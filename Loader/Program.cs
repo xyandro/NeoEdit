@@ -43,12 +43,18 @@ namespace Loader
 		static void RunExtractor(string[] args)
 		{
 			var extractor = new Extractor();
-			if ((args.Length != 0) && (args[0] == "-extractor"))
+			if ((args.Length == 4) && (args[0] == "-extractor"))
 			{
-				var bitDepth = args.Length > 1 ? (BitDepths)Enum.Parse(typeof(BitDepths), args[1]) : Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32;
-				var pid = args.Length > 2 ? int.Parse(args[2]) : default(int?);
-				var fileName = args.Length > 3 ? args[3] : null;
+				var bitDepth = (BitDepths)Enum.Parse(typeof(BitDepths), args[1]);
+				var pid = int.Parse(args[2]);
+				var fileName = args[3];
 				extractor.RunExtractor(bitDepth, pid, fileName);
+			}
+			else if ((args.Length == 3) && (args[0] == "-update"))
+			{
+				var fileName = args[1];
+				var pid = int.Parse(args[2]);
+				extractor.RunUpdate(pid, fileName);
 			}
 			else if ((ResourceReader.Config.ExtractAction != ExtractActions.None) && ((Keyboard.GetKeyStates(Key.CapsLock).HasFlag(KeyStates.Down)) || ((args.Length == 1) && (args[0] == "-extract"))))
 			{

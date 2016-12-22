@@ -21,6 +21,7 @@ namespace NeoEdit.GUI
 		Action<int> processHexEditorLauncher;
 		Action<string, string, byte[], Coder.CodePage, bool?, bool> textEditorLauncher;
 		Action<string, bool> textViewerLauncher;
+		Action updateLauncher;
 
 		public static void Initialize(
 			Action about
@@ -35,6 +36,7 @@ namespace NeoEdit.GUI
 			, Action<int> processHexEditor
 			, Action<string, string, byte[], Coder.CodePage, bool?, bool> textEditor
 			, Action<string, bool> textViewer
+			, Action update
 		)
 		{
 			launcher = new Launcher
@@ -51,6 +53,7 @@ namespace NeoEdit.GUI
 				processHexEditorLauncher = processHexEditor,
 				textEditorLauncher = textEditor,
 				textViewerLauncher = textViewer,
+				updateLauncher = update,
 			};
 		}
 
@@ -66,5 +69,6 @@ namespace NeoEdit.GUI
 		public void LaunchProcesses(int? pid = null) => processesLauncher?.Invoke(pid);
 		public void LaunchTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool forceCreate = false) => textEditorLauncher?.Invoke(fileName, displayName, bytes, codePage, modified, forceCreate);
 		public void LaunchTextViewer(string fileName = null, bool forceCreate = false) => textViewerLauncher?.Invoke(fileName, forceCreate);
+		public void LaunchUpdate() => updateLauncher?.Invoke();
 	}
 }

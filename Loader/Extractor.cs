@@ -85,6 +85,14 @@ namespace Loader
 			DeleteDelayed(exeFile);
 		}
 
+		public void RunUpdate(int pid, string dest)
+		{
+			WaitForParentExit(pid);
+			var src = typeof(Program).Assembly.Location;
+			File.Copy(src, dest, true);
+			DeleteDelayed(src);
+		}
+
 		Dictionary<string, Assembly> resolved = new Dictionary<string, Assembly>();
 		Assembly AssemblyResolve(ResolveEventArgs args, string dllPath)
 		{
