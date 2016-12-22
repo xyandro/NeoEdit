@@ -536,60 +536,84 @@ namespace NeoEdit.Common
 			}
 		}
 
-		class DiffData
+		class DiffParams
 		{
-			public string Data;
-			public bool IgnoreWhitespace, IgnoreCase, IgnoreNumbers, IgnoreLineEndings;
-			public List<LCS.MatchType> LineCompare;
-			public List<Tuple<int, int>>[] ColCompare;
-			public Dictionary<int, int> LineMap, LineRevMap;
+			public readonly bool IgnoreWhitespace, IgnoreCase, IgnoreNumbers, IgnoreLineEndings;
 
-			public DiffData(string data, bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings)
+			public DiffParams(bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings)
 			{
-				Data = data;
 				IgnoreWhitespace = ignoreWhitespace;
 				IgnoreCase = ignoreCase;
 				IgnoreNumbers = ignoreNumbers;
 				IgnoreLineEndings = ignoreLineEndings;
 			}
+
+			public Tuple<string, List<int>> FormatLine(string line)
+			{
+				var map = new List<int>();
+				var sb = new StringBuilder(line.Length);
+				var inNumber = false;
+				for (var ctr = 0; ctr < line.Length; ++ctr)
+				{
+					var ch = line[ctr];
+					if (!char.IsDigit(ch))
+						inNumber = false;
+					if ((IgnoreWhitespace) && (char.IsWhiteSpace(ch)) && (ch != '\r') && (ch != '\n'))
+						continue;
+					if (IgnoreCase)
+						ch = char.ToLowerInvariant(ch);
+					if ((IgnoreNumbers) && (char.IsDigit(ch)))
+					{
+						if (inNumber)
+							continue;
+						inNumber = true;
+						ch = '0';
+					}
+					if ((IgnoreLineEndings) && ((ch == '\r') || (ch == '\n')))
+						continue;
+
+					map.Add(ctr);
+					sb.Append(ch);
+				}
+				map.Add(line.Length);
+
+				return Tuple.Create(sb.ToString(), map);
+			}
+
+			public bool Equals(DiffParams diffParams)
+			{
+				if (IgnoreWhitespace != diffParams.IgnoreWhitespace)
+					return false;
+				if (IgnoreCase != diffParams.IgnoreCase)
+					return false;
+				if (IgnoreNumbers != diffParams.IgnoreNumbers)
+					return false;
+				if (IgnoreLineEndings != diffParams.IgnoreLineEndings)
+					return false;
+				return true;
+			}
+		}
+
+		class DiffData
+		{
+			public string Data;
+			public DiffParams DiffParams;
+			public List<LCS.MatchType> LineCompare;
+			public List<Tuple<int, int>>[] ColCompare;
+			public Dictionary<int, int> LineMap, LineRevMap;
+
+			public DiffData(string data, DiffParams diffParams)
+			{
+				Data = data;
+				DiffParams = diffParams;
+			}
 		}
 		DiffData diffData;
 
-		static Tuple<string, List<int>> FormatDiffLine(string line, bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings)
-		{
-			var map = new List<int>();
-			var sb = new StringBuilder(line.Length);
-			var inNumber = false;
-			for (var ctr = 0; ctr < line.Length; ++ctr)
-			{
-				var ch = line[ctr];
-				if (!char.IsDigit(ch))
-					inNumber = false;
-				if ((ignoreWhitespace) && (char.IsWhiteSpace(ch)) && (ch != '\r') && (ch != '\n'))
-					continue;
-				if (ignoreCase)
-					ch = char.ToLowerInvariant(ch);
-				if ((ignoreNumbers) && (char.IsDigit(ch)))
-				{
-					if (inNumber)
-						continue;
-					inNumber = true;
-					ch = '0';
-				}
-				if ((ignoreLineEndings) && ((ch == '\r') || (ch == '\n')))
-					continue;
-
-				map.Add(ctr);
-				sb.Append(ch);
-			}
-			map.Add(line.Length);
-
-			return Tuple.Create(sb.ToString(), map);
-		}
-
 		public static void CalculateDiff(TextData textData0, TextData textData1, bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings)
 		{
-			if ((textData0.diffData != null) && (textData1.diffData != null) && (textData0.diffData.Data == textData0.Data) && (textData1.diffData.Data == textData1.Data) && (textData0.diffData.IgnoreWhitespace == ignoreWhitespace) && (textData1.diffData.IgnoreWhitespace == ignoreWhitespace) && (textData0.diffData.IgnoreCase == ignoreCase) && (textData1.diffData.IgnoreCase == ignoreCase) && (textData0.diffData.IgnoreNumbers == ignoreNumbers) && (textData1.diffData.IgnoreNumbers == ignoreNumbers) && (textData0.diffData.IgnoreLineEndings == ignoreLineEndings) && (textData1.diffData.IgnoreLineEndings == ignoreLineEndings))
+			var diffParams = new DiffParams(ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings);
+			if ((textData0.diffData != null) && (textData1.diffData != null) && (textData0.diffData.Data == textData0.Data) && (textData1.diffData.Data == textData1.Data) && (textData0.diffData.DiffParams.Equals(diffParams)) && (textData1.diffData.DiffParams.Equals(diffParams)))
 				return;
 
 			var textData = new TextData[] { textData0, textData1 };
@@ -598,8 +622,8 @@ namespace NeoEdit.Common
 			for (var pass = 0; pass < 2; ++pass)
 			{
 				textData[pass].ClearDiff();
-				textData[pass].diffData = new DiffData(textData[pass].Data, ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings);
-				var formatDiffLine = Enumerable.Range(0, textData[pass].NumLines).Select(line => FormatDiffLine(textData[pass].GetLine(line, true), ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings)).ToList();
+				textData[pass].diffData = new DiffData(textData[pass].Data, diffParams);
+				var formatDiffLine = Enumerable.Range(0, textData[pass].NumLines).Select(line => diffParams.FormatLine(textData[pass].GetLine(line, true))).ToList();
 				lines[pass] = formatDiffLine.Select(val => val.Item1).ToList();
 				map[pass] = formatDiffLine.Select(val => val.Item2).ToList();
 			}
