@@ -238,6 +238,7 @@ namespace NeoEdit.TextEdit
 		int mouseClickCount = 0;
 		DragType doDrag = DragType.None;
 		CacheValue modifiedChecksum = new CacheValue();
+		string diffIgnoreCharacters;
 		PreviousStruct previous = null;
 		FileSystemWatcher watcher = null;
 
@@ -390,7 +391,8 @@ namespace NeoEdit.TextEdit
 			diffTarget.DiffIgnoreCase = DiffIgnoreCase;
 			diffTarget.DiffIgnoreNumbers = DiffIgnoreNumbers;
 			diffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
-			TextData.CalculateDiff(Data, diffTarget.Data, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings);
+			diffTarget.diffIgnoreCharacters = diffIgnoreCharacters;
+			TextData.CalculateDiff(Data, diffTarget.Data, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
 
 			CalculateBoundaries();
 			diffTarget.CalculateBoundaries();
@@ -580,6 +582,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Data_Sign: dialogResult = Command_Edit_Data_Sign_Dialog(); break;
 				case TextEditCommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(); break;
 				case TextEditCommand.Edit_Convert: dialogResult = Command_Edit_Convert_Dialog(); break;
+				case TextEditCommand.Diff_IgnoreCharacters: dialogResult = Command_Diff_IgnoreCharacters_Dialog(); break;
 				case TextEditCommand.Files_Names_MakeAbsolute: dialogResult = Command_Files_Names_MakeAbsolute_Dialog(); break;
 				case TextEditCommand.Files_Names_GetUnique: dialogResult = Command_Files_Names_GetUnique_Dialog(); break;
 				case TextEditCommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(); break;
@@ -896,6 +899,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(multiStatus); break;
 				case TextEditCommand.Diff_IgnoreNumbers: Command_Diff_IgnoreNumbers(multiStatus); break;
 				case TextEditCommand.Diff_IgnoreLineEndings: Command_Diff_IgnoreLineEndings(multiStatus); break;
+				case TextEditCommand.Diff_IgnoreCharacters: Command_Diff_IgnoreCharacters(dialogResult as DiffIgnoreCharactersDialog.Result); break;
 				case TextEditCommand.Diff_Reset: Command_Diff_Reset(); break;
 				case TextEditCommand.Diff_Next: Command_Diff_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Diff_Previous: Command_Diff_NextPrevious(false, shiftDown); break;

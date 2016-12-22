@@ -539,13 +539,19 @@ namespace NeoEdit.Common
 		class DiffParams
 		{
 			public readonly bool IgnoreWhitespace, IgnoreCase, IgnoreNumbers, IgnoreLineEndings;
+			public readonly string IgnoreCharacters;
 
-			public DiffParams(bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings)
+			readonly HashSet<char> IgnoreCharactersHash;
+
+			public DiffParams(bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings, string ignoreCharacters)
 			{
 				IgnoreWhitespace = ignoreWhitespace;
 				IgnoreCase = ignoreCase;
 				IgnoreNumbers = ignoreNumbers;
 				IgnoreLineEndings = ignoreLineEndings;
+				IgnoreCharacters = ignoreCharacters;
+
+				IgnoreCharactersHash = new HashSet<char>(IgnoreCharacters ?? "");
 			}
 
 			public Tuple<string, List<int>> FormatLine(string line)
@@ -558,6 +564,8 @@ namespace NeoEdit.Common
 					var ch = line[ctr];
 					if (!char.IsDigit(ch))
 						inNumber = false;
+					if (IgnoreCharactersHash.Contains(ch))
+						continue;
 					if ((IgnoreWhitespace) && (char.IsWhiteSpace(ch)) && (ch != '\r') && (ch != '\n'))
 						continue;
 					if (IgnoreCase)
@@ -590,6 +598,8 @@ namespace NeoEdit.Common
 					return false;
 				if (IgnoreLineEndings != diffParams.IgnoreLineEndings)
 					return false;
+				if (IgnoreCharacters != diffParams.IgnoreCharacters)
+					return false;
 				return true;
 			}
 		}
@@ -610,9 +620,9 @@ namespace NeoEdit.Common
 		}
 		DiffData diffData;
 
-		public static void CalculateDiff(TextData textData0, TextData textData1, bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings)
+		public static void CalculateDiff(TextData textData0, TextData textData1, bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings, string ignoreCharacters)
 		{
-			var diffParams = new DiffParams(ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings);
+			var diffParams = new DiffParams(ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings, ignoreCharacters);
 			if ((textData0.diffData != null) && (textData1.diffData != null) && (textData0.diffData.Data == textData0.Data) && (textData1.diffData.Data == textData1.Data) && (textData0.diffData.DiffParams.Equals(diffParams)) && (textData1.diffData.DiffParams.Equals(diffParams)))
 				return;
 

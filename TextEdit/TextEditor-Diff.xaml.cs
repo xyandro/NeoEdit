@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
@@ -106,9 +107,18 @@ namespace NeoEdit.TextEdit
 			CalculateDiff();
 		}
 
+		DiffIgnoreCharactersDialog.Result Command_Diff_IgnoreCharacters_Dialog() => DiffIgnoreCharactersDialog.Run(WindowParent, diffIgnoreCharacters);
+
+		void Command_Diff_IgnoreCharacters(DiffIgnoreCharactersDialog.Result result)
+		{
+			diffIgnoreCharacters = result.IgnoreCharacters;
+			CalculateDiff();
+		}
+
 		void Command_Diff_Reset()
 		{
 			DiffIgnoreWhitespace = DiffIgnoreCase = DiffIgnoreNumbers = DiffIgnoreLineEndings = false;
+			diffIgnoreCharacters = null;
 			CalculateDiff();
 		}
 

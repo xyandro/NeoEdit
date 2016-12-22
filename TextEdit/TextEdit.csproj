@@ -213,6 +213,13 @@
     <Compile Include="Dialogs\DatabaseConnectDialog.xaml.cs">
       <DependentUpon>DatabaseConnectDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\DiffIgnoreCharactersDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\DiffIgnoreCharactersDialog.xaml.cs">
+      <DependentUpon>DiffIgnoreCharactersDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\EditDatabaseConnectDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -141,6 +141,7 @@
 		<textEdit:MultiMenuItem Header="Ignore _Case" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
 		<textEdit:MultiMenuItem Header="Ignore _Numbers" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers"/>
 		<textEdit:MultiMenuItem Header="Ignore Line _Endings" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings"/>
+		<textEdit:TextEditMenuItem Header="Ignore C_haracters" CommandEnum="Diff_IgnoreCharacters"/>
 		<textEdit:TextEditMenuItem Header="_Reset" CommandEnum="Diff_Reset"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Ne_xt" CommandEnum="Diff_Next"/>
