@@ -1,0 +1,34 @@
+﻿<Window Name="self" x:Class="Build.BuildWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Build Utility" Width="800" Height="600">
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+
+		<DockPanel Grid.Row="0" Grid.Column="0">
+			<Label DockPanel.Dock="Top" Content="_Configurations:" Target="{Binding ElementName=configurations}"/>
+			<ListBox DockPanel.Dock="Top" Name="configurations" ItemsSource="{Binding Configurations, ElementName=self}"/>
+
+			<Label DockPanel.Dock="Top" Content="_Platforms:" Target="{Binding ElementName=platforms}"/>
+			<ListBox DockPanel.Dock="Top" Name="platforms" ItemsSource="{Binding Platforms, ElementName=self}" SelectionMode="Extended"/>
+
+			<Label DockPanel.Dock="Top" Content="_Actions:" Target="{Binding ElementName=actions}"/>
+			<ListBox DockPanel.Dock="Top" Name="actions" ItemsSource="{Binding Actions,ElementName=self}" SelectionMode="Extended"/>
+
+			<Button DockPanel.Dock="Top" Content="_Reset" Click="OnReset"/>
+			<Button DockPanel.Dock="Top" Name="deleteIgnoredButton" Content="Delete _Ignored" Click="OnDeleteIgnored"/>
+
+			<Button DockPanel.Dock="Bottom" Name="goButton" Content="_Go" Click="OnGo" VerticalAlignment="Bottom"/>
+		</DockPanel>
+
+		<TextBox Grid.Row="0" Grid.Column="1" IsReadOnly="True" Name="progressText" Text="{Binding ProgressText, ElementName=self}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"/>
+	</Grid>
+
+</Window>

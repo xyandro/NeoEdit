@@ -3,18 +3,19 @@
 *.log
 *.opendb
 *.opensdf
+*.pdb
 *.sdf
 *.suo
 *.tmp_proj
 *.user
 *.VC.db
+.vs
 bin
 ipch
 obj
 TestResults
 
 # Specific
-/.vs
 /Common/Expressions/Parser
 /Dependencies/GlobalAssemblyInfo.cs
 /Dependencies/GlobalVersionInfo.h
@@ -24,6 +25,7 @@ TestResults
 /Disk/Magic/regex2.dll.gz
 /Disk/Magic/zlib1.dll.gz
 /NeoEdit/CommandLineParams/Parser
+/Release
 /TextEdit/Content/Balanced/Parser
 /TextEdit/Content/Columns/Parser
 /TextEdit/Content/CPlusPlus/Parser
