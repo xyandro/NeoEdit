@@ -14,7 +14,6 @@ HEXPID         : '-binarypid' | '-hexpid'                                       
 IMAGEEDIT      : '-grab' | '-grabber' | '-image' | '-imageedit' | '-imageeditor'                        ;
 LICENSE        : '-license'                                                                             ;
 LINE           : '-line'                                                                                ;
-LIVE           : '-live'                                                                                ;
 MULTI          : '-multi'                                                                               ;
 NETWORK        : '-socket' | '-sockets' | '-network'                                                    ;
 PROCESSES      : '-pid' | '-process' | '-processes'                                                     ;
@@ -41,7 +40,6 @@ HEXPID2        : HEXPID        -> type(HEXPID)        ;
 IMAGEEDIT2     : IMAGEEDIT     -> type(IMAGEEDIT)     ;
 LICENSE2       : LICENSE       -> type(LICENSE)       ;
 LINE2          : LINE          -> type(LINE)          ;
-LIVE2          : LIVE          -> type(LIVE)          ;
 MULTI2         : MULTI         -> type(MULTI)         ;
 NETWORK2       : NETWORK       -> type(NETWORK)       ;
 PROCESSES2     : PROCESSES     -> type(PROCESSES)     ;
