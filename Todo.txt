@@ -1,7 +1,7 @@
 All:
 Add TFS source control
 Allow selecting a screen location (with zoom)
-Detect loader files and delete them (happens after an update)
+Add PGP hash for files
 
 Disk:
 Move timestamp (possibly others) from TextEditor
