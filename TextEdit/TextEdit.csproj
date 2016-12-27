@@ -598,6 +598,7 @@
     <Compile Include="RevRegEx\RevRegExVisitor.cs" />
     <None Include="RevRegEx\Source\RevRegExLexer.g4" />
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
+    <Compile Include="ShutdownData.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="TextEditCommand.cs" />
     <Page Include="TextEditMenu.xaml">

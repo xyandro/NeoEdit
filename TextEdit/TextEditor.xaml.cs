@@ -241,10 +241,12 @@ namespace NeoEdit.TextEdit
 		string diffIgnoreCharacters;
 		PreviousStruct previous = null;
 		FileSystemWatcher watcher = null;
+		ShutdownData shutdownData;
 
-		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int? line = null, int? column = null)
+		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null)
 		{
 			SetupLocalKeys();
+			this.shutdownData = shutdownData;
 
 			InitializeComponent();
 			AutoRefresh = true;
@@ -441,6 +443,7 @@ namespace NeoEdit.TextEdit
 			DiffTarget = null;
 			globalKeysChanged -= SetupLocalOrGlobalKeys;
 			ClearWatcher();
+			shutdownData.OnShutdown();
 			base.Closed();
 		}
 

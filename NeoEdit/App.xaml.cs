@@ -4,11 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Threading;
+using NeoEdit.Common;
 using NeoEdit.Dialogs;
 using NeoEdit.Disk;
 using NeoEdit.GUI.Controls;
@@ -65,14 +68,19 @@ namespace NeoEdit
 				Debugger.Break();
 			}
 #endif
-
 		}
+
+		[DllImport("user32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		static extern bool SetForegroundWindow(IntPtr hWnd);
 
 		public void CreateWindowsFromArgs(string commandLine)
 		{
 			try
 			{
 				var paramList = CommandLineParams.CommandLineVisitor.GetCommandLineParams(commandLine);
+				var shutdownEvent = paramList.OfType<WaitParam>().FirstOrDefault()?.ShutdownEvent;
+				paramList.RemoveAll(param => param is WaitParam);
 
 				var windows = UIHelper<NEWindow>.GetAllWindows();
 				var restored = windows.Count(window => window.Restore());
@@ -80,9 +88,15 @@ namespace NeoEdit
 					return;
 
 				if (!paramList.Any())
-					TextEditTabs.Create();
+					TextEditTabs.Create(shutdownEvent: shutdownEvent);
 				foreach (var param in paramList)
-					param.Execute();
+					param.Execute(shutdownEvent);
+
+				UIHelper<NEWindow>.GetAllWindows().Except(windows).ForEach(window =>
+				{
+					window.Show();
+					SetForegroundWindow(new WindowInteropHelper(window).Handle);
+				});
 			}
 			catch (Exception ex) { ShowExceptionMessage(ex); }
 		}
@@ -100,8 +114,8 @@ namespace NeoEdit
 				, license: () => LicenseDialog.Run()
 				, network: () => new NetworkWindow()
 				, processes: pid => new ProcessesWindow(pid)
-				, textEditorDiff: (fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2) => TextEditTabs.CreateDiff().AddDiff(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2)
-				, textEditorFile: (fileName, displayName, bytes, encoding, modified, line, column, forceCreate) => TextEditTabs.Create(fileName, displayName, bytes, encoding, modified, line ?? 1, column ?? 1, forceCreate: forceCreate)
+				, textEditorDiff: (fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent) => TextEditTabs.CreateDiff().AddDiff(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent)
+				, textEditorFile: (fileName, displayName, bytes, encoding, modified, line, column, forceCreate, shutdownEvent) => TextEditTabs.Create(fileName, displayName, bytes, encoding, modified, line ?? 1, column ?? 1, null, forceCreate, shutdownEvent)
 				, textViewer: (fileName, forceCreate) => TextViewTabs.Create(fileName, forceCreate)
 				, update: () => Update()
 			);

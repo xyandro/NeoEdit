@@ -25,7 +25,7 @@ namespace NeoEdit.TextEdit
 	{
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
-		public static void Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false)
+		public static void Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false, string shutdownEvent = null)
 		{
 			if ((!Helpers.IsDebugBuild) && (fileName != null))
 			{
@@ -51,7 +51,7 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			var textEditor = new TextEditor(fileName, displayName, bytes, codePage, modified, line, column);
+			var textEditor = new TextEditor(fileName, displayName, bytes, codePage, modified, line, column, new ShutdownData(shutdownEvent, 1));
 			var replaced = CreateTab(textEditor, textEditTabs, forceCreate);
 			textEditor.DiffTarget = replaced?.DiffTarget;
 		}
@@ -64,10 +64,11 @@ namespace NeoEdit.TextEdit
 			return textEditTabs;
 		}
 
-		public void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, bool? modified1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, bool? modified2 = null, int? line2 = null, int? column2 = null)
+		public void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, bool? modified1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, bool? modified2 = null, int? line2 = null, int? column2 = null, string shutdownEvent = null)
 		{
-			var textEdit1 = new TextEditor(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1);
-			var textEdit2 = new TextEditor(fileName2, displayName2, bytes2, codePage2, modified2, line2, column2);
+			var shutdownData = new ShutdownData(shutdownEvent, 2);
+			var textEdit1 = new TextEditor(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, shutdownData);
+			var textEdit2 = new TextEditor(fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownData);
 			tabs.CreateTab(textEdit1);
 			tabs.CreateTab(textEdit2);
 			ItemTabs.TopMost = textEdit2;

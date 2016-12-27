@@ -19,6 +19,7 @@ NETWORK        : '-socket' | '-sockets' | '-network'                            
 PROCESSES      : '-pid' | '-process' | '-processes'                                                     ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                        ;
 TEXTVIEW       : '-textview' | '-textviewer' | '-view'                                                  ;
+WAIT           : '-wait'                                                                                ;
 
 EQUALS         : '=' ;
 NUMBER         : [0-9]+ ;
@@ -45,6 +46,7 @@ NETWORK2       : NETWORK       -> type(NETWORK)       ;
 PROCESSES2     : PROCESSES     -> type(PROCESSES)     ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
 TEXTVIEW2      : TEXTVIEW      -> type(TEXTVIEW)      ;
+WAIT2          : WAIT          -> type(WAIT)          ;
 
 EQUALS2        : EQUALS        -> type(EQUALS)        ;
 NUMBER2        : NUMBER        -> type(NUMBER)        ;

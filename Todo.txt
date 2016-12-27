@@ -9,9 +9,7 @@ Select readable
 In active list add number of selections, allow sort, allow typing to find file
 
 Text:
-Copy positions/goto copied positions (useful for applying diff)
 If user chooses rows and columns, scroll extra windows
-Add ability to wait until program close (since inline diff tools wait for the program to exit; could remove -multi flag and share a diff window)
 Only show file changed dialog when window is active and selected
 Add multi-file status bar (shows how many (active? files|selections|etc.)
 Improve sort performance for very large sets
@@ -19,7 +17,6 @@ Selecting the already selected file without shift down should deselect the other
 Tutorial
 Move tabs with selections to start of active tabs list
 Print
-Expression "line" is wrong in diff mode
 
 View:
 Update as new lines are added

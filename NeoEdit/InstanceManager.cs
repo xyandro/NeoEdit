@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO.MemoryMappedFiles;
 using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -10,35 +12,66 @@ namespace NeoEdit
 	class InstanceManager
 	{
 		const string IPCName = "NeoEdit-{1e5bef22-1257-4cbd-a84b-36679ed79b07}";
+		const string ShutdownEventName = "NeoEdit-Wait-{0}";
 
-		static Mutex mutex = new Mutex(false, IPCName);
+		static MemoryMappedFile mmfile;
+
+		[DllImport("user32.dll", SetLastError = true)]
+		static extern bool AllowSetForegroundWindow(int dwProcessId);
 
 		[STAThread]
 		static void Main()
 		{
 			ClearModifierKeys();
 
-			var args = Environment.GetCommandLineArgs();
+			var args = Environment.GetCommandLineArgs().Skip(1).ToList();
 			var multi = args.Any(arg => arg == "-multi");
 
-			if ((multi) || (mutex.WaitOne(TimeSpan.Zero, true)))
+			var masterPid = default(int?);
+			try
+			{
+				if (!multi)
+					using (var oldMMFile = MemoryMappedFile.OpenExisting(IPCName))
+					using (var va = oldMMFile.CreateViewAccessor())
+						masterPid = va.ReadInt32(0);
+			}
+			catch { }
+
+			if (!masterPid.HasValue)
 			{
 				var app = new App();
 				if (!multi)
+				{
+					mmfile = MemoryMappedFile.CreateNew(IPCName, 4);
+					using (var va = mmfile.CreateViewAccessor())
+						va.Write(0, Process.GetCurrentProcess().Id);
 					SetupPipeWait(app);
+				}
 				app.Run();
-				if (!multi)
-					mutex.ReleaseMutex();
 				return;
 			}
 
+			var proc = Process.GetProcessById(masterPid.Value);
+			AllowSetForegroundWindow(proc.Id);
+
 			// Server already exists; connect and send command line
+			var waitEvent = default(EventWaitHandle);
+			if (args.Any(arg => arg == "-wait"))
+			{
+				args.RemoveAll(arg => arg == "-wait");
+				var name = string.Format(ShutdownEventName, Guid.NewGuid());
+				args.Add("-wait");
+				args.Add(name);
+				waitEvent = new EventWaitHandle(false, EventResetMode.ManualReset, name);
+			}
 			var pipeClient = new NamedPipeClientStream(".", IPCName, PipeDirection.InOut);
 			pipeClient.Connect();
-			var buf = Coder.StringToBytes(string.Join(" ", args.Skip(1).Select(arg => $"\"{arg.Replace(@"""", @"""""")}\"")), Coder.CodePage.UTF8);
+			var buf = Coder.StringToBytes(string.Join(" ", args.Select(arg => $"\"{arg.Replace(@"""", @"""""")}\"")), Coder.CodePage.UTF8);
 			var size = BitConverter.GetBytes(buf.Length);
 			pipeClient.Write(size, 0, size.Length);
 			pipeClient.Write(buf, 0, buf.Length);
+
+			while ((waitEvent?.WaitOne(1000) == false) && (!proc.HasExited)) { }
 		}
 
 		static void SetupPipeWait(App app)
