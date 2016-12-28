@@ -10,6 +10,7 @@
 		Window_ImageEditor,
 		Window_Network,
 		Window_Processes,
+		Window_Ripper,
 		Window_TextEditor,
 		Window_TextViewer,
 	}

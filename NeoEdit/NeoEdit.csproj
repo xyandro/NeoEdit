@@ -103,6 +103,10 @@
       <Project>{c65dd007-a448-49f5-b813-372c53d374c3}</Project>
       <Name>Processes</Name>
     </ProjectReference>
+    <ProjectReference Include="$(SolutionDir)\Rip\Rip.csproj">
+      <Project>{C1CD0B7A-0A12-46CA-B326-3E544EE8E963}</Project>
+      <Name>Rip</Name>
+    </ProjectReference>
     <ProjectReference Include="$(SolutionDir)\TextEdit\TextEdit.csproj">
       <Project>{9a35ab82-2481-4c44-b51e-66df7d248ead}</Project>
       <Name>TextEdit</Name>

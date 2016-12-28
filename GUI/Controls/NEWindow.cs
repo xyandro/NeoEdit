@@ -73,6 +73,7 @@ namespace NeoEdit.GUI.Controls
 				case WindowCommand.Window_ImageEditor: Launcher.Static.LaunchImageEditor(); break;
 				case WindowCommand.Window_Network: Launcher.Static.LaunchNetwork(); break;
 				case WindowCommand.Window_Processes: Launcher.Static.LaunchProcesses(); break;
+				case WindowCommand.Window_Ripper: Launcher.Static.LaunchRipper(); break;
 				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditorFile(forceCreate: true); break;
 				case WindowCommand.Window_TextViewer: Launcher.Static.LaunchTextViewer(forceCreate: true); break;
 			}

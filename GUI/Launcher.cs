@@ -19,26 +19,28 @@ namespace NeoEdit.GUI
 		Action licenseLauncher;
 		Action networkLauncher;
 		Action<int?> processesLauncher;
+		Action ripperLauncher;
 		Action<string, string, byte[], Coder.CodePage, bool?, int?, int?, string, string, byte[], Coder.CodePage, bool?, int?, int?, string> textEditorDiffLauncher;
 		Action<string, string, byte[], Coder.CodePage, bool?, int?, int?, bool, string> textEditorFileLauncher;
 		Action<string, bool> textViewerLauncher;
 		Action updateLauncher;
 
 		public static void Initialize(
-			Action about
-			, Action<string, IEnumerable<string>, bool> disk
-			, Action<int?> handles
-			, Action<string, bool> hexEditorDump
-			, Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFile
-			, Action<int> hexEditorProcess
-			, Action<string> imageEditor
-			, Action license
-			, Action network
-			, Action<int?> processes
-			, Action<string, string, byte[], Coder.CodePage, bool?, int?, int?, string, string, byte[], Coder.CodePage, bool?, int?, int?, string> textEditorDiff
-			, Action<string, string, byte[], Coder.CodePage, bool?, int?, int?, bool, string> textEditorFile
-			, Action<string, bool> textViewer
-			, Action update
+			Action about = null
+			, Action<string, IEnumerable<string>, bool> disk = null
+			, Action<int?> handles = null
+			, Action<string, bool> hexEditorDump = null
+			, Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFile = null
+			, Action<int> hexEditorProcess = null
+			, Action<string> imageEditor = null
+			, Action license = null
+			, Action network = null
+			, Action<int?> processes = null
+			, Action ripper = null
+			, Action<string, string, byte[], Coder.CodePage, bool?, int?, int?, string, string, byte[], Coder.CodePage, bool?, int?, int?, string> textEditorDiff = null
+			, Action<string, string, byte[], Coder.CodePage, bool?, int?, int?, bool, string> textEditorFile = null
+			, Action<string, bool> textViewer = null
+			, Action update = null
 		)
 		{
 			launcher = new Launcher
@@ -53,6 +55,7 @@ namespace NeoEdit.GUI
 				licenseLauncher = license,
 				networkLauncher = network,
 				processesLauncher = processes,
+				ripperLauncher = ripper,
 				textEditorDiffLauncher = textEditorDiff,
 				textEditorFileLauncher = textEditorFile,
 				textViewerLauncher = textViewer,
@@ -70,6 +73,7 @@ namespace NeoEdit.GUI
 		public void LaunchLicense() => licenseLauncher?.Invoke();
 		public void LaunchNetwork() => networkLauncher?.Invoke();
 		public void LaunchProcesses(int? pid = null) => processesLauncher?.Invoke(pid);
+		public void LaunchRipper() => ripperLauncher?.Invoke();
 		public void LaunchTextEditorDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, bool? modified1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, bool? modified2 = null, int? line2 = null, int? column2 = null, string shutdownEvent = null) => textEditorDiffLauncher?.Invoke(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent);
 		public void LaunchTextEditorFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int? line = null, int? column = null, bool forceCreate = false, string shutdownEvent = null) => textEditorFileLauncher?.Invoke(fileName, displayName, bytes, codePage, modified, line, column, forceCreate, shutdownEvent);
 		public void LaunchTextViewer(string fileName = null, bool forceCreate = false) => textViewerLauncher?.Invoke(fileName, forceCreate);
