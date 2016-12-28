@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Loader.GetConfig" x:ClassModifier="internal"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:Loader"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:Loader"
 	Title="Loader Configuration" SizeToContent="WidthAndHeight">
 
 	<Grid Margin="10">

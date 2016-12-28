@@ -11,11 +11,22 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CDDrive.cs" />
+    <Compile Include="CDTrack.cs" />
+    <Compile Include="CDWin32.cs" />
+    <Page Include="Dialogs\AddCDDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\AddCDDialog.xaml.cs">
+      <DependentUpon>AddCDDialog.xaml</DependentUpon>
+    </Compile>
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RipCommand.cs" />
+    <Compile Include="RipItem.cs" />
     <Page Include="RipMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

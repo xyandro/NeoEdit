@@ -7,6 +7,9 @@
 	<MenuItem Header="_File">
 		<rip:RipMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
+	<MenuItem Header="_Add">
+		<rip:RipMenuItem Header="_CD" CommandEnum="Add_CD"/>
+	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>
 
