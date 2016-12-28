@@ -21,6 +21,13 @@
     <Compile Include="Dialogs\AddCDDialog.xaml.cs">
       <DependentUpon>AddCDDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\AddYouTubeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\AddYouTubeDialog.xaml.cs">
+      <DependentUpon>AddYouTubeDialog.xaml</DependentUpon>
+    </Compile>
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -41,6 +48,9 @@
     <Compile Include="Ripper.xaml.cs">
       <DependentUpon>Ripper.xaml</DependentUpon>
     </Compile>
+    <Compile Include="YouTube.cs" />
+    <Compile Include="YouTubeItem.cs" />
+    <Compile Include="YouTubeVideo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\Common\Common.csproj">
