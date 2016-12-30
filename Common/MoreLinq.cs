@@ -318,5 +318,27 @@ namespace NeoEdit.Common
 			}
 		}
 
+		public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<TKey> keys, IEnumerable<TValue> values)
+		{
+			var result = new Dictionary<TKey, TValue>();
+			//=> keys.Zip(values, (key, value) => new { key, value }).ToDictionary(obj => obj.key, obj => obj.value);
+			using (var keyEnumerator = keys.GetEnumerator())
+			using (var valueEnumerator = values.GetEnumerator())
+			{
+				while (true)
+				{
+					var hasKey = keyEnumerator.MoveNext();
+					var hasValue = valueEnumerator.MoveNext();
+					if (hasKey != hasValue)
+						throw new Exception("Inputs must be the same size");
+					if (!hasKey)
+						break;
+					if (result.ContainsKey(keyEnumerator.Current))
+						throw new Exception("Key already in result");
+					result[keyEnumerator.Current] = valueEnumerator.Current;
+				}
+			}
+			return result;
+		}
 	}
 }

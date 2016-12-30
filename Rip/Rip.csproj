@@ -28,6 +28,13 @@
     <Compile Include="Dialogs\AddYouTubeDialog.xaml.cs">
       <DependentUpon>AddYouTubeDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\MultiProgressDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\MultiProgressDialog.xaml.cs">
+      <DependentUpon>MultiProgressDialog.xaml</DependentUpon>
+    </Compile>
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

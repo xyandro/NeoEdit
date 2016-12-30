@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using NeoEdit.Common;
 
 namespace NeoEdit.Rip
 {
@@ -22,6 +25,6 @@ namespace NeoEdit.Rip
 
 		public override string ToString() => Title;
 
-		public override void Run(Func<bool> cancelled, Action<int> progress, string directory) => YouTube.Save(Video, GetFileName(directory), cancelled, progress).Wait();
+		public async override Task Run(IProgress<ProgressReport> progress, CancellationToken token, string directory) => await YouTube.Save(Video, GetFileName(directory), progress, token);
 	}
 }

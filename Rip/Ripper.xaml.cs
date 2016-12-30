@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Dialogs;
 using NeoEdit.Rip.Dialogs;
 
 namespace NeoEdit.Rip
@@ -65,39 +63,12 @@ namespace NeoEdit.Rip
 			if (urls == null)
 				return;
 
-			var youTubeItems = ProgressDialog.Run(this, "Getting YouTube data...", (cancelled, progress) =>
-			{
-				var playlists = urls.Where(url => url.Contains("playlist")).ToDictionary(url => url, url => default(List<string>));
-				playlists = Task.WhenAll(playlists.Keys.Select(url => youTube.GetPlaylistVideoIDs(url).ContinueWith(task => new { url, task.Result }))).Result.ToDictionary(obj => obj.url, obj => obj.Result);
-				urls = urls.SelectMany(url => playlists.ContainsKey(url) ? playlists[url] : new List<string> { url }).ToList();
+			var playlists = urls.Where(YouTube.IsPlaylist).ToList();
+			var playlistItems = MultiProgressDialog.RunAsync(this, "Getting playlist contents...", playlists.Select(url => YouTube.GetPlaylistID(url)), async (id, progress, token) => await youTube.GetPlaylistVideoIDs(id, progress, token));
+			var playlistsMap = playlists.ToDictionary(playlistItems);
+			urls = urls.SelectMany(url => playlistsMap.ContainsKey(url) ? playlistsMap[url] : new List<string> { YouTube.GetVideoID(url) }).Distinct().ToList();
 
-				var result = new List<YouTubeItem>();
-				const int NumRunning = 10;
-				var running = new List<Task<YouTubeVideo>>();
-				var total = urls.Count;
-				while (true)
-				{
-					progress(result.Count * 100 / total);
-					if (cancelled())
-						throw new Exception("Cancelled");
-
-					while ((running.Count < NumRunning) && (urls.Count != 0))
-					{
-						var url = urls[0];
-						urls.RemoveAt(0);
-						running.Add(youTube.GetBestVideo(url));
-					}
-					if (running.Count == 0)
-						break;
-
-					var finished = Task.WhenAny(running).Result;
-					running.Remove(finished);
-					result.Add(new YouTubeItem(youTube, finished.Result));
-				}
-				return result;
-			}) as List<YouTubeItem>;
-			if (youTubeItems == null)
-				return;
+			var youTubeItems = MultiProgressDialog.RunAsync(this, "Getting video data...", urls, async (id, progress, token) => new YouTubeItem(youTube, await youTube.GetBestVideo(id, progress, token))).NonNull().ToList();
 			foreach (var youTubeItem in youTubeItems)
 				RipItems.Add(youTubeItem);
 		}
@@ -113,8 +84,7 @@ namespace NeoEdit.Rip
 		void OnGoClick(object sender = null, RoutedEventArgs e = null)
 		{
 			var directory = OutputDirectory;
-			foreach (var ripItem in RipItems)
-				ProgressDialog.Run(this, ripItem.ToString(), (cancelled, progress) => ripItem.Run(cancelled, progress, directory));
+			MultiProgressDialog.RunAsync(this, "Ripping...", RipItems, async (item, progress, cancelled) => await item.Run(progress, cancelled, directory));
 		}
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)

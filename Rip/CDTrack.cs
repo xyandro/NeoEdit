@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using NeoEdit.Common;
 
 namespace NeoEdit.Rip
 {
@@ -27,6 +30,6 @@ namespace NeoEdit.Rip
 
 		public override string ToString() => $"{Drive} - Track {Track}";
 
-		public override void Run(Func<bool> cancelled, Action<int> progress, string directory) => Drive.WriteTrack(GetFileName(directory), this, cancelled, progress);
+		public override Task Run(IProgress<ProgressReport> progress, CancellationToken token, string directory) => Task.Run(() => Drive.WriteTrack(GetFileName(directory), this, progress, token));
 	}
 }

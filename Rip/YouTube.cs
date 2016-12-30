@@ -5,8 +5,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using NeoEdit.Common;
 
 namespace NeoEdit.Rip
 {
@@ -20,17 +22,40 @@ namespace NeoEdit.Rip
 			client = null;
 		}
 
-		public async Task<List<string>> GetPlaylistVideoIDs(string playlistID)
+		public static bool IsPlaylist(string uri) => uri.Contains("playlist");
+
+		public static string GetPlaylistID(string uri)
+		{
+			if (uri.Contains("?"))
+				uri = new Uri(uri).Query;
+			return HttpUtility.ParseQueryString(uri)["list"] ?? uri;
+		}
+
+		public static string GetVideoID(string uri)
+		{
+			uri = uri
+				.Replace("youtu.be/", "youtube.com/watch?v=")
+				.Replace("youtube.com/embed/", "youtube.com/watch?v=")
+				.Replace("/v/", "/watch?v=")
+				.Replace("/watch#", "/watch?")
+				.ToString();
+
+			if (uri.Contains("?"))
+				uri = new Uri(uri).Query;
+			return HttpUtility.ParseQueryString(uri)["v"] ?? uri;
+		}
+
+		public async Task<List<string>> GetPlaylistVideoIDs(string playlistID, IProgress<ProgressReport> progress, CancellationToken token)
 		{
 			playlistID = GetPlaylistID(playlistID);
-			string html = await client.GetStringAsync($@"https://www.youtube.com/playlist?list={playlistID}");
+			var html = await GetString($@"https://www.youtube.com/playlist?list={playlistID}", progress, token);
 			return Regex.Matches(html, @"data-video-id=""([-_0-9a-zA-Z]+)""").Cast<Match>().Select(result => result.Groups[1].Value).ToList();
 		}
 
-		public async Task<List<YouTubeVideo>> GetVideos(string videoID)
+		public async Task<List<YouTubeVideo>> GetVideos(string videoID, IProgress<ProgressReport> progress, CancellationToken token)
 		{
 			videoID = GetVideoID(videoID);
-			var html = await client.GetStringAsync($"https://youtube.com/watch?v={videoID}");
+			var html = await GetString($"https://youtube.com/watch?v={videoID}", progress, token);
 
 			var title = GetTitle(html);
 			var jsPlayer = "http:" + GetKey("js", html).Replace(@"\/", "/");
@@ -60,52 +85,24 @@ namespace NeoEdit.Rip
 			return result;
 		}
 
-		public async Task<YouTubeVideo> GetBestVideo(string videoID) => (await GetVideos(videoID)).OrderByDescending(video => video.Score).First();
+		public async Task<YouTubeVideo> GetBestVideo(string videoID, IProgress<ProgressReport> progress, CancellationToken token) => (await GetVideos(videoID, progress, token)).OrderByDescending(video => video.Score).First();
 
-		public async Task Save(YouTubeVideo video, string fileName, Func<bool> cancelled, Action<int> progress)
+		public async Task Save(YouTubeVideo video, string fileName, IProgress<ProgressReport> progress, CancellationToken token)
 		{
 			await DecryptURI(video);
-			var request = await client.GetAsync(video.URI, HttpCompletionOption.ResponseHeadersRead);
-			using (var input = await request.Content.ReadAsStreamAsync())
 			using (var output = File.Create(fileName))
+				await SaveURL(video.URI, output, progress, token);
+		}
+
+		async Task<string> GetString(string url, IProgress<ProgressReport> progress, CancellationToken token)
+		{
+			using (var ms = new MemoryStream())
 			{
-				var length = request.Content.Headers.ContentLength;
-				var read = 0L;
-				var buffer = new byte[16384];
-				while (true)
-				{
-					if (cancelled())
-						throw new Exception("Cancelled.");
-					if (length.HasValue)
-						progress((int)(read * 100 / length.Value));
-					var count = await input.ReadAsync(buffer, 0, buffer.Length);
-					if (count == 0)
-						break;
-					await output.WriteAsync(buffer, 0, count);
-					read += count;
-				}
+				await SaveURL(url, ms, progress, token);
+				ms.Position = 0;
+				var sr = new StreamReader(ms);
+				return sr.ReadToEnd();
 			}
-		}
-
-		static string GetPlaylistID(string uri)
-		{
-			if (uri.Contains("?"))
-				uri = new Uri(uri).Query;
-			return HttpUtility.ParseQueryString(uri)["list"] ?? uri;
-		}
-
-		static string GetVideoID(string uri)
-		{
-			uri = uri
-				.Replace("youtu.be/", "youtube.com/watch?v=")
-				.Replace("youtube.com/embed/", "youtube.com/watch?v=")
-				.Replace("/v/", "/watch?v=")
-				.Replace("/watch#", "/watch?")
-				.ToString();
-
-			if (uri.Contains("?"))
-				uri = new Uri(uri).Query;
-			return HttpUtility.ParseQueryString(uri)["v"] ?? uri;
 		}
 
 		static string GetTitle(string html)
@@ -181,6 +178,29 @@ namespace NeoEdit.Rip
 			}
 			uriValues["signature"] = new string(signature);
 			video.SetDecryptedURI(new UriBuilder(uri) { Query = uriValues.ToString() }.ToString());
+		}
+
+		async Task SaveURL(string url, Stream output, IProgress<ProgressReport> progress, CancellationToken token)
+		{
+			var result = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, token);
+			var count = result.Content.Headers.ContentLength;
+			var buffer = new byte[16384];
+			var offset = 0L;
+			using (var input = await result.Content.ReadAsStreamAsync())
+			{
+				while (true)
+				{
+					var block = (int)Math.Min(buffer.Length, (count - offset) ?? int.MaxValue);
+					if (block != 0)
+						block = await input.ReadAsync(buffer, 0, block, token);
+					if (block == 0)
+						break;
+					await output.WriteAsync(buffer, 0, block, token);
+					offset += block;
+					if (count.HasValue)
+						progress.Report(new ProgressReport(offset, count.Value));
+				}
+			}
 		}
 
 		enum DecryptAction

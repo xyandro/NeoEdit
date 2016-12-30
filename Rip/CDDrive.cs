@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Rip
@@ -76,42 +78,46 @@ namespace NeoEdit.Rip
 			return result;
 		}
 
-		public void WriteTrack(string fileName, CDTrack track, Func<bool> cancelled, Action<int> progress)
+		static object cdLock = new object();
+		public void WriteTrack(string fileName, CDTrack track, IProgress<ProgressReport> progress, CancellationToken token)
 		{
-			Open();
-
-			using (var output = File.Create(fileName))
+			lock (cdLock)
 			{
-				var bytes = Coder.StringToBytes("UklGRgAAAABXQVZFZm10IBIAAAABAAIARKwAABCxAgAEABAAAABkYXRhAAAAAA", Coder.CodePage.Base64);
-				Array.Copy(BitConverter.GetBytes(track.Size + 38), 0, bytes, 4, 4);
-				Array.Copy(BitConverter.GetBytes(track.Size), 0, bytes, 42, 4);
-				output.Write(bytes, 0, bytes.Length);
+				Open();
 
-				var sector = track.StartSector;
-				while (sector < track.EndSector)
+				using (var output = File.Create(fileName))
 				{
-					if (cancelled())
-						throw new Exception("Cancelled");
+					var bytes = Coder.StringToBytes("UklGRgAAAABXQVZFZm10IBIAAAABAAIARKwAABCxAgAEABAAAABkYXRhAAAAAA", Coder.CodePage.Base64);
+					Array.Copy(BitConverter.GetBytes(track.Size + 38), 0, bytes, 4, 4);
+					Array.Copy(BitConverter.GetBytes(track.Size), 0, bytes, 42, 4);
+					output.Write(bytes, 0, bytes.Length);
 
-					progress((sector - track.StartSector) * 100 / (track.EndSector - track.StartSector));
-
-					const int NumSectors = 13;
-					int numSectors = Math.Min(track.EndSector - sector, NumSectors);
-
-					var rri = new CDWin32.RAW_READ_INFO
+					var sector = track.StartSector;
+					while (sector < track.EndSector)
 					{
-						TrackMode = CDWin32.TRACK_MODE_TYPE.CDDA,
-						SectorCount = numSectors,
-						DiskOffset = sector * 2048,
-					};
+						if (token.IsCancellationRequested)
+							throw new Exception("Cancelled");
 
-					var bytesRead = 0;
-					var buffer = new byte[CDWin32.SectorBytes * numSectors];
-					if (!CDWin32.DeviceIoControl(handle, CDWin32.IoControlCode.IOCTL_CDROM_RAW_READ, rri, Marshal.SizeOf(rri), buffer, buffer.Length, ref bytesRead, IntPtr.Zero))
-						throw new Exception("Failed to read CD", new Win32Exception());
+						progress.Report(new ProgressReport(sector - track.StartSector, track.EndSector - track.StartSector));
 
-					output.Write(buffer, 0, CDWin32.SectorBytes * numSectors);
-					sector += numSectors;
+						const int NumSectors = 13;
+						int numSectors = Math.Min(track.EndSector - sector, NumSectors);
+
+						var rri = new CDWin32.RAW_READ_INFO
+						{
+							TrackMode = CDWin32.TRACK_MODE_TYPE.CDDA,
+							SectorCount = numSectors,
+							DiskOffset = sector * 2048,
+						};
+
+						var bytesRead = 0;
+						var buffer = new byte[CDWin32.SectorBytes * numSectors];
+						if (!CDWin32.DeviceIoControl(handle, CDWin32.IoControlCode.IOCTL_CDROM_RAW_READ, rri, Marshal.SizeOf(rri), buffer, buffer.Length, ref bytesRead, IntPtr.Zero))
+							throw new Exception("Failed to read CD", new Win32Exception());
+
+						output.Write(buffer, 0, CDWin32.SectorBytes * numSectors);
+						sector += numSectors;
+					}
 				}
 			}
 		}
