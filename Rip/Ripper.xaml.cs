@@ -15,8 +15,6 @@ namespace NeoEdit.Rip
 	{
 		[DepProp]
 		ObservableCollection<RipItem> RipItems { get { return UIHelper<Ripper>.GetPropValue<ObservableCollection<RipItem>>(this); } set { UIHelper<Ripper>.SetPropValue(this, value); } }
-		[DepProp]
-		string OutputDirectory { get { return UIHelper<Ripper>.GetPropValue<string>(this); } set { UIHelper<Ripper>.SetPropValue(this, value); } }
 
 		YouTube youTube = new YouTube();
 		static Ripper() { UIHelper<Ripper>.Register(); }
@@ -26,7 +24,6 @@ namespace NeoEdit.Rip
 			RipMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
 			InitializeComponent();
 			RipItems = new ObservableCollection<RipItem>();
-			OutputDirectory = Directory.GetCurrentDirectory();
 		}
 
 		protected override void OnClosed(EventArgs e)
@@ -78,12 +75,12 @@ namespace NeoEdit.Rip
 		void OnSelectExistingClick(object sender, RoutedEventArgs e)
 		{
 			ripItems.UnselectAll();
-			RipItems.Where(ripItem => File.Exists(ripItem.GetFileName(OutputDirectory))).ForEach(ripItem => ripItems.SelectedItems.Add(ripItem));
+			RipItems.Where(ripItem => File.Exists(ripItem.GetFileName(RipDirectory))).ForEach(ripItem => ripItems.SelectedItems.Add(ripItem));
 		}
 
 		void OnGoClick(object sender = null, RoutedEventArgs e = null)
 		{
-			var directory = OutputDirectory;
+			var directory = RipDirectory;
 			MultiProgressDialog.RunAsync(this, "Ripping...", RipItems, async (item, progress, cancelled) => await item.Run(progress, cancelled, directory));
 		}
 

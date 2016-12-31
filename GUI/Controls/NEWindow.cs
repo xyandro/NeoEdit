@@ -24,6 +24,7 @@ namespace NeoEdit.GUI.Controls
 					var xml = XElement.Load(settingsFile);
 					try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
 					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
+					try { ripDirectory = xml.Element(nameof(RipDirectory)).Value; } catch { }
 					try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
 				}
 				catch { }
@@ -39,6 +40,7 @@ namespace NeoEdit.GUI.Controls
 				var xml = new XElement("Settings");
 				xml.Add(new XElement(nameof(MinimizeToTray), minimizeToTray));
 				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
+				xml.Add(new XElement(nameof(RipDirectory), ripDirectory));
 				xml.Add(new XElement(nameof(Font.FontSize), Font.FontSize));
 				xml.Save(settingsFile);
 			}
@@ -111,6 +113,20 @@ namespace NeoEdit.GUI.Controls
 
 		static EventHandler minimizeToTrayChanged;
 		public static event EventHandler MinimizeToTrayChanged { add { minimizeToTrayChanged += value; } remove { minimizeToTrayChanged -= value; } }
+
+		static string ripDirectory = Directory.GetCurrentDirectory();
+		public static string RipDirectory
+		{
+			get { return ripDirectory; }
+			set
+			{
+				ripDirectory = value;
+				SaveSettings();
+			}
+		}
+
+		static EventHandler ripDirectoryChanged;
+		public static event EventHandler RipDirectoryChanged { add { ripDirectoryChanged += value; } remove { ripDirectoryChanged -= value; } }
 
 		System.Windows.Forms.NotifyIcon ni;
 		protected override void OnStateChanged(EventArgs e)

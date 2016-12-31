@@ -35,8 +35,8 @@
 			<Button DockPanel.Dock="Bottom" Click="OnGoClick" Content="_Go" VerticalAlignment="Bottom"/>
 		</DockPanel>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="_Directory:" Target="{Binding ElementName=outputDirectory}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="2" Grid.Column="1" Name="outputDirectory" Text="{Binding OutputDirectory, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="_Directory:" Target="{Binding ElementName=ripDirectory}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Name="ripDirectory" Text="{Binding RipDirectory, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
 	</Grid>
 
 </guiControls:NEWindow>
