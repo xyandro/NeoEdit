@@ -85,7 +85,19 @@ namespace NeoEdit.Rip
 			return result;
 		}
 
-		public async Task<YouTubeVideo> GetBestVideo(string videoID, IProgress<ProgressReport> progress, CancellationToken token) => (await GetVideos(videoID, progress, token)).OrderByDescending(video => video.Score).First();
+		public async Task<YouTubeVideo> GetBestVideo(string videoID, IProgress<ProgressReport> progress, CancellationToken token, HashSet<string> extensions, HashSet<string> resolutions, HashSet<string> audios, HashSet<string> videos, HashSet<bool> is3Ds, HashSet<YouTubeVideo.AdaptiveKindEnum> adaptiveKinds)
+		{
+			return (await GetVideos(videoID, progress, token))
+				.Where(video => extensions.Contains(video.Extension))
+				.Where(video => resolutions.Contains(video.Resolution))
+				.Where(video => audios.Contains(video.Audio))
+				.Where(video => videos.Contains(video.Video))
+				.Where(video => is3Ds.Contains(video.Is3D))
+				.Where(video => adaptiveKinds.Contains(video.AdaptiveKind))
+				.OrderByDescending(video => video.Height)
+				.ThenByDescending(video => video.Width)
+				.First();
+		}
 
 		public async Task Save(YouTubeVideo video, string fileName, IProgress<ProgressReport> progress, CancellationToken token)
 		{
