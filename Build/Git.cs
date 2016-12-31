@@ -18,7 +18,7 @@ namespace Build
 			repo = new Repository(path);
 		}
 
-		public static string GetDirtyPaths() => string.Join("\n", repo.RetrieveStatus().Select(entry => $"{entry.State}: {entry.FilePath}"));
+		public static string GetDirtyPaths() => string.Join("\n", repo.RetrieveStatus().Where(entry => entry.State != FileStatus.Untracked).Select(entry => $"{entry.State}: {entry.FilePath}"));
 
 		public static IEnumerable<string> GetIgoredPaths() => repo.RetrieveStatus().Ignored.Select(entry => Path.Combine(repo.Info.WorkingDirectory, entry.FilePath));
 
