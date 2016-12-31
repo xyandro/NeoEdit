@@ -36,32 +36,37 @@
 			<RowDefinition/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_URLs:" Target="{Binding ElementName=urls}" HorizontalAlignment="Center"/>
-		<TextBox Grid.Row="1" Grid.RowSpan="7" Grid.Column="0" x:Name="urls" AcceptsReturn="True" Text="{Binding URLs, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<TextBox Grid.Row="1" Grid.RowSpan="9" Grid.Column="0" x:Name="urls" AcceptsReturn="True" Text="{Binding URLs, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="0" Grid.Column="1" Content="_Extension:" Target="{Binding ElementName=extensions}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-		<ListBox Grid.Row="1" Grid.Column="1" x:Name="extensions" ItemsSource="{Binding Extensions, ElementName=self}"/>
-
-		<Label Grid.Row="2" Grid.Column="1" Content="_Resolution:" Target="{Binding ElementName=resolutions}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-		<ListBox Grid.Row="3" Grid.RowSpan="5" Grid.Column="1" x:Name="resolutions" ItemsSource="{Binding Resolutions, ElementName=self}"/>
+		<Label Grid.Row="0" Grid.Column="1" Content="_Video:" Target="{Binding ElementName=videos}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		<ListBox Grid.Row="1" Grid.Column="1" x:Name="videos" ItemsSource="{Binding Videos, ElementName=self}"/>
 
 		<Label Grid.Row="0" Grid.Column="2" Content="_Audio:" Target="{Binding ElementName=audios}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 		<ListBox Grid.Row="1" Grid.Column="2" x:Name="audios" ItemsSource="{Binding Audios, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="2" Content="_Video:" Target="{Binding ElementName=videos}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-		<ListBox Grid.Row="3" Grid.Column="2" x:Name="videos" ItemsSource="{Binding Videos, ElementName=self}"/>
+		<Label Grid.Row="2" Grid.Column="1" Content="_Extension:" Target="{Binding ElementName=extensions}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		<ListBox Grid.Row="3" Grid.Column="1" x:Name="extensions" ItemsSource="{Binding Extensions, ElementName=self}"/>
 
-		<Label Grid.Row="4" Grid.Column="2" Content="_3D:" Target="{Binding ElementName=is3Ds}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-		<ListBox Grid.Row="5" Grid.Column="2" x:Name="is3Ds" ItemsSource="{Binding Is3Ds, ElementName=self}"/>
+		<Label Grid.Row="2" Grid.Column="2" Content="_Resolution:" Target="{Binding ElementName=resolutions}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		<ListBox Grid.Row="3" Grid.RowSpan="3" Grid.Column="2" x:Name="resolutions" ItemsSource="{Binding Resolutions, ElementName=self}"/>
 
-		<Label Grid.Row="6" Grid.Column="2" Content="Adaptive_Kind:" Target="{Binding ElementName=adaptiveKinds}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-		<ListBox Grid.Row="7" Grid.Column="2" x:Name="adaptiveKinds" ItemsSource="{Binding AdaptiveKinds, ElementName=self}"/>
+		<Label Grid.Row="4" Grid.Column="1" Content="Au_dio Bit Rate:" Target="{Binding ElementName=audioBitRates}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		<ListBox Grid.Row="5" Grid.Column="1" x:Name="audioBitRates" ItemsSource="{Binding AudioBitRates, ElementName=self}"/>
 
-		<UniformGrid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
+		<Label Grid.Row="6" Grid.Column="1" Content="Adaptive_Kind:" Target="{Binding ElementName=adaptiveKinds}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		<ListBox Grid.Row="7" Grid.Column="1" x:Name="adaptiveKinds" ItemsSource="{Binding AdaptiveKinds, ElementName=self}"/>
+
+		<Label Grid.Row="6" Grid.Column="2" Content="_3D:" Target="{Binding ElementName=is3Ds}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		<ListBox Grid.Row="7" Grid.Column="2" x:Name="is3Ds" ItemsSource="{Binding Is3Ds, ElementName=self}"/>
+
+		<UniformGrid Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

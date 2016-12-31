@@ -15,6 +15,7 @@ namespace NeoEdit.Rip.Dialogs
 			public HashSet<string> Resolutions;
 			public HashSet<string> Audios;
 			public HashSet<string> Videos;
+			public HashSet<int?> AudioBitRates;
 			public HashSet<bool> Is3Ds;
 			public HashSet<YouTubeVideo.AdaptiveKindEnum> AdaptiveKinds;
 		}
@@ -29,6 +30,8 @@ namespace NeoEdit.Rip.Dialogs
 		public List<string> Audios { get { return UIHelper<AddYouTubeDialog>.GetPropValue<List<string>>(this); } set { UIHelper<AddYouTubeDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public List<string> Videos { get { return UIHelper<AddYouTubeDialog>.GetPropValue<List<string>>(this); } set { UIHelper<AddYouTubeDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public List<int?> AudioBitRates { get { return UIHelper<AddYouTubeDialog>.GetPropValue<List<int?>>(this); } set { UIHelper<AddYouTubeDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public List<bool> Is3Ds { get { return UIHelper<AddYouTubeDialog>.GetPropValue<List<bool>>(this); } set { UIHelper<AddYouTubeDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -54,6 +57,9 @@ namespace NeoEdit.Rip.Dialogs
 			foreach (var video in Videos.NonNull())
 				videos.SelectedItems.Add(video);
 
+			AudioBitRates = YouTubeVideo.AudioBitRates;
+			audioBitRates.SelectAll();
+
 			Is3Ds = YouTubeVideo.Is3Ds;
 			is3Ds.SelectAll();
 
@@ -72,6 +78,7 @@ namespace NeoEdit.Rip.Dialogs
 				Resolutions = new HashSet<string>(resolutions.SelectedItems.Cast<string>()),
 				Audios = new HashSet<string>(audios.SelectedItems.Cast<string>()),
 				Videos = new HashSet<string>(videos.SelectedItems.Cast<string>()),
+				AudioBitRates = new HashSet<int?>(audioBitRates.SelectedItems.Cast<int?>()),
 				Is3Ds = new HashSet<bool>(is3Ds.SelectedItems.Cast<bool>()),
 				AdaptiveKinds = new HashSet<YouTubeVideo.AdaptiveKindEnum>(adaptiveKinds.SelectedItems.Cast<YouTubeVideo.AdaptiveKindEnum>()),
 			};

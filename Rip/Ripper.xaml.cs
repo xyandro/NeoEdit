@@ -66,7 +66,7 @@ namespace NeoEdit.Rip
 			var playlistsMap = playlists.ToDictionary(playlistItems);
 			urls = urls.SelectMany(url => playlistsMap.ContainsKey(url) ? playlistsMap[url] : new List<string> { YouTube.GetVideoID(url) }).Distinct().ToList();
 
-			var youTubeItems = MultiProgressDialog.RunAsync(this, "Getting video data...", urls, async (id, progress, token) => new YouTubeItem(youTube, await youTube.GetBestVideo(id, progress, token, result.Extensions, result.Resolutions, result.Audios, result.Videos, result.Is3Ds, result.AdaptiveKinds))).NonNull().ToList();
+			var youTubeItems = MultiProgressDialog.RunAsync(this, "Getting video data...", urls, async (id, progress, token) => new YouTubeItem(youTube, await youTube.GetBestVideo(id, progress, token, result.Extensions, result.Resolutions, result.Audios, result.Videos, result.AudioBitRates, result.Is3Ds, result.AdaptiveKinds))).NonNull().ToList();
 			foreach (var youTubeItem in youTubeItems)
 				RipItems.Add(youTubeItem);
 		}
