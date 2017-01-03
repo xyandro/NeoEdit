@@ -19,7 +19,7 @@ namespace NeoEdit.Rip
 		{
 			YouTube = youTube;
 			Video = video;
-			Title = $"{Video.Title}: {Video.Height}p";
+			Title = $"{Video.Title}: {Video.Resolution}";
 			Name = Video.FileName;
 		}
 

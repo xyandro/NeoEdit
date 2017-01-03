@@ -42,7 +42,8 @@ namespace NeoEdit.Rip
 			}
 		}
 
-		public override string ToString() => $"{FileName}: Resolution: {Width}x{Height}, Video: {Video}, Audio: {Audio}, AdaptiveKind: {AdaptiveKind}";
+		public override string ToString() => $"{FileName}: Resolution: {Resolution}, Video: {Video}, Audio: {Audio}, AdaptiveKind: {AdaptiveKind}";
+		public string Description => $"{Extension}, {Resolution}, {Video}, {Audio}, {AdaptiveKind}";
 
 		public enum AdaptiveKindEnum
 		{

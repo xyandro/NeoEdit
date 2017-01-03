@@ -82,7 +82,11 @@ namespace NeoEdit.Rip
 				}
 			}
 
-			return result;
+			return result
+				.OrderByDescending(video => video.Height)
+				.ThenByDescending(video => video.Width)
+				.ThenByDescending(video => video.AudioBitRate)
+				.ToList();
 		}
 
 		public async Task<YouTubeVideo> GetBestVideo(string videoID, IProgress<ProgressReport> progress, CancellationToken token, HashSet<string> extensions, HashSet<string> resolutions, HashSet<string> audios, HashSet<string> videos, HashSet<int?> audioBitRates, HashSet<bool> is3Ds, HashSet<YouTubeVideo.AdaptiveKindEnum> adaptiveKinds)
@@ -95,9 +99,6 @@ namespace NeoEdit.Rip
 				.Where(video => audioBitRates.Contains(video.AudioBitRate))
 				.Where(video => is3Ds.Contains(video.Is3D))
 				.Where(video => adaptiveKinds.Contains(video.AdaptiveKind))
-				.OrderByDescending(video => video.Height)
-				.ThenByDescending(video => video.Width)
-				.ThenByDescending(video => video.AudioBitRate)
 				.First();
 		}
 
@@ -122,7 +123,13 @@ namespace NeoEdit.Rip
 		static string GetTitle(string html)
 		{
 			var match = Regex.Match(html, "<title>(.*?)</title>");
-			return match.Success ? WebUtility.HtmlDecode(match.Groups[1].Value) : null;
+			if (!match.Success)
+				return null;
+			var title = WebUtility.HtmlDecode(match.Groups[1].Value).Trim();
+			var remove = "- YouTube";
+			if (title.EndsWith(remove))
+				title = title.Substring(0, title.Length - remove.Length).Trim();
+			return title;
 		}
 
 		static string GetKey(string key, string html)

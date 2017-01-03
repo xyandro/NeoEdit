@@ -56,19 +56,12 @@ namespace NeoEdit.Rip
 
 		void Command_Add_YouTube()
 		{
-			var result = AddYouTubeDialog.Run(this);
+			var result = AddYouTubeDialog.Run(this, youTube);
 			if (result == null)
 				return;
 
-			var urls = result.URLs.ToList();
-			var playlists = urls.Where(YouTube.IsPlaylist).ToList();
-			var playlistItems = MultiProgressDialog.RunAsync(this, "Getting playlist contents...", playlists.Select(url => YouTube.GetPlaylistID(url)), async (id, progress, token) => await youTube.GetPlaylistVideoIDs(id, progress, token));
-			var playlistsMap = playlists.ToDictionary(playlistItems);
-			urls = urls.SelectMany(url => playlistsMap.ContainsKey(url) ? playlistsMap[url] : new List<string> { YouTube.GetVideoID(url) }).Distinct().ToList();
-
-			var youTubeItems = MultiProgressDialog.RunAsync(this, "Getting video data...", urls, async (id, progress, token) => new YouTubeItem(youTube, await youTube.GetBestVideo(id, progress, token, result.Extensions, result.Resolutions, result.Audios, result.Videos, result.AudioBitRates, result.Is3Ds, result.AdaptiveKinds))).NonNull().ToList();
-			foreach (var youTubeItem in youTubeItems)
-				RipItems.Add(youTubeItem);
+			foreach (var item in result)
+				RipItems.Add(item);
 		}
 
 		void OnRemoveClick(object sender = null, RoutedEventArgs e = null) => ripItems.SelectedItems.Cast<RipItem>().ToList().ForEach(item => RipItems.Remove(item));
