@@ -107,11 +107,11 @@ namespace NeoEdit.Rip.Dialogs
 
 			var playlistUrls = urls.Distinct().Where(YouTube.IsPlaylist).ToList();
 			var playlistIDs = playlistUrls.Select(url => YouTube.GetPlaylistID(url)).Distinct().ToList();
-			var playlistItems = playlistIDs.ToDictionary(MultiProgressDialog.RunAsync(this, "Getting playlist contents...", playlistIDs, async (id, progress, token) => await youTube.GetPlaylistVideoIDs(id, progress, token)));
+			var playlistItems = playlistIDs.ToDictionary(MultiProgressDialog.RunAsync(this, "Getting playlist contents...", playlistIDs, async (id, progress, token) => await youTube.GetPlaylistVideoIDs(id, progress, token), id => $"Playlist {id}"));
 			var playlistsMap = playlistUrls.ToDictionary(url => url, url => playlistItems[YouTube.GetPlaylistID(url)]);
 			urls = urls.SelectMany(url => playlistsMap.ContainsKey(url) ? playlistsMap[url] : new List<string> { YouTube.GetVideoID(url) }).Distinct().ToList();
 
-			var items = MultiProgressDialog.RunAsync(this, "Getting video data...", urls, async (id, progress, token) => new VideoItemData(id, await youTube.GetVideos(id, progress, token))).NonNull().ToList();
+			var items = MultiProgressDialog.RunAsync(this, "Getting video data...", urls, async (id, progress, token) => new VideoItemData(id, await youTube.GetVideos(id, progress, token)), id => $"Video {id}").NonNull().ToList();
 			foreach (var item in items)
 			{
 				VideoItems.Add(item);

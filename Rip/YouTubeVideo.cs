@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using NeoEdit.Common;
 
 namespace NeoEdit.Rip
@@ -38,7 +39,7 @@ namespace NeoEdit.Rip
 			get
 			{
 				var invalid = new HashSet<char>(Path.GetInvalidFileNameChars());
-				return $"{new string(Title.Where(ch => !invalid.Contains(ch)).ToArray())}.{Extension}";
+				return $"{Regex.Replace(new string(Title.Select(ch => invalid.Contains(ch) ? ' ' : ch).ToArray()), @"\s+", " ").Trim()}.{Extension}";
 			}
 		}
 
