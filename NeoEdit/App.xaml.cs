@@ -156,22 +156,13 @@ namespace NeoEdit
 			if (oldNums.Count != newNums.Count)
 				throw new Exception("Version length mismatch");
 
-			var newer = 0;
-			for (var ctr = 0; ctr < oldNums.Count; ++ctr)
-				if (newer == 0)
-					newer = newNums[ctr].CompareTo(oldNums[ctr]);
-
-			if (newer <= 0)
-			{
-				Message.Show("Already up to date.");
-				return;
-			}
-
+			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
 			if (new Message
 			{
 				Title = "Download new version?",
-				Text = $"A newer version ({newVersion}) is available.  Download it?",
+				Text = newer ? $"A newer version ({newVersion}) is available.  Download it?" : $"Already up to date ({newVersion}).  Update anyway?",
 				Options = Message.OptionsEnum.YesNo,
+				DefaultAccept = newer ? Message.OptionsEnum.Yes : Message.OptionsEnum.No,
 				DefaultCancel = Message.OptionsEnum.No,
 			}.Show() != Message.OptionsEnum.Yes)
 				return;

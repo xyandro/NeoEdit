@@ -430,6 +430,16 @@ namespace NeoEdit.Common
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 
+		static public bool? IsGreater(this IComparable v1, IComparable v2)
+		{
+			var comp = v1.CompareTo(v2);
+			if (comp == 0)
+				return null;
+			if (comp < 0)
+				return false;
+			return true;
+		}
+
 		public static string NeoEditAppData => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NeoEdit");
 
 		static Helpers() { Directory.CreateDirectory(NeoEditAppData); }
