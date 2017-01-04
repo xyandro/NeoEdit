@@ -42,7 +42,7 @@
 		<Label Grid.Row="2" Grid.Column="1" Content="_Extension:" Target="{Binding ElementName=extensions}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 		<ListBox Grid.Row="3" Grid.Column="1" x:Name="extensions" ItemsSource="{Binding Extensions, ElementName=self}" DisplayMemberPath="Key" SelectionMode="Extended" SelectionChanged="OnParamsSelectionChanged"/>
 
-		<Label Grid.Row="2" Grid.Column="2" Content="Re_solution:" Target="{Binding ElementName=resolutions}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		<Label Grid.Row="2" Grid.Column="2" Content="Res_olution:" Target="{Binding ElementName=resolutions}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 		<ListBox Grid.Row="3" Grid.RowSpan="3" Grid.Column="2" x:Name="resolutions" ItemsSource="{Binding Resolutions, ElementName=self}" DisplayMemberPath="Key" SelectionMode="Extended" SelectionChanged="OnParamsSelectionChanged"/>
 
 		<Label Grid.Row="4" Grid.Column="1" Content="Audio _Bit Rate:" Target="{Binding ElementName=audioBitRates}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -59,8 +59,7 @@
 			<Button Click="RemoveClick" Content="_Remove" Padding="10,1"/>
 			<Button Click="InvertClick" Content="_Invert" Padding="10,1"/>
 			<Button Content="Re_fresh" Click="OnRefresh" Padding="10,1"/>
-			<Button Content="Select A_ll" Click="OnSelectAll" Padding="10,1"/>
-			<Button Content="Select _None" Click="OnSelectNone" Padding="10,1"/>
+			<Button Content="Re_set" Click="OnReset" Padding="10,1"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">

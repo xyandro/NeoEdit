@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -70,6 +69,14 @@ namespace NeoEdit.Rip
 		{
 			ripItems.UnselectAll();
 			RipItems.Where(ripItem => File.Exists(ripItem.GetFileName(RipDirectory))).ForEach(ripItem => ripItems.SelectedItems.Add(ripItem));
+		}
+
+		void OnInvertClick(object sender, RoutedEventArgs e)
+		{
+			var newItems = RipItems.Except(ripItems.SelectedItems.Cast<RipItem>()).ToList();
+			ripItems.SelectedItems.Clear();
+			foreach (var item in newItems)
+				ripItems.SelectedItems.Add(item);
 		}
 
 		void OnGoClick(object sender = null, RoutedEventArgs e = null)

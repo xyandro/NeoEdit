@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 
@@ -29,7 +30,7 @@ namespace NeoEdit.Rip.Dialogs
 				ID = id;
 				Title = videos.Select(video => video.Title).NonNullOrWhiteSpace().FirstOrDefault();
 				Videos = videos.ToList();
-				enabled = Videos.ToDictionary(video => video, video => true);
+				enabled = Videos.ToDictionary(video => video, video => (video.Video != null) && (video.Audio != null));
 			}
 
 			public bool Enabled(YouTubeVideo video) => enabled[video];
@@ -38,6 +39,8 @@ namespace NeoEdit.Rip.Dialogs
 				enabled[video] = isEnabled;
 				SetPropertyChanged(nameof(Best));
 			}
+
+			public void Reset() => enabled.Where(pair => !pair.Value).Select(pair => pair.Key).ToList().ForEach(key => Enable(key));
 		}
 
 		readonly YouTube youTube;
@@ -102,9 +105,10 @@ namespace NeoEdit.Rip.Dialogs
 			if (urls == null)
 				return;
 
-			var playlists = urls.Where(YouTube.IsPlaylist).ToList();
-			var playlistItems = MultiProgressDialog.RunAsync(this, "Getting playlist contents...", playlists.Select(url => YouTube.GetPlaylistID(url)), async (id, progress, token) => await youTube.GetPlaylistVideoIDs(id, progress, token));
-			var playlistsMap = playlists.ToDictionary(playlistItems);
+			var playlistUrls = urls.Distinct().Where(YouTube.IsPlaylist).ToList();
+			var playlistIDs = playlistUrls.Select(url => YouTube.GetPlaylistID(url)).Distinct().ToList();
+			var playlistItems = playlistIDs.ToDictionary(MultiProgressDialog.RunAsync(this, "Getting playlist contents...", playlistIDs, async (id, progress, token) => await youTube.GetPlaylistVideoIDs(id, progress, token)));
+			var playlistsMap = playlistUrls.ToDictionary(url => url, url => playlistItems[YouTube.GetPlaylistID(url)]);
 			urls = urls.SelectMany(url => playlistsMap.ContainsKey(url) ? playlistsMap[url] : new List<string> { YouTube.GetVideoID(url) }).Distinct().ToList();
 
 			var items = MultiProgressDialog.RunAsync(this, "Getting video data...", urls, async (id, progress, token) => new VideoItemData(id, await youTube.GetVideos(id, progress, token))).NonNull().ToList();
@@ -115,7 +119,7 @@ namespace NeoEdit.Rip.Dialogs
 			}
 		}
 
-		void RemoveClick(object sender, RoutedEventArgs e) => videoItems.SelectedItems.Cast<VideoItemData>().ToList().ForEach(item => VideoItems.Remove(item));
+		void RemoveClick(object sender = null, RoutedEventArgs e = null) => videoItems.SelectedItems.Cast<VideoItemData>().ToList().ForEach(item => VideoItems.Remove(item));
 
 		void InvertClick(object sender, RoutedEventArgs e)
 		{
@@ -123,6 +127,15 @@ namespace NeoEdit.Rip.Dialogs
 			videoItems.SelectedItems.Clear();
 			foreach (var item in newItems)
 				videoItems.SelectedItems.Add(item);
+		}
+
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case Key.Delete: RemoveClick(); break;
+			}
+			base.OnPreviewKeyDown(e);
 		}
 
 		bool changing = false;
@@ -188,26 +201,10 @@ namespace NeoEdit.Rip.Dialogs
 			changing = false;
 		}
 
-		void OnSelectAll(object sender, RoutedEventArgs e)
+		void OnReset(object sender, RoutedEventArgs e)
 		{
-			extensions.SelectAll();
-			resolutions.SelectAll();
-			audios.SelectAll();
-			videos.SelectAll();
-			audioBitRates.SelectAll();
-			is3Ds.SelectAll();
-			adaptiveKinds.SelectAll();
-		}
-
-		void OnSelectNone(object sender, RoutedEventArgs e)
-		{
-			extensions.UnselectAll();
-			resolutions.UnselectAll();
-			audios.UnselectAll();
-			videos.UnselectAll();
-			audioBitRates.UnselectAll();
-			is3Ds.UnselectAll();
-			adaptiveKinds.UnselectAll();
+			VideoItems.ForEach(videoItem => videoItem.Reset());
+			OnRefresh();
 		}
 
 		List<YouTubeItem> result;

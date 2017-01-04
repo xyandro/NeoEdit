@@ -19,7 +19,7 @@
 
 		<rip:RipMenu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" x:Name="menu"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Items:" Target="{Binding ElementName=ripItems}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="I_tems:" Target="{Binding ElementName=ripItems}" HorizontalAlignment="Right"/>
 		<ListView Grid.Row="1" Grid.Column="1" Name="ripItems" ItemsSource="{Binding RipItems, ElementName=self}" SelectionMode="Extended">
 			<ListView.View>
 				<GridView>
@@ -32,6 +32,7 @@
 		<DockPanel Grid.Row="1" Grid.Column="2">
 			<Button DockPanel.Dock="Top" Click="OnRemoveClick" Content="_Remove"/>
 			<Button DockPanel.Dock="Top" Click="OnSelectExistingClick" Content="Select _Existing"/>
+			<Button DockPanel.Dock="Top" Click="OnInvertClick" Content="_Invert"/>
 			<Button DockPanel.Dock="Bottom" Click="OnGoClick" Content="_Go" VerticalAlignment="Bottom"/>
 		</DockPanel>
 

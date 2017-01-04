@@ -105,7 +105,7 @@ namespace NeoEdit.Rip.Dialogs
 				var finished = Task.WhenAny(Running.Select(task => task.Task)).Result;
 				lock (Running)
 				{
-					var runTask = Running.SingleOrDefault(tuple => tuple.Task == finished);
+					var runTask = Running.First(tuple => tuple.Task == finished);
 					ProgressDatas.Single(x => x.RunTask == runTask).RunTask = null;
 					Running.Remove(runTask);
 					if (finished.Exception != null)
@@ -203,7 +203,7 @@ namespace NeoEdit.Rip.Dialogs
 
 		ProgressData AddProgress(int row, int column, int columnSpan = 1)
 		{
-			var textBlock = new TextBlock { HorizontalAlignment = HorizontalAlignment.Center };
+			var textBlock = new TextBlock { HorizontalAlignment = HorizontalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
 			var progressBar = new ProgressBar { Height = 10, Minimum = 0, Margin = new Thickness(10, 0, 10, 0) };
 
 			var sp = new StackPanel();
