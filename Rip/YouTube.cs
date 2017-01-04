@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if DEBUG
+#define CACHE
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -72,7 +76,7 @@ namespace NeoEdit.Rip
 			if (dashKey != null)
 			{
 				dashKey = WebUtility.UrlDecode(dashKey).Replace(@"\/", "/");
-				var manifest = (await client.GetStringAsync(dashKey)).Replace(@"\/", "/").Replace("%2F", "/");
+				var manifest = (await GetString(dashKey, progress, token)).Replace(@"\/", "/").Replace("%2F", "/");
 				var uris = GetUrisFromManifest(manifest);
 				foreach (var uri in uris)
 				{
@@ -104,7 +108,7 @@ namespace NeoEdit.Rip
 
 		public async Task Save(YouTubeVideo video, string fileName, IProgress<ProgressReport> progress, CancellationToken token)
 		{
-			await DecryptURI(video);
+			await DecryptURI(video, progress, token);
 			using (var output = File.Create(fileName))
 				await SaveURL(video.URI, output, progress, token);
 		}
@@ -173,7 +177,7 @@ namespace NeoEdit.Rip
 			return temp.Split(new string[] { opening }, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Substring(0, v.IndexOf(closing))).ToList();
 		}
 
-		async Task DecryptURI(YouTubeVideo video)
+		async Task DecryptURI(YouTubeVideo video, IProgress<ProgressReport> progress, CancellationToken token)
 		{
 			if (!video.Encrypted)
 				return;
@@ -181,7 +185,7 @@ namespace NeoEdit.Rip
 			var uri = new Uri(video.URI);
 			var uriValues = HttpUtility.ParseQueryString(uri.Query);
 			var signature = uriValues["signature"].ToArray();
-			var decryptSteps = await GetDecryptSteps(video.JSPlayer);
+			var decryptSteps = await GetDecryptSteps(video.JSPlayer, progress, token);
 			foreach (var decryptStep in decryptSteps)
 			{
 				switch (decryptStep.Item1)
@@ -203,25 +207,53 @@ namespace NeoEdit.Rip
 
 		async Task SaveURL(string url, Stream output, IProgress<ProgressReport> progress, CancellationToken token)
 		{
-			var result = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, token);
-			var count = result.Content.Headers.ContentLength;
-			var buffer = new byte[16384];
-			var offset = 0L;
-			using (var input = await result.Content.ReadAsStreamAsync())
+#if CACHE
+			var invalid = new HashSet<char>(Path.GetInvalidFileNameChars());
+			var cacheDir = Path.Combine(Path.GetDirectoryName(typeof(YouTube).Assembly.Location), "Cache");
+			Directory.CreateDirectory(cacheDir);
+			var fileName = new string(url.Where(ch => !invalid.Contains(ch)).ToArray());
+			var cacheFile = Path.Combine(cacheDir, fileName);
+			if (cacheFile.Length > 250)
+				cacheFile = Path.Combine(cacheDir, Common.Transform.Hasher.Get(Common.Transform.Coder.StringToBytes(fileName, Common.Transform.Coder.CodePage.UTF8), Common.Transform.Hasher.Type.SHA1));
+			if (!File.Exists(cacheFile))
 			{
-				while (true)
+				var oldOutput = output;
+				using (output = File.Create(cacheFile))
 				{
-					var block = (int)Math.Min(buffer.Length, (count - offset) ?? int.MaxValue);
-					if (block != 0)
-						block = await input.ReadAsync(buffer, 0, block, token);
-					if (block == 0)
-						break;
-					await output.WriteAsync(buffer, 0, block, token);
-					offset += block;
-					if (count.HasValue)
-						progress.Report(new ProgressReport(offset, count.Value));
+#endif
+					var result = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, token);
+					var count = result.Content.Headers.ContentLength;
+					var buffer = new byte[16384];
+					var offset = 0L;
+					using (var input = await result.Content.ReadAsStreamAsync())
+					{
+						while (true)
+						{
+							var block = (int)Math.Min(buffer.Length, (count - offset) ?? int.MaxValue);
+							if (block != 0)
+								block = await input.ReadAsync(buffer, 0, block, token);
+							if (block == 0)
+								break;
+							await output.WriteAsync(buffer, 0, block, token);
+							offset += block;
+							if (count.HasValue)
+								progress.Report(new ProgressReport(offset, count.Value));
+						}
+					}
+#if CACHE
 				}
+				output = oldOutput;
 			}
+
+			if (new FileInfo(cacheFile).Length == 0)
+			{
+				File.Delete(cacheFile);
+				return;
+			}
+
+			using (var input = File.OpenRead(cacheFile))
+				input.CopyTo(output);
+#endif
 		}
 
 		enum DecryptAction
@@ -232,11 +264,11 @@ namespace NeoEdit.Rip
 		}
 
 		Dictionary<string, List<Tuple<DecryptAction, int>>> decryptCache = new Dictionary<string, List<Tuple<DecryptAction, int>>>();
-		async Task<List<Tuple<DecryptAction, int>>> GetDecryptSteps(string jSPlayer)
+		async Task<List<Tuple<DecryptAction, int>>> GetDecryptSteps(string jsPlayer, IProgress<ProgressReport> progress, CancellationToken token)
 		{
-			if (!decryptCache.ContainsKey(jSPlayer))
+			if (!decryptCache.ContainsKey(jsPlayer))
 			{
-				var js = await client.GetStringAsync(jSPlayer);
+				var js = await GetString(jsPlayer, progress, token);
 				var match = Regex.Match(js, @".sig\s*\|\|\s*([$_0-9a-zA-Z]+)\(");
 				if (!match.Success)
 					throw new Exception("Failed to find decryption function");
@@ -274,10 +306,10 @@ namespace NeoEdit.Rip
 					result.Add(Tuple.Create(funcActionMap[func], funcActionMap[func] == DecryptAction.Reverse ? 0 : int.Parse(param)));
 				}
 
-				decryptCache[jSPlayer] = result;
+				decryptCache[jsPlayer] = result;
 			}
 
-			return decryptCache[jSPlayer];
+			return decryptCache[jsPlayer];
 		}
 
 		string GetJSFunction(string js, string func, bool literal = false)
