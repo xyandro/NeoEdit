@@ -17,7 +17,6 @@ Selecting the already selected file without shift down should deselect the other
 Tutorial
 Move tabs with selections to start of active tabs list
 Print
-Don't copy newlines when pasting to a single selection if all lines to be pasted have newlines
 
 View:
 Update as new lines are added

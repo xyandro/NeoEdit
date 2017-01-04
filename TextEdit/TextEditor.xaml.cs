@@ -1821,13 +1821,14 @@ namespace NeoEdit.TextEdit
 			CalculateBoundaries();
 		}
 
-		void ReplaceOneWithMany(List<string> strs, bool addNewLines = false)
+		void ReplaceOneWithMany(List<string> strs, bool? addNewLines)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var ending = addNewLines ? Data.DefaultEnding : "";
-			if (addNewLines)
+			addNewLines = addNewLines ?? strs.Any(str => !str.EndsWith(Data.DefaultEnding));
+			var ending = addNewLines.Value ? Data.DefaultEnding : "";
+			if (ending.Length != 0)
 				strs = strs.Select(str => str + ending).ToList();
 			var offset = Selections.Single().Start;
 			ReplaceSelections(string.Join("", strs));

@@ -48,7 +48,7 @@ namespace NeoEdit.TextEdit
 			}
 
 			if (Selections.Count == 1)
-				ReplaceOneWithMany(strs);
+				ReplaceOneWithMany(strs, false);
 			if (Selections.Count == fileNames.Count())
 				ReplaceSelections(strs);
 		}

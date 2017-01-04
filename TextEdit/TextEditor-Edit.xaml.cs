@@ -233,7 +233,7 @@ namespace NeoEdit.TextEdit
 
 			if ((Selections.Count == 1) && (clipboardStrings.Count > 1))
 			{
-				ReplaceOneWithMany(clipboardStrings, true);
+				ReplaceOneWithMany(clipboardStrings, null);
 				return;
 			}
 
