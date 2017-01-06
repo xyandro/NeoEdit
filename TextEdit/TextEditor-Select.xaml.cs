@@ -109,7 +109,7 @@ namespace NeoEdit.TextEdit
 
 			var lines = new List<int>();
 			for (var line = 0; line < hasLine.Length; ++line)
-				if (hasLine[line])
+				if ((hasLine[line]) && (!Data.IsDiffGapLine(line)))
 					lines.Add(line);
 
 			Selections.Replace(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line) + (includeEndings ? Data.GetEndingLength(line) : 0))).ToList());

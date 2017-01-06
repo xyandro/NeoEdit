@@ -835,6 +835,7 @@ namespace NeoEdit.Common
 			return Tuple.Create(ranges, strs);
 		}
 
+		public bool IsDiffGapLine(int line) => diffData == null ? false : diffData.LineCompare[line] == LCS.MatchType.Gap;
 		public int GetDiffLine(int line) => (diffData == null) || (line >= diffData.LineMap.Count) ? line : diffData.LineMap[line];
 		public int GetNonDiffLine(int line) => (diffData == null) || (line >= diffData.LineRevMap.Count) ? line : diffData.LineRevMap[line];
 		public bool GetLineDiffMatches(int line) => diffData == null ? true : diffData.LineCompare[line] == LCS.MatchType.Match;
