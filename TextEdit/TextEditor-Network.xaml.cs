@@ -55,6 +55,15 @@ namespace NeoEdit.TextEdit
 			return results;
 		}
 
+		AbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog() => AbsoluteURLDialog.Run(WindowParent, GetVariables());
+
+		void Command_Network_AbsoluteURL(AbsoluteURLDialog.Result result)
+		{
+			var results = GetFixedExpressionResults<string>(result.Expression);
+			var newStrs = Selections.Zip(results, (range, baseUrl) => new { range, baseUrl }).AsParallel().AsOrdered().Select(obj => new Uri(new Uri(obj.baseUrl), GetString(obj.range)).AbsoluteUri).ToList();
+			ReplaceSelections(newStrs);
+		}
+
 		void Command_Network_Fetch(Coder.CodePage codePage = Coder.CodePage.None)
 		{
 			var urls = GetSelectionStrings();

@@ -425,6 +425,8 @@
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">
+		<textEdit:TextEditMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
 		<textEdit:TextEditMenuItem Header="Fetch _Hex" CommandEnum="Network_Fetch_Hex"/>
 		<Separator/>
@@ -433,7 +435,7 @@
 			<textEdit:TextEditMenuItem Header="_HostName" CommandEnum="Network_Lookup_HostName"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Adapters Info" CommandEnum="Network_AdaptersInfo"/>
+		<textEdit:TextEditMenuItem Header="A_dapters Info" CommandEnum="Network_AdaptersInfo"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Ping" CommandEnum="Network_Ping"/>
 		<textEdit:TextEditMenuItem Header="_Scan Ports" CommandEnum="Network_ScanPorts"/>

@@ -122,6 +122,13 @@
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
     <Compile Include="DBConnectInfo.cs" />
+    <Page Include="Dialogs\AbsoluteURLDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\AbsoluteURLDialog.xaml.cs">
+      <DependentUpon>AbsoluteURLDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\AddColumnDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

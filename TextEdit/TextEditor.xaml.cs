@@ -640,6 +640,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_WithAttribute: dialogResult = Command_Content_WithAttribute_Dialog(); break;
 				case TextEditCommand.Content_Children_WithAttribute: dialogResult = Command_Content_Children_WithAttribute_Dialog(); break;
 				case TextEditCommand.Content_Descendants_WithAttribute: dialogResult = Command_Content_Descendants_WithAttribute_Dialog(); break;
+				case TextEditCommand.Network_AbsoluteURL: dialogResult = Command_Network_AbsoluteURL_Dialog(); break;
 				case TextEditCommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
 				case TextEditCommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(); break;
 				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
@@ -1078,6 +1079,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Navigate_PgDn: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.PgDn, shiftDown); break;
 				case TextEditCommand.Content_Navigate_Row: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Row, true); break;
 				case TextEditCommand.Content_Navigate_Column: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Column, true); break;
+				case TextEditCommand.Network_AbsoluteURL: Command_Network_AbsoluteURL(dialogResult as AbsoluteURLDialog.Result); break;
 				case TextEditCommand.Network_Fetch: Command_Network_Fetch(); break;
 				case TextEditCommand.Network_Fetch_Hex: Command_Network_Fetch(Coder.CodePage.Hex); break;
 				case TextEditCommand.Network_Lookup_IP: Command_Network_Lookup_IP(); break;
