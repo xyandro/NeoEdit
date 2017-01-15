@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextEdit.Dialogs;
@@ -55,6 +57,16 @@ namespace NeoEdit.TextEdit
 			return results;
 		}
 
+		async Task FetchURL(string url, string fileName)
+		{
+			using (var client = new WebClient())
+			{
+				client.Headers["User-Agent"] = "Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)";
+				client.Encoding = Encoding.UTF8;
+				await client.DownloadFileTaskAsync(url, fileName);
+			}
+		}
+
 		AbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog() => AbsoluteURLDialog.Run(WindowParent, GetVariables());
 
 		void Command_Network_AbsoluteURL(AbsoluteURLDialog.Result result)
@@ -76,6 +88,41 @@ namespace NeoEdit.TextEdit
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
+		}
+
+		FetchURLDialog.Result Command_Network_Fetch_File_Dialog() => FetchURLDialog.Run(WindowParent, GetVariables());
+
+		void Command_Network_Fetch_File(FetchURLDialog.Result result)
+		{
+			var variables = GetVariables();
+
+			var urlExpression = new NEExpression(result.URL);
+			var fileNameExpression = new NEExpression(result.FileName);
+			var resultCount = variables.ResultCount(urlExpression, fileNameExpression);
+
+			var urls = urlExpression.EvaluateRows<string>(variables, resultCount);
+			var fileNames = fileNameExpression.EvaluateRows<string>(variables, resultCount);
+
+			const int InvalidCount = 10;
+			var invalid = fileNames.Select(name => Path.GetDirectoryName(name)).Distinct().Where(dir => !Directory.Exists(dir)).Take(InvalidCount).ToList();
+			if (invalid.Any())
+				throw new Exception($"Directories don't exist:\n{string.Join("\n", invalid)}");
+
+			invalid = fileNames.Where(fileName => File.Exists(fileName)).Distinct().Take(InvalidCount).ToList();
+			if (invalid.Any())
+			{
+				if (new Message(WindowParent)
+				{
+					Title = "Confirm",
+					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
+					Options = Message.OptionsEnum.YesNo,
+					DefaultAccept = Message.OptionsEnum.Yes,
+					DefaultCancel = Message.OptionsEnum.No,
+				}.Show() != Message.OptionsEnum.Yes)
+					return;
+			}
+
+			MultiProgressDialog.RunAsync(WindowParent, "Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
 		}
 
 		void Command_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }

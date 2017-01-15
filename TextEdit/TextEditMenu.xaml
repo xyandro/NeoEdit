@@ -429,6 +429,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
 		<textEdit:TextEditMenuItem Header="Fetch _Hex" CommandEnum="Network_Fetch_Hex"/>
+		<textEdit:TextEditMenuItem Header="Fetch F_ile" CommandEnum="Network_Fetch_File"/>
 		<Separator/>
 		<MenuItem Header="_Lookup">
 			<textEdit:TextEditMenuItem Header="_IP" CommandEnum="Network_Lookup_IP"/>

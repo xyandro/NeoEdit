@@ -260,6 +260,7 @@ namespace NeoEdit.TextEdit
 		Network_AbsoluteURL,
 		Network_Fetch,
 		Network_Fetch_Hex,
+		Network_Fetch_File,
 		Network_Lookup_IP,
 		Network_Lookup_HostName,
 		Network_AdaptersInfo,
