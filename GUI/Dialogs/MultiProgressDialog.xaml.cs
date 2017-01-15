@@ -11,7 +11,7 @@ using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 
-namespace NeoEdit.Rip.Dialogs
+namespace NeoEdit.GUI.Dialogs
 {
 	partial class MultiProgressDialog
 	{

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Dialogs;
 using NeoEdit.Rip.Dialogs;
 
 namespace NeoEdit.Rip
