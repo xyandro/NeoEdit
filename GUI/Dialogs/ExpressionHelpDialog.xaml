@@ -59,7 +59,6 @@
 						<guiDialogs:HelpItem Name="$&quot;{2+2}&quot;" Description="Interpolated string"/>
 						<guiDialogs:HelpItem Name="@$&quot;C:\{2+2}&quot;" Description="Verbatim interpolated string"/>
 						<guiDialogs:HelpItem Name="x" Description="Variable"/>
-						<guiDialogs:HelpItem Name="[x]" Description="Variable list"/>
 					</guiDialogs:HelpItems.Items>
 				</guiDialogs:HelpItems>
 
@@ -165,17 +164,6 @@
 						<guiDialogs:HelpItem Name="tmin(...)" Description="Minimum"/>
 						<guiDialogs:HelpItem Name="tmax(...)" Description="Maximum"/>
 						<guiDialogs:HelpItem Name="len(x)" Description="Length"/>
-					</guiDialogs:HelpItems.Items>
-				</guiDialogs:HelpItems>
-
-				<guiDialogs:HelpItems Name="List Functions" Columns="4" NameWidth="80" DescWidth="160">
-					<guiDialogs:HelpItems.Items>
-						<guiDialogs:HelpItem Name="min(x)" Description="Numeric minimum"/>
-						<guiDialogs:HelpItem Name="max(x)" Description="Numeric maximum"/>
-						<guiDialogs:HelpItem Name="tmin(x)" Description="String minimum"/>
-						<guiDialogs:HelpItem Name="tmax(x)" Description="String maximum"/>
-						<guiDialogs:HelpItem Name="sum(x)" Description="Sum"/>
-						<guiDialogs:HelpItem Name="count(x)" Description="Count"/>
 					</guiDialogs:HelpItems.Items>
 				</guiDialogs:HelpItems>
 

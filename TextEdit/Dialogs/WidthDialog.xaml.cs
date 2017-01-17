@@ -42,7 +42,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 			IsSelect = isSelect;
 
-			Expression = "max(len([x]))";
+			Expression = "xlmax";
 			if (numeric)
 				NumericClick(null, null);
 			else

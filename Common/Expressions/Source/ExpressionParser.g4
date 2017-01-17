@@ -37,7 +37,6 @@ e
 
 value
 	: val=PARAM # Param
-	| val=VARPARAM # VarParam
 	| (normalstring | verbatimstring | interpolatedstring | verbatiminterpolatedstring) # String
 	| TRUE # True
 	| FALSE # False

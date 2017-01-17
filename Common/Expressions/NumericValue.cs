@@ -593,13 +593,5 @@ namespace NeoEdit.Common.Expressions
 			var result = obj as NumericValue;
 			return GetFloat.CompareTo(result.GetFloat);
 		}
-
-		public static NumericValue Sum(IEnumerable<NumericValue> values)
-		{
-			var current = new NumericValue(0);
-			foreach (var value in values)
-				current += value;
-			return current;
-		}
 	}
 }

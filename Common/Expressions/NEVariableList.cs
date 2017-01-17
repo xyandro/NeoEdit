@@ -31,12 +31,6 @@ namespace NeoEdit.Common.Expressions
 			return list[index];
 		}
 
-		public override List<object> GetValues()
-		{
-			Setup();
-			return list;
-		}
-
 		public override int? Count()
 		{
 			Setup();

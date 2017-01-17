@@ -30,8 +30,6 @@ namespace NeoEdit.Common.Expressions
 
 		public object GetValue(string variable, int rowNum) => GetVariable(variable).GetValue(rowNum);
 
-		public List<object> GetValues(string variable) => GetVariable(variable).GetValues();
-
 		public List<object> GetValues(string variable, int rowCount) => Enumerable.Range(0, rowCount).Select(row => GetVariable(variable).GetValue(row)).ToList();
 
 		public int ResultCount(params IEnumerable<string>[] variableLists)

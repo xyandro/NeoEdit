@@ -17,7 +17,6 @@ namespace NeoEdit.Common.Expressions
 		}
 
 		abstract public object GetValue(int index);
-		virtual public List<object> GetValues() { throw new ArgumentException("Get only get list values in list context"); }
 		virtual public int? Count() => null;
 
 		public static NEVariable Constant<T>(string name, string description, T value) => new NEVariableConstant(name, description, value);

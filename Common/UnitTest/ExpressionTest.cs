@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common;
@@ -123,8 +122,6 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("4", new NEExpression("Max(3,4,2)").Evaluate().ToString());
 
 			Assert.AreEqual("16", new NEExpression("len(\"1125899906842624\")").Evaluate().ToString());
-			Assert.AreEqual("16,3,4", new NEExpression("len(\"1125899906842624\", 123, \"Test\")").Evaluate().ToString());
-			Assert.AreEqual("3", new NEExpression("min(len(\"1125899906842624\", 123, \"Test\"))").Evaluate().ToString());
 
 			Assert.AreEqual("8", new NEExpression("multiple(8,8)").Evaluate().ToString());
 			Assert.AreEqual("16", new NEExpression("multiple(9,8)").Evaluate().ToString());
@@ -196,14 +193,6 @@ namespace NeoEdit.Common.UnitTest
 			Assert.IsTrue(vars.Contains("x"));
 			Assert.IsTrue(vars.Contains("y"));
 			Assert.AreEqual("7816989104", expr.EvaluateRow(miscVars, 0xfeedface).ToString());
-
-			var listVars = new NEVariables(NEVariable.List("y", "", () => new List<string> { "12", "-13.1", "-13", "9", "0.0001" }));
-			Assert.AreEqual("5", new NEExpression("count([y])").EvaluateRow(listVars).ToString());
-			Assert.AreEqual("-13.1", new NEExpression("min([y])").EvaluateRow(listVars).ToString());
-			Assert.AreEqual("12", new NEExpression("max([y])").EvaluateRow(listVars).ToString());
-			Assert.AreEqual("0.0001", new NEExpression("tmin([y])").EvaluateRow(listVars).ToString());
-			Assert.AreEqual("9", new NEExpression("tmax([y])").EvaluateRow(listVars).ToString());
-			Assert.AreEqual("-5.0999", new NEExpression("sum([y])").EvaluateRow(listVars).ToString());
 
 			CheckDates();
 		}

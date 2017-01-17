@@ -760,20 +760,37 @@ namespace NeoEdit.TextEdit
 
 			var strs = default(List<string>);
 			var initializeStrs = new NEVariableListInitializer(() => strs = Selections.Select(range => GetString(range)).ToList());
-			results.Add(NEVariable.List("x", "Selected text", () => strs, initializeStrs));
-			results.Add(NEVariable.Constant("xn", "Selections count", Selections.Count));
+			results.Add(NEVariable.List("x", "Selection", () => strs, initializeStrs));
+			results.Add(NEVariable.Constant("xn", "Selection count", Selections.Count));
+			results.Add(NEVariable.List("xl", "Selection length", () => Selections.Select(range => range.Length)));
+			results.Add(NEVariable.Constant("xlmin", "Selection min length", Selections.Select(range => range.Length).DefaultIfEmpty(0).Min()));
+			results.Add(NEVariable.Constant("xlmax", "Selection max length", Selections.Select(range => range.Length).DefaultIfEmpty(0).Max()));
 
 			var regions = default(List<string>);
 			var initializeRegions = new NEVariableListInitializer(() => regions = Regions.Select(range => GetString(range)).ToList());
-			results.Add(NEVariable.List("r", "Region text", () => regions, initializeRegions));
+			results.Add(NEVariable.List("r", "Region", () => regions, initializeRegions));
+			results.Add(NEVariable.Constant("rn", "Region count", Regions.Count));
+			results.Add(NEVariable.List("rl", "Region length", () => Regions.Select(range => range.Length)));
+			results.Add(NEVariable.Constant("rlmin", "Region min length", Regions.Select(range => range.Length).DefaultIfEmpty(0).Min()));
+			results.Add(NEVariable.Constant("rlmax", "Region max length", Regions.Select(range => range.Length).DefaultIfEmpty(0).Max()));
 
 			results.Add(NEVariable.Series("y", "One-based index", index => index + 1));
 			results.Add(NEVariable.Series("z", "Zero-based index", index => index));
 
 			if (clipboard.Count == 1)
-				results.Add(NEVariable.Constant("c", "Clipboard string", clipboard[0]));
+			{
+				results.Add(NEVariable.Constant("c", "Clipboard", clipboard[0]));
+				results.Add(NEVariable.Constant("cl", "Clipboard length", clipboard[0].Length));
+				results.Add(NEVariable.Constant("clmin", "Clipboard min length", clipboard[0].Length));
+				results.Add(NEVariable.Constant("clmax", "Clipboard max length", clipboard[0].Length));
+			}
 			else
-				results.Add(NEVariable.List("c", "Clipboard string", () => clipboard));
+			{
+				results.Add(NEVariable.List("c", "Clipboard", () => clipboard));
+				results.Add(NEVariable.List("cl", "Clipboard length", () => clipboard.Select(str => str.Length)));
+				results.Add(NEVariable.Constant("clmin", "Clipboard min length", clipboard.Select(str => str.Length).DefaultIfEmpty(0).Min()));
+				results.Add(NEVariable.Constant("clmax", "Clipboard max length", clipboard.Select(str => str.Length).DefaultIfEmpty(0).Max()));
+			}
 			results.Add(NEVariable.Constant("cn", "Clipboard count", clipboard.Count));
 
 			results.Add(NEVariable.Constant("f", "Filename", fileName));
@@ -801,8 +818,14 @@ namespace NeoEdit.TextEdit
 
 			for (var ctr = 0; ctr <= 9; ++ctr)
 			{
-				var num = ctr; // If we don't copy this the threads get the wrong value
-				results.Add(NEVariable.List(ctr == 0 ? "k" : $"v{ctr}", ctr == 0 ? "Keys" : $"Values {ctr}", () => KeysAndValues[num]));
+				var name = ctr == 0 ? "k" : $"v{ctr}";
+				var desc = ctr == 0 ? "Keys" : $"Values {ctr}";
+				var values = KeysAndValues[ctr];
+				results.Add(NEVariable.List(name, desc, () => values));
+				results.Add(NEVariable.Constant($"{name}n", $"{desc} count", values.Count));
+				results.Add(NEVariable.List($"{name}l", $"{desc} length", () => values.Select(str => str.Length)));
+				results.Add(NEVariable.Constant($"{name}lmin", $"{desc} min length", values.Select(str => str.Length).DefaultIfEmpty(0).Min()));
+				results.Add(NEVariable.Constant($"{name}lmax", $"{desc} max length", values.Select(str => str.Length).DefaultIfEmpty(0).Max()));
 			}
 
 			// Add variables that aren't already set
