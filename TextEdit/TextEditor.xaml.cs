@@ -246,7 +246,7 @@ namespace NeoEdit.TextEdit
 		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null)
 		{
 			SetupLocalKeys();
-			this.shutdownData = shutdownData;
+			this.shutdownData = shutdownData ?? new ShutdownData(null, 1);
 
 			InitializeComponent();
 			AutoRefresh = true;
