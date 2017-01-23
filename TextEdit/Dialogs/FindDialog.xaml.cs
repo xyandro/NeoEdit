@@ -25,8 +25,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			None,
 			CopyCount,
-			Find,
-			SelectAll,
+			FindFirst,
+			FindAll,
 		}
 
 		public class Result
@@ -129,10 +129,10 @@ namespace NeoEdit.TextEdit.Dialogs
 			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, MultiLine = MultiLine };
 			if (sender == copyCount)
 				result.Type = ResultType.CopyCount;
-			else if (sender == find)
-				result.Type = ResultType.Find;
-			else if (sender == selectAll)
-				result.Type = ResultType.SelectAll;
+			else if (sender == findFirst)
+				result.Type = ResultType.FindFirst;
+			else if (sender == findAll)
+				result.Type = ResultType.FindAll;
 			else
 				throw new Exception("Invalid search type");
 

@@ -19,7 +19,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="F_ind:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
 		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FindText" OnAcceptSuggestion="OnAcceptSuggestion"/>
 
 		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
@@ -54,8 +54,7 @@
 					</MultiBinding>
 				</Button.Visibility>
 			</Button>
-			<Button Click="OkClick" Name="find" IsDefault="True" Content="Find" Padding="10,1"/>
-			<Button Click="OkClick" Name="selectAll" Content="Select _All" Padding="10,1">
+			<Button Click="OkClick" Name="findFirst" Content="Find _First" Padding="10,1">
 				<Button.Visibility>
 					<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="![0] &amp;&amp; ![1]">
 						<Binding Path="KeepMatching" ElementName="self"/>
@@ -63,6 +62,7 @@
 					</MultiBinding>
 				</Button.Visibility>
 			</Button>
+			<Button Click="OkClick" Name="findAll" IsDefault="True" Content="Find _All" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>

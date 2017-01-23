@@ -297,11 +297,11 @@ namespace NeoEdit.TextEdit
 
 			switch (result.Type)
 			{
-				case FindDialog.ResultType.Find:
+				case FindDialog.ResultType.FindFirst:
 					Searches.Replace(results);
 					FindNext(true, selecting);
 					break;
-				case FindDialog.ResultType.SelectAll:
+				case FindDialog.ResultType.FindAll:
 					Selections.Replace(results);
 					break;
 			}
