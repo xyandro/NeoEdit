@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.NEClipboards;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.Rip.Dialogs;
@@ -37,10 +38,16 @@ namespace NeoEdit.Rip
 			switch (command)
 			{
 				case RipCommand.File_Exit: Close(); break;
+				case RipCommand.Edit_CopyTitles: Command_Edit_CopyTitles(); break;
+				case RipCommand.Edit_CopyFileNames: Command_Edit_CopyFileNames(); break;
 				case RipCommand.Add_CD: Command_Add_CD(); break;
 				case RipCommand.Add_YouTube: Command_Add_YouTube(); break;
 			}
 		}
+
+		void Command_Edit_CopyTitles() => NEClipboard.Strings = ripItems.SelectedItems.Cast<RipItem>().Select(item => item.Title).ToList();
+
+		void Command_Edit_CopyFileNames() => NEClipboard.Strings = ripItems.SelectedItems.Cast<RipItem>().Select(item => item.FileName).ToList();
 
 		void Command_Add_CD()
 		{

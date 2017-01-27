@@ -7,6 +7,7 @@ namespace NeoEdit.Rip
 {
 	class CDTrack : RipItem
 	{
+		public override string Title => $"Track {Track}";
 		public override string FileName => $"Track {Track}.wav";
 
 		public CDDrive Drive { get; }

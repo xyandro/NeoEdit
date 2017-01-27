@@ -7,6 +7,8 @@ namespace NeoEdit.Rip
 	{
 		None,
 		File_Exit,
+		Edit_CopyTitles,
+		[KeyGesture(Key.C, ModifierKeys.Control)] Edit_CopyFileNames,
 		[KeyGesture(Key.D, ModifierKeys.Control)] Add_CD,
 		[KeyGesture(Key.Y, ModifierKeys.Control)] Add_YouTube,
 	}

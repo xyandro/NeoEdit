@@ -7,7 +7,7 @@ namespace NeoEdit.Rip
 {
 	class YouTubeItem : RipItem
 	{
-		public string Title { get; }
+		public override string Title { get; }
 		public string Name { get; }
 
 		public override string FileName => Name;
