@@ -177,7 +177,7 @@ namespace NeoEdit.GUI.Controls
 			if (!Suggestions.Any())
 				Suggestions.Add(null);
 
-			SuggestedIndex = Suggestions.Indexes(str => str.Text.StartsWith(Text, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+			SuggestedIndex = Suggestions.Indexes(str => str?.Text.StartsWith(Text, StringComparison.InvariantCultureIgnoreCase) ?? false).FirstOrDefault();
 		}
 
 		void OnSuggestionClick(object sender, MouseButtonEventArgs e) => AcceptSuggestion((sender as ListBoxItem).Content as Suggestion);
