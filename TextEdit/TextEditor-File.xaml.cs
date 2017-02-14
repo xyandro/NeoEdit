@@ -276,7 +276,7 @@ namespace NeoEdit.TextEdit
 			Replace(sel, sel.Select(str => result.LineEndings).ToList());
 		}
 
-		string Command_File_Encryption_Dialog() => FileEncryptor.GetKey(WindowParent);
+		string Command_File_Encryption_Dialog() => FileEncryptor.GetKey(WindowParent, true);
 
 		void Command_File_Encryption(string result)
 		{

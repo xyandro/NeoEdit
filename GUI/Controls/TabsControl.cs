@@ -13,7 +13,7 @@ namespace NeoEdit.GUI.Controls
 		public string TabLabel { get { return UIHelper<TabsControl<ItemType, CommandType>>.GetPropValue<string>(this); } set { UIHelper<TabsControl<ItemType, CommandType>>.SetPropValue(this, value); } }
 
 		public Tabs<ItemType, CommandType> TabsParent { get; internal set; }
-		public TabsWindow<ItemType, CommandType> WindowParent => TabsParent.WindowParent;
+		public TabsWindow<ItemType, CommandType> WindowParent => TabsParent?.WindowParent;
 
 		static TabsControl() { UIHelper<TabsControl<ItemType, CommandType>>.Register(); }
 

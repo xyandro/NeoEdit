@@ -13,7 +13,7 @@ namespace NeoEdit.GUI.Misc
 		readonly static byte[] EncryptedHeader = Encoding.UTF8.GetBytes("\u0000NEAES\u0000");
 		readonly static byte[] EncryptedValidate = Encoding.UTF8.GetBytes("\u0000VALID\u0000");
 
-		public static string GetKey(Window windowParent = null) => CryptorKeyDialog.Run(windowParent, Cryptor.Type.AES, true);
+		public static string GetKey(Window parent, bool encrypt) => CryptorKeyDialog.Run(parent, Cryptor.Type.AES, encrypt);
 
 		public static byte[] Encrypt(byte[] data, string AESKey)
 		{
@@ -36,14 +36,14 @@ namespace NeoEdit.GUI.Misc
 			catch { return null; }
 		}
 
-		public static void HandleDecrypt(ref byte[] bytes, out string AESKey)
+		public static void HandleDecrypt(Window parent, ref byte[] bytes, out string AESKey)
 		{
 			AESKey = null;
 			if ((bytes.Length < EncryptedHeader.Length) || (!bytes.Equal(EncryptedHeader, EncryptedHeader.Length)))
 				return;
 
 			bytes = bytes.Skip(EncryptedHeader.Length).ToArray();
-			var key = GetKey();
+			var key = GetKey(parent, false);
 			if (string.IsNullOrEmpty(key))
 				throw new Exception("Failed to decrypt file");
 

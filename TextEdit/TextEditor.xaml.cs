@@ -1773,7 +1773,7 @@ namespace NeoEdit.TextEdit
 			}
 
 			string aesKey;
-			FileEncryptor.HandleDecrypt(ref bytes, out aesKey);
+			FileEncryptor.HandleDecrypt(WindowParent, ref bytes, out aesKey);
 			AESKey = aesKey;
 
 			if (codePage == Coder.CodePage.AutoByBOM)

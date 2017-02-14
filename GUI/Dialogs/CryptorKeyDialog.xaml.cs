@@ -10,11 +10,11 @@ namespace NeoEdit.GUI.Dialogs
 	public partial class CryptorKeyDialog
 	{
 		[DepProp]
+		public bool Encrypt { get { return UIHelper<CryptorKeyDialog>.GetPropValue<bool>(this); } set { UIHelper<CryptorKeyDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public string PrivateKey { get { return UIHelper<CryptorKeyDialog>.GetPropValue<string>(this); } set { UIHelper<CryptorKeyDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string PublicKey { get { return UIHelper<CryptorKeyDialog>.GetPropValue<string>(this); } set { UIHelper<CryptorKeyDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public string Password { get { return UIHelper<CryptorKeyDialog>.GetPropValue<string>(this); } set { UIHelper<CryptorKeyDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Salt { get { return UIHelper<CryptorKeyDialog>.GetPropValue<string>(this); } set { UIHelper<CryptorKeyDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -25,13 +25,12 @@ namespace NeoEdit.GUI.Dialogs
 		static CryptorKeyDialog() { UIHelper<CryptorKeyDialog>.Register(); }
 
 		readonly Cryptor.Type type;
-		readonly bool encrypt;
 		CryptorKeyDialog(Cryptor.Type type, bool encrypt)
 		{
 			InitializeComponent();
 
 			this.type = type;
-			this.encrypt = encrypt;
+			Encrypt = encrypt;
 
 			if (type.IsSymmetric())
 			{
@@ -74,7 +73,7 @@ namespace NeoEdit.GUI.Dialogs
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			GenerateKey(null, null);
-			result = encrypt ? PublicKey : PrivateKey;
+			result = Encrypt ? PublicKey : PrivateKey;
 			if (string.IsNullOrEmpty(result))
 				return;
 
@@ -85,9 +84,19 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			if (type.IsSymmetric())
 			{
-				if ((string.IsNullOrEmpty(Password)) || (string.IsNullOrEmpty(Salt)))
+				if ((string.IsNullOrEmpty(symmetricPassword.Password)) || (string.IsNullOrEmpty(Salt)))
 					return;
-				PublicKey = PrivateKey = Cryptor.GetRfc2898Key(Password, Salt, KeySize);
+				if ((Encrypt) && (symmetricPassword.Password != symmetricConfirm.Password))
+				{
+					new Message(this)
+					{
+						Title = "Password mismatch",
+						Text = "Passwords must match.",
+						Options = Message.OptionsEnum.Ok,
+					}.Show();
+					return;
+				}
+				PublicKey = PrivateKey = Cryptor.GetRfc2898Key(symmetricPassword.Password, Salt, KeySize);
 			}
 			else
 			{
