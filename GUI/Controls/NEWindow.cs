@@ -11,8 +11,6 @@ namespace NeoEdit.GUI.Controls
 {
 	public class NEWindow : Window
 	{
-		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
-
 		static readonly string settingsFile = Path.Combine(Helpers.NeoEditAppData, "Settings.xml");
 
 		static NEWindow()
@@ -49,37 +47,6 @@ namespace NeoEdit.GUI.Controls
 				xml.Save(settingsFile);
 			}
 			catch { }
-		}
-
-		public NEWindow()
-		{
-			HelpMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
-			WindowMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
-		}
-
-		void RunCommand(HelpCommand command)
-		{
-			switch (command)
-			{
-				case HelpCommand.Help_About: Launcher.Static.LaunchAbout(); break;
-				case HelpCommand.Help_Update: Launcher.Static.LaunchUpdate(); break;
-				case HelpCommand.Help_RunGC: GC.Collect(); break;
-			}
-		}
-
-		void RunCommand(WindowCommand command)
-		{
-			switch (command)
-			{
-				case WindowCommand.Window_Diff: Launcher.Static.LaunchTextEditorDiff(); break;
-				case WindowCommand.Window_Disk: Launcher.Static.LaunchDisk(forceCreate: true); break;
-				case WindowCommand.Window_HexEditor: Launcher.Static.LaunchHexEditor(forceCreate: true); break;
-				case WindowCommand.Window_StreamSaver: Launcher.Static.LaunchStreamSaver(); break;
-				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditorFile(forceCreate: true); break;
-			}
-
-			if (shiftDown)
-				Close();
 		}
 
 		static bool escapeClearsSelections = true;
