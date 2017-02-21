@@ -447,6 +447,18 @@ namespace NeoEdit.TextEdit
 			base.Closed();
 		}
 
+		bool ConfirmCheckCanFullyEncode()
+		{
+			return new Message(WindowParent)
+			{
+				Title = "Confirm",
+				Text = "The specified encoding cannot fully represent the data.  Continue anyway?",
+				Options = Message.OptionsEnum.YesNo,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.No,
+			}.Show() == Message.OptionsEnum.Yes;
+		}
+
 		bool ConfirmVerifyCanFullyEncode()
 		{
 			switch (new Message(WindowParent)
@@ -2030,6 +2042,10 @@ namespace NeoEdit.TextEdit
 		}
 
 		public override string ToString() => FileName;
+
+		bool CheckCanFullyEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanFullyEncode(data, codePage))) || (ConfirmCheckCanFullyEncode());
+
+		bool CheckCanFullyEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmCheckCanFullyEncode());
 
 		bool VerifyCanFullyEncode() => (Data.CanFullyEncode(CodePage)) || (ConfirmVerifyCanFullyEncode());
 
