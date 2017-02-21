@@ -520,6 +520,8 @@ namespace NeoEdit.Common.Transform
 			// These formats will allow whitespace, although you can't save it
 			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.HexRev) || (codePage == CodePage.Binary) || (codePage == CodePage.Base64)))
 				str1 = str1.StripWhitespace();
+			if ((str1 != null) && (codePage == CodePage.Base64))
+				str1 = str1.TrimEnd('=');
 
 			// Numeric formats separate with spaces
 			if ((str1 != null) && (!IsStr(codePage)))
@@ -531,6 +533,10 @@ namespace NeoEdit.Common.Transform
 			var str2 = TryBytesToString(bytes, codePage);
 			if (str2 == null)
 				return false;
+
+			if (codePage == CodePage.Base64)
+				str2 = str2.TrimEnd('=');
+
 			return str1 == str2;
 		}
 
