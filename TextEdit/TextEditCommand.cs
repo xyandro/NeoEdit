@@ -36,6 +36,8 @@ namespace NeoEdit.TextEdit
 		File_Encoding_ReopenWithEncoding,
 		File_Encoding_LineEndings,
 		File_Encryption,
+		File_Shell_Integrate,
+		File_Shell_Unintegrate,
 		File_Exit,
 		[KeyGesture(Key.Z, ModifierKeys.Control)] Edit_Undo,
 		[KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo,

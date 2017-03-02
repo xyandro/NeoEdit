@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -128,6 +129,24 @@ namespace NeoEdit.TextEdit
 		}
 
 		void Command_File_Copy_AllPaths() => NEClipboard.CopiedFiles = ItemTabs.Items.Select(editor => editor.FileName).Where(name => !string.IsNullOrEmpty(name)).ToList();
+
+		void Command_File_Shell_Integrate()
+		{
+			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
+			using (var starKey = baseKey.OpenSubKey("*"))
+			using (var shellKey = starKey.OpenSubKey("shell", true))
+			using (var neoEditKey = shellKey.CreateSubKey("Open with NeoEdit Text Editor"))
+			using (var commandKey = neoEditKey.CreateSubKey("command"))
+				commandKey.SetValue("", $@"""{Assembly.GetEntryAssembly().Location}"" -text ""%1""");
+		}
+
+		void Command_File_Shell_Unintegrate()
+		{
+			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
+			using (var starKey = baseKey.OpenSubKey("*"))
+			using (var shellKey = starKey.OpenSubKey("shell", true))
+				shellKey.DeleteSubKeyTree("Open with NeoEdit Text Editor");
+		}
 
 		void Command_File_Open_CopiedCut()
 		{
@@ -434,6 +453,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
 				case TextEditCommand.File_Copy_AllPaths: Command_File_Copy_AllPaths(); break;
+				case TextEditCommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;
+				case TextEditCommand.File_Shell_Unintegrate: Command_File_Shell_Unintegrate(); break;
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Edit_Copy_AllClipboards: Command_Edit_Copy_AllClipboards(); break;
 				case TextEditCommand.Edit_Paste_AllFiles: Command_Edit_Paste_AllFiles(); break;
