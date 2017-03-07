@@ -173,7 +173,7 @@ namespace NeoEdit.TextEdit
 					counts[tuple.Item1] = 0;
 				++counts[tuple.Item1];
 			}
-			strs = strs.Where(tuple => (counts[tuple.Item1] >= result.MinCount) && (counts[tuple.Item1] <= result.MaxCount)).ToList();
+			strs = strs.Where(tuple => ((!result.MinCount.HasValue) || (counts[tuple.Item1] >= result.MinCount)) && ((!result.MaxCount.HasValue) || (counts[tuple.Item1] <= result.MaxCount))).ToList();
 			Selections.Replace(strs.Select(tuple => Selections[tuple.Item2]).ToList());
 		}
 

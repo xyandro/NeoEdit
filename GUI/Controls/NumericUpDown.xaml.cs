@@ -14,7 +14,7 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public long Minimum { get { return UIHelper<NumericUpDown>.GetPropValue<long>(this); } set { UIHelper<NumericUpDown>.SetPropValue(this, value); } }
 		[DepProp(BindsTwoWayByDefault = true)]
-		public long Value { get { return UIHelper<NumericUpDown>.GetPropValue<long>(this); } set { UIHelper<NumericUpDown>.SetPropValue(this, value); } }
+		public long? Value { get { return UIHelper<NumericUpDown>.GetPropValue<long?>(this); } set { UIHelper<NumericUpDown>.SetPropValue(this, value); } }
 		[DepProp]
 		public long Maximum { get { return UIHelper<NumericUpDown>.GetPropValue<long>(this); } set { UIHelper<NumericUpDown>.SetPropValue(this, value); } }
 
@@ -36,7 +36,7 @@ namespace NeoEdit.GUI.Controls
 			Maximum = long.MaxValue;
 		}
 
-		void Validate() => Value = Math.Max(Minimum, Math.Min(Maximum, Value));
+		void Validate() => Value = Value.HasValue ? Math.Max(Minimum, Math.Min(Maximum, Value.Value)) : default(long?);
 
 		protected override void OnGotFocus(RoutedEventArgs e)
 		{
@@ -65,22 +65,18 @@ namespace NeoEdit.GUI.Controls
 
 	class NumericUpDownConverter : MarkupExtension, IMultiValueConverter
 	{
-		static NumericUpDownConverter converter;
-		public override object ProvideValue(IServiceProvider serviceProvider)
-		{
-			if (converter == null)
-				converter = new NumericUpDownConverter();
-			return converter;
-		}
+		public override object ProvideValue(IServiceProvider serviceProvider) => this;
 
 		public object Convert(object[] _values, Type targetType, object parameter, CultureInfo culture)
 		{
-			long value = (long)_values[0];
-			bool isHex = (bool)_values[1];
-			if (isHex)
+			var value = (long?)_values[0];
+			var isHex = (bool)_values[1];
+			if (value == null)
+				return "";
+			else if (isHex)
 				return $"0x{value:x}";
 			else
-				return value.ToString("n0");
+				return value.Value.ToString("n0");
 		}
 
 		public object[] ConvertBack(object _values, Type[] targetType, object parameter, CultureInfo culture)
@@ -91,8 +87,10 @@ namespace NeoEdit.GUI.Controls
 			{
 				var values = _values as string;
 				var isHex = values.StartsWith("0x");
-				long value;
-				if (isHex)
+				long? value;
+				if (string.IsNullOrEmpty(values))
+					value = null;
+				else if (isHex)
 					value = long.Parse(values.Substring(2), NumberStyles.AllowHexSpecifier);
 				else
 					value = long.Parse(values, NumberStyles.AllowThousands | NumberStyles.AllowLeadingSign);

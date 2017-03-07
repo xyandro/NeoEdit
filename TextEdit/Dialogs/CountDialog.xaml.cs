@@ -7,15 +7,15 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public int MinCount { get; set; }
-			public int MaxCount { get; set; }
+			public int? MinCount { get; set; }
+			public int? MaxCount { get; set; }
 			public bool CaseSensitive { get; set; }
 		}
 
 		[DepProp]
-		public int MinCount { get { return UIHelper<CountDialog>.GetPropValue<int>(this); } set { UIHelper<CountDialog>.SetPropValue(this, value); } }
+		public int? MinCount { get { return UIHelper<CountDialog>.GetPropValue<int?>(this); } set { UIHelper<CountDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int MaxCount { get { return UIHelper<CountDialog>.GetPropValue<int>(this); } set { UIHelper<CountDialog>.SetPropValue(this, value); } }
+		public int? MaxCount { get { return UIHelper<CountDialog>.GetPropValue<int?>(this); } set { UIHelper<CountDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool CaseSensitive { get { return UIHelper<CountDialog>.GetPropValue<bool>(this); } set { UIHelper<CountDialog>.SetPropValue(this, value); } }
 
@@ -24,13 +24,14 @@ namespace NeoEdit.TextEdit.Dialogs
 		CountDialog()
 		{
 			InitializeComponent();
-			MinCount = MaxCount = 2;
+			MinCount = 2;
+			MaxCount = null;
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (MaxCount < MinCount)
+			if (((!MinCount.HasValue) && (!MaxCount.HasValue)) || (MaxCount < MinCount))
 				return;
 			result = new Result { MinCount = MinCount, MaxCount = MaxCount, CaseSensitive = CaseSensitive };
 			DialogResult = true;
