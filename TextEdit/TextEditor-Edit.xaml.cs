@@ -309,6 +309,18 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_Find_NextPrevious(bool next, bool selecting) => FindNext(next, selecting);
 
+		void Command_Edit_Find_Selected(bool selecting)
+		{
+			if ((Selections.Count != 1) || (!Selections[0].HasSelection))
+				throw new Exception("Must have one selection with selected text.");
+
+			var text = Regex.Escape(GetString(Selections[0]));
+			var regex = new Regex(text, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
+
+			Searches.Replace(Data.RegexMatches(regex, BeginOffset, EndOffset, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+			FindNext(true, selecting);
+		}
+
 		MassFindDialog.Result Command_Edit_Find_MassFind_Dialog()
 		{
 			string text = null;

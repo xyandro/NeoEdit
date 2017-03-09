@@ -906,6 +906,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Find_Find: Command_Edit_Find_Find(shiftDown, dialogResult as FindDialog.Result); break;
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
+				case TextEditCommand.Edit_Find_Selected: Command_Edit_Find_Selected(shiftDown); break;
 				case TextEditCommand.Edit_Find_MassFind: Command_Edit_Find_MassFind(dialogResult as MassFindDialog.Result); break;
 				case TextEditCommand.Edit_Find_Replace: Command_Edit_Find_Replace(dialogResult as ReplaceDialog.Result); break;
 				case TextEditCommand.Edit_Find_ClearSearchResults: Command_Edit_Find_ClearSearchResults(); break;
