@@ -68,7 +68,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		void Reset(object sender, RoutedEventArgs e) => MatchCase = KeepMatching = RemoveMatching = false;
+		void Reset(object sender, RoutedEventArgs e) => MatchCase = SelectionOnly = KeepMatching = RemoveMatching = false;
 
 		static public Result Run(Window parent, string text, bool selectionOnly, NEVariables variables)
 		{

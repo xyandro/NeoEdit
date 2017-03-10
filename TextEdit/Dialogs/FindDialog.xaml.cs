@@ -143,7 +143,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
-		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = MultiLine = IsRegex = RegexGroups = EntireSelection = KeepMatching = RemoveMatching = false;
+		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = MultiLine = IsRegex = RegexGroups = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
 
 		static public Result Run(Window parent, string text, bool selectionOnly)
 		{
