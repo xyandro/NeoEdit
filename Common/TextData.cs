@@ -500,11 +500,7 @@ namespace NeoEdit.Common
 					if ((!regexGroups) || (match.Groups.Count == 1))
 						result.Add(new Tuple<int, int>(offset + match.Index, match.Length));
 					else
-					{
-						for (var ctr = 1; ctr < match.Groups.Count; ++ctr)
-							if (match.Groups[ctr].Success)
-								result.Add(new Tuple<int, int>(offset + match.Groups[ctr].Index, match.Groups[ctr].Length));
-					}
+						result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => new Tuple<int, int>(offset + capture.Index, capture.Length)));
 					if ((firstOnly) && (result.Count != 0))
 						return result;
 				}
