@@ -164,6 +164,8 @@ namespace NeoEdit.TextEdit
 		Text_LoremIpsum,
 		Text_ReverseRegEx,
 		Text_FirstDistinct,
+		Text_RepeatCount,
+		Text_RepeatIndex,
 		Numeric_Select_Min,
 		Numeric_Select_Max,
 		Numeric_Select_Whole,

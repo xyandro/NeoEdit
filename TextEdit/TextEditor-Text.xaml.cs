@@ -226,5 +226,27 @@ namespace NeoEdit.TextEdit
 			if (opResult != null)
 				Selections.Replace(opResult);
 		}
+
+		void Command_Text_RepeatCount()
+		{
+			var strs = GetSelectionStrings();
+			var counts = strs.GroupBy(str => str).ToDictionary(group => group.Key, group => group.Count());
+			ReplaceSelections(strs.Select(str => counts[str].ToString()).ToList());
+		}
+
+		void Command_Text_RepeatIndex()
+		{
+			var counts = new Dictionary<string, int>();
+			var strs = GetSelectionStrings();
+			var newStrs = new List<string>();
+			foreach (var str in strs)
+			{
+				if (!counts.ContainsKey(str))
+					counts[str] = 0;
+				++counts[str];
+				newStrs.Add(counts[str].ToString());
+			}
+			ReplaceSelections(newStrs);
+		}
 	}
 }

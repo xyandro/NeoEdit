@@ -1020,6 +1020,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_LoremIpsum: Command_Text_LoremIpsum(); break;
 				case TextEditCommand.Text_ReverseRegEx: Command_Text_ReverseRegEx(dialogResult as RevRegExDialog.Result); break;
 				case TextEditCommand.Text_FirstDistinct: Command_Text_FirstDistinct(dialogResult as FirstDistinctDialog.Result); break;
+				case TextEditCommand.Text_RepeatCount: Command_Text_RepeatCount(); break;
+				case TextEditCommand.Text_RepeatIndex: Command_Text_RepeatIndex(); break;
 				case TextEditCommand.Numeric_Select_Min: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.Numeric); break;
 				case TextEditCommand.Numeric_Select_Max: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.Numeric); break;
 				case TextEditCommand.Numeric_Select_Whole: Command_Numeric_Select_Whole(); break;
