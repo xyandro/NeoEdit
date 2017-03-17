@@ -294,6 +294,8 @@ namespace NeoEdit.TextEdit
 			}
 
 			var results = resultsByRegion.SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			if (result.AddMatches)
+				results.AddRange(Selections);
 
 			switch (result.Type)
 			{

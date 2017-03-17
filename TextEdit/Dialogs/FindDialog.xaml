@@ -38,6 +38,7 @@
 			<CheckBox Content="_Entire selection" IsChecked="{Binding EntireSelection, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 			<CheckBox Content="_Keep matches" IsChecked="{Binding KeepMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 			<CheckBox Content="Remo_ve matches" IsChecked="{Binding RemoveMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
+			<CheckBox Content="A_dd matches" IsChecked="{Binding AddMatches, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 		</StackPanel>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
@@ -48,17 +49,19 @@
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" Name="copyCount" Content="C_opy Count" Padding="10,1">
 				<Button.Visibility>
-					<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="![0] &amp;&amp; ![1]">
+					<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="![0] &amp;&amp; ![1] &amp;&amp; ![2]">
 						<Binding Path="KeepMatching" ElementName="self"/>
 						<Binding Path="RemoveMatching" ElementName="self"/>
+						<Binding Path="AddMatches" ElementName="self"/>
 					</MultiBinding>
 				</Button.Visibility>
 			</Button>
 			<Button Click="OkClick" Name="findFirst" Content="Find _First" Padding="10,1">
 				<Button.Visibility>
-					<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="![0] &amp;&amp; ![1]">
+					<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="![0] &amp;&amp; ![1] &amp;&amp; ![2]">
 						<Binding Path="KeepMatching" ElementName="self"/>
 						<Binding Path="RemoveMatching" ElementName="self"/>
+						<Binding Path="AddMatches" ElementName="self"/>
 					</MultiBinding>
 				</Button.Visibility>
 			</Button>
