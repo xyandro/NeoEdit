@@ -118,19 +118,6 @@ namespace Loader
 			var start = Environment.Is64BitProcess ? ResourceReader.Config.X64Start : ResourceReader.Config.X32Start;
 			var dllPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), start, "DLLs");
 
-			var self = typeof(Extractor).Assembly.Location;
-			var dir = Path.GetDirectoryName(self);
-			var existing = ResourceReader.Resources.Select(resource => Path.Combine(dir, resource.Name)).Where(file => (file != self) && (File.Exists(file))).ToList();
-			if (existing.Any())
-			{
-				var result = MessageBox.Show($"{existing.Count} files from a previous version exist which may make this program work incorrectly.  Delete them?", "Warning", MessageBoxButton.YesNoCancel);
-				switch (result)
-				{
-					case MessageBoxResult.Yes: existing.ForEach(file => File.Delete(file)); break;
-					case MessageBoxResult.Cancel: return;
-				}
-			}
-
 			var entry = ResourceReader.Resources.Where(resource => resource.Name.Equals(start, StringComparison.OrdinalIgnoreCase)).Single();
 			if (entry.FileType != FileTypes.Managed)
 			{

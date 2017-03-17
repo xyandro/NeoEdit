@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -40,6 +42,13 @@ namespace Loader
 			Builder.Run(config);
 		}
 
+		static bool FilesAreExtracted()
+		{
+			var self = typeof(Extractor).Assembly.Location;
+			var dir = Path.GetDirectoryName(self);
+			return ResourceReader.Resources.Select(resource => Path.Combine(dir, resource.Name)).Any(file => (file != self) && (File.Exists(file)));
+		}
+
 		static void RunExtractor(string[] args)
 		{
 			var extractor = new Extractor();
@@ -56,7 +65,7 @@ namespace Loader
 				var pid = int.Parse(args[2]);
 				extractor.RunUpdate(pid, fileName);
 			}
-			else if ((ResourceReader.Config.ExtractAction != ExtractActions.None) && ((Keyboard.GetKeyStates(Key.CapsLock).HasFlag(KeyStates.Down)) || ((args.Length == 1) && (args[0] == "-extract"))))
+			else if ((ResourceReader.Config.ExtractAction != ExtractActions.None) && ((Keyboard.GetKeyStates(Key.CapsLock).HasFlag(KeyStates.Down)) || ((args.Length == 1) && (args[0] == "-extract")) || (FilesAreExtracted())))
 			{
 				var action = ResourceReader.Config.ExtractAction;
 				var bitDepth = Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32;
