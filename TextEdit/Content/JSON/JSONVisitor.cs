@@ -26,44 +26,54 @@ namespace NeoEdit.TextEdit.Content.JSON
 					break;
 				case OBJECT:
 					{
-						result.Add("{");
-						var last = children.Last();
-						foreach (var child in children)
+						if (!children.Any())
+							result.Add("{}");
+						else
 						{
-							var lines = rFormat(child, input);
-							if (child != last)
-								lines[lines.Count - 1] += ",";
-							result.AddRange(lines.Select(str => $"\t{str}"));
+							result.Add("{");
+							var last = children.Last();
+							foreach (var child in children)
+							{
+								var lines = rFormat(child, input);
+								if (child != last)
+									lines[lines.Count - 1] += ",";
+								result.AddRange(lines.Select(str => $"\t{str}"));
+							}
+							result.Add("}");
 						}
-						result.Add("}");
 					}
 					break;
 				case ARRAY:
 					{
-						var childResults = new List<List<string>>();
-						var last = children.Last();
-						foreach (var child in children)
-						{
-							var lines = rFormat(child, input);
-							if (child != last)
-								lines[lines.Count - 1] += ",";
-							childResults.Add(lines);
-						}
-						string childResult = null;
-						if (childResults.All(list => list.Count == 1))
-						{
-							childResult = string.Join("", childResults.Select(str => str[0]));
-							if (childResult.Length > 200)
-								childResult = null;
-						}
-
-						if (childResult != null)
-							result.Add($"[{childResult}]");
+						if (!children.Any())
+							result.Add("[]");
 						else
 						{
-							result.Add("[");
-							result.AddRange(childResults.SelectMany(list => list).Select(str => $"\t{str}"));
-							result.Add("]");
+							var childResults = new List<List<string>>();
+							var last = children.Last();
+							foreach (var child in children)
+							{
+								var lines = rFormat(child, input);
+								if (child != last)
+									lines[lines.Count - 1] += ",";
+								childResults.Add(lines);
+							}
+							string childResult = null;
+							if (childResults.All(list => list.Count == 1))
+							{
+								childResult = string.Join("", childResults.Select(str => str[0]));
+								if (childResult.Length > 200)
+									childResult = null;
+							}
+
+							if (childResult != null)
+								result.Add($"[{childResult}]");
+							else
+							{
+								result.Add("[");
+								result.AddRange(childResults.SelectMany(list => list).Select(str => $"\t{str}"));
+								result.Add("]");
+							}
 						}
 					}
 					break;
