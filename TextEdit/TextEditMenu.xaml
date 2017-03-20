@@ -251,7 +251,8 @@
 	<MenuItem Header="_Text">
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Text_Select_Trim"/>
-			<textEdit:TextEditMenuItem Header="By _Width" CommandEnum="Text_Select_ByWidth"/>
+			<textEdit:TextEditMenuItem Header="_By Width" CommandEnum="Text_Select_ByWidth"/>
+			<textEdit:TextEditMenuItem Header="_Whole Word" CommandEnum="Text_Select_WholeWord"/>
 			<MenuItem Header="Mi_n">
 				<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Text_Select_Min_Text"/>
 				<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Text_Select_Min_Length"/>

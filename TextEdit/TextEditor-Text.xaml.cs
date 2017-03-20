@@ -78,6 +78,32 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList());
 		}
 
+		SelectWholeWordDialog.Result Command_Text_Select_WholeWord_Dialog() => SelectWholeWordDialog.Run(WindowParent);
+
+		void Command_Text_Select_WholeWord(SelectWholeWordDialog.Result result)
+		{
+			var sels = new List<Range>();
+			foreach (var range in Selections)
+			{
+				var startLine = Data.GetOffsetLine(range.Start);
+				var startLength = Data.GetLineLength(startLine);
+				var startIndex = Math.Min(startLength, Data.GetOffsetIndex(range.Start, startLine));
+				while ((startIndex > 0) && result.Chars.Contains(Data[startLine, startIndex - 1]))
+					--startIndex;
+				var start = Data.GetOffset(startLine, startIndex);
+
+				var endLine = Data.GetOffsetLine(range.End);
+				var endLength = Data.GetLineLength(endLine);
+				var endIndex = Math.Min(endLength, Data.GetOffsetIndex(range.End, endLine));
+				while ((endIndex < endLength) && (result.Chars.Contains(Data[endLine, endIndex])))
+					++endIndex;
+				var end = Data.GetOffset(endLine, endIndex);
+
+				sels.Add(new Range(start, end));
+			}
+			Selections.Replace(sels);
+		}
+
 		void Command_Text_Case_Upper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToUpperInvariant()).ToList());
 
 		void Command_Text_Case_Lower() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToLowerInvariant()).ToList());

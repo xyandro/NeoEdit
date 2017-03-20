@@ -619,6 +619,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_SetVariables: dialogResult = Command_Expression_SetVariables_Dialog(); break;
 				case TextEditCommand.Text_Select_Trim: dialogResult = Command_Text_Select_Trim_Dialog(); break;
 				case TextEditCommand.Text_Select_ByWidth: dialogResult = Command_Text_Select_ByWidth_Dialog(); break;
+				case TextEditCommand.Text_Select_WholeWord: dialogResult = Command_Text_Select_WholeWord_Dialog(); break;
 				case TextEditCommand.Text_Width: dialogResult = Command_Text_Width_Dialog(); break;
 				case TextEditCommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(); break;
 				case TextEditCommand.Text_RandomText: dialogResult = Command_Text_RandomText_Dialog(); break;
@@ -739,7 +740,7 @@ namespace NeoEdit.TextEdit
 					var c = Data[line, index];
 					if (char.IsWhiteSpace(c))
 						current = WordSkipType.Space;
-					else if ((char.IsLetterOrDigit(c)) || (Data[line, index] == '_'))
+					else if ((char.IsLetterOrDigit(c)) || (c == '_'))
 						current = WordSkipType.Char;
 					else
 						current = WordSkipType.Symbol;
@@ -1003,6 +1004,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_SetVariables: Command_Expression_SetVariables(dialogResult as SetVariablesDialog.Result); break;
 				case TextEditCommand.Text_Select_Trim: Command_Text_Select_Trim(dialogResult as TrimDialog.Result); break;
 				case TextEditCommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(dialogResult as WidthDialog.Result); break;
+				case TextEditCommand.Text_Select_WholeWord: Command_Text_Select_WholeWord(dialogResult as SelectWholeWordDialog.Result); break;
 				case TextEditCommand.Text_Select_Min_Text: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.String); break;
 				case TextEditCommand.Text_Select_Min_Length: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.Length); break;
 				case TextEditCommand.Text_Select_Max_Text: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.String); break;
