@@ -253,6 +253,7 @@
 			<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Text_Select_Trim"/>
 			<textEdit:TextEditMenuItem Header="_By Width" CommandEnum="Text_Select_ByWidth"/>
 			<textEdit:TextEditMenuItem Header="_Whole Word" CommandEnum="Text_Select_WholeWord"/>
+			<textEdit:TextEditMenuItem Header="B_ounded Word" CommandEnum="Text_Select_BoundedWord"/>
 			<MenuItem Header="Mi_n">
 				<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Text_Select_Min_Text"/>
 				<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Text_Select_Min_Length"/>

@@ -493,12 +493,12 @@
     <Compile Include="Dialogs\SelectSplitDialog.xaml.cs">
       <DependentUpon>SelectSplitDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\SelectWholeWordDialog.xaml">
+    <Page Include="Dialogs\SelectWordDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\SelectWholeWordDialog.xaml.cs">
-      <DependentUpon>SelectWholeWordDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\SelectWordDialog.xaml.cs">
+      <DependentUpon>SelectWordDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\SetAttributesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

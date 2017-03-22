@@ -148,6 +148,7 @@ namespace NeoEdit.TextEdit
 		Text_Select_Trim,
 		Text_Select_ByWidth,
 		Text_Select_WholeWord,
+		Text_Select_BoundedWord,
 		Text_Select_Min_Text,
 		Text_Select_Min_Length,
 		Text_Select_Max_Text,
