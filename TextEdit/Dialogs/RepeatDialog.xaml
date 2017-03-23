@@ -23,8 +23,8 @@
 		<Label Grid.Row="1" Grid.Column="0" Content="Value(s):" HorizontalAlignment="Right"/>
 		<guiControls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="_Select all:" Target="{Binding ElementName=selectAll}" HorizontalAlignment="Right"/>
-		<CheckBox Grid.Row="2" Grid.Column="1" Name="selectAll" IsChecked="{Binding SelectAll, ElementName=self}" VerticalAlignment="Center" Focusable="False"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="_Select all:" Target="{Binding ElementName=selectRepetitions}" HorizontalAlignment="Right"/>
+		<CheckBox Grid.Row="2" Grid.Column="1" Name="selectRepetitions" IsChecked="{Binding SelectRepetitions, ElementName=self}" VerticalAlignment="Center" Focusable="False"/>
 
 		<UniformGrid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
 			<Button Content="Expression _Help" Click="ExpressionHelp" Padding="10,1"/>
