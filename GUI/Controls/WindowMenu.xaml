@@ -12,6 +12,7 @@
 	<guiControls:WindowMenuItem Header="_Network" CommandEnum="Window_Network"/>
 	<guiControls:WindowMenuItem Header="_Processes" CommandEnum="Window_Processes"/>
 	<guiControls:WindowMenuItem Header="_Ripper" CommandEnum="Window_Ripper"/>
+	<guiControls:WindowMenuItem Header="_Stream Saver" CommandEnum="Window_StreamSaver"/>
 	<guiControls:WindowMenuItem Header="_Text Editor" CommandEnum="Window_TextEditor"/>
 	<guiControls:WindowMenuItem Header="Text _Viewer" CommandEnum="Window_TextViewer"/>
 

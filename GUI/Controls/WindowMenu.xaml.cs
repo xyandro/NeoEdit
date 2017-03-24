@@ -11,6 +11,7 @@
 		Window_Network,
 		Window_Processes,
 		Window_Ripper,
+		Window_StreamSaver,
 		Window_TextEditor,
 		Window_TextViewer,
 	}

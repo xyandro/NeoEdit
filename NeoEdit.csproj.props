@@ -71,6 +71,9 @@
 		<Reference Include="MySql.Data">
 			<HintPath>$(SolutionDir)\Lib\MySql.Data.dll</HintPath>
 		</Reference>
+		<Reference Include="Newtonsoft.Json">
+			<HintPath>$(SolutionDir)\Lib\Newtonsoft.Json.dll</HintPath>
+		</Reference>
 		<Reference Include="PresentationCore" />
 		<Reference Include="PresentationFramework" />
 		<Reference Include="SharpSvn">

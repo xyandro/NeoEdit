@@ -25,6 +25,7 @@ namespace NeoEdit.GUI.Controls
 					try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
 					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
 					try { ripDirectory = xml.Element(nameof(RipDirectory)).Value; } catch { }
+					try { streamSaveDirectory = xml.Element(nameof(StreamSaveDirectory)).Value; } catch { }
 					try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
 				}
 				catch { }
@@ -41,6 +42,7 @@ namespace NeoEdit.GUI.Controls
 				xml.Add(new XElement(nameof(MinimizeToTray), minimizeToTray));
 				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
 				xml.Add(new XElement(nameof(RipDirectory), ripDirectory));
+				xml.Add(new XElement(nameof(StreamSaveDirectory), streamSaveDirectory));
 				xml.Add(new XElement(nameof(Font.FontSize), Font.FontSize));
 				xml.Save(settingsFile);
 			}
@@ -76,6 +78,7 @@ namespace NeoEdit.GUI.Controls
 				case WindowCommand.Window_Network: Launcher.Static.LaunchNetwork(); break;
 				case WindowCommand.Window_Processes: Launcher.Static.LaunchProcesses(); break;
 				case WindowCommand.Window_Ripper: Launcher.Static.LaunchRipper(); break;
+				case WindowCommand.Window_StreamSaver: Launcher.Static.LaunchStreamSaver(); break;
 				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditorFile(forceCreate: true); break;
 				case WindowCommand.Window_TextViewer: Launcher.Static.LaunchTextViewer(forceCreate: true); break;
 			}
@@ -127,6 +130,20 @@ namespace NeoEdit.GUI.Controls
 
 		static EventHandler ripDirectoryChanged;
 		public static event EventHandler RipDirectoryChanged { add { ripDirectoryChanged += value; } remove { ripDirectoryChanged -= value; } }
+
+		static string streamSaveDirectory = Directory.GetCurrentDirectory();
+		public static string StreamSaveDirectory
+		{
+			get { return streamSaveDirectory; }
+			set
+			{
+				streamSaveDirectory = value;
+				SaveSettings();
+			}
+		}
+
+		static EventHandler streamSaveDirectoryChanged;
+		public static event EventHandler StreamSaveDirectoryChanged { add { streamSaveDirectoryChanged += value; } remove { streamSaveDirectoryChanged -= value; } }
 
 		System.Windows.Forms.NotifyIcon ni;
 		protected override void OnStateChanged(EventArgs e)

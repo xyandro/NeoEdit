@@ -105,6 +105,11 @@ namespace NeoEdit
 		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchRipper();
 	}
 
+	class StreamSaveParam : Param
+	{
+		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchStreamSaver();
+	}
+
 	class TextEditParam : Param
 	{
 		public class TextEditFile

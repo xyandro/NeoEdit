@@ -18,6 +18,7 @@ MULTI          : '-multi'                                                       
 NETWORK        : '-socket' | '-sockets' | '-network'                                                    ;
 PROCESSES      : '-pid' | '-process' | '-processes'                                                     ;
 RIP            : '-rip' | '-riper' | '-ripper'                                                          ;
+STREAMSAVE     : '-streamsave' | '-stream' | '-save'                                                    ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                        ;
 TEXTVIEW       : '-textview' | '-textviewer' | '-view'                                                  ;
 WAIT           : '-wait'                                                                                ;
@@ -46,6 +47,7 @@ MULTI2         : MULTI         -> type(MULTI)         ;
 NETWORK2       : NETWORK       -> type(NETWORK)       ;
 PROCESSES2     : PROCESSES     -> type(PROCESSES)     ;
 RIP2           : RIP           -> type(RIP)           ;
+STREAMSAVE2    : STREAMSAVE    -> type(STREAMSAVE)    ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
 TEXTVIEW2      : TEXTVIEW      -> type(TEXTVIEW)      ;
 WAIT2          : WAIT          -> type(WAIT)          ;

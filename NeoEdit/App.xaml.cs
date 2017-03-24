@@ -22,6 +22,7 @@ using NeoEdit.ImageEdit;
 using NeoEdit.Network;
 using NeoEdit.Processes;
 using NeoEdit.Rip;
+using NeoEdit.StreamSave;
 using NeoEdit.TextEdit;
 using NeoEdit.TextView;
 
@@ -116,6 +117,7 @@ namespace NeoEdit
 				, network: () => new NetworkWindow()
 				, processes: pid => new ProcessesWindow(pid)
 				, ripper: () => new Ripper()
+				, streamSaver: () => new StreamSaver()
 				, textEditorDiff: (fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent) => TextEditTabs.CreateDiff().AddDiff(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent)
 				, textEditorFile: (fileName, displayName, bytes, encoding, modified, line, column, forceCreate, shutdownEvent) => TextEditTabs.Create(fileName, displayName, bytes, encoding, modified, line ?? 1, column ?? 1, null, forceCreate, shutdownEvent)
 				, textViewer: (fileName, forceCreate) => TextViewTabs.Create(fileName, forceCreate)
