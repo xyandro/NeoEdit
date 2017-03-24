@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -17,7 +16,6 @@ namespace NeoEdit.Rip
 		[DepProp]
 		ObservableCollection<RipItem> RipItems { get { return UIHelper<Ripper>.GetPropValue<ObservableCollection<RipItem>>(this); } set { UIHelper<Ripper>.SetPropValue(this, value); } }
 
-		YouTube youTube = new YouTube();
 		static Ripper() { UIHelper<Ripper>.Register(); }
 
 		public Ripper()
@@ -25,12 +23,6 @@ namespace NeoEdit.Rip
 			RipMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command));
 			InitializeComponent();
 			RipItems = new ObservableCollection<RipItem>();
-		}
-
-		protected override void OnClosed(EventArgs e)
-		{
-			youTube.Dispose();
-			base.OnClosed(e);
 		}
 
 		void RunCommand(RipCommand command)
@@ -41,7 +33,6 @@ namespace NeoEdit.Rip
 				case RipCommand.Edit_CopyTitles: Command_Edit_CopyTitles(); break;
 				case RipCommand.Edit_CopyFileNames: Command_Edit_CopyFileNames(); break;
 				case RipCommand.Add_CD: Command_Add_CD(); break;
-				case RipCommand.Add_YouTube: Command_Add_YouTube(); break;
 			}
 		}
 
@@ -59,16 +50,6 @@ namespace NeoEdit.Rip
 				foreach (var track in drive.GetTracks())
 					RipItems.Add(track);
 			}
-		}
-
-		void Command_Add_YouTube()
-		{
-			var result = AddYouTubeDialog.Run(this, youTube);
-			if (result == null)
-				return;
-
-			foreach (var item in result)
-				RipItems.Add(item);
 		}
 
 		void OnRemoveClick(object sender = null, RoutedEventArgs e = null) => ripItems.SelectedItems.Cast<RipItem>().ToList().ForEach(item => RipItems.Remove(item));

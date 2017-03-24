@@ -18,6 +18,7 @@ Tutorial
 Move tabs with selections to start of active tabs list
 Print
 Add ability to select all attributes
+Allow moving muliple windows, allow drop in middle of window instead of requiring title
 
 View:
 Update as new lines are added

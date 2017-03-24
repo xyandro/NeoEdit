@@ -13,7 +13,6 @@
 	</MenuItem>
 	<MenuItem Header="_Add">
 		<rip:RipMenuItem Header="_CD" CommandEnum="Add_CD"/>
-		<rip:RipMenuItem Header="_YouTube" CommandEnum="Add_YouTube"/>
 	</MenuItem>
 	<guiControls:WindowMenu/>
 	<guiControls:HelpMenu/>
