@@ -212,7 +212,7 @@ namespace NeoEdit.TextEdit
 
 		CustomGridDialog.Result Command_View_Type_Dialog() => CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
 
-		void Command_View_Type(TabsLayout layout, CustomGridDialog.Result result) => ItemTabs.SetLayout(layout, result?.Columns ?? 0, result?.Rows ?? 0);
+		void Command_View_Type(TabsLayout layout, CustomGridDialog.Result result) => ItemTabs.SetLayout(layout, result?.Columns, result?.Rows);
 
 		void Command_View_ActiveTabs() => tabs.ShowActiveTabsDialog();
 

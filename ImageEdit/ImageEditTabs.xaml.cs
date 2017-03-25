@@ -74,7 +74,7 @@ namespace NeoEdit.ImageEdit
 				CreateTab(new ImageEditor(null, image), this);
 		}
 
-		void Command_View_Type(TabsLayout layout, CustomGridDialog.Result result) => ItemTabs.SetLayout(layout, result?.Columns ?? 0, result?.Rows ?? 0);
+		void Command_View_Type(TabsLayout layout, CustomGridDialog.Result result) => ItemTabs.SetLayout(layout, result?.Columns, result?.Rows);
 
 		void Command_View_ActiveTabs() => tabs.ShowActiveTabsDialog();
 

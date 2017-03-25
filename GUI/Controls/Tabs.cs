@@ -30,9 +30,9 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public TabsLayout Layout { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<TabsLayout>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public int Columns { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<int>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
+		public int? Columns { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<int?>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public int Rows { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<int>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
+		public int? Rows { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<int?>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public double TabsScroll { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
@@ -62,7 +62,7 @@ namespace NeoEdit.GUI.Controls
 			Drop += (s, e) => OnDrop(e, null);
 		}
 
-		public void SetLayout(TabsLayout layout, int columns = 0, int rows = 0)
+		public void SetLayout(TabsLayout layout, int? columns = null, int? rows = null)
 		{
 			Layout = layout;
 			Columns = columns;
@@ -305,10 +305,10 @@ namespace NeoEdit.GUI.Controls
 			public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 			{
 				var count = (int)values[0];
-				var columns = (int)values[1];
-				var rows = (int)values[2];
+				var columns = (int?)values[1];
+				var rows = (int?)values[2];
 
-				return columns != 0 ? columns : rows != 0 ? 0 : (int)Math.Ceiling(Math.Sqrt(count));
+				return columns ?? (rows.HasValue ? 0 : (int)Math.Ceiling(Math.Sqrt(count)));
 			}
 
 			public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
@@ -319,10 +319,10 @@ namespace NeoEdit.GUI.Controls
 			public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 			{
 				var count = (int)values[0];
-				var columns = (int)values[1];
-				var rows = (int)values[2];
+				var columns = (int?)values[1];
+				var rows = (int?)values[2];
 
-				return rows != 0 ? rows : 0;
+				return rows;
 			}
 
 			public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
