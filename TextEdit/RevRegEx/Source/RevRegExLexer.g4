@@ -5,6 +5,8 @@ LBRACKET      : '[' -> pushMode(CHARS);
 LPAREN        : '(' ;
 RPAREN        : ')' ;
 PIPE          : '|' ;
+ASTERISK      : '*' ;
+PLUS          : '+' ;
 QUESTION      : '?' ;
 CHAR          : '\\' . | ~[{\[()|?] ;
 

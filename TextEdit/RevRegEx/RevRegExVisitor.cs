@@ -7,21 +7,39 @@ namespace NeoEdit.TextEdit.RevRegEx
 {
 	class RevRegExVisitor : RevRegExParserBaseVisitor<RevRegExData>
 	{
-		public static RevRegExData Parse(string input)
+		public static RevRegExData Parse(string input, int infiniteCount)
 		{
 			var tree = ParserHelper.Parse<RevRegExLexer, RevRegExParser, RevRegExParser.RevregexContext>(input, parser => parser.revregex(), true);
-			return new RevRegExVisitor().Visit(tree);
+			return new RevRegExVisitor(infiniteCount).Visit(tree);
+		}
+
+		readonly int infiniteCount;
+		public RevRegExVisitor(int infiniteCount)
+		{
+			this.infiniteCount = infiniteCount;
 		}
 
 		public override RevRegExData VisitRevregex(RevRegExParser.RevregexContext context) => Visit(context.items());
-		public override RevRegExData VisitItems(RevRegExParser.ItemsContext context) => RevRegExDataJoin.Create(context.itemsList().Select(item => Visit(item)));
-		public override RevRegExData VisitItemsList(RevRegExParser.ItemsListContext context) => RevRegExDataList.Create(context.item().Select(item => Visit(item)));
+		public override RevRegExData VisitItems(RevRegExParser.ItemsContext context) => RevRegExDataJoin.Create(context.itemsList().Select(item => Visit(item)).ToList());
+		public override RevRegExData VisitItemsList(RevRegExParser.ItemsListContext context) => RevRegExDataList.Create(context.item().Select(item => Visit(item)).ToList());
 		public override RevRegExData VisitParens(RevRegExParser.ParensContext context) => Visit(context.items());
-		public override RevRegExData VisitOptional(RevRegExParser.OptionalContext context) => new RevRegExDataRepeat(Visit(context.item()), 0, 1);
 		public override RevRegExData VisitRepeat(RevRegExParser.RepeatContext context)
 		{
-			var max = int.Parse(context.maxcount.Text);
-			var min = context.COMMA() == null ? max : context.mincount == null ? 0 : int.Parse(context.mincount.Text);
+			var min = 0;
+			var max = infiniteCount;
+			if (context.question != null)
+				max = 1;
+			else if (context.asterisk != null)
+			{ }
+			else if (context.plus != null)
+				min = 1;
+			else if (context.count != null)
+				min = max = int.Parse(context.count.Text);
+			else
+			{
+				min = context.mincount == null ? min : int.Parse(context.mincount.Text);
+				max = context.maxcount == null ? max : int.Parse(context.maxcount.Text);
+			}
 			return new RevRegExDataRepeat(Visit(context.item()), min, max);
 		}
 		public override RevRegExData VisitChar(RevRegExParser.CharContext context) => new RevRegExDataChar(context.val.Text.Last());

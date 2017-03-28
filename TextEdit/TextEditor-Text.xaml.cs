@@ -157,7 +157,7 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var data = RevRegEx.RevRegExVisitor.Parse(result.RegEx);
+			var data = RevRegEx.RevRegExVisitor.Parse(result.RegEx, result.InfiniteCount);
 			var output = data.GetPossibilities().Select(str => str + Data.DefaultEnding).ToList();
 			ReplaceSelections(string.Join("", output));
 
