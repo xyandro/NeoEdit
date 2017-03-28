@@ -1210,6 +1210,13 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
 				case TextEditCommand.Region_CopyEnclosingRegion: Command_Region_CopyEnclosingRegion(); break;
 				case TextEditCommand.Region_CopyEnclosingRegionIndex: Command_Region_CopyEnclosingRegionIndex(); break;
+				case TextEditCommand.Region_TransformSelections_Flatten: Command_Region_TransformSelections_Flatten(); break;
+				case TextEditCommand.Region_TransformSelections_Transpose: Command_Region_TransformSelections_Transpose(); break;
+				case TextEditCommand.Region_TransformSelections_RotateLeft: Command_Region_TransformSelections_RotateLeft(); break;
+				case TextEditCommand.Region_TransformSelections_RotateRight: Command_Region_TransformSelections_RotateRight(); break;
+				case TextEditCommand.Region_TransformSelections_Rotate180: Command_Region_TransformSelections_Rotate180(); break;
+				case TextEditCommand.Region_TransformSelections_MirrorHorizontal: Command_Region_TransformSelections_MirrorHorizontal(); break;
+				case TextEditCommand.Region_TransformSelections_MirrorVertical: Command_Region_TransformSelections_MirrorVertical(); break;
 				case TextEditCommand.Macro_RepeatLastAction: if (previous != null) HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus); break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}

@@ -560,6 +560,16 @@
 		<textEdit:TextEditMenuItem Header="Select _Enclosing Region" CommandEnum="Region_SelectEnclosingRegion"/>
 		<textEdit:TextEditMenuItem Header="Copy E_nclosing Region" CommandEnum="Region_CopyEnclosingRegion"/>
 		<textEdit:TextEditMenuItem Header="Copy Encl_osing Region Index" CommandEnum="Region_CopyEnclosingRegionIndex"/>
+		<Separator/>
+		<MenuItem Header="_Transform Selections">
+			<textEdit:TextEditMenuItem Header="_Flatten" CommandEnum="Region_TransformSelections_Flatten"/>
+			<textEdit:TextEditMenuItem Header="_Transpose" CommandEnum="Region_TransformSelections_Transpose"/>
+			<textEdit:TextEditMenuItem Header="Rotate _Left" CommandEnum="Region_TransformSelections_RotateLeft"/>
+			<textEdit:TextEditMenuItem Header="Rotate _Right" CommandEnum="Region_TransformSelections_RotateRight"/>
+			<textEdit:TextEditMenuItem Header="Rotate _180" CommandEnum="Region_TransformSelections_Rotate180"/>
+			<textEdit:TextEditMenuItem Header="Mirror _Horizontal" CommandEnum="Region_TransformSelections_MirrorHorizontal"/>
+			<textEdit:TextEditMenuItem Header="Mirror _Vertical" CommandEnum="Region_TransformSelections_MirrorVertical"/>
+		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_View">
 		<textEdit:TextEditMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
