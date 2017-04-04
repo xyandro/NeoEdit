@@ -583,6 +583,8 @@
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="Tabs _With Selections" CommandEnum="View_Select_TabsWithSelections"/>
 			<textEdit:TextEditMenuItem Header="Tabs With_out Selections" CommandEnum="View_Select_TabsWithoutSelections"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="Tabs With Selections To _Top" CommandEnum="View_Select_TabsWithSelectionsToTop"/>
 		</MenuItem>
 		<MenuItem Header="_Close">
 			<textEdit:TextEditMenuItem Header="Tabs _With Selections" CommandEnum="View_Close_TabsWithSelections"/>

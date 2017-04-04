@@ -15,7 +15,6 @@ Add multi-file status bar (shows how many (active? files|selections|etc.)
 Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files
 Tutorial
-Move tabs with selections to start of active tabs list
 Print
 Add ability to select all attributes
 Allow moving muliple windows, allow drop in middle of window instead of requiring title

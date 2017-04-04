@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -298,6 +299,14 @@ namespace NeoEdit.GUI.Controls
 						Dispatcher.BeginInvoke((Action)(() => RaiseEvent(new RoutedEventArgs(ItemMatchEvent))));
 				});
 			}
+		}
+
+		public void MoveToTop(IEnumerable<ItemType> tabs)
+		{
+			var found = new HashSet<ItemType>(tabs);
+			var indexes = Items.Indexes(item => found.Contains(item)).ToList();
+			for (var ctr = 0; ctr < indexes.Count; ++ctr)
+				Items.Move(indexes[ctr], ctr);
 		}
 
 		class ColumnCountConverter : IMultiValueConverter

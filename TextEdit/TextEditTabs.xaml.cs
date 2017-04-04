@@ -233,6 +233,21 @@ namespace NeoEdit.TextEdit
 			active.ForEach(tab => tab.Active = true);
 		}
 
+		void Command_View_Select_TabsWithSelectionsToTop()
+		{
+			var topMost = ItemTabs.TopMost;
+			var active = ItemTabs.Items.Where(tab => tab.Active).ToList();
+			var hasSelections = active.Where(tab => tab.HasSelections).ToList();
+			if ((!active.Any()) || (!hasSelections.Any()))
+				return;
+
+			ItemTabs.MoveToTop(hasSelections);
+			if (!active.Contains(topMost))
+				topMost = active.First();
+			ItemTabs.TopMost = topMost;
+			active.ForEach(tab => tab.Active = true);
+		}
+
 		void Command_View_CloseTabsWithSelections(bool hasSelections)
 		{
 			var topMost = ItemTabs.TopMost;
@@ -468,6 +483,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.View_FontSize: Command_View_FontSize(); break;
 				case TextEditCommand.View_Select_TabsWithSelections: Command_View_SelectTabsWithSelections(true); break;
 				case TextEditCommand.View_Select_TabsWithoutSelections: Command_View_SelectTabsWithSelections(false); break;
+				case TextEditCommand.View_Select_TabsWithSelectionsToTop: Command_View_Select_TabsWithSelectionsToTop(); break;
 				case TextEditCommand.View_Close_TabsWithSelections: Command_View_CloseTabsWithSelections(true); break;
 				case TextEditCommand.View_Close_TabsWithoutSelections: Command_View_CloseTabsWithSelections(false); break;
 				case TextEditCommand.View_Close_ActiveTabs: Command_View_Close_ActiveTabs(true); break;

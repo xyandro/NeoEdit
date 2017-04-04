@@ -367,6 +367,7 @@ namespace NeoEdit.TextEdit
 		View_FontSize,
 		View_Select_TabsWithSelections,
 		View_Select_TabsWithoutSelections,
+		View_Select_TabsWithSelectionsToTop,
 		View_Close_TabsWithSelections,
 		View_Close_TabsWithoutSelections,
 		View_Close_ActiveTabs,
