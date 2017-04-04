@@ -238,8 +238,9 @@ namespace NeoEdit.TextEdit
 			var topMost = ItemTabs.TopMost;
 			var active = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
 
+			var answer = Message.OptionsEnum.None;
 			var closeTabs = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
-			if (!closeTabs.All(tab => tab.CanClose()))
+			if (!closeTabs.All(tab => tab.CanClose(ref answer)))
 				return;
 			closeTabs.ForEach(tab => Remove(tab));
 
@@ -254,8 +255,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_View_Close_ActiveTabs(bool active)
 		{
+			var answer = Message.OptionsEnum.None;
 			var closeTabs = ItemTabs.Items.Where(tab => tab.Active == active).ToList();
-			if (!closeTabs.All(tab => tab.CanClose()))
+			if (!closeTabs.All(tab => tab.CanClose(ref answer)))
 				return;
 			closeTabs.ForEach(tab => Remove(tab));
 		}
@@ -481,8 +483,13 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
 			}
 
+			var answer = Message.OptionsEnum.None;
 			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
-				textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus);
+			{
+				textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, ref answer);
+				if (answer == Message.OptionsEnum.Cancel)
+					break;
+			}
 
 			return true;
 		}

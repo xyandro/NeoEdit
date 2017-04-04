@@ -856,7 +856,7 @@ namespace NeoEdit.TextEdit
 		}
 
 		bool timeNext = false;
-		public void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus)
+		public void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus, ref Message.OptionsEnum answer)
 		{
 			doDrag = DragType.None;
 
@@ -885,7 +885,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
 				case TextEditCommand.File_Operations_CommandPrompt: Command_File_Operations_CommandPrompt(); break;
 				case TextEditCommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(); break;
-				case TextEditCommand.File_Close: if (CanClose()) { TabsParent.Remove(this); } break;
+				case TextEditCommand.File_Close: if (CanClose(ref answer)) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
 				case TextEditCommand.File_AutoRefresh: Command_File_AutoRefresh(multiStatus); break;
 				case TextEditCommand.File_Revert: Command_File_Revert(); break;
@@ -1217,7 +1217,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_TransformSelections_Rotate180: Command_Region_TransformSelections_Rotate180(); break;
 				case TextEditCommand.Region_TransformSelections_MirrorHorizontal: Command_Region_TransformSelections_MirrorHorizontal(); break;
 				case TextEditCommand.Region_TransformSelections_MirrorVertical: Command_Region_TransformSelections_MirrorVertical(); break;
-				case TextEditCommand.Macro_RepeatLastAction: if (previous != null) HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus); break;
+				case TextEditCommand.Macro_RepeatLastAction: Command_Macro_RepeatLastAction(); break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}
 
@@ -2066,5 +2066,13 @@ namespace NeoEdit.TextEdit
 		bool VerifyCanFullyEncode(List<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
 
 		void Command_Type_Select_MinMax(bool min, FindMinMaxType type) => Selections.Replace(FindMinMax(min, type));
+
+		void Command_Macro_RepeatLastAction()
+		{
+			if (previous == null)
+				return;
+			var answer = Message.OptionsEnum.None;
+			HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus, ref answer);
+		}
 	}
 }
