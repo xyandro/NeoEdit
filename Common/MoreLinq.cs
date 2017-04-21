@@ -204,7 +204,8 @@ namespace NeoEdit.Common
 
 		public static IEnumerable<TSource> Null<TSource>(this IEnumerable<TSource> source) => source.Where(item => item == null);
 		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<TSource> source) where TSource : class => source.Where(item => item != null);
-		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<Nullable<TSource>> source) where TSource : struct => source.Where(item => item.HasValue).Select(item => item.Value);
+		public static IEnumerable<TSource> NonNull<TSource, TElement>(this IEnumerable<TSource> source, Func<TSource, TElement> selector) where TSource : class => source.Where(item => selector(item) != null);
+		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<TSource?> source) where TSource : struct => source.Where(item => item.HasValue).Select(item => item.Value);
 
 		public static IEnumerable<string> NullOrEmpty(this IEnumerable<string> source) => source.Where(str => string.IsNullOrEmpty(str));
 		public static IEnumerable<TSource> NullOrEmpty<TSource>(this IEnumerable<TSource> source, Func<TSource, string> selector) => source.Where(obj => string.IsNullOrEmpty(selector(obj)));
@@ -219,7 +220,7 @@ namespace NeoEdit.Common
 		public static List<TResult> Execute<TResult>(this IEnumerable<Func<TResult>> source) => source.ForEach(action => action());
 
 		public static IEnumerable<TSource> Coalesce<TSource>(this IEnumerable<TSource> source, TSource defaultValue) where TSource : class => source.Select(val => val ?? defaultValue);
-		public static IEnumerable<TSource> Coalesce<TSource>(this IEnumerable<Nullable<TSource>> source, TSource defaultValue) where TSource : struct => source.Select(val => val ?? defaultValue);
+		public static IEnumerable<TSource> Coalesce<TSource>(this IEnumerable<TSource?> source, TSource defaultValue) where TSource : struct => source.Select(val => val ?? defaultValue);
 
 		public static IEnumerable<TSource> EveryNth<TSource>(this IEnumerable<TSource> source, int n)
 		{

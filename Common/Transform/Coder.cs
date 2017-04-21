@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,6 +32,12 @@ namespace NeoEdit.Common.Transform
 			Single = -115,
 			Double = -116,
 			EndNum = -119,
+
+			StartImage = -200,
+			Bitmap = -201,
+			JPEG = -202,
+			PNG = -203,
+			EndImage = -204,
 
 			StartString = -50,
 
@@ -134,10 +142,13 @@ namespace NeoEdit.Common.Transform
 
 			internal NEEncoding(EncodingInfo encoding) : this((CodePage)encoding.CodePage, encoding.DisplayName) { }
 
-			internal NEEncoding(CodePage _codePage, string _description)
+			internal NEEncoding(CodePage _codePage, string _description, string _preamble = null)
 			{
 				codePage = _codePage;
 				shortDescription = description = _description;
+
+				if (!string.IsNullOrWhiteSpace(_preamble))
+					preamble = Coder.StringToBytes(_preamble, CodePage.Hex);
 
 				if (codePage >= 0)
 				{
@@ -173,6 +184,9 @@ namespace NeoEdit.Common.Transform
 				new NEEncoding(CodePage.HexRev, "Hex Reversed"),
 				new NEEncoding(CodePage.Binary, "Binary"),
 				new NEEncoding(CodePage.Base64, "Base64"),
+				new NEEncoding(CodePage.Bitmap, "Bitmap", "424D"),
+				new NEEncoding(CodePage.JPEG, "JPEG", "FFD8"),
+				new NEEncoding(CodePage.PNG, "PNG", "89504E47"),
 				new NEEncoding(CodePage.Int8, "Int8"),
 				new NEEncoding(CodePage.Int16LE, "Int16 (Little endian)"),
 				new NEEncoding(CodePage.Int16BE, "Int16 (Big endian)"),
@@ -354,6 +368,163 @@ namespace NeoEdit.Common.Transform
 			return bytes;
 		}
 
+		static unsafe string ToImageString(byte[] data)
+		{
+			if (data.Length == 0)
+				return "";
+
+			Bitmap bitmap;
+			using (var ms = new MemoryStream(data))
+				bitmap = new Bitmap(ms);
+
+			var lockBits = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+			var hexNumbers = Enumerable.Range(0, 16).Select(num => $"{num:x}").ToArray();
+			try
+			{
+				var padding = lockBits.Stride - lockBits.Width * 4;
+				var bytes = (byte*)lockBits.Scan0.ToPointer();
+
+				var ending = "\r\n";
+				var sb = new StringBuilder(lockBits.Height * (lockBits.Width * 9 - 1 + ending.Length));
+
+				for (var y = 0; y < lockBits.Height; ++y)
+				{
+					for (var x = 0; x < lockBits.Width; ++x)
+					{
+						if (x != 0)
+							sb.Append(" ");
+						var value = *(uint*)bytes;
+						for (var bit = 28; bit >= 0; bit -= 4)
+							sb.Append(hexNumbers[value >> bit & 15]);
+						bytes += 4;
+					}
+					sb.Append(ending);
+					bytes += padding;
+				}
+
+				return sb.ToString();
+			}
+			finally
+			{
+				bitmap.UnlockBits(lockBits);
+			}
+		}
+
+		static unsafe byte[] FromImageString(string data, ImageFormat imageFormat)
+		{
+			data = ReformatImage(data);
+			if (data.Length == 0)
+				return new byte[0];
+
+			var height = 0;
+			var width = 1;
+			for (var ctr = 0; ctr < data.Length; ++ctr)
+			{
+				if ((height == 0) && (data[ctr] == ' '))
+					++width;
+				if (data[ctr] == '\r')
+					++height;
+			}
+
+			var bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+			var lockBits = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+			try
+			{
+				var padding = lockBits.Stride - lockBits.Width * 4;
+				var bytes = (byte*)lockBits.Scan0.ToPointer();
+				var dataIndex = 0;
+
+				for (var y = 0; y < height; ++y)
+				{
+					for (var x = 0; x < width; ++x)
+					{
+						uint value = 0;
+						for (var ctr = 0; ctr < 8; ++ctr)
+						{
+							value *= 16;
+							var c = data[dataIndex];
+							if (c >= '0' && c <= '9')
+								value += (uint)(c - '0');
+							else
+								value += (uint)(c - 'a' + 10);
+							++dataIndex;
+						}
+						*(uint*)bytes = value;
+						++dataIndex;
+						bytes += 4;
+					}
+					bytes += padding;
+					++dataIndex;
+				}
+			}
+			finally
+			{
+				bitmap.UnlockBits(lockBits);
+			}
+			using (var ms = new MemoryStream())
+			{
+				bitmap.Save(ms, imageFormat);
+				return ms.ToArray();
+			}
+		}
+
+		static string ReformatImage(string str)
+		{
+			str = str.ToLowerInvariant();
+			var width = default(int?);
+			var lineWidth = 0;
+			var sb = new StringBuilder();
+			for (var ctr = 0; ctr <= str.Length;)
+			{
+				var endCtr = ctr;
+				while ((endCtr < str.Length) && (((str[endCtr] >= '0') && (str[endCtr] <= '9')) || ((str[endCtr] >= 'a') && (str[endCtr] <= 'f'))))
+					++endCtr;
+
+				if (endCtr != ctr)
+				{
+					if ((sb.Length != 0) && (sb[sb.Length - 1] != '\n'))
+						sb.Append(" ");
+
+					switch (endCtr - ctr)
+					{
+						case 1: sb.Append("ff").Append(str[ctr], 6); break;
+						case 2: sb.Append("ff").Append(str, ctr, 2).Append(str, ctr, 2).Append(str, ctr, 2); break;
+						case 3: sb.Append("ff").Append(str[ctr], 2).Append(str[ctr + 1], 2).Append(str[ctr + 2], 2); break;
+						case 4: sb.Append(str[ctr], 2).Append(str[ctr + 1], 2).Append(str[ctr + 2], 2).Append(str[ctr + 3], 2); break;
+						case 6: sb.Append("ff").Append(str, ctr, 6); break;
+						case 8: sb.Append(str, ctr, 8); break;
+						default: throw new Exception("Invalid color");
+					}
+					ctr = endCtr;
+					++lineWidth;
+					continue;
+				}
+
+				if ((ctr == str.Length) || (str[ctr] == '\r') || (str[ctr] == '\n'))
+				{
+					if ((sb.Length != 0) && (sb[sb.Length - 1] != '\n'))
+					{
+						width = width ?? lineWidth;
+						if (lineWidth != width)
+							throw new Exception("All lines must have the same number of pixels");
+						lineWidth = 0;
+						sb.Append("\r\n");
+					}
+					++ctr;
+					continue;
+				}
+
+				if (char.IsWhiteSpace(str[ctr]))
+				{
+					++ctr;
+					continue;
+				}
+
+				throw new Exception("Invalid image string");
+			}
+			return sb.ToString();
+		}
+
 		static string BytesToNum<T>(byte[] data, int size, Func<byte[], T> converter, bool reverse) where T : struct
 		{
 			var current = new byte[size];
@@ -399,6 +570,9 @@ namespace NeoEdit.Common.Transform
 					case CodePage.Hex: return ToHexString(data);
 					case CodePage.HexRev: return ToHexRevString(data);
 					case CodePage.Binary: return ToBinaryString(data);
+					case CodePage.Bitmap: return ToImageString(data);
+					case CodePage.JPEG: return ToImageString(data);
+					case CodePage.PNG: return ToImageString(data);
 					default:
 						{
 							var encoding = NEEncodingDictionary[codePage];
@@ -500,6 +674,9 @@ namespace NeoEdit.Common.Transform
 					case CodePage.Hex: return FromHexString(value);
 					case CodePage.HexRev: return FromHexRevString(value);
 					case CodePage.Binary: return FromBinaryString(value);
+					case CodePage.Bitmap: return FromImageString(value, ImageFormat.Bmp);
+					case CodePage.JPEG: return FromImageString(value, ImageFormat.Jpeg);
+					case CodePage.PNG: return FromImageString(value, ImageFormat.Png);
 					default: return NEEncodingDictionary[codePage].encoding.GetBytes(((addBOM) && (NEEncodingDictionary[codePage].preamble != null) ? "\ufeff" : "") + value);
 				}
 			}
@@ -517,14 +694,14 @@ namespace NeoEdit.Common.Transform
 
 		public static bool CanFullyEncode(string str1, CodePage codePage)
 		{
-			// These formats will allow whitespace, although you can't save it
+			// Handle whitespace
 			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.HexRev) || (codePage == CodePage.Binary) || (codePage == CodePage.Base64)))
 				str1 = str1.StripWhitespace();
 			if ((str1 != null) && (codePage == CodePage.Base64))
 				str1 = str1.TrimEnd('=');
-
-			// Numeric formats separate with spaces
-			if ((str1 != null) && (!IsStr(codePage)))
+			if ((str1 != null) && (IsImage(codePage)))
+				str1 = ReformatImage(str1);
+			if ((str1 != null) && (IsNumeric(codePage)))
 				str1 = str1.ConvertWhitespaceToSpaces().Trim();
 
 			var bytes = TryStringToBytes(str1, codePage);
@@ -542,10 +719,10 @@ namespace NeoEdit.Common.Transform
 
 		public static bool CanFullyEncode(byte[] bytes1, CodePage codePage)
 		{
-			var str = Coder.TryBytesToString(bytes1, codePage);
+			var str = TryBytesToString(bytes1, codePage);
 			if (str == null)
 				return false;
-			var bytes2 = Coder.TryStringToBytes(str, codePage);
+			var bytes2 = TryStringToBytes(str, codePage);
 			if (bytes2 == null)
 				return false;
 			if (bytes1.Length != bytes2.Length)
@@ -559,29 +736,11 @@ namespace NeoEdit.Common.Transform
 			{
 				var header = new byte[Math.Min(4, file.Length)];
 				file.Read(header, 0, header.Length);
-				return Coder.CodePageFromBOM(header);
+				return CodePageFromBOM(header);
 			}
 		}
 
-		public static CodePage CodePageFromBOM(byte[] data)
-		{
-			var encodingWithPreambles = NEEncodings.Where(encoding => encoding.preamble != null).OrderByDescending(encoding => encoding.preamble.Length).ToList();
-
-			foreach (var encoding in encodingWithPreambles)
-			{
-				var match = true;
-				if (data.Length < encoding.preamble.Length)
-					match = false;
-				if (match)
-					for (var ctr = 0; ctr < encoding.preamble.Length; ctr++)
-						if (data[ctr] != encoding.preamble[ctr])
-							match = false;
-				if (match)
-					return encoding.codePage;
-			}
-
-			return CodePage.Default;
-		}
+		public static CodePage CodePageFromBOM(byte[] data) => NEEncodings.NonNull(encoding => encoding.preamble).OrderByDescending(encoding => encoding.preamble.Length).Where(encoding => (data.Length >= encoding.preamble.Length) && (data.Equal(encoding.preamble, encoding.preamble.Length))).Select(encoding => encoding.codePage).DefaultIfEmpty(CodePage.Default).First();
 
 		public static CodePage GuessUnicodeEncoding(byte[] data)
 		{
@@ -622,6 +781,10 @@ namespace NeoEdit.Common.Transform
 		public static Encoding GetEncoding(CodePage codePage) => NEEncodingDictionary[codePage].encoding;
 
 		public static bool IsStr(CodePage codePage) => codePage >= CodePage.StartString;
+
+		public static bool IsImage(CodePage codePage) => (codePage <= CodePage.StartImage) && (codePage >= CodePage.EndImage);
+
+		public static bool IsNumeric(CodePage codePage) => (codePage <= CodePage.StartNum) && (codePage >= CodePage.EndNum);
 
 		public static int PreambleSize(CodePage codePage)
 		{

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common.Transform;
 
@@ -263,6 +264,24 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.Binary, "	 11011110101011011011 111011101111 \n ", new byte[] { 0xde, 0xad, 0xbe, 0xef }, false, "11011110101011011011111011101111");
 			VerifyCoder(Coder.CodePage.Binary, "000000000", new byte[] { 0, 0 }, false, "0000000000000000");
 			VerifyCoder(Coder.CodePage.Binary, "0101012", null, false);
+		}
+
+		[TestMethod]
+		public void CoderImageTest()
+		{
+			// Bitmap
+			VerifyCoder(Coder.CodePage.Bitmap, "", new byte[] { }, false);
+			VerifyCoder(Coder.CodePage.Bitmap, "ffffffff ffff0000\r\nff00ff00 ff0000ff\r\n", Convert.FromBase64String("Qk1GAAAAAAAAADYAAAAoAAAAAgAAAAIAAAABACAAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAP8A//8AAP//////AAD//w=="), false);
+			VerifyCoder(Coder.CodePage.Bitmap, "fff ff00\n00ff00  ff0000ff", Convert.FromBase64String("Qk1GAAAAAAAAADYAAAAoAAAAAgAAAAIAAAABACAAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAP8A//8AAP//////AAD//w=="), false, "ffffffff ffff0000\r\nff00ff00 ff0000ff\r\n");
+
+			// JPEG
+			VerifyCoder(Coder.CodePage.JPEG, "", new byte[] { }, false);
+			VerifyCoder(Coder.CodePage.JPEG, "fff ff00\n00ff00  ff0000ff", Convert.FromBase64String("/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAACAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzLXry6bxFqbNczFjdykkyHn5zRRRX0NH+FH0R9Th/4MPRfkf/2Q=="), false, "ffebf1ef ff545a58\r\nffa4aaa8 ff181e1c\r\n");
+
+			// PNG
+			VerifyCoder(Coder.CodePage.PNG, "", new byte[] { }, false);
+			VerifyCoder(Coder.CodePage.PNG, "ffffffff ffff0000\r\nff00ff00 ff0000ff\r\n", Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAATSURBVBhXY/gPAgwMYAQk/v8HAGOuCff0e1nZAAAAAElFTkSuQmCC"), false);
+			VerifyCoder(Coder.CodePage.PNG, "fff ff00\n00ff00  ff0000ff", Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAATSURBVBhXY/gPAgwMYAQk/v8HAGOuCff0e1nZAAAAAElFTkSuQmCC"), false, "ffffffff ffff0000\r\nff00ff00 ff0000ff\r\n");
 		}
 	}
 }
