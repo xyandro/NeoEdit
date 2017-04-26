@@ -28,6 +28,8 @@ namespace NeoEdit.TextEdit
 
 		public static void Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false, string shutdownEvent = null)
 		{
+			fileName = fileName?.Trim('"');
+
 			if ((!Helpers.IsDebugBuild) && (fileName != null))
 			{
 				var fileInfo = new FileInfo(fileName);
