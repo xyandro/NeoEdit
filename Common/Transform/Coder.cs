@@ -702,9 +702,11 @@ namespace NeoEdit.Common.Transform
 
 		public static bool CanFullyEncode(string str1, CodePage codePage)
 		{
-			// Handle whitespace
+			// Handle formatting (whitespace/case/etc)
 			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.HexRev) || (codePage == CodePage.Binary) || (codePage == CodePage.Base64)))
 				str1 = str1.StripWhitespace();
+			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.HexRev)))
+				str1 = str1.ToLowerInvariant();
 			if ((str1 != null) && (codePage == CodePage.Base64))
 				str1 = str1.TrimEnd('=');
 			if ((str1 != null) && (IsImage(codePage)))
