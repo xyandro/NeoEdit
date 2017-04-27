@@ -740,9 +740,10 @@ namespace NeoEdit.Common.Transform
 
 		public static CodePage CodePageFromBOM(string fileName)
 		{
+			var maxPreambleLength = NEEncodings.Select(encoding => encoding.preamble).NonNull().Select(preamble => preamble.Length).Max();
 			using (var file = File.OpenRead(fileName))
 			{
-				var header = new byte[Math.Min(4, file.Length)];
+				var header = new byte[Math.Min(maxPreambleLength, file.Length)];
 				file.Read(header, 0, header.Length);
 				return CodePageFromBOM(header);
 			}
