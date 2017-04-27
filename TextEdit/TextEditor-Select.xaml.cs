@@ -140,17 +140,15 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_Join()
 		{
-			var sels = Selections.ToList();
-			var ctr = 0;
-			while (ctr < sels.Count - 1)
+			var sels = new List<Range>();
+			var start = 0;
+			while (start < Selections.Count)
 			{
-				if (sels[ctr].End == sels[ctr + 1].Start)
-				{
-					sels[ctr] = new Range(sels[ctr + 1].End, sels[ctr].Start);
-					sels.RemoveAt(ctr + 1);
-				}
-				else
-					++ctr;
+				var end = start;
+				while ((end + 1 < Selections.Count) && (Selections[end].End == Selections[end + 1].Start))
+					++end;
+				sels.Add(new Range(Selections[end].End, Selections[start].Start));
+				start = end + 1;
 			}
 			Selections.Replace(sels);
 		}
