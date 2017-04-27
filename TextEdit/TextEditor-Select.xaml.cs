@@ -83,19 +83,33 @@ namespace NeoEdit.TextEdit
 		void Command_Select_Limit(LimitDialog.Result result)
 		{
 			var variables = GetVariables();
-			var firstSel = new NEExpression(result.FirstSel).EvaluateRow<int>(variables);
-			var selMult = new NEExpression(result.SelMult).EvaluateRow<int>(variables);
-			var numSels = new NEExpression(result.NumSels).EvaluateRow<int>(variables);
+			var firstSelection = new NEExpression(result.FirstSelection).EvaluateRow<int>(variables);
+			var everyNth = new NEExpression(result.EveryNth).EvaluateRow<int>(variables);
+			var takeCount = new NEExpression(result.TakeCount).EvaluateRow<int>(variables);
+			var numSels = new NEExpression(result.NumSelections).EvaluateRow<int>(variables);
 
-			IEnumerable<Range> retval = Selections;
-
-			retval = retval.Skip(firstSel - 1);
-			if (result.JoinSels)
-				retval = retval.Batch(selMult).Select(batch => new Range(batch.Last().End, batch.First().Start));
+			List<Range> regions;
+			if (result.WithinRegions)
+				regions = GetEnclosingRegions();
 			else
-				retval = retval.EveryNth(selMult);
-			retval = retval.Take(numSels);
-			Selections.Replace(retval.ToList());
+				regions = Enumerable.Repeat(FullRange, Selections.Count).ToList();
+
+			var selectionsInRegions = Selections.Zip(regions, (selection, region) => new { selection, region }).GroupBy(obj => obj.region).Select(group => group.Select(obj => obj.selection).ToList()).ToList();
+
+			var sels = new List<Range>();
+			foreach (var selectionsInRegion in selectionsInRegions)
+			{
+				var take = selectionsInRegion as IEnumerable<Range>;
+
+				take = take.Skip(firstSelection - 1);
+				if (result.JoinSelections)
+					take = take.Batch(everyNth).Select(batch => batch.Take(takeCount)).Select(batch => new Range(batch.Last().End, batch.First().Start));
+				else
+					take = take.EveryNth(everyNth, takeCount);
+				take = take.Take(numSels);
+				sels.AddRange(take);
+			}
+			Selections.Replace(sels);
 		}
 
 		void Command_Select_Lines(bool includeEndings)

@@ -8,49 +8,55 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public string FirstSel { get; set; }
-			public string SelMult { get; set; }
-			public string NumSels { get; set; }
-			public bool JoinSels { get; set; }
+			public string FirstSelection { get; set; }
+			public string EveryNth { get; set; }
+			public string TakeCount { get; set; }
+			public string NumSelections { get; set; }
+			public bool JoinSelections { get; set; }
+			public bool WithinRegions { get; set; }
 		}
 
 		[DepProp]
-		public string FirstSel { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
+		public string FirstSelection { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string SelMult { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
+		public string EveryNth { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string NumSels { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
+		public string TakeCount { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool JoinSels { get { return UIHelper<LimitDialog>.GetPropValue<bool>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
+		public string NumSelections { get { return UIHelper<LimitDialog>.GetPropValue<string>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool JoinSelections { get { return UIHelper<LimitDialog>.GetPropValue<bool>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool WithinRegions { get { return UIHelper<LimitDialog>.GetPropValue<bool>(this); } set { UIHelper<LimitDialog>.SetPropValue(this, value); } }
 
 		public NEVariables Variables { get; }
 
 		static LimitDialog() { UIHelper<LimitDialog>.Register(); }
 
-		LimitDialog(int maxSels, NEVariables variables)
+		LimitDialog(int numSelections, NEVariables variables)
 		{
 			Variables = variables;
 			InitializeComponent();
 
-			FirstSel = "1";
-			SelMult = "1";
-			NumSels = maxSels.ToString();
-			JoinSels = false;
+			FirstSelection = EveryNth = TakeCount = "1";
+			NumSelections = numSelections.ToString();
+			JoinSelections = WithinRegions = false;
 		}
 
 		Result result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			firstSel.AddCurrentSuggestion();
-			selMult.AddCurrentSuggestion();
-			numSels.AddCurrentSuggestion();
-			result = new Result { FirstSel = FirstSel, SelMult = SelMult, NumSels = NumSels, JoinSels = JoinSels };
+			firstSelection.AddCurrentSuggestion();
+			everyNth.AddCurrentSuggestion();
+			takeCount.AddCurrentSuggestion();
+			numSelections.AddCurrentSuggestion();
+			result = new Result { FirstSelection = FirstSelection, EveryNth = EveryNth, TakeCount = TakeCount, NumSelections = NumSelections, JoinSelections = JoinSelections, WithinRegions = WithinRegions };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, int numSels, NEVariables variables)
+		public static Result Run(Window parent, int numSelections, NEVariables variables)
 		{
-			var dialog = new LimitDialog(numSels, variables) { Owner = parent };
+			var dialog = new LimitDialog(numSelections, variables) { Owner = parent };
 			if (!dialog.ShowDialog())
 				return null;
 
