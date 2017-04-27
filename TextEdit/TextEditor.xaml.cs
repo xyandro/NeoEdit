@@ -1049,6 +1049,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Add_Sum: Command_Numeric_Add_Sum(); break;
 				case TextEditCommand.Numeric_Add_ForwardSum: Command_Numeric_Add_ForwardReverseSum(true); break;
 				case TextEditCommand.Numeric_Add_ReverseSum: Command_Numeric_Add_ForwardReverseSum(false); break;
+				case TextEditCommand.Numeric_Add_Increment: Numeric_Add_IncrementDecrement(true); break;
+				case TextEditCommand.Numeric_Add_Decrement: Numeric_Add_IncrementDecrement(false); break;
 				case TextEditCommand.Numeric_Add_AddClipboard: Command_Numeric_Add_AddSubtractClipboard(true); break;
 				case TextEditCommand.Numeric_Add_SubtractClipboard: Command_Numeric_Add_AddSubtractClipboard(false); break;
 				case TextEditCommand.Numeric_Whole: Command_Numeric_Whole(); break;

@@ -167,6 +167,8 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(numbers.Select(num => num.ToString()).ToList());
 		}
 
+		void Numeric_Add_IncrementDecrement(bool add) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (double.Parse(GetString(range)) + (add ? 1 : -1)).ToString()).ToList());
+
 		void Command_Numeric_Add_AddSubtractClipboard(bool add)
 		{
 			if (Selections.Count == 0)

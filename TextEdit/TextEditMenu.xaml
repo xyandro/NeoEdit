@@ -314,6 +314,8 @@
 			<textEdit:TextEditMenuItem Header="_Sum" CommandEnum="Numeric_Add_Sum"/>
 			<textEdit:TextEditMenuItem Header="_Forward Sum" CommandEnum="Numeric_Add_ForwardSum"/>
 			<textEdit:TextEditMenuItem Header="_Reverse Sum" CommandEnum="Numeric_Add_ReverseSum"/>
+			<textEdit:TextEditMenuItem Header="_Increment" CommandEnum="Numeric_Add_Increment"/>
+			<textEdit:TextEditMenuItem Header="_Decrement" CommandEnum="Numeric_Add_Decrement"/>
 			<textEdit:TextEditMenuItem Header="_Add Clipboard" CommandEnum="Numeric_Add_AddClipboard"/>
 			<textEdit:TextEditMenuItem Header="S_ubtract Clipboard" CommandEnum="Numeric_Add_SubtractClipboard"/>
 		</MenuItem>
