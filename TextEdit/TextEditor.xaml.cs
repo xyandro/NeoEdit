@@ -1046,11 +1046,11 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Series_Linear: Command_Numeric_Series_Linear(dialogResult as NumericSeriesDialog.Result); break;
 				case TextEditCommand.Numeric_Series_Geometric: Command_Numeric_Series_Geometric(dialogResult as NumericSeriesDialog.Result); break;
 				case TextEditCommand.Numeric_Scale: Command_Numeric_Scale(dialogResult as ScaleDialog.Result); break;
-				case TextEditCommand.Numeric_Sum: Command_Numeric_Sum(); break;
-				case TextEditCommand.Numeric_ForwardSum: Command_Numeric_ForwardReverseSum(true); break;
-				case TextEditCommand.Numeric_ReverseSum: Command_Numeric_ForwardReverseSum(false); break;
-				case TextEditCommand.Numeric_AddClipboard: Command_Numeric_AddSubtractClipboard(true); break;
-				case TextEditCommand.Numeric_SubtractClipboard: Command_Numeric_AddSubtractClipboard(false); break;
+				case TextEditCommand.Numeric_Add_Sum: Command_Numeric_Add_Sum(); break;
+				case TextEditCommand.Numeric_Add_ForwardSum: Command_Numeric_Add_ForwardReverseSum(true); break;
+				case TextEditCommand.Numeric_Add_ReverseSum: Command_Numeric_Add_ForwardReverseSum(false); break;
+				case TextEditCommand.Numeric_Add_AddClipboard: Command_Numeric_Add_AddSubtractClipboard(true); break;
+				case TextEditCommand.Numeric_Add_SubtractClipboard: Command_Numeric_Add_AddSubtractClipboard(false); break;
 				case TextEditCommand.Numeric_Whole: Command_Numeric_Whole(); break;
 				case TextEditCommand.Numeric_Fraction: Command_Numeric_Fraction(); break;
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as FloorRoundCeilingDialog.Result); break;

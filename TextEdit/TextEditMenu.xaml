@@ -310,19 +310,20 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="S_cale" CommandEnum="Numeric_Scale"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="Su_m" CommandEnum="Numeric_Sum"/>
-		<textEdit:TextEditMenuItem Header="F_orward Sum" CommandEnum="Numeric_ForwardSum"/>
-		<textEdit:TextEditMenuItem Header="Re_verse Sum" CommandEnum="Numeric_ReverseSum"/>
-		<textEdit:TextEditMenuItem Header="A_dd Clipboard" CommandEnum="Numeric_AddClipboard"/>
-		<textEdit:TextEditMenuItem Header="S_ubtract Clipboard" CommandEnum="Numeric_SubtractClipboard"/>
+		<MenuItem Header="A_dd">
+			<textEdit:TextEditMenuItem Header="_Sum" CommandEnum="Numeric_Add_Sum"/>
+			<textEdit:TextEditMenuItem Header="_Forward Sum" CommandEnum="Numeric_Add_ForwardSum"/>
+			<textEdit:TextEditMenuItem Header="_Reverse Sum" CommandEnum="Numeric_Add_ReverseSum"/>
+			<textEdit:TextEditMenuItem Header="_Add Clipboard" CommandEnum="Numeric_Add_AddClipboard"/>
+			<textEdit:TextEditMenuItem Header="S_ubtract Clipboard" CommandEnum="Numeric_Add_SubtractClipboard"/>
+		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Whole" CommandEnum="Numeric_Whole"/>
 		<textEdit:TextEditMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="F_loor" CommandEnum="Numeric_Floor"/>
-		<textEdit:TextEditMenuItem Header="Ceilin_g" CommandEnum="Numeric_Ceiling"/>
-		<textEdit:TextEditMenuItem Header="Rou_nd" CommandEnum="Numeric_Round"/>
+		<textEdit:TextEditMenuItem Header="Ceili_ng" CommandEnum="Numeric_Ceiling"/>
+		<textEdit:TextEditMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
 		<textEdit:TextEditMenuItem Header="L_imit" CommandEnum="Numeric_Limit"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Numeric_Trim"/>
@@ -330,8 +331,8 @@
 		<textEdit:TextEditMenuItem Header="F_actor" CommandEnum="Numeric_Factor"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber"/>
-		<textEdit:TextEditMenuItem Header="Combinations/_Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
-		<textEdit:TextEditMenuItem Header="Min/Ma_x Values" CommandEnum="Numeric_MinMaxValues"/>
+		<textEdit:TextEditMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
+		<textEdit:TextEditMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues"/>
 	</MenuItem>
 	<MenuItem Header="_Date/Time">
 		<textEdit:TextEditMenuItem Header="_Now" CommandEnum="DateTime_Now"/>

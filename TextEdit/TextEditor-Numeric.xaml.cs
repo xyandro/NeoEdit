@@ -138,7 +138,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ((double.Parse(GetString(range)) - result.PrevMin) * ratio + result.NewMin).ToString()).ToList());
 		}
 
-		void Command_Numeric_Sum()
+		void Command_Numeric_Add_Sum()
 		{
 			if (!Selections.Any())
 				return;
@@ -152,7 +152,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(sum.ToString());
 		}
 
-		void Command_Numeric_ForwardReverseSum(bool forward)
+		void Command_Numeric_Add_ForwardReverseSum(bool forward)
 		{
 			var numbers = Selections.AsParallel().AsOrdered().Select(range => double.Parse(GetString(range))).ToList();
 			double total = 0;
@@ -167,7 +167,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(numbers.Select(num => num.ToString()).ToList());
 		}
 
-		void Command_Numeric_AddSubtractClipboard(bool add)
+		void Command_Numeric_Add_AddSubtractClipboard(bool add)
 		{
 			if (Selections.Count == 0)
 				return;
