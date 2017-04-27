@@ -269,19 +269,38 @@ namespace NeoEdit.Common.UnitTest
 		[TestMethod]
 		public void CoderImageTest()
 		{
+			const string image1 = "ffffffff ffff0000\r\nff00ff00 ff0000ff\r\n";
+			const string image2 = "fff ff00\n00ff00  ff0000ff";
+			const string revImageJpeg = "ffebf1ef ff545a58\r\nffa4aaa8 ff181e1c\r\n";
+
 			// Bitmap
+			const string bmpBytes = "Qk1GAAAAAAAAADYAAAAoAAAAAgAAAAIAAAABACAAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAP8A//8AAP//////AAD//w==";
 			VerifyCoder(Coder.CodePage.Bitmap, "", new byte[] { }, false);
-			VerifyCoder(Coder.CodePage.Bitmap, "ffffffff ffff0000\r\nff00ff00 ff0000ff\r\n", Convert.FromBase64String("Qk1GAAAAAAAAADYAAAAoAAAAAgAAAAIAAAABACAAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAP8A//8AAP//////AAD//w=="), false);
-			VerifyCoder(Coder.CodePage.Bitmap, "fff ff00\n00ff00  ff0000ff", Convert.FromBase64String("Qk1GAAAAAAAAADYAAAAoAAAAAgAAAAIAAAABACAAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAP8A//8AAP//////AAD//w=="), false, "ffffffff ffff0000\r\nff00ff00 ff0000ff\r\n");
+			VerifyCoder(Coder.CodePage.Bitmap, image1, Convert.FromBase64String(bmpBytes), false);
+			VerifyCoder(Coder.CodePage.Bitmap, image2, Convert.FromBase64String(bmpBytes), false, image1);
+
+			// GIF
+			const string gifBytes = "R0lGODlhAgACAPcAAAAAAAAAMwAAZgAAmQAAzAAA/wArAAArMwArZgArmQArzAAr/wBVAABVMwBVZgBVmQBVzABV/wCAAACAMwCAZgCAmQCAzACA/wCqAACqMwCqZgCqmQCqzACq/wDVAADVMwDVZgDVmQDVzADV/wD/AAD/MwD/ZgD/mQD/zAD//zMAADMAMzMAZjMAmTMAzDMA/zMrADMrMzMrZjMrmTMrzDMr/zNVADNVMzNVZjNVmTNVzDNV/zOAADOAMzOAZjOAmTOAzDOA/zOqADOqMzOqZjOqmTOqzDOq/zPVADPVMzPVZjPVmTPVzDPV/zP/ADP/MzP/ZjP/mTP/zDP//2YAAGYAM2YAZmYAmWYAzGYA/2YrAGYrM2YrZmYrmWYrzGYr/2ZVAGZVM2ZVZmZVmWZVzGZV/2aAAGaAM2aAZmaAmWaAzGaA/2aqAGaqM2aqZmaqmWaqzGaq/2bVAGbVM2bVZmbVmWbVzGbV/2b/AGb/M2b/Zmb/mWb/zGb//5kAAJkAM5kAZpkAmZkAzJkA/5krAJkrM5krZpkrmZkrzJkr/5lVAJlVM5lVZplVmZlVzJlV/5mAAJmAM5mAZpmAmZmAzJmA/5mqAJmqM5mqZpmqmZmqzJmq/5nVAJnVM5nVZpnVmZnVzJnV/5n/AJn/M5n/Zpn/mZn/zJn//8wAAMwAM8wAZswAmcwAzMwA/8wrAMwrM8wrZswrmcwrzMwr/8xVAMxVM8xVZsxVmcxVzMxV/8yAAMyAM8yAZsyAmcyAzMyA/8yqAMyqM8yqZsyqmcyqzMyq/8zVAMzVM8zVZszVmczVzMzV/8z/AMz/M8z/Zsz/mcz/zMz///8AAP8AM/8AZv8Amf8AzP8A//8rAP8rM/8rZv8rmf8rzP8r//9VAP9VM/9VZv9Vmf9VzP9V//+AAP+AM/+AZv+Amf+AzP+A//+qAP+qM/+qZv+qmf+qzP+q///VAP/VM//VZv/Vmf/VzP/V////AP//M///Zv//mf//zP///wAAAAAAAAAAAAAAACH5BAEAAPwALAAAAAACAAIAAAgHAPdJI1EgIAA7";
+			VerifyCoder(Coder.CodePage.GIF, "", new byte[] { }, false);
+			VerifyCoder(Coder.CodePage.GIF, image1, Convert.FromBase64String(gifBytes), false);
+			VerifyCoder(Coder.CodePage.GIF, image2, Convert.FromBase64String(gifBytes), false, image1);
 
 			// JPEG
+			const string jpegBytes = "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAACAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzLXry6bxFqbNczFjdykkyHn5zRRRX0NH+FH0R9Th/4MPRfkf/2Q==";
 			VerifyCoder(Coder.CodePage.JPEG, "", new byte[] { }, false);
-			VerifyCoder(Coder.CodePage.JPEG, "fff ff00\n00ff00  ff0000ff", Convert.FromBase64String("/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAACAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzLXry6bxFqbNczFjdykkyHn5zRRRX0NH+FH0R9Th/4MPRfkf/2Q=="), false, "ffebf1ef ff545a58\r\nffa4aaa8 ff181e1c\r\n");
+			VerifyCoder(Coder.CodePage.JPEG, image2, Convert.FromBase64String(jpegBytes), false, revImageJpeg);
 
 			// PNG
+			const string pngBytes = "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAATSURBVBhXY/gPAgwMYAQk/v8HAGOuCff0e1nZAAAAAElFTkSuQmCC";
 			VerifyCoder(Coder.CodePage.PNG, "", new byte[] { }, false);
-			VerifyCoder(Coder.CodePage.PNG, "ffffffff ffff0000\r\nff00ff00 ff0000ff\r\n", Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAATSURBVBhXY/gPAgwMYAQk/v8HAGOuCff0e1nZAAAAAElFTkSuQmCC"), false);
-			VerifyCoder(Coder.CodePage.PNG, "fff ff00\n00ff00  ff0000ff", Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAATSURBVBhXY/gPAgwMYAQk/v8HAGOuCff0e1nZAAAAAElFTkSuQmCC"), false, "ffffffff ffff0000\r\nff00ff00 ff0000ff\r\n");
+			VerifyCoder(Coder.CodePage.PNG, image1, Convert.FromBase64String(pngBytes), false);
+			VerifyCoder(Coder.CodePage.PNG, image2, Convert.FromBase64String(pngBytes), false, image1);
+
+			// TIFF
+			const string tiffBytes = "SUkqABgAAACAP+BP8AAEAgAAQSCAGCQEEAD+AAQAAQAAAAAAAAAAAQQAAQAAAAIAAAABAQQAAQAAAAIAAAACAQMABAAAAN4AAAADAQMAAQAAAAUAAAAGAQMAAQAAAAIAAAARAQQAAQAAAAgAAAAVAQMAAQAAAAQAAAAWAQQAAQAAAAIAAAAXAQQAAQAAABAAAAAaAQUAAQAAAOYAAAAbAQUAAQAAAO4AAAAcAQMAAQAAAAEAAAAoAQMAAQAAAAIAAAA9AQMAAQAAAAIAAABSAQMAAQAAAAIAAAAAAAAACAAIAAgACAAAdwEA6AMAAAB3AQDoAwAA";
+			VerifyCoder(Coder.CodePage.TIFF, "", new byte[] { }, false);
+			VerifyCoder(Coder.CodePage.TIFF, image1, Convert.FromBase64String(tiffBytes), false);
+			VerifyCoder(Coder.CodePage.TIFF, image2, Convert.FromBase64String(tiffBytes), false, image1);
 		}
 	}
 }

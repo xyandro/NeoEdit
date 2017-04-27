@@ -35,9 +35,11 @@ namespace NeoEdit.Common.Transform
 
 			StartImage = -200,
 			Bitmap = -201,
-			JPEG = -202,
-			PNG = -203,
-			EndImage = -204,
+			GIF = -202,
+			JPEG = -203,
+			PNG = -204,
+			TIFF = -205,
+			EndImage = -206,
 
 			StartString = -50,
 
@@ -185,8 +187,10 @@ namespace NeoEdit.Common.Transform
 				new NEEncoding(CodePage.Binary, "Binary"),
 				new NEEncoding(CodePage.Base64, "Base64"),
 				new NEEncoding(CodePage.Bitmap, "Bitmap", "424D"),
+				new NEEncoding(CodePage.GIF, "GIF", "474946"),
 				new NEEncoding(CodePage.JPEG, "JPEG", "FFD8"),
 				new NEEncoding(CodePage.PNG, "PNG", "89504E47"),
+				new NEEncoding(CodePage.TIFF, "TIFF"),
 				new NEEncoding(CodePage.Int8, "Int8"),
 				new NEEncoding(CodePage.Int16LE, "Int16 (Little endian)"),
 				new NEEncoding(CodePage.Int16BE, "Int16 (Big endian)"),
@@ -571,8 +575,10 @@ namespace NeoEdit.Common.Transform
 					case CodePage.HexRev: return ToHexRevString(data);
 					case CodePage.Binary: return ToBinaryString(data);
 					case CodePage.Bitmap: return ToImageString(data);
+					case CodePage.GIF: return ToImageString(data);
 					case CodePage.JPEG: return ToImageString(data);
 					case CodePage.PNG: return ToImageString(data);
+					case CodePage.TIFF: return ToImageString(data);
 					default:
 						{
 							var encoding = NEEncodingDictionary[codePage];
@@ -675,8 +681,10 @@ namespace NeoEdit.Common.Transform
 					case CodePage.HexRev: return FromHexRevString(value);
 					case CodePage.Binary: return FromBinaryString(value);
 					case CodePage.Bitmap: return FromImageString(value, ImageFormat.Bmp);
+					case CodePage.GIF: return FromImageString(value, ImageFormat.Gif);
 					case CodePage.JPEG: return FromImageString(value, ImageFormat.Jpeg);
 					case CodePage.PNG: return FromImageString(value, ImageFormat.Png);
+					case CodePage.TIFF: return FromImageString(value, ImageFormat.Tiff);
 					default: return NEEncodingDictionary[codePage].encoding.GetBytes(((addBOM) && (NEEncodingDictionary[codePage].preamble != null) ? "\ufeff" : "") + value);
 				}
 			}
