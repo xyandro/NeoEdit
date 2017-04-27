@@ -402,6 +402,13 @@
     <Compile Include="Dialogs\MinMaxValuesDialog.xaml.cs">
       <DependentUpon>MinMaxValuesDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NumericLimitDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NumericLimitDialog.xaml.cs">
+      <DependentUpon>NumericLimitDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\NumericSeriesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

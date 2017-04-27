@@ -77,11 +77,11 @@ namespace NeoEdit.ImageEdit
 			var clipboard = NEClipboard.Strings;
 
 			var results = new NEVariables();
-			results.Add(NEVariable.Constant("f", "Filename", fileName));
-			results.Add(NEVariable.Constant("w", "Image width", Image.Width));
-			results.Add(NEVariable.Constant("h", "Image height", Image.Height));
+			results.Add(NEVariable.Constant("f", "Filename", () => fileName));
+			results.Add(NEVariable.Constant("w", "Image width", () => Image.Width));
+			results.Add(NEVariable.Constant("h", "Image height", () => Image.Height));
 			if (clipboard.Count >= 1)
-				results.Add(NEVariable.Constant("c", "Clipboard string", clipboard[0]));
+				results.Add(NEVariable.Constant("c", "Clipboard string", () => clipboard[0]));
 
 			return results;
 		}

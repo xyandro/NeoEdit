@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
 using NeoEdit.TextEdit.Dialogs;
 
@@ -55,6 +56,15 @@ namespace NeoEdit.TextEdit
 			var regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			var results = Selections.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, false, false, false)).SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			Selections.Replace(results);
+		}
+
+		double Limit(double minimum, double value, double maximum)
+		{
+			if (value < minimum)
+				value = minimum;
+			if (value > maximum)
+				value = maximum;
+			return value;
 		}
 
 		void Command_Numeric_Select_Whole()
@@ -206,6 +216,19 @@ namespace NeoEdit.TextEdit
 		FloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
 
 		void Command_Numeric_Round(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(decimal.Parse(GetString(range)) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
+
+		NumericLimitDialog.Result Command_Numeric_Limit_Dialog() => NumericLimitDialog.Run(WindowParent, GetVariables());
+
+		void Command_Numeric_Limit(NumericLimitDialog.Result result)
+		{
+			var variables = GetVariables();
+			var minimum = new NEExpression(result.Minimum).EvaluateRow<double>(variables);
+			var maximum = new NEExpression(result.Maximum).EvaluateRow<double>(variables);
+			if (minimum > maximum)
+				throw new Exception("Minimum must be greater than maximum.");
+
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Limit(minimum, double.Parse(GetString(range)), maximum).ToString()).ToList());
+		}
 
 		void Command_Numeric_Trim() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => TrimNumeric(GetString(range))).ToList());
 

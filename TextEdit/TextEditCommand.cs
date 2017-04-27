@@ -193,6 +193,7 @@ namespace NeoEdit.TextEdit
 		Numeric_Floor,
 		Numeric_Ceiling,
 		Numeric_Round,
+		Numeric_Limit,
 		Numeric_Trim,
 		Numeric_Factor,
 		Numeric_RandomNumber,

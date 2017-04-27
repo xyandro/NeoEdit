@@ -8,6 +8,7 @@ namespace NeoEdit.Common.Expressions
 		Func<List<object>> listFunc;
 		List<object> list;
 		NEVariableListInitializer initializer;
+		object lockObj = new object();
 
 		public NEVariableList(string name, string description, Func<List<object>> listFunc, NEVariableListInitializer initializer = null) : base(name, description)
 		{
@@ -19,8 +20,15 @@ namespace NeoEdit.Common.Expressions
 		{
 			if (list != null)
 				return;
-			initializer?.Initialize();
-			list = listFunc();
+
+			lock (lockObj)
+			{
+				if (list != null)
+					return;
+
+				initializer?.Initialize();
+				list = listFunc();
+			}
 		}
 
 		public override object GetValue(int index)

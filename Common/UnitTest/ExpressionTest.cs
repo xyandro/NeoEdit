@@ -183,9 +183,9 @@ namespace NeoEdit.Common.UnitTest
 			Assert.IsTrue(values.Count == 9);
 
 			var miscVars = new NEVariables(
-				NEVariable.Constant("x", "", 0xdeadbeef),
-				NEVariable.Constant("y", "", 0x0badf00d),
-				NEVariable.Constant("z", "", 0x0defaced)
+				NEVariable.Constant("x", "", () => 0xdeadbeef),
+				NEVariable.Constant("y", "", () => 0x0badf00d),
+				NEVariable.Constant("z", "", () => 0x0defaced)
 			);
 			var expr = new NEExpression("x - y + [0]");
 			var vars = expr.Variables;

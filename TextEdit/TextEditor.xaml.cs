@@ -634,6 +634,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Floor: dialogResult = Command_Numeric_Floor_Dialog(); break;
 				case TextEditCommand.Numeric_Ceiling: dialogResult = Command_Numeric_Ceiling_Dialog(); break;
 				case TextEditCommand.Numeric_Round: dialogResult = Command_Numeric_Round_Dialog(); break;
+				case TextEditCommand.Numeric_Limit: dialogResult = Command_Numeric_Limit_Dialog(); break;
 				case TextEditCommand.Numeric_RandomNumber: dialogResult = Command_Numeric_RandomNumber_Dialog(); break;
 				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Numeric_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
@@ -776,39 +777,42 @@ namespace NeoEdit.TextEdit
 			var strs = default(List<string>);
 			var initializeStrs = new NEVariableListInitializer(() => strs = Selections.Select(range => GetString(range)).ToList());
 			results.Add(NEVariable.List("x", "Selection", () => strs, initializeStrs));
-			results.Add(NEVariable.Constant("xn", "Selection count", Selections.Count));
+			results.Add(NEVariable.Constant("xn", "Selection count", () => Selections.Count));
 			results.Add(NEVariable.List("xl", "Selection length", () => Selections.Select(range => range.Length)));
-			results.Add(NEVariable.Constant("xlmin", "Selection min length", Selections.Select(range => range.Length).DefaultIfEmpty(0).Min()));
-			results.Add(NEVariable.Constant("xlmax", "Selection max length", Selections.Select(range => range.Length).DefaultIfEmpty(0).Max()));
+			results.Add(NEVariable.Constant("xlmin", "Selection min length", () => Selections.Select(range => range.Length).DefaultIfEmpty(0).Min()));
+			results.Add(NEVariable.Constant("xlmax", "Selection max length", () => Selections.Select(range => range.Length).DefaultIfEmpty(0).Max()));
+
+			results.Add(NEVariable.Constant("xmin", "Selection numeric min", () => Selections.AsParallel().GroupBy(range => GetString(range)).Select(group => double.Parse(group.Key)).DefaultIfEmpty(0).Min()));
+			results.Add(NEVariable.Constant("xmax", "Selection numeric max", () => Selections.AsParallel().GroupBy(range => GetString(range)).Select(group => double.Parse(group.Key)).DefaultIfEmpty(0).Max()));
 
 			var regions = default(List<string>);
 			var initializeRegions = new NEVariableListInitializer(() => regions = Regions.Select(range => GetString(range)).ToList());
 			results.Add(NEVariable.List("r", "Region", () => regions, initializeRegions));
-			results.Add(NEVariable.Constant("rn", "Region count", Regions.Count));
+			results.Add(NEVariable.Constant("rn", "Region count", () => Regions.Count));
 			results.Add(NEVariable.List("rl", "Region length", () => Regions.Select(range => range.Length)));
-			results.Add(NEVariable.Constant("rlmin", "Region min length", Regions.Select(range => range.Length).DefaultIfEmpty(0).Min()));
-			results.Add(NEVariable.Constant("rlmax", "Region max length", Regions.Select(range => range.Length).DefaultIfEmpty(0).Max()));
+			results.Add(NEVariable.Constant("rlmin", "Region min length", () => Regions.Select(range => range.Length).DefaultIfEmpty(0).Min()));
+			results.Add(NEVariable.Constant("rlmax", "Region max length", () => Regions.Select(range => range.Length).DefaultIfEmpty(0).Max()));
 
 			results.Add(NEVariable.Series("y", "One-based index", index => index + 1));
 			results.Add(NEVariable.Series("z", "Zero-based index", index => index));
 
 			if (clipboard.Count == 1)
 			{
-				results.Add(NEVariable.Constant("c", "Clipboard", clipboard[0]));
-				results.Add(NEVariable.Constant("cl", "Clipboard length", clipboard[0].Length));
-				results.Add(NEVariable.Constant("clmin", "Clipboard min length", clipboard[0].Length));
-				results.Add(NEVariable.Constant("clmax", "Clipboard max length", clipboard[0].Length));
+				results.Add(NEVariable.Constant("c", "Clipboard", () => clipboard[0]));
+				results.Add(NEVariable.Constant("cl", "Clipboard length", () => clipboard[0].Length));
+				results.Add(NEVariable.Constant("clmin", "Clipboard min length", () => clipboard[0].Length));
+				results.Add(NEVariable.Constant("clmax", "Clipboard max length", () => clipboard[0].Length));
 			}
 			else
 			{
 				results.Add(NEVariable.List("c", "Clipboard", () => clipboard));
 				results.Add(NEVariable.List("cl", "Clipboard length", () => clipboard.Select(str => str.Length)));
-				results.Add(NEVariable.Constant("clmin", "Clipboard min length", clipboard.Select(str => str.Length).DefaultIfEmpty(0).Min()));
-				results.Add(NEVariable.Constant("clmax", "Clipboard max length", clipboard.Select(str => str.Length).DefaultIfEmpty(0).Max()));
+				results.Add(NEVariable.Constant("clmin", "Clipboard min length", () => clipboard.Select(str => str.Length).DefaultIfEmpty(0).Min()));
+				results.Add(NEVariable.Constant("clmax", "Clipboard max length", () => clipboard.Select(str => str.Length).DefaultIfEmpty(0).Max()));
 			}
-			results.Add(NEVariable.Constant("cn", "Clipboard count", clipboard.Count));
+			results.Add(NEVariable.Constant("cn", "Clipboard count", () => clipboard.Count));
 
-			results.Add(NEVariable.Constant("f", "Filename", fileName));
+			results.Add(NEVariable.Constant("f", "Filename", () => fileName));
 
 			var lineStarts = default(List<int>);
 			var initializeLineStarts = new NEVariableListInitializer(() => lineStarts = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start) + 1).ToList());
@@ -837,10 +841,10 @@ namespace NeoEdit.TextEdit
 				var desc = ctr == 0 ? "Keys" : $"Values {ctr}";
 				var values = KeysAndValues[ctr];
 				results.Add(NEVariable.List(name, desc, () => values));
-				results.Add(NEVariable.Constant($"{name}n", $"{desc} count", values.Count));
+				results.Add(NEVariable.Constant($"{name}n", $"{desc} count", () => values.Count));
 				results.Add(NEVariable.List($"{name}l", $"{desc} length", () => values.Select(str => str.Length)));
-				results.Add(NEVariable.Constant($"{name}lmin", $"{desc} min length", values.Select(str => str.Length).DefaultIfEmpty(0).Min()));
-				results.Add(NEVariable.Constant($"{name}lmax", $"{desc} max length", values.Select(str => str.Length).DefaultIfEmpty(0).Max()));
+				results.Add(NEVariable.Constant($"{name}lmin", $"{desc} min length", () => values.Select(str => str.Length).DefaultIfEmpty(0).Min()));
+				results.Add(NEVariable.Constant($"{name}lmax", $"{desc} max length", () => values.Select(str => str.Length).DefaultIfEmpty(0).Max()));
 			}
 
 			// Add variables that aren't already set
@@ -1052,6 +1056,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as FloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as FloorRoundCeilingDialog.Result); break;
+				case TextEditCommand.Numeric_Limit: Command_Numeric_Limit(dialogResult as NumericLimitDialog.Result); break;
 				case TextEditCommand.Numeric_Trim: Command_Numeric_Trim(); break;
 				case TextEditCommand.Numeric_Factor: Command_Numeric_Factor(); break;
 				case TextEditCommand.Numeric_RandomNumber: Command_Numeric_RandomNumber(dialogResult as RandomNumberDialog.Result); break;
