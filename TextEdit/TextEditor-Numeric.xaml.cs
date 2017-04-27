@@ -130,12 +130,18 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Series_Geometric(NumericSeriesDialog.Result result) => ReplaceSelections(Selections.Select((range, index) => (Math.Pow(result.Increment, index) * result.Start).ToString()).ToList());
 
-		ScaleDialog.Result Command_Numeric_Scale_Dialog() => ScaleDialog.Run(WindowParent);
+		ScaleDialog.Result Command_Numeric_Scale_Dialog() => ScaleDialog.Run(WindowParent, GetVariables());
 
 		void Command_Numeric_Scale(ScaleDialog.Result result)
 		{
-			var ratio = (result.NewMax - result.NewMin) / (result.PrevMax - result.PrevMin);
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ((double.Parse(GetString(range)) - result.PrevMin) * ratio + result.NewMin).ToString()).ToList());
+			var variables = GetVariables();
+			var prevMin = new NEExpression(result.PrevMin).EvaluateRow<double>(variables);
+			var prevMax = new NEExpression(result.PrevMax).EvaluateRow<double>(variables);
+			var newMin = new NEExpression(result.NewMin).EvaluateRow<double>(variables);
+			var newMax = new NEExpression(result.NewMax).EvaluateRow<double>(variables);
+
+			var ratio = (newMax - newMin) / (prevMax - prevMin);
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ((double.Parse(GetString(range)) - prevMin) * ratio + newMin).ToString()).ToList());
 		}
 
 		void Command_Numeric_Add_Sum()

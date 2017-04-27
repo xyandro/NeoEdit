@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -7,28 +8,31 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public double PrevMin { get; set; }
-			public double PrevMax { get; set; }
-			public double NewMin { get; set; }
-			public double NewMax { get; set; }
+			public string PrevMin { get; set; }
+			public string PrevMax { get; set; }
+			public string NewMin { get; set; }
+			public string NewMax { get; set; }
 		}
 
 		[DepProp]
-		public double PrevMin { get { return UIHelper<ScaleDialog>.GetPropValue<double>(this); } set { UIHelper<ScaleDialog>.SetPropValue(this, value); } }
+		public string PrevMin { get { return UIHelper<ScaleDialog>.GetPropValue<string>(this); } set { UIHelper<ScaleDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public double PrevMax { get { return UIHelper<ScaleDialog>.GetPropValue<double>(this); } set { UIHelper<ScaleDialog>.SetPropValue(this, value); } }
+		public string PrevMax { get { return UIHelper<ScaleDialog>.GetPropValue<string>(this); } set { UIHelper<ScaleDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public double NewMin { get { return UIHelper<ScaleDialog>.GetPropValue<double>(this); } set { UIHelper<ScaleDialog>.SetPropValue(this, value); } }
+		public string NewMin { get { return UIHelper<ScaleDialog>.GetPropValue<string>(this); } set { UIHelper<ScaleDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public double NewMax { get { return UIHelper<ScaleDialog>.GetPropValue<double>(this); } set { UIHelper<ScaleDialog>.SetPropValue(this, value); } }
+		public string NewMax { get { return UIHelper<ScaleDialog>.GetPropValue<string>(this); } set { UIHelper<ScaleDialog>.SetPropValue(this, value); } }
+
+		public NEVariables Variables { get; }
 
 		static ScaleDialog() { UIHelper<ScaleDialog>.Register(); }
 
-		ScaleDialog()
+		ScaleDialog(NEVariables variables)
 		{
+			Variables = variables;
 			InitializeComponent();
-			PrevMin = NewMin = 1;
-			PrevMax = NewMax = 10;
+			PrevMin = NewMin = "xmin";
+			PrevMax = NewMax = "xmax";
 		}
 
 		Result result;
@@ -38,9 +42,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent)
+		static public Result Run(Window parent, NEVariables variables)
 		{
-			var dialog = new ScaleDialog() { Owner = parent };
+			var dialog = new ScaleDialog(variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
