@@ -1261,6 +1261,7 @@ namespace NeoEdit.TextEdit
 						Replace(Selections.AsParallel().AsOrdered().Select(range =>
 						{
 							var offset = range.Start;
+							var anchor = range.Anchor;
 
 							if (controlDown)
 							{
@@ -1268,6 +1269,12 @@ namespace NeoEdit.TextEdit
 									offset = GetPrevWord(offset);
 								else
 									offset = GetNextWord(offset);
+							}
+							else if (shiftDown)
+							{
+								var line = Data.GetOffsetLine(offset);
+								offset = Data.GetOffset(line, 0);
+								anchor = offset + Data.GetLineLength(line) + Data.GetEndingLength(line);
 							}
 							else
 							{
@@ -1297,7 +1304,7 @@ namespace NeoEdit.TextEdit
 								offset = Data.GetOffset(line, index);
 							}
 
-							return new Range(offset, range.Anchor);
+							return new Range(offset, anchor);
 						}).Where(range => range != null).ToList(), null);
 					}
 					break;
