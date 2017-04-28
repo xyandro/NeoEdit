@@ -153,24 +153,29 @@ namespace NeoEdit.TextEdit
 					DefaultAccept = Message.OptionsEnum.Yes,
 					DefaultCancel = Message.OptionsEnum.No,
 				}.Show() == Message.OptionsEnum.Yes)
-					Command_File_Revert();
+				{
+					Message.OptionsEnum answer = Message.OptionsEnum.No;
+					Command_File_Revert(ref answer);
+				}
 			}
 		}
 
 		void Command_File_AutoRefresh(bool? multiStatus) => SetAutoRefresh(multiStatus != true);
 
-		void Command_File_Revert()
+		void Command_File_Revert(ref Message.OptionsEnum answer)
 		{
 			if (IsModified)
 			{
-				if (new Message(WindowParent)
-				{
-					Title = "Confirm",
-					Text = "You have unsaved changes.  Are you sure you want to reload?",
-					Options = Message.OptionsEnum.YesNo,
-					DefaultAccept = Message.OptionsEnum.Yes,
-					DefaultCancel = Message.OptionsEnum.No,
-				}.Show() != Message.OptionsEnum.Yes)
+				if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
+					answer = new Message(WindowParent)
+					{
+						Title = "Confirm",
+						Text = "You have unsaved changes.  Are you sure you want to reload?",
+						Options = Message.OptionsEnum.YesNoYesAllNoAllCancel,
+						DefaultAccept = Message.OptionsEnum.No,
+						DefaultCancel = Message.OptionsEnum.No,
+					}.Show();
+				if ((answer != Message.OptionsEnum.Yes) && (answer != Message.OptionsEnum.YesToAll))
 					return;
 			}
 

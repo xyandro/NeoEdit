@@ -893,7 +893,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Close: if (CanClose(ref answer)) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
 				case TextEditCommand.File_AutoRefresh: Command_File_AutoRefresh(multiStatus); break;
-				case TextEditCommand.File_Revert: Command_File_Revert(); break;
+				case TextEditCommand.File_Revert: Command_File_Revert(ref answer); break;
 				case TextEditCommand.File_Insert_Files: Command_File_Insert_Files(); break;
 				case TextEditCommand.File_Insert_CopiedCut: Command_File_Insert_CopiedCut(); break;
 				case TextEditCommand.File_Insert_Selected: Command_File_Insert_Selected(); break;
