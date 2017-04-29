@@ -443,6 +443,7 @@ namespace NeoEdit.TextEdit
 		{
 			DiffTarget = null;
 			globalKeysChanged -= SetupLocalOrGlobalKeys;
+			Font.FontSizeChanged -= FontSizeChanged;
 			ClearWatcher();
 			shutdownData.OnShutdown();
 			base.Closed();
