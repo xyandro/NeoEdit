@@ -373,14 +373,14 @@ namespace NeoEdit.TextEdit
 
 		void Command_Macro_Play_Repeat()
 		{
-			var result = MacroRepeatDialog.Run(this, Macro<TextEditCommand>.ChooseMacro);
+			var result = MacroPlayRepeatDialog.Run(this, Macro<TextEditCommand>.ChooseMacro);
 			if (result == null)
 				return;
 
 			var macro = Macro<TextEditCommand>.Load(result.Macro);
 			var expression = new NEExpression(result.Expression);
 			var count = int.MaxValue;
-			if (result.RepeatType == MacroRepeatDialog.RepeatTypeEnum.Number)
+			if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Number)
 				count = expression.Evaluate<int>();
 
 			Action startNext = null;
@@ -389,7 +389,7 @@ namespace NeoEdit.TextEdit
 				if ((ItemTabs.TopMost == null) || (--count < 0))
 					return;
 
-				if (result.RepeatType == MacroRepeatDialog.RepeatTypeEnum.Condition)
+				if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Condition)
 					if (!expression.EvaluateRow<bool>(ItemTabs.TopMost.GetVariables()))
 						return;
 

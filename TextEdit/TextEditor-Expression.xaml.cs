@@ -27,8 +27,8 @@ namespace NeoEdit.TextEdit
 
 		void Command_Expression_ClearVariables() => variables.Clear();
 
-		SetVariablesDialog.Result Command_Expression_SetVariables_Dialog() => SetVariablesDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault() ?? "");
+		ExpressionSetVariablesDialog.Result Command_Expression_SetVariables_Dialog() => ExpressionSetVariablesDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault() ?? "");
 
-		void Command_Expression_SetVariables(SetVariablesDialog.Result result) => variables[result.VarName] = GetSelectionStrings();
+		void Command_Expression_SetVariables(ExpressionSetVariablesDialog.Result result) => variables[result.VarName] = GetSelectionStrings();
 	}
 }

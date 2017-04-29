@@ -264,9 +264,9 @@ namespace NeoEdit.TextEdit
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		LineEndingsDialog.Result Command_File_Encoding_LineEndings_Dialog() => LineEndingsDialog.Run(WindowParent, LineEnding ?? "");
+		FileEncodingLineEndingsDialog.Result Command_File_Encoding_LineEndings_Dialog() => FileEncodingLineEndingsDialog.Run(WindowParent, LineEnding ?? "");
 
-		void Command_File_Encoding_LineEndings(LineEndingsDialog.Result result)
+		void Command_File_Encoding_LineEndings(FileEncodingLineEndingsDialog.Result result)
 		{
 			var lines = Data.NumLines;
 			var sel = new List<Range>();

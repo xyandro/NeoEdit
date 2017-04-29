@@ -65,26 +65,26 @@ namespace NeoEdit.TextEdit
 
 		void Command_Table_Type_Detect() => ContentType = Table.GuessTableType(AllText);
 
-		ChooseTableTypeDialog.Result Command_Table_Convert_Dialog() => ChooseTableTypeDialog.Run(WindowParent, ContentType);
+		TableConvertDialog.Result Command_Table_Convert_Dialog() => TableConvertDialog.Run(WindowParent, ContentType);
 
-		void Command_Table_Convert(ChooseTableTypeDialog.Result result)
+		void Command_Table_Convert(TableConvertDialog.Result result)
 		{
 			var table = GetTable();
 			ContentType = result.TableType;
 			SetText(table);
 		}
 
-		TextToTableDialog.Result Command_Table_TextToTable_Dialog()
+		TableTextToTableDialog.Result Command_Table_TextToTable_Dialog()
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection");
 			if (!Selections[0].HasSelection)
 				throw new Exception("Must have data selected");
 
-			return TextToTableDialog.Run(WindowParent, GetSelectionStrings().Single());
+			return TableTextToTableDialog.Run(WindowParent, GetSelectionStrings().Single());
 		}
 
-		void Command_Table_TextToTable(TextToTableDialog.Result result)
+		void Command_Table_TextToTable(TableTextToTableDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection");
@@ -124,14 +124,14 @@ namespace NeoEdit.TextEdit
 			OpenTable(new Table(rows, false));
 		}
 
-		EditTableDialog.Result Command_Table_EditTable_Dialog() => EditTableDialog.Run(WindowParent, GetTable());
+		TableEditTableDialog.Result Command_Table_EditTable_Dialog() => TableEditTableDialog.Run(WindowParent, GetTable());
 
-		void Command_Table_EditTable(EditTableDialog.Result result) => SetText(GetTable().Aggregate(result.AggregateData).Sort(result.SortData));
+		void Command_Table_EditTable(TableEditTableDialog.Result result) => SetText(GetTable().Aggregate(result.AggregateData).Sort(result.SortData));
 
-		AddColumnDialog.Result Command_Table_AddColumn_Dialog()
+		TableAddColumnDialog.Result Command_Table_AddColumn_Dialog()
 		{
 			var table = GetTable();
-			return AddColumnDialog.Run(WindowParent, GetTableVariables(table), table.NumRows);
+			return TableAddColumnDialog.Run(WindowParent, GetTableVariables(table), table.NumRows);
 		}
 
 		void Command_Table_AddHeaders() => SetText(GetTable(false));
@@ -143,7 +143,7 @@ namespace NeoEdit.TextEdit
 			SetText(table);
 		}
 
-		void Command_Table_AddColumn(AddColumnDialog.Result result)
+		void Command_Table_AddColumn(TableAddColumnDialog.Result result)
 		{
 			var table = GetTable();
 			var variables = GetTableVariables(table);
@@ -169,15 +169,15 @@ namespace NeoEdit.TextEdit
 
 		void Command_Table_SetJoinSource() => joinTable = GetTable();
 
-		JoinDialog.Result Command_Table_Join_Dialog()
+		TableJoinDialog.Result Command_Table_Join_Dialog()
 		{
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
 
-			return JoinDialog.Run(WindowParent, GetTable(), joinTable);
+			return TableJoinDialog.Run(WindowParent, GetTable(), joinTable);
 		}
 
-		void Command_Table_Join(JoinDialog.Result result)
+		void Command_Table_Join(TableJoinDialog.Result result)
 		{
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
@@ -194,9 +194,9 @@ namespace NeoEdit.TextEdit
 				variables[table.GetHeader(column)] = Enumerable.Range(0, table.NumRows).Select(row => table[row, column]).ToList();
 		}
 
-		GenerateInsertsDialog.Result Command_Table_Database_GenerateInserts_Dialog() => GenerateInsertsDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		TableDatabaseGenerateInsertsDialog.Result Command_Table_Database_GenerateInserts_Dialog() => TableDatabaseGenerateInsertsDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
-		void Command_Table_Database_GenerateInserts(GenerateInsertsDialog.Result result)
+		void Command_Table_Database_GenerateInserts(TableDatabaseGenerateInsertsDialog.Result result)
 		{
 			var table = GetTable();
 			var header = $"INSERT INTO {result.TableName} ({string.Join(", ", Enumerable.Range(0, table.NumColumns).Select(column => table.GetHeader(column)))}) VALUES{(result.BatchSize == 1 ? " " : Data.DefaultEnding)}";
@@ -213,9 +213,9 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels);
 		}
 
-		GenerateUpdatesDialog.Result Command_Table_Database_GenerateUpdates_Dialog() => GenerateUpdatesDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		TableDatabaseGenerateUpdatesDialog.Result Command_Table_Database_GenerateUpdates_Dialog() => TableDatabaseGenerateUpdatesDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
-		void Command_Table_Database_GenerateUpdates(GenerateUpdatesDialog.Result result)
+		void Command_Table_Database_GenerateUpdates(TableDatabaseGenerateUpdatesDialog.Result result)
 		{
 			var table = GetTable();
 
@@ -232,9 +232,9 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels);
 		}
 
-		GenerateDeletesDialog.Result Command_Table_Database_GenerateDeletes_Dialog() => GenerateDeletesDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		TableDatabaseGenerateDeletesDialog.Result Command_Table_Database_GenerateDeletes_Dialog() => TableDatabaseGenerateDeletesDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
-		void Command_Table_Database_GenerateDeletes(GenerateDeletesDialog.Result result)
+		void Command_Table_Database_GenerateDeletes(TableDatabaseGenerateDeletesDialog.Result result)
 		{
 			var table = GetTable();
 

@@ -113,7 +113,7 @@ namespace NeoEdit.TextEdit
 		void Command_Database_Examine_Dialog()
 		{
 			ValidateConnection();
-			ExamineDatabaseDialog.Run(WindowParent, dbConnection);
+			DatabaseExamineDialog.Run(WindowParent, dbConnection);
 		}
 	}
 }

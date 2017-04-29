@@ -9,14 +9,14 @@ namespace NeoEdit.TextEdit
 	{
 		void Command_DateTime_Now() => ReplaceSelections(DateTime.Now.ToString("O"));
 
-		ConvertDateTimeDialog.Result Command_DateTime_Convert_Dialog()
+		DateTimeConvertDialog.Result Command_DateTime_Convert_Dialog()
 		{
 			if (Selections.Count < 1)
 				return null;
 
-			return ConvertDateTimeDialog.Run(WindowParent, GetString(Selections.First()));
+			return DateTimeConvertDialog.Run(WindowParent, GetString(Selections.First()));
 		}
 
-		void Command_DateTime_Convert(ConvertDateTimeDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ConvertDateTimeDialog.ConvertFormat(GetString(range), result.InputFormat, result.InputUTC, result.OutputFormat, result.OutputUTC)).ToList());
+		void Command_DateTime_Convert(DateTimeConvertDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => DateTimeConvertDialog.ConvertFormat(GetString(range), result.InputFormat, result.InputUTC, result.OutputFormat, result.OutputUTC)).ToList());
 	}
 }

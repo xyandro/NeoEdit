@@ -8,7 +8,7 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
-		GotoDialog.Result Command_Position_Goto_Dialog(GotoType gotoType)
+		PositionGotoDialog.Result Command_Position_Goto_Dialog(GotoType gotoType)
 		{
 			int line = 1, index = 1, position = 0;
 			var range = Selections.FirstOrDefault();
@@ -26,10 +26,10 @@ namespace NeoEdit.TextEdit
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return GotoDialog.Run(WindowParent, gotoType, startValue, GetVariables());
+			return PositionGotoDialog.Run(WindowParent, gotoType, startValue, GetVariables());
 		}
 
-		void Command_Position_Goto(GotoType gotoType, bool selecting, GotoDialog.Result result)
+		void Command_Position_Goto(GotoType gotoType, bool selecting, PositionGotoDialog.Result result)
 		{
 			var offsets = GetVariableExpressionResults<int>(result.Expression);
 			if (!offsets.Any())

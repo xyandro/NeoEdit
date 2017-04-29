@@ -101,9 +101,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse("0" + GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 
-		ConvertBaseDialog.Result Command_Numeric_ConvertBase_Dialog() => ConvertBaseDialog.Run(WindowParent);
+		NumericConvertBaseDialog.Result Command_Numeric_ConvertBase_Dialog() => NumericConvertBaseDialog.Run(WindowParent);
 
-		void Command_Numeric_ConvertBase(ConvertBaseDialog.Result result) => ReplaceSelections(GetSelectionStrings().Select(str => ConvertBase(str, result.InputSet, result.OutputSet)).ToList());
+		void Command_Numeric_ConvertBase(NumericConvertBaseDialog.Result result) => ReplaceSelections(GetSelectionStrings().Select(str => ConvertBase(str, result.InputSet, result.OutputSet)).ToList());
 
 		void Command_Numeric_Series_ZeroBased() => ReplaceSelections(Selections.Select((range, index) => index.ToString()).ToList());
 
@@ -130,9 +130,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Series_Geometric(NumericSeriesDialog.Result result) => ReplaceSelections(Selections.Select((range, index) => (Math.Pow(result.Increment, index) * result.Start).ToString()).ToList());
 
-		ScaleDialog.Result Command_Numeric_Scale_Dialog() => ScaleDialog.Run(WindowParent, GetVariables());
+		NumericScaleDialog.Result Command_Numeric_Scale_Dialog() => NumericScaleDialog.Run(WindowParent, GetVariables());
 
-		void Command_Numeric_Scale(ScaleDialog.Result result)
+		void Command_Numeric_Scale(NumericScaleDialog.Result result)
 		{
 			var variables = GetVariables();
 			var prevMin = new NEExpression(result.PrevMin).EvaluateRow<double>(variables);
@@ -213,17 +213,17 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		FloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
+		NumericFloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent);
 
-		void Command_Numeric_Floor(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Floor(decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
+		void Command_Numeric_Floor(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Floor(decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
 
-		FloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
+		NumericFloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent);
 
-		void Command_Numeric_Ceiling(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Ceiling(decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
+		void Command_Numeric_Ceiling(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Ceiling(decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
 
-		FloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => FloorRoundCeilingDialog.Run(WindowParent);
+		NumericFloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent);
 
-		void Command_Numeric_Round(FloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(decimal.Parse(GetString(range)) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
+		void Command_Numeric_Round(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(decimal.Parse(GetString(range)) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
 
 		NumericLimitDialog.Result Command_Numeric_Limit_Dialog() => NumericLimitDialog.Run(WindowParent, GetVariables());
 
@@ -242,19 +242,19 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Factor() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Factor(BigInteger.Parse(GetString(range)))).ToList());
 
-		RandomNumberDialog.Result Command_Numeric_RandomNumber_Dialog() => RandomNumberDialog.Run(WindowParent);
+		NumericRandomNumberDialog.Result Command_Numeric_RandomNumber_Dialog() => NumericRandomNumberDialog.Run(WindowParent);
 
-		void Command_Numeric_RandomNumber(RandomNumberDialog.Result result) => ReplaceSelections(Selections.AsParallel().Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
+		void Command_Numeric_RandomNumber(NumericRandomNumberDialog.Result result) => ReplaceSelections(Selections.AsParallel().Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
 
-		CombinationsPermutationsDialog.Result Command_Numeric_CombinationsPermutations_Dialog()
+		NumericCombinationsPermutationsDialog.Result Command_Numeric_CombinationsPermutations_Dialog()
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			return CombinationsPermutationsDialog.Run(WindowParent);
+			return NumericCombinationsPermutationsDialog.Run(WindowParent);
 		}
 
-		void Command_Numeric_CombinationsPermutations(CombinationsPermutationsDialog.Result result)
+		void Command_Numeric_CombinationsPermutations(NumericCombinationsPermutationsDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -282,7 +282,7 @@ namespace NeoEdit.TextEdit
 				++onNum;
 				if (onNum < result.UseCount)
 				{
-					if (result.Type == CombinationsPermutationsDialog.CombinationsPermutationsType.Combinations)
+					if (result.Type == NumericCombinationsPermutationsDialog.CombinationsPermutationsType.Combinations)
 						nums[onNum] = nums[onNum - 1] - 1;
 					else
 						nums[onNum] = -1;
@@ -311,8 +311,8 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels);
 		}
 
-		MinMaxValuesDialog.Result Command_Numeric_MinMaxValues_Dialog() => MinMaxValuesDialog.Run(WindowParent);
+		NumericMinMaxValuesDialog.Result Command_Numeric_MinMaxValues_Dialog() => NumericMinMaxValuesDialog.Run(WindowParent);
 
-		void Command_Numeric_MinMaxValues(MinMaxValuesDialog.Result result) => ReplaceSelections(string.Join(" ", new List<string> { result.Min ? result.CodePage.MinValue() : null, result.Max ? result.CodePage.MaxValue() : null }.Where(str => !string.IsNullOrEmpty(str))));
+		void Command_Numeric_MinMaxValues(NumericMinMaxValuesDialog.Result result) => ReplaceSelections(string.Join(" ", new List<string> { result.Min ? result.CodePage.MinValue() : null, result.Max ? result.CodePage.MaxValue() : null }.Where(str => !string.IsNullOrEmpty(str))));
 	}
 }

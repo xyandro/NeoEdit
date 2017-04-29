@@ -67,9 +67,9 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		AbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog() => AbsoluteURLDialog.Run(WindowParent, GetVariables());
+		NetworkAbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog() => NetworkAbsoluteURLDialog.Run(WindowParent, GetVariables());
 
-		void Command_Network_AbsoluteURL(AbsoluteURLDialog.Result result)
+		void Command_Network_AbsoluteURL(NetworkAbsoluteURLDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			var newStrs = Selections.Zip(results, (range, baseUrl) => new { range, baseUrl }).AsParallel().AsOrdered().Select(obj => new Uri(new Uri(obj.baseUrl), GetString(obj.range)).AbsoluteUri).ToList();
@@ -90,9 +90,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		FetchURLDialog.Result Command_Network_Fetch_File_Dialog() => FetchURLDialog.Run(WindowParent, GetVariables());
+		NetworkFetchFileDialog.Result Command_Network_Fetch_File_Dialog() => NetworkFetchFileDialog.Run(WindowParent, GetVariables());
 
-		void Command_Network_Fetch_File(FetchURLDialog.Result result)
+		void Command_Network_Fetch_File(NetworkFetchFileDialog.Result result)
 		{
 			var variables = GetVariables();
 
@@ -159,9 +159,9 @@ namespace NeoEdit.TextEdit
 			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
 		}
 
-		PingDialog.Result Command_Network_Ping_Dialog() => PingDialog.Run(WindowParent);
+		NetworkPingDialog.Result Command_Network_Ping_Dialog() => NetworkPingDialog.Run(WindowParent);
 
-		void Command_Network_Ping(PingDialog.Result result)
+		void Command_Network_Ping(NetworkPingDialog.Result result)
 		{
 			var replies = Task.Run(async () =>
 			{
@@ -185,9 +185,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(replies);
 		}
 
-		ScanPortsDialog.Result Command_Network_ScanPorts_Dialog() => ScanPortsDialog.Run(WindowParent);
+		NetworkScanPortsDialog.Result Command_Network_ScanPorts_Dialog() => NetworkScanPortsDialog.Run(WindowParent);
 
-		void Command_Network_ScanPorts(ScanPortsDialog.Result result)
+		void Command_Network_ScanPorts(NetworkScanPortsDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			var results = PortScanner.ScanPorts(strs.Select(str => IPAddress.Parse(str)).ToList(), result.Ports, result.Attempts, TimeSpan.FromMilliseconds(result.Timeout), result.Concurrency);

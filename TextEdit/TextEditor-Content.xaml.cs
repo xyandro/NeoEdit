@@ -89,17 +89,17 @@ namespace NeoEdit.TextEdit
 
 		void Command_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
 
-		FindContentAttributeDialog.Result Command_Content_Ancestor_Dialog() => FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
+		ContentAttributeDialog.Result Command_Content_Ancestor_Dialog() => ContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
 
-		void Command_Content_Ancestor(FindContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Command_Content_Ancestor(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		SelectContentAttributeDialog.Result Command_Content_Attributes_Dialog() => SelectContentAttributeDialog.Run(WindowParent, GetSelectionNodes());
+		ContentAttributesDialog.Result Command_Content_Attributes_Dialog() => ContentAttributesDialog.Run(WindowParent, GetSelectionNodes());
 
-		void Command_Content_Attributes(SelectContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
+		void Command_Content_Attributes(ContentAttributesDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 
-		FindContentAttributeDialog.Result Command_Content_WithAttribute_Dialog() => FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes());
+		ContentAttributeDialog.Result Command_Content_WithAttribute_Dialog() => ContentAttributeDialog.Run(WindowParent, GetSelectionNodes());
 
-		void Command_Content_WithAttribute(FindContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Command_Content_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
 		void Command_Content_Children_Children() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()));
 
@@ -107,9 +107,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
 
-		FindContentAttributeDialog.Result Command_Content_Children_WithAttribute_Dialog() => FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
+		ContentAttributeDialog.Result Command_Content_Children_WithAttribute_Dialog() => ContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
 
-		void Command_Content_Children_WithAttribute(FindContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Command_Content_Children_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
 		void Command_Content_Descendants_Descendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()));
 
@@ -117,9 +117,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
 
-		FindContentAttributeDialog.Result Command_Content_Descendants_WithAttribute_Dialog() => FindContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+		ContentAttributeDialog.Result Command_Content_Descendants_WithAttribute_Dialog() => ContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
 
-		void Command_Content_Descendants_WithAttribute(FindContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Command_Content_Descendants_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
 		void Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown)));
 	}

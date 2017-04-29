@@ -245,7 +245,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(clipboardStrings, highlight);
 		}
 
-		FindDialog.Result Command_Edit_Find_Find_Dialog()
+		EditFindFindDialog.Result Command_Edit_Find_Find_Dialog()
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
@@ -260,10 +260,10 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			return FindDialog.Run(WindowParent, text, selectionOnly);
+			return EditFindFindDialog.Run(WindowParent, text, selectionOnly);
 		}
 
-		void Command_Edit_Find_Find(bool selecting, FindDialog.Result result)
+		void Command_Edit_Find_Find(bool selecting, EditFindFindDialog.Result result)
 		{
 			var text = result.Text;
 			if (!result.IsRegex)
@@ -287,7 +287,7 @@ namespace NeoEdit.TextEdit
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
 			var resultsByRegion = regions.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false)).ToList();
 
-			if (result.Type == FindDialog.ResultType.CopyCount)
+			if (result.Type == EditFindFindDialog.ResultType.CopyCount)
 			{
 				SetClipboardStrings(resultsByRegion.Select(list => list.Count.ToString()));
 				return;
@@ -299,11 +299,11 @@ namespace NeoEdit.TextEdit
 
 			switch (result.Type)
 			{
-				case FindDialog.ResultType.FindFirst:
+				case EditFindFindDialog.ResultType.FindFirst:
 					Searches.Replace(results);
 					FindNext(true, selecting);
 					break;
-				case FindDialog.ResultType.FindAll:
+				case EditFindFindDialog.ResultType.FindAll:
 					Selections.Replace(results);
 					break;
 			}
@@ -323,7 +323,7 @@ namespace NeoEdit.TextEdit
 			FindNext(true, selecting);
 		}
 
-		MassFindDialog.Result Command_Edit_Find_MassFind_Dialog()
+		EditFindMassFindDialog.Result Command_Edit_Find_MassFind_Dialog()
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
@@ -338,10 +338,10 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			return MassFindDialog.Run(WindowParent, text, selectionOnly, GetVariables());
+			return EditFindMassFindDialog.Run(WindowParent, text, selectionOnly, GetVariables());
 		}
 
-		void Command_Edit_Find_MassFind(MassFindDialog.Result result)
+		void Command_Edit_Find_MassFind(EditFindMassFindDialog.Result result)
 		{
 			var texts = GetVariableExpressionResults<string>(result.Text);
 
@@ -358,7 +358,7 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(ranges);
 		}
 
-		ReplaceDialog.Result Command_Edit_Find_Replace_Dialog()
+		EditFindReplaceDialog.Result Command_Edit_Find_Replace_Dialog()
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
@@ -373,10 +373,10 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			return ReplaceDialog.Run(WindowParent, text, selectionOnly);
+			return EditFindReplaceDialog.Run(WindowParent, text, selectionOnly);
 		}
 
-		void Command_Edit_Find_Replace(ReplaceDialog.Result result)
+		void Command_Edit_Find_Replace(EditFindReplaceDialog.Result result)
 		{
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
 			var sels = regions.AsParallel().AsOrdered().SelectMany(region => Data.RegexMatches(result.Regex, region.Start, region.Length, result.MultiLine, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
@@ -398,9 +398,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		RotateDialog.Result Command_Edit_Rotate_Dialog() => RotateDialog.Run(WindowParent, GetVariables());
+		EditRotateDialog.Result Command_Edit_Rotate_Dialog() => EditRotateDialog.Run(WindowParent, GetVariables());
 
-		void Command_Edit_Rotate(RotateDialog.Result result)
+		void Command_Edit_Rotate(EditRotateDialog.Result result)
 		{
 			var count = new NEExpression(result.Count).EvaluateRow<int>(GetVariables());
 			if (count == 0)
@@ -416,9 +416,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		RepeatDialog.Result Command_Edit_Repeat_Dialog() => RepeatDialog.Run(WindowParent, Selections.Count == 1, GetVariables());
+		EditRepeatDialog.Result Command_Edit_Repeat_Dialog() => EditRepeatDialog.Run(WindowParent, Selections.Count == 1, GetVariables());
 
-		void Command_Edit_Repeat(RepeatDialog.Result result)
+		void Command_Edit_Repeat(EditRepeatDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(GetString(range), results[index])).ToList());
@@ -449,9 +449,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_URL_Unescape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 
-		MakeAbsoluteDialog.Result Command_Edit_URL_Absolute_Dialog() => MakeAbsoluteDialog.Run(WindowParent, GetVariables(), false);
+		FilesNamesMakeAbsoluteDialog.Result Command_Edit_URL_Absolute_Dialog() => FilesNamesMakeAbsoluteDialog.Run(WindowParent, GetVariables(), false);
 
-		void Command_Edit_URL_Absolute(MakeAbsoluteDialog.Result result)
+		void Command_Edit_URL_Absolute(FilesNamesMakeAbsoluteDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			ReplaceSelections(GetSelectionStrings().Select((str, index) =>
@@ -461,13 +461,13 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		ChooseColorDialog.Result Command_Edit_Color_Dialog() => ChooseColorDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault());
+		EditColorDialog.Result Command_Edit_Color_Dialog() => EditColorDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault());
 
-		void Command_Edit_Color(ChooseColorDialog.Result result) => ReplaceSelections(result.Color);
+		void Command_Edit_Color(EditColorDialog.Result result) => ReplaceSelections(result.Color);
 
-		HashDataDialog.Result Command_Edit_Data_Hash_Dialog() => HashDataDialog.Run(WindowParent, CodePage);
+		EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog() => EditDataHashDialog.Run(WindowParent, CodePage);
 
-		void Command_Edit_Data_Hash(HashDataDialog.Result result)
+		void Command_Edit_Data_Hash(EditDataHashDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!CheckCanFullyEncode(strs, result.CodePage))
@@ -475,9 +475,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		CompressDataDialog.Result Command_Edit_Data_Compress_Dialog() => CompressDataDialog.Run(WindowParent, CodePage, true);
+		EditDataCompressDialog.Result Command_Edit_Data_Compress_Dialog() => EditDataCompressDialog.Run(WindowParent, CodePage, true);
 
-		void Command_Edit_Data_Compress(CompressDataDialog.Result result)
+		void Command_Edit_Data_Compress(EditDataCompressDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!CheckCanFullyEncode(strs, result.InputCodePage))
@@ -488,9 +488,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(compressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		CompressDataDialog.Result Command_Edit_Data_Decompress_Dialog() => CompressDataDialog.Run(WindowParent, CodePage, false);
+		EditDataCompressDialog.Result Command_Edit_Data_Decompress_Dialog() => EditDataCompressDialog.Run(WindowParent, CodePage, false);
 
-		void Command_Edit_Data_Decompress(CompressDataDialog.Result result)
+		void Command_Edit_Data_Decompress(EditDataCompressDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!CheckCanFullyEncode(strs, result.InputCodePage))
@@ -501,9 +501,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(decompressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EncryptDataDialog.Result Command_Edit_Data_Encrypt_Dialog() => EncryptDataDialog.Run(WindowParent, CodePage, true);
+		EditDataEncryptDialog.Result Command_Edit_Data_Encrypt_Dialog() => EditDataEncryptDialog.Run(WindowParent, CodePage, true);
 
-		void Command_Edit_Data_Encrypt(EncryptDataDialog.Result result)
+		void Command_Edit_Data_Encrypt(EditDataEncryptDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!CheckCanFullyEncode(strs, result.InputCodePage))
@@ -514,9 +514,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(encrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EncryptDataDialog.Result Command_Edit_Data_Decrypt_Dialog() => EncryptDataDialog.Run(WindowParent, CodePage, false);
+		EditDataEncryptDialog.Result Command_Edit_Data_Decrypt_Dialog() => EditDataEncryptDialog.Run(WindowParent, CodePage, false);
 
-		void Command_Edit_Data_Decrypt(EncryptDataDialog.Result result)
+		void Command_Edit_Data_Decrypt(EditDataEncryptDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!CheckCanFullyEncode(strs, result.InputCodePage))
@@ -527,9 +527,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(decrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		SignDataDialog.Result Command_Edit_Data_Sign_Dialog() => SignDataDialog.Run(WindowParent, CodePage);
+		EditDataSignDialog.Result Command_Edit_Data_Sign_Dialog() => EditDataSignDialog.Run(WindowParent, CodePage);
 
-		void Command_Edit_Data_Sign(SignDataDialog.Result result)
+		void Command_Edit_Data_Sign(EditDataSignDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!CheckCanFullyEncode(strs, result.CodePage))
@@ -537,9 +537,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		SortDialog.Result Command_Edit_Sort_Dialog() => SortDialog.Run(WindowParent);
+		EditSortDialog.Result Command_Edit_Sort_Dialog() => EditSortDialog.Run(WindowParent);
 
-		void Command_Edit_Sort(SortDialog.Result result)
+		void Command_Edit_Sort(EditSortDialog.Result result)
 		{
 			var regions = GetSortSource(result.SortScope);
 			var ordering = GetOrdering(result.WithinRegions, result.SortType, result.CaseSensitive, result.Ascending);
@@ -568,9 +568,9 @@ namespace NeoEdit.TextEdit
 				Regions.Replace(newRegions);
 		}
 
-		ConvertDialog.Result Command_Edit_Convert_Dialog() => ConvertDialog.Run(WindowParent);
+		EditConvertDialog.Result Command_Edit_Convert_Dialog() => EditConvertDialog.Run(WindowParent);
 
-		void Command_Edit_Convert(ConvertDialog.Result result)
+		void Command_Edit_Convert(EditConvertDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			if (!CheckCanFullyEncode(strs, result.InputType))

@@ -164,9 +164,9 @@ namespace NeoEdit.TextEdit
 				right.ReplaceSelections(left.GetSelectionStrings());
 		}
 
-		FixWhitespaceDialog.Result Command_Diff_FixWhitespace_Dialog() => FixWhitespaceDialog.Run(WindowParent);
+		DiffFixWhitespaceDialog.Result Command_Diff_FixWhitespace_Dialog() => DiffFixWhitespaceDialog.Run(WindowParent);
 
-		void Command_Diff_FixWhitespace(FixWhitespaceDialog.Result result)
+		void Command_Diff_FixWhitespace(DiffFixWhitespaceDialog.Result result)
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");

@@ -11,7 +11,7 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
-		string SetWidth(string str, WidthDialog.Result result, int value)
+		string SetWidth(string str, TextWidthDialog.Result result, int value)
 		{
 			if (str.Length == value)
 				return str;
@@ -20,9 +20,9 @@ namespace NeoEdit.TextEdit
 			{
 				switch (result.Location)
 				{
-					case WidthDialog.TextLocation.Start: return str.Substring(0, value);
-					case WidthDialog.TextLocation.Middle: return str.Substring((str.Length - value + 1) / 2, value);
-					case WidthDialog.TextLocation.End: return str.Substring(str.Length - value);
+					case TextWidthDialog.TextLocation.Start: return str.Substring(0, value);
+					case TextWidthDialog.TextLocation.Middle: return str.Substring((str.Length - value + 1) / 2, value);
+					case TextWidthDialog.TextLocation.End: return str.Substring(str.Length - value);
 					default: throw new ArgumentException("Invalid");
 				}
 			}
@@ -31,15 +31,15 @@ namespace NeoEdit.TextEdit
 				var len = value - str.Length;
 				switch (result.Location)
 				{
-					case WidthDialog.TextLocation.Start: return str + new string(result.PadChar, len);
-					case WidthDialog.TextLocation.Middle: return new string(result.PadChar, (len + 1) / 2) + str + new string(result.PadChar, len / 2);
-					case WidthDialog.TextLocation.End: return new string(result.PadChar, len) + str;
+					case TextWidthDialog.TextLocation.Start: return str + new string(result.PadChar, len);
+					case TextWidthDialog.TextLocation.Middle: return new string(result.PadChar, (len + 1) / 2) + str + new string(result.PadChar, len / 2);
+					case TextWidthDialog.TextLocation.End: return new string(result.PadChar, len) + str;
 					default: throw new ArgumentException("Invalid");
 				}
 			}
 		}
 
-		Range TrimRange(Range range, TrimDialog.Result result)
+		Range TrimRange(Range range, TextTrimDialog.Result result)
 		{
 			var index = range.Start;
 			var length = range.Length;
@@ -49,7 +49,7 @@ namespace NeoEdit.TextEdit
 			return Range.FromIndex(index, length);
 		}
 
-		string TrimString(string str, TrimDialog.Result result)
+		string TrimString(string str, TextTrimDialog.Result result)
 		{
 			var start = 0;
 			var end = str.Length;
@@ -66,21 +66,21 @@ namespace NeoEdit.TextEdit
 			return str.Substring(start, end - start);
 		}
 
-		TrimDialog.Result Command_Text_Select_Trim_Dialog() => TrimDialog.Run(WindowParent);
+		TextTrimDialog.Result Command_Text_Select_Trim_Dialog() => TextTrimDialog.Run(WindowParent);
 
-		void Command_Text_Select_Trim(TrimDialog.Result result) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList());
+		void Command_Text_Select_Trim(TextTrimDialog.Result result) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList());
 
-		WidthDialog.Result Command_Text_Select_ByWidth_Dialog() => WidthDialog.Run(WindowParent, false, true, GetVariables());
+		TextWidthDialog.Result Command_Text_Select_ByWidth_Dialog() => TextWidthDialog.Run(WindowParent, false, true, GetVariables());
 
-		void Command_Text_Select_ByWidth(WidthDialog.Result result)
+		void Command_Text_Select_ByWidth(TextWidthDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<int>(result.Expression);
 			Selections.Replace(Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList());
 		}
 
-		SelectWordDialog.Result Command_Text_Select_WholeBoundedWord_Dialog(bool wholeWord) => SelectWordDialog.Run(WindowParent, wholeWord);
+		TextSelectWholeBoundedWordDialog.Result Command_Text_Select_WholeBoundedWord_Dialog(bool wholeWord) => TextSelectWholeBoundedWordDialog.Run(WindowParent, wholeWord);
 
-		void Command_Text_Select_WholeBoundedWord(SelectWordDialog.Result result, bool wholeWord)
+		void Command_Text_Select_WholeBoundedWord(TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
 		{
 			var sels = new List<Range>();
 			foreach (var range in Selections)
@@ -114,29 +114,29 @@ namespace NeoEdit.TextEdit
 
 		void Command_Text_Length() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => range.Length.ToString()).ToList());
 
-		WidthDialog.Result Command_Text_Width_Dialog()
+		TextWidthDialog.Result Command_Text_Width_Dialog()
 		{
 			var numeric = Selections.Any() ? Selections.AsParallel().All(range => GetString(range).IsNumeric()) : false;
-			return WidthDialog.Run(WindowParent, numeric, false, GetVariables());
+			return TextWidthDialog.Run(WindowParent, numeric, false, GetVariables());
 		}
 
-		void Command_Text_Width(WidthDialog.Result result)
+		void Command_Text_Width(TextWidthDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), result, results[index])).ToList());
 		}
 
-		TrimDialog.Result Command_Text_Trim_Dialog() => TrimDialog.Run(WindowParent);
+		TextTrimDialog.Result Command_Text_Trim_Dialog() => TextTrimDialog.Run(WindowParent);
 
-		void Command_Text_Trim(TrimDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(GetString(str), result)).ToList());
+		void Command_Text_Trim(TextTrimDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(GetString(str), result)).ToList());
 
 		void Command_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
 		void Command_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
-		RandomDataDialog.Result Command_Text_RandomText_Dialog() => RandomDataDialog.Run(GetVariables(), WindowParent);
+		TextRandomTextDialog.Result Command_Text_RandomText_Dialog() => TextRandomTextDialog.Run(GetVariables(), WindowParent);
 
-		void Command_Text_RandomText(RandomDataDialog.Result result)
+		void Command_Text_RandomText(TextRandomTextDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<int>(result.Expression);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
@@ -144,15 +144,15 @@ namespace NeoEdit.TextEdit
 
 		void Command_Text_LoremIpsum() => ReplaceSelections(new LoremGenerator().GetSentences().Take(Selections.Count).ToList());
 
-		RevRegExDialog.Result Command_Text_ReverseRegEx_Dialog()
+		TextReverseRegExDialog.Result Command_Text_ReverseRegEx_Dialog()
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			return RevRegExDialog.Run(WindowParent);
+			return TextReverseRegExDialog.Run(WindowParent);
 		}
 
-		void Command_Text_ReverseRegEx(RevRegExDialog.Result result)
+		void Command_Text_ReverseRegEx(TextReverseRegExDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -171,9 +171,9 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels);
 		}
 
-		FirstDistinctDialog.Result Command_Text_FirstDistinct_Dialog() => FirstDistinctDialog.Run(WindowParent);
+		TextFirstDistinctDialog.Result Command_Text_FirstDistinct_Dialog() => TextFirstDistinctDialog.Run(WindowParent);
 
-		void Command_Text_FirstDistinct(FirstDistinctDialog.Result result)
+		void Command_Text_FirstDistinct(TextFirstDistinctDialog.Result result)
 		{
 			var opResult = ProgressDialog.Run(WindowParent, "Finding characters...", (cancelled, progress) =>
 			{

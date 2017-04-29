@@ -78,9 +78,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_Nothing() => Selections.Clear();
 
-		LimitDialog.Result Command_Select_Limit_Dialog() => LimitDialog.Run(WindowParent, Selections.Count, GetVariables());
+		SelectLimitDialog.Result Command_Select_Limit_Dialog() => SelectLimitDialog.Run(WindowParent, Selections.Count, GetVariables());
 
-		void Command_Select_Limit(LimitDialog.Result result)
+		void Command_Select_Limit(SelectLimitDialog.Result result)
 		{
 			var variables = GetVariables();
 			var firstSelection = new NEExpression(result.FirstSelection).EvaluateRow<int>(variables);
@@ -173,9 +173,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_RepeatedLines() => Selections.Replace(Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(range)).ToList());
 
-		CountDialog.Result Command_Select_ByCount_Dialog() => CountDialog.Run(WindowParent);
+		SelectByCountDialog.Result Command_Select_ByCount_Dialog() => SelectByCountDialog.Run(WindowParent);
 
-		void Command_Select_ByCount(CountDialog.Result result)
+		void Command_Select_ByCount(SelectByCountDialog.Result result)
 		{
 			var strs = Selections.Select((range, index) => Tuple.Create(GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(result.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);

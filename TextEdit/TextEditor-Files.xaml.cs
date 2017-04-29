@@ -161,17 +161,17 @@ namespace NeoEdit.TextEdit
 
 		void Command_Files_Names_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
 
-		MakeAbsoluteDialog.Result Command_Files_Names_MakeAbsolute_Dialog() => MakeAbsoluteDialog.Run(WindowParent, GetVariables(), true);
+		FilesNamesMakeAbsoluteDialog.Result Command_Files_Names_MakeAbsolute_Dialog() => FilesNamesMakeAbsoluteDialog.Run(WindowParent, GetVariables(), true);
 
-		void Command_Files_Names_MakeAbsolute(MakeAbsoluteDialog.Result result)
+		void Command_Files_Names_MakeAbsolute(FilesNamesMakeAbsoluteDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
-			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == MakeAbsoluteDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
+			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		GetUniqueNamesDialog.Result Command_Files_Names_GetUnique_Dialog() => GetUniqueNamesDialog.Run(WindowParent);
+		FilesNamesGetUniqueDialog.Result Command_Files_Names_GetUnique_Dialog() => FilesNamesGetUniqueDialog.Run(WindowParent);
 
-		void Command_Files_Names_GetUnique(GetUniqueNamesDialog.Result result)
+		void Command_Files_Names_GetUnique(FilesNamesGetUniqueDialog.Result result)
 		{
 			var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			if (!result.Format.Contains("{Unique}"))
@@ -301,15 +301,15 @@ namespace NeoEdit.TextEdit
 
 		void Command_Files_Get_Version_Assembly() => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => AssemblyName.GetAssemblyName(file).Version.ToString()).ToList());
 
-		SetSizeDialog.Result Command_Files_Set_Size_Dialog()
+		FilesSetSizeDialog.Result Command_Files_Set_Size_Dialog()
 		{
 			var vars = GetVariables();
 			var sizes = RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			return SetSizeDialog.Run(WindowParent, vars);
+			return FilesSetSizeDialog.Run(WindowParent, vars);
 		}
 
-		void Command_Files_Set_Size(SetSizeDialog.Result result)
+		void Command_Files_Set_Size(FilesSetSizeDialog.Result result)
 		{
 			var vars = GetVariables();
 			var files = RelativeSelectedFiles();
@@ -319,9 +319,9 @@ namespace NeoEdit.TextEdit
 			files.Zip(results, (file, size) => new { file, size }).AsParallel().ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
-		ChooseDateTimeDialog.Result Command_Files_Set_Time_Dialog() => ChooseDateTimeDialog.Run(WindowParent, DateTime.Now);
+		FilesSetTimeDialog.Result Command_Files_Set_Time_Dialog() => FilesSetTimeDialog.Run(WindowParent, DateTime.Now);
 
-		void Command_Files_Set_Time(TimestampType type, ChooseDateTimeDialog.Result result)
+		void Command_Files_Set_Time(TimestampType type, FilesSetTimeDialog.Result result)
 		{
 			var files = RelativeSelectedFiles();
 			foreach (var file in files)
@@ -352,7 +352,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		SetAttributesDialog.Result Command_Files_Set_Attributes_Dialog()
+		FilesSetAttributesDialog.Result Command_Files_Set_Attributes_Dialog()
 		{
 			var filesAttrs = Selections.Select(range => GetString(range)).Select(file => new DirectoryInfo(file).Attributes).ToList();
 			var availAttrs = Helpers.GetValues<FileAttributes>();
@@ -367,10 +367,10 @@ namespace NeoEdit.TextEdit
 						current[availAttr] = null;
 				}
 
-			return SetAttributesDialog.Run(WindowParent, current);
+			return FilesSetAttributesDialog.Run(WindowParent, current);
 		}
 
-		void Command_Files_Set_Attributes(SetAttributesDialog.Result result)
+		void Command_Files_Set_Attributes(FilesSetAttributesDialog.Result result)
 		{
 			FileAttributes andMask = 0, orMask = 0;
 			foreach (var pair in result.Attributes)
@@ -395,9 +395,9 @@ namespace NeoEdit.TextEdit
 				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors.Select(ex => ex.Message))}", "Error", WindowParent);
 		}
 
-		InsertFilesDialog.Result Command_Files_Insert_Dialog() => InsertFilesDialog.Run(WindowParent);
+		FilesInsertDialog.Result Command_Files_Insert_Dialog() => FilesInsertDialog.Run(WindowParent);
 
-		void Command_Files_Insert(InsertFilesDialog.Result result) => ReplaceSelections(GetSelectionStrings().AsParallel().AsOrdered().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
+		void Command_Files_Insert(FilesInsertDialog.Result result) => ReplaceSelections(GetSelectionStrings().AsParallel().AsOrdered().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
 
 		void Command_Files_Create_Files()
 		{
@@ -417,9 +417,9 @@ namespace NeoEdit.TextEdit
 				Directory.CreateDirectory(file);
 		}
 
-		CreateFilesDialog.Result Command_Files_Create_FromExpressions_Dialog() => CreateFilesDialog.Run(WindowParent, GetVariables(), CodePage);
+		FilesCreateFromExpressionsDialog.Result Command_Files_Create_FromExpressions_Dialog() => FilesCreateFromExpressionsDialog.Run(WindowParent, GetVariables(), CodePage);
 
-		void Command_Files_Create_FromExpressions(CreateFilesDialog.Result result)
+		void Command_Files_Create_FromExpressions(FilesCreateFromExpressionsDialog.Result result)
 		{
 			var variables = GetVariables();
 
@@ -463,13 +463,13 @@ namespace NeoEdit.TextEdit
 
 		void Command_Files_Hash(HashDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().Select(file => Hasher.Get(file, result.HashType)).ToList());
 
-		SignFilesDialog.Result Command_Files_Sign_Dialog() => SignFilesDialog.Run(WindowParent);
+		FilesSignDialog.Result Command_Files_Sign_Dialog() => FilesSignDialog.Run(WindowParent);
 
-		void Command_Files_Sign(SignFilesDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
+		void Command_Files_Sign(FilesSignDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
 
-		CopyMoveFilesDialog.Result Command_Files_Operations_CopyMove_Dialog(bool move) => CopyMoveFilesDialog.Run(WindowParent, GetVariables(), move);
+		FilesOperationsCopyMoveDialog.Result Command_Files_Operations_CopyMove_Dialog(bool move) => FilesOperationsCopyMoveDialog.Run(WindowParent, GetVariables(), move);
 
-		void Command_Files_Operations_CopyMove(CopyMoveFilesDialog.Result result, bool move)
+		void Command_Files_Operations_CopyMove(FilesOperationsCopyMoveDialog.Result result, bool move)
 		{
 			var variables = GetVariables();
 
