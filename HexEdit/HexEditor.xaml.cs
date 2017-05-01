@@ -163,7 +163,7 @@ namespace NeoEdit.HexEdit
 
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
 
-			Font.FontSizeChanged += newSize => { CalculateBoundaries(); canvas.InvalidateVisual(); };
+			Font.FontSizeChanged += FontSizeChanged;
 		}
 
 		public override bool CanClose(ref Message.OptionsEnum answer)
@@ -186,6 +186,18 @@ namespace NeoEdit.HexEdit
 					return !IsModified;
 			}
 			return false;
+		}
+
+		public override void Closed()
+		{
+			Font.FontSizeChanged -= FontSizeChanged;
+			base.Closed();
+		}
+
+		void FontSizeChanged(double newSize)
+		{
+			CalculateBoundaries();
+			canvas.InvalidateVisual();
 		}
 
 		void EnsureVisible(long position)

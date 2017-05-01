@@ -81,10 +81,22 @@ namespace NeoEdit.TextView
 
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
 
-			Font.FontSizeChanged += newSize => { CalculateBoundaries(); canvas.InvalidateVisual(); };
+			Font.FontSizeChanged += FontSizeChanged;
+		}
+
+		public override void Closed()
+		{
+			Font.FontSizeChanged -= FontSizeChanged;
+			base.Closed();
 		}
 
 		public void Dispose() => data.Dispose();
+
+		void FontSizeChanged(double newSize)
+		{
+			CalculateBoundaries();
+			canvas.InvalidateVisual();
+		}
 
 		internal void Command_File_CopyPath() => NEClipboard.CopiedFile = FileName;
 
