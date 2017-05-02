@@ -32,9 +32,11 @@ namespace Loader
 			var files = GetFiles(config.X32Path).Concat(GetFiles(config.X64Path)).Distinct(StringComparer.OrdinalIgnoreCase).Where(file => config.IsMatch(file)).ToList();
 			// Make sure entry points are found
 			if (config.X32Start != null)
-				files.Single(file => file.Equals(config.X32Start, StringComparison.OrdinalIgnoreCase));
+				if (files.Count(file => file.Equals(config.X32Start, StringComparison.OrdinalIgnoreCase)) != 1)
+					throw new Exception("X32Start must exist");
 			if (config.X64Start != null)
-				files.Single(file => file.Equals(config.X64Start, StringComparison.OrdinalIgnoreCase));
+				if (files.Count(file => file.Equals(config.X64Start, StringComparison.OrdinalIgnoreCase)) != 1)
+					throw new Exception("X64Start must exist");
 
 			var loader = typeof(Program).Assembly.Location;
 			var bytes = File.ReadAllBytes(loader);
@@ -48,10 +50,10 @@ namespace Loader
 
 			File.WriteAllBytes(config.Output, bytes);
 
-			using (var nr = new ResourceWriter(config.Output))
+			using (var writer = new ResourceWriter(config.Output))
 			{
 				var startFile = config.X64StartFull ?? config.X32StartFull;
-				nr.CopyResources(new PEInfo(startFile), new List<IntPtr> { Native.RT_ICON, Native.RT_GROUP_ICON, Native.RT_VERSION });
+				writer.CopyResources(new PEInfo(startFile), new List<IntPtr> { Native.RT_ICON, Native.RT_GROUP_ICON, Native.RT_VERSION });
 
 				var currentID = 1;
 				foreach (var file in files)
@@ -71,27 +73,25 @@ namespace Loader
 
 					if (x32Res == x64Res)
 					{
-						x32Res.BitDepth = BitDepths.Any;
+						x32Res.Header.BitDepth = BitDepths.Any;
 						x64Res = null;
 					}
 
 					if (x32Res != null)
 					{
-						x32Res.ResourceID = ++currentID;
-						nr.AddBinary(x32Res.ResourceID, x32Res.CompressedData);
-						x32Res.CompressedData = null;
-						config.Resources.Add(x32Res);
+						x32Res.Header.ResourceID = ++currentID;
+						writer.AddBinary(x32Res.Header.ResourceID, x32Res.Data);
+						config.ResourceHeaders.Add(x32Res.Header);
 					}
 					if (x64Res != null)
 					{
-						x64Res.ResourceID = ++currentID;
-						nr.AddBinary(x64Res.ResourceID, x64Res.CompressedData);
-						x64Res.CompressedData = null;
-						config.Resources.Add(x64Res);
+						x64Res.Header.ResourceID = ++currentID;
+						writer.AddBinary(x64Res.Header.ResourceID, x64Res.Data);
+						config.ResourceHeaders.Add(x64Res.Header);
 					}
 				}
 
-				nr.AddBinary(1, config.SerializedData);
+				writer.AddBinary(1, config.ToBytes());
 			}
 		}
 	}

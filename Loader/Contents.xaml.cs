@@ -8,12 +8,12 @@ namespace Loader
 {
 	partial class Contents
 	{
-		public static DependencyProperty ResourceItemsProperty = DependencyProperty.Register(nameof(ResourceItems), typeof(ObservableCollection<Resource>), typeof(Contents));
+		public static DependencyProperty ResourceHeadersProperty = DependencyProperty.Register(nameof(ResourceHeaders), typeof(ObservableCollection<ResourceHeader>), typeof(Contents));
 		public static DependencyProperty StartProperty = DependencyProperty.Register(nameof(Start), typeof(string), typeof(Contents));
 		public static DependencyProperty Extract32Property = DependencyProperty.Register(nameof(Extract32), typeof(bool), typeof(Contents));
 		public static DependencyProperty Extract64Property = DependencyProperty.Register(nameof(Extract64), typeof(bool), typeof(Contents));
 
-		public ObservableCollection<Resource> ResourceItems { get { return (ObservableCollection<Resource>)GetValue(ResourceItemsProperty); } set { SetValue(ResourceItemsProperty, value); } }
+		public ObservableCollection<ResourceHeader> ResourceHeaders { get { return (ObservableCollection<ResourceHeader>)GetValue(ResourceHeadersProperty); } set { SetValue(ResourceHeadersProperty, value); } }
 		public string Start { get { return (string)GetValue(StartProperty); } set { SetValue(StartProperty, value); } }
 		public bool Extract32 { get { return (bool)GetValue(Extract32Property); } set { SetValue(Extract32Property, value); } }
 		public bool Extract64 { get { return (bool)GetValue(Extract64Property); } set { SetValue(Extract64Property, value); } }
@@ -25,7 +25,7 @@ namespace Loader
 			EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, e2) => (s as TextBox).SelectAll()));
 			DataContext = this;
 			InitializeComponent();
-			ResourceItems = new ObservableCollection<Resource>(ResourceReader.AllResources);
+			ResourceHeaders = new ObservableCollection<ResourceHeader>(ResourceReader.AllResourceHeaders);
 			if (Environment.Is64BitProcess)
 				Extract64 = true;
 			else

@@ -46,7 +46,7 @@ namespace Loader
 		{
 			var self = typeof(Extractor).Assembly.Location;
 			var dir = Path.GetDirectoryName(self);
-			return ResourceReader.Resources.Select(resource => Path.Combine(dir, resource.Name)).Any(file => (file != self) && (File.Exists(file)));
+			return ResourceReader.ResourceHeaders.Select(resourceHeader => Path.Combine(dir, resourceHeader.Name)).Any(file => (file != self) && (File.Exists(file)));
 		}
 
 		static void RunExtractor(string[] args)
@@ -76,6 +76,7 @@ namespace Loader
 					bitDepth = result?.Item2 ?? bitDepth;
 				}
 
+				// This is after the dialog because it makes the dialog not get focus
 				ClearCapsLock();
 
 				switch (action)

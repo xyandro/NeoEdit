@@ -23,7 +23,7 @@ namespace Loader
 		ExtractActions extractAction = ExtractActions.Extract;
 		bool nGen;
 		bool isConsole;
-		ObservableCollection<Resource> resources = new ObservableCollection<Resource>();
+		ObservableCollection<ResourceHeader> resourceHeaders = new ObservableCollection<ResourceHeader>();
 
 		public string X32Start { get { return x32Start; } private set { SetStrValue(ref x32Start, value); } }
 		public string X64Start { get { return x64Start; } private set { SetStrValue(ref x64Start, value); } }
@@ -34,48 +34,48 @@ namespace Loader
 		public ExtractActions ExtractAction { get { return extractAction; } set { SetValue(ref extractAction, value); } }
 		public bool NGen { get { return nGen; } set { SetValue(ref nGen, value); } }
 		public bool IsConsole { get { return isConsole; } set { SetValue(ref isConsole, value); } }
-		public ObservableCollection<Resource> Resources { get { return resources; } set { SetValue(ref resources, value); } }
+		public ObservableCollection<ResourceHeader> ResourceHeaders { get { return resourceHeaders; } set { SetValue(ref resourceHeaders, value); } }
 
 		public string X32StartFull => X32Start == null ? null : Path.Combine(X32Path, X32Start);
 		public string X64StartFull => X64Start == null ? null : Path.Combine(X64Path, X64Start);
 
 		public bool IsMatch(string filename) => match.IsMatch(filename);
 
-		public byte[] SerializedData
+		public byte[] ToBytes()
 		{
-			get
+			using (var ms = new MemoryStream())
+			using (var writer = new BinaryWriter(ms, Encoding.UTF8, true))
 			{
-				using (var ms = new MemoryStream())
-				using (var writer = new BinaryWriter(ms, Encoding.UTF8, true))
+				writer.Write(X32Start ?? "");
+				writer.Write(X64Start ?? "");
+				writer.Write((int)ExtractAction);
+				writer.Write(NGen);
+				writer.Write(ResourceHeaders.Count);
+				foreach (var resourceHeader in ResourceHeaders)
 				{
-					writer.Write(X32Start ?? "");
-					writer.Write(X64Start ?? "");
-					writer.Write((int)ExtractAction);
-					writer.Write(NGen);
-					writer.Write(Resources.Count);
-					foreach (var resource in Resources)
-					{
-						var data = resource.SerializedHeader;
-						writer.Write(data.Length);
-						writer.Write(data);
-					}
-					return ms.ToArray();
+					var data = resourceHeader.ToBytes();
+					writer.Write(data.Length);
+					writer.Write(data);
 				}
+				return ms.ToArray();
 			}
-			set
+		}
+
+		public static Config FromBytes(byte[] data)
+		{
+			using (var ms = new MemoryStream(data))
+			using (var reader = new BinaryReader(ms, Encoding.UTF8, true))
 			{
-				using (var ms = new MemoryStream(value))
-				using (var reader = new BinaryReader(ms, Encoding.UTF8, true))
-				{
-					X32Start = reader.ReadString();
-					X64Start = reader.ReadString();
-					ExtractAction = (ExtractActions)reader.ReadInt32();
-					NGen = reader.ReadBoolean();
-					Resources.Clear();
-					var resourceCount = reader.ReadInt32();
-					for (var ctr = 0; ctr < resourceCount; ++ctr)
-						Resources.Add(Resource.CreateFromSerializedHeader(reader.ReadBytes(reader.ReadInt32())));
-				}
+				var config = new Config();
+				config.X32Start = reader.ReadString();
+				config.X64Start = reader.ReadString();
+				config.ExtractAction = (ExtractActions)reader.ReadInt32();
+				config.NGen = reader.ReadBoolean();
+				config.ResourceHeaders.Clear();
+				var resourceHeaderCount = reader.ReadInt32();
+				for (var ctr = 0; ctr < resourceHeaderCount; ++ctr)
+					config.ResourceHeaders.Add(ResourceHeader.FromBytes(reader.ReadBytes(reader.ReadInt32())));
+				return config;
 			}
 		}
 

@@ -2,126 +2,75 @@
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace Loader
 {
 	class Resource
 	{
-		public int ResourceID { get; set; }
-		public string Name { get; set; }
-		public FileTypes FileType { get; set; }
-		public DateTime WriteTime { get; set; }
-		public BitDepths BitDepth { get; set; }
-		public string Version { get; set; }
-		public int CompressedSize { get; set; }
-		public int UncompressedSize { get; set; }
-		public string SHA1 { get; set; }
-		byte[] compressedData;
-		public byte[] CompressedData
-		{
-			get
-			{
-				return compressedData ?? ResourceReader.GetBinary(ResourceID);
-			}
-			set
-			{
-				CompressedSize = value?.Length ?? CompressedSize;
-				compressedData = value;
-			}
-		}
-
-		public byte[] UncompressedData
-		{
-			get
-			{
-				using (var ms = new MemoryStream())
-				{
-					using (var gz = new GZipStream(new MemoryStream(CompressedData), CompressionMode.Decompress))
-						gz.CopyTo(ms);
-					return ms.ToArray();
-				}
-			}
-			set
-			{
-				using (var output = new MemoryStream())
-				{
-					using (var gz = new GZipStream(output, CompressionLevel.Optimal, true))
-					using (var input = new MemoryStream(value))
-						input.CopyTo(gz);
-
-					CompressedData = output.ToArray();
-					UncompressedSize = value.Length;
-				}
-			}
-		}
-
-		public byte[] SerializedHeader
-		{
-			get
-			{
-				using (var ms = new MemoryStream())
-				using (var msWriter = new BinaryWriter(ms, Encoding.UTF8, true))
-				{
-					msWriter.Write(ResourceID);
-					msWriter.Write(Name);
-					msWriter.Write((int)FileType);
-					msWriter.Write(WriteTime.ToBinary());
-					msWriter.Write((int)BitDepth);
-					msWriter.Write(Version);
-					msWriter.Write(CompressedSize);
-					msWriter.Write(UncompressedSize);
-					msWriter.Write(SHA1);
-					return ms.ToArray();
-				}
-			}
-			set
-			{
-				using (var ms = new MemoryStream(value))
-				using (var reader = new BinaryReader(ms, Encoding.UTF8, true))
-				{
-					ResourceID = reader.ReadInt32();
-					Name = reader.ReadString();
-					FileType = (FileTypes)reader.ReadInt32();
-					WriteTime = DateTime.FromBinary(reader.ReadInt64());
-					BitDepth = (BitDepths)reader.ReadInt32();
-					Version = reader.ReadString();
-					CompressedSize = reader.ReadInt32();
-					UncompressedSize = reader.ReadInt32();
-					SHA1 = reader.ReadString();
-				}
-			}
-		}
+		public ResourceHeader Header { get; private set; }
+		public byte[] Data { get; private set; }
+		public byte[] RawData { get; private set; }
 
 		Resource() { }
-
-		public bool NameMatch(string name) => (Name.Equals(name, StringComparison.OrdinalIgnoreCase)) || (Name.Equals($"{name}.exe", StringComparison.OrdinalIgnoreCase)) || (Name.Equals($"{name}.dll", StringComparison.OrdinalIgnoreCase));
 
 		public static Resource CreateFromFile(string name, string fullPath, BitDepths bitDepth)
 		{
 			if ((string.IsNullOrWhiteSpace(fullPath)) || (!File.Exists(fullPath)))
 				return null;
 
-			var data = File.ReadAllBytes(fullPath);
-			var peInfo = new PEInfo(data);
-			var sha1 = new SHA1Managed();
+			var rawData = File.ReadAllBytes(fullPath);
+			var data = rawData;
+			using (var output = new MemoryStream())
+			{
+				using (var gz = new GZipStream(output, CompressionLevel.Optimal, true))
+				using (var input = new MemoryStream(data))
+					input.CopyTo(gz);
+
+				data = output.ToArray();
+			}
+
+			var peInfo = new PEInfo(rawData);
+			var sha1 = BitConverter.ToString(new SHA1Managed().ComputeHash(rawData)).Replace("-", "").ToLower();
+
 			return new Resource
 			{
-				Name = name,
-				FileType = peInfo.FileType,
-				WriteTime = File.GetLastWriteTimeUtc(fullPath),
-				BitDepth = bitDepth,
-				Version = peInfo.Version,
-				SHA1 = BitConverter.ToString(sha1.ComputeHash(data)).Replace("-", "").ToLower(),
-				UncompressedData = data,
+				Header = new ResourceHeader
+				{
+					Name = name,
+					FileType = peInfo.FileType,
+					WriteTime = File.GetLastWriteTimeUtc(fullPath),
+					BitDepth = bitDepth,
+					Version = peInfo.Version,
+					DataSize = data.Length,
+					RawDataSize = rawData.Length,
+					SHA1 = sha1,
+				},
+				RawData = rawData,
+				Data = data,
 			};
 		}
 
-		public static Resource CreateFromSerializedHeader(byte[] data) => new Resource { SerializedHeader = data };
+		public static Resource CreateFromHeader(ResourceHeader header)
+		{
+			var data = ResourceReader.GetBinary(header.ResourceID);
 
-		public void WriteToPath(string path) => File.WriteAllBytes(Path.Combine(path, Name), UncompressedData);
+			var rawData = data;
+			using (var ms = new MemoryStream())
+			{
+				using (var gz = new GZipStream(new MemoryStream(rawData), CompressionMode.Decompress))
+					gz.CopyTo(ms);
+				rawData = ms.ToArray();
+			}
 
-		public void SetDate(string path) => File.SetLastWriteTimeUtc(Path.Combine(path, Name), WriteTime);
+			return new Resource
+			{
+				Header = header,
+				Data = data,
+				RawData = rawData,
+			};
+		}
+
+		public void WriteToPath(string path) => File.WriteAllBytes(Path.Combine(path, Header.Name), RawData);
 
 		static public bool DataMatch(Resource x32Res, Resource x64Res)
 		{
@@ -129,26 +78,18 @@ namespace Loader
 				return false;
 			if (x32Res == x64Res)
 				return true;
-			if (x32Res.FileType != x64Res.FileType)
+			if (!ResourceHeader.DataMatch(x32Res.Header, x64Res.Header))
 				return false;
-			if (x32Res.Version != x64Res.Version)
+			if ((x32Res.RawData == null) || (x64Res.RawData == null))
 				return false;
-			if (x32Res.CompressedSize != x64Res.CompressedSize)
+			if (x32Res.RawData.Length != x64Res.RawData.Length)
 				return false;
-			if (x32Res.UncompressedSize != x64Res.UncompressedSize)
-				return false;
-			if (x32Res.SHA1 != x64Res.SHA1)
-				return false;
-			if ((x32Res.CompressedData == null) || (x64Res.CompressedData == null))
-				return false;
-			if (x32Res.CompressedData.Length != x64Res.CompressedData.Length)
-				return false;
-			for (var ctr = 0; ctr < x32Res.CompressedData.Length; ++ctr)
-				if (x32Res.CompressedData[ctr] != x64Res.CompressedData[ctr])
+			for (var ctr = 0; ctr < x32Res.RawData.Length; ++ctr)
+				if (x32Res.RawData[ctr] != x64Res.RawData[ctr])
 					return false;
 			return true;
 		}
 
-		public override string ToString() => Name;
+		public override string ToString() => Header.Name;
 	}
 }

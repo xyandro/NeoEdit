@@ -15,7 +15,7 @@ namespace Loader
 			Config = null;
 			var data = GetBinary(1, false);
 			if (data != null)
-				Config = new Config { SerializedData = data };
+				Config = Config.FromBytes(data);
 		}
 
 		public static byte[] GetBinary(int id, bool throwOnFailure = true)
@@ -34,15 +34,15 @@ namespace Loader
 			return result;
 		}
 
-		public static IEnumerable<Resource> AllResources => Config.Resources;
+		public static IEnumerable<ResourceHeader> AllResourceHeaders => Config.ResourceHeaders;
 
-		public static IEnumerable<Resource> GetResources(BitDepths bitDepth)
+		public static IEnumerable<ResourceHeader> GetResourceHeaders(BitDepths bitDepth)
 		{
-			foreach (var resource in AllResources)
-				if ((resource.BitDepth == bitDepth) || (resource.BitDepth == BitDepths.Any))
-					yield return resource;
+			foreach (var resourceHeader in AllResourceHeaders)
+				if ((resourceHeader.BitDepth == bitDepth) || (resourceHeader.BitDepth == BitDepths.Any))
+					yield return resourceHeader;
 		}
 
-		public static IEnumerable<Resource> Resources => GetResources(Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32);
+		public static IEnumerable<ResourceHeader> ResourceHeaders => GetResourceHeaders(Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32);
 	}
 }

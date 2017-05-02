@@ -18,7 +18,7 @@
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Contents of Archive:"/>
 
-		<ListView Name="items" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ResourceItems}">
+		<ListView Name="items" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ResourceHeaders}">
 			<ListView.Style>
 				<Style>
 					<Style.Resources>
@@ -37,14 +37,14 @@
 					<GridViewColumn Header="Compressed Size">
 						<GridViewColumn.CellTemplate>
 							<DataTemplate>
-								<TextBlock Text="{Binding CompressedSize, StringFormat=n0}" TextAlignment="Right"/>
+								<TextBlock Text="{Binding RawDataSize, StringFormat=n0}" TextAlignment="Right"/>
 							</DataTemplate>
 						</GridViewColumn.CellTemplate>
 					</GridViewColumn>
 					<GridViewColumn Header="Uncompressed Size">
 						<GridViewColumn.CellTemplate>
 							<DataTemplate>
-								<TextBlock Text="{Binding UncompressedSize, StringFormat=n0}" TextAlignment="Right"/>
+								<TextBlock Text="{Binding DataSize, StringFormat=n0}" TextAlignment="Right"/>
 							</DataTemplate>
 						</GridViewColumn.CellTemplate>
 					</GridViewColumn>

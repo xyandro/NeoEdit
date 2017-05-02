@@ -75,10 +75,12 @@ namespace Loader
 
 			var exeFile = typeof(Program).Assembly.Location;
 			var location = Path.GetDirectoryName(exeFile);
-			foreach (var resource in ResourceReader.GetResources(bitDepth))
-				resource.WriteToPath(location);
-			foreach (var resource in ResourceReader.GetResources(bitDepth))
-				resource.SetDate(location);
+
+			var resourceHeaders = ResourceReader.GetResourceHeaders(bitDepth).ToList();
+			foreach (var resourceHeader in resourceHeaders)
+				Resource.CreateFromHeader(resourceHeader).WriteToPath(location);
+			foreach (var resourceHeader in resourceHeaders)
+				resourceHeader.SetDate(location);
 
 			RunNGen();
 
@@ -100,15 +102,16 @@ namespace Loader
 			if (resolved.ContainsKey(name))
 				return resolved[name];
 
-			var resource = ResourceReader.Resources.Where(res => res.NameMatch(name)).SingleOrDefault();
-			if (resource == null)
+			var resourceHeader = ResourceReader.ResourceHeaders.SingleOrDefault(res => res.NameMatch(name));
+			if (resourceHeader == null)
 				return resolved[name] = null;
-			if (resource.FileType == FileTypes.Managed)
-				return resolved[name] = Assembly.Load(resource.UncompressedData);
-			if (resource.FileType == FileTypes.Mixed)
+			var resource = Resource.CreateFromHeader(resourceHeader);
+			if (resourceHeader.FileType == FileTypes.Managed)
+				return resolved[name] = Assembly.Load(resource.RawData);
+			if (resourceHeader.FileType == FileTypes.Mixed)
 			{
 				resource.WriteToPath(dllPath);
-				return resolved[name] = Assembly.LoadFile(Path.Combine(dllPath, resource.Name));
+				return resolved[name] = Assembly.LoadFile(Path.Combine(dllPath, resourceHeader.Name));
 			}
 			return resolved[name] = null;
 		}
@@ -118,20 +121,14 @@ namespace Loader
 			var start = Environment.Is64BitProcess ? ResourceReader.Config.X64Start : ResourceReader.Config.X32Start;
 			var dllPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), start, "DLLs");
 
-			var entry = ResourceReader.Resources.Where(resource => resource.Name.Equals(start, StringComparison.OrdinalIgnoreCase)).Single();
-			if (entry.FileType != FileTypes.Managed)
-			{
-				Directory.CreateDirectory(dllPath);
-				foreach (var resource in ResourceReader.Resources)
-					resource.WriteToPath(dllPath);
-				var proc = Process.Start(Path.Combine(dllPath, entry.Name), Environment.CommandLine);
-				proc.WaitForExit();
-				return;
-			}
+			var entry = ResourceReader.ResourceHeaders.Single(resourceHeader => resourceHeader.Name.Equals(start, StringComparison.OrdinalIgnoreCase));
 
 			var found = false;
-			foreach (var resource in ResourceReader.Resources.Where(resource => resource.FileType == FileTypes.Native))
+			foreach (var resourceHeader in ResourceReader.ResourceHeaders)
 			{
+				if ((entry.FileType == FileTypes.Managed) && (resourceHeader.FileType != FileTypes.Native))
+					continue;
+
 				if (!found)
 				{
 					Directory.CreateDirectory(dllPath);
@@ -139,7 +136,14 @@ namespace Loader
 					found = true;
 				}
 
-				resource.WriteToPath(dllPath);
+				Resource.CreateFromHeader(resourceHeader).WriteToPath(dllPath);
+			}
+
+			if (entry.FileType != FileTypes.Managed)
+			{
+				var proc = Process.Start(Path.Combine(dllPath, entry.Name), Environment.CommandLine);
+				proc.WaitForExit();
+				return;
 			}
 
 			AppDomain.CurrentDomain.AssemblyResolve += (s, info) => AssemblyResolve(info, dllPath);
