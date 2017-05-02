@@ -1271,7 +1271,7 @@ namespace NeoEdit.TextEdit
 								else
 									offset = GetNextWord(offset);
 							}
-							else if (shiftDown)
+							else if ((shiftDown) && (key == Key.Delete))
 							{
 								var line = Data.GetOffsetLine(offset);
 								offset = Data.GetOffset(line, 0);
