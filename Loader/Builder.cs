@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Loader
 {
-	class Builder
+	static class Builder
 	{
 		static IEnumerable<string> GetFiles(string startPath)
 		{

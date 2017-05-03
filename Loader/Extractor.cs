@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Loader
 {
-	class Extractor
+	static class Extractor
 	{
 		static void DeleteDelayed(string path)
 		{
@@ -29,7 +29,7 @@ namespace Loader
 			});
 		}
 
-		public void Extract(BitDepths bitDepth)
+		public static void Extract(BitDepths bitDepth)
 		{
 			var location = typeof(Program).Assembly.Location;
 			var newLocation = Path.Combine(Path.GetDirectoryName(location), $"{Path.GetFileNameWithoutExtension(location)}.Extractor{Path.GetExtension(location)}");
@@ -39,7 +39,7 @@ namespace Loader
 
 		static void WaitForParentExit(int pid) { try { Process.GetProcessById(pid).WaitForExit(); } catch { } }
 
-		void RunNGen()
+		static void RunNGen()
 		{
 			if (!ResourceReader.Config.NGen)
 				return;
@@ -66,7 +66,7 @@ namespace Loader
 			});
 		}
 
-		public void RunExtractor(BitDepths bitDepth, int? parentPid, string parentPath)
+		public static void RunExtractor(BitDepths bitDepth, int? parentPid, string parentPath)
 		{
 			if (parentPid.HasValue)
 				WaitForParentExit(parentPid.Value);
@@ -87,7 +87,7 @@ namespace Loader
 			DeleteDelayed(exeFile);
 		}
 
-		public void RunUpdate(int pid, string dest)
+		public static void RunUpdate(int pid, string dest)
 		{
 			WaitForParentExit(pid);
 			var src = typeof(Program).Assembly.Location;
@@ -95,8 +95,8 @@ namespace Loader
 			DeleteDelayed(src);
 		}
 
-		Dictionary<string, Assembly> resolved = new Dictionary<string, Assembly>();
-		Assembly AssemblyResolve(ResolveEventArgs args, string dllPath)
+		static Dictionary<string, Assembly> resolved = new Dictionary<string, Assembly>();
+		static Assembly AssemblyResolve(ResolveEventArgs args, string dllPath)
 		{
 			var name = new AssemblyName(args.Name).Name;
 			if (resolved.ContainsKey(name))
@@ -116,7 +116,7 @@ namespace Loader
 			return resolved[name] = null;
 		}
 
-		public void RunProgram(string[] args)
+		public static void RunProgram(string[] args)
 		{
 			var start = Environment.Is64BitProcess ? ResourceReader.Config.X64Start : ResourceReader.Config.X32Start;
 			var dllPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), start, "DLLs");

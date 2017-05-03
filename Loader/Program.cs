@@ -55,19 +55,18 @@ namespace Loader
 		{
 			SetupPassword();
 
-			var extractor = new Extractor();
 			if ((args.Length == 4) && (args[0] == "-extractor"))
 			{
 				var bitDepth = (BitDepths)Enum.Parse(typeof(BitDepths), args[1]);
 				var pid = int.Parse(args[2]);
 				var fileName = args[3];
-				extractor.RunExtractor(bitDepth, pid, fileName);
+				Extractor.RunExtractor(bitDepth, pid, fileName);
 			}
 			else if ((args.Length == 3) && (args[0] == "-update"))
 			{
 				var fileName = args[1];
 				var pid = int.Parse(args[2]);
-				extractor.RunUpdate(pid, fileName);
+				Extractor.RunUpdate(pid, fileName);
 			}
 			else if ((ResourceReader.Config.ExtractAction != ExtractActions.None) && ((Keyboard.GetKeyStates(Key.CapsLock).HasFlag(KeyStates.Down)) || ((args.Length == 1) && (args[0] == "-extract")) || (FilesAreExtracted())))
 			{
@@ -85,12 +84,12 @@ namespace Loader
 
 				switch (action)
 				{
-					case ExtractActions.Extract: extractor.Extract(bitDepth); break;
-					case ExtractActions.GUI: extractor.RunProgram(args); break;
+					case ExtractActions.Extract: Extractor.Extract(bitDepth); break;
+					case ExtractActions.GUI: Extractor.RunProgram(args); break;
 				}
 			}
 			else
-				extractor.RunProgram(args);
+				Extractor.RunProgram(args);
 		}
 
 		static void SetupPassword()
