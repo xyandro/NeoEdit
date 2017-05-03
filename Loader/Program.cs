@@ -21,6 +21,8 @@ namespace Loader
 					config.SetStart(new Uri(new Uri(loader), arg.Substring("-Start=".Length)).LocalPath);
 				else if (arg.StartsWith("-Path=", StringComparison.OrdinalIgnoreCase))
 					config.SetPath(new Uri(new Uri(loader), arg.Substring("-Path=".Length)).LocalPath);
+				else if (arg.StartsWith("-Password=", StringComparison.OrdinalIgnoreCase))
+					config.Password = arg.Substring("-Password=".Length);
 				else if (arg.StartsWith("-Output=", StringComparison.OrdinalIgnoreCase))
 					config.Output = new Uri(new Uri(loader), arg.Substring("-Output=".Length)).LocalPath;
 				else if (arg.StartsWith("-Match=", StringComparison.OrdinalIgnoreCase))
@@ -51,6 +53,8 @@ namespace Loader
 
 		static void RunExtractor(string[] args)
 		{
+			SetupPassword();
+
 			var extractor = new Extractor();
 			if ((args.Length == 4) && (args[0] == "-extractor"))
 			{
@@ -89,6 +93,49 @@ namespace Loader
 				extractor.RunProgram(args);
 		}
 
+		static void SetupPassword()
+		{
+			if (ResourceReader.Config.Password == null)
+				return;
+
+			if (Native.GetConsoleWindow() == IntPtr.Zero)
+			{
+				Resource.Password = PasswordDialog.Run();
+				return;
+			}
+
+			Console.Write("Password: ");
+
+			var password = "";
+			while (true)
+			{
+				var key = Console.ReadKey(true);
+				if (key.Key == ConsoleKey.Backspace)
+				{
+					if (password.Length > 0)
+					{
+						password = password.Remove(password.Length - 1);
+						Console.Write("\b \b");
+					}
+				}
+				else if (key.Key == ConsoleKey.Enter)
+				{
+					if (password.Length > 0)
+					{
+						Console.WriteLine();
+						break;
+					}
+				}
+				else
+				{
+					Console.Write("*");
+					password += key.KeyChar;
+				}
+			}
+
+			Resource.Password = password;
+		}
+
 		static void ClearCapsLock()
 		{
 			if (!Keyboard.GetKeyStates(Key.CapsLock).HasFlag(KeyStates.Toggled))
@@ -116,7 +163,10 @@ namespace Loader
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show($"{ex.Message}\n\nStack trace:\n{ex.StackTrace}", "Error");
+				if (Native.GetConsoleWindow() != IntPtr.Zero)
+					Console.WriteLine(ex.Message);
+				else
+					MessageBox.Show(ex.Message, "Error");
 				Environment.Exit(1);
 			}
 		}

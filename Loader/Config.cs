@@ -18,6 +18,7 @@ namespace Loader
 		string x64Start;
 		string x32Path;
 		string x64Path;
+		string password;
 		string output;
 		Regex match = new Regex(@"\.(exe|dll|txt)$", RegexOptions.IgnoreCase);
 		ExtractActions extractAction = ExtractActions.Extract;
@@ -29,6 +30,7 @@ namespace Loader
 		public string X64Start { get { return x64Start; } private set { SetStrValue(ref x64Start, value); } }
 		public string X32Path { get { return x32Path; } private set { SetStrValue(ref x32Path, value); } }
 		public string X64Path { get { return x64Path; } private set { SetStrValue(ref x64Path, value); } }
+		public string Password { get { return password; } set { SetStrValue(ref password, value); } }
 		public string Output { get { return output; } set { SetStrValue(ref output, value); } }
 		public string Match { get { return match.ToString(); } set { SetValue(ref match, new Regex(value, RegexOptions.IgnoreCase)); } }
 		public ExtractActions ExtractAction { get { return extractAction; } set { SetValue(ref extractAction, value); } }
@@ -50,6 +52,8 @@ namespace Loader
 				writer.Write(X64Start ?? "");
 				writer.Write((int)ExtractAction);
 				writer.Write(NGen);
+				writer.Write(Password != null);
+
 				writer.Write(ResourceHeaders.Count);
 				foreach (var resourceHeader in ResourceHeaders)
 				{
@@ -71,6 +75,8 @@ namespace Loader
 				config.X64Start = reader.ReadString();
 				config.ExtractAction = (ExtractActions)reader.ReadInt32();
 				config.NGen = reader.ReadBoolean();
+				config.Password = reader.ReadBoolean() ? "prompt" : null;
+
 				config.ResourceHeaders.Clear();
 				var resourceHeaderCount = reader.ReadInt32();
 				for (var ctr = 0; ctr < resourceHeaderCount; ++ctr)

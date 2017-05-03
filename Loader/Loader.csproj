@@ -53,6 +53,13 @@
       <DependentUpon>GetConfig.xaml</DependentUpon>
     </Compile>
     <Compile Include="Native.cs" />
+    <Page Include="PasswordDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="PasswordDialog.xaml.cs">
+      <DependentUpon>PasswordDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PEInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Resource.cs" />

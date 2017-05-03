@@ -150,10 +150,10 @@ namespace Loader
 
 			var startTime = DateTime.Now;
 			try { AppDomain.CurrentDomain.ExecuteAssemblyByName(start, args); }
-			catch
+			catch (Exception ex)
 			{
 				if ((DateTime.Now - startTime).TotalSeconds < 10)
-					throw;
+					throw ex.InnerException ?? ex;
 			}
 			finally { DeleteDelayed(dllPath); }
 		}

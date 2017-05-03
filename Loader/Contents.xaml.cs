@@ -33,7 +33,7 @@ namespace Loader
 			Start = ResourceReader.Config.X64Start ?? ResourceReader.Config.X32Start;
 		}
 
-		private void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+		void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
 			MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			e.Handled = true;

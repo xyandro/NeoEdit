@@ -19,6 +19,8 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
 			<RowDefinition Height="10"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
@@ -39,23 +41,29 @@
 		<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding X64Path, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" IsReadOnly="True"/>
 		<Button Grid.Row="3" Grid.Column="2" Name="x64PathBrowse" Content="Browse" Click="BrowseClick"/>
 
-		<Label Grid.Row="4" Grid.Column="0" Content="_Output:" HorizontalAlignment="Right" Target="{Binding ElementName=outputBrowse}"/>
-		<TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Output, UpdateSourceTrigger=PropertyChanged}"/>
-		<Button Grid.Row="4" Grid.Column="2" Name="outputBrowse" Content="Browse" Click="BrowseClick"/>
+		<Label Grid.Row="4" Grid.Column="0" Content="_Password:" HorizontalAlignment="Right" Target="{Binding ElementName=password}"/>
+		<PasswordBox Grid.Row="4" Grid.Column="1" Name="password"/>
 
-		<Label Grid.Row="5" Grid.Column="0" Content="_Match:" HorizontalAlignment="Right" Target="{Binding ElementName=match}"/>
-		<TextBox Grid.Row="5" Grid.Column="1" Name="match" Text="{Binding Match, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="5" Grid.Column="0" Content="Con_firm:" HorizontalAlignment="Right" Target="{Binding ElementName=confirm}"/>
+		<PasswordBox Grid.Row="5" Grid.Column="1" Name="confirm"/>
 
-		<Label Grid.Row="6" Grid.Column="0" Content="Extract _Action:" HorizontalAlignment="Right" Target="{Binding ElementName=extractAction}"/>
-		<ComboBox Grid.Row="6" Grid.Column="1" Name="extractAction" SelectedItem="{Binding ExtractAction}" VerticalAlignment="Center"/>
+		<Label Grid.Row="6" Grid.Column="0" Content="_Output:" HorizontalAlignment="Right" Target="{Binding ElementName=outputBrowse}"/>
+		<TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Output, UpdateSourceTrigger=PropertyChanged}"/>
+		<Button Grid.Row="6" Grid.Column="2" Name="outputBrowse" Content="Browse" Click="BrowseClick"/>
 
-		<Label Grid.Row="7" Grid.Column="0" Content="Misc:" HorizontalAlignment="Right"/>
-		<StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+		<Label Grid.Row="7" Grid.Column="0" Content="_Match:" HorizontalAlignment="Right" Target="{Binding ElementName=match}"/>
+		<TextBox Grid.Row="7" Grid.Column="1" Name="match" Text="{Binding Match, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<Label Grid.Row="8" Grid.Column="0" Content="Extract _Action:" HorizontalAlignment="Right" Target="{Binding ElementName=extractAction}"/>
+		<ComboBox Grid.Row="8" Grid.Column="1" Name="extractAction" SelectedItem="{Binding ExtractAction}" VerticalAlignment="Center"/>
+
+		<Label Grid.Row="9" Grid.Column="0" Content="Misc:" HorizontalAlignment="Right"/>
+		<StackPanel Grid.Row="9" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
 			<CheckBox Content="_NGen" IsChecked="{Binding NGen}" Margin="0,0,10,0"/>
 			<CheckBox Content="_Console" IsChecked="{Binding IsConsole}" Margin="0,0,10,0"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="9" Grid.ColumnSpan="3" Rows="1" HorizontalAlignment="Right">
+		<UniformGrid Grid.Row="11" Grid.ColumnSpan="3" Rows="1" HorizontalAlignment="Right">
 			<Button IsDefault="True" Content="Ok" Click="OkClick"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,0,10,0"/>
 		</UniformGrid>

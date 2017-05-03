@@ -20,9 +20,10 @@ namespace Loader
 			DataContext = this.config = config;
 			InitializeComponent();
 			extractAction.ItemsSource = Enum.GetValues(typeof(ExtractActions)).Cast<ExtractActions>().ToList();
+			password.Password = confirm.Password = config.Password;
 		}
 
-		private void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+		void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
 			MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			e.Handled = true;
@@ -66,7 +67,14 @@ namespace Loader
 			}
 		}
 
-		void OkClick(object sender, RoutedEventArgs e) => DialogResult = true;
+		void OkClick(object sender, RoutedEventArgs e)
+		{
+			if (password.Password != confirm.Password)
+				throw new Exception("Passwords must match");
+
+			config.Password = password.Password;
+			DialogResult = true;
+		}
 
 		public static bool Run(Config config) => new GetConfig(config).ShowDialog() == true;
 	}

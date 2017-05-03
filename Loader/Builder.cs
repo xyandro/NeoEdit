@@ -50,6 +50,7 @@ namespace Loader
 
 			File.WriteAllBytes(config.Output, bytes);
 
+			Resource.Password = config.Password;
 			using (var writer = new ResourceWriter(config.Output))
 			{
 				var startFile = config.X64StartFull ?? config.X32StartFull;

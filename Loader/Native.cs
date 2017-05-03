@@ -17,6 +17,8 @@ namespace Loader
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern IntPtr FindResource(IntPtr hModule, IntPtr lpName, IntPtr lpType);
 		[DllImport("kernel32.dll", SetLastError = true)]
+		public static extern IntPtr GetConsoleWindow();
+		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern IntPtr LoadResource(IntPtr hModule, IntPtr hResInfo);
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern IntPtr LockResource(IntPtr hResData);
