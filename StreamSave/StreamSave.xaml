@@ -9,22 +9,28 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
+			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<streamSave:StreamSaveMenu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" x:Name="menu"/>
 
-		<UniformGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Rows="1">
+		<UniformGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Rows="1">
 			<Button Content="Save _URL:" Click="OnSaveURL"/>
 			<Button Content="Save Play _List:" Click="OnSavePlayList"/>
 		</UniformGrid>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="_Directory:" Target="{Binding ElementName=streamSaveDirectory}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="2" Grid.Column="1" Name="streamSaveDirectory" Text="{Binding StreamSaveDirectory, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="_YouTubeDL:" Target="{Binding ElementName=youTubeDLPath}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Name="youTubeDLPath" Text="{Binding YouTubeDLPath, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+		<Button Grid.Row="2" Grid.Column="2" Content="U_pdate" Click="OnUpdateYouTubeDL" VerticalAlignment="Center"/>
+
+		<Label Grid.Row="3" Grid.Column="0" Content="_Directory:" Target="{Binding ElementName=streamSaveDirectory}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Name="streamSaveDirectory" Text="{Binding StreamSaveDirectory, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
 	</Grid>
 
 </guiControls:NEWindow>

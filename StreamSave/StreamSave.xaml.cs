@@ -36,5 +36,7 @@ namespace NeoEdit.StreamSave
 				return;
 			MultiProgressDialog.RunAsync(this, "Downloading...", items, async (item, progress, cancelled) => await YouTubeDL.DownloadStream(StreamSaveDirectory, item, progress, cancelled));
 		}
+
+		void OnUpdateYouTubeDL(object sender, RoutedEventArgs e) => YouTubeDL.Update();
 	}
 }

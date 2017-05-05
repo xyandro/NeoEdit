@@ -48,9 +48,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SevenZipCompress", "SevenZipCompress\SevenZipCompress.csproj", "{FACD6EAC-7E0E-4CDD-8B30-CFB66D869116}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamSave", "StreamSave\StreamSave.csproj", "{096C5887-E289-40A8-898E-BE8CE7DF3866}"
-	ProjectSection(ProjectDependencies) = postProject
-		{FACD6EAC-7E0E-4CDD-8B30-CFB66D869116} = {FACD6EAC-7E0E-4CDD-8B30-CFB66D869116}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEdit", "TextEdit\TextEdit.csproj", "{9A35AB82-2481-4C44-B51E-66DF7D248EAD}"
 	ProjectSection(ProjectDependencies) = postProject
