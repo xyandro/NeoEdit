@@ -164,14 +164,44 @@ namespace NeoEdit.TextEdit
 				right.ReplaceSelections(left.GetSelectionStrings());
 		}
 
-		DiffFixWhitespaceDialog.Result Command_Diff_FixWhitespace_Dialog() => DiffFixWhitespaceDialog.Run(WindowParent);
+		DiffFixWhitespaceDialog.Result Command_Diff_Fix_Whitespace_Dialog() => DiffFixWhitespaceDialog.Run(WindowParent);
 
-		void Command_Diff_FixWhitespace(DiffFixWhitespaceDialog.Result result)
+		void Command_Diff_Fix_Whitespace(DiffFixWhitespaceDialog.Result result)
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var fixes = TextData.GetWhitespaceFixes(DiffTarget.Data, Data, result.LineStartTabStop, DiffIgnoreCase, DiffIgnoreNumbers, diffIgnoreCharacters);
+			var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, result.LineStartTabStop, null, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
+			Selections.Replace(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)));
+			ReplaceSelections(fixes.Item2);
+		}
+
+		void Command_Diff_Fix_Case()
+		{
+			if (DiffTarget == null)
+				throw new Exception("Diff not in progress");
+
+			var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, null, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
+			Selections.Replace(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)));
+			ReplaceSelections(fixes.Item2);
+		}
+
+		void Command_Diff_Fix_Numbers()
+		{
+			if (DiffTarget == null)
+				throw new Exception("Diff not in progress");
+
+			var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, null, DiffIgnoreLineEndings, diffIgnoreCharacters);
+			Selections.Replace(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)));
+			ReplaceSelections(fixes.Item2);
+		}
+
+		void Command_Diff_Fix_LineEndings()
+		{
+			if (DiffTarget == null)
+				throw new Exception("Diff not in progress");
+
+			var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, null, diffIgnoreCharacters);
 			Selections.Replace(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)));
 			ReplaceSelections(fixes.Item2);
 		}

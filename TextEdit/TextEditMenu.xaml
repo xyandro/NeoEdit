@@ -154,7 +154,13 @@
 		<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
 		<textEdit:TextEditMenuItem Header="C_opy Left" CommandEnum="Diff_CopyLeft"/>
 		<textEdit:TextEditMenuItem Header="Cop_y Right" CommandEnum="Diff_CopyRight"/>
-		<textEdit:TextEditMenuItem Header="F_ix Whitespace" CommandEnum="Diff_FixWhitespace"/>
+		<Separator/>
+		<MenuItem Header="F_ix">
+			<textEdit:TextEditMenuItem Header="_Whitespace" CommandEnum="Diff_Fix_Whitespace"/>
+			<textEdit:TextEditMenuItem Header="_Case" CommandEnum="Diff_Fix_Case"/>
+			<textEdit:TextEditMenuItem Header="_Numbers" CommandEnum="Diff_Fix_Numbers"/>
+			<textEdit:TextEditMenuItem Header="Line _Endings" CommandEnum="Diff_Fix_LineEndings"/>
+		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="_Match" CommandEnum="Diff_Select_Match"/>

@@ -738,13 +738,13 @@ namespace NeoEdit.Common
 			diffData = null;
 		}
 
-		static public Tuple<List<Tuple<int, int>>, List<string>> GetWhitespaceFixes(TextData src, TextData dest, int lineStartTabStop, bool ignoreCase, bool ignoreNumbers, string ignoreCharacters)
+		static public Tuple<List<Tuple<int, int>>, List<string>> GetDiffFixes(TextData src, TextData dest, int lineStartTabStop, bool? ignoreWhitespace, bool? ignoreCase, bool? ignoreNumbers, bool? ignoreLineEndings, string ignoreCharacters)
 		{
 			var textData = new TextData[] { src, dest };
 			var lineMap = new Dictionary<int, int>[2];
 			var lines = new List<string>[2];
 			var textLines = new List<string>[2];
-			var diffParams = new DiffParams(true, ignoreCase, ignoreNumbers, true, ignoreCharacters, lineStartTabStop);
+			var diffParams = new DiffParams(ignoreWhitespace ?? true, ignoreCase ?? true, ignoreNumbers ?? true, ignoreLineEndings ?? true, ignoreCharacters, lineStartTabStop);
 			for (var pass = 0; pass < 2; ++pass)
 			{
 				lineMap[pass] = Enumerable.Range(0, textData[pass].NumLines).Indexes(line => textData[pass].diffData?.LineCompare[line] != LCS.MatchType.Gap).Select((index1, index2) => new { index1, index2 }).ToDictionary(obj => obj.index2, obj => obj.index1);
@@ -757,7 +757,7 @@ namespace NeoEdit.Common
 			var ranges = new List<Tuple<int, int>>();
 			var strs = new List<string>();
 			var curLine = new int[] { -1, -1 };
-			diffParams = new DiffParams(false, ignoreCase, ignoreNumbers, src.OnlyEnding != null, ignoreCharacters);
+			diffParams = new DiffParams(ignoreWhitespace ?? false, ignoreCase ?? false, ignoreNumbers ?? false, ignoreLineEndings ?? src.OnlyEnding != null, ignoreCharacters);
 			for (var line = 0; line < linesLCS.Count; ++line)
 			{
 				var mappedCurLine = new int[2];
@@ -813,7 +813,7 @@ namespace NeoEdit.Common
 					}
 				}
 
-				if ((src.OnlyEnding != null) && (linesLCS[line][1] != LCS.MatchType.Gap))
+				if ((ignoreLineEndings == null) && (src.OnlyEnding != null) && (linesLCS[line][1] != LCS.MatchType.Gap))
 				{
 					var endingStart = dest.endingOffset[mappedCurLine[1]];
 					var endingEnd = dest.lineOffset[mappedCurLine[1] + 1];
