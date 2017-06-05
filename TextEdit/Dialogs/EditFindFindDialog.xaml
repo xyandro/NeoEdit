@@ -30,8 +30,8 @@
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 			<CheckBox Content="by _group" IsChecked="{Binding RegexGroups, ElementName=self}" Focusable="False" Margin="5,0,0,0" VerticalAlignment="Center"/>
-			<Button Content="Escape" Click="Escape" Focusable="False" VerticalAlignment="Center" Margin="5,0,0,0"/>
-			<Button Content="Unescape" Click="Unescape" Focusable="False" VerticalAlignment="Center"/>
+			<Button Content="Esca_pe" Click="Escape" Focusable="False" VerticalAlignment="Center" Margin="5,0,0,0"/>
+			<Button Content="_Unescape" Click="Unescape" Focusable="False" VerticalAlignment="Center"/>
 		</StackPanel>
 		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Focusable="False"/>
