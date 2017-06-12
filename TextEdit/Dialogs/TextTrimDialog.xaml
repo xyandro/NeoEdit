@@ -23,12 +23,12 @@
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Trim Location:" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-			<RadioButton GroupName="location" Content="_Both" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Both}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
+			<RadioButton GroupName="location" Content="_Both" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Both}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
+			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 		</StackPanel>
 
-		<CheckBox Grid.Row="2" Grid.Column="1" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}"/>
+		<CheckBox Grid.Row="2" Grid.Column="1" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
