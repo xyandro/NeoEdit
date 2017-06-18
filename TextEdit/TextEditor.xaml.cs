@@ -1059,6 +1059,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Add_SubtractClipboard: Command_Numeric_Add_AddSubtractClipboard(false); break;
 				case TextEditCommand.Numeric_Whole: Command_Numeric_Whole(); break;
 				case TextEditCommand.Numeric_Fraction: Command_Numeric_Fraction(); break;
+				case TextEditCommand.Numeric_Absolute: Command_Numeric_Absolute(); break;
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as NumericFloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as NumericFloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as NumericFloorRoundCeilingDialog.Result); break;

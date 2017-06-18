@@ -306,7 +306,7 @@
 			<textEdit:TextEditMenuItem Header="_To Hex" CommandEnum="Numeric_Hex_ToHex"/>
 			<textEdit:TextEditMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="Convert _Base" CommandEnum="Numeric_ConvertBase"/>
+		<textEdit:TextEditMenuItem Header="Con_vert Base" CommandEnum="Numeric_ConvertBase"/>
 		<Separator/>
 		<MenuItem Header="S_eries">
 			<textEdit:TextEditMenuItem Header="_Zero Based" CommandEnum="Numeric_Series_ZeroBased"/>
@@ -329,6 +329,7 @@
 		<textEdit:TextEditMenuItem Header="_Whole" CommandEnum="Numeric_Whole"/>
 		<textEdit:TextEditMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="A_bsolute" CommandEnum="Numeric_Absolute"/>
 		<textEdit:TextEditMenuItem Header="F_loor" CommandEnum="Numeric_Floor"/>
 		<textEdit:TextEditMenuItem Header="Ceili_ng" CommandEnum="Numeric_Ceiling"/>
 		<textEdit:TextEditMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>

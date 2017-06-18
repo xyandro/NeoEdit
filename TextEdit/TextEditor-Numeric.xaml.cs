@@ -213,6 +213,8 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
+		void Command_Numeric_Absolute() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).TrimStart('-')).ToList());
+
 		NumericFloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent);
 
 		void Command_Numeric_Floor(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Floor(decimal.Parse(GetString(range)), result.Interval).ToString()).ToList());
