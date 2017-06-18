@@ -19,7 +19,7 @@ multi         : MULTI ;
 network       : NETWORK ;
 processes     : PROCESSES pid=NUMBER? ;
 rip           : RIP ;
-streamsave    : STREAMSAVE ;
+streamsave    : STREAMSAVE ((URL | playlist=PLAYLIST)? STRING+)?;
 textedit      : TEXTEDIT texteditfile* | texteditfile+ ;
 texteditfile  : file=param (LINE EQUALS? line=NUMBER)? (COLUMN EQUALS? column=NUMBER)? (DISPLAY EQUALS? display=param)? ;
 textview      : TEXTVIEW param* ;

@@ -16,11 +16,13 @@ LICENSE        : '-license'                                                     
 LINE           : '-line'                                                                                ;
 MULTI          : '-multi'                                                                               ;
 NETWORK        : '-socket' | '-sockets' | '-network'                                                    ;
+PLAYLIST       : '-playlist' | '-playlists' | '-list' | '-lists'                                        ;
 PROCESSES      : '-pid' | '-process' | '-processes'                                                     ;
 RIP            : '-rip' | '-riper' | '-ripper'                                                          ;
 STREAMSAVE     : '-streamsave' | '-stream' | '-save'                                                    ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                        ;
 TEXTVIEW       : '-textview' | '-textviewer' | '-view'                                                  ;
+URL            : '-url' | '-urls'                                                                       ;
 WAIT           : '-wait'                                                                                ;
 
 EQUALS         : '=' ;
@@ -45,11 +47,13 @@ LICENSE2       : LICENSE       -> type(LICENSE)       ;
 LINE2          : LINE          -> type(LINE)          ;
 MULTI2         : MULTI         -> type(MULTI)         ;
 NETWORK2       : NETWORK       -> type(NETWORK)       ;
+PLAYLIST2      : PLAYLIST      -> type(PLAYLIST)      ;
 PROCESSES2     : PROCESSES     -> type(PROCESSES)     ;
 RIP2           : RIP           -> type(RIP)           ;
 STREAMSAVE2    : STREAMSAVE    -> type(STREAMSAVE)    ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
 TEXTVIEW2      : TEXTVIEW      -> type(TEXTVIEW)      ;
+URL2           : URL           -> type(URL)           ;
 WAIT2          : WAIT          -> type(WAIT)          ;
 
 EQUALS2        : EQUALS        -> type(EQUALS)        ;

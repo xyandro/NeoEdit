@@ -107,7 +107,10 @@ namespace NeoEdit
 
 	class StreamSaveParam : Param
 	{
-		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchStreamSaver();
+		readonly List<string> Urls;
+		readonly bool IsPlaylist;
+		public StreamSaveParam(List<string> urls, bool isPlaylist) { Urls = urls; IsPlaylist = isPlaylist; }
+		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchStreamSaver(Urls, IsPlaylist);
 	}
 
 	class TextEditParam : Param
