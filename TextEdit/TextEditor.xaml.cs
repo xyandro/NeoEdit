@@ -580,6 +580,7 @@ namespace NeoEdit.TextEdit
 
 			switch (command)
 			{
+				case TextEditCommand.File_Operations_RenameByExpression: dialogResult = Command_File_Operations_RenameByExpression_Dialog(); break;
 				case TextEditCommand.File_Encoding_Encoding: dialogResult = Command_File_Encoding_Encoding_Dialog(); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
 				case TextEditCommand.File_Encoding_LineEndings: dialogResult = Command_File_Encoding_LineEndings_Dialog(); break;
@@ -887,6 +888,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Save_Save: Command_File_Save_Save(); break;
 				case TextEditCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
 				case TextEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
+				case TextEditCommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(dialogResult as GetExpressionDialog.Result, ref answer); break;
 				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
 				case TextEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
 				case TextEditCommand.File_Operations_CommandPrompt: Command_File_Operations_CommandPrompt(); break;

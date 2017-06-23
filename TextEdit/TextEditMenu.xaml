@@ -30,6 +30,7 @@
 		</MenuItem>
 		<MenuItem Header="O_perations">
 			<textEdit:TextEditMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
+			<textEdit:TextEditMenuItem Header="Rename By E_xpression" CommandEnum="File_Operations_RenameByExpression"/>
 			<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
 			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
 			<textEdit:TextEditMenuItem Header="C_ommand Prompt" CommandEnum="File_Operations_CommandPrompt"/>

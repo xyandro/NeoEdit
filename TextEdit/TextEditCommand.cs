@@ -16,6 +16,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.S, ModifierKeys.Control)] File_Save_Save,
 		File_Save_SaveAs,
 		File_Operations_Rename,
+		File_Operations_RenameByExpression,
 		File_Operations_Delete,
 		File_Operations_Explore,
 		File_Operations_CommandPrompt,
