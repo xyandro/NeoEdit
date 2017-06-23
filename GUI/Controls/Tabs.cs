@@ -244,21 +244,21 @@ namespace NeoEdit.GUI.Controls
 					TopMost = item;
 		}
 
-		void OnDrop(DragEventArgs e, TabLabel toLabel)
+		void OnDrop(DragEventArgs e, DockPanel toControl)
 		{
-			var fromLabel = e.Data.GetData(typeof(TabLabel)) as TabLabel;
-			if ((fromLabel == null) || (toLabel == fromLabel))
+			var fromControl = e.Data.GetData(typeof(DockPanel)) as DockPanel;
+			if ((fromControl == null) || (toControl == fromControl))
 				return;
 
-			var toData = toLabel?.DataContext as ItemType;
-			var fromData = fromLabel.DataContext as ItemType;
+			var toData = toControl?.DataContext as ItemType;
+			var fromData = fromControl.DataContext as ItemType;
 
 			var fromTabs = fromData.TabsParent;
-			if ((fromTabs == null) || ((fromTabs == this) && (toLabel == null)))
+			if ((fromTabs == null) || ((fromTabs == this) && (toControl == null)))
 				return;
 
 			var fromIndex = fromTabs.Items.IndexOf(fromData);
-			var toIndex = toLabel == null ? Items.Count : Items.IndexOf(toData);
+			var toIndex = toControl == null ? Items.Count : Items.IndexOf(toData);
 
 			fromTabs.Items.RemoveAt(fromIndex);
 			Items.Insert(toIndex, fromData);
@@ -339,30 +339,54 @@ namespace NeoEdit.GUI.Controls
 
 		FrameworkElementFactory GetTabLabel(bool tiles)
 		{
-			var label = new FrameworkElementFactory(typeof(TabLabel));
-			if (tiles)
-				label.SetValue(DockPanel.DockProperty, Dock.Top);
-			label.SetBinding(TabLabel.TextProperty, new Binding(UIHelper<TabsControl<ItemType, CommandType>>.GetProperty(a => a.TabLabel).Name));
-			label.SetValue(TabLabel.PaddingProperty, new Thickness(10, 2, 10, 2));
-			label.SetValue(TabLabel.MarginProperty, new Thickness(0, 0, tiles ? 0 : 2, 1));
+			var dp = new FrameworkElementFactory(typeof(DockPanel));
+			dp.SetValue(DockPanel.DockProperty, Dock.Top);
+			dp.SetValue(DockPanel.MarginProperty, new Thickness(0, 0, tiles ? 0 : 2, 1));
 
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] o== [2] ? \"CadetBlue\" : ([1] ? \"LightBlue\" : \"LightGray\")" };
 			multiBinding.Bindings.Add(new Binding());
 			multiBinding.Bindings.Add(new Binding(UIHelper<TabsControl<ItemType, CommandType>>.GetProperty(a => a.Active).Name));
 			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.TopMost).Name) { Source = this });
-			label.SetBinding(TabLabel.BackgroundProperty, multiBinding);
+			dp.SetBinding(DockPanel.BackgroundProperty, multiBinding);
 
-			label.SetValue(TabLabel.AllowDropProperty, true);
-			label.AddHandler(TabLabel.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => TopMost = (s as TabLabel).DataContext as ItemType));
-			label.AddHandler(TabLabel.MouseMoveEvent, (MouseEventHandler)((s, e) =>
+			dp.SetValue(DockPanel.AllowDropProperty, true);
+			dp.AddHandler(DockPanel.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => TopMost = (s as DockPanel).DataContext as ItemType));
+			dp.AddHandler(DockPanel.MouseMoveEvent, (MouseEventHandler)((s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
-					DragDrop.DoDragDrop(s as TabLabel, new DataObject(typeof(TabLabel), s as TabLabel), DragDropEffects.Move);
+					DragDrop.DoDragDrop(s as DockPanel, new DataObject(typeof(DockPanel), s as DockPanel), DragDropEffects.Move);
 			}));
 
-			label.AddHandler(TabLabel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as TabLabel)));
+			dp.AddHandler(DockPanel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
 
-			return label;
+			{
+				var label = new FrameworkElementFactory(typeof(TabLabel));
+				label.SetBinding(TabLabel.TextProperty, new Binding(UIHelper<TabsControl<ItemType, CommandType>>.GetProperty(a => a.TabLabel).Name));
+				label.SetValue(TabLabel.VerticalAlignmentProperty, VerticalAlignment.Center);
+				label.SetValue(TabLabel.MarginProperty, new Thickness(10, 0, 2, 0));
+				dp.AppendChild(label);
+			}
+
+			{
+				var button = new FrameworkElementFactory(typeof(Button));
+				button.SetValue(Button.ContentProperty, "x");
+				button.SetValue(Button.BorderThicknessProperty, new Thickness(0));
+				button.SetValue(Button.StyleProperty, FindResource(ToolBar.ButtonStyleKey));
+				button.SetValue(Button.VerticalAlignmentProperty, VerticalAlignment.Center);
+				button.SetValue(Button.MarginProperty, new Thickness(2, 0, 5, 0));
+				button.SetValue(Button.ForegroundProperty, new SolidColorBrush(Color.FromRgb(128, 32, 32)));
+				button.SetValue(Button.FocusableProperty, false);
+				button.SetValue(Button.HorizontalAlignmentProperty, HorizontalAlignment.Right);
+				button.AddHandler(Button.ClickEvent, (RoutedEventHandler)((s, e) =>
+				{
+					var item = ((s as Button).Parent as DockPanel).DataContext as ItemType;
+					if (item.CanClose())
+						Remove(item);
+				}));
+				dp.AppendChild(button);
+			}
+
+			return dp;
 		}
 
 		void SetupLayout()

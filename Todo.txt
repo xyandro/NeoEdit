@@ -18,7 +18,6 @@ Tutorial
 Print
 Add ability to select all attributes
 Allow moving muliple windows, allow drop in middle of window instead of requiring title
-Add close button on tabs
 
 View:
 Update as new lines are added
