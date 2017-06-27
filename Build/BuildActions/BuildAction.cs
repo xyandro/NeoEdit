@@ -8,7 +8,7 @@ namespace Build.BuildActions
 
 		public override void Run(WriteTextDelegate writeText, string configuration, List<string> platforms)
 		{
-			const string devenv = @"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.com";
+			const string devenv = @"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\devenv.com";
 			foreach (var platform in platforms)
 			{
 				writeText($"Building {configuration}.{platform}...");

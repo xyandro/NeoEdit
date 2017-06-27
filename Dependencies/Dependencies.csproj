@@ -16,11 +16,11 @@
     <None Include="GlobalVersionInfo.h" />
     <None Include="GlobalVersionInfo.Template.h" />
   </ItemGroup>
-  <Target Name="BuildGlobalAssemblyInfo" Inputs="GlobalAssemblyInfo.Template.cs" Outputs="GlobalAssemblyInfo.cs">
+  <Target Name="BuildGlobalAssemblyInfo" Inputs="GlobalAssemblyInfo.Template.cs" Outputs="GlobalAssemblyInfo.cs" Returns="">
     <Message Text="Building GlobalAssemblyInfo" Importance="High" />
     <Exec Command="GitInfo.bat GlobalAssemblyInfo.Template.cs GlobalAssemblyInfo.cs" />
   </Target>
-  <Target Name="BuildGlobalVersionInfo" Inputs="GlobalVersionInfo.Template.h" Outputs="GlobalVersionInfo.h">
+  <Target Name="BuildGlobalVersionInfo" Inputs="GlobalVersionInfo.Template.h" Outputs="GlobalVersionInfo.h" Returns="">
     <Message Text="Building GlobalVersionInfo" Importance="High" />
     <Exec Command="GitInfo.bat GlobalVersionInfo.Template.h GlobalVersionInfo.h" />
   </Target>

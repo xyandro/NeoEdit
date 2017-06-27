@@ -9,7 +9,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  <Target Name="BuildCommandLineParams" Inputs="CommandLineParams\Source\CommandLineParamsLexer.g4;CommandLineParams\Source\CommandLineParamsParser.g4" Outputs="CommandLineParams\Parser\CommandLineParamsLexer.cs;CommandLineParams\Parser\CommandLineParamsParser.cs;CommandLineParams\Parser\CommandLineParamsParserBaseVisitor.cs;CommandLineParams\Parser\CommandLineParamsParserVisitor.cs">
+  <Target Name="BuildCommandLineParams" Inputs="CommandLineParams\Source\CommandLineParamsLexer.g4;CommandLineParams\Source\CommandLineParamsParser.g4" Outputs="CommandLineParams\Parser\CommandLineParamsLexer.cs;CommandLineParams\Parser\CommandLineParamsParser.cs;CommandLineParams\Parser\CommandLineParamsParserBaseVisitor.cs;CommandLineParams\Parser\CommandLineParamsParserVisitor.cs" Returns="">
     <Message Text="Building CommandLineParams parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.CommandLineParams.Parser&quot; -o &quot;$(ProjectDir)CommandLineParams\Parser&quot; &quot;$(ProjectDir)CommandLineParams\Source\CommandLineParamsLexer.g4&quot; &quot;$(ProjectDir)CommandLineParams\Source\CommandLineParamsParser.g4&quot;" />
   </Target>
