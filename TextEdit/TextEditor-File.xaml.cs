@@ -87,6 +87,35 @@ namespace NeoEdit.TextEdit
 				Save(fileName);
 		}
 
+		GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
+
+		void Command_File_Save_SaveAsByExpression(GetExpressionDialog.Result result, ref Message.OptionsEnum answer)
+		{
+			var results = GetFixedExpressionResults<string>(result.Expression);
+			if (results.Count != 1)
+				throw new Exception("Only one filename may be specified");
+
+			var newFileName = FileName.RelativeChild(results[0]);
+
+			if (File.Exists(newFileName))
+			{
+				if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
+					answer = new Message(WindowParent)
+					{
+						Title = "Confirm",
+						Text = "File already exists; overwrite?",
+						Options = Message.OptionsEnum.YesNoYesAllNoAllCancel,
+						DefaultCancel = Message.OptionsEnum.Cancel,
+					}.Show();
+
+				if ((answer != Message.OptionsEnum.Yes) && (answer != Message.OptionsEnum.YesToAll))
+					return;
+			}
+
+			SetFileName(newFileName);
+			Command_File_Save_Save();
+		}
+
 		void Command_File_Operations_Rename()
 		{
 			if (string.IsNullOrEmpty(FileName))

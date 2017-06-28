@@ -27,6 +27,7 @@
 		<MenuItem Header="_Save">
 			<textEdit:TextEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
 			<textEdit:TextEditMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
+			<textEdit:TextEditMenuItem Header="Save As By E_xpression" CommandEnum="File_Save_SaveAsByExpression"/>
 		</MenuItem>
 		<MenuItem Header="O_perations">
 			<textEdit:TextEditMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
