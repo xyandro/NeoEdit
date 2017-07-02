@@ -47,6 +47,7 @@ namespace NeoEdit.GUI.Controls
 				case Key.OemPeriod: mods.Add("."); break;
 				case Key.OemOpenBrackets: mods.Add("["); break;
 				case Key.OemCloseBrackets: mods.Add("]"); break;
+				case Key.OemQuestion: mods.Add("/"); break;
 				default: mods.Add(key.ToString()); break;
 			}
 			GestureText = string.Join("+", mods);
