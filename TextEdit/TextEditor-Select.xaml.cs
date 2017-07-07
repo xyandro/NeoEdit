@@ -171,6 +171,10 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_Duplicates() => Selections.Replace(Selections.AsParallel().AsOrdered().Duplicate(range => GetString(range)).ToList());
 
+		void Command_Select_MatchPrevious() => Selections.Replace(Selections.AsParallel().AsOrdered().Match(range => GetString(range)).ToList());
+
+		void Command_Select_NonMatchPrevious() => Selections.Replace(Selections.AsParallel().AsOrdered().NonMatch(range => GetString(range)).ToList());
+
 		void Command_Select_RepeatedLines() => Selections.Replace(Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(range)).ToList());
 
 		SelectByCountDialog.Result Command_Select_ByCount_Dialog() => SelectByCountDialog.Run(WindowParent);

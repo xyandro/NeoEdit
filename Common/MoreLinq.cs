@@ -60,6 +60,32 @@ namespace NeoEdit.Common
 			}
 		}
 
+		public static IEnumerable<TSource> Match<TSource, TData>(this IEnumerable<TSource> source, Func<TSource, TData> selector)
+		{
+			var previous = default(TData);
+			foreach (var item in source)
+			{
+				var data = selector(item);
+				if (Equals(previous, data))
+					yield return item;
+				else
+					previous = data;
+			}
+		}
+
+		public static IEnumerable<TSource> NonMatch<TSource, TData>(this IEnumerable<TSource> source, Func<TSource, TData> selector)
+		{
+			var previous = default(TData);
+			foreach (var item in source)
+			{
+				var data = selector(item);
+				if (Equals(previous, data))
+					continue;
+				previous = data;
+				yield return item;
+			}
+		}
+
 		public static bool InOrder<TSource>(this IEnumerable<TSource> source, bool ascending = true, bool equal = false) where TSource : IComparable
 		{
 			var prev = default(TSource);

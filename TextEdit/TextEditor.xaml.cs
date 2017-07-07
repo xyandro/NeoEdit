@@ -1203,6 +1203,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_ToggleOpenClose: Command_Select_ToggleOpenClose(shiftDown); break;
 				case TextEditCommand.Select_Unique: Command_Select_Unique(); break;
 				case TextEditCommand.Select_Duplicates: Command_Select_Duplicates(); break;
+				case TextEditCommand.Select_MatchPrevious: Command_Select_MatchPrevious(); break;
+				case TextEditCommand.Select_NonMatchPrevious: Command_Select_NonMatchPrevious(); break;
 				case TextEditCommand.Select_RepeatedLines: Command_Select_RepeatedLines(); break;
 				case TextEditCommand.Select_ByCount: Command_Select_ByCount(dialogResult as SelectByCountDialog.Result); break;
 				case TextEditCommand.Select_Split: Command_Select_Split(dialogResult as SelectSplitDialog.Result); break;
