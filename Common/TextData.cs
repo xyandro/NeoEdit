@@ -574,7 +574,8 @@ namespace NeoEdit.Common
 						continue;
 					}
 
-					if (!char.IsDigit(ch))
+					var isNumber = (char.IsDigit(ch)) || ((ch == '.') && (((ctr - 1 >= 0) && (char.IsDigit(line[ctr - 1]))) || ((ctr + 1 < line.Length) && (char.IsDigit(line[ctr + 1])))));
+					if (!isNumber)
 						inNumber = false;
 					if (IgnoreCharactersHash.Contains(ch))
 						continue;
@@ -582,7 +583,7 @@ namespace NeoEdit.Common
 						continue;
 					if (IgnoreCase)
 						ch = char.ToLowerInvariant(ch);
-					if ((IgnoreNumbers) && (char.IsDigit(ch)))
+					if ((IgnoreNumbers) && (isNumber))
 					{
 						if (inNumber)
 							continue;
