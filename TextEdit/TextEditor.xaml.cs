@@ -151,6 +151,8 @@ namespace NeoEdit.TextEdit
 		public bool DiffIgnoreLineEndings { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsDiff { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool DiffEncodingMismatch { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		TextEditor diffTarget;
 		public TextEditor DiffTarget
@@ -395,6 +397,7 @@ namespace NeoEdit.TextEdit
 			diffTarget.DiffIgnoreNumbers = DiffIgnoreNumbers;
 			diffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
 			diffTarget.diffIgnoreCharacters = diffIgnoreCharacters;
+			DiffEncodingMismatch = diffTarget.DiffEncodingMismatch = CodePage != diffTarget.CodePage;
 			TextData.CalculateDiff(Data, diffTarget.Data, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
 
 			CalculateBoundaries();
@@ -1830,9 +1833,11 @@ namespace NeoEdit.TextEdit
 
 			if (codePage == Coder.CodePage.AutoByBOM)
 				codePage = Coder.CodePageFromBOM(bytes);
+			CodePage = codePage;
+
 			var data = Coder.BytesToString(bytes, codePage, true);
 			Replace(new List<Range> { FullRange }, new List<string> { data });
-			CodePage = codePage;
+
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
 
@@ -2059,11 +2064,12 @@ namespace NeoEdit.TextEdit
 
 		void SetupTabLabel()
 		{
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] ?? FileName([1]) ?? ""[Untitled]"")t+([2]?""*"":"""")t+([3]?"" (Diff)"":"""")" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] ?? FileName([1]) ?? ""[Untitled]"")t+([2]?""*"":"""")t+([3]?"" (Diff""t+([4]?"" - Encoding mismatch"":"""")t+"")"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.DisplayName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsDiff).Name) { Source = this });
+			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.DiffEncodingMismatch).Name) { Source = this });
 			SetBinding(UIHelper<TabsControl<TextEditor, TextEditCommand>>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
