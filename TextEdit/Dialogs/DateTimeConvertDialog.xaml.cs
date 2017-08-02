@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -13,19 +14,19 @@ namespace NeoEdit.TextEdit.Dialogs
 		internal class Result
 		{
 			public string InputFormat { get; set; }
-			public bool InputUTC { get; set; }
+			public string InputTimeZone { get; set; }
 			public string OutputFormat { get; set; }
-			public bool OutputUTC { get; set; }
+			public string OutputTimeZone { get; set; }
 		}
 
 		[DepProp]
 		public string InputFormat { get { return UIHelper<DateTimeConvertDialog>.GetPropValue<string>(this); } set { UIHelper<DateTimeConvertDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool InputUTC { get { return UIHelper<DateTimeConvertDialog>.GetPropValue<bool>(this); } set { UIHelper<DateTimeConvertDialog>.SetPropValue(this, value); } }
+		public string InputTimeZone { get { return UIHelper<DateTimeConvertDialog>.GetPropValue<string>(this); } set { UIHelper<DateTimeConvertDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string OutputFormat { get { return UIHelper<DateTimeConvertDialog>.GetPropValue<string>(this); } set { UIHelper<DateTimeConvertDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool OutputUTC { get { return UIHelper<DateTimeConvertDialog>.GetPropValue<bool>(this); } set { UIHelper<DateTimeConvertDialog>.SetPropValue(this, value); } }
+		public string OutputTimeZone { get { return UIHelper<DateTimeConvertDialog>.GetPropValue<string>(this); } set { UIHelper<DateTimeConvertDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Example { get { return UIHelper<DateTimeConvertDialog>.GetPropValue<string>(this); } set { UIHelper<DateTimeConvertDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -33,26 +34,41 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public string OutputExample { get { return UIHelper<DateTimeConvertDialog>.GetPropValue<string>(this); } set { UIHelper<DateTimeConvertDialog>.SetPropValue(this, value); } }
 
-		static DateTimeConvertDialog()
-		{
-			UIHelper<DateTimeConvertDialog>.Register();
-			UIHelper<DateTimeConvertDialog>.AddCallback(a => a.InputFormat, (obj, o, n) => obj.CheckValidInput());
-			UIHelper<DateTimeConvertDialog>.AddCallback(a => a.InputUTC, (obj, o, n) => { obj.CheckValidInput(); obj.OutputUTC = obj.InputUTC; });
-			UIHelper<DateTimeConvertDialog>.AddCallback(a => a.OutputFormat, (obj, o, n) => obj.CheckValidInput());
-			UIHelper<DateTimeConvertDialog>.AddCallback(a => a.OutputUTC, (obj, o, n) => obj.CheckValidInput());
-		}
+		readonly static List<string> formats;
+		readonly static List<string> timeZones;
 
 		const string Unix = "Unix";
 		const string FileTime = "FileTime";
 		const string Excel = "Excel";
-		static List<string> formats = new List<string>
+		const string Ticks = "Ticks";
+		static readonly string Local = $"Local {TimeZoneInfo.Local.DisplayName}";
+		const string UTC = "UTC";
+
+		static DateTimeConvertDialog()
 		{
-			"O",
-			Unix,
-			FileTime,
-			Excel,
-			"d", "D", "f", "F", "g", "G", "M", "R", "s", "t", "T", "u", "U", "Y",
-		};
+			UIHelper<DateTimeConvertDialog>.Register();
+			UIHelper<DateTimeConvertDialog>.AddCallback(a => a.InputFormat, (obj, o, n) => obj.CheckValidInput());
+			UIHelper<DateTimeConvertDialog>.AddCallback(a => a.InputTimeZone, (obj, o, n) => obj.CheckValidInput());
+			UIHelper<DateTimeConvertDialog>.AddCallback(a => a.OutputFormat, (obj, o, n) => obj.CheckValidInput());
+			UIHelper<DateTimeConvertDialog>.AddCallback(a => a.OutputTimeZone, (obj, o, n) => obj.CheckValidInput());
+
+			formats = new List<string>
+			{
+				"O",
+				Unix,
+				FileTime,
+				Excel,
+				Ticks,
+				"d", "D", "f", "F", "g", "G", "M", "R", "s", "t", "T", "u", "U", "Y",
+			};
+
+			timeZones = new List<string>
+			{
+				Local,
+				UTC,
+			};
+			TimeZoneInfo.GetSystemTimeZones().ForEach(timeZone => timeZones.Add(timeZone.DisplayName));
+		}
 
 		DateTimeConvertDialog(string _example)
 		{
@@ -65,13 +81,21 @@ namespace NeoEdit.TextEdit.Dialogs
 				inputFormat.Items.Add(format);
 				outputFormat.Items.Add(format);
 
-				var value = InterpretFormat(Example, format, InputUTC, false);
+				var value = ToDateTimeOffset(Example, format, Local, false);
 				if (value != null)
 				{
 					InputFormat = format;
-					InputUTC = OutputUTC = value.Value.Kind == DateTimeKind.Utc;
+					if (value?.Offset == TimeSpan.Zero)
+						InputTimeZone = OutputTimeZone = UTC;
+					else if (TimeZoneInfo.Local.GetUtcOffset(value.Value) == value?.Offset)
+						InputTimeZone = OutputTimeZone = Local;
+					else
+						InputTimeZone = OutputTimeZone = value?.Offset.ToString();
 				}
 			}
+
+			inputTimeZone.AddSuggestions(timeZones.ToArray());
+			outputTimeZone.AddSuggestions(timeZones.ToArray());
 
 			if (string.IsNullOrEmpty(InputFormat))
 				InputFormat = formats.First();
@@ -82,14 +106,14 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			ParsedExample = OutputExample = "";
 
-			var result = InterpretFormat(Example, InputFormat, InputUTC);
+			var result = ToDateTimeOffset(Example, InputFormat, InputTimeZone);
 			inputFormat.SetValidation(ComboBox.TextProperty, result != null);
 			if (result == null)
 				return;
 
 			ParsedExample = result.Value.ToString("O");
 
-			var resultStr = InterpretFormat(result.Value, OutputFormat, OutputUTC);
+			var resultStr = FromDateTimeOffset(result.Value, OutputFormat, OutputTimeZone);
 			outputFormat.SetValidation(ComboBox.TextProperty, result != null);
 			if (resultStr == null)
 				return;
@@ -97,14 +121,50 @@ namespace NeoEdit.TextEdit.Dialogs
 			OutputExample = resultStr;
 		}
 
-		static DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-		static DateTime excelBase = new DateTime(1900, 1, 1, 0, 0, 0, DateTimeKind.Local).AddDays(-2);
-		static DateTime? InterpretFormat(string value, string format, bool inputUTC, bool generic = true)
+		static object GetTimeZone(string timeZone)
+		{
+			if (string.IsNullOrWhiteSpace(timeZone))
+				return null;
+			if (timeZone == Local)
+				return TimeZoneInfo.Local;
+			if (timeZone == UTC)
+				return TimeZoneInfo.Utc;
+			var found = TimeZoneInfo.GetSystemTimeZones().FirstOrDefault(tz => tz.DisplayName == timeZone);
+			if (found != null)
+				return found;
+			TimeSpan timeSpan;
+			if (TimeSpan.TryParse(timeZone, out timeSpan))
+				return timeSpan;
+			return null;
+		}
+
+		static DateTimeOffset SetTimeZone(DateTimeOffset dateTime, string timeZone)
+		{
+			var tz = GetTimeZone(timeZone);
+			if (tz is TimeSpan)
+				dateTime = new DateTimeOffset(dateTime.DateTime, (TimeSpan)tz);
+			else if (tz is TimeZoneInfo)
+				dateTime = new DateTimeOffset(dateTime.DateTime, (tz as TimeZoneInfo).GetUtcOffset(dateTime.DateTime));
+			return dateTime;
+		}
+
+		static DateTimeOffset ConvertTimeZone(DateTimeOffset dateTime, string timeZone)
+		{
+			var tz = GetTimeZone(timeZone);
+			if (tz is TimeSpan)
+				dateTime = dateTime.ToOffset((TimeSpan)tz);
+			else if (tz is TimeZoneInfo)
+				dateTime = TimeZoneInfo.ConvertTime(dateTime, tz as TimeZoneInfo);
+			return dateTime;
+		}
+
+		static DateTimeOffset epoch = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+		static DateTimeOffset excelBase = new DateTimeOffset(1900, 1, 1, 0, 0, 0, TimeSpan.Zero);
+		static DateTimeOffset? ToDateTimeOffset(string value, string format, string timeZone, bool generic = true)
 		{
 			try
 			{
-				DateTime? result = null;
-				if ((!result.HasValue) && (format == Unix))
+				if (format == Unix)
 				{
 					double seconds;
 					if (!double.TryParse(value, out seconds))
@@ -112,74 +172,95 @@ namespace NeoEdit.TextEdit.Dialogs
 					return epoch.AddSeconds(seconds);
 				}
 
-				if ((!result.HasValue) && (format == FileTime))
+				if (format == FileTime)
 				{
 					long fileTimeLong;
 					if (!long.TryParse(value, out fileTimeLong))
 						return null;
-					return DateTime.FromFileTimeUtc(fileTimeLong);
+					return DateTimeOffset.FromFileTime(fileTimeLong);
 				}
 
-				if ((!result.HasValue) && (format == Excel))
+				if (format == Excel)
 				{
 					double days;
 					if (!double.TryParse(value, out days))
 						return null;
-					return excelBase.AddDays(days);
+					return SetTimeZone(excelBase.AddDays(days + (days < 61 ? 1 : 0) - 2), timeZone);
 				}
 
-				if (!result.HasValue)
+				if (format == Ticks)
+				{
+					long ticks;
+					if (!long.TryParse(value, out ticks))
+						return null;
+					return SetTimeZone(new DateTimeOffset(ticks, TimeSpan.Zero), timeZone);
+				}
+
+				DateTimeOffset dateTime;
+				if (DateTimeOffset.TryParseExact(value, format, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.RoundtripKind, out dateTime))
 				{
 					DateTime dateTimeValue;
-					if (DateTime.TryParseExact(value, format, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.RoundtripKind, out dateTimeValue))
-						result = dateTimeValue;
+					if ((DateTime.TryParseExact(value, format, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.RoundtripKind, out dateTimeValue)) && (dateTimeValue.Kind == DateTimeKind.Unspecified))
+						dateTime = SetTimeZone(dateTime, timeZone);
+
+					return dateTime;
 				}
 
-				if ((!result.HasValue) && (generic))
+				if (generic)
 				{
-					DateTime dateTimeValue;
-					if (DateTime.TryParse(value, out dateTimeValue))
-						result = dateTimeValue;
+					if (DateTimeOffset.TryParse(value, out dateTime))
+					{
+						DateTime dateTimeValue;
+						if ((DateTime.TryParse(value, out dateTimeValue)) && (dateTimeValue.Kind == DateTimeKind.Unspecified))
+							dateTime = SetTimeZone(dateTime, timeZone);
+
+						return dateTime;
+					}
 				}
-
-				if ((result.HasValue) && (result.Value.Kind == DateTimeKind.Unspecified))
-					result = DateTime.SpecifyKind(result.Value, inputUTC ? DateTimeKind.Utc : DateTimeKind.Local);
-
-				return result;
 			}
-			catch { return null; }
+			catch { }
+			return null;
 		}
 
-		static string InterpretFormat(DateTime value, string format, bool toUTC)
+		static string FromDateTimeOffset(DateTimeOffset value, string format, string timeZone)
 		{
 			if (format == Unix)
-				return (value.ToUniversalTime() - epoch).TotalSeconds.ToString();
+				return (value - epoch).TotalSeconds.ToString();
 			if (format == FileTime)
-				return value.ToFileTimeUtc().ToString();
+				return value.ToFileTime().ToString();
 			if (format == Excel)
-				return (value.ToLocalTime() - excelBase).TotalDays.ToString();
+			{
+				value = new DateTimeOffset(ConvertTimeZone(value, timeZone).DateTime, TimeSpan.Zero);
+				var days = (value - excelBase).TotalDays + 2;
+				if (days < 61)
+					--days;
+				return days.ToString();
+			}
 
+			if (format == Ticks)
+				return ConvertTimeZone(value, timeZone).Ticks.ToString();
 
-			if (toUTC)
-				value = value.ToUniversalTime();
-			else
-				value = value.ToLocalTime();
+			var tz = GetTimeZone(timeZone);
+			if (tz is TimeZoneInfo)
+				value = TimeZoneInfo.ConvertTime(value, tz as TimeZoneInfo);
+			else if (tz is TimeSpan)
+				value = value.ToOffset((TimeSpan)tz);
 
 			return value.ToString(format);
 		}
 
-		static public string ConvertFormat(string input, string inputFormat, bool inputUTC, string outputFormat, bool outputUTC)
+		static public string ConvertFormat(string input, string inputFormat, string inputTimeZone, string outputFormat, string outputTimeZone)
 		{
-			var value = InterpretFormat(input, inputFormat, inputUTC);
+			var value = ToDateTimeOffset(input, inputFormat, inputTimeZone);
 			if (value == null)
 				throw new Exception($"Can't interpret time: {input}");
-			return InterpretFormat(value.Value, outputFormat, outputUTC);
+			return FromDateTimeOffset(value.Value, outputFormat, outputTimeZone);
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { InputFormat = InputFormat, InputUTC = InputUTC, OutputFormat = OutputFormat, OutputUTC = OutputUTC };
+			result = new Result { InputFormat = InputFormat, InputTimeZone = InputTimeZone, OutputFormat = OutputFormat, OutputTimeZone = OutputTimeZone };
 			DialogResult = true;
 		}
 

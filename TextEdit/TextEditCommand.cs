@@ -208,6 +208,7 @@ namespace NeoEdit.TextEdit
 		Numeric_CombinationsPermutations,
 		Numeric_MinMaxValues,
 		DateTime_Now,
+		DateTime_UTCNow,
 		DateTime_Convert,
 		Table_DetectType,
 		Table_Convert,

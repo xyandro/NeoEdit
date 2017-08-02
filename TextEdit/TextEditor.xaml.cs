@@ -1077,6 +1077,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_CombinationsPermutations: Command_Numeric_CombinationsPermutations(dialogResult as NumericCombinationsPermutationsDialog.Result); break;
 				case TextEditCommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as NumericMinMaxValuesDialog.Result); break;
 				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
+				case TextEditCommand.DateTime_UTCNow: Command_DateTime_UtcNow(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as DateTimeConvertDialog.Result); break;
 				case TextEditCommand.Table_DetectType: Command_Table_Type_Detect(); break;
 				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as TableConvertDialog.Result); break;

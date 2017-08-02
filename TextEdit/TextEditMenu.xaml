@@ -347,6 +347,7 @@
 	</MenuItem>
 	<MenuItem Header="_Date/Time">
 		<textEdit:TextEditMenuItem Header="_Now" CommandEnum="DateTime_Now"/>
+		<textEdit:TextEditMenuItem Header="_Utc Now" CommandEnum="DateTime_UTCNow"/>
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">

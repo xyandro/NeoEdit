@@ -8,39 +8,47 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
-			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="10"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Input format:" Target="{Binding ElementName=inputFormat}"/>
-		<ComboBox Grid.Row="0" Grid.Column="1" Name="inputFormat" IsEditable="True" Text="{Binding InputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
-		<Label Grid.Row="0" Grid.Column="2" Content="_UTC" Target="{Binding ElementName=inputUTC}"/>
-		<CheckBox Grid.Row="0" Grid.Column="3" Name="inputUTC" IsChecked="{Binding InputUTC, ElementName=self}" VerticalAlignment="Center"/>
+		<Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Input" HorizontalAlignment="Center"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="Example:"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Example, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Format:" Target="{Binding ElementName=inputFormat}"/>
+		<ComboBox Grid.Row="1" Grid.Column="1" Name="inputFormat" IsEditable="True" Text="{Binding InputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ParsedExample, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="Default _Time Zone" Target="{Binding ElementName=inputTimeZone}"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" Name="inputTimeZone" Text="{Binding InputTimeZone, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="4" Grid.Column="0" Content="_Output format:" Target="{Binding ElementName=outputFormat}"/>
-		<ComboBox Grid.Row="4" Grid.Column="1" Name="outputFormat" IsEditable="True" Text="{Binding OutputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
-		<Label Grid.Row="4" Grid.Column="2" Content="U_TC" Target="{Binding ElementName=outputUTC}"/>
-		<CheckBox Grid.Row="4" Grid.Column="3" Name="outputUTC" IsChecked="{Binding OutputUTC, ElementName=self}" VerticalAlignment="Center"/>
+		<Label Grid.Row="3" Grid.Column="0" Content="Example:"/>
+		<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Example, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
 
-		<Label Grid.Row="5" Grid.Column="0" Content="Result:"/>
-		<TextBox Grid.Row="5" Grid.Column="1" Text="{Binding OutputExample, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
+		<TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ParsedExample, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
 
-		<UniformGrid Grid.Row="7" Grid.ColumnSpan="4" HorizontalAlignment="Right" Rows="1">
+		<Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Content="Output" HorizontalAlignment="Center"/>
+
+		<Label Grid.Row="7" Grid.Column="0" Content="F_ormat:" Target="{Binding ElementName=outputFormat}"/>
+		<ComboBox Grid.Row="7" Grid.Column="1" Name="outputFormat" IsEditable="True" Text="{Binding OutputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<Label Grid.Row="8" Grid.Column="0" Content="T_ime Zone" Target="{Binding ElementName=outputTimeZone}"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="8" Grid.Column="1" Name="outputTimeZone" Text="{Binding OutputTimeZone, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<Label Grid.Row="9" Grid.Column="0" Content="Result:"/>
+		<TextBox Grid.Row="9" Grid.Column="1" Text="{Binding OutputExample, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
+
+		<UniformGrid Grid.Row="11" Grid.ColumnSpan="4" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
