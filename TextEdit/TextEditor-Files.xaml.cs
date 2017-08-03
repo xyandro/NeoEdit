@@ -159,19 +159,19 @@ namespace NeoEdit.TextEdit
 				file.SetLength(value);
 		}
 
-		void Command_Files_Names_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
+		void Command_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
 
-		FilesNamesMakeAbsoluteDialog.Result Command_Files_Names_MakeAbsolute_Dialog() => FilesNamesMakeAbsoluteDialog.Run(WindowParent, GetVariables(), true);
+		FilesNamesMakeAbsoluteDialog.Result Command_Files_Name_MakeAbsolute_Dialog() => FilesNamesMakeAbsoluteDialog.Run(WindowParent, GetVariables(), true);
 
-		void Command_Files_Names_MakeAbsolute(FilesNamesMakeAbsoluteDialog.Result result)
+		void Command_Files_Name_MakeAbsolute(FilesNamesMakeAbsoluteDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		FilesNamesGetUniqueDialog.Result Command_Files_Names_GetUnique_Dialog() => FilesNamesGetUniqueDialog.Run(WindowParent);
+		FilesNamesGetUniqueDialog.Result Command_Files_Name_GetUnique_Dialog() => FilesNamesGetUniqueDialog.Run(WindowParent);
 
-		void Command_Files_Names_GetUnique(FilesNamesGetUniqueDialog.Result result)
+		void Command_Files_Name_GetUnique(FilesNamesGetUniqueDialog.Result result)
 		{
 			var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			if (!result.Format.Contains("{Unique}"))
@@ -203,70 +203,29 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(newNames);
 		}
 
-		void Command_Files_Names_Sanitize() => ReplaceSelections(Selections.Select(range => SanitizeFileName(GetString(range))).ToList());
+		void Command_Files_Name_Sanitize() => ReplaceSelections(Selections.Select(range => SanitizeFileName(GetString(range))).ToList());
 
 		void Command_Files_Get_Size() => ReplaceSelections(RelativeSelectedFiles().Select(file => GetSize(file)).ToList());
 
-		void Command_Files_Get_WriteTime()
+		void Command_Files_Get_Time(TimestampType timestampType)
 		{
-			var files = RelativeSelectedFiles();
-			var strs = new List<string>();
-			foreach (var file in files)
+			Func<FileSystemInfo, DateTime> getTime;
+			switch (timestampType)
 			{
-				if (File.Exists(file))
-				{
-					var fileinfo = new FileInfo(file);
-					strs.Add(fileinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-				}
-				else if (Directory.Exists(file))
-				{
-					var dirinfo = new DirectoryInfo(file);
-					strs.Add(dirinfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-				}
-				else
-					strs.Add("INVALID");
+				case TimestampType.Write: getTime = fi => fi.LastWriteTime; break;
+				case TimestampType.Access: getTime = fi => fi.LastAccessTime; break;
+				case TimestampType.Create: getTime = fi => fi.CreationTime; break;
+				default: throw new Exception("Invalid TimestampType");
 			}
-			ReplaceSelections(strs);
-		}
 
-		void Command_Files_Get_AccessTime()
-		{
 			var files = RelativeSelectedFiles();
 			var strs = new List<string>();
 			foreach (var file in files)
 			{
 				if (File.Exists(file))
-				{
-					var fileinfo = new FileInfo(file);
-					strs.Add(fileinfo.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-				}
+					strs.Add(getTime(new FileInfo(file)).ToString("yyyy-MM-dd HH:mm:ss.fff"));
 				else if (Directory.Exists(file))
-				{
-					var dirinfo = new DirectoryInfo(file);
-					strs.Add(dirinfo.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-				}
-				else
-					strs.Add("INVALID");
-			}
-			ReplaceSelections(strs);
-		}
-
-		void Command_Files_Get_CreateTime()
-		{
-			var files = RelativeSelectedFiles();
-			var strs = new List<string>();
-			foreach (var file in files)
-			{
-				if (File.Exists(file))
-				{
-					var fileinfo = new FileInfo(file);
-					strs.Add(fileinfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-				}
-				else if (Directory.Exists(file))
-				{
-					var dirinfo = new DirectoryInfo(file);
-					strs.Add(dirinfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-				}
+					strs.Add(getTime(new DirectoryInfo(file)).ToString("yyyy-MM-dd HH:mm:ss.fff"));
 				else
 					strs.Add("INVALID");
 			}
@@ -300,6 +259,18 @@ namespace NeoEdit.TextEdit
 		void Command_Files_Get_Version_Product() => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => FileVersionInfo.GetVersionInfo(file).ProductVersion).ToList());
 
 		void Command_Files_Get_Version_Assembly() => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => AssemblyName.GetAssemblyName(file).Version.ToString()).ToList());
+
+		void Command_Files_Get_ChildrenDescendants(bool recursive)
+		{
+			var dirs = RelativeSelectedFiles();
+			if (dirs.Any(dir => !Directory.Exists(dir)))
+				throw new ArgumentException("Path must be of existing directories");
+
+			var errors = new List<Exception>();
+			ReplaceSelections(dirs.Select(dir => string.Join(Data.DefaultEnding, GetDirectoryContents(dir, recursive, errors))).ToList());
+			if (errors.Any())
+				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors.Select(ex => ex.Message))}", "Error", WindowParent);
+		}
 
 		FilesSetSizeDialog.Result Command_Files_Set_Size_Dialog()
 		{
@@ -381,18 +352,6 @@ namespace NeoEdit.TextEdit
 			}
 			foreach (var file in Selections.Select(range => GetString(range)))
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
-		}
-
-		void Command_Files_Directory_GetChildrenDescendants(bool recursive)
-		{
-			var dirs = RelativeSelectedFiles();
-			if (dirs.Any(dir => !Directory.Exists(dir)))
-				throw new ArgumentException("Path must be of existing directories");
-
-			var errors = new List<Exception>();
-			ReplaceSelections(dirs.Select(dir => string.Join(Data.DefaultEnding, GetDirectoryContents(dir, recursive, errors))).ToList());
-			if (errors.Any())
-				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors.Select(ex => ex.Message))}", "Error", WindowParent);
 		}
 
 		FilesInsertDialog.Result Command_Files_Insert_Dialog() => FilesInsertDialog.Run(WindowParent);
