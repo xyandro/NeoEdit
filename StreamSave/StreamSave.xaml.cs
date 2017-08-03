@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using NeoEdit.Common;
@@ -28,7 +29,12 @@ namespace NeoEdit.StreamSave
 			}
 		}
 
-		void SaveURLs(List<string> urls) => MultiProgressDialog.RunAsync(this, "Downloading...", urls, async (item, progress, cancelled) => await YouTubeDL.DownloadStream(StreamSaveDirectory, item, progress, cancelled));
+		void SaveURLs(List<string> urls)
+		{
+			var now = DateTime.Now;
+			var data = urls.Select((url, index) => Tuple.Create(url, now + TimeSpan.FromSeconds(index))).ToList();
+			MultiProgressDialog.RunAsync(this, "Downloading...", data, async (item, progress, cancelled) => await YouTubeDL.DownloadStream(StreamSaveDirectory, item.Item1, item.Item2, progress, cancelled));
+		}
 
 		void SavePlaylists(List<string> urls)
 		{
