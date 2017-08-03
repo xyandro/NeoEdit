@@ -290,13 +290,16 @@ namespace NeoEdit.TextEdit
 			files.Zip(results, (file, size) => new { file, size }).AsParallel().ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
-		FilesSetTimeDialog.Result Command_Files_Set_Time_Dialog() => FilesSetTimeDialog.Run(WindowParent, DateTime.Now);
+		FilesSetTimeDialog.Result Command_Files_Set_Time_Dialog() => FilesSetTimeDialog.Run(WindowParent, GetVariables(), $@"""{DateTime.Now}""");
 
 		void Command_Files_Set_Time(TimestampType type, FilesSetTimeDialog.Result result)
 		{
+			var dateTimes = GetFixedExpressionResults<DateTime>(result.Expression);
 			var files = RelativeSelectedFiles();
-			foreach (var file in files)
+			for (var ctr = 0; ctr < files.Count; ++ctr)
 			{
+				var dateTime = dateTimes[ctr];
+				var file = files[ctr];
 				if (!FileOrDirectoryExists(file))
 					File.WriteAllBytes(file, new byte[0]);
 
@@ -304,21 +307,21 @@ namespace NeoEdit.TextEdit
 				{
 					var info = new FileInfo(file);
 					if (type.HasFlag(TimestampType.Write))
-						info.LastWriteTime = result.Value;
+						info.LastWriteTime = dateTime;
 					if (type.HasFlag(TimestampType.Access))
-						info.LastAccessTime = result.Value;
+						info.LastAccessTime = dateTime;
 					if (type.HasFlag(TimestampType.Create))
-						info.CreationTime = result.Value;
+						info.CreationTime = dateTime;
 				}
 				else if (Directory.Exists(file))
 				{
 					var info = new DirectoryInfo(file);
 					if (type.HasFlag(TimestampType.Write))
-						info.LastWriteTime = result.Value;
+						info.LastWriteTime = dateTime;
 					if (type.HasFlag(TimestampType.Access))
-						info.LastAccessTime = result.Value;
+						info.LastAccessTime = dateTime;
 					if (type.HasFlag(TimestampType.Create))
-						info.CreationTime = result.Value;
+						info.CreationTime = dateTime;
 				}
 			}
 		}

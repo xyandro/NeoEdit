@@ -1,5 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -8,31 +8,34 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public DateTime Value { get; set; }
+			public string Expression { get; set; }
 		}
 
 		[DepProp]
-		public DateTime Value { get { return UIHelper<FilesSetTimeDialog>.GetPropValue<DateTime>(this); } set { UIHelper<FilesSetTimeDialog>.SetPropValue(this, value); } }
+		public NEVariables Variables { get { return UIHelper<FilesSetTimeDialog>.GetPropValue<NEVariables>(this); } set { UIHelper<FilesSetTimeDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public string Expression { get { return UIHelper<FilesSetTimeDialog>.GetPropValue<string>(this); } set { UIHelper<FilesSetTimeDialog>.SetPropValue(this, value); } }
 
 		static FilesSetTimeDialog() { UIHelper<FilesSetTimeDialog>.Register(); }
 
-		FilesSetTimeDialog(DateTime value)
+		FilesSetTimeDialog(NEVariables variables, string expression)
 		{
 			InitializeComponent();
 
-			Value = value;
+			Variables = variables;
+			Expression = expression;
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Value = Value };
+			result = new Result { Expression = Expression };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, DateTime datetime)
+		static public Result Run(Window parent, NEVariables variables, string expression)
 		{
-			var dialog = new FilesSetTimeDialog(datetime) { Owner = parent };
+			var dialog = new FilesSetTimeDialog(variables, expression) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
