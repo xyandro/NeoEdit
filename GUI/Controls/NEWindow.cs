@@ -26,6 +26,7 @@ namespace NeoEdit.GUI.Controls
 					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
 					try { ripDirectory = xml.Element(nameof(RipDirectory)).Value; } catch { }
 					try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
+					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
 					try { streamSaveDirectory = xml.Element(nameof(StreamSaveDirectory)).Value; } catch { }
 					try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
 				}
@@ -44,6 +45,7 @@ namespace NeoEdit.GUI.Controls
 				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
 				xml.Add(new XElement(nameof(RipDirectory), ripDirectory));
 				xml.Add(new XElement(nameof(YouTubeDLPath), youTubeDLPath));
+				xml.Add(new XElement(nameof(FFmpegPath), ffmpegPath));
 				xml.Add(new XElement(nameof(StreamSaveDirectory), streamSaveDirectory));
 				xml.Add(new XElement(nameof(Font.FontSize), Font.FontSize));
 				xml.Save(settingsFile);
@@ -146,6 +148,20 @@ namespace NeoEdit.GUI.Controls
 
 		static EventHandler youTubeDLPathChanged;
 		public static event EventHandler YouTubeDLPathChanged { add { youTubeDLPathChanged += value; } remove { youTubeDLPathChanged -= value; } }
+
+		static string ffmpegPath = "";
+		public static string FFmpegPath
+		{
+			get { return ffmpegPath; }
+			set
+			{
+				ffmpegPath = value;
+				SaveSettings();
+			}
+		}
+
+		static EventHandler ffmpegPathChanged;
+		public static event EventHandler FFmpegPathChanged { add { ffmpegPathChanged += value; } remove { ffmpegPathChanged -= value; } }
 
 		static string streamSaveDirectory = Directory.GetCurrentDirectory();
 		public static string StreamSaveDirectory

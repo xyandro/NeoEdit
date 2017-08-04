@@ -62,7 +62,7 @@ namespace NeoEdit.StreamSave
 				StartInfo = new ProcessStartInfo
 				{
 					FileName = NEWindow.YouTubeDLPath,
-					Arguments = $@"-iwc --no-playlist ""{url}""",
+					Arguments = $@"-iwc --ffmpeg-location ""{NEWindow.FFmpegPath}"" --no-playlist ""{url}""",
 					WorkingDirectory = directory,
 					UseShellExecute = false,
 					StandardOutputEncoding = Encoding.Default,
