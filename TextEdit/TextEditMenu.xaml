@@ -82,6 +82,7 @@
 		</MenuItem>
 		<MenuItem Header="_Paste">
 			<textEdit:TextEditMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>
+			<textEdit:TextEditMenuItem Header="_Rotate Paste" CommandEnum="Edit_Paste_RotatePaste"/>
 			<textEdit:TextEditMenuItem Header="_All Files" CommandEnum="Edit_Paste_AllFiles"/>
 		</MenuItem>
 		<Separator/>

@@ -222,7 +222,7 @@ namespace NeoEdit.TextEdit
 
 		public void Command_Edit_Paste_AllFiles(string str, bool highlight) => ReplaceSelections(Selections.Select(value => str).ToList(), highlight);
 
-		void Command_Edit_Paste_Paste(bool highlight)
+		void Command_Edit_Paste_Paste(bool highlight, bool rotate)
 		{
 			var clipboardStrings = clipboard.Strings;
 			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
@@ -241,7 +241,12 @@ namespace NeoEdit.TextEdit
 			if (repeat * clipboardStrings.Count != Selections.Count)
 				throw new Exception("Number of selections must be a multiple of number of clipboards.");
 
-			clipboardStrings = clipboardStrings.SelectMany(str => Enumerable.Repeat(str, repeat)).ToList();
+			if (repeat != 1)
+				if (rotate)
+					clipboardStrings = Enumerable.Repeat(clipboardStrings, repeat).SelectMany(x => x).ToList();
+				else
+					clipboardStrings = clipboardStrings.SelectMany(str => Enumerable.Repeat(str, repeat)).ToList();
+
 			ReplaceSelections(clipboardStrings, highlight);
 		}
 
