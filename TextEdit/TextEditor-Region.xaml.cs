@@ -52,11 +52,52 @@ namespace NeoEdit.TextEdit
 
 		void Command_Region_AddSelections() => Regions.AddRange(Selections);
 
-		void Command_Region_RemoveSelections() => Regions.Replace(Regions.Where(region => Selections.All(selection => ((region.Start != selection.Start) || (region.End != selection.End)) && ((region.End <= selection.Start) || (region.Start >= selection.End)))).ToList());
+		void Command_Region_RemoveSelections()
+		{
+			var regions = new List<Range>();
+			var regionIndex = 0;
+			foreach (var selection in Selections)
+			{
+				while ((regionIndex < Regions.Count) && (Regions[regionIndex].End < selection.Start))
+					regions.Add(Regions[regionIndex++]);
+				while ((regionIndex < Regions.Count) && (((Regions[regionIndex].Start == selection.Start) && (Regions[regionIndex].End == selection.End)) || ((Regions[regionIndex].End > selection.Start) && (Regions[regionIndex].Start < selection.End))))
+					++regionIndex;
+			}
+			while (regionIndex < Regions.Count)
+				regions.Add(Regions[regionIndex++]);
+			Regions.Replace(regions);
+		}
 
-		void Command_Region_ReplaceSelections() => Regions.Replace(Regions.Where(region => Selections.All(selection => (region.End <= selection.Start) || (region.Start >= selection.End))).Concat(Selections).ToList());
+		void Command_Region_ReplaceSelections()
+		{
+			var regions = new List<Range>();
+			var regionIndex = 0;
+			foreach (var selection in Selections)
+			{
+				while ((regionIndex < Regions.Count) && (Regions[regionIndex].End < selection.Start))
+					regions.Add(Regions[regionIndex++]);
+				while ((regionIndex < Regions.Count) && (((Regions[regionIndex].Start == selection.Start) && (Regions[regionIndex].End == selection.End)) || ((Regions[regionIndex].End > selection.Start) && (Regions[regionIndex].Start < selection.End))))
+					++regionIndex;
+				regions.Add(selection);
+			}
+			while (regionIndex < Regions.Count)
+				regions.Add(Regions[regionIndex++]);
+			Regions.Replace(regions);
+		}
 
-		void Command_Region_LimitToSelections() => Regions.Replace(Regions.Where(region => Selections.Any(selection => (region.Start >= selection.Start) && (region.End <= selection.End))).ToList());
+		void Command_Region_LimitToSelections()
+		{
+			var regions = new List<Range>();
+			var regionIndex = 0;
+			foreach (var selection in Selections)
+			{
+				while ((regionIndex < Regions.Count) && (Regions[regionIndex].Start < selection.Start))
+					++regionIndex;
+				while ((regionIndex < Regions.Count) && (Regions[regionIndex].Start >= selection.Start) && (Regions[regionIndex].End <= selection.End))
+					regions.Add(Regions[regionIndex++]);
+			}
+			Regions.Replace(regions);
+		}
 
 		void Command_Region_Clear() => Regions.Clear();
 
