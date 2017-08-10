@@ -680,6 +680,20 @@ namespace NeoEdit.TextEdit
 
 		List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateRows<T>(GetVariables(), Selections.Count());
 
+		WordSkipType GetWordSkipType(int line, int index)
+		{
+			if ((index < 0) || (index >= Data.GetLineLength(line)))
+				return WordSkipType.Space;
+
+			var c = Data[line, index];
+			if (char.IsWhiteSpace(c))
+				return WordSkipType.Space;
+			else if ((char.IsLetterOrDigit(c)) || (c == '_'))
+				return WordSkipType.Char;
+			else
+				return WordSkipType.Symbol;
+		}
+
 		int GetNextWord(int offset)
 		{
 			WordSkipType moveType = WordSkipType.None;
@@ -697,19 +711,7 @@ namespace NeoEdit.TextEdit
 				}
 
 				++index;
-				WordSkipType current;
-				if (index >= Data.GetLineLength(line))
-					current = WordSkipType.Space;
-				else
-				{
-					var c = Data[line, index];
-					if (char.IsWhiteSpace(c))
-						current = WordSkipType.Space;
-					else if ((char.IsLetterOrDigit(c)) || (c == '_'))
-						current = WordSkipType.Char;
-					else
-						current = WordSkipType.Symbol;
-				}
+				var current = GetWordSkipType(line, index);
 
 				if (moveType == WordSkipType.None)
 					moveType = current;
@@ -725,7 +727,6 @@ namespace NeoEdit.TextEdit
 
 			var line = Data.GetOffsetLine(offset);
 			var index = Math.Min(Data.GetLineLength(line), Data.GetOffsetIndex(offset, line));
-			int lastLine = -1, lastIndex = -1;
 			while (true)
 			{
 				if (index < 0)
@@ -737,29 +738,14 @@ namespace NeoEdit.TextEdit
 					continue;
 				}
 
-				lastLine = line;
-				lastIndex = index;
-
 				--index;
-				WordSkipType current;
-				if (index < 0)
-					current = WordSkipType.Space;
-				else
-				{
-					var c = Data[line, index];
-					if (char.IsWhiteSpace(c))
-						current = WordSkipType.Space;
-					else if ((char.IsLetterOrDigit(c)) || (c == '_'))
-						current = WordSkipType.Char;
-					else
-						current = WordSkipType.Symbol;
-				}
+				var current = GetWordSkipType(line, index);
 
 				if (moveType == WordSkipType.None)
 					moveType = current;
 
 				if (current != moveType)
-					return Data.GetOffset(lastLine, lastIndex);
+					return Data.GetOffset(line, index + 1);
 			}
 		}
 
@@ -949,6 +935,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Bookmarks_Next: Command_Edit_Bookmarks_NextPreviousBookmark(true, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Previous: Command_Edit_Bookmarks_NextPreviousBookmark(false, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(); break;
+				case TextEditCommand.Edit_Navigate_WordLeft: Command_Edit_Navigate_WordLeft(shiftDown); break;
+				case TextEditCommand.Edit_Navigate_WordRight: Command_Edit_Navigate_WordRight(shiftDown); break;
 				case TextEditCommand.Diff_Selections: Command_Diff_Selections(); break;
 				case TextEditCommand.Diff_SelectedFiles: Command_Diff_SelectedFiles(); break;
 				case TextEditCommand.Diff_Regions: Command_Diff_Regions(); break;
@@ -1344,9 +1332,7 @@ namespace NeoEdit.TextEdit
 						{
 							var line = Data.GetOffsetLine(range.Cursor);
 							var index = Data.GetOffsetIndex(range.Cursor, line);
-							if (controlDown)
-								return MoveCursor(range, GetPrevWord(range.Cursor), shiftDown);
-							else if ((!shiftDown) && (hasSelection))
+							if ((!shiftDown) && (hasSelection))
 								return new Range(range.Start);
 							else if ((index == 0) && (line != 0))
 								return MoveCursor(range, -1, int.MaxValue, shiftDown, indexRel: false);
@@ -1362,9 +1348,7 @@ namespace NeoEdit.TextEdit
 						{
 							var line = Data.GetOffsetLine(range.Cursor);
 							var index = Data.GetOffsetIndex(range.Cursor, line);
-							if (controlDown)
-								return MoveCursor(range, GetNextWord(range.Cursor), shiftDown);
-							else if ((!shiftDown) && (hasSelection))
+							if ((!shiftDown) && (hasSelection))
 								return new Range(range.End);
 							else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
 								return MoveCursor(range, 1, 0, shiftDown, indexRel: false);

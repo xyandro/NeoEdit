@@ -529,10 +529,13 @@ namespace NeoEdit.TextEdit
 			var controlDown = this.controlDown;
 			var altDown = this.altDown;
 
-			e.Handled = HandleKey(e.Key, shiftDown, controlDown, altDown);
+			var key = e.Key;
+			if (key == Key.System)
+				key = e.SystemKey;
+			e.Handled = HandleKey(key, shiftDown, controlDown, altDown);
 
 			if ((recordingMacro != null) && (e.Handled))
-				recordingMacro.AddKey(e.Key, shiftDown, controlDown, altDown);
+				recordingMacro.AddKey(key, shiftDown, controlDown, altDown);
 		}
 
 		public override bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)

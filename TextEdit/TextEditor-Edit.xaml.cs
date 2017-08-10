@@ -618,6 +618,10 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_Bookmarks_Clear() => Bookmarks.Clear();
 
+		void Command_Edit_Navigate_WordLeft(bool selecting) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, GetPrevWord(range.Cursor), selecting)).ToList());
+
+		void Command_Edit_Navigate_WordRight(bool selecting) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, GetNextWord(range.Cursor), selecting)).ToList());
+
 		IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)
 		{
 			var func = ascending ? (Func<IEnumerable<TSource>, Func<TSource, TKey>, IComparer<TKey>, IOrderedEnumerable<TSource>>)Enumerable.OrderBy : Enumerable.OrderByDescending;
