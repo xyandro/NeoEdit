@@ -27,8 +27,11 @@ namespace Loader
 					config.Output = new Uri(new Uri(loader), arg.Substring("-Output=".Length)).LocalPath;
 				else if (arg.StartsWith("-Match=", StringComparison.OrdinalIgnoreCase))
 					config.Match = arg.Substring("-Match=".Length);
-				else if (arg.StartsWith("-ExtractAction=", StringComparison.OrdinalIgnoreCase))
-					config.ExtractAction = (ExtractActions)Enum.Parse(typeof(ExtractActions), arg.Substring("-ExtractAction=".Length), true);
+				else if (arg.StartsWith("-CanExtract=", StringComparison.OrdinalIgnoreCase))
+					switch (arg.Substring("-CanExtract=".Length).ToLowerInvariant()[0])
+					{
+						case '1': case 'y': case 't': config.CanExtract = true; break;
+					}
 				else if (arg.StartsWith("-NGen=", StringComparison.OrdinalIgnoreCase))
 					switch (arg.Substring("-NGen=".Length).ToLowerInvariant()[0])
 					{
@@ -68,24 +71,14 @@ namespace Loader
 				var pid = int.Parse(args[2]);
 				Extractor.RunUpdate(pid, fileName);
 			}
-			else if ((ResourceReader.Config.ExtractAction != ExtractActions.None) && ((Keyboard.GetKeyStates(Key.CapsLock).HasFlag(KeyStates.Down)) || ((args.Length == 1) && (args[0] == "-extract")) || (FilesAreExtracted())))
+			else if ((ResourceReader.Config.CanExtract) && ((Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) || ((args.Length == 1) && (args[0] == "-extract")) || (FilesAreExtracted())))
 			{
-				var action = ResourceReader.Config.ExtractAction;
-				var bitDepth = Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32;
-				if (action == ExtractActions.GUI)
+				var result = MessageBox.Show("Do you want to extract the contents of this archive?", "Confirm", MessageBoxButton.YesNoCancel);
+				switch (result)
 				{
-					var result = Contents.Run();
-					action = result?.Item1 ?? ExtractActions.None;
-					bitDepth = result?.Item2 ?? bitDepth;
-				}
-
-				// This is after the dialog because it makes the dialog not get focus
-				ClearCapsLock();
-
-				switch (action)
-				{
-					case ExtractActions.Extract: Extractor.Extract(bitDepth); break;
-					case ExtractActions.GUI: Extractor.RunProgram(args); break;
+					case MessageBoxResult.Yes: Extractor.Extract(Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32); break;
+					case MessageBoxResult.No: Extractor.RunProgram(args); break;
+					case MessageBoxResult.Cancel: return;
 				}
 			}
 			else
@@ -133,21 +126,6 @@ namespace Loader
 			}
 
 			Resource.Password = password;
-		}
-
-		static void ClearCapsLock()
-		{
-			if (!Keyboard.GetKeyStates(Key.CapsLock).HasFlag(KeyStates.Toggled))
-				return;
-
-			var inputs = new Native.INPUT[]
-			{
-				new Native.INPUT { type = Native.InputType.KEYBOARD, ki = new Native.INPUT.KEYBDINPUT { wVk = Native.VirtualKeyShort.CAPSLOCK, dwFlags = Native.KEYEVENTF.KEYUP } },
-				new Native.INPUT { type = Native.InputType.KEYBOARD, ki = new Native.INPUT.KEYBDINPUT { wVk = Native.VirtualKeyShort.CAPSLOCK, dwFlags = Native.KEYEVENTF.NONE } },
-				new Native.INPUT { type = Native.InputType.KEYBOARD, ki = new Native.INPUT.KEYBDINPUT { wVk = Native.VirtualKeyShort.CAPSLOCK, dwFlags = Native.KEYEVENTF.KEYUP } },
-			};
-
-			Native.SendInput(inputs.Length, inputs, Native.INPUT.Size);
 		}
 
 		[STAThread]

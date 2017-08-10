@@ -22,8 +22,6 @@ namespace Loader
 		public static extern IntPtr LoadResource(IntPtr hModule, IntPtr hResInfo);
 		[DllImport("kernel32.dll", SetLastError = true)]
 		public static extern IntPtr LockResource(IntPtr hResData);
-		[DllImport("user32.dll", SetLastError = true)]
-		public static extern uint SendInput(int nInputs, [MarshalAs(UnmanagedType.LPArray), In] INPUT[] pInputs, int cbSize);
 		[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
 		public static extern void SetDllDirectory(string lpPathName);
 		[DllImport("kernel32.dll", SetLastError = true)]
@@ -107,19 +105,6 @@ namespace Loader
 			x32BitPreferred = 0x00020000,
 		}
 
-		public enum InputType : uint
-		{
-			KEYBOARD = 1,
-		}
-
-		[Flags]
-		public enum KEYEVENTF : uint
-		{
-			NONE = 0x0000,
-			EXTENDEDKEY = 0x0001,
-			KEYUP = 0x0002,
-		}
-
 		public enum MagicType : ushort
 		{
 			IMAGE_NT_OPTIONAL_HDR32_MAGIC = 0x10b,
@@ -139,11 +124,6 @@ namespace Loader
 			IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER = 12,
 			IMAGE_SUBSYSTEM_EFI_ROM = 13,
 			IMAGE_SUBSYSTEM_XBOX = 14
-		}
-
-		public enum VirtualKeyShort : short
-		{
-			CAPSLOCK = 20,
 		}
 
 		public interface IMAGE_NT_HEADERS
@@ -410,49 +390,6 @@ namespace Loader
 			public DataSectionFlags Characteristics;
 
 			public string Section => new string(Name).TrimEnd('\0');
-		}
-
-		[StructLayout(LayoutKind.Sequential)]
-		public struct INPUT
-		{
-			public InputType type;
-			[StructLayout(LayoutKind.Sequential)]
-			public struct KEYBDINPUT
-			{
-				public VirtualKeyShort wVk;
-				public short wScan;
-				public KEYEVENTF dwFlags;
-				public int time;
-				public UIntPtr dwExtraInfo;
-			}
-			public KEYBDINPUT ki;
-			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-			public byte[] padding;
-
-			public static int Size
-			{
-				get { return Marshal.SizeOf(typeof(INPUT)); }
-			}
-		}
-
-		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-		public struct VS_VERSION_INFO
-		{
-			public ushort Size;
-			public short ValueDataSize;
-			public short ValueType;
-			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
-			public string ValueID;
-			public short Padding;
-			public uint Signature;
-			public int VersionData;
-			public ushort Version2;
-			public ushort Version1;
-			public ushort Version4;
-			public ushort Version3;
-
-			public bool IsValid => (ValueDataSize == 52) && (ValueType == 0) && (ValueID == "VS_VERSION_INFO") && (Signature == 0xfeef04bd) && (VersionData == 0x00010000);
-			public string Version => $"{Version1}.{Version2}.{Version3}.{Version4}";
 		}
 	}
 }

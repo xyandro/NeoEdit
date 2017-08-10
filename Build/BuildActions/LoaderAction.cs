@@ -26,7 +26,7 @@ namespace Build.BuildActions
 			var output = $@"{App.Location}\Release\NeoEdit.exe";
 			Directory.CreateDirectory(Path.GetDirectoryName(output));
 
-			var arguments = $@"{fileList} -output=""{output}"" -ngen=1 -extractaction=gui -go";
+			var arguments = $@"{fileList} -output=""{output}"" -ngen=1 -canextract=1 -go";
 			RunCommand(writeText, loader, arguments);
 		}
 	}

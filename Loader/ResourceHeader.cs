@@ -11,10 +11,7 @@ namespace Loader
 		public FileTypes FileType { get; set; }
 		public DateTime WriteTime { get; set; }
 		public BitDepths BitDepth { get; set; }
-		public string Version { get; set; }
 		public string SHA1 { get; set; }
-		public int DataSize { get; set; }
-		public int RawDataSize { get; set; }
 
 		public byte[] ToBytes()
 		{
@@ -26,9 +23,6 @@ namespace Loader
 				msWriter.Write((int)FileType);
 				msWriter.Write(WriteTime.ToBinary());
 				msWriter.Write((int)BitDepth);
-				msWriter.Write(Version);
-				msWriter.Write(DataSize);
-				msWriter.Write(RawDataSize);
 				msWriter.Write(SHA1);
 				return ms.ToArray();
 			}
@@ -46,9 +40,6 @@ namespace Loader
 					FileType = (FileTypes)reader.ReadInt32(),
 					WriteTime = DateTime.FromBinary(reader.ReadInt64()),
 					BitDepth = (BitDepths)reader.ReadInt32(),
-					Version = reader.ReadString(),
-					DataSize = reader.ReadInt32(),
-					RawDataSize = reader.ReadInt32(),
 					SHA1 = reader.ReadString(),
 				};
 			}
@@ -63,12 +54,6 @@ namespace Loader
 			if (x32Res == x64Res)
 				return true;
 			if (x32Res.FileType != x64Res.FileType)
-				return false;
-			if (x32Res.Version != x64Res.Version)
-				return false;
-			if (x32Res.DataSize != x64Res.DataSize)
-				return false;
-			if (x32Res.RawDataSize != x64Res.RawDataSize)
 				return false;
 			if (x32Res.SHA1 != x64Res.SHA1)
 				return false;

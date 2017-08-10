@@ -21,7 +21,7 @@ namespace Loader
 		string password;
 		string output;
 		Regex match = new Regex(@"\.(exe|dll|txt)$", RegexOptions.IgnoreCase);
-		ExtractActions extractAction = ExtractActions.Extract;
+		bool canExtract;
 		bool nGen;
 		bool isConsole;
 		ObservableCollection<ResourceHeader> resourceHeaders = new ObservableCollection<ResourceHeader>();
@@ -33,7 +33,7 @@ namespace Loader
 		public string Password { get { return password; } set { SetStrValue(ref password, value); } }
 		public string Output { get { return output; } set { SetStrValue(ref output, value); } }
 		public string Match { get { return match.ToString(); } set { SetValue(ref match, new Regex(value, RegexOptions.IgnoreCase)); } }
-		public ExtractActions ExtractAction { get { return extractAction; } set { SetValue(ref extractAction, value); } }
+		public bool CanExtract { get { return canExtract; } set { SetValue(ref canExtract, value); } }
 		public bool NGen { get { return nGen; } set { SetValue(ref nGen, value); } }
 		public bool IsConsole { get { return isConsole; } set { SetValue(ref isConsole, value); } }
 		public ObservableCollection<ResourceHeader> ResourceHeaders { get { return resourceHeaders; } set { SetValue(ref resourceHeaders, value); } }
@@ -50,7 +50,7 @@ namespace Loader
 			{
 				writer.Write(X32Start ?? "");
 				writer.Write(X64Start ?? "");
-				writer.Write((int)ExtractAction);
+				writer.Write(CanExtract);
 				writer.Write(NGen);
 				writer.Write(Password != null);
 
@@ -73,7 +73,7 @@ namespace Loader
 				var config = new Config();
 				config.X32Start = reader.ReadString();
 				config.X64Start = reader.ReadString();
-				config.ExtractAction = (ExtractActions)reader.ReadInt32();
+				config.CanExtract = reader.ReadBoolean();
 				config.NGen = reader.ReadBoolean();
 				config.Password = reader.ReadBoolean() ? "prompt" : null;
 

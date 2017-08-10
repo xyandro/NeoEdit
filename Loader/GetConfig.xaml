@@ -1,7 +1,6 @@
 ﻿<Window x:Class="Loader.GetConfig" x:ClassModifier="internal"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:local="clr-namespace:Loader"
 	Title="Loader Configuration" SizeToContent="WidthAndHeight">
 
 	<Grid Margin="10">
@@ -11,7 +10,6 @@
 			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
@@ -54,16 +52,14 @@
 		<Label Grid.Row="7" Grid.Column="0" Content="_Match:" HorizontalAlignment="Right" Target="{Binding ElementName=match}"/>
 		<TextBox Grid.Row="7" Grid.Column="1" Name="match" Text="{Binding Match, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="8" Grid.Column="0" Content="Extract _Action:" HorizontalAlignment="Right" Target="{Binding ElementName=extractAction}"/>
-		<ComboBox Grid.Row="8" Grid.Column="1" Name="extractAction" SelectedItem="{Binding ExtractAction}" VerticalAlignment="Center"/>
-
-		<Label Grid.Row="9" Grid.Column="0" Content="Misc:" HorizontalAlignment="Right"/>
-		<StackPanel Grid.Row="9" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+		<Label Grid.Row="8" Grid.Column="0" Content="Misc:" HorizontalAlignment="Right"/>
+		<StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+			<CheckBox Content="Can _Extract" IsChecked="{Binding CanExtract}" Margin="0,0,10,0"/>
 			<CheckBox Content="_NGen" IsChecked="{Binding NGen}" Margin="0,0,10,0"/>
 			<CheckBox Content="_Console" IsChecked="{Binding IsConsole}" Margin="0,0,10,0"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="11" Grid.ColumnSpan="3" Rows="1" HorizontalAlignment="Right">
+		<UniformGrid Grid.Row="10" Grid.ColumnSpan="3" Rows="1" HorizontalAlignment="Right">
 			<Button IsDefault="True" Content="Ok" Click="OkClick"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,0,10,0"/>
 		</UniformGrid>

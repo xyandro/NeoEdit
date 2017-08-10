@@ -19,7 +19,6 @@ namespace Loader
 			EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, e2) => (s as TextBox).SelectAll()));
 			DataContext = this.config = config;
 			InitializeComponent();
-			extractAction.ItemsSource = Enum.GetValues(typeof(ExtractActions)).Cast<ExtractActions>().ToList();
 			password.Password = confirm.Password = config.Password;
 		}
 

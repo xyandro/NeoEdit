@@ -35,14 +35,6 @@
     <Compile Include="BitDepths.cs" />
     <Compile Include="Builder.cs" />
     <Compile Include="Config.cs" />
-    <Page Include="Contents.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Contents.xaml.cs">
-      <DependentUpon>Contents.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ExtractActions.cs" />
     <Compile Include="Extractor.cs" />
     <Compile Include="FileTypes.cs" />
     <Page Include="GetConfig.xaml">
