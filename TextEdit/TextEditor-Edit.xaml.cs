@@ -622,6 +622,80 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_Navigate_WordRight(bool selecting) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, GetNextWord(range.Cursor), selecting)).ToList());
 
+		void Command_Edit_Navigate_AllLeft(bool selecting)
+		{
+			if (!Selections.Any())
+				return;
+
+			var offsets = Selections.Select(range => range.Cursor).ToList();
+			var lines = offsets.AsParallel().AsOrdered().Select(offset => Data.GetOffsetLine(offset)).ToList();
+
+			var indexes = offsets.Zip(lines, (offset, line) => Data.GetOffsetIndex(offset, line)).ToList();
+			var index = Math.Min(indexes.Max() - 1, indexes.Min());
+
+			var currentIsSpace = default(bool?);
+
+			while (true)
+			{
+				if (index < 0)
+				{
+					offsets = lines.Select(line => Data.GetOffset(line, 0)).ToList();
+					break;
+				}
+
+				var isSpace = lines.All(line => GetWordSkipType(line, index) == WordSkipType.Space);
+
+				if (!currentIsSpace.HasValue)
+					currentIsSpace = isSpace;
+				else if (isSpace != currentIsSpace)
+				{
+					offsets = lines.Select(line => Data.GetOffset(line, index + 1)).ToList();
+					break;
+				}
+
+				--index;
+			}
+
+			Selections.Replace(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
+		}
+
+		void Command_Edit_Navigate_AllRight(bool selecting)
+		{
+			if (!Selections.Any())
+				return;
+
+			var offsets = Selections.Select(range => range.Cursor).ToList();
+			var lines = offsets.AsParallel().AsOrdered().Select(offset => Data.GetOffsetLine(offset)).ToList();
+
+			var index = offsets.Zip(lines, (offset, line) => Data.GetOffsetIndex(offset, line)).Min();
+			var endIndex = lines.Select(line => Data.GetLineLength(line)).Min();
+
+			var currentIsSpace = default(bool?);
+
+			while (true)
+			{
+				if (index > endIndex)
+				{
+					offsets = lines.Select(line => Data.GetOffset(line, Data.GetLineLength(line))).ToList();
+					break;
+				}
+
+				var isSpace = lines.All(line => GetWordSkipType(line, index) == WordSkipType.Space);
+
+				if (!currentIsSpace.HasValue)
+					currentIsSpace = isSpace;
+				else if (isSpace != currentIsSpace)
+				{
+					offsets = lines.Select(line => Data.GetOffset(line, index)).ToList();
+					break;
+				}
+
+				++index;
+			}
+
+			Selections.Replace(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
+		}
+
 		IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)
 		{
 			var func = ascending ? (Func<IEnumerable<TSource>, Func<TSource, TKey>, IComparer<TKey>, IOrderedEnumerable<TSource>>)Enumerable.OrderBy : Enumerable.OrderByDescending;

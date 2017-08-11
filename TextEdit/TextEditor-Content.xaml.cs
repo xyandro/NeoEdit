@@ -121,6 +121,18 @@ namespace NeoEdit.TextEdit
 
 		void Command_Content_Descendants_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		void Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown)));
+		void Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown)
+		{
+			if (ContentType == Parser.ParserType.None)
+			{
+				switch (direction)
+				{
+					case ParserNode.ParserNavigationDirectionEnum.Left: Command_Edit_Navigate_AllLeft(shiftDown); break;
+					case ParserNode.ParserNavigationDirectionEnum.Right: Command_Edit_Navigate_AllRight(shiftDown); break;
+				}
+			}
+			else
+				ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown)));
+		}
 	}
 }

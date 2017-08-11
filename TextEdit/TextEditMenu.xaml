@@ -140,6 +140,8 @@
 		<MenuItem Header="Na_vigate">
 			<textEdit:TextEditMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft"/>
 			<textEdit:TextEditMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight"/>
+			<textEdit:TextEditMenuItem Header="All L_eft" CommandEnum="Edit_Navigate_AllLeft"/>
+			<textEdit:TextEditMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="Esc_ape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(guiControls:NEWindow.EscapeClearsSelections), Mode=TwoWay}"/>

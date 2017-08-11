@@ -81,6 +81,8 @@ namespace NeoEdit.TextEdit
 		Edit_Bookmarks_Clear,
 		[KeyGesture(Key.Left, ModifierKeys.Control)] [KeyGesture(Key.Left, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Navigate_WordLeft,
 		[KeyGesture(Key.Right, ModifierKeys.Control)] [KeyGesture(Key.Right, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Navigate_WordRight,
+		Edit_Navigate_AllLeft,
+		Edit_Navigate_AllRight,
 		[KeyGesture(Key.D, ModifierKeys.Control)] [KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift, 2)] Diff_Diff,
 		Diff_Selections,
 		Diff_SelectedFiles,
