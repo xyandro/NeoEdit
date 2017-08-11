@@ -90,9 +90,9 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		NetworkFetchFileDialog.Result Command_Network_Fetch_File_Dialog() => NetworkFetchFileDialog.Run(WindowParent, GetVariables());
+		NetworkFetchFileDialog.Result Command_Network_FetchFile_Dialog() => NetworkFetchFileDialog.Run(WindowParent, GetVariables());
 
-		void Command_Network_Fetch_File(NetworkFetchFileDialog.Result result)
+		void Command_Network_FetchFile(NetworkFetchFileDialog.Result result)
 		{
 			var variables = GetVariables();
 

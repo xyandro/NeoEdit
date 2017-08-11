@@ -63,7 +63,7 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(BeginRange);
 		}
 
-		void Command_Table_Type_Detect() => ContentType = Table.GuessTableType(AllText);
+		void Command_Table_DetectType() => ContentType = Table.GuessTableType(AllText);
 
 		TableConvertDialog.Result Command_Table_Convert_Dialog() => TableConvertDialog.Run(WindowParent, ContentType);
 
@@ -128,12 +128,6 @@ namespace NeoEdit.TextEdit
 
 		void Command_Table_EditTable(TableEditTableDialog.Result result) => SetText(GetTable().Aggregate(result.AggregateData).Sort(result.SortData));
 
-		TableAddColumnDialog.Result Command_Table_AddColumn_Dialog()
-		{
-			var table = GetTable();
-			return TableAddColumnDialog.Run(WindowParent, GetTableVariables(table), table.NumRows);
-		}
-
 		void Command_Table_AddHeaders() => SetText(GetTable(false));
 
 		void Command_Table_AddRow()
@@ -141,6 +135,12 @@ namespace NeoEdit.TextEdit
 			var table = GetTable();
 			table.AddRow();
 			SetText(table);
+		}
+
+		TableAddColumnDialog.Result Command_Table_AddColumn_Dialog()
+		{
+			var table = GetTable();
+			return TableAddColumnDialog.Run(WindowParent, GetTableVariables(table), table.NumRows);
 		}
 
 		void Command_Table_AddColumn(TableAddColumnDialog.Result result)

@@ -5,8 +5,7 @@
 	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
 	xmlns:system="clr-namespace:System;assembly=mscorlib"
-	xmlns:textEdit="clr-namespace:NeoEdit.TextEdit"
-	xmlns:textEditHighlighting="clr-namespace:NeoEdit.TextEdit.Highlighting">
+	xmlns:textEdit="clr-namespace:NeoEdit.TextEdit">
 
 	<Menu.Resources>
 		<system:Boolean x:Key="True">True</system:Boolean>
@@ -358,14 +357,14 @@
 	</MenuItem>
 	<MenuItem Header="_Date/Time">
 		<textEdit:TextEditMenuItem Header="_Now" CommandEnum="DateTime_Now"/>
-		<textEdit:TextEditMenuItem Header="_Utc Now" CommandEnum="DateTime_UTCNow"/>
+		<textEdit:TextEditMenuItem Header="_Utc Now" CommandEnum="DateTime_UtcNow"/>
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
 		<textEdit:TextEditMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Te_xt to Table" CommandEnum="Table_TextToTable"/>
+		<textEdit:TextEditMenuItem Header="Te_xt To Table" CommandEnum="Table_TextToTable"/>
 		<textEdit:TextEditMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
 		<textEdit:TextEditMenuItem Header="Re_gion Selections To Table" CommandEnum="Table_RegionSelectionsToTable"/>
 		<Separator/>
@@ -386,9 +385,9 @@
 		<textEdit:TextEditMenuItem Header="Set _Variables" CommandEnum="Table_SetVariables"/>
 		<Separator/>
 		<MenuItem Header="_Database">
-			<textEdit:TextEditMenuItem Header="Generate _INSERTs" CommandEnum="Table_Database_GenerateInserts"/>
-			<textEdit:TextEditMenuItem Header="Generate _UPDATEs" CommandEnum="Table_Database_GenerateUpdates"/>
-			<textEdit:TextEditMenuItem Header="Generate _DELETEs" CommandEnum="Table_Database_GenerateDeletes"/>
+			<textEdit:TextEditMenuItem Header="Generate _Inserts" CommandEnum="Table_Database_GenerateInserts"/>
+			<textEdit:TextEditMenuItem Header="Generate _Updates" CommandEnum="Table_Database_GenerateUpdates"/>
+			<textEdit:TextEditMenuItem Header="Generate _Deletes" CommandEnum="Table_Database_GenerateDeletes"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Position">
@@ -465,8 +464,8 @@
 		<textEdit:TextEditMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
-		<textEdit:TextEditMenuItem Header="Fetch _Hex" CommandEnum="Network_Fetch_Hex"/>
-		<textEdit:TextEditMenuItem Header="Fetch F_ile" CommandEnum="Network_Fetch_File"/>
+		<textEdit:TextEditMenuItem Header="Fetch _Hex" CommandEnum="Network_FetchHex"/>
+		<textEdit:TextEditMenuItem Header="Fetch F_ile" CommandEnum="Network_FetchFile"/>
 		<Separator/>
 		<MenuItem Header="_Lookup">
 			<textEdit:TextEditMenuItem Header="_IP" CommandEnum="Network_Lookup_IP"/>
@@ -626,39 +625,39 @@
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">
 			<MenuItem Header="_Quick">
-				<textEdit:TextEditMenuItem Header="Record _6" CommandEnum="Macro_Record_Quick_6"/>
-				<textEdit:TextEditMenuItem Header="Record _7" CommandEnum="Macro_Record_Quick_7"/>
-				<textEdit:TextEditMenuItem Header="Record _8" CommandEnum="Macro_Record_Quick_8"/>
-				<textEdit:TextEditMenuItem Header="Record _9" CommandEnum="Macro_Record_Quick_9"/>
-				<textEdit:TextEditMenuItem Header="Record 1_0" CommandEnum="Macro_Record_Quick_10"/>
-				<textEdit:TextEditMenuItem Header="Record 1_1" CommandEnum="Macro_Record_Quick_11"/>
-				<textEdit:TextEditMenuItem Header="Record 1_2" CommandEnum="Macro_Record_Quick_12"/>
+				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Record_Quick_6"/>
+				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Record_Quick_7"/>
+				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Record_Quick_8"/>
+				<textEdit:TextEditMenuItem Header="_9" CommandEnum="Macro_Record_Quick_9"/>
+				<textEdit:TextEditMenuItem Header="1_0" CommandEnum="Macro_Record_Quick_10"/>
+				<textEdit:TextEditMenuItem Header="1_1" CommandEnum="Macro_Record_Quick_11"/>
+				<textEdit:TextEditMenuItem Header="1_2" CommandEnum="Macro_Record_Quick_12"/>
 			</MenuItem>
 			<textEdit:TextEditMenuItem Header="_Record" CommandEnum="Macro_Record_Record"/>
 			<textEdit:TextEditMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording"/>
 		</MenuItem>
 		<MenuItem Header="_Append">
 			<MenuItem Header="_Quick">
-				<textEdit:TextEditMenuItem Header="Append _6" CommandEnum="Macro_Append_Quick_6"/>
-				<textEdit:TextEditMenuItem Header="Append _7" CommandEnum="Macro_Append_Quick_7"/>
-				<textEdit:TextEditMenuItem Header="Append _8" CommandEnum="Macro_Append_Quick_8"/>
-				<textEdit:TextEditMenuItem Header="Append _9" CommandEnum="Macro_Append_Quick_9"/>
-				<textEdit:TextEditMenuItem Header="Append 1_0" CommandEnum="Macro_Append_Quick_10"/>
-				<textEdit:TextEditMenuItem Header="Append 1_1" CommandEnum="Macro_Append_Quick_11"/>
-				<textEdit:TextEditMenuItem Header="Append 1_2" CommandEnum="Macro_Append_Quick_12"/>
+				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Append_Quick_6"/>
+				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Append_Quick_7"/>
+				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Append_Quick_8"/>
+				<textEdit:TextEditMenuItem Header="_9" CommandEnum="Macro_Append_Quick_9"/>
+				<textEdit:TextEditMenuItem Header="1_0" CommandEnum="Macro_Append_Quick_10"/>
+				<textEdit:TextEditMenuItem Header="1_1" CommandEnum="Macro_Append_Quick_11"/>
+				<textEdit:TextEditMenuItem Header="1_2" CommandEnum="Macro_Append_Quick_12"/>
 			</MenuItem>
 			<textEdit:TextEditMenuItem Header="_Append" CommandEnum="Macro_Append_Append"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Play">
 			<MenuItem Header="_Quick">
-				<textEdit:TextEditMenuItem Header="Play _6" CommandEnum="Macro_Play_Quick_6"/>
-				<textEdit:TextEditMenuItem Header="Play _7" CommandEnum="Macro_Play_Quick_7"/>
-				<textEdit:TextEditMenuItem Header="Play _8" CommandEnum="Macro_Play_Quick_8"/>
-				<textEdit:TextEditMenuItem Header="Play _9" CommandEnum="Macro_Play_Quick_9"/>
-				<textEdit:TextEditMenuItem Header="Play 1_0" CommandEnum="Macro_Play_Quick_10"/>
-				<textEdit:TextEditMenuItem Header="Play 1_1" CommandEnum="Macro_Play_Quick_11"/>
-				<textEdit:TextEditMenuItem Header="Play 1_2" CommandEnum="Macro_Play_Quick_12"/>
+				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Play_Quick_6"/>
+				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Play_Quick_7"/>
+				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Play_Quick_8"/>
+				<textEdit:TextEditMenuItem Header="_9" CommandEnum="Macro_Play_Quick_9"/>
+				<textEdit:TextEditMenuItem Header="1_0" CommandEnum="Macro_Play_Quick_10"/>
+				<textEdit:TextEditMenuItem Header="1_1" CommandEnum="Macro_Play_Quick_11"/>
+				<textEdit:TextEditMenuItem Header="1_2" CommandEnum="Macro_Play_Quick_12"/>
 			</MenuItem>
 			<textEdit:TextEditMenuItem Header="_Play" CommandEnum="Macro_Play_Play"/>
 			<textEdit:TextEditMenuItem Header="_Repeat" CommandEnum="Macro_Play_Repeat"/>
@@ -667,13 +666,13 @@
 		<Separator/>
 		<MenuItem Header="_Open">
 			<MenuItem Header="_Quick">
-				<textEdit:TextEditMenuItem Header="Open _6" CommandEnum="Macro_Open_Quick_6"/>
-				<textEdit:TextEditMenuItem Header="Open _7" CommandEnum="Macro_Open_Quick_7"/>
-				<textEdit:TextEditMenuItem Header="Open _8" CommandEnum="Macro_Open_Quick_8"/>
-				<textEdit:TextEditMenuItem Header="Open _9" CommandEnum="Macro_Open_Quick_9"/>
-				<textEdit:TextEditMenuItem Header="Open 1_0" CommandEnum="Macro_Open_Quick_10"/>
-				<textEdit:TextEditMenuItem Header="Open 1_1" CommandEnum="Macro_Open_Quick_11"/>
-				<textEdit:TextEditMenuItem Header="Open 1_2" CommandEnum="Macro_Open_Quick_12"/>
+				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Open_Quick_6"/>
+				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Open_Quick_7"/>
+				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Open_Quick_8"/>
+				<textEdit:TextEditMenuItem Header="_9" CommandEnum="Macro_Open_Quick_9"/>
+				<textEdit:TextEditMenuItem Header="1_0" CommandEnum="Macro_Open_Quick_10"/>
+				<textEdit:TextEditMenuItem Header="1_1" CommandEnum="Macro_Open_Quick_11"/>
+				<textEdit:TextEditMenuItem Header="1_2" CommandEnum="Macro_Open_Quick_12"/>
 			</MenuItem>
 			<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Macro_Open_Open"/>
 		</MenuItem>

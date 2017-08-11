@@ -663,7 +663,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Children_WithAttribute: dialogResult = Command_Content_Children_WithAttribute_Dialog(); break;
 				case TextEditCommand.Content_Descendants_WithAttribute: dialogResult = Command_Content_Descendants_WithAttribute_Dialog(); break;
 				case TextEditCommand.Network_AbsoluteURL: dialogResult = Command_Network_AbsoluteURL_Dialog(); break;
-				case TextEditCommand.Network_Fetch_File: dialogResult = Command_Network_Fetch_File_Dialog(); break;
+				case TextEditCommand.Network_FetchFile: dialogResult = Command_Network_FetchFile_Dialog(); break;
 				case TextEditCommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
 				case TextEditCommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(); break;
 				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
@@ -1051,8 +1051,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Add_Sum: Command_Numeric_Add_Sum(); break;
 				case TextEditCommand.Numeric_Add_ForwardSum: Command_Numeric_Add_ForwardReverseSum(true); break;
 				case TextEditCommand.Numeric_Add_ReverseSum: Command_Numeric_Add_ForwardReverseSum(false); break;
-				case TextEditCommand.Numeric_Add_Increment: Numeric_Add_IncrementDecrement(true); break;
-				case TextEditCommand.Numeric_Add_Decrement: Numeric_Add_IncrementDecrement(false); break;
+				case TextEditCommand.Numeric_Add_Increment: Command_Numeric_Add_IncrementDecrement(true); break;
+				case TextEditCommand.Numeric_Add_Decrement: Command_Numeric_Add_IncrementDecrement(false); break;
 				case TextEditCommand.Numeric_Add_AddClipboard: Command_Numeric_Add_AddSubtractClipboard(true); break;
 				case TextEditCommand.Numeric_Add_SubtractClipboard: Command_Numeric_Add_AddSubtractClipboard(false); break;
 				case TextEditCommand.Numeric_Whole: Command_Numeric_Whole(); break;
@@ -1068,9 +1068,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_CombinationsPermutations: Command_Numeric_CombinationsPermutations(dialogResult as NumericCombinationsPermutationsDialog.Result); break;
 				case TextEditCommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as NumericMinMaxValuesDialog.Result); break;
 				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
-				case TextEditCommand.DateTime_UTCNow: Command_DateTime_UtcNow(); break;
+				case TextEditCommand.DateTime_UtcNow: Command_DateTime_UtcNow(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as DateTimeConvertDialog.Result); break;
-				case TextEditCommand.Table_DetectType: Command_Table_Type_Detect(); break;
+				case TextEditCommand.Table_DetectType: Command_Table_DetectType(); break;
 				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as TableConvertDialog.Result); break;
 				case TextEditCommand.Table_TextToTable: Command_Table_TextToTable(dialogResult as TableTextToTableDialog.Result); break;
 				case TextEditCommand.Table_LineSelectionsToTable: Command_Table_LineSelectionsToTable(); break;
@@ -1136,8 +1136,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Navigate_Column: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Column, true); break;
 				case TextEditCommand.Network_AbsoluteURL: Command_Network_AbsoluteURL(dialogResult as NetworkAbsoluteURLDialog.Result); break;
 				case TextEditCommand.Network_Fetch: Command_Network_Fetch(); break;
-				case TextEditCommand.Network_Fetch_Hex: Command_Network_Fetch(Coder.CodePage.Hex); break;
-				case TextEditCommand.Network_Fetch_File: Command_Network_Fetch_File(dialogResult as NetworkFetchFileDialog.Result); break;
+				case TextEditCommand.Network_FetchHex: Command_Network_Fetch(Coder.CodePage.Hex); break;
+				case TextEditCommand.Network_FetchFile: Command_Network_FetchFile(dialogResult as NetworkFetchFileDialog.Result); break;
 				case TextEditCommand.Network_Lookup_IP: Command_Network_Lookup_IP(); break;
 				case TextEditCommand.Network_Lookup_HostName: Command_Network_Lookup_HostName(); break;
 				case TextEditCommand.Network_AdaptersInfo: Command_Network_AdaptersInfo(); break;
