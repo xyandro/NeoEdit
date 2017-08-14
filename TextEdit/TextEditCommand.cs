@@ -364,6 +364,7 @@ namespace NeoEdit.TextEdit
 		Region_RemoveSelections,
 		[KeyGesture(Key.R, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Region_ReplaceSelections,
 		Region_LimitToSelections,
+		Region_RepeatBySelections,
 		Region_Clear,
 		Region_WithEnclosingRegion,
 		Region_WithoutEnclosingRegion,

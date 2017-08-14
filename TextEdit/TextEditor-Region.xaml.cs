@@ -8,7 +8,27 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
-		List<List<string>> GetRegionsWithSelections(bool mustBeSameSize = true)
+		List<Tuple<Range, List<Range>>> GetRegionsWithSelections()
+		{
+			var result = new List<Tuple<Range, List<Range>>>();
+			var currentSelection = 0;
+			foreach (var region in Regions)
+			{
+				var sels = new List<Range>();
+				if ((currentSelection < Selections.Count) && (Selections[currentSelection].Start < region.Start))
+					throw new Exception("No region found.  All selections must be inside a region.");
+				while ((currentSelection < Selections.Count) && (Selections[currentSelection].End <= region.End))
+					sels.Add(Selections[currentSelection++]);
+
+				result.Add(Tuple.Create(region, sels));
+			}
+			if (currentSelection != Selections.Count)
+				throw new Exception("No region found.  All selections must be inside a region.");
+
+			return result;
+		}
+
+		List<List<string>> GetRegionsWithSelectionsText(bool mustBeSameSize = true)
 		{
 			var list = GetSelectionStrings().Zip(GetEnclosingRegions(true), (selection, region) => new { selection, region }).GroupBy(obj => obj.region).Select(group => group.Select(obj => obj.selection).ToList()).ToList();
 			if ((mustBeSameSize) && (list.Select(items => items.Count).Distinct().Count() > 1))
@@ -16,7 +36,7 @@ namespace NeoEdit.TextEdit
 			return list;
 		}
 
-		void SetRegionsWithSelections(List<List<string>> list, bool mustBeSameSize = true)
+		void SetRegionsWithSelectionsText(List<List<string>> list, bool mustBeSameSize = true)
 		{
 			if (!Regions.Any())
 				throw new Exception("Must have selected regions");
@@ -99,6 +119,29 @@ namespace NeoEdit.TextEdit
 			Regions.Replace(regions);
 		}
 
+		void Command_Region_RepeatBySelections()
+		{
+			var regionsWithSelections = GetRegionsWithSelections();
+			var offset = 0;
+			var newRegionStrs = new List<string>();
+			var newRegions = new List<Range>();
+			var newSelections = new List<Range>();
+			foreach (var regionsWithSelection in regionsWithSelections)
+			{
+				newRegionStrs.Add(string.Join("", Enumerable.Repeat(GetString(regionsWithSelection.Item1), regionsWithSelection.Item2.Count)));
+				offset -= regionsWithSelection.Item1.Length;
+				foreach (var selection in regionsWithSelection.Item2)
+				{
+					offset += regionsWithSelection.Item1.Length;
+					newRegions.Add(new Range(regionsWithSelection.Item1.Cursor + offset, regionsWithSelection.Item1.Anchor + offset));
+					newSelections.Add(new Range(selection.Cursor + offset, selection.Anchor + offset));
+				}
+			}
+			Replace(Regions, newRegionStrs);
+			Regions.Replace(newRegions);
+			Selections.Replace(newSelections);
+		}
+
 		void Command_Region_Clear() => Regions.Clear();
 
 		void Command_Region_WithEnclosingRegion() => Selections.Replace(Selections.Zip(GetEnclosingRegions(mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
@@ -111,50 +154,50 @@ namespace NeoEdit.TextEdit
 
 		void Command_Region_CopyEnclosingRegionIndex() => SetClipboardStrings(GetEnclosingRegions().Select(region => (Regions.IndexOf(region) + 1).ToString()).ToList());
 
-		void Command_Region_TransformSelections_Flatten() => SetRegionsWithSelections(GetRegionsWithSelections(false), false);
+		void Command_Region_TransformSelections_Flatten() => SetRegionsWithSelectionsText(GetRegionsWithSelectionsText(false), false);
 
 		void Command_Region_TransformSelections_Transpose()
 		{
-			var regions = GetRegionsWithSelections();
+			var regions = GetRegionsWithSelectionsText();
 			var count = regions.Select(region => region.Count).FirstOrDefault();
-			SetRegionsWithSelections(Enumerable.Range(0, count).Select(index => regions.Select(strs => strs[index]).ToList()).ToList());
+			SetRegionsWithSelectionsText(Enumerable.Range(0, count).Select(index => regions.Select(strs => strs[index]).ToList()).ToList());
 		}
 
 		void Command_Region_TransformSelections_RotateLeft()
 		{
-			var regions = GetRegionsWithSelections();
+			var regions = GetRegionsWithSelectionsText();
 			var count = regions.Select(region => region.Count).FirstOrDefault();
-			SetRegionsWithSelections(Enumerable.Range(0, count).Select(index => regions.Select(region => region[region.Count - 1 - index]).ToList()).ToList());
+			SetRegionsWithSelectionsText(Enumerable.Range(0, count).Select(index => regions.Select(region => region[region.Count - 1 - index]).ToList()).ToList());
 		}
 
 		void Command_Region_TransformSelections_RotateRight()
 		{
-			var regions = GetRegionsWithSelections();
+			var regions = GetRegionsWithSelectionsText();
 			regions.Reverse();
 			var count = regions.Select(region => region.Count).FirstOrDefault();
-			SetRegionsWithSelections(Enumerable.Range(0, count).Select(index => regions.Select(region => region[index]).ToList()).ToList());
+			SetRegionsWithSelectionsText(Enumerable.Range(0, count).Select(index => regions.Select(region => region[index]).ToList()).ToList());
 		}
 
 		void Command_Region_TransformSelections_Rotate180()
 		{
-			var regions = GetRegionsWithSelections();
+			var regions = GetRegionsWithSelectionsText();
 			regions.Reverse();
 			regions.ForEach(list => list.Reverse());
-			SetRegionsWithSelections(regions);
+			SetRegionsWithSelectionsText(regions);
 		}
 
 		void Command_Region_TransformSelections_MirrorHorizontal()
 		{
-			var regions = GetRegionsWithSelections();
+			var regions = GetRegionsWithSelectionsText();
 			regions.ForEach(list => list.Reverse());
-			SetRegionsWithSelections(regions);
+			SetRegionsWithSelectionsText(regions);
 		}
 
 		void Command_Region_TransformSelections_MirrorVertical()
 		{
-			var regions = GetRegionsWithSelections();
+			var regions = GetRegionsWithSelectionsText();
 			regions.Reverse();
-			SetRegionsWithSelections(regions);
+			SetRegionsWithSelectionsText(regions);
 		}
 	}
 }

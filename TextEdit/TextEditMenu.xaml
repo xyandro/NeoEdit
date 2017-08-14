@@ -579,6 +579,8 @@
 		<textEdit:TextEditMenuItem Header="Re_place Selections" CommandEnum="Region_ReplaceSelections"/>
 		<textEdit:TextEditMenuItem Header="_Limit To Selections" CommandEnum="Region_LimitToSelections"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="Repeat _By Selections" CommandEnum="Region_RepeatBySelections"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Clear" CommandEnum="Region_Clear"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_With Enclosing Region" CommandEnum="Region_WithEnclosingRegion"/>
