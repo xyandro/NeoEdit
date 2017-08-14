@@ -1974,15 +1974,7 @@ namespace NeoEdit.TextEdit
 
 		void SelectionsInvalidated()
 		{
-			var visible = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
 			Selections.DeOverlap();
-			if (visible != null)
-			{
-				CurrentSelection = Selections.FindIndex(range => (range.Start == visible.Start) && (range.End == visible.End));
-				if (CurrentSelection < 0)
-					CurrentSelection = 0;
-			}
-
 			EnsureVisible();
 			canvasRenderTimer.Start();
 		}
