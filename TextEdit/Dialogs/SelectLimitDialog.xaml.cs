@@ -33,13 +33,13 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		static SelectLimitDialog() { UIHelper<SelectLimitDialog>.Register(); }
 
-		SelectLimitDialog(int numSelections, NEVariables variables)
+		SelectLimitDialog(NEVariables variables)
 		{
 			Variables = variables;
 			InitializeComponent();
 
 			FirstSelection = EveryNth = TakeCount = "1";
-			NumSelections = numSelections.ToString();
+			NumSelections = "xn";
 			JoinSelections = WithinRegions = false;
 		}
 
@@ -54,9 +54,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, int numSelections, NEVariables variables)
+		public static Result Run(Window parent, NEVariables variables)
 		{
-			var dialog = new SelectLimitDialog(numSelections, variables) { Owner = parent };
+			var dialog = new SelectLimitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())
 				return null;
 

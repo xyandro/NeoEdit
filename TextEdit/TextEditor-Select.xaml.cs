@@ -78,7 +78,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_Nothing() => Selections.Clear();
 
-		SelectLimitDialog.Result Command_Select_Limit_Dialog() => SelectLimitDialog.Run(WindowParent, Selections.Count, GetVariables());
+		SelectLimitDialog.Result Command_Select_Limit_Dialog() => SelectLimitDialog.Run(WindowParent, GetVariables());
 
 		void Command_Select_Limit(SelectLimitDialog.Result result)
 		{
