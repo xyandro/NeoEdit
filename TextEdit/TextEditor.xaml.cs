@@ -880,12 +880,12 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Save_SaveAsByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, ref answer); break;
 				case TextEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
 				case TextEditCommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(dialogResult as GetExpressionDialog.Result, ref answer); break;
-				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
+				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(ref answer); break;
 				case TextEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
 				case TextEditCommand.File_Operations_CommandPrompt: Command_File_Operations_CommandPrompt(); break;
 				case TextEditCommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(); break;
 				case TextEditCommand.File_Close: if (CanClose(ref answer)) { TabsParent.Remove(this); } break;
-				case TextEditCommand.File_Refresh: Command_File_Refresh(); break;
+				case TextEditCommand.File_Refresh: Command_File_Refresh(ref answer); break;
 				case TextEditCommand.File_AutoRefresh: Command_File_AutoRefresh(multiStatus); break;
 				case TextEditCommand.File_Revert: Command_File_Revert(ref answer); break;
 				case TextEditCommand.File_Insert_Files: Command_File_Insert_Files(); break;
@@ -896,7 +896,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Copy_DisplayName: Command_File_Copy_DisplayName(); break;
 				case TextEditCommand.File_Copy_Count: Command_File_Copy_Count(); break;
 				case TextEditCommand.File_Encoding_Encoding: Command_File_Encoding_Encoding(dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
+				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result, ref answer); break;
 				case TextEditCommand.File_Encoding_LineEndings: Command_File_Encoding_LineEndings(dialogResult as FileEncodingLineEndingsDialog.Result); break;
 				case TextEditCommand.File_Encryption: Command_File_Encryption(dialogResult as string); break;
 				case TextEditCommand.Edit_Undo: Command_Edit_Undo(); break;
@@ -2023,7 +2023,8 @@ namespace NeoEdit.TextEdit
 				timer.Tick += (s2, e2) =>
 				{
 					timer.Stop();
-					Command_File_Refresh();
+					var answer = Message.OptionsEnum.No;
+					Command_File_Refresh(ref answer);
 					watcher.EnableRaisingEvents = true;
 				};
 				timer.Start();
