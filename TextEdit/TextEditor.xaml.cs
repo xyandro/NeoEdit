@@ -577,107 +577,6 @@ namespace NeoEdit.TextEdit
 
 		decimal Floor(decimal number, decimal interval) => Math.Truncate(number / interval) * interval;
 
-		public bool GetDialogResult(TextEditCommand command, out object dialogResult)
-		{
-			dialogResult = null;
-
-			switch (command)
-			{
-				case TextEditCommand.File_Save_SaveAsByExpression: dialogResult = Command_File_Save_SaveAsByExpression_Dialog(); break;
-				case TextEditCommand.File_Operations_RenameByExpression: dialogResult = Command_File_Operations_RenameByExpression_Dialog(); break;
-				case TextEditCommand.File_Encoding_Encoding: dialogResult = Command_File_Encoding_Encoding_Dialog(); break;
-				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
-				case TextEditCommand.File_Encoding_LineEndings: dialogResult = Command_File_Encoding_LineEndings_Dialog(); break;
-				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
-				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_Find_Dialog(); break;
-				case TextEditCommand.Edit_Find_MassFind: dialogResult = Command_Edit_Find_MassFind_Dialog(); break;
-				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_Replace_Dialog(); break;
-				case TextEditCommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(); break;
-				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
-				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
-				case TextEditCommand.Edit_Color: dialogResult = Command_Edit_Color_Dialog(); break;
-				case TextEditCommand.Edit_Data_Hash: dialogResult = Command_Edit_Data_Hash_Dialog(); break;
-				case TextEditCommand.Edit_Data_Compress: dialogResult = Command_Edit_Data_Compress_Dialog(); break;
-				case TextEditCommand.Edit_Data_Decompress: dialogResult = Command_Edit_Data_Decompress_Dialog(); break;
-				case TextEditCommand.Edit_Data_Encrypt: dialogResult = Command_Edit_Data_Encrypt_Dialog(); break;
-				case TextEditCommand.Edit_Data_Decrypt: dialogResult = Command_Edit_Data_Decrypt_Dialog(); break;
-				case TextEditCommand.Edit_Data_Sign: dialogResult = Command_Edit_Data_Sign_Dialog(); break;
-				case TextEditCommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(); break;
-				case TextEditCommand.Edit_Convert: dialogResult = Command_Edit_Convert_Dialog(); break;
-				case TextEditCommand.Diff_IgnoreCharacters: dialogResult = Command_Diff_IgnoreCharacters_Dialog(); break;
-				case TextEditCommand.Diff_Fix_Whitespace: dialogResult = Command_Diff_Fix_Whitespace_Dialog(); break;
-				case TextEditCommand.Files_Name_MakeAbsolute: dialogResult = Command_Files_Name_MakeAbsolute_Dialog(); break;
-				case TextEditCommand.Files_Name_GetUnique: dialogResult = Command_Files_Name_GetUnique_Dialog(); break;
-				case TextEditCommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(); break;
-				case TextEditCommand.Files_Set_Time_Write: dialogResult = Command_Files_Set_Time_Dialog(); break;
-				case TextEditCommand.Files_Set_Time_Access: dialogResult = Command_Files_Set_Time_Dialog(); break;
-				case TextEditCommand.Files_Set_Time_Create: dialogResult = Command_Files_Set_Time_Dialog(); break;
-				case TextEditCommand.Files_Set_Time_All: dialogResult = Command_Files_Set_Time_Dialog(); break;
-				case TextEditCommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
-				case TextEditCommand.Files_Insert: dialogResult = Command_Files_Insert_Dialog(); break;
-				case TextEditCommand.Files_Create_FromExpressions: dialogResult = Command_Files_Create_FromExpressions_Dialog(); break;
-				case TextEditCommand.Files_Hash: dialogResult = Command_Files_Hash_Dialog(); break;
-				case TextEditCommand.Files_Sign: dialogResult = Command_Files_Sign_Dialog(); break;
-				case TextEditCommand.Files_Operations_Copy: dialogResult = Command_Files_Operations_CopyMove_Dialog(false); break;
-				case TextEditCommand.Files_Operations_Move: dialogResult = Command_Files_Operations_CopyMove_Dialog(true); break;
-				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
-				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Copy_Dialog(); break;
-				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
-				case TextEditCommand.Expression_SetVariables: dialogResult = Command_Expression_SetVariables_Dialog(); break;
-				case TextEditCommand.Text_Select_Trim: dialogResult = Command_Text_Select_Trim_Dialog(); break;
-				case TextEditCommand.Text_Select_ByWidth: dialogResult = Command_Text_Select_ByWidth_Dialog(); break;
-				case TextEditCommand.Text_Select_WholeWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(true); break;
-				case TextEditCommand.Text_Select_BoundedWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(false); break;
-				case TextEditCommand.Text_Width: dialogResult = Command_Text_Width_Dialog(); break;
-				case TextEditCommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(); break;
-				case TextEditCommand.Text_RandomText: dialogResult = Command_Text_RandomText_Dialog(); break;
-				case TextEditCommand.Text_ReverseRegEx: dialogResult = Command_Text_ReverseRegEx_Dialog(); break;
-				case TextEditCommand.Text_FirstDistinct: dialogResult = Command_Text_FirstDistinct_Dialog(); break;
-				case TextEditCommand.Numeric_ConvertBase: dialogResult = Command_Numeric_ConvertBase_Dialog(); break;
-				case TextEditCommand.Numeric_Series_Linear: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(true); break;
-				case TextEditCommand.Numeric_Series_Geometric: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(false); break;
-				case TextEditCommand.Numeric_Scale: dialogResult = Command_Numeric_Scale_Dialog(); break;
-				case TextEditCommand.Numeric_Floor: dialogResult = Command_Numeric_Floor_Dialog(); break;
-				case TextEditCommand.Numeric_Ceiling: dialogResult = Command_Numeric_Ceiling_Dialog(); break;
-				case TextEditCommand.Numeric_Round: dialogResult = Command_Numeric_Round_Dialog(); break;
-				case TextEditCommand.Numeric_Limit: dialogResult = Command_Numeric_Limit_Dialog(); break;
-				case TextEditCommand.Numeric_RandomNumber: dialogResult = Command_Numeric_RandomNumber_Dialog(); break;
-				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Numeric_CombinationsPermutations_Dialog(); break;
-				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
-				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
-				case TextEditCommand.Table_Convert: dialogResult = Command_Table_Convert_Dialog(); break;
-				case TextEditCommand.Table_TextToTable: dialogResult = Command_Table_TextToTable_Dialog(); break;
-				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
-				case TextEditCommand.Table_AddColumn: dialogResult = Command_Table_AddColumn_Dialog(); break;
-				case TextEditCommand.Table_Select_RowsByExpression: dialogResult = Command_Table_Select_RowsByExpression_Dialog(); break;
-				case TextEditCommand.Table_Join: dialogResult = Command_Table_Join_Dialog(); break;
-				case TextEditCommand.Table_Database_GenerateInserts: dialogResult = Command_Table_Database_GenerateInserts_Dialog(); break;
-				case TextEditCommand.Table_Database_GenerateUpdates: dialogResult = Command_Table_Database_GenerateUpdates_Dialog(); break;
-				case TextEditCommand.Table_Database_GenerateDeletes: dialogResult = Command_Table_Database_GenerateDeletes_Dialog(); break;
-				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
-				case TextEditCommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(GotoType.Column); break;
-				case TextEditCommand.Position_Goto_Positions: dialogResult = Command_Position_Goto_Dialog(GotoType.Position); break;
-				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_Ancestor_Dialog(); break;
-				case TextEditCommand.Content_Attributes: dialogResult = Command_Content_Attributes_Dialog(); break;
-				case TextEditCommand.Content_WithAttribute: dialogResult = Command_Content_WithAttribute_Dialog(); break;
-				case TextEditCommand.Content_Children_WithAttribute: dialogResult = Command_Content_Children_WithAttribute_Dialog(); break;
-				case TextEditCommand.Content_Descendants_WithAttribute: dialogResult = Command_Content_Descendants_WithAttribute_Dialog(); break;
-				case TextEditCommand.Network_AbsoluteURL: dialogResult = Command_Network_AbsoluteURL_Dialog(); break;
-				case TextEditCommand.Network_FetchFile: dialogResult = Command_Network_FetchFile_Dialog(); break;
-				case TextEditCommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
-				case TextEditCommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(); break;
-				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
-				case TextEditCommand.Database_QueryBuilder: dialogResult = Command_Database_QueryBuilder_Dialog(); break;
-				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
-				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
-				case TextEditCommand.Select_ByCount: dialogResult = Command_Select_ByCount_Dialog(); break;
-				case TextEditCommand.Select_Split: dialogResult = Command_Select_Split_Dialog(); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
 		List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateRows<T>(GetVariables(), Selections.Count());
 
 		WordSkipType GetWordSkipType(int line, int index)
@@ -850,6 +749,107 @@ namespace NeoEdit.TextEdit
 			var useLine = Math.Max(0, Math.Min(line ?? 1, Data.NumLines) - 1);
 			var index = Data.GetIndexFromColumn(useLine, Math.Max(0, (column ?? 1) - 1), true);
 			Selections.Add(new Range(Data.GetOffset(useLine, index)));
+		}
+
+		public bool GetDialogResult(TextEditCommand command, out object dialogResult)
+		{
+			dialogResult = null;
+
+			switch (command)
+			{
+				case TextEditCommand.File_Save_SaveAsByExpression: dialogResult = Command_File_Save_SaveAsByExpression_Dialog(); break;
+				case TextEditCommand.File_Operations_RenameByExpression: dialogResult = Command_File_Operations_RenameByExpression_Dialog(); break;
+				case TextEditCommand.File_Encoding_Encoding: dialogResult = Command_File_Encoding_Encoding_Dialog(); break;
+				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
+				case TextEditCommand.File_Encoding_LineEndings: dialogResult = Command_File_Encoding_LineEndings_Dialog(); break;
+				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
+				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_Find_Dialog(); break;
+				case TextEditCommand.Edit_Find_MassFind: dialogResult = Command_Edit_Find_MassFind_Dialog(); break;
+				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_Replace_Dialog(); break;
+				case TextEditCommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(); break;
+				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
+				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
+				case TextEditCommand.Edit_Color: dialogResult = Command_Edit_Color_Dialog(); break;
+				case TextEditCommand.Edit_Data_Hash: dialogResult = Command_Edit_Data_Hash_Dialog(); break;
+				case TextEditCommand.Edit_Data_Compress: dialogResult = Command_Edit_Data_Compress_Dialog(); break;
+				case TextEditCommand.Edit_Data_Decompress: dialogResult = Command_Edit_Data_Decompress_Dialog(); break;
+				case TextEditCommand.Edit_Data_Encrypt: dialogResult = Command_Edit_Data_Encrypt_Dialog(); break;
+				case TextEditCommand.Edit_Data_Decrypt: dialogResult = Command_Edit_Data_Decrypt_Dialog(); break;
+				case TextEditCommand.Edit_Data_Sign: dialogResult = Command_Edit_Data_Sign_Dialog(); break;
+				case TextEditCommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(); break;
+				case TextEditCommand.Edit_Convert: dialogResult = Command_Edit_Convert_Dialog(); break;
+				case TextEditCommand.Diff_IgnoreCharacters: dialogResult = Command_Diff_IgnoreCharacters_Dialog(); break;
+				case TextEditCommand.Diff_Fix_Whitespace: dialogResult = Command_Diff_Fix_Whitespace_Dialog(); break;
+				case TextEditCommand.Files_Name_MakeAbsolute: dialogResult = Command_Files_Name_MakeAbsolute_Dialog(); break;
+				case TextEditCommand.Files_Name_GetUnique: dialogResult = Command_Files_Name_GetUnique_Dialog(); break;
+				case TextEditCommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(); break;
+				case TextEditCommand.Files_Set_Time_Write: dialogResult = Command_Files_Set_Time_Dialog(); break;
+				case TextEditCommand.Files_Set_Time_Access: dialogResult = Command_Files_Set_Time_Dialog(); break;
+				case TextEditCommand.Files_Set_Time_Create: dialogResult = Command_Files_Set_Time_Dialog(); break;
+				case TextEditCommand.Files_Set_Time_All: dialogResult = Command_Files_Set_Time_Dialog(); break;
+				case TextEditCommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
+				case TextEditCommand.Files_Insert: dialogResult = Command_Files_Insert_Dialog(); break;
+				case TextEditCommand.Files_Create_FromExpressions: dialogResult = Command_Files_Create_FromExpressions_Dialog(); break;
+				case TextEditCommand.Files_Hash: dialogResult = Command_Files_Hash_Dialog(); break;
+				case TextEditCommand.Files_Sign: dialogResult = Command_Files_Sign_Dialog(); break;
+				case TextEditCommand.Files_Operations_Copy: dialogResult = Command_Files_Operations_CopyMove_Dialog(false); break;
+				case TextEditCommand.Files_Operations_Move: dialogResult = Command_Files_Operations_CopyMove_Dialog(true); break;
+				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
+				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Copy_Dialog(); break;
+				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
+				case TextEditCommand.Expression_SetVariables: dialogResult = Command_Expression_SetVariables_Dialog(); break;
+				case TextEditCommand.Text_Select_Trim: dialogResult = Command_Text_Select_Trim_Dialog(); break;
+				case TextEditCommand.Text_Select_ByWidth: dialogResult = Command_Text_Select_ByWidth_Dialog(); break;
+				case TextEditCommand.Text_Select_WholeWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(true); break;
+				case TextEditCommand.Text_Select_BoundedWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(false); break;
+				case TextEditCommand.Text_Width: dialogResult = Command_Text_Width_Dialog(); break;
+				case TextEditCommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(); break;
+				case TextEditCommand.Text_RandomText: dialogResult = Command_Text_RandomText_Dialog(); break;
+				case TextEditCommand.Text_ReverseRegEx: dialogResult = Command_Text_ReverseRegEx_Dialog(); break;
+				case TextEditCommand.Text_FirstDistinct: dialogResult = Command_Text_FirstDistinct_Dialog(); break;
+				case TextEditCommand.Numeric_ConvertBase: dialogResult = Command_Numeric_ConvertBase_Dialog(); break;
+				case TextEditCommand.Numeric_Series_Linear: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(true); break;
+				case TextEditCommand.Numeric_Series_Geometric: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(false); break;
+				case TextEditCommand.Numeric_Scale: dialogResult = Command_Numeric_Scale_Dialog(); break;
+				case TextEditCommand.Numeric_Floor: dialogResult = Command_Numeric_Floor_Dialog(); break;
+				case TextEditCommand.Numeric_Ceiling: dialogResult = Command_Numeric_Ceiling_Dialog(); break;
+				case TextEditCommand.Numeric_Round: dialogResult = Command_Numeric_Round_Dialog(); break;
+				case TextEditCommand.Numeric_Limit: dialogResult = Command_Numeric_Limit_Dialog(); break;
+				case TextEditCommand.Numeric_RandomNumber: dialogResult = Command_Numeric_RandomNumber_Dialog(); break;
+				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Numeric_CombinationsPermutations_Dialog(); break;
+				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
+				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
+				case TextEditCommand.Table_Convert: dialogResult = Command_Table_Convert_Dialog(); break;
+				case TextEditCommand.Table_TextToTable: dialogResult = Command_Table_TextToTable_Dialog(); break;
+				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
+				case TextEditCommand.Table_AddColumn: dialogResult = Command_Table_AddColumn_Dialog(); break;
+				case TextEditCommand.Table_Select_RowsByExpression: dialogResult = Command_Table_Select_RowsByExpression_Dialog(); break;
+				case TextEditCommand.Table_Join: dialogResult = Command_Table_Join_Dialog(); break;
+				case TextEditCommand.Table_Database_GenerateInserts: dialogResult = Command_Table_Database_GenerateInserts_Dialog(); break;
+				case TextEditCommand.Table_Database_GenerateUpdates: dialogResult = Command_Table_Database_GenerateUpdates_Dialog(); break;
+				case TextEditCommand.Table_Database_GenerateDeletes: dialogResult = Command_Table_Database_GenerateDeletes_Dialog(); break;
+				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
+				case TextEditCommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(GotoType.Column); break;
+				case TextEditCommand.Position_Goto_Positions: dialogResult = Command_Position_Goto_Dialog(GotoType.Position); break;
+				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_Ancestor_Dialog(); break;
+				case TextEditCommand.Content_Attributes: dialogResult = Command_Content_Attributes_Dialog(); break;
+				case TextEditCommand.Content_WithAttribute: dialogResult = Command_Content_WithAttribute_Dialog(); break;
+				case TextEditCommand.Content_Children_WithAttribute: dialogResult = Command_Content_Children_WithAttribute_Dialog(); break;
+				case TextEditCommand.Content_Descendants_WithAttribute: dialogResult = Command_Content_Descendants_WithAttribute_Dialog(); break;
+				case TextEditCommand.Network_AbsoluteURL: dialogResult = Command_Network_AbsoluteURL_Dialog(); break;
+				case TextEditCommand.Network_FetchFile: dialogResult = Command_Network_FetchFile_Dialog(); break;
+				case TextEditCommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
+				case TextEditCommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(); break;
+				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
+				case TextEditCommand.Database_QueryBuilder: dialogResult = Command_Database_QueryBuilder_Dialog(); break;
+				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
+				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
+				case TextEditCommand.Select_ByCount: dialogResult = Command_Select_ByCount_Dialog(); break;
+				case TextEditCommand.Select_Split: dialogResult = Command_Select_Split_Dialog(); break;
+				default: return true;
+			}
+
+			return dialogResult != null;
 		}
 
 		bool timeNext = false;
