@@ -1213,6 +1213,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Selection_Previous: Command_Select_Selection_NextPrevious(false); break;
 				case TextEditCommand.Select_Selection_Single: Command_Select_Selection_Single(); break;
 				case TextEditCommand.Select_Selection_Remove: Command_Select_Selection_Remove(); break;
+				case TextEditCommand.Select_Selection_RemoveBeforeCurrent: Command_Select_Selection_RemoveBeforeCurrent(); break;
+				case TextEditCommand.Select_Selection_RemoveAfterCurrent: Command_Select_Selection_RemoveAfterCurrent(); break;
 				case TextEditCommand.Region_SetSelections: Command_Region_SetSelections(); break;
 				case TextEditCommand.Region_AddSelections: Command_Region_AddSelections(); break;
 				case TextEditCommand.Region_RemoveSelections: Command_Region_RemoveSelections(); break;

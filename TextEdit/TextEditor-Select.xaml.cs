@@ -234,7 +234,6 @@ namespace NeoEdit.TextEdit
 		{
 			if (!Selections.Any())
 				return;
-			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
 			Selections.Replace(Selections[CurrentSelection]);
 			CurrentSelection = 0;
 		}
@@ -244,6 +243,21 @@ namespace NeoEdit.TextEdit
 			if (!Selections.Any())
 				return;
 			Selections.RemoveAt(CurrentSelection);
+		}
+
+		void Command_Select_Selection_RemoveBeforeCurrent()
+		{
+			if (!Selections.Any())
+				return;
+			Selections.RemoveRange(0, CurrentSelection);
+			CurrentSelection = 0;
+		}
+
+		void Command_Select_Selection_RemoveAfterCurrent()
+		{
+			if (!Selections.Any())
+				return;
+			Selections.RemoveRange(CurrentSelection + 1, Selections.Count - CurrentSelection - 1);
 		}
 	}
 }

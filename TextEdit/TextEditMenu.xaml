@@ -570,6 +570,8 @@
 			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Select_Selection_Previous"/>
 			<textEdit:TextEditMenuItem Header="_Single" CommandEnum="Select_Selection_Single"/>
 			<textEdit:TextEditMenuItem Header="_Remove" CommandEnum="Select_Selection_Remove"/>
+			<textEdit:TextEditMenuItem Header="Remove _Before Current" CommandEnum="Select_Selection_RemoveBeforeCurrent"/>
+			<textEdit:TextEditMenuItem Header="Remove _After Current" CommandEnum="Select_Selection_RemoveAfterCurrent"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Region">

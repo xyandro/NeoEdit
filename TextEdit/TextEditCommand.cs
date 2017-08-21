@@ -359,6 +359,8 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.OemMinus, ModifierKeys.Alt)] Select_Selection_Previous,
 		[KeyGesture(Key.Enter, ModifierKeys.Alt)] Select_Selection_Single,
 		[KeyGesture(Key.Back, ModifierKeys.Alt)] Select_Selection_Remove,
+		Select_Selection_RemoveBeforeCurrent,
+		Select_Selection_RemoveAfterCurrent,
 		[KeyGesture(Key.R, ModifierKeys.Control | ModifierKeys.Shift)] Region_SetSelections,
 		Region_AddSelections,
 		Region_RemoveSelections,
