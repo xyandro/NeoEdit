@@ -18,7 +18,6 @@ Tutorial
 Print
 Add ability to select all attributes
 Allow moving muliple windows, allow drop in middle of window instead of requiring title
-Diff shows encoding mismatch after changing encoding
 
 View:
 Update as new lines are added
