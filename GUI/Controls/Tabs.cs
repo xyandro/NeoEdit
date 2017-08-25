@@ -24,6 +24,9 @@ namespace NeoEdit.GUI.Controls
 
 	public class Tabs<ItemType, CommandType> : UserControl where ItemType : TabsControl<ItemType, CommandType>
 	{
+		public delegate void TabsChangedDelegate();
+		public event TabsChangedDelegate TabsChanged;
+
 		[DepProp]
 		public ObservableCollection<ItemType> Items { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<ObservableCollection<ItemType>>(this); } private set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
@@ -89,6 +92,8 @@ namespace NeoEdit.GUI.Controls
 
 		void ItemsChanged()
 		{
+			TabsChanged?.Invoke();
+
 			if (Items == null)
 				return;
 
@@ -551,5 +556,7 @@ namespace NeoEdit.GUI.Controls
 			}
 			Style = style;
 		}
+
+		internal void NotifyActiveChanged() => TabsChanged?.Invoke();
 	}
 }

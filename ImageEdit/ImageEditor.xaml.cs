@@ -74,7 +74,7 @@ namespace NeoEdit.ImageEdit
 		{
 			// Can't access DependencyProperties/clipboard from other threads; grab a copy:
 			var fileName = FileName;
-			var clipboard = NEClipboard.Strings;
+			var clipboard = NEClipboard.Current.Strings;
 
 			var results = new NEVariables();
 			results.Add(NEVariable.Constant("f", "Filename", () => fileName));
@@ -305,9 +305,9 @@ namespace NeoEdit.ImageEdit
 
 		void Command_File_Close() => TabsParent.Remove(this);
 
-		void Command_Edit_Copy_Position() => NEClipboard.Text = $"{PosX},{PosY}";
+		void Command_Edit_Copy_Position() => NEClipboard.Current = NEClipboard.CreateString($"{PosX},{PosY}");
 
-		void Command_Edit_Copy_Color() => NEClipboard.Text = PosColor?.ToString();
+		void Command_Edit_Copy_Color() => NEClipboard.Current = NEClipboard.CreateString(PosColor?.ToString());
 
 		ImageSizeDialog.Result Command_Image_Size_Dialog() => ImageSizeDialog.Run(WindowParent, GetVariables());
 

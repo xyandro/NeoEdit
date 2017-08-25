@@ -124,7 +124,7 @@ namespace NeoEdit.TextEdit
 					break;
 				case SortType.Clipboard:
 					{
-						var sort = clipboard.Strings.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
+						var sort = Clipboard.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
 						entries = OrderByAscDesc(entries, entry => entry.value, ascending, Comparer<string>.Create((value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue))).ToList();
 					}
 					break;
@@ -224,7 +224,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_Paste_Paste(bool highlight, bool rotate)
 		{
-			var clipboardStrings = clipboard.Strings;
+			var clipboardStrings = Clipboard;
 			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
 				return;
 

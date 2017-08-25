@@ -180,7 +180,7 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count == 0)
 				return;
 
-			var clipboardStrings = clipboard.Strings;
+			var clipboardStrings = Clipboard;
 			if ((clipboardStrings.Count == 1) && (Selections.Count != 1))
 				clipboardStrings = Selections.Select(str => clipboardStrings[0]).ToList();
 

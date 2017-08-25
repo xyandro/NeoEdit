@@ -39,9 +39,9 @@
     <Compile Include="LCS.cs" />
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
-    <Compile Include="NEClipboards\ClipboardData.cs" />
     <Compile Include="NEClipboards\NEClipboard.cs" />
-    <Compile Include="NEClipboards\NELocalClipboard.cs" />
+    <Compile Include="NEClipboards\NEClipboardItem.cs" />
+    <Compile Include="NEClipboards\NEClipboardList.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
     <Compile Include="Parsing\ParserAttribute.cs" />

@@ -81,7 +81,7 @@ namespace NeoEdit.HexEdit
 
 		void Command_File_Open_OpenCopiedCutFiles()
 		{
-			var files = NEClipboard.Strings;
+			var files = NEClipboard.Current.Strings;
 
 			if ((files.Count > 5) && (new Message(this)
 			{

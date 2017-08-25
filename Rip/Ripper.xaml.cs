@@ -36,9 +36,9 @@ namespace NeoEdit.Rip
 			}
 		}
 
-		void Command_Edit_CopyTitles() => NEClipboard.Strings = ripItems.SelectedItems.Cast<RipItem>().Select(item => item.Title).ToList();
+		void Command_Edit_CopyTitles() => NEClipboard.Current = NEClipboard.CreateStrings(ripItems.SelectedItems.Cast<RipItem>().Select(item => item.Title).ToList());
 
-		void Command_Edit_CopyFileNames() => NEClipboard.Strings = ripItems.SelectedItems.Cast<RipItem>().Select(item => item.FileName).ToList();
+		void Command_Edit_CopyFileNames() => NEClipboard.Current = NEClipboard.CreateStrings(ripItems.SelectedItems.Cast<RipItem>().Select(item => item.FileName).ToList());
 
 		void Command_Add_CD()
 		{

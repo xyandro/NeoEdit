@@ -80,6 +80,7 @@ namespace NeoEdit.TextEdit
 
 		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, modified, line, column, this);
 
+		readonly RunOnceTimer clipboardsTimer;
 		TextEditTabs()
 		{
 			TextEditMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
@@ -89,6 +90,26 @@ namespace NeoEdit.TextEdit
 
 			AllowDrop = true;
 			Drop += TextEditTabs_Drop;
+			clipboardsTimer = new RunOnceTimer(() => UpdateClipboards());
+			ItemTabs.TabsChanged += () => clipboardsTimer.Start();
+			NEClipboard.ClipboardChanged += () => clipboardsTimer.Start();
+		}
+
+		void UpdateClipboards()
+		{
+			ItemTabs.Items.ForEach(item => item.Clipboard = new List<string>());
+
+			var activeTabs = ItemTabs.Items.Where(item => item.Active).ToList();
+
+			if (NEClipboard.Current.Count == activeTabs.Count)
+				NEClipboard.Current.Zip(activeTabs, (cb, tab) => new { cb, tab }).ForEach(obj => obj.tab.Clipboard = obj.cb.Strings);
+			else if (NEClipboard.Current.ChildCount == activeTabs.Count)
+				NEClipboard.Current.Strings.Zip(activeTabs, (str, tab) => new { str, tab }).ForEach(obj => obj.tab.Clipboard = new List<string> { obj.str });
+			else
+			{
+				var strs = NEClipboard.Current.Strings;
+				activeTabs.ForEach(tab => tab.Clipboard = strs);
+			}
 		}
 
 		void TextEditTabs_Drop(object sender, System.Windows.DragEventArgs e)
@@ -130,7 +151,7 @@ namespace NeoEdit.TextEdit
 				AddTextEditor(filename);
 		}
 
-		void Command_File_Copy_AllPaths() => NEClipboard.CopiedFiles = ItemTabs.Items.Select(editor => editor.FileName).Where(name => !string.IsNullOrEmpty(name)).ToList();
+		void Command_File_Copy_AllPaths() => NEClipboard.Current = NEClipboard.CreateStrings(ItemTabs.Items.Select(editor => editor.FileName).Where(name => !string.IsNullOrEmpty(name)).ToList(), false);
 
 		void Command_File_Shell_Integrate()
 		{
@@ -152,7 +173,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_File_Open_CopiedCut()
 		{
-			var files = NEClipboard.Strings;
+			var files = NEClipboard.Current.Strings;
 
 			if ((files.Count > 5) && (new Message(this)
 			{
@@ -168,18 +189,6 @@ namespace NeoEdit.TextEdit
 				item.Active = false;
 			foreach (var file in files)
 				AddTextEditor(file);
-		}
-
-		void Command_Edit_Copy_AllClipboards() => NEClipboard.Strings = ItemTabs.Items.Where(textEditor => textEditor.Active).Select(textEditor => textEditor.clipboard.Strings).Distinct().SelectMany().ToList();
-
-		void Command_Edit_Paste_AllFiles()
-		{
-			var strs = NEClipboard.Strings;
-			var active = ItemTabs.Items.Where(data => data.Active).ToList();
-			if (strs.Count != active.Count)
-				throw new Exception("Clipboard count and active editor count must match");
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
-				active[ctr].Command_Edit_Paste_AllFiles(strs[ctr], shiftDown);
 		}
 
 		void Command_Diff_Diff()
@@ -358,7 +367,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Macro_Play_PlayOnCopiedFiles()
 		{
-			var files = new Queue<string>(NEClipboard.Strings);
+			var files = new Queue<string>(NEClipboard.Current.Strings);
 			var macro = Macro<TextEditCommand>.Load();
 			Action startNext = null;
 			startNext = () =>
@@ -449,6 +458,14 @@ namespace NeoEdit.TextEdit
 			HandleCommand(command, shiftDown, dialogResult, multiStatus);
 		}
 
+		NEClipboard newClipboard;
+		public void AddClipboardStrings(IEnumerable<string> strings, bool? isCut = null)
+		{
+			newClipboard = newClipboard ?? new NEClipboard();
+			newClipboard.Add(NEClipboardList.CreateStrings(strings));
+			newClipboard.IsCut = isCut;
+		}
+
 		internal bool GetDialogResult(TextEditCommand command, out object dialogResult)
 		{
 			dialogResult = null;
@@ -475,8 +492,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;
 				case TextEditCommand.File_Shell_Unintegrate: Command_File_Shell_Unintegrate(); break;
 				case TextEditCommand.File_Exit: Close(); break;
-				case TextEditCommand.Edit_Copy_AllClipboards: Command_Edit_Copy_AllClipboards(); break;
-				case TextEditCommand.Edit_Paste_AllFiles: Command_Edit_Paste_AllFiles(); break;
 				case TextEditCommand.Diff_Diff: Command_Diff_Diff(); break;
 				case TextEditCommand.View_Full: Command_View_Type(TabsLayout.Full, null); break;
 				case TextEditCommand.View_Grid: Command_View_Type(TabsLayout.Grid, null); break;
@@ -502,12 +517,15 @@ namespace NeoEdit.TextEdit
 			}
 
 			var answer = Message.OptionsEnum.None;
+			newClipboard = null;
 			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
 			{
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, ref answer);
 				if (answer == Message.OptionsEnum.Cancel)
 					break;
 			}
+			if (newClipboard != null)
+				NEClipboard.Current = newClipboard;
 
 			return true;
 		}

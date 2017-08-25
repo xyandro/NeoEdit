@@ -52,7 +52,7 @@ namespace NeoEdit.TextView
 
 		void Command_File_OpenCopiedCutFiles()
 		{
-			var files = NEClipboard.Strings;
+			var files = NEClipboard.Current.Strings;
 			if (files.Count == 0)
 				return;
 

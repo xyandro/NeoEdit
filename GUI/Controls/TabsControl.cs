@@ -15,7 +15,11 @@ namespace NeoEdit.GUI.Controls
 		public Tabs<ItemType, CommandType> TabsParent { get; internal set; }
 		public TabsWindow<ItemType, CommandType> WindowParent => TabsParent?.WindowParent;
 
-		static TabsControl() { UIHelper<TabsControl<ItemType, CommandType>>.Register(); }
+		static TabsControl()
+		{
+			UIHelper<TabsControl<ItemType, CommandType>>.Register();
+			UIHelper<TabsControl<ItemType, CommandType>>.AddCallback(a => a.Active, (obj, o, n) => obj.TabsParent?.NotifyActiveChanged());
+		}
 
 		public virtual bool Empty() => false;
 

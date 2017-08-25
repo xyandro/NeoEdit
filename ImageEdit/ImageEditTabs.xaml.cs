@@ -49,7 +49,7 @@ namespace NeoEdit.ImageEdit
 
 		void Command_File_Open_CopiedCut()
 		{
-			var files = NEClipboard.Strings;
+			var files = NEClipboard.Current.Strings;
 
 			if ((files.Count > 5) && (new Message(this)
 			{
@@ -69,7 +69,7 @@ namespace NeoEdit.ImageEdit
 
 		void Command_Edit_Paste()
 		{
-			var image = NEClipboard.Image;
+			var image = NEClipboard.Current.Images.FirstOrDefault();
 			if (image != null)
 				CreateTab(new ImageEditor(null, image), this);
 		}

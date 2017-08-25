@@ -692,9 +692,9 @@ namespace NeoEdit.HexEdit
 			++ChangeCount;
 		}
 
-		internal void Command_File_Copy_CopyPath() => NEClipboard.CopiedFile = FileName;
+		internal void Command_File_Copy_CopyPath() => NEClipboard.Current = NEClipboard.CreateString(FileName, false);
 
-		internal void Command_File_Copy_CopyName() => NEClipboard.Text = Path.GetFileName(FileName);
+		internal void Command_File_Copy_CopyName() => NEClipboard.Current = NEClipboard.CreateString(Path.GetFileName(FileName));
 
 		internal void Command_File_Encoding()
 		{
@@ -744,7 +744,7 @@ namespace NeoEdit.HexEdit
 					sb[ctr] = (char)bytes[ctr];
 				str = new string(sb);
 			}
-			NEClipboard.Text = str;
+			NEClipboard.Current = NEClipboard.CreateString(str);
 			if ((isCut) && (Insert))
 				Replace(null);
 		}
@@ -752,7 +752,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Edit_Paste()
 		{
-			var str = NEClipboard.Text;
+			var str = NEClipboard.Current.String;
 			if (str == null)
 				return;
 			byte[] bytes;

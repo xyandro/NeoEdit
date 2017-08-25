@@ -13,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
-using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
@@ -140,7 +139,7 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public string LineEnding { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int ClipboardCount { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public List<string> Clipboard { get { return UIHelper<TextEditor>.GetPropValue<List<string>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool DiffIgnoreWhitespace { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -236,7 +235,6 @@ namespace NeoEdit.TextEdit
 		List<PropertyChangeNotifier> localCallbacks;
 		readonly UndoRedo undoRedo;
 		static ThreadSafeRandom random = new ThreadSafeRandom();
-		public readonly NELocalClipboard clipboard = new NELocalClipboard();
 		DateTime fileLastWrite;
 		int mouseClickCount = 0;
 		DragType doDrag = DragType.None;
@@ -256,8 +254,6 @@ namespace NeoEdit.TextEdit
 			AutoRefresh = true;
 
 			SetupTabLabel();
-
-			clipboard.ClipboardChanged += SetClipboardCount;
 
 			AllowDrop = true;
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
@@ -661,7 +657,7 @@ namespace NeoEdit.TextEdit
 		{
 			// Can't access DependencyProperties/clipboard from other threads; grab a copy:
 			var fileName = FileName;
-			var clipboard = this.clipboard.Strings;
+			var clipboard = Clipboard;
 			var KeysAndValues = this.KeysAndValues;
 
 			var results = new NEVariables();
@@ -1982,15 +1978,13 @@ namespace NeoEdit.TextEdit
 			canvasRenderTimer.Start();
 		}
 
-		void SetClipboardCount() => ClipboardCount = clipboard.Strings.Count;
+		void SetClipboardFile(string fileName, bool isCut = false) => SetClipboardFiles(new List<string> { fileName }, isCut);
 
-		void SetClipboardFile(string fileName, bool isCut = false) => clipboard.SetFile(fileName, isCut, TabsParent.ActiveCount == 1, TabsParent.TopMost == this);
+		void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => (WindowParent as TextEditTabs).AddClipboardStrings(fileNames, isCut);
 
-		void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => clipboard.SetFiles(fileNames, isCut, TabsParent.ActiveCount == 1, TabsParent.TopMost == this);
+		void SetClipboardString(string text) => SetClipboardStrings(new List<string> { text });
 
-		void SetClipboardStrings(IEnumerable<string> strs) => clipboard.SetStrings(strs, TabsParent.ActiveCount == 1, TabsParent.TopMost == this);
-
-		void SetClipboardText(string text) => clipboard.SetText(text, TabsParent.ActiveCount == 1, TabsParent.TopMost == this);
+		void SetClipboardStrings(IEnumerable<string> strs) => (WindowParent as TextEditTabs).AddClipboardStrings(strs);
 
 		void SetFileName(string fileName)
 		{
