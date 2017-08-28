@@ -80,7 +80,7 @@ namespace NeoEdit.TextEdit
 
 		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, modified, line, column, this);
 
-		readonly RunOnceTimer clipboardsTimer;
+		readonly RunOnceTimer clipboardsTimer, onActivatedTimer;
 		TextEditTabs()
 		{
 			TextEditMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
@@ -91,8 +91,10 @@ namespace NeoEdit.TextEdit
 			AllowDrop = true;
 			Drop += TextEditTabs_Drop;
 			clipboardsTimer = new RunOnceTimer(() => UpdateClipboards());
+			onActivatedTimer = new RunOnceTimer(() => OnActivated(null, null));
 			ItemTabs.TabsChanged += () => clipboardsTimer.Start();
 			NEClipboard.ClipboardChanged += () => clipboardsTimer.Start();
+			Activated += OnActivated;
 		}
 
 		void UpdateClipboards()
@@ -588,6 +590,27 @@ namespace NeoEdit.TextEdit
 			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
 				result = textEditorItems.HandleText(text) || result;
 			return result;
+		}
+
+		public void QueueOnActivated() => onActivatedTimer.Start();
+
+		void OnActivated(object sender, EventArgs e)
+		{
+			if (!IsActive)
+				return;
+
+			Activated -= OnActivated;
+			try
+			{
+				var answer = Message.OptionsEnum.None;
+				foreach (var item in ItemTabs.Items)
+				{
+					item.Activated(ref answer);
+					if (answer == Message.OptionsEnum.Cancel)
+						break;
+				}
+			}
+			finally { Activated += OnActivated; }
 		}
 	}
 }

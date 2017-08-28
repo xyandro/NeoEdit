@@ -153,6 +153,8 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public bool DiffEncodingMismatch { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
+		bool watcherFileModified = false;
+
 		TextEditor diffTarget;
 		public TextEditor DiffTarget
 		{
@@ -2015,18 +2017,19 @@ namespace NeoEdit.TextEdit
 			};
 			watcher.Changed += (s1, e1) =>
 			{
-				watcher.EnableRaisingEvents = false;
-				var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, Dispatcher);
-				timer.Tick += (s2, e2) =>
-				{
-					timer.Stop();
-					var answer = Message.OptionsEnum.No;
-					Command_File_Refresh(ref answer);
-					watcher.EnableRaisingEvents = true;
-				};
-				timer.Start();
+				watcherFileModified = true;
+				Dispatcher.Invoke(() => (WindowParent as TextEditTabs).QueueOnActivated());
 			};
 			watcher.EnableRaisingEvents = true;
+		}
+
+		public void Activated(ref Message.OptionsEnum answer)
+		{
+			if (!watcherFileModified)
+				return;
+
+			watcherFileModified = false;
+			Command_File_Refresh(ref answer);
 		}
 
 		void SetModifiedFlag(bool? newValue = null)
