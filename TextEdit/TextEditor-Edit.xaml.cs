@@ -328,23 +328,7 @@ namespace NeoEdit.TextEdit
 			FindNext(true, selecting);
 		}
 
-		EditFindMassFindDialog.Result Command_Edit_Find_MassFind_Dialog()
-		{
-			string text = null;
-			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
-
-			if (Selections.Count == 1)
-			{
-				var sel = Selections.Single();
-				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
-				{
-					selectionOnly = false;
-					text = GetString(sel);
-				}
-			}
-
-			return EditFindMassFindDialog.Run(WindowParent, text, selectionOnly, GetVariables());
-		}
+		EditFindMassFindDialog.Result Command_Edit_Find_MassFind_Dialog() => EditFindMassFindDialog.Run(WindowParent, Selections.Any(range => range.HasSelection), GetVariables());
 
 		void Command_Edit_Find_MassFind(EditFindMassFindDialog.Result result)
 		{

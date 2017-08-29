@@ -39,11 +39,11 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<EditFindMassFindDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = false; } });
 		}
 
-		EditFindMassFindDialog(string text, bool selectionOnly, NEVariables variables)
+		EditFindMassFindDialog(bool selectionOnly, NEVariables variables)
 		{
 			InitializeComponent();
 
-			Text = text.CoalesceNullOrEmpty(this.text.GetLastSuggestion(), "");
+			Text = text.GetLastSuggestion().CoalesceNullOrEmpty("k");
 			MatchCase = matchCaseVal;
 			KeepMatching = keepMatchingVal;
 			RemoveMatching = removeMatchingVal;
@@ -70,9 +70,9 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		void Reset(object sender, RoutedEventArgs e) => MatchCase = SelectionOnly = KeepMatching = RemoveMatching = false;
 
-		static public Result Run(Window parent, string text, bool selectionOnly, NEVariables variables)
+		static public Result Run(Window parent, bool selectionOnly, NEVariables variables)
 		{
-			var dialog = new EditFindMassFindDialog(text, selectionOnly, variables) { Owner = parent };
+			var dialog = new EditFindMassFindDialog(selectionOnly, variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
