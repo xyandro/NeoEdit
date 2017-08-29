@@ -10,6 +10,7 @@ namespace NeoEdit.GUI
 		public static Launcher Static => launcher;
 
 		Action aboutLauncher;
+		Action changeLogLauncher;
 		Action<string, IEnumerable<string>, bool> diskLauncher;
 		Action<int?> handlesLauncher;
 		Action<string, bool> hexEditorDumpLauncher;
@@ -28,6 +29,7 @@ namespace NeoEdit.GUI
 
 		public static void Initialize(
 			Action about = null
+			, Action changeLog = null
 			, Action<string, IEnumerable<string>, bool> disk = null
 			, Action<int?> handles = null
 			, Action<string, bool> hexEditorDump = null
@@ -48,6 +50,7 @@ namespace NeoEdit.GUI
 			launcher = new Launcher
 			{
 				aboutLauncher = about,
+				changeLogLauncher = changeLog,
 				diskLauncher = disk,
 				handlesLauncher = handles,
 				hexEditorDumpLauncher = hexEditorDump,
@@ -67,6 +70,7 @@ namespace NeoEdit.GUI
 		}
 
 		public void LaunchAbout() => aboutLauncher?.Invoke();
+		public void LaunchChangeLog() => changeLogLauncher?.Invoke();
 		public void LaunchDisk(string path = null, IEnumerable<string> files = null, bool forceCreate = false) => diskLauncher?.Invoke(path, files, forceCreate);
 		public void LaunchHandles(int? pid = null) => handlesLauncher?.Invoke(pid);
 		public void LaunchHexEditorDump(string fileName, bool forceCreate = false) => hexEditorDumpLauncher(fileName, forceCreate);

@@ -3,6 +3,7 @@ lexer grammar CommandLineParamsLexer;
 STARTSTR       : '"' -> skip, pushMode(STR) ;
 
 ABOUT          : '-about'                                                                               ;
+CHANGELOG      : '-changelog' | '-changes' | '-log'                                                     ;
 COLUMN         : '-col' | '-column'                                                                     ;
 DIFF           : '-diff'                                                                                ;
 DISK           : '-disk' | '-disks'                                                                     ;
@@ -34,6 +35,7 @@ WS             : [ \r\n\t]+ -> skip ;
 mode STR;
 
 ABOUT2         : ABOUT         -> type(ABOUT)         ;
+CHANGELOG2     : CHANGELOG     -> type(CHANGELOG)     ;
 COLUMN2        : COLUMN        -> type(COLUMN)        ;
 DIFF2          : DIFF          -> type(DIFF)          ;
 DISK2          : DISK          -> type(DISK)          ;

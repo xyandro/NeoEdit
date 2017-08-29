@@ -107,6 +107,7 @@ namespace NeoEdit
 		{
 			NeoEdit.GUI.Launcher.Initialize(
 				about: () => AboutDialog.Run()
+				, changeLog: () => ChangeLogDialog.Run()
 				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
 				, handles: pid => new HandlesWindow(pid)
 				, hexEditorDump: (fileName, forceCreate) => HexEditTabs.CreateFromDump(fileName, forceCreate)

@@ -16,6 +16,7 @@ obj
 TestResults
 
 # Specific
+/ChangeLog.txt
 /Common/Expressions/Parser
 /Dependencies/GlobalAssemblyInfo.cs
 /Dependencies/GlobalVersionInfo.h

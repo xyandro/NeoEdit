@@ -20,6 +20,9 @@
     <StartupObject>NeoEdit.InstanceManager</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="$(SolutionDir)\ChangeLog.txt">
+      <Link>Dialogs\ChangeLog.txt</Link>
+    </EmbeddedResource>
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
@@ -54,6 +57,13 @@
     </Page>
     <Compile Include="Dialogs\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ChangeLogDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ChangeLogDialog.xaml.cs">
+      <DependentUpon>ChangeLogDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\LicenseDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
