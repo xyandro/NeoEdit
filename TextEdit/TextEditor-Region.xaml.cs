@@ -78,9 +78,9 @@ namespace NeoEdit.TextEdit
 			var regionIndex = 0;
 			foreach (var selection in Selections)
 			{
-				while ((regionIndex < Regions.Count) && (Regions[regionIndex].End < selection.Start))
+				while ((regionIndex < Regions.Count) && (Regions[regionIndex].End <= selection.Start) && (!Regions[regionIndex].Equals(selection)))
 					regions.Add(Regions[regionIndex++]);
-				while ((regionIndex < Regions.Count) && (((Regions[regionIndex].Start == selection.Start) && (Regions[regionIndex].End == selection.End)) || ((Regions[regionIndex].End > selection.Start) && (Regions[regionIndex].Start < selection.End))))
+				while ((regionIndex < Regions.Count) && ((Regions[regionIndex].Equals(selection)) || ((Regions[regionIndex].End > selection.Start) && (Regions[regionIndex].Start < selection.End))))
 					++regionIndex;
 			}
 			while (regionIndex < Regions.Count)
@@ -94,9 +94,9 @@ namespace NeoEdit.TextEdit
 			var regionIndex = 0;
 			foreach (var selection in Selections)
 			{
-				while ((regionIndex < Regions.Count) && (Regions[regionIndex].End < selection.Start))
+				while ((regionIndex < Regions.Count) && (Regions[regionIndex].End <= selection.Start) && (!Regions[regionIndex].Equals(selection)))
 					regions.Add(Regions[regionIndex++]);
-				while ((regionIndex < Regions.Count) && (((Regions[regionIndex].Start == selection.Start) && (Regions[regionIndex].End == selection.End)) || ((Regions[regionIndex].End > selection.Start) && (Regions[regionIndex].Start < selection.End))))
+				while ((regionIndex < Regions.Count) && ((Regions[regionIndex].Equals(selection)) || ((Regions[regionIndex].End > selection.Start) && (Regions[regionIndex].Start < selection.End))))
 					++regionIndex;
 				regions.Add(selection);
 			}
