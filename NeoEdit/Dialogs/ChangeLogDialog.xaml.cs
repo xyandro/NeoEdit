@@ -18,7 +18,7 @@ namespace NeoEdit.Dialogs
 			var stream = typeof(ChangeLogDialog).Assembly.GetManifestResourceStream(typeof(ChangeLogDialog).Namespace + ".ChangeLog.txt");
 			var buf = new byte[stream.Length];
 			stream.Read(buf, 0, buf.Length);
-			ChangeLogText = Encoding.UTF8.GetString(buf);
+			ChangeLogText = Encoding.UTF8.GetString(buf).Replace("\r\n", "\n").Trim('\n');
 
 			changeLog.Focus();
 			changeLog.Select(0, 0);

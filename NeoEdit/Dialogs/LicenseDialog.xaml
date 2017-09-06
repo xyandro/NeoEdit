@@ -13,7 +13,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<TextBox Name="license" Grid.Row="0" Text="{Binding LicenseText, ElementName=self}" IsReadOnly="False" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+		<TextBox Name="license" Grid.Row="0" Text="{Binding LicenseText, ElementName=self}" IsReadOnly="True" IsReadOnlyCaretVisible="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
 
 		<Button Grid.Row="2" Width="50" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" Content="Ok" Click="OKClick"/>
 	</Grid>
