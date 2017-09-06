@@ -2018,7 +2018,7 @@ namespace NeoEdit.TextEdit
 			watcher.Changed += (s1, e1) =>
 			{
 				watcherFileModified = true;
-				Dispatcher.Invoke(() => (WindowParent as TextEditTabs).QueueOnActivated());
+				Dispatcher.Invoke(() => (WindowParent as TextEditTabs).QueueDoActivated());
 			};
 			watcher.EnableRaisingEvents = true;
 		}
