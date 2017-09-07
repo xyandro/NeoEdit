@@ -61,6 +61,9 @@ namespace NeoEdit.GUI.Dialogs
 			var moveToBottom = new Button { Content = "Move To _Bottom" };
 			moveToBottom.Click += MoveToBottom_Click;
 			stackPanel.Children.Add(moveToBottom);
+			var close = new Button { Content = "_Close", Margin = new Thickness(0, 10, 0, 0) };
+			close.Click += Close_Click;
+			stackPanel.Children.Add(close);
 			Grid.SetRow(stackPanel, 0);
 			Grid.SetColumn(stackPanel, 1);
 			grid.Children.Add(stackPanel);
@@ -143,6 +146,18 @@ namespace NeoEdit.GUI.Dialogs
 			var indexes = SelectedIndexes();
 			for (var ctr = indexes.Count - 1; ctr >= 0; --ctr)
 				tabs.Items.Move(indexes[ctr], tabs.Items.Count - indexes.Count + ctr);
+			listView.ItemsSource = tabs.Items.ToList();
+		}
+
+		void Close_Click(object sender, RoutedEventArgs e)
+		{
+			var selected = listView.SelectedItems.Cast<ItemType>().ToList();
+
+			var answer = Message.OptionsEnum.None;
+			if (!selected.All(tab => tab.CanClose(ref answer)))
+				return;
+
+			selected.ForEach(item => tabs.Items.Remove(item));
 			listView.ItemsSource = tabs.Items.ToList();
 		}
 

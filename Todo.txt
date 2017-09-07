@@ -2,6 +2,7 @@ All:
 Add TFS source control
 Allow selecting a screen location (with zoom)
 Add PGP hash for files
+Make modal dialogs modal for owning window only
 
 Disk:
 Move timestamp (possibly others) from TextEditor
