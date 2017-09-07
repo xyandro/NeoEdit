@@ -622,6 +622,8 @@
 			<textEdit:TextEditMenuItem Header="_Inactive Tabs" CommandEnum="View_Close_InactiveTabs"/>
 		</MenuItem>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="_New Window" CommandEnum="View_NewWindow"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>
 	</MenuItem>
 	<MenuItem Header="_Macro">

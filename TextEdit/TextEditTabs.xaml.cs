@@ -285,6 +285,18 @@ namespace NeoEdit.TextEdit
 			closeTabs.ForEach(tab => Remove(tab));
 		}
 
+		void Command_View_NewWindow()
+		{
+			var active = ItemTabs.Items.Where(tab => tab.Active).ToList();
+			active.ForEach(tab => ItemTabs.Items.Remove(tab));
+
+			var newWindow = new TextEditTabs();
+			newWindow.ItemTabs.Layout = ItemTabs.Layout;
+			newWindow.ItemTabs.Columns = ItemTabs.Columns;
+			newWindow.ItemTabs.Rows = ItemTabs.Rows;
+			active.ForEach(tab => newWindow.ItemTabs.Items.Add(tab));
+		}
+
 		void Command_View_WordList()
 		{
 			var type = GetType();
@@ -502,6 +514,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.View_Close_TabsWithoutSelections: Command_View_CloseTabsWithSelections(false); break;
 				case TextEditCommand.View_Close_ActiveTabs: Command_View_Close_ActiveTabs(true); break;
 				case TextEditCommand.View_Close_InactiveTabs: Command_View_Close_ActiveTabs(false); break;
+				case TextEditCommand.View_NewWindow: Command_View_NewWindow(); break;
 				case TextEditCommand.View_WordList: Command_View_WordList(); break;
 				case TextEditCommand.Macro_Open_Quick_6: Macro_Open_Quick(6); return true;
 				case TextEditCommand.Macro_Open_Quick_7: Macro_Open_Quick(7); return true;
