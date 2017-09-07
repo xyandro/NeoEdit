@@ -397,7 +397,10 @@ namespace NeoEdit.TextEdit
 			diffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
 			diffTarget.diffIgnoreCharacters = diffIgnoreCharacters;
 			DiffEncodingMismatch = diffTarget.DiffEncodingMismatch = CodePage != diffTarget.CodePage;
-			TextData.CalculateDiff(Data, diffTarget.Data, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
+
+			var left = TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget) ? this : DiffTarget;
+			var right = left == this ? DiffTarget : this;
+			TextData.CalculateDiff(left.Data, right.Data, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
 
 			CalculateBoundaries();
 			diffTarget.CalculateBoundaries();

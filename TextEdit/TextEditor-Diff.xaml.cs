@@ -146,17 +146,8 @@ namespace NeoEdit.TextEdit
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			TextEditor left, right;
-			if (TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget))
-			{
-				left = this;
-				right = DiffTarget;
-			}
-			else
-			{
-				left = DiffTarget;
-				right = this;
-			}
+			var left = TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget) ? this : DiffTarget;
+			var right = left == this ? DiffTarget : this;
 
 			if (moveLeft)
 				left.ReplaceSelections(right.GetSelectionStrings());
