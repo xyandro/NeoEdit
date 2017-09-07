@@ -59,14 +59,6 @@ namespace NeoEdit.TextEdit
 			textEditor.DiffTarget = replaced?.DiffTarget;
 		}
 
-		public static TextEditTabs CreateDiff()
-		{
-			var textEditTabs = new TextEditTabs();
-			textEditTabs.ItemTabs.Layout = TabsLayout.Grid;
-			textEditTabs.ItemTabs.Columns = 2;
-			return textEditTabs;
-		}
-
 		public void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, bool? modified1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, bool? modified2 = null, int? line2 = null, int? column2 = null, string shutdownEvent = null)
 		{
 			var shutdownData = new ShutdownData(shutdownEvent, 2);
@@ -76,12 +68,15 @@ namespace NeoEdit.TextEdit
 			tabs.CreateTab(textEdit2);
 			ItemTabs.TopMost = textEdit2;
 			textEdit1.DiffTarget = textEdit2;
+			ItemTabs.Layout = TabsLayout.Grid;
+			if (ItemTabs.Items.Count > 2)
+				ItemTabs.Columns = 2;
 		}
 
 		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, modified, line, column, this);
 
 		readonly RunOnceTimer clipboardsTimer, doActivatedTimer;
-		TextEditTabs()
+		public TextEditTabs()
 		{
 			TextEditMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
 			InitializeComponent();
