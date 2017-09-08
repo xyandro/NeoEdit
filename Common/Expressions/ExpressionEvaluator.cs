@@ -109,6 +109,7 @@ namespace NeoEdit.Common.Expressions
 				case "/": return GetNumeric(val1) / GetNumeric(val2);
 				case "t*": return Repeat(GetString(val1), GetNumeric(val2).IntValue);
 				case "//": return GetNumeric(val1).IntDiv(GetNumeric(val2));
+				case "///": return GetNumeric(val1).IntDivWithRemainder(GetNumeric(val2));
 				case "%": return GetNumeric(val1) % GetNumeric(val2);
 				case "+": return GetNumeric(val1) + GetNumeric(val2);
 				case "-": return GetNumeric(val1) - GetNumeric(val2);

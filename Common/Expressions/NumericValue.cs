@@ -141,6 +141,14 @@ namespace NeoEdit.Common.Expressions
 
 		public NumericValue IntDiv(NumericValue divisor) => new NumericValue(GetInteger / divisor.GetInteger, Units / divisor.Units);
 
+		public string IntDivWithRemainder(NumericValue divisor)
+		{
+			var quotient = GetInteger / divisor.GetInteger;
+			var remainder = GetInteger % divisor.GetInteger;
+			var units = Units / divisor.Units;
+			return $"{quotient}r{remainder} {units}";
+		}
+
 		public static NumericValue operator %(NumericValue dividend, NumericValue divisor)
 		{
 			var units = dividend.Units / divisor.Units;

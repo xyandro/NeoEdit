@@ -84,12 +84,12 @@
 					<guiDialogs:HelpItems.Items>
 						<guiDialogs:HelpItem Name="+" Description="Add"/>
 						<guiDialogs:HelpItem Name="-" Description="Subtract"/>
-						<guiDialogs:HelpItem/>
 						<guiDialogs:HelpItem Name="^" Description="Exponent"/>
+						<guiDialogs:HelpItem Name="%" Description="Modulo"/>
 						<guiDialogs:HelpItem Name="*" Description="Multiply"/>
 						<guiDialogs:HelpItem Name="/" Description="Divide"/>
 						<guiDialogs:HelpItem Name="//" Description="Integer Divide"/>
-						<guiDialogs:HelpItem Name="%" Description="Modulo"/>
+						<guiDialogs:HelpItem Name="///" Description="Divide With Remainder"/>
 						<guiDialogs:HelpItem Name="==" Description="Equal"/>
 						<guiDialogs:HelpItem Name="!=" Description="Not equal"/>
 						<guiDialogs:HelpItem/>
