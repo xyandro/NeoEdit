@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
-using NeoEdit.HexEdit.Data;
 
 namespace NeoEdit.HexEdit.Models
 {
@@ -97,7 +96,7 @@ namespace NeoEdit.HexEdit.Models
 		{
 			if ((position < 0) || (position < start) || (position + count > end) || (position + count > data.Length))
 				return null;
-			return data.GetSubset(position, count);
+			return data.Read(position, count);
 		}
 
 		Dictionary<string, NEExpression> expressions = new Dictionary<string, NEExpression>();

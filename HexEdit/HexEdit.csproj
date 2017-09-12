@@ -12,12 +12,8 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BinaryData.cs" />
     <Compile Include="Converters\DisplayValueConverter.cs" />
-    <Compile Include="Data\BinaryData.cs" />
-    <Compile Include="Data\DumpBinaryData.cs" />
-    <Compile Include="Data\MemoryBinaryData.cs" />
-    <Compile Include="Data\ProcessBinaryData.cs" />
-    <Compile Include="Data\SharedMemoryBinaryData.cs" />
     <Page Include="Dialogs\EncodingsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -123,10 +119,7 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Protect.cs" />
     <Compile Include="UndoRedo.cs" />
-    <Compile Include="VirtualQueryInfo.cs" />
-    <Compile Include="Win32.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\Common\Common.csproj">

@@ -12,9 +12,7 @@ namespace NeoEdit.GUI
 		Action aboutLauncher;
 		Action changeLogLauncher;
 		Action<string, IEnumerable<string>, bool> diskLauncher;
-		Action<string, bool> hexEditorDumpLauncher;
-		Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFileLauncher;
-		Action<int> hexEditorProcessLauncher;
+		Action<string, byte[], Coder.CodePage, bool, bool> hexEditorLauncher;
 		Action licenseLauncher;
 		Action<List<string>, bool> streamSaverLauncher;
 		Action<string, string, byte[], Coder.CodePage, bool?, int?, int?, string, string, byte[], Coder.CodePage, bool?, int?, int?, string> textEditorDiffLauncher;
@@ -26,9 +24,7 @@ namespace NeoEdit.GUI
 			Action about = null
 			, Action changeLog = null
 			, Action<string, IEnumerable<string>, bool> disk = null
-			, Action<string, bool> hexEditorDump = null
-			, Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFile = null
-			, Action<int> hexEditorProcess = null
+			, Action<string, byte[], Coder.CodePage, bool, bool> hexEditor = null
 			, Action license = null
 			, Action<List<string>, bool> streamSaver = null
 			, Action<string, string, byte[], Coder.CodePage, bool?, int?, int?, string, string, byte[], Coder.CodePage, bool?, int?, int?, string> textEditorDiff = null
@@ -42,9 +38,7 @@ namespace NeoEdit.GUI
 				aboutLauncher = about,
 				changeLogLauncher = changeLog,
 				diskLauncher = disk,
-				hexEditorDumpLauncher = hexEditorDump,
-				hexEditorFileLauncher = hexEditorFile,
-				hexEditorProcessLauncher = hexEditorProcess,
+				hexEditorLauncher = hexEditor,
 				licenseLauncher = license,
 				streamSaverLauncher = streamSaver,
 				textEditorDiffLauncher = textEditorDiff,
@@ -57,9 +51,7 @@ namespace NeoEdit.GUI
 		public void LaunchAbout() => aboutLauncher?.Invoke();
 		public void LaunchChangeLog() => changeLogLauncher?.Invoke();
 		public void LaunchDisk(string path = null, IEnumerable<string> files = null, bool forceCreate = false) => diskLauncher?.Invoke(path, files, forceCreate);
-		public void LaunchHexEditorDump(string fileName, bool forceCreate = false) => hexEditorDumpLauncher(fileName, forceCreate);
-		public void LaunchHexEditorFile(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false) => hexEditorFileLauncher?.Invoke(fileName, bytes, codePage, modified, forceCreate);
-		public void LaunchHexEditorProcess(int pid) => hexEditorProcessLauncher?.Invoke(pid);
+		public void LaunchHexEditor(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false) => hexEditorLauncher?.Invoke(fileName, bytes, codePage, modified, forceCreate);
 		public void LaunchLicense() => licenseLauncher?.Invoke();
 		public void LaunchStreamSaver(List<string> urls = null, bool isPlaylist = false) => streamSaverLauncher?.Invoke(urls, isPlaylist);
 		public void LaunchTextEditorDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, bool? modified1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, bool? modified2 = null, int? line2 = null, int? column2 = null, string shutdownEvent = null) => textEditorDiffLauncher?.Invoke(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent);

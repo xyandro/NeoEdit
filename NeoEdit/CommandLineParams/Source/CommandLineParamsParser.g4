@@ -4,15 +4,13 @@ options { tokenVocab = CommandLineParamsLexer; }
 
 expr          : parameter* EOF ;
 
-parameter     : about | changelog | diff | disk | hexdump | hexedit | hexpid | license | multi | streamsave | textedit | textview | wait ;
+parameter     : about | changelog | diff | disk | hexedit | license | multi | streamsave | textedit | textview | wait ;
 
 about         : ABOUT ;
 changelog     : CHANGELOG ;
 diff          : DIFF texteditfile? texteditfile? ;
 disk          : DISK file=param? ;
-hexdump       : HEXDUMP param* ;
 hexedit       : HEXEDIT param* ;
-hexpid        : HEXPID NUMBER* ;
 license       : LICENSE ;
 multi         : MULTI ;
 streamsave    : STREAMSAVE ((URL | playlist=PLAYLIST)? STRING+)?;

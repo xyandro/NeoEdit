@@ -1,8 +1,8 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
-<# var types = new Type[] { typeof(string), typeof(char[]), typeof(byte[]) }; #>
-<# var bases = new Type[] { typeof(char), typeof(char), typeof(byte) }; #>
-<# var length = new string[] { ".Length", ".Count()", ".Count()" }; #>
+<# var types = new Type[] { typeof(string), typeof(byte[]) }; #>
+<# var bases = new Type[] { typeof(char), typeof(byte) }; #>
+<# var length = new string[] { ".Length", ".Count()" }; #>
 <#@ import namespace="System.Linq" #>
 using System;
 using System.Collections.Generic;

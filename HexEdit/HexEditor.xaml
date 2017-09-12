@@ -40,16 +40,6 @@
 					</TextBlock.Text>
 				</TextBlock>
 			</StatusBarItem>
-			<Separator/>
-			<StatusBarItem>
-				<TextBlock>
-					<TextBlock.Text>
-						<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="[0] ? &quot;INS&quot; : &quot;OVR&quot;">
-							<Binding Path="Insert" ElementName="self"/>
-						</MultiBinding>
-					</TextBlock.Text>
-				</TextBlock>
-			</StatusBarItem>
 		</StatusBar>
 	</Grid>
 

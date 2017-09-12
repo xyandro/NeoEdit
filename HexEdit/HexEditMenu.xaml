@@ -9,8 +9,7 @@
 		<hexEdit:HexEditMenuItem Header="_New" CommandEnum="File_New"/>
 		<MenuItem Header="_Open">
 			<hexEdit:HexEditMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
-			<hexEdit:HexEditMenuItem Header="Open _Copied/Cut Files" CommandEnum="File_Open_OpenCopiedCutFiles"/>
-			<hexEdit:HexEditMenuItem Header="Open _Dump" CommandEnum="File_Open_OpenDump"/>
+			<hexEdit:HexEditMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
 		</MenuItem>
 		<MenuItem Header="Open _With">
 			<hexEdit:HexEditMenuItem Header="_Disk" CommandEnum="File_OpenWith_Disk"/>
@@ -30,8 +29,8 @@
 		<hexEdit:HexEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
 		<MenuItem Header="_Copy">
-			<hexEdit:HexEditMenuItem Header="Copy _Path" CommandEnum="File_Copy_CopyPath"/>
-			<hexEdit:HexEditMenuItem Header="Copy Na_me" CommandEnum="File_Copy_CopyName"/>
+			<hexEdit:HexEditMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
+			<hexEdit:HexEditMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
 		</MenuItem>
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="_Encoding" CommandEnum="File_Encoding"/>
@@ -53,8 +52,6 @@
 		</MenuItem>
 		<Separator/>
 		<hexEdit:HexEditMenuItem Header="_Goto" CommandEnum="Edit_Goto"/>
-		<Separator/>
-		<hexEdit:HexEditMenuItem Header="_Insert" CommandEnum="Edit_Insert" IsChecked="{Binding Parent.ItemTabs.TopMost.Insert, ElementName=self}"/>
 	</MenuItem>
 	<MenuItem Header="_View">
 		<hexEdit:HexEditMenuItem Header="_Values" CommandEnum="View_Values" IsChecked="{Binding Parent.ItemTabs.TopMost.ShowValues, ElementName=self}"/>

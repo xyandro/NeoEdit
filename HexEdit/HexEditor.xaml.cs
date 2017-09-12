@@ -17,7 +17,6 @@ using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Converters;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
-using NeoEdit.HexEdit.Data;
 using NeoEdit.HexEdit.Dialogs;
 using NeoEdit.HexEdit.Dialogs.Models;
 using NeoEdit.HexEdit.Models;
@@ -41,11 +40,9 @@ namespace NeoEdit.HexEdit
 		[DepProp]
 		public long ChangeCount { get { return UIHelper<HexEditor>.GetPropValue<long>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public long SelStart { get { return UIHelper<HexEditor>.GetPropValue<long>(this); } set { ++internalChangeCount; UIHelper<HexEditor>.SetPropValue(this, value); --internalChangeCount; } }
+		public long SelStart { get { return UIHelper<HexEditor>.GetPropValue<long>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public long SelEnd { get { return UIHelper<HexEditor>.GetPropValue<long>(this); } set { ++internalChangeCount; UIHelper<HexEditor>.SetPropValue(this, value); --internalChangeCount; } }
-		[DepProp]
-		public bool Insert { get { return UIHelper<HexEditor>.GetPropValue<bool>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
+		public long SelEnd { get { return UIHelper<HexEditor>.GetPropValue<long>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<HexEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<HexEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -55,8 +52,6 @@ namespace NeoEdit.HexEdit
 
 		long yScrollViewportFloor => (long)Math.Floor(yScroll.ViewportSize);
 		long yScrollViewportCeiling => (long)Math.Ceiling(yScroll.ViewportSize);
-
-		int internalChangeCount = 0;
 
 		DateTime fileLastWrite;
 
@@ -330,9 +325,6 @@ namespace NeoEdit.HexEdit
 				case Key.Back:
 				case Key.Delete:
 					{
-						if (!VerifyInsert())
-							break;
-
 						if (SelStart != SelEnd)
 						{
 							Replace(null);
@@ -429,7 +421,7 @@ namespace NeoEdit.HexEdit
 			if (bytes == null)
 				bytes = new byte[0];
 
-			Replace(SelStart, Insert ? Length : bytes.Length, bytes);
+			Replace(SelStart, Length, bytes);
 
 			MoveCursor(SelStart, false, false);
 			MoveCursor(SelStart + bytes.Length, bytes.Length != 1, false);
@@ -437,10 +429,7 @@ namespace NeoEdit.HexEdit
 
 		void Replace(long index, long count, byte[] bytes, ReplaceType replaceType = ReplaceType.Normal)
 		{
-			if ((!Insert) && ((count != bytes.Length) || (index + count > Data.Length)))
-				throw new InvalidOperationException("This operation can only be done in insert mode.");
-
-			var undoRedoStep = new UndoRedo.UndoRedoStep(index, bytes.Length, Data.GetSubset(index, count));
+			var undoRedoStep = new UndoRedo.UndoRedoStep(index, bytes.Length, Data.Read(index, count));
 			switch (replaceType)
 			{
 				case ReplaceType.Undo: undoRedo.AddUndone(undoRedoStep); break;
@@ -552,21 +541,6 @@ namespace NeoEdit.HexEdit
 			e.Handled = true;
 		}
 
-		bool VerifyInsert()
-		{
-			if (Insert)
-				return true;
-
-			new Message(WindowParent)
-			{
-				Title = "Error",
-				Text = "This operation can only be performed in insert mode.",
-				Options = Message.OptionsEnum.Ok
-			}.Show();
-
-			return false;
-		}
-
 		bool CanFullyEncode(byte[] bytes)
 		{
 			if (Coder.CanFullyEncode(bytes, CodePage))
@@ -586,7 +560,7 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_File_OpenWith_TextEditor()
 		{
-			var bytes = Data.GetAllBytes();
+			var bytes = Data.Data;
 			if (!CanFullyEncode(bytes))
 				return;
 			Launcher.Static.LaunchTextEditorFile(FileName, null, bytes, CodePage, IsModified);
@@ -666,9 +640,6 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_File_Revert()
 		{
-			if (!Data.CanReload())
-				return;
-
 			if (IsModified)
 			{
 				if (new Message(WindowParent)
@@ -692,9 +663,9 @@ namespace NeoEdit.HexEdit
 			++ChangeCount;
 		}
 
-		internal void Command_File_Copy_CopyPath() => NEClipboard.Current = NEClipboard.Create(FileName, false);
+		internal void Command_File_Copy_Path() => NEClipboard.Current = NEClipboard.Create(FileName, false);
 
-		internal void Command_File_Copy_CopyName() => NEClipboard.Current = NEClipboard.Create(Path.GetFileName(FileName));
+		internal void Command_File_Copy_Name() => NEClipboard.Current = NEClipboard.Create(Path.GetFileName(FileName));
 
 		internal void Command_File_Encoding()
 		{
@@ -733,7 +704,7 @@ namespace NeoEdit.HexEdit
 			if (SelStart == SelEnd)
 				return;
 
-			var bytes = Data.GetSubset(SelStart, Length);
+			var bytes = Data.Read(SelStart, Length);
 			string str;
 			if (SelHex)
 				str = Coder.BytesToString(bytes, Coder.CodePage.Hex);
@@ -745,7 +716,7 @@ namespace NeoEdit.HexEdit
 				str = new string(sb);
 			}
 			NEClipboard.Current = NEClipboard.Create(str);
-			if ((isCut) && (Insert))
+			if (isCut)
 				Replace(null);
 		}
 
@@ -787,20 +758,13 @@ namespace NeoEdit.HexEdit
 			MoveCursor(position.Value, shiftDown, false);
 		}
 
-		internal void Command_Edit_Insert()
-		{
-			if (Data.CanInsert())
-				Insert = !Insert;
-		}
-
 		internal void Command_View_Values() => ShowValues = !ShowValues;
 
 		internal void Command_File_Refresh()
 		{
-			Data.Refresh();
 			++ChangeCount;
 
-			if ((!Data.CanReload()) || (string.IsNullOrEmpty(FileName)))
+			if (string.IsNullOrEmpty(FileName))
 				return;
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
@@ -821,7 +785,7 @@ namespace NeoEdit.HexEdit
 			if (Length == 0)
 				SelectAll();
 
-			var data = Data.GetSubset(SelStart, Length);
+			var data = Data.Read(SelStart, Length);
 			new Message(WindowParent)
 			{
 				Title = "Result",
@@ -832,23 +796,17 @@ namespace NeoEdit.HexEdit
 
 		internal void Command_Data_Compress(bool compress, Compressor.Type type)
 		{
-			if (!VerifyInsert())
-				return;
-
 			if (Length == 0)
 				SelectAll();
 
 			if (compress)
-				Replace(Compressor.Compress(Data.GetSubset(SelStart, SelEnd - SelStart), type));
+				Replace(Compressor.Compress(Data.Read(SelStart, SelEnd - SelStart), type));
 			else
-				Replace(Compressor.Decompress(Data.GetSubset(SelStart, SelEnd - SelStart), type));
+				Replace(Compressor.Decompress(Data.Read(SelStart, SelEnd - SelStart), type));
 		}
 
 		internal void Command_Data_Encrypt(Cryptor.Type type, bool encrypt)
 		{
-			if (!VerifyInsert())
-				return;
-
 			var result = EncryptDialog.Run(WindowParent, type, encrypt);
 			if (result == null)
 				return;
@@ -858,9 +816,9 @@ namespace NeoEdit.HexEdit
 				SelectAll();
 
 			if (encrypt)
-				Replace(Cryptor.Encrypt(Data.GetSubset(SelStart, SelEnd - SelStart), type, key));
+				Replace(Cryptor.Encrypt(Data.Read(SelStart, SelEnd - SelStart), type, key));
 			else
-				Replace(Cryptor.Decrypt(Data.GetSubset(SelStart, SelEnd - SelStart), type, key));
+				Replace(Cryptor.Decrypt(Data.Read(SelStart, SelEnd - SelStart), type, key));
 		}
 
 		internal void Command_Data_Sign(Cryptor.Type type, bool sign)
@@ -874,8 +832,8 @@ namespace NeoEdit.HexEdit
 
 			string text;
 			if (sign)
-				text = Cryptor.Sign(Data.GetSubset(SelStart, SelEnd - SelStart), type, result.Key, result.Hash);
-			else if (Cryptor.Verify(Data.GetSubset(SelStart, SelEnd - SelStart), type, result.Key, result.Hash, result.Signature))
+				text = Cryptor.Sign(Data.Read(SelStart, SelEnd - SelStart), type, result.Key, result.Hash);
+			else if (Cryptor.Verify(Data.Read(SelStart, SelEnd - SelStart), type, result.Key, result.Hash, result.Signature))
 				text = "Matched.";
 			else
 				text = "ERROR: Signature DOES NOT match.";

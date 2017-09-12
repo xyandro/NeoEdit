@@ -47,20 +47,6 @@ namespace NeoEdit.Common.UnitTest
 		}
 
 		[TestMethod]
-		public void SearcherCharArrayTest()
-		{
-			var testData = searchText.ToCharArray();
-			var findStrs = findStrings.Select(str => str.ToCharArray()).ToList();
-			var caseSearcher = new Searcher(findStrs, true);
-			var ignoreCaseSearcher = new Searcher(findStrs);
-			Assert.AreEqual(caseSearcher.MaxLen, 3);
-			Assert.AreEqual(ignoreCaseSearcher.MaxLen, 3);
-			var caseResults = caseSearcher.Find(testData);
-			var ignoreCaseResults = ignoreCaseSearcher.Find(testData);
-			VerifyResults(caseResults, ignoreCaseResults);
-		}
-
-		[TestMethod]
 		public void SearcherByteTest()
 		{
 			var testData = Encoding.UTF8.GetBytes(searchText);

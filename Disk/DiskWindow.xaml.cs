@@ -531,7 +531,7 @@ namespace NeoEdit.Disk
 		internal void Command_Edit_HexEdit()
 		{
 			foreach (var file in Selected)
-				Launcher.Static.LaunchHexEditorFile(file.FullName);
+				Launcher.Static.LaunchHexEditor(file.FullName);
 		}
 
 		internal void Command_Select_All()

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -8,7 +6,6 @@ using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
-using NeoEdit.HexEdit.Data;
 
 namespace NeoEdit.HexEdit
 {
@@ -38,22 +35,10 @@ namespace NeoEdit.HexEdit
 				else
 					bytes = File.ReadAllBytes(filename);
 			}
-			Create(new MemoryBinaryData(bytes), codePage, filename, modified: modified, forceCreate: forceCreate);
+			Create(new BinaryData(bytes), codePage, filename, modified: modified, forceCreate: forceCreate);
 		}
 
-		public static void CreateFromDump(string filename, bool forceCreate = false) => Create(new DumpBinaryData(filename), filename: filename, filetitle: "Dump: ", forceCreate: forceCreate);
-
-		public static void CreateFromProcess(int pid, bool forceCreate = false)
-		{
-			var process = Process.GetProcessById(pid);
-			if (process == null)
-				throw new ArgumentException("Process doesn't exist.");
-			if (process.Id == Process.GetCurrentProcess().Id)
-				throw new ArgumentException("Can't open current process.");
-			Create(new ProcessBinaryData(pid), filetitle: $"Process {pid} ({process.ProcessName}) - ", forceCreate: forceCreate);
-		}
-
-		void Command_File_New(bool newWindow) => Create(new MemoryBinaryData(), hexEditTabs: this, forceCreate: newWindow);
+		void Command_File_New(bool newWindow) => Create(new BinaryData(), hexEditTabs: this, forceCreate: newWindow);
 
 		void Command_File_Open_Open()
 		{
@@ -67,19 +52,10 @@ namespace NeoEdit.HexEdit
 				return;
 
 			foreach (var filename in dialog.FileNames)
-				tabs.CreateTab(new HexEditor(new MemoryBinaryData(File.ReadAllBytes(filename)), filename: filename));
+				tabs.CreateTab(new HexEditor(new BinaryData(File.ReadAllBytes(filename)), filename: filename));
 		}
 
-		void Command_File_Open_OpenDump()
-		{
-			var dialog = new OpenFileDialog();
-			if (dialog.ShowDialog() != true)
-				return;
-
-			tabs.CreateTab(new HexEditor(new DumpBinaryData(dialog.FileName), filetitle: "Dump: ", filename: dialog.FileName));
-		}
-
-		void Command_File_Open_OpenCopiedCutFiles()
+		void Command_File_Open_CopiedCut()
 		{
 			var files = NEClipboard.Current.Strings;
 
@@ -94,7 +70,7 @@ namespace NeoEdit.HexEdit
 				return;
 
 			foreach (var file in files)
-				tabs.CreateTab(new HexEditor(new MemoryBinaryData(File.ReadAllBytes(file)), filename: file));
+				tabs.CreateTab(new HexEditor(new BinaryData(File.ReadAllBytes(file)), filename: file));
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -142,8 +118,7 @@ namespace NeoEdit.HexEdit
 			{
 				case HexEditCommand.File_New: Command_File_New(shiftDown); break;
 				case HexEditCommand.File_Open_Open: Command_File_Open_Open(); break;
-				case HexEditCommand.File_Open_OpenCopiedCutFiles: Command_File_Open_OpenCopiedCutFiles(); break;
-				case HexEditCommand.File_Open_OpenDump: Command_File_Open_OpenDump(); break;
+				case HexEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
 				case HexEditCommand.File_Exit: Close(); break;
 				case HexEditCommand.View_Full: ItemTabs.SetLayout(TabsLayout.Full); break;
 				case HexEditCommand.View_Grid: ItemTabs.SetLayout(TabsLayout.Grid); break;
@@ -169,8 +144,8 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.File_Close: if (ItemTabs.TopMost.CanClose()) Remove(ItemTabs.TopMost); break;
 				case HexEditCommand.File_Refresh: ItemTabs.TopMost.Command_File_Refresh(); break;
 				case HexEditCommand.File_Revert: ItemTabs.TopMost.Command_File_Revert(); break;
-				case HexEditCommand.File_Copy_CopyPath: ItemTabs.TopMost.Command_File_Copy_CopyPath(); break;
-				case HexEditCommand.File_Copy_CopyName: ItemTabs.TopMost.Command_File_Copy_CopyName(); break;
+				case HexEditCommand.File_Copy_Path: ItemTabs.TopMost.Command_File_Copy_Path(); break;
+				case HexEditCommand.File_Copy_Name: ItemTabs.TopMost.Command_File_Copy_Name(); break;
 				case HexEditCommand.File_Encoding: ItemTabs.TopMost.Command_File_Encoding(); break;
 				case HexEditCommand.Edit_Undo: ItemTabs.TopMost.Command_Edit_Undo(); break;
 				case HexEditCommand.Edit_Redo: ItemTabs.TopMost.Command_Edit_Redo(); break;
@@ -181,7 +156,6 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.Edit_Find_Next: ItemTabs.TopMost.Command_Edit_FindNextPrev(true, shiftDown); break;
 				case HexEditCommand.Edit_Find_Previous: ItemTabs.TopMost.Command_Edit_FindNextPrev(false, shiftDown); break;
 				case HexEditCommand.Edit_Goto: ItemTabs.TopMost.Command_Edit_Goto(shiftDown); break;
-				case HexEditCommand.Edit_Insert: ItemTabs.TopMost.Command_Edit_Insert(); break;
 				case HexEditCommand.View_Values: ItemTabs.TopMost.Command_View_Values(); break;
 				case HexEditCommand.Data_Hash_MD5: ItemTabs.TopMost.Command_Data_Hash(Hasher.Type.MD5); break;
 				case HexEditCommand.Data_Hash_SHA1: ItemTabs.TopMost.Command_Data_Hash(Hasher.Type.SHA1); break;

@@ -68,7 +68,7 @@ namespace NeoEdit.TextEdit
 		{
 			if (!VerifyCanFullyEncode())
 				return;
-			Launcher.Static.LaunchHexEditorFile(FileName, Data.GetBytes(CodePage), CodePage, IsModified);
+			Launcher.Static.LaunchHexEditor(FileName, Data.GetBytes(CodePage), CodePage, IsModified);
 			WindowParent.Remove(this, true);
 		}
 

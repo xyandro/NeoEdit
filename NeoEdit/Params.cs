@@ -33,17 +33,6 @@ namespace NeoEdit
 		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchDisk(Location);
 	}
 
-	class HexDumpParam : Param
-	{
-		readonly List<string> Files;
-		public HexDumpParam(List<string> files) { Files = files; }
-		public override void Execute(string shutdownEvent)
-		{
-			foreach (var file in Files)
-				Launcher.Static.LaunchHexEditorDump(file);
-		}
-	}
-
 	class HexEditParam : Param
 	{
 		readonly List<string> Files;
@@ -51,20 +40,9 @@ namespace NeoEdit
 		public override void Execute(string shutdownEvent)
 		{
 			if (!Files.Any())
-				Launcher.Static.LaunchHexEditorFile();
+				Launcher.Static.LaunchHexEditor();
 			foreach (var file in Files)
-				Launcher.Static.LaunchHexEditorFile(file);
-		}
-	}
-
-	class HexPidParam : Param
-	{
-		readonly List<int> PIDs;
-		public HexPidParam(List<int> pids) { PIDs = pids; }
-		public override void Execute(string shutdownEvent)
-		{
-			foreach (var pid in PIDs)
-				Launcher.Static.LaunchHexEditorProcess(pid);
+				Launcher.Static.LaunchHexEditor(file);
 		}
 	}
 

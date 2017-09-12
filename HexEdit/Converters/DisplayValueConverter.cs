@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 using NeoEdit.Common.Transform;
-using NeoEdit.HexEdit.Data;
 
 namespace NeoEdit.HexEdit.Converters
 {
@@ -38,7 +37,7 @@ namespace NeoEdit.HexEdit.Converters
 				if (Coder.IsStr(codePage))
 				{
 					count = Math.Min(count, codePage.PreviewSize());
-					var bytes1 = data.GetSubset(selStart, count);
+					var bytes1 = data.Read(selStart, count);
 					if (!Coder.CanFullyEncode(bytes1, codePage))
 						return "Invalid";
 					return Coder.BytesToString(bytes1, codePage).Replace("\r", @"\r").Replace("\n", @"\n");
@@ -47,7 +46,7 @@ namespace NeoEdit.HexEdit.Converters
 				{
 					var coder = (Coder.CodePage)value[4];
 					count = Math.Min(count, coder.BytesRequired());
-					return Coder.BytesToString(data.GetSubset(selStart, count), coder);
+					return Coder.BytesToString(data.Read(selStart, count), coder);
 				}
 			}
 			catch { return "Invalid"; }
