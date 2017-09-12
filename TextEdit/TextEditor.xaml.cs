@@ -760,6 +760,7 @@ namespace NeoEdit.TextEdit
 			switch (command)
 			{
 				case TextEditCommand.File_Save_SaveAsByExpression: dialogResult = Command_File_Save_SaveAsByExpression_Dialog(); break;
+				case TextEditCommand.File_Save_CopyToByExpression: dialogResult = Command_File_Save_SaveAsByExpression_Dialog(); break;
 				case TextEditCommand.File_Operations_RenameByExpression: dialogResult = Command_File_Operations_RenameByExpression_Dialog(); break;
 				case TextEditCommand.File_Encoding_Encoding: dialogResult = Command_File_Encoding_Encoding_Dialog(); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
@@ -880,6 +881,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Save_Save: Command_File_Save_Save(); break;
 				case TextEditCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
 				case TextEditCommand.File_Save_SaveAsByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, ref answer); break;
+				case TextEditCommand.File_Save_CopyTo: Command_File_Save_SaveAs(true); break;
+				case TextEditCommand.File_Save_CopyToByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, ref answer, true); break;
 				case TextEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
 				case TextEditCommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(dialogResult as GetExpressionDialog.Result, ref answer); break;
 				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(ref answer); break;
@@ -1929,7 +1932,7 @@ namespace NeoEdit.TextEdit
 				Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
 		}
 
-		void Save(string fileName)
+		void Save(string fileName, bool copyOnly = false)
 		{
 			if (((Data.NumChars >> 20) < 50) && (!VerifyCanFullyEncode()))
 				return;
@@ -1939,10 +1942,10 @@ namespace NeoEdit.TextEdit
 			{
 				try
 				{
-					if (watcher != null)
+					if ((!copyOnly) && (watcher != null))
 						watcher.EnableRaisingEvents = false;
 					File.WriteAllBytes(fileName, FileEncryptor.Encrypt(Data.GetBytes(CodePage), AESKey));
-					if (watcher != null)
+					if ((!copyOnly) && (watcher != null))
 						watcher.EnableRaisingEvents = true;
 					break;
 				}
@@ -1964,9 +1967,13 @@ namespace NeoEdit.TextEdit
 					triedReadOnly = true;
 				}
 			}
-			fileLastWrite = new FileInfo(fileName).LastWriteTime;
-			SetModifiedFlag(false);
-			SetFileName(fileName);
+
+			if (!copyOnly)
+			{
+				fileLastWrite = new FileInfo(fileName).LastWriteTime;
+				SetModifiedFlag(false);
+				SetFileName(fileName);
+			}
 		}
 
 		void SearchesInvalidated()

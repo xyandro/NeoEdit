@@ -80,16 +80,16 @@ namespace NeoEdit.TextEdit
 				Save(FileName);
 		}
 
-		void Command_File_Save_SaveAs()
+		void Command_File_Save_SaveAs(bool copyOnly = false)
 		{
 			var fileName = GetSaveFileName();
 			if (fileName != null)
-				Save(fileName);
+				Save(fileName, copyOnly);
 		}
 
 		GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
-		void Command_File_Save_SaveAsByExpression(GetExpressionDialog.Result result, ref Message.OptionsEnum answer)
+		void Command_File_Save_SaveAsByExpression(GetExpressionDialog.Result result, ref Message.OptionsEnum answer, bool copyOnly = false)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
@@ -112,8 +112,7 @@ namespace NeoEdit.TextEdit
 					return;
 			}
 
-			SetFileName(newFileName);
-			Command_File_Save_Save();
+			Save(newFileName, copyOnly);
 		}
 
 		void Command_File_Operations_Rename()
