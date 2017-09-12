@@ -6,7 +6,6 @@
 
 	<guiControls:WindowMenuItem Header="Di_ff" CommandEnum="Window_Diff"/>
 	<guiControls:WindowMenuItem Header="_Disk" CommandEnum="Window_Disk"/>
-	<guiControls:WindowMenuItem Header="H_andles" CommandEnum="Window_Handles"/>
 	<guiControls:WindowMenuItem Header="_Hex Editor" CommandEnum="Window_HexEditor"/>
 	<guiControls:WindowMenuItem Header="_Image Editor" CommandEnum="Window_ImageEditor"/>
 	<guiControls:WindowMenuItem Header="_Network" CommandEnum="Window_Network"/>

@@ -12,7 +12,6 @@ namespace NeoEdit.GUI
 		Action aboutLauncher;
 		Action changeLogLauncher;
 		Action<string, IEnumerable<string>, bool> diskLauncher;
-		Action<int?> handlesLauncher;
 		Action<string, bool> hexEditorDumpLauncher;
 		Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFileLauncher;
 		Action<int> hexEditorProcessLauncher;
@@ -31,7 +30,6 @@ namespace NeoEdit.GUI
 			Action about = null
 			, Action changeLog = null
 			, Action<string, IEnumerable<string>, bool> disk = null
-			, Action<int?> handles = null
 			, Action<string, bool> hexEditorDump = null
 			, Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFile = null
 			, Action<int> hexEditorProcess = null
@@ -52,7 +50,6 @@ namespace NeoEdit.GUI
 				aboutLauncher = about,
 				changeLogLauncher = changeLog,
 				diskLauncher = disk,
-				handlesLauncher = handles,
 				hexEditorDumpLauncher = hexEditorDump,
 				hexEditorFileLauncher = hexEditorFile,
 				hexEditorProcessLauncher = hexEditorProcess,
@@ -72,7 +69,6 @@ namespace NeoEdit.GUI
 		public void LaunchAbout() => aboutLauncher?.Invoke();
 		public void LaunchChangeLog() => changeLogLauncher?.Invoke();
 		public void LaunchDisk(string path = null, IEnumerable<string> files = null, bool forceCreate = false) => diskLauncher?.Invoke(path, files, forceCreate);
-		public void LaunchHandles(int? pid = null) => handlesLauncher?.Invoke(pid);
 		public void LaunchHexEditorDump(string fileName, bool forceCreate = false) => hexEditorDumpLauncher(fileName, forceCreate);
 		public void LaunchHexEditorFile(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false) => hexEditorFileLauncher?.Invoke(fileName, bytes, codePage, modified, forceCreate);
 		public void LaunchHexEditorProcess(int pid) => hexEditorProcessLauncher?.Invoke(pid);

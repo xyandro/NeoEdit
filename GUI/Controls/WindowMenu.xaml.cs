@@ -5,7 +5,6 @@
 		None,
 		Window_Diff,
 		Window_Disk,
-		Window_Handles,
 		Window_HexEditor,
 		Window_ImageEditor,
 		Window_Network,

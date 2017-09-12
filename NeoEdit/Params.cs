@@ -33,13 +33,6 @@ namespace NeoEdit
 		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchDisk(Location);
 	}
 
-	class HandlesParam : Param
-	{
-		readonly int? PID;
-		public HandlesParam(int? pid) { PID = pid; }
-		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchHandles(PID);
-	}
-
 	class HexDumpParam : Param
 	{
 		readonly List<string> Files;

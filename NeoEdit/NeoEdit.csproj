@@ -93,10 +93,6 @@
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
     </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)\Handles\Handles.csproj">
-      <Project>{20cb32e5-9b1d-4c78-8126-20367398001c}</Project>
-      <Name>Handles</Name>
-    </ProjectReference>
     <ProjectReference Include="$(SolutionDir)\HexEdit\HexEdit.csproj">
       <Project>{6eab3c48-87bf-4f98-972e-1d0c8b7e03a4}</Project>
       <Name>HexEdit</Name>

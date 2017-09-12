@@ -54,10 +54,6 @@ namespace NeoEdit.Processes
 				case ProcessesCommand.View_Refresh:
 					Refresh();
 					break;
-				case ProcessesCommand.View_Handles:
-					foreach (ProcessItem selected in processes.Selected)
-						Launcher.Static.LaunchHandles(selected.PID);
-					break;
 				case ProcessesCommand.View_Memory:
 					foreach (ProcessItem selected in processes.Selected)
 						Launcher.Static.LaunchHexEditorProcess(selected.PID);

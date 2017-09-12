@@ -8,7 +8,6 @@ COLUMN         : '-col' | '-column'                                             
 DIFF           : '-diff'                                                                                ;
 DISK           : '-disk' | '-disks'                                                                     ;
 DISPLAY        : '-display' | '-displayname' | '-displaytext'                                           ;
-HANDLES        : '-handle' | '-handles'                                                                 ;
 HEXDUMP        : '-binarydump' | '-dump' | '-hexdump'                                                   ;
 HEXEDIT        : '-binary' | '-binaryedit' | '-binaryeditor' | '-hex' | '-hexedit' | '-hexeditor'       ;
 HEXPID         : '-binarypid' | '-hexpid'                                                               ;
@@ -40,7 +39,6 @@ COLUMN2        : COLUMN        -> type(COLUMN)        ;
 DIFF2          : DIFF          -> type(DIFF)          ;
 DISK2          : DISK          -> type(DISK)          ;
 DISPLAY2       : DISPLAY       -> type(DISPLAY)       ;
-HANDLES2       : HANDLES       -> type(HANDLES)       ;
 HEXDUMP2       : HEXDUMP       -> type(HEXDUMP)       ;
 HEXEDIT2       : HEXEDIT       -> type(HEXEDIT)       ;
 HEXPID2        : HEXPID        -> type(HEXPID)        ;
