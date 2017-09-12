@@ -16,7 +16,6 @@ namespace NeoEdit.GUI
 		Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFileLauncher;
 		Action<int> hexEditorProcessLauncher;
 		Action licenseLauncher;
-		Action<int?> processesLauncher;
 		Action ripperLauncher;
 		Action<List<string>, bool> streamSaverLauncher;
 		Action<string, string, byte[], Coder.CodePage, bool?, int?, int?, string, string, byte[], Coder.CodePage, bool?, int?, int?, string> textEditorDiffLauncher;
@@ -32,7 +31,6 @@ namespace NeoEdit.GUI
 			, Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFile = null
 			, Action<int> hexEditorProcess = null
 			, Action license = null
-			, Action<int?> processes = null
 			, Action ripper = null
 			, Action<List<string>, bool> streamSaver = null
 			, Action<string, string, byte[], Coder.CodePage, bool?, int?, int?, string, string, byte[], Coder.CodePage, bool?, int?, int?, string> textEditorDiff = null
@@ -50,7 +48,6 @@ namespace NeoEdit.GUI
 				hexEditorFileLauncher = hexEditorFile,
 				hexEditorProcessLauncher = hexEditorProcess,
 				licenseLauncher = license,
-				processesLauncher = processes,
 				ripperLauncher = ripper,
 				streamSaverLauncher = streamSaver,
 				textEditorDiffLauncher = textEditorDiff,
@@ -67,7 +64,6 @@ namespace NeoEdit.GUI
 		public void LaunchHexEditorFile(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false) => hexEditorFileLauncher?.Invoke(fileName, bytes, codePage, modified, forceCreate);
 		public void LaunchHexEditorProcess(int pid) => hexEditorProcessLauncher?.Invoke(pid);
 		public void LaunchLicense() => licenseLauncher?.Invoke();
-		public void LaunchProcesses(int? pid = null) => processesLauncher?.Invoke(pid);
 		public void LaunchRipper() => ripperLauncher?.Invoke();
 		public void LaunchStreamSaver(List<string> urls = null, bool isPlaylist = false) => streamSaverLauncher?.Invoke(urls, isPlaylist);
 		public void LaunchTextEditorDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, bool? modified1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, bool? modified2 = null, int? line2 = null, int? column2 = null, string shutdownEvent = null) => textEditorDiffLauncher?.Invoke(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent);

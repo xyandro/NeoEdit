@@ -7,7 +7,6 @@
 	<guiControls:WindowMenuItem Header="Di_ff" CommandEnum="Window_Diff"/>
 	<guiControls:WindowMenuItem Header="_Disk" CommandEnum="Window_Disk"/>
 	<guiControls:WindowMenuItem Header="_Hex Editor" CommandEnum="Window_HexEditor"/>
-	<guiControls:WindowMenuItem Header="_Processes" CommandEnum="Window_Processes"/>
 	<guiControls:WindowMenuItem Header="_Ripper" CommandEnum="Window_Ripper"/>
 	<guiControls:WindowMenuItem Header="_Stream Saver" CommandEnum="Window_StreamSaver"/>
 	<guiControls:WindowMenuItem Header="_Text Editor" CommandEnum="Window_TextEditor"/>

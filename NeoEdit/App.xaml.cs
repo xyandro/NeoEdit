@@ -17,7 +17,6 @@ using NeoEdit.Disk;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.HexEdit;
-using NeoEdit.Processes;
 using NeoEdit.Rip;
 using NeoEdit.StreamSave;
 using NeoEdit.TextEdit;
@@ -110,7 +109,6 @@ namespace NeoEdit
 				, hexEditorFile: (fileName, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(fileName, binarydata, encoder, modified, forceCreate)
 				, hexEditorProcess: pid => HexEditTabs.CreateFromProcess(pid)
 				, license: () => LicenseDialog.Run()
-				, processes: pid => new ProcessesWindow(pid)
 				, ripper: () => new Ripper()
 				, streamSaver: (urls, isPlaylist) => new StreamSaver(urls, isPlaylist)
 				, textEditorDiff: (fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent) => new TextEditTabs().AddDiff(fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent)

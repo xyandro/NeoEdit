@@ -15,7 +15,6 @@ LICENSE        : '-license'                                                     
 LINE           : '-line'                                                                                ;
 MULTI          : '-multi'                                                                               ;
 PLAYLIST       : '-playlist' | '-playlists' | '-list' | '-lists'                                        ;
-PROCESSES      : '-pid' | '-process' | '-processes'                                                     ;
 RIP            : '-rip' | '-riper' | '-ripper'                                                          ;
 STREAMSAVE     : '-streamsave' | '-stream' | '-save'                                                    ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                        ;
@@ -44,7 +43,6 @@ LICENSE2       : LICENSE       -> type(LICENSE)       ;
 LINE2          : LINE          -> type(LINE)          ;
 MULTI2         : MULTI         -> type(MULTI)         ;
 PLAYLIST2      : PLAYLIST      -> type(PLAYLIST)      ;
-PROCESSES2     : PROCESSES     -> type(PROCESSES)     ;
 RIP2           : RIP           -> type(RIP)           ;
 STREAMSAVE2    : STREAMSAVE    -> type(STREAMSAVE)    ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
