@@ -130,11 +130,18 @@ namespace NeoEdit.TextEdit.Content.JSON
 		public override ParserNode VisitPair(JSONParser.PairContext context)
 		{
 			var node = GetNode(context, PAIR);
+			var str = context.STRING();
+			var isStr = str != null;
+			str = str ?? context.NUMBER();
 			int start, end;
-			context.name.GetBounds(out start, out end);
-			++start;
-			--end;
-			var id = context.name.Text.Substring(1, context.name.Text.Length - 2);
+			str.GetBounds(out start, out end);
+			var id = str.GetText();
+			if (isStr)
+			{
+				++start;
+				--end;
+				id = id.Substring(1, id.Length - 2);
+			}
 			node.AddAttr(ID, id, start, end);
 			Visit(context.item()).Parent = node;
 			return node;

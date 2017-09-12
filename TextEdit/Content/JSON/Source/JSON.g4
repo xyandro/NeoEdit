@@ -3,7 +3,7 @@ grammar JSON;
 json     : item* EOF ;
 item     : object | array | string | number | constant ;
 object   : LBRACE (pair (COMMA pair)*)? RBRACE ;
-pair     : name=STRING COLON item ;
+pair     : (STRING | NUMBER) COLON item ;
 array    : LBRACKET (item (COMMA item)*)? RBRACKET ;
 string   : STRING ;
 number   : NUMBER ;
