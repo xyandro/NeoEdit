@@ -68,19 +68,6 @@ namespace NeoEdit
 		}
 	}
 
-	class ImageEditParam : Param
-	{
-		readonly List<string> Files;
-		public ImageEditParam(List<string> files) { Files = files; }
-		public override void Execute(string shutdownEvent)
-		{
-			if (!Files.Any())
-				Launcher.Static.LaunchImageEditor();
-			foreach (var file in Files)
-				Launcher.Static.LaunchImageEditor(file);
-		}
-	}
-
 	class LicenseParam : Param
 	{
 		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchLicense();

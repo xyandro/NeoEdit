@@ -11,7 +11,6 @@ DISPLAY        : '-display' | '-displayname' | '-displaytext'                   
 HEXDUMP        : '-binarydump' | '-dump' | '-hexdump'                                                   ;
 HEXEDIT        : '-binary' | '-binaryedit' | '-binaryeditor' | '-hex' | '-hexedit' | '-hexeditor'       ;
 HEXPID         : '-binarypid' | '-hexpid'                                                               ;
-IMAGEEDIT      : '-grab' | '-grabber' | '-image' | '-imageedit' | '-imageeditor'                        ;
 LICENSE        : '-license'                                                                             ;
 LINE           : '-line'                                                                                ;
 MULTI          : '-multi'                                                                               ;
@@ -42,7 +41,6 @@ DISPLAY2       : DISPLAY       -> type(DISPLAY)       ;
 HEXDUMP2       : HEXDUMP       -> type(HEXDUMP)       ;
 HEXEDIT2       : HEXEDIT       -> type(HEXEDIT)       ;
 HEXPID2        : HEXPID        -> type(HEXPID)        ;
-IMAGEEDIT2     : IMAGEEDIT     -> type(IMAGEEDIT)     ;
 LICENSE2       : LICENSE       -> type(LICENSE)       ;
 LINE2          : LINE          -> type(LINE)          ;
 MULTI2         : MULTI         -> type(MULTI)         ;

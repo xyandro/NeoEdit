@@ -15,7 +15,6 @@ namespace NeoEdit.GUI
 		Action<string, bool> hexEditorDumpLauncher;
 		Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFileLauncher;
 		Action<int> hexEditorProcessLauncher;
-		Action<string> imageEditorLauncher;
 		Action licenseLauncher;
 		Action networkLauncher;
 		Action<int?> processesLauncher;
@@ -33,7 +32,6 @@ namespace NeoEdit.GUI
 			, Action<string, bool> hexEditorDump = null
 			, Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFile = null
 			, Action<int> hexEditorProcess = null
-			, Action<string> imageEditor = null
 			, Action license = null
 			, Action network = null
 			, Action<int?> processes = null
@@ -53,7 +51,6 @@ namespace NeoEdit.GUI
 				hexEditorDumpLauncher = hexEditorDump,
 				hexEditorFileLauncher = hexEditorFile,
 				hexEditorProcessLauncher = hexEditorProcess,
-				imageEditorLauncher = imageEditor,
 				licenseLauncher = license,
 				networkLauncher = network,
 				processesLauncher = processes,
@@ -72,7 +69,6 @@ namespace NeoEdit.GUI
 		public void LaunchHexEditorDump(string fileName, bool forceCreate = false) => hexEditorDumpLauncher(fileName, forceCreate);
 		public void LaunchHexEditorFile(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false) => hexEditorFileLauncher?.Invoke(fileName, bytes, codePage, modified, forceCreate);
 		public void LaunchHexEditorProcess(int pid) => hexEditorProcessLauncher?.Invoke(pid);
-		public void LaunchImageEditor(string fileName = null) => imageEditorLauncher?.Invoke(fileName);
 		public void LaunchLicense() => licenseLauncher?.Invoke();
 		public void LaunchNetwork() => networkLauncher?.Invoke();
 		public void LaunchProcesses(int? pid = null) => processesLauncher?.Invoke(pid);

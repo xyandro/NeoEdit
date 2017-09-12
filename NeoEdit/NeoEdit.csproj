@@ -97,10 +97,6 @@
       <Project>{6eab3c48-87bf-4f98-972e-1d0c8b7e03a4}</Project>
       <Name>HexEdit</Name>
     </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)\ImageEdit\ImageEdit.csproj">
-      <Project>{f3918b0e-db9e-4722-8bee-d2b199f72bed}</Project>
-      <Name>ImageEdit</Name>
-    </ProjectReference>
     <ProjectReference Include="$(SolutionDir)\Network\Network.csproj">
       <Project>{64b9f21b-a7fe-4cf9-b764-948505dace60}</Project>
       <Name>Network</Name>
