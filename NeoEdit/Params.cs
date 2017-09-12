@@ -73,11 +73,6 @@ namespace NeoEdit
 		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchLicense();
 	}
 
-	class RipParam : Param
-	{
-		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchRipper();
-	}
-
 	class StreamSaveParam : Param
 	{
 		readonly List<string> Urls;

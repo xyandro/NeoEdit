@@ -15,7 +15,6 @@ LICENSE        : '-license'                                                     
 LINE           : '-line'                                                                                ;
 MULTI          : '-multi'                                                                               ;
 PLAYLIST       : '-playlist' | '-playlists' | '-list' | '-lists'                                        ;
-RIP            : '-rip' | '-riper' | '-ripper'                                                          ;
 STREAMSAVE     : '-streamsave' | '-stream' | '-save'                                                    ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                        ;
 TEXTVIEW       : '-textview' | '-textviewer' | '-view'                                                  ;
@@ -43,7 +42,6 @@ LICENSE2       : LICENSE       -> type(LICENSE)       ;
 LINE2          : LINE          -> type(LINE)          ;
 MULTI2         : MULTI         -> type(MULTI)         ;
 PLAYLIST2      : PLAYLIST      -> type(PLAYLIST)      ;
-RIP2           : RIP           -> type(RIP)           ;
 STREAMSAVE2    : STREAMSAVE    -> type(STREAMSAVE)    ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
 TEXTVIEW2      : TEXTVIEW      -> type(TEXTVIEW)      ;

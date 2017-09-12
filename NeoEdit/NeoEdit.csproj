@@ -97,10 +97,6 @@
       <Project>{6eab3c48-87bf-4f98-972e-1d0c8b7e03a4}</Project>
       <Name>HexEdit</Name>
     </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)\Rip\Rip.csproj">
-      <Project>{C1CD0B7A-0A12-46CA-B326-3E544EE8E963}</Project>
-      <Name>Rip</Name>
-    </ProjectReference>
     <ProjectReference Include="$(SolutionDir)\StreamSave\StreamSave.csproj">
       <Project>{096C5887-E289-40A8-898E-BE8CE7DF3866}</Project>
       <Name>StreamSave</Name>

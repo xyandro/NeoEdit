@@ -24,7 +24,6 @@ namespace NeoEdit.GUI.Controls
 					var xml = XElement.Load(settingsFile);
 					try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
 					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
-					try { ripDirectory = xml.Element(nameof(RipDirectory)).Value; } catch { }
 					try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
 					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
 					try { streamSaveDirectory = xml.Element(nameof(StreamSaveDirectory)).Value; } catch { }
@@ -43,7 +42,6 @@ namespace NeoEdit.GUI.Controls
 				var xml = new XElement("Settings");
 				xml.Add(new XElement(nameof(MinimizeToTray), minimizeToTray));
 				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
-				xml.Add(new XElement(nameof(RipDirectory), ripDirectory));
 				xml.Add(new XElement(nameof(YouTubeDLPath), youTubeDLPath));
 				xml.Add(new XElement(nameof(FFmpegPath), ffmpegPath));
 				xml.Add(new XElement(nameof(StreamSaveDirectory), streamSaveDirectory));
@@ -78,7 +76,6 @@ namespace NeoEdit.GUI.Controls
 				case WindowCommand.Window_Diff: Launcher.Static.LaunchTextEditorDiff(); break;
 				case WindowCommand.Window_Disk: Launcher.Static.LaunchDisk(forceCreate: true); break;
 				case WindowCommand.Window_HexEditor: Launcher.Static.LaunchHexEditorFile(forceCreate: true); break;
-				case WindowCommand.Window_Ripper: Launcher.Static.LaunchRipper(); break;
 				case WindowCommand.Window_StreamSaver: Launcher.Static.LaunchStreamSaver(); break;
 				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditorFile(forceCreate: true); break;
 				case WindowCommand.Window_TextViewer: Launcher.Static.LaunchTextViewer(forceCreate: true); break;
@@ -117,20 +114,6 @@ namespace NeoEdit.GUI.Controls
 
 		static EventHandler minimizeToTrayChanged;
 		public static event EventHandler MinimizeToTrayChanged { add { minimizeToTrayChanged += value; } remove { minimizeToTrayChanged -= value; } }
-
-		static string ripDirectory = Directory.GetCurrentDirectory();
-		public static string RipDirectory
-		{
-			get { return ripDirectory; }
-			set
-			{
-				ripDirectory = value;
-				SaveSettings();
-			}
-		}
-
-		static EventHandler ripDirectoryChanged;
-		public static event EventHandler RipDirectoryChanged { add { ripDirectoryChanged += value; } remove { ripDirectoryChanged -= value; } }
 
 		static string youTubeDLPath = "";
 		public static string YouTubeDLPath
