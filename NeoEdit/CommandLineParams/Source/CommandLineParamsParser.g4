@@ -4,7 +4,7 @@ options { tokenVocab = CommandLineParamsLexer; }
 
 expr          : parameter* EOF ;
 
-parameter     : about | changelog | diff | disk | hexdump | hexedit | hexpid | license | multi | network | processes | rip | streamsave | textedit | textview | wait ;
+parameter     : about | changelog | diff | disk | hexdump | hexedit | hexpid | license | multi | processes | rip | streamsave | textedit | textview | wait ;
 
 about         : ABOUT ;
 changelog     : CHANGELOG ;
@@ -15,7 +15,6 @@ hexedit       : HEXEDIT param* ;
 hexpid        : HEXPID NUMBER* ;
 license       : LICENSE ;
 multi         : MULTI ;
-network       : NETWORK ;
 processes     : PROCESSES pid=NUMBER? ;
 rip           : RIP ;
 streamsave    : STREAMSAVE ((URL | playlist=PLAYLIST)? STRING+)?;

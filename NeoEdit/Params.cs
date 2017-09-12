@@ -73,11 +73,6 @@ namespace NeoEdit
 		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchLicense();
 	}
 
-	class NetworkParam : Param
-	{
-		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchNetwork();
-	}
-
 	class ProcessesParam : Param
 	{
 		readonly int? PID;

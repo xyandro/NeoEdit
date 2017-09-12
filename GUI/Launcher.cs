@@ -16,7 +16,6 @@ namespace NeoEdit.GUI
 		Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFileLauncher;
 		Action<int> hexEditorProcessLauncher;
 		Action licenseLauncher;
-		Action networkLauncher;
 		Action<int?> processesLauncher;
 		Action ripperLauncher;
 		Action<List<string>, bool> streamSaverLauncher;
@@ -33,7 +32,6 @@ namespace NeoEdit.GUI
 			, Action<string, byte[], Coder.CodePage, bool, bool> hexEditorFile = null
 			, Action<int> hexEditorProcess = null
 			, Action license = null
-			, Action network = null
 			, Action<int?> processes = null
 			, Action ripper = null
 			, Action<List<string>, bool> streamSaver = null
@@ -52,7 +50,6 @@ namespace NeoEdit.GUI
 				hexEditorFileLauncher = hexEditorFile,
 				hexEditorProcessLauncher = hexEditorProcess,
 				licenseLauncher = license,
-				networkLauncher = network,
 				processesLauncher = processes,
 				ripperLauncher = ripper,
 				streamSaverLauncher = streamSaver,
@@ -70,7 +67,6 @@ namespace NeoEdit.GUI
 		public void LaunchHexEditorFile(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false) => hexEditorFileLauncher?.Invoke(fileName, bytes, codePage, modified, forceCreate);
 		public void LaunchHexEditorProcess(int pid) => hexEditorProcessLauncher?.Invoke(pid);
 		public void LaunchLicense() => licenseLauncher?.Invoke();
-		public void LaunchNetwork() => networkLauncher?.Invoke();
 		public void LaunchProcesses(int? pid = null) => processesLauncher?.Invoke(pid);
 		public void LaunchRipper() => ripperLauncher?.Invoke();
 		public void LaunchStreamSaver(List<string> urls = null, bool isPlaylist = false) => streamSaverLauncher?.Invoke(urls, isPlaylist);

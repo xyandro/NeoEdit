@@ -6,7 +6,6 @@
 		Window_Diff,
 		Window_Disk,
 		Window_HexEditor,
-		Window_Network,
 		Window_Processes,
 		Window_Ripper,
 		Window_StreamSaver,
