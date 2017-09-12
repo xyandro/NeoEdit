@@ -98,7 +98,7 @@ namespace NeoEdit.TextView
 			canvas.InvalidateVisual();
 		}
 
-		internal void Command_File_CopyPath() => NEClipboard.Current = NEClipboard.CreateString(FileName, false);
+		internal void Command_File_CopyPath() => NEClipboard.Current = NEClipboard.Create(FileName, false);
 
 		internal void Command_File_Split()
 		{
@@ -139,7 +139,7 @@ namespace NeoEdit.TextView
 				result += str;
 			}
 			if (result.Length != 0)
-				NEClipboard.Current = NEClipboard.CreateString(result);
+				NEClipboard.Current = NEClipboard.Create(result);
 		}
 
 		void GetSel(out int startLine, out int startColumn, out int endLine, out int endColumn)

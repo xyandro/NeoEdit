@@ -148,7 +148,7 @@ namespace NeoEdit.TextEdit
 				AddTextEditor(filename);
 		}
 
-		void Command_File_Copy_AllPaths() => NEClipboard.Current = NEClipboard.CreateStrings(ItemTabs.Items.Select(editor => editor.FileName).Where(name => !string.IsNullOrEmpty(name)).ToList(), false);
+		void Command_File_Copy_AllPaths() => NEClipboard.Current = NEClipboard.Create(ItemTabs.Items.Select(editor => editor.FileName).Where(name => !string.IsNullOrEmpty(name)).ToList(), false);
 
 		void Command_File_Shell_Integrate()
 		{
@@ -471,7 +471,7 @@ namespace NeoEdit.TextEdit
 		public void AddClipboardStrings(IEnumerable<string> strings, bool? isCut = null)
 		{
 			newClipboard = newClipboard ?? new NEClipboard();
-			newClipboard.Add(NEClipboardList.CreateStrings(strings));
+			newClipboard.Add(NEClipboardList.Create(strings));
 			newClipboard.IsCut = isCut;
 		}
 

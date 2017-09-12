@@ -7,24 +7,27 @@ namespace NeoEdit.Common.NEClipboards
 {
 	public class NEClipboardList : IEnumerable<NEClipboardItem>
 	{
-		List<NEClipboardItem> neClipboardItems;
+		List<NEClipboardItem> neClipboardItems = new List<NEClipboardItem>();
 
-		public List<string> Strings => neClipboardItems.Select(item => item.String).ToList();
-		public List<object> Objects => neClipboardItems.Select(item => item.Object).ToList();
-		public List<BitmapSource> Images => neClipboardItems.Select(item => item.Image).ToList();
+		public List<string> Strings => neClipboardItems.Where(item => item.Type == NEClipboardItem.NEClipboardItemType.String).Select(item => item.String).ToList();
+		public List<object> Objects => neClipboardItems.Where(item => item.Type == NEClipboardItem.NEClipboardItemType.Object).Select(item => item.Object).ToList();
+		public List<BitmapSource> Images => neClipboardItems.Where(item => item.Type == NEClipboardItem.NEClipboardItemType.Image).Select(item => item.Image).ToList();
 
 		public int Count => neClipboardItems.Count;
 
-		private NEClipboardList() { }
+		internal NEClipboardList() { }
 
-		public static NEClipboardList CreateString(string str) => CreateStrings(new List<string> { str });
-		public static NEClipboardList CreateStrings(IEnumerable<string> strings) => new NEClipboardList { neClipboardItems = strings.Select(str => NEClipboardItem.CreateString(str)).ToList() };
+		public void Add(NEClipboardItem item) => neClipboardItems.Add(item);
+		public void Add(IEnumerable<NEClipboardItem> item) => neClipboardItems.AddRange(item);
 
-		public static NEClipboardList CreateObject(object obj, string text = null) => CreateObjects(new List<object> { obj }, text);
-		public static NEClipboardList CreateObjects(IEnumerable<object> objects, string text = null) => new NEClipboardList() { neClipboardItems = objects.Select(obj => NEClipboardItem.CreateObject(obj, text)).ToList() };
+		public static NEClipboardList Create(string str) => Create(new List<string> { str });
+		public static NEClipboardList Create(IEnumerable<string> strings) => new NEClipboardList { neClipboardItems = strings.Select(str => NEClipboardItem.Create(str)).ToList() };
 
-		public static NEClipboardList CreateImage(BitmapSource image) => CreateImages(new List<BitmapSource> { image });
-		public static NEClipboardList CreateImages(IEnumerable<BitmapSource> images) => new NEClipboardList() { neClipboardItems = images.Select(image => NEClipboardItem.CreateImage(image)).ToList() };
+		public static NEClipboardList Create(object obj) => Create(new List<object> { obj });
+		public static NEClipboardList Create(IEnumerable<object> objects) => new NEClipboardList { neClipboardItems = objects.Select(str => NEClipboardItem.Create(str)).ToList() };
+
+		public static NEClipboardList Create(BitmapSource image) => Create(new List<BitmapSource> { image });
+		public static NEClipboardList Create(IEnumerable<BitmapSource> images) => new NEClipboardList { neClipboardItems = images.Select(str => NEClipboardItem.Create(str)).ToList() };
 
 		public IEnumerator<NEClipboardItem> GetEnumerator() => neClipboardItems.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

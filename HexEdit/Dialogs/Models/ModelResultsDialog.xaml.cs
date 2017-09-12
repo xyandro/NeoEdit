@@ -116,7 +116,7 @@ namespace NeoEdit.HexEdit.Dialogs.Models
 			var values = results.Selected.Select(item => item.Value).ToList();
 			if (values.Count == 0)
 				return;
-			NEClipboard.Current = NEClipboard.CreateStrings(values);
+			NEClipboard.Current = NEClipboard.Create(values);
 		}
 
 		void PasteValues(object sender, RoutedEventArgs e)

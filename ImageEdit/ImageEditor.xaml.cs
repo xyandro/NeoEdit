@@ -305,9 +305,9 @@ namespace NeoEdit.ImageEdit
 
 		void Command_File_Close() => TabsParent.Remove(this);
 
-		void Command_Edit_Copy_Position() => NEClipboard.Current = NEClipboard.CreateString($"{PosX},{PosY}");
+		void Command_Edit_Copy_Position() => NEClipboard.Current = NEClipboard.Create($"{PosX},{PosY}");
 
-		void Command_Edit_Copy_Color() => NEClipboard.Current = NEClipboard.CreateString(PosColor?.ToString());
+		void Command_Edit_Copy_Color() => NEClipboard.Current = NEClipboard.Create(PosColor?.ToString());
 
 		ImageSizeDialog.Result Command_Image_Size_Dialog() => ImageSizeDialog.Run(WindowParent, GetVariables());
 

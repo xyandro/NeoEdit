@@ -63,17 +63,17 @@ namespace NeoEdit.Common.NEClipboards
 		public List<object> Objects => neClipboardLists.SelectMany(list => list.Objects).ToList();
 		public List<BitmapSource> Images => neClipboardLists.SelectMany(list => list.Images).ToList();
 
-		public static NEClipboard CreateString(string text, bool? isCut = null) => CreateStrings(new List<string> { text }, isCut);
-		public static NEClipboard CreateStrings(IEnumerable<string> strings, bool? isCut = null) => CreateStrings(new List<IEnumerable<string>> { strings }, isCut);
-		public static NEClipboard CreateStrings(IEnumerable<IEnumerable<string>> strings, bool? isCut = null) => new NEClipboard() { neClipboardLists = strings.Select(list => NEClipboardList.CreateStrings(list)).ToList(), IsCut = isCut };
+		public static NEClipboard Create(string str, bool? isCut = null) => Create(new List<string> { str }, isCut);
+		public static NEClipboard Create(IEnumerable<string> strings, bool? isCut = null) => Create(new List<IEnumerable<string>> { strings }, isCut);
+		public static NEClipboard Create(IEnumerable<IEnumerable<string>> strings, bool? isCut = null) => new NEClipboard() { neClipboardLists = strings.Select(list => NEClipboardList.Create(list)).ToList(), IsCut = isCut };
 
-		public static NEClipboard CreateObject(object obj, string text = null) => CreateObjects(new List<object> { obj }, text);
-		public static NEClipboard CreateObjects(IEnumerable<object> objects, string text = null) => CreateObjects(new List<IEnumerable<object>> { objects }, text);
-		public static NEClipboard CreateObjects(IEnumerable<IEnumerable<object>> objects, string text = null) => new NEClipboard() { neClipboardLists = objects.Select(list => NEClipboardList.CreateObjects(list, text)).ToList() };
+		public static NEClipboard Create(object obj) => Create(new List<object> { obj });
+		public static NEClipboard Create(IEnumerable<object> objects) => Create(new List<IEnumerable<object>> { objects });
+		public static NEClipboard Create(IEnumerable<IEnumerable<object>> objects) => new NEClipboard() { neClipboardLists = objects.Select(list => NEClipboardList.Create(list)).ToList() };
 
-		public static NEClipboard CreateImage(BitmapSource image) => CreateImages(new List<BitmapSource> { image });
-		public static NEClipboard CreateImages(IEnumerable<BitmapSource> images) => CreateImages(new List<IEnumerable<BitmapSource>> { images });
-		public static NEClipboard CreateImages(IEnumerable<IEnumerable<BitmapSource>> images) => new NEClipboard() { neClipboardLists = images.Select(list => NEClipboardList.CreateImages(list)).ToList() };
+		public static NEClipboard Create(BitmapSource image) => Create(new List<BitmapSource> { image });
+		public static NEClipboard Create(IEnumerable<BitmapSource> images) => Create(new List<IEnumerable<BitmapSource>> { images });
+		public static NEClipboard Create(IEnumerable<IEnumerable<BitmapSource>> images) => new NEClipboard() { neClipboardLists = images.Select(list => NEClipboardList.Create(list)).ToList() };
 
 		static NEClipboard GetSystem()
 		{
@@ -81,9 +81,9 @@ namespace NeoEdit.Common.NEClipboards
 			if (dataObj.GetData(typeof(NEClipboard)) as int? == PID)
 				return null;
 
-			var image = dataObj.GetData(DataFormats.Bitmap, true) as BitmapSource;
-			if (image != null)
-				return CreateImage(image);
+			var result = new NEClipboard();
+			var list = new NEClipboardList();
+			result.Add(list);
 
 			var dropList = (dataObj.GetData(DataFormats.FileDrop) as string[])?.OrderBy(Helpers.SmartComparer(false)).ToList();
 			if ((dropList != null) && (dropList.Count != 0))
@@ -99,29 +99,38 @@ namespace NeoEdit.Common.NEClipboards
 					}
 					catch { }
 				}
-				return CreateStrings(dropList, isCut);
+				list.Add(dropList.Select(str => NEClipboardItem.Create(str)));
+				result.IsCut = isCut;
+			}
+			else
+			{
+				var str = dataObj.GetData(DataFormats.UnicodeText) as string ?? dataObj.GetData(DataFormats.OemText) as string ?? dataObj.GetData(DataFormats.Text) as string ?? dataObj.GetData(typeof(string)) as string;
+				list.Add(NEClipboardItem.Create(str));
 			}
 
-			var str = dataObj.GetData(DataFormats.UnicodeText) as string ?? dataObj.GetData(DataFormats.OemText) as string ?? dataObj.GetData(DataFormats.Text) as string ?? dataObj.GetData(typeof(string)) as string;
-			return CreateString(str ?? "");
+			var image = dataObj.GetData(DataFormats.Bitmap, true) as BitmapSource;
+			if (image != null)
+				list.Add(NEClipboardItem.Create(image));
+
+			return result;
 		}
 
 		void SetSystem()
 		{
 			var dataObj = new DataObject();
 
-			dataObj.SetText(string.Join(" ", neClipboardLists.SelectMany().Select(item => item.Text)), TextDataFormat.UnicodeText);
+			dataObj.SetText(String, TextDataFormat.UnicodeText);
 			dataObj.SetData(typeof(NEClipboard), PID);
 
 			if (IsCut.HasValue)
 			{
 				var dropList = new StringCollection();
-				dropList.AddRange(neClipboardLists.SelectMany().Select(item => item.Text).ToArray());
+				dropList.AddRange(Strings.ToArray());
 				dataObj.SetFileDropList(dropList);
 				dataObj.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(IsCut == true ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
 			}
 
-			var image = neClipboardLists.SelectMany().Select(item => item.Data).OfType<BitmapSource>().FirstOrDefault();
+			var image = Images.FirstOrDefault();
 			if (image != null)
 				dataObj.SetImage(image);
 

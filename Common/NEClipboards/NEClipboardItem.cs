@@ -4,17 +4,25 @@ namespace NeoEdit.Common.NEClipboards
 {
 	public class NEClipboardItem
 	{
-		public string Text { get; private set; }
-		public object Data { get; private set; }
+		public enum NEClipboardItemType
+		{
+			String,
+			Object,
+			Image,
+		}
 
-		private NEClipboardItem() { }
+		object data;
+		public NEClipboardItemType Type { get; }
+		public string String => Type == NEClipboardItemType.String ? data as string : null;
+		public object Object => Type == NEClipboardItemType.Object ? data : null;
+		public BitmapSource Image => Type == NEClipboardItemType.Image ? data as BitmapSource : null;
 
-		public string String => Data as string;
-		public object Object => Data;
-		public BitmapSource Image => Data as BitmapSource;
+		public NEClipboardItem(string str) { data = str ?? ""; Type = NEClipboardItemType.String; }
+		public NEClipboardItem(object obj) { data = obj; Type = NEClipboardItemType.Object; }
+		public NEClipboardItem(BitmapSource image) { data = image; Type = NEClipboardItemType.Image; }
 
-		public static NEClipboardItem CreateString(string str) => new NEClipboardItem { Text = str ?? "<NULL>", Data = str };
-		public static NEClipboardItem CreateObject(object obj, string text = null) => new NEClipboardItem { Text = text ?? obj?.ToString() ?? "<NULL>", Data = obj };
-		public static NEClipboardItem CreateImage(BitmapSource image) => new NEClipboardItem() { Text = "Image", Data = image };
+		static public NEClipboardItem Create(string str) => new NEClipboardItem(str);
+		static public NEClipboardItem Create(object obj) => new NEClipboardItem(obj);
+		static public NEClipboardItem Create(BitmapSource image) => new NEClipboardItem(image);
 	}
 }

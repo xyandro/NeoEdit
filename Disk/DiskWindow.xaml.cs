@@ -301,7 +301,7 @@ namespace NeoEdit.Disk
 			if (Selected.Count == 0)
 				return;
 			var files = Selected.Cast<DiskItem>().Select(item => item.FullName).ToList();
-			NEClipboard.Current = NEClipboard.CreateStrings(files, isCut);
+			NEClipboard.Current = NEClipboard.Create(files, isCut);
 		}
 
 		internal void Command_Edit_Paste()
