@@ -63,7 +63,7 @@ namespace NeoEdit.GUI.Controls
 			FocusVisualStyle = null;
 			AllowDrop = true;
 			VerticalAlignment = VerticalAlignment.Stretch;
-			Drop += (s, e) => OnDrop(e, null);
+			PreviewDrop += (s, e) => OnDrop(e, null);
 		}
 
 		public void SetLayout(TabsLayout layout, int? columns = null, int? rows = null)
@@ -249,28 +249,28 @@ namespace NeoEdit.GUI.Controls
 					TopMost = item;
 		}
 
-		void OnDrop(DragEventArgs e, DockPanel toControl)
+		void OnDrop(DragEventArgs e, DockPanel toPanel)
 		{
-			var fromControl = e.Data.GetData(typeof(DockPanel)) as DockPanel;
-			if ((fromControl == null) || (toControl == fromControl))
+			var fromItems = e.Data.GetData(typeof(List<ItemType>)) as List<ItemType>;
+			if (fromItems == null)
 				return;
 
-			var toData = toControl?.DataContext as ItemType;
-			var fromData = fromControl.DataContext as ItemType;
+			var toIndex = Items.IndexOf(toPanel?.DataContext as ItemType);
+			if (toIndex == -1)
+				toIndex = Items.Count;
 
-			var fromTabs = fromData.TabsParent;
-			if ((fromTabs == null) || ((fromTabs == this) && (toControl == null)))
-				return;
+			foreach (var fromItem in fromItems)
+			{
+				var fromTabs = fromItem.TabsParent;
+				if ((fromTabs == null) || ((fromTabs == this) && (toPanel == null)))
+					continue;
 
-			var fromIndex = fromTabs.Items.IndexOf(fromData);
-			var toIndex = toControl == null ? Items.Count : Items.IndexOf(toData);
-
-			fromTabs.Items.RemoveAt(fromIndex);
-			Items.Insert(toIndex, fromData);
-
-			TopMost = fromData;
-
-			e.Handled = true;
+				fromTabs.Items.Remove(fromItem);
+				Items.Insert(toIndex, fromItem);
+				++toIndex;
+				TopMost = fromItem;
+				e.Handled = true;
+			}
 		}
 
 		class AllItemsControl : ItemsControl
@@ -359,7 +359,10 @@ namespace NeoEdit.GUI.Controls
 			dp.AddHandler(DockPanel.MouseMoveEvent, (MouseEventHandler)((s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
-					DragDrop.DoDragDrop(s as DockPanel, new DataObject(typeof(DockPanel), s as DockPanel), DragDropEffects.Move);
+				{
+					var active = (((s as DockPanel).DataContext as ItemType).TabsParent as Tabs<ItemType, CommandType>).Items.Where(tab => tab.Active).ToList();
+					DragDrop.DoDragDrop(s as DockPanel, new DataObject(typeof(List<ItemType>), active), DragDropEffects.Move);
+				}
 			}));
 
 			dp.AddHandler(DockPanel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
