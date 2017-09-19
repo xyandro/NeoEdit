@@ -87,7 +87,7 @@ namespace NeoEdit.TextEdit
 			{
 				_data = value;
 				Selections.Clear();
-				Regions.Clear();
+				Regions.Values.ForEach(region => region.Clear());
 				Searches.Clear();
 				Bookmarks.Clear();
 				undoRedo.Clear();
@@ -131,7 +131,7 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public int NumSelections { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int NumRegions { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public Dictionary<int, int> NumRegions { get { return UIHelper<TextEditor>.GetPropValue<Dictionary<int, int>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int xScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -232,7 +232,8 @@ namespace NeoEdit.TextEdit
 			SetupStaticKeys();
 		}
 
-		readonly RangeList Selections, Searches, Regions, Bookmarks;
+		readonly RangeList Selections, Searches, Bookmarks;
+		readonly Dictionary<int, RangeList> Regions;
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 		readonly UndoRedo undoRedo;
@@ -264,11 +265,11 @@ namespace NeoEdit.TextEdit
 			undoRedo = new UndoRedo();
 			Selections = new RangeList(SelectionsInvalidated);
 			Searches = new RangeList(SearchesInvalidated);
-			Regions = new RangeList(RegionsInvalidated);
+			Regions = Enumerable.Range(7, 3).ToDictionary(num => num, num => new RangeList(() => RegionsInvalidated(num)));
 			Bookmarks = new RangeList(BookmarksInvalidated);
 
 			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
-			canvasRenderTimer.AddDependency(Selections.Timer, Searches.Timer, Regions.Timer);
+			canvasRenderTimer.AddDependency(new RunOnceTimer[] { Selections.Timer, Searches.Timer }.Concat(Regions.Values.Select(region => region.Timer)).ToArray());
 			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
 
 			OpenFile(fileName, displayName, bytes, codePage, modified);
@@ -678,13 +679,16 @@ namespace NeoEdit.TextEdit
 			results.Add(NEVariable.Constant("xmin", "Selection numeric min", () => Selections.AsParallel().GroupBy(range => GetString(range)).Select(group => double.Parse(group.Key)).DefaultIfEmpty(0).Min()));
 			results.Add(NEVariable.Constant("xmax", "Selection numeric max", () => Selections.AsParallel().GroupBy(range => GetString(range)).Select(group => double.Parse(group.Key)).DefaultIfEmpty(0).Max()));
 
-			var regions = default(List<string>);
-			var initializeRegions = new NEVariableListInitializer(() => regions = Regions.Select(range => GetString(range)).ToList());
-			results.Add(NEVariable.List("r", "Region", () => regions, initializeRegions));
-			results.Add(NEVariable.Constant("rn", "Region count", () => Regions.Count));
-			results.Add(NEVariable.List("rl", "Region length", () => Regions.Select(range => range.Length)));
-			results.Add(NEVariable.Constant("rlmin", "Region min length", () => Regions.Select(range => range.Length).DefaultIfEmpty(0).Min()));
-			results.Add(NEVariable.Constant("rlmax", "Region max length", () => Regions.Select(range => range.Length).DefaultIfEmpty(0).Max()));
+			foreach (var pair in Regions)
+			{
+				var regions = default(List<string>);
+				var initializeRegions = new NEVariableListInitializer(() => regions = pair.Value.Select(range => GetString(range)).ToList());
+				results.Add(NEVariable.List($"r{pair.Key}", $"Region {pair.Key}", () => regions, initializeRegions));
+				results.Add(NEVariable.Constant($"r{pair.Key}n", $"Region {pair.Key} count", () => pair.Value.Count));
+				results.Add(NEVariable.List($"r{pair.Key}l", $"Region {pair.Key} length", () => pair.Value.Select(range => range.Length)));
+				results.Add(NEVariable.Constant($"r{pair.Key}lmin", $"Region {pair.Key} min length", () => pair.Value.Select(range => range.Length).DefaultIfEmpty(0).Min()));
+				results.Add(NEVariable.Constant($"r{pair.Key}lmax", $"Region {pair.Key} max length", () => pair.Value.Select(range => range.Length).DefaultIfEmpty(0).Max()));
+			}
 
 			results.Add(NEVariable.Series("y", "One-based index", index => index + 1));
 			results.Add(NEVariable.Series("z", "Zero-based index", index => index));
@@ -728,7 +732,7 @@ namespace NeoEdit.TextEdit
 			var initializePosEnds = new NEVariableListInitializer(() => posEnds = Selections.Select(range => range.End).ToList());
 			results.Add(NEVariable.List("posend", "Selection position end", () => posEnds, initializePosEnds));
 
-			for (var ctr = 0; ctr <= 9; ++ctr)
+			for (var ctr = 0; ctr < KeysAndValues.Count; ++ctr)
 			{
 				var name = ctr == 0 ? "k" : $"v{ctr}";
 				var desc = ctr == 0 ? "Keys" : $"Values {ctr}";
@@ -946,7 +950,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Navigate_AllRight: Command_Edit_Navigate_AllRight(shiftDown); break;
 				case TextEditCommand.Diff_Selections: Command_Diff_Selections(); break;
 				case TextEditCommand.Diff_SelectedFiles: Command_Diff_SelectedFiles(); break;
-				case TextEditCommand.Diff_Regions: Command_Diff_Regions(); break;
+				case TextEditCommand.Diff_Regions_Region7: Command_Diff_Regions_Region(7); break;
+				case TextEditCommand.Diff_Regions_Region8: Command_Diff_Regions_Region(8); break;
+				case TextEditCommand.Diff_Regions_Region9: Command_Diff_Regions_Region(9); break;
 				case TextEditCommand.Diff_Break: Command_Diff_Break(); break;
 				case TextEditCommand.Diff_IgnoreWhitespace: Command_Diff_IgnoreWhitespace(multiStatus); break;
 				case TextEditCommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(multiStatus); break;
@@ -1079,7 +1085,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as TableConvertDialog.Result); break;
 				case TextEditCommand.Table_TextToTable: Command_Table_TextToTable(dialogResult as TableTextToTableDialog.Result); break;
 				case TextEditCommand.Table_LineSelectionsToTable: Command_Table_LineSelectionsToTable(); break;
-				case TextEditCommand.Table_RegionSelectionsToTable: Command_Table_RegionSelectionsToTable(); break;
+				case TextEditCommand.Table_RegionSelectionsToTable_Region7: Command_Table_RegionSelectionsToTable_Region(7); break;
+				case TextEditCommand.Table_RegionSelectionsToTable_Region8: Command_Table_RegionSelectionsToTable_Region(8); break;
+				case TextEditCommand.Table_RegionSelectionsToTable_Region9: Command_Table_RegionSelectionsToTable_Region(9); break;
 				case TextEditCommand.Table_EditTable: Command_Table_EditTable(dialogResult as TableEditTableDialog.Result); break;
 				case TextEditCommand.Table_AddHeaders: Command_Table_AddHeaders(); break;
 				case TextEditCommand.Table_AddRow: Command_Table_AddRow(); break;
@@ -1158,9 +1166,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Set_Values4: Command_Keys_Set(4); break;
 				case TextEditCommand.Keys_Set_Values5: Command_Keys_Set(5); break;
 				case TextEditCommand.Keys_Set_Values6: Command_Keys_Set(6); break;
-				case TextEditCommand.Keys_Set_Values7: Command_Keys_Set(7); break;
-				case TextEditCommand.Keys_Set_Values8: Command_Keys_Set(8); break;
-				case TextEditCommand.Keys_Set_Values9: Command_Keys_Set(9); break;
 				case TextEditCommand.Keys_Add_Keys: Command_Keys_Add(0); break;
 				case TextEditCommand.Keys_Add_Values1: Command_Keys_Add(1); break;
 				case TextEditCommand.Keys_Add_Values2: Command_Keys_Add(2); break;
@@ -1168,9 +1173,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Add_Values4: Command_Keys_Add(4); break;
 				case TextEditCommand.Keys_Add_Values5: Command_Keys_Add(5); break;
 				case TextEditCommand.Keys_Add_Values6: Command_Keys_Add(6); break;
-				case TextEditCommand.Keys_Add_Values7: Command_Keys_Add(7); break;
-				case TextEditCommand.Keys_Add_Values8: Command_Keys_Add(8); break;
-				case TextEditCommand.Keys_Add_Values9: Command_Keys_Add(9); break;
 				case TextEditCommand.Keys_Remove_Keys: Command_Keys_Remove(0); break;
 				case TextEditCommand.Keys_Remove_Values1: Command_Keys_Remove(1); break;
 				case TextEditCommand.Keys_Remove_Values2: Command_Keys_Remove(2); break;
@@ -1178,18 +1180,12 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Keys_Remove_Values4: Command_Keys_Remove(4); break;
 				case TextEditCommand.Keys_Remove_Values5: Command_Keys_Remove(5); break;
 				case TextEditCommand.Keys_Remove_Values6: Command_Keys_Remove(6); break;
-				case TextEditCommand.Keys_Remove_Values7: Command_Keys_Remove(7); break;
-				case TextEditCommand.Keys_Remove_Values8: Command_Keys_Remove(8); break;
-				case TextEditCommand.Keys_Remove_Values9: Command_Keys_Remove(9); break;
 				case TextEditCommand.Keys_Replace_Values1: Command_Keys_Replace(1); break;
 				case TextEditCommand.Keys_Replace_Values2: Command_Keys_Replace(2); break;
 				case TextEditCommand.Keys_Replace_Values3: Command_Keys_Replace(3); break;
 				case TextEditCommand.Keys_Replace_Values4: Command_Keys_Replace(4); break;
 				case TextEditCommand.Keys_Replace_Values5: Command_Keys_Replace(5); break;
 				case TextEditCommand.Keys_Replace_Values6: Command_Keys_Replace(6); break;
-				case TextEditCommand.Keys_Replace_Values7: Command_Keys_Replace(7); break;
-				case TextEditCommand.Keys_Replace_Values8: Command_Keys_Replace(8); break;
-				case TextEditCommand.Keys_Replace_Values9: Command_Keys_Replace(9); break;
 				case TextEditCommand.Select_All: Command_Select_All(); break;
 				case TextEditCommand.Select_Nothing: Command_Select_Nothing(); break;
 				case TextEditCommand.Select_Limit: Command_Select_Limit(dialogResult as SelectLimitDialog.Result); break;
@@ -1218,26 +1214,66 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Selection_Remove: Command_Select_Selection_Remove(); break;
 				case TextEditCommand.Select_Selection_RemoveBeforeCurrent: Command_Select_Selection_RemoveBeforeCurrent(); break;
 				case TextEditCommand.Select_Selection_RemoveAfterCurrent: Command_Select_Selection_RemoveAfterCurrent(); break;
-				case TextEditCommand.Region_SetSelections: Command_Region_SetSelections(); break;
-				case TextEditCommand.Region_AddSelections: Command_Region_AddSelections(); break;
-				case TextEditCommand.Region_RemoveSelections: Command_Region_RemoveSelections(); break;
-				case TextEditCommand.Region_ReplaceSelections: Command_Region_ReplaceSelections(); break;
-				case TextEditCommand.Region_LimitToSelections: Command_Region_LimitToSelections(); break;
-				case TextEditCommand.Region_Clear: Command_Region_Clear(); break;
-				case TextEditCommand.Region_RepeatBySelections: Command_Region_RepeatBySelections(); break;
-				case TextEditCommand.Region_CopyEnclosingRegion: Command_Region_CopyEnclosingRegion(); break;
-				case TextEditCommand.Region_CopyEnclosingRegionIndex: Command_Region_CopyEnclosingRegionIndex(); break;
-				case TextEditCommand.Region_TransformSelections_Flatten: Command_Region_TransformSelections_Flatten(); break;
-				case TextEditCommand.Region_TransformSelections_Transpose: Command_Region_TransformSelections_Transpose(); break;
-				case TextEditCommand.Region_TransformSelections_RotateLeft: Command_Region_TransformSelections_RotateLeft(); break;
-				case TextEditCommand.Region_TransformSelections_RotateRight: Command_Region_TransformSelections_RotateRight(); break;
-				case TextEditCommand.Region_TransformSelections_Rotate180: Command_Region_TransformSelections_Rotate180(); break;
-				case TextEditCommand.Region_TransformSelections_MirrorHorizontal: Command_Region_TransformSelections_MirrorHorizontal(); break;
-				case TextEditCommand.Region_TransformSelections_MirrorVertical: Command_Region_TransformSelections_MirrorVertical(); break;
-				case TextEditCommand.Region_Select_Regions: Command_Region_Select_Regions(); break;
-				case TextEditCommand.Region_Select_EnclosingRegion: Command_Region_Select_EnclosingRegion(); break;
-				case TextEditCommand.Region_Select_WithEnclosingRegion: Command_Region_Select_WithEnclosingRegion(); break;
-				case TextEditCommand.Region_Select_WithoutEnclosingRegion: Command_Region_Select_WithoutEnclosingRegion(); break;
+				case TextEditCommand.Region_SetSelections_Region7: Command_Region_SetSelections_Region(7); break;
+				case TextEditCommand.Region_SetSelections_Region8: Command_Region_SetSelections_Region(8); break;
+				case TextEditCommand.Region_SetSelections_Region9: Command_Region_SetSelections_Region(9); break;
+				case TextEditCommand.Region_AddSelections_Region7: Command_Region_AddSelections_Region(7); break;
+				case TextEditCommand.Region_AddSelections_Region8: Command_Region_AddSelections_Region(8); break;
+				case TextEditCommand.Region_AddSelections_Region9: Command_Region_AddSelections_Region(9); break;
+				case TextEditCommand.Region_RemoveSelections_Region7: Command_Region_RemoveSelections_Region(7); break;
+				case TextEditCommand.Region_RemoveSelections_Region8: Command_Region_RemoveSelections_Region(8); break;
+				case TextEditCommand.Region_RemoveSelections_Region9: Command_Region_RemoveSelections_Region(9); break;
+				case TextEditCommand.Region_ReplaceSelections_Region7: Command_Region_ReplaceSelections_Region(7); break;
+				case TextEditCommand.Region_ReplaceSelections_Region8: Command_Region_ReplaceSelections_Region(8); break;
+				case TextEditCommand.Region_ReplaceSelections_Region9: Command_Region_ReplaceSelections_Region(9); break;
+				case TextEditCommand.Region_LimitToSelections_Region7: Command_Region_LimitToSelections_Region(7); break;
+				case TextEditCommand.Region_LimitToSelections_Region8: Command_Region_LimitToSelections_Region(8); break;
+				case TextEditCommand.Region_LimitToSelections_Region9: Command_Region_LimitToSelections_Region(9); break;
+				case TextEditCommand.Region_Clear_Region7: Command_Region_Clear_Region(7); break;
+				case TextEditCommand.Region_Clear_Region8: Command_Region_Clear_Region(8); break;
+				case TextEditCommand.Region_Clear_Region9: Command_Region_Clear_Region(9); break;
+				case TextEditCommand.Region_RepeatBySelections_Region7: Command_Region_RepeatBySelections_Region(7); break;
+				case TextEditCommand.Region_RepeatBySelections_Region8: Command_Region_RepeatBySelections_Region(8); break;
+				case TextEditCommand.Region_RepeatBySelections_Region9: Command_Region_RepeatBySelections_Region(9); break;
+				case TextEditCommand.Region_CopyEnclosingRegion_Region7: Command_Region_CopyEnclosingRegion_Region(7); break;
+				case TextEditCommand.Region_CopyEnclosingRegion_Region8: Command_Region_CopyEnclosingRegion_Region(8); break;
+				case TextEditCommand.Region_CopyEnclosingRegion_Region9: Command_Region_CopyEnclosingRegion_Region(9); break;
+				case TextEditCommand.Region_CopyEnclosingRegionIndex_Region7: Command_Region_CopyEnclosingRegionIndex_Region(7); break;
+				case TextEditCommand.Region_CopyEnclosingRegionIndex_Region8: Command_Region_CopyEnclosingRegionIndex_Region(8); break;
+				case TextEditCommand.Region_CopyEnclosingRegionIndex_Region9: Command_Region_CopyEnclosingRegionIndex_Region(9); break;
+				case TextEditCommand.Region_TransformSelections_Flatten_Region7: Command_Region_TransformSelections_Flatten_Region(7); break;
+				case TextEditCommand.Region_TransformSelections_Flatten_Region8: Command_Region_TransformSelections_Flatten_Region(8); break;
+				case TextEditCommand.Region_TransformSelections_Flatten_Region9: Command_Region_TransformSelections_Flatten_Region(9); break;
+				case TextEditCommand.Region_TransformSelections_Transpose_Region7: Command_Region_TransformSelections_Transpose_Region(7); break;
+				case TextEditCommand.Region_TransformSelections_Transpose_Region8: Command_Region_TransformSelections_Transpose_Region(8); break;
+				case TextEditCommand.Region_TransformSelections_Transpose_Region9: Command_Region_TransformSelections_Transpose_Region(9); break;
+				case TextEditCommand.Region_TransformSelections_RotateLeft_Region7: Command_Region_TransformSelections_RotateLeft_Region(7); break;
+				case TextEditCommand.Region_TransformSelections_RotateLeft_Region8: Command_Region_TransformSelections_RotateLeft_Region(8); break;
+				case TextEditCommand.Region_TransformSelections_RotateLeft_Region9: Command_Region_TransformSelections_RotateLeft_Region(9); break;
+				case TextEditCommand.Region_TransformSelections_RotateRight_Region7: Command_Region_TransformSelections_RotateRight_Region(7); break;
+				case TextEditCommand.Region_TransformSelections_RotateRight_Region8: Command_Region_TransformSelections_RotateRight_Region(8); break;
+				case TextEditCommand.Region_TransformSelections_RotateRight_Region9: Command_Region_TransformSelections_RotateRight_Region(9); break;
+				case TextEditCommand.Region_TransformSelections_Rotate180_Region7: Command_Region_TransformSelections_Rotate180_Region(7); break;
+				case TextEditCommand.Region_TransformSelections_Rotate180_Region8: Command_Region_TransformSelections_Rotate180_Region(8); break;
+				case TextEditCommand.Region_TransformSelections_Rotate180_Region9: Command_Region_TransformSelections_Rotate180_Region(9); break;
+				case TextEditCommand.Region_TransformSelections_MirrorHorizontal_Region7: Command_Region_TransformSelections_MirrorHorizontal_Region(7); break;
+				case TextEditCommand.Region_TransformSelections_MirrorHorizontal_Region8: Command_Region_TransformSelections_MirrorHorizontal_Region(8); break;
+				case TextEditCommand.Region_TransformSelections_MirrorHorizontal_Region9: Command_Region_TransformSelections_MirrorHorizontal_Region(9); break;
+				case TextEditCommand.Region_TransformSelections_MirrorVertical_Region7: Command_Region_TransformSelections_MirrorVertical_Region(7); break;
+				case TextEditCommand.Region_TransformSelections_MirrorVertical_Region8: Command_Region_TransformSelections_MirrorVertical_Region(8); break;
+				case TextEditCommand.Region_TransformSelections_MirrorVertical_Region9: Command_Region_TransformSelections_MirrorVertical_Region(9); break;
+				case TextEditCommand.Region_Select_Regions_Region7: Command_Region_Select_Regions_Region(7); break;
+				case TextEditCommand.Region_Select_Regions_Region8: Command_Region_Select_Regions_Region(8); break;
+				case TextEditCommand.Region_Select_Regions_Region9: Command_Region_Select_Regions_Region(9); break;
+				case TextEditCommand.Region_Select_EnclosingRegion_Region7: Command_Region_Select_EnclosingRegion_Region(7); break;
+				case TextEditCommand.Region_Select_EnclosingRegion_Region8: Command_Region_Select_EnclosingRegion_Region(8); break;
+				case TextEditCommand.Region_Select_EnclosingRegion_Region9: Command_Region_Select_EnclosingRegion_Region(9); break;
+				case TextEditCommand.Region_Select_WithEnclosingRegion_Region7: Command_Region_Select_WithEnclosingRegion_Region(7); break;
+				case TextEditCommand.Region_Select_WithEnclosingRegion_Region8: Command_Region_Select_WithEnclosingRegion_Region(8); break;
+				case TextEditCommand.Region_Select_WithEnclosingRegion_Region9: Command_Region_Select_WithEnclosingRegion_Region(9); break;
+				case TextEditCommand.Region_Select_WithoutEnclosingRegion_Region7: Command_Region_Select_WithoutEnclosingRegion_Region(7); break;
+				case TextEditCommand.Region_Select_WithoutEnclosingRegion_Region8: Command_Region_Select_WithoutEnclosingRegion_Region(8); break;
+				case TextEditCommand.Region_Select_WithoutEnclosingRegion_Region9: Command_Region_Select_WithoutEnclosingRegion_Region(9); break;
 				case TextEditCommand.Macro_RepeatLastAction: Command_Macro_RepeatLastAction(); break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}
@@ -1654,11 +1690,11 @@ namespace NeoEdit.TextEdit
 			{
 				Tuple.Create(Selections, Misc.selectionBrush),
 				Tuple.Create(Searches, Misc.searchBrush),
-				Tuple.Create(Regions, Misc.regionBrush),
 			};
+			brushes.AddRange(Regions.Select(pair => Tuple.Create(pair.Value, Misc.regionBrush[pair.Key])));
 
 			NumSelections = Selections.Count;
-			NumRegions = Regions.Count;
+			NumRegions = Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count);
 
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Data.NumLines, startLine + yScrollViewportCeiling);
@@ -1845,9 +1881,9 @@ namespace NeoEdit.TextEdit
 			SetModifiedFlag(isModified);
 		}
 
-		void RegionsInvalidated()
+		void RegionsInvalidated(int useRegion)
 		{
-			Regions.DeOverlap();
+			Regions[useRegion].DeOverlap();
 			canvasRenderTimer.Start();
 		}
 
@@ -1889,9 +1925,9 @@ namespace NeoEdit.TextEdit
 			SetModifiedFlag();
 			CalculateDiff();
 
-			var translateMap = RangeList.GetTranslateMap(ranges, strs, Selections, Regions, Searches, Bookmarks);
+			var translateMap = RangeList.GetTranslateMap(ranges, strs, new RangeList[] { Selections, Searches, Bookmarks }.Concat(Regions.Values).ToArray());
 			Selections.Translate(translateMap);
-			Regions.Translate(translateMap);
+			Regions.Values.ForEach(region => region.Translate(translateMap));
 			var searchLens = Searches.Select(range => range.Length).ToList();
 			Searches.Translate(translateMap);
 			Searches.Replace(Searches.Where((range, index) => searchLens[index] == range.Length).ToList());

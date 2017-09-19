@@ -113,13 +113,13 @@ namespace NeoEdit.TextEdit
 			OpenTable(new Table(rows, false));
 		}
 
-		void Command_Table_RegionSelectionsToTable()
+		void Command_Table_RegionSelectionsToTable_Region(int useRegion)
 		{
 			if (!Selections.Any())
 				return;
 
 			var sels = GetSelectionStrings();
-			var regions = GetEnclosingRegions();
+			var regions = GetEnclosingRegions(useRegion);
 			var rows = Enumerable.Range(0, Selections.Count).GroupBy(index => regions[index]).Select(group => group.Select(index => sels[index]).ToList()).ToList();
 			OpenTable(new Table(rows, false));
 		}

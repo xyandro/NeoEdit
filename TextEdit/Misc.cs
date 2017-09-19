@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
+using NeoEdit.Common;
 
 namespace NeoEdit.TextEdit
 {
@@ -11,7 +13,7 @@ namespace NeoEdit.TextEdit
 		{
 			selectionBrush.Freeze();
 			searchBrush.Freeze();
-			regionBrush.Freeze();
+			regionBrush.Values.ForEach(brush => brush.Freeze());
 			visibleCursorBrush.Freeze();
 			diffMajorBrush.Freeze();
 			diffMinorBrush.Freeze();
@@ -21,7 +23,12 @@ namespace NeoEdit.TextEdit
 
 		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
 		static internal readonly Brush searchBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
-		static internal readonly Brush regionBrush = new SolidColorBrush(Color.FromArgb(64, 0, 128, 0));
+		static internal readonly Dictionary<int, Brush> regionBrush = new Dictionary<int, Brush>
+		{
+			[7] = new SolidColorBrush(Color.FromArgb(64, 0, 128, 0)),
+			[8] = new SolidColorBrush(Color.FromArgb(64, 128, 0, 0)),
+			[9] = new SolidColorBrush(Color.FromArgb(64, 0, 0, 128)),
+		};
 		static internal readonly Brush visibleCursorBrush = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
 		static internal readonly Brush diffMajorBrush = new SolidColorBrush(Color.FromArgb(192, 239, 203, 5));
 		static internal readonly Brush diffMinorBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));

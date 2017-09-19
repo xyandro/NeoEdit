@@ -5,13 +5,16 @@
 	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
 	Title="Sort" SizeToContent="WidthAndHeight">
 
-	<StackPanel Margin="10" Width="300">
+	<StackPanel Margin="10" Width="350">
 		<GroupBox Header="What to sort:">
 			<StackPanel>
 				<UniformGrid Columns="3">
 					<RadioButton GroupName="sortScope" Content="_Selections" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Selections}"/>
 					<RadioButton GroupName="sortScope" Content="_Lines" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Lines}"/>
 					<RadioButton GroupName="sortScope" Content="_Regions" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Regions}"/>
+					<RadioButton GroupName="useRegion" Content="Region _7" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=7}" Margin="0,10,0,0"/>
+					<RadioButton GroupName="useRegion" Content="Region _8" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=8}" Margin="0,10,0,0"/>
+					<RadioButton GroupName="useRegion" Content="Region _9" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=9}" Margin="0,10,0,0"/>
 				</UniformGrid>
 			</StackPanel>
 		</GroupBox>

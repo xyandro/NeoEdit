@@ -149,7 +149,11 @@
 		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
 		<textEdit:TextEditMenuItem Header="Se_lections" CommandEnum="Diff_Selections"/>
 		<textEdit:TextEditMenuItem Header="Selected _Files" CommandEnum="Diff_SelectedFiles"/>
-		<textEdit:TextEditMenuItem Header="Re_gions" CommandEnum="Diff_Regions"/>
+		<MenuItem Header="Re_gions">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Diff_Regions_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Diff_Regions_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Diff_Regions_Region9"/>
+		</MenuItem>
 		<textEdit:TextEditMenuItem Header="_Break" CommandEnum="Diff_Break"/>
 		<Separator/>
 		<textEdit:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
@@ -366,7 +370,11 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Te_xt To Table" CommandEnum="Table_TextToTable"/>
 		<textEdit:TextEditMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
-		<textEdit:TextEditMenuItem Header="Re_gion Selections To Table" CommandEnum="Table_RegionSelectionsToTable"/>
+		<MenuItem Header="Re_gion Selections To Table">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Table_RegionSelectionsToTable_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Table_RegionSelectionsToTable_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Table_RegionSelectionsToTable_Region9"/>
+		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Ed_it Table" CommandEnum="Table_EditTable"/>
 		<textEdit:TextEditMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
@@ -492,9 +500,6 @@
 			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Set_Values4"/>
 			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Set_Values5"/>
 			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Set_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Set_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Set_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Set_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Add">
 			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Add_Keys"/>
@@ -504,9 +509,6 @@
 			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Add_Values4"/>
 			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Add_Values5"/>
 			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Add_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Add_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Add_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Add_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Remove">
 			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Remove_Keys"/>
@@ -516,9 +518,6 @@
 			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Remove_Values4"/>
 			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Remove_Values5"/>
 			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Remove_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Remove_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Remove_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Remove_Values9"/>
 		</MenuItem>
 		<MenuItem Header="R_eplace">
 			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Replace_Values1"/>
@@ -527,9 +526,6 @@
 			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Replace_Values4"/>
 			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Replace_Values5"/>
 			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Replace_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Replace_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Replace_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Replace_Values9"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Select">
@@ -572,33 +568,113 @@
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Region">
-		<textEdit:TextEditMenuItem Header="S_et Selections" CommandEnum="Region_SetSelections"/>
-		<textEdit:TextEditMenuItem Header="_Add Selections" CommandEnum="Region_AddSelections"/>
-		<textEdit:TextEditMenuItem Header="_Remove Selections" CommandEnum="Region_RemoveSelections"/>
-		<textEdit:TextEditMenuItem Header="Re_place Selections" CommandEnum="Region_ReplaceSelections"/>
-		<textEdit:TextEditMenuItem Header="_Limit To Selections" CommandEnum="Region_LimitToSelections"/>
-		<textEdit:TextEditMenuItem Header="_Clear" CommandEnum="Region_Clear"/>
+		<MenuItem Header="S_et Selections">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_SetSelections_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_SetSelections_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_SetSelections_Region9"/>
+		</MenuItem>
+		<MenuItem Header="_Add Selections">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_AddSelections_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_AddSelections_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_AddSelections_Region9"/>
+		</MenuItem>
+		<MenuItem Header="_Remove Selections">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_RemoveSelections_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_RemoveSelections_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_RemoveSelections_Region9"/>
+		</MenuItem>
+		<MenuItem Header="Re_place Selections">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_ReplaceSelections_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_ReplaceSelections_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_ReplaceSelections_Region9"/>
+		</MenuItem>
+		<MenuItem Header="_Limit To Selections">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_LimitToSelections_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_LimitToSelections_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_LimitToSelections_Region9"/>
+		</MenuItem>
+		<MenuItem Header="_Clear">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Clear_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Clear_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Clear_Region9"/>
+		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Repeat _By Selections" CommandEnum="Region_RepeatBySelections"/>
+		<MenuItem Header="Repeat _By Selections">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_RepeatBySelections_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_RepeatBySelections_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_RepeatBySelections_Region9"/>
+		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="C_opy Enclosing Region" CommandEnum="Region_CopyEnclosingRegion"/>
-		<textEdit:TextEditMenuItem Header="Copy Enclosing Region _Index" CommandEnum="Region_CopyEnclosingRegionIndex"/>
+		<MenuItem Header="C_opy Enclosing Region">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegion_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegion_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegion_Region9"/>
+		</MenuItem>
+		<MenuItem Header="Copy Enclosing Region _Index">
+			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegionIndex_Region7"/>
+			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegionIndex_Region8"/>
+			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegionIndex_Region9"/>
+		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Transform Selections">
-			<textEdit:TextEditMenuItem Header="_Flatten" CommandEnum="Region_TransformSelections_Flatten"/>
-			<textEdit:TextEditMenuItem Header="_Transpose" CommandEnum="Region_TransformSelections_Transpose"/>
-			<textEdit:TextEditMenuItem Header="Rotate _Left" CommandEnum="Region_TransformSelections_RotateLeft"/>
-			<textEdit:TextEditMenuItem Header="Rotate _Right" CommandEnum="Region_TransformSelections_RotateRight"/>
-			<textEdit:TextEditMenuItem Header="Rotate _180" CommandEnum="Region_TransformSelections_Rotate180"/>
-			<textEdit:TextEditMenuItem Header="Mirror _Horizontal" CommandEnum="Region_TransformSelections_MirrorHorizontal"/>
-			<textEdit:TextEditMenuItem Header="Mirror _Vertical" CommandEnum="Region_TransformSelections_MirrorVertical"/>
+			<MenuItem Header="_Flatten">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Flatten_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Flatten_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Flatten_Region9"/>
+			</MenuItem>
+			<MenuItem Header="_Transpose">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Transpose_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Transpose_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Transpose_Region9"/>
+			</MenuItem>
+			<MenuItem Header="Rotate _Left">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateLeft_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateLeft_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateLeft_Region9"/>
+			</MenuItem>
+			<MenuItem Header="Rotate _Right">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateRight_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateRight_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateRight_Region9"/>
+			</MenuItem>
+			<MenuItem Header="Rotate _180">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Rotate180_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Rotate180_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Rotate180_Region9"/>
+			</MenuItem>
+			<MenuItem Header="Mirror _Horizontal">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region9"/>
+			</MenuItem>
+			<MenuItem Header="Mirror _Vertical">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorVertical_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorVertical_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorVertical_Region9"/>
+			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="_Regions" CommandEnum="Region_Select_Regions"/>
-			<textEdit:TextEditMenuItem Header="_Enclosing Region" CommandEnum="Region_Select_EnclosingRegion"/>
-			<textEdit:TextEditMenuItem Header="_With Enclosing Region" CommandEnum="Region_Select_WithEnclosingRegion"/>
-			<textEdit:TextEditMenuItem Header="W_ithout Enclosing Region" CommandEnum="Region_Select_WithoutEnclosingRegion"/>
+			<MenuItem Header="_Regions">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Select_Regions_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Select_Regions_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Select_Regions_Region9"/>
+			</MenuItem>
+			<MenuItem Header="_Enclosing Region">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Select_EnclosingRegion_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Select_EnclosingRegion_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Select_EnclosingRegion_Region9"/>
+			</MenuItem>
+			<MenuItem Header="_With Enclosing Region">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Select_WithEnclosingRegion_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Select_WithEnclosingRegion_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Select_WithEnclosingRegion_Region9"/>
+			</MenuItem>
+			<MenuItem Header="W_ithout Enclosing Region">
+				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Select_WithoutEnclosingRegion_Region7"/>
+				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Select_WithoutEnclosingRegion_Region8"/>
+				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Select_WithoutEnclosingRegion_Region9"/>
+			</MenuItem>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_View">

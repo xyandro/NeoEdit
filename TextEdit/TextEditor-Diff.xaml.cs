@@ -79,7 +79,7 @@ namespace NeoEdit.TextEdit
 				tabs.AddDiff(fileName1: batch[0], fileName2: batch[1]);
 		}
 
-		void Command_Diff_Regions() => DoRangesDiff(Regions);
+		void Command_Diff_Regions_Region(int useRegion) => DoRangesDiff(Regions[useRegion]);
 
 		void Command_Diff_Break() => DiffTarget = null;
 

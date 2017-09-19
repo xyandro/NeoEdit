@@ -53,23 +53,24 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		List<Range> GetEnclosingRegions(bool useAllRegions = false, bool mustBeInRegion = true)
+		List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
 		{
+			var useRegions = Regions[useRegion];
 			var regions = new List<Range>();
 			var currentRegion = 0;
 			var used = false;
 			foreach (var selection in Selections)
 			{
-				while ((currentRegion < Regions.Count) && (Regions[currentRegion].End <= selection.Start))
+				while ((currentRegion < useRegions.Count) && (useRegions[currentRegion].End <= selection.Start))
 				{
 					if ((useAllRegions) && (!used))
 						throw new Exception("Extra regions found.");
 					used = false;
 					++currentRegion;
 				}
-				if ((currentRegion < Regions.Count) && (selection.Start >= Regions[currentRegion].Start) && (selection.End <= Regions[currentRegion].End))
+				if ((currentRegion < useRegions.Count) && (selection.Start >= useRegions[currentRegion].Start) && (selection.End <= useRegions[currentRegion].End))
 				{
-					regions.Add(Regions[currentRegion]);
+					regions.Add(useRegions[currentRegion]);
 					used = true;
 				}
 				else if (mustBeInRegion)
@@ -77,7 +78,7 @@ namespace NeoEdit.TextEdit
 				else
 					regions.Add(null);
 			}
-			if ((Selections.Any()) && (useAllRegions) && (currentRegion != Regions.Count - 1))
+			if ((Selections.Any()) && (useAllRegions) && (currentRegion != useRegions.Count - 1))
 				throw new Exception("Extra regions found.");
 
 			return regions;
@@ -143,14 +144,14 @@ namespace NeoEdit.TextEdit
 
 		List<Range> GetSortLines() => Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
 
-		List<Range> GetSortSource(SortScope scope)
+		List<Range> GetSortSource(SortScope scope, int useRegion)
 		{
 			List<Range> sortSource = null;
 			switch (scope)
 			{
 				case SortScope.Selections: sortSource = Selections.ToList(); break;
 				case SortScope.Lines: sortSource = GetSortLines(); break;
-				case SortScope.Regions: sortSource = GetEnclosingRegions(true); break;
+				case SortScope.Regions: sortSource = GetEnclosingRegions(useRegion, true); break;
 				default: throw new Exception("Invalid sort type");
 			}
 
@@ -523,7 +524,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_Sort(EditSortDialog.Result result)
 		{
-			var regions = GetSortSource(result.SortScope);
+			var regions = GetSortSource(result.SortScope, result.UseRegion);
 			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
 			if (regions.Count != ordering.Count)
 				throw new Exception("Ordering misaligned");
@@ -547,7 +548,7 @@ namespace NeoEdit.TextEdit
 
 			Selections.Replace(newSelections);
 			if (result.SortScope == SortScope.Regions)
-				Regions.Replace(newRegions);
+				Regions[result.UseRegion].Replace(newRegions);
 		}
 
 		EditConvertDialog.Result Command_Edit_Convert_Dialog() => EditConvertDialog.Run(WindowParent);
