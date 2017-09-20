@@ -183,14 +183,6 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_Split(SelectSplitDialog.Result result) => Selections.Replace(Selections.AsParallel().AsOrdered().SelectMany(range => SelectSplit(range, result)).ToList());
 
-		void Command_Select_Regions() => Selections.Replace(Regions);
-
-		void Command_Select_FindResults()
-		{
-			Selections.Replace(Searches);
-			Searches.Clear();
-		}
-
 		void Command_Select_Selection_First()
 		{
 			CurrentSelection = 0;

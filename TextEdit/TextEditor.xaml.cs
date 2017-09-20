@@ -1208,8 +1208,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_RepeatedLines: Command_Select_RepeatedLines(); break;
 				case TextEditCommand.Select_ByCount: Command_Select_ByCount(dialogResult as SelectByCountDialog.Result); break;
 				case TextEditCommand.Select_Split: Command_Select_Split(dialogResult as SelectSplitDialog.Result); break;
-				case TextEditCommand.Select_Regions: Command_Select_Regions(); break;
-				case TextEditCommand.Select_FindResults: Command_Select_FindResults(); break;
 				case TextEditCommand.Select_Selection_First: Command_Select_Selection_First(); break;
 				case TextEditCommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;
 				case TextEditCommand.Select_Selection_Center: Command_Select_Selection_Center(); break;
@@ -1225,11 +1223,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_RemoveSelections: Command_Region_RemoveSelections(); break;
 				case TextEditCommand.Region_ReplaceSelections: Command_Region_ReplaceSelections(); break;
 				case TextEditCommand.Region_LimitToSelections: Command_Region_LimitToSelections(); break;
-				case TextEditCommand.Region_RepeatBySelections: Command_Region_RepeatBySelections(); break;
 				case TextEditCommand.Region_Clear: Command_Region_Clear(); break;
-				case TextEditCommand.Region_WithEnclosingRegion: Command_Region_WithEnclosingRegion(); break;
-				case TextEditCommand.Region_WithoutEnclosingRegion: Command_Region_WithoutEnclosingRegion(); break;
-				case TextEditCommand.Region_SelectEnclosingRegion: Command_Region_SelectEnclosingRegion(); break;
+				case TextEditCommand.Region_RepeatBySelections: Command_Region_RepeatBySelections(); break;
 				case TextEditCommand.Region_CopyEnclosingRegion: Command_Region_CopyEnclosingRegion(); break;
 				case TextEditCommand.Region_CopyEnclosingRegionIndex: Command_Region_CopyEnclosingRegionIndex(); break;
 				case TextEditCommand.Region_TransformSelections_Flatten: Command_Region_TransformSelections_Flatten(); break;
@@ -1239,6 +1234,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_TransformSelections_Rotate180: Command_Region_TransformSelections_Rotate180(); break;
 				case TextEditCommand.Region_TransformSelections_MirrorHorizontal: Command_Region_TransformSelections_MirrorHorizontal(); break;
 				case TextEditCommand.Region_TransformSelections_MirrorVertical: Command_Region_TransformSelections_MirrorVertical(); break;
+				case TextEditCommand.Region_Select_Regions: Command_Region_Select_Regions(); break;
+				case TextEditCommand.Region_Select_EnclosingRegion: Command_Region_Select_EnclosingRegion(); break;
+				case TextEditCommand.Region_Select_WithEnclosingRegion: Command_Region_Select_WithEnclosingRegion(); break;
+				case TextEditCommand.Region_Select_WithoutEnclosingRegion: Command_Region_Select_WithoutEnclosingRegion(); break;
 				case TextEditCommand.Macro_RepeatLastAction: Command_Macro_RepeatLastAction(); break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}

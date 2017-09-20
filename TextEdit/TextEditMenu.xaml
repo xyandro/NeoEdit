@@ -558,9 +558,6 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="S_plit" CommandEnum="Select_Split"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Regions" CommandEnum="Select_Regions"/>
-		<textEdit:TextEditMenuItem Header="_Find Results" CommandEnum="Select_FindResults"/>
-		<Separator/>
 		<MenuItem Header="_Selection">
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Select_Selection_First"/>
 			<textEdit:TextEditMenuItem Header="Center _Vertically" CommandEnum="Select_Selection_CenterVertically"/>
@@ -575,22 +572,17 @@
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Region">
-		<textEdit:TextEditMenuItem Header="_Set Selections" CommandEnum="Region_SetSelections"/>
+		<textEdit:TextEditMenuItem Header="S_et Selections" CommandEnum="Region_SetSelections"/>
 		<textEdit:TextEditMenuItem Header="_Add Selections" CommandEnum="Region_AddSelections"/>
 		<textEdit:TextEditMenuItem Header="_Remove Selections" CommandEnum="Region_RemoveSelections"/>
 		<textEdit:TextEditMenuItem Header="Re_place Selections" CommandEnum="Region_ReplaceSelections"/>
 		<textEdit:TextEditMenuItem Header="_Limit To Selections" CommandEnum="Region_LimitToSelections"/>
+		<textEdit:TextEditMenuItem Header="_Clear" CommandEnum="Region_Clear"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Repeat _By Selections" CommandEnum="Region_RepeatBySelections"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Clear" CommandEnum="Region_Clear"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="_With Enclosing Region" CommandEnum="Region_WithEnclosingRegion"/>
-		<textEdit:TextEditMenuItem Header="W_ithout Enclosing Region" CommandEnum="Region_WithoutEnclosingRegion"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="Select _Enclosing Region" CommandEnum="Region_SelectEnclosingRegion"/>
-		<textEdit:TextEditMenuItem Header="Copy E_nclosing Region" CommandEnum="Region_CopyEnclosingRegion"/>
-		<textEdit:TextEditMenuItem Header="Copy Encl_osing Region Index" CommandEnum="Region_CopyEnclosingRegionIndex"/>
+		<textEdit:TextEditMenuItem Header="C_opy Enclosing Region" CommandEnum="Region_CopyEnclosingRegion"/>
+		<textEdit:TextEditMenuItem Header="Copy Enclosing Region _Index" CommandEnum="Region_CopyEnclosingRegionIndex"/>
 		<Separator/>
 		<MenuItem Header="_Transform Selections">
 			<textEdit:TextEditMenuItem Header="_Flatten" CommandEnum="Region_TransformSelections_Flatten"/>
@@ -600,6 +592,13 @@
 			<textEdit:TextEditMenuItem Header="Rotate _180" CommandEnum="Region_TransformSelections_Rotate180"/>
 			<textEdit:TextEditMenuItem Header="Mirror _Horizontal" CommandEnum="Region_TransformSelections_MirrorHorizontal"/>
 			<textEdit:TextEditMenuItem Header="Mirror _Vertical" CommandEnum="Region_TransformSelections_MirrorVertical"/>
+		</MenuItem>
+		<Separator/>
+		<MenuItem Header="_Select">
+			<textEdit:TextEditMenuItem Header="_Regions" CommandEnum="Region_Select_Regions"/>
+			<textEdit:TextEditMenuItem Header="_Enclosing Region" CommandEnum="Region_Select_EnclosingRegion"/>
+			<textEdit:TextEditMenuItem Header="_With Enclosing Region" CommandEnum="Region_Select_WithEnclosingRegion"/>
+			<textEdit:TextEditMenuItem Header="W_ithout Enclosing Region" CommandEnum="Region_Select_WithoutEnclosingRegion"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_View">

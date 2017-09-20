@@ -119,6 +119,8 @@ namespace NeoEdit.TextEdit
 			Regions.Replace(regions);
 		}
 
+		void Command_Region_Clear() => Regions.Clear();
+
 		void Command_Region_RepeatBySelections()
 		{
 			var regionsWithSelections = GetRegionsWithSelections();
@@ -141,14 +143,6 @@ namespace NeoEdit.TextEdit
 			Regions.Replace(newRegions);
 			Selections.Replace(newSelections);
 		}
-
-		void Command_Region_Clear() => Regions.Clear();
-
-		void Command_Region_WithEnclosingRegion() => Selections.Replace(Selections.Zip(GetEnclosingRegions(mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
-
-		void Command_Region_WithoutEnclosingRegion() => Selections.Replace(Selections.Zip(GetEnclosingRegions(mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList());
-
-		void Command_Region_SelectEnclosingRegion() => Selections.Replace(GetEnclosingRegions());
 
 		void Command_Region_CopyEnclosingRegion() => SetClipboardStrings(GetEnclosingRegions().Select(range => GetString(range)).ToList());
 
@@ -199,5 +193,13 @@ namespace NeoEdit.TextEdit
 			regions.Reverse();
 			SetRegionsWithSelectionsText(regions);
 		}
+
+		void Command_Region_Select_Regions() => Selections.Replace(Regions);
+
+		void Command_Region_Select_EnclosingRegion() => Selections.Replace(GetEnclosingRegions());
+
+		void Command_Region_Select_WithEnclosingRegion() => Selections.Replace(Selections.Zip(GetEnclosingRegions(mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
+
+		void Command_Region_Select_WithoutEnclosingRegion() => Selections.Replace(Selections.Zip(GetEnclosingRegions(mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList());
 	}
 }
