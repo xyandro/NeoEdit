@@ -13,7 +13,6 @@ namespace NeoEdit.TextEdit.Dialogs
 			public string TakeCount { get; set; }
 			public string NumSelections { get; set; }
 			public bool JoinSelections { get; set; }
-			public bool WithinRegions { get; set; }
 		}
 
 		[DepProp]
@@ -26,8 +25,6 @@ namespace NeoEdit.TextEdit.Dialogs
 		public string NumSelections { get { return UIHelper<SelectLimitDialog>.GetPropValue<string>(this); } set { UIHelper<SelectLimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool JoinSelections { get { return UIHelper<SelectLimitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectLimitDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool WithinRegions { get { return UIHelper<SelectLimitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectLimitDialog>.SetPropValue(this, value); } }
 
 		public NEVariables Variables { get; }
 
@@ -40,7 +37,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 			FirstSelection = EveryNth = TakeCount = "1";
 			NumSelections = "xn";
-			JoinSelections = WithinRegions = false;
+			JoinSelections = false;
 		}
 
 		Result result = null;
@@ -50,7 +47,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			everyNth.AddCurrentSuggestion();
 			takeCount.AddCurrentSuggestion();
 			numSelections.AddCurrentSuggestion();
-			result = new Result { FirstSelection = FirstSelection, EveryNth = EveryNth, TakeCount = TakeCount, NumSelections = NumSelections, JoinSelections = JoinSelections, WithinRegions = WithinRegions };
+			result = new Result { FirstSelection = FirstSelection, EveryNth = EveryNth, TakeCount = TakeCount, NumSelections = NumSelections, JoinSelections = JoinSelections };
 			DialogResult = true;
 		}
 

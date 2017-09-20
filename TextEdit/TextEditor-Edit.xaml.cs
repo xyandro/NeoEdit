@@ -101,7 +101,7 @@ namespace NeoEdit.TextEdit
 			return MoveCursor(range, Bookmarks[index].Start, selecting);
 		}
 
-		List<int> GetOrdering(bool withinRegions, SortType type, bool caseSensitive, bool ascending)
+		List<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)
 		{
 			var entries = Selections.Select((range, index) => new { value = GetString(range), index = index }).ToList();
 
@@ -136,13 +136,6 @@ namespace NeoEdit.TextEdit
 						entries = OrderByAscDesc(entries, entry => frequency[entry.value], ascending).ToList();
 					}
 					break;
-			}
-
-			if (withinRegions)
-			{
-				var regions = GetEnclosingRegions();
-				var regionIndexes = Regions.Select((region, index) => new { region = region, index = index }).ToDictionary(obj => obj.region, obj => obj.index);
-				entries = entries.OrderBy(entry => regionIndexes[regions[entry.index]]).ToList();
 			}
 
 			return entries.Select(entry => entry.index).ToList();
@@ -531,7 +524,7 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Sort(EditSortDialog.Result result)
 		{
 			var regions = GetSortSource(result.SortScope);
-			var ordering = GetOrdering(result.WithinRegions, result.SortType, result.CaseSensitive, result.Ascending);
+			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
 			if (regions.Count != ordering.Count)
 				throw new Exception("Ordering misaligned");
 

@@ -88,28 +88,14 @@ namespace NeoEdit.TextEdit
 			var takeCount = new NEExpression(result.TakeCount).EvaluateRow<int>(variables);
 			var numSels = new NEExpression(result.NumSelections).EvaluateRow<int>(variables);
 
-			List<Range> regions;
-			if (result.WithinRegions)
-				regions = GetEnclosingRegions();
+			var sels = Selections.Skip(firstSelection - 1);
+			if (result.JoinSelections)
+				sels = sels.Batch(everyNth).Select(batch => batch.Take(takeCount)).Select(batch => new Range(batch.Last().End, batch.First().Start));
 			else
-				regions = Enumerable.Repeat(FullRange, Selections.Count).ToList();
+				sels = sels.EveryNth(everyNth, takeCount);
+			sels = sels.Take(numSels);
 
-			var selectionsInRegions = Selections.Zip(regions, (selection, region) => new { selection, region }).GroupBy(obj => obj.region).Select(group => group.Select(obj => obj.selection).ToList()).ToList();
-
-			var sels = new List<Range>();
-			foreach (var selectionsInRegion in selectionsInRegions)
-			{
-				var take = selectionsInRegion as IEnumerable<Range>;
-
-				take = take.Skip(firstSelection - 1);
-				if (result.JoinSelections)
-					take = take.Batch(everyNth).Select(batch => batch.Take(takeCount)).Select(batch => new Range(batch.Last().End, batch.First().Start));
-				else
-					take = take.EveryNth(everyNth, takeCount);
-				take = take.Take(numSels);
-				sels.AddRange(take);
-			}
-			Selections.Replace(sels);
+			Selections.Replace(sels.ToList());
 		}
 
 		void Command_Select_Lines(bool includeEndings)

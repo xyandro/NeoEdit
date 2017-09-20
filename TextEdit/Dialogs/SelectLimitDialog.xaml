@@ -47,10 +47,7 @@
 		<Label Grid.Row="7" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
 		<guiControls:NEExpressionResults Grid.Row="7" Grid.Column="1" NumResults="1" Expression="{Binding NumSelections, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal">
-			<CheckBox Content="_Join Selections" IsChecked="{Binding JoinSelections, ElementName=self}"/>
-			<CheckBox Content="_Within Regions" Margin="10,0,0,0" IsChecked="{Binding WithinRegions, ElementName=self}"/>
-		</StackPanel>
+		<CheckBox Grid.Row="8" Grid.Column="1" Content="_Join Selections" IsChecked="{Binding JoinSelections, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="10" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
