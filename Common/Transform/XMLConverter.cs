@@ -108,10 +108,15 @@ namespace NeoEdit.Common.Transform
 			}
 			else if ((type.IsGenericType) && ((type.GetGenericTypeDefinition() == typeof(List<>)) || (type.GetGenericTypeDefinition() == typeof(HashSet<>))))
 			{
-				var items = obj as IEnumerable;
-				var itemType = type.GetGenericArguments()[0];
-				foreach (var item in items)
-					xml.Add(rToXML(itemTag, item, itemType, true, references));
+				if (obj is IEnumerable<char>)
+					xml.Add(new XAttribute("Values", Coder.BytesToString(Coder.StringToBytes(new string((obj as IEnumerable<char>).ToArray()), Coder.CodePage.UTF8), Coder.CodePage.Base64)));
+				else
+				{
+					var items = obj as IEnumerable;
+					var itemType = type.GetGenericArguments()[0];
+					foreach (var item in items)
+						xml.Add(rToXML(itemTag, item, itemType, true, references));
+				}
 			}
 			else if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Dictionary<,>)))
 			{
@@ -196,8 +201,16 @@ namespace NeoEdit.Common.Transform
 				var obj = references[guid] = type.GetConstructor(Type.EmptyTypes).Invoke(null);
 				var itemType = type.GetGenericArguments()[0];
 				var addMethod = type.GetMethod("Add");
-				foreach (var element in xml.Elements(itemTag))
-					addMethod.Invoke(obj, new object[] { rFromXML(element, itemType, references) });
+				if (itemType == typeof(char))
+				{
+					foreach (var ch in Coder.BytesToString(Coder.StringToBytes(xml.Attribute("Values").Value, Coder.CodePage.Base64), Coder.CodePage.UTF8))
+						addMethod.Invoke(obj, new object[] { ch });
+				}
+				else
+				{
+					foreach (var element in xml.Elements(itemTag))
+						addMethod.Invoke(obj, new object[] { rFromXML(element, itemType, references) });
+				}
 				return obj;
 			}
 			else if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Dictionary<,>)))
