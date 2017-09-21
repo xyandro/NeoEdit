@@ -597,6 +597,7 @@
 			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Clear_Region7"/>
 			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Clear_Region8"/>
 			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Clear_Region9"/>
+			<textEdit:TextEditMenuItem Header="_All" CommandEnum="Region_Clear_All"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="Repeat _By Selections">

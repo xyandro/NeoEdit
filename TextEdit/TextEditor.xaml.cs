@@ -1232,6 +1232,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_Clear_Region7: Command_Region_Clear_Region(7); break;
 				case TextEditCommand.Region_Clear_Region8: Command_Region_Clear_Region(8); break;
 				case TextEditCommand.Region_Clear_Region9: Command_Region_Clear_Region(9); break;
+				case TextEditCommand.Region_Clear_All: Command_Region_Clear_Region(null); break;
 				case TextEditCommand.Region_RepeatBySelections_Region7: Command_Region_RepeatBySelections_Region(7); break;
 				case TextEditCommand.Region_RepeatBySelections_Region8: Command_Region_RepeatBySelections_Region(8); break;
 				case TextEditCommand.Region_RepeatBySelections_Region9: Command_Region_RepeatBySelections_Region(9); break;

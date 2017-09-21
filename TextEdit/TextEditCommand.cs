@@ -369,6 +369,7 @@ namespace NeoEdit.TextEdit
 		Region_Clear_Region7,
 		Region_Clear_Region8,
 		Region_Clear_Region9,
+		[KeyGesture(Key.D0, ModifierKeys.Control | ModifierKeys.Shift)] Region_Clear_All,
 		Region_RepeatBySelections_Region7,
 		Region_RepeatBySelections_Region8,
 		Region_RepeatBySelections_Region9,

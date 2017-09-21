@@ -123,7 +123,7 @@ namespace NeoEdit.TextEdit
 			useRegions.Replace(regions);
 		}
 
-		void Command_Region_Clear_Region(int useRegion) => Regions[useRegion].Clear();
+		void Command_Region_Clear_Region(int? useRegion) => Regions.Where(region => (!useRegion.HasValue) || (useRegion == region.Key)).ForEach(pair => pair.Value.Clear());
 
 		void Command_Region_RepeatBySelections_Region(int useRegion)
 		{
