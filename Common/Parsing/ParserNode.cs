@@ -108,7 +108,7 @@ namespace NeoEdit.Common.Parsing
 				yield return descendant;
 		}
 
-		IEnumerable<ParserNode> NavigateRegular(ParserNavigationDirectionEnum direction, bool shiftDown)
+		IEnumerable<ParserNode> NavigateRegular(ParserNavigationDirectionEnum direction, bool shiftDown, bool keepSelections)
 		{
 			switch (direction)
 			{
@@ -118,22 +118,26 @@ namespace NeoEdit.Common.Parsing
 						if (shiftDown)
 							yield return this;
 
-						var index = parent?.children.IndexOf(this);
-						if ((index == -1) || (index == null))
+						var index = parent?.children.IndexOf(this) ?? -1;
+						if (index == -1)
 						{
-							yield return this;
-							yield break;
+							if (keepSelections)
+								yield return this;
+							break;
 						}
-						var offset = direction == ParserNavigationDirectionEnum.Up ? -1 : 1;
-						index = Math.Max(0, Math.Min(index.Value + offset, parent.children.Count - 1));
-						yield return parent.children[index.Value];
+						index += direction == ParserNavigationDirectionEnum.Up ? -1 : 1;
+						if (keepSelections)
+							index = Math.Max(0, Math.Min(index, parent.children.Count - 1));
+						if ((index >= 0) && (index < parent.children.Count))
+							yield return parent.children[index];
 					}
 					break;
 				case ParserNavigationDirectionEnum.Left:
-					yield return parent == null ? this : parent;
+					if ((parent != null) || (keepSelections))
+						yield return parent ?? this;
 					break;
 				case ParserNavigationDirectionEnum.Right:
-					if (!children.Any())
+					if ((keepSelections) && (!children.Any()))
 						yield return this;
 					foreach (var child in children)
 					{
@@ -146,7 +150,8 @@ namespace NeoEdit.Common.Parsing
 				case ParserNavigationDirectionEnum.Column:
 					if (parent == null)
 					{
-						yield return this;
+						if (keepSelections)
+							yield return this;
 						break;
 					}
 					foreach (var child in parent.children)
@@ -157,8 +162,9 @@ namespace NeoEdit.Common.Parsing
 					{
 						if (parent == null)
 						{
-							yield return this;
-							yield break;
+							if (keepSelections)
+								yield return this;
+							break;
 						}
 						var index = parent.children.IndexOf(this);
 						if (!shiftDown)
@@ -173,8 +179,9 @@ namespace NeoEdit.Common.Parsing
 					{
 						if (parent == null)
 						{
-							yield return this;
-							yield break;
+							if (keepSelections)
+								yield return this;
+							break;
 						}
 						var index = parent.children.IndexOf(this);
 						if (!shiftDown)
@@ -184,7 +191,10 @@ namespace NeoEdit.Common.Parsing
 								yield return child;
 					}
 					break;
-				default: yield return this; break;
+				default:
+					if (keepSelections)
+						yield return this;
+					break;
 			}
 		}
 
@@ -196,7 +206,7 @@ namespace NeoEdit.Common.Parsing
 			yield return item;
 		}
 
-		IEnumerable<ParserNode> NavigateCell(ParserNavigationDirectionEnum direction, bool shiftDown)
+		IEnumerable<ParserNode> NavigateCell(ParserNavigationDirectionEnum direction, bool shiftDown, bool keepSelections)
 		{
 			var startColumn = parent.children.IndexOf(this);
 			var startRow = parent.parent.children.IndexOf(parent);
@@ -219,9 +229,14 @@ namespace NeoEdit.Common.Parsing
 
 			if (!shiftDown)
 			{
-				var row = Math.Max(0, Math.Min(endRow, parent.parent.children.Count - 1));
-				var column = Math.Max(0, Math.Min(endColumn, parent.parent.children[row].children.Count - 1));
-				yield return parent.parent.children[row].children[column];
+				if (keepSelections)
+				{
+					endRow = Math.Max(0, Math.Min(endRow, parent.parent.children.Count - 1));
+					endColumn = Math.Max(0, Math.Min(endColumn, parent.parent.children[endRow].children.Count - 1));
+				}
+				if ((endRow >= 0) && (endRow < parent.parent.children.Count))
+					if ((endColumn >= 0) && (endColumn < parent.parent.children[endRow].children.Count))
+						yield return parent.parent.children[endRow].children[endColumn];
 				yield break;
 			}
 
@@ -235,13 +250,13 @@ namespace NeoEdit.Common.Parsing
 					yield return parent.parent.children[row].children[column];
 		}
 
-		public IEnumerable<ParserNode> Navigate(ParserNavigationDirectionEnum direction, bool shiftDown)
+		public IEnumerable<ParserNode> Navigate(ParserNavigationDirectionEnum direction, bool shiftDown, bool keepSelections)
 		{
 			switch (ParserNavigationType)
 			{
-				case ParserNavigationTypeEnum.Regular: return NavigateRegular(direction, shiftDown);
+				case ParserNavigationTypeEnum.Regular: return NavigateRegular(direction, shiftDown, keepSelections);
 				case ParserNavigationTypeEnum.FirstChild: return NavigateFirstChild();
-				case ParserNavigationTypeEnum.Cell: return NavigateCell(direction, shiftDown);
+				case ParserNavigationTypeEnum.Cell: return NavigateCell(direction, shiftDown, keepSelections);
 				default: throw new ArgumentException($"Invalid {nameof(ParserNavigationType)}");
 			}
 		}

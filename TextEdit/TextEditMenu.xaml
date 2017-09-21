@@ -467,6 +467,7 @@
 			<textEdit:TextEditMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
 			<textEdit:TextEditMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
 		</MenuItem>
+		<textEdit:MultiMenuItem Header="_Keep Selections" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections"/>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">
 		<textEdit:TextEditMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL"/>

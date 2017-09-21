@@ -254,7 +254,7 @@ namespace NeoEdit.TextEdit
 			this.shutdownData = shutdownData ?? new ShutdownData(null, 1);
 
 			InitializeComponent();
-			AutoRefresh = true;
+			AutoRefresh = KeepSelections = true;
 
 			SetupTabLabel();
 
@@ -1147,6 +1147,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Navigate_PgDn: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.PgDn, shiftDown); break;
 				case TextEditCommand.Content_Navigate_Row: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Row, true); break;
 				case TextEditCommand.Content_Navigate_Column: Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Column, true); break;
+				case TextEditCommand.Content_KeepSelections: Command_Content_KeepSelections(multiStatus); break;
 				case TextEditCommand.Network_AbsoluteURL: Command_Network_AbsoluteURL(dialogResult as NetworkAbsoluteURLDialog.Result); break;
 				case TextEditCommand.Network_Fetch: Command_Network_Fetch(); break;
 				case TextEditCommand.Network_FetchHex: Command_Network_Fetch(Coder.CodePage.Hex); break;

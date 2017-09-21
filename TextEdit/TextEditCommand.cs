@@ -283,6 +283,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.PageDown, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.PageDown, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift, 2)] Content_Navigate_PgDn,
 		[KeyGesture(Key.Space, ModifierKeys.Control | ModifierKeys.Alt)] Content_Navigate_Row,
 		[KeyGesture(Key.Space, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Content_Navigate_Column,
+		Content_KeepSelections,
 		Network_AbsoluteURL,
 		Network_Fetch,
 		Network_FetchHex,

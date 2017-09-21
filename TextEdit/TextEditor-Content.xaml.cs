@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
+using NeoEdit.GUI.Controls;
 using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
 
@@ -10,6 +11,9 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
+		[DepProp]
+		public bool KeepSelections { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+
 		CacheValue previousData = new CacheValue();
 		Parser.ParserType previousType;
 		ParserNode previousRoot;
@@ -132,7 +136,9 @@ namespace NeoEdit.TextEdit
 				}
 			}
 			else
-				ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown)));
+				ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown, KeepSelections)));
 		}
+
+		void Command_Content_KeepSelections(bool? multiStatus) => KeepSelections = multiStatus != true;
 	}
 }
