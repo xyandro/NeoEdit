@@ -31,6 +31,9 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>$(SolutionDir)\..\Photoshop\NeoEdit.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -70,6 +73,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WriteTextDelegate.cs" />
+    <Resource Include="$(SolutionDir)\..\Photoshop\NeoEdit.ico">
+      <Link>NeoEdit.ico</Link>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="LibGit2Sharp">
