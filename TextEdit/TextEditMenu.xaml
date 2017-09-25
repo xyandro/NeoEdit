@@ -217,6 +217,11 @@
 			<textEdit:TextEditMenuItem Header="_Attributes" CommandEnum="Files_Set_Attributes"/>
 		</MenuItem>
 		<Separator/>
+		<MenuItem Header="_Find">
+			<textEdit:TextEditMenuItem Header="_Binary" CommandEnum="Files_Find_Binary"/>
+			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Files_Find_Text"/>
+		</MenuItem>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
 		<MenuItem Header="_Create">
 			<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Create_Files"/>

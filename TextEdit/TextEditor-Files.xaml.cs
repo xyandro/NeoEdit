@@ -19,6 +19,31 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
+		bool BinarySearchFile(string fileName, FindBinaryDialog.Result search)
+		{
+			var findLen = search.Searcher.MaxLen;
+			var buffer = new byte[8192];
+			var used = 0;
+			using (var stream = File.OpenRead(fileName))
+				while (true)
+				{
+					var block = stream.Read(buffer, used, buffer.Length - used);
+					if (block == 0)
+						break;
+					used += block;
+
+					var result = search.Searcher.Find(buffer, 0, used, true);
+					if (result.Any())
+						return true;
+
+					var keep = Math.Min(used, findLen - 1);
+					Array.Copy(buffer, used - keep, buffer, 0, keep);
+					used = keep;
+				}
+
+			return false;
+		}
+
 		void CopyDirectory(string src, string dest)
 		{
 			var srcDirs = new List<string> { src };
@@ -157,6 +182,13 @@ namespace NeoEdit.TextEdit
 
 			using (var file = File.Open(fileName, FileMode.Open))
 				file.SetLength(value);
+		}
+
+		bool TextSearchFile(string fileName, FindTextDialog.Result search)
+		{
+			var data = new TextData(Coder.BytesToString(File.ReadAllBytes(fileName), Coder.CodePage.AutoByBOM, true));
+			var start = data.GetOffset(0, 0);
+			return data.RegexMatches(search.Regex, start, data.NumChars - start, search.MultiLine, false, true).Any();
 		}
 
 		void Command_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
@@ -357,9 +389,33 @@ namespace NeoEdit.TextEdit
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
+		FindBinaryDialog.Result Command_Files_Find_Binary_Dialog() => FindBinaryDialog.Run(WindowParent);
+
+		void Command_Files_Find_Binary(FindBinaryDialog.Result result)
+		{
+			var sels = new List<Range>();
+			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
+			foreach (var obj in selected)
+				if (BinarySearchFile(obj.fileName, result))
+					sels.Add(obj.range);
+			Selections.Replace(sels);
+		}
+
+		FindTextDialog.Result Command_Files_Find_Text_Dialog() => FindTextDialog.Run(WindowParent);
+
+		void Command_Files_Find_Text(FindTextDialog.Result result)
+		{
+			var sels = new List<Range>();
+			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
+			foreach (var obj in selected)
+				if (TextSearchFile(obj.fileName, result))
+					sels.Add(obj.range);
+			Selections.Replace(sels);
+		}
+
 		FilesInsertDialog.Result Command_Files_Insert_Dialog() => FilesInsertDialog.Run(WindowParent);
 
-		void Command_Files_Insert(FilesInsertDialog.Result result) => ReplaceSelections(GetSelectionStrings().AsParallel().AsOrdered().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
+		void Command_Files_Insert(FilesInsertDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
 
 		void Command_Files_Create_Files()
 		{

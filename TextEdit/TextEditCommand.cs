@@ -126,6 +126,8 @@ namespace NeoEdit.TextEdit
 		Files_Set_Time_Create,
 		Files_Set_Time_All,
 		Files_Set_Attributes,
+		Files_Find_Binary,
+		Files_Find_Text,
 		Files_Insert,
 		Files_Create_Files,
 		Files_Create_Directories,
