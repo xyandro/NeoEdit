@@ -22,7 +22,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			InitializeComponent();
 			WholeWord = wholeWord;
-			Chars = wholeWord ? @"a-zA-Z0-9_" : "\"'";
+			Chars = wholeWord ? @"a-zA-Z0-9_" : @"""'\r\n";
 		}
 
 		Result result;
