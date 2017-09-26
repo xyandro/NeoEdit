@@ -1273,10 +1273,10 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_TransformSelections_MirrorVertical_Region7: Command_Region_TransformSelections_MirrorVertical_Region(7); break;
 				case TextEditCommand.Region_TransformSelections_MirrorVertical_Region8: Command_Region_TransformSelections_MirrorVertical_Region(8); break;
 				case TextEditCommand.Region_TransformSelections_MirrorVertical_Region9: Command_Region_TransformSelections_MirrorVertical_Region(9); break;
-				case TextEditCommand.Region_Select_Regions_Region7: Command_Region_Select_Regions_Region(7); break;
-				case TextEditCommand.Region_Select_Regions_Region8: Command_Region_Select_Regions_Region(8); break;
-				case TextEditCommand.Region_Select_Regions_Region9: Command_Region_Select_Regions_Region(9); break;
-				case TextEditCommand.Region_Select_Regions_All: Command_Region_Select_Regions_Region(); break;
+				case TextEditCommand.Region_Select_Regions_Region7: Command_Region_Select_Regions_Region(shiftDown, 7); break;
+				case TextEditCommand.Region_Select_Regions_Region8: Command_Region_Select_Regions_Region(shiftDown, 8); break;
+				case TextEditCommand.Region_Select_Regions_Region9: Command_Region_Select_Regions_Region(shiftDown, 9); break;
+				case TextEditCommand.Region_Select_Regions_All: Command_Region_Select_Regions_Region(shiftDown); break;
 				case TextEditCommand.Region_Select_EnclosingRegion_Region7: Command_Region_Select_EnclosingRegion_Region(7); break;
 				case TextEditCommand.Region_Select_EnclosingRegion_Region8: Command_Region_Select_EnclosingRegion_Region(8); break;
 				case TextEditCommand.Region_Select_EnclosingRegion_Region9: Command_Region_Select_EnclosingRegion_Region(9); break;

@@ -214,7 +214,12 @@ namespace NeoEdit.TextEdit
 			SetRegionsWithSelectionsText(useRegion, regions);
 		}
 
-		void Command_Region_Select_Regions_Region(int? useRegion = null) => Selections.Replace(Regions.Where(pair => pair.Key == (useRegion ?? pair.Key)).SelectMany(pair => pair.Value));
+		void Command_Region_Select_Regions_Region(bool shiftDown, int? useRegion = null)
+		{
+			var sels = shiftDown ? Selections.ToList() : new List<Range>();
+			sels.AddRange(Regions.Where(pair => pair.Key == (useRegion ?? pair.Key)).SelectMany(pair => pair.Value));
+			Selections.Replace(sels);
+		}
 
 		void Command_Region_Select_EnclosingRegion_Region(int useRegion) => Selections.Replace(GetEnclosingRegions(useRegion));
 
