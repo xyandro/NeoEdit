@@ -247,7 +247,7 @@ namespace NeoEdit.TextEdit
 		FileSystemWatcher watcher = null;
 		ShutdownData shutdownData;
 
-		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null)
+		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null)
 		{
 			fileName = fileName?.Trim('"');
 			SetupLocalKeys();
@@ -272,7 +272,7 @@ namespace NeoEdit.TextEdit
 			canvasRenderTimer.AddDependency(new RunOnceTimer[] { Selections.Timer, Searches.Timer }.Concat(Regions.Values.Select(region => region.Timer)).ToArray());
 			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
 
-			OpenFile(fileName, displayName, bytes, codePage, modified);
+			OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
 			Goto(line, column);
 
 			localCallbacks = UIHelper<TextEditor>.GetLocalCallbacks(this);
@@ -1857,9 +1857,11 @@ namespace NeoEdit.TextEdit
 				ReplaceOneWithMany(result, true);
 		}
 
-		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool? modified = null, bool keepUndo = false)
+		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, bool keepUndo = false)
 		{
 			SetFileName(fileName);
+			if (ContentType == Parser.ParserType.None)
+				ContentType = contentType;
 			DisplayName = displayName;
 			var isModified = modified ?? bytes != null;
 			if (bytes == null)

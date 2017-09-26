@@ -53,7 +53,7 @@ namespace NeoEdit.TextEdit
 				ReplaceSelections(strs);
 		}
 
-		void Command_File_NewFromSelections() => GetSelectionStrings().ForEach((str, index) => TextEditTabs.Create(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
+		void Command_File_NewFromSelections() => GetSelectionStrings().ForEach((str, index) => TextEditTabs.Create(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false));
 
 		void Command_File_Open_Selected()
 		{
