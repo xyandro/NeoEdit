@@ -76,7 +76,7 @@ namespace NeoEdit.TextEdit
 
 		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, contentType, modified, line, column, this);
 
-		readonly RunOnceTimer clipboardsTimer, doActivatedTimer;
+		readonly RunOnceTimer doActivatedTimer;
 		public TextEditTabs()
 		{
 			TextEditMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
@@ -86,10 +86,9 @@ namespace NeoEdit.TextEdit
 
 			AllowDrop = true;
 			Drop += TextEditTabs_Drop;
-			clipboardsTimer = new RunOnceTimer(() => UpdateClipboards());
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());
-			ItemTabs.TabsChanged += () => clipboardsTimer.Start();
-			NEClipboard.ClipboardChanged += () => clipboardsTimer.Start();
+			ItemTabs.TabsChanged += () => UpdateClipboards();
+			NEClipboard.ClipboardChanged += () => UpdateClipboards();
 			Activated += OnActivated;
 		}
 
