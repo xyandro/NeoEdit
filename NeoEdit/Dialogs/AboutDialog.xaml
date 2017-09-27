@@ -29,6 +29,7 @@
 		</TextBox>
 		<TextBox Grid.Row="2" BorderBrush="Transparent" IsReadOnly="True" Text="{Binding Copyright, ElementName=self}"/>
 
+		<Button Grid.Row="3" HorizontalAlignment="Left" Content="_Change Log" Click="ChangeLogClick"/>
 		<Button Grid.Row="3" Width="50" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" Content="Ok" Click="OKClick"/>
 	</Grid>
 

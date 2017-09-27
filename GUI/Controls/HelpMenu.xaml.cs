@@ -5,7 +5,6 @@
 		None,
 		Help_About,
 		Help_License,
-		Help_ChangeLog,
 		Help_Update,
 		Help_RunGC,
 	}

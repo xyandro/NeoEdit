@@ -102,7 +102,6 @@ namespace NeoEdit
 		{
 			NeoEdit.GUI.Launcher.Initialize(
 				about: () => AboutDialog.Run()
-				, changeLog: () => ChangeLogDialog.Run()
 				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
 				, hexEditor: (fileName, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(fileName, binarydata, encoder, modified, forceCreate)
 				, license: () => LicenseDialog.Run()

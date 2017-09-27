@@ -10,7 +10,6 @@ namespace NeoEdit.GUI
 		public static Launcher Static => launcher;
 
 		Action aboutLauncher;
-		Action changeLogLauncher;
 		Action<string, IEnumerable<string>, bool> diskLauncher;
 		Action<string, byte[], Coder.CodePage, bool, bool> hexEditorLauncher;
 		Action licenseLauncher;
@@ -22,7 +21,6 @@ namespace NeoEdit.GUI
 
 		public static void Initialize(
 			Action about = null
-			, Action changeLog = null
 			, Action<string, IEnumerable<string>, bool> disk = null
 			, Action<string, byte[], Coder.CodePage, bool, bool> hexEditor = null
 			, Action license = null
@@ -36,7 +34,6 @@ namespace NeoEdit.GUI
 			launcher = new Launcher
 			{
 				aboutLauncher = about,
-				changeLogLauncher = changeLog,
 				diskLauncher = disk,
 				hexEditorLauncher = hexEditor,
 				licenseLauncher = license,
@@ -49,7 +46,6 @@ namespace NeoEdit.GUI
 		}
 
 		public void LaunchAbout() => aboutLauncher?.Invoke();
-		public void LaunchChangeLog() => changeLogLauncher?.Invoke();
 		public void LaunchDisk(string path = null, IEnumerable<string> files = null, bool forceCreate = false) => diskLauncher?.Invoke(path, files, forceCreate);
 		public void LaunchHexEditor(string fileName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false) => hexEditorLauncher?.Invoke(fileName, bytes, codePage, modified, forceCreate);
 		public void LaunchLicense() => licenseLauncher?.Invoke();

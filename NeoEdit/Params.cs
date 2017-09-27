@@ -14,11 +14,6 @@ namespace NeoEdit
 		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchAbout();
 	}
 
-	class ChangeLogParam : Param
-	{
-		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchChangeLog();
-	}
-
 	class DiffParam : Param
 	{
 		readonly List<TextEditParam.TextEditFile> Files;

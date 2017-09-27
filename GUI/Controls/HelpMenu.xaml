@@ -6,7 +6,6 @@
 
 	<guiControls:HelpMenuItem Header="_About" CommandEnum="Help_About"/>
 	<guiControls:HelpMenuItem Header="_License" CommandEnum="Help_License"/>
-	<guiControls:HelpMenuItem Header="_Change Log" CommandEnum="Help_ChangeLog"/>
 	<guiControls:HelpMenuItem Header="_Update" CommandEnum="Help_Update"/>
 	<guiControls:HelpMenuItem Header="Run _GC" CommandEnum="Help_RunGC"/>
 </MenuItem>
