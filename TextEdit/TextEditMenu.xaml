@@ -263,6 +263,7 @@
 			<MenuItem Header="R_un Command">
 				<textEdit:TextEditMenuItem Header="_Parallel" CommandEnum="Files_Operations_RunCommand_Parallel"/>
 				<textEdit:TextEditMenuItem Header="_Sequential" CommandEnum="Files_Operations_RunCommand_Sequential"/>
+				<textEdit:TextEditMenuItem Header="S_hell" CommandEnum="Files_Operations_RunCommand_Shell"/>
 			</MenuItem>
 		</MenuItem>
 	</MenuItem>

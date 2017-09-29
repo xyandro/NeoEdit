@@ -1019,6 +1019,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_CommandPrompt: Command_Files_Operations_CommandPrompt(); break;
 				case TextEditCommand.Files_Operations_RunCommand_Parallel: Command_Files_Operations_RunCommand_Parallel(); break;
 				case TextEditCommand.Files_Operations_RunCommand_Sequential: Command_Files_Operations_RunCommand_Sequential(); break;
+				case TextEditCommand.Files_Operations_RunCommand_Shell: Command_Files_Operations_RunCommand_Shell(); break;
 				case TextEditCommand.Expression_Expression: Command_Expression_Expression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_Copy: Command_Expression_Copy(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;

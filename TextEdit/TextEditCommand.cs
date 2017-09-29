@@ -153,6 +153,7 @@ namespace NeoEdit.TextEdit
 		Files_Operations_CommandPrompt,
 		Files_Operations_RunCommand_Parallel,
 		Files_Operations_RunCommand_Sequential,
+		Files_Operations_RunCommand_Shell,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Expression_Expression,
 		Expression_Copy,
 		[KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Alt)] Expression_EvaluateSelected,
