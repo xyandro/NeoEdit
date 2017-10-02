@@ -25,6 +25,12 @@ namespace NeoEdit.TextEdit
 		static internal readonly Brush searchBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
 		static internal readonly Dictionary<int, Brush> regionBrush = new Dictionary<int, Brush>
 		{
+			[1] = new SolidColorBrush(Color.FromArgb(64, 0, 64, 0)),
+			[2] = new SolidColorBrush(Color.FromArgb(64, 64, 0, 0)),
+			[3] = new SolidColorBrush(Color.FromArgb(64, 0, 0, 64)),
+			[4] = new SolidColorBrush(Color.FromArgb(64, 64, 64, 0)),
+			[5] = new SolidColorBrush(Color.FromArgb(64, 64, 0, 64)),
+			[6] = new SolidColorBrush(Color.FromArgb(64, 0, 64, 64)),
 			[7] = new SolidColorBrush(Color.FromArgb(64, 0, 128, 0)),
 			[8] = new SolidColorBrush(Color.FromArgb(64, 128, 0, 0)),
 			[9] = new SolidColorBrush(Color.FromArgb(64, 0, 0, 128)),

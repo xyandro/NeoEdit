@@ -37,7 +37,7 @@ namespace NeoEdit.TextEdit
 
 		void SetupLocalKeys()
 		{
-			localKeysAndValues = new ObservableCollection<ObservableCollection<string>>(Enumerable.Repeat(default(ObservableCollection<string>), 7));
+			localKeysAndValues = new ObservableCollection<ObservableCollection<string>>(Enumerable.Repeat(default(ObservableCollection<string>), 10));
 			localKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(localKeysAndValues, localKeysHash, e);
 			for (var ctr = 0; ctr < localKeysAndValues.Count; ++ctr)
 				localKeysAndValues[ctr] = new ObservableCollection<string>();
@@ -50,7 +50,7 @@ namespace NeoEdit.TextEdit
 
 		static void SetupStaticKeys()
 		{
-			staticKeysAndValues = new ObservableCollection<ObservableCollection<string>>(Enumerable.Repeat(default(ObservableCollection<string>), 7));
+			staticKeysAndValues = new ObservableCollection<ObservableCollection<string>>(Enumerable.Repeat(default(ObservableCollection<string>), 10));
 			staticKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(staticKeysAndValues, staticKeysHash, e);
 			for (var ctr = 0; ctr < staticKeysAndValues.Count; ++ctr)
 				staticKeysAndValues[ctr] = new ObservableCollection<string>();

@@ -12,9 +12,20 @@
 					<RadioButton GroupName="sortScope" Content="_Selections" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Selections}"/>
 					<RadioButton GroupName="sortScope" Content="_Lines" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Lines}"/>
 					<RadioButton GroupName="sortScope" Content="_Regions" IsChecked="{Binding SortScope, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Regions}"/>
-					<RadioButton GroupName="useRegion" Content="Region _7" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=7}" Margin="0,10,0,0"/>
-					<RadioButton GroupName="useRegion" Content="Region _8" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=8}" Margin="0,10,0,0"/>
-					<RadioButton GroupName="useRegion" Content="Region _9" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=9}" Margin="0,10,0,0"/>
+					
+					<Separator Background="Transparent"/>
+					<Separator Background="Transparent"/>
+					<Separator Background="Transparent"/>
+					
+					<RadioButton GroupName="useRegion" Content="Region _1" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=1}"/>
+					<RadioButton GroupName="useRegion" Content="Region _2" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=2}"/>
+					<RadioButton GroupName="useRegion" Content="Region _3" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=3}"/>
+					<RadioButton GroupName="useRegion" Content="Region _4" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=4}"/>
+					<RadioButton GroupName="useRegion" Content="Region _5" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=5}"/>
+					<RadioButton GroupName="useRegion" Content="Region _6" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=6}"/>
+					<RadioButton GroupName="useRegion" Content="Region _7" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=7}"/>
+					<RadioButton GroupName="useRegion" Content="Region _8" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=8}"/>
+					<RadioButton GroupName="useRegion" Content="Region _9" IsChecked="{Binding UseRegion, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=9}"/>
 				</UniformGrid>
 			</StackPanel>
 		</GroupBox>
@@ -36,7 +47,11 @@
 					<RadioButton GroupName="sortType" Content="_Frequency" IsChecked="{Binding SortType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Frequency}"/>
 				</UniformGrid>
 
-				<CheckBox Content="_Case Sensitive" IsChecked="{Binding CaseSensitive, ElementName=self}" Margin="0,10,0,0"/>
+				<Separator Background="Transparent"/>
+				<Separator Background="Transparent"/>
+				<Separator Background="Transparent"/>
+
+				<CheckBox Content="_Case Sensitive" IsChecked="{Binding CaseSensitive, ElementName=self}"/>
 			</StackPanel>
 		</GroupBox>
 
@@ -47,7 +62,9 @@
 			</UniformGrid>
 		</GroupBox>
 
-		<UniformGrid HorizontalAlignment="Right" Rows="1" Margin="0,10,0,0">
+		<Separator Background="Transparent"/>
+
+		<UniformGrid HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
