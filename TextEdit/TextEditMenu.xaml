@@ -864,6 +864,11 @@
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">
 			<MenuItem Header="_Quick">
+				<textEdit:TextEditMenuItem Header="1" CommandEnum="Macro_Record_Quick_1"/>
+				<textEdit:TextEditMenuItem Header="2" CommandEnum="Macro_Record_Quick_2"/>
+				<textEdit:TextEditMenuItem Header="_3" CommandEnum="Macro_Record_Quick_3"/>
+				<textEdit:TextEditMenuItem Header="_4" CommandEnum="Macro_Record_Quick_4"/>
+				<textEdit:TextEditMenuItem Header="_5" CommandEnum="Macro_Record_Quick_5"/>
 				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Record_Quick_6"/>
 				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Record_Quick_7"/>
 				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Record_Quick_8"/>
@@ -877,6 +882,11 @@
 		</MenuItem>
 		<MenuItem Header="_Append">
 			<MenuItem Header="_Quick">
+				<textEdit:TextEditMenuItem Header="1" CommandEnum="Macro_Append_Quick_1"/>
+				<textEdit:TextEditMenuItem Header="2" CommandEnum="Macro_Append_Quick_2"/>
+				<textEdit:TextEditMenuItem Header="_3" CommandEnum="Macro_Append_Quick_3"/>
+				<textEdit:TextEditMenuItem Header="_4" CommandEnum="Macro_Append_Quick_4"/>
+				<textEdit:TextEditMenuItem Header="_5" CommandEnum="Macro_Append_Quick_5"/>
 				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Append_Quick_6"/>
 				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Append_Quick_7"/>
 				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Append_Quick_8"/>
@@ -890,6 +900,11 @@
 		<Separator/>
 		<MenuItem Header="_Play">
 			<MenuItem Header="_Quick">
+				<textEdit:TextEditMenuItem Header="1" CommandEnum="Macro_Play_Quick_1"/>
+				<textEdit:TextEditMenuItem Header="2" CommandEnum="Macro_Play_Quick_2"/>
+				<textEdit:TextEditMenuItem Header="_3" CommandEnum="Macro_Play_Quick_3"/>
+				<textEdit:TextEditMenuItem Header="_4" CommandEnum="Macro_Play_Quick_4"/>
+				<textEdit:TextEditMenuItem Header="_5" CommandEnum="Macro_Play_Quick_5"/>
 				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Play_Quick_6"/>
 				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Play_Quick_7"/>
 				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Play_Quick_8"/>
@@ -905,6 +920,11 @@
 		<Separator/>
 		<MenuItem Header="_Open">
 			<MenuItem Header="_Quick">
+				<textEdit:TextEditMenuItem Header="1" CommandEnum="Macro_Open_Quick_1"/>
+				<textEdit:TextEditMenuItem Header="2" CommandEnum="Macro_Open_Quick_2"/>
+				<textEdit:TextEditMenuItem Header="_3" CommandEnum="Macro_Open_Quick_3"/>
+				<textEdit:TextEditMenuItem Header="_4" CommandEnum="Macro_Open_Quick_4"/>
+				<textEdit:TextEditMenuItem Header="_5" CommandEnum="Macro_Open_Quick_5"/>
 				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Open_Quick_6"/>
 				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Open_Quick_7"/>
 				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Open_Quick_8"/>

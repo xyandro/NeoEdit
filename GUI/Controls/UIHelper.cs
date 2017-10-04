@@ -200,7 +200,7 @@ namespace NeoEdit.GUI.Controls
 
 			var noAccel = headers.Where(header => !header.Contains("_")).ToList();
 			if (noAccel.Count != headers.Count)
-				errors.AddRange(noAccel.Select(header => $"{path} -> {header}: No accelerator ({headerAvail[header]} / {allAvail} available)"));
+				errors.AddRange(noAccel.Where(header => headerAvail[header].Length != 0).Select(header => $"{path} -> {header}: No accelerator ({headerAvail[header]} / {allAvail} available)"));
 		}
 
 		public static void AuditMenu(Menu menu)
