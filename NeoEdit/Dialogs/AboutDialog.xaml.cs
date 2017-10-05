@@ -26,6 +26,8 @@ namespace NeoEdit.Dialogs
 
 		public static void Run() => new AboutDialog().Show();
 
+		void LicenseClick(object sender, RoutedEventArgs e) => LicenseDialog.Run();
+
 		void ChangeLogClick(object sender, RoutedEventArgs e) => ChangeLogDialog.Run();
 
 		void OKClick(object sender, RoutedEventArgs e) => Close();

@@ -4,7 +4,6 @@
 	{
 		None,
 		Help_About,
-		Help_License,
 		Help_Update,
 		Help_RunGC,
 	}

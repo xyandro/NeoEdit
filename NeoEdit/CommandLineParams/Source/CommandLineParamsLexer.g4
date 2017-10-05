@@ -8,7 +8,6 @@ DIFF           : '-diff'                                                        
 DISK           : '-disk' | '-disks'                                                                     ;
 DISPLAY        : '-display' | '-displayname' | '-displaytext'                                           ;
 HEXEDIT        : '-binary' | '-binaryedit' | '-binaryeditor' | '-hex' | '-hexedit' | '-hexeditor'       ;
-LICENSE        : '-license'                                                                             ;
 LINE           : '-line'                                                                                ;
 MULTI          : '-multi'                                                                               ;
 PLAYLIST       : '-playlist' | '-playlists' | '-list' | '-lists'                                        ;
@@ -32,7 +31,6 @@ DIFF2          : DIFF          -> type(DIFF)          ;
 DISK2          : DISK          -> type(DISK)          ;
 DISPLAY2       : DISPLAY       -> type(DISPLAY)       ;
 HEXEDIT2       : HEXEDIT       -> type(HEXEDIT)       ;
-LICENSE2       : LICENSE       -> type(LICENSE)       ;
 LINE2          : LINE          -> type(LINE)          ;
 MULTI2         : MULTI         -> type(MULTI)         ;
 PLAYLIST2      : PLAYLIST      -> type(PLAYLIST)      ;
