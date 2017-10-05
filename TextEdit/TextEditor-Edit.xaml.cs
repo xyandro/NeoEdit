@@ -222,14 +222,14 @@ namespace NeoEdit.TextEdit
 			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
 				return;
 
-			if (clipboardStrings.Count == 0)
-				throw new Exception("Nothing on clipboard!");
-
-			if ((Selections.Count == 1) && (clipboardStrings.Count > 1))
+			if ((Selections.Count == 1) && (clipboardStrings.Count != 1))
 			{
 				ReplaceOneWithMany(clipboardStrings, null);
 				return;
 			}
+
+			if (clipboardStrings.Count == 0)
+				throw new Exception("Nothing on clipboard!");
 
 			var repeat = Selections.Count / clipboardStrings.Count;
 			if (repeat * clipboardStrings.Count != Selections.Count)

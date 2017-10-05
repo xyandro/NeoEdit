@@ -2100,8 +2100,7 @@ namespace NeoEdit.TextEdit
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			addNewLines = addNewLines ?? strs.Any(str => !str.EndsWith(Data.DefaultEnding));
-			var ending = addNewLines.Value ? Data.DefaultEnding : "";
+			var ending = addNewLines ?? strs.Any(str => !str.EndsWith(Data.DefaultEnding)) ? Data.DefaultEnding : "";
 			if (ending.Length != 0)
 				strs = strs.Select(str => str + ending).ToList();
 			var offset = Selections.Single().Start;
