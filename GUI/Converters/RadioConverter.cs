@@ -20,11 +20,11 @@ namespace NeoEdit.GUI.Converters
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (targetType == typeof(bool))
-				return bool.Parse(parameter as string);
 			if ((value is bool) && (!(bool)value))
 				return DependencyProperty.UnsetValue;
-			return Enum.Parse(targetType, parameter as string);
+			if (targetType.IsEnum)
+				return Enum.Parse(targetType, parameter as string);
+			return System.Convert.ChangeType(parameter, targetType);
 		}
 	}
 }
