@@ -19,9 +19,9 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
-		bool BinarySearchFile(string fileName, FindBinaryDialog.Result search)
+		bool BinarySearchFile(string fileName, Searcher searcher)
 		{
-			var findLen = search.Searcher.MaxLen;
+			var findLen = searcher.MaxLen;
 			var buffer = new byte[8192];
 			var used = 0;
 			using (var stream = File.OpenRead(fileName))
@@ -32,7 +32,7 @@ namespace NeoEdit.TextEdit
 						break;
 					used += block;
 
-					var result = search.Searcher.Find(buffer, 0, used, true);
+					var result = searcher.Find(buffer, 0, used, true);
 					if (result.Any())
 						return true;
 
@@ -396,7 +396,7 @@ namespace NeoEdit.TextEdit
 			var sels = new List<Range>();
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			foreach (var obj in selected)
-				if (BinarySearchFile(obj.fileName, result))
+				if (BinarySearchFile(obj.fileName, result.Searcher))
 					sels.Add(obj.range);
 			Selections.Replace(sels);
 		}
@@ -409,6 +409,20 @@ namespace NeoEdit.TextEdit
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			foreach (var obj in selected)
 				if (TextSearchFile(obj.fileName, result))
+					sels.Add(obj.range);
+			Selections.Replace(sels);
+		}
+
+		FilesFindMassFindDialog.Result Command_Files_Find_MassFind_Dialog() => FilesFindMassFindDialog.Run(WindowParent, GetVariables());
+
+		void Command_Files_Find_MassFind(FilesFindMassFindDialog.Result result)
+		{
+			var findStrs = GetVariableExpressionResults<string>(result.Expression);
+			var searcher = new Searcher(findStrs, result.MatchCase);
+			var sels = new List<Range>();
+			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
+			foreach (var obj in selected)
+				if (BinarySearchFile(obj.fileName, searcher))
 					sels.Add(obj.range);
 			Selections.Replace(sels);
 		}

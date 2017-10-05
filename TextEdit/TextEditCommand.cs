@@ -134,6 +134,7 @@ namespace NeoEdit.TextEdit
 		Files_Set_Attributes,
 		Files_Find_Binary,
 		Files_Find_Text,
+		Files_Find_MassFind,
 		Files_Insert,
 		Files_Create_Files,
 		Files_Create_Directories,

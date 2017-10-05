@@ -226,6 +226,7 @@
 		<MenuItem Header="_Find">
 			<textEdit:TextEditMenuItem Header="_Binary" CommandEnum="Files_Find_Binary"/>
 			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Files_Find_Text"/>
+			<textEdit:TextEditMenuItem Header="_Mass Find" CommandEnum="Files_Find_MassFind"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>

@@ -283,6 +283,13 @@
     <Compile Include="Dialogs\FilesCreateFromExpressionsDialog.xaml.cs">
       <DependentUpon>FilesCreateFromExpressionsDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\FilesFindMassFindDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesFindMassFindDialog.xaml.cs">
+      <DependentUpon>FilesFindMassFindDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\FilesInsertDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
