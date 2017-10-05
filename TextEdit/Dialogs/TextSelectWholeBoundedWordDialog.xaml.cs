@@ -22,7 +22,11 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			InitializeComponent();
 			WholeWord = wholeWord;
-			Chars = wholeWord ? @"a-zA-Z0-9_" : @"""'\r\n";
+			if (wholeWord)
+				chars.AddSuggestions(@"a-zA-Z0-9_");
+			else
+				chars.AddSuggestions(@"""'\r\n", @" \t\r\n\v\f\u0085\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000");
+			Chars = chars.GetLastSuggestion();
 		}
 
 		Result result;
