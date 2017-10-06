@@ -999,9 +999,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_Time_Create: Command_Files_Set_Time(TimestampType.Create, dialogResult as FilesSetTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_Time_All: Command_Files_Set_Time(TimestampType.All, dialogResult as FilesSetTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_Attributes: Command_Files_Set_Attributes(dialogResult as FilesSetAttributesDialog.Result); break;
-				case TextEditCommand.Files_Find_Binary: Command_Files_Find_Binary(dialogResult as FindBinaryDialog.Result); break;
-				case TextEditCommand.Files_Find_Text: Command_Files_Find_Text(dialogResult as FindTextDialog.Result); break;
-				case TextEditCommand.Files_Find_MassFind: Command_Files_Find_MassFind(dialogResult as FilesFindMassFindDialog.Result); break;
+				case TextEditCommand.Files_Find_Binary: Command_Files_Find_Binary(dialogResult as FindBinaryDialog.Result, ref answer); break;
+				case TextEditCommand.Files_Find_Text: Command_Files_Find_Text(dialogResult as FindTextDialog.Result, ref answer); break;
+				case TextEditCommand.Files_Find_MassFind: Command_Files_Find_MassFind(dialogResult as FilesFindMassFindDialog.Result, ref answer); break;
 				case TextEditCommand.Files_Insert: Command_Files_Insert(dialogResult as FilesInsertDialog.Result); break;
 				case TextEditCommand.Files_Create_Files: Command_Files_Create_Files(); break;
 				case TextEditCommand.Files_Create_Directories: Command_Files_Create_Directories(); break;
