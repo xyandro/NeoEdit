@@ -442,7 +442,8 @@ namespace NeoEdit.Disk
 			if ((file.FileType != DiskItem.DiskItemType.File) || (!file.Exists))
 				return false;
 
-			var findLen = search.Searcher.MaxLen;
+			var searcher = Helpers.GetSearcher(new List<string> { search.Text }, search.CodePages, search.MatchCase);
+			var findLen = searcher.MaxLen;
 			var buffer = new byte[8192];
 			var used = 0;
 			using (var stream = File.OpenRead(file.FullName))
@@ -453,7 +454,7 @@ namespace NeoEdit.Disk
 						break;
 					used += block;
 
-					var result = search.Searcher.Find(buffer, 0, used, true);
+					var result = searcher.Find(buffer, 0, used, true);
 					if (result.Any())
 						return true;
 

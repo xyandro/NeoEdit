@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Dialogs;
 
@@ -39,14 +41,15 @@ namespace NeoEdit.HexEdit
 			if ((index < 0) || (index >= Length))
 				return false;
 
+			var searcher = Helpers.GetSearcher(new List<string> { currentFind.Text }, currentFind.CodePages, currentFind.MatchCase);
 			var min = index;
-			var findLen = currentFind.Searcher.MaxLen;
+			var findLen = searcher.MaxLen;
 
 			while (index < Length)
 			{
 				index = Math.Max(min, index - findLen - 1);
 				var block = Read(index, Math.Min(65536, Length - index));
-				var result = currentFind.Searcher.Find(block, 0, block.Length, true);
+				var result = searcher.Find(block, 0, block.Length, true);
 				if (result.Count != 0)
 				{
 					start = result[0].Item1 + index;

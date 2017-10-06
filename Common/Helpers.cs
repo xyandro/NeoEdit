@@ -6,6 +6,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Common
 {
@@ -441,6 +442,20 @@ namespace NeoEdit.Common
 		}
 
 		public static string NeoEditAppData => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NeoEdit");
+
+		public static Searcher GetSearcher(List<string> findStrs, List<Coder.CodePage> codePages, bool matchCase)
+		{
+			var data = new List<Tuple<byte[], bool>>();
+			foreach (var findStr in findStrs)
+				foreach (var codePage in codePages)
+				{
+					var bytes = Coder.TryStringToBytes(findStr, codePage);
+					if (bytes != null)
+						data.Add(Tuple.Create(bytes, (!Coder.IsStr(codePage)) || (matchCase) || (Coder.AlwaysCaseSensitive(codePage))));
+				}
+			data = data.Distinct(tuple => $"{Coder.BytesToString(tuple.Item1, Coder.CodePage.Hex)}-{tuple.Item2}").ToList();
+			return new Searcher(data);
+		}
 
 		static Helpers() { Directory.CreateDirectory(NeoEditAppData); }
 	}

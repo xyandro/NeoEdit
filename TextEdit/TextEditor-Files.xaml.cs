@@ -22,6 +22,8 @@ namespace NeoEdit.TextEdit
 		bool BinarySearchFile(string fileName, Searcher searcher)
 		{
 			var findLen = searcher.MaxLen;
+			if (findLen == 0)
+				return false;
 			var buffer = new byte[8192];
 			var used = 0;
 			using (var stream = File.OpenRead(fileName))
@@ -395,8 +397,9 @@ namespace NeoEdit.TextEdit
 		{
 			var sels = new List<Range>();
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
+			var searcher = Helpers.GetSearcher(new List<string> { result.Text }, result.CodePages, result.MatchCase);
 			foreach (var obj in selected)
-				if (BinarySearchFile(obj.fileName, result.Searcher))
+				if (BinarySearchFile(obj.fileName, searcher))
 					sels.Add(obj.range);
 			Selections.Replace(sels);
 		}

@@ -22,7 +22,7 @@
 						<Setter Property="IsChecked" Value="True"/>
 						<Setter Property="Focusable" Value="False"/>
 					</Style>
-					<Style TargetType="guiDialogs:CodePageCheckBox" BasedOn="{StaticResource {x:Type CheckBox}}"/>
+					<Style TargetType="guiControls:CodePageCheckBox" BasedOn="{StaticResource {x:Type CheckBox}}"/>
 					<Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
 						<Setter Property="Focusable" Value="False"/>
 					</Style>
@@ -83,28 +83,28 @@
 
 				<Label Grid.Row="0" Grid.Column="0" Content="Unsigned LE:" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}"/>
 
-				<guiDialogs:CodePageCheckBox Grid.Row="0" Grid.Column="1" CodePage="UInt8" x:Name="UInt8" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="0" Grid.Column="2" CodePage="UInt16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt16LE}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="0" Grid.Column="3" CodePage="UInt32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt32LE}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="0" Grid.Column="4" CodePage="UInt64LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt64LE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="0" Grid.Column="1" CodePage="UInt8" x:Name="UInt8" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8}"/>
+				<guiControls:CodePageCheckBox Grid.Row="0" Grid.Column="2" CodePage="UInt16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt16LE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="0" Grid.Column="3" CodePage="UInt32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt32LE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="0" Grid.Column="4" CodePage="UInt64LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt64LE}"/>
 
 				<Label Grid.Row="1" Grid.Column="0" Content="Signed LE:" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="1" Grid.Column="1" CodePage="Int8" x:Name="Int8" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int8}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="1" Grid.Column="2" CodePage="Int16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int16LE}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="1" Grid.Column="3" CodePage="Int32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int32LE}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="1" Grid.Column="4" CodePage="Int64LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int64LE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="1" Grid.Column="1" CodePage="Int8" x:Name="Int8" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int8}"/>
+				<guiControls:CodePageCheckBox Grid.Row="1" Grid.Column="2" CodePage="Int16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int16LE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="1" Grid.Column="3" CodePage="Int32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int32LE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="1" Grid.Column="4" CodePage="Int64LE" Visibility="{Binding ShowLE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int64LE}"/>
 
 				<Label Grid.Row="2" Grid.Column="0" Content="Unsigned BE:" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}"/>
 				<CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding IsChecked, ElementName=UInt8}" Content="UInt8" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt8}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="2" Grid.Column="2" CodePage="UInt16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt16BE}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="2" Grid.Column="3" CodePage="UInt32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt32BE}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="2" Grid.Column="4" CodePage="UInt64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt64BE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="2" Grid.Column="2" CodePage="UInt16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt16BE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="2" Grid.Column="3" CodePage="UInt32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt32BE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="2" Grid.Column="4" CodePage="UInt64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=UInt64BE}"/>
 
 				<Label Grid.Row="3" Grid.Column="0" Content="Signed BE:" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}"/>
 				<CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding IsChecked, ElementName=Int8}" Content="Int8" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int8}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="3" Grid.Column="2" CodePage="Int16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int16BE}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="3" Grid.Column="3" CodePage="Int32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int32BE}"/>
-				<guiDialogs:CodePageCheckBox Grid.Row="3" Grid.Column="4" CodePage="Int64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int64BE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="3" Grid.Column="2" CodePage="Int16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int16BE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="3" Grid.Column="3" CodePage="Int32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int32BE}"/>
+				<guiControls:CodePageCheckBox Grid.Row="3" Grid.Column="4" CodePage="Int64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={guiConverters:NEExpressionConverter}}" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Int64BE}"/>
 
 				<UniformGrid Grid.Row="4" Grid.ColumnSpan="5" HorizontalAlignment="Right" Rows="1">
 					<Button Click="SelectAllNone" Content="All" Padding="10,1"/>
@@ -127,8 +127,8 @@
 					<RowDefinition/>
 				</Grid.RowDefinitions>
 
-				<guiDialogs:CodePageCheckBox Grid.Column="1" CodePage="Single" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Single}"/>
-				<guiDialogs:CodePageCheckBox Grid.Column="2" CodePage="Double" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Double}"/>
+				<guiControls:CodePageCheckBox Grid.Column="1" CodePage="Single" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Single}"/>
+				<guiControls:CodePageCheckBox Grid.Column="2" CodePage="Double" IsEnabled="{Binding FindText, ElementName=self, Converter={StaticResource ValidConv}, ConverterParameter=Double}"/>
 
 				<UniformGrid Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Right" Rows="1">
 					<Button Click="SelectAllNone" Content="All" Padding="10,1"/>
@@ -156,7 +156,7 @@
 					<ListBox.Style>
 						<Style>
 							<Style.Resources>
-								<Style TargetType="guiDialogs:CodePageCheckBox">
+								<Style TargetType="guiControls:CodePageCheckBox">
 									<Setter Property="IsEnabled">
 										<Setter.Value>
 											<MultiBinding Converter="{StaticResource ValidConv}">

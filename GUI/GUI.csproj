@@ -19,6 +19,7 @@
       <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\BindableScrollViewer.cs" />
+    <Compile Include="Controls\CodePageCheckBox.cs" />
     <Compile Include="Controls\EnhancedFocusManager.cs" />
     <Page Include="Controls\HelpMenu.xaml">
       <SubType>Designer</SubType>

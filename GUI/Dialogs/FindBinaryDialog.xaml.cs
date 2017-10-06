@@ -11,31 +11,19 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.GUI.Dialogs
 {
-	internal class CodePageCheckBox : CheckBox
-	{
-		[DepProp]
-		public Coder.CodePage CodePage { get { return UIHelper<CodePageCheckBox>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<CodePageCheckBox>.SetPropValue(this, value); } }
-
-		static CodePageCheckBox()
-		{
-			UIHelper<CodePageCheckBox>.Register();
-			UIHelper<CodePageCheckBox>.AddCallback(a => a.CodePage, (obj, o, n) => obj.Content = Coder.IsStr(obj.CodePage) ? Coder.GetDescription(obj.CodePage) : obj.CodePage.ToString());
-		}
-
-		public CodePageCheckBox() { CodePage = Coder.CodePage.None; }
-	}
-
 	partial class FindBinaryDialog
 	{
 		public class Result
 		{
 			public string Text { get; }
-			public Searcher Searcher { get; }
+			public List<Coder.CodePage> CodePages { get; }
+			public bool MatchCase { get; }
 
-			internal Result(string text, Searcher searcher)
+			internal Result(string text, List<Coder.CodePage> codePages, bool matchCase)
 			{
 				Text = text;
-				Searcher = searcher;
+				CodePages = codePages;
+				MatchCase = matchCase;
 			}
 		}
 
@@ -111,7 +99,7 @@ namespace NeoEdit.GUI.Dialogs
 			if (string.IsNullOrEmpty(FindText))
 				return;
 
-			var data = new List<Tuple<byte[], bool>>();
+			var codePages = new List<Coder.CodePage>();
 			foreach (var checkBox in checkBoxes)
 			{
 				if ((!checkBox.IsEnabled) || (checkBox.IsChecked != true))
@@ -121,15 +109,13 @@ namespace NeoEdit.GUI.Dialogs
 					continue;
 				if ((!str) && (!checkBox.IsVisible))
 					continue;
-				data.Add(Tuple.Create(Coder.StringToBytes(FindText, checkBox.CodePage), (!str) || (MatchCase) || (Coder.AlwaysCaseSensitive(checkBox.CodePage))));
+				codePages.Add(checkBox.CodePage);
 			}
 
-			data = data.Distinct(tuple => $"{Coder.BytesToString(tuple.Item1, Coder.CodePage.Hex)}-{tuple.Item2}").ToList();
-
-			if (data.Count == 0)
+			if (codePages.Count == 0)
 				return;
 
-			result = new Result(FindText, new Searcher(data));
+			result = new Result(FindText, codePages, MatchCase);
 
 			findText.AddCurrentSuggestion();
 
