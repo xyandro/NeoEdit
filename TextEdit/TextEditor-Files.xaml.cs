@@ -421,7 +421,7 @@ namespace NeoEdit.TextEdit
 		void Command_Files_Find_MassFind(FilesFindMassFindDialog.Result result)
 		{
 			var findStrs = GetVariableExpressionResults<string>(result.Expression);
-			var searcher = new Searcher(findStrs, result.MatchCase);
+			var searcher = Helpers.GetSearcher(findStrs, result.CodePages, result.MatchCase);
 			var sels = new List<Range>();
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			foreach (var obj in selected)
