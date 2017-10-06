@@ -41,9 +41,9 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			[OptionsEnum.Yes] = "_Yes",
 			[OptionsEnum.No] = "_No",
-			[OptionsEnum.YesToAll] = "Yes to _all",
-			[OptionsEnum.NoToAll] = "No to a_ll",
-			[OptionsEnum.Ok] = "Ok",
+			[OptionsEnum.YesToAll] = "Y_es to all",
+			[OptionsEnum.NoToAll] = "N_o to all",
+			[OptionsEnum.Ok] = "_Ok",
 			[OptionsEnum.Cancel] = "_Cancel",
 		};
 
