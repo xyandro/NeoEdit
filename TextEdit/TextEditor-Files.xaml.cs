@@ -344,6 +344,8 @@ namespace NeoEdit.TextEdit
 				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors.Select(ex => ex.Message))}", "Error", WindowParent);
 		}
 
+		void Command_Files_Get_VersionControlStatus() => ReplaceSelections(new VCS().GetStatus(RelativeSelectedFiles()).Select(x => x.ToString()).ToList());
+
 		FilesSetSizeDialog.Result Command_Files_Set_Size_Dialog()
 		{
 			var vars = GetVariables();

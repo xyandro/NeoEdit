@@ -126,6 +126,7 @@ namespace NeoEdit.TextEdit
 		Files_Get_Version_Assembly,
 		Files_Get_Children,
 		Files_Get_Descendants,
+		Files_Get_VersionControlStatus,
 		Files_Set_Size,
 		Files_Set_Time_Write,
 		Files_Set_Time_Access,

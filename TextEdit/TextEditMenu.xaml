@@ -203,7 +203,7 @@
 			</MenuItem>
 			<textEdit:TextEditMenuItem Header="_Attributes" CommandEnum="Files_Get_Attributes"/>
 			<Separator/>
-			<MenuItem Header="_Version">
+			<MenuItem Header="V_ersion">
 				<textEdit:TextEditMenuItem Header="_File" CommandEnum="Files_Get_Version_File"/>
 				<textEdit:TextEditMenuItem Header="_Product" CommandEnum="Files_Get_Version_Product"/>
 				<textEdit:TextEditMenuItem Header="_Assembly" CommandEnum="Files_Get_Version_Assembly"/>
@@ -211,6 +211,8 @@
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Files_Get_Children"/>
 			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Files_Get_Descendants"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="_Version Control Status" CommandEnum="Files_Get_VersionControlStatus"/>
 		</MenuItem>
 		<MenuItem Header="S_et">
 			<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Files_Set_Size"/>

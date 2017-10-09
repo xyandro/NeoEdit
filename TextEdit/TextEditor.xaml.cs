@@ -993,6 +993,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Get_Version_Assembly: Command_Files_Get_Version_Assembly(); break;
 				case TextEditCommand.Files_Get_Children: Command_Files_Get_ChildrenDescendants(false); break;
 				case TextEditCommand.Files_Get_Descendants: Command_Files_Get_ChildrenDescendants(true); break;
+				case TextEditCommand.Files_Get_VersionControlStatus: Command_Files_Get_VersionControlStatus(); break;
 				case TextEditCommand.Files_Set_Size: Command_Files_Set_Size(dialogResult as FilesSetSizeDialog.Result); break;
 				case TextEditCommand.Files_Set_Time_Write: Command_Files_Set_Time(TimestampType.Write, dialogResult as FilesSetTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_Time_Access: Command_Files_Set_Time(TimestampType.Access, dialogResult as FilesSetTimeDialog.Result); break;
