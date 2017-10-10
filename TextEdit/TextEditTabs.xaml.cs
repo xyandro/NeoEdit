@@ -148,8 +148,6 @@ namespace NeoEdit.TextEdit
 				AddTextEditor(filename);
 		}
 
-		void Command_File_Copy_AllPaths() => NEClipboard.Current = NEClipboard.Create(ItemTabs.Items.Select(editor => editor.FileName).Where(name => !string.IsNullOrEmpty(name)).ToList(), false);
-
 		void Command_File_Shell_Integrate()
 		{
 			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
@@ -512,7 +510,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_New: Create(textEditTabs: this, forceCreate: shiftDown); break;
 				case TextEditCommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
-				case TextEditCommand.File_Copy_AllPaths: Command_File_Copy_AllPaths(); break;
 				case TextEditCommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;
 				case TextEditCommand.File_Shell_Unintegrate: Command_File_Shell_Unintegrate(); break;
 				case TextEditCommand.File_Exit: Close(); break;

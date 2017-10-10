@@ -304,8 +304,6 @@ namespace NeoEdit.TextEdit
 
 		void Command_File_Copy_DisplayName() => SetClipboardString(DisplayName ?? Path.GetFileName(FileName));
 
-		void Command_File_Copy_Count() => SetClipboardString(Selections.Count.ToString());
-
 		EncodingDialog.Result Command_File_Encoding_Encoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage);
 
 		void Command_File_Encoding_Encoding(EncodingDialog.Result result) => CodePage = result.CodePage;

@@ -907,7 +907,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Copy_Path: Command_File_Copy_Path(); break;
 				case TextEditCommand.File_Copy_Name: Command_File_Copy_Name(); break;
 				case TextEditCommand.File_Copy_DisplayName: Command_File_Copy_DisplayName(); break;
-				case TextEditCommand.File_Copy_Count: Command_File_Copy_Count(); break;
 				case TextEditCommand.File_Encoding_Encoding: Command_File_Encoding_Encoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result, ref answer); break;
 				case TextEditCommand.File_Encoding_LineEndings: Command_File_Encoding_LineEndings(dialogResult as FileEncodingLineEndingsDialog.Result); break;
