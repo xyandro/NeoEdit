@@ -254,6 +254,8 @@
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="_Roots" CommandEnum="Files_Select_Roots"/>
 			<textEdit:TextEditMenuItem Header="Non-R_oots" CommandEnum="Files_Select_NonRoots"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="By _Version Control Status" CommandEnum="Files_Select_ByVersionControlStatus"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Files_Hash"/>

@@ -534,6 +534,15 @@ namespace NeoEdit.TextEdit
 			Selections.Replace(sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList());
 		}
 
+		FilesSelectByVersionControlStatusDialog.Result Command_Files_Select_ByVersionControlStatus_Dialog() => FilesSelectByVersionControlStatusDialog.Run(WindowParent);
+
+		void Command_Files_Select_ByVersionControlStatus(FilesSelectByVersionControlStatusDialog.Result result)
+		{
+			var statuses = new VCS().GetStatus(RelativeSelectedFiles()).ToList();
+			var sels = Selections.Zip(statuses, (range, status) => new { range, status }).Where(obj => result.Statuses.Contains(obj.status)).Select(obj => obj.range).ToList();
+			Selections.Replace(sels);
+		}
+
 		HashDialog.Result Command_Files_Hash_Dialog() => HashDialog.Run(WindowParent);
 
 		void Command_Files_Hash(HashDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().Select(file => Hasher.Get(file, result.HashType)).ToList());

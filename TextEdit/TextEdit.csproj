@@ -318,6 +318,13 @@
     <Compile Include="Dialogs\FilesOperationsCopyMoveDialog.xaml.cs">
       <DependentUpon>FilesOperationsCopyMoveDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\FilesSelectByVersionControlStatusDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesSelectByVersionControlStatusDialog.xaml.cs">
+      <DependentUpon>FilesSelectByVersionControlStatusDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\FilesSetAttributesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

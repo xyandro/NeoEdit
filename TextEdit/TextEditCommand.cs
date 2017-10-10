@@ -150,6 +150,7 @@ namespace NeoEdit.TextEdit
 		Files_Select_NonExisting,
 		Files_Select_Roots,
 		Files_Select_NonRoots,
+		Files_Select_ByVersionControlStatus,
 		Files_Hash,
 		Files_Sign,
 		Files_Operations_Copy,
