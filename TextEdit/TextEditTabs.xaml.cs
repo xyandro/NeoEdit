@@ -25,6 +25,15 @@ namespace NeoEdit.TextEdit
 
 	partial class TextEditTabs
 	{
+		[DepProp]
+		public string FilesCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public string ActiveCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public string InactiveCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public string ClipboardCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
 		public static void Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false, string shutdownEvent = null)
@@ -76,7 +85,7 @@ namespace NeoEdit.TextEdit
 
 		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, contentType, modified, line, column, this);
 
-		readonly RunOnceTimer doActivatedTimer;
+		readonly RunOnceTimer doActivatedTimer, countsTimer;
 		public TextEditTabs()
 		{
 			TextEditMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
@@ -87,9 +96,20 @@ namespace NeoEdit.TextEdit
 			AllowDrop = true;
 			Drop += TextEditTabs_Drop;
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());
+			countsTimer = new RunOnceTimer(() => UpdateStatusBarText());
 			ItemTabs.TabsChanged += () => UpdateClipboards();
 			NEClipboard.ClipboardChanged += () => UpdateClipboards();
 			Activated += OnActivated;
+		}
+
+		void UpdateStatusBarText()
+		{
+			Func<int, string, string> plural = (count, item) => $"{count} {item}{(count == 1 ? "" : "s")}";
+
+			FilesCountText = $"{plural(ItemTabs.Items.Count, "file")}, {plural(ItemTabs.Items.Sum(item => item.NumSelections), "selection")}";
+			ActiveCountText = $"{plural(ItemTabs.Items.Where(item => item.Active).Count(), "file")}, {plural(ItemTabs.Items.Where(item => item.Active).Sum(item => item.NumSelections), "selection")}";
+			InactiveCountText = $"{plural(ItemTabs.Items.Where(item => !item.Active).Count(), "file")}, {plural(ItemTabs.Items.Where(item => !item.Active).Sum(item => item.NumSelections), "selection")}";
+			ClipboardCountText = $"{plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}";
 		}
 
 		void UpdateClipboards()
@@ -107,6 +127,8 @@ namespace NeoEdit.TextEdit
 				var strs = NEClipboard.Current.Strings;
 				activeTabs.ForEach(tab => tab.Clipboard = strs);
 			}
+
+			UpdateStatusBarText();
 		}
 
 		void TextEditTabs_Drop(object sender, System.Windows.DragEventArgs e)
@@ -618,6 +640,8 @@ namespace NeoEdit.TextEdit
 		}
 
 		public void QueueDoActivated() => doActivatedTimer.Start();
+
+		public void QueueUpdateCounts() => countsTimer.Start();
 
 		void OnActivated(object sender, EventArgs e) => QueueDoActivated();
 

@@ -3,6 +3,7 @@ Add TFS source control
 Allow selecting a screen location (with zoom)
 Add PGP hash for files
 Make modal dialogs modal for owning window only
+Evaluate libs still in use
 
 Disk:
 Move timestamp (possibly others) from TextEditor
@@ -12,7 +13,6 @@ In active list add number of selections, allow sort, allow typing to find file
 Text:
 If user chooses rows and columns, scroll extra windows
 Only show file changed dialog when window is active and selected
-Add multi-file status bar (shows how many (active? files|selections|etc.)
 Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files
 Tutorial

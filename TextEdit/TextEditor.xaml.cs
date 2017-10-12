@@ -1856,6 +1856,7 @@ namespace NeoEdit.TextEdit
 
 			NumSelections = Selections.Count;
 			NumRegions = Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count);
+			(WindowParent as TextEditTabs).QueueUpdateCounts();
 
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Data.NumLines, startLine + yScrollViewportCeiling);
