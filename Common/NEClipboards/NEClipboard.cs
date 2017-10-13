@@ -77,64 +77,72 @@ namespace NeoEdit.Common.NEClipboards
 
 		static NEClipboard GetSystem()
 		{
-			var dataObj = Clipboard.GetDataObject();
-			if (dataObj.GetData(typeof(NEClipboard)) as int? == PID)
-				return null;
-
-			var result = new NEClipboard();
-			var list = new NEClipboardList();
-			result.Add(list);
-
-			var dropList = (dataObj.GetData(DataFormats.FileDrop) as string[])?.OrderBy(Helpers.SmartComparer(false)).ToList();
-			if ((dropList != null) && (dropList.Count != 0))
+			try
 			{
-				var isCut = false;
-				var dropEffectStream = dataObj.GetData("Preferred DropEffect");
-				if (dropEffectStream is MemoryStream)
+				var dataObj = Clipboard.GetDataObject();
+				if (dataObj.GetData(typeof(NEClipboard)) as int? == PID)
+					return null;
+
+				var result = new NEClipboard();
+				var list = new NEClipboardList();
+				result.Add(list);
+
+				var dropList = (dataObj.GetData(DataFormats.FileDrop) as string[])?.OrderBy(Helpers.SmartComparer(false)).ToList();
+				if ((dropList != null) && (dropList.Count != 0))
 				{
-					try
+					var isCut = false;
+					var dropEffectStream = dataObj.GetData("Preferred DropEffect");
+					if (dropEffectStream is MemoryStream)
 					{
-						var dropEffect = (DragDropEffects)BitConverter.ToInt32(((MemoryStream)dropEffectStream).ToArray(), 0);
-						isCut = dropEffect.HasFlag(DragDropEffects.Move);
+						try
+						{
+							var dropEffect = (DragDropEffects)BitConverter.ToInt32(((MemoryStream)dropEffectStream).ToArray(), 0);
+							isCut = dropEffect.HasFlag(DragDropEffects.Move);
+						}
+						catch { }
 					}
-					catch { }
+					list.Add(dropList.Select(str => NEClipboardItem.Create(str)));
+					result.IsCut = isCut;
 				}
-				list.Add(dropList.Select(str => NEClipboardItem.Create(str)));
-				result.IsCut = isCut;
-			}
-			else
-			{
-				var str = dataObj.GetData(DataFormats.UnicodeText) as string ?? dataObj.GetData(DataFormats.OemText) as string ?? dataObj.GetData(DataFormats.Text) as string ?? dataObj.GetData(typeof(string)) as string;
-				list.Add(NEClipboardItem.Create(str));
-			}
+				else
+				{
+					var str = dataObj.GetData(DataFormats.UnicodeText) as string ?? dataObj.GetData(DataFormats.OemText) as string ?? dataObj.GetData(DataFormats.Text) as string ?? dataObj.GetData(typeof(string)) as string;
+					list.Add(NEClipboardItem.Create(str));
+				}
 
-			var image = dataObj.GetData(DataFormats.Bitmap, true) as BitmapSource;
-			if (image != null)
-				list.Add(NEClipboardItem.Create(image));
+				var image = dataObj.GetData(DataFormats.Bitmap, true) as BitmapSource;
+				if (image != null)
+					list.Add(NEClipboardItem.Create(image));
 
-			return result;
+				return result;
+			}
+			catch { return null; }
 		}
 
 		void SetSystem()
 		{
-			var dataObj = new DataObject();
-
-			dataObj.SetText(String, TextDataFormat.UnicodeText);
-			dataObj.SetData(typeof(NEClipboard), PID);
-
-			if (IsCut.HasValue)
+			try
 			{
-				var dropList = new StringCollection();
-				dropList.AddRange(Strings.ToArray());
-				dataObj.SetFileDropList(dropList);
-				dataObj.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(IsCut == true ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
+				var dataObj = new DataObject();
+
+				dataObj.SetText(String, TextDataFormat.UnicodeText);
+				dataObj.SetData(typeof(NEClipboard), PID);
+
+				if (IsCut.HasValue)
+				{
+					var dropList = new StringCollection();
+					dropList.AddRange(Strings.ToArray());
+					dataObj.SetFileDropList(dropList);
+					dataObj.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(IsCut == true ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
+				}
+
+				var image = Images.FirstOrDefault();
+				if (image != null)
+					dataObj.SetImage(image);
+
+				Clipboard.SetDataObject(dataObj, true);
 			}
-
-			var image = Images.FirstOrDefault();
-			if (image != null)
-				dataObj.SetImage(image);
-
-			Clipboard.SetDataObject(dataObj, true);
+			catch { }
 		}
 
 		public IEnumerator<NEClipboardList> GetEnumerator() => neClipboardLists.GetEnumerator();
