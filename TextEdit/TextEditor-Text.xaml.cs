@@ -129,6 +129,10 @@ namespace NeoEdit.TextEdit
 
 		void Command_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
+		TextUnicodeDialog.Result Command_Text_Unicode_Dialog() => TextUnicodeDialog.Run(WindowParent);
+
+		void Command_Text_Unicode(TextUnicodeDialog.Result result) => ReplaceSelections(result.Value);
+
 		void Command_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
 		TextRandomTextDialog.Result Command_Text_RandomText_Dialog() => TextRandomTextDialog.Run(GetVariables(), WindowParent);

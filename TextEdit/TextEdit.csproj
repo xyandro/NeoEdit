@@ -584,6 +584,13 @@
     <Compile Include="Dialogs\TextTrimDialog.xaml.cs">
       <DependentUpon>TextTrimDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\TextUnicodeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TextUnicodeDialog.xaml.cs">
+      <DependentUpon>TextUnicodeDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\TextWidthDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -601,6 +608,7 @@
     <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Misc.cs" />
+    <EmbeddedResource Include="Misc\Unicode.dat" />
     <None Include="Misc\Words.txt" />
     <EmbeddedResource Include="Misc\Words.txt.gz" />
     <Compile Include="PortScanner.cs" />

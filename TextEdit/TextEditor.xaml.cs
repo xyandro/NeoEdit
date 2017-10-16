@@ -815,6 +815,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_Select_BoundedWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(false); break;
 				case TextEditCommand.Text_Width: dialogResult = Command_Text_Width_Dialog(); break;
 				case TextEditCommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(); break;
+				case TextEditCommand.Text_Unicode: dialogResult = Command_Text_Unicode_Dialog(); break;
 				case TextEditCommand.Text_RandomText: dialogResult = Command_Text_RandomText_Dialog(); break;
 				case TextEditCommand.Text_ReverseRegEx: dialogResult = Command_Text_ReverseRegEx_Dialog(); break;
 				case TextEditCommand.Text_FirstDistinct: dialogResult = Command_Text_FirstDistinct_Dialog(); break;
@@ -1052,6 +1053,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_Width: Command_Text_Width(dialogResult as TextWidthDialog.Result); break;
 				case TextEditCommand.Text_Trim: Command_Text_Trim(dialogResult as TextTrimDialog.Result); break;
 				case TextEditCommand.Text_SingleLine: Command_Text_SingleLine(); break;
+				case TextEditCommand.Text_Unicode: Command_Text_Unicode(dialogResult as TextUnicodeDialog.Result); break;
 				case TextEditCommand.Text_GUID: Command_Text_GUID(); break;
 				case TextEditCommand.Text_RandomText: Command_Text_RandomText(dialogResult as TextRandomTextDialog.Result); break;
 				case TextEditCommand.Text_LoremIpsum: Command_Text_LoremIpsum(); break;

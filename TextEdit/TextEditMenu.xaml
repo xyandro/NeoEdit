@@ -313,14 +313,15 @@
 		<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Text_Trim"/>
 		<textEdit:TextEditMenuItem Header="S_ingle Line" CommandEnum="Text_SingleLine"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Unicode" CommandEnum="Text_Unicode"/>
 		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Text_GUID"/>
 		<textEdit:TextEditMenuItem Header="_Random Text" CommandEnum="Text_RandomText"/>
 		<textEdit:TextEditMenuItem Header="L_orem Ipsum" CommandEnum="Text_LoremIpsum"/>
-		<textEdit:TextEditMenuItem Header="Reverse R_egEx" CommandEnum="Text_ReverseRegEx"/>
-		<textEdit:TextEditMenuItem Header="First _Distinct" CommandEnum="Text_FirstDistinct"/>
+		<textEdit:TextEditMenuItem Header="Re_verse RegEx" CommandEnum="Text_ReverseRegEx"/>
+		<textEdit:TextEditMenuItem Header="_First Distinct" CommandEnum="Text_FirstDistinct"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Repeat Co_unt" CommandEnum="Text_RepeatCount"/>
-		<textEdit:TextEditMenuItem Header="Repeat I_ndex" CommandEnum="Text_RepeatIndex"/>
+		<textEdit:TextEditMenuItem Header="R_epeat Count" CommandEnum="Text_RepeatCount"/>
+		<textEdit:TextEditMenuItem Header="Re_peat Index" CommandEnum="Text_RepeatIndex"/>
 	</MenuItem>
 	<MenuItem Header="_Numeric">
 		<MenuItem Header="_Select">

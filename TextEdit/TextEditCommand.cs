@@ -183,6 +183,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.W, ModifierKeys.Control)] Text_Width,
 		[KeyGesture(Key.T, ModifierKeys.Control)] Text_Trim,
 		Text_SingleLine,
+		Text_Unicode,
 		Text_GUID,
 		Text_RandomText,
 		Text_LoremIpsum,

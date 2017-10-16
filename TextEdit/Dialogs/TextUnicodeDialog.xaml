@@ -1,0 +1,46 @@
+﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.Dialogs.TextUnicodeDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:guiConverters="clr-namespace:NeoEdit.GUI.Converters;assembly=NeoEdit.GUI"
+	Title="Insert Unicode" Width="800" Height="600" FocusManager.FocusedElement="{Binding ElementName=codePoints}">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="_Search" Target="{Binding ElementName=search}"/>
+		<TextBox Grid.Row="0" Grid.Column="1" Name="search" Text="{Binding Search, ElementName=self, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="OnSearchPreviewKeyDown"/>
+
+		<ListView Name="codePoints" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding CodePointInformation, ElementName=self}" SelectedItem="{Binding CodePoint, ElementName=self}" MouseDoubleClick="OnCodePointsDoubleClick">
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Header="Code Point" DisplayMemberBinding="{Binding CodePointDisplay}"/>
+					<GridViewColumn Header="" DisplayMemberBinding="{Binding Display}"/>
+					<GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}"/>
+				</GridView>
+			</ListView.View>
+		</ListView>
+
+		<StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+			<RadioButton Content="_Octal" Margin="0,0,10,0" GroupName="baseType" IsChecked="{Binding BaseType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Octal}" Focusable="False"/>
+			<RadioButton Content="_Decimal" Margin="0,0,10,0" GroupName="baseType" IsChecked="{Binding BaseType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Decimal}" Focusable="False"/>
+			<RadioButton Content="_Hex" Margin="0,0,10,0" GroupName="baseType" IsChecked="{Binding BaseType, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Hex}" Focusable="False"/>
+		</StackPanel>
+
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+
+</guiControls:ModalDialog>
