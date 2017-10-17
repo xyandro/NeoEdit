@@ -432,9 +432,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_URL_Unescape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 
-		FilesNamesMakeAbsoluteDialog.Result Command_Edit_URL_Absolute_Dialog() => FilesNamesMakeAbsoluteDialog.Run(WindowParent, GetVariables(), false);
+		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Edit_URL_Absolute_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(WindowParent, GetVariables(), true, false);
 
-		void Command_Edit_URL_Absolute(FilesNamesMakeAbsoluteDialog.Result result)
+		void Command_Edit_URL_Absolute(FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			ReplaceSelections(GetSelectionStrings().Select((str, index) =>

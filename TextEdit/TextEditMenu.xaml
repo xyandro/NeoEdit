@@ -188,6 +188,7 @@
 		<MenuItem Header="N_ame">
 			<textEdit:TextEditMenuItem Header="_Simplify" CommandEnum="Files_Name_Simplify"/>
 			<textEdit:TextEditMenuItem Header="Make _Absolute" CommandEnum="Files_Name_MakeAbsolute"/>
+			<textEdit:TextEditMenuItem Header="Make _Relative" CommandEnum="Files_Name_MakeRelative"/>
 			<textEdit:TextEditMenuItem Header="Get _Unique" CommandEnum="Files_Name_GetUnique"/>
 			<textEdit:TextEditMenuItem Header="Sa_nitize" CommandEnum="Files_Name_Sanitize"/>
 		</MenuItem>

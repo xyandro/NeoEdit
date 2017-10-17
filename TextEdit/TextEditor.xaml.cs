@@ -788,6 +788,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_IgnoreCharacters: dialogResult = Command_Diff_IgnoreCharacters_Dialog(); break;
 				case TextEditCommand.Diff_Fix_Whitespace: dialogResult = Command_Diff_Fix_Whitespace_Dialog(); break;
 				case TextEditCommand.Files_Name_MakeAbsolute: dialogResult = Command_Files_Name_MakeAbsolute_Dialog(); break;
+				case TextEditCommand.Files_Name_MakeRelative: dialogResult = Command_Files_Name_MakeRelative_Dialog(); break;
 				case TextEditCommand.Files_Name_GetUnique: dialogResult = Command_Files_Name_GetUnique_Dialog(); break;
 				case TextEditCommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(); break;
 				case TextEditCommand.Files_Set_Time_Write: dialogResult = Command_Files_Set_Time_Dialog(); break;
@@ -934,7 +935,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_RegEx_Unescape: Command_Edit_RegEx_Unescape(); break;
 				case TextEditCommand.Edit_URL_Escape: Command_Edit_URL_Escape(); break;
 				case TextEditCommand.Edit_URL_Unescape: Command_Edit_URL_Unescape(); break;
-				case TextEditCommand.Edit_URL_Absolute: Command_Edit_URL_Absolute(dialogResult as FilesNamesMakeAbsoluteDialog.Result); break;
+				case TextEditCommand.Edit_URL_Absolute: Command_Edit_URL_Absolute(dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
 				case TextEditCommand.Edit_Color: Command_Edit_Color(dialogResult as EditColorDialog.Result); break;
 				case TextEditCommand.Edit_Data_Hash: Command_Edit_Data_Hash(dialogResult as EditDataHashDialog.Result); break;
 				case TextEditCommand.Edit_Data_Compress: Command_Edit_Data_Compress(dialogResult as EditDataCompressDialog.Result); break;
@@ -981,7 +982,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_Select_Match: Command_Diff_Select_MatchDiff(true); break;
 				case TextEditCommand.Diff_Select_Diff: Command_Diff_Select_MatchDiff(false); break;
 				case TextEditCommand.Files_Name_Simplify: Command_Files_Name_Simplify(); break;
-				case TextEditCommand.Files_Name_MakeAbsolute: Command_Files_Name_MakeAbsolute(dialogResult as FilesNamesMakeAbsoluteDialog.Result); break;
+				case TextEditCommand.Files_Name_MakeAbsolute: Command_Files_Name_MakeAbsolute(dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
+				case TextEditCommand.Files_Name_MakeRelative: Command_Files_Name_MakeRelative(dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
 				case TextEditCommand.Files_Name_GetUnique: Command_Files_Name_GetUnique(dialogResult as FilesNamesGetUniqueDialog.Result); break;
 				case TextEditCommand.Files_Name_Sanitize: Command_Files_Name_Sanitize(); break;
 				case TextEditCommand.Files_Get_Size: Command_Files_Get_Size(); break;

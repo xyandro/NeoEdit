@@ -121,6 +121,16 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		string GetRelativePath(string absolutePath, string relativeDirectory)
+		{
+			var absoluteDirs = absolutePath.Split('\\').ToList();
+			var relativeDirs = relativeDirectory.Split('\\').ToList();
+			var use = 0;
+			while ((use < absoluteDirs.Count) && (use < relativeDirs.Count) && (absoluteDirs[use].Equals(relativeDirs[use], StringComparison.OrdinalIgnoreCase)))
+				++use;
+			return use == 0 ? absolutePath : string.Join("\\", relativeDirs.Skip(use).Select(str => "..").Concat(absoluteDirs.Skip(use)));
+		}
+
 		string GetSize(string path)
 		{
 			if (File.Exists(path))
@@ -233,12 +243,22 @@ namespace NeoEdit.TextEdit
 
 		void Command_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
 
-		FilesNamesMakeAbsoluteDialog.Result Command_Files_Name_MakeAbsolute_Dialog() => FilesNamesMakeAbsoluteDialog.Run(WindowParent, GetVariables(), true);
+		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeAbsolute_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(WindowParent, GetVariables(), true, true);
 
-		void Command_Files_Name_MakeAbsolute(FilesNamesMakeAbsoluteDialog.Result result)
+		void Command_Files_Name_MakeAbsolute(FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
-			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
+			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteRelativeDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
+		}
+
+		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeRelative_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(WindowParent, GetVariables(), false, true);
+
+		void Command_Files_Name_MakeRelative(FilesNamesMakeAbsoluteRelativeDialog.Result result)
+		{
+			var results = GetFixedExpressionResults<string>(result.Expression);
+			if (result.Type == FilesNamesMakeAbsoluteRelativeDialog.ResultType.File)
+				results = results.Select(str => Path.GetDirectoryName(str)).ToList();
+			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
 		}
 
 		FilesNamesGetUniqueDialog.Result Command_Files_Name_GetUnique_Dialog() => FilesNamesGetUniqueDialog.Run(WindowParent);

@@ -304,12 +304,12 @@
     <Compile Include="Dialogs\FilesNamesGetUniqueDialog.xaml.cs">
       <DependentUpon>FilesNamesGetUniqueDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\FilesNamesMakeAbsoluteDialog.xaml">
+    <Page Include="Dialogs\FilesNamesMakeAbsoluteRelativeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\FilesNamesMakeAbsoluteDialog.xaml.cs">
-      <DependentUpon>FilesNamesMakeAbsoluteDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\FilesNamesMakeAbsoluteRelativeDialog.xaml.cs">
+      <DependentUpon>FilesNamesMakeAbsoluteRelativeDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\FilesOperationsCopyMoveDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

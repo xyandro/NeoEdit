@@ -112,6 +112,7 @@ namespace NeoEdit.TextEdit
 		Diff_Select_Diff,
 		Files_Name_Simplify,
 		Files_Name_MakeAbsolute,
+		Files_Name_MakeRelative,
 		Files_Name_GetUnique,
 		Files_Name_Sanitize,
 		Files_Get_Size,
