@@ -700,6 +700,8 @@ namespace NeoEdit.Common.Transform
 			return result;
 		}
 
+		public static string ConvertString(string value, CodePage inCodePage, CodePage outCodePage) => BytesToString(StringToBytes(value, inCodePage), outCodePage);
+
 		public static bool CanFullyEncode(string str1, CodePage codePage)
 		{
 			// Handle formatting (whitespace/case/etc)

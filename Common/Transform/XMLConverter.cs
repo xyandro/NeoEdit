@@ -109,7 +109,7 @@ namespace NeoEdit.Common.Transform
 			else if ((type.IsGenericType) && ((type.GetGenericTypeDefinition() == typeof(List<>)) || (type.GetGenericTypeDefinition() == typeof(HashSet<>))))
 			{
 				if (obj is IEnumerable<char>)
-					xml.Add(new XAttribute("Values", Coder.BytesToString(Coder.StringToBytes(new string((obj as IEnumerable<char>).ToArray()), Coder.CodePage.UTF8), Coder.CodePage.Base64)));
+					xml.Add(new XAttribute("Values", Coder.ConvertString(new string((obj as IEnumerable<char>).ToArray()), Coder.CodePage.UTF8, Coder.CodePage.Base64)));
 				else
 				{
 					var items = obj as IEnumerable;
@@ -203,7 +203,7 @@ namespace NeoEdit.Common.Transform
 				var addMethod = type.GetMethod("Add");
 				if (itemType == typeof(char))
 				{
-					foreach (var ch in Coder.BytesToString(Coder.StringToBytes(xml.Attribute("Values").Value, Coder.CodePage.Base64), Coder.CodePage.UTF8))
+					foreach (var ch in Coder.ConvertString(xml.Attribute("Values").Value, Coder.CodePage.Base64, Coder.CodePage.UTF8))
 						addMethod.Invoke(obj, new object[] { ch });
 				}
 				else
