@@ -25,20 +25,9 @@ namespace NeoEdit.TextEdit
 		static Dictionary<string, int> staticKeysHash = new Dictionary<string, int>();
 		Dictionary<string, int> localKeysHash = new Dictionary<string, int>();
 
-		static void keysAndValues_CollectionChanged(ObservableCollection<ObservableCollection<string>> data, Dictionary<string, int> hash, NotifyCollectionChangedEventArgs e)
-		{
-			if ((e.Action != NotifyCollectionChangedAction.Replace) || (e.NewStartingIndex != 0))
-				return;
-
-			hash.Clear();
-			for (var pos = 0; pos < data[0].Count; ++pos)
-				hash[data[0][pos]] = pos;
-		}
-
 		void SetupLocalKeys()
 		{
 			localKeysAndValues = new ObservableCollection<ObservableCollection<string>>(Enumerable.Repeat(default(ObservableCollection<string>), 10));
-			localKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(localKeysAndValues, localKeysHash, e);
 			for (var ctr = 0; ctr < localKeysAndValues.Count; ++ctr)
 				localKeysAndValues[ctr] = new ObservableCollection<string>();
 
@@ -51,29 +40,44 @@ namespace NeoEdit.TextEdit
 		static void SetupStaticKeys()
 		{
 			staticKeysAndValues = new ObservableCollection<ObservableCollection<string>>(Enumerable.Repeat(default(ObservableCollection<string>), 10));
-			staticKeysAndValues.CollectionChanged += (s, e) => keysAndValues_CollectionChanged(staticKeysAndValues, staticKeysHash, e);
 			for (var ctr = 0; ctr < staticKeysAndValues.Count; ++ctr)
 				staticKeysAndValues[ctr] = new ObservableCollection<string>();
 		}
 
-		void Command_Keys_Set(int index)
+		void Command_Keys_Set(int index, bool caseSensitive = true)
 		{
 			GlobalKeys = TabsParent.ActiveCount == 1;
 			// Handles keys as well as values
 			var values = GetSelectionStrings();
-			if ((index == 0) && (values.Distinct().Count() != values.Count))
+			if ((index == 0) && (values.Distinct(str => caseSensitive ? str : str.ToLowerInvariant()).Count() != values.Count))
 				throw new ArgumentException("Cannot have duplicate keys");
 			KeysAndValues[index] = new ObservableCollection<string>(values);
+			if (index == 0)
+				CalculateKeysHash(caseSensitive);
+		}
+
+		void CalculateKeysHash(bool caseSensitive)
+		{
+			var hash = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
+			for (var pos = 0; pos < KeysAndValues[0].Count; ++pos)
+				hash[KeysAndValues[0][pos]] = pos;
+			if (GlobalKeys)
+				staticKeysHash = hash;
+			else
+				localKeysHash = hash;
 		}
 
 		void Command_Keys_Add(int index)
 		{
 			// Handles keys as well as values
 			var values = GetSelectionStrings();
-			if ((index == 0) && (KeysAndValues[0].Concat(values).GroupBy(key => key).Any(group => group.Count() > 1)))
+			var caseSensitive = keysHash.Comparer == StringComparer.Ordinal;
+			if ((index == 0) && (KeysAndValues[0].Concat(values).GroupBy(key => caseSensitive ? key : key.ToLowerInvariant()).Any(group => group.Count() > 1)))
 				throw new ArgumentException("Cannot have duplicate keys");
 			foreach (var value in values)
 				KeysAndValues[index].Add(value);
+			if (index == 0)
+				CalculateKeysHash(caseSensitive);
 		}
 
 		void Command_Keys_Remove(int index)

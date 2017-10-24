@@ -1185,7 +1185,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_ExecuteQuery: Command_Database_ExecuteQuery(); break;
 				case TextEditCommand.Database_QueryBuilder: Command_Database_QueryBuilder(dialogResult as string); break;
-				case TextEditCommand.Keys_Set_Keys: Command_Keys_Set(0); break;
+				case TextEditCommand.Keys_Set_KeysCaseSensitive: Command_Keys_Set(0, true); break;
+				case TextEditCommand.Keys_Set_KeysCaseInsensitive: Command_Keys_Set(0, false); break;
 				case TextEditCommand.Keys_Set_Values1: Command_Keys_Set(1); break;
 				case TextEditCommand.Keys_Set_Values2: Command_Keys_Set(2); break;
 				case TextEditCommand.Keys_Set_Values3: Command_Keys_Set(3); break;

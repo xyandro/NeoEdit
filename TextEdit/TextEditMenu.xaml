@@ -517,7 +517,8 @@
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">
-			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Set_Keys"/>
+			<textEdit:TextEditMenuItem Header="_Keys (Case Sensitive)" CommandEnum="Keys_Set_KeysCaseSensitive"/>
+			<textEdit:TextEditMenuItem Header="K_eys (Case Insensitive)" CommandEnum="Keys_Set_KeysCaseInsensitive"/>
 			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Set_Values1"/>
 			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Set_Values2"/>
 			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Set_Values3"/>
