@@ -858,7 +858,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Database_QueryBuilder: dialogResult = Command_Database_QueryBuilder_Dialog(); break;
 				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
-				case TextEditCommand.Select_ByCount: dialogResult = Command_Select_ByCount_Dialog(); break;
+				case TextEditCommand.Select_Repeats_ByCount: dialogResult = Command_Select_Repeats_ByCount_Dialog(); break;
 				case TextEditCommand.Select_Split: dialogResult = Command_Select_Split_Dialog(); break;
 				default: return true;
 			}
@@ -1239,12 +1239,12 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Empty: Command_Select_Empty(true); break;
 				case TextEditCommand.Select_NonEmpty: Command_Select_Empty(false); break;
 				case TextEditCommand.Select_ToggleOpenClose: Command_Select_ToggleOpenClose(shiftDown); break;
-				case TextEditCommand.Select_Unique: Command_Select_Unique(); break;
-				case TextEditCommand.Select_Duplicates: Command_Select_Duplicates(); break;
-				case TextEditCommand.Select_MatchPrevious: Command_Select_MatchPrevious(); break;
-				case TextEditCommand.Select_NonMatchPrevious: Command_Select_NonMatchPrevious(); break;
-				case TextEditCommand.Select_RepeatedLines: Command_Select_RepeatedLines(); break;
-				case TextEditCommand.Select_ByCount: Command_Select_ByCount(dialogResult as SelectByCountDialog.Result); break;
+				case TextEditCommand.Select_Repeats_Unique: Command_Select_Repeats_Unique(); break;
+				case TextEditCommand.Select_Repeats_Duplicates: Command_Select_Repeats_Duplicates(); break;
+				case TextEditCommand.Select_Repeats_MatchPrevious: Command_Select_Repeats_MatchPrevious(); break;
+				case TextEditCommand.Select_Repeats_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(); break;
+				case TextEditCommand.Select_Repeats_RepeatedLines: Command_Select_Repeats_RepeatedLines(); break;
+				case TextEditCommand.Select_Repeats_ByCount: Command_Select_Repeats_ByCount(dialogResult as SelectByCountDialog.Result); break;
 				case TextEditCommand.Select_Split: Command_Select_Split(dialogResult as SelectSplitDialog.Result); break;
 				case TextEditCommand.Select_Selection_First: Command_Select_Selection_First(); break;
 				case TextEditCommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;

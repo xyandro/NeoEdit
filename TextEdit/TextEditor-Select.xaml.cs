@@ -153,19 +153,19 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		void Command_Select_Unique() => Selections.Replace(Selections.AsParallel().AsOrdered().Distinct(range => GetString(range)).ToList());
+		void Command_Select_Repeats_Unique() => Selections.Replace(Selections.AsParallel().AsOrdered().Distinct(range => GetString(range)).ToList());
 
-		void Command_Select_Duplicates() => Selections.Replace(Selections.AsParallel().AsOrdered().Duplicate(range => GetString(range)).ToList());
+		void Command_Select_Repeats_Duplicates() => Selections.Replace(Selections.AsParallel().AsOrdered().Duplicate(range => GetString(range)).ToList());
 
-		void Command_Select_MatchPrevious() => Selections.Replace(Selections.AsParallel().AsOrdered().Match(range => GetString(range)).ToList());
+		void Command_Select_Repeats_MatchPrevious() => Selections.Replace(Selections.AsParallel().AsOrdered().Match(range => GetString(range)).ToList());
 
-		void Command_Select_NonMatchPrevious() => Selections.Replace(Selections.AsParallel().AsOrdered().NonMatch(range => GetString(range)).ToList());
+		void Command_Select_Repeats_NonMatchPrevious() => Selections.Replace(Selections.AsParallel().AsOrdered().NonMatch(range => GetString(range)).ToList());
 
-		void Command_Select_RepeatedLines() => Selections.Replace(Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(range)).ToList());
+		void Command_Select_Repeats_RepeatedLines() => Selections.Replace(Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(range)).ToList());
 
-		SelectByCountDialog.Result Command_Select_ByCount_Dialog() => SelectByCountDialog.Run(WindowParent);
+		SelectByCountDialog.Result Command_Select_Repeats_ByCount_Dialog() => SelectByCountDialog.Run(WindowParent);
 
-		void Command_Select_ByCount(SelectByCountDialog.Result result)
+		void Command_Select_Repeats_ByCount(SelectByCountDialog.Result result)
 		{
 			var strs = Selections.Select((range, index) => Tuple.Create(GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(result.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);

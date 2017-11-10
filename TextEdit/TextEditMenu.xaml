@@ -569,7 +569,7 @@
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
-		<textEdit:TextEditMenuItem Header="Not_hing" CommandEnum="Select_Nothing"/>
+		<textEdit:TextEditMenuItem Header="N_othing" CommandEnum="Select_Nothing"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
 		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
@@ -582,14 +582,18 @@
 		<textEdit:TextEditMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
 		<textEdit:TextEditMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="To_ggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
+		<textEdit:TextEditMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Unique"/>
-		<textEdit:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Duplicates"/>
-		<textEdit:TextEditMenuItem Header="Match Pre_vious" CommandEnum="Select_MatchPrevious"/>
-		<textEdit:TextEditMenuItem Header="N_on Match Previous" CommandEnum="Select_NonMatchPrevious"/>
-		<textEdit:TextEditMenuItem Header="Repea_ted Lines" CommandEnum="Select_RepeatedLines"/>
-		<textEdit:TextEditMenuItem Header="_By Count" CommandEnum="Select_ByCount"/>
+		<MenuItem Header="_Repeats">
+			<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Repeats_Unique"/>
+			<textEdit:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_Duplicates"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_MatchPrevious"/>
+			<textEdit:TextEditMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_NonMatchPrevious"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="R_epeated Lines" CommandEnum="Select_Repeats_RepeatedLines"/>
+			<textEdit:TextEditMenuItem Header="By _Count" CommandEnum="Select_Repeats_ByCount"/>
+		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="S_plit" CommandEnum="Select_Split"/>
 		<Separator/>
