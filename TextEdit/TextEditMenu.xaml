@@ -425,6 +425,7 @@
 		<MenuItem Header="_Goto">
 			<textEdit:TextEditMenuItem Header="_Lines" CommandEnum="Position_Goto_Lines"/>
 			<textEdit:TextEditMenuItem Header="_Columns" CommandEnum="Position_Goto_Columns"/>
+			<textEdit:TextEditMenuItem Header="_Indexes" CommandEnum="Position_Goto_Indexes"/>
 			<textEdit:TextEditMenuItem Header="_Positions" CommandEnum="Position_Goto_Positions"/>
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="_Files/Lines" CommandEnum="Position_Goto_FilesLines"/>
@@ -432,6 +433,7 @@
 		<MenuItem Header="_Copy">
 			<textEdit:TextEditMenuItem Header="_Lines" CommandEnum="Position_Copy_Lines"/>
 			<textEdit:TextEditMenuItem Header="_Columns" CommandEnum="Position_Copy_Columns"/>
+			<textEdit:TextEditMenuItem Header="_Indexes" CommandEnum="Position_Copy_Indexes"/>
 			<textEdit:TextEditMenuItem Header="_Positions" CommandEnum="Position_Copy_Positions"/>
 		</MenuItem>
 	</MenuItem>

@@ -71,7 +71,7 @@
 			<Separator/>
 
 			<StatusBarItem>
-				<TextBlock Text="Ch"/>
+				<TextBlock Text="In"/>
 			</StatusBarItem>
 			<StatusBarItem>
 				<TextBlock>

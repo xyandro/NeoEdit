@@ -4,6 +4,7 @@
 	{
 		Line,
 		Column,
+		Index,
 		Position,
 	}
 }

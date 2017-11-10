@@ -19,6 +19,8 @@ Tutorial
 Print
 Add ability to select all attributes
 Allow moving muliple windows, allow drop in middle of window instead of requiring title
+Allow tabs to move to other windows
+Ctrl+Left/Right with selection moves to selection boundary
 
 View:
 Update as new lines are added

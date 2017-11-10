@@ -843,6 +843,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_Database_GenerateDeletes: dialogResult = Command_Table_Database_GenerateDeletes_Dialog(); break;
 				case TextEditCommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(GotoType.Line); break;
 				case TextEditCommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(GotoType.Column); break;
+				case TextEditCommand.Position_Goto_Indexes: dialogResult = Command_Position_Goto_Dialog(GotoType.Index); break;
 				case TextEditCommand.Position_Goto_Positions: dialogResult = Command_Position_Goto_Dialog(GotoType.Position); break;
 				case TextEditCommand.Content_Ancestor: dialogResult = Command_Content_Ancestor_Dialog(); break;
 				case TextEditCommand.Content_Attributes: dialogResult = Command_Content_Attributes_Dialog(); break;
@@ -1127,10 +1128,12 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_Database_GenerateDeletes: Command_Table_Database_GenerateDeletes(dialogResult as TableDatabaseGenerateDeletesDialog.Result); break;
 				case TextEditCommand.Position_Goto_Lines: Command_Position_Goto(GotoType.Line, shiftDown, dialogResult as PositionGotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Columns: Command_Position_Goto(GotoType.Column, shiftDown, dialogResult as PositionGotoDialog.Result); break;
+				case TextEditCommand.Position_Goto_Indexes: Command_Position_Goto(GotoType.Index, shiftDown, dialogResult as PositionGotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_Positions: Command_Position_Goto(GotoType.Position, shiftDown, dialogResult as PositionGotoDialog.Result); break;
 				case TextEditCommand.Position_Goto_FilesLines: Command_Position_Goto_FilesLines(); break;
 				case TextEditCommand.Position_Copy_Lines: Command_Position_Copy(GotoType.Line); break;
 				case TextEditCommand.Position_Copy_Columns: Command_Position_Copy(GotoType.Column); break;
+				case TextEditCommand.Position_Copy_Indexes: Command_Position_Copy(GotoType.Index); break;
 				case TextEditCommand.Position_Copy_Positions: Command_Position_Copy(GotoType.Position); break;
 				case TextEditCommand.Content_Type_SetFromExtension: Command_Content_Type_SetFromExtension(); break;
 				case TextEditCommand.Content_Type_None: Command_Content_Type(Parser.ParserType.None); break;
