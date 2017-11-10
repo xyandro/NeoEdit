@@ -950,8 +950,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Bookmarks_Next: Command_Edit_Bookmarks_NextPreviousBookmark(true, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Previous: Command_Edit_Bookmarks_NextPreviousBookmark(false, shiftDown); break;
 				case TextEditCommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(); break;
-				case TextEditCommand.Edit_Navigate_WordLeft: Command_Edit_Navigate_WordLeft(shiftDown); break;
-				case TextEditCommand.Edit_Navigate_WordRight: Command_Edit_Navigate_WordRight(shiftDown); break;
+				case TextEditCommand.Edit_Navigate_WordLeft: Command_Edit_Navigate_WordLeftRight(false, shiftDown); break;
+				case TextEditCommand.Edit_Navigate_WordRight: Command_Edit_Navigate_WordLeftRight(true, shiftDown); break;
 				case TextEditCommand.Edit_Navigate_AllLeft: Command_Edit_Navigate_AllLeft(shiftDown); break;
 				case TextEditCommand.Edit_Navigate_AllRight: Command_Edit_Navigate_AllRight(shiftDown); break;
 				case TextEditCommand.Diff_Selections: Command_Diff_Selections(); break;

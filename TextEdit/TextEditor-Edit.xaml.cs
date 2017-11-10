@@ -591,9 +591,17 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_Bookmarks_Clear() => Bookmarks.Clear();
 
-		void Command_Edit_Navigate_WordLeft(bool selecting) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, GetPrevWord(range.Cursor), selecting)).ToList());
+		void Command_Edit_Navigate_WordLeftRight(bool next, bool selecting)
+		{
+			if ((!selecting) && (Selections.Any(range => range.HasSelection)))
+			{
+				Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => new Range(next ? range.End : range.Start)).ToList());
+				return;
+			}
 
-		void Command_Edit_Navigate_WordRight(bool selecting) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, GetNextWord(range.Cursor), selecting)).ToList());
+			var func = next ? (Func<int, int>)GetNextWord : GetPrevWord;
+			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, func(range.Cursor), selecting)).ToList());
+		}
 
 		void Command_Edit_Navigate_AllLeft(bool selecting)
 		{
