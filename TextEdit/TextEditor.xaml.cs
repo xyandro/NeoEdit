@@ -254,7 +254,7 @@ namespace NeoEdit.TextEdit
 			this.shutdownData = shutdownData ?? new ShutdownData(null, 1);
 
 			InitializeComponent();
-			AutoRefresh = KeepSelections = true;
+			AutoRefresh = KeepSelections = RepeatsCaseSensitive = true;
 
 			SetupTabLabel();
 
@@ -1245,6 +1245,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Repeats_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(); break;
 				case TextEditCommand.Select_Repeats_RepeatedLines: Command_Select_Repeats_RepeatedLines(); break;
 				case TextEditCommand.Select_Repeats_ByCount: Command_Select_Repeats_ByCount(dialogResult as SelectByCountDialog.Result); break;
+				case TextEditCommand.Select_Repeats_CaseSensitive: Command_Select_Repeats_CaseSensitive(multiStatus); break;
 				case TextEditCommand.Select_Split: Command_Select_Split(dialogResult as SelectSplitDialog.Result); break;
 				case TextEditCommand.Select_Selection_First: Command_Select_Selection_First(); break;
 				case TextEditCommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;

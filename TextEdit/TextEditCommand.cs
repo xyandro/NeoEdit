@@ -374,6 +374,7 @@ namespace NeoEdit.TextEdit
 		Select_Repeats_NonMatchPrevious,
 		Select_Repeats_RepeatedLines,
 		[KeyGesture(Key.B, ModifierKeys.Control)] Select_Repeats_ByCount,
+		Select_Repeats_CaseSensitive,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt)] Select_Split,
 		[KeyGesture(Key.D0, ModifierKeys.Alt)] Select_Selection_First,
 		[KeyGesture(Key.Space, ModifierKeys.Alt)] Select_Selection_CenterVertically,
