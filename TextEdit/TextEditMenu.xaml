@@ -594,7 +594,13 @@
 			<textEdit:TextEditMenuItem Header="R_epeated Lines" CommandEnum="Select_Repeats_RepeatedLines"/>
 			<textEdit:TextEditMenuItem Header="By _Count" CommandEnum="Select_Repeats_ByCount"/>
 			<Separator/>
-			<textEdit:MultiMenuItem Header="C_ase Sensitive" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="RepeatsCaseSensitive" MultiValue="{StaticResource True}" CommandEnum="Select_Repeats_CaseSensitive"/>
+			<MenuItem Header="C_ase Insensitive">
+				<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Repeats_CaseInsensitive_Unique"/>
+				<textEdit:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_CaseInsensitive_Duplicates"/>
+				<Separator/>
+				<textEdit:TextEditMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_CaseInsensitive_MatchPrevious"/>
+				<textEdit:TextEditMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_CaseInsensitive_NonMatchPrevious"/>
+			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="S_plit" CommandEnum="Select_Split"/>

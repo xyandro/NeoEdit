@@ -254,7 +254,7 @@ namespace NeoEdit.TextEdit
 			this.shutdownData = shutdownData ?? new ShutdownData(null, 1);
 
 			InitializeComponent();
-			AutoRefresh = KeepSelections = RepeatsCaseSensitive = true;
+			AutoRefresh = KeepSelections = true;
 
 			SetupTabLabel();
 
@@ -1239,13 +1239,16 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Empty: Command_Select_Empty(true); break;
 				case TextEditCommand.Select_NonEmpty: Command_Select_Empty(false); break;
 				case TextEditCommand.Select_ToggleOpenClose: Command_Select_ToggleOpenClose(shiftDown); break;
-				case TextEditCommand.Select_Repeats_Unique: Command_Select_Repeats_Unique(); break;
-				case TextEditCommand.Select_Repeats_Duplicates: Command_Select_Repeats_Duplicates(); break;
-				case TextEditCommand.Select_Repeats_MatchPrevious: Command_Select_Repeats_MatchPrevious(); break;
-				case TextEditCommand.Select_Repeats_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(); break;
+				case TextEditCommand.Select_Repeats_Unique: Command_Select_Repeats_Unique(true); break;
+				case TextEditCommand.Select_Repeats_Duplicates: Command_Select_Repeats_Duplicates(true); break;
+				case TextEditCommand.Select_Repeats_MatchPrevious: Command_Select_Repeats_MatchPrevious(true); break;
+				case TextEditCommand.Select_Repeats_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(true); break;
 				case TextEditCommand.Select_Repeats_RepeatedLines: Command_Select_Repeats_RepeatedLines(); break;
 				case TextEditCommand.Select_Repeats_ByCount: Command_Select_Repeats_ByCount(dialogResult as SelectByCountDialog.Result); break;
-				case TextEditCommand.Select_Repeats_CaseSensitive: Command_Select_Repeats_CaseSensitive(multiStatus); break;
+				case TextEditCommand.Select_Repeats_CaseInsensitive_Unique: Command_Select_Repeats_Unique(false); break;
+				case TextEditCommand.Select_Repeats_CaseInsensitive_Duplicates: Command_Select_Repeats_Duplicates(false); break;
+				case TextEditCommand.Select_Repeats_CaseInsensitive_MatchPrevious: Command_Select_Repeats_MatchPrevious(false); break;
+				case TextEditCommand.Select_Repeats_CaseInsensitive_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(false); break;
 				case TextEditCommand.Select_Split: Command_Select_Split(dialogResult as SelectSplitDialog.Result); break;
 				case TextEditCommand.Select_Selection_First: Command_Select_Selection_First(); break;
 				case TextEditCommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;
