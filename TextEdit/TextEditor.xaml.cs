@@ -79,22 +79,7 @@ namespace NeoEdit.TextEdit
 		}
 
 
-		TextData _data = new TextData();
-		TextData Data
-		{
-			get { return _data; }
-			set
-			{
-				_data = value;
-				Selections.Clear();
-				Regions.Values.ForEach(region => region.Clear());
-				Searches.Clear();
-				Bookmarks.Clear();
-				undoRedo.Clear();
-				CalculateDiff();
-				CalculateBoundaries();
-			}
-		}
+		readonly TextData Data = new TextData();
 
 		[DepProp]
 		public string DisplayName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
