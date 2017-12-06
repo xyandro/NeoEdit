@@ -1,96 +1,25 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
-using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.TextEdit
 {
-	class RangeList : List<Range>
+	class RangeList : IEnumerable<Range>
 	{
-		readonly RunOnceTimer timer;
+		List<Range> items = new List<Range>();
 
-		public RunOnceTimer Timer => timer;
-		public bool Changed => timer.Started;
-
-		public RangeList(Action callback)
+		public RangeList(List<Range> items)
 		{
-			timer = new RunOnceTimer(() =>
-			{
-				callback();
-				timer.Stop();
-			});
+			this.items = DeOverlap(items);
 		}
 
-		void Signal() => timer.Start();
+		public int Count => items.Count;
 
-		public new Range this[int index]
-		{
-			get { return base[index]; }
-			set
-			{
-				base[index] = value;
-				Signal();
-			}
-		}
+		public int IndexOf(Range range) => items.IndexOf(range);
 
-		public new void AddRange(IEnumerable<Range> items)
-		{
-			if (!items.Any())
-				return;
-			base.AddRange(items);
-			Signal();
-		}
-
-		public new void Insert(int index, Range item)
-		{
-			base.Insert(index, item);
-			Signal();
-		}
-
-		public new bool Remove(Range item)
-		{
-			Signal();
-			return base.Remove(item);
-		}
-
-		public new void RemoveAt(int index)
-		{
-			base.RemoveAt(index);
-			Signal();
-		}
-
-		public new void RemoveRange(int index, int count)
-		{
-			base.RemoveRange(index, count);
-			Signal();
-		}
-
-		public void Replace(Range item)
-		{
-			Clear();
-			Add(item);
-		}
-
-		public void Replace(IEnumerable<Range> items)
-		{
-			Clear();
-			AddRange(items);
-		}
-
-		public new void Clear()
-		{
-			if (Count == 0)
-				return;
-			Signal();
-			base.Clear();
-		}
-
-		public new void Add(Range item)
-		{
-			base.Add(item);
-			Signal();
-		}
+		public Range this[int index] => items[index];
 
 		enum DeOverlapStep
 		{
@@ -99,11 +28,11 @@ namespace NeoEdit.TextEdit
 			Done,
 		}
 
-		DeOverlapStep GetDeOverlapStep()
+		static DeOverlapStep GetDeOverlapStep(List<Range> items)
 		{
 			var result = DeOverlapStep.Done;
 			Range last = null;
-			foreach (var range in this)
+			foreach (var range in items)
 			{
 				if (last != null)
 				{
@@ -120,11 +49,11 @@ namespace NeoEdit.TextEdit
 			return result;
 		}
 
-		void DoDeOverlap()
+		static List<Range> DoDeOverlap(List<Range> items)
 		{
 			var result = new List<Range>();
 
-			using (var enumerator = this.GetEnumerator())
+			using (var enumerator = items.GetEnumerator())
 			{
 				var last = default(Range);
 
@@ -153,18 +82,19 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			Replace(result);
+			return result;
 		}
 
-		public void DeOverlap()
+		static List<Range> DeOverlap(List<Range> items)
 		{
 			while (true)
 			{
-				switch (GetDeOverlapStep())
+				switch (GetDeOverlapStep(items))
 				{
-					case DeOverlapStep.Sort: Replace(this.OrderBy(range => range.Start).ThenBy(range => range.End).ToList()); break;
-					case DeOverlapStep.DeOverlap: DoDeOverlap(); return;
-					case DeOverlapStep.Done: return;
+					case DeOverlapStep.Sort: items = items.OrderBy(range => range.Start).ThenBy(range => range.End).ToList(); break;
+					case DeOverlapStep.DeOverlap: return DoDeOverlap(items);
+					case DeOverlapStep.Done: return items;
+					default: throw new Exception("Invalid step");
 				}
 			}
 		}
@@ -237,7 +167,7 @@ namespace NeoEdit.TextEdit
 			return Tuple.Create(translateNums, translateResults);
 		}
 
-		public void Translate(Tuple<int[], int[]> translateMap)
+		public List<Range> Translate(Tuple<int[], int[]> translateMap)
 		{
 			var result = Helpers.PartitionedParallelForEach<Range>(Count, Math.Max(65536, (Count + 31) / 32), (start, end, list) =>
 			{
@@ -253,7 +183,7 @@ namespace NeoEdit.TextEdit
 						list.Add(new Range(translateMap.Item2[current], translateMap.Item2[startPos]));
 				}
 			});
-			Replace(result);
+			return result;
 		}
 
 		public int BinaryFindFirst(Predicate<Range> predicate)
@@ -262,7 +192,7 @@ namespace NeoEdit.TextEdit
 			while (min < max)
 			{
 				int mid = (min + max) / 2;
-				if (predicate(base[mid]))
+				if (predicate(items[mid]))
 					max = mid;
 				else
 					min = mid + 1;
@@ -276,12 +206,16 @@ namespace NeoEdit.TextEdit
 			while (min < max)
 			{
 				int mid = (min + max + 1) / 2;
-				if (predicate(base[mid]))
+				if (predicate(items[mid]))
 					min = mid;
 				else
 					max = mid - 1;
 			}
 			return min;
 		}
+
+		public IEnumerator<Range> GetEnumerator() => items.GetEnumerator();
+
+		IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 	}
 }

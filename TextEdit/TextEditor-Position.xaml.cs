@@ -91,7 +91,7 @@ namespace NeoEdit.TextEdit
 			if (values.Count != sels.Count)
 				throw new Exception("Expression count doesn't match selection count");
 
-			Selections.Replace(sels.AsParallel().AsOrdered().Select((range, ctr) => GetRange(range, gotoType, values[ctr], selecting)).ToList());
+			SetSelections(sels.AsParallel().AsOrdered().Select((range, ctr) => GetRange(range, gotoType, values[ctr], selecting)).ToList());
 		}
 
 		void Command_Position_Goto_FilesLines()
@@ -106,7 +106,7 @@ namespace NeoEdit.TextEdit
 			foreach (var pair in data)
 			{
 				var textEditor = new TextEditor(pair.Key);
-				textEditor.Selections.Replace(pair.Value.Select(line => new Range(textEditor.Data.GetOffset(line - 1, 0))));
+				textEditor.SetSelections(pair.Value.Select(line => new Range(textEditor.Data.GetOffset(line - 1, 0))).ToList());
 				TabsParent.CreateTab(textEditor);
 			}
 		}

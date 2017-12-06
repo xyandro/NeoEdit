@@ -22,7 +22,7 @@ namespace NeoEdit.TextEdit
 		void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<bool>(result.Expression);
-			Selections.Replace(Selections.Where((str, num) => results[num]).ToList());
+			SetSelections(Selections.Where((str, num) => results[num]).ToList());
 		}
 
 		void Command_Expression_ClearVariables() => variables.Clear();

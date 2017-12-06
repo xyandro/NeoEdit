@@ -33,7 +33,7 @@ namespace NeoEdit.TextEdit
 		{
 			nodes = nodes.Where(node => node != null).Distinct().OrderBy(node => node.Start).ToList();
 			var overlap = nodes.WithPrev().Any(tuple => tuple.Item2.start < tuple.Item1.end);
-			Selections.Replace(nodes.Select(node => new Range(node.Start, overlap ? node.Start : node.End)).ToList());
+			SetSelections(nodes.Select(node => new Range(node.Start, overlap ? node.Start : node.End)).ToList());
 		}
 
 		List<ParserNode> GetSelectionNodes()
@@ -86,7 +86,7 @@ namespace NeoEdit.TextEdit
 		{
 			var nodes = GetSelectionNodes();
 			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All();
-			Selections.Replace(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
+			SetSelections(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
 		}
 
 		void Command_Content_Current() => ContentReplaceSelections(GetSelectionNodes());

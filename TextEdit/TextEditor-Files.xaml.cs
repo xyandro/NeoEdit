@@ -461,7 +461,7 @@ namespace NeoEdit.TextEdit
 			foreach (var obj in selected)
 				if (BinarySearchFile(obj.fileName, searcher, ref answer))
 					sels.Add(obj.range);
-			Selections.Replace(sels);
+			SetSelections(sels);
 		}
 
 		FindTextDialog.Result Command_Files_Find_Text_Dialog() => FindTextDialog.Run(WindowParent);
@@ -473,7 +473,7 @@ namespace NeoEdit.TextEdit
 			foreach (var obj in selected)
 				if (TextSearchFile(obj.fileName, result, ref answer))
 					sels.Add(obj.range);
-			Selections.Replace(sels);
+			SetSelections(sels);
 		}
 
 		FilesFindMassFindDialog.Result Command_Files_Find_MassFind_Dialog() => FilesFindMassFindDialog.Run(WindowParent, GetVariables());
@@ -487,7 +487,7 @@ namespace NeoEdit.TextEdit
 			foreach (var obj in selected)
 				if (BinarySearchFile(obj.fileName, searcher, ref answer))
 					sels.Add(obj.range);
-			Selections.Replace(sels);
+			SetSelections(sels);
 		}
 
 		FilesInsertDialog.Result Command_Files_Insert_Dialog() => FilesInsertDialog.Run(WindowParent);
@@ -528,13 +528,13 @@ namespace NeoEdit.TextEdit
 				File.WriteAllBytes(filename[ctr], Coder.StringToBytes(data[ctr], result.CodePage, true));
 		}
 
-		void Command_Files_Select_Name(GetPathType type) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList());
+		void Command_Files_Select_Name(GetPathType type) => SetSelections(Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList());
 
-		void Command_Files_Select_Files() => Selections.Replace(Selections.Where(range => File.Exists(FileName.RelativeChild(GetString(range)))).ToList());
+		void Command_Files_Select_Files() => SetSelections(Selections.Where(range => File.Exists(FileName.RelativeChild(GetString(range)))).ToList());
 
-		void Command_Files_Select_Directories() => Selections.Replace(Selections.Where(range => Directory.Exists(FileName.RelativeChild(GetString(range)))).ToList());
+		void Command_Files_Select_Directories() => SetSelections(Selections.Where(range => Directory.Exists(FileName.RelativeChild(GetString(range)))).ToList());
 
-		void Command_Files_Select_Existing(bool existing) => Selections.Replace(Selections.Where(range => FileOrDirectoryExists(FileName.RelativeChild(GetString(range))) == existing).ToList());
+		void Command_Files_Select_Existing(bool existing) => SetSelections(Selections.Where(range => FileOrDirectoryExists(FileName.RelativeChild(GetString(range))) == existing).ToList());
 
 		void Command_Files_Select_Roots(bool include)
 		{
@@ -551,7 +551,7 @@ namespace NeoEdit.TextEdit
 				root = file;
 			}
 
-			Selections.Replace(sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList());
+			SetSelections(sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList());
 		}
 
 		FilesSelectByVersionControlStatusDialog.Result Command_Files_Select_ByVersionControlStatus_Dialog() => FilesSelectByVersionControlStatusDialog.Run(WindowParent);
@@ -560,7 +560,7 @@ namespace NeoEdit.TextEdit
 		{
 			var statuses = new VCS().GetStatus(RelativeSelectedFiles()).ToList();
 			var sels = Selections.Zip(statuses, (range, status) => new { range, status }).Where(obj => result.Statuses.Contains(obj.status)).Select(obj => obj.range).ToList();
-			Selections.Replace(sels);
+			SetSelections(sels);
 		}
 
 		HashDialog.Result Command_Files_Hash_Dialog() => HashDialog.Run(WindowParent);

@@ -137,7 +137,7 @@ namespace NeoEdit.TextEdit
 				var sels = lines.Select(tuple => new Range(target.Data.GetOffset(tuple.Item2, 0, true), target.Data.GetOffset(tuple.Item1, 0, true))).ToList();
 				if (shiftDown)
 					sels.AddRange(target.Selections);
-				target.Selections.Replace(sels);
+				target.SetSelections(sels);
 			}
 		}
 
@@ -163,7 +163,7 @@ namespace NeoEdit.TextEdit
 				throw new Exception("Diff not in progress");
 
 			var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, result.LineStartTabStop, null, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
-			Selections.Replace(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)));
+			SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
 			ReplaceSelections(fixes.Item2);
 		}
 
@@ -173,7 +173,7 @@ namespace NeoEdit.TextEdit
 				throw new Exception("Diff not in progress");
 
 			var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, null, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
-			Selections.Replace(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)));
+			SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
 			ReplaceSelections(fixes.Item2);
 		}
 
@@ -183,7 +183,7 @@ namespace NeoEdit.TextEdit
 				throw new Exception("Diff not in progress");
 
 			var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, null, DiffIgnoreLineEndings, diffIgnoreCharacters);
-			Selections.Replace(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)));
+			SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
 			ReplaceSelections(fixes.Item2);
 		}
 
@@ -193,7 +193,7 @@ namespace NeoEdit.TextEdit
 				throw new Exception("Diff not in progress");
 
 			var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, null, diffIgnoreCharacters);
-			Selections.Replace(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)));
+			SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
 			ReplaceSelections(fixes.Item2);
 		}
 
@@ -202,7 +202,7 @@ namespace NeoEdit.TextEdit
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			Selections.Replace(Data.GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)));
+			SetSelections(Data.GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)).ToList());
 		}
 	}
 }

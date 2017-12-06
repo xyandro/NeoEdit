@@ -217,8 +217,39 @@ namespace NeoEdit.TextEdit
 			SetupStaticKeys();
 		}
 
-		readonly RangeList Selections, Searches, Bookmarks;
-		readonly Dictionary<int, RangeList> Regions;
+		RangeList selectionsList = new RangeList(new List<Range>());
+		RangeList Selections => selectionsList;
+		void SetSelections(List<Range> selections)
+		{
+			selectionsList = new RangeList(selections);
+			EnsureVisible();
+			canvasRenderTimer.Start();
+		}
+
+		RangeList searchesList = new RangeList(new List<Range>());
+		RangeList Searches => searchesList;
+		void SetSearches(List<Range> searches)
+		{
+			searchesList = new RangeList(searches.Where(range => range.HasSelection).ToList());
+			canvasRenderTimer.Start();
+		}
+
+		RangeList bookmarksList = new RangeList(new List<Range>());
+		RangeList Bookmarks => bookmarksList;
+		void SetBookmarks(List<Range> bookmarks)
+		{
+			bookmarksList = new RangeList(bookmarks.Select(range => MoveCursor(range, 0, 0, false, lineRel: true, indexRel: false)).ToList());
+			bookmarkRenderTimer.Start();
+		}
+
+		readonly Dictionary<int, RangeList> regionsList = Enumerable.Range(1, 9).ToDictionary(num => num, num => new RangeList(new List<Range>()));
+		IReadOnlyDictionary<int, RangeList> Regions => regionsList;
+		void SetRegions(int region, List<Range> regions)
+		{
+			regionsList[region] = new RangeList(regions);
+			canvasRenderTimer.Start();
+		}
+
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 		readonly UndoRedo undoRedo;
@@ -248,13 +279,8 @@ namespace NeoEdit.TextEdit
 			Drop += (s, e) => { OnDrop(e.Data); e.Handled = true; };
 
 			undoRedo = new UndoRedo();
-			Selections = new RangeList(SelectionsInvalidated);
-			Searches = new RangeList(SearchesInvalidated);
-			Regions = Enumerable.Range(1, 9).ToDictionary(num => num, num => new RangeList(() => RegionsInvalidated(num)));
-			Bookmarks = new RangeList(BookmarksInvalidated);
 
 			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
-			canvasRenderTimer.AddDependency(new RunOnceTimer[] { Selections.Timer, Searches.Timer }.Concat(Regions.Values.Select(region => region.Timer)).ToArray());
 			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
 
 			OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
@@ -296,7 +322,8 @@ namespace NeoEdit.TextEdit
 
 		void BlockSelDown()
 		{
-			foreach (var range in Selections.ToList())
+			var sels = new List<Range>();
+			foreach (var range in Selections)
 			{
 				var cursorLine = Data.GetOffsetLine(range.Cursor);
 				var highlightLine = Data.GetOffsetLine(range.Anchor);
@@ -308,8 +335,9 @@ namespace NeoEdit.TextEdit
 				cursorIndex = Math.Max(0, Math.Min(cursorIndex, Data.GetLineLength(cursorLine)));
 				highlightIndex = Math.Max(0, Math.Min(highlightIndex, Data.GetLineLength(highlightLine)));
 
-				Selections.Add(new Range(Data.GetOffset(cursorLine, cursorIndex), Data.GetOffset(highlightLine, highlightIndex)));
+				sels.Add(new Range(Data.GetOffset(cursorLine, cursorIndex), Data.GetOffset(highlightLine, highlightIndex)));
 			}
+			SetSelections(Selections.Concat(sels).ToList());
 		}
 
 		void BlockSelUp()
@@ -338,14 +366,7 @@ namespace NeoEdit.TextEdit
 					sels.Add(range);
 			}
 
-			Selections.Replace(sels);
-		}
-
-		void BookmarksInvalidated()
-		{
-			Bookmarks.Replace(Bookmarks.Select(range => MoveCursor(range, 0, 0, false, lineRel: true, indexRel: false)).ToList());
-			Bookmarks.DeOverlap();
-			bookmarkRenderTimer.Start();
+			SetSelections(sels);
 		}
 
 		void CalculateBoundaries()
@@ -739,7 +760,7 @@ namespace NeoEdit.TextEdit
 		{
 			var useLine = Math.Max(0, Math.Min(line ?? 1, Data.NumLines) - 1);
 			var index = Data.GetIndexFromColumn(useLine, Math.Max(0, (column ?? 1) - 1), true);
-			Selections.Add(new Range(Data.GetOffset(useLine, index)));
+			SetSelections(Selections.Concat(new Range(Data.GetOffset(useLine, index))).ToList());
 		}
 
 		public bool GetDialogResult(TextEditCommand command, out object dialogResult)
@@ -1516,7 +1537,7 @@ namespace NeoEdit.TextEdit
 					}
 					break;
 				case Key.Escape:
-					Searches.Clear();
+					SetSearches(new List<Range>());
 					doDrag = DragType.None;
 					if (NEWindow.EscapeClearsSelections)
 					{
@@ -1524,14 +1545,14 @@ namespace NeoEdit.TextEdit
 						if (!Selections.Any())
 						{
 							var pos = Data.GetOffset(Math.Max(0, Math.Min(yScrollValue, Data.NumLines - 1)), 0);
-							Selections.Replace(new Range(pos));
+							SetSelections(new List<Range> { new Range(pos) });
 						}
 					}
 					break;
 				case Key.Left:
 					{
 						var hasSelection = Selections.Any(range => range.HasSelection);
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
+						SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 						{
 							var line = Data.GetOffsetLine(range.Cursor);
 							var index = Data.GetOffsetIndex(range.Cursor, line);
@@ -1547,7 +1568,7 @@ namespace NeoEdit.TextEdit
 				case Key.Right:
 					{
 						var hasSelection = Selections.Any(range => range.HasSelection);
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
+						SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 						{
 							var line = Data.GetOffsetLine(range.Cursor);
 							var index = Data.GetOffsetIndex(range.Cursor, line);
@@ -1565,7 +1586,7 @@ namespace NeoEdit.TextEdit
 					{
 						var mult = key == Key.Up ? -1 : 1;
 						if (!controlDown)
-							Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, mult, 0, shiftDown)).ToList());
+							SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, mult, 0, shiftDown)).ToList());
 						else if (!shiftDown)
 							yScrollValue += mult;
 						else if (key == Key.Down)
@@ -1580,15 +1601,16 @@ namespace NeoEdit.TextEdit
 						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, BeginOffset, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
 							sels.Add(BeginRange);
-						Selections.Replace(sels);
+						SetSelections(sels);
 					}
 					else
 					{
+						var sels = new List<Range>();
 						bool changed = false;
-						for (var ctr = 0; ctr < Selections.Count; ++ctr)
+						foreach (var selection in Selections)
 						{
-							var line = Data.GetOffsetLine(Selections[ctr].Cursor);
-							var index = Data.GetOffsetIndex(Selections[ctr].Cursor, line);
+							var line = Data.GetOffsetLine(selection.Cursor);
+							var index = Data.GetOffsetIndex(selection.Cursor, line);
 
 							int first;
 							var end = Data.GetLineLength(line);
@@ -1602,13 +1624,14 @@ namespace NeoEdit.TextEdit
 
 							if (first != index)
 								changed = true;
-							Selections[ctr] = MoveCursor(Selections[ctr], 0, first, shiftDown, indexRel: false);
+							sels.Add(MoveCursor(selection, 0, first, shiftDown, indexRel: false));
 						}
 						if (!changed)
 						{
-							Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, 0, shiftDown, indexRel: false)).ToList());
+							sels = sels.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, 0, shiftDown, indexRel: false)).ToList();
 							xScrollValue = 0;
 						}
+						SetSelections(sels);
 					}
 					break;
 				case Key.End:
@@ -1617,10 +1640,10 @@ namespace NeoEdit.TextEdit
 						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, EndOffset, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
 							sels.Add(EndRange);
-						Selections.Replace(sels);
+						SetSelections(sels);
 					}
 					else
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, int.MaxValue, shiftDown, indexRel: false)).ToList());
+						SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, int.MaxValue, shiftDown, indexRel: false)).ToList());
 					break;
 				case Key.PageUp:
 					if (controlDown)
@@ -1628,7 +1651,7 @@ namespace NeoEdit.TextEdit
 					else
 					{
 						var savedYScrollViewportFloor = yScrollViewportFloor;
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - savedYScrollViewportFloor, 0, shiftDown)).ToList());
+						SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - savedYScrollViewportFloor, 0, shiftDown)).ToList());
 					}
 					break;
 				case Key.PageDown:
@@ -1637,7 +1660,7 @@ namespace NeoEdit.TextEdit
 					else
 					{
 						var savedYScrollViewportFloor = yScrollViewportFloor;
-						Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, savedYScrollViewportFloor - 1, 0, shiftDown)).ToList());
+						SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, savedYScrollViewportFloor - 1, 0, shiftDown)).ToList());
 					}
 					break;
 				case Key.Tab:
@@ -1682,9 +1705,6 @@ namespace NeoEdit.TextEdit
 				default: ret = false; break;
 			}
 
-			if (Selections.Changed)
-				EnsureVisible();
-
 			return ret;
 		}
 
@@ -1694,24 +1714,24 @@ namespace NeoEdit.TextEdit
 				return true;
 
 			ReplaceSelections(text, false, tryJoinUndo: true);
-			if (Selections.Changed)
-				EnsureVisible();
 			return true;
 		}
 
 		void MouseHandler(Point mousePos, int clickCount, bool selecting)
 		{
+			var sels = Selections.ToList();
 			var line = Math.Max(0, Math.Min(Data.NumLines - 1, (int)(mousePos.Y / Font.FontSize) + yScrollValue));
 			var column = Math.Max(0, Math.Min(Data.GetLineColumnsLength(line), (int)(mousePos.X / Font.CharWidth) + xScrollValue));
 			var index = Data.GetIndexFromColumn(line, column, true);
 			var offset = Data.GetOffset(line, index);
-			var mouseRange = CurrentSelection < Selections.Count ? Selections[CurrentSelection] : null;
+			var mouseRange = CurrentSelection < sels.Count ? sels[CurrentSelection] : null;
 
+			var currentSelection = default(Range);
 			if (selecting)
 			{
 				if (mouseRange != null)
 				{
-					Selections.Remove(mouseRange);
+					sels.Remove(mouseRange);
 					var anchor = mouseRange.Anchor;
 					if (clickCount != 1)
 					{
@@ -1729,24 +1749,29 @@ namespace NeoEdit.TextEdit
 						}
 					}
 
-					Selections.Add(new Range(offset, anchor));
-					CurrentSelection = Selections.Count - 1;
+					currentSelection = new Range(offset, anchor);
 				}
-				return;
 			}
-
-			if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.None)
-				Selections.Clear();
-
-			if (clickCount == 1)
-				Selections.Add(new Range(offset));
 			else
 			{
-				if (mouseRange != null)
-					Selections.Remove(mouseRange);
-				Selections.Add(new Range(GetNextWord(offset), GetPrevWord(Math.Min(offset + 1, EndOffset))));
+				if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.None)
+					sels.Clear();
+
+				if (clickCount == 1)
+					currentSelection = new Range(offset);
+				else
+				{
+					if (mouseRange != null)
+						sels.Remove(mouseRange);
+					currentSelection = new Range(GetNextWord(offset), GetPrevWord(Math.Min(offset + 1, EndOffset)));
+				}
 			}
-			CurrentSelection = Selections.Count - 1;
+
+			if (currentSelection != null)
+				sels.Add(currentSelection);
+			SetSelections(sels);
+			if (currentSelection != null)
+				CurrentSelection = Selections.IndexOf(currentSelection);
 		}
 
 		Range MoveCursor(Range range, int cursor, bool selecting)
@@ -2042,12 +2067,6 @@ namespace NeoEdit.TextEdit
 			SetModifiedFlag(isModified);
 		}
 
-		void RegionsInvalidated(int useRegion)
-		{
-			Regions[useRegion].DeOverlap();
-			canvasRenderTimer.Start();
-		}
-
 		List<string> RelativeSelectedFiles()
 		{
 			var fileName = FileName;
@@ -2087,12 +2106,12 @@ namespace NeoEdit.TextEdit
 			CalculateDiff();
 
 			var translateMap = RangeList.GetTranslateMap(ranges, strs, new RangeList[] { Selections, Searches, Bookmarks }.Concat(Regions.Values).ToArray());
-			Selections.Translate(translateMap);
-			Regions.Values.ForEach(region => region.Translate(translateMap));
+			SetSelections(Selections.Translate(translateMap));
+			Regions.Keys.ToList().ForEach(key => SetRegions(key, Regions[key].Translate(translateMap)));
 			var searchLens = Searches.Select(range => range.Length).ToList();
-			Searches.Translate(translateMap);
-			Searches.Replace(Searches.Where((range, index) => searchLens[index] == range.Length).ToList());
-			Bookmarks.Translate(translateMap);
+			SetSearches(Searches.Translate(translateMap));
+			SetSearches(Searches.Where((range, index) => searchLens[index] == range.Length).ToList());
+			SetBookmarks(Bookmarks.Translate(translateMap));
 
 			CalculateBoundaries();
 		}
@@ -2107,24 +2126,26 @@ namespace NeoEdit.TextEdit
 				strs = strs.Select(str => str + ending).ToList();
 			var offset = Selections.Single().Start;
 			ReplaceSelections(string.Join("", strs));
-			Selections.Clear();
+
+			var sels = new List<Range>();
 			foreach (var str in strs)
 			{
-				Selections.Add(Range.FromIndex(offset, str.Length - ending.Length));
+				sels.Add(Range.FromIndex(offset, str.Length - ending.Length));
 				offset += str.Length;
 			}
+			SetSelections(sels);
 		}
 
 		void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false) => ReplaceSelections(Selections.Select(range => str).ToList(), highlight, replaceType, tryJoinUndo);
 
 		void ReplaceSelections(List<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
-			Replace(Selections, strs, replaceType, tryJoinUndo);
+			Replace(Selections.ToList(), strs, replaceType, tryJoinUndo);
 
 			if (highlight)
-				Selections.Replace(Selections.AsParallel().AsOrdered().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList());
+				SetSelections(Selections.AsParallel().AsOrdered().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList());
 			else
-				Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
+				SetSelections(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
 		}
 
 		void Save(string fileName, bool copyOnly = false)
@@ -2169,20 +2190,6 @@ namespace NeoEdit.TextEdit
 				SetModifiedFlag(false);
 				SetFileName(fileName);
 			}
-		}
-
-		void SearchesInvalidated()
-		{
-			Searches.Replace(Searches.Where(range => range.HasSelection).ToList());
-			Searches.DeOverlap();
-			canvasRenderTimer.Start();
-		}
-
-		void SelectionsInvalidated()
-		{
-			Selections.DeOverlap();
-			EnsureVisible();
-			canvasRenderTimer.Start();
 		}
 
 		void SetClipboardFile(string fileName, bool isCut = false) => SetClipboardFiles(new List<string> { fileName }, isCut);
@@ -2284,7 +2291,7 @@ namespace NeoEdit.TextEdit
 
 		bool VerifyCanFullyEncode(List<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
 
-		void Command_Type_Select_MinMax(bool min, FindMinMaxType type) => Selections.Replace(FindMinMax(min, type));
+		void Command_Type_Select_MinMax(bool min, FindMinMaxType type) => SetSelections(FindMinMax(min, type));
 
 		void Command_Macro_RepeatLastAction()
 		{

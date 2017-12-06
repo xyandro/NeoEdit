@@ -60,7 +60,7 @@ namespace NeoEdit.TextEdit
 		{
 			var output = GetTableText(table);
 			Replace(new List<Range> { FullRange }, new List<string> { output });
-			Selections.Replace(BeginRange);
+			SetSelections(new List<Range> { BeginRange });
 		}
 
 		void Command_Table_DetectType() => ContentType = Table.GuessTableType(AllText);
@@ -164,7 +164,7 @@ namespace NeoEdit.TextEdit
 			var variables = GetTableVariables(table);
 			var results = new NEExpression(result.Expression).EvaluateRows<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
-			Selections.Replace(lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
+			SetSelections(lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
 		}
 
 		void Command_Table_SetJoinSource() => joinTable = GetTable();
@@ -210,7 +210,7 @@ namespace NeoEdit.TextEdit
 				sels.Add(Range.FromIndex(offset, item.Length));
 				offset += item.Length;
 			}
-			Selections.Replace(sels);
+			SetSelections(sels);
 		}
 
 		TableDatabaseGenerateUpdatesDialog.Result Command_Table_Database_GenerateUpdates_Dialog() => TableDatabaseGenerateUpdatesDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
@@ -229,7 +229,7 @@ namespace NeoEdit.TextEdit
 				sels.Add(Range.FromIndex(offset, item.Length));
 				offset += item.Length;
 			}
-			Selections.Replace(sels);
+			SetSelections(sels);
 		}
 
 		TableDatabaseGenerateDeletesDialog.Result Command_Table_Database_GenerateDeletes_Dialog() => TableDatabaseGenerateDeletesDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
@@ -248,7 +248,7 @@ namespace NeoEdit.TextEdit
 				sels.Add(Range.FromIndex(offset, item.Length));
 				offset += item.Length;
 			}
-			Selections.Replace(sels);
+			SetSelections(sels);
 		}
 	}
 }

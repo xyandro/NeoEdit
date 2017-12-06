@@ -24,33 +24,35 @@ namespace NeoEdit.TextEdit
 		{
 			if (Searches.Count == 0)
 			{
-				Selections.Clear();
+				SetSelections(new List<Range>());
 				return;
 			}
 
-			for (var ctr = 0; ctr < Selections.Count; ++ctr)
+			var sels = new List<Range>();
+			foreach (var selection in Selections)
 			{
 				int index;
 				if (forward)
 				{
-					index = Searches.BinaryFindFirst(range => range.Start >= Selections[ctr].End);
+					index = Searches.BinaryFindFirst(range => range.Start >= selection.End);
 					if (index == -1)
 						index = 0;
 				}
 				else
 				{
-					index = Searches.BinaryFindLast(range => range.Start < Selections[ctr].Start);
+					index = Searches.BinaryFindLast(range => range.Start < selection.Start);
 					if (index == -1)
 						index = Searches.Count - 1;
 				}
 
 				if (!selecting)
-					Selections[ctr] = new Range(Searches[index].End, Searches[index].Start);
+					sels.Add(new Range(Searches[index].End, Searches[index].Start));
 				else if (forward)
-					Selections[ctr] = new Range(Searches[index].End, Selections[ctr].Start);
+					sels.Add(new Range(Searches[index].End, selection.Start));
 				else
-					Selections[ctr] = new Range(Searches[index].Start, Selections[ctr].End);
+					sels.Add(new Range(Searches[index].Start, selection.End));
 			}
+			SetSelections(sels);
 		}
 
 		List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
@@ -184,7 +186,7 @@ namespace NeoEdit.TextEdit
 			var undo = undoRedo.GetUndo();
 			if (undo == null)
 				return;
-			Selections.Replace(undo.ranges);
+			SetSelections(undo.ranges);
 			ReplaceSelections(undo.text, replaceType: ReplaceType.Undo);
 		}
 
@@ -193,7 +195,7 @@ namespace NeoEdit.TextEdit
 			var redo = undoRedo.GetRedo();
 			if (redo == null)
 				return;
-			Selections.Replace(redo.ranges);
+			SetSelections(redo.ranges);
 			ReplaceSelections(redo.text, replaceType: ReplaceType.Redo);
 		}
 
@@ -274,7 +276,7 @@ namespace NeoEdit.TextEdit
 
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
-				Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => regex.IsMatch(GetString(range)) == result.KeepMatching).ToList());
+				SetSelections(Selections.AsParallel().AsOrdered().Where(range => regex.IsMatch(GetString(range)) == result.KeepMatching).ToList());
 				return;
 			}
 
@@ -294,11 +296,11 @@ namespace NeoEdit.TextEdit
 			switch (result.Type)
 			{
 				case EditFindFindDialog.ResultType.FindFirst:
-					Searches.Replace(results);
+					SetSearches(results);
 					FindNext(true, selecting);
 					break;
 				case EditFindFindDialog.ResultType.FindAll:
-					Selections.Replace(results);
+					SetSelections(results);
 					break;
 			}
 		}
@@ -313,7 +315,7 @@ namespace NeoEdit.TextEdit
 			var text = Regex.Escape(GetString(Selections[0]));
 			var regex = new Regex(text, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-			Searches.Replace(Data.RegexMatches(regex, BeginOffset, EndOffset, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)));
+			SetSearches(Data.RegexMatches(regex, BeginOffset, EndOffset, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
 			FindNext(true, selecting);
 		}
 
@@ -326,14 +328,14 @@ namespace NeoEdit.TextEdit
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
 				var set = new HashSet<string>(texts, result.MatchCase ? (IEqualityComparer<string>)EqualityComparer<string>.Default : StringComparer.OrdinalIgnoreCase);
-				Selections.Replace(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == result.KeepMatching).ToList());
+				SetSelections(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == result.KeepMatching).ToList());
 				return;
 			}
 
 			var searcher = new Searcher(texts, result.MatchCase);
 			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
 			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => Data.StringMatches(searcher, selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
-			Selections.Replace(ranges);
+			SetSelections(ranges);
 		}
 
 		EditFindReplaceDialog.Result Command_Edit_Find_Replace_Dialog()
@@ -358,11 +360,11 @@ namespace NeoEdit.TextEdit
 		{
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
 			var sels = regions.AsParallel().AsOrdered().SelectMany(region => Data.RegexMatches(result.Regex, region.Start, region.Length, result.MultiLine, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
-			Selections.Replace(sels);
+			SetSelections(sels);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => result.Regex.Replace(GetString(range), result.Replace)).ToList());
 		}
 
-		void Command_Edit_Find_ClearSearchResults() => Searches.Clear();
+		void Command_Edit_Find_ClearSearchResults() => SetSearches(new List<Range>());
 
 		void Command_Edit_CopyDown()
 		{
@@ -411,7 +413,7 @@ namespace NeoEdit.TextEdit
 					for (var index = selection.Start; index < selection.End; index += len)
 						sels.Add(new Range(index + len, index));
 				}
-				Selections.Replace(sels);
+				SetSelections(sels);
 			}
 		}
 
@@ -541,9 +543,9 @@ namespace NeoEdit.TextEdit
 			}
 			newSelections = ordering.Select(num => newSelections[num]).ToList();
 
-			Selections.Replace(newSelections);
+			SetSelections(newSelections);
 			if (result.SortScope == SortScope.Regions)
-				Regions[result.UseRegion].Replace(newRegions);
+				SetRegions(result.UseRegion, newRegions);
 		}
 
 		EditConvertDialog.Result Command_Edit_Convert_Dialog() => EditConvertDialog.Run(WindowParent);
@@ -565,42 +567,44 @@ namespace NeoEdit.TextEdit
 			if (linePairs.Any(pair => pair.start != pair.end))
 				throw new Exception("Selections must be on a single line.");
 
+			var bookmarks = Bookmarks.ToList();
 			var lineRanges = linePairs.AsParallel().AsOrdered().Select(pair => new Range(Data.GetOffset(pair.start, 0))).ToList();
 			var comparer = Comparer<Range>.Create((r1, r2) => r1.Start.CompareTo(r2.Start));
-			var indexes = lineRanges.AsParallel().Select(range => new { range = range, index = Bookmarks.BinarySearch(range, comparer) }).Reverse().ToList();
+			var indexes = lineRanges.AsParallel().Select(range => new { range = range, index = bookmarks.BinarySearch(range, comparer) }).Reverse().ToList();
 
 			if (indexes.Any(index => index.index < 0))
 			{
 				foreach (var pair in indexes)
 					if (pair.index < 0)
-						Bookmarks.Insert(~pair.index, pair.range);
+						bookmarks.Insert(~pair.index, pair.range);
 			}
 			else
 			{
 				foreach (var pair in indexes)
-					Bookmarks.RemoveAt(pair.index);
+					bookmarks.RemoveAt(pair.index);
 			}
+			SetBookmarks(bookmarks);
 		}
 
 		void Command_Edit_Bookmarks_NextPreviousBookmark(bool next, bool selecting)
 		{
 			if (!Bookmarks.Any())
 				return;
-			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => GetNextPrevBookmark(range, next, selecting)).ToList());
+			SetSelections(Selections.AsParallel().AsOrdered().Select(range => GetNextPrevBookmark(range, next, selecting)).ToList());
 		}
 
-		void Command_Edit_Bookmarks_Clear() => Bookmarks.Clear();
+		void Command_Edit_Bookmarks_Clear() => SetBookmarks(new List<Range>());
 
 		void Command_Edit_Navigate_WordLeftRight(bool next, bool selecting)
 		{
 			if ((!selecting) && (Selections.Any(range => range.HasSelection)))
 			{
-				Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => new Range(next ? range.End : range.Start)).ToList());
+				SetSelections(Selections.AsParallel().AsOrdered().Select(range => new Range(next ? range.End : range.Start)).ToList());
 				return;
 			}
 
 			var func = next ? (Func<int, int>)GetNextWord : GetPrevWord;
-			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, func(range.Cursor), selecting)).ToList());
+			SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, func(range.Cursor), selecting)).ToList());
 		}
 
 		void Command_Edit_Navigate_AllLeft(bool selecting)
@@ -637,7 +641,7 @@ namespace NeoEdit.TextEdit
 				--index;
 			}
 
-			Selections.Replace(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
+			SetSelections(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
 		}
 
 		void Command_Edit_Navigate_AllRight(bool selecting)
@@ -674,7 +678,7 @@ namespace NeoEdit.TextEdit
 				++index;
 			}
 
-			Selections.Replace(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
+			SetSelections(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
 		}
 
 		IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)

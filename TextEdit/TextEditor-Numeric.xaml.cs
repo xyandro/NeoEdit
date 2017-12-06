@@ -55,7 +55,7 @@ namespace NeoEdit.TextEdit
 		{
 			var regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			var results = Selections.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, false, false, false)).SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
-			Selections.Replace(results);
+			SetSelections(results);
 		}
 
 		double Limit(double minimum, double value, double maximum)
@@ -69,7 +69,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Select_Whole()
 		{
-			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
+			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 			{
 				var str = GetString(range);
 				var idx = str.IndexOf('.');
@@ -81,7 +81,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Select_Fraction()
 		{
-			Selections.Replace(Selections.AsParallel().AsOrdered().Select(range =>
+			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 			{
 				var str = GetString(range);
 				var idx = str.IndexOf('.');
@@ -154,7 +154,7 @@ namespace NeoEdit.TextEdit
 				result = Selections[Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1))];
 
 			var sum = Selections.AsParallel().Where(range => range.HasSelection).Select(range => double.Parse(GetString(range))).Sum();
-			Selections.Replace(result);
+			SetSelections(new List<Range> { result });
 			ReplaceSelections(sum.ToString());
 		}
 
@@ -310,7 +310,7 @@ namespace NeoEdit.TextEdit
 				}
 				start += Data.DefaultEnding.Length - 1; // -1 is for space added before
 			}
-			Selections.Replace(sels);
+			SetSelections(sels);
 		}
 
 		NumericMinMaxValuesDialog.Result Command_Numeric_MinMaxValues_Dialog() => NumericMinMaxValuesDialog.Run(WindowParent);

@@ -68,14 +68,14 @@ namespace NeoEdit.TextEdit
 
 		TextTrimDialog.Result Command_Text_Select_Trim_Dialog() => TextTrimDialog.Run(WindowParent);
 
-		void Command_Text_Select_Trim(TextTrimDialog.Result result) => Selections.Replace(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList());
+		void Command_Text_Select_Trim(TextTrimDialog.Result result) => SetSelections(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList());
 
 		TextWidthDialog.Result Command_Text_Select_ByWidth_Dialog() => TextWidthDialog.Run(WindowParent, false, true, GetVariables());
 
 		void Command_Text_Select_ByWidth(TextWidthDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<int>(result.Expression);
-			Selections.Replace(Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList());
+			SetSelections(Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList());
 		}
 
 		TextSelectWholeBoundedWordDialog.Result Command_Text_Select_WholeBoundedWord_Dialog(bool wholeWord) => TextSelectWholeBoundedWordDialog.Run(WindowParent, wholeWord);
@@ -98,7 +98,7 @@ namespace NeoEdit.TextEdit
 
 				sels.Add(new Range(startOffset, endOffset));
 			}
-			Selections.Replace(sels);
+			SetSelections(sels);
 		}
 
 		void Command_Text_Case_Upper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToUpperInvariant()).ToList());
@@ -169,7 +169,7 @@ namespace NeoEdit.TextEdit
 				sels.Add(Range.FromIndex(start, str.Length - Data.DefaultEnding.Length));
 				start += str.Length;
 			}
-			Selections.Replace(sels);
+			SetSelections(sels);
 		}
 
 		TextFirstDistinctDialog.Result Command_Text_FirstDistinct_Dialog() => TextFirstDistinctDialog.Run(WindowParent);
@@ -251,7 +251,7 @@ namespace NeoEdit.TextEdit
 			}) as List<Range>;
 
 			if (opResult != null)
-				Selections.Replace(opResult);
+				SetSelections(opResult);
 		}
 
 		void Command_Text_RepeatCount()
