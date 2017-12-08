@@ -219,9 +219,9 @@ namespace NeoEdit.TextEdit
 
 		RangeList selectionsList = new RangeList(new List<Range>());
 		RangeList Selections => selectionsList;
-		void SetSelections(List<Range> selections)
+		void SetSelections(List<Range> selections, bool deOverlap = true)
 		{
-			selectionsList = new RangeList(selections);
+			selectionsList = new RangeList(selections, deOverlap);
 			EnsureVisible();
 			canvasRenderTimer.Start();
 		}

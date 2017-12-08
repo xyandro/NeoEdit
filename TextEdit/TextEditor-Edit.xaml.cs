@@ -186,7 +186,7 @@ namespace NeoEdit.TextEdit
 			var undo = undoRedo.GetUndo();
 			if (undo == null)
 				return;
-			SetSelections(undo.ranges);
+			SetSelections(undo.ranges, false);
 			ReplaceSelections(undo.text, replaceType: ReplaceType.Undo);
 		}
 

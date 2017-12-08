@@ -10,9 +10,11 @@ namespace NeoEdit.TextEdit
 	{
 		List<Range> items = new List<Range>();
 
-		public RangeList(List<Range> items)
+		public RangeList(List<Range> items, bool deOverlap = true)
 		{
-			this.items = DeOverlap(items);
+			if (deOverlap)
+				items = DeOverlap(items);
+			this.items = items;
 		}
 
 		public int Count => items.Count;
