@@ -13,6 +13,8 @@ namespace NeoEdit.TextEdit
 	{
 		[DepProp]
 		public bool KeepSelections { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool HighlightSyntax { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		CacheValue previousData = new CacheValue();
 		Parser.ParserType previousType;
@@ -70,6 +72,8 @@ namespace NeoEdit.TextEdit
 		void Command_Content_Type_SetFromExtension() => ContentType = Parser.GetParserType(FileName);
 
 		void Command_Content_Type(Parser.ParserType contentType) => ContentType = contentType;
+
+		void Command_Content_HighlightSyntax(bool? multiStatus) => HighlightSyntax = multiStatus == false;
 
 		void Command_Content_Reformat()
 		{

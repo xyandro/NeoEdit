@@ -212,6 +212,7 @@ namespace NeoEdit.TextEdit
 			UIHelper<TextEditor>.AddCallback(a => a.CodePage, (obj, o, n) => obj.CalculateDiff());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
+			UIHelper<TextEditor>.AddCallback(a => a.HighlightSyntax, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 			SetupStaticKeys();
@@ -270,7 +271,9 @@ namespace NeoEdit.TextEdit
 			this.shutdownData = shutdownData ?? new ShutdownData(null, 1);
 
 			InitializeComponent();
-			AutoRefresh = KeepSelections = true;
+			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
+			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
+			AutoRefresh = KeepSelections = HighlightSyntax = true;
 
 			SetupTabLabel();
 
@@ -279,9 +282,6 @@ namespace NeoEdit.TextEdit
 			Drop += (s, e) => { OnDrop(e.Data); e.Handled = true; };
 
 			undoRedo = new UndoRedo();
-
-			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
-			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
 
 			OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
 			Goto(line, column);
@@ -1154,6 +1154,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Type_SQL: Command_Content_Type(Parser.ParserType.SQL); break;
 				case TextEditCommand.Content_Type_TSV: Command_Content_Type(Parser.ParserType.TSV); break;
 				case TextEditCommand.Content_Type_XML: Command_Content_Type(Parser.ParserType.XML); break;
+				case TextEditCommand.Content_HighlightSyntax: Command_Content_HighlightSyntax(multiStatus); break;
 				case TextEditCommand.Content_Reformat: Command_Content_Reformat(); break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;
@@ -1953,7 +1954,7 @@ namespace NeoEdit.TextEdit
 				}
 			}
 
-			var highlightDictionary = Highlight.Get(ContentType)?.GetDictionary();
+			var highlightDictionary = HighlightSyntax ? Highlight.Get(ContentType)?.GetDictionary() : null;
 
 			for (var line = startLine; line < endLine; ++line)
 			{
