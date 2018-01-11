@@ -98,9 +98,15 @@ namespace NeoEdit.TextEdit
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());
 			countsTimer = new RunOnceTimer(() => UpdateStatusBarText());
 			clipboardTimer = new RunOnceTimer(() => UpdateClipboards());
-			ItemTabs.TabsChanged += () => clipboardTimer.Start();
+			ItemTabs.TabsChanged += ItemTabs_TabsChanged;
 			NEClipboard.ClipboardChanged += () => clipboardTimer.Start();
 			Activated += OnActivated;
+		}
+
+		void ItemTabs_TabsChanged()
+		{
+			ItemTabs.Items.ForEach(item => item.InvalidateCanvas());
+			clipboardTimer.Start();
 		}
 
 		void UpdateStatusBarText()

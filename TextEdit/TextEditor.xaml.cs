@@ -223,8 +223,10 @@ namespace NeoEdit.TextEdit
 		void SetSelections(List<Range> selections, bool deOverlap = true)
 		{
 			selectionsList = new RangeList(selections, deOverlap);
+			NumSelections = selectionsList.Count;
 			EnsureVisible();
 			canvasRenderTimer.Start();
+			(WindowParent as TextEditTabs)?.QueueUpdateCounts();
 		}
 
 		RangeList searchesList = new RangeList(new List<Range>());
@@ -248,7 +250,9 @@ namespace NeoEdit.TextEdit
 		void SetRegions(int region, List<Range> regions)
 		{
 			regionsList[region] = new RangeList(regions);
+			NumRegions = Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count);
 			canvasRenderTimer.Start();
+			(WindowParent as TextEditTabs)?.QueueUpdateCounts();
 		}
 
 		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
@@ -306,6 +310,8 @@ namespace NeoEdit.TextEdit
 			FontSizeChanged(Font.FontSize);
 			Font.FontSizeChanged += FontSizeChanged;
 		}
+
+		public void InvalidateCanvas() => canvas.InvalidateVisual();
 
 		void FontSizeChanged(double fontSize)
 		{
@@ -1867,19 +1873,14 @@ namespace NeoEdit.TextEdit
 
 		void OnCanvasRender(object sender, DrawingContext dc)
 		{
-			if ((Data == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0))
+			if ((Data == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0) || (!canvas.IsVisible))
 				return;
 
-			var brushes = new List<Tuple<RangeList, Brush>>
-			{
-				Tuple.Create(Selections, Misc.selectionBrush),
-				Tuple.Create(Searches, Misc.searchBrush),
-			};
-			brushes.AddRange(Regions.Select(pair => Tuple.Create(pair.Value, Misc.regionBrush[pair.Key])));
-
-			NumSelections = Selections.Count;
-			NumRegions = Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count);
-			(WindowParent as TextEditTabs).QueueUpdateCounts();
+			var parent = WindowParent;
+			var canvasBounds = new Rect(canvas.PointToScreen(new Point()), canvas.RenderSize);
+			var parentBounds = new Rect(parent.PointToScreen(new Point()), parent.RenderSize);
+			if (!canvasBounds.IntersectsWith(parentBounds))
+				return;
 
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Data.NumLines, startLine + yScrollViewportCeiling);
@@ -1896,6 +1897,12 @@ namespace NeoEdit.TextEdit
 			var cursorLineDone = new HashSet<int>();
 			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
 
+			var brushes = new List<Tuple<RangeList, Brush>>
+			{
+				Tuple.Create(Selections, Misc.selectionBrush),
+				Tuple.Create(Searches, Misc.searchBrush),
+			};
+			brushes.AddRange(Regions.Select(pair => Tuple.Create(pair.Value, Misc.regionBrush[pair.Key])));
 			foreach (var entry in brushes)
 			{
 				var hasSelection = entry.Item1.Any(range => range.HasSelection);
