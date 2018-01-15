@@ -82,23 +82,35 @@ namespace NeoEdit.TextEdit
 				File.Copy(srcFiles[ctr], destFiles[ctr]);
 		}
 
-		List<string> GetDirectoryContents(string dir, bool recursive, List<Exception> errors)
+		List<string> GetDirectoryContents(string dir, bool recursive, List<string> errors)
 		{
-			var dirs = new List<string> { dir };
+			var dirs = new Queue<string>();
+			dirs.Enqueue(dir);
 			var results = new List<string>();
-			try
+			int errorCount = 0;
+			while (dirs.Count != 0)
 			{
-				for (var ctr = 0; ctr < dirs.Count; ++ctr)
+				try
 				{
-					var subDirs = Directory.GetDirectories(dirs[ctr]);
-					dirs.AddRange(subDirs);
-					results.AddRange(subDirs);
-					results.AddRange(Directory.GetFiles(dirs[ctr]));
-					if (!recursive)
-						break;
+					var cur = dirs.Dequeue();
+					foreach (var subDir in Directory.GetDirectories(cur))
+					{
+						dirs.Enqueue(subDir);
+						results.Add(subDir);
+					}
+					results.AddRange(Directory.GetFiles(cur));
 				}
+				catch (Exception ex)
+				{
+					++errorCount;
+					if (errors.Count < 10)
+						errors.Add(ex.Message);
+				}
+				if (!recursive)
+					break;
 			}
-			catch (Exception ex) { errors.Add(ex); }
+			if (errorCount != errors.Count)
+				errors.Add($"(Plus {errorCount - errors.Count} more)");
 			return results;
 		}
 
@@ -358,10 +370,10 @@ namespace NeoEdit.TextEdit
 			if (dirs.Any(dir => !Directory.Exists(dir)))
 				throw new ArgumentException("Path must be of existing directories");
 
-			var errors = new List<Exception>();
+			var errors = new List<string>();
 			ReplaceSelections(dirs.Select(dir => string.Join(Data.DefaultEnding, GetDirectoryContents(dir, recursive, errors))).ToList());
 			if (errors.Any())
-				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors.Select(ex => ex.Message))}", "Error", WindowParent);
+				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors)}", "Error", WindowParent);
 		}
 
 		void Command_Files_Get_VersionControlStatus() => ReplaceSelections(new VCS().GetStatus(RelativeSelectedFiles()).Select(x => x.ToString()).ToList());
