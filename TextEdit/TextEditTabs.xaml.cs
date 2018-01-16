@@ -99,7 +99,7 @@ namespace NeoEdit.TextEdit
 			countsTimer = new RunOnceTimer(() => UpdateStatusBarText());
 			clipboardTimer = new RunOnceTimer(() => UpdateClipboards());
 			ItemTabs.TabsChanged += ItemTabs_TabsChanged;
-			NEClipboard.ClipboardChanged += () => clipboardTimer.Start();
+			NEClipboard.ClipboardChanged += () => UpdateClipboards();
 			Activated += OnActivated;
 		}
 
