@@ -20,6 +20,20 @@ namespace NeoEdit.Common.Transform
 			RSAAES,
 		}
 
+		public static string GetFormatDescription(Type type)
+		{
+			switch (type)
+			{
+				case Type.AES:
+				case Type.DES:
+				case Type.DES3: return "IV Length (4 bytes) + IV + Encrypted data";
+				case Type.RSA: 
+				case Type.DSA:
+				case Type.RSAAES: return "Encrypted data";
+				default: return "Unknown";
+			}
+		}
+
 		public static bool IsSymmetric(this Type type)
 		{
 			switch (type)
@@ -69,21 +83,7 @@ namespace NeoEdit.Common.Transform
 			{
 				case Type.AES:
 				case Type.DES:
-				case Type.DES3:
-					using (var alg = GetSymmetricAlgorithm(type))
-					{
-						alg.Key = Convert.FromBase64String(key);
-
-						using (var encryptor = alg.CreateEncryptor())
-						using (var ms = new MemoryStream())
-						{
-							ms.Write(BitConverter.GetBytes(alg.IV.Length), 0, sizeof(int));
-							ms.Write(alg.IV, 0, alg.IV.Length);
-							var encrypted = encryptor.TransformFinalBlock(data, 0, data.Length);
-							ms.Write(encrypted, 0, encrypted.Length);
-							return ms.ToArray();
-						}
-					}
+				case Type.DES3: return EncryptSymmetric(data, type, key);
 				case Type.RSA: return EncryptRSA(data, key);
 				case Type.RSAAES: return EncryptRSAAES(data, key);
 			}
@@ -98,18 +98,7 @@ namespace NeoEdit.Common.Transform
 				{
 					case Type.AES:
 					case Type.DES:
-					case Type.DES3:
-						using (var alg = GetSymmetricAlgorithm(type))
-						{
-							alg.Key = Convert.FromBase64String(key);
-
-							var iv = new byte[BitConverter.ToInt32(data, 0)];
-							Array.Copy(data, sizeof(int), iv, 0, iv.Length);
-							alg.IV = iv;
-
-							using (var decryptor = alg.CreateDecryptor())
-								return decryptor.TransformFinalBlock(data, sizeof(int) + iv.Length, data.Length - sizeof(int) - iv.Length);
-						}
+					case Type.DES3: return DecryptSymmetric(data, type, key);
 					case Type.RSA: return DecryptRSA(data, key);
 					case Type.RSAAES: return DecryptRSAAES(data, key);
 				}
@@ -172,6 +161,39 @@ namespace NeoEdit.Common.Transform
 			keySizes = keySet.OrderBy().ToList();
 		}
 
+		static byte[] EncryptSymmetric(byte[] data, Type type, string key)
+		{
+			using (var alg = GetSymmetricAlgorithm(type))
+			{
+				alg.Key = Convert.FromBase64String(key);
+
+				using (var encryptor = alg.CreateEncryptor())
+				using (var ms = new MemoryStream())
+				{
+					ms.Write(BitConverter.GetBytes(alg.IV.Length), 0, sizeof(int));
+					ms.Write(alg.IV, 0, alg.IV.Length);
+					var encrypted = encryptor.TransformFinalBlock(data, 0, data.Length);
+					ms.Write(encrypted, 0, encrypted.Length);
+					return ms.ToArray();
+				}
+			}
+		}
+
+		static byte[] DecryptSymmetric(byte[] data, Type type, string key)
+		{
+			using (var alg = GetSymmetricAlgorithm(type))
+			{
+				alg.Key = Convert.FromBase64String(key);
+
+				var iv = new byte[BitConverter.ToInt32(data, 0)];
+				Array.Copy(data, sizeof(int), iv, 0, iv.Length);
+				alg.IV = iv;
+
+				using (var decryptor = alg.CreateDecryptor())
+					return decryptor.TransformFinalBlock(data, sizeof(int) + iv.Length, data.Length - sizeof(int) - iv.Length);
+			}
+		}
+
 		static byte[] EncryptRSA(byte[] data, string pubKey)
 		{
 			var rsa = new RSACryptoServiceProvider();
@@ -191,8 +213,8 @@ namespace NeoEdit.Common.Transform
 			var aesKey = GenerateKey(Type.AES, 0);
 			using (var ms = new MemoryStream())
 			{
-				var encryptedAesKey = Encrypt(Encoding.UTF8.GetBytes(aesKey), Type.RSA, pubKey);
-				var encryptedData = Encrypt(data, Type.AES, aesKey);
+				var encryptedAesKey = EncryptRSA(Encoding.UTF8.GetBytes(aesKey), pubKey);
+				var encryptedData = EncryptSymmetric(data, Type.AES, aesKey);
 
 				ms.Write(BitConverter.GetBytes(encryptedAesKey.Length), 0, sizeof(int));
 				ms.Write(encryptedAesKey, 0, encryptedAesKey.Length);
@@ -206,9 +228,9 @@ namespace NeoEdit.Common.Transform
 		{
 			var encryptedAesKey = new byte[BitConverter.ToInt32(data, 0)];
 			Array.Copy(data, sizeof(int), encryptedAesKey, 0, encryptedAesKey.Length);
-			var aesKey = Encoding.UTF8.GetString(Decrypt(encryptedAesKey, Type.RSA, privKey));
+			var aesKey = Encoding.UTF8.GetString(DecryptRSA(encryptedAesKey, privKey));
 			var encryptedData = data.Skip(sizeof(int) + encryptedAesKey.Length).ToArray();
-			return Decrypt(encryptedData, Type.AES, aesKey);
+			return DecryptSymmetric(encryptedData, Type.AES, aesKey);
 		}
 
 		public static IEnumerable<string> SigningHashes(this Type type)
