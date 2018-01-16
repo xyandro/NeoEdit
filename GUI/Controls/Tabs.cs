@@ -320,7 +320,7 @@ namespace NeoEdit.GUI.Controls
 				var columns = (int?)values[1];
 				var rows = (int?)values[2];
 
-				return rows;
+				return rows ?? 0;
 			}
 
 			public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
