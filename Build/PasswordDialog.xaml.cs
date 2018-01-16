@@ -17,11 +17,11 @@ namespace Build
 		{
 			try
 			{
-				var data = Convert.FromBase64String("mz+a0ikajQs02EsaYcpOoVEBQVLVR9A3vaTIiSi+SYqdGLtZwprzcxCiKmiH+lYDvSo2oopyoU1b2WzwNns2WA==");
+				var data = Convert.FromBase64String("h1MUL40C8A96MHjwJbJFgcz7uS9rjthXgVf+eIA3OJIUl7uJ4B/klQQVZubPyGc8aqghiQqgz3xDVeMbWtfVqA==");
 				using (var alg = new AesCryptoServiceProvider())
 				{
-					alg.IV = Convert.FromBase64String("MKGBD+k3QXg2CaPp6BYPFg==");
-					using (var byteGenerator = new Rfc2898DeriveBytes(password.Password, Convert.FromBase64String("AWdSJ9hs72TXUUqaKpYIbU2v/YONdOxf")))
+					alg.IV = Convert.FromBase64String("7gR10RNIeruIGYAFpIIKXg==");
+					using (var byteGenerator = new Rfc2898DeriveBytes(password.Password, Convert.FromBase64String("RYRwx+Bu9dLtKY6NaQEgyRNiYsG59MHv")))
 						alg.Key = Convert.FromBase64String(Convert.ToBase64String(byteGenerator.GetBytes(32)));
 
 					using (var decryptor = alg.CreateDecryptor())

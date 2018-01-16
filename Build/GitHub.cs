@@ -21,7 +21,7 @@ namespace Build
 		public GitHub()
 		{
 			client = new HttpClient();
-			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", App.GitHubToken);
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", App.GitHubToken);
 			client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0");
 		}
 
