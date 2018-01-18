@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
-using NeoEdit.GUI.Controls;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
@@ -67,13 +66,13 @@ namespace NeoEdit.TextEdit
 			var start = 0;
 			foreach (Match match in result.Regex.Matches(str))
 			{
-				if (match.Index != start)
+				if ((!result.ExcludeEmpty) || (match.Index != start))
 					yield return Range.FromIndex(range.Start + start, match.Index - start);
 				if (result.IncludeResults)
 					yield return Range.FromIndex(range.Start + match.Index, match.Length);
 				start = match.Index + match.Length;
 			}
-			if (str.Length != start)
+			if ((!result.ExcludeEmpty) || (str.Length != start))
 				yield return Range.FromIndex(range.Start + start, str.Length - start);
 		}
 

@@ -11,6 +11,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			public Regex Regex { get; set; }
 			public bool IncludeResults { get; set; }
+			public bool ExcludeEmpty { get; set; }
 		}
 
 		[DepProp]
@@ -21,6 +22,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		public bool IsRegex { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IncludeResults { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool ExcludeEmpty { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 
 		static SelectSplitDialog() { UIHelper<SelectSplitDialog>.Register(); }
 
@@ -43,7 +46,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
-			result = new Result { Regex = new Regex(text, options), IncludeResults = IncludeResults };
+			result = new Result { Regex = new Regex(text, options), IncludeResults = IncludeResults, ExcludeEmpty = ExcludeEmpty };
 
 			this.text.AddCurrentSuggestion();
 

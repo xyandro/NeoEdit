@@ -14,6 +14,7 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -23,11 +24,12 @@
 
 		<CheckBox Grid.Row="1" Grid.Column="1" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
 		<CheckBox Grid.Row="2" Grid.Column="1" Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
-		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Include results" IsChecked="{Binding IncludeResults, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
+		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Include find" IsChecked="{Binding IncludeResults, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
+		<CheckBox Grid.Row="4" Grid.Column="1" Content="_Exclude empty" IsChecked="{Binding ExcludeEmpty, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 
-		<Button Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" Click="RegExHelp" Content="RegEx _Help"/>
+		<Button Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Left" Click="RegExHelp" Content="RegEx _Help"/>
 
-		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
