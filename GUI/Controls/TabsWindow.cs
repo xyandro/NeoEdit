@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using NeoEdit.GUI.Dialogs;
 
@@ -21,7 +22,7 @@ namespace NeoEdit.GUI.Controls
 		protected bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 		protected bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
 
-		public static ItemType CreateTab<ClassType>(ItemType item, ClassType classItem = null, bool forceCreate = false) where ClassType : TabsWindow<ItemType, CommandType>
+		public static Tuple<ItemType, Window> CreateTab<ClassType>(ItemType item, ClassType classItem = null, bool forceCreate = false) where ClassType : TabsWindow<ItemType, CommandType>
 		{
 			if ((classItem == null) && (!forceCreate))
 				classItem = UIHelper<ClassType>.GetNewest();
@@ -29,9 +30,7 @@ namespace NeoEdit.GUI.Controls
 			if (classItem == null)
 				classItem = (ClassType)Activator.CreateInstance(typeof(ClassType), true);
 
-			classItem.Activate();
-
-			return classItem.ItemTabs.CreateTab(item);
+			return new Tuple<ItemType, Window>(classItem.ItemTabs.CreateTab(item), classItem);
 		}
 
 		public void Remove(ItemType item, bool closeIfLast = false)

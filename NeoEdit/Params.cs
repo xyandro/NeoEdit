@@ -1,43 +1,46 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using NeoEdit.GUI;
 
 namespace NeoEdit
 {
 	abstract class Param
 	{
-		public abstract void Execute(string shutdownEvent);
+		public abstract Window Execute(string shutdownEvent);
 	}
 
 	class AboutParam : Param
 	{
-		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchAbout();
+		public override Window Execute(string shutdownEvent) => Launcher.Static.LaunchAbout();
 	}
 
 	class DiffParam : Param
 	{
 		readonly List<TextEditParam.TextEditFile> Files;
 		public DiffParam(List<TextEditParam.TextEditFile> files) { Files = files; }
-		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchTextEditorDiff(fileName1: Files[0]?.FileName, displayName1: Files[0]?.DisplayName, line1: Files[0]?.Line, column1: Files[0]?.Column, fileName2: Files[1]?.FileName, displayName2: Files[1]?.DisplayName, line2: Files[1]?.Line, column2: Files[1]?.Column, shutdownEvent: shutdownEvent);
+		public override Window Execute(string shutdownEvent) => Launcher.Static.LaunchTextEditorDiff(fileName1: Files[0]?.FileName, displayName1: Files[0]?.DisplayName, line1: Files[0]?.Line, column1: Files[0]?.Column, fileName2: Files[1]?.FileName, displayName2: Files[1]?.DisplayName, line2: Files[1]?.Line, column2: Files[1]?.Column, shutdownEvent: shutdownEvent);
 	}
 
 	class DiskParam : Param
 	{
 		readonly string Location;
 		public DiskParam(string location) { Location = location; }
-		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchDisk(Location);
+		public override Window Execute(string shutdownEvent) => Launcher.Static.LaunchDisk(Location);
 	}
 
 	class HexEditParam : Param
 	{
 		readonly List<string> Files;
 		public HexEditParam(List<string> files) { Files = files; }
-		public override void Execute(string shutdownEvent)
+		public override Window Execute(string shutdownEvent)
 		{
 			if (!Files.Any())
-				Launcher.Static.LaunchHexEditor();
+				return Launcher.Static.LaunchHexEditor();
+			Window window = null;
 			foreach (var file in Files)
-				Launcher.Static.LaunchHexEditor(file);
+				window = Launcher.Static.LaunchHexEditor(file);
+			return window;
 		}
 	}
 
@@ -46,7 +49,7 @@ namespace NeoEdit
 		readonly List<string> Urls;
 		readonly bool IsPlaylist;
 		public StreamSaveParam(List<string> urls, bool isPlaylist) { Urls = urls; IsPlaylist = isPlaylist; }
-		public override void Execute(string shutdownEvent) => Launcher.Static.LaunchStreamSaver(Urls, IsPlaylist);
+		public override Window Execute(string shutdownEvent) => Launcher.Static.LaunchStreamSaver(Urls, IsPlaylist);
 	}
 
 	class TextEditParam : Param
@@ -69,12 +72,14 @@ namespace NeoEdit
 
 		readonly List<TextEditFile> Files;
 		public TextEditParam(List<TextEditFile> files) { Files = files; }
-		public override void Execute(string shutdownEvent)
+		public override Window Execute(string shutdownEvent)
 		{
 			if (!Files.Any())
-				Launcher.Static.LaunchTextEditorFile(shutdownEvent: shutdownEvent);
+				return Launcher.Static.LaunchTextEditorFile(shutdownEvent: shutdownEvent);
+			Window window = null;
 			foreach (var file in Files)
-				Launcher.Static.LaunchTextEditorFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownEvent: shutdownEvent);
+				window = Launcher.Static.LaunchTextEditorFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownEvent: shutdownEvent);
+			return window;
 		}
 	}
 
@@ -82,12 +87,14 @@ namespace NeoEdit
 	{
 		readonly List<string> Files;
 		public TextViewParam(List<string> files) { Files = files; }
-		public override void Execute(string shutdownEvent)
+		public override Window Execute(string shutdownEvent)
 		{
 			if (!Files.Any())
-				Launcher.Static.LaunchTextViewer();
+				return Launcher.Static.LaunchTextViewer();
+			Window window = null;
 			foreach (var file in Files)
-				Launcher.Static.LaunchTextViewer(file);
+				window = Launcher.Static.LaunchTextViewer(file);
+			return window;
 		}
 	}
 
@@ -95,6 +102,6 @@ namespace NeoEdit
 	{
 		public readonly string ShutdownEvent;
 		public WaitParam(string guid) { ShutdownEvent = guid; }
-		public override void Execute(string shutdownEvent) { }
+		public override Window Execute(string shutdownEvent) => null;
 	}
 }

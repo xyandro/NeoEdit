@@ -15,7 +15,7 @@ namespace NeoEdit.Disk
 
 		static List<DiskWindow> Lists = new List<DiskWindow> { new DiskWindow(list: 1), new DiskWindow(list: 2), new DiskWindow(list: 3), new DiskWindow(list: 4), new DiskWindow(list: 5), new DiskWindow(list: 6), new DiskWindow(list: 7), new DiskWindow(list: 8), new DiskWindow(list: 9) };
 
-		public static void Create(string path = null, IEnumerable<string> files = null, DiskTabs diskTabs = null, bool forceCreate = false) => CreateTab(new DiskWindow(path, listFiles: files), diskTabs, forceCreate);
+		public static Window Create(string path = null, IEnumerable<string> files = null, DiskTabs diskTabs = null, bool forceCreate = false) => CreateTab(new DiskWindow(path, listFiles: files), diskTabs, forceCreate).Item2;
 
 		DiskTabs()
 		{

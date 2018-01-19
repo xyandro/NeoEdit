@@ -4,12 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Dialogs;
@@ -67,11 +65,7 @@ namespace NeoEdit
 #endif
 		}
 
-		[DllImport("user32.dll", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		static extern bool SetForegroundWindow(IntPtr hWnd);
-
-		public void CreateWindowsFromArgs(string commandLine)
+		public Window CreateWindowsFromArgs(string commandLine)
 		{
 			try
 			{
@@ -82,20 +76,17 @@ namespace NeoEdit
 				var windows = UIHelper<NEWindow>.GetAllWindows();
 				var restored = windows.Count(window => window.Restore());
 				if ((restored > 0) && (!paramList.Any()))
-					return;
+					return null;
 
 				if (!paramList.Any())
-					TextEditTabs.Create(shutdownEvent: shutdownEvent);
+					return TextEditTabs.Create(shutdownEvent: shutdownEvent);
+				Window created = null;
 				foreach (var param in paramList)
-					param.Execute(shutdownEvent);
-
-				UIHelper<NEWindow>.GetAllWindows().Except(windows).ForEach(window =>
-				{
-					window.Show();
-					SetForegroundWindow(new WindowInteropHelper(window).Handle);
-				});
+					created = param.Execute(shutdownEvent);
+				return created;
 			}
 			catch (Exception ex) { ShowExceptionMessage(ex); }
+			return null;
 		}
 
 		public App()

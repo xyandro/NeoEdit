@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -16,7 +17,7 @@ namespace NeoEdit.HexEdit
 	{
 		static HexEditTabs() { UIHelper<HexEditTabs>.Register(); }
 
-		static void Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, HexEditTabs hexEditTabs = null, bool forceCreate = false) => CreateTab(new HexEditor(data, codePage, filename, filetitle, modified), hexEditTabs, forceCreate);
+		static Window Create(BinaryData data, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, string filename = null, string filetitle = null, bool modified = false, HexEditTabs hexEditTabs = null, bool forceCreate = false) => CreateTab(new HexEditor(data, codePage, filename, filetitle, modified), hexEditTabs, forceCreate).Item2;
 
 		HexEditTabs()
 		{
@@ -26,7 +27,7 @@ namespace NeoEdit.HexEdit
 			UIHelper.AuditMenu(menu);
 		}
 
-		public static void CreateFromFile(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false)
+		public static Window CreateFromFile(string filename = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, bool modified = false, bool forceCreate = false)
 		{
 			if (bytes == null)
 			{
@@ -35,7 +36,7 @@ namespace NeoEdit.HexEdit
 				else
 					bytes = File.ReadAllBytes(filename);
 			}
-			Create(new BinaryData(bytes), codePage, filename, modified: modified, forceCreate: forceCreate);
+			return Create(new BinaryData(bytes), codePage, filename, modified: modified, forceCreate: forceCreate);
 		}
 
 		void Command_File_New(bool newWindow) => Create(new BinaryData(), hexEditTabs: this, forceCreate: newWindow);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -19,7 +20,12 @@ namespace NeoEdit.TextView
 	{
 		static TextViewTabs() { UIHelper<TextViewTabs>.Register(); }
 
-		public static void Create(string filename = null, bool forceCreate = false) => ((!forceCreate ? UIHelper<TextViewTabs>.GetNewest() : null) ?? new TextViewTabs()).Add(filename);
+		public static Window Create(string filename = null, bool forceCreate = false)
+		{
+			var textViewTabs = (!forceCreate ? UIHelper<TextViewTabs>.GetNewest() : null) ?? new TextViewTabs();
+			textViewTabs.Add(filename);
+			return textViewTabs;
+		}
 
 		TextViewTabs()
 		{

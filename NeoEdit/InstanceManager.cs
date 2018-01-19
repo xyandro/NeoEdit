@@ -5,6 +5,7 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Interop;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit
@@ -74,6 +75,10 @@ namespace NeoEdit
 			while ((waitEvent?.WaitOne(1000) == false) && (!proc.HasExited)) { }
 		}
 
+		[DllImport("user32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		static extern bool SetForegroundWindow(IntPtr hWnd);
+
 		static void SetupPipeWait(App app)
 		{
 			var pipe = new NamedPipeServerStream(IPCName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
@@ -88,7 +93,16 @@ namespace NeoEdit
 				pipe.Read(buf, 0, buf.Length);
 				var commandLine = Coder.BytesToString(buf, Coder.CodePage.UTF8);
 
-				app.Dispatcher.Invoke(() => app.CreateWindowsFromArgs(commandLine));
+				app.Dispatcher.Invoke(() =>
+				{
+					var window = app.CreateWindowsFromArgs(commandLine);
+					if (window != null)
+					{
+						window.Activate();
+						window.Show();
+						SetForegroundWindow(new WindowInteropHelper(window).Handle);
+					}
+				});
 
 				SetupPipeWait(app);
 			}, null);

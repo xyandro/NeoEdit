@@ -24,7 +24,12 @@ namespace NeoEdit.Dialogs
 			Copyright = ((AssemblyCopyrightAttribute)typeof(AboutDialog).Assembly.GetCustomAttribute(typeof(AssemblyCopyrightAttribute))).Copyright;
 		}
 
-		public static void Run() => new AboutDialog().Show();
+		public static Window Run()
+		{
+			var dialog = new AboutDialog();
+			dialog.Show();
+			return dialog;
+		}
 
 		void LicenseClick(object sender, RoutedEventArgs e) => LicenseDialog.Run();
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -36,7 +37,7 @@ namespace NeoEdit.TextEdit
 
 		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
 
-		public static void Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false, string shutdownEvent = null)
+		public static Window Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false, string shutdownEvent = null)
 		{
 			fileName = fileName?.Trim('"');
 
@@ -56,9 +57,9 @@ namespace NeoEdit.TextEdit
 							DefaultCancel = Message.OptionsEnum.Cancel,
 						}.Show())
 						{
-							case Message.OptionsEnum.Yes: Launcher.Static.LaunchTextViewer(fileName); return;
+							case Message.OptionsEnum.Yes: return Launcher.Static.LaunchTextViewer(fileName);
 							case Message.OptionsEnum.No: break;
-							case Message.OptionsEnum.Cancel: return;
+							case Message.OptionsEnum.Cancel: return null;
 						}
 					}
 				}
@@ -66,10 +67,11 @@ namespace NeoEdit.TextEdit
 
 			var textEditor = new TextEditor(fileName, displayName, bytes, codePage, contentType, modified, line, column, new ShutdownData(shutdownEvent, 1));
 			var replaced = CreateTab(textEditor, textEditTabs, forceCreate);
-			textEditor.DiffTarget = replaced?.DiffTarget;
+			textEditor.DiffTarget = replaced.Item1?.DiffTarget;
+			return replaced.Item2;
 		}
 
-		public void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, Parser.ParserType contentType1 = Parser.ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, Parser.ParserType contentType2 = Parser.ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, string shutdownEvent = null)
+		public Window AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, Parser.ParserType contentType1 = Parser.ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, Parser.ParserType contentType2 = Parser.ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, string shutdownEvent = null)
 		{
 			var shutdownData = new ShutdownData(shutdownEvent, 2);
 			var textEdit1 = new TextEditor(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, shutdownData);
@@ -81,6 +83,7 @@ namespace NeoEdit.TextEdit
 			ItemTabs.Layout = TabsLayout.Grid;
 			if (ItemTabs.Items.Count > 2)
 				ItemTabs.Columns = 2;
+			return this;
 		}
 
 		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, contentType, modified, line, column, this);
