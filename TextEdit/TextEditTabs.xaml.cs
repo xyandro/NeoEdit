@@ -114,7 +114,7 @@ namespace NeoEdit.TextEdit
 
 		void UpdateStatusBarText()
 		{
-			Func<int, string, string> plural = (count, item) => $"{count} {item}{(count == 1 ? "" : "s")}";
+			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
 
 			FilesCountText = $"{plural(ItemTabs.Items.Count, "file")}, {plural(ItemTabs.Items.Sum(item => item.NumSelections), "selection")}";
 			ActiveCountText = $"{plural(ItemTabs.Items.Where(item => item.Active).Count(), "file")}, {plural(ItemTabs.Items.Where(item => item.Active).Sum(item => item.NumSelections), "selection")}";

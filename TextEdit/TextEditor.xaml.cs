@@ -2289,7 +2289,7 @@ namespace NeoEdit.TextEdit
 			return true;
 		}
 
-		public override string ToString() => FileName;
+		public override string ToString() => FileName ?? DisplayName;
 
 		bool CheckCanFullyEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanFullyEncode(data, codePage))) || (ConfirmCheckCanFullyEncode());
 
