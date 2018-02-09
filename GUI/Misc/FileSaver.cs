@@ -8,10 +8,11 @@ using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.Misc
 {
-	public static class FileEncryptor
+	public static class FileSaver
 	{
 		readonly static byte[] EncryptedHeader = Encoding.UTF8.GetBytes("\u0000NEAES\u0000");
 		readonly static byte[] EncryptedValidate = Encoding.UTF8.GetBytes("\u0000VALID\u0000");
+		readonly static byte[] CompressedHeader = Encoding.UTF8.GetBytes("\u0000NEGZIP\u0000");
 
 		public static string GetKey(Window parent, bool encrypt) => CryptorKeyDialog.Run(parent, Cryptor.Type.AES, encrypt);
 
@@ -47,12 +48,24 @@ namespace NeoEdit.GUI.Misc
 			if (string.IsNullOrEmpty(key))
 				throw new Exception("Failed to decrypt file");
 
-			var result = Decrypt(bytes, key);
-			if (result == null)
-				throw new Exception("Failed to decrypt file");
-
-			bytes = result;
+			bytes = Decrypt(bytes, key) ?? throw new Exception("Failed to decrypt file");
 			AESKey = key;
+		}
+
+		public static byte[] Compress(byte[] bytes, bool compress)
+		{
+			if (!compress)
+				return bytes;
+
+			return CompressedHeader.Concat(Compressor.Compress(bytes, Compressor.Type.GZip)).ToArray();
+		}
+
+		public static byte[] Decompress(byte[] bytes, out bool compressed)
+		{
+			compressed = (bytes.Length >= CompressedHeader.Length) && (bytes.Equal(CompressedHeader, CompressedHeader.Length));
+			if (!compressed)
+				return bytes;
+			return Compressor.Decompress(bytes.Skip(CompressedHeader.Length).ToArray(), Compressor.Type.GZip);
 		}
 	}
 }

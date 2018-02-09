@@ -38,6 +38,7 @@ namespace NeoEdit.TextEdit
 		File_Encoding_ReopenWithEncoding,
 		File_Encoding_LineEndings,
 		File_Encryption,
+		File_Compress,
 		File_Shell_Integrate,
 		File_Shell_Unintegrate,
 		File_Exit,

@@ -96,6 +96,8 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public string AESKey { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool Compressed { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
 		public int? LineMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int? LineMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -926,6 +928,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result, ref answer); break;
 				case TextEditCommand.File_Encoding_LineEndings: Command_File_Encoding_LineEndings(dialogResult as FileEncodingLineEndingsDialog.Result); break;
 				case TextEditCommand.File_Encryption: Command_File_Encryption(dialogResult as string); break;
+				case TextEditCommand.File_Compress: Command_File_Compress(multiStatus); break;
 				case TextEditCommand.Edit_Undo: Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Command_Edit_Redo(); break;
 				case TextEditCommand.Edit_Copy_Copy: Command_Edit_Copy_CutCopy(false); break;
@@ -2053,8 +2056,12 @@ namespace NeoEdit.TextEdit
 			}
 
 			string aesKey;
-			FileEncryptor.HandleDecrypt(WindowParent, ref bytes, out aesKey);
+			FileSaver.HandleDecrypt(WindowParent, ref bytes, out aesKey);
 			AESKey = aesKey;
+
+			bool compressed;
+			bytes = FileSaver.Decompress(bytes, out compressed);
+			Compressed = compressed;
 
 			if (codePage == Coder.CodePage.AutoByBOM)
 				codePage = Coder.CodePageFromBOM(bytes);
@@ -2168,7 +2175,7 @@ namespace NeoEdit.TextEdit
 				{
 					if ((!copyOnly) && (watcher != null))
 						watcher.EnableRaisingEvents = false;
-					File.WriteAllBytes(fileName, FileEncryptor.Encrypt(Data.GetBytes(CodePage), AESKey));
+					File.WriteAllBytes(fileName, FileSaver.Encrypt(FileSaver.Compress(Data.GetBytes(CodePage), Compressed), AESKey));
 					if ((!copyOnly) && (watcher != null))
 						watcher.EnableRaisingEvents = true;
 					break;

@@ -62,6 +62,7 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Encr_yption" CommandEnum="File_Encryption"/>
+		<textEdit:MultiMenuItem Header="Co_mpress" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
 		<Separator/>
 		<MenuItem Header="S_hell">
 			<textEdit:TextEditMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate"/>

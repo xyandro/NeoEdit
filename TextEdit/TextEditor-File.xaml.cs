@@ -347,7 +347,24 @@ namespace NeoEdit.TextEdit
 			Replace(sel, sel.Select(str => result.LineEndings).ToList());
 		}
 
-		string Command_File_Encryption_Dialog() => FileEncryptor.GetKey(WindowParent, true);
+		string Command_File_Encryption_Dialog()
+		{
+			var key = FileSaver.GetKey(WindowParent, true);
+			if ((AESKey != null) && (key == null))
+			{
+				var answer = new Message(WindowParent)
+				{
+					Title = "Confirm",
+					Text = "Remove encryption?",
+					Options = Message.OptionsEnum.YesNoCancel,
+					DefaultCancel = Message.OptionsEnum.Cancel,
+				}.Show();
+
+				if (answer == Message.OptionsEnum.Yes)
+					return "";
+			}
+			return key;
+		}
 
 		void Command_File_Encryption(string result)
 		{
@@ -355,5 +372,7 @@ namespace NeoEdit.TextEdit
 				return;
 			AESKey = result == "" ? null : result;
 		}
+
+		void Command_File_Compress(bool? multiStatus) => Compressed = multiStatus == false;
 	}
 }
