@@ -28,15 +28,6 @@
 
 		<StatusBar Grid.Row="2" Grid.Column="0">
 			<StatusBarItem>
-				<TextBlock Text="Files:"/>
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding FilesCountText, ElementName=self}"/>
-			</StatusBarItem>
-
-			<Separator/>
-
-			<StatusBarItem>
 				<TextBlock Text="Active:"/>
 			</StatusBarItem>
 			<StatusBarItem>
@@ -50,6 +41,15 @@
 			</StatusBarItem>
 			<StatusBarItem>
 				<TextBlock Text="{Binding InactiveCountText, ElementName=self}"/>
+			</StatusBarItem>
+
+			<Separator/>
+
+			<StatusBarItem>
+				<TextBlock Text="Total:"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding TotalCountText, ElementName=self}"/>
 			</StatusBarItem>
 
 			<Separator/>

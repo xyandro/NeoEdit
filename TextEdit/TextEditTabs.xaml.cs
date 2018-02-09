@@ -27,11 +27,11 @@ namespace NeoEdit.TextEdit
 	partial class TextEditTabs
 	{
 		[DepProp]
-		public string FilesCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
-		[DepProp]
 		public string ActiveCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public string InactiveCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public string TotalCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public string ClipboardCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 
@@ -116,9 +116,9 @@ namespace NeoEdit.TextEdit
 		{
 			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
 
-			FilesCountText = $"{plural(ItemTabs.Items.Count, "file")}, {plural(ItemTabs.Items.Sum(item => item.NumSelections), "selection")}";
 			ActiveCountText = $"{plural(ItemTabs.Items.Where(item => item.Active).Count(), "file")}, {plural(ItemTabs.Items.Where(item => item.Active).Sum(item => item.NumSelections), "selection")}";
 			InactiveCountText = $"{plural(ItemTabs.Items.Where(item => !item.Active).Count(), "file")}, {plural(ItemTabs.Items.Where(item => !item.Active).Sum(item => item.NumSelections), "selection")}";
+			TotalCountText = $"{plural(ItemTabs.Items.Count, "file")}, {plural(ItemTabs.Items.Sum(item => item.NumSelections), "selection")}";
 			ClipboardCountText = $"{plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}";
 		}
 
