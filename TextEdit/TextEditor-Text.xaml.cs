@@ -91,10 +91,13 @@ namespace NeoEdit.TextEdit
 				var startOffset = range.Start;
 				var endOffset = range.End;
 
-				while ((startOffset > minOffset) && (result.Chars.Contains(Data.Data[startOffset - 1]) == wholeWord))
-					--startOffset;
-				while ((endOffset < maxOffset) && (result.Chars.Contains(Data.Data[endOffset]) == wholeWord))
-					++endOffset;
+				if (result.Start)
+					while ((startOffset > minOffset) && (result.Chars.Contains(Data.Data[startOffset - 1]) == wholeWord))
+						--startOffset;
+
+				if (result.End)
+					while ((endOffset < maxOffset) && (result.Chars.Contains(Data.Data[endOffset]) == wholeWord))
+						++endOffset;
 
 				sels.Add(new Range(startOffset, endOffset));
 			}

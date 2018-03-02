@@ -27,7 +27,6 @@ namespace NeoEdit.GUI.Controls
 
 		[DepProp]
 		public string CompletionTag { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<string>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
-
 		[DepProp]
 		public bool IsDropDownOpen { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
@@ -61,32 +60,38 @@ namespace NeoEdit.GUI.Controls
 		ListBox listbox => Template.FindName("PART_ListBox", this) as ListBox;
 
 		static Dictionary<string, List<Suggestion>> SuggestionLists = new Dictionary<string, List<Suggestion>>();
-
 		List<Suggestion> localSuggestionList = new List<Suggestion>();
-		List<Suggestion> SuggestionList
+
+		static List<Suggestion> GetSuggestionList(string completionTag)
 		{
-			get
-			{
-				if (string.IsNullOrEmpty(CompletionTag))
-					return localSuggestionList;
-				if (!SuggestionLists.ContainsKey(CompletionTag))
-					SuggestionLists[CompletionTag] = new List<Suggestion>();
-				return SuggestionLists[CompletionTag];
-			}
+			if (!SuggestionLists.ContainsKey(completionTag))
+				SuggestionLists[completionTag] = new List<Suggestion>();
+			return SuggestionLists[completionTag];
 		}
 
-		public void AddSuggestions(params string[] suggestions) => AddSuggestions(suggestions.Select(text => new Suggestion { Text = text }).ToArray());
+		List<Suggestion> SuggestionList => string.IsNullOrEmpty(CompletionTag) ? localSuggestionList : GetSuggestionList(CompletionTag);
 
-		public void AddSuggestions(params Tuple<string, object>[] suggestions) => AddSuggestions(suggestions.Select(tuple => new Suggestion { Text = tuple.Item1, Data = tuple.Item2 }).ToArray());
+		static public void AddTagSuggestions(string completionTag, params string[] suggestions) => AddTagSuggestions(GetSuggestionList(completionTag), suggestions.Select(text => new Suggestion { Text = text }).ToArray());
 
-		void AddSuggestions(params Suggestion[] suggestions)
+		static public void AddTagSuggestions(string completionTag, params Tuple<string, object>[] suggestions) => AddTagSuggestions(GetSuggestionList(completionTag), suggestions.Select(tuple => new Suggestion { Text = tuple.Item1, Data = tuple.Item2 }).ToArray());
+
+		static void AddTagSuggestions(string completionTag, params Suggestion[] suggestions) => AddTagSuggestions(GetSuggestionList(completionTag), suggestions);
+
+		static void AddTagSuggestions(List<Suggestion> list, params Suggestion[] suggestions)
 		{
-			var newSuggestions = suggestions.Where(x => !string.IsNullOrEmpty(x.Text)).ToList();
-			SuggestionList.RemoveAll(suggestion => newSuggestions.Any(newSuggestion => suggestion.Text.Equals(newSuggestion.Text, StringComparison.OrdinalIgnoreCase)));
-			SuggestionList.InsertRange(0, newSuggestions);
+			suggestions = suggestions.Where(x => !string.IsNullOrEmpty(x.Text)).ToArray();
+			var toRemove = new HashSet<string>(suggestions.Select(suggestion => suggestion.Text), StringComparer.OrdinalIgnoreCase);
+			list.RemoveAll(suggestion => toRemove.Contains(suggestion.Text));
+			list.InsertRange(0, suggestions);
 		}
 
-		public void AddCurrentSuggestion(object data = null) => AddSuggestions(new Suggestion { Text = Text, Data = data });
+		public void AddSuggestions(params string[] suggestions) => AddTagSuggestions(SuggestionList, suggestions.Select(text => new Suggestion { Text = text }).ToArray());
+
+		public void AddSuggestions(params Tuple<string, object>[] suggestions) => AddTagSuggestions(SuggestionList, suggestions.Select(tuple => new Suggestion { Text = tuple.Item1, Data = tuple.Item2 }).ToArray());
+
+		void AddSuggestions(params Suggestion[] suggestions) => AddTagSuggestions(SuggestionList, suggestions);
+
+		public void AddCurrentSuggestion(object data = null) => AddTagSuggestions(SuggestionList, new Suggestion { Text = Text, Data = data });
 
 		public string GetLastSuggestion() => SuggestionList.FirstOrDefault()?.Text;
 		public object GetLastSuggestionData() => SuggestionList.FirstOrDefault()?.Data;
