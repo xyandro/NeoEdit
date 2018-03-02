@@ -19,7 +19,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Trim c_haracters:" Target="{Binding ElementName=trimChars}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Name="trimChars" Text="{Binding TrimChars, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Name="trimChars" Text="{Binding TrimChars, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="TextTrimDialog"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Trim Location:" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">

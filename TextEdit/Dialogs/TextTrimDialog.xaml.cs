@@ -6,6 +6,8 @@ namespace NeoEdit.TextEdit.Dialogs
 {
 	internal partial class TextTrimDialog
 	{
+		const string WHITESPACE = @" \t\r\n\v\f\u0085\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000";
+
 		internal enum TrimLocation
 		{
 			Start = 1,
@@ -27,12 +29,16 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public bool MatchCase { get { return UIHelper<TextTrimDialog>.GetPropValue<bool>(this); } set { UIHelper<TextTrimDialog>.SetPropValue(this, value); } }
 
-		static TextTrimDialog() { UIHelper<TextTrimDialog>.Register(); }
+		static TextTrimDialog()
+		{
+			UIHelper<TextTrimDialog>.Register();
+			AutoCompleteTextBox.AddTagSuggestions("TextTrimDialog", WHITESPACE);
+		}
 
 		TextTrimDialog()
 		{
 			InitializeComponent();
-			TrimChars = @" \t\r\n\v\f\u0085\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000";
+			TrimChars = WHITESPACE;
 			Location = TrimLocation.Both;
 			MatchCase = false;
 		}
@@ -53,6 +59,7 @@ namespace NeoEdit.TextEdit.Dialogs
 				Start = Location.HasFlag(TrimLocation.Start),
 				End = Location.HasFlag(TrimLocation.End),
 			};
+			trimChars.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
