@@ -58,7 +58,7 @@ namespace NeoEdit.Common.NEClipboards
 
 		public NEClipboardList this[int index] => neClipboardLists[index];
 
-		public string String => string.Join(" ", Strings);
+		public string String => string.Join("\r\n", Strings);
 		public List<string> Strings => neClipboardLists.SelectMany(list => list.Strings).ToList();
 		public List<object> Objects => neClipboardLists.SelectMany(list => list.Objects).ToList();
 		public List<BitmapSource> Images => neClipboardLists.SelectMany(list => list.Images).ToList();
