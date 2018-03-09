@@ -211,6 +211,8 @@ namespace NeoEdit.TextEdit
 		Numeric_Add_Sum,
 		Numeric_Add_ForwardSum,
 		Numeric_Add_ReverseSum,
+		Numeric_Add_UndoForwardSum,
+		Numeric_Add_UndoReverseSum,
 		[KeyGesture(Key.Add, ModifierKeys.Control)] [KeyGesture(Key.OemPlus, ModifierKeys.Control, 2)] Numeric_Add_Increment,
 		[KeyGesture(Key.Subtract, ModifierKeys.Control)] [KeyGesture(Key.OemMinus, ModifierKeys.Control, 2)] Numeric_Add_Decrement,
 		[KeyGesture(Key.Add, ModifierKeys.Control | ModifierKeys.Shift)] [KeyGesture(Key.OemPlus, ModifierKeys.Control | ModifierKeys.Shift, 2)] Numeric_Add_AddClipboard,

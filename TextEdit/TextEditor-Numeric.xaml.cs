@@ -158,7 +158,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(sum.ToString());
 		}
 
-		void Command_Numeric_Add_ForwardReverseSum(bool forward)
+		void Command_Numeric_Add_ForwardReverseSum(bool forward, bool undo)
 		{
 			var numbers = Selections.AsParallel().AsOrdered().Select(range => double.Parse(GetString(range))).ToList();
 			double total = 0;
@@ -167,8 +167,11 @@ namespace NeoEdit.TextEdit
 			var step = forward ? 1 : -1;
 			for (var ctr = start; ctr != end; ctr += step)
 			{
+				if (undo)
+					numbers[ctr] -= total;
 				total += numbers[ctr];
-				numbers[ctr] = total;
+				if (!undo)
+					numbers[ctr] = total;
 			}
 			ReplaceSelections(numbers.Select(num => num.ToString()).ToList());
 		}
