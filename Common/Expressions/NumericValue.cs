@@ -590,6 +590,13 @@ namespace NeoEdit.Common.Expressions
 			return new NumericValue(Math.Atan(GetFloat), "rad");
 		}
 
+		public static NumericValue Atan2(NumericValue xOfs, NumericValue yOfs)
+		{
+			xOfs.VerifyNoUnits();
+			yOfs.VerifyNoUnits();
+			return new NumericValue(Math.Atan2(xOfs.GetFloat, yOfs.GetFloat), "rad");
+		}
+
 		public object GetResult() => Units.HasUnits ? $"{Value} {Units}" : Value;
 
 		public override string ToString() => GetResult().ToString();

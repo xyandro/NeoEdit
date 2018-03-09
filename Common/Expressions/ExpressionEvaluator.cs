@@ -238,7 +238,7 @@ namespace NeoEdit.Common.Expressions
 				case "abs": return GetNumeric(paramList[0]).Abs();
 				case "acos": return GetNumeric(paramList[0]).Acos();
 				case "asin": return GetNumeric(paramList[0]).Asin();
-				case "atan": return GetNumeric(paramList[0]).Atan();
+				case "atan": return paramList.Count == 2 ? NumericValue.Atan2(GetNumeric(paramList[0]), GetNumeric(paramList[1])) : GetNumeric(paramList[0]).Atan();
 				case "cos": return GetNumeric(paramList[0]).Cos();
 				case "date": return new NumericValue(new DateTimeOffset(DateTime.Now.Date, DateTimeOffset.Now.Offset).UtcTicks, "ticks");
 				case "eval": return new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row);
