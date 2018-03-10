@@ -113,8 +113,6 @@
 			<textEdit:TextEditMenuItem Header="_Absolute" CommandEnum="Edit_URL_Absolute"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="C_olor" CommandEnum="Edit_Color"/>
-		<Separator/>
 		<MenuItem Header="_Data">
 			<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash"/>
 			<textEdit:TextEditMenuItem Header="_Compress" CommandEnum="Edit_Data_Compress"/>
@@ -383,6 +381,9 @@
 		<textEdit:TextEditMenuItem Header="_Now" CommandEnum="DateTime_Now"/>
 		<textEdit:TextEditMenuItem Header="_Utc Now" CommandEnum="DateTime_UtcNow"/>
 		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
+	</MenuItem>
+	<MenuItem Header="Ima_ge">
+		<textEdit:TextEditMenuItem Header="_Grab Color" CommandEnum="Image_GrabColor"/>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
 		<textEdit:TextEditMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>

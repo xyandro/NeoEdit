@@ -13,7 +13,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
-	partial class EditColorDialog
+	partial class ImageGrabColorDialog
 	{
 		public class Result
 		{
@@ -21,21 +21,21 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public byte Alpha { get { return UIHelper<EditColorDialog>.GetPropValue<byte>(this); } set { UIHelper<EditColorDialog>.SetPropValue(this, value); } }
+		public byte Alpha { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<byte>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public byte Red { get { return UIHelper<EditColorDialog>.GetPropValue<byte>(this); } set { UIHelper<EditColorDialog>.SetPropValue(this, value); } }
+		public byte Red { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<byte>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public byte Green { get { return UIHelper<EditColorDialog>.GetPropValue<byte>(this); } set { UIHelper<EditColorDialog>.SetPropValue(this, value); } }
+		public byte Green { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<byte>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public byte Blue { get { return UIHelper<EditColorDialog>.GetPropValue<byte>(this); } set { UIHelper<EditColorDialog>.SetPropValue(this, value); } }
+		public byte Blue { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<byte>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Percent { get { return UIHelper<EditColorDialog>.GetPropValue<string>(this); } set { UIHelper<EditColorDialog>.SetPropValue(this, value); } }
+		public string Percent { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<string>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Picking { get { return UIHelper<EditColorDialog>.GetPropValue<bool>(this); } set { UIHelper<EditColorDialog>.SetPropValue(this, value); } }
+		public bool Picking { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<bool>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 
-		static EditColorDialog() { UIHelper<EditColorDialog>.Register(); }
+		static ImageGrabColorDialog() { UIHelper<ImageGrabColorDialog>.Register(); }
 
-		EditColorDialog(string color)
+		ImageGrabColorDialog(string color)
 		{
 			InitializeComponent();
 
@@ -171,7 +171,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		static public Result Run(Window parent, string color)
 		{
-			var dialog = new EditColorDialog(color) { Owner = parent };
+			var dialog = new ImageGrabColorDialog(color) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

@@ -441,10 +441,6 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		EditColorDialog.Result Command_Edit_Color_Dialog() => EditColorDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault());
-
-		void Command_Edit_Color(EditColorDialog.Result result) => ReplaceSelections(result.Color);
-
 		EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog() => EditDataHashDialog.Run(WindowParent, CodePage);
 
 		void Command_Edit_Data_Hash(EditDataHashDialog.Result result)

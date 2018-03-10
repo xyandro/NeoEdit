@@ -171,13 +171,6 @@
     <Compile Include="Dialogs\DiffIgnoreCharactersDialog.xaml.cs">
       <DependentUpon>DiffIgnoreCharactersDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\EditColorDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\EditColorDialog.xaml.cs">
-      <DependentUpon>EditColorDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\EditConvertDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -352,6 +345,13 @@
     </Page>
     <Compile Include="Dialogs\FilesSignDialog.xaml.cs">
       <DependentUpon>FilesSignDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ImageGrabColorDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ImageGrabColorDialog.xaml.cs">
+      <DependentUpon>ImageGrabColorDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\JoinDisplay.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -680,6 +680,9 @@
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Files.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Image.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Keys.xaml.cs">

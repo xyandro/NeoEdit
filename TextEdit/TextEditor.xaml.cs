@@ -790,7 +790,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(); break;
 				case TextEditCommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case TextEditCommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(); break;
-				case TextEditCommand.Edit_Color: dialogResult = Command_Edit_Color_Dialog(); break;
 				case TextEditCommand.Edit_Data_Hash: dialogResult = Command_Edit_Data_Hash_Dialog(); break;
 				case TextEditCommand.Edit_Data_Compress: dialogResult = Command_Edit_Data_Compress_Dialog(); break;
 				case TextEditCommand.Edit_Data_Decompress: dialogResult = Command_Edit_Data_Decompress_Dialog(); break;
@@ -846,6 +845,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Numeric_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
+				case TextEditCommand.Image_GrabColor: dialogResult = Command_Image_GrabColor_Dialog(); break;
 				case TextEditCommand.Table_Convert: dialogResult = Command_Table_Convert_Dialog(); break;
 				case TextEditCommand.Table_TextToTable: dialogResult = Command_Table_TextToTable_Dialog(); break;
 				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
@@ -952,7 +952,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_URL_Escape: Command_Edit_URL_Escape(); break;
 				case TextEditCommand.Edit_URL_Unescape: Command_Edit_URL_Unescape(); break;
 				case TextEditCommand.Edit_URL_Absolute: Command_Edit_URL_Absolute(dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
-				case TextEditCommand.Edit_Color: Command_Edit_Color(dialogResult as EditColorDialog.Result); break;
 				case TextEditCommand.Edit_Data_Hash: Command_Edit_Data_Hash(dialogResult as EditDataHashDialog.Result); break;
 				case TextEditCommand.Edit_Data_Compress: Command_Edit_Data_Compress(dialogResult as EditDataCompressDialog.Result); break;
 				case TextEditCommand.Edit_Data_Decompress: Command_Edit_Data_Decompress(dialogResult as EditDataCompressDialog.Result); break;
@@ -1118,6 +1117,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.DateTime_Now: Command_DateTime_Now(); break;
 				case TextEditCommand.DateTime_UtcNow: Command_DateTime_UtcNow(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as DateTimeConvertDialog.Result); break;
+				case TextEditCommand.Image_GrabColor: Command_Image_GrabColor(dialogResult as ImageGrabColorDialog.Result); break;
 				case TextEditCommand.Table_DetectType: Command_Table_DetectType(); break;
 				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as TableConvertDialog.Result); break;
 				case TextEditCommand.Table_TextToTable: Command_Table_TextToTable(dialogResult as TableTextToTableDialog.Result); break;
