@@ -234,6 +234,7 @@ namespace NeoEdit.TextEdit
 		Image_GrabColor,
 		Image_AdjustColor,
 		Image_AddColor,
+		Image_OverlayColor,
 		Table_DetectType,
 		Table_Convert,
 		Table_TextToTable,

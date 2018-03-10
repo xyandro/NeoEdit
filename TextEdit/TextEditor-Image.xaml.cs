@@ -32,6 +32,17 @@ namespace NeoEdit.TextEdit
 			return ColorConverter.FromARGB(alpha, red, green, blue);
 		}
 
+		string OverlayColor(string color1, string color2)
+		{
+			ColorConverter.GetARGB(color1, out byte alpha1, out byte red1, out byte green1, out byte blue1);
+			ColorConverter.GetARGB(color2, out byte alpha2, out byte red2, out byte green2, out byte blue2);
+			red1 = (byte)((red1 * alpha1 / 255) + (red2 * alpha2 * (255 - alpha1) / (255 * 255)));
+			green1 = (byte)((green1 * alpha1 / 255) + (green2 * alpha2 * (255 - alpha1) / (255 * 255)));
+			blue1 = (byte)((blue1 * alpha1 / 255) + (blue2 * alpha2 * (255 - alpha1) / (255 * 255)));
+			alpha1 = (byte)(alpha1 + (alpha2 * (255 - alpha1) / 255));
+			return ColorConverter.FromARGB(alpha1, red1, green1, blue1);
+		}
+
 		ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog() => ImageGrabColorDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault());
 
 		void Command_Image_GrabColor(ImageGrabColorDialog.Result result) => ReplaceSelections(result.Color);
@@ -45,12 +56,19 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		ImageAddColorDialog.Result Command_Image_AddColor_Dialog() => ImageAddColorDialog.Run(WindowParent, GetVariables());
+		ImageAddOverlayColorDialog.Result Command_Image_AddOverlayColor_Dialog(bool add) => ImageAddOverlayColorDialog.Run(WindowParent, add, GetVariables());
 
-		void Command_Image_AddColor(ImageAddColorDialog.Result result)
+		void Command_Image_AddColor(ImageAddOverlayColorDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AddColor(GetString(range), results[index])).ToList();
+			ReplaceSelections(strs);
+		}
+
+		void Command_Image_OverlayColor(ImageAddOverlayColorDialog.Result result)
+		{
+			var results = GetFixedExpressionResults<string>(result.Expression);
+			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], GetString(range))).ToList();
 			ReplaceSelections(strs);
 		}
 	}

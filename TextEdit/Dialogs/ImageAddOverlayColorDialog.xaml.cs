@@ -4,7 +4,7 @@ using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
-	partial class ImageAddColorDialog
+	partial class ImageAddOverlayColorDialog
 	{
 		public class Result
 		{
@@ -12,13 +12,14 @@ namespace NeoEdit.TextEdit.Dialogs
 		}
 
 		[DepProp]
-		public string Expression { get { return UIHelper<ImageAddColorDialog>.GetPropValue<string>(this); } set { UIHelper<ImageAddColorDialog>.SetPropValue(this, value); } }
+		public string Expression { get { return UIHelper<ImageAddOverlayColorDialog>.GetPropValue<string>(this); } set { UIHelper<ImageAddOverlayColorDialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
 
-		static ImageAddColorDialog() { UIHelper<ImageAddColorDialog>.Register(); }
+		static ImageAddOverlayColorDialog() { UIHelper<ImageAddOverlayColorDialog>.Register(); }
 
-		ImageAddColorDialog(NEVariables variables)
+		ImageAddOverlayColorDialog(bool add, NEVariables variables)
 		{
+			Title = $"{(add ? "Add" : "Overlay")} Colors";
 			Variables = variables;
 			InitializeComponent();
 			Expression = "c";
@@ -32,9 +33,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables)
+		static public Result Run(Window parent, bool add, NEVariables variables)
 		{
-			var dialog = new ImageAddColorDialog(variables) { Owner = parent };
+			var dialog = new ImageAddOverlayColorDialog(add, variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

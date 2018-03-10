@@ -385,7 +385,9 @@
 	<MenuItem Header="Ima_ge">
 		<textEdit:TextEditMenuItem Header="_Grab Color" CommandEnum="Image_GrabColor"/>
 		<textEdit:TextEditMenuItem Header="A_djust Color" CommandEnum="Image_AdjustColor"/>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Add Color" CommandEnum="Image_AddColor"/>
+		<textEdit:TextEditMenuItem Header="_Overlay Color" CommandEnum="Image_OverlayColor"/>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
 		<textEdit:TextEditMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>

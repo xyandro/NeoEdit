@@ -346,12 +346,12 @@
     <Compile Include="Dialogs\FilesSignDialog.xaml.cs">
       <DependentUpon>FilesSignDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ImageAddColorDialog.xaml">
+    <Page Include="Dialogs\ImageAddOverlayColorDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\ImageAddColorDialog.xaml.cs">
-      <DependentUpon>ImageAddColorDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\ImageAddOverlayColorDialog.xaml.cs">
+      <DependentUpon>ImageAddOverlayColorDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\ImageAdjustColorDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
