@@ -346,6 +346,13 @@
     <Compile Include="Dialogs\FilesSignDialog.xaml.cs">
       <DependentUpon>FilesSignDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ImageAdjustColorDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ImageAdjustColorDialog.xaml.cs">
+      <DependentUpon>ImageAdjustColorDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ImageGrabColorDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

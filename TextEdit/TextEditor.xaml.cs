@@ -846,6 +846,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
 				case TextEditCommand.Image_GrabColor: dialogResult = Command_Image_GrabColor_Dialog(); break;
+				case TextEditCommand.Image_AdjustColor: dialogResult = Command_Image_AdjustColor_Dialog(); break;
 				case TextEditCommand.Table_Convert: dialogResult = Command_Table_Convert_Dialog(); break;
 				case TextEditCommand.Table_TextToTable: dialogResult = Command_Table_TextToTable_Dialog(); break;
 				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
@@ -1118,6 +1119,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.DateTime_UtcNow: Command_DateTime_UtcNow(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as DateTimeConvertDialog.Result); break;
 				case TextEditCommand.Image_GrabColor: Command_Image_GrabColor(dialogResult as ImageGrabColorDialog.Result); break;
+				case TextEditCommand.Image_AdjustColor: Command_Image_AdjustColor(dialogResult as ImageAdjustColorDialog.Result); break;
 				case TextEditCommand.Table_DetectType: Command_Table_DetectType(); break;
 				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as TableConvertDialog.Result); break;
 				case TextEditCommand.Table_TextToTable: Command_Table_TextToTable(dialogResult as TableTextToTableDialog.Result); break;

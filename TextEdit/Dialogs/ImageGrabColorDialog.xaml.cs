@@ -29,8 +29,6 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public byte Blue { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<byte>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Percent { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<string>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
-		[DepProp]
 		public bool Picking { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<bool>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 
 		static ImageGrabColorDialog() { UIHelper<ImageGrabColorDialog>.Register(); }
@@ -47,21 +45,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			Blue = blue;
 		}
 
-		byte Adjust(byte color, double percent) => (byte)Math.Max(0, Math.Min((int)(color * percent / 100 + 0.5), 255));
-
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (!string.IsNullOrWhiteSpace(Percent))
-			{
-				var percent = double.Parse(Percent);
-				Red = Adjust(Red, percent);
-				Green = Adjust(Green, percent);
-				Blue = Adjust(Blue, percent);
-				Percent = null;
-				return;
-			}
-
 			color.AddCurrentSuggestion();
 			result = new Result { Color = color.Text };
 			DialogResult = true;
@@ -218,26 +204,26 @@ namespace NeoEdit.TextEdit.Dialogs
 			return true;
 		}
 
+		public static string FromARGB(byte alpha, byte red, byte green, byte blue) => $"{(alpha == 255 ? "" : $"{alpha:x2}")}{red:x2}{green:x2}{blue:x2}";
+
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			byte alpha2, red2, green2, blue2;
 			var alpha = (byte)values[0];
 			var red = (byte)values[1];
 			var green = (byte)values[2];
 			var blue = (byte)values[3];
-			if (GetARGB(lastValue, out alpha2, out red2, out green2, out blue2))
+			if (GetARGB(lastValue, out byte alpha2, out byte red2, out byte green2, out byte blue2))
 			{
 				if ((alpha == alpha2) && (red == red2) && (green == green2) && (blue == blue2))
 					return lastValue;
 			}
-			return alpha == 255 ? $"{red:x2}{green:x2}{blue:x2}" : $"{alpha:x2}{red:x2}{green:x2}{blue:x2}";
+			return FromARGB(alpha, red, green, blue);
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
-			byte alpha, red, green, blue;
 			lastValue = value as string;
-			if (GetARGB(lastValue, out alpha, out red, out green, out blue))
+			if (GetARGB(lastValue, out byte alpha, out byte red, out byte green, out byte blue))
 				return new object[] { alpha, red, green, blue };
 			return new object[] { DependencyProperty.UnsetValue, DependencyProperty.UnsetValue, DependencyProperty.UnsetValue, DependencyProperty.UnsetValue };
 		}

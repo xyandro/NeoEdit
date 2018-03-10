@@ -232,6 +232,7 @@ namespace NeoEdit.TextEdit
 		DateTime_UtcNow,
 		DateTime_Convert,
 		Image_GrabColor,
+		Image_AdjustColor,
 		Table_DetectType,
 		Table_Convert,
 		Table_TextToTable,

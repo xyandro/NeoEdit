@@ -93,9 +93,6 @@
 				</Viewbox>
 			</StackPanel>
 
-			<Label Grid.Row="3" Grid.Column="3" Content="_Percent:" Target="{Binding ElementName=percent}" HorizontalAlignment="Right"/>
-			<TextBox Grid.Row="3" Grid.Column="4" Name="percent" Text="{Binding Percent, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
-
 			<UniformGrid Grid.Row="5" Grid.ColumnSpan="6" HorizontalAlignment="Right" Rows="1">
 				<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 				<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
