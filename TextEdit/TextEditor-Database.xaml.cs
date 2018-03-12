@@ -5,7 +5,9 @@ using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
+using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
 using NeoEdit.TextEdit.QueryBuilding;
 using NeoEdit.TextEdit.QueryBuilding.Dialogs;
@@ -114,6 +116,34 @@ namespace NeoEdit.TextEdit
 		{
 			ValidateConnection();
 			DatabaseExamineDialog.Run(WindowParent, dbConnection);
+		}
+
+		void Command_Database_GetSproc()
+		{
+			ValidateConnection();
+
+			var results = new List<string>();
+			foreach (var selection in Selections)
+			{
+				var sproc = GetString(selection);
+				var result = "Success";
+				try
+				{
+					var text = "";
+					using (var command = dbConnection.CreateCommand())
+					{
+						command.CommandText = $"sp_helptext '{sproc}'";
+						using (var reader = command.ExecuteReader())
+							while (reader.Read())
+								text += reader.GetString(0);
+					}
+
+					TabsParent.CreateTab(new TextEditor(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: Parser.ParserType.SQL, modified: false));
+				}
+				catch (Exception ex) { result = ex.Message; }
+				results.Add($"{sproc}: {result}");
+			}
+			ReplaceSelections(results);
 		}
 	}
 }
