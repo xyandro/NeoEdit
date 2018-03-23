@@ -71,7 +71,7 @@ namespace Loader
 				var pid = int.Parse(args[2]);
 				Extractor.RunUpdate(pid, fileName);
 			}
-			else if ((ResourceReader.Config.CanExtract) && ((Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) || ((args.Length == 1) && (args[0] == "-extract")) || (FilesAreExtracted())))
+			else if ((ResourceReader.Config.CanExtract) && ((Keyboard.IsKeyDown(Key.Tab)) || ((args.Length == 1) && (args[0] == "-extract")) || (FilesAreExtracted())))
 			{
 				var result = MessageBox.Show("Do you want to extract the contents of this archive?", "Confirm", MessageBoxButton.YesNoCancel);
 				switch (result)
