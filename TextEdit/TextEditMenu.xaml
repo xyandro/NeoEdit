@@ -630,6 +630,7 @@
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Region">
+		<textEdit:TextEditMenuItem Header="_Modify Regions" CommandEnum="Region_ModifyRegions"/>
 		<MenuItem Header="S_et Selections">
 			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_SetSelections_Region1"/>
 			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_SetSelections_Region2"/>

@@ -877,6 +877,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
 				case TextEditCommand.Select_Repeats_ByCount: dialogResult = Command_Select_Repeats_ByCount_Dialog(); break;
 				case TextEditCommand.Select_Split: dialogResult = Command_Select_Split_Dialog(); break;
+				case TextEditCommand.Region_ModifyRegions: dialogResult = Command_Region_ModifyRegions_Dialog(); break;
 				default: return true;
 			}
 
@@ -1285,6 +1286,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Selection_Remove: Command_Select_Selection_Remove(); break;
 				case TextEditCommand.Select_Selection_RemoveBeforeCurrent: Command_Select_Selection_RemoveBeforeCurrent(); break;
 				case TextEditCommand.Select_Selection_RemoveAfterCurrent: Command_Select_Selection_RemoveAfterCurrent(); break;
+				case TextEditCommand.Region_ModifyRegions: Command_Region_ModifyRegions(dialogResult as RegionModifyRegionsDialog.Result); break;
 				case TextEditCommand.Region_SetSelections_Region1: Command_Region_SetSelections_Region(1); break;
 				case TextEditCommand.Region_SetSelections_Region2: Command_Region_SetSelections_Region(2); break;
 				case TextEditCommand.Region_SetSelections_Region3: Command_Region_SetSelections_Region(3); break;

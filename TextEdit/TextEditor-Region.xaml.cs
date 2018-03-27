@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NeoEdit.Common;
+using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
@@ -67,6 +68,160 @@ namespace NeoEdit.TextEdit
 			Replace(useRegions.ToList(), strs);
 			SetRegions(useRegion, newRegions);
 			SetSelections(newSelections);
+		}
+
+		RegionModifyRegionsDialog.Result Command_Region_ModifyRegions_Dialog() => RegionModifyRegionsDialog.Run(WindowParent);
+
+		void Command_Region_ModifyRegions(RegionModifyRegionsDialog.Result result)
+		{
+			switch (result.Action)
+			{
+				case RegionModifyRegionsDialog.Action.Select:
+					SetSelections(result.Regions.SelectMany(useRegion => Regions[useRegion]).ToList());
+					break;
+				case RegionModifyRegionsDialog.Action.Set:
+					foreach (var useRegion in result.Regions)
+						SetRegions(useRegion, Selections.ToList());
+					break;
+				case RegionModifyRegionsDialog.Action.Clear:
+					foreach (var useRegion in result.Regions)
+						SetRegions(useRegion, new List<Range>());
+					break;
+				case RegionModifyRegionsDialog.Action.Remove:
+					foreach (var useRegion in result.Regions)
+					{
+						var newRegions = new List<Range>();
+						var regionIndex = 0;
+						foreach (var selection in Selections)
+						{
+							while ((regionIndex < Regions[useRegion].Count) && (Regions[useRegion][regionIndex].End <= selection.Start) && (!Regions[useRegion][regionIndex].Equals(selection)))
+								newRegions.Add(Regions[useRegion][regionIndex++]);
+							while ((regionIndex < Regions[useRegion].Count) && ((Regions[useRegion][regionIndex].Equals(selection)) || ((Regions[useRegion][regionIndex].End > selection.Start) && (Regions[useRegion][regionIndex].Start < selection.End))))
+								++regionIndex;
+						}
+						while (regionIndex < Regions[useRegion].Count)
+							newRegions.Add(Regions[useRegion][regionIndex++]);
+						SetRegions(useRegion, newRegions);
+					}
+					break;
+				case RegionModifyRegionsDialog.Action.Replace:
+					foreach (var useRegion in result.Regions)
+					{
+						var newRegions = new List<Range>();
+						var regionIndex = 0;
+						foreach (var selection in Selections)
+						{
+							while ((regionIndex < Regions[useRegion].Count) && (Regions[useRegion][regionIndex].End <= selection.Start) && (!Regions[useRegion][regionIndex].Equals(selection)))
+								newRegions.Add(Regions[useRegion][regionIndex++]);
+							while ((regionIndex < Regions[useRegion].Count) && ((Regions[useRegion][regionIndex].Equals(selection)) || ((Regions[useRegion][regionIndex].End > selection.Start) && (Regions[useRegion][regionIndex].Start < selection.End))))
+								++regionIndex;
+							newRegions.Add(selection);
+						}
+						while (regionIndex < Regions[useRegion].Count)
+							newRegions.Add(Regions[useRegion][regionIndex++]);
+						SetRegions(useRegion, newRegions);
+					}
+					break;
+				case RegionModifyRegionsDialog.Action.Unite:
+					foreach (var useRegion in result.Regions)
+					{
+						var newRegions = new List<Range>();
+						int regionIndex = 0, selectionIndex = 0;
+						Range region = null;
+						while (true)
+						{
+							if ((region == null) && (regionIndex < Regions[useRegion].Count))
+								region = Regions[useRegion][regionIndex++];
+
+							if (selectionIndex >= Selections.Count)
+							{
+								if (region == null)
+									break;
+								newRegions.Add(region);
+								region = null;
+							}
+							else if (region == null)
+								newRegions.Add(Selections[selectionIndex++]);
+							else if (region.Equals(Selections[selectionIndex]))
+								region = null;
+							else if (region.End <= Selections[selectionIndex].Start)
+							{
+								newRegions.Add(region);
+								region = null;
+							}
+							else if (Selections[selectionIndex].End <= region.Start)
+								newRegions.Add(Selections[selectionIndex++]);
+							else
+							{
+								if (region.Start < Selections[selectionIndex].Start)
+									newRegions.Add(new Range(region.Start, Selections[selectionIndex].Start));
+								if (region.End <= Selections[selectionIndex].End)
+									region = null;
+								else
+									region = new Range(Selections[selectionIndex].End, region.End);
+							}
+						}
+						SetRegions(useRegion, newRegions);
+					}
+					break;
+				case RegionModifyRegionsDialog.Action.Intersect:
+					foreach (var useRegion in result.Regions)
+					{
+						var newRegions = new List<Range>();
+						var startRegionIndex = 0;
+						foreach (var selection in Selections)
+						{
+							var regionIndex = startRegionIndex;
+							while ((regionIndex < Regions[useRegion].Count) && (Regions[useRegion][regionIndex].End < selection.Start))
+								++regionIndex;
+							startRegionIndex = regionIndex;
+							while ((regionIndex < Regions[useRegion].Count) && (Regions[useRegion][regionIndex].Start <= selection.End))
+							{
+								if ((!Regions[useRegion][regionIndex].HasSelection) || (!selection.HasSelection) || ((Regions[useRegion][regionIndex].End != selection.Start) && (Regions[useRegion][regionIndex].Start != selection.End)))
+								{
+									var newRegion = new Range(Math.Max(Regions[useRegion][regionIndex].Start, selection.Start), Math.Min(Regions[useRegion][regionIndex].End, selection.End));
+									if ((newRegions.Count == 0) || (!newRegion.Equals(newRegions[newRegions.Count - 1])))
+										newRegions.Add(newRegion);
+								}
+								++regionIndex;
+							}
+						}
+						SetRegions(useRegion, newRegions);
+					}
+					break;
+				case RegionModifyRegionsDialog.Action.Exclude:
+					foreach (var useRegion in result.Regions)
+					{
+						var regions = Regions[useRegion].ToList();
+						var newRegions = new List<Range>();
+						var regionIndex = 0;
+						var selectionIndex = 0;
+						while (regionIndex < regions.Count)
+						{
+							if (selectionIndex >= Selections.Count)
+								newRegions.Add(regions[regionIndex++]);
+							else if (Selections[selectionIndex].Equals(regions[regionIndex]))
+								regionIndex++;
+							else if (regions[regionIndex].End < Selections[selectionIndex].Start)
+								newRegions.Add(regions[regionIndex++]);
+							else if (Selections[selectionIndex].End < regions[regionIndex].Start)
+								++selectionIndex;
+							else
+							{
+								if (regions[regionIndex].Start < Selections[selectionIndex].Start)
+									newRegions.Add(new Range(regions[regionIndex].Start, Selections[selectionIndex].Start));
+								while ((regionIndex < regions.Count) && (regions[regionIndex].End <= Selections[selectionIndex].End))
+									regionIndex++;
+								if ((regionIndex < regions.Count) && (regions[regionIndex].Start < Selections[selectionIndex].End))
+									regions[regionIndex] = new Range(Selections[selectionIndex].End, regions[regionIndex].End);
+								++selectionIndex;
+							}
+						}
+						SetRegions(useRegion, newRegions);
+					}
+					break;
+
+			}
 		}
 
 		void Command_Region_SetSelections_Region(int? useRegion = null) => Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => SetRegions(key, Selections.ToList()));
