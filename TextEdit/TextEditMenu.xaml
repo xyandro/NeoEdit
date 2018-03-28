@@ -873,6 +873,7 @@
 		<textEdit:TextEditMenuItem Header="C_ustom Grid" CommandEnum="View_CustomGrid"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
+		<textEdit:TextEditMenuItem Header="Tab _Index" CommandEnum="View_TabIndex"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="F_ont Size" CommandEnum="View_FontSize"/>
 		<Separator/>
