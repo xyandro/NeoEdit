@@ -67,6 +67,16 @@ namespace NeoEdit.TextEdit
 			return value;
 		}
 
+		double Cycle(double value, double minimum, double maximum, bool includeBeginning)
+		{
+			var range = maximum - minimum;
+			while ((value < minimum) || ((value == minimum) && (!includeBeginning)))
+				value += range;
+			while ((value > maximum) || ((value == maximum) && (includeBeginning)))
+				value -= range;
+			return value;
+		}
+
 		void Command_Numeric_Select_Whole()
 		{
 			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
@@ -241,6 +251,18 @@ namespace NeoEdit.TextEdit
 				throw new Exception("Minimum must be greater than maximum.");
 
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Limit(minimum, double.Parse(GetString(range)), maximum).ToString()).ToList());
+		}
+
+		NumericCycleDialog.Result Command_Numeric_Cycle_Dialog() => NumericCycleDialog.Run(WindowParent, GetVariables());
+
+		void Command_Numeric_Cycle(NumericCycleDialog.Result result)
+		{
+			var variables = GetVariables();
+			var minimum = new NEExpression(result.Minimum).EvaluateRow<double>(variables);
+			var maximum = new NEExpression(result.Maximum).EvaluateRow<double>(variables);
+			if (minimum > maximum)
+				throw new Exception("Minimum must be greater than maximum.");
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Cycle(double.Parse(GetString(range)), minimum, maximum, result.IncludeBeginning).ToString()).ToList());
 		}
 
 		void Command_Numeric_Trim() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => TrimNumeric(GetString(range))).ToList());

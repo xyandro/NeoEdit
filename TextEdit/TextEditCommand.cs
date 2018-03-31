@@ -223,6 +223,7 @@ namespace NeoEdit.TextEdit
 		Numeric_Ceiling,
 		Numeric_Round,
 		Numeric_Limit,
+		Numeric_Cycle,
 		Numeric_Trim,
 		Numeric_Factor,
 		Numeric_RandomNumber,

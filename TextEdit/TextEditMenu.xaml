@@ -368,6 +368,7 @@
 		<textEdit:TextEditMenuItem Header="Ceili_ng" CommandEnum="Numeric_Ceiling"/>
 		<textEdit:TextEditMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
 		<textEdit:TextEditMenuItem Header="L_imit" CommandEnum="Numeric_Limit"/>
+		<textEdit:TextEditMenuItem Header="C_ycle" CommandEnum="Numeric_Cycle"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Numeric_Trim"/>
 		<Separator/>

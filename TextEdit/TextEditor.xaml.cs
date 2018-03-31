@@ -841,6 +841,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Ceiling: dialogResult = Command_Numeric_Ceiling_Dialog(); break;
 				case TextEditCommand.Numeric_Round: dialogResult = Command_Numeric_Round_Dialog(); break;
 				case TextEditCommand.Numeric_Limit: dialogResult = Command_Numeric_Limit_Dialog(); break;
+				case TextEditCommand.Numeric_Cycle: dialogResult = Command_Numeric_Cycle_Dialog(); break;
 				case TextEditCommand.Numeric_RandomNumber: dialogResult = Command_Numeric_RandomNumber_Dialog(); break;
 				case TextEditCommand.Numeric_CombinationsPermutations: dialogResult = Command_Numeric_CombinationsPermutations_Dialog(); break;
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
@@ -1113,6 +1114,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as NumericFloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Round: Command_Numeric_Round(dialogResult as NumericFloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Limit: Command_Numeric_Limit(dialogResult as NumericLimitDialog.Result); break;
+				case TextEditCommand.Numeric_Cycle: Command_Numeric_Cycle(dialogResult as NumericCycleDialog.Result); break;
 				case TextEditCommand.Numeric_Trim: Command_Numeric_Trim(); break;
 				case TextEditCommand.Numeric_Factor: Command_Numeric_Factor(); break;
 				case TextEditCommand.Numeric_RandomNumber: Command_Numeric_RandomNumber(dialogResult as NumericRandomNumberDialog.Result); break;
