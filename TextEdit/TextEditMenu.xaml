@@ -874,6 +874,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
 		<textEdit:TextEditMenuItem Header="Tab _Index" CommandEnum="View_TabIndex"/>
+		<textEdit:TextEditMenuItem Header="Active Tab In_dex" CommandEnum="View_ActiveTabIndex"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="F_ont Size" CommandEnum="View_FontSize"/>
 		<Separator/>

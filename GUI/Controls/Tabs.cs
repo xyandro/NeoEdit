@@ -142,9 +142,9 @@ namespace NeoEdit.GUI.Controls
 			TopMost = topMost;
 		}
 
-		public int GetIndex(ItemType item)
+		public int GetIndex(ItemType item, bool activeOnly = false)
 		{
-			var index = Items.IndexOf(item);
+			var index = Items.Where(x => (!activeOnly) || (x.Active)).Indexes(x => x == item).DefaultIfEmpty(-1).First();
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;

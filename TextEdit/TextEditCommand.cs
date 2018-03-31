@@ -590,6 +590,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Alt)] View_CustomGrid,
 		[KeyGesture(Key.A, ModifierKeys.Control | ModifierKeys.Alt)] View_ActiveTabs,
 		View_TabIndex,
+		View_ActiveTabIndex,
 		View_FontSize,
 		View_Select_TabsWithSelections,
 		View_Select_TabsWithoutSelections,

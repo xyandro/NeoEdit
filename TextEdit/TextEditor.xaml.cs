@@ -1474,7 +1474,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Region_Select_WithoutEnclosingRegion_Region7: Command_Region_Select_WithoutEnclosingRegion_Region(7); break;
 				case TextEditCommand.Region_Select_WithoutEnclosingRegion_Region8: Command_Region_Select_WithoutEnclosingRegion_Region(8); break;
 				case TextEditCommand.Region_Select_WithoutEnclosingRegion_Region9: Command_Region_Select_WithoutEnclosingRegion_Region(9); break;
-				case TextEditCommand.View_TabIndex: Command_View_TabIndex(); break;
+				case TextEditCommand.View_TabIndex: Command_View_TabIndex(false); break;
+				case TextEditCommand.View_ActiveTabIndex: Command_View_TabIndex(true); break;
 				case TextEditCommand.Macro_RepeatLastAction: Command_Macro_RepeatLastAction(); break;
 				case TextEditCommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 			}
