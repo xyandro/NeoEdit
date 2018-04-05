@@ -1,4 +1,9 @@
-﻿using System;
+﻿using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -7,11 +12,6 @@ using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using NeoEdit.Common;
-using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Parsing;
-using NeoEdit.Common.Transform;
-using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
@@ -401,18 +401,20 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Repeat(EditRepeatDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<int>(result.Expression);
+			if (results.Any(repeatCount => repeatCount < 0))
+				throw new Exception("Repeat count must be >= 0");
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(GetString(range), results[index])).ToList());
 			if (result.SelectRepetitions)
 			{
 				var sels = new List<Range>();
 				for (var ctr = 0; ctr < Selections.Count; ++ctr)
-				{
-					var selection = Selections[ctr];
-					var repeatCount = results[ctr];
-					var len = selection.Length / repeatCount;
-					for (var index = selection.Start; index < selection.End; index += len)
-						sels.Add(new Range(index + len, index));
-				}
+					if (results[ctr] != 0)
+					{
+						var selection = Selections[ctr];
+						var len = selection.Length / results[ctr];
+						for (var index = selection.Start; index < selection.End; index += len)
+							sels.Add(new Range(index + len, index));
+					}
 				SetSelections(sels);
 			}
 		}
