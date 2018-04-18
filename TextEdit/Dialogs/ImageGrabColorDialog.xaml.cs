@@ -37,8 +37,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			InitializeComponent();
 
-			byte alpha, red, green, blue;
-			ColorConverter.GetARGB(color, out alpha, out red, out green, out blue);
+			byte alpha = 255, red = 255, green = 255, blue = 255;
+			try { ColorConverter.GetARGB(color, out alpha, out red, out green, out blue); } catch { }
 			Alpha = alpha;
 			Red = red;
 			Green = green;
@@ -164,68 +164,71 @@ namespace NeoEdit.TextEdit.Dialogs
 
 	class ColorConverter : IMultiValueConverter
 	{
-		string lastValue;
-
-		public static bool GetARGB(string color, out byte alpha, out byte red, out byte green, out byte blue)
+		static byte GetValue(string color)
 		{
-			alpha = red = green = blue = 0;
+			if ((string.IsNullOrEmpty(color)) || (color.Length > 2))
+				throw new Exception("Invalid color");
+			var value = byte.Parse(color, NumberStyles.HexNumber);
+			if (color.Length == 1)
+				value = (byte)(value * 16 + value);
+			return value;
+		}
+
+		public static void GetARGB(string color, out byte alpha, out byte red, out byte green, out byte blue)
+		{
 			if (string.IsNullOrEmpty(color))
-				return false;
+				throw new Exception($"Invalid color: {color}");
+			foreach (var c in color)
+				if (((c < '0') || (c > '9')) && ((c < 'A') || (c > 'F')) && ((c < 'a') || (c > 'f')))
+					throw new Exception($"Invalid color: {color}");
 
-			if (color.Length <= 3)
+			switch (color.Length)
 			{
-				color = color.PadLeft(3, '0');
-				alpha = 255;
-				red = byte.Parse(color.Substring(0, 1), NumberStyles.HexNumber);
-				green = byte.Parse(color.Substring(1, 1), NumberStyles.HexNumber);
-				blue = byte.Parse(color.Substring(2, 1), NumberStyles.HexNumber);
-				red = (byte)(red * 16 + red);
-				green = (byte)(green * 16 + green);
-				blue = (byte)(blue * 16 + blue);
+				case 1:
+					alpha = 255;
+					red = green = blue = GetValue(color.Substring(0, 1));
+					break;
+				case 2:
+					alpha = 255;
+					red = green = blue = GetValue(color.Substring(0, 2));
+					break;
+				case 3:
+					alpha = 255;
+					red = GetValue(color.Substring(0, 1));
+					green = GetValue(color.Substring(1, 1));
+					blue = GetValue(color.Substring(2, 1));
+					break;
+				case 4:
+					alpha = GetValue(color.Substring(0, 1));
+					red = GetValue(color.Substring(1, 1));
+					green = GetValue(color.Substring(2, 1));
+					blue = GetValue(color.Substring(3, 1));
+					break;
+				case 6:
+					alpha = 255;
+					red = GetValue(color.Substring(0, 2));
+					green = GetValue(color.Substring(2, 2));
+					blue = GetValue(color.Substring(4, 2));
+					break;
+				case 8:
+					alpha = GetValue(color.Substring(0, 2));
+					red = GetValue(color.Substring(2, 2));
+					green = GetValue(color.Substring(4, 2));
+					blue = GetValue(color.Substring(6, 2));
+					break;
+				default:
+					throw new Exception($"Invalid color: {color}");
 			}
-			else if (color.Length <= 6)
-			{
-				color = color.PadLeft(6, '0');
-				alpha = 255;
-				red = byte.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
-				green = byte.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
-				blue = byte.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
-			}
-			else if (color.Length <= 8)
-			{
-				color = color.PadLeft(8, '0');
-				alpha = byte.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
-				red = byte.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
-				green = byte.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
-				blue = byte.Parse(color.Substring(6, 2), NumberStyles.HexNumber);
-			}
-			else
-				return false;
-			return true;
 		}
 
-		public static string FromARGB(byte alpha, byte red, byte green, byte blue) => $"{(alpha == 255 ? "" : $"{alpha:x2}")}{red:x2}{green:x2}{blue:x2}";
+		public static string FromARGB(byte alpha, byte red, byte green, byte blue) => $"{alpha:x2}{red:x2}{green:x2}{blue:x2}";
 
-		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-		{
-			var alpha = (byte)values[0];
-			var red = (byte)values[1];
-			var green = (byte)values[2];
-			var blue = (byte)values[3];
-			if (GetARGB(lastValue, out byte alpha2, out byte red2, out byte green2, out byte blue2))
-			{
-				if ((alpha == alpha2) && (red == red2) && (green == green2) && (blue == blue2))
-					return lastValue;
-			}
-			return FromARGB(alpha, red, green, blue);
-		}
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => FromARGB((byte)values[0], (byte)values[1], (byte)values[2], (byte)values[3]);
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
-			lastValue = value as string;
-			if (GetARGB(lastValue, out byte alpha, out byte red, out byte green, out byte blue))
-				return new object[] { alpha, red, green, blue };
-			return new object[] { DependencyProperty.UnsetValue, DependencyProperty.UnsetValue, DependencyProperty.UnsetValue, DependencyProperty.UnsetValue };
+			GetARGB(value as string, out byte alpha, out byte red, out byte green, out byte blue);
+			return new object[] { alpha, red, green, blue };
 		}
 	}
 
