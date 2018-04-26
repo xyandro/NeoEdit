@@ -60,6 +60,8 @@ namespace NeoEdit.TextEdit
 
 		double Limit(double minimum, double value, double maximum)
 		{
+			if (minimum > maximum)
+				throw new Exception("Minimum must be less than maximum.");
 			if (value < minimum)
 				value = minimum;
 			if (value > maximum)
@@ -69,6 +71,8 @@ namespace NeoEdit.TextEdit
 
 		double Cycle(double value, double minimum, double maximum, bool includeBeginning)
 		{
+			if (minimum > maximum)
+				throw new Exception("Minimum must be less than maximum.");
 			var range = maximum - minimum;
 			while ((value < minimum) || ((value == minimum) && (!includeBeginning)))
 				value += range;
@@ -145,13 +149,12 @@ namespace NeoEdit.TextEdit
 		void Command_Numeric_Scale(NumericScaleDialog.Result result)
 		{
 			var variables = GetVariables();
-			var prevMin = new NEExpression(result.PrevMin).EvaluateRow<double>(variables);
-			var prevMax = new NEExpression(result.PrevMax).EvaluateRow<double>(variables);
-			var newMin = new NEExpression(result.NewMin).EvaluateRow<double>(variables);
-			var newMax = new NEExpression(result.NewMax).EvaluateRow<double>(variables);
+			var prevMins = new NEExpression(result.PrevMin).EvaluateRows<double>(variables, Selections.Count());
+			var prevMaxs = new NEExpression(result.PrevMax).EvaluateRows<double>(variables, Selections.Count());
+			var newMins = new NEExpression(result.NewMin).EvaluateRows<double>(variables, Selections.Count());
+			var newMaxs = new NEExpression(result.NewMax).EvaluateRows<double>(variables, Selections.Count());
 
-			var ratio = (newMax - newMin) / (prevMax - prevMin);
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => ((double.Parse(GetString(range)) - prevMin) * ratio + newMin).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => ((double.Parse(GetString(range)) - prevMins[index]) * (newMaxs[index] - newMins[index]) / (prevMaxs[index] - prevMins[index]) + newMins[index]).ToString()).ToList());
 		}
 
 		void Command_Numeric_Add_Sum()
@@ -245,12 +248,10 @@ namespace NeoEdit.TextEdit
 		void Command_Numeric_Limit(NumericLimitDialog.Result result)
 		{
 			var variables = GetVariables();
-			var minimum = new NEExpression(result.Minimum).EvaluateRow<double>(variables);
-			var maximum = new NEExpression(result.Maximum).EvaluateRow<double>(variables);
-			if (minimum > maximum)
-				throw new Exception("Minimum must be greater than maximum.");
+			var minimums = new NEExpression(result.Minimum).EvaluateRows<double>(variables, Selections.Count());
+			var maximums = new NEExpression(result.Maximum).EvaluateRows<double>(variables, Selections.Count());
 
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Limit(minimum, double.Parse(GetString(range)), maximum).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => Limit(minimums[index], double.Parse(GetString(range)), maximums[index]).ToString()).ToList());
 		}
 
 		NumericCycleDialog.Result Command_Numeric_Cycle_Dialog() => NumericCycleDialog.Run(WindowParent, GetVariables());
@@ -258,11 +259,9 @@ namespace NeoEdit.TextEdit
 		void Command_Numeric_Cycle(NumericCycleDialog.Result result)
 		{
 			var variables = GetVariables();
-			var minimum = new NEExpression(result.Minimum).EvaluateRow<double>(variables);
-			var maximum = new NEExpression(result.Maximum).EvaluateRow<double>(variables);
-			if (minimum > maximum)
-				throw new Exception("Minimum must be greater than maximum.");
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Cycle(double.Parse(GetString(range)), minimum, maximum, result.IncludeBeginning).ToString()).ToList());
+			var minimums = new NEExpression(result.Minimum).EvaluateRows<double>(variables, Selections.Count());
+			var maximums = new NEExpression(result.Maximum).EvaluateRows<double>(variables, Selections.Count());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => Cycle(double.Parse(GetString(range)), minimums[index], maximums[index], result.IncludeBeginning).ToString()).ToList());
 		}
 
 		void Command_Numeric_Trim() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => TrimNumeric(GetString(range))).ToList());
