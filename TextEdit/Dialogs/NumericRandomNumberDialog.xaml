@@ -12,17 +12,25 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Mi_nimum:" Target="{Binding ElementName=minValue}"/>
-		<guiControls:NumericUpDown Grid.Row="0" Grid.Column="1" Name="minValue" Value="{Binding MinValue, ElementName=self}"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Name="minValue" Text="{Binding MinValue, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="NumericRandomNumberDialogMinValue"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="Ma_ximum:" Target="{Binding ElementName=maxValue}"/>
-		<guiControls:NumericUpDown Grid.Row="1" Grid.Column="1" Name="maxValue" Value="{Binding MaxValue, ElementName=self}"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
+		<guiControls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding MinValue, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<Label Grid.Row="2" Grid.Column="0" Content="Ma_ximum:" Target="{Binding ElementName=maxValue}"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" Name="maxValue" Text="{Binding MaxValue, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="NumericRandomNumberDialogMaxValue"/>
+
+		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
+		<guiControls:NEExpressionResults Grid.Row="3" Grid.Column="1" Expression="{Binding MaxValue, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
+
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

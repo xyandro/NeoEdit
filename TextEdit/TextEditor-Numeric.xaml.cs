@@ -269,9 +269,15 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Factor() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Factor(BigInteger.Parse(GetString(range)))).ToList());
 
-		NumericRandomNumberDialog.Result Command_Numeric_RandomNumber_Dialog() => NumericRandomNumberDialog.Run(WindowParent);
+		NumericRandomNumberDialog.Result Command_Numeric_RandomNumber_Dialog() => NumericRandomNumberDialog.Run(WindowParent, GetVariables());
 
-		void Command_Numeric_RandomNumber(NumericRandomNumberDialog.Result result) => ReplaceSelections(Selections.AsParallel().Select(range => random.Next(result.MinValue, result.MaxValue + 1).ToString()).ToList());
+		void Command_Numeric_RandomNumber(NumericRandomNumberDialog.Result result)
+		{
+			var variables = GetVariables();
+			var minValues = new NEExpression(result.MinValue).EvaluateRows<int>(variables, Selections.Count());
+			var maxValues = new NEExpression(result.MaxValue).EvaluateRows<int>(variables, Selections.Count());
+			ReplaceSelections(Selections.AsParallel().Select((range, index) => random.Next(minValues[index], maxValues[index] + 1).ToString()).ToList());
+		}
 
 		NumericCombinationsPermutationsDialog.Result Command_Numeric_CombinationsPermutations_Dialog()
 		{
