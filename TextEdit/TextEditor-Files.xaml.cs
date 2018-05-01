@@ -82,6 +82,16 @@ namespace NeoEdit.TextEdit
 				File.Copy(srcFiles[ctr], destFiles[ctr]);
 		}
 
+		int GetDepthLength(string path, int matchDepth)
+		{
+			var depth = 0;
+			for (var index = 0; index < path.Length; ++index)
+				if (path[index] == '\\')
+					if (++depth == matchDepth)
+						return index;
+			return path.Length;
+		}
+
 		List<string> GetDirectoryContents(string dir, bool recursive, List<string> errors)
 		{
 			var dirs = new Queue<string>();
@@ -564,6 +574,13 @@ namespace NeoEdit.TextEdit
 			}
 
 			SetSelections(sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList());
+		}
+
+		void Command_Files_Select_MatchDepth()
+		{
+			var strs = GetSelectionStrings();
+			var minDepth = strs.Select(str => str.Count(c => c == '\\') + 1).DefaultIfEmpty(0).Min();
+			SetSelections(Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], minDepth))).ToList());
 		}
 
 		FilesSelectByVersionControlStatusDialog.Result Command_Files_Select_ByVersionControlStatus_Dialog() => FilesSelectByVersionControlStatusDialog.Run(WindowParent);

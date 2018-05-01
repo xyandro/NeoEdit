@@ -1040,6 +1040,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Select_NonExisting: Command_Files_Select_Existing(false); break;
 				case TextEditCommand.Files_Select_Roots: Command_Files_Select_Roots(true); break;
 				case TextEditCommand.Files_Select_NonRoots: Command_Files_Select_Roots(false); break;
+				case TextEditCommand.Files_Select_MatchDepth: Command_Files_Select_MatchDepth(); break;
 				case TextEditCommand.Files_Select_ByVersionControlStatus: Command_Files_Select_ByVersionControlStatus(dialogResult as FilesSelectByVersionControlStatusDialog.Result); break;
 				case TextEditCommand.Files_Hash: Command_Files_Hash(dialogResult as HashDialog.Result); break;
 				case TextEditCommand.Files_Sign: Command_Files_Sign(dialogResult as FilesSignDialog.Result); break;
