@@ -23,7 +23,7 @@ namespace NeoEdit.HexEdit
 
 		static DisplayValues() { UIHelper<DisplayValues>.Register(); }
 
-		HashSet<Coder.CodePage> codePages = new HashSet<Coder.CodePage> { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE };
+		HashSet<Coder.CodePage> codePages = new HashSet<Coder.CodePage> { Coder.DefaultCodePage, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE };
 
 		public DisplayValues()
 		{

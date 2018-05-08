@@ -36,7 +36,7 @@ namespace NeoEdit.TextView.Dialogs
 		ChangeEncodingDialog()
 		{
 			InitializeComponent();
-			var encodings = new List<Coder.CodePage> { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE, Coder.CodePage.UTF16BE, Coder.CodePage.UTF32LE, Coder.CodePage.UTF32BE };
+			var encodings = new List<Coder.CodePage> { Coder.DefaultCodePage, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE, Coder.CodePage.UTF16BE, Coder.CodePage.UTF32LE, Coder.CodePage.UTF32BE };
 			var encodingsList = encodings.Select(codePage => Tuple.Create(codePage, Coder.GetDescription(codePage)));
 			outputCodePage.ItemsSource = encodingsList;
 			outputCodePage.SelectedValuePath = "Item1";

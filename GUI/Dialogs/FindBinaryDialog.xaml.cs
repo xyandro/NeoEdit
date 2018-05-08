@@ -51,7 +51,7 @@ namespace NeoEdit.GUI.Dialogs
 		static bool savedShowStr = true;
 		static bool savedMatchCase = false;
 		readonly List<CodePageCheckBox> checkBoxes;
-		readonly static HashSet<Coder.CodePage> defaultCodePages = new HashSet<Coder.CodePage>(Coder.GetNumericCodePages().Concat(new Coder.CodePage[] { Coder.CodePage.Default, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE }));
+		readonly static HashSet<Coder.CodePage> defaultCodePages = new HashSet<Coder.CodePage>(Coder.GetNumericCodePages().Concat(new Coder.CodePage[] { Coder.DefaultCodePage, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE }));
 		readonly static HashSet<Coder.CodePage> savedCodePages = new HashSet<Coder.CodePage>(defaultCodePages);
 
 		static FindBinaryDialog() { UIHelper<FindBinaryDialog>.Register(); }

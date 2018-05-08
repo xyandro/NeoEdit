@@ -47,9 +47,9 @@ namespace NeoEdit.GUI.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, Coder.CodePage codePage = Coder.CodePage.Default, Coder.CodePage detected = Coder.CodePage.None)
+		public static Result Run(Window parent, Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None)
 		{
-			var dialog = new EncodingDialog(codePage, detected) { Owner = parent };
+			var dialog = new EncodingDialog(codePage ?? Coder.DefaultCodePage, detected) { Owner = parent };
 			if (!dialog.ShowDialog())
 				return null;
 			return dialog.result;

@@ -99,7 +99,7 @@ namespace NeoEdit.TextView
 
 				switch (codePage)
 				{
-					case Coder.CodePage.Default: lineStart.AddRange(Win32.Interop.GetLinesDefault(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;
+					case Coder.CodePage.CodePage1252: lineStart.AddRange(Win32.Interop.GetLinesDefault(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;
 					case Coder.CodePage.UTF8: lineStart.AddRange(Win32.Interop.GetLinesUTF8(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;
 					case Coder.CodePage.UTF16LE: lineStart.AddRange(Win32.Interop.GetLinesUTF16LE(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;
 					case Coder.CodePage.UTF16BE: lineStart.AddRange(Win32.Interop.GetLinesUTF16BE(block, ref lineLength, ref maxLine).Select(offset => offset + position)); break;

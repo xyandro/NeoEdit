@@ -228,9 +228,9 @@ namespace NeoEdit.Common.UnitTest
 			VerifyCoder(Coder.CodePage.UTF32BE, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.UTF32BE, "This is my string", new byte[] { 0, 0, 0, 84, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 109, 0, 0, 0, 121, 0, 0, 0, 32, 0, 0, 0, 115, 0, 0, 0, 116, 0, 0, 0, 114, 0, 0, 0, 105, 0, 0, 0, 110, 0, 0, 0, 103 }, false);
 			VerifyCoder(Coder.CodePage.UTF32BE, "This is my string", new byte[] { 0, 0, 254, 255, 0, 0, 0, 84, 0, 0, 0, 104, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 105, 0, 0, 0, 115, 0, 0, 0, 32, 0, 0, 0, 109, 0, 0, 0, 121, 0, 0, 0, 32, 0, 0, 0, 115, 0, 0, 0, 116, 0, 0, 0, 114, 0, 0, 0, 105, 0, 0, 0, 110, 0, 0, 0, 103 }, true);
-			VerifyCoder(Coder.CodePage.Default, "", new byte[] { }, false);
-			VerifyCoder(Coder.CodePage.Default, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, false);
-			VerifyCoder(Coder.CodePage.Default, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, true);
+			VerifyCoder(Coder.DefaultCodePage, "", Encoding.Default.GetBytes(""), false);
+			VerifyCoder(Coder.DefaultCodePage, "This is my string", Encoding.Default.GetBytes("This is my string"), false);
+			VerifyCoder(Coder.DefaultCodePage, "This is my string", Encoding.Default.GetBytes("This is my string"), true);
 			VerifyCoder(Coder.CodePage.ASCII, "", new byte[] { }, false);
 			VerifyCoder(Coder.CodePage.ASCII, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, false);
 			VerifyCoder(Coder.CodePage.ASCII, "This is my string", new byte[] { 84, 104, 105, 115, 32, 105, 115, 32, 109, 121, 32, 115, 116, 114, 105, 110, 103 }, true);
