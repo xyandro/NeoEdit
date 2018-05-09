@@ -124,6 +124,7 @@ namespace NeoEdit.GUI.Dialogs
 		void WorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			DialogResult = IsFinished = true;
+			Event.Set();
 		}
 
 		void UpdateUIThread()
@@ -166,9 +167,9 @@ namespace NeoEdit.GUI.Dialogs
 				progressGrid.RowDefinitions.Add(new RowDefinition());
 
 			OverallTask = new RunTask { Name = "Overall", Maximum = Items.Count };
-			AddProgress(0, 0, columns).RunTask = OverallTask;
 			for (var ctr = 0; ctr < Concurrency; ++ctr)
 				AddProgress(ctr / columns + 1, ctr % columns);
+			AddProgress(0, 0, columns).RunTask = OverallTask;
 		}
 
 		void UpdateGrid()
@@ -190,6 +191,7 @@ namespace NeoEdit.GUI.Dialogs
 						progressData.ProgressBar.Visibility = Visibility.Visible;
 						progressData.ProgressBar.Value = runTask.Value;
 						progressData.ProgressBar.Maximum = runTask.Maximum;
+						OverallTask.Value += runTask.Value / runTask.Maximum;
 					}
 				}
 			}
