@@ -554,11 +554,7 @@ namespace NeoEdit.Common.Transform
 		{
 			try
 			{
-				if (codePage == CodePage.AutoUnicode)
-					codePage = GuessUnicodeEncoding(data);
-				else if (codePage == CodePage.AutoByBOM)
-					codePage = CodePageFromBOM(data);
-
+				codePage = ResolveCodePage(codePage, data);
 				switch (codePage)
 				{
 					case CodePage.Int8: return BytesToNum(data, sizeof(sbyte), bytes => (sbyte)bytes[0], false);
@@ -749,9 +745,19 @@ namespace NeoEdit.Common.Transform
 			return bytes1.Equal(bytes2);
 		}
 
+		public static CodePage ResolveCodePage(CodePage codePage, byte[] data)
+		{
+			switch (codePage)
+			{
+				case CodePage.AutoByBOM: return CodePageFromBOM(data);
+				case CodePage.AutoUnicode: return GuessUnicodeEncoding(data);
+				default: return codePage;
+			}
+		}
+
 		public static CodePage CodePageFromBOM(string fileName)
 		{
-			var maxPreambleLength = NEEncodings.Select(encoding => encoding.preamble).NonNull().Select(preamble => preamble.Length).Max();
+			var maxPreambleLength = MaxPreambleSize;
 			using (var file = File.OpenRead(fileName))
 			{
 				var header = new byte[Math.Min(maxPreambleLength, file.Length)];
@@ -805,6 +811,8 @@ namespace NeoEdit.Common.Transform
 		public static bool IsImage(CodePage codePage) => (codePage <= CodePage.StartImage) && (codePage >= CodePage.EndImage);
 
 		public static bool IsNumeric(CodePage codePage) => (codePage <= CodePage.StartNum) && (codePage >= CodePage.EndNum);
+
+		public static int MaxPreambleSize => NEEncodings.Select(encoding => encoding.preamble).NonNull().Select(preamble => preamble.Length).Max();
 
 		public static int PreambleSize(CodePage codePage)
 		{

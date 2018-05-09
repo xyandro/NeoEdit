@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
@@ -182,6 +183,58 @@ namespace NeoEdit.TextEdit
 			}
 
 			return "INVALID";
+		}
+
+		void ReencodeFile(string inputFile, IProgress<ProgressReport> progress, CancellationToken cancel, Coder.CodePage inputCodePage, Coder.CodePage outputCodePage)
+		{
+			if (cancel.IsCancellationRequested)
+				return;
+
+			var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), Guid.NewGuid().ToString());
+			try
+			{
+				using (var input = File.OpenRead(inputFile))
+				{
+					var bom = new byte[Coder.MaxPreambleSize];
+					var headerSize = input.Read(bom, 0, (int)Math.Min(input.Length, bom.Length));
+					Array.Resize(ref bom, headerSize);
+					inputCodePage = Coder.ResolveCodePage(inputCodePage, bom);
+					if (inputCodePage == outputCodePage)
+						return;
+					input.Position = Coder.PreambleSize(inputCodePage);
+
+					using (var output = File.Create(outputFile))
+					{
+						bom = Coder.StringToBytes("", outputCodePage, true);
+						output.Write(bom, 0, bom.Length);
+						var decoder = Coder.GetEncoding(inputCodePage).GetDecoder();
+						var encoder = Coder.GetEncoding(outputCodePage).GetEncoder();
+						var chars = new char[65536];
+						var bytes = new byte[chars.Length * 5]; // Should be big enough to hold any resulting output
+						while (input.Position != input.Length)
+						{
+							if (cancel.IsCancellationRequested)
+								throw new OperationCanceledException();
+
+							var inByteCount = input.Read(bytes, 0, (int)Math.Min(chars.Length, input.Length - input.Position));
+
+							var numChars = decoder.GetChars(bytes, 0, inByteCount, chars, 0);
+							var outByteCount = encoder.GetBytes(chars, 0, numChars, bytes, 0, false);
+
+							output.Write(bytes, 0, outByteCount);
+
+							progress.Report(new ProgressReport(input.Position, input.Length));
+						}
+					}
+				}
+				File.Delete(inputFile);
+				File.Move(outputFile, inputFile);
+			}
+			catch
+			{
+				File.Delete(outputFile);
+				throw;
+			}
 		}
 
 		string RunCommand(string arguments)
@@ -743,5 +796,9 @@ namespace NeoEdit.TextEdit
 		void Command_Files_Operations_RunCommand_Sequential() => ReplaceSelections(GetSelectionStrings().Select(str => RunCommand(str)).ToList());
 
 		void Command_Files_Operations_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
+
+		FilesOperationsEncodingDialog.Result Command_Files_Operations_Encoding_Dialog() => FilesOperationsEncodingDialog.Run(WindowParent);
+
+		void Command_Files_Operations_Encoding(FilesOperationsEncodingDialog.Result result) => MultiProgressDialog.Run(WindowParent, "Changing encoding...", RelativeSelectedFiles(), (inputFile, progress, cancel) => ReencodeFile(inputFile, progress, cancel, result.InputCodePage, result.OutputCodePage));
 	}
 }

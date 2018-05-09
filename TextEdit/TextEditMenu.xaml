@@ -276,6 +276,8 @@
 				<textEdit:TextEditMenuItem Header="_Sequential" CommandEnum="Files_Operations_RunCommand_Sequential"/>
 				<textEdit:TextEditMenuItem Header="S_hell" CommandEnum="Files_Operations_RunCommand_Shell"/>
 			</MenuItem>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="E_ncoding" CommandEnum="Files_Operations_Encoding"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="E_xpression">
