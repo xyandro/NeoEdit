@@ -28,7 +28,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			var ignoreCharacterStr = new string(Misc.GetCharsFromRegexString(IgnoreCharacters).ToCharArray());
+			var ignoreCharacterStr = new string(Misc.GetCharsFromCharString(IgnoreCharacters).ToCharArray());
 			if (!MatchCase)
 				ignoreCharacterStr = new string((ignoreCharacterStr.ToLowerInvariant() + ignoreCharacterStr.ToUpperInvariant()).Distinct().ToArray());
 			result = new Result { IgnoreCharacters = ignoreCharacterStr };

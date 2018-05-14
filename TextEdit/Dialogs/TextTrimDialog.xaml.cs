@@ -55,7 +55,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			var comparer = MatchCase ? EqualityComparer<char>.Default : (IEqualityComparer<char>)new NoCaseCharComparer();
 			result = new Result
 			{
-				TrimChars = new HashSet<char>(Misc.GetCharsFromRegexString(TrimChars).ToCharArray(), comparer),
+				TrimChars = new HashSet<char>(Misc.GetCharsFromCharString(TrimChars).ToCharArray(), comparer),
 				Start = Location.HasFlag(TrimLocation.Start),
 				End = Location.HasFlag(TrimLocation.End),
 			};

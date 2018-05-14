@@ -32,7 +32,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			var chars = Misc.GetCharsFromRegexString(Chars);
+			var chars = Misc.GetCharsFromCharString(Chars);
 			if (chars.Length == 0)
 				return;
 

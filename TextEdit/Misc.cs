@@ -41,29 +41,40 @@ namespace NeoEdit.TextEdit
 		static internal readonly Brush cursorBrush = new SolidColorBrush(Color.FromArgb(10, 0, 0, 0));
 		static internal readonly Pen cursorPen = new Pen(new SolidColorBrush(Color.FromArgb(20, 0, 0, 0)), 1);
 
-		static internal string GetCharsFromRegexString(string regex)
+		static internal string GetCharsFromCharString(string charString)
 		{
-			if (string.IsNullOrEmpty(regex))
-				return "";
-
-			var sb = new StringBuilder();
-			var matches = Regex.Matches(Regex.Unescape(regex), "(.)-(.)|(.)", RegexOptions.Singleline);
-			foreach (Match match in matches)
+			var result = new StringBuilder();
+			var range = false;
+			foreach (var c in Regex.Unescape(charString))
 			{
-				if (match.Groups[1].Success)
+				if (c == '-')
 				{
-					var v0 = match.Groups[1].Value[0];
-					var v1 = match.Groups[2].Value[0];
-					var start = (char)Math.Min(v0, v1);
-					var end = (char)Math.Max(v0, v1);
-					for (var c = start; c <= end; ++c)
-						sb.Append(c);
+					range = !range;
+					if (range)
+						continue;
 				}
-				else if (match.Groups[3].Success)
-					sb.Append(match.Groups[3].Value[0]);
-			}
 
-			return sb.ToString();
+				if ((range) && (result.Length == 0))
+					throw new Exception("Invalid charstring");
+
+				var start = range ? result[result.Length - 1] : c;
+				var dir = c > start ? 1 : -1;
+
+				while (true)
+				{
+					if (range)
+						range = false;
+					else
+						result.Append(start);
+					if (start == c)
+						break;
+					start = (char)(start + dir);
+				}
+			}
+			if (range)
+				throw new Exception("Invalid charstring");
+
+			return result.ToString();
 		}
 	}
 }

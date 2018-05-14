@@ -53,7 +53,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			result = new Result
 			{
-				Chars = new HashSet<char>(Misc.GetCharsFromRegexString(Chars).ToCharArray()),
+				Chars = new HashSet<char>(Misc.GetCharsFromCharString(Chars).ToCharArray()),
 				Start = Location.HasFlag(TrimLocation.Start),
 				End = Location.HasFlag(TrimLocation.End),
 			};
