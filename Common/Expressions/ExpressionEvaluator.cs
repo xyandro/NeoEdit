@@ -212,7 +212,13 @@ namespace NeoEdit.Common.Expressions
 			catch { return false; }
 		}
 
+		string GetDirectoryName(string str) => string.IsNullOrEmpty(str) ? null : Path.GetDirectoryName(str);
+
 		string GetFileName(string str) => string.IsNullOrEmpty(str) ? null : Path.GetFileName(str);
+
+		string GetFileNameWithoutExtension(string str) => string.IsNullOrEmpty(str) ? null : Path.GetFileNameWithoutExtension(str);
+
+		string GetExtension(string str) => string.IsNullOrEmpty(str) ? null : Path.GetExtension(str);
 
 		NumericValue FromDate(string str) => new NumericValue(DateTimeOffset.Parse(str).ToOffset(TimeSpan.Zero).Ticks, "ticks");
 
@@ -237,9 +243,12 @@ namespace NeoEdit.Common.Expressions
 				case "atan": return paramList.Count == 2 ? NumericValue.Atan2(GetNumeric(paramList[0]), GetNumeric(paramList[1])) : GetNumeric(paramList[0]).Atan();
 				case "cos": return GetNumeric(paramList[0]).Cos();
 				case "date": return new NumericValue(new DateTimeOffset(DateTime.Now.Date, DateTimeOffset.Now.Offset).UtcTicks, "ticks");
+				case "directoryname": return GetDirectoryName(GetString(paramList[0]));
 				case "eval": return new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row);
+				case "extension": return GetExtension(GetString(paramList[0]));
 				case "factor": return GetNumeric(paramList[0]).Factor();
 				case "filename": return GetFileName(GetString(paramList[0]));
+				case "filenamewithoutextension": return GetFileNameWithoutExtension(GetString(paramList[0]));
 				case "fromdate": return FromDate(GetString(paramList[0]));
 				case "fromwords": return NumericValue.FromWords(GetString(paramList[0]));
 				case "gcf": return NumericValue.GCF(paramList.Select(val => GetNumeric(val)).ToList());
