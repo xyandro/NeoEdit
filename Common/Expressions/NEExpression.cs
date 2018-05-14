@@ -19,12 +19,12 @@ namespace NeoEdit.Common.Expressions
 			catch (Exception ex) { throw new Exception("Invalid expression", ex); }
 		}
 
-		internal object InternalEvaluate(NEVariables variables, int row) => new ExpressionEvaluator(expression, variables, row).Visit(tree);
+		internal object InternalEvaluate(NEVariables variables, int row, string unit) => new ExpressionEvaluator(expression, variables, row, unit).Visit(tree);
 
-		public object Evaluate(NEVariables variables = null) => EvaluateList(variables, 1)[0];
-		public T Evaluate<T>(NEVariables variables = null) => EvaluateList<T>(variables, 1)[0];
+		public object Evaluate(NEVariables variables = null, string unit = null) => EvaluateList(variables, 1, unit)[0];
+		public T Evaluate<T>(NEVariables variables = null, string unit = null) => EvaluateList<T>(variables, 1, unit)[0];
 
-		public List<object> EvaluateList(NEVariables variables, int? rowCount = null) => EvaluateList<object>(variables, rowCount);
+		public List<object> EvaluateList(NEVariables variables, int? rowCount = null, string unit = null) => EvaluateList<object>(variables, rowCount, unit);
 
 		T ChangeType<T>(object value)
 		{
@@ -37,14 +37,14 @@ namespace NeoEdit.Common.Expressions
 			return (T)Convert.ChangeType(value, typeof(T));
 		}
 
-		public List<T> EvaluateList<T>(NEVariables variables, int? rowCount = null)
+		public List<T> EvaluateList<T>(NEVariables variables, int? rowCount = null, string unit = null)
 		{
 			try
 			{
 				if (rowCount < 0)
 					throw new ArgumentException($"{nameof(rowCount)} must be positive");
 				var count = rowCount ?? variables.ResultCount(Variables);
-				Func<int, T> action = row => ChangeType<T>(InternalEvaluate(variables, row));
+				Func<int, T> action = row => ChangeType<T>(InternalEvaluate(variables, row, unit));
 				if (count == 1)
 					return new List<T> { action(0) };
 				return Enumerable.Range(0, count).AsParallel().AsOrdered().Select(action).ToList();

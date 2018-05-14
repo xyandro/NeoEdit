@@ -166,6 +166,12 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("10 W", new NEExpression("10 J/s => Simple").Evaluate().ToString());
 			Assert.AreEqual("25 $/lessons", new NEExpression("1000$ / 40 lessons").Evaluate().ToString());
 
+			Assert.AreEqual("25", new NEExpression("25").Evaluate(unit: "bytes").ToString());
+			Assert.AreEqual("25", new NEExpression("25 bytes").Evaluate(unit: "bytes").ToString());
+			Assert.AreEqual("25600", new NEExpression("25 kb").Evaluate(unit: "bytes").ToString());
+			Assert.AreEqual("26214400", new NEExpression("25 mb").Evaluate(unit: "bytes").ToString());
+			Assert.AreEqual("25600", new NEExpression("25 mb").Evaluate(unit: "kb").ToString());
+
 			Assert.AreEqual("-1", new NEExpression("cos(pi)").Evaluate().ToString());
 			Assert.AreEqual("-1", new NEExpression("cos(pi rad)").Evaluate().ToString());
 			Assert.AreEqual("-1", new NEExpression("cos(180 deg)").Evaluate().ToString());

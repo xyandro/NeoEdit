@@ -278,6 +278,13 @@ namespace NeoEdit.Common.Expressions
 			return this * mult + add;
 		}
 
+		public NumericValue StripUnits()
+		{
+			if (!Units.HasUnits)
+				return this;
+			return new NumericValue(Value);
+		}
+
 		public NumericValue SetUnits(NumericValue units)
 		{
 			if (Units.HasUnits)

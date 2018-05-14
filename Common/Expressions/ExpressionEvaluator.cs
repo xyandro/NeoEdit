@@ -17,11 +17,13 @@ namespace NeoEdit.Common.Expressions
 		readonly string expression;
 		readonly NEVariables variables;
 		readonly int row;
-		internal ExpressionEvaluator(string expression, NEVariables variables, int row)
+		readonly string unit;
+		internal ExpressionEvaluator(string expression, NEVariables variables, int row, string unit)
 		{
 			this.expression = expression;
 			this.variables = variables;
 			this.row = row;
+			this.unit = unit;
 		}
 
 		NumericValue GetNumeric(object val)
@@ -158,7 +160,15 @@ namespace NeoEdit.Common.Expressions
 		{
 			if ((context.DEBUG() != null) && (Debugger.IsAttached))
 				Debugger.Break();
-			return Simplify(Visit(context.form()));
+			var result = Visit(context.form());
+			if (unit != null)
+			{
+				if (!(result is NumericValue))
+					throw new Exception("Cannot change units on non-numeric result");
+				if ((result as NumericValue).Units.HasUnits)
+					result = (result as NumericValue).ConvertUnits(new ExpressionUnits(unit)).StripUnits();
+			}
+			return Simplify(result);
 		}
 
 		static object Simplify(object value)
@@ -244,7 +254,7 @@ namespace NeoEdit.Common.Expressions
 				case "cos": return GetNumeric(paramList[0]).Cos();
 				case "date": return new NumericValue(new DateTimeOffset(DateTime.Now.Date, DateTimeOffset.Now.Offset).UtcTicks, "ticks");
 				case "directoryname": return GetDirectoryName(GetString(paramList[0]));
-				case "eval": return new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row);
+				case "eval": return new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row, unit);
 				case "extension": return GetExtension(GetString(paramList[0]));
 				case "factor": return GetNumeric(paramList[0]).Factor();
 				case "filename": return GetFileName(GetString(paramList[0]));
@@ -275,7 +285,7 @@ namespace NeoEdit.Common.Expressions
 				case "towords": return GetNumeric(paramList[0]).ToWords();
 				case "type": return paramList[0].GetType();
 				case "utcdate": return new NumericValue(DateTimeOffset.Now.UtcDateTime.Date.Ticks, "ticks");
-				case "valideval": try { new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row); return true; } catch { return false; }
+				case "valideval": try { new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row, unit); return true; } catch { return false; }
 				case "validre": return ValidRE(GetString(paramList[0]));
 				default: throw new ArgumentException($"Invalid method: {method}");
 			}
