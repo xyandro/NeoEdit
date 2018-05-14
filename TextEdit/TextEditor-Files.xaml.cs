@@ -455,7 +455,7 @@ namespace NeoEdit.TextEdit
 			var files = RelativeSelectedFiles();
 			var sizes = files.AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			var results = new NEExpression(result.Expression).EvaluateRows<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
+			var results = new NEExpression(result.Expression).EvaluateList<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
 			files.Zip(results, (file, size) => new { file, size }).AsParallel().ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
@@ -597,8 +597,8 @@ namespace NeoEdit.TextEdit
 			var dataExpression = new NEExpression(result.Data);
 			var resultCount = variables.ResultCount(filenameExpression, dataExpression);
 
-			var filename = filenameExpression.EvaluateRows<string>(variables, resultCount);
-			var data = dataExpression.EvaluateRows<string>(variables, resultCount);
+			var filename = filenameExpression.EvaluateList<string>(variables, resultCount);
+			var data = dataExpression.EvaluateList<string>(variables, resultCount);
 			for (var ctr = 0; ctr < data.Count; ++ctr)
 				File.WriteAllBytes(filename[ctr], Coder.StringToBytes(data[ctr], result.CodePage, true));
 		}
@@ -663,8 +663,8 @@ namespace NeoEdit.TextEdit
 			var newFileNameExpression = new NEExpression(result.NewFileName);
 			var resultCount = variables.ResultCount(oldFileNameExpression, newFileNameExpression);
 
-			var oldFileNames = oldFileNameExpression.EvaluateRows<string>(variables, resultCount);
-			var newFileNames = newFileNameExpression.EvaluateRows<string>(variables, resultCount);
+			var oldFileNames = oldFileNameExpression.EvaluateList<string>(variables, resultCount);
+			var newFileNames = newFileNameExpression.EvaluateList<string>(variables, resultCount);
 
 			const int InvalidCount = 10;
 			var invalid = oldFileNames.Distinct().Where(name => !FileOrDirectoryExists(name)).Take(InvalidCount).ToList();

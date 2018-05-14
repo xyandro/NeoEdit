@@ -36,8 +36,7 @@ e
 	;
 
 value
-	: val=PARAM # Param
-	| (normalstring | verbatimstring | interpolatedstring | verbatiminterpolatedstring) # String
+	: (normalstring | verbatimstring | interpolatedstring | verbatiminterpolatedstring) # String
 	| TRUE # True
 	| FALSE # False
 	| NULL # Null

@@ -19,15 +19,12 @@ namespace NeoEdit.Common.Expressions
 			catch (Exception ex) { throw new Exception("Invalid expression", ex); }
 		}
 
-		internal object InternalEvaluate(NEVariables variables, int row, params object[] values) => new ExpressionEvaluator(expression, variables, row, values).Visit(tree);
+		internal object InternalEvaluate(NEVariables variables, int row) => new ExpressionEvaluator(expression, variables, row).Visit(tree);
 
-		public object Evaluate(params object[] values) => EvaluateRow(null, values);
-		public T Evaluate<T>(params object[] values) => EvaluateRow<T>(null, values);
+		public object Evaluate(NEVariables variables = null) => EvaluateList(variables, 1)[0];
+		public T Evaluate<T>(NEVariables variables = null) => EvaluateList<T>(variables, 1)[0];
 
-		public object EvaluateRow(NEVariables variables, params object[] values) => EvaluateRows(variables, 1, values)[0];
-		public T EvaluateRow<T>(NEVariables variables, params object[] values) => EvaluateRows<T>(variables, 1, values)[0];
-
-		public List<object> EvaluateRows(NEVariables variables, int? rowCount = null, params object[] values) => EvaluateRows<object>(variables, rowCount, values);
+		public List<object> EvaluateList(NEVariables variables, int? rowCount = null) => EvaluateList<object>(variables, rowCount);
 
 		T ChangeType<T>(object value)
 		{
@@ -40,14 +37,14 @@ namespace NeoEdit.Common.Expressions
 			return (T)Convert.ChangeType(value, typeof(T));
 		}
 
-		public List<T> EvaluateRows<T>(NEVariables variables, int? rowCount = null, params object[] values)
+		public List<T> EvaluateList<T>(NEVariables variables, int? rowCount = null)
 		{
 			try
 			{
 				if (rowCount < 0)
 					throw new ArgumentException($"{nameof(rowCount)} must be positive");
 				var count = rowCount ?? variables.ResultCount(Variables);
-				Func<int, T> action = row => ChangeType<T>(InternalEvaluate(variables, row, values));
+				Func<int, T> action = row => ChangeType<T>(InternalEvaluate(variables, row));
 				if (count == 1)
 					return new List<T> { action(0) };
 				return Enumerable.Range(0, count).AsParallel().AsOrdered().Select(action).ToList();

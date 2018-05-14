@@ -147,7 +147,7 @@ namespace NeoEdit.TextEdit
 		{
 			var table = GetTable();
 			var variables = GetTableVariables(table);
-			var results = new NEExpression(result.Expression).EvaluateRows<string>(variables, table.NumRows);
+			var results = new NEExpression(result.Expression).EvaluateList<string>(variables, table.NumRows);
 			table.AddColumn(result.ColumnName, results);
 			SetText(table);
 		}
@@ -162,7 +162,7 @@ namespace NeoEdit.TextEdit
 		{
 			var table = GetTable();
 			var variables = GetTableVariables(table);
-			var results = new NEExpression(result.Expression).EvaluateRows<bool>(variables, table.NumRows);
+			var results = new NEExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
 			SetSelections(lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
 		}

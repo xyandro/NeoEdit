@@ -24,8 +24,8 @@
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<guiControls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Type:" HorizontalAlignment="Right" Visibility="{Binding CheckType, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]'}"/>
-		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Visibility="{Binding CheckType, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]'}">
+		<Label Grid.Row="2" Grid.Column="0" Content="Type:" HorizontalAlignment="Right" Visibility="{Binding CheckType, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='p0'}"/>
+		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Visibility="{Binding CheckType, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='p0'}">
 			<RadioButton GroupName="isFile" Content="_File" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=File}" VerticalAlignment="Center" Margin="0,0,10,0"/>
 			<RadioButton GroupName="isFile" Content="_Directory" IsChecked="{Binding Type, ElementName=self, Converter={guiConverters:RadioConverter}, ConverterParameter=Directory}" VerticalAlignment="Center" Margin="0,0,10,0"/>
 		</StackPanel>

@@ -53,10 +53,10 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("8", new NEExpression("2 << 2").Evaluate().ToString());
 			Assert.AreEqual("1024", new NEExpression("1048576 >> 10").Evaluate().ToString());
 
-			Assert.AreEqual("-3735928560", new NEExpression("~[0]").Evaluate(0xdeadbeef).ToString());
-			Assert.AreEqual("179154957", new NEExpression("&").Evaluate(0xdeadbeef, 0x0badf00d).ToString());
-			Assert.AreEqual("3573567202", new NEExpression("^^").Evaluate(0xdeadbeef, 0x0badf00d).ToString());
-			Assert.AreEqual("3752722159", new NEExpression("|").Evaluate(0xdeadbeef, 0x0badf00d).ToString());
+			Assert.AreEqual("-3735928560", new NEExpression("~p0").Evaluate(new NEVariables(0xdeadbeef)).ToString());
+			Assert.AreEqual("179154957", new NEExpression("&").Evaluate(new NEVariables(0xdeadbeef, 0x0badf00d)).ToString());
+			Assert.AreEqual("3573567202", new NEExpression("^^").Evaluate(new NEVariables(0xdeadbeef, 0x0badf00d)).ToString());
+			Assert.AreEqual("3752722159", new NEExpression("|").Evaluate(new NEVariables(0xdeadbeef, 0x0badf00d)).ToString());
 
 			Assert.AreEqual(true, new NEExpression("TRUE").Evaluate());
 			Assert.AreEqual(false, new NEExpression("False").Evaluate());
@@ -64,9 +64,9 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("7.1", new NEExpression("5.0 + 2.1").Evaluate().ToString());
 			Assert.AreEqual("14.1", new NEExpression("3.6 + 2.1 * 5.0").Evaluate().ToString());
 			Assert.AreEqual("28.5", new NEExpression("(3.6 + 2.1) * 5.0").Evaluate().ToString());
-			Assert.AreEqual("12.1", new NEExpression("[0] + [1]").Evaluate(5.4, 6.7).ToString());
+			Assert.AreEqual("12.1", new NEExpression("p0 + p1").Evaluate(new NEVariables(5.4, 6.7)).ToString());
 
-			Assert.AreEqual(true, new NEExpression("[0] is \"Int32\"").Evaluate(5));
+			Assert.AreEqual(true, new NEExpression("p0 is \"Int32\"").Evaluate(new NEVariables(5)));
 
 			Assert.AreEqual(true, new NEExpression("\"5a\" t== \"5a\"").Evaluate());
 			Assert.AreEqual(false, new NEExpression("\"5a\" t== \"5A\"").Evaluate());
@@ -77,20 +77,20 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(false, new NEExpression("\"5a\" ti!= \"5a\"").Evaluate());
 			Assert.AreEqual(false, new NEExpression("\"5a\" ti!= \"5A\"").Evaluate());
 
-			Assert.AreEqual("5", new NEExpression("[0].\"value\"").Evaluate(new ExpressionDotTest(5)).ToString());
+			Assert.AreEqual("5", new NEExpression("p0.\"value\"").Evaluate(new NEVariables(new ExpressionDotTest(5))).ToString());
 
-			Assert.AreEqual(typeof(ExpressionDotTest).FullName, new NEExpression("Type([0]).\"FullName\"").Evaluate(new ExpressionDotTest(5)).ToString());
+			Assert.AreEqual(typeof(ExpressionDotTest).FullName, new NEExpression("Type(p0).\"FullName\"").Evaluate(new NEVariables(new ExpressionDotTest(5))).ToString());
 
-			Assert.AreEqual(true, new NEExpression("ValidRE([0])").Evaluate(@"\d+"));
-			Assert.AreEqual(false, new NEExpression("ValidRE([0])").Evaluate(@"["));
+			Assert.AreEqual(true, new NEExpression("ValidRE(p0)").Evaluate(new NEVariables(@"\d+")));
+			Assert.AreEqual(false, new NEExpression("ValidRE(p0)").Evaluate(new NEVariables(@"[")));
 
-			Assert.AreEqual("15.5", new NEExpression("+").Evaluate(1, 2, 3, 4, 5.5).ToString());
-			Assert.AreEqual(true, new NEExpression("||").Evaluate(false, false, true, false));
-			Assert.AreEqual("120", new NEExpression("*").Evaluate(4, 5, 6).ToString());
+			Assert.AreEqual("15.5", new NEExpression("+").Evaluate(new NEVariables(1, 2, 3, 4, 5.5)).ToString());
+			Assert.AreEqual(true, new NEExpression("||").Evaluate(new NEVariables(false, false, true, false)));
+			Assert.AreEqual("120", new NEExpression("*").Evaluate(new NEVariables(4, 5, 6)).ToString());
 
-			Assert.AreEqual("5", new NEExpression("([0] || [1]) ? [2] : [3]").Evaluate(false, true, 5, 6).ToString());
+			Assert.AreEqual("5", new NEExpression("(p0 || p1) ? p2 : p3").Evaluate(new NEVariables(false, true, 5, 6)).ToString());
 
-			Assert.AreEqual("ICanJoinStrings", new NEExpression("t+").Evaluate("I", "Can", null, "Join", "Strings").ToString());
+			Assert.AreEqual("ICanJoinStrings", new NEExpression("t+").Evaluate(new NEVariables("I", "Can", null, "Join", "Strings")).ToString());
 
 			Assert.AreEqual("a\\\'\"\0\a\b\f\n\r\t\v\x1\x12\x123\x1234\u1234\U00001234\U0001d161", new NEExpression(@"""a"" t+ ""\\"" t+ ""\'"" t+ ""\"""" t+ ""\0"" t+ ""\a"" t+ ""\b"" t+ ""\f"" t+ ""\n"" t+ ""\r"" t+ ""\t"" t+ ""\v"" t+ ""\x1"" t+ ""\x12"" t+ ""\x123"" t+ ""\x1234"" t+ ""\u1234"" t+ ""\U00001234"" t+ ""\U0001d161""").Evaluate().ToString());
 			Assert.AreEqual("", new NEExpression("\"\"").Evaluate().ToString());
@@ -104,19 +104,19 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("", new NEExpression("@$\"\"").Evaluate().ToString());
 			Assert.AreEqual("", new NEExpression("$@\"\"").Evaluate().ToString());
 
-			Assert.AreEqual("[0]5+7 is 12", new NEExpression("StrFormat(\"[0]{0}+{1} is {2}\", [0], [1], [0] + [1])").Evaluate(5, 7).ToString());
+			Assert.AreEqual("p05+7 is 12", new NEExpression("StrFormat(\"p0{0}+{1} is {2}\", p0, p1, p0 + p1)").Evaluate(new NEVariables(5, 7)).ToString());
 
 			Assert.AreEqual("Test", new NEExpression("StrFormat(\"Test\")").Evaluate().ToString());
 			Assert.AreEqual("Test 5", new NEExpression("StrFormat(\"Test {0}\", 5)").Evaluate().ToString());
 			Assert.AreEqual("Test 5 7", new NEExpression("StrFormat(\"Test {0} {1}\", 5, 7)").Evaluate().ToString());
 
 			Assert.AreEqual(false, new NEExpression("!true").Evaluate());
-			Assert.AreEqual(true, new NEExpression("![0]").Evaluate(false));
+			Assert.AreEqual(true, new NEExpression("!p0").Evaluate(new NEVariables(false)));
 			Assert.AreEqual("-4", new NEExpression("-4").Evaluate().ToString());
 
-			Assert.AreEqual(typeof(byte), new NEExpression("Type([0])").Evaluate((byte)0));
+			Assert.AreEqual(typeof(byte), new NEExpression("Type(p0)").Evaluate(new NEVariables((byte)0)));
 
-			Assert.AreEqual("3931877116", new NEExpression("0xdeadbeef + [0]").Evaluate(0x0badf00d).ToString());
+			Assert.AreEqual("3931877116", new NEExpression("0xdeadbeef + p0").Evaluate(new NEVariables(0x0badf00d)).ToString());
 
 			Assert.AreEqual("2", new NEExpression("Min(3,4,2)").Evaluate().ToString());
 			Assert.AreEqual("4", new NEExpression("Max(3,4,2)").Evaluate().ToString());
@@ -179,7 +179,7 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual(true, new NEExpression("valideval(\"(5+2)\")").Evaluate());
 			Assert.AreEqual(false, new NEExpression("valideval(\"(5+)2\")").Evaluate());
 
-			var values = new NEExpression("random(2,10)").EvaluateRows<int>(null, 1000).Distinct().OrderBy().ToList();
+			var values = new NEExpression("random(2,10)").EvaluateList<int>(null, 1000).Distinct().OrderBy().ToList();
 			Assert.IsTrue(values.Count == 9);
 
 			var miscVars = new NEVariables(
@@ -187,12 +187,12 @@ namespace NeoEdit.Common.UnitTest
 				NEVariable.Constant("y", "", () => 0x0badf00d),
 				NEVariable.Constant("z", "", () => 0x0defaced)
 			);
-			var expr = new NEExpression("x - y + [0]");
+			var expr = new NEExpression("x - y + 0xfeedface");
 			var vars = expr.Variables;
 			Assert.AreEqual(2, vars.Count);
 			Assert.IsTrue(vars.Contains("x"));
 			Assert.IsTrue(vars.Contains("y"));
-			Assert.AreEqual("7816989104", expr.EvaluateRow(miscVars, 0xfeedface).ToString());
+			Assert.AreEqual("7816989104", expr.Evaluate(miscVars).ToString());
 
 			CheckDates();
 		}

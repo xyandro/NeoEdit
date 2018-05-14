@@ -11,6 +11,8 @@ namespace NeoEdit.Common.Expressions
 
 		public NEVariables() { }
 
+		public NEVariables(params object[] values) { AddRange(values.Select((value, index) => NEVariable.Constant($"p{index}", $"Param {index}", value))); }
+
 		public NEVariables(IEnumerable<NEVariable> variables) { AddRange(variables); }
 
 		public NEVariables(params NEVariable[] variables) { AddRange(variables); }

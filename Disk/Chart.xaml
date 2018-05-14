@@ -16,7 +16,7 @@
 
 		<ScrollViewer Grid.Row="0" Grid.Column="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Name="scroller" Focusable="False">
 			<ScrollViewer.MaxWidth>
-				<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="[0]-5-[3]+[2]-[1]">
+				<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="p0-5-p3+p2-p1">
 					<Binding Path="ActualWidth" ElementName="grid"/>
 					<Binding Path="ActualHeight" ElementName="grid"/>
 					<Binding Path="ActualHeight" ElementName="self"/>

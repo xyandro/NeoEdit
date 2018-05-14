@@ -51,7 +51,6 @@ CONDITIONAL   : '?' ;
 ELSE          : ':' ;
 DOT           : '.' ;
 CONSTANT      : P I | E ;
-PARAM         : '[' [0-9]+ ']' ;
 STRSTART      : '"' -> pushMode(STRING) ;
 VSTRSTART     : '@"' -> pushMode(VERBATIMSTRING) ;
 ISTRSTART     : '$"' -> pushMode(INTERPOLATEDSTRING) ;

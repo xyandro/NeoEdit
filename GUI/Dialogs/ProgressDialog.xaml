@@ -18,7 +18,7 @@
 
 		<TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Text, ElementName=self}" HorizontalAlignment="Center"/>
 
-		<ProgressBar Grid.Row="1" Grid.Column="0" Height="10" MinWidth="500" Visibility="{Binding Percent, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0] != null'}" Value="{Binding Percent, ElementName=self}"/>
+		<ProgressBar Grid.Row="1" Grid.Column="0" Height="10" MinWidth="500" Visibility="{Binding Percent, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='p0 != null'}" Value="{Binding Percent, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" Rows="1">
 			<Button Name="cancel" Content="Cancel" Padding="10,1" Click="OnCancel"/>

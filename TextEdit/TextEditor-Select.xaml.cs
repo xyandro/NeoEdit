@@ -85,10 +85,10 @@ namespace NeoEdit.TextEdit
 		void Command_Select_Limit(SelectLimitDialog.Result result)
 		{
 			var variables = GetVariables();
-			var firstSelection = new NEExpression(result.FirstSelection).EvaluateRow<int>(variables);
-			var everyNth = new NEExpression(result.EveryNth).EvaluateRow<int>(variables);
-			var takeCount = new NEExpression(result.TakeCount).EvaluateRow<int>(variables);
-			var numSels = new NEExpression(result.NumSelections).EvaluateRow<int>(variables);
+			var firstSelection = new NEExpression(result.FirstSelection).Evaluate<int>(variables);
+			var everyNth = new NEExpression(result.EveryNth).Evaluate<int>(variables);
+			var takeCount = new NEExpression(result.TakeCount).Evaluate<int>(variables);
+			var numSels = new NEExpression(result.NumSelections).Evaluate<int>(variables);
 
 			var sels = Selections.Skip(firstSelection - 1);
 			if (result.JoinSelections)

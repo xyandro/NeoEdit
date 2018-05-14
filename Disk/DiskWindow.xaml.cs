@@ -66,7 +66,7 @@ namespace NeoEdit.Disk
 			InitializeComponent();
 			ConstantList = list;
 
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"[0] o== null ? ([1] o== null ? ""Custom"" : FileName([1])) : $""List {[0]}""" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"p0 o== null ? (p1 o== null ? ""Custom"" : FileName(p1)) : $""List {p0}""" };
 			multiBinding.Bindings.Add(new Binding("ConstantList") { Source = this });
 			multiBinding.Bindings.Add(new Binding("Location") { Source = this });
 			SetBinding(UIHelper<TabsControl<DiskWindow, DiskCommand>>.GetProperty(a => a.TabLabel), multiBinding);

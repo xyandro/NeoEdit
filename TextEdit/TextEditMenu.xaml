@@ -873,8 +873,8 @@
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_View">
-		<textEdit:TextEditMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
-		<textEdit:TextEditMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='[0]t==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
+		<textEdit:TextEditMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
+		<textEdit:TextEditMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
 		<textEdit:TextEditMenuItem Header="C_ustom Grid" CommandEnum="View_CustomGrid"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>

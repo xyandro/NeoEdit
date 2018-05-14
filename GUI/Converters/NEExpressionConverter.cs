@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
@@ -127,13 +128,16 @@ namespace NeoEdit.GUI.Converters
 
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var result = GetExpression(parameter as string).Evaluate(value);
+			var values = value.Select(val => val == DependencyProperty.UnsetValue ? null : val).ToArray();
+			var result = GetExpression(parameter as string).Evaluate(new NEVariables(values));
 			return GetResult(result, targetType);
 		}
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var result = GetExpression(parameter as string).Evaluate(new object[] { value });
+			if (value == DependencyProperty.UnsetValue)
+				value = null;
+			var result = GetExpression(parameter as string).Evaluate(new NEVariables(value));
 			return GetResult(result, targetType);
 		}
 

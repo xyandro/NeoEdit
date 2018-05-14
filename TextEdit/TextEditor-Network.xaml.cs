@@ -100,8 +100,8 @@ namespace NeoEdit.TextEdit
 			var fileNameExpression = new NEExpression(result.FileName);
 			var resultCount = variables.ResultCount(urlExpression, fileNameExpression);
 
-			var urls = urlExpression.EvaluateRows<string>(variables, resultCount);
-			var fileNames = fileNameExpression.EvaluateRows<string>(variables, resultCount);
+			var urls = urlExpression.EvaluateList<string>(variables, resultCount);
+			var fileNames = fileNameExpression.EvaluateList<string>(variables, resultCount);
 
 			const int InvalidCount = 10;
 			var invalid = fileNames.Select(name => Path.GetDirectoryName(name)).Distinct().Where(dir => !Directory.Exists(dir)).Take(InvalidCount).ToList();

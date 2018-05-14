@@ -102,12 +102,12 @@ namespace NeoEdit.GUI.Controls
 		IEnumerable<FrameworkElement> GetErrorControls()
 		{
 			var rectangle = new Rectangle { Fill = Brushes.LightGray, Opacity = .90 };
-			rectangle.SetBinding(Rectangle.VisibilityProperty, new Binding(nameof(IsValid)) { Source = this, Converter = new NEExpressionConverter(), ConverterParameter = "![0]" });
+			rectangle.SetBinding(Rectangle.VisibilityProperty, new Binding(nameof(IsValid)) { Source = this, Converter = new NEExpressionConverter(), ConverterParameter = "!p0" });
 			yield return rectangle;
 
 			var textBlock = new TextBlock { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
 			textBlock.SetBinding(TextBlock.TextProperty, new Binding(nameof(ErrorMessage)) { Source = this });
-			textBlock.SetBinding(TextBlock.VisibilityProperty, new Binding(nameof(IsValid)) { Source = this, Converter = new NEExpressionConverter(), ConverterParameter = "![0]" });
+			textBlock.SetBinding(TextBlock.VisibilityProperty, new Binding(nameof(IsValid)) { Source = this, Converter = new NEExpressionConverter(), ConverterParameter = "!p0" });
 			yield return textBlock;
 		}
 
@@ -144,7 +144,7 @@ namespace NeoEdit.GUI.Controls
 				var expression = new NEExpression(Expression);
 				variables = new List<string>(expression.Variables);
 				var resultCount = Math.Min(NumResults ?? ResultCount, useResults);
-				results = expression.EvaluateRows<string>(Variables, resultCount).Coalesce("").ToList();
+				results = expression.EvaluateList<string>(Variables, resultCount).Coalesce("").ToList();
 				varValues = variables.ToDictionary(variable => variable, variable => Variables.GetValues(variable, resultCount).Select(val => val?.ToString()).ToList());
 				IsValid = true;
 				ErrorMessage = null;

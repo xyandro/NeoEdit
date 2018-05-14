@@ -332,7 +332,7 @@ namespace NeoEdit.GUI.Controls
 			dp.SetValue(DockPanel.DockProperty, Dock.Top);
 			dp.SetValue(DockPanel.MarginProperty, new Thickness(0, 0, tiles ? 0 : 2, 1));
 
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] o== [2] ? \"CadetBlue\" : ([1] ? \"LightBlue\" : \"LightGray\")" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "p0 o== p2 ? \"CadetBlue\" : (p1 ? \"LightBlue\" : \"LightGray\")" };
 			multiBinding.Bindings.Add(new Binding());
 			multiBinding.Bindings.Add(new Binding(UIHelper<TabsControl<ItemType, CommandType>>.GetProperty(a => a.Active).Name));
 			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.TopMost).Name) { Source = this });
@@ -467,7 +467,7 @@ namespace NeoEdit.GUI.Controls
 							{
 								var contentControl = new FrameworkElementFactory(typeof(ContentControl));
 								contentControl.SetBinding(ContentControl.ContentProperty, new Binding());
-								var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "[0] o== [1]" };
+								var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "p0 o== p1" };
 								multiBinding.Bindings.Add(new Binding());
 								multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.TopMost).Name) { Source = this });
 								contentControl.SetBinding(ContentControl.VisibilityProperty, multiBinding);

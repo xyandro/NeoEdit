@@ -594,7 +594,7 @@ namespace NeoEdit.TextEdit
 
 		decimal Floor(decimal number, decimal interval) => Math.Truncate(number / interval) * interval;
 
-		List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateRows<T>(GetVariables(), Selections.Count());
+		List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables(), Selections.Count());
 
 		WordSkipType GetWordSkipType(int line, int index)
 		{
@@ -671,7 +671,7 @@ namespace NeoEdit.TextEdit
 
 		string GetString(Range range) => Data.GetString(range.Start, range.Length);
 
-		List<T> GetVariableExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateRows<T>(GetVariables());
+		List<T> GetVariableExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables());
 
 		public NEVariables GetVariables()
 		{
@@ -2291,7 +2291,7 @@ namespace NeoEdit.TextEdit
 
 		void SetupTabLabel()
 		{
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"([0] ?? FileName([1]) ?? ""[Untitled]"")t+([2]?""*"":"""")t+([3]?"" (Diff""t+([4]?"" - Encoding mismatch"":"""")t+"")"":"""")" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"(p0 ?? FileName(p1) ?? ""[Untitled]"")t+(p2?""*"":"""")t+(p3?"" (Diff""t+(p4?"" - Encoding mismatch"":"""")t+"")"":"""")" };
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.DisplayName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.FileName).Name) { Source = this });
 			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsModified).Name) { Source = this });

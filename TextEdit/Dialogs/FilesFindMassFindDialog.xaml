@@ -58,7 +58,7 @@
 
 		<GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Header="Integers">
 			<GroupBox.Visibility>
-				<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="[0] &amp;&amp; ([1] || [2])">
+				<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="p0 &amp;&amp; (p1 || p2)">
 					<Binding Path="ShowInt" ElementName="self"/>
 					<Binding Path="ShowLE" ElementName="self"/>
 					<Binding Path="ShowBE" ElementName="self"/>

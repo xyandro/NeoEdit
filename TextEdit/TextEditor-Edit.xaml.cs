@@ -382,7 +382,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_Rotate(EditRotateDialog.Result result)
 		{
-			var count = new NEExpression(result.Count).EvaluateRow<int>(GetVariables());
+			var count = new NEExpression(result.Count).Evaluate<int>(GetVariables());
 			if (count == 0)
 				return;
 

@@ -50,7 +50,7 @@ namespace NeoEdit.TextEdit.Dialogs
 
 			try
 			{
-				var value = new NEExpression(Expression).EvaluateRow<string>(Variables);
+				var value = new NEExpression(Expression).Evaluate<string>(Variables);
 				if (value == null)
 					return;
 				if (File.Exists(value))

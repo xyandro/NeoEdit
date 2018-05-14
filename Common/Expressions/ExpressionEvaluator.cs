@@ -17,16 +17,12 @@ namespace NeoEdit.Common.Expressions
 		readonly string expression;
 		readonly NEVariables variables;
 		readonly int row;
-		readonly List<object> values;
-		internal ExpressionEvaluator(string expression, NEVariables variables, int row, params object[] values)
+		internal ExpressionEvaluator(string expression, NEVariables variables, int row)
 		{
 			this.expression = expression;
 			this.variables = variables;
 			this.row = row;
-			this.values = values?.Select(val => RemoveUnset(val)).ToList();
 		}
-
-		object RemoveUnset(object val) => (val == null) || (val.GetType().FullName != "MS.Internal.NamedObject") || (val.ToString() != "{DependencyProperty.UnsetValue}") ? val : null;
 
 		NumericValue GetNumeric(object val)
 		{
@@ -194,7 +190,7 @@ namespace NeoEdit.Common.Expressions
 
 		object GetShortForm(string op)
 		{
-			var values = new Queue<object>(this.values);
+			var values = new Queue<object>(variables.Select(variable => variable.GetValue(row)));
 			object result = null;
 			bool first = true;
 			while (values.Any())
@@ -323,7 +319,6 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitNullCoalesce(ExpressionParser.NullCoalesceContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
 		public override object VisitUnitConversion(ExpressionParser.UnitConversionContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
 		public override object VisitTernary(ExpressionParser.TernaryContext context) => GetBoolean(Visit(context.condition)) ? Visit(context.trueval) : Visit(context.falseval);
-		public override object VisitParam(ExpressionParser.ParamContext context) => values[int.Parse(context.val.Text.Trim('[', ']'))];
 		public override object VisitNormalstring(ExpressionParser.NormalstringContext context) => Visit(context.val);
 		public override object VisitStrcontent(ExpressionParser.StrcontentContext context) => context.children?.Select(child => GetString(Visit(child))).ToJoinedString() ?? "";
 		public override object VisitStrchars(ExpressionParser.StrcharsContext context) => context.val.Text;
