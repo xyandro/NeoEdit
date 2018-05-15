@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
@@ -288,6 +289,32 @@ namespace NeoEdit.TextEdit
 
 			using (var file = File.Open(fileName, FileMode.Open))
 				file.SetLength(value);
+		}
+
+		async Task SplitFileAsync(string fileName, string outputTemplate, long chunkSize, IProgress<ProgressReport> progress, CancellationToken cancel)
+		{
+			if (chunkSize <= 0)
+				throw new Exception($"Invalid chunk size: {chunkSize}");
+
+			var chunk = 0;
+			var buffer = new byte[65536];
+			using (var inputFile = File.OpenRead(fileName))
+				while (inputFile.Position < inputFile.Length)
+					using (var outputFile = File.Create(string.Format(outputTemplate, ++chunk)))
+					{
+						var endChunk = Math.Min(inputFile.Position + chunkSize, inputFile.Length);
+						while (inputFile.Position < endChunk)
+						{
+							if (cancel.IsCancellationRequested)
+								break;
+
+							var block = await inputFile.ReadAsync(buffer, 0, (int)Math.Min(buffer.Length, endChunk - inputFile.Position));
+							if (block <= 0)
+								throw new Exception("Failed to read file");
+							progress.Report(new ProgressReport(inputFile.Position, inputFile.Length));
+							await outputFile.WriteAsync(buffer, 0, block);
+						}
+					}
 		}
 
 		bool TextSearchFile(string fileName, FindTextDialog.Result search, ref Message.OptionsEnum answer)
@@ -800,5 +827,22 @@ namespace NeoEdit.TextEdit
 		FilesOperationsEncodingDialog.Result Command_Files_Operations_Encoding_Dialog() => FilesOperationsEncodingDialog.Run(WindowParent);
 
 		void Command_Files_Operations_Encoding(FilesOperationsEncodingDialog.Result result) => MultiProgressDialog.Run(WindowParent, "Changing encoding...", RelativeSelectedFiles(), (inputFile, progress, cancel) => ReencodeFile(inputFile, progress, cancel, result.InputCodePage, result.OutputCodePage));
+
+		FilesOperationsSplitFileDialog.Result Command_Files_Operations_SplitFile_Dialog()
+		{
+			var variables = GetVariables();
+			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
+			return FilesOperationsSplitFileDialog.Run(WindowParent, variables);
+		}
+
+		void Command_Files_Operations_SplitFile(FilesOperationsSplitFileDialog.Result result)
+		{
+			var variables = GetVariables();
+			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
+			var files = RelativeSelectedFiles();
+			var outputTemplates = new NEExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
+			var chunkSizes = new NEExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
+			MultiProgressDialog.RunAsync(WindowParent, "Splitting files...", Enumerable.Range(0, Selections.Count), (index, progress, cancel) => SplitFileAsync(files[index], outputTemplates[index], chunkSizes[index], progress, cancel), index => Path.GetFileName(files[index]));
+		}
 	}
 }

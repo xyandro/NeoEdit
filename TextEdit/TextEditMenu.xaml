@@ -278,6 +278,8 @@
 			</MenuItem>
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="E_ncoding" CommandEnum="Files_Operations_Encoding"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="_Split File" CommandEnum="Files_Operations_SplitFile"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="E_xpression">

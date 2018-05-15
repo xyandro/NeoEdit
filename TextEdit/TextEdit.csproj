@@ -318,6 +318,13 @@
     <Compile Include="Dialogs\FilesOperationsEncodingDialog.xaml.cs">
       <DependentUpon>FilesOperationsEncodingDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\FilesOperationsSplitFileDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesOperationsSplitFileDialog.xaml.cs">
+      <DependentUpon>FilesOperationsSplitFileDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\FilesSelectByVersionControlStatusDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

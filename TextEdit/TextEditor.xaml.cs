@@ -820,6 +820,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_Copy: dialogResult = Command_Files_Operations_CopyMove_Dialog(false); break;
 				case TextEditCommand.Files_Operations_Move: dialogResult = Command_Files_Operations_CopyMove_Dialog(true); break;
 				case TextEditCommand.Files_Operations_Encoding: dialogResult = Command_Files_Operations_Encoding_Dialog(); break;
+				case TextEditCommand.Files_Operations_SplitFile: dialogResult = Command_Files_Operations_SplitFile_Dialog(); break;
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Copy_Dialog(); break;
 				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
@@ -1056,6 +1057,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_RunCommand_Sequential: Command_Files_Operations_RunCommand_Sequential(); break;
 				case TextEditCommand.Files_Operations_RunCommand_Shell: Command_Files_Operations_RunCommand_Shell(); break;
 				case TextEditCommand.Files_Operations_Encoding: Command_Files_Operations_Encoding(dialogResult as FilesOperationsEncodingDialog.Result); break;
+				case TextEditCommand.Files_Operations_SplitFile: Command_Files_Operations_SplitFile(dialogResult as FilesOperationsSplitFileDialog.Result); break;
 				case TextEditCommand.Expression_Expression: Command_Expression_Expression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_Copy: Command_Expression_Copy(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;
