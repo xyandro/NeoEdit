@@ -27,7 +27,6 @@ namespace NeoEdit.CommandLineParams
 		public override object VisitStreamsave(CommandLineParamsParser.StreamsaveContext context) => new StreamSaveParam(context.STRING().Select(url => url.GetText()).ToList(), context.playlist != null);
 		public override object VisitTextedit(CommandLineParamsParser.TexteditContext context) => new TextEditParam(context.texteditfile().Select(textEditFile => VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile).ToList());
 		public override object VisitTexteditfile(CommandLineParamsParser.TexteditfileContext context) => new TextEditParam.TextEditFile(context.file.GetText(), context.display?.GetText(), context.line == null ? default(int?) : int.Parse(context.line.Text), context.column == null ? default(int?) : int.Parse(context.column.Text));
-		public override object VisitTextview(CommandLineParamsParser.TextviewContext context) => new TextViewParam(context.param().Select(file => file.GetText()).ToList());
 		public override object VisitWait(CommandLineParamsParser.WaitContext context) => new WaitParam(context.guid?.Text);
 	}
 }

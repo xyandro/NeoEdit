@@ -40,31 +40,6 @@ namespace NeoEdit.TextEdit
 		public static Window Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false, string shutdownEvent = null)
 		{
 			fileName = fileName?.Trim('"');
-
-			if ((!Helpers.IsDebugBuild) && (fileName != null))
-			{
-				var fileInfo = new FileInfo(fileName);
-				if (fileInfo.Exists)
-				{
-					if (fileInfo.Length > 52428800) // 50 MB
-					{
-						switch (new Message
-						{
-							Title = "Confirm",
-							Text = "The file you are trying to open is very large.  Would you like to open it in the text viewer instead?",
-							Options = Message.OptionsEnum.YesNoCancel,
-							DefaultAccept = Message.OptionsEnum.Yes,
-							DefaultCancel = Message.OptionsEnum.Cancel,
-						}.Show())
-						{
-							case Message.OptionsEnum.Yes: return Launcher.Static.LaunchTextViewer(fileName);
-							case Message.OptionsEnum.No: break;
-							case Message.OptionsEnum.Cancel: return null;
-						}
-					}
-				}
-			}
-
 			var textEditor = new TextEditor(fileName, displayName, bytes, codePage, contentType, modified, line, column, new ShutdownData(shutdownEvent, 1));
 			var replaced = CreateTab(textEditor, textEditTabs, forceCreate);
 			textEditor.DiffTarget = replaced.Item1?.DiffTarget;

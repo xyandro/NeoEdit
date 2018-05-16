@@ -17,7 +17,6 @@ using NeoEdit.GUI.Dialogs;
 using NeoEdit.HexEdit;
 using NeoEdit.StreamSave;
 using NeoEdit.TextEdit;
-using NeoEdit.TextView;
 
 namespace NeoEdit
 {
@@ -98,7 +97,6 @@ namespace NeoEdit
 				, streamSaver: (urls, isPlaylist) => new StreamSaver(urls, isPlaylist)
 				, textEditorDiff: (fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent) => new TextEditTabs().AddDiff(fileName1, displayName1, bytes1, codePage1, TextEdit.Content.Parser.ParserType.None, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, TextEdit.Content.Parser.ParserType.None, modified2, line2, column2, shutdownEvent)
 				, textEditorFile: (fileName, displayName, bytes, encoding, modified, line, column, forceCreate, shutdownEvent) => TextEditTabs.Create(fileName, displayName, bytes, encoding, TextEdit.Content.Parser.ParserType.None, modified, line ?? 1, column ?? 1, null, forceCreate, shutdownEvent)
-				, textViewer: (fileName, forceCreate) => TextViewTabs.Create(fileName, forceCreate)
 				, update: () => Update()
 			);
 

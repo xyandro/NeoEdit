@@ -13,7 +13,6 @@ MULTI          : '-multi'                                                       
 PLAYLIST       : '-playlist' | '-playlists' | '-list' | '-lists'                                        ;
 STREAMSAVE     : '-streamsave' | '-stream' | '-save'                                                    ;
 TEXTEDIT       : '-edit' | '-text' | '-textedit' | '-texteditor'                                        ;
-TEXTVIEW       : '-textview' | '-textviewer' | '-view'                                                  ;
 URL            : '-url' | '-urls'                                                                       ;
 WAIT           : '-wait'                                                                                ;
 
@@ -36,7 +35,6 @@ MULTI2         : MULTI         -> type(MULTI)         ;
 PLAYLIST2      : PLAYLIST      -> type(PLAYLIST)      ;
 STREAMSAVE2    : STREAMSAVE    -> type(STREAMSAVE)    ;
 TEXTEDIT2      : TEXTEDIT      -> type(TEXTEDIT)      ;
-TEXTVIEW2      : TEXTVIEW      -> type(TEXTVIEW)      ;
 URL2           : URL           -> type(URL)           ;
 WAIT2          : WAIT          -> type(WAIT)          ;
 

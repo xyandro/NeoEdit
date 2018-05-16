@@ -76,7 +76,6 @@ namespace NeoEdit.GUI.Controls
 				case WindowCommand.Window_HexEditor: Launcher.Static.LaunchHexEditor(forceCreate: true); break;
 				case WindowCommand.Window_StreamSaver: Launcher.Static.LaunchStreamSaver(); break;
 				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditorFile(forceCreate: true); break;
-				case WindowCommand.Window_TextViewer: Launcher.Static.LaunchTextViewer(forceCreate: true); break;
 			}
 
 			if (shiftDown)

@@ -44,13 +44,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextEdit", "TextEdit\TextEd
 		{FACD6EAC-7E0E-4CDD-8B30-CFB66D869116} = {FACD6EAC-7E0E-4CDD-8B30-CFB66D869116}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextView", "TextView\TextView.csproj", "{46568E12-8F80-492E-AED8-647C2386C3E9}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32", "Win32\Win32.vcxproj", "{95A660DC-FBFE-4560-A433-0B024494B213}"
-	ProjectSection(ProjectDependencies) = postProject
-		{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC} = {454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|32 = Debug|32
@@ -147,24 +140,11 @@ Global
 		{9A35AB82-2481-4C44-B51E-66DF7D248EAD}.Release|32.Build.0 = Release|x86
 		{9A35AB82-2481-4C44-B51E-66DF7D248EAD}.Release|64.ActiveCfg = Release|x64
 		{9A35AB82-2481-4C44-B51E-66DF7D248EAD}.Release|64.Build.0 = Release|x64
-		{46568E12-8F80-492E-AED8-647C2386C3E9}.Debug|32.ActiveCfg = Debug|x86
-		{46568E12-8F80-492E-AED8-647C2386C3E9}.Debug|32.Build.0 = Debug|x86
-		{46568E12-8F80-492E-AED8-647C2386C3E9}.Debug|64.ActiveCfg = Debug|x64
-		{46568E12-8F80-492E-AED8-647C2386C3E9}.Debug|64.Build.0 = Debug|x64
-		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|32.ActiveCfg = Release|x86
-		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|32.Build.0 = Release|x86
-		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|64.ActiveCfg = Release|x64
-		{46568E12-8F80-492E-AED8-647C2386C3E9}.Release|64.Build.0 = Release|x64
-		{95A660DC-FBFE-4560-A433-0B024494B213}.Debug|32.ActiveCfg = Debug|Win32
-		{95A660DC-FBFE-4560-A433-0B024494B213}.Debug|32.Build.0 = Debug|Win32
-		{95A660DC-FBFE-4560-A433-0B024494B213}.Debug|64.ActiveCfg = Debug|x64
-		{95A660DC-FBFE-4560-A433-0B024494B213}.Debug|64.Build.0 = Debug|x64
-		{95A660DC-FBFE-4560-A433-0B024494B213}.Release|32.ActiveCfg = Release|Win32
-		{95A660DC-FBFE-4560-A433-0B024494B213}.Release|32.Build.0 = Release|Win32
-		{95A660DC-FBFE-4560-A433-0B024494B213}.Release|64.ActiveCfg = Release|x64
-		{95A660DC-FBFE-4560-A433-0B024494B213}.Release|64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A5637B4C-B149-4D6B-B48C-37AB77B03351}
 	EndGlobalSection
 EndGlobal

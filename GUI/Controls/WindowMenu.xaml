@@ -9,7 +9,6 @@
 	<guiControls:WindowMenuItem Header="_Hex Editor" CommandEnum="Window_HexEditor"/>
 	<guiControls:WindowMenuItem Header="_Stream Saver" CommandEnum="Window_StreamSaver"/>
 	<guiControls:WindowMenuItem Header="_Text Editor" CommandEnum="Window_TextEditor"/>
-	<guiControls:WindowMenuItem Header="Text _Viewer" CommandEnum="Window_TextViewer"/>
 
 	<MenuItem Header="_Minimize to Tray" IsCheckable="True" IsChecked="{Binding Path=(guiControls:NEWindow.MinimizeToTray), Mode=TwoWay}"/>
 

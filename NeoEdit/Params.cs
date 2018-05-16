@@ -83,21 +83,6 @@ namespace NeoEdit
 		}
 	}
 
-	class TextViewParam : Param
-	{
-		readonly List<string> Files;
-		public TextViewParam(List<string> files) { Files = files; }
-		public override Window Execute(string shutdownEvent)
-		{
-			if (!Files.Any())
-				return Launcher.Static.LaunchTextViewer();
-			Window window = null;
-			foreach (var file in Files)
-				window = Launcher.Static.LaunchTextViewer(file);
-			return window;
-		}
-	}
-
 	class WaitParam : Param
 	{
 		public readonly string ShutdownEvent;

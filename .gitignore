@@ -19,7 +19,6 @@ TestResults
 /ChangeLog.txt
 /Common/Expressions/Parser
 /Dependencies/GlobalAssemblyInfo.cs
-/Dependencies/GlobalVersionInfo.h
 /Disk/Magic/file.exe.gz
 /Disk/Magic/magic.mgc.gz
 /Disk/Magic/magic1.dll.gz
@@ -27,10 +26,8 @@ TestResults
 /Disk/Magic/zlib1.dll.gz
 /NeoEdit/CommandLineParams/Parser
 /Release
-/StreamSave/YouTubeDL/youtube-dl.exe.gz
 /TextEdit/Content/Balanced/Parser
 /TextEdit/Content/Columns/Parser
-/TextEdit/Content/CPlusPlus/Parser
 /TextEdit/Content/CSharp/Parser
 /TextEdit/Content/ExactColumns/Parser
 /TextEdit/Content/HTML/Parser

@@ -8,7 +8,6 @@
 		Window_HexEditor,
 		Window_StreamSaver,
 		Window_TextEditor,
-		Window_TextViewer,
 	}
 
 	class WindowMenuItem : NEMenuItem<WindowCommand> { }

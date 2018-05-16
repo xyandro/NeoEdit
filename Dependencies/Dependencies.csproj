@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="BuildGlobalAssemblyInfo;BuildGlobalVersionInfo;BuildChangeLog;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="BuildGlobalAssemblyInfo;BuildChangeLog;Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}</ProjectGuid>
@@ -13,16 +13,10 @@
     <None Include="GitInfo.ps1" />
     <None Include="GlobalAssemblyInfo.cs" />
     <None Include="GlobalAssemblyInfo.Template.cs" />
-    <None Include="GlobalVersionInfo.h" />
-    <None Include="GlobalVersionInfo.Template.h" />
   </ItemGroup>
   <Target Name="BuildGlobalAssemblyInfo" Inputs="GlobalAssemblyInfo.Template.cs" Outputs="GlobalAssemblyInfo.cs" Returns="">
     <Message Text="Building GlobalAssemblyInfo" Importance="High" />
     <Exec Command="GitInfo.bat GlobalAssemblyInfo.Template.cs GlobalAssemblyInfo.cs" />
-  </Target>
-  <Target Name="BuildGlobalVersionInfo" Inputs="GlobalVersionInfo.Template.h" Outputs="GlobalVersionInfo.h" Returns="">
-    <Message Text="Building GlobalVersionInfo" Importance="High" />
-    <Exec Command="GitInfo.bat GlobalVersionInfo.Template.h GlobalVersionInfo.h" />
   </Target>
   <Target Name="BuildChangeLog" Outputs="$(SolutionDir)\ChangeLog.txt" Returns="">
     <Message Text="Building ChangeLog" Importance="High" />
