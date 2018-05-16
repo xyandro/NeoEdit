@@ -647,7 +647,7 @@ namespace NeoEdit.TextEdit
 
 		HashDialog.Result Command_Files_Hash_Dialog() => HashDialog.Run(WindowParent);
 
-		void Command_Files_Hash(HashDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().Select(file => Hasher.Get(file, result.HashType)).ToList());
+		void Command_Files_Hash(HashDialog.Result result) => ReplaceSelections(MultiProgressDialog.RunAsync(WindowParent, "Calculating hashes...", RelativeSelectedFiles(), (file, progress, cancel) => Hasher.GetAsync(file, result.HashType, result.HMACKey, progress, cancel)));
 
 		FilesSignDialog.Result Command_Files_Sign_Dialog() => FilesSignDialog.Run(WindowParent);
 

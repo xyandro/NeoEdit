@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Classless.Hasher;
 using Classless.Hasher.Mac;
 
@@ -250,19 +252,30 @@ namespace NeoEdit.Common.Transform
 			return Coder.BytesToString(hashAlg.ComputeHash(data), Coder.CodePage.Hex);
 		}
 
-		public static string Get(Stream stream, Type type, byte[] key = null)
-		{
-			if (type == Type.QuickHash)
-				return Coder.BytesToString(ComputeQuickHash(stream), Coder.CodePage.Hex);
+		public static string Get(string fileName, Type type, byte[] key = null, IProgress<ProgressReport> progress = null, CancellationToken? cancel = null) => Task.Run(() => GetAsync(fileName, type, key, progress, cancel)).Result;
 
-			var hashAlg = GetHashAlgorithm(type);
-			return Coder.BytesToString(hashAlg.ComputeHash(stream), Coder.CodePage.Hex);
-		}
-
-		public static string Get(string fileName, Type type, byte[] key = null)
+		async public static Task<string> GetAsync(string fileName, Type type, byte[] key = null, IProgress<ProgressReport> progress = null, CancellationToken? cancel = null)
 		{
 			using (var stream = File.OpenRead(fileName))
-				return Get(stream, type, key);
+			{
+				if (type == Type.QuickHash)
+					return Coder.BytesToString(ComputeQuickHash(stream), Coder.CodePage.Hex);
+
+				var hashAlg = GetHashAlgorithm(type);
+				hashAlg.Initialize();
+				var buffer = new byte[65536];
+				while (stream.Position < stream.Length)
+				{
+					if (cancel?.IsCancellationRequested == true)
+						throw new Exception("Cancelled");
+					progress?.Report(new ProgressReport(stream.Position, stream.Length));
+
+					var block = await stream.ReadAsync(buffer, 0, buffer.Length);
+					hashAlg.TransformBlock(buffer, 0, block, null, 0);
+				}
+				hashAlg.TransformFinalBlock(buffer, 0, 0);
+				return Coder.BytesToString(hashAlg.Hash, Coder.CodePage.Hex);
+			}
 		}
 
 		const int QuickHashBlockSize = 2048;

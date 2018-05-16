@@ -125,6 +125,8 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			DialogResult = IsFinished = true;
 			Event.Set();
+			if (token.IsCancellationRequested)
+				throw new Exception("Cancelled");
 		}
 
 		void UpdateUIThread()
