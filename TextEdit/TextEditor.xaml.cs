@@ -693,6 +693,9 @@ namespace NeoEdit.TextEdit
 			results.Add(NEVariable.Constant("xmin", "Selection numeric min", () => Selections.AsParallel().GroupBy(range => GetString(range)).Select(group => double.Parse(group.Key)).DefaultIfEmpty(0).Min()));
 			results.Add(NEVariable.Constant("xmax", "Selection numeric max", () => Selections.AsParallel().GroupBy(range => GetString(range)).Select(group => double.Parse(group.Key)).DefaultIfEmpty(0).Max()));
 
+			results.Add(NEVariable.Constant("xtmin", "Selection text min", () => Selections.AsParallel().Select(range => GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).First()));
+			results.Add(NEVariable.Constant("xtmax", "Selection text max", () => Selections.AsParallel().Select(range => GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).Last()));
+
 			foreach (var pair in Regions)
 			{
 				var regions = default(List<string>);
@@ -821,6 +824,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_Move: dialogResult = Command_Files_Operations_CopyMove_Dialog(true); break;
 				case TextEditCommand.Files_Operations_Encoding: dialogResult = Command_Files_Operations_Encoding_Dialog(); break;
 				case TextEditCommand.Files_Operations_SplitFile: dialogResult = Command_Files_Operations_SplitFile_Dialog(); break;
+				case TextEditCommand.Files_Operations_CombineFiles: dialogResult = Command_Files_Operations_CombineFiles_Dialog(); break;
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Copy_Dialog(); break;
 				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
@@ -1058,6 +1062,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_RunCommand_Shell: Command_Files_Operations_RunCommand_Shell(); break;
 				case TextEditCommand.Files_Operations_Encoding: Command_Files_Operations_Encoding(dialogResult as FilesOperationsEncodingDialog.Result); break;
 				case TextEditCommand.Files_Operations_SplitFile: Command_Files_Operations_SplitFile(dialogResult as FilesOperationsSplitFileDialog.Result); break;
+				case TextEditCommand.Files_Operations_CombineFiles: Command_Files_Operations_CombineFiles(dialogResult as FilesOperationsCombineFilesDialog.Result); break;
 				case TextEditCommand.Expression_Expression: Command_Expression_Expression(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_Copy: Command_Expression_Copy(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;

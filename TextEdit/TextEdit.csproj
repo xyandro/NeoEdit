@@ -304,6 +304,13 @@
     <Compile Include="Dialogs\FilesNamesMakeAbsoluteRelativeDialog.xaml.cs">
       <DependentUpon>FilesNamesMakeAbsoluteRelativeDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\FilesOperationsCombineFilesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesOperationsCombineFilesDialog.xaml.cs">
+      <DependentUpon>FilesOperationsCombineFilesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\FilesOperationsCopyMoveDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

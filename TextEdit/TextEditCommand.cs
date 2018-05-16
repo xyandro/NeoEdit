@@ -165,6 +165,7 @@ namespace NeoEdit.TextEdit
 		Files_Operations_RunCommand_Shell,
 		Files_Operations_Encoding,
 		Files_Operations_SplitFile,
+		Files_Operations_CombineFiles,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Expression_Expression,
 		Expression_Copy,
 		[KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Alt)] Expression_EvaluateSelected,

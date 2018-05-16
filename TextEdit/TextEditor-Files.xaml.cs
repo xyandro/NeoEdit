@@ -67,6 +67,28 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		async Task CombineFilesAsync(string outputFile, List<string> inputFiles, IProgress<ProgressReport> progress, CancellationToken cancel)
+		{
+			var total = inputFiles.Sum(file => new FileInfo(file).Length);
+			var written = 0L;
+			var buffer = new byte[65536];
+			using (var outputStream = File.Create(outputFile))
+				foreach (var inputFile in inputFiles)
+					using (var inputStream = File.OpenRead(inputFile))
+						while (true)
+						{
+							if (cancel.IsCancellationRequested)
+								return;
+
+							var block = await inputStream.ReadAsync(buffer, 0, buffer.Length);
+							if (block == 0)
+								break;
+							await outputStream.WriteAsync(buffer, 0, block);
+							written += block;
+							progress.Report(new ProgressReport(written, total));
+						}
+		}
+
 		void CopyDirectory(string src, string dest)
 		{
 			var srcDirs = new List<string> { src };
@@ -843,6 +865,39 @@ namespace NeoEdit.TextEdit
 			var outputTemplates = new NEExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
 			var chunkSizes = new NEExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
 			MultiProgressDialog.RunAsync(WindowParent, "Splitting files...", Enumerable.Range(0, Selections.Count), (index, progress, cancel) => SplitFileAsync(files[index], outputTemplates[index], chunkSizes[index], progress, cancel), index => Path.GetFileName(files[index]));
+		}
+
+		FilesOperationsCombineFilesDialog.Result Command_Files_Operations_CombineFiles_Dialog() => FilesOperationsCombineFilesDialog.Run(WindowParent, GetVariables());
+
+		void Command_Files_Operations_CombineFiles(FilesOperationsCombineFilesDialog.Result result)
+		{
+			var variables = GetVariables();
+
+			var inputFileCountExpr = new NEExpression(result.InputFileCount);
+			var outputFilesExpr = new NEExpression(result.OutputFiles);
+			var count = variables.ResultCount(inputFileCountExpr, outputFilesExpr);
+
+			var inputFiles = new NEExpression(result.InputFiles).EvaluateList<string>(variables);
+			var inputFileCount = inputFileCountExpr.EvaluateList<int>(variables, count);
+			var outputFiles = outputFilesExpr.EvaluateList<string>(variables, count);
+
+			if (inputFiles.Count != inputFileCount.Sum())
+				throw new Exception("Invalid input file count");
+
+			var current = -1;
+			var inputs = new List<List<string>>();
+			foreach (var inputFile in inputFiles)
+			{
+				while ((current < 0) || (inputs[current].Count == inputFileCount[current]))
+				{
+					++current;
+					inputs.Add(new List<string>());
+				}
+
+				inputs[current].Add(inputFile);
+			}
+
+			MultiProgressDialog.RunAsync(WindowParent, "Combining files...", Enumerable.Range(0, outputFiles.Count), (index, progress, cancel) => CombineFilesAsync(outputFiles[index], inputs[index], progress, cancel), index => Path.GetFileName(outputFiles[index]));
 		}
 	}
 }
