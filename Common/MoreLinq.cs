@@ -381,5 +381,12 @@ namespace NeoEdit.Common
 			}
 			return result;
 		}
+
+		public static IEnumerable<TSource> Except<TSource>(this IEnumerable<TSource> source, TSource value)
+		{
+			foreach (var item in source)
+				if (!item.Equals(value))
+					yield return item;
+		}
 	}
 }

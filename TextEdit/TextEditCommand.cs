@@ -240,6 +240,7 @@ namespace NeoEdit.TextEdit
 		Image_AdjustColor,
 		Image_AddColor,
 		Image_OverlayColor,
+		Image_Size,
 		Table_DetectType,
 		Table_Convert,
 		Table_TextToTable,

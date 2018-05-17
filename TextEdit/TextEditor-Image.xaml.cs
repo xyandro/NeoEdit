@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Transform;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit
@@ -30,6 +33,17 @@ namespace NeoEdit.TextEdit
 			if (doBlue)
 				blue = (byte)Math.Max(0, Math.Min((int)(blue * multiplier + 0.5), 255));
 			return ColorConverter.FromARGB(alpha, red, green, blue);
+		}
+
+		NEVariables GetImageVariables() => GetImageVariables(out var bitmap);
+
+		NEVariables GetImageVariables(out System.Drawing.Bitmap bitmap)
+		{
+			bitmap = Coder.StringToBitmap(AllText);
+			var variables = GetVariables();
+			variables.Add(NEVariable.Constant("width", "Image width", bitmap.Width));
+			variables.Add(NEVariable.Constant("height", "Image height", bitmap.Height));
+			return variables;
 		}
 
 		string OverlayColor(string color1, string color2)
@@ -70,6 +84,35 @@ namespace NeoEdit.TextEdit
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], GetString(range))).ToList();
 			ReplaceSelections(strs);
+		}
+
+		ImageSizeDialog.Result Command_Image_Size_Dialog() => ImageSizeDialog.Run(WindowParent, GetImageVariables());
+
+		void Command_Image_Size(ImageSizeDialog.Result result)
+		{
+			var variables = GetImageVariables(out var bitmap);
+			var width = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
+			var height = new NEExpression(result.HeightExpression).Evaluate<int>(variables);
+
+			var resultBitmap = new System.Drawing.Bitmap(width, height, bitmap.PixelFormat);
+			resultBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
+			using (var graphics = System.Drawing.Graphics.FromImage(resultBitmap))
+			{
+				graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+				graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+				graphics.InterpolationMode = result.InterpolationMode;
+				graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+				graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
+				using (var wrapMode = new System.Drawing.Imaging.ImageAttributes())
+				{
+					wrapMode.SetWrapMode(System.Drawing.Drawing2D.WrapMode.TileFlipXY);
+					graphics.DrawImage(bitmap, new System.Drawing.Rectangle(0, 0, width, height), 0, 0, bitmap.Width, bitmap.Height, System.Drawing.GraphicsUnit.Pixel, wrapMode);
+				}
+			}
+
+			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
+			SetSelections(new List<Range> { BeginRange });
 		}
 	}
 }

@@ -396,6 +396,8 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Add Color" CommandEnum="Image_AddColor"/>
 		<textEdit:TextEditMenuItem Header="_Overlay Color" CommandEnum="Image_OverlayColor"/>
+		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Image_Size"/>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
 		<textEdit:TextEditMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>

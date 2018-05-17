@@ -379,14 +379,10 @@ namespace NeoEdit.Common.Transform
 			return bytes;
 		}
 
-		static unsafe string ToImageString(byte[] data)
+		public static unsafe string BitmapToString(Bitmap bitmap)
 		{
-			if (data.Length == 0)
+			if (bitmap == null)
 				return "";
-
-			Bitmap bitmap;
-			using (var ms = new MemoryStream(data))
-				bitmap = new Bitmap(ms);
 
 			var lockBits = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
 			var hexNumbers = Enumerable.Range(0, 16).Select(num => $"{num:x}").ToArray();
@@ -421,11 +417,11 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
-		static unsafe byte[] FromImageString(string data, ImageFormat imageFormat)
+		public static unsafe Bitmap StringToBitmap(string data)
 		{
 			data = ReformatImage(data);
 			if (data.Length == 0)
-				return new byte[0];
+				return null;
 
 			var height = 0;
 			var width = 1;
@@ -472,6 +468,24 @@ namespace NeoEdit.Common.Transform
 			{
 				bitmap.UnlockBits(lockBits);
 			}
+			return bitmap;
+		}
+
+		static string ToImageString(byte[] data)
+		{
+			Bitmap bitmap = null;
+			if (data.Length != 0)
+				using (var ms = new MemoryStream(data))
+					bitmap = new Bitmap(ms);
+			return BitmapToString(bitmap);
+		}
+
+		static byte[] FromImageString(string data, ImageFormat imageFormat)
+		{
+			var bitmap = StringToBitmap(data);
+			if (bitmap == null)
+				return new byte[0];
+
 			using (var ms = new MemoryStream())
 			{
 				bitmap.Save(ms, imageFormat);
