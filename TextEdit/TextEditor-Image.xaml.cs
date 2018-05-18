@@ -167,5 +167,30 @@ namespace NeoEdit.TextEdit
 		void Command_Image_FlipHorizontal() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipX);
 
 		void Command_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
+
+		ImageRotateDialog.Result Command_Image_Rotate_Dialog() => ImageRotateDialog.Run(WindowParent, GetImageVariables());
+
+		void Command_Image_Rotate(ImageRotateDialog.Result result)
+		{
+			var variables = GetImageVariables(out var bitmap);
+			var angle = new NEExpression(result.AngleExpression).Evaluate<float>(variables, "deg");
+
+			var path = new System.Drawing.Drawing2D.GraphicsPath();
+			path.AddRectangle(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height));
+			var matrix = new System.Drawing.Drawing2D.Matrix();
+			matrix.Rotate(angle);
+			var rect = path.GetBounds(matrix);
+			var resultBitmap = new System.Drawing.Bitmap((int)rect.Width, (int)rect.Height, bitmap.PixelFormat);
+			using (var g = System.Drawing.Graphics.FromImage(resultBitmap))
+			{
+				g.TranslateTransform(-rect.X, -rect.Y);
+				g.RotateTransform(angle);
+				g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
+				g.DrawImageUnscaled(bitmap, 0, 0);
+			}
+
+			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
+			SetSelections(new List<Range> { BeginRange });
+		}
 	}
 }

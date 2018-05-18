@@ -395,6 +395,13 @@
     <Compile Include="Dialogs\ImageGrabColorDialog.xaml.cs">
       <DependentUpon>ImageGrabColorDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ImageRotateDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ImageRotateDialog.xaml.cs">
+      <DependentUpon>ImageRotateDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ImageSizeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

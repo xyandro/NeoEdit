@@ -402,6 +402,7 @@
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Flip _Horizontal" CommandEnum="Image_FlipHorizontal"/>
 		<textEdit:TextEditMenuItem Header="Flip _Vertical" CommandEnum="Image_FlipVertical"/>
+		<textEdit:TextEditMenuItem Header="_Rotate" CommandEnum="Image_Rotate"/>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
 		<textEdit:TextEditMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>
