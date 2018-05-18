@@ -381,6 +381,13 @@
     <Compile Include="Dialogs\ImageAdjustColorDialog.xaml.cs">
       <DependentUpon>ImageAdjustColorDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ImageCropDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ImageCropDialog.xaml.cs">
+      <DependentUpon>ImageCropDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ImageGrabColorDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -114,5 +114,46 @@ namespace NeoEdit.TextEdit
 			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
 			SetSelections(new List<Range> { BeginRange });
 		}
+
+		ImageCropDialog.Result Command_Image_Crop_Dialog() => ImageCropDialog.Run(WindowParent, GetImageVariables());
+
+		void Command_Image_Crop(ImageCropDialog.Result result)
+		{
+			var variables = GetImageVariables(out var bitmap);
+			var destX = new NEExpression(result.XExpression).Evaluate<int>(variables);
+			var destY = new NEExpression(result.YExpression).Evaluate<int>(variables);
+			var newWidth = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
+			var newHeight = new NEExpression(result.HeightExpression).Evaluate<int>(variables);
+			if ((newWidth <= 0) || (newHeight <= 0))
+				throw new Exception("Width and height must be greater than 0");
+
+			var srcX = 0;
+			var srcY = 0;
+			var width = bitmap.Width;
+			var height = bitmap.Height;
+			if (destX < 0)
+			{
+				width += destX;
+				srcX -= destX;
+				destX = 0;
+			}
+			if (destY < 0)
+			{
+				height += destY;
+				srcY -= destY;
+				destY = 0;
+			}
+			width = Math.Min(width, newWidth - destX);
+			height = Math.Min(height, newHeight - destY);
+
+			var resultBitmap = new System.Drawing.Bitmap(newWidth, newHeight, bitmap.PixelFormat);
+			resultBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
+			using (var graphics = System.Drawing.Graphics.FromImage(resultBitmap))
+			using (var wrapMode = new System.Drawing.Imaging.ImageAttributes())
+				graphics.DrawImage(bitmap, new System.Drawing.Rectangle(destX, destY, width, height), new System.Drawing.Rectangle(srcX, srcY, width, height), System.Drawing.GraphicsUnit.Pixel);
+
+			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
+			SetSelections(new List<Range> { BeginRange });
+		}
 	}
 }
