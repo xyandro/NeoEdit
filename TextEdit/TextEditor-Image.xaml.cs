@@ -57,6 +57,14 @@ namespace NeoEdit.TextEdit
 			return ColorConverter.FromARGB(alpha1, red1, green1, blue1);
 		}
 
+		void Flip(System.Drawing.RotateFlipType type)
+		{
+			var bitmap = Coder.StringToBitmap(AllText);
+			bitmap.RotateFlip(type);
+			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(bitmap) });
+			SetSelections(new List<Range> { BeginRange });
+		}
+
 		ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog() => ImageGrabColorDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault());
 
 		void Command_Image_GrabColor(ImageGrabColorDialog.Result result) => ReplaceSelections(result.Color);
@@ -155,5 +163,9 @@ namespace NeoEdit.TextEdit
 			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
 			SetSelections(new List<Range> { BeginRange });
 		}
+
+		void Command_Image_FlipHorizontal() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipX);
+
+		void Command_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
 	}
 }

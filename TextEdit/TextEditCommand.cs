@@ -242,6 +242,8 @@ namespace NeoEdit.TextEdit
 		Image_OverlayColor,
 		Image_Size,
 		Image_Crop,
+		Image_FlipHorizontal,
+		Image_FlipVertical,
 		Table_DetectType,
 		Table_Convert,
 		Table_TextToTable,

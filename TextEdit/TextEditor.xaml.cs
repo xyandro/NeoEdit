@@ -1141,6 +1141,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Image_OverlayColor: Command_Image_OverlayColor(dialogResult as ImageAddOverlayColorDialog.Result); break;
 				case TextEditCommand.Image_Size: Command_Image_Size(dialogResult as ImageSizeDialog.Result); break;
 				case TextEditCommand.Image_Crop: Command_Image_Crop(dialogResult as ImageCropDialog.Result); break;
+				case TextEditCommand.Image_FlipHorizontal: Command_Image_FlipHorizontal(); break;
+				case TextEditCommand.Image_FlipVertical: Command_Image_FlipVertical(); break;
 				case TextEditCommand.Table_DetectType: Command_Table_DetectType(); break;
 				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as TableConvertDialog.Result); break;
 				case TextEditCommand.Table_TextToTable: Command_Table_TextToTable(dialogResult as TableTextToTableDialog.Result); break;
