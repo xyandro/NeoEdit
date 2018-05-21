@@ -66,13 +66,13 @@ namespace NeoEdit.TextEdit
 			var start = 0;
 			foreach (Match match in result.Regex.Matches(str))
 			{
-				if ((!result.ExcludeEmpty) || (match.Index != start))
+				if ((result.IncludeEmpty) || (match.Index != start))
 					yield return Range.FromIndex(range.Start + start, match.Index - start);
 				if (result.IncludeResults)
 					yield return Range.FromIndex(range.Start + match.Index, match.Length);
 				start = match.Index + match.Length;
 			}
-			if ((!result.ExcludeEmpty) || (str.Length != start))
+			if ((result.IncludeEmpty) || (str.Length != start))
 				yield return Range.FromIndex(range.Start + start, str.Length - start);
 		}
 
