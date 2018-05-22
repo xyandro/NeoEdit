@@ -158,7 +158,10 @@ namespace NeoEdit.TextEdit
 			resultBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
 			using (var graphics = System.Drawing.Graphics.FromImage(resultBitmap))
 			using (var wrapMode = new System.Drawing.Imaging.ImageAttributes())
+			{
+				graphics.FillRectangle(new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb((int)Colorer.StringToValue(result.FillColor))), new System.Drawing.Rectangle(System.Drawing.Point.Empty, resultBitmap.Size));
 				graphics.DrawImage(bitmap, new System.Drawing.Rectangle(destX, destY, width, height), new System.Drawing.Rectangle(srcX, srcY, width, height), System.Drawing.GraphicsUnit.Pixel);
+			}
 
 			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
 			SetSelections(new List<Range> { BeginRange });

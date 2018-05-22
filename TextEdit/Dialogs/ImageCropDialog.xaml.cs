@@ -5,6 +5,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
 using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 
@@ -18,6 +19,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			public string YExpression { get; set; }
 			public string WidthExpression { get; set; }
 			public string HeightExpression { get; set; }
+			public string FillColor { get; set; }
 		}
 
 		[DepProp]
@@ -30,6 +32,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		public string HeightExpression { get { return UIHelper<ImageCropDialog>.GetPropValue<string>(this); } set { UIHelper<ImageCropDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public string AspectRatio { get { return UIHelper<ImageCropDialog>.GetPropValue<string>(this); } set { UIHelper<ImageCropDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public string FillColor { get { return UIHelper<ImageCropDialog>.GetPropValue<string>(this); } set { UIHelper<ImageCropDialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
 
 		static ImageCropDialog()
@@ -173,6 +177,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			XExpression = GetXCenter(WidthExpression);
 			YExpression = GetYCenter(HeightExpression);
 			AspectRatio = "width/height";
+			FillColor = "00000000";
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
@@ -180,11 +185,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { XExpression = XExpression, YExpression = YExpression, WidthExpression = WidthExpression, HeightExpression = HeightExpression };
+			result = new Result { XExpression = XExpression, YExpression = YExpression, WidthExpression = WidthExpression, HeightExpression = HeightExpression, FillColor = Colorer.StringToString(FillColor) };
 			xExpression.AddCurrentSuggestion();
 			yExpression.AddCurrentSuggestion();
 			widthExpression.AddCurrentSuggestion();
 			heightExpression.AddCurrentSuggestion();
+			aspectRatio.AddCurrentSuggestion();
+			fillColor.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 

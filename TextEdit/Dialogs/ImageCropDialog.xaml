@@ -155,12 +155,17 @@
 			</UniformGrid>
 		</StackPanel>
 
-		<StackPanel Grid.Row="4" Grid.RowSpan="4" Grid.Column="3" VerticalAlignment="Center">
+		<StackPanel Grid.Row="4" Grid.RowSpan="2" Grid.Column="3" VerticalAlignment="Center">
 			<Label Content="_Ratio" HorizontalAlignment="Center" Target="{Binding ElementName=aspectRatio}"/>
-			<StackPanel Orientation="Horizontal">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 				<guiControls:AutoCompleteTextBox Name="aspectRatio" Width="100" Text="{Binding AspectRatio, ElementName=self, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" CompletionTag="ImageCropDialogAspectRatio"/>
 				<Button Content="_Apply" HorizontalAlignment="Center" Click="OnApplyAspectRatio"/>
 			</StackPanel>
+		</StackPanel>
+
+		<StackPanel Grid.Row="6" Grid.RowSpan="2" Grid.Column="3" VerticalAlignment="Center">
+			<Label Content="Fill _Color" HorizontalAlignment="Center" Target="{Binding ElementName=fillColor}"/>
+			<guiControls:AutoCompleteTextBox Name="fillColor" Width="100" Text="{Binding FillColor, ElementName=self, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" CompletionTag="ImageCropDialogFillColor"/>
 		</StackPanel>
 
 		<UniformGrid Grid.Row="9" Grid.ColumnSpan="4" HorizontalAlignment="Left" Rows="1">
