@@ -381,35 +381,38 @@ namespace NeoEdit.Common.Transform
 
 		public static unsafe string BitmapToString(Bitmap bitmap)
 		{
+			const string ending = "\r\n";
 			if (bitmap == null)
 				return "";
 
 			var lockBits = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
-			var hexNumbers = Enumerable.Range(0, 16).Select(num => $"{num:x}").ToArray();
+			var hexChars = Enumerable.Range(0, 16).Select(num => $"{num:x}"[0]).ToArray();
 			try
 			{
 				var padding = lockBits.Stride - lockBits.Width * 4;
-				var bytes = (byte*)lockBits.Scan0.ToPointer();
+				var bitmapPtr = (uint*)lockBits.Scan0.ToPointer();
 
-				var ending = "\r\n";
-				var sb = new StringBuilder(lockBits.Height * (lockBits.Width * 9 - 1 + ending.Length));
-
-				for (var y = 0; y < lockBits.Height; ++y)
+				var result = new string((char)0, lockBits.Height * (lockBits.Width * 9 - 1 + ending.Length));
+				fixed (char* resultFixed = result)
 				{
-					for (var x = 0; x < lockBits.Width; ++x)
+					var resultPtr = resultFixed;
+					for (var y = 0; y < lockBits.Height; ++y)
 					{
-						if (x != 0)
-							sb.Append(" ");
-						var value = *(uint*)bytes;
-						for (var bit = 28; bit >= 0; bit -= 4)
-							sb.Append(hexNumbers[value >> bit & 15]);
-						bytes += 4;
+						for (var x = 0; x < lockBits.Width; ++x)
+						{
+							if (x != 0)
+								*(resultPtr++) = ' ';
+							for (var ctr = 7; ctr >= 0; --ctr)
+								*(resultPtr++) = (hexChars[*bitmapPtr >> (ctr << 2) & 15]);
+							bitmapPtr++;
+						}
+						foreach (var c in ending)
+							*(resultPtr++) = c;
+						bitmapPtr = (uint*)((byte*)bitmapPtr + padding);
 					}
-					sb.Append(ending);
-					bytes += padding;
 				}
 
-				return sb.ToString();
+				return result.ToString();
 			}
 			finally
 			{
@@ -419,49 +422,80 @@ namespace NeoEdit.Common.Transform
 
 		public static unsafe Bitmap StringToBitmap(string data)
 		{
-			data = ReformatImage(data);
-			if (data.Length == 0)
-				return null;
+			var pixels = new List<List<uint>>();
+			var y = 0;
 
-			var height = 0;
-			var width = 1;
-			for (var ctr = 0; ctr < data.Length; ++ctr)
+			var index = 0;
+			while (index <= data.Length)
 			{
-				if ((height == 0) && (data[ctr] == ' '))
-					++width;
-				if (data[ctr] == '\r')
-					++height;
+				if ((index == data.Length) || (data[index] == '\r') || (data[index] == '\n'))
+				{
+					++index;
+					if (y == pixels.Count)
+						continue;
+
+					if ((y != 0) && (pixels[y].Count != pixels[0].Count))
+						throw new Exception("All rows must have the same number of pixels");
+
+					++y;
+					continue;
+				}
+
+				if (char.IsWhiteSpace(data[index]))
+				{
+					++index;
+					continue;
+				}
+
+				var start = index;
+				uint value = 0;
+				while (index < data.Length)
+				{
+					if ((data[index] >= '0') && (data[index] <= '9'))
+						value = value * 16 + data[index] - '0';
+					else if ((data[index] >= 'a') && (data[index] <= 'f'))
+						value = value * 16 + data[index] - 'a' + 10;
+					else if ((data[index] >= 'A') && (data[index] <= 'F'))
+						value = value * 16 + data[index] - 'A' + 10;
+					else
+						break;
+					++index;
+				}
+
+				if (start == index)
+					throw new Exception("Invalid image string");
+
+				switch (index - start)
+				{
+					case 1: value = 0xff000000 | (value << 20) | (value << 16) | (value << 12) | (value << 8) | (value << 4) | (value << 0); break;
+					case 2: value = 0xff000000 | (value << 16) | (value << 8) | (value << 0); break;
+					case 3: value = 0xff000000 | ((value & 0xf00) << 12) | ((value & 0xf00) << 8) | ((value & 0xf0) << 8) | ((value & 0xf0) << 4) | ((value & 0xf) << 4) | (value & 0xf); break;
+					case 4: value = ((value & 0xf000) << 16) | ((value & 0xf000) << 12) | ((value & 0xf00) << 12) | ((value & 0xf00) << 8) | ((value & 0xf0) << 8) | ((value & 0xf0) << 4) | ((value & 0xf) << 4) | (value & 0xf); break;
+					case 6: value = 0xff000000 | value; break;
+					case 8: break;
+					default: throw new Exception("Invalid color");
+				}
+
+				if (pixels.Count == y)
+					pixels.Add(new List<uint>());
+				pixels[y].Add(value);
 			}
 
-			var bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+			if (pixels.Count == 0)
+				return null;
+
+			var bitmap = new Bitmap(pixels[0].Count, pixels.Count, PixelFormat.Format32bppArgb);
 			var lockBits = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.WriteOnly, bitmap.PixelFormat);
 			try
 			{
 				var padding = lockBits.Stride - lockBits.Width * 4;
-				var bytes = (byte*)lockBits.Scan0.ToPointer();
-				var dataIndex = 0;
+				var ptr = (uint*)lockBits.Scan0.ToPointer();
 
-				for (var y = 0; y < height; ++y)
+				foreach (var row in pixels)
 				{
-					for (var x = 0; x < width; ++x)
-					{
-						uint value = 0;
-						for (var ctr = 0; ctr < 8; ++ctr)
-						{
-							value *= 16;
-							var c = data[dataIndex];
-							if (c >= '0' && c <= '9')
-								value += (uint)(c - '0');
-							else
-								value += (uint)(c - 'a' + 10);
-							++dataIndex;
-						}
-						*(uint*)bytes = value;
-						++dataIndex;
-						bytes += 4;
-					}
-					bytes += padding;
-					++dataIndex;
+					foreach (var pixel in row)
+						*(ptr++) = pixel;
+					ptr = (uint*)((byte*)ptr + padding);
 				}
 			}
 			finally
@@ -473,10 +507,12 @@ namespace NeoEdit.Common.Transform
 
 		static string ToImageString(byte[] data)
 		{
+			if (data.Length == 0)
+				return "";
+
 			Bitmap bitmap = null;
-			if (data.Length != 0)
-				using (var ms = new MemoryStream(data))
-					bitmap = new Bitmap(ms);
+			using (var ms = new MemoryStream(data))
+				bitmap = new Bitmap(ms);
 			return BitmapToString(bitmap);
 		}
 
@@ -491,63 +527,6 @@ namespace NeoEdit.Common.Transform
 				bitmap.Save(ms, imageFormat);
 				return ms.ToArray();
 			}
-		}
-
-		static string ReformatImage(string str)
-		{
-			str = str.ToLowerInvariant();
-			var width = default(int?);
-			var lineWidth = 0;
-			var sb = new StringBuilder();
-			for (var ctr = 0; ctr <= str.Length;)
-			{
-				var endCtr = ctr;
-				while ((endCtr < str.Length) && (((str[endCtr] >= '0') && (str[endCtr] <= '9')) || ((str[endCtr] >= 'a') && (str[endCtr] <= 'f'))))
-					++endCtr;
-
-				if (endCtr != ctr)
-				{
-					if ((sb.Length != 0) && (sb[sb.Length - 1] != '\n'))
-						sb.Append(" ");
-
-					switch (endCtr - ctr)
-					{
-						case 1: sb.Append("ff").Append(str[ctr], 6); break;
-						case 2: sb.Append("ff").Append(str, ctr, 2).Append(str, ctr, 2).Append(str, ctr, 2); break;
-						case 3: sb.Append("ff").Append(str[ctr], 2).Append(str[ctr + 1], 2).Append(str[ctr + 2], 2); break;
-						case 4: sb.Append(str[ctr], 2).Append(str[ctr + 1], 2).Append(str[ctr + 2], 2).Append(str[ctr + 3], 2); break;
-						case 6: sb.Append("ff").Append(str, ctr, 6); break;
-						case 8: sb.Append(str, ctr, 8); break;
-						default: throw new Exception("Invalid color");
-					}
-					ctr = endCtr;
-					++lineWidth;
-					continue;
-				}
-
-				if ((ctr == str.Length) || (str[ctr] == '\r') || (str[ctr] == '\n'))
-				{
-					if ((sb.Length != 0) && (sb[sb.Length - 1] != '\n'))
-					{
-						width = width ?? lineWidth;
-						if (lineWidth != width)
-							throw new Exception("All lines must have the same number of pixels");
-						lineWidth = 0;
-						sb.Append("\r\n");
-					}
-					++ctr;
-					continue;
-				}
-
-				if (char.IsWhiteSpace(str[ctr]))
-				{
-					++ctr;
-					continue;
-				}
-
-				throw new Exception("Invalid image string");
-			}
-			return sb.ToString();
 		}
 
 		static string BytesToNum<T>(byte[] data, int size, Func<byte[], T> converter, bool reverse) where T : struct
