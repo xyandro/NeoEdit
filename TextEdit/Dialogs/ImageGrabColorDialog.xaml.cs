@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -37,12 +38,15 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			InitializeComponent();
 
-			byte alpha = 255, red = 255, green = 255, blue = 255;
-			try { ColorConverter.GetARGB(color, out alpha, out red, out green, out blue); } catch { }
-			Alpha = alpha;
-			Red = red;
-			Green = green;
-			Blue = blue;
+			try
+			{
+				Colorer.StringToARGB(color, out var alpha, out var red, out var green, out var blue);
+				Alpha = alpha;
+				Red = red;
+				Green = green;
+				Blue = blue;
+			}
+			catch { Alpha = Red = Green = Blue = 255; }
 		}
 
 		Result result;
@@ -164,70 +168,11 @@ namespace NeoEdit.TextEdit.Dialogs
 
 	class ColorConverter : IMultiValueConverter
 	{
-		static byte GetValue(string color)
-		{
-			if ((string.IsNullOrEmpty(color)) || (color.Length > 2))
-				throw new Exception("Invalid color");
-			var value = byte.Parse(color, NumberStyles.HexNumber);
-			if (color.Length == 1)
-				value = (byte)(value * 16 + value);
-			return value;
-		}
-
-		public static void GetARGB(string color, out byte alpha, out byte red, out byte green, out byte blue)
-		{
-			if (string.IsNullOrEmpty(color))
-				throw new Exception($"Invalid color: {color}");
-			foreach (var c in color)
-				if (((c < '0') || (c > '9')) && ((c < 'A') || (c > 'F')) && ((c < 'a') || (c > 'f')))
-					throw new Exception($"Invalid color: {color}");
-
-			switch (color.Length)
-			{
-				case 1:
-					alpha = 255;
-					red = green = blue = GetValue(color.Substring(0, 1));
-					break;
-				case 2:
-					alpha = 255;
-					red = green = blue = GetValue(color.Substring(0, 2));
-					break;
-				case 3:
-					alpha = 255;
-					red = GetValue(color.Substring(0, 1));
-					green = GetValue(color.Substring(1, 1));
-					blue = GetValue(color.Substring(2, 1));
-					break;
-				case 4:
-					alpha = GetValue(color.Substring(0, 1));
-					red = GetValue(color.Substring(1, 1));
-					green = GetValue(color.Substring(2, 1));
-					blue = GetValue(color.Substring(3, 1));
-					break;
-				case 6:
-					alpha = 255;
-					red = GetValue(color.Substring(0, 2));
-					green = GetValue(color.Substring(2, 2));
-					blue = GetValue(color.Substring(4, 2));
-					break;
-				case 8:
-					alpha = GetValue(color.Substring(0, 2));
-					red = GetValue(color.Substring(2, 2));
-					green = GetValue(color.Substring(4, 2));
-					blue = GetValue(color.Substring(6, 2));
-					break;
-				default:
-					throw new Exception($"Invalid color: {color}");
-			}
-		}
-
-		public static string FromARGB(byte alpha, byte red, byte green, byte blue) => $"{alpha:x2}{red:x2}{green:x2}{blue:x2}";
-
-		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => FromARGB((byte)values[0], (byte)values[1], (byte)values[2], (byte)values[3]);
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => Colorer.ARGBToString((byte)values[0], (byte)values[1], (byte)values[2], (byte)values[3]);
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
-			GetARGB(value as string, out byte alpha, out byte red, out byte green, out byte blue);
+			Colorer.StringToARGB(value as string, out byte alpha, out byte red, out byte green, out byte blue);
 			return new object[] { alpha, red, green, blue };
 		}
 	}

@@ -12,18 +12,18 @@ namespace NeoEdit.TextEdit
 	{
 		string AddColor(string color1, string color2)
 		{
-			ColorConverter.GetARGB(color1, out byte alpha1, out byte red1, out byte green1, out byte blue1);
-			ColorConverter.GetARGB(color2, out byte alpha2, out byte red2, out byte green2, out byte blue2);
+			Colorer.StringToARGB(color1, out var alpha1, out var red1, out var green1, out var blue1);
+			Colorer.StringToARGB(color2, out var alpha2, out var red2, out var green2, out var blue2);
 			alpha1 = (byte)Math.Max(0, Math.Min(alpha1 + alpha2, 255));
 			red1 = (byte)Math.Max(0, Math.Min(red1 + red2, 255));
 			green1 = (byte)Math.Max(0, Math.Min(green1 + green2, 255));
 			blue1 = (byte)Math.Max(0, Math.Min(blue1 + blue2, 255));
-			return ColorConverter.FromARGB(alpha1, red1, green1, blue1);
+			return Colorer.ARGBToString(alpha1, red1, green1, blue1);
 		}
 
 		string AdjustColor(string color, double multiplier, bool doAlpha, bool doRed, bool doGreen, bool doBlue)
 		{
-			ColorConverter.GetARGB(color, out byte alpha, out byte red, out byte green, out byte blue);
+			Colorer.StringToARGB(color, out var alpha, out var red, out var green, out var blue);
 			if (doAlpha)
 				alpha = (byte)Math.Max(0, Math.Min((int)(alpha * multiplier + 0.5), 255));
 			if (doRed)
@@ -32,7 +32,7 @@ namespace NeoEdit.TextEdit
 				green = (byte)Math.Max(0, Math.Min((int)(green * multiplier + 0.5), 255));
 			if (doBlue)
 				blue = (byte)Math.Max(0, Math.Min((int)(blue * multiplier + 0.5), 255));
-			return ColorConverter.FromARGB(alpha, red, green, blue);
+			return Colorer.ARGBToString(alpha, red, green, blue);
 		}
 
 		NEVariables GetImageVariables() => GetImageVariables(out var bitmap);
@@ -48,13 +48,13 @@ namespace NeoEdit.TextEdit
 
 		string OverlayColor(string color1, string color2)
 		{
-			ColorConverter.GetARGB(color1, out byte alpha1, out byte red1, out byte green1, out byte blue1);
-			ColorConverter.GetARGB(color2, out byte alpha2, out byte red2, out byte green2, out byte blue2);
+			Colorer.StringToARGB(color1, out byte alpha1, out byte red1, out byte green1, out byte blue1);
+			Colorer.StringToARGB(color2, out byte alpha2, out byte red2, out byte green2, out byte blue2);
 			red1 = (byte)((red1 * alpha1 / 255) + (red2 * alpha2 * (255 - alpha1) / (255 * 255)));
 			green1 = (byte)((green1 * alpha1 / 255) + (green2 * alpha2 * (255 - alpha1) / (255 * 255)));
 			blue1 = (byte)((blue1 * alpha1 / 255) + (blue2 * alpha2 * (255 - alpha1) / (255 * 255)));
 			alpha1 = (byte)(alpha1 + (alpha2 * (255 - alpha1) / 255));
-			return ColorConverter.FromARGB(alpha1, red1, green1, blue1);
+			return Colorer.ARGBToString(alpha1, red1, green1, blue1);
 		}
 
 		void Flip(System.Drawing.RotateFlipType type)

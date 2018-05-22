@@ -447,35 +447,7 @@ namespace NeoEdit.Common.Transform
 					continue;
 				}
 
-				var start = index;
-				uint value = 0;
-				while (index < data.Length)
-				{
-					if ((data[index] >= '0') && (data[index] <= '9'))
-						value = value * 16 + data[index] - '0';
-					else if ((data[index] >= 'a') && (data[index] <= 'f'))
-						value = value * 16 + data[index] - 'a' + 10;
-					else if ((data[index] >= 'A') && (data[index] <= 'F'))
-						value = value * 16 + data[index] - 'A' + 10;
-					else
-						break;
-					++index;
-				}
-
-				if (start == index)
-					throw new Exception("Invalid image string");
-
-				switch (index - start)
-				{
-					case 1: value = 0xff000000 | (value << 20) | (value << 16) | (value << 12) | (value << 8) | (value << 4) | (value << 0); break;
-					case 2: value = 0xff000000 | (value << 16) | (value << 8) | (value << 0); break;
-					case 3: value = 0xff000000 | ((value & 0xf00) << 12) | ((value & 0xf00) << 8) | ((value & 0xf0) << 8) | ((value & 0xf0) << 4) | ((value & 0xf) << 4) | (value & 0xf); break;
-					case 4: value = ((value & 0xf000) << 16) | ((value & 0xf000) << 12) | ((value & 0xf00) << 12) | ((value & 0xf00) << 8) | ((value & 0xf0) << 8) | ((value & 0xf0) << 4) | ((value & 0xf) << 4) | (value & 0xf); break;
-					case 6: value = 0xff000000 | value; break;
-					case 8: break;
-					default: throw new Exception("Invalid color");
-				}
-
+				var value = Colorer.ReadWhileIsColor(data, ref index);
 				if (pixels.Count == y)
 					pixels.Add(new List<uint>());
 				pixels[y].Add(value);
