@@ -50,9 +50,9 @@
 		<guiControls:NEExpressionResults Grid.Row="7" Grid.Column="1" Expression="{Binding HeightExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="3" VerticalAlignment="Center">
-			<Label Grid.Row="0" Grid.Column="0" Content="Anchor" HorizontalAlignment="Center"/>
+			<Label Content="Anchor (Ctrl + Direction to select)" HorizontalAlignment="Center"/>
 
-			<UniformGrid Grid.Row="1" Grid.Column="0" Rows="3" Columns="3" Width="60">
+			<UniformGrid Rows="3" Columns="3" Width="60">
 				<ToggleButton Width="20" Content="↖" Tag="Top,Left" Click="OnChangeAnchor">
 					<ToggleButton.IsChecked>
 						<MultiBinding Converter="{local:CropImageToggleButtonConverter}" ConverterParameter="Top,Left" Mode="OneWay">
@@ -158,7 +158,7 @@
 		<StackPanel Grid.Row="4" Grid.RowSpan="4" Grid.Column="3" VerticalAlignment="Center">
 			<Label Content="_Ratio" HorizontalAlignment="Center" Target="{Binding ElementName=aspectRatio}"/>
 			<StackPanel Orientation="Horizontal">
-				<guiControls:AutoCompleteTextBox Name="aspectRatio" Width="50" Text="{Binding AspectRatio, ElementName=self, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" CompletionTag="ImageCropDialogAspectRatio"/>
+				<guiControls:AutoCompleteTextBox Name="aspectRatio" Width="100" Text="{Binding AspectRatio, ElementName=self, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" CompletionTag="ImageCropDialogAspectRatio"/>
 				<Button Content="_Apply" HorizontalAlignment="Center" Click="OnApplyAspectRatio"/>
 			</StackPanel>
 		</StackPanel>
