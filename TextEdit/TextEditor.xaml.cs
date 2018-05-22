@@ -469,7 +469,7 @@ namespace NeoEdit.TextEdit
 			base.Closed();
 		}
 
-		bool ConfirmCheckCanFullyEncode()
+		bool ConfirmContinueWhenCannotEncode()
 		{
 			return new Message(WindowParent)
 			{
@@ -479,24 +479,6 @@ namespace NeoEdit.TextEdit
 				DefaultAccept = Message.OptionsEnum.Yes,
 				DefaultCancel = Message.OptionsEnum.No,
 			}.Show() == Message.OptionsEnum.Yes;
-		}
-
-		bool ConfirmVerifyCanFullyEncode()
-		{
-			switch (new Message(WindowParent)
-			{
-				Title = "Confirm",
-				Text = "The current encoding cannot fully represent this data.  Switch to UTF-8?",
-				Options = Message.OptionsEnum.YesNoCancel,
-				DefaultAccept = Message.OptionsEnum.Yes,
-				DefaultCancel = Message.OptionsEnum.Cancel,
-			}.Show())
-			{
-				case Message.OptionsEnum.Yes: CodePage = Coder.CodePage.UTF8; return true;
-				case Message.OptionsEnum.No: return true;
-				case Message.OptionsEnum.Cancel: return false;
-				default: throw new Exception("Invalid response");
-			}
 		}
 
 		public override bool Empty() => (FileName == null) && (!IsModified) && (BeginOffset == EndOffset);
@@ -2108,7 +2090,7 @@ namespace NeoEdit.TextEdit
 
 			// If encoding can't exactly express bytes mark as modified (only for < 50 MB)
 			if ((!isModified) && ((bytes.Length >> 20) < 50))
-				isModified = !Coder.CanFullyEncode(bytes, CodePage);
+				isModified = !Coder.CanExactlyEncode(bytes, CodePage);
 
 			if (!keepUndo)
 				undoRedo.Clear();
@@ -2198,7 +2180,7 @@ namespace NeoEdit.TextEdit
 
 		void Save(string fileName, bool copyOnly = false)
 		{
-			if (((Data.NumChars >> 20) < 50) && (!VerifyCanFullyEncode()))
+			if ((Coder.IsStr(CodePage)) && ((Data.NumChars >> 20) < 50) && (!VerifyCanEncode()))
 				return;
 
 			var triedReadOnly = false;
@@ -2331,13 +2313,31 @@ namespace NeoEdit.TextEdit
 
 		public override string ToString() => FileName ?? DisplayName;
 
-		bool CheckCanFullyEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanFullyEncode(data, codePage))) || (ConfirmCheckCanFullyEncode());
+		bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanEncode(data, codePage))) || (ConfirmContinueWhenCannotEncode());
 
-		bool CheckCanFullyEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmCheckCanFullyEncode());
+		bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
 
-		bool VerifyCanFullyEncode() => (Data.CanFullyEncode(CodePage)) || (ConfirmVerifyCanFullyEncode());
+		bool VerifyCanEncode()
+		{
+			if (Data.CanEncode(CodePage))
+				return true;
 
-		bool VerifyCanFullyEncode(List<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanFullyEncode(str, codePage))) || (ConfirmVerifyCanFullyEncode());
+			switch (new Message(WindowParent)
+			{
+				Title = "Confirm",
+				Text = "The current encoding cannot fully represent this data.  Switch to UTF-8?",
+				Options = Message.OptionsEnum.YesNoCancel,
+				DefaultAccept = Message.OptionsEnum.Yes,
+				DefaultCancel = Message.OptionsEnum.Cancel,
+			}.Show())
+			{
+				case Message.OptionsEnum.Yes: CodePage = Coder.CodePage.UTF8; return true;
+				case Message.OptionsEnum.No: return true;
+				case Message.OptionsEnum.Cancel: return false;
+				default: throw new Exception("Invalid response");
+			}
+
+		}
 
 		void Command_Type_Select_MinMax(bool min, FindMinMaxType type) => SetSelections(FindMinMax(min, type));
 

@@ -38,7 +38,7 @@ namespace NeoEdit.HexEdit.Converters
 				{
 					count = Math.Min(count, codePage.PreviewSize());
 					var bytes1 = data.Read(selStart, count);
-					if (!Coder.CanFullyEncode(bytes1, codePage))
+					if (!Coder.CanExactlyEncode(bytes1, codePage))
 						return "Invalid";
 					return Coder.BytesToString(bytes1, codePage).Replace("\r", @"\r").Replace("\n", @"\n");
 				}

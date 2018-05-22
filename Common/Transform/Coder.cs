@@ -719,44 +719,40 @@ namespace NeoEdit.Common.Transform
 
 		public static string ConvertString(string value, CodePage inCodePage, CodePage outCodePage) => BytesToString(StringToBytes(value, inCodePage), outCodePage);
 
-		public static bool CanFullyEncode(string str1, CodePage codePage)
+		public static bool CanEncode(string value, CodePage codePage)
 		{
-			// Handle formatting (whitespace/case/etc)
-			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.HexRev) || (codePage == CodePage.Binary) || (codePage == CodePage.Base64)))
-				str1 = str1.StripWhitespace();
-			if ((str1 != null) && ((codePage == CodePage.Hex) || (codePage == CodePage.HexRev)))
-				str1 = str1.ToLowerInvariant();
-			if ((str1 != null) && (codePage == CodePage.Base64))
-				str1 = str1.TrimEnd('=');
-			if ((str1 != null) && (IsImage(codePage)))
-				str1 = ReformatImage(str1);
-			if ((str1 != null) && (IsNumeric(codePage)))
-				str1 = str1.ConvertWhitespaceToSpaces().Trim();
-
-			var bytes = TryStringToBytes(str1, codePage);
-			if (bytes == null)
-				return false;
-			var str2 = TryBytesToString(bytes, codePage);
-			if (str2 == null)
-				return false;
-
-			if (codePage == CodePage.Base64)
-				str2 = str2.TrimEnd('=');
-
-			return str1 == str2;
+			if (IsStr(codePage))
+				return CanExactlyEncode(value, codePage);
+			return TryStringToBytes(value, codePage) != null;
 		}
 
-		public static bool CanFullyEncode(byte[] bytes1, CodePage codePage)
+		public static bool CanEncode(byte[] value, CodePage codePage)
 		{
-			var str = TryBytesToString(bytes1, codePage);
+			if (IsStr(codePage))
+				return CanExactlyEncode(value, codePage);
+			return TryBytesToString(value, codePage) != null;
+		}
+
+		public static bool CanExactlyEncode(string value, CodePage codePage)
+		{
+			var bytes = TryStringToBytes(value, codePage);
+			if (bytes == null)
+				return false;
+			var value2 = TryBytesToString(bytes, codePage);
+			if (value2 == null)
+				return false;
+			return value == value2;
+		}
+
+		public static bool CanExactlyEncode(byte[] value, CodePage codePage)
+		{
+			var str = TryBytesToString(value, codePage);
 			if (str == null)
 				return false;
-			var bytes2 = TryStringToBytes(str, codePage);
-			if (bytes2 == null)
+			var bytes = TryStringToBytes(str, codePage);
+			if (bytes == null)
 				return false;
-			if (bytes1.Length != bytes2.Length)
-				return false;
-			return bytes1.Equal(bytes2);
+			return value.Equal(bytes);
 		}
 
 		public static CodePage ResolveCodePage(CodePage codePage, byte[] data)

@@ -35,7 +35,7 @@ namespace NeoEdit.Common
 			Data = data;
 		}
 
-		public bool CanFullyEncode(Coder.CodePage codePage) => Coder.CanFullyEncode(Data, codePage);
+		public bool CanEncode(Coder.CodePage codePage) => Coder.CanEncode(Data, codePage);
 
 		public byte[] GetBytes(Coder.CodePage codePage) => Coder.StringToBytes(Data, codePage, true);
 

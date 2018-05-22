@@ -541,9 +541,9 @@ namespace NeoEdit.HexEdit
 			e.Handled = true;
 		}
 
-		bool CanFullyEncode(byte[] bytes)
+		bool CanExactlyEncode(byte[] bytes)
 		{
-			if (Coder.CanFullyEncode(bytes, CodePage))
+			if (Coder.CanExactlyEncode(bytes, CodePage))
 				return true;
 
 			return new Message(WindowParent)
@@ -561,7 +561,7 @@ namespace NeoEdit.HexEdit
 		internal void Command_File_OpenWith_TextEditor()
 		{
 			var bytes = Data.Data;
-			if (!CanFullyEncode(bytes))
+			if (!CanExactlyEncode(bytes))
 				return;
 			Launcher.Static.LaunchTextEditorFile(FileName, null, bytes, CodePage, IsModified);
 			WindowParent.Remove(this, true);

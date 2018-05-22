@@ -448,7 +448,7 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Data_Hash(EditDataHashDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
-			if (!CheckCanFullyEncode(strs, result.CodePage))
+			if (!CheckCanEncode(strs, result.CodePage))
 				return;
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
@@ -458,10 +458,10 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Data_Compress(EditDataCompressDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
-			if (!CheckCanFullyEncode(strs, result.InputCodePage))
+			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var compressed = strs.AsParallel().AsOrdered().Select(str => Compressor.Compress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
-			if (!CheckCanFullyEncode(compressed, result.OutputCodePage))
+			if (!CheckCanEncode(compressed, result.OutputCodePage))
 				return;
 			ReplaceSelections(compressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
@@ -471,10 +471,10 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Data_Decompress(EditDataCompressDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
-			if (!CheckCanFullyEncode(strs, result.InputCodePage))
+			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var decompressed = strs.AsParallel().AsOrdered().Select(str => Compressor.Decompress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
-			if (!CheckCanFullyEncode(decompressed, result.OutputCodePage))
+			if (!CheckCanEncode(decompressed, result.OutputCodePage))
 				return;
 			ReplaceSelections(decompressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
@@ -484,10 +484,10 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Data_Encrypt(EditDataEncryptDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
-			if (!CheckCanFullyEncode(strs, result.InputCodePage))
+			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var encrypted = strs.AsParallel().AsOrdered().Select(str => Cryptor.Encrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
-			if (!CheckCanFullyEncode(encrypted, result.OutputCodePage))
+			if (!CheckCanEncode(encrypted, result.OutputCodePage))
 				return;
 			ReplaceSelections(encrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
@@ -497,10 +497,10 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Data_Decrypt(EditDataEncryptDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
-			if (!CheckCanFullyEncode(strs, result.InputCodePage))
+			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var decrypted = strs.AsParallel().AsOrdered().Select(str => Cryptor.Decrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
-			if (!CheckCanFullyEncode(decrypted, result.OutputCodePage))
+			if (!CheckCanEncode(decrypted, result.OutputCodePage))
 				return;
 			ReplaceSelections(decrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
@@ -510,7 +510,7 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Data_Sign(EditDataSignDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
-			if (!CheckCanFullyEncode(strs, result.CodePage))
+			if (!CheckCanEncode(strs, result.CodePage))
 				return;
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
 		}
@@ -551,10 +551,10 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Convert(EditConvertDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
-			if (!CheckCanFullyEncode(strs, result.InputType))
+			if (!CheckCanEncode(strs, result.InputType))
 				return;
 			var bytes = strs.AsParallel().AsOrdered().Select(str => Coder.StringToBytes(str, result.InputType, result.InputBOM)).ToList();
-			if (!CheckCanFullyEncode(bytes, result.OutputType))
+			if (!CheckCanEncode(bytes, result.OutputType))
 				return;
 			ReplaceSelections(bytes.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
 		}
