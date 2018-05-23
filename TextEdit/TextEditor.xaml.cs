@@ -743,6 +743,12 @@ namespace NeoEdit.TextEdit
 				results.Add(NEVariable.Constant($"{name}lmax", $"{desc} max length", () => values.Select(str => str.Length).DefaultIfEmpty(0).Max()));
 			}
 
+			if (Coder.IsImage(CodePage))
+			{
+				results.Add(NEVariable.Constant("width", "Image width", () => GetBitmap().Width));
+				results.Add(NEVariable.Constant("height", "Image height", () => GetBitmap().Height));
+			}
+
 			// Add variables that aren't already set
 			results.AddRange(variables.Where(pair => !results.Contains(pair.Key)).ForEach(pair => NEVariable.List(pair.Key, "User-defined", () => pair.Value)));
 

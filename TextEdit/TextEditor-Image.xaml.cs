@@ -10,6 +10,9 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
+		string savedBitmapText;
+		System.Drawing.Bitmap savedBitmap;
+
 		string AddColor(string color1, string color2)
 		{
 			Colorer.StringToARGB(color1, out var alpha1, out var red1, out var green1, out var blue1);
@@ -35,15 +38,20 @@ namespace NeoEdit.TextEdit
 			return Colorer.ARGBToString(alpha, red, green, blue);
 		}
 
-		NEVariables GetImageVariables() => GetImageVariables(out var bitmap);
 
-		NEVariables GetImageVariables(out System.Drawing.Bitmap bitmap)
+		System.Drawing.Bitmap GetBitmap()
 		{
-			bitmap = Coder.StringToBitmap(AllText);
-			var variables = GetVariables();
-			variables.Add(NEVariable.Constant("width", "Image width", bitmap.Width));
-			variables.Add(NEVariable.Constant("height", "Image height", bitmap.Height));
-			return variables;
+			if (!Coder.IsImage(CodePage))
+			{
+				savedBitmapText = null;
+				savedBitmap = null;
+			}
+			else if (Data.Data != savedBitmapText)
+			{
+				savedBitmapText = Data.Data;
+				savedBitmap = Coder.StringToBitmap(AllText);
+			}
+			return savedBitmap;
 		}
 
 		string OverlayColor(string color1, string color2)
@@ -94,14 +102,15 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(strs);
 		}
 
-		ImageSizeDialog.Result Command_Image_Size_Dialog() => ImageSizeDialog.Run(WindowParent, GetImageVariables());
+		ImageSizeDialog.Result Command_Image_Size_Dialog() => ImageSizeDialog.Run(WindowParent, GetVariables());
 
 		void Command_Image_Size(ImageSizeDialog.Result result)
 		{
-			var variables = GetImageVariables(out var bitmap);
+			var variables = GetVariables();
 			var width = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
 			var height = new NEExpression(result.HeightExpression).Evaluate<int>(variables);
 
+			var bitmap = GetBitmap();
 			var resultBitmap = new System.Drawing.Bitmap(width, height, bitmap.PixelFormat);
 			resultBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
 			using (var graphics = System.Drawing.Graphics.FromImage(resultBitmap))
@@ -123,11 +132,11 @@ namespace NeoEdit.TextEdit
 			SetSelections(new List<Range> { BeginRange });
 		}
 
-		ImageCropDialog.Result Command_Image_Crop_Dialog() => ImageCropDialog.Run(WindowParent, GetImageVariables());
+		ImageCropDialog.Result Command_Image_Crop_Dialog() => ImageCropDialog.Run(WindowParent, GetVariables());
 
 		void Command_Image_Crop(ImageCropDialog.Result result)
 		{
-			var variables = GetImageVariables(out var bitmap);
+			var variables = GetVariables();
 			var destX = new NEExpression(result.XExpression).Evaluate<int>(variables);
 			var destY = new NEExpression(result.YExpression).Evaluate<int>(variables);
 			var newWidth = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
@@ -135,6 +144,7 @@ namespace NeoEdit.TextEdit
 			if ((newWidth <= 0) || (newHeight <= 0))
 				throw new Exception("Width and height must be greater than 0");
 
+			var bitmap = GetBitmap();
 			var srcX = 0;
 			var srcY = 0;
 			var width = bitmap.Width;
@@ -171,13 +181,14 @@ namespace NeoEdit.TextEdit
 
 		void Command_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		ImageRotateDialog.Result Command_Image_Rotate_Dialog() => ImageRotateDialog.Run(WindowParent, GetImageVariables());
+		ImageRotateDialog.Result Command_Image_Rotate_Dialog() => ImageRotateDialog.Run(WindowParent, GetVariables());
 
 		void Command_Image_Rotate(ImageRotateDialog.Result result)
 		{
-			var variables = GetImageVariables(out var bitmap);
+			var variables = GetVariables();
 			var angle = new NEExpression(result.AngleExpression).Evaluate<float>(variables, "deg");
 
+			var bitmap = GetBitmap();
 			var path = new System.Drawing.Drawing2D.GraphicsPath();
 			path.AddRectangle(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height));
 			var matrix = new System.Drawing.Drawing2D.Matrix();
