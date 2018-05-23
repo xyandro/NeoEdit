@@ -388,6 +388,13 @@
     <Compile Include="Dialogs\ImageCropDialog.xaml.cs">
       <DependentUpon>ImageCropDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ImageGIFAnimateDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ImageGIFAnimateDialog.xaml.cs">
+      <DependentUpon>ImageGIFAnimateDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ImageGrabColorDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -668,6 +675,7 @@
     <Compile Include="Dialogs\TextWidthDialog.xaml.cs">
       <DependentUpon>TextWidthDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GIFWriter.cs" />
     <Compile Include="GotoType.cs" />
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />

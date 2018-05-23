@@ -206,5 +206,21 @@ namespace NeoEdit.TextEdit
 			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
 			SetSelections(new List<Range> { BeginRange });
 		}
+
+		ImageGIFAnimateDialog.Result Command_Image_GIF_Animate_Dialog() => ImageGIFAnimateDialog.Run(WindowParent, GetVariables());
+
+		void Command_Image_GIF_Animate(ImageGIFAnimateDialog.Result result)
+		{
+			var variables = GetVariables();
+			var inputFiles = new NEExpression(result.InputFiles).EvaluateList<string>(variables);
+			var outputFile = new NEExpression(result.OutputFile).Evaluate<string>(variables);
+			var delays = new NEExpression(result.Delay).EvaluateList<int>(variables, inputFiles.Count, "ms");
+			var repeat = new NEExpression(result.Repeat).Evaluate<int>(variables);
+
+			using (var writer = new GIFWriter(outputFile, repeat))
+				for (var ctr = 0; ctr < inputFiles.Count; ++ctr)
+					using (var image = System.Drawing.Image.FromFile(inputFiles[ctr]))
+						writer.WriteFrame(image, delays[ctr]);
+		}
 	}
 }

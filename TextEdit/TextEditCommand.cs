@@ -245,6 +245,7 @@ namespace NeoEdit.TextEdit
 		Image_FlipHorizontal,
 		Image_FlipVertical,
 		Image_Rotate,
+		Image_GIF_Animate,
 		Table_DetectType,
 		Table_Convert,
 		Table_TextToTable,

@@ -847,6 +847,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Image_Size: dialogResult = Command_Image_Size_Dialog(); break;
 				case TextEditCommand.Image_Crop: dialogResult = Command_Image_Crop_Dialog(); break;
 				case TextEditCommand.Image_Rotate: dialogResult = Command_Image_Rotate_Dialog(); break;
+				case TextEditCommand.Image_GIF_Animate: dialogResult = Command_Image_GIF_Animate_Dialog(); break;
 				case TextEditCommand.Table_Convert: dialogResult = Command_Table_Convert_Dialog(); break;
 				case TextEditCommand.Table_TextToTable: dialogResult = Command_Table_TextToTable_Dialog(); break;
 				case TextEditCommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(); break;
@@ -1133,6 +1134,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Image_FlipHorizontal: Command_Image_FlipHorizontal(); break;
 				case TextEditCommand.Image_FlipVertical: Command_Image_FlipVertical(); break;
 				case TextEditCommand.Image_Rotate: Command_Image_Rotate(dialogResult as ImageRotateDialog.Result); break;
+				case TextEditCommand.Image_GIF_Animate: Command_Image_GIF_Animate(dialogResult as ImageGIFAnimateDialog.Result); break;
 				case TextEditCommand.Table_DetectType: Command_Table_DetectType(); break;
 				case TextEditCommand.Table_Convert: Command_Table_Convert(dialogResult as TableConvertDialog.Result); break;
 				case TextEditCommand.Table_TextToTable: Command_Table_TextToTable(dialogResult as TableTextToTableDialog.Result); break;
