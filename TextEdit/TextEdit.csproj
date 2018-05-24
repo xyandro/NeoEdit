@@ -395,6 +395,13 @@
     <Compile Include="Dialogs\ImageGIFAnimateDialog.xaml.cs">
       <DependentUpon>ImageGIFAnimateDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ImageGIFSplitDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ImageGIFSplitDialog.xaml.cs">
+      <DependentUpon>ImageGIFSplitDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ImageGrabColorDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

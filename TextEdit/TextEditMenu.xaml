@@ -406,6 +406,7 @@
 		<Separator/>
 		<MenuItem Header="G_IF">
 			<textEdit:TextEditMenuItem Header="_Animate" CommandEnum="Image_GIF_Animate"/>
+			<textEdit:TextEditMenuItem Header="_Split" CommandEnum="Image_GIF_Split"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">

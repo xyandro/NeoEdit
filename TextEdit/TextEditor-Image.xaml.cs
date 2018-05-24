@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
 using NeoEdit.TextEdit.Dialogs;
@@ -71,6 +72,20 @@ namespace NeoEdit.TextEdit
 			bitmap.RotateFlip(type);
 			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(bitmap) });
 			SetSelections(new List<Range> { BeginRange });
+		}
+
+		void SplitGIF(string fileName, string outputTemplate)
+		{
+			using (var image = System.Drawing.Image.FromFile(fileName))
+			{
+				var dimension = new System.Drawing.Imaging.FrameDimension(image.FrameDimensionsList[0]);
+				var frameCount = image.GetFrameCount(dimension);
+				for (var frame = 0; frame < frameCount; ++frame)
+				{
+					image.SelectActiveFrame(dimension, frame);
+					image.Save(string.Format(outputTemplate, frame + 1), System.Drawing.Imaging.ImageFormat.Png);
+				}
+			}
 		}
 
 		ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog() => ImageGrabColorDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault());
@@ -221,6 +236,22 @@ namespace NeoEdit.TextEdit
 				for (var ctr = 0; ctr < inputFiles.Count; ++ctr)
 					using (var image = System.Drawing.Image.FromFile(inputFiles[ctr]))
 						writer.WriteFrame(image, delays[ctr]);
+		}
+
+		ImageGIFSplitDialog.Result Command_Image_GIF_Split_Dialog()
+		{
+			var variables = GetVariables();
+			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
+			return ImageGIFSplitDialog.Run(WindowParent, variables);
+		}
+
+		void Command_Image_GIF_Split(ImageGIFSplitDialog.Result result)
+		{
+			var variables = GetVariables();
+			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
+			var files = RelativeSelectedFiles();
+			var outputTemplates = new NEExpression(result.OutputTemplate).EvaluateList<string>(variables, files.Count);
+			Enumerable.Range(0, files.Count).AsParallel().ForEach(index => SplitGIF(files[index], outputTemplates[index]));
 		}
 	}
 }
