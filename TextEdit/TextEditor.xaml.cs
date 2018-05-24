@@ -672,8 +672,8 @@ namespace NeoEdit.TextEdit
 			results.Add(NEVariable.Constant("xlmin", "Selection min length", () => Selections.Select(range => range.Length).DefaultIfEmpty(0).Min()));
 			results.Add(NEVariable.Constant("xlmax", "Selection max length", () => Selections.Select(range => range.Length).DefaultIfEmpty(0).Max()));
 
-			results.Add(NEVariable.Constant("xmin", "Selection numeric min", () => Selections.AsParallel().GroupBy(range => GetString(range)).Select(group => double.Parse(group.Key)).DefaultIfEmpty(0).Min()));
-			results.Add(NEVariable.Constant("xmax", "Selection numeric max", () => Selections.AsParallel().GroupBy(range => GetString(range)).Select(group => double.Parse(group.Key)).DefaultIfEmpty(0).Max()));
+			results.Add(NEVariable.Constant("xmin", "Selection numeric min", () => Selections.AsParallel().Select(range => GetString(range)).Distinct().Select(str => double.Parse(str)).DefaultIfEmpty(0).Min()));
+			results.Add(NEVariable.Constant("xmax", "Selection numeric max", () => Selections.AsParallel().Select(range => GetString(range)).Distinct().Select(str => double.Parse(str)).DefaultIfEmpty(0).Max()));
 
 			results.Add(NEVariable.Constant("xtmin", "Selection text min", () => Selections.AsParallel().Select(range => GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).First()));
 			results.Add(NEVariable.Constant("xtmax", "Selection text max", () => Selections.AsParallel().Select(range => GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).Last()));
