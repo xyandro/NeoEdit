@@ -71,13 +71,17 @@ namespace NeoEdit.TextEdit
 
 		double Cycle(double value, double minimum, double maximum, bool includeBeginning)
 		{
-			if (minimum > maximum)
-				throw new Exception("Minimum must be less than maximum.");
 			var range = maximum - minimum;
-			while ((value < minimum) || ((value == minimum) && (!includeBeginning)))
+			if (range <= 0)
+				throw new Exception("Minimum must be less than maximum.");
+			value -= minimum;
+			var mult = (int)(value / range);
+			if (value < 0)
+				--mult;
+			value -= mult * range;
+			if ((!includeBeginning) && (value == 0))
 				value += range;
-			while ((value > maximum) || ((value == maximum) && (includeBeginning)))
-				value -= range;
+			value += minimum;
 			return value;
 		}
 
