@@ -133,7 +133,8 @@ namespace NeoEdit.GUI.Dialogs
 			while (!IsFinished)
 			{
 				Event.WaitOne();
-				Dispatcher.Invoke(() => { lock (Running) UpdateGrid(); });
+				lock (Running)
+					Dispatcher.Invoke(UpdateGrid);
 			}
 		}
 
