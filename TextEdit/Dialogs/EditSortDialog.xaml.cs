@@ -28,14 +28,15 @@ namespace NeoEdit.TextEdit.Dialogs
 		static EditSortDialog()
 		{
 			UIHelper<EditSortDialog>.Register();
+			UIHelper<EditSortDialog>.AddCallback(a => a.UseRegion, (obj, o, n) => obj.SortScope = TextEditor.SortScope.Regions);
 		}
 
 		EditSortDialog()
 		{
 			InitializeComponent();
 
-			SortScope = TextEditor.SortScope.Selections;
 			UseRegion = 1;
+			SortScope = TextEditor.SortScope.Selections;
 			SortType = TextEditor.SortType.Smart;
 			ascending.IsChecked = true;
 		}
