@@ -11,6 +11,7 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Controls\AnswerResult.cs" />
     <Page Include="Controls\AutoCompleteTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -421,13 +421,13 @@ namespace NeoEdit.TextEdit
 			diffTarget.CalculateBoundaries();
 		}
 
-		public override bool CanClose(ref Message.OptionsEnum answer)
+		public override bool CanClose(AnswerResult answer)
 		{
 			if (!IsModified)
 				return true;
 
-			if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
-				answer = new Message(WindowParent)
+			if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+				answer.Answer = new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -435,7 +435,7 @@ namespace NeoEdit.TextEdit
 					DefaultCancel = Message.OptionsEnum.Cancel,
 				}.Show();
 
-			switch (answer)
+			switch (answer.Answer)
 			{
 				case Message.OptionsEnum.Cancel:
 					return false;
@@ -885,7 +885,7 @@ namespace NeoEdit.TextEdit
 		}
 
 		bool timeNext = false;
-		public void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus, ref Message.OptionsEnum answer)
+		public void HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
 		{
 			doDrag = DragType.None;
 
@@ -909,19 +909,19 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_OpenWith_HexEditor: Command_File_OpenWith_HexEditor(); break;
 				case TextEditCommand.File_Save_Save: Command_File_Save_Save(); break;
 				case TextEditCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
-				case TextEditCommand.File_Save_SaveAsByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, ref answer); break;
+				case TextEditCommand.File_Save_SaveAsByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
 				case TextEditCommand.File_Save_CopyTo: Command_File_Save_SaveAs(true); break;
-				case TextEditCommand.File_Save_CopyToByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, ref answer, true); break;
+				case TextEditCommand.File_Save_CopyToByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, answer, true); break;
 				case TextEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
-				case TextEditCommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(dialogResult as GetExpressionDialog.Result, ref answer); break;
-				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(ref answer); break;
+				case TextEditCommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
+				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(answer); break;
 				case TextEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
 				case TextEditCommand.File_Operations_CommandPrompt: Command_File_Operations_CommandPrompt(); break;
 				case TextEditCommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(); break;
-				case TextEditCommand.File_Close: if (CanClose(ref answer)) { TabsParent.Remove(this); } break;
-				case TextEditCommand.File_Refresh: Command_File_Refresh(ref answer); break;
+				case TextEditCommand.File_Close: if (CanClose(answer)) { TabsParent.Remove(this); } break;
+				case TextEditCommand.File_Refresh: Command_File_Refresh(answer); break;
 				case TextEditCommand.File_AutoRefresh: Command_File_AutoRefresh(multiStatus); break;
-				case TextEditCommand.File_Revert: Command_File_Revert(ref answer); break;
+				case TextEditCommand.File_Revert: Command_File_Revert(answer); break;
 				case TextEditCommand.File_Insert_Files: Command_File_Insert_Files(); break;
 				case TextEditCommand.File_Insert_CopiedCut: Command_File_Insert_CopiedCut(); break;
 				case TextEditCommand.File_Insert_Selected: Command_File_Insert_Selected(); break;
@@ -929,7 +929,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Copy_Name: Command_File_Copy_Name(); break;
 				case TextEditCommand.File_Copy_DisplayName: Command_File_Copy_DisplayName(); break;
 				case TextEditCommand.File_Encoding_Encoding: Command_File_Encoding_Encoding(dialogResult as EncodingDialog.Result); break;
-				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result, ref answer); break;
+				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result, answer); break;
 				case TextEditCommand.File_Encoding_LineEndings: Command_File_Encoding_LineEndings(dialogResult as FileEncodingLineEndingsDialog.Result); break;
 				case TextEditCommand.File_Encryption: Command_File_Encryption(dialogResult as string); break;
 				case TextEditCommand.File_Compress: Command_File_Compress(multiStatus); break;
@@ -1022,9 +1022,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Set_Time_Create: Command_Files_Set_Time(TimestampType.Create, dialogResult as FilesSetTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_Time_All: Command_Files_Set_Time(TimestampType.All, dialogResult as FilesSetTimeDialog.Result); break;
 				case TextEditCommand.Files_Set_Attributes: Command_Files_Set_Attributes(dialogResult as FilesSetAttributesDialog.Result); break;
-				case TextEditCommand.Files_Find_Binary: Command_Files_Find_Binary(dialogResult as FindBinaryDialog.Result, ref answer); break;
-				case TextEditCommand.Files_Find_Text: Command_Files_Find_Text(dialogResult as FindTextDialog.Result, ref answer); break;
-				case TextEditCommand.Files_Find_MassFind: Command_Files_Find_MassFind(dialogResult as FilesFindMassFindDialog.Result, ref answer); break;
+				case TextEditCommand.Files_Find_Binary: Command_Files_Find_Binary(dialogResult as FindBinaryDialog.Result, answer); break;
+				case TextEditCommand.Files_Find_Text: Command_Files_Find_Text(dialogResult as FindTextDialog.Result, answer); break;
+				case TextEditCommand.Files_Find_MassFind: Command_Files_Find_MassFind(dialogResult as FilesFindMassFindDialog.Result, answer); break;
 				case TextEditCommand.Files_Insert: Command_Files_Insert(dialogResult as FilesInsertDialog.Result); break;
 				case TextEditCommand.Files_Create_Files: Command_Files_Create_Files(); break;
 				case TextEditCommand.Files_Create_Directories: Command_Files_Create_Directories(); break;
@@ -2275,13 +2275,13 @@ namespace NeoEdit.TextEdit
 			watcher.EnableRaisingEvents = true;
 		}
 
-		public void Activated(ref Message.OptionsEnum answer)
+		public void Activated(AnswerResult answer)
 		{
 			if (!watcherFileModified)
 				return;
 
 			watcherFileModified = false;
-			Command_File_Refresh(ref answer);
+			Command_File_Refresh(answer);
 		}
 
 		void SetModifiedFlag(bool? newValue = null)
@@ -2355,8 +2355,7 @@ namespace NeoEdit.TextEdit
 		{
 			if (previous == null)
 				return;
-			var answer = Message.OptionsEnum.None;
-			HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus, ref answer);
+			HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus, new AnswerResult());
 		}
 	}
 }

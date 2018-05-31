@@ -42,12 +42,12 @@ namespace NeoEdit.GUI.Controls
 
 		protected override void OnClosing(CancelEventArgs e)
 		{
-			var answer = Message.OptionsEnum.None;
+			var answer = new AnswerResult();
 			var topMost = ItemTabs.TopMost;
 			foreach (var item in ItemTabs.Items)
 			{
 				ItemTabs.TopMost = item;
-				if (!item.CanClose(ref answer))
+				if (!item.CanClose(answer))
 				{
 					e.Cancel = true;
 					return;

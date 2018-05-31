@@ -161,7 +161,7 @@ namespace NeoEdit.HexEdit
 			Font.FontSizeChanged += FontSizeChanged;
 		}
 
-		public override bool CanClose(ref Message.OptionsEnum answer)
+		public override bool CanClose(AnswerResult answer)
 		{
 			if (!IsModified)
 				return true;

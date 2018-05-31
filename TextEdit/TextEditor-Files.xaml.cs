@@ -14,6 +14,7 @@ using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
+using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextEdit.Dialogs;
 
@@ -21,11 +22,11 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
-		bool BinarySearchFile(string fileName, Searcher searcher, ref Message.OptionsEnum answer)
+		bool BinarySearchFile(string fileName, Searcher searcher, AnswerResult answer)
 		{
 			try
 			{
-				if (answer == Message.OptionsEnum.Cancel)
+				if (answer.Answer == Message.OptionsEnum.Cancel)
 					return true;
 
 				var findLen = searcher.MaxLen;
@@ -54,8 +55,8 @@ namespace NeoEdit.TextEdit
 			}
 			catch (Exception ex)
 			{
-				if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
-					answer = new Message(WindowParent)
+				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
@@ -63,7 +64,7 @@ namespace NeoEdit.TextEdit
 						DefaultCancel = Message.OptionsEnum.Cancel,
 					}.Show();
 
-				return (answer == Message.OptionsEnum.Yes) || (answer == Message.OptionsEnum.YesToAll) || (answer == Message.OptionsEnum.Cancel);
+				return (answer.Answer == Message.OptionsEnum.Yes) || (answer.Answer == Message.OptionsEnum.YesToAll) || (answer.Answer == Message.OptionsEnum.Cancel);
 			}
 		}
 
@@ -339,11 +340,11 @@ namespace NeoEdit.TextEdit
 					}
 		}
 
-		bool TextSearchFile(string fileName, FindTextDialog.Result search, ref Message.OptionsEnum answer)
+		bool TextSearchFile(string fileName, FindTextDialog.Result search, AnswerResult answer)
 		{
 			try
 			{
-				if (answer == Message.OptionsEnum.Cancel)
+				if (answer.Answer == Message.OptionsEnum.Cancel)
 					return true;
 
 				var data = new TextData(Coder.BytesToString(File.ReadAllBytes(fileName), Coder.CodePage.AutoByBOM, true));
@@ -352,8 +353,8 @@ namespace NeoEdit.TextEdit
 			}
 			catch (Exception ex)
 			{
-				if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
-					answer = new Message(WindowParent)
+				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
@@ -361,7 +362,7 @@ namespace NeoEdit.TextEdit
 						DefaultCancel = Message.OptionsEnum.Cancel,
 					}.Show();
 
-				return (answer == Message.OptionsEnum.Yes) || (answer == Message.OptionsEnum.YesToAll) || (answer == Message.OptionsEnum.Cancel);
+				return (answer.Answer == Message.OptionsEnum.Yes) || (answer.Answer == Message.OptionsEnum.YesToAll) || (answer.Answer == Message.OptionsEnum.Cancel);
 			}
 		}
 
@@ -577,39 +578,39 @@ namespace NeoEdit.TextEdit
 
 		FindBinaryDialog.Result Command_Files_Find_Binary_Dialog() => FindBinaryDialog.Run(WindowParent);
 
-		void Command_Files_Find_Binary(FindBinaryDialog.Result result, ref Message.OptionsEnum answer)
+		void Command_Files_Find_Binary(FindBinaryDialog.Result result, AnswerResult answer)
 		{
 			var sels = new List<Range>();
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			var searcher = Helpers.GetSearcher(new List<string> { result.Text }, result.CodePages, result.MatchCase);
 			foreach (var obj in selected)
-				if (BinarySearchFile(obj.fileName, searcher, ref answer))
+				if (BinarySearchFile(obj.fileName, searcher, answer))
 					sels.Add(obj.range);
 			SetSelections(sels);
 		}
 
 		FindTextDialog.Result Command_Files_Find_Text_Dialog() => FindTextDialog.Run(WindowParent);
 
-		void Command_Files_Find_Text(FindTextDialog.Result result, ref Message.OptionsEnum answer)
+		void Command_Files_Find_Text(FindTextDialog.Result result, AnswerResult answer)
 		{
 			var sels = new List<Range>();
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			foreach (var obj in selected)
-				if (TextSearchFile(obj.fileName, result, ref answer))
+				if (TextSearchFile(obj.fileName, result, answer))
 					sels.Add(obj.range);
 			SetSelections(sels);
 		}
 
 		FilesFindMassFindDialog.Result Command_Files_Find_MassFind_Dialog() => FilesFindMassFindDialog.Run(WindowParent, GetVariables());
 
-		void Command_Files_Find_MassFind(FilesFindMassFindDialog.Result result, ref Message.OptionsEnum answer)
+		void Command_Files_Find_MassFind(FilesFindMassFindDialog.Result result, AnswerResult answer)
 		{
 			var findStrs = GetVariableExpressionResults<string>(result.Expression);
 			var searcher = Helpers.GetSearcher(findStrs, result.CodePages, result.MatchCase);
 			var sels = new List<Range>();
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			foreach (var obj in selected)
-				if (BinarySearchFile(obj.fileName, searcher, ref answer))
+				if (BinarySearchFile(obj.fileName, searcher, answer))
 					sels.Add(obj.range);
 			SetSelections(sels);
 		}

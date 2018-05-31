@@ -153,8 +153,8 @@ namespace NeoEdit.GUI.Dialogs
 		{
 			var selected = listView.SelectedItems.Cast<ItemType>().ToList();
 
-			var answer = Message.OptionsEnum.None;
-			if (!selected.All(tab => tab.CanClose(ref answer)))
+			var answer = new AnswerResult();
+			if (!selected.All(tab => tab.CanClose(answer)))
 				return;
 
 			selected.ForEach(item => tabs.Items.Remove(item));

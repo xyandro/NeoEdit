@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Dialogs;
 
 namespace NeoEdit.GUI.Dialogs
 {

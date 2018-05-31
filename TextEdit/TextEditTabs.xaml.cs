@@ -12,7 +12,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
@@ -266,9 +265,9 @@ namespace NeoEdit.TextEdit
 			var topMost = ItemTabs.TopMost;
 			var active = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
 
-			var answer = Message.OptionsEnum.None;
+			var answer = new AnswerResult();
 			var closeTabs = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
-			if (!closeTabs.All(tab => tab.CanClose(ref answer)))
+			if (!closeTabs.All(tab => tab.CanClose(answer)))
 				return;
 			closeTabs.ForEach(tab => Remove(tab));
 
@@ -283,9 +282,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_View_Close_ActiveTabs(bool active)
 		{
-			var answer = Message.OptionsEnum.None;
+			var answer = new AnswerResult();
 			var closeTabs = ItemTabs.Items.Where(tab => tab.Active == active).ToList();
-			if (!closeTabs.All(tab => tab.CanClose(ref answer)))
+			if (!closeTabs.All(tab => tab.CanClose(answer)))
 				return;
 			closeTabs.ForEach(tab => Remove(tab));
 		}
@@ -550,12 +549,12 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
 			}
 
-			var answer = Message.OptionsEnum.None;
+			var answer = new AnswerResult();
 			newClipboard = null;
 			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
 			{
-				textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, ref answer);
-				if (answer == Message.OptionsEnum.Cancel)
+				textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, answer);
+				if (answer.Answer == Message.OptionsEnum.Cancel)
 					break;
 			}
 			if (newClipboard != null)
@@ -638,11 +637,11 @@ namespace NeoEdit.TextEdit
 			Activated -= OnActivated;
 			try
 			{
-				var answer = Message.OptionsEnum.None;
+				var answer = new AnswerResult();
 				foreach (var item in ItemTabs.Items)
 				{
-					item.Activated(ref answer);
-					if (answer == Message.OptionsEnum.Cancel)
+					item.Activated(answer);
+					if (answer.Answer == Message.OptionsEnum.Cancel)
 						break;
 				}
 			}

@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI;
+using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.GUI.Misc;
 using NeoEdit.TextEdit.Dialogs;
@@ -89,7 +90,7 @@ namespace NeoEdit.TextEdit
 
 		GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
-		void Command_File_Save_SaveAsByExpression(GetExpressionDialog.Result result, ref Message.OptionsEnum answer, bool copyOnly = false)
+		void Command_File_Save_SaveAsByExpression(GetExpressionDialog.Result result, AnswerResult answer, bool copyOnly = false)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
@@ -99,8 +100,8 @@ namespace NeoEdit.TextEdit
 
 			if (File.Exists(newFileName))
 			{
-				if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
-					answer = new Message(WindowParent)
+				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -108,7 +109,7 @@ namespace NeoEdit.TextEdit
 						DefaultCancel = Message.OptionsEnum.Cancel,
 					}.Show();
 
-				if ((answer != Message.OptionsEnum.Yes) && (answer != Message.OptionsEnum.YesToAll))
+				if ((answer.Answer != Message.OptionsEnum.Yes) && (answer.Answer != Message.OptionsEnum.YesToAll))
 					return;
 			}
 
@@ -134,7 +135,7 @@ namespace NeoEdit.TextEdit
 
 		GetExpressionDialog.Result Command_File_Operations_RenameByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
-		void Command_File_Operations_RenameByExpression(GetExpressionDialog.Result result, ref Message.OptionsEnum answer)
+		void Command_File_Operations_RenameByExpression(GetExpressionDialog.Result result, AnswerResult answer)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
@@ -144,8 +145,8 @@ namespace NeoEdit.TextEdit
 
 			if (File.Exists(newFileName))
 			{
-				if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
-					answer = new Message(WindowParent)
+				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -153,7 +154,7 @@ namespace NeoEdit.TextEdit
 						DefaultCancel = Message.OptionsEnum.Cancel,
 					}.Show();
 
-				if ((answer != Message.OptionsEnum.Yes) && (answer != Message.OptionsEnum.YesToAll))
+				if ((answer.Answer != Message.OptionsEnum.Yes) && (answer.Answer != Message.OptionsEnum.YesToAll))
 					return;
 			}
 
@@ -165,13 +166,13 @@ namespace NeoEdit.TextEdit
 			SetFileName(newFileName);
 		}
 
-		void Command_File_Operations_Delete(ref Message.OptionsEnum answer)
+		void Command_File_Operations_Delete(AnswerResult answer)
 		{
 			if (FileName == null)
 				return;
 
-			if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
-				answer = new Message(WindowParent)
+			if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+				answer.Answer = new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "Are you sure you want to delete this file?",
@@ -180,7 +181,7 @@ namespace NeoEdit.TextEdit
 					DefaultCancel = Message.OptionsEnum.NoToAll,
 				}.Show();
 
-			if ((answer != Message.OptionsEnum.Yes) && (answer != Message.OptionsEnum.YesToAll))
+			if ((answer.Answer != Message.OptionsEnum.Yes) && (answer.Answer != Message.OptionsEnum.YesToAll))
 				return;
 
 			File.Delete(FileName);
@@ -199,7 +200,7 @@ namespace NeoEdit.TextEdit
 			doDrag = DragType.CurrentFile;
 		}
 
-		void Command_File_Refresh(ref Message.OptionsEnum answer)
+		void Command_File_Refresh(AnswerResult answer)
 		{
 			if (string.IsNullOrEmpty(FileName))
 				return;
@@ -209,8 +210,8 @@ namespace NeoEdit.TextEdit
 
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
-				if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
-					answer = new Message(WindowParent)
+				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "This file has been updated on disk.  Reload?",
@@ -219,21 +220,21 @@ namespace NeoEdit.TextEdit
 						DefaultCancel = Message.OptionsEnum.NoToAll,
 					}.Show();
 
-				if ((answer != Message.OptionsEnum.Yes) && (answer != Message.OptionsEnum.YesToAll))
+				if ((answer.Answer != Message.OptionsEnum.Yes) && (answer.Answer != Message.OptionsEnum.YesToAll))
 					return;
 
-				Command_File_Revert(ref answer);
+				Command_File_Revert(answer);
 			}
 		}
 
 		void Command_File_AutoRefresh(bool? multiStatus) => SetAutoRefresh(multiStatus != true);
 
-		void Command_File_Revert(ref Message.OptionsEnum answer)
+		void Command_File_Revert(AnswerResult answer)
 		{
 			if (IsModified)
 			{
-				if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
-					answer = new Message(WindowParent)
+				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes.  Are you sure you want to reload?",
@@ -241,7 +242,7 @@ namespace NeoEdit.TextEdit
 						DefaultAccept = Message.OptionsEnum.No,
 						DefaultCancel = Message.OptionsEnum.No,
 					}.Show();
-				if ((answer != Message.OptionsEnum.Yes) && (answer != Message.OptionsEnum.YesToAll))
+				if ((answer.Answer != Message.OptionsEnum.Yes) && (answer.Answer != Message.OptionsEnum.YesToAll))
 					return;
 			}
 
@@ -310,12 +311,12 @@ namespace NeoEdit.TextEdit
 
 		EncodingDialog.Result Command_File_Encoding_ReopenWithEncoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage);
 
-		void Command_File_Encoding_ReopenWithEncoding(EncodingDialog.Result result, ref Message.OptionsEnum answer)
+		void Command_File_Encoding_ReopenWithEncoding(EncodingDialog.Result result, AnswerResult answer)
 		{
 			if (IsModified)
 			{
-				if ((answer != Message.OptionsEnum.YesToAll) && (answer != Message.OptionsEnum.NoToAll))
-					answer = new Message(WindowParent)
+				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes.  Are you sure you want to reload?",
@@ -323,7 +324,7 @@ namespace NeoEdit.TextEdit
 						DefaultAccept = Message.OptionsEnum.Yes,
 						DefaultCancel = Message.OptionsEnum.NoToAll,
 					}.Show();
-				if ((answer != Message.OptionsEnum.Yes) && (answer != Message.OptionsEnum.YesToAll))
+				if ((answer.Answer != Message.OptionsEnum.Yes) && (answer.Answer != Message.OptionsEnum.YesToAll))
 					return;
 			}
 
