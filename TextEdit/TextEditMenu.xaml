@@ -392,6 +392,7 @@
 	</MenuItem>
 	<MenuItem Header="Ima_ge">
 		<textEdit:TextEditMenuItem Header="_Grab Color" CommandEnum="Image_GrabColor"/>
+		<textEdit:TextEditMenuItem Header="Grab I_mage" CommandEnum="Image_GrabImage"/>
 		<textEdit:TextEditMenuItem Header="A_djust Color" CommandEnum="Image_AdjustColor"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Add Color" CommandEnum="Image_AddColor"/>

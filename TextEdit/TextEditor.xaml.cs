@@ -841,6 +841,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
 				case TextEditCommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
 				case TextEditCommand.Image_GrabColor: dialogResult = Command_Image_GrabColor_Dialog(); break;
+				case TextEditCommand.Image_GrabImage: dialogResult = Command_Image_GrabImage_Dialog(); break;
 				case TextEditCommand.Image_AdjustColor: dialogResult = Command_Image_AdjustColor_Dialog(); break;
 				case TextEditCommand.Image_AddColor: dialogResult = Command_Image_AddOverlayColor_Dialog(true); break;
 				case TextEditCommand.Image_OverlayColor: dialogResult = Command_Image_AddOverlayColor_Dialog(false); break;
@@ -1127,6 +1128,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.DateTime_UtcNow: Command_DateTime_UtcNow(); break;
 				case TextEditCommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as DateTimeConvertDialog.Result); break;
 				case TextEditCommand.Image_GrabColor: Command_Image_GrabColor(dialogResult as ImageGrabColorDialog.Result); break;
+				case TextEditCommand.Image_GrabImage: Command_Image_GrabImage(dialogResult as ImageGrabImageDialog.Result); break;
 				case TextEditCommand.Image_AdjustColor: Command_Image_AdjustColor(dialogResult as ImageAdjustColorDialog.Result); break;
 				case TextEditCommand.Image_AddColor: Command_Image_AddColor(dialogResult as ImageAddOverlayColorDialog.Result); break;
 				case TextEditCommand.Image_OverlayColor: Command_Image_OverlayColor(dialogResult as ImageAddOverlayColorDialog.Result); break;

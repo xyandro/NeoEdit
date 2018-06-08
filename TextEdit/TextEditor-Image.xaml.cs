@@ -92,6 +92,29 @@ namespace NeoEdit.TextEdit
 
 		void Command_Image_GrabColor(ImageGrabColorDialog.Result result) => ReplaceSelections(result.Color);
 
+		ImageGrabImageDialog.Result Command_Image_GrabImage_Dialog() => ImageGrabImageDialog.Run(WindowParent, GetVariables());
+
+		void Command_Image_GrabImage(ImageGrabImageDialog.Result result)
+		{
+			var variables = GetVariables();
+			var x = new NEExpression(result.GrabX).EvaluateList<int>(variables, Selections.Count());
+			var y = new NEExpression(result.GrabY).EvaluateList<int>(variables, Selections.Count());
+			var width = new NEExpression(result.GrabWidth).EvaluateList<int>(variables, Selections.Count());
+			var height = new NEExpression(result.GrabHeight).EvaluateList<int>(variables, Selections.Count());
+
+			var strs = new List<string>();
+			for (var ctr = 0; ctr < x.Count; ++ctr)
+			{
+				using (var image = new System.Drawing.Bitmap(width[ctr], height[ctr], System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+				{
+					using (var dest = System.Drawing.Graphics.FromImage(image))
+						dest.CopyFromScreen(x[ctr], y[ctr], 0, 0, image.Size);
+					strs.Add(Coder.BitmapToString(image));
+				}
+			}
+			ReplaceSelections(strs);
+		}
+
 		ImageAdjustColorDialog.Result Command_Image_AdjustColor_Dialog() => ImageAdjustColorDialog.Run(WindowParent, GetVariables());
 
 		void Command_Image_AdjustColor(ImageAdjustColorDialog.Result result)
