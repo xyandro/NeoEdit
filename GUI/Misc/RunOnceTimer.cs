@@ -5,12 +5,13 @@ using System.Windows.Threading;
 
 namespace NeoEdit.GUI.Misc
 {
-	// As this is always run on the dispatcher thread, multi-threaded locking isn't necessary.
 	public class RunOnceTimer
 	{
+		static DispatcherTimer timer = null;
+		static readonly HashSet<RunOnceTimer> ready = new HashSet<RunOnceTimer>();
+
 		readonly Action action;
 		readonly HashSet<RunOnceTimer> dependencies = new HashSet<RunOnceTimer>();
-		DispatcherTimer timer = null;
 		public RunOnceTimer(Action action) { this.action = action; }
 
 		public void AddDependency(params RunOnceTimer[] timers)
@@ -22,28 +23,16 @@ namespace NeoEdit.GUI.Misc
 					dependencies.Add(timer);
 		}
 
-		public bool Started => timer != null;
+		public bool Started { get; private set; }
 
 		public void Start()
 		{
 			if (Started)
 				return;
 
-			timer = new DispatcherTimer();
-			timer.Tick += (s, e) =>
-			{
-				Stop();
-
-				if (dependencies.Any(dependency => dependency.Started))
-				{
-					// A dependency is ready to go; queue up for after it's done
-					Start();
-					return;
-				}
-
-				action();
-			};
-			timer.Start();
+			Started = true;
+			ready.Add(this);
+			SetupTimer();
 		}
 
 		public void Stop()
@@ -51,8 +40,44 @@ namespace NeoEdit.GUI.Misc
 			if (!Started)
 				return;
 
-			timer.Stop();
-			timer = null;
+			Started = false;
+			ready.Remove(this);
+			SetupTimer();
+		}
+
+		static void SetupTimer()
+		{
+			if ((timer == null) != (ready.Any()))
+				return;
+
+			if (timer == null)
+			{
+				timer = new DispatcherTimer();
+				timer.Tick += OnTimer;
+				timer.Start();
+			}
+			else
+			{
+				timer.Stop();
+				timer = null;
+			}
+		}
+
+		static void OnTimer(object sender, EventArgs e)
+		{
+			while (true)
+			{
+				if (!ready.Any())
+					break;
+				foreach (var timer in ready.ToList())
+				{
+					if (timer.dependencies.Any(dependency => dependency.Started))
+						continue;
+
+					timer.Stop();
+					timer.action();
+				}
+			}
 		}
 	}
 }
