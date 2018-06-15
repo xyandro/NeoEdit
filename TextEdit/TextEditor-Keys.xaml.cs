@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using NeoEdit.Common;
-using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit
 {
@@ -16,8 +15,42 @@ namespace NeoEdit.TextEdit
 		static bool globalKeys = true;
 		public static bool GlobalKeys { get { return globalKeys; } set { globalKeys = value; globalKeysChanged?.Invoke(); } }
 
-		[DepProp]
-		public ObservableCollection<ObservableCollection<string>> KeysAndValues { get { return UIHelper<TextEditor>.GetPropValue<ObservableCollection<ObservableCollection<string>>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		ObservableCollection<ObservableCollection<string>> _keysAndValues;
+		public ObservableCollection<ObservableCollection<string>> KeysAndValues
+		{
+			get => _keysAndValues;
+			set
+			{
+				RemoveKeysAndValuesCallback();
+				_keysAndValues = value;
+				SetKeysAndValuesCallback();
+			}
+		}
+
+		void SetKeysAndValuesCallback()
+		{
+			if (KeysAndValues == null)
+				return;
+			KeysAndValues.CollectionChanged += KeysAndValuesChanged;
+			foreach (var coll in KeysAndValues)
+				coll.CollectionChanged += KeysAndValuesChanged;
+		}
+
+		void RemoveKeysAndValuesCallback()
+		{
+			if (KeysAndValues == null)
+				return;
+			foreach (var coll in KeysAndValues)
+				coll.CollectionChanged -= KeysAndValuesChanged;
+			KeysAndValues.CollectionChanged -= KeysAndValuesChanged;
+		}
+
+		void KeysAndValuesChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			RemoveKeysAndValuesCallback();
+			SetKeysAndValuesCallback();
+			statusBarRenderTimer.Start();
+		}
 
 		static ObservableCollection<ObservableCollection<string>> staticKeysAndValues { get; set; }
 		ObservableCollection<ObservableCollection<string>> localKeysAndValues { get; set; }

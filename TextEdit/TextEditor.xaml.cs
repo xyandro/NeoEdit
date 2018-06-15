@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -98,35 +99,11 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public bool Compressed { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? LineMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int? LineMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int? ColumnMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int? ColumnMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int? IndexMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int? IndexMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int? PositionMin { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int? PositionMax { get { return UIHelper<TextEditor>.GetPropValue<int?>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int CurrentSelection { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int NumSelections { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public Dictionary<int, int> NumRegions { get { return UIHelper<TextEditor>.GetPropValue<Dictionary<int, int>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
 		public int xScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public int yScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public string LineEnding { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public List<string> Clipboard { get { return UIHelper<TextEditor>.GetPropValue<List<string>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool DiffIgnoreWhitespace { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -139,6 +116,12 @@ namespace NeoEdit.TextEdit
 		public bool IsDiff { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool DiffEncodingMismatch { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+
+		int currentSelectionField;
+		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; statusBarRenderTimer.Start(); } }
+		public int NumSelections => Selections.Count;
+		List<string> clipboardField;
+		public List<string> Clipboard { get => clipboardField; set { clipboardField = value; statusBarRenderTimer.Start(); } }
 
 		bool watcherFileModified = false;
 
@@ -225,7 +208,6 @@ namespace NeoEdit.TextEdit
 		void SetSelections(List<Range> selections, bool deOverlap = true)
 		{
 			selectionsList = new RangeList(selections, deOverlap);
-			NumSelections = selectionsList.Count;
 			EnsureVisible();
 			canvasRenderTimer.Start();
 			(WindowParent as TextEditTabs)?.QueueUpdateCounts();
@@ -252,12 +234,11 @@ namespace NeoEdit.TextEdit
 		void SetRegions(int region, List<Range> regions)
 		{
 			regionsList[region] = new RangeList(regions);
-			NumRegions = Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count);
 			canvasRenderTimer.Start();
 			(WindowParent as TextEditTabs)?.QueueUpdateCounts();
 		}
 
-		RunOnceTimer canvasRenderTimer, bookmarkRenderTimer;
+		RunOnceTimer canvasRenderTimer, statusBarRenderTimer, bookmarkRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 		readonly UndoRedo undoRedo;
 		static ThreadSafeRandom random = new ThreadSafeRandom();
@@ -277,7 +258,8 @@ namespace NeoEdit.TextEdit
 			this.shutdownData = shutdownData ?? new ShutdownData(null, 1);
 
 			InitializeComponent();
-			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
+			canvasRenderTimer = new RunOnceTimer(() => { canvas.InvalidateVisual(); statusBar.InvalidateVisual(); });
+			statusBarRenderTimer = new RunOnceTimer(() => statusBar.InvalidateVisual());
 			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
 			AutoRefresh = KeepSelections = HighlightSyntax = true;
 
@@ -298,6 +280,7 @@ namespace NeoEdit.TextEdit
 			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonUp;
 			canvas.MouseMove += OnCanvasMouseMove;
 			canvas.Render += OnCanvasRender;
+			statusBar.Render += OnStatusBarRender;
 
 			bookmarks.Render += OnBookmarksRender;
 
@@ -313,7 +296,11 @@ namespace NeoEdit.TextEdit
 			Font.FontSizeChanged += FontSizeChanged;
 		}
 
-		public void InvalidateCanvas() => canvas.InvalidateVisual();
+		public void InvalidateCanvas()
+		{
+			canvas.InvalidateVisual();
+			statusBar.InvalidateVisual();
+		}
 
 		void FontSizeChanged(double fontSize)
 		{
@@ -487,24 +474,13 @@ namespace NeoEdit.TextEdit
 		{
 			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
 			if (!Selections.Any())
-			{
-				LineMin = LineMax = IndexMin = IndexMax = PositionMin = PositionMax = ColumnMin = ColumnMax = null;
 				return;
-			}
 
 			var range = Selections[CurrentSelection];
 			var lineMin = Data.GetOffsetLine(range.Start);
 			var lineMax = Data.GetOffsetLine(range.End);
 			var indexMin = Data.GetOffsetIndex(range.Start, lineMin);
 			var indexMax = Data.GetOffsetIndex(range.End, lineMax);
-			LineMin = Data.GetDiffLine(lineMin) + 1;
-			LineMax = Data.GetDiffLine(lineMax) + 1;
-			IndexMin = indexMin + 1;
-			IndexMax = indexMax + 1;
-			PositionMin = range.Start;
-			PositionMax = range.End;
-			ColumnMin = Data.GetColumnFromIndex(lineMin, indexMin) + 1;
-			ColumnMax = Data.GetColumnFromIndex(lineMax, indexMax) + 1;
 
 			if (centerVertically)
 			{
@@ -520,6 +496,8 @@ namespace NeoEdit.TextEdit
 			var x = Data.GetColumnFromIndex(line, index);
 			yScrollValue = Math.Min(line, Math.Max(line - yScrollViewportFloor + 1, yScrollValue));
 			xScrollValue = Math.Min(x, Math.Max(x - xScrollViewportFloor + 1, xScrollValue));
+
+			statusBarRenderTimer.Start();
 		}
 
 		string Factor(BigInteger value)
@@ -659,8 +637,6 @@ namespace NeoEdit.TextEdit
 		{
 			// Can't access DependencyProperties/clipboard from other threads; grab a copy:
 			var fileName = FileName;
-			var clipboard = Clipboard;
-			var KeysAndValues = this.KeysAndValues;
 
 			var results = new NEVariables();
 
@@ -692,21 +668,21 @@ namespace NeoEdit.TextEdit
 			results.Add(NEVariable.Series("y", "One-based index", index => index + 1));
 			results.Add(NEVariable.Series("z", "Zero-based index", index => index));
 
-			if (clipboard.Count == 1)
+			if (Clipboard.Count == 1)
 			{
-				results.Add(NEVariable.Constant("c", "Clipboard", () => clipboard[0]));
-				results.Add(NEVariable.Constant("cl", "Clipboard length", () => clipboard[0].Length));
-				results.Add(NEVariable.Constant("clmin", "Clipboard min length", () => clipboard[0].Length));
-				results.Add(NEVariable.Constant("clmax", "Clipboard max length", () => clipboard[0].Length));
+				results.Add(NEVariable.Constant("c", "Clipboard", () => Clipboard[0]));
+				results.Add(NEVariable.Constant("cl", "Clipboard length", () => Clipboard[0].Length));
+				results.Add(NEVariable.Constant("clmin", "Clipboard min length", () => Clipboard[0].Length));
+				results.Add(NEVariable.Constant("clmax", "Clipboard max length", () => Clipboard[0].Length));
 			}
 			else
 			{
-				results.Add(NEVariable.List("c", "Clipboard", () => clipboard));
-				results.Add(NEVariable.List("cl", "Clipboard length", () => clipboard.Select(str => str.Length)));
-				results.Add(NEVariable.Constant("clmin", "Clipboard min length", () => clipboard.Select(str => str.Length).DefaultIfEmpty(0).Min()));
-				results.Add(NEVariable.Constant("clmax", "Clipboard max length", () => clipboard.Select(str => str.Length).DefaultIfEmpty(0).Max()));
+				results.Add(NEVariable.List("c", "Clipboard", () => Clipboard));
+				results.Add(NEVariable.List("cl", "Clipboard length", () => Clipboard.Select(str => str.Length)));
+				results.Add(NEVariable.Constant("clmin", "Clipboard min length", () => Clipboard.Select(str => str.Length).DefaultIfEmpty(0).Min()));
+				results.Add(NEVariable.Constant("clmax", "Clipboard max length", () => Clipboard.Select(str => str.Length).DefaultIfEmpty(0).Max()));
 			}
-			results.Add(NEVariable.Constant("cn", "Clipboard count", () => clipboard.Count));
+			results.Add(NEVariable.Constant("cn", "Clipboard count", () => Clipboard.Count));
 
 			results.Add(NEVariable.Constant("f", "Filename", () => fileName));
 
@@ -2055,6 +2031,52 @@ namespace NeoEdit.TextEdit
 				}
 				dc.DrawText(text, new Point(0, y[line]));
 			}
+		}
+
+		void OnStatusBarRender(object sender, DrawingContext dc)
+		{
+			var parent = WindowParent;
+			var statusBarBounds = new Rect(statusBar.PointToScreen(new Point()), statusBar.RenderSize);
+			var parentBounds = new Rect(parent.PointToScreen(new Point()), parent.RenderSize);
+			if (!statusBarBounds.IntersectsWith(parentBounds))
+				return;
+
+			int? lineMin = null, lineMax = null, columnMin = null, columnMax = null, indexMin = null, indexMax = null, posMin = null, posMax = null;
+
+			if ((CurrentSelection >= 0) && (CurrentSelection < Selections.Count))
+			{
+				var range = Selections[CurrentSelection];
+				var startLine = Data.GetOffsetLine(range.Start);
+				var endLine = Data.GetOffsetLine(range.End);
+				indexMin = Data.GetOffsetIndex(range.Start, startLine);
+				indexMax = Data.GetOffsetIndex(range.End, endLine);
+				lineMin = Data.GetDiffLine(startLine);
+				lineMax = Data.GetDiffLine(endLine);
+				columnMin = Data.GetColumnFromIndex(startLine, indexMin.Value);
+				columnMax = Data.GetColumnFromIndex(endLine, indexMax.Value);
+				posMin = range.Start;
+				posMax = range.End;
+			}
+
+			string minMaxText(int? min, int? max) => $"{min:n0}{(min == max ? "" : $" - {max:n0}")}";
+			string minMaxLengthText(int? min, int? max) => $"{min:n0}{(min == max ? "" : $" - {max:n0} ({max - min:n0})")}";
+
+			var numRegions = Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count);
+
+			var sb = new List<string>();
+			sb.Add($"Selection {CurrentSelection + 1:n0}/{NumSelections:n0}");
+			sb.Add($"Line {minMaxText(lineMin + 1, lineMax + 1)}");
+			sb.Add($"Col {minMaxText(columnMin + 1, columnMax + 1)}");
+			sb.Add($"In {minMaxText(indexMin + 1, indexMax + 1)}");
+			sb.Add($"Pos {minMaxLengthText(posMin, posMax)}");
+			sb.Add($"Regions {string.Join(" / ", numRegions.OrderBy(pair => pair.Key).Select(pair => $"{pair.Value:n0}"))}");
+			sb.Add($"Clipboards {Clipboard?.Count:n0}");
+			sb.Add($"Keys/Values {string.Join(" / ", KeysAndValues.Select(l => $"{l.Count:n0}"))}");
+			sb.Add($"Database {DBName}");
+			var statusBarText = string.Join(" │ ", sb);
+
+			var tf = SystemFonts.MessageFontFamily.GetTypefaces().Where(x => (x.Weight == FontWeights.Normal) && (x.Style == FontStyles.Normal)).First();
+			dc.DrawText(new FormattedText(statusBarText, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.Black), new Point(2, 2));
 		}
 
 		void OnDrop(IDataObject data)

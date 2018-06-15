@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Controls;
 using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
 using NeoEdit.TextEdit.QueryBuilding;
@@ -23,8 +22,8 @@ namespace NeoEdit.TextEdit
 			public Table Table { get; set; }
 		}
 
-		[DepProp]
-		public string DBName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		string dbNameField;
+		public string DBName { get => dbNameField; set { dbNameField = value; statusBarRenderTimer.Start(); } }
 
 		DbConnection dbConnection;
 
