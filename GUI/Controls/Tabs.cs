@@ -63,7 +63,7 @@ namespace NeoEdit.GUI.Controls
 			FocusVisualStyle = null;
 			AllowDrop = true;
 			VerticalAlignment = VerticalAlignment.Stretch;
-			PreviewDrop += (s, e) => OnDrop(e, null);
+			Drop += (s, e) => OnDrop(e, null);
 		}
 
 		public void SetLayout(TabsLayout layout, int? columns = null, int? rows = null)
@@ -240,16 +240,15 @@ namespace NeoEdit.GUI.Controls
 				return;
 
 			var toIndex = Items.IndexOf(toPanel?.DataContext as ItemType);
+			fromItems.ForEach(fromItem => fromItem.TabsParent.Items.Remove(fromItem));
+
 			if (toIndex == -1)
 				toIndex = Items.Count;
+			else
+				toIndex = Math.Min(toIndex, Items.Count);
 
 			foreach (var fromItem in fromItems)
 			{
-				var fromTabs = fromItem.TabsParent;
-				if ((fromTabs == null) || ((fromTabs == this) && (toPanel == null)))
-					continue;
-
-				fromTabs.Items.Remove(fromItem);
 				Items.Insert(toIndex, fromItem);
 				++toIndex;
 				TopMost = fromItem;
@@ -338,7 +337,6 @@ namespace NeoEdit.GUI.Controls
 			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.TopMost).Name) { Source = this });
 			dp.SetBinding(DockPanel.BackgroundProperty, multiBinding);
 
-			dp.SetValue(DockPanel.AllowDropProperty, true);
 			dp.AddHandler(DockPanel.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => TopMost = (s as DockPanel).DataContext as ItemType));
 			dp.AddHandler(DockPanel.MouseMoveEvent, (MouseEventHandler)((s, e) =>
 			{
@@ -348,8 +346,6 @@ namespace NeoEdit.GUI.Controls
 					DragDrop.DoDragDrop(s as DockPanel, new DataObject(typeof(List<ItemType>), active), DragDropEffects.Move);
 				}
 			}));
-
-			dp.AddHandler(DockPanel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
 
 			{
 				var label = new FrameworkElementFactory(typeof(TabLabel));
@@ -388,6 +384,8 @@ namespace NeoEdit.GUI.Controls
 				var fullTemplate = new ControlTemplate();
 				{
 					var dockPanel = new FrameworkElementFactory(typeof(DockPanel));
+					dockPanel.SetValue(DockPanel.AllowDropProperty, true);
+					dockPanel.AddHandler(DockPanel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
 
 					{
 						var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
@@ -498,6 +496,8 @@ namespace NeoEdit.GUI.Controls
 						var itemTemplate = new DataTemplate();
 						{
 							var dockPanel = new FrameworkElementFactory(typeof(DockPanel));
+							dockPanel.SetValue(DockPanel.AllowDropProperty, true);
+							dockPanel.AddHandler(DockPanel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
 							dockPanel.SetValue(DockPanel.MarginProperty, new Thickness(0, 0, 2, 2));
 							dockPanel.AppendChild(GetTabLabel(true));
 							{
