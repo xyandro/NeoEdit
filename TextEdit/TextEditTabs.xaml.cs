@@ -71,7 +71,7 @@ namespace NeoEdit.TextEdit
 			UIHelper.AuditMenu(menu);
 
 			AllowDrop = true;
-			Drop += TextEditTabs_Drop;
+			Drop += OnDrop;
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());
 			countsTimer = new RunOnceTimer(() => UpdateStatusBarText());
 			clipboardTimer = new RunOnceTimer(() => UpdateClipboards());
@@ -115,13 +115,12 @@ namespace NeoEdit.TextEdit
 			UpdateStatusBarText();
 		}
 
-		void TextEditTabs_Drop(object sender, System.Windows.DragEventArgs e)
+		void OnDrop(object sender, DragEventArgs e)
 		{
 			var fileList = e.Data.GetData("FileDrop") as string[];
 			if (fileList == null)
 				return;
-			foreach (var file in fileList)
-				Create(file);
+			fileList.ForEach(file => Create(file));
 			e.Handled = true;
 		}
 

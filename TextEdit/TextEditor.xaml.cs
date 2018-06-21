@@ -267,7 +267,7 @@ namespace NeoEdit.TextEdit
 
 			AllowDrop = true;
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
-			Drop += (s, e) => { OnDrop(e.Data); e.Handled = true; };
+			Drop += OnDrop;
 
 			undoRedo = new UndoRedo();
 
@@ -2079,14 +2079,22 @@ namespace NeoEdit.TextEdit
 			dc.DrawText(new FormattedText(statusBarText, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.Black), new Point(2, 2));
 		}
 
-		void OnDrop(IDataObject data)
+		void OnDrop(object sender, DragEventArgs e)
 		{
+			// If we get a file list, return and let the tabs window handle it
+			var fileList = e.Data.GetData("FileDrop") as string[];
+			if (fileList != null)
+				return;
+
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var result = OnDropDialog.Run(WindowParent, data);
-			if (result != null)
-				ReplaceOneWithMany(result, true);
+			var data = (e.Data.GetData("UnicodeText") ?? e.Data.GetData("Text") ?? e.Data.GetData(typeof(string))) as string;
+			if (data == null)
+				return;
+
+			ReplaceSelections(data);
+			e.Handled = true;
 		}
 
 		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, bool keepUndo = false)
