@@ -14,13 +14,6 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
-		decimal Ceiling(decimal number, decimal interval)
-		{
-			var val = number / interval;
-			var intPart = Math.Truncate(val);
-			return (intPart + (val - intPart != 0m ? 1 : 0)) * interval;
-		}
-
 		string TrimNumeric(string number)
 		{
 			var whole = number;
@@ -237,15 +230,15 @@ namespace NeoEdit.TextEdit
 
 		NumericFloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent);
 
-		void Command_Numeric_Floor(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Floor(decimal.Parse(GetString(range), NumberStyles.Float), result.Interval).ToString()).ToList());
+		void Command_Numeric_Floor(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Floor(double.Parse(GetString(range), NumberStyles.Float) / result.Interval) * result.Interval).ToString()).ToList());
 
 		NumericFloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent);
 
-		void Command_Numeric_Ceiling(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Ceiling(decimal.Parse(GetString(range), NumberStyles.Float), result.Interval).ToString()).ToList());
+		void Command_Numeric_Ceiling(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Ceiling(double.Parse(GetString(range), NumberStyles.Float) / result.Interval) * result.Interval).ToString()).ToList());
 
 		NumericFloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent);
 
-		void Command_Numeric_Round(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(decimal.Parse(GetString(range), NumberStyles.Float) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
+		void Command_Numeric_Round(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(double.Parse(GetString(range), NumberStyles.Float) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
 
 		NumericLimitDialog.Result Command_Numeric_Limit_Dialog() => NumericLimitDialog.Run(WindowParent, GetVariables());
 

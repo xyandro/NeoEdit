@@ -552,8 +552,6 @@ namespace NeoEdit.TextEdit
 			return result.ToList();
 		}
 
-		decimal Floor(decimal number, decimal interval) => Math.Truncate(number / interval) * interval;
-
 		List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables(), Selections.Count());
 
 		WordSkipType GetWordSkipType(int line, int index)

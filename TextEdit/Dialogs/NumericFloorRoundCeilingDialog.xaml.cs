@@ -7,24 +7,24 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public decimal Interval { get; set; }
+			public double Interval { get; set; }
 		}
 
 		[DepProp]
-		public decimal Interval { get { return UIHelper<NumericFloorRoundCeilingDialog>.GetPropValue<decimal>(this); } set { UIHelper<NumericFloorRoundCeilingDialog>.SetPropValue(this, value); } }
+		public string Interval { get { return UIHelper<NumericFloorRoundCeilingDialog>.GetPropValue<string>(this); } set { UIHelper<NumericFloorRoundCeilingDialog>.SetPropValue(this, value); } }
 
 		static NumericFloorRoundCeilingDialog() { UIHelper<NumericFloorRoundCeilingDialog>.Register(); }
 
 		NumericFloorRoundCeilingDialog()
 		{
 			InitializeComponent();
-			Interval = 1;
+			Interval = "1";
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Interval = Interval };
+			result = new Result { Interval = double.Parse(Interval) };
 			DialogResult = true;
 		}
 
