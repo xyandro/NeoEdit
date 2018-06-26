@@ -170,6 +170,7 @@ namespace NeoEdit.TextEdit
 		Expression_Copy,
 		[KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Alt)] Expression_EvaluateSelected,
 		[KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift)] Expression_SelectByExpression,
+		Expression_Solve,
 		Expression_ClearVariables,
 		Expression_SetVariables,
 		[KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Alt)] Text_Select_Trim,

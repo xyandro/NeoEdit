@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using NeoEdit.Common.Expressions.Parser;
 using NeoEdit.Common.Parsing;
 
@@ -34,6 +35,8 @@ namespace NeoEdit.Common.Expressions
 				return (T)value;
 			if (typeof(T) == typeof(string))
 				return (T)(object)value.ToString();
+			if ((typeof(T) == typeof(double)) && (value is BigInteger v))
+				return (T)(object)(double)v;
 			return (T)Convert.ChangeType(value, typeof(T));
 		}
 
@@ -51,5 +54,7 @@ namespace NeoEdit.Common.Expressions
 
 		HashSet<string> variables;
 		public HashSet<string> Variables => variables = variables ?? VariableFinder.GetVariables(tree);
+
+		public override string ToString() => expression;
 	}
 }

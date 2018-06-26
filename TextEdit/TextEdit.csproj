@@ -262,6 +262,13 @@
     <Compile Include="Dialogs\ExpressionSetVariablesDialog.xaml.cs">
       <DependentUpon>ExpressionSetVariablesDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ExpressionSolveDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExpressionSolveDialog.xaml.cs">
+      <DependentUpon>ExpressionSolveDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\FileEncodingLineEndingsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
