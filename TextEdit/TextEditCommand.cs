@@ -81,6 +81,8 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.Right, ModifierKeys.Control)] [KeyGesture(Key.Right, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Navigate_WordRight,
 		Edit_Navigate_AllLeft,
 		Edit_Navigate_AllRight,
+		Edit_Navigate_JumpBy_Words,
+		Edit_Navigate_JumpBy_Numbers,
 		[KeyGesture(Key.D, ModifierKeys.Control)] [KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift, 2)] Diff_Diff,
 		Diff_Selections,
 		Diff_SelectedFiles,

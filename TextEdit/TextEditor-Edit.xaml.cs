@@ -2,6 +2,7 @@
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.GUI.Controls;
 using NeoEdit.TextEdit.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -17,8 +18,13 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
+		JumpByType jumpBy;
+		[DepProp]
+		public JumpByType JumpBy { get { return UIHelper<TextEditor>.GetPropValue<JumpByType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); jumpBy = JumpBy; } }
+
 		public enum SortScope { Selections, Lines, Regions }
 		public enum SortType { Smart, String, Length, Integer, Float, Hex, DateTime, Keys, Clipboard, Reverse, Randomize, Frequency }
+		public enum JumpByType { Words, Numbers }
 
 		void FindNext(bool forward, bool selecting)
 		{
@@ -678,6 +684,8 @@ namespace NeoEdit.TextEdit
 
 			SetSelections(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
 		}
+
+		void Command_Edit_Navigate_JumpBy(JumpByType jumpBy) => JumpBy = jumpBy;
 
 		IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)
 		{

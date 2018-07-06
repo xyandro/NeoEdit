@@ -262,6 +262,7 @@ namespace NeoEdit.TextEdit
 			statusBarRenderTimer = new RunOnceTimer(() => statusBar.InvalidateVisual());
 			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
 			AutoRefresh = KeepSelections = HighlightSyntax = true;
+			JumpBy = JumpByType.Words;
 
 			SetupTabLabel();
 
@@ -562,7 +563,7 @@ namespace NeoEdit.TextEdit
 			var c = Data[line, index];
 			if (char.IsWhiteSpace(c))
 				return WordSkipType.Space;
-			else if ((char.IsLetterOrDigit(c)) || (c == '_'))
+			else if ((char.IsLetterOrDigit(c)) || (c == '_') || ((jumpBy == JumpByType.Numbers) && ((c == '.') || (c == '-'))))
 				return WordSkipType.Char;
 			else
 				return WordSkipType.Symbol;
@@ -948,6 +949,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Navigate_WordRight: Command_Edit_Navigate_WordLeftRight(true, shiftDown); break;
 				case TextEditCommand.Edit_Navigate_AllLeft: Command_Edit_Navigate_AllLeft(shiftDown); break;
 				case TextEditCommand.Edit_Navigate_AllRight: Command_Edit_Navigate_AllRight(shiftDown); break;
+				case TextEditCommand.Edit_Navigate_JumpBy_Words: Command_Edit_Navigate_JumpBy(JumpByType.Words); break;
+				case TextEditCommand.Edit_Navigate_JumpBy_Numbers: Command_Edit_Navigate_JumpBy(JumpByType.Numbers); break;
 				case TextEditCommand.Diff_Selections: Command_Diff_Selections(); break;
 				case TextEditCommand.Diff_SelectedFiles: Command_Diff_SelectedFiles(); break;
 				case TextEditCommand.Diff_Regions_Region1: Command_Diff_Regions_Region(1); break;

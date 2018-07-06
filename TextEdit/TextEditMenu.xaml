@@ -138,6 +138,11 @@
 			<textEdit:TextEditMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight"/>
 			<textEdit:TextEditMenuItem Header="All L_eft" CommandEnum="Edit_Navigate_AllLeft"/>
 			<textEdit:TextEditMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
+			<Separator/>
+			<MenuItem Header="_Jump By">
+				<textEdit:MultiMenuItem Header="_Words" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static textEdit:TextEditor+JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
+				<textEdit:MultiMenuItem Header="_Numbers" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static textEdit:TextEditor+JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
+			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="Esc_ape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(guiControls:NEWindow.EscapeClearsSelections), Mode=TwoWay}"/>
