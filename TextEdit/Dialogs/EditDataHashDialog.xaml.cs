@@ -35,6 +35,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			hashType.ItemsSource = Enum.GetValues(typeof(Hasher.Type)).Cast<Hasher.Type>().Where(type => type != Hasher.Type.None).ToList();
 
 			CodePage = _codePage;
+			HashType = Hasher.Type.SHA1;
 		}
 
 		Result result = null;
