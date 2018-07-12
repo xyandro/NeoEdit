@@ -77,6 +77,7 @@ namespace NeoEdit.TextEdit
 			Char,
 			Symbol,
 			Space,
+			Path,
 		}
 
 
@@ -561,12 +562,23 @@ namespace NeoEdit.TextEdit
 				return WordSkipType.Space;
 
 			var c = Data[line, index];
-			if (char.IsWhiteSpace(c))
-				return WordSkipType.Space;
-			else if ((char.IsLetterOrDigit(c)) || (c == '_') || ((jumpBy == JumpByType.Numbers) && ((c == '.') || (c == '-'))))
-				return WordSkipType.Char;
-			else
-				return WordSkipType.Symbol;
+			switch (jumpBy)
+			{
+				case JumpByType.Words:
+				case JumpByType.Numbers:
+					if (char.IsWhiteSpace(c))
+						return WordSkipType.Space;
+					else if ((char.IsLetterOrDigit(c)) || (c == '_') || ((jumpBy == JumpByType.Numbers) && ((c == '.') || (c == '-'))))
+						return WordSkipType.Char;
+					else
+						return WordSkipType.Symbol;
+				case JumpByType.Paths:
+					if (c == '\\')
+						return WordSkipType.Path;
+					return WordSkipType.Char;
+				default:
+					return WordSkipType.Space;
+			}
 		}
 
 		int GetNextWord(int offset)
@@ -951,6 +963,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Navigate_AllRight: Command_Edit_Navigate_AllRight(shiftDown); break;
 				case TextEditCommand.Edit_Navigate_JumpBy_Words: Command_Edit_Navigate_JumpBy(JumpByType.Words); break;
 				case TextEditCommand.Edit_Navigate_JumpBy_Numbers: Command_Edit_Navigate_JumpBy(JumpByType.Numbers); break;
+				case TextEditCommand.Edit_Navigate_JumpBy_Paths: Command_Edit_Navigate_JumpBy(JumpByType.Paths); break;
 				case TextEditCommand.Diff_Selections: Command_Diff_Selections(); break;
 				case TextEditCommand.Diff_SelectedFiles: Command_Diff_SelectedFiles(); break;
 				case TextEditCommand.Diff_Regions_Region1: Command_Diff_Regions_Region(1); break;

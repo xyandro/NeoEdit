@@ -142,6 +142,7 @@
 			<MenuItem Header="_Jump By">
 				<textEdit:MultiMenuItem Header="_Words" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static textEdit:TextEditor+JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
 				<textEdit:MultiMenuItem Header="_Numbers" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static textEdit:TextEditor+JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
+				<textEdit:MultiMenuItem Header="_Paths" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static textEdit:TextEditor+JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>

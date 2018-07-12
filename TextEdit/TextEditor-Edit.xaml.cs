@@ -24,7 +24,7 @@ namespace NeoEdit.TextEdit
 
 		public enum SortScope { Selections, Lines, Regions }
 		public enum SortType { Smart, String, Length, Integer, Float, Hex, DateTime, Keys, Clipboard, Reverse, Randomize, Frequency }
-		public enum JumpByType { Words, Numbers }
+		public enum JumpByType { Words, Numbers, Paths }
 
 		void FindNext(bool forward, bool selecting)
 		{
