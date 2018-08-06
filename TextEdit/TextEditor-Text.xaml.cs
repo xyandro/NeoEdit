@@ -21,7 +21,7 @@ namespace NeoEdit.TextEdit
 				switch (result.Location)
 				{
 					case TextWidthDialog.TextLocation.Start: return str.Substring(0, value);
-					case TextWidthDialog.TextLocation.Middle: return str.Substring((str.Length - value + 1) / 2, value);
+					case TextWidthDialog.TextLocation.Middle: return str.Substring((str.Length - value) / 2, value);
 					case TextWidthDialog.TextLocation.End: return str.Substring(str.Length - value);
 					default: throw new ArgumentException("Invalid");
 				}
@@ -32,7 +32,7 @@ namespace NeoEdit.TextEdit
 				switch (result.Location)
 				{
 					case TextWidthDialog.TextLocation.Start: return str + new string(result.PadChar, len);
-					case TextWidthDialog.TextLocation.Middle: return new string(result.PadChar, (len + 1) / 2) + str + new string(result.PadChar, len / 2);
+					case TextWidthDialog.TextLocation.Middle: return new string(result.PadChar, len / 2) + str + new string(result.PadChar, (len + 1) / 2);
 					case TextWidthDialog.TextLocation.End: return new string(result.PadChar, len) + str;
 					default: throw new ArgumentException("Invalid");
 				}
