@@ -538,18 +538,18 @@ namespace NeoEdit.TextEdit
 		{
 			switch (type)
 			{
-				case FindMinMaxType.String: return FindMinMax(min, range => GetString(range), Comparer<string>.Default);
-				case FindMinMaxType.Numeric: return FindMinMax(min, range => GetString(range), Comparer<string>.Create((x, y) => x.SmartCompare(y)));
-				case FindMinMaxType.Length: return FindMinMax(min, range => range.Length, Comparer<int>.Default);
+				case FindMinMaxType.String: return FindMinMax(min, range => GetString(range));
+				case FindMinMaxType.Numeric: return FindMinMax(min, range => double.Parse(GetString(range)));
+				case FindMinMaxType.Length: return FindMinMax(min, range => range.Length);
 				default: throw new Exception("Invalid type");
 			}
 		}
 
-		List<Range> FindMinMax<Input>(bool min, Func<Range, Input> select, Comparer<Input> sort)
+		List<Range> FindMinMax<Input>(bool min, Func<Range, Input> select)
 		{
 			if (!Selections.Any())
 				throw new Exception("No selections");
-			var selections = Selections.AsParallel().GroupBy(range => select(range)).OrderBy(group => group.Key, sort);
+			var selections = Selections.AsParallel().GroupBy(range => select(range)).OrderBy(group => group.Key);
 			var result = min ? selections.First() : selections.Last();
 			return result.ToList();
 		}
