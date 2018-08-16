@@ -557,7 +557,7 @@ namespace NeoEdit.Common
 				var map = new List<int>();
 				var sb = new StringBuilder(line.Length);
 				var inNumber = false;
-				var lineStart = LineStartTabStop != 0;
+				var lineStart = (LineStartTabStop != 0) && (!string.IsNullOrWhiteSpace(line));
 				for (var ctr = 0; ctr < line.Length; ++ctr)
 				{
 					var ch = line[ctr];
