@@ -95,6 +95,8 @@
 
 			<UniformGrid Grid.Row="5" Grid.ColumnSpan="6" HorizontalAlignment="Right" Rows="1">
 				<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+				<Button Click="SelectClick" Content="_Select" Padding="10,1"/>
+				<Button Click="HideClick" Content="_Hide" Padding="10,1"/>
 				<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 			</UniformGrid>
 		</Grid>

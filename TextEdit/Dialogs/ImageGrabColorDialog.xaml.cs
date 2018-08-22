@@ -49,12 +49,32 @@ namespace NeoEdit.TextEdit.Dialogs
 			catch { Alpha = Red = Green = Blue = 255; }
 		}
 
+		protected override void OnClosed(EventArgs e)
+		{
+			hidden.ForEach(hwnd => ShowWindow(hwnd, SW_SHOWNA));
+			base.OnClosed(e);
+		}
+
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			color.AddCurrentSuggestion();
 			result = new Result { Color = color.Text };
 			DialogResult = true;
+		}
+
+		void SelectClick(object sender, RoutedEventArgs e)
+		{
+			GetCursorPos(out var point);
+			SetColor(new Point(point.X, point.Y));
+			e.Handled = true;
+		}
+
+		void HideClick(object sender, RoutedEventArgs e)
+		{
+			GetCursorPos(out var point);
+			HideWindow(new Point(point.X, point.Y));
+			e.Handled = true;
 		}
 
 		Point pickStart;
@@ -71,21 +91,25 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (!IsMouseCaptured)
 				return;
 
+			SetColor(PointToScreen(e.GetPosition(this)));
+			e.Handled = true;
+		}
+
+		void SetColor(Point point)
+		{
 			using (var screenPixel = new System.Drawing.Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
 			using (var dest = System.Drawing.Graphics.FromImage(screenPixel))
 			{
-				var pos = PointToScreen(e.GetPosition(this));
-				dest.CopyFromScreen((int)pos.X, (int)pos.Y, 0, 0, new System.Drawing.Size(1, 1));
+				dest.CopyFromScreen((int)point.X, (int)point.Y, 0, 0, new System.Drawing.Size(1, 1));
 				var color = screenPixel.GetPixel(0, 0);
 				Alpha = color.A;
 				Red = color.R;
 				Green = color.G;
 				Blue = color.B;
 			}
-			e.Handled = true;
 		}
 
-		List<IntPtr> hidden = new List<IntPtr>();
+		readonly List<IntPtr> hidden = new List<IntPtr>();
 
 		void OnMouseUp(object sender, MouseButtonEventArgs e)
 		{
@@ -95,22 +119,25 @@ namespace NeoEdit.TextEdit.Dialogs
 			ReleaseMouseCapture();
 			Picking = false;
 			e.Handled = true;
-			hidden.ForEach(hwnd => ShowWindow(hwnd, SW_SHOWNA));
 			Left = pickStart.X;
 			Top = pickStart.Y;
 		}
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
+			if ((IsMouseCaptured) && (e.Key == Key.H))
+			{
+				HideWindow(PointToScreen(Mouse.GetPosition(this)));
+				e.Handled = true;
+			}
+
 			base.OnPreviewKeyDown(e);
-			if ((!IsMouseCaptured) || (e.Key != Key.H))
-				return;
+		}
 
-			e.Handled = true;
-
-			var pos = PointToScreen(Mouse.GetPosition(this));
-			var point = new POINT { X = (int)pos.X, Y = (int)pos.Y };
-			var hwnd = WindowFromPoint(point);
+		void HideWindow(Point point)
+		{
+			var winPoint = new POINT { X = (int)point.X, Y = (int)point.Y };
+			var hwnd = WindowFromPoint(winPoint);
 
 			if (hwnd == new WindowInteropHelper(this).Handle)
 			{
@@ -158,6 +185,9 @@ namespace NeoEdit.TextEdit.Dialogs
 
 		[DllImport("user32.dll", SetLastError = false)]
 		static extern IntPtr GetDesktopWindow();
+
+		[DllImport("user32.dll", SetLastError = false)]
+		static extern bool GetCursorPos(out POINT lpPoint);
 
 		static public Result Run(Window parent, string color)
 		{
