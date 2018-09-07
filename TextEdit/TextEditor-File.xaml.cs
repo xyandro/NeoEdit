@@ -27,7 +27,7 @@ namespace NeoEdit.TextEdit
 				DefaultExt = "txt",
 			};
 			if (dialog.ShowDialog() != true)
-				return null;
+				throw new Exception("Canceled");
 
 			if (Directory.Exists(dialog.FileName))
 				throw new Exception("A directory by that name already exists");
@@ -81,12 +81,7 @@ namespace NeoEdit.TextEdit
 				Save(FileName);
 		}
 
-		void Command_File_Save_SaveAs(bool copyOnly = false)
-		{
-			var fileName = GetSaveFileName();
-			if (fileName != null)
-				Save(fileName, copyOnly);
-		}
+		void Command_File_Save_SaveAs(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
 		GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
@@ -125,9 +120,6 @@ namespace NeoEdit.TextEdit
 			}
 
 			var fileName = GetSaveFileName();
-			if (fileName == null)
-				return;
-
 			File.Delete(fileName);
 			File.Move(FileName, fileName);
 			SetFileName(fileName);
