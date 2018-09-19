@@ -389,14 +389,12 @@ namespace NeoEdit.TextEdit
 		void Command_Edit_Rotate(EditRotateDialog.Result result)
 		{
 			var count = new NEExpression(result.Count).Evaluate<int>(GetVariables());
-			if (count == 0)
-				return;
 
 			var strs = GetSelectionStrings();
 			if (count < 0)
-				count = -count;
+				count = -count % strs.Count;
 			else
-				count = strs.Count - count;
+				count = strs.Count - count % strs.Count;
 			strs.AddRange(strs.Take(count).ToList());
 			strs.RemoveRange(0, count);
 			ReplaceSelections(strs);
