@@ -927,7 +927,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Copy_Copy: Command_Edit_Copy_CutCopy(false); break;
 				case TextEditCommand.Edit_Copy_Cut: Command_Edit_Copy_CutCopy(true); break;
 				case TextEditCommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(shiftDown, false); break;
-				case TextEditCommand.Edit_Paste_RotatePaste: Command_Edit_Paste_Paste(shiftDown, true); break;
+				case TextEditCommand.Edit_Paste_RotatePaste: Command_Edit_Paste_Paste(true, true); break;
 				case TextEditCommand.Edit_Find_Find: Command_Edit_Find_Find(shiftDown, dialogResult as EditFindFindDialog.Result); break;
 				case TextEditCommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case TextEditCommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
