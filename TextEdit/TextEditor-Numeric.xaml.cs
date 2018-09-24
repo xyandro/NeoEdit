@@ -78,6 +78,32 @@ namespace NeoEdit.TextEdit
 			return value;
 		}
 
+		NEVariables GetNumericSeriesVariables(bool linear)
+		{
+			double start, increment;
+			var nonNulls = Selections.AsParallel().AsOrdered().Select((range, index) => new { str = GetString(range), index = index }).NonNullOrWhiteSpace(obj => obj.str).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList();
+			if (nonNulls.Count == 0)
+				start = increment = 1;
+			else if (nonNulls.Count == 1)
+			{
+				start = nonNulls[0].Item1;
+				increment = 1;
+			}
+			else
+			{
+				var first = nonNulls.First();
+				var last = nonNulls.Last();
+
+				increment = linear ? (last.Item1 - first.Item1) / (last.Item2 - first.Item2) : Math.Pow(last.Item1 / first.Item1, 1.0 / (last.Item2 - first.Item2));
+				start = linear ? first.Item1 - increment * first.Item2 : first.Item1 / Math.Pow(increment, first.Item2);
+			}
+
+			var results = GetVariables();
+			results.Add(NEVariable.Constant("start", "Series start", () => start));
+			results.Add(NEVariable.Constant("increment", "Series increment", () => increment));
+			return results;
+		}
+
 		void Command_Numeric_Select_Whole()
 		{
 			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
@@ -120,26 +146,15 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Series_OneBased() => ReplaceSelections(Selections.Select((range, index) => (index + 1).ToString()).ToList());
 
-		NumericSeriesDialog.Result Command_Numeric_Series_LinearGeometric_Dialog(bool linear)
+		NumericSeriesDialog.Result Command_Numeric_Series_LinearGeometric_Dialog(bool linear) => NumericSeriesDialog.Run(WindowParent, linear, GetNumericSeriesVariables(linear));
+
+		void Command_Numeric_Series_LinearGeometric(NumericSeriesDialog.Result result, bool linear)
 		{
-			var nonNulls = Selections.AsParallel().AsOrdered().Select((range, index) => new { str = GetString(range), index = index }).NonNullOrWhiteSpace(obj => obj.str).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList();
-			if (nonNulls.Count == 0)
-				return NumericSeriesDialog.Run(WindowParent, linear, 1, 1);
-			if (nonNulls.Count == 1)
-				return NumericSeriesDialog.Run(WindowParent, linear, nonNulls[0].Item1, 1);
-
-			var first = nonNulls.First();
-			var last = nonNulls.Last();
-
-			var increment = linear ? (last.Item1 - first.Item1) / (last.Item2 - first.Item2) : Math.Pow(last.Item1 / first.Item1, 1.0 / (last.Item2 - first.Item2));
-			var start = linear ? first.Item1 - increment * first.Item2 : first.Item1 / Math.Pow(increment, first.Item2);
-
-			return NumericSeriesDialog.Run(WindowParent, linear, start, increment);
+			var variables = GetNumericSeriesVariables(linear);
+			var start = new NEExpression(result.StartExpression).Evaluate<double>(variables);
+			var increment = new NEExpression(result.IncrementExpression).Evaluate<double>(variables);
+			ReplaceSelections(Selections.Select((range, index) => (linear ? start + increment * index : start * Math.Pow(increment, index)).ToString()).ToList());
 		}
-
-		void Command_Numeric_Series_Linear(NumericSeriesDialog.Result result) => ReplaceSelections(Selections.Select((range, index) => (result.Increment * index + result.Start).ToString()).ToList());
-
-		void Command_Numeric_Series_Geometric(NumericSeriesDialog.Result result) => ReplaceSelections(Selections.Select((range, index) => (Math.Pow(result.Increment, index) * result.Start).ToString()).ToList());
 
 		NumericScaleDialog.Result Command_Numeric_Scale_Dialog() => NumericScaleDialog.Run(WindowParent, GetVariables());
 

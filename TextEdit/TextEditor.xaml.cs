@@ -1091,8 +1091,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_ConvertBase: Command_Numeric_ConvertBase(dialogResult as NumericConvertBaseDialog.Result); break;
 				case TextEditCommand.Numeric_Series_ZeroBased: Command_Numeric_Series_ZeroBased(); break;
 				case TextEditCommand.Numeric_Series_OneBased: Command_Numeric_Series_OneBased(); break;
-				case TextEditCommand.Numeric_Series_Linear: Command_Numeric_Series_Linear(dialogResult as NumericSeriesDialog.Result); break;
-				case TextEditCommand.Numeric_Series_Geometric: Command_Numeric_Series_Geometric(dialogResult as NumericSeriesDialog.Result); break;
+				case TextEditCommand.Numeric_Series_Linear: Command_Numeric_Series_LinearGeometric(dialogResult as NumericSeriesDialog.Result, true); break;
+				case TextEditCommand.Numeric_Series_Geometric: Command_Numeric_Series_LinearGeometric(dialogResult as NumericSeriesDialog.Result, false); break;
 				case TextEditCommand.Numeric_Scale: Command_Numeric_Scale(dialogResult as NumericScaleDialog.Result); break;
 				case TextEditCommand.Numeric_Add_Sum: Command_Numeric_Add_Sum(); break;
 				case TextEditCommand.Numeric_Add_ForwardSum: Command_Numeric_Add_ForwardReverseSum(true, false); break;

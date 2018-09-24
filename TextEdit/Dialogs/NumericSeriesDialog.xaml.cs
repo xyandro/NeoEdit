@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -7,39 +8,43 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public double Start { get; set; }
-			public double Increment { get; set; }
+			public string StartExpression { get; set; }
+			public string IncrementExpression { get; set; }
 		}
 
 		[DepProp]
-		public double Start { get { return UIHelper<NumericSeriesDialog>.GetPropValue<double>(this); } set { UIHelper<NumericSeriesDialog>.SetPropValue(this, value); } }
+		public string StartExpression { get { return UIHelper<NumericSeriesDialog>.GetPropValue<string>(this); } set { UIHelper<NumericSeriesDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public double Increment { get { return UIHelper<NumericSeriesDialog>.GetPropValue<double>(this); } set { UIHelper<NumericSeriesDialog>.SetPropValue(this, value); } }
+		public string IncrementExpression { get { return UIHelper<NumericSeriesDialog>.GetPropValue<string>(this); } set { UIHelper<NumericSeriesDialog>.SetPropValue(this, value); } }
+
+		public NEVariables Variables { get; }
 
 		static NumericSeriesDialog() { UIHelper<NumericSeriesDialog>.Register(); }
 
-		NumericSeriesDialog(bool linear, double start, double increment)
+		NumericSeriesDialog(bool linear, NEVariables variables)
 		{
+			Variables = variables;
+
 			InitializeComponent();
 			if (!linear)
 			{
 				Title = "Geometric Series";
 				incrementLabel.Content = "_Multiplier";
 			}
-			Start = start;
-			Increment = increment;
+			StartExpression = "start";
+			IncrementExpression = "increment";
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Start = Start, Increment = Increment };
+			result = new Result { StartExpression = StartExpression, IncrementExpression = IncrementExpression };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, bool linear, double start, double increment)
+		static public Result Run(Window parent, bool linear, NEVariables variables)
 		{
-			var dialog = new NumericSeriesDialog(linear, start, increment) { Owner = parent };
+			var dialog = new NumericSeriesDialog(linear, variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

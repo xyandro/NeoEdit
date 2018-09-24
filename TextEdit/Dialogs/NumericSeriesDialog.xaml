@@ -12,17 +12,25 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Start:" Target="{Binding ElementName=start}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Name="start" Text="{Binding Start, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<TextBox Grid.Row="0" Grid.Column="1" Name="start" Text="{Binding StartExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Name="incrementLabel" Content="_Increment:" Target="{Binding ElementName=increment}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Name="increment" Text="{Binding Increment, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
+		<guiControls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding StartExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<Label Grid.Row="2" Grid.Column="0" Name="incrementLabel" Content="_Increment:" Target="{Binding ElementName=increment}" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Name="increment" Text="{Binding IncrementExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
+		<guiControls:NEExpressionResults Grid.Row="3" Grid.Column="1" Expression="{Binding IncrementExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
+
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
