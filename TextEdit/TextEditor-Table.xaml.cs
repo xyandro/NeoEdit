@@ -187,13 +187,6 @@ namespace NeoEdit.TextEdit
 
 		void Command_Table_Transpose() => SetText(GetTable().Transpose());
 
-		void Command_Table_SetVariables()
-		{
-			var table = GetTable();
-			for (var column = 0; column < table.NumColumns; ++column)
-				variables[table.GetHeader(column)] = Enumerable.Range(0, table.NumRows).Select(row => table[row, column]).ToList();
-		}
-
 		TableDatabaseGenerateInsertsDialog.Result Command_Table_Database_GenerateInserts_Dialog() => TableDatabaseGenerateInsertsDialog.Run(WindowParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
 		void Command_Table_Database_GenerateInserts(TableDatabaseGenerateInsertsDialog.Result result)

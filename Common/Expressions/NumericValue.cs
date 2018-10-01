@@ -47,10 +47,26 @@ namespace NeoEdit.Common.Expressions
 				Value = input;
 			else if (input is bool)
 				Value = (bool)input ? BigInteger.One : BigInteger.Zero;
-			else if ((input is sbyte) || (input is byte) || (input is short) || (input is ushort) || (input is int) || (input is uint) || (input is long) || (input is ulong))
-				Value = new BigInteger((long)Convert.ChangeType(input, typeof(long)));
-			else if ((input is float) || (input is decimal))
-				Value = Convert.ChangeType(input, typeof(double));
+			else if (input is sbyte)
+				Value = new BigInteger((sbyte)input);
+			else if (input is byte)
+				Value = new BigInteger((byte)input);
+			else if (input is short)
+				Value = new BigInteger((short)input);
+			else if (input is ushort)
+				Value = new BigInteger((ushort)input);
+			else if (input is int)
+				Value = new BigInteger((int)input);
+			else if (input is uint)
+				Value = new BigInteger((uint)input);
+			else if (input is long)
+				Value = new BigInteger((long)input);
+			else if (input is ulong)
+				Value = new BigInteger((ulong)input);
+			else if (input is float)
+				Value = (double)(float)input;
+			else if (input is decimal)
+				Value = (double)(decimal)input;
 			else if (input is string)
 			{
 				var str = (string)input;

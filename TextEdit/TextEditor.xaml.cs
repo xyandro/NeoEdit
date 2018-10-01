@@ -187,8 +187,6 @@ namespace NeoEdit.TextEdit
 
 		public bool HasSelections => Selections.Any();
 
-		static Dictionary<string, List<string>> variables { get; } = new Dictionary<string, List<string>>();
-
 		static TextEditor()
 		{
 			UIHelper<TextEditor>.Register();
@@ -736,9 +734,6 @@ namespace NeoEdit.TextEdit
 				results.Add(NEVariable.Constant("height", "Image height", () => GetBitmap().Height));
 			}
 
-			// Add variables that aren't already set
-			results.AddRange(variables.Where(pair => !results.Contains(pair.Key)).ForEach(pair => NEVariable.List(pair.Key, "User-defined", () => pair.Value)));
-
 			return results;
 		}
 
@@ -803,8 +798,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Copy_Dialog(); break;
 				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
+				case TextEditCommand.Expression_AddVariable: dialogResult = Command_Expression_AddVariable_Dialog(); break;
 				case TextEditCommand.Expression_Solve: dialogResult = Command_Expression_Solve_Dialog(); break;
-				case TextEditCommand.Expression_SetVariables: dialogResult = Command_Expression_SetVariables_Dialog(); break;
 				case TextEditCommand.Text_Select_Trim: dialogResult = Command_Text_Select_Trim_Dialog(); break;
 				case TextEditCommand.Text_Select_ByWidth: dialogResult = Command_Text_Select_ByWidth_Dialog(); break;
 				case TextEditCommand.Text_Select_WholeWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(true); break;
@@ -1052,9 +1047,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_Copy: Command_Expression_Copy(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;
 				case TextEditCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
+				case TextEditCommand.Expression_AddVariable: Command_Expression_AddVariable(dialogResult as ExpressionAddVariableDialog.Result); break;
+				case TextEditCommand.Expression_CalculateVariables: Command_Expression_CalculateVariables(); break;
 				case TextEditCommand.Expression_Solve: Command_Expression_Solve(dialogResult as ExpressionSolveDialog.Result, answer); break;
-				case TextEditCommand.Expression_ClearVariables: Command_Expression_ClearVariables(); break;
-				case TextEditCommand.Expression_SetVariables: Command_Expression_SetVariables(dialogResult as ExpressionSetVariablesDialog.Result); break;
 				case TextEditCommand.Text_Select_Trim: Command_Text_Select_Trim(dialogResult as TextTrimDialog.Result); break;
 				case TextEditCommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(dialogResult as TextWidthDialog.Result); break;
 				case TextEditCommand.Text_Select_WholeWord: Command_Text_Select_WholeBoundedWord(dialogResult as TextSelectWholeBoundedWordDialog.Result, true); break;
@@ -1152,7 +1147,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Table_SetJoinSource: Command_Table_SetJoinSource(); break;
 				case TextEditCommand.Table_Join: Command_Table_Join(dialogResult as TableJoinDialog.Result); break;
 				case TextEditCommand.Table_Transpose: Command_Table_Transpose(); break;
-				case TextEditCommand.Table_SetVariables: Command_Table_SetVariables(); break;
 				case TextEditCommand.Table_Database_GenerateInserts: Command_Table_Database_GenerateInserts(dialogResult as TableDatabaseGenerateInsertsDialog.Result); break;
 				case TextEditCommand.Table_Database_GenerateUpdates: Command_Table_Database_GenerateUpdates(dialogResult as TableDatabaseGenerateUpdatesDialog.Result); break;
 				case TextEditCommand.Table_Database_GenerateDeletes: Command_Table_Database_GenerateDeletes(dialogResult as TableDatabaseGenerateDeletesDialog.Result); break;

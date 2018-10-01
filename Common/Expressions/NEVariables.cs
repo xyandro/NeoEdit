@@ -21,6 +21,8 @@ namespace NeoEdit.Common.Expressions
 
 		public void AddRange(IEnumerable<NEVariable> variables) => variables.ForEach(variable => Add(variable));
 
+		public void Remove(string name) => varDict.Remove(name);
+
 		public bool Contains(string variable) => varDict.ContainsKey(variable);
 
 		NEVariable GetVariable(string variable)

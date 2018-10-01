@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
@@ -10,6 +12,65 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
+		class RunningVar
+		{
+			public string Name { get; set; }
+			public string Expression { get => NEExpression.ToString(); set => NEExpression = new NEExpression(value); }
+			public NEExpression NEExpression { get; set; }
+			public double Value { get; set; }
+			public Range ExpressionRange { get; set; }
+			public Range ValueRange { get; set; }
+			public Exception Exception { get; set; }
+		}
+
+		void CalculateVariables(List<RunningVar> runningVars)
+		{
+			var variables = GetVariables();
+			runningVars.ForEach(runningVar => variables.Remove(runningVar.Name));
+
+			while (true)
+			{
+				var done = true;
+				foreach (var runningVar in runningVars)
+				{
+					if (variables.Contains(runningVar.Name))
+						continue;
+					if (!runningVar.NEExpression.Variables.All(name => variables.Contains(name)))
+						continue;
+					runningVar.Value = runningVar.NEExpression.Evaluate<double>(variables);
+					variables.Add(NEVariable.Constant(runningVar.Name, "User-defined", runningVar.Value));
+					done = false;
+				}
+				if (done)
+					break;
+			}
+
+			foreach (var runningVar in runningVars)
+			{
+				if (variables.Contains(runningVar.Name))
+					continue;
+				runningVar.Exception = new Exception($"{string.Join(", ", runningVar.NEExpression.Variables.Where(name => !variables.Contains(name)))} undefined");
+			}
+		}
+
+		List<RunningVar> GetRunningVars()
+		{
+			var runningVars = new List<RunningVar>();
+			var regex = new Regex(@"\[VAR:(\w+):'(.*?)'=(.*?)?\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
+			foreach (var tuple in Data.RegexMatches(regex, BeginOffset, EndOffset - BeginOffset, false, false, false))
+			{
+				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
+				runningVars.Add(new RunningVar
+				{
+					Name = match.Groups[1].Value,
+					Expression = match.Groups[2].Value,
+					ExpressionRange = Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length),
+					ValueRange = match.Groups[3].Success ? Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length) : Range.FromIndex(tuple.Item1 + match.Index + match.Length - 1, 0),
+				});
+			}
+			return runningVars;
+		}
+
 		GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
 		void Command_Expression_Expression(GetExpressionDialog.Result result) => ReplaceSelections(GetFixedExpressionResults<string>(result.Expression));
@@ -28,68 +89,129 @@ namespace NeoEdit.TextEdit
 			SetSelections(Selections.Where((str, num) => results[num]).ToList());
 		}
 
+		ExpressionAddVariableDialog.Result Command_Expression_AddVariable_Dialog()
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have only one selection");
+
+			return ExpressionAddVariableDialog.Run(WindowParent);
+		}
+
+		void Command_Expression_AddVariable(ExpressionAddVariableDialog.Result result)
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have only one selection");
+
+			ReplaceSelections($"[VAR:{result.VarName}:'{result.Expression}'=]");
+		}
+
+		void Command_Expression_CalculateVariables()
+		{
+			var runningVars = GetRunningVars();
+			CalculateVariables(runningVars);
+			SetSelections(runningVars.Select(runningVar => runningVar.ValueRange).ToList());
+			ReplaceSelections(runningVars.Select(runningVar => runningVar.Value.ToString()).ToList());
+		}
+
 		ExpressionSolveDialog.Result Command_Expression_Solve_Dialog() => ExpressionSolveDialog.Run(WindowParent, GetVariables());
 
 		void Command_Expression_Solve(ExpressionSolveDialog.Result result, AnswerResult answer)
 		{
+			var runningVars = GetRunningVars();
+			var setIndex = runningVars.FindIndex(runningVar => runningVar.Name.Equals(result.SetVariable));
+			if (setIndex == -1)
+				throw new Exception($"Unknown variable: {result.SetVariable}");
+			var changeIndex = runningVars.FindIndex(runningVar => runningVar.Name.Equals(result.ChangeVariable));
+			if (changeIndex == -1)
+				throw new Exception($"Unknown variable: {result.ChangeVariable}");
+
 			var variables = GetVariables();
-			var expression = new NEExpression(result.Expression);
-			var targets = new NEExpression(result.Target).EvaluateList<double>(variables, Selections.Count);
-			var values = Selections.AsParallel().AsOrdered().Select(range => range.HasSelection ? double.Parse(GetString(range)) : 0).ToList();
+			var target = new NEExpression(result.TargetExpression).Evaluate<double>(variables);
+			var tolerance = new NEExpression(result.ToleranceExpression).Evaluate<double>(variables);
+			var value = new NEExpression(result.StartValueExpression).Evaluate<double>(variables);
 
-			var maxLoops = 10000;
-			var level = Enumerable.Repeat(1e14, Selections.Count).ToList();
-			var done = Enumerable.Repeat(false, Selections.Count).ToList();
-			var doneCount = Selections.Count;
-			while ((maxLoops-- >= 0) && (doneCount != 0))
+			Func<double, double> GetValue = input =>
 			{
-				variables.Add(NEVariable.List("v", "", () => values));
-				var current = expression.EvaluateList<double>(variables, Selections.Count).Select((value, index) => Math.Abs(value - targets[index])).ToList();
+				runningVars[changeIndex].Expression = input.ToString();
+				CalculateVariables(runningVars);
+				var exception = runningVars.Select(runningVar => runningVar.Value).OfType<Exception>().FirstOrDefault();
+				if (exception != null)
+					throw exception;
+				var diff = Math.Abs(runningVars[setIndex].Value - target);
+				if ((double.IsNaN(diff)) || (double.IsInfinity(diff)))
+					diff = double.MaxValue;
+				return diff;
+			};
 
-				for (var ctr = 0; ctr < done.Count; ++ctr)
-					if ((!done[ctr]) && (current[ctr] <= result.Tolerance))
-					{
-						--doneCount;
-						done[ctr] = true;
-					}
+			var current = GetValue(value);
+			var level = Math.Pow(10, Math.Floor(Math.Log10(value)));
+			var increasing = true;
 
-				variables.Add(NEVariable.List("v", "", () => values.Select((value, index) => value - level[index])));
-				var prev = expression.EvaluateList<double>(variables, Selections.Count).Select((value, index) => Math.Abs(value - targets[index])).ToList();
+			double? prev = null, next = null;
+			var maxLoops = 100;
+			while (maxLoops-- > 0)
+			{
+				if (increasing)
+					level *= 10;
+				else if (current <= tolerance)
+					break;
 
-				variables.Add(NEVariable.List("v", "", () => values.Select((value, index) => value + level[index])));
-				var next = expression.EvaluateList<double>(variables, Selections.Count).Select((value, index) => Math.Abs(value - targets[index])).ToList();
+				prev = prev ?? GetValue(value - level);
+				next = next ?? GetValue(value + level);
 
-				for (var ctr = 0; ctr < done.Count; ++ctr)
-					if (!done[ctr])
-					{
-						if ((current[ctr] <= prev[ctr]) && (current[ctr] <= next[ctr]))
-							level[ctr] /= 10;
-						else if (prev[ctr] <= next[ctr])
-							values[ctr] -= level[ctr];
-						else
-							values[ctr] += level[ctr];
-					}
+				if ((current <= prev) && (current <= next))
+				{
+					increasing = false;
+					level /= 10;
+					prev = next = null;
+				}
+				else if (increasing)
+					prev = next = null;
+				else if (prev <= next)
+				{
+					next = current;
+					current = prev.Value;
+					prev = null;
+					value -= level;
+				}
+				else
+				{
+					prev = current;
+					current = next.Value;
+					next = null;
+					value += level;
+				}
 			}
 
-			if (doneCount != 0)
+			if (maxLoops == 0)
 			{
-				if (new Message(WindowParent)
-				{
-					Title = "Confirm",
-					Text = "Unable to find value. Use best match?",
-					Options = Message.OptionsEnum.YesNo,
-					DefaultCancel = Message.OptionsEnum.No,
-				}.Show() != Message.OptionsEnum.Yes)
+				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+					answer.Answer = new Message(WindowParent)
+					{
+						Title = "Confirm",
+						Text = "Unable to find value. Use best match?",
+						Options = Message.OptionsEnum.YesNoYesAll,
+						DefaultCancel = Message.OptionsEnum.No,
+					}.Show();
+				if ((answer.Answer != Message.OptionsEnum.Yes) && (answer.Answer != Message.OptionsEnum.YesToAll))
 					throw new Exception("Unable to find value");
 			}
 
-			ReplaceSelections(values.Select(value => value.ToString()).ToList());
+			GetValue(value);
+			var sels = new List<Range>();
+			var values = new List<string>();
+			for (var ctr = 0; ctr < runningVars.Count; ++ctr)
+			{
+				if (ctr == changeIndex)
+				{
+					sels.Add(runningVars[ctr].ExpressionRange);
+					values.Add(value.ToString());
+				}
+				sels.Add(runningVars[ctr].ValueRange);
+				values.Add(runningVars[ctr].Value.ToString());
+			}
+			SetSelections(sels);
+			ReplaceSelections(values);
 		}
-
-		void Command_Expression_ClearVariables() => variables.Clear();
-
-		ExpressionSetVariablesDialog.Result Command_Expression_SetVariables_Dialog() => ExpressionSetVariablesDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault() ?? "");
-
-		void Command_Expression_SetVariables(ExpressionSetVariablesDialog.Result result) => variables[result.VarName] = GetSelectionStrings();
 	}
 }

@@ -292,13 +292,12 @@
 	<MenuItem Header="E_xpression">
 		<textEdit:TextEditMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>
 		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Expression_Copy"/>
-		<textEdit:TextEditMenuItem Header="Ev_aluate Selected" CommandEnum="Expression_EvaluateSelected"/>
+		<textEdit:TextEditMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected"/>
 		<textEdit:TextEditMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression"/>
 		<Separator/>
+		<textEdit:TextEditMenuItem Header="_Add Variable" CommandEnum="Expression_AddVariable"/>
+		<textEdit:TextEditMenuItem Header="Ca_lculate Variables" CommandEnum="Expression_CalculateVariables"/>
 		<textEdit:TextEditMenuItem Header="S_olve" CommandEnum="Expression_Solve"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="C_lear Variables" CommandEnum="Expression_ClearVariables"/>
-		<textEdit:TextEditMenuItem Header="Set _Variables" CommandEnum="Expression_SetVariables"/>
 	</MenuItem>
 	<MenuItem Header="_Text">
 		<MenuItem Header="_Select">
@@ -449,8 +448,6 @@
 		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Table_Join"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Transpose" CommandEnum="Table_Transpose"/>
-		<Separator/>
-		<textEdit:TextEditMenuItem Header="Set _Variables" CommandEnum="Table_SetVariables"/>
 		<Separator/>
 		<MenuItem Header="_Database">
 			<textEdit:TextEditMenuItem Header="Generate _Inserts" CommandEnum="Table_Database_GenerateInserts"/>

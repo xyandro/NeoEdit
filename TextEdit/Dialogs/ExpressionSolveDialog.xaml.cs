@@ -9,17 +9,23 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		public class Result
 		{
-			public string Expression { get; set; }
-			public string Target { get; set; }
-			public double Tolerance { get; set; }
+			public string SetVariable { get; set; }
+			public string TargetExpression { get; set; }
+			public string ToleranceExpression { get; set; }
+			public string ChangeVariable { get; set; }
+			public string StartValueExpression { get; set; }
 		}
 
 		[DepProp]
-		public string Expression { get { return UIHelper<ExpressionSolveDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionSolveDialog>.SetPropValue(this, value); } }
+		public string SetVariable { get { return UIHelper<ExpressionSolveDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionSolveDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Target { get { return UIHelper<ExpressionSolveDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionSolveDialog>.SetPropValue(this, value); } }
+		public string TargetExpression { get { return UIHelper<ExpressionSolveDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionSolveDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string Tolerance { get { return UIHelper<ExpressionSolveDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionSolveDialog>.SetPropValue(this, value); } }
+		public string ToleranceExpression { get { return UIHelper<ExpressionSolveDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionSolveDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public string ChangeVariable { get { return UIHelper<ExpressionSolveDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionSolveDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public string StartValueExpression { get { return UIHelper<ExpressionSolveDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionSolveDialog>.SetPropValue(this, value); } }
 
 		public NEVariables Variables { get; }
 		static ExpressionSolveDialog() { UIHelper<ExpressionSolveDialog>.Register(); }
@@ -29,9 +35,9 @@ namespace NeoEdit.TextEdit.Dialogs
 			Variables = variables;
 			InitializeComponent();
 
-			Expression = "";
-			Target = "0";
-			Tolerance = "0.000001";
+			SetVariable = ChangeVariable = "";
+			TargetExpression = StartValueExpression = "0";
+			ToleranceExpression = "0.000001";
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
@@ -39,16 +45,15 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			if (!new NEExpression(Expression).Variables.Contains("v"))
-			{
-				Message.Show("Must include 'v' in expression to solve.", "Error", Owner);
+			if ((string.IsNullOrWhiteSpace(SetVariable)) || (string.IsNullOrWhiteSpace(ChangeVariable)))
 				return;
-			}
 
-			expression.AddCurrentSuggestion();
-			target.AddCurrentSuggestion();
-			tolerance.AddCurrentSuggestion();
-			result = new Result { Expression = Expression, Target = Target, Tolerance = double.Parse(Tolerance) };
+			setVariable.AddCurrentSuggestion();
+			targetExpression.AddCurrentSuggestion();
+			toleranceExpression.AddCurrentSuggestion();
+			changeVariable.AddCurrentSuggestion();
+			startValueExpression.AddCurrentSuggestion();
+			result = new Result { SetVariable = SetVariable, TargetExpression = TargetExpression, ToleranceExpression = ToleranceExpression, ChangeVariable = ChangeVariable, StartValueExpression = StartValueExpression };
 			DialogResult = true;
 		}
 
