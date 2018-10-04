@@ -798,8 +798,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case TextEditCommand.Expression_Copy: dialogResult = Command_Expression_Copy_Dialog(); break;
 				case TextEditCommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
-				case TextEditCommand.Expression_AddVariable: dialogResult = Command_Expression_AddVariable_Dialog(); break;
-				case TextEditCommand.Expression_Solve: dialogResult = Command_Expression_Solve_Dialog(); break;
+				case TextEditCommand.Expression_InlineVariables_Add: dialogResult = Command_Expression_InlineVariables_Add_Dialog(); break;
+				case TextEditCommand.Expression_InlineVariables_Solve: dialogResult = Command_Expression_InlineVariables_Solve_Dialog(); break;
 				case TextEditCommand.Text_Select_Trim: dialogResult = Command_Text_Select_Trim_Dialog(); break;
 				case TextEditCommand.Text_Select_ByWidth: dialogResult = Command_Text_Select_ByWidth_Dialog(); break;
 				case TextEditCommand.Text_Select_WholeWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(true); break;
@@ -1047,9 +1047,9 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_Copy: Command_Expression_Copy(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;
 				case TextEditCommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
-				case TextEditCommand.Expression_AddVariable: Command_Expression_AddVariable(dialogResult as ExpressionAddVariableDialog.Result); break;
-				case TextEditCommand.Expression_CalculateVariables: Command_Expression_CalculateVariables(); break;
-				case TextEditCommand.Expression_Solve: Command_Expression_Solve(dialogResult as ExpressionSolveDialog.Result, answer); break;
+				case TextEditCommand.Expression_InlineVariables_Add: Command_Expression_InlineVariables_Add(dialogResult as ExpressionAddVariableDialog.Result); break;
+				case TextEditCommand.Expression_InlineVariables_Calculate: Command_Expression_InlineVariables_Calculate(); break;
+				case TextEditCommand.Expression_InlineVariables_Solve: Command_Expression_InlineVariables_Solve(dialogResult as ExpressionSolveDialog.Result, answer); break;
 				case TextEditCommand.Text_Select_Trim: Command_Text_Select_Trim(dialogResult as TextTrimDialog.Result); break;
 				case TextEditCommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(dialogResult as TextWidthDialog.Result); break;
 				case TextEditCommand.Text_Select_WholeWord: Command_Text_Select_WholeBoundedWord(dialogResult as TextSelectWholeBoundedWordDialog.Result, true); break;

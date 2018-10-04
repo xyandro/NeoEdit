@@ -12,7 +12,7 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
-		class RunningVar
+		class InlineVariable
 		{
 			public string Name { get; set; }
 			public string Expression { get => NEExpression.ToString(); set => NEExpression = new NEExpression(value); }
@@ -23,44 +23,44 @@ namespace NeoEdit.TextEdit
 			public Exception Exception { get; set; }
 		}
 
-		void CalculateVariables(List<RunningVar> runningVars)
+		void CalculateInlineVariables(List<InlineVariable> inlineVars)
 		{
 			var variables = GetVariables();
-			runningVars.ForEach(runningVar => variables.Remove(runningVar.Name));
+			inlineVars.ForEach(inlineVar => variables.Remove(inlineVar.Name));
 
 			while (true)
 			{
 				var done = true;
-				foreach (var runningVar in runningVars)
+				foreach (var inlineVar in inlineVars)
 				{
-					if (variables.Contains(runningVar.Name))
+					if (variables.Contains(inlineVar.Name))
 						continue;
-					if (!runningVar.NEExpression.Variables.All(name => variables.Contains(name)))
+					if (!inlineVar.NEExpression.Variables.All(name => variables.Contains(name)))
 						continue;
-					runningVar.Value = runningVar.NEExpression.Evaluate<double>(variables);
-					variables.Add(NEVariable.Constant(runningVar.Name, "User-defined", runningVar.Value));
+					inlineVar.Value = inlineVar.NEExpression.Evaluate<double>(variables);
+					variables.Add(NEVariable.Constant(inlineVar.Name, "User-defined", inlineVar.Value));
 					done = false;
 				}
 				if (done)
 					break;
 			}
 
-			foreach (var runningVar in runningVars)
+			foreach (var inlineVar in inlineVars)
 			{
-				if (variables.Contains(runningVar.Name))
+				if (variables.Contains(inlineVar.Name))
 					continue;
-				runningVar.Exception = new Exception($"{string.Join(", ", runningVar.NEExpression.Variables.Where(name => !variables.Contains(name)))} undefined");
+				inlineVar.Exception = new Exception($"{string.Join(", ", inlineVar.NEExpression.Variables.Where(name => !variables.Contains(name)))} undefined");
 			}
 		}
 
-		List<RunningVar> GetRunningVars()
+		List<InlineVariable> GetInlineVariables()
 		{
-			var runningVars = new List<RunningVar>();
+			var inlineVars = new List<InlineVariable>();
 			var regex = new Regex(@"\[VAR:(\w+):'(.*?)'=(.*?)?\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			foreach (var tuple in Data.RegexMatches(regex, BeginOffset, EndOffset - BeginOffset, false, false, false))
 			{
 				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
-				runningVars.Add(new RunningVar
+				inlineVars.Add(new InlineVariable
 				{
 					Name = match.Groups[1].Value,
 					Expression = match.Groups[2].Value,
@@ -68,7 +68,7 @@ namespace NeoEdit.TextEdit
 					ValueRange = match.Groups[3].Success ? Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length) : Range.FromIndex(tuple.Item1 + match.Index + match.Length - 1, 0),
 				});
 			}
-			return runningVars;
+			return inlineVars;
 		}
 
 		GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
@@ -89,7 +89,7 @@ namespace NeoEdit.TextEdit
 			SetSelections(Selections.Where((str, num) => results[num]).ToList());
 		}
 
-		ExpressionAddVariableDialog.Result Command_Expression_AddVariable_Dialog()
+		ExpressionAddVariableDialog.Result Command_Expression_InlineVariables_Add_Dialog()
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have only one selection");
@@ -97,7 +97,7 @@ namespace NeoEdit.TextEdit
 			return ExpressionAddVariableDialog.Run(WindowParent);
 		}
 
-		void Command_Expression_AddVariable(ExpressionAddVariableDialog.Result result)
+		void Command_Expression_InlineVariables_Add(ExpressionAddVariableDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have only one selection");
@@ -105,23 +105,23 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections($"[VAR:{result.VarName}:'{result.Expression}'=]");
 		}
 
-		void Command_Expression_CalculateVariables()
+		void Command_Expression_InlineVariables_Calculate()
 		{
-			var runningVars = GetRunningVars();
-			CalculateVariables(runningVars);
-			SetSelections(runningVars.Select(runningVar => runningVar.ValueRange).ToList());
-			ReplaceSelections(runningVars.Select(runningVar => runningVar.Value.ToString()).ToList());
+			var inlineVars = GetInlineVariables();
+			CalculateInlineVariables(inlineVars);
+			SetSelections(inlineVars.Select(inlineVar => inlineVar.ValueRange).ToList());
+			ReplaceSelections(inlineVars.Select(inlineVar => inlineVar.Value.ToString()).ToList());
 		}
 
-		ExpressionSolveDialog.Result Command_Expression_Solve_Dialog() => ExpressionSolveDialog.Run(WindowParent, GetVariables());
+		ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog() => ExpressionSolveDialog.Run(WindowParent, GetVariables());
 
-		void Command_Expression_Solve(ExpressionSolveDialog.Result result, AnswerResult answer)
+		void Command_Expression_InlineVariables_Solve(ExpressionSolveDialog.Result result, AnswerResult answer)
 		{
-			var runningVars = GetRunningVars();
-			var setIndex = runningVars.FindIndex(runningVar => runningVar.Name.Equals(result.SetVariable));
+			var inlineVars = GetInlineVariables();
+			var setIndex = inlineVars.FindIndex(inlineVar => inlineVar.Name.Equals(result.SetVariable));
 			if (setIndex == -1)
 				throw new Exception($"Unknown variable: {result.SetVariable}");
-			var changeIndex = runningVars.FindIndex(runningVar => runningVar.Name.Equals(result.ChangeVariable));
+			var changeIndex = inlineVars.FindIndex(inlineVar => inlineVar.Name.Equals(result.ChangeVariable));
 			if (changeIndex == -1)
 				throw new Exception($"Unknown variable: {result.ChangeVariable}");
 
@@ -132,12 +132,12 @@ namespace NeoEdit.TextEdit
 
 			Func<double, double> GetValue = input =>
 			{
-				runningVars[changeIndex].Expression = input.ToString();
-				CalculateVariables(runningVars);
-				var exception = runningVars.Select(runningVar => runningVar.Value).OfType<Exception>().FirstOrDefault();
+				inlineVars[changeIndex].Expression = input.ToString();
+				CalculateInlineVariables(inlineVars);
+				var exception = inlineVars.Select(inlineVar => inlineVar.Value).OfType<Exception>().FirstOrDefault();
 				if (exception != null)
 					throw exception;
-				var diff = Math.Abs(runningVars[setIndex].Value - target);
+				var diff = Math.Abs(inlineVars[setIndex].Value - target);
 				if ((double.IsNaN(diff)) || (double.IsInfinity(diff)))
 					diff = double.MaxValue;
 				return diff;
@@ -200,15 +200,15 @@ namespace NeoEdit.TextEdit
 			GetValue(value);
 			var sels = new List<Range>();
 			var values = new List<string>();
-			for (var ctr = 0; ctr < runningVars.Count; ++ctr)
+			for (var ctr = 0; ctr < inlineVars.Count; ++ctr)
 			{
 				if (ctr == changeIndex)
 				{
-					sels.Add(runningVars[ctr].ExpressionRange);
+					sels.Add(inlineVars[ctr].ExpressionRange);
 					values.Add(value.ToString());
 				}
-				sels.Add(runningVars[ctr].ValueRange);
-				values.Add(runningVars[ctr].Value.ToString());
+				sels.Add(inlineVars[ctr].ValueRange);
+				values.Add(inlineVars[ctr].Value.ToString());
 			}
 			SetSelections(sels);
 			ReplaceSelections(values);

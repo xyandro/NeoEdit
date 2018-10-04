@@ -295,9 +295,11 @@
 		<textEdit:TextEditMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected"/>
 		<textEdit:TextEditMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Add Variable" CommandEnum="Expression_AddVariable"/>
-		<textEdit:TextEditMenuItem Header="Ca_lculate Variables" CommandEnum="Expression_CalculateVariables"/>
-		<textEdit:TextEditMenuItem Header="S_olve" CommandEnum="Expression_Solve"/>
+		<MenuItem Header="_Inline Variables">
+			<textEdit:TextEditMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add"/>
+			<textEdit:TextEditMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate"/>
+			<textEdit:TextEditMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve"/>
+		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Text">
 		<MenuItem Header="_Select">
