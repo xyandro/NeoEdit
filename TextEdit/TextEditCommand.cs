@@ -176,6 +176,7 @@ namespace NeoEdit.TextEdit
 		Expression_InlineVariables_Add,
 		[KeyGesture(Key.F9, ModifierKeys.Control)] Expression_InlineVariables_Calculate,
 		Expression_InlineVariables_Solve,
+		Expression_InlineVariables_IncludeInExpressions,
 		[KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Alt)] Text_Select_Trim,
 		Text_Select_ByWidth,
 		[KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Alt)] Text_Select_WholeWord,

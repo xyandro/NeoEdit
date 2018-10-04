@@ -734,6 +734,9 @@ namespace NeoEdit.TextEdit
 				results.Add(NEVariable.Constant("height", "Image height", () => GetBitmap().Height));
 			}
 
+			if (IncludeInlineVariables)
+				GetInlineVariables().Where(inlineVar => !results.Contains(inlineVar.Name)).ForEach(inlineVar => results.Add(NEVariable.Constant(inlineVar.Name, "Inline variable", inlineVar.Value)));
+
 			return results;
 		}
 
@@ -1050,6 +1053,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Expression_InlineVariables_Add: Command_Expression_InlineVariables_Add(dialogResult as ExpressionAddVariableDialog.Result); break;
 				case TextEditCommand.Expression_InlineVariables_Calculate: Command_Expression_InlineVariables_Calculate(); break;
 				case TextEditCommand.Expression_InlineVariables_Solve: Command_Expression_InlineVariables_Solve(dialogResult as ExpressionSolveDialog.Result, answer); break;
+				case TextEditCommand.Expression_InlineVariables_IncludeInExpressions: Command_Expression_InlineVariables_IncludeInExpressions(multiStatus); break;
 				case TextEditCommand.Text_Select_Trim: Command_Text_Select_Trim(dialogResult as TextTrimDialog.Result); break;
 				case TextEditCommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(dialogResult as TextWidthDialog.Result); break;
 				case TextEditCommand.Text_Select_WholeWord: Command_Text_Select_WholeBoundedWord(dialogResult as TextSelectWholeBoundedWordDialog.Result, true); break;

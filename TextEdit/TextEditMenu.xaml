@@ -299,6 +299,7 @@
 			<textEdit:TextEditMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add"/>
 			<textEdit:TextEditMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate"/>
 			<textEdit:TextEditMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve"/>
+			<textEdit:MultiMenuItem Header="_Include In Expressions" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Text">

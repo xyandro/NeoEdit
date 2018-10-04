@@ -12,6 +12,9 @@ namespace NeoEdit.TextEdit
 {
 	partial class TextEditor
 	{
+		[DepProp]
+		public bool IncludeInlineVariables { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+
 		class InlineVariable
 		{
 			public string Name { get; set; }
@@ -56,16 +59,19 @@ namespace NeoEdit.TextEdit
 		List<InlineVariable> GetInlineVariables()
 		{
 			var inlineVars = new List<InlineVariable>();
-			var regex = new Regex(@"\[VAR:(\w+):'(.*?)'=(.*?)?\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
+			var regex = new Regex(@"\[VAR:(\w+):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			foreach (var tuple in Data.RegexMatches(regex, BeginOffset, EndOffset - BeginOffset, false, false, false))
 			{
 				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
+				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);
+				double.TryParse(GetString(valueRange), out var value);
 				inlineVars.Add(new InlineVariable
 				{
 					Name = match.Groups[1].Value,
 					Expression = match.Groups[2].Value,
 					ExpressionRange = Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length),
-					ValueRange = match.Groups[3].Success ? Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length) : Range.FromIndex(tuple.Item1 + match.Index + match.Length - 1, 0),
+					Value = value,
+					ValueRange = valueRange,
 				});
 			}
 			return inlineVars;
@@ -213,5 +219,7 @@ namespace NeoEdit.TextEdit
 			SetSelections(sels);
 			ReplaceSelections(values);
 		}
+
+		void Command_Expression_InlineVariables_IncludeInExpressions(bool? multiStatus) => IncludeInlineVariables = multiStatus != true;
 	}
 }
