@@ -97,6 +97,13 @@ namespace NeoEdit.Common.Expressions
 
 		static string IncrementChars(string str, int amount) => new string(str.Select(ch => (char)(ch + amount)).ToArray());
 
+		static NumericValue GetCharDiff(string str1, string str2)
+		{
+			if ((str1.Length != 1) || (str2.Length != 1))
+				throw new Exception("t--- must be used on characters");
+			return new NumericValue(str1[0] - str2[0]);
+		}
+
 		object BinaryOp(string op, object val1, object val2)
 		{
 			switch (op)
@@ -114,6 +121,7 @@ namespace NeoEdit.Common.Expressions
 				case "t+": return GetString(val1) + GetString(val2);
 				case "t++": return IncrementChars(GetString(val1), GetNumeric(val2).IntValue);
 				case "t--": return IncrementChars(GetString(val1), -GetNumeric(val2).IntValue);
+				case "t---": return GetCharDiff(GetString(val1), GetString(val2));
 				case "<<": return GetNumeric(val1).ShiftLeft(GetNumeric(val2));
 				case ">>": return GetNumeric(val1).ShiftRight(GetNumeric(val2));
 				case "<": return GetNumeric(val1) < GetNumeric(val2);

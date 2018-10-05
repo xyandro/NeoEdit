@@ -35,7 +35,7 @@ METHOD        : A B S | A C O S | A S I N | A T A N | C O S | D A T E | D I R E 
 BANG          : '!' ;
 EXPOP         : '^' ;
 MULTOP        : [*/%] | '//' | '///' | 't*' ;
-ADDOP         : [-+] | 't' ('+' | '++' | '--') ;
+ADDOP         : [-+] | 't' ('+' | '++' | '--' | '---') ;
 SHIFTOP       : '<<' | '>>' ;
 EQUALITYOP    : ('o' | 't' 'i'?)? ('=' | '==' | '!=' | '<>') ;
 RELATIONALOP  : ('t' 'i'?)? [<>] '='? | I S ;

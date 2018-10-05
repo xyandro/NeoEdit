@@ -27,6 +27,7 @@ namespace NeoEdit.Common.UnitTest
 			Assert.AreEqual("5", new NEExpression("4.9 + .1").Evaluate().ToString());
 			Assert.AreEqual("5.2", new NEExpression("5.1 + .1").Evaluate().ToString());
 			Assert.AreEqual("bcd", new NEExpression("\"abc\" t++ 1").Evaluate().ToString());
+			Assert.AreEqual("25", new NEExpression("\"Z\" t--- \"A\"").Evaluate().ToString());
 			Assert.AreEqual("a1", new NEExpression("\"a\" t+ 1").Evaluate().ToString());
 
 			Assert.AreEqual("0", new NEExpression("2 - 2").Evaluate().ToString());
