@@ -60,19 +60,24 @@ namespace NeoEdit.TextEdit
 		{
 			var inlineVars = new List<InlineVariable>();
 			var regex = new Regex(@"\[VAR:(\w+):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
+			var found = new HashSet<string>();
 			foreach (var tuple in Data.RegexMatches(regex, BeginOffset, EndOffset - BeginOffset, false, false, false))
 			{
 				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
 				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);
 				double.TryParse(GetString(valueRange), out var value);
-				inlineVars.Add(new InlineVariable
+				var inlineVar = new InlineVariable
 				{
 					Name = match.Groups[1].Value,
 					Expression = match.Groups[2].Value,
 					ExpressionRange = Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length),
 					Value = value,
 					ValueRange = valueRange,
-				});
+				};
+				if (found.Contains(inlineVar.Name))
+					throw new Exception($"Duplicate inline variable: {inlineVar.Name}");
+				found.Add(inlineVar.Name);
+				inlineVars.Add(inlineVar);
 			}
 			return inlineVars;
 		}
