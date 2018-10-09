@@ -18,13 +18,13 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Mi_nimum count:" Target="{Binding ElementName=minimum}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Mi_nimum:" Target="{Binding ElementName=minimum}" HorizontalAlignment="Right"/>
 		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Name="minimum" Text="{Binding Minimum, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="NumericLimitDialog_Minimum"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
 		<guiControls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding Minimum, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Ma_ximum count:" Target="{Binding ElementName=maximum}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="Ma_ximum:" Target="{Binding ElementName=maximum}" HorizontalAlignment="Right"/>
 		<guiControls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" Name="maximum" Text="{Binding Maximum, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="NumericLimitDialog_Maximum"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
