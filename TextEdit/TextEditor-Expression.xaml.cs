@@ -80,7 +80,7 @@ namespace NeoEdit.TextEdit
 		List<InlineVariable> GetInlineVariables()
 		{
 			var inlineVars = new List<InlineVariable>();
-			var regex = new Regex(@"\[VAR:(\w+):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
+			var regex = new Regex(@"\[(\w+):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			var found = new HashSet<string>();
 			foreach (var tuple in Data.RegexMatches(regex, BeginOffset, EndOffset - BeginOffset, false, false, false))
 			{
@@ -113,21 +113,7 @@ namespace NeoEdit.TextEdit
 			SetSelections(Selections.Where((str, num) => results[num]).ToList());
 		}
 
-		ExpressionAddVariableDialog.Result Command_Expression_InlineVariables_Add_Dialog()
-		{
-			if (Selections.Count != 1)
-				throw new Exception("Must have only one selection");
-
-			return ExpressionAddVariableDialog.Run(WindowParent);
-		}
-
-		void Command_Expression_InlineVariables_Add(ExpressionAddVariableDialog.Result result)
-		{
-			if (Selections.Count != 1)
-				throw new Exception("Must have only one selection");
-
-			ReplaceSelections($"[VAR:{result.VarName}:'{result.Expression}'=]");
-		}
+		void Command_Expression_InlineVariables_Add() => ReplaceSelections($"[var:'0'=0]");
 
 		void Command_Expression_InlineVariables_Calculate()
 		{

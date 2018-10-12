@@ -255,13 +255,6 @@
     <Compile Include="Dialogs\EditSortDialog.xaml.cs">
       <DependentUpon>EditSortDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ExpressionAddVariableDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ExpressionAddVariableDialog.xaml.cs">
-      <DependentUpon>ExpressionAddVariableDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\ExpressionSolveDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
