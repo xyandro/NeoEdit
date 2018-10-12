@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
@@ -19,11 +20,31 @@ namespace NeoEdit.TextEdit
 		{
 			public string Name { get; set; }
 			public string Expression { get => NEExpression.ToString(); set => NEExpression = new NEExpression(value); }
-			public NEExpression NEExpression { get; set; }
-			public double Value { get; set; }
 			public Range ExpressionRange { get; set; }
+			public NEExpression NEExpression { get; set; }
+			double value;
+			public double Value
+			{
+				get => value; set
+				{
+					if (value == this.value)
+						return;
+					this.value = value;
+					Changed = true;
+				}
+			}
 			public Range ValueRange { get; set; }
 			public Exception Exception { get; set; }
+			public bool Changed { get; set; }
+
+			public InlineVariable(string name, string expression, Range expressionRange, string value, Range valueRange)
+			{
+				Name = name;
+				Expression = expression;
+				ExpressionRange = expressionRange;
+				double.TryParse(value, out this.value);
+				ValueRange = valueRange;
+			}
 		}
 
 		void CalculateInlineVariables(List<InlineVariable> inlineVars)
@@ -52,7 +73,7 @@ namespace NeoEdit.TextEdit
 			{
 				if (variables.Contains(inlineVar.Name))
 					continue;
-				inlineVar.Exception = new Exception($"{string.Join(", ", inlineVar.NEExpression.Variables.Where(name => !variables.Contains(name)))} undefined");
+				inlineVar.Exception = new Exception($"{inlineVar.Name}: {string.Join(", ", inlineVar.NEExpression.Variables.Where(name => !variables.Contains(name)))} undefined");
 			}
 		}
 
@@ -65,15 +86,7 @@ namespace NeoEdit.TextEdit
 			{
 				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
 				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);
-				double.TryParse(GetString(valueRange), out var value);
-				var inlineVar = new InlineVariable
-				{
-					Name = match.Groups[1].Value,
-					Expression = match.Groups[2].Value,
-					ExpressionRange = Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length),
-					Value = value,
-					ValueRange = valueRange,
-				};
+				var inlineVar = new InlineVariable(match.Groups[1].Value, match.Groups[2].Value, Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length), GetString(valueRange), valueRange);
 				if (found.Contains(inlineVar.Name))
 					throw new Exception($"Duplicate inline variable: {inlineVar.Name}");
 				found.Add(inlineVar.Name);
@@ -120,6 +133,8 @@ namespace NeoEdit.TextEdit
 		{
 			var inlineVars = GetInlineVariables();
 			CalculateInlineVariables(inlineVars);
+			inlineVars.Select(inlineVar => inlineVar.Exception).NonNull().ForEach(ex => throw ex);
+			inlineVars = inlineVars.Where(inlineVar => inlineVar.Changed).ToList();
 			SetSelections(inlineVars.Select(inlineVar => inlineVar.ValueRange).ToList());
 			ReplaceSelections(inlineVars.Select(inlineVar => inlineVar.Value.ToString()).ToList());
 		}
