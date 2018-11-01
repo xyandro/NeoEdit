@@ -364,10 +364,26 @@ namespace NeoEdit.TextEdit
 
 		void Command_Edit_Find_Replace(EditFindReplaceDialog.Result result)
 		{
+			var text = result.Text;
+			var replace = result.Replace;
+			if (!result.IsRegex)
+			{
+				text = Regex.Escape(text);
+				replace = replace.Replace("$", "$$");
+			}
+			if (result.WholeWords)
+				text = $"\\b{text}\\b";
+			if (result.EntireSelection)
+				text = $"\\A{text}\\Z";
+			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
+			if (!result.MatchCase)
+				options |= RegexOptions.IgnoreCase;
+			var regex = new Regex(text, options);
+
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var sels = regions.AsParallel().AsOrdered().SelectMany(region => Data.RegexMatches(result.Regex, region.Start, region.Length, result.MultiLine, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			var sels = regions.AsParallel().AsOrdered().SelectMany(region => Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			SetSelections(sels);
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => result.Regex.Replace(GetString(range), result.Replace)).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => regex.Replace(GetString(range), result.Replace)).ToList());
 		}
 
 		void Command_Edit_Find_ClearSearchResults() => SetSearches(new List<Range>());

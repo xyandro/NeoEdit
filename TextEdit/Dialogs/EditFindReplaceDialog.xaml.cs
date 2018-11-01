@@ -8,12 +8,25 @@ namespace NeoEdit.TextEdit.Dialogs
 {
 	partial class EditFindReplaceDialog
 	{
+		class CheckBoxStatus
+		{
+			public bool WholeWords { get; set; }
+			public bool MatchCase { get; set; }
+			public bool MultiLine { get; set; }
+			public bool IsRegex { get; set; }
+			public bool EntireSelection { get; set; }
+		}
+
 		public class Result
 		{
-			public Regex Regex { get; set; }
+			public string Text { get; set; }
 			public string Replace { get; set; }
-			public bool SelectionOnly { get; set; }
+			public bool WholeWords { get; set; }
+			public bool MatchCase { get; set; }
 			public bool MultiLine { get; set; }
+			public bool IsRegex { get; set; }
+			public bool SelectionOnly { get; set; }
+			public bool EntireSelection { get; set; }
 		}
 
 		[DepProp]
@@ -25,15 +38,13 @@ namespace NeoEdit.TextEdit.Dialogs
 		[DepProp]
 		public bool MatchCase { get { return UIHelper<EditFindReplaceDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindReplaceDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool MultiLine { get { return UIHelper<EditFindReplaceDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindReplaceDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public bool IsRegex { get { return UIHelper<EditFindReplaceDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindReplaceDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool SelectionOnly { get { return UIHelper<EditFindReplaceDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindReplaceDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool EntireSelection { get { return UIHelper<EditFindReplaceDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindReplaceDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool MultiLine { get { return UIHelper<EditFindReplaceDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindReplaceDialog>.SetPropValue(this, value); } }
-
-		static bool wholeWordsVal, matchCaseVal, isRegexVal, multiLineVal;
 
 		static EditFindReplaceDialog()
 		{
@@ -42,18 +53,41 @@ namespace NeoEdit.TextEdit.Dialogs
 			UIHelper<EditFindReplaceDialog>.AddCallback(a => a.EntireSelection, (obj, o, n) => { if (obj.EntireSelection) obj.SelectionOnly = true; });
 		}
 
-		EditFindReplaceDialog(string _text, bool _selectionOnly)
+		EditFindReplaceDialog(string text, bool selectionOnly)
 		{
 			InitializeComponent();
 
-			Text = _text.CoalesceNullOrEmpty(text.GetLastSuggestion(), "");
-			Replace = replace.GetLastSuggestion() ?? "";
-			SelectionOnly = _selectionOnly;
-			WholeWords = wholeWordsVal;
-			MatchCase = matchCaseVal;
-			IsRegex = isRegexVal;
-			MultiLine = multiLineVal;
+			SelectionOnly = selectionOnly;
+			Text = text.CoalesceNullOrEmpty(this.text.GetLastSuggestion(), "");
+			Replace = "";
+			SetCheckBoxStatus(this.text.GetLastSuggestionData() as CheckBoxStatus);
 		}
+
+		CheckBoxStatus GetCheckBoxStatus()
+		{
+			return new CheckBoxStatus
+			{
+				WholeWords = WholeWords,
+				MatchCase = MatchCase,
+				MultiLine = MultiLine,
+				IsRegex = IsRegex,
+				EntireSelection = EntireSelection,
+			};
+		}
+
+		void SetCheckBoxStatus(CheckBoxStatus checkBoxStatus)
+		{
+			if (checkBoxStatus == null)
+				return;
+
+			WholeWords = checkBoxStatus.WholeWords;
+			MatchCase = checkBoxStatus.MatchCase;
+			MultiLine = checkBoxStatus.MultiLine;
+			IsRegex = checkBoxStatus.IsRegex;
+			EntireSelection = checkBoxStatus.EntireSelection;
+		}
+
+		void OnAcceptSuggestion(string text, object data) => SetCheckBoxStatus(data as CheckBoxStatus);
 
 		void Escape(object sender, RoutedEventArgs e) => Text = Regex.Escape(Text);
 		void Unescape(object sender, RoutedEventArgs e) => Text = Regex.Unescape(Text);
@@ -64,40 +98,21 @@ namespace NeoEdit.TextEdit.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			var text = Text;
-			var replace = Replace;
-			if (!IsRegex)
-			{
-				text = Regex.Escape(text);
-				replace = replace.Replace("$", "$$");
-			}
-			if (WholeWords)
-				text = $"\\b{text}\\b";
-			if (EntireSelection)
-				text = $"\\A{text}\\Z";
-			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
-			if (!MatchCase)
-				options |= RegexOptions.IgnoreCase;
-			result = new Result { Regex = new Regex(text, options), Replace = replace, SelectionOnly = SelectionOnly, MultiLine = MultiLine };
-
-			wholeWordsVal = WholeWords;
-			matchCaseVal = MatchCase;
-			isRegexVal = IsRegex;
-			multiLineVal = MultiLine;
-
-			text = Text;
-			this.text.AddCurrentSuggestion();
-			this.replace.AddCurrentSuggestion();
+			result = new Result { Text = Text, Replace = Replace, WholeWords = WholeWords, MatchCase = MatchCase, MultiLine = MultiLine, IsRegex = IsRegex, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection };
+			text.AddCurrentSuggestion(GetCheckBoxStatus());
+			replace.AddCurrentSuggestion();
 
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, string text = null, bool selectionOnly = false)
+		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
+
+		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = MultiLine = IsRegex = SelectionOnly = EntireSelection = false;
+
+		static public Result Run(Window parent, string text, bool selectionOnly)
 		{
 			var dialog = new EditFindReplaceDialog(text, selectionOnly) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
-
-		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 	}
 }

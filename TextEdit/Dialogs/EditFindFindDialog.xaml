@@ -19,8 +19,8 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="F_ind:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
-		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FindText" OnAcceptSuggestion="OnAcceptSuggestion"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="EditFindFindDialogText" OnAcceptSuggestion="OnAcceptSuggestion"/>
 
 		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>
