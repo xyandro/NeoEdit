@@ -756,7 +756,7 @@ namespace NeoEdit.TextEdit
 			}.Show() != Message.OptionsEnum.Yes)
 				return;
 
-			invalid = newFileNames.Where(pair => File.Exists(pair)).Distinct().Take(InvalidCount).ToList();
+			invalid = newFileNames.Zip(oldFileNames, (newFileName, oldFileName) => new { newFileName, oldFileName }).Where(obj => (!string.Equals(obj.newFileName, obj.oldFileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(obj.newFileName))).Select(obj => obj.newFileName).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
 				if (new Message(WindowParent)
@@ -780,7 +780,7 @@ namespace NeoEdit.TextEdit
 				}
 				else
 				{
-					if (File.Exists(newFileNames[ctr]))
+					if ((File.Exists(newFileNames[ctr])) && (!string.Equals(oldFileNames[ctr], newFileNames[ctr], StringComparison.OrdinalIgnoreCase)))
 						File.Delete(newFileNames[ctr]);
 
 					if (move)

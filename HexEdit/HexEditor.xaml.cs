@@ -613,7 +613,8 @@ namespace NeoEdit.HexEdit
 			if (fileName == null)
 				return;
 
-			File.Delete(fileName);
+			if (!string.Equals(FileName, fileName, StringComparison.OrdinalIgnoreCase))
+				File.Delete(fileName);
 			File.Move(FileName, fileName);
 			FileName = fileName;
 		}

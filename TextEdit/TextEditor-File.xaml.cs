@@ -120,7 +120,9 @@ namespace NeoEdit.TextEdit
 			}
 
 			var fileName = GetSaveFileName();
-			File.Delete(fileName);
+
+			if (!string.Equals(FileName, fileName, StringComparison.OrdinalIgnoreCase))
+				File.Delete(fileName);
 			File.Move(FileName, fileName);
 			SetFileName(fileName);
 		}
@@ -135,7 +137,7 @@ namespace NeoEdit.TextEdit
 
 			var newFileName = FileName.RelativeChild(results[0]);
 
-			if (File.Exists(newFileName))
+			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
 				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
 					answer.Answer = new Message(WindowParent)
@@ -152,7 +154,8 @@ namespace NeoEdit.TextEdit
 
 			if (FileName != null)
 			{
-				File.Delete(newFileName);
+				if (!string.Equals(FileName, newFileName, StringComparison.OrdinalIgnoreCase))
+					File.Delete(newFileName);
 				File.Move(FileName, newFileName);
 			}
 			SetFileName(newFileName);
