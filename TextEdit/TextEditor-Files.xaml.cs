@@ -268,7 +268,7 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		string RunCommand(string arguments)
+		string RunCommand(string arguments, string workingDirectory)
 		{
 			var output = new StringBuilder();
 			output.AppendLine($"Command: {arguments}");
@@ -279,6 +279,7 @@ namespace NeoEdit.TextEdit
 				{
 					FileName = "cmd.exe",
 					Arguments = $"/c \"{arguments}\"",
+					WorkingDirectory = workingDirectory,
 					UseShellExecute = false,
 					RedirectStandardOutput = true,
 					RedirectStandardError = true,
@@ -855,9 +856,13 @@ namespace NeoEdit.TextEdit
 			Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = dirs[0] });
 		}
 
-		void Command_Files_Operations_RunCommand_Parallel() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => RunCommand(GetString(range))).ToList());
+		void Command_Files_Operations_RunCommand_Parallel()
+		{
+			var workingDirectory = Path.GetDirectoryName(FileName ?? "");
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => RunCommand(GetString(range), workingDirectory)).ToList());
+		}
 
-		void Command_Files_Operations_RunCommand_Sequential() => ReplaceSelections(GetSelectionStrings().Select(str => RunCommand(str)).ToList());
+		void Command_Files_Operations_RunCommand_Sequential() => ReplaceSelections(GetSelectionStrings().Select(str => RunCommand(str, Path.GetDirectoryName(FileName ?? ""))).ToList());
 
 		void Command_Files_Operations_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
 
