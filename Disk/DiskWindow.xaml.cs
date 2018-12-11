@@ -11,7 +11,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Transform;
 using NeoEdit.Disk.Dialogs;
-using NeoEdit.Disk.VCS;
 using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Controls.ItemGridControl;
@@ -380,10 +379,10 @@ namespace NeoEdit.Disk
 					if (file.HasChildren)
 					{
 						var add = true;
-						if ((result.VCSStatus != VersionControlStatus.Unknown) && (result.VCSStatus != VersionControlStatus.All))
+						if ((result.VCSStatus != Versioner.Status.Unknown) && (result.VCSStatus != Versioner.Status.All))
 						{
 							file.SetVCSStatus();
-							if ((file.VCSStatus == VersionControlStatus.DoNotTrack) || (file.VCSStatus == VersionControlStatus.Ignored))
+							if ((file.VCSStatus == Versioner.Status.VersionControl) || (file.VCSStatus == Versioner.Status.Ignored))
 								add = false;
 						}
 
@@ -413,7 +412,7 @@ namespace NeoEdit.Disk
 			if (result.EndDate.HasValue)
 				selected = selected.Where(file => file.WriteTime <= result.EndDate.Value).ToList();
 
-			if ((result.VCSStatus != VersionControlStatus.Unknown) && (result.VCSStatus != VersionControlStatus.All))
+			if ((result.VCSStatus != Versioner.Status.Unknown) && (result.VCSStatus != Versioner.Status.All))
 			{
 				foreach (var file in selected)
 					file.SetVCSStatus();

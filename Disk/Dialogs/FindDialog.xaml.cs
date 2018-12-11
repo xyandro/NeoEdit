@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.Disk.VCS;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.Disk.Dialogs
@@ -13,7 +13,7 @@ namespace NeoEdit.Disk.Dialogs
 			public Regex Regex;
 			public bool FullPath;
 			public bool Recursive;
-			public VersionControlStatus VCSStatus;
+			public Versioner.Status VCSStatus;
 			public long? MinSize;
 			public long? MaxSize;
 			public DateTime? StartDate;
@@ -29,7 +29,7 @@ namespace NeoEdit.Disk.Dialogs
 		[DepProp]
 		public bool Recursive { get { return UIHelper<FindDialog>.GetPropValue<bool>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public VersionControlStatus VCSStatus { get { return UIHelper<FindDialog>.GetPropValue<VersionControlStatus>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
+		public Versioner.Status VCSStatus { get { return UIHelper<FindDialog>.GetPropValue<Versioner.Status>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public long? MinSize { get { return UIHelper<FindDialog>.GetPropValue<long?>(this); } private set { UIHelper<FindDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -46,7 +46,7 @@ namespace NeoEdit.Disk.Dialogs
 			InitializeComponent();
 			Expression = "*.*";
 			expression.SelectAll();
-			VCSStatus = VersionControlStatus.Unknown;
+			VCSStatus = Versioner.Status.Unknown;
 		}
 
 		Result result;

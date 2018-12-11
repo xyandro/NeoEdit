@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
+using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
@@ -8,17 +8,19 @@ namespace NeoEdit.TextEdit.Dialogs
 	{
 		internal class Result
 		{
-			public HashSet<VCS.VCSStatus> Statuses { get; } = new HashSet<VCS.VCSStatus>();
+			public Versioner.Status Statuses { get; set; }
 		}
 
 		[DepProp]
-		public bool Unknown { get { return UIHelper<FilesSelectByVersionControlStatusDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesSelectByVersionControlStatusDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool Ignored { get { return UIHelper<FilesSelectByVersionControlStatusDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesSelectByVersionControlStatusDialog>.SetPropValue(this, value); } }
+		public bool Normal { get { return UIHelper<FilesSelectByVersionControlStatusDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesSelectByVersionControlStatusDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool Modified { get { return UIHelper<FilesSelectByVersionControlStatusDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesSelectByVersionControlStatusDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Normal { get { return UIHelper<FilesSelectByVersionControlStatusDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesSelectByVersionControlStatusDialog>.SetPropValue(this, value); } }
+		public bool Ignored { get { return UIHelper<FilesSelectByVersionControlStatusDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesSelectByVersionControlStatusDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool Unknown { get { return UIHelper<FilesSelectByVersionControlStatusDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesSelectByVersionControlStatusDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool VersionControl { get { return UIHelper<FilesSelectByVersionControlStatusDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesSelectByVersionControlStatusDialog>.SetPropValue(this, value); } }
 
 		static FilesSelectByVersionControlStatusDialog() { UIHelper<FilesSelectByVersionControlStatusDialog>.Register(); }
 
@@ -31,14 +33,16 @@ namespace NeoEdit.TextEdit.Dialogs
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			result = new Result();
-			if (Unknown)
-				result.Statuses.Add(VCS.VCSStatus.Unknown);
-			if (Ignored)
-				result.Statuses.Add(VCS.VCSStatus.Ignored);
-			if (Modified)
-				result.Statuses.Add(VCS.VCSStatus.Modified);
 			if (Normal)
-				result.Statuses.Add(VCS.VCSStatus.Normal);
+				result.Statuses |= Versioner.Status.Normal;
+			if (Modified)
+				result.Statuses |= Versioner.Status.Modified;
+			if (Ignored)
+				result.Statuses |= Versioner.Status.Ignored;
+			if (Unknown)
+				result.Statuses |= Versioner.Status.Unknown;
+			if (VersionControl)
+				result.Statuses |= Versioner.Status.VersionControl;
 			DialogResult = true;
 		}
 

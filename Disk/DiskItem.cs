@@ -7,8 +7,8 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using NeoEdit.Common.Transform;
-using NeoEdit.Disk.VCS;
 using NeoEdit.GUI.Controls;
+using NeoEdit.GUI.Misc;
 
 namespace NeoEdit.Disk
 {
@@ -52,7 +52,7 @@ namespace NeoEdit.Disk
 		[DepProp]
 		public string Identity { get { return UIHelper<DiskItem>.GetPropValue<string>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 		[DepProp]
-		public VersionControlStatus VCSStatus { get { return UIHelper<DiskItem>.GetPropValue<VersionControlStatus>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
+		public Versioner.Status VCSStatus { get { return UIHelper<DiskItem>.GetPropValue<Versioner.Status>(this); } private set { UIHelper<DiskItem>.SetPropValue(this, value); } }
 
 		public bool HasChildren => FileType != DiskItemType.File;
 		public DiskItem Parent => new DiskItem(Path);
@@ -74,6 +74,9 @@ namespace NeoEdit.Disk
 				}
 			}
 		}
+
+		static Versioner versioner = null;
+		static RunOnceTimer versionerTimer = new RunOnceTimer(ClearVersioner);
 
 		static DiskItem() { UIHelper<DiskItem>.Register(); }
 
@@ -229,7 +232,25 @@ namespace NeoEdit.Disk
 			Hash = $"{hashType}: {Hasher.Get(FullName, hashType, key)}";
 		}
 
-		public void SetVCSStatus() => VCSStatus = VCSCache.Single.GetStatus(FullName, Path);
+		static void ClearVersioner()
+		{
+			versioner = null;
+			versionerTimer.Stop();
+		}
+
+		public void SetVCSStatus()
+		{
+			if (versioner == null)
+			{
+				lock (versionerTimer)
+					if (versioner == null)
+					{
+						versioner = new Versioner();
+						versionerTimer.Start();
+					}
+			}
+			VCSStatus = versioner.GetStatus(FullName);
+		}
 
 		public void Rename(string newName)
 		{

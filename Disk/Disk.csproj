@@ -94,9 +94,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VCS\GitCache.cs" />
-    <Compile Include="VCS\SvnCache.cs" />
-    <Compile Include="VCS\VCSCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\Common\Common.csproj">

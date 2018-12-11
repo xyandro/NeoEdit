@@ -516,7 +516,11 @@ namespace NeoEdit.TextEdit
 				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors)}", "Error", WindowParent);
 		}
 
-		void Command_Files_Get_VersionControlStatus() => ReplaceSelections(new VCS().GetStatus(RelativeSelectedFiles()).Select(x => x.ToString()).ToList());
+		void Command_Files_Get_VersionControlStatus()
+		{
+			var versioner = new Versioner();
+			ReplaceSelections(RelativeSelectedFiles().Select(x => versioner.GetStatus(x).ToString()).ToList());
+		}
 
 		FilesSetSizeDialog.Result Command_Files_Set_Size_Dialog()
 		{
@@ -705,8 +709,9 @@ namespace NeoEdit.TextEdit
 
 		void Command_Files_Select_ByVersionControlStatus(FilesSelectByVersionControlStatusDialog.Result result)
 		{
-			var statuses = new VCS().GetStatus(RelativeSelectedFiles()).ToList();
-			var sels = Selections.Zip(statuses, (range, status) => new { range, status }).Where(obj => result.Statuses.Contains(obj.status)).Select(obj => obj.range).ToList();
+			var versioner = new Versioner();
+			var statuses = RelativeSelectedFiles().Select(x => versioner.GetStatus(x)).ToList();
+			var sels = Selections.Zip(statuses, (range, status) => new { range, status }).Where(obj => result.Statuses.HasFlag(obj.status)).Select(obj => obj.range).ToList();
 			SetSelections(sels);
 		}
 
