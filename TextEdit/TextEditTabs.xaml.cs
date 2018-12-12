@@ -50,6 +50,10 @@ namespace NeoEdit.TextEdit
 			var shutdownData = new ShutdownData(shutdownEvent, 2);
 			var textEdit1 = new TextEditor(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, shutdownData);
 			var textEdit2 = new TextEditor(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, shutdownData);
+			if (textEdit1.ContentType == Parser.ParserType.None)
+				textEdit1.ContentType = textEdit2.ContentType;
+			if (textEdit2.ContentType == Parser.ParserType.None)
+				textEdit2.ContentType = textEdit1.ContentType;
 			tabs.CreateTab(textEdit1);
 			tabs.CreateTab(textEdit2);
 			ItemTabs.TopMost = textEdit2;

@@ -87,6 +87,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.D, ModifierKeys.Control)] [KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift, 2)] Diff_Diff,
 		Diff_Selections,
 		Diff_SelectedFiles,
+		Diff_VCSNormalFiles,
 		Diff_Regions_Region1,
 		Diff_Regions_Region2,
 		Diff_Regions_Region3,

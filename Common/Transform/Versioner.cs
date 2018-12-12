@@ -99,7 +99,7 @@ namespace NeoEdit.Common.Transform
 			AddPathStatus(path, Status.Unknown);
 		}
 
-		private bool GetSvnFiles(string path)
+		bool GetSvnFiles(string path)
 		{
 			using (var client = new SvnClient())
 			{
@@ -113,7 +113,7 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
-		private static Status GetSvnStatus(SvnStatusEventArgs status)
+		static Status GetSvnStatus(SvnStatusEventArgs status)
 		{
 			switch (status.LocalContentStatus)
 			{
@@ -136,7 +136,7 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
-		private bool GetGitFiles(string path)
+		bool GetGitFiles(string path)
 		{
 			var repoPath = Repository.Discover(path);
 			if (repoPath == null)
@@ -158,5 +158,57 @@ namespace NeoEdit.Common.Transform
 			}
 			return true;
 		}
+
+		static byte[] GetUnmodifiedGitFile(string file)
+		{
+			try
+			{
+				var repoPath = Repository.Discover(file);
+				if (repoPath == null)
+					return null;
+
+				using (var repository = new Repository(repoPath))
+				{
+					var obj = repository.Head.Tip.Tree as GitObject;
+					foreach (var path in SplitPath(file.Substring(repository.Info.WorkingDirectory.Length)))
+					{
+						obj = (obj as Tree)?.SingleOrDefault(x => x.Name.Equals(path, StringComparison.OrdinalIgnoreCase))?.Target;
+						if (obj == null)
+							return null;
+					}
+
+					if (!(obj is Blob blob))
+						return null;
+
+					using (var ms = new MemoryStream((int)blob.Size))
+					{
+						using (var stream = blob.GetContentStream())
+							stream.CopyTo(ms);
+						return ms.ToArray();
+					}
+				}
+			}
+			catch { return null; }
+		}
+
+		static byte[] GetUnmodifiedSvnFile(string file)
+		{
+			try
+			{
+				file = SvnTools.GetTruePath(file);
+				if (file == null)
+					return null;
+
+				using (var ms = new MemoryStream())
+				{
+					using (var client = new SvnClient())
+						client.Write(SvnPathTarget.FromString(file), ms, new SvnWriteArgs() { Revision = SvnRevision.Base });
+					return ms.ToArray();
+				}
+			}
+			catch { return null; }
+		}
+
+		static public byte[] GetUnmodifiedFile(string file) => GetUnmodifiedGitFile(file) ?? GetUnmodifiedSvnFile(file);
 	}
 }

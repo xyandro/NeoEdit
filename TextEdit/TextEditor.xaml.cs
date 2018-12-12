@@ -963,6 +963,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Edit_Navigate_JumpBy_Paths: Command_Edit_Navigate_JumpBy(JumpByType.Paths); break;
 				case TextEditCommand.Diff_Selections: Command_Diff_Selections(); break;
 				case TextEditCommand.Diff_SelectedFiles: Command_Diff_SelectedFiles(); break;
+				case TextEditCommand.Diff_VCSNormalFiles: Command_Diff_Diff_VCSNormalFiles(); break;
 				case TextEditCommand.Diff_Regions_Region1: Command_Diff_Regions_Region(1); break;
 				case TextEditCommand.Diff_Regions_Region2: Command_Diff_Regions_Region(2); break;
 				case TextEditCommand.Diff_Regions_Region3: Command_Diff_Regions_Region(3); break;

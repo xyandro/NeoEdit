@@ -152,6 +152,7 @@
 		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
 		<textEdit:TextEditMenuItem Header="Se_lections" CommandEnum="Diff_Selections"/>
 		<textEdit:TextEditMenuItem Header="Selected _Files" CommandEnum="Diff_SelectedFiles"/>
+		<textEdit:TextEditMenuItem Header="_VCS Normal Files" CommandEnum="Diff_VCSNormalFiles"/>
 		<MenuItem Header="Re_gions">
 			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Diff_Regions_Region1"/>
 			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Diff_Regions_Region2"/>
@@ -163,6 +164,7 @@
 			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Diff_Regions_Region8"/>
 			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Diff_Regions_Region9"/>
 		</MenuItem>
+		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Break" CommandEnum="Diff_Break"/>
 		<Separator/>
 		<textEdit:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>

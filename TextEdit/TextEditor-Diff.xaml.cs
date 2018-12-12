@@ -79,6 +79,22 @@ namespace NeoEdit.TextEdit
 				tabs.AddDiff(fileName1: batch[0], fileName2: batch[1]);
 		}
 
+		void Command_Diff_Diff_VCSNormalFiles()
+		{
+			var files = GetSelectionStrings();
+			if (files.Any(file => !File.Exists(file)))
+				throw new Exception("Selections must be files.");
+
+			var original = files.Select(file => Versioner.GetUnmodifiedFile(file)).ToList();
+			var invalidIndexes = original.Indexes(file => file == null);
+			if (invalidIndexes.Any())
+				throw new Exception($"Unable to get unmodified files:\n{string.Join("\n", invalidIndexes.Select(index => files[index]))}");
+
+			var tabs = new TextEditTabs();
+			for (var ctr = 0; ctr < files.Count; ctr++)
+				tabs.AddDiff(displayName1: Path.GetFileName(files[ctr]), modified1: false, bytes1: original[ctr], fileName2: files[ctr]);
+		}
+
 		void Command_Diff_Regions_Region(int useRegion) => DoRangesDiff(Regions[useRegion]);
 
 		void Command_Diff_Break() => DiffTarget = null;
