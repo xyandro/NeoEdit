@@ -195,6 +195,22 @@ namespace NeoEdit.TextEdit
 			doDrag = DragType.CurrentFile;
 		}
 
+		void Command_File_Operations_VCSDiff()
+		{
+			if (string.IsNullOrEmpty(FileName))
+				throw new Exception("Must have filename to do diff");
+			var original = Versioner.GetUnmodifiedFile(FileName);
+			if (original == null)
+				throw new Exception("Unable to get VCS content");
+
+			var topMost = TabsParent.TopMost;
+			var textEdit = new TextEditor(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
+			textEdit.ContentType = ContentType;
+			TabsParent.CreateTab(textEdit, TabsParent.GetIndex(this));
+			textEdit.DiffTarget = this;
+			TabsParent.TopMost = topMost;
+		}
+
 		void Command_File_Refresh(AnswerResult answer)
 		{
 			if (string.IsNullOrEmpty(FileName))

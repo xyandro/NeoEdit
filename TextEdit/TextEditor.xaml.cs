@@ -904,6 +904,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
 				case TextEditCommand.File_Operations_CommandPrompt: Command_File_Operations_CommandPrompt(); break;
 				case TextEditCommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(); break;
+				case TextEditCommand.File_Operations_VCSDiff: Command_File_Operations_VCSDiff(); break;
 				case TextEditCommand.File_Close: if (CanClose(answer)) { TabsParent.Remove(this); } break;
 				case TextEditCommand.File_Refresh: Command_File_Refresh(answer); break;
 				case TextEditCommand.File_AutoRefresh: Command_File_AutoRefresh(multiStatus); break;

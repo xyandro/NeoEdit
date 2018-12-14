@@ -73,13 +73,13 @@ namespace NeoEdit.GUI.Controls
 			Rows = rows;
 		}
 
-		public ItemType CreateTab(ItemType item)
+		public ItemType CreateTab(ItemType item, int? index = null)
 		{
-			var replace = (!item.Empty()) && (TopMost != null) && (TopMost.Empty()) ? TopMost : default(ItemType);
+			var replace = (!index.HasValue) && (!item.Empty()) && (TopMost != null) && (TopMost.Empty()) ? TopMost : default(ItemType);
 			if (replace != null)
 				Items[Items.IndexOf(replace)] = item;
 			else
-				Items.Add(item);
+				Items.Insert(index ?? Items.Count, item);
 			TopMost = item;
 			return replace;
 		}

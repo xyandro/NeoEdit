@@ -24,6 +24,7 @@ namespace NeoEdit.TextEdit
 		File_Operations_Explore,
 		File_Operations_CommandPrompt,
 		File_Operations_DragDrop,
+		File_Operations_VCSDiff,
 		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[KeyGesture(Key.F5)] File_Refresh,
 		[KeyGesture(Key.F5, ModifierKeys.Control)] File_AutoRefresh,
