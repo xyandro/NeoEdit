@@ -243,17 +243,29 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Absolute() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).TrimStart('-')).ToList());
 
-		NumericFloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent);
+		NumericFloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, GetVariables());
 
-		void Command_Numeric_Floor(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Floor(double.Parse(GetString(range), NumberStyles.Float) / result.Interval) * result.Interval).ToString()).ToList());
+		void Command_Numeric_Floor(NumericFloorRoundCeilingDialog.Result result)
+		{
+			var interval = new NEExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Floor(double.Parse(GetString(range), NumberStyles.Float) / interval[index]) * interval[index]).ToString()).ToList());
+		}
 
-		NumericFloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent);
+		NumericFloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, GetVariables());
 
-		void Command_Numeric_Ceiling(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Ceiling(double.Parse(GetString(range), NumberStyles.Float) / result.Interval) * result.Interval).ToString()).ToList());
+		void Command_Numeric_Ceiling(NumericFloorRoundCeilingDialog.Result result)
+		{
+			var interval = new NEExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Ceiling(double.Parse(GetString(range), NumberStyles.Float) / interval[index]) * interval[index]).ToString()).ToList());
+		}
 
-		NumericFloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent);
+		NumericFloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, GetVariables());
 
-		void Command_Numeric_Round(NumericFloorRoundCeilingDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (Math.Round(double.Parse(GetString(range), NumberStyles.Float) / result.Interval, MidpointRounding.AwayFromZero) * result.Interval).ToString()).ToList());
+		void Command_Numeric_Round(NumericFloorRoundCeilingDialog.Result result)
+		{
+			var interval = new NEExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Round(double.Parse(GetString(range), NumberStyles.Float) / interval[index], MidpointRounding.AwayFromZero) * interval[index]).ToString()).ToList());
+		}
 
 		NumericLimitDialog.Result Command_Numeric_Limit_Dialog() => NumericLimitDialog.Run(WindowParent, GetVariables());
 
