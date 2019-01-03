@@ -41,7 +41,7 @@ namespace NeoEdit.TextEdit
 				var col = column; // If we don't copy this the value will be updated and invalid
 				var header = table.GetHeader(column);
 				var colData = default(List<string>);
-				var colDataInitialize = new NEVariableListInitializer(() => colData = Enumerable.Range(0, table.NumRows).Select(row => table[row, col]).ToList());
+				var colDataInitialize = new NEVariableInitializer(() => colData = Enumerable.Range(0, table.NumRows).Select(row => table[row, col]).ToList());
 				results.Add(NEVariable.List(header, $"Column {header}", () => colData, colDataInitialize));
 			}
 			return results;

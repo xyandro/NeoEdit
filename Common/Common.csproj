@@ -22,8 +22,8 @@
     <Compile Include="Expressions\NEExpression.cs" />
     <Compile Include="Expressions\NEVariable.cs" />
     <Compile Include="Expressions\NEVariableConstant.cs" />
+    <Compile Include="Expressions\NEVariableInitializer.cs" />
     <Compile Include="Expressions\NEVariableList.cs" />
-    <Compile Include="Expressions\NEVariableListInitializer.cs" />
     <Compile Include="Expressions\NEVariables.cs" />
     <Compile Include="Expressions\NEVariableSeries.cs" />
     <Compile Include="Expressions\NumericValue.cs" />

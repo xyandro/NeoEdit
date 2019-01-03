@@ -5,44 +5,20 @@ namespace NeoEdit.Common.Expressions
 {
 	internal class NEVariableList : NEVariable
 	{
-		Func<List<object>> listFunc;
+		readonly Func<List<object>> listFunc;
 		List<object> list;
-		NEVariableListInitializer initializer;
-		object lockObj = new object();
 
-		public NEVariableList(string name, string description, Func<List<object>> listFunc, NEVariableListInitializer initializer = null) : base(name, description)
+		public NEVariableList(string name, string description, Func<List<object>> listFunc, NEVariableInitializer initializer = null) : base(name, description, initializer) => this.listFunc = listFunc;
+
+		protected override void VirtSetup() => list = listFunc();
+
+		protected override int? VirtCount() => list.Count;
+
+		protected override object VirtValue(int index)
 		{
-			this.listFunc = listFunc;
-			this.initializer = initializer;
-		}
-
-		void Setup()
-		{
-			if (list != null)
-				return;
-
-			lock (lockObj)
-			{
-				if (list != null)
-					return;
-
-				initializer?.Initialize();
-				list = listFunc();
-			}
-		}
-
-		public override object GetValue(int index)
-		{
-			Setup();
 			if (index >= list.Count)
 				throw new ArgumentException($"Not enough values for variable {Name}");
 			return list[index];
-		}
-
-		public override int? Count()
-		{
-			Setup();
-			return list.Count;
 		}
 	}
 }

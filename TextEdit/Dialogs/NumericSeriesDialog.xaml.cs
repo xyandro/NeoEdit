@@ -26,13 +26,18 @@ namespace NeoEdit.TextEdit.Dialogs
 			Variables = variables;
 
 			InitializeComponent();
-			if (!linear)
+			if (linear)
 			{
+				StartExpression = "linestart";
+				IncrementExpression = "lineincrement";
+			}
+			else
+			{
+				StartExpression = "geostart";
+				IncrementExpression = "geoincrement";
 				Title = "Geometric Series";
 				incrementLabel.Content = "_Multiplier";
 			}
-			StartExpression = "start";
-			IncrementExpression = "increment";
 		}
 
 		Result result;

@@ -650,7 +650,7 @@ namespace NeoEdit.TextEdit
 			var results = new NEVariables();
 
 			var strs = default(List<string>);
-			var initializeStrs = new NEVariableListInitializer(() => strs = Selections.Select(range => GetString(range)).ToList());
+			var initializeStrs = new NEVariableInitializer(() => strs = Selections.Select(range => GetString(range)).ToList());
 			results.Add(NEVariable.List("x", "Selection", () => strs, initializeStrs));
 			results.Add(NEVariable.Constant("xn", "Selection count", () => Selections.Count));
 			results.Add(NEVariable.List("xl", "Selection length", () => Selections.Select(range => range.Length)));
@@ -666,7 +666,7 @@ namespace NeoEdit.TextEdit
 			foreach (var pair in Regions)
 			{
 				var regions = default(List<string>);
-				var initializeRegions = new NEVariableListInitializer(() => regions = pair.Value.Select(range => GetString(range)).ToList());
+				var initializeRegions = new NEVariableInitializer(() => regions = pair.Value.Select(range => GetString(range)).ToList());
 				results.Add(NEVariable.List($"r{pair.Key}", $"Region {pair.Key}", () => regions, initializeRegions));
 				results.Add(NEVariable.Constant($"r{pair.Key}n", $"Region {pair.Key} count", () => pair.Value.Count));
 				results.Add(NEVariable.List($"r{pair.Key}l", $"Region {pair.Key} length", () => pair.Value.Select(range => range.Length)));
@@ -696,24 +696,24 @@ namespace NeoEdit.TextEdit
 			results.Add(NEVariable.Constant("f", "Filename", () => fileName));
 
 			var lineStarts = default(List<int>);
-			var initializeLineStarts = new NEVariableListInitializer(() => lineStarts = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start) + 1).ToList());
+			var initializeLineStarts = new NEVariableInitializer(() => lineStarts = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start) + 1).ToList());
 			results.Add(NEVariable.List("line", "Selection line start", () => lineStarts, initializeLineStarts));
 			var lineEnds = default(List<int>);
-			var initializeLineEnds = new NEVariableListInitializer(() => lineEnds = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.End) + 1).ToList());
+			var initializeLineEnds = new NEVariableInitializer(() => lineEnds = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.End) + 1).ToList());
 			results.Add(NEVariable.List("lineend", "Selection line end", () => lineEnds, initializeLineEnds));
 
 			var colStarts = default(List<int>);
-			var initializeColStarts = new NEVariableListInitializer(() => colStarts = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
+			var initializeColStarts = new NEVariableInitializer(() => colStarts = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
 			results.Add(NEVariable.List("col", "Selection column start", () => colStarts, initializeColStarts));
 			var colEnds = default(List<int>);
-			var initializeColEnds = new NEVariableListInitializer(() => colEnds = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
+			var initializeColEnds = new NEVariableInitializer(() => colEnds = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
 			results.Add(NEVariable.List("colend", "Selection column end", () => colEnds, initializeColEnds));
 
 			var posStarts = default(List<int>);
-			var initializePosStarts = new NEVariableListInitializer(() => posStarts = Selections.Select(range => range.Start).ToList());
+			var initializePosStarts = new NEVariableInitializer(() => posStarts = Selections.Select(range => range.Start).ToList());
 			results.Add(NEVariable.List("pos", "Selection position start", () => posStarts, initializePosStarts));
 			var posEnds = default(List<int>);
-			var initializePosEnds = new NEVariableListInitializer(() => posEnds = Selections.Select(range => range.End).ToList());
+			var initializePosEnds = new NEVariableInitializer(() => posEnds = Selections.Select(range => range.End).ToList());
 			results.Add(NEVariable.List("posend", "Selection position end", () => posEnds, initializePosEnds));
 
 			for (var ctr = 0; ctr < KeysAndValues.Count; ++ctr)
@@ -733,6 +733,50 @@ namespace NeoEdit.TextEdit
 				results.Add(NEVariable.Constant("width", "Image width", () => GetBitmap().Width));
 				results.Add(NEVariable.Constant("height", "Image height", () => GetBitmap().Height));
 			}
+
+			var nonNulls = default(List<Tuple<double, int>>);
+			double lineStart = 0, lineIncrement = 0, geoStart = 0, geoIncrement = 0;
+			var initializeNonNulls = new NEVariableInitializer(() => nonNulls = Selections.AsParallel().AsOrdered().Select((range, index) => new { str = GetString(range), index }).NonNullOrWhiteSpace(obj => obj.str).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList());
+			var initializeLineSeries = new NEVariableInitializer(() =>
+			{
+				if (nonNulls.Count == 0)
+					lineStart = lineIncrement = 1;
+				else if (nonNulls.Count == 1)
+				{
+					lineStart = nonNulls[0].Item1;
+					lineIncrement = 1;
+				}
+				else
+				{
+					var first = nonNulls.First();
+					var last = nonNulls.Last();
+
+					lineIncrement = (last.Item1 - first.Item1) / (last.Item2 - first.Item2);
+					lineStart = first.Item1 - lineIncrement * first.Item2;
+				}
+			}, initializeNonNulls);
+			var initializeGeoSeries = new NEVariableInitializer(() =>
+			{
+				if (nonNulls.Count == 0)
+					geoStart = geoIncrement = 1;
+				else if (nonNulls.Count == 1)
+				{
+					geoStart = nonNulls[0].Item1;
+					geoIncrement = 1;
+				}
+				else
+				{
+					var first = nonNulls.First();
+					var last = nonNulls.Last();
+
+					geoIncrement = Math.Pow(last.Item1 / first.Item1, 1.0 / (last.Item2 - first.Item2));
+					geoStart = first.Item1 / Math.Pow(geoIncrement, first.Item2);
+				}
+			}, initializeNonNulls);
+			results.Add(NEVariable.Constant("linestart", "Linear series start", () => lineStart, initializeLineSeries));
+			results.Add(NEVariable.Constant("lineincrement", "Linear series increment", () => lineIncrement, initializeLineSeries));
+			results.Add(NEVariable.Constant("geostart", "Geometric series start", () => geoStart, initializeGeoSeries));
+			results.Add(NEVariable.Constant("geoincrement", "Geometric series increment", () => geoIncrement, initializeGeoSeries));
 
 			if (IncludeInlineVariables)
 				GetInlineVariables().Where(inlineVar => !results.Contains(inlineVar.Name)).ForEach(inlineVar => results.Add(NEVariable.Constant(inlineVar.Name, "Inline variable", inlineVar.Value)));

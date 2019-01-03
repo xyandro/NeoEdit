@@ -4,30 +4,13 @@ namespace NeoEdit.Common.Expressions
 {
 	class NEVariableConstant : NEVariable
 	{
-		Func<object> valueFunc;
+		readonly Func<object> valueFunc;
 		object value;
-		bool isSet = false;
-		object lockObj = new object();
 
-		public NEVariableConstant(string name, string description, Func<object> valueFunc) : base(name, description)
-		{
-			this.valueFunc = valueFunc;
-		}
+		public NEVariableConstant(string name, string description, Func<object> valueFunc, NEVariableInitializer initializer = null) : base(name, description, initializer) => this.valueFunc = valueFunc;
 
-		public override object GetValue(int index)
-		{
-			if (!isSet)
-			{
-				lock (lockObj)
-				{
-					if (!isSet)
-					{
-						value = valueFunc();
-						isSet = true;
-					}
-				}
-			}
-			return value;
-		}
+		protected override void VirtSetup() => value = valueFunc();
+
+		protected override object VirtValue(int index) => value;
 	}
 }

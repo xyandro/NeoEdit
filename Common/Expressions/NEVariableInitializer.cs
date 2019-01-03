@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace NeoEdit.Common.Expressions
 {
-	public class NEVariableListInitializer
+	public class NEVariableInitializer
 	{
 		public Action Action { get; }
-		public List<NEVariableListInitializer> Dependencies { get; }
+		public List<NEVariableInitializer> Dependencies { get; }
 		public bool Initialized { get; private set; } = false;
 
-		public NEVariableListInitializer(Action action, params NEVariableListInitializer[] dependencies)
+		public NEVariableInitializer(Action action, params NEVariableInitializer[] dependencies)
 		{
 			Action = action;
 			Dependencies = dependencies.ToList();
