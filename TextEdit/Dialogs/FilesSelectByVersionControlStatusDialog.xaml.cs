@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using NeoEdit.Common.Transform;
 using NeoEdit.GUI.Controls;
 
@@ -27,6 +28,19 @@ namespace NeoEdit.TextEdit.Dialogs
 		FilesSelectByVersionControlStatusDialog()
 		{
 			InitializeComponent();
+			Normal = Modified = true;
+			Ignored = Unknown = VersionControl = false;
+		}
+
+		void OnSelectionClick(object sender, RoutedEventArgs e)
+		{
+			Normal = Modified = Ignored = Unknown = VersionControl = false;
+			switch ((sender as Button).Tag as string)
+			{
+				case "Controlled": Normal = Modified = true; break;
+				case "Modified": Modified = true; break;
+				case "Ignored": Ignored = true; break;
+			}
 		}
 
 		Result result;
