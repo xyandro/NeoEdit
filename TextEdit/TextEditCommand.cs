@@ -155,6 +155,7 @@ namespace NeoEdit.TextEdit
 		Files_Select_Roots,
 		Files_Select_NonRoots,
 		Files_Select_MatchDepth,
+		Files_Select_CommonAncestor,
 		Files_Select_ByVersionControlStatus,
 		Files_Hash,
 		Files_Sign,

@@ -116,12 +116,27 @@ namespace NeoEdit.TextEdit
 
 		int GetDepthLength(string path, int matchDepth)
 		{
+			if (matchDepth == 0)
+				return 0;
+
 			var depth = 0;
 			for (var index = 0; index < path.Length; ++index)
 				if (path[index] == '\\')
 					if (++depth == matchDepth)
 						return index;
+
 			return path.Length;
+		}
+
+		void FindCommonLength(string str1, string str2, ref int length)
+		{
+			length = Math.Min(length, Math.Min(str1.Length, str2.Length));
+			for (var ctr = 0; ctr < length; ++ctr)
+				if (char.ToLowerInvariant(str1[ctr]) != (char.ToLowerInvariant(str2[ctr])))
+				{
+					length = ctr;
+					break;
+				}
 		}
 
 		List<string> GetDirectoryContents(string dir, bool recursive, List<string> errors)
@@ -703,6 +718,19 @@ namespace NeoEdit.TextEdit
 			var strs = GetSelectionStrings();
 			var minDepth = strs.Select(str => str.Count(c => c == '\\') + 1).DefaultIfEmpty(0).Min();
 			SetSelections(Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], minDepth))).ToList());
+		}
+
+		void Command_Files_Select_CommonAncestor()
+		{
+			var strs = Selections.AsParallel().AsOrdered().Select(range => GetString(range) + "\\").ToList();
+			var depth = 0;
+			if (strs.Any())
+			{
+				var length = strs[0].Length;
+				strs.Skip(1).ForEach(str => FindCommonLength(strs[0], str, ref length));
+				depth = strs[0].Substring(0, length).Count(c => c == '\\');
+			}
+			SetSelections(Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList());
 		}
 
 		FilesSelectByVersionControlStatusDialog.Result Command_Files_Select_ByVersionControlStatus_Dialog() => FilesSelectByVersionControlStatusDialog.Run(WindowParent);

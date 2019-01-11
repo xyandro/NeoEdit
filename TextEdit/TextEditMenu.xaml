@@ -265,6 +265,8 @@
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="_Match Depth" CommandEnum="Files_Select_MatchDepth"/>
 			<Separator/>
+			<textEdit:TextEditMenuItem Header="_Common Ancestor" CommandEnum="Files_Select_CommonAncestor"/>
+			<Separator/>
 			<textEdit:TextEditMenuItem Header="By _Version Control Status" CommandEnum="Files_Select_ByVersionControlStatus"/>
 		</MenuItem>
 		<Separator/>
