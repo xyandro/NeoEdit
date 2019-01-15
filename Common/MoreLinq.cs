@@ -176,7 +176,7 @@ namespace NeoEdit.Common
 			return false;
 		}
 
-		public static IEnumerable<IEnumerable<TSource>> Batch<TSource>(this IEnumerable<TSource> source, int batchSize)
+		public static IEnumerable<List<TSource>> Batch<TSource>(this IEnumerable<TSource> source, int batchSize)
 		{
 			List<TSource> batch = null;
 

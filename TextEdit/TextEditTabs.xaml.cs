@@ -198,31 +198,31 @@ namespace NeoEdit.TextEdit
 		void Command_Diff_Diff()
 		{
 			var diffTargets = ItemTabs.Items.Count == 2 ? ItemTabs.Items.ToList() : ItemTabs.Items.Where(data => data.Active).ToList();
-			if ((diffTargets.Count == 2) && (diffTargets[0].DiffTarget != diffTargets[1]))
+			if (diffTargets.Any(item => item.DiffTarget != null))
 			{
-				if (shiftDown)
-				{
-					if (ItemTabs.Items.Count == 2)
-						ItemTabs.Layout = TabsLayout.Grid;
-					else
-					{
-						ItemTabs.Items.Remove(diffTargets[0]);
-						ItemTabs.Items.Remove(diffTargets[1]);
-
-						var textEditTabs = new TextEditTabs();
-						textEditTabs.ItemTabs.Layout = TabsLayout.Grid;
-						textEditTabs.tabs.CreateTab(diffTargets[0]);
-						textEditTabs.tabs.CreateTab(diffTargets[1]);
-						textEditTabs.ItemTabs.TopMost = diffTargets[0];
-					}
-
-				}
-				diffTargets[0].DiffTarget = diffTargets[1];
-			}
-			else if (diffTargets.Any(item => item.DiffTarget != null))
 				diffTargets.ForEach(item => item.DiffTarget = null);
-			else
-				throw new Exception("Must have two files active for diff.");
+				return;
+			}
+
+			if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
+				throw new Exception("Must have even number of files active for diff.");
+
+			if (shiftDown)
+			{
+				if (!ItemTabs.Items.Except(diffTargets).Any())
+					ItemTabs.Layout = TabsLayout.Grid;
+				else
+				{
+					diffTargets.ForEach(diffTarget => ItemTabs.Items.Remove(diffTarget));
+
+					var textEditTabs = new TextEditTabs();
+					textEditTabs.ItemTabs.Layout = TabsLayout.Grid;
+					diffTargets.ForEach(diffTarget => textEditTabs.tabs.CreateTab(diffTarget));
+					textEditTabs.ItemTabs.TopMost = diffTargets[0];
+				}
+			}
+
+			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
 		}
 
 		CustomGridDialog.Result Command_View_Type_Dialog() => CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
