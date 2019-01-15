@@ -225,6 +225,21 @@ namespace NeoEdit.TextEdit
 			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
 		}
 
+		void Command_Diff_Select_LeftRightTab(bool left)
+		{
+			var topMost = ItemTabs.TopMost;
+			var active = ItemTabs.Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (ItemTabs.GetIndex(item) < ItemTabs.GetIndex(item.DiffTarget)) == left).ToList();
+			ItemTabs.Items.ForEach(item => item.Active = false);
+
+			if (!active.Any())
+				return;
+
+			if (!active.Contains(topMost))
+				topMost = active.First();
+			ItemTabs.TopMost = topMost;
+			active.ForEach(item => item.Active = true);
+		}
+
 		CustomGridDialog.Result Command_View_Type_Dialog() => CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
 
 		void Command_View_Type(TabsLayout layout, CustomGridDialog.Result result) => ItemTabs.SetLayout(layout, result?.Columns, result?.Rows);
@@ -523,6 +538,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Shell_Unintegrate: Command_File_Shell_Unintegrate(); break;
 				case TextEditCommand.File_Exit: Close(); break;
 				case TextEditCommand.Diff_Diff: Command_Diff_Diff(); break;
+				case TextEditCommand.Diff_Select_LeftTab: Command_Diff_Select_LeftRightTab(true); break;
+				case TextEditCommand.Diff_Select_RightTab: Command_Diff_Select_LeftRightTab(false); break;
 				case TextEditCommand.View_Full: Command_View_Type(TabsLayout.Full, null); break;
 				case TextEditCommand.View_Grid: Command_View_Type(TabsLayout.Grid, null); break;
 				case TextEditCommand.View_CustomGrid: Command_View_Type(TabsLayout.Grid, dialogResult as CustomGridDialog.Result); break;

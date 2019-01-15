@@ -115,6 +115,8 @@ namespace NeoEdit.TextEdit
 		Diff_Fix_LineEndings,
 		Diff_Select_Match,
 		Diff_Select_Diff,
+		Diff_Select_LeftTab,
+		Diff_Select_RightTab,
 		Files_Name_Simplify,
 		Files_Name_MakeAbsolute,
 		Files_Name_MakeRelative,

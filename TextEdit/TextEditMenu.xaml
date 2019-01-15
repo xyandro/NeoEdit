@@ -191,6 +191,9 @@
 		<MenuItem Header="_Select">
 			<textEdit:TextEditMenuItem Header="_Match" CommandEnum="Diff_Select_Match"/>
 			<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Select_Diff"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="_Left Tab" CommandEnum="Diff_Select_LeftTab"/>
+			<textEdit:TextEditMenuItem Header="_Right Tab" CommandEnum="Diff_Select_RightTab"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
