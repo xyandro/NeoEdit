@@ -194,6 +194,7 @@
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="_Left Tab" CommandEnum="Diff_Select_LeftTab"/>
 			<textEdit:TextEditMenuItem Header="_Right Tab" CommandEnum="Diff_Select_RightTab"/>
+			<textEdit:TextEditMenuItem Header="_Both Tabs" CommandEnum="Diff_Select_BothTabs"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
