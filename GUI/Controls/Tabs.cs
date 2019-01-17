@@ -142,6 +142,8 @@ namespace NeoEdit.GUI.Controls
 			TopMost = topMost;
 		}
 
+		public bool IsActive(ItemType item) => Items.Where(x => x == item).Select(x => x.Active).DefaultIfEmpty(false).First();
+
 		public int GetIndex(ItemType item, bool activeOnly = false)
 		{
 			var index = Items.Where(x => (!activeOnly) || (x.Active)).Indexes(x => x == item).DefaultIfEmpty(-1).First();

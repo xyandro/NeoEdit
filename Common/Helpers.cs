@@ -442,5 +442,12 @@ namespace NeoEdit.Common
 		}
 
 		static Helpers() { Directory.CreateDirectory(NeoEditAppData); }
+
+		public static void Swap<T>(ref T item1, ref T item2)
+		{
+			var save = item1;
+			item1 = item2;
+			item2 = save;
+		}
 	}
 }

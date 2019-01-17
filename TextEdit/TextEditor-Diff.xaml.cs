@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -162,13 +163,21 @@ namespace NeoEdit.TextEdit
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var left = TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget) ? this : DiffTarget;
-			var right = left == this ? DiffTarget : this;
+			var target = TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget) ? this : DiffTarget;
+			var source = target == this ? DiffTarget : this;
+			if (!moveLeft)
+				Helpers.Swap(ref target, ref source);
 
-			if (moveLeft)
-				left.ReplaceSelections(right.GetSelectionStrings());
-			else
-				right.ReplaceSelections(left.GetSelectionStrings());
+			// If both tabs are active only do this from the target tab
+			var bothActive = TabsParent.IsActive(DiffTarget);
+			if ((bothActive) && (target != this))
+				return;
+
+			var strs = source.GetSelectionStrings();
+			target.ReplaceSelections(strs);
+			// If both tabs are active queue an empty edit so undo will take both back to the same place
+			if (bothActive)
+				source.ReplaceSelections(strs);
 		}
 
 		DiffFixWhitespaceDialog.Result Command_Diff_Fix_Whitespace_Dialog() => DiffFixWhitespaceDialog.Run(WindowParent);
