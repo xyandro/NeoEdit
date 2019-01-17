@@ -651,7 +651,7 @@ namespace NeoEdit.Common
 				map[pass] = formatDiffLine.Select(val => val.Item2).ToList();
 			}
 
-			var linesLCS = LCS.GetLCS(lines[0], lines[1], str => !string.IsNullOrWhiteSpace(str));
+			var linesLCS = LCS.GetLCS(lines[0], lines[1], (str1, str2) => (string.IsNullOrWhiteSpace(str1) == string.IsNullOrWhiteSpace(str2)));
 
 			for (var pass = 0; pass < 2; ++pass)
 			{
@@ -697,7 +697,7 @@ namespace NeoEdit.Common
 				if (skip)
 					continue;
 
-				var colsLCS = LCS.GetLCS(lines[0][curLine[0]], lines[1][curLine[1]], ch => char.IsLetterOrDigit(ch));
+				var colsLCS = LCS.GetLCS(lines[0][curLine[0]], lines[1][curLine[1]], (ch1, ch2) => (char.IsLetterOrDigit(ch1) && char.IsLetterOrDigit(ch2)) || (char.IsWhiteSpace(ch1) && char.IsWhiteSpace(ch2)));
 
 				for (var pass = 0; pass < 2; ++pass)
 				{
@@ -753,7 +753,7 @@ namespace NeoEdit.Common
 				textLines[pass] = lines[pass].Select(line => diffParams.FormatLine(line).Item1).ToList();
 			}
 
-			var linesLCS = LCS.GetLCS(textLines[0], textLines[1], str => !string.IsNullOrWhiteSpace(str));
+			var linesLCS = LCS.GetLCS(textLines[0], textLines[1], (str1, str2) => string.IsNullOrWhiteSpace(str1) == string.IsNullOrWhiteSpace(str2));
 
 			var ranges = new List<Tuple<int, int>>();
 			var strs = new List<string>();

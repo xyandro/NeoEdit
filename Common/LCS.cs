@@ -24,15 +24,14 @@ namespace NeoEdit.Common
 
 		public enum MatchType { Match, Mismatch, Gap }
 
-		static List<LCSResult> CalculateDiff<T>(List<T> list0, List<T> list1, Func<T, bool> keepTogether = null)
+		static List<LCSResult> CalculateDiff<T>(List<T> list0, List<T> list1, Func<T, T, bool> keepTogether = null)
 		{
 			const int ValueBase = 0x00020000;
 			const int CountBase = 0x00000004;
 			const int Type = 0x00000003;
-			const int Gap0 = 1;
-			const int Gap1 = 0;
-			const int Match = 2;
-			const int MatchSeq = 3;
+			const int Gap0 = 2;
+			const int Gap1 = 1; // Gap0 > Gap1 so LCS will prefer left
+			const int Match = 3;
 
 			var lenArray = new int[list0.Count + 1, list1.Count + 1];
 			for (var list0Pos = 1; list0Pos <= list0.Count; ++list0Pos)
@@ -43,23 +42,18 @@ namespace NeoEdit.Common
 			for (var list0Pos = 1; list0Pos <= list0.Count; ++list0Pos)
 				for (var list1Pos = 1; list1Pos <= list1.Count; ++list1Pos)
 				{
-					var gap0Val = (lenArray[list0Pos, list1Pos - 1] & ~Type) | Gap0;
-					var gap1Val = (lenArray[list0Pos - 1, list1Pos] & ~Type) | Gap1;
+					var gap0Val = lenArray[list0Pos, list1Pos - 1] & ~Type | Gap0;
+					var gap1Val = lenArray[list0Pos - 1, list1Pos] & ~Type | Gap1;
 					var max = Math.Max(gap0Val, gap1Val);
 
 					var item0 = list0[list0Pos - 1];
 					var item1 = list1[list1Pos - 1];
 					if (item0.Equals(item1))
 					{
-						var matchVal = (lenArray[list0Pos - 1, list1Pos - 1] & ~Type) + ValueBase;
-						if ((keepTogether == null) || (keepTogether(item0)))
-						{
-							matchVal |= MatchSeq;
-							if ((lenArray[list0Pos - 1, list1Pos - 1] & Type) == MatchSeq)
+						var matchVal = (lenArray[list0Pos - 1, list1Pos - 1] & ~Type | Match) + ValueBase;
+						if ((list0Pos > 1) && ((lenArray[list0Pos - 1, list1Pos - 1] & Type) == Match))
+							if (keepTogether?.Invoke(list0[list0Pos - 2], item0) == true)
 								matchVal += CountBase;
-						}
-						else
-							matchVal |= Match;
 						max = Math.Max(max, matchVal);
 					}
 
@@ -73,7 +67,7 @@ namespace NeoEdit.Common
 			{
 				switch (lenArray[pos0, pos1] & Type)
 				{
-					case Match: case MatchSeq: result.Add(new LCSResult(MatchType.Match, MatchType.Match)); break;
+					case Match: result.Add(new LCSResult(MatchType.Match, MatchType.Match)); break;
 					case Gap0: result.Add(new LCSResult(MatchType.Gap, MatchType.Mismatch)); break;
 					case Gap1: result.Add(new LCSResult(MatchType.Mismatch, MatchType.Gap)); break;
 				}
@@ -108,7 +102,7 @@ namespace NeoEdit.Common
 			return result;
 		}
 
-		public static List<LCSResult> GetLCS<T>(IEnumerable<T> input0, IEnumerable<T> input1, Func<T, bool> keepTogether = null)
+		public static List<LCSResult> GetLCS<T>(IEnumerable<T> input0, IEnumerable<T> input1, Func<T, T, bool> keepTogether = null)
 		{
 			const int BufSize = 2048;
 			const int BreakMatchCount = 10;
