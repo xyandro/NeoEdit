@@ -119,7 +119,7 @@ namespace NeoEdit.TextEdit
 			SetSelections(Selections.Where((str, num) => results[num]).ToList());
 		}
 
-		void Command_Expression_InlineVariables_Add() => ReplaceSelections($"[var:'0'=0]");
+		void Command_Expression_InlineVariables_Add() => ReplaceSelections(GetSelectionStrings().Select(str => $"[:'{(string.IsNullOrEmpty(str) ? "0" : str)}'=0]").ToList());
 
 		void Command_Expression_InlineVariables_Calculate()
 		{
