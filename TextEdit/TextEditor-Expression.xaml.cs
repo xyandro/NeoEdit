@@ -30,12 +30,10 @@ namespace NeoEdit.TextEdit
 					if (value == this.value)
 						return;
 					this.value = value;
-					Changed = true;
 				}
 			}
 			public Range ValueRange { get; set; }
 			public Exception Exception { get; set; }
-			public bool Changed { get; set; }
 
 			public InlineVariable(string name, string expression, Range expressionRange, string value, Range valueRange)
 			{
@@ -126,9 +124,7 @@ namespace NeoEdit.TextEdit
 			var inlineVars = GetInlineVariables();
 			CalculateInlineVariables(inlineVars);
 			inlineVars.Select(inlineVar => inlineVar.Exception).NonNull().ForEach(ex => throw ex);
-			inlineVars = inlineVars.Where(inlineVar => inlineVar.Changed).ToList();
-			SetSelections(inlineVars.Select(inlineVar => inlineVar.ValueRange).ToList());
-			ReplaceSelections(inlineVars.Select(inlineVar => inlineVar.Value.ToString()).ToList());
+			Replace(inlineVars.Select(inlineVar => inlineVar.ValueRange).ToList(), inlineVars.Select(inlineVar => inlineVar.Value.ToString()).ToList());
 		}
 
 		ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog() => ExpressionSolveDialog.Run(WindowParent, GetVariables());
