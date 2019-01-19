@@ -50,19 +50,22 @@ namespace NeoEdit.TextEdit
 		void CalculateInlineVariables(List<InlineVariable> inlineVars)
 		{
 			var variables = GetVariables();
-			inlineVars.ForEach(inlineVar => variables.Remove(inlineVar.Name));
+			var processed = new HashSet<InlineVariable>();
+			inlineVars.NonNullOrEmpty(inlineVar => inlineVar.Name).ForEach(inlineVar => variables.Remove(inlineVar.Name));
 
 			while (true)
 			{
 				var done = true;
 				foreach (var inlineVar in inlineVars)
 				{
-					if (variables.Contains(inlineVar.Name))
+					if (processed.Contains(inlineVar))
 						continue;
 					if (!inlineVar.NEExpression.Variables.All(name => variables.Contains(name)))
 						continue;
 					inlineVar.Value = inlineVar.NEExpression.Evaluate<double>(variables);
-					variables.Add(NEVariable.Constant(inlineVar.Name, "User-defined", inlineVar.Value));
+					if (!string.IsNullOrEmpty(inlineVar.Name))
+						variables.Add(NEVariable.Constant(inlineVar.Name, "User-defined", inlineVar.Value));
+					processed.Add(inlineVar);
 					done = false;
 				}
 				if (done)
@@ -71,7 +74,7 @@ namespace NeoEdit.TextEdit
 
 			foreach (var inlineVar in inlineVars)
 			{
-				if (variables.Contains(inlineVar.Name))
+				if (processed.Contains(inlineVar))
 					continue;
 				inlineVar.Exception = new Exception($"{inlineVar.Name}: {string.Join(", ", inlineVar.NEExpression.Variables.Where(name => !variables.Contains(name)))} undefined");
 			}
@@ -80,16 +83,19 @@ namespace NeoEdit.TextEdit
 		List<InlineVariable> GetInlineVariables()
 		{
 			var inlineVars = new List<InlineVariable>();
-			var regex = new Regex(@"\[(\w+):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
+			var regex = new Regex(@"\[(\w*):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			var found = new HashSet<string>();
 			foreach (var tuple in Data.RegexMatches(regex, BeginOffset, EndOffset - BeginOffset, false, false, false))
 			{
 				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
 				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);
 				var inlineVar = new InlineVariable(match.Groups[1].Value, match.Groups[2].Value, Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length), GetString(valueRange), valueRange);
-				if (found.Contains(inlineVar.Name))
-					throw new Exception($"Duplicate inline variable: {inlineVar.Name}");
-				found.Add(inlineVar.Name);
+				if (!string.IsNullOrEmpty(inlineVar.Name))
+				{
+					if (found.Contains(inlineVar.Name))
+						throw new Exception($"Duplicate inline variable: {inlineVar.Name}");
+					found.Add(inlineVar.Name);
+				}
 				inlineVars.Add(inlineVar);
 			}
 			return inlineVars;

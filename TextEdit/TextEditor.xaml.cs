@@ -779,7 +779,7 @@ namespace NeoEdit.TextEdit
 			results.Add(NEVariable.Constant("geoincrement", "Geometric series increment", () => geoIncrement, initializeGeoSeries));
 
 			if (IncludeInlineVariables)
-				GetInlineVariables().Where(inlineVar => !results.Contains(inlineVar.Name)).ForEach(inlineVar => results.Add(NEVariable.Constant(inlineVar.Name, "Inline variable", inlineVar.Value)));
+				GetInlineVariables().NonNullOrEmpty(inlineVar => inlineVar.Name).Where(inlineVar => !results.Contains(inlineVar.Name)).ForEach(inlineVar => results.Add(NEVariable.Constant(inlineVar.Name, "Inline variable", inlineVar.Value)));
 
 			return results;
 		}
