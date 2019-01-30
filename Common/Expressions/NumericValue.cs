@@ -500,17 +500,6 @@ namespace NeoEdit.Common.Expressions
 			throw new Exception("Invalid root");
 		}
 
-		static BigInteger CalcGCF(BigInteger value1, BigInteger value2)
-		{
-			while (value2 != 0)
-			{
-				var newValue = value1 % value2;
-				value1 = value2;
-				value2 = newValue;
-			}
-			return value1;
-		}
-
 		public static NumericValue GCF(List<NumericValue> inputs)
 		{
 			if (inputs.Count == 0)
@@ -524,7 +513,7 @@ namespace NeoEdit.Common.Expressions
 
 			var gcf = factors[0];
 			for (var ctr = 1; ctr < factors.Count; ++ctr)
-				gcf = CalcGCF(gcf, factors[ctr]);
+				gcf = Helpers.GCF(gcf, factors[ctr]);
 			return new NumericValue(gcf);
 		}
 
@@ -541,7 +530,7 @@ namespace NeoEdit.Common.Expressions
 
 			var lcm = factors[0];
 			for (var ctr = 1; ctr < factors.Count; ++ctr)
-				lcm *= factors[ctr] / CalcGCF(lcm, factors[ctr]);
+				lcm *= factors[ctr] / Helpers.GCF(lcm, factors[ctr]);
 			return new NumericValue(lcm);
 		}
 
@@ -554,7 +543,7 @@ namespace NeoEdit.Common.Expressions
 			if ((num == 0) || (den == 0))
 				throw new Exception("Factors cannot be 0");
 
-			var gcf = CalcGCF(num, den);
+			var gcf = Helpers.GCF(num, den);
 			return $"{num / gcf}/{den / gcf}";
 		}
 

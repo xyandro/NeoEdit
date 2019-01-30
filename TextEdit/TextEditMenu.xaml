@@ -389,6 +389,8 @@
 		<MenuItem Header="_Fraction">
 			<textEdit:TextEditMenuItem Header="_Whole" CommandEnum="Numeric_Fraction_Whole"/>
 			<textEdit:TextEditMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction_Fraction"/>
+			<Separator/>
+			<textEdit:TextEditMenuItem Header="_Simplify" CommandEnum="Numeric_Fraction_Simplify"/>
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="A_bsolute" CommandEnum="Numeric_Absolute"/>

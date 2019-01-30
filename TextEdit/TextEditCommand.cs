@@ -230,6 +230,7 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.Subtract, ModifierKeys.Control | ModifierKeys.Shift)] [KeyGesture(Key.OemMinus, ModifierKeys.Control | ModifierKeys.Shift, 2)] Numeric_Add_SubtractClipboard,
 		Numeric_Fraction_Whole,
 		Numeric_Fraction_Fraction,
+		Numeric_Fraction_Simplify,
 		Numeric_Absolute,
 		Numeric_Floor,
 		Numeric_Ceiling,

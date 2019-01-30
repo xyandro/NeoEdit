@@ -449,5 +449,16 @@ namespace NeoEdit.Common
 			item1 = item2;
 			item2 = save;
 		}
+
+		public static BigInteger GCF(BigInteger value1, BigInteger value2)
+		{
+			while (value2 != 0)
+			{
+				var newValue = value1 % value2;
+				value1 = value2;
+				value2 = newValue;
+			}
+			return value1;
+		}
 	}
 }

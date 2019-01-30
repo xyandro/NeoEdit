@@ -78,6 +78,56 @@ namespace NeoEdit.TextEdit
 			return value;
 		}
 
+		void GetFraction(string str, out BigInteger numerator, out BigInteger denominator)
+		{
+			if (str.IndexOf('.') == -1)
+			{
+				numerator = BigInteger.Parse(str);
+				denominator = 1;
+				return;
+			}
+
+			var value = double.Parse(str);
+			for (var mult = 1; mult < 1000000; ++mult)
+			{
+				var val = value * mult;
+				var rounded = Math.Round(val);
+				if (Math.Abs(val - rounded) <= 1E-8)
+				{
+					numerator = (BigInteger)rounded;
+					denominator = mult;
+					return;
+				}
+			}
+
+			throw new Exception($"Failed to convert {str} to fraction");
+		}
+
+		string SimplifyFraction(string str)
+		{
+			var idx = str.IndexOf('/');
+			if (idx == -1)
+			{
+				idx = str.Length;
+				str += "/1";
+			}
+
+			GetFraction(str.Remove(idx), out var num, out var numMult);
+			GetFraction(str.Substring(idx + 1), out var den, out var denMult);
+
+			num *= denMult;
+			den *= numMult;
+
+			var gcf = Helpers.GCF(num, den);
+			num /= gcf;
+			den /= gcf;
+
+			if (den == 1)
+				return num.ToString();
+			else
+				return $"{num}/{den}";
+		}
+
 		void Command_Numeric_Select_Fraction_Whole()
 		{
 			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
@@ -208,6 +258,8 @@ namespace NeoEdit.TextEdit
 				return str.Substring(idx);
 			}).ToList());
 		}
+
+		void Command_Numeric_Fraction_Simplify() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range)).Select(SimplifyFraction).ToList());
 
 		void Command_Numeric_Absolute() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).TrimStart('-')).ToList());
 
