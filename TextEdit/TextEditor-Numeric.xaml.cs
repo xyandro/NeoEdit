@@ -78,7 +78,7 @@ namespace NeoEdit.TextEdit
 			return value;
 		}
 
-		void Command_Numeric_Select_Whole()
+		void Command_Numeric_Select_Fraction_Whole()
 		{
 			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 			{
@@ -90,7 +90,7 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		void Command_Numeric_Select_Fraction()
+		void Command_Numeric_Select_Fraction_Fraction()
 		{
 			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 			{
@@ -187,7 +187,7 @@ namespace NeoEdit.TextEdit
 			ReplaceSelections(Selections.Zip(clipboardStrings, (sel, clip) => new { sel, clip }).AsParallel().AsOrdered().Select(obj => (double.Parse(GetString(obj.sel)) + double.Parse(obj.clip) * mult).ToString()).ToList());
 		}
 
-		void Command_Numeric_Whole()
+		void Command_Numeric_Fraction_Whole()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str =>
 			{
@@ -198,7 +198,7 @@ namespace NeoEdit.TextEdit
 			}).ToList());
 		}
 
-		void Command_Numeric_Fraction()
+		void Command_Numeric_Fraction_Fraction()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str =>
 			{

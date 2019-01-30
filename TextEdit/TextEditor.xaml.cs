@@ -1126,8 +1126,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Text_RepeatIndex: Command_Text_RepeatIndex(); break;
 				case TextEditCommand.Numeric_Select_Min: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.Numeric); break;
 				case TextEditCommand.Numeric_Select_Max: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.Numeric); break;
-				case TextEditCommand.Numeric_Select_Whole: Command_Numeric_Select_Whole(); break;
-				case TextEditCommand.Numeric_Select_Fraction: Command_Numeric_Select_Fraction(); break;
+				case TextEditCommand.Numeric_Select_Fraction_Whole: Command_Numeric_Select_Fraction_Whole(); break;
+				case TextEditCommand.Numeric_Select_Fraction_Fraction: Command_Numeric_Select_Fraction_Fraction(); break;
 				case TextEditCommand.Numeric_Hex_ToHex: Command_Numeric_Hex_ToHex(); break;
 				case TextEditCommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(); break;
 				case TextEditCommand.Numeric_ConvertBase: Command_Numeric_ConvertBase(dialogResult as NumericConvertBaseDialog.Result); break;
@@ -1145,8 +1145,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Numeric_Add_Decrement: Command_Numeric_Add_IncrementDecrement(false); break;
 				case TextEditCommand.Numeric_Add_AddClipboard: Command_Numeric_Add_AddSubtractClipboard(true); break;
 				case TextEditCommand.Numeric_Add_SubtractClipboard: Command_Numeric_Add_AddSubtractClipboard(false); break;
-				case TextEditCommand.Numeric_Whole: Command_Numeric_Whole(); break;
-				case TextEditCommand.Numeric_Fraction: Command_Numeric_Fraction(); break;
+				case TextEditCommand.Numeric_Fraction_Whole: Command_Numeric_Fraction_Whole(); break;
+				case TextEditCommand.Numeric_Fraction_Fraction: Command_Numeric_Fraction_Fraction(); break;
 				case TextEditCommand.Numeric_Absolute: Command_Numeric_Absolute(); break;
 				case TextEditCommand.Numeric_Floor: Command_Numeric_Floor(dialogResult as NumericFloorRoundCeilingDialog.Result); break;
 				case TextEditCommand.Numeric_Ceiling: Command_Numeric_Ceiling(dialogResult as NumericFloorRoundCeilingDialog.Result); break;
