@@ -267,24 +267,27 @@ namespace NeoEdit.TextEdit
 
 		void Command_Numeric_Floor(NumericFloorRoundCeilingDialog.Result result)
 		{
+			var baseValue = new NEExpression(result.BaseValue).EvaluateList<double>(GetVariables(), Selections.Count());
 			var interval = new NEExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Floor(double.Parse(GetString(range), NumberStyles.Float) / interval[index]) * interval[index]).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Floor((double.Parse(GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index]) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
 		NumericFloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, GetVariables());
 
 		void Command_Numeric_Ceiling(NumericFloorRoundCeilingDialog.Result result)
 		{
+			var baseValue = new NEExpression(result.BaseValue).EvaluateList<double>(GetVariables(), Selections.Count());
 			var interval = new NEExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Ceiling(double.Parse(GetString(range), NumberStyles.Float) / interval[index]) * interval[index]).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Ceiling((double.Parse(GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index]) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
 		NumericFloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, GetVariables());
 
 		void Command_Numeric_Round(NumericFloorRoundCeilingDialog.Result result)
 		{
+			var baseValue = new NEExpression(result.BaseValue).EvaluateList<double>(GetVariables(), Selections.Count());
 			var interval = new NEExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Round(double.Parse(GetString(range), NumberStyles.Float) / interval[index], MidpointRounding.AwayFromZero) * interval[index]).ToString()).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Round((double.Parse(GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index], MidpointRounding.AwayFromZero) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
 		NumericLimitDialog.Result Command_Numeric_Limit_Dialog() => NumericLimitDialog.Run(WindowParent, GetVariables());
