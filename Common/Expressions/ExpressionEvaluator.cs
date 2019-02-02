@@ -171,10 +171,15 @@ namespace NeoEdit.Common.Expressions
 			var result = Visit(context.form());
 			if (unit != null)
 			{
-				if (!(result is NumericValue))
-					throw new Exception("Cannot change units on non-numeric result");
-				if ((result as NumericValue).Units.HasUnits)
-					result = (result as NumericValue).ConvertUnits(new ExpressionUnits(unit)).StripUnits();
+				if (unit != "")
+				{
+					if (!(result is NumericValue))
+						throw new Exception("Cannot change units on non-numeric result");
+					if ((result as NumericValue).Units.HasUnits)
+						result = (result as NumericValue).ConvertUnits(new ExpressionUnits(unit)).StripUnits();
+				}
+				else if (result is NumericValue)
+					result = (result as NumericValue).StripUnits();
 			}
 			return Simplify(result);
 		}

@@ -60,7 +60,7 @@ namespace NeoEdit.TextEdit
 						continue;
 					if (!inlineVar.NEExpression.Variables.All(name => variables.Contains(name)))
 						continue;
-					inlineVar.Value = inlineVar.NEExpression.Evaluate<double>(variables);
+					inlineVar.Value = inlineVar.NEExpression.Evaluate<double>(variables, "");
 					if (!string.IsNullOrEmpty(inlineVar.Name))
 						variables.Add(NEVariable.Constant(inlineVar.Name, "User-defined", inlineVar.Value));
 					processed.Add(inlineVar);
@@ -140,9 +140,9 @@ namespace NeoEdit.TextEdit
 				throw new Exception($"Unknown variable: {result.ChangeVariable}");
 
 			var variables = GetVariables();
-			var target = new NEExpression(result.TargetExpression).Evaluate<double>(variables);
-			var tolerance = new NEExpression(result.ToleranceExpression).Evaluate<double>(variables);
-			var value = new NEExpression(result.StartValueExpression).Evaluate<double>(variables);
+			var target = new NEExpression(result.TargetExpression).Evaluate<double>(variables, "");
+			var tolerance = new NEExpression(result.ToleranceExpression).Evaluate<double>(variables, "");
+			var value = new NEExpression(result.StartValueExpression).Evaluate<double>(variables, "");
 
 			Func<double, double> GetValue = input =>
 			{
