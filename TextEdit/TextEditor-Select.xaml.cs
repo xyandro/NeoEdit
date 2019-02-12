@@ -292,6 +292,14 @@ namespace NeoEdit.TextEdit
 
 		void Command_Select_SplitParameters() => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => SelectSplitParameters(range)).ToList());
 
+		SelectParameterDialog.Result Command_Select_Parameter_Dialog() => SelectParameterDialog.Run(WindowParent, GetVariables());
+
+		void Command_Select_Parameter(SelectParameterDialog.Result result)
+		{
+			var num = GetFixedExpressionResults<int>(result.Expression);
+			SetSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SelectSplitParameters(range).Skip(num[index] - 1).First()).ToList());
+		}
+
 		void Command_Select_Selection_First()
 		{
 			CurrentSelection = 0;

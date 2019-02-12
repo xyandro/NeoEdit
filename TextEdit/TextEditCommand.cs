@@ -409,6 +409,7 @@ namespace NeoEdit.TextEdit
 		Select_Repeats_CaseInsensitive_NonMatchPrevious,
 		Select_Split,
 		[KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt)] Select_SplitParameters,
+		Select_Parameter,
 		[KeyGesture(Key.D0, ModifierKeys.Alt)] Select_Selection_First,
 		[KeyGesture(Key.Space, ModifierKeys.Alt)] Select_Selection_CenterVertically,
 		[KeyGesture(Key.Space, ModifierKeys.Alt | ModifierKeys.Shift)] Select_Selection_Center,

@@ -629,7 +629,7 @@
 		<textEdit:TextEditMenuItem Header="_Whole Lines" CommandEnum="Select_WholeLines"/>
 		<textEdit:TextEditMenuItem Header="Re_ctangle" CommandEnum="Select_Rectangle"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Invert" CommandEnum="Select_Invert"/>
+		<textEdit:TextEditMenuItem Header="In_vert" CommandEnum="Select_Invert"/>
 		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Select_Join"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
@@ -656,8 +656,9 @@
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="S_plit" CommandEnum="Select_Split"/>
+		<textEdit:TextEditMenuItem Header="Spl_it" CommandEnum="Select_Split"/>
 		<textEdit:TextEditMenuItem Header="Spli_t Parameters" CommandEnum="Select_SplitParameters"/>
+		<textEdit:TextEditMenuItem Header="_Parameter" CommandEnum="Select_Parameter"/>
 		<Separator/>
 		<MenuItem Header="_Selection">
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Select_Selection_First"/>

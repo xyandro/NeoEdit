@@ -907,6 +907,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
 				case TextEditCommand.Select_Repeats_ByCount: dialogResult = Command_Select_Repeats_ByCount_Dialog(); break;
 				case TextEditCommand.Select_Split: dialogResult = Command_Select_Split_Dialog(); break;
+				case TextEditCommand.Select_Parameter: dialogResult = Command_Select_Parameter_Dialog(); break;
 				case TextEditCommand.Region_ModifyRegions: dialogResult = Command_Region_ModifyRegions_Dialog(); break;
 				default: return true;
 			}
@@ -1325,6 +1326,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Select_Repeats_CaseInsensitive_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(false); break;
 				case TextEditCommand.Select_Split: Command_Select_Split(dialogResult as SelectSplitDialog.Result); break;
 				case TextEditCommand.Select_SplitParameters: Command_Select_SplitParameters(); break;
+				case TextEditCommand.Select_Parameter: Command_Select_Parameter(dialogResult as SelectParameterDialog.Result); break;
 				case TextEditCommand.Select_Selection_First: Command_Select_Selection_First(); break;
 				case TextEditCommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;
 				case TextEditCommand.Select_Selection_Center: Command_Select_Selection_Center(); break;
