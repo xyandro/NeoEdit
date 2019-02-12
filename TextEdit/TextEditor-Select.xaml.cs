@@ -76,6 +76,111 @@ namespace NeoEdit.TextEdit
 				yield return Range.FromIndex(range.Start + start, str.Length - start);
 		}
 
+		enum SelectSplitEnum
+		{
+			None = 0,
+			Parentheses = 1,
+			Brackets = 2,
+			Braces = 4,
+			String = 8,
+			VerbatimString = 16 | String,
+			InterpolatedString = 32 | String,
+			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
+		}
+		IEnumerable<Range> SelectSplitParameters(Range range)
+		{
+			var stack = new Stack<SelectSplitEnum>();
+			stack.Push(SelectSplitEnum.None);
+
+			var charValue = new Dictionary<char, SelectSplitEnum>
+			{
+				['('] = SelectSplitEnum.Parentheses,
+				[')'] = SelectSplitEnum.Parentheses,
+				['['] = SelectSplitEnum.Brackets,
+				[']'] = SelectSplitEnum.Brackets,
+				['{'] = SelectSplitEnum.Braces,
+				['}'] = SelectSplitEnum.Braces,
+			};
+
+			var start = range.Start;
+			var pos = start;
+			while (true)
+			{
+				if (stack.Peek().HasFlag(SelectSplitEnum.String))
+				{
+					if (pos >= range.End)
+						throw new Exception("Incomplete string");
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '\\') && (!stack.Peek().HasFlag(SelectSplitEnum.VerbatimString)))
+						pos += 2;
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '"') && (Data.Data[pos + 1] == '"') && (stack.Peek().HasFlag(SelectSplitEnum.VerbatimString)))
+						pos += 2;
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '{') && (Data.Data[pos + 1] == '{') && (stack.Peek().HasFlag(SelectSplitEnum.InterpolatedString)))
+						pos += 2;
+					else if ((Data.Data[pos] == '{') && (stack.Peek().HasFlag(SelectSplitEnum.InterpolatedString)))
+					{
+						stack.Push(SelectSplitEnum.Braces);
+						++pos;
+					}
+					else if (Data.Data[pos] == '"')
+					{
+						stack.Pop();
+						++pos;
+					}
+					else
+						++pos;
+				}
+				else
+				{
+					if ((pos >= range.End) || ((Data.Data[pos] == ',') && (stack.Peek() == SelectSplitEnum.None)))
+					{
+						if (stack.Count != 1)
+							throw new Exception($"Didn't find close for {stack.Peek()}");
+						while ((start < pos) && (char.IsWhiteSpace(Data.Data[start])))
+							++start;
+						var end = pos;
+						while ((end > start) && (char.IsWhiteSpace(Data.Data[end - 1])))
+							--end;
+						yield return new Range(end, start);
+						if (pos >= range.End)
+							break;
+						++pos;
+						start = pos;
+					}
+					else if ((Data.Data[pos] == '(') || (Data.Data[pos] == '[') || (Data.Data[pos] == '{'))
+						stack.Push(charValue[Data.Data[pos++]]);
+					else if ((Data.Data[pos] == ')') || (Data.Data[pos] == ']') || (Data.Data[pos] == '}'))
+					{
+						var last = stack.Pop();
+						if (charValue[Data.Data[pos]] != last)
+							throw new Exception($"Didn't find open for {Data.Data[pos]}");
+						++pos;
+					}
+					else if (Data.Data[pos] == '\"')
+					{
+						stack.Push(SelectSplitEnum.String);
+						++pos;
+					}
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '@') && (Data.Data[pos + 1] == '\"'))
+					{
+						stack.Push(SelectSplitEnum.VerbatimString);
+						pos += 2;
+					}
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '$') && (Data.Data[pos + 1] == '\"'))
+					{
+						stack.Push(SelectSplitEnum.InterpolatedString);
+						pos += 2;
+					}
+					else if ((pos + 2 < range.End) && (Data.Data[pos] == '$') && (Data.Data[pos + 1] == '@') && (Data.Data[pos + 2] == '\"'))
+					{
+						stack.Push(SelectSplitEnum.InterpolatedVerbatimString);
+						pos += 3;
+					}
+					else
+						++pos;
+				}
+			}
+		}
+
 		void Command_Select_All() => SetSelections(new List<Range> { FullRange });
 
 		void Command_Select_Nothing() => SetSelections(new List<Range>());
@@ -184,6 +289,8 @@ namespace NeoEdit.TextEdit
 		SelectSplitDialog.Result Command_Select_Split_Dialog() => SelectSplitDialog.Run(WindowParent);
 
 		void Command_Select_Split(SelectSplitDialog.Result result) => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => SelectSplit(range, result)).ToList());
+
+		void Command_Select_SplitParameters() => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => SelectSplitParameters(range)).ToList());
 
 		void Command_Select_Selection_First()
 		{

@@ -635,7 +635,7 @@
 		<textEdit:TextEditMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
 		<textEdit:TextEditMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
+		<textEdit:TextEditMenuItem Header="To_ggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
 		<Separator/>
 		<MenuItem Header="_Repeats">
 			<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Repeats_Unique"/>
@@ -657,6 +657,7 @@
 		</MenuItem>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="S_plit" CommandEnum="Select_Split"/>
+		<textEdit:TextEditMenuItem Header="Spli_t Parameters" CommandEnum="Select_SplitParameters"/>
 		<Separator/>
 		<MenuItem Header="_Selection">
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Select_Selection_First"/>
