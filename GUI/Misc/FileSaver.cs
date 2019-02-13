@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -13,6 +14,7 @@ namespace NeoEdit.GUI.Misc
 		readonly static byte[] EncryptedHeader = Encoding.UTF8.GetBytes("\u0000NEAES\u0000");
 		readonly static byte[] EncryptedValidate = Encoding.UTF8.GetBytes("\u0000VALID\u0000");
 		readonly static byte[] CompressedHeader = Encoding.UTF8.GetBytes("\u0000NEGZIP\u0000");
+		readonly static HashSet<string> keyVault = new HashSet<string>();
 
 		public static string GetKey(Window parent, bool encrypt) => CryptorKeyDialog.Run(parent, Cryptor.Type.AES, encrypt);
 
@@ -21,6 +23,7 @@ namespace NeoEdit.GUI.Misc
 			if (string.IsNullOrEmpty(AESKey))
 				return data;
 
+			keyVault.Add(AESKey);
 			return EncryptedHeader.Concat(Cryptor.Encrypt(EncryptedValidate.Concat(data).ToArray(), Cryptor.Type.AES, AESKey)).ToArray();
 		}
 
@@ -44,12 +47,33 @@ namespace NeoEdit.GUI.Misc
 				return;
 
 			bytes = bytes.Skip(EncryptedHeader.Length).ToArray();
-			var key = GetKey(parent, false);
-			if (string.IsNullOrEmpty(key))
-				throw new Exception("Failed to decrypt file");
 
-			bytes = Decrypt(bytes, key) ?? throw new Exception("Failed to decrypt file");
-			AESKey = key;
+			foreach (var key in keyVault)
+			{
+				var output = Decrypt(bytes, key);
+				if (output == null)
+					continue;
+
+				bytes = output;
+				AESKey = key;
+				return;
+			}
+
+			while (true)
+			{
+				var key = GetKey(parent, false);
+				if (string.IsNullOrEmpty(key))
+					throw new Exception("Failed to decrypt file");
+
+				var output = Decrypt(bytes, key);
+				if (output == null)
+					continue;
+
+				keyVault.Add(key);
+				bytes = output;
+				AESKey = key;
+				return;
+			}
 		}
 
 		public static byte[] Compress(byte[] bytes, bool compress)
