@@ -63,7 +63,7 @@
 			<textEdit:TextEditMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Encr_yption" CommandEnum="File_Encryption"/>
+		<textEdit:MultiMenuItem Header="Encr_ypt" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="AESKey" Converter="{guiConverters:NonEmptyConverter}"  MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
 		<textEdit:MultiMenuItem Header="Co_mpress" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
 		<Separator/>
 		<MenuItem Header="S_hell">

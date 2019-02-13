@@ -791,7 +791,7 @@ namespace NeoEdit.TextEdit
 			SetSelections(Selections.Concat(new Range(Data.GetOffset(useLine, index))).ToList());
 		}
 
-		public bool GetDialogResult(TextEditCommand command, out object dialogResult)
+		public bool GetDialogResult(TextEditCommand command, out object dialogResult, bool? multiStatus)
 		{
 			dialogResult = null;
 
@@ -803,7 +803,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encoding_Encoding: dialogResult = Command_File_Encoding_Encoding_Dialog(); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
 				case TextEditCommand.File_Encoding_LineEndings: dialogResult = Command_File_Encoding_LineEndings_Dialog(); break;
-				case TextEditCommand.File_Encryption: dialogResult = Command_File_Encryption_Dialog(); break;
+				case TextEditCommand.File_Encrypt: dialogResult = Command_File_Encrypt_Dialog(multiStatus); break;
 				case TextEditCommand.Edit_Find_Find: dialogResult = Command_Edit_Find_Find_Dialog(); break;
 				case TextEditCommand.Edit_Find_MassFind: dialogResult = Command_Edit_Find_MassFind_Dialog(); break;
 				case TextEditCommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_Replace_Dialog(); break;
@@ -963,7 +963,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Encoding_Encoding: Command_File_Encoding_Encoding(dialogResult as EncodingDialog.Result); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result, answer); break;
 				case TextEditCommand.File_Encoding_LineEndings: Command_File_Encoding_LineEndings(dialogResult as FileEncodingLineEndingsDialog.Result); break;
-				case TextEditCommand.File_Encryption: Command_File_Encryption(dialogResult as string); break;
+				case TextEditCommand.File_Encrypt: Command_File_Encrypt(dialogResult as string); break;
 				case TextEditCommand.File_Compress: Command_File_Compress(multiStatus); break;
 				case TextEditCommand.Edit_Undo: Command_Edit_Undo(); break;
 				case TextEditCommand.Edit_Redo: Command_Edit_Redo(); break;
@@ -2173,12 +2173,10 @@ namespace NeoEdit.TextEdit
 					bytes = File.ReadAllBytes(FileName);
 			}
 
-			string aesKey;
-			FileSaver.HandleDecrypt(WindowParent, ref bytes, out aesKey);
+			FileSaver.HandleDecrypt(WindowParent, ref bytes, out var aesKey);
 			AESKey = aesKey;
 
-			bool compressed;
-			bytes = FileSaver.Decompress(bytes, out compressed);
+			bytes = FileSaver.Decompress(bytes, out var compressed);
 			Compressed = compressed;
 
 			if (codePage == Coder.CodePage.AutoByBOM)

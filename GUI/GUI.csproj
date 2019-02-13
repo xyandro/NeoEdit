@@ -67,6 +67,7 @@
     <Compile Include="Converters\CheckBitConverter.cs" />
     <Compile Include="Converters\HexConverter.cs" />
     <Compile Include="Converters\NEExpressionConverter.cs" />
+    <Compile Include="Converters\NonEmptyConverter.cs" />
     <Compile Include="Converters\RadioConverter.cs" />
     <Compile Include="Converters\SingleLineConverter.cs" />
     <Compile Include="Converters\ValidValueConverter.cs" />

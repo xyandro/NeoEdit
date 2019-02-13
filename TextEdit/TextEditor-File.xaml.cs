@@ -359,31 +359,15 @@ namespace NeoEdit.TextEdit
 			Replace(sel, sel.Select(str => result.LineEndings).ToList());
 		}
 
-		string Command_File_Encryption_Dialog()
+		string Command_File_Encrypt_Dialog(bool? multiStatus)
 		{
-			var key = FileSaver.GetKey(WindowParent, true);
-			if ((AESKey != null) && (key == null))
-			{
-				var answer = new Message(WindowParent)
-				{
-					Title = "Confirm",
-					Text = "Remove encryption?",
-					Options = Message.OptionsEnum.YesNoCancel,
-					DefaultCancel = Message.OptionsEnum.Cancel,
-				}.Show();
+			if (multiStatus != false)
+				return "";
 
-				if (answer == Message.OptionsEnum.Yes)
-					return "";
-			}
-			return key;
+			return FileSaver.GetKey(WindowParent, true);
 		}
 
-		void Command_File_Encryption(string result)
-		{
-			if (result == null)
-				return;
-			AESKey = result == "" ? null : result;
-		}
+		void Command_File_Encrypt(string result) => AESKey = result == "" ? null : result;
 
 		void Command_File_Compress(bool? multiStatus) => Compressed = multiStatus == false;
 	}

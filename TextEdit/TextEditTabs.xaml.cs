@@ -495,7 +495,7 @@ namespace NeoEdit.TextEdit
 			var shiftDown = this.shiftDown;
 
 			object dialogResult;
-			if (!GetDialogResult(command, out dialogResult))
+			if (!GetDialogResult(command, out dialogResult, multiStatus))
 				return;
 
 			if (recordingMacro != null)
@@ -512,7 +512,7 @@ namespace NeoEdit.TextEdit
 			newClipboard.IsCut = isCut;
 		}
 
-		internal bool GetDialogResult(TextEditCommand command, out object dialogResult)
+		internal bool GetDialogResult(TextEditCommand command, out object dialogResult, bool? multiStatus)
 		{
 			dialogResult = null;
 
@@ -521,7 +521,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
 				case TextEditCommand.View_CustomGrid: dialogResult = Command_View_Type_Dialog(); break;
 				case TextEditCommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro<TextEditCommand>.MacroDirectory); break;
-				default: return ItemTabs.TopMost == null ? true : ItemTabs.TopMost.GetDialogResult(command, out dialogResult);
+				default: return ItemTabs.TopMost == null ? true : ItemTabs.TopMost.GetDialogResult(command, out dialogResult, multiStatus);
 			}
 
 			return dialogResult != null;

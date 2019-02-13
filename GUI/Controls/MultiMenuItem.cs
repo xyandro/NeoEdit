@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,6 +17,8 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public string Property { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<string>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
+		public IValueConverter Converter { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<IValueConverter>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
+		[DepProp]
 		public object MultiValue { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool? MultiChecked { get { return UIHelper<MultiMenuItem<ItemType, CommandType>>.GetPropValue<bool?>(this); } set { UIHelper<MultiMenuItem<ItemType, CommandType>>.SetPropValue(this, value); MultiStatus = value; } }
@@ -31,7 +34,7 @@ namespace NeoEdit.GUI.Controls
 			else
 			{
 				var property = typeof(ItemType).GetProperty(Property);
-				var match = Objects.Where(obj => obj.Active).Select(obj => property.GetValue(obj).Equals(MultiValue)).Distinct().ToList();
+				var match = Objects.Where(obj => obj.Active).Select(obj => property.GetValue(obj)).Select(value => Converter?.Convert(value, MultiValue.GetType(), null, CultureInfo.DefaultThreadCurrentCulture) ?? value).Select(value => value.Equals(MultiValue)).Distinct().ToList();
 				MultiChecked = match.Count == 1 ? match.First() : default(bool?);
 			}
 
