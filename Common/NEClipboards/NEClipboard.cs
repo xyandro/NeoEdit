@@ -16,41 +16,25 @@ namespace NeoEdit.Common.NEClipboards
 		public delegate void ClipboardChangedDelegate();
 		public static event ClipboardChangedDelegate ClipboardChanged;
 
-		static ClipboardChangeNotifier clipboardChangeNotifier = new ClipboardChangeNotifier(() => { while (true) try { FetchSystemClipboard(); break; } catch { Thread.Sleep(100); } });
-		static NEClipboard() { FetchSystemClipboard(); }
+		static NEClipboard currentClipboard = null, lastClipboard = null;
 
-		static void FetchSystemClipboard()
+		static ClipboardChangeNotifier clipboardChangeNotifier = new ClipboardChangeNotifier(() =>
 		{
-			var system = GetSystem();
-			if (system == null)
-				return;
-			current = system;
-			ClipboardChanged?.Invoke();
-		}
+			currentClipboard = null;
+			for (var ctr = 0; ctr < 5; ++ctr)
+				if (GetSystem() == null)
+					Thread.Sleep(100);
+				else
+					break;
+		});
+		static NEClipboard() { GetSystem(); }
 
-		static NEClipboard current;
-		public static NEClipboard Current
-		{
-			get { return current; }
-			set
-			{
-				if (current == value)
-					return;
-				current = value;
-				current.SetSystem();
-				ClipboardChanged?.Invoke();
-			}
-		}
+		public static NEClipboard Current { get => GetSystem(); set => value.SetSystem(); }
 
 		static readonly int PID = Process.GetCurrentProcess().Id;
 
-		List<NEClipboardList> neClipboardLists;
+		List<NEClipboardList> neClipboardLists = new List<NEClipboardList>();
 		public bool? IsCut { get; set; } = null;
-
-		public NEClipboard()
-		{
-			neClipboardLists = new List<NEClipboardList>();
-		}
 
 		public void Add(NEClipboardList items) => neClipboardLists.Add(items);
 		public int Count => neClipboardLists.Count;
@@ -79,9 +63,15 @@ namespace NeoEdit.Common.NEClipboards
 		{
 			try
 			{
+				if (currentClipboard != null)
+					return currentClipboard;
+
 				var dataObj = Clipboard.GetDataObject();
 				if (dataObj.GetData(typeof(NEClipboard)) as int? == PID)
-					return null;
+				{
+					currentClipboard = lastClipboard;
+					return currentClipboard;
+				}
 
 				var result = new NEClipboard();
 				var list = new NEClipboardList();
@@ -110,11 +100,12 @@ namespace NeoEdit.Common.NEClipboards
 					list.Add(NEClipboardItem.Create(str));
 				}
 
-				var image = dataObj.GetData(DataFormats.Bitmap, true) as BitmapSource;
-				if (image != null)
+				if (dataObj.GetData(DataFormats.Bitmap, true) is BitmapSource image)
 					list.Add(NEClipboardItem.Create(image));
 
-				return result;
+				currentClipboard = result;
+				try { ClipboardChanged?.Invoke(); } catch { }
+				return currentClipboard;
 			}
 			catch { return null; }
 		}
@@ -123,6 +114,9 @@ namespace NeoEdit.Common.NEClipboards
 		{
 			try
 			{
+				if (this == currentClipboard)
+					return;
+
 				var dataObj = new DataObject();
 
 				dataObj.SetText(String, TextDataFormat.UnicodeText);
@@ -141,6 +135,8 @@ namespace NeoEdit.Common.NEClipboards
 					dataObj.SetImage(image);
 
 				Clipboard.SetDataObject(dataObj, true);
+				currentClipboard = lastClipboard = this;
+				try { ClipboardChanged?.Invoke(); } catch { }
 			}
 			catch { }
 		}
