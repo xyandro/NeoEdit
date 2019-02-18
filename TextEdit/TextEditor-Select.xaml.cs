@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text.RegularExpressions;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
@@ -60,22 +59,6 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		IEnumerable<Range> SelectSplit(Range range, SelectSplitDialog.Result result)
-		{
-			var str = GetString(range);
-			var start = 0;
-			foreach (Match match in result.Regex.Matches(str))
-			{
-				if ((result.IncludeEmpty) || (match.Index != start))
-					yield return Range.FromIndex(range.Start + start, match.Index - start);
-				if (result.IncludeResults)
-					yield return Range.FromIndex(range.Start + match.Index, match.Length);
-				start = match.Index + match.Length;
-			}
-			if ((result.IncludeEmpty) || (str.Length != start))
-				yield return Range.FromIndex(range.Start + start, str.Length - start);
-		}
-
 		enum SelectSplitEnum
 		{
 			None = 0,
@@ -87,7 +70,7 @@ namespace NeoEdit.TextEdit
 			InterpolatedString = 32 | String,
 			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
 		}
-		IEnumerable<Range> SelectSplitParameters(Range range)
+		IEnumerable<Range> SelectSplit(Range range, SelectSplitDialog.Result result)
 		{
 			var stack = new Stack<SelectSplitEnum>();
 			stack.Push(SelectSplitEnum.None);
@@ -104,19 +87,22 @@ namespace NeoEdit.TextEdit
 
 			var start = range.Start;
 			var pos = start;
+			var matchPos = -1;
+			var matchLen = 0;
 			while (true)
 			{
-				if (stack.Peek().HasFlag(SelectSplitEnum.String))
+				var stackTop = stack.Peek();
+				if (stackTop.HasFlag(SelectSplitEnum.String))
 				{
 					if (pos >= range.End)
 						throw new Exception("Incomplete string");
-					else if ((pos + 1 < range.End) && (Data.Data[pos] == '\\') && (!stack.Peek().HasFlag(SelectSplitEnum.VerbatimString)))
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '\\') && (!stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
 						pos += 2;
-					else if ((pos + 1 < range.End) && (Data.Data[pos] == '"') && (Data.Data[pos + 1] == '"') && (stack.Peek().HasFlag(SelectSplitEnum.VerbatimString)))
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '"') && (Data.Data[pos + 1] == '"') && (stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
 						pos += 2;
-					else if ((pos + 1 < range.End) && (Data.Data[pos] == '{') && (Data.Data[pos + 1] == '{') && (stack.Peek().HasFlag(SelectSplitEnum.InterpolatedString)))
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '{') && (Data.Data[pos + 1] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
 						pos += 2;
-					else if ((Data.Data[pos] == '{') && (stack.Peek().HasFlag(SelectSplitEnum.InterpolatedString)))
+					else if ((Data.Data[pos] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
 					{
 						stack.Push(SelectSplitEnum.Braces);
 						++pos;
@@ -131,28 +117,54 @@ namespace NeoEdit.TextEdit
 				}
 				else
 				{
-					if ((pos >= range.End) || ((Data.Data[pos] == ',') && (stack.Peek() == SelectSplitEnum.None)))
+					if ((stackTop == SelectSplitEnum.None) && (pos > matchPos))
+					{
+						var match = result.Regex.Match(GetString(new Range(pos, range.End)));
+						if (match.Success)
+						{
+							if (match.Length == 0)
+								throw new Exception("Cannot split on empty selection");
+							matchPos = match.Index + pos;
+							matchLen = match.Length;
+						}
+						else
+						{
+							matchPos = range.End;
+							matchLen = 0;
+						}
+					}
+
+					if ((pos >= range.End) || ((pos == matchPos) && (stackTop == SelectSplitEnum.None)))
 					{
 						if (stack.Count != 1)
-							throw new Exception($"Didn't find close for {stack.Peek()}");
-						while ((start < pos) && (char.IsWhiteSpace(Data.Data[start])))
-							++start;
-						var end = pos;
-						while ((end > start) && (char.IsWhiteSpace(Data.Data[end - 1])))
-							--end;
-						yield return new Range(end, start);
+							throw new Exception($"Didn't find close for {stackTop}");
+						var useStart = start;
+						var useEnd = pos;
+						if (result.TrimWhitespace)
+						{
+							while ((useStart < pos) && (char.IsWhiteSpace(Data.Data[useStart])))
+								++useStart;
+							while ((useEnd > useStart) && (char.IsWhiteSpace(Data.Data[useEnd - 1])))
+								--useEnd;
+						}
+						if ((result.IncludeEmpty) || (useStart != useEnd))
+							yield return new Range(useEnd, useStart);
 						if (pos >= range.End)
 							break;
-						++pos;
+						if (result.IncludeResults)
+							yield return Range.FromIndex(pos, matchLen);
+						pos += matchLen;
 						start = pos;
 					}
+					else if (!result.Balanced)
+						++pos;
 					else if ((Data.Data[pos] == '(') || (Data.Data[pos] == '[') || (Data.Data[pos] == '{'))
 						stack.Push(charValue[Data.Data[pos++]]);
 					else if ((Data.Data[pos] == ')') || (Data.Data[pos] == ']') || (Data.Data[pos] == '}'))
 					{
-						var last = stack.Pop();
-						if (charValue[Data.Data[pos]] != last)
+						if (charValue[Data.Data[pos]] != stackTop)
 							throw new Exception($"Didn't find open for {Data.Data[pos]}");
+						stack.Pop();
 						++pos;
 					}
 					else if (Data.Data[pos] == '\"')
@@ -286,18 +298,12 @@ namespace NeoEdit.TextEdit
 			SetSelections(strs.Select(tuple => Selections[tuple.Item2]).ToList());
 		}
 
-		SelectSplitDialog.Result Command_Select_Split_Dialog() => SelectSplitDialog.Run(WindowParent);
+		SelectSplitDialog.Result Command_Select_Split_Dialog() => SelectSplitDialog.Run(WindowParent, GetVariables());
 
-		void Command_Select_Split(SelectSplitDialog.Result result) => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => SelectSplit(range, result)).ToList());
-
-		void Command_Select_SplitParameters() => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => SelectSplitParameters(range)).ToList());
-
-		SelectParameterDialog.Result Command_Select_Parameter_Dialog() => SelectParameterDialog.Run(WindowParent, GetVariables());
-
-		void Command_Select_Parameter(SelectParameterDialog.Result result)
+		void Command_Select_Split(SelectSplitDialog.Result result)
 		{
-			var num = GetFixedExpressionResults<int>(result.Expression);
-			SetSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SelectSplitParameters(range).Skip(num[index] - 1).First()).ToList());
+			var indexes = GetFixedExpressionResults<int>(result.Index);
+			SetSelections(Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList());
 		}
 
 		void Command_Select_Selection_First()

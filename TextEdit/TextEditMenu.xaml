@@ -622,10 +622,10 @@
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
-		<textEdit:TextEditMenuItem Header="N_othing" CommandEnum="Select_Nothing"/>
+		<textEdit:TextEditMenuItem Header="_Nothing" CommandEnum="Select_Nothing"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
-		<textEdit:TextEditMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
+		<textEdit:TextEditMenuItem Header="L_ines" CommandEnum="Select_Lines"/>
 		<textEdit:TextEditMenuItem Header="_Whole Lines" CommandEnum="Select_WholeLines"/>
 		<textEdit:TextEditMenuItem Header="Re_ctangle" CommandEnum="Select_Rectangle"/>
 		<Separator/>
@@ -635,7 +635,7 @@
 		<textEdit:TextEditMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
 		<textEdit:TextEditMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="To_ggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
+		<textEdit:TextEditMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
 		<Separator/>
 		<MenuItem Header="_Repeats">
 			<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Repeats_Unique"/>
@@ -656,9 +656,7 @@
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Spl_it" CommandEnum="Select_Split"/>
-		<textEdit:TextEditMenuItem Header="Spli_t Parameters" CommandEnum="Select_SplitParameters"/>
-		<textEdit:TextEditMenuItem Header="_Parameter" CommandEnum="Select_Parameter"/>
+		<textEdit:TextEditMenuItem Header="S_plit" CommandEnum="Select_Split"/>
 		<Separator/>
 		<MenuItem Header="_Selection">
 			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Select_Selection_First"/>
