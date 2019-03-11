@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -220,6 +219,14 @@ namespace NeoEdit.TextEdit
 			var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, null, diffIgnoreCharacters);
 			SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
 			ReplaceSelections(fixes.Item2);
+		}
+
+		void Command_Diff_Fix_Encoding()
+		{
+			if (DiffTarget == null)
+				throw new Exception("Diff not in progress");
+
+			CodePage = DiffTarget.CodePage;
 		}
 
 		void Command_Diff_Select_MatchDiff(bool matching)

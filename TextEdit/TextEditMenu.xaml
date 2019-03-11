@@ -186,6 +186,7 @@
 			<textEdit:TextEditMenuItem Header="_Case" CommandEnum="Diff_Fix_Case"/>
 			<textEdit:TextEditMenuItem Header="_Numbers" CommandEnum="Diff_Fix_Numbers"/>
 			<textEdit:TextEditMenuItem Header="Line _Endings" CommandEnum="Diff_Fix_LineEndings"/>
+			<textEdit:TextEditMenuItem Header="Enc_oding" CommandEnum="Diff_Fix_Encoding"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">

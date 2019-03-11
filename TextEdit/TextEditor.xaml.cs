@@ -1033,6 +1033,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_Fix_Case: Command_Diff_Fix_Case(); break;
 				case TextEditCommand.Diff_Fix_Numbers: Command_Diff_Fix_Numbers(); break;
 				case TextEditCommand.Diff_Fix_LineEndings: Command_Diff_Fix_LineEndings(); break;
+				case TextEditCommand.Diff_Fix_Encoding: Command_Diff_Fix_Encoding(); break;
 				case TextEditCommand.Diff_Select_Match: Command_Diff_Select_MatchDiff(true); break;
 				case TextEditCommand.Diff_Select_Diff: Command_Diff_Select_MatchDiff(false); break;
 				case TextEditCommand.Files_Name_Simplify: Command_Files_Name_Simplify(); break;

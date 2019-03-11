@@ -113,6 +113,7 @@ namespace NeoEdit.TextEdit
 		Diff_Fix_Case,
 		Diff_Fix_Numbers,
 		Diff_Fix_LineEndings,
+		Diff_Fix_Encoding,
 		Diff_Select_Match,
 		Diff_Select_Diff,
 		Diff_Select_LeftTab,
