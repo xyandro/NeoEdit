@@ -162,6 +162,7 @@ fragment VERBATIM_STRING   : '@' '"' (~["] | '""')* '"' ;
 fragment ESCAPE            : '\\' ~[xUu] | '\\x' HEX_DIGIT+ | '\\u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT | '\\U' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT ;
 
 INTERPOLATED_START         : '$"' -> more, pushMode(INTERPOLATED) ;
+INTERVERB_START            : '$@"' -> more, pushMode(INTERVERB) ;
 
 CHARACTER                  : '\'' (~['\\\r\n\u0085\u2028\u2029] | ESCAPE) '\'' ;
 
@@ -183,3 +184,9 @@ INTERPOLATED_EXP_BRACE     : '{' -> more, pushMode(INTERPOLATED_EXP) ;
 INTERPOLATED_EXP_CHARS     : (STR | ~["@${}]+) -> more ;
 INTERPOLATED_EXP_START     : '$"' -> more, pushMode(INTERPOLATED_SUB) ;
 INTERPOLATED_EXP_END       : '}' -> more, popMode;
+
+mode INTERVERB;
+INTERVERB_BRACES           : '{{' -> more ;
+INTERVERB_BRACE            : '{' -> more, pushMode(INTERPOLATED_EXP) ;
+INTERVERB_CHARS            : (~["{] | '""')+ -> more ;
+INTERVERB_END              : '"' -> type(STR), popMode ;

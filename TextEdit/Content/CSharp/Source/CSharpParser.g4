@@ -3,18 +3,31 @@ parser grammar CSharpParser;
 options { tokenVocab = CSharpLexer; }
 
 csharp : topcontent* EOF ;
-topcontent : EXTERN ALIAS identifier SEMICOLON # ExternAlias
-           | USING (type | identifier ASSIGN type) SEMICOLON # UsingNS
-           | NAMESPACE Name=type LBRACE topcontent* RBRACE SEMICOLON? # Namespace
-           | attribute* modifier* NodeType=(CLASS | INTERFACE | STRUCT) Name=type (COLON type (COMMA type)*)? where* LBRACE topcontent* RBRACE SEMICOLON? # Class
-           | attribute* modifier* Return=type (Name=type | THIS LBRACKET paramlist RBRACKET) (LBRACE topcontent* RBRACE (ASSIGN expression SEMICOLON)? | LAMBDA expression SEMICOLON) # Property
-           | attribute* modifier* Name=(GET | SET | ADD | REMOVE) (methodcontent | LAMBDA expression SEMICOLON) # Accessor
-           | attribute* modifier* Return=type? (Name=type | OPERATOR Operator=operator) LPAREN paramlist RPAREN where* (COLON (THIS | BASE) LPAREN expressionlist RPAREN)? (methodcontent | LAMBDA expression SEMICOLON) # Method
-           | attribute* modifier* Return=type vardecl (COMMA vardecl)* SEMICOLON # Field
-           | attribute* modifier* EVENT Return=type Name=type (LBRACE topcontent* RBRACE | (ASSIGN expression)? SEMICOLON)? # Event
-           | attribute* modifier* ENUM Name=identifier (COLON Return=type)? LBRACE enumvalue (COMMA enumvalue)* COMMA? RBRACE SEMICOLON? # Enum
-           | attribute # GlobalAttribute // Keep this last so it doesn't grab attributes that should be assigned to other items
+topcontent : externalias
+           | usingns
+           | namespace
+           | class
+           | property
+           | accessor
+           | method
+           | field
+           | event
+           | enum
+           | globalattribute // Keep this last so it doesn't grab attributes that should be assigned to other items
            ;
+
+externalias     : EXTERN ALIAS identifier SEMICOLON ;
+usingns         : USING STATIC? (type | identifier ASSIGN type) SEMICOLON ;
+namespace       : NAMESPACE Name=type LBRACE topcontent* RBRACE SEMICOLON? ;
+class           : attribute* modifier* NodeType=(CLASS | INTERFACE | STRUCT) Name=type (COLON type (COMMA type)*)? where* LBRACE topcontent* RBRACE SEMICOLON? ;
+property        : attribute* modifier* Return=type (Name=type | THIS LBRACKET paramlist RBRACKET) (LBRACE topcontent* RBRACE (ASSIGN expression SEMICOLON)? | LAMBDA expression SEMICOLON) ;
+accessor        : attribute* modifier* Name=(GET | SET | ADD | REMOVE) (methodcontent | LAMBDA expression SEMICOLON) ;
+method          : attribute* modifier* Return=type? (Name=type | OPERATOR Operator=operator) LPAREN paramlist RPAREN where* (COLON (THIS | BASE) LPAREN expressionlist RPAREN)? (methodcontent | LAMBDA expression SEMICOLON) ;
+field           : attribute* modifier* Return=type vardecl (COMMA vardecl)* SEMICOLON ;
+event           : attribute* modifier* EVENT Return=type Name=type (LBRACE topcontent* RBRACE | (ASSIGN expression)? SEMICOLON)? ;
+enum            : attribute* modifier* ENUM Name=identifier (COLON Return=type)? LBRACE enumvalue (COMMA enumvalue)* COMMA? RBRACE SEMICOLON? ;
+globalattribute : attribute ;
+
 methodcontent : modifier* Return=type vardecl (COMMA vardecl)* SEMICOLON # Variable
               | Name=identifier COLON # GotoLabel
               | LBRACE methodcontent* RBRACE # Block
@@ -35,6 +48,7 @@ methodcontent : modifier* Return=type vardecl (COMMA vardecl)* SEMICOLON # Varia
               | CONTINUE SEMICOLON # Continue
               | YIELD? RETURN expression? SEMICOLON # Return
               | THROW expression? SEMICOLON # Throw
+              | method # NextMethod
               | SEMICOLON # Empty
               ;
 operator : type | AND | BANG | DEC | DIV | EQ | FALSE | GE | GT | GT GT | INC | LE | LEFT_SHIFT | LT | MINUS | MOD | MULT | NE | OR | PLUS | TILDE | TRUE | XOR ;
@@ -57,7 +71,7 @@ initialize : expression | LBRACE initialize_list RBRACE | LBRACKET expression RB
 initialize_list : (initialize (COMMA initialize)* COMMA?)? ;
 
 methodparamslist : (methodparam (COMMA methodparam)*)? ;
-methodparam : (identifier COLON)? (IN | OUT | REF)? expression ;
+methodparam : (identifier COLON)? (IN | OUT | REF)? type? expression ;
 expressionlist : (expression (COMMA expression)*)? ;
 expression : identifier # ExpressionIdentifier
            | expression (AND | AND_ASSIGN | ASSIGN | DIV | DIV_ASSIGN | INTERR? DOT | EQ | GE | GT | GT GE | GT GT | LAND | LE | LEFT_SHIFT | LEFT_SHIFT_ASSIGN | LOR | LT | MINUS | MINUS_ASSIGN | MOD | MOD_ASSIGN | MULT | MULT_ASSIGN | NE | OR | OR_ASSIGN | PLUS | PLUS_ASSIGN | PTR | XOR | XOR_ASSIGN) expression # ExpressionBinaryOp
@@ -75,13 +89,14 @@ expression : identifier # ExpressionIdentifier
            | AWAIT expression # ExpressionAwait
            | expression LPAREN methodparamslist RPAREN # ExpressionMethodCall
            | DELEGATE (LPAREN paramlist RPAREN)? methodcontent # ExpressionDelegate
-           | ASYNC? (identifier | LPAREN (type? identifier (COMMA type? identifier)*)? RPAREN) LAMBDA (expression | methodcontent) # ExpressionLambda
+           | ASYNC? (identifier | LPAREN (lambdavar (COMMA lambdavar)*)? RPAREN) LAMBDA (expression | methodcontent) # ExpressionLambda
            | TYPEOF LPAREN type RPAREN # ExpressionTypeOf
            | DEFAULT LPAREN type RPAREN # ExpressionDefault
            | linq # ExpressionLinq
            | (STR | CHARACTER | NUMBER | TRUE | FALSE | NULL) # ExpressionLiteral
            ;
 
+lambdavar : OUT? type? identifier ;
 param : attribute* (IN | OUT | REF | PARAMS | THIS)? type Name=identifier (ASSIGN expression)? ;
 paramlist : (param (COMMA param)*)? | ARGLIST ;
 

@@ -110,11 +110,11 @@ namespace NeoEdit.TextEdit.Content.CSharp
 			return null;
 		}
 
-		public override object VisitExternAlias([NotNull] CSharpParser.ExternAliasContext context) => AddNode(context, new Dictionary<string, object>
+		public override object VisitExternalias([NotNull] CSharpParser.ExternaliasContext context) => AddNode(context, new Dictionary<string, object>
 		{
 			["Type"] = "ExternAlias",
 		});
-		public override object VisitUsingNS([NotNull] CSharpParser.UsingNSContext context) => AddNode(context, new Dictionary<string, object>
+		public override object VisitUsingns([NotNull] CSharpParser.UsingnsContext context) => AddNode(context, new Dictionary<string, object>
 		{
 			["Type"] = "UsingNS",
 		});
@@ -188,7 +188,7 @@ namespace NeoEdit.TextEdit.Content.CSharp
 			["Name"] = context.Name,
 			["Attribute"] = context.attribute(),
 		});
-		public override object VisitGlobalAttribute([NotNull] CSharpParser.GlobalAttributeContext context) => AddNode(context, new Dictionary<string, object>
+		public override object VisitGlobalattribute([NotNull] CSharpParser.GlobalattributeContext context) => AddNode(context, new Dictionary<string, object>
 		{
 			["Type"] = "GlobalAttribute",
 		});
