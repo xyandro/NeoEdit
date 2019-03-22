@@ -33,9 +33,29 @@ namespace NeoEdit.TextEdit
 
 		void ContentReplaceSelections(IEnumerable<ParserBase> nodes)
 		{
-			nodes = nodes.Where(node => node != null).Distinct().OrderBy(node => node.Start).ToList();
-			var overlap = nodes.WithPrev().Any(tuple => tuple.Item2.start < tuple.Item1.end);
-			SetSelections(nodes.Select(node => new Range(node.Start, overlap ? node.Start : node.End)).ToList());
+			nodes = nodes.NonNull().Distinct().OrderBy(node => node.Start).ThenBy(node => node.End);
+			var sels = new List<Range>();
+			var prevNode = default(ParserBase);
+			using (var e = nodes.GetEnumerator())
+				while (true)
+					if (e.MoveNext())
+					{
+						if (prevNode != null)
+						{
+							var overlap = e.Current.Start < prevNode.End;
+							sels.Add(new Range(prevNode.Start, overlap ? prevNode.Start : prevNode.End));
+						}
+
+						prevNode = e.Current;
+					}
+					else
+					{
+						if (prevNode != null)
+							sels.Add(new Range(prevNode.Start, prevNode.End));
+						break;
+					}
+
+			SetSelections(sels);
 		}
 
 		List<ParserNode> GetSelectionNodes()
