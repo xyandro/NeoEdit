@@ -66,7 +66,7 @@ namespace NeoEdit.TextEdit
 
 		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, contentType, modified, line, column, this);
 
-		readonly RunOnceTimer doActivatedTimer, countsTimer, clipboardTimer;
+		readonly RunOnceTimer doActivatedTimer, countsTimer;
 		public TextEditTabs()
 		{
 			TextEditMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
@@ -78,16 +78,14 @@ namespace NeoEdit.TextEdit
 			Drop += OnDrop;
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());
 			countsTimer = new RunOnceTimer(() => UpdateStatusBarText());
-			clipboardTimer = new RunOnceTimer(() => UpdateClipboards());
 			ItemTabs.TabsChanged += ItemTabs_TabsChanged;
-			NEClipboard.ClipboardChanged += () => UpdateClipboards();
+			NEClipboard.ClipboardChanged += () => UpdateStatusBarText();
 			Activated += OnActivated;
 		}
 
 		void ItemTabs_TabsChanged()
 		{
 			ItemTabs.Items.ForEach(item => item.InvalidateCanvas());
-			clipboardTimer.Start();
 		}
 
 		void UpdateStatusBarText()
@@ -100,23 +98,30 @@ namespace NeoEdit.TextEdit
 			ClipboardCountText = $"{plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}";
 		}
 
-		void UpdateClipboards()
+		Dictionary<TextEditor, List<string>> clipboard;
+		public List<string> GetClipboard(TextEditor textEditor)
 		{
-			ItemTabs.Items.ForEach(item => item.Clipboard = new List<string>());
-
-			var activeTabs = ItemTabs.Items.Where(item => item.Active).ToList();
-
-			if (NEClipboard.Current.Count == activeTabs.Count)
-				NEClipboard.Current.Zip(activeTabs, (cb, tab) => new { cb, tab }).ForEach(obj => obj.tab.Clipboard = obj.cb.Strings);
-			else if (NEClipboard.Current.ChildCount == activeTabs.Count)
-				NEClipboard.Current.Strings.Zip(activeTabs, (str, tab) => new { str, tab }).ForEach(obj => obj.tab.Clipboard = new List<string> { obj.str });
-			else
+			if (clipboard == null)
 			{
-				var strs = NEClipboard.Current.Strings;
-				activeTabs.ForEach(tab => tab.Clipboard = strs);
+				var empty = new List<string>();
+				clipboard = ItemTabs.Items.ToDictionary(x => x, x => empty);
+
+				var activeTabs = ItemTabs.Items.Where(item => item.Active).ToList();
+
+				if (NEClipboard.Current.Count == activeTabs.Count)
+					NEClipboard.Current.ForEach((cb, index) => clipboard[activeTabs[index]] = cb.Strings);
+				else if (NEClipboard.Current.ChildCount == activeTabs.Count)
+					NEClipboard.Current.Strings.ForEach((str, index) => clipboard[activeTabs[index]] = new List<string> { str });
+				else if ((NEClipboard.Current.Count == 1) && (NEClipboard.Current.ChildCount == activeTabs.Sum(tab => tab.NumSelections)))
+					NEClipboard.Current.Strings.Take(activeTabs.Select(tab => tab.NumSelections)).ForEach((obj, index) => clipboard[activeTabs[index]] = obj.ToList());
+				else
+				{
+					var strs = NEClipboard.Current.Strings;
+					activeTabs.ForEach(tab => clipboard[tab] = strs);
+				}
 			}
 
-			UpdateStatusBarText();
+			return clipboard[textEditor];
 		}
 
 		void OnDrop(object sender, DragEventArgs e)
@@ -571,15 +576,19 @@ namespace NeoEdit.TextEdit
 			}
 
 			var answer = new AnswerResult();
-			newClipboard = null;
 			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
 			{
 				textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, answer);
 				if (answer.Answer == Message.OptionsEnum.Cancel)
 					break;
 			}
+
+			clipboard = null;
 			if (newClipboard != null)
+			{
 				NEClipboard.Current = newClipboard;
+				newClipboard = null;
+			}
 
 			return true;
 		}

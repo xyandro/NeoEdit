@@ -388,5 +388,21 @@ namespace NeoEdit.Common
 				if (!item.Equals(value))
 					yield return item;
 		}
+
+		public static IEnumerable<IEnumerable<TSource>> Take<TSource>(this IEnumerable<TSource> source, IEnumerable<int> counts)
+		{
+			using (var sourceEnum = source.GetEnumerator())
+				foreach (var count in counts)
+					yield return TakePart(sourceEnum, count);
+		}
+
+		static IEnumerable<TSource> TakePart<TSource>(IEnumerator<TSource> sourceEnum, int count)
+		{
+			for (var ctr = 0; ctr < count; ++ctr)
+				if (sourceEnum.MoveNext())
+					yield return sourceEnum.Current;
+				else
+					break;
+		}
 	}
 }

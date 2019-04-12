@@ -121,8 +121,7 @@ namespace NeoEdit.TextEdit
 		int currentSelectionField;
 		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; statusBarRenderTimer.Start(); } }
 		public int NumSelections => Selections.Count;
-		List<string> clipboardField;
-		public List<string> Clipboard { get => clipboardField; set { clipboardField = value; statusBarRenderTimer.Start(); } }
+		public List<string> Clipboard => (WindowParent as TextEditTabs).GetClipboard(this);
 
 		bool watcherFileModified = false;
 
@@ -2140,7 +2139,6 @@ namespace NeoEdit.TextEdit
 			sb.Add($"In {minMaxText(indexMin + 1, indexMax + 1)}");
 			sb.Add($"Pos {minMaxLengthText(posMin, posMax)}");
 			sb.Add($"Regions {string.Join(" / ", numRegions.OrderBy(pair => pair.Key).Select(pair => $"{pair.Value:n0}"))}");
-			sb.Add($"Clipboards {Clipboard?.Count:n0}");
 			sb.Add($"Keys/Values {string.Join(" / ", KeysAndValues.Select(l => $"{l.Count:n0}"))}");
 			sb.Add($"Database {DBName}");
 			var statusBarText = string.Join(" │ ", sb);
