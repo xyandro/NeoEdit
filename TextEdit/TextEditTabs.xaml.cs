@@ -613,8 +613,12 @@ namespace NeoEdit.TextEdit
 		public override bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
 		{
 			var result = false;
-			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
-				result = textEditorItems.HandleKey(key, shiftDown, controlDown, altDown) || result;
+			var activeTabs = ItemTabs.Items.Where(item => item.Active).ToList();
+			var previousData = default(object);
+			foreach (var textEditorItems in activeTabs)
+				textEditorItems.PreHandleKey(key, shiftDown, controlDown, altDown, ref previousData);
+			foreach (var textEditorItems in activeTabs)
+				result = textEditorItems.HandleKey(key, shiftDown, controlDown, altDown, previousData) || result;
 			return result;
 		}
 

@@ -1544,7 +1544,20 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		public bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
+		public void PreHandleKey(Key key, bool shiftDown, bool controlDown, bool altDown, ref object previousData)
+		{
+			switch (key)
+			{
+				case Key.Back:
+				case Key.Delete:
+				case Key.Left:
+				case Key.Right:
+					previousData = (previousData as bool? ?? false) || (Selections.Any(range => range.HasSelection));
+					break;
+			}
+		}
+
+		public bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown, object previousData)
 		{
 			var ret = true;
 			switch (key)
@@ -1552,7 +1565,7 @@ namespace NeoEdit.TextEdit
 				case Key.Back:
 				case Key.Delete:
 					{
-						if (Selections.Any(range => range.HasSelection))
+						if ((bool)previousData)
 						{
 							ReplaceSelections("");
 							break;
@@ -1623,12 +1636,11 @@ namespace NeoEdit.TextEdit
 					break;
 				case Key.Left:
 					{
-						var hasSelection = Selections.Any(range => range.HasSelection);
 						SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 						{
 							var line = Data.GetOffsetLine(range.Cursor);
 							var index = Data.GetOffsetIndex(range.Cursor, line);
-							if ((!shiftDown) && (hasSelection))
+							if ((!shiftDown) && ((bool)previousData))
 								return new Range(range.Start);
 							else if ((index == 0) && (line != 0))
 								return MoveCursor(range, -1, int.MaxValue, shiftDown, indexRel: false);
@@ -1639,12 +1651,11 @@ namespace NeoEdit.TextEdit
 					break;
 				case Key.Right:
 					{
-						var hasSelection = Selections.Any(range => range.HasSelection);
 						SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 						{
 							var line = Data.GetOffsetLine(range.Cursor);
 							var index = Data.GetOffsetIndex(range.Cursor, line);
-							if ((!shiftDown) && (hasSelection))
+							if ((!shiftDown) && ((bool)previousData))
 								return new Range(range.End);
 							else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
 								return MoveCursor(range, 1, 0, shiftDown, indexRel: false);
