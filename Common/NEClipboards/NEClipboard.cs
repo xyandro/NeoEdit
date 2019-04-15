@@ -27,7 +27,6 @@ namespace NeoEdit.Common.NEClipboards
 				else
 					break;
 		});
-		static NEClipboard() { GetSystem(); }
 
 		public static NEClipboard Current { get => GetSystem(); set => value.SetSystem(); }
 

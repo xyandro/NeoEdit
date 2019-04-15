@@ -81,6 +81,8 @@ namespace NeoEdit.TextEdit
 			ItemTabs.TabsChanged += ItemTabs_TabsChanged;
 			NEClipboard.ClipboardChanged += () => UpdateStatusBarText();
 			Activated += OnActivated;
+
+			UpdateStatusBarText();
 		}
 
 		void ItemTabs_TabsChanged()
