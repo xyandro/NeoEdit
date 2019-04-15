@@ -88,6 +88,7 @@ namespace NeoEdit.TextEdit
 		void ItemTabs_TabsChanged()
 		{
 			ItemTabs.Items.ForEach(item => item.InvalidateCanvas());
+			UpdateStatusBarText();
 		}
 
 		void UpdateStatusBarText()
