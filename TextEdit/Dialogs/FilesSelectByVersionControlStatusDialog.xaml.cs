@@ -40,6 +40,8 @@ namespace NeoEdit.TextEdit.Dialogs
 				case "Controlled": Normal = Modified = true; break;
 				case "Modified": Modified = true; break;
 				case "Ignored": Ignored = true; break;
+				case "Unknown": Unknown = true; break;
+				case "VersionControl": VersionControl = true; break;
 			}
 		}
 

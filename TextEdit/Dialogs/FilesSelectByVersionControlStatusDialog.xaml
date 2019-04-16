@@ -25,14 +25,16 @@
 
 		<CheckBox Grid.Row="2" Grid.Column="0" Content="I_gnored" IsChecked="{Binding Ignored, ElementName=self}"/>
 
-		<CheckBox Grid.Row="3" Grid.Column="0" Content="_Unknown" IsChecked="{Binding Unknown, ElementName=self}"/>
+		<CheckBox Grid.Row="3" Grid.Column="0" Content="U_nknown" IsChecked="{Binding Unknown, ElementName=self}"/>
 
-		<CheckBox Grid.Row="4" Grid.Column="0" Content="_VersionControl" IsChecked="{Binding VersionControl, ElementName=self}"/>
+		<CheckBox Grid.Row="4" Grid.Column="0" Content="V_ersionControl" IsChecked="{Binding VersionControl, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" Rows="1">
 			<Button Content="_Controlled" Tag="Controlled" Click="OnSelectionClick"/>
 			<Button Content="_Modified" Tag="Modified" Click="OnSelectionClick"/>
 			<Button Content="_Ignored" Tag="Ignored" Click="OnSelectionClick"/>
+			<Button Content="_Unknown" Tag="Unknown" Click="OnSelectionClick"/>
+			<Button Content="_VersionControl" Tag="VersionControl" Click="OnSelectionClick"/>
 			<Button Content="Rese_t" Tag="Reset" Click="OnSelectionClick"/>
 		</UniformGrid>
 
