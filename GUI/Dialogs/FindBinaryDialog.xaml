@@ -179,7 +179,7 @@
 		</GroupBox>
 
 		<UniformGrid Grid.Row="6" HorizontalAlignment="Left" Rows="1">
-			<Button Click="Reset" Content="_Reset" Padding="10,1"/>
+			<Button Click="Reset" Content="Rese_t" Padding="10,1"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="6" HorizontalAlignment="Center" Rows="1">
