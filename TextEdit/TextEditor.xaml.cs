@@ -1951,12 +1951,6 @@ namespace NeoEdit.TextEdit
 			if ((Data == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0) || (!canvas.IsVisible))
 				return;
 
-			var parent = WindowParent;
-			var canvasBounds = new Rect(canvas.PointToScreen(new Point()), canvas.RenderSize);
-			var parentBounds = new Rect(parent.PointToScreen(new Point()), parent.RenderSize);
-			if (!canvasBounds.IntersectsWith(parentBounds))
-				return;
-
 			var startLine = yScrollValue;
 			var endLine = Math.Min(Data.NumLines, startLine + yScrollViewportCeiling);
 			var startColumn = xScrollValue;
@@ -2104,12 +2098,6 @@ namespace NeoEdit.TextEdit
 
 		void OnStatusBarRender(object sender, DrawingContext dc)
 		{
-			var parent = WindowParent;
-			var statusBarBounds = new Rect(statusBar.PointToScreen(new Point()), statusBar.RenderSize);
-			var parentBounds = new Rect(parent.PointToScreen(new Point()), parent.RenderSize);
-			if (!statusBarBounds.IntersectsWith(parentBounds))
-				return;
-
 			int? lineMin = null, lineMax = null, columnMin = null, columnMax = null, indexMin = null, indexMax = null, posMin = null, posMax = null;
 
 			if ((CurrentSelection >= 0) && (CurrentSelection < Selections.Count))

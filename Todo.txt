@@ -11,7 +11,6 @@ Select readable
 In active list add number of selections, allow sort, allow typing to find file
 
 Text:
-If user chooses rows and columns, scroll extra windows
 Only show file changed dialog when window is active and selected
 Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files

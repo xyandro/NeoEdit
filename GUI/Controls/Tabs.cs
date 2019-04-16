@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -38,11 +37,9 @@ namespace NeoEdit.GUI.Controls
 		[DepProp]
 		public int? Rows { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<int?>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
 		[DepProp]
-		public double TabsScroll { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
-		[DepProp]
-		public double TabsScrollMax { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<double>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
-		[DepProp]
 		public TabsWindow<ItemType, CommandType> WindowParent { get { return UIHelper<Tabs<ItemType, CommandType>>.GetPropValue<TabsWindow<ItemType, CommandType>>(this); } set { UIHelper<Tabs<ItemType, CommandType>>.SetPropValue(this, value); } }
+
+		readonly RunOnceTimer layoutTimer, topMostTimer;
 
 		static Tabs()
 		{
@@ -50,12 +47,25 @@ namespace NeoEdit.GUI.Controls
 			UIHelper<Tabs<ItemType, CommandType>>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ItemsChanged());
 			UIHelper<Tabs<ItemType, CommandType>>.AddCallback(a => a.TopMost, (obj, o, n) => obj.TopMostChanged());
 			UIHelper<Tabs<ItemType, CommandType>>.AddCoerce(a => a.TopMost, (obj, value) => (value != null) && (obj.Items?.Contains(value) == true) ? value : null);
+			UIHelper<Tabs<ItemType, CommandType>>.AddCallback(a => a.Layout, (obj, o, n) => obj.layoutTimer.Start());
+			UIHelper<Tabs<ItemType, CommandType>>.AddCallback(a => a.Rows, (obj, o, n) => obj.layoutTimer.Start());
+			UIHelper<Tabs<ItemType, CommandType>>.AddCallback(a => a.Columns, (obj, o, n) => obj.layoutTimer.Start());
 		}
 
+		readonly Canvas canvas;
+		readonly ScrollBar scrollBar;
+		Action<ItemType> ShowItem;
 		int itemOrder = 0;
 		public Tabs()
 		{
-			SetupLayout();
+			layoutTimer = new RunOnceTimer(DoLayout);
+			topMostTimer = new RunOnceTimer(ShowTopMost);
+			topMostTimer.AddDependency(layoutTimer);
+
+			SetupLayout(out canvas, out scrollBar);
+			SizeChanged += (s, e) => layoutTimer.Start();
+			scrollBar.ValueChanged += (s, e) => layoutTimer.Start();
+			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
 			Items = new ObservableCollection<ItemType>();
 			Layout = TabsLayout.Full;
@@ -66,11 +76,20 @@ namespace NeoEdit.GUI.Controls
 			Drop += (s, e) => OnDrop(e, null);
 		}
 
+		void ShowTopMost()
+		{
+			if (TopMost == null)
+				return;
+			ShowItem?.Invoke(TopMost);
+			TopMost.Focus();
+		}
+
 		public void SetLayout(TabsLayout layout, int? columns = null, int? rows = null)
 		{
 			Layout = layout;
 			Columns = columns;
 			Rows = rows;
+			topMostTimer.Start();
 		}
 
 		public ItemType CreateTab(ItemType item, int? index = null)
@@ -104,6 +123,7 @@ namespace NeoEdit.GUI.Controls
 			}
 
 			UpdateTopMost();
+			layoutTimer.Start();
 		}
 
 		void TopMostChanged()
@@ -128,6 +148,8 @@ namespace NeoEdit.GUI.Controls
 				if (TopMost != null)
 					TopMost.Focus();
 			}));
+
+			topMostTimer.Start();
 		}
 
 		void UpdateTopMost()
@@ -258,39 +280,6 @@ namespace NeoEdit.GUI.Controls
 			}
 		}
 
-		class AllItemsControl : ItemsControl
-		{
-			public AllItemsControl() { Focusable = false; }
-			protected override bool IsItemItsOwnContainerOverride(object item) => false;
-		}
-
-		class TabLabel : TextBlock
-		{
-			public static readonly RoutedEvent ItemMatchEvent = EventManager.RegisterRoutedEvent("ItemMatch", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(TabLabel));
-
-			[DepProp]
-			public object Item { get { return UIHelper<TabLabel>.GetPropValue<object>(this); } private set { UIHelper<TabLabel>.SetPropValue(this, value); } }
-
-			public event RoutedEventHandler ItemMatch
-			{
-				add { AddHandler(ItemMatchEvent, value); }
-				remove { RemoveHandler(ItemMatchEvent, value); }
-			}
-
-			static TabLabel() { UIHelper<TabLabel>.Register(); }
-
-			PropertyChangeNotifier notifier;
-			public TabLabel()
-			{
-				Focusable = false;
-				notifier = new PropertyChangeNotifier(this, UIHelper<TabLabel>.GetProperty(a => a.Item), () =>
-				{
-					if (Item == DataContext)
-						Dispatcher.BeginInvoke((Action)(() => RaiseEvent(new RoutedEventArgs(ItemMatchEvent))));
-				});
-			}
-		}
-
 		public void MoveToTop(IEnumerable<ItemType> tabs)
 		{
 			var found = new HashSet<ItemType>(tabs);
@@ -299,48 +288,18 @@ namespace NeoEdit.GUI.Controls
 				Items.Move(indexes[ctr], ctr);
 		}
 
-		class ColumnCountConverter : IMultiValueConverter
+		DockPanel GetTabLabel(Tabs<ItemType, CommandType> tabs, bool tiles, ItemType item)
 		{
-			public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-			{
-				var count = (int)values[0];
-				var columns = (int?)values[1];
-				var rows = (int?)values[2];
-
-				return columns ?? (rows.HasValue ? 0 : (int)Math.Ceiling(Math.Sqrt(count)));
-			}
-
-			public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
-		}
-
-		class RowCountConverter : IMultiValueConverter
-		{
-			public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-			{
-				var count = (int)values[0];
-				var columns = (int?)values[1];
-				var rows = (int?)values[2];
-
-				return rows ?? 0;
-			}
-
-			public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) { throw new NotImplementedException(); }
-		}
-
-		FrameworkElementFactory GetTabLabel(bool tiles)
-		{
-			var dp = new FrameworkElementFactory(typeof(DockPanel));
-			dp.SetValue(DockPanel.DockProperty, Dock.Top);
-			dp.SetValue(DockPanel.MarginProperty, new Thickness(0, 0, tiles ? 0 : 2, 1));
+			var dockPanel = new DockPanel { Margin = new Thickness(0, 0, tiles ? 0 : 2, 1), Tag = item };
 
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "p0 o== p2 ? \"CadetBlue\" : (p1 ? \"LightBlue\" : \"LightGray\")" };
-			multiBinding.Bindings.Add(new Binding());
-			multiBinding.Bindings.Add(new Binding(UIHelper<TabsControl<ItemType, CommandType>>.GetProperty(a => a.Active).Name));
-			multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.TopMost).Name) { Source = this });
-			dp.SetBinding(DockPanel.BackgroundProperty, multiBinding);
+			multiBinding.Bindings.Add(new Binding { Source = item });
+			multiBinding.Bindings.Add(new Binding(nameof(TabsControl<ItemType, CommandType>.Active)) { Source = item });
+			multiBinding.Bindings.Add(new Binding(nameof(Tabs<ItemType, CommandType>.TopMost)) { Source = tabs });
+			dockPanel.SetBinding(DockPanel.BackgroundProperty, multiBinding);
 
-			dp.AddHandler(DockPanel.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => TopMost = (s as DockPanel).DataContext as ItemType));
-			dp.AddHandler(DockPanel.MouseMoveEvent, (MouseEventHandler)((s, e) =>
+			dockPanel.AddHandler(DockPanel.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => tabs.TopMost = item));
+			dockPanel.AddHandler(DockPanel.MouseMoveEvent, (MouseEventHandler)((s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
@@ -349,201 +308,195 @@ namespace NeoEdit.GUI.Controls
 				}
 			}));
 
-			{
-				var label = new FrameworkElementFactory(typeof(TabLabel));
-				label.SetBinding(TabLabel.TextProperty, new Binding(UIHelper<TabsControl<ItemType, CommandType>>.GetProperty(a => a.TabLabel).Name));
-				label.SetValue(TabLabel.VerticalAlignmentProperty, VerticalAlignment.Center);
-				label.SetValue(TabLabel.MarginProperty, new Thickness(10, 0, 2, 0));
-				dp.AppendChild(label);
-			}
+			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 2, 0) };
+			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TabsControl<ItemType, CommandType>.TabLabel)) { Source = item });
+			dockPanel.Children.Add(text);
 
+			var closeButton = new Button
 			{
-				var button = new FrameworkElementFactory(typeof(Button));
-				button.SetValue(Button.ContentProperty, "x");
-				button.SetValue(Button.BorderThicknessProperty, new Thickness(0));
-				button.SetValue(Button.StyleProperty, FindResource(ToolBar.ButtonStyleKey));
-				button.SetValue(Button.VerticalAlignmentProperty, VerticalAlignment.Center);
-				button.SetValue(Button.MarginProperty, new Thickness(2, 0, 5, 0));
-				button.SetValue(Button.ForegroundProperty, new SolidColorBrush(Color.FromRgb(128, 32, 32)));
-				button.SetValue(Button.FocusableProperty, false);
-				button.SetValue(Button.HorizontalAlignmentProperty, HorizontalAlignment.Right);
-				button.AddHandler(Button.ClickEvent, (RoutedEventHandler)((s, e) =>
-				{
-					var item = ((s as Button).Parent as DockPanel).DataContext as ItemType;
-					if (item.CanClose())
-						Remove(item);
-				}));
-				dp.AppendChild(button);
-			}
-
-			return dp;
+				Content = "x",
+				BorderThickness = new Thickness(0),
+				Style = FindResource(ToolBar.ButtonStyleKey) as Style,
+				VerticalAlignment = VerticalAlignment.Center,
+				Margin = new Thickness(2, 0, 5, 0),
+				Foreground = new SolidColorBrush(Color.FromRgb(128, 32, 32)),
+				Focusable = false,
+				HorizontalAlignment = HorizontalAlignment.Right,
+			};
+			closeButton.AddHandler(Button.ClickEvent, (RoutedEventHandler)((s, e) =>
+			{
+				if (item.CanClose())
+					tabs.Remove(item);
+			}));
+			dockPanel.Children.Add(closeButton);
+			return dockPanel;
 		}
 
-		void SetupLayout()
+		void SetupLayout(out Canvas canvas, out ScrollBar scrollBar)
 		{
-			var style = new Style();
+			var grid = new Grid();
+			grid.RowDefinitions.Add(new RowDefinition());
+			grid.ColumnDefinitions.Add(new ColumnDefinition());
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+			Content = grid;
+
+			canvas = new Canvas { Background = Brushes.Gray, ClipToBounds = true };
+			Grid.SetRow(canvas, 0);
+			Grid.SetColumn(canvas, 0);
+			grid.Children.Add(canvas);
+
+			scrollBar = new ScrollBar();
+			Grid.SetRow(scrollBar, 0);
+			Grid.SetColumn(scrollBar, 1);
+			grid.Children.Add(scrollBar);
+		}
+
+		void ClearLayout()
+		{
+			canvas.Children.Clear();
+			foreach (var item in Items)
 			{
-				var fullTemplate = new ControlTemplate();
-				{
-					var dockPanel = new FrameworkElementFactory(typeof(DockPanel));
-					dockPanel.SetValue(DockPanel.AllowDropProperty, true);
-					dockPanel.AddHandler(DockPanel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
+				var parent = item.Parent;
+				if (parent is Panel p)
+					p.Children.Clear();
+				else if (parent is ContentControl cc)
+					cc.Content = null;
+				else if (parent != null)
+					throw new Exception("Don't know how to disconnect item");
+			}
+		}
 
-					{
-						var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
-						itemsControl.SetValue(DockPanel.DockProperty, Dock.Top);
-						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items).Name) { Source = this });
-						{
-							var notifierLabel = GetTabLabel(false);
-							notifierLabel.SetBinding(UIHelper<TabLabel>.GetProperty(a => a.Item), new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.TopMost).Name) { Source = this });
-							notifierLabel.AddHandler(TabLabel.ItemMatchEvent, (RoutedEventHandler)((s, e) =>
-							{
-								var label = s as TabLabel;
-								var scrollViewer = UIHelper.FindParent<ScrollViewer>(label);
-								if (scrollViewer == null)
-									return;
-								var left = label.TranslatePoint(new Point(0, 0), scrollViewer).X + TabsScroll;
-								var right = label.TranslatePoint(new Point(label.ActualWidth, 0), scrollViewer).X + TabsScroll;
-								TabsScroll = Math.Min(left, Math.Max(TabsScroll, right - scrollViewer.ViewportWidth));
-								TabsScroll = Math.Max(0, Math.Min(TabsScroll, TabsScrollMax));
-							}));
-							var itemTemplate = new DataTemplate { VisualTree = notifierLabel };
-							itemsControl.SetValue(AllItemsControl.ItemTemplateProperty, itemTemplate);
-						}
+		void DoLayout()
+		{
+			ClearLayout();
+			switch (Layout)
+			{
+				case TabsLayout.Full: DoFullLayout(); break;
+				case TabsLayout.Grid: DoGridLayout(); break;
+			}
+			TopMost?.Focus();
+		}
 
-						{
-							var itemsPanel = new ItemsPanelTemplate();
-							{
-								var stackPanel = new FrameworkElementFactory(typeof(StackPanel));
-								stackPanel.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal);
-								itemsPanel.VisualTree = stackPanel;
-							}
-							itemsControl.SetValue(AllItemsControl.ItemsPanelProperty, itemsPanel);
-							{
-								var template = new ControlTemplate();
-								{
-									var dockPanel2 = new FrameworkElementFactory(typeof(DockPanel));
-
-									{
-										var repeatButton = new FrameworkElementFactory(typeof(RepeatButton));
-										repeatButton.SetValue(DockPanel.DockProperty, Dock.Left);
-										repeatButton.SetValue(RepeatButton.ContentProperty, "<");
-										repeatButton.SetValue(RepeatButton.MarginProperty, new Thickness(0, 0, 4, 0));
-										repeatButton.SetValue(RepeatButton.PaddingProperty, new Thickness(5, 0, 5, 0));
-										repeatButton.AddHandler(RepeatButton.ClickEvent, (RoutedEventHandler)((s, e) => TabsScroll = Math.Max(0, Math.Min(TabsScroll - 50, TabsScrollMax))));
-										dockPanel2.AppendChild(repeatButton);
-									}
-									{
-										var repeatButton = new FrameworkElementFactory(typeof(RepeatButton));
-										repeatButton.SetValue(DockPanel.DockProperty, Dock.Right);
-										repeatButton.SetValue(RepeatButton.ContentProperty, ">");
-										repeatButton.SetValue(RepeatButton.MarginProperty, new Thickness(2, 0, 0, 0));
-										repeatButton.SetValue(RepeatButton.PaddingProperty, new Thickness(5, 0, 5, 0));
-										repeatButton.AddHandler(RepeatButton.ClickEvent, (RoutedEventHandler)((s, e) => TabsScroll = Math.Max(0, Math.Min(TabsScroll + 50, TabsScrollMax))));
-										dockPanel2.AppendChild(repeatButton);
-									}
-									{
-										var scrollViewer = new FrameworkElementFactory(typeof(BindableScrollViewer));
-										scrollViewer.SetValue(BindableScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
-										scrollViewer.SetValue(BindableScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
-										scrollViewer.SetBinding(UIHelper<BindableScrollViewer>.GetProperty(a => a.HorizontalPosition), new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.TabsScroll).Name) { Source = this, Mode = BindingMode.TwoWay });
-										scrollViewer.SetBinding(UIHelper<BindableScrollViewer>.GetProperty(a => a.HorizontalMax), new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.TabsScrollMax).Name) { Source = this, Mode = BindingMode.OneWayToSource });
-										scrollViewer.AppendChild(new FrameworkElementFactory(typeof(ItemsPresenter)));
-										dockPanel2.AppendChild(scrollViewer);
-									}
-									template.VisualTree = dockPanel2;
-								}
-								itemsControl.SetValue(AllItemsControl.TemplateProperty, template);
-							}
-						}
-						dockPanel.AppendChild(itemsControl);
-					}
-					{
-						var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
-						itemsControl.SetValue(DockPanel.DockProperty, Dock.Bottom);
-						itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items).Name) { Source = this });
-						{
-							var itemTemplate = new DataTemplate();
-							{
-								var contentControl = new FrameworkElementFactory(typeof(ContentControl));
-								contentControl.SetBinding(ContentControl.ContentProperty, new Binding());
-								var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "p0 o== p1" };
-								multiBinding.Bindings.Add(new Binding());
-								multiBinding.Bindings.Add(new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.TopMost).Name) { Source = this });
-								contentControl.SetBinding(ContentControl.VisibilityProperty, multiBinding);
-								contentControl.SetValue(ContentControl.FocusVisualStyleProperty, null);
-								itemTemplate.VisualTree = contentControl;
-							}
-							itemsControl.SetValue(AllItemsControl.ItemTemplateProperty, itemTemplate);
-						}
-						itemsControl.SetValue(AllItemsControl.ItemsPanelProperty, new ItemsPanelTemplate { VisualTree = new FrameworkElementFactory(typeof(Grid)) });
-						dockPanel.AppendChild(itemsControl);
-					}
-					dockPanel.SetValue(Window.BackgroundProperty, Brushes.Gray);
-
-					fullTemplate.VisualTree = dockPanel;
-
-				}
-
-				style.Setters.Add(new Setter(AllItemsControl.TemplateProperty, fullTemplate));
+		void DoFullLayout()
+		{
+			if (scrollBar.Visibility != Visibility.Collapsed)
+			{
+				scrollBar.Visibility = Visibility.Collapsed;
+				UpdateLayout();
 			}
 
+			var grid = new Grid { Width = canvas.ActualWidth, Height = canvas.ActualHeight, AllowDrop = true };
+			grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+			grid.RowDefinitions.Add(new RowDefinition());
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+			grid.ColumnDefinitions.Add(new ColumnDefinition());
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+			grid.AddHandler(Grid.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
+
+			var tabLabels = new ScrollViewer { HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden, VerticalScrollBarVisibility = ScrollBarVisibility.Hidden };
+
+			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
+			foreach (var item in Items)
+				stackPanel.Children.Add(GetTabLabel(this, false, item));
+
+			ShowItem = item =>
 			{
-				var gridTemplate = new ControlTemplate();
+				var show = stackPanel.Children.OfType<FrameworkElement>().Where(x => x.Tag == item).FirstOrDefault();
+				if (show == null)
+					return;
+				tabLabels.UpdateLayout();
+				var left = show.TranslatePoint(new Point(0, 0), tabLabels).X + tabLabels.HorizontalOffset;
+				tabLabels.ScrollToHorizontalOffset(Math.Min(left, Math.Max(tabLabels.HorizontalOffset, left + show.ActualWidth - tabLabels.ViewportWidth)));
+			};
 
+			tabLabels.Content = stackPanel;
+			Grid.SetRow(tabLabels, 0);
+			Grid.SetColumn(tabLabels, 1);
+			grid.Children.Add(tabLabels);
+
+			var moveLeft = new RepeatButton { Content = "<", Margin = new Thickness(0, 0, 4, 0), Padding = new Thickness(5, 0, 5, 0) };
+			moveLeft.AddHandler(RepeatButton.ClickEvent, (RoutedEventHandler)((s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset - 50, tabLabels.ScrollableWidth)))));
+			Grid.SetRow(moveLeft, 0);
+			Grid.SetColumn(moveLeft, 0);
+			grid.Children.Add(moveLeft);
+
+			var moveRight = new RepeatButton { Content = ">", Margin = new Thickness(2, 0, 0, 0), Padding = new Thickness(5, 0, 5, 0) };
+			moveRight.AddHandler(RepeatButton.ClickEvent, (RoutedEventHandler)((s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset + 50, tabLabels.ScrollableWidth)))));
+			Grid.SetRow(moveRight, 0);
+			Grid.SetColumn(moveRight, 2);
+			grid.Children.Add(moveRight);
+
+			var contentControl = new ContentControl { FocusVisualStyle = null };
+			contentControl.SetBinding(ContentControl.ContentProperty, new Binding(nameof(TopMost)) { Source = this });
+			Grid.SetRow(contentControl, 1);
+			Grid.SetColumn(contentControl, 0);
+			Grid.SetColumnSpan(contentControl, 3);
+			grid.Children.Add(contentControl);
+
+			canvas.Children.Add(grid);
+		}
+
+		void DoGridLayout()
+		{
+			int columns, rows;
+			if (!Rows.HasValue)
+			{
+				columns = Math.Max(1, Columns ?? (int)Math.Ceiling(Math.Sqrt(Items.Count)));
+				rows = Math.Max(1, (Items.Count + columns - 1) / columns);
+			}
+			else
+			{
+				rows = Math.Max(1, Rows.Value);
+				columns = Math.Max(1, Columns ?? (Items.Count + rows - 1) / rows);
+			}
+
+			var totalRows = (Items.Count + columns - 1) / columns;
+
+			var scrollBarVisibility = totalRows > rows ? Visibility.Visible : Visibility.Collapsed;
+			if (scrollBar.Visibility != scrollBarVisibility)
+			{
+				scrollBar.Visibility = scrollBarVisibility;
+				UpdateLayout();
+			}
+
+			var width = canvas.ActualWidth / columns;
+			var height = canvas.ActualHeight / rows;
+
+			scrollBar.ViewportSize = scrollBar.LargeChange = canvas.ActualHeight;
+			scrollBar.Maximum = height * totalRows - scrollBar.ViewportSize;
+
+			for (var ctr = 0; ctr < Items.Count; ++ctr)
+			{
+				var top = ctr / columns * height - scrollBar.Value;
+				if ((top + height < 0) || (top > canvas.ActualHeight))
+					continue;
+
+				var dockPanel = new DockPanel { AllowDrop = true, Margin = new Thickness(0, 0, 2, 2) };
+				dockPanel.AddHandler(DockPanel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
+				var tabLabel = GetTabLabel(this, true, Items[ctr]);
+				DockPanel.SetDock(tabLabel, Dock.Top);
+				dockPanel.Children.Add(tabLabel);
 				{
-					var itemsControl = new FrameworkElementFactory(typeof(AllItemsControl));
-					itemsControl.SetBinding(AllItemsControl.ItemsSourceProperty, new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items).Name) { Source = this });
-					{
-						var itemTemplate = new DataTemplate();
-						{
-							var dockPanel = new FrameworkElementFactory(typeof(DockPanel));
-							dockPanel.SetValue(DockPanel.AllowDropProperty, true);
-							dockPanel.AddHandler(DockPanel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
-							dockPanel.SetValue(DockPanel.MarginProperty, new Thickness(0, 0, 2, 2));
-							dockPanel.AppendChild(GetTabLabel(true));
-							{
-								var contentControl = new FrameworkElementFactory(typeof(ContentControl));
-								contentControl.SetValue(DockPanel.DockProperty, Dock.Bottom);
-								contentControl.SetValue(ContentControl.ContentProperty, new Binding());
-								contentControl.SetValue(ContentControl.FocusVisualStyleProperty, null);
-								dockPanel.AppendChild(contentControl);
-							}
-							itemTemplate.VisualTree = dockPanel;
-						}
-						itemsControl.SetValue(AllItemsControl.ItemTemplateProperty, itemTemplate);
-					}
-					{
-						var itemsPanel = new ItemsPanelTemplate();
-						{
-							var uniformGrid = new FrameworkElementFactory(typeof(UniformGrid));
-
-							var columnsBinding = new MultiBinding { Converter = new ColumnCountConverter() };
-							columnsBinding.Bindings.Add(new Binding($"{UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items)}.Count") { Source = this });
-							columnsBinding.Bindings.Add(new Binding(nameof(Columns)) { Source = this });
-							columnsBinding.Bindings.Add(new Binding(nameof(Rows)) { Source = this });
-							uniformGrid.SetBinding(UniformGrid.ColumnsProperty, columnsBinding);
-
-							var rowsBinding = new MultiBinding { Converter = new RowCountConverter() };
-							rowsBinding.Bindings.Add(new Binding($"{UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Items)}.Count") { Source = this });
-							rowsBinding.Bindings.Add(new Binding(nameof(Columns)) { Source = this });
-							rowsBinding.Bindings.Add(new Binding(nameof(Rows)) { Source = this });
-							uniformGrid.SetBinding(UniformGrid.RowsProperty, rowsBinding);
-
-							uniformGrid.SetValue(UniformGrid.MarginProperty, new Thickness(0, 0, -2, -2));
-							itemsPanel.VisualTree = uniformGrid;
-						}
-						itemsControl.SetValue(AllItemsControl.ItemsPanelProperty, itemsPanel);
-					}
-					gridTemplate.VisualTree = itemsControl;
-					itemsControl.SetValue(Window.BackgroundProperty, Brushes.Gray);
+					Items[ctr].SetValue(DockPanel.DockProperty, Dock.Bottom);
+					Items[ctr].FocusVisualStyle = null;
+					dockPanel.Children.Add(Items[ctr]);
 				}
 
-				var dataTrigger = new DataTrigger { Binding = new Binding(UIHelper<Tabs<ItemType, CommandType>>.GetProperty(a => a.Layout).Name) { Source = this }, Value = TabsLayout.Grid };
-				dataTrigger.Setters.Add(new Setter(AllItemsControl.TemplateProperty, gridTemplate));
-				style.Triggers.Add(dataTrigger);
+				Canvas.SetLeft(dockPanel, ctr % columns * width + 1);
+				Canvas.SetTop(dockPanel, top + 1);
+				dockPanel.Width = width - 2;
+				dockPanel.Height = height - 2;
+				canvas.Children.Add(dockPanel);
 			}
-			Style = style;
+
+			ShowItem = item =>
+			{
+				var index = Items.IndexOf(item);
+				if (index == -1)
+					return;
+				var top = index / columns * height;
+				scrollBar.Value = Math.Min(top, Math.Max(scrollBar.Value, top + height - scrollBar.ViewportSize));
+			};
 		}
 
 		internal void NotifyActiveChanged() => TabsChanged?.Invoke();
