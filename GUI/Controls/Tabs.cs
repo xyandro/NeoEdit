@@ -19,6 +19,7 @@ namespace NeoEdit.GUI.Controls
 	{
 		Full,
 		Grid,
+		Custom,
 	}
 
 	public class Tabs<ItemType, CommandType> : UserControl where ItemType : TabsControl<ItemType, CommandType>
@@ -369,11 +370,10 @@ namespace NeoEdit.GUI.Controls
 		void DoLayout()
 		{
 			ClearLayout();
-			switch (Layout)
-			{
-				case TabsLayout.Full: DoFullLayout(); break;
-				case TabsLayout.Grid: DoGridLayout(); break;
-			}
+			if (Layout == TabsLayout.Full)
+				DoFullLayout();
+			else
+				DoGridLayout();
 			TopMost?.Focus();
 		}
 
@@ -439,7 +439,12 @@ namespace NeoEdit.GUI.Controls
 		void DoGridLayout()
 		{
 			int columns, rows;
-			if (!Rows.HasValue)
+			if (Layout == TabsLayout.Grid)
+			{
+				columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Items.Count)), 5));
+				rows = Math.Max(1, Math.Min((Items.Count + columns - 1) / columns, 5));
+			}
+			else if (!Rows.HasValue)
 			{
 				columns = Math.Max(1, Columns ?? (int)Math.Ceiling(Math.Sqrt(Items.Count)));
 				rows = Math.Max(1, (Items.Count + columns - 1) / columns);

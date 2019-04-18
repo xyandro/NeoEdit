@@ -56,7 +56,7 @@ namespace NeoEdit.Disk
 				case DiskCommand.View_CustomGrid:
 					var result = CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
 					if (result != null)
-						ItemTabs.SetLayout(TabsLayout.Grid, result.Columns, result.Rows);
+						ItemTabs.SetLayout(TabsLayout.Custom, result.Columns, result.Rows);
 					break;
 				case DiskCommand.View_List1: Command_View_List(1); break;
 				case DiskCommand.View_List2: Command_View_List(2); break;

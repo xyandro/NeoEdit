@@ -551,7 +551,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Diff_Select_BothTabs: Command_Diff_Select_LeftRightBothTabs(null); break;
 				case TextEditCommand.View_Full: Command_View_Type(TabsLayout.Full, null); break;
 				case TextEditCommand.View_Grid: Command_View_Type(TabsLayout.Grid, null); break;
-				case TextEditCommand.View_CustomGrid: Command_View_Type(TabsLayout.Grid, dialogResult as CustomGridDialog.Result); break;
+				case TextEditCommand.View_CustomGrid: Command_View_Type(TabsLayout.Custom, dialogResult as CustomGridDialog.Result); break;
 				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
 				case TextEditCommand.View_FontSize: Command_View_FontSize(); break;
 				case TextEditCommand.View_Select_TabsWithSelections: Command_View_SelectTabsWithSelections(true); break;

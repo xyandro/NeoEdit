@@ -126,7 +126,7 @@ namespace NeoEdit.HexEdit
 				case HexEditCommand.View_CustomGrid:
 					var result = CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
 					if (result != null)
-						ItemTabs.SetLayout(TabsLayout.Grid, result.Columns, result.Rows);
+						ItemTabs.SetLayout(TabsLayout.Custom, result.Columns, result.Rows);
 					break;
 			}
 
