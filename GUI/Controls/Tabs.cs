@@ -258,13 +258,13 @@ namespace NeoEdit.GUI.Controls
 					TopMost = item;
 		}
 
-		void OnDrop(DragEventArgs e, DockPanel toPanel)
+		void OnDrop(DragEventArgs e, ItemType toItem)
 		{
 			var fromItems = e.Data.GetData(typeof(List<ItemType>)) as List<ItemType>;
 			if (fromItems == null)
 				return;
 
-			var toIndex = Items.IndexOf(toPanel?.DataContext as ItemType);
+			var toIndex = Items.IndexOf(toItem);
 			fromItems.ForEach(fromItem => fromItem.TabsParent.Items.Remove(fromItem));
 
 			if (toIndex == -1)
@@ -299,15 +299,15 @@ namespace NeoEdit.GUI.Controls
 			multiBinding.Bindings.Add(new Binding(nameof(Tabs<ItemType, CommandType>.TopMost)) { Source = tabs });
 			dockPanel.SetBinding(DockPanel.BackgroundProperty, multiBinding);
 
-			dockPanel.AddHandler(DockPanel.MouseLeftButtonDownEvent, (MouseButtonEventHandler)((s, e) => tabs.TopMost = item));
-			dockPanel.AddHandler(DockPanel.MouseMoveEvent, (MouseEventHandler)((s, e) =>
+			dockPanel.MouseLeftButtonDown += (s, e) => tabs.TopMost = item;
+			dockPanel.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
-					var active = (((s as DockPanel).DataContext as ItemType).TabsParent as Tabs<ItemType, CommandType>).Items.Where(tab => tab.Active).ToList();
+					var active = (item.TabsParent as Tabs<ItemType, CommandType>).Items.Where(tab => tab.Active).ToList();
 					DragDrop.DoDragDrop(s as DockPanel, new DataObject(typeof(List<ItemType>), active), DragDropEffects.Move);
 				}
-			}));
+			};
 
 			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 2, 0) };
 			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TabsControl<ItemType, CommandType>.TabLabel)) { Source = item });
@@ -324,11 +324,11 @@ namespace NeoEdit.GUI.Controls
 				Focusable = false,
 				HorizontalAlignment = HorizontalAlignment.Right,
 			};
-			closeButton.AddHandler(Button.ClickEvent, (RoutedEventHandler)((s, e) =>
+			closeButton.Click += (s, e) =>
 			{
 				if (item.CanClose())
 					tabs.Remove(item);
-			}));
+			};
 			dockPanel.Children.Add(closeButton);
 			return dockPanel;
 		}
@@ -391,13 +391,16 @@ namespace NeoEdit.GUI.Controls
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 			grid.ColumnDefinitions.Add(new ColumnDefinition());
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-			grid.AddHandler(Grid.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
 
 			var tabLabels = new ScrollViewer { HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden, VerticalScrollBarVisibility = ScrollBarVisibility.Hidden };
 
 			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
 			foreach (var item in Items)
-				stackPanel.Children.Add(GetTabLabel(this, false, item));
+			{
+				var tabLabel = GetTabLabel(this, false, item);
+				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as ItemType);
+				stackPanel.Children.Add(tabLabel);
+			}
 
 			ShowItem = item =>
 			{
@@ -415,13 +418,13 @@ namespace NeoEdit.GUI.Controls
 			grid.Children.Add(tabLabels);
 
 			var moveLeft = new RepeatButton { Content = "<", Margin = new Thickness(0, 0, 4, 0), Padding = new Thickness(5, 0, 5, 0) };
-			moveLeft.AddHandler(RepeatButton.ClickEvent, (RoutedEventHandler)((s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset - 50, tabLabels.ScrollableWidth)))));
+			moveLeft.Click += (s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset - 50, tabLabels.ScrollableWidth)));
 			Grid.SetRow(moveLeft, 0);
 			Grid.SetColumn(moveLeft, 0);
 			grid.Children.Add(moveLeft);
 
 			var moveRight = new RepeatButton { Content = ">", Margin = new Thickness(2, 0, 0, 0), Padding = new Thickness(5, 0, 5, 0) };
-			moveRight.AddHandler(RepeatButton.ClickEvent, (RoutedEventHandler)((s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset + 50, tabLabels.ScrollableWidth)))));
+			moveRight.Click += (s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset + 50, tabLabels.ScrollableWidth)));
 			Grid.SetRow(moveRight, 0);
 			Grid.SetColumn(moveRight, 2);
 			grid.Children.Add(moveRight);
@@ -472,19 +475,20 @@ namespace NeoEdit.GUI.Controls
 
 			for (var ctr = 0; ctr < Items.Count; ++ctr)
 			{
+				var item = Items[ctr];
 				var top = ctr / columns * height - scrollBar.Value;
 				if ((top + height < 0) || (top > canvas.ActualHeight))
 					continue;
 
 				var dockPanel = new DockPanel { AllowDrop = true, Margin = new Thickness(0, 0, 2, 2) };
-				dockPanel.AddHandler(DockPanel.DropEvent, (DragEventHandler)((s, e) => OnDrop(e, s as DockPanel)));
-				var tabLabel = GetTabLabel(this, true, Items[ctr]);
+				dockPanel.Drop += (s, e) => OnDrop(e, item);
+				var tabLabel = GetTabLabel(this, true, item);
 				DockPanel.SetDock(tabLabel, Dock.Top);
 				dockPanel.Children.Add(tabLabel);
 				{
-					Items[ctr].SetValue(DockPanel.DockProperty, Dock.Bottom);
-					Items[ctr].FocusVisualStyle = null;
-					dockPanel.Children.Add(Items[ctr]);
+					item.SetValue(DockPanel.DockProperty, Dock.Bottom);
+					item.FocusVisualStyle = null;
+					dockPanel.Children.Add(item);
 				}
 
 				Canvas.SetLeft(dockPanel, ctr % columns * width + 1);
