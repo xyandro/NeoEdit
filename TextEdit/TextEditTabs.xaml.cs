@@ -159,6 +159,8 @@ namespace NeoEdit.TextEdit
 			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}
 
+		void Command_File_New_FromClipboards() => NEClipboard.Current.Strings.ForEach((str, index) => TextEditTabs.Create(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
+
 		void Command_File_Open_Open(OpenFileDialogResult result)
 		{
 			foreach (var filename in result.files)
@@ -540,6 +542,7 @@ namespace NeoEdit.TextEdit
 			switch (command)
 			{
 				case TextEditCommand.File_New_New: Create(textEditTabs: this, forceCreate: shiftDown); break;
+				case TextEditCommand.File_New_FromClipboards: Command_File_New_FromClipboards(); break;
 				case TextEditCommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
 				case TextEditCommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;

@@ -8,6 +8,7 @@ namespace NeoEdit.TextEdit
 		None,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New_New,
 		File_New_FromSelections,
+		File_New_FromClipboards,
 		[KeyGesture(Key.O, ModifierKeys.Control)] File_Open_Open,
 		[KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_Open_CopiedCut,
 		File_Open_Selected,
