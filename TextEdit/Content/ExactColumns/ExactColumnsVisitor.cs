@@ -7,9 +7,9 @@ namespace NeoEdit.TextEdit.Content.ExactColumns
 {
 	class ExactColumnsVisitor : ExactColumnsBaseVisitor<ParserNode>
 	{
-		public static ParserNode Parse(string input)
+		public static ParserNode Parse(string input, bool strict)
 		{
-			var tree = ParserHelper.Parse<ExactColumnsLexer, ExactColumnsParser, ExactColumnsParser.RootContext>(input, parser => parser.root());
+			var tree = ParserHelper.Parse<ExactColumnsLexer, ExactColumnsParser, ExactColumnsParser.RootContext>(input, parser => parser.root(), strict);
 			return new ExactColumnsVisitor().Visit(tree);
 		}
 

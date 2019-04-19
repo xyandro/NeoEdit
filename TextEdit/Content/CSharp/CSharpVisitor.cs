@@ -12,9 +12,9 @@ namespace NeoEdit.TextEdit.Content.CSharp
 {
 	class CSharpVisitor : CSharpParserBaseVisitor<object>
 	{
-		public static ParserNode Parse(string input)
+		public static ParserNode Parse(string input, bool strict)
 		{
-			var tree = ParserHelper.Parse<CSharpLexer, CSharpParser, CSharpParser.CsharpContext>(input, parser => parser.csharp());
+			var tree = ParserHelper.Parse<CSharpLexer, CSharpParser, CSharpParser.CsharpContext>(input, parser => parser.csharp(), strict);
 			var visitor = new CSharpVisitor(input);
 			visitor.Visit(tree);
 			return visitor.Root;

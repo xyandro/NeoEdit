@@ -505,6 +505,7 @@
 			<textEdit:MultiMenuItem Header="_XML" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.XML}" CommandEnum="Content_Type_XML"/>
 		</MenuItem>
 		<textEdit:MultiMenuItem Header="_Highlight Syntax" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax"/>
+		<textEdit:MultiMenuItem Header="_Strict Parsing" Objects="{Binding Parent.ItemTabs.Items, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="Re_format" CommandEnum="Content_Reformat"/>
 		<Separator/>

@@ -15,6 +15,8 @@ namespace NeoEdit.TextEdit
 		public bool KeepSelections { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool HighlightSyntax { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool StrictParsing { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		CacheValue previousData = new CacheValue();
 		Parser.ParserType previousType;
@@ -24,7 +26,7 @@ namespace NeoEdit.TextEdit
 		{
 			if ((!previousData.Match(Data.Data)) || (previousType != ContentType))
 			{
-				previousRoot = Parser.Parse(Data.Data, ContentType);
+				previousRoot = Parser.Parse(Data.Data, ContentType, StrictParsing);
 				previousData.SetValue(Data.Data);
 				previousType = ContentType;
 			}
@@ -94,6 +96,12 @@ namespace NeoEdit.TextEdit
 		void Command_Content_Type(Parser.ParserType contentType) => ContentType = contentType;
 
 		void Command_Content_HighlightSyntax(bool? multiStatus) => HighlightSyntax = multiStatus == false;
+
+		void Command_Content_StrictParsing(bool? multiStatus)
+		{
+			StrictParsing = multiStatus == false;
+			previousData.Invalidate();
+		}
 
 		void Command_Content_Reformat()
 		{

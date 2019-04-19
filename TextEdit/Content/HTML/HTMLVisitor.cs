@@ -10,9 +10,9 @@ namespace NeoEdit.TextEdit.Content.HTML
 {
 	class HTMLVisitor : HTMLParserBaseVisitor<ParserNode>
 	{
-		public static ParserNode Parse(string input)
+		public static ParserNode Parse(string input, bool strict)
 		{
-			var tree = ParserHelper.Parse<HTMLLexer, HTMLParser, HTMLParser.DocumentContext>(input, parser => parser.document(), caseSensitive: false);
+			var tree = ParserHelper.Parse<HTMLLexer, HTMLParser, HTMLParser.DocumentContext>(input, parser => parser.document(), strict, caseSensitive: false);
 			return new HTMLVisitor(input).Visit(tree);
 		}
 

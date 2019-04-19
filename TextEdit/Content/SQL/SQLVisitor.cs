@@ -11,9 +11,9 @@ namespace NeoEdit.TextEdit.Content.SQL
 {
 	class SQLVisitor : SQLParserBaseVisitor<ParserNode>
 	{
-		public static ParserNode Parse(string input)
+		public static ParserNode Parse(string input, bool strict)
 		{
-			var tree = ParserHelper.Parse<SQLLexer, SQLParser, SQLParser.DocumentContext>(input, parser => parser.document());
+			var tree = ParserHelper.Parse<SQLLexer, SQLParser, SQLParser.DocumentContext>(input, parser => parser.document(), strict);
 			var visitor = new SQLVisitor(input);
 			visitor.Visit(tree);
 			return visitor.Root;

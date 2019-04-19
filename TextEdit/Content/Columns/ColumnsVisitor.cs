@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Antlr4.Runtime;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TextEdit.Content.Columns.Parser;
@@ -8,9 +7,9 @@ namespace NeoEdit.TextEdit.Content.Columns
 {
 	class ColumnsVisitor : ColumnsBaseVisitor<ParserNode>
 	{
-		public static ParserNode Parse(string input)
+		public static ParserNode Parse(string input, bool strict)
 		{
-			var tree = ParserHelper.Parse<ColumnsLexer, ColumnsParser, ColumnsParser.RootContext>(input, parser => parser.root());
+			var tree = ParserHelper.Parse<ColumnsLexer, ColumnsParser, ColumnsParser.RootContext>(input, parser => parser.root(), strict);
 			return new ColumnsVisitor().Visit(tree);
 		}
 

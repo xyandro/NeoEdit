@@ -36,20 +36,20 @@ namespace NeoEdit.TextEdit.Content
 
 		public static bool IsTableType(this ParserType parserType) => (parserType == ParserType.Columns) || (parserType == ParserType.ExactColumns) || (parserType == ParserType.TSV) || (parserType == ParserType.CSV);
 
-		static public ParserNode Parse(string data, ParserType parserType)
+		static public ParserNode Parse(string data, ParserType parserType, bool strict)
 		{
 			switch (parserType)
 			{
-				case ParserType.Balanced: return BalancedVisitor.Parse(data);
-				case ParserType.Columns: return ColumnsVisitor.Parse(data);
-				case ParserType.CSharp: return CSharpVisitor.Parse(data);
-				case ParserType.CSV: return CSVVisitor.Parse(data);
-				case ParserType.ExactColumns: return ExactColumnsVisitor.Parse(data);
-				case ParserType.HTML: return HTMLVisitor.Parse(data);
-				case ParserType.JSON: return JSONVisitor.Parse(data);
-				case ParserType.SQL: return SQLVisitor.Parse(data);
-				case ParserType.TSV: return TSVVisitor.Parse(data);
-				case ParserType.XML: return XMLVisitor.Parse(data);
+				case ParserType.Balanced: return BalancedVisitor.Parse(data, strict);
+				case ParserType.Columns: return ColumnsVisitor.Parse(data, strict);
+				case ParserType.CSharp: return CSharpVisitor.Parse(data, strict);
+				case ParserType.CSV: return CSVVisitor.Parse(data, strict);
+				case ParserType.ExactColumns: return ExactColumnsVisitor.Parse(data, strict);
+				case ParserType.HTML: return HTMLVisitor.Parse(data, strict);
+				case ParserType.JSON: return JSONVisitor.Parse(data, strict);
+				case ParserType.SQL: return SQLVisitor.Parse(data, strict);
+				case ParserType.TSV: return TSVVisitor.Parse(data, strict);
+				case ParserType.XML: return XMLVisitor.Parse(data, strict);
 				default: throw new ArgumentException("Unable to parse this type");
 			}
 		}

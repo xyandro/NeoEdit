@@ -7,9 +7,9 @@ namespace NeoEdit.TextEdit.Content.Balanced
 {
 	class BalancedVisitor : BalancedBaseVisitor<ParserNode>
 	{
-		public static ParserNode Parse(string input)
+		public static ParserNode Parse(string input, bool strict)
 		{
-			var tree = ParserHelper.Parse<BalancedLexer, BalancedParser, BalancedParser.BalancedContext>(input, parser => parser.balanced());
+			var tree = ParserHelper.Parse<BalancedLexer, BalancedParser, BalancedParser.BalancedContext>(input, parser => parser.balanced(), strict);
 			return new BalancedVisitor().Visit(tree);
 		}
 

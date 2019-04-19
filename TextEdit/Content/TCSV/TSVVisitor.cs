@@ -6,9 +6,9 @@ namespace NeoEdit.TextEdit.Content.TCSV
 {
 	class TSVVisitor : TSVBaseVisitor<ParserNode>
 	{
-		public static ParserNode Parse(string input)
+		public static ParserNode Parse(string input, bool strict)
 		{
-			var tree = ParserHelper.Parse<TSVLexer, TSVParser, TSVParser.RootContext>(input, parser => parser.root());
+			var tree = ParserHelper.Parse<TSVLexer, TSVParser, TSVParser.RootContext>(input, parser => parser.root(), strict);
 			return new TSVVisitor().Visit(tree);
 		}
 

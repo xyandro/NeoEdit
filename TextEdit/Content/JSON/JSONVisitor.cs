@@ -8,9 +8,9 @@ namespace NeoEdit.TextEdit.Content.JSON
 {
 	class JSONVisitor : JSONBaseVisitor<ParserNode>
 	{
-		public static ParserNode Parse(string input)
+		public static ParserNode Parse(string input, bool strict)
 		{
-			var tree = ParserHelper.Parse<JSONLexer, JSONParser, JSONParser.JsonContext>(input, parser => parser.json());
+			var tree = ParserHelper.Parse<JSONLexer, JSONParser, JSONParser.JsonContext>(input, parser => parser.json(), strict);
 			return new JSONVisitor().Visit(tree);
 		}
 

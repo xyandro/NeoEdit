@@ -1221,6 +1221,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Type_TSV: Command_Content_Type(Parser.ParserType.TSV); break;
 				case TextEditCommand.Content_Type_XML: Command_Content_Type(Parser.ParserType.XML); break;
 				case TextEditCommand.Content_HighlightSyntax: Command_Content_HighlightSyntax(multiStatus); break;
+				case TextEditCommand.Content_StrictParsing: Command_Content_StrictParsing(multiStatus); break;
 				case TextEditCommand.Content_Reformat: Command_Content_Reformat(); break;
 				case TextEditCommand.Content_Comment: Command_Content_Comment(); break;
 				case TextEditCommand.Content_Uncomment: Command_Content_Uncomment(); break;

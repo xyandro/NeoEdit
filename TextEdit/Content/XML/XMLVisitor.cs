@@ -9,9 +9,9 @@ namespace NeoEdit.TextEdit.Content.XML
 {
 	class XMLVisitor : XMLParserBaseVisitor<ParserNode>
 	{
-		public static ParserNode Parse(string input)
+		public static ParserNode Parse(string input, bool strict)
 		{
-			var tree = ParserHelper.Parse<XMLLexer, XMLParser, XMLParser.DocumentContext>(input, parser => parser.document());
+			var tree = ParserHelper.Parse<XMLLexer, XMLParser, XMLParser.DocumentContext>(input, parser => parser.document(), strict);
 			return new XMLVisitor(input).Visit(tree);
 		}
 

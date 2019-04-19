@@ -305,6 +305,7 @@ namespace NeoEdit.TextEdit
 		Content_Type_TSV,
 		Content_Type_XML,
 		Content_HighlightSyntax,
+		Content_StrictParsing,
 		Content_Reformat,
 		[KeyGesture(Key.OemQuestion, ModifierKeys.Control)] Content_Comment,
 		[KeyGesture(Key.OemQuestion, ModifierKeys.Control | ModifierKeys.Shift)] Content_Uncomment,
