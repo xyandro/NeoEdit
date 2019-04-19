@@ -539,7 +539,7 @@ namespace NeoEdit.TextEdit
 		{
 			switch (command)
 			{
-				case TextEditCommand.File_New: Create(textEditTabs: this, forceCreate: shiftDown); break;
+				case TextEditCommand.File_New_New: Create(textEditTabs: this, forceCreate: shiftDown); break;
 				case TextEditCommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
 				case TextEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
 				case TextEditCommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;

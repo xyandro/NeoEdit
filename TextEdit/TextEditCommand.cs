@@ -6,8 +6,8 @@ namespace NeoEdit.TextEdit
 	public enum TextEditCommand
 	{
 		None,
-		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New,
-		File_NewFromSelections,
+		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New_New,
+		File_New_FromSelections,
 		[KeyGesture(Key.O, ModifierKeys.Control)] File_Open_Open,
 		[KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_Open_CopiedCut,
 		File_Open_Selected,
