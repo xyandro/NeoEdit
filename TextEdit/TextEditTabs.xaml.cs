@@ -115,7 +115,7 @@ namespace NeoEdit.TextEdit
 					NEClipboard.Current.ForEach((cb, index) => clipboard[activeTabs[index]] = cb.Strings);
 				else if (NEClipboard.Current.ChildCount == activeTabs.Count)
 					NEClipboard.Current.Strings.ForEach((str, index) => clipboard[activeTabs[index]] = new List<string> { str });
-				else if ((NEClipboard.Current.Count == 1) && (NEClipboard.Current.ChildCount == activeTabs.Sum(tab => tab.NumSelections)))
+				else if (((NEClipboard.Current.Count == 1) || (NEClipboard.Current.Count == NEClipboard.Current.ChildCount)) && (NEClipboard.Current.ChildCount == activeTabs.Sum(tab => tab.NumSelections)))
 					NEClipboard.Current.Strings.Take(activeTabs.Select(tab => tab.NumSelections)).ForEach((obj, index) => clipboard[activeTabs[index]] = obj.ToList());
 				else
 				{
