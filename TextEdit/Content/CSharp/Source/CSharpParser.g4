@@ -43,7 +43,7 @@ methodcontent : modifier* Return=type vardecl (COMMA vardecl)* SEMICOLON # Varia
               | UNSAFE methodcontent # Unsafe
               | LOCK LPAREN expression RPAREN methodcontent # Lock
               | Type=(USING | FIXED) LPAREN (Return=type vardecl (COMMA vardecl)* | expression) RPAREN methodcontent # Using
-              | TRY methodcontent (CATCH (LPAREN type identifier? RPAREN)? methodcontent)* (FINALLY methodcontent)? # Try
+              | TRY methodcontent (CATCH (LPAREN type identifier? RPAREN)? (WHEN LPAREN expression RPAREN)? methodcontent)* (FINALLY methodcontent)? # Try
               | YIELD? BREAK SEMICOLON # Break
               | CONTINUE SEMICOLON # Continue
               | YIELD? RETURN expression? SEMICOLON # Return
@@ -61,7 +61,7 @@ vardecl : Name=type (ASSIGN initialize)? ;
 switchcase : ((CASE expression | DEFAULT) COLON)* methodcontent+ ;
 gotodestination : (identifier | CASE expression | DEFAULT) ;
 
-identifier : IDENTIFIER | ADD | ALIAS | ASCENDING | ASSEMBLY | ASYNC | AWAIT | BY | DESCENDING | EQUALS | FIELD | FROM | GET | GROUP | INTO | JOIN | LET | METHOD | MODULE | ON | ORDERBY | PARAM | PARTIAL | PROPERTY | REMOVE | SELECT | SET | TYPE | WHERE | YIELD | THIS | BASE ;
+identifier : IDENTIFIER | ADD | ALIAS | ASCENDING | ASSEMBLY | ASYNC | AWAIT | BY | DESCENDING | EQUALS | FIELD | FROM | GET | GROUP | INTO | JOIN | LET | METHOD | MODULE | ON | ORDERBY | PARAM | PARTIAL | PROPERTY | REMOVE | SELECT | SET | TYPE | WHEN | WHERE | YIELD | THIS | BASE ;
 typepart : identifier (LT generic_type (COMMA generic_type)* GT)? ;
 type : (identifier DOUBLE_COLON)? TILDE? typepart (DOT typepart)* unnamed_type ;
 unnamed_type : (INTERR | MULT)? (LBRACKET NUMBER? (COMMA NUMBER?)* RBRACKET)* ;
@@ -81,7 +81,7 @@ expression : identifier # ExpressionIdentifier
            | expression LBRACKET expression (COMMA expression)* RBRACKET # ExpressionArray
            | (NEW | STACKALLOC) (type | unnamed_type) ((LPAREN expressionlist RPAREN) | (LBRACE initialize_list RBRACE))* # ExpressionNew
            | (CHECKED | UNCHECKED) LPAREN expression RPAREN # ExpressionChecked
-           | expression (AS | IS) type # ExpressionCheckType
+           | expression (AS | IS) type identifier? # ExpressionCheckType
            | expression COALESCE expression # ExpressionCoalesce
            | LPAREN type RPAREN expression # ExpressionCast
            | LPAREN expression RPAREN # ExpressionParens
@@ -93,6 +93,7 @@ expression : identifier # ExpressionIdentifier
            | TYPEOF LPAREN type RPAREN # ExpressionTypeOf
            | DEFAULT LPAREN type RPAREN # ExpressionDefault
            | linq # ExpressionLinq
+           | THROW expression # ExpressionThrow
            | (STR | CHARACTER | NUMBER | TRUE | FALSE | NULL) # ExpressionLiteral
            ;
 

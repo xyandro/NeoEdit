@@ -88,6 +88,7 @@ UNSAFE                     : 'unsafe'     ;
 USING                      : 'using'      ;
 VIRTUAL                    : 'virtual'    ;
 VOLATILE                   : 'volatile'   ;
+WHEN                       : 'when'       ;
 WHERE                      : 'where'      ;
 WHILE                      : 'while'      ;
 YIELD                      : 'yield'      ;
