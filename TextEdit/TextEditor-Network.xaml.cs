@@ -125,6 +125,31 @@ namespace NeoEdit.TextEdit
 			MultiProgressDialog.RunAsync(WindowParent, "Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
 		}
 
+		NetworkFetchStreamDialog.Result Command_Network_FetchStream_Dialog() => NetworkFetchStreamDialog.Run(WindowParent, GetVariables(), Path.GetDirectoryName(FileName) ?? "");
+
+		void Command_Network_FetchStream(NetworkFetchStreamDialog.Result result)
+		{
+			var urls = GetVariableExpressionResults<string>(result.Expression);
+			if (!urls.Any())
+				return;
+
+			var now = DateTime.Now;
+			var data = urls.Select((url, index) => Tuple.Create(url, now + TimeSpan.FromSeconds(index))).ToList();
+			MultiProgressDialog.RunAsync(WindowParent, "Downloading...", data, async (item, progress, cancelled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, cancelled));
+		}
+
+		NetworkFetchStreamDialog.Result Command_Network_FetchPlaylist_Dialog() => NetworkFetchStreamDialog.Run(WindowParent, GetVariables(), null);
+
+		void Command_Network_FetchPlaylist(NetworkFetchStreamDialog.Result result)
+		{
+			var urls = GetVariableExpressionResults<string>(result.Expression);
+			if (!urls.Any())
+				return;
+
+			var items = MultiProgressDialog.RunAsync(WindowParent, "Getting playlist contents...", urls, async (item, progress, cancelled) => await YouTubeDL.GetPlayListItems(item, progress, cancelled)).ToList();
+			ReplaceSelections(items.Select(l => string.Join(Data.DefaultEnding, l)).ToList());
+		}
+
 		void Command_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
 		void Command_Network_Lookup_HostName() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }

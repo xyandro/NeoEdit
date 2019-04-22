@@ -339,6 +339,8 @@ namespace NeoEdit.TextEdit
 		Network_Fetch,
 		Network_FetchHex,
 		Network_FetchFile,
+		Network_FetchStream,
+		Network_FetchPlaylist,
 		Network_Lookup_IP,
 		Network_Lookup_HostName,
 		Network_AdaptersInfo,

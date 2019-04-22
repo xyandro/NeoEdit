@@ -458,6 +458,13 @@
     <Compile Include="Dialogs\NetworkFetchFileDialog.xaml.cs">
       <DependentUpon>NetworkFetchFileDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NetworkFetchStreamDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NetworkFetchStreamDialog.xaml.cs">
+      <DependentUpon>NetworkFetchStreamDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\NetworkPingDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -813,6 +820,7 @@
     </Compile>
     <Compile Include="UndoRedo.cs" />
     <Compile Include="UnitTest\TextDataTest.cs" />
+    <Compile Include="YouTubeDL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\Common\Common.csproj">

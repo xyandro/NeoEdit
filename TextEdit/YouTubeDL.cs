@@ -11,7 +11,7 @@ using NeoEdit.Common;
 using NeoEdit.GUI.Controls;
 using Newtonsoft.Json.Linq;
 
-namespace NeoEdit.StreamSave
+namespace NeoEdit.TextEdit
 {
 	static class YouTubeDL
 	{

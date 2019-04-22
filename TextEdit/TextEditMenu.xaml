@@ -556,6 +556,8 @@
 		<textEdit:TextEditMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
 		<textEdit:TextEditMenuItem Header="Fetch _Hex" CommandEnum="Network_FetchHex"/>
 		<textEdit:TextEditMenuItem Header="Fetch F_ile" CommandEnum="Network_FetchFile"/>
+		<textEdit:TextEditMenuItem Header="Fetch _Stream" CommandEnum="Network_FetchStream"/>
+		<textEdit:TextEditMenuItem Header="Fetch Pla_ylist" CommandEnum="Network_FetchPlaylist"/>
 		<Separator/>
 		<MenuItem Header="_Lookup">
 			<textEdit:TextEditMenuItem Header="_IP" CommandEnum="Network_Lookup_IP"/>
@@ -565,7 +567,7 @@
 		<textEdit:TextEditMenuItem Header="A_dapters Info" CommandEnum="Network_AdaptersInfo"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Ping" CommandEnum="Network_Ping"/>
-		<textEdit:TextEditMenuItem Header="_Scan Ports" CommandEnum="Network_ScanPorts"/>
+		<textEdit:TextEditMenuItem Header="S_can Ports" CommandEnum="Network_ScanPorts"/>
 	</MenuItem>
 	<MenuItem Header="D_atabase">
 		<textEdit:TextEditMenuItem Header="_Connect" CommandEnum="Database_Connect"/>

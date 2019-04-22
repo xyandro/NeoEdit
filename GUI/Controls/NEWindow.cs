@@ -24,7 +24,6 @@ namespace NeoEdit.GUI.Controls
 					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
 					try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
 					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
-					try { streamSaveDirectory = xml.Element(nameof(StreamSaveDirectory)).Value; } catch { }
 					try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
 				}
 				catch { }
@@ -42,7 +41,6 @@ namespace NeoEdit.GUI.Controls
 				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
 				xml.Add(new XElement(nameof(YouTubeDLPath), youTubeDLPath));
 				xml.Add(new XElement(nameof(FFmpegPath), ffmpegPath));
-				xml.Add(new XElement(nameof(StreamSaveDirectory), streamSaveDirectory));
 				xml.Add(new XElement(nameof(Font.FontSize), Font.FontSize));
 				xml.Save(settingsFile);
 			}
@@ -106,20 +104,6 @@ namespace NeoEdit.GUI.Controls
 
 		static EventHandler ffmpegPathChanged;
 		public static event EventHandler FFmpegPathChanged { add { ffmpegPathChanged += value; } remove { ffmpegPathChanged -= value; } }
-
-		static string streamSaveDirectory = Directory.GetCurrentDirectory();
-		public static string StreamSaveDirectory
-		{
-			get { return streamSaveDirectory; }
-			set
-			{
-				streamSaveDirectory = value;
-				SaveSettings();
-			}
-		}
-
-		static EventHandler streamSaveDirectoryChanged;
-		public static event EventHandler StreamSaveDirectoryChanged { add { streamSaveDirectoryChanged += value; } remove { streamSaveDirectoryChanged -= value; } }
 
 		System.Windows.Forms.NotifyIcon ni;
 		protected override void OnStateChanged(EventArgs e)

@@ -898,6 +898,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Content_Descendants_WithAttribute: dialogResult = Command_Content_Descendants_WithAttribute_Dialog(); break;
 				case TextEditCommand.Network_AbsoluteURL: dialogResult = Command_Network_AbsoluteURL_Dialog(); break;
 				case TextEditCommand.Network_FetchFile: dialogResult = Command_Network_FetchFile_Dialog(); break;
+				case TextEditCommand.Network_FetchStream: dialogResult = Command_Network_FetchStream_Dialog(); break;
+				case TextEditCommand.Network_FetchPlaylist: dialogResult = Command_Network_FetchPlaylist_Dialog(); break;
 				case TextEditCommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
 				case TextEditCommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(); break;
 				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
@@ -1254,6 +1256,8 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_Fetch: Command_Network_Fetch(); break;
 				case TextEditCommand.Network_FetchHex: Command_Network_Fetch(Coder.CodePage.Hex); break;
 				case TextEditCommand.Network_FetchFile: Command_Network_FetchFile(dialogResult as NetworkFetchFileDialog.Result); break;
+				case TextEditCommand.Network_FetchStream: Command_Network_FetchStream(dialogResult as NetworkFetchStreamDialog.Result); break;
+				case TextEditCommand.Network_FetchPlaylist: Command_Network_FetchPlaylist(dialogResult as NetworkFetchStreamDialog.Result); break;
 				case TextEditCommand.Network_Lookup_IP: Command_Network_Lookup_IP(); break;
 				case TextEditCommand.Network_Lookup_HostName: Command_Network_Lookup_HostName(); break;
 				case TextEditCommand.Network_AdaptersInfo: Command_Network_AdaptersInfo(); break;
