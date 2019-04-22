@@ -581,18 +581,21 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
 			}
 
-			var answer = new AnswerResult();
-			foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
+			try
 			{
-				textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, answer);
-				if (answer.Answer == Message.OptionsEnum.Cancel)
-					break;
+				var answer = new AnswerResult();
+				foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
+				{
+					textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, answer);
+					if (answer.Answer == Message.OptionsEnum.Cancel)
+						break;
+				}
+				if (newClipboard != null)
+					NEClipboard.Current = newClipboard;
 			}
-
-			clipboard = null;
-			if (newClipboard != null)
+			finally
 			{
-				NEClipboard.Current = newClipboard;
+				clipboard = null;
 				newClipboard = null;
 			}
 
