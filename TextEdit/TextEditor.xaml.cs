@@ -169,8 +169,8 @@ namespace NeoEdit.TextEdit
 
 					var diffXScrollValue = diffTarget.xScrollValue;
 					var diffYScrollValue = diffTarget.yScrollValue;
-					SetBinding(UIHelper<TextEditor>.GetProperty(a => a.xScrollValue), new Binding(UIHelper<TextEditor>.GetProperty(a => a.xScrollValue).Name) { Source = value, Mode = BindingMode.TwoWay });
-					SetBinding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue), new Binding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue).Name) { Source = value, Mode = BindingMode.TwoWay });
+					SetBinding(UIHelper<TextEditor>.GetProperty(a => a.xScrollValue), new Binding(nameof(xScrollValue)) { Source = value, Mode = BindingMode.TwoWay });
+					SetBinding(UIHelper<TextEditor>.GetProperty(a => a.yScrollValue), new Binding(nameof(yScrollValue)) { Source = value, Mode = BindingMode.TwoWay });
 					IsDiff = diffTarget.IsDiff = true;
 					CalculateDiff();
 					xScrollValue = diffXScrollValue;
@@ -2390,11 +2390,11 @@ namespace NeoEdit.TextEdit
 		void SetupTabLabel()
 		{
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"(p0 ?? FileName(p1) ?? ""[Untitled]"")t+(p2?""*"":"""")t+(p3?"" (Diff""t+(p4?"" - Encoding mismatch"":"""")t+"")"":"""")" };
-			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.DisplayName).Name) { Source = this });
-			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.FileName).Name) { Source = this });
-			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsModified).Name) { Source = this });
-			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.IsDiff).Name) { Source = this });
-			multiBinding.Bindings.Add(new Binding(UIHelper<TextEditor>.GetProperty(a => a.DiffEncodingMismatch).Name) { Source = this });
+			multiBinding.Bindings.Add(new Binding(nameof(DisplayName)) { Source = this });
+			multiBinding.Bindings.Add(new Binding(nameof(FileName)) { Source = this });
+			multiBinding.Bindings.Add(new Binding(nameof(IsModified)) { Source = this });
+			multiBinding.Bindings.Add(new Binding(nameof(IsDiff)) { Source = this });
+			multiBinding.Bindings.Add(new Binding(nameof(DiffEncodingMismatch)) { Source = this });
 			SetBinding(UIHelper<TabsControl<TextEditor, TextEditCommand>>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
