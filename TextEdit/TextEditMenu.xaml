@@ -572,7 +572,6 @@
 	<MenuItem Header="D_atabase">
 		<textEdit:TextEditMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
 		<textEdit:TextEditMenuItem Header="Execute _Query" CommandEnum="Database_ExecuteQuery"/>
-		<textEdit:TextEditMenuItem Header="Q_uery Builder" CommandEnum="Database_QueryBuilder"/>
 		<Separator/>
 		<textEdit:TextEditMenuItem Header="_Examine" CommandEnum="Database_Examine"/>
 		<textEdit:TextEditMenuItem Header="_Get Sproc" CommandEnum="Database_GetSproc"/>

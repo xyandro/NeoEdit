@@ -708,24 +708,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="QueryBuilding\Dialogs\ChooseDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="QueryBuilding\Dialogs\ChooseDialog.xaml.cs">
-      <DependentUpon>ChooseDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="QueryBuilding\Dialogs\QueryBuilderDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="QueryBuilding\Dialogs\QueryBuilderDialog.xaml.cs">
-      <DependentUpon>QueryBuilderDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="QueryBuilding\QBVisitor.cs" />
-    <Compile Include="QueryBuilding\QuerySelect.cs" />
-    <Compile Include="QueryBuilding\Select.cs" />
-    <Compile Include="QueryBuilding\TableSelect.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="RangeList.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />

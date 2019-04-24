@@ -903,7 +903,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
 				case TextEditCommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(); break;
 				case TextEditCommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
-				case TextEditCommand.Database_QueryBuilder: dialogResult = Command_Database_QueryBuilder_Dialog(); break;
 				case TextEditCommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case TextEditCommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
 				case TextEditCommand.Select_Repeats_ByCount: dialogResult = Command_Select_Repeats_ByCount_Dialog(); break;
@@ -1265,7 +1264,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Network_ScanPorts: Command_Network_ScanPorts(dialogResult as NetworkScanPortsDialog.Result); break;
 				case TextEditCommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case TextEditCommand.Database_ExecuteQuery: Command_Database_ExecuteQuery(); break;
-				case TextEditCommand.Database_QueryBuilder: Command_Database_QueryBuilder(dialogResult as string); break;
 				case TextEditCommand.Database_GetSproc: Command_Database_GetSproc(); break;
 				case TextEditCommand.Keys_Set_KeysCaseSensitive: Command_Keys_Set(0, true); break;
 				case TextEditCommand.Keys_Set_KeysCaseInsensitive: Command_Keys_Set(0, false); break;

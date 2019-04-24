@@ -8,8 +8,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
-using NeoEdit.TextEdit.QueryBuilding;
-using NeoEdit.TextEdit.QueryBuilding.Dialogs;
 
 namespace NeoEdit.TextEdit
 {
@@ -94,22 +92,6 @@ namespace NeoEdit.TextEdit
 
 			ReplaceSelections(strs);
 		}
-
-		string Command_Database_QueryBuilder_Dialog()
-		{
-			if (Selections.Count != 1)
-				throw new Exception("Must run QueryBuilder with one selection");
-			ValidateConnection();
-
-			var tables = dbConnection.GetSchema("columns").Rows.OfType<DataRow>().GroupBy(row => row["table_name"]?.ToString()).Where(group => group.Key != null).Select(group => new TableSelect(group.Key, group.Select(row => row["column_name"]?.ToString()).NonNull().ToList())).ToList();
-			var selectQuery = QuerySelect.FromStr(GetString(Selections[0]), tables);
-			var querySelect = QueryBuilderDialog.Run(WindowParent, tables, selectQuery);
-			if (querySelect == null)
-				return null;
-			return string.Join("", querySelect.QueryLines.Select(str => $"{str}{Data.DefaultEnding}"));
-		}
-
-		void Command_Database_QueryBuilder(string result) => ReplaceSelections(result);
 
 		void Command_Database_Examine_Dialog()
 		{
