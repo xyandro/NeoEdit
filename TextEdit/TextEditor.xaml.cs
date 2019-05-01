@@ -798,6 +798,7 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_Save_SaveAsByExpression: dialogResult = Command_File_Save_SaveAsByExpression_Dialog(); break;
 				case TextEditCommand.File_Save_CopyToByExpression: dialogResult = Command_File_Save_SaveAsByExpression_Dialog(); break;
+				case TextEditCommand.File_Save_SetDisplayName: dialogResult = Command_File_Save_SaveAsByExpression_Dialog(); break;
 				case TextEditCommand.File_Operations_RenameByExpression: dialogResult = Command_File_Operations_RenameByExpression_Dialog(); break;
 				case TextEditCommand.File_Encoding_Encoding: dialogResult = Command_File_Encoding_Encoding_Dialog(); break;
 				case TextEditCommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(); break;
@@ -942,6 +943,7 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.File_Save_SaveAsByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
 				case TextEditCommand.File_Save_CopyTo: Command_File_Save_SaveAs(true); break;
 				case TextEditCommand.File_Save_CopyToByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, answer, true); break;
+				case TextEditCommand.File_Save_SetDisplayName: Command_File_Save_SetDisplayName(dialogResult as GetExpressionDialog.Result); break;
 				case TextEditCommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
 				case TextEditCommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
 				case TextEditCommand.File_Operations_Delete: Command_File_Operations_Delete(answer); break;

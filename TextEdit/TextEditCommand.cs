@@ -19,6 +19,7 @@ namespace NeoEdit.TextEdit
 		File_Save_SaveAsByExpression,
 		File_Save_CopyTo,
 		File_Save_CopyToByExpression,
+		File_Save_SetDisplayName,
 		File_Operations_Rename,
 		File_Operations_RenameByExpression,
 		File_Operations_Delete,

@@ -111,6 +111,19 @@ namespace NeoEdit.TextEdit
 			Save(newFileName, copyOnly);
 		}
 
+		void Command_File_Save_SetDisplayName(GetExpressionDialog.Result result)
+		{
+			if (result.Expression == "f")
+			{
+				DisplayName = null;
+				return;
+			}
+			var results = GetVariableExpressionResults<string>(result.Expression);
+			if (results.Count != 1)
+				throw new Exception("Only one value may be specified");
+			DisplayName = results[0];
+		}
+
 		void Command_File_Operations_Rename()
 		{
 			if (string.IsNullOrEmpty(FileName))
