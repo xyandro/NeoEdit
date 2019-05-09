@@ -13,7 +13,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.TextEdit.Dialogs;
@@ -871,8 +870,6 @@ namespace NeoEdit.TextEdit
 				throw new Exception("Selections must be files.");
 			doDrag = DragType.Selections;
 		}
-
-		void Command_Files_Operations_OpenDisk() => Launcher.Static.LaunchDisk(files: RelativeSelectedFiles());
 
 		void Command_Files_Operations_Explore()
 		{

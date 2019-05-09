@@ -936,8 +936,7 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_New_FromSelections: Command_File_New_FromSelections(); break;
 				case TextEditCommand.File_Open_Selected: Command_File_Open_Selected(); break;
-				case TextEditCommand.File_OpenWith_Disk: Command_File_OpenWith_Disk(); break;
-				case TextEditCommand.File_OpenWith_HexEditor: Command_File_OpenWith_HexEditor(); break;
+				case TextEditCommand.File_HexEdit: Command_File_HexEdit(); break;
 				case TextEditCommand.File_Save_Save: Command_File_Save_Save(); break;
 				case TextEditCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
 				case TextEditCommand.File_Save_SaveAsByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
@@ -1086,7 +1085,6 @@ namespace NeoEdit.TextEdit
 				case TextEditCommand.Files_Operations_Move: Command_Files_Operations_CopyMove(dialogResult as FilesOperationsCopyMoveDialog.Result, true); break;
 				case TextEditCommand.Files_Operations_Delete: Command_Files_Operations_Delete(); break;
 				case TextEditCommand.Files_Operations_DragDrop: Command_Files_Operations_DragDrop(); break;
-				case TextEditCommand.Files_Operations_OpenDisk: Command_Files_Operations_OpenDisk(); break;
 				case TextEditCommand.Files_Operations_Explore: Command_Files_Operations_Explore(); break;
 				case TextEditCommand.Files_Operations_CommandPrompt: Command_Files_Operations_CommandPrompt(); break;
 				case TextEditCommand.Files_Operations_RunCommand_Parallel: Command_Files_Operations_RunCommand_Parallel(); break;

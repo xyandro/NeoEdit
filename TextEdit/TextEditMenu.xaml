@@ -22,10 +22,7 @@
 			<textEdit:TextEditMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
 			<textEdit:TextEditMenuItem Header="_Selected" CommandEnum="File_Open_Selected"/>
 		</MenuItem>
-		<MenuItem Header="Open _With">
-			<textEdit:TextEditMenuItem Header="_Disk" CommandEnum="File_OpenWith_Disk"/>
-			<textEdit:TextEditMenuItem Header="_Hex Editor" CommandEnum="File_OpenWith_HexEditor"/>
-		</MenuItem>
+		<textEdit:TextEditMenuItem Header="Hex E_dit" CommandEnum="File_HexEdit"/>
 		<MenuItem Header="_Save">
 			<textEdit:TextEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
 			<textEdit:TextEditMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
@@ -290,7 +287,6 @@
 			<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="Files_Operations_Delete"/>
 			<Separator/>
 			<textEdit:TextEditMenuItem Header="D_rag/Drop" CommandEnum="Files_Operations_DragDrop"/>
-			<textEdit:TextEditMenuItem Header="Open D_isk" CommandEnum="Files_Operations_OpenDisk"/>
 			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore"/>
 			<textEdit:TextEditMenuItem Header="C_ommand Prompt" CommandEnum="Files_Operations_CommandPrompt"/>
 			<Separator/>

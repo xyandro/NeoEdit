@@ -22,7 +22,6 @@ namespace NeoEdit.CommandLineParams
 		public override object VisitExpr(CommandLineParamsParser.ExprContext context) => context.parameter().Select(parameter => VisitParameter(parameter)).Where(param => param != null).Cast<Param>().ToList();
 		public override object VisitAbout(CommandLineParamsParser.AboutContext context) => new AboutParam();
 		public override object VisitDiff(CommandLineParamsParser.DiffContext context) => new DiffParam(context.texteditfile().Select(textEditFile => VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile).Resize(2, null).ToList());
-		public override object VisitDisk(CommandLineParamsParser.DiskContext context) => new DiskParam(context.file == null ? null : context.file.GetText());
 		public override object VisitHexedit(CommandLineParamsParser.HexeditContext context) => new HexEditParam(context.param().Select(file => file.GetText()).ToList());
 		public override object VisitTextedit(CommandLineParamsParser.TexteditContext context) => new TextEditParam(context.texteditfile().Select(textEditFile => VisitTexteditfile(textEditFile) as TextEditParam.TextEditFile).ToList());
 		public override object VisitTexteditfile(CommandLineParamsParser.TexteditfileContext context) => new TextEditParam.TextEditFile(context.file.GetText(), context.display?.GetText(), context.line == null ? default(int?) : int.Parse(context.line.Text), context.column == null ? default(int?) : int.Parse(context.column.Text));

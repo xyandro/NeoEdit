@@ -22,13 +22,6 @@ namespace NeoEdit
 		public override Window Execute(string shutdownEvent) => Launcher.Static.LaunchTextEditorDiff(fileName1: Files[0]?.FileName, displayName1: Files[0]?.DisplayName, line1: Files[0]?.Line, column1: Files[0]?.Column, fileName2: Files[1]?.FileName, displayName2: Files[1]?.DisplayName, line2: Files[1]?.Line, column2: Files[1]?.Column, shutdownEvent: shutdownEvent);
 	}
 
-	class DiskParam : Param
-	{
-		readonly string Location;
-		public DiskParam(string location) { Location = location; }
-		public override Window Execute(string shutdownEvent) => Launcher.Static.LaunchDisk(Location);
-	}
-
 	class HexEditParam : Param
 	{
 		readonly List<string> Files;

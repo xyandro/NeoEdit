@@ -6,7 +6,6 @@ namespace NeoEdit.GUI.Controls
 	{
 		None,
 		Window_Diff,
-		Window_Disk,
 		Window_HexEditor,
 		Window_TextEditor,
 	}
@@ -28,7 +27,6 @@ namespace NeoEdit.GUI.Controls
 			switch (command)
 			{
 				case WindowCommand.Window_Diff: Launcher.Static.LaunchTextEditorDiff(); break;
-				case WindowCommand.Window_Disk: Launcher.Static.LaunchDisk(forceCreate: true); break;
 				case WindowCommand.Window_HexEditor: Launcher.Static.LaunchHexEditor(forceCreate: true); break;
 				case WindowCommand.Window_TextEditor: Launcher.Static.LaunchTextEditorFile(forceCreate: true); break;
 			}

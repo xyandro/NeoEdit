@@ -556,9 +556,7 @@ namespace NeoEdit.HexEdit
 			}.Show() == GUI.Dialogs.Message.OptionsEnum.Yes;
 		}
 
-		internal void Command_File_OpenWith_Disk() => Launcher.Static.LaunchDisk(FileName);
-
-		internal void Command_File_OpenWith_TextEditor()
+		internal void Command_File_TextEdit()
 		{
 			var bytes = Data.Data;
 			if (!CanExactlyEncode(bytes))

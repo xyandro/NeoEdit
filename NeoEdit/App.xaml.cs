@@ -11,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Dialogs;
-using NeoEdit.Disk;
 using NeoEdit.GUI.Controls;
 using NeoEdit.GUI.Dialogs;
 using NeoEdit.HexEdit;
@@ -91,7 +90,6 @@ namespace NeoEdit
 		{
 			NeoEdit.GUI.Launcher.Initialize(
 				about: () => AboutDialog.Run()
-				, disk: (path, files, forceCreate) => DiskTabs.Create(path, files, forceCreate: forceCreate)
 				, hexEditor: (fileName, binarydata, encoder, modified, forceCreate) => HexEditTabs.CreateFromFile(fileName, binarydata, encoder, modified, forceCreate)
 				, textEditorDiff: (fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent) => new TextEditTabs().AddDiff(fileName1, displayName1, bytes1, codePage1, TextEdit.Content.Parser.ParserType.None, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, TextEdit.Content.Parser.ParserType.None, modified2, line2, column2, shutdownEvent)
 				, textEditorFile: (fileName, displayName, bytes, encoding, modified, line, column, forceCreate, shutdownEvent) => TextEditTabs.Create(fileName, displayName, bytes, encoding, TextEdit.Content.Parser.ParserType.None, modified, line ?? 1, column ?? 1, null, forceCreate, shutdownEvent)

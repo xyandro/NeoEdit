@@ -85,10 +85,6 @@
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)\Disk\Disk.csproj">
-      <Project>{839c668b-921c-4a33-91cd-0d8131ffacfc}</Project>
-      <Name>Disk</Name>
-    </ProjectReference>
     <ProjectReference Include="$(SolutionDir)\GUI\GUI.csproj">
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>

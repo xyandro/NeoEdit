@@ -63,9 +63,7 @@ namespace NeoEdit.TextEdit
 				TextEditTabs.Create(file);
 		}
 
-		void Command_File_OpenWith_Disk() => Launcher.Static.LaunchDisk(FileName);
-
-		void Command_File_OpenWith_HexEditor()
+		void Command_File_HexEdit()
 		{
 			if (!VerifyCanEncode())
 				return;

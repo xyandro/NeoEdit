@@ -11,10 +11,7 @@
 			<hexEdit:HexEditMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
 			<hexEdit:HexEditMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
 		</MenuItem>
-		<MenuItem Header="Open _With">
-			<hexEdit:HexEditMenuItem Header="_Disk" CommandEnum="File_OpenWith_Disk"/>
-			<hexEdit:HexEditMenuItem Header="_Text Editor" CommandEnum="File_OpenWith_TextEditor"/>
-		</MenuItem>
+		<hexEdit:HexEditMenuItem Header="_Text Edit" CommandEnum="File_TextEdit"/>
 		<MenuItem Header="_Save">
 			<hexEdit:HexEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
 			<hexEdit:HexEditMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>

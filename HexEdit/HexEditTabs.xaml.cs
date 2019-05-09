@@ -135,8 +135,7 @@ namespace NeoEdit.HexEdit
 
 			switch (command)
 			{
-				case HexEditCommand.File_OpenWith_Disk: ItemTabs.TopMost.Command_File_OpenWith_Disk(); break;
-				case HexEditCommand.File_OpenWith_TextEditor: ItemTabs.TopMost.Command_File_OpenWith_TextEditor(); break;
+				case HexEditCommand.File_TextEdit: ItemTabs.TopMost.Command_File_TextEdit(); break;
 				case HexEditCommand.File_Save_Save: ItemTabs.TopMost.Command_File_Save_Save(); break;
 				case HexEditCommand.File_Save_SaveAs: ItemTabs.TopMost.Command_File_Save_SaveAs(); break;
 				case HexEditCommand.File_Operations_Rename: ItemTabs.TopMost.Command_File_Operations_Rename(); break;
