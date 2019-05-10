@@ -7,7 +7,7 @@ using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Controls;
+using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

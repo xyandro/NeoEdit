@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using NeoEdit.GUI.Controls;
+using NeoEdit.Common;
+using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -55,7 +56,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			var comparer = MatchCase ? EqualityComparer<char>.Default : (IEqualityComparer<char>)new NoCaseCharComparer();
 			result = new Result
 			{
-				TrimChars = new HashSet<char>(Misc.GetCharsFromCharString(TrimChars).ToCharArray(), comparer),
+				TrimChars = new HashSet<char>(Helpers.GetCharsFromCharString(TrimChars).ToCharArray(), comparer),
 				Start = Location.HasFlag(TrimLocation.Start),
 				End = Location.HasFlag(TrimLocation.End),
 			};

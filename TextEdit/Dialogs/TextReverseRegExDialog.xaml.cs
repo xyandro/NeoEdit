@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using NeoEdit.GUI.Controls;
+using NeoEdit.TextEdit.Controls;
 using NeoEdit.TextEdit.RevRegEx;
 
 namespace NeoEdit.TextEdit.Dialogs

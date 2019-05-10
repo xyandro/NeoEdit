@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
-using NeoEdit.GUI.Controls;
+using NeoEdit.Common;
+using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -28,7 +29,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			var ignoreCharacterStr = new string(Misc.GetCharsFromCharString(IgnoreCharacters).ToCharArray());
+			var ignoreCharacterStr = new string(Helpers.GetCharsFromCharString(IgnoreCharacters).ToCharArray());
 			if (!MatchCase)
 				ignoreCharacterStr = new string((ignoreCharacterStr.ToLowerInvariant() + ignoreCharacterStr.ToUpperInvariant()).Distinct().ToArray());
 			result = new Result { IgnoreCharacters = ignoreCharacterStr };

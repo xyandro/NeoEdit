@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Windows;
 using NeoEdit.Common.Expressions;
-using NeoEdit.GUI.Controls;
+using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

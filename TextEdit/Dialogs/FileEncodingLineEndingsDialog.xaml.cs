@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using NeoEdit.GUI.Controls;
+using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

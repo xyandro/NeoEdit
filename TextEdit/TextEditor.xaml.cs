@@ -16,18 +16,15 @@ using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Converters;
-using NeoEdit.GUI.Dialogs;
-using NeoEdit.GUI.Misc;
-using NeoEdit.TextEdit.Content;
+using NeoEdit.TextEdit.Controls;
+using NeoEdit.TextEdit.Converters;
 using NeoEdit.TextEdit.Dialogs;
+using NeoEdit.TextEdit.Misc;
+using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Highlighting;
 
 namespace NeoEdit.TextEdit
 {
-	public class TabsControl : TabsControl<TextEditor, TextEditCommand> { }
-
 	partial class TextEditor
 	{
 		class PreviousStruct
@@ -117,11 +114,21 @@ namespace NeoEdit.TextEdit
 		public bool IsDiff { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool DiffEncodingMismatch { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public int ItemOrder { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool Active { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public string TabLabel { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+
+		public TextEditTabs TabsParent { get; internal set; }
+
+		public bool CanClose() => CanClose(new AnswerResult());
 
 		int currentSelectionField;
 		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; statusBarRenderTimer.Start(); } }
 		public int NumSelections => Selections.Count;
-		public List<string> Clipboard => (WindowParent as TextEditTabs).GetClipboard(this);
+		public List<string> Clipboard => TabsParent.GetClipboard(this);
 
 		bool watcherFileModified = false;
 
@@ -179,6 +186,26 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
+		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
+		static internal readonly Brush searchBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
+		static internal readonly Dictionary<int, Brush> regionBrush = new Dictionary<int, Brush>
+		{
+			[1] = new SolidColorBrush(Color.FromArgb(64, 0, 64, 0)),
+			[2] = new SolidColorBrush(Color.FromArgb(64, 64, 0, 0)),
+			[3] = new SolidColorBrush(Color.FromArgb(64, 0, 0, 64)),
+			[4] = new SolidColorBrush(Color.FromArgb(64, 64, 64, 0)),
+			[5] = new SolidColorBrush(Color.FromArgb(64, 64, 0, 64)),
+			[6] = new SolidColorBrush(Color.FromArgb(64, 0, 64, 64)),
+			[7] = new SolidColorBrush(Color.FromArgb(64, 0, 128, 0)),
+			[8] = new SolidColorBrush(Color.FromArgb(64, 128, 0, 0)),
+			[9] = new SolidColorBrush(Color.FromArgb(64, 0, 0, 128)),
+		};
+		static internal readonly Brush visibleCursorBrush = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
+		static internal readonly Brush diffMajorBrush = new SolidColorBrush(Color.FromArgb(192, 239, 203, 5));
+		static internal readonly Brush diffMinorBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));
+		static internal readonly Brush cursorBrush = new SolidColorBrush(Color.FromArgb(10, 0, 0, 0));
+		static internal readonly Pen cursorPen = new Pen(new SolidColorBrush(Color.FromArgb(20, 0, 0, 0)), 1);
+
 		int xScrollViewportFloor => (int)Math.Floor(xScroll.ViewportSize);
 		int xScrollViewportCeiling => (int)Math.Ceiling(xScroll.ViewportSize);
 		int yScrollViewportFloor => (int)Math.Floor(yScroll.ViewportSize);
@@ -188,7 +215,17 @@ namespace NeoEdit.TextEdit
 
 		static TextEditor()
 		{
+			selectionBrush.Freeze();
+			searchBrush.Freeze();
+			regionBrush.Values.ForEach(brush => brush.Freeze());
+			visibleCursorBrush.Freeze();
+			diffMajorBrush.Freeze();
+			diffMinorBrush.Freeze();
+			cursorBrush.Freeze();
+			cursorPen.Freeze();
+
 			UIHelper<TextEditor>.Register();
+			UIHelper<TextEditor>.AddCallback(a => a.Active, (obj, o, n) => obj.TabsParent?.NotifyActiveChanged());
 			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => { obj.canvasRenderTimer.Start(); obj.bookmarkRenderTimer.Start(); });
 			UIHelper<TextEditor>.AddCallback(a => a.ContentType, (obj, o, n) => obj.canvasRenderTimer.Start());
@@ -208,7 +245,7 @@ namespace NeoEdit.TextEdit
 			selectionsList = new RangeList(selections, deOverlap);
 			EnsureVisible();
 			canvasRenderTimer.Start();
-			(WindowParent as TextEditTabs)?.QueueUpdateCounts();
+			TabsParent?.QueueUpdateCounts();
 		}
 
 		RangeList searchesList = new RangeList(new List<Range>());
@@ -233,7 +270,7 @@ namespace NeoEdit.TextEdit
 		{
 			regionsList[region] = new RangeList(regions);
 			canvasRenderTimer.Start();
-			(WindowParent as TextEditTabs)?.QueueUpdateCounts();
+			TabsParent?.QueueUpdateCounts();
 		}
 
 		RunOnceTimer canvasRenderTimer, statusBarRenderTimer, bookmarkRenderTimer;
@@ -407,13 +444,13 @@ namespace NeoEdit.TextEdit
 			diffTarget.CalculateBoundaries();
 		}
 
-		public override bool CanClose(AnswerResult answer)
+		public bool CanClose(AnswerResult answer)
 		{
 			if (!IsModified)
 				return true;
 
 			if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
-				answer.Answer = new Message(WindowParent)
+				answer.Answer = new Message(TabsParent)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -445,19 +482,18 @@ namespace NeoEdit.TextEdit
 			}
 		}
 
-		public override void Closed()
+		public void Closed()
 		{
 			DiffTarget = null;
 			globalKeysChanged -= SetupLocalOrGlobalKeys;
 			Font.FontSizeChanged -= FontSizeChanged;
 			ClearWatcher();
 			shutdownData.OnShutdown();
-			base.Closed();
 		}
 
 		bool ConfirmContinueWhenCannotEncode()
 		{
-			return new Message(WindowParent)
+			return new Message(TabsParent)
 			{
 				Title = "Confirm",
 				Text = "The specified encoding cannot fully represent the data.  Continue anyway?",
@@ -467,7 +503,7 @@ namespace NeoEdit.TextEdit
 			}.Show() == Message.OptionsEnum.Yes;
 		}
 
-		public override bool Empty() => (FileName == null) && (!IsModified) && (BeginOffset == EndOffset);
+		public bool Empty() => (FileName == null) && (!IsModified) && (BeginOffset == EndOffset);
 
 		void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
 		{
@@ -1536,7 +1572,7 @@ namespace NeoEdit.TextEdit
 			if ((command != TextEditCommand.Macro_TimeNextAction) && (timeNext))
 			{
 				timeNext = false;
-				new Message(WindowParent)
+				new Message(TabsParent)
 				{
 					Title = "Timer",
 					Text = $"Elapsed time: {elapsed:n} ms",
@@ -1970,10 +2006,10 @@ namespace NeoEdit.TextEdit
 
 			var brushes = new List<Tuple<RangeList, Brush>>
 			{
-				Tuple.Create(Selections, Misc.selectionBrush),
-				Tuple.Create(Searches, Misc.searchBrush),
+				Tuple.Create(Selections, selectionBrush),
+				Tuple.Create(Searches, searchBrush),
 			};
-			brushes.AddRange(Regions.Select(pair => Tuple.Create(pair.Value, Misc.regionBrush[pair.Key])));
+			brushes.AddRange(Regions.Select(pair => Tuple.Create(pair.Value, regionBrush[pair.Key])));
 			foreach (var entry in brushes)
 			{
 				var hasSelection = entry.Item1.Any(range => range.HasSelection);
@@ -1992,11 +2028,11 @@ namespace NeoEdit.TextEdit
 					if ((entry.Item1 == Selections) && (!hasSelection) && (cursorLine >= entryStartLine) && (cursorLine < entryEndLine))
 					{
 						if (range == visibleCursor)
-							dc.DrawRectangle(Misc.visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, Font.FontSize));
+							dc.DrawRectangle(visibleCursorBrush, null, new Rect(0, y[cursorLine], canvas.ActualWidth, Font.FontSize));
 
 						if (!cursorLineDone.Contains(cursorLine))
 						{
-							dc.DrawRectangle(Misc.cursorBrush, Misc.cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, Font.FontSize));
+							dc.DrawRectangle(cursorBrush, cursorPen, new Rect(0, y[cursorLine], canvas.ActualWidth, Font.FontSize));
 							cursorLineDone.Add(cursorLine);
 						}
 
@@ -2038,7 +2074,7 @@ namespace NeoEdit.TextEdit
 			{
 				if (!Data.GetLineDiffMatches(line))
 				{
-					dc.DrawRectangle(Misc.diffMinorBrush, null, new Rect(0, y[line], canvas.ActualWidth, Font.FontSize));
+					dc.DrawRectangle(diffMinorBrush, null, new Rect(0, y[line], canvas.ActualWidth, Font.FontSize));
 
 					var map = Data.GetLineColumnMap(line, true);
 					foreach (var tuple in Data.GetLineColumnDiffs(line))
@@ -2056,7 +2092,7 @@ namespace NeoEdit.TextEdit
 						var startX = Math.Max(0, start * Font.CharWidth);
 						var endX = Math.Min(ActualWidth, end * Font.CharWidth);
 						if (endX > startX)
-							dc.DrawRectangle(Misc.diffMajorBrush, null, new Rect(startX, y[line], endX - startX, Font.FontSize));
+							dc.DrawRectangle(diffMajorBrush, null, new Rect(startX, y[line], endX - startX, Font.FontSize));
 					}
 				}
 
@@ -2170,7 +2206,7 @@ namespace NeoEdit.TextEdit
 					bytes = File.ReadAllBytes(FileName);
 			}
 
-			FileSaver.HandleDecrypt(WindowParent, ref bytes, out var aesKey);
+			FileSaver.HandleDecrypt(TabsParent, ref bytes, out var aesKey);
 			AESKey = aesKey;
 
 			bytes = FileSaver.Decompress(bytes, out var compressed);
@@ -2298,7 +2334,7 @@ namespace NeoEdit.TextEdit
 					if ((triedReadOnly) || (!new FileInfo(fileName).IsReadOnly))
 						throw;
 
-					if (new Message(WindowParent)
+					if (new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "Save failed.  Remove read-only flag?",
@@ -2322,11 +2358,11 @@ namespace NeoEdit.TextEdit
 
 		void SetClipboardFile(string fileName, bool isCut = false) => SetClipboardFiles(new List<string> { fileName }, isCut);
 
-		void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => (WindowParent as TextEditTabs).AddClipboardStrings(fileNames, isCut);
+		void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => TabsParent.AddClipboardStrings(fileNames, isCut);
 
 		void SetClipboardString(string text) => SetClipboardStrings(new List<string> { text });
 
-		void SetClipboardStrings(IEnumerable<string> strs) => (WindowParent as TextEditTabs).AddClipboardStrings(strs);
+		void SetClipboardStrings(IEnumerable<string> strs) => TabsParent.AddClipboardStrings(strs);
 
 		void SetFileName(string fileName)
 		{
@@ -2358,7 +2394,7 @@ namespace NeoEdit.TextEdit
 			watcher.Changed += (s1, e1) =>
 			{
 				watcherFileModified = true;
-				Dispatcher.Invoke(() => (WindowParent as TextEditTabs).QueueDoActivated());
+				Dispatcher.Invoke(() => TabsParent.QueueDoActivated());
 			};
 			watcher.EnableRaisingEvents = true;
 		}
@@ -2392,7 +2428,7 @@ namespace NeoEdit.TextEdit
 			multiBinding.Bindings.Add(new Binding(nameof(IsModified)) { Source = this });
 			multiBinding.Bindings.Add(new Binding(nameof(IsDiff)) { Source = this });
 			multiBinding.Bindings.Add(new Binding(nameof(DiffEncodingMismatch)) { Source = this });
-			SetBinding(UIHelper<TabsControl<TextEditor, TextEditCommand>>.GetProperty(a => a.TabLabel), multiBinding);
+			SetBinding(UIHelper<TextEditor>.GetProperty(a => a.TabLabel), multiBinding);
 		}
 
 		static HashSet<string> drives = new HashSet<string>(DriveInfo.GetDrives().Select(drive => drive.Name));
@@ -2420,7 +2456,7 @@ namespace NeoEdit.TextEdit
 			if (Data.CanEncode(CodePage))
 				return true;
 
-			switch (new Message(WindowParent)
+			switch (new Message(TabsParent)
 			{
 				Title = "Confirm",
 				Text = "The current encoding cannot fully represent this data.  Switch to UTF-8?",

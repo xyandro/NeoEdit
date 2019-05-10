@@ -1,7 +1,7 @@
-﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.Dialogs.TableDatabaseGenerateDeletesDialog" x:ClassModifier="internal"
+﻿<guiControls:ModalDialog x:Name="self" x:Class="NeoEdit.TextEdit.Dialogs.TableDatabaseGenerateDeletesDialog" x:ClassModifier="internal"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:guiControls="clr-namespace:NeoEdit.TextEdit.Controls"
 	xmlns:dialogs="clr-namespace:NeoEdit.TextEdit.Dialogs"
 	Title="Generate Deletes" Width="800" Height="500" FocusManager.FocusedElement="{Binding ElementName=where}" WindowStyle="SingleBorderWindow">
 

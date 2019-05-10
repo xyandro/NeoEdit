@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using NeoEdit.GUI.Controls;
+using NeoEdit.Common;
+using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -56,7 +57,7 @@ namespace NeoEdit.TextEdit.Dialogs
 			updating = false;
 		}
 
-		int? BaseFromChars(string chars) { try { return Misc.GetCharsFromCharString(chars).Length; } catch { return null; } }
+		int? BaseFromChars(string chars) { try { return Helpers.GetCharsFromCharString(chars).Length; } catch { return null; } }
 
 		string GetChars(ref int count, char start, char end)
 		{
@@ -96,8 +97,8 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			var inputChars = Misc.GetCharsFromCharString(InputSet);
-			var outputChars = Misc.GetCharsFromCharString(OutputSet);
+			var inputChars = Helpers.GetCharsFromCharString(InputSet);
+			var outputChars = Helpers.GetCharsFromCharString(OutputSet);
 			if (((inputChars.GroupBy(ch => ch).Any(group => group.Count() > 1))) || (outputChars.GroupBy(ch => ch).Any(group => group.Count() > 1)))
 				throw new ArgumentException("Can't have same number more than once");
 

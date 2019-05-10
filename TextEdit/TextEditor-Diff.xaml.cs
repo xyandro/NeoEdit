@@ -123,7 +123,7 @@ namespace NeoEdit.TextEdit
 			CalculateDiff();
 		}
 
-		DiffIgnoreCharactersDialog.Result Command_Diff_IgnoreCharacters_Dialog() => DiffIgnoreCharactersDialog.Run(WindowParent, diffIgnoreCharacters);
+		DiffIgnoreCharactersDialog.Result Command_Diff_IgnoreCharacters_Dialog() => DiffIgnoreCharactersDialog.Run(TabsParent, diffIgnoreCharacters);
 
 		void Command_Diff_IgnoreCharacters(DiffIgnoreCharactersDialog.Result result)
 		{
@@ -168,7 +168,7 @@ namespace NeoEdit.TextEdit
 				Helpers.Swap(ref target, ref source);
 
 			// If both tabs are active only do this from the target tab
-			var bothActive = TabsParent.IsActive(DiffTarget);
+			var bothActive = TabsParent.TabIsActive(DiffTarget);
 			if ((bothActive) && (target != this))
 				return;
 
@@ -179,7 +179,7 @@ namespace NeoEdit.TextEdit
 				source.ReplaceSelections(strs);
 		}
 
-		DiffFixWhitespaceDialog.Result Command_Diff_Fix_Whitespace_Dialog() => DiffFixWhitespaceDialog.Run(WindowParent);
+		DiffFixWhitespaceDialog.Result Command_Diff_Fix_Whitespace_Dialog() => DiffFixWhitespaceDialog.Run(TabsParent);
 
 		void Command_Diff_Fix_Whitespace(DiffFixWhitespaceDialog.Result result)
 		{

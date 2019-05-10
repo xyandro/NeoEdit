@@ -1,9 +1,9 @@
-﻿using NeoEdit.GUI.Controls;
+﻿using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit
 {
 	class TextEditMenuItem : NEMenuItem<TextEditCommand> { }
-	class MultiMenuItem : MultiMenuItem<TextEditor, TextEditCommand> { }
+	class MultiMenuItem : Controls.MultiMenuItem { }
 
 	partial class TextEditMenu
 	{

@@ -1,7 +1,7 @@
-﻿<guiControls:ModalDialog Name="self" x:Class="NeoEdit.TextEdit.Dialogs.ImageRotateDialog" x:ClassModifier="internal"
+﻿<guiControls:ModalDialog x:Name="self" x:Class="NeoEdit.TextEdit.Dialogs.ImageRotateDialog" x:ClassModifier="internal"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:guiControls="clr-namespace:NeoEdit.GUI.Controls;assembly=NeoEdit.GUI"
+	xmlns:guiControls="clr-namespace:NeoEdit.TextEdit.Controls"
 	Title="Rotate Image" SizeToContent="Height" Width="500" FocusManager.FocusedElement="{Binding ElementName=angleExpression}">
 
 	<Grid Margin="10">
@@ -17,7 +17,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Angle in Degrees:" Target="{Binding ElementName=angleExpression}" HorizontalAlignment="Right"/>
-		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Name="angleExpression" Text="{Binding AngleExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageResizeDialogWidthExpression"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="angleExpression" Text="{Binding AngleExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageResizeDialogWidthExpression"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<guiControls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding AngleExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

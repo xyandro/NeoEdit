@@ -7,8 +7,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using NeoEdit.Common;
-using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Misc;
+using NeoEdit.TextEdit.Controls;
+using NeoEdit.TextEdit.Misc;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

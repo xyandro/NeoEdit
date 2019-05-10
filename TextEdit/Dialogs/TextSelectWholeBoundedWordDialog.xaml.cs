@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using NeoEdit.GUI.Controls;
+using NeoEdit.Common;
+using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -53,7 +54,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		{
 			result = new Result
 			{
-				Chars = new HashSet<char>(Misc.GetCharsFromCharString(Chars).ToCharArray()),
+				Chars = new HashSet<char>(Helpers.GetCharsFromCharString(Chars).ToCharArray()),
 				Start = Location.HasFlag(TrimLocation.Start),
 				End = Location.HasFlag(TrimLocation.End),
 			};

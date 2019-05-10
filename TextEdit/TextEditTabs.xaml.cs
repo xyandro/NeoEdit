@@ -1,30 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Dialogs;
-using NeoEdit.GUI.Misc;
-using NeoEdit.TextEdit.Content;
+using NeoEdit.TextEdit.Controls;
+using NeoEdit.TextEdit.Converters;
 using NeoEdit.TextEdit.Dialogs;
+using NeoEdit.TextEdit.Misc;
+using NeoEdit.TextEdit.Content;
 
 namespace NeoEdit.TextEdit
 {
-	public class Tabs : Tabs<TextEditor, TextEditCommand> { }
-	public class TabsWindow : TabsWindow<TextEditor, TextEditCommand> { }
-
 	partial class TextEditTabs
 	{
+		[DepProp]
+		public ObservableCollection<TextEditor> Items { get { return UIHelper<TextEditTabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public TextEditor TopMost { get { return UIHelper<TextEditTabs>.GetPropValue<TextEditor>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public TabsLayout Layout { get { return UIHelper<TextEditTabs>.GetPropValue<TabsLayout>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public int? Columns { get { return UIHelper<TextEditTabs>.GetPropValue<int?>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public int? Rows { get { return UIHelper<TextEditTabs>.GetPropValue<int?>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public TextEditTabs WindowParent { get { return UIHelper<TextEditTabs>.GetPropValue<TextEditTabs>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public string ActiveCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 		[DepProp]
@@ -34,7 +48,37 @@ namespace NeoEdit.TextEdit
 		[DepProp]
 		public string ClipboardCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
 
-		static TextEditTabs() { UIHelper<TextEditTabs>.Register(); }
+		public delegate void TabsChangedDelegate();
+		public event TabsChangedDelegate TabsChanged;
+
+		readonly RunOnceTimer layoutTimer, topMostTimer;
+
+		readonly Canvas canvas;
+		readonly ScrollBar scrollBar;
+		Action<TextEditor> ShowItem;
+		int itemOrder = 0;
+
+		static TextEditTabs()
+		{
+			UIHelper<TextEditTabs>.Register();
+			UIHelper<TextEditTabs>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ItemsChanged());
+			UIHelper<TextEditTabs>.AddCallback(a => a.TopMost, (obj, o, n) => obj.TopMostChanged());
+			UIHelper<TextEditTabs>.AddCoerce(a => a.TopMost, (obj, value) => (value != null) && (obj.Items?.Contains(value) == true) ? value : null);
+			UIHelper<TextEditTabs>.AddCallback(a => a.Layout, (obj, o, n) => obj.layoutTimer.Start());
+			UIHelper<TextEditTabs>.AddCallback(a => a.Rows, (obj, o, n) => obj.layoutTimer.Start());
+			UIHelper<TextEditTabs>.AddCallback(a => a.Columns, (obj, o, n) => obj.layoutTimer.Start());
+		}
+
+		public static Tuple<TextEditor, Window> CreateTab(TextEditor item, TextEditTabs tabs = null, bool forceCreate = false)
+		{
+			if ((tabs == null) && (!forceCreate))
+				tabs = UIHelper<TextEditTabs>.GetNewest();
+
+			if (tabs == null)
+				tabs = new TextEditTabs();
+
+			return new Tuple<TextEditor, Window>(tabs.AddTab(item), tabs);
+		}
 
 		public static Window Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false, string shutdownEvent = null)
 		{
@@ -54,40 +98,60 @@ namespace NeoEdit.TextEdit
 				textEdit1.ContentType = textEdit2.ContentType;
 			if (textEdit2.ContentType == Parser.ParserType.None)
 				textEdit2.ContentType = textEdit1.ContentType;
-			tabs.CreateTab(textEdit1);
-			tabs.CreateTab(textEdit2);
-			ItemTabs.TopMost = textEdit2;
+			AddTab(textEdit1);
+			AddTab(textEdit2);
+			TopMost = textEdit2;
 			textEdit1.DiffTarget = textEdit2;
-			ItemTabs.Layout = TabsLayout.Grid;
-			if (ItemTabs.Items.Count > 2)
-				ItemTabs.Columns = 2;
+			Layout = TabsLayout.Grid;
+			if (Items.Count > 2)
+				Columns = 2;
 			return this;
 		}
+
+		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+		bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
 
 		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, contentType, modified, line, column, this);
 
 		readonly RunOnceTimer doActivatedTimer, countsTimer;
 		public TextEditTabs()
 		{
+			layoutTimer = new RunOnceTimer(DoLayout);
+			topMostTimer = new RunOnceTimer(ShowTopMost);
+			topMostTimer.AddDependency(layoutTimer);
+
+			Items = new ObservableCollection<TextEditor>();
+			Layout = TabsLayout.Full;
+			Focusable = true;
+			FocusVisualStyle = null;
+			AllowDrop = true;
+			VerticalAlignment = VerticalAlignment.Stretch;
+			Drop += (s, e) => OnDrop(e, null);
+
 			TextEditMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
 			InitializeComponent();
-			ItemTabs = tabs;
 			UIHelper.AuditMenu(menu);
 
 			AllowDrop = true;
 			Drop += OnDrop;
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());
 			countsTimer = new RunOnceTimer(() => UpdateStatusBarText());
-			ItemTabs.TabsChanged += ItemTabs_TabsChanged;
+			TabsChanged += ItemTabs_TabsChanged;
 			NEClipboard.ClipboardChanged += () => UpdateStatusBarText();
 			Activated += OnActivated;
+
+			SetupLayout(out canvas, out scrollBar);
+			SizeChanged += (s, e) => layoutTimer.Start();
+			scrollBar.ValueChanged += (s, e) => layoutTimer.Start();
+			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
 			UpdateStatusBarText();
 		}
 
 		void ItemTabs_TabsChanged()
 		{
-			ItemTabs.Items.ForEach(item => item.InvalidateCanvas());
+			Items.ForEach(item => item.InvalidateCanvas());
 			UpdateStatusBarText();
 		}
 
@@ -95,9 +159,9 @@ namespace NeoEdit.TextEdit
 		{
 			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
 
-			ActiveCountText = $"{plural(ItemTabs.Items.Where(item => item.Active).Count(), "file")}, {plural(ItemTabs.Items.Where(item => item.Active).Sum(item => item.NumSelections), "selection")}";
-			InactiveCountText = $"{plural(ItemTabs.Items.Where(item => !item.Active).Count(), "file")}, {plural(ItemTabs.Items.Where(item => !item.Active).Sum(item => item.NumSelections), "selection")}";
-			TotalCountText = $"{plural(ItemTabs.Items.Count, "file")}, {plural(ItemTabs.Items.Sum(item => item.NumSelections), "selection")}";
+			ActiveCountText = $"{plural(Items.Where(item => item.Active).Count(), "file")}, {plural(Items.Where(item => item.Active).Sum(item => item.NumSelections), "selection")}";
+			InactiveCountText = $"{plural(Items.Where(item => !item.Active).Count(), "file")}, {plural(Items.Where(item => !item.Active).Sum(item => item.NumSelections), "selection")}";
+			TotalCountText = $"{plural(Items.Count, "file")}, {plural(Items.Sum(item => item.NumSelections), "selection")}";
 			ClipboardCountText = $"{plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}";
 		}
 
@@ -107,9 +171,9 @@ namespace NeoEdit.TextEdit
 			if (clipboard == null)
 			{
 				var empty = new List<string>();
-				clipboard = ItemTabs.Items.ToDictionary(x => x, x => empty);
+				clipboard = Items.ToDictionary(x => x, x => empty);
 
-				var activeTabs = ItemTabs.Items.Where(item => item.Active).ToList();
+				var activeTabs = Items.Where(item => item.Active).ToList();
 
 				if (NEClipboard.Current.Count == activeTabs.Count)
 					NEClipboard.Current.ForEach((cb, index) => clipboard[activeTabs[index]] = cb.Strings);
@@ -143,8 +207,8 @@ namespace NeoEdit.TextEdit
 
 		OpenFileDialogResult Command_File_Open_Open_Dialog(string initialDirectory = null)
 		{
-			if ((initialDirectory == null) && (ItemTabs.TopMost != null))
-				initialDirectory = Path.GetDirectoryName(ItemTabs.TopMost.FileName);
+			if ((initialDirectory == null) && (TopMost != null))
+				initialDirectory = Path.GetDirectoryName(TopMost.FileName);
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "txt",
@@ -199,7 +263,7 @@ namespace NeoEdit.TextEdit
 			}.Show() != Message.OptionsEnum.Yes))
 				return;
 
-			foreach (var item in ItemTabs.Items)
+			foreach (var item in Items)
 				item.Active = false;
 			foreach (var file in files)
 				AddTextEditor(file);
@@ -207,7 +271,7 @@ namespace NeoEdit.TextEdit
 
 		void Command_Diff_Diff()
 		{
-			var diffTargets = ItemTabs.Items.Count == 2 ? ItemTabs.Items.ToList() : ItemTabs.Items.Where(data => data.Active).ToList();
+			var diffTargets = Items.Count == 2 ? Items.ToList() : Items.Where(data => data.Active).ToList();
 			if (diffTargets.Any(item => item.DiffTarget != null))
 			{
 				diffTargets.ForEach(item => item.DiffTarget = null);
@@ -219,16 +283,16 @@ namespace NeoEdit.TextEdit
 
 			if (shiftDown)
 			{
-				if (!ItemTabs.Items.Except(diffTargets).Any())
-					ItemTabs.Layout = TabsLayout.Grid;
+				if (!Items.Except(diffTargets).Any())
+					Layout = TabsLayout.Grid;
 				else
 				{
-					diffTargets.ForEach(diffTarget => ItemTabs.Items.Remove(diffTarget));
+					diffTargets.ForEach(diffTarget => Items.Remove(diffTarget));
 
 					var textEditTabs = new TextEditTabs();
-					textEditTabs.ItemTabs.Layout = TabsLayout.Grid;
-					diffTargets.ForEach(diffTarget => textEditTabs.tabs.CreateTab(diffTarget));
-					textEditTabs.ItemTabs.TopMost = diffTargets[0];
+					textEditTabs.Layout = TabsLayout.Grid;
+					diffTargets.ForEach(diffTarget => textEditTabs.AddTab(diffTarget));
+					textEditTabs.TopMost = diffTargets[0];
 				}
 			}
 
@@ -237,64 +301,64 @@ namespace NeoEdit.TextEdit
 
 		void Command_Diff_Select_LeftRightBothTabs(bool? left)
 		{
-			var topMost = ItemTabs.TopMost;
-			var active = ItemTabs.Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((ItemTabs.GetIndex(item) < ItemTabs.GetIndex(item.DiffTarget)) == left)).ToList();
-			ItemTabs.Items.ForEach(item => item.Active = false);
+			var topMost = TopMost;
+			var active = Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetIndex(item) < GetIndex(item.DiffTarget)) == left)).ToList();
+			Items.ForEach(item => item.Active = false);
 
 			if (!active.Any())
 				return;
 
 			if (!active.Contains(topMost))
 				topMost = active.First();
-			ItemTabs.TopMost = topMost;
+			TopMost = topMost;
 			active.ForEach(item => item.Active = true);
 		}
 
-		CustomGridDialog.Result Command_View_Type_Dialog() => CustomGridDialog.Run(this, ItemTabs.Columns, ItemTabs.Rows);
+		CustomGridDialog.Result Command_View_Type_Dialog() => CustomGridDialog.Run(this, Columns, Rows);
 
-		void Command_View_Type(TabsLayout layout, CustomGridDialog.Result result) => ItemTabs.SetLayout(layout, result?.Columns, result?.Rows);
+		void Command_View_Type(TabsLayout layout, CustomGridDialog.Result result) => SetLayout(layout, result?.Columns, result?.Rows);
 
-		void Command_View_ActiveTabs() => tabs.ShowActiveTabsDialog();
+		void Command_View_ActiveTabs() => ShowActiveTabsDialog();
 
 		void Command_View_FontSize() => FontSizeDialog.Run(this);
 
 		void Command_View_SelectTabsWithSelections(bool hasSelections)
 		{
-			var topMost = ItemTabs.TopMost;
-			var active = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
-			ItemTabs.Items.ToList().ForEach(tab => tab.Active = false);
+			var topMost = TopMost;
+			var active = Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
+			Items.ToList().ForEach(tab => tab.Active = false);
 
 			if (!active.Any())
 				return;
 
 			if (!active.Contains(topMost))
 				topMost = active.First();
-			ItemTabs.TopMost = topMost;
+			TopMost = topMost;
 			active.ForEach(tab => tab.Active = true);
 		}
 
 		void Command_View_Select_TabsWithSelectionsToTop()
 		{
-			var topMost = ItemTabs.TopMost;
-			var active = ItemTabs.Items.Where(tab => tab.Active).ToList();
+			var topMost = TopMost;
+			var active = Items.Where(tab => tab.Active).ToList();
 			var hasSelections = active.Where(tab => tab.HasSelections).ToList();
 			if ((!active.Any()) || (!hasSelections.Any()))
 				return;
 
-			ItemTabs.MoveToTop(hasSelections);
+			MoveToTop(hasSelections);
 			if (!active.Contains(topMost))
 				topMost = active.First();
-			ItemTabs.TopMost = topMost;
+			TopMost = topMost;
 			active.ForEach(tab => tab.Active = true);
 		}
 
 		void Command_View_CloseTabsWithSelections(bool hasSelections)
 		{
-			var topMost = ItemTabs.TopMost;
-			var active = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
+			var topMost = TopMost;
+			var active = Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
 
 			var answer = new AnswerResult();
-			var closeTabs = ItemTabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
+			var closeTabs = Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
 			if (!closeTabs.All(tab => tab.CanClose(answer)))
 				return;
 			closeTabs.ForEach(tab => Remove(tab));
@@ -304,14 +368,14 @@ namespace NeoEdit.TextEdit
 
 			if (!active.Contains(topMost))
 				topMost = active.First();
-			ItemTabs.TopMost = topMost;
+			TopMost = topMost;
 			active.ForEach(tab => tab.Active = true);
 		}
 
 		void Command_View_Close_ActiveTabs(bool active)
 		{
 			var answer = new AnswerResult();
-			var closeTabs = ItemTabs.Items.Where(tab => tab.Active == active).ToList();
+			var closeTabs = Items.Where(tab => tab.Active == active).ToList();
 			if (!closeTabs.All(tab => tab.CanClose(answer)))
 				return;
 			closeTabs.ForEach(tab => Remove(tab));
@@ -319,14 +383,14 @@ namespace NeoEdit.TextEdit
 
 		void Command_View_NewWindow()
 		{
-			var active = ItemTabs.Items.Where(tab => tab.Active).ToList();
-			active.ForEach(tab => ItemTabs.Items.Remove(tab));
+			var active = Items.Where(tab => tab.Active).ToList();
+			active.ForEach(tab => Items.Remove(tab));
 
 			var newWindow = new TextEditTabs();
-			newWindow.ItemTabs.Layout = ItemTabs.Layout;
-			newWindow.ItemTabs.Columns = ItemTabs.Columns;
-			newWindow.ItemTabs.Rows = ItemTabs.Rows;
-			active.ForEach(tab => newWindow.ItemTabs.Items.Add(tab));
+			newWindow.Layout = Layout;
+			newWindow.Columns = Columns;
+			newWindow.Rows = Rows;
+			active.ForEach(tab => newWindow.Items.Add(tab));
 		}
 
 		void Command_View_WordList()
@@ -346,7 +410,7 @@ namespace NeoEdit.TextEdit
 		}
 
 		string QuickMacro(int num) => $"QuickText{num}.xml";
-		void Macro_Open_Quick(int quickNum) => AddTextEditor(Path.Combine(Macro<TextEditCommand>.MacroDirectory, QuickMacro(quickNum)));
+		void Macro_Open_Quick(int quickNum) => AddTextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum)));
 
 		void Command_Macro_Record_Quick(int quickNum)
 		{
@@ -359,7 +423,7 @@ namespace NeoEdit.TextEdit
 		void Command_Macro_Append_Quick(int quickNum)
 		{
 			if (recordingMacro == null)
-				recordingMacro = Macro<TextEditCommand>.Load(QuickMacro(quickNum), true);
+				recordingMacro = Macro.Load(QuickMacro(quickNum), true);
 			else
 				Command_Macro_Record_StopRecording(QuickMacro(quickNum));
 		}
@@ -367,10 +431,10 @@ namespace NeoEdit.TextEdit
 		void Command_Macro_Append_Append()
 		{
 			ValidateNoCurrentMacro();
-			recordingMacro = Macro<TextEditCommand>.Load();
+			recordingMacro = Macro.Load();
 		}
 
-		void Command_Macro_Play_Quick(int quickNum) => Macro<TextEditCommand>.Load(QuickMacro(quickNum), true).Play(this, playing => macroPlaying = playing);
+		void Command_Macro_Play_Quick(int quickNum) => Macro.Load(QuickMacro(quickNum), true).Play(this, playing => macroPlaying = playing);
 
 		void ValidateNoCurrentMacro()
 		{
@@ -383,7 +447,7 @@ namespace NeoEdit.TextEdit
 		void Command_Macro_Record_Record()
 		{
 			ValidateNoCurrentMacro();
-			recordingMacro = new Macro<TextEditCommand>();
+			recordingMacro = new Macro();
 		}
 
 		void Command_Macro_Record_StopRecording(string fileName = null)
@@ -404,12 +468,12 @@ namespace NeoEdit.TextEdit
 			macro.Save(fileName, true);
 		}
 
-		void Command_Macro_Play_Play() => Macro<TextEditCommand>.Load().Play(this, playing => macroPlaying = playing);
+		void Command_Macro_Play_Play() => Macro.Load().Play(this, playing => macroPlaying = playing);
 
 		void Command_Macro_Play_PlayOnCopiedFiles()
 		{
 			var files = new Queue<string>(NEClipboard.Current.Strings);
-			var macro = Macro<TextEditCommand>.Load();
+			var macro = Macro.Load();
 			Action startNext = null;
 			startNext = () =>
 			{
@@ -423,11 +487,11 @@ namespace NeoEdit.TextEdit
 
 		void Command_Macro_Play_Repeat()
 		{
-			var result = MacroPlayRepeatDialog.Run(this, Macro<TextEditCommand>.ChooseMacro);
+			var result = MacroPlayRepeatDialog.Run(this, Macro.ChooseMacro);
 			if (result == null)
 				return;
 
-			var macro = Macro<TextEditCommand>.Load(result.Macro);
+			var macro = Macro.Load(result.Macro);
 			var expression = new NEExpression(result.Expression);
 			var count = int.MaxValue;
 			if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Number)
@@ -436,11 +500,11 @@ namespace NeoEdit.TextEdit
 			Action startNext = null;
 			startNext = () =>
 			{
-				if ((ItemTabs.TopMost == null) || (--count < 0))
+				if ((TopMost == null) || (--count < 0))
 					return;
 
 				if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Condition)
-					if (!expression.Evaluate<bool>(ItemTabs.TopMost.GetVariables()))
+					if (!expression.Evaluate<bool>(TopMost.GetVariables()))
 						return;
 
 				macro.Play(this, playing => macroPlaying = playing, startNext);
@@ -448,8 +512,8 @@ namespace NeoEdit.TextEdit
 			startNext();
 		}
 
-		Macro<TextEditCommand> recordingMacro;
-		internal Macro<TextEditCommand> macroPlaying = null;
+		Macro recordingMacro;
+		internal Macro macroPlaying = null;
 
 		internal void RunCommand(TextEditCommand command, bool? multiStatus)
 		{
@@ -530,14 +594,14 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
 				case TextEditCommand.View_CustomGrid: dialogResult = Command_View_Type_Dialog(); break;
-				case TextEditCommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro<TextEditCommand>.MacroDirectory); break;
-				default: return ItemTabs.TopMost == null ? true : ItemTabs.TopMost.GetDialogResult(command, out dialogResult, multiStatus);
+				case TextEditCommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro.MacroDirectory); break;
+				default: return TopMost == null ? true : TopMost.GetDialogResult(command, out dialogResult, multiStatus);
 			}
 
 			return dialogResult != null;
 		}
 
-		public override bool HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus)
+		public bool HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus)
 		{
 			switch (command)
 			{
@@ -584,7 +648,7 @@ namespace NeoEdit.TextEdit
 			try
 			{
 				var answer = new AnswerResult();
-				foreach (var textEditorItem in ItemTabs.Items.Where(item => item.Active).ToList())
+				foreach (var textEditorItem in Items.Where(item => item.Active).ToList())
 				{
 					textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, answer);
 					if (answer.Answer == Message.OptionsEnum.Cancel)
@@ -628,10 +692,10 @@ namespace NeoEdit.TextEdit
 				recordingMacro.AddKey(key, shiftDown, controlDown, altDown);
 		}
 
-		public override bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
+		public bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
 		{
 			var result = false;
-			var activeTabs = ItemTabs.Items.Where(item => item.Active).ToList();
+			var activeTabs = Items.Where(item => item.Active).ToList();
 			var previousData = default(object);
 			foreach (var textEditorItems in activeTabs)
 				textEditorItems.PreHandleKey(key, shiftDown, controlDown, altDown, ref previousData);
@@ -658,10 +722,10 @@ namespace NeoEdit.TextEdit
 				recordingMacro.AddText(e.Text);
 		}
 
-		public override bool HandleText(string text)
+		public bool HandleText(string text)
 		{
 			var result = false;
-			foreach (var textEditorItems in ItemTabs.Items.Where(item => item.Active).ToList())
+			foreach (var textEditorItems in Items.Where(item => item.Active).ToList())
 				result = textEditorItems.HandleText(text) || result;
 			return result;
 		}
@@ -681,7 +745,7 @@ namespace NeoEdit.TextEdit
 			try
 			{
 				var answer = new AnswerResult();
-				foreach (var item in ItemTabs.Items)
+				foreach (var item in Items)
 				{
 					item.Activated(answer);
 					if (answer.Answer == Message.OptionsEnum.Cancel)
@@ -689,6 +753,453 @@ namespace NeoEdit.TextEdit
 				}
 			}
 			finally { Activated += OnActivated; }
+		}
+
+		void ShowTopMost()
+		{
+			if (TopMost == null)
+				return;
+			ShowItem?.Invoke(TopMost);
+			TopMost.Focus();
+		}
+
+		public void SetLayout(TabsLayout layout, int? columns = null, int? rows = null)
+		{
+			Layout = layout;
+			Columns = columns;
+			Rows = rows;
+			topMostTimer.Start();
+		}
+
+		public TextEditor AddTab(TextEditor item, int? index = null)
+		{
+			var replace = (!index.HasValue) && (!item.Empty()) && (TopMost != null) && (TopMost.Empty()) ? TopMost : default(TextEditor);
+			if (replace != null)
+				Items[Items.IndexOf(replace)] = item;
+			else
+				Items.Insert(index ?? Items.Count, item);
+			TopMost = item;
+			return replace;
+		}
+
+		public void ShowActiveTabsDialog()
+		{
+			ActiveTabsDialog.Run(this);
+			UpdateTopMost();
+		}
+
+		void ItemsChanged()
+		{
+			TabsChanged?.Invoke();
+
+			if (Items == null)
+				return;
+
+			foreach (var item in Items)
+			{
+				EnhancedFocusManager.SetIsEnhancedFocusScope(item, true);
+				item.TabsParent = this;
+			}
+
+			UpdateTopMost();
+			layoutTimer.Start();
+		}
+
+		void TopMostChanged()
+		{
+			if (TopMost == null)
+			{
+				UpdateTopMost();
+				return;
+			}
+
+			if (!shiftDown)
+				foreach (var item in Items)
+					item.Active = false;
+			TopMost.Active = true;
+
+			if (!controlDown)
+				TopMost.ItemOrder = ++itemOrder;
+
+			Dispatcher.BeginInvoke((Action)(() =>
+			{
+				UpdateLayout();
+				if (TopMost != null)
+					TopMost.Focus();
+			}));
+
+			topMostTimer.Start();
+		}
+
+		void UpdateTopMost()
+		{
+			var topMost = TopMost;
+			if ((topMost == null) || (!topMost.Active))
+				topMost = null;
+			if (topMost == null)
+				topMost = Items.Where(item => item.Active).OrderByDescending(item => item.ItemOrder).FirstOrDefault();
+			if (topMost == null)
+				topMost = Items.OrderByDescending(item => item.ItemOrder).FirstOrDefault();
+			TopMost = topMost;
+		}
+
+		public bool TabIsActive(TextEditor item) => Items.Where(x => x == item).Select(x => x.Active).DefaultIfEmpty(false).First();
+
+		public int GetIndex(TextEditor item, bool activeOnly = false)
+		{
+			var index = Items.Where(x => (!activeOnly) || (x.Active)).Indexes(x => x == item).DefaultIfEmpty(-1).First();
+			if (index == -1)
+				throw new ArgumentException("Not found");
+			return index;
+		}
+
+		public void Remove(TextEditor item)
+		{
+			Items.Remove(item);
+			item.Closed();
+		}
+
+		public void RemoveAll()
+		{
+			var items = Items.ToList();
+			Items.Clear();
+			foreach (var item in items)
+				item.Closed();
+		}
+
+		public int ActiveCount => Items.Count(item => item.Active);
+
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		{
+			base.OnPreviewKeyDown(e);
+
+			if ((controlDown) && (!altDown))
+			{
+				e.Handled = true;
+				switch (e.Key)
+				{
+					case Key.PageUp: MovePrev(); break;
+					case Key.PageDown: MoveNext(); break;
+					case Key.Tab: MoveTabOrder(); break;
+					default: e.Handled = false; break;
+				}
+			}
+		}
+
+		protected override void OnPreviewKeyUp(KeyEventArgs e)
+		{
+			base.OnPreviewKeyUp(e);
+			if ((e.Key == Key.LeftCtrl) || (e.Key == Key.RightCtrl))
+				if (TopMost != null)
+					TopMost.ItemOrder = ++itemOrder;
+		}
+
+		void MovePrev()
+		{
+			var index = Items.IndexOf(TopMost) - 1;
+			if (index < 0)
+				index = Items.Count - 1;
+			if (index >= 0)
+				TopMost = Items[index];
+		}
+
+		void MoveNext()
+		{
+			var index = Items.IndexOf(TopMost) + 1;
+			if (index >= Items.Count)
+				index = 0;
+			if (index < Items.Count)
+				TopMost = Items[index];
+		}
+
+		void MoveTabOrder()
+		{
+			var ordering = Items.OrderBy(item => item.ItemOrder).ToList();
+			var current = ordering.IndexOf(TopMost) - 1;
+			if (current == -2) // Not found
+				return;
+			if (current == -1)
+				current = ordering.Count - 1;
+			TopMost = ordering[current];
+		}
+
+		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+		{
+			base.OnMouseLeftButtonDown(e);
+			var source = e.OriginalSource as DependencyObject;
+			foreach (var item in Items)
+				if (item.IsAncestorOf(source))
+					TopMost = item;
+		}
+
+		void OnDrop(DragEventArgs e, TextEditor toItem)
+		{
+			var fromItems = e.Data.GetData(typeof(List<TextEditor>)) as List<TextEditor>;
+			if (fromItems == null)
+				return;
+
+			var toIndex = Items.IndexOf(toItem);
+			fromItems.ForEach(fromItem => fromItem.TabsParent.Items.Remove(fromItem));
+
+			if (toIndex == -1)
+				toIndex = Items.Count;
+			else
+				toIndex = Math.Min(toIndex, Items.Count);
+
+			foreach (var fromItem in fromItems)
+			{
+				Items.Insert(toIndex, fromItem);
+				++toIndex;
+				TopMost = fromItem;
+				e.Handled = true;
+			}
+		}
+
+		public void MoveToTop(IEnumerable<TextEditor> tabs)
+		{
+			var found = new HashSet<TextEditor>(tabs);
+			var indexes = Items.Indexes(item => found.Contains(item)).ToList();
+			for (var ctr = 0; ctr < indexes.Count; ++ctr)
+				Items.Move(indexes[ctr], ctr);
+		}
+
+		DockPanel GetTabLabel(TextEditTabs tabs, bool tiles, TextEditor item)
+		{
+			var dockPanel = new DockPanel { Margin = new Thickness(0, 0, tiles ? 0 : 2, 1), Tag = item };
+
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "p0 o== p2 ? \"CadetBlue\" : (p1 ? \"LightBlue\" : \"LightGray\")" };
+			multiBinding.Bindings.Add(new Binding { Source = item });
+			multiBinding.Bindings.Add(new Binding(nameof(TextEditor.Active)) { Source = item });
+			multiBinding.Bindings.Add(new Binding(nameof(TopMost)) { Source = tabs });
+			dockPanel.SetBinding(DockPanel.BackgroundProperty, multiBinding);
+
+			dockPanel.MouseLeftButtonDown += (s, e) => tabs.TopMost = item;
+			dockPanel.MouseMove += (s, e) =>
+			{
+				if (e.LeftButton == MouseButtonState.Pressed)
+				{
+					var active = item.TabsParent.Items.Where(tab => tab.Active).ToList();
+					DragDrop.DoDragDrop(s as DockPanel, new DataObject(typeof(List<TextEditor>), active), DragDropEffects.Move);
+				}
+			};
+
+			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 2, 0) };
+			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditor.TabLabel)) { Source = item });
+			dockPanel.Children.Add(text);
+
+			var closeButton = new Button
+			{
+				Content = "x",
+				BorderThickness = new Thickness(0),
+				Style = FindResource(ToolBar.ButtonStyleKey) as Style,
+				VerticalAlignment = VerticalAlignment.Center,
+				Margin = new Thickness(2, 0, 5, 0),
+				Foreground = new SolidColorBrush(Color.FromRgb(128, 32, 32)),
+				Focusable = false,
+				HorizontalAlignment = HorizontalAlignment.Right,
+			};
+			closeButton.Click += (s, e) =>
+			{
+				if (item.CanClose())
+					tabs.Remove(item);
+			};
+			dockPanel.Children.Add(closeButton);
+			return dockPanel;
+		}
+
+		void SetupLayout(out Canvas canvas, out ScrollBar scrollBar)
+		{
+			var grid = new Grid();
+			grid.RowDefinitions.Add(new RowDefinition());
+			grid.ColumnDefinitions.Add(new ColumnDefinition());
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+			tabs.Content = grid;
+
+			canvas = new Canvas { Background = Brushes.Gray, ClipToBounds = true };
+			Grid.SetRow(canvas, 0);
+			Grid.SetColumn(canvas, 0);
+			grid.Children.Add(canvas);
+
+			scrollBar = new ScrollBar();
+			Grid.SetRow(scrollBar, 0);
+			Grid.SetColumn(scrollBar, 1);
+			grid.Children.Add(scrollBar);
+		}
+
+		void ClearLayout()
+		{
+			canvas.Children.Clear();
+			foreach (var item in Items)
+			{
+				var parent = item.Parent;
+				if (parent is Panel p)
+					p.Children.Clear();
+				else if (parent is ContentControl cc)
+					cc.Content = null;
+				else if (parent != null)
+					throw new Exception("Don't know how to disconnect item");
+			}
+		}
+
+		void DoLayout()
+		{
+			ClearLayout();
+			if (Layout == TabsLayout.Full)
+				DoFullLayout();
+			else
+				DoGridLayout();
+			TopMost?.Focus();
+		}
+
+		void DoFullLayout()
+		{
+			if (scrollBar.Visibility != Visibility.Collapsed)
+			{
+				scrollBar.Visibility = Visibility.Collapsed;
+				UpdateLayout();
+			}
+
+			var grid = new Grid { Width = canvas.ActualWidth, Height = canvas.ActualHeight, AllowDrop = true };
+			grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+			grid.RowDefinitions.Add(new RowDefinition());
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+			grid.ColumnDefinitions.Add(new ColumnDefinition());
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+			var tabLabels = new ScrollViewer { HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden, VerticalScrollBarVisibility = ScrollBarVisibility.Hidden };
+
+			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
+			foreach (var item in Items)
+			{
+				var tabLabel = GetTabLabel(this, false, item);
+				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as TextEditor);
+				stackPanel.Children.Add(tabLabel);
+			}
+
+			ShowItem = item =>
+			{
+				var show = stackPanel.Children.OfType<FrameworkElement>().Where(x => x.Tag == item).FirstOrDefault();
+				if (show == null)
+					return;
+				tabLabels.UpdateLayout();
+				var left = show.TranslatePoint(new Point(0, 0), tabLabels).X + tabLabels.HorizontalOffset;
+				tabLabels.ScrollToHorizontalOffset(Math.Min(left, Math.Max(tabLabels.HorizontalOffset, left + show.ActualWidth - tabLabels.ViewportWidth)));
+			};
+
+			tabLabels.Content = stackPanel;
+			Grid.SetRow(tabLabels, 0);
+			Grid.SetColumn(tabLabels, 1);
+			grid.Children.Add(tabLabels);
+
+			var moveLeft = new RepeatButton { Content = "<", Margin = new Thickness(0, 0, 4, 0), Padding = new Thickness(5, 0, 5, 0) };
+			moveLeft.Click += (s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset - 50, tabLabels.ScrollableWidth)));
+			Grid.SetRow(moveLeft, 0);
+			Grid.SetColumn(moveLeft, 0);
+			grid.Children.Add(moveLeft);
+
+			var moveRight = new RepeatButton { Content = ">", Margin = new Thickness(2, 0, 0, 0), Padding = new Thickness(5, 0, 5, 0) };
+			moveRight.Click += (s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset + 50, tabLabels.ScrollableWidth)));
+			Grid.SetRow(moveRight, 0);
+			Grid.SetColumn(moveRight, 2);
+			grid.Children.Add(moveRight);
+
+			var contentControl = new ContentControl { FocusVisualStyle = null };
+			contentControl.SetBinding(ContentControl.ContentProperty, new Binding(nameof(TopMost)) { Source = this });
+			Grid.SetRow(contentControl, 1);
+			Grid.SetColumn(contentControl, 0);
+			Grid.SetColumnSpan(contentControl, 3);
+			grid.Children.Add(contentControl);
+
+			canvas.Children.Add(grid);
+		}
+
+		void DoGridLayout()
+		{
+			int columns, rows;
+			if (Layout == TabsLayout.Grid)
+			{
+				columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Items.Count)), 5));
+				rows = Math.Max(1, Math.Min((Items.Count + columns - 1) / columns, 5));
+			}
+			else if (!Rows.HasValue)
+			{
+				columns = Math.Max(1, Columns ?? (int)Math.Ceiling(Math.Sqrt(Items.Count)));
+				rows = Math.Max(1, (Items.Count + columns - 1) / columns);
+			}
+			else
+			{
+				rows = Math.Max(1, Rows.Value);
+				columns = Math.Max(1, Columns ?? (Items.Count + rows - 1) / rows);
+			}
+
+			var totalRows = (Items.Count + columns - 1) / columns;
+
+			var scrollBarVisibility = totalRows > rows ? Visibility.Visible : Visibility.Collapsed;
+			if (scrollBar.Visibility != scrollBarVisibility)
+			{
+				scrollBar.Visibility = scrollBarVisibility;
+				UpdateLayout();
+			}
+
+			var width = canvas.ActualWidth / columns;
+			var height = canvas.ActualHeight / rows;
+
+			scrollBar.ViewportSize = scrollBar.LargeChange = canvas.ActualHeight;
+			scrollBar.Maximum = height * totalRows - scrollBar.ViewportSize;
+
+			for (var ctr = 0; ctr < Items.Count; ++ctr)
+			{
+				var item = Items[ctr];
+				var top = ctr / columns * height - scrollBar.Value;
+				if ((top + height < 0) || (top > canvas.ActualHeight))
+					continue;
+
+				var dockPanel = new DockPanel { AllowDrop = true, Margin = new Thickness(0, 0, 2, 2) };
+				dockPanel.Drop += (s, e) => OnDrop(e, item);
+				var tabLabel = GetTabLabel(this, true, item);
+				DockPanel.SetDock(tabLabel, Dock.Top);
+				dockPanel.Children.Add(tabLabel);
+				{
+					item.SetValue(DockPanel.DockProperty, Dock.Bottom);
+					item.FocusVisualStyle = null;
+					dockPanel.Children.Add(item);
+				}
+
+				Canvas.SetLeft(dockPanel, ctr % columns * width + 1);
+				Canvas.SetTop(dockPanel, top + 1);
+				dockPanel.Width = width - 2;
+				dockPanel.Height = height - 2;
+				canvas.Children.Add(dockPanel);
+			}
+
+			ShowItem = item =>
+			{
+				var index = Items.IndexOf(item);
+				if (index == -1)
+					return;
+				var top = index / columns * height;
+				scrollBar.Value = Math.Min(top, Math.Max(scrollBar.Value, top + height - scrollBar.ViewportSize));
+			};
+		}
+
+		internal void NotifyActiveChanged() => TabsChanged?.Invoke();
+
+		protected override void OnClosing(CancelEventArgs e)
+		{
+			var answer = new AnswerResult();
+			var topMost = TopMost;
+			foreach (var item in Items)
+			{
+				TopMost = item;
+				if (!item.CanClose(answer))
+				{
+					e.Cancel = true;
+					return;
+				}
+			}
+			TopMost = topMost;
+			Items.ToList().ForEach(item => item.Closed());
+			base.OnClosing(e);
 		}
 	}
 }

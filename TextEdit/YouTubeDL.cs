@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using NeoEdit.Common;
-using NeoEdit.GUI.Controls;
+using NeoEdit.TextEdit.Controls;
 using Newtonsoft.Json.Linq;
 
 namespace NeoEdit.TextEdit

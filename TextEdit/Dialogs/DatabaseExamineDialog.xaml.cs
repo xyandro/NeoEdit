@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Windows;
-using NeoEdit.GUI.Controls;
+using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

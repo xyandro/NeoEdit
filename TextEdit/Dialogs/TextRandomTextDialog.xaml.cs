@@ -1,7 +1,8 @@
 ﻿using System.Windows;
+using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
-using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Dialogs;
+using NeoEdit.TextEdit.Controls;
+using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit.Dialogs
 {
@@ -32,7 +33,7 @@ namespace NeoEdit.TextEdit.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			var chars = Misc.GetCharsFromCharString(Chars);
+			var chars = Helpers.GetCharsFromCharString(Chars);
 			if (chars.Length == 0)
 				return;
 

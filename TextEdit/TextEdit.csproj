@@ -121,7 +121,58 @@
     <None Include="Content\XML\Source\XMLLexer.g4" />
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
+    <Compile Include="Controls\AnswerResult.cs" />
+    <Page Include="Controls\AutoCompleteTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\AutoCompleteTextBox.xaml.cs">
+      <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CodePageCheckBox.cs" />
+    <Compile Include="Controls\EnhancedFocusManager.cs" />
+    <Page Include="Controls\HelpMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\HelpMenu.xaml.cs">
+      <DependentUpon>HelpMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ModalDialog.cs" />
+    <Compile Include="Controls\NECommand.cs" />
+    <Page Include="Controls\NEExpressionResults.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\NEExpressionResults.xaml.cs">
+      <DependentUpon>NEExpressionResults.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NEWindow.cs" />
+    <Page Include="Controls\NumericUpDown.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\NumericUpDown.xaml.cs">
+      <DependentUpon>NumericUpDown.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RenderCanvas.cs" />
+    <Compile Include="Controls\UIHelper.cs" />
+    <Page Include="Controls\WindowMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\WindowMenu.xaml.cs">
+      <DependentUpon>WindowMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\CheckBitConverter.cs" />
+    <Compile Include="Converters\HexConverter.cs" />
+    <Compile Include="Converters\NEExpressionConverter.cs" />
+    <Compile Include="Converters\NonEmptyConverter.cs" />
+    <Compile Include="Converters\RadioConverter.cs" />
+    <Compile Include="Converters\SingleLineConverter.cs" />
+    <Compile Include="Converters\ValidValueConverter.cs" />
     <Compile Include="DBConnectInfo.cs" />
+    <Compile Include="Dialogs\ActiveTabsDialog.cs" />
     <Page Include="Dialogs\ContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -135,6 +186,20 @@
     </Page>
     <Compile Include="Dialogs\ContentAttributesDialog.xaml.cs">
       <DependentUpon>ContentAttributesDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\CryptorKeyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\CryptorKeyDialog.xaml.cs">
+      <DependentUpon>CryptorKeyDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\CustomGridDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\CustomGridDialog.xaml.cs">
+      <DependentUpon>CustomGridDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\DatabaseConnectDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -255,6 +320,41 @@
     <Compile Include="Dialogs\EditSortDialog.xaml.cs">
       <DependentUpon>EditSortDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\EncodingDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\EncodingDialog.xaml.cs">
+      <DependentUpon>EncodingDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\EncryptDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\EncryptDialog.xaml.cs">
+      <DependentUpon>EncryptDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ExpressionHelpDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExpressionHelpDialog.xaml.cs">
+      <DependentUpon>ExpressionHelpDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ExpressionHelpUnitsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExpressionHelpUnitsDialog.xaml.cs">
+      <DependentUpon>ExpressionHelpUnitsDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ExpressionHelpVariablesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExpressionHelpVariablesDialog.xaml.cs">
+      <DependentUpon>ExpressionHelpVariablesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ExpressionSolveDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -367,6 +467,42 @@
     <Compile Include="Dialogs\FilesSignDialog.xaml.cs">
       <DependentUpon>FilesSignDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\FindBinaryDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FindBinaryDialog.xaml.cs">
+      <DependentUpon>FindBinaryDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FindTextDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FindTextDialog.xaml.cs">
+      <DependentUpon>FindTextDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FontSizeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FontSizeDialog.xaml.cs">
+      <DependentUpon>FontSizeDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\GetExpressionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\GetExpressionDialog.xaml.cs">
+      <DependentUpon>GetExpressionDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\HashDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\HashDialog.xaml.cs">
+      <DependentUpon>HashDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\HelpItems.cs" />
     <Page Include="Dialogs\ImageAddOverlayColorDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -443,6 +579,20 @@
     </Page>
     <Compile Include="Dialogs\MacroPlayRepeatDialog.xaml.cs">
       <DependentUpon>MacroPlayRepeatDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Message.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Message.xaml.cs">
+      <DependentUpon>Message.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\MultiProgressDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\MultiProgressDialog.xaml.cs">
+      <DependentUpon>MultiProgressDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\NetworkAbsoluteURLDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -549,6 +699,20 @@
     <Compile Include="Dialogs\PositionGotoDialog.xaml.cs">
       <DependentUpon>PositionGotoDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ProgressDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ProgressDialog.xaml.cs">
+      <DependentUpon>ProgressDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\RegExHelpDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
+      <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\RegionModifyRegionsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -576,6 +740,13 @@
     </Page>
     <Compile Include="Dialogs\SelectSplitDialog.xaml.cs">
       <DependentUpon>SelectSplitDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\SignVerifyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\SignVerifyDialog.xaml.cs">
+      <DependentUpon>SignVerifyDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\TableAddColumnDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -698,11 +869,18 @@
     <Compile Include="Highlighting\HighlightJSON.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
+    <Compile Include="Launcher.cs" />
     <Compile Include="LoremGenerator.cs" />
-    <Compile Include="Misc.cs" />
+    <Compile Include="Macro.cs" />
+    <Compile Include="Misc\FileSaver.cs" />
+    <Compile Include="Misc\Font.cs" />
+    <Compile Include="Misc\KeySet.cs" />
+    <Compile Include="Misc\PropertyChangeNotifier.cs" />
+    <Compile Include="Misc\RunOnceTimer.cs" />
     <EmbeddedResource Include="Misc\Unicode.dat" />
     <None Include="Misc\Words.txt" />
     <EmbeddedResource Include="Misc\Words.txt.gz" />
+    <Compile Include="MultiMenuItem.cs" />
     <Compile Include="PortScanner.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -710,6 +888,10 @@
     </Compile>
     <Compile Include="Range.cs" />
     <Compile Include="RangeList.cs" />
+    <Resource Include="Resources\Checked.png" />
+    <Resource Include="Resources\DejaVuSansMono.ttf" />
+    <Resource Include="Resources\Indeterminate.png" />
+    <Resource Include="Resources\Unchecked.png" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />
@@ -724,6 +906,7 @@
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
     <Compile Include="ShutdownData.cs" />
     <Compile Include="Table.cs" />
+    <Compile Include="TabsLayout.cs" />
     <Compile Include="TextEditCommand.cs" />
     <Page Include="TextEditMenu.xaml">
       <SubType>Designer</SubType>
@@ -808,10 +991,6 @@
     <ProjectReference Include="$(SolutionDir)\Common\Common.csproj">
       <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
       <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)\GUI\GUI.csproj">
-      <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
-      <Name>GUI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

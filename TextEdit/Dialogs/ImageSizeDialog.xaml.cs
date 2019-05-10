@@ -5,8 +5,8 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
-using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Dialogs;
+using NeoEdit.TextEdit.Controls;
+using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

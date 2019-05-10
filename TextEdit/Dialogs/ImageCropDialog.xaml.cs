@@ -6,8 +6,8 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Controls;
-using NeoEdit.GUI.Dialogs;
+using NeoEdit.TextEdit.Controls;
+using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

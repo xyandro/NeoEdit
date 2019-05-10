@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows;
 using NeoEdit.Common.Transform;
-using NeoEdit.GUI.Controls;
+using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

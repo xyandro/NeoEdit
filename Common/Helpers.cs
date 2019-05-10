@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NeoEdit.Common.Transform;
 
@@ -459,6 +460,42 @@ namespace NeoEdit.Common
 				value2 = newValue;
 			}
 			return value1;
+		}
+
+		public static string GetCharsFromCharString(string charString)
+		{
+			var result = new StringBuilder();
+			var range = false;
+			foreach (var c in Regex.Unescape(charString))
+			{
+				if (c == '-')
+				{
+					range = !range;
+					if (range)
+						continue;
+				}
+
+				if ((range) && (result.Length == 0))
+					throw new Exception("Invalid charstring");
+
+				var start = range ? result[result.Length - 1] : c;
+				var dir = c > start ? 1 : -1;
+
+				while (true)
+				{
+					if (range)
+						range = false;
+					else
+						result.Append(start);
+					if (start == c)
+						break;
+					start = (char)(start + dir);
+				}
+			}
+			if (range)
+				throw new Exception("Invalid charstring");
+
+			return result.ToString();
 		}
 	}
 }

@@ -70,7 +70,7 @@ namespace NeoEdit.TextEdit
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return PositionGotoDialog.Run(WindowParent, gotoType, startValue, GetVariables());
+			return PositionGotoDialog.Run(TabsParent, gotoType, startValue, GetVariables());
 		}
 
 		void Command_Position_Goto(GotoType gotoType, bool selecting, PositionGotoDialog.Result result)
@@ -107,7 +107,7 @@ namespace NeoEdit.TextEdit
 			{
 				var textEditor = new TextEditor(pair.Key);
 				textEditor.SetSelections(pair.Value.Select(line => new Range(textEditor.Data.GetOffset(line - 1, 0))).ToList());
-				TabsParent.CreateTab(textEditor);
+				TabsParent.AddTab(textEditor);
 			}
 		}
 
