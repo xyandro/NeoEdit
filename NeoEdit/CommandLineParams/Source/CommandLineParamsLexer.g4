@@ -6,7 +6,6 @@ ABOUT          : '-about'                                                       
 COLUMN         : '-col' | '-column'                                                                     ;
 DIFF           : '-diff'                                                                                ;
 DISPLAY        : '-display' | '-displayname' | '-displaytext'                                           ;
-HEXEDIT        : '-binary' | '-binaryedit' | '-binaryeditor' | '-hex' | '-hexedit' | '-hexeditor'       ;
 LINE           : '-line'                                                                                ;
 MULTI          : '-multi'                                                                               ;
 PLAYLIST       : '-playlist' | '-playlists' | '-list' | '-lists'                                        ;
@@ -26,7 +25,6 @@ ABOUT2         : ABOUT         -> type(ABOUT)         ;
 COLUMN2        : COLUMN        -> type(COLUMN)        ;
 DIFF2          : DIFF          -> type(DIFF)          ;
 DISPLAY2       : DISPLAY       -> type(DISPLAY)       ;
-HEXEDIT2       : HEXEDIT       -> type(HEXEDIT)       ;
 LINE2          : LINE          -> type(LINE)          ;
 MULTI2         : MULTI         -> type(MULTI)         ;
 PLAYLIST2      : PLAYLIST      -> type(PLAYLIST)      ;

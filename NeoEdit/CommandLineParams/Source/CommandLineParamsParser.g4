@@ -4,11 +4,10 @@ options { tokenVocab = CommandLineParamsLexer; }
 
 expr          : parameter* EOF ;
 
-parameter     : about | diff | hexedit | multi | textedit | wait ;
+parameter     : about | diff | multi | textedit | wait ;
 
 about         : ABOUT ;
 diff          : DIFF texteditfile? texteditfile? ;
-hexedit       : HEXEDIT param* ;
 multi         : MULTI ;
 textedit      : TEXTEDIT texteditfile* | texteditfile+ ;
 texteditfile  : file=param (LINE EQUALS? line=NUMBER)? (COLUMN EQUALS? column=NUMBER)? (DISPLAY EQUALS? display=param)? ;

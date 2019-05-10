@@ -936,7 +936,6 @@ namespace NeoEdit.TextEdit
 			{
 				case TextEditCommand.File_New_FromSelections: Command_File_New_FromSelections(); break;
 				case TextEditCommand.File_Open_Selected: Command_File_Open_Selected(); break;
-				case TextEditCommand.File_HexEdit: Command_File_HexEdit(); break;
 				case TextEditCommand.File_Save_Save: Command_File_Save_Save(); break;
 				case TextEditCommand.File_Save_SaveAs: Command_File_Save_SaveAs(); break;
 				case TextEditCommand.File_Save_SaveAsByExpression: Command_File_Save_SaveAsByExpression(dialogResult as GetExpressionDialog.Result, answer); break;

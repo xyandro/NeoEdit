@@ -12,7 +12,6 @@ namespace NeoEdit.TextEdit
 		[KeyGesture(Key.O, ModifierKeys.Control)] File_Open_Open,
 		[KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_Open_CopiedCut,
 		File_Open_Selected,
-		[KeyGesture(Key.H, ModifierKeys.Control | ModifierKeys.Alt)] File_HexEdit,
 		[KeyGesture(Key.S, ModifierKeys.Control)] File_Save_Save,
 		File_Save_SaveAs,
 		File_Save_SaveAsByExpression,

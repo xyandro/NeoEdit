@@ -63,14 +63,6 @@ namespace NeoEdit.TextEdit
 				TextEditTabs.Create(file);
 		}
 
-		void Command_File_HexEdit()
-		{
-			if (!VerifyCanEncode())
-				return;
-			Launcher.Static.LaunchHexEditor(FileName, Data.GetBytes(CodePage), CodePage, IsModified);
-			WindowParent.Remove(this, true);
-		}
-
 		void Command_File_Save_Save()
 		{
 			if (FileName == null)

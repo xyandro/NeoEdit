@@ -89,10 +89,6 @@
       <Project>{53da8d50-6f45-4663-8101-9dd4bf99096e}</Project>
       <Name>GUI</Name>
     </ProjectReference>
-    <ProjectReference Include="$(SolutionDir)\HexEdit\HexEdit.csproj">
-      <Project>{6eab3c48-87bf-4f98-972e-1d0c8b7e03a4}</Project>
-      <Name>HexEdit</Name>
-    </ProjectReference>
     <ProjectReference Include="$(SolutionDir)\TextEdit\TextEdit.csproj">
       <Project>{9a35ab82-2481-4c44-b51e-66df7d248ead}</Project>
       <Name>TextEdit</Name>

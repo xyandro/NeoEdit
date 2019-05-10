@@ -22,21 +22,6 @@ namespace NeoEdit
 		public override Window Execute(string shutdownEvent) => Launcher.Static.LaunchTextEditorDiff(fileName1: Files[0]?.FileName, displayName1: Files[0]?.DisplayName, line1: Files[0]?.Line, column1: Files[0]?.Column, fileName2: Files[1]?.FileName, displayName2: Files[1]?.DisplayName, line2: Files[1]?.Line, column2: Files[1]?.Column, shutdownEvent: shutdownEvent);
 	}
 
-	class HexEditParam : Param
-	{
-		readonly List<string> Files;
-		public HexEditParam(List<string> files) { Files = files; }
-		public override Window Execute(string shutdownEvent)
-		{
-			if (!Files.Any())
-				return Launcher.Static.LaunchHexEditor();
-			Window window = null;
-			foreach (var file in Files)
-				window = Launcher.Static.LaunchHexEditor(file);
-			return window;
-		}
-	}
-
 	class TextEditParam : Param
 	{
 		public class TextEditFile

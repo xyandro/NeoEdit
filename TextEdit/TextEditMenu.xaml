@@ -22,7 +22,6 @@
 			<textEdit:TextEditMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
 			<textEdit:TextEditMenuItem Header="_Selected" CommandEnum="File_Open_Selected"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="Hex E_dit" CommandEnum="File_HexEdit"/>
 		<MenuItem Header="_Save">
 			<textEdit:TextEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
 			<textEdit:TextEditMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>

@@ -5,7 +5,6 @@
 	Header="_Window">
 
 	<guiControls:WindowMenuItem Header="Di_ff" CommandEnum="Window_Diff"/>
-	<guiControls:WindowMenuItem Header="_Hex Editor" CommandEnum="Window_HexEditor"/>
 	<guiControls:WindowMenuItem Header="_Text Editor" CommandEnum="Window_TextEditor"/>
 
 	<MenuItem Header="_Minimize to Tray" IsCheckable="True" IsChecked="{Binding Path=(guiControls:NEWindow.MinimizeToTray), Mode=TwoWay}"/>
