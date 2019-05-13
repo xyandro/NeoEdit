@@ -169,7 +169,6 @@
     <Compile Include="Controls\WindowMenu.xaml.cs">
       <DependentUpon>WindowMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\CheckBitConverter.cs" />
     <Compile Include="Converters\HexConverter.cs" />
     <Compile Include="Converters\NEExpressionConverter.cs" />
     <Compile Include="Converters\NonEmptyConverter.cs" />
@@ -1055,7 +1054,6 @@
     <Compile Include="UnitTest\UnicodeTest.cs" />
     <Compile Include="UnitTest\UnitTest.cs" />
     <Compile Include="UnitTest\XMLConverterTest.cs" />
-    <Compile Include="WeakList.cs" />
     <Compile Include="YouTubeDL.cs" />
   </ItemGroup>
   <ItemGroup>
