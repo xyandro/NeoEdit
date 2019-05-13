@@ -1,6 +1,6 @@
 ﻿using System.Windows;
-using NeoEdit.Common;
-using NeoEdit.Common.Expressions;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Expressions;
 using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs

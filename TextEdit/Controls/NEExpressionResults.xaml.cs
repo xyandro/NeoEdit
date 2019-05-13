@@ -6,8 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using NeoEdit.Common;
-using NeoEdit.Common.Expressions;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Expressions;
 using NeoEdit.TextEdit.Converters;
 
 namespace NeoEdit.TextEdit.Controls

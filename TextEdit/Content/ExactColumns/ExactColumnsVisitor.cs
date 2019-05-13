@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime;
-using NeoEdit.Common.Parsing;
+using NeoEdit.TextEdit.Parsing;
 using NeoEdit.TextEdit.Content.ExactColumns.Parser;
 
 namespace NeoEdit.TextEdit.Content.ExactColumns

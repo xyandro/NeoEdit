@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Transform;
 using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs

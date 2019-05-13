@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Common.Parsing;
+using NeoEdit.TextEdit.Parsing;
 using NeoEdit.TextEdit.RevRegEx.Parser;
 
 namespace NeoEdit.TextEdit.RevRegEx

@@ -9,11 +9,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using NeoEdit.Common;
+using NeoEdit.TextEdit;
 using NeoEdit.Dialogs;
 using NeoEdit.TextEdit.Controls;
 using NeoEdit.TextEdit.Dialogs;
-using NeoEdit.TextEdit;
 
 namespace NeoEdit
 {

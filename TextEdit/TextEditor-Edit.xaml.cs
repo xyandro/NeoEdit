@@ -1,7 +1,7 @@
-﻿using NeoEdit.Common;
-using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Parsing;
-using NeoEdit.Common.Transform;
+﻿using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Expressions;
+using NeoEdit.TextEdit.Parsing;
+using NeoEdit.TextEdit.Transform;
 using NeoEdit.TextEdit.Controls;
 using NeoEdit.TextEdit.Dialogs;
 using System;

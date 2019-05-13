@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
-using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Expressions;
+using NeoEdit.TextEdit.Transform;
 using NeoEdit.TextEdit.Controls;
 using NeoEdit.TextEdit.Dialogs;
 

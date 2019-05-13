@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NeoEdit.Common;
-using NeoEdit.Common.Expressions;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Expressions;
 using NeoEdit.TextEdit.Controls;
 using NeoEdit.TextEdit.Dialogs;
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using NeoEdit.Common;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Transform;
 
 namespace NeoEdit.TextEdit.Converters
 {

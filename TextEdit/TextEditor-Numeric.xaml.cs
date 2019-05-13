@@ -5,9 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
-using NeoEdit.Common;
-using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Expressions;
+using NeoEdit.TextEdit.Transform;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit

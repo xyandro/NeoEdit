@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using NeoEdit.Common;
+using NeoEdit.TextEdit;
 using NeoEdit.TextEdit.Dialogs;
 using NeoEdit.TextEdit.Misc;
 

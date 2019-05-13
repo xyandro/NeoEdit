@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Transform;
 
 namespace NeoEdit.TextEdit.Converters
 {

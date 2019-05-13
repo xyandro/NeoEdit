@@ -6,8 +6,8 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using Microsoft.Win32;
-using NeoEdit.Common;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Transform;
 using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit

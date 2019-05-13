@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Transform;
 using NeoEdit.TextEdit.Controls;
 
 namespace NeoEdit.TextEdit.Dialogs

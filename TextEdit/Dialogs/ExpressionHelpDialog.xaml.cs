@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using NeoEdit.Common.Expressions;
+using NeoEdit.TextEdit.Expressions;
 
 namespace NeoEdit.TextEdit.Dialogs
 {

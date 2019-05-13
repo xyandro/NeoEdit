@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NeoEdit.Common;
-using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Expressions;
+using NeoEdit.TextEdit.Transform;
 using NeoEdit.TextEdit.Dialogs;
 using NeoEdit.TextEdit.Content;
 

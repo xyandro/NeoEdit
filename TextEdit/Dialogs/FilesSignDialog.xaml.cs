@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Transform;
 using NeoEdit.TextEdit.Controls;
 using NeoEdit.TextEdit.Dialogs;
 

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NeoEdit.Common;
-using NeoEdit.Common.Transform;
 
 namespace NeoEdit.SevenZip
 {
@@ -211,36 +209,36 @@ namespace NeoEdit.SevenZip
 				var fileSize = stream.Length;
 				var formats = new List<Tuple<long, string, Formats>>
 				{
-					Tuple.Create(0L, "377abcaf271c", Formats.SevenZip),
-					Tuple.Create(0L, "1f8b08", Formats.GZip),
-					Tuple.Create(0L, "526172211a0700", Formats.Rar),
-					Tuple.Create(0L, "504b0304", Formats.Zip),
-					Tuple.Create(0L, "5d00004000", Formats.Lzma),
-					Tuple.Create(0L, "1f9d90", Formats.Z),
-					Tuple.Create(0L, "60ea", Formats.Arj),
-					Tuple.Create(0L, "425a68", Formats.BZip2),
-					Tuple.Create(0L, "4d534346", Formats.Cab),
-					Tuple.Create(0L, "49545346", Formats.Chm),
-					Tuple.Create(0L, "213c617263683e0a64656269616e2d62696e617279", Formats.Deb),
-					Tuple.Create(0L, "edabeedb", Formats.Rpm),
-					Tuple.Create(0L, "4d5357494d000000", Formats.Wim),
-					Tuple.Create(0L, "78617221", Formats.Xar),
-					Tuple.Create(0L, "fd377a585a", Formats.XZ),
-					Tuple.Create(0L, "465753", Formats.SWF),
-					Tuple.Create(0L, "4d5a", Formats.PE),
-					Tuple.Create(0L, "7f454c46", Formats.ELF),
-					Tuple.Create(0L, "78", Formats.Dmg),
-					Tuple.Create(0L, "d0cf11e0a1b11ae1", Formats.Cab),
-					Tuple.Create(2L, "2d6c68", Formats.Lzh),
-					Tuple.Create(257L, "7573746172", Formats.Tar),
-					Tuple.Create(0x400L, "482b", Formats.HFS),
-					Tuple.Create(0x8001L, "4344303031", Formats.Iso),
-					Tuple.Create(0x8801L, "4344303031", Formats.Iso),
-					Tuple.Create(0x9001L, "4344303031", Formats.Iso),
-					Tuple.Create(fileSize - 1024, new string('0', 2048), Formats.Tar),
+					Tuple.Create(0L, "N3q8rycc", Formats.SevenZip),
+					Tuple.Create(0L, "H4sI", Formats.GZip),
+					Tuple.Create(0L, "UmFyIRoHAA==", Formats.Rar),
+					Tuple.Create(0L, "UEsDBA==", Formats.Zip),
+					Tuple.Create(0L, "XQAAQAA=", Formats.Lzma),
+					Tuple.Create(0L, "H52Q", Formats.Z),
+					Tuple.Create(0L, "YOo=", Formats.Arj),
+					Tuple.Create(0L, "Qlpo", Formats.BZip2),
+					Tuple.Create(0L, "TVNDRg==", Formats.Cab),
+					Tuple.Create(0L, "SVRTRg==", Formats.Chm),
+					Tuple.Create(0L, "ITxhcmNoPgpkZWJpYW4tYmluYXJ5", Formats.Deb),
+					Tuple.Create(0L, "7avu2w==", Formats.Rpm),
+					Tuple.Create(0L, "TVNXSU0AAAA=", Formats.Wim),
+					Tuple.Create(0L, "eGFyIQ==", Formats.Xar),
+					Tuple.Create(0L, "/Td6WFo=", Formats.XZ),
+					Tuple.Create(0L, "RldT", Formats.SWF),
+					Tuple.Create(0L, "TVo=", Formats.PE),
+					Tuple.Create(0L, "f0VMRg==", Formats.ELF),
+					Tuple.Create(0L, "eA==", Formats.Dmg),
+					Tuple.Create(0L, "0M8R4KGxGuE=", Formats.Cab),
+					Tuple.Create(2L, "LWxo", Formats.Lzh),
+					Tuple.Create(257L, "dXN0YXI=", Formats.Tar),
+					Tuple.Create(0x400L, "SCs=", Formats.HFS),
+					Tuple.Create(0x8001L, "Q0QwMDE=", Formats.Iso),
+					Tuple.Create(0x8801L, "Q0QwMDE=", Formats.Iso),
+					Tuple.Create(0x9001L, "Q0QwMDE=", Formats.Iso),
+					Tuple.Create(fileSize - 1024, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==", Formats.Tar),
 				};
 
-				var groups = formats.Where(format => (format.Item1 >= 0) && (format.Item1 + format.Item2.Length / 2 <= fileSize)).GroupBy(format => format.Item1).Select(group => new { offset = group.Key, items = group.Select(format => new { bytes = Coder.StringToBytes(format.Item2, Coder.CodePage.Hex), format = format.Item3 }) }).OrderBy(group => group.offset).ToList();
+				var groups = formats.Where(format => (format.Item1 >= 0) && (format.Item1 + format.Item2.Length / 2 <= fileSize)).GroupBy(format => format.Item1).Select(group => new { offset = group.Key, items = group.Select(format => new { bytes = Convert.FromBase64String(format.Item2), format = format.Item3 }) }).OrderBy(group => group.offset).ToList();
 				foreach (var group in groups)
 				{
 					var bytes = new byte[group.items.Max(item => item.bytes.Length)];
@@ -248,7 +246,7 @@ namespace NeoEdit.SevenZip
 					var read = 0;
 					while (read < bytes.Length)
 						read += stream.Read(bytes, read, bytes.Length - read);
-					var found = group.items.FirstOrDefault(item => item.bytes.Zip(bytes.Take(item.bytes.Length), (itemByte, fileByte) => itemByte == fileByte).All());
+					var found = group.items.FirstOrDefault(item => item.bytes.Zip(bytes.Take(item.bytes.Length), (itemByte, fileByte) => itemByte == fileByte).All(x => x));
 					if (found != null)
 						return found.format;
 				}

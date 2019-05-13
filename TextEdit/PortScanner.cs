@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using NeoEdit.Common;
-using NeoEdit.Common.Parsing;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Parsing;
 
 namespace NeoEdit.TextEdit
 {

@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
-using NeoEdit.Common;
+using NeoEdit.TextEdit;
 using NeoEdit.TextEdit.Misc;
 
 namespace NeoEdit.TextEdit.Controls

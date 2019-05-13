@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
-using NeoEdit.Common.Expressions;
+using NeoEdit.TextEdit.Expressions;
 
 namespace NeoEdit.TextEdit.Converters
 {

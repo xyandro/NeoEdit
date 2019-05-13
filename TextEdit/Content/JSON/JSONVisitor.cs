@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using NeoEdit.Common.Parsing;
+using NeoEdit.TextEdit.Parsing;
 using NeoEdit.TextEdit.Content.JSON.Parser;
 
 namespace NeoEdit.TextEdit.Content.JSON

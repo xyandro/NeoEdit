@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Transform;
 
 namespace NeoEdit.TextEdit
 {

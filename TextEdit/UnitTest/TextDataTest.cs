@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NeoEdit.Common;
+using NeoEdit.TextEdit;
 
 namespace NeoEdit.TextEdit.UnitTest
 {

@@ -4,8 +4,8 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NeoEdit.Common;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Transform;
 using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;
 

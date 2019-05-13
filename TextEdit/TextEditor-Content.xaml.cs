@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Common;
-using NeoEdit.Common.Parsing;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Parsing;
 using NeoEdit.TextEdit.Controls;
 using NeoEdit.TextEdit.Content;
 using NeoEdit.TextEdit.Dialogs;

@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Transform;
 
 namespace NeoEdit.TextEdit.Controls
 {

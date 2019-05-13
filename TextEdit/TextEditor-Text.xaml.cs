@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NeoEdit.Common;
-using NeoEdit.Common.Parsing;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Parsing;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit

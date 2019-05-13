@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Common;
+using NeoEdit.TextEdit;
 
 namespace NeoEdit.TextEdit
 {

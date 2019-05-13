@@ -3,11 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{1C928016-0E00-4125-80A5-458B82F1EC0D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC} = {454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dependencies", "Dependencies\Dependencies.csproj", "{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loader", "Loader\Loader.csproj", "{770DFCD1-C149-40E4-B1A1-76D06465A57C}"
@@ -41,14 +36,6 @@ Global
 		Release|64 = Release|64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1C928016-0E00-4125-80A5-458B82F1EC0D}.Debug|32.ActiveCfg = Debug|x86
-		{1C928016-0E00-4125-80A5-458B82F1EC0D}.Debug|32.Build.0 = Debug|x86
-		{1C928016-0E00-4125-80A5-458B82F1EC0D}.Debug|64.ActiveCfg = Debug|x64
-		{1C928016-0E00-4125-80A5-458B82F1EC0D}.Debug|64.Build.0 = Debug|x64
-		{1C928016-0E00-4125-80A5-458B82F1EC0D}.Release|32.ActiveCfg = Release|x86
-		{1C928016-0E00-4125-80A5-458B82F1EC0D}.Release|32.Build.0 = Release|x86
-		{1C928016-0E00-4125-80A5-458B82F1EC0D}.Release|64.ActiveCfg = Release|x64
-		{1C928016-0E00-4125-80A5-458B82F1EC0D}.Release|64.Build.0 = Release|x64
 		{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}.Debug|32.ActiveCfg = Debug|x86
 		{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}.Debug|32.Build.0 = Debug|x86
 		{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}.Debug|64.ActiveCfg = Debug|x64

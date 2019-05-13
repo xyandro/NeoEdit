@@ -860,8 +860,28 @@
     <Compile Include="Dialogs\TextWidthDialog.xaml.cs">
       <DependentUpon>TextWidthDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Expressions\ExpressionEvaluator.cs" />
+    <Compile Include="Expressions\ExpressionUnit.cs" />
+    <Compile Include="Expressions\ExpressionUnits.cs" />
+    <Compile Include="Expressions\ExpressionUnitsConversion.cs" />
+    <Compile Include="Expressions\NEExpression.cs" />
+    <Compile Include="Expressions\NEVariable.cs" />
+    <Compile Include="Expressions\NEVariableConstant.cs" />
+    <Compile Include="Expressions\NEVariableInitializer.cs" />
+    <Compile Include="Expressions\NEVariableList.cs" />
+    <Compile Include="Expressions\NEVariables.cs" />
+    <Compile Include="Expressions\NEVariableSeries.cs" />
+    <Compile Include="Expressions\NumericValue.cs" />
+    <Compile Include="Expressions\Parser\ExpressionLexer.cs" />
+    <Compile Include="Expressions\Parser\ExpressionParser.cs" />
+    <Compile Include="Expressions\Parser\ExpressionParserBaseVisitor.cs" />
+    <Compile Include="Expressions\Parser\ExpressionParserVisitor.cs" />
+    <None Include="Expressions\Source\ExpressionLexer.g4" />
+    <None Include="Expressions\Source\ExpressionParser.g4" />
+    <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="GIFWriter.cs" />
     <Compile Include="GotoType.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
@@ -869,7 +889,9 @@
     <Compile Include="Highlighting\HighlightJSON.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
+    <Compile Include="ItemSet.cs" />
     <Compile Include="Launcher.cs" />
+    <Compile Include="LCS.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="Misc\FileSaver.cs" />
@@ -878,8 +900,23 @@
     <Compile Include="Misc\PropertyChangeNotifier.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
     <None Include="Misc\Words.txt" />
+    <Compile Include="MoreLinq.cs" />
     <Compile Include="MultiMenuItem.cs" />
+    <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
+    <Compile Include="NEClipboards\NEClipboard.cs" />
+    <Compile Include="NEClipboards\NEClipboardItem.cs" />
+    <Compile Include="NEClipboards\NEClipboardList.cs" />
+    <Compile Include="ObservableCollectionEx.cs" />
+    <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
+    <Compile Include="Parsing\ParserAttribute.cs" />
+    <Compile Include="Parsing\ParserBase.cs" />
+    <Compile Include="Parsing\ParserException.cs" />
+    <Compile Include="Parsing\ParserExtensions.cs" />
+    <Compile Include="Parsing\ParserHelper.cs" />
+    <Compile Include="Parsing\ParserNode.cs" />
     <Compile Include="PortScanner.cs" />
+    <Compile Include="ProcessExtension.cs" />
+    <Compile Include="ProgressReport.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -904,9 +941,19 @@
     <Compile Include="RevRegEx\RevRegExVisitor.cs" />
     <None Include="RevRegEx\Source\RevRegExLexer.g4" />
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
+    <Compile Include="Searcher.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Searcher.tt</DependentUpon>
+    </Compile>
+    <Content Include="Searcher.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Searcher.cs</LastGenOutput>
+    </Content>
     <Compile Include="ShutdownData.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="TabsLayout.cs" />
+    <Compile Include="TextData.cs" />
     <Compile Include="TextEditCommand.cs" />
     <Page Include="TextEditMenu.xaml">
       <SubType>Designer</SubType>
@@ -983,8 +1030,27 @@
     <Compile Include="TextEditTabs.xaml.cs">
       <DependentUpon>TextEditTabs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ThreadSafeRandom.cs" />
+    <Compile Include="Transform\Coder.cs" />
+    <Compile Include="Transform\Colorer.cs" />
+    <Compile Include="Transform\Compressor.cs" />
+    <Compile Include="Transform\Cryptor.cs" />
+    <Compile Include="Transform\Hasher.cs" />
+    <Compile Include="Transform\Versioner.cs" />
+    <Compile Include="Transform\XMLConverter.cs" />
     <Compile Include="UndoRedo.cs" />
+    <Compile Include="UnitTest\CoderTest.cs" />
+    <Compile Include="UnitTest\ColorerTest.cs" />
+    <Compile Include="UnitTest\CompressionTest.cs" />
+    <Compile Include="UnitTest\CryptoTest.cs" />
+    <Compile Include="UnitTest\ExpressionTest.cs" />
+    <Compile Include="UnitTest\HashTest.cs" />
+    <Compile Include="UnitTest\SearcherTest.cs" />
     <Compile Include="UnitTest\TextDataTest.cs" />
+    <Compile Include="UnitTest\UnicodeTest.cs" />
+    <Compile Include="UnitTest\UnitTest.cs" />
+    <Compile Include="UnitTest\XMLConverterTest.cs" />
+    <Compile Include="WeakList.cs" />
     <Compile Include="YouTubeDL.cs" />
   </ItemGroup>
   <ItemGroup>

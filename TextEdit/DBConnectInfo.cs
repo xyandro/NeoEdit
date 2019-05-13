@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.Data.SqlServerCe;
 using MySql.Data.MySqlClient;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit.Transform;
 
 namespace NeoEdit.TextEdit
 {

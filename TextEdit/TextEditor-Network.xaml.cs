@@ -7,9 +7,9 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
-using NeoEdit.Common;
-using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Transform;
+using NeoEdit.TextEdit;
+using NeoEdit.TextEdit.Expressions;
+using NeoEdit.TextEdit.Transform;
 using NeoEdit.TextEdit.Dialogs;
 
 namespace NeoEdit.TextEdit

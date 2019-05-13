@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
-using NeoEdit.Common;
+using NeoEdit.TextEdit;
 
 namespace NeoEdit.TextEdit.Controls
 {
