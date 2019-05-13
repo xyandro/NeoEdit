@@ -397,7 +397,7 @@ namespace NeoEdit.TextEdit
 		{
 			var type = GetType();
 			byte[] data;
-			using (var stream = type.Assembly.GetManifestResourceStream($"{type.Namespace}.Misc.Words.txt.gz"))
+			using (var stream = type.Assembly.GetManifestResourceStream($"{type.Namespace}.Resources.Words.txt.gz"))
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);

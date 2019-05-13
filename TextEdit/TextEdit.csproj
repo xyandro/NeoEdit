@@ -7,9 +7,9 @@
     <AssemblyName>NeoEdit.TextEdit</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
-  <Target Name="CompressWords" Inputs="Misc\Words.txt" Outputs="Misc\Words.txt.gz" Returns="">
+  <Target Name="CompressWords" Inputs="Misc\Words.txt" Outputs="Resources\Words.txt.gz" Returns="">
     <Message Text="Compressing word list" Importance="High" />
-    <Exec Command="&quot;$(SolutionDir)\SevenZipCompress\bin\$(Configuration).$(BitDepth)\SevenZipCompress.exe&quot; &quot;$(ProjectDir)Misc\Words.txt&quot; &quot;$(ProjectDir)Misc\Words.txt.gz&quot;" />
+    <Exec Command="&quot;$(SolutionDir)\SevenZipCompress\bin\$(Configuration).$(BitDepth)\SevenZipCompress.exe&quot; &quot;$(ProjectDir)Misc\Words.txt&quot; &quot;$(ProjectDir)Resources\Words.txt.gz&quot;" />
   </Target>
   <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs" Returns="">
     <Message Text="Building Balanced parser" Importance="High" />
@@ -877,9 +877,7 @@
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\PropertyChangeNotifier.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
-    <EmbeddedResource Include="Misc\Unicode.dat" />
     <None Include="Misc\Words.txt" />
-    <EmbeddedResource Include="Misc\Words.txt.gz" />
     <Compile Include="MultiMenuItem.cs" />
     <Compile Include="PortScanner.cs" />
     <AppDesigner Include="Properties\" />
@@ -892,6 +890,8 @@
     <Resource Include="Resources\DejaVuSansMono.ttf" />
     <Resource Include="Resources\Indeterminate.png" />
     <Resource Include="Resources\Unchecked.png" />
+    <EmbeddedResource Include="Resources\Unicode.dat" />
+    <EmbeddedResource Include="Resources\Words.txt.gz" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />
