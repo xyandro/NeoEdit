@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="CompressWords;BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="CompressWords;BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{9A35AB82-2481-4C44-B51E-66DF7D248EAD}</ProjectGuid>
     <RootNamespace>NeoEdit.TextEdit</RootNamespace>
     <AssemblyName>NeoEdit.TextEdit</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Target Name="CompressWords" Inputs="Misc\Words.txt" Outputs="Resources\Words.txt.gz" Returns="">
     <Message Text="Compressing word list" Importance="High" />
@@ -50,6 +51,10 @@
   <Target Name="BuildXML" Inputs="Content\XML\Source\XMLLexer.g4;Content\XML\Source\XMLParser.g4" Outputs="Content\XML\Parser\XMLLexer.cs;Content\XML\Parser\XMLParser.cs;Content\XML\Parser\XMLParserBaseVisitor.cs;Content\XML\Parser\XMLParserVisitor.cs" Returns="">
     <Message Text="Building XML parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.TextEdit.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
+  </Target>
+  <Target Name="License" Inputs="$(SolutionDir)License.txt" Outputs="$(OutDir)License.txt" Returns="">
+    <Message Text="Copy license" Importance="High" />
+    <Exec Command="xcopy /y &quot;$(SolutionDir)License.txt&quot; &quot;$(OutDir)&quot;" />
   </Target>
   <ItemGroup>
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
