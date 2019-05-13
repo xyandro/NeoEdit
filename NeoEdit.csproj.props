@@ -34,9 +34,6 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
 	<ItemGroup>
-		<None Include="$(SolutionDir)\Lib\$(BitDepth)\7z.dll">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
 		<None Include="$(SolutionDir)\Lib\$(BitDepth)\git2-e0902fb.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

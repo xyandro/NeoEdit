@@ -10,7 +10,7 @@
   </PropertyGroup>
   <Target Name="CompressWords" Inputs="Misc\Words.txt" Outputs="Resources\Words.txt.gz" Returns="">
     <Message Text="Compressing word list" Importance="High" />
-    <Exec Command="&quot;$(SolutionDir)\SevenZipCompress\bin\$(Configuration).$(BitDepth)\SevenZipCompress.exe&quot; &quot;$(ProjectDir)Misc\Words.txt&quot; &quot;$(ProjectDir)Resources\Words.txt.gz&quot;" />
+    <Exec Command="&quot;$(SolutionDir)\Compress\bin\$(Configuration)\Compress.exe&quot; &quot;$(ProjectDir)Misc\Words.txt&quot; &quot;$(ProjectDir)Resources\Words.txt.gz&quot;" />
   </Target>
   <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs" Returns="">
     <Message Text="Building Balanced parser" Importance="High" />
@@ -1055,12 +1055,6 @@
     <Compile Include="UnitTest\UnitTest.cs" />
     <Compile Include="UnitTest\XMLConverterTest.cs" />
     <Compile Include="YouTubeDL.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)\Common\Common.csproj">
-      <Project>{1c928016-0e00-4125-80a5-458b82f1ec0d}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

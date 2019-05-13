@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using NeoEdit.SevenZip;
+using System.IO.Compression;
 
-namespace SevenZipCompress
+namespace Compress
 {
 	class Program
 	{
@@ -15,8 +14,10 @@ namespace SevenZipCompress
 				return;
 			}
 
-			using (var archive = SevenZipArchive.OpenWrite(args[1]))
-				archive.Add(args[0], new List<string> { args[0] });
+			using (var output = File.Create(args[1]))
+			using (var gz = new GZipStream(output, CompressionLevel.Optimal, true))
+			using (var input = File.OpenRead(args[0]))
+				input.CopyTo(gz);
 		}
 	}
 }
