@@ -1,0 +1,158 @@
+﻿<Window Name="self" x:Class="NeoEdit.Dialogs.RegExHelpDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	xmlns:guiDialogs="clr-namespace:NeoEdit.Dialogs"
+	Title="Regular Expression Reference" SizeToContent="WidthAndHeight">
+
+	<Window.Resources>
+		<system:Int32 x:Key="nameColumn">160</system:Int32>
+		<system:Int32 x:Key="descColumn">200</system:Int32>
+
+		<DataTemplate x:Key="helpItemTemplate">
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="{Binding Name}" FontWeight="Bold" Width="{Binding DataContext.NameWidth, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"/>
+				<TextBlock Text="{Binding Description}" Width="{Binding DataContext.DescWidth, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+			</StackPanel>
+		</DataTemplate>
+
+		<DataTemplate x:Key="helpItemsTemplate">
+			<GroupBox>
+				<GroupBox.Header>
+					<TextBlock Text="{Binding Name}" FontStyle="Italic"/>
+				</GroupBox.Header>
+
+				<ItemsControl ItemTemplate="{StaticResource helpItemTemplate}" ItemsSource="{Binding Items}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<UniformGrid Columns="{Binding Columns}"/>
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+				</ItemsControl>
+			</GroupBox>
+		</DataTemplate>
+	</Window.Resources>
+
+	<StackPanel Margin="10" Orientation="Vertical">
+		<StackPanel.Style>
+			<Style>
+				<Style.Resources>
+					<Style TargetType="Label">
+						<Setter Property="Margin" Value="0"/>
+						<Setter Property="Padding" Value="2,0"/>
+					</Style>
+				</Style.Resources>
+			</Style>
+		</StackPanel.Style>
+
+		<TextBlock Margin="0,0,0,10">
+			<Italic>Regular Expression Reference</Italic>
+		</TextBlock>
+
+		<ItemsControl ItemTemplate="{StaticResource helpItemsTemplate}">
+			<ItemsControl.Items>
+
+				<guiDialogs:HelpItems Name="Anchors" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+					<guiDialogs:HelpItems.Items>
+						<guiDialogs:HelpItem Name="^" Description="Beginning of line/selection"/>
+						<guiDialogs:HelpItem Name="\A" Description="Beginning of selection"/>
+						<guiDialogs:HelpItem Name="\b" Description="Word boundary"/>
+						<guiDialogs:HelpItem Name="$" Description="Ending of line/selection"/>
+						<guiDialogs:HelpItem Name="\Z" Description="End of selection"/>
+						<guiDialogs:HelpItem Name="\B" Description="Non-word boundary"/>
+						<guiDialogs:HelpItem Name="\G" Description="End of last match"/>
+					</guiDialogs:HelpItems.Items>
+				</guiDialogs:HelpItems>
+
+				<guiDialogs:HelpItems Name="Characters" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+					<guiDialogs:HelpItems.Items>
+						<guiDialogs:HelpItem Name="." Description="Any character"/>
+						<guiDialogs:HelpItem Name="\d" Description="Digit: [0-9]"/>
+						<guiDialogs:HelpItem Name="\w" Description="Word character: [A-Za-z0-9_]"/>
+						<guiDialogs:HelpItem Name="[xyz^]" Description="Any of the characters"/>
+						<guiDialogs:HelpItem Name="\D" Description="Non-digit: [^0-9]"/>
+						<guiDialogs:HelpItem Name="\W" Description="Non-word character: [^A-Za-z0-9_]"/>
+						<guiDialogs:HelpItem Name="[a-z]" Description="Any character in range"/>
+						<guiDialogs:HelpItem Name="\s" Description="Whitespace: [ \f\n\r\t\v]"/>
+						<guiDialogs:HelpItem Name="\p{name}" Description="Unicode category &quot;name&quot;"/>
+						<guiDialogs:HelpItem Name="[^acgz]" Description="None of the characters"/>
+						<guiDialogs:HelpItem Name="\S" Description="Non-whitespace: [^ \f\n\r\t\v]"/>
+						<guiDialogs:HelpItem Name="\P{name}" Description="Non-unicode category &quot;name&quot;"/>
+					</guiDialogs:HelpItems.Items>
+				</guiDialogs:HelpItems>
+
+				<guiDialogs:HelpItems Name="Repetition" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+					<guiDialogs:HelpItems.Items>
+						<guiDialogs:HelpItem Name="* / *?" Description="Zero or more: {0,}"/>
+						<guiDialogs:HelpItem Name="? / ??" Description="Zero or one: {0,1}"/>
+						<guiDialogs:HelpItem Name="{}{n,} / {n,}?" Description="Match at least n times"/>
+						<guiDialogs:HelpItem Name="+ / +?" Description="One or more: {1,}"/>
+						<guiDialogs:HelpItem Name="{}{n} / {n}?" Description="Match n times"/>
+						<guiDialogs:HelpItem Name="{}{n,m} / {n,m}?" Description="Match n - m times"/>
+					</guiDialogs:HelpItems.Items>
+				</guiDialogs:HelpItems>
+
+				<guiDialogs:HelpItems Name="Grouping" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+					<guiDialogs:HelpItems.Items>
+						<guiDialogs:HelpItem Name="(pattern)" Description="Capture group"/>
+						<guiDialogs:HelpItem Name="(?&lt;name&gt;)" Description="Capture and name group"/>
+						<guiDialogs:HelpItem Name="(?=...)" Description="Positive lookahead"/>
+						<guiDialogs:HelpItem Name="\n" Description="Backreference group n (1 digit)"/>
+						<guiDialogs:HelpItem Name="\k&lt;name&gt;" Description="Backreference named group"/>
+						<guiDialogs:HelpItem Name="(?!...)" Description="Negative lookahead"/>
+						<guiDialogs:HelpItem Name="(?:pattern)" Description="Non-capturing match"/>
+						<guiDialogs:HelpItem Name="(?imnsx-imnsx[:pattern])" Description="Enable/disable options"/>
+						<guiDialogs:HelpItem Name="(?&lt;=...)" Description="Positive lookbehind"/>
+						<guiDialogs:HelpItem Name="(?&gt;pattern)" Description="Nonbacktracking"/>
+						<guiDialogs:HelpItem Name="(?&lt;name1-name2&gt;pattern)" Description="Balancing group"/>
+						<guiDialogs:HelpItem Name="(?&lt;!...)" Description="Negative lookbehind"/>
+					</guiDialogs:HelpItems.Items>
+				</guiDialogs:HelpItems>
+
+				<guiDialogs:HelpItems Name="Conditional" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+					<guiDialogs:HelpItems.Items>
+						<guiDialogs:HelpItem Name="x|y" Description="x or y"/>
+						<guiDialogs:HelpItem Name="(?(expression)yes|no)" Description="Ternary"/>
+						<guiDialogs:HelpItem Name="(?(name)yes|no)" Description="Ternary on name/number"/>
+					</guiDialogs:HelpItems.Items>
+				</guiDialogs:HelpItems>
+
+				<guiDialogs:HelpItems Name="Special" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+					<guiDialogs:HelpItems.Items>
+						<guiDialogs:HelpItem Name="\" Description="Escape character"/>
+						<guiDialogs:HelpItem Name="\f" Description="Form-feed"/>
+						<guiDialogs:HelpItem Name="\nn" Description="Octal character (2-3 digits)"/>
+						<guiDialogs:HelpItem Name="\a" Description="Bell"/>
+						<guiDialogs:HelpItem Name="\n" Description="Newline"/>
+						<guiDialogs:HelpItem Name="\xnn" Description="Hex character (2 hex digits)"/>
+						<guiDialogs:HelpItem Name="\b" Description="Backspace"/>
+						<guiDialogs:HelpItem Name="\r" Description="Carriage return"/>
+						<guiDialogs:HelpItem Name="\unnnn" Description="Unicode character (4 hex digits)"/>
+						<guiDialogs:HelpItem Name="\cx" Description="Ctrl-&quot;x&quot;"/>
+						<guiDialogs:HelpItem Name="\t" Description="Tab"/>
+						<guiDialogs:HelpItem/>
+						<guiDialogs:HelpItem Name="\e" Description="Escape"/>
+						<guiDialogs:HelpItem Name="\v" Description="Vertical tab"/>
+					</guiDialogs:HelpItems.Items>
+				</guiDialogs:HelpItems>
+
+				<guiDialogs:HelpItems Name="Substitution" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+					<guiDialogs:HelpItems.Items>
+						<guiDialogs:HelpItem Name="$number" Description="Group number"/>
+						<guiDialogs:HelpItem Name="$_" Description="Whole string"/>
+						<guiDialogs:HelpItem Name="$`" Description="Before match"/>
+						<guiDialogs:HelpItem Name="${name}" Description="Group name"/>
+						<guiDialogs:HelpItem Name="$&amp;" Description="Whole match"/>
+						<guiDialogs:HelpItem Name="$'" Description="After match"/>
+						<guiDialogs:HelpItem Name="$$" Description="Literal $"/>
+						<guiDialogs:HelpItem Name="$+" Description="Last group"/>
+					</guiDialogs:HelpItems.Items>
+				</guiDialogs:HelpItems>
+
+			</ItemsControl.Items>
+		</ItemsControl>
+
+		<Button Click="OkClick" IsDefault="True" IsCancel="True" Content="Ok" Margin="0,10,0,0" Padding="20,1" HorizontalAlignment="Right"/>
+	</StackPanel>
+
+</Window>

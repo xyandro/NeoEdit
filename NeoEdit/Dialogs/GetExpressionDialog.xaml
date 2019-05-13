@@ -1,0 +1,35 @@
+﻿<guiControls:ModalDialog x:Name="self" x:Class="NeoEdit.Dialogs.GetExpressionDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.Controls"
+	Title="Expression" SizeToContent="Height" Width="1000" FocusManager.FocusedElement="{Binding ElementName=expression}">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="_Expression:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="expression" AcceptsTab="True" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="GetExpressionDialog"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
+		<guiControls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" NumResults="{Binding NumRows, ElementName=self}" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}" IsValid="{Binding IsValid, ElementName=self}"/>
+
+		<UniformGrid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
+			<Button Click="ExpressionHelp" Content="Expression _Help" Padding="10,1"/>
+		</UniformGrid>
+
+		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+
+</guiControls:ModalDialog>

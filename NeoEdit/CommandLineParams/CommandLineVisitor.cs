@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.CommandLineParams.Parser;
-using NeoEdit.TextEdit;
-using NeoEdit.TextEdit.Parsing;
+using NeoEdit;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.CommandLineParams
 {

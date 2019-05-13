@@ -1,0 +1,39 @@
+﻿<guiControls:ModalDialog x:Name="self" x:Class="NeoEdit.Dialogs.TableAddColumnDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.Controls"
+	Title="Add Column" SizeToContent="Height" Width="1000" FocusManager.FocusedElement="{Binding ElementName=columnName}">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="Column _Name:" Target="{Binding ElementName=columnName}" HorizontalAlignment="Right"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="columnName" Text="{Binding ColumnName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="AddColumnDialogColumnName"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="_Expression:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
+		<guiControls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="AddColumnDialogExpression"/>
+
+		<Label Grid.Row="2" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
+		<guiControls:NEExpressionResults Grid.Row="2" Grid.Column="1" MultiRow="True" NumResults="{Binding NumRows, ElementName=self}" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}" IsValid="{Binding IsValid, ElementName=self}"/>
+
+		<UniformGrid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
+			<Button Click="ExpressionHelp" Content="Expression _Help" Padding="10,1"/>
+		</UniformGrid>
+
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+
+</guiControls:ModalDialog>

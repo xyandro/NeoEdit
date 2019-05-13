@@ -1,0 +1,40 @@
+﻿<guiControls:ModalDialog x:Name="self" x:Class="NeoEdit.Dialogs.FilesNamesGetUniqueDialog" x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:guiControls="clr-namespace:NeoEdit.Controls"
+	Title="Get Unique Names" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=format}">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition MinHeight="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="_Format:" Target="{Binding ElementName=format}" HorizontalAlignment="Right"/>
+		<TextBox Name="format" Grid.Row="0" Grid.Column="1" Text="{Binding Format, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<UniformGrid Grid.Row="1" Grid.Column="1" Rows="1" HorizontalAlignment="Left">
+			<Button Name="keepName" Content="_Keep name" Click="FormatClick" Focusable="False"/>
+			<Button Name="discardName" Content="_Discard name" Click="FormatClick" Focusable="False"/>
+		</UniformGrid>
+
+		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+			<CheckBox Content="_Check existing files" IsChecked="{Binding CheckExisting, ElementName=self}" Focusable="False" Margin="0,0,10,0"/>
+			<CheckBox Content="_Rename all" IsChecked="{Binding RenameAll, ElementName=self}" Focusable="False" Margin="0,0,10,0"/>
+			<CheckBox Content="_GUIDs" IsChecked="{Binding UseGUIDs, ElementName=self}" Focusable="False"/>
+		</StackPanel>
+
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+
+</guiControls:ModalDialog>
