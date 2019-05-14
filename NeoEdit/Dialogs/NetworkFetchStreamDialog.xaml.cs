@@ -35,8 +35,8 @@ namespace NeoEdit.Dialogs
 			if (OutputDirectory == null)
 				outputDirectoryRow.Height = new GridLength(0);
 			Expression = "x";
-			YouTubeDLPath = NEWindow.YouTubeDLPath;
-			FFmpegPath = NEWindow.FFmpegPath;
+			YouTubeDLPath = Settings.YouTubeDLPath;
+			FFmpegPath = Settings.FFmpegPath;
 		}
 
 		void OnUpdateYouTubeDL(object sender, RoutedEventArgs e) => YouTubeDL.Update();
@@ -46,8 +46,8 @@ namespace NeoEdit.Dialogs
 		{
 			if ((OutputDirectory != null) && (!Directory.Exists(OutputDirectory)))
 				throw new Exception("Invalid output directory");
-			NEWindow.YouTubeDLPath = YouTubeDLPath;
-			NEWindow.FFmpegPath = FFmpegPath;
+			Settings.YouTubeDLPath = YouTubeDLPath;
+			Settings.FFmpegPath = FFmpegPath;
 			expression.AddCurrentSuggestion();
 			outputDirectory.AddCurrentSuggestion();
 			result = new Result
@@ -58,7 +58,7 @@ namespace NeoEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(NEWindow parent, NEVariables variables, string outputDirectory)
+		static public Result Run(Tabs parent, NEVariables variables, string outputDirectory)
 		{
 			var dialog = new NetworkFetchStreamDialog(variables, outputDirectory) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;

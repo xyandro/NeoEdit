@@ -1661,7 +1661,7 @@ namespace NeoEdit
 				case Key.Escape:
 					SetSearches(new List<Range>());
 					doDrag = DragType.None;
-					if (NEWindow.EscapeClearsSelections)
+					if (Settings.EscapeClearsSelections)
 					{
 						Command_Select_Selection_Single();
 						if (!Selections.Any())

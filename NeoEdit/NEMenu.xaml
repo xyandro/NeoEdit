@@ -150,7 +150,7 @@
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="Esc_ape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(controls:NEWindow.EscapeClearsSelections), Mode=TwoWay}"/>
+		<MenuItem Header="Esc_ape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(neoEdit:Settings.EscapeClearsSelections), Mode=TwoWay}"/>
 	</MenuItem>
 	<MenuItem Header="D_iff">
 		<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>

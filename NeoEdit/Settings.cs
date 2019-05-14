@@ -1,35 +1,31 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Input;
 using System.Xml.Linq;
-using NeoEdit;
 using NeoEdit.Misc;
 
-namespace NeoEdit.Controls
+namespace NeoEdit
 {
-	public class NEWindow : Window
+	static class Settings
 	{
 		static readonly string settingsFile = Path.Combine(Helpers.NeoEditAppData, "Settings.xml");
 
-		static NEWindow()
+		static Settings()
 		{
-			if (File.Exists(settingsFile))
-			{
-				try
-				{
-					var xml = XElement.Load(settingsFile);
-					try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
-					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
-					try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
-					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
-					try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
-				}
-				catch { }
-			}
-
 			Font.FontSizeChanged += newSize => SaveSettings();
+
+			if (!File.Exists(settingsFile))
+				return;
+
+			try
+			{
+				var xml = XElement.Load(settingsFile);
+				try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
+				try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
+				try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
+				try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
+				try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
+			}
+			catch { }
 		}
 
 		static void SaveSettings()
@@ -104,36 +100,5 @@ namespace NeoEdit.Controls
 
 		static EventHandler ffmpegPathChanged;
 		public static event EventHandler FFmpegPathChanged { add { ffmpegPathChanged += value; } remove { ffmpegPathChanged -= value; } }
-
-		System.Windows.Forms.NotifyIcon ni;
-		protected override void OnStateChanged(EventArgs e)
-		{
-			base.OnStateChanged(e);
-			if (WindowState == WindowState.Minimized)
-			{
-				if (MinimizeToTray)
-				{
-					ni = new System.Windows.Forms.NotifyIcon
-					{
-						Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetEntryAssembly().Location),
-						Visible = true,
-					};
-					ni.Click += (s, e2) => Restore();
-					Hide();
-				}
-			}
-		}
-
-		public bool Restore()
-		{
-			if (ni == null)
-				return false;
-
-			base.Show();
-			WindowState = WindowState.Normal;
-			ni.Dispose();
-			ni = null;
-			return true;
-		}
 	}
 }

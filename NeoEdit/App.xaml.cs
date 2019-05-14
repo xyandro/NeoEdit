@@ -61,7 +61,7 @@ namespace NeoEdit
 			{
 				var clParams = CommandLine.CommandLineVisitor.GetCommandLineParams(commandLine);
 
-				var windows = UIHelper<NEWindow>.GetAllWindows();
+				var windows = UIHelper<Tabs>.GetAllWindows();
 				var restored = windows.Count(window => window.Restore());
 
 				if (!clParams.Files.Any())

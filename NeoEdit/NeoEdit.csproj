@@ -191,7 +191,6 @@
       <DependentUpon>NEExpressionResults.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NEMenuItem.cs" />
-    <Compile Include="Controls\NEWindow.cs" />
     <Page Include="Controls\NumericUpDown.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1016,8 +1015,16 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Searcher.cs</LastGenOutput>
     </Content>
+    <Compile Include="Settings.cs" />
     <Compile Include="ShutdownData.cs" />
     <Compile Include="Table.cs" />
+    <Page Include="Tabs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Tabs.xaml.cs">
+      <DependentUpon>Tabs.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TabsLayout.cs" />
     <Compile Include="TextData.cs" />
     <Compile Include="TextEditor-Content.xaml.cs">
@@ -1080,13 +1087,6 @@
     </Page>
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Tabs.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="Tabs.xaml.cs">
-      <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />

@@ -51,9 +51,6 @@ namespace NeoEdit
 		[DepProp]
 		public string ClipboardCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 
-		public delegate void TabsChangedDelegate();
-		public event TabsChangedDelegate TabsChanged;
-
 		readonly RunOnceTimer layoutTimer, topMostTimer;
 
 		readonly Canvas canvas;
@@ -99,7 +96,6 @@ namespace NeoEdit
 			Drop += OnDrop;
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());
 			countsTimer = new RunOnceTimer(() => UpdateStatusBarText());
-			TabsChanged += ItemTabs_TabsChanged;
 			NEClipboard.ClipboardChanged += () => UpdateStatusBarText();
 			Activated += OnActivated;
 
@@ -852,7 +848,7 @@ namespace NeoEdit
 
 		void ItemsChanged()
 		{
-			TabsChanged?.Invoke();
+			ItemTabs_TabsChanged();
 
 			if (Items == null)
 				return;
@@ -1244,7 +1240,7 @@ namespace NeoEdit
 			};
 		}
 
-		internal void NotifyActiveChanged() => TabsChanged?.Invoke();
+		internal void NotifyActiveChanged() => ItemTabs_TabsChanged();
 
 		protected override void OnClosing(CancelEventArgs e)
 		{
@@ -1262,6 +1258,37 @@ namespace NeoEdit
 			TopMost = topMost;
 			Items.ToList().ForEach(item => item.Closed());
 			base.OnClosing(e);
+		}
+
+		System.Windows.Forms.NotifyIcon ni;
+		protected override void OnStateChanged(EventArgs e)
+		{
+			base.OnStateChanged(e);
+			if (WindowState == WindowState.Minimized)
+			{
+				if (Settings.MinimizeToTray)
+				{
+					ni = new System.Windows.Forms.NotifyIcon
+					{
+						Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetEntryAssembly().Location),
+						Visible = true,
+					};
+					ni.Click += (s, e2) => Restore();
+					Hide();
+				}
+			}
+		}
+
+		public bool Restore()
+		{
+			if (ni == null)
+				return false;
+
+			base.Show();
+			WindowState = WindowState.Normal;
+			ni.Dispose();
+			ni = null;
+			return true;
 		}
 	}
 }

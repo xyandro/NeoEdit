@@ -35,7 +35,7 @@ namespace NeoEdit
 		{
 			var startInfo = new ProcessStartInfo
 			{
-				FileName = NEWindow.YouTubeDLPath,
+				FileName = Settings.YouTubeDLPath,
 				Arguments = $@"-J --flat-playlist ""{url}""",
 				UseShellExecute = false,
 				StandardOutputEncoding = Encoding.UTF8,
@@ -53,7 +53,7 @@ namespace NeoEdit
 			return JToken.Parse(result)["entries"].Children().Select(token => GetPlayListItem(token)).ToList();
 		}
 
-		public static void Update() => Process.Start(NEWindow.YouTubeDLPath, "-U");
+		public static void Update() => Process.Start(Settings.YouTubeDLPath, "-U");
 
 		public static async Task DownloadStream(string directory, string url, DateTime? fileTime = null, IProgress<ProgressReport> progress = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -61,8 +61,8 @@ namespace NeoEdit
 			{
 				StartInfo = new ProcessStartInfo
 				{
-					FileName = NEWindow.YouTubeDLPath,
-					Arguments = $@"-iwc --ffmpeg-location ""{NEWindow.FFmpegPath}"" --no-playlist ""{url}""",
+					FileName = Settings.YouTubeDLPath,
+					Arguments = $@"-iwc --ffmpeg-location ""{Settings.FFmpegPath}"" --no-playlist ""{url}""",
 					WorkingDirectory = directory,
 					UseShellExecute = false,
 					StandardOutputEncoding = Encoding.Default,
