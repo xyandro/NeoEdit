@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using NeoEdit.Content;
 using NeoEdit.Controls;
 using NeoEdit.Dialogs;
 
@@ -62,21 +63,36 @@ namespace NeoEdit
 		{
 			try
 			{
-				var paramList = CommandLineParams.CommandLineVisitor.GetCommandLineParams(commandLine);
-				var shutdownEvent = paramList.OfType<WaitParam>().FirstOrDefault()?.ShutdownEvent;
-				paramList.RemoveAll(param => param is WaitParam);
+				var clParams = CommandLine.CommandLineVisitor.GetCommandLineParams(commandLine);
 
 				var windows = UIHelper<NEWindow>.GetAllWindows();
 				var restored = windows.Count(window => window.Restore());
-				if ((restored > 0) && (!paramList.Any()))
-					return null;
 
-				if (!paramList.Any())
-					return TextEditTabs.Create(shutdownEvent: shutdownEvent);
-				Window created = null;
-				foreach (var param in paramList)
-					created = param.Execute(shutdownEvent);
-				return created;
+				if (!clParams.Files.Any())
+				{
+					if (restored > 0)
+						return null;
+					return TextEditTabs.Create(shutdownEvent: clParams.Wait);
+				}
+
+				var tabs = new TextEditTabs();
+				foreach (var file in clParams.Files)
+					tabs.AddTab(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownData: new ShutdownData(clParams.Wait, 1)));
+
+				if (clParams.Diff)
+				{
+					for (var ctr = 0; ctr + 1 < tabs.Items.Count; ctr += 2)
+					{
+						tabs.Items[ctr].DiffTarget = tabs.Items[ctr + 1];
+						if (tabs.Items[ctr].ContentType == Parser.ParserType.None)
+							tabs.Items[ctr].ContentType = tabs.Items[ctr + 1].ContentType;
+						if (tabs.Items[ctr + 1].ContentType == Parser.ParserType.None)
+							tabs.Items[ctr + 1].ContentType = tabs.Items[ctr].ContentType;
+					}
+					tabs.SetLayout(TabsLayout.Custom, 2);
+				}
+
+				return tabs;
 			}
 			catch (Exception ex) { ShowExceptionMessage(ex); }
 			return null;

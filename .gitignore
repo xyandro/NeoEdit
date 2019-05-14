@@ -24,7 +24,7 @@ TestResults
 /Disk/Magic/magic1.dll.gz
 /Disk/Magic/regex2.dll.gz
 /Disk/Magic/zlib1.dll.gz
-/NeoEdit/CommandLineParams/Parser
+/NeoEdit/CommandLine/Parser
 /NeoEdit/Content/Balanced/Parser
 /NeoEdit/Content/Columns/Parser
 /NeoEdit/Content/CSharp/Parser

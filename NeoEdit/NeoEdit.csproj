@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="CompressWords;BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;License;BuildCommandLineParams" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="CompressWords;BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;License;BuildCommandLine" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
@@ -58,9 +58,9 @@
     <Message Text="Copy license" Importance="High" />
     <Exec Command="xcopy /y &quot;$(SolutionDir)License.txt&quot; &quot;$(OutDir)&quot;" />
   </Target>
-  <Target Name="BuildCommandLineParams" Inputs="CommandLineParams\Source\CommandLineParamsLexer.g4;CommandLineParams\Source\CommandLineParamsParser.g4" Outputs="CommandLineParams\Parser\CommandLineParamsLexer.cs;CommandLineParams\Parser\CommandLineParamsParser.cs;CommandLineParams\Parser\CommandLineParamsParserBaseVisitor.cs;CommandLineParams\Parser\CommandLineParamsParserVisitor.cs" Returns="">
-    <Message Text="Building CommandLineParams parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.CommandLineParams.Parser&quot; -o &quot;$(ProjectDir)CommandLineParams\Parser&quot; &quot;$(ProjectDir)CommandLineParams\Source\CommandLineParamsLexer.g4&quot; &quot;$(ProjectDir)CommandLineParams\Source\CommandLineParamsParser.g4&quot;" />
+  <Target Name="BuildCommandLine" Inputs="CommandLine\Source\CommandLineLexer.g4;CommandLine\Source\CommandLineParser.g4" Outputs="CommandLine\Parser\CommandLineLexer.cs;CommandLine\Parser\CommandLineParser.cs;CommandLine\Parser\CommandLineParserBaseVisitor.cs;CommandLine\Parser\CommandLineParserVisitor.cs" Returns="">
+    <Message Text="Building CommandLine parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.CommandLine.Parser&quot; -o &quot;$(ProjectDir)CommandLine\Parser&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineLexer.g4&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineParser.g4&quot;" />
   </Target>
   <PropertyGroup>
     <ApplicationIcon>$(SolutionDir)\Photoshop\NeoEdit.ico</ApplicationIcon>
@@ -94,13 +94,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CacheValue.cs" />
-    <Compile Include="CommandLineParams\CommandLineVisitor.cs" />
-    <Compile Include="CommandLineParams\Parser\CommandLineParamsLexer.cs" />
-    <Compile Include="CommandLineParams\Parser\CommandLineParamsParser.cs" />
-    <Compile Include="CommandLineParams\Parser\CommandLineParamsParserBaseVisitor.cs" />
-    <Compile Include="CommandLineParams\Parser\CommandLineParamsParserVisitor.cs" />
-    <None Include="CommandLineParams\Source\CommandLineParamsLexer.g4" />
-    <None Include="CommandLineParams\Source\CommandLineParamsParser.g4" />
+    <Compile Include="CommandLine\CommandLineParams.cs" />
+    <Compile Include="CommandLine\CommandLineVisitor.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineLexer.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineParser.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineParserBaseVisitor.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineParserVisitor.cs" />
+    <None Include="CommandLine\Source\CommandLineLexer.g4" />
+    <None Include="CommandLine\Source\CommandLineParser.g4" />
     <Compile Include="Content\Balanced\BalancedVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedBaseVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedLexer.cs" />
@@ -974,7 +975,6 @@
     <Compile Include="NEClipboards\NEClipboardList.cs" />
     <Compile Include="NoDelayClipboard.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
-    <Compile Include="Params.cs" />
     <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
     <Compile Include="Parsing\ParserAttribute.cs" />
     <Compile Include="Parsing\ParserBase.cs" />
