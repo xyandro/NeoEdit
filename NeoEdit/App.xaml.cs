@@ -68,10 +68,10 @@ namespace NeoEdit
 				{
 					if (restored > 0)
 						return null;
-					return TextEditTabs.Create(shutdownEvent: clParams.Wait);
+					return Tabs.Create(shutdownEvent: clParams.Wait);
 				}
 
-				var tabs = new TextEditTabs();
+				var tabs = new Tabs();
 				foreach (var file in clParams.Files)
 					tabs.AddTab(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownData: new ShutdownData(clParams.Wait, 1)));
 

@@ -1,4 +1,4 @@
-﻿<guiControls:NEWindow x:Name="self" x:Class="NeoEdit.TextEditTabs"
+﻿<guiControls:NEWindow x:Name="self" x:Class="NeoEdit.Tabs"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:guiControls="clr-namespace:NeoEdit.Controls"
@@ -9,7 +9,7 @@
 	<Window.Title>
 		<!--A simple Binding doesn't give any title if [0] blank-->
 		<MultiBinding Converter="{guiConverters:NEExpressionConverter}" ConverterParameter="$&quot;{p0} - NeoEdit Text Editor&quot;">
-			<Binding Path="ItemTabs.TopMost.FileName" ElementName="self"/>
+			<Binding Path="TopMost.FileName" ElementName="self"/>
 		</MultiBinding>
 	</Window.Title>
 
@@ -23,7 +23,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<textEdit:TextEditMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
+		<textEdit:NEMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
 		<UserControl Grid.Row="1" Grid.Column="0" x:Name="tabs"/>
 

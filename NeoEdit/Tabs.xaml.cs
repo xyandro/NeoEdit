@@ -28,28 +28,28 @@ using NeoEdit.Transform;
 
 namespace NeoEdit
 {
-	partial class TextEditTabs
+	partial class Tabs
 	{
 		[DepProp]
-		public ObservableCollection<TextEditor> Items { get { return UIHelper<TextEditTabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public ObservableCollection<TextEditor> Items { get { return UIHelper<Tabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public TextEditor TopMost { get { return UIHelper<TextEditTabs>.GetPropValue<TextEditor>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public TextEditor TopMost { get { return UIHelper<Tabs>.GetPropValue<TextEditor>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public TabsLayout Layout { get { return UIHelper<TextEditTabs>.GetPropValue<TabsLayout>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public TabsLayout Layout { get { return UIHelper<Tabs>.GetPropValue<TabsLayout>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? Columns { get { return UIHelper<TextEditTabs>.GetPropValue<int?>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public int? Columns { get { return UIHelper<Tabs>.GetPropValue<int?>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? Rows { get { return UIHelper<TextEditTabs>.GetPropValue<int?>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public int? Rows { get { return UIHelper<Tabs>.GetPropValue<int?>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public TextEditTabs WindowParent { get { return UIHelper<TextEditTabs>.GetPropValue<TextEditTabs>(this); } set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public Tabs WindowParent { get { return UIHelper<Tabs>.GetPropValue<Tabs>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public string ActiveCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public string ActiveCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public string InactiveCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public string InactiveCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public string TotalCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public string TotalCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public string ClipboardCountText { get { return UIHelper<TextEditTabs>.GetPropValue<string>(this); } private set { UIHelper<TextEditTabs>.SetPropValue(this, value); } }
+		public string ClipboardCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 
 		public delegate void TabsChangedDelegate();
 		public event TabsChangedDelegate TabsChanged;
@@ -61,29 +61,29 @@ namespace NeoEdit
 		Action<TextEditor> ShowItem;
 		int itemOrder = 0;
 
-		static TextEditTabs()
+		static Tabs()
 		{
-			UIHelper<TextEditTabs>.Register();
-			UIHelper<TextEditTabs>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ItemsChanged());
-			UIHelper<TextEditTabs>.AddCallback(a => a.TopMost, (obj, o, n) => obj.TopMostChanged());
-			UIHelper<TextEditTabs>.AddCoerce(a => a.TopMost, (obj, value) => (value != null) && (obj.Items?.Contains(value) == true) ? value : null);
-			UIHelper<TextEditTabs>.AddCallback(a => a.Layout, (obj, o, n) => obj.layoutTimer.Start());
-			UIHelper<TextEditTabs>.AddCallback(a => a.Rows, (obj, o, n) => obj.layoutTimer.Start());
-			UIHelper<TextEditTabs>.AddCallback(a => a.Columns, (obj, o, n) => obj.layoutTimer.Start());
+			UIHelper<Tabs>.Register();
+			UIHelper<Tabs>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ItemsChanged());
+			UIHelper<Tabs>.AddCallback(a => a.TopMost, (obj, o, n) => obj.TopMostChanged());
+			UIHelper<Tabs>.AddCoerce(a => a.TopMost, (obj, value) => (value != null) && (obj.Items?.Contains(value) == true) ? value : null);
+			UIHelper<Tabs>.AddCallback(a => a.Layout, (obj, o, n) => obj.layoutTimer.Start());
+			UIHelper<Tabs>.AddCallback(a => a.Rows, (obj, o, n) => obj.layoutTimer.Start());
+			UIHelper<Tabs>.AddCallback(a => a.Columns, (obj, o, n) => obj.layoutTimer.Start());
 		}
 
-		public static Tuple<TextEditor, Window> CreateTab(TextEditor item, TextEditTabs tabs = null, bool forceCreate = false)
+		public static Tuple<TextEditor, Window> CreateTab(TextEditor item, Tabs tabs = null, bool forceCreate = false)
 		{
 			if ((tabs == null) && (!forceCreate))
-				tabs = UIHelper<TextEditTabs>.GetNewest();
+				tabs = UIHelper<Tabs>.GetNewest();
 
 			if (tabs == null)
-				tabs = new TextEditTabs();
+				tabs = new Tabs();
 
 			return new Tuple<TextEditor, Window>(tabs.AddTab(item), tabs);
 		}
 
-		public static Window Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int line = 1, int column = 1, TextEditTabs textEditTabs = null, bool forceCreate = false, string shutdownEvent = null)
+		public static Window Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int line = 1, int column = 1, Tabs textEditTabs = null, bool forceCreate = false, string shutdownEvent = null)
 		{
 			fileName = fileName?.Trim('"');
 			var textEditor = new TextEditor(fileName, displayName, bytes, codePage, contentType, modified, line, column, new ShutdownData(shutdownEvent, 1));
@@ -118,7 +118,7 @@ namespace NeoEdit
 		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, contentType, modified, line, column, this);
 
 		readonly RunOnceTimer doActivatedTimer, countsTimer;
-		public TextEditTabs()
+		public Tabs()
 		{
 			layoutTimer = new RunOnceTimer(DoLayout);
 			topMostTimer = new RunOnceTimer(ShowTopMost);
@@ -226,7 +226,7 @@ namespace NeoEdit
 			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}
 
-		void Command_File_New_FromClipboards() => NEClipboard.Current.Strings.ForEach((str, index) => TextEditTabs.Create(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
+		void Command_File_New_FromClipboards() => NEClipboard.Current.Strings.ForEach((str, index) => Tabs.Create(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
 
 		void Command_File_Open_Open(OpenFileDialogResult result)
 		{
@@ -292,7 +292,7 @@ namespace NeoEdit
 				{
 					diffTargets.ForEach(diffTarget => Items.Remove(diffTarget));
 
-					var textEditTabs = new TextEditTabs();
+					var textEditTabs = new Tabs();
 					textEditTabs.Layout = TabsLayout.Grid;
 					diffTargets.ForEach(diffTarget => textEditTabs.AddTab(diffTarget));
 					textEditTabs.TopMost = diffTargets[0];
@@ -389,7 +389,7 @@ namespace NeoEdit
 			var active = Items.Where(tab => tab.Active).ToList();
 			active.ForEach(tab => Items.Remove(tab));
 
-			var newWindow = new TextEditTabs();
+			var newWindow = new Tabs();
 			newWindow.Layout = Layout;
 			newWindow.Columns = Columns;
 			newWindow.Rows = Rows;
@@ -414,7 +414,7 @@ namespace NeoEdit
 
 		void Command_Window_NewWindow()
 		{
-			var tabs = new TextEditTabs();
+			var tabs = new Tabs();
 			tabs.AddTab(new TextEditor());
 		}
 
@@ -596,55 +596,55 @@ namespace NeoEdit
 		Macro recordingMacro;
 		internal Macro macroPlaying = null;
 
-		internal void RunCommand(TextEditCommand command, bool? multiStatus)
+		internal void RunCommand(NECommand command, bool? multiStatus)
 		{
 			if (macroPlaying != null)
 				return;
 
 			switch (command)
 			{
-				case TextEditCommand.Macro_Record_Quick_1: Command_Macro_Record_Quick(1); return;
-				case TextEditCommand.Macro_Record_Quick_2: Command_Macro_Record_Quick(2); return;
-				case TextEditCommand.Macro_Record_Quick_3: Command_Macro_Record_Quick(3); return;
-				case TextEditCommand.Macro_Record_Quick_4: Command_Macro_Record_Quick(4); return;
-				case TextEditCommand.Macro_Record_Quick_5: Command_Macro_Record_Quick(5); return;
-				case TextEditCommand.Macro_Record_Quick_6: Command_Macro_Record_Quick(6); return;
-				case TextEditCommand.Macro_Record_Quick_7: Command_Macro_Record_Quick(7); return;
-				case TextEditCommand.Macro_Record_Quick_8: Command_Macro_Record_Quick(8); return;
-				case TextEditCommand.Macro_Record_Quick_9: Command_Macro_Record_Quick(9); return;
-				case TextEditCommand.Macro_Record_Quick_10: Command_Macro_Record_Quick(10); return;
-				case TextEditCommand.Macro_Record_Quick_11: Command_Macro_Record_Quick(11); return;
-				case TextEditCommand.Macro_Record_Quick_12: Command_Macro_Record_Quick(12); return;
-				case TextEditCommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
-				case TextEditCommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
-				case TextEditCommand.Macro_Append_Quick_1: Command_Macro_Append_Quick(1); return;
-				case TextEditCommand.Macro_Append_Quick_2: Command_Macro_Append_Quick(2); return;
-				case TextEditCommand.Macro_Append_Quick_3: Command_Macro_Append_Quick(3); return;
-				case TextEditCommand.Macro_Append_Quick_4: Command_Macro_Append_Quick(4); return;
-				case TextEditCommand.Macro_Append_Quick_5: Command_Macro_Append_Quick(5); return;
-				case TextEditCommand.Macro_Append_Quick_6: Command_Macro_Append_Quick(6); return;
-				case TextEditCommand.Macro_Append_Quick_7: Command_Macro_Append_Quick(7); return;
-				case TextEditCommand.Macro_Append_Quick_8: Command_Macro_Append_Quick(8); return;
-				case TextEditCommand.Macro_Append_Quick_9: Command_Macro_Append_Quick(9); return;
-				case TextEditCommand.Macro_Append_Quick_10: Command_Macro_Append_Quick(10); return;
-				case TextEditCommand.Macro_Append_Quick_11: Command_Macro_Append_Quick(11); return;
-				case TextEditCommand.Macro_Append_Quick_12: Command_Macro_Append_Quick(12); return;
-				case TextEditCommand.Macro_Append_Append: Command_Macro_Append_Append(); return;
-				case TextEditCommand.Macro_Play_Quick_1: Command_Macro_Play_Quick(1); return;
-				case TextEditCommand.Macro_Play_Quick_2: Command_Macro_Play_Quick(2); return;
-				case TextEditCommand.Macro_Play_Quick_3: Command_Macro_Play_Quick(3); return;
-				case TextEditCommand.Macro_Play_Quick_4: Command_Macro_Play_Quick(4); return;
-				case TextEditCommand.Macro_Play_Quick_5: Command_Macro_Play_Quick(5); return;
-				case TextEditCommand.Macro_Play_Quick_6: Command_Macro_Play_Quick(6); return;
-				case TextEditCommand.Macro_Play_Quick_7: Command_Macro_Play_Quick(7); return;
-				case TextEditCommand.Macro_Play_Quick_8: Command_Macro_Play_Quick(8); return;
-				case TextEditCommand.Macro_Play_Quick_9: Command_Macro_Play_Quick(9); return;
-				case TextEditCommand.Macro_Play_Quick_10: Command_Macro_Play_Quick(10); return;
-				case TextEditCommand.Macro_Play_Quick_11: Command_Macro_Play_Quick(11); return;
-				case TextEditCommand.Macro_Play_Quick_12: Command_Macro_Play_Quick(12); return;
-				case TextEditCommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
-				case TextEditCommand.Macro_Play_Repeat: Command_Macro_Play_Repeat(); return;
-				case TextEditCommand.Macro_Play_PlayOnCopiedFiles: Command_Macro_Play_PlayOnCopiedFiles(); return;
+				case NECommand.Macro_Record_Quick_1: Command_Macro_Record_Quick(1); return;
+				case NECommand.Macro_Record_Quick_2: Command_Macro_Record_Quick(2); return;
+				case NECommand.Macro_Record_Quick_3: Command_Macro_Record_Quick(3); return;
+				case NECommand.Macro_Record_Quick_4: Command_Macro_Record_Quick(4); return;
+				case NECommand.Macro_Record_Quick_5: Command_Macro_Record_Quick(5); return;
+				case NECommand.Macro_Record_Quick_6: Command_Macro_Record_Quick(6); return;
+				case NECommand.Macro_Record_Quick_7: Command_Macro_Record_Quick(7); return;
+				case NECommand.Macro_Record_Quick_8: Command_Macro_Record_Quick(8); return;
+				case NECommand.Macro_Record_Quick_9: Command_Macro_Record_Quick(9); return;
+				case NECommand.Macro_Record_Quick_10: Command_Macro_Record_Quick(10); return;
+				case NECommand.Macro_Record_Quick_11: Command_Macro_Record_Quick(11); return;
+				case NECommand.Macro_Record_Quick_12: Command_Macro_Record_Quick(12); return;
+				case NECommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
+				case NECommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
+				case NECommand.Macro_Append_Quick_1: Command_Macro_Append_Quick(1); return;
+				case NECommand.Macro_Append_Quick_2: Command_Macro_Append_Quick(2); return;
+				case NECommand.Macro_Append_Quick_3: Command_Macro_Append_Quick(3); return;
+				case NECommand.Macro_Append_Quick_4: Command_Macro_Append_Quick(4); return;
+				case NECommand.Macro_Append_Quick_5: Command_Macro_Append_Quick(5); return;
+				case NECommand.Macro_Append_Quick_6: Command_Macro_Append_Quick(6); return;
+				case NECommand.Macro_Append_Quick_7: Command_Macro_Append_Quick(7); return;
+				case NECommand.Macro_Append_Quick_8: Command_Macro_Append_Quick(8); return;
+				case NECommand.Macro_Append_Quick_9: Command_Macro_Append_Quick(9); return;
+				case NECommand.Macro_Append_Quick_10: Command_Macro_Append_Quick(10); return;
+				case NECommand.Macro_Append_Quick_11: Command_Macro_Append_Quick(11); return;
+				case NECommand.Macro_Append_Quick_12: Command_Macro_Append_Quick(12); return;
+				case NECommand.Macro_Append_Append: Command_Macro_Append_Append(); return;
+				case NECommand.Macro_Play_Quick_1: Command_Macro_Play_Quick(1); return;
+				case NECommand.Macro_Play_Quick_2: Command_Macro_Play_Quick(2); return;
+				case NECommand.Macro_Play_Quick_3: Command_Macro_Play_Quick(3); return;
+				case NECommand.Macro_Play_Quick_4: Command_Macro_Play_Quick(4); return;
+				case NECommand.Macro_Play_Quick_5: Command_Macro_Play_Quick(5); return;
+				case NECommand.Macro_Play_Quick_6: Command_Macro_Play_Quick(6); return;
+				case NECommand.Macro_Play_Quick_7: Command_Macro_Play_Quick(7); return;
+				case NECommand.Macro_Play_Quick_8: Command_Macro_Play_Quick(8); return;
+				case NECommand.Macro_Play_Quick_9: Command_Macro_Play_Quick(9); return;
+				case NECommand.Macro_Play_Quick_10: Command_Macro_Play_Quick(10); return;
+				case NECommand.Macro_Play_Quick_11: Command_Macro_Play_Quick(11); return;
+				case NECommand.Macro_Play_Quick_12: Command_Macro_Play_Quick(12); return;
+				case NECommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
+				case NECommand.Macro_Play_Repeat: Command_Macro_Play_Repeat(); return;
+				case NECommand.Macro_Play_PlayOnCopiedFiles: Command_Macro_Play_PlayOnCopiedFiles(); return;
 			}
 
 			var shiftDown = this.shiftDown;
@@ -667,67 +667,67 @@ namespace NeoEdit
 			newClipboard.IsCut = isCut;
 		}
 
-		internal bool GetDialogResult(TextEditCommand command, out object dialogResult, bool? multiStatus)
+		internal bool GetDialogResult(NECommand command, out object dialogResult, bool? multiStatus)
 		{
 			dialogResult = null;
 
 			switch (command)
 			{
-				case TextEditCommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
-				case TextEditCommand.View_CustomGrid: dialogResult = Command_View_Type_Dialog(); break;
-				case TextEditCommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro.MacroDirectory); break;
+				case NECommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
+				case NECommand.View_CustomGrid: dialogResult = Command_View_Type_Dialog(); break;
+				case NECommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro.MacroDirectory); break;
 				default: return TopMost == null ? true : TopMost.GetDialogResult(command, out dialogResult, multiStatus);
 			}
 
 			return dialogResult != null;
 		}
 
-		public bool HandleCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus)
+		public bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
 		{
 			switch (command)
 			{
-				case TextEditCommand.File_New_New: Create(textEditTabs: this, forceCreate: shiftDown); break;
-				case TextEditCommand.File_New_FromClipboards: Command_File_New_FromClipboards(); break;
-				case TextEditCommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
-				case TextEditCommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
-				case TextEditCommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;
-				case TextEditCommand.File_Shell_Unintegrate: Command_File_Shell_Unintegrate(); break;
-				case TextEditCommand.File_Exit: Close(); break;
-				case TextEditCommand.Diff_Diff: Command_Diff_Diff(); break;
-				case TextEditCommand.Diff_Select_LeftTab: Command_Diff_Select_LeftRightBothTabs(true); break;
-				case TextEditCommand.Diff_Select_RightTab: Command_Diff_Select_LeftRightBothTabs(false); break;
-				case TextEditCommand.Diff_Select_BothTabs: Command_Diff_Select_LeftRightBothTabs(null); break;
-				case TextEditCommand.View_Full: Command_View_Type(TabsLayout.Full, null); break;
-				case TextEditCommand.View_Grid: Command_View_Type(TabsLayout.Grid, null); break;
-				case TextEditCommand.View_CustomGrid: Command_View_Type(TabsLayout.Custom, dialogResult as CustomGridDialog.Result); break;
-				case TextEditCommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
-				case TextEditCommand.View_FontSize: Command_View_FontSize(); break;
-				case TextEditCommand.View_Select_TabsWithSelections: Command_View_SelectTabsWithSelections(true); break;
-				case TextEditCommand.View_Select_TabsWithoutSelections: Command_View_SelectTabsWithSelections(false); break;
-				case TextEditCommand.View_Select_TabsWithSelectionsToTop: Command_View_Select_TabsWithSelectionsToTop(); break;
-				case TextEditCommand.View_Close_TabsWithSelections: Command_View_CloseTabsWithSelections(true); break;
-				case TextEditCommand.View_Close_TabsWithoutSelections: Command_View_CloseTabsWithSelections(false); break;
-				case TextEditCommand.View_Close_ActiveTabs: Command_View_Close_ActiveTabs(true); break;
-				case TextEditCommand.View_Close_InactiveTabs: Command_View_Close_ActiveTabs(false); break;
-				case TextEditCommand.View_NewWindow: Command_View_NewWindow(); break;
-				case TextEditCommand.View_WordList: Command_View_WordList(); break;
-				case TextEditCommand.Macro_Open_Quick_1: Macro_Open_Quick(1); return true;
-				case TextEditCommand.Macro_Open_Quick_2: Macro_Open_Quick(2); return true;
-				case TextEditCommand.Macro_Open_Quick_3: Macro_Open_Quick(3); return true;
-				case TextEditCommand.Macro_Open_Quick_4: Macro_Open_Quick(4); return true;
-				case TextEditCommand.Macro_Open_Quick_5: Macro_Open_Quick(5); return true;
-				case TextEditCommand.Macro_Open_Quick_6: Macro_Open_Quick(6); return true;
-				case TextEditCommand.Macro_Open_Quick_7: Macro_Open_Quick(7); return true;
-				case TextEditCommand.Macro_Open_Quick_8: Macro_Open_Quick(8); return true;
-				case TextEditCommand.Macro_Open_Quick_9: Macro_Open_Quick(9); return true;
-				case TextEditCommand.Macro_Open_Quick_10: Macro_Open_Quick(10); return true;
-				case TextEditCommand.Macro_Open_Quick_11: Macro_Open_Quick(11); return true;
-				case TextEditCommand.Macro_Open_Quick_12: Macro_Open_Quick(12); return true;
-				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
-				case TextEditCommand.Window_NewWindow: Command_Window_NewWindow(); break;
-				case TextEditCommand.Help_About: Command_Help_About(); break;
-				case TextEditCommand.Help_Update: Command_Help_Update(); break;
-				case TextEditCommand.Help_RunGC: Command_Help_RunGC(); break;
+				case NECommand.File_New_New: Create(textEditTabs: this, forceCreate: shiftDown); break;
+				case NECommand.File_New_FromClipboards: Command_File_New_FromClipboards(); break;
+				case NECommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
+				case NECommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
+				case NECommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;
+				case NECommand.File_Shell_Unintegrate: Command_File_Shell_Unintegrate(); break;
+				case NECommand.File_Exit: Close(); break;
+				case NECommand.Diff_Diff: Command_Diff_Diff(); break;
+				case NECommand.Diff_Select_LeftTab: Command_Diff_Select_LeftRightBothTabs(true); break;
+				case NECommand.Diff_Select_RightTab: Command_Diff_Select_LeftRightBothTabs(false); break;
+				case NECommand.Diff_Select_BothTabs: Command_Diff_Select_LeftRightBothTabs(null); break;
+				case NECommand.View_Full: Command_View_Type(TabsLayout.Full, null); break;
+				case NECommand.View_Grid: Command_View_Type(TabsLayout.Grid, null); break;
+				case NECommand.View_CustomGrid: Command_View_Type(TabsLayout.Custom, dialogResult as CustomGridDialog.Result); break;
+				case NECommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
+				case NECommand.View_FontSize: Command_View_FontSize(); break;
+				case NECommand.View_Select_TabsWithSelections: Command_View_SelectTabsWithSelections(true); break;
+				case NECommand.View_Select_TabsWithoutSelections: Command_View_SelectTabsWithSelections(false); break;
+				case NECommand.View_Select_TabsWithSelectionsToTop: Command_View_Select_TabsWithSelectionsToTop(); break;
+				case NECommand.View_Close_TabsWithSelections: Command_View_CloseTabsWithSelections(true); break;
+				case NECommand.View_Close_TabsWithoutSelections: Command_View_CloseTabsWithSelections(false); break;
+				case NECommand.View_Close_ActiveTabs: Command_View_Close_ActiveTabs(true); break;
+				case NECommand.View_Close_InactiveTabs: Command_View_Close_ActiveTabs(false); break;
+				case NECommand.View_NewWindow: Command_View_NewWindow(); break;
+				case NECommand.View_WordList: Command_View_WordList(); break;
+				case NECommand.Macro_Open_Quick_1: Macro_Open_Quick(1); return true;
+				case NECommand.Macro_Open_Quick_2: Macro_Open_Quick(2); return true;
+				case NECommand.Macro_Open_Quick_3: Macro_Open_Quick(3); return true;
+				case NECommand.Macro_Open_Quick_4: Macro_Open_Quick(4); return true;
+				case NECommand.Macro_Open_Quick_5: Macro_Open_Quick(5); return true;
+				case NECommand.Macro_Open_Quick_6: Macro_Open_Quick(6); return true;
+				case NECommand.Macro_Open_Quick_7: Macro_Open_Quick(7); return true;
+				case NECommand.Macro_Open_Quick_8: Macro_Open_Quick(8); return true;
+				case NECommand.Macro_Open_Quick_9: Macro_Open_Quick(9); return true;
+				case NECommand.Macro_Open_Quick_10: Macro_Open_Quick(10); return true;
+				case NECommand.Macro_Open_Quick_11: Macro_Open_Quick(11); return true;
+				case NECommand.Macro_Open_Quick_12: Macro_Open_Quick(12); return true;
+				case NECommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
+				case NECommand.Window_NewWindow: Command_Window_NewWindow(); break;
+				case NECommand.Help_About: Command_Help_About(); break;
+				case NECommand.Help_Update: Command_Help_Update(); break;
+				case NECommand.Help_RunGC: Command_Help_RunGC(); break;
 			}
 
 			try
@@ -1048,7 +1048,7 @@ namespace NeoEdit
 				Items.Move(indexes[ctr], ctr);
 		}
 
-		DockPanel GetTabLabel(TextEditTabs tabs, bool tiles, TextEditor item)
+		DockPanel GetTabLabel(Tabs tabs, bool tiles, TextEditor item)
 		{
 			var dockPanel = new DockPanel { Margin = new Thickness(0, 0, tiles ? 0 : 2, 1), Tag = item };
 

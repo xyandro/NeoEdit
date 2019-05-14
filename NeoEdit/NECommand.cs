@@ -3,7 +3,7 @@ using NeoEdit.Controls;
 
 namespace NeoEdit
 {
-	public enum TextEditCommand
+	public enum NECommand
 	{
 		None,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New_New,

@@ -1,4 +1,4 @@
-﻿<Menu Name="self" x:Class="NeoEdit.TextEditMenu"
+﻿<Menu Name="self" x:Class="NeoEdit.NEMenu"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:content="clr-namespace:NeoEdit.Content"
@@ -914,8 +914,8 @@
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_View">
-		<controls:NEMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
-		<controls:NEMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
+		<controls:NEMenuItem Header="_Full" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
+		<controls:NEMenuItem Header="_Grid" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
 		<controls:NEMenuItem Header="C_ustom Grid" CommandEnum="View_CustomGrid"/>
 		<Separator/>
 		<controls:NEMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>

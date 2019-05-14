@@ -181,8 +181,8 @@
     </Compile>
     <Compile Include="Controls\CodePageCheckBox.cs" />
     <Compile Include="Controls\EnhancedFocusManager.cs" />
+    <Compile Include="Controls\KeyGestureAttribute.cs" />
     <Compile Include="Controls\ModalDialog.cs" />
-    <Compile Include="Controls\NECommand.cs" />
     <Page Include="Controls\NEExpressionResults.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -963,6 +963,14 @@
     <Compile Include="NEClipboards\NEClipboard.cs" />
     <Compile Include="NEClipboards\NEClipboardItem.cs" />
     <Compile Include="NEClipboards\NEClipboardList.cs" />
+    <Compile Include="NECommand.cs" />
+    <Page Include="NEMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="NEMenu.xaml.cs">
+      <DependentUpon>NEMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NoDelayClipboard.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
@@ -1012,14 +1020,6 @@
     <Compile Include="Table.cs" />
     <Compile Include="TabsLayout.cs" />
     <Compile Include="TextData.cs" />
-    <Compile Include="TextEditCommand.cs" />
-    <Page Include="TextEditMenu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="TextEditMenu.xaml.cs">
-      <DependentUpon>TextEditMenu.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Content.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -1081,12 +1081,12 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Page Include="TextEditTabs.xaml">
+    <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="TextEditTabs.xaml.cs">
-      <DependentUpon>TextEditTabs.xaml</DependentUpon>
+    <Compile Include="Tabs.xaml.cs">
+      <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />

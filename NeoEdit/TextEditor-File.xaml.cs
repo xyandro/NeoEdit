@@ -52,13 +52,13 @@ namespace NeoEdit
 				ReplaceSelections(strs);
 		}
 
-		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach((str, index) => TextEditTabs.Create(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false));
+		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach((str, index) => Tabs.Create(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false));
 
 		void Command_File_Open_Selected()
 		{
 			var files = RelativeSelectedFiles();
 			foreach (var file in files)
-				TextEditTabs.Create(file);
+				Tabs.Create(file);
 		}
 
 		void Command_File_Save_Save()

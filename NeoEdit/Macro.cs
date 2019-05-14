@@ -41,12 +41,12 @@ namespace NeoEdit
 
 		class MacroActionCommand : MacroAction
 		{
-			public TextEditCommand command { get; }
+			public NECommand command { get; }
 			public bool shiftDown { get; }
 			public object dialogResult { get; }
 			public bool? multiStatus { get; }
 
-			public MacroActionCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus)
+			public MacroActionCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
 			{
 				this.command = command;
 				this.shiftDown = shiftDown;
@@ -72,9 +72,9 @@ namespace NeoEdit
 			macroActions.Add(new MacroActionText(text));
 		}
 
-		public void AddCommand(TextEditCommand command, bool shiftDown, object dialogResult, bool? multiStatus) => macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult, multiStatus));
+		public void AddCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus) => macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult, multiStatus));
 
-		public void Play(TextEditTabs tabs, Action<Macro> setMacroPlaying, Action finished = null)
+		public void Play(Tabs tabs, Action<Macro> setMacroPlaying, Action finished = null)
 		{
 			setMacroPlaying(this);
 			var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);

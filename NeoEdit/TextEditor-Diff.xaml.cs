@@ -19,7 +19,7 @@ namespace NeoEdit
 				throw new Exception("Must have even number of items.");
 
 			var codePage = CodePage; // Must save as other threads can't access DependencyProperties
-			var tabs = new TextEditTabs();
+			var tabs = new Tabs();
 			var batches = ranges.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).ToList();
 			foreach (var batch in batches)
 				tabs.AddDiff(bytes1: batch[0], bytes2: batch[1], codePage1: codePage, codePage2: codePage, modified1: false, modified2: false);
@@ -73,7 +73,7 @@ namespace NeoEdit
 			if (files.Any(file => !File.Exists(file)))
 				throw new Exception("Selections must be files.");
 
-			var tabs = new TextEditTabs();
+			var tabs = new Tabs();
 			var batches = files.Batch(2).ToList();
 			foreach (var batch in batches)
 				tabs.AddDiff(fileName1: batch[0], fileName2: batch[1]);
@@ -90,7 +90,7 @@ namespace NeoEdit
 			if (invalidIndexes.Any())
 				throw new Exception($"Unable to get unmodified files:\n{string.Join("\n", invalidIndexes.Select(index => files[index]))}");
 
-			var tabs = new TextEditTabs();
+			var tabs = new Tabs();
 			for (var ctr = 0; ctr < files.Count; ctr++)
 				tabs.AddDiff(displayName1: Path.GetFileName(files[ctr]), modified1: false, bytes1: original[ctr], fileName2: files[ctr]);
 		}
