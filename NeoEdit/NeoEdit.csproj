@@ -204,7 +204,6 @@
     <Compile Include="Converters\NEExpressionConverter.cs" />
     <Compile Include="Converters\NonEmptyConverter.cs" />
     <Compile Include="Converters\RadioConverter.cs" />
-    <Compile Include="Converters\SingleLineConverter.cs" />
     <Compile Include="Converters\ValidValueConverter.cs" />
     <Compile Include="DBConnectInfo.cs" />
     <Compile Include="Dialogs\ActiveTabsDialog.cs" />
