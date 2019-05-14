@@ -16,10 +16,8 @@ namespace NeoEdit
 		public void OnShutdown()
 		{
 			lock (this)
-			{
-				if ((name != null) && (--count == 0))
+				if (--count == 0)
 					new EventWaitHandle(false, EventResetMode.ManualReset, name).Set();
-			}
 		}
 	}
 }

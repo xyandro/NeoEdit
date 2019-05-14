@@ -13,15 +13,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using NeoEdit;
-using NeoEdit.Expressions;
-using NeoEdit.Parsing;
-using NeoEdit.Transform;
+using NeoEdit.Content;
 using NeoEdit.Controls;
 using NeoEdit.Converters;
 using NeoEdit.Dialogs;
-using NeoEdit.Misc;
-using NeoEdit.Content;
+using NeoEdit.Expressions;
 using NeoEdit.Highlighting;
+using NeoEdit.Misc;
+using NeoEdit.Parsing;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {
@@ -290,7 +290,7 @@ namespace NeoEdit
 		{
 			fileName = fileName?.Trim('"');
 			SetupLocalKeys();
-			this.shutdownData = shutdownData ?? new ShutdownData(null, 1);
+			this.shutdownData = shutdownData;
 
 			InitializeComponent();
 			canvasRenderTimer = new RunOnceTimer(() => { canvas.InvalidateVisual(); statusBar.InvalidateVisual(); });
@@ -488,7 +488,7 @@ namespace NeoEdit
 			globalKeysChanged -= SetupLocalOrGlobalKeys;
 			Font.FontSizeChanged -= FontSizeChanged;
 			ClearWatcher();
-			shutdownData.OnShutdown();
+			shutdownData?.OnShutdown();
 		}
 
 		bool ConfirmContinueWhenCannotEncode()

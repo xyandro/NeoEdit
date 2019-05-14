@@ -830,9 +830,8 @@ namespace NeoEdit
 			return replace;
 		}
 
-		public Window AddDiff(TextEditor textEdit1, TextEditor textEdit2, string shutdownEvent = null)
+		public Window AddDiff(TextEditor textEdit1, TextEditor textEdit2)
 		{
-			var shutdownData = new ShutdownData(shutdownEvent, 2);
 			if (textEdit1.ContentType == Parser.ParserType.None)
 				textEdit1.ContentType = textEdit2.ContentType;
 			if (textEdit2.ContentType == Parser.ParserType.None)
