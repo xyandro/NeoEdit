@@ -72,53 +72,12 @@ namespace NeoEdit
 			UIHelper<Tabs>.AddCallback(a => a.Columns, (obj, o, n) => obj.layoutTimer.Start());
 		}
 
-		public static Tuple<TextEditor, Window> CreateTab(TextEditor item, Tabs tabs = null, bool forceCreate = false)
-		{
-			if ((tabs == null) && (!forceCreate))
-				tabs = UIHelper<Tabs>.GetNewest();
-
-			if (tabs == null)
-				tabs = new Tabs();
-
-			return new Tuple<TextEditor, Window>(tabs.AddTab(item), tabs);
-		}
-
-		public static Window Create(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int line = 1, int column = 1, Tabs textEditTabs = null, bool forceCreate = false, string shutdownEvent = null)
-		{
-			fileName = fileName?.Trim('"');
-			var textEditor = new TextEditor(fileName, displayName, bytes, codePage, contentType, modified, line, column, new ShutdownData(shutdownEvent, 1));
-			var replaced = CreateTab(textEditor, textEditTabs, forceCreate);
-			textEditor.DiffTarget = replaced.Item1?.DiffTarget;
-			return replaced.Item2;
-		}
-
-		public Window AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, Parser.ParserType contentType1 = Parser.ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, Parser.ParserType contentType2 = Parser.ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, string shutdownEvent = null)
-		{
-			var shutdownData = new ShutdownData(shutdownEvent, 2);
-			var textEdit1 = new TextEditor(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, shutdownData);
-			var textEdit2 = new TextEditor(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, shutdownData);
-			if (textEdit1.ContentType == Parser.ParserType.None)
-				textEdit1.ContentType = textEdit2.ContentType;
-			if (textEdit2.ContentType == Parser.ParserType.None)
-				textEdit2.ContentType = textEdit1.ContentType;
-			AddTab(textEdit1);
-			AddTab(textEdit2);
-			TopMost = textEdit2;
-			textEdit1.DiffTarget = textEdit2;
-			Layout = TabsLayout.Grid;
-			if (Items.Count > 2)
-				Columns = 2;
-			return this;
-		}
-
 		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
 		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 		bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
 
-		public void AddTextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, int line = 1, int column = 1, bool? modified = null) => Create(fileName, displayName, bytes, codePage, contentType, modified, line, column, this);
-
 		readonly RunOnceTimer doActivatedTimer, countsTimer;
-		public Tabs()
+		public Tabs(bool addEmpty = false)
 		{
 			layoutTimer = new RunOnceTimer(DoLayout);
 			topMostTimer = new RunOnceTimer(ShowTopMost);
@@ -150,6 +109,9 @@ namespace NeoEdit
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
 			UpdateStatusBarText();
+
+			if (addEmpty)
+				Add(new TextEditor());
 		}
 
 		void ItemTabs_TabsChanged()
@@ -199,7 +161,7 @@ namespace NeoEdit
 			var fileList = e.Data.GetData("FileDrop") as string[];
 			if (fileList == null)
 				return;
-			fileList.ForEach(file => Create(file));
+			fileList.ForEach(file => Add(new TextEditor(file)));
 			e.Handled = true;
 		}
 
@@ -226,12 +188,14 @@ namespace NeoEdit
 			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}
 
-		void Command_File_New_FromClipboards() => NEClipboard.Current.Strings.ForEach((str, index) => Tabs.Create(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
+		void Command_File_New_New(bool createTabs) => (createTabs ? new Tabs() : this).Add(new TextEditor());
+
+		void Command_File_New_FromClipboards() => NEClipboard.Current.Strings.ForEach((str, index) => Add(new TextEditor(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 
 		void Command_File_Open_Open(OpenFileDialogResult result)
 		{
 			foreach (var filename in result.files)
-				AddTextEditor(filename);
+				Add(new TextEditor(filename));
 		}
 
 		void Command_File_Shell_Integrate()
@@ -269,7 +233,7 @@ namespace NeoEdit
 			foreach (var item in Items)
 				item.Active = false;
 			foreach (var file in files)
-				AddTextEditor(file);
+				Add(new TextEditor(file));
 		}
 
 		void Command_Diff_Diff()
@@ -294,7 +258,7 @@ namespace NeoEdit
 
 					var textEditTabs = new Tabs();
 					textEditTabs.Layout = TabsLayout.Grid;
-					diffTargets.ForEach(diffTarget => textEditTabs.AddTab(diffTarget));
+					diffTargets.ForEach(diffTarget => textEditTabs.Add(diffTarget));
 					textEditTabs.TopMost = diffTargets[0];
 				}
 			}
@@ -393,7 +357,7 @@ namespace NeoEdit
 			newWindow.Layout = Layout;
 			newWindow.Columns = Columns;
 			newWindow.Rows = Rows;
-			active.ForEach(tab => newWindow.Items.Add(tab));
+			active.ForEach(tab => newWindow.Add(tab));
 		}
 
 		void Command_View_WordList()
@@ -409,14 +373,10 @@ namespace NeoEdit
 
 			data = Compressor.Decompress(data, Compressor.Type.GZip);
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace("\n", "\r\n"));
-			AddTextEditor(bytes: data, modified: false);
+			Add(new TextEditor(bytes: data, modified: false));
 		}
 
-		void Command_Window_NewWindow()
-		{
-			var tabs = new Tabs();
-			tabs.AddTab(new TextEditor());
-		}
+		void Command_Window_NewWindow() => new Tabs(true);
 
 		void Command_Help_About() => HelpAboutDialog.Run();
 
@@ -491,7 +451,7 @@ namespace NeoEdit
 		void Command_Help_RunGC() => GC.Collect();
 
 		string QuickMacro(int num) => $"QuickText{num}.xml";
-		void Macro_Open_Quick(int quickNum) => AddTextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum)));
+		void Macro_Open_Quick(int quickNum) => Add(new TextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 
 		void Command_Macro_Record_Quick(int quickNum)
 		{
@@ -560,7 +520,7 @@ namespace NeoEdit
 			{
 				if (!files.Any())
 					return;
-				AddTextEditor(files.Dequeue());
+				Add(new TextEditor(files.Dequeue()));
 				macro.Play(this, playing => macroPlaying = playing, startNext);
 			};
 			startNext();
@@ -686,7 +646,7 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.File_New_New: Create(textEditTabs: this, forceCreate: shiftDown); break;
+				case NECommand.File_New_New: Command_File_New_New(shiftDown); break;
 				case NECommand.File_New_FromClipboards: Command_File_New_FromClipboards(); break;
 				case NECommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
 				case NECommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
@@ -856,15 +816,33 @@ namespace NeoEdit
 			topMostTimer.Start();
 		}
 
-		public TextEditor AddTab(TextEditor item, int? index = null)
+		public TextEditor Add(TextEditor item, int? index = null)
 		{
 			var replace = (!index.HasValue) && (!item.Empty()) && (TopMost != null) && (TopMost.Empty()) ? TopMost : default(TextEditor);
 			if (replace != null)
+			{
+				replace.Closed();
 				Items[Items.IndexOf(replace)] = item;
+			}
 			else
 				Items.Insert(index ?? Items.Count, item);
 			TopMost = item;
 			return replace;
+		}
+
+		public Window AddDiff(TextEditor textEdit1, TextEditor textEdit2, string shutdownEvent = null)
+		{
+			var shutdownData = new ShutdownData(shutdownEvent, 2);
+			if (textEdit1.ContentType == Parser.ParserType.None)
+				textEdit1.ContentType = textEdit2.ContentType;
+			if (textEdit2.ContentType == Parser.ParserType.None)
+				textEdit2.ContentType = textEdit1.ContentType;
+			Add(textEdit1);
+			Add(textEdit2);
+			textEdit1.DiffTarget = textEdit2;
+			Layout = TabsLayout.Custom;
+			Columns = 2;
+			return this;
 		}
 
 		public void ShowActiveTabsDialog()

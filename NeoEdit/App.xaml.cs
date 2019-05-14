@@ -55,7 +55,7 @@ namespace NeoEdit
 #endif
 		}
 
-		public Window CreateWindowsFromArgs(string commandLine)
+		public Tabs CreateWindowsFromArgs(string commandLine)
 		{
 			try
 			{
@@ -68,12 +68,12 @@ namespace NeoEdit
 				{
 					if (restored > 0)
 						return null;
-					return Tabs.Create(shutdownEvent: clParams.Wait);
+					return new Tabs(true);
 				}
 
 				var tabs = new Tabs();
 				foreach (var file in clParams.Files)
-					tabs.AddTab(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownData: new ShutdownData(clParams.Wait, 1)));
+					tabs.Add(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownData: new ShutdownData(clParams.Wait, 1)));
 
 				if (clParams.Diff)
 				{

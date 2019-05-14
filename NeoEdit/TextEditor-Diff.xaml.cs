@@ -3,8 +3,8 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using NeoEdit;
-using NeoEdit.Transform;
 using NeoEdit.Dialogs;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {
@@ -22,7 +22,7 @@ namespace NeoEdit
 			var tabs = new Tabs();
 			var batches = ranges.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).ToList();
 			foreach (var batch in batches)
-				tabs.AddDiff(bytes1: batch[0], bytes2: batch[1], codePage1: codePage, codePage2: codePage, modified1: false, modified2: false);
+				tabs.AddDiff(new TextEditor(bytes: batch[0], codePage: codePage, modified: false), new TextEditor(bytes: batch[1], codePage: codePage, modified: false));
 		}
 
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
@@ -76,7 +76,7 @@ namespace NeoEdit
 			var tabs = new Tabs();
 			var batches = files.Batch(2).ToList();
 			foreach (var batch in batches)
-				tabs.AddDiff(fileName1: batch[0], fileName2: batch[1]);
+				tabs.AddDiff(new TextEditor(batch[0]), new TextEditor(batch[1]));
 		}
 
 		void Command_Diff_Diff_VCSNormalFiles()
@@ -92,7 +92,7 @@ namespace NeoEdit
 
 			var tabs = new Tabs();
 			for (var ctr = 0; ctr < files.Count; ctr++)
-				tabs.AddDiff(displayName1: Path.GetFileName(files[ctr]), modified1: false, bytes1: original[ctr], fileName2: files[ctr]);
+				tabs.AddDiff(new TextEditor(displayName: Path.GetFileName(files[ctr]), modified: false, bytes: original[ctr]), new TextEditor(fileName: files[ctr]));
 		}
 
 		void Command_Diff_Regions_Region(int useRegion) => DoRangesDiff(Regions[useRegion]);

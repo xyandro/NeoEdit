@@ -5,11 +5,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Win32;
-using NeoEdit;
-using NeoEdit.Transform;
 using NeoEdit.Controls;
 using NeoEdit.Dialogs;
 using NeoEdit.Misc;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {
@@ -52,13 +51,13 @@ namespace NeoEdit
 				ReplaceSelections(strs);
 		}
 
-		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach((str, index) => Tabs.Create(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false));
+		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach((str, index) => TabsParent.Add(new TextEditor(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false)));
 
 		void Command_File_Open_Selected()
 		{
 			var files = RelativeSelectedFiles();
 			foreach (var file in files)
-				Tabs.Create(file);
+				TabsParent.Add(new TextEditor(file));
 		}
 
 		void Command_File_Save_Save()
@@ -207,7 +206,7 @@ namespace NeoEdit
 			var topMost = TabsParent.TopMost;
 			var textEdit = new TextEditor(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
 			textEdit.ContentType = ContentType;
-			TabsParent.AddTab(textEdit, TabsParent.GetIndex(this));
+			TabsParent.Add(textEdit, TabsParent.GetIndex(this));
 			textEdit.DiffTarget = this;
 			TabsParent.TopMost = topMost;
 		}

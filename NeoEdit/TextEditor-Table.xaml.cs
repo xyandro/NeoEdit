@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NeoEdit;
+using NeoEdit.Content;
+using NeoEdit.Dialogs;
 using NeoEdit.Expressions;
 using NeoEdit.Transform;
-using NeoEdit.Dialogs;
-using NeoEdit.Content;
 
 namespace NeoEdit
 {
@@ -52,7 +52,7 @@ namespace NeoEdit
 			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 			textEditor.ContentType = contentType;
 			textEditor.DisplayName = name;
-			TabsParent.AddTab(textEditor);
+			TabsParent.Add(textEditor);
 		}
 
 		void SetText(Table table)

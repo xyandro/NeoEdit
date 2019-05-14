@@ -107,7 +107,7 @@ namespace NeoEdit
 			{
 				var textEditor = new TextEditor(pair.Key);
 				textEditor.SetSelections(pair.Value.Select(line => new Range(textEditor.Data.GetOffset(line - 1, 0))).ToList());
-				TabsParent.AddTab(textEditor);
+				TabsParent.Add(textEditor);
 			}
 		}
 

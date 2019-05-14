@@ -4,10 +4,9 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NeoEdit;
-using NeoEdit.Transform;
 using NeoEdit.Content;
 using NeoEdit.Dialogs;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {
@@ -119,7 +118,7 @@ namespace NeoEdit
 								text += reader.GetString(0);
 					}
 
-					TabsParent.AddTab(new TextEditor(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: Parser.ParserType.SQL, modified: false));
+					TabsParent.Add(new TextEditor(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: Parser.ParserType.SQL, modified: false));
 				}
 				catch (Exception ex) { result = ex.Message; }
 				results.Add($"{sproc}: {result}");
