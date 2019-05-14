@@ -177,13 +177,6 @@
     </Compile>
     <Compile Include="Controls\CodePageCheckBox.cs" />
     <Compile Include="Controls\EnhancedFocusManager.cs" />
-    <Page Include="Controls\HelpMenu.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Controls\HelpMenu.xaml.cs">
-      <DependentUpon>HelpMenu.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\ModalDialog.cs" />
     <Compile Include="Controls\NECommand.cs" />
     <Page Include="Controls\NEExpressionResults.xaml">
@@ -193,6 +186,7 @@
     <Compile Include="Controls\NEExpressionResults.xaml.cs">
       <DependentUpon>NEExpressionResults.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\NEMenuItem.cs" />
     <Compile Include="Controls\NEWindow.cs" />
     <Page Include="Controls\NumericUpDown.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -203,13 +197,6 @@
     </Compile>
     <Compile Include="Controls\RenderCanvas.cs" />
     <Compile Include="Controls\UIHelper.cs" />
-    <Page Include="Controls\WindowMenu.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Controls\WindowMenu.xaml.cs">
-      <DependentUpon>WindowMenu.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Converters\HexConverter.cs" />
     <Compile Include="Converters\NEExpressionConverter.cs" />
     <Compile Include="Converters\NonEmptyConverter.cs" />
@@ -957,7 +944,6 @@
     <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="InstanceManager.cs" />
     <Compile Include="ItemSet.cs" />
-    <Compile Include="Launcher.cs" />
     <Compile Include="LCS.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />

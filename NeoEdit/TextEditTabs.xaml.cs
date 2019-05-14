@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -14,14 +17,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
 using NeoEdit;
-using NeoEdit.Expressions;
-using NeoEdit.NEClipboards;
-using NeoEdit.Transform;
+using NeoEdit.Content;
 using NeoEdit.Controls;
 using NeoEdit.Converters;
 using NeoEdit.Dialogs;
+using NeoEdit.Expressions;
 using NeoEdit.Misc;
-using NeoEdit.Content;
+using NeoEdit.NEClipboards;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {
@@ -129,7 +132,7 @@ namespace NeoEdit
 			VerticalAlignment = VerticalAlignment.Stretch;
 			Drop += (s, e) => OnDrop(e, null);
 
-			TextEditMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
+			NEMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
@@ -409,6 +412,84 @@ namespace NeoEdit
 			AddTextEditor(bytes: data, modified: false);
 		}
 
+		void Command_Window_NewWindow()
+		{
+			var tabs = new TextEditTabs();
+			tabs.AddTab(new TextEditor());
+		}
+
+		void Command_Help_About() => HelpAboutDialog.Run();
+
+		void Command_Help_Update()
+		{
+			const string url = "https://github.com/xyandro/NeoEdit/releases/latest";
+			const string check = "https://github.com/xyandro/NeoEdit/releases/tag/";
+			const string exe = "https://github.com/xyandro/NeoEdit/releases/download/{0}/NeoEdit.exe";
+
+			var oldVersion = ((AssemblyFileVersionAttribute)typeof(App).Assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
+			string newVersion;
+
+			var request = WebRequest.Create(url) as HttpWebRequest;
+			request.AllowAutoRedirect = false;
+			using (var response = request.GetResponse() as HttpWebResponse)
+			{
+				var redirUrl = response.Headers["Location"];
+				if (!redirUrl.StartsWith(check))
+					throw new Exception("Version check failed to find latest version");
+
+				newVersion = redirUrl.Substring(check.Length);
+			}
+
+			var oldNums = oldVersion.Split('.').Select(str => int.Parse(str)).ToList();
+			var newNums = newVersion.Split('.').Select(str => int.Parse(str)).ToList();
+			if (oldNums.Count != newNums.Count)
+				throw new Exception("Version length mismatch");
+
+			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
+			if (new Message
+			{
+				Title = "Download new version?",
+				Text = newer ? $"A newer version ({newVersion}) is available.  Download it?" : $"Already up to date ({newVersion}).  Update anyway?",
+				Options = Message.OptionsEnum.YesNo,
+				DefaultAccept = newer ? Message.OptionsEnum.Yes : Message.OptionsEnum.No,
+				DefaultCancel = Message.OptionsEnum.No,
+			}.Show() != Message.OptionsEnum.Yes)
+				return;
+
+			var oldLocation = Assembly.GetEntryAssembly().Location;
+			var newLocation = Path.Combine(Path.GetDirectoryName(oldLocation), $"{Path.GetFileNameWithoutExtension(oldLocation)}-Update{Path.GetExtension(oldLocation)}");
+
+			byte[] result = null;
+			ProgressDialog.Run(null, "Downloading new version...", (cancelled, progress) =>
+			{
+				var finished = new ManualResetEvent(false);
+				using (var client = new WebClient())
+				{
+					client.DownloadProgressChanged += (s, e) => progress(e.ProgressPercentage);
+					client.DownloadDataCompleted += (s, e) =>
+					{
+						if (!e.Cancelled)
+							result = e.Result;
+						finished.Set();
+					};
+					client.DownloadDataAsync(new Uri(string.Format(exe, newVersion)));
+					while (!finished.WaitOne(500))
+						if (cancelled())
+							client.CancelAsync();
+				}
+			});
+
+			if (result == null)
+				return;
+
+			File.WriteAllBytes(newLocation, result);
+
+			Message.Show("The program will be updated after exiting.");
+			Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
+		}
+
+		void Command_Help_RunGC() => GC.Collect();
+
 		string QuickMacro(int num) => $"QuickText{num}.xml";
 		void Macro_Open_Quick(int quickNum) => AddTextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum)));
 
@@ -643,6 +724,10 @@ namespace NeoEdit
 				case TextEditCommand.Macro_Open_Quick_11: Macro_Open_Quick(11); return true;
 				case TextEditCommand.Macro_Open_Quick_12: Macro_Open_Quick(12); return true;
 				case TextEditCommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
+				case TextEditCommand.Window_NewWindow: Command_Window_NewWindow(); break;
+				case TextEditCommand.Help_About: Command_Help_About(); break;
+				case TextEditCommand.Help_Update: Command_Help_Update(); break;
+				case TextEditCommand.Help_RunGC: Command_Help_RunGC(); break;
 			}
 
 			try

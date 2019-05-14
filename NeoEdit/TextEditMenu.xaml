@@ -2,10 +2,10 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:content="clr-namespace:NeoEdit.Content"
-	xmlns:guiControls="clr-namespace:NeoEdit.Controls"
-	xmlns:guiConverters="clr-namespace:NeoEdit.Converters"
-	xmlns:system="clr-namespace:System;assembly=mscorlib"
-	xmlns:textEdit="clr-namespace:NeoEdit">
+	xmlns:controls="clr-namespace:NeoEdit.Controls"
+	xmlns:converters="clr-namespace:NeoEdit.Converters"
+	xmlns:neoEdit="clr-namespace:NeoEdit"
+	xmlns:system="clr-namespace:System;assembly=mscorlib">
 
 	<Menu.Resources>
 		<system:Boolean x:Key="True">True</system:Boolean>
@@ -13,1013 +13,1019 @@
 
 	<MenuItem Header="_File">
 		<MenuItem Header="_New">
-			<textEdit:TextEditMenuItem Header="_New" CommandEnum="File_New_New"/>
-			<textEdit:TextEditMenuItem Header="From _Selections" CommandEnum="File_New_FromSelections"/>
-			<textEdit:TextEditMenuItem Header="From _Clipboards" CommandEnum="File_New_FromClipboards"/>
+			<controls:NEMenuItem Header="_New" CommandEnum="File_New_New"/>
+			<controls:NEMenuItem Header="From _Selections" CommandEnum="File_New_FromSelections"/>
+			<controls:NEMenuItem Header="From _Clipboards" CommandEnum="File_New_FromClipboards"/>
 		</MenuItem>
 		<MenuItem Header="_Open">
-			<textEdit:TextEditMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
-			<textEdit:TextEditMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
-			<textEdit:TextEditMenuItem Header="_Selected" CommandEnum="File_Open_Selected"/>
+			<controls:NEMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
+			<controls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
+			<controls:NEMenuItem Header="_Selected" CommandEnum="File_Open_Selected"/>
 		</MenuItem>
 		<MenuItem Header="_Save">
-			<textEdit:TextEditMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
-			<textEdit:TextEditMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
-			<textEdit:TextEditMenuItem Header="Save As By E_xpression" CommandEnum="File_Save_SaveAsByExpression"/>
+			<controls:NEMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
+			<controls:NEMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
+			<controls:NEMenuItem Header="Save As By E_xpression" CommandEnum="File_Save_SaveAsByExpression"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Copy To" CommandEnum="File_Save_CopyTo"/>
-			<textEdit:TextEditMenuItem Header="Copy To By Ex_pression" CommandEnum="File_Save_CopyToByExpression"/>
+			<controls:NEMenuItem Header="_Copy To" CommandEnum="File_Save_CopyTo"/>
+			<controls:NEMenuItem Header="Copy To By Ex_pression" CommandEnum="File_Save_CopyToByExpression"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="Set _Display Name" CommandEnum="File_Save_SetDisplayName"/>
+			<controls:NEMenuItem Header="Set _Display Name" CommandEnum="File_Save_SetDisplayName"/>
 		</MenuItem>
 		<MenuItem Header="O_perations">
-			<textEdit:TextEditMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
-			<textEdit:TextEditMenuItem Header="Rename By E_xpression" CommandEnum="File_Operations_RenameByExpression"/>
-			<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
-			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
-			<textEdit:TextEditMenuItem Header="C_ommand Prompt" CommandEnum="File_Operations_CommandPrompt"/>
-			<textEdit:TextEditMenuItem Header="Dr_ag/Drop" CommandEnum="File_Operations_DragDrop"/>
+			<controls:NEMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
+			<controls:NEMenuItem Header="Rename By E_xpression" CommandEnum="File_Operations_RenameByExpression"/>
+			<controls:NEMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
+			<controls:NEMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
+			<controls:NEMenuItem Header="C_ommand Prompt" CommandEnum="File_Operations_CommandPrompt"/>
+			<controls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="File_Operations_DragDrop"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_VCS Diff" CommandEnum="File_Operations_VCSDiff"/>
+			<controls:NEMenuItem Header="_VCS Diff" CommandEnum="File_Operations_VCSDiff"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="C_lose" CommandEnum="File_Close"/>
-		<textEdit:TextEditMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
-		<textEdit:MultiMenuItem Header="_Auto Refresh" Objects="{Binding Parent.Items, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh"/>
-		<textEdit:TextEditMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
+		<controls:NEMenuItem Header="C_lose" CommandEnum="File_Close"/>
+		<controls:NEMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
+		<controls:MultiMenuItem Header="_Auto Refresh" Objects="{Binding Parent.Items, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh"/>
+		<controls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
 		<MenuItem Header="_Insert">
-			<textEdit:TextEditMenuItem Header="_Files" CommandEnum="File_Insert_Files"/>
-			<textEdit:TextEditMenuItem Header="_Copied/Cut" CommandEnum="File_Insert_CopiedCut"/>
-			<textEdit:TextEditMenuItem Header="_Selected" CommandEnum="File_Insert_Selected"/>
+			<controls:NEMenuItem Header="_Files" CommandEnum="File_Insert_Files"/>
+			<controls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Insert_CopiedCut"/>
+			<controls:NEMenuItem Header="_Selected" CommandEnum="File_Insert_Selected"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Copy">
-			<textEdit:TextEditMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
-			<textEdit:TextEditMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
-			<textEdit:TextEditMenuItem Header="_Display Name" CommandEnum="File_Copy_DisplayName"/>
+			<controls:NEMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
+			<controls:NEMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
+			<controls:NEMenuItem Header="_Display Name" CommandEnum="File_Copy_DisplayName"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Encoding">
-			<textEdit:TextEditMenuItem Header="_Encoding" CommandEnum="File_Encoding_Encoding"/>
-			<textEdit:TextEditMenuItem Header="_Reopen With Encoding" CommandEnum="File_Encoding_ReopenWithEncoding"/>
-			<textEdit:TextEditMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings"/>
+			<controls:NEMenuItem Header="_Encoding" CommandEnum="File_Encoding_Encoding"/>
+			<controls:NEMenuItem Header="_Reopen With Encoding" CommandEnum="File_Encoding_ReopenWithEncoding"/>
+			<controls:NEMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:MultiMenuItem Header="Encr_ypt" Objects="{Binding Parent.Items, ElementName=self}" Property="AESKey" Converter="{guiConverters:NonEmptyConverter}"  MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
-		<textEdit:MultiMenuItem Header="Co_mpress" Objects="{Binding Parent.Items, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
+		<controls:MultiMenuItem Header="Encr_ypt" Objects="{Binding Parent.Items, ElementName=self}" Property="AESKey" Converter="{converters:NonEmptyConverter}"  MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
+		<controls:MultiMenuItem Header="Co_mpress" Objects="{Binding Parent.Items, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
 		<Separator/>
 		<MenuItem Header="S_hell">
-			<textEdit:TextEditMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate"/>
-			<textEdit:TextEditMenuItem Header="_Unintegrate" CommandEnum="File_Shell_Unintegrate"/>
+			<controls:NEMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate"/>
+			<controls:NEMenuItem Header="_Unintegrate" CommandEnum="File_Shell_Unintegrate"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="E_xit" CommandEnum="File_Exit"/>
+		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
-		<textEdit:TextEditMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
-		<textEdit:TextEditMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
+		<controls:NEMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
+		<controls:NEMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
 		<Separator/>
 		<MenuItem Header="_Copy">
-			<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Edit_Copy_Copy"/>
-			<textEdit:TextEditMenuItem Header="C_ut" CommandEnum="Edit_Copy_Cut"/>
+			<controls:NEMenuItem Header="_Copy" CommandEnum="Edit_Copy_Copy"/>
+			<controls:NEMenuItem Header="C_ut" CommandEnum="Edit_Copy_Cut"/>
 		</MenuItem>
 		<MenuItem Header="_Paste">
-			<textEdit:TextEditMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>
-			<textEdit:TextEditMenuItem Header="_Rotate Paste" CommandEnum="Edit_Paste_RotatePaste"/>
+			<controls:NEMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>
+			<controls:NEMenuItem Header="_Rotate Paste" CommandEnum="Edit_Paste_RotatePaste"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Find">
-			<textEdit:TextEditMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
-			<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Edit_Find_Next"/>
-			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
-			<textEdit:TextEditMenuItem Header="_Selected" CommandEnum="Edit_Find_Selected"/>
-			<textEdit:TextEditMenuItem Header="_Mass Find" CommandEnum="Edit_Find_MassFind"/>
-			<textEdit:TextEditMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
-			<textEdit:TextEditMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults"/>
+			<controls:NEMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
+			<controls:NEMenuItem Header="_Next" CommandEnum="Edit_Find_Next"/>
+			<controls:NEMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
+			<controls:NEMenuItem Header="_Selected" CommandEnum="Edit_Find_Selected"/>
+			<controls:NEMenuItem Header="_Mass Find" CommandEnum="Edit_Find_MassFind"/>
+			<controls:NEMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
+			<controls:NEMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Copy Do_wn" CommandEnum="Edit_CopyDown"/>
-		<textEdit:TextEditMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate"/>
+		<controls:NEMenuItem Header="Copy Do_wn" CommandEnum="Edit_CopyDown"/>
+		<controls:NEMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="R_epeat" CommandEnum="Edit_Repeat"/>
+		<controls:NEMenuItem Header="R_epeat" CommandEnum="Edit_Repeat"/>
 		<Separator/>
 		<MenuItem Header="_Markup">
-			<textEdit:TextEditMenuItem Header="_Escape" CommandEnum="Edit_Markup_Escape"/>
-			<textEdit:TextEditMenuItem Header="_Unescape" CommandEnum="Edit_Markup_Unescape"/>
+			<controls:NEMenuItem Header="_Escape" CommandEnum="Edit_Markup_Escape"/>
+			<controls:NEMenuItem Header="_Unescape" CommandEnum="Edit_Markup_Unescape"/>
 		</MenuItem>
 		<MenuItem Header="RegE_x">
-			<textEdit:TextEditMenuItem Header="_Escape" CommandEnum="Edit_RegEx_Escape"/>
-			<textEdit:TextEditMenuItem Header="_Unescape" CommandEnum="Edit_RegEx_Unescape"/>
+			<controls:NEMenuItem Header="_Escape" CommandEnum="Edit_RegEx_Escape"/>
+			<controls:NEMenuItem Header="_Unescape" CommandEnum="Edit_RegEx_Unescape"/>
 		</MenuItem>
 		<MenuItem Header="UR_L">
-			<textEdit:TextEditMenuItem Header="_Escape" CommandEnum="Edit_URL_Escape"/>
-			<textEdit:TextEditMenuItem Header="_Unescape" CommandEnum="Edit_URL_Unescape"/>
-			<textEdit:TextEditMenuItem Header="_Absolute" CommandEnum="Edit_URL_Absolute"/>
+			<controls:NEMenuItem Header="_Escape" CommandEnum="Edit_URL_Escape"/>
+			<controls:NEMenuItem Header="_Unescape" CommandEnum="Edit_URL_Unescape"/>
+			<controls:NEMenuItem Header="_Absolute" CommandEnum="Edit_URL_Absolute"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Data">
-			<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash"/>
-			<textEdit:TextEditMenuItem Header="_Compress" CommandEnum="Edit_Data_Compress"/>
-			<textEdit:TextEditMenuItem Header="_Decompress" CommandEnum="Edit_Data_Decompress"/>
-			<textEdit:TextEditMenuItem Header="E_ncrypt" CommandEnum="Edit_Data_Encrypt"/>
-			<textEdit:TextEditMenuItem Header="D_ecrypt" CommandEnum="Edit_Data_Decrypt"/>
-			<textEdit:TextEditMenuItem Header="_Sign" CommandEnum="Edit_Data_Sign"/>
+			<controls:NEMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash"/>
+			<controls:NEMenuItem Header="_Compress" CommandEnum="Edit_Data_Compress"/>
+			<controls:NEMenuItem Header="_Decompress" CommandEnum="Edit_Data_Decompress"/>
+			<controls:NEMenuItem Header="E_ncrypt" CommandEnum="Edit_Data_Encrypt"/>
+			<controls:NEMenuItem Header="D_ecrypt" CommandEnum="Edit_Data_Decrypt"/>
+			<controls:NEMenuItem Header="_Sign" CommandEnum="Edit_Data_Sign"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
+		<controls:NEMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Co_nvert" CommandEnum="Edit_Convert"/>
+		<controls:NEMenuItem Header="Co_nvert" CommandEnum="Edit_Convert"/>
 		<Separator/>
 		<MenuItem Header="_Bookmarks">
-			<textEdit:TextEditMenuItem Header="_Toggle" CommandEnum="Edit_Bookmarks_Toggle"/>
-			<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Edit_Bookmarks_Next"/>
-			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Edit_Bookmarks_Previous"/>
-			<textEdit:TextEditMenuItem Header="_Clear" CommandEnum="Edit_Bookmarks_Clear"/>
+			<controls:NEMenuItem Header="_Toggle" CommandEnum="Edit_Bookmarks_Toggle"/>
+			<controls:NEMenuItem Header="_Next" CommandEnum="Edit_Bookmarks_Next"/>
+			<controls:NEMenuItem Header="_Previous" CommandEnum="Edit_Bookmarks_Previous"/>
+			<controls:NEMenuItem Header="_Clear" CommandEnum="Edit_Bookmarks_Clear"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="Na_vigate">
-			<textEdit:TextEditMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft"/>
-			<textEdit:TextEditMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight"/>
-			<textEdit:TextEditMenuItem Header="All L_eft" CommandEnum="Edit_Navigate_AllLeft"/>
-			<textEdit:TextEditMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
+			<controls:NEMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft"/>
+			<controls:NEMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight"/>
+			<controls:NEMenuItem Header="All L_eft" CommandEnum="Edit_Navigate_AllLeft"/>
+			<controls:NEMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
 			<Separator/>
 			<MenuItem Header="_Jump By">
-				<textEdit:MultiMenuItem Header="_Words" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static textEdit:TextEditor+JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
-				<textEdit:MultiMenuItem Header="_Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static textEdit:TextEditor+JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
-				<textEdit:MultiMenuItem Header="_Paths" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static textEdit:TextEditor+JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
+				<controls:MultiMenuItem Header="_Words" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:TextEditor+JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
+				<controls:MultiMenuItem Header="_Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:TextEditor+JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
+				<controls:MultiMenuItem Header="_Paths" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:TextEditor+JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="Esc_ape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(guiControls:NEWindow.EscapeClearsSelections), Mode=TwoWay}"/>
+		<MenuItem Header="Esc_ape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(controls:NEWindow.EscapeClearsSelections), Mode=TwoWay}"/>
 	</MenuItem>
 	<MenuItem Header="D_iff">
-		<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
-		<textEdit:TextEditMenuItem Header="Se_lections" CommandEnum="Diff_Selections"/>
-		<textEdit:TextEditMenuItem Header="Selected _Files" CommandEnum="Diff_SelectedFiles"/>
-		<textEdit:TextEditMenuItem Header="_VCS Normal Files" CommandEnum="Diff_VCSNormalFiles"/>
+		<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
+		<controls:NEMenuItem Header="Se_lections" CommandEnum="Diff_Selections"/>
+		<controls:NEMenuItem Header="Selected _Files" CommandEnum="Diff_SelectedFiles"/>
+		<controls:NEMenuItem Header="_VCS Normal Files" CommandEnum="Diff_VCSNormalFiles"/>
 		<MenuItem Header="Re_gions">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Diff_Regions_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Diff_Regions_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Diff_Regions_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Diff_Regions_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Diff_Regions_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Diff_Regions_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Diff_Regions_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Diff_Regions_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Diff_Regions_Region9"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Diff_Regions_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Diff_Regions_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Diff_Regions_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Diff_Regions_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Diff_Regions_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Diff_Regions_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Diff_Regions_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Diff_Regions_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Diff_Regions_Region9"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Break" CommandEnum="Diff_Break"/>
+		<controls:NEMenuItem Header="_Break" CommandEnum="Diff_Break"/>
 		<Separator/>
-		<textEdit:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
-		<textEdit:MultiMenuItem Header="Ignore _Case" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
-		<textEdit:MultiMenuItem Header="Ignore _Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers"/>
-		<textEdit:MultiMenuItem Header="Ignore Line _Endings" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings"/>
-		<textEdit:TextEditMenuItem Header="Ignore C_haracters" CommandEnum="Diff_IgnoreCharacters"/>
-		<textEdit:TextEditMenuItem Header="_Reset" CommandEnum="Diff_Reset"/>
+		<controls:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
+		<controls:MultiMenuItem Header="Ignore _Case" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
+		<controls:MultiMenuItem Header="Ignore _Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers"/>
+		<controls:MultiMenuItem Header="Ignore Line _Endings" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings"/>
+		<controls:NEMenuItem Header="Ignore C_haracters" CommandEnum="Diff_IgnoreCharacters"/>
+		<controls:NEMenuItem Header="_Reset" CommandEnum="Diff_Reset"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Ne_xt" CommandEnum="Diff_Next"/>
-		<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
-		<textEdit:TextEditMenuItem Header="C_opy Left" CommandEnum="Diff_CopyLeft"/>
-		<textEdit:TextEditMenuItem Header="Cop_y Right" CommandEnum="Diff_CopyRight"/>
+		<controls:NEMenuItem Header="Ne_xt" CommandEnum="Diff_Next"/>
+		<controls:NEMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
+		<controls:NEMenuItem Header="C_opy Left" CommandEnum="Diff_CopyLeft"/>
+		<controls:NEMenuItem Header="Cop_y Right" CommandEnum="Diff_CopyRight"/>
 		<Separator/>
 		<MenuItem Header="F_ix">
-			<textEdit:TextEditMenuItem Header="_Whitespace" CommandEnum="Diff_Fix_Whitespace"/>
-			<textEdit:TextEditMenuItem Header="_Case" CommandEnum="Diff_Fix_Case"/>
-			<textEdit:TextEditMenuItem Header="_Numbers" CommandEnum="Diff_Fix_Numbers"/>
-			<textEdit:TextEditMenuItem Header="Line _Endings" CommandEnum="Diff_Fix_LineEndings"/>
-			<textEdit:TextEditMenuItem Header="Enc_oding" CommandEnum="Diff_Fix_Encoding"/>
+			<controls:NEMenuItem Header="_Whitespace" CommandEnum="Diff_Fix_Whitespace"/>
+			<controls:NEMenuItem Header="_Case" CommandEnum="Diff_Fix_Case"/>
+			<controls:NEMenuItem Header="_Numbers" CommandEnum="Diff_Fix_Numbers"/>
+			<controls:NEMenuItem Header="Line _Endings" CommandEnum="Diff_Fix_LineEndings"/>
+			<controls:NEMenuItem Header="Enc_oding" CommandEnum="Diff_Fix_Encoding"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="_Match" CommandEnum="Diff_Select_Match"/>
-			<textEdit:TextEditMenuItem Header="_Diff" CommandEnum="Diff_Select_Diff"/>
+			<controls:NEMenuItem Header="_Match" CommandEnum="Diff_Select_Match"/>
+			<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Select_Diff"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Left Tab" CommandEnum="Diff_Select_LeftTab"/>
-			<textEdit:TextEditMenuItem Header="_Right Tab" CommandEnum="Diff_Select_RightTab"/>
-			<textEdit:TextEditMenuItem Header="_Both Tabs" CommandEnum="Diff_Select_BothTabs"/>
+			<controls:NEMenuItem Header="_Left Tab" CommandEnum="Diff_Select_LeftTab"/>
+			<controls:NEMenuItem Header="_Right Tab" CommandEnum="Diff_Select_RightTab"/>
+			<controls:NEMenuItem Header="_Both Tabs" CommandEnum="Diff_Select_BothTabs"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
 		<MenuItem Header="N_ame">
-			<textEdit:TextEditMenuItem Header="_Simplify" CommandEnum="Files_Name_Simplify"/>
-			<textEdit:TextEditMenuItem Header="Make _Absolute" CommandEnum="Files_Name_MakeAbsolute"/>
-			<textEdit:TextEditMenuItem Header="Make _Relative" CommandEnum="Files_Name_MakeRelative"/>
-			<textEdit:TextEditMenuItem Header="Get _Unique" CommandEnum="Files_Name_GetUnique"/>
-			<textEdit:TextEditMenuItem Header="Sa_nitize" CommandEnum="Files_Name_Sanitize"/>
+			<controls:NEMenuItem Header="_Simplify" CommandEnum="Files_Name_Simplify"/>
+			<controls:NEMenuItem Header="Make _Absolute" CommandEnum="Files_Name_MakeAbsolute"/>
+			<controls:NEMenuItem Header="Make _Relative" CommandEnum="Files_Name_MakeRelative"/>
+			<controls:NEMenuItem Header="Get _Unique" CommandEnum="Files_Name_GetUnique"/>
+			<controls:NEMenuItem Header="Sa_nitize" CommandEnum="Files_Name_Sanitize"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Get">
-			<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Files_Get_Size"/>
+			<controls:NEMenuItem Header="_Size" CommandEnum="Files_Get_Size"/>
 			<MenuItem Header="_Time">
-				<textEdit:TextEditMenuItem Header="_Write" CommandEnum="Files_Get_Time_Write"/>
-				<textEdit:TextEditMenuItem Header="_Access" CommandEnum="Files_Get_Time_Access"/>
-				<textEdit:TextEditMenuItem Header="_Create" CommandEnum="Files_Get_Time_Create"/>
+				<controls:NEMenuItem Header="_Write" CommandEnum="Files_Get_Time_Write"/>
+				<controls:NEMenuItem Header="_Access" CommandEnum="Files_Get_Time_Access"/>
+				<controls:NEMenuItem Header="_Create" CommandEnum="Files_Get_Time_Create"/>
 			</MenuItem>
-			<textEdit:TextEditMenuItem Header="_Attributes" CommandEnum="Files_Get_Attributes"/>
+			<controls:NEMenuItem Header="_Attributes" CommandEnum="Files_Get_Attributes"/>
 			<Separator/>
 			<MenuItem Header="V_ersion">
-				<textEdit:TextEditMenuItem Header="_File" CommandEnum="Files_Get_Version_File"/>
-				<textEdit:TextEditMenuItem Header="_Product" CommandEnum="Files_Get_Version_Product"/>
-				<textEdit:TextEditMenuItem Header="_Assembly" CommandEnum="Files_Get_Version_Assembly"/>
+				<controls:NEMenuItem Header="_File" CommandEnum="Files_Get_Version_File"/>
+				<controls:NEMenuItem Header="_Product" CommandEnum="Files_Get_Version_Product"/>
+				<controls:NEMenuItem Header="_Assembly" CommandEnum="Files_Get_Version_Assembly"/>
 			</MenuItem>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Files_Get_Children"/>
-			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Files_Get_Descendants"/>
+			<controls:NEMenuItem Header="_Children" CommandEnum="Files_Get_Children"/>
+			<controls:NEMenuItem Header="_Descendants" CommandEnum="Files_Get_Descendants"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Version Control Status" CommandEnum="Files_Get_VersionControlStatus"/>
+			<controls:NEMenuItem Header="_Version Control Status" CommandEnum="Files_Get_VersionControlStatus"/>
 		</MenuItem>
 		<MenuItem Header="S_et">
-			<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Files_Set_Size"/>
+			<controls:NEMenuItem Header="_Size" CommandEnum="Files_Set_Size"/>
 			<MenuItem Header="_Time">
-				<textEdit:TextEditMenuItem Header="_Write" CommandEnum="Files_Set_Time_Write"/>
-				<textEdit:TextEditMenuItem Header="_Access" CommandEnum="Files_Set_Time_Access"/>
-				<textEdit:TextEditMenuItem Header="_Create" CommandEnum="Files_Set_Time_Create"/>
-				<textEdit:TextEditMenuItem Header="A_ll" CommandEnum="Files_Set_Time_All"/>
+				<controls:NEMenuItem Header="_Write" CommandEnum="Files_Set_Time_Write"/>
+				<controls:NEMenuItem Header="_Access" CommandEnum="Files_Set_Time_Access"/>
+				<controls:NEMenuItem Header="_Create" CommandEnum="Files_Set_Time_Create"/>
+				<controls:NEMenuItem Header="A_ll" CommandEnum="Files_Set_Time_All"/>
 			</MenuItem>
-			<textEdit:TextEditMenuItem Header="_Attributes" CommandEnum="Files_Set_Attributes"/>
+			<controls:NEMenuItem Header="_Attributes" CommandEnum="Files_Set_Attributes"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Find">
-			<textEdit:TextEditMenuItem Header="_Binary" CommandEnum="Files_Find_Binary"/>
-			<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Files_Find_Text"/>
-			<textEdit:TextEditMenuItem Header="_Mass Find" CommandEnum="Files_Find_MassFind"/>
+			<controls:NEMenuItem Header="_Binary" CommandEnum="Files_Find_Binary"/>
+			<controls:NEMenuItem Header="_Text" CommandEnum="Files_Find_Text"/>
+			<controls:NEMenuItem Header="_Mass Find" CommandEnum="Files_Find_MassFind"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
+		<controls:NEMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
 		<MenuItem Header="_Create">
-			<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Create_Files"/>
-			<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Create_Directories"/>
-			<textEdit:TextEditMenuItem Header="From _Expressions" CommandEnum="Files_Create_FromExpressions"/>
+			<controls:NEMenuItem Header="_Files" CommandEnum="Files_Create_Files"/>
+			<controls:NEMenuItem Header="_Directories" CommandEnum="Files_Create_Directories"/>
+			<controls:NEMenuItem Header="From _Expressions" CommandEnum="Files_Create_FromExpressions"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<MenuItem Header="_Name">
-				<textEdit:TextEditMenuItem Header="_Directory" CommandEnum="Files_Select_Name_Directory"/>
-				<textEdit:TextEditMenuItem Header="_Name" CommandEnum="Files_Select_Name_Name"/>
-				<textEdit:TextEditMenuItem Header="File Name _w/o Extension" CommandEnum="Files_Select_Name_FileNamewoExtension"/>
-				<textEdit:TextEditMenuItem Header="_Extension" CommandEnum="Files_Select_Name_Extension"/>
+				<controls:NEMenuItem Header="_Directory" CommandEnum="Files_Select_Name_Directory"/>
+				<controls:NEMenuItem Header="_Name" CommandEnum="Files_Select_Name_Name"/>
+				<controls:NEMenuItem Header="File Name _w/o Extension" CommandEnum="Files_Select_Name_FileNamewoExtension"/>
+				<controls:NEMenuItem Header="_Extension" CommandEnum="Files_Select_Name_Extension"/>
 			</MenuItem>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Files" CommandEnum="Files_Select_Files"/>
-			<textEdit:TextEditMenuItem Header="_Directories" CommandEnum="Files_Select_Directories"/>
+			<controls:NEMenuItem Header="_Files" CommandEnum="Files_Select_Files"/>
+			<controls:NEMenuItem Header="_Directories" CommandEnum="Files_Select_Directories"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Existing" CommandEnum="Files_Select_Existing"/>
-			<textEdit:TextEditMenuItem Header="Non-E_xisting" CommandEnum="Files_Select_NonExisting"/>
+			<controls:NEMenuItem Header="_Existing" CommandEnum="Files_Select_Existing"/>
+			<controls:NEMenuItem Header="Non-E_xisting" CommandEnum="Files_Select_NonExisting"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Roots" CommandEnum="Files_Select_Roots"/>
-			<textEdit:TextEditMenuItem Header="Non-R_oots" CommandEnum="Files_Select_NonRoots"/>
+			<controls:NEMenuItem Header="_Roots" CommandEnum="Files_Select_Roots"/>
+			<controls:NEMenuItem Header="Non-R_oots" CommandEnum="Files_Select_NonRoots"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Match Depth" CommandEnum="Files_Select_MatchDepth"/>
+			<controls:NEMenuItem Header="_Match Depth" CommandEnum="Files_Select_MatchDepth"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Common Ancestor" CommandEnum="Files_Select_CommonAncestor"/>
+			<controls:NEMenuItem Header="_Common Ancestor" CommandEnum="Files_Select_CommonAncestor"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="By _Version Control Status" CommandEnum="Files_Select_ByVersionControlStatus"/>
+			<controls:NEMenuItem Header="By _Version Control Status" CommandEnum="Files_Select_ByVersionControlStatus"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Hash" CommandEnum="Files_Hash"/>
-		<textEdit:TextEditMenuItem Header="S_ign" CommandEnum="Files_Sign"/>
+		<controls:NEMenuItem Header="_Hash" CommandEnum="Files_Hash"/>
+		<controls:NEMenuItem Header="S_ign" CommandEnum="Files_Sign"/>
 		<Separator/>
 		<MenuItem Header="O_perations">
-			<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>
-			<textEdit:TextEditMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
-			<textEdit:TextEditMenuItem Header="_Delete" CommandEnum="Files_Operations_Delete"/>
+			<controls:NEMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>
+			<controls:NEMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
+			<controls:NEMenuItem Header="_Delete" CommandEnum="Files_Operations_Delete"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="D_rag/Drop" CommandEnum="Files_Operations_DragDrop"/>
-			<textEdit:TextEditMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore"/>
-			<textEdit:TextEditMenuItem Header="C_ommand Prompt" CommandEnum="Files_Operations_CommandPrompt"/>
+			<controls:NEMenuItem Header="D_rag/Drop" CommandEnum="Files_Operations_DragDrop"/>
+			<controls:NEMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore"/>
+			<controls:NEMenuItem Header="C_ommand Prompt" CommandEnum="Files_Operations_CommandPrompt"/>
 			<Separator/>
 			<MenuItem Header="R_un Command">
-				<textEdit:TextEditMenuItem Header="_Parallel" CommandEnum="Files_Operations_RunCommand_Parallel"/>
-				<textEdit:TextEditMenuItem Header="_Sequential" CommandEnum="Files_Operations_RunCommand_Sequential"/>
-				<textEdit:TextEditMenuItem Header="S_hell" CommandEnum="Files_Operations_RunCommand_Shell"/>
+				<controls:NEMenuItem Header="_Parallel" CommandEnum="Files_Operations_RunCommand_Parallel"/>
+				<controls:NEMenuItem Header="_Sequential" CommandEnum="Files_Operations_RunCommand_Sequential"/>
+				<controls:NEMenuItem Header="S_hell" CommandEnum="Files_Operations_RunCommand_Shell"/>
 			</MenuItem>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="E_ncoding" CommandEnum="Files_Operations_Encoding"/>
+			<controls:NEMenuItem Header="E_ncoding" CommandEnum="Files_Operations_Encoding"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Split File" CommandEnum="Files_Operations_SplitFile"/>
-			<textEdit:TextEditMenuItem Header="Com_bine Files" CommandEnum="Files_Operations_CombineFiles"/>
+			<controls:NEMenuItem Header="_Split File" CommandEnum="Files_Operations_SplitFile"/>
+			<controls:NEMenuItem Header="Com_bine Files" CommandEnum="Files_Operations_CombineFiles"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="E_xpression">
-		<textEdit:TextEditMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>
-		<textEdit:TextEditMenuItem Header="_Copy" CommandEnum="Expression_Copy"/>
-		<textEdit:TextEditMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected"/>
-		<textEdit:TextEditMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression"/>
+		<controls:NEMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>
+		<controls:NEMenuItem Header="_Copy" CommandEnum="Expression_Copy"/>
+		<controls:NEMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected"/>
+		<controls:NEMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression"/>
 		<Separator/>
 		<MenuItem Header="_Inline Variables">
-			<textEdit:TextEditMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add"/>
-			<textEdit:TextEditMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate"/>
-			<textEdit:TextEditMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve"/>
-			<textEdit:MultiMenuItem Header="_Include In Expressions" Objects="{Binding Parent.Items, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions"/>
+			<controls:NEMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add"/>
+			<controls:NEMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate"/>
+			<controls:NEMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve"/>
+			<controls:MultiMenuItem Header="_Include In Expressions" Objects="{Binding Parent.Items, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Text">
 		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Text_Select_Trim"/>
-			<textEdit:TextEditMenuItem Header="_By Width" CommandEnum="Text_Select_ByWidth"/>
-			<textEdit:TextEditMenuItem Header="_Whole Word" CommandEnum="Text_Select_WholeWord"/>
-			<textEdit:TextEditMenuItem Header="B_ounded Word" CommandEnum="Text_Select_BoundedWord"/>
+			<controls:NEMenuItem Header="_Trim" CommandEnum="Text_Select_Trim"/>
+			<controls:NEMenuItem Header="_By Width" CommandEnum="Text_Select_ByWidth"/>
+			<controls:NEMenuItem Header="_Whole Word" CommandEnum="Text_Select_WholeWord"/>
+			<controls:NEMenuItem Header="B_ounded Word" CommandEnum="Text_Select_BoundedWord"/>
 			<MenuItem Header="Mi_n">
-				<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Text_Select_Min_Text"/>
-				<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Text_Select_Min_Length"/>
+				<controls:NEMenuItem Header="_Text" CommandEnum="Text_Select_Min_Text"/>
+				<controls:NEMenuItem Header="_Length" CommandEnum="Text_Select_Min_Length"/>
 			</MenuItem>
 			<MenuItem Header="Ma_x">
-				<textEdit:TextEditMenuItem Header="_Text" CommandEnum="Text_Select_Max_Text"/>
-				<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Text_Select_Max_Length"/>
+				<controls:NEMenuItem Header="_Text" CommandEnum="Text_Select_Max_Text"/>
+				<controls:NEMenuItem Header="_Length" CommandEnum="Text_Select_Max_Length"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Case">
-			<textEdit:TextEditMenuItem Header="_Upper" CommandEnum="Text_Case_Upper"/>
-			<textEdit:TextEditMenuItem Header="_Lower" CommandEnum="Text_Case_Lower"/>
-			<textEdit:TextEditMenuItem Header="_Proper" CommandEnum="Text_Case_Proper"/>
-			<textEdit:TextEditMenuItem Header="_Toggle" CommandEnum="Text_Case_Toggle"/>
+			<controls:NEMenuItem Header="_Upper" CommandEnum="Text_Case_Upper"/>
+			<controls:NEMenuItem Header="_Lower" CommandEnum="Text_Case_Lower"/>
+			<controls:NEMenuItem Header="_Proper" CommandEnum="Text_Case_Proper"/>
+			<controls:NEMenuItem Header="_Toggle" CommandEnum="Text_Case_Toggle"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Length" CommandEnum="Text_Length"/>
-		<textEdit:TextEditMenuItem Header="_Width" CommandEnum="Text_Width"/>
-		<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Text_Trim"/>
-		<textEdit:TextEditMenuItem Header="S_ingle Line" CommandEnum="Text_SingleLine"/>
+		<controls:NEMenuItem Header="_Length" CommandEnum="Text_Length"/>
+		<controls:NEMenuItem Header="_Width" CommandEnum="Text_Width"/>
+		<controls:NEMenuItem Header="_Trim" CommandEnum="Text_Trim"/>
+		<controls:NEMenuItem Header="S_ingle Line" CommandEnum="Text_SingleLine"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Unicode" CommandEnum="Text_Unicode"/>
-		<textEdit:TextEditMenuItem Header="_GUID" CommandEnum="Text_GUID"/>
-		<textEdit:TextEditMenuItem Header="_Random Text" CommandEnum="Text_RandomText"/>
-		<textEdit:TextEditMenuItem Header="L_orem Ipsum" CommandEnum="Text_LoremIpsum"/>
-		<textEdit:TextEditMenuItem Header="Re_verse RegEx" CommandEnum="Text_ReverseRegEx"/>
-		<textEdit:TextEditMenuItem Header="_First Distinct" CommandEnum="Text_FirstDistinct"/>
+		<controls:NEMenuItem Header="_Unicode" CommandEnum="Text_Unicode"/>
+		<controls:NEMenuItem Header="_GUID" CommandEnum="Text_GUID"/>
+		<controls:NEMenuItem Header="_Random Text" CommandEnum="Text_RandomText"/>
+		<controls:NEMenuItem Header="L_orem Ipsum" CommandEnum="Text_LoremIpsum"/>
+		<controls:NEMenuItem Header="Re_verse RegEx" CommandEnum="Text_ReverseRegEx"/>
+		<controls:NEMenuItem Header="_First Distinct" CommandEnum="Text_FirstDistinct"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="R_epeat Count" CommandEnum="Text_RepeatCount"/>
-		<textEdit:TextEditMenuItem Header="Re_peat Index" CommandEnum="Text_RepeatIndex"/>
+		<controls:NEMenuItem Header="R_epeat Count" CommandEnum="Text_RepeatCount"/>
+		<controls:NEMenuItem Header="Re_peat Index" CommandEnum="Text_RepeatIndex"/>
 	</MenuItem>
 	<MenuItem Header="_Numeric">
 		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="Mi_n" CommandEnum="Numeric_Select_Min"/>
-			<textEdit:TextEditMenuItem Header="Ma_x" CommandEnum="Numeric_Select_Max"/>
+			<controls:NEMenuItem Header="Mi_n" CommandEnum="Numeric_Select_Min"/>
+			<controls:NEMenuItem Header="Ma_x" CommandEnum="Numeric_Select_Max"/>
 			<MenuItem Header="_Fraction">
-				<textEdit:TextEditMenuItem Header="_Whole" CommandEnum="Numeric_Select_Fraction_Whole"/>
-				<textEdit:TextEditMenuItem Header="_Fraction" CommandEnum="Numeric_Select_Fraction_Fraction"/>
+				<controls:NEMenuItem Header="_Whole" CommandEnum="Numeric_Select_Fraction_Whole"/>
+				<controls:NEMenuItem Header="_Fraction" CommandEnum="Numeric_Select_Fraction_Fraction"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Hex">
-			<textEdit:TextEditMenuItem Header="_To Hex" CommandEnum="Numeric_Hex_ToHex"/>
-			<textEdit:TextEditMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex"/>
+			<controls:NEMenuItem Header="_To Hex" CommandEnum="Numeric_Hex_ToHex"/>
+			<controls:NEMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex"/>
 		</MenuItem>
-		<textEdit:TextEditMenuItem Header="Con_vert Base" CommandEnum="Numeric_ConvertBase"/>
+		<controls:NEMenuItem Header="Con_vert Base" CommandEnum="Numeric_ConvertBase"/>
 		<Separator/>
 		<MenuItem Header="S_eries">
-			<textEdit:TextEditMenuItem Header="_Zero Based" CommandEnum="Numeric_Series_ZeroBased"/>
-			<textEdit:TextEditMenuItem Header="_One Based" CommandEnum="Numeric_Series_OneBased"/>
-			<textEdit:TextEditMenuItem Header="_Linear" CommandEnum="Numeric_Series_Linear"/>
-			<textEdit:TextEditMenuItem Header="_Geometric" CommandEnum="Numeric_Series_Geometric"/>
+			<controls:NEMenuItem Header="_Zero Based" CommandEnum="Numeric_Series_ZeroBased"/>
+			<controls:NEMenuItem Header="_One Based" CommandEnum="Numeric_Series_OneBased"/>
+			<controls:NEMenuItem Header="_Linear" CommandEnum="Numeric_Series_Linear"/>
+			<controls:NEMenuItem Header="_Geometric" CommandEnum="Numeric_Series_Geometric"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="S_cale" CommandEnum="Numeric_Scale"/>
+		<controls:NEMenuItem Header="S_cale" CommandEnum="Numeric_Scale"/>
 		<MenuItem Header="A_dd">
-			<textEdit:TextEditMenuItem Header="_Sum" CommandEnum="Numeric_Add_Sum"/>
-			<textEdit:TextEditMenuItem Header="_Forward Sum" CommandEnum="Numeric_Add_ForwardSum"/>
-			<textEdit:TextEditMenuItem Header="_Reverse Sum" CommandEnum="Numeric_Add_ReverseSum"/>
-			<textEdit:TextEditMenuItem Header="Undo F_orward Sum" CommandEnum="Numeric_Add_UndoForwardSum"/>
-			<textEdit:TextEditMenuItem Header="Undo R_everse Sum" CommandEnum="Numeric_Add_UndoReverseSum"/>
-			<textEdit:TextEditMenuItem Header="_Increment" CommandEnum="Numeric_Add_Increment"/>
-			<textEdit:TextEditMenuItem Header="_Decrement" CommandEnum="Numeric_Add_Decrement"/>
-			<textEdit:TextEditMenuItem Header="_Add Clipboard" CommandEnum="Numeric_Add_AddClipboard"/>
-			<textEdit:TextEditMenuItem Header="S_ubtract Clipboard" CommandEnum="Numeric_Add_SubtractClipboard"/>
+			<controls:NEMenuItem Header="_Sum" CommandEnum="Numeric_Add_Sum"/>
+			<controls:NEMenuItem Header="_Forward Sum" CommandEnum="Numeric_Add_ForwardSum"/>
+			<controls:NEMenuItem Header="_Reverse Sum" CommandEnum="Numeric_Add_ReverseSum"/>
+			<controls:NEMenuItem Header="Undo F_orward Sum" CommandEnum="Numeric_Add_UndoForwardSum"/>
+			<controls:NEMenuItem Header="Undo R_everse Sum" CommandEnum="Numeric_Add_UndoReverseSum"/>
+			<controls:NEMenuItem Header="_Increment" CommandEnum="Numeric_Add_Increment"/>
+			<controls:NEMenuItem Header="_Decrement" CommandEnum="Numeric_Add_Decrement"/>
+			<controls:NEMenuItem Header="_Add Clipboard" CommandEnum="Numeric_Add_AddClipboard"/>
+			<controls:NEMenuItem Header="S_ubtract Clipboard" CommandEnum="Numeric_Add_SubtractClipboard"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Fraction">
-			<textEdit:TextEditMenuItem Header="_Whole" CommandEnum="Numeric_Fraction_Whole"/>
-			<textEdit:TextEditMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction_Fraction"/>
+			<controls:NEMenuItem Header="_Whole" CommandEnum="Numeric_Fraction_Whole"/>
+			<controls:NEMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction_Fraction"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Simplify" CommandEnum="Numeric_Fraction_Simplify"/>
+			<controls:NEMenuItem Header="_Simplify" CommandEnum="Numeric_Fraction_Simplify"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="A_bsolute" CommandEnum="Numeric_Absolute"/>
-		<textEdit:TextEditMenuItem Header="F_loor" CommandEnum="Numeric_Floor"/>
-		<textEdit:TextEditMenuItem Header="Ceili_ng" CommandEnum="Numeric_Ceiling"/>
-		<textEdit:TextEditMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
-		<textEdit:TextEditMenuItem Header="L_imit" CommandEnum="Numeric_Limit"/>
-		<textEdit:TextEditMenuItem Header="C_ycle" CommandEnum="Numeric_Cycle"/>
+		<controls:NEMenuItem Header="A_bsolute" CommandEnum="Numeric_Absolute"/>
+		<controls:NEMenuItem Header="F_loor" CommandEnum="Numeric_Floor"/>
+		<controls:NEMenuItem Header="Ceili_ng" CommandEnum="Numeric_Ceiling"/>
+		<controls:NEMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
+		<controls:NEMenuItem Header="L_imit" CommandEnum="Numeric_Limit"/>
+		<controls:NEMenuItem Header="C_ycle" CommandEnum="Numeric_Cycle"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Trim" CommandEnum="Numeric_Trim"/>
+		<controls:NEMenuItem Header="_Trim" CommandEnum="Numeric_Trim"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="F_actor" CommandEnum="Numeric_Factor"/>
+		<controls:NEMenuItem Header="F_actor" CommandEnum="Numeric_Factor"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber"/>
-		<textEdit:TextEditMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
-		<textEdit:TextEditMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues"/>
+		<controls:NEMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber"/>
+		<controls:NEMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
+		<controls:NEMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues"/>
 	</MenuItem>
 	<MenuItem Header="_Date/Time">
-		<textEdit:TextEditMenuItem Header="_Now" CommandEnum="DateTime_Now"/>
-		<textEdit:TextEditMenuItem Header="_Utc Now" CommandEnum="DateTime_UtcNow"/>
-		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
+		<controls:NEMenuItem Header="_Now" CommandEnum="DateTime_Now"/>
+		<controls:NEMenuItem Header="_Utc Now" CommandEnum="DateTime_UtcNow"/>
+		<controls:NEMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
 	</MenuItem>
 	<MenuItem Header="Ima_ge">
-		<textEdit:TextEditMenuItem Header="_Grab Color" CommandEnum="Image_GrabColor"/>
-		<textEdit:TextEditMenuItem Header="Grab I_mage" CommandEnum="Image_GrabImage"/>
-		<textEdit:TextEditMenuItem Header="A_djust Color" CommandEnum="Image_AdjustColor"/>
+		<controls:NEMenuItem Header="_Grab Color" CommandEnum="Image_GrabColor"/>
+		<controls:NEMenuItem Header="Grab I_mage" CommandEnum="Image_GrabImage"/>
+		<controls:NEMenuItem Header="A_djust Color" CommandEnum="Image_AdjustColor"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Add Color" CommandEnum="Image_AddColor"/>
-		<textEdit:TextEditMenuItem Header="_Overlay Color" CommandEnum="Image_OverlayColor"/>
+		<controls:NEMenuItem Header="_Add Color" CommandEnum="Image_AddColor"/>
+		<controls:NEMenuItem Header="_Overlay Color" CommandEnum="Image_OverlayColor"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Size" CommandEnum="Image_Size"/>
-		<textEdit:TextEditMenuItem Header="_Crop" CommandEnum="Image_Crop"/>
+		<controls:NEMenuItem Header="_Size" CommandEnum="Image_Size"/>
+		<controls:NEMenuItem Header="_Crop" CommandEnum="Image_Crop"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Flip _Horizontal" CommandEnum="Image_FlipHorizontal"/>
-		<textEdit:TextEditMenuItem Header="Flip _Vertical" CommandEnum="Image_FlipVertical"/>
-		<textEdit:TextEditMenuItem Header="_Rotate" CommandEnum="Image_Rotate"/>
+		<controls:NEMenuItem Header="Flip _Horizontal" CommandEnum="Image_FlipHorizontal"/>
+		<controls:NEMenuItem Header="Flip _Vertical" CommandEnum="Image_FlipVertical"/>
+		<controls:NEMenuItem Header="_Rotate" CommandEnum="Image_Rotate"/>
 		<Separator/>
 		<MenuItem Header="G_IF">
-			<textEdit:TextEditMenuItem Header="_Animate" CommandEnum="Image_GIF_Animate"/>
-			<textEdit:TextEditMenuItem Header="_Split" CommandEnum="Image_GIF_Split"/>
+			<controls:NEMenuItem Header="_Animate" CommandEnum="Image_GIF_Animate"/>
+			<controls:NEMenuItem Header="_Split" CommandEnum="Image_GIF_Split"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
-		<textEdit:TextEditMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>
-		<textEdit:TextEditMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
+		<controls:NEMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>
+		<controls:NEMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Te_xt To Table" CommandEnum="Table_TextToTable"/>
-		<textEdit:TextEditMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
+		<controls:NEMenuItem Header="Te_xt To Table" CommandEnum="Table_TextToTable"/>
+		<controls:NEMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
 		<MenuItem Header="Re_gion Selections To Table">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Table_RegionSelectionsToTable_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Table_RegionSelectionsToTable_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Table_RegionSelectionsToTable_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Table_RegionSelectionsToTable_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Table_RegionSelectionsToTable_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Table_RegionSelectionsToTable_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Table_RegionSelectionsToTable_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Table_RegionSelectionsToTable_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Table_RegionSelectionsToTable_Region9"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Table_RegionSelectionsToTable_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Table_RegionSelectionsToTable_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Table_RegionSelectionsToTable_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Table_RegionSelectionsToTable_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Table_RegionSelectionsToTable_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Table_RegionSelectionsToTable_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Table_RegionSelectionsToTable_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Table_RegionSelectionsToTable_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Table_RegionSelectionsToTable_Region9"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Ed_it Table" CommandEnum="Table_EditTable"/>
-		<textEdit:TextEditMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
-		<textEdit:TextEditMenuItem Header="Add _Row" CommandEnum="Table_AddRow"/>
-		<textEdit:TextEditMenuItem Header="_Add Column" CommandEnum="Table_AddColumn"/>
+		<controls:NEMenuItem Header="Ed_it Table" CommandEnum="Table_EditTable"/>
+		<controls:NEMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
+		<controls:NEMenuItem Header="Add _Row" CommandEnum="Table_AddRow"/>
+		<controls:NEMenuItem Header="_Add Column" CommandEnum="Table_AddColumn"/>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="Rows By _Expression" CommandEnum="Table_Select_RowsByExpression"/>
+			<controls:NEMenuItem Header="Rows By _Expression" CommandEnum="Table_Select_RowsByExpression"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Set J_oin Source" CommandEnum="Table_SetJoinSource"/>
-		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Table_Join"/>
+		<controls:NEMenuItem Header="Set J_oin Source" CommandEnum="Table_SetJoinSource"/>
+		<controls:NEMenuItem Header="_Join" CommandEnum="Table_Join"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Transpose" CommandEnum="Table_Transpose"/>
+		<controls:NEMenuItem Header="_Transpose" CommandEnum="Table_Transpose"/>
 		<Separator/>
 		<MenuItem Header="_Database">
-			<textEdit:TextEditMenuItem Header="Generate _Inserts" CommandEnum="Table_Database_GenerateInserts"/>
-			<textEdit:TextEditMenuItem Header="Generate _Updates" CommandEnum="Table_Database_GenerateUpdates"/>
-			<textEdit:TextEditMenuItem Header="Generate _Deletes" CommandEnum="Table_Database_GenerateDeletes"/>
+			<controls:NEMenuItem Header="Generate _Inserts" CommandEnum="Table_Database_GenerateInserts"/>
+			<controls:NEMenuItem Header="Generate _Updates" CommandEnum="Table_Database_GenerateUpdates"/>
+			<controls:NEMenuItem Header="Generate _Deletes" CommandEnum="Table_Database_GenerateDeletes"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Position">
 		<MenuItem Header="_Goto">
-			<textEdit:TextEditMenuItem Header="_Lines" CommandEnum="Position_Goto_Lines"/>
-			<textEdit:TextEditMenuItem Header="_Columns" CommandEnum="Position_Goto_Columns"/>
-			<textEdit:TextEditMenuItem Header="_Indexes" CommandEnum="Position_Goto_Indexes"/>
-			<textEdit:TextEditMenuItem Header="_Positions" CommandEnum="Position_Goto_Positions"/>
+			<controls:NEMenuItem Header="_Lines" CommandEnum="Position_Goto_Lines"/>
+			<controls:NEMenuItem Header="_Columns" CommandEnum="Position_Goto_Columns"/>
+			<controls:NEMenuItem Header="_Indexes" CommandEnum="Position_Goto_Indexes"/>
+			<controls:NEMenuItem Header="_Positions" CommandEnum="Position_Goto_Positions"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Files/Lines" CommandEnum="Position_Goto_FilesLines"/>
+			<controls:NEMenuItem Header="_Files/Lines" CommandEnum="Position_Goto_FilesLines"/>
 		</MenuItem>
 		<MenuItem Header="_Copy">
-			<textEdit:TextEditMenuItem Header="_Lines" CommandEnum="Position_Copy_Lines"/>
-			<textEdit:TextEditMenuItem Header="_Columns" CommandEnum="Position_Copy_Columns"/>
-			<textEdit:TextEditMenuItem Header="_Indexes" CommandEnum="Position_Copy_Indexes"/>
-			<textEdit:TextEditMenuItem Header="_Positions" CommandEnum="Position_Copy_Positions"/>
+			<controls:NEMenuItem Header="_Lines" CommandEnum="Position_Copy_Lines"/>
+			<controls:NEMenuItem Header="_Columns" CommandEnum="Position_Copy_Columns"/>
+			<controls:NEMenuItem Header="_Indexes" CommandEnum="Position_Copy_Indexes"/>
+			<controls:NEMenuItem Header="_Positions" CommandEnum="Position_Copy_Positions"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
-			<textEdit:TextEditMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension"/>
-			<textEdit:MultiMenuItem Header="_None" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.None}" CommandEnum="Content_Type_None"/>
-			<textEdit:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
-			<textEdit:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
-			<textEdit:MultiMenuItem Header="C_++" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus"/>
-			<textEdit:MultiMenuItem Header="C_#" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
-			<textEdit:MultiMenuItem Header="_CSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
-			<textEdit:MultiMenuItem Header="_Exact Columns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns"/>
-			<textEdit:MultiMenuItem Header="_HTML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
-			<textEdit:MultiMenuItem Header="_JSON" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
-			<textEdit:MultiMenuItem Header="_SQL" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.SQL}" CommandEnum="Content_Type_SQL"/>
-			<textEdit:MultiMenuItem Header="_TSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
-			<textEdit:MultiMenuItem Header="_XML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.XML}" CommandEnum="Content_Type_XML"/>
+			<controls:NEMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension"/>
+			<controls:MultiMenuItem Header="_None" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.None}" CommandEnum="Content_Type_None"/>
+			<controls:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
+			<controls:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
+			<controls:MultiMenuItem Header="C_++" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus"/>
+			<controls:MultiMenuItem Header="C_#" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
+			<controls:MultiMenuItem Header="_CSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
+			<controls:MultiMenuItem Header="_Exact Columns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns"/>
+			<controls:MultiMenuItem Header="_HTML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
+			<controls:MultiMenuItem Header="_JSON" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
+			<controls:MultiMenuItem Header="_SQL" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.SQL}" CommandEnum="Content_Type_SQL"/>
+			<controls:MultiMenuItem Header="_TSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
+			<controls:MultiMenuItem Header="_XML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static content:Parser+ParserType.XML}" CommandEnum="Content_Type_XML"/>
 		</MenuItem>
-		<textEdit:MultiMenuItem Header="_Highlight Syntax" Objects="{Binding Parent.Items, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax"/>
-		<textEdit:MultiMenuItem Header="_Strict Parsing" Objects="{Binding Parent.Items, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing"/>
+		<controls:MultiMenuItem Header="_Highlight Syntax" Objects="{Binding Parent.Items, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax"/>
+		<controls:MultiMenuItem Header="_Strict Parsing" Objects="{Binding Parent.Items, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Re_format" CommandEnum="Content_Reformat"/>
+		<controls:NEMenuItem Header="Re_format" CommandEnum="Content_Reformat"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="C_omment" CommandEnum="Content_Comment"/>
-		<textEdit:TextEditMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment"/>
+		<controls:NEMenuItem Header="C_omment" CommandEnum="Content_Comment"/>
+		<controls:NEMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="To_ggle Position" CommandEnum="Content_TogglePosition"/>
+		<controls:NEMenuItem Header="To_ggle Position" CommandEnum="Content_TogglePosition"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="Cu_rrent" CommandEnum="Content_Current"/>
-		<textEdit:TextEditMenuItem Header="_Parent" CommandEnum="Content_Parent"/>
-		<textEdit:TextEditMenuItem Header="A_ncestor" CommandEnum="Content_Ancestor"/>
-		<textEdit:TextEditMenuItem Header="_Attributes" CommandEnum="Content_Attributes"/>
-		<textEdit:TextEditMenuItem Header="_With Attribute" CommandEnum="Content_WithAttribute"/>
+		<controls:NEMenuItem Header="Cu_rrent" CommandEnum="Content_Current"/>
+		<controls:NEMenuItem Header="_Parent" CommandEnum="Content_Parent"/>
+		<controls:NEMenuItem Header="A_ncestor" CommandEnum="Content_Ancestor"/>
+		<controls:NEMenuItem Header="_Attributes" CommandEnum="Content_Attributes"/>
+		<controls:NEMenuItem Header="_With Attribute" CommandEnum="Content_WithAttribute"/>
 		<MenuItem Header="_Children">
-			<textEdit:TextEditMenuItem Header="_Children" CommandEnum="Content_Children_Children"/>
-			<textEdit:TextEditMenuItem Header="_Self And Children" CommandEnum="Content_Children_SelfAndChildren"/>
-			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Children_First"/>
-			<textEdit:TextEditMenuItem Header="_With Attribute" CommandEnum="Content_Children_WithAttribute"/>
+			<controls:NEMenuItem Header="_Children" CommandEnum="Content_Children_Children"/>
+			<controls:NEMenuItem Header="_Self And Children" CommandEnum="Content_Children_SelfAndChildren"/>
+			<controls:NEMenuItem Header="_First" CommandEnum="Content_Children_First"/>
+			<controls:NEMenuItem Header="_With Attribute" CommandEnum="Content_Children_WithAttribute"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
-			<textEdit:TextEditMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants"/>
-			<textEdit:TextEditMenuItem Header="_Self And Descendants" CommandEnum="Content_Descendants_SelfAndDescendants"/>
-			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Content_Descendants_First"/>
-			<textEdit:TextEditMenuItem Header="_With Attribute" CommandEnum="Content_Descendants_WithAttribute"/>
+			<controls:NEMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants"/>
+			<controls:NEMenuItem Header="_Self And Descendants" CommandEnum="Content_Descendants_SelfAndDescendants"/>
+			<controls:NEMenuItem Header="_First" CommandEnum="Content_Descendants_First"/>
+			<controls:NEMenuItem Header="_With Attribute" CommandEnum="Content_Descendants_WithAttribute"/>
 		</MenuItem>
 		<MenuItem Header="Na_vigate">
-			<textEdit:TextEditMenuItem Header="_Up" CommandEnum="Content_Navigate_Up"/>
-			<textEdit:TextEditMenuItem Header="_Down" CommandEnum="Content_Navigate_Down"/>
-			<textEdit:TextEditMenuItem Header="_Left" CommandEnum="Content_Navigate_Left"/>
-			<textEdit:TextEditMenuItem Header="_Right" CommandEnum="Content_Navigate_Right"/>
+			<controls:NEMenuItem Header="_Up" CommandEnum="Content_Navigate_Up"/>
+			<controls:NEMenuItem Header="_Down" CommandEnum="Content_Navigate_Down"/>
+			<controls:NEMenuItem Header="_Left" CommandEnum="Content_Navigate_Left"/>
+			<controls:NEMenuItem Header="_Right" CommandEnum="Content_Navigate_Right"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="_Home" CommandEnum="Content_Navigate_Home"/>
-			<textEdit:TextEditMenuItem Header="_End" CommandEnum="Content_Navigate_End"/>
-			<textEdit:TextEditMenuItem Header="_PgUp" CommandEnum="Content_Navigate_PgUp"/>
-			<textEdit:TextEditMenuItem Header="P_gDn" CommandEnum="Content_Navigate_PgDn"/>
+			<controls:NEMenuItem Header="_Home" CommandEnum="Content_Navigate_Home"/>
+			<controls:NEMenuItem Header="_End" CommandEnum="Content_Navigate_End"/>
+			<controls:NEMenuItem Header="_PgUp" CommandEnum="Content_Navigate_PgUp"/>
+			<controls:NEMenuItem Header="P_gDn" CommandEnum="Content_Navigate_PgDn"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
-			<textEdit:TextEditMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
+			<controls:NEMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
+			<controls:NEMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
 		</MenuItem>
-		<textEdit:MultiMenuItem Header="_Keep Selections" Objects="{Binding Parent.Items, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections"/>
+		<controls:MultiMenuItem Header="_Keep Selections" Objects="{Binding Parent.Items, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections"/>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">
-		<textEdit:TextEditMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL"/>
+		<controls:NEMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
-		<textEdit:TextEditMenuItem Header="Fetch _Hex" CommandEnum="Network_FetchHex"/>
-		<textEdit:TextEditMenuItem Header="Fetch F_ile" CommandEnum="Network_FetchFile"/>
-		<textEdit:TextEditMenuItem Header="Fetch _Stream" CommandEnum="Network_FetchStream"/>
-		<textEdit:TextEditMenuItem Header="Fetch Pla_ylist" CommandEnum="Network_FetchPlaylist"/>
+		<controls:NEMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
+		<controls:NEMenuItem Header="Fetch _Hex" CommandEnum="Network_FetchHex"/>
+		<controls:NEMenuItem Header="Fetch F_ile" CommandEnum="Network_FetchFile"/>
+		<controls:NEMenuItem Header="Fetch _Stream" CommandEnum="Network_FetchStream"/>
+		<controls:NEMenuItem Header="Fetch Pla_ylist" CommandEnum="Network_FetchPlaylist"/>
 		<Separator/>
 		<MenuItem Header="_Lookup">
-			<textEdit:TextEditMenuItem Header="_IP" CommandEnum="Network_Lookup_IP"/>
-			<textEdit:TextEditMenuItem Header="_HostName" CommandEnum="Network_Lookup_HostName"/>
+			<controls:NEMenuItem Header="_IP" CommandEnum="Network_Lookup_IP"/>
+			<controls:NEMenuItem Header="_HostName" CommandEnum="Network_Lookup_HostName"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="A_dapters Info" CommandEnum="Network_AdaptersInfo"/>
+		<controls:NEMenuItem Header="A_dapters Info" CommandEnum="Network_AdaptersInfo"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Ping" CommandEnum="Network_Ping"/>
-		<textEdit:TextEditMenuItem Header="S_can Ports" CommandEnum="Network_ScanPorts"/>
+		<controls:NEMenuItem Header="_Ping" CommandEnum="Network_Ping"/>
+		<controls:NEMenuItem Header="S_can Ports" CommandEnum="Network_ScanPorts"/>
 	</MenuItem>
 	<MenuItem Header="D_atabase">
-		<textEdit:TextEditMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
-		<textEdit:TextEditMenuItem Header="Execute _Query" CommandEnum="Database_ExecuteQuery"/>
+		<controls:NEMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
+		<controls:NEMenuItem Header="Execute _Query" CommandEnum="Database_ExecuteQuery"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Examine" CommandEnum="Database_Examine"/>
-		<textEdit:TextEditMenuItem Header="_Get Sproc" CommandEnum="Database_GetSproc"/>
+		<controls:NEMenuItem Header="_Examine" CommandEnum="Database_Examine"/>
+		<controls:NEMenuItem Header="_Get Sproc" CommandEnum="Database_GetSproc"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">
-			<textEdit:TextEditMenuItem Header="_Keys (Case Sensitive)" CommandEnum="Keys_Set_KeysCaseSensitive"/>
-			<textEdit:TextEditMenuItem Header="K_eys (Case Insensitive)" CommandEnum="Keys_Set_KeysCaseInsensitive"/>
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Set_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Set_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Set_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Set_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Set_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Set_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Set_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Set_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Set_Values9"/>
+			<controls:NEMenuItem Header="_Keys (Case Sensitive)" CommandEnum="Keys_Set_KeysCaseSensitive"/>
+			<controls:NEMenuItem Header="K_eys (Case Insensitive)" CommandEnum="Keys_Set_KeysCaseInsensitive"/>
+			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Set_Values1"/>
+			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Set_Values2"/>
+			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Set_Values3"/>
+			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Set_Values4"/>
+			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Set_Values5"/>
+			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Set_Values6"/>
+			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Set_Values7"/>
+			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Set_Values8"/>
+			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Set_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Add">
-			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Add_Keys"/>
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Add_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Add_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Add_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Add_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Add_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Add_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Add_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Add_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Add_Values9"/>
+			<controls:NEMenuItem Header="_Keys" CommandEnum="Keys_Add_Keys"/>
+			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Add_Values1"/>
+			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Add_Values2"/>
+			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Add_Values3"/>
+			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Add_Values4"/>
+			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Add_Values5"/>
+			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Add_Values6"/>
+			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Add_Values7"/>
+			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Add_Values8"/>
+			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Add_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Remove">
-			<textEdit:TextEditMenuItem Header="_Keys" CommandEnum="Keys_Remove_Keys"/>
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Remove_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Remove_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Remove_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Remove_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Remove_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Remove_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Remove_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Remove_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Remove_Values9"/>
+			<controls:NEMenuItem Header="_Keys" CommandEnum="Keys_Remove_Keys"/>
+			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Remove_Values1"/>
+			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Remove_Values2"/>
+			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Remove_Values3"/>
+			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Remove_Values4"/>
+			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Remove_Values5"/>
+			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Remove_Values6"/>
+			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Remove_Values7"/>
+			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Remove_Values8"/>
+			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Remove_Values9"/>
 		</MenuItem>
 		<MenuItem Header="R_eplace">
-			<textEdit:TextEditMenuItem Header="Values _1" CommandEnum="Keys_Replace_Values1"/>
-			<textEdit:TextEditMenuItem Header="Values _2" CommandEnum="Keys_Replace_Values2"/>
-			<textEdit:TextEditMenuItem Header="Values _3" CommandEnum="Keys_Replace_Values3"/>
-			<textEdit:TextEditMenuItem Header="Values _4" CommandEnum="Keys_Replace_Values4"/>
-			<textEdit:TextEditMenuItem Header="Values _5" CommandEnum="Keys_Replace_Values5"/>
-			<textEdit:TextEditMenuItem Header="Values _6" CommandEnum="Keys_Replace_Values6"/>
-			<textEdit:TextEditMenuItem Header="Values _7" CommandEnum="Keys_Replace_Values7"/>
-			<textEdit:TextEditMenuItem Header="Values _8" CommandEnum="Keys_Replace_Values8"/>
-			<textEdit:TextEditMenuItem Header="Values _9" CommandEnum="Keys_Replace_Values9"/>
+			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Replace_Values1"/>
+			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Replace_Values2"/>
+			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Replace_Values3"/>
+			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Replace_Values4"/>
+			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Replace_Values5"/>
+			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Replace_Values6"/>
+			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Replace_Values7"/>
+			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Replace_Values8"/>
+			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Replace_Values9"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Select">
-		<textEdit:TextEditMenuItem Header="_All" CommandEnum="Select_All"/>
-		<textEdit:TextEditMenuItem Header="_Nothing" CommandEnum="Select_Nothing"/>
+		<controls:NEMenuItem Header="_All" CommandEnum="Select_All"/>
+		<controls:NEMenuItem Header="_Nothing" CommandEnum="Select_Nothing"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
-		<textEdit:TextEditMenuItem Header="L_ines" CommandEnum="Select_Lines"/>
-		<textEdit:TextEditMenuItem Header="_Whole Lines" CommandEnum="Select_WholeLines"/>
-		<textEdit:TextEditMenuItem Header="Re_ctangle" CommandEnum="Select_Rectangle"/>
+		<controls:NEMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
+		<controls:NEMenuItem Header="L_ines" CommandEnum="Select_Lines"/>
+		<controls:NEMenuItem Header="_Whole Lines" CommandEnum="Select_WholeLines"/>
+		<controls:NEMenuItem Header="Re_ctangle" CommandEnum="Select_Rectangle"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="In_vert" CommandEnum="Select_Invert"/>
-		<textEdit:TextEditMenuItem Header="_Join" CommandEnum="Select_Join"/>
+		<controls:NEMenuItem Header="In_vert" CommandEnum="Select_Invert"/>
+		<controls:NEMenuItem Header="_Join" CommandEnum="Select_Join"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
-		<textEdit:TextEditMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>
+		<controls:NEMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
+		<controls:NEMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
+		<controls:NEMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
 		<Separator/>
 		<MenuItem Header="_Repeats">
-			<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Repeats_Unique"/>
-			<textEdit:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_Duplicates"/>
+			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_Repeats_Unique"/>
+			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_Duplicates"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_MatchPrevious"/>
-			<textEdit:TextEditMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_NonMatchPrevious"/>
+			<controls:NEMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_MatchPrevious"/>
+			<controls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_NonMatchPrevious"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="R_epeated Lines" CommandEnum="Select_Repeats_RepeatedLines"/>
-			<textEdit:TextEditMenuItem Header="By _Count" CommandEnum="Select_Repeats_ByCount"/>
+			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_Repeats_RepeatedLines"/>
+			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_Repeats_ByCount"/>
 			<Separator/>
 			<MenuItem Header="C_ase Insensitive">
-				<textEdit:TextEditMenuItem Header="_Unique" CommandEnum="Select_Repeats_CaseInsensitive_Unique"/>
-				<textEdit:TextEditMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_CaseInsensitive_Duplicates"/>
+				<controls:NEMenuItem Header="_Unique" CommandEnum="Select_Repeats_CaseInsensitive_Unique"/>
+				<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_CaseInsensitive_Duplicates"/>
 				<Separator/>
-				<textEdit:TextEditMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_CaseInsensitive_MatchPrevious"/>
-				<textEdit:TextEditMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_CaseInsensitive_NonMatchPrevious"/>
+				<controls:NEMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_CaseInsensitive_MatchPrevious"/>
+				<controls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_CaseInsensitive_NonMatchPrevious"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="S_plit" CommandEnum="Select_Split"/>
+		<controls:NEMenuItem Header="S_plit" CommandEnum="Select_Split"/>
 		<Separator/>
 		<MenuItem Header="_Selection">
-			<textEdit:TextEditMenuItem Header="_First" CommandEnum="Select_Selection_First"/>
-			<textEdit:TextEditMenuItem Header="Center _Vertically" CommandEnum="Select_Selection_CenterVertically"/>
-			<textEdit:TextEditMenuItem Header="_Center" CommandEnum="Select_Selection_Center"/>
-			<textEdit:TextEditMenuItem Header="_Toggle Anchor" CommandEnum="Select_Selection_ToggleAnchor"/>
-			<textEdit:TextEditMenuItem Header="_Next" CommandEnum="Select_Selection_Next"/>
-			<textEdit:TextEditMenuItem Header="_Previous" CommandEnum="Select_Selection_Previous"/>
-			<textEdit:TextEditMenuItem Header="_Single" CommandEnum="Select_Selection_Single"/>
-			<textEdit:TextEditMenuItem Header="_Remove" CommandEnum="Select_Selection_Remove"/>
-			<textEdit:TextEditMenuItem Header="Remove _Before Current" CommandEnum="Select_Selection_RemoveBeforeCurrent"/>
-			<textEdit:TextEditMenuItem Header="Remove _After Current" CommandEnum="Select_Selection_RemoveAfterCurrent"/>
+			<controls:NEMenuItem Header="_First" CommandEnum="Select_Selection_First"/>
+			<controls:NEMenuItem Header="Center _Vertically" CommandEnum="Select_Selection_CenterVertically"/>
+			<controls:NEMenuItem Header="_Center" CommandEnum="Select_Selection_Center"/>
+			<controls:NEMenuItem Header="_Toggle Anchor" CommandEnum="Select_Selection_ToggleAnchor"/>
+			<controls:NEMenuItem Header="_Next" CommandEnum="Select_Selection_Next"/>
+			<controls:NEMenuItem Header="_Previous" CommandEnum="Select_Selection_Previous"/>
+			<controls:NEMenuItem Header="_Single" CommandEnum="Select_Selection_Single"/>
+			<controls:NEMenuItem Header="_Remove" CommandEnum="Select_Selection_Remove"/>
+			<controls:NEMenuItem Header="Remove _Before Current" CommandEnum="Select_Selection_RemoveBeforeCurrent"/>
+			<controls:NEMenuItem Header="Remove _After Current" CommandEnum="Select_Selection_RemoveAfterCurrent"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Region">
-		<textEdit:TextEditMenuItem Header="_Modify Regions" CommandEnum="Region_ModifyRegions"/>
+		<controls:NEMenuItem Header="_Modify Regions" CommandEnum="Region_ModifyRegions"/>
 		<MenuItem Header="S_et Selections">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_SetSelections_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_SetSelections_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_SetSelections_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_SetSelections_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_SetSelections_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_SetSelections_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_SetSelections_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_SetSelections_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_SetSelections_Region9"/>
-			<textEdit:TextEditMenuItem Header="_All" CommandEnum="Region_SetSelections_All"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_SetSelections_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_SetSelections_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_SetSelections_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_SetSelections_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_SetSelections_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_SetSelections_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_SetSelections_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_SetSelections_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_SetSelections_Region9"/>
+			<controls:NEMenuItem Header="_All" CommandEnum="Region_SetSelections_All"/>
 		</MenuItem>
 		<MenuItem Header="_Add Selections">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_AddSelections_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_AddSelections_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_AddSelections_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_AddSelections_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_AddSelections_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_AddSelections_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_AddSelections_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_AddSelections_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_AddSelections_Region9"/>
-			<textEdit:TextEditMenuItem Header="_All" CommandEnum="Region_AddSelections_All"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_AddSelections_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_AddSelections_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_AddSelections_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_AddSelections_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_AddSelections_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_AddSelections_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_AddSelections_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_AddSelections_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_AddSelections_Region9"/>
+			<controls:NEMenuItem Header="_All" CommandEnum="Region_AddSelections_All"/>
 		</MenuItem>
 		<MenuItem Header="_Remove Selections">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_RemoveSelections_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_RemoveSelections_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_RemoveSelections_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_RemoveSelections_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_RemoveSelections_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_RemoveSelections_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_RemoveSelections_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_RemoveSelections_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_RemoveSelections_Region9"/>
-			<textEdit:TextEditMenuItem Header="_All" CommandEnum="Region_RemoveSelections_All"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_RemoveSelections_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_RemoveSelections_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_RemoveSelections_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_RemoveSelections_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_RemoveSelections_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_RemoveSelections_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_RemoveSelections_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_RemoveSelections_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_RemoveSelections_Region9"/>
+			<controls:NEMenuItem Header="_All" CommandEnum="Region_RemoveSelections_All"/>
 		</MenuItem>
 		<MenuItem Header="Re_place Selections">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_ReplaceSelections_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_ReplaceSelections_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_ReplaceSelections_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_ReplaceSelections_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_ReplaceSelections_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_ReplaceSelections_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_ReplaceSelections_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_ReplaceSelections_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_ReplaceSelections_Region9"/>
-			<textEdit:TextEditMenuItem Header="_All" CommandEnum="Region_ReplaceSelections_All"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_ReplaceSelections_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_ReplaceSelections_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_ReplaceSelections_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_ReplaceSelections_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_ReplaceSelections_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_ReplaceSelections_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_ReplaceSelections_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_ReplaceSelections_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_ReplaceSelections_Region9"/>
+			<controls:NEMenuItem Header="_All" CommandEnum="Region_ReplaceSelections_All"/>
 		</MenuItem>
 		<MenuItem Header="_Limit To Selections">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_LimitToSelections_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_LimitToSelections_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_LimitToSelections_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_LimitToSelections_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_LimitToSelections_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_LimitToSelections_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_LimitToSelections_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_LimitToSelections_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_LimitToSelections_Region9"/>
-			<textEdit:TextEditMenuItem Header="_All" CommandEnum="Region_LimitToSelections_All"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_LimitToSelections_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_LimitToSelections_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_LimitToSelections_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_LimitToSelections_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_LimitToSelections_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_LimitToSelections_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_LimitToSelections_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_LimitToSelections_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_LimitToSelections_Region9"/>
+			<controls:NEMenuItem Header="_All" CommandEnum="Region_LimitToSelections_All"/>
 		</MenuItem>
 		<MenuItem Header="_Clear">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_Clear_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_Clear_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_Clear_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_Clear_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_Clear_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_Clear_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Clear_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Clear_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Clear_Region9"/>
-			<textEdit:TextEditMenuItem Header="_All" CommandEnum="Region_Clear_All"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_Clear_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_Clear_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_Clear_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_Clear_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_Clear_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_Clear_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_Clear_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_Clear_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_Clear_Region9"/>
+			<controls:NEMenuItem Header="_All" CommandEnum="Region_Clear_All"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="Repeat _By Selections">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_RepeatBySelections_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_RepeatBySelections_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_RepeatBySelections_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_RepeatBySelections_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_RepeatBySelections_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_RepeatBySelections_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_RepeatBySelections_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_RepeatBySelections_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_RepeatBySelections_Region9"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_RepeatBySelections_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_RepeatBySelections_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_RepeatBySelections_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_RepeatBySelections_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_RepeatBySelections_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_RepeatBySelections_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_RepeatBySelections_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_RepeatBySelections_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_RepeatBySelections_Region9"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="C_opy Enclosing Region">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_CopyEnclosingRegion_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_CopyEnclosingRegion_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_CopyEnclosingRegion_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_CopyEnclosingRegion_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_CopyEnclosingRegion_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_CopyEnclosingRegion_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegion_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegion_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegion_Region9"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_CopyEnclosingRegion_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_CopyEnclosingRegion_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_CopyEnclosingRegion_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_CopyEnclosingRegion_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_CopyEnclosingRegion_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_CopyEnclosingRegion_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegion_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegion_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegion_Region9"/>
 		</MenuItem>
 		<MenuItem Header="Copy Enclosing Region _Index">
-			<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_CopyEnclosingRegionIndex_Region1"/>
-			<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_CopyEnclosingRegionIndex_Region2"/>
-			<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_CopyEnclosingRegionIndex_Region3"/>
-			<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_CopyEnclosingRegionIndex_Region4"/>
-			<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_CopyEnclosingRegionIndex_Region5"/>
-			<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_CopyEnclosingRegionIndex_Region6"/>
-			<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegionIndex_Region7"/>
-			<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegionIndex_Region8"/>
-			<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegionIndex_Region9"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_CopyEnclosingRegionIndex_Region1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_CopyEnclosingRegionIndex_Region2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_CopyEnclosingRegionIndex_Region3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_CopyEnclosingRegionIndex_Region4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_CopyEnclosingRegionIndex_Region5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_CopyEnclosingRegionIndex_Region6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegionIndex_Region7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegionIndex_Region8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegionIndex_Region9"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Transform Selections">
 			<MenuItem Header="_Flatten">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Flatten_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Flatten_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Flatten_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Flatten_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Flatten_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Flatten_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Flatten_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Flatten_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Flatten_Region9"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Flatten_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Flatten_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Flatten_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Flatten_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Flatten_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Flatten_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Flatten_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Flatten_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Flatten_Region9"/>
 			</MenuItem>
 			<MenuItem Header="_Transpose">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Transpose_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Transpose_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Transpose_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Transpose_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Transpose_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Transpose_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Transpose_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Transpose_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Transpose_Region9"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Transpose_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Transpose_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Transpose_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Transpose_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Transpose_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Transpose_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Transpose_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Transpose_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Transpose_Region9"/>
 			</MenuItem>
 			<MenuItem Header="Rotate _Left">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_RotateLeft_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_RotateLeft_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_RotateLeft_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_RotateLeft_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_RotateLeft_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_RotateLeft_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateLeft_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateLeft_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateLeft_Region9"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_RotateLeft_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_RotateLeft_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_RotateLeft_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_RotateLeft_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_RotateLeft_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_RotateLeft_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateLeft_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateLeft_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateLeft_Region9"/>
 			</MenuItem>
 			<MenuItem Header="Rotate _Right">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_RotateRight_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_RotateRight_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_RotateRight_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_RotateRight_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_RotateRight_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_RotateRight_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateRight_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateRight_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateRight_Region9"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_RotateRight_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_RotateRight_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_RotateRight_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_RotateRight_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_RotateRight_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_RotateRight_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateRight_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateRight_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateRight_Region9"/>
 			</MenuItem>
 			<MenuItem Header="Rotate _180">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Rotate180_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Rotate180_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Rotate180_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Rotate180_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Rotate180_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Rotate180_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Rotate180_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Rotate180_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Rotate180_Region9"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Rotate180_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Rotate180_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Rotate180_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Rotate180_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Rotate180_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Rotate180_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Rotate180_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Rotate180_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Rotate180_Region9"/>
 			</MenuItem>
 			<MenuItem Header="Mirror _Horizontal">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region9"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region9"/>
 			</MenuItem>
 			<MenuItem Header="Mirror _Vertical">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_MirrorVertical_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_MirrorVertical_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_MirrorVertical_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_MirrorVertical_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_MirrorVertical_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_MirrorVertical_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorVertical_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorVertical_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorVertical_Region9"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_MirrorVertical_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_MirrorVertical_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_MirrorVertical_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_MirrorVertical_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_MirrorVertical_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_MirrorVertical_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorVertical_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorVertical_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorVertical_Region9"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<MenuItem Header="_Regions">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_Select_Regions_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_Select_Regions_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_Select_Regions_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_Select_Regions_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_Select_Regions_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_Select_Regions_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Select_Regions_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Select_Regions_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Select_Regions_Region9"/>
-				<textEdit:TextEditMenuItem Header="_All" CommandEnum="Region_Select_Regions_All"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_Regions_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_Regions_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_Regions_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_Regions_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_Regions_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_Regions_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_Regions_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_Regions_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_Regions_Region9"/>
+				<controls:NEMenuItem Header="_All" CommandEnum="Region_Select_Regions_All"/>
 			</MenuItem>
 			<MenuItem Header="_Enclosing Region">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_Select_EnclosingRegion_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_Select_EnclosingRegion_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_Select_EnclosingRegion_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_Select_EnclosingRegion_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_Select_EnclosingRegion_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_Select_EnclosingRegion_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Select_EnclosingRegion_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Select_EnclosingRegion_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Select_EnclosingRegion_Region9"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_EnclosingRegion_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_EnclosingRegion_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_EnclosingRegion_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_EnclosingRegion_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_EnclosingRegion_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_EnclosingRegion_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_EnclosingRegion_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_EnclosingRegion_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_EnclosingRegion_Region9"/>
 			</MenuItem>
 			<MenuItem Header="_With Enclosing Region">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_Select_WithEnclosingRegion_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_Select_WithEnclosingRegion_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_Select_WithEnclosingRegion_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_Select_WithEnclosingRegion_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_Select_WithEnclosingRegion_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_Select_WithEnclosingRegion_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Select_WithEnclosingRegion_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Select_WithEnclosingRegion_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Select_WithEnclosingRegion_Region9"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_WithEnclosingRegion_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_WithEnclosingRegion_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_WithEnclosingRegion_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_WithEnclosingRegion_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_WithEnclosingRegion_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_WithEnclosingRegion_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_WithEnclosingRegion_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_WithEnclosingRegion_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_WithEnclosingRegion_Region9"/>
 			</MenuItem>
 			<MenuItem Header="W_ithout Enclosing Region">
-				<textEdit:TextEditMenuItem Header="Region _1" CommandEnum="Region_Select_WithoutEnclosingRegion_Region1"/>
-				<textEdit:TextEditMenuItem Header="Region _2" CommandEnum="Region_Select_WithoutEnclosingRegion_Region2"/>
-				<textEdit:TextEditMenuItem Header="Region _3" CommandEnum="Region_Select_WithoutEnclosingRegion_Region3"/>
-				<textEdit:TextEditMenuItem Header="Region _4" CommandEnum="Region_Select_WithoutEnclosingRegion_Region4"/>
-				<textEdit:TextEditMenuItem Header="Region _5" CommandEnum="Region_Select_WithoutEnclosingRegion_Region5"/>
-				<textEdit:TextEditMenuItem Header="Region _6" CommandEnum="Region_Select_WithoutEnclosingRegion_Region6"/>
-				<textEdit:TextEditMenuItem Header="Region _7" CommandEnum="Region_Select_WithoutEnclosingRegion_Region7"/>
-				<textEdit:TextEditMenuItem Header="Region _8" CommandEnum="Region_Select_WithoutEnclosingRegion_Region8"/>
-				<textEdit:TextEditMenuItem Header="Region _9" CommandEnum="Region_Select_WithoutEnclosingRegion_Region9"/>
+				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_WithoutEnclosingRegion_Region1"/>
+				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_WithoutEnclosingRegion_Region2"/>
+				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_WithoutEnclosingRegion_Region3"/>
+				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_WithoutEnclosingRegion_Region4"/>
+				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_WithoutEnclosingRegion_Region5"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_WithoutEnclosingRegion_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_WithoutEnclosingRegion_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_WithoutEnclosingRegion_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_WithoutEnclosingRegion_Region9"/>
 			</MenuItem>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_View">
-		<textEdit:TextEditMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
-		<textEdit:TextEditMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={guiConverters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
-		<textEdit:TextEditMenuItem Header="C_ustom Grid" CommandEnum="View_CustomGrid"/>
+		<controls:NEMenuItem Header="_Full" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
+		<controls:NEMenuItem Header="_Grid" IsChecked="{Binding Parent.ItemTabs.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
+		<controls:NEMenuItem Header="C_ustom Grid" CommandEnum="View_CustomGrid"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
-		<textEdit:TextEditMenuItem Header="Tab _Index" CommandEnum="View_TabIndex"/>
-		<textEdit:TextEditMenuItem Header="Active Tab In_dex" CommandEnum="View_ActiveTabIndex"/>
+		<controls:NEMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
+		<controls:NEMenuItem Header="Tab _Index" CommandEnum="View_TabIndex"/>
+		<controls:NEMenuItem Header="Active Tab In_dex" CommandEnum="View_ActiveTabIndex"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="F_ont Size" CommandEnum="View_FontSize"/>
+		<controls:NEMenuItem Header="F_ont Size" CommandEnum="View_FontSize"/>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<textEdit:TextEditMenuItem Header="Tabs _With Selections" CommandEnum="View_Select_TabsWithSelections"/>
-			<textEdit:TextEditMenuItem Header="Tabs With_out Selections" CommandEnum="View_Select_TabsWithoutSelections"/>
+			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="View_Select_TabsWithSelections"/>
+			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="View_Select_TabsWithoutSelections"/>
 			<Separator/>
-			<textEdit:TextEditMenuItem Header="Tabs With Selections To _Top" CommandEnum="View_Select_TabsWithSelectionsToTop"/>
+			<controls:NEMenuItem Header="Tabs With Selections To _Top" CommandEnum="View_Select_TabsWithSelectionsToTop"/>
 		</MenuItem>
 		<MenuItem Header="_Close">
-			<textEdit:TextEditMenuItem Header="Tabs _With Selections" CommandEnum="View_Close_TabsWithSelections"/>
-			<textEdit:TextEditMenuItem Header="Tabs With_out Selections" CommandEnum="View_Close_TabsWithoutSelections"/>
-			<textEdit:TextEditMenuItem Header="_Active Tabs" CommandEnum="View_Close_ActiveTabs"/>
-			<textEdit:TextEditMenuItem Header="_Inactive Tabs" CommandEnum="View_Close_InactiveTabs"/>
+			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="View_Close_TabsWithSelections"/>
+			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="View_Close_TabsWithoutSelections"/>
+			<controls:NEMenuItem Header="_Active Tabs" CommandEnum="View_Close_ActiveTabs"/>
+			<controls:NEMenuItem Header="_Inactive Tabs" CommandEnum="View_Close_InactiveTabs"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_New Window" CommandEnum="View_NewWindow"/>
+		<controls:NEMenuItem Header="_New Window" CommandEnum="View_NewWindow"/>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="_Word List" CommandEnum="View_WordList"/>
+		<controls:NEMenuItem Header="_Word List" CommandEnum="View_WordList"/>
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">
 			<MenuItem Header="_Quick">
-				<textEdit:TextEditMenuItem Header="1" CommandEnum="Macro_Record_Quick_1"/>
-				<textEdit:TextEditMenuItem Header="2" CommandEnum="Macro_Record_Quick_2"/>
-				<textEdit:TextEditMenuItem Header="_3" CommandEnum="Macro_Record_Quick_3"/>
-				<textEdit:TextEditMenuItem Header="_4" CommandEnum="Macro_Record_Quick_4"/>
-				<textEdit:TextEditMenuItem Header="_5" CommandEnum="Macro_Record_Quick_5"/>
-				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Record_Quick_6"/>
-				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Record_Quick_7"/>
-				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Record_Quick_8"/>
-				<textEdit:TextEditMenuItem Header="_9" CommandEnum="Macro_Record_Quick_9"/>
-				<textEdit:TextEditMenuItem Header="1_0" CommandEnum="Macro_Record_Quick_10"/>
-				<textEdit:TextEditMenuItem Header="1_1" CommandEnum="Macro_Record_Quick_11"/>
-				<textEdit:TextEditMenuItem Header="1_2" CommandEnum="Macro_Record_Quick_12"/>
+				<controls:NEMenuItem Header="1" CommandEnum="Macro_Record_Quick_1"/>
+				<controls:NEMenuItem Header="2" CommandEnum="Macro_Record_Quick_2"/>
+				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Record_Quick_3"/>
+				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Record_Quick_4"/>
+				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Record_Quick_5"/>
+				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Record_Quick_6"/>
+				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Record_Quick_7"/>
+				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Record_Quick_8"/>
+				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Record_Quick_9"/>
+				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Record_Quick_10"/>
+				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Record_Quick_11"/>
+				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Record_Quick_12"/>
 			</MenuItem>
-			<textEdit:TextEditMenuItem Header="_Record" CommandEnum="Macro_Record_Record"/>
-			<textEdit:TextEditMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording"/>
+			<controls:NEMenuItem Header="_Record" CommandEnum="Macro_Record_Record"/>
+			<controls:NEMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording"/>
 		</MenuItem>
 		<MenuItem Header="_Append">
 			<MenuItem Header="_Quick">
-				<textEdit:TextEditMenuItem Header="1" CommandEnum="Macro_Append_Quick_1"/>
-				<textEdit:TextEditMenuItem Header="2" CommandEnum="Macro_Append_Quick_2"/>
-				<textEdit:TextEditMenuItem Header="_3" CommandEnum="Macro_Append_Quick_3"/>
-				<textEdit:TextEditMenuItem Header="_4" CommandEnum="Macro_Append_Quick_4"/>
-				<textEdit:TextEditMenuItem Header="_5" CommandEnum="Macro_Append_Quick_5"/>
-				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Append_Quick_6"/>
-				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Append_Quick_7"/>
-				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Append_Quick_8"/>
-				<textEdit:TextEditMenuItem Header="_9" CommandEnum="Macro_Append_Quick_9"/>
-				<textEdit:TextEditMenuItem Header="1_0" CommandEnum="Macro_Append_Quick_10"/>
-				<textEdit:TextEditMenuItem Header="1_1" CommandEnum="Macro_Append_Quick_11"/>
-				<textEdit:TextEditMenuItem Header="1_2" CommandEnum="Macro_Append_Quick_12"/>
+				<controls:NEMenuItem Header="1" CommandEnum="Macro_Append_Quick_1"/>
+				<controls:NEMenuItem Header="2" CommandEnum="Macro_Append_Quick_2"/>
+				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Append_Quick_3"/>
+				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Append_Quick_4"/>
+				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Append_Quick_5"/>
+				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Append_Quick_6"/>
+				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Append_Quick_7"/>
+				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Append_Quick_8"/>
+				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Append_Quick_9"/>
+				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Append_Quick_10"/>
+				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Append_Quick_11"/>
+				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Append_Quick_12"/>
 			</MenuItem>
-			<textEdit:TextEditMenuItem Header="_Append" CommandEnum="Macro_Append_Append"/>
+			<controls:NEMenuItem Header="_Append" CommandEnum="Macro_Append_Append"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Play">
 			<MenuItem Header="_Quick">
-				<textEdit:TextEditMenuItem Header="1" CommandEnum="Macro_Play_Quick_1"/>
-				<textEdit:TextEditMenuItem Header="2" CommandEnum="Macro_Play_Quick_2"/>
-				<textEdit:TextEditMenuItem Header="_3" CommandEnum="Macro_Play_Quick_3"/>
-				<textEdit:TextEditMenuItem Header="_4" CommandEnum="Macro_Play_Quick_4"/>
-				<textEdit:TextEditMenuItem Header="_5" CommandEnum="Macro_Play_Quick_5"/>
-				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Play_Quick_6"/>
-				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Play_Quick_7"/>
-				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Play_Quick_8"/>
-				<textEdit:TextEditMenuItem Header="_9" CommandEnum="Macro_Play_Quick_9"/>
-				<textEdit:TextEditMenuItem Header="1_0" CommandEnum="Macro_Play_Quick_10"/>
-				<textEdit:TextEditMenuItem Header="1_1" CommandEnum="Macro_Play_Quick_11"/>
-				<textEdit:TextEditMenuItem Header="1_2" CommandEnum="Macro_Play_Quick_12"/>
+				<controls:NEMenuItem Header="1" CommandEnum="Macro_Play_Quick_1"/>
+				<controls:NEMenuItem Header="2" CommandEnum="Macro_Play_Quick_2"/>
+				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Play_Quick_3"/>
+				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Play_Quick_4"/>
+				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Play_Quick_5"/>
+				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Play_Quick_6"/>
+				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Play_Quick_7"/>
+				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Play_Quick_8"/>
+				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Play_Quick_9"/>
+				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Play_Quick_10"/>
+				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Play_Quick_11"/>
+				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Play_Quick_12"/>
 			</MenuItem>
-			<textEdit:TextEditMenuItem Header="_Play" CommandEnum="Macro_Play_Play"/>
-			<textEdit:TextEditMenuItem Header="_Repeat" CommandEnum="Macro_Play_Repeat"/>
-			<textEdit:TextEditMenuItem Header="Play On Copied _Files" CommandEnum="Macro_Play_PlayOnCopiedFiles"/>
+			<controls:NEMenuItem Header="_Play" CommandEnum="Macro_Play_Play"/>
+			<controls:NEMenuItem Header="_Repeat" CommandEnum="Macro_Play_Repeat"/>
+			<controls:NEMenuItem Header="Play On Copied _Files" CommandEnum="Macro_Play_PlayOnCopiedFiles"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Open">
 			<MenuItem Header="_Quick">
-				<textEdit:TextEditMenuItem Header="1" CommandEnum="Macro_Open_Quick_1"/>
-				<textEdit:TextEditMenuItem Header="2" CommandEnum="Macro_Open_Quick_2"/>
-				<textEdit:TextEditMenuItem Header="_3" CommandEnum="Macro_Open_Quick_3"/>
-				<textEdit:TextEditMenuItem Header="_4" CommandEnum="Macro_Open_Quick_4"/>
-				<textEdit:TextEditMenuItem Header="_5" CommandEnum="Macro_Open_Quick_5"/>
-				<textEdit:TextEditMenuItem Header="_6" CommandEnum="Macro_Open_Quick_6"/>
-				<textEdit:TextEditMenuItem Header="_7" CommandEnum="Macro_Open_Quick_7"/>
-				<textEdit:TextEditMenuItem Header="_8" CommandEnum="Macro_Open_Quick_8"/>
-				<textEdit:TextEditMenuItem Header="_9" CommandEnum="Macro_Open_Quick_9"/>
-				<textEdit:TextEditMenuItem Header="1_0" CommandEnum="Macro_Open_Quick_10"/>
-				<textEdit:TextEditMenuItem Header="1_1" CommandEnum="Macro_Open_Quick_11"/>
-				<textEdit:TextEditMenuItem Header="1_2" CommandEnum="Macro_Open_Quick_12"/>
+				<controls:NEMenuItem Header="1" CommandEnum="Macro_Open_Quick_1"/>
+				<controls:NEMenuItem Header="2" CommandEnum="Macro_Open_Quick_2"/>
+				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Open_Quick_3"/>
+				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Open_Quick_4"/>
+				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Open_Quick_5"/>
+				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Open_Quick_6"/>
+				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Open_Quick_7"/>
+				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Open_Quick_8"/>
+				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Open_Quick_9"/>
+				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Open_Quick_10"/>
+				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Open_Quick_11"/>
+				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Open_Quick_12"/>
 			</MenuItem>
-			<textEdit:TextEditMenuItem Header="_Open" CommandEnum="Macro_Open_Open"/>
+			<controls:NEMenuItem Header="_Open" CommandEnum="Macro_Open_Open"/>
 		</MenuItem>
 		<Separator/>
-		<textEdit:TextEditMenuItem Header="R_epeat Last Action" CommandEnum="Macro_RepeatLastAction"/>
-		<textEdit:TextEditMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction"/>
+		<controls:NEMenuItem Header="R_epeat Last Action" CommandEnum="Macro_RepeatLastAction"/>
+		<controls:NEMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction"/>
 	</MenuItem>
-	<guiControls:WindowMenu/>
-	<guiControls:HelpMenu/>
+	<MenuItem Header="_Window">
+		<controls:NEMenuItem Header="_New Window" CommandEnum="Window_NewWindow"/>
+	</MenuItem>
+	<MenuItem Header="_Help">
+		<controls:NEMenuItem Header="_About" CommandEnum="Help_About"/>
+		<controls:NEMenuItem Header="_Update" CommandEnum="Help_Update"/>
+		<controls:NEMenuItem Header="Run _GC" CommandEnum="Help_RunGC"/>
+	</MenuItem>
 
 </Menu>

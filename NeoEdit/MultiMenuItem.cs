@@ -7,11 +7,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using NeoEdit.Controls;
 
 namespace NeoEdit.Controls
 {
-	public class MultiMenuItem : NEMenuItem<TextEditCommand>
+	public class MultiMenuItem : NEMenuItem
 	{
 		[DepProp]
 		public ObservableCollection<TextEditor> Objects { get { return UIHelper<MultiMenuItem>.GetPropValue<ObservableCollection<TextEditor>>(this); } set { UIHelper<MultiMenuItem>.SetPropValue(this, value); } }

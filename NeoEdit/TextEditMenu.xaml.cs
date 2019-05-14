@@ -2,9 +2,6 @@
 
 namespace NeoEdit
 {
-	class TextEditMenuItem : NEMenuItem<TextEditCommand> { }
-	class MultiMenuItem : Controls.MultiMenuItem { }
-
 	partial class TextEditMenu
 	{
 		[DepProp]

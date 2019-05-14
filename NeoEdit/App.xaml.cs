@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -100,13 +96,6 @@ namespace NeoEdit
 
 		public App()
 		{
-			NeoEdit.Launcher.Initialize(
-				about: () => HelpAboutDialog.Run()
-				, textEditorDiff: (fileName1, displayName1, bytes1, codePage1, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, modified2, line2, column2, shutdownEvent) => new TextEditTabs().AddDiff(fileName1, displayName1, bytes1, codePage1, Content.Parser.ParserType.None, modified1, line1, column1, fileName2, displayName2, bytes2, codePage2, Content.Parser.ParserType.None, modified2, line2, column2, shutdownEvent)
-				, textEditorFile: (fileName, displayName, bytes, encoding, modified, line, column, forceCreate, shutdownEvent) => TextEditTabs.Create(fileName, displayName, bytes, encoding, Content.Parser.ParserType.None, modified, line ?? 1, column ?? 1, null, forceCreate, shutdownEvent)
-				, update: () => Update()
-			);
-
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
 		}
 
@@ -114,74 +103,6 @@ namespace NeoEdit
 		{
 			ShowExceptionMessage(e.Exception);
 			e.Handled = true;
-		}
-
-		static void Update()
-		{
-			const string url = "https://github.com/xyandro/NeoEdit/releases/latest";
-			const string check = "https://github.com/xyandro/NeoEdit/releases/tag/";
-			const string exe = "https://github.com/xyandro/NeoEdit/releases/download/{0}/NeoEdit.exe";
-
-			var oldVersion = ((AssemblyFileVersionAttribute)typeof(App).Assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
-			string newVersion;
-
-			var request = WebRequest.Create(url) as HttpWebRequest;
-			request.AllowAutoRedirect = false;
-			using (var response = request.GetResponse() as HttpWebResponse)
-			{
-				var redirUrl = response.Headers["Location"];
-				if (!redirUrl.StartsWith(check))
-					throw new Exception("Version check failed to find latest version");
-
-				newVersion = redirUrl.Substring(check.Length);
-			}
-
-			var oldNums = oldVersion.Split('.').Select(str => int.Parse(str)).ToList();
-			var newNums = newVersion.Split('.').Select(str => int.Parse(str)).ToList();
-			if (oldNums.Count != newNums.Count)
-				throw new Exception("Version length mismatch");
-
-			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
-			if (new Message
-			{
-				Title = "Download new version?",
-				Text = newer ? $"A newer version ({newVersion}) is available.  Download it?" : $"Already up to date ({newVersion}).  Update anyway?",
-				Options = Message.OptionsEnum.YesNo,
-				DefaultAccept = newer ? Message.OptionsEnum.Yes : Message.OptionsEnum.No,
-				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() != Message.OptionsEnum.Yes)
-				return;
-
-			var oldLocation = Assembly.GetEntryAssembly().Location;
-			var newLocation = Path.Combine(Path.GetDirectoryName(oldLocation), $"{Path.GetFileNameWithoutExtension(oldLocation)}-Update{Path.GetExtension(oldLocation)}");
-
-			byte[] result = null;
-			ProgressDialog.Run(null, "Downloading new version...", (cancelled, progress) =>
-			{
-				var finished = new ManualResetEvent(false);
-				using (var client = new WebClient())
-				{
-					client.DownloadProgressChanged += (s, e) => progress(e.ProgressPercentage);
-					client.DownloadDataCompleted += (s, e) =>
-					{
-						if (!e.Cancelled)
-							result = e.Result;
-						finished.Set();
-					};
-					client.DownloadDataAsync(new Uri(string.Format(exe, newVersion)));
-					while (!finished.WaitOne(500))
-						if (cancelled())
-							client.CancelAsync();
-				}
-			});
-
-			if (result == null)
-				return;
-
-			File.WriteAllBytes(newLocation, result);
-
-			Message.Show("The program will be updated after exiting.");
-			Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
 		}
 	}
 }

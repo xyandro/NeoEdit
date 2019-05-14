@@ -681,5 +681,9 @@ namespace NeoEdit
 		Macro_Open_Open,
 		[KeyGesture(Key.OemPeriod, ModifierKeys.Control)] Macro_RepeatLastAction,
 		Macro_TimeNextAction,
+		Window_NewWindow,
+		Help_About,
+		Help_Update,
+		Help_RunGC,
 	}
 }
