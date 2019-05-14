@@ -25,7 +25,7 @@ using NeoEdit.Transform;
 
 namespace NeoEdit
 {
-	partial class TextEditor
+	partial class TextEditor : ITextEditor
 	{
 		class PreviousStruct
 		{
