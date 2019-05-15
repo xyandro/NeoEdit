@@ -1116,5 +1116,11 @@
     <Compile Include="WordSkipType.cs" />
     <Compile Include="YouTubeDL.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{41bacfec-48ae-4dcc-abc9-e45aa149784d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
 </Project>
