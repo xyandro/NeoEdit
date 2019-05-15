@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Common;
+using System.Windows.Input;
 using NeoEdit.Content;
+using NeoEdit.Controls;
 using NeoEdit.Expressions;
 using NeoEdit.Parsing;
 using NeoEdit.Transform;
@@ -24,10 +26,17 @@ namespace NeoEdit
 		bool DiffIgnoreCase { get; set; }
 		bool DiffIgnoreNumbers { get; set; }
 		bool DiffIgnoreLineEndings { get; set; }
-		Tabs TabsParent { get; }
+		int ItemOrder { get; set; }
+		bool Active { get; set; }
+		string TabLabel { get; }
+		Tabs TabsParent { get; set; }
+		bool CanClose();
+		bool CanClose(AnswerResult answer);
 		int CurrentSelection { get; set; }
+		int NumSelections { get; }
 		List<string> Clipboard { get; }
-		TextEditor DiffTarget { get; set; }
+		ITextEditor DiffTarget { get; set; }
+		bool HasSelections { get; }
 		RangeList Selections { get; }
 		void SetSelections(List<Range> selections, bool deOverlap = true);
 		RangeList Searches { get; }
@@ -40,12 +49,15 @@ namespace NeoEdit
 		DateTime fileLastWrite { get; set; }
 		DragType doDrag { get; set; }
 		string DiffIgnoreCharacters { get; set; }
+		void InvalidateCanvas();
 		int BeginOffset { get; }
 		int EndOffset { get; }
 		Range BeginRange { get; }
 		Range FullRange { get; }
 		string AllText { get; }
 		void CalculateDiff();
+		void Closed();
+		bool Empty();
 		void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false);
 		List<T> GetFixedExpressionResults<T>(string expression);
 		WordSkipType GetWordSkipType(int line, int index);
@@ -55,6 +67,11 @@ namespace NeoEdit
 		string GetString(Range range);
 		List<T> GetVariableExpressionResults<T>(string expression);
 		NEVariables GetVariables();
+		bool GetDialogResult(NECommand command, out object dialogResult, bool? multiStatus);
+		void HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer);
+		void PreHandleKey(Key key, bool shiftDown, bool controlDown, bool altDown, ref object previousData);
+		bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown, object previousData);
+		bool HandleText(string text);
 		Range MoveCursor(Range range, int cursor, bool selecting);
 		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, bool keepUndo = false);
 		List<string> RelativeSelectedFiles();
@@ -69,6 +86,7 @@ namespace NeoEdit
 		void SetClipboardStrings(IEnumerable<string> strs);
 		void SetFileName(string fileName);
 		void SetAutoRefresh(bool? value = null);
+		void Activated(AnswerResult answer);
 		bool StringsAreFiles(List<string> strs);
 		bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage);
 		bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage);
@@ -88,5 +106,6 @@ namespace NeoEdit
 		bool IncludeInlineVariables { get; set; }
 		string savedBitmapText { get; set; }
 		System.Drawing.Bitmap savedBitmap { get; set; }
+		bool Focus();
 	}
 }

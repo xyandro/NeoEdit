@@ -98,7 +98,7 @@ namespace NeoEdit
 		[DepProp]
 		public string TabLabel { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
-		public Tabs TabsParent { get; internal set; }
+		public Tabs TabsParent { get; set; }
 
 		public bool CanClose() => CanClose(new AnswerResult());
 
@@ -110,7 +110,7 @@ namespace NeoEdit
 		bool watcherFileModified = false;
 
 		TextEditor diffTarget;
-		public TextEditor DiffTarget
+		public ITextEditor DiffTarget
 		{
 			get { return diffTarget; }
 			set
@@ -148,8 +148,8 @@ namespace NeoEdit
 				if (value != null)
 				{
 					value.DiffTarget = null;
-					diffTarget = value;
-					value.diffTarget = this;
+					diffTarget = value as TextEditor;
+					(value as TextEditor).diffTarget = this;
 
 					var diffXScrollValue = diffTarget.xScrollValue;
 					var diffYScrollValue = diffTarget.yScrollValue;

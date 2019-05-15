@@ -11,8 +11,8 @@ namespace NeoEdit.Dialogs
 {
 	class ActiveTabsDialog : ModalDialog
 	{
-		readonly List<TextEditor> originalActive;
-		readonly TextEditor originalTopMost;
+		readonly List<ITextEditor> originalActive;
+		readonly ITextEditor originalTopMost;
 		readonly Tabs tabs;
 		ListView listView;
 
@@ -40,10 +40,10 @@ namespace NeoEdit.Dialogs
 			listView = new ListView { ItemsSource = tabs.Items.ToList(), Height = 400, SelectionMode = SelectionMode.Extended };
 			{
 				var gridView = new GridView();
-				gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(nameof(TextEditor.TabLabel)), Width = 500 });
+				gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(nameof(ITextEditor.TabLabel)), Width = 500 });
 				listView.View = gridView;
 			}
-			listView.SelectionChanged += (s, e) => SyncItems(listView.SelectedItems.Cast<TextEditor>());
+			listView.SelectionChanged += (s, e) => SyncItems(listView.SelectedItems.Cast<ITextEditor>());
 			Grid.SetRow(listView, 0);
 			Grid.SetColumn(listView, 0);
 			grid.Children.Add(listView);
@@ -111,7 +111,7 @@ namespace NeoEdit.Dialogs
 
 		List<int> SelectedIndexes()
 		{
-			var selected = new HashSet<TextEditor>(listView.SelectedItems.Cast<TextEditor>());
+			var selected = new HashSet<ITextEditor>(listView.SelectedItems.Cast<ITextEditor>());
 			return tabs.Items.Indexes(tab => selected.Contains(tab)).ToList();
 		}
 
@@ -151,7 +151,7 @@ namespace NeoEdit.Dialogs
 
 		void Close_Click(object sender, RoutedEventArgs e)
 		{
-			var selected = listView.SelectedItems.Cast<TextEditor>().ToList();
+			var selected = listView.SelectedItems.Cast<ITextEditor>().ToList();
 
 			var answer = new AnswerResult();
 			if (!selected.All(tab => tab.CanClose(answer)))
@@ -161,9 +161,9 @@ namespace NeoEdit.Dialogs
 			listView.ItemsSource = tabs.Items.ToList();
 		}
 
-		void SyncItems(IEnumerable<TextEditor> active)
+		void SyncItems(IEnumerable<ITextEditor> active)
 		{
-			var activeHash = new HashSet<TextEditor>(active);
+			var activeHash = new HashSet<ITextEditor>(active);
 			foreach (var item in tabs.Items)
 				item.Active = activeHash.Contains(item);
 			var topMost = tabs.TopMost;

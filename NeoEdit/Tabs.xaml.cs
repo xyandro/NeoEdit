@@ -31,9 +31,9 @@ namespace NeoEdit
 	partial class Tabs
 	{
 		[DepProp]
-		public ObservableCollection<TextEditor> Items { get { return UIHelper<Tabs>.GetPropValue<ObservableCollection<TextEditor>>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
+		public ObservableCollection<ITextEditor> Items { get { return UIHelper<Tabs>.GetPropValue<ObservableCollection<ITextEditor>>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public TextEditor TopMost { get { return UIHelper<Tabs>.GetPropValue<TextEditor>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
+		public ITextEditor TopMost { get { return UIHelper<Tabs>.GetPropValue<ITextEditor>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public TabsLayout Layout { get { return UIHelper<Tabs>.GetPropValue<TabsLayout>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
@@ -55,7 +55,7 @@ namespace NeoEdit
 
 		readonly Canvas canvas;
 		readonly ScrollBar scrollBar;
-		Action<TextEditor> ShowItem;
+		Action<ITextEditor> ShowItem;
 		int itemOrder = 0;
 
 		static Tabs()
@@ -80,7 +80,7 @@ namespace NeoEdit
 			topMostTimer = new RunOnceTimer(ShowTopMost);
 			topMostTimer.AddDependency(layoutTimer);
 
-			Items = new ObservableCollection<TextEditor>();
+			Items = new ObservableCollection<ITextEditor>();
 			Layout = TabsLayout.Full;
 			Focusable = true;
 			FocusVisualStyle = null;
@@ -126,8 +126,8 @@ namespace NeoEdit
 			ClipboardCountText = $"{plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}";
 		}
 
-		Dictionary<TextEditor, List<string>> clipboard;
-		public List<string> GetClipboard(TextEditor textEditor)
+		Dictionary<ITextEditor, List<string>> clipboard;
+		public List<string> GetClipboard(ITextEditor textEditor)
 		{
 			if (clipboard == null)
 			{
@@ -265,7 +265,7 @@ namespace NeoEdit
 		void Command_Diff_Select_LeftRightBothTabs(bool? left)
 		{
 			var topMost = TopMost;
-			var active = Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetIndex(item) < GetIndex(item.DiffTarget)) == left)).ToList();
+			var active = Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<ITextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetIndex(item) < GetIndex(item.DiffTarget)) == left)).ToList();
 			Items.ForEach(item => item.Active = false);
 
 			if (!active.Any())
@@ -812,9 +812,9 @@ namespace NeoEdit
 			topMostTimer.Start();
 		}
 
-		public TextEditor Add(TextEditor item, int? index = null)
+		public ITextEditor Add(ITextEditor item, int? index = null)
 		{
-			var replace = (!index.HasValue) && (!item.Empty()) && (TopMost != null) && (TopMost.Empty()) ? TopMost : default(TextEditor);
+			var replace = (!index.HasValue) && (!item.Empty()) && (TopMost != null) && (TopMost.Empty()) ? TopMost : default(ITextEditor);
 			if (replace != null)
 			{
 				replace.Closed();
@@ -826,7 +826,7 @@ namespace NeoEdit
 			return replace;
 		}
 
-		public Window AddDiff(TextEditor textEdit1, TextEditor textEdit2)
+		public Window AddDiff(ITextEditor textEdit1, ITextEditor textEdit2)
 		{
 			if (textEdit1.ContentType == Parser.ParserType.None)
 				textEdit1.ContentType = textEdit2.ContentType;
@@ -855,7 +855,7 @@ namespace NeoEdit
 
 			foreach (var item in Items)
 			{
-				EnhancedFocusManager.SetIsEnhancedFocusScope(item, true);
+				EnhancedFocusManager.SetIsEnhancedFocusScope(item as DependencyObject, true);
 				item.TabsParent = this;
 			}
 
@@ -901,9 +901,9 @@ namespace NeoEdit
 			TopMost = topMost;
 		}
 
-		public bool TabIsActive(TextEditor item) => Items.Where(x => x == item).Select(x => x.Active).DefaultIfEmpty(false).First();
+		public bool TabIsActive(ITextEditor item) => Items.Where(x => x == item).Select(x => x.Active).DefaultIfEmpty(false).First();
 
-		public int GetIndex(TextEditor item, bool activeOnly = false)
+		public int GetIndex(ITextEditor item, bool activeOnly = false)
 		{
 			var index = Items.Where(x => (!activeOnly) || (x.Active)).Indexes(x => x == item).DefaultIfEmpty(-1).First();
 			if (index == -1)
@@ -911,7 +911,7 @@ namespace NeoEdit
 			return index;
 		}
 
-		public void Remove(TextEditor item)
+		public void Remove(ITextEditor item)
 		{
 			Items.Remove(item);
 			item.Closed();
@@ -986,13 +986,13 @@ namespace NeoEdit
 			base.OnMouseLeftButtonDown(e);
 			var source = e.OriginalSource as DependencyObject;
 			foreach (var item in Items)
-				if (item.IsAncestorOf(source))
+				if ((item as Visual).IsAncestorOf(source))
 					TopMost = item;
 		}
 
-		void OnDrop(DragEventArgs e, TextEditor toItem)
+		void OnDrop(DragEventArgs e, ITextEditor toItem)
 		{
-			var fromItems = e.Data.GetData(typeof(List<TextEditor>)) as List<TextEditor>;
+			var fromItems = e.Data.GetData(typeof(List<ITextEditor>)) as List<ITextEditor>;
 			if (fromItems == null)
 				return;
 
@@ -1013,21 +1013,21 @@ namespace NeoEdit
 			}
 		}
 
-		public void MoveToTop(IEnumerable<TextEditor> tabs)
+		public void MoveToTop(IEnumerable<ITextEditor> tabs)
 		{
-			var found = new HashSet<TextEditor>(tabs);
+			var found = new HashSet<ITextEditor>(tabs);
 			var indexes = Items.Indexes(item => found.Contains(item)).ToList();
 			for (var ctr = 0; ctr < indexes.Count; ++ctr)
 				Items.Move(indexes[ctr], ctr);
 		}
 
-		DockPanel GetTabLabel(Tabs tabs, bool tiles, TextEditor item)
+		DockPanel GetTabLabel(Tabs tabs, bool tiles, ITextEditor item)
 		{
 			var dockPanel = new DockPanel { Margin = new Thickness(0, 0, tiles ? 0 : 2, 1), Tag = item };
 
 			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "p0 o== p2 ? \"CadetBlue\" : (p1 ? \"LightBlue\" : \"LightGray\")" };
 			multiBinding.Bindings.Add(new Binding { Source = item });
-			multiBinding.Bindings.Add(new Binding(nameof(TextEditor.Active)) { Source = item });
+			multiBinding.Bindings.Add(new Binding(nameof(ITextEditor.Active)) { Source = item });
 			multiBinding.Bindings.Add(new Binding(nameof(TopMost)) { Source = tabs });
 			dockPanel.SetBinding(DockPanel.BackgroundProperty, multiBinding);
 
@@ -1037,12 +1037,12 @@ namespace NeoEdit
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
 					var active = item.TabsParent.Items.Where(tab => tab.Active).ToList();
-					DragDrop.DoDragDrop(s as DockPanel, new DataObject(typeof(List<TextEditor>), active), DragDropEffects.Move);
+					DragDrop.DoDragDrop(s as DockPanel, new DataObject(typeof(List<ITextEditor>), active), DragDropEffects.Move);
 				}
 			};
 
 			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 2, 0) };
-			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditor.TabLabel)) { Source = item });
+			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(ITextEditor.TabLabel)) { Source = item });
 			dockPanel.Children.Add(text);
 
 			var closeButton = new Button
@@ -1089,7 +1089,7 @@ namespace NeoEdit
 			canvas.Children.Clear();
 			foreach (var item in Items)
 			{
-				var parent = item.Parent;
+				var parent = (item as FrameworkElement).Parent;
 				if (parent is Panel p)
 					p.Children.Clear();
 				else if (parent is ContentControl cc)
@@ -1130,7 +1130,7 @@ namespace NeoEdit
 			foreach (var item in Items)
 			{
 				var tabLabel = GetTabLabel(this, false, item);
-				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as TextEditor);
+				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as ITextEditor);
 				stackPanel.Children.Add(tabLabel);
 			}
 
@@ -1207,7 +1207,7 @@ namespace NeoEdit
 
 			for (var ctr = 0; ctr < Items.Count; ++ctr)
 			{
-				var item = Items[ctr];
+				var item = Items[ctr] as TextEditor;
 				var top = ctr / columns * height - scrollBar.Value;
 				if ((top + height < 0) || (top > canvas.ActualHeight))
 					continue;
