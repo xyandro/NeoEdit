@@ -83,5 +83,6 @@ namespace NeoEdit
 		Range BeginRange { get; }
 		System.Drawing.Bitmap savedBitmap { get; set; }
 		string savedBitmapText { get; set; }
+		int CurrentSelection { get; set; }
 	}
 }

@@ -511,36 +511,6 @@ namespace NeoEdit
 			statusBarRenderTimer.Start();
 		}
 
-		string Factor(BigInteger value)
-		{
-			var factors = new List<BigInteger>();
-			if (value < 0)
-			{
-				factors.Add(-1);
-				value = -value;
-			}
-
-			BigInteger factor = 2;
-			while (value > 1)
-			{
-				if (value % factor == 0)
-				{
-					factors.Add(factor);
-					value /= factor;
-					continue;
-				}
-
-				++factor;
-			}
-
-			if (!factors.Any())
-				factors.Add(value);
-
-			factors.Reverse();
-
-			return string.Join("*", factors);
-		}
-
 		static bool FileOrDirectoryExists(string name) => (Directory.Exists(name)) || (File.Exists(name));
 
 		List<Range> FindMinMax(bool min, FindMinMaxType type)

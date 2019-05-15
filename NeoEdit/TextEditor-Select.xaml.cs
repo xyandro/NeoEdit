@@ -306,9 +306,9 @@ namespace NeoEdit
 			te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(te, range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList());
 		}
 
-		void Command_Select_Selection_First()
+		void Command_Select_Selection_First(ITextEditor te)
 		{
-			CurrentSelection = 0;
+			te.CurrentSelection = 0;
 			EnsureVisible();
 			canvasRenderTimer.Start();
 		}
@@ -322,11 +322,11 @@ namespace NeoEdit
 		void Command_Select_Selection_NextPrevious(ITextEditor te, bool next)
 		{
 			var offset = next ? 1 : -1;
-			CurrentSelection += offset;
-			if (CurrentSelection < 0)
-				CurrentSelection = te.Selections.Count - 1;
-			if (CurrentSelection >= te.Selections.Count)
-				CurrentSelection = 0;
+			te.CurrentSelection += offset;
+			if (te.CurrentSelection < 0)
+				te.CurrentSelection = te.Selections.Count - 1;
+			if (te.CurrentSelection >= te.Selections.Count)
+				te.CurrentSelection = 0;
 			EnsureVisible();
 			canvasRenderTimer.Start();
 		}
@@ -335,25 +335,25 @@ namespace NeoEdit
 		{
 			if (!te.Selections.Any())
 				return;
-			te.SetSelections(new List<Range> { te.Selections[CurrentSelection] });
-			CurrentSelection = 0;
+			te.SetSelections(new List<Range> { te.Selections[te.CurrentSelection] });
+			te.CurrentSelection = 0;
 		}
 
 		void Command_Select_Selection_Remove(ITextEditor te)
 		{
-			te.SetSelections(te.Selections.Where((sel, index) => index != CurrentSelection).ToList());
-			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, te.Selections.Count - 1));
+			te.SetSelections(te.Selections.Where((sel, index) => index != te.CurrentSelection).ToList());
+			te.CurrentSelection = Math.Max(0, Math.Min(te.CurrentSelection, te.Selections.Count - 1));
 		}
 
 		void Command_Select_Selection_RemoveBeforeCurrent(ITextEditor te)
 		{
-			te.SetSelections(te.Selections.Where((sel, index) => index >= CurrentSelection).ToList());
-			CurrentSelection = 0;
+			te.SetSelections(te.Selections.Where((sel, index) => index >= te.CurrentSelection).ToList());
+			te.CurrentSelection = 0;
 		}
 
 		void Command_Select_Selection_RemoveAfterCurrent(ITextEditor te)
 		{
-			te.SetSelections(te.Selections.Where((sel, index) => index <= CurrentSelection).ToList());
+			te.SetSelections(te.Selections.Where((sel, index) => index <= te.CurrentSelection).ToList());
 		}
 	}
 }
