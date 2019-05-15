@@ -324,13 +324,6 @@
     <Compile Include="Dialogs\HelpAboutLicenseDialog.xaml.cs">
       <DependentUpon>HelpAboutLicenseDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\JoinDisplay.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\JoinDisplay.xaml.cs">
-      <DependentUpon>JoinDisplay.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\MacroPlayRepeatDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -449,69 +442,6 @@
     </Page>
     <Compile Include="Dialogs\SignVerifyDialog.xaml.cs">
       <DependentUpon>SignVerifyDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TableAddColumnDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TableAddColumnDialog.xaml.cs">
-      <DependentUpon>TableAddColumnDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TableConvertDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TableConvertDialog.xaml.cs">
-      <DependentUpon>TableConvertDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TableDatabaseGenerateDeletesDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TableDatabaseGenerateDeletesDialog.xaml.cs">
-      <DependentUpon>TableDatabaseGenerateDeletesDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TableDatabaseGenerateInsertsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TableDatabaseGenerateInsertsDialog.xaml.cs">
-      <DependentUpon>TableDatabaseGenerateInsertsDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TableDatabaseGenerateUpdatesDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TableDatabaseGenerateUpdatesDialog.xaml.cs">
-      <DependentUpon>TableDatabaseGenerateUpdatesDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TableDisplay.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TableDisplay.xaml.cs">
-      <DependentUpon>TableDisplay.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TableEditTableDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TableEditTableDialog.xaml.cs">
-      <DependentUpon>TableEditTableDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TableJoinDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TableJoinDialog.xaml.cs">
-      <DependentUpon>TableJoinDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TableTextToTableDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TableTextToTableDialog.xaml.cs">
-      <DependentUpon>TableTextToTableDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\TextFirstDistinctDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -638,9 +568,6 @@
     <Compile Include="TextEditor-Select.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Table.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Text.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -703,6 +630,10 @@
     <ProjectReference Include="..\Position\Position.csproj">
       <Project>{a7d32fd6-0bed-4ffc-9ed7-2c9c385e241c}</Project>
       <Name>Position</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Table\Table.csproj">
+      <Project>{5b8dbd58-aa5b-45f3-9637-34ee5dd49ff3}</Project>
+      <Name>Table</Name>
     </ProjectReference>
     <ProjectReference Include="..\View\View.csproj">
       <Project>{55adecd1-44a7-4b68-86b7-222b68e99078}</Project>

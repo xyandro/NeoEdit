@@ -970,15 +970,15 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Table_Convert: dialogResult = Command_Table_Convert_Dialog(this); break;
-				case NECommand.Table_TextToTable: dialogResult = Command_Table_TextToTable_Dialog(this); break;
-				case NECommand.Table_EditTable: dialogResult = Command_Table_EditTable_Dialog(this); break;
-				case NECommand.Table_AddColumn: dialogResult = Command_Table_AddColumn_Dialog(this); break;
-				case NECommand.Table_Select_RowsByExpression: dialogResult = Command_Table_Select_RowsByExpression_Dialog(this); break;
-				case NECommand.Table_Join: dialogResult = Command_Table_Join_Dialog(this); break;
-				case NECommand.Table_Database_GenerateInserts: dialogResult = Command_Table_Database_GenerateInserts_Dialog(this); break;
-				case NECommand.Table_Database_GenerateUpdates: dialogResult = Command_Table_Database_GenerateUpdates_Dialog(this); break;
-				case NECommand.Table_Database_GenerateDeletes: dialogResult = Command_Table_Database_GenerateDeletes_Dialog(this); break;
+				case NECommand.Table_Convert: dialogResult = TableFunctions.Command_Table_Convert_Dialog(this); break;
+				case NECommand.Table_TextToTable: dialogResult = TableFunctions.Command_Table_TextToTable_Dialog(this); break;
+				case NECommand.Table_EditTable: dialogResult = TableFunctions.Command_Table_EditTable_Dialog(this); break;
+				case NECommand.Table_AddColumn: dialogResult = TableFunctions.Command_Table_AddColumn_Dialog(this); break;
+				case NECommand.Table_Select_RowsByExpression: dialogResult = TableFunctions.Command_Table_Select_RowsByExpression_Dialog(this); break;
+				case NECommand.Table_Join: dialogResult = TableFunctions.Command_Table_Join_Dialog(this); break;
+				case NECommand.Table_Database_GenerateInserts: dialogResult = TableFunctions.Command_Table_Database_GenerateInserts_Dialog(this); break;
+				case NECommand.Table_Database_GenerateUpdates: dialogResult = TableFunctions.Command_Table_Database_GenerateUpdates_Dialog(this); break;
+				case NECommand.Table_Database_GenerateDeletes: dialogResult = TableFunctions.Command_Table_Database_GenerateDeletes_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1414,30 +1414,30 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Table_DetectType: Command_Table_DetectType(this); break;
-				case NECommand.Table_Convert: Command_Table_Convert(this, dialogResult as TableConvertDialog.Result); break;
-				case NECommand.Table_TextToTable: Command_Table_TextToTable(this, dialogResult as TableTextToTableDialog.Result); break;
-				case NECommand.Table_LineSelectionsToTable: Command_Table_LineSelectionsToTable(this); break;
-				case NECommand.Table_RegionSelectionsToTable_Region1: Command_Table_RegionSelectionsToTable_Region(this, 1); break;
-				case NECommand.Table_RegionSelectionsToTable_Region2: Command_Table_RegionSelectionsToTable_Region(this, 2); break;
-				case NECommand.Table_RegionSelectionsToTable_Region3: Command_Table_RegionSelectionsToTable_Region(this, 3); break;
-				case NECommand.Table_RegionSelectionsToTable_Region4: Command_Table_RegionSelectionsToTable_Region(this, 4); break;
-				case NECommand.Table_RegionSelectionsToTable_Region5: Command_Table_RegionSelectionsToTable_Region(this, 5); break;
-				case NECommand.Table_RegionSelectionsToTable_Region6: Command_Table_RegionSelectionsToTable_Region(this, 6); break;
-				case NECommand.Table_RegionSelectionsToTable_Region7: Command_Table_RegionSelectionsToTable_Region(this, 7); break;
-				case NECommand.Table_RegionSelectionsToTable_Region8: Command_Table_RegionSelectionsToTable_Region(this, 8); break;
-				case NECommand.Table_RegionSelectionsToTable_Region9: Command_Table_RegionSelectionsToTable_Region(this, 9); break;
-				case NECommand.Table_EditTable: Command_Table_EditTable(this, dialogResult as TableEditTableDialog.Result); break;
-				case NECommand.Table_AddHeaders: Command_Table_AddHeaders(this); break;
-				case NECommand.Table_AddRow: Command_Table_AddRow(this); break;
-				case NECommand.Table_AddColumn: Command_Table_AddColumn(this, dialogResult as TableAddColumnDialog.Result); break;
-				case NECommand.Table_Select_RowsByExpression: Command_Table_Select_RowsByExpression(this, dialogResult as GetExpressionDialog.Result); break;
-				case NECommand.Table_SetJoinSource: Command_Table_SetJoinSource(this); break;
-				case NECommand.Table_Join: Command_Table_Join(this, dialogResult as TableJoinDialog.Result); break;
-				case NECommand.Table_Transpose: Command_Table_Transpose(this); break;
-				case NECommand.Table_Database_GenerateInserts: Command_Table_Database_GenerateInserts(this, dialogResult as TableDatabaseGenerateInsertsDialog.Result); break;
-				case NECommand.Table_Database_GenerateUpdates: Command_Table_Database_GenerateUpdates(this, dialogResult as TableDatabaseGenerateUpdatesDialog.Result); break;
-				case NECommand.Table_Database_GenerateDeletes: Command_Table_Database_GenerateDeletes(this, dialogResult as TableDatabaseGenerateDeletesDialog.Result); break;
+				case NECommand.Table_DetectType: TableFunctions.Command_Table_DetectType(this); break;
+				case NECommand.Table_Convert: TableFunctions.Command_Table_Convert(this, dialogResult as TableConvertDialog.Result); break;
+				case NECommand.Table_TextToTable: TableFunctions.Command_Table_TextToTable(this, dialogResult as TableTextToTableDialog.Result); break;
+				case NECommand.Table_LineSelectionsToTable: TableFunctions.Command_Table_LineSelectionsToTable(this); break;
+				case NECommand.Table_RegionSelectionsToTable_Region1: TableFunctions.Command_Table_RegionSelectionsToTable_Region(this, 1); break;
+				case NECommand.Table_RegionSelectionsToTable_Region2: TableFunctions.Command_Table_RegionSelectionsToTable_Region(this, 2); break;
+				case NECommand.Table_RegionSelectionsToTable_Region3: TableFunctions.Command_Table_RegionSelectionsToTable_Region(this, 3); break;
+				case NECommand.Table_RegionSelectionsToTable_Region4: TableFunctions.Command_Table_RegionSelectionsToTable_Region(this, 4); break;
+				case NECommand.Table_RegionSelectionsToTable_Region5: TableFunctions.Command_Table_RegionSelectionsToTable_Region(this, 5); break;
+				case NECommand.Table_RegionSelectionsToTable_Region6: TableFunctions.Command_Table_RegionSelectionsToTable_Region(this, 6); break;
+				case NECommand.Table_RegionSelectionsToTable_Region7: TableFunctions.Command_Table_RegionSelectionsToTable_Region(this, 7); break;
+				case NECommand.Table_RegionSelectionsToTable_Region8: TableFunctions.Command_Table_RegionSelectionsToTable_Region(this, 8); break;
+				case NECommand.Table_RegionSelectionsToTable_Region9: TableFunctions.Command_Table_RegionSelectionsToTable_Region(this, 9); break;
+				case NECommand.Table_EditTable: TableFunctions.Command_Table_EditTable(this, dialogResult as TableEditTableDialog.Result); break;
+				case NECommand.Table_AddHeaders: TableFunctions.Command_Table_AddHeaders(this); break;
+				case NECommand.Table_AddRow: TableFunctions.Command_Table_AddRow(this); break;
+				case NECommand.Table_AddColumn: TableFunctions.Command_Table_AddColumn(this, dialogResult as TableAddColumnDialog.Result); break;
+				case NECommand.Table_Select_RowsByExpression: TableFunctions.Command_Table_Select_RowsByExpression(this, dialogResult as GetExpressionDialog.Result); break;
+				case NECommand.Table_SetJoinSource: TableFunctions.Command_Table_SetJoinSource(this); break;
+				case NECommand.Table_Join: TableFunctions.Command_Table_Join(this, dialogResult as TableJoinDialog.Result); break;
+				case NECommand.Table_Transpose: TableFunctions.Command_Table_Transpose(this); break;
+				case NECommand.Table_Database_GenerateInserts: TableFunctions.Command_Table_Database_GenerateInserts(this, dialogResult as TableDatabaseGenerateInsertsDialog.Result); break;
+				case NECommand.Table_Database_GenerateUpdates: TableFunctions.Command_Table_Database_GenerateUpdates(this, dialogResult as TableDatabaseGenerateUpdatesDialog.Result); break;
+				case NECommand.Table_Database_GenerateDeletes: TableFunctions.Command_Table_Database_GenerateDeletes(this, dialogResult as TableDatabaseGenerateDeletesDialog.Result); break;
 			}
 		}
 
@@ -2868,6 +2868,37 @@ namespace NeoEdit
 				inlineVars.Add(inlineVar);
 			}
 			return inlineVars;
+		}
+
+		public List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
+		{
+			var useRegions = Regions[useRegion];
+			var regions = new List<Range>();
+			var currentRegion = 0;
+			var used = false;
+			foreach (var selection in Selections)
+			{
+				while ((currentRegion < useRegions.Count) && (useRegions[currentRegion].End <= selection.Start))
+				{
+					if ((useAllRegions) && (!used))
+						throw new Exception("Extra regions found.");
+					used = false;
+					++currentRegion;
+				}
+				if ((currentRegion < useRegions.Count) && (selection.Start >= useRegions[currentRegion].Start) && (selection.End <= useRegions[currentRegion].End))
+				{
+					regions.Add(useRegions[currentRegion]);
+					used = true;
+				}
+				else if (mustBeInRegion)
+					throw new Exception("No region found.  All selections must be inside a region.");
+				else
+					regions.Add(null);
+			}
+			if ((Selections.Any()) && (useAllRegions) && (currentRegion != useRegions.Count - 1))
+				throw new Exception("Extra regions found.");
+
+			return regions;
 		}
 	}
 }

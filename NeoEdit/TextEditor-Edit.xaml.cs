@@ -60,37 +60,6 @@ namespace NeoEdit
 			te.SetSelections(sels);
 		}
 
-		static List<Range> GetEnclosingRegions(ITextEditor te, int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
-		{
-			var useRegions = te.Regions[useRegion];
-			var regions = new List<Range>();
-			var currentRegion = 0;
-			var used = false;
-			foreach (var selection in te.Selections)
-			{
-				while ((currentRegion < useRegions.Count) && (useRegions[currentRegion].End <= selection.Start))
-				{
-					if ((useAllRegions) && (!used))
-						throw new Exception("Extra regions found.");
-					used = false;
-					++currentRegion;
-				}
-				if ((currentRegion < useRegions.Count) && (selection.Start >= useRegions[currentRegion].Start) && (selection.End <= useRegions[currentRegion].End))
-				{
-					regions.Add(useRegions[currentRegion]);
-					used = true;
-				}
-				else if (mustBeInRegion)
-					throw new Exception("No region found.  All selections must be inside a region.");
-				else
-					regions.Add(null);
-			}
-			if ((te.Selections.Any()) && (useAllRegions) && (currentRegion != useRegions.Count - 1))
-				throw new Exception("Extra regions found.");
-
-			return regions;
-		}
-
 		static Range GetNextPrevBookmark(ITextEditor te, Range range, bool next, bool selecting)
 		{
 			int index;
@@ -153,7 +122,7 @@ namespace NeoEdit
 			{
 				case SortScope.Selections: sortSource = te.Selections.ToList(); break;
 				case SortScope.Lines: sortSource = GetSortLines(te); break;
-				case SortScope.Regions: sortSource = GetEnclosingRegions(te, useRegion, true); break;
+				case SortScope.Regions: sortSource = te.GetEnclosingRegions(useRegion, true); break;
 				default: throw new Exception("Invalid sort type");
 			}
 

@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
+  <PropertyGroup>
+    <ProjectGuid>{5B8DBD58-AA5B-45F3-9637-34EE5DD49FF3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>NeoEdit.Table</RootNamespace>
+    <AssemblyName>NeoEdit.Table</AssemblyName>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Page Include="Dialogs\JoinDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\JoinDisplay.xaml.cs">
+      <DependentUpon>JoinDisplay.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TableAddColumnDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TableAddColumnDialog.xaml.cs">
+      <DependentUpon>TableAddColumnDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TableConvertDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TableConvertDialog.xaml.cs">
+      <DependentUpon>TableConvertDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TableDatabaseGenerateDeletesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TableDatabaseGenerateDeletesDialog.xaml.cs">
+      <DependentUpon>TableDatabaseGenerateDeletesDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TableDatabaseGenerateInsertsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TableDatabaseGenerateInsertsDialog.xaml.cs">
+      <DependentUpon>TableDatabaseGenerateInsertsDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TableDatabaseGenerateUpdatesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TableDatabaseGenerateUpdatesDialog.xaml.cs">
+      <DependentUpon>TableDatabaseGenerateUpdatesDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TableDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TableDisplay.xaml.cs">
+      <DependentUpon>TableDisplay.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TableEditTableDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TableEditTableDialog.xaml.cs">
+      <DependentUpon>TableEditTableDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TableJoinDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TableJoinDialog.xaml.cs">
+      <DependentUpon>TableJoinDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TableTextToTableDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TableTextToTableDialog.xaml.cs">
+      <DependentUpon>TableTextToTableDialog.xaml</DependentUpon>
+    </Compile>
+    <AppDesigner Include="Properties\" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TableFunctions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{41bacfec-48ae-4dcc-abc9-e45aa149784d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+</Project>

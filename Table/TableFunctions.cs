@@ -8,7 +8,7 @@ using NeoEdit.Expressions;
 
 namespace NeoEdit
 {
-	partial class TextEditor
+	public static class TableFunctions
 	{
 		static Table joinTable;
 
@@ -51,18 +51,18 @@ namespace NeoEdit
 			te.SetSelections(new List<Range> { te.BeginRange });
 		}
 
-		static void Command_Table_DetectType(ITextEditor te) => te.ContentType = Table.GuessTableType(te.AllText);
+		static public void Command_Table_DetectType(ITextEditor te) => te.ContentType = Table.GuessTableType(te.AllText);
 
-		static TableConvertDialog.Result Command_Table_Convert_Dialog(ITextEditor te) => TableConvertDialog.Run(te.WindowParent, te.ContentType);
+		static public TableConvertDialog.Result Command_Table_Convert_Dialog(ITextEditor te) => TableConvertDialog.Run(te.WindowParent, te.ContentType);
 
-		static void Command_Table_Convert(ITextEditor te, TableConvertDialog.Result result)
+		static public void Command_Table_Convert(ITextEditor te, TableConvertDialog.Result result)
 		{
 			var table = GetTable(te);
 			te.ContentType = result.TableType;
 			SetText(te, table);
 		}
 
-		static TableTextToTableDialog.Result Command_Table_TextToTable_Dialog(ITextEditor te)
+		static public TableTextToTableDialog.Result Command_Table_TextToTable_Dialog(ITextEditor te)
 		{
 			if (te.Selections.Count != 1)
 				throw new Exception("Must have one selection");
@@ -72,7 +72,7 @@ namespace NeoEdit
 			return TableTextToTableDialog.Run(te.WindowParent, te.GetSelectionStrings().Single());
 		}
 
-		static void Command_Table_TextToTable(ITextEditor te, TableTextToTableDialog.Result result)
+		static public void Command_Table_TextToTable(ITextEditor te, TableTextToTableDialog.Result result)
 		{
 			if (te.Selections.Count != 1)
 				throw new Exception("Must have one selection");
@@ -86,7 +86,7 @@ namespace NeoEdit
 			te.OpenTable(new Table(rows));
 		}
 
-		static void Command_Table_LineSelectionsToTable(ITextEditor te)
+		static public void Command_Table_LineSelectionsToTable(ITextEditor te)
 		{
 			if (!te.Selections.Any())
 				return;
@@ -101,37 +101,37 @@ namespace NeoEdit
 			te.OpenTable(new Table(rows, false));
 		}
 
-		static void Command_Table_RegionSelectionsToTable_Region(ITextEditor te, int useRegion)
+		static public void Command_Table_RegionSelectionsToTable_Region(ITextEditor te, int useRegion)
 		{
 			if (!te.Selections.Any())
 				return;
 
 			var sels = te.GetSelectionStrings();
-			var regions = GetEnclosingRegions(te, useRegion);
+			var regions = te.GetEnclosingRegions(useRegion);
 			var rows = Enumerable.Range(0, te.Selections.Count).GroupBy(index => regions[index]).Select(group => group.Select(index => sels[index]).ToList()).ToList();
 			te.OpenTable(new Table(rows, false));
 		}
 
-		static TableEditTableDialog.Result Command_Table_EditTable_Dialog(ITextEditor te) => TableEditTableDialog.Run(te.WindowParent, GetTable(te));
+		static public TableEditTableDialog.Result Command_Table_EditTable_Dialog(ITextEditor te) => TableEditTableDialog.Run(te.WindowParent, GetTable(te));
 
-		static void Command_Table_EditTable(ITextEditor te, TableEditTableDialog.Result result) => SetText(te, GetTable(te).Aggregate(result.AggregateData).Sort(result.SortData));
+		static public void Command_Table_EditTable(ITextEditor te, TableEditTableDialog.Result result) => SetText(te, GetTable(te).Aggregate(result.AggregateData).Sort(result.SortData));
 
-		static void Command_Table_AddHeaders(ITextEditor te) => SetText(te, GetTable(te, false));
+		static public void Command_Table_AddHeaders(ITextEditor te) => SetText(te, GetTable(te, false));
 
-		static void Command_Table_AddRow(ITextEditor te)
+		static public void Command_Table_AddRow(ITextEditor te)
 		{
 			var table = GetTable(te);
 			table.AddRow();
 			SetText(te, table);
 		}
 
-		static TableAddColumnDialog.Result Command_Table_AddColumn_Dialog(ITextEditor te)
+		static public TableAddColumnDialog.Result Command_Table_AddColumn_Dialog(ITextEditor te)
 		{
 			var table = GetTable(te);
 			return TableAddColumnDialog.Run(te.WindowParent, GetTableVariables(te, table), table.NumRows);
 		}
 
-		static void Command_Table_AddColumn(ITextEditor te, TableAddColumnDialog.Result result)
+		static public void Command_Table_AddColumn(ITextEditor te, TableAddColumnDialog.Result result)
 		{
 			var table = GetTable(te);
 			var variables = GetTableVariables(te, table);
@@ -140,13 +140,13 @@ namespace NeoEdit
 			SetText(te, table);
 		}
 
-		static GetExpressionDialog.Result Command_Table_Select_RowsByExpression_Dialog(ITextEditor te)
+		static public GetExpressionDialog.Result Command_Table_Select_RowsByExpression_Dialog(ITextEditor te)
 		{
 			var table = GetTable(te);
 			return GetExpressionDialog.Run(te.WindowParent, GetTableVariables(te, table), table.NumRows);
 		}
 
-		static void Command_Table_Select_RowsByExpression(ITextEditor te, GetExpressionDialog.Result result)
+		static public void Command_Table_Select_RowsByExpression(ITextEditor te, GetExpressionDialog.Result result)
 		{
 			var table = GetTable(te);
 			var variables = GetTableVariables(te, table);
@@ -155,9 +155,9 @@ namespace NeoEdit
 			te.SetSelections(lines.AsParallel().AsOrdered().Select(line => new Range(te.Data.GetOffset(line, te.Data.GetLineLength(line)), te.Data.GetOffset(line, 0))).ToList());
 		}
 
-		static void Command_Table_SetJoinSource(ITextEditor te) => joinTable = GetTable(te);
+		static public void Command_Table_SetJoinSource(ITextEditor te) => joinTable = GetTable(te);
 
-		static TableJoinDialog.Result Command_Table_Join_Dialog(ITextEditor te)
+		static public TableJoinDialog.Result Command_Table_Join_Dialog(ITextEditor te)
 		{
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
@@ -165,7 +165,7 @@ namespace NeoEdit
 			return TableJoinDialog.Run(te.WindowParent, GetTable(te), joinTable);
 		}
 
-		static void Command_Table_Join(ITextEditor te, TableJoinDialog.Result result)
+		static public void Command_Table_Join(ITextEditor te, TableJoinDialog.Result result)
 		{
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
@@ -173,11 +173,11 @@ namespace NeoEdit
 			SetText(te, Table.Join(GetTable(te), joinTable, result.LeftColumns, result.RightColumns, result.JoinType));
 		}
 
-		static void Command_Table_Transpose(ITextEditor te) => SetText(te, GetTable(te).Transpose());
+		static public void Command_Table_Transpose(ITextEditor te) => SetText(te, GetTable(te).Transpose());
 
-		static TableDatabaseGenerateInsertsDialog.Result Command_Table_Database_GenerateInserts_Dialog(ITextEditor te) => TableDatabaseGenerateInsertsDialog.Run(te.WindowParent, GetTable(te), te.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(te.FileName));
+		static public TableDatabaseGenerateInsertsDialog.Result Command_Table_Database_GenerateInserts_Dialog(ITextEditor te) => TableDatabaseGenerateInsertsDialog.Run(te.WindowParent, GetTable(te), te.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(te.FileName));
 
-		static void Command_Table_Database_GenerateInserts(ITextEditor te, TableDatabaseGenerateInsertsDialog.Result result)
+		static public void Command_Table_Database_GenerateInserts(ITextEditor te, TableDatabaseGenerateInsertsDialog.Result result)
 		{
 			var table = GetTable(te);
 			var header = $"INSERT INTO {result.TableName} ({string.Join(", ", Enumerable.Range(0, table.NumColumns).Select(column => table.GetHeader(column)))}) VALUES{(result.BatchSize == 1 ? " " : te.Data.DefaultEnding)}";
@@ -194,9 +194,9 @@ namespace NeoEdit
 			te.SetSelections(sels);
 		}
 
-		static TableDatabaseGenerateUpdatesDialog.Result Command_Table_Database_GenerateUpdates_Dialog(ITextEditor te) => TableDatabaseGenerateUpdatesDialog.Run(te.WindowParent, GetTable(te), te.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(te.FileName));
+		static public TableDatabaseGenerateUpdatesDialog.Result Command_Table_Database_GenerateUpdates_Dialog(ITextEditor te) => TableDatabaseGenerateUpdatesDialog.Run(te.WindowParent, GetTable(te), te.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(te.FileName));
 
-		static void Command_Table_Database_GenerateUpdates(ITextEditor te, TableDatabaseGenerateUpdatesDialog.Result result)
+		static public void Command_Table_Database_GenerateUpdates(ITextEditor te, TableDatabaseGenerateUpdatesDialog.Result result)
 		{
 			var table = GetTable(te);
 
@@ -213,9 +213,9 @@ namespace NeoEdit
 			te.SetSelections(sels);
 		}
 
-		static TableDatabaseGenerateDeletesDialog.Result Command_Table_Database_GenerateDeletes_Dialog(ITextEditor te) => TableDatabaseGenerateDeletesDialog.Run(te.WindowParent, GetTable(te), te.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(te.FileName));
+		static public TableDatabaseGenerateDeletesDialog.Result Command_Table_Database_GenerateDeletes_Dialog(ITextEditor te) => TableDatabaseGenerateDeletesDialog.Run(te.WindowParent, GetTable(te), te.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(te.FileName));
 
-		static void Command_Table_Database_GenerateDeletes(ITextEditor te, TableDatabaseGenerateDeletesDialog.Result result)
+		static public void Command_Table_Database_GenerateDeletes(ITextEditor te, TableDatabaseGenerateDeletesDialog.Result result)
 		{
 			var table = GetTable(te);
 

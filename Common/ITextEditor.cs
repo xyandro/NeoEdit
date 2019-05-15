@@ -109,5 +109,6 @@ namespace NeoEdit
 		System.Drawing.Bitmap GetBitmap();
 		bool GlobalKeys { get; set; }
 		List<InlineVariable> GetInlineVariables();
+		List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true);
 	}
 }

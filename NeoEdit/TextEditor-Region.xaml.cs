@@ -31,7 +31,7 @@ namespace NeoEdit
 
 		static List<List<string>> GetRegionsWithSelectionsText(ITextEditor te, int useRegion, bool mustBeSameSize = true)
 		{
-			var list = te.GetSelectionStrings().Zip(GetEnclosingRegions(te, useRegion, true), (selection, region) => new { selection, region }).GroupBy(obj => obj.region).Select(group => group.Select(obj => obj.selection).ToList()).ToList();
+			var list = te.GetSelectionStrings().Zip(te.GetEnclosingRegions(useRegion, true), (selection, region) => new { selection, region }).GroupBy(obj => obj.region).Select(group => group.Select(obj => obj.selection).ToList()).ToList();
 			if ((mustBeSameSize) && (list.Select(items => items.Count).Distinct().Count() > 1))
 				throw new Exception("All regions must have the same number of selections");
 			return list;
@@ -319,9 +319,9 @@ namespace NeoEdit
 			te.SetSelections(newSelections);
 		}
 
-		static void Command_Region_CopyEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(range => te.GetString(range)).ToList());
+		static void Command_Region_CopyEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetClipboardStrings(te.GetEnclosingRegions(useRegion).Select(range => te.GetString(range)).ToList());
 
-		static void Command_Region_CopyEnclosingRegionIndex_Region(ITextEditor te, int useRegion) => te.SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(region => (te.Regions[useRegion].IndexOf(region) + 1).ToString()).ToList());
+		static void Command_Region_CopyEnclosingRegionIndex_Region(ITextEditor te, int useRegion) => te.SetClipboardStrings(te.GetEnclosingRegions(useRegion).Select(region => (te.Regions[useRegion].IndexOf(region) + 1).ToString()).ToList());
 
 		static void Command_Region_TransformSelections_Flatten_Region(ITextEditor te, int useRegion) => SetRegionsWithSelectionsText(te, useRegion, GetRegionsWithSelectionsText(te, useRegion, false), false);
 
@@ -376,10 +376,10 @@ namespace NeoEdit
 			te.SetSelections(sels);
 		}
 
-		static void Command_Region_Select_EnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(GetEnclosingRegions(te, useRegion));
+		static void Command_Region_Select_EnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.GetEnclosingRegions(useRegion));
 
-		static void Command_Region_Select_WithEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.Selections.Zip(GetEnclosingRegions(te, useRegion, mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
+		static void Command_Region_Select_WithEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.Selections.Zip(te.GetEnclosingRegions(useRegion, mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
 
-		static void Command_Region_Select_WithoutEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.Selections.Zip(GetEnclosingRegions(te, useRegion, mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList());
+		static void Command_Region_Select_WithoutEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.Selections.Zip(te.GetEnclosingRegions(useRegion, mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList());
 	}
 }
