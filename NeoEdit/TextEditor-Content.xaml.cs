@@ -19,7 +19,7 @@ namespace NeoEdit
 		public bool StrictParsing { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		public CacheValue previousData { get; } = new CacheValue();
-		public Parser.ParserType previousType { get; set; }
+		public ParserType previousType { get; set; }
 		public ParserNode previousRoot { get; set; }
 
 		static ParserNode RootNode(ITextEditor te)
@@ -93,7 +93,7 @@ namespace NeoEdit
 
 		static void Command_Content_Type_SetFromExtension(ITextEditor te) => te.ContentType = Parser.GetParserType(te.FileName);
 
-		static void Command_Content_Type(ITextEditor te, Parser.ParserType contentType) => te.ContentType = contentType;
+		static void Command_Content_Type(ITextEditor te, ParserType contentType) => te.ContentType = contentType;
 
 		static void Command_Content_HighlightSyntax(ITextEditor te, bool? multiStatus) => te.HighlightSyntax = multiStatus == false;
 
@@ -159,7 +159,7 @@ namespace NeoEdit
 
 		static void Command_Content_Navigate(ITextEditor te, ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown)
 		{
-			//if (te.ContentType == Parser.ParserType.None)
+			//if (te.ContentType == ParserType.None)
 			//{
 			//	switch (direction)
 			//	{

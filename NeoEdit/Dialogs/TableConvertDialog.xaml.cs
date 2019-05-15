@@ -9,17 +9,17 @@ namespace NeoEdit.Dialogs
 	{
 		internal class Result
 		{
-			public Parser.ParserType TableType { get; set; }
+			public ParserType TableType { get; set; }
 		}
 
 		[DepProp]
-		public Parser.ParserType TableType { get { return UIHelper<TableConvertDialog>.GetPropValue<Parser.ParserType>(this); } set { UIHelper<TableConvertDialog>.SetPropValue(this, value); } }
+		public ParserType TableType { get { return UIHelper<TableConvertDialog>.GetPropValue<ParserType>(this); } set { UIHelper<TableConvertDialog>.SetPropValue(this, value); } }
 
-		public List<Parser.ParserType> TableTypes { get; } = new List<Parser.ParserType> { Parser.ParserType.TSV, Parser.ParserType.CSV, Parser.ParserType.Columns, Parser.ParserType.ExactColumns };
+		public List<ParserType> TableTypes { get; } = new List<ParserType> { ParserType.TSV, ParserType.CSV, ParserType.Columns, ParserType.ExactColumns };
 
 		static TableConvertDialog() { UIHelper<TableConvertDialog>.Register(); }
 
-		TableConvertDialog(Parser.ParserType tableType)
+		TableConvertDialog(ParserType tableType)
 		{
 			InitializeComponent();
 			TableType = tableType;
@@ -32,7 +32,7 @@ namespace NeoEdit.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, Parser.ParserType tableType)
+		static public Result Run(Window parent, ParserType tableType)
 		{
 			var dialog = new TableConvertDialog(tableType) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;

@@ -14,7 +14,7 @@ namespace NeoEdit
 		void AddClipboardStrings(IEnumerable<string> strings, bool? isCut = null);
 		void QueueDoActivated();
 		void QueueUpdateCounts();
-		ITextEditor Add(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null, int? index = null);
+		ITextEditor Add(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null, int? index = null);
 		bool TabIsActive(ITextEditor item);
 		int GetIndex(ITextEditor item, bool activeOnly = false);
 		void Remove(ITextEditor item);

@@ -66,7 +66,7 @@ namespace NeoEdit
 		[DepProp]
 		public bool AutoRefresh { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public Parser.ParserType ContentType { get { return UIHelper<TextEditor>.GetPropValue<Parser.ParserType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public ParserType ContentType { get { return UIHelper<TextEditor>.GetPropValue<ParserType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -264,7 +264,7 @@ namespace NeoEdit
 		FileSystemWatcher watcher = null;
 		ShutdownData shutdownData;
 
-		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null)
+		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null)
 		{
 			fileName = fileName?.Trim('"');
 			SetupLocalKeys();
@@ -1453,18 +1453,18 @@ namespace NeoEdit
 			switch (command)
 			{
 				case NECommand.Content_Type_SetFromExtension: Command_Content_Type_SetFromExtension(this); break;
-				case NECommand.Content_Type_None: Command_Content_Type(this, Parser.ParserType.None); break;
-				case NECommand.Content_Type_Balanced: Command_Content_Type(this, Parser.ParserType.Balanced); break;
-				case NECommand.Content_Type_Columns: Command_Content_Type(this, Parser.ParserType.Columns); break;
-				case NECommand.Content_Type_CPlusPlus: Command_Content_Type(this, Parser.ParserType.CPlusPlus); break;
-				case NECommand.Content_Type_CSharp: Command_Content_Type(this, Parser.ParserType.CSharp); break;
-				case NECommand.Content_Type_CSV: Command_Content_Type(this, Parser.ParserType.CSV); break;
-				case NECommand.Content_Type_ExactColumns: Command_Content_Type(this, Parser.ParserType.ExactColumns); break;
-				case NECommand.Content_Type_HTML: Command_Content_Type(this, Parser.ParserType.HTML); break;
-				case NECommand.Content_Type_JSON: Command_Content_Type(this, Parser.ParserType.JSON); break;
-				case NECommand.Content_Type_SQL: Command_Content_Type(this, Parser.ParserType.SQL); break;
-				case NECommand.Content_Type_TSV: Command_Content_Type(this, Parser.ParserType.TSV); break;
-				case NECommand.Content_Type_XML: Command_Content_Type(this, Parser.ParserType.XML); break;
+				case NECommand.Content_Type_None: Command_Content_Type(this, ParserType.None); break;
+				case NECommand.Content_Type_Balanced: Command_Content_Type(this, ParserType.Balanced); break;
+				case NECommand.Content_Type_Columns: Command_Content_Type(this, ParserType.Columns); break;
+				case NECommand.Content_Type_CPlusPlus: Command_Content_Type(this, ParserType.CPlusPlus); break;
+				case NECommand.Content_Type_CSharp: Command_Content_Type(this, ParserType.CSharp); break;
+				case NECommand.Content_Type_CSV: Command_Content_Type(this, ParserType.CSV); break;
+				case NECommand.Content_Type_ExactColumns: Command_Content_Type(this, ParserType.ExactColumns); break;
+				case NECommand.Content_Type_HTML: Command_Content_Type(this, ParserType.HTML); break;
+				case NECommand.Content_Type_JSON: Command_Content_Type(this, ParserType.JSON); break;
+				case NECommand.Content_Type_SQL: Command_Content_Type(this, ParserType.SQL); break;
+				case NECommand.Content_Type_TSV: Command_Content_Type(this, ParserType.TSV); break;
+				case NECommand.Content_Type_XML: Command_Content_Type(this, ParserType.XML); break;
 				case NECommand.Content_HighlightSyntax: Command_Content_HighlightSyntax(this, multiStatus); break;
 				case NECommand.Content_StrictParsing: Command_Content_StrictParsing(this, multiStatus); break;
 				case NECommand.Content_Reformat: Command_Content_Reformat(this); break;
@@ -2435,10 +2435,10 @@ namespace NeoEdit
 			e.Handled = true;
 		}
 
-		public void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, bool keepUndo = false)
+		public void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, bool keepUndo = false)
 		{
 			SetFileName(fileName);
-			if (ContentType == Parser.ParserType.None)
+			if (ContentType == ParserType.None)
 				ContentType = contentType;
 			DisplayName = displayName;
 			var isModified = modified ?? bytes != null;
@@ -2728,7 +2728,7 @@ namespace NeoEdit
 
 		public void OpenTable(Table table, string name = null)
 		{
-			var contentType = ContentType.IsTableType() ? ContentType : Parser.ParserType.Columns;
+			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
 			var textEditor = TabsParent.Add(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 			textEditor.ContentType = contentType;
 			textEditor.DisplayName = name;

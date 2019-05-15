@@ -20,7 +20,7 @@ namespace NeoEdit
 		{
 			if (te.ContentType.IsTableType())
 				return new Table(te.AllText, te.ContentType, hasHeaders);
-			if (te.ContentType == Parser.ParserType.None)
+			if (te.ContentType == ParserType.None)
 				return new Table(Enumerable.Range(0, te.Data.NumLines).AsParallel().AsOrdered().Select(line => te.Data.GetLine(line)).NonNullOrWhiteSpace().Select(str => new List<string> { str }).ToList(), false);
 			throw new Exception("Invalid content type");
 		}
@@ -28,7 +28,7 @@ namespace NeoEdit
 		static string GetTableText(ITextEditor te, Table table)
 		{
 			if (!te.ContentType.IsTableType())
-				te.ContentType = Parser.ParserType.Columns;
+				te.ContentType = ParserType.Columns;
 			return table.ToString(te.Data.DefaultEnding, te.ContentType);
 		}
 

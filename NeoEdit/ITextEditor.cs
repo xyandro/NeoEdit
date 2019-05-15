@@ -18,7 +18,7 @@ namespace NeoEdit
 		string DisplayName { get; set; }
 		string FileName { get; set; }
 		bool IsModified { get; }
-		Parser.ParserType ContentType { get; set; }
+		ParserType ContentType { get; set; }
 		Coder.CodePage CodePage { get; set; }
 		string AESKey { get; set; }
 		bool Compressed { get; set; }
@@ -75,7 +75,7 @@ namespace NeoEdit
 		bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown, object previousData);
 		bool HandleText(string text);
 		Range MoveCursor(Range range, int cursor, bool selecting);
-		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, bool keepUndo = false);
+		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, bool keepUndo = false);
 		List<string> RelativeSelectedFiles();
 		void Replace(List<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false);
 		void ReplaceOneWithMany(List<string> strs, bool? addNewLines);
@@ -100,7 +100,7 @@ namespace NeoEdit
 		bool HighlightSyntax { get; set; }
 		bool StrictParsing { get; set; }
 		CacheValue previousData { get; }
-		Parser.ParserType previousType { get; set; }
+		ParserType previousType { get; set; }
 		ParserNode previousRoot { get; set; }
 		string DBName { get; set; }
 		DbConnection dbConnection { get; set; }

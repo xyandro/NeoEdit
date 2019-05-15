@@ -826,13 +826,13 @@ namespace NeoEdit
 			return replace;
 		}
 
-		public ITextEditor Add(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null, int? index = null) => Add(new TextEditor(fileName, displayName, bytes, codePage, contentType, modified, line, column, shutdownData), index);
+		public ITextEditor Add(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null, int? index = null) => Add(new TextEditor(fileName, displayName, bytes, codePage, contentType, modified, line, column, shutdownData), index);
 
 		public Window AddDiff(ITextEditor textEdit1, ITextEditor textEdit2)
 		{
-			if (textEdit1.ContentType == Parser.ParserType.None)
+			if (textEdit1.ContentType == ParserType.None)
 				textEdit1.ContentType = textEdit2.ContentType;
-			if (textEdit2.ContentType == Parser.ParserType.None)
+			if (textEdit2.ContentType == ParserType.None)
 				textEdit2.ContentType = textEdit1.ContentType;
 			Add(textEdit1);
 			Add(textEdit2);

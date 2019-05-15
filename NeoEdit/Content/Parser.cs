@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NeoEdit;
-using NeoEdit.Parsing;
 using NeoEdit.Content.Balanced;
 using NeoEdit.Content.Columns;
 using NeoEdit.Content.CSharp;
@@ -13,27 +12,12 @@ using NeoEdit.Content.JSON;
 using NeoEdit.Content.SQL;
 using NeoEdit.Content.TCSV;
 using NeoEdit.Content.XML;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.Content
 {
 	static public class Parser
 	{
-		public enum ParserType
-		{
-			None,
-			Balanced,
-			Columns,
-			CPlusPlus,
-			CSharp,
-			CSV,
-			ExactColumns,
-			HTML,
-			JSON,
-			SQL,
-			TSV,
-			XML,
-		}
-
 		public static bool IsTableType(this ParserType parserType) => (parserType == ParserType.Columns) || (parserType == ParserType.ExactColumns) || (parserType == ParserType.TSV) || (parserType == ParserType.CSV);
 
 		static public ParserNode Parse(string data, ParserType parserType, bool strict)

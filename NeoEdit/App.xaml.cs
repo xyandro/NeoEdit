@@ -81,9 +81,9 @@ namespace NeoEdit
 					for (var ctr = 0; ctr + 1 < tabs.Items.Count; ctr += 2)
 					{
 						tabs.Items[ctr].DiffTarget = tabs.Items[ctr + 1];
-						if (tabs.Items[ctr].ContentType == Parser.ParserType.None)
+						if (tabs.Items[ctr].ContentType == ParserType.None)
 							tabs.Items[ctr].ContentType = tabs.Items[ctr + 1].ContentType;
-						if (tabs.Items[ctr + 1].ContentType == Parser.ParserType.None)
+						if (tabs.Items[ctr + 1].ContentType == ParserType.None)
 							tabs.Items[ctr + 1].ContentType = tabs.Items[ctr].ContentType;
 					}
 					tabs.SetLayout(TabsLayout.Custom, 2);
