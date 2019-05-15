@@ -71,13 +71,13 @@ namespace NeoEdit
 		void Command_Network_AbsoluteURL(ITextEditor te, NetworkAbsoluteURLDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
-			var newStrs = te.Selections.Zip(results, (range, baseUrl) => new { range, baseUrl }).AsParallel().AsOrdered().Select(obj => new Uri(new Uri(obj.baseUrl), GetString(obj.range)).AbsoluteUri).ToList();
+			var newStrs = te.Selections.Zip(results, (range, baseUrl) => new { range, baseUrl }).AsParallel().AsOrdered().Select(obj => new Uri(new Uri(obj.baseUrl), te.GetString(obj.range)).AbsoluteUri).ToList();
 			te.ReplaceSelections(newStrs);
 		}
 
 		void Command_Network_Fetch(ITextEditor te, Coder.CodePage codePage = Coder.CodePage.None)
 		{
-			var urls = GetSelectionStrings();
+			var urls = te.GetSelectionStrings();
 			var results = Task.Run(() => GetURLs(te, urls, codePage).Result).Result;
 			if (results.Any(result => result.Item3))
 				new Message(te.TabsParent)
@@ -149,9 +149,9 @@ namespace NeoEdit
 			te.ReplaceSelections(items.Select(l => string.Join(te.Data.DefaultEnding, l)).ToList());
 		}
 
-		void Command_Network_Lookup_IP(ITextEditor te) { te.ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
+		void Command_Network_Lookup_IP(ITextEditor te) { te.ReplaceSelections(Task.Run(async () => await Task.WhenAll(te.GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
-		void Command_Network_Lookup_HostName(ITextEditor te) { te.ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
+		void Command_Network_Lookup_HostName(ITextEditor te) { te.ReplaceSelections(Task.Run(async () => await Task.WhenAll(te.GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
 		void Command_Network_AdaptersInfo(ITextEditor te)
 		{
@@ -189,7 +189,7 @@ namespace NeoEdit
 		{
 			var replies = Task.Run(async () =>
 			{
-				var strs = GetSelectionStrings().Select(async str =>
+				var strs = te.GetSelectionStrings().Select(async str =>
 				{
 					try
 					{
@@ -213,7 +213,7 @@ namespace NeoEdit
 
 		void Command_Network_ScanPorts(ITextEditor te, NetworkScanPortsDialog.Result result)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			var results = PortScanner.ScanPorts(strs.Select(str => IPAddress.Parse(str)).ToList(), result.Ports, result.Attempts, TimeSpan.FromMilliseconds(result.Timeout), result.Concurrency);
 			te.ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
 		}

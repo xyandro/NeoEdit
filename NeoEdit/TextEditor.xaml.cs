@@ -664,9 +664,9 @@ namespace NeoEdit
 
 		string GetRandomData(string chars, int length) => new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
 
-		List<string> GetSelectionStrings() => Selections.AsParallel().AsOrdered().Select(range => GetString(range)).ToList();
+		public List<string> GetSelectionStrings() => Selections.AsParallel().AsOrdered().Select(range => GetString(range)).ToList();
 
-		string GetString(Range range) => Data.GetString(range.Start, range.Length);
+		public string GetString(Range range) => Data.GetString(range.Start, range.Length);
 
 		List<T> GetVariableExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables());
 

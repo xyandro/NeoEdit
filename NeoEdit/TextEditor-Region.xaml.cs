@@ -31,7 +31,7 @@ namespace NeoEdit
 
 		List<List<string>> GetRegionsWithSelectionsText(ITextEditor te, int useRegion, bool mustBeSameSize = true)
 		{
-			var list = GetSelectionStrings().Zip(GetEnclosingRegions(te, useRegion, true), (selection, region) => new { selection, region }).GroupBy(obj => obj.region).Select(group => group.Select(obj => obj.selection).ToList()).ToList();
+			var list = te.GetSelectionStrings().Zip(GetEnclosingRegions(te, useRegion, true), (selection, region) => new { selection, region }).GroupBy(obj => obj.region).Select(group => group.Select(obj => obj.selection).ToList()).ToList();
 			if ((mustBeSameSize) && (list.Select(items => items.Count).Distinct().Count() > 1))
 				throw new Exception("All regions must have the same number of selections");
 			return list;
@@ -305,7 +305,7 @@ namespace NeoEdit
 			var newSelections = new List<Range>();
 			foreach (var regionsWithSelection in regionsWithSelections)
 			{
-				newRegionStrs.Add(string.Join("", Enumerable.Repeat(GetString(regionsWithSelection.Item1), regionsWithSelection.Item2.Count)));
+				newRegionStrs.Add(string.Join("", Enumerable.Repeat(te.GetString(regionsWithSelection.Item1), regionsWithSelection.Item2.Count)));
 				offset -= regionsWithSelection.Item1.Length;
 				foreach (var selection in regionsWithSelection.Item2)
 				{
@@ -319,7 +319,7 @@ namespace NeoEdit
 			te.SetSelections(newSelections);
 		}
 
-		void Command_Region_CopyEnclosingRegion_Region(ITextEditor te, int useRegion) => SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(range => GetString(range)).ToList());
+		void Command_Region_CopyEnclosingRegion_Region(ITextEditor te, int useRegion) => SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(range => te.GetString(range)).ToList());
 
 		void Command_Region_CopyEnclosingRegionIndex_Region(ITextEditor te, int useRegion) => SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(region => (Regions[useRegion].IndexOf(region) + 1).ToString()).ToList());
 

@@ -51,7 +51,7 @@ namespace NeoEdit
 				te.ReplaceSelections(strs);
 		}
 
-		void Command_File_New_FromSelections(ITextEditor te) => GetSelectionStrings().ForEach((str, index) => te.TabsParent.Add(new TextEditor(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: te.ContentType, modified: false)));
+		void Command_File_New_FromSelections(ITextEditor te) => te.GetSelectionStrings().ForEach((str, index) => te.TabsParent.Add(new TextEditor(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: te.ContentType, modified: false)));
 
 		void Command_File_Open_Selected(ITextEditor te)
 		{

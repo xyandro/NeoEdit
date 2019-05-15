@@ -112,7 +112,7 @@ namespace NeoEdit
 
 		List<int> GetOrdering(ITextEditor te, SortType type, bool caseSensitive, bool ascending)
 		{
-			var entries = te.Selections.Select((range, index) => new { value = GetString(range), index = index }).ToList();
+			var entries = te.Selections.Select((range, index) => new { value = te.GetString(range), index = index }).ToList();
 
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 
@@ -205,9 +205,9 @@ namespace NeoEdit
 			te.ReplaceSelections(redo.text, replaceType: ReplaceType.Redo);
 		}
 
-		void Command_Edit_Copy_CutCopy(bool isCut)
+		void Command_Edit_Copy_CutCopy(ITextEditor te, bool isCut)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 
 			if (!StringsAreFiles(strs))
 				SetClipboardStrings(strs);
@@ -258,7 +258,7 @@ namespace NeoEdit
 				if ((selectionOnly) && (te.Data.GetOffsetLine(sel.Cursor) == te.Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
-					text = GetString(sel);
+					text = te.GetString(sel);
 				}
 			}
 
@@ -282,7 +282,7 @@ namespace NeoEdit
 
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
-				te.SetSelections(te.Selections.AsParallel().AsOrdered().Where(range => regex.IsMatch(GetString(range)) == result.KeepMatching).ToList());
+				te.SetSelections(te.Selections.AsParallel().AsOrdered().Where(range => regex.IsMatch(te.GetString(range)) == result.KeepMatching).ToList());
 				return;
 			}
 
@@ -318,7 +318,7 @@ namespace NeoEdit
 			if ((te.Selections.Count != 1) || (!te.Selections[0].HasSelection))
 				throw new Exception("Must have one selection with selected text.");
 
-			var text = Regex.Escape(GetString(te.Selections[0]));
+			var text = Regex.Escape(te.GetString(te.Selections[0]));
 			var regex = new Regex(text, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
 			SetSearches(te.Data.RegexMatches(regex, BeginOffset, EndOffset, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
@@ -334,7 +334,7 @@ namespace NeoEdit
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
 				var set = new HashSet<string>(texts, result.MatchCase ? (IEqualityComparer<string>)EqualityComparer<string>.Default : StringComparer.OrdinalIgnoreCase);
-				te.SetSelections(te.Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == result.KeepMatching).ToList());
+				te.SetSelections(te.Selections.AsParallel().AsOrdered().Where(range => set.Contains(te.GetString(range)) == result.KeepMatching).ToList());
 				return;
 			}
 
@@ -355,7 +355,7 @@ namespace NeoEdit
 				if ((selectionOnly) && (te.Data.GetOffsetLine(sel.Cursor) == te.Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
-					text = GetString(sel);
+					text = te.GetString(sel);
 				}
 			}
 
@@ -383,14 +383,14 @@ namespace NeoEdit
 			var regions = result.SelectionOnly ? te.Selections.ToList() : new List<Range> { te.FullRange };
 			var sels = regions.AsParallel().AsOrdered().SelectMany(region => te.Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			te.SetSelections(sels);
-			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => regex.Replace(GetString(range), result.Replace)).ToList());
+			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => regex.Replace(te.GetString(range), result.Replace)).ToList());
 		}
 
 		void Command_Edit_Find_ClearSearchResults() => SetSearches(new List<Range>());
 
 		void Command_Edit_CopyDown(ITextEditor te)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			var index = 0;
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
 				if (string.IsNullOrWhiteSpace(strs[ctr]))
@@ -406,7 +406,7 @@ namespace NeoEdit
 		{
 			var count = new NEExpression(result.Count).Evaluate<int>(GetVariables());
 
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			if (count < 0)
 				count = -count % strs.Count;
 			else
@@ -423,7 +423,7 @@ namespace NeoEdit
 			var results = GetFixedExpressionResults<int>(result.Expression);
 			if (results.Any(repeatCount => repeatCount < 0))
 				throw new Exception("Repeat count must be >= 0");
-			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(GetString(range), results[index])).ToList());
+			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(te.GetString(range), results[index])).ToList());
 			if (result.SelectRepetitions)
 			{
 				var sels = new List<Range>();
@@ -439,24 +439,24 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Edit_Markup_Escape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlEncode(GetString(range))).ToList());
+		void Command_Edit_Markup_Escape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlEncode(te.GetString(range))).ToList());
 
-		void Command_Edit_Markup_Unescape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlDecode(GetString(range))).ToList());
+		void Command_Edit_Markup_Unescape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlDecode(te.GetString(range))).ToList());
 
-		void Command_Edit_RegEx_Escape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => Regex.Escape(GetString(range))).ToList());
+		void Command_Edit_RegEx_Escape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => Regex.Escape(te.GetString(range))).ToList());
 
-		void Command_Edit_RegEx_Unescape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => Regex.Unescape(GetString(range))).ToList());
+		void Command_Edit_RegEx_Unescape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => Regex.Unescape(te.GetString(range))).ToList());
 
-		void Command_Edit_URL_Escape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlEncode(GetString(range))).ToList());
+		void Command_Edit_URL_Escape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlEncode(te.GetString(range))).ToList());
 
-		void Command_Edit_URL_Unescape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
+		void Command_Edit_URL_Unescape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(te.GetString(range))).ToList());
 
 		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Edit_URL_Absolute_Dialog(ITextEditor te) => FilesNamesMakeAbsoluteRelativeDialog.Run(te.TabsParent, GetVariables(), true, false);
 
 		void Command_Edit_URL_Absolute(ITextEditor te, FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
-			te.ReplaceSelections(GetSelectionStrings().Select((str, index) =>
+			te.ReplaceSelections(te.GetSelectionStrings().Select((str, index) =>
 			{
 				var uri = new Uri(new Uri(results[index]), str);
 				return uri.AbsoluteUri;
@@ -467,7 +467,7 @@ namespace NeoEdit
 
 		void Command_Edit_Data_Hash(ITextEditor te, EditDataHashDialog.Result result)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
 			te.ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
@@ -477,7 +477,7 @@ namespace NeoEdit
 
 		void Command_Edit_Data_Compress(ITextEditor te, EditDataCompressDialog.Result result)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var compressed = strs.AsParallel().AsOrdered().Select(str => Compressor.Compress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
@@ -490,7 +490,7 @@ namespace NeoEdit
 
 		void Command_Edit_Data_Decompress(ITextEditor te, EditDataCompressDialog.Result result)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var decompressed = strs.AsParallel().AsOrdered().Select(str => Compressor.Decompress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
@@ -503,7 +503,7 @@ namespace NeoEdit
 
 		void Command_Edit_Data_Encrypt(ITextEditor te, EditDataEncryptDialog.Result result)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var encrypted = strs.AsParallel().AsOrdered().Select(str => Cryptor.Encrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
@@ -516,7 +516,7 @@ namespace NeoEdit
 
 		void Command_Edit_Data_Decrypt(ITextEditor te, EditDataEncryptDialog.Result result)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var decrypted = strs.AsParallel().AsOrdered().Select(str => Cryptor.Decrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
@@ -529,7 +529,7 @@ namespace NeoEdit
 
 		void Command_Edit_Data_Sign(ITextEditor te, EditDataSignDialog.Result result)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
 			te.ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
@@ -546,7 +546,7 @@ namespace NeoEdit
 
 			var newSelections = te.Selections.ToList();
 			var orderedRegions = ordering.Select(index => regions[index]).ToList();
-			var orderedRegionText = orderedRegions.Select(range => GetString(range)).ToList();
+			var orderedRegionText = orderedRegions.Select(range => te.GetString(range)).ToList();
 
 			te.Replace(regions, orderedRegionText);
 
@@ -570,7 +570,7 @@ namespace NeoEdit
 
 		void Command_Edit_Convert(ITextEditor te, EditConvertDialog.Result result)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputType))
 				return;
 			var bytes = strs.AsParallel().AsOrdered().Select(str => Coder.StringToBytes(str, result.InputType, result.InputBOM)).ToList();

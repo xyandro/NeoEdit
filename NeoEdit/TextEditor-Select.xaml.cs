@@ -18,7 +18,7 @@ namespace NeoEdit
 			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, te.Data.GetOffset(line, 0)), Math.Min(inputRange.End, te.Data.GetOffset(line, te.Data.GetLineLength(line))))).ToList();
 			if ((lineRanges.Count >= 2) && (!lineRanges[lineRanges.Count - 1].HasSelection))
 				lineRanges.RemoveAt(lineRanges.Count - 1);
-			var lineStrs = lineRanges.Select(range => GetString(range)).ToList();
+			var lineStrs = lineRanges.Select(range => te.GetString(range)).ToList();
 			var lines = Enumerable.Range(1, lineStrs.Count).MaxBy(x => GetRepetitionScore(lineStrs, x));
 			for (var ctr = 0; ctr < lineRanges.Count; ctr += lines)
 				yield return new Range(lineRanges[ctr + lines - 1].End, lineRanges[ctr].Start);
@@ -119,7 +119,7 @@ namespace NeoEdit
 				{
 					if ((stackTop == SelectSplitEnum.None) && (pos > matchPos))
 					{
-						var match = result.Regex.Match(GetString(new Range(pos, range.End)));
+						var match = result.Regex.Match(te.GetString(new Range(pos, range.End)));
 						if (match.Success)
 						{
 							if (match.Length == 0)
@@ -272,13 +272,13 @@ namespace NeoEdit
 			}).ToList());
 		}
 
-		void Command_Select_Repeats_Unique(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Distinct(range => RepeatsValue(caseSensitive, GetString(range))).ToList());
+		void Command_Select_Repeats_Unique(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Distinct(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
 
-		void Command_Select_Repeats_Duplicates(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Duplicate(range => RepeatsValue(caseSensitive, GetString(range))).ToList());
+		void Command_Select_Repeats_Duplicates(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Duplicate(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
 
-		void Command_Select_Repeats_MatchPrevious(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Match(range => RepeatsValue(caseSensitive, GetString(range))).ToList());
+		void Command_Select_Repeats_MatchPrevious(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Match(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
 
-		void Command_Select_Repeats_NonMatchPrevious(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, GetString(range))).ToList());
+		void Command_Select_Repeats_NonMatchPrevious(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
 
 		void Command_Select_Repeats_RepeatedLines(ITextEditor te) => te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(te, range)).ToList());
 
@@ -286,7 +286,7 @@ namespace NeoEdit
 
 		void Command_Select_Repeats_ByCount(ITextEditor te, SelectByCountDialog.Result result)
 		{
-			var strs = te.Selections.Select((range, index) => Tuple.Create(GetString(range), index)).ToList();
+			var strs = te.Selections.Select((range, index) => Tuple.Create(te.GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(result.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 			foreach (var tuple in strs)
 			{

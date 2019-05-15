@@ -46,7 +46,7 @@ namespace NeoEdit
 			return results;
 		}
 
-		void OpenTable(ITextEditor te, Table table, string name = null)
+		public void OpenTable(ITextEditor te, Table table, string name = null)
 		{
 			var contentType = te.ContentType.IsTableType() ? te.ContentType : Parser.ParserType.Columns;
 			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
@@ -80,7 +80,7 @@ namespace NeoEdit
 			if (!te.Selections[0].HasSelection)
 				throw new Exception("Must have data selected");
 
-			return TableTextToTableDialog.Run(te.TabsParent, GetSelectionStrings().Single());
+			return TableTextToTableDialog.Run(te.TabsParent, te.GetSelectionStrings().Single());
 		}
 
 		void Command_Table_TextToTable(ITextEditor te, TableTextToTableDialog.Result result)
@@ -93,8 +93,8 @@ namespace NeoEdit
 			var columns = new List<Tuple<int, int>>();
 			for (var ctr = 0; ctr < result.LineBreaks.Count - 1; ++ctr)
 				columns.Add(Tuple.Create(result.LineBreaks[ctr], result.LineBreaks[ctr + 1]));
-			var rows = GetSelectionStrings().Single().Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).NonNullOrEmpty().Select(line => columns.Select(col => line.Substring(Math.Min(line.Length, col.Item1), Math.Min(line.Length, col.Item2) - Math.Min(line.Length, col.Item1)).Trim()).ToList()).ToList();
-			OpenTable(te, new Table(rows));
+			var rows = te.GetSelectionStrings().Single().Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).NonNullOrEmpty().Select(line => columns.Select(col => line.Substring(Math.Min(line.Length, col.Item1), Math.Min(line.Length, col.Item2) - Math.Min(line.Length, col.Item1)).Trim()).ToList()).ToList();
+			te.OpenTable(te, new Table(rows));
 		}
 
 		void Command_Table_LineSelectionsToTable(ITextEditor te)
@@ -106,10 +106,10 @@ namespace NeoEdit
 			if (lineSets.Any(range => range.start != range.end))
 				throw new Exception("Cannot have multi-line selections");
 
-			var sels = GetSelectionStrings();
+			var sels = te.GetSelectionStrings();
 			var lines = lineSets.Select(range => range.start).ToList();
 			var rows = Enumerable.Range(0, te.Selections.Count).GroupBy(index => lines[index]).Select(group => group.Select(index => sels[index]).ToList()).ToList();
-			OpenTable(te, new Table(rows, false));
+			te.OpenTable(te, new Table(rows, false));
 		}
 
 		void Command_Table_RegionSelectionsToTable_Region(ITextEditor te, int useRegion)
@@ -117,10 +117,10 @@ namespace NeoEdit
 			if (!te.Selections.Any())
 				return;
 
-			var sels = GetSelectionStrings();
+			var sels = te.GetSelectionStrings();
 			var regions = GetEnclosingRegions(te, useRegion);
 			var rows = Enumerable.Range(0, te.Selections.Count).GroupBy(index => regions[index]).Select(group => group.Select(index => sels[index]).ToList()).ToList();
-			OpenTable(te, new Table(rows, false));
+			te.OpenTable(te, new Table(rows, false));
 		}
 
 		TableEditTableDialog.Result Command_Table_EditTable_Dialog(ITextEditor te) => TableEditTableDialog.Run(te.TabsParent, GetTable(te));

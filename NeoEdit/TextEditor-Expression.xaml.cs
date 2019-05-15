@@ -86,7 +86,7 @@ namespace NeoEdit
 			{
 				var match = regex.Match(te.Data.GetString(tuple.Item1, tuple.Item2));
 				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);
-				var inlineVar = new InlineVariable(match.Groups[1].Value, match.Groups[2].Value, Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length), GetString(valueRange), valueRange);
+				var inlineVar = new InlineVariable(match.Groups[1].Value, match.Groups[2].Value, Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length), te.GetString(valueRange), valueRange);
 				if (!string.IsNullOrEmpty(inlineVar.Name))
 				{
 					if (found.Contains(inlineVar.Name))
@@ -116,7 +116,7 @@ namespace NeoEdit
 			te.SetSelections(te.Selections.Where((str, num) => results[num]).ToList());
 		}
 
-		void Command_Expression_InlineVariables_Add(ITextEditor te) => te.ReplaceSelections(GetSelectionStrings().Select(str => $"[:'{(string.IsNullOrEmpty(str) ? "0" : str)}'=0]").ToList());
+		void Command_Expression_InlineVariables_Add(ITextEditor te) => te.ReplaceSelections(te.GetSelectionStrings().Select(str => $"[:'{(string.IsNullOrEmpty(str) ? "0" : str)}'=0]").ToList());
 
 		void Command_Expression_InlineVariables_Calculate(ITextEditor te)
 		{

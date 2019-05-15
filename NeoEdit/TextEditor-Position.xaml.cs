@@ -96,7 +96,7 @@ namespace NeoEdit
 
 		void Command_Position_Goto_FilesLines(ITextEditor te)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			var startPos = strs.Select(str => str.LastIndexOf("(")).ToList();
 			if ((strs.Any(str => string.IsNullOrWhiteSpace(str))) || (startPos.Any(val => val == -1)) || (strs.Any(str => str[str.Length - 1] != ')')))
 				throw new Exception("Format: FileName(Line)");

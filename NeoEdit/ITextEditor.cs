@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Common;
 using NeoEdit.Content;
 using NeoEdit.Parsing;
 
@@ -22,5 +23,10 @@ namespace NeoEdit
 		void ReplaceSelections(List<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false);
 		Tabs TabsParent { get; }
 		Range MoveCursor(Range range, int cursor, bool selecting);
+		DbConnection dbConnection { get; set; }
+		string DBName { get; set; }
+		List<string> GetSelectionStrings();
+		void OpenTable(ITextEditor te, Table table, string name = null);
+		string GetString(Range range);
 	}
 }

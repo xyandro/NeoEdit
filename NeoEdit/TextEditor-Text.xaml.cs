@@ -103,33 +103,33 @@ namespace NeoEdit
 			te.SetSelections(sels);
 		}
 
-		void Command_Text_Case_Upper(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToUpperInvariant()).ToList());
+		void Command_Text_Case_Upper(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).ToUpperInvariant()).ToList());
 
-		void Command_Text_Case_Lower(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToLowerInvariant()).ToList());
+		void Command_Text_Case_Lower(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).ToLowerInvariant()).ToList());
 
-		void Command_Text_Case_Proper(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToProper()).ToList());
+		void Command_Text_Case_Proper(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).ToProper()).ToList());
 
-		void Command_Text_Case_Toggle(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToToggled()).ToList());
+		void Command_Text_Case_Toggle(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).ToToggled()).ToList());
 
 		void Command_Text_Length(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => range.Length.ToString()).ToList());
 
 		TextWidthDialog.Result Command_Text_Width_Dialog(ITextEditor te)
 		{
-			var numeric = te.Selections.Any() ? te.Selections.AsParallel().All(range => GetString(range).IsNumeric()) : false;
+			var numeric = te.Selections.Any() ? te.Selections.AsParallel().All(range => te.GetString(range).IsNumeric()) : false;
 			return TextWidthDialog.Run(te.TabsParent, numeric, false, GetVariables());
 		}
 
 		void Command_Text_Width(ITextEditor te, TextWidthDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<int>(result.Expression);
-			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), result, results[index])).ToList());
+			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(te.GetString(range), result, results[index])).ToList());
 		}
 
 		TextTrimDialog.Result Command_Text_Trim_Dialog(ITextEditor te) => TextTrimDialog.Run(te.TabsParent);
 
-		void Command_Text_Trim(ITextEditor te, TextTrimDialog.Result result) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(str => TrimString(GetString(str), result)).ToList());
+		void Command_Text_Trim(ITextEditor te, TextTrimDialog.Result result) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(str => TrimString(te.GetString(str), result)).ToList());
 
-		void Command_Text_SingleLine(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
+		void Command_Text_SingleLine(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
 		TextUnicodeDialog.Result Command_Text_Unicode_Dialog(ITextEditor te) => TextUnicodeDialog.Run(te.TabsParent);
 
@@ -181,7 +181,7 @@ namespace NeoEdit
 			var opResult = ProgressDialog.Run(te.TabsParent, "Finding characters...", (cancelled, progress) =>
 			{
 				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
-				var data = GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).Select((str, strIndex) => Tuple.Create(str, strIndex, str.Indexes(ch => valid.Contains(ch)).Distinct(index => str[index]).ToList())).OrderBy(tuple => tuple.Item3.Count).ToList();
+				var data = te.GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).Select((str, strIndex) => Tuple.Create(str, strIndex, str.Indexes(ch => valid.Contains(ch)).Distinct(index => str[index]).ToList())).OrderBy(tuple => tuple.Item3.Count).ToList();
 				var chars = data.Select(tuple => tuple.Item3.Select(index => tuple.Item1[index]).ToList()).ToList();
 
 				var onChar = new int[chars.Count];
@@ -258,7 +258,7 @@ namespace NeoEdit
 
 		void Command_Text_RepeatCount(ITextEditor te)
 		{
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			var counts = strs.GroupBy(str => str).ToDictionary(group => group.Key, group => group.Count());
 			te.ReplaceSelections(strs.Select(str => counts[str].ToString()).ToList());
 		}
@@ -266,7 +266,7 @@ namespace NeoEdit
 		void Command_Text_RepeatIndex(ITextEditor te)
 		{
 			var counts = new Dictionary<string, int>();
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			var newStrs = new List<string>();
 			foreach (var str in strs)
 			{

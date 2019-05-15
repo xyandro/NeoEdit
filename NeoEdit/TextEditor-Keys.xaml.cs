@@ -81,7 +81,7 @@ namespace NeoEdit
 		{
 			GlobalKeys = te.TabsParent.ActiveCount == 1;
 			// Handles keys as well as values
-			var values = GetSelectionStrings();
+			var values = te.GetSelectionStrings();
 			if ((index == 0) && (values.Distinct(str => caseSensitive ? str : str.ToLowerInvariant()).Count() != values.Count))
 				throw new ArgumentException("Cannot have duplicate keys");
 			KeysAndValues[index] = new ObservableCollection<string>(values);
@@ -100,10 +100,10 @@ namespace NeoEdit
 				localKeysHash = hash;
 		}
 
-		void Command_Keys_Add(int index)
+		void Command_Keys_Add(ITextEditor te, int index)
 		{
 			// Handles keys as well as values
-			var values = GetSelectionStrings();
+			var values = te.GetSelectionStrings();
 			var caseSensitive = keysHash.Comparer == StringComparer.Ordinal;
 			if ((index == 0) && (KeysAndValues[0].Concat(values).GroupBy(key => caseSensitive ? key : key.ToLowerInvariant()).Any(group => group.Count() > 1)))
 				throw new ArgumentException("Cannot have duplicate keys");
@@ -113,10 +113,10 @@ namespace NeoEdit
 				CalculateKeysHash(caseSensitive);
 		}
 
-		void Command_Keys_Remove(int index)
+		void Command_Keys_Remove(ITextEditor te, int index)
 		{
 			// Handles keys as well as values
-			var values = GetSelectionStrings().Distinct().ToList();
+			var values = te.GetSelectionStrings().Distinct().ToList();
 			foreach (var value in values)
 				KeysAndValues[index].Remove(value);
 		}
@@ -130,7 +130,7 @@ namespace NeoEdit
 			var strs = new List<string>();
 			foreach (var range in te.Selections)
 			{
-				var str = GetString(range);
+				var str = te.GetString(range);
 				if (!keysHash.ContainsKey(str))
 					strs.Add(str);
 				else

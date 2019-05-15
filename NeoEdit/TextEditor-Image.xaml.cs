@@ -88,7 +88,7 @@ namespace NeoEdit
 			}
 		}
 
-		ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog(ITextEditor te) => ImageGrabColorDialog.Run(te.TabsParent, te.Selections.Select(range => GetString(range)).FirstOrDefault());
+		ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog(ITextEditor te) => ImageGrabColorDialog.Run(te.TabsParent, te.Selections.Select(range => te.GetString(range)).FirstOrDefault());
 
 		void Command_Image_GrabColor(ImageGrabColorDialog.Result result) => ReplaceSelections(result.Color);
 
@@ -120,7 +120,7 @@ namespace NeoEdit
 		void Command_Image_AdjustColor(ITextEditor te, ImageAdjustColorDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<double>(result.Expression);
-			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => AdjustColor(GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
+			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => AdjustColor(te.GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
 			te.ReplaceSelections(strs);
 		}
 
@@ -129,14 +129,14 @@ namespace NeoEdit
 		void Command_Image_AddColor(ITextEditor te, ImageAddOverlayColorDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
-			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => AddColor(GetString(range), results[index])).ToList();
+			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => AddColor(te.GetString(range), results[index])).ToList();
 			te.ReplaceSelections(strs);
 		}
 
 		void Command_Image_OverlayColor(ITextEditor te, ImageAddOverlayColorDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
-			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], GetString(range))).ToList();
+			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], te.GetString(range))).ToList();
 			te.ReplaceSelections(strs);
 		}
 

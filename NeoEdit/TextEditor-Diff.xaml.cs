@@ -10,7 +10,7 @@ namespace NeoEdit
 {
 	partial class TextEditor
 	{
-		void DoRangesDiff(RangeList ranges)
+		void DoRangesDiff(ITextEditor te, RangeList ranges)
 		{
 			if (!ranges.Any())
 				return;
@@ -20,7 +20,7 @@ namespace NeoEdit
 
 			var codePage = CodePage; // Must save as other threads can't access DependencyProperties
 			var tabs = new Tabs();
-			var batches = ranges.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).ToList();
+			var batches = ranges.AsParallel().AsOrdered().Select(range => te.GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).ToList();
 			foreach (var batch in batches)
 				tabs.AddDiff(new TextEditor(bytes: batch[0], codePage: codePage, modified: false), new TextEditor(bytes: batch[1], codePage: codePage, modified: false));
 		}
@@ -59,7 +59,7 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Diff_Selections(ITextEditor te) => DoRangesDiff(te.Selections);
+		void Command_Diff_Selections(ITextEditor te) => DoRangesDiff(te, te.Selections);
 
 		void Command_Diff_SelectedFiles(ITextEditor te)
 		{
@@ -69,7 +69,7 @@ namespace NeoEdit
 			if (te.Selections.Count % 2 != 0)
 				throw new Exception("Must have even number of selections.");
 
-			var files = GetSelectionStrings();
+			var files = te.GetSelectionStrings();
 			if (files.Any(file => !File.Exists(file)))
 				throw new Exception("Selections must be files.");
 
@@ -79,9 +79,9 @@ namespace NeoEdit
 				tabs.AddDiff(new TextEditor(batch[0]), new TextEditor(batch[1]));
 		}
 
-		void Command_Diff_Diff_VCSNormalFiles()
+		void Command_Diff_Diff_VCSNormalFiles(ITextEditor te)
 		{
-			var files = GetSelectionStrings();
+			var files = te.GetSelectionStrings();
 			if (files.Any(file => !File.Exists(file)))
 				throw new Exception("Selections must be files.");
 
@@ -95,7 +95,7 @@ namespace NeoEdit
 				tabs.AddDiff(new TextEditor(displayName: Path.GetFileName(files[ctr]), modified: false, bytes: original[ctr]), new TextEditor(fileName: files[ctr]));
 		}
 
-		void Command_Diff_Regions_Region(int useRegion) => DoRangesDiff(Regions[useRegion]);
+		void Command_Diff_Regions_Region(ITextEditor te, int useRegion) => DoRangesDiff(te, Regions[useRegion]);
 
 		void Command_Diff_Break() => DiffTarget = null;
 

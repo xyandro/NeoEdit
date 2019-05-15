@@ -22,17 +22,17 @@ namespace NeoEdit
 		string dbNameField;
 		public string DBName { get => dbNameField; set { dbNameField = value; statusBarRenderTimer.Start(); } }
 
-		DbConnection dbConnection;
+		public DbConnection dbConnection { get; set; }
 
-		string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
+		static string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
 
-		List<QueryResult> RunDBSelect(string commandText)
+		static List<QueryResult> RunDBSelect(ITextEditor te, string commandText)
 		{
 			try
 			{
 				var result = new List<QueryResult>();
 				var tableName = Regex.Match(commandText, @"\bFROM\b.*?([\[\]a-z\.]+)", RegexOptions.IgnoreCase).Groups[1].Value.Replace("[", "").Replace("]", "").CoalesceNullOrEmpty();
-				using (var command = dbConnection.CreateCommand())
+				using (var command = te.dbConnection.CreateCommand())
 				{
 					command.CommandText = commandText;
 					using (var reader = command.ExecuteReader())
@@ -51,34 +51,34 @@ namespace NeoEdit
 			catch (Exception ex) { return new List<QueryResult> { new QueryResult { Exception = ex } }; }
 		}
 
-		void ValidateConnection()
+		static void ValidateConnection(ITextEditor te)
 		{
-			if (dbConnection == null)
+			if (te.dbConnection == null)
 				throw new Exception("No connection.");
 		}
 
-		DatabaseConnectDialog.Result Command_Database_Connect_Dialog(ITextEditor te) => DatabaseConnectDialog.Run(te.TabsParent);
+		static DatabaseConnectDialog.Result Command_Database_Connect_Dialog(ITextEditor te) => DatabaseConnectDialog.Run(te.TabsParent);
 
-		void Command_Database_Connect(DatabaseConnectDialog.Result result)
+		static void Command_Database_Connect(ITextEditor te, DatabaseConnectDialog.Result result)
 		{
-			if (dbConnection != null)
+			if (te.dbConnection != null)
 			{
-				dbConnection.Dispose();
-				dbConnection = null;
+				te.dbConnection.Dispose();
+				te.dbConnection = null;
 			}
-			dbConnection = result.DBConnectInfo.GetConnection();
-			DBName = result.DBConnectInfo.Name;
+			te.dbConnection = result.DBConnectInfo.GetConnection();
+			te.DBName = result.DBConnectInfo.Name;
 		}
 
-		void Command_Database_ExecuteQuery(ITextEditor te)
+		static void Command_Database_ExecuteQuery(ITextEditor te)
 		{
-			ValidateConnection();
+			ValidateConnection(te);
 			var selections = te.Selections.ToList();
 			if ((te.Selections.Count == 1) && (!te.Selections[0].HasSelection))
 				selections = new List<Range> { te.FullRange };
-			var strs = GetSelectionStrings();
+			var strs = te.GetSelectionStrings();
 			// Not in parallel because prior selections may affect later ones
-			var results = selections.Select((range, index) => RunDBSelect(strs[index])).ToList();
+			var results = selections.Select((range, index) => RunDBSelect(te, strs[index])).ToList();
 
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
 			{
@@ -86,31 +86,31 @@ namespace NeoEdit
 				strs[ctr] += $": {(exception == null ? "Success" : $"{exception.Message}")}";
 
 				foreach (var table in results[ctr].Where(table => table.Table != null))
-					OpenTable(te, table.Table, table.TableName);
+					te.OpenTable(te, table.Table, table.TableName);
 			}
 
 			te.ReplaceSelections(strs);
 		}
 
-		void Command_Database_Examine_Dialog(ITextEditor te)
+		static void Command_Database_Examine_Dialog(ITextEditor te)
 		{
-			ValidateConnection();
-			DatabaseExamineDialog.Run(te.TabsParent, dbConnection);
+			ValidateConnection(te);
+			DatabaseExamineDialog.Run(te.TabsParent, te.dbConnection);
 		}
 
-		void Command_Database_GetSproc(ITextEditor te)
+		static void Command_Database_GetSproc(ITextEditor te)
 		{
-			ValidateConnection();
+			ValidateConnection(te);
 
 			var results = new List<string>();
 			foreach (var selection in te.Selections)
 			{
-				var sproc = GetString(selection);
+				var sproc = te.GetString(selection);
 				var result = "Success";
 				try
 				{
 					var text = "";
-					using (var command = dbConnection.CreateCommand())
+					using (var command = te.dbConnection.CreateCommand())
 					{
 						command.CommandText = $"sp_helptext '{sproc}'";
 						using (var reader = command.ExecuteReader())
