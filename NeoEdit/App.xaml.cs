@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using NeoEdit.Content;
 using NeoEdit.Controls;
 using NeoEdit.Dialogs;
 
@@ -97,6 +96,7 @@ namespace NeoEdit
 
 		public App()
 		{
+			ITabsCreator.CreateTabs = addEmpty => new Tabs(addEmpty);
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
 		}
 

@@ -845,8 +845,8 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Diff_IgnoreCharacters: dialogResult = Command_Diff_IgnoreCharacters_Dialog(this); break;
-				case NECommand.Diff_Fix_Whitespace: dialogResult = Command_Diff_Fix_Whitespace_Dialog(this); break;
+				case NECommand.Diff_IgnoreCharacters: dialogResult = DiffFunctions.Command_Diff_IgnoreCharacters_Dialog(this); break;
+				case NECommand.Diff_Fix_Whitespace: dialogResult = DiffFunctions.Command_Diff_Fix_Whitespace_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1189,36 +1189,36 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Diff_Selections: Command_Diff_Selections(this); break;
-				case NECommand.Diff_SelectedFiles: Command_Diff_SelectedFiles(this); break;
-				case NECommand.Diff_VCSNormalFiles: Command_Diff_Diff_VCSNormalFiles(this); break;
-				case NECommand.Diff_Regions_Region1: Command_Diff_Regions_Region(this, 1); break;
-				case NECommand.Diff_Regions_Region2: Command_Diff_Regions_Region(this, 2); break;
-				case NECommand.Diff_Regions_Region3: Command_Diff_Regions_Region(this, 3); break;
-				case NECommand.Diff_Regions_Region4: Command_Diff_Regions_Region(this, 4); break;
-				case NECommand.Diff_Regions_Region5: Command_Diff_Regions_Region(this, 5); break;
-				case NECommand.Diff_Regions_Region6: Command_Diff_Regions_Region(this, 6); break;
-				case NECommand.Diff_Regions_Region7: Command_Diff_Regions_Region(this, 7); break;
-				case NECommand.Diff_Regions_Region8: Command_Diff_Regions_Region(this, 8); break;
-				case NECommand.Diff_Regions_Region9: Command_Diff_Regions_Region(this, 9); break;
-				case NECommand.Diff_Break: Command_Diff_Break(this); break;
-				case NECommand.Diff_IgnoreWhitespace: Command_Diff_IgnoreWhitespace(this, multiStatus); break;
-				case NECommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(this, multiStatus); break;
-				case NECommand.Diff_IgnoreNumbers: Command_Diff_IgnoreNumbers(this, multiStatus); break;
-				case NECommand.Diff_IgnoreLineEndings: Command_Diff_IgnoreLineEndings(this, multiStatus); break;
-				case NECommand.Diff_IgnoreCharacters: Command_Diff_IgnoreCharacters(this, dialogResult as DiffIgnoreCharactersDialog.Result); break;
-				case NECommand.Diff_Reset: Command_Diff_Reset(this); break;
-				case NECommand.Diff_Next: Command_Diff_NextPrevious(this, true, shiftDown); break;
-				case NECommand.Diff_Previous: Command_Diff_NextPrevious(this, false, shiftDown); break;
-				case NECommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(this, true); break;
-				case NECommand.Diff_CopyRight: Command_Diff_CopyLeftRight(this, false); break;
-				case NECommand.Diff_Fix_Whitespace: Command_Diff_Fix_Whitespace(this, dialogResult as DiffFixWhitespaceDialog.Result); break;
-				case NECommand.Diff_Fix_Case: Command_Diff_Fix_Case(this); break;
-				case NECommand.Diff_Fix_Numbers: Command_Diff_Fix_Numbers(this); break;
-				case NECommand.Diff_Fix_LineEndings: Command_Diff_Fix_LineEndings(this); break;
-				case NECommand.Diff_Fix_Encoding: Command_Diff_Fix_Encoding(this); break;
-				case NECommand.Diff_Select_Match: Command_Diff_Select_MatchDiff(this, true); break;
-				case NECommand.Diff_Select_Diff: Command_Diff_Select_MatchDiff(this, false); break;
+				case NECommand.Diff_Selections: DiffFunctions.Command_Diff_Selections(this); break;
+				case NECommand.Diff_SelectedFiles: DiffFunctions.Command_Diff_SelectedFiles(this); break;
+				case NECommand.Diff_VCSNormalFiles: DiffFunctions.Command_Diff_Diff_VCSNormalFiles(this); break;
+				case NECommand.Diff_Regions_Region1: DiffFunctions.Command_Diff_Regions_Region(this, 1); break;
+				case NECommand.Diff_Regions_Region2: DiffFunctions.Command_Diff_Regions_Region(this, 2); break;
+				case NECommand.Diff_Regions_Region3: DiffFunctions.Command_Diff_Regions_Region(this, 3); break;
+				case NECommand.Diff_Regions_Region4: DiffFunctions.Command_Diff_Regions_Region(this, 4); break;
+				case NECommand.Diff_Regions_Region5: DiffFunctions.Command_Diff_Regions_Region(this, 5); break;
+				case NECommand.Diff_Regions_Region6: DiffFunctions.Command_Diff_Regions_Region(this, 6); break;
+				case NECommand.Diff_Regions_Region7: DiffFunctions.Command_Diff_Regions_Region(this, 7); break;
+				case NECommand.Diff_Regions_Region8: DiffFunctions.Command_Diff_Regions_Region(this, 8); break;
+				case NECommand.Diff_Regions_Region9: DiffFunctions.Command_Diff_Regions_Region(this, 9); break;
+				case NECommand.Diff_Break: DiffFunctions.Command_Diff_Break(this); break;
+				case NECommand.Diff_IgnoreWhitespace: DiffFunctions.Command_Diff_IgnoreWhitespace(this, multiStatus); break;
+				case NECommand.Diff_IgnoreCase: DiffFunctions.Command_Diff_IgnoreCase(this, multiStatus); break;
+				case NECommand.Diff_IgnoreNumbers: DiffFunctions.Command_Diff_IgnoreNumbers(this, multiStatus); break;
+				case NECommand.Diff_IgnoreLineEndings: DiffFunctions.Command_Diff_IgnoreLineEndings(this, multiStatus); break;
+				case NECommand.Diff_IgnoreCharacters: DiffFunctions.Command_Diff_IgnoreCharacters(this, dialogResult as DiffIgnoreCharactersDialog.Result); break;
+				case NECommand.Diff_Reset: DiffFunctions.Command_Diff_Reset(this); break;
+				case NECommand.Diff_Next: DiffFunctions.Command_Diff_NextPrevious(this, true, shiftDown); break;
+				case NECommand.Diff_Previous: DiffFunctions.Command_Diff_NextPrevious(this, false, shiftDown); break;
+				case NECommand.Diff_CopyLeft: DiffFunctions.Command_Diff_CopyLeftRight(this, true); break;
+				case NECommand.Diff_CopyRight: DiffFunctions.Command_Diff_CopyLeftRight(this, false); break;
+				case NECommand.Diff_Fix_Whitespace: DiffFunctions.Command_Diff_Fix_Whitespace(this, dialogResult as DiffFixWhitespaceDialog.Result); break;
+				case NECommand.Diff_Fix_Case: DiffFunctions.Command_Diff_Fix_Case(this); break;
+				case NECommand.Diff_Fix_Numbers: DiffFunctions.Command_Diff_Fix_Numbers(this); break;
+				case NECommand.Diff_Fix_LineEndings: DiffFunctions.Command_Diff_Fix_LineEndings(this); break;
+				case NECommand.Diff_Fix_Encoding: DiffFunctions.Command_Diff_Fix_Encoding(this); break;
+				case NECommand.Diff_Select_Match: DiffFunctions.Command_Diff_Select_MatchDiff(this, true); break;
+				case NECommand.Diff_Select_Diff: DiffFunctions.Command_Diff_Select_MatchDiff(this, false); break;
 			}
 		}
 

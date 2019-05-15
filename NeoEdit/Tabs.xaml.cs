@@ -17,7 +17,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
 using NeoEdit;
-using NeoEdit.Content;
 using NeoEdit.Controls;
 using NeoEdit.Converters;
 using NeoEdit.Dialogs;
@@ -840,6 +839,13 @@ namespace NeoEdit
 			Layout = TabsLayout.Custom;
 			Columns = 2;
 			return this;
+		}
+
+		public Window AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, ParserType contentType1 = ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, ShutdownData shutdownData1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, ParserType contentType2 = ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, ShutdownData shutdownData2 = null)
+		{
+			var te1 = new TextEditor(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, shutdownData1);
+			var te2 = new TextEditor(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, shutdownData2);
+			return AddDiff(te1, te2);
 		}
 
 		public void ShowActiveTabsDialog()

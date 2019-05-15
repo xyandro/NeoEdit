@@ -194,20 +194,6 @@
     <Compile Include="Dialogs\CustomGridDialog.xaml.cs">
       <DependentUpon>CustomGridDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\DiffFixWhitespaceDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\DiffFixWhitespaceDialog.xaml.cs">
-      <DependentUpon>DiffFixWhitespaceDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\DiffIgnoreCharactersDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\DiffIgnoreCharactersDialog.xaml.cs">
-      <DependentUpon>DiffIgnoreCharactersDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\EditConvertDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -811,9 +797,6 @@
     <Compile Include="TextEditor-Content.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Diff.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Edit.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -876,6 +859,10 @@
     <ProjectReference Include="..\DateTime\DateTime.csproj">
       <Project>{118c89ac-608d-4d2c-bbb1-e6ce9d68b40a}</Project>
       <Name>DateTime</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Diff\Diff.csproj">
+      <Project>{41dd9ee2-9d24-4d08-a87d-75920bcffd08}</Project>
+      <Name>Diff</Name>
     </ProjectReference>
     <ProjectReference Include="..\Image\Image.csproj">
       <Project>{d13a65ab-dc9d-4022-ac1a-ae01e5d8be19}</Project>
