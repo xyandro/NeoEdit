@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="CompressWords;BuildRevRegEx;License;BuildCommandLine" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="CompressWords;License;BuildCommandLine" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
@@ -12,10 +12,6 @@
   <Target Name="CompressWords" Inputs="Misc\Words.txt" Outputs="Resources\Words.txt.gz" Returns="">
     <Message Text="Compressing word list" Importance="High" />
     <Exec Command="&quot;$(SolutionDir)\Compress\bin\$(Configuration)\Compress.exe&quot; &quot;$(ProjectDir)Misc\Words.txt&quot; &quot;$(ProjectDir)Resources\Words.txt.gz&quot;" />
-  </Target>
-  <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegExLexer.g4;RevRegEx\Source\RevRegExParser.g4" Outputs="RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExParserBaseVisitor.cs;RevRegEx\Parser\RevRegExParserVisitor.cs" Returns="">
-    <Message Text="Building RevRegEx parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
   </Target>
   <Target Name="License" Inputs="$(SolutionDir)License.txt" Outputs="$(OutDir)License.txt" Returns="">
     <Message Text="Copy license" Importance="High" />
@@ -394,13 +390,6 @@
     <Compile Include="Dialogs\NumericSeriesDialog.xaml.cs">
       <DependentUpon>NumericSeriesDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ProgressDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ProgressDialog.xaml.cs">
-      <DependentUpon>ProgressDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\RegExHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -443,55 +432,6 @@
     <Compile Include="Dialogs\SignVerifyDialog.xaml.cs">
       <DependentUpon>SignVerifyDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\TextFirstDistinctDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TextFirstDistinctDialog.xaml.cs">
-      <DependentUpon>TextFirstDistinctDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TextRandomTextDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TextRandomTextDialog.xaml.cs">
-      <DependentUpon>TextRandomTextDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TextReverseRegExDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TextReverseRegExDialog.xaml.cs">
-      <DependentUpon>TextReverseRegExDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TextSelectWholeBoundedWordDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TextSelectWholeBoundedWordDialog.xaml.cs">
-      <DependentUpon>TextSelectWholeBoundedWordDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TextTrimDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TextTrimDialog.xaml.cs">
-      <DependentUpon>TextTrimDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TextUnicodeDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TextUnicodeDialog.xaml.cs">
-      <DependentUpon>TextUnicodeDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\TextWidthDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TextWidthDialog.xaml.cs">
-      <DependentUpon>TextWidthDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
@@ -500,7 +440,6 @@
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="InstanceManager.cs" />
-    <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="Misc\FileSaver.cs" />
     <Compile Include="Misc\KeySet.cs" />
@@ -530,18 +469,6 @@
     <Resource Include="Resources\Unchecked.png" />
     <EmbeddedResource Include="Resources\Unicode.dat" />
     <EmbeddedResource Include="Resources\Words.txt.gz" />
-    <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExParserVisitor.cs" />
-    <Compile Include="RevRegEx\RevRegExData.cs" />
-    <Compile Include="RevRegEx\RevRegExDataChar.cs" />
-    <Compile Include="RevRegEx\RevRegExDataJoin.cs" />
-    <Compile Include="RevRegEx\RevRegExDataList.cs" />
-    <Compile Include="RevRegEx\RevRegExDataRepeat.cs" />
-    <Compile Include="RevRegEx\RevRegExVisitor.cs" />
-    <None Include="RevRegEx\Source\RevRegExLexer.g4" />
-    <None Include="RevRegEx\Source\RevRegExParser.g4" />
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -566,9 +493,6 @@
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Select.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Text.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Page Include="TextEditor.xaml">
@@ -634,6 +558,10 @@
     <ProjectReference Include="..\Table\Table.csproj">
       <Project>{5b8dbd58-aa5b-45f3-9637-34ee5dd49ff3}</Project>
       <Name>Table</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Text\Text.csproj">
+      <Project>{1e27e6fc-ff53-48f3-b2c1-4b79b34abeea}</Project>
+      <Name>Text</Name>
     </ProjectReference>
     <ProjectReference Include="..\View\View.csproj">
       <Project>{55adecd1-44a7-4b68-86b7-222b68e99078}</Project>

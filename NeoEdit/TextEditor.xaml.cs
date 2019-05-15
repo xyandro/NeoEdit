@@ -905,16 +905,16 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Text_Select_Trim: dialogResult = Command_Text_Select_Trim_Dialog(this); break;
-				case NECommand.Text_Select_ByWidth: dialogResult = Command_Text_Select_ByWidth_Dialog(this); break;
-				case NECommand.Text_Select_WholeWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(this, true); break;
-				case NECommand.Text_Select_BoundedWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(this, false); break;
-				case NECommand.Text_Width: dialogResult = Command_Text_Width_Dialog(this); break;
-				case NECommand.Text_Trim: dialogResult = Command_Text_Trim_Dialog(this); break;
-				case NECommand.Text_Unicode: dialogResult = Command_Text_Unicode_Dialog(this); break;
-				case NECommand.Text_RandomText: dialogResult = Command_Text_RandomText_Dialog(this); break;
-				case NECommand.Text_ReverseRegEx: dialogResult = Command_Text_ReverseRegEx_Dialog(this); break;
-				case NECommand.Text_FirstDistinct: dialogResult = Command_Text_FirstDistinct_Dialog(this); break;
+				case NECommand.Text_Select_Trim: dialogResult = TextFunctions.Command_Text_Select_Trim_Dialog(this); break;
+				case NECommand.Text_Select_ByWidth: dialogResult = TextFunctions.Command_Text_Select_ByWidth_Dialog(this); break;
+				case NECommand.Text_Select_WholeWord: dialogResult = TextFunctions.Command_Text_Select_WholeBoundedWord_Dialog(this, true); break;
+				case NECommand.Text_Select_BoundedWord: dialogResult = TextFunctions.Command_Text_Select_WholeBoundedWord_Dialog(this, false); break;
+				case NECommand.Text_Width: dialogResult = TextFunctions.Command_Text_Width_Dialog(this); break;
+				case NECommand.Text_Trim: dialogResult = TextFunctions.Command_Text_Trim_Dialog(this); break;
+				case NECommand.Text_Unicode: dialogResult = TextFunctions.Command_Text_Unicode_Dialog(this); break;
+				case NECommand.Text_RandomText: dialogResult = TextFunctions.Command_Text_RandomText_Dialog(this); break;
+				case NECommand.Text_ReverseRegEx: dialogResult = TextFunctions.Command_Text_ReverseRegEx_Dialog(this); break;
+				case NECommand.Text_FirstDistinct: dialogResult = TextFunctions.Command_Text_FirstDistinct_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1312,30 +1312,30 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Text_Select_Trim: Command_Text_Select_Trim(this, dialogResult as TextTrimDialog.Result); break;
-				case NECommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(this, dialogResult as TextWidthDialog.Result); break;
-				case NECommand.Text_Select_WholeWord: Command_Text_Select_WholeBoundedWord(this, dialogResult as TextSelectWholeBoundedWordDialog.Result, true); break;
-				case NECommand.Text_Select_BoundedWord: Command_Text_Select_WholeBoundedWord(this, dialogResult as TextSelectWholeBoundedWordDialog.Result, false); break;
+				case NECommand.Text_Select_Trim: TextFunctions.Command_Text_Select_Trim(this, dialogResult as TextTrimDialog.Result); break;
+				case NECommand.Text_Select_ByWidth: TextFunctions.Command_Text_Select_ByWidth(this, dialogResult as TextWidthDialog.Result); break;
+				case NECommand.Text_Select_WholeWord: TextFunctions.Command_Text_Select_WholeBoundedWord(this, dialogResult as TextSelectWholeBoundedWordDialog.Result, true); break;
+				case NECommand.Text_Select_BoundedWord: TextFunctions.Command_Text_Select_WholeBoundedWord(this, dialogResult as TextSelectWholeBoundedWordDialog.Result, false); break;
 				case NECommand.Text_Select_Min_Text: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.String); break;
 				case NECommand.Text_Select_Min_Length: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.Length); break;
 				case NECommand.Text_Select_Max_Text: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.String); break;
 				case NECommand.Text_Select_Max_Length: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.Length); break;
-				case NECommand.Text_Case_Upper: Command_Text_Case_Upper(this); break;
-				case NECommand.Text_Case_Lower: Command_Text_Case_Lower(this); break;
-				case NECommand.Text_Case_Proper: Command_Text_Case_Proper(this); break;
-				case NECommand.Text_Case_Toggle: Command_Text_Case_Toggle(this); break;
-				case NECommand.Text_Length: Command_Text_Length(this); break;
-				case NECommand.Text_Width: Command_Text_Width(this, dialogResult as TextWidthDialog.Result); break;
-				case NECommand.Text_Trim: Command_Text_Trim(this, dialogResult as TextTrimDialog.Result); break;
-				case NECommand.Text_SingleLine: Command_Text_SingleLine(this); break;
-				case NECommand.Text_Unicode: Command_Text_Unicode(this, dialogResult as TextUnicodeDialog.Result); break;
-				case NECommand.Text_GUID: Command_Text_GUID(this); break;
-				case NECommand.Text_RandomText: Command_Text_RandomText(this, dialogResult as TextRandomTextDialog.Result); break;
-				case NECommand.Text_LoremIpsum: Command_Text_LoremIpsum(this); break;
-				case NECommand.Text_ReverseRegEx: Command_Text_ReverseRegEx(this, dialogResult as TextReverseRegExDialog.Result); break;
-				case NECommand.Text_FirstDistinct: Command_Text_FirstDistinct(this, dialogResult as TextFirstDistinctDialog.Result); break;
-				case NECommand.Text_RepeatCount: Command_Text_RepeatCount(this); break;
-				case NECommand.Text_RepeatIndex: Command_Text_RepeatIndex(this); break;
+				case NECommand.Text_Case_Upper: TextFunctions.Command_Text_Case_Upper(this); break;
+				case NECommand.Text_Case_Lower: TextFunctions.Command_Text_Case_Lower(this); break;
+				case NECommand.Text_Case_Proper: TextFunctions.Command_Text_Case_Proper(this); break;
+				case NECommand.Text_Case_Toggle: TextFunctions.Command_Text_Case_Toggle(this); break;
+				case NECommand.Text_Length: TextFunctions.Command_Text_Length(this); break;
+				case NECommand.Text_Width: TextFunctions.Command_Text_Width(this, dialogResult as TextWidthDialog.Result); break;
+				case NECommand.Text_Trim: TextFunctions.Command_Text_Trim(this, dialogResult as TextTrimDialog.Result); break;
+				case NECommand.Text_SingleLine: TextFunctions.Command_Text_SingleLine(this); break;
+				case NECommand.Text_Unicode: TextFunctions.Command_Text_Unicode(this, dialogResult as TextUnicodeDialog.Result); break;
+				case NECommand.Text_GUID: TextFunctions.Command_Text_GUID(this); break;
+				case NECommand.Text_RandomText: TextFunctions.Command_Text_RandomText(this, dialogResult as TextRandomTextDialog.Result); break;
+				case NECommand.Text_LoremIpsum: TextFunctions.Command_Text_LoremIpsum(this); break;
+				case NECommand.Text_ReverseRegEx: TextFunctions.Command_Text_ReverseRegEx(this, dialogResult as TextReverseRegExDialog.Result); break;
+				case NECommand.Text_FirstDistinct: TextFunctions.Command_Text_FirstDistinct(this, dialogResult as TextFirstDistinctDialog.Result); break;
+				case NECommand.Text_RepeatCount: TextFunctions.Command_Text_RepeatCount(this); break;
+				case NECommand.Text_RepeatIndex: TextFunctions.Command_Text_RepeatIndex(this); break;
 			}
 		}
 

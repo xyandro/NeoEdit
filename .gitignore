@@ -30,5 +30,5 @@ TestResults
 /Dependencies/GlobalAssemblyInfo.cs
 /NeoEdit/CommandLine/Parser
 /NeoEdit/Resources/Words.txt.gz
-/NeoEdit/RevRegEx/Parser
 /Release
+/Text/RevRegEx/Parser

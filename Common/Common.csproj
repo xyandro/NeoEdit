@@ -97,6 +97,13 @@
     <Compile Include="Dialogs\MultiProgressDialog.xaml.cs">
       <DependentUpon>MultiProgressDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ProgressDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ProgressDialog.xaml.cs">
+      <DependentUpon>ProgressDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DragType.cs" />
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
     <Compile Include="Expressions\ExpressionUnit.cs" />
