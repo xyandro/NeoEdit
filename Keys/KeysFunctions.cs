@@ -6,11 +6,11 @@ using NeoEdit;
 
 namespace NeoEdit
 {
-	partial class TextEditor
+	public static class KeysFunctions
 	{
-		static void Command_Keys_Set(ITextEditor te, int index, bool caseSensitive = true)
+		static public void Command_Keys_Set(ITextEditor te, int index, bool caseSensitive = true)
 		{
-			GlobalKeys = te.TabsParent.ActiveCount == 1;
+			te.GlobalKeys = te.TabsParent.ActiveCount == 1;
 			// Handles keys as well as values
 			var values = te.GetSelectionStrings();
 			if ((index == 0) && (values.Distinct(str => caseSensitive ? str : str.ToLowerInvariant()).Count() != values.Count))
@@ -20,7 +20,7 @@ namespace NeoEdit
 				te.CalculateKeysHash(caseSensitive);
 		}
 
-		static void Command_Keys_Add(ITextEditor te, int index)
+		static public void Command_Keys_Add(ITextEditor te, int index)
 		{
 			// Handles keys as well as values
 			var values = te.GetSelectionStrings();
@@ -33,7 +33,7 @@ namespace NeoEdit
 				te.CalculateKeysHash(caseSensitive);
 		}
 
-		static void Command_Keys_Remove(ITextEditor te, int index)
+		static public void Command_Keys_Remove(ITextEditor te, int index)
 		{
 			// Handles keys as well as values
 			var values = te.GetSelectionStrings().Distinct().ToList();
@@ -41,7 +41,7 @@ namespace NeoEdit
 				te.KeysAndValues[index].Remove(value);
 		}
 
-		static void Command_Keys_Replace(ITextEditor te, int index)
+		static public void Command_Keys_Replace(ITextEditor te, int index)
 		{
 			// Handles keys as well as values
 			if (te.KeysAndValues[0].Count != te.KeysAndValues[index].Count)

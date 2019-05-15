@@ -107,5 +107,6 @@ namespace NeoEdit
 		bool IncludeInlineVariables { get; set; }
 		bool Focus();
 		System.Drawing.Bitmap GetBitmap();
+		bool GlobalKeys { get; set; }
 	}
 }

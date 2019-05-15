@@ -859,9 +859,6 @@
     <Compile Include="TextEditor-Files.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Keys.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Network.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -915,6 +912,10 @@
     <ProjectReference Include="..\Image\Image.csproj">
       <Project>{d13a65ab-dc9d-4022-ac1a-ae01e5d8be19}</Project>
       <Name>Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Keys\Keys.csproj">
+      <Project>{b0b2bd86-4588-4cb3-9407-890b63fada12}</Project>
+      <Name>Keys</Name>
     </ProjectReference>
     <ProjectReference Include="..\View\View.csproj">
       <Project>{55adecd1-44a7-4b68-86b7-222b68e99078}</Project>

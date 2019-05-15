@@ -1530,46 +1530,46 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Keys_Set_KeysCaseSensitive: Command_Keys_Set(this, 0, true); break;
-				case NECommand.Keys_Set_KeysCaseInsensitive: Command_Keys_Set(this, 0, false); break;
-				case NECommand.Keys_Set_Values1: Command_Keys_Set(this, 1); break;
-				case NECommand.Keys_Set_Values2: Command_Keys_Set(this, 2); break;
-				case NECommand.Keys_Set_Values3: Command_Keys_Set(this, 3); break;
-				case NECommand.Keys_Set_Values4: Command_Keys_Set(this, 4); break;
-				case NECommand.Keys_Set_Values5: Command_Keys_Set(this, 5); break;
-				case NECommand.Keys_Set_Values6: Command_Keys_Set(this, 6); break;
-				case NECommand.Keys_Set_Values7: Command_Keys_Set(this, 7); break;
-				case NECommand.Keys_Set_Values8: Command_Keys_Set(this, 8); break;
-				case NECommand.Keys_Set_Values9: Command_Keys_Set(this, 9); break;
-				case NECommand.Keys_Add_Keys: Command_Keys_Add(this, 0); break;
-				case NECommand.Keys_Add_Values1: Command_Keys_Add(this, 1); break;
-				case NECommand.Keys_Add_Values2: Command_Keys_Add(this, 2); break;
-				case NECommand.Keys_Add_Values3: Command_Keys_Add(this, 3); break;
-				case NECommand.Keys_Add_Values4: Command_Keys_Add(this, 4); break;
-				case NECommand.Keys_Add_Values5: Command_Keys_Add(this, 5); break;
-				case NECommand.Keys_Add_Values6: Command_Keys_Add(this, 6); break;
-				case NECommand.Keys_Add_Values7: Command_Keys_Add(this, 7); break;
-				case NECommand.Keys_Add_Values8: Command_Keys_Add(this, 8); break;
-				case NECommand.Keys_Add_Values9: Command_Keys_Add(this, 9); break;
-				case NECommand.Keys_Remove_Keys: Command_Keys_Remove(this, 0); break;
-				case NECommand.Keys_Remove_Values1: Command_Keys_Remove(this, 1); break;
-				case NECommand.Keys_Remove_Values2: Command_Keys_Remove(this, 2); break;
-				case NECommand.Keys_Remove_Values3: Command_Keys_Remove(this, 3); break;
-				case NECommand.Keys_Remove_Values4: Command_Keys_Remove(this, 4); break;
-				case NECommand.Keys_Remove_Values5: Command_Keys_Remove(this, 5); break;
-				case NECommand.Keys_Remove_Values6: Command_Keys_Remove(this, 6); break;
-				case NECommand.Keys_Remove_Values7: Command_Keys_Remove(this, 7); break;
-				case NECommand.Keys_Remove_Values8: Command_Keys_Remove(this, 8); break;
-				case NECommand.Keys_Remove_Values9: Command_Keys_Remove(this, 9); break;
-				case NECommand.Keys_Replace_Values1: Command_Keys_Replace(this, 1); break;
-				case NECommand.Keys_Replace_Values2: Command_Keys_Replace(this, 2); break;
-				case NECommand.Keys_Replace_Values3: Command_Keys_Replace(this, 3); break;
-				case NECommand.Keys_Replace_Values4: Command_Keys_Replace(this, 4); break;
-				case NECommand.Keys_Replace_Values5: Command_Keys_Replace(this, 5); break;
-				case NECommand.Keys_Replace_Values6: Command_Keys_Replace(this, 6); break;
-				case NECommand.Keys_Replace_Values7: Command_Keys_Replace(this, 7); break;
-				case NECommand.Keys_Replace_Values8: Command_Keys_Replace(this, 8); break;
-				case NECommand.Keys_Replace_Values9: Command_Keys_Replace(this, 9); break;
+				case NECommand.Keys_Set_KeysCaseSensitive: KeysFunctions.Command_Keys_Set(this, 0, true); break;
+				case NECommand.Keys_Set_KeysCaseInsensitive: KeysFunctions.Command_Keys_Set(this, 0, false); break;
+				case NECommand.Keys_Set_Values1: KeysFunctions.Command_Keys_Set(this, 1); break;
+				case NECommand.Keys_Set_Values2: KeysFunctions.Command_Keys_Set(this, 2); break;
+				case NECommand.Keys_Set_Values3: KeysFunctions.Command_Keys_Set(this, 3); break;
+				case NECommand.Keys_Set_Values4: KeysFunctions.Command_Keys_Set(this, 4); break;
+				case NECommand.Keys_Set_Values5: KeysFunctions.Command_Keys_Set(this, 5); break;
+				case NECommand.Keys_Set_Values6: KeysFunctions.Command_Keys_Set(this, 6); break;
+				case NECommand.Keys_Set_Values7: KeysFunctions.Command_Keys_Set(this, 7); break;
+				case NECommand.Keys_Set_Values8: KeysFunctions.Command_Keys_Set(this, 8); break;
+				case NECommand.Keys_Set_Values9: KeysFunctions.Command_Keys_Set(this, 9); break;
+				case NECommand.Keys_Add_Keys: KeysFunctions.Command_Keys_Add(this, 0); break;
+				case NECommand.Keys_Add_Values1: KeysFunctions.Command_Keys_Add(this, 1); break;
+				case NECommand.Keys_Add_Values2: KeysFunctions.Command_Keys_Add(this, 2); break;
+				case NECommand.Keys_Add_Values3: KeysFunctions.Command_Keys_Add(this, 3); break;
+				case NECommand.Keys_Add_Values4: KeysFunctions.Command_Keys_Add(this, 4); break;
+				case NECommand.Keys_Add_Values5: KeysFunctions.Command_Keys_Add(this, 5); break;
+				case NECommand.Keys_Add_Values6: KeysFunctions.Command_Keys_Add(this, 6); break;
+				case NECommand.Keys_Add_Values7: KeysFunctions.Command_Keys_Add(this, 7); break;
+				case NECommand.Keys_Add_Values8: KeysFunctions.Command_Keys_Add(this, 8); break;
+				case NECommand.Keys_Add_Values9: KeysFunctions.Command_Keys_Add(this, 9); break;
+				case NECommand.Keys_Remove_Keys: KeysFunctions.Command_Keys_Remove(this, 0); break;
+				case NECommand.Keys_Remove_Values1: KeysFunctions.Command_Keys_Remove(this, 1); break;
+				case NECommand.Keys_Remove_Values2: KeysFunctions.Command_Keys_Remove(this, 2); break;
+				case NECommand.Keys_Remove_Values3: KeysFunctions.Command_Keys_Remove(this, 3); break;
+				case NECommand.Keys_Remove_Values4: KeysFunctions.Command_Keys_Remove(this, 4); break;
+				case NECommand.Keys_Remove_Values5: KeysFunctions.Command_Keys_Remove(this, 5); break;
+				case NECommand.Keys_Remove_Values6: KeysFunctions.Command_Keys_Remove(this, 6); break;
+				case NECommand.Keys_Remove_Values7: KeysFunctions.Command_Keys_Remove(this, 7); break;
+				case NECommand.Keys_Remove_Values8: KeysFunctions.Command_Keys_Remove(this, 8); break;
+				case NECommand.Keys_Remove_Values9: KeysFunctions.Command_Keys_Remove(this, 9); break;
+				case NECommand.Keys_Replace_Values1: KeysFunctions.Command_Keys_Replace(this, 1); break;
+				case NECommand.Keys_Replace_Values2: KeysFunctions.Command_Keys_Replace(this, 2); break;
+				case NECommand.Keys_Replace_Values3: KeysFunctions.Command_Keys_Replace(this, 3); break;
+				case NECommand.Keys_Replace_Values4: KeysFunctions.Command_Keys_Replace(this, 4); break;
+				case NECommand.Keys_Replace_Values5: KeysFunctions.Command_Keys_Replace(this, 5); break;
+				case NECommand.Keys_Replace_Values6: KeysFunctions.Command_Keys_Replace(this, 6); break;
+				case NECommand.Keys_Replace_Values7: KeysFunctions.Command_Keys_Replace(this, 7); break;
+				case NECommand.Keys_Replace_Values8: KeysFunctions.Command_Keys_Replace(this, 8); break;
+				case NECommand.Keys_Replace_Values9: KeysFunctions.Command_Keys_Replace(this, 9); break;
 			}
 		}
 
@@ -2738,7 +2738,7 @@ namespace NeoEdit
 
 		static GlobalKeysChangedDelegate globalKeysChanged;
 		static bool globalKeys = true;
-		public static bool GlobalKeys { get { return globalKeys; } set { globalKeys = value; globalKeysChanged?.Invoke(); } }
+		public bool GlobalKeys { get { return globalKeys; } set { globalKeys = value; globalKeysChanged?.Invoke(); } }
 
 		ObservableCollection<ObservableCollection<string>> _keysAndValues;
 		public ObservableCollection<ObservableCollection<string>> KeysAndValues
