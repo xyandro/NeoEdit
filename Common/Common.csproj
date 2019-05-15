@@ -75,6 +75,13 @@
     <Compile Include="Dialogs\ExpressionHelpVariablesDialog.xaml.cs">
       <DependentUpon>ExpressionHelpVariablesDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\GetExpressionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\GetExpressionDialog.xaml.cs">
+      <DependentUpon>GetExpressionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\HelpItems.cs" />
     <Page Include="Dialogs\Message.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -104,6 +111,7 @@
     <None Include="Expressions\Source\ExpressionParser.g4" />
     <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="InlineVariable.cs" />
     <Compile Include="ITabs.cs" />
     <Compile Include="ItemSet.cs" />
     <Compile Include="ITextEditor.cs" />

@@ -170,13 +170,6 @@
     <Compile Include="Dialogs\EncryptDialog.xaml.cs">
       <DependentUpon>EncryptDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ExpressionSolveDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ExpressionSolveDialog.xaml.cs">
-      <DependentUpon>ExpressionSolveDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\FileEncodingLineEndingsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -302,13 +295,6 @@
     </Page>
     <Compile Include="Dialogs\FontSizeDialog.xaml.cs">
       <DependentUpon>FontSizeDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\GetExpressionDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\GetExpressionDialog.xaml.cs">
-      <DependentUpon>GetExpressionDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\HashDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -682,9 +668,6 @@
     <Compile Include="TextEditor-Edit.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Expression.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-File.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -749,6 +732,10 @@
     <ProjectReference Include="..\Diff\Diff.csproj">
       <Project>{41dd9ee2-9d24-4d08-a87d-75920bcffd08}</Project>
       <Name>Diff</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Expression\Expression.csproj">
+      <Project>{bd04fc3e-9aaf-4886-9167-49fa8dde95c5}</Project>
+      <Name>Expression</Name>
     </ProjectReference>
     <ProjectReference Include="..\Image\Image.csproj">
       <Project>{d13a65ab-dc9d-4022-ac1a-ae01e5d8be19}</Project>

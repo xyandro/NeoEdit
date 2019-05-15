@@ -103,6 +103,8 @@ namespace NeoEdit
 		public bool HighlightSyntax { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool StrictParsing { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool IncludeInlineVariables { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 
 		public ITabs TabsParent { get; set; }
@@ -767,7 +769,7 @@ namespace NeoEdit
 			results.Add(NEVariable.Constant("geoincrement", "Geometric series increment", () => geoIncrement, initializeGeoSeries));
 
 			if (IncludeInlineVariables)
-				GetInlineVariables(this).NonNullOrEmpty(inlineVar => inlineVar.Name).Where(inlineVar => !results.Contains(inlineVar.Name)).ForEach(inlineVar => results.Add(NEVariable.Constant(inlineVar.Name, "Inline variable", inlineVar.Value)));
+				GetInlineVariables().NonNullOrEmpty(inlineVar => inlineVar.Name).Where(inlineVar => !results.Contains(inlineVar.Name)).ForEach(inlineVar => results.Add(NEVariable.Constant(inlineVar.Name, "Inline variable", inlineVar.Value)));
 
 			return results;
 		}
@@ -891,10 +893,10 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(this); break;
-				case NECommand.Expression_Copy: dialogResult = Command_Expression_Copy_Dialog(this); break;
-				case NECommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(this); break;
-				case NECommand.Expression_InlineVariables_Solve: dialogResult = Command_Expression_InlineVariables_Solve_Dialog(this); break;
+				case NECommand.Expression_Expression: dialogResult = ExpressionFunctions.Command_Expression_Expression_Dialog(this); break;
+				case NECommand.Expression_Copy: dialogResult = ExpressionFunctions.Command_Expression_Copy_Dialog(this); break;
+				case NECommand.Expression_SelectByExpression: dialogResult = ExpressionFunctions.Command_Expression_SelectByExpression_Dialog(this); break;
+				case NECommand.Expression_InlineVariables_Solve: dialogResult = ExpressionFunctions.Command_Expression_InlineVariables_Solve_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1295,14 +1297,14 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Expression_Expression: Command_Expression_Expression(this, dialogResult as GetExpressionDialog.Result); break;
-				case NECommand.Expression_Copy: Command_Expression_Copy(this, dialogResult as GetExpressionDialog.Result); break;
-				case NECommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(this); break;
-				case NECommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(this, dialogResult as GetExpressionDialog.Result); break;
-				case NECommand.Expression_InlineVariables_Add: Command_Expression_InlineVariables_Add(this); break;
-				case NECommand.Expression_InlineVariables_Calculate: Command_Expression_InlineVariables_Calculate(this); break;
-				case NECommand.Expression_InlineVariables_Solve: Command_Expression_InlineVariables_Solve(this, dialogResult as ExpressionSolveDialog.Result, answer); break;
-				case NECommand.Expression_InlineVariables_IncludeInExpressions: Command_Expression_InlineVariables_IncludeInExpressions(this, multiStatus); break;
+				case NECommand.Expression_Expression: ExpressionFunctions.Command_Expression_Expression(this, dialogResult as GetExpressionDialog.Result); break;
+				case NECommand.Expression_Copy: ExpressionFunctions.Command_Expression_Copy(this, dialogResult as GetExpressionDialog.Result); break;
+				case NECommand.Expression_EvaluateSelected: ExpressionFunctions.Command_Expression_EvaluateSelected(this); break;
+				case NECommand.Expression_SelectByExpression: ExpressionFunctions.Command_Expression_SelectByExpression(this, dialogResult as GetExpressionDialog.Result); break;
+				case NECommand.Expression_InlineVariables_Add: ExpressionFunctions.Command_Expression_InlineVariables_Add(this); break;
+				case NECommand.Expression_InlineVariables_Calculate: ExpressionFunctions.Command_Expression_InlineVariables_Calculate(this); break;
+				case NECommand.Expression_InlineVariables_Solve: ExpressionFunctions.Command_Expression_InlineVariables_Solve(this, dialogResult as ExpressionSolveDialog.Result, answer); break;
+				case NECommand.Expression_InlineVariables_IncludeInExpressions: ExpressionFunctions.Command_Expression_InlineVariables_IncludeInExpressions(this, multiStatus); break;
 			}
 		}
 
@@ -2846,5 +2848,26 @@ namespace NeoEdit
 		public CacheValue previousData { get; } = new CacheValue();
 		public ParserType previousType { get; set; }
 		public ParserNode previousRoot { get; set; }
+
+		public List<InlineVariable> GetInlineVariables()
+		{
+			var inlineVars = new List<InlineVariable>();
+			var regex = new Regex(@"\[(\w*):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
+			var found = new HashSet<string>();
+			foreach (var tuple in Data.RegexMatches(regex, BeginOffset, EndOffset - BeginOffset, false, false, false))
+			{
+				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
+				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);
+				var inlineVar = new InlineVariable(match.Groups[1].Value, match.Groups[2].Value, Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length), GetString(valueRange), valueRange);
+				if (!string.IsNullOrEmpty(inlineVar.Name))
+				{
+					if (found.Contains(inlineVar.Name))
+						throw new Exception($"Duplicate inline variable: {inlineVar.Name}");
+					found.Add(inlineVar.Name);
+				}
+				inlineVars.Add(inlineVar);
+			}
+			return inlineVars;
+		}
 	}
 }
