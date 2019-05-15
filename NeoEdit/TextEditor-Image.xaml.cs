@@ -42,7 +42,7 @@ namespace NeoEdit
 
 		System.Drawing.Bitmap GetBitmap(ITextEditor te)
 		{
-			if (!Coder.IsImage(CodePage))
+			if (!Coder.IsImage(te.CodePage))
 			{
 				savedBitmapText = null;
 				savedBitmap = null;

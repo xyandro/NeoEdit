@@ -669,7 +669,7 @@ namespace NeoEdit
 				Directory.CreateDirectory(file);
 		}
 
-		FilesCreateFromExpressionsDialog.Result Command_Files_Create_FromExpressions_Dialog(ITextEditor te) => FilesCreateFromExpressionsDialog.Run(te.TabsParent, GetVariables(), CodePage);
+		FilesCreateFromExpressionsDialog.Result Command_Files_Create_FromExpressions_Dialog(ITextEditor te) => FilesCreateFromExpressionsDialog.Run(te.TabsParent, GetVariables(), te.CodePage);
 
 		void Command_Files_Create_FromExpressions(FilesCreateFromExpressionsDialog.Result result)
 		{

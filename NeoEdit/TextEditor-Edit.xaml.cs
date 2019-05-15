@@ -63,7 +63,7 @@ namespace NeoEdit
 
 		List<Range> GetEnclosingRegions(ITextEditor te, int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
 		{
-			var useRegions = Regions[useRegion];
+			var useRegions = te.Regions[useRegion];
 			var regions = new List<Range>();
 			var currentRegion = 0;
 			var used = false;
@@ -463,7 +463,7 @@ namespace NeoEdit
 			}).ToList());
 		}
 
-		EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog(ITextEditor te) => EditDataHashDialog.Run(te.TabsParent, CodePage);
+		EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog(ITextEditor te) => EditDataHashDialog.Run(te.TabsParent, te.CodePage);
 
 		void Command_Edit_Data_Hash(ITextEditor te, EditDataHashDialog.Result result)
 		{
@@ -473,7 +473,7 @@ namespace NeoEdit
 			te.ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		EditDataCompressDialog.Result Command_Edit_Data_Compress_Dialog(ITextEditor te) => EditDataCompressDialog.Run(te.TabsParent, CodePage, true);
+		EditDataCompressDialog.Result Command_Edit_Data_Compress_Dialog(ITextEditor te) => EditDataCompressDialog.Run(te.TabsParent, te.CodePage, true);
 
 		void Command_Edit_Data_Compress(ITextEditor te, EditDataCompressDialog.Result result)
 		{
@@ -486,7 +486,7 @@ namespace NeoEdit
 			te.ReplaceSelections(compressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataCompressDialog.Result Command_Edit_Data_Decompress_Dialog(ITextEditor te) => EditDataCompressDialog.Run(te.TabsParent, CodePage, false);
+		EditDataCompressDialog.Result Command_Edit_Data_Decompress_Dialog(ITextEditor te) => EditDataCompressDialog.Run(te.TabsParent, te.CodePage, false);
 
 		void Command_Edit_Data_Decompress(ITextEditor te, EditDataCompressDialog.Result result)
 		{
@@ -499,7 +499,7 @@ namespace NeoEdit
 			te.ReplaceSelections(decompressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataEncryptDialog.Result Command_Edit_Data_Encrypt_Dialog(ITextEditor te) => EditDataEncryptDialog.Run(te.TabsParent, CodePage, true);
+		EditDataEncryptDialog.Result Command_Edit_Data_Encrypt_Dialog(ITextEditor te) => EditDataEncryptDialog.Run(te.TabsParent, te.CodePage, true);
 
 		void Command_Edit_Data_Encrypt(ITextEditor te, EditDataEncryptDialog.Result result)
 		{
@@ -512,7 +512,7 @@ namespace NeoEdit
 			te.ReplaceSelections(encrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataEncryptDialog.Result Command_Edit_Data_Decrypt_Dialog(ITextEditor te) => EditDataEncryptDialog.Run(te.TabsParent, CodePage, false);
+		EditDataEncryptDialog.Result Command_Edit_Data_Decrypt_Dialog(ITextEditor te) => EditDataEncryptDialog.Run(te.TabsParent, te.CodePage, false);
 
 		void Command_Edit_Data_Decrypt(ITextEditor te, EditDataEncryptDialog.Result result)
 		{
@@ -525,7 +525,7 @@ namespace NeoEdit
 			te.ReplaceSelections(decrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataSignDialog.Result Command_Edit_Data_Sign_Dialog(ITextEditor te) => EditDataSignDialog.Run(te.TabsParent, CodePage);
+		EditDataSignDialog.Result Command_Edit_Data_Sign_Dialog(ITextEditor te) => EditDataSignDialog.Run(te.TabsParent, te.CodePage);
 
 		void Command_Edit_Data_Sign(ITextEditor te, EditDataSignDialog.Result result)
 		{

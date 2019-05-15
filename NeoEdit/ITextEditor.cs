@@ -2,6 +2,7 @@
 using System.Data.Common;
 using NeoEdit.Content;
 using NeoEdit.Parsing;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {
@@ -29,5 +30,14 @@ namespace NeoEdit
 		void OpenTable(ITextEditor te, Table table, string name = null);
 		string GetString(Range range);
 		void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false);
+		void CalculateDiff();
+		Coder.CodePage CodePage { get; set; }
+		bool DiffIgnoreCase { get; set; }
+		string DiffIgnoreCharacters { get; set; }
+		bool DiffIgnoreLineEndings { get; set; }
+		bool DiffIgnoreNumbers { get; set; }
+		bool DiffIgnoreWhitespace { get; set; }
+		TextEditor DiffTarget { get; set; }
+		IReadOnlyDictionary<int, RangeList> Regions { get; }
 	}
 }

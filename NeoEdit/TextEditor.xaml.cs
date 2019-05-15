@@ -258,7 +258,7 @@ namespace NeoEdit
 		}
 
 		readonly Dictionary<int, RangeList> regionsList = Enumerable.Range(1, 9).ToDictionary(num => num, num => new RangeList(new List<Range>()));
-		IReadOnlyDictionary<int, RangeList> Regions => regionsList;
+		public IReadOnlyDictionary<int, RangeList> Regions => regionsList;
 		void SetRegions(int region, List<Range> regions)
 		{
 			regionsList[region] = new RangeList(regions);
@@ -274,7 +274,7 @@ namespace NeoEdit
 		int mouseClickCount = 0;
 		DragType doDrag = DragType.None;
 		CacheValue modifiedChecksum = new CacheValue();
-		string diffIgnoreCharacters;
+		public string DiffIgnoreCharacters { get; set; }
 		PreviousStruct previous = null;
 		FileSystemWatcher watcher = null;
 		ShutdownData shutdownData;
@@ -417,7 +417,7 @@ namespace NeoEdit
 			canvasRenderTimer.Start();
 		}
 
-		void CalculateDiff()
+		public void CalculateDiff()
 		{
 			if (diffTarget == null)
 				return;
@@ -426,12 +426,12 @@ namespace NeoEdit
 			diffTarget.DiffIgnoreCase = DiffIgnoreCase;
 			diffTarget.DiffIgnoreNumbers = DiffIgnoreNumbers;
 			diffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
-			diffTarget.diffIgnoreCharacters = diffIgnoreCharacters;
+			diffTarget.DiffIgnoreCharacters = DiffIgnoreCharacters;
 			DiffEncodingMismatch = diffTarget.DiffEncodingMismatch = CodePage != diffTarget.CodePage;
 
 			var left = TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget) ? this : DiffTarget;
 			var right = left == this ? DiffTarget : this;
-			TextData.CalculateDiff(left.Data, right.Data, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
+			TextData.CalculateDiff(left.Data, right.Data, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 
 			CalculateBoundaries();
 			diffTarget.CalculateBoundaries();

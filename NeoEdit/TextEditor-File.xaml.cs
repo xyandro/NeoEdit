@@ -316,11 +316,11 @@ namespace NeoEdit
 
 		void Command_File_Copy_DisplayName(ITextEditor te) => SetClipboardString(DisplayName ?? Path.GetFileName(te.FileName));
 
-		EncodingDialog.Result Command_File_Encoding_Encoding_Dialog(ITextEditor te) => EncodingDialog.Run(te.TabsParent, CodePage);
+		EncodingDialog.Result Command_File_Encoding_Encoding_Dialog(ITextEditor te) => EncodingDialog.Run(te.TabsParent, te.CodePage);
 
-		void Command_File_Encoding_Encoding(EncodingDialog.Result result) => CodePage = result.CodePage;
+		void Command_File_Encoding_Encoding(ITextEditor te, EncodingDialog.Result result) => te.CodePage = result.CodePage;
 
-		EncodingDialog.Result Command_File_Encoding_ReopenWithEncoding_Dialog(ITextEditor te) => EncodingDialog.Run(te.TabsParent, CodePage);
+		EncodingDialog.Result Command_File_Encoding_ReopenWithEncoding_Dialog(ITextEditor te) => EncodingDialog.Run(te.TabsParent, te.CodePage);
 
 		void Command_File_Encoding_ReopenWithEncoding(ITextEditor te, EncodingDialog.Result result, AnswerResult answer)
 		{
