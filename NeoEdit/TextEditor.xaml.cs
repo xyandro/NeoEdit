@@ -454,7 +454,7 @@ namespace NeoEdit
 					return true;
 				case MessageOptions.Yes:
 				case MessageOptions.YesToAll:
-					Command_File_Save_Save(this);
+					FileFunctions.Command_File_Save_Save(this);
 					return !IsModified;
 			}
 			return false;
@@ -815,14 +815,14 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.File_Save_SaveAsByExpression: dialogResult = Command_File_Save_SaveAsByExpression_Dialog(this); break;
-				case NECommand.File_Save_CopyToByExpression: dialogResult = Command_File_Save_SaveAsByExpression_Dialog(this); break;
-				case NECommand.File_Save_SetDisplayName: dialogResult = Command_File_Save_SaveAsByExpression_Dialog(this); break;
-				case NECommand.File_Operations_RenameByExpression: dialogResult = Command_File_Operations_RenameByExpression_Dialog(this); break;
-				case NECommand.File_Encoding_Encoding: dialogResult = Command_File_Encoding_Encoding_Dialog(this); break;
-				case NECommand.File_Encoding_ReopenWithEncoding: dialogResult = Command_File_Encoding_ReopenWithEncoding_Dialog(this); break;
-				case NECommand.File_Encoding_LineEndings: dialogResult = Command_File_Encoding_LineEndings_Dialog(this); break;
-				case NECommand.File_Encrypt: dialogResult = Command_File_Encrypt_Dialog(this, multiStatus); break;
+				case NECommand.File_Save_SaveAsByExpression: dialogResult = FileFunctions.Command_File_Save_SaveAsByExpression_Dialog(this); break;
+				case NECommand.File_Save_CopyToByExpression: dialogResult = FileFunctions.Command_File_Save_SaveAsByExpression_Dialog(this); break;
+				case NECommand.File_Save_SetDisplayName: dialogResult = FileFunctions.Command_File_Save_SaveAsByExpression_Dialog(this); break;
+				case NECommand.File_Operations_RenameByExpression: dialogResult = FileFunctions.Command_File_Operations_RenameByExpression_Dialog(this); break;
+				case NECommand.File_Encoding_Encoding: dialogResult = FileFunctions.Command_File_Encoding_Encoding_Dialog(this); break;
+				case NECommand.File_Encoding_ReopenWithEncoding: dialogResult = FileFunctions.Command_File_Encoding_ReopenWithEncoding_Dialog(this); break;
+				case NECommand.File_Encoding_LineEndings: dialogResult = FileFunctions.Command_File_Encoding_LineEndings_Dialog(this); break;
+				case NECommand.File_Encrypt: dialogResult = FileFunctions.Command_File_Encrypt_Dialog(this, multiStatus); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1111,36 +1111,36 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.File_New_FromSelections: Command_File_New_FromSelections(this); break;
-				case NECommand.File_Open_Selected: Command_File_Open_Selected(this); break;
-				case NECommand.File_Save_Save: Command_File_Save_Save(this); break;
-				case NECommand.File_Save_SaveAs: Command_File_Save_SaveAs(this); break;
-				case NECommand.File_Save_SaveAsByExpression: Command_File_Save_SaveAsByExpression(this, dialogResult as GetExpressionDialog.Result, answer); break;
-				case NECommand.File_Save_CopyTo: Command_File_Save_SaveAs(this, true); break;
-				case NECommand.File_Save_CopyToByExpression: Command_File_Save_SaveAsByExpression(this, dialogResult as GetExpressionDialog.Result, answer, true); break;
-				case NECommand.File_Save_SetDisplayName: Command_File_Save_SetDisplayName(this, dialogResult as GetExpressionDialog.Result); break;
-				case NECommand.File_Operations_Rename: Command_File_Operations_Rename(this); break;
-				case NECommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(this, dialogResult as GetExpressionDialog.Result, answer); break;
-				case NECommand.File_Operations_Delete: Command_File_Operations_Delete(this, answer); break;
-				case NECommand.File_Operations_Explore: Command_File_Operations_Explore(this); break;
-				case NECommand.File_Operations_CommandPrompt: Command_File_Operations_CommandPrompt(this); break;
-				case NECommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(this); break;
-				case NECommand.File_Operations_VCSDiff: Command_File_Operations_VCSDiff(this); break;
-				case NECommand.File_Close: if (CanClose(answer)) { TabsParent.Remove(this); } break;
-				case NECommand.File_Refresh: Command_File_Refresh(this, answer); break;
-				case NECommand.File_AutoRefresh: Command_File_AutoRefresh(this, multiStatus); break;
-				case NECommand.File_Revert: Command_File_Revert(this, answer); break;
-				case NECommand.File_Insert_Files: Command_File_Insert_Files(this); break;
-				case NECommand.File_Insert_CopiedCut: Command_File_Insert_CopiedCut(this); break;
-				case NECommand.File_Insert_Selected: Command_File_Insert_Selected(this); break;
-				case NECommand.File_Copy_Path: Command_File_Copy_Path(this); break;
-				case NECommand.File_Copy_Name: Command_File_Copy_Name(this); break;
-				case NECommand.File_Copy_DisplayName: Command_File_Copy_DisplayName(this); break;
-				case NECommand.File_Encoding_Encoding: Command_File_Encoding_Encoding(this, dialogResult as EncodingDialog.Result); break;
-				case NECommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(this, dialogResult as EncodingDialog.Result, answer); break;
-				case NECommand.File_Encoding_LineEndings: Command_File_Encoding_LineEndings(this, dialogResult as FileEncodingLineEndingsDialog.Result); break;
-				case NECommand.File_Encrypt: Command_File_Encrypt(this, dialogResult as string); break;
-				case NECommand.File_Compress: Command_File_Compress(this, multiStatus); break;
+				case NECommand.File_New_FromSelections: FileFunctions.Command_File_New_FromSelections(this); break;
+				case NECommand.File_Open_Selected: FileFunctions.Command_File_Open_Selected(this); break;
+				case NECommand.File_Save_Save: FileFunctions.Command_File_Save_Save(this); break;
+				case NECommand.File_Save_SaveAs: FileFunctions.Command_File_Save_SaveAs(this); break;
+				case NECommand.File_Save_SaveAsByExpression: FileFunctions.Command_File_Save_SaveAsByExpression(this, dialogResult as GetExpressionDialog.Result, answer); break;
+				case NECommand.File_Save_CopyTo: FileFunctions.Command_File_Save_SaveAs(this, true); break;
+				case NECommand.File_Save_CopyToByExpression: FileFunctions.Command_File_Save_SaveAsByExpression(this, dialogResult as GetExpressionDialog.Result, answer, true); break;
+				case NECommand.File_Save_SetDisplayName: FileFunctions.Command_File_Save_SetDisplayName(this, dialogResult as GetExpressionDialog.Result); break;
+				case NECommand.File_Operations_Rename: FileFunctions.Command_File_Operations_Rename(this); break;
+				case NECommand.File_Operations_RenameByExpression: FileFunctions.Command_File_Operations_RenameByExpression(this, dialogResult as GetExpressionDialog.Result, answer); break;
+				case NECommand.File_Operations_Delete: FileFunctions.Command_File_Operations_Delete(this, answer); break;
+				case NECommand.File_Operations_Explore: FileFunctions.Command_File_Operations_Explore(this); break;
+				case NECommand.File_Operations_CommandPrompt: FileFunctions.Command_File_Operations_CommandPrompt(this); break;
+				case NECommand.File_Operations_DragDrop: FileFunctions.Command_File_Operations_DragDrop(this); break;
+				case NECommand.File_Operations_VCSDiff: FileFunctions.Command_File_Operations_VCSDiff(this); break;
+				case NECommand.File_Close: FileFunctions.Command_File_Close(this, answer); break;
+				case NECommand.File_Refresh: FileFunctions.Command_File_Refresh(this, answer); break;
+				case NECommand.File_AutoRefresh: FileFunctions.Command_File_AutoRefresh(this, multiStatus); break;
+				case NECommand.File_Revert: FileFunctions.Command_File_Revert(this, answer); break;
+				case NECommand.File_Insert_Files: FileFunctions.Command_File_Insert_Files(this); break;
+				case NECommand.File_Insert_CopiedCut: FileFunctions.Command_File_Insert_CopiedCut(this); break;
+				case NECommand.File_Insert_Selected: FileFunctions.Command_File_Insert_Selected(this); break;
+				case NECommand.File_Copy_Path: FileFunctions.Command_File_Copy_Path(this); break;
+				case NECommand.File_Copy_Name: FileFunctions.Command_File_Copy_Name(this); break;
+				case NECommand.File_Copy_DisplayName: FileFunctions.Command_File_Copy_DisplayName(this); break;
+				case NECommand.File_Encoding_Encoding: FileFunctions.Command_File_Encoding_Encoding(this, dialogResult as EncodingDialog.Result); break;
+				case NECommand.File_Encoding_ReopenWithEncoding: FileFunctions.Command_File_Encoding_ReopenWithEncoding(this, dialogResult as EncodingDialog.Result, answer); break;
+				case NECommand.File_Encoding_LineEndings: FileFunctions.Command_File_Encoding_LineEndings(this, dialogResult as FileEncodingLineEndingsDialog.Result); break;
+				case NECommand.File_Encrypt: FileFunctions.Command_File_Encrypt(this, dialogResult as string); break;
+				case NECommand.File_Compress: FileFunctions.Command_File_Compress(this, multiStatus); break;
 			}
 		}
 
@@ -2658,7 +2658,7 @@ namespace NeoEdit
 				return;
 
 			watcherFileModified = false;
-			Command_File_Refresh(this, answer);
+			FileFunctions.Command_File_Refresh(this, answer);
 		}
 
 		void SetModifiedFlag(bool? newValue = null)

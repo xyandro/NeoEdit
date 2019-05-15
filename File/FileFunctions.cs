@@ -7,12 +7,11 @@ using System.Linq;
 using Microsoft.Win32;
 using NeoEdit.Controls;
 using NeoEdit.Dialogs;
-using NeoEdit.Misc;
 using NeoEdit.Transform;
 
 namespace NeoEdit
 {
-	partial class TextEditor
+	public static class FileFunctions
 	{
 		static string GetSaveFileName(ITextEditor te)
 		{
@@ -51,16 +50,16 @@ namespace NeoEdit
 				te.ReplaceSelections(strs);
 		}
 
-		static void Command_File_New_FromSelections(ITextEditor te) => te.GetSelectionStrings().ForEach((str, index) => te.TabsParent.Add(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: te.ContentType, modified: false));
+		static public void Command_File_New_FromSelections(ITextEditor te) => te.GetSelectionStrings().ForEach((str, index) => te.TabsParent.Add(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: te.ContentType, modified: false));
 
-		static void Command_File_Open_Selected(ITextEditor te)
+		static public void Command_File_Open_Selected(ITextEditor te)
 		{
 			var files = te.RelativeSelectedFiles();
 			foreach (var file in files)
 				te.TabsParent.Add(file);
 		}
 
-		static void Command_File_Save_Save(ITextEditor te)
+		static public void Command_File_Save_Save(ITextEditor te)
 		{
 			if (te.FileName == null)
 				Command_File_Save_SaveAs(te);
@@ -68,11 +67,11 @@ namespace NeoEdit
 				te.Save(te.FileName);
 		}
 
-		static void Command_File_Save_SaveAs(ITextEditor te, bool copyOnly = false) => te.Save(GetSaveFileName(te), copyOnly);
+		static public void Command_File_Save_SaveAs(ITextEditor te, bool copyOnly = false) => te.Save(GetSaveFileName(te), copyOnly);
 
-		static GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.WindowParent, te.GetVariables(), te.Selections.Count);
+		static public GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.WindowParent, te.GetVariables(), te.Selections.Count);
 
-		static void Command_File_Save_SaveAsByExpression(ITextEditor te, GetExpressionDialog.Result result, AnswerResult answer, bool copyOnly = false)
+		static public void Command_File_Save_SaveAsByExpression(ITextEditor te, GetExpressionDialog.Result result, AnswerResult answer, bool copyOnly = false)
 		{
 			var results = te.GetFixedExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
@@ -98,7 +97,7 @@ namespace NeoEdit
 			te.Save(newFileName, copyOnly);
 		}
 
-		static void Command_File_Save_SetDisplayName(ITextEditor te, GetExpressionDialog.Result result)
+		static public void Command_File_Save_SetDisplayName(ITextEditor te, GetExpressionDialog.Result result)
 		{
 			if (result.Expression == "f")
 			{
@@ -111,7 +110,7 @@ namespace NeoEdit
 			te.DisplayName = results[0];
 		}
 
-		static void Command_File_Operations_Rename(ITextEditor te)
+		static public void Command_File_Operations_Rename(ITextEditor te)
 		{
 			if (string.IsNullOrEmpty(te.FileName))
 			{
@@ -127,9 +126,9 @@ namespace NeoEdit
 			te.SetFileName(fileName);
 		}
 
-		static GetExpressionDialog.Result Command_File_Operations_RenameByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.WindowParent, te.GetVariables(), te.Selections.Count);
+		static public GetExpressionDialog.Result Command_File_Operations_RenameByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.WindowParent, te.GetVariables(), te.Selections.Count);
 
-		static void Command_File_Operations_RenameByExpression(ITextEditor te, GetExpressionDialog.Result result, AnswerResult answer)
+		static public void Command_File_Operations_RenameByExpression(ITextEditor te, GetExpressionDialog.Result result, AnswerResult answer)
 		{
 			var results = te.GetFixedExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
@@ -161,7 +160,7 @@ namespace NeoEdit
 			te.SetFileName(newFileName);
 		}
 
-		static void Command_File_Operations_Delete(ITextEditor te, AnswerResult answer)
+		static public void Command_File_Operations_Delete(ITextEditor te, AnswerResult answer)
 		{
 			if (te.FileName == null)
 				return;
@@ -182,11 +181,11 @@ namespace NeoEdit
 			File.Delete(te.FileName);
 		}
 
-		static void Command_File_Operations_Explore(ITextEditor te) => Process.Start("explorer.exe", $"/select,\"{te.FileName}\"");
+		static public void Command_File_Operations_Explore(ITextEditor te) => Process.Start("explorer.exe", $"/select,\"{te.FileName}\"");
 
-		static void Command_File_Operations_CommandPrompt(ITextEditor te) => Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = Path.GetDirectoryName(te.FileName) });
+		static public void Command_File_Operations_CommandPrompt(ITextEditor te) => Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = Path.GetDirectoryName(te.FileName) });
 
-		static void Command_File_Operations_DragDrop(ITextEditor te)
+		static public void Command_File_Operations_DragDrop(ITextEditor te)
 		{
 			if (string.IsNullOrWhiteSpace(te.FileName))
 				throw new Exception("No current file.");
@@ -195,7 +194,7 @@ namespace NeoEdit
 			te.doDrag = DragType.CurrentFile;
 		}
 
-		static void Command_File_Operations_VCSDiff(ITextEditor te)
+		static public void Command_File_Operations_VCSDiff(ITextEditor te)
 		{
 			if (string.IsNullOrEmpty(te.FileName))
 				throw new Exception("Must have filename to do diff");
@@ -210,7 +209,13 @@ namespace NeoEdit
 			te.TabsParent.TopMost = topMost;
 		}
 
-		static void Command_File_Refresh(ITextEditor te, AnswerResult answer)
+		static public void Command_File_Close(ITextEditor te, AnswerResult answer)
+		{
+			if (te.CanClose(answer))
+				te.TabsParent.Remove(te);
+		}
+
+		static public void Command_File_Refresh(ITextEditor te, AnswerResult answer)
 		{
 			if (string.IsNullOrEmpty(te.FileName))
 				return;
@@ -237,9 +242,9 @@ namespace NeoEdit
 			}
 		}
 
-		static void Command_File_AutoRefresh(ITextEditor te, bool? multiStatus) => te.SetAutoRefresh(multiStatus != true);
+		static public void Command_File_AutoRefresh(ITextEditor te, bool? multiStatus) => te.SetAutoRefresh(multiStatus != true);
 
-		static void Command_File_Revert(ITextEditor te, AnswerResult answer)
+		static public void Command_File_Revert(ITextEditor te, AnswerResult answer)
 		{
 			if (te.IsModified)
 			{
@@ -259,7 +264,7 @@ namespace NeoEdit
 			te.OpenFile(te.FileName, te.DisplayName, keepUndo: true);
 		}
 
-		static void Command_File_Insert_Files(ITextEditor te)
+		static public void Command_File_Insert_Files(ITextEditor te)
 		{
 			if (te.Selections.Count != 1)
 			{
@@ -277,7 +282,7 @@ namespace NeoEdit
 				InsertFiles(te, dialog.FileNames);
 		}
 
-		static void Command_File_Insert_CopiedCut(ITextEditor te)
+		static public void Command_File_Insert_CopiedCut(ITextEditor te)
 		{
 			if (te.Selections.Count != 1)
 			{
@@ -307,21 +312,21 @@ namespace NeoEdit
 			InsertFiles(te, files);
 		}
 
-		static void Command_File_Insert_Selected(ITextEditor te) => InsertFiles(te, te.RelativeSelectedFiles());
+		static public void Command_File_Insert_Selected(ITextEditor te) => InsertFiles(te, te.RelativeSelectedFiles());
 
-		static void Command_File_Copy_Path(ITextEditor te) => te.SetClipboardFile(te.FileName);
+		static public void Command_File_Copy_Path(ITextEditor te) => te.SetClipboardFile(te.FileName);
 
-		static void Command_File_Copy_Name(ITextEditor te) => te.SetClipboardString(Path.GetFileName(te.FileName));
+		static public void Command_File_Copy_Name(ITextEditor te) => te.SetClipboardString(Path.GetFileName(te.FileName));
 
-		static void Command_File_Copy_DisplayName(ITextEditor te) => te.SetClipboardString(te.DisplayName ?? Path.GetFileName(te.FileName));
+		static public void Command_File_Copy_DisplayName(ITextEditor te) => te.SetClipboardString(te.DisplayName ?? Path.GetFileName(te.FileName));
 
-		static EncodingDialog.Result Command_File_Encoding_Encoding_Dialog(ITextEditor te) => EncodingDialog.Run(te.WindowParent, te.CodePage);
+		static public EncodingDialog.Result Command_File_Encoding_Encoding_Dialog(ITextEditor te) => EncodingDialog.Run(te.WindowParent, te.CodePage);
 
-		static void Command_File_Encoding_Encoding(ITextEditor te, EncodingDialog.Result result) => te.CodePage = result.CodePage;
+		static public void Command_File_Encoding_Encoding(ITextEditor te, EncodingDialog.Result result) => te.CodePage = result.CodePage;
 
-		static EncodingDialog.Result Command_File_Encoding_ReopenWithEncoding_Dialog(ITextEditor te) => EncodingDialog.Run(te.WindowParent, te.CodePage);
+		static public EncodingDialog.Result Command_File_Encoding_ReopenWithEncoding_Dialog(ITextEditor te) => EncodingDialog.Run(te.WindowParent, te.CodePage);
 
-		static void Command_File_Encoding_ReopenWithEncoding(ITextEditor te, EncodingDialog.Result result, AnswerResult answer)
+		static public void Command_File_Encoding_ReopenWithEncoding(ITextEditor te, EncodingDialog.Result result, AnswerResult answer)
 		{
 			if (te.IsModified)
 			{
@@ -341,9 +346,9 @@ namespace NeoEdit
 			te.OpenFile(te.FileName, codePage: result.CodePage);
 		}
 
-		static FileEncodingLineEndingsDialog.Result Command_File_Encoding_LineEndings_Dialog(ITextEditor te) => FileEncodingLineEndingsDialog.Run(te.WindowParent, te.LineEnding ?? "");
+		static public FileEncodingLineEndingsDialog.Result Command_File_Encoding_LineEndings_Dialog(ITextEditor te) => FileEncodingLineEndingsDialog.Run(te.WindowParent, te.LineEnding ?? "");
 
-		static void Command_File_Encoding_LineEndings(ITextEditor te, FileEncodingLineEndingsDialog.Result result)
+		static public void Command_File_Encoding_LineEndings(ITextEditor te, FileEncodingLineEndingsDialog.Result result)
 		{
 			var lines = te.Data.NumLines;
 			var sel = new List<Range>();
@@ -358,7 +363,7 @@ namespace NeoEdit
 			te.Replace(sel, sel.Select(str => result.LineEndings).ToList());
 		}
 
-		static string Command_File_Encrypt_Dialog(ITextEditor te, bool? multiStatus)
+		static public string Command_File_Encrypt_Dialog(ITextEditor te, bool? multiStatus)
 		{
 			if (multiStatus != false)
 				return "";
@@ -366,8 +371,8 @@ namespace NeoEdit
 			return FileSaver.GetKey(te.WindowParent, true);
 		}
 
-		static void Command_File_Encrypt(ITextEditor te, string result) => te.AESKey = result == "" ? null : result;
+		static public void Command_File_Encrypt(ITextEditor te, string result) => te.AESKey = result == "" ? null : result;
 
-		static void Command_File_Compress(ITextEditor te, bool? multiStatus) => te.Compressed = multiStatus == false;
+		static public void Command_File_Compress(ITextEditor te, bool? multiStatus) => te.Compressed = multiStatus == false;
 	}
 }

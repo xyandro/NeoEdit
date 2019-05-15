@@ -61,13 +61,6 @@
     <None Include="CommandLine\Source\CommandLineLexer.g4" />
     <None Include="CommandLine\Source\CommandLineParser.g4" />
     <Compile Include="Dialogs\ActiveTabsDialog.cs" />
-    <Page Include="Dialogs\CryptorKeyDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\CryptorKeyDialog.xaml.cs">
-      <DependentUpon>CryptorKeyDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\CustomGridDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -152,26 +145,12 @@
     <Compile Include="Dialogs\EditSortDialog.xaml.cs">
       <DependentUpon>EditSortDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\EncodingDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\EncodingDialog.xaml.cs">
-      <DependentUpon>EncodingDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\EncryptDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Dialogs\EncryptDialog.xaml.cs">
       <DependentUpon>EncryptDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FileEncodingLineEndingsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FileEncodingLineEndingsDialog.xaml.cs">
-      <DependentUpon>FileEncodingLineEndingsDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\FilesCreateFromExpressionsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -441,7 +420,6 @@
     <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="InstanceManager.cs" />
     <Compile Include="Macro.cs" />
-    <Compile Include="Misc\FileSaver.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
     <None Include="Misc\Words.txt" />
@@ -478,9 +456,6 @@
     </Compile>
     <Compile Include="TabsLayout.cs" />
     <Compile Include="TextEditor-Edit.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-File.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Files.xaml.cs">
@@ -538,6 +513,10 @@
     <ProjectReference Include="..\Expression\Expression.csproj">
       <Project>{bd04fc3e-9aaf-4886-9167-49fa8dde95c5}</Project>
       <Name>Expression</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\File\File.csproj">
+      <Project>{d11908ef-d913-46a6-be44-a9bf6a311b65}</Project>
+      <Name>File</Name>
     </ProjectReference>
     <ProjectReference Include="..\Image\Image.csproj">
       <Project>{d13a65ab-dc9d-4022-ac1a-ae01e5d8be19}</Project>

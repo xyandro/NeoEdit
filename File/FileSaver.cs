@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using NeoEdit;
-using NeoEdit.Transform;
 using NeoEdit.Dialogs;
+using NeoEdit.Transform;
 
-namespace NeoEdit.Misc
+namespace NeoEdit
 {
 	public static class FileSaver
 	{

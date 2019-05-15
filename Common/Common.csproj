@@ -54,6 +54,13 @@
     <Compile Include="Converters\NonEmptyConverter.cs" />
     <Compile Include="Converters\RadioConverter.cs" />
     <Compile Include="Converters\ValidValueConverter.cs" />
+    <Page Include="Dialogs\CryptorKeyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\CryptorKeyDialog.xaml.cs">
+      <DependentUpon>CryptorKeyDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ExpressionHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
