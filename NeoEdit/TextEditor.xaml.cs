@@ -322,10 +322,10 @@ namespace NeoEdit
 
 		public int BeginOffset => Data.GetOffset(0, 0);
 		public int EndOffset => Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
-		Range BeginRange => new Range(BeginOffset);
+		public Range BeginRange => new Range(BeginOffset);
 		Range EndRange => new Range(EndOffset);
 		public Range FullRange => new Range(EndOffset, BeginOffset);
-		string AllText => GetString(FullRange);
+		public string AllText => GetString(FullRange);
 
 		void BlockSelDown()
 		{

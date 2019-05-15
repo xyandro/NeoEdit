@@ -83,7 +83,7 @@ namespace NeoEdit
 			var sels = te.Selections.ToList();
 
 			if ((sels.Count == 0) && (gotoType == GotoType.Line))
-				sels.Add(BeginRange);
+				sels.Add(te.BeginRange);
 			if (sels.Count == 1)
 				sels = sels.Resize(values.Count, sels[0]).ToList();
 			if (values.Count == 1)

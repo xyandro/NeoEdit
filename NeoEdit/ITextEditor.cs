@@ -79,5 +79,9 @@ namespace NeoEdit
 		void SetClipboardFile(string fileName, bool isCut = false);
 		void SetClipboardString(string text);
 		void SetFileName(string fileName);
+		string AllText { get; }
+		Range BeginRange { get; }
+		System.Drawing.Bitmap savedBitmap { get; set; }
+		string savedBitmapText { get; set; }
 	}
 }

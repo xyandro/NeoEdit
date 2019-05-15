@@ -19,7 +19,7 @@ namespace NeoEdit
 		Table GetTable(ITextEditor te, bool hasHeaders = true)
 		{
 			if (te.ContentType.IsTableType())
-				return new Table(AllText, te.ContentType, hasHeaders);
+				return new Table(te.AllText, te.ContentType, hasHeaders);
 			if (te.ContentType == Parser.ParserType.None)
 				return new Table(Enumerable.Range(0, te.Data.NumLines).AsParallel().AsOrdered().Select(line => te.Data.GetLine(line)).NonNullOrWhiteSpace().Select(str => new List<string> { str }).ToList(), false);
 			throw new Exception("Invalid content type");
@@ -59,10 +59,10 @@ namespace NeoEdit
 		{
 			var output = GetTableText(te, table);
 			te.Replace(new List<Range> { te.FullRange }, new List<string> { output });
-			te.SetSelections(new List<Range> { BeginRange });
+			te.SetSelections(new List<Range> { te.BeginRange });
 		}
 
-		void Command_Table_DetectType(ITextEditor te) => te.ContentType = Table.GuessTableType(AllText);
+		void Command_Table_DetectType(ITextEditor te) => te.ContentType = Table.GuessTableType(te.AllText);
 
 		TableConvertDialog.Result Command_Table_Convert_Dialog(ITextEditor te) => TableConvertDialog.Run(te.TabsParent, te.ContentType);
 
