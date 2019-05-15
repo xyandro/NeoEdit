@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NeoEdit;
-using NeoEdit.Content;
 using NeoEdit.Dialogs;
 using NeoEdit.Expressions;
-using NeoEdit.Transform;
 
 namespace NeoEdit
 {

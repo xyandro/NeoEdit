@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
-using NeoEdit.Content;
 
 namespace NeoEdit.Highlighting
 {

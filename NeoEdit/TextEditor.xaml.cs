@@ -15,7 +15,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using NeoEdit;
-using NeoEdit.Content;
 using NeoEdit.Controls;
 using NeoEdit.Converters;
 using NeoEdit.Dialogs;
@@ -98,6 +97,13 @@ namespace NeoEdit
 		public bool Active { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public string TabLabel { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool KeepSelections { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool HighlightSyntax { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool StrictParsing { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+
 
 		public ITabs TabsParent { get; set; }
 		public Window WindowParent => TabsParent as Window;
@@ -991,11 +997,11 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Content_Ancestor: dialogResult = Command_Content_Ancestor_Dialog(this); break;
-				case NECommand.Content_Attributes: dialogResult = Command_Content_Attributes_Dialog(this); break;
-				case NECommand.Content_WithAttribute: dialogResult = Command_Content_WithAttribute_Dialog(this); break;
-				case NECommand.Content_Children_WithAttribute: dialogResult = Command_Content_Children_WithAttribute_Dialog(this); break;
-				case NECommand.Content_Descendants_WithAttribute: dialogResult = Command_Content_Descendants_WithAttribute_Dialog(this); break;
+				case NECommand.Content_Ancestor: dialogResult = ContentFunctions.Command_Content_Ancestor_Dialog(this); break;
+				case NECommand.Content_Attributes: dialogResult = ContentFunctions.Command_Content_Attributes_Dialog(this); break;
+				case NECommand.Content_WithAttribute: dialogResult = ContentFunctions.Command_Content_WithAttribute_Dialog(this); break;
+				case NECommand.Content_Children_WithAttribute: dialogResult = ContentFunctions.Command_Content_Children_WithAttribute_Dialog(this); break;
+				case NECommand.Content_Descendants_WithAttribute: dialogResult = ContentFunctions.Command_Content_Descendants_WithAttribute_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1453,49 +1459,49 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Content_Type_SetFromExtension: Command_Content_Type_SetFromExtension(this); break;
-				case NECommand.Content_Type_None: Command_Content_Type(this, ParserType.None); break;
-				case NECommand.Content_Type_Balanced: Command_Content_Type(this, ParserType.Balanced); break;
-				case NECommand.Content_Type_Columns: Command_Content_Type(this, ParserType.Columns); break;
-				case NECommand.Content_Type_CPlusPlus: Command_Content_Type(this, ParserType.CPlusPlus); break;
-				case NECommand.Content_Type_CSharp: Command_Content_Type(this, ParserType.CSharp); break;
-				case NECommand.Content_Type_CSV: Command_Content_Type(this, ParserType.CSV); break;
-				case NECommand.Content_Type_ExactColumns: Command_Content_Type(this, ParserType.ExactColumns); break;
-				case NECommand.Content_Type_HTML: Command_Content_Type(this, ParserType.HTML); break;
-				case NECommand.Content_Type_JSON: Command_Content_Type(this, ParserType.JSON); break;
-				case NECommand.Content_Type_SQL: Command_Content_Type(this, ParserType.SQL); break;
-				case NECommand.Content_Type_TSV: Command_Content_Type(this, ParserType.TSV); break;
-				case NECommand.Content_Type_XML: Command_Content_Type(this, ParserType.XML); break;
-				case NECommand.Content_HighlightSyntax: Command_Content_HighlightSyntax(this, multiStatus); break;
-				case NECommand.Content_StrictParsing: Command_Content_StrictParsing(this, multiStatus); break;
-				case NECommand.Content_Reformat: Command_Content_Reformat(this); break;
-				case NECommand.Content_Comment: Command_Content_Comment(this); break;
-				case NECommand.Content_Uncomment: Command_Content_Uncomment(this); break;
-				case NECommand.Content_TogglePosition: Command_Content_TogglePosition(this, shiftDown); break;
-				case NECommand.Content_Current: Command_Content_Current(this); break;
-				case NECommand.Content_Parent: Command_Content_Parent(this); break;
-				case NECommand.Content_Ancestor: Command_Content_Ancestor(this, dialogResult as ContentAttributeDialog.Result); break;
-				case NECommand.Content_Attributes: Command_Content_Attributes(this, dialogResult as ContentAttributesDialog.Result); break;
-				case NECommand.Content_WithAttribute: Command_Content_WithAttribute(this, dialogResult as ContentAttributeDialog.Result); break;
-				case NECommand.Content_Children_Children: Command_Content_Children_Children(this); break;
-				case NECommand.Content_Children_SelfAndChildren: Command_Content_Children_SelfAndChildren(this); break;
-				case NECommand.Content_Children_First: Command_Content_Children_First(this); break;
-				case NECommand.Content_Children_WithAttribute: Command_Content_Children_WithAttribute(this, dialogResult as ContentAttributeDialog.Result); break;
-				case NECommand.Content_Descendants_Descendants: Command_Content_Descendants_Descendants(this); break;
-				case NECommand.Content_Descendants_SelfAndDescendants: Command_Content_Descendants_SelfAndDescendants(this); break;
-				case NECommand.Content_Descendants_First: Command_Content_Descendants_First(this); break;
-				case NECommand.Content_Descendants_WithAttribute: Command_Content_Descendants_WithAttribute(this, dialogResult as ContentAttributeDialog.Result); break;
-				case NECommand.Content_Navigate_Up: Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Up, shiftDown); break;
-				case NECommand.Content_Navigate_Down: Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Down, shiftDown); break;
-				case NECommand.Content_Navigate_Left: Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Left, shiftDown); break;
-				case NECommand.Content_Navigate_Right: Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Right, shiftDown); break;
-				case NECommand.Content_Navigate_Home: Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Home, shiftDown); break;
-				case NECommand.Content_Navigate_End: Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.End, shiftDown); break;
-				case NECommand.Content_Navigate_PgUp: Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.PgUp, shiftDown); break;
-				case NECommand.Content_Navigate_PgDn: Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.PgDn, shiftDown); break;
-				case NECommand.Content_Navigate_Row: Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Row, true); break;
-				case NECommand.Content_Navigate_Column: Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Column, true); break;
-				case NECommand.Content_KeepSelections: Command_Content_KeepSelections(this, multiStatus); break;
+				case NECommand.Content_Type_SetFromExtension: ContentFunctions.Command_Content_Type_SetFromExtension(this); break;
+				case NECommand.Content_Type_None: ContentFunctions.Command_Content_Type(this, ParserType.None); break;
+				case NECommand.Content_Type_Balanced: ContentFunctions.Command_Content_Type(this, ParserType.Balanced); break;
+				case NECommand.Content_Type_Columns: ContentFunctions.Command_Content_Type(this, ParserType.Columns); break;
+				case NECommand.Content_Type_CPlusPlus: ContentFunctions.Command_Content_Type(this, ParserType.CPlusPlus); break;
+				case NECommand.Content_Type_CSharp: ContentFunctions.Command_Content_Type(this, ParserType.CSharp); break;
+				case NECommand.Content_Type_CSV: ContentFunctions.Command_Content_Type(this, ParserType.CSV); break;
+				case NECommand.Content_Type_ExactColumns: ContentFunctions.Command_Content_Type(this, ParserType.ExactColumns); break;
+				case NECommand.Content_Type_HTML: ContentFunctions.Command_Content_Type(this, ParserType.HTML); break;
+				case NECommand.Content_Type_JSON: ContentFunctions.Command_Content_Type(this, ParserType.JSON); break;
+				case NECommand.Content_Type_SQL: ContentFunctions.Command_Content_Type(this, ParserType.SQL); break;
+				case NECommand.Content_Type_TSV: ContentFunctions.Command_Content_Type(this, ParserType.TSV); break;
+				case NECommand.Content_Type_XML: ContentFunctions.Command_Content_Type(this, ParserType.XML); break;
+				case NECommand.Content_HighlightSyntax: ContentFunctions.Command_Content_HighlightSyntax(this, multiStatus); break;
+				case NECommand.Content_StrictParsing: ContentFunctions.Command_Content_StrictParsing(this, multiStatus); break;
+				case NECommand.Content_Reformat: ContentFunctions.Command_Content_Reformat(this); break;
+				case NECommand.Content_Comment: ContentFunctions.Command_Content_Comment(this); break;
+				case NECommand.Content_Uncomment: ContentFunctions.Command_Content_Uncomment(this); break;
+				case NECommand.Content_TogglePosition: ContentFunctions.Command_Content_TogglePosition(this, shiftDown); break;
+				case NECommand.Content_Current: ContentFunctions.Command_Content_Current(this); break;
+				case NECommand.Content_Parent: ContentFunctions.Command_Content_Parent(this); break;
+				case NECommand.Content_Ancestor: ContentFunctions.Command_Content_Ancestor(this, dialogResult as ContentAttributeDialog.Result); break;
+				case NECommand.Content_Attributes: ContentFunctions.Command_Content_Attributes(this, dialogResult as ContentAttributesDialog.Result); break;
+				case NECommand.Content_WithAttribute: ContentFunctions.Command_Content_WithAttribute(this, dialogResult as ContentAttributeDialog.Result); break;
+				case NECommand.Content_Children_Children: ContentFunctions.Command_Content_Children_Children(this); break;
+				case NECommand.Content_Children_SelfAndChildren: ContentFunctions.Command_Content_Children_SelfAndChildren(this); break;
+				case NECommand.Content_Children_First: ContentFunctions.Command_Content_Children_First(this); break;
+				case NECommand.Content_Children_WithAttribute: ContentFunctions.Command_Content_Children_WithAttribute(this, dialogResult as ContentAttributeDialog.Result); break;
+				case NECommand.Content_Descendants_Descendants: ContentFunctions.Command_Content_Descendants_Descendants(this); break;
+				case NECommand.Content_Descendants_SelfAndDescendants: ContentFunctions.Command_Content_Descendants_SelfAndDescendants(this); break;
+				case NECommand.Content_Descendants_First: ContentFunctions.Command_Content_Descendants_First(this); break;
+				case NECommand.Content_Descendants_WithAttribute: ContentFunctions.Command_Content_Descendants_WithAttribute(this, dialogResult as ContentAttributeDialog.Result); break;
+				case NECommand.Content_Navigate_Up: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Up, shiftDown); break;
+				case NECommand.Content_Navigate_Down: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Down, shiftDown); break;
+				case NECommand.Content_Navigate_Left: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Left, shiftDown); break;
+				case NECommand.Content_Navigate_Right: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Right, shiftDown); break;
+				case NECommand.Content_Navigate_Home: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Home, shiftDown); break;
+				case NECommand.Content_Navigate_End: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.End, shiftDown); break;
+				case NECommand.Content_Navigate_PgUp: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.PgUp, shiftDown); break;
+				case NECommand.Content_Navigate_PgDn: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.PgDn, shiftDown); break;
+				case NECommand.Content_Navigate_Row: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Row, true); break;
+				case NECommand.Content_Navigate_Column: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Column, true); break;
+				case NECommand.Content_KeepSelections: ContentFunctions.Command_Content_KeepSelections(this, multiStatus); break;
 			}
 		}
 
@@ -2615,7 +2621,7 @@ namespace NeoEdit
 				return;
 
 			FileName = fileName;
-			ContentType = Parser.GetParserType(FileName);
+			ContentType = ParserExtensions.GetParserType(FileName);
 			DisplayName = null;
 
 			SetAutoRefresh();
@@ -2836,5 +2842,9 @@ namespace NeoEdit
 		public string DBName { get => dbNameField; set { dbNameField = value; statusBarRenderTimer.Start(); } }
 
 		public DbConnection dbConnection { get; set; }
+
+		public CacheValue previousData { get; } = new CacheValue();
+		public ParserType previousType { get; set; }
+		public ParserNode previousRoot { get; set; }
 	}
 }
