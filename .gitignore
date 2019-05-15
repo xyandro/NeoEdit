@@ -29,6 +29,6 @@ TestResults
 /Content/Content/XML/Parser
 /Dependencies/GlobalAssemblyInfo.cs
 /NeoEdit/CommandLine/Parser
-/NeoEdit/Resources/Words.txt.gz
 /Release
 /Text/RevRegEx/Parser
+/View/Words.txt.gz

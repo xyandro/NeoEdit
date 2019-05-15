@@ -64,6 +64,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Text", "Text\Text.csproj", "{1E27E6FC-FF53-48F3-B2C1-4B79B34ABEEA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "View\View.csproj", "{55ADECD1-44A7-4B68-86B7-222B68E99078}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8} = {2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

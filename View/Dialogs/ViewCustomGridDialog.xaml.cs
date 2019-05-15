@@ -3,7 +3,7 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	partial class CustomGridDialog
+	partial class ViewCustomGridDialog
 	{
 		public class Result
 		{
@@ -12,13 +12,13 @@ namespace NeoEdit.Dialogs
 		}
 
 		[DepProp]
-		public int? Columns { get { return UIHelper<CustomGridDialog>.GetPropValue<int?>(this); } set { UIHelper<CustomGridDialog>.SetPropValue(this, value); } }
+		public int? Columns { get { return UIHelper<ViewCustomGridDialog>.GetPropValue<int?>(this); } set { UIHelper<ViewCustomGridDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? Rows { get { return UIHelper<CustomGridDialog>.GetPropValue<int?>(this); } set { UIHelper<CustomGridDialog>.SetPropValue(this, value); } }
+		public int? Rows { get { return UIHelper<ViewCustomGridDialog>.GetPropValue<int?>(this); } set { UIHelper<ViewCustomGridDialog>.SetPropValue(this, value); } }
 
-		static CustomGridDialog() { UIHelper<CustomGridDialog>.Register(); }
+		static ViewCustomGridDialog() { UIHelper<ViewCustomGridDialog>.Register(); }
 
-		CustomGridDialog(int? columns, int? rows)
+		ViewCustomGridDialog(int? columns, int? rows)
 		{
 			InitializeComponent();
 			Columns = columns;
@@ -36,7 +36,7 @@ namespace NeoEdit.Dialogs
 
 		public static Result Run(Window parent, int? columns, int? rows)
 		{
-			var dialog = new CustomGridDialog(columns, rows) { Owner = parent };
+			var dialog = new ViewCustomGridDialog(columns, rows) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,7 +39,7 @@ namespace NeoEdit
 		[DepProp]
 		public int? Rows { get { return UIHelper<Tabs>.GetPropValue<int?>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Tabs WindowParent { get { return UIHelper<Tabs>.GetPropValue<Tabs>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
+		public Window WindowParent { get { return UIHelper<Tabs>.GetPropValue<Tabs>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public string ActiveCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
@@ -274,101 +273,6 @@ namespace NeoEdit
 				topMost = active.First();
 			TopMost = topMost;
 			active.ForEach(item => item.Active = true);
-		}
-
-		CustomGridDialog.Result Command_View_Type_Dialog() => CustomGridDialog.Run(this, Columns, Rows);
-
-		void Command_View_Type(TabsLayout layout, CustomGridDialog.Result result) => SetLayout(layout, result?.Columns, result?.Rows);
-
-		void Command_View_ActiveTabs() => ShowActiveTabsDialog();
-
-		void Command_View_FontSize() => FontSizeDialog.Run(this);
-
-		void Command_View_SelectTabsWithSelections(bool hasSelections)
-		{
-			var topMost = TopMost;
-			var active = Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
-			Items.ToList().ForEach(tab => tab.Active = false);
-
-			if (!active.Any())
-				return;
-
-			if (!active.Contains(topMost))
-				topMost = active.First();
-			TopMost = topMost;
-			active.ForEach(tab => tab.Active = true);
-		}
-
-		void Command_View_Select_TabsWithSelectionsToTop()
-		{
-			var topMost = TopMost;
-			var active = Items.Where(tab => tab.Active).ToList();
-			var hasSelections = active.Where(tab => tab.HasSelections).ToList();
-			if ((!active.Any()) || (!hasSelections.Any()))
-				return;
-
-			MoveToTop(hasSelections);
-			if (!active.Contains(topMost))
-				topMost = active.First();
-			TopMost = topMost;
-			active.ForEach(tab => tab.Active = true);
-		}
-
-		void Command_View_CloseTabsWithSelections(bool hasSelections)
-		{
-			var topMost = TopMost;
-			var active = Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
-
-			var answer = new AnswerResult();
-			var closeTabs = Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
-			if (!closeTabs.All(tab => tab.CanClose(answer)))
-				return;
-			closeTabs.ForEach(tab => Remove(tab));
-
-			if (!active.Any())
-				return;
-
-			if (!active.Contains(topMost))
-				topMost = active.First();
-			TopMost = topMost;
-			active.ForEach(tab => tab.Active = true);
-		}
-
-		void Command_View_Close_ActiveTabs(bool active)
-		{
-			var answer = new AnswerResult();
-			var closeTabs = Items.Where(tab => tab.Active == active).ToList();
-			if (!closeTabs.All(tab => tab.CanClose(answer)))
-				return;
-			closeTabs.ForEach(tab => Remove(tab));
-		}
-
-		void Command_View_NewWindow()
-		{
-			var active = Items.Where(tab => tab.Active).ToList();
-			active.ForEach(tab => Items.Remove(tab));
-
-			var newWindow = new Tabs();
-			newWindow.Layout = Layout;
-			newWindow.Columns = Columns;
-			newWindow.Rows = Rows;
-			active.ForEach(tab => newWindow.Add(tab));
-		}
-
-		void Command_View_WordList()
-		{
-			var type = GetType();
-			byte[] data;
-			using (var stream = type.Assembly.GetManifestResourceStream($"{type.Namespace}.Resources.Words.txt.gz"))
-			using (var ms = new MemoryStream())
-			{
-				stream.CopyTo(ms);
-				data = ms.ToArray();
-			}
-
-			data = Compressor.Decompress(data, Compressor.Type.GZip);
-			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace("\n", "\r\n"));
-			Add(new TextEditor(bytes: data, modified: false));
 		}
 
 		void Command_Window_NewWindow() => new Tabs(true);
@@ -629,7 +533,7 @@ namespace NeoEdit
 			switch (command)
 			{
 				case NECommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
-				case NECommand.View_CustomGrid: dialogResult = Command_View_Type_Dialog(); break;
+				case NECommand.View_CustomGrid: dialogResult = ViewFunctions.Command_View_Type_Dialog(this); break;
 				case NECommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro.MacroDirectory); break;
 				default: return TopMost == null ? true : TopMost.GetDialogResult(command, out dialogResult, multiStatus);
 			}
@@ -652,20 +556,20 @@ namespace NeoEdit
 				case NECommand.Diff_Select_LeftTab: Command_Diff_Select_LeftRightBothTabs(true); break;
 				case NECommand.Diff_Select_RightTab: Command_Diff_Select_LeftRightBothTabs(false); break;
 				case NECommand.Diff_Select_BothTabs: Command_Diff_Select_LeftRightBothTabs(null); break;
-				case NECommand.View_Full: Command_View_Type(TabsLayout.Full, null); break;
-				case NECommand.View_Grid: Command_View_Type(TabsLayout.Grid, null); break;
-				case NECommand.View_CustomGrid: Command_View_Type(TabsLayout.Custom, dialogResult as CustomGridDialog.Result); break;
-				case NECommand.View_ActiveTabs: Command_View_ActiveTabs(); break;
-				case NECommand.View_FontSize: Command_View_FontSize(); break;
-				case NECommand.View_Select_TabsWithSelections: Command_View_SelectTabsWithSelections(true); break;
-				case NECommand.View_Select_TabsWithoutSelections: Command_View_SelectTabsWithSelections(false); break;
-				case NECommand.View_Select_TabsWithSelectionsToTop: Command_View_Select_TabsWithSelectionsToTop(); break;
-				case NECommand.View_Close_TabsWithSelections: Command_View_CloseTabsWithSelections(true); break;
-				case NECommand.View_Close_TabsWithoutSelections: Command_View_CloseTabsWithSelections(false); break;
-				case NECommand.View_Close_ActiveTabs: Command_View_Close_ActiveTabs(true); break;
-				case NECommand.View_Close_InactiveTabs: Command_View_Close_ActiveTabs(false); break;
-				case NECommand.View_NewWindow: Command_View_NewWindow(); break;
-				case NECommand.View_WordList: Command_View_WordList(); break;
+				case NECommand.View_Full: ViewFunctions.Command_View_Type(this, TabsLayout.Full, null); break;
+				case NECommand.View_Grid: ViewFunctions.Command_View_Type(this, TabsLayout.Grid, null); break;
+				case NECommand.View_CustomGrid: ViewFunctions.Command_View_Type(this, TabsLayout.Custom, dialogResult as ViewCustomGridDialog.Result); break;
+				case NECommand.View_ActiveTabs: ViewFunctions.Command_View_ActiveTabs(this); break;
+				case NECommand.View_FontSize: ViewFunctions.Command_View_FontSize(this); break;
+				case NECommand.View_Select_TabsWithSelections: ViewFunctions.Command_View_SelectTabsWithSelections(this, true); break;
+				case NECommand.View_Select_TabsWithoutSelections: ViewFunctions.Command_View_SelectTabsWithSelections(this, false); break;
+				case NECommand.View_Select_TabsWithSelectionsToTop: ViewFunctions.Command_View_Select_TabsWithSelectionsToTop(this); break;
+				case NECommand.View_Close_TabsWithSelections: ViewFunctions.Command_View_CloseTabsWithSelections(this, true); break;
+				case NECommand.View_Close_TabsWithoutSelections: ViewFunctions.Command_View_CloseTabsWithSelections(this, false); break;
+				case NECommand.View_Close_ActiveTabs: ViewFunctions.Command_View_Close_ActiveTabs(this, true); break;
+				case NECommand.View_Close_InactiveTabs: ViewFunctions.Command_View_Close_ActiveTabs(this, false); break;
+				case NECommand.View_NewWindow: ViewFunctions.Command_View_NewWindow(this); break;
+				case NECommand.View_WordList: ViewFunctions.Command_View_WordList(this); break;
 				case NECommand.Macro_Open_Quick_1: Macro_Open_Quick(1); return true;
 				case NECommand.Macro_Open_Quick_2: Macro_Open_Quick(2); return true;
 				case NECommand.Macro_Open_Quick_3: Macro_Open_Quick(3); return true;
@@ -848,12 +752,6 @@ namespace NeoEdit
 			return AddDiff(te1, te2);
 		}
 
-		public void ShowActiveTabsDialog()
-		{
-			ActiveTabsDialog.Run(this);
-			UpdateTopMost();
-		}
-
 		void ItemsChanged()
 		{
 			ItemTabs_TabsChanged();
@@ -897,7 +795,7 @@ namespace NeoEdit
 			topMostTimer.Start();
 		}
 
-		void UpdateTopMost()
+		public void UpdateTopMost()
 		{
 			var topMost = TopMost;
 			if ((topMost == null) || (!topMost.Active))

@@ -1,4 +1,4 @@
-﻿namespace NeoEdit.Controls
+﻿namespace NeoEdit
 {
 	public enum TabsLayout
 	{

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="CompressWords;License;BuildCommandLine" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="License;BuildCommandLine" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
@@ -9,10 +9,6 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  <Target Name="CompressWords" Inputs="Misc\Words.txt" Outputs="Resources\Words.txt.gz" Returns="">
-    <Message Text="Compressing word list" Importance="High" />
-    <Exec Command="&quot;$(SolutionDir)\Compress\bin\$(Configuration)\Compress.exe&quot; &quot;$(ProjectDir)Misc\Words.txt&quot; &quot;$(ProjectDir)Resources\Words.txt.gz&quot;" />
-  </Target>
   <Target Name="License" Inputs="$(SolutionDir)License.txt" Outputs="$(OutDir)License.txt" Returns="">
     <Message Text="Copy license" Importance="High" />
     <Exec Command="xcopy /y &quot;$(SolutionDir)License.txt&quot; &quot;$(OutDir)&quot;" />
@@ -60,27 +56,12 @@
     <Compile Include="CommandLine\Parser\CommandLineParserVisitor.cs" />
     <None Include="CommandLine\Source\CommandLineLexer.g4" />
     <None Include="CommandLine\Source\CommandLineParser.g4" />
-    <Compile Include="Dialogs\ActiveTabsDialog.cs" />
-    <Page Include="Dialogs\CustomGridDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\CustomGridDialog.xaml.cs">
-      <DependentUpon>CustomGridDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\EncryptDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Dialogs\EncryptDialog.xaml.cs">
       <DependentUpon>EncryptDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FontSizeDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FontSizeDialog.xaml.cs">
-      <DependentUpon>FontSizeDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\HelpAboutChangeLogDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -128,7 +109,6 @@
     <Compile Include="Macro.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
-    <None Include="Misc\Words.txt" />
     <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
     <Compile Include="NEClipboards\NEClipboard.cs" />
     <Compile Include="NEClipboards\NEClipboardItem.cs" />
@@ -152,7 +132,6 @@
     <Resource Include="Resources\Indeterminate.png" />
     <Resource Include="Resources\Unchecked.png" />
     <EmbeddedResource Include="Resources\Unicode.dat" />
-    <EmbeddedResource Include="Resources\Words.txt.gz" />
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -160,7 +139,6 @@
     <Compile Include="Tabs.xaml.cs">
       <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TabsLayout.cs" />
     <Page Include="TextEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

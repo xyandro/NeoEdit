@@ -185,6 +185,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="ShutdownData.cs" />
     <Compile Include="Table.cs" />
+    <Compile Include="TabsLayout.cs" />
     <Compile Include="TextData.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />
