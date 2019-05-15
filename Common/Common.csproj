@@ -111,6 +111,13 @@
     <Compile Include="Dialogs\ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\RegExHelpDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
+      <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DragType.cs" />
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
     <Compile Include="Expressions\ExpressionUnit.cs" />

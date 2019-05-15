@@ -369,40 +369,12 @@
     <Compile Include="Dialogs\NumericSeriesDialog.xaml.cs">
       <DependentUpon>NumericSeriesDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\RegExHelpDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
-      <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\RegionModifyRegionsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Dialogs\RegionModifyRegionsDialog.xaml.cs">
       <DependentUpon>RegionModifyRegionsDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\SelectByCountDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\SelectByCountDialog.xaml.cs">
-      <DependentUpon>SelectByCountDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\SelectLimitDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\SelectLimitDialog.xaml.cs">
-      <DependentUpon>SelectLimitDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\SelectSplitDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\SelectSplitDialog.xaml.cs">
-      <DependentUpon>SelectSplitDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\SignVerifyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -465,9 +437,6 @@
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Region.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Select.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Page Include="TextEditor.xaml">
@@ -533,6 +502,10 @@
     <ProjectReference Include="..\Position\Position.csproj">
       <Project>{a7d32fd6-0bed-4ffc-9ed7-2c9c385e241c}</Project>
       <Name>Position</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Select\Select.csproj">
+      <Project>{a77b4c32-4d34-4bff-aad2-200457743604}</Project>
+      <Name>Select</Name>
     </ProjectReference>
     <ProjectReference Include="..\Table\Table.csproj">
       <Project>{5b8dbd58-aa5b-45f3-9637-34ee5dd49ff3}</Project>

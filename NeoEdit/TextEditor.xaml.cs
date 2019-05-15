@@ -1036,9 +1036,9 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(this); break;
-				case NECommand.Select_Repeats_ByCount: dialogResult = Command_Select_Repeats_ByCount_Dialog(this); break;
-				case NECommand.Select_Split: dialogResult = Command_Select_Split_Dialog(this); break;
+				case NECommand.Select_Limit: dialogResult = SelectFunctions.Command_Select_Limit_Dialog(this); break;
+				case NECommand.Select_Repeats_ByCount: dialogResult = SelectFunctions.Command_Select_Repeats_ByCount_Dialog(this); break;
+				case NECommand.Select_Split: dialogResult = SelectFunctions.Command_Select_Split_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1586,38 +1586,38 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Select_All: Command_Select_All(this); break;
-				case NECommand.Select_Nothing: Command_Select_Nothing(this); break;
-				case NECommand.Select_Limit: Command_Select_Limit(this, dialogResult as SelectLimitDialog.Result); break;
-				case NECommand.Select_Lines: Command_Select_Lines(this, false); break;
-				case NECommand.Select_WholeLines: Command_Select_Lines(this, true); break;
-				case NECommand.Select_Rectangle: Command_Select_Rectangle(this); break;
-				case NECommand.Select_Invert: Command_Select_Invert(this); break;
-				case NECommand.Select_Join: Command_Select_Join(this); break;
-				case NECommand.Select_Empty: Command_Select_Empty(this, true); break;
-				case NECommand.Select_NonEmpty: Command_Select_Empty(this, false); break;
-				case NECommand.Select_ToggleOpenClose: Command_Select_ToggleOpenClose(this, shiftDown); break;
-				case NECommand.Select_Repeats_Unique: Command_Select_Repeats_Unique(this, true); break;
-				case NECommand.Select_Repeats_Duplicates: Command_Select_Repeats_Duplicates(this, true); break;
-				case NECommand.Select_Repeats_MatchPrevious: Command_Select_Repeats_MatchPrevious(this, true); break;
-				case NECommand.Select_Repeats_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(this, true); break;
-				case NECommand.Select_Repeats_RepeatedLines: Command_Select_Repeats_RepeatedLines(this); break;
-				case NECommand.Select_Repeats_ByCount: Command_Select_Repeats_ByCount(this, dialogResult as SelectByCountDialog.Result); break;
-				case NECommand.Select_Repeats_CaseInsensitive_Unique: Command_Select_Repeats_Unique(this, false); break;
-				case NECommand.Select_Repeats_CaseInsensitive_Duplicates: Command_Select_Repeats_Duplicates(this, false); break;
-				case NECommand.Select_Repeats_CaseInsensitive_MatchPrevious: Command_Select_Repeats_MatchPrevious(this, false); break;
-				case NECommand.Select_Repeats_CaseInsensitive_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(this, false); break;
-				case NECommand.Select_Split: Command_Select_Split(this, dialogResult as SelectSplitDialog.Result); break;
-				case NECommand.Select_Selection_First: Command_Select_Selection_First(this); break;
-				case NECommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(this); break;
-				case NECommand.Select_Selection_Center: Command_Select_Selection_Center(this); break;
-				case NECommand.Select_Selection_ToggleAnchor: Command_Select_Selection_ToggleAnchor(this); break;
-				case NECommand.Select_Selection_Next: Command_Select_Selection_NextPrevious(this, true); break;
-				case NECommand.Select_Selection_Previous: Command_Select_Selection_NextPrevious(this, false); break;
-				case NECommand.Select_Selection_Single: Command_Select_Selection_Single(this); break;
-				case NECommand.Select_Selection_Remove: Command_Select_Selection_Remove(this); break;
-				case NECommand.Select_Selection_RemoveBeforeCurrent: Command_Select_Selection_RemoveBeforeCurrent(this); break;
-				case NECommand.Select_Selection_RemoveAfterCurrent: Command_Select_Selection_RemoveAfterCurrent(this); break;
+				case NECommand.Select_All: SelectFunctions.Command_Select_All(this); break;
+				case NECommand.Select_Nothing: SelectFunctions.Command_Select_Nothing(this); break;
+				case NECommand.Select_Limit: SelectFunctions.Command_Select_Limit(this, dialogResult as SelectLimitDialog.Result); break;
+				case NECommand.Select_Lines: SelectFunctions.Command_Select_Lines(this, false); break;
+				case NECommand.Select_WholeLines: SelectFunctions.Command_Select_Lines(this, true); break;
+				case NECommand.Select_Rectangle: SelectFunctions.Command_Select_Rectangle(this); break;
+				case NECommand.Select_Invert: SelectFunctions.Command_Select_Invert(this); break;
+				case NECommand.Select_Join: SelectFunctions.Command_Select_Join(this); break;
+				case NECommand.Select_Empty: SelectFunctions.Command_Select_Empty(this, true); break;
+				case NECommand.Select_NonEmpty: SelectFunctions.Command_Select_Empty(this, false); break;
+				case NECommand.Select_ToggleOpenClose: SelectFunctions.Command_Select_ToggleOpenClose(this, shiftDown); break;
+				case NECommand.Select_Repeats_Unique: SelectFunctions.Command_Select_Repeats_Unique(this, true); break;
+				case NECommand.Select_Repeats_Duplicates: SelectFunctions.Command_Select_Repeats_Duplicates(this, true); break;
+				case NECommand.Select_Repeats_MatchPrevious: SelectFunctions.Command_Select_Repeats_MatchPrevious(this, true); break;
+				case NECommand.Select_Repeats_NonMatchPrevious: SelectFunctions.Command_Select_Repeats_NonMatchPrevious(this, true); break;
+				case NECommand.Select_Repeats_RepeatedLines: SelectFunctions.Command_Select_Repeats_RepeatedLines(this); break;
+				case NECommand.Select_Repeats_ByCount: SelectFunctions.Command_Select_Repeats_ByCount(this, dialogResult as SelectByCountDialog.Result); break;
+				case NECommand.Select_Repeats_CaseInsensitive_Unique: SelectFunctions.Command_Select_Repeats_Unique(this, false); break;
+				case NECommand.Select_Repeats_CaseInsensitive_Duplicates: SelectFunctions.Command_Select_Repeats_Duplicates(this, false); break;
+				case NECommand.Select_Repeats_CaseInsensitive_MatchPrevious: SelectFunctions.Command_Select_Repeats_MatchPrevious(this, false); break;
+				case NECommand.Select_Repeats_CaseInsensitive_NonMatchPrevious: SelectFunctions.Command_Select_Repeats_NonMatchPrevious(this, false); break;
+				case NECommand.Select_Split: SelectFunctions.Command_Select_Split(this, dialogResult as SelectSplitDialog.Result); break;
+				case NECommand.Select_Selection_First: SelectFunctions.Command_Select_Selection_First(this); break;
+				case NECommand.Select_Selection_CenterVertically: SelectFunctions.Command_Select_Selection_CenterVertically(this); break;
+				case NECommand.Select_Selection_Center: SelectFunctions.Command_Select_Selection_Center(this); break;
+				case NECommand.Select_Selection_ToggleAnchor: SelectFunctions.Command_Select_Selection_ToggleAnchor(this); break;
+				case NECommand.Select_Selection_Next: SelectFunctions.Command_Select_Selection_NextPrevious(this, true); break;
+				case NECommand.Select_Selection_Previous: SelectFunctions.Command_Select_Selection_NextPrevious(this, false); break;
+				case NECommand.Select_Selection_Single: SelectFunctions.Command_Select_Selection_Single(this); break;
+				case NECommand.Select_Selection_Remove: SelectFunctions.Command_Select_Selection_Remove(this); break;
+				case NECommand.Select_Selection_RemoveBeforeCurrent: SelectFunctions.Command_Select_Selection_RemoveBeforeCurrent(this); break;
+				case NECommand.Select_Selection_RemoveAfterCurrent: SelectFunctions.Command_Select_Selection_RemoveAfterCurrent(this); break;
 			}
 		}
 
@@ -1916,7 +1916,7 @@ namespace NeoEdit
 					doDrag = DragType.None;
 					if (Settings.EscapeClearsSelections)
 					{
-						Command_Select_Selection_Single(this);
+						SelectFunctions.Command_Select_Selection_Single(this);
 						if (!Selections.Any())
 						{
 							var pos = Data.GetOffset(Math.Max(0, Math.Min(yScrollValue, Data.NumLines - 1)), 0);
