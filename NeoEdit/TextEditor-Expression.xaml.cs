@@ -44,7 +44,7 @@ namespace NeoEdit
 			}
 		}
 
-		void CalculateInlineVariables(ITextEditor te, List<InlineVariable> inlineVars)
+		static void CalculateInlineVariables(ITextEditor te, List<InlineVariable> inlineVars)
 		{
 			var variables = te.GetVariables();
 			var processed = new HashSet<InlineVariable>();
@@ -77,7 +77,7 @@ namespace NeoEdit
 			}
 		}
 
-		List<InlineVariable> GetInlineVariables(ITextEditor te)
+		static List<InlineVariable> GetInlineVariables(ITextEditor te)
 		{
 			var inlineVars = new List<InlineVariable>();
 			var regex = new Regex(@"\[(\w*):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
@@ -98,27 +98,27 @@ namespace NeoEdit
 			return inlineVars;
 		}
 
-		GetExpressionDialog.Result Command_Expression_Expression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables(), te.Selections.Count);
+		static GetExpressionDialog.Result Command_Expression_Expression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables(), te.Selections.Count);
 
-		void Command_Expression_Expression(ITextEditor te, GetExpressionDialog.Result result) => te.ReplaceSelections(te.GetFixedExpressionResults<string>(result.Expression));
+		static void Command_Expression_Expression(ITextEditor te, GetExpressionDialog.Result result) => te.ReplaceSelections(te.GetFixedExpressionResults<string>(result.Expression));
 
-		GetExpressionDialog.Result Command_Expression_Copy_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables());
+		static GetExpressionDialog.Result Command_Expression_Copy_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables());
 
-		void Command_Expression_Copy(ITextEditor te, GetExpressionDialog.Result result) => te.SetClipboardStrings(te.GetVariableExpressionResults<string>(result.Expression));
+		static void Command_Expression_Copy(ITextEditor te, GetExpressionDialog.Result result) => te.SetClipboardStrings(te.GetVariableExpressionResults<string>(result.Expression));
 
-		void Command_Expression_EvaluateSelected(ITextEditor te) => te.ReplaceSelections(te.GetFixedExpressionResults<string>("Eval(x)"));
+		static void Command_Expression_EvaluateSelected(ITextEditor te) => te.ReplaceSelections(te.GetFixedExpressionResults<string>("Eval(x)"));
 
-		GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables(), te.Selections.Count);
+		static GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables(), te.Selections.Count);
 
-		void Command_Expression_SelectByExpression(ITextEditor te, GetExpressionDialog.Result result)
+		static void Command_Expression_SelectByExpression(ITextEditor te, GetExpressionDialog.Result result)
 		{
 			var results = te.GetFixedExpressionResults<bool>(result.Expression);
 			te.SetSelections(te.Selections.Where((str, num) => results[num]).ToList());
 		}
 
-		void Command_Expression_InlineVariables_Add(ITextEditor te) => te.ReplaceSelections(te.GetSelectionStrings().Select(str => $"[:'{(string.IsNullOrEmpty(str) ? "0" : str)}'=0]").ToList());
+		static void Command_Expression_InlineVariables_Add(ITextEditor te) => te.ReplaceSelections(te.GetSelectionStrings().Select(str => $"[:'{(string.IsNullOrEmpty(str) ? "0" : str)}'=0]").ToList());
 
-		void Command_Expression_InlineVariables_Calculate(ITextEditor te)
+		static void Command_Expression_InlineVariables_Calculate(ITextEditor te)
 		{
 			var inlineVars = GetInlineVariables(te);
 			CalculateInlineVariables(te, inlineVars);
@@ -126,9 +126,9 @@ namespace NeoEdit
 			te.Replace(inlineVars.Select(inlineVar => inlineVar.ValueRange).ToList(), inlineVars.Select(inlineVar => inlineVar.Value.ToString()).ToList());
 		}
 
-		ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog(ITextEditor te) => ExpressionSolveDialog.Run(te.TabsParent, te.GetVariables());
+		static ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog(ITextEditor te) => ExpressionSolveDialog.Run(te.TabsParent, te.GetVariables());
 
-		void Command_Expression_InlineVariables_Solve(ITextEditor te, ExpressionSolveDialog.Result result, AnswerResult answer)
+		static void Command_Expression_InlineVariables_Solve(ITextEditor te, ExpressionSolveDialog.Result result, AnswerResult answer)
 		{
 			var inlineVars = GetInlineVariables(te);
 			var setIndex = inlineVars.FindIndex(inlineVar => inlineVar.Name.Equals(result.SetVariable));
@@ -227,6 +227,6 @@ namespace NeoEdit
 			te.ReplaceSelections(values);
 		}
 
-		void Command_Expression_InlineVariables_IncludeInExpressions(bool? multiStatus) => IncludeInlineVariables = multiStatus != true;
+		static void Command_Expression_InlineVariables_IncludeInExpressions(ITextEditor te, bool? multiStatus) => te.IncludeInlineVariables = multiStatus != true;
 	}
 }

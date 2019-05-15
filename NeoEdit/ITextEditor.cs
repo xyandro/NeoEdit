@@ -64,5 +64,6 @@ namespace NeoEdit
 		void SetSearches(List<Range> searches);
 		bool StringsAreFiles(List<string> strs);
 		UndoRedo undoRedo { get; }
+		bool IncludeInlineVariables { get; set; }
 	}
 }
