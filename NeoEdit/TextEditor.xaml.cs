@@ -4,7 +4,6 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +19,6 @@ using NeoEdit.Dialogs;
 using NeoEdit.Expressions;
 using NeoEdit.Highlighting;
 using NeoEdit.Misc;
-using NeoEdit.Parsing;
 using NeoEdit.Transform;
 
 namespace NeoEdit
@@ -614,8 +612,6 @@ namespace NeoEdit
 					return Data.GetOffset(line, index + 1);
 			}
 		}
-
-		string GetRandomData(string chars, int length) => new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
 
 		public List<string> GetSelectionStrings() => Selections.AsParallel().AsOrdered().Select(range => GetString(range)).ToList();
 
