@@ -109,10 +109,6 @@
     <Compile Include="Macro.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
-    <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
-    <Compile Include="NEClipboards\NEClipboard.cs" />
-    <Compile Include="NEClipboards\NEClipboardItem.cs" />
-    <Compile Include="NEClipboards\NEClipboardList.cs" />
     <Page Include="NEMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

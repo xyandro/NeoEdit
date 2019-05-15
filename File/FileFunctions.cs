@@ -4,9 +4,11 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Win32;
 using NeoEdit.Controls;
 using NeoEdit.Dialogs;
+using NeoEdit.NEClipboards;
 using NeoEdit.Transform;
 
 namespace NeoEdit
@@ -50,7 +52,51 @@ namespace NeoEdit
 				te.ReplaceSelections(strs);
 		}
 
+		static public void Command_File_New_New(ITabs tabs, bool createTabs) => (createTabs ? ITabsCreator.CreateTabs() : tabs).Add();
+
 		static public void Command_File_New_FromSelections(ITextEditor te) => te.GetSelectionStrings().ForEach((str, index) => te.TabsParent.Add(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: te.ContentType, modified: false));
+
+		static public void Command_File_New_FromClipboards(ITabs tabs) => NEClipboard.Current.Strings.ForEach((str, index) => tabs.Add(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
+
+		static public OpenFileDialogResult Command_File_Open_Open_Dialog(ITabs tabs, string initialDirectory = null)
+		{
+			if ((initialDirectory == null) && (tabs.TopMost != null))
+				initialDirectory = Path.GetDirectoryName(tabs.TopMost.FileName);
+			var dialog = new OpenFileDialog
+			{
+				DefaultExt = "txt",
+				Filter = "Text files|*.txt|All files|*.*",
+				FilterIndex = 2,
+				Multiselect = true,
+				InitialDirectory = initialDirectory,
+			};
+			if (dialog.ShowDialog() != true)
+				return null;
+
+			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
+		}
+
+		static public void Command_File_Open_Open(ITabs tabs, OpenFileDialogResult result) => result.files.ForEach(fileName => tabs.Add(fileName));
+
+		static public void Command_File_Open_CopiedCut(ITabs tabs)
+		{
+			var files = NEClipboard.Current.Strings;
+
+			if ((files.Count > 5) && (new Message(tabs.WindowParent)
+			{
+				Title = "Confirm",
+				Text = $"Are you sure you want to open these {files.Count} files?",
+				Options = MessageOptions.YesNoCancel,
+				DefaultAccept = MessageOptions.Yes,
+				DefaultCancel = MessageOptions.Cancel,
+			}.Show() != MessageOptions.Yes))
+				return;
+
+			foreach (var item in tabs.Items)
+				item.Active = false;
+			foreach (var file in files)
+				tabs.Add(file);
+		}
 
 		static public void Command_File_Open_Selected(ITextEditor te)
 		{
@@ -374,5 +420,23 @@ namespace NeoEdit
 		static public void Command_File_Encrypt(ITextEditor te, string result) => te.AESKey = result == "" ? null : result;
 
 		static public void Command_File_Compress(ITextEditor te, bool? multiStatus) => te.Compressed = multiStatus == false;
+
+		static public void Command_File_Shell_Integrate()
+		{
+			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
+			using (var starKey = baseKey.OpenSubKey("*"))
+			using (var shellKey = starKey.OpenSubKey("shell", true))
+			using (var neoEditKey = shellKey.CreateSubKey("Open with NeoEdit Text Editor"))
+			using (var commandKey = neoEditKey.CreateSubKey("command"))
+				commandKey.SetValue("", $@"""{Assembly.GetEntryAssembly().Location}"" -text ""%1""");
+		}
+
+		static public void Command_File_Shell_Unintegrate()
+		{
+			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
+			using (var starKey = baseKey.OpenSubKey("*"))
+			using (var shellKey = starKey.OpenSubKey("shell", true))
+				shellKey.DeleteSubKeyTree("Open with NeoEdit Text Editor");
+		}
 	}
 }

@@ -156,6 +156,10 @@
     <Compile Include="Misc\Font.cs" />
     <Compile Include="Misc\PropertyChangeNotifier.cs" />
     <Compile Include="MoreLinq.cs" />
+    <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
+    <Compile Include="NEClipboards\NEClipboard.cs" />
+    <Compile Include="NEClipboards\NEClipboardItem.cs" />
+    <Compile Include="NEClipboards\NEClipboardList.cs" />
     <Compile Include="NECommand.cs" />
     <Compile Include="ParserType.cs" />
     <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />

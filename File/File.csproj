@@ -29,6 +29,7 @@
     </Compile>
     <Compile Include="FileFunctions.cs" />
     <Compile Include="FileSaver.cs" />
+    <Compile Include="OpenFileDialogResult.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

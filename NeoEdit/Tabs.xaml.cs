@@ -159,77 +159,6 @@ namespace NeoEdit
 			e.Handled = true;
 		}
 
-		class OpenFileDialogResult
-		{
-			public List<string> files { get; set; }
-		}
-
-		OpenFileDialogResult Command_File_Open_Open_Dialog(string initialDirectory = null)
-		{
-			if ((initialDirectory == null) && (TopMost != null))
-				initialDirectory = Path.GetDirectoryName(TopMost.FileName);
-			var dialog = new OpenFileDialog
-			{
-				DefaultExt = "txt",
-				Filter = "Text files|*.txt|All files|*.*",
-				FilterIndex = 2,
-				Multiselect = true,
-				InitialDirectory = initialDirectory,
-			};
-			if (dialog.ShowDialog() != true)
-				return null;
-
-			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
-		}
-
-		void Command_File_New_New(bool createTabs) => (createTabs ? new Tabs() : this).Add(new TextEditor());
-
-		void Command_File_New_FromClipboards() => NEClipboard.Current.Strings.ForEach((str, index) => Add(new TextEditor(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
-
-		void Command_File_Open_Open(OpenFileDialogResult result)
-		{
-			foreach (var filename in result.files)
-				Add(new TextEditor(filename));
-		}
-
-		void Command_File_Shell_Integrate()
-		{
-			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
-			using (var starKey = baseKey.OpenSubKey("*"))
-			using (var shellKey = starKey.OpenSubKey("shell", true))
-			using (var neoEditKey = shellKey.CreateSubKey("Open with NeoEdit Text Editor"))
-			using (var commandKey = neoEditKey.CreateSubKey("command"))
-				commandKey.SetValue("", $@"""{Assembly.GetEntryAssembly().Location}"" -text ""%1""");
-		}
-
-		void Command_File_Shell_Unintegrate()
-		{
-			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
-			using (var starKey = baseKey.OpenSubKey("*"))
-			using (var shellKey = starKey.OpenSubKey("shell", true))
-				shellKey.DeleteSubKeyTree("Open with NeoEdit Text Editor");
-		}
-
-		void Command_File_Open_CopiedCut()
-		{
-			var files = NEClipboard.Current.Strings;
-
-			if ((files.Count > 5) && (new Message(this)
-			{
-				Title = "Confirm",
-				Text = $"Are you sure you want to open these {files.Count} files?",
-				Options = MessageOptions.YesNoCancel,
-				DefaultAccept = MessageOptions.Yes,
-				DefaultCancel = MessageOptions.Cancel,
-			}.Show() != MessageOptions.Yes))
-				return;
-
-			foreach (var item in Items)
-				item.Active = false;
-			foreach (var file in files)
-				Add(new TextEditor(file));
-		}
-
 		void Command_Diff_Diff()
 		{
 			var diffTargets = Items.Count == 2 ? Items.ToList() : Items.Where(data => data.Active).ToList();
@@ -532,9 +461,9 @@ namespace NeoEdit
 
 			switch (command)
 			{
-				case NECommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
+				case NECommand.File_Open_Open: dialogResult = FileFunctions.Command_File_Open_Open_Dialog(this); break;
 				case NECommand.View_CustomGrid: dialogResult = ViewFunctions.Command_View_Type_Dialog(this); break;
-				case NECommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro.MacroDirectory); break;
+				case NECommand.Macro_Open_Open: dialogResult = FileFunctions.Command_File_Open_Open_Dialog(this, Macro.MacroDirectory); break;
 				default: return TopMost == null ? true : TopMost.GetDialogResult(command, out dialogResult, multiStatus);
 			}
 
@@ -545,12 +474,12 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.File_New_New: Command_File_New_New(shiftDown); break;
-				case NECommand.File_New_FromClipboards: Command_File_New_FromClipboards(); break;
-				case NECommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
-				case NECommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
-				case NECommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;
-				case NECommand.File_Shell_Unintegrate: Command_File_Shell_Unintegrate(); break;
+				case NECommand.File_New_New: FileFunctions.Command_File_New_New(this, shiftDown); break;
+				case NECommand.File_New_FromClipboards: FileFunctions.Command_File_New_FromClipboards(this); break;
+				case NECommand.File_Open_Open: FileFunctions.Command_File_Open_Open(this, dialogResult as OpenFileDialogResult); break;
+				case NECommand.File_Open_CopiedCut: FileFunctions.Command_File_Open_CopiedCut(this); break;
+				case NECommand.File_Shell_Integrate: FileFunctions.Command_File_Shell_Integrate(); break;
+				case NECommand.File_Shell_Unintegrate: FileFunctions.Command_File_Shell_Unintegrate(); break;
 				case NECommand.File_Exit: Close(); break;
 				case NECommand.Diff_Diff: Command_Diff_Diff(); break;
 				case NECommand.Diff_Select_LeftTab: Command_Diff_Select_LeftRightBothTabs(true); break;
@@ -582,7 +511,7 @@ namespace NeoEdit
 				case NECommand.Macro_Open_Quick_10: Macro_Open_Quick(10); return true;
 				case NECommand.Macro_Open_Quick_11: Macro_Open_Quick(11); return true;
 				case NECommand.Macro_Open_Quick_12: Macro_Open_Quick(12); return true;
-				case NECommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
+				case NECommand.Macro_Open_Open: FileFunctions.Command_File_Open_Open(this, dialogResult as OpenFileDialogResult); return true;
 				case NECommand.Window_NewWindow: Command_Window_NewWindow(); break;
 				case NECommand.Help_About: Command_Help_About(); break;
 				case NECommand.Help_Update: Command_Help_Update(); break;
