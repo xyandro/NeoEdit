@@ -35,13 +35,6 @@ namespace NeoEdit
 			public bool? MultiStatus { get; set; }
 		}
 
-		enum DragType
-		{
-			None,
-			CurrentFile,
-			Selections,
-		}
-
 		enum FindMinMaxType { String, Numeric, Length }
 
 		enum GetPathType
@@ -260,9 +253,9 @@ namespace NeoEdit
 		List<PropertyChangeNotifier> localCallbacks;
 		public UndoRedo undoRedo { get; }
 		static ThreadSafeRandom random = new ThreadSafeRandom();
-		DateTime fileLastWrite;
+		public DateTime fileLastWrite { get; set; }
 		int mouseClickCount = 0;
-		DragType doDrag = DragType.None;
+		public DragType doDrag { get; set; } = DragType.None;
 		CacheValue modifiedChecksum = new CacheValue();
 		public string DiffIgnoreCharacters { get; set; }
 		PreviousStruct previous = null;
@@ -2174,7 +2167,7 @@ namespace NeoEdit
 			e.Handled = true;
 		}
 
-		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, bool keepUndo = false)
+		public void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, bool keepUndo = false)
 		{
 			SetFileName(fileName);
 			if (ContentType == Parser.ParserType.None)
@@ -2214,7 +2207,7 @@ namespace NeoEdit
 			SetModifiedFlag(isModified);
 		}
 
-		List<string> RelativeSelectedFiles()
+		public List<string> RelativeSelectedFiles()
 		{
 			var fileName = FileName;
 			return Selections.AsParallel().AsOrdered().Select(range => fileName.RelativeChild(GetString(range))).ToList();
@@ -2295,7 +2288,7 @@ namespace NeoEdit
 				SetSelections(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
 		}
 
-		void Save(string fileName, bool copyOnly = false)
+		public void Save(string fileName, bool copyOnly = false)
 		{
 			if ((Coder.IsStr(CodePage)) && ((Data.NumChars >> 20) < 50) && (!VerifyCanEncode()))
 				return;
@@ -2339,15 +2332,15 @@ namespace NeoEdit
 			}
 		}
 
-		void SetClipboardFile(string fileName, bool isCut = false) => SetClipboardFiles(new List<string> { fileName }, isCut);
+		public void SetClipboardFile(string fileName, bool isCut = false) => SetClipboardFiles(new List<string> { fileName }, isCut);
 
 		public void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => TabsParent.AddClipboardStrings(fileNames, isCut);
 
-		void SetClipboardString(string text) => SetClipboardStrings(new List<string> { text });
+		public void SetClipboardString(string text) => SetClipboardStrings(new List<string> { text });
 
 		public void SetClipboardStrings(IEnumerable<string> strs) => TabsParent.AddClipboardStrings(strs);
 
-		void SetFileName(string fileName)
+		public void SetFileName(string fileName)
 		{
 			if (FileName == fileName)
 				return;
@@ -2359,7 +2352,7 @@ namespace NeoEdit
 			SetAutoRefresh();
 		}
 
-		void SetAutoRefresh(bool? value = null)
+		public void SetAutoRefresh(bool? value = null)
 		{
 			ClearWatcher();
 

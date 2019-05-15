@@ -97,6 +97,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DragType.cs" />
     <Compile Include="JumpByType.cs" />
     <Compile Include="WordSkipType.cs" />
     <Compile Include="ReplaceType.cs" />

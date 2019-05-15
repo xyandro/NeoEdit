@@ -272,7 +272,7 @@ namespace NeoEdit
 		{
 			var variables = te.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
-			var files = RelativeSelectedFiles();
+			var files = te.RelativeSelectedFiles();
 			var outputTemplates = new NEExpression(result.OutputTemplate).EvaluateList<string>(variables, files.Count);
 			Enumerable.Range(0, files.Count).AsParallel().ForEach(index => SplitGIF(files[index], outputTemplates[index]));
 		}

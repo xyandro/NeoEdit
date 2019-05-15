@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using NeoEdit.Content;
 using NeoEdit.Expressions;
@@ -40,7 +41,6 @@ namespace NeoEdit
 		bool DiffIgnoreWhitespace { get; set; }
 		TextEditor DiffTarget { get; set; }
 		IReadOnlyDictionary<int, RangeList> Regions { get; }
-
 		int BeginOffset { get; }
 		RangeList Bookmarks { get; }
 		bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage);
@@ -65,5 +65,19 @@ namespace NeoEdit
 		bool StringsAreFiles(List<string> strs);
 		UndoRedo undoRedo { get; }
 		bool IncludeInlineVariables { get; set; }
+		string AESKey { get; set; }
+		bool Compressed { get; set; }
+		string DisplayName { get; set; }
+		DragType doDrag { get; set; }
+		DateTime fileLastWrite { get; set; }
+		bool IsModified { get; }
+		string LineEnding { get; }
+		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, bool keepUndo = false);
+		List<string> RelativeSelectedFiles();
+		void Save(string fileName, bool copyOnly = false);
+		void SetAutoRefresh(bool? value = null);
+		void SetClipboardFile(string fileName, bool isCut = false);
+		void SetClipboardString(string text);
+		void SetFileName(string fileName);
 	}
 }
