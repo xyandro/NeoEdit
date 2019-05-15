@@ -11,7 +11,7 @@ namespace NeoEdit
 {
 	partial class TextEditor
 	{
-		IEnumerable<Range> FindRepetitions(ITextEditor te, Range inputRange)
+		static IEnumerable<Range> FindRepetitions(ITextEditor te, Range inputRange)
 		{
 			var startLine = te.Data.GetOffsetLine(inputRange.Start);
 			var endLine = te.Data.GetOffsetLine(inputRange.End);
@@ -24,7 +24,7 @@ namespace NeoEdit
 				yield return new Range(lineRanges[ctr + lines - 1].End, lineRanges[ctr].Start);
 		}
 
-		int GetRepetitionScore(List<string> data, int lines)
+		static int GetRepetitionScore(List<string> data, int lines)
 		{
 			var count = data.Count / lines;
 			if (count * lines != data.Count)
@@ -37,9 +37,9 @@ namespace NeoEdit
 			return score;
 		}
 
-		string RepeatsValue(bool caseSensitive, string input) => caseSensitive ? input : input?.ToLowerInvariant();
+		static string RepeatsValue(bool caseSensitive, string input) => caseSensitive ? input : input?.ToLowerInvariant();
 
-		IEnumerable<Range> SelectRectangle(ITextEditor te, Range range)
+		static IEnumerable<Range> SelectRectangle(ITextEditor te, Range range)
 		{
 			var startLine = te.Data.GetOffsetLine(range.Start);
 			var endLine = te.Data.GetOffsetLine(range.End);
@@ -70,7 +70,7 @@ namespace NeoEdit
 			InterpolatedString = 32 | String,
 			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
 		}
-		IEnumerable<Range> SelectSplit(ITextEditor te, Range range, SelectSplitDialog.Result result)
+		static IEnumerable<Range> SelectSplit(ITextEditor te, Range range, SelectSplitDialog.Result result)
 		{
 			var stack = new Stack<SelectSplitEnum>();
 			stack.Push(SelectSplitEnum.None);
@@ -193,13 +193,13 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Select_All(ITextEditor te) => te.SetSelections(new List<Range> { te.FullRange });
+		static void Command_Select_All(ITextEditor te) => te.SetSelections(new List<Range> { te.FullRange });
 
-		void Command_Select_Nothing(ITextEditor te) => te.SetSelections(new List<Range>());
+		static void Command_Select_Nothing(ITextEditor te) => te.SetSelections(new List<Range>());
 
-		SelectLimitDialog.Result Command_Select_Limit_Dialog(ITextEditor te) => SelectLimitDialog.Run(te.TabsParent, te.GetVariables());
+		static SelectLimitDialog.Result Command_Select_Limit_Dialog(ITextEditor te) => SelectLimitDialog.Run(te.TabsParent, te.GetVariables());
 
-		void Command_Select_Limit(ITextEditor te, SelectLimitDialog.Result result)
+		static void Command_Select_Limit(ITextEditor te, SelectLimitDialog.Result result)
 		{
 			var variables = te.GetVariables();
 			var firstSelection = new NEExpression(result.FirstSelection).Evaluate<int>(variables);
@@ -217,7 +217,7 @@ namespace NeoEdit
 			te.SetSelections(sels.ToList());
 		}
 
-		void Command_Select_Lines(ITextEditor te, bool includeEndings)
+		static void Command_Select_Lines(ITextEditor te, bool includeEndings)
 		{
 			var lineSets = te.Selections.AsParallel().Select(range => new { start = te.Data.GetOffsetLine(range.Start), end = te.Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) }).ToList();
 
@@ -234,16 +234,16 @@ namespace NeoEdit
 			te.SetSelections(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(te.Data.GetOffset(line, 0), te.Data.GetLineLength(line) + (includeEndings ? te.Data.GetEndingLength(line) : 0))).ToList());
 		}
 
-		void Command_Select_Rectangle(ITextEditor te) => te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(te, range)).ToList());
+		static void Command_Select_Rectangle(ITextEditor te) => te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(te, range)).ToList());
 
-		void Command_Select_Invert(ITextEditor te)
+		static void Command_Select_Invert(ITextEditor te)
 		{
 			var start = new[] { 0 }.Concat(te.Selections.Select(sel => sel.End));
 			var end = te.Selections.Select(sel => sel.Start).Concat(new[] { te.Data.NumChars });
 			te.SetSelections(Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != te.Data.NumChars))).ToList());
 		}
 
-		void Command_Select_Join(ITextEditor te)
+		static void Command_Select_Join(ITextEditor te)
 		{
 			var sels = new List<Range>();
 			var start = 0;
@@ -258,9 +258,9 @@ namespace NeoEdit
 			te.SetSelections(sels);
 		}
 
-		void Command_Select_Empty(ITextEditor te, bool include) => te.SetSelections(te.Selections.Where(range => range.HasSelection != include).ToList());
+		static void Command_Select_Empty(ITextEditor te, bool include) => te.SetSelections(te.Selections.Where(range => range.HasSelection != include).ToList());
 
-		void Command_Select_ToggleOpenClose(ITextEditor te, bool shiftDown)
+		static void Command_Select_ToggleOpenClose(ITextEditor te, bool shiftDown)
 		{
 			te.SetSelections(te.Selections.AsParallel().AsOrdered().Select(range =>
 			{
@@ -272,19 +272,19 @@ namespace NeoEdit
 			}).ToList());
 		}
 
-		void Command_Select_Repeats_Unique(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Distinct(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
+		static void Command_Select_Repeats_Unique(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Distinct(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
 
-		void Command_Select_Repeats_Duplicates(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Duplicate(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
+		static void Command_Select_Repeats_Duplicates(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Duplicate(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
 
-		void Command_Select_Repeats_MatchPrevious(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Match(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
+		static void Command_Select_Repeats_MatchPrevious(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Match(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
 
-		void Command_Select_Repeats_NonMatchPrevious(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
+		static void Command_Select_Repeats_NonMatchPrevious(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
 
-		void Command_Select_Repeats_RepeatedLines(ITextEditor te) => te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(te, range)).ToList());
+		static void Command_Select_Repeats_RepeatedLines(ITextEditor te) => te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(te, range)).ToList());
 
-		SelectByCountDialog.Result Command_Select_Repeats_ByCount_Dialog(ITextEditor te) => SelectByCountDialog.Run(te.TabsParent);
+		static SelectByCountDialog.Result Command_Select_Repeats_ByCount_Dialog(ITextEditor te) => SelectByCountDialog.Run(te.TabsParent);
 
-		void Command_Select_Repeats_ByCount(ITextEditor te, SelectByCountDialog.Result result)
+		static void Command_Select_Repeats_ByCount(ITextEditor te, SelectByCountDialog.Result result)
 		{
 			var strs = te.Selections.Select((range, index) => Tuple.Create(te.GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(result.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
@@ -298,28 +298,27 @@ namespace NeoEdit
 			te.SetSelections(strs.Select(tuple => te.Selections[tuple.Item2]).ToList());
 		}
 
-		SelectSplitDialog.Result Command_Select_Split_Dialog(ITextEditor te) => SelectSplitDialog.Run(te.TabsParent, te.GetVariables());
+		static SelectSplitDialog.Result Command_Select_Split_Dialog(ITextEditor te) => SelectSplitDialog.Run(te.TabsParent, te.GetVariables());
 
-		void Command_Select_Split(ITextEditor te, SelectSplitDialog.Result result)
+		static void Command_Select_Split(ITextEditor te, SelectSplitDialog.Result result)
 		{
 			var indexes = te.GetFixedExpressionResults<int>(result.Index);
 			te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(te, range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList());
 		}
 
-		void Command_Select_Selection_First(ITextEditor te)
+		static void Command_Select_Selection_First(ITextEditor te)
 		{
 			te.CurrentSelection = 0;
-			EnsureVisible();
-			canvasRenderTimer.Start();
+			te.EnsureVisible();
 		}
 
-		void Command_Select_Selection_CenterVertically() => EnsureVisible(true);
+		static void Command_Select_Selection_CenterVertically(ITextEditor te) => te.EnsureVisible(true);
 
-		void Command_Select_Selection_Center() => EnsureVisible(true, true);
+		static void Command_Select_Selection_Center(ITextEditor te) => te.EnsureVisible(true, true);
 
-		void Command_Select_Selection_ToggleAnchor(ITextEditor te) => te.SetSelections(te.Selections.Select(range => new Range(range.Anchor, range.Cursor)).ToList());
+		static void Command_Select_Selection_ToggleAnchor(ITextEditor te) => te.SetSelections(te.Selections.Select(range => new Range(range.Anchor, range.Cursor)).ToList());
 
-		void Command_Select_Selection_NextPrevious(ITextEditor te, bool next)
+		static void Command_Select_Selection_NextPrevious(ITextEditor te, bool next)
 		{
 			var offset = next ? 1 : -1;
 			te.CurrentSelection += offset;
@@ -327,11 +326,10 @@ namespace NeoEdit
 				te.CurrentSelection = te.Selections.Count - 1;
 			if (te.CurrentSelection >= te.Selections.Count)
 				te.CurrentSelection = 0;
-			EnsureVisible();
-			canvasRenderTimer.Start();
+			te.EnsureVisible();
 		}
 
-		void Command_Select_Selection_Single(ITextEditor te)
+		static void Command_Select_Selection_Single(ITextEditor te)
 		{
 			if (!te.Selections.Any())
 				return;
@@ -339,19 +337,19 @@ namespace NeoEdit
 			te.CurrentSelection = 0;
 		}
 
-		void Command_Select_Selection_Remove(ITextEditor te)
+		static void Command_Select_Selection_Remove(ITextEditor te)
 		{
 			te.SetSelections(te.Selections.Where((sel, index) => index != te.CurrentSelection).ToList());
 			te.CurrentSelection = Math.Max(0, Math.Min(te.CurrentSelection, te.Selections.Count - 1));
 		}
 
-		void Command_Select_Selection_RemoveBeforeCurrent(ITextEditor te)
+		static void Command_Select_Selection_RemoveBeforeCurrent(ITextEditor te)
 		{
 			te.SetSelections(te.Selections.Where((sel, index) => index >= te.CurrentSelection).ToList());
 			te.CurrentSelection = 0;
 		}
 
-		void Command_Select_Selection_RemoveAfterCurrent(ITextEditor te)
+		static void Command_Select_Selection_RemoveAfterCurrent(ITextEditor te)
 		{
 			te.SetSelections(te.Selections.Where((sel, index) => index <= te.CurrentSelection).ToList());
 		}

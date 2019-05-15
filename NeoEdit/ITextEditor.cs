@@ -84,5 +84,6 @@ namespace NeoEdit
 		System.Drawing.Bitmap savedBitmap { get; set; }
 		string savedBitmapText { get; set; }
 		int CurrentSelection { get; set; }
+		void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false);
 	}
 }

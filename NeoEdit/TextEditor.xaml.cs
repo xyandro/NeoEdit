@@ -102,7 +102,7 @@ namespace NeoEdit
 		public bool CanClose() => CanClose(new AnswerResult());
 
 		int currentSelectionField;
-		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; statusBarRenderTimer.Start(); } }
+		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; canvasRenderTimer.Start(); statusBarRenderTimer.Start(); } }
 		public int NumSelections => Selections.Count;
 		public List<string> Clipboard => TabsParent.GetClipboard(this);
 
@@ -481,7 +481,7 @@ namespace NeoEdit
 
 		public bool Empty() => (FileName == null) && (!IsModified) && (BeginOffset == EndOffset);
 
-		void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
+		public void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
 		{
 			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
 			if (!Selections.Any())
