@@ -923,18 +923,18 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Numeric_ConvertBase: dialogResult = Command_Numeric_ConvertBase_Dialog(this); break;
-				case NECommand.Numeric_Series_Linear: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(this, true); break;
-				case NECommand.Numeric_Series_Geometric: dialogResult = Command_Numeric_Series_LinearGeometric_Dialog(this, false); break;
-				case NECommand.Numeric_Scale: dialogResult = Command_Numeric_Scale_Dialog(this); break;
-				case NECommand.Numeric_Floor: dialogResult = Command_Numeric_Floor_Dialog(this); break;
-				case NECommand.Numeric_Ceiling: dialogResult = Command_Numeric_Ceiling_Dialog(this); break;
-				case NECommand.Numeric_Round: dialogResult = Command_Numeric_Round_Dialog(this); break;
-				case NECommand.Numeric_Limit: dialogResult = Command_Numeric_Limit_Dialog(this); break;
-				case NECommand.Numeric_Cycle: dialogResult = Command_Numeric_Cycle_Dialog(this); break;
-				case NECommand.Numeric_RandomNumber: dialogResult = Command_Numeric_RandomNumber_Dialog(this); break;
-				case NECommand.Numeric_CombinationsPermutations: dialogResult = Command_Numeric_CombinationsPermutations_Dialog(this); break;
-				case NECommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(this); break;
+				case NECommand.Numeric_ConvertBase: dialogResult = NumericFunctions.Command_Numeric_ConvertBase_Dialog(this); break;
+				case NECommand.Numeric_Series_Linear: dialogResult = NumericFunctions.Command_Numeric_Series_LinearGeometric_Dialog(this, true); break;
+				case NECommand.Numeric_Series_Geometric: dialogResult = NumericFunctions.Command_Numeric_Series_LinearGeometric_Dialog(this, false); break;
+				case NECommand.Numeric_Scale: dialogResult = NumericFunctions.Command_Numeric_Scale_Dialog(this); break;
+				case NECommand.Numeric_Floor: dialogResult = NumericFunctions.Command_Numeric_Floor_Dialog(this); break;
+				case NECommand.Numeric_Ceiling: dialogResult = NumericFunctions.Command_Numeric_Ceiling_Dialog(this); break;
+				case NECommand.Numeric_Round: dialogResult = NumericFunctions.Command_Numeric_Round_Dialog(this); break;
+				case NECommand.Numeric_Limit: dialogResult = NumericFunctions.Command_Numeric_Limit_Dialog(this); break;
+				case NECommand.Numeric_Cycle: dialogResult = NumericFunctions.Command_Numeric_Cycle_Dialog(this); break;
+				case NECommand.Numeric_RandomNumber: dialogResult = NumericFunctions.Command_Numeric_RandomNumber_Dialog(this); break;
+				case NECommand.Numeric_CombinationsPermutations: dialogResult = NumericFunctions.Command_Numeric_CombinationsPermutations_Dialog(this); break;
+				case NECommand.Numeric_MinMaxValues: dialogResult = NumericFunctions.Command_Numeric_MinMaxValues_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1345,39 +1345,39 @@ namespace NeoEdit
 			{
 				case NECommand.Numeric_Select_Min: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.Numeric); break;
 				case NECommand.Numeric_Select_Max: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.Numeric); break;
-				case NECommand.Numeric_Select_Fraction_Whole: Command_Numeric_Select_Fraction_Whole(this); break;
-				case NECommand.Numeric_Select_Fraction_Fraction: Command_Numeric_Select_Fraction_Fraction(this); break;
-				case NECommand.Numeric_Hex_ToHex: Command_Numeric_Hex_ToHex(this); break;
-				case NECommand.Numeric_Hex_FromHex: Command_Numeric_Hex_FromHex(this); break;
-				case NECommand.Numeric_ConvertBase: Command_Numeric_ConvertBase(this, dialogResult as NumericConvertBaseDialog.Result); break;
-				case NECommand.Numeric_Series_ZeroBased: Command_Numeric_Series_ZeroBased(this); break;
-				case NECommand.Numeric_Series_OneBased: Command_Numeric_Series_OneBased(this); break;
-				case NECommand.Numeric_Series_Linear: Command_Numeric_Series_LinearGeometric(this, dialogResult as NumericSeriesDialog.Result, true); break;
-				case NECommand.Numeric_Series_Geometric: Command_Numeric_Series_LinearGeometric(this, dialogResult as NumericSeriesDialog.Result, false); break;
-				case NECommand.Numeric_Scale: Command_Numeric_Scale(this, dialogResult as NumericScaleDialog.Result); break;
-				case NECommand.Numeric_Add_Sum: Command_Numeric_Add_Sum(this); break;
-				case NECommand.Numeric_Add_ForwardSum: Command_Numeric_Add_ForwardReverseSum(this, true, false); break;
-				case NECommand.Numeric_Add_ReverseSum: Command_Numeric_Add_ForwardReverseSum(this, false, false); break;
-				case NECommand.Numeric_Add_UndoForwardSum: Command_Numeric_Add_ForwardReverseSum(this, true, true); break;
-				case NECommand.Numeric_Add_UndoReverseSum: Command_Numeric_Add_ForwardReverseSum(this, false, true); break;
-				case NECommand.Numeric_Add_Increment: Command_Numeric_Add_IncrementDecrement(this, true); break;
-				case NECommand.Numeric_Add_Decrement: Command_Numeric_Add_IncrementDecrement(this, false); break;
-				case NECommand.Numeric_Add_AddClipboard: Command_Numeric_Add_AddSubtractClipboard(this, true); break;
-				case NECommand.Numeric_Add_SubtractClipboard: Command_Numeric_Add_AddSubtractClipboard(this, false); break;
-				case NECommand.Numeric_Fraction_Whole: Command_Numeric_Fraction_Whole(this); break;
-				case NECommand.Numeric_Fraction_Fraction: Command_Numeric_Fraction_Fraction(this); break;
-				case NECommand.Numeric_Fraction_Simplify: Command_Numeric_Fraction_Simplify(this); break;
-				case NECommand.Numeric_Absolute: Command_Numeric_Absolute(this); break;
-				case NECommand.Numeric_Floor: Command_Numeric_Floor(this, dialogResult as NumericFloorRoundCeilingDialog.Result); break;
-				case NECommand.Numeric_Ceiling: Command_Numeric_Ceiling(this, dialogResult as NumericFloorRoundCeilingDialog.Result); break;
-				case NECommand.Numeric_Round: Command_Numeric_Round(this, dialogResult as NumericFloorRoundCeilingDialog.Result); break;
-				case NECommand.Numeric_Limit: Command_Numeric_Limit(this, dialogResult as NumericLimitDialog.Result); break;
-				case NECommand.Numeric_Cycle: Command_Numeric_Cycle(this, dialogResult as NumericCycleDialog.Result); break;
-				case NECommand.Numeric_Trim: Command_Numeric_Trim(this); break;
-				case NECommand.Numeric_Factor: Command_Numeric_Factor(this); break;
-				case NECommand.Numeric_RandomNumber: Command_Numeric_RandomNumber(this, dialogResult as NumericRandomNumberDialog.Result); break;
-				case NECommand.Numeric_CombinationsPermutations: Command_Numeric_CombinationsPermutations(this, dialogResult as NumericCombinationsPermutationsDialog.Result); break;
-				case NECommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(this, dialogResult as NumericMinMaxValuesDialog.Result); break;
+				case NECommand.Numeric_Select_Fraction_Whole: NumericFunctions.Command_Numeric_Select_Fraction_Whole(this); break;
+				case NECommand.Numeric_Select_Fraction_Fraction: NumericFunctions.Command_Numeric_Select_Fraction_Fraction(this); break;
+				case NECommand.Numeric_Hex_ToHex: NumericFunctions.Command_Numeric_Hex_ToHex(this); break;
+				case NECommand.Numeric_Hex_FromHex: NumericFunctions.Command_Numeric_Hex_FromHex(this); break;
+				case NECommand.Numeric_ConvertBase: NumericFunctions.Command_Numeric_ConvertBase(this, dialogResult as NumericConvertBaseDialog.Result); break;
+				case NECommand.Numeric_Series_ZeroBased: NumericFunctions.Command_Numeric_Series_ZeroBased(this); break;
+				case NECommand.Numeric_Series_OneBased: NumericFunctions.Command_Numeric_Series_OneBased(this); break;
+				case NECommand.Numeric_Series_Linear: NumericFunctions.Command_Numeric_Series_LinearGeometric(this, dialogResult as NumericSeriesDialog.Result, true); break;
+				case NECommand.Numeric_Series_Geometric: NumericFunctions.Command_Numeric_Series_LinearGeometric(this, dialogResult as NumericSeriesDialog.Result, false); break;
+				case NECommand.Numeric_Scale: NumericFunctions.Command_Numeric_Scale(this, dialogResult as NumericScaleDialog.Result); break;
+				case NECommand.Numeric_Add_Sum: NumericFunctions.Command_Numeric_Add_Sum(this); break;
+				case NECommand.Numeric_Add_ForwardSum: NumericFunctions.Command_Numeric_Add_ForwardReverseSum(this, true, false); break;
+				case NECommand.Numeric_Add_ReverseSum: NumericFunctions.Command_Numeric_Add_ForwardReverseSum(this, false, false); break;
+				case NECommand.Numeric_Add_UndoForwardSum: NumericFunctions.Command_Numeric_Add_ForwardReverseSum(this, true, true); break;
+				case NECommand.Numeric_Add_UndoReverseSum: NumericFunctions.Command_Numeric_Add_ForwardReverseSum(this, false, true); break;
+				case NECommand.Numeric_Add_Increment: NumericFunctions.Command_Numeric_Add_IncrementDecrement(this, true); break;
+				case NECommand.Numeric_Add_Decrement: NumericFunctions.Command_Numeric_Add_IncrementDecrement(this, false); break;
+				case NECommand.Numeric_Add_AddClipboard: NumericFunctions.Command_Numeric_Add_AddSubtractClipboard(this, true); break;
+				case NECommand.Numeric_Add_SubtractClipboard: NumericFunctions.Command_Numeric_Add_AddSubtractClipboard(this, false); break;
+				case NECommand.Numeric_Fraction_Whole: NumericFunctions.Command_Numeric_Fraction_Whole(this); break;
+				case NECommand.Numeric_Fraction_Fraction: NumericFunctions.Command_Numeric_Fraction_Fraction(this); break;
+				case NECommand.Numeric_Fraction_Simplify: NumericFunctions.Command_Numeric_Fraction_Simplify(this); break;
+				case NECommand.Numeric_Absolute: NumericFunctions.Command_Numeric_Absolute(this); break;
+				case NECommand.Numeric_Floor: NumericFunctions.Command_Numeric_Floor(this, dialogResult as NumericFloorRoundCeilingDialog.Result); break;
+				case NECommand.Numeric_Ceiling: NumericFunctions.Command_Numeric_Ceiling(this, dialogResult as NumericFloorRoundCeilingDialog.Result); break;
+				case NECommand.Numeric_Round: NumericFunctions.Command_Numeric_Round(this, dialogResult as NumericFloorRoundCeilingDialog.Result); break;
+				case NECommand.Numeric_Limit: NumericFunctions.Command_Numeric_Limit(this, dialogResult as NumericLimitDialog.Result); break;
+				case NECommand.Numeric_Cycle: NumericFunctions.Command_Numeric_Cycle(this, dialogResult as NumericCycleDialog.Result); break;
+				case NECommand.Numeric_Trim: NumericFunctions.Command_Numeric_Trim(this); break;
+				case NECommand.Numeric_Factor: NumericFunctions.Command_Numeric_Factor(this); break;
+				case NECommand.Numeric_RandomNumber: NumericFunctions.Command_Numeric_RandomNumber(this, dialogResult as NumericRandomNumberDialog.Result); break;
+				case NECommand.Numeric_CombinationsPermutations: NumericFunctions.Command_Numeric_CombinationsPermutations(this, dialogResult as NumericCombinationsPermutationsDialog.Result); break;
+				case NECommand.Numeric_MinMaxValues: NumericFunctions.Command_Numeric_MinMaxValues(this, dialogResult as NumericMinMaxValuesDialog.Result); break;
 			}
 		}
 

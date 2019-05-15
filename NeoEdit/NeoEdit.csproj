@@ -306,69 +306,6 @@
     <Compile Include="Dialogs\MacroPlayRepeatDialog.xaml.cs">
       <DependentUpon>MacroPlayRepeatDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\NumericCombinationsPermutationsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NumericCombinationsPermutationsDialog.xaml.cs">
-      <DependentUpon>NumericCombinationsPermutationsDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NumericConvertBaseDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NumericConvertBaseDialog.xaml.cs">
-      <DependentUpon>NumericConvertBaseDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NumericCycleDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NumericCycleDialog.xaml.cs">
-      <DependentUpon>NumericCycleDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NumericFloorRoundCeilingDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NumericFloorRoundCeilingDialog.xaml.cs">
-      <DependentUpon>NumericFloorRoundCeilingDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NumericLimitDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NumericLimitDialog.xaml.cs">
-      <DependentUpon>NumericLimitDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NumericMinMaxValuesDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NumericMinMaxValuesDialog.xaml.cs">
-      <DependentUpon>NumericMinMaxValuesDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NumericRandomNumberDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NumericRandomNumberDialog.xaml.cs">
-      <DependentUpon>NumericRandomNumberDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NumericScaleDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NumericScaleDialog.xaml.cs">
-      <DependentUpon>NumericScaleDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NumericSeriesDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NumericSeriesDialog.xaml.cs">
-      <DependentUpon>NumericSeriesDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\RegionModifyRegionsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -433,9 +370,6 @@
     <Compile Include="TextEditor-Files.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Numeric.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Region.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -498,6 +432,10 @@
     <ProjectReference Include="..\Network\Network.csproj">
       <Project>{6d97e1f0-c290-4725-b6ef-1c54e1530612}</Project>
       <Name>Network</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Numeric\Numeric.csproj">
+      <Project>{1a6adfcc-b4e7-4c31-89cd-b8621bcf1aba}</Project>
+      <Name>Numeric</Name>
     </ProjectReference>
     <ProjectReference Include="..\Position\Position.csproj">
       <Project>{a7d32fd6-0bed-4ffc-9ed7-2c9c385e241c}</Project>
