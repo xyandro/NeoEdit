@@ -54,7 +54,7 @@ namespace NeoEdit
 
 		static ObservableCollection<ObservableCollection<string>> staticKeysAndValues { get; set; }
 		ObservableCollection<ObservableCollection<string>> localKeysAndValues { get; set; }
-		Dictionary<string, int> keysHash => GlobalKeys ? staticKeysHash : localKeysHash;
+		public Dictionary<string, int> keysHash => GlobalKeys ? staticKeysHash : localKeysHash;
 		static Dictionary<string, int> staticKeysHash = new Dictionary<string, int>();
 		Dictionary<string, int> localKeysHash = new Dictionary<string, int>();
 
@@ -104,7 +104,7 @@ namespace NeoEdit
 		{
 			// Handles keys as well as values
 			var values = te.GetSelectionStrings();
-			var caseSensitive = keysHash.Comparer == StringComparer.Ordinal;
+			var caseSensitive = te.keysHash.Comparer == StringComparer.Ordinal;
 			if ((index == 0) && (KeysAndValues[0].Concat(values).GroupBy(key => caseSensitive ? key : key.ToLowerInvariant()).Any(group => group.Count() > 1)))
 				throw new ArgumentException("Cannot have duplicate keys");
 			foreach (var value in values)
@@ -131,10 +131,10 @@ namespace NeoEdit
 			foreach (var range in te.Selections)
 			{
 				var str = te.GetString(range);
-				if (!keysHash.ContainsKey(str))
+				if (!te.keysHash.ContainsKey(str))
 					strs.Add(str);
 				else
-					strs.Add(KeysAndValues[index][keysHash[str]]);
+					strs.Add(KeysAndValues[index][te.keysHash[str]]);
 			}
 			te.ReplaceSelections(strs);
 		}

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Common;
 using NeoEdit.Content;
+using NeoEdit.Expressions;
 using NeoEdit.Parsing;
 using NeoEdit.Transform;
 
@@ -39,5 +40,29 @@ namespace NeoEdit
 		bool DiffIgnoreWhitespace { get; set; }
 		TextEditor DiffTarget { get; set; }
 		IReadOnlyDictionary<int, RangeList> Regions { get; }
+
+		int BeginOffset { get; }
+		RangeList Bookmarks { get; }
+		bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage);
+		bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage);
+		List<string> Clipboard { get; }
+		int EndOffset { get; }
+		List<T> GetFixedExpressionResults<T>(string expression);
+		int GetNextWord(int offset);
+		int GetPrevWord(int offset);
+		List<T> GetVariableExpressionResults<T>(string expression);
+		NEVariables GetVariables();
+		WordSkipType GetWordSkipType(int line, int index);
+		JumpByType JumpBy { get; set; }
+		Dictionary<string, int> keysHash { get; }
+		void ReplaceOneWithMany(List<string> strs, bool? addNewLines);
+		RangeList Searches { get; }
+		void SetBookmarks(List<Range> bookmarks);
+		void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false);
+		void SetClipboardStrings(IEnumerable<string> strs);
+		void SetRegions(int region, List<Range> regions);
+		void SetSearches(List<Range> searches);
+		bool StringsAreFiles(List<string> strs);
+		UndoRedo undoRedo { get; }
 	}
 }

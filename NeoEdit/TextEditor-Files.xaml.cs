@@ -408,19 +408,19 @@ namespace NeoEdit
 
 		void Command_Files_Name_Simplify(ITextEditor te) => te.ReplaceSelections(te.Selections.Select(range => Path.GetFullPath(te.GetString(range))).ToList());
 
-		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeAbsolute_Dialog(ITextEditor te) => FilesNamesMakeAbsoluteRelativeDialog.Run(te.TabsParent, GetVariables(), true, true);
+		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeAbsolute_Dialog(ITextEditor te) => FilesNamesMakeAbsoluteRelativeDialog.Run(te.TabsParent, te.GetVariables(), true, true);
 
 		void Command_Files_Name_MakeAbsolute(ITextEditor te, FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = te.GetFixedExpressionResults<string>(result.Expression);
 			te.ReplaceSelections(te.GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteRelativeDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeRelative_Dialog(ITextEditor te) => FilesNamesMakeAbsoluteRelativeDialog.Run(te.TabsParent, GetVariables(), false, true);
+		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeRelative_Dialog(ITextEditor te) => FilesNamesMakeAbsoluteRelativeDialog.Run(te.TabsParent, te.GetVariables(), false, true);
 
 		void Command_Files_Name_MakeRelative(ITextEditor te, FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = te.GetFixedExpressionResults<string>(result.Expression);
 			if (result.Type == FilesNamesMakeAbsoluteRelativeDialog.ResultType.File)
 				results = results.Select(str => Path.GetDirectoryName(str)).ToList();
 			te.ReplaceSelections(te.GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
@@ -537,7 +537,7 @@ namespace NeoEdit
 
 		FilesSetSizeDialog.Result Command_Files_Set_Size_Dialog(ITextEditor te)
 		{
-			var vars = GetVariables();
+			var vars = te.GetVariables();
 			var sizes = RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
 			return FilesSetSizeDialog.Run(te.TabsParent, vars);
@@ -545,7 +545,7 @@ namespace NeoEdit
 
 		void Command_Files_Set_Size(ITextEditor te, FilesSetSizeDialog.Result result)
 		{
-			var vars = GetVariables();
+			var vars = te.GetVariables();
 			var files = RelativeSelectedFiles();
 			var sizes = files.AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
@@ -553,11 +553,11 @@ namespace NeoEdit
 			files.Zip(results, (file, size) => new { file, size }).AsParallel().ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
-		FilesSetTimeDialog.Result Command_Files_Set_Time_Dialog(ITextEditor te) => FilesSetTimeDialog.Run(te.TabsParent, GetVariables(), $@"""{DateTime.Now}""");
+		FilesSetTimeDialog.Result Command_Files_Set_Time_Dialog(ITextEditor te) => FilesSetTimeDialog.Run(te.TabsParent, te.GetVariables(), $@"""{DateTime.Now}""");
 
-		void Command_Files_Set_Time(TimestampType type, FilesSetTimeDialog.Result result)
+		void Command_Files_Set_Time(ITextEditor te, TimestampType type, FilesSetTimeDialog.Result result)
 		{
-			var dateTimes = GetFixedExpressionResults<DateTime>(result.Expression);
+			var dateTimes = te.GetFixedExpressionResults<DateTime>(result.Expression);
 			var files = RelativeSelectedFiles();
 			for (var ctr = 0; ctr < files.Count; ++ctr)
 			{
@@ -637,11 +637,11 @@ namespace NeoEdit
 			te.SetSelections(MultiProgressDialog.RunAsync(te.TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await TextSearchFileAsync(te, obj.fileName, result, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}
 
-		FilesFindMassFindDialog.Result Command_Files_Find_MassFind_Dialog(ITextEditor te) => FilesFindMassFindDialog.Run(te.TabsParent, GetVariables());
+		FilesFindMassFindDialog.Result Command_Files_Find_MassFind_Dialog(ITextEditor te) => FilesFindMassFindDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Files_Find_MassFind(ITextEditor te, FilesFindMassFindDialog.Result result, AnswerResult answer)
 		{
-			var findStrs = GetVariableExpressionResults<string>(result.Expression);
+			var findStrs = te.GetVariableExpressionResults<string>(result.Expression);
 			var searcher = Helpers.GetSearcher(findStrs, result.CodePages, result.MatchCase);
 			var selected = RelativeSelectedFiles().Zip(te.Selections, (fileName, range) => new { fileName, range }).ToList();
 			te.SetSelections(MultiProgressDialog.RunAsync(te.TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
@@ -669,11 +669,11 @@ namespace NeoEdit
 				Directory.CreateDirectory(file);
 		}
 
-		FilesCreateFromExpressionsDialog.Result Command_Files_Create_FromExpressions_Dialog(ITextEditor te) => FilesCreateFromExpressionsDialog.Run(te.TabsParent, GetVariables(), te.CodePage);
+		FilesCreateFromExpressionsDialog.Result Command_Files_Create_FromExpressions_Dialog(ITextEditor te) => FilesCreateFromExpressionsDialog.Run(te.TabsParent, te.GetVariables(), te.CodePage);
 
-		void Command_Files_Create_FromExpressions(FilesCreateFromExpressionsDialog.Result result)
+		void Command_Files_Create_FromExpressions(ITextEditor te, FilesCreateFromExpressionsDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 
 			var filenameExpression = new NEExpression(result.FileName);
 			var dataExpression = new NEExpression(result.Data);
@@ -749,11 +749,11 @@ namespace NeoEdit
 
 		void Command_Files_Sign(ITextEditor te, FilesSignDialog.Result result) => te.ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
 
-		FilesOperationsCopyMoveDialog.Result Command_Files_Operations_CopyMove_Dialog(ITextEditor te, bool move) => FilesOperationsCopyMoveDialog.Run(te.TabsParent, GetVariables(), move);
+		FilesOperationsCopyMoveDialog.Result Command_Files_Operations_CopyMove_Dialog(ITextEditor te, bool move) => FilesOperationsCopyMoveDialog.Run(te.TabsParent, te.GetVariables(), move);
 
 		void Command_Files_Operations_CopyMove(ITextEditor te, FilesOperationsCopyMoveDialog.Result result, bool move)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 
 			var oldFileNameExpression = new NEExpression(result.OldFileName);
 			var newFileNameExpression = new NEExpression(result.NewFileName);
@@ -862,10 +862,10 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Files_Operations_DragDrop()
+		void Command_Files_Operations_DragDrop(ITextEditor te)
 		{
 			var strs = RelativeSelectedFiles();
-			if (!StringsAreFiles(strs))
+			if (!te.StringsAreFiles(strs))
 				throw new Exception("Selections must be files.");
 			doDrag = DragType.Selections;
 		}
@@ -901,14 +901,14 @@ namespace NeoEdit
 
 		FilesOperationsSplitFileDialog.Result Command_Files_Operations_SplitFile_Dialog(ITextEditor te)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
 			return FilesOperationsSplitFileDialog.Run(te.TabsParent, variables);
 		}
 
 		void Command_Files_Operations_SplitFile(ITextEditor te, FilesOperationsSplitFileDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
 			var files = RelativeSelectedFiles();
 			var outputTemplates = new NEExpression(result.OutputTemplate).EvaluateList<string>(variables, te.Selections.Count);
@@ -916,11 +916,11 @@ namespace NeoEdit
 			MultiProgressDialog.RunAsync(te.TabsParent, "Splitting files...", Enumerable.Range(0, te.Selections.Count), (index, progress, cancel) => SplitFileAsync(files[index], outputTemplates[index], chunkSizes[index], progress, cancel), index => Path.GetFileName(files[index]));
 		}
 
-		FilesOperationsCombineFilesDialog.Result Command_Files_Operations_CombineFiles_Dialog(ITextEditor te) => FilesOperationsCombineFilesDialog.Run(te.TabsParent, GetVariables());
+		FilesOperationsCombineFilesDialog.Result Command_Files_Operations_CombineFiles_Dialog(ITextEditor te) => FilesOperationsCombineFilesDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Files_Operations_CombineFiles(ITextEditor te, FilesOperationsCombineFilesDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 
 			var inputFileCountExpr = new NEExpression(result.InputFileCount);
 			var outputFilesExpr = new NEExpression(result.OutputFiles);

@@ -92,11 +92,11 @@ namespace NeoEdit
 
 		void Command_Image_GrabColor(ITextEditor te, ImageGrabColorDialog.Result result) => te.ReplaceSelections(result.Color);
 
-		ImageGrabImageDialog.Result Command_Image_GrabImage_Dialog(ITextEditor te) => ImageGrabImageDialog.Run(te.TabsParent, GetVariables());
+		ImageGrabImageDialog.Result Command_Image_GrabImage_Dialog(ITextEditor te) => ImageGrabImageDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Image_GrabImage(ITextEditor te, ImageGrabImageDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 			var x = new NEExpression(result.GrabX).EvaluateList<int>(variables, te.Selections.Count());
 			var y = new NEExpression(result.GrabY).EvaluateList<int>(variables, te.Selections.Count());
 			var width = new NEExpression(result.GrabWidth).EvaluateList<int>(variables, te.Selections.Count());
@@ -115,36 +115,36 @@ namespace NeoEdit
 			te.ReplaceSelections(strs);
 		}
 
-		ImageAdjustColorDialog.Result Command_Image_AdjustColor_Dialog(ITextEditor te) => ImageAdjustColorDialog.Run(te.TabsParent, GetVariables());
+		ImageAdjustColorDialog.Result Command_Image_AdjustColor_Dialog(ITextEditor te) => ImageAdjustColorDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Image_AdjustColor(ITextEditor te, ImageAdjustColorDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<double>(result.Expression);
+			var results = te.GetFixedExpressionResults<double>(result.Expression);
 			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => AdjustColor(te.GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
 			te.ReplaceSelections(strs);
 		}
 
-		ImageAddOverlayColorDialog.Result Command_Image_AddOverlayColor_Dialog(ITextEditor te, bool add) => ImageAddOverlayColorDialog.Run(te.TabsParent, add, GetVariables());
+		ImageAddOverlayColorDialog.Result Command_Image_AddOverlayColor_Dialog(ITextEditor te, bool add) => ImageAddOverlayColorDialog.Run(te.TabsParent, add, te.GetVariables());
 
 		void Command_Image_AddColor(ITextEditor te, ImageAddOverlayColorDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = te.GetFixedExpressionResults<string>(result.Expression);
 			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => AddColor(te.GetString(range), results[index])).ToList();
 			te.ReplaceSelections(strs);
 		}
 
 		void Command_Image_OverlayColor(ITextEditor te, ImageAddOverlayColorDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = te.GetFixedExpressionResults<string>(result.Expression);
 			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], te.GetString(range))).ToList();
 			te.ReplaceSelections(strs);
 		}
 
-		ImageSizeDialog.Result Command_Image_Size_Dialog(ITextEditor te) => ImageSizeDialog.Run(te.TabsParent, GetVariables());
+		ImageSizeDialog.Result Command_Image_Size_Dialog(ITextEditor te) => ImageSizeDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Image_Size(ITextEditor te, ImageSizeDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 			var width = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
 			var height = new NEExpression(result.HeightExpression).Evaluate<int>(variables);
 
@@ -170,11 +170,11 @@ namespace NeoEdit
 			te.SetSelections(new List<Range> { BeginRange });
 		}
 
-		ImageCropDialog.Result Command_Image_Crop_Dialog(ITextEditor te) => ImageCropDialog.Run(te.TabsParent, GetVariables());
+		ImageCropDialog.Result Command_Image_Crop_Dialog(ITextEditor te) => ImageCropDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Image_Crop(ITextEditor te, ImageCropDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 			var destX = new NEExpression(result.XExpression).Evaluate<int>(variables);
 			var destY = new NEExpression(result.YExpression).Evaluate<int>(variables);
 			var newWidth = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
@@ -219,11 +219,11 @@ namespace NeoEdit
 
 		void Command_Image_FlipVertical(ITextEditor te) => Flip(te, System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		ImageRotateDialog.Result Command_Image_Rotate_Dialog(ITextEditor te) => ImageRotateDialog.Run(te.TabsParent, GetVariables());
+		ImageRotateDialog.Result Command_Image_Rotate_Dialog(ITextEditor te) => ImageRotateDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Image_Rotate(ITextEditor te, ImageRotateDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 			var angle = new NEExpression(result.AngleExpression).Evaluate<float>(variables, "deg");
 
 			var bitmap = GetBitmap(te);
@@ -245,11 +245,11 @@ namespace NeoEdit
 			te.SetSelections(new List<Range> { BeginRange });
 		}
 
-		ImageGIFAnimateDialog.Result Command_Image_GIF_Animate_Dialog(ITextEditor te) => ImageGIFAnimateDialog.Run(te.TabsParent, GetVariables());
+		ImageGIFAnimateDialog.Result Command_Image_GIF_Animate_Dialog(ITextEditor te) => ImageGIFAnimateDialog.Run(te.TabsParent, te.GetVariables());
 
-		void Command_Image_GIF_Animate(ImageGIFAnimateDialog.Result result)
+		void Command_Image_GIF_Animate(ITextEditor te, ImageGIFAnimateDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 			var inputFiles = new NEExpression(result.InputFiles).EvaluateList<string>(variables);
 			var outputFile = new NEExpression(result.OutputFile).Evaluate<string>(variables);
 			var delays = new NEExpression(result.Delay).EvaluateList<int>(variables, inputFiles.Count, "ms");
@@ -263,14 +263,14 @@ namespace NeoEdit
 
 		ImageGIFSplitDialog.Result Command_Image_GIF_Split_Dialog(ITextEditor te)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
 			return ImageGIFSplitDialog.Run(te.TabsParent, variables);
 		}
 
-		void Command_Image_GIF_Split(ImageGIFSplitDialog.Result result)
+		void Command_Image_GIF_Split(ITextEditor te, ImageGIFSplitDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
 			var files = RelativeSelectedFiles();
 			var outputTemplates = new NEExpression(result.OutputTemplate).EvaluateList<string>(variables, files.Count);

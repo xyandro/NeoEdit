@@ -66,11 +66,11 @@ namespace NeoEdit
 			}
 		}
 
-		NetworkAbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog(ITextEditor te) => NetworkAbsoluteURLDialog.Run(te.TabsParent, GetVariables());
+		NetworkAbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog(ITextEditor te) => NetworkAbsoluteURLDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Network_AbsoluteURL(ITextEditor te, NetworkAbsoluteURLDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = te.GetFixedExpressionResults<string>(result.Expression);
 			var newStrs = te.Selections.Zip(results, (range, baseUrl) => new { range, baseUrl }).AsParallel().AsOrdered().Select(obj => new Uri(new Uri(obj.baseUrl), te.GetString(obj.range)).AbsoluteUri).ToList();
 			te.ReplaceSelections(newStrs);
 		}
@@ -89,11 +89,11 @@ namespace NeoEdit
 			te.ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		NetworkFetchFileDialog.Result Command_Network_FetchFile_Dialog(ITextEditor te) => NetworkFetchFileDialog.Run(te.TabsParent, GetVariables());
+		NetworkFetchFileDialog.Result Command_Network_FetchFile_Dialog(ITextEditor te) => NetworkFetchFileDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Network_FetchFile(ITextEditor te, NetworkFetchFileDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 
 			var urlExpression = new NEExpression(result.URL);
 			var fileNameExpression = new NEExpression(result.FileName);
@@ -124,11 +124,11 @@ namespace NeoEdit
 			MultiProgressDialog.RunAsync(te.TabsParent, "Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
 		}
 
-		NetworkFetchStreamDialog.Result Command_Network_FetchStream_Dialog(ITextEditor te) => NetworkFetchStreamDialog.Run(te.TabsParent, GetVariables(), Path.GetDirectoryName(te.FileName) ?? "");
+		NetworkFetchStreamDialog.Result Command_Network_FetchStream_Dialog(ITextEditor te) => NetworkFetchStreamDialog.Run(te.TabsParent, te.GetVariables(), Path.GetDirectoryName(te.FileName) ?? "");
 
 		void Command_Network_FetchStream(ITextEditor te, NetworkFetchStreamDialog.Result result)
 		{
-			var urls = GetVariableExpressionResults<string>(result.Expression);
+			var urls = te.GetVariableExpressionResults<string>(result.Expression);
 			if (!urls.Any())
 				return;
 
@@ -137,11 +137,11 @@ namespace NeoEdit
 			MultiProgressDialog.RunAsync(te.TabsParent, "Downloading...", data, async (item, progress, cancelled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, cancelled));
 		}
 
-		NetworkFetchStreamDialog.Result Command_Network_FetchPlaylist_Dialog(ITextEditor te) => NetworkFetchStreamDialog.Run(te.TabsParent, GetVariables(), null);
+		NetworkFetchStreamDialog.Result Command_Network_FetchPlaylist_Dialog(ITextEditor te) => NetworkFetchStreamDialog.Run(te.TabsParent, te.GetVariables(), null);
 
 		void Command_Network_FetchPlaylist(ITextEditor te, NetworkFetchStreamDialog.Result result)
 		{
-			var urls = GetVariableExpressionResults<string>(result.Expression);
+			var urls = te.GetVariableExpressionResults<string>(result.Expression);
 			if (!urls.Any())
 				return;
 
@@ -180,7 +180,7 @@ namespace NeoEdit
 				});
 			}
 			var columnLens = data[0].Select((item, column) => data.Max(row => row[column].Length)).ToList();
-			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
+			te.ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
 		}
 
 		NetworkPingDialog.Result Command_Network_Ping_Dialog(ITextEditor te) => NetworkPingDialog.Run(te.TabsParent);

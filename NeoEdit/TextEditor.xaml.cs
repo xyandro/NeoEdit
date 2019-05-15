@@ -61,16 +61,6 @@ namespace NeoEdit
 			All = Write | Access | Create,
 		}
 
-		enum WordSkipType
-		{
-			None,
-			Char,
-			Symbol,
-			Space,
-			Path,
-		}
-
-
 		public TextData Data { get; } = new TextData();
 
 		[DepProp]
@@ -242,16 +232,16 @@ namespace NeoEdit
 		}
 
 		RangeList searchesList = new RangeList(new List<Range>());
-		RangeList Searches => searchesList;
-		void SetSearches(List<Range> searches)
+		public RangeList Searches => searchesList;
+		public void SetSearches(List<Range> searches)
 		{
 			searchesList = new RangeList(searches.Where(range => range.HasSelection).ToList());
 			canvasRenderTimer.Start();
 		}
 
 		RangeList bookmarksList = new RangeList(new List<Range>());
-		RangeList Bookmarks => bookmarksList;
-		void SetBookmarks(List<Range> bookmarks)
+		public RangeList Bookmarks => bookmarksList;
+		public void SetBookmarks(List<Range> bookmarks)
 		{
 			bookmarksList = new RangeList(bookmarks.Select(range => MoveCursor(range, 0, 0, false, lineRel: true, indexRel: false)).ToList());
 			bookmarkRenderTimer.Start();
@@ -259,7 +249,7 @@ namespace NeoEdit
 
 		readonly Dictionary<int, RangeList> regionsList = Enumerable.Range(1, 9).ToDictionary(num => num, num => new RangeList(new List<Range>()));
 		public IReadOnlyDictionary<int, RangeList> Regions => regionsList;
-		void SetRegions(int region, List<Range> regions)
+		public void SetRegions(int region, List<Range> regions)
 		{
 			regionsList[region] = new RangeList(regions);
 			canvasRenderTimer.Start();
@@ -268,7 +258,7 @@ namespace NeoEdit
 
 		RunOnceTimer canvasRenderTimer, statusBarRenderTimer, bookmarkRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
-		readonly UndoRedo undoRedo;
+		public UndoRedo undoRedo { get; }
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		DateTime fileLastWrite;
 		int mouseClickCount = 0;
@@ -337,8 +327,8 @@ namespace NeoEdit
 			CalculateBoundaries();
 		}
 
-		int BeginOffset => Data.GetOffset(0, 0);
-		int EndOffset => Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
+		public int BeginOffset => Data.GetOffset(0, 0);
+		public int EndOffset => Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
 		Range BeginRange => new Range(BeginOffset);
 		Range EndRange => new Range(EndOffset);
 		public Range FullRange => new Range(EndOffset, BeginOffset);
@@ -580,9 +570,9 @@ namespace NeoEdit
 			return result.ToList();
 		}
 
-		List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables(), Selections.Count());
+		public List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables(), Selections.Count());
 
-		WordSkipType GetWordSkipType(int line, int index)
+		public WordSkipType GetWordSkipType(int line, int index)
 		{
 			if ((index < 0) || (index >= Data.GetLineLength(line)))
 				return WordSkipType.Space;
@@ -607,7 +597,7 @@ namespace NeoEdit
 			}
 		}
 
-		int GetNextWord(int offset)
+		public int GetNextWord(int offset)
 		{
 			WordSkipType moveType = WordSkipType.None;
 
@@ -634,7 +624,7 @@ namespace NeoEdit
 			}
 		}
 
-		int GetPrevWord(int offset)
+		public int GetPrevWord(int offset)
 		{
 			WordSkipType moveType = WordSkipType.None;
 
@@ -668,7 +658,7 @@ namespace NeoEdit
 
 		public string GetString(Range range) => Data.GetString(range.Start, range.Length);
 
-		List<T> GetVariableExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables());
+		public List<T> GetVariableExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables());
 
 		public NEVariables GetVariables()
 		{
@@ -2273,7 +2263,7 @@ namespace NeoEdit
 			CalculateBoundaries();
 		}
 
-		void ReplaceOneWithMany(List<string> strs, bool? addNewLines)
+		public void ReplaceOneWithMany(List<string> strs, bool? addNewLines)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -2351,11 +2341,11 @@ namespace NeoEdit
 
 		void SetClipboardFile(string fileName, bool isCut = false) => SetClipboardFiles(new List<string> { fileName }, isCut);
 
-		void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => TabsParent.AddClipboardStrings(fileNames, isCut);
+		public void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => TabsParent.AddClipboardStrings(fileNames, isCut);
 
 		void SetClipboardString(string text) => SetClipboardStrings(new List<string> { text });
 
-		void SetClipboardStrings(IEnumerable<string> strs) => TabsParent.AddClipboardStrings(strs);
+		public void SetClipboardStrings(IEnumerable<string> strs) => TabsParent.AddClipboardStrings(strs);
 
 		void SetFileName(string fileName)
 		{
@@ -2425,7 +2415,7 @@ namespace NeoEdit
 		}
 
 		static HashSet<string> drives = new HashSet<string>(DriveInfo.GetDrives().Select(drive => drive.Name));
-		bool StringsAreFiles(List<string> strs)
+		public bool StringsAreFiles(List<string> strs)
 		{
 			if (!strs.Any())
 				return false;
@@ -2440,9 +2430,9 @@ namespace NeoEdit
 
 		public override string ToString() => FileName ?? DisplayName;
 
-		bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanEncode(data, codePage))) || (ConfirmContinueWhenCannotEncode());
+		public bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanEncode(data, codePage))) || (ConfirmContinueWhenCannotEncode());
 
-		bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
+		public bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
 
 		bool VerifyCanEncode()
 		{

@@ -144,9 +144,9 @@
 			<controls:NEMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
 			<Separator/>
 			<MenuItem Header="_Jump By">
-				<controls:MultiMenuItem Header="_Words" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:TextEditor+JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
-				<controls:MultiMenuItem Header="_Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:TextEditor+JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
-				<controls:MultiMenuItem Header="_Paths" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:TextEditor+JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
+				<controls:MultiMenuItem Header="_Words" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
+				<controls:MultiMenuItem Header="_Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
+				<controls:MultiMenuItem Header="_Paths" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>

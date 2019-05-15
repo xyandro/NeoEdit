@@ -32,9 +32,9 @@ namespace NeoEdit
 			return table.ToString(te.Data.DefaultEnding, te.ContentType);
 		}
 
-		NEVariables GetTableVariables(Table table)
+		NEVariables GetTableVariables(ITextEditor te, Table table)
 		{
-			var results = GetVariables();
+			var results = te.GetVariables();
 			for (var column = 0; column < table.NumColumns; ++column)
 			{
 				var col = column; // If we don't copy this the value will be updated and invalid
@@ -139,13 +139,13 @@ namespace NeoEdit
 		TableAddColumnDialog.Result Command_Table_AddColumn_Dialog(ITextEditor te)
 		{
 			var table = GetTable(te);
-			return TableAddColumnDialog.Run(te.TabsParent, GetTableVariables(table), table.NumRows);
+			return TableAddColumnDialog.Run(te.TabsParent, GetTableVariables(te, table), table.NumRows);
 		}
 
 		void Command_Table_AddColumn(ITextEditor te, TableAddColumnDialog.Result result)
 		{
 			var table = GetTable(te);
-			var variables = GetTableVariables(table);
+			var variables = GetTableVariables(te, table);
 			var results = new NEExpression(result.Expression).EvaluateList<string>(variables, table.NumRows);
 			table.AddColumn(result.ColumnName, results);
 			SetText(te, table);
@@ -154,13 +154,13 @@ namespace NeoEdit
 		GetExpressionDialog.Result Command_Table_Select_RowsByExpression_Dialog(ITextEditor te)
 		{
 			var table = GetTable(te);
-			return GetExpressionDialog.Run(te.TabsParent, GetTableVariables(table), table.NumRows);
+			return GetExpressionDialog.Run(te.TabsParent, GetTableVariables(te, table), table.NumRows);
 		}
 
 		void Command_Table_Select_RowsByExpression(ITextEditor te, GetExpressionDialog.Result result)
 		{
 			var table = GetTable(te);
-			var variables = GetTableVariables(table);
+			var variables = GetTableVariables(te, table);
 			var results = new NEExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
 			te.SetSelections(lines.AsParallel().AsOrdered().Select(line => new Range(te.Data.GetOffset(line, te.Data.GetLineLength(line)), te.Data.GetOffset(line, 0))).ToList());

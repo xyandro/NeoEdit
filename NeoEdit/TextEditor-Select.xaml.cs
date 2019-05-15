@@ -197,11 +197,11 @@ namespace NeoEdit
 
 		void Command_Select_Nothing(ITextEditor te) => te.SetSelections(new List<Range>());
 
-		SelectLimitDialog.Result Command_Select_Limit_Dialog(ITextEditor te) => SelectLimitDialog.Run(te.TabsParent, GetVariables());
+		SelectLimitDialog.Result Command_Select_Limit_Dialog(ITextEditor te) => SelectLimitDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Select_Limit(ITextEditor te, SelectLimitDialog.Result result)
 		{
-			var variables = GetVariables();
+			var variables = te.GetVariables();
 			var firstSelection = new NEExpression(result.FirstSelection).Evaluate<int>(variables);
 			var everyNth = new NEExpression(result.EveryNth).Evaluate<int>(variables);
 			var takeCount = new NEExpression(result.TakeCount).Evaluate<int>(variables);
@@ -298,11 +298,11 @@ namespace NeoEdit
 			te.SetSelections(strs.Select(tuple => te.Selections[tuple.Item2]).ToList());
 		}
 
-		SelectSplitDialog.Result Command_Select_Split_Dialog(ITextEditor te) => SelectSplitDialog.Run(te.TabsParent, GetVariables());
+		SelectSplitDialog.Result Command_Select_Split_Dialog(ITextEditor te) => SelectSplitDialog.Run(te.TabsParent, te.GetVariables());
 
 		void Command_Select_Split(ITextEditor te, SelectSplitDialog.Result result)
 		{
-			var indexes = GetFixedExpressionResults<int>(result.Index);
+			var indexes = te.GetFixedExpressionResults<int>(result.Index);
 			te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(te, range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList());
 		}
 

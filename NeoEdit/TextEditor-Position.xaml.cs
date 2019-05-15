@@ -34,7 +34,7 @@ namespace NeoEdit
 						value = Math.Max(0, Math.Min(value, te.Data.GetLineLength(line)));
 						return te.Data.GetOffset(line, value);
 					}
-				case GotoType.Position: return Math.Max(BeginOffset, Math.Min(value, EndOffset));
+				case GotoType.Position: return Math.Max(te.BeginOffset, Math.Min(value, te.EndOffset));
 				default: throw new Exception("Invalid GotoType");
 			}
 		}
@@ -70,13 +70,13 @@ namespace NeoEdit
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return PositionGotoDialog.Run(te.TabsParent, gotoType, startValue, GetVariables());
+			return PositionGotoDialog.Run(te.TabsParent, gotoType, startValue, te.GetVariables());
 		}
 
 		void Command_Position_Goto(ITextEditor te, GotoType gotoType, bool selecting, PositionGotoDialog.Result result)
 		{
 			var delta = gotoType == GotoType.Position ? 0 : -1;
-			var values = GetVariableExpressionResults<string>(result.Expression).Select(value => GetValues(value, delta)).ToList();
+			var values = te.GetVariableExpressionResults<string>(result.Expression).Select(value => GetValues(value, delta)).ToList();
 			if (!values.Any())
 				return;
 
@@ -140,7 +140,7 @@ namespace NeoEdit
 			}
 
 			var delta = gotoType == GotoType.Position ? 0 : 1;
-			SetClipboardStrings(starts[gotoType].Zip(ends[gotoType], (start, end) => $"{start + delta}{(start != end ? $"-{end + delta}" : "")}"));
+			te.SetClipboardStrings(starts[gotoType].Zip(ends[gotoType], (start, end) => $"{start + delta}{(start != end ? $"-{end + delta}" : "")}"));
 		}
 	}
 }

@@ -46,7 +46,7 @@ namespace NeoEdit
 			}
 
 			if (te.Selections.Count == 1)
-				ReplaceOneWithMany(strs, false);
+				te.ReplaceOneWithMany(strs, false);
 			if (te.Selections.Count == fileNames.Count())
 				te.ReplaceSelections(strs);
 		}
@@ -70,11 +70,11 @@ namespace NeoEdit
 
 		void Command_File_Save_SaveAs(ITextEditor te, bool copyOnly = false) => Save(GetSaveFileName(te), copyOnly);
 
-		GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, GetVariables(), te.Selections.Count);
+		GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables(), te.Selections.Count);
 
 		void Command_File_Save_SaveAsByExpression(ITextEditor te, GetExpressionDialog.Result result, AnswerResult answer, bool copyOnly = false)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = te.GetFixedExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
 
@@ -98,14 +98,14 @@ namespace NeoEdit
 			Save(newFileName, copyOnly);
 		}
 
-		void Command_File_Save_SetDisplayName(GetExpressionDialog.Result result)
+		void Command_File_Save_SetDisplayName(ITextEditor te, GetExpressionDialog.Result result)
 		{
 			if (result.Expression == "f")
 			{
 				DisplayName = null;
 				return;
 			}
-			var results = GetVariableExpressionResults<string>(result.Expression);
+			var results = te.GetVariableExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
 				throw new Exception("Only one value may be specified");
 			DisplayName = results[0];
@@ -127,11 +127,11 @@ namespace NeoEdit
 			SetFileName(fileName);
 		}
 
-		GetExpressionDialog.Result Command_File_Operations_RenameByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, GetVariables(), te.Selections.Count);
+		GetExpressionDialog.Result Command_File_Operations_RenameByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables(), te.Selections.Count);
 
 		void Command_File_Operations_RenameByExpression(ITextEditor te, GetExpressionDialog.Result result, AnswerResult answer)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = te.GetFixedExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
 
@@ -291,7 +291,7 @@ namespace NeoEdit
 				return;
 			}
 
-			var files = Clipboard;
+			var files = te.Clipboard;
 			if (files.Count == 0)
 				return;
 

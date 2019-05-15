@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace NeoEdit
 {
-	class UndoRedo
+	public class UndoRedo
 	{
 		internal class UndoRedoStep
 		{
