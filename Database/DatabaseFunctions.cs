@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NeoEdit.Content;
 using NeoEdit.Dialogs;
 using NeoEdit.Transform;
 
 namespace NeoEdit
 {
-	partial class TextEditor
+	public static class DatabaseFunctions
 	{
 		class QueryResult
 		{
@@ -18,11 +16,6 @@ namespace NeoEdit
 			public string TableName { get; set; }
 			public Table Table { get; set; }
 		}
-
-		string dbNameField;
-		public string DBName { get => dbNameField; set { dbNameField = value; statusBarRenderTimer.Start(); } }
-
-		public DbConnection dbConnection { get; set; }
 
 		static string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
 
@@ -57,9 +50,9 @@ namespace NeoEdit
 				throw new Exception("No connection.");
 		}
 
-		static DatabaseConnectDialog.Result Command_Database_Connect_Dialog(ITextEditor te) => DatabaseConnectDialog.Run(te.WindowParent);
+		static public DatabaseConnectDialog.Result Command_Database_Connect_Dialog(ITextEditor te) => DatabaseConnectDialog.Run(te.WindowParent);
 
-		static void Command_Database_Connect(ITextEditor te, DatabaseConnectDialog.Result result)
+		static public void Command_Database_Connect(ITextEditor te, DatabaseConnectDialog.Result result)
 		{
 			if (te.dbConnection != null)
 			{
@@ -70,7 +63,7 @@ namespace NeoEdit
 			te.DBName = result.DBConnectInfo.Name;
 		}
 
-		static void Command_Database_ExecuteQuery(ITextEditor te)
+		static public void Command_Database_ExecuteQuery(ITextEditor te)
 		{
 			ValidateConnection(te);
 			var selections = te.Selections.ToList();
@@ -92,13 +85,13 @@ namespace NeoEdit
 			te.ReplaceSelections(strs);
 		}
 
-		static void Command_Database_Examine_Dialog(ITextEditor te)
+		static public void Command_Database_Examine_Dialog(ITextEditor te)
 		{
 			ValidateConnection(te);
 			DatabaseExamineDialog.Run(te.WindowParent, te.dbConnection);
 		}
 
-		static void Command_Database_GetSproc(ITextEditor te)
+		static public void Command_Database_GetSproc(ITextEditor te)
 		{
 			ValidateConnection(te);
 

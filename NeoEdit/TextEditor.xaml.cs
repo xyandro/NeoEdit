@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -1017,8 +1018,8 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(this); break;
-				case NECommand.Database_Examine: Command_Database_Examine_Dialog(this); break;
+				case NECommand.Database_Connect: dialogResult = DatabaseFunctions.Command_Database_Connect_Dialog(this); break;
+				case NECommand.Database_Examine: DatabaseFunctions.Command_Database_Examine_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1520,9 +1521,9 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Database_Connect: Command_Database_Connect(this, dialogResult as DatabaseConnectDialog.Result); break;
-				case NECommand.Database_ExecuteQuery: Command_Database_ExecuteQuery(this); break;
-				case NECommand.Database_GetSproc: Command_Database_GetSproc(this); break;
+				case NECommand.Database_Connect: DatabaseFunctions.Command_Database_Connect(this, dialogResult as DatabaseConnectDialog.Result); break;
+				case NECommand.Database_ExecuteQuery: DatabaseFunctions.Command_Database_ExecuteQuery(this); break;
+				case NECommand.Database_GetSproc: DatabaseFunctions.Command_Database_GetSproc(this); break;
 			}
 		}
 
@@ -2830,5 +2831,10 @@ namespace NeoEdit
 			}
 			return savedBitmap;
 		}
+
+		string dbNameField;
+		public string DBName { get => dbNameField; set { dbNameField = value; statusBarRenderTimer.Start(); } }
+
+		public DbConnection dbConnection { get; set; }
 	}
 }
