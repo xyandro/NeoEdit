@@ -9,7 +9,7 @@ namespace NeoEdit
 {
 	partial class TextEditor
 	{
-		List<Tuple<Range, List<Range>>> GetRegionsWithSelections(ITextEditor te, int useRegion)
+		static List<Tuple<Range, List<Range>>> GetRegionsWithSelections(ITextEditor te, int useRegion)
 		{
 			var result = new List<Tuple<Range, List<Range>>>();
 			var currentSelection = 0;
@@ -29,7 +29,7 @@ namespace NeoEdit
 			return result;
 		}
 
-		List<List<string>> GetRegionsWithSelectionsText(ITextEditor te, int useRegion, bool mustBeSameSize = true)
+		static List<List<string>> GetRegionsWithSelectionsText(ITextEditor te, int useRegion, bool mustBeSameSize = true)
 		{
 			var list = te.GetSelectionStrings().Zip(GetEnclosingRegions(te, useRegion, true), (selection, region) => new { selection, region }).GroupBy(obj => obj.region).Select(group => group.Select(obj => obj.selection).ToList()).ToList();
 			if ((mustBeSameSize) && (list.Select(items => items.Count).Distinct().Count() > 1))
@@ -37,7 +37,7 @@ namespace NeoEdit
 			return list;
 		}
 
-		void SetRegionsWithSelectionsText(ITextEditor te, int useRegion, List<List<string>> list, bool mustBeSameSize = true)
+		static void SetRegionsWithSelectionsText(ITextEditor te, int useRegion, List<List<string>> list, bool mustBeSameSize = true)
 		{
 			var useRegions = te.Regions[useRegion];
 			if (!useRegions.Any())
@@ -70,9 +70,9 @@ namespace NeoEdit
 			te.SetSelections(newSelections);
 		}
 
-		RegionModifyRegionsDialog.Result Command_Region_ModifyRegions_Dialog(ITextEditor te) => RegionModifyRegionsDialog.Run(te.TabsParent);
+		static RegionModifyRegionsDialog.Result Command_Region_ModifyRegions_Dialog(ITextEditor te) => RegionModifyRegionsDialog.Run(te.TabsParent);
 
-		void Command_Region_ModifyRegions(ITextEditor te, RegionModifyRegionsDialog.Result result)
+		static void Command_Region_ModifyRegions(ITextEditor te, RegionModifyRegionsDialog.Result result)
 		{
 			switch (result.Action)
 			{
@@ -224,11 +224,11 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Region_SetSelections_Region(ITextEditor te, int? useRegion = null) => te.Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => te.SetRegions(key, te.Selections.ToList()));
+		static void Command_Region_SetSelections_Region(ITextEditor te, int? useRegion = null) => te.Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => te.SetRegions(key, te.Selections.ToList()));
 
-		void Command_Region_AddSelections_Region(ITextEditor te, int? useRegion = null) => te.Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => te.SetRegions(key, te.Regions[key].Concat(te.Selections).ToList()));
+		static void Command_Region_AddSelections_Region(ITextEditor te, int? useRegion = null) => te.Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => te.SetRegions(key, te.Regions[key].Concat(te.Selections).ToList()));
 
-		void Command_Region_RemoveSelections_Region(ITextEditor te, int? useRegion = null)
+		static void Command_Region_RemoveSelections_Region(ITextEditor te, int? useRegion = null)
 		{
 			foreach (var key in te.Regions.Keys.ToList())
 			{
@@ -250,7 +250,7 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Region_ReplaceSelections_Region(ITextEditor te, int? useRegion = null)
+		static void Command_Region_ReplaceSelections_Region(ITextEditor te, int? useRegion = null)
 		{
 			foreach (var key in te.Regions.Keys.ToList())
 			{
@@ -273,7 +273,7 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Region_LimitToSelections_Region(ITextEditor te, int? useRegion = null)
+		static void Command_Region_LimitToSelections_Region(ITextEditor te, int? useRegion = null)
 		{
 			foreach (var key in te.Regions.Keys.ToList())
 			{
@@ -293,9 +293,9 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Region_Clear_Region(ITextEditor te, int? useRegion = null) => te.Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => te.SetRegions(key, new List<Range>()));
+		static void Command_Region_Clear_Region(ITextEditor te, int? useRegion = null) => te.Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => te.SetRegions(key, new List<Range>()));
 
-		void Command_Region_RepeatBySelections_Region(ITextEditor te, int useRegion)
+		static void Command_Region_RepeatBySelections_Region(ITextEditor te, int useRegion)
 		{
 			var useRegions = te.Regions[useRegion];
 			var regionsWithSelections = GetRegionsWithSelections(te, useRegion);
@@ -319,27 +319,27 @@ namespace NeoEdit
 			te.SetSelections(newSelections);
 		}
 
-		void Command_Region_CopyEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(range => te.GetString(range)).ToList());
+		static void Command_Region_CopyEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(range => te.GetString(range)).ToList());
 
-		void Command_Region_CopyEnclosingRegionIndex_Region(ITextEditor te, int useRegion) => te.SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(region => (te.Regions[useRegion].IndexOf(region) + 1).ToString()).ToList());
+		static void Command_Region_CopyEnclosingRegionIndex_Region(ITextEditor te, int useRegion) => te.SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(region => (te.Regions[useRegion].IndexOf(region) + 1).ToString()).ToList());
 
-		void Command_Region_TransformSelections_Flatten_Region(ITextEditor te, int useRegion) => SetRegionsWithSelectionsText(te, useRegion, GetRegionsWithSelectionsText(te, useRegion, false), false);
+		static void Command_Region_TransformSelections_Flatten_Region(ITextEditor te, int useRegion) => SetRegionsWithSelectionsText(te, useRegion, GetRegionsWithSelectionsText(te, useRegion, false), false);
 
-		void Command_Region_TransformSelections_Transpose_Region(ITextEditor te, int useRegion)
+		static void Command_Region_TransformSelections_Transpose_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			var count = regions.Select(region => region.Count).FirstOrDefault();
 			SetRegionsWithSelectionsText(te, useRegion, Enumerable.Range(0, count).Select(index => regions.Select(strs => strs[index]).ToList()).ToList());
 		}
 
-		void Command_Region_TransformSelections_RotateLeft_Region(ITextEditor te, int useRegion)
+		static void Command_Region_TransformSelections_RotateLeft_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			var count = regions.Select(region => region.Count).FirstOrDefault();
 			SetRegionsWithSelectionsText(te, useRegion, Enumerable.Range(0, count).Select(index => regions.Select(region => region[region.Count - 1 - index]).ToList()).ToList());
 		}
 
-		void Command_Region_TransformSelections_RotateRight_Region(ITextEditor te, int useRegion)
+		static void Command_Region_TransformSelections_RotateRight_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			regions.Reverse();
@@ -347,7 +347,7 @@ namespace NeoEdit
 			SetRegionsWithSelectionsText(te, useRegion, Enumerable.Range(0, count).Select(index => regions.Select(region => region[index]).ToList()).ToList());
 		}
 
-		void Command_Region_TransformSelections_Rotate180_Region(ITextEditor te, int useRegion)
+		static void Command_Region_TransformSelections_Rotate180_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			regions.Reverse();
@@ -355,31 +355,31 @@ namespace NeoEdit
 			SetRegionsWithSelectionsText(te, useRegion, regions);
 		}
 
-		void Command_Region_TransformSelections_MirrorHorizontal_Region(ITextEditor te, int useRegion)
+		static void Command_Region_TransformSelections_MirrorHorizontal_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			regions.ForEach(list => list.Reverse());
 			SetRegionsWithSelectionsText(te, useRegion, regions);
 		}
 
-		void Command_Region_TransformSelections_MirrorVertical_Region(ITextEditor te, int useRegion)
+		static void Command_Region_TransformSelections_MirrorVertical_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			regions.Reverse();
 			SetRegionsWithSelectionsText(te, useRegion, regions);
 		}
 
-		void Command_Region_Select_Regions_Region(ITextEditor te, bool shiftDown, int? useRegion = null)
+		static void Command_Region_Select_Regions_Region(ITextEditor te, bool shiftDown, int? useRegion = null)
 		{
 			var sels = shiftDown ? te.Selections.ToList() : new List<Range>();
 			sels.AddRange(te.Regions.Where(pair => pair.Key == (useRegion ?? pair.Key)).SelectMany(pair => pair.Value));
 			te.SetSelections(sels);
 		}
 
-		void Command_Region_Select_EnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(GetEnclosingRegions(te, useRegion));
+		static void Command_Region_Select_EnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(GetEnclosingRegions(te, useRegion));
 
-		void Command_Region_Select_WithEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.Selections.Zip(GetEnclosingRegions(te, useRegion, mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
+		static void Command_Region_Select_WithEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.Selections.Zip(GetEnclosingRegions(te, useRegion, mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
 
-		void Command_Region_Select_WithoutEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.Selections.Zip(GetEnclosingRegions(te, useRegion, mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList());
+		static void Command_Region_Select_WithoutEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.Selections.Zip(GetEnclosingRegions(te, useRegion, mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList());
 	}
 }
