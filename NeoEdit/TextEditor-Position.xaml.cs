@@ -53,7 +53,7 @@ namespace NeoEdit
 		PositionGotoDialog.Result Command_Position_Goto_Dialog(ITextEditor te, GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
-			var range = Selections.FirstOrDefault();
+			var range = te.Selections.FirstOrDefault();
 			if (range != null)
 			{
 				line = te.Data.GetOffsetLine(range.Start) + 1;
@@ -70,7 +70,7 @@ namespace NeoEdit
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return PositionGotoDialog.Run(TabsParent, gotoType, startValue, GetVariables());
+			return PositionGotoDialog.Run(te.TabsParent, gotoType, startValue, GetVariables());
 		}
 
 		void Command_Position_Goto(ITextEditor te, GotoType gotoType, bool selecting, PositionGotoDialog.Result result)
@@ -80,7 +80,7 @@ namespace NeoEdit
 			if (!values.Any())
 				return;
 
-			var sels = Selections.ToList();
+			var sels = te.Selections.ToList();
 
 			if ((sels.Count == 0) && (gotoType == GotoType.Line))
 				sels.Add(BeginRange);
@@ -91,7 +91,7 @@ namespace NeoEdit
 			if (values.Count != sels.Count)
 				throw new Exception("Expression count doesn't match selection count");
 
-			SetSelections(sels.AsParallel().AsOrdered().Select((range, ctr) => GetRange(te, range, gotoType, values[ctr], selecting)).ToList());
+			te.SetSelections(sels.AsParallel().AsOrdered().Select((range, ctr) => GetRange(te, range, gotoType, values[ctr], selecting)).ToList());
 		}
 
 		void Command_Position_Goto_FilesLines(ITextEditor te)
@@ -107,7 +107,7 @@ namespace NeoEdit
 			{
 				var textEditor = new TextEditor(pair.Key);
 				textEditor.SetSelections(pair.Value.Select(line => new Range(textEditor.Data.GetOffset(line - 1, 0))).ToList());
-				TabsParent.Add(textEditor);
+				te.TabsParent.Add(textEditor);
 			}
 		}
 
@@ -116,9 +116,9 @@ namespace NeoEdit
 			var starts = new Dictionary<GotoType, List<int>>();
 			var ends = new Dictionary<GotoType, List<int>>();
 
-			var count = Selections.Count;
-			starts[GotoType.Position] = Selections.Select(range => range.Start).ToList();
-			ends[GotoType.Position] = Selections.Select(range => range.End).ToList();
+			var count = te.Selections.Count;
+			starts[GotoType.Position] = te.Selections.Select(range => range.Start).ToList();
+			ends[GotoType.Position] = te.Selections.Select(range => range.End).ToList();
 
 			if ((gotoType == GotoType.Line) || (gotoType == GotoType.Column) || (gotoType == GotoType.Index))
 			{

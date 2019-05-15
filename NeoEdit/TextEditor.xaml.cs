@@ -52,13 +52,6 @@ namespace NeoEdit
 			Extension,
 		}
 
-		enum ReplaceType
-		{
-			Normal,
-			Undo,
-			Redo,
-		}
-
 		[Flags]
 		enum TimestampType
 		{
@@ -239,8 +232,8 @@ namespace NeoEdit
 		}
 
 		RangeList selectionsList = new RangeList(new List<Range>());
-		RangeList Selections => selectionsList;
-		void SetSelections(List<Range> selections, bool deOverlap = true)
+		public RangeList Selections => selectionsList;
+		public void SetSelections(List<Range> selections, bool deOverlap = true)
 		{
 			selectionsList = new RangeList(selections, deOverlap);
 			EnsureVisible();
@@ -348,7 +341,7 @@ namespace NeoEdit
 		int EndOffset => Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
 		Range BeginRange => new Range(BeginOffset);
 		Range EndRange => new Range(EndOffset);
-		Range FullRange => new Range(EndOffset, BeginOffset);
+		public Range FullRange => new Range(EndOffset, BeginOffset);
 		string AllText => GetString(FullRange);
 
 		void BlockSelDown()
@@ -467,7 +460,7 @@ namespace NeoEdit
 					return true;
 				case Message.OptionsEnum.Yes:
 				case Message.OptionsEnum.YesToAll:
-					Command_File_Save_Save();
+					Command_File_Save_Save(this);
 					return !IsModified;
 			}
 			return false;
@@ -1663,7 +1656,7 @@ namespace NeoEdit
 					doDrag = DragType.None;
 					if (Settings.EscapeClearsSelections)
 					{
-						Command_Select_Selection_Single();
+						Command_Select_Selection_Single(this);
 						if (!Selections.Any())
 						{
 							var pos = Data.GetOffset(Math.Max(0, Math.Min(yScrollValue, Data.NumLines - 1)), 0);
@@ -1894,7 +1887,7 @@ namespace NeoEdit
 				CurrentSelection = Selections.IndexOf(currentSelection);
 		}
 
-		Range MoveCursor(Range range, int cursor, bool selecting)
+		public Range MoveCursor(Range range, int cursor, bool selecting)
 		{
 			cursor = Math.Max(BeginOffset, Math.Min(cursor, EndOffset));
 			if (selecting)
@@ -2237,7 +2230,7 @@ namespace NeoEdit
 			return Selections.AsParallel().AsOrdered().Select(range => fileName.RelativeChild(GetString(range))).ToList();
 		}
 
-		void Replace(List<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		public void Replace(List<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
 			if (strs == null)
 				strs = Enumerable.Repeat("", ranges.Count).ToList();
@@ -2302,7 +2295,7 @@ namespace NeoEdit
 
 		void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false) => ReplaceSelections(Selections.Select(range => str).ToList(), highlight, replaceType, tryJoinUndo);
 
-		void ReplaceSelections(List<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		public void ReplaceSelections(List<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
 			Replace(Selections.ToList(), strs, replaceType, tryJoinUndo);
 
@@ -2405,7 +2398,7 @@ namespace NeoEdit
 				return;
 
 			watcherFileModified = false;
-			Command_File_Refresh(answer);
+			Command_File_Refresh(this, answer);
 		}
 
 		void SetModifiedFlag(bool? newValue = null)

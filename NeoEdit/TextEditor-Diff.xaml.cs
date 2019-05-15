@@ -59,14 +59,14 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Diff_Selections() => DoRangesDiff(Selections);
+		void Command_Diff_Selections(ITextEditor te) => DoRangesDiff(te.Selections);
 
-		void Command_Diff_SelectedFiles()
+		void Command_Diff_SelectedFiles(ITextEditor te)
 		{
-			if (!Selections.Any())
+			if (!te.Selections.Any())
 				return;
 
-			if (Selections.Count % 2 != 0)
+			if (te.Selections.Count % 2 != 0)
 				throw new Exception("Must have even number of selections.");
 
 			var files = GetSelectionStrings();
@@ -123,7 +123,7 @@ namespace NeoEdit
 			CalculateDiff();
 		}
 
-		DiffIgnoreCharactersDialog.Result Command_Diff_IgnoreCharacters_Dialog() => DiffIgnoreCharactersDialog.Run(TabsParent, diffIgnoreCharacters);
+		DiffIgnoreCharactersDialog.Result Command_Diff_IgnoreCharacters_Dialog(ITextEditor te) => DiffIgnoreCharactersDialog.Run(te.TabsParent, diffIgnoreCharacters);
 
 		void Command_Diff_IgnoreCharacters(DiffIgnoreCharactersDialog.Result result)
 		{
@@ -143,10 +143,10 @@ namespace NeoEdit
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			if ((TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget)) && (DiffTarget.Active))
+			if ((te.TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget)) && (DiffTarget.Active))
 				return;
 
-			var lines = Selections.AsParallel().AsOrdered().Select(range => GetDiffNextPrevious(te, range, next)).ToList();
+			var lines = te.Selections.AsParallel().AsOrdered().Select(range => GetDiffNextPrevious(te, range, next)).ToList();
 			for (var pass = 0; pass < 2; ++pass)
 			{
 				var target = pass == 0 ? this : DiffTarget;
@@ -157,18 +157,18 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Diff_CopyLeftRight(bool moveLeft)
+		void Command_Diff_CopyLeftRight(ITextEditor te, bool moveLeft)
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var target = TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget) ? this : DiffTarget;
+			var target = te.TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget) ? this : DiffTarget;
 			var source = target == this ? DiffTarget : this;
 			if (!moveLeft)
 				Helpers.Swap(ref target, ref source);
 
 			// If both tabs are active only do this from the target tab
-			var bothActive = TabsParent.TabIsActive(DiffTarget);
+			var bothActive = te.TabsParent.TabIsActive(DiffTarget);
 			if ((bothActive) && (target != this))
 				return;
 
@@ -179,7 +179,7 @@ namespace NeoEdit
 				source.ReplaceSelections(strs);
 		}
 
-		DiffFixWhitespaceDialog.Result Command_Diff_Fix_Whitespace_Dialog() => DiffFixWhitespaceDialog.Run(TabsParent);
+		DiffFixWhitespaceDialog.Result Command_Diff_Fix_Whitespace_Dialog(ITextEditor te) => DiffFixWhitespaceDialog.Run(te.TabsParent);
 
 		void Command_Diff_Fix_Whitespace(ITextEditor te, DiffFixWhitespaceDialog.Result result)
 		{
@@ -187,8 +187,8 @@ namespace NeoEdit
 				throw new Exception("Diff not in progress");
 
 			var fixes = TextData.GetDiffFixes(DiffTarget.Data, te.Data, result.LineStartTabStop, null, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
-			SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
-			ReplaceSelections(fixes.Item2);
+			te.SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
+			te.ReplaceSelections(fixes.Item2);
 		}
 
 		void Command_Diff_Fix_Case(ITextEditor te)
@@ -197,8 +197,8 @@ namespace NeoEdit
 				throw new Exception("Diff not in progress");
 
 			var fixes = TextData.GetDiffFixes(DiffTarget.Data, te.Data, 0, DiffIgnoreWhitespace, null, DiffIgnoreNumbers, DiffIgnoreLineEndings, diffIgnoreCharacters);
-			SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
-			ReplaceSelections(fixes.Item2);
+			te.SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
+			te.ReplaceSelections(fixes.Item2);
 		}
 
 		void Command_Diff_Fix_Numbers(ITextEditor te)
@@ -207,8 +207,8 @@ namespace NeoEdit
 				throw new Exception("Diff not in progress");
 
 			var fixes = TextData.GetDiffFixes(DiffTarget.Data, te.Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, null, DiffIgnoreLineEndings, diffIgnoreCharacters);
-			SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
-			ReplaceSelections(fixes.Item2);
+			te.SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
+			te.ReplaceSelections(fixes.Item2);
 		}
 
 		void Command_Diff_Fix_LineEndings(ITextEditor te)
@@ -217,8 +217,8 @@ namespace NeoEdit
 				throw new Exception("Diff not in progress");
 
 			var fixes = TextData.GetDiffFixes(DiffTarget.Data, te.Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, null, diffIgnoreCharacters);
-			SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
-			ReplaceSelections(fixes.Item2);
+			te.SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
+			te.ReplaceSelections(fixes.Item2);
 		}
 
 		void Command_Diff_Fix_Encoding()
@@ -234,7 +234,7 @@ namespace NeoEdit
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			SetSelections(te.Data.GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)).ToList());
+			te.SetSelections(te.Data.GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)).ToList());
 		}
 	}
 }

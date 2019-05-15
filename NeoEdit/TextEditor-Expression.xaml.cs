@@ -98,35 +98,35 @@ namespace NeoEdit
 			return inlineVars;
 		}
 
-		GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables(), Selections.Count);
+		GetExpressionDialog.Result Command_Expression_Expression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, GetVariables(), te.Selections.Count);
 
-		void Command_Expression_Expression(GetExpressionDialog.Result result) => ReplaceSelections(GetFixedExpressionResults<string>(result.Expression));
+		void Command_Expression_Expression(ITextEditor te, GetExpressionDialog.Result result) => te.ReplaceSelections(GetFixedExpressionResults<string>(result.Expression));
 
-		GetExpressionDialog.Result Command_Expression_Copy_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables());
+		GetExpressionDialog.Result Command_Expression_Copy_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, GetVariables());
 
 		void Command_Expression_Copy(GetExpressionDialog.Result result) => SetClipboardStrings(GetVariableExpressionResults<string>(result.Expression));
 
-		void Command_Expression_EvaluateSelected() => ReplaceSelections(GetFixedExpressionResults<string>("Eval(x)"));
+		void Command_Expression_EvaluateSelected(ITextEditor te) => te.ReplaceSelections(GetFixedExpressionResults<string>("Eval(x)"));
 
-		GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables(), Selections.Count);
+		GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, GetVariables(), te.Selections.Count);
 
-		void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)
+		void Command_Expression_SelectByExpression(ITextEditor te, GetExpressionDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<bool>(result.Expression);
-			SetSelections(Selections.Where((str, num) => results[num]).ToList());
+			te.SetSelections(te.Selections.Where((str, num) => results[num]).ToList());
 		}
 
-		void Command_Expression_InlineVariables_Add() => ReplaceSelections(GetSelectionStrings().Select(str => $"[:'{(string.IsNullOrEmpty(str) ? "0" : str)}'=0]").ToList());
+		void Command_Expression_InlineVariables_Add(ITextEditor te) => te.ReplaceSelections(GetSelectionStrings().Select(str => $"[:'{(string.IsNullOrEmpty(str) ? "0" : str)}'=0]").ToList());
 
 		void Command_Expression_InlineVariables_Calculate(ITextEditor te)
 		{
 			var inlineVars = GetInlineVariables(te);
 			CalculateInlineVariables(inlineVars);
 			inlineVars.Select(inlineVar => inlineVar.Exception).NonNull().ForEach(ex => throw ex);
-			Replace(inlineVars.Select(inlineVar => inlineVar.ValueRange).ToList(), inlineVars.Select(inlineVar => inlineVar.Value.ToString()).ToList());
+			te.Replace(inlineVars.Select(inlineVar => inlineVar.ValueRange).ToList(), inlineVars.Select(inlineVar => inlineVar.Value.ToString()).ToList());
 		}
 
-		ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog() => ExpressionSolveDialog.Run(TabsParent, GetVariables());
+		ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog(ITextEditor te) => ExpressionSolveDialog.Run(te.TabsParent, GetVariables());
 
 		void Command_Expression_InlineVariables_Solve(ITextEditor te, ExpressionSolveDialog.Result result, AnswerResult answer)
 		{
@@ -199,7 +199,7 @@ namespace NeoEdit
 			if (maxLoops == 0)
 			{
 				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
-					answer.Answer = new Message(TabsParent)
+					answer.Answer = new Message(te.TabsParent)
 					{
 						Title = "Confirm",
 						Text = "Unable to find value. Use best match?",
@@ -223,8 +223,8 @@ namespace NeoEdit
 				sels.Add(inlineVars[ctr].ValueRange);
 				values.Add(inlineVars[ctr].Value.ToString());
 			}
-			SetSelections(sels);
-			ReplaceSelections(values);
+			te.SetSelections(sels);
+			te.ReplaceSelections(values);
 		}
 
 		void Command_Expression_InlineVariables_IncludeInExpressions(bool? multiStatus) => IncludeInlineVariables = multiStatus != true;

@@ -11,14 +11,14 @@ namespace NeoEdit
 
 		void Command_DateTime_UtcNow() => ReplaceSelections(DateTimeOffset.UtcNow.ToString("O"));
 
-		DateTimeConvertDialog.Result Command_DateTime_Convert_Dialog()
+		DateTimeConvertDialog.Result Command_DateTime_Convert_Dialog(ITextEditor te)
 		{
-			if (Selections.Count < 1)
+			if (te.Selections.Count < 1)
 				return null;
 
-			return DateTimeConvertDialog.Run(TabsParent, GetString(Selections.First()));
+			return DateTimeConvertDialog.Run(te.TabsParent, GetString(te.Selections.First()));
 		}
 
-		void Command_DateTime_Convert(DateTimeConvertDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => DateTimeConvertDialog.ConvertFormat(GetString(range), result.InputFormat, result.InputTimeZone, result.OutputFormat, result.OutputTimeZone)).ToList());
+		void Command_DateTime_Convert(ITextEditor te, DateTimeConvertDialog.Result result) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => DateTimeConvertDialog.ConvertFormat(GetString(range), result.InputFormat, result.InputTimeZone, result.OutputFormat, result.OutputTimeZone)).ToList());
 	}
 }

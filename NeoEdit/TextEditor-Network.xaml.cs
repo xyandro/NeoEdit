@@ -66,13 +66,13 @@ namespace NeoEdit
 			}
 		}
 
-		NetworkAbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog() => NetworkAbsoluteURLDialog.Run(TabsParent, GetVariables());
+		NetworkAbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog(ITextEditor te) => NetworkAbsoluteURLDialog.Run(te.TabsParent, GetVariables());
 
-		void Command_Network_AbsoluteURL(NetworkAbsoluteURLDialog.Result result)
+		void Command_Network_AbsoluteURL(ITextEditor te, NetworkAbsoluteURLDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
-			var newStrs = Selections.Zip(results, (range, baseUrl) => new { range, baseUrl }).AsParallel().AsOrdered().Select(obj => new Uri(new Uri(obj.baseUrl), GetString(obj.range)).AbsoluteUri).ToList();
-			ReplaceSelections(newStrs);
+			var newStrs = te.Selections.Zip(results, (range, baseUrl) => new { range, baseUrl }).AsParallel().AsOrdered().Select(obj => new Uri(new Uri(obj.baseUrl), GetString(obj.range)).AbsoluteUri).ToList();
+			te.ReplaceSelections(newStrs);
 		}
 
 		void Command_Network_Fetch(ITextEditor te, Coder.CodePage codePage = Coder.CodePage.None)
@@ -80,18 +80,18 @@ namespace NeoEdit
 			var urls = GetSelectionStrings();
 			var results = Task.Run(() => GetURLs(te, urls, codePage).Result).Result;
 			if (results.Any(result => result.Item3))
-				new Message(TabsParent)
+				new Message(te.TabsParent)
 				{
 					Title = "Error",
 					Text = $"Failed to fetch the URLs:\n{string.Join("\n", results.Where(result => result.Item3).Select(result => result.Item1))}",
 					Options = Message.OptionsEnum.Ok,
 				}.Show();
-			ReplaceSelections(results.Select(result => result.Item2).ToList());
+			te.ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		NetworkFetchFileDialog.Result Command_Network_FetchFile_Dialog() => NetworkFetchFileDialog.Run(TabsParent, GetVariables());
+		NetworkFetchFileDialog.Result Command_Network_FetchFile_Dialog(ITextEditor te) => NetworkFetchFileDialog.Run(te.TabsParent, GetVariables());
 
-		void Command_Network_FetchFile(NetworkFetchFileDialog.Result result)
+		void Command_Network_FetchFile(ITextEditor te, NetworkFetchFileDialog.Result result)
 		{
 			var variables = GetVariables();
 
@@ -110,7 +110,7 @@ namespace NeoEdit
 			invalid = fileNames.Where(fileName => File.Exists(fileName)).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
-				if (new Message(TabsParent)
+				if (new Message(te.TabsParent)
 				{
 					Title = "Confirm",
 					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
@@ -121,12 +121,12 @@ namespace NeoEdit
 					return;
 			}
 
-			MultiProgressDialog.RunAsync(TabsParent, "Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
+			MultiProgressDialog.RunAsync(te.TabsParent, "Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
 		}
 
-		NetworkFetchStreamDialog.Result Command_Network_FetchStream_Dialog() => NetworkFetchStreamDialog.Run(TabsParent, GetVariables(), Path.GetDirectoryName(FileName) ?? "");
+		NetworkFetchStreamDialog.Result Command_Network_FetchStream_Dialog(ITextEditor te) => NetworkFetchStreamDialog.Run(te.TabsParent, GetVariables(), Path.GetDirectoryName(te.FileName) ?? "");
 
-		void Command_Network_FetchStream(NetworkFetchStreamDialog.Result result)
+		void Command_Network_FetchStream(ITextEditor te, NetworkFetchStreamDialog.Result result)
 		{
 			var urls = GetVariableExpressionResults<string>(result.Expression);
 			if (!urls.Any())
@@ -134,10 +134,10 @@ namespace NeoEdit
 
 			var now = DateTime.Now;
 			var data = urls.Select((url, index) => Tuple.Create(url, now + TimeSpan.FromSeconds(index))).ToList();
-			MultiProgressDialog.RunAsync(TabsParent, "Downloading...", data, async (item, progress, cancelled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, cancelled));
+			MultiProgressDialog.RunAsync(te.TabsParent, "Downloading...", data, async (item, progress, cancelled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, cancelled));
 		}
 
-		NetworkFetchStreamDialog.Result Command_Network_FetchPlaylist_Dialog() => NetworkFetchStreamDialog.Run(TabsParent, GetVariables(), null);
+		NetworkFetchStreamDialog.Result Command_Network_FetchPlaylist_Dialog(ITextEditor te) => NetworkFetchStreamDialog.Run(te.TabsParent, GetVariables(), null);
 
 		void Command_Network_FetchPlaylist(ITextEditor te, NetworkFetchStreamDialog.Result result)
 		{
@@ -145,17 +145,17 @@ namespace NeoEdit
 			if (!urls.Any())
 				return;
 
-			var items = MultiProgressDialog.RunAsync(TabsParent, "Getting playlist contents...", urls, async (item, progress, cancelled) => await YouTubeDL.GetPlayListItems(item, progress, cancelled)).ToList();
-			ReplaceSelections(items.Select(l => string.Join(te.Data.DefaultEnding, l)).ToList());
+			var items = MultiProgressDialog.RunAsync(te.TabsParent, "Getting playlist contents...", urls, async (item, progress, cancelled) => await YouTubeDL.GetPlayListItems(item, progress, cancelled)).ToList();
+			te.ReplaceSelections(items.Select(l => string.Join(te.Data.DefaultEnding, l)).ToList());
 		}
 
-		void Command_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
+		void Command_Network_Lookup_IP(ITextEditor te) { te.ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
-		void Command_Network_Lookup_HostName() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
+		void Command_Network_Lookup_HostName(ITextEditor te) { te.ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
-		void Command_Network_AdaptersInfo()
+		void Command_Network_AdaptersInfo(ITextEditor te)
 		{
-			if (Selections.Count != 1)
+			if (te.Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
 			var data = new List<List<string>>();
@@ -183,9 +183,9 @@ namespace NeoEdit
 			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
 		}
 
-		NetworkPingDialog.Result Command_Network_Ping_Dialog() => NetworkPingDialog.Run(TabsParent);
+		NetworkPingDialog.Result Command_Network_Ping_Dialog(ITextEditor te) => NetworkPingDialog.Run(te.TabsParent);
 
-		void Command_Network_Ping(NetworkPingDialog.Result result)
+		void Command_Network_Ping(ITextEditor te, NetworkPingDialog.Result result)
 		{
 			var replies = Task.Run(async () =>
 			{
@@ -206,16 +206,16 @@ namespace NeoEdit
 				}).ToList();
 				return await Task.WhenAll(strs);
 			}).Result.ToList();
-			ReplaceSelections(replies);
+			te.ReplaceSelections(replies);
 		}
 
-		NetworkScanPortsDialog.Result Command_Network_ScanPorts_Dialog() => NetworkScanPortsDialog.Run(TabsParent);
+		NetworkScanPortsDialog.Result Command_Network_ScanPorts_Dialog(ITextEditor te) => NetworkScanPortsDialog.Run(te.TabsParent);
 
-		void Command_Network_ScanPorts(NetworkScanPortsDialog.Result result)
+		void Command_Network_ScanPorts(ITextEditor te, NetworkScanPortsDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			var results = PortScanner.ScanPorts(strs.Select(str => IPAddress.Parse(str)).ToList(), result.Ports, result.Attempts, TimeSpan.FromMilliseconds(result.Timeout), result.Concurrency);
-			ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
+			te.ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
 		}
 	}
 }

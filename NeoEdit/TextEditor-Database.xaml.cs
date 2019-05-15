@@ -57,7 +57,7 @@ namespace NeoEdit
 				throw new Exception("No connection.");
 		}
 
-		DatabaseConnectDialog.Result Command_Database_Connect_Dialog() => DatabaseConnectDialog.Run(TabsParent);
+		DatabaseConnectDialog.Result Command_Database_Connect_Dialog(ITextEditor te) => DatabaseConnectDialog.Run(te.TabsParent);
 
 		void Command_Database_Connect(DatabaseConnectDialog.Result result)
 		{
@@ -73,9 +73,9 @@ namespace NeoEdit
 		void Command_Database_ExecuteQuery(ITextEditor te)
 		{
 			ValidateConnection();
-			var selections = Selections.ToList();
-			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
-				selections = new List<Range> { FullRange };
+			var selections = te.Selections.ToList();
+			if ((te.Selections.Count == 1) && (!te.Selections[0].HasSelection))
+				selections = new List<Range> { te.FullRange };
 			var strs = GetSelectionStrings();
 			// Not in parallel because prior selections may affect later ones
 			var results = selections.Select((range, index) => RunDBSelect(strs[index])).ToList();
@@ -89,21 +89,21 @@ namespace NeoEdit
 					OpenTable(te, table.Table, table.TableName);
 			}
 
-			ReplaceSelections(strs);
+			te.ReplaceSelections(strs);
 		}
 
-		void Command_Database_Examine_Dialog()
+		void Command_Database_Examine_Dialog(ITextEditor te)
 		{
 			ValidateConnection();
-			DatabaseExamineDialog.Run(TabsParent, dbConnection);
+			DatabaseExamineDialog.Run(te.TabsParent, dbConnection);
 		}
 
-		void Command_Database_GetSproc()
+		void Command_Database_GetSproc(ITextEditor te)
 		{
 			ValidateConnection();
 
 			var results = new List<string>();
-			foreach (var selection in Selections)
+			foreach (var selection in te.Selections)
 			{
 				var sproc = GetString(selection);
 				var result = "Success";
@@ -118,12 +118,12 @@ namespace NeoEdit
 								text += reader.GetString(0);
 					}
 
-					TabsParent.Add(new TextEditor(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: Parser.ParserType.SQL, modified: false));
+					te.TabsParent.Add(new TextEditor(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: Parser.ParserType.SQL, modified: false));
 				}
 				catch (Exception ex) { result = ex.Message; }
 				results.Add($"{sproc}: {result}");
 			}
-			ReplaceSelections(results);
+			te.ReplaceSelections(results);
 		}
 	}
 }

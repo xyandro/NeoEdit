@@ -2,9 +2,9 @@
 {
 	partial class TextEditor
 	{
-		void Command_View_TabIndex(bool activeOnly)
+		void Command_View_TabIndex(ITextEditor te, bool activeOnly)
 		{
-			ReplaceSelections((TabsParent.GetIndex(this, activeOnly) + 1).ToString());
+			ReplaceSelections((te.TabsParent.GetIndex(this, activeOnly) + 1).ToString());
 		}
 	}
 }

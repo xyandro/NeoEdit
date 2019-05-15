@@ -77,9 +77,9 @@ namespace NeoEdit
 				staticKeysAndValues[ctr] = new ObservableCollection<string>();
 		}
 
-		void Command_Keys_Set(int index, bool caseSensitive = true)
+		void Command_Keys_Set(ITextEditor te, int index, bool caseSensitive = true)
 		{
-			GlobalKeys = TabsParent.ActiveCount == 1;
+			GlobalKeys = te.TabsParent.ActiveCount == 1;
 			// Handles keys as well as values
 			var values = GetSelectionStrings();
 			if ((index == 0) && (values.Distinct(str => caseSensitive ? str : str.ToLowerInvariant()).Count() != values.Count))
@@ -121,14 +121,14 @@ namespace NeoEdit
 				KeysAndValues[index].Remove(value);
 		}
 
-		void Command_Keys_Replace(int index)
+		void Command_Keys_Replace(ITextEditor te, int index)
 		{
 			// Handles keys as well as values
 			if (KeysAndValues[0].Count != KeysAndValues[index].Count)
 				throw new Exception("Keys and values count must match");
 
 			var strs = new List<string>();
-			foreach (var range in Selections)
+			foreach (var range in te.Selections)
 			{
 				var str = GetString(range);
 				if (!keysHash.ContainsKey(str))
@@ -136,7 +136,7 @@ namespace NeoEdit
 				else
 					strs.Add(KeysAndValues[index][keysHash[str]]);
 			}
-			ReplaceSelections(strs);
+			te.ReplaceSelections(strs);
 		}
 	}
 }

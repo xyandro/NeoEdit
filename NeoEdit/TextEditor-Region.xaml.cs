@@ -9,29 +9,29 @@ namespace NeoEdit
 {
 	partial class TextEditor
 	{
-		List<Tuple<Range, List<Range>>> GetRegionsWithSelections(int useRegion)
+		List<Tuple<Range, List<Range>>> GetRegionsWithSelections(ITextEditor te, int useRegion)
 		{
 			var result = new List<Tuple<Range, List<Range>>>();
 			var currentSelection = 0;
 			foreach (var region in Regions[useRegion])
 			{
 				var sels = new List<Range>();
-				if ((currentSelection < Selections.Count) && (Selections[currentSelection].Start < region.Start))
+				if ((currentSelection < te.Selections.Count) && (te.Selections[currentSelection].Start < region.Start))
 					throw new Exception("No region found.  All selections must be inside a region.");
-				while ((currentSelection < Selections.Count) && (Selections[currentSelection].End <= region.End))
-					sels.Add(Selections[currentSelection++]);
+				while ((currentSelection < te.Selections.Count) && (te.Selections[currentSelection].End <= region.End))
+					sels.Add(te.Selections[currentSelection++]);
 
 				result.Add(Tuple.Create(region, sels));
 			}
-			if (currentSelection != Selections.Count)
+			if (currentSelection != te.Selections.Count)
 				throw new Exception("No region found.  All selections must be inside a region.");
 
 			return result;
 		}
 
-		List<List<string>> GetRegionsWithSelectionsText(int useRegion, bool mustBeSameSize = true)
+		List<List<string>> GetRegionsWithSelectionsText(ITextEditor te, int useRegion, bool mustBeSameSize = true)
 		{
-			var list = GetSelectionStrings().Zip(GetEnclosingRegions(useRegion, true), (selection, region) => new { selection, region }).GroupBy(obj => obj.region).Select(group => group.Select(obj => obj.selection).ToList()).ToList();
+			var list = GetSelectionStrings().Zip(GetEnclosingRegions(te, useRegion, true), (selection, region) => new { selection, region }).GroupBy(obj => obj.region).Select(group => group.Select(obj => obj.selection).ToList()).ToList();
 			if ((mustBeSameSize) && (list.Select(items => items.Count).Distinct().Count() > 1))
 				throw new Exception("All regions must have the same number of selections");
 			return list;
@@ -65,23 +65,23 @@ namespace NeoEdit
 
 			var strs = new List<string> { sb.ToString() };
 			strs.AddRange(Enumerable.Repeat("", useRegions.Count - 1));
-			Replace(useRegions.ToList(), strs);
+			te.Replace(useRegions.ToList(), strs);
 			SetRegions(useRegion, newRegions);
-			SetSelections(newSelections);
+			te.SetSelections(newSelections);
 		}
 
-		RegionModifyRegionsDialog.Result Command_Region_ModifyRegions_Dialog() => RegionModifyRegionsDialog.Run(TabsParent);
+		RegionModifyRegionsDialog.Result Command_Region_ModifyRegions_Dialog(ITextEditor te) => RegionModifyRegionsDialog.Run(te.TabsParent);
 
-		void Command_Region_ModifyRegions(RegionModifyRegionsDialog.Result result)
+		void Command_Region_ModifyRegions(ITextEditor te, RegionModifyRegionsDialog.Result result)
 		{
 			switch (result.Action)
 			{
 				case RegionModifyRegionsDialog.Action.Select:
-					SetSelections(result.Regions.SelectMany(useRegion => Regions[useRegion]).ToList());
+					te.SetSelections(result.Regions.SelectMany(useRegion => Regions[useRegion]).ToList());
 					break;
 				case RegionModifyRegionsDialog.Action.Set:
 					foreach (var useRegion in result.Regions)
-						SetRegions(useRegion, Selections.ToList());
+						SetRegions(useRegion, te.Selections.ToList());
 					break;
 				case RegionModifyRegionsDialog.Action.Clear:
 					foreach (var useRegion in result.Regions)
@@ -92,7 +92,7 @@ namespace NeoEdit
 					{
 						var newRegions = new List<Range>();
 						var regionIndex = 0;
-						foreach (var selection in Selections)
+						foreach (var selection in te.Selections)
 						{
 							while ((regionIndex < Regions[useRegion].Count) && (Regions[useRegion][regionIndex].End <= selection.Start) && (!Regions[useRegion][regionIndex].Equals(selection)))
 								newRegions.Add(Regions[useRegion][regionIndex++]);
@@ -109,7 +109,7 @@ namespace NeoEdit
 					{
 						var newRegions = new List<Range>();
 						var regionIndex = 0;
-						foreach (var selection in Selections)
+						foreach (var selection in te.Selections)
 						{
 							while ((regionIndex < Regions[useRegion].Count) && (Regions[useRegion][regionIndex].End <= selection.Start) && (!Regions[useRegion][regionIndex].Equals(selection)))
 								newRegions.Add(Regions[useRegion][regionIndex++]);
@@ -133,7 +133,7 @@ namespace NeoEdit
 							if ((region == null) && (regionIndex < Regions[useRegion].Count))
 								region = Regions[useRegion][regionIndex++];
 
-							if (selectionIndex >= Selections.Count)
+							if (selectionIndex >= te.Selections.Count)
 							{
 								if (region == null)
 									break;
@@ -141,24 +141,24 @@ namespace NeoEdit
 								region = null;
 							}
 							else if (region == null)
-								newRegions.Add(Selections[selectionIndex++]);
-							else if (region.Equals(Selections[selectionIndex]))
+								newRegions.Add(te.Selections[selectionIndex++]);
+							else if (region.Equals(te.Selections[selectionIndex]))
 								region = null;
-							else if (region.End <= Selections[selectionIndex].Start)
+							else if (region.End <= te.Selections[selectionIndex].Start)
 							{
 								newRegions.Add(region);
 								region = null;
 							}
-							else if (Selections[selectionIndex].End <= region.Start)
-								newRegions.Add(Selections[selectionIndex++]);
+							else if (te.Selections[selectionIndex].End <= region.Start)
+								newRegions.Add(te.Selections[selectionIndex++]);
 							else
 							{
-								if (region.Start < Selections[selectionIndex].Start)
-									newRegions.Add(new Range(region.Start, Selections[selectionIndex].Start));
-								if (region.End <= Selections[selectionIndex].End)
+								if (region.Start < te.Selections[selectionIndex].Start)
+									newRegions.Add(new Range(region.Start, te.Selections[selectionIndex].Start));
+								if (region.End <= te.Selections[selectionIndex].End)
 									region = null;
 								else
-									region = new Range(Selections[selectionIndex].End, region.End);
+									region = new Range(te.Selections[selectionIndex].End, region.End);
 							}
 						}
 						SetRegions(useRegion, newRegions);
@@ -169,7 +169,7 @@ namespace NeoEdit
 					{
 						var newRegions = new List<Range>();
 						var startRegionIndex = 0;
-						foreach (var selection in Selections)
+						foreach (var selection in te.Selections)
 						{
 							var regionIndex = startRegionIndex;
 							while ((regionIndex < Regions[useRegion].Count) && (Regions[useRegion][regionIndex].End < selection.Start))
@@ -198,22 +198,22 @@ namespace NeoEdit
 						var selectionIndex = 0;
 						while (regionIndex < regions.Count)
 						{
-							if (selectionIndex >= Selections.Count)
+							if (selectionIndex >= te.Selections.Count)
 								newRegions.Add(regions[regionIndex++]);
-							else if (Selections[selectionIndex].Equals(regions[regionIndex]))
+							else if (te.Selections[selectionIndex].Equals(regions[regionIndex]))
 								regionIndex++;
-							else if (regions[regionIndex].End < Selections[selectionIndex].Start)
+							else if (regions[regionIndex].End < te.Selections[selectionIndex].Start)
 								newRegions.Add(regions[regionIndex++]);
-							else if (Selections[selectionIndex].End < regions[regionIndex].Start)
+							else if (te.Selections[selectionIndex].End < regions[regionIndex].Start)
 								++selectionIndex;
 							else
 							{
-								if (regions[regionIndex].Start < Selections[selectionIndex].Start)
-									newRegions.Add(new Range(regions[regionIndex].Start, Selections[selectionIndex].Start));
-								while ((regionIndex < regions.Count) && (regions[regionIndex].End <= Selections[selectionIndex].End))
+								if (regions[regionIndex].Start < te.Selections[selectionIndex].Start)
+									newRegions.Add(new Range(regions[regionIndex].Start, te.Selections[selectionIndex].Start));
+								while ((regionIndex < regions.Count) && (regions[regionIndex].End <= te.Selections[selectionIndex].End))
 									regionIndex++;
-								if ((regionIndex < regions.Count) && (regions[regionIndex].Start < Selections[selectionIndex].End))
-									regions[regionIndex] = new Range(Selections[selectionIndex].End, regions[regionIndex].End);
+								if ((regionIndex < regions.Count) && (regions[regionIndex].Start < te.Selections[selectionIndex].End))
+									regions[regionIndex] = new Range(te.Selections[selectionIndex].End, regions[regionIndex].End);
 								++selectionIndex;
 							}
 						}
@@ -224,11 +224,11 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Region_SetSelections_Region(int? useRegion = null) => Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => SetRegions(key, Selections.ToList()));
+		void Command_Region_SetSelections_Region(ITextEditor te, int? useRegion = null) => Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => SetRegions(key, te.Selections.ToList()));
 
-		void Command_Region_AddSelections_Region(int? useRegion = null) => Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => SetRegions(key, Regions[key].Concat(Selections).ToList()));
+		void Command_Region_AddSelections_Region(ITextEditor te, int? useRegion = null) => Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => SetRegions(key, Regions[key].Concat(te.Selections).ToList()));
 
-		void Command_Region_RemoveSelections_Region(int? useRegion = null)
+		void Command_Region_RemoveSelections_Region(ITextEditor te, int? useRegion = null)
 		{
 			foreach (var key in Regions.Keys.ToList())
 			{
@@ -237,7 +237,7 @@ namespace NeoEdit
 
 				var regions = new List<Range>();
 				var regionIndex = 0;
-				foreach (var selection in Selections)
+				foreach (var selection in te.Selections)
 				{
 					while ((regionIndex < Regions[key].Count) && (Regions[key][regionIndex].End <= selection.Start) && (!Regions[key][regionIndex].Equals(selection)))
 						regions.Add(Regions[key][regionIndex++]);
@@ -250,7 +250,7 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Region_ReplaceSelections_Region(int? useRegion = null)
+		void Command_Region_ReplaceSelections_Region(ITextEditor te, int? useRegion = null)
 		{
 			foreach (var key in Regions.Keys.ToList())
 			{
@@ -259,7 +259,7 @@ namespace NeoEdit
 
 				var regions = new List<Range>();
 				var regionIndex = 0;
-				foreach (var selection in Selections)
+				foreach (var selection in te.Selections)
 				{
 					while ((regionIndex < Regions[key].Count) && (Regions[key][regionIndex].End <= selection.Start) && (!Regions[key][regionIndex].Equals(selection)))
 						regions.Add(Regions[key][regionIndex++]);
@@ -273,7 +273,7 @@ namespace NeoEdit
 			}
 		}
 
-		void Command_Region_LimitToSelections_Region(int? useRegion = null)
+		void Command_Region_LimitToSelections_Region(ITextEditor te, int? useRegion = null)
 		{
 			foreach (var key in Regions.Keys.ToList())
 			{
@@ -282,7 +282,7 @@ namespace NeoEdit
 
 				var regions = new List<Range>();
 				var regionIndex = 0;
-				foreach (var selection in Selections)
+				foreach (var selection in te.Selections)
 				{
 					while ((regionIndex < Regions[key].Count) && (Regions[key][regionIndex].Start < selection.Start))
 						++regionIndex;
@@ -295,10 +295,10 @@ namespace NeoEdit
 
 		void Command_Region_Clear_Region(int? useRegion = null) => Regions.Keys.ToList().Where(key => key == (useRegion ?? key)).ForEach(key => SetRegions(key, new List<Range>()));
 
-		void Command_Region_RepeatBySelections_Region(int useRegion)
+		void Command_Region_RepeatBySelections_Region(ITextEditor te, int useRegion)
 		{
 			var useRegions = Regions[useRegion];
-			var regionsWithSelections = GetRegionsWithSelections(useRegion);
+			var regionsWithSelections = GetRegionsWithSelections(te, useRegion);
 			var offset = 0;
 			var newRegionStrs = new List<string>();
 			var newRegions = new List<Range>();
@@ -314,34 +314,34 @@ namespace NeoEdit
 					newSelections.Add(new Range(selection.Cursor + offset, selection.Anchor + offset));
 				}
 			}
-			Replace(useRegions.ToList(), newRegionStrs);
+			te.Replace(useRegions.ToList(), newRegionStrs);
 			SetRegions(useRegion, newRegions);
-			SetSelections(newSelections);
+			te.SetSelections(newSelections);
 		}
 
-		void Command_Region_CopyEnclosingRegion_Region(int useRegion) => SetClipboardStrings(GetEnclosingRegions(useRegion).Select(range => GetString(range)).ToList());
+		void Command_Region_CopyEnclosingRegion_Region(ITextEditor te, int useRegion) => SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(range => GetString(range)).ToList());
 
-		void Command_Region_CopyEnclosingRegionIndex_Region(int useRegion) => SetClipboardStrings(GetEnclosingRegions(useRegion).Select(region => (Regions[useRegion].IndexOf(region) + 1).ToString()).ToList());
+		void Command_Region_CopyEnclosingRegionIndex_Region(ITextEditor te, int useRegion) => SetClipboardStrings(GetEnclosingRegions(te, useRegion).Select(region => (Regions[useRegion].IndexOf(region) + 1).ToString()).ToList());
 
-		void Command_Region_TransformSelections_Flatten_Region(ITextEditor te, int useRegion) => SetRegionsWithSelectionsText(te, useRegion, GetRegionsWithSelectionsText(useRegion, false), false);
+		void Command_Region_TransformSelections_Flatten_Region(ITextEditor te, int useRegion) => SetRegionsWithSelectionsText(te, useRegion, GetRegionsWithSelectionsText(te, useRegion, false), false);
 
 		void Command_Region_TransformSelections_Transpose_Region(ITextEditor te, int useRegion)
 		{
-			var regions = GetRegionsWithSelectionsText(useRegion);
+			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			var count = regions.Select(region => region.Count).FirstOrDefault();
 			SetRegionsWithSelectionsText(te, useRegion, Enumerable.Range(0, count).Select(index => regions.Select(strs => strs[index]).ToList()).ToList());
 		}
 
 		void Command_Region_TransformSelections_RotateLeft_Region(ITextEditor te, int useRegion)
 		{
-			var regions = GetRegionsWithSelectionsText(useRegion);
+			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			var count = regions.Select(region => region.Count).FirstOrDefault();
 			SetRegionsWithSelectionsText(te, useRegion, Enumerable.Range(0, count).Select(index => regions.Select(region => region[region.Count - 1 - index]).ToList()).ToList());
 		}
 
 		void Command_Region_TransformSelections_RotateRight_Region(ITextEditor te, int useRegion)
 		{
-			var regions = GetRegionsWithSelectionsText(useRegion);
+			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			regions.Reverse();
 			var count = regions.Select(region => region.Count).FirstOrDefault();
 			SetRegionsWithSelectionsText(te, useRegion, Enumerable.Range(0, count).Select(index => regions.Select(region => region[index]).ToList()).ToList());
@@ -349,7 +349,7 @@ namespace NeoEdit
 
 		void Command_Region_TransformSelections_Rotate180_Region(ITextEditor te, int useRegion)
 		{
-			var regions = GetRegionsWithSelectionsText(useRegion);
+			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			regions.Reverse();
 			regions.ForEach(list => list.Reverse());
 			SetRegionsWithSelectionsText(te, useRegion, regions);
@@ -357,29 +357,29 @@ namespace NeoEdit
 
 		void Command_Region_TransformSelections_MirrorHorizontal_Region(ITextEditor te, int useRegion)
 		{
-			var regions = GetRegionsWithSelectionsText(useRegion);
+			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			regions.ForEach(list => list.Reverse());
 			SetRegionsWithSelectionsText(te, useRegion, regions);
 		}
 
 		void Command_Region_TransformSelections_MirrorVertical_Region(ITextEditor te, int useRegion)
 		{
-			var regions = GetRegionsWithSelectionsText(useRegion);
+			var regions = GetRegionsWithSelectionsText(te, useRegion);
 			regions.Reverse();
 			SetRegionsWithSelectionsText(te, useRegion, regions);
 		}
 
-		void Command_Region_Select_Regions_Region(bool shiftDown, int? useRegion = null)
+		void Command_Region_Select_Regions_Region(ITextEditor te, bool shiftDown, int? useRegion = null)
 		{
-			var sels = shiftDown ? Selections.ToList() : new List<Range>();
+			var sels = shiftDown ? te.Selections.ToList() : new List<Range>();
 			sels.AddRange(Regions.Where(pair => pair.Key == (useRegion ?? pair.Key)).SelectMany(pair => pair.Value));
-			SetSelections(sels);
+			te.SetSelections(sels);
 		}
 
-		void Command_Region_Select_EnclosingRegion_Region(int useRegion) => SetSelections(GetEnclosingRegions(useRegion));
+		void Command_Region_Select_EnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(GetEnclosingRegions(te, useRegion));
 
-		void Command_Region_Select_WithEnclosingRegion_Region(int useRegion) => SetSelections(Selections.Zip(GetEnclosingRegions(useRegion, mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
+		void Command_Region_Select_WithEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.Selections.Zip(GetEnclosingRegions(te, useRegion, mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
 
-		void Command_Region_Select_WithoutEnclosingRegion_Region(int useRegion) => SetSelections(Selections.Zip(GetEnclosingRegions(useRegion, mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList());
+		void Command_Region_Select_WithoutEnclosingRegion_Region(ITextEditor te, int useRegion) => te.SetSelections(te.Selections.Zip(GetEnclosingRegions(te, useRegion, mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList());
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace NeoEdit
 {
-	class Range
+	public class Range
 	{
 		public Range() : this(0) { }
 		public Range(int pos) : this(pos, pos) { }

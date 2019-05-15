@@ -6,7 +6,7 @@ using NeoEdit;
 
 namespace NeoEdit
 {
-	class RangeList : IEnumerable<Range>
+	public class RangeList : IEnumerable<Range>
 	{
 		List<Range> items = new List<Range>();
 

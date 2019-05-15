@@ -52,19 +52,19 @@ namespace NeoEdit
 			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 			textEditor.ContentType = contentType;
 			textEditor.DisplayName = name;
-			TabsParent.Add(textEditor);
+			te.TabsParent.Add(textEditor);
 		}
 
 		void SetText(ITextEditor te, Table table)
 		{
 			var output = GetTableText(te, table);
-			Replace(new List<Range> { FullRange }, new List<string> { output });
-			SetSelections(new List<Range> { BeginRange });
+			te.Replace(new List<Range> { te.FullRange }, new List<string> { output });
+			te.SetSelections(new List<Range> { BeginRange });
 		}
 
 		void Command_Table_DetectType(ITextEditor te) => te.ContentType = Table.GuessTableType(AllText);
 
-		TableConvertDialog.Result Command_Table_Convert_Dialog(ITextEditor te) => TableConvertDialog.Run(TabsParent, te.ContentType);
+		TableConvertDialog.Result Command_Table_Convert_Dialog(ITextEditor te) => TableConvertDialog.Run(te.TabsParent, te.ContentType);
 
 		void Command_Table_Convert(ITextEditor te, TableConvertDialog.Result result)
 		{
@@ -73,21 +73,21 @@ namespace NeoEdit
 			SetText(te, table);
 		}
 
-		TableTextToTableDialog.Result Command_Table_TextToTable_Dialog()
+		TableTextToTableDialog.Result Command_Table_TextToTable_Dialog(ITextEditor te)
 		{
-			if (Selections.Count != 1)
+			if (te.Selections.Count != 1)
 				throw new Exception("Must have one selection");
-			if (!Selections[0].HasSelection)
+			if (!te.Selections[0].HasSelection)
 				throw new Exception("Must have data selected");
 
-			return TableTextToTableDialog.Run(TabsParent, GetSelectionStrings().Single());
+			return TableTextToTableDialog.Run(te.TabsParent, GetSelectionStrings().Single());
 		}
 
 		void Command_Table_TextToTable(ITextEditor te, TableTextToTableDialog.Result result)
 		{
-			if (Selections.Count != 1)
+			if (te.Selections.Count != 1)
 				throw new Exception("Must have one selection");
-			if (!Selections[0].HasSelection)
+			if (!te.Selections[0].HasSelection)
 				throw new Exception("Must have data selected");
 
 			var columns = new List<Tuple<int, int>>();
@@ -99,31 +99,31 @@ namespace NeoEdit
 
 		void Command_Table_LineSelectionsToTable(ITextEditor te)
 		{
-			if (!Selections.Any())
+			if (!te.Selections.Any())
 				return;
 
-			var lineSets = Selections.AsParallel().AsOrdered().Select(range => new { start = te.Data.GetOffsetLine(range.Start), end = te.Data.GetOffsetLine(range.End) }).ToList();
+			var lineSets = te.Selections.AsParallel().AsOrdered().Select(range => new { start = te.Data.GetOffsetLine(range.Start), end = te.Data.GetOffsetLine(range.End) }).ToList();
 			if (lineSets.Any(range => range.start != range.end))
 				throw new Exception("Cannot have multi-line selections");
 
 			var sels = GetSelectionStrings();
 			var lines = lineSets.Select(range => range.start).ToList();
-			var rows = Enumerable.Range(0, Selections.Count).GroupBy(index => lines[index]).Select(group => group.Select(index => sels[index]).ToList()).ToList();
+			var rows = Enumerable.Range(0, te.Selections.Count).GroupBy(index => lines[index]).Select(group => group.Select(index => sels[index]).ToList()).ToList();
 			OpenTable(te, new Table(rows, false));
 		}
 
 		void Command_Table_RegionSelectionsToTable_Region(ITextEditor te, int useRegion)
 		{
-			if (!Selections.Any())
+			if (!te.Selections.Any())
 				return;
 
 			var sels = GetSelectionStrings();
-			var regions = GetEnclosingRegions(useRegion);
-			var rows = Enumerable.Range(0, Selections.Count).GroupBy(index => regions[index]).Select(group => group.Select(index => sels[index]).ToList()).ToList();
+			var regions = GetEnclosingRegions(te, useRegion);
+			var rows = Enumerable.Range(0, te.Selections.Count).GroupBy(index => regions[index]).Select(group => group.Select(index => sels[index]).ToList()).ToList();
 			OpenTable(te, new Table(rows, false));
 		}
 
-		TableEditTableDialog.Result Command_Table_EditTable_Dialog(ITextEditor te) => TableEditTableDialog.Run(TabsParent, GetTable(te));
+		TableEditTableDialog.Result Command_Table_EditTable_Dialog(ITextEditor te) => TableEditTableDialog.Run(te.TabsParent, GetTable(te));
 
 		void Command_Table_EditTable(ITextEditor te, TableEditTableDialog.Result result) => SetText(te, GetTable(te).Aggregate(result.AggregateData).Sort(result.SortData));
 
@@ -139,7 +139,7 @@ namespace NeoEdit
 		TableAddColumnDialog.Result Command_Table_AddColumn_Dialog(ITextEditor te)
 		{
 			var table = GetTable(te);
-			return TableAddColumnDialog.Run(TabsParent, GetTableVariables(table), table.NumRows);
+			return TableAddColumnDialog.Run(te.TabsParent, GetTableVariables(table), table.NumRows);
 		}
 
 		void Command_Table_AddColumn(ITextEditor te, TableAddColumnDialog.Result result)
@@ -154,7 +154,7 @@ namespace NeoEdit
 		GetExpressionDialog.Result Command_Table_Select_RowsByExpression_Dialog(ITextEditor te)
 		{
 			var table = GetTable(te);
-			return GetExpressionDialog.Run(TabsParent, GetTableVariables(table), table.NumRows);
+			return GetExpressionDialog.Run(te.TabsParent, GetTableVariables(table), table.NumRows);
 		}
 
 		void Command_Table_Select_RowsByExpression(ITextEditor te, GetExpressionDialog.Result result)
@@ -163,7 +163,7 @@ namespace NeoEdit
 			var variables = GetTableVariables(table);
 			var results = new NEExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
-			SetSelections(lines.AsParallel().AsOrdered().Select(line => new Range(te.Data.GetOffset(line, te.Data.GetLineLength(line)), te.Data.GetOffset(line, 0))).ToList());
+			te.SetSelections(lines.AsParallel().AsOrdered().Select(line => new Range(te.Data.GetOffset(line, te.Data.GetLineLength(line)), te.Data.GetOffset(line, 0))).ToList());
 		}
 
 		void Command_Table_SetJoinSource(ITextEditor te) => joinTable = GetTable(te);
@@ -173,7 +173,7 @@ namespace NeoEdit
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
 
-			return TableJoinDialog.Run(TabsParent, GetTable(te), joinTable);
+			return TableJoinDialog.Run(te.TabsParent, GetTable(te), joinTable);
 		}
 
 		void Command_Table_Join(ITextEditor te, TableJoinDialog.Result result)
@@ -186,14 +186,14 @@ namespace NeoEdit
 
 		void Command_Table_Transpose(ITextEditor te) => SetText(te, GetTable(te).Transpose());
 
-		TableDatabaseGenerateInsertsDialog.Result Command_Table_Database_GenerateInserts_Dialog(ITextEditor te) => TableDatabaseGenerateInsertsDialog.Run(TabsParent, GetTable(te), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		TableDatabaseGenerateInsertsDialog.Result Command_Table_Database_GenerateInserts_Dialog(ITextEditor te) => TableDatabaseGenerateInsertsDialog.Run(te.TabsParent, GetTable(te), te.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(te.FileName));
 
 		void Command_Table_Database_GenerateInserts(ITextEditor te, TableDatabaseGenerateInsertsDialog.Result result)
 		{
 			var table = GetTable(te);
 			var header = $"INSERT INTO {result.TableName} ({string.Join(", ", Enumerable.Range(0, table.NumColumns).Select(column => table.GetHeader(column)))}) VALUES{(result.BatchSize == 1 ? " " : te.Data.DefaultEnding)}";
 			var output = Enumerable.Range(0, table.NumRows).Batch(result.BatchSize).Select(batch => string.Join($",{te.Data.DefaultEnding}", batch.Select(row => $"({string.Join(", ", result.Columns.Select(column => GetDBValue(table[row, column])))})"))).Select(val => $"{header}{val}{te.Data.DefaultEnding}").ToList();
-			Replace(new List<Range> { FullRange }, new List<string> { string.Join("", output) });
+			te.Replace(new List<Range> { te.FullRange }, new List<string> { string.Join("", output) });
 
 			var offset = 0;
 			var sels = new List<Range>();
@@ -202,17 +202,17 @@ namespace NeoEdit
 				sels.Add(Range.FromIndex(offset, item.Length));
 				offset += item.Length;
 			}
-			SetSelections(sels);
+			te.SetSelections(sels);
 		}
 
-		TableDatabaseGenerateUpdatesDialog.Result Command_Table_Database_GenerateUpdates_Dialog(ITextEditor te) => TableDatabaseGenerateUpdatesDialog.Run(TabsParent, GetTable(te), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		TableDatabaseGenerateUpdatesDialog.Result Command_Table_Database_GenerateUpdates_Dialog(ITextEditor te) => TableDatabaseGenerateUpdatesDialog.Run(te.TabsParent, GetTable(te), te.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(te.FileName));
 
 		void Command_Table_Database_GenerateUpdates(ITextEditor te, TableDatabaseGenerateUpdatesDialog.Result result)
 		{
 			var table = GetTable(te);
 
 			var output = Enumerable.Range(0, table.NumRows).Select(row => $"UPDATE {result.TableName} SET {string.Join(", ", result.Update.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{te.Data.DefaultEnding}").ToList();
-			Replace(new List<Range> { FullRange }, new List<string> { string.Join("", output) });
+			te.Replace(new List<Range> { te.FullRange }, new List<string> { string.Join("", output) });
 
 			var offset = 0;
 			var sels = new List<Range>();
@@ -221,17 +221,17 @@ namespace NeoEdit
 				sels.Add(Range.FromIndex(offset, item.Length));
 				offset += item.Length;
 			}
-			SetSelections(sels);
+			te.SetSelections(sels);
 		}
 
-		TableDatabaseGenerateDeletesDialog.Result Command_Table_Database_GenerateDeletes_Dialog(ITextEditor te) => TableDatabaseGenerateDeletesDialog.Run(TabsParent, GetTable(te), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		TableDatabaseGenerateDeletesDialog.Result Command_Table_Database_GenerateDeletes_Dialog(ITextEditor te) => TableDatabaseGenerateDeletesDialog.Run(te.TabsParent, GetTable(te), te.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(te.FileName));
 
 		void Command_Table_Database_GenerateDeletes(ITextEditor te, TableDatabaseGenerateDeletesDialog.Result result)
 		{
 			var table = GetTable(te);
 
 			var output = Enumerable.Range(0, table.NumRows).Select(row => $"DELETE FROM {result.TableName} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{te.Data.DefaultEnding}").ToList();
-			Replace(new List<Range> { FullRange }, new List<string> { string.Join("", output) });
+			te.Replace(new List<Range> { te.FullRange }, new List<string> { string.Join("", output) });
 
 			var offset = 0;
 			var sels = new List<Range>();
@@ -240,7 +240,7 @@ namespace NeoEdit
 				sels.Add(Range.FromIndex(offset, item.Length));
 				offset += item.Length;
 			}
-			SetSelections(sels);
+			te.SetSelections(sels);
 		}
 	}
 }
