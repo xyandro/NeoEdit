@@ -214,7 +214,7 @@ namespace NeoEdit
 			else
 				SetClipboardFiles(strs, isCut);
 			if (isCut)
-				ReplaceSelections("");
+				te.ReplaceSelections("");
 		}
 
 		public void Command_Edit_Paste_AllFiles(ITextEditor te, string str, bool highlight) => te.ReplaceSelections(te.Selections.Select(value => str).ToList(), highlight);

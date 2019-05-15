@@ -4,7 +4,7 @@
 	{
 		void Command_View_TabIndex(ITextEditor te, bool activeOnly)
 		{
-			ReplaceSelections((te.TabsParent.GetIndex(this, activeOnly) + 1).ToString());
+			te.ReplaceSelections((te.TabsParent.GetIndex(this, activeOnly) + 1).ToString());
 		}
 	}
 }

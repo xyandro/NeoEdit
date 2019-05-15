@@ -198,7 +198,7 @@ namespace NeoEdit
 
 			var sum = te.Selections.AsParallel().Where(range => range.HasSelection).Select(range => double.Parse(te.GetString(range))).Sum();
 			te.SetSelections(new List<Range> { result });
-			ReplaceSelections(sum.ToString());
+			te.ReplaceSelections(sum.ToString());
 		}
 
 		void Command_Numeric_Add_ForwardReverseSum(ITextEditor te, bool forward, bool undo)
@@ -374,7 +374,7 @@ namespace NeoEdit
 				}
 			}
 
-			ReplaceSelections(string.Join("", output.Select(row => string.Join(" ", row) + te.Data.DefaultEnding)));
+			te.ReplaceSelections(string.Join("", output.Select(row => string.Join(" ", row) + te.Data.DefaultEnding)));
 
 			var start = te.Selections.Single().Start;
 			var sels = new List<Range>();
@@ -392,6 +392,6 @@ namespace NeoEdit
 
 		NumericMinMaxValuesDialog.Result Command_Numeric_MinMaxValues_Dialog(ITextEditor te) => NumericMinMaxValuesDialog.Run(te.TabsParent);
 
-		void Command_Numeric_MinMaxValues(NumericMinMaxValuesDialog.Result result) => ReplaceSelections(string.Join(" ", new List<string> { result.Min ? result.CodePage.MinValue() : null, result.Max ? result.CodePage.MaxValue() : null }.Where(str => !string.IsNullOrEmpty(str))));
+		void Command_Numeric_MinMaxValues(ITextEditor te, NumericMinMaxValuesDialog.Result result) => te.ReplaceSelections(string.Join(" ", new List<string> { result.Min ? result.CodePage.MinValue() : null, result.Max ? result.CodePage.MaxValue() : null }.Where(str => !string.IsNullOrEmpty(str))));
 	}
 }

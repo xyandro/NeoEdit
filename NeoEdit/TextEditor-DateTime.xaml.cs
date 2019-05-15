@@ -7,11 +7,11 @@ namespace NeoEdit
 {
 	partial class TextEditor
 	{
-		void Command_DateTime_Now() => ReplaceSelections(DateTimeOffset.Now.ToString("O"));
+		static void Command_DateTime_Now(ITextEditor te) => te.ReplaceSelections(DateTimeOffset.Now.ToString("O"));
 
-		void Command_DateTime_UtcNow() => ReplaceSelections(DateTimeOffset.UtcNow.ToString("O"));
+		static void Command_DateTime_UtcNow(ITextEditor te) => te.ReplaceSelections(DateTimeOffset.UtcNow.ToString("O"));
 
-		DateTimeConvertDialog.Result Command_DateTime_Convert_Dialog(ITextEditor te)
+		static DateTimeConvertDialog.Result Command_DateTime_Convert_Dialog(ITextEditor te)
 		{
 			if (te.Selections.Count < 1)
 				return null;
@@ -19,6 +19,6 @@ namespace NeoEdit
 			return DateTimeConvertDialog.Run(te.TabsParent, te.GetString(te.Selections.First()));
 		}
 
-		void Command_DateTime_Convert(ITextEditor te, DateTimeConvertDialog.Result result) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => DateTimeConvertDialog.ConvertFormat(te.GetString(range), result.InputFormat, result.InputTimeZone, result.OutputFormat, result.OutputTimeZone)).ToList());
+		static void Command_DateTime_Convert(ITextEditor te, DateTimeConvertDialog.Result result) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => DateTimeConvertDialog.ConvertFormat(te.GetString(range), result.InputFormat, result.InputTimeZone, result.OutputFormat, result.OutputTimeZone)).ToList());
 	}
 }

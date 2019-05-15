@@ -133,7 +133,7 @@ namespace NeoEdit
 
 		TextUnicodeDialog.Result Command_Text_Unicode_Dialog(ITextEditor te) => TextUnicodeDialog.Run(te.TabsParent);
 
-		void Command_Text_Unicode(TextUnicodeDialog.Result result) => ReplaceSelections(result.Value);
+		void Command_Text_Unicode(ITextEditor te, TextUnicodeDialog.Result result) => te.ReplaceSelections(result.Value);
 
 		void Command_Text_GUID(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
@@ -162,7 +162,7 @@ namespace NeoEdit
 
 			var data = RevRegEx.RevRegExVisitor.Parse(result.RegEx, result.InfiniteCount);
 			var output = data.GetPossibilities().Select(str => str + te.Data.DefaultEnding).ToList();
-			ReplaceSelections(string.Join("", output));
+			te.ReplaceSelections(string.Join("", output));
 
 			var start = te.Selections.Single().Start;
 			var sels = new List<Range>();

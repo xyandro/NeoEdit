@@ -28,5 +28,6 @@ namespace NeoEdit
 		List<string> GetSelectionStrings();
 		void OpenTable(ITextEditor te, Table table, string name = null);
 		string GetString(Range range);
+		void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false);
 	}
 }
