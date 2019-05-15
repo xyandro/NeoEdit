@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit", "NeoEdit\NeoEdit.
 		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8} = {2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "View\View.csproj", "{55ADECD1-44A7-4B68-86B7-222B68E99078}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|32 = Debug|32
@@ -97,6 +99,14 @@ Global
 		{DB80FD39-0222-4591-B224-833259BAC943}.Release|32.Build.0 = Release|x86
 		{DB80FD39-0222-4591-B224-833259BAC943}.Release|64.ActiveCfg = Release|x64
 		{DB80FD39-0222-4591-B224-833259BAC943}.Release|64.Build.0 = Release|x64
+		{55ADECD1-44A7-4B68-86B7-222B68E99078}.Debug|32.ActiveCfg = Debug|x86
+		{55ADECD1-44A7-4B68-86B7-222B68E99078}.Debug|32.Build.0 = Debug|x86
+		{55ADECD1-44A7-4B68-86B7-222B68E99078}.Debug|64.ActiveCfg = Debug|x64
+		{55ADECD1-44A7-4B68-86B7-222B68E99078}.Debug|64.Build.0 = Debug|x64
+		{55ADECD1-44A7-4B68-86B7-222B68E99078}.Release|32.ActiveCfg = Release|x86
+		{55ADECD1-44A7-4B68-86B7-222B68E99078}.Release|32.Build.0 = Release|x86
+		{55ADECD1-44A7-4B68-86B7-222B68E99078}.Release|64.ActiveCfg = Release|x64
+		{55ADECD1-44A7-4B68-86B7-222B68E99078}.Release|64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

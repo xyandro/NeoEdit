@@ -1811,8 +1811,8 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.View_TabIndex: Command_View_TabIndex(this, false); break;
-				case NECommand.View_ActiveTabIndex: Command_View_TabIndex(this, true); break;
+				case NECommand.View_TabIndex: ViewFunctions.Command_View_TabIndex(this, false); break;
+				case NECommand.View_ActiveTabIndex: ViewFunctions.Command_View_TabIndex(this, true); break;
 			}
 		}
 

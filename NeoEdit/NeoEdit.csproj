@@ -883,9 +883,6 @@
     <Compile Include="TextEditor-Text.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-View.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Page Include="TextEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -918,6 +915,10 @@
     <ProjectReference Include="..\Image\Image.csproj">
       <Project>{d13a65ab-dc9d-4022-ac1a-ae01e5d8be19}</Project>
       <Name>Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\View\View.csproj">
+      <Project>{55adecd1-44a7-4b68-86b7-222b68e99078}</Project>
+      <Name>View</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
