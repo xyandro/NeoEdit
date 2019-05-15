@@ -5,7 +5,7 @@ using NeoEdit.Misc;
 
 namespace NeoEdit
 {
-	static class Settings
+	public static class Settings
 	{
 		static readonly string settingsFile = Path.Combine(Helpers.NeoEditAppData, "Settings.xml");
 

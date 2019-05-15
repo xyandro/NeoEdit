@@ -1012,12 +1012,12 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Network_AbsoluteURL: dialogResult = Command_Network_AbsoluteURL_Dialog(this); break;
-				case NECommand.Network_FetchFile: dialogResult = Command_Network_FetchFile_Dialog(this); break;
-				case NECommand.Network_FetchStream: dialogResult = Command_Network_FetchStream_Dialog(this); break;
-				case NECommand.Network_FetchPlaylist: dialogResult = Command_Network_FetchPlaylist_Dialog(this); break;
-				case NECommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(this); break;
-				case NECommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(this); break;
+				case NECommand.Network_AbsoluteURL: dialogResult = NetworkFunctions.Command_Network_AbsoluteURL_Dialog(this); break;
+				case NECommand.Network_FetchFile: dialogResult = NetworkFunctions.Command_Network_FetchFile_Dialog(this); break;
+				case NECommand.Network_FetchStream: dialogResult = NetworkFunctions.Command_Network_FetchStream_Dialog(this); break;
+				case NECommand.Network_FetchPlaylist: dialogResult = NetworkFunctions.Command_Network_FetchPlaylist_Dialog(this); break;
+				case NECommand.Network_Ping: dialogResult = NetworkFunctions.Command_Network_Ping_Dialog(this); break;
+				case NECommand.Network_ScanPorts: dialogResult = NetworkFunctions.Command_Network_ScanPorts_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1511,17 +1511,17 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Network_AbsoluteURL: Command_Network_AbsoluteURL(this, dialogResult as NetworkAbsoluteURLDialog.Result); break;
-				case NECommand.Network_Fetch: Command_Network_Fetch(this); break;
-				case NECommand.Network_FetchHex: Command_Network_Fetch(this, Coder.CodePage.Hex); break;
-				case NECommand.Network_FetchFile: Command_Network_FetchFile(this, dialogResult as NetworkFetchFileDialog.Result); break;
-				case NECommand.Network_FetchStream: Command_Network_FetchStream(this, dialogResult as NetworkFetchStreamDialog.Result); break;
-				case NECommand.Network_FetchPlaylist: Command_Network_FetchPlaylist(this, dialogResult as NetworkFetchStreamDialog.Result); break;
-				case NECommand.Network_Lookup_IP: Command_Network_Lookup_IP(this); break;
-				case NECommand.Network_Lookup_HostName: Command_Network_Lookup_HostName(this); break;
-				case NECommand.Network_AdaptersInfo: Command_Network_AdaptersInfo(this); break;
-				case NECommand.Network_Ping: Command_Network_Ping(this, dialogResult as NetworkPingDialog.Result); break;
-				case NECommand.Network_ScanPorts: Command_Network_ScanPorts(this, dialogResult as NetworkScanPortsDialog.Result); break;
+				case NECommand.Network_AbsoluteURL: NetworkFunctions.Command_Network_AbsoluteURL(this, dialogResult as NetworkAbsoluteURLDialog.Result); break;
+				case NECommand.Network_Fetch: NetworkFunctions.Command_Network_Fetch(this); break;
+				case NECommand.Network_FetchHex: NetworkFunctions.Command_Network_Fetch(this, Coder.CodePage.Hex); break;
+				case NECommand.Network_FetchFile: NetworkFunctions.Command_Network_FetchFile(this, dialogResult as NetworkFetchFileDialog.Result); break;
+				case NECommand.Network_FetchStream: NetworkFunctions.Command_Network_FetchStream(this, dialogResult as NetworkFetchStreamDialog.Result); break;
+				case NECommand.Network_FetchPlaylist: NetworkFunctions.Command_Network_FetchPlaylist(this, dialogResult as NetworkFetchStreamDialog.Result); break;
+				case NECommand.Network_Lookup_IP: NetworkFunctions.Command_Network_Lookup_IP(this); break;
+				case NECommand.Network_Lookup_HostName: NetworkFunctions.Command_Network_Lookup_HostName(this); break;
+				case NECommand.Network_AdaptersInfo: NetworkFunctions.Command_Network_AdaptersInfo(this); break;
+				case NECommand.Network_Ping: NetworkFunctions.Command_Network_Ping(this, dialogResult as NetworkPingDialog.Result); break;
+				case NECommand.Network_ScanPorts: NetworkFunctions.Command_Network_ScanPorts(this, dialogResult as NetworkScanPortsDialog.Result); break;
 			}
 		}
 

@@ -338,48 +338,6 @@
     <Compile Include="Dialogs\MacroPlayRepeatDialog.xaml.cs">
       <DependentUpon>MacroPlayRepeatDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\MultiProgressDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\MultiProgressDialog.xaml.cs">
-      <DependentUpon>MultiProgressDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NetworkAbsoluteURLDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NetworkAbsoluteURLDialog.xaml.cs">
-      <DependentUpon>NetworkAbsoluteURLDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NetworkFetchFileDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NetworkFetchFileDialog.xaml.cs">
-      <DependentUpon>NetworkFetchFileDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NetworkFetchStreamDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NetworkFetchStreamDialog.xaml.cs">
-      <DependentUpon>NetworkFetchStreamDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NetworkPingDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NetworkPingDialog.xaml.cs">
-      <DependentUpon>NetworkPingDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\NetworkScanPortsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\NetworkScanPortsDialog.xaml.cs">
-      <DependentUpon>NetworkScanPortsDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\NumericCombinationsPermutationsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -615,7 +573,6 @@
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="Misc\FileSaver.cs" />
-    <Compile Include="Misc\Font.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
     <None Include="Misc\Words.txt" />
@@ -632,7 +589,6 @@
     </Compile>
     <Compile Include="NoDelayClipboard.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
-    <Compile Include="PortScanner.cs" />
     <Compile Include="ProcessExtension.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -656,7 +612,6 @@
     <Compile Include="RevRegEx\RevRegExVisitor.cs" />
     <None Include="RevRegEx\Source\RevRegExLexer.g4" />
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
-    <Compile Include="Settings.cs" />
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -672,9 +627,6 @@
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Files.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Network.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Numeric.xaml.cs">
@@ -710,7 +662,6 @@
     <Compile Include="UnitTest\UnicodeTest.cs" />
     <Compile Include="UnitTest\UnitTest.cs" />
     <Compile Include="UnitTest\XMLConverterTest.cs" />
-    <Compile Include="YouTubeDL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -744,6 +695,10 @@
     <ProjectReference Include="..\Keys\Keys.csproj">
       <Project>{b0b2bd86-4588-4cb3-9407-890b63fada12}</Project>
       <Name>Keys</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Network\Network.csproj">
+      <Project>{6d97e1f0-c290-4725-b6ef-1c54e1530612}</Project>
+      <Name>Network</Name>
     </ProjectReference>
     <ProjectReference Include="..\Position\Position.csproj">
       <Project>{a7d32fd6-0bed-4ffc-9ed7-2c9c385e241c}</Project>

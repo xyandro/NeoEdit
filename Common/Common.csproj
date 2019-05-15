@@ -90,6 +90,13 @@
     <Compile Include="Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\MultiProgressDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\MultiProgressDialog.xaml.cs">
+      <DependentUpon>MultiProgressDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DragType.cs" />
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
     <Compile Include="Expressions\ExpressionUnit.cs" />
@@ -118,6 +125,7 @@
     <Compile Include="JumpByType.cs" />
     <Compile Include="LCS.cs" />
     <Compile Include="MessageOptions.cs" />
+    <Compile Include="Misc\Font.cs" />
     <Compile Include="Misc\PropertyChangeNotifier.cs" />
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NECommand.cs" />
@@ -146,6 +154,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Searcher.cs</LastGenOutput>
     </Content>
+    <Compile Include="Settings.cs" />
     <Compile Include="ShutdownData.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="TextData.cs" />

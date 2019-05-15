@@ -14,7 +14,7 @@ using NeoEdit.Transform;
 
 namespace NeoEdit
 {
-	partial class TextEditor
+	public static class NetworkFunctions
 	{
 		static async Task<string> GetURL(string url, Coder.CodePage codePage = Coder.CodePage.None)
 		{
@@ -66,16 +66,16 @@ namespace NeoEdit
 			}
 		}
 
-		static NetworkAbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog(ITextEditor te) => NetworkAbsoluteURLDialog.Run(te.WindowParent, te.GetVariables());
+		static public NetworkAbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog(ITextEditor te) => NetworkAbsoluteURLDialog.Run(te.WindowParent, te.GetVariables());
 
-		static void Command_Network_AbsoluteURL(ITextEditor te, NetworkAbsoluteURLDialog.Result result)
+		static public void Command_Network_AbsoluteURL(ITextEditor te, NetworkAbsoluteURLDialog.Result result)
 		{
 			var results = te.GetFixedExpressionResults<string>(result.Expression);
 			var newStrs = te.Selections.Zip(results, (range, baseUrl) => new { range, baseUrl }).AsParallel().AsOrdered().Select(obj => new Uri(new Uri(obj.baseUrl), te.GetString(obj.range)).AbsoluteUri).ToList();
 			te.ReplaceSelections(newStrs);
 		}
 
-		static void Command_Network_Fetch(ITextEditor te, Coder.CodePage codePage = Coder.CodePage.None)
+		static public void Command_Network_Fetch(ITextEditor te, Coder.CodePage codePage = Coder.CodePage.None)
 		{
 			var urls = te.GetSelectionStrings();
 			var results = Task.Run(() => GetURLs(te, urls, codePage).Result).Result;
@@ -89,9 +89,9 @@ namespace NeoEdit
 			te.ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		static NetworkFetchFileDialog.Result Command_Network_FetchFile_Dialog(ITextEditor te) => NetworkFetchFileDialog.Run(te.WindowParent, te.GetVariables());
+		static public NetworkFetchFileDialog.Result Command_Network_FetchFile_Dialog(ITextEditor te) => NetworkFetchFileDialog.Run(te.WindowParent, te.GetVariables());
 
-		static void Command_Network_FetchFile(ITextEditor te, NetworkFetchFileDialog.Result result)
+		static public void Command_Network_FetchFile(ITextEditor te, NetworkFetchFileDialog.Result result)
 		{
 			var variables = te.GetVariables();
 
@@ -124,9 +124,9 @@ namespace NeoEdit
 			MultiProgressDialog.RunAsync(te.WindowParent, "Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
 		}
 
-		static NetworkFetchStreamDialog.Result Command_Network_FetchStream_Dialog(ITextEditor te) => NetworkFetchStreamDialog.Run(te.WindowParent, te.GetVariables(), Path.GetDirectoryName(te.FileName) ?? "");
+		static public NetworkFetchStreamDialog.Result Command_Network_FetchStream_Dialog(ITextEditor te) => NetworkFetchStreamDialog.Run(te.WindowParent, te.GetVariables(), Path.GetDirectoryName(te.FileName) ?? "");
 
-		static void Command_Network_FetchStream(ITextEditor te, NetworkFetchStreamDialog.Result result)
+		static public void Command_Network_FetchStream(ITextEditor te, NetworkFetchStreamDialog.Result result)
 		{
 			var urls = te.GetVariableExpressionResults<string>(result.Expression);
 			if (!urls.Any())
@@ -137,9 +137,9 @@ namespace NeoEdit
 			MultiProgressDialog.RunAsync(te.WindowParent, "Downloading...", data, async (item, progress, cancelled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, cancelled));
 		}
 
-		static NetworkFetchStreamDialog.Result Command_Network_FetchPlaylist_Dialog(ITextEditor te) => NetworkFetchStreamDialog.Run(te.WindowParent, te.GetVariables(), null);
+		static public NetworkFetchStreamDialog.Result Command_Network_FetchPlaylist_Dialog(ITextEditor te) => NetworkFetchStreamDialog.Run(te.WindowParent, te.GetVariables(), null);
 
-		static void Command_Network_FetchPlaylist(ITextEditor te, NetworkFetchStreamDialog.Result result)
+		static public void Command_Network_FetchPlaylist(ITextEditor te, NetworkFetchStreamDialog.Result result)
 		{
 			var urls = te.GetVariableExpressionResults<string>(result.Expression);
 			if (!urls.Any())
@@ -149,11 +149,11 @@ namespace NeoEdit
 			te.ReplaceSelections(items.Select(l => string.Join(te.Data.DefaultEnding, l)).ToList());
 		}
 
-		static void Command_Network_Lookup_IP(ITextEditor te) { te.ReplaceSelections(Task.Run(async () => await Task.WhenAll(te.GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
+		static public void Command_Network_Lookup_IP(ITextEditor te) { te.ReplaceSelections(Task.Run(async () => await Task.WhenAll(te.GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
-		static void Command_Network_Lookup_HostName(ITextEditor te) { te.ReplaceSelections(Task.Run(async () => await Task.WhenAll(te.GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
+		static public void Command_Network_Lookup_HostName(ITextEditor te) { te.ReplaceSelections(Task.Run(async () => await Task.WhenAll(te.GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
-		static void Command_Network_AdaptersInfo(ITextEditor te)
+		static public void Command_Network_AdaptersInfo(ITextEditor te)
 		{
 			if (te.Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -183,9 +183,9 @@ namespace NeoEdit
 			te.ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
 		}
 
-		static NetworkPingDialog.Result Command_Network_Ping_Dialog(ITextEditor te) => NetworkPingDialog.Run(te.WindowParent);
+		static public NetworkPingDialog.Result Command_Network_Ping_Dialog(ITextEditor te) => NetworkPingDialog.Run(te.WindowParent);
 
-		static void Command_Network_Ping(ITextEditor te, NetworkPingDialog.Result result)
+		static public void Command_Network_Ping(ITextEditor te, NetworkPingDialog.Result result)
 		{
 			var replies = Task.Run(async () =>
 			{
@@ -209,9 +209,9 @@ namespace NeoEdit
 			te.ReplaceSelections(replies);
 		}
 
-		static NetworkScanPortsDialog.Result Command_Network_ScanPorts_Dialog(ITextEditor te) => NetworkScanPortsDialog.Run(te.WindowParent);
+		static public NetworkScanPortsDialog.Result Command_Network_ScanPorts_Dialog(ITextEditor te) => NetworkScanPortsDialog.Run(te.WindowParent);
 
-		static void Command_Network_ScanPorts(ITextEditor te, NetworkScanPortsDialog.Result result)
+		static public void Command_Network_ScanPorts(ITextEditor te, NetworkScanPortsDialog.Result result)
 		{
 			var strs = te.GetSelectionStrings();
 			var results = PortScanner.ScanPorts(strs.Select(str => IPAddress.Parse(str)).ToList(), result.Ports, result.Attempts, TimeSpan.FromMilliseconds(result.Timeout), result.Concurrency);
