@@ -979,10 +979,10 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Position_Goto_Lines: dialogResult = Command_Position_Goto_Dialog(this, GotoType.Line); break;
-				case NECommand.Position_Goto_Columns: dialogResult = Command_Position_Goto_Dialog(this, GotoType.Column); break;
-				case NECommand.Position_Goto_Indexes: dialogResult = Command_Position_Goto_Dialog(this, GotoType.Index); break;
-				case NECommand.Position_Goto_Positions: dialogResult = Command_Position_Goto_Dialog(this, GotoType.Position); break;
+				case NECommand.Position_Goto_Lines: dialogResult = PositionFunctions.Command_Position_Goto_Dialog(this, GotoType.Line); break;
+				case NECommand.Position_Goto_Columns: dialogResult = PositionFunctions.Command_Position_Goto_Dialog(this, GotoType.Column); break;
+				case NECommand.Position_Goto_Indexes: dialogResult = PositionFunctions.Command_Position_Goto_Dialog(this, GotoType.Index); break;
+				case NECommand.Position_Goto_Positions: dialogResult = PositionFunctions.Command_Position_Goto_Dialog(this, GotoType.Position); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1437,15 +1437,15 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Position_Goto_Lines: Command_Position_Goto(this, GotoType.Line, shiftDown, dialogResult as PositionGotoDialog.Result); break;
-				case NECommand.Position_Goto_Columns: Command_Position_Goto(this, GotoType.Column, shiftDown, dialogResult as PositionGotoDialog.Result); break;
-				case NECommand.Position_Goto_Indexes: Command_Position_Goto(this, GotoType.Index, shiftDown, dialogResult as PositionGotoDialog.Result); break;
-				case NECommand.Position_Goto_Positions: Command_Position_Goto(this, GotoType.Position, shiftDown, dialogResult as PositionGotoDialog.Result); break;
-				case NECommand.Position_Goto_FilesLines: Command_Position_Goto_FilesLines(this); break;
-				case NECommand.Position_Copy_Lines: Command_Position_Copy(this, GotoType.Line); break;
-				case NECommand.Position_Copy_Columns: Command_Position_Copy(this, GotoType.Column); break;
-				case NECommand.Position_Copy_Indexes: Command_Position_Copy(this, GotoType.Index); break;
-				case NECommand.Position_Copy_Positions: Command_Position_Copy(this, GotoType.Position); break;
+				case NECommand.Position_Goto_Lines: PositionFunctions.Command_Position_Goto(this, GotoType.Line, shiftDown, dialogResult as PositionGotoDialog.Result); break;
+				case NECommand.Position_Goto_Columns: PositionFunctions.Command_Position_Goto(this, GotoType.Column, shiftDown, dialogResult as PositionGotoDialog.Result); break;
+				case NECommand.Position_Goto_Indexes: PositionFunctions.Command_Position_Goto(this, GotoType.Index, shiftDown, dialogResult as PositionGotoDialog.Result); break;
+				case NECommand.Position_Goto_Positions: PositionFunctions.Command_Position_Goto(this, GotoType.Position, shiftDown, dialogResult as PositionGotoDialog.Result); break;
+				case NECommand.Position_Goto_FilesLines: PositionFunctions.Command_Position_Goto_FilesLines(this); break;
+				case NECommand.Position_Copy_Lines: PositionFunctions.Command_Position_Copy(this, GotoType.Line); break;
+				case NECommand.Position_Copy_Columns: PositionFunctions.Command_Position_Copy(this, GotoType.Column); break;
+				case NECommand.Position_Copy_Indexes: PositionFunctions.Command_Position_Copy(this, GotoType.Index); break;
+				case NECommand.Position_Copy_Positions: PositionFunctions.Command_Position_Copy(this, GotoType.Position); break;
 			}
 		}
 

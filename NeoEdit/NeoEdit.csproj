@@ -586,13 +586,6 @@
     <Compile Include="Dialogs\NumericSeriesDialog.xaml.cs">
       <DependentUpon>NumericSeriesDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\PositionGotoDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\PositionGotoDialog.xaml.cs">
-      <DependentUpon>PositionGotoDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\ProgressDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -754,7 +747,6 @@
     <Compile Include="Dialogs\TextWidthDialog.xaml.cs">
       <DependentUpon>TextWidthDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GotoType.cs" />
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
@@ -840,9 +832,6 @@
     <Compile Include="TextEditor-Numeric.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Position.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Region.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -895,6 +884,10 @@
     <ProjectReference Include="..\Keys\Keys.csproj">
       <Project>{b0b2bd86-4588-4cb3-9407-890b63fada12}</Project>
       <Name>Keys</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Position\Position.csproj">
+      <Project>{a7d32fd6-0bed-4ffc-9ed7-2c9c385e241c}</Project>
+      <Name>Position</Name>
     </ProjectReference>
     <ProjectReference Include="..\View\View.csproj">
       <Project>{55adecd1-44a7-4b68-86b7-222b68e99078}</Project>

@@ -7,7 +7,7 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	partial class TextEditor
+	public static class PositionFunctions
 	{
 		static List<int> GetValues(string str, int delta)
 		{
@@ -50,7 +50,7 @@ namespace NeoEdit
 				return Range.FromIndex(offsets[0], 0);
 		}
 
-		static PositionGotoDialog.Result Command_Position_Goto_Dialog(ITextEditor te, GotoType gotoType)
+		static public PositionGotoDialog.Result Command_Position_Goto_Dialog(ITextEditor te, GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
 			var range = te.Selections.FirstOrDefault();
@@ -73,7 +73,7 @@ namespace NeoEdit
 			return PositionGotoDialog.Run(te.WindowParent, gotoType, startValue, te.GetVariables());
 		}
 
-		static void Command_Position_Goto(ITextEditor te, GotoType gotoType, bool selecting, PositionGotoDialog.Result result)
+		static public void Command_Position_Goto(ITextEditor te, GotoType gotoType, bool selecting, PositionGotoDialog.Result result)
 		{
 			var delta = gotoType == GotoType.Position ? 0 : -1;
 			var values = te.GetVariableExpressionResults<string>(result.Expression).Select(value => GetValues(value, delta)).ToList();
@@ -94,7 +94,7 @@ namespace NeoEdit
 			te.SetSelections(sels.AsParallel().AsOrdered().Select((range, ctr) => GetRange(te, range, gotoType, values[ctr], selecting)).ToList());
 		}
 
-		static void Command_Position_Goto_FilesLines(ITextEditor te)
+		static public void Command_Position_Goto_FilesLines(ITextEditor te)
 		{
 			var strs = te.GetSelectionStrings();
 			var startPos = strs.Select(str => str.LastIndexOf("(")).ToList();
@@ -110,7 +110,7 @@ namespace NeoEdit
 			}
 		}
 
-		static void Command_Position_Copy(ITextEditor te, GotoType gotoType)
+		static public void Command_Position_Copy(ITextEditor te, GotoType gotoType)
 		{
 			var starts = new Dictionary<GotoType, List<int>>();
 			var ends = new Dictionary<GotoType, List<int>>();
