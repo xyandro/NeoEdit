@@ -7,19 +7,19 @@ namespace NeoEdit.Dialogs
 	{
 		public class Result
 		{
-			public TextEditor.SortScope SortScope { get; set; }
+			public SortScope SortScope { get; set; }
 			public int UseRegion { get; set; }
-			public TextEditor.SortType SortType { get; set; }
+			public SortType SortType { get; set; }
 			public bool CaseSensitive { get; set; }
 			public bool Ascending { get; set; }
 		}
 
 		[DepProp]
-		public TextEditor.SortScope SortScope { get { return UIHelper<EditSortDialog>.GetPropValue<TextEditor.SortScope>(this); } set { UIHelper<EditSortDialog>.SetPropValue(this, value); } }
+		public SortScope SortScope { get { return UIHelper<EditSortDialog>.GetPropValue<SortScope>(this); } set { UIHelper<EditSortDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public int UseRegion { get { return UIHelper<EditSortDialog>.GetPropValue<int>(this); } set { UIHelper<EditSortDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public TextEditor.SortType SortType { get { return UIHelper<EditSortDialog>.GetPropValue<TextEditor.SortType>(this); } set { UIHelper<EditSortDialog>.SetPropValue(this, value); } }
+		public SortType SortType { get { return UIHelper<EditSortDialog>.GetPropValue<SortType>(this); } set { UIHelper<EditSortDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool CaseSensitive { get { return UIHelper<EditSortDialog>.GetPropValue<bool>(this); } set { UIHelper<EditSortDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -28,7 +28,7 @@ namespace NeoEdit.Dialogs
 		static EditSortDialog()
 		{
 			UIHelper<EditSortDialog>.Register();
-			UIHelper<EditSortDialog>.AddCallback(a => a.UseRegion, (obj, o, n) => obj.SortScope = TextEditor.SortScope.Regions);
+			UIHelper<EditSortDialog>.AddCallback(a => a.UseRegion, (obj, o, n) => obj.SortScope = SortScope.Regions);
 		}
 
 		EditSortDialog()
@@ -36,8 +36,8 @@ namespace NeoEdit.Dialogs
 			InitializeComponent();
 
 			UseRegion = 1;
-			SortScope = TextEditor.SortScope.Selections;
-			SortType = TextEditor.SortType.Smart;
+			SortScope = SortScope.Selections;
+			SortType = SortType.Smart;
 			ascending.IsChecked = true;
 		}
 

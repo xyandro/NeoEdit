@@ -82,6 +82,13 @@
     <Compile Include="Dialogs\ExpressionHelpVariablesDialog.xaml.cs">
       <DependentUpon>ExpressionHelpVariablesDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\FilesNamesMakeAbsoluteRelativeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesNamesMakeAbsoluteRelativeDialog.xaml.cs">
+      <DependentUpon>FilesNamesMakeAbsoluteRelativeDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\GetExpressionDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -105,7 +105,8 @@ namespace NeoEdit
 		public bool StrictParsing { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IncludeInlineVariables { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-
+		[DepProp]
+		public JumpByType JumpBy { get { return UIHelper<TextEditor>.GetPropValue<JumpByType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); jumpBy = JumpBy; } }
 
 		public ITabs TabsParent { get; set; }
 		public Window WindowParent => TabsParent as Window;
@@ -116,6 +117,7 @@ namespace NeoEdit
 		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; canvasRenderTimer.Start(); statusBarRenderTimer.Start(); } }
 		public int NumSelections => Selections.Count;
 		public List<string> Clipboard => TabsParent.GetClipboard(this);
+		JumpByType jumpBy;
 
 		bool watcherFileModified = false;
 
@@ -831,20 +833,20 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Edit_Find_Find: dialogResult = Command_Edit_Find_Find_Dialog(this); break;
-				case NECommand.Edit_Find_MassFind: dialogResult = Command_Edit_Find_MassFind_Dialog(this); break;
-				case NECommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_Replace_Dialog(this); break;
-				case NECommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(this); break;
-				case NECommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(this); break;
-				case NECommand.Edit_URL_Absolute: dialogResult = Command_Edit_URL_Absolute_Dialog(this); break;
-				case NECommand.Edit_Data_Hash: dialogResult = Command_Edit_Data_Hash_Dialog(this); break;
-				case NECommand.Edit_Data_Compress: dialogResult = Command_Edit_Data_Compress_Dialog(this); break;
-				case NECommand.Edit_Data_Decompress: dialogResult = Command_Edit_Data_Decompress_Dialog(this); break;
-				case NECommand.Edit_Data_Encrypt: dialogResult = Command_Edit_Data_Encrypt_Dialog(this); break;
-				case NECommand.Edit_Data_Decrypt: dialogResult = Command_Edit_Data_Decrypt_Dialog(this); break;
-				case NECommand.Edit_Data_Sign: dialogResult = Command_Edit_Data_Sign_Dialog(this); break;
-				case NECommand.Edit_Sort: dialogResult = Command_Edit_Sort_Dialog(this); break;
-				case NECommand.Edit_Convert: dialogResult = Command_Edit_Convert_Dialog(this); break;
+				case NECommand.Edit_Find_Find: dialogResult = EditFunctions.Command_Edit_Find_Find_Dialog(this); break;
+				case NECommand.Edit_Find_MassFind: dialogResult = EditFunctions.Command_Edit_Find_MassFind_Dialog(this); break;
+				case NECommand.Edit_Find_Replace: dialogResult = EditFunctions.Command_Edit_Find_Replace_Dialog(this); break;
+				case NECommand.Edit_Rotate: dialogResult = EditFunctions.Command_Edit_Rotate_Dialog(this); break;
+				case NECommand.Edit_Repeat: dialogResult = EditFunctions.Command_Edit_Repeat_Dialog(this); break;
+				case NECommand.Edit_URL_Absolute: dialogResult = EditFunctions.Command_Edit_URL_Absolute_Dialog(this); break;
+				case NECommand.Edit_Data_Hash: dialogResult = EditFunctions.Command_Edit_Data_Hash_Dialog(this); break;
+				case NECommand.Edit_Data_Compress: dialogResult = EditFunctions.Command_Edit_Data_Compress_Dialog(this); break;
+				case NECommand.Edit_Data_Decompress: dialogResult = EditFunctions.Command_Edit_Data_Decompress_Dialog(this); break;
+				case NECommand.Edit_Data_Encrypt: dialogResult = EditFunctions.Command_Edit_Data_Encrypt_Dialog(this); break;
+				case NECommand.Edit_Data_Decrypt: dialogResult = EditFunctions.Command_Edit_Data_Decrypt_Dialog(this); break;
+				case NECommand.Edit_Data_Sign: dialogResult = EditFunctions.Command_Edit_Data_Sign_Dialog(this); break;
+				case NECommand.Edit_Sort: dialogResult = EditFunctions.Command_Edit_Sort_Dialog(this); break;
+				case NECommand.Edit_Convert: dialogResult = EditFunctions.Command_Edit_Convert_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1148,48 +1150,48 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Edit_Undo: Command_Edit_Undo(this); break;
-				case NECommand.Edit_Redo: Command_Edit_Redo(this); break;
-				case NECommand.Edit_Copy_Copy: Command_Edit_Copy_CutCopy(this, false); break;
-				case NECommand.Edit_Copy_Cut: Command_Edit_Copy_CutCopy(this, true); break;
-				case NECommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(this, shiftDown, false); break;
-				case NECommand.Edit_Paste_RotatePaste: Command_Edit_Paste_Paste(this, true, true); break;
-				case NECommand.Edit_Find_Find: Command_Edit_Find_Find(this, shiftDown, dialogResult as EditFindFindDialog.Result); break;
-				case NECommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(this, true, shiftDown); break;
-				case NECommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(this, false, shiftDown); break;
-				case NECommand.Edit_Find_Selected: Command_Edit_Find_Selected(this, shiftDown); break;
-				case NECommand.Edit_Find_MassFind: Command_Edit_Find_MassFind(this, dialogResult as EditFindMassFindDialog.Result); break;
-				case NECommand.Edit_Find_Replace: Command_Edit_Find_Replace(this, dialogResult as EditFindReplaceDialog.Result); break;
-				case NECommand.Edit_Find_ClearSearchResults: Command_Edit_Find_ClearSearchResults(this); break;
-				case NECommand.Edit_CopyDown: Command_Edit_CopyDown(this); break;
-				case NECommand.Edit_Rotate: Command_Edit_Rotate(this, dialogResult as EditRotateDialog.Result); break;
-				case NECommand.Edit_Repeat: Command_Edit_Repeat(this, dialogResult as EditRepeatDialog.Result); break;
-				case NECommand.Edit_Markup_Escape: Command_Edit_Markup_Escape(this); break;
-				case NECommand.Edit_Markup_Unescape: Command_Edit_Markup_Unescape(this); break;
-				case NECommand.Edit_RegEx_Escape: Command_Edit_RegEx_Escape(this); break;
-				case NECommand.Edit_RegEx_Unescape: Command_Edit_RegEx_Unescape(this); break;
-				case NECommand.Edit_URL_Escape: Command_Edit_URL_Escape(this); break;
-				case NECommand.Edit_URL_Unescape: Command_Edit_URL_Unescape(this); break;
-				case NECommand.Edit_URL_Absolute: Command_Edit_URL_Absolute(this, dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
-				case NECommand.Edit_Data_Hash: Command_Edit_Data_Hash(this, dialogResult as EditDataHashDialog.Result); break;
-				case NECommand.Edit_Data_Compress: Command_Edit_Data_Compress(this, dialogResult as EditDataCompressDialog.Result); break;
-				case NECommand.Edit_Data_Decompress: Command_Edit_Data_Decompress(this, dialogResult as EditDataCompressDialog.Result); break;
-				case NECommand.Edit_Data_Encrypt: Command_Edit_Data_Encrypt(this, dialogResult as EditDataEncryptDialog.Result); break;
-				case NECommand.Edit_Data_Decrypt: Command_Edit_Data_Decrypt(this, dialogResult as EditDataEncryptDialog.Result); break;
-				case NECommand.Edit_Data_Sign: Command_Edit_Data_Sign(this, dialogResult as EditDataSignDialog.Result); break;
-				case NECommand.Edit_Sort: Command_Edit_Sort(this, dialogResult as EditSortDialog.Result); break;
-				case NECommand.Edit_Convert: Command_Edit_Convert(this, dialogResult as EditConvertDialog.Result); break;
-				case NECommand.Edit_Bookmarks_Toggle: Command_Edit_Bookmarks_Toggle(this); break;
-				case NECommand.Edit_Bookmarks_Next: Command_Edit_Bookmarks_NextPreviousBookmark(this, true, shiftDown); break;
-				case NECommand.Edit_Bookmarks_Previous: Command_Edit_Bookmarks_NextPreviousBookmark(this, false, shiftDown); break;
-				case NECommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(this); break;
-				case NECommand.Edit_Navigate_WordLeft: Command_Edit_Navigate_WordLeftRight(this, false, shiftDown); break;
-				case NECommand.Edit_Navigate_WordRight: Command_Edit_Navigate_WordLeftRight(this, true, shiftDown); break;
-				case NECommand.Edit_Navigate_AllLeft: Command_Edit_Navigate_AllLeft(this, shiftDown); break;
-				case NECommand.Edit_Navigate_AllRight: Command_Edit_Navigate_AllRight(this, shiftDown); break;
-				case NECommand.Edit_Navigate_JumpBy_Words: Command_Edit_Navigate_JumpBy(this, JumpByType.Words); break;
-				case NECommand.Edit_Navigate_JumpBy_Numbers: Command_Edit_Navigate_JumpBy(this, JumpByType.Numbers); break;
-				case NECommand.Edit_Navigate_JumpBy_Paths: Command_Edit_Navigate_JumpBy(this, JumpByType.Paths); break;
+				case NECommand.Edit_Undo: EditFunctions.Command_Edit_Undo(this); break;
+				case NECommand.Edit_Redo: EditFunctions.Command_Edit_Redo(this); break;
+				case NECommand.Edit_Copy_Copy: EditFunctions.Command_Edit_Copy_CutCopy(this, false); break;
+				case NECommand.Edit_Copy_Cut: EditFunctions.Command_Edit_Copy_CutCopy(this, true); break;
+				case NECommand.Edit_Paste_Paste: EditFunctions.Command_Edit_Paste_Paste(this, shiftDown, false); break;
+				case NECommand.Edit_Paste_RotatePaste: EditFunctions.Command_Edit_Paste_Paste(this, true, true); break;
+				case NECommand.Edit_Find_Find: EditFunctions.Command_Edit_Find_Find(this, shiftDown, dialogResult as EditFindFindDialog.Result); break;
+				case NECommand.Edit_Find_Next: EditFunctions.Command_Edit_Find_NextPrevious(this, true, shiftDown); break;
+				case NECommand.Edit_Find_Previous: EditFunctions.Command_Edit_Find_NextPrevious(this, false, shiftDown); break;
+				case NECommand.Edit_Find_Selected: EditFunctions.Command_Edit_Find_Selected(this, shiftDown); break;
+				case NECommand.Edit_Find_MassFind: EditFunctions.Command_Edit_Find_MassFind(this, dialogResult as EditFindMassFindDialog.Result); break;
+				case NECommand.Edit_Find_Replace: EditFunctions.Command_Edit_Find_Replace(this, dialogResult as EditFindReplaceDialog.Result); break;
+				case NECommand.Edit_Find_ClearSearchResults: EditFunctions.Command_Edit_Find_ClearSearchResults(this); break;
+				case NECommand.Edit_CopyDown: EditFunctions.Command_Edit_CopyDown(this); break;
+				case NECommand.Edit_Rotate: EditFunctions.Command_Edit_Rotate(this, dialogResult as EditRotateDialog.Result); break;
+				case NECommand.Edit_Repeat: EditFunctions.Command_Edit_Repeat(this, dialogResult as EditRepeatDialog.Result); break;
+				case NECommand.Edit_Markup_Escape: EditFunctions.Command_Edit_Markup_Escape(this); break;
+				case NECommand.Edit_Markup_Unescape: EditFunctions.Command_Edit_Markup_Unescape(this); break;
+				case NECommand.Edit_RegEx_Escape: EditFunctions.Command_Edit_RegEx_Escape(this); break;
+				case NECommand.Edit_RegEx_Unescape: EditFunctions.Command_Edit_RegEx_Unescape(this); break;
+				case NECommand.Edit_URL_Escape: EditFunctions.Command_Edit_URL_Escape(this); break;
+				case NECommand.Edit_URL_Unescape: EditFunctions.Command_Edit_URL_Unescape(this); break;
+				case NECommand.Edit_URL_Absolute: EditFunctions.Command_Edit_URL_Absolute(this, dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
+				case NECommand.Edit_Data_Hash: EditFunctions.Command_Edit_Data_Hash(this, dialogResult as EditDataHashDialog.Result); break;
+				case NECommand.Edit_Data_Compress: EditFunctions.Command_Edit_Data_Compress(this, dialogResult as EditDataCompressDialog.Result); break;
+				case NECommand.Edit_Data_Decompress: EditFunctions.Command_Edit_Data_Decompress(this, dialogResult as EditDataCompressDialog.Result); break;
+				case NECommand.Edit_Data_Encrypt: EditFunctions.Command_Edit_Data_Encrypt(this, dialogResult as EditDataEncryptDialog.Result); break;
+				case NECommand.Edit_Data_Decrypt: EditFunctions.Command_Edit_Data_Decrypt(this, dialogResult as EditDataEncryptDialog.Result); break;
+				case NECommand.Edit_Data_Sign: EditFunctions.Command_Edit_Data_Sign(this, dialogResult as EditDataSignDialog.Result); break;
+				case NECommand.Edit_Sort: EditFunctions.Command_Edit_Sort(this, dialogResult as EditSortDialog.Result); break;
+				case NECommand.Edit_Convert: EditFunctions.Command_Edit_Convert(this, dialogResult as EditConvertDialog.Result); break;
+				case NECommand.Edit_Bookmarks_Toggle: EditFunctions.Command_Edit_Bookmarks_Toggle(this); break;
+				case NECommand.Edit_Bookmarks_Next: EditFunctions.Command_Edit_Bookmarks_NextPreviousBookmark(this, true, shiftDown); break;
+				case NECommand.Edit_Bookmarks_Previous: EditFunctions.Command_Edit_Bookmarks_NextPreviousBookmark(this, false, shiftDown); break;
+				case NECommand.Edit_Bookmarks_Clear: EditFunctions.Command_Edit_Bookmarks_Clear(this); break;
+				case NECommand.Edit_Navigate_WordLeft: EditFunctions.Command_Edit_Navigate_WordLeftRight(this, false, shiftDown); break;
+				case NECommand.Edit_Navigate_WordRight: EditFunctions.Command_Edit_Navigate_WordLeftRight(this, true, shiftDown); break;
+				case NECommand.Edit_Navigate_AllLeft: EditFunctions.Command_Edit_Navigate_AllLeft(this, shiftDown); break;
+				case NECommand.Edit_Navigate_AllRight: EditFunctions.Command_Edit_Navigate_AllRight(this, shiftDown); break;
+				case NECommand.Edit_Navigate_JumpBy_Words: EditFunctions.Command_Edit_Navigate_JumpBy(this, JumpByType.Words); break;
+				case NECommand.Edit_Navigate_JumpBy_Numbers: EditFunctions.Command_Edit_Navigate_JumpBy(this, JumpByType.Numbers); break;
+				case NECommand.Edit_Navigate_JumpBy_Paths: EditFunctions.Command_Edit_Navigate_JumpBy(this, JumpByType.Paths); break;
 			}
 		}
 
