@@ -29,7 +29,7 @@ namespace NeoEdit
 		DbConnection dbConnection { get; set; }
 		string DBName { get; set; }
 		List<string> GetSelectionStrings();
-		void OpenTable(ITextEditor te, Table table, string name = null);
+		void OpenTable(Table table, string name = null);
 		string GetString(Range range);
 		void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false);
 		void CalculateDiff();

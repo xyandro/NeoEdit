@@ -86,7 +86,7 @@ namespace NeoEdit
 				strs[ctr] += $": {(exception == null ? "Success" : $"{exception.Message}")}";
 
 				foreach (var table in results[ctr].Where(table => table.Table != null))
-					te.OpenTable(te, table.Table, table.TableName);
+					te.OpenTable(table.Table, table.TableName);
 			}
 
 			te.ReplaceSelections(strs);
