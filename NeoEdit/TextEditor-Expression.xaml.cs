@@ -77,14 +77,14 @@ namespace NeoEdit
 			}
 		}
 
-		List<InlineVariable> GetInlineVariables()
+		List<InlineVariable> GetInlineVariables(ITextEditor te)
 		{
 			var inlineVars = new List<InlineVariable>();
 			var regex = new Regex(@"\[(\w*):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			var found = new HashSet<string>();
-			foreach (var tuple in Data.RegexMatches(regex, BeginOffset, EndOffset - BeginOffset, false, false, false))
+			foreach (var tuple in te.Data.RegexMatches(regex, BeginOffset, EndOffset - BeginOffset, false, false, false))
 			{
-				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
+				var match = regex.Match(te.Data.GetString(tuple.Item1, tuple.Item2));
 				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);
 				var inlineVar = new InlineVariable(match.Groups[1].Value, match.Groups[2].Value, Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length), GetString(valueRange), valueRange);
 				if (!string.IsNullOrEmpty(inlineVar.Name))
@@ -118,9 +118,9 @@ namespace NeoEdit
 
 		void Command_Expression_InlineVariables_Add() => ReplaceSelections(GetSelectionStrings().Select(str => $"[:'{(string.IsNullOrEmpty(str) ? "0" : str)}'=0]").ToList());
 
-		void Command_Expression_InlineVariables_Calculate()
+		void Command_Expression_InlineVariables_Calculate(ITextEditor te)
 		{
-			var inlineVars = GetInlineVariables();
+			var inlineVars = GetInlineVariables(te);
 			CalculateInlineVariables(inlineVars);
 			inlineVars.Select(inlineVar => inlineVar.Exception).NonNull().ForEach(ex => throw ex);
 			Replace(inlineVars.Select(inlineVar => inlineVar.ValueRange).ToList(), inlineVars.Select(inlineVar => inlineVar.Value.ToString()).ToList());
@@ -128,9 +128,9 @@ namespace NeoEdit
 
 		ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog() => ExpressionSolveDialog.Run(TabsParent, GetVariables());
 
-		void Command_Expression_InlineVariables_Solve(ExpressionSolveDialog.Result result, AnswerResult answer)
+		void Command_Expression_InlineVariables_Solve(ITextEditor te, ExpressionSolveDialog.Result result, AnswerResult answer)
 		{
-			var inlineVars = GetInlineVariables();
+			var inlineVars = GetInlineVariables(te);
 			var setIndex = inlineVars.FindIndex(inlineVar => inlineVar.Name.Equals(result.SetVariable));
 			if (setIndex == -1)
 				throw new Exception($"Unknown variable: {result.SetVariable}");

@@ -51,7 +51,7 @@ namespace NeoEdit
 				ReplaceSelections(strs);
 		}
 
-		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach((str, index) => TabsParent.Add(new TextEditor(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false)));
+		void Command_File_New_FromSelections(ITextEditor te) => GetSelectionStrings().ForEach((str, index) => TabsParent.Add(new TextEditor(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: te.ContentType, modified: false)));
 
 		void Command_File_Open_Selected()
 		{
@@ -195,7 +195,7 @@ namespace NeoEdit
 			doDrag = DragType.CurrentFile;
 		}
 
-		void Command_File_Operations_VCSDiff()
+		void Command_File_Operations_VCSDiff(ITextEditor te)
 		{
 			if (string.IsNullOrEmpty(FileName))
 				throw new Exception("Must have filename to do diff");
@@ -205,7 +205,7 @@ namespace NeoEdit
 
 			var topMost = TabsParent.TopMost;
 			var textEdit = new TextEditor(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
-			textEdit.ContentType = ContentType;
+			textEdit.ContentType = te.ContentType;
 			TabsParent.Add(textEdit, TabsParent.GetIndex(this));
 			textEdit.DiffTarget = this;
 			TabsParent.TopMost = topMost;
@@ -344,16 +344,16 @@ namespace NeoEdit
 
 		FileEncodingLineEndingsDialog.Result Command_File_Encoding_LineEndings_Dialog() => FileEncodingLineEndingsDialog.Run(TabsParent, LineEnding ?? "");
 
-		void Command_File_Encoding_LineEndings(FileEncodingLineEndingsDialog.Result result)
+		void Command_File_Encoding_LineEndings(ITextEditor te, FileEncodingLineEndingsDialog.Result result)
 		{
-			var lines = Data.NumLines;
+			var lines = te.Data.NumLines;
 			var sel = new List<Range>();
 			for (var line = 0; line < lines; ++line)
 			{
-				var current = Data.GetEnding(line);
+				var current = te.Data.GetEnding(line);
 				if ((current.Length == 0) || (current == result.LineEndings))
 					continue;
-				var start = Data.GetOffset(line, Data.GetLineLength(line));
+				var start = te.Data.GetOffset(line, te.Data.GetLineLength(line));
 				sel.Add(Range.FromIndex(start, current.Length));
 			}
 			Replace(sel, sel.Select(str => result.LineEndings).ToList());

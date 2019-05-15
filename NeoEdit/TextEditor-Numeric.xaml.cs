@@ -44,10 +44,10 @@ namespace NeoEdit
 			return new string(output.ToArray());
 		}
 
-		void SelectRegEx(string pattern)
+		void SelectRegEx(ITextEditor te, string pattern)
 		{
 			var regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-			var results = Selections.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, false, false, false)).SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			var results = Selections.AsParallel().AsOrdered().Select(region => te.Data.RegexMatches(regex, region.Start, region.Length, false, false, false)).SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			SetSelections(results);
 		}
 
@@ -333,7 +333,7 @@ namespace NeoEdit
 			return NumericCombinationsPermutationsDialog.Run(TabsParent);
 		}
 
-		void Command_Numeric_CombinationsPermutations(NumericCombinationsPermutationsDialog.Result result)
+		void Command_Numeric_CombinationsPermutations(ITextEditor te, NumericCombinationsPermutationsDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -374,7 +374,7 @@ namespace NeoEdit
 				}
 			}
 
-			ReplaceSelections(string.Join("", output.Select(row => string.Join(" ", row) + Data.DefaultEnding)));
+			ReplaceSelections(string.Join("", output.Select(row => string.Join(" ", row) + te.Data.DefaultEnding)));
 
 			var start = Selections.Single().Start;
 			var sels = new List<Range>();
@@ -385,7 +385,7 @@ namespace NeoEdit
 					sels.Add(Range.FromIndex(start, str.Length));
 					start += str.Length + 1; // +1 is for space
 				}
-				start += Data.DefaultEnding.Length - 1; // -1 is for space added before
+				start += te.Data.DefaultEnding.Length - 1; // -1 is for space added before
 			}
 			SetSelections(sels);
 		}

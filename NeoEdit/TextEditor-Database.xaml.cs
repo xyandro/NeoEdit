@@ -70,7 +70,7 @@ namespace NeoEdit
 			DBName = result.DBConnectInfo.Name;
 		}
 
-		void Command_Database_ExecuteQuery()
+		void Command_Database_ExecuteQuery(ITextEditor te)
 		{
 			ValidateConnection();
 			var selections = Selections.ToList();
@@ -86,7 +86,7 @@ namespace NeoEdit
 				strs[ctr] += $": {(exception == null ? "Success" : $"{exception.Message}")}";
 
 				foreach (var table in results[ctr].Where(table => table.Table != null))
-					OpenTable(table.Table, table.TableName);
+					OpenTable(te, table.Table, table.TableName);
 			}
 
 			ReplaceSelections(strs);

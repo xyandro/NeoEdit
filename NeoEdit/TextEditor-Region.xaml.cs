@@ -37,7 +37,7 @@ namespace NeoEdit
 			return list;
 		}
 
-		void SetRegionsWithSelectionsText(int useRegion, List<List<string>> list, bool mustBeSameSize = true)
+		void SetRegionsWithSelectionsText(ITextEditor te, int useRegion, List<List<string>> list, bool mustBeSameSize = true)
 		{
 			var useRegions = Regions[useRegion];
 			if (!useRegions.Any())
@@ -47,7 +47,7 @@ namespace NeoEdit
 			if ((mustBeSameSize) && (list.Select(items => items.Count).Distinct().Count() > 1))
 				throw new Exception("All regions must have the same number of selections");
 
-			var sb = new StringBuilder(list.Sum(items => items.Sum(item => item.Length) + Data.DefaultEnding.Length));
+			var sb = new StringBuilder(list.Sum(items => items.Sum(item => item.Length) + te.Data.DefaultEnding.Length));
 			var start = useRegions.First().Start;
 			var newRegions = new List<Range>();
 			var newSelections = new List<Range>();
@@ -59,7 +59,7 @@ namespace NeoEdit
 					newSelections.Add(Range.FromIndex(start + sb.Length, column.Length));
 					sb.Append(column);
 				}
-				sb.Append(Data.DefaultEnding);
+				sb.Append(te.Data.DefaultEnding);
 				newRegions.Add(Range.FromIndex(start + regionStart, sb.Length - regionStart));
 			}
 
@@ -323,50 +323,50 @@ namespace NeoEdit
 
 		void Command_Region_CopyEnclosingRegionIndex_Region(int useRegion) => SetClipboardStrings(GetEnclosingRegions(useRegion).Select(region => (Regions[useRegion].IndexOf(region) + 1).ToString()).ToList());
 
-		void Command_Region_TransformSelections_Flatten_Region(int useRegion) => SetRegionsWithSelectionsText(useRegion, GetRegionsWithSelectionsText(useRegion, false), false);
+		void Command_Region_TransformSelections_Flatten_Region(ITextEditor te, int useRegion) => SetRegionsWithSelectionsText(te, useRegion, GetRegionsWithSelectionsText(useRegion, false), false);
 
-		void Command_Region_TransformSelections_Transpose_Region(int useRegion)
+		void Command_Region_TransformSelections_Transpose_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(useRegion);
 			var count = regions.Select(region => region.Count).FirstOrDefault();
-			SetRegionsWithSelectionsText(useRegion, Enumerable.Range(0, count).Select(index => regions.Select(strs => strs[index]).ToList()).ToList());
+			SetRegionsWithSelectionsText(te, useRegion, Enumerable.Range(0, count).Select(index => regions.Select(strs => strs[index]).ToList()).ToList());
 		}
 
-		void Command_Region_TransformSelections_RotateLeft_Region(int useRegion)
+		void Command_Region_TransformSelections_RotateLeft_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(useRegion);
 			var count = regions.Select(region => region.Count).FirstOrDefault();
-			SetRegionsWithSelectionsText(useRegion, Enumerable.Range(0, count).Select(index => regions.Select(region => region[region.Count - 1 - index]).ToList()).ToList());
+			SetRegionsWithSelectionsText(te, useRegion, Enumerable.Range(0, count).Select(index => regions.Select(region => region[region.Count - 1 - index]).ToList()).ToList());
 		}
 
-		void Command_Region_TransformSelections_RotateRight_Region(int useRegion)
+		void Command_Region_TransformSelections_RotateRight_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(useRegion);
 			regions.Reverse();
 			var count = regions.Select(region => region.Count).FirstOrDefault();
-			SetRegionsWithSelectionsText(useRegion, Enumerable.Range(0, count).Select(index => regions.Select(region => region[index]).ToList()).ToList());
+			SetRegionsWithSelectionsText(te, useRegion, Enumerable.Range(0, count).Select(index => regions.Select(region => region[index]).ToList()).ToList());
 		}
 
-		void Command_Region_TransformSelections_Rotate180_Region(int useRegion)
+		void Command_Region_TransformSelections_Rotate180_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(useRegion);
 			regions.Reverse();
 			regions.ForEach(list => list.Reverse());
-			SetRegionsWithSelectionsText(useRegion, regions);
+			SetRegionsWithSelectionsText(te, useRegion, regions);
 		}
 
-		void Command_Region_TransformSelections_MirrorHorizontal_Region(int useRegion)
+		void Command_Region_TransformSelections_MirrorHorizontal_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(useRegion);
 			regions.ForEach(list => list.Reverse());
-			SetRegionsWithSelectionsText(useRegion, regions);
+			SetRegionsWithSelectionsText(te, useRegion, regions);
 		}
 
-		void Command_Region_TransformSelections_MirrorVertical_Region(int useRegion)
+		void Command_Region_TransformSelections_MirrorVertical_Region(ITextEditor te, int useRegion)
 		{
 			var regions = GetRegionsWithSelectionsText(useRegion);
 			regions.Reverse();
-			SetRegionsWithSelectionsText(useRegion, regions);
+			SetRegionsWithSelectionsText(te, useRegion, regions);
 		}
 
 		void Command_Region_Select_Regions_Region(bool shiftDown, int? useRegion = null)

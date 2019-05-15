@@ -31,7 +31,7 @@ namespace NeoEdit
 			}
 		}
 
-		async Task<List<Tuple<string, string, bool>>> GetURLs(List<string> urls, Coder.CodePage codePage = Coder.CodePage.None)
+		async Task<List<Tuple<string, string, bool>>> GetURLs(ITextEditor te, List<string> urls, Coder.CodePage codePage = Coder.CodePage.None)
 		{
 			var tasks = urls.Select(url => GetURL(url, codePage)).ToList();
 			var results = new List<Tuple<string, string, bool>>();
@@ -43,13 +43,13 @@ namespace NeoEdit
 				catch (Exception ex)
 				{
 					error = true;
-					data = $"<error>{Data.DefaultEnding}";
-					data += $"\t<url>{urls[ctr]}</url>{Data.DefaultEnding}";
-					data += $"\t<data>{Data.DefaultEnding}";
+					data = $"<error>{te.Data.DefaultEnding}";
+					data += $"\t<url>{urls[ctr]}</url>{te.Data.DefaultEnding}";
+					data += $"\t<data>{te.Data.DefaultEnding}";
 					for (; ex != null; ex = ex.InnerException)
-						data += $"\t\t{ex.Message}{Data.DefaultEnding}";
-					data += $"\t</data>{Data.DefaultEnding}";
-					data += $"</error>{Data.DefaultEnding}";
+						data += $"\t\t{ex.Message}{te.Data.DefaultEnding}";
+					data += $"\t</data>{te.Data.DefaultEnding}";
+					data += $"</error>{te.Data.DefaultEnding}";
 				}
 				results.Add(Tuple.Create(urls[ctr], data, error));
 			}
@@ -75,10 +75,10 @@ namespace NeoEdit
 			ReplaceSelections(newStrs);
 		}
 
-		void Command_Network_Fetch(Coder.CodePage codePage = Coder.CodePage.None)
+		void Command_Network_Fetch(ITextEditor te, Coder.CodePage codePage = Coder.CodePage.None)
 		{
 			var urls = GetSelectionStrings();
-			var results = Task.Run(() => GetURLs(urls, codePage).Result).Result;
+			var results = Task.Run(() => GetURLs(te, urls, codePage).Result).Result;
 			if (results.Any(result => result.Item3))
 				new Message(TabsParent)
 				{
@@ -139,14 +139,14 @@ namespace NeoEdit
 
 		NetworkFetchStreamDialog.Result Command_Network_FetchPlaylist_Dialog() => NetworkFetchStreamDialog.Run(TabsParent, GetVariables(), null);
 
-		void Command_Network_FetchPlaylist(NetworkFetchStreamDialog.Result result)
+		void Command_Network_FetchPlaylist(ITextEditor te, NetworkFetchStreamDialog.Result result)
 		{
 			var urls = GetVariableExpressionResults<string>(result.Expression);
 			if (!urls.Any())
 				return;
 
 			var items = MultiProgressDialog.RunAsync(TabsParent, "Getting playlist contents...", urls, async (item, progress, cancelled) => await YouTubeDL.GetPlayListItems(item, progress, cancelled)).ToList();
-			ReplaceSelections(items.Select(l => string.Join(Data.DefaultEnding, l)).ToList());
+			ReplaceSelections(items.Select(l => string.Join(te.Data.DefaultEnding, l)).ToList());
 		}
 
 		void Command_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }

@@ -145,15 +145,15 @@ namespace NeoEdit
 			return entries.Select(entry => entry.index).ToList();
 		}
 
-		List<Range> GetSortLines() => Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
+		List<Range> GetSortLines(ITextEditor te) => Selections.Select(range => te.Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(te.Data.GetOffset(line, 0), te.Data.GetLineLength(line))).ToList();
 
-		List<Range> GetSortSource(SortScope scope, int useRegion)
+		List<Range> GetSortSource(ITextEditor te, SortScope scope, int useRegion)
 		{
 			List<Range> sortSource = null;
 			switch (scope)
 			{
 				case SortScope.Selections: sortSource = Selections.ToList(); break;
-				case SortScope.Lines: sortSource = GetSortLines(); break;
+				case SortScope.Lines: sortSource = GetSortLines(te); break;
 				case SortScope.Regions: sortSource = GetEnclosingRegions(useRegion, true); break;
 				default: throw new Exception("Invalid sort type");
 			}
@@ -247,7 +247,7 @@ namespace NeoEdit
 			ReplaceSelections(clipboardStrings, highlight);
 		}
 
-		EditFindFindDialog.Result Command_Edit_Find_Find_Dialog()
+		EditFindFindDialog.Result Command_Edit_Find_Find_Dialog(ITextEditor te)
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
@@ -255,7 +255,7 @@ namespace NeoEdit
 			if (Selections.Count == 1)
 			{
 				var sel = Selections.Single();
-				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
+				if ((selectionOnly) && (te.Data.GetOffsetLine(sel.Cursor) == te.Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
 					text = GetString(sel);
@@ -265,7 +265,7 @@ namespace NeoEdit
 			return EditFindFindDialog.Run(TabsParent, text, selectionOnly);
 		}
 
-		void Command_Edit_Find_Find(bool selecting, EditFindFindDialog.Result result)
+		void Command_Edit_Find_Find(ITextEditor te, bool selecting, EditFindFindDialog.Result result)
 		{
 			var text = result.Text;
 			if (!result.IsRegex)
@@ -287,7 +287,7 @@ namespace NeoEdit
 			}
 
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var resultsByRegion = regions.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false)).ToList();
+			var resultsByRegion = regions.AsParallel().AsOrdered().Select(region => te.Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false)).ToList();
 
 			if (result.Type == EditFindFindDialog.ResultType.CopyCount)
 			{
@@ -313,7 +313,7 @@ namespace NeoEdit
 
 		void Command_Edit_Find_NextPrevious(bool next, bool selecting) => FindNext(next, selecting);
 
-		void Command_Edit_Find_Selected(bool selecting)
+		void Command_Edit_Find_Selected(ITextEditor te, bool selecting)
 		{
 			if ((Selections.Count != 1) || (!Selections[0].HasSelection))
 				throw new Exception("Must have one selection with selected text.");
@@ -321,13 +321,13 @@ namespace NeoEdit
 			var text = Regex.Escape(GetString(Selections[0]));
 			var regex = new Regex(text, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-			SetSearches(Data.RegexMatches(regex, BeginOffset, EndOffset, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
+			SetSearches(te.Data.RegexMatches(regex, BeginOffset, EndOffset, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
 			FindNext(true, selecting);
 		}
 
 		EditFindMassFindDialog.Result Command_Edit_Find_MassFind_Dialog() => EditFindMassFindDialog.Run(TabsParent, Selections.Any(range => range.HasSelection), GetVariables());
 
-		void Command_Edit_Find_MassFind(EditFindMassFindDialog.Result result)
+		void Command_Edit_Find_MassFind(ITextEditor te, EditFindMassFindDialog.Result result)
 		{
 			var texts = GetVariableExpressionResults<string>(result.Text);
 
@@ -340,11 +340,11 @@ namespace NeoEdit
 
 			var searcher = new Searcher(texts, result.MatchCase);
 			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => Data.StringMatches(searcher, selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => te.Data.StringMatches(searcher, selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			SetSelections(ranges);
 		}
 
-		EditFindReplaceDialog.Result Command_Edit_Find_Replace_Dialog()
+		EditFindReplaceDialog.Result Command_Edit_Find_Replace_Dialog(ITextEditor te)
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
@@ -352,7 +352,7 @@ namespace NeoEdit
 			if (Selections.Count == 1)
 			{
 				var sel = Selections.Single();
-				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
+				if ((selectionOnly) && (te.Data.GetOffsetLine(sel.Cursor) == te.Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
 					text = GetString(sel);
@@ -362,7 +362,7 @@ namespace NeoEdit
 			return EditFindReplaceDialog.Run(TabsParent, text, selectionOnly);
 		}
 
-		void Command_Edit_Find_Replace(EditFindReplaceDialog.Result result)
+		void Command_Edit_Find_Replace(ITextEditor te, EditFindReplaceDialog.Result result)
 		{
 			var text = result.Text;
 			var replace = result.Replace;
@@ -381,7 +381,7 @@ namespace NeoEdit
 			var regex = new Regex(text, options);
 
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var sels = regions.AsParallel().AsOrdered().SelectMany(region => Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			var sels = regions.AsParallel().AsOrdered().SelectMany(region => te.Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			SetSelections(sels);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => regex.Replace(GetString(range), result.Replace)).ToList());
 		}
@@ -537,9 +537,9 @@ namespace NeoEdit
 
 		EditSortDialog.Result Command_Edit_Sort_Dialog() => EditSortDialog.Run(TabsParent);
 
-		void Command_Edit_Sort(EditSortDialog.Result result)
+		void Command_Edit_Sort(ITextEditor te, EditSortDialog.Result result)
 		{
-			var regions = GetSortSource(result.SortScope, result.UseRegion);
+			var regions = GetSortSource(te, result.SortScope, result.UseRegion);
 			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
 			if (regions.Count != ordering.Count)
 				throw new Exception("Ordering misaligned");
@@ -579,14 +579,14 @@ namespace NeoEdit
 			ReplaceSelections(bytes.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
 		}
 
-		void Command_Edit_Bookmarks_Toggle()
+		void Command_Edit_Bookmarks_Toggle(ITextEditor te)
 		{
-			var linePairs = Selections.AsParallel().AsOrdered().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End) }).ToList();
+			var linePairs = Selections.AsParallel().AsOrdered().Select(range => new { start = te.Data.GetOffsetLine(range.Start), end = te.Data.GetOffsetLine(range.End) }).ToList();
 			if (linePairs.Any(pair => pair.start != pair.end))
 				throw new Exception("Selections must be on a single line.");
 
 			var bookmarks = Bookmarks.ToList();
-			var lineRanges = linePairs.AsParallel().AsOrdered().Select(pair => new Range(Data.GetOffset(pair.start, 0))).ToList();
+			var lineRanges = linePairs.AsParallel().AsOrdered().Select(pair => new Range(te.Data.GetOffset(pair.start, 0))).ToList();
 			var comparer = Comparer<Range>.Create((r1, r2) => r1.Start.CompareTo(r2.Start));
 			var indexes = lineRanges.AsParallel().Select(range => new { range = range, index = bookmarks.BinarySearch(range, comparer) }).Reverse().ToList();
 
@@ -625,15 +625,15 @@ namespace NeoEdit
 			SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, func(range.Cursor), selecting)).ToList());
 		}
 
-		void Command_Edit_Navigate_AllLeft(bool selecting)
+		void Command_Edit_Navigate_AllLeft(ITextEditor te, bool selecting)
 		{
 			if (!Selections.Any())
 				return;
 
 			var offsets = Selections.Select(range => range.Cursor).ToList();
-			var lines = offsets.AsParallel().AsOrdered().Select(offset => Data.GetOffsetLine(offset)).ToList();
+			var lines = offsets.AsParallel().AsOrdered().Select(offset => te.Data.GetOffsetLine(offset)).ToList();
 
-			var indexes = offsets.Zip(lines, (offset, line) => Data.GetOffsetIndex(offset, line)).ToList();
+			var indexes = offsets.Zip(lines, (offset, line) => te.Data.GetOffsetIndex(offset, line)).ToList();
 			var index = Math.Min(indexes.Max() - 1, indexes.Min());
 
 			var currentIsSpace = default(bool?);
@@ -642,7 +642,7 @@ namespace NeoEdit
 			{
 				if (index < 0)
 				{
-					offsets = lines.Select(line => Data.GetOffset(line, 0)).ToList();
+					offsets = lines.Select(line => te.Data.GetOffset(line, 0)).ToList();
 					break;
 				}
 
@@ -652,7 +652,7 @@ namespace NeoEdit
 					currentIsSpace = isSpace;
 				else if (isSpace != currentIsSpace)
 				{
-					offsets = lines.Select(line => Data.GetOffset(line, index + 1)).ToList();
+					offsets = lines.Select(line => te.Data.GetOffset(line, index + 1)).ToList();
 					break;
 				}
 
@@ -662,16 +662,16 @@ namespace NeoEdit
 			SetSelections(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
 		}
 
-		void Command_Edit_Navigate_AllRight(bool selecting)
+		void Command_Edit_Navigate_AllRight(ITextEditor te, bool selecting)
 		{
 			if (!Selections.Any())
 				return;
 
 			var offsets = Selections.Select(range => range.Cursor).ToList();
-			var lines = offsets.AsParallel().AsOrdered().Select(offset => Data.GetOffsetLine(offset)).ToList();
+			var lines = offsets.AsParallel().AsOrdered().Select(offset => te.Data.GetOffsetLine(offset)).ToList();
 
-			var index = offsets.Zip(lines, (offset, line) => Data.GetOffsetIndex(offset, line)).Min();
-			var endIndex = lines.Select(line => Data.GetLineLength(line)).Min();
+			var index = offsets.Zip(lines, (offset, line) => te.Data.GetOffsetIndex(offset, line)).Min();
+			var endIndex = lines.Select(line => te.Data.GetLineLength(line)).Min();
 
 			var currentIsSpace = default(bool?);
 
@@ -679,7 +679,7 @@ namespace NeoEdit
 			{
 				if (index > endIndex)
 				{
-					offsets = lines.Select(line => Data.GetOffset(line, Data.GetLineLength(line))).ToList();
+					offsets = lines.Select(line => te.Data.GetOffset(line, te.Data.GetLineLength(line))).ToList();
 					break;
 				}
 
@@ -689,7 +689,7 @@ namespace NeoEdit
 					currentIsSpace = isSpace;
 				else if (isSpace != currentIsSpace)
 				{
-					offsets = lines.Select(line => Data.GetOffset(line, index)).ToList();
+					offsets = lines.Select(line => te.Data.GetOffset(line, index)).ToList();
 					break;
 				}
 

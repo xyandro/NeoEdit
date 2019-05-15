@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using NeoEdit;
-using NeoEdit.Parsing;
-using NeoEdit.Controls;
 using NeoEdit.Content;
+using NeoEdit.Controls;
 using NeoEdit.Dialogs;
+using NeoEdit.Parsing;
 
 namespace NeoEdit
 {
@@ -18,19 +18,19 @@ namespace NeoEdit
 		[DepProp]
 		public bool StrictParsing { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
-		CacheValue previousData = new CacheValue();
-		Parser.ParserType previousType;
-		ParserNode previousRoot;
+		public CacheValue previousData { get; } = new CacheValue();
+		public Parser.ParserType previousType { get; set; }
+		public ParserNode previousRoot { get; set; }
 
-		ParserNode RootNode()
+		ParserNode RootNode(ITextEditor te)
 		{
-			if ((!previousData.Match(Data.Data)) || (previousType != ContentType))
+			if ((!te.previousData.Match(te.Data.Data)) || (te.previousType != te.ContentType))
 			{
-				previousRoot = Parser.Parse(Data.Data, ContentType, StrictParsing);
-				previousData.SetValue(Data.Data);
-				previousType = ContentType;
+				te.previousRoot = Parser.Parse(te.Data.Data, te.ContentType, StrictParsing);
+				te.previousData.SetValue(te.Data.Data);
+				te.previousType = te.ContentType;
 			}
-			return previousRoot;
+			return te.previousRoot;
 		}
 
 		void ContentReplaceSelections(IEnumerable<ParserBase> nodes)
@@ -60,9 +60,9 @@ namespace NeoEdit
 			SetSelections(sels);
 		}
 
-		List<ParserNode> GetSelectionNodes()
+		List<ParserNode> GetSelectionNodes(ITextEditor te)
 		{
-			var nodes = RootNode().GetAllNodes();
+			var nodes = RootNode(te).GetAllNodes();
 			var fullLocation = new Dictionary<int, Dictionary<int, ParserNode>>();
 			var startLocation = new Dictionary<int, ParserNode>();
 			foreach (var node in nodes)
@@ -91,84 +91,84 @@ namespace NeoEdit
 			return result;
 		}
 
-		void Command_Content_Type_SetFromExtension() => ContentType = Parser.GetParserType(FileName);
+		void Command_Content_Type_SetFromExtension(ITextEditor te) => te.ContentType = Parser.GetParserType(FileName);
 
-		void Command_Content_Type(Parser.ParserType contentType) => ContentType = contentType;
+		void Command_Content_Type(ITextEditor te, Parser.ParserType contentType) => te.ContentType = contentType;
 
 		void Command_Content_HighlightSyntax(bool? multiStatus) => HighlightSyntax = multiStatus == false;
 
-		void Command_Content_StrictParsing(bool? multiStatus)
+		void Command_Content_StrictParsing(ITextEditor te, bool? multiStatus)
 		{
 			StrictParsing = multiStatus == false;
-			previousData.Invalidate();
+			te.previousData.Invalidate();
 		}
 
-		void Command_Content_Reformat()
+		void Command_Content_Reformat(ITextEditor te)
 		{
-			var root = RootNode();
-			var str = Parser.Reformat(root, Data.Data, ContentType);
+			var root = RootNode(te);
+			var str = Parser.Reformat(root, te.Data.Data, te.ContentType);
 			Replace(new List<Range> { FullRange }, new List<string> { str });
 		}
 
-		void Command_Content_Comment() => ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Data, range)).ToList());
+		void Command_Content_Comment(ITextEditor te) => ReplaceSelections(Selections.Select(range => Parser.Comment(te.ContentType, te.Data, range)).ToList());
 
-		void Command_Content_Uncomment() => ReplaceSelections(Selections.Select(range => Parser.Uncomment(ContentType, Data, range)).ToList());
+		void Command_Content_Uncomment(ITextEditor te) => ReplaceSelections(Selections.Select(range => Parser.Uncomment(te.ContentType, te.Data, range)).ToList());
 
-		void Command_Content_TogglePosition(bool shiftDown)
+		void Command_Content_TogglePosition(ITextEditor te, bool shiftDown)
 		{
-			var nodes = GetSelectionNodes();
+			var nodes = GetSelectionNodes(te);
 			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All();
 			SetSelections(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
 		}
 
-		void Command_Content_Current() => ContentReplaceSelections(GetSelectionNodes());
+		void Command_Content_Current(ITextEditor te) => ContentReplaceSelections(GetSelectionNodes(te));
 
-		void Command_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
+		void Command_Content_Parent(ITextEditor te) => ContentReplaceSelections(GetSelectionNodes(te).Select(node => node.Parent ?? node));
 
-		ContentAttributeDialog.Result Command_Content_Ancestor_Dialog() => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
+		ContentAttributeDialog.Result Command_Content_Ancestor_Dialog(ITextEditor te) => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes(te).SelectMany(node => node.Parents()).Distinct().ToList());
 
-		void Command_Content_Ancestor(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Command_Content_Ancestor(ITextEditor te, ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes(te).SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		ContentAttributesDialog.Result Command_Content_Attributes_Dialog() => ContentAttributesDialog.Run(TabsParent, GetSelectionNodes());
+		ContentAttributesDialog.Result Command_Content_Attributes_Dialog(ITextEditor te) => ContentAttributesDialog.Run(TabsParent, GetSelectionNodes(te));
 
-		void Command_Content_Attributes(ContentAttributesDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
+		void Command_Content_Attributes(ITextEditor te, ContentAttributesDialog.Result result) => ContentReplaceSelections(GetSelectionNodes(te).SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 
-		ContentAttributeDialog.Result Command_Content_WithAttribute_Dialog() => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes());
+		ContentAttributeDialog.Result Command_Content_WithAttribute_Dialog(ITextEditor te) => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes(te));
 
-		void Command_Content_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Command_Content_WithAttribute(ITextEditor te, ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes(te).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		void Command_Content_Children_Children() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()));
+		void Command_Content_Children_Children(ITextEditor te) => ContentReplaceSelections(GetSelectionNodes(te).SelectMany(node => node.Children()));
 
-		void Command_Content_Children_SelfAndChildren() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndChildren()));
+		void Command_Content_Children_SelfAndChildren(ITextEditor te) => ContentReplaceSelections(GetSelectionNodes(te).SelectMany(node => node.SelfAndChildren()));
 
-		void Command_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
+		void Command_Content_Children_First(ITextEditor te) => ContentReplaceSelections(GetSelectionNodes(te).Select(node => node.Children().FirstOrDefault()));
 
-		ContentAttributeDialog.Result Command_Content_Children_WithAttribute_Dialog() => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
+		ContentAttributeDialog.Result Command_Content_Children_WithAttribute_Dialog(ITextEditor te) => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes(te).SelectMany(node => node.Children()).Distinct().ToList());
 
-		void Command_Content_Children_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Command_Content_Children_WithAttribute(ITextEditor te, ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes(te).SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		void Command_Content_Descendants_Descendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()));
+		void Command_Content_Descendants_Descendants(ITextEditor te) => ContentReplaceSelections(GetSelectionNodes(te).SelectMany(node => node.Descendants()));
 
-		void Command_Content_Descendants_SelfAndDescendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndDescendants()));
+		void Command_Content_Descendants_SelfAndDescendants(ITextEditor te) => ContentReplaceSelections(GetSelectionNodes(te).SelectMany(node => node.SelfAndDescendants()));
 
-		void Command_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
+		void Command_Content_Descendants_First(ITextEditor te) => ContentReplaceSelections(GetSelectionNodes(te).Select(node => node.Descendants().FirstOrDefault()));
 
-		ContentAttributeDialog.Result Command_Content_Descendants_WithAttribute_Dialog() => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+		ContentAttributeDialog.Result Command_Content_Descendants_WithAttribute_Dialog(ITextEditor te) => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes(te).SelectMany(node => node.Descendants()).Distinct().ToList());
 
-		void Command_Content_Descendants_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Command_Content_Descendants_WithAttribute(ITextEditor te, ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes(te).SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		void Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown)
+		void Command_Content_Navigate(ITextEditor te, ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown)
 		{
-			if (ContentType == Parser.ParserType.None)
+			if (te.ContentType == Parser.ParserType.None)
 			{
 				switch (direction)
 				{
-					case ParserNode.ParserNavigationDirectionEnum.Left: Command_Edit_Navigate_AllLeft(shiftDown); break;
-					case ParserNode.ParserNavigationDirectionEnum.Right: Command_Edit_Navigate_AllRight(shiftDown); break;
+					case ParserNode.ParserNavigationDirectionEnum.Left: Command_Edit_Navigate_AllLeft(te, shiftDown); break;
+					case ParserNode.ParserNavigationDirectionEnum.Right: Command_Edit_Navigate_AllRight(te, shiftDown); break;
 				}
 			}
 			else
-				ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown, KeepSelections)));
+				ContentReplaceSelections(GetSelectionNodes(te).SelectMany(node => node.Navigate(direction, shiftDown, KeepSelections)));
 		}
 
 		void Command_Content_KeepSelections(bool? multiStatus) => KeepSelections = multiStatus != true;

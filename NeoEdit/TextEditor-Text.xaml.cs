@@ -38,11 +38,11 @@ namespace NeoEdit
 			}
 		}
 
-		Range TrimRange(Range range, TextTrimDialog.Result result)
+		Range TrimRange(ITextEditor te, Range range, TextTrimDialog.Result result)
 		{
 			var index = range.Start;
 			var length = range.Length;
-			Data.Trim(ref index, ref length, result.TrimChars, result.Start, result.End);
+			te.Data.Trim(ref index, ref length, result.TrimChars, result.Start, result.End);
 			if ((index == range.Start) && (length == range.Length))
 				return range;
 			return Range.FromIndex(index, length);
@@ -67,7 +67,7 @@ namespace NeoEdit
 
 		TextTrimDialog.Result Command_Text_Select_Trim_Dialog() => TextTrimDialog.Run(TabsParent);
 
-		void Command_Text_Select_Trim(TextTrimDialog.Result result) => SetSelections(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList());
+		void Command_Text_Select_Trim(ITextEditor te, TextTrimDialog.Result result) => SetSelections(Selections.AsParallel().AsOrdered().Select(range => TrimRange(te, range, result)).ToList());
 
 		TextWidthDialog.Result Command_Text_Select_ByWidth_Dialog() => TextWidthDialog.Run(TabsParent, false, true, GetVariables());
 
@@ -79,7 +79,7 @@ namespace NeoEdit
 
 		TextSelectWholeBoundedWordDialog.Result Command_Text_Select_WholeBoundedWord_Dialog(bool wholeWord) => TextSelectWholeBoundedWordDialog.Run(TabsParent, wholeWord);
 
-		void Command_Text_Select_WholeBoundedWord(TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
+		void Command_Text_Select_WholeBoundedWord(ITextEditor te, TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
 		{
 			var minOffset = BeginOffset;
 			var maxOffset = EndOffset;
@@ -91,11 +91,11 @@ namespace NeoEdit
 				var endOffset = range.End;
 
 				if (result.Start)
-					while ((startOffset > minOffset) && (result.Chars.Contains(Data.Data[startOffset - 1]) == wholeWord))
+					while ((startOffset > minOffset) && (result.Chars.Contains(te.Data.Data[startOffset - 1]) == wholeWord))
 						--startOffset;
 
 				if (result.End)
-					while ((endOffset < maxOffset) && (result.Chars.Contains(Data.Data[endOffset]) == wholeWord))
+					while ((endOffset < maxOffset) && (result.Chars.Contains(te.Data.Data[endOffset]) == wholeWord))
 						++endOffset;
 
 				sels.Add(new Range(startOffset, endOffset));
@@ -155,20 +155,20 @@ namespace NeoEdit
 			return TextReverseRegExDialog.Run(TabsParent);
 		}
 
-		void Command_Text_ReverseRegEx(TextReverseRegExDialog.Result result)
+		void Command_Text_ReverseRegEx(ITextEditor te, TextReverseRegExDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
 			var data = RevRegEx.RevRegExVisitor.Parse(result.RegEx, result.InfiniteCount);
-			var output = data.GetPossibilities().Select(str => str + Data.DefaultEnding).ToList();
+			var output = data.GetPossibilities().Select(str => str + te.Data.DefaultEnding).ToList();
 			ReplaceSelections(string.Join("", output));
 
 			var start = Selections.Single().Start;
 			var sels = new List<Range>();
 			foreach (var str in output)
 			{
-				sels.Add(Range.FromIndex(start, str.Length - Data.DefaultEnding.Length));
+				sels.Add(Range.FromIndex(start, str.Length - te.Data.DefaultEnding.Length));
 				start += str.Length;
 			}
 			SetSelections(sels);

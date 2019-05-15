@@ -11,11 +11,11 @@ namespace NeoEdit
 {
 	partial class TextEditor
 	{
-		IEnumerable<Range> FindRepetitions(Range inputRange)
+		IEnumerable<Range> FindRepetitions(ITextEditor te, Range inputRange)
 		{
-			var startLine = Data.GetOffsetLine(inputRange.Start);
-			var endLine = Data.GetOffsetLine(inputRange.End);
-			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, Data.GetOffset(line, 0)), Math.Min(inputRange.End, Data.GetOffset(line, Data.GetLineLength(line))))).ToList();
+			var startLine = te.Data.GetOffsetLine(inputRange.Start);
+			var endLine = te.Data.GetOffsetLine(inputRange.End);
+			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, te.Data.GetOffset(line, 0)), Math.Min(inputRange.End, te.Data.GetOffset(line, te.Data.GetLineLength(line))))).ToList();
 			if ((lineRanges.Count >= 2) && (!lineRanges[lineRanges.Count - 1].HasSelection))
 				lineRanges.RemoveAt(lineRanges.Count - 1);
 			var lineStrs = lineRanges.Select(range => GetString(range)).ToList();
@@ -39,22 +39,22 @@ namespace NeoEdit
 
 		string RepeatsValue(bool caseSensitive, string input) => caseSensitive ? input : input?.ToLowerInvariant();
 
-		IEnumerable<Range> SelectRectangle(Range range)
+		IEnumerable<Range> SelectRectangle(ITextEditor te, Range range)
 		{
-			var startLine = Data.GetOffsetLine(range.Start);
-			var endLine = Data.GetOffsetLine(range.End);
+			var startLine = te.Data.GetOffsetLine(range.Start);
+			var endLine = te.Data.GetOffsetLine(range.End);
 			if (startLine == endLine)
 			{
 				yield return range;
 				yield break;
 			}
-			var startIndex = Data.GetOffsetIndex(range.Start, startLine);
-			var endIndex = Data.GetOffsetIndex(range.End, endLine);
+			var startIndex = te.Data.GetOffsetIndex(range.Start, startLine);
+			var endIndex = te.Data.GetOffsetIndex(range.End, endLine);
 			for (var line = startLine; line <= endLine; ++line)
 			{
-				var length = Data.GetLineLength(line);
-				var lineStartOffset = Data.GetOffset(line, Math.Min(length, startIndex));
-				var lineEndOffset = Data.GetOffset(line, Math.Min(length, endIndex));
+				var length = te.Data.GetLineLength(line);
+				var lineStartOffset = te.Data.GetOffset(line, Math.Min(length, startIndex));
+				var lineEndOffset = te.Data.GetOffset(line, Math.Min(length, endIndex));
 				yield return new Range(lineEndOffset, lineStartOffset);
 			}
 		}
@@ -70,7 +70,7 @@ namespace NeoEdit
 			InterpolatedString = 32 | String,
 			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
 		}
-		IEnumerable<Range> SelectSplit(Range range, SelectSplitDialog.Result result)
+		IEnumerable<Range> SelectSplit(ITextEditor te, Range range, SelectSplitDialog.Result result)
 		{
 			var stack = new Stack<SelectSplitEnum>();
 			stack.Push(SelectSplitEnum.None);
@@ -96,18 +96,18 @@ namespace NeoEdit
 				{
 					if (pos >= range.End)
 						throw new Exception("Incomplete string");
-					else if ((pos + 1 < range.End) && (Data.Data[pos] == '\\') && (!stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
+					else if ((pos + 1 < range.End) && (te.Data.Data[pos] == '\\') && (!stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
 						pos += 2;
-					else if ((pos + 1 < range.End) && (Data.Data[pos] == '"') && (Data.Data[pos + 1] == '"') && (stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
+					else if ((pos + 1 < range.End) && (te.Data.Data[pos] == '"') && (te.Data.Data[pos + 1] == '"') && (stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
 						pos += 2;
-					else if ((pos + 1 < range.End) && (Data.Data[pos] == '{') && (Data.Data[pos + 1] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
+					else if ((pos + 1 < range.End) && (te.Data.Data[pos] == '{') && (te.Data.Data[pos + 1] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
 						pos += 2;
-					else if ((Data.Data[pos] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
+					else if ((te.Data.Data[pos] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
 					{
 						stack.Push(SelectSplitEnum.Braces);
 						++pos;
 					}
-					else if (Data.Data[pos] == '"')
+					else if (te.Data.Data[pos] == '"')
 					{
 						stack.Pop();
 						++pos;
@@ -142,9 +142,9 @@ namespace NeoEdit
 						var useEnd = pos;
 						if (result.TrimWhitespace)
 						{
-							while ((useStart < pos) && (char.IsWhiteSpace(Data.Data[useStart])))
+							while ((useStart < pos) && (char.IsWhiteSpace(te.Data.Data[useStart])))
 								++useStart;
-							while ((useEnd > useStart) && (char.IsWhiteSpace(Data.Data[useEnd - 1])))
+							while ((useEnd > useStart) && (char.IsWhiteSpace(te.Data.Data[useEnd - 1])))
 								--useEnd;
 						}
 						if ((result.IncludeEmpty) || (useStart != useEnd))
@@ -158,31 +158,31 @@ namespace NeoEdit
 					}
 					else if (!result.Balanced)
 						++pos;
-					else if ((Data.Data[pos] == '(') || (Data.Data[pos] == '[') || (Data.Data[pos] == '{'))
-						stack.Push(charValue[Data.Data[pos++]]);
-					else if ((Data.Data[pos] == ')') || (Data.Data[pos] == ']') || (Data.Data[pos] == '}'))
+					else if ((te.Data.Data[pos] == '(') || (te.Data.Data[pos] == '[') || (te.Data.Data[pos] == '{'))
+						stack.Push(charValue[te.Data.Data[pos++]]);
+					else if ((te.Data.Data[pos] == ')') || (te.Data.Data[pos] == ']') || (te.Data.Data[pos] == '}'))
 					{
-						if (charValue[Data.Data[pos]] != stackTop)
-							throw new Exception($"Didn't find open for {Data.Data[pos]}");
+						if (charValue[te.Data.Data[pos]] != stackTop)
+							throw new Exception($"Didn't find open for {te.Data.Data[pos]}");
 						stack.Pop();
 						++pos;
 					}
-					else if (Data.Data[pos] == '\"')
+					else if (te.Data.Data[pos] == '\"')
 					{
 						stack.Push(SelectSplitEnum.String);
 						++pos;
 					}
-					else if ((pos + 1 < range.End) && (Data.Data[pos] == '@') && (Data.Data[pos + 1] == '\"'))
+					else if ((pos + 1 < range.End) && (te.Data.Data[pos] == '@') && (te.Data.Data[pos + 1] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.VerbatimString);
 						pos += 2;
 					}
-					else if ((pos + 1 < range.End) && (Data.Data[pos] == '$') && (Data.Data[pos + 1] == '\"'))
+					else if ((pos + 1 < range.End) && (te.Data.Data[pos] == '$') && (te.Data.Data[pos + 1] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.InterpolatedString);
 						pos += 2;
 					}
-					else if ((pos + 2 < range.End) && (Data.Data[pos] == '$') && (Data.Data[pos + 1] == '@') && (Data.Data[pos + 2] == '\"'))
+					else if ((pos + 2 < range.End) && (te.Data.Data[pos] == '$') && (te.Data.Data[pos + 1] == '@') && (te.Data.Data[pos + 2] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.InterpolatedVerbatimString);
 						pos += 3;
@@ -217,30 +217,30 @@ namespace NeoEdit
 			SetSelections(sels.ToList());
 		}
 
-		void Command_Select_Lines(bool includeEndings)
+		void Command_Select_Lines(ITextEditor te, bool includeEndings)
 		{
-			var lineSets = Selections.AsParallel().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) }).ToList();
+			var lineSets = Selections.AsParallel().Select(range => new { start = te.Data.GetOffsetLine(range.Start), end = te.Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) }).ToList();
 
-			var hasLine = new bool[Data.NumLines];
+			var hasLine = new bool[te.Data.NumLines];
 			foreach (var set in lineSets)
 				for (var ctr = set.start; ctr <= set.end; ++ctr)
 					hasLine[ctr] = true;
 
 			var lines = new List<int>();
 			for (var line = 0; line < hasLine.Length; ++line)
-				if ((hasLine[line]) && (!Data.IsDiffGapLine(line)))
+				if ((hasLine[line]) && (!te.Data.IsDiffGapLine(line)))
 					lines.Add(line);
 
-			SetSelections(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line) + (includeEndings ? Data.GetEndingLength(line) : 0))).ToList());
+			SetSelections(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(te.Data.GetOffset(line, 0), te.Data.GetLineLength(line) + (includeEndings ? te.Data.GetEndingLength(line) : 0))).ToList());
 		}
 
-		void Command_Select_Rectangle() => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(range)).ToList());
+		void Command_Select_Rectangle(ITextEditor te) => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(te, range)).ToList());
 
-		void Command_Select_Invert()
+		void Command_Select_Invert(ITextEditor te)
 		{
 			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
-			var end = Selections.Select(sel => sel.Start).Concat(new[] { Data.NumChars });
-			SetSelections(Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Data.NumChars))).ToList());
+			var end = Selections.Select(sel => sel.Start).Concat(new[] { te.Data.NumChars });
+			SetSelections(Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != te.Data.NumChars))).ToList());
 		}
 
 		void Command_Select_Join()
@@ -260,11 +260,11 @@ namespace NeoEdit
 
 		void Command_Select_Empty(bool include) => SetSelections(Selections.Where(range => range.HasSelection != include).ToList());
 
-		void Command_Select_ToggleOpenClose(bool shiftDown)
+		void Command_Select_ToggleOpenClose(ITextEditor te, bool shiftDown)
 		{
 			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 			{
-				var newPos = Data.GetOppositeBracket(range.Cursor);
+				var newPos = te.Data.GetOppositeBracket(range.Cursor);
 				if (newPos == -1)
 					return range;
 
@@ -280,7 +280,7 @@ namespace NeoEdit
 
 		void Command_Select_Repeats_NonMatchPrevious(bool caseSensitive) => SetSelections(Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, GetString(range))).ToList());
 
-		void Command_Select_Repeats_RepeatedLines() => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(range)).ToList());
+		void Command_Select_Repeats_RepeatedLines(ITextEditor te) => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(te, range)).ToList());
 
 		SelectByCountDialog.Result Command_Select_Repeats_ByCount_Dialog() => SelectByCountDialog.Run(TabsParent);
 
@@ -300,10 +300,10 @@ namespace NeoEdit
 
 		SelectSplitDialog.Result Command_Select_Split_Dialog() => SelectSplitDialog.Run(TabsParent, GetVariables());
 
-		void Command_Select_Split(SelectSplitDialog.Result result)
+		void Command_Select_Split(ITextEditor te, SelectSplitDialog.Result result)
 		{
 			var indexes = GetFixedExpressionResults<int>(result.Index);
-			SetSelections(Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList());
+			SetSelections(Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(te, range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList());
 		}
 
 		void Command_Select_Selection_First()

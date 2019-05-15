@@ -40,16 +40,16 @@ namespace NeoEdit
 		}
 
 
-		System.Drawing.Bitmap GetBitmap()
+		System.Drawing.Bitmap GetBitmap(ITextEditor te)
 		{
 			if (!Coder.IsImage(CodePage))
 			{
 				savedBitmapText = null;
 				savedBitmap = null;
 			}
-			else if (Data.Data != savedBitmapText)
+			else if (te.Data.Data != savedBitmapText)
 			{
-				savedBitmapText = Data.Data;
+				savedBitmapText = te.Data.Data;
 				savedBitmap = Coder.StringToBitmap(AllText);
 			}
 			return savedBitmap;
@@ -142,13 +142,13 @@ namespace NeoEdit
 
 		ImageSizeDialog.Result Command_Image_Size_Dialog() => ImageSizeDialog.Run(TabsParent, GetVariables());
 
-		void Command_Image_Size(ImageSizeDialog.Result result)
+		void Command_Image_Size(ITextEditor te, ImageSizeDialog.Result result)
 		{
 			var variables = GetVariables();
 			var width = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
 			var height = new NEExpression(result.HeightExpression).Evaluate<int>(variables);
 
-			var bitmap = GetBitmap();
+			var bitmap = GetBitmap(te);
 			var resultBitmap = new System.Drawing.Bitmap(width, height, bitmap.PixelFormat);
 			resultBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
 			using (var graphics = System.Drawing.Graphics.FromImage(resultBitmap))
@@ -172,7 +172,7 @@ namespace NeoEdit
 
 		ImageCropDialog.Result Command_Image_Crop_Dialog() => ImageCropDialog.Run(TabsParent, GetVariables());
 
-		void Command_Image_Crop(ImageCropDialog.Result result)
+		void Command_Image_Crop(ITextEditor te, ImageCropDialog.Result result)
 		{
 			var variables = GetVariables();
 			var destX = new NEExpression(result.XExpression).Evaluate<int>(variables);
@@ -182,7 +182,7 @@ namespace NeoEdit
 			if ((newWidth <= 0) || (newHeight <= 0))
 				throw new Exception("Width and height must be greater than 0");
 
-			var bitmap = GetBitmap();
+			var bitmap = GetBitmap(te);
 			var srcX = 0;
 			var srcY = 0;
 			var width = bitmap.Width;
@@ -221,12 +221,12 @@ namespace NeoEdit
 
 		ImageRotateDialog.Result Command_Image_Rotate_Dialog() => ImageRotateDialog.Run(TabsParent, GetVariables());
 
-		void Command_Image_Rotate(ImageRotateDialog.Result result)
+		void Command_Image_Rotate(ITextEditor te, ImageRotateDialog.Result result)
 		{
 			var variables = GetVariables();
 			var angle = new NEExpression(result.AngleExpression).Evaluate<float>(variables, "deg");
 
-			var bitmap = GetBitmap();
+			var bitmap = GetBitmap(te);
 			var path = new System.Drawing.Drawing2D.GraphicsPath();
 			path.AddRectangle(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height));
 			var matrix = new System.Drawing.Drawing2D.Matrix();

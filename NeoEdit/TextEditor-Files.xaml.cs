@@ -361,7 +361,7 @@ namespace NeoEdit
 					}
 		}
 
-		async Task<bool> TextSearchFileAsync(string fileName, FindTextDialog.Result search, AnswerResult answer, IProgress<ProgressReport> progress, CancellationToken cancel)
+		async Task<bool> TextSearchFileAsync(ITextEditor te, string fileName, FindTextDialog.Result search, AnswerResult answer, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{
 			try
 			{
@@ -517,14 +517,14 @@ namespace NeoEdit
 
 		void Command_Files_Get_Version_Assembly() => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => AssemblyName.GetAssemblyName(file).Version.ToString()).ToList());
 
-		void Command_Files_Get_ChildrenDescendants(bool recursive)
+		void Command_Files_Get_ChildrenDescendants(ITextEditor te, bool recursive)
 		{
 			var dirs = RelativeSelectedFiles();
 			if (dirs.Any(dir => !Directory.Exists(dir)))
 				throw new ArgumentException("Path must be of existing directories");
 
 			var errors = new List<string>();
-			ReplaceSelections(dirs.Select(dir => string.Join(Data.DefaultEnding, GetDirectoryContents(dir, recursive, errors))).ToList());
+			ReplaceSelections(dirs.Select(dir => string.Join(te.Data.DefaultEnding, GetDirectoryContents(dir, recursive, errors))).ToList());
 			if (errors.Any())
 				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors)}", "Error", TabsParent);
 		}
@@ -631,10 +631,10 @@ namespace NeoEdit
 
 		FindTextDialog.Result Command_Files_Find_Text_Dialog() => FindTextDialog.Run(TabsParent);
 
-		void Command_Files_Find_Text(FindTextDialog.Result result, AnswerResult answer)
+		void Command_Files_Find_Text(ITextEditor te, FindTextDialog.Result result, AnswerResult answer)
 		{
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
-			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await TextSearchFileAsync(obj.fileName, result, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
+			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await TextSearchFileAsync(te, obj.fileName, result, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}
 
 		FilesFindMassFindDialog.Result Command_Files_Find_MassFind_Dialog() => FilesFindMassFindDialog.Run(TabsParent, GetVariables());
