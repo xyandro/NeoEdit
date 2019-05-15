@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Common;
 using NeoEdit.Content;
 using NeoEdit.Expressions;
@@ -85,5 +86,7 @@ namespace NeoEdit
 		string savedBitmapText { get; set; }
 		int CurrentSelection { get; set; }
 		void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false);
+		void CalculateKeysHash(bool caseSensitive);
+		ObservableCollection<ObservableCollection<string>> KeysAndValues { get; }
 	}
 }

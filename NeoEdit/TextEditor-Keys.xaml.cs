@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using NeoEdit;
 
@@ -9,122 +8,43 @@ namespace NeoEdit
 {
 	partial class TextEditor
 	{
-		delegate void GlobalKeysChangedDelegate();
-
-		static GlobalKeysChangedDelegate globalKeysChanged;
-		static bool globalKeys = true;
-		public static bool GlobalKeys { get { return globalKeys; } set { globalKeys = value; globalKeysChanged?.Invoke(); } }
-
-		ObservableCollection<ObservableCollection<string>> _keysAndValues;
-		public ObservableCollection<ObservableCollection<string>> KeysAndValues
-		{
-			get => _keysAndValues;
-			set
-			{
-				RemoveKeysAndValuesCallback();
-				_keysAndValues = value;
-				SetKeysAndValuesCallback();
-			}
-		}
-
-		void SetKeysAndValuesCallback()
-		{
-			if (KeysAndValues == null)
-				return;
-			KeysAndValues.CollectionChanged += KeysAndValuesChanged;
-			foreach (var coll in KeysAndValues)
-				coll.CollectionChanged += KeysAndValuesChanged;
-		}
-
-		void RemoveKeysAndValuesCallback()
-		{
-			if (KeysAndValues == null)
-				return;
-			foreach (var coll in KeysAndValues)
-				coll.CollectionChanged -= KeysAndValuesChanged;
-			KeysAndValues.CollectionChanged -= KeysAndValuesChanged;
-		}
-
-		void KeysAndValuesChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			RemoveKeysAndValuesCallback();
-			SetKeysAndValuesCallback();
-			statusBarRenderTimer.Start();
-		}
-
-		static ObservableCollection<ObservableCollection<string>> staticKeysAndValues { get; set; }
-		ObservableCollection<ObservableCollection<string>> localKeysAndValues { get; set; }
-		public Dictionary<string, int> keysHash => GlobalKeys ? staticKeysHash : localKeysHash;
-		static Dictionary<string, int> staticKeysHash = new Dictionary<string, int>();
-		Dictionary<string, int> localKeysHash = new Dictionary<string, int>();
-
-		void SetupLocalKeys()
-		{
-			localKeysAndValues = new ObservableCollection<ObservableCollection<string>>(Enumerable.Repeat(default(ObservableCollection<string>), 10));
-			for (var ctr = 0; ctr < localKeysAndValues.Count; ++ctr)
-				localKeysAndValues[ctr] = new ObservableCollection<string>();
-
-			SetupLocalOrGlobalKeys();
-			globalKeysChanged += SetupLocalOrGlobalKeys;
-		}
-
-		void SetupLocalOrGlobalKeys() => KeysAndValues = GlobalKeys ? staticKeysAndValues : localKeysAndValues;
-
-		static void SetupStaticKeys()
-		{
-			staticKeysAndValues = new ObservableCollection<ObservableCollection<string>>(Enumerable.Repeat(default(ObservableCollection<string>), 10));
-			for (var ctr = 0; ctr < staticKeysAndValues.Count; ++ctr)
-				staticKeysAndValues[ctr] = new ObservableCollection<string>();
-		}
-
-		void Command_Keys_Set(ITextEditor te, int index, bool caseSensitive = true)
+		static void Command_Keys_Set(ITextEditor te, int index, bool caseSensitive = true)
 		{
 			GlobalKeys = te.TabsParent.ActiveCount == 1;
 			// Handles keys as well as values
 			var values = te.GetSelectionStrings();
 			if ((index == 0) && (values.Distinct(str => caseSensitive ? str : str.ToLowerInvariant()).Count() != values.Count))
 				throw new ArgumentException("Cannot have duplicate keys");
-			KeysAndValues[index] = new ObservableCollection<string>(values);
+			te.KeysAndValues[index] = new ObservableCollection<string>(values);
 			if (index == 0)
-				CalculateKeysHash(caseSensitive);
+				te.CalculateKeysHash(caseSensitive);
 		}
 
-		void CalculateKeysHash(bool caseSensitive)
-		{
-			var hash = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
-			for (var pos = 0; pos < KeysAndValues[0].Count; ++pos)
-				hash[KeysAndValues[0][pos]] = pos;
-			if (GlobalKeys)
-				staticKeysHash = hash;
-			else
-				localKeysHash = hash;
-		}
-
-		void Command_Keys_Add(ITextEditor te, int index)
+		static void Command_Keys_Add(ITextEditor te, int index)
 		{
 			// Handles keys as well as values
 			var values = te.GetSelectionStrings();
 			var caseSensitive = te.keysHash.Comparer == StringComparer.Ordinal;
-			if ((index == 0) && (KeysAndValues[0].Concat(values).GroupBy(key => caseSensitive ? key : key.ToLowerInvariant()).Any(group => group.Count() > 1)))
+			if ((index == 0) && (te.KeysAndValues[0].Concat(values).GroupBy(key => caseSensitive ? key : key.ToLowerInvariant()).Any(group => group.Count() > 1)))
 				throw new ArgumentException("Cannot have duplicate keys");
 			foreach (var value in values)
-				KeysAndValues[index].Add(value);
+				te.KeysAndValues[index].Add(value);
 			if (index == 0)
-				CalculateKeysHash(caseSensitive);
+				te.CalculateKeysHash(caseSensitive);
 		}
 
-		void Command_Keys_Remove(ITextEditor te, int index)
+		static void Command_Keys_Remove(ITextEditor te, int index)
 		{
 			// Handles keys as well as values
 			var values = te.GetSelectionStrings().Distinct().ToList();
 			foreach (var value in values)
-				KeysAndValues[index].Remove(value);
+				te.KeysAndValues[index].Remove(value);
 		}
 
-		void Command_Keys_Replace(ITextEditor te, int index)
+		static void Command_Keys_Replace(ITextEditor te, int index)
 		{
 			// Handles keys as well as values
-			if (KeysAndValues[0].Count != KeysAndValues[index].Count)
+			if (te.KeysAndValues[0].Count != te.KeysAndValues[index].Count)
 				throw new Exception("Keys and values count must match");
 
 			var strs = new List<string>();
@@ -134,7 +54,7 @@ namespace NeoEdit
 				if (!te.keysHash.ContainsKey(str))
 					strs.Add(str);
 				else
-					strs.Add(KeysAndValues[index][te.keysHash[str]]);
+					strs.Add(te.KeysAndValues[index][te.keysHash[str]]);
 			}
 			te.ReplaceSelections(strs);
 		}
