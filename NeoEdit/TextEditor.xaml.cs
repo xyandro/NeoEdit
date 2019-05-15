@@ -711,8 +711,8 @@ namespace NeoEdit
 
 			if (Coder.IsImage(CodePage))
 			{
-				results.Add(NEVariable.Constant("width", "Image width", () => GetBitmap(this).Width));
-				results.Add(NEVariable.Constant("height", "Image height", () => GetBitmap(this).Height));
+				results.Add(NEVariable.Constant("width", "Image width", () => GetBitmap().Width));
+				results.Add(NEVariable.Constant("height", "Image height", () => GetBitmap().Height));
 			}
 
 			var nonNulls = default(List<Tuple<double, int>>);
@@ -943,16 +943,16 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Image_GrabColor: dialogResult = Command_Image_GrabColor_Dialog(this); break;
-				case NECommand.Image_GrabImage: dialogResult = Command_Image_GrabImage_Dialog(this); break;
-				case NECommand.Image_AdjustColor: dialogResult = Command_Image_AdjustColor_Dialog(this); break;
-				case NECommand.Image_AddColor: dialogResult = Command_Image_AddOverlayColor_Dialog(this, true); break;
-				case NECommand.Image_OverlayColor: dialogResult = Command_Image_AddOverlayColor_Dialog(this, false); break;
-				case NECommand.Image_Size: dialogResult = Command_Image_Size_Dialog(this); break;
-				case NECommand.Image_Crop: dialogResult = Command_Image_Crop_Dialog(this); break;
-				case NECommand.Image_Rotate: dialogResult = Command_Image_Rotate_Dialog(this); break;
-				case NECommand.Image_GIF_Animate: dialogResult = Command_Image_GIF_Animate_Dialog(this); break;
-				case NECommand.Image_GIF_Split: dialogResult = Command_Image_GIF_Split_Dialog(this); break;
+				case NECommand.Image_GrabColor: dialogResult = ImageFunctions.Command_Image_GrabColor_Dialog(this); break;
+				case NECommand.Image_GrabImage: dialogResult = ImageFunctions.Command_Image_GrabImage_Dialog(this); break;
+				case NECommand.Image_AdjustColor: dialogResult = ImageFunctions.Command_Image_AdjustColor_Dialog(this); break;
+				case NECommand.Image_AddColor: dialogResult = ImageFunctions.Command_Image_AddOverlayColor_Dialog(this, true); break;
+				case NECommand.Image_OverlayColor: dialogResult = ImageFunctions.Command_Image_AddOverlayColor_Dialog(this, false); break;
+				case NECommand.Image_Size: dialogResult = ImageFunctions.Command_Image_Size_Dialog(this); break;
+				case NECommand.Image_Crop: dialogResult = ImageFunctions.Command_Image_Crop_Dialog(this); break;
+				case NECommand.Image_Rotate: dialogResult = ImageFunctions.Command_Image_Rotate_Dialog(this); break;
+				case NECommand.Image_GIF_Animate: dialogResult = ImageFunctions.Command_Image_GIF_Animate_Dialog(this); break;
+				case NECommand.Image_GIF_Split: dialogResult = ImageFunctions.Command_Image_GIF_Split_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1386,18 +1386,18 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Image_GrabColor: Command_Image_GrabColor(this, dialogResult as ImageGrabColorDialog.Result); break;
-				case NECommand.Image_GrabImage: Command_Image_GrabImage(this, dialogResult as ImageGrabImageDialog.Result); break;
-				case NECommand.Image_AdjustColor: Command_Image_AdjustColor(this, dialogResult as ImageAdjustColorDialog.Result); break;
-				case NECommand.Image_AddColor: Command_Image_AddColor(this, dialogResult as ImageAddOverlayColorDialog.Result); break;
-				case NECommand.Image_OverlayColor: Command_Image_OverlayColor(this, dialogResult as ImageAddOverlayColorDialog.Result); break;
-				case NECommand.Image_Size: Command_Image_Size(this, dialogResult as ImageSizeDialog.Result); break;
-				case NECommand.Image_Crop: Command_Image_Crop(this, dialogResult as ImageCropDialog.Result); break;
-				case NECommand.Image_FlipHorizontal: Command_Image_FlipHorizontal(this); break;
-				case NECommand.Image_FlipVertical: Command_Image_FlipVertical(this); break;
-				case NECommand.Image_Rotate: Command_Image_Rotate(this, dialogResult as ImageRotateDialog.Result); break;
-				case NECommand.Image_GIF_Animate: Command_Image_GIF_Animate(this, dialogResult as ImageGIFAnimateDialog.Result); break;
-				case NECommand.Image_GIF_Split: Command_Image_GIF_Split(this, dialogResult as ImageGIFSplitDialog.Result); break;
+				case NECommand.Image_GrabColor: ImageFunctions.Command_Image_GrabColor(this, dialogResult as ImageGrabColorDialog.Result); break;
+				case NECommand.Image_GrabImage: ImageFunctions.Command_Image_GrabImage(this, dialogResult as ImageGrabImageDialog.Result); break;
+				case NECommand.Image_AdjustColor: ImageFunctions.Command_Image_AdjustColor(this, dialogResult as ImageAdjustColorDialog.Result); break;
+				case NECommand.Image_AddColor: ImageFunctions.Command_Image_AddColor(this, dialogResult as ImageAddOverlayColorDialog.Result); break;
+				case NECommand.Image_OverlayColor: ImageFunctions.Command_Image_OverlayColor(this, dialogResult as ImageAddOverlayColorDialog.Result); break;
+				case NECommand.Image_Size: ImageFunctions.Command_Image_Size(this, dialogResult as ImageSizeDialog.Result); break;
+				case NECommand.Image_Crop: ImageFunctions.Command_Image_Crop(this, dialogResult as ImageCropDialog.Result); break;
+				case NECommand.Image_FlipHorizontal: ImageFunctions.Command_Image_FlipHorizontal(this); break;
+				case NECommand.Image_FlipVertical: ImageFunctions.Command_Image_FlipVertical(this); break;
+				case NECommand.Image_Rotate: ImageFunctions.Command_Image_Rotate(this, dialogResult as ImageRotateDialog.Result); break;
+				case NECommand.Image_GIF_Animate: ImageFunctions.Command_Image_GIF_Animate(this, dialogResult as ImageGIFAnimateDialog.Result); break;
+				case NECommand.Image_GIF_Split: ImageFunctions.Command_Image_GIF_Split(this, dialogResult as ImageGIFSplitDialog.Result); break;
 			}
 		}
 
@@ -2811,6 +2811,24 @@ namespace NeoEdit
 				staticKeysHash = hash;
 			else
 				localKeysHash = hash;
+		}
+
+		string savedBitmapText;
+		System.Drawing.Bitmap savedBitmap;
+
+		public System.Drawing.Bitmap GetBitmap()
+		{
+			if (!Coder.IsImage(CodePage))
+			{
+				savedBitmapText = null;
+				savedBitmap = null;
+			}
+			else if (Data.Data != savedBitmapText)
+			{
+				savedBitmapText = Data.Data;
+				savedBitmap = Coder.StringToBitmap(AllText);
+			}
+			return savedBitmap;
 		}
 	}
 }

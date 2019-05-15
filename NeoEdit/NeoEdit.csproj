@@ -328,27 +328,6 @@
     <Compile Include="Dialogs\EncryptDialog.xaml.cs">
       <DependentUpon>EncryptDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ExpressionHelpDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ExpressionHelpDialog.xaml.cs">
-      <DependentUpon>ExpressionHelpDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ExpressionHelpUnitsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ExpressionHelpUnitsDialog.xaml.cs">
-      <DependentUpon>ExpressionHelpUnitsDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ExpressionHelpVariablesDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ExpressionHelpVariablesDialog.xaml.cs">
-      <DependentUpon>ExpressionHelpVariablesDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\ExpressionSolveDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -516,70 +495,6 @@
     </Page>
     <Compile Include="Dialogs\HelpAboutLicenseDialog.xaml.cs">
       <DependentUpon>HelpAboutLicenseDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\HelpItems.cs" />
-    <Page Include="Dialogs\ImageAddOverlayColorDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ImageAddOverlayColorDialog.xaml.cs">
-      <DependentUpon>ImageAddOverlayColorDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ImageAdjustColorDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ImageAdjustColorDialog.xaml.cs">
-      <DependentUpon>ImageAdjustColorDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ImageCropDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ImageCropDialog.xaml.cs">
-      <DependentUpon>ImageCropDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ImageGIFAnimateDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ImageGIFAnimateDialog.xaml.cs">
-      <DependentUpon>ImageGIFAnimateDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ImageGIFSplitDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ImageGIFSplitDialog.xaml.cs">
-      <DependentUpon>ImageGIFSplitDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ImageGrabColorDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ImageGrabColorDialog.xaml.cs">
-      <DependentUpon>ImageGrabColorDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ImageGrabImageDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ImageGrabImageDialog.xaml.cs">
-      <DependentUpon>ImageGrabImageDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ImageRotateDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ImageRotateDialog.xaml.cs">
-      <DependentUpon>ImageRotateDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ImageSizeDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ImageSizeDialog.xaml.cs">
-      <DependentUpon>ImageSizeDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\JoinDisplay.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -868,7 +783,6 @@
     <Compile Include="Dialogs\TextWidthDialog.xaml.cs">
       <DependentUpon>TextWidthDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GIFWriter.cs" />
     <Compile Include="GotoType.cs" />
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
@@ -955,9 +869,6 @@
     <Compile Include="TextEditor-Files.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Image.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Keys.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -1009,6 +920,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{41bacfec-48ae-4dcc-abc9-e45aa149784d}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Image\Image.csproj">
+      <Project>{d13a65ab-dc9d-4022-ac1a-ae01e5d8be19}</Project>
+      <Name>Image</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />

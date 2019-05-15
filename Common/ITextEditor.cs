@@ -105,8 +105,7 @@ namespace NeoEdit
 		DbConnection dbConnection { get; set; }
 		JumpByType JumpBy { get; set; }
 		bool IncludeInlineVariables { get; set; }
-		string savedBitmapText { get; set; }
-		System.Drawing.Bitmap savedBitmap { get; set; }
 		bool Focus();
+		System.Drawing.Bitmap GetBitmap();
 	}
 }
