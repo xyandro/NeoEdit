@@ -6,7 +6,7 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	partial class HashDialog
+	partial class FilesHashDialog
 	{
 		public class Result
 		{
@@ -15,13 +15,13 @@ namespace NeoEdit.Dialogs
 		}
 
 		[DepProp]
-		Hasher.Type HashType { get { return UIHelper<HashDialog>.GetPropValue<Hasher.Type>(this); } set { UIHelper<HashDialog>.SetPropValue(this, value); } }
+		Hasher.Type HashType { get { return UIHelper<FilesHashDialog>.GetPropValue<Hasher.Type>(this); } set { UIHelper<FilesHashDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		byte[] HMACKey { get { return UIHelper<HashDialog>.GetPropValue<byte[]>(this); } set { UIHelper<HashDialog>.SetPropValue(this, value); } }
+		byte[] HMACKey { get { return UIHelper<FilesHashDialog>.GetPropValue<byte[]>(this); } set { UIHelper<FilesHashDialog>.SetPropValue(this, value); } }
 
-		static HashDialog() { UIHelper<HashDialog>.Register(); }
+		static FilesHashDialog() { UIHelper<FilesHashDialog>.Register(); }
 
-		HashDialog()
+		FilesHashDialog()
 		{
 			InitializeComponent();
 
@@ -38,7 +38,7 @@ namespace NeoEdit.Dialogs
 
 		public static Result Run(Window parent)
 		{
-			var dialog = new HashDialog() { Owner = parent };
+			var dialog = new FilesHashDialog() { Owner = parent };
 			return dialog.ShowDialog() == true ? dialog.result : null;
 		}
 	}

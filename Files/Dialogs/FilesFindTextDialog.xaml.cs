@@ -4,7 +4,7 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	partial class FindTextDialog
+	partial class FilesFindTextDialog
 	{
 		public class Result
 		{
@@ -13,21 +13,21 @@ namespace NeoEdit.Dialogs
 		}
 
 		[DepProp]
-		public string Text { get { return UIHelper<FindTextDialog>.GetPropValue<string>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
+		public string Text { get { return UIHelper<FilesFindTextDialog>.GetPropValue<string>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool WholeWords { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
+		public bool WholeWords { get { return UIHelper<FilesFindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool MatchCase { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
+		public bool MatchCase { get { return UIHelper<FilesFindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IsRegex { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
+		public bool IsRegex { get { return UIHelper<FilesFindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool MultiLine { get { return UIHelper<FindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FindTextDialog>.SetPropValue(this, value); } }
+		public bool MultiLine { get { return UIHelper<FilesFindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
 
 		static bool wholeWordsVal, matchCaseVal, isRegexVal, multiLineVal;
 
-		static FindTextDialog() { UIHelper<FindTextDialog>.Register(); }
+		static FilesFindTextDialog() { UIHelper<FilesFindTextDialog>.Register(); }
 
-		FindTextDialog()
+		FilesFindTextDialog()
 		{
 			InitializeComponent();
 
@@ -70,7 +70,7 @@ namespace NeoEdit.Dialogs
 
 		static public Result Run(Window parent)
 		{
-			var dialog = new FindTextDialog() { Owner = parent };
+			var dialog = new FilesFindTextDialog() { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 

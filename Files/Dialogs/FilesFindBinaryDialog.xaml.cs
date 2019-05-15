@@ -11,7 +11,7 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	partial class FindBinaryDialog
+	partial class FilesFindBinaryDialog
 	{
 		public class Result
 		{
@@ -28,21 +28,21 @@ namespace NeoEdit.Dialogs
 		}
 
 		[DepProp]
-		public string FindText { get { return UIHelper<FindBinaryDialog>.GetPropValue<string>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
+		public string FindText { get { return UIHelper<FilesFindBinaryDialog>.GetPropValue<string>(this); } set { UIHelper<FilesFindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowLE { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
+		public bool ShowLE { get { return UIHelper<FilesFindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowBE { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
+		public bool ShowBE { get { return UIHelper<FilesFindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowInt { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
+		public bool ShowInt { get { return UIHelper<FilesFindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowFloat { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
+		public bool ShowFloat { get { return UIHelper<FilesFindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool ShowStr { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
+		public bool ShowStr { get { return UIHelper<FilesFindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool MatchCase { get { return UIHelper<FindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
+		public bool MatchCase { get { return UIHelper<FilesFindBinaryDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindBinaryDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		ObservableCollection<CodePageCheckBox> EncodingCheckBoxes { get { return UIHelper<FindBinaryDialog>.GetPropValue<ObservableCollection<CodePageCheckBox>>(this); } set { UIHelper<FindBinaryDialog>.SetPropValue(this, value); } }
+		ObservableCollection<CodePageCheckBox> EncodingCheckBoxes { get { return UIHelper<FilesFindBinaryDialog>.GetPropValue<ObservableCollection<CodePageCheckBox>>(this); } set { UIHelper<FilesFindBinaryDialog>.SetPropValue(this, value); } }
 
 		static bool savedShowLE = true;
 		static bool savedShowBE = false;
@@ -54,9 +54,9 @@ namespace NeoEdit.Dialogs
 		readonly static HashSet<Coder.CodePage> defaultCodePages = new HashSet<Coder.CodePage>(Coder.GetNumericCodePages().Concat(new Coder.CodePage[] { Coder.DefaultCodePage, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE }));
 		readonly static HashSet<Coder.CodePage> savedCodePages = new HashSet<Coder.CodePage>(defaultCodePages);
 
-		static FindBinaryDialog() { UIHelper<FindBinaryDialog>.Register(); }
+		static FilesFindBinaryDialog() { UIHelper<FilesFindBinaryDialog>.Register(); }
 
-		FindBinaryDialog()
+		FilesFindBinaryDialog()
 		{
 			InitializeComponent();
 
@@ -135,7 +135,7 @@ namespace NeoEdit.Dialogs
 
 		public static Result Run(Window parent)
 		{
-			var find = new FindBinaryDialog { Owner = parent };
+			var find = new FilesFindBinaryDialog { Owner = parent };
 			if (!find.ShowDialog())
 				return null;
 			return find.result;

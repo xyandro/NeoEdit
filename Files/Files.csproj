@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
+  <PropertyGroup>
+    <ProjectGuid>{7491AC29-E69F-497D-85E4-5A45CEA24286}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>NeoEdit.Files</RootNamespace>
+    <AssemblyName>NeoEdit.Files</AssemblyName>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Page Include="Dialogs\FilesCreateFromExpressionsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesCreateFromExpressionsDialog.xaml.cs">
+      <DependentUpon>FilesCreateFromExpressionsDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesFindBinaryDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesFindBinaryDialog.xaml.cs">
+      <DependentUpon>FilesFindBinaryDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesFindMassFindDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesFindMassFindDialog.xaml.cs">
+      <DependentUpon>FilesFindMassFindDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesFindTextDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesFindTextDialog.xaml.cs">
+      <DependentUpon>FilesFindTextDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesHashDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesHashDialog.xaml.cs">
+      <DependentUpon>FilesHashDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesInsertDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesInsertDialog.xaml.cs">
+      <DependentUpon>FilesInsertDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesNamesGetUniqueDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesNamesGetUniqueDialog.xaml.cs">
+      <DependentUpon>FilesNamesGetUniqueDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesOperationsCombineFilesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesOperationsCombineFilesDialog.xaml.cs">
+      <DependentUpon>FilesOperationsCombineFilesDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesOperationsCopyMoveDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesOperationsCopyMoveDialog.xaml.cs">
+      <DependentUpon>FilesOperationsCopyMoveDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesOperationsEncodingDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesOperationsEncodingDialog.xaml.cs">
+      <DependentUpon>FilesOperationsEncodingDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesOperationsSplitFileDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesOperationsSplitFileDialog.xaml.cs">
+      <DependentUpon>FilesOperationsSplitFileDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesSelectByVersionControlStatusDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesSelectByVersionControlStatusDialog.xaml.cs">
+      <DependentUpon>FilesSelectByVersionControlStatusDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesSetAttributesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesSetAttributesDialog.xaml.cs">
+      <DependentUpon>FilesSetAttributesDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesSetSizeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesSetSizeDialog.xaml.cs">
+      <DependentUpon>FilesSetSizeDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesSetTimeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesSetTimeDialog.xaml.cs">
+      <DependentUpon>FilesSetTimeDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesSignDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesSignDialog.xaml.cs">
+      <DependentUpon>FilesSignDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FilesFunctions.cs" />
+    <Compile Include="GetPathType.cs" />
+    <AppDesigner Include="Properties\" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TimestampType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{41bacfec-48ae-4dcc-abc9-e45aa149784d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+</Project>

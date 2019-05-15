@@ -75,124 +75,12 @@
     <Compile Include="Dialogs\EncryptDialog.xaml.cs">
       <DependentUpon>EncryptDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\FilesCreateFromExpressionsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesCreateFromExpressionsDialog.xaml.cs">
-      <DependentUpon>FilesCreateFromExpressionsDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesFindMassFindDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesFindMassFindDialog.xaml.cs">
-      <DependentUpon>FilesFindMassFindDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesInsertDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesInsertDialog.xaml.cs">
-      <DependentUpon>FilesInsertDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesNamesGetUniqueDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesNamesGetUniqueDialog.xaml.cs">
-      <DependentUpon>FilesNamesGetUniqueDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesOperationsCombineFilesDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesOperationsCombineFilesDialog.xaml.cs">
-      <DependentUpon>FilesOperationsCombineFilesDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesOperationsCopyMoveDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesOperationsCopyMoveDialog.xaml.cs">
-      <DependentUpon>FilesOperationsCopyMoveDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesOperationsEncodingDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesOperationsEncodingDialog.xaml.cs">
-      <DependentUpon>FilesOperationsEncodingDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesOperationsSplitFileDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesOperationsSplitFileDialog.xaml.cs">
-      <DependentUpon>FilesOperationsSplitFileDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesSelectByVersionControlStatusDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesSelectByVersionControlStatusDialog.xaml.cs">
-      <DependentUpon>FilesSelectByVersionControlStatusDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesSetAttributesDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesSetAttributesDialog.xaml.cs">
-      <DependentUpon>FilesSetAttributesDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesSetSizeDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesSetSizeDialog.xaml.cs">
-      <DependentUpon>FilesSetSizeDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesSetTimeDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesSetTimeDialog.xaml.cs">
-      <DependentUpon>FilesSetTimeDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesSignDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesSignDialog.xaml.cs">
-      <DependentUpon>FilesSignDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FindBinaryDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FindBinaryDialog.xaml.cs">
-      <DependentUpon>FindBinaryDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FindTextDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FindTextDialog.xaml.cs">
-      <DependentUpon>FindTextDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\FontSizeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Dialogs\FontSizeDialog.xaml.cs">
       <DependentUpon>FontSizeDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\HashDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\HashDialog.xaml.cs">
-      <DependentUpon>HashDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\HelpAboutChangeLogDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -273,9 +161,6 @@
       <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
     <Compile Include="TabsLayout.cs" />
-    <Compile Include="TextEditor-Files.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Page Include="TextEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -327,6 +212,10 @@
     <ProjectReference Include="..\File\File.csproj">
       <Project>{d11908ef-d913-46a6-be44-a9bf6a311b65}</Project>
       <Name>File</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Files\Files.csproj">
+      <Project>{7491ac29-e69f-497d-85e4-5a45cea24286}</Project>
+      <Name>Files</Name>
     </ProjectReference>
     <ProjectReference Include="..\Image\Image.csproj">
       <Project>{d13a65ab-dc9d-4022-ac1a-ae01e5d8be19}</Project>

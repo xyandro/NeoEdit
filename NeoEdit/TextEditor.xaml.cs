@@ -38,23 +38,6 @@ namespace NeoEdit
 
 		enum FindMinMaxType { String, Numeric, Length }
 
-		enum GetPathType
-		{
-			FileName,
-			FileNameWoExtension,
-			Directory,
-			Extension,
-		}
-
-		[Flags]
-		enum TimestampType
-		{
-			Write = 1,
-			Access = 2,
-			Create = 4,
-			All = Write | Access | Create,
-		}
-
 		public TextData Data { get; } = new TextData();
 
 		[DepProp]
@@ -524,8 +507,6 @@ namespace NeoEdit
 			statusBarRenderTimer.Start();
 		}
 
-		static bool FileOrDirectoryExists(string name) => (Directory.Exists(name)) || (File.Exists(name));
-
 		List<Range> FindMinMax(bool min, FindMinMaxType type)
 		{
 			switch (type)
@@ -865,28 +846,28 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Files_Name_MakeAbsolute: dialogResult = Command_Files_Name_MakeAbsolute_Dialog(this); break;
-				case NECommand.Files_Name_MakeRelative: dialogResult = Command_Files_Name_MakeRelative_Dialog(this); break;
-				case NECommand.Files_Name_GetUnique: dialogResult = Command_Files_Name_GetUnique_Dialog(this); break;
-				case NECommand.Files_Set_Size: dialogResult = Command_Files_Set_Size_Dialog(this); break;
-				case NECommand.Files_Set_Time_Write: dialogResult = Command_Files_Set_Time_Dialog(this); break;
-				case NECommand.Files_Set_Time_Access: dialogResult = Command_Files_Set_Time_Dialog(this); break;
-				case NECommand.Files_Set_Time_Create: dialogResult = Command_Files_Set_Time_Dialog(this); break;
-				case NECommand.Files_Set_Time_All: dialogResult = Command_Files_Set_Time_Dialog(this); break;
-				case NECommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(this); break;
-				case NECommand.Files_Find_Binary: dialogResult = Command_Files_Find_Binary_Dialog(this); break;
-				case NECommand.Files_Find_Text: dialogResult = Command_Files_Find_Text_Dialog(this); break;
-				case NECommand.Files_Find_MassFind: dialogResult = Command_Files_Find_MassFind_Dialog(this); break;
-				case NECommand.Files_Insert: dialogResult = Command_Files_Insert_Dialog(this); break;
-				case NECommand.Files_Create_FromExpressions: dialogResult = Command_Files_Create_FromExpressions_Dialog(this); break;
-				case NECommand.Files_Select_ByVersionControlStatus: dialogResult = Command_Files_Select_ByVersionControlStatus_Dialog(this); break;
-				case NECommand.Files_Hash: dialogResult = Command_Files_Hash_Dialog(this); break;
-				case NECommand.Files_Sign: dialogResult = Command_Files_Sign_Dialog(this); break;
-				case NECommand.Files_Operations_Copy: dialogResult = Command_Files_Operations_CopyMove_Dialog(this, false); break;
-				case NECommand.Files_Operations_Move: dialogResult = Command_Files_Operations_CopyMove_Dialog(this, true); break;
-				case NECommand.Files_Operations_Encoding: dialogResult = Command_Files_Operations_Encoding_Dialog(this); break;
-				case NECommand.Files_Operations_SplitFile: dialogResult = Command_Files_Operations_SplitFile_Dialog(this); break;
-				case NECommand.Files_Operations_CombineFiles: dialogResult = Command_Files_Operations_CombineFiles_Dialog(this); break;
+				case NECommand.Files_Name_MakeAbsolute: dialogResult = FilesFunctions.Command_Files_Name_MakeAbsolute_Dialog(this); break;
+				case NECommand.Files_Name_MakeRelative: dialogResult = FilesFunctions.Command_Files_Name_MakeRelative_Dialog(this); break;
+				case NECommand.Files_Name_GetUnique: dialogResult = FilesFunctions.Command_Files_Name_GetUnique_Dialog(this); break;
+				case NECommand.Files_Set_Size: dialogResult = FilesFunctions.Command_Files_Set_Size_Dialog(this); break;
+				case NECommand.Files_Set_Time_Write: dialogResult = FilesFunctions.Command_Files_Set_Time_Dialog(this); break;
+				case NECommand.Files_Set_Time_Access: dialogResult = FilesFunctions.Command_Files_Set_Time_Dialog(this); break;
+				case NECommand.Files_Set_Time_Create: dialogResult = FilesFunctions.Command_Files_Set_Time_Dialog(this); break;
+				case NECommand.Files_Set_Time_All: dialogResult = FilesFunctions.Command_Files_Set_Time_Dialog(this); break;
+				case NECommand.Files_Set_Attributes: dialogResult = FilesFunctions.Command_Files_Set_Attributes_Dialog(this); break;
+				case NECommand.Files_Find_Binary: dialogResult = FilesFunctions.Command_Files_Find_Binary_Dialog(this); break;
+				case NECommand.Files_Find_Text: dialogResult = FilesFunctions.Command_Files_Find_Text_Dialog(this); break;
+				case NECommand.Files_Find_MassFind: dialogResult = FilesFunctions.Command_Files_Find_MassFind_Dialog(this); break;
+				case NECommand.Files_Insert: dialogResult = FilesFunctions.Command_Files_Insert_Dialog(this); break;
+				case NECommand.Files_Create_FromExpressions: dialogResult = FilesFunctions.Command_Files_Create_FromExpressions_Dialog(this); break;
+				case NECommand.Files_Select_ByVersionControlStatus: dialogResult = FilesFunctions.Command_Files_Select_ByVersionControlStatus_Dialog(this); break;
+				case NECommand.Files_Hash: dialogResult = FilesFunctions.Command_Files_Hash_Dialog(this); break;
+				case NECommand.Files_Sign: dialogResult = FilesFunctions.Command_Files_Sign_Dialog(this); break;
+				case NECommand.Files_Operations_Copy: dialogResult = FilesFunctions.Command_Files_Operations_CopyMove_Dialog(this, false); break;
+				case NECommand.Files_Operations_Move: dialogResult = FilesFunctions.Command_Files_Operations_CopyMove_Dialog(this, true); break;
+				case NECommand.Files_Operations_Encoding: dialogResult = FilesFunctions.Command_Files_Operations_Encoding_Dialog(this); break;
+				case NECommand.Files_Operations_SplitFile: dialogResult = FilesFunctions.Command_Files_Operations_SplitFile_Dialog(this); break;
+				case NECommand.Files_Operations_CombineFiles: dialogResult = FilesFunctions.Command_Files_Operations_CombineFiles_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1236,62 +1217,62 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Files_Name_Simplify: Command_Files_Name_Simplify(this); break;
-				case NECommand.Files_Name_MakeAbsolute: Command_Files_Name_MakeAbsolute(this, dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
-				case NECommand.Files_Name_MakeRelative: Command_Files_Name_MakeRelative(this, dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
-				case NECommand.Files_Name_GetUnique: Command_Files_Name_GetUnique(this, dialogResult as FilesNamesGetUniqueDialog.Result); break;
-				case NECommand.Files_Name_Sanitize: Command_Files_Name_Sanitize(this); break;
-				case NECommand.Files_Get_Size: Command_Files_Get_Size(this); break;
-				case NECommand.Files_Get_Time_Write: Command_Files_Get_Time(this, TimestampType.Write); break;
-				case NECommand.Files_Get_Time_Access: Command_Files_Get_Time(this, TimestampType.Access); break;
-				case NECommand.Files_Get_Time_Create: Command_Files_Get_Time(this, TimestampType.Create); break;
-				case NECommand.Files_Get_Attributes: Command_Files_Get_Attributes(this); break;
-				case NECommand.Files_Get_Version_File: Command_Files_Get_Version_File(this); break;
-				case NECommand.Files_Get_Version_Product: Command_Files_Get_Version_Product(this); break;
-				case NECommand.Files_Get_Version_Assembly: Command_Files_Get_Version_Assembly(this); break;
-				case NECommand.Files_Get_Children: Command_Files_Get_ChildrenDescendants(this, false); break;
-				case NECommand.Files_Get_Descendants: Command_Files_Get_ChildrenDescendants(this, true); break;
-				case NECommand.Files_Get_VersionControlStatus: Command_Files_Get_VersionControlStatus(this); break;
-				case NECommand.Files_Set_Size: Command_Files_Set_Size(this, dialogResult as FilesSetSizeDialog.Result); break;
-				case NECommand.Files_Set_Time_Write: Command_Files_Set_Time(this, TimestampType.Write, dialogResult as FilesSetTimeDialog.Result); break;
-				case NECommand.Files_Set_Time_Access: Command_Files_Set_Time(this, TimestampType.Access, dialogResult as FilesSetTimeDialog.Result); break;
-				case NECommand.Files_Set_Time_Create: Command_Files_Set_Time(this, TimestampType.Create, dialogResult as FilesSetTimeDialog.Result); break;
-				case NECommand.Files_Set_Time_All: Command_Files_Set_Time(this, TimestampType.All, dialogResult as FilesSetTimeDialog.Result); break;
-				case NECommand.Files_Set_Attributes: Command_Files_Set_Attributes(this, dialogResult as FilesSetAttributesDialog.Result); break;
-				case NECommand.Files_Find_Binary: Command_Files_Find_Binary(this, dialogResult as FindBinaryDialog.Result, answer); break;
-				case NECommand.Files_Find_Text: Command_Files_Find_Text(this, dialogResult as FindTextDialog.Result, answer); break;
-				case NECommand.Files_Find_MassFind: Command_Files_Find_MassFind(this, dialogResult as FilesFindMassFindDialog.Result, answer); break;
-				case NECommand.Files_Insert: Command_Files_Insert(this, dialogResult as FilesInsertDialog.Result); break;
-				case NECommand.Files_Create_Files: Command_Files_Create_Files(this); break;
-				case NECommand.Files_Create_Directories: Command_Files_Create_Directories(this); break;
-				case NECommand.Files_Create_FromExpressions: Command_Files_Create_FromExpressions(this, dialogResult as FilesCreateFromExpressionsDialog.Result); break;
-				case NECommand.Files_Select_Name_Directory: Command_Files_Select_Name(this, TextEditor.GetPathType.Directory); break;
-				case NECommand.Files_Select_Name_Name: Command_Files_Select_Name(this, TextEditor.GetPathType.FileName); break;
-				case NECommand.Files_Select_Name_FileNamewoExtension: Command_Files_Select_Name(this, TextEditor.GetPathType.FileNameWoExtension); break;
-				case NECommand.Files_Select_Name_Extension: Command_Files_Select_Name(this, TextEditor.GetPathType.Extension); break;
-				case NECommand.Files_Select_Files: Command_Files_Select_Files(this); break;
-				case NECommand.Files_Select_Directories: Command_Files_Select_Directories(this); break;
-				case NECommand.Files_Select_Existing: Command_Files_Select_Existing(this, true); break;
-				case NECommand.Files_Select_NonExisting: Command_Files_Select_Existing(this, false); break;
-				case NECommand.Files_Select_Roots: Command_Files_Select_Roots(this, true); break;
-				case NECommand.Files_Select_NonRoots: Command_Files_Select_Roots(this, false); break;
-				case NECommand.Files_Select_MatchDepth: Command_Files_Select_MatchDepth(this); break;
-				case NECommand.Files_Select_CommonAncestor: Command_Files_Select_CommonAncestor(this); break;
-				case NECommand.Files_Select_ByVersionControlStatus: Command_Files_Select_ByVersionControlStatus(this, dialogResult as FilesSelectByVersionControlStatusDialog.Result); break;
-				case NECommand.Files_Hash: Command_Files_Hash(this, dialogResult as HashDialog.Result); break;
-				case NECommand.Files_Sign: Command_Files_Sign(this, dialogResult as FilesSignDialog.Result); break;
-				case NECommand.Files_Operations_Copy: Command_Files_Operations_CopyMove(this, dialogResult as FilesOperationsCopyMoveDialog.Result, false); break;
-				case NECommand.Files_Operations_Move: Command_Files_Operations_CopyMove(this, dialogResult as FilesOperationsCopyMoveDialog.Result, true); break;
-				case NECommand.Files_Operations_Delete: Command_Files_Operations_Delete(this); break;
-				case NECommand.Files_Operations_DragDrop: Command_Files_Operations_DragDrop(this); break;
-				case NECommand.Files_Operations_Explore: Command_Files_Operations_Explore(this); break;
-				case NECommand.Files_Operations_CommandPrompt: Command_Files_Operations_CommandPrompt(this); break;
-				case NECommand.Files_Operations_RunCommand_Parallel: Command_Files_Operations_RunCommand_Parallel(this); break;
-				case NECommand.Files_Operations_RunCommand_Sequential: Command_Files_Operations_RunCommand_Sequential(this); break;
-				case NECommand.Files_Operations_RunCommand_Shell: Command_Files_Operations_RunCommand_Shell(this); break;
-				case NECommand.Files_Operations_Encoding: Command_Files_Operations_Encoding(this, dialogResult as FilesOperationsEncodingDialog.Result); break;
-				case NECommand.Files_Operations_SplitFile: Command_Files_Operations_SplitFile(this, dialogResult as FilesOperationsSplitFileDialog.Result); break;
-				case NECommand.Files_Operations_CombineFiles: Command_Files_Operations_CombineFiles(this, dialogResult as FilesOperationsCombineFilesDialog.Result); break;
+				case NECommand.Files_Name_Simplify: FilesFunctions.Command_Files_Name_Simplify(this); break;
+				case NECommand.Files_Name_MakeAbsolute: FilesFunctions.Command_Files_Name_MakeAbsolute(this, dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
+				case NECommand.Files_Name_MakeRelative: FilesFunctions.Command_Files_Name_MakeRelative(this, dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
+				case NECommand.Files_Name_GetUnique: FilesFunctions.Command_Files_Name_GetUnique(this, dialogResult as FilesNamesGetUniqueDialog.Result); break;
+				case NECommand.Files_Name_Sanitize: FilesFunctions.Command_Files_Name_Sanitize(this); break;
+				case NECommand.Files_Get_Size: FilesFunctions.Command_Files_Get_Size(this); break;
+				case NECommand.Files_Get_Time_Write: FilesFunctions.Command_Files_Get_Time(this, TimestampType.Write); break;
+				case NECommand.Files_Get_Time_Access: FilesFunctions.Command_Files_Get_Time(this, TimestampType.Access); break;
+				case NECommand.Files_Get_Time_Create: FilesFunctions.Command_Files_Get_Time(this, TimestampType.Create); break;
+				case NECommand.Files_Get_Attributes: FilesFunctions.Command_Files_Get_Attributes(this); break;
+				case NECommand.Files_Get_Version_File: FilesFunctions.Command_Files_Get_Version_File(this); break;
+				case NECommand.Files_Get_Version_Product: FilesFunctions.Command_Files_Get_Version_Product(this); break;
+				case NECommand.Files_Get_Version_Assembly: FilesFunctions.Command_Files_Get_Version_Assembly(this); break;
+				case NECommand.Files_Get_Children: FilesFunctions.Command_Files_Get_ChildrenDescendants(this, false); break;
+				case NECommand.Files_Get_Descendants: FilesFunctions.Command_Files_Get_ChildrenDescendants(this, true); break;
+				case NECommand.Files_Get_VersionControlStatus: FilesFunctions.Command_Files_Get_VersionControlStatus(this); break;
+				case NECommand.Files_Set_Size: FilesFunctions.Command_Files_Set_Size(this, dialogResult as FilesSetSizeDialog.Result); break;
+				case NECommand.Files_Set_Time_Write: FilesFunctions.Command_Files_Set_Time(this, TimestampType.Write, dialogResult as FilesSetTimeDialog.Result); break;
+				case NECommand.Files_Set_Time_Access: FilesFunctions.Command_Files_Set_Time(this, TimestampType.Access, dialogResult as FilesSetTimeDialog.Result); break;
+				case NECommand.Files_Set_Time_Create: FilesFunctions.Command_Files_Set_Time(this, TimestampType.Create, dialogResult as FilesSetTimeDialog.Result); break;
+				case NECommand.Files_Set_Time_All: FilesFunctions.Command_Files_Set_Time(this, TimestampType.All, dialogResult as FilesSetTimeDialog.Result); break;
+				case NECommand.Files_Set_Attributes: FilesFunctions.Command_Files_Set_Attributes(this, dialogResult as FilesSetAttributesDialog.Result); break;
+				case NECommand.Files_Find_Binary: FilesFunctions.Command_Files_Find_Binary(this, dialogResult as FilesFindBinaryDialog.Result, answer); break;
+				case NECommand.Files_Find_Text: FilesFunctions.Command_Files_Find_Text(this, dialogResult as FilesFindTextDialog.Result, answer); break;
+				case NECommand.Files_Find_MassFind: FilesFunctions.Command_Files_Find_MassFind(this, dialogResult as FilesFindMassFindDialog.Result, answer); break;
+				case NECommand.Files_Insert: FilesFunctions.Command_Files_Insert(this, dialogResult as FilesInsertDialog.Result); break;
+				case NECommand.Files_Create_Files: FilesFunctions.Command_Files_Create_Files(this); break;
+				case NECommand.Files_Create_Directories: FilesFunctions.Command_Files_Create_Directories(this); break;
+				case NECommand.Files_Create_FromExpressions: FilesFunctions.Command_Files_Create_FromExpressions(this, dialogResult as FilesCreateFromExpressionsDialog.Result); break;
+				case NECommand.Files_Select_Name_Directory: FilesFunctions.Command_Files_Select_Name(this, GetPathType.Directory); break;
+				case NECommand.Files_Select_Name_Name: FilesFunctions.Command_Files_Select_Name(this, GetPathType.FileName); break;
+				case NECommand.Files_Select_Name_FileNamewoExtension: FilesFunctions.Command_Files_Select_Name(this, GetPathType.FileNameWoExtension); break;
+				case NECommand.Files_Select_Name_Extension: FilesFunctions.Command_Files_Select_Name(this, GetPathType.Extension); break;
+				case NECommand.Files_Select_Files: FilesFunctions.Command_Files_Select_Files(this); break;
+				case NECommand.Files_Select_Directories: FilesFunctions.Command_Files_Select_Directories(this); break;
+				case NECommand.Files_Select_Existing: FilesFunctions.Command_Files_Select_Existing(this, true); break;
+				case NECommand.Files_Select_NonExisting: FilesFunctions.Command_Files_Select_Existing(this, false); break;
+				case NECommand.Files_Select_Roots: FilesFunctions.Command_Files_Select_Roots(this, true); break;
+				case NECommand.Files_Select_NonRoots: FilesFunctions.Command_Files_Select_Roots(this, false); break;
+				case NECommand.Files_Select_MatchDepth: FilesFunctions.Command_Files_Select_MatchDepth(this); break;
+				case NECommand.Files_Select_CommonAncestor: FilesFunctions.Command_Files_Select_CommonAncestor(this); break;
+				case NECommand.Files_Select_ByVersionControlStatus: FilesFunctions.Command_Files_Select_ByVersionControlStatus(this, dialogResult as FilesSelectByVersionControlStatusDialog.Result); break;
+				case NECommand.Files_Hash: FilesFunctions.Command_Files_Hash(this, dialogResult as FilesHashDialog.Result); break;
+				case NECommand.Files_Sign: FilesFunctions.Command_Files_Sign(this, dialogResult as FilesSignDialog.Result); break;
+				case NECommand.Files_Operations_Copy: FilesFunctions.Command_Files_Operations_CopyMove(this, dialogResult as FilesOperationsCopyMoveDialog.Result, false); break;
+				case NECommand.Files_Operations_Move: FilesFunctions.Command_Files_Operations_CopyMove(this, dialogResult as FilesOperationsCopyMoveDialog.Result, true); break;
+				case NECommand.Files_Operations_Delete: FilesFunctions.Command_Files_Operations_Delete(this); break;
+				case NECommand.Files_Operations_DragDrop: FilesFunctions.Command_Files_Operations_DragDrop(this); break;
+				case NECommand.Files_Operations_Explore: FilesFunctions.Command_Files_Operations_Explore(this); break;
+				case NECommand.Files_Operations_CommandPrompt: FilesFunctions.Command_Files_Operations_CommandPrompt(this); break;
+				case NECommand.Files_Operations_RunCommand_Parallel: FilesFunctions.Command_Files_Operations_RunCommand_Parallel(this); break;
+				case NECommand.Files_Operations_RunCommand_Sequential: FilesFunctions.Command_Files_Operations_RunCommand_Sequential(this); break;
+				case NECommand.Files_Operations_RunCommand_Shell: FilesFunctions.Command_Files_Operations_RunCommand_Shell(this); break;
+				case NECommand.Files_Operations_Encoding: FilesFunctions.Command_Files_Operations_Encoding(this, dialogResult as FilesOperationsEncodingDialog.Result); break;
+				case NECommand.Files_Operations_SplitFile: FilesFunctions.Command_Files_Operations_SplitFile(this, dialogResult as FilesOperationsSplitFileDialog.Result); break;
+				case NECommand.Files_Operations_CombineFiles: FilesFunctions.Command_Files_Operations_CombineFiles(this, dialogResult as FilesOperationsCombineFilesDialog.Result); break;
 			}
 		}
 
@@ -2695,7 +2676,7 @@ namespace NeoEdit
 				return false;
 			if (strs.Any(str => !drives.Any(drive => str.StartsWith(drive, StringComparison.OrdinalIgnoreCase))))
 				return false;
-			if (strs.Any(str => !FileOrDirectoryExists(str)))
+			if (strs.Any(str => !FilesFunctions.FileOrDirectoryExists(str)))
 				return false;
 			return true;
 		}
