@@ -220,10 +220,10 @@ namespace NeoEdit
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to open these {files.Count} files?",
-				Options = Message.OptionsEnum.YesNoCancel,
-				DefaultAccept = Message.OptionsEnum.Yes,
-				DefaultCancel = Message.OptionsEnum.Cancel,
-			}.Show() != Message.OptionsEnum.Yes))
+				Options = MessageOptions.YesNoCancel,
+				DefaultAccept = MessageOptions.Yes,
+				DefaultCancel = MessageOptions.Cancel,
+			}.Show() != MessageOptions.Yes))
 				return;
 
 			foreach (var item in Items)
@@ -406,10 +406,10 @@ namespace NeoEdit
 			{
 				Title = "Download new version?",
 				Text = newer ? $"A newer version ({newVersion}) is available.  Download it?" : $"Already up to date ({newVersion}).  Update anyway?",
-				Options = Message.OptionsEnum.YesNo,
-				DefaultAccept = newer ? Message.OptionsEnum.Yes : Message.OptionsEnum.No,
-				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() != Message.OptionsEnum.Yes)
+				Options = MessageOptions.YesNo,
+				DefaultAccept = newer ? MessageOptions.Yes : MessageOptions.No,
+				DefaultCancel = MessageOptions.No,
+			}.Show() != MessageOptions.Yes)
 				return;
 
 			var oldLocation = Assembly.GetEntryAssembly().Location;
@@ -495,7 +495,7 @@ namespace NeoEdit
 				{
 					Title = "Error",
 					Text = $"Cannot stop recording; recording not in progess.",
-					Options = Message.OptionsEnum.Ok,
+					Options = MessageOptions.Ok,
 				}.Show();
 				return;
 			}
@@ -692,7 +692,7 @@ namespace NeoEdit
 				foreach (var textEditorItem in Items.Where(item => item.Active).ToList())
 				{
 					textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, answer);
-					if (answer.Answer == Message.OptionsEnum.Cancel)
+					if (answer.Answer == MessageOptions.Cancel)
 						break;
 				}
 				if (newClipboard != null)
@@ -789,7 +789,7 @@ namespace NeoEdit
 				foreach (var item in Items)
 				{
 					item.Activated(answer);
-					if (answer.Answer == Message.OptionsEnum.Cancel)
+					if (answer.Answer == MessageOptions.Cancel)
 						break;
 				}
 			}

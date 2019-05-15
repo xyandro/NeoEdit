@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
-using NeoEdit.Content;
 using NeoEdit.Transform;
 
 namespace NeoEdit

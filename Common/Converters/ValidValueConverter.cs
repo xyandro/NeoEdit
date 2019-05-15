@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using NeoEdit;
 using NeoEdit.Transform;
 
 namespace NeoEdit.Converters
 {
-	class ValidValueConverter : IValueConverter, IMultiValueConverter
+	public class ValidValueConverter : IValueConverter, IMultiValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => Coder.CanEncode(value as string, Helpers.ParseEnum<Coder.CodePage>(parameter as string));
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => Coder.CanEncode(values[0] as string, (Coder.CodePage)values[1]);

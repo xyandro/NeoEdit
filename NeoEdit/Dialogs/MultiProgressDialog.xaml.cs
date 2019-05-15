@@ -229,10 +229,10 @@ namespace NeoEdit.Dialogs
 			{
 				Title = "Are you sure?",
 				Text = "Are you sure you wish to cancel?",
-				Options = Message.OptionsEnum.YesNo,
-				DefaultAccept = Message.OptionsEnum.Yes,
-				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() != Message.OptionsEnum.Yes)
+				Options = MessageOptions.YesNo,
+				DefaultAccept = MessageOptions.Yes,
+				DefaultCancel = MessageOptions.No,
+			}.Show() != MessageOptions.Yes)
 				return;
 
 			token.Cancel();

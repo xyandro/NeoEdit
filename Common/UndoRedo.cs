@@ -5,13 +5,13 @@ namespace NeoEdit
 {
 	public class UndoRedo
 	{
-		internal class UndoRedoStep
+		public class UndoRedoStep
 		{
-			internal List<Range> ranges { get; }
-			internal List<string> text { get; }
+			public List<Range> ranges { get; }
+			public List<string> text { get; }
 			internal bool tryJoinLast { get; }
 
-			internal UndoRedoStep(List<Range> _ranges, List<string> _text, bool _tryJoinLast)
+			public UndoRedoStep(List<Range> _ranges, List<string> _text, bool _tryJoinLast)
 			{
 				ranges = _ranges;
 				text = _text;
@@ -22,15 +22,15 @@ namespace NeoEdit
 		readonly List<UndoRedoStep> undo = new List<UndoRedoStep>();
 		readonly List<UndoRedoStep> redo = new List<UndoRedoStep>();
 
-		internal UndoRedo() { }
+		public UndoRedo() { }
 
-		internal void Clear()
+		public void Clear()
 		{
 			undo.Clear();
 			redo.Clear();
 		}
 
-		internal UndoRedoStep GetUndo()
+		public UndoRedoStep GetUndo()
 		{
 			if (undo.Count == 0)
 				return null;
@@ -40,7 +40,7 @@ namespace NeoEdit
 			return step;
 		}
 
-		internal UndoRedoStep GetRedo()
+		public UndoRedoStep GetRedo()
 		{
 			if (redo.Count == 0)
 				return null;
@@ -50,18 +50,18 @@ namespace NeoEdit
 			return step;
 		}
 
-		internal void AddUndone(UndoRedoStep current)
+		public void AddUndone(UndoRedoStep current)
 		{
 			redo.Add(current);
 		}
 
-		internal void AddRedone(UndoRedoStep current)
+		public void AddRedone(UndoRedoStep current)
 		{
 			undo.Add(current);
 		}
 
 		const int maxUndo = 1048576 * 10;
-		internal void AddUndo(UndoRedoStep current, bool modified)
+		public void AddUndo(UndoRedoStep current, bool modified)
 		{
 			redo.Clear();
 

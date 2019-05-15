@@ -13,7 +13,7 @@ namespace NeoEdit.Controls
 	public class MultiMenuItem : NEMenuItem
 	{
 		[DepProp]
-		public ObservableCollection<TextEditor> Objects { get { return UIHelper<MultiMenuItem>.GetPropValue<ObservableCollection<TextEditor>>(this); } set { UIHelper<MultiMenuItem>.SetPropValue(this, value); } }
+		public ObservableCollection<ITextEditor> Objects { get { return UIHelper<MultiMenuItem>.GetPropValue<ObservableCollection<ITextEditor>>(this); } set { UIHelper<MultiMenuItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public string Property { get { return UIHelper<MultiMenuItem>.GetPropValue<string>(this); } set { UIHelper<MultiMenuItem>.SetPropValue(this, value); } }
 		[DepProp]
@@ -33,7 +33,7 @@ namespace NeoEdit.Controls
 				MultiChecked = null;
 			else
 			{
-				var property = typeof(TextEditor).GetProperty(Property);
+				var property = typeof(ITextEditor).GetProperty(Property);
 				var match = Objects.Where(obj => obj.Active).Select(obj => property.GetValue(obj)).Select(value => Converter?.Convert(value, MultiValue.GetType(), null, CultureInfo.DefaultThreadCurrentCulture) ?? value).Select(value => value.Equals(MultiValue)).Distinct().ToList();
 				MultiChecked = match.Count == 1 ? match.First() : default(bool?);
 			}

@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Windows;
 using System.Windows.Input;
-using NeoEdit.Content;
 using NeoEdit.Controls;
 using NeoEdit.Expressions;
 using NeoEdit.Parsing;

@@ -1,7 +1,7 @@
 ﻿<guiControls:ModalDialog x:Name="self" x:Class="NeoEdit.Dialogs.EditFindMassFindDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:guiControls="clr-namespace:NeoEdit.Controls"
+	xmlns:guiControls="clr-namespace:NeoEdit.Controls;assembly=NeoEdit.Common"
 	Title="Mass Find" SizeToContent="Height" Width="600" FocusManager.FocusedElement="{Binding ElementName=text}">
 
 	<Grid Margin="10">

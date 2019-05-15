@@ -3,9 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:guiControls="clr-namespace:NeoEdit.Controls"
-	xmlns:guiConverters="clr-namespace:NeoEdit.Converters"
-	xmlns:textEdit="clr-namespace:NeoEdit"
+	xmlns:guiControls="clr-namespace:NeoEdit.Controls;assembly=NeoEdit.Common"
 	mc:Ignorable="d" Focusable="True" FocusVisualStyle="{x:Null}"
 	d:DesignWidth="300" d:DesignHeight="300" Background="White">
 

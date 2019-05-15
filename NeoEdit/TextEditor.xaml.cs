@@ -427,24 +427,24 @@ namespace NeoEdit
 			if (!IsModified)
 				return true;
 
-			if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+			if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
 				answer.Answer = new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
-					Options = Message.OptionsEnum.YesNoYesAllNoAllCancel,
-					DefaultCancel = Message.OptionsEnum.Cancel,
+					Options = MessageOptions.YesNoYesAllNoAllCancel,
+					DefaultCancel = MessageOptions.Cancel,
 				}.Show();
 
 			switch (answer.Answer)
 			{
-				case Message.OptionsEnum.Cancel:
+				case MessageOptions.Cancel:
 					return false;
-				case Message.OptionsEnum.No:
-				case Message.OptionsEnum.NoToAll:
+				case MessageOptions.No:
+				case MessageOptions.NoToAll:
 					return true;
-				case Message.OptionsEnum.Yes:
-				case Message.OptionsEnum.YesToAll:
+				case MessageOptions.Yes:
+				case MessageOptions.YesToAll:
 					Command_File_Save_Save(this);
 					return !IsModified;
 			}
@@ -475,10 +475,10 @@ namespace NeoEdit
 			{
 				Title = "Confirm",
 				Text = "The specified encoding cannot fully represent the data.  Continue anyway?",
-				Options = Message.OptionsEnum.YesNo,
-				DefaultAccept = Message.OptionsEnum.Yes,
-				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() == Message.OptionsEnum.Yes;
+				Options = MessageOptions.YesNo,
+				DefaultAccept = MessageOptions.Yes,
+				DefaultCancel = MessageOptions.No,
+			}.Show() == MessageOptions.Yes;
 		}
 
 		public bool Empty() => (FileName == null) && (!IsModified) && (BeginOffset == EndOffset);
@@ -1093,7 +1093,7 @@ namespace NeoEdit
 				{
 					Title = "Timer",
 					Text = $"Elapsed time: {elapsed:n} ms",
-					Options = Message.OptionsEnum.Ok,
+					Options = MessageOptions.Ok,
 				}.Show();
 			}
 		}
@@ -2582,10 +2582,10 @@ namespace NeoEdit
 					{
 						Title = "Confirm",
 						Text = "Save failed.  Remove read-only flag?",
-						Options = Message.OptionsEnum.YesNo,
-						DefaultAccept = Message.OptionsEnum.Yes,
-						DefaultCancel = Message.OptionsEnum.No,
-					}.Show() != Message.OptionsEnum.Yes)
+						Options = MessageOptions.YesNo,
+						DefaultAccept = MessageOptions.Yes,
+						DefaultCancel = MessageOptions.No,
+					}.Show() != MessageOptions.Yes)
 						throw;
 					new FileInfo(fileName).IsReadOnly = false;
 					triedReadOnly = true;
@@ -2704,14 +2704,14 @@ namespace NeoEdit
 			{
 				Title = "Confirm",
 				Text = "The current encoding cannot fully represent this data.  Switch to UTF-8?",
-				Options = Message.OptionsEnum.YesNoCancel,
-				DefaultAccept = Message.OptionsEnum.Yes,
-				DefaultCancel = Message.OptionsEnum.Cancel,
+				Options = MessageOptions.YesNoCancel,
+				DefaultAccept = MessageOptions.Yes,
+				DefaultCancel = MessageOptions.Cancel,
 			}.Show())
 			{
-				case Message.OptionsEnum.Yes: CodePage = Coder.CodePage.UTF8; return true;
-				case Message.OptionsEnum.No: return true;
-				case Message.OptionsEnum.Cancel: return false;
+				case MessageOptions.Yes: CodePage = Coder.CodePage.UTF8; return true;
+				case MessageOptions.No: return true;
+				case MessageOptions.Cancel: return false;
 				default: throw new Exception("Invalid response");
 			}
 

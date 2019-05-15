@@ -198,15 +198,15 @@ namespace NeoEdit
 
 			if (maxLoops == 0)
 			{
-				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
 					answer.Answer = new Message(te.WindowParent)
 					{
 						Title = "Confirm",
 						Text = "Unable to find value. Use best match?",
-						Options = Message.OptionsEnum.YesNoYesAll,
-						DefaultCancel = Message.OptionsEnum.No,
+						Options = MessageOptions.YesNoYesAll,
+						DefaultCancel = MessageOptions.No,
 					}.Show();
-				if ((answer.Answer != Message.OptionsEnum.Yes) && (answer.Answer != Message.OptionsEnum.YesToAll))
+				if ((answer.Answer != MessageOptions.Yes) && (answer.Answer != MessageOptions.YesToAll))
 					throw new Exception("Unable to find value");
 			}
 

@@ -24,7 +24,7 @@ namespace NeoEdit
 		{
 			try
 			{
-				if (answer.Answer == Message.OptionsEnum.Cancel)
+				if (answer.Answer == MessageOptions.Cancel)
 					return true;
 
 				if (Directory.Exists(fileName))
@@ -59,17 +59,17 @@ namespace NeoEdit
 			{
 				te.TabsParent.Dispatcher.Invoke(() =>
 				{
-					if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+					if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
 						answer.Answer = new Message(te.WindowParent)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
-							Options = Message.OptionsEnum.YesNoYesAllNoAllCancel,
-							DefaultCancel = Message.OptionsEnum.Cancel,
+							Options = MessageOptions.YesNoYesAllNoAllCancel,
+							DefaultCancel = MessageOptions.Cancel,
 						}.Show();
 				});
 
-				return (answer.Answer == Message.OptionsEnum.Yes) || (answer.Answer == Message.OptionsEnum.YesToAll) || (answer.Answer == Message.OptionsEnum.Cancel);
+				return (answer.Answer == MessageOptions.Yes) || (answer.Answer == MessageOptions.YesToAll) || (answer.Answer == MessageOptions.Cancel);
 			}
 		}
 
@@ -365,7 +365,7 @@ namespace NeoEdit
 		{
 			try
 			{
-				if (answer.Answer == Message.OptionsEnum.Cancel)
+				if (answer.Answer == MessageOptions.Cancel)
 					return true;
 
 				if (Directory.Exists(fileName))
@@ -392,17 +392,17 @@ namespace NeoEdit
 			{
 				te.TabsParent.Dispatcher.Invoke(() =>
 				{
-					if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
+					if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
 						answer.Answer = new Message(te.WindowParent)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
-							Options = Message.OptionsEnum.YesNoYesAllNoAllCancel,
-							DefaultCancel = Message.OptionsEnum.Cancel,
+							Options = MessageOptions.YesNoYesAllNoAllCancel,
+							DefaultCancel = MessageOptions.Cancel,
 						}.Show();
 				});
 
-				return (answer.Answer == Message.OptionsEnum.Yes) || (answer.Answer == Message.OptionsEnum.YesToAll) || (answer.Answer == Message.OptionsEnum.Cancel);
+				return (answer.Answer == MessageOptions.Yes) || (answer.Answer == MessageOptions.YesToAll) || (answer.Answer == MessageOptions.Cancel);
 			}
 		}
 
@@ -782,10 +782,10 @@ namespace NeoEdit
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?",
-				Options = Message.OptionsEnum.YesNo,
-				DefaultAccept = Message.OptionsEnum.Yes,
-				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() != Message.OptionsEnum.Yes)
+				Options = MessageOptions.YesNo,
+				DefaultAccept = MessageOptions.Yes,
+				DefaultCancel = MessageOptions.No,
+			}.Show() != MessageOptions.Yes)
 				return;
 
 			invalid = newFileNames.Zip(oldFileNames, (newFileName, oldFileName) => new { newFileName, oldFileName }).Where(obj => (!string.Equals(obj.newFileName, obj.oldFileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(obj.newFileName))).Select(obj => obj.newFileName).Distinct().Take(InvalidCount).ToList();
@@ -795,10 +795,10 @@ namespace NeoEdit
 				{
 					Title = "Confirm",
 					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
-					Options = Message.OptionsEnum.YesNo,
-					DefaultAccept = Message.OptionsEnum.Yes,
-					DefaultCancel = Message.OptionsEnum.No,
-				}.Show() != Message.OptionsEnum.Yes)
+					Options = MessageOptions.YesNo,
+					DefaultAccept = MessageOptions.Yes,
+					DefaultCancel = MessageOptions.No,
+				}.Show() != MessageOptions.Yes)
 					return;
 			}
 
@@ -828,13 +828,13 @@ namespace NeoEdit
 			{
 				Title = "Confirm",
 				Text = "Are you sure you want to delete these files/directories?",
-				Options = Message.OptionsEnum.YesNo,
-				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() != Message.OptionsEnum.Yes)
+				Options = MessageOptions.YesNo,
+				DefaultCancel = MessageOptions.No,
+			}.Show() != MessageOptions.Yes)
 				return;
 
 			var files = te.RelativeSelectedFiles();
-			var answer = Message.OptionsEnum.None;
+			var answer = MessageOptions.None;
 			foreach (var file in files)
 			{
 				try
@@ -846,17 +846,17 @@ namespace NeoEdit
 				}
 				catch (Exception ex)
 				{
-					if (answer != Message.OptionsEnum.YesToAll)
+					if (answer != MessageOptions.YesToAll)
 						answer = new Message(te.WindowParent)
 						{
 							Title = "Confirm",
 							Text = $"An error occurred:\n\n{ex.Message}\n\nContinue?",
-							Options = Message.OptionsEnum.YesNoYesAll,
-							DefaultAccept = Message.OptionsEnum.Yes,
-							DefaultCancel = Message.OptionsEnum.No,
+							Options = MessageOptions.YesNoYesAll,
+							DefaultAccept = MessageOptions.Yes,
+							DefaultCancel = MessageOptions.No,
 						}.Show();
 
-					if (answer == Message.OptionsEnum.No)
+					if (answer == MessageOptions.No)
 						break;
 				}
 			}

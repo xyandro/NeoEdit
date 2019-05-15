@@ -17,6 +17,7 @@ TestResults
 
 # Specific
 /ChangeLog.txt
+/Common/Expressions/Parser
 /Dependencies/GlobalAssemblyInfo.cs
 /Disk/Magic/file.exe.gz
 /Disk/Magic/magic.mgc.gz
@@ -33,7 +34,6 @@ TestResults
 /NeoEdit/Content/SQL/Parser
 /NeoEdit/Content/TCSV/Parser
 /NeoEdit/Content/XML/Parser
-/NeoEdit/Expressions/Parser
 /NeoEdit/Resources/Words.txt.gz
 /NeoEdit/RevRegEx/Parser
 /Release

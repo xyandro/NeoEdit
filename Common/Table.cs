@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using NeoEdit;
 using NeoEdit.Transform;
-using NeoEdit.Content;
 
 namespace NeoEdit
 {
@@ -184,7 +182,7 @@ namespace NeoEdit
 			}
 		}
 
-		internal void AddRow() => Rows.Add(Headers.Select(header => "").ToList());
+		public void AddRow() => Rows.Add(Headers.Select(header => "").ToList());
 
 		public void AddColumn(string columnName, List<string> results)
 		{

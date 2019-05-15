@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using NeoEdit;
 using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
@@ -12,42 +10,23 @@ namespace NeoEdit.Dialogs
 		[DepProp]
 		public string Text { get { return UIHelper<Message>.GetPropValue<string>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 		[DepProp]
-		public OptionsEnum Options { get { return UIHelper<Message>.GetPropValue<OptionsEnum>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
+		public MessageOptions Options { get { return UIHelper<Message>.GetPropValue<MessageOptions>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 		[DepProp]
-		public OptionsEnum DefaultAccept { get { return UIHelper<Message>.GetPropValue<OptionsEnum>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
+		public MessageOptions DefaultAccept { get { return UIHelper<Message>.GetPropValue<MessageOptions>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 		[DepProp]
-		public OptionsEnum DefaultCancel { get { return UIHelper<Message>.GetPropValue<OptionsEnum>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
+		public MessageOptions DefaultCancel { get { return UIHelper<Message>.GetPropValue<MessageOptions>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 
-		[Flags]
-		public enum OptionsEnum
+		static Dictionary<MessageOptions, string> buttonContent = new Dictionary<MessageOptions, string>()
 		{
-			None = 0,
-			Yes = 1,
-			No = 2,
-			YesNo = Yes | No,
-			YesToAll = 4,
-			YesNoYesAll = Yes | No | YesToAll,
-			NoToAll = 8,
-			YesNoNoAll = Yes | No | NoToAll,
-			YesNoYesAllNoAll = Yes | No | YesToAll | NoToAll,
-			Ok = 16,
-			Cancel = 32,
-			OkCancel = Ok | Cancel,
-			YesNoCancel = Yes | No | Cancel,
-			YesNoYesAllNoAllCancel = Yes | No | YesToAll | NoToAll | Cancel,
-		}
-
-		static Dictionary<OptionsEnum, string> buttonContent = new Dictionary<OptionsEnum, string>()
-		{
-			[OptionsEnum.Yes] = "_Yes",
-			[OptionsEnum.No] = "_No",
-			[OptionsEnum.YesToAll] = "Y_es to all",
-			[OptionsEnum.NoToAll] = "N_o to all",
-			[OptionsEnum.Ok] = "_Ok",
-			[OptionsEnum.Cancel] = "_Cancel",
+			[MessageOptions.Yes] = "_Yes",
+			[MessageOptions.No] = "_No",
+			[MessageOptions.YesToAll] = "Y_es to all",
+			[MessageOptions.NoToAll] = "N_o to all",
+			[MessageOptions.Ok] = "_Ok",
+			[MessageOptions.Cancel] = "_Cancel",
 		};
 
-		public new OptionsEnum Show()
+		public new MessageOptions Show()
 		{
 			ShowDialog();
 			return Answer;
@@ -59,14 +38,14 @@ namespace NeoEdit.Dialogs
 			{
 				Text = text,
 				Title = title ?? "Info",
-				Options = OptionsEnum.Ok,
-				DefaultAccept = OptionsEnum.Ok,
-				DefaultCancel = OptionsEnum.Ok,
+				Options = MessageOptions.Ok,
+				DefaultAccept = MessageOptions.Ok,
+				DefaultCancel = MessageOptions.Ok,
 			}.Show();
 		}
 
-		Dictionary<Button, OptionsEnum> buttonActions = new Dictionary<Button, OptionsEnum>();
-		OptionsEnum Answer { get; set; }
+		Dictionary<Button, MessageOptions> buttonActions = new Dictionary<Button, MessageOptions>();
+		MessageOptions Answer { get; set; }
 
 		static bool IsPowerOfTwo(int x) => (x & (x - 1)) == 0;
 
@@ -92,14 +71,14 @@ namespace NeoEdit.Dialogs
 		{
 			buttons.Children.Clear();
 
-			foreach (var option in Helpers.GetValues<OptionsEnum>())
+			foreach (var option in Helpers.GetValues<MessageOptions>())
 			{
 				if ((!IsPowerOfTwo((int)option)) || ((Options & option) == 0))
 					continue;
 
-				if (DefaultAccept == OptionsEnum.None)
+				if (DefaultAccept == MessageOptions.None)
 					DefaultAccept = option;
-				if (DefaultCancel == OptionsEnum.None)
+				if (DefaultCancel == MessageOptions.None)
 					DefaultCancel = option;
 
 				var button = new Button

@@ -58,10 +58,10 @@ namespace NeoEdit.Dialogs
 			{
 				Title = "Please confirm",
 				Text = "This value and the password together are required to generate the key.  Are you sure you want to change it?",
-				Options = Message.OptionsEnum.YesNo,
-				DefaultAccept = Message.OptionsEnum.Yes,
-				DefaultCancel = Message.OptionsEnum.No,
-			}.Show() != Message.OptionsEnum.Yes)
+				Options = MessageOptions.YesNo,
+				DefaultAccept = MessageOptions.Yes,
+				DefaultCancel = MessageOptions.No,
+			}.Show() != MessageOptions.Yes)
 				return;
 
 			var bytes = new byte[24];
@@ -92,7 +92,7 @@ namespace NeoEdit.Dialogs
 					{
 						Title = "Password mismatch",
 						Text = "Passwords must match.",
-						Options = Message.OptionsEnum.Ok,
+						Options = MessageOptions.Ok,
 					}.Show();
 					return;
 				}

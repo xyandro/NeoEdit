@@ -78,9 +78,9 @@ namespace NeoEdit.Dialogs
 			{
 				Title = "Information",
 				Text = GetResult().Test() ?? "Database created.",
-				Options = Message.OptionsEnum.Ok,
-				DefaultAccept = Message.OptionsEnum.Ok,
-				DefaultCancel = Message.OptionsEnum.Ok,
+				Options = MessageOptions.Ok,
+				DefaultAccept = MessageOptions.Ok,
+				DefaultCancel = MessageOptions.Ok,
 			}.Show();
 		}
 
@@ -90,9 +90,9 @@ namespace NeoEdit.Dialogs
 			{
 				Title = "Information",
 				Text = GetResult().Test() ?? "Connection successful.",
-				Options = Message.OptionsEnum.Ok,
-				DefaultAccept = Message.OptionsEnum.Ok,
-				DefaultCancel = Message.OptionsEnum.Ok,
+				Options = MessageOptions.Ok,
+				DefaultAccept = MessageOptions.Ok,
+				DefaultCancel = MessageOptions.Ok,
 			}.Show();
 		}
 

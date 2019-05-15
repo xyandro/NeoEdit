@@ -70,10 +70,10 @@ namespace NeoEdit.Dialogs
 			{
 				Title = "Confirm",
 				Text = "Delete this entry?",
-				Options = Message.OptionsEnum.YesNoCancel,
-				DefaultAccept = Message.OptionsEnum.Yes,
-				DefaultCancel = Message.OptionsEnum.Cancel,
-			}.Show() != Message.OptionsEnum.Yes)
+				Options = MessageOptions.YesNoCancel,
+				DefaultAccept = MessageOptions.Yes,
+				DefaultCancel = MessageOptions.Cancel,
+			}.Show() != MessageOptions.Yes)
 				return;
 			DBConnectInfos.Remove(DBConnectInfo);
 		}
@@ -109,9 +109,9 @@ namespace NeoEdit.Dialogs
 			{
 				Title = "Information",
 				Text = DBConnectInfo.Test() ?? "Connection successful.",
-				Options = Message.OptionsEnum.Ok,
-				DefaultAccept = Message.OptionsEnum.Ok,
-				DefaultCancel = Message.OptionsEnum.Ok,
+				Options = MessageOptions.Ok,
+				DefaultAccept = MessageOptions.Ok,
+				DefaultCancel = MessageOptions.Ok,
 			}.Show();
 		}
 

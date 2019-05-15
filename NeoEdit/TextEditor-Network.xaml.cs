@@ -84,7 +84,7 @@ namespace NeoEdit
 				{
 					Title = "Error",
 					Text = $"Failed to fetch the URLs:\n{string.Join("\n", results.Where(result => result.Item3).Select(result => result.Item1))}",
-					Options = Message.OptionsEnum.Ok,
+					Options = MessageOptions.Ok,
 				}.Show();
 			te.ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
@@ -114,10 +114,10 @@ namespace NeoEdit
 				{
 					Title = "Confirm",
 					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
-					Options = Message.OptionsEnum.YesNo,
-					DefaultAccept = Message.OptionsEnum.Yes,
-					DefaultCancel = Message.OptionsEnum.No,
-				}.Show() != Message.OptionsEnum.Yes)
+					Options = MessageOptions.YesNo,
+					DefaultAccept = MessageOptions.Yes,
+					DefaultCancel = MessageOptions.No,
+				}.Show() != MessageOptions.Yes)
 					return;
 			}
 
