@@ -306,13 +306,6 @@
     <Compile Include="Dialogs\MacroPlayRepeatDialog.xaml.cs">
       <DependentUpon>MacroPlayRepeatDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\RegionModifyRegionsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\RegionModifyRegionsDialog.xaml.cs">
-      <DependentUpon>RegionModifyRegionsDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\SignVerifyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -368,9 +361,6 @@
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Files.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Region.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Page Include="TextEditor.xaml">
@@ -440,6 +430,10 @@
     <ProjectReference Include="..\Position\Position.csproj">
       <Project>{a7d32fd6-0bed-4ffc-9ed7-2c9c385e241c}</Project>
       <Name>Position</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Region\Region.csproj">
+      <Project>{5a300f7f-9a32-4d1b-b797-3177e771b0b4}</Project>
+      <Name>Region</Name>
     </ProjectReference>
     <ProjectReference Include="..\Select\Select.csproj">
       <Project>{a77b4c32-4d34-4bff-aad2-200457743604}</Project>
