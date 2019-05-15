@@ -16,7 +16,7 @@ namespace NeoEdit
 			if (te.Selections.Count < 1)
 				return null;
 
-			return DateTimeConvertDialog.Run(te.TabsParent, te.GetString(te.Selections.First()));
+			return DateTimeConvertDialog.Run(te.WindowParent, te.GetString(te.Selections.First()));
 		}
 
 		static void Command_DateTime_Convert(ITextEditor te, DateTimeConvertDialog.Result result) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => DateTimeConvertDialog.ConvertFormat(te.GetString(range), result.InputFormat, result.InputTimeZone, result.OutputFormat, result.OutputTimeZone)).ToList());

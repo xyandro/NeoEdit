@@ -67,11 +67,11 @@ namespace NeoEdit
 
 		static string GetRandomData(string chars, int length) => new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
 
-		static TextTrimDialog.Result Command_Text_Select_Trim_Dialog(ITextEditor te) => TextTrimDialog.Run(te.TabsParent);
+		static TextTrimDialog.Result Command_Text_Select_Trim_Dialog(ITextEditor te) => TextTrimDialog.Run(te.WindowParent);
 
 		static void Command_Text_Select_Trim(ITextEditor te, TextTrimDialog.Result result) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Select(range => TrimRange(te, range, result)).ToList());
 
-		static TextWidthDialog.Result Command_Text_Select_ByWidth_Dialog(ITextEditor te) => TextWidthDialog.Run(te.TabsParent, false, true, te.GetVariables());
+		static TextWidthDialog.Result Command_Text_Select_ByWidth_Dialog(ITextEditor te) => TextWidthDialog.Run(te.WindowParent, false, true, te.GetVariables());
 
 		static void Command_Text_Select_ByWidth(ITextEditor te, TextWidthDialog.Result result)
 		{
@@ -79,7 +79,7 @@ namespace NeoEdit
 			te.SetSelections(te.Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList());
 		}
 
-		static TextSelectWholeBoundedWordDialog.Result Command_Text_Select_WholeBoundedWord_Dialog(ITextEditor te, bool wholeWord) => TextSelectWholeBoundedWordDialog.Run(te.TabsParent, wholeWord);
+		static TextSelectWholeBoundedWordDialog.Result Command_Text_Select_WholeBoundedWord_Dialog(ITextEditor te, bool wholeWord) => TextSelectWholeBoundedWordDialog.Run(te.WindowParent, wholeWord);
 
 		static void Command_Text_Select_WholeBoundedWord(ITextEditor te, TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
 		{
@@ -118,7 +118,7 @@ namespace NeoEdit
 		static TextWidthDialog.Result Command_Text_Width_Dialog(ITextEditor te)
 		{
 			var numeric = te.Selections.Any() ? te.Selections.AsParallel().All(range => te.GetString(range).IsNumeric()) : false;
-			return TextWidthDialog.Run(te.TabsParent, numeric, false, te.GetVariables());
+			return TextWidthDialog.Run(te.WindowParent, numeric, false, te.GetVariables());
 		}
 
 		static void Command_Text_Width(ITextEditor te, TextWidthDialog.Result result)
@@ -127,19 +127,19 @@ namespace NeoEdit
 			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(te.GetString(range), result, results[index])).ToList());
 		}
 
-		static TextTrimDialog.Result Command_Text_Trim_Dialog(ITextEditor te) => TextTrimDialog.Run(te.TabsParent);
+		static TextTrimDialog.Result Command_Text_Trim_Dialog(ITextEditor te) => TextTrimDialog.Run(te.WindowParent);
 
 		static void Command_Text_Trim(ITextEditor te, TextTrimDialog.Result result) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(str => TrimString(te.GetString(str), result)).ToList());
 
 		static void Command_Text_SingleLine(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
-		static TextUnicodeDialog.Result Command_Text_Unicode_Dialog(ITextEditor te) => TextUnicodeDialog.Run(te.TabsParent);
+		static TextUnicodeDialog.Result Command_Text_Unicode_Dialog(ITextEditor te) => TextUnicodeDialog.Run(te.WindowParent);
 
 		static void Command_Text_Unicode(ITextEditor te, TextUnicodeDialog.Result result) => te.ReplaceSelections(result.Value);
 
 		static void Command_Text_GUID(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
-		static TextRandomTextDialog.Result Command_Text_RandomText_Dialog(ITextEditor te) => TextRandomTextDialog.Run(te.GetVariables(), te.TabsParent);
+		static TextRandomTextDialog.Result Command_Text_RandomText_Dialog(ITextEditor te) => TextRandomTextDialog.Run(te.GetVariables(), te.WindowParent);
 
 		static void Command_Text_RandomText(ITextEditor te, TextRandomTextDialog.Result result)
 		{
@@ -154,7 +154,7 @@ namespace NeoEdit
 			if (te.Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			return TextReverseRegExDialog.Run(te.TabsParent);
+			return TextReverseRegExDialog.Run(te.WindowParent);
 		}
 
 		static void Command_Text_ReverseRegEx(ITextEditor te, TextReverseRegExDialog.Result result)
@@ -176,11 +176,11 @@ namespace NeoEdit
 			te.SetSelections(sels);
 		}
 
-		static TextFirstDistinctDialog.Result Command_Text_FirstDistinct_Dialog(ITextEditor te) => TextFirstDistinctDialog.Run(te.TabsParent);
+		static TextFirstDistinctDialog.Result Command_Text_FirstDistinct_Dialog(ITextEditor te) => TextFirstDistinctDialog.Run(te.WindowParent);
 
 		static void Command_Text_FirstDistinct(ITextEditor te, TextFirstDistinctDialog.Result result)
 		{
-			var opResult = ProgressDialog.Run(te.TabsParent, "Finding characters...", (cancelled, progress) =>
+			var opResult = ProgressDialog.Run(te.WindowParent, "Finding characters...", (cancelled, progress) =>
 			{
 				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
 				var data = te.GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).Select((str, strIndex) => Tuple.Create(str, strIndex, str.Indexes(ch => valid.Contains(ch)).Distinct(index => str[index]).ToList())).OrderBy(tuple => tuple.Item3.Count).ToList();

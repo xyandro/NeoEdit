@@ -197,7 +197,7 @@ namespace NeoEdit
 
 		static void Command_Select_Nothing(ITextEditor te) => te.SetSelections(new List<Range>());
 
-		static SelectLimitDialog.Result Command_Select_Limit_Dialog(ITextEditor te) => SelectLimitDialog.Run(te.TabsParent, te.GetVariables());
+		static SelectLimitDialog.Result Command_Select_Limit_Dialog(ITextEditor te) => SelectLimitDialog.Run(te.WindowParent, te.GetVariables());
 
 		static void Command_Select_Limit(ITextEditor te, SelectLimitDialog.Result result)
 		{
@@ -282,7 +282,7 @@ namespace NeoEdit
 
 		static void Command_Select_Repeats_RepeatedLines(ITextEditor te) => te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(te, range)).ToList());
 
-		static SelectByCountDialog.Result Command_Select_Repeats_ByCount_Dialog(ITextEditor te) => SelectByCountDialog.Run(te.TabsParent);
+		static SelectByCountDialog.Result Command_Select_Repeats_ByCount_Dialog(ITextEditor te) => SelectByCountDialog.Run(te.WindowParent);
 
 		static void Command_Select_Repeats_ByCount(ITextEditor te, SelectByCountDialog.Result result)
 		{
@@ -298,7 +298,7 @@ namespace NeoEdit
 			te.SetSelections(strs.Select(tuple => te.Selections[tuple.Item2]).ToList());
 		}
 
-		static SelectSplitDialog.Result Command_Select_Split_Dialog(ITextEditor te) => SelectSplitDialog.Run(te.TabsParent, te.GetVariables());
+		static SelectSplitDialog.Result Command_Select_Split_Dialog(ITextEditor te) => SelectSplitDialog.Run(te.WindowParent, te.GetVariables());
 
 		static void Command_Select_Split(ITextEditor te, SelectSplitDialog.Result result)
 		{

@@ -98,7 +98,8 @@ namespace NeoEdit
 		[DepProp]
 		public string TabLabel { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
-		public Tabs TabsParent { get; set; }
+		public ITabs TabsParent { get; set; }
+		public Window WindowParent => TabsParent as Window;
 
 		public bool CanClose() => CanClose(new AnswerResult());
 
@@ -427,7 +428,7 @@ namespace NeoEdit
 				return true;
 
 			if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
-				answer.Answer = new Message(TabsParent)
+				answer.Answer = new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -470,7 +471,7 @@ namespace NeoEdit
 
 		bool ConfirmContinueWhenCannotEncode()
 		{
-			return new Message(TabsParent)
+			return new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = "The specified encoding cannot fully represent the data.  Continue anyway?",
@@ -1088,7 +1089,7 @@ namespace NeoEdit
 			if ((command != NECommand.Macro_TimeNextAction) && (timeNext))
 			{
 				timeNext = false;
-				new Message(TabsParent)
+				new Message(WindowParent)
 				{
 					Title = "Timer",
 					Text = $"Elapsed time: {elapsed:n} ms",
@@ -2449,7 +2450,7 @@ namespace NeoEdit
 					bytes = File.ReadAllBytes(FileName);
 			}
 
-			FileSaver.HandleDecrypt(TabsParent, ref bytes, out var aesKey);
+			FileSaver.HandleDecrypt(WindowParent, ref bytes, out var aesKey);
 			AESKey = aesKey;
 
 			bytes = FileSaver.Decompress(bytes, out var compressed);
@@ -2577,7 +2578,7 @@ namespace NeoEdit
 					if ((triedReadOnly) || (!new FileInfo(fileName).IsReadOnly))
 						throw;
 
-					if (new Message(TabsParent)
+					if (new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "Save failed.  Remove read-only flag?",
@@ -2699,7 +2700,7 @@ namespace NeoEdit
 			if (Data.CanEncode(CodePage))
 				return true;
 
-			switch (new Message(TabsParent)
+			switch (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = "The current encoding cannot fully represent this data.  Switch to UTF-8?",
@@ -2728,10 +2729,9 @@ namespace NeoEdit
 		public void OpenTable(Table table, string name = null)
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : Parser.ParserType.Columns;
-			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+			var textEditor = TabsParent.Add(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 			textEditor.ContentType = contentType;
 			textEditor.DisplayName = name;
-			TabsParent.Add(textEditor);
 		}
 
 		delegate void GlobalKeysChangedDelegate();

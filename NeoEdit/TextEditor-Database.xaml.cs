@@ -57,7 +57,7 @@ namespace NeoEdit
 				throw new Exception("No connection.");
 		}
 
-		static DatabaseConnectDialog.Result Command_Database_Connect_Dialog(ITextEditor te) => DatabaseConnectDialog.Run(te.TabsParent);
+		static DatabaseConnectDialog.Result Command_Database_Connect_Dialog(ITextEditor te) => DatabaseConnectDialog.Run(te.WindowParent);
 
 		static void Command_Database_Connect(ITextEditor te, DatabaseConnectDialog.Result result)
 		{
@@ -95,7 +95,7 @@ namespace NeoEdit
 		static void Command_Database_Examine_Dialog(ITextEditor te)
 		{
 			ValidateConnection(te);
-			DatabaseExamineDialog.Run(te.TabsParent, te.dbConnection);
+			DatabaseExamineDialog.Run(te.WindowParent, te.dbConnection);
 		}
 
 		static void Command_Database_GetSproc(ITextEditor te)
@@ -118,7 +118,7 @@ namespace NeoEdit
 								text += reader.GetString(0);
 					}
 
-					te.TabsParent.Add(new TextEditor(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: Parser.ParserType.SQL, modified: false));
+					te.TabsParent.Add(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: Parser.ParserType.SQL, modified: false);
 				}
 				catch (Exception ex) { result = ex.Message; }
 				results.Add($"{sproc}: {result}");

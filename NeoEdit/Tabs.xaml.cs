@@ -28,7 +28,7 @@ using NeoEdit.Transform;
 
 namespace NeoEdit
 {
-	partial class Tabs
+	partial class Tabs : ITabs
 	{
 		[DepProp]
 		public ObservableCollection<ITextEditor> Items { get { return UIHelper<Tabs>.GetPropValue<ObservableCollection<ITextEditor>>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
@@ -826,6 +826,8 @@ namespace NeoEdit
 			return replace;
 		}
 
+		public ITextEditor Add(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, Parser.ParserType contentType = Parser.ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null, int? index = null) => Add(new TextEditor(fileName, displayName, bytes, codePage, contentType, modified, line, column, shutdownData), index);
+
 		public Window AddDiff(ITextEditor textEdit1, ITextEditor textEdit2)
 		{
 			if (textEdit1.ContentType == Parser.ParserType.None)
@@ -1240,7 +1242,7 @@ namespace NeoEdit
 			};
 		}
 
-		internal void NotifyActiveChanged() => ItemTabs_TabsChanged();
+		public void NotifyActiveChanged() => ItemTabs_TabsChanged();
 
 		protected override void OnClosing(CancelEventArgs e)
 		{

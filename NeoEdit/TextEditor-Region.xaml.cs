@@ -70,7 +70,7 @@ namespace NeoEdit
 			te.SetSelections(newSelections);
 		}
 
-		static RegionModifyRegionsDialog.Result Command_Region_ModifyRegions_Dialog(ITextEditor te) => RegionModifyRegionsDialog.Run(te.TabsParent);
+		static RegionModifyRegionsDialog.Result Command_Region_ModifyRegions_Dialog(ITextEditor te) => RegionModifyRegionsDialog.Run(te.WindowParent);
 
 		static void Command_Region_ModifyRegions(ITextEditor te, RegionModifyRegionsDialog.Result result)
 		{

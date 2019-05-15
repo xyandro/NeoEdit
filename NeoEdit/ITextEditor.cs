@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Common;
+using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Content;
 using NeoEdit.Controls;
@@ -29,7 +30,8 @@ namespace NeoEdit
 		int ItemOrder { get; set; }
 		bool Active { get; set; }
 		string TabLabel { get; }
-		Tabs TabsParent { get; set; }
+		ITabs TabsParent { get; set; }
+		Window WindowParent { get; }
 		bool CanClose();
 		bool CanClose(AnswerResult answer);
 		int CurrentSelection { get; set; }

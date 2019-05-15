@@ -97,10 +97,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DragType.cs" />
-    <Compile Include="JumpByType.cs" />
-    <Compile Include="WordSkipType.cs" />
-    <Compile Include="ReplaceType.cs" />
     <Compile Include="CacheValue.cs" />
     <Compile Include="CommandLine\CommandLineParams.cs" />
     <Compile Include="CommandLine\CommandLineVisitor.cs" />
@@ -919,6 +915,7 @@
     <Compile Include="Dialogs\TextWidthDialog.xaml.cs">
       <DependentUpon>TextWidthDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DragType.cs" />
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
     <Compile Include="Expressions\ExpressionUnit.cs" />
     <Compile Include="Expressions\ExpressionUnits.cs" />
@@ -949,8 +946,10 @@
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="InstanceManager.cs" />
+    <Compile Include="ITabs.cs" />
     <Compile Include="ItemSet.cs" />
     <Compile Include="ITextEditor.cs" />
+    <Compile Include="JumpByType.cs" />
     <Compile Include="LCS.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
@@ -992,6 +991,7 @@
     </Compile>
     <Compile Include="Range.cs" />
     <Compile Include="RangeList.cs" />
+    <Compile Include="ReplaceType.cs" />
     <Resource Include="Resources\Checked.png" />
     <Resource Include="Resources\DejaVuSansMono.ttf" />
     <Resource Include="Resources\Indeterminate.png" />
@@ -1112,6 +1112,7 @@
     <Compile Include="UnitTest\UnicodeTest.cs" />
     <Compile Include="UnitTest\UnitTest.cs" />
     <Compile Include="UnitTest\XMLConverterTest.cs" />
+    <Compile Include="WordSkipType.cs" />
     <Compile Include="YouTubeDL.cs" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />

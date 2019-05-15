@@ -88,11 +88,11 @@ namespace NeoEdit
 			}
 		}
 
-		static ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog(ITextEditor te) => ImageGrabColorDialog.Run(te.TabsParent, te.Selections.Select(range => te.GetString(range)).FirstOrDefault());
+		static ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog(ITextEditor te) => ImageGrabColorDialog.Run(te.WindowParent, te.Selections.Select(range => te.GetString(range)).FirstOrDefault());
 
 		static void Command_Image_GrabColor(ITextEditor te, ImageGrabColorDialog.Result result) => te.ReplaceSelections(result.Color);
 
-		static ImageGrabImageDialog.Result Command_Image_GrabImage_Dialog(ITextEditor te) => ImageGrabImageDialog.Run(te.TabsParent, te.GetVariables());
+		static ImageGrabImageDialog.Result Command_Image_GrabImage_Dialog(ITextEditor te) => ImageGrabImageDialog.Run(te.WindowParent, te.GetVariables());
 
 		static void Command_Image_GrabImage(ITextEditor te, ImageGrabImageDialog.Result result)
 		{
@@ -115,7 +115,7 @@ namespace NeoEdit
 			te.ReplaceSelections(strs);
 		}
 
-		static ImageAdjustColorDialog.Result Command_Image_AdjustColor_Dialog(ITextEditor te) => ImageAdjustColorDialog.Run(te.TabsParent, te.GetVariables());
+		static ImageAdjustColorDialog.Result Command_Image_AdjustColor_Dialog(ITextEditor te) => ImageAdjustColorDialog.Run(te.WindowParent, te.GetVariables());
 
 		static void Command_Image_AdjustColor(ITextEditor te, ImageAdjustColorDialog.Result result)
 		{
@@ -124,7 +124,7 @@ namespace NeoEdit
 			te.ReplaceSelections(strs);
 		}
 
-		static ImageAddOverlayColorDialog.Result Command_Image_AddOverlayColor_Dialog(ITextEditor te, bool add) => ImageAddOverlayColorDialog.Run(te.TabsParent, add, te.GetVariables());
+		static ImageAddOverlayColorDialog.Result Command_Image_AddOverlayColor_Dialog(ITextEditor te, bool add) => ImageAddOverlayColorDialog.Run(te.WindowParent, add, te.GetVariables());
 
 		static void Command_Image_AddColor(ITextEditor te, ImageAddOverlayColorDialog.Result result)
 		{
@@ -140,7 +140,7 @@ namespace NeoEdit
 			te.ReplaceSelections(strs);
 		}
 
-		static ImageSizeDialog.Result Command_Image_Size_Dialog(ITextEditor te) => ImageSizeDialog.Run(te.TabsParent, te.GetVariables());
+		static ImageSizeDialog.Result Command_Image_Size_Dialog(ITextEditor te) => ImageSizeDialog.Run(te.WindowParent, te.GetVariables());
 
 		static void Command_Image_Size(ITextEditor te, ImageSizeDialog.Result result)
 		{
@@ -170,7 +170,7 @@ namespace NeoEdit
 			te.SetSelections(new List<Range> { te.BeginRange });
 		}
 
-		static ImageCropDialog.Result Command_Image_Crop_Dialog(ITextEditor te) => ImageCropDialog.Run(te.TabsParent, te.GetVariables());
+		static ImageCropDialog.Result Command_Image_Crop_Dialog(ITextEditor te) => ImageCropDialog.Run(te.WindowParent, te.GetVariables());
 
 		static void Command_Image_Crop(ITextEditor te, ImageCropDialog.Result result)
 		{
@@ -219,7 +219,7 @@ namespace NeoEdit
 
 		static void Command_Image_FlipVertical(ITextEditor te) => Flip(te, System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		static ImageRotateDialog.Result Command_Image_Rotate_Dialog(ITextEditor te) => ImageRotateDialog.Run(te.TabsParent, te.GetVariables());
+		static ImageRotateDialog.Result Command_Image_Rotate_Dialog(ITextEditor te) => ImageRotateDialog.Run(te.WindowParent, te.GetVariables());
 
 		static void Command_Image_Rotate(ITextEditor te, ImageRotateDialog.Result result)
 		{
@@ -245,7 +245,7 @@ namespace NeoEdit
 			te.SetSelections(new List<Range> { te.BeginRange });
 		}
 
-		static ImageGIFAnimateDialog.Result Command_Image_GIF_Animate_Dialog(ITextEditor te) => ImageGIFAnimateDialog.Run(te.TabsParent, te.GetVariables());
+		static ImageGIFAnimateDialog.Result Command_Image_GIF_Animate_Dialog(ITextEditor te) => ImageGIFAnimateDialog.Run(te.WindowParent, te.GetVariables());
 
 		static void Command_Image_GIF_Animate(ITextEditor te, ImageGIFAnimateDialog.Result result)
 		{
@@ -265,7 +265,7 @@ namespace NeoEdit
 		{
 			var variables = te.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return ImageGIFSplitDialog.Run(te.TabsParent, variables);
+			return ImageGIFSplitDialog.Run(te.WindowParent, variables);
 		}
 
 		static void Command_Image_GIF_Split(ITextEditor te, ImageGIFSplitDialog.Result result)

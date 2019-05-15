@@ -98,17 +98,17 @@ namespace NeoEdit
 			return inlineVars;
 		}
 
-		static GetExpressionDialog.Result Command_Expression_Expression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables(), te.Selections.Count);
+		static GetExpressionDialog.Result Command_Expression_Expression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.WindowParent, te.GetVariables(), te.Selections.Count);
 
 		static void Command_Expression_Expression(ITextEditor te, GetExpressionDialog.Result result) => te.ReplaceSelections(te.GetFixedExpressionResults<string>(result.Expression));
 
-		static GetExpressionDialog.Result Command_Expression_Copy_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables());
+		static GetExpressionDialog.Result Command_Expression_Copy_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.WindowParent, te.GetVariables());
 
 		static void Command_Expression_Copy(ITextEditor te, GetExpressionDialog.Result result) => te.SetClipboardStrings(te.GetVariableExpressionResults<string>(result.Expression));
 
 		static void Command_Expression_EvaluateSelected(ITextEditor te) => te.ReplaceSelections(te.GetFixedExpressionResults<string>("Eval(x)"));
 
-		static GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.TabsParent, te.GetVariables(), te.Selections.Count);
+		static GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.WindowParent, te.GetVariables(), te.Selections.Count);
 
 		static void Command_Expression_SelectByExpression(ITextEditor te, GetExpressionDialog.Result result)
 		{
@@ -126,7 +126,7 @@ namespace NeoEdit
 			te.Replace(inlineVars.Select(inlineVar => inlineVar.ValueRange).ToList(), inlineVars.Select(inlineVar => inlineVar.Value.ToString()).ToList());
 		}
 
-		static ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog(ITextEditor te) => ExpressionSolveDialog.Run(te.TabsParent, te.GetVariables());
+		static ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog(ITextEditor te) => ExpressionSolveDialog.Run(te.WindowParent, te.GetVariables());
 
 		static void Command_Expression_InlineVariables_Solve(ITextEditor te, ExpressionSolveDialog.Result result, AnswerResult answer)
 		{
@@ -199,7 +199,7 @@ namespace NeoEdit
 			if (maxLoops == 0)
 			{
 				if ((answer.Answer != Message.OptionsEnum.YesToAll) && (answer.Answer != Message.OptionsEnum.NoToAll))
-					answer.Answer = new Message(te.TabsParent)
+					answer.Answer = new Message(te.WindowParent)
 					{
 						Title = "Confirm",
 						Text = "Unable to find value. Use best match?",

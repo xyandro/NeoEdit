@@ -2,7 +2,7 @@
 
 namespace NeoEdit
 {
-	class ShutdownData
+	public class ShutdownData
 	{
 		string name;
 		int count;
