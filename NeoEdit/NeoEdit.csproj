@@ -209,13 +209,6 @@
     <Compile Include="Dialogs\DatabaseExamineDialog.xaml.cs">
       <DependentUpon>DatabaseExamineDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\DateTimeConvertDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\DateTimeConvertDialog.xaml.cs">
-      <DependentUpon>DateTimeConvertDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\DiffFixWhitespaceDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -851,9 +844,6 @@
     <Compile Include="TextEditor-Database.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-DateTime.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextEditor-Diff.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -920,6 +910,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{41bacfec-48ae-4dcc-abc9-e45aa149784d}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DateTime\DateTime.csproj">
+      <Project>{118c89ac-608d-4d2c-bbb1-e6ce9d68b40a}</Project>
+      <Name>DateTime</Name>
     </ProjectReference>
     <ProjectReference Include="..\Image\Image.csproj">
       <Project>{d13a65ab-dc9d-4022-ac1a-ae01e5d8be19}</Project>

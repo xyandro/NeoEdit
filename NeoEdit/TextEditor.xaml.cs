@@ -934,7 +934,7 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(this); break;
+				case NECommand.DateTime_Convert: dialogResult = DateTimeFunctions.Command_DateTime_Convert_Dialog(this); break;
 				default: dialogResult = new object(); break;
 			}
 		}
@@ -1376,9 +1376,9 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.DateTime_Now: Command_DateTime_Now(this); break;
-				case NECommand.DateTime_UtcNow: Command_DateTime_UtcNow(this); break;
-				case NECommand.DateTime_Convert: Command_DateTime_Convert(this, dialogResult as DateTimeConvertDialog.Result); break;
+				case NECommand.DateTime_Now: DateTimeFunctions.Command_DateTime_Now(this); break;
+				case NECommand.DateTime_UtcNow: DateTimeFunctions.Command_DateTime_UtcNow(this); break;
+				case NECommand.DateTime_Convert: DateTimeFunctions.Command_DateTime_Convert(this, dialogResult as DateTimeConvertDialog.Result); break;
 			}
 		}
 
