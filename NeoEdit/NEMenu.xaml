@@ -3,8 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Controls;assembly=NeoEdit.Common"
 	xmlns:converters="clr-namespace:NeoEdit.Converters;assembly=NeoEdit.Common"
-	xmlns:neoEdit="clr-namespace:NeoEdit"
-	xmlns:neoEditCommon="clr-namespace:NeoEdit;assembly=NeoEdit.Common"
+	xmlns:neoEdit="clr-namespace:NeoEdit;assembly=NeoEdit.Common"
 	xmlns:system="clr-namespace:System;assembly=mscorlib">
 
 	<Menu.Resources>
@@ -144,9 +143,9 @@
 			<controls:NEMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
 			<Separator/>
 			<MenuItem Header="_Jump By">
-				<controls:MultiMenuItem Header="_Words" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEditCommon:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
-				<controls:MultiMenuItem Header="_Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEditCommon:JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
-				<controls:MultiMenuItem Header="_Paths" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEditCommon:JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
+				<controls:MultiMenuItem Header="_Words" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
+				<controls:MultiMenuItem Header="_Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
+				<controls:MultiMenuItem Header="_Paths" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static neoEdit:JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
@@ -492,18 +491,18 @@
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
 			<controls:NEMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension"/>
-			<controls:MultiMenuItem Header="_None" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.None}" CommandEnum="Content_Type_None"/>
-			<controls:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
-			<controls:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
-			<controls:MultiMenuItem Header="C_++" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus"/>
-			<controls:MultiMenuItem Header="C_#" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
-			<controls:MultiMenuItem Header="_CSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
-			<controls:MultiMenuItem Header="_Exact Columns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns"/>
-			<controls:MultiMenuItem Header="_HTML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
-			<controls:MultiMenuItem Header="_JSON" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
-			<controls:MultiMenuItem Header="_SQL" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.SQL}" CommandEnum="Content_Type_SQL"/>
-			<controls:MultiMenuItem Header="_TSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
-			<controls:MultiMenuItem Header="_XML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEditCommon:ParserType.XML}" CommandEnum="Content_Type_XML"/>
+			<controls:MultiMenuItem Header="_None" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.None}" CommandEnum="Content_Type_None"/>
+			<controls:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
+			<controls:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
+			<controls:MultiMenuItem Header="C_++" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus"/>
+			<controls:MultiMenuItem Header="C_#" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
+			<controls:MultiMenuItem Header="_CSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
+			<controls:MultiMenuItem Header="_Exact Columns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns"/>
+			<controls:MultiMenuItem Header="_HTML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
+			<controls:MultiMenuItem Header="_JSON" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
+			<controls:MultiMenuItem Header="_SQL" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.SQL}" CommandEnum="Content_Type_SQL"/>
+			<controls:MultiMenuItem Header="_TSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
+			<controls:MultiMenuItem Header="_XML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static neoEdit:ParserType.XML}" CommandEnum="Content_Type_XML"/>
 		</MenuItem>
 		<controls:MultiMenuItem Header="_Highlight Syntax" Objects="{Binding Parent.Items, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax"/>
 		<controls:MultiMenuItem Header="_Strict Parsing" Objects="{Binding Parent.Items, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing"/>

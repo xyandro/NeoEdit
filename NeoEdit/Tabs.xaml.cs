@@ -14,7 +14,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using Microsoft.Win32;
 using NeoEdit;
 using NeoEdit.Controls;
 using NeoEdit.Converters;
@@ -157,51 +156,6 @@ namespace NeoEdit
 				return;
 			fileList.ForEach(file => Add(new TextEditor(file)));
 			e.Handled = true;
-		}
-
-		void Command_Diff_Diff()
-		{
-			var diffTargets = Items.Count == 2 ? Items.ToList() : Items.Where(data => data.Active).ToList();
-			if (diffTargets.Any(item => item.DiffTarget != null))
-			{
-				diffTargets.ForEach(item => item.DiffTarget = null);
-				return;
-			}
-
-			if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
-				throw new Exception("Must have even number of files active for diff.");
-
-			if (shiftDown)
-			{
-				if (!Items.Except(diffTargets).Any())
-					Layout = TabsLayout.Grid;
-				else
-				{
-					diffTargets.ForEach(diffTarget => Items.Remove(diffTarget));
-
-					var textEditTabs = new Tabs();
-					textEditTabs.Layout = TabsLayout.Grid;
-					diffTargets.ForEach(diffTarget => textEditTabs.Add(diffTarget));
-					textEditTabs.TopMost = diffTargets[0];
-				}
-			}
-
-			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
-		}
-
-		void Command_Diff_Select_LeftRightBothTabs(bool? left)
-		{
-			var topMost = TopMost;
-			var active = Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<ITextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetIndex(item) < GetIndex(item.DiffTarget)) == left)).ToList();
-			Items.ForEach(item => item.Active = false);
-
-			if (!active.Any())
-				return;
-
-			if (!active.Contains(topMost))
-				topMost = active.First();
-			TopMost = topMost;
-			active.ForEach(item => item.Active = true);
 		}
 
 		void Command_Window_NewWindow() => new Tabs(true);
@@ -481,10 +435,10 @@ namespace NeoEdit
 				case NECommand.File_Shell_Integrate: FileFunctions.Command_File_Shell_Integrate(); break;
 				case NECommand.File_Shell_Unintegrate: FileFunctions.Command_File_Shell_Unintegrate(); break;
 				case NECommand.File_Exit: Close(); break;
-				case NECommand.Diff_Diff: Command_Diff_Diff(); break;
-				case NECommand.Diff_Select_LeftTab: Command_Diff_Select_LeftRightBothTabs(true); break;
-				case NECommand.Diff_Select_RightTab: Command_Diff_Select_LeftRightBothTabs(false); break;
-				case NECommand.Diff_Select_BothTabs: Command_Diff_Select_LeftRightBothTabs(null); break;
+				case NECommand.Diff_Diff: DiffFunctions.Command_Diff_Diff(this, shiftDown); break;
+				case NECommand.Diff_Select_LeftTab: DiffFunctions.Command_Diff_Select_LeftRightBothTabs(this, true); break;
+				case NECommand.Diff_Select_RightTab: DiffFunctions.Command_Diff_Select_LeftRightBothTabs(this, false); break;
+				case NECommand.Diff_Select_BothTabs: DiffFunctions.Command_Diff_Select_LeftRightBothTabs(this, null); break;
 				case NECommand.View_Full: ViewFunctions.Command_View_Type(this, TabsLayout.Full, null); break;
 				case NECommand.View_Grid: ViewFunctions.Command_View_Type(this, TabsLayout.Grid, null); break;
 				case NECommand.View_CustomGrid: ViewFunctions.Command_View_Type(this, TabsLayout.Custom, dialogResult as ViewCustomGridDialog.Result); break;
