@@ -3,9 +3,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class SelectByCountDialog
+	partial class SelectByCountDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public int? MinCount { get; set; }
 			public int? MaxCount { get; set; }

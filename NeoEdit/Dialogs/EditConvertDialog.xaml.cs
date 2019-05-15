@@ -5,9 +5,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class EditConvertDialog
+	partial class EditConvertDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public Coder.CodePage InputType { get; set; }
 			public bool InputBOM { get; set; }

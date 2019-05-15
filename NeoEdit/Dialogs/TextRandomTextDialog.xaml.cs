@@ -8,7 +8,7 @@ namespace NeoEdit.Dialogs
 {
 	partial class TextRandomTextDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Expression { get; set; }
 			public string Chars { get; set; }

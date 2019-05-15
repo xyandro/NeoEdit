@@ -10,9 +10,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class TextUnicodeDialog
+	partial class TextUnicodeDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Value { get; set; }
 		}

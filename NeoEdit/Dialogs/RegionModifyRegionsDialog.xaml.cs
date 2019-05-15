@@ -6,9 +6,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class RegionModifyRegionsDialog
+	partial class RegionModifyRegionsDialog
 	{
-		internal enum Action
+		public enum Action
 		{
 			Select,
 			Set,
@@ -20,7 +20,7 @@ namespace NeoEdit.Dialogs
 			Exclude,
 		}
 
-		internal class Result
+		public class Result
 		{
 			public List<int> Regions { get; set; }
 			public Action Action { get; set; }

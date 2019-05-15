@@ -7,7 +7,7 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class DatabaseExamineDialog
+	partial class DatabaseExamineDialog
 	{
 		[DepProp]
 		public ObservableCollection<string> Collections { get { return UIHelper<DatabaseExamineDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<DatabaseExamineDialog>.SetPropValue(this, value); } }

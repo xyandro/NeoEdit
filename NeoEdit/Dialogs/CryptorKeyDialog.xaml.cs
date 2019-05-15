@@ -7,7 +7,7 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	public partial class CryptorKeyDialog
+	partial class CryptorKeyDialog
 	{
 		[DepProp]
 		public bool Encrypt { get { return UIHelper<CryptorKeyDialog>.GetPropValue<bool>(this); } set { UIHelper<CryptorKeyDialog>.SetPropValue(this, value); } }

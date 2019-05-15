@@ -11,9 +11,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class ImageCropDialog
+	partial class ImageCropDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string XExpression { get; set; }
 			public string YExpression { get; set; }

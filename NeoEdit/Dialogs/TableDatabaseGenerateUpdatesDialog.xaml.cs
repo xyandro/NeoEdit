@@ -6,9 +6,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class TableDatabaseGenerateUpdatesDialog
+	partial class TableDatabaseGenerateUpdatesDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public List<int> Update { get; set; }
 			public List<int> Where { get; set; }

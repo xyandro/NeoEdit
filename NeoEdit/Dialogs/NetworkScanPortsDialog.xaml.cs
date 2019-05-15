@@ -6,9 +6,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NetworkScanPortsDialog
+	partial class NetworkScanPortsDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public List<Tuple<int, int>> Ports { get; set; }
 			public int Attempts { get; set; }

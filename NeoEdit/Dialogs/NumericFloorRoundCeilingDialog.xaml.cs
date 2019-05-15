@@ -4,9 +4,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NumericFloorRoundCeilingDialog
+	partial class NumericFloorRoundCeilingDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string BaseValue { get; set; }
 			public string Interval { get; set; }

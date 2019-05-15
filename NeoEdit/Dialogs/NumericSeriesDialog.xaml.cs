@@ -4,9 +4,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NumericSeriesDialog
+	partial class NumericSeriesDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string StartExpression { get; set; }
 			public string IncrementExpression { get; set; }

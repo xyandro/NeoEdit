@@ -7,9 +7,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class TableEditTableDialog
+	partial class TableEditTableDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public List<Table.AggregateData> AggregateData { get; set; }
 			public List<Table.SortData> SortData { get; set; }

@@ -6,9 +6,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class TableDatabaseGenerateInsertsDialog
+	partial class TableDatabaseGenerateInsertsDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public List<int> Columns { get; set; }
 			public int BatchSize { get; set; }

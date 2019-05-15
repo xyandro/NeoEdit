@@ -10,9 +10,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class ImageSizeDialog
+	partial class ImageSizeDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string WidthExpression { get; set; }
 			public string HeightExpression { get; set; }

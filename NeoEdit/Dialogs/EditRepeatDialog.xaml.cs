@@ -5,9 +5,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class EditRepeatDialog
+	partial class EditRepeatDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Expression { get; set; }
 			public bool SelectRepetitions { get; set; }

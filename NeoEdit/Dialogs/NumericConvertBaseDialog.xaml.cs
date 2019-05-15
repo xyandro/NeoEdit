@@ -7,9 +7,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NumericConvertBaseDialog
+	partial class NumericConvertBaseDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public Dictionary<char, int> InputSet { get; set; }
 			public Dictionary<int, char> OutputSet { get; set; }

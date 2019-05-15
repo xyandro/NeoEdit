@@ -4,9 +4,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class EditRotateDialog
+	partial class EditRotateDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Count { get; set; }
 		}

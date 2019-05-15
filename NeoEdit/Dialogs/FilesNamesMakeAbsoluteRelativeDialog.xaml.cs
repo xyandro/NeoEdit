@@ -1,20 +1,20 @@
 ﻿using System.IO;
 using System.Windows;
-using NeoEdit.Expressions;
 using NeoEdit.Controls;
+using NeoEdit.Expressions;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class FilesNamesMakeAbsoluteRelativeDialog
+	partial class FilesNamesMakeAbsoluteRelativeDialog
 	{
-		internal enum ResultType
+		public enum ResultType
 		{
 			None,
 			File,
 			Directory,
 		}
 
-		internal class Result
+		public class Result
 		{
 			public string Expression { get; set; }
 			public ResultType Type { get; set; }

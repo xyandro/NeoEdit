@@ -12,9 +12,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class DatabaseConnectDialog
+	partial class DatabaseConnectDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public DBConnectInfo DBConnectInfo { get; internal set; }
 		}

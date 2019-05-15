@@ -4,9 +4,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NumericScaleDialog
+	partial class NumericScaleDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string PrevMin { get; set; }
 			public string PrevMax { get; set; }

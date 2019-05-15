@@ -6,9 +6,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class FilesSetAttributesDialog
+	partial class FilesSetAttributesDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public Dictionary<FileAttributes, bool?> Attributes { get; set; }
 		}

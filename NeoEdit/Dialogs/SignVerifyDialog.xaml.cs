@@ -6,7 +6,7 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	public partial class SignVerifyDialog
+	partial class SignVerifyDialog
 	{
 		public class Result
 		{

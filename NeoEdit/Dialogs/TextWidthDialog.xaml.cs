@@ -5,7 +5,7 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class TextWidthDialog
+	partial class TextWidthDialog
 	{
 		public enum TextLocation
 		{
@@ -14,7 +14,7 @@ namespace NeoEdit.Dialogs
 			End,
 		}
 
-		internal class Result
+		public class Result
 		{
 			public string Expression { get; set; }
 			public char PadChar { get; set; }

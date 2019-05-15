@@ -5,7 +5,7 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class MacroPlayRepeatDialog
+	partial class MacroPlayRepeatDialog
 	{
 		public enum RepeatTypeEnum
 		{
@@ -13,7 +13,7 @@ namespace NeoEdit.Dialogs
 			Condition,
 		}
 
-		internal class Result
+		public class Result
 		{
 			public string Macro { get; set; }
 			public string Expression { get; set; }

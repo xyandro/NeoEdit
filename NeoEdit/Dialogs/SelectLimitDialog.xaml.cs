@@ -4,9 +4,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class SelectLimitDialog
+	partial class SelectLimitDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string FirstSelection { get; set; }
 			public string EveryNth { get; set; }

@@ -3,9 +3,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class FilesNamesGetUniqueDialog
+	partial class FilesNamesGetUniqueDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Format { get; set; }
 			public bool CheckExisting { get; set; }

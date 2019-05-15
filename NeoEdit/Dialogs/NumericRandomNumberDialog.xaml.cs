@@ -4,9 +4,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NumericRandomNumberDialog
+	partial class NumericRandomNumberDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string MinValue { get; set; }
 			public string MaxValue { get; set; }

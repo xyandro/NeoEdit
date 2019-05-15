@@ -4,9 +4,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class FilesOperationsSplitFileDialog
+	partial class FilesOperationsSplitFileDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string OutputTemplate { get; set; }
 			public string ChunkSize { get; set; }

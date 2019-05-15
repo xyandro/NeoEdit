@@ -5,9 +5,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class ImageGIFAnimateDialog
+	partial class ImageGIFAnimateDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string InputFiles { get; set; }
 			public string OutputFile { get; set; }

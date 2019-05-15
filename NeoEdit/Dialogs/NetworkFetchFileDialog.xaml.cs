@@ -5,9 +5,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NetworkFetchFileDialog
+	partial class NetworkFetchFileDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string URL { get; set; }
 			public string FileName { get; set; }

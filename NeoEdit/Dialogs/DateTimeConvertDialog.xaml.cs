@@ -4,14 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using NeoEdit;
 using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class DateTimeConvertDialog
+	partial class DateTimeConvertDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string InputFormat { get; set; }
 			public string InputTimeZone { get; set; }

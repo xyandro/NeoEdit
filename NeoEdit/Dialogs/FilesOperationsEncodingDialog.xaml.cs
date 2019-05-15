@@ -6,9 +6,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class FilesOperationsEncodingDialog
+	partial class FilesOperationsEncodingDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public Coder.CodePage InputCodePage { get; set; }
 			public Coder.CodePage OutputCodePage { get; set; }

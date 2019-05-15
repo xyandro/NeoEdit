@@ -6,7 +6,7 @@ namespace NeoEdit.Dialogs
 {
 	partial class TextFirstDistinctDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Chars { get; set; }
 			public bool MatchCase { get; set; }

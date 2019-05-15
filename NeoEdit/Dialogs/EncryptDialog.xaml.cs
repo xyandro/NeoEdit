@@ -4,7 +4,7 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	public partial class EncryptDialog
+	partial class EncryptDialog
 	{
 		public class Result
 		{

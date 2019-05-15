@@ -5,7 +5,7 @@ namespace NeoEdit.Dialogs
 {
 	partial class DiffFixWhitespaceDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public int LineStartTabStop { get; set; }
 		}

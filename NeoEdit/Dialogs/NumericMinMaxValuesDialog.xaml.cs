@@ -5,9 +5,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NumericMinMaxValuesDialog
+	partial class NumericMinMaxValuesDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public Coder.CodePage CodePage { get; set; }
 			public bool Min { get; set; }

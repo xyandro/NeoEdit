@@ -5,9 +5,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class ImageRotateDialog
+	partial class ImageRotateDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string AngleExpression { get; set; }
 		}

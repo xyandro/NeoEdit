@@ -5,9 +5,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class PositionGotoDialog
+	partial class PositionGotoDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Expression { get; set; }
 		}

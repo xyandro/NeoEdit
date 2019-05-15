@@ -5,9 +5,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class FilesSelectByVersionControlStatusDialog
+	partial class FilesSelectByVersionControlStatusDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public Versioner.Status Statuses { get; set; }
 		}

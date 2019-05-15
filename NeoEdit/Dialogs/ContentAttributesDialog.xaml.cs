@@ -7,9 +7,9 @@ using NeoEdit.Content;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class ContentAttributesDialog
+	partial class ContentAttributesDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Attribute { get; set; }
 			public bool FirstOnly { get; set; }

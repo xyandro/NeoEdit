@@ -5,7 +5,7 @@ namespace NeoEdit.Dialogs
 {
 	partial class EditSortDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public TextEditor.SortScope SortScope { get; set; }
 			public int UseRegion { get; set; }

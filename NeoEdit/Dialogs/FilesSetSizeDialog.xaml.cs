@@ -6,9 +6,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class FilesSetSizeDialog
+	partial class FilesSetSizeDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Expression { get; set; }
 			public long Factor { get; set; }

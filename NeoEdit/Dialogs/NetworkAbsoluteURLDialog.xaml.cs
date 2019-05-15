@@ -4,9 +4,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NetworkAbsoluteURLDialog
+	partial class NetworkAbsoluteURLDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Expression { get; set; }
 		}

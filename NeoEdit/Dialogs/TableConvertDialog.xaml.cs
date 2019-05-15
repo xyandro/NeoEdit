@@ -5,9 +5,9 @@ using NeoEdit.Content;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class TableConvertDialog
+	partial class TableConvertDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public ParserType TableType { get; set; }
 		}

@@ -4,9 +4,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class FilesOperationsCombineFilesDialog
+	partial class FilesOperationsCombineFilesDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string InputFiles { get; set; }
 			public string InputFileCount { get; set; }

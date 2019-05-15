@@ -6,15 +6,15 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NumericCombinationsPermutationsDialog
+	partial class NumericCombinationsPermutationsDialog
 	{
-		internal enum CombinationsPermutationsType
+		public enum CombinationsPermutationsType
 		{
 			Combinations,
 			Permutations,
 		}
 
-		internal class Result
+		public class Result
 		{
 			public int ItemCount { get; set; }
 			public int UseCount { get; set; }

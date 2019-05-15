@@ -7,7 +7,7 @@ namespace NeoEdit.Dialogs
 {
 	partial class DiffIgnoreCharactersDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string IgnoreCharacters { get; set; }
 		}

@@ -8,7 +8,7 @@ namespace NeoEdit.Dialogs
 {
 	partial class TableJoinDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public List<int> LeftColumns { get; set; }
 			public List<int> RightColumns { get; set; }

@@ -4,9 +4,9 @@ using NeoEdit.RevRegEx;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class TextReverseRegExDialog
+	partial class TextReverseRegExDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string RegEx { get; set; }
 			public int InfiniteCount { get; set; }

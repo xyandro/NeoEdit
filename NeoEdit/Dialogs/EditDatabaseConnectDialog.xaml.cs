@@ -15,7 +15,7 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class EditDatabaseConnectDialog
+	partial class EditDatabaseConnectDialog
 	{
 		public class DBParam : DependencyObject
 		{

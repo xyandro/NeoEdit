@@ -6,9 +6,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class TableDatabaseGenerateDeletesDialog
+	partial class TableDatabaseGenerateDeletesDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public List<int> Where { get; set; }
 			public string TableName { get; set; }

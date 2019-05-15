@@ -5,9 +5,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class FilesOperationsCopyMoveDialog
+	partial class FilesOperationsCopyMoveDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string OldFileName { get; set; }
 			public string NewFileName { get; set; }

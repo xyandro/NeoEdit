@@ -4,9 +4,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class ImageGIFSplitDialog
+	partial class ImageGIFSplitDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string OutputTemplate { get; set; }
 		}

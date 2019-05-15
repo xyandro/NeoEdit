@@ -7,9 +7,9 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class FilesCreateFromExpressionsDialog
+	partial class FilesCreateFromExpressionsDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string FileName { get; set; }
 			public string Data { get; set; }

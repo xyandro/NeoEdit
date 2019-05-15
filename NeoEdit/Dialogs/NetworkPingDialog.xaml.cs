@@ -3,9 +3,9 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class NetworkPingDialog
+	partial class NetworkPingDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public int Timeout { get; set; }
 		}

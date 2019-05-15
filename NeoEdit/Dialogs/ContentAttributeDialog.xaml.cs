@@ -8,9 +8,9 @@ using NeoEdit.Content;
 
 namespace NeoEdit.Dialogs
 {
-	internal partial class ContentAttributeDialog
+	partial class ContentAttributeDialog
 	{
-		internal class Result
+		public class Result
 		{
 			public string Attribute { get; set; }
 			public Regex Regex { get; set; }
