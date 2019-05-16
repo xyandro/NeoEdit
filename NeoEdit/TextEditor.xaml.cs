@@ -1071,8 +1071,8 @@ namespace NeoEdit
 				case "Keys": HandleCommandKeys(command, shiftDown, dialogResult, multiStatus, answer); break;
 				case "Select": HandleCommandSelect(command, shiftDown, dialogResult, multiStatus, answer); break;
 				case "Region": HandleCommandRegion(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "View": HandleCommandView(command, shiftDown, dialogResult, multiStatus, answer); break;
 				case "Macro": HandleCommandMacro(command, shiftDown, dialogResult, multiStatus, answer); break;
+				case "Window": HandleCommandWindow(command, shiftDown, dialogResult, multiStatus, answer); break;
 			}
 
 			var end = DateTime.UtcNow;
@@ -1799,21 +1799,21 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandView(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
-		{
-			switch (command)
-			{
-				case NECommand.View_TabIndex: ViewFunctions.Command_View_TabIndex(this, false); break;
-				case NECommand.View_ActiveTabIndex: ViewFunctions.Command_View_TabIndex(this, true); break;
-			}
-		}
-
 		void HandleCommandMacro(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
 		{
 			switch (command)
 			{
 				case NECommand.Macro_RepeatLastAction: Command_Macro_RepeatLastAction(); break;
 				case NECommand.Macro_TimeNextAction: timeNext = !timeNext; break;
+			}
+		}
+
+		void HandleCommandWindow(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		{
+			switch (command)
+			{
+				case NECommand.Window_TabIndex: WindowFunctions.Command_Window_TabIndex(this, false); break;
+				case NECommand.Window_ActiveTabIndex: WindowFunctions.Command_Window_TabIndex(this, true); break;
 			}
 		}
 

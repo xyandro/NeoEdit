@@ -9,14 +9,14 @@ using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {
-	class ViewActiveTabsDialog : ModalDialog
+	class WindowActiveTabsDialog : ModalDialog
 	{
 		readonly List<ITextEditor> originalActive;
 		readonly ITextEditor originalTopMost;
 		readonly ITabs tabs;
 		ListView listView;
 
-		public ViewActiveTabsDialog(ITabs tabs)
+		public WindowActiveTabsDialog(ITabs tabs)
 		{
 			this.tabs = tabs;
 			originalActive = tabs.Items.Where(item => item.Active).ToList();
@@ -173,6 +173,6 @@ namespace NeoEdit.Dialogs
 				tabs.TopMost = topMost;
 		}
 
-		public static void Run(ITabs tabs) => new ViewActiveTabsDialog(tabs) { Owner = tabs.WindowParent }.ShowDialog();
+		public static void Run(ITabs tabs) => new WindowActiveTabsDialog(tabs) { Owner = tabs.WindowParent }.ShowDialog();
 	}
 }

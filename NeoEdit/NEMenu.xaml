@@ -914,32 +914,6 @@
 			</MenuItem>
 		</MenuItem>
 	</MenuItem>
-	<MenuItem Header="_View">
-		<controls:NEMenuItem Header="_Full" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Full&quot;'}" CommandEnum="View_Full"/>
-		<controls:NEMenuItem Header="_Grid" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Grid&quot;'}" CommandEnum="View_Grid"/>
-		<controls:NEMenuItem Header="C_ustom Grid" CommandEnum="View_CustomGrid"/>
-		<Separator/>
-		<controls:NEMenuItem Header="_Active Tabs" CommandEnum="View_ActiveTabs"/>
-		<controls:NEMenuItem Header="Tab _Index" CommandEnum="View_TabIndex"/>
-		<controls:NEMenuItem Header="Active Tab In_dex" CommandEnum="View_ActiveTabIndex"/>
-		<Separator/>
-		<controls:NEMenuItem Header="F_ont Size" CommandEnum="View_FontSize"/>
-		<Separator/>
-		<MenuItem Header="_Select">
-			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="View_Select_TabsWithSelections"/>
-			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="View_Select_TabsWithoutSelections"/>
-			<Separator/>
-			<controls:NEMenuItem Header="Tabs With Selections To _Top" CommandEnum="View_Select_TabsWithSelectionsToTop"/>
-		</MenuItem>
-		<MenuItem Header="_Close">
-			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="View_Close_TabsWithSelections"/>
-			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="View_Close_TabsWithoutSelections"/>
-			<controls:NEMenuItem Header="_Active Tabs" CommandEnum="View_Close_ActiveTabs"/>
-			<controls:NEMenuItem Header="_Inactive Tabs" CommandEnum="View_Close_InactiveTabs"/>
-		</MenuItem>
-		<Separator/>
-		<controls:NEMenuItem Header="_Word List" CommandEnum="View_WordList"/>
-	</MenuItem>
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">
 			<MenuItem Header="_Quick">
@@ -1020,6 +994,31 @@
 	</MenuItem>
 	<MenuItem Header="_Window">
 		<controls:NEMenuItem Header="_New Window" CommandEnum="Window_NewWindow"/>
+		<Separator/>
+		<controls:NEMenuItem Header="_Full" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Full&quot;'}" CommandEnum="Window_Full"/>
+		<controls:NEMenuItem Header="_Grid" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Grid&quot;'}" CommandEnum="Window_Grid"/>
+		<controls:NEMenuItem Header="C_ustom Grid" CommandEnum="Window_CustomGrid"/>
+		<Separator/>
+		<controls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_ActiveTabs"/>
+		<controls:NEMenuItem Header="Tab _Index" CommandEnum="Window_TabIndex"/>
+		<controls:NEMenuItem Header="Active Tab In_dex" CommandEnum="Window_ActiveTabIndex"/>
+		<Separator/>
+		<controls:NEMenuItem Header="F_ont Size" CommandEnum="Window_FontSize"/>
+		<Separator/>
+		<MenuItem Header="_Select">
+			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Select_TabsWithSelections"/>
+			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Select_TabsWithoutSelections"/>
+			<Separator/>
+			<controls:NEMenuItem Header="Tabs With Selections To _Top" CommandEnum="Window_Select_TabsWithSelectionsToTop"/>
+		</MenuItem>
+		<MenuItem Header="_Close">
+			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Close_TabsWithSelections"/>
+			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Close_TabsWithoutSelections"/>
+			<controls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_Close_ActiveTabs"/>
+			<controls:NEMenuItem Header="_Inactive Tabs" CommandEnum="Window_Close_InactiveTabs"/>
+		</MenuItem>
+		<Separator/>
+		<controls:NEMenuItem Header="_Word List" CommandEnum="Window_WordList"/>
 	</MenuItem>
 	<MenuItem Header="_Help">
 		<controls:NEMenuItem Header="_About" CommandEnum="Help_About"/>

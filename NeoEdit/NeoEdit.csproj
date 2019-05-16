@@ -210,9 +210,9 @@
       <Project>{1e27e6fc-ff53-48f3-b2c1-4b79b34abeea}</Project>
       <Name>Text</Name>
     </ProjectReference>
-    <ProjectReference Include="..\View\View.csproj">
+    <ProjectReference Include="..\Window\Window.csproj">
       <Project>{55adecd1-44a7-4b68-86b7-222b68e99078}</Project>
-      <Name>View</Name>
+      <Name>Window</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />

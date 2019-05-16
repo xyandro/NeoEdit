@@ -7,26 +7,28 @@ using NeoEdit.Transform;
 
 namespace NeoEdit
 {
-	public static class ViewFunctions
+	public static class WindowFunctions
 	{
-		static public void Command_View_Type(ITabs tabs, TabsLayout layout, ViewCustomGridDialog.Result result) => tabs.SetLayout(layout, result?.Columns, result?.Rows);
+		static public void Command_Window_NewWindow() => ITabsCreator.CreateTabs();
 
-		static public ViewCustomGridDialog.Result Command_View_Type_Dialog(ITabs tabs) => ViewCustomGridDialog.Run(tabs.WindowParent, tabs.Columns, tabs.Rows);
+		static public void Command_Window_Type(ITabs tabs, TabsLayout layout, WindowCustomGridDialog.Result result) => tabs.SetLayout(layout, result?.Columns, result?.Rows);
 
-		static public void Command_View_ActiveTabs(ITabs tabs)
+		static public WindowCustomGridDialog.Result Command_Window_Type_Dialog(ITabs tabs) => WindowCustomGridDialog.Run(tabs.WindowParent, tabs.Columns, tabs.Rows);
+
+		static public void Command_Window_ActiveTabs(ITabs tabs)
 		{
-			ViewActiveTabsDialog.Run(tabs);
+			WindowActiveTabsDialog.Run(tabs);
 			tabs.UpdateTopMost();
 		}
 
-		static public void Command_View_TabIndex(ITextEditor te, bool activeOnly)
+		static public void Command_Window_TabIndex(ITextEditor te, bool activeOnly)
 		{
 			te.ReplaceSelections((te.TabsParent.GetIndex(te, activeOnly) + 1).ToString());
 		}
 
-		static public void Command_View_FontSize(ITabs tabs) => ViewFontSizeDialog.Run(tabs.WindowParent);
+		static public void Command_Window_FontSize(ITabs tabs) => WindowFontSizeDialog.Run(tabs.WindowParent);
 
-		static public void Command_View_SelectTabsWithSelections(ITabs tabs, bool hasSelections)
+		static public void Command_Window_SelectTabsWithSelections(ITabs tabs, bool hasSelections)
 		{
 			var topMost = tabs.TopMost;
 			var active = tabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
@@ -41,7 +43,7 @@ namespace NeoEdit
 			active.ForEach(tab => tab.Active = true);
 		}
 
-		static public void Command_View_Select_TabsWithSelectionsToTop(ITabs tabs)
+		static public void Command_Window_Select_TabsWithSelectionsToTop(ITabs tabs)
 		{
 			var topMost = tabs.TopMost;
 			var active = tabs.Items.Where(tab => tab.Active).ToList();
@@ -56,7 +58,7 @@ namespace NeoEdit
 			active.ForEach(tab => tab.Active = true);
 		}
 
-		static public void Command_View_CloseTabsWithSelections(ITabs tabs, bool hasSelections)
+		static public void Command_Window_CloseTabsWithSelections(ITabs tabs, bool hasSelections)
 		{
 			var topMost = tabs.TopMost;
 			var active = tabs.Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
@@ -76,7 +78,7 @@ namespace NeoEdit
 			active.ForEach(tab => tab.Active = true);
 		}
 
-		static public void Command_View_Close_ActiveTabs(ITabs tabs, bool active)
+		static public void Command_Window_Close_ActiveTabs(ITabs tabs, bool active)
 		{
 			var answer = new AnswerResult();
 			var closeTabs = tabs.Items.Where(tab => tab.Active == active).ToList();
@@ -85,11 +87,11 @@ namespace NeoEdit
 			closeTabs.ForEach(tab => tabs.Remove(tab));
 		}
 
-		static public void Command_View_WordList(ITabs tabs)
+		static public void Command_Window_WordList(ITabs tabs)
 		{
 			var type = tabs.GetType();
 			byte[] data;
-			var streamName = typeof(ViewFunctions).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
+			var streamName = typeof(WindowFunctions).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
 			using (var stream = type.Assembly.GetManifestResourceStream(streamName))
 			using (var ms = new MemoryStream())
 			{

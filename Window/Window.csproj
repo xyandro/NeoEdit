@@ -4,8 +4,8 @@
   <PropertyGroup>
     <ProjectGuid>{55ADECD1-44A7-4B68-86B7-222B68E99078}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>NeoEdit.View</RootNamespace>
-    <AssemblyName>NeoEdit.View</AssemblyName>
+    <RootNamespace>NeoEdit.Window</RootNamespace>
+    <AssemblyName>NeoEdit.Window</AssemblyName>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
@@ -17,26 +17,26 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Dialogs\ViewActiveTabsDialog.cs" />
-    <Page Include="Dialogs\ViewCustomGridDialog.xaml">
+    <Compile Include="Dialogs\WindowActiveTabsDialog.cs" />
+    <Page Include="Dialogs\WindowCustomGridDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\ViewCustomGridDialog.xaml.cs">
-      <DependentUpon>ViewCustomGridDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\WindowCustomGridDialog.xaml.cs">
+      <DependentUpon>WindowCustomGridDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ViewFontSizeDialog.xaml">
+    <Page Include="Dialogs\WindowFontSizeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\ViewFontSizeDialog.xaml.cs">
-      <DependentUpon>ViewFontSizeDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\WindowFontSizeDialog.xaml.cs">
+      <DependentUpon>WindowFontSizeDialog.xaml</DependentUpon>
     </Compile>
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewFunctions.cs" />
+    <Compile Include="WindowFunctions.cs" />
     <Resource Include="Words.txt" />
     <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>

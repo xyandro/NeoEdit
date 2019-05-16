@@ -155,8 +155,6 @@ namespace NeoEdit
 			e.Handled = true;
 		}
 
-		void Command_Window_NewWindow() => new Tabs(true);
-
 		string QuickMacro(int num) => $"QuickText{num}.xml";
 		void Macro_Open_Quick(int quickNum) => Add(new TextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 
@@ -341,8 +339,8 @@ namespace NeoEdit
 			switch (command)
 			{
 				case NECommand.File_Open_Open: dialogResult = FileFunctions.Command_File_Open_Open_Dialog(this); break;
-				case NECommand.View_CustomGrid: dialogResult = ViewFunctions.Command_View_Type_Dialog(this); break;
 				case NECommand.Macro_Open_Open: dialogResult = FileFunctions.Command_File_Open_Open_Dialog(this, Macro.MacroDirectory); break;
+				case NECommand.Window_CustomGrid: dialogResult = WindowFunctions.Command_Window_Type_Dialog(this); break;
 				default: return TopMost == null ? true : TopMost.GetDialogResult(command, out dialogResult, multiStatus);
 			}
 
@@ -365,19 +363,6 @@ namespace NeoEdit
 				case NECommand.Diff_Select_LeftTab: DiffFunctions.Command_Diff_Select_LeftRightBothTabs(this, true); break;
 				case NECommand.Diff_Select_RightTab: DiffFunctions.Command_Diff_Select_LeftRightBothTabs(this, false); break;
 				case NECommand.Diff_Select_BothTabs: DiffFunctions.Command_Diff_Select_LeftRightBothTabs(this, null); break;
-				case NECommand.View_Full: ViewFunctions.Command_View_Type(this, TabsLayout.Full, null); break;
-				case NECommand.View_Grid: ViewFunctions.Command_View_Type(this, TabsLayout.Grid, null); break;
-				case NECommand.View_CustomGrid: ViewFunctions.Command_View_Type(this, TabsLayout.Custom, dialogResult as ViewCustomGridDialog.Result); break;
-				case NECommand.View_ActiveTabs: ViewFunctions.Command_View_ActiveTabs(this); break;
-				case NECommand.View_FontSize: ViewFunctions.Command_View_FontSize(this); break;
-				case NECommand.View_Select_TabsWithSelections: ViewFunctions.Command_View_SelectTabsWithSelections(this, true); break;
-				case NECommand.View_Select_TabsWithoutSelections: ViewFunctions.Command_View_SelectTabsWithSelections(this, false); break;
-				case NECommand.View_Select_TabsWithSelectionsToTop: ViewFunctions.Command_View_Select_TabsWithSelectionsToTop(this); break;
-				case NECommand.View_Close_TabsWithSelections: ViewFunctions.Command_View_CloseTabsWithSelections(this, true); break;
-				case NECommand.View_Close_TabsWithoutSelections: ViewFunctions.Command_View_CloseTabsWithSelections(this, false); break;
-				case NECommand.View_Close_ActiveTabs: ViewFunctions.Command_View_Close_ActiveTabs(this, true); break;
-				case NECommand.View_Close_InactiveTabs: ViewFunctions.Command_View_Close_ActiveTabs(this, false); break;
-				case NECommand.View_WordList: ViewFunctions.Command_View_WordList(this); break;
 				case NECommand.Macro_Open_Quick_1: Macro_Open_Quick(1); return true;
 				case NECommand.Macro_Open_Quick_2: Macro_Open_Quick(2); return true;
 				case NECommand.Macro_Open_Quick_3: Macro_Open_Quick(3); return true;
@@ -391,7 +376,20 @@ namespace NeoEdit
 				case NECommand.Macro_Open_Quick_11: Macro_Open_Quick(11); return true;
 				case NECommand.Macro_Open_Quick_12: Macro_Open_Quick(12); return true;
 				case NECommand.Macro_Open_Open: FileFunctions.Command_File_Open_Open(this, dialogResult as OpenFileDialogResult); return true;
-				case NECommand.Window_NewWindow: Command_Window_NewWindow(); break;
+				case NECommand.Window_NewWindow: WindowFunctions.Command_Window_NewWindow(); break;
+				case NECommand.Window_Full: WindowFunctions.Command_Window_Type(this, TabsLayout.Full, null); break;
+				case NECommand.Window_Grid: WindowFunctions.Command_Window_Type(this, TabsLayout.Grid, null); break;
+				case NECommand.Window_CustomGrid: WindowFunctions.Command_Window_Type(this, TabsLayout.Custom, dialogResult as WindowCustomGridDialog.Result); break;
+				case NECommand.Window_ActiveTabs: WindowFunctions.Command_Window_ActiveTabs(this); break;
+				case NECommand.Window_FontSize: WindowFunctions.Command_Window_FontSize(this); break;
+				case NECommand.Window_Select_TabsWithSelections: WindowFunctions.Command_Window_SelectTabsWithSelections(this, true); break;
+				case NECommand.Window_Select_TabsWithoutSelections: WindowFunctions.Command_Window_SelectTabsWithSelections(this, false); break;
+				case NECommand.Window_Select_TabsWithSelectionsToTop: WindowFunctions.Command_Window_Select_TabsWithSelectionsToTop(this); break;
+				case NECommand.Window_Close_TabsWithSelections: WindowFunctions.Command_Window_CloseTabsWithSelections(this, true); break;
+				case NECommand.Window_Close_TabsWithoutSelections: WindowFunctions.Command_Window_CloseTabsWithSelections(this, false); break;
+				case NECommand.Window_Close_ActiveTabs: WindowFunctions.Command_Window_Close_ActiveTabs(this, true); break;
+				case NECommand.Window_Close_InactiveTabs: WindowFunctions.Command_Window_Close_ActiveTabs(this, false); break;
+				case NECommand.Window_WordList: WindowFunctions.Command_Window_WordList(this); break;
 				case NECommand.Help_About: HelpFunctions.Command_Help_About(); break;
 				case NECommand.Help_Update: HelpFunctions.Command_Help_Update(); break;
 				case NECommand.Help_RunGC: HelpFunctions.Command_Help_RunGC(); break;
