@@ -160,6 +160,16 @@ namespace NeoEdit
 			return string.Join("*", factors);
 		}
 
+		static public void Command_Numeric_Select_MinMax(ITextEditor te, bool max)
+		{
+			if (!te.Selections.Any())
+				throw new Exception("No selections");
+
+			var values = te.Selections.AsParallel().AsOrdered().Select(range => double.Parse(te.GetString(range))).ToList();
+			var find = max ? values.OrderByDescending().First() : values.OrderBy().First();
+			te.SetSelections(values.Indexes(value => value == find).Select(index => te.Selections[index]).ToList());
+		}
+
 		static public void Command_Numeric_Select_Fraction_Whole(ITextEditor te)
 		{
 			te.SetSelections(te.Selections.AsParallel().AsOrdered().Select(range =>

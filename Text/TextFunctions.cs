@@ -107,6 +107,26 @@ namespace NeoEdit
 			te.SetSelections(sels);
 		}
 
+		static public void Command_Text_Select_MinMax_Text(ITextEditor te, bool max)
+		{
+			if (!te.Selections.Any())
+				throw new Exception("No selections");
+
+			var strings = te.GetSelectionStrings();
+			var find = max ? strings.OrderByDescending().First() : strings.OrderBy().First();
+			te.SetSelections(strings.Indexes(str => str == find).Select(index => te.Selections[index]).ToList());
+		}
+
+		static public void Command_Text_Select_MinMax_Length(ITextEditor te, bool max)
+		{
+			if (!te.Selections.Any())
+				throw new Exception("No selections");
+
+			var lengths = te.Selections.Select(range => range.Length).ToList();
+			var find = max ? lengths.OrderByDescending().First() : lengths.OrderBy().First();
+			te.SetSelections(lengths.Indexes(length => length == find).Select(index => te.Selections[index]).ToList());
+		}
+
 		static public void Command_Text_Case_Upper(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).ToUpperInvariant()).ToList());
 
 		static public void Command_Text_Case_Lower(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).ToLowerInvariant()).ToList());

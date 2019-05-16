@@ -36,8 +36,6 @@ namespace NeoEdit
 			public bool? MultiStatus { get; set; }
 		}
 
-		enum FindMinMaxType { String, Numeric, Length }
-
 		public TextData Data { get; } = new TextData();
 
 		[DepProp]
@@ -505,26 +503,6 @@ namespace NeoEdit
 			xScrollValue = Math.Min(x, Math.Max(x - xScrollViewportFloor + 1, xScrollValue));
 
 			statusBarRenderTimer.Start();
-		}
-
-		List<Range> FindMinMax(bool min, FindMinMaxType type)
-		{
-			switch (type)
-			{
-				case FindMinMaxType.String: return FindMinMax(min, range => GetString(range));
-				case FindMinMaxType.Numeric: return FindMinMax(min, range => double.Parse(GetString(range)));
-				case FindMinMaxType.Length: return FindMinMax(min, range => range.Length);
-				default: throw new Exception("Invalid type");
-			}
-		}
-
-		List<Range> FindMinMax<Input>(bool min, Func<Range, Input> select)
-		{
-			if (!Selections.Any())
-				throw new Exception("No selections");
-			var selections = Selections.AsParallel().GroupBy(range => select(range)).OrderBy(group => group.Key);
-			var result = min ? selections.First() : selections.Last();
-			return result.ToList();
 		}
 
 		public List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables(), Selections.Count());
@@ -1299,10 +1277,10 @@ namespace NeoEdit
 				case NECommand.Text_Select_ByWidth: TextFunctions.Command_Text_Select_ByWidth(this, dialogResult as TextWidthDialog.Result); break;
 				case NECommand.Text_Select_WholeWord: TextFunctions.Command_Text_Select_WholeBoundedWord(this, dialogResult as TextSelectWholeBoundedWordDialog.Result, true); break;
 				case NECommand.Text_Select_BoundedWord: TextFunctions.Command_Text_Select_WholeBoundedWord(this, dialogResult as TextSelectWholeBoundedWordDialog.Result, false); break;
-				case NECommand.Text_Select_Min_Text: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.String); break;
-				case NECommand.Text_Select_Min_Length: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.Length); break;
-				case NECommand.Text_Select_Max_Text: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.String); break;
-				case NECommand.Text_Select_Max_Length: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.Length); break;
+				case NECommand.Text_Select_Min_Text: TextFunctions.Command_Text_Select_MinMax_Text(this, false); break;
+				case NECommand.Text_Select_Min_Length: TextFunctions.Command_Text_Select_MinMax_Length(this, false); break;
+				case NECommand.Text_Select_Max_Text: TextFunctions.Command_Text_Select_MinMax_Text(this, true); break;
+				case NECommand.Text_Select_Max_Length: TextFunctions.Command_Text_Select_MinMax_Length(this, true); break;
 				case NECommand.Text_Case_Upper: TextFunctions.Command_Text_Case_Upper(this); break;
 				case NECommand.Text_Case_Lower: TextFunctions.Command_Text_Case_Lower(this); break;
 				case NECommand.Text_Case_Proper: TextFunctions.Command_Text_Case_Proper(this); break;
@@ -1326,8 +1304,8 @@ namespace NeoEdit
 		{
 			switch (command)
 			{
-				case NECommand.Numeric_Select_Min: Command_Type_Select_MinMax(true, TextEditor.FindMinMaxType.Numeric); break;
-				case NECommand.Numeric_Select_Max: Command_Type_Select_MinMax(false, TextEditor.FindMinMaxType.Numeric); break;
+				case NECommand.Numeric_Select_Min: NumericFunctions.Command_Numeric_Select_MinMax(this, false); break;
+				case NECommand.Numeric_Select_Max: NumericFunctions.Command_Numeric_Select_MinMax(this, true); break;
 				case NECommand.Numeric_Select_Fraction_Whole: NumericFunctions.Command_Numeric_Select_Fraction_Whole(this); break;
 				case NECommand.Numeric_Select_Fraction_Fraction: NumericFunctions.Command_Numeric_Select_Fraction_Fraction(this); break;
 				case NECommand.Numeric_Hex_ToHex: NumericFunctions.Command_Numeric_Hex_ToHex(this); break;
@@ -2708,8 +2686,6 @@ namespace NeoEdit
 			}
 
 		}
-
-		void Command_Type_Select_MinMax(bool min, FindMinMaxType type) => SetSelections(FindMinMax(min, type));
 
 		void Command_Macro_RepeatLastAction()
 		{
