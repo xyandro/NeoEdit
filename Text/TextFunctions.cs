@@ -5,6 +5,7 @@ using System.Linq;
 using NeoEdit;
 using NeoEdit.Dialogs;
 using NeoEdit.Parsing;
+using NeoEdit.RevRegEx;
 
 namespace NeoEdit
 {
@@ -184,7 +185,7 @@ namespace NeoEdit
 			if (te.Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var data = RevRegEx.RevRegExVisitor.Parse(result.RegEx, result.InfiniteCount);
+			var data = RevRegExVisitor.Parse(result.RegEx, result.InfiniteCount);
 			var output = data.GetPossibilities().Select(str => str + te.Data.DefaultEnding).ToList();
 			te.ReplaceSelections(string.Join("", output));
 

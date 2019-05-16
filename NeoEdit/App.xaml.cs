@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using NeoEdit.CommandLine;
 using NeoEdit.Controls;
 using NeoEdit.Dialogs;
 
@@ -58,7 +59,7 @@ namespace NeoEdit
 		{
 			try
 			{
-				var clParams = CommandLine.CommandLineVisitor.GetCommandLineParams(commandLine);
+				var clParams = CommandLineVisitor.GetCommandLineParams(commandLine);
 
 				var windows = UIHelper<Tabs>.GetAllWindows();
 				var restored = windows.Count(window => window.Restore());
