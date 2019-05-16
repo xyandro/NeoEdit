@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using NeoEdit.Transform;
 
@@ -36,5 +37,10 @@ namespace NeoEdit
 		void SetLayout(TabsLayout layout, int? columns = null, int? rows = null);
 		void UpdateTopMost();
 		void MoveToTop(IEnumerable<ITextEditor> tabs);
+		bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown);
+		bool HandleText(string text);
+		bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus);
+		Macro RecordingMacro { get; set; }
+		Macro MacroPlaying { get; set; }
 	}
 }

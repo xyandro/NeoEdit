@@ -152,6 +152,7 @@
     <Compile Include="ITextEditor.cs" />
     <Compile Include="JumpByType.cs" />
     <Compile Include="LCS.cs" />
+    <Compile Include="Macro.cs" />
     <Compile Include="MessageOptions.cs" />
     <Compile Include="Misc\Font.cs" />
     <Compile Include="Misc\PropertyChangeNotifier.cs" />

@@ -63,13 +63,6 @@
     <Compile Include="Dialogs\EncryptDialog.xaml.cs">
       <DependentUpon>EncryptDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\MacroPlayRepeatDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\MacroPlayRepeatDialog.xaml.cs">
-      <DependentUpon>MacroPlayRepeatDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\SignVerifyDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -85,7 +78,6 @@
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="InstanceManager.cs" />
-    <Compile Include="Macro.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
     <Page Include="NEMenu.xaml">
@@ -181,6 +173,10 @@
     <ProjectReference Include="..\Keys\Keys.csproj">
       <Project>{b0b2bd86-4588-4cb3-9407-890b63fada12}</Project>
       <Name>Keys</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Macro\Macro.csproj">
+      <Project>{b434f844-75eb-4855-a13d-783939264f22}</Project>
+      <Name>Macro</Name>
     </ProjectReference>
     <ProjectReference Include="..\Network\Network.csproj">
       <Project>{6d97e1f0-c290-4725-b6ef-1c54e1530612}</Project>

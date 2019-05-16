@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -15,7 +14,6 @@ using NeoEdit;
 using NeoEdit.Controls;
 using NeoEdit.Converters;
 using NeoEdit.Dialogs;
-using NeoEdit.Expressions;
 using NeoEdit.Misc;
 using NeoEdit.NEClipboards;
 using NeoEdit.Transform;
@@ -155,161 +153,58 @@ namespace NeoEdit
 			e.Handled = true;
 		}
 
-		string QuickMacro(int num) => $"QuickText{num}.xml";
-		void Macro_Open_Quick(int quickNum) => Add(new TextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
-
-		void Command_Macro_Record_Quick(int quickNum)
-		{
-			if (recordingMacro == null)
-				Command_Macro_Record_Record();
-			else
-				Command_Macro_Record_StopRecording(QuickMacro(quickNum));
-		}
-
-		void Command_Macro_Append_Quick(int quickNum)
-		{
-			if (recordingMacro == null)
-				recordingMacro = Macro.Load(QuickMacro(quickNum), true);
-			else
-				Command_Macro_Record_StopRecording(QuickMacro(quickNum));
-		}
-
-		void Command_Macro_Append_Append()
-		{
-			ValidateNoCurrentMacro();
-			recordingMacro = Macro.Load();
-		}
-
-		void Command_Macro_Play_Quick(int quickNum) => Macro.Load(QuickMacro(quickNum), true).Play(this, playing => macroPlaying = playing);
-
-		void ValidateNoCurrentMacro()
-		{
-			if (recordingMacro == null)
-				return;
-
-			throw new Exception("Cannot start recording; recording is already in progess.");
-		}
-
-		void Command_Macro_Record_Record()
-		{
-			ValidateNoCurrentMacro();
-			recordingMacro = new Macro();
-		}
-
-		void Command_Macro_Record_StopRecording(string fileName = null)
-		{
-			if (recordingMacro == null)
-			{
-				new Message(this)
-				{
-					Title = "Error",
-					Text = $"Cannot stop recording; recording not in progess.",
-					Options = MessageOptions.Ok,
-				}.Show();
-				return;
-			}
-
-			var macro = recordingMacro;
-			recordingMacro = null;
-			macro.Save(fileName, true);
-		}
-
-		void Command_Macro_Play_Play() => Macro.Load().Play(this, playing => macroPlaying = playing);
-
-		void Command_Macro_Play_PlayOnCopiedFiles()
-		{
-			var files = new Queue<string>(NEClipboard.Current.Strings);
-			var macro = Macro.Load();
-			Action startNext = null;
-			startNext = () =>
-			{
-				if (!files.Any())
-					return;
-				Add(new TextEditor(files.Dequeue()));
-				macro.Play(this, playing => macroPlaying = playing, startNext);
-			};
-			startNext();
-		}
-
-		void Command_Macro_Play_Repeat()
-		{
-			var result = MacroPlayRepeatDialog.Run(this, Macro.ChooseMacro);
-			if (result == null)
-				return;
-
-			var macro = Macro.Load(result.Macro);
-			var expression = new NEExpression(result.Expression);
-			var count = int.MaxValue;
-			if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Number)
-				count = expression.Evaluate<int>();
-
-			Action startNext = null;
-			startNext = () =>
-			{
-				if ((TopMost == null) || (--count < 0))
-					return;
-
-				if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Condition)
-					if (!expression.Evaluate<bool>(TopMost.GetVariables()))
-						return;
-
-				macro.Play(this, playing => macroPlaying = playing, startNext);
-			};
-			startNext();
-		}
-
-		Macro recordingMacro;
-		internal Macro macroPlaying = null;
+		public Macro RecordingMacro { get; set; }
+		public Macro MacroPlaying { get; set; }
 
 		internal void RunCommand(NECommand command, bool? multiStatus)
 		{
-			if (macroPlaying != null)
+			if (MacroPlaying != null)
 				return;
 
 			switch (command)
 			{
-				case NECommand.Macro_Record_Quick_1: Command_Macro_Record_Quick(1); return;
-				case NECommand.Macro_Record_Quick_2: Command_Macro_Record_Quick(2); return;
-				case NECommand.Macro_Record_Quick_3: Command_Macro_Record_Quick(3); return;
-				case NECommand.Macro_Record_Quick_4: Command_Macro_Record_Quick(4); return;
-				case NECommand.Macro_Record_Quick_5: Command_Macro_Record_Quick(5); return;
-				case NECommand.Macro_Record_Quick_6: Command_Macro_Record_Quick(6); return;
-				case NECommand.Macro_Record_Quick_7: Command_Macro_Record_Quick(7); return;
-				case NECommand.Macro_Record_Quick_8: Command_Macro_Record_Quick(8); return;
-				case NECommand.Macro_Record_Quick_9: Command_Macro_Record_Quick(9); return;
-				case NECommand.Macro_Record_Quick_10: Command_Macro_Record_Quick(10); return;
-				case NECommand.Macro_Record_Quick_11: Command_Macro_Record_Quick(11); return;
-				case NECommand.Macro_Record_Quick_12: Command_Macro_Record_Quick(12); return;
-				case NECommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
-				case NECommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
-				case NECommand.Macro_Append_Quick_1: Command_Macro_Append_Quick(1); return;
-				case NECommand.Macro_Append_Quick_2: Command_Macro_Append_Quick(2); return;
-				case NECommand.Macro_Append_Quick_3: Command_Macro_Append_Quick(3); return;
-				case NECommand.Macro_Append_Quick_4: Command_Macro_Append_Quick(4); return;
-				case NECommand.Macro_Append_Quick_5: Command_Macro_Append_Quick(5); return;
-				case NECommand.Macro_Append_Quick_6: Command_Macro_Append_Quick(6); return;
-				case NECommand.Macro_Append_Quick_7: Command_Macro_Append_Quick(7); return;
-				case NECommand.Macro_Append_Quick_8: Command_Macro_Append_Quick(8); return;
-				case NECommand.Macro_Append_Quick_9: Command_Macro_Append_Quick(9); return;
-				case NECommand.Macro_Append_Quick_10: Command_Macro_Append_Quick(10); return;
-				case NECommand.Macro_Append_Quick_11: Command_Macro_Append_Quick(11); return;
-				case NECommand.Macro_Append_Quick_12: Command_Macro_Append_Quick(12); return;
-				case NECommand.Macro_Append_Append: Command_Macro_Append_Append(); return;
-				case NECommand.Macro_Play_Quick_1: Command_Macro_Play_Quick(1); return;
-				case NECommand.Macro_Play_Quick_2: Command_Macro_Play_Quick(2); return;
-				case NECommand.Macro_Play_Quick_3: Command_Macro_Play_Quick(3); return;
-				case NECommand.Macro_Play_Quick_4: Command_Macro_Play_Quick(4); return;
-				case NECommand.Macro_Play_Quick_5: Command_Macro_Play_Quick(5); return;
-				case NECommand.Macro_Play_Quick_6: Command_Macro_Play_Quick(6); return;
-				case NECommand.Macro_Play_Quick_7: Command_Macro_Play_Quick(7); return;
-				case NECommand.Macro_Play_Quick_8: Command_Macro_Play_Quick(8); return;
-				case NECommand.Macro_Play_Quick_9: Command_Macro_Play_Quick(9); return;
-				case NECommand.Macro_Play_Quick_10: Command_Macro_Play_Quick(10); return;
-				case NECommand.Macro_Play_Quick_11: Command_Macro_Play_Quick(11); return;
-				case NECommand.Macro_Play_Quick_12: Command_Macro_Play_Quick(12); return;
-				case NECommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
-				case NECommand.Macro_Play_Repeat: Command_Macro_Play_Repeat(); return;
-				case NECommand.Macro_Play_PlayOnCopiedFiles: Command_Macro_Play_PlayOnCopiedFiles(); return;
+				case NECommand.Macro_Record_Quick_1: MacroFunctions.Command_Macro_Record_Quick(this, 1); return;
+				case NECommand.Macro_Record_Quick_2: MacroFunctions.Command_Macro_Record_Quick(this, 2); return;
+				case NECommand.Macro_Record_Quick_3: MacroFunctions.Command_Macro_Record_Quick(this, 3); return;
+				case NECommand.Macro_Record_Quick_4: MacroFunctions.Command_Macro_Record_Quick(this, 4); return;
+				case NECommand.Macro_Record_Quick_5: MacroFunctions.Command_Macro_Record_Quick(this, 5); return;
+				case NECommand.Macro_Record_Quick_6: MacroFunctions.Command_Macro_Record_Quick(this, 6); return;
+				case NECommand.Macro_Record_Quick_7: MacroFunctions.Command_Macro_Record_Quick(this, 7); return;
+				case NECommand.Macro_Record_Quick_8: MacroFunctions.Command_Macro_Record_Quick(this, 8); return;
+				case NECommand.Macro_Record_Quick_9: MacroFunctions.Command_Macro_Record_Quick(this, 9); return;
+				case NECommand.Macro_Record_Quick_10: MacroFunctions.Command_Macro_Record_Quick(this, 10); return;
+				case NECommand.Macro_Record_Quick_11: MacroFunctions.Command_Macro_Record_Quick(this, 11); return;
+				case NECommand.Macro_Record_Quick_12: MacroFunctions.Command_Macro_Record_Quick(this, 12); return;
+				case NECommand.Macro_Record_Record: MacroFunctions.Command_Macro_Record_Record(this); return;
+				case NECommand.Macro_Record_StopRecording: MacroFunctions.Command_Macro_Record_StopRecording(this); return;
+				case NECommand.Macro_Append_Quick_1: MacroFunctions.Command_Macro_Append_Quick(this, 1); return;
+				case NECommand.Macro_Append_Quick_2: MacroFunctions.Command_Macro_Append_Quick(this, 2); return;
+				case NECommand.Macro_Append_Quick_3: MacroFunctions.Command_Macro_Append_Quick(this, 3); return;
+				case NECommand.Macro_Append_Quick_4: MacroFunctions.Command_Macro_Append_Quick(this, 4); return;
+				case NECommand.Macro_Append_Quick_5: MacroFunctions.Command_Macro_Append_Quick(this, 5); return;
+				case NECommand.Macro_Append_Quick_6: MacroFunctions.Command_Macro_Append_Quick(this, 6); return;
+				case NECommand.Macro_Append_Quick_7: MacroFunctions.Command_Macro_Append_Quick(this, 7); return;
+				case NECommand.Macro_Append_Quick_8: MacroFunctions.Command_Macro_Append_Quick(this, 8); return;
+				case NECommand.Macro_Append_Quick_9: MacroFunctions.Command_Macro_Append_Quick(this, 9); return;
+				case NECommand.Macro_Append_Quick_10: MacroFunctions.Command_Macro_Append_Quick(this, 10); return;
+				case NECommand.Macro_Append_Quick_11: MacroFunctions.Command_Macro_Append_Quick(this, 11); return;
+				case NECommand.Macro_Append_Quick_12: MacroFunctions.Command_Macro_Append_Quick(this, 12); return;
+				case NECommand.Macro_Append_Append: MacroFunctions.Command_Macro_Append_Append(this); return;
+				case NECommand.Macro_Play_Quick_1: MacroFunctions.Command_Macro_Play_Quick(this, 1); return;
+				case NECommand.Macro_Play_Quick_2: MacroFunctions.Command_Macro_Play_Quick(this, 2); return;
+				case NECommand.Macro_Play_Quick_3: MacroFunctions.Command_Macro_Play_Quick(this, 3); return;
+				case NECommand.Macro_Play_Quick_4: MacroFunctions.Command_Macro_Play_Quick(this, 4); return;
+				case NECommand.Macro_Play_Quick_5: MacroFunctions.Command_Macro_Play_Quick(this, 5); return;
+				case NECommand.Macro_Play_Quick_6: MacroFunctions.Command_Macro_Play_Quick(this, 6); return;
+				case NECommand.Macro_Play_Quick_7: MacroFunctions.Command_Macro_Play_Quick(this, 7); return;
+				case NECommand.Macro_Play_Quick_8: MacroFunctions.Command_Macro_Play_Quick(this, 8); return;
+				case NECommand.Macro_Play_Quick_9: MacroFunctions.Command_Macro_Play_Quick(this, 9); return;
+				case NECommand.Macro_Play_Quick_10: MacroFunctions.Command_Macro_Play_Quick(this, 10); return;
+				case NECommand.Macro_Play_Quick_11: MacroFunctions.Command_Macro_Play_Quick(this, 11); return;
+				case NECommand.Macro_Play_Quick_12: MacroFunctions.Command_Macro_Play_Quick(this, 12); return;
+				case NECommand.Macro_Play_Play: MacroFunctions.Command_Macro_Play_Play(this); return;
+				case NECommand.Macro_Play_Repeat: MacroFunctions.Command_Macro_Play_Repeat(this); return;
+				case NECommand.Macro_Play_PlayOnCopiedFiles: MacroFunctions.Command_Macro_Play_PlayOnCopiedFiles(this); return;
 			}
 
 			var shiftDown = this.shiftDown;
@@ -318,8 +213,8 @@ namespace NeoEdit
 			if (!GetDialogResult(command, out dialogResult, multiStatus))
 				return;
 
-			if (recordingMacro != null)
-				recordingMacro.AddCommand(command, shiftDown, dialogResult, multiStatus);
+			if (RecordingMacro != null)
+				RecordingMacro.AddCommand(command, shiftDown, dialogResult, multiStatus);
 
 			HandleCommand(command, shiftDown, dialogResult, multiStatus);
 		}
@@ -363,18 +258,18 @@ namespace NeoEdit
 				case NECommand.Diff_Select_LeftTab: DiffFunctions.Command_Diff_Select_LeftRightBothTabs(this, true); break;
 				case NECommand.Diff_Select_RightTab: DiffFunctions.Command_Diff_Select_LeftRightBothTabs(this, false); break;
 				case NECommand.Diff_Select_BothTabs: DiffFunctions.Command_Diff_Select_LeftRightBothTabs(this, null); break;
-				case NECommand.Macro_Open_Quick_1: Macro_Open_Quick(1); return true;
-				case NECommand.Macro_Open_Quick_2: Macro_Open_Quick(2); return true;
-				case NECommand.Macro_Open_Quick_3: Macro_Open_Quick(3); return true;
-				case NECommand.Macro_Open_Quick_4: Macro_Open_Quick(4); return true;
-				case NECommand.Macro_Open_Quick_5: Macro_Open_Quick(5); return true;
-				case NECommand.Macro_Open_Quick_6: Macro_Open_Quick(6); return true;
-				case NECommand.Macro_Open_Quick_7: Macro_Open_Quick(7); return true;
-				case NECommand.Macro_Open_Quick_8: Macro_Open_Quick(8); return true;
-				case NECommand.Macro_Open_Quick_9: Macro_Open_Quick(9); return true;
-				case NECommand.Macro_Open_Quick_10: Macro_Open_Quick(10); return true;
-				case NECommand.Macro_Open_Quick_11: Macro_Open_Quick(11); return true;
-				case NECommand.Macro_Open_Quick_12: Macro_Open_Quick(12); return true;
+				case NECommand.Macro_Open_Quick_1: MacroFunctions.Command_Macro_Open_Quick(this, 1); return true;
+				case NECommand.Macro_Open_Quick_2: MacroFunctions.Command_Macro_Open_Quick(this, 2); return true;
+				case NECommand.Macro_Open_Quick_3: MacroFunctions.Command_Macro_Open_Quick(this, 3); return true;
+				case NECommand.Macro_Open_Quick_4: MacroFunctions.Command_Macro_Open_Quick(this, 4); return true;
+				case NECommand.Macro_Open_Quick_5: MacroFunctions.Command_Macro_Open_Quick(this, 5); return true;
+				case NECommand.Macro_Open_Quick_6: MacroFunctions.Command_Macro_Open_Quick(this, 6); return true;
+				case NECommand.Macro_Open_Quick_7: MacroFunctions.Command_Macro_Open_Quick(this, 7); return true;
+				case NECommand.Macro_Open_Quick_8: MacroFunctions.Command_Macro_Open_Quick(this, 8); return true;
+				case NECommand.Macro_Open_Quick_9: MacroFunctions.Command_Macro_Open_Quick(this, 9); return true;
+				case NECommand.Macro_Open_Quick_10: MacroFunctions.Command_Macro_Open_Quick(this, 10); return true;
+				case NECommand.Macro_Open_Quick_11: MacroFunctions.Command_Macro_Open_Quick(this, 11); return true;
+				case NECommand.Macro_Open_Quick_12: MacroFunctions.Command_Macro_Open_Quick(this, 12); return true;
 				case NECommand.Macro_Open_Open: FileFunctions.Command_File_Open_Open(this, dialogResult as OpenFileDialogResult); return true;
 				case NECommand.Window_NewWindow: WindowFunctions.Command_Window_NewWindow(); break;
 				case NECommand.Window_Full: WindowFunctions.Command_Window_Type(this, TabsLayout.Full, null); break;
@@ -418,10 +313,10 @@ namespace NeoEdit
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			if (macroPlaying != null)
+			if (MacroPlaying != null)
 			{
 				if (e.Key == Key.Escape)
-					macroPlaying.Stop();
+					MacroPlaying.Stop();
 				return;
 			}
 
@@ -438,8 +333,8 @@ namespace NeoEdit
 				key = e.SystemKey;
 			e.Handled = HandleKey(key, shiftDown, controlDown, altDown);
 
-			if ((recordingMacro != null) && (e.Handled))
-				recordingMacro.AddKey(key, shiftDown, controlDown, altDown);
+			if ((RecordingMacro != null) && (e.Handled))
+				RecordingMacro.AddKey(key, shiftDown, controlDown, altDown);
 		}
 
 		public bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
@@ -456,7 +351,7 @@ namespace NeoEdit
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
-			if (macroPlaying != null)
+			if (MacroPlaying != null)
 				return;
 
 			base.OnTextInput(e);
@@ -468,8 +363,8 @@ namespace NeoEdit
 
 			e.Handled = HandleText(e.Text);
 
-			if ((recordingMacro != null) && (e.Handled))
-				recordingMacro.AddText(e.Text);
+			if ((RecordingMacro != null) && (e.Handled))
+				RecordingMacro.AddText(e.Text);
 		}
 
 		public bool HandleText(string text)
