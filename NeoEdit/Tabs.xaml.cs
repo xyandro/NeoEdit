@@ -45,8 +45,6 @@ namespace NeoEdit
 
 		readonly RunOnceTimer layoutTimer, topMostTimer;
 
-		readonly Canvas canvas;
-		readonly ScrollBar scrollBar;
 		Action<ITextEditor> ShowItem;
 		int itemOrder = 0;
 
@@ -91,7 +89,6 @@ namespace NeoEdit
 			NEClipboard.ClipboardChanged += () => UpdateStatusBarText();
 			Activated += OnActivated;
 
-			SetupLayout(out canvas, out scrollBar);
 			SizeChanged += (s, e) => layoutTimer.Start();
 			scrollBar.ValueChanged += (s, e) => layoutTimer.Start();
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
@@ -670,25 +667,6 @@ namespace NeoEdit
 			};
 			dockPanel.Children.Add(closeButton);
 			return dockPanel;
-		}
-
-		void SetupLayout(out Canvas canvas, out ScrollBar scrollBar)
-		{
-			var grid = new Grid();
-			grid.RowDefinitions.Add(new RowDefinition());
-			grid.ColumnDefinitions.Add(new ColumnDefinition());
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-			tabs.Content = grid;
-
-			canvas = new Canvas { Background = Brushes.Gray, ClipToBounds = true };
-			Grid.SetRow(canvas, 0);
-			Grid.SetColumn(canvas, 0);
-			grid.Children.Add(canvas);
-
-			scrollBar = new ScrollBar();
-			Grid.SetRow(scrollBar, 0);
-			Grid.SetColumn(scrollBar, 1);
-			grid.Children.Add(scrollBar);
 		}
 
 		void ClearLayout()

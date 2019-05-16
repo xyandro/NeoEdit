@@ -24,7 +24,18 @@
 
 		<textEdit:NEMenu x:Name="menu" Parent="{Binding ElementName=self}"/>
 
-		<UserControl Grid.Row="1" Grid.Column="0" x:Name="tabs"/>
+		<Grid Grid.Row="1" Grid.Column="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+
+			<Canvas Grid.Row="0" Grid.Column="0" Name="canvas" Background="Gray" ClipToBounds="True"/>
+			<ScrollBar Grid.Row="0" Grid.Column="1" Name="scrollBar"/>
+		</Grid>
 
 		<StatusBar Grid.Row="2" Grid.Column="0">
 			<StatusBarItem>
