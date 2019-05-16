@@ -56,20 +56,6 @@
     <Compile Include="CommandLine\Parser\CommandLineParserVisitor.cs" />
     <None Include="CommandLine\Source\CommandLineLexer.g4" />
     <None Include="CommandLine\Source\CommandLineParser.g4" />
-    <Page Include="Dialogs\EncryptDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\EncryptDialog.xaml.cs">
-      <DependentUpon>EncryptDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\SignVerifyDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\SignVerifyDialog.xaml.cs">
-      <DependentUpon>SignVerifyDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
