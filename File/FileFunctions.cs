@@ -310,6 +310,16 @@ namespace NeoEdit
 			te.OpenFile(te.FileName, te.DisplayName, keepUndo: true);
 		}
 
+		static public void Command_File_MoveToNewWindow(ITabs tabs)
+		{
+			var active = tabs.Items.Where(tab => tab.Active).ToList();
+			active.ForEach(tab => tabs.Items.Remove(tab));
+
+			var newWindow = ITabsCreator.CreateTabs();
+			newWindow.SetLayout(newWindow.Layout, newWindow.Columns, newWindow.Rows);
+			active.ForEach(tab => newWindow.Add(tab));
+		}
+
 		static public void Command_File_Insert_Files(ITextEditor te)
 		{
 			if (te.Selections.Count != 1)

@@ -46,6 +46,8 @@
 		<controls:MultiMenuItem Header="_Auto Refresh" Objects="{Binding Parent.Items, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh"/>
 		<controls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
+		<controls:NEMenuItem Header="Move To New _Window" CommandEnum="File_MoveToNewWindow"/>
+		<Separator/>
 		<MenuItem Header="_Insert">
 			<controls:NEMenuItem Header="_Files" CommandEnum="File_Insert_Files"/>
 			<controls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Insert_CopiedCut"/>
@@ -935,8 +937,6 @@
 			<controls:NEMenuItem Header="_Active Tabs" CommandEnum="View_Close_ActiveTabs"/>
 			<controls:NEMenuItem Header="_Inactive Tabs" CommandEnum="View_Close_InactiveTabs"/>
 		</MenuItem>
-		<Separator/>
-		<controls:NEMenuItem Header="_New Window" CommandEnum="View_NewWindow"/>
 		<Separator/>
 		<controls:NEMenuItem Header="_Word List" CommandEnum="View_WordList"/>
 	</MenuItem>

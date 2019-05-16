@@ -85,16 +85,6 @@ namespace NeoEdit
 			closeTabs.ForEach(tab => tabs.Remove(tab));
 		}
 
-		static public void Command_View_NewWindow(ITabs tabs)
-		{
-			var active = tabs.Items.Where(tab => tab.Active).ToList();
-			active.ForEach(tab => tabs.Items.Remove(tab));
-
-			var newWindow = ITabsCreator.CreateTabs();
-			newWindow.SetLayout(newWindow.Layout, newWindow.Columns, newWindow.Rows);
-			active.ForEach(tab => newWindow.Add(tab));
-		}
-
 		static public void Command_View_WordList(ITabs tabs)
 		{
 			var type = tabs.GetType();

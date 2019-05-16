@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -360,6 +357,7 @@ namespace NeoEdit
 				case NECommand.File_New_FromClipboards: FileFunctions.Command_File_New_FromClipboards(this); break;
 				case NECommand.File_Open_Open: FileFunctions.Command_File_Open_Open(this, dialogResult as OpenFileDialogResult); break;
 				case NECommand.File_Open_CopiedCut: FileFunctions.Command_File_Open_CopiedCut(this); break;
+				case NECommand.File_MoveToNewWindow: FileFunctions.Command_File_MoveToNewWindow(this); break;
 				case NECommand.File_Shell_Integrate: FileFunctions.Command_File_Shell_Integrate(); break;
 				case NECommand.File_Shell_Unintegrate: FileFunctions.Command_File_Shell_Unintegrate(); break;
 				case NECommand.File_Exit: Close(); break;
@@ -379,7 +377,6 @@ namespace NeoEdit
 				case NECommand.View_Close_TabsWithoutSelections: ViewFunctions.Command_View_CloseTabsWithSelections(this, false); break;
 				case NECommand.View_Close_ActiveTabs: ViewFunctions.Command_View_Close_ActiveTabs(this, true); break;
 				case NECommand.View_Close_InactiveTabs: ViewFunctions.Command_View_Close_ActiveTabs(this, false); break;
-				case NECommand.View_NewWindow: ViewFunctions.Command_View_NewWindow(this); break;
 				case NECommand.View_WordList: ViewFunctions.Command_View_WordList(this); break;
 				case NECommand.Macro_Open_Quick_1: Macro_Open_Quick(1); return true;
 				case NECommand.Macro_Open_Quick_2: Macro_Open_Quick(2); return true;
