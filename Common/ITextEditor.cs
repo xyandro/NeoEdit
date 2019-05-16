@@ -110,5 +110,6 @@ namespace NeoEdit
 		bool GlobalKeys { get; set; }
 		List<InlineVariable> GetInlineVariables();
 		List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true);
+		bool AutoRefresh { get; }
 	}
 }
