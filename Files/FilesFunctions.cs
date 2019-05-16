@@ -20,8 +20,6 @@ namespace NeoEdit
 {
 	public static class FilesFunctions
 	{
-		static public bool FileOrDirectoryExists(string name) => (Directory.Exists(name)) || (File.Exists(name));
-
 		static async Task<bool> BinarySearchFileAsync(ITextEditor te, string fileName, Searcher searcher, AnswerResult answer, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{
 			try
@@ -447,7 +445,7 @@ namespace NeoEdit
 				var newFileName = fileName;
 				for (var num = result.RenameAll ? 1 : 2; ; ++num)
 				{
-					if ((result.CheckExisting) && (FileOrDirectoryExists(newFileName)))
+					if ((result.CheckExisting) && (Helpers.FileOrDirectoryExists(newFileName)))
 						used.Add(newFileName);
 					if (((num != 1) || (!result.RenameAll)) && (!used.Contains(newFileName)))
 						break;
@@ -565,7 +563,7 @@ namespace NeoEdit
 			{
 				var dateTime = dateTimes[ctr];
 				var file = files[ctr];
-				if (!FileOrDirectoryExists(file))
+				if (!Helpers.FileOrDirectoryExists(file))
 					File.WriteAllBytes(file, new byte[0]);
 
 				if (File.Exists(file))
@@ -693,7 +691,7 @@ namespace NeoEdit
 
 		static public void Command_Files_Select_Directories(ITextEditor te) => te.SetSelections(te.Selections.Where(range => Directory.Exists(te.FileName.RelativeChild(te.GetString(range)))).ToList());
 
-		static public void Command_Files_Select_Existing(ITextEditor te, bool existing) => te.SetSelections(te.Selections.Where(range => FileOrDirectoryExists(te.FileName.RelativeChild(te.GetString(range))) == existing).ToList());
+		static public void Command_Files_Select_Existing(ITextEditor te, bool existing) => te.SetSelections(te.Selections.Where(range => Helpers.FileOrDirectoryExists(te.FileName.RelativeChild(te.GetString(range))) == existing).ToList());
 
 		static public void Command_Files_Select_Roots(ITextEditor te, bool include)
 		{
@@ -765,7 +763,7 @@ namespace NeoEdit
 			var newFileNames = newFileNameExpression.EvaluateList<string>(variables, resultCount);
 
 			const int InvalidCount = 10;
-			var invalid = oldFileNames.Distinct().Where(name => !FileOrDirectoryExists(name)).Take(InvalidCount).ToList();
+			var invalid = oldFileNames.Distinct().Where(name => !Helpers.FileOrDirectoryExists(name)).Take(InvalidCount).ToList();
 			if (invalid.Any())
 				throw new Exception($"Sources don't exist:\n{string.Join("\n", invalid)}");
 

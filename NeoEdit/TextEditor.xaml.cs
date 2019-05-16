@@ -1899,7 +1899,7 @@ namespace NeoEdit
 					doDrag = DragType.None;
 					if (Settings.EscapeClearsSelections)
 					{
-						SelectFunctions.Command_Select_Selection_Single(this);
+						HandleCommand(NECommand.Select_Selection_Single, false, null, null, null);
 						if (!Selections.Any())
 						{
 							var pos = Data.GetOffset(Math.Max(0, Math.Min(yScrollValue, Data.NumLines - 1)), 0);
@@ -2676,7 +2676,7 @@ namespace NeoEdit
 				return false;
 			if (strs.Any(str => !drives.Any(drive => str.StartsWith(drive, StringComparison.OrdinalIgnoreCase))))
 				return false;
-			if (strs.Any(str => !FilesFunctions.FileOrDirectoryExists(str)))
+			if (strs.Any(str => !Helpers.FileOrDirectoryExists(str)))
 				return false;
 			return true;
 		}

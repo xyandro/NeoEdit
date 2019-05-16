@@ -497,5 +497,7 @@ namespace NeoEdit
 
 			return result.ToString();
 		}
+
+		public static bool FileOrDirectoryExists(string name) => (Directory.Exists(name)) || (File.Exists(name));
 	}
 }
