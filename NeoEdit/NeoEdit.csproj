@@ -63,27 +63,6 @@
     <Compile Include="Dialogs\EncryptDialog.xaml.cs">
       <DependentUpon>EncryptDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\HelpAboutChangeLogDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\HelpAboutChangeLogDialog.xaml.cs">
-      <DependentUpon>HelpAboutChangeLogDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\HelpAboutDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\HelpAboutDialog.xaml.cs">
-      <DependentUpon>HelpAboutDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\HelpAboutLicenseDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\HelpAboutLicenseDialog.xaml.cs">
-      <DependentUpon>HelpAboutLicenseDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\MacroPlayRepeatDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -190,6 +169,10 @@
     <ProjectReference Include="..\Files\Files.csproj">
       <Project>{7491ac29-e69f-497d-85e4-5a45cea24286}</Project>
       <Name>Files</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Help\Help.csproj">
+      <Project>{e18a0ee5-8905-4fbc-affa-ac2d24763806}</Project>
+      <Name>Help</Name>
     </ProjectReference>
     <ProjectReference Include="..\Image\Image.csproj">
       <Project>{d13a65ab-dc9d-4022-ac1a-ae01e5d8be19}</Project>
