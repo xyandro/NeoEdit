@@ -742,13 +742,11 @@ namespace NeoEdit
 			SetSelections(Selections.Concat(new Range(Data.GetOffset(useLine, index))).ToList());
 		}
 
-		string GetCommandArea(NECommand command) => command.ToString().Split('_').First();
-
 		public bool GetDialogResult(NECommand command, out object dialogResult, bool? multiStatus)
 		{
 			dialogResult = null;
 
-			switch (GetCommandArea(command))
+			switch (command.GetArea())
 			{
 				case "File": GetDialogResultFile(command, ref dialogResult, multiStatus); break;
 				case "Edit": GetDialogResultEdit(command, ref dialogResult, multiStatus); break;
@@ -1030,7 +1028,7 @@ namespace NeoEdit
 				};
 			}
 
-			switch (GetCommandArea(command))
+			switch (command.GetArea())
 			{
 				case "File": HandleCommandFile(command, shiftDown, dialogResult, multiStatus, answer); break;
 				case "Edit": HandleCommandEdit(command, shiftDown, dialogResult, multiStatus, answer); break;

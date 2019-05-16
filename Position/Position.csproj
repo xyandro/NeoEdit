@@ -20,7 +20,7 @@
     <Compile Include="Dialogs\PositionGotoDialog.xaml.cs">
       <DependentUpon>PositionGotoDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GotoType.cs" />
+    <Compile Include="Enums\GotoType.cs" />
     <Compile Include="PositionFunctions.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">

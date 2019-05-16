@@ -91,12 +91,12 @@
       <DependentUpon>EditSortDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="EditFunctions.cs" />
+    <Compile Include="Enums\SortScope.cs" />
+    <Compile Include="Enums\SortType.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SortScope.cs" />
-    <Compile Include="SortType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

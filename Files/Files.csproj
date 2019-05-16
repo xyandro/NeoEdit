@@ -125,13 +125,13 @@
     <Compile Include="Dialogs\FilesSignDialog.xaml.cs">
       <DependentUpon>FilesSignDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums\GetPathType.cs" />
+    <Compile Include="Enums\TimestampType.cs" />
     <Compile Include="FilesFunctions.cs" />
-    <Compile Include="GetPathType.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TimestampType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

@@ -13,30 +13,66 @@
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Page Include="Dialogs\NumericCombinationsPermutationsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="Dialogs\NumericCombinationsPermutationsDialog.xaml.cs">
       <DependentUpon>NumericCombinationsPermutationsDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NumericConvertBaseDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="Dialogs\NumericConvertBaseDialog.xaml.cs">
       <DependentUpon>NumericConvertBaseDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NumericCycleDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="Dialogs\NumericCycleDialog.xaml.cs">
       <DependentUpon>NumericCycleDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NumericFloorRoundCeilingDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="Dialogs\NumericFloorRoundCeilingDialog.xaml.cs">
       <DependentUpon>NumericFloorRoundCeilingDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NumericLimitDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="Dialogs\NumericLimitDialog.xaml.cs">
       <DependentUpon>NumericLimitDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NumericMinMaxValuesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="Dialogs\NumericMinMaxValuesDialog.xaml.cs">
       <DependentUpon>NumericMinMaxValuesDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NumericRandomNumberDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="Dialogs\NumericRandomNumberDialog.xaml.cs">
       <DependentUpon>NumericRandomNumberDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NumericScaleDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="Dialogs\NumericScaleDialog.xaml.cs">
       <DependentUpon>NumericScaleDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NumericSeriesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="Dialogs\NumericSeriesDialog.xaml.cs">
       <DependentUpon>NumericSeriesDialog.xaml</DependentUpon>
     </Compile>
@@ -45,42 +81,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Dialogs\NumericCombinationsPermutationsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\NumericConvertBaseDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\NumericCycleDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\NumericFloorRoundCeilingDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\NumericLimitDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\NumericMinMaxValuesDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\NumericRandomNumberDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\NumericScaleDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Dialogs\NumericSeriesDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

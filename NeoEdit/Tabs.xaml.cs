@@ -153,14 +153,12 @@ namespace NeoEdit
 		public Macro RecordingMacro { get; set; }
 		public Macro MacroPlaying { get; set; }
 
-		string GetCommandArea(NECommand command) => command.ToString().Split('_').First();
-
 		internal void RunCommand(NECommand command, bool? multiStatus)
 		{
 			if (MacroPlaying != null)
 				return;
 
-			if (GetCommandArea(command) == "Macro")
+			if (command.GetArea() == "Macro")
 				if (PreHandleCommandMacro(command))
 					return;
 
@@ -239,7 +237,7 @@ namespace NeoEdit
 			dialogResult = null;
 
 			bool result;
-			switch (GetCommandArea(command))
+			switch (command.GetArea())
 			{
 				case "File": result = GetDialogResultFile(command, ref dialogResult, multiStatus); break;
 				case "Macro": result = GetDialogResultMacro(command, ref dialogResult, multiStatus); break;
@@ -285,7 +283,7 @@ namespace NeoEdit
 
 		public bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
 		{
-			switch (GetCommandArea(command))
+			switch (command.GetArea())
 			{
 				case "File": HandleCommandFile(command, shiftDown, dialogResult, multiStatus); break;
 				case "Diff": HandleCommandDiff(command, shiftDown, dialogResult, multiStatus); break;

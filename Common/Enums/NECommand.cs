@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Linq;
+using System.Windows.Input;
 using NeoEdit.Controls;
 
 namespace NeoEdit
@@ -685,5 +686,10 @@ namespace NeoEdit
 		Help_About,
 		Help_Update,
 		Help_RunGC,
+	}
+
+	public static class NECommandExtensions
+	{
+		public static string GetArea(this NECommand command) => command.ToString().Split('_').First();
 	}
 }

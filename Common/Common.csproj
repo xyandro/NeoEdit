@@ -47,6 +47,7 @@
     <Compile Include="Controls\NumericUpDown.xaml.cs">
       <DependentUpon>NumericUpDown.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PropertyChangeNotifier.cs" />
     <Compile Include="Controls\RenderCanvas.cs" />
     <Compile Include="Controls\UIHelper.cs" />
     <Compile Include="Converters\HexConverter.cs" />
@@ -125,11 +126,19 @@
     <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
       <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DragType.cs" />
+    <Compile Include="Enums\DragType.cs" />
+    <Compile Include="Enums\JumpByType.cs" />
+    <Compile Include="Enums\MessageOptions.cs" />
+    <Compile Include="Enums\NECommand.cs" />
+    <Compile Include="Enums\ParserType.cs" />
+    <Compile Include="Enums\ReplaceType.cs" />
+    <Compile Include="Enums\TabsLayout.cs" />
+    <Compile Include="Enums\WordSkipType.cs" />
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
     <Compile Include="Expressions\ExpressionUnit.cs" />
     <Compile Include="Expressions\ExpressionUnits.cs" />
     <Compile Include="Expressions\ExpressionUnitsConversion.cs" />
+    <Compile Include="Expressions\InlineVariable.cs" />
     <Compile Include="Expressions\NEExpression.cs" />
     <Compile Include="Expressions\NEVariable.cs" />
     <Compile Include="Expressions\NEVariableConstant.cs" />
@@ -145,24 +154,18 @@
     <None Include="Expressions\Source\ExpressionLexer.g4" />
     <None Include="Expressions\Source\ExpressionParser.g4" />
     <Compile Include="Expressions\VariableFinder.cs" />
+    <Compile Include="Font.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="InlineVariable.cs" />
     <Compile Include="ITabs.cs" />
     <Compile Include="ItemSet.cs" />
     <Compile Include="ITextEditor.cs" />
-    <Compile Include="JumpByType.cs" />
     <Compile Include="LCS.cs" />
     <Compile Include="Macro.cs" />
-    <Compile Include="MessageOptions.cs" />
-    <Compile Include="Misc\Font.cs" />
-    <Compile Include="Misc\PropertyChangeNotifier.cs" />
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
     <Compile Include="NEClipboards\NEClipboard.cs" />
     <Compile Include="NEClipboards\NEClipboardItem.cs" />
     <Compile Include="NEClipboards\NEClipboardList.cs" />
-    <Compile Include="NECommand.cs" />
-    <Compile Include="ParserType.cs" />
     <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
     <Compile Include="Parsing\ParserAttribute.cs" />
     <Compile Include="Parsing\ParserBase.cs" />
@@ -177,7 +180,6 @@
     </Compile>
     <Compile Include="Range.cs" />
     <Compile Include="RangeList.cs" />
-    <Compile Include="ReplaceType.cs" />
     <Compile Include="Searcher.cs">
       <DependentUpon>Searcher.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -190,7 +192,6 @@
     <Compile Include="Settings.cs" />
     <Compile Include="ShutdownData.cs" />
     <Compile Include="Table.cs" />
-    <Compile Include="TabsLayout.cs" />
     <Compile Include="TextData.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />
@@ -201,7 +202,7 @@
     <Compile Include="Transform\Versioner.cs" />
     <Compile Include="Transform\XMLConverter.cs" />
     <Compile Include="UndoRedo.cs" />
-    <Compile Include="WordSkipType.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
 </Project>
