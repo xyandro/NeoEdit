@@ -180,6 +180,10 @@
     </Compile>
     <Compile Include="Range.cs" />
     <Compile Include="RangeList.cs" />
+    <Resource Include="Resources\Checked.png" />
+    <Resource Include="Resources\DejaVuSansMono.ttf" />
+    <Resource Include="Resources\Indeterminate.png" />
+    <Resource Include="Resources\Unchecked.png" />
     <Compile Include="Searcher.cs">
       <DependentUpon>Searcher.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -203,6 +207,5 @@
     <Compile Include="Transform\XMLConverter.cs" />
     <Compile Include="UndoRedo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
 </Project>

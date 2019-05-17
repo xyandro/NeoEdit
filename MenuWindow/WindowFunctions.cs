@@ -90,10 +90,9 @@ namespace NeoEdit.MenuWindow
 
 		static public void Command_Window_WordList(ITabs tabs)
 		{
-			var type = tabs.GetType();
 			byte[] data;
 			var streamName = typeof(WindowFunctions).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
-			using (var stream = type.Assembly.GetManifestResourceStream(streamName))
+			using (var stream = typeof(WindowFunctions).Assembly.GetManifestResourceStream(streamName))
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);

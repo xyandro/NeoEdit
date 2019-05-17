@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="License;BuildCommandLine" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="BuildCommandLine" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
@@ -9,10 +9,6 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  <Target Name="License" Inputs="$(SolutionDir)License.txt" Outputs="$(OutDir)License.txt" Returns="">
-    <Message Text="Copy license" Importance="High" />
-    <Exec Command="xcopy /y &quot;$(SolutionDir)License.txt&quot; &quot;$(OutDir)&quot;" />
-  </Target>
   <Target Name="BuildCommandLine" Inputs="CommandLine\Source\CommandLineLexer.g4;CommandLine\Source\CommandLineParser.g4" Outputs="CommandLine\Parser\CommandLineLexer.cs;CommandLine\Parser\CommandLineParser.cs;CommandLine\Parser\CommandLineParserBaseVisitor.cs;CommandLine\Parser\CommandLineParserVisitor.cs" Returns="">
     <Message Text="Building CommandLine parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.CommandLine.Parser -o &quot;$(ProjectDir)CommandLine\Parser&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineLexer.g4&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineParser.g4&quot;" />
@@ -24,20 +20,11 @@
     <StartupObject>NeoEdit.InstanceManager</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(SolutionDir)\ChangeLog.txt">
-      <Link>Resources\ChangeLog.txt</Link>
-    </EmbeddedResource>
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <EmbeddedResource Include="$(SolutionDir)\License.txt">
-      <Link>Resources\License.txt</Link>
-    </EmbeddedResource>
     <Resource Include="$(SolutionDir)\Photoshop\NeoEdit.ico">
       <Link>NeoEdit.ico</Link>
-    </Resource>
-    <Resource Include="$(SolutionDir)\Photoshop\NeoEdit.png">
-      <Link>Resources\NeoEdit.png</Link>
     </Resource>
     <None Include="App.config" />
     <ApplicationDefinition Include="App.xaml">
@@ -80,11 +67,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Resource Include="Resources\Checked.png" />
-    <Resource Include="Resources\DejaVuSansMono.ttf" />
-    <Resource Include="Resources\Indeterminate.png" />
-    <Resource Include="Resources\Unchecked.png" />
-    <EmbeddedResource Include="Resources\Unicode.dat" />
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

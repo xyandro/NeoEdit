@@ -14,7 +14,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Image Margin="15,0,15,15" Source="/NeoEdit;component/Resources/NeoEdit.png" Stretch="None">
+		<Image Margin="15,0,15,15" Source="/NeoEdit.MenuHelp;component/Resources/NeoEdit.png" Stretch="None">
 			<Image.Effect>
 				<DropShadowEffect BlurRadius="15" ShadowDepth="10"/>
 			</Image.Effect>

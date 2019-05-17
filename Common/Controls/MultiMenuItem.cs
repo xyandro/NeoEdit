@@ -48,19 +48,19 @@ namespace NeoEdit.Common.Controls
 
 			{
 				var trigger = new DataTrigger { Binding = new Binding("MultiChecked") { Source = this }, Value = true };
-				trigger.Setters.Add(new Setter { Property = IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Checked.png")) } });
+				trigger.Setters.Add(new Setter { Property = IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit.Common;component/Resources/Checked.png")) } });
 				style.Triggers.Add(trigger);
 			}
 
 			{
 				var trigger = new DataTrigger { Binding = new Binding("MultiChecked") { Source = this }, Value = false };
-				trigger.Setters.Add(new Setter { Property = IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Unchecked.png")) } });
+				trigger.Setters.Add(new Setter { Property = IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit.Common;component/Resources/Unchecked.png")) } });
 				style.Triggers.Add(trigger);
 			}
 
 			{
 				var trigger = new DataTrigger { Binding = new Binding("MultiChecked") { Source = this }, Value = null };
-				trigger.Setters.Add(new Setter { Property = IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Indeterminate.png")) } });
+				trigger.Setters.Add(new Setter { Property = IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit.Common;component/Resources/Indeterminate.png")) } });
 				style.Triggers.Add(trigger);
 			}
 
