@@ -142,6 +142,12 @@ namespace NeoEdit.MenuEdit
 			return sortSource;
 		}
 
+		static IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)
+		{
+			var func = ascending ? (Func<IEnumerable<TSource>, Func<TSource, TKey>, IComparer<TKey>, IOrderedEnumerable<TSource>>)Enumerable.OrderBy : Enumerable.OrderByDescending;
+			return func(source, keySelector, comparer ?? Comparer<TKey>.Default);
+		}
+
 		static public string RepeatString(string input, int count)
 		{
 			var builder = new StringBuilder(input.Length * count);
@@ -179,8 +185,6 @@ namespace NeoEdit.MenuEdit
 			if (isCut)
 				te.ReplaceSelections("");
 		}
-
-		static public void Command_Edit_Paste_AllFiles(ITextEditor te, string str, bool highlight) => te.ReplaceSelections(te.Selections.Select(value => str).ToList(), highlight);
 
 		static public void Command_Edit_Paste_Paste(ITextEditor te, bool highlight, bool rotate)
 		{
@@ -663,11 +667,5 @@ namespace NeoEdit.MenuEdit
 		}
 
 		static public void Command_Edit_Navigate_JumpBy(ITextEditor te, JumpByType jumpBy) => te.JumpBy = jumpBy;
-
-		static IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)
-		{
-			var func = ascending ? (Func<IEnumerable<TSource>, Func<TSource, TKey>, IComparer<TKey>, IOrderedEnumerable<TSource>>)Enumerable.OrderBy : Enumerable.OrderByDescending;
-			return func(source, keySelector, comparer ?? Comparer<TKey>.Default);
-		}
 	}
 }

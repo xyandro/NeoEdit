@@ -14,6 +14,8 @@ namespace NeoEdit.MenuText
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
+		static string GetRandomData(string chars, int length) => new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
+
 		static string SetWidth(string str, TextWidthDialog.Result result, int value)
 		{
 			if (str.Length == value)
@@ -68,8 +70,6 @@ namespace NeoEdit.MenuText
 			}
 			return str.Substring(start, end - start);
 		}
-
-		static string GetRandomData(string chars, int length) => new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
 
 		static public TextTrimDialog.Result Command_Text_Select_Trim_Dialog(ITextEditor te) => TextTrimDialog.Run(te.WindowParent);
 

@@ -9,14 +9,6 @@ namespace NeoEdit.MenuPosition
 {
 	public static class PositionFunctions
 	{
-		static List<int> GetValues(string str, int delta)
-		{
-			var values = str.Split('-').Select(x => int.Parse(x) + delta).ToList();
-			if (values.Count > 2)
-				throw new Exception("Invalid format");
-			return values;
-		}
-
 		static int GetOffset(ITextEditor te, int offset, GotoType gotoType, int value)
 		{
 			switch (gotoType)
@@ -48,6 +40,14 @@ namespace NeoEdit.MenuPosition
 				return new Range(offsets[0], range.Anchor);
 			else
 				return Range.FromIndex(offsets[0], 0);
+		}
+
+		static List<int> GetValues(string str, int delta)
+		{
+			var values = str.Split('-').Select(x => int.Parse(x) + delta).ToList();
+			if (values.Count > 2)
+				throw new Exception("Invalid format");
+			return values;
 		}
 
 		static public PositionGotoDialog.Result Command_Position_Goto_Dialog(ITextEditor te, GotoType gotoType)

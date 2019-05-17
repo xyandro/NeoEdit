@@ -113,6 +113,17 @@ namespace NeoEdit.MenuFiles
 				File.Copy(srcFiles[ctr], destFiles[ctr]);
 		}
 
+		static void FindCommonLength(string str1, string str2, ref int length)
+		{
+			length = Math.Min(length, Math.Min(str1.Length, str2.Length));
+			for (var ctr = 0; ctr < length; ++ctr)
+				if (char.ToLowerInvariant(str1[ctr]) != (char.ToLowerInvariant(str2[ctr])))
+				{
+					length = ctr;
+					break;
+				}
+		}
+
 		static int GetDepthLength(string path, int matchDepth)
 		{
 			if (matchDepth == 0)
@@ -125,17 +136,6 @@ namespace NeoEdit.MenuFiles
 						return index;
 
 			return path.Length;
-		}
-
-		static void FindCommonLength(string str1, string str2, ref int length)
-		{
-			length = Math.Min(length, Math.Min(str1.Length, str2.Length));
-			for (var ctr = 0; ctr < length; ++ctr)
-				if (char.ToLowerInvariant(str1[ctr]) != (char.ToLowerInvariant(str2[ctr])))
-				{
-					length = ctr;
-					break;
-				}
 		}
 
 		static List<string> GetDirectoryContents(string dir, bool recursive, List<string> errors)

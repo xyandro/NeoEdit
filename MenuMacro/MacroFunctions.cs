@@ -12,6 +12,8 @@ namespace NeoEdit.MenuMacro
 {
 	public static class MacroFunctions
 	{
+		static string QuickMacro(int num) => $"QuickText{num}.xml";
+
 		static void ValidateNoCurrentMacro(ITabs tabs)
 		{
 			if (tabs.RecordingMacro == null)
@@ -20,10 +22,6 @@ namespace NeoEdit.MenuMacro
 			throw new Exception("Cannot start recording; recording is already in progess.");
 		}
 
-		static string QuickMacro(int num) => $"QuickText{num}.xml";
-
-		static public void Command_Macro_Open_Quick(ITabs tabs, int quickNum) => tabs.Add(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum)));
-
 		static public void Command_Macro_Record_Quick(ITabs tabs, int quickNum)
 		{
 			if (tabs.RecordingMacro == null)
@@ -31,22 +29,6 @@ namespace NeoEdit.MenuMacro
 			else
 				Command_Macro_Record_StopRecording(tabs, QuickMacro(quickNum));
 		}
-
-		static public void Command_Macro_Append_Quick(ITabs tabs, int quickNum)
-		{
-			if (tabs.RecordingMacro == null)
-				tabs.RecordingMacro = Macro.Load(QuickMacro(quickNum), true);
-			else
-				Command_Macro_Record_StopRecording(tabs, QuickMacro(quickNum));
-		}
-
-		static public void Command_Macro_Append_Append(ITabs tabs)
-		{
-			ValidateNoCurrentMacro(tabs);
-			tabs.RecordingMacro = Macro.Load();
-		}
-
-		static public void Command_Macro_Play_Quick(ITabs tabs, int quickNum) => Macro.Load(QuickMacro(quickNum), true).Play(tabs, playing => tabs.MacroPlaying = playing);
 
 		static public void Command_Macro_Record_Record(ITabs tabs)
 		{
@@ -72,22 +54,23 @@ namespace NeoEdit.MenuMacro
 			macro.Save(fileName, true);
 		}
 
-		static public void Command_Macro_Play_Play(ITabs tabs) => Macro.Load().Play(tabs, playing => tabs.MacroPlaying = playing);
-
-		static public void Command_Macro_Play_PlayOnCopiedFiles(ITabs tabs)
+		static public void Command_Macro_Append_Quick(ITabs tabs, int quickNum)
 		{
-			var files = new Queue<string>(NEClipboard.Current.Strings);
-			var macro = Macro.Load();
-			Action startNext = null;
-			startNext = () =>
-			{
-				if (!files.Any())
-					return;
-				tabs.Add(files.Dequeue());
-				macro.Play(tabs, playing => tabs.MacroPlaying = playing, startNext);
-			};
-			startNext();
+			if (tabs.RecordingMacro == null)
+				tabs.RecordingMacro = Macro.Load(QuickMacro(quickNum), true);
+			else
+				Command_Macro_Record_StopRecording(tabs, QuickMacro(quickNum));
 		}
+
+		static public void Command_Macro_Append_Append(ITabs tabs)
+		{
+			ValidateNoCurrentMacro(tabs);
+			tabs.RecordingMacro = Macro.Load();
+		}
+
+		static public void Command_Macro_Play_Quick(ITabs tabs, int quickNum) => Macro.Load(QuickMacro(quickNum), true).Play(tabs, playing => tabs.MacroPlaying = playing);
+
+		static public void Command_Macro_Play_Play(ITabs tabs) => Macro.Load().Play(tabs, playing => tabs.MacroPlaying = playing);
 
 		static public void Command_Macro_Play_Repeat(ITabs tabs)
 		{
@@ -115,5 +98,22 @@ namespace NeoEdit.MenuMacro
 			};
 			startNext();
 		}
+
+		static public void Command_Macro_Play_PlayOnCopiedFiles(ITabs tabs)
+		{
+			var files = new Queue<string>(NEClipboard.Current.Strings);
+			var macro = Macro.Load();
+			Action startNext = null;
+			startNext = () =>
+			{
+				if (!files.Any())
+					return;
+				tabs.Add(files.Dequeue());
+				macro.Play(tabs, playing => tabs.MacroPlaying = playing, startNext);
+			};
+			startNext();
+		}
+
+		static public void Command_Macro_Open_Quick(ITabs tabs, int quickNum) => tabs.Add(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum)));
 	}
 }

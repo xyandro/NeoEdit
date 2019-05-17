@@ -10,17 +10,6 @@ namespace NeoEdit.MenuContent
 {
 	public static class ContentFunctions
 	{
-		static ParserNode RootNode(ITextEditor te)
-		{
-			if ((!te.previousData.Match(te.Data.Data)) || (te.previousType != te.ContentType))
-			{
-				te.previousRoot = Parser.Parse(te.Data.Data, te.ContentType, te.StrictParsing);
-				te.previousData.SetValue(te.Data.Data);
-				te.previousType = te.ContentType;
-			}
-			return te.previousRoot;
-		}
-
 		static void ContentReplaceSelections(ITextEditor te, IEnumerable<ParserBase> nodes)
 		{
 			nodes = nodes.NonNull().Distinct().OrderBy(node => node.Start).ThenBy(node => node.End);
@@ -77,6 +66,17 @@ namespace NeoEdit.MenuContent
 				result.Add(found);
 			}
 			return result;
+		}
+
+		static ParserNode RootNode(ITextEditor te)
+		{
+			if ((!te.previousData.Match(te.Data.Data)) || (te.previousType != te.ContentType))
+			{
+				te.previousRoot = Parser.Parse(te.Data.Data, te.ContentType, te.StrictParsing);
+				te.previousData.SetValue(te.Data.Data);
+				te.previousType = te.ContentType;
+			}
+			return te.previousRoot;
 		}
 
 		static public void Command_Content_Type_SetFromExtension(ITextEditor te) => te.ContentType = ParserExtensions.GetParserType(te.FileName);

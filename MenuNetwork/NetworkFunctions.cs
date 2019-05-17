@@ -18,6 +18,16 @@ namespace NeoEdit.MenuNetwork
 {
 	public static class NetworkFunctions
 	{
+		static async Task FetchURL(string url, string fileName)
+		{
+			using (var client = new WebClient())
+			{
+				client.Headers["User-Agent"] = "Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)";
+				client.Encoding = Encoding.UTF8;
+				await client.DownloadFileTaskAsync(url, fileName);
+			}
+		}
+
 		static async Task<string> GetURL(string url, Coder.CodePage codePage = Coder.CodePage.None)
 		{
 			using (var client = new WebClient())
@@ -56,16 +66,6 @@ namespace NeoEdit.MenuNetwork
 				results.Add(Tuple.Create(urls[ctr], data, error));
 			}
 			return results;
-		}
-
-		static async Task FetchURL(string url, string fileName)
-		{
-			using (var client = new WebClient())
-			{
-				client.Headers["User-Agent"] = "Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)";
-				client.Encoding = Encoding.UTF8;
-				await client.DownloadFileTaskAsync(url, fileName);
-			}
 		}
 
 		static public NetworkAbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog(ITextEditor te) => NetworkAbsoluteURLDialog.Run(te.WindowParent, te.GetVariables());

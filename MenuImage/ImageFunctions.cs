@@ -36,6 +36,14 @@ namespace NeoEdit.MenuImage
 			return Colorer.ARGBToString(alpha, red, green, blue);
 		}
 
+		static void Flip(ITextEditor te, System.Drawing.RotateFlipType type)
+		{
+			var bitmap = Coder.StringToBitmap(te.AllText);
+			bitmap.RotateFlip(type);
+			te.Replace(new List<Range> { te.FullRange }, new List<string> { Coder.BitmapToString(bitmap) });
+			te.SetSelections(new List<Range> { te.BeginRange });
+		}
+
 		static string OverlayColor(string color1, string color2)
 		{
 			Colorer.StringToARGB(color1, out byte alpha1, out byte red1, out byte green1, out byte blue1);
@@ -45,14 +53,6 @@ namespace NeoEdit.MenuImage
 			blue1 = (byte)((blue1 * alpha1 / 255) + (blue2 * alpha2 * (255 - alpha1) / (255 * 255)));
 			alpha1 = (byte)(alpha1 + (alpha2 * (255 - alpha1) / 255));
 			return Colorer.ARGBToString(alpha1, red1, green1, blue1);
-		}
-
-		static void Flip(ITextEditor te, System.Drawing.RotateFlipType type)
-		{
-			var bitmap = Coder.StringToBitmap(te.AllText);
-			bitmap.RotateFlip(type);
-			te.Replace(new List<Range> { te.FullRange }, new List<string> { Coder.BitmapToString(bitmap) });
-			te.SetSelections(new List<Range> { te.BeginRange });
 		}
 
 		static void SplitGIF(string fileName, string outputTemplate)

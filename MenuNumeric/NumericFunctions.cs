@@ -16,22 +16,6 @@ namespace NeoEdit.MenuNumeric
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
-		static string TrimNumeric(string number)
-		{
-			var whole = number;
-			var fraction = "";
-			var point = number.IndexOf('.');
-			if (point != -1)
-			{
-				whole = number.Substring(0, point);
-				fraction = number.Substring(point);
-			}
-			number = whole.TrimStart('0', ' ', '\r', '\n', '\t').TrimEnd(' ', '\r', '\n', '\t') + fraction.TrimEnd('0', '.', ' ', '\r', '\n', '\t');
-			if (number.Length == 0)
-				number = "0";
-			return number;
-		}
-
 		static string ConvertBase(string str, Dictionary<char, int> inputSet, Dictionary<int, char> outputSet)
 		{
 			BigInteger value = 0;
@@ -44,24 +28,6 @@ namespace NeoEdit.MenuNumeric
 				value /= outputSet.Count;
 			}
 			return new string(output.ToArray());
-		}
-
-		static void SelectRegEx(ITextEditor te, string pattern)
-		{
-			var regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-			var results = te.Selections.AsParallel().AsOrdered().Select(region => te.Data.RegexMatches(regex, region.Start, region.Length, false, false, false)).SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
-			te.SetSelections(results);
-		}
-
-		static double Limit(double minimum, double value, double maximum)
-		{
-			if (minimum > maximum)
-				throw new Exception("Minimum must be less than maximum.");
-			if (value < minimum)
-				value = minimum;
-			if (value > maximum)
-				value = maximum;
-			return value;
 		}
 
 		static double Cycle(double value, double minimum, double maximum, bool includeBeginning)
@@ -78,56 +44,6 @@ namespace NeoEdit.MenuNumeric
 				value += range;
 			value += minimum;
 			return value;
-		}
-
-		static void GetFraction(string str, out BigInteger numerator, out BigInteger denominator)
-		{
-			if (str.IndexOf('.') == -1)
-			{
-				numerator = BigInteger.Parse(str);
-				denominator = 1;
-				return;
-			}
-
-			var value = double.Parse(str);
-			for (var mult = 1; mult < 1000000; ++mult)
-			{
-				var val = value * mult;
-				var rounded = Math.Round(val);
-				if (Math.Abs(val - rounded) <= 1E-8)
-				{
-					numerator = (BigInteger)rounded;
-					denominator = mult;
-					return;
-				}
-			}
-
-			throw new Exception($"Failed to convert {str} to fraction");
-		}
-
-		static string SimplifyFraction(string str)
-		{
-			var idx = str.IndexOf('/');
-			if (idx == -1)
-			{
-				idx = str.Length;
-				str += "/1";
-			}
-
-			GetFraction(str.Remove(idx), out var num, out var numMult);
-			GetFraction(str.Substring(idx + 1), out var den, out var denMult);
-
-			num *= denMult;
-			den *= numMult;
-
-			var gcf = Helpers.GCF(num, den);
-			num /= gcf;
-			den /= gcf;
-
-			if (den == 1)
-				return num.ToString();
-			else
-				return $"{num}/{den}";
 		}
 
 		static string Factor(BigInteger value)
@@ -158,6 +74,90 @@ namespace NeoEdit.MenuNumeric
 			factors.Reverse();
 
 			return string.Join("*", factors);
+		}
+
+		static void GetFraction(string str, out BigInteger numerator, out BigInteger denominator)
+		{
+			if (str.IndexOf('.') == -1)
+			{
+				numerator = BigInteger.Parse(str);
+				denominator = 1;
+				return;
+			}
+
+			var value = double.Parse(str);
+			for (var mult = 1; mult < 1000000; ++mult)
+			{
+				var val = value * mult;
+				var rounded = Math.Round(val);
+				if (Math.Abs(val - rounded) <= 1E-8)
+				{
+					numerator = (BigInteger)rounded;
+					denominator = mult;
+					return;
+				}
+			}
+
+			throw new Exception($"Failed to convert {str} to fraction");
+		}
+
+		static double Limit(double minimum, double value, double maximum)
+		{
+			if (minimum > maximum)
+				throw new Exception("Minimum must be less than maximum.");
+			if (value < minimum)
+				value = minimum;
+			if (value > maximum)
+				value = maximum;
+			return value;
+		}
+
+		static void SelectRegEx(ITextEditor te, string pattern)
+		{
+			var regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
+			var results = te.Selections.AsParallel().AsOrdered().Select(region => te.Data.RegexMatches(regex, region.Start, region.Length, false, false, false)).SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			te.SetSelections(results);
+		}
+
+		static string SimplifyFraction(string str)
+		{
+			var idx = str.IndexOf('/');
+			if (idx == -1)
+			{
+				idx = str.Length;
+				str += "/1";
+			}
+
+			GetFraction(str.Remove(idx), out var num, out var numMult);
+			GetFraction(str.Substring(idx + 1), out var den, out var denMult);
+
+			num *= denMult;
+			den *= numMult;
+
+			var gcf = Helpers.GCF(num, den);
+			num /= gcf;
+			den /= gcf;
+
+			if (den == 1)
+				return num.ToString();
+			else
+				return $"{num}/{den}";
+		}
+
+		static string TrimNumeric(string number)
+		{
+			var whole = number;
+			var fraction = "";
+			var point = number.IndexOf('.');
+			if (point != -1)
+			{
+				whole = number.Substring(0, point);
+				fraction = number.Substring(point);
+			}
+			number = whole.TrimStart('0', ' ', '\r', '\n', '\t').TrimEnd(' ', '\r', '\n', '\t') + fraction.TrimEnd('0', '.', ' ', '\r', '\n', '\t');
+			if (number.Length == 0)
+				number = "0";
+			return number;
 		}
 
 		static public void Command_Numeric_Select_MinMax(ITextEditor te, bool max)

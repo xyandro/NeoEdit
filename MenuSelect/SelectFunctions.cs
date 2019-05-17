@@ -11,6 +11,18 @@ namespace NeoEdit.MenuSelect
 {
 	public static class SelectFunctions
 	{
+		enum SelectSplitEnum
+		{
+			None = 0,
+			Parentheses = 1,
+			Brackets = 2,
+			Braces = 4,
+			String = 8,
+			VerbatimString = 16 | String,
+			InterpolatedString = 32 | String,
+			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
+		}
+
 		static IEnumerable<Range> FindRepetitions(ITextEditor te, Range inputRange)
 		{
 			var startLine = te.Data.GetOffsetLine(inputRange.Start);
@@ -59,17 +71,6 @@ namespace NeoEdit.MenuSelect
 			}
 		}
 
-		enum SelectSplitEnum
-		{
-			None = 0,
-			Parentheses = 1,
-			Brackets = 2,
-			Braces = 4,
-			String = 8,
-			VerbatimString = 16 | String,
-			InterpolatedString = 32 | String,
-			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
-		}
 		static IEnumerable<Range> SelectSplit(ITextEditor te, Range range, SelectSplitDialog.Result result)
 		{
 			var stack = new Stack<SelectSplitEnum>();
