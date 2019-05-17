@@ -481,8 +481,6 @@
 			<commonControls:NEMenuItem Header="_Columns" CommandEnum="Position_Goto_Columns"/>
 			<commonControls:NEMenuItem Header="_Indexes" CommandEnum="Position_Goto_Indexes"/>
 			<commonControls:NEMenuItem Header="_Positions" CommandEnum="Position_Goto_Positions"/>
-			<Separator/>
-			<commonControls:NEMenuItem Header="_Files/Lines" CommandEnum="Position_Goto_FilesLines"/>
 		</MenuItem>
 		<MenuItem Header="_Copy">
 			<commonControls:NEMenuItem Header="_Lines" CommandEnum="Position_Copy_Lines"/>

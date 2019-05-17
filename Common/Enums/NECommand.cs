@@ -288,7 +288,6 @@ namespace NeoEdit.Common
 		Position_Goto_Columns,
 		Position_Goto_Indexes,
 		Position_Goto_Positions,
-		Position_Goto_FilesLines,
 		Position_Copy_Lines,
 		Position_Copy_Columns,
 		Position_Copy_Indexes,

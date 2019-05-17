@@ -1442,11 +1442,10 @@ namespace NeoEdit
 				case NECommand.Position_Goto_Columns: PositionFunctions.Command_Position_Goto(this, GotoType.Column, shiftDown, dialogResult as PositionGotoDialog.Result); break;
 				case NECommand.Position_Goto_Indexes: PositionFunctions.Command_Position_Goto(this, GotoType.Index, shiftDown, dialogResult as PositionGotoDialog.Result); break;
 				case NECommand.Position_Goto_Positions: PositionFunctions.Command_Position_Goto(this, GotoType.Position, shiftDown, dialogResult as PositionGotoDialog.Result); break;
-				case NECommand.Position_Goto_FilesLines: PositionFunctions.Command_Position_Goto_FilesLines(this); break;
-				case NECommand.Position_Copy_Lines: PositionFunctions.Command_Position_Copy(this, GotoType.Line); break;
-				case NECommand.Position_Copy_Columns: PositionFunctions.Command_Position_Copy(this, GotoType.Column); break;
-				case NECommand.Position_Copy_Indexes: PositionFunctions.Command_Position_Copy(this, GotoType.Index); break;
-				case NECommand.Position_Copy_Positions: PositionFunctions.Command_Position_Copy(this, GotoType.Position); break;
+				case NECommand.Position_Copy_Lines: PositionFunctions.Command_Position_Copy(this, GotoType.Line, false); break;
+				case NECommand.Position_Copy_Columns: PositionFunctions.Command_Position_Copy(this, GotoType.Column, !shiftDown); break;
+				case NECommand.Position_Copy_Indexes: PositionFunctions.Command_Position_Copy(this, GotoType.Index, !shiftDown); break;
+				case NECommand.Position_Copy_Positions: PositionFunctions.Command_Position_Copy(this, GotoType.Position, false); break;
 			}
 		}
 
@@ -2382,41 +2381,33 @@ namespace NeoEdit
 
 		void OnStatusBarRender(object sender, DrawingContext dc)
 		{
-			int? lineMin = null, lineMax = null, columnMin = null, columnMax = null, indexMin = null, indexMax = null, posMin = null, posMax = null;
+			if ((CurrentSelection < 0) || (CurrentSelection >= Selections.Count))
+				return;
 
-			if ((CurrentSelection >= 0) && (CurrentSelection < Selections.Count))
-			{
-				var range = Selections[CurrentSelection];
-				var startLine = Data.GetOffsetLine(range.Start);
-				var endLine = Data.GetOffsetLine(range.End);
-				indexMin = Data.GetOffsetIndex(range.Start, startLine);
-				indexMax = Data.GetOffsetIndex(range.End, endLine);
-				lineMin = Data.GetDiffLine(startLine);
-				lineMax = Data.GetDiffLine(endLine);
-				columnMin = Data.GetColumnFromIndex(startLine, indexMin.Value);
-				columnMax = Data.GetColumnFromIndex(endLine, indexMax.Value);
-				posMin = range.Start;
-				posMax = range.End;
-			}
-
-			string minMaxText(int? min, int? max) => $"{min:n0}{(min == max ? "" : $" - {max:n0}")}";
-			string minMaxLengthText(int? min, int? max) => $"{min:n0}{(min == max ? "" : $" - {max:n0} ({max - min:n0})")}";
-
-			var numRegions = Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count);
+			var range = Selections[CurrentSelection];
+			var startLine = Data.GetOffsetLine(range.Start);
+			var endLine = Data.GetOffsetLine(range.End);
+			var indexMin = Data.GetOffsetIndex(range.Start, startLine);
+			var indexMax = Data.GetOffsetIndex(range.End, endLine);
+			var lineMin = Data.GetDiffLine(startLine);
+			var lineMax = Data.GetDiffLine(endLine);
+			var columnMin = Data.GetColumnFromIndex(startLine, indexMin);
+			var columnMax = Data.GetColumnFromIndex(endLine, indexMax);
+			var posMin = range.Start;
+			var posMax = range.End;
 
 			var sb = new List<string>();
 			sb.Add($"Selection {CurrentSelection + 1:n0}/{NumSelections:n0}");
-			sb.Add($"Line {minMaxText(lineMin + 1, lineMax + 1)}");
-			sb.Add($"Col {minMaxText(columnMin + 1, columnMax + 1)}");
-			sb.Add($"In {minMaxText(indexMin + 1, indexMax + 1)}");
-			sb.Add($"Pos {minMaxLengthText(posMin, posMax)}");
-			sb.Add($"Regions {string.Join(" / ", numRegions.OrderBy(pair => pair.Key).Select(pair => $"{pair.Value:n0}"))}");
+			sb.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
+			sb.Add($"In {lineMin + 1:n0}:{indexMin + 1:n0}{((lineMin == lineMax) && (indexMin == indexMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{indexMax + 1:n0}")}");
+			sb.Add($"Pos {posMin:n0}{(posMin == posMax ? "" : $"-{posMax:n0}")}");
+
+			sb.Add($"Regions {string.Join(" / ", Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count).OrderBy(pair => pair.Key).Select(pair => $"{pair.Value:n0}"))}");
 			sb.Add($"Keys/Values {string.Join(" / ", KeysAndValues.Select(l => $"{l.Count:n0}"))}");
 			sb.Add($"Database {DBName}");
-			var statusBarText = string.Join(" │ ", sb);
 
 			var tf = SystemFonts.MessageFontFamily.GetTypefaces().Where(x => (x.Weight == FontWeights.Normal) && (x.Style == FontStyles.Normal)).First();
-			dc.DrawText(new FormattedText(statusBarText, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.Black), new Point(2, 2));
+			dc.DrawText(new FormattedText(string.Join(" │ ", sb), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.Black), new Point(2, 2));
 		}
 
 		void OnDrop(object sender, DragEventArgs e)
