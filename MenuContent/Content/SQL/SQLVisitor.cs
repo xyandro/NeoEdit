@@ -98,7 +98,6 @@ namespace NeoEdit.MenuContent.Content.SQL
 			return node;
 		}
 
-
 		public override ParserNode VisitDocument([NotNull] SQLParser.DocumentContext context) => AddNode(context, NodeTypes.Document);
 		public override ParserNode VisitDdl([NotNull] SQLParser.DdlContext context) => AddNode(context, NodeTypes.DDL);
 		public override ParserNode VisitTsql([NotNull] SQLParser.TsqlContext context) => AddNode(context, NodeTypes.TSQL);

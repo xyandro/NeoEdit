@@ -17,14 +17,14 @@ namespace NeoEdit.MenuRegion
 			{
 				var sels = new List<Range>();
 				if ((currentSelection < te.Selections.Count) && (te.Selections[currentSelection].Start < region.Start))
-					throw new Exception("No region found.  All selections must be inside a region.");
+					throw new Exception("No region found. All selections must be inside a region.");
 				while ((currentSelection < te.Selections.Count) && (te.Selections[currentSelection].End <= region.End))
 					sels.Add(te.Selections[currentSelection++]);
 
 				result.Add(Tuple.Create(region, sels));
 			}
 			if (currentSelection != te.Selections.Count)
-				throw new Exception("No region found.  All selections must be inside a region.");
+				throw new Exception("No region found. All selections must be inside a region.");
 
 			return result;
 		}
@@ -220,7 +220,6 @@ namespace NeoEdit.MenuRegion
 						te.SetRegions(useRegion, newRegions);
 					}
 					break;
-
 			}
 		}
 

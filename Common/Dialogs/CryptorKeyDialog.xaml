@@ -31,7 +31,7 @@
 			</Grid.ColumnDefinitions>
 
 			<Label Grid.Row="0" Grid.Column="0" Content="Key _size:" HorizontalAlignment="Right" Target="{Binding ElementName=symmetricKeySize}"/>
-			<ComboBox Grid.Row="0" Grid.Column="1" Name="symmetricKeySize" HorizontalAlignment="Left"  Width="100" ItemsSource="{Binding KeySizes, ElementName=self}" SelectedValue="{Binding KeySize, ElementName=self}"/>
+			<ComboBox Grid.Row="0" Grid.Column="1" Name="symmetricKeySize" HorizontalAlignment="Left" Width="100" ItemsSource="{Binding KeySizes, ElementName=self}" SelectedValue="{Binding KeySize, ElementName=self}"/>
 
 			<Label Grid.Row="1" Grid.Column="0" Content="_Key:" HorizontalAlignment="Right" Target="{Binding ElementName=symmetricKey}"/>
 			<TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="symmetricKey" Text="{Binding PrivateKey, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>

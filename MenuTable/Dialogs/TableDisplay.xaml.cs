@@ -193,7 +193,6 @@ namespace NeoEdit.MenuTable.Dialogs
 			var columnLeft = tableGrid.ColumnDefinitions.Take(SelectedColumn).Sum(columnDef => columnDef.ActualWidth);
 			var columnRight = columnLeft + tableGrid.ColumnDefinitions[SelectedColumn].ActualWidth;
 			xScroller.ScrollToHorizontalOffset(Math.Min(Math.Max(xScroller.HorizontalOffset, columnRight - xScroller.ViewportWidth), columnLeft));
-
 		}
 	}
 }

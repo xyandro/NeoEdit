@@ -202,7 +202,6 @@ namespace NeoEdit.Common
 					continue;
 				}
 
-
 				var newWorking = new List<SearchData>();
 				foreach (var worker in working)
 				{
@@ -266,7 +265,6 @@ namespace NeoEdit.Common
 					working.Clear();
 					continue;
 				}
-
 
 				var newWorking = new List<SearchData>();
 				foreach (var worker in working)

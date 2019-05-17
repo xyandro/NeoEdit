@@ -57,7 +57,7 @@ namespace NeoEdit.Common.Dialogs
 			if (new Message(this)
 			{
 				Title = "Please confirm",
-				Text = "This value and the password together are required to generate the key.  Are you sure you want to change it?",
+				Text = "This value and the password together are required to generate the key. Are you sure you want to change it?",
 				Options = MessageOptions.YesNo,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.No,

@@ -63,7 +63,6 @@ namespace NeoEdit.MenuContent.Content.XML
 						else
 							result.Add($"<{open} />");
 
-
 						return result;
 					}
 				default: throw new ArgumentException("Unable to interpret XML");

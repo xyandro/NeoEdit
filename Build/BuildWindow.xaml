@@ -1,7 +1,7 @@
 ﻿<Window Name="self" x:Class="Build.BuildWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Build Utility" Width="800" Height="600">
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Build Utility" Width="800" Height="600">
 
 	<Grid>
 		<Grid.ColumnDefinitions>

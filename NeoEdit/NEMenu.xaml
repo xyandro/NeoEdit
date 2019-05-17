@@ -66,7 +66,7 @@
 			<commonControls:NEMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:MultiMenuItem Header="Encr_ypt" Objects="{Binding Parent.Items, ElementName=self}" Property="AESKey" Converter="{commonConverters:NonEmptyConverter}"  MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
+		<commonControls:MultiMenuItem Header="Encr_ypt" Objects="{Binding Parent.Items, ElementName=self}" Property="AESKey" Converter="{commonConverters:NonEmptyConverter}" MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
 		<commonControls:MultiMenuItem Header="Co_mpress" Objects="{Binding Parent.Items, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
 		<Separator/>
 		<MenuItem Header="S_hell">

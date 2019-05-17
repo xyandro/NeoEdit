@@ -62,7 +62,7 @@
 		</GroupBox>
 
 		<UniformGrid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
-			<Button Click="ResetClick"  Content="Rese_t" Padding="10,1"/>
+			<Button Click="ResetClick" Content="Rese_t" Padding="10,1"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

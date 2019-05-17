@@ -20,7 +20,6 @@ namespace NeoEdit.Common.Transform
 			VersionControl = 32,
 
 			All = Normal | Modified | Ignored | Unknown | VersionControl,
-
 		}
 
 		class Node

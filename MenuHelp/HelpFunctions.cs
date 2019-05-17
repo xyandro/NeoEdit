@@ -46,7 +46,7 @@ namespace NeoEdit.MenuHelp
 			if (new Message
 			{
 				Title = "Download new version?",
-				Text = newer ? $"A newer version ({newVersion}) is available.  Download it?" : $"Already up to date ({newVersion}).  Update anyway?",
+				Text = newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?",
 				Options = MessageOptions.YesNo,
 				DefaultAccept = newer ? MessageOptions.Yes : MessageOptions.No,
 				DefaultCancel = MessageOptions.No,
@@ -86,6 +86,5 @@ namespace NeoEdit.MenuHelp
 		}
 
 		static public void Command_Help_RunGC() => GC.Collect();
-
 	}
 }

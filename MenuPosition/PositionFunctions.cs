@@ -121,7 +121,6 @@ namespace NeoEdit.MenuPosition
 
 			if ((gotoType == GotoType.Line) || (gotoType == GotoType.Column) || (gotoType == GotoType.Index))
 			{
-
 				starts[GotoType.Line] = starts[GotoType.Position].Select(pos => te.Data.GetOffsetLine(pos)).ToList();
 				ends[GotoType.Line] = ends[GotoType.Position].Select(pos => te.Data.GetOffsetLine(pos)).ToList();
 

@@ -50,7 +50,6 @@ namespace NeoEdit.MenuText.Dialogs
 
 			public string Display => char.ConvertFromUtf32(CodePoint);
 
-
 			public override string ToString() => CodePointDisplay;
 		}
 

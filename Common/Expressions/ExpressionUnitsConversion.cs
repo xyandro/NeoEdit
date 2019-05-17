@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
@@ -83,7 +83,7 @@ namespace NeoEdit.Common.Expressions
 						Tuple.Create("d", 1e-1d),
 						Tuple.Create("c", 1e-2d),
 						Tuple.Create("m", 1e-3d),
-						Tuple.Create("�", 1e-6d),
+						Tuple.Create("µ", 1e-6d),
 						Tuple.Create("n", 1e-9d),
 						Tuple.Create("p", 1e-12d),
 						Tuple.Create("f", 1e-15d),

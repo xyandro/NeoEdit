@@ -277,7 +277,7 @@ namespace NeoEdit.MenuFile
 					answer.Answer = new Message(te.WindowParent)
 					{
 						Title = "Confirm",
-						Text = "This file has been updated on disk.  Reload?",
+						Text = "This file has been updated on disk. Reload?",
 						Options = MessageOptions.YesNoYesAllNoAll,
 						DefaultAccept = MessageOptions.Yes,
 						DefaultCancel = MessageOptions.NoToAll,
@@ -300,7 +300,7 @@ namespace NeoEdit.MenuFile
 					answer.Answer = new Message(te.WindowParent)
 					{
 						Title = "Confirm",
-						Text = "You have unsaved changes.  Are you sure you want to reload?",
+						Text = "You have unsaved changes. Are you sure you want to reload?",
 						Options = MessageOptions.YesNoYesAllNoAllCancel,
 						DefaultAccept = MessageOptions.No,
 						DefaultCancel = MessageOptions.No,
@@ -392,7 +392,7 @@ namespace NeoEdit.MenuFile
 					answer.Answer = new Message(te.WindowParent)
 					{
 						Title = "Confirm",
-						Text = "You have unsaved changes.  Are you sure you want to reload?",
+						Text = "You have unsaved changes. Are you sure you want to reload?",
 						Options = MessageOptions.YesNoYesAllNoAll,
 						DefaultAccept = MessageOptions.Yes,
 						DefaultCancel = MessageOptions.NoToAll,

@@ -27,7 +27,7 @@ namespace NeoEdit.Common.Transform
 				case Type.AES:
 				case Type.DES:
 				case Type.DES3: return "IV Length (4 bytes) + IV + Encrypted data";
-				case Type.RSA: 
+				case Type.RSA:
 				case Type.DSA:
 				case Type.RSAAES: return "Encrypted data";
 				default: return "Unknown";

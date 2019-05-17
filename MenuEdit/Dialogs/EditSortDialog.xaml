@@ -12,11 +12,11 @@
 					<RadioButton GroupName="sortScope" Content="_Selections" IsChecked="{Binding SortScope, ElementName=self, Converter={commonConverters:RadioConverter}, ConverterParameter=Selections}"/>
 					<RadioButton GroupName="sortScope" Content="_Lines" IsChecked="{Binding SortScope, ElementName=self, Converter={commonConverters:RadioConverter}, ConverterParameter=Lines}"/>
 					<RadioButton GroupName="sortScope" Content="_Regions" IsChecked="{Binding SortScope, ElementName=self, Converter={commonConverters:RadioConverter}, ConverterParameter=Regions}"/>
-					
+
 					<Separator Background="Transparent"/>
 					<Separator Background="Transparent"/>
 					<Separator Background="Transparent"/>
-					
+
 					<RadioButton GroupName="useRegion" Content="Region _1" IsChecked="{Binding UseRegion, ElementName=self, Converter={commonConverters:RadioConverter}, ConverterParameter=1}"/>
 					<RadioButton GroupName="useRegion" Content="Region _2" IsChecked="{Binding UseRegion, ElementName=self, Converter={commonConverters:RadioConverter}, ConverterParameter=2}"/>
 					<RadioButton GroupName="useRegion" Content="Region _3" IsChecked="{Binding UseRegion, ElementName=self, Converter={commonConverters:RadioConverter}, ConverterParameter=3}"/>

@@ -500,7 +500,7 @@ namespace NeoEdit
 			return new Message(WindowParent)
 			{
 				Title = "Confirm",
-				Text = "The specified encoding cannot fully represent the data.  Continue anyway?",
+				Text = "The specified encoding cannot fully represent the data. Continue anyway?",
 				Options = MessageOptions.YesNo,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.No,
@@ -2583,7 +2583,7 @@ namespace NeoEdit
 					if (new Message(WindowParent)
 					{
 						Title = "Confirm",
-						Text = "Save failed.  Remove read-only flag?",
+						Text = "Save failed. Remove read-only flag?",
 						Options = MessageOptions.YesNo,
 						DefaultAccept = MessageOptions.Yes,
 						DefaultCancel = MessageOptions.No,
@@ -2705,7 +2705,7 @@ namespace NeoEdit
 			switch (new Message(WindowParent)
 			{
 				Title = "Confirm",
-				Text = "The current encoding cannot fully represent this data.  Switch to UTF-8?",
+				Text = "The current encoding cannot fully represent this data. Switch to UTF-8?",
 				Options = MessageOptions.YesNoCancel,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.Cancel,
@@ -2716,7 +2716,6 @@ namespace NeoEdit
 				case MessageOptions.Cancel: return false;
 				default: throw new Exception("Invalid response");
 			}
-
 		}
 
 		void Command_Macro_RepeatLastAction()
@@ -2882,7 +2881,7 @@ namespace NeoEdit
 					used = true;
 				}
 				else if (mustBeInRegion)
-					throw new Exception("No region found.  All selections must be inside a region.");
+					throw new Exception("No region found. All selections must be inside a region.");
 				else
 					regions.Add(null);
 			}

@@ -127,7 +127,6 @@ namespace NeoEdit.MenuContent.Content.JSON
 			return node;
 		}
 
-
 		public override ParserNode VisitPair(JSONParser.PairContext context)
 		{
 			var node = GetNode(context, PAIR);

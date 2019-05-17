@@ -93,7 +93,6 @@ namespace NeoEdit.MenuNumeric.Dialogs
 			return result;
 		}
 
-
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
