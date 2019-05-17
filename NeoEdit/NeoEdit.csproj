@@ -99,17 +99,6 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UnitTest\CoderTest.cs" />
-    <Compile Include="UnitTest\ColorerTest.cs" />
-    <Compile Include="UnitTest\CompressionTest.cs" />
-    <Compile Include="UnitTest\CryptoTest.cs" />
-    <Compile Include="UnitTest\ExpressionTest.cs" />
-    <Compile Include="UnitTest\HashTest.cs" />
-    <Compile Include="UnitTest\SearcherTest.cs" />
-    <Compile Include="UnitTest\TextDataTest.cs" />
-    <Compile Include="UnitTest\UnicodeTest.cs" />
-    <Compile Include="UnitTest\UnitTest.cs" />
-    <Compile Include="UnitTest\XMLConverterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
