@@ -18,6 +18,8 @@ namespace NeoEdit.MenuFile
 {
 	public static class FileFunctions
 	{
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static string GetSaveFileName(ITextEditor te)
 		{
 			var dialog = new SaveFileDialog

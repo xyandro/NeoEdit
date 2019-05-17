@@ -10,6 +10,8 @@ namespace NeoEdit.MenuContent
 {
 	public static class ContentFunctions
 	{
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static void ContentReplaceSelections(ITextEditor te, IEnumerable<ParserBase> nodes)
 		{
 			nodes = nodes.NonNull().Distinct().OrderBy(node => node.Start).ThenBy(node => node.End);

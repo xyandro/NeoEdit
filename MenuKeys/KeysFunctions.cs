@@ -8,6 +8,8 @@ namespace NeoEdit.MenuKeys
 {
 	public static class KeysFunctions
 	{
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static public void Command_Keys_Set(ITextEditor te, int index, bool caseSensitive = true)
 		{
 			te.GlobalKeys = te.TabsParent.ActiveCount == 1;

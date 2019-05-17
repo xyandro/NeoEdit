@@ -8,6 +8,8 @@ namespace NeoEdit.MenuDateTime
 {
 	public static class DateTimeFunctions
 	{
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static public void Command_DateTime_Now(ITextEditor te) => te.ReplaceSelections(DateTimeOffset.Now.ToString("O"));
 
 		static public void Command_DateTime_UtcNow(ITextEditor te) => te.ReplaceSelections(DateTimeOffset.UtcNow.ToString("O"));

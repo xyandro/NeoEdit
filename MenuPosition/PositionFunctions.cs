@@ -9,6 +9,8 @@ namespace NeoEdit.MenuPosition
 {
 	public static class PositionFunctions
 	{
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static int GetOffset(ITextEditor te, int offset, GotoType gotoType, int value)
 		{
 			switch (gotoType)

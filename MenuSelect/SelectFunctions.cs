@@ -23,6 +23,8 @@ namespace NeoEdit.MenuSelect
 			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
 		}
 
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static IEnumerable<Range> FindRepetitions(ITextEditor te, Range inputRange)
 		{
 			var startLine = te.Data.GetOffsetLine(inputRange.Start);

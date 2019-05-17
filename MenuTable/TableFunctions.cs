@@ -13,6 +13,8 @@ namespace NeoEdit.MenuTable
 	{
 		static Table joinTable;
 
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static string GetDBValue(string value) => value?.IsNumeric() != false ? value ?? "NULL" : $"'{value.Replace("'", "''")}'";
 
 		static Table GetTable(ITextEditor te, bool hasHeaders = true)

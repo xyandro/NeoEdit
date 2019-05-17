@@ -11,6 +11,8 @@ namespace NeoEdit.MenuDiff
 {
 	public static class DiffFunctions
 	{
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static void DoRangesDiff(ITextEditor te, RangeList ranges)
 		{
 			if (!ranges.Any())

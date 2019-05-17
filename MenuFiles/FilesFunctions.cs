@@ -21,6 +21,8 @@ namespace NeoEdit.MenuFiles
 {
 	public static class FilesFunctions
 	{
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static async Task<bool> BinarySearchFileAsync(ITextEditor te, string fileName, Searcher searcher, AnswerResult answer, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{
 			try

@@ -18,6 +18,8 @@ namespace NeoEdit.MenuNetwork
 {
 	public static class NetworkFunctions
 	{
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static async Task FetchURL(string url, string fileName)
 		{
 			using (var client = new WebClient())

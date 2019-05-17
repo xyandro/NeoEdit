@@ -12,6 +12,8 @@ namespace NeoEdit.MenuExpression
 {
 	public static class ExpressionFunctions
 	{
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static void CalculateInlineVariables(ITextEditor te, List<InlineVariable> inlineVars)
 		{
 			var variables = te.GetVariables();

@@ -98,7 +98,6 @@ namespace NeoEdit
 
 		public App()
 		{
-			ITabsCreator.CreateTabs = addEmpty => new Tabs(addEmpty);
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
 		}
 

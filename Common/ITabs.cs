@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -11,6 +12,7 @@ namespace NeoEdit.Common
 	{
 		public delegate ITabs CreateTabsDelegate(bool addEmpty = false);
 		static public CreateTabsDelegate CreateTabs { get; set; }
+		static public Action LoadAllAssemblies { get; set; }
 	}
 
 	public interface ITabs

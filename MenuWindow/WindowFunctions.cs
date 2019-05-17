@@ -10,6 +10,8 @@ namespace NeoEdit.MenuWindow
 {
 	public static class WindowFunctions
 	{
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static public void Command_Window_NewWindow() => ITabsCreator.CreateTabs(true);
 
 		static public void Command_Window_Type(ITabs tabs, TabsLayout layout, WindowCustomGridDialog.Result result) => tabs.SetLayout(layout, result?.Columns, result?.Rows);

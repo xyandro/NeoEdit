@@ -18,6 +18,8 @@ namespace NeoEdit.MenuDatabase
 			public Table Table { get; set; }
 		}
 
+		static public void Load() { } // Doesn't do anything except load the assembly
+
 		static string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
 
 		static List<QueryResult> RunDBSelect(ITextEditor te, string commandText)

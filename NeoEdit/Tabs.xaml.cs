@@ -16,10 +16,25 @@ using NeoEdit.Common.Converters;
 using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.MenuContent;
+using NeoEdit.MenuDatabase;
+using NeoEdit.MenuDateTime;
 using NeoEdit.MenuDiff;
+using NeoEdit.MenuEdit;
+using NeoEdit.MenuExpression;
 using NeoEdit.MenuFile;
+using NeoEdit.MenuFiles;
 using NeoEdit.MenuHelp;
+using NeoEdit.MenuImage;
+using NeoEdit.MenuKeys;
 using NeoEdit.MenuMacro;
+using NeoEdit.MenuNetwork;
+using NeoEdit.MenuNumeric;
+using NeoEdit.MenuPosition;
+using NeoEdit.MenuRegion;
+using NeoEdit.MenuSelect;
+using NeoEdit.MenuTable;
+using NeoEdit.MenuText;
 using NeoEdit.MenuWindow;
 using NeoEdit.MenuWindow.Dialogs;
 using NeoEdit.Misc;
@@ -56,6 +71,9 @@ namespace NeoEdit
 
 		static Tabs()
 		{
+			ITabsCreator.CreateTabs = addEmpty => new Tabs(addEmpty);
+			ITabsCreator.LoadAllAssemblies = () => LoadAll();
+
 			UIHelper<Tabs>.Register();
 			UIHelper<Tabs>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ItemsChanged());
 			UIHelper<Tabs>.AddCallback(a => a.TopMost, (obj, o, n) => obj.TopMostChanged());
@@ -968,6 +986,30 @@ namespace NeoEdit
 			ni.Dispose();
 			ni = null;
 			return true;
+		}
+
+		static void LoadAll()
+		{
+			ContentFunctions.Load();
+			DatabaseFunctions.Load();
+			DateTimeFunctions.Load();
+			DiffFunctions.Load();
+			EditFunctions.Load();
+			ExpressionFunctions.Load();
+			FileFunctions.Load();
+			FilesFunctions.Load();
+			HelpFunctions.Load();
+			ImageFunctions.Load();
+			KeysFunctions.Load();
+			MacroFunctions.Load();
+			NetworkFunctions.Load();
+			NumericFunctions.Load();
+			PositionFunctions.Load();
+			RegionFunctions.Load();
+			SelectFunctions.Load();
+			TableFunctions.Load();
+			TextFunctions.Load();
+			WindowFunctions.Load();
 		}
 	}
 }
