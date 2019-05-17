@@ -5,7 +5,7 @@ using Antlr4.Runtime.Tree;
 
 namespace NeoEdit.Parsing
 {
-	public static class ParserExtensions
+	public static class AntlrParserExtensions
 	{
 		public static void GetBounds(this ParserRuleContext ctx, out int start, out int end)
 		{
