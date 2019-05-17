@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Controls;
@@ -58,7 +59,29 @@ namespace NeoEdit.MenuFile
 
 		static public void Command_File_New_FromSelections(ITextEditor te) => te.GetSelectionStrings().ForEach((str, index) => te.TabsParent.Add(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: te.ContentType, modified: false));
 
-		static public void Command_File_New_FromClipboards(ITabs tabs) => NEClipboard.Current.Strings.ForEach((str, index) => tabs.Add(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
+		static public void Command_File_New_FromClipboards(ITabs tabs)
+		{
+			var index = 0;
+			foreach (var clipboard in NEClipboard.Current)
+			{
+				++index;
+				var strs = clipboard.Strings;
+				var ending = strs.Any(str => (!str.EndsWith("\r")) && (!str.EndsWith("\n"))) ? "\r\n" : "";
+				var sb = new StringBuilder(strs.Sum(str => str.Length + ending.Length));
+				var sels = new List<Range>();
+				foreach (var str in strs)
+				{
+					var start = sb.Length;
+					sb.Append(str);
+					sels.Add(new Range(sb.Length, start));
+					sb.Append(ending);
+				}
+				var te = tabs.Add(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+				te.SetSelections(sels);
+			}
+		}
+
+		static public void Command_File_New_FromClipboardSelections(ITabs tabs) => NEClipboard.Current.Strings.ForEach((str, index) => tabs.Add(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
 
 		static public OpenFileDialogResult Command_File_Open_Open_Dialog(ITabs tabs, string initialDirectory = null)
 		{

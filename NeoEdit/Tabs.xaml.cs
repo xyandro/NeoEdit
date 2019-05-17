@@ -325,6 +325,7 @@ namespace NeoEdit
 			{
 				case NECommand.File_New_New: FileFunctions.Command_File_New_New(this, shiftDown); break;
 				case NECommand.File_New_FromClipboards: FileFunctions.Command_File_New_FromClipboards(this); break;
+				case NECommand.File_New_FromClipboardSelections: FileFunctions.Command_File_New_FromClipboardSelections(this); break;
 				case NECommand.File_Open_Open: FileFunctions.Command_File_Open_Open(this, dialogResult as OpenFileDialogResult); break;
 				case NECommand.File_Open_CopiedCut: FileFunctions.Command_File_Open_CopiedCut(this); break;
 				case NECommand.File_MoveToNewWindow: FileFunctions.Command_File_MoveToNewWindow(this); break;
@@ -502,7 +503,7 @@ namespace NeoEdit
 			topMostTimer.Start();
 		}
 
-		public ITextEditor Add(ITextEditor item, int? index = null)
+		public void Add(ITextEditor item, int? index = null)
 		{
 			var replace = (!index.HasValue) && (!item.Empty()) && (TopMost != null) && (TopMost.Empty()) ? TopMost : default(ITextEditor);
 			if (replace != null)
@@ -513,10 +514,14 @@ namespace NeoEdit
 			else
 				Items.Insert(index ?? Items.Count, item);
 			TopMost = item;
-			return replace;
 		}
 
-		public ITextEditor Add(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null, int? index = null) => Add(new TextEditor(fileName, displayName, bytes, codePage, contentType, modified, line, column, shutdownData), index);
+		public ITextEditor Add(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null, int? index = null)
+		{
+			var textEditor = new TextEditor(fileName, displayName, bytes, codePage, contentType, modified, line, column, shutdownData);
+			Add(textEditor, index);
+			return textEditor;
+		}
 
 		public Window AddDiff(ITextEditor textEdit1, ITextEditor textEdit2)
 		{

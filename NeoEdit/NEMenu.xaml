@@ -15,6 +15,7 @@
 			<commonControls:NEMenuItem Header="_New" CommandEnum="File_New_New"/>
 			<commonControls:NEMenuItem Header="From _Selections" CommandEnum="File_New_FromSelections"/>
 			<commonControls:NEMenuItem Header="From _Clipboards" CommandEnum="File_New_FromClipboards"/>
+			<commonControls:NEMenuItem Header="From C_lipboard Selections" CommandEnum="File_New_FromClipboardSelections"/>
 		</MenuItem>
 		<MenuItem Header="_Open">
 			<commonControls:NEMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
