@@ -34,56 +34,56 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
 	<ItemGroup>
-		<None Include="$(SolutionDir)\Lib\$(BitDepth)\git2-e0902fb.dll">
+		<None Include="$(SolutionDir)Lib\$(BitDepth)\git2-e0902fb.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Include="$(SolutionDir)\Lib\$(BitDepth)\sqlceer40EN.dll">
+		<None Include="$(SolutionDir)Lib\$(BitDepth)\sqlceer40EN.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Include="$(SolutionDir)\Lib\$(BitDepth)\sqlceme40.dll">
+		<None Include="$(SolutionDir)Lib\$(BitDepth)\sqlceme40.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Include="$(SolutionDir)\Lib\$(BitDepth)\sqlceqp40.dll">
+		<None Include="$(SolutionDir)Lib\$(BitDepth)\sqlceqp40.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Include="$(SolutionDir)\Lib\$(BitDepth)\sqlcese40.dll">
+		<None Include="$(SolutionDir)Lib\$(BitDepth)\sqlcese40.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Include="$(SolutionDir)\Lib\$(BitDepth)\SQLite.Interop.dll">
+		<None Include="$(SolutionDir)Lib\$(BitDepth)\SQLite.Interop.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<Reference Include="Antlr4.Runtime">
-			<HintPath>$(SolutionDir)\Lib\ANTLR\Antlr4.Runtime.dll</HintPath>
+			<HintPath>$(SolutionDir)Lib\ANTLR\Antlr4.Runtime.dll</HintPath>
 		</Reference>
 		<Reference Include="Classless.Hasher">
-			<HintPath>$(SolutionDir)\Lib\Classless.Hasher.dll</HintPath>
+			<HintPath>$(SolutionDir)Lib\Classless.Hasher.dll</HintPath>
 		</Reference>
 		<Reference Include="LibGit2Sharp">
-			<HintPath>$(SolutionDir)\Lib\LibGit2Sharp.dll</HintPath>
+			<HintPath>$(SolutionDir)Lib\LibGit2Sharp.dll</HintPath>
 		</Reference>
 		<Reference Include="Microsoft.CSharp" />
 		<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="MySql.Data">
-			<HintPath>$(SolutionDir)\Lib\MySql.Data.dll</HintPath>
+			<HintPath>$(SolutionDir)Lib\MySql.Data.dll</HintPath>
 		</Reference>
 		<Reference Include="Newtonsoft.Json">
-			<HintPath>$(SolutionDir)\Lib\Newtonsoft.Json.dll</HintPath>
+			<HintPath>$(SolutionDir)Lib\Newtonsoft.Json.dll</HintPath>
 		</Reference>
 		<Reference Include="PresentationCore" />
 		<Reference Include="PresentationFramework" />
 		<Reference Include="SharpSvn">
-			<HintPath>$(SolutionDir)\Lib\$(BitDepth)\SharpSvn.dll</HintPath>
+			<HintPath>$(SolutionDir)Lib\$(BitDepth)\SharpSvn.dll</HintPath>
 		</Reference>
 		<Reference Include="System" />
 		<Reference Include="System.Data" />
 		<Reference Include="System.Data.DataSetExtensions" />
 		<Reference Include="System.Data.SQLite">
-			<HintPath>$(SolutionDir)\Lib\System.Data.SQLite.dll</HintPath>
+			<HintPath>$(SolutionDir)Lib\System.Data.SQLite.dll</HintPath>
 		</Reference>
 		<Reference Include="System.Data.SqlServerCe">
-			<HintPath>$(SolutionDir)\Lib\System.Data.SqlServerCe.dll</HintPath>
+			<HintPath>$(SolutionDir)Lib\System.Data.SqlServerCe.dll</HintPath>
 		</Reference>
 		<Reference Include="System.Drawing" />
 		<Reference Include="System.Management" />
@@ -98,7 +98,7 @@
 		<Reference Include="System.Xml.Linq" />
 		<Reference Include="WindowsBase" />
 		<Reference Include="Xceed.Wpf.Toolkit">
-			<HintPath>$(SolutionDir)\Lib\Xceed.Wpf.Toolkit.dll</HintPath>
+			<HintPath>$(SolutionDir)Lib\Xceed.Wpf.Toolkit.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 </Project>

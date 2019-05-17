@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="BuildExpression" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
+  <Import Project="$(SolutionDir)$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -15,7 +15,7 @@
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Common.Expressions.Parser -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionLexer.g4&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionParser.g4&quot;" />
   </Target>
   <ItemGroup>
-    <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
+    <Compile Include="$(SolutionDir)Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CacheValue.cs" />
@@ -207,5 +207,5 @@
     <Compile Include="Transform\XMLConverter.cs" />
     <Compile Include="UndoRedo.cs" />
   </ItemGroup>
-  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+  <Import Project="$(SolutionDir)$(SolutionName).csproj2.props" />
 </Project>

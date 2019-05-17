@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
+  <Import Project="$(SolutionDir)$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{6ABA57FE-12C1-4AFE-836B-71341D7DB72B}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -10,7 +10,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
+    <Compile Include="$(SolutionDir)Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Page Include="Dialogs\EditConvertDialog.xaml">
@@ -104,5 +104,5 @@
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+  <Import Project="$(SolutionDir)$(SolutionName).csproj2.props" />
 </Project>

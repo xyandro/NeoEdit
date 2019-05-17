@@ -32,9 +32,12 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>$(SolutionDir)\..\Photoshop\NeoEdit.ico</ApplicationIcon>
+    <ApplicationIcon>$(SolutionDir)..\Photoshop\NeoEdit.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Resource Include="$(SolutionDir)..\Photoshop\NeoEdit.ico">
+      <Link>NeoEdit.ico</Link>
+    </Resource>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -73,9 +76,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WriteTextDelegate.cs" />
-    <Resource Include="$(SolutionDir)\..\Photoshop\NeoEdit.ico">
-      <Link>NeoEdit.ico</Link>
-    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="LibGit2Sharp">

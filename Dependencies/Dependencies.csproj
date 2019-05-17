@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="BuildGlobalAssemblyInfo" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
+  <Import Project="$(SolutionDir)$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}</ProjectGuid>
     <RootNamespace>NeoEdit.Dependencies</RootNamespace>
@@ -18,5 +18,5 @@
     <Message Text="Building GlobalAssemblyInfo" Importance="High" />
     <Exec Command="GitInfo.bat GlobalAssemblyInfo.Template.cs GlobalAssemblyInfo.cs" />
   </Target>
-  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+  <Import Project="$(SolutionDir)$(SolutionName).csproj2.props" />
 </Project>
