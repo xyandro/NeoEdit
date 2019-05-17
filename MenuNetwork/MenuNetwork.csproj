@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
+  <PropertyGroup>
+    <ProjectGuid>{6D97E1F0-C290-4725-B6EF-1C54E1530612}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>NeoEdit.MenuNetwork</RootNamespace>
+    <AssemblyName>NeoEdit.MenuNetwork</AssemblyName>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Page Include="Dialogs\NetworkAbsoluteURLDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NetworkAbsoluteURLDialog.xaml.cs">
+      <DependentUpon>NetworkAbsoluteURLDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\NetworkFetchFileDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NetworkFetchFileDialog.xaml.cs">
+      <DependentUpon>NetworkFetchFileDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\NetworkFetchStreamDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NetworkFetchStreamDialog.xaml.cs">
+      <DependentUpon>NetworkFetchStreamDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\NetworkPingDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NetworkPingDialog.xaml.cs">
+      <DependentUpon>NetworkPingDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\NetworkScanPortsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NetworkScanPortsDialog.xaml.cs">
+      <DependentUpon>NetworkScanPortsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NetworkFunctions.cs" />
+    <Compile Include="PortScanner.cs" />
+    <AppDesigner Include="Properties\" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="YouTubeDL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{41bacfec-48ae-4dcc-abc9-e45aa149784d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+</Project>

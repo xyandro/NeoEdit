@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj.props" />
+  <PropertyGroup>
+    <ProjectGuid>{118C89AC-608D-4D2C-BBB1-E6CE9D68B40A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>NeoEdit.MenuDateTime</RootNamespace>
+    <AssemblyName>NeoEdit.MenuDateTime</AssemblyName>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="DateTimeFunctions.cs" />
+    <Page Include="Dialogs\DateTimeConvertDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\DateTimeConvertDialog.xaml.cs">
+      <DependentUpon>DateTimeConvertDialog.xaml</DependentUpon>
+    </Compile>
+    <AppDesigner Include="Properties\" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{41bacfec-48ae-4dcc-abc9-e45aa149784d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\$(SolutionName).csproj2.props" />
+</Project>

@@ -116,83 +116,83 @@
       <Project>{41bacfec-48ae-4dcc-abc9-e45aa149784d}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Content\Content.csproj">
+    <ProjectReference Include="..\MenuContent\MenuContent.csproj">
       <Project>{d7a0072e-bcef-4774-a4cd-ee0df92c9256}</Project>
       <Name>Content</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Database\Database.csproj">
+    <ProjectReference Include="..\MenuDatabase\MenuDatabase.csproj">
       <Project>{fad91d2c-099c-4e49-9fcb-bb4ea89cdfdb}</Project>
       <Name>Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DateTime\DateTime.csproj">
+    <ProjectReference Include="..\MenuDateTime\MenuDateTime.csproj">
       <Project>{118c89ac-608d-4d2c-bbb1-e6ce9d68b40a}</Project>
       <Name>DateTime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Diff\Diff.csproj">
+    <ProjectReference Include="..\MenuDiff\MenuDiff.csproj">
       <Project>{41dd9ee2-9d24-4d08-a87d-75920bcffd08}</Project>
       <Name>Diff</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Edit\Edit.csproj">
+    <ProjectReference Include="..\MenuEdit\MenuEdit.csproj">
       <Project>{6aba57fe-12c1-4afe-836b-71341d7db72b}</Project>
       <Name>Edit</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Expression\Expression.csproj">
+    <ProjectReference Include="..\MenuExpression\MenuExpression.csproj">
       <Project>{bd04fc3e-9aaf-4886-9167-49fa8dde95c5}</Project>
       <Name>Expression</Name>
     </ProjectReference>
-    <ProjectReference Include="..\File\File.csproj">
+    <ProjectReference Include="..\MenuFile\MenuFile.csproj">
       <Project>{d11908ef-d913-46a6-be44-a9bf6a311b65}</Project>
       <Name>File</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Files\Files.csproj">
+    <ProjectReference Include="..\MenuFiles\MenuFiles.csproj">
       <Project>{7491ac29-e69f-497d-85e4-5a45cea24286}</Project>
       <Name>Files</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Help\Help.csproj">
+    <ProjectReference Include="..\MenuHelp\MenuHelp.csproj">
       <Project>{e18a0ee5-8905-4fbc-affa-ac2d24763806}</Project>
       <Name>Help</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Image\Image.csproj">
+    <ProjectReference Include="..\MenuImage\MenuImage.csproj">
       <Project>{d13a65ab-dc9d-4022-ac1a-ae01e5d8be19}</Project>
       <Name>Image</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Keys\Keys.csproj">
+    <ProjectReference Include="..\MenuKeys\MenuKeys.csproj">
       <Project>{b0b2bd86-4588-4cb3-9407-890b63fada12}</Project>
       <Name>Keys</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Macro\Macro.csproj">
+    <ProjectReference Include="..\MenuMacro\MenuMacro.csproj">
       <Project>{b434f844-75eb-4855-a13d-783939264f22}</Project>
       <Name>Macro</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Network\Network.csproj">
+    <ProjectReference Include="..\MenuNetwork\MenuNetwork.csproj">
       <Project>{6d97e1f0-c290-4725-b6ef-1c54e1530612}</Project>
       <Name>Network</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Numeric\Numeric.csproj">
+    <ProjectReference Include="..\MenuNumeric\MenuNumeric.csproj">
       <Project>{1a6adfcc-b4e7-4c31-89cd-b8621bcf1aba}</Project>
       <Name>Numeric</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Position\Position.csproj">
+    <ProjectReference Include="..\MenuPosition\MenuPosition.csproj">
       <Project>{a7d32fd6-0bed-4ffc-9ed7-2c9c385e241c}</Project>
       <Name>Position</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Region\Region.csproj">
+    <ProjectReference Include="..\MenuRegion\MenuRegion.csproj">
       <Project>{5a300f7f-9a32-4d1b-b797-3177e771b0b4}</Project>
       <Name>Region</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Select\Select.csproj">
+    <ProjectReference Include="..\MenuSelect\MenuSelect.csproj">
       <Project>{a77b4c32-4d34-4bff-aad2-200457743604}</Project>
       <Name>Select</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Table\Table.csproj">
+    <ProjectReference Include="..\MenuTable\MenuTable.csproj">
       <Project>{5b8dbd58-aa5b-45f3-9637-34ee5dd49ff3}</Project>
       <Name>Table</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Text\Text.csproj">
+    <ProjectReference Include="..\MenuText\MenuText.csproj">
       <Project>{1e27e6fc-ff53-48f3-b2c1-4b79b34abeea}</Project>
       <Name>Text</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Window\Window.csproj">
+    <ProjectReference Include="..\MenuWindow\MenuWindow.csproj">
       <Project>{55adecd1-44a7-4b68-86b7-222b68e99078}</Project>
       <Name>Window</Name>
     </ProjectReference>
