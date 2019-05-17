@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Controls;
+using NeoEdit.Common.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuNetwork.Dialogs
 {
 	partial class NetworkScanPortsDialog
 	{

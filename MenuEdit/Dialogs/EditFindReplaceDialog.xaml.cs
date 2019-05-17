@@ -1,10 +1,10 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit;
-using NeoEdit.Controls;
-using NeoEdit.Dialogs;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Dialogs;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuEdit.Dialogs
 {
 	partial class EditFindReplaceDialog
 	{

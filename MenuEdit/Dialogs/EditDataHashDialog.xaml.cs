@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Transform;
-using NeoEdit.Controls;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuEdit.Dialogs
 {
 	partial class EditDataHashDialog
 	{

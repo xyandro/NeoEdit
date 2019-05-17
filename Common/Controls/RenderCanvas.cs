@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Common.Controls
 {
 	public class RenderCanvas : Canvas
 	{

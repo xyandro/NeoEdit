@@ -7,11 +7,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NeoEdit;
-using NeoEdit.Controls;
+using NeoEdit.Common;
 using Newtonsoft.Json.Linq;
 
-namespace NeoEdit
+namespace NeoEdit.MenuNetwork
 {
 	static class YouTubeDL
 	{

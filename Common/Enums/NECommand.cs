@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Windows.Input;
-using NeoEdit.Controls;
+using NeoEdit.Common.Controls;
 
-namespace NeoEdit
+namespace NeoEdit.Common
 {
 	public enum NECommand
 	{

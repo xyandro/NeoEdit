@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NeoEdit.Common;
 
-namespace NeoEdit.Expressions
+namespace NeoEdit.Common.Expressions
 {
 	public class NEVariables : IEnumerable<NEVariable>
 	{

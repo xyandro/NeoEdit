@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NeoEdit;
+using NeoEdit.Common;
 
-namespace NeoEdit
+namespace NeoEdit.Common
 {
 	public class RangeList : IEnumerable<Range>
 	{

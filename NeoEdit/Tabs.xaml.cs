@@ -10,13 +10,19 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using NeoEdit;
-using NeoEdit.Controls;
-using NeoEdit.Converters;
-using NeoEdit.Dialogs;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Converters;
+using NeoEdit.Common.NEClipboards;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
+using NeoEdit.MenuDiff;
+using NeoEdit.MenuFile;
+using NeoEdit.MenuHelp;
+using NeoEdit.MenuMacro;
+using NeoEdit.MenuWindow;
+using NeoEdit.MenuWindow.Dialogs;
 using NeoEdit.Misc;
-using NeoEdit.NEClipboards;
-using NeoEdit.Transform;
 
 namespace NeoEdit
 {

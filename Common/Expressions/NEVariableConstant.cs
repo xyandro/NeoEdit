@@ -1,6 +1,6 @@
 using System;
 
-namespace NeoEdit.Expressions
+namespace NeoEdit.Common.Expressions
 {
 	class NEVariableConstant : NEVariable
 	{

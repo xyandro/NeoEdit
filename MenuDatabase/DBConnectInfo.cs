@@ -4,9 +4,9 @@ using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.Data.SqlServerCe;
 using MySql.Data.MySqlClient;
-using NeoEdit.Transform;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.MenuDatabase
 {
 	public class DBConnectInfo
 	{

@@ -1,10 +1,10 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.Expressions;
-using NeoEdit.Controls;
-using NeoEdit.Dialogs;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuSelect.Dialogs
 {
 	partial class SelectSplitDialog
 	{

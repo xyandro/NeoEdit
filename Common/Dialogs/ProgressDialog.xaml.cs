@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
-using NeoEdit.Controls;
+using NeoEdit.Common.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Common.Dialogs
 {
 	partial class ProgressDialog
 	{

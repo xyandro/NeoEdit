@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NeoEdit.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Common
 {
 	// Offsets: absolute positions in data
 	// Lines/indexes: positions in data as broken into lines

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Common.Controls
 {
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
 	public class KeyGestureAttribute : Attribute

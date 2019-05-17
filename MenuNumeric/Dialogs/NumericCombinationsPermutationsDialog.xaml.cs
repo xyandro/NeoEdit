@@ -2,9 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using NeoEdit.Controls;
+using NeoEdit.Common.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuNumeric.Dialogs
 {
 	partial class NumericCombinationsPermutationsDialog
 	{

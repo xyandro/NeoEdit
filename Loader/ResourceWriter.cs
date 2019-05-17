@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Loader
+namespace NeoEdit.Loader
 {
 	class ResourceWriter : IDisposable
 	{

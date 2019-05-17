@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using NeoEdit.Common;
 
-namespace NeoEdit.RevRegEx
+namespace NeoEdit.MenuText.RevRegEx
 {
 	class RevRegExDataList : RevRegExData
 	{

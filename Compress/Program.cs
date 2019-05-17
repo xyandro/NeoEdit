@@ -2,7 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace Compress
+namespace NeoEdit.Compress
 {
 	class Program
 	{

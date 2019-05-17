@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Classless.Hasher;
 using Classless.Hasher.Mac;
 
-namespace NeoEdit.Transform
+namespace NeoEdit.Common.Transform
 {
 	public static class Hasher
 	{

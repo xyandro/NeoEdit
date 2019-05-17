@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NeoEdit;
-using NeoEdit.Controls;
-using NeoEdit.Dialogs;
-using NeoEdit.Expressions;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.Common.Expressions;
+using NeoEdit.MenuExpression.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuExpression
 {
 	public static class ExpressionFunctions
 	{

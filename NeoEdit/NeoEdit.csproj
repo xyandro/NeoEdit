@@ -15,7 +15,7 @@
   </Target>
   <Target Name="BuildCommandLine" Inputs="CommandLine\Source\CommandLineLexer.g4;CommandLine\Source\CommandLineParser.g4" Outputs="CommandLine\Parser\CommandLineLexer.cs;CommandLine\Parser\CommandLineParser.cs;CommandLine\Parser\CommandLineParserBaseVisitor.cs;CommandLine\Parser\CommandLineParserVisitor.cs" Returns="">
     <Message Text="Building CommandLine parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.CommandLine.Parser&quot; -o &quot;$(ProjectDir)CommandLine\Parser&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineLexer.g4&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineParser.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.CommandLine.Parser -o &quot;$(ProjectDir)CommandLine\Parser&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineLexer.g4&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineParser.g4&quot;" />
   </Target>
   <PropertyGroup>
     <ApplicationIcon>$(SolutionDir)\Photoshop\NeoEdit.ico</ApplicationIcon>

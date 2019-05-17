@@ -4,12 +4,13 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NeoEdit;
-using NeoEdit.Expressions;
-using NeoEdit.Transform;
-using NeoEdit.Controls;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuFiles.Dialogs
 {
 	partial class FilesFindMassFindDialog
 	{

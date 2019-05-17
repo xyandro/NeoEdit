@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NeoEdit.Transform;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.UnitTest
 {

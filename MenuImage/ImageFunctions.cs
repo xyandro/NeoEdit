@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NeoEdit.Dialogs;
-using NeoEdit.Expressions;
-using NeoEdit.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Transform;
+using NeoEdit.MenuImage.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuImage
 {
 	public static class ImageFunctions
 	{

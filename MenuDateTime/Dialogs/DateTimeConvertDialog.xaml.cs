@@ -4,9 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using NeoEdit.Controls;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuDateTime.Dialogs
 {
 	partial class DateTimeConvertDialog
 	{

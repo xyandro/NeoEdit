@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace NeoEdit.Converters
+namespace NeoEdit.Common.Converters
 {
 	public class NonEmptyConverter : MarkupExtension, IValueConverter
 	{

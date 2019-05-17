@@ -1,8 +1,8 @@
 ﻿using System.Windows;
-using NeoEdit.Controls;
-using NeoEdit.Misc;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuWindow.Dialogs
 {
 	partial class WindowFontSizeDialog
 	{

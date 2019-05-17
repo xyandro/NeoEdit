@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit
+namespace NeoEdit.Common
 {
 	public class ThreadSafeRandom
 	{

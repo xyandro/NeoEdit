@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using NeoEdit.Transform;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Converters
+namespace NeoEdit.Common.Converters
 {
 	public class ValidValueConverter : IValueConverter, IMultiValueConverter
 	{

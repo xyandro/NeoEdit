@@ -1,4 +1,4 @@
-namespace NeoEdit.Expressions
+namespace NeoEdit.Common.Expressions
 {
 	public class ExpressionUnit
 	{

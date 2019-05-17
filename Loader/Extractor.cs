@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 
-namespace Loader
+namespace NeoEdit.Loader
 {
 	static class Extractor
 	{

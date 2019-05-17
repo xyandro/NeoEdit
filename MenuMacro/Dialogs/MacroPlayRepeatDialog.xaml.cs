@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
-using NeoEdit.Controls;
-using NeoEdit.Dialogs;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Dialogs;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuMacro.Dialogs
 {
 	partial class MacroPlayRepeatDialog
 	{

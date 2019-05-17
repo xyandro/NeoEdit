@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using NeoEdit;
-using NeoEdit.Dialogs;
-using NeoEdit.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Transform;
+using NeoEdit.MenuDiff.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuDiff
 {
 	public static class DiffFunctions
 	{

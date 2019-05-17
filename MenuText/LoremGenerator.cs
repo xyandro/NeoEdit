@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NeoEdit;
+using NeoEdit.Common;
 
-namespace NeoEdit
+namespace NeoEdit.MenuText
 {
 	class LoremGenerator
 	{

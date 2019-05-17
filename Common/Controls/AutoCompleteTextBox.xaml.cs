@@ -8,9 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
-using NeoEdit;
+using NeoEdit.Common;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Common.Controls
 {
 	partial class AutoCompleteTextBox
 	{

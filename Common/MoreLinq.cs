@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 
-namespace NeoEdit
+namespace NeoEdit.Common
 {
 	public static class MoreLinq
 	{

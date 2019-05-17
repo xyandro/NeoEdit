@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NeoEdit;
-using NeoEdit.Dialogs;
-using NeoEdit.Expressions;
-using NeoEdit.NEClipboards;
+using NeoEdit.Common;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.Common.Expressions;
+using NeoEdit.Common.NEClipboards;
+using NeoEdit.MenuMacro.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuMacro
 {
 	public static class MacroFunctions
 	{

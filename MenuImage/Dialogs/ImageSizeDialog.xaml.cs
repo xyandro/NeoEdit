@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows;
-using NeoEdit;
-using NeoEdit.Expressions;
-using NeoEdit.Controls;
-using NeoEdit.Dialogs;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuImage.Dialogs
 {
 	partial class ImageSizeDialog
 	{

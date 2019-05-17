@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Loader
+namespace NeoEdit.Loader
 {
 	class Config : INotifyPropertyChanged
 	{

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NeoEdit;
-using NeoEdit.Dialogs;
+using NeoEdit.Common;
+using NeoEdit.MenuRegion.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuRegion
 {
 	public static class RegionFunctions
 	{

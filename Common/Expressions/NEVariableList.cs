@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NeoEdit.Expressions
+namespace NeoEdit.Common.Expressions
 {
 	internal class NEVariableList : NEVariable
 	{

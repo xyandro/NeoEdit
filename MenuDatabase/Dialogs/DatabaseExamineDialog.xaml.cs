@@ -3,9 +3,10 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Controls;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuDatabase.Dialogs
 {
 	partial class DatabaseExamineDialog
 	{

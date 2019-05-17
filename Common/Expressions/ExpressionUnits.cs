@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using NeoEdit.Common;
 
-namespace NeoEdit.Expressions
+namespace NeoEdit.Common.Expressions
 {
 	public class ExpressionUnits : IEnumerable<ExpressionUnit>
 	{

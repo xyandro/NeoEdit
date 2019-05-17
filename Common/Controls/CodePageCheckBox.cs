@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
-using NeoEdit.Transform;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Common.Controls
 {
 	public class CodePageCheckBox : CheckBox
 	{

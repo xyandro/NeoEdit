@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using NeoEdit;
-using NeoEdit.Parsing;
-using NeoEdit.Content.HTML.Parser;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
+using NeoEdit.MenuContent.Content.HTML.Parser;
 
-namespace NeoEdit.Content.HTML
+namespace NeoEdit.MenuContent.Content.HTML
 {
 	class HTMLVisitor : HTMLParserBaseVisitor<ParserNode>
 	{

@@ -4,7 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NeoEdit.Transform;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.UnitTest
 {

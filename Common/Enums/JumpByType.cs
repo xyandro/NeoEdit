@@ -1,4 +1,4 @@
-﻿namespace NeoEdit
+﻿namespace NeoEdit.Common
 {
 	public enum JumpByType { Words, Numbers, Paths }
 }

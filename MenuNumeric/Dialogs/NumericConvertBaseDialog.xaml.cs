@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using NeoEdit;
-using NeoEdit.Controls;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuNumeric.Dialogs
 {
 	partial class NumericConvertBaseDialog
 	{

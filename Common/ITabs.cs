@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-using NeoEdit.Transform;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Common
 {
 	static public class ITabsCreator
 	{

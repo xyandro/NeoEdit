@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Linq;
-using NeoEdit.Misc;
 
-namespace NeoEdit
+namespace NeoEdit.Common
 {
 	public static class Settings
 	{

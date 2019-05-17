@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NeoEdit;
-using NeoEdit.Content;
-using NeoEdit.Dialogs;
-using NeoEdit.Parsing;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
+using NeoEdit.MenuContent.Content;
+using NeoEdit.MenuContent.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuContent
 {
 	public static class ContentFunctions
 	{

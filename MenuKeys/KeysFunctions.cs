@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using NeoEdit;
+using NeoEdit.Common;
 
-namespace NeoEdit
+namespace NeoEdit.MenuKeys
 {
 	public static class KeysFunctions
 	{

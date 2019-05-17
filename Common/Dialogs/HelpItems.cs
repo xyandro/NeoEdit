@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Common.Dialogs
 {
 	public class HelpItems
 	{

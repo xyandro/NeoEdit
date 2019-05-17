@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Common.Controls
 {
 	public static class EnhancedFocusManager
 	{

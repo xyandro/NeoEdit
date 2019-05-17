@@ -1,9 +1,9 @@
-﻿<guiControls:ModalDialog x:Name="self" x:Class="NeoEdit.Dialogs.RegionModifyRegionsDialog"
+﻿<commonControls:ModalDialog x:Name="self" x:Class="NeoEdit.MenuRegion.Dialogs.RegionModifyRegionsDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:guiControls="clr-namespace:NeoEdit.Controls;assembly=NeoEdit.Common"
+	xmlns:commonControls="clr-namespace:NeoEdit.Common.Controls;assembly=NeoEdit.Common"
+	xmlns:menuRegionDialogs="clr-namespace:NeoEdit.MenuRegion.Dialogs"
 	xmlns:system="clr-namespace:System;assembly=mscorlib"
-	xmlns:local="clr-namespace:NeoEdit.Dialogs"
 	Title="Modify Regions" SizeToContent="Height" Width="400">
 
 	<Grid Margin="10">
@@ -50,18 +50,18 @@
 
 		<GroupBox Grid.Row="1" Grid.Column="0" Header="Actions">
 			<UniformGrid Columns="3">
-				<Button Click="OkClick" Content="_Select" Tag="{x:Static local:RegionModifyRegionsDialog+Action.Select}"/>
-				<Button Click="OkClick" Content="S_et" Tag="{x:Static local:RegionModifyRegionsDialog+Action.Set}"/>
-				<Button Click="OkClick" Content="_Clear" Tag="{x:Static local:RegionModifyRegionsDialog+Action.Clear}"/>
-				<Button Click="OkClick" Content="_Remove" Tag="{x:Static local:RegionModifyRegionsDialog+Action.Remove}"/>
-				<Button Click="OkClick" Content="Re_place" Tag="{x:Static local:RegionModifyRegionsDialog+Action.Replace}"/>
-				<Button Click="OkClick" Content="_Unite" Tag="{x:Static local:RegionModifyRegionsDialog+Action.Unite}"/>
-				<Button Click="OkClick" Content="_Intersect" Tag="{x:Static local:RegionModifyRegionsDialog+Action.Intersect}"/>
-				<Button Click="OkClick" Content="E_xclude" Tag="{x:Static local:RegionModifyRegionsDialog+Action.Exclude}"/>
+				<Button Click="OkClick" Content="_Select" Tag="{x:Static menuRegionDialogs:RegionModifyRegionsDialog+Action.Select}"/>
+				<Button Click="OkClick" Content="S_et" Tag="{x:Static menuRegionDialogs:RegionModifyRegionsDialog+Action.Set}"/>
+				<Button Click="OkClick" Content="_Clear" Tag="{x:Static menuRegionDialogs:RegionModifyRegionsDialog+Action.Clear}"/>
+				<Button Click="OkClick" Content="_Remove" Tag="{x:Static menuRegionDialogs:RegionModifyRegionsDialog+Action.Remove}"/>
+				<Button Click="OkClick" Content="Re_place" Tag="{x:Static menuRegionDialogs:RegionModifyRegionsDialog+Action.Replace}"/>
+				<Button Click="OkClick" Content="_Unite" Tag="{x:Static menuRegionDialogs:RegionModifyRegionsDialog+Action.Unite}"/>
+				<Button Click="OkClick" Content="_Intersect" Tag="{x:Static menuRegionDialogs:RegionModifyRegionsDialog+Action.Intersect}"/>
+				<Button Click="OkClick" Content="E_xclude" Tag="{x:Static menuRegionDialogs:RegionModifyRegionsDialog+Action.Exclude}"/>
 			</UniformGrid>
 		</GroupBox>
 
 		<Button Grid.Row="3" Grid.Column="0" Content="Cancel" IsCancel="True" HorizontalAlignment="Right"/>
 	</Grid>
 
-</guiControls:ModalDialog>
+</commonControls:ModalDialog>

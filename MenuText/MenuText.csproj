@@ -11,7 +11,7 @@
   </PropertyGroup>
   <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegExLexer.g4;RevRegEx\Source\RevRegExParser.g4" Outputs="RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExParserBaseVisitor.cs;RevRegEx\Parser\RevRegExParserVisitor.cs" Returns="">
     <Message Text="Building RevRegEx parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.MenuText.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
   </Target>
   <ItemGroup>
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">

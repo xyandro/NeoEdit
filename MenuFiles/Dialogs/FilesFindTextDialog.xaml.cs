@@ -1,8 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.Controls;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Dialogs;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuFiles.Dialogs
 {
 	partial class FilesFindTextDialog
 	{

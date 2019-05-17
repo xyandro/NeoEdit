@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Windows;
-using NeoEdit.Controls;
-using NeoEdit.Expressions;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Common.Dialogs
 {
 	partial class FilesNamesMakeAbsoluteRelativeDialog
 	{

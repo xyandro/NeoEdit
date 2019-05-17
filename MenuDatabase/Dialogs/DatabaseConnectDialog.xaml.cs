@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
-using NeoEdit;
-using NeoEdit.Transform;
-using NeoEdit.Controls;
-using NeoEdit.Dialogs;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuDatabase.Dialogs
 {
 	partial class DatabaseConnectDialog
 	{

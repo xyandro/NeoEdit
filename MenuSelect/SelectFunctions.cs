@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NeoEdit;
-using NeoEdit.Expressions;
-using NeoEdit.Parsing;
-using NeoEdit.Dialogs;
+using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Parsing;
+using NeoEdit.MenuSelect.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuSelect
 {
 	public static class SelectFunctions
 	{

@@ -5,10 +5,11 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
-using NeoEdit.Controls;
-using NeoEdit.Converters;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Converters;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuTable.Dialogs
 {
 	partial class JoinDisplay
 	{

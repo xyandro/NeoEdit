@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Loader
+namespace NeoEdit.Loader
 {
 	static class Native
 	{

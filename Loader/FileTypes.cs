@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Loader
+namespace NeoEdit.Loader
 {
 	[Flags]
 	public enum FileTypes

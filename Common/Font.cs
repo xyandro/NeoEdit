@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
-namespace NeoEdit.Misc
+namespace NeoEdit.Common
 {
 	public static class Font
 	{

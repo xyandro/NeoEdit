@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NeoEdit.Dialogs;
-using NeoEdit.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Transform;
+using NeoEdit.MenuDatabase.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuDatabase
 {
 	public static class DatabaseFunctions
 	{

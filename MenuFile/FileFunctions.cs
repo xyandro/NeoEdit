@@ -6,12 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Win32;
-using NeoEdit.Controls;
-using NeoEdit.Dialogs;
-using NeoEdit.NEClipboards;
-using NeoEdit.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.Common.NEClipboards;
+using NeoEdit.Common.Transform;
+using NeoEdit.MenuFile.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuFile
 {
 	public static class FileFunctions
 	{

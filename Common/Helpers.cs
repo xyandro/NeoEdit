@@ -7,9 +7,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NeoEdit.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Common
 {
 	public static class Helpers
 	{

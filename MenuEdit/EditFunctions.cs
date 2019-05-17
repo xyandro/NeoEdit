@@ -7,13 +7,14 @@ using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using NeoEdit;
-using NeoEdit.Dialogs;
-using NeoEdit.Expressions;
-using NeoEdit.Parsing;
-using NeoEdit.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
+using NeoEdit.MenuEdit.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuEdit
 {
 	public static class EditFunctions
 	{

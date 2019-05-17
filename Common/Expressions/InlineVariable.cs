@@ -1,7 +1,6 @@
 ﻿using System;
-using NeoEdit.Expressions;
 
-namespace NeoEdit
+namespace NeoEdit.Common.Expressions
 {
 	public class InlineVariable
 	{

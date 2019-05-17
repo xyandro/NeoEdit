@@ -1,8 +1,8 @@
 ﻿using System.Windows;
-using NeoEdit.Controls;
-using NeoEdit.RevRegEx;
+using NeoEdit.Common.Controls;
+using NeoEdit.MenuText.RevRegEx;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuText.Dialogs
 {
 	partial class TextReverseRegExDialog
 	{

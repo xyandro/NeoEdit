@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using NeoEdit.Controls;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuText.Dialogs
 {
 	partial class TextTrimDialog
 	{

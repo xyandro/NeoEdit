@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Loader
+namespace NeoEdit.Loader
 {
 	partial class PasswordDialog
 	{

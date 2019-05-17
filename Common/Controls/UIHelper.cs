@@ -10,10 +10,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using NeoEdit.Dialogs;
-using NeoEdit.Misc;
+using NeoEdit.Common;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Common.Controls
 {
 	public class DepPropAttribute : Attribute
 	{

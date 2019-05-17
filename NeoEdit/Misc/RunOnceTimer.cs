@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Threading;
+using NeoEdit.Common;
 
 namespace NeoEdit.Misc
 {

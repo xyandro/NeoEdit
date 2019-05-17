@@ -1,6 +1,6 @@
 ﻿using Antlr4.Runtime;
 
-namespace NeoEdit.Parsing
+namespace NeoEdit.Common.Parsing
 {
 	public class CaseInsensitiveInputStream : AntlrInputStream
 	{

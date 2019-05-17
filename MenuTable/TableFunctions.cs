@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NeoEdit;
-using NeoEdit.Dialogs;
-using NeoEdit.Expressions;
+using NeoEdit.Common;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.Common.Expressions;
+using NeoEdit.MenuTable.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuTable
 {
 	public static class TableFunctions
 	{

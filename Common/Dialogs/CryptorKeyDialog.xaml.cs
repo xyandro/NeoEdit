@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Transform;
-using NeoEdit.Controls;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Common.Dialogs
 {
 	partial class CryptorKeyDialog
 	{

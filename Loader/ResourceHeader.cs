@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Loader
+namespace NeoEdit.Loader
 {
 	class ResourceHeader
 	{

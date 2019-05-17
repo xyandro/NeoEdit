@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using NeoEdit.Expressions.Parser;
-using NeoEdit.Parsing;
+using NeoEdit.Common.Expressions.Parser;
+using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.Expressions
+namespace NeoEdit.Common.Expressions
 {
 	public class NEExpression
 	{

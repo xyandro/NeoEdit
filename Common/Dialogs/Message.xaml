@@ -1,7 +1,7 @@
-﻿<guiControls:ModalDialog x:Name="self" x:Class="NeoEdit.Dialogs.Message"
+﻿<commonControls:ModalDialog x:Name="self" x:Class="NeoEdit.Common.Dialogs.Message"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:guiControls="clr-namespace:NeoEdit.Controls"
+	xmlns:commonControls="clr-namespace:NeoEdit.Common.Controls"
 	Title="Message" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner">
 
 	<Grid Margin="10,5">
@@ -23,4 +23,4 @@
 			</StackPanel.Resources>
 		</StackPanel>
 	</Grid>
-</guiControls:ModalDialog>
+</commonControls:ModalDialog>

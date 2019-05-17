@@ -4,10 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using NeoEdit;
-using NeoEdit.Parsing;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 
-namespace NeoEdit
+namespace NeoEdit.MenuNetwork
 {
 	class PortScanner
 	{

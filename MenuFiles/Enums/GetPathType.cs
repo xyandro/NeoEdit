@@ -1,4 +1,4 @@
-﻿namespace NeoEdit
+﻿namespace NeoEdit.MenuFiles
 {
 	public enum GetPathType
 	{

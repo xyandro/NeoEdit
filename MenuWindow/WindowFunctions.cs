@@ -1,11 +1,12 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text;
-using NeoEdit.Controls;
-using NeoEdit.Dialogs;
-using NeoEdit.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Transform;
+using NeoEdit.MenuWindow.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuWindow
 {
 	public static class WindowFunctions
 	{

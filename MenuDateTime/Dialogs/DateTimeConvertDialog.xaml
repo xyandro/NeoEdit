@@ -1,7 +1,7 @@
-﻿<guiControls:ModalDialog x:Name="self" x:Class="NeoEdit.Dialogs.DateTimeConvertDialog"
+﻿<commonControls:ModalDialog x:Name="self" x:Class="NeoEdit.MenuDateTime.Dialogs.DateTimeConvertDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:guiControls="clr-namespace:NeoEdit.Controls;assembly=NeoEdit.Common"
+	xmlns:commonControls="clr-namespace:NeoEdit.Common.Controls;assembly=NeoEdit.Common"
 	Title="Convert Date/Time" SizeToContent="Height" Width="500" FocusManager.FocusedElement="{Binding ElementName=outputFormat}">
 
 	<Grid Margin="10">
@@ -30,7 +30,7 @@
 		<ComboBox Grid.Row="1" Grid.Column="1" Name="inputFormat" IsEditable="True" Text="{Binding InputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Default _Time Zone" Target="{Binding ElementName=inputTimeZone}"/>
-		<guiControls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="inputTimeZone" Text="{Binding InputTimeZone, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<commonControls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="inputTimeZone" Text="{Binding InputTimeZone, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Example:"/>
 		<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Example, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
@@ -43,7 +43,7 @@
 		<ComboBox Grid.Row="7" Grid.Column="1" Name="outputFormat" IsEditable="True" Text="{Binding OutputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="8" Grid.Column="0" Content="T_ime Zone" Target="{Binding ElementName=outputTimeZone}"/>
-		<guiControls:AutoCompleteTextBox Grid.Row="8" Grid.Column="1" x:Name="outputTimeZone" Text="{Binding OutputTimeZone, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<commonControls:AutoCompleteTextBox Grid.Row="8" Grid.Column="1" x:Name="outputTimeZone" Text="{Binding OutputTimeZone, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="9" Grid.Column="0" Content="Result:"/>
 		<TextBox Grid.Row="9" Grid.Column="1" Text="{Binding OutputExample, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
@@ -54,4 +54,4 @@
 		</UniformGrid>
 	</Grid>
 
-</guiControls:ModalDialog>
+</commonControls:ModalDialog>

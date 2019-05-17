@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.Parsing
+namespace NeoEdit.Common.Parsing
 {
 	public class ParserNode : ParserBase
 	{

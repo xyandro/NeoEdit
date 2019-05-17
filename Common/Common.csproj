@@ -12,7 +12,7 @@
   </PropertyGroup>
   <Target Name="BuildExpression" Inputs="Expressions\Source\ExpressionLexer.g4;Expressions\Source\ExpressionParser.g4" Outputs="Expressions\Parser\ExpressionLexer.cs;Expressions\Parser\ExpressionParser.cs;Expressions\Parser\ExpressionParserBaseVisitor.cs;Expressions\Parser\ExpressionParserVisitor.cs" Returns="">
     <Message Text="Building expression parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package &quot;NeoEdit.Expressions.Parser&quot; -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionLexer.g4&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionParser.g4&quot;" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Common.Expressions.Parser -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionLexer.g4&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionParser.g4&quot;" />
   </Target>
   <ItemGroup>
     <Compile Include="$(SolutionDir)\Dependencies\GlobalAssemblyInfo.cs">

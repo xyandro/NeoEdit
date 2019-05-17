@@ -5,9 +5,11 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-using NeoEdit.Dialogs;
+using NeoEdit.Common;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.MenuHelp.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuHelp
 {
 	public static class HelpFunctions
 	{

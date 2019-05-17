@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using NeoEdit.Expressions;
-using NeoEdit.Controls;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuNetwork.Dialogs
 {
 	partial class NetworkFetchStreamDialog
 	{

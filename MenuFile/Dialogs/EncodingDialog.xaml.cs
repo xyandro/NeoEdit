@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using NeoEdit.Transform;
-using NeoEdit.Controls;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuFile.Dialogs
 {
 	partial class EncodingDialog
 	{

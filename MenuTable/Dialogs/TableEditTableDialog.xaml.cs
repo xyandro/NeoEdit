@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using NeoEdit;
-using NeoEdit.Controls;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuTable.Dialogs
 {
 	partial class TableEditTableDialog
 	{

@@ -4,12 +4,12 @@ using System.Collections.ObjectModel;
 using System.Data.Common;
 using System.Windows;
 using System.Windows.Input;
-using NeoEdit.Controls;
-using NeoEdit.Expressions;
-using NeoEdit.Parsing;
-using NeoEdit.Transform;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Common
 {
 	public interface ITextEditor
 	{

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NeoEdit;
-using NeoEdit.Dialogs;
-using NeoEdit.Parsing;
-using NeoEdit.RevRegEx;
+using NeoEdit.Common;
+using NeoEdit.Common.Dialogs;
+using NeoEdit.Common.Parsing;
+using NeoEdit.MenuText.Dialogs;
+using NeoEdit.MenuText.RevRegEx;
 
-namespace NeoEdit
+namespace NeoEdit.MenuText
 {
 	public static class TextFunctions
 	{

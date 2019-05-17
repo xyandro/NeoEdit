@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using NeoEdit.Controls;
+using NeoEdit.Common.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuEdit.Dialogs
 {
 	partial class EditSortDialog
 	{

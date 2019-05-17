@@ -6,9 +6,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using NeoEdit.Controls;
+using NeoEdit.Common;
+using NeoEdit.Common.Controls;
+using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.MenuTable.Dialogs
 {
 	partial class TableDisplay
 	{

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NeoEdit;
-using NeoEdit.Dialogs;
+using NeoEdit.Common;
+using NeoEdit.MenuPosition.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.MenuPosition
 {
 	public static class PositionFunctions
 	{
