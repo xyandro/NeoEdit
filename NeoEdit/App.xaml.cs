@@ -73,7 +73,11 @@ namespace NeoEdit
 				}
 
 				var shutdownData = string.IsNullOrWhiteSpace(clParams.Wait) ? null : new ShutdownData(clParams.Wait, clParams.Files.Count);
-				var tabs = new Tabs();
+				var tabs = default(Tabs);
+				if (!clParams.Diff)
+					tabs = UIHelper<Tabs>.GetNewest();
+				if (tabs == null)
+					tabs = new Tabs();
 				foreach (var file in clParams.Files)
 					tabs.Add(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownData: shutdownData));
 
