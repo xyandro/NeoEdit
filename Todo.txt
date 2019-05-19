@@ -1,29 +1,7 @@
-All:
-Add TFS source control
-Allow selecting a screen location (with zoom)
-Add PGP hash for files
 Make modal dialogs modal for owning window only
-Evaluate libs still in use
-
-Disk:
-Move timestamp (possibly others) from TextEditor
-Select readable
-In active list add number of selections, allow sort, allow typing to find file
-
-Text:
-Only show file changed dialog when window is active and selected
 Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files
 Tutorial
 Print
 Add ability to select all attributes
-Allow moving muliple windows, allow drop in middle of window instead of requiring title
 Allow tabs to move to other windows
-Allow "Identify" for files
-
-View:
-Update as new lines are added
-Add cursor mouse navigation (currently no way to jump to middle of file)
-
-Hex:
-Fix backwards search
