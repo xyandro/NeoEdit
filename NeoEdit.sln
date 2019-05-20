@@ -68,9 +68,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-4
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit", "NeoEdit\NeoEdit.csproj", "{DB80FD39-0222-4591-B224-833259BAC943}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8} = {2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{990E4DBE-127E-4A5B-AA48-36765713838C}"
 EndProject
