@@ -48,7 +48,7 @@ namespace NeoEdit.Common
 		void SetRegions(int region, List<Range> regions);
 		UndoRedo undoRedo { get; }
 		DateTime fileLastWrite { get; set; }
-		DragType doDrag { get; set; }
+		List<string> DragFiles { get; set; }
 		string DiffIgnoreCharacters { get; set; }
 		void InvalidateCanvas();
 		int BeginOffset { get; }

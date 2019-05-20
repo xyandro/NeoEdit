@@ -287,7 +287,7 @@
 			<commonControls:NEMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
 			<commonControls:NEMenuItem Header="_Delete" CommandEnum="Files_Operations_Delete"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="D_rag/Drop" CommandEnum="Files_Operations_DragDrop"/>
+			<commonControls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="Files_Operations_DragDrop"/>
 			<commonControls:NEMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore"/>
 			<commonControls:NEMenuItem Header="C_ommand Prompt" CommandEnum="Files_Operations_CommandPrompt"/>
 			<Separator/>

@@ -126,7 +126,6 @@
     <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
       <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Enums\DragType.cs" />
     <Compile Include="Enums\JumpByType.cs" />
     <Compile Include="Enums\MessageOptions.cs" />
     <Compile Include="Enums\NECommand.cs" />

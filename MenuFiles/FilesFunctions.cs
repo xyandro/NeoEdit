@@ -870,7 +870,7 @@ namespace NeoEdit.MenuFiles
 			var strs = te.RelativeSelectedFiles();
 			if (!te.StringsAreFiles(strs))
 				throw new Exception("Selections must be files.");
-			te.doDrag = DragType.Selections;
+			te.DragFiles = strs;
 		}
 
 		static public void Command_Files_Operations_Explore(ITextEditor te)

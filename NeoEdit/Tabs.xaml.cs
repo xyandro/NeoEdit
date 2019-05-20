@@ -307,6 +307,8 @@ namespace NeoEdit
 
 		public bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
 		{
+			Items.ForEach(te => te.DragFiles = null);
+
 			switch (command.GetArea())
 			{
 				case "File": HandleCommandFile(command, shiftDown, dialogResult, multiStatus); break;
@@ -346,6 +348,7 @@ namespace NeoEdit
 				case NECommand.File_New_FromClipboardSelections: FileFunctions.Command_File_New_FromClipboardSelections(this); break;
 				case NECommand.File_Open_Open: FileFunctions.Command_File_Open_Open(this, dialogResult as OpenFileDialogResult); break;
 				case NECommand.File_Open_CopiedCut: FileFunctions.Command_File_Open_CopiedCut(this); break;
+				case NECommand.File_Operations_DragDrop: FileFunctions.Command_File_Operations_DragDrop(this); break;
 				case NECommand.File_MoveToNewWindow: FileFunctions.Command_File_MoveToNewWindow(this); break;
 				case NECommand.File_Shell_Integrate: FileFunctions.Command_File_Shell_Integrate(); break;
 				case NECommand.File_Shell_Unintegrate: FileFunctions.Command_File_Shell_Unintegrate(); break;

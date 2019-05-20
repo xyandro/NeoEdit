@@ -258,13 +258,17 @@ namespace NeoEdit.MenuFile
 
 		static public void Command_File_Operations_CommandPrompt(ITextEditor te) => Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = Path.GetDirectoryName(te.FileName) });
 
-		static public void Command_File_Operations_DragDrop(ITextEditor te)
+		static public void Command_File_Operations_DragDrop(ITabs tabs)
 		{
-			if (string.IsNullOrWhiteSpace(te.FileName))
-				throw new Exception("No current file.");
-			if (!File.Exists(te.FileName))
-				throw new Exception("Current file does not exist.");
-			te.doDrag = DragType.CurrentFile;
+			if (tabs.TopMost == null)
+				throw new Exception("No active file");
+			var fileNames = tabs.Items.Where(te => te.Active).Select(te => te.FileName).NonNullOrEmpty().ToList();
+			if (!fileNames.Any())
+				throw new Exception("No current files have filenames.");
+			var nonExisting = fileNames.Where(x => !File.Exists(x));
+			if (nonExisting.Any())
+				throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
+			tabs.TopMost.DragFiles = fileNames;
 		}
 
 		static public void Command_File_Operations_VCSDiff(ITextEditor te)

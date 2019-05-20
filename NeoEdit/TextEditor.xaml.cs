@@ -283,7 +283,7 @@ namespace NeoEdit
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		public DateTime fileLastWrite { get; set; }
 		int mouseClickCount = 0;
-		public DragType doDrag { get; set; } = DragType.None;
+		public List<string> DragFiles { get; set; }
 		CacheValue modifiedChecksum = new CacheValue();
 		public string DiffIgnoreCharacters { get; set; }
 		PreviousStruct previous = null;
@@ -1048,8 +1048,6 @@ namespace NeoEdit
 		bool timeNext = false;
 		public void HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
 		{
-			doDrag = DragType.None;
-
 			var start = DateTime.UtcNow;
 			if (command != NECommand.Macro_RepeatLastAction)
 			{
@@ -1117,7 +1115,6 @@ namespace NeoEdit
 				case NECommand.File_Operations_Delete: FileFunctions.Command_File_Operations_Delete(this, answer); break;
 				case NECommand.File_Operations_Explore: FileFunctions.Command_File_Operations_Explore(this); break;
 				case NECommand.File_Operations_CommandPrompt: FileFunctions.Command_File_Operations_CommandPrompt(this); break;
-				case NECommand.File_Operations_DragDrop: FileFunctions.Command_File_Operations_DragDrop(this); break;
 				case NECommand.File_Operations_VCSDiff: FileFunctions.Command_File_Operations_VCSDiff(this); break;
 				case NECommand.File_Close: FileFunctions.Command_File_Close(this, answer); break;
 				case NECommand.File_Refresh: FileFunctions.Command_File_Refresh(this, answer); break;
@@ -1905,7 +1902,7 @@ namespace NeoEdit
 					break;
 				case Key.Escape:
 					SetSearches(new List<Range>());
-					doDrag = DragType.None;
+					DragFiles = null;
 					if (Settings.EscapeClearsSelections)
 					{
 						HandleCommand(NECommand.Select_Selection_Single, false, null, null, null);
@@ -2191,20 +2188,10 @@ namespace NeoEdit
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (doDrag != DragType.None)
+			if (DragFiles != null)
 			{
-				List<string> strs;
-				switch (doDrag)
-				{
-					case DragType.CurrentFile: strs = new List<string> { FileName }; break;
-					case DragType.Selections: strs = RelativeSelectedFiles(); break;
-					default: throw new Exception("Invalid drag type");
-				}
-				if (!StringsAreFiles(strs))
-					throw new Exception("Selections must be files.");
-
-				DragDrop.DoDragDrop(this, new DataObject(DataFormats.FileDrop, strs.ToArray()), DragDropEffects.Copy);
-				doDrag = DragType.None;
+				DragDrop.DoDragDrop(this, new DataObject(DataFormats.FileDrop, DragFiles.ToArray()), DragDropEffects.Copy);
+				DragFiles = null;
 				return;
 			}
 
