@@ -158,7 +158,7 @@ namespace NeoEdit.MenuWindow.Dialogs
 			if (!selected.All(tab => tab.CanClose(answer)))
 				return;
 
-			selected.ForEach(item => tabs.Items.Remove(item));
+			selected.ForEach(item => tabs.Remove(item));
 			listView.ItemsSource = tabs.Items.ToList();
 		}
 

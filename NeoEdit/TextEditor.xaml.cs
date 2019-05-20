@@ -492,6 +492,7 @@ namespace NeoEdit
 			globalKeysChanged -= SetupLocalOrGlobalKeys;
 			Font.FontSizeChanged -= FontSizeChanged;
 			ClearWatcher();
+			RemoveKeysAndValuesCallback();
 			shutdownData?.OnShutdown();
 		}
 
