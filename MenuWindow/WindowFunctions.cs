@@ -31,10 +31,25 @@ namespace NeoEdit.MenuWindow
 
 		static public void Command_Window_FontSize(ITabs tabs) => WindowFontSizeDialog.Run(tabs.WindowParent);
 
-		static public void Command_Window_SelectTabsWithSelections(ITabs tabs, bool hasSelections)
+		static public void Command_Window_Select_TabsWithWithoutSelections(ITabs tabs, bool hasSelections)
 		{
 			var topMost = tabs.TopMost;
 			var active = tabs.Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
+			tabs.Items.ToList().ForEach(tab => tab.Active = false);
+
+			if (!active.Any())
+				return;
+
+			if (!active.Contains(topMost))
+				topMost = active.First();
+			tabs.TopMost = topMost;
+			active.ForEach(tab => tab.Active = true);
+		}
+
+		static public void Command_Window_Select_ModifiedUnmodifiedTabs(ITabs tabs, bool modified)
+		{
+			var topMost = tabs.TopMost;
+			var active = tabs.Items.Where(tab => (tab.Active) && (tab.IsModified == modified)).ToList();
 			tabs.Items.ToList().ForEach(tab => tab.Active = false);
 
 			if (!active.Any())
@@ -61,7 +76,7 @@ namespace NeoEdit.MenuWindow
 			active.ForEach(tab => tab.Active = true);
 		}
 
-		static public void Command_Window_CloseTabsWithSelections(ITabs tabs, bool hasSelections)
+		static public void Command_Window_Close_TabsWithWithoutSelections(ITabs tabs, bool hasSelections)
 		{
 			var topMost = tabs.TopMost;
 			var active = tabs.Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
@@ -81,7 +96,27 @@ namespace NeoEdit.MenuWindow
 			active.ForEach(tab => tab.Active = true);
 		}
 
-		static public void Command_Window_Close_ActiveTabs(ITabs tabs, bool active)
+		static public void Command_Window_Close_ModifiedUnmodifiedTabs(ITabs tabs, bool modified)
+		{
+			var topMost = tabs.TopMost;
+			var active = tabs.Items.Where(tab => (tab.Active) && (tab.IsModified != modified)).ToList();
+
+			var answer = new AnswerResult();
+			var closeTabs = tabs.Items.Where(tab => (tab.Active) && (tab.IsModified == modified)).ToList();
+			if (!closeTabs.All(tab => tab.CanClose(answer)))
+				return;
+			closeTabs.ForEach(tab => tabs.Remove(tab));
+
+			if (!active.Any())
+				return;
+
+			if (!active.Contains(topMost))
+				topMost = active.First();
+			tabs.TopMost = topMost;
+			active.ForEach(tab => tab.Active = true);
+		}
+
+		static public void Command_Window_Close_ActiveInactiveTabs(ITabs tabs, bool active)
 		{
 			var answer = new AnswerResult();
 			var closeTabs = tabs.Items.Where(tab => tab.Active == active).ToList();

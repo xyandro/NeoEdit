@@ -398,13 +398,17 @@ namespace NeoEdit
 				case NECommand.Window_CustomGrid: WindowFunctions.Command_Window_Type(this, TabsLayout.Custom, dialogResult as WindowCustomGridDialog.Result); break;
 				case NECommand.Window_ActiveTabs: WindowFunctions.Command_Window_ActiveTabs(this); break;
 				case NECommand.Window_FontSize: WindowFunctions.Command_Window_FontSize(this); break;
-				case NECommand.Window_Select_TabsWithSelections: WindowFunctions.Command_Window_SelectTabsWithSelections(this, true); break;
-				case NECommand.Window_Select_TabsWithoutSelections: WindowFunctions.Command_Window_SelectTabsWithSelections(this, false); break;
+				case NECommand.Window_Select_TabsWithSelections: WindowFunctions.Command_Window_Select_TabsWithWithoutSelections(this, true); break;
+				case NECommand.Window_Select_TabsWithoutSelections: WindowFunctions.Command_Window_Select_TabsWithWithoutSelections(this, false); break;
+				case NECommand.Window_Select_ModifiedTabs: WindowFunctions.Command_Window_Select_ModifiedUnmodifiedTabs(this, true); break;
+				case NECommand.Window_Select_UnmodifiedTabs: WindowFunctions.Command_Window_Select_ModifiedUnmodifiedTabs(this, false); break;
 				case NECommand.Window_Select_TabsWithSelectionsToTop: WindowFunctions.Command_Window_Select_TabsWithSelectionsToTop(this); break;
-				case NECommand.Window_Close_TabsWithSelections: WindowFunctions.Command_Window_CloseTabsWithSelections(this, true); break;
-				case NECommand.Window_Close_TabsWithoutSelections: WindowFunctions.Command_Window_CloseTabsWithSelections(this, false); break;
-				case NECommand.Window_Close_ActiveTabs: WindowFunctions.Command_Window_Close_ActiveTabs(this, true); break;
-				case NECommand.Window_Close_InactiveTabs: WindowFunctions.Command_Window_Close_ActiveTabs(this, false); break;
+				case NECommand.Window_Close_TabsWithSelections: WindowFunctions.Command_Window_Close_TabsWithWithoutSelections(this, true); break;
+				case NECommand.Window_Close_TabsWithoutSelections: WindowFunctions.Command_Window_Close_TabsWithWithoutSelections(this, false); break;
+				case NECommand.Window_Close_ModifiedTabs: WindowFunctions.Command_Window_Close_ModifiedUnmodifiedTabs(this, true); break;
+				case NECommand.Window_Close_UnmodifiedTabs: WindowFunctions.Command_Window_Close_ModifiedUnmodifiedTabs(this, false); break;
+				case NECommand.Window_Close_ActiveTabs: WindowFunctions.Command_Window_Close_ActiveInactiveTabs(this, true); break;
+				case NECommand.Window_Close_InactiveTabs: WindowFunctions.Command_Window_Close_ActiveInactiveTabs(this, false); break;
 				case NECommand.Window_WordList: WindowFunctions.Command_Window_WordList(this); break;
 			}
 		}

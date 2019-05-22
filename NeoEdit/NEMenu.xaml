@@ -1008,11 +1008,18 @@
 			<commonControls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Select_TabsWithSelections"/>
 			<commonControls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Select_TabsWithoutSelections"/>
 			<Separator/>
+			<commonControls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Select_ModifiedTabs"/>
+			<commonControls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Select_UnmodifiedTabs"/>
+			<Separator/>
 			<commonControls:NEMenuItem Header="Tabs With Selections To _Top" CommandEnum="Window_Select_TabsWithSelectionsToTop"/>
 		</MenuItem>
 		<MenuItem Header="_Close">
 			<commonControls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Close_TabsWithSelections"/>
 			<commonControls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Close_TabsWithoutSelections"/>
+			<Separator/>
+			<commonControls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Close_ModifiedTabs"/>
+			<commonControls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Close_UnmodifiedTabs"/>
+			<Separator/>
 			<commonControls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_Close_ActiveTabs"/>
 			<commonControls:NEMenuItem Header="_Inactive Tabs" CommandEnum="Window_Close_InactiveTabs"/>
 		</MenuItem>
