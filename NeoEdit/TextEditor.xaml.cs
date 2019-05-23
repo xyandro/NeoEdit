@@ -632,6 +632,7 @@ namespace NeoEdit
 		{
 			// Can't access DependencyProperties/clipboard from other threads; grab a copy:
 			var fileName = FileName;
+			var displayName = DisplayName;
 
 			var results = new NEVariables();
 
@@ -680,6 +681,7 @@ namespace NeoEdit
 			results.Add(NEVariable.Constant("cn", "Clipboard count", () => Clipboard.Count));
 
 			results.Add(NEVariable.Constant("f", "Filename", () => fileName));
+			results.Add(NEVariable.Constant("d", "Display name", () => displayName));
 
 			var lineStarts = default(List<int>);
 			var initializeLineStarts = new NEVariableInitializer(() => lineStarts = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start) + 1).ToList());
