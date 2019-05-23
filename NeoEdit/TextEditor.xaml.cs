@@ -2401,26 +2401,34 @@ namespace NeoEdit
 
 		void OnStatusBarRender(object sender, DrawingContext dc)
 		{
-			if ((CurrentSelection < 0) || (CurrentSelection >= Selections.Count))
-				return;
-
-			var range = Selections[CurrentSelection];
-			var startLine = Data.GetOffsetLine(range.Start);
-			var endLine = Data.GetOffsetLine(range.End);
-			var indexMin = Data.GetOffsetIndex(range.Start, startLine);
-			var indexMax = Data.GetOffsetIndex(range.End, endLine);
-			var lineMin = Data.GetDiffLine(startLine);
-			var lineMax = Data.GetDiffLine(endLine);
-			var columnMin = Data.GetColumnFromIndex(startLine, indexMin);
-			var columnMax = Data.GetColumnFromIndex(endLine, indexMax);
-			var posMin = range.Start;
-			var posMax = range.End;
-
 			var sb = new List<string>();
-			sb.Add($"Selection {CurrentSelection + 1:n0}/{NumSelections:n0}");
-			sb.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
-			sb.Add($"In {lineMin + 1:n0}:{indexMin + 1:n0}{((lineMin == lineMax) && (indexMin == indexMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{indexMax + 1:n0}")}");
-			sb.Add($"Pos {posMin:n0}{(posMin == posMax ? "" : $"-{posMax:n0}")}");
+
+			if ((CurrentSelection < 0) || (CurrentSelection >= Selections.Count))
+			{
+				sb.Add("Selection 0/0");
+				sb.Add("Col");
+				sb.Add("In");
+				sb.Add("Pos");
+			}
+			else
+			{
+				var range = Selections[CurrentSelection];
+				var startLine = Data.GetOffsetLine(range.Start);
+				var endLine = Data.GetOffsetLine(range.End);
+				var indexMin = Data.GetOffsetIndex(range.Start, startLine);
+				var indexMax = Data.GetOffsetIndex(range.End, endLine);
+				var lineMin = Data.GetDiffLine(startLine);
+				var lineMax = Data.GetDiffLine(endLine);
+				var columnMin = Data.GetColumnFromIndex(startLine, indexMin);
+				var columnMax = Data.GetColumnFromIndex(endLine, indexMax);
+				var posMin = range.Start;
+				var posMax = range.End;
+
+				sb.Add($"Selection {CurrentSelection + 1:n0}/{NumSelections:n0}");
+				sb.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
+				sb.Add($"In {lineMin + 1:n0}:{indexMin + 1:n0}{((lineMin == lineMax) && (indexMin == indexMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{indexMax + 1:n0}")}");
+				sb.Add($"Pos {posMin:n0}{(posMin == posMax ? "" : $"-{posMax:n0}")}");
+			}
 
 			sb.Add($"Regions {string.Join(" / ", Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count).OrderBy(pair => pair.Key).Select(pair => $"{pair.Value:n0}"))}");
 			sb.Add($"Keys/Values {string.Join(" / ", KeysAndValues.Select(l => $"{l.Count:n0}"))}");
