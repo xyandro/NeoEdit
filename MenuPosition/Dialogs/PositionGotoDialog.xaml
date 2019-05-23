@@ -13,6 +13,7 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -25,11 +26,13 @@
 
 		<Label Grid.Row="2" Grid.Column="1" Content="Relative: line/col/pos + number"/>
 
-		<UniformGrid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
+		<CheckBox Grid.Row="3" Grid.Column="1" Content="Only open files _once" IsChecked="{Binding OpenFilesOnce, ElementName=self}"/>
+
+		<UniformGrid Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
 			<Button Click="ExpressionHelp" Content="Expression _Help"/>
 		</UniformGrid>
 
-		<UniformGrid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

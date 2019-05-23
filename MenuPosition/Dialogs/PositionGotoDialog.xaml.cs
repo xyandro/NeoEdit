@@ -10,10 +10,13 @@ namespace NeoEdit.MenuPosition.Dialogs
 		public class Result
 		{
 			public string Expression { get; set; }
+			public bool OpenFilesOnce { get; set; }
 		}
 
 		[DepProp]
 		public string Expression { get { return UIHelper<PositionGotoDialog>.GetPropValue<string>(this); } set { UIHelper<PositionGotoDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool OpenFilesOnce { get { return UIHelper<PositionGotoDialog>.GetPropValue<bool>(this); } set { UIHelper<PositionGotoDialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
 
 		static PositionGotoDialog() { UIHelper<PositionGotoDialog>.Register(); }
@@ -25,6 +28,7 @@ namespace NeoEdit.MenuPosition.Dialogs
 
 			Title = $"Go To {gotoType}";
 			Expression = value.ToString();
+			OpenFilesOnce = true;
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
@@ -32,7 +36,7 @@ namespace NeoEdit.MenuPosition.Dialogs
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = Expression };
+			result = new Result { Expression = Expression, OpenFilesOnce = OpenFilesOnce };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}

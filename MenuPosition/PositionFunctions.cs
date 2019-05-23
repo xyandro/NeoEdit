@@ -162,23 +162,45 @@ namespace NeoEdit.MenuPosition
 			if (values.Any(x => (x.File != null) != hasFiles))
 				throw new Exception("Either all locations must have files or none");
 
-			var valuesByFile = values.GroupBy(value => value.File, StringComparer.OrdinalIgnoreCase).Select(g => Tuple.Create(g.Key, g.ToList())).ToList();
+			var valuesByFile = new List<List<GotoRange>>();
+			var fileMap = new Dictionary<string, List<GotoRange>>(StringComparer.OrdinalIgnoreCase);
+			foreach (var value in values)
+			{
+				List<GotoRange> list;
+				if (result.OpenFilesOnce)
+				{
+					var key = value.File ?? "";
+					if (!fileMap.ContainsKey(key))
+					{
+						fileMap[key] = list = new List<GotoRange>();
+						valuesByFile.Add(list);
+					}
+					else
+						list = fileMap[key];
+				}
+				else
+				{
+					list = new List<GotoRange>();
+					valuesByFile.Add(list);
+				}
+				list.Add(value);
+			}
 
 			if (hasFiles)
 			{
-				var invalidFiles = valuesByFile.Select(tuple => tuple.Item1).NonNull().Where(file => !File.Exists(file)).ToList();
+				var invalidFiles = valuesByFile.Select(list => list.First().File).NonNull().Where(file => !File.Exists(file)).ToList();
 				if (invalidFiles.Any())
 					throw new Exception($"The following files could not be found: {string.Join("\n", invalidFiles)}");
 			}
 
 			var active = new HashSet<ITextEditor>();
-			foreach (var tuple in valuesByFile)
+			foreach (var list in valuesByFile)
 			{
-				var useTE = tuple.Item1 == null ? te : te.TabsParent.Add(tuple.Item1);
+				var useTE = list.First().File == null ? te : te.TabsParent.Add(list.First().File);
 				active.Add(useTE);
 
 				var sels = useTE.Selections.ToList();
-				var positions = tuple.Item2;
+				var positions = list;
 
 				if ((sels.Count == 0) && ((gotoType == GotoType.Line) || (gotoType == GotoType.Position)))
 					sels.Add(useTE.BeginRange);
