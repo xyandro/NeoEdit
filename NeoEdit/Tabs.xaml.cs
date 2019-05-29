@@ -706,11 +706,13 @@ namespace NeoEdit
 
 		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
 		{
-			base.OnMouseLeftButtonDown(e);
-			var source = e.OriginalSource as DependencyObject;
-			foreach (var item in Items)
-				if ((item as Visual).IsAncestorOf(source))
-					TopMost = item;
+			base.OnPreviewMouseLeftButtonDown(e);
+			for (var source = e.OriginalSource as FrameworkElement; source != null; source = source.Parent as FrameworkElement)
+				if (source is TextEditor te)
+				{
+					TopMost = te;
+					break;
+				}
 		}
 
 		void OnDrop(DragEventArgs e, ITextEditor toItem)
