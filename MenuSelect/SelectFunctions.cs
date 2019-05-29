@@ -159,33 +159,31 @@ namespace NeoEdit.MenuSelect
 						pos += matchLen;
 						start = pos;
 					}
-					else if (!result.Balanced)
-						++pos;
-					else if ((te.Data.Data[pos] == '(') || (te.Data.Data[pos] == '[') || (te.Data.Data[pos] == '{'))
+					else if (((result.BalanceParens) && (te.Data.Data[pos] == '(')) || ((result.BalanceBrackets) && (te.Data.Data[pos] == '[')) || ((result.BalanceBraces) && (te.Data.Data[pos] == '{')))
 						stack.Push(charValue[te.Data.Data[pos++]]);
-					else if ((te.Data.Data[pos] == ')') || (te.Data.Data[pos] == ']') || (te.Data.Data[pos] == '}'))
+					else if (((result.BalanceParens) && (te.Data.Data[pos] == ')')) || ((result.BalanceBrackets) && (te.Data.Data[pos] == ']')) || ((result.BalanceBraces) && (te.Data.Data[pos] == '}')))
 					{
 						if (charValue[te.Data.Data[pos]] != stackTop)
 							throw new Exception($"Didn't find open for {te.Data.Data[pos]}");
 						stack.Pop();
 						++pos;
 					}
-					else if (te.Data.Data[pos] == '\"')
+					else if ((result.BalanceStrings) && (te.Data.Data[pos] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.String);
 						++pos;
 					}
-					else if ((pos + 1 < range.End) && (te.Data.Data[pos] == '@') && (te.Data.Data[pos + 1] == '\"'))
+					else if ((result.BalanceStrings) && (pos + 1 < range.End) && (te.Data.Data[pos] == '@') && (te.Data.Data[pos + 1] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.VerbatimString);
 						pos += 2;
 					}
-					else if ((pos + 1 < range.End) && (te.Data.Data[pos] == '$') && (te.Data.Data[pos + 1] == '\"'))
+					else if ((result.BalanceStrings) && (pos + 1 < range.End) && (te.Data.Data[pos] == '$') && (te.Data.Data[pos + 1] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.InterpolatedString);
 						pos += 2;
 					}
-					else if ((pos + 2 < range.End) && (te.Data.Data[pos] == '$') && (te.Data.Data[pos + 1] == '@') && (te.Data.Data[pos + 2] == '\"'))
+					else if ((result.BalanceStrings) && (pos + 2 < range.End) && (te.Data.Data[pos] == '$') && (te.Data.Data[pos + 1] == '@') && (te.Data.Data[pos + 2] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.InterpolatedVerbatimString);
 						pos += 3;

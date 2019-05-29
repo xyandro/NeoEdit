@@ -1,5 +1,10 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Markup;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
@@ -14,7 +19,10 @@ namespace NeoEdit.MenuSelect.Dialogs
 			public string Index { get; set; }
 			public bool IncludeResults { get; set; }
 			public bool IncludeEmpty { get; set; }
-			public bool Balanced { get; set; }
+			public bool BalanceStrings { get; set; }
+			public bool BalanceParens { get; set; }
+			public bool BalanceBrackets { get; set; }
+			public bool BalanceBraces { get; set; }
 			public bool TrimWhitespace { get; set; }
 		}
 
@@ -31,7 +39,13 @@ namespace NeoEdit.MenuSelect.Dialogs
 		[DepProp]
 		public bool IncludeEmpty { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Balanced { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
+		public bool BalanceStrings { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool BalanceParens { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool BalanceBrackets { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool BalanceBraces { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool TrimWhitespace { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
@@ -50,7 +64,7 @@ namespace NeoEdit.MenuSelect.Dialogs
 		{
 			Index = "0";
 			MatchCase = IsRegex = IncludeResults = IncludeEmpty = false;
-			Balanced = TrimWhitespace = true;
+			BalanceStrings = BalanceParens = BalanceBrackets = BalanceBraces = TrimWhitespace = true;
 		}
 
 		Result result;
@@ -65,7 +79,18 @@ namespace NeoEdit.MenuSelect.Dialogs
 			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
-			result = new Result { Regex = new Regex(text, options), Index = Index, IncludeResults = IncludeResults, IncludeEmpty = IncludeEmpty, Balanced = Balanced, TrimWhitespace = TrimWhitespace };
+			result = new Result
+			{
+				Regex = new Regex(text, options),
+				Index = Index,
+				IncludeResults = IncludeResults,
+				IncludeEmpty = IncludeEmpty,
+				BalanceStrings = BalanceStrings,
+				BalanceParens = BalanceParens,
+				BalanceBrackets = BalanceBrackets,
+				BalanceBraces = BalanceBraces,
+				TrimWhitespace = TrimWhitespace,
+			};
 
 			this.text.AddCurrentSuggestion();
 
@@ -79,5 +104,28 @@ namespace NeoEdit.MenuSelect.Dialogs
 			var dialog = new SelectSplitDialog(variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
+	}
+
+	class CheckboxConverter : MarkupExtension, IMultiValueConverter
+	{
+		public override object ProvideValue(IServiceProvider serviceProvider) => this;
+
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+		{
+			var result = default(bool?);
+			foreach (var value in values)
+			{
+				if (value is bool b)
+				{
+					if (!result.HasValue)
+						result = b;
+					if (result != b)
+						return null;
+				}
+			}
+			return result;
+		}
+
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => Enumerable.Repeat(value, targetTypes.Length).ToArray();
 	}
 }
