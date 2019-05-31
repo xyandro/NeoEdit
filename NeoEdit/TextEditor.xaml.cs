@@ -1078,8 +1078,24 @@ namespace NeoEdit
 			return dialogResult != null;
 		}
 
+		public void PreHandleCommand(NECommand command, ref object preResult)
+		{
+			switch (command.GetArea())
+			{
+				case "Select": PreHandleCommandSelect(command, ref preResult); break;
+			}
+		}
+
+		void PreHandleCommandSelect(NECommand command, ref object preResult)
+		{
+			switch (command)
+			{
+				case NECommand.Select_Selection_ToggleAnchor: SelectFunctions.Command_Pre_Select_Selection_ToggleAnchor(this, ref preResult); break;
+			}
+		}
+
 		bool timeNext = false;
-		public void HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		public void HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			var start = DateTime.UtcNow;
 			if (command != NECommand.Macro_RepeatLastAction)
@@ -1095,25 +1111,25 @@ namespace NeoEdit
 
 			switch (command.GetArea())
 			{
-				case "File": HandleCommandFile(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Edit": HandleCommandEdit(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Diff": HandleCommandDiff(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Files": HandleCommandFiles(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Expression": HandleCommandExpression(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Text": HandleCommandText(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Numeric": HandleCommandNumeric(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "DateTime": HandleCommandDateTime(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Image": HandleCommandImage(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Table": HandleCommandTable(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Position": HandleCommandPosition(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Content": HandleCommandContent(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Network": HandleCommandNetwork(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Database": HandleCommandDatabase(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Keys": HandleCommandKeys(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Select": HandleCommandSelect(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Region": HandleCommandRegion(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Macro": HandleCommandMacro(command, shiftDown, dialogResult, multiStatus, answer); break;
-				case "Window": HandleCommandWindow(command, shiftDown, dialogResult, multiStatus, answer); break;
+				case "File": HandleCommandFile(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Edit": HandleCommandEdit(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Diff": HandleCommandDiff(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Files": HandleCommandFiles(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Expression": HandleCommandExpression(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Text": HandleCommandText(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Numeric": HandleCommandNumeric(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "DateTime": HandleCommandDateTime(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Image": HandleCommandImage(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Table": HandleCommandTable(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Position": HandleCommandPosition(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Content": HandleCommandContent(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Network": HandleCommandNetwork(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Database": HandleCommandDatabase(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Keys": HandleCommandKeys(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Select": HandleCommandSelect(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Region": HandleCommandRegion(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Macro": HandleCommandMacro(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
+				case "Window": HandleCommandWindow(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
 			}
 
 			var end = DateTime.UtcNow;
@@ -1131,7 +1147,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandFile(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandFile(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1167,7 +1183,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandEdit(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandEdit(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1216,7 +1232,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandDiff(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandDiff(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1253,7 +1269,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandFiles(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandFiles(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1316,7 +1332,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandExpression(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandExpression(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1331,7 +1347,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandText(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandText(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1362,7 +1378,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandNumeric(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandNumeric(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1404,7 +1420,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandDateTime(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandDateTime(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1414,7 +1430,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandImage(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandImage(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1433,7 +1449,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandTable(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandTable(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1464,7 +1480,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandPosition(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandPosition(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1479,7 +1495,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandContent(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandContent(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1529,7 +1545,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandNetwork(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandNetwork(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1547,7 +1563,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandDatabase(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandDatabase(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1557,7 +1573,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandKeys(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandKeys(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1604,7 +1620,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandSelect(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandSelect(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1633,7 +1649,7 @@ namespace NeoEdit
 				case NECommand.Select_Selection_First: SelectFunctions.Command_Select_Selection_First(this); break;
 				case NECommand.Select_Selection_CenterVertically: SelectFunctions.Command_Select_Selection_CenterVertically(this); break;
 				case NECommand.Select_Selection_Center: SelectFunctions.Command_Select_Selection_Center(this); break;
-				case NECommand.Select_Selection_ToggleAnchor: SelectFunctions.Command_Select_Selection_ToggleAnchor(this); break;
+				case NECommand.Select_Selection_ToggleAnchor: SelectFunctions.Command_Select_Selection_ToggleAnchor(this, preResult); break;
 				case NECommand.Select_Selection_Next: SelectFunctions.Command_Select_Selection_NextPrevious(this, true); break;
 				case NECommand.Select_Selection_Previous: SelectFunctions.Command_Select_Selection_NextPrevious(this, false); break;
 				case NECommand.Select_Selection_Single: SelectFunctions.Command_Select_Selection_Single(this); break;
@@ -1643,7 +1659,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandRegion(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandRegion(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1838,7 +1854,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandMacro(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandMacro(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1847,7 +1863,7 @@ namespace NeoEdit
 			}
 		}
 
-		void HandleCommandWindow(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer)
+		void HandleCommandWindow(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
 		{
 			switch (command)
 			{
@@ -1938,7 +1954,7 @@ namespace NeoEdit
 					DragFiles = null;
 					if (Settings.EscapeClearsSelections)
 					{
-						HandleCommand(NECommand.Select_Selection_Single, false, null, null, null);
+						HandleCommand(NECommand.Select_Selection_Single, false, null, null, null, null);
 						if (!Selections.Any())
 						{
 							var pos = Data.GetOffset(Math.Max(0, Math.Min(yScrollValue, Data.NumLines - 1)), 0);
@@ -2741,7 +2757,7 @@ namespace NeoEdit
 		{
 			if (previous == null)
 				return;
-			HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus, new AnswerResult());
+			HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus, new AnswerResult(), null);
 		}
 
 		public void OpenTable(Table table, string name = null)

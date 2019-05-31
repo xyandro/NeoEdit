@@ -317,7 +317,20 @@ namespace NeoEdit.MenuSelect
 
 		static public void Command_Select_Selection_Center(ITextEditor te) => te.EnsureVisible(true, true);
 
-		static public void Command_Select_Selection_ToggleAnchor(ITextEditor te) => te.SetSelections(te.Selections.Select(range => new Range(range.Anchor, range.Cursor)).ToList());
+		static public void Command_Pre_Select_Selection_ToggleAnchor(ITextEditor te, ref object preResult)
+		{
+			var anchorStart = preResult as bool?;
+			if (anchorStart == true)
+				return;
+			var types = te.Selections.Where(range => range.HasSelection).Select(range => range.Anchor < range.Cursor).Distinct().Take(2).ToList();
+			preResult = types.Count == 1 ? !types[0] : true;
+		}
+
+		static public void Command_Select_Selection_ToggleAnchor(ITextEditor te, object preResult)
+		{
+			var anchorStart = (bool)preResult;
+			te.SetSelections(te.Selections.Select(range => new Range(anchorStart ? range.End : range.Start, anchorStart ? range.Start : range.End)).ToList());
+		}
 
 		static public void Command_Select_Selection_NextPrevious(ITextEditor te, bool next)
 		{

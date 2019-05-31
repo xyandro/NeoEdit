@@ -69,7 +69,8 @@ namespace NeoEdit.Common
 		List<T> GetVariableExpressionResults<T>(string expression);
 		NEVariables GetVariables();
 		bool GetDialogResult(NECommand command, out object dialogResult, bool? multiStatus);
-		void HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer);
+		void PreHandleCommand(NECommand command, ref object preResult);
+		void HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult);
 		void PreHandleKey(Key key, bool shiftDown, bool controlDown, bool altDown, ref object previousData);
 		bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown, object previousData);
 		bool HandleText(string text);

@@ -320,10 +320,14 @@ namespace NeoEdit
 
 			try
 			{
+				var preResult = default(object);
+				foreach (var textEditorItem in Items.Where(item => item.Active).ToList())
+					textEditorItem.PreHandleCommand(command, ref preResult);
+
 				var answer = new AnswerResult();
 				foreach (var textEditorItem in Items.Where(item => item.Active).ToList())
 				{
-					textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, answer);
+					textEditorItem.HandleCommand(command, shiftDown, dialogResult, multiStatus, answer, preResult);
 					if (answer.Answer == MessageOptions.Cancel)
 						break;
 				}
