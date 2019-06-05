@@ -750,30 +750,6 @@ namespace NeoEdit
 		{
 			dialogResult = null;
 
-			switch (command.GetArea())
-			{
-				case "File": return GetDialogResultFile(command, ref dialogResult, multiStatus);
-				case "Edit": return GetDialogResultEdit(command, ref dialogResult, multiStatus);
-				case "Diff": return GetDialogResultDiff(command, ref dialogResult, multiStatus);
-				case "Files": return GetDialogResultFiles(command, ref dialogResult, multiStatus);
-				case "Expression": return GetDialogResultExpression(command, ref dialogResult, multiStatus);
-				case "Text": return GetDialogResultText(command, ref dialogResult, multiStatus);
-				case "Numeric": return GetDialogResultNumeric(command, ref dialogResult, multiStatus);
-				case "DateTime": return GetDialogResultDateTime(command, ref dialogResult, multiStatus);
-				case "Image": return GetDialogResultImage(command, ref dialogResult, multiStatus);
-				case "Table": return GetDialogResultTable(command, ref dialogResult, multiStatus);
-				case "Position": return GetDialogResultPosition(command, ref dialogResult, multiStatus);
-				case "Content": return GetDialogResultContent(command, ref dialogResult, multiStatus);
-				case "Network": return GetDialogResultNetwork(command, ref dialogResult, multiStatus);
-				case "Database": return GetDialogResultDatabase(command, ref dialogResult, multiStatus);
-				case "Select": return GetDialogResultSelect(command, ref dialogResult, multiStatus);
-				case "Region": return GetDialogResultRegion(command, ref dialogResult, multiStatus);
-				default: return true;
-			}
-		}
-
-		bool GetDialogResultFile(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
 			switch (command)
 			{
 				case NECommand.File_Save_SaveAsByExpression: dialogResult = FileFunctions.Command_File_Save_SaveAsByExpression_Dialog(this); break;
@@ -784,16 +760,6 @@ namespace NeoEdit
 				case NECommand.File_Encoding_ReopenWithEncoding: dialogResult = FileFunctions.Command_File_Encoding_ReopenWithEncoding_Dialog(this); break;
 				case NECommand.File_Encoding_LineEndings: dialogResult = FileFunctions.Command_File_Encoding_LineEndings_Dialog(this); break;
 				case NECommand.File_Encrypt: dialogResult = FileFunctions.Command_File_Encrypt_Dialog(this, multiStatus); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultEdit(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Edit_Find_Find: dialogResult = EditFunctions.Command_Edit_Find_Find_Dialog(this); break;
 				case NECommand.Edit_Find_MassFind: dialogResult = EditFunctions.Command_Edit_Find_MassFind_Dialog(this); break;
 				case NECommand.Edit_Find_Replace: dialogResult = EditFunctions.Command_Edit_Find_Replace_Dialog(this); break;
@@ -808,28 +774,8 @@ namespace NeoEdit
 				case NECommand.Edit_Data_Sign: dialogResult = EditFunctions.Command_Edit_Data_Sign_Dialog(this); break;
 				case NECommand.Edit_Sort: dialogResult = EditFunctions.Command_Edit_Sort_Dialog(this); break;
 				case NECommand.Edit_Convert: dialogResult = EditFunctions.Command_Edit_Convert_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultDiff(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Diff_IgnoreCharacters: dialogResult = DiffFunctions.Command_Diff_IgnoreCharacters_Dialog(this); break;
 				case NECommand.Diff_Fix_Whitespace: dialogResult = DiffFunctions.Command_Diff_Fix_Whitespace_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultFiles(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Files_Name_MakeAbsolute: dialogResult = FilesFunctions.Command_Files_Name_MakeAbsolute_Dialog(this); break;
 				case NECommand.Files_Name_MakeRelative: dialogResult = FilesFunctions.Command_Files_Name_MakeRelative_Dialog(this); break;
 				case NECommand.Files_Name_GetUnique: dialogResult = FilesFunctions.Command_Files_Name_GetUnique_Dialog(this); break;
@@ -852,30 +798,10 @@ namespace NeoEdit
 				case NECommand.Files_Operations_Encoding: dialogResult = FilesFunctions.Command_Files_Operations_Encoding_Dialog(this); break;
 				case NECommand.Files_Operations_SplitFile: dialogResult = FilesFunctions.Command_Files_Operations_SplitFile_Dialog(this); break;
 				case NECommand.Files_Operations_CombineFiles: dialogResult = FilesFunctions.Command_Files_Operations_CombineFiles_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultExpression(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Expression_Expression: dialogResult = ExpressionFunctions.Command_Expression_Expression_Dialog(this); break;
 				case NECommand.Expression_Copy: dialogResult = ExpressionFunctions.Command_Expression_Copy_Dialog(this); break;
 				case NECommand.Expression_SelectByExpression: dialogResult = ExpressionFunctions.Command_Expression_SelectByExpression_Dialog(this); break;
 				case NECommand.Expression_InlineVariables_Solve: dialogResult = ExpressionFunctions.Command_Expression_InlineVariables_Solve_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultText(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Text_Select_Trim: dialogResult = TextFunctions.Command_Text_Select_Trim_Dialog(this); break;
 				case NECommand.Text_Select_ByWidth: dialogResult = TextFunctions.Command_Text_Select_ByWidth_Dialog(this); break;
 				case NECommand.Text_Select_WholeWord: dialogResult = TextFunctions.Command_Text_Select_WholeBoundedWord_Dialog(this, true); break;
@@ -886,16 +812,6 @@ namespace NeoEdit
 				case NECommand.Text_RandomText: dialogResult = TextFunctions.Command_Text_RandomText_Dialog(this); break;
 				case NECommand.Text_ReverseRegEx: dialogResult = TextFunctions.Command_Text_ReverseRegEx_Dialog(this); break;
 				case NECommand.Text_FirstDistinct: dialogResult = TextFunctions.Command_Text_FirstDistinct_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultNumeric(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Numeric_ConvertBase: dialogResult = NumericFunctions.Command_Numeric_ConvertBase_Dialog(this); break;
 				case NECommand.Numeric_Series_Linear: dialogResult = NumericFunctions.Command_Numeric_Series_LinearGeometric_Dialog(this, true); break;
 				case NECommand.Numeric_Series_Geometric: dialogResult = NumericFunctions.Command_Numeric_Series_LinearGeometric_Dialog(this, false); break;
@@ -908,27 +824,7 @@ namespace NeoEdit
 				case NECommand.Numeric_RandomNumber: dialogResult = NumericFunctions.Command_Numeric_RandomNumber_Dialog(this); break;
 				case NECommand.Numeric_CombinationsPermutations: dialogResult = NumericFunctions.Command_Numeric_CombinationsPermutations_Dialog(this); break;
 				case NECommand.Numeric_MinMaxValues: dialogResult = NumericFunctions.Command_Numeric_MinMaxValues_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultDateTime(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.DateTime_Convert: dialogResult = DateTimeFunctions.Command_DateTime_Convert_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultImage(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Image_GrabColor: dialogResult = ImageFunctions.Command_Image_GrabColor_Dialog(this); break;
 				case NECommand.Image_GrabImage: dialogResult = ImageFunctions.Command_Image_GrabImage_Dialog(this); break;
 				case NECommand.Image_AdjustColor: dialogResult = ImageFunctions.Command_Image_AdjustColor_Dialog(this); break;
@@ -939,16 +835,6 @@ namespace NeoEdit
 				case NECommand.Image_Rotate: dialogResult = ImageFunctions.Command_Image_Rotate_Dialog(this); break;
 				case NECommand.Image_GIF_Animate: dialogResult = ImageFunctions.Command_Image_GIF_Animate_Dialog(this); break;
 				case NECommand.Image_GIF_Split: dialogResult = ImageFunctions.Command_Image_GIF_Split_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultTable(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Table_Convert: dialogResult = TableFunctions.Command_Table_Convert_Dialog(this); break;
 				case NECommand.Table_TextToTable: dialogResult = TableFunctions.Command_Table_TextToTable_Dialog(this); break;
 				case NECommand.Table_EditTable: dialogResult = TableFunctions.Command_Table_EditTable_Dialog(this); break;
@@ -958,86 +844,26 @@ namespace NeoEdit
 				case NECommand.Table_Database_GenerateInserts: dialogResult = TableFunctions.Command_Table_Database_GenerateInserts_Dialog(this); break;
 				case NECommand.Table_Database_GenerateUpdates: dialogResult = TableFunctions.Command_Table_Database_GenerateUpdates_Dialog(this); break;
 				case NECommand.Table_Database_GenerateDeletes: dialogResult = TableFunctions.Command_Table_Database_GenerateDeletes_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultPosition(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Position_Goto_Lines: dialogResult = PositionFunctions.Command_Position_Goto_Dialog(this, GotoType.Line); break;
 				case NECommand.Position_Goto_Columns: dialogResult = PositionFunctions.Command_Position_Goto_Dialog(this, GotoType.Column); break;
 				case NECommand.Position_Goto_Indexes: dialogResult = PositionFunctions.Command_Position_Goto_Dialog(this, GotoType.Index); break;
 				case NECommand.Position_Goto_Positions: dialogResult = PositionFunctions.Command_Position_Goto_Dialog(this, GotoType.Position); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultContent(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Content_Ancestor: dialogResult = ContentFunctions.Command_Content_Ancestor_Dialog(this); break;
 				case NECommand.Content_Attributes: dialogResult = ContentFunctions.Command_Content_Attributes_Dialog(this); break;
 				case NECommand.Content_WithAttribute: dialogResult = ContentFunctions.Command_Content_WithAttribute_Dialog(this); break;
 				case NECommand.Content_Children_WithAttribute: dialogResult = ContentFunctions.Command_Content_Children_WithAttribute_Dialog(this); break;
 				case NECommand.Content_Descendants_WithAttribute: dialogResult = ContentFunctions.Command_Content_Descendants_WithAttribute_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultNetwork(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Network_AbsoluteURL: dialogResult = NetworkFunctions.Command_Network_AbsoluteURL_Dialog(this); break;
 				case NECommand.Network_FetchFile: dialogResult = NetworkFunctions.Command_Network_FetchFile_Dialog(this); break;
 				case NECommand.Network_FetchStream: dialogResult = NetworkFunctions.Command_Network_FetchStream_Dialog(this); break;
 				case NECommand.Network_FetchPlaylist: dialogResult = NetworkFunctions.Command_Network_FetchPlaylist_Dialog(this); break;
 				case NECommand.Network_Ping: dialogResult = NetworkFunctions.Command_Network_Ping_Dialog(this); break;
 				case NECommand.Network_ScanPorts: dialogResult = NetworkFunctions.Command_Network_ScanPorts_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultDatabase(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Database_Connect: dialogResult = DatabaseFunctions.Command_Database_Connect_Dialog(this); break;
 				case NECommand.Database_Examine: DatabaseFunctions.Command_Database_Examine_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultSelect(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Select_Limit: dialogResult = SelectFunctions.Command_Select_Limit_Dialog(this); break;
 				case NECommand.Select_Repeats_ByCount: dialogResult = SelectFunctions.Command_Select_Repeats_ByCount_Dialog(this); break;
 				case NECommand.Select_Split: dialogResult = SelectFunctions.Command_Select_Split_Dialog(this); break;
-				default: return true;
-			}
-
-			return dialogResult != null;
-		}
-
-		bool GetDialogResultRegion(NECommand command, ref object dialogResult, bool? multiStatus)
-		{
-			switch (command)
-			{
 				case NECommand.Region_ModifyRegions: dialogResult = RegionFunctions.Command_Region_ModifyRegions_Dialog(this); break;
 				default: return true;
 			}
@@ -1046,14 +872,6 @@ namespace NeoEdit
 		}
 
 		public void PreHandleCommand(NECommand command, ref object preResult)
-		{
-			switch (command.GetArea())
-			{
-				case "Select": PreHandleCommandSelect(command, ref preResult); break;
-			}
-		}
-
-		void PreHandleCommandSelect(NECommand command, ref object preResult)
 		{
 			switch (command)
 			{
@@ -1076,46 +894,6 @@ namespace NeoEdit
 				};
 			}
 
-			switch (command.GetArea())
-			{
-				case "File": HandleCommandFile(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Edit": HandleCommandEdit(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Diff": HandleCommandDiff(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Files": HandleCommandFiles(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Expression": HandleCommandExpression(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Text": HandleCommandText(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Numeric": HandleCommandNumeric(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "DateTime": HandleCommandDateTime(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Image": HandleCommandImage(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Table": HandleCommandTable(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Position": HandleCommandPosition(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Content": HandleCommandContent(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Network": HandleCommandNetwork(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Database": HandleCommandDatabase(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Keys": HandleCommandKeys(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Select": HandleCommandSelect(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Region": HandleCommandRegion(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Macro": HandleCommandMacro(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-				case "Window": HandleCommandWindow(command, shiftDown, dialogResult, multiStatus, answer, preResult); break;
-			}
-
-			var end = DateTime.UtcNow;
-			var elapsed = (end - start).TotalMilliseconds;
-
-			if ((command != NECommand.Macro_TimeNextAction) && (timeNext))
-			{
-				timeNext = false;
-				new Message(WindowParent)
-				{
-					Title = "Timer",
-					Text = $"Elapsed time: {elapsed:n} ms",
-					Options = MessageOptions.Ok,
-				}.Show();
-			}
-		}
-
-		void HandleCommandFile(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
 			switch (command)
 			{
 				case NECommand.File_New_FromSelections: FileFunctions.Command_File_New_FromSelections(this); break;
@@ -1147,13 +925,6 @@ namespace NeoEdit
 				case NECommand.File_Encoding_LineEndings: FileFunctions.Command_File_Encoding_LineEndings(this, dialogResult as FileEncodingLineEndingsDialog.Result); break;
 				case NECommand.File_Encrypt: FileFunctions.Command_File_Encrypt(this, dialogResult as string); break;
 				case NECommand.File_Compress: FileFunctions.Command_File_Compress(this, multiStatus); break;
-			}
-		}
-
-		void HandleCommandEdit(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Edit_Undo: EditFunctions.Command_Edit_Undo(this); break;
 				case NECommand.Edit_Redo: EditFunctions.Command_Edit_Redo(this); break;
 				case NECommand.Edit_Copy_Copy: EditFunctions.Command_Edit_Copy_CutCopy(this, false); break;
@@ -1196,13 +967,6 @@ namespace NeoEdit
 				case NECommand.Edit_Navigate_JumpBy_Words: EditFunctions.Command_Edit_Navigate_JumpBy(this, JumpByType.Words); break;
 				case NECommand.Edit_Navigate_JumpBy_Numbers: EditFunctions.Command_Edit_Navigate_JumpBy(this, JumpByType.Numbers); break;
 				case NECommand.Edit_Navigate_JumpBy_Paths: EditFunctions.Command_Edit_Navigate_JumpBy(this, JumpByType.Paths); break;
-			}
-		}
-
-		void HandleCommandDiff(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Diff_Selections: DiffFunctions.Command_Diff_Selections(this); break;
 				case NECommand.Diff_SelectedFiles: DiffFunctions.Command_Diff_SelectedFiles(this); break;
 				case NECommand.Diff_VCSNormalFiles: DiffFunctions.Command_Diff_Diff_VCSNormalFiles(this); break;
@@ -1233,13 +997,6 @@ namespace NeoEdit
 				case NECommand.Diff_Fix_Encoding: DiffFunctions.Command_Diff_Fix_Encoding(this); break;
 				case NECommand.Diff_Select_Match: DiffFunctions.Command_Diff_Select_MatchDiff(this, true); break;
 				case NECommand.Diff_Select_Diff: DiffFunctions.Command_Diff_Select_MatchDiff(this, false); break;
-			}
-		}
-
-		void HandleCommandFiles(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Files_Name_Simplify: FilesFunctions.Command_Files_Name_Simplify(this); break;
 				case NECommand.Files_Name_MakeAbsolute: FilesFunctions.Command_Files_Name_MakeAbsolute(this, dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
 				case NECommand.Files_Name_MakeRelative: FilesFunctions.Command_Files_Name_MakeRelative(this, dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
@@ -1296,13 +1053,6 @@ namespace NeoEdit
 				case NECommand.Files_Operations_Encoding: FilesFunctions.Command_Files_Operations_Encoding(this, dialogResult as FilesOperationsEncodingDialog.Result); break;
 				case NECommand.Files_Operations_SplitFile: FilesFunctions.Command_Files_Operations_SplitFile(this, dialogResult as FilesOperationsSplitFileDialog.Result); break;
 				case NECommand.Files_Operations_CombineFiles: FilesFunctions.Command_Files_Operations_CombineFiles(this, dialogResult as FilesOperationsCombineFilesDialog.Result); break;
-			}
-		}
-
-		void HandleCommandExpression(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Expression_Expression: ExpressionFunctions.Command_Expression_Expression(this, dialogResult as GetExpressionDialog.Result); break;
 				case NECommand.Expression_Copy: ExpressionFunctions.Command_Expression_Copy(this, dialogResult as GetExpressionDialog.Result); break;
 				case NECommand.Expression_EvaluateSelected: ExpressionFunctions.Command_Expression_EvaluateSelected(this); break;
@@ -1311,13 +1061,6 @@ namespace NeoEdit
 				case NECommand.Expression_InlineVariables_Calculate: ExpressionFunctions.Command_Expression_InlineVariables_Calculate(this); break;
 				case NECommand.Expression_InlineVariables_Solve: ExpressionFunctions.Command_Expression_InlineVariables_Solve(this, dialogResult as ExpressionSolveDialog.Result, answer); break;
 				case NECommand.Expression_InlineVariables_IncludeInExpressions: ExpressionFunctions.Command_Expression_InlineVariables_IncludeInExpressions(this, multiStatus); break;
-			}
-		}
-
-		void HandleCommandText(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Text_Select_Trim: TextFunctions.Command_Text_Select_Trim(this, dialogResult as TextTrimDialog.Result); break;
 				case NECommand.Text_Select_ByWidth: TextFunctions.Command_Text_Select_ByWidth(this, dialogResult as TextWidthDialog.Result); break;
 				case NECommand.Text_Select_WholeWord: TextFunctions.Command_Text_Select_WholeBoundedWord(this, dialogResult as TextSelectWholeBoundedWordDialog.Result, true); break;
@@ -1342,13 +1085,6 @@ namespace NeoEdit
 				case NECommand.Text_FirstDistinct: TextFunctions.Command_Text_FirstDistinct(this, dialogResult as TextFirstDistinctDialog.Result); break;
 				case NECommand.Text_RepeatCount: TextFunctions.Command_Text_RepeatCount(this); break;
 				case NECommand.Text_RepeatIndex: TextFunctions.Command_Text_RepeatIndex(this); break;
-			}
-		}
-
-		void HandleCommandNumeric(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Numeric_Select_Min: NumericFunctions.Command_Numeric_Select_MinMax(this, false); break;
 				case NECommand.Numeric_Select_Max: NumericFunctions.Command_Numeric_Select_MinMax(this, true); break;
 				case NECommand.Numeric_Select_Fraction_Whole: NumericFunctions.Command_Numeric_Select_Fraction_Whole(this); break;
@@ -1384,23 +1120,9 @@ namespace NeoEdit
 				case NECommand.Numeric_RandomNumber: NumericFunctions.Command_Numeric_RandomNumber(this, dialogResult as NumericRandomNumberDialog.Result); break;
 				case NECommand.Numeric_CombinationsPermutations: NumericFunctions.Command_Numeric_CombinationsPermutations(this, dialogResult as NumericCombinationsPermutationsDialog.Result); break;
 				case NECommand.Numeric_MinMaxValues: NumericFunctions.Command_Numeric_MinMaxValues(this, dialogResult as NumericMinMaxValuesDialog.Result); break;
-			}
-		}
-
-		void HandleCommandDateTime(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.DateTime_Now: DateTimeFunctions.Command_DateTime_Now(this); break;
 				case NECommand.DateTime_UtcNow: DateTimeFunctions.Command_DateTime_UtcNow(this); break;
 				case NECommand.DateTime_Convert: DateTimeFunctions.Command_DateTime_Convert(this, dialogResult as DateTimeConvertDialog.Result); break;
-			}
-		}
-
-		void HandleCommandImage(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Image_GrabColor: ImageFunctions.Command_Image_GrabColor(this, dialogResult as ImageGrabColorDialog.Result); break;
 				case NECommand.Image_GrabImage: ImageFunctions.Command_Image_GrabImage(this, dialogResult as ImageGrabImageDialog.Result); break;
 				case NECommand.Image_AdjustColor: ImageFunctions.Command_Image_AdjustColor(this, dialogResult as ImageAdjustColorDialog.Result); break;
@@ -1413,13 +1135,6 @@ namespace NeoEdit
 				case NECommand.Image_Rotate: ImageFunctions.Command_Image_Rotate(this, dialogResult as ImageRotateDialog.Result); break;
 				case NECommand.Image_GIF_Animate: ImageFunctions.Command_Image_GIF_Animate(this, dialogResult as ImageGIFAnimateDialog.Result); break;
 				case NECommand.Image_GIF_Split: ImageFunctions.Command_Image_GIF_Split(this, dialogResult as ImageGIFSplitDialog.Result); break;
-			}
-		}
-
-		void HandleCommandTable(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Table_DetectType: TableFunctions.Command_Table_DetectType(this); break;
 				case NECommand.Table_Convert: TableFunctions.Command_Table_Convert(this, dialogResult as TableConvertDialog.Result); break;
 				case NECommand.Table_TextToTable: TableFunctions.Command_Table_TextToTable(this, dialogResult as TableTextToTableDialog.Result); break;
@@ -1444,13 +1159,6 @@ namespace NeoEdit
 				case NECommand.Table_Database_GenerateInserts: TableFunctions.Command_Table_Database_GenerateInserts(this, dialogResult as TableDatabaseGenerateInsertsDialog.Result); break;
 				case NECommand.Table_Database_GenerateUpdates: TableFunctions.Command_Table_Database_GenerateUpdates(this, dialogResult as TableDatabaseGenerateUpdatesDialog.Result); break;
 				case NECommand.Table_Database_GenerateDeletes: TableFunctions.Command_Table_Database_GenerateDeletes(this, dialogResult as TableDatabaseGenerateDeletesDialog.Result); break;
-			}
-		}
-
-		void HandleCommandPosition(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Position_Goto_Lines: PositionFunctions.Command_Position_Goto(this, GotoType.Line, shiftDown, dialogResult as PositionGotoDialog.Result); break;
 				case NECommand.Position_Goto_Columns: PositionFunctions.Command_Position_Goto(this, GotoType.Column, shiftDown, dialogResult as PositionGotoDialog.Result); break;
 				case NECommand.Position_Goto_Indexes: PositionFunctions.Command_Position_Goto(this, GotoType.Index, shiftDown, dialogResult as PositionGotoDialog.Result); break;
@@ -1459,13 +1167,6 @@ namespace NeoEdit
 				case NECommand.Position_Copy_Columns: PositionFunctions.Command_Position_Copy(this, GotoType.Column, !shiftDown); break;
 				case NECommand.Position_Copy_Indexes: PositionFunctions.Command_Position_Copy(this, GotoType.Index, !shiftDown); break;
 				case NECommand.Position_Copy_Positions: PositionFunctions.Command_Position_Copy(this, GotoType.Position, false); break;
-			}
-		}
-
-		void HandleCommandContent(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Content_Type_SetFromExtension: ContentFunctions.Command_Content_Type_SetFromExtension(this); break;
 				case NECommand.Content_Type_None: ContentFunctions.Command_Content_Type(this, ParserType.None); break;
 				case NECommand.Content_Type_Balanced: ContentFunctions.Command_Content_Type(this, ParserType.Balanced); break;
@@ -1509,13 +1210,6 @@ namespace NeoEdit
 				case NECommand.Content_Navigate_Row: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Row, true); break;
 				case NECommand.Content_Navigate_Column: ContentFunctions.Command_Content_Navigate(this, ParserNode.ParserNavigationDirectionEnum.Column, true); break;
 				case NECommand.Content_KeepSelections: ContentFunctions.Command_Content_KeepSelections(this, multiStatus); break;
-			}
-		}
-
-		void HandleCommandNetwork(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Network_AbsoluteURL: NetworkFunctions.Command_Network_AbsoluteURL(this, dialogResult as NetworkAbsoluteURLDialog.Result); break;
 				case NECommand.Network_Fetch: NetworkFunctions.Command_Network_Fetch(this); break;
 				case NECommand.Network_FetchHex: NetworkFunctions.Command_Network_Fetch(this, Coder.CodePage.Hex); break;
@@ -1527,23 +1221,9 @@ namespace NeoEdit
 				case NECommand.Network_AdaptersInfo: NetworkFunctions.Command_Network_AdaptersInfo(this); break;
 				case NECommand.Network_Ping: NetworkFunctions.Command_Network_Ping(this, dialogResult as NetworkPingDialog.Result); break;
 				case NECommand.Network_ScanPorts: NetworkFunctions.Command_Network_ScanPorts(this, dialogResult as NetworkScanPortsDialog.Result); break;
-			}
-		}
-
-		void HandleCommandDatabase(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Database_Connect: DatabaseFunctions.Command_Database_Connect(this, dialogResult as DatabaseConnectDialog.Result); break;
 				case NECommand.Database_ExecuteQuery: DatabaseFunctions.Command_Database_ExecuteQuery(this); break;
 				case NECommand.Database_GetSproc: DatabaseFunctions.Command_Database_GetSproc(this); break;
-			}
-		}
-
-		void HandleCommandKeys(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Keys_Set_KeysCaseSensitive: KeysFunctions.Command_Keys_Set(this, 0, true); break;
 				case NECommand.Keys_Set_KeysCaseInsensitive: KeysFunctions.Command_Keys_Set(this, 0, false); break;
 				case NECommand.Keys_Set_Values1: KeysFunctions.Command_Keys_Set(this, 1); break;
@@ -1584,13 +1264,6 @@ namespace NeoEdit
 				case NECommand.Keys_Replace_Values7: KeysFunctions.Command_Keys_Replace(this, 7); break;
 				case NECommand.Keys_Replace_Values8: KeysFunctions.Command_Keys_Replace(this, 8); break;
 				case NECommand.Keys_Replace_Values9: KeysFunctions.Command_Keys_Replace(this, 9); break;
-			}
-		}
-
-		void HandleCommandSelect(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Select_All: SelectFunctions.Command_Select_All(this); break;
 				case NECommand.Select_Nothing: SelectFunctions.Command_Select_Nothing(this); break;
 				case NECommand.Select_Limit: SelectFunctions.Command_Select_Limit(this, dialogResult as SelectLimitDialog.Result); break;
@@ -1623,13 +1296,6 @@ namespace NeoEdit
 				case NECommand.Select_Selection_Remove: SelectFunctions.Command_Select_Selection_Remove(this); break;
 				case NECommand.Select_Selection_RemoveBeforeCurrent: SelectFunctions.Command_Select_Selection_RemoveBeforeCurrent(this); break;
 				case NECommand.Select_Selection_RemoveAfterCurrent: SelectFunctions.Command_Select_Selection_RemoveAfterCurrent(this); break;
-			}
-		}
-
-		void HandleCommandRegion(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Region_ModifyRegions: RegionFunctions.Command_Region_ModifyRegions(this, dialogResult as RegionModifyRegionsDialog.Result); break;
 				case NECommand.Region_SetSelections_Region1: RegionFunctions.Command_Region_SetSelections_Region(this, 1); break;
 				case NECommand.Region_SetSelections_Region2: RegionFunctions.Command_Region_SetSelections_Region(this, 2); break;
@@ -1818,24 +1484,24 @@ namespace NeoEdit
 				case NECommand.Region_Select_WithoutEnclosingRegion_Region7: RegionFunctions.Command_Region_Select_WithoutEnclosingRegion_Region(this, 7); break;
 				case NECommand.Region_Select_WithoutEnclosingRegion_Region8: RegionFunctions.Command_Region_Select_WithoutEnclosingRegion_Region(this, 8); break;
 				case NECommand.Region_Select_WithoutEnclosingRegion_Region9: RegionFunctions.Command_Region_Select_WithoutEnclosingRegion_Region(this, 9); break;
-			}
-		}
-
-		void HandleCommandMacro(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Macro_RepeatLastAction: Command_Macro_RepeatLastAction(); break;
 				case NECommand.Macro_TimeNextAction: timeNext = !timeNext; break;
-			}
-		}
-
-		void HandleCommandWindow(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
-		{
-			switch (command)
-			{
 				case NECommand.Window_TabIndex: WindowFunctions.Command_Window_TabIndex(this, false); break;
 				case NECommand.Window_ActiveTabIndex: WindowFunctions.Command_Window_TabIndex(this, true); break;
+			}
+
+			var end = DateTime.UtcNow;
+			var elapsed = (end - start).TotalMilliseconds;
+
+			if ((command != NECommand.Macro_TimeNextAction) && (timeNext))
+			{
+				timeNext = false;
+				new Message(WindowParent)
+				{
+					Title = "Timer",
+					Text = $"Elapsed time: {elapsed:n} ms",
+					Options = MessageOptions.Ok,
+				}.Show();
 			}
 		}
 
