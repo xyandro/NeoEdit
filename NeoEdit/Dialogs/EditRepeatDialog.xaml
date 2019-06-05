@@ -1,4 +1,4 @@
-﻿<commonControls:ModalDialog x:Name="self" x:Class="NeoEdit.MenuEdit.Dialogs.EditRepeatDialog"
+﻿<commonControls:ModalDialog x:Name="self" x:Class="NeoEdit.Dialogs.EditRepeatDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:commonControls="clr-namespace:NeoEdit.Common.Controls;assembly=NeoEdit.Common"

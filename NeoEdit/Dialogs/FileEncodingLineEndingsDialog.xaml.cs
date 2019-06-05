@@ -2,7 +2,7 @@
 using System.Windows;
 using NeoEdit.Common.Controls;
 
-namespace NeoEdit.MenuFile.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class FileEncodingLineEndingsDialog
 	{

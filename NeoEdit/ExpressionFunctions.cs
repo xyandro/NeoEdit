@@ -6,9 +6,9 @@ using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
-using NeoEdit.MenuExpression.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuExpression
+namespace NeoEdit
 {
 	public static class ExpressionFunctions
 	{

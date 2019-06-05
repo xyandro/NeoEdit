@@ -6,7 +6,7 @@ using System.Windows;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.MenuDatabase.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class DatabaseExamineDialog
 	{

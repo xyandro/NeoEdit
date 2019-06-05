@@ -8,7 +8,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.MenuWindow.Dialogs
+namespace NeoEdit.Dialogs
 {
 	class WindowActiveTabsDialog : ModalDialog
 	{

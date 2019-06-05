@@ -4,9 +4,9 @@ using System.Linq;
 using Antlr4.Runtime;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuContent.Content.HTML.Parser;
+using NeoEdit.Content.HTML.Parser;
 
-namespace NeoEdit.MenuContent.Content.HTML
+namespace NeoEdit.Content.HTML
 {
 	class HTMLVisitor : HTMLParserBaseVisitor<ParserNode>
 	{

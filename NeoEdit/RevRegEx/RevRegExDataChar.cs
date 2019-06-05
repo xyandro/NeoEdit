@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.MenuText.RevRegEx
+namespace NeoEdit.RevRegEx
 {
 	class RevRegExDataChar : RevRegExData
 	{

@@ -3,7 +3,7 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.MenuText.RevRegEx
+namespace NeoEdit.RevRegEx
 {
 	class RevRegExDataRepeat : RevRegExData
 	{

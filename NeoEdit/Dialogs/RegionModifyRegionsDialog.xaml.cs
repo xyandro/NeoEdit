@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 
-namespace NeoEdit.MenuRegion.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class RegionModifyRegionsDialog
 	{

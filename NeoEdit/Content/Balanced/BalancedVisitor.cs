@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuContent.Content.Balanced.Parser;
+using NeoEdit.Content.Balanced.Parser;
 
-namespace NeoEdit.MenuContent.Content.Balanced
+namespace NeoEdit.Content.Balanced
 {
 	class BalancedVisitor : BalancedBaseVisitor<ParserNode>
 	{

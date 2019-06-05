@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using NeoEdit.Common;
 using Newtonsoft.Json.Linq;
 
-namespace NeoEdit.MenuNetwork
+namespace NeoEdit
 {
 	static class YouTubeDL
 	{

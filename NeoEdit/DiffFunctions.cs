@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
-using NeoEdit.MenuDiff.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuDiff
+namespace NeoEdit
 {
 	public static class DiffFunctions
 	{

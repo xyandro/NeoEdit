@@ -5,9 +5,9 @@ using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuContent.Content.SQL.Parser;
+using NeoEdit.Content.SQL.Parser;
 
-namespace NeoEdit.MenuContent.Content.SQL
+namespace NeoEdit.Content.SQL
 {
 	class SQLVisitor : SQLParserBaseVisitor<ParserNode>
 	{

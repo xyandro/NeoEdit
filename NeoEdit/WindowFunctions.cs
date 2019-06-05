@@ -4,9 +4,9 @@ using System.Text;
 using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Transform;
-using NeoEdit.MenuWindow.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuWindow
+namespace NeoEdit
 {
 	public static class WindowFunctions
 	{

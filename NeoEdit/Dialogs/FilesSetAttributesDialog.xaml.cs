@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Common.Controls;
 
-namespace NeoEdit.MenuFiles.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class FilesSetAttributesDialog
 	{

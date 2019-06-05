@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using NeoEdit.Common;
 
-namespace NeoEdit.MenuText.RevRegEx
+namespace NeoEdit.RevRegEx
 {
 	class RevRegExDataList : RevRegExData
 	{

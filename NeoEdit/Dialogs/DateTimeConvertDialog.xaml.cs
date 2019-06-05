@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 
-namespace NeoEdit.MenuDateTime.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class DateTimeConvertDialog
 	{

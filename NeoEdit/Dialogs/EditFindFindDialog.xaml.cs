@@ -5,7 +5,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 
-namespace NeoEdit.MenuEdit.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class EditFindFindDialog
 	{

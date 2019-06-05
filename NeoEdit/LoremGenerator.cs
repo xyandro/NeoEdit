@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NeoEdit.Common;
 
-namespace NeoEdit.MenuText
+namespace NeoEdit
 {
 	class LoremGenerator
 	{

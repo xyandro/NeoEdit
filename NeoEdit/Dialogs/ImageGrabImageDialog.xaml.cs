@@ -5,7 +5,7 @@ using System.Windows;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.MenuImage.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class ImageGrabImageDialog
 	{

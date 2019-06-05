@@ -7,9 +7,9 @@ using System.Reflection;
 using System.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Dialogs;
-using NeoEdit.MenuHelp.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuHelp
+namespace NeoEdit
 {
 	public static class HelpFunctions
 	{

@@ -13,7 +13,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.MenuImage.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class ImageGrabColorDialog
 	{

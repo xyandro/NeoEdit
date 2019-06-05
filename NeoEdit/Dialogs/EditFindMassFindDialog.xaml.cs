@@ -3,7 +3,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.MenuEdit.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class EditFindMassFindDialog
 	{

@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
-using NeoEdit.MenuPosition.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuPosition
+namespace NeoEdit
 {
 	public static class PositionFunctions
 	{

@@ -10,7 +10,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.MenuTable.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class TableDisplay
 	{

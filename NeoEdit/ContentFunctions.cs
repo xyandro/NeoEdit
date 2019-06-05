@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuContent.Content;
-using NeoEdit.MenuContent.Dialogs;
+using NeoEdit.Content;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuContent
+namespace NeoEdit
 {
 	public static class ContentFunctions
 	{

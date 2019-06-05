@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.MenuFiles.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class FilesSelectByVersionControlStatusDialog
 	{

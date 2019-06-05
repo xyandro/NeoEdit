@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using NeoEdit.Common.Controls;
 
-namespace NeoEdit.MenuNumeric.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class NumericCombinationsPermutationsDialog
 	{

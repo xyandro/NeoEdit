@@ -3,9 +3,9 @@ using System.Linq;
 using Antlr4.Runtime;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuContent.Content.JSON.Parser;
+using NeoEdit.Content.JSON.Parser;
 
-namespace NeoEdit.MenuContent.Content.JSON
+namespace NeoEdit.Content.JSON
 {
 	class JSONVisitor : JSONBaseVisitor<ParserNode>
 	{

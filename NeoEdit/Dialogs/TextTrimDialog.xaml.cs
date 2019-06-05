@@ -3,7 +3,7 @@ using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 
-namespace NeoEdit.MenuText.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class TextTrimDialog
 	{

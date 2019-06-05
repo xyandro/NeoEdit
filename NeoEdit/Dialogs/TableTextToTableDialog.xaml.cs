@@ -9,7 +9,7 @@ using System.Windows.Shapes;
 using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 
-namespace NeoEdit.MenuTable.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class TableTextToTableDialog
 	{

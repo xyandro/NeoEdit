@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuContent.Content.Columns.Parser;
+using NeoEdit.Content.Columns.Parser;
 
-namespace NeoEdit.MenuContent.Content.Columns
+namespace NeoEdit.Content.Columns
 {
 	class ColumnsVisitor : ColumnsBaseVisitor<ParserNode>
 	{

@@ -15,9 +15,9 @@ using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
-using NeoEdit.MenuFiles.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuFiles
+namespace NeoEdit
 {
 	public static class FilesFunctions
 	{

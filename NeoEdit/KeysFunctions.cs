@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using NeoEdit.Common;
 
-namespace NeoEdit.MenuKeys
+namespace NeoEdit
 {
 	public static class KeysFunctions
 	{

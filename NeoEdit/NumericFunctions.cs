@@ -8,9 +8,9 @@ using System.Text.RegularExpressions;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
-using NeoEdit.MenuNumeric.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuNumeric
+namespace NeoEdit
 {
 	public static class NumericFunctions
 	{

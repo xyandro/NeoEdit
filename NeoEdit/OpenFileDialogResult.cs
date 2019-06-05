@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.MenuFile
+namespace NeoEdit
 {
 	public class OpenFileDialogResult
 	{

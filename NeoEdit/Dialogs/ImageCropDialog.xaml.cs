@@ -9,7 +9,7 @@ using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.MenuImage.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class ImageCropDialog
 	{

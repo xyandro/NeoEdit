@@ -4,7 +4,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.MenuNumeric.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class NumericMinMaxValuesDialog
 	{

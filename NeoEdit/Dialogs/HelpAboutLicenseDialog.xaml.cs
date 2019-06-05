@@ -3,7 +3,7 @@ using System.Text;
 using System.Windows;
 using NeoEdit.Common.Controls;
 
-namespace NeoEdit.MenuHelp.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class HelpAboutLicenseDialog
 	{

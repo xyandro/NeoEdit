@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using NeoEdit.Common.Controls;
 
-namespace NeoEdit.MenuWindow.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class WindowCustomGridDialog
 	{

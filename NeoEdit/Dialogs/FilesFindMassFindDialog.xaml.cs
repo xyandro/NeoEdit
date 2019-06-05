@@ -10,7 +10,7 @@ using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.MenuFiles.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class FilesFindMassFindDialog
 	{

@@ -10,7 +10,7 @@ using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.MenuDatabase.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class DatabaseConnectDialog
 	{

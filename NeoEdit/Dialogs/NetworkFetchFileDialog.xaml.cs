@@ -3,7 +3,7 @@ using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.MenuNetwork.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class NetworkFetchFileDialog
 	{

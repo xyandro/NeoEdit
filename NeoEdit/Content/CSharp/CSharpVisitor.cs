@@ -6,9 +6,9 @@ using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuContent.Content.CSharp.Parser;
+using NeoEdit.Content.CSharp.Parser;
 
-namespace NeoEdit.MenuContent.Content.CSharp
+namespace NeoEdit.Content.CSharp
 {
 	class CSharpVisitor : CSharpParserBaseVisitor<object>
 	{

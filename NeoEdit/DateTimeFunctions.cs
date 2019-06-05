@@ -2,9 +2,9 @@
 using System.Data;
 using System.Linq;
 using NeoEdit.Common;
-using NeoEdit.MenuDateTime.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuDateTime
+namespace NeoEdit
 {
 	public static class DateTimeFunctions
 	{

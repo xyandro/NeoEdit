@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuContent.Content;
+using NeoEdit.Content;
 
-namespace NeoEdit.MenuContent.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class ContentAttributeDialog
 	{

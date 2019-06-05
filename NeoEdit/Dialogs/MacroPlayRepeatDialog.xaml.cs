@@ -3,7 +3,7 @@ using System.Windows;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 
-namespace NeoEdit.MenuMacro.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class MacroPlayRepeatDialog
 	{

@@ -6,9 +6,9 @@ using NeoEdit.Common;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.NEClipboards;
-using NeoEdit.MenuMacro.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuMacro
+namespace NeoEdit
 {
 	public static class MacroFunctions
 	{

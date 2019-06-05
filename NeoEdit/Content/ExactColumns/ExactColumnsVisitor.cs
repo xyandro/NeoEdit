@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuContent.Content.ExactColumns.Parser;
+using NeoEdit.Content.ExactColumns.Parser;
 
-namespace NeoEdit.MenuContent.Content.ExactColumns
+namespace NeoEdit.Content.ExactColumns
 {
 	class ExactColumnsVisitor : ExactColumnsBaseVisitor<ParserNode>
 	{

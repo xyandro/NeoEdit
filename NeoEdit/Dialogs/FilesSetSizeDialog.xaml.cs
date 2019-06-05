@@ -4,7 +4,7 @@ using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.MenuFiles.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class FilesSetSizeDialog
 	{

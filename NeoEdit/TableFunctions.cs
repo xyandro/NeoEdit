@@ -5,9 +5,9 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
-using NeoEdit.MenuTable.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuTable
+namespace NeoEdit
 {
 	public static class TableFunctions
 	{

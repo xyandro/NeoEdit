@@ -1,4 +1,4 @@
-﻿namespace NeoEdit.MenuPosition
+﻿namespace NeoEdit
 {
 	public enum GotoType
 	{

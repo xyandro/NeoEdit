@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.MenuNetwork
+namespace NeoEdit
 {
 	class PortScanner
 	{

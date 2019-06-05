@@ -9,7 +9,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Converters;
 
-namespace NeoEdit.MenuTable.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class JoinDisplay
 	{

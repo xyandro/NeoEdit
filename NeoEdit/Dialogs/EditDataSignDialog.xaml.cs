@@ -8,7 +8,7 @@ using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.MenuEdit.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class EditDataSignDialog
 	{

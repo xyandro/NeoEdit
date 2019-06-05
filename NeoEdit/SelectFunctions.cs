@@ -5,9 +5,9 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuSelect.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuSelect
+namespace NeoEdit
 {
 	public static class SelectFunctions
 	{

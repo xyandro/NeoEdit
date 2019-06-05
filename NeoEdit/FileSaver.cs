@@ -7,7 +7,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.MenuFile
+namespace NeoEdit
 {
 	public static class FileSaver
 	{

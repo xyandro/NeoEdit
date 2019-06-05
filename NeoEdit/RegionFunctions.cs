@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NeoEdit.Common;
-using NeoEdit.MenuRegion.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuRegion
+namespace NeoEdit
 {
 	public static class RegionFunctions
 	{

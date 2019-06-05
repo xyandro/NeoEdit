@@ -3,7 +3,7 @@ using System.Windows;
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 
-namespace NeoEdit.MenuFiles.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class FilesFindTextDialog
 	{

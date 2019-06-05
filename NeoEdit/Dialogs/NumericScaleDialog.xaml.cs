@@ -2,7 +2,7 @@
 using NeoEdit.Common.Controls;
 using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.MenuNumeric.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class NumericScaleDialog
 	{

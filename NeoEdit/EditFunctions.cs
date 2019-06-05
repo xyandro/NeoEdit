@@ -12,9 +12,9 @@ using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
-using NeoEdit.MenuEdit.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuEdit
+namespace NeoEdit
 {
 	public static class EditFunctions
 	{

@@ -6,7 +6,7 @@ using NeoEdit.Common.Controls;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.MenuEdit.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class EditDataCompressDialog
 	{

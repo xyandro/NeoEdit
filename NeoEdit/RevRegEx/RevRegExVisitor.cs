@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuText.RevRegEx.Parser;
+using NeoEdit.RevRegEx.Parser;
 
-namespace NeoEdit.MenuText.RevRegEx
+namespace NeoEdit.RevRegEx
 {
 	class RevRegExVisitor : RevRegExParserBaseVisitor<RevRegExData>
 	{

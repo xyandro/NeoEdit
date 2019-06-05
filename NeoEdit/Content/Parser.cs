@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuContent.Content.Balanced;
-using NeoEdit.MenuContent.Content.Columns;
-using NeoEdit.MenuContent.Content.CSharp;
-using NeoEdit.MenuContent.Content.ExactColumns;
-using NeoEdit.MenuContent.Content.HTML;
-using NeoEdit.MenuContent.Content.JSON;
-using NeoEdit.MenuContent.Content.SQL;
-using NeoEdit.MenuContent.Content.TCSV;
-using NeoEdit.MenuContent.Content.XML;
+using NeoEdit.Content.Balanced;
+using NeoEdit.Content.Columns;
+using NeoEdit.Content.CSharp;
+using NeoEdit.Content.ExactColumns;
+using NeoEdit.Content.HTML;
+using NeoEdit.Content.JSON;
+using NeoEdit.Content.SQL;
+using NeoEdit.Content.TCSV;
+using NeoEdit.Content.XML;
 
-namespace NeoEdit.MenuContent.Content
+namespace NeoEdit.Content
 {
 	static public class Parser
 	{

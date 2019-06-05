@@ -5,9 +5,9 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
-using NeoEdit.MenuImage.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuImage
+namespace NeoEdit
 {
 	public static class ImageFunctions
 	{

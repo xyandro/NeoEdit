@@ -12,9 +12,9 @@ using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Transform;
-using NeoEdit.MenuFile.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuFile
+namespace NeoEdit
 {
 	public static class FileFunctions
 	{

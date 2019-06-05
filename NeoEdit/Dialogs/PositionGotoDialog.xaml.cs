@@ -3,7 +3,7 @@ using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.MenuPosition.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class PositionGotoDialog
 	{

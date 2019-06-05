@@ -5,10 +5,10 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Parsing;
-using NeoEdit.MenuText.Dialogs;
-using NeoEdit.MenuText.RevRegEx;
+using NeoEdit.Dialogs;
+using NeoEdit.RevRegEx;
 
-namespace NeoEdit.MenuText
+namespace NeoEdit
 {
 	public static class TextFunctions
 	{

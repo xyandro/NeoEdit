@@ -9,7 +9,7 @@ using NeoEdit.Common.Controls;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.MenuSelect.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class SelectSplitDialog
 	{

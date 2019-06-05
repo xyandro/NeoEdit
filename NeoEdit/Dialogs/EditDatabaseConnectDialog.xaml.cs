@@ -14,7 +14,7 @@ using NeoEdit.Common.Converters;
 using NeoEdit.Common.Dialogs;
 using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.MenuDatabase.Dialogs
+namespace NeoEdit.Dialogs
 {
 	partial class EditDatabaseConnectDialog
 	{

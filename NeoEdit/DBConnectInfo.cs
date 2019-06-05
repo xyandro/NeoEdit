@@ -6,7 +6,7 @@ using System.Data.SqlServerCe;
 using MySql.Data.MySqlClient;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.MenuDatabase
+namespace NeoEdit
 {
 	public class DBConnectInfo
 	{

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
-using NeoEdit.MenuDatabase.Dialogs;
+using NeoEdit.Dialogs;
 
-namespace NeoEdit.MenuDatabase
+namespace NeoEdit
 {
 	public static class DatabaseFunctions
 	{
