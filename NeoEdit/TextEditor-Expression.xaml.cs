@@ -10,10 +10,8 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class ExpressionFunctions
+	partial class TextEditor
 	{
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static void CalculateInlineVariables(ITextEditor te, List<InlineVariable> inlineVars)
 		{
 			var variables = te.GetVariables();

@@ -9,7 +9,7 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class PositionFunctions
+	partial class TextEditor
 	{
 		class GotoRange
 		{
@@ -126,8 +126,6 @@ namespace NeoEdit
 				return Range.FromIndex(start.Value, 0);
 			}
 		}
-
-		static public void Load() { } // Doesn't do anything except load the assembly
 
 		static public PositionGotoDialog.Result Command_Position_Goto_Dialog(ITextEditor te, GotoType gotoType)
 		{

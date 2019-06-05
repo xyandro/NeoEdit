@@ -9,7 +9,7 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class DatabaseFunctions
+	partial class TextEditor
 	{
 		class QueryResult
 		{
@@ -17,8 +17,6 @@ namespace NeoEdit
 			public string TableName { get; set; }
 			public Table Table { get; set; }
 		}
-
-		static public void Load() { } // Doesn't do anything except load the assembly
 
 		static string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
 

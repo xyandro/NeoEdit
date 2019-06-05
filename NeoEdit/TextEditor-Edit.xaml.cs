@@ -16,12 +16,8 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class EditFunctions
+	partial class TextEditor
 	{
-		static ThreadSafeRandom random = new ThreadSafeRandom();
-
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static void FindNext(ITextEditor te, bool forward, bool selecting)
 		{
 			if (te.Searches.Count == 0)

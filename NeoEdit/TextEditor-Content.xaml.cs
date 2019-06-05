@@ -8,10 +8,8 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class ContentFunctions
+	partial class TextEditor
 	{
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static void ContentReplaceSelections(ITextEditor te, IEnumerable<ParserBase> nodes)
 		{
 			nodes = nodes.NonNull().Distinct().OrderBy(node => node.Start).ThenBy(node => node.End);

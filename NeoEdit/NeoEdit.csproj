@@ -169,9 +169,6 @@
     <None Include="Content\XML\Source\XMLLexer.g4" />
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
-    <Compile Include="ContentFunctions.cs" />
-    <Compile Include="DatabaseFunctions.cs" />
-    <Compile Include="DateTimeFunctions.cs" />
     <Compile Include="DBConnectInfo.cs" />
     <Page Include="Dialogs\ContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -797,19 +794,13 @@
     <Compile Include="Dialogs\WindowFontSizeDialog.xaml.cs">
       <DependentUpon>WindowFontSizeDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DiffFunctions.cs" />
-    <Compile Include="EditFunctions.cs" />
     <Compile Include="Enums\GetPathType.cs" />
     <Compile Include="Enums\GotoType.cs" />
     <Compile Include="Enums\SortScope.cs" />
     <Compile Include="Enums\SortType.cs" />
     <Compile Include="Enums\TimestampType.cs" />
-    <Compile Include="ExpressionFunctions.cs" />
-    <Compile Include="FileFunctions.cs" />
     <Compile Include="FileSaver.cs" />
-    <Compile Include="FilesFunctions.cs" />
     <Compile Include="GIFWriter.cs" />
-    <Compile Include="HelpFunctions.cs" />
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
@@ -817,11 +808,8 @@
     <Compile Include="Highlighting\HighlightJSON.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
-    <Compile Include="ImageFunctions.cs" />
     <Compile Include="InstanceManager.cs" />
-    <Compile Include="KeysFunctions.cs" />
     <Compile Include="LoremGenerator.cs" />
-    <Compile Include="MacroFunctions.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
     <Page Include="NEMenu.xaml">
@@ -831,19 +819,15 @@
     <Compile Include="NEMenu.xaml.cs">
       <DependentUpon>NEMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="NetworkFunctions.cs" />
     <Compile Include="NoDelayClipboard.cs" />
-    <Compile Include="NumericFunctions.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="OpenFileDialogResult.cs" />
     <Compile Include="PortScanner.cs" />
-    <Compile Include="PositionFunctions.cs" />
     <Compile Include="ProcessExtension.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RegionFunctions.cs" />
     <EmbeddedResource Include="Resources\Unicode.dat" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
@@ -857,14 +841,81 @@
     <Compile Include="RevRegEx\RevRegExVisitor.cs" />
     <None Include="RevRegEx\Source\RevRegExLexer.g4" />
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
-    <Compile Include="SelectFunctions.cs" />
-    <Compile Include="TableFunctions.cs" />
+    <Compile Include="Tabs-Diff.xaml.cs">
+      <DependentUpon>Tabs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-File.xaml.cs">
+      <DependentUpon>Tabs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-Help.xaml.cs">
+      <DependentUpon>Tabs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-Macro.xaml.cs">
+      <DependentUpon>Tabs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-Window.xaml.cs">
+      <DependentUpon>Tabs.xaml</DependentUpon>
+    </Compile>
     <Page Include="Tabs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="Tabs.xaml.cs">
       <DependentUpon>Tabs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Content.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Database.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-DateTime.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Diff.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Edit.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Expression.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-File.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Files.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Image.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Keys.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Network.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Numeric.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Position.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Region.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Select.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Table.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Text.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditor-Window.xaml.cs">
+      <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Page Include="TextEditor.xaml">
       <SubType>Designer</SubType>
@@ -873,8 +924,6 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextFunctions.cs" />
-    <Compile Include="WindowFunctions.cs" />
     <Resource Include="Words.txt" />
     <EmbeddedResource Include="Words.txt.gz" />
     <Compile Include="YouTubeDL.cs" />

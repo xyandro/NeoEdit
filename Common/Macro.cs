@@ -162,7 +162,6 @@ namespace NeoEdit.Common
 
 		public static Macro Load(string fileName = null, bool macroDirRelative = false)
 		{
-			ITabsCreator.LoadAllAssemblies();
 			if (fileName == null)
 			{
 				fileName = Macro.ChooseMacro();

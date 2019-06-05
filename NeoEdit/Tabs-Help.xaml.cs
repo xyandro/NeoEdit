@@ -11,10 +11,8 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class HelpFunctions
+	partial class Tabs
 	{
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static public void Command_Help_About() => HelpAboutDialog.Run();
 
 		static public void Command_Help_Update()

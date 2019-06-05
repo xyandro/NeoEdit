@@ -9,7 +9,7 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class SelectFunctions
+	partial class TextEditor
 	{
 		enum SelectSplitEnum
 		{
@@ -22,8 +22,6 @@ namespace NeoEdit
 			InterpolatedString = 32 | String,
 			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
 		}
-
-		static public void Load() { } // Doesn't do anything except load the assembly
 
 		static IEnumerable<Range> FindRepetitions(ITextEditor te, Range inputRange)
 		{

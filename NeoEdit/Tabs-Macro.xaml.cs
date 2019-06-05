@@ -10,10 +10,8 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class MacroFunctions
+	partial class Tabs
 	{
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static string QuickMacro(int num) => $"QuickText{num}.xml";
 
 		static void ValidateNoCurrentMacro(ITabs tabs)

@@ -8,10 +8,8 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class WindowFunctions
+	partial class Tabs
 	{
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static public void Command_Window_NewWindow() => ITabsCreator.CreateTabs(true);
 
 		static public void Command_Window_Type(ITabs tabs, TabsLayout layout, WindowCustomGridDialog.Result result) => tabs.SetLayout(layout, result?.Columns, result?.Rows);
@@ -22,11 +20,6 @@ namespace NeoEdit
 		{
 			WindowActiveTabsDialog.Run(tabs);
 			tabs.UpdateTopMost();
-		}
-
-		static public void Command_Window_TabIndex(ITextEditor te, bool activeOnly)
-		{
-			te.ReplaceSelections((te.TabsParent.GetIndex(te, activeOnly) + 1).ToString());
 		}
 
 		static public void Command_Window_FontSize(ITabs tabs) => WindowFontSizeDialog.Run(tabs.WindowParent);
@@ -128,8 +121,8 @@ namespace NeoEdit
 		static public void Command_Window_WordList(ITabs tabs)
 		{
 			byte[] data;
-			var streamName = typeof(WindowFunctions).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
-			using (var stream = typeof(WindowFunctions).Assembly.GetManifestResourceStream(streamName))
+			var streamName = typeof(Tabs).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
+			using (var stream = typeof(Tabs).Assembly.GetManifestResourceStream(streamName))
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);

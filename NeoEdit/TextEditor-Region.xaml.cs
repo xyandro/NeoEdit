@@ -7,10 +7,8 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class RegionFunctions
+	partial class TextEditor
 	{
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static List<Tuple<Range, List<Range>>> GetRegionsWithSelections(ITextEditor te, int useRegion)
 		{
 			var result = new List<Tuple<Range, List<Range>>>();

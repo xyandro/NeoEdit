@@ -9,10 +9,8 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class ImageFunctions
+	partial class TextEditor
 	{
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static string AddColor(string color1, string color2)
 		{
 			Colorer.StringToARGB(color1, out var alpha1, out var red1, out var green1, out var blue1);

@@ -19,10 +19,8 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class FilesFunctions
+	partial class TextEditor
 	{
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static async Task<bool> BinarySearchFileAsync(ITextEditor te, string fileName, Searcher searcher, AnswerResult answer, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{
 			try

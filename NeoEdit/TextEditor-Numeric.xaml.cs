@@ -12,12 +12,8 @@ using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
-	public static class NumericFunctions
+	partial class TextEditor
 	{
-		static ThreadSafeRandom random = new ThreadSafeRandom();
-
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static string ConvertBase(string str, Dictionary<char, int> inputSet, Dictionary<int, char> outputSet)
 		{
 			BigInteger value = 0;

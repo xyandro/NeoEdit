@@ -10,12 +10,8 @@ using NeoEdit.RevRegEx;
 
 namespace NeoEdit
 {
-	public static class TextFunctions
+	partial class TextEditor
 	{
-		static ThreadSafeRandom random = new ThreadSafeRandom();
-
-		static public void Load() { } // Doesn't do anything except load the assembly
-
 		static string GetRandomData(string chars, int length) => new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
 
 		static string SetWidth(string str, TextWidthDialog.Result result, int value)
