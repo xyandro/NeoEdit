@@ -146,16 +146,16 @@ namespace NeoEdit
 
 		void Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown)
 		{
-			//if (ContentType == ParserType.None)
-			//{
-			//	switch (direction)
-			//	{
-			//		case ParserNode.ParserNavigationDirectionEnum.Left: Command_Edit_Navigate_AllLeft(shiftDown); break;
-			//		case ParserNode.ParserNavigationDirectionEnum.Right: Command_Edit_Navigate_AllRight(shiftDown); break;
-			//	}
-			//}
-			//else
-			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown, KeepSelections)));
+			if (ContentType == ParserType.None)
+			{
+				switch (direction)
+				{
+					case ParserNode.ParserNavigationDirectionEnum.Left: Command_Edit_Navigate_AllLeft(shiftDown); break;
+					case ParserNode.ParserNavigationDirectionEnum.Right: Command_Edit_Navigate_AllRight(shiftDown); break;
+				}
+			}
+			else
+				ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown, KeepSelections)));
 		}
 
 		void Command_Content_KeepSelections(bool? multiStatus) => KeepSelections = multiStatus != true;
