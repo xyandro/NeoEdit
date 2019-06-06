@@ -1,8 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Dialogs;
+using NeoEdit;
+using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {

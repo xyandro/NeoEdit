@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NeoEdit.Common;
-using NeoEdit.Common.Transform;
+using NeoEdit;
+using NeoEdit.Transform;
 
 namespace NeoEdit.Tests
 {

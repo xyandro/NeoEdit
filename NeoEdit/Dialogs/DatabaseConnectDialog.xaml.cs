@@ -5,10 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Dialogs;
-using NeoEdit.Common.Transform;
+using NeoEdit;
+using NeoEdit.Controls;
+using NeoEdit.Transform;
 
 namespace NeoEdit.Dialogs
 {

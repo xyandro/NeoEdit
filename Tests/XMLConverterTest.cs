@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NeoEdit.Common.Transform;
+using NeoEdit.Transform;
 
 namespace NeoEdit.Tests
 {

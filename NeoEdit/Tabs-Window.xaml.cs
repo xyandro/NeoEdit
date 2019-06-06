@@ -1,10 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Transform;
+using NeoEdit.Controls;
 using NeoEdit.Dialogs;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using NeoEdit.Common;
-using NeoEdit.Common.Parsing;
+using NeoEdit;
 using NeoEdit.Content.HTML.Parser;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.Content.HTML
 {

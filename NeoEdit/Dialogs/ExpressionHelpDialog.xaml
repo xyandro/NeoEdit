@@ -1,0 +1,208 @@
+﻿<Window Name="self" x:Class="NeoEdit.Dialogs.ExpressionHelpDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:commonDialogs="clr-namespace:NeoEdit.Dialogs"
+	Title="Expression Reference" SizeToContent="WidthAndHeight" Visibility="Visible">
+
+	<Window.Resources>
+		<DataTemplate x:Key="helpItemTemplate">
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="{Binding Name}" FontWeight="Bold" Width="{Binding DataContext.NameWidth, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"/>
+				<TextBlock Text="{Binding Description}" Width="{Binding DataContext.DescWidth, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+			</StackPanel>
+		</DataTemplate>
+
+		<DataTemplate x:Key="helpItemsTemplate">
+			<GroupBox>
+				<GroupBox.Header>
+					<TextBlock Text="{Binding Name}" FontStyle="Italic"/>
+				</GroupBox.Header>
+
+				<ItemsControl ItemTemplate="{StaticResource helpItemTemplate}" ItemsSource="{Binding Items}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<UniformGrid Columns="{Binding Columns}"/>
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+				</ItemsControl>
+			</GroupBox>
+		</DataTemplate>
+	</Window.Resources>
+
+	<StackPanel Margin="10" Orientation="Vertical">
+		<StackPanel.Style>
+			<Style>
+				<Style.Resources>
+					<Style TargetType="Label">
+						<Setter Property="Margin" Value="0"/>
+						<Setter Property="Padding" Value="2,0"/>
+					</Style>
+				</Style.Resources>
+			</Style>
+		</StackPanel.Style>
+
+		<TextBlock Margin="0,0,0,10">
+			<Italic>Expression Reference</Italic>
+		</TextBlock>
+
+		<ItemsControl ItemTemplate="{StaticResource helpItemsTemplate}">
+			<ItemsControl.Items>
+
+				<commonDialogs:HelpItems Name="Literals" Columns="4" NameWidth="80" DescWidth="160">
+					<commonDialogs:HelpItems.Items>
+						<commonDialogs:HelpItem Name="5" Description="Integer"/>
+						<commonDialogs:HelpItem Name="5.5" Description="Floating point"/>
+						<commonDialogs:HelpItem Name="true/false" Description="Boolean"/>
+						<commonDialogs:HelpItem Name="0x12345" Description="Hex"/>
+						<commonDialogs:HelpItem Name="&quot;Test&quot;" Description="String"/>
+						<commonDialogs:HelpItem Name="@&quot;C:\Test&quot;" Description="Verbatim string"/>
+						<commonDialogs:HelpItem Name="$&quot;{2+2}&quot;" Description="Interpolated string"/>
+						<commonDialogs:HelpItem Name="@$&quot;C:\{2+2}&quot;" Description="Verbatim interpolated string"/>
+						<commonDialogs:HelpItem Name="x" Description="Variable"/>
+					</commonDialogs:HelpItems.Items>
+				</commonDialogs:HelpItems>
+
+				<commonDialogs:HelpItems Name="Generic Operators" Columns="4" NameWidth="40" DescWidth="200">
+					<commonDialogs:HelpItems.Items>
+						<commonDialogs:HelpItem Name="o==" Description="Equal"/>
+						<commonDialogs:HelpItem Name="o!=" Description="Not equal"/>
+						<commonDialogs:HelpItem Name="??" Description="NULL coalesce"/>
+						<commonDialogs:HelpItem Name="( )" Description="Precedence"/>
+					</commonDialogs:HelpItems.Items>
+				</commonDialogs:HelpItems>
+
+				<commonDialogs:HelpItems Name="Boolean Operators" Columns="4" NameWidth="40" DescWidth="200">
+					<commonDialogs:HelpItems.Items>
+						<commonDialogs:HelpItem Name="&amp;&amp;" Description="Logical AND"/>
+						<commonDialogs:HelpItem Name="||" Description="Logical OR"/>
+						<commonDialogs:HelpItem Name="!" Description="Logical NOT"/>
+						<commonDialogs:HelpItem Name="? :" Description="Conditional"/>
+					</commonDialogs:HelpItems.Items>
+				</commonDialogs:HelpItems>
+
+				<commonDialogs:HelpItems Name="Numeric Operators" Columns="4" NameWidth="40" DescWidth="200">
+					<commonDialogs:HelpItems.Items>
+						<commonDialogs:HelpItem Name="+" Description="Add"/>
+						<commonDialogs:HelpItem Name="-" Description="Subtract"/>
+						<commonDialogs:HelpItem Name="^" Description="Exponent"/>
+						<commonDialogs:HelpItem Name="%" Description="Modulo"/>
+						<commonDialogs:HelpItem Name="*" Description="Multiply"/>
+						<commonDialogs:HelpItem Name="/" Description="Divide"/>
+						<commonDialogs:HelpItem Name="//" Description="Integer Divide"/>
+						<commonDialogs:HelpItem Name="///" Description="Divide With Remainder"/>
+						<commonDialogs:HelpItem Name="==" Description="Equal"/>
+						<commonDialogs:HelpItem Name="!=" Description="Not equal"/>
+						<commonDialogs:HelpItem/>
+						<commonDialogs:HelpItem/>
+						<commonDialogs:HelpItem Name="&lt;" Description="Less than"/>
+						<commonDialogs:HelpItem Name="&lt;=" Description="Less/equal"/>
+						<commonDialogs:HelpItem Name="&gt;" Description="Greater than"/>
+						<commonDialogs:HelpItem Name="&gt;=" Description="Greater/equal"/>
+						<commonDialogs:HelpItem Name="&amp;" Description="Bitwise AND"/>
+						<commonDialogs:HelpItem Name="|" Description="Bitwise OR"/>
+						<commonDialogs:HelpItem Name="^^" Description="Bitwise XOR"/>
+						<commonDialogs:HelpItem Name="~" Description="Bitwise NOT"/>
+						<commonDialogs:HelpItem Name="&lt;&lt;" Description="Shift left"/>
+						<commonDialogs:HelpItem Name="&gt;&gt;" Description="Shift right"/>
+						<commonDialogs:HelpItem/>
+						<commonDialogs:HelpItem Name="=&gt;" Description="Convert units"/>
+					</commonDialogs:HelpItems.Items>
+				</commonDialogs:HelpItems>
+
+				<commonDialogs:HelpItems Name="Numeric Functions" Columns="4" NameWidth="80" DescWidth="160">
+					<commonDialogs:HelpItems.Items>
+						<commonDialogs:HelpItem Name="min(...)" Description="Minimum"/>
+						<commonDialogs:HelpItem Name="max(...)" Description="Maximum"/>
+						<commonDialogs:HelpItem Name="abs(x)" Description="Absolute value"/>
+						<commonDialogs:HelpItem Name="reciprocal(x)" Description="1/x"/>
+						<commonDialogs:HelpItem Name="gcf(x)" Description="Greatest common factor"/>
+						<commonDialogs:HelpItem Name="lcm(x)" Description="Least common multiple"/>
+						<commonDialogs:HelpItem Name="reduce(n,d)" Description="Reduce fraction"/>
+						<commonDialogs:HelpItem/>
+						<commonDialogs:HelpItem Name="ln(x)" Description="Natural log"/>
+						<commonDialogs:HelpItem Name="log(x)" Description="Log base 10"/>
+						<commonDialogs:HelpItem Name="log(x,b)" Description="Log base b"/>
+						<commonDialogs:HelpItem/>
+						<commonDialogs:HelpItem Name="sqrt(x)" Description="Square root"/>
+						<commonDialogs:HelpItem Name="root(x,b)" Description="Root base b"/>
+						<commonDialogs:HelpItem/>
+						<commonDialogs:HelpItem/>
+						<commonDialogs:HelpItem Name="sin(x)" Description="Sine"/>
+						<commonDialogs:HelpItem Name="cos(x)" Description="Cosine"/>
+						<commonDialogs:HelpItem Name="tan(x)" Description="Tangent"/>
+						<commonDialogs:HelpItem/>
+						<commonDialogs:HelpItem Name="asin(x)" Description="Arcsine"/>
+						<commonDialogs:HelpItem Name="acos(x)" Description="Arccosine"/>
+						<commonDialogs:HelpItem Name="atan(x)" Description="Arctangent"/>
+						<commonDialogs:HelpItem/>
+					</commonDialogs:HelpItems.Items>
+				</commonDialogs:HelpItems>
+
+				<commonDialogs:HelpItems Name="String Operators" Columns="4" NameWidth="40" DescWidth="200">
+					<commonDialogs:HelpItems.Items>
+						<commonDialogs:HelpItem Name="t+" Description="Concat"/>
+						<commonDialogs:HelpItem Name="t*" Description="Repeat"/>
+						<commonDialogs:HelpItem Name="t++" Description="Increment character"/>
+						<commonDialogs:HelpItem Name="t--" Description="Decrement character"/>
+						<commonDialogs:HelpItem Name="t==" Description="Equal"/>
+						<commonDialogs:HelpItem Name="ti==" Description="Equal (case insensitive)"/>
+						<commonDialogs:HelpItem Name="t!=" Description="Not equal"/>
+						<commonDialogs:HelpItem Name="ti!=" Description="Not equal (case insensitive)"/>
+						<commonDialogs:HelpItem Name="t&lt;" Description="Less than"/>
+						<commonDialogs:HelpItem Name="t&lt;=" Description="Less/equal"/>
+						<commonDialogs:HelpItem Name="t&gt;" Description="Greater than"/>
+						<commonDialogs:HelpItem Name="t&gt;=" Description="Greater/equal"/>
+						<commonDialogs:HelpItem Name="ti&lt;" Description="Less than (case insensitive)"/>
+						<commonDialogs:HelpItem Name="ti&lt;=" Description="Less/equal (case insensitive)"/>
+						<commonDialogs:HelpItem Name="ti&gt;" Description="Greater than (case insensitive)"/>
+						<commonDialogs:HelpItem Name="ti&gt;=" Description="Greater/equal (case insensitive)"/>
+					</commonDialogs:HelpItems.Items>
+				</commonDialogs:HelpItems>
+
+				<commonDialogs:HelpItems Name="String Functions" Columns="4" NameWidth="80" DescWidth="160">
+					<commonDialogs:HelpItems.Items>
+						<commonDialogs:HelpItem Name="tmin(...)" Description="Minimum"/>
+						<commonDialogs:HelpItem Name="tmax(...)" Description="Maximum"/>
+						<commonDialogs:HelpItem Name="len(x)" Description="Length"/>
+					</commonDialogs:HelpItems.Items>
+				</commonDialogs:HelpItems>
+
+				<commonDialogs:HelpItems Name="Date Functions" Columns="4" NameWidth="80" DescWidth="160">
+					<commonDialogs:HelpItems.Items>
+						<commonDialogs:HelpItem Name="now()" Description="Date/time in ticks"/>
+						<commonDialogs:HelpItem Name="date()" Description="Local date in ticks"/>
+						<commonDialogs:HelpItem Name="utcdate()" Description="UTC date in ticks"/>
+						<commonDialogs:HelpItem/>
+						<commonDialogs:HelpItem Name="todate(x)" Description="Ticks to local date"/>
+						<commonDialogs:HelpItem Name="todate(x,tz)" Description="Ticks to tz date"/>
+						<commonDialogs:HelpItem Name="toutcdate(x)" Description="Ticks to UTC date"/>
+						<commonDialogs:HelpItem Name="fromdate(x)" Description="Date to ticks"/>
+					</commonDialogs:HelpItems.Items>
+				</commonDialogs:HelpItems>
+
+				<commonDialogs:HelpItems Name="Miscellaneous Functions" Columns="2" NameWidth="160" DescWidth="320">
+					<commonDialogs:HelpItems.Items>
+						<commonDialogs:HelpItem Name="Type(x)" Description="Get type"/>
+						<commonDialogs:HelpItem Name="ValidRE(x)" Description="Check whether RegEx is valid"/>
+						<commonDialogs:HelpItem Name="Eval(x)" Description="Evalulate expression"/>
+						<commonDialogs:HelpItem Name="ValidEval(x)" Description="Check whether expression is valid"/>
+						<commonDialogs:HelpItem Name="FileName(x)" Description="Get filename from path"/>
+						<commonDialogs:HelpItem Name="StrFormat(&quot;Value: {0}&quot;, x)" Description="Format string"/>
+						<commonDialogs:HelpItem Name="ToWords(x)" Description="Number to text"/>
+						<commonDialogs:HelpItem Name="FromWords(x)" Description="Text to number"/>
+					</commonDialogs:HelpItems.Items>
+				</commonDialogs:HelpItems>
+
+			</ItemsControl.Items>
+		</ItemsControl>
+
+		<DockPanel>
+			<UniformGrid Rows="1" Margin="0,10,0,0">
+				<Button Name="ShowVariables" Click="ShowVariablesClick" Padding="5,0" Content="_Variables"/>
+				<Button Click="ShowUnitsClick" Content="_Units"/>
+			</UniformGrid>
+			<Button Click="OkClick" IsDefault="True" IsCancel="True" Content="Ok" Margin="0,10,0,0" Padding="20,1" HorizontalAlignment="Right"/>
+		</DockPanel>
+	</StackPanel>
+
+</Window>

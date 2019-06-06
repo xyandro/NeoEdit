@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
+using NeoEdit;
+using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {

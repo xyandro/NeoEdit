@@ -5,11 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Win32;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Dialogs;
-using NeoEdit.Common.Transform;
+using NeoEdit.Controls;
 using NeoEdit.Dialogs;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {

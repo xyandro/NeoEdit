@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Common;
-using NeoEdit.Common.Parsing;
+using NeoEdit;
 using NeoEdit.Content.Balanced;
 using NeoEdit.Content.Columns;
 using NeoEdit.Content.CSharp;
@@ -12,6 +11,7 @@ using NeoEdit.Content.JSON;
 using NeoEdit.Content.SQL;
 using NeoEdit.Content.TCSV;
 using NeoEdit.Content.XML;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.Content
 {

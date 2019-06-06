@@ -6,10 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.Win32;
-using NeoEdit.Common;
-using NeoEdit.Common.Dialogs;
-using NeoEdit.Common.NEClipboards;
-using NeoEdit.Common.Transform;
+using NeoEdit.Dialogs;
+using NeoEdit.NEClipboards;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {

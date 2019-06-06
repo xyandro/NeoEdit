@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Dialogs;
-using NeoEdit.Common.Expressions;
+using NeoEdit.Controls;
+using NeoEdit.Expressions;
 
 namespace NeoEdit.Dialogs
 {

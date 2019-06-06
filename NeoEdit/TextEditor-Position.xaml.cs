@@ -4,7 +4,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NeoEdit.Common;
 using NeoEdit.Dialogs;
 
 namespace NeoEdit

@@ -17,7 +17,6 @@ TestResults
 
 # Specific
 /ChangeLog.txt
-/Common/Expressions/Parser
 /Dependencies/GlobalAssemblyInfo.cs
 /NeoEdit/CommandLine/Parser
 /NeoEdit/Content/Balanced/Parser
@@ -29,6 +28,7 @@ TestResults
 /NeoEdit/Content/SQL/Parser
 /NeoEdit/Content/TCSV/Parser
 /NeoEdit/Content/XML/Parser
+/NeoEdit/Expressions/Parser
 /NeoEdit/RevRegEx/Parser
 /NeoEdit/Words.txt.gz
 /Release

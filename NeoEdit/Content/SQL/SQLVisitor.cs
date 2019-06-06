@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using NeoEdit.Common;
-using NeoEdit.Common.Parsing;
+using NeoEdit;
 using NeoEdit.Content.SQL.Parser;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.Content.SQL
 {

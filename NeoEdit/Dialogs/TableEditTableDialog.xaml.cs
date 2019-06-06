@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
+using NeoEdit;
+using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="BuildBalanced;BuildChangeLog;BuildColumns;BuildCommandLine;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;CompressWords;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="BuildBalanced;BuildChangeLog;BuildColumns;BuildCommandLine;BuildCSharp;BuildExactColumns;BuildExpression;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;CompressWords;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
@@ -32,6 +32,10 @@
   <Target Name="BuildExactColumns" Inputs="Content\ExactColumns\Source\ExactColumns.g4" Outputs="Content\ExactColumns\Parser\ExactColumnsBaseVisitor.cs;Content\ExactColumns\Parser\ExactColumnsLexer.cs;Content\ExactColumns\Parser\ExactColumnsParser.cs;Content\ExactColumns\Parser\ExactColumnsVisitor.cs" Returns="">
     <Message Text="Building ExactColumns parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Content.ExactColumns.Parser -o &quot;$(ProjectDir)Content\ExactColumns\Parser&quot; &quot;$(ProjectDir)Content\ExactColumns\Source\ExactColumns.g4&quot;" />
+  </Target>
+  <Target Name="BuildExpression" Inputs="Expressions\Source\ExpressionLexer.g4;Expressions\Source\ExpressionParser.g4" Outputs="Expressions\Parser\ExpressionLexer.cs;Expressions\Parser\ExpressionParser.cs;Expressions\Parser\ExpressionParserBaseVisitor.cs;Expressions\Parser\ExpressionParserVisitor.cs" Returns="">
+    <Message Text="Building expression parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Expressions.Parser -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionLexer.g4&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionParser.g4&quot;" />
   </Target>
   <Target Name="BuildHTML" Inputs="Content\HTML\Source\HTMLLexer.g4;Content\HTML\Source\HTMLParser.g4" Outputs="Content\HTML\Parser\HTMLLexer.cs;Content\HTML\Parser\HTMLParser.cs;Content\HTML\Parser\HTMLParserBaseVisitor.cs;Content\HTML\Parser\HTMLParserVisitor.cs" Returns="">
     <Message Text="Building HTML parser" Importance="High" />
@@ -71,6 +75,18 @@
   <PropertyGroup>
     <StartupObject>NeoEdit.InstanceManager</StartupObject>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(SolutionDir)ChangeLog.txt">
       <Link>Resources\ChangeLog.txt</Link>
@@ -96,6 +112,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CacheValue.cs" />
     <Compile Include="CommandLine\CommandLineParams.cs" />
     <Compile Include="CommandLine\CommandLineVisitor.cs" />
     <Compile Include="CommandLine\Parser\CommandLineLexer.cs" />
@@ -169,8 +186,42 @@
     <None Include="Content\XML\Source\XMLLexer.g4" />
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
+    <Compile Include="Controls\AnswerResult.cs" />
+    <Page Include="Controls\AutoCompleteTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\AutoCompleteTextBox.xaml.cs">
+      <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CodePageCheckBox.cs" />
+    <Compile Include="Controls\EnhancedFocusManager.cs" />
+    <Compile Include="Controls\KeyGestureAttribute.cs" />
+    <Compile Include="Controls\ModalDialog.cs" />
     <Compile Include="Controls\MultiMenuItem.cs" />
+    <Page Include="Controls\NEExpressionResults.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\NEExpressionResults.xaml.cs">
+      <DependentUpon>NEExpressionResults.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NEMenuItem.cs" />
+    <Page Include="Controls\NumericUpDown.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\NumericUpDown.xaml.cs">
+      <DependentUpon>NumericUpDown.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PropertyChangeNotifier.cs" />
+    <Compile Include="Controls\RenderCanvas.cs" />
+    <Compile Include="Controls\UIHelper.cs" />
+    <Compile Include="Converters\HexConverter.cs" />
+    <Compile Include="Converters\NEExpressionConverter.cs" />
+    <Compile Include="Converters\NonEmptyConverter.cs" />
+    <Compile Include="Converters\RadioConverter.cs" />
+    <Compile Include="Converters\ValidValueConverter.cs" />
     <Compile Include="DBConnectInfo.cs" />
     <Page Include="Dialogs\ContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -185,6 +236,13 @@
     </Page>
     <Compile Include="Dialogs\ContentAttributesDialog.xaml.cs">
       <DependentUpon>ContentAttributesDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\CryptorKeyDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\CryptorKeyDialog.xaml.cs">
+      <DependentUpon>CryptorKeyDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\DatabaseConnectDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -312,6 +370,27 @@
     <Compile Include="Dialogs\EncodingDialog.xaml.cs">
       <DependentUpon>EncodingDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\ExpressionHelpDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExpressionHelpDialog.xaml.cs">
+      <DependentUpon>ExpressionHelpDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ExpressionHelpUnitsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExpressionHelpUnitsDialog.xaml.cs">
+      <DependentUpon>ExpressionHelpUnitsDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ExpressionHelpVariablesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ExpressionHelpVariablesDialog.xaml.cs">
+      <DependentUpon>ExpressionHelpVariablesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ExpressionSolveDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -374,6 +453,13 @@
     </Page>
     <Compile Include="Dialogs\FilesNamesGetUniqueDialog.xaml.cs">
       <DependentUpon>FilesNamesGetUniqueDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FilesNamesMakeAbsoluteRelativeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FilesNamesMakeAbsoluteRelativeDialog.xaml.cs">
+      <DependentUpon>FilesNamesMakeAbsoluteRelativeDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\FilesOperationsCombineFilesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -438,6 +524,13 @@
     <Compile Include="Dialogs\FilesSignDialog.xaml.cs">
       <DependentUpon>FilesSignDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\GetExpressionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\GetExpressionDialog.xaml.cs">
+      <DependentUpon>GetExpressionDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\HelpAboutChangeLogDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -459,6 +552,7 @@
     <Compile Include="Dialogs\HelpAboutLicenseDialog.xaml.cs">
       <DependentUpon>HelpAboutLicenseDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\HelpItems.cs" />
     <Page Include="Dialogs\ImageAddOverlayColorDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -535,6 +629,20 @@
     </Page>
     <Compile Include="Dialogs\MacroPlayRepeatDialog.xaml.cs">
       <DependentUpon>MacroPlayRepeatDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Message.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Message.xaml.cs">
+      <DependentUpon>Message.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\MultiProgressDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\MultiProgressDialog.xaml.cs">
+      <DependentUpon>MultiProgressDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\NetworkAbsoluteURLDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -640,6 +748,20 @@
     </Page>
     <Compile Include="Dialogs\PositionGotoDialog.xaml.cs">
       <DependentUpon>PositionGotoDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ProgressDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ProgressDialog.xaml.cs">
+      <DependentUpon>ProgressDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\RegExHelpDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
+      <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\RegionModifyRegionsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -798,11 +920,39 @@
     </Compile>
     <Compile Include="Enums\GetPathType.cs" />
     <Compile Include="Enums\GotoType.cs" />
+    <Compile Include="Enums\JumpByType.cs" />
+    <Compile Include="Enums\MessageOptions.cs" />
+    <Compile Include="Enums\ParserType.cs" />
+    <Compile Include="Enums\ReplaceType.cs" />
     <Compile Include="Enums\SortScope.cs" />
     <Compile Include="Enums\SortType.cs" />
+    <Compile Include="Enums\TabsLayout.cs" />
     <Compile Include="Enums\TimestampType.cs" />
+    <Compile Include="Enums\WordSkipType.cs" />
+    <Compile Include="Expressions\ExpressionEvaluator.cs" />
+    <Compile Include="Expressions\ExpressionUnit.cs" />
+    <Compile Include="Expressions\ExpressionUnits.cs" />
+    <Compile Include="Expressions\ExpressionUnitsConversion.cs" />
+    <Compile Include="Expressions\InlineVariable.cs" />
+    <Compile Include="Expressions\NEExpression.cs" />
+    <Compile Include="Expressions\NEVariable.cs" />
+    <Compile Include="Expressions\NEVariableConstant.cs" />
+    <Compile Include="Expressions\NEVariableInitializer.cs" />
+    <Compile Include="Expressions\NEVariableList.cs" />
+    <Compile Include="Expressions\NEVariables.cs" />
+    <Compile Include="Expressions\NEVariableSeries.cs" />
+    <Compile Include="Expressions\NumericValue.cs" />
+    <Compile Include="Expressions\Parser\ExpressionLexer.cs" />
+    <Compile Include="Expressions\Parser\ExpressionParser.cs" />
+    <Compile Include="Expressions\Parser\ExpressionParserBaseVisitor.cs" />
+    <Compile Include="Expressions\Parser\ExpressionParserVisitor.cs" />
+    <None Include="Expressions\Source\ExpressionLexer.g4" />
+    <None Include="Expressions\Source\ExpressionParser.g4" />
+    <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="FileSaver.cs" />
+    <Compile Include="Font.cs" />
     <Compile Include="GIFWriter.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
@@ -811,10 +961,17 @@
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="InstanceManager.cs" />
+    <Compile Include="ItemSet.cs" />
+    <Compile Include="LCS.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
+    <Compile Include="MoreLinq.cs" />
+    <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
+    <Compile Include="NEClipboards\NEClipboard.cs" />
+    <Compile Include="NEClipboards\NEClipboardItem.cs" />
+    <Compile Include="NEClipboards\NEClipboardList.cs" />
     <Compile Include="NECommand.cs" />
     <Page Include="NEMenu.xaml">
       <SubType>Designer</SubType>
@@ -826,12 +983,26 @@
     <Compile Include="NoDelayClipboard.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="OpenFileDialogResult.cs" />
+    <Compile Include="Parsing\AntlrParserExtensions.cs" />
+    <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
+    <Compile Include="Parsing\ParserAttribute.cs" />
+    <Compile Include="Parsing\ParserBase.cs" />
+    <Compile Include="Parsing\ParserException.cs" />
+    <Compile Include="Parsing\ParserHelper.cs" />
+    <Compile Include="Parsing\ParserNode.cs" />
     <Compile Include="PortScanner.cs" />
     <Compile Include="ProcessExtension.cs" />
+    <Compile Include="ProgressReport.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Range.cs" />
+    <Compile Include="RangeList.cs" />
+    <Resource Include="Resources\Checked.png" />
+    <Resource Include="Resources\DejaVuSansMono.ttf" />
+    <Resource Include="Resources\Indeterminate.png" />
+    <Resource Include="Resources\Unchecked.png" />
     <EmbeddedResource Include="Resources\Unicode.dat" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
@@ -845,6 +1016,18 @@
     <Compile Include="RevRegEx\RevRegExVisitor.cs" />
     <None Include="RevRegEx\Source\RevRegExLexer.g4" />
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
+    <Compile Include="Searcher.cs">
+      <DependentUpon>Searcher.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Content Include="Searcher.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Searcher.cs</LastGenOutput>
+    </Content>
+    <Compile Include="Settings.cs" />
+    <Compile Include="ShutdownData.cs" />
+    <Compile Include="Table.cs" />
     <Compile Include="Tabs-Diff.xaml.cs">
       <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
@@ -867,6 +1050,7 @@
     <Compile Include="Tabs.xaml.cs">
       <DependentUpon>Tabs.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextData.cs" />
     <Compile Include="TextEditor-Content.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
@@ -928,15 +1112,18 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ThreadSafeRandom.cs" />
+    <Compile Include="Transform\Coder.cs" />
+    <Compile Include="Transform\Colorer.cs" />
+    <Compile Include="Transform\Compressor.cs" />
+    <Compile Include="Transform\Cryptor.cs" />
+    <Compile Include="Transform\Hasher.cs" />
+    <Compile Include="Transform\Versioner.cs" />
+    <Compile Include="Transform\XMLConverter.cs" />
+    <Compile Include="UndoRedo.cs" />
     <Resource Include="Words.txt" />
     <EmbeddedResource Include="Words.txt.gz" />
     <Compile Include="YouTubeDL.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{41bacfec-48ae-4dcc-abc9-e45aa149784d}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)$(SolutionName).csproj2.props" />
 </Project>

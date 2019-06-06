@@ -9,13 +9,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Dialogs;
-using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Parsing;
-using NeoEdit.Common.Transform;
+using NeoEdit.Controls;
 using NeoEdit.Dialogs;
+using NeoEdit.Expressions;
+using NeoEdit.Parsing;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {

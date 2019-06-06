@@ -5,8 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-using NeoEdit.Common;
-using NeoEdit.Common.Dialogs;
 using NeoEdit.Dialogs;
 
 namespace NeoEdit

@@ -30,9 +30,9 @@
     <Compile Include="XMLConverterTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}</Project>
-      <Name>Common</Name>
+    <ProjectReference Include="..\NeoEdit\NeoEdit.csproj">
+      <Project>{db80fd39-0222-4591-b224-833259bac943}</Project>
+      <Name>NeoEdit</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)$(SolutionName).csproj2.props" />

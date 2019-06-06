@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Parsing;
 using NeoEdit.Content;
+using NeoEdit.Controls;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.Dialogs
 {

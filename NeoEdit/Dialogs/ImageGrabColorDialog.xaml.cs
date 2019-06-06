@@ -9,9 +9,9 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Transform;
+using NeoEdit;
+using NeoEdit.Controls;
+using NeoEdit.Transform;
 
 namespace NeoEdit.Dialogs
 {

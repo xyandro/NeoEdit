@@ -7,12 +7,10 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
-using NeoEdit.Common;
-using NeoEdit.Common.Dialogs;
-using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Parsing;
-using NeoEdit.Common.Transform;
 using NeoEdit.Dialogs;
+using NeoEdit.Expressions;
+using NeoEdit.Parsing;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {

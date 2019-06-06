@@ -1,4 +1,4 @@
-﻿using NeoEdit.Common.Controls;
+﻿using NeoEdit.Controls;
 
 namespace NeoEdit
 {

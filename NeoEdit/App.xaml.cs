@@ -6,9 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using NeoEdit.CommandLine;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Dialogs;
+using NeoEdit.Controls;
+using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {

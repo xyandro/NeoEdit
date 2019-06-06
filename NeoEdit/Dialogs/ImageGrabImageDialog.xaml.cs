@@ -2,8 +2,8 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Expressions;
+using NeoEdit.Controls;
+using NeoEdit.Expressions;
 
 namespace NeoEdit.Dialogs
 {

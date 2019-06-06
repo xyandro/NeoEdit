@@ -6,8 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Interop;
-using NeoEdit.Common;
-using NeoEdit.Common.Transform;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {

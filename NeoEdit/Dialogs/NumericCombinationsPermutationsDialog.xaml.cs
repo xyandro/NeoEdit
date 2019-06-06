@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using NeoEdit.Common.Controls;
+using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {

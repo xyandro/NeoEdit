@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
+using NeoEdit;
+using NeoEdit.Controls;
 
 namespace NeoEdit.Dialogs
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Antlr4.Runtime.Misc;
 using NeoEdit.CommandLine.Parser;
-using NeoEdit.Common.Parsing;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.CommandLine
 {

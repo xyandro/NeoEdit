@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Parsing;
+using NeoEdit;
+using NeoEdit.Controls;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.Dialogs
 {

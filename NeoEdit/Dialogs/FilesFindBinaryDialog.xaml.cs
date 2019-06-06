@@ -4,10 +4,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Parsing;
-using NeoEdit.Common.Transform;
+using NeoEdit;
+using NeoEdit.Controls;
+using NeoEdit.Parsing;
+using NeoEdit.Transform;
 
 namespace NeoEdit.Dialogs
 {

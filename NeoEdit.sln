@@ -3,11 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC} = {454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compress", "Compress\Compress.csproj", "{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dependencies", "Dependencies\Dependencies.csproj", "{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}"
@@ -27,6 +22,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit", "NeoEdit\NeoEdit.csproj", "{DB80FD39-0222-4591-B224-833259BAC943}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8} = {2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}
+		{454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC} = {454ED9B9-636C-4BEA-B81C-BEDA4B5B5CFC}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{990E4DBE-127E-4A5B-AA48-36765713838C}"
@@ -39,14 +35,6 @@ Global
 		Release|64 = Release|64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}.Debug|32.ActiveCfg = Debug|x86
-		{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}.Debug|32.Build.0 = Debug|x86
-		{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}.Debug|64.ActiveCfg = Debug|x64
-		{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}.Debug|64.Build.0 = Debug|x64
-		{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}.Release|32.ActiveCfg = Release|x86
-		{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}.Release|32.Build.0 = Release|x86
-		{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}.Release|64.ActiveCfg = Release|x64
-		{41BACFEC-48AE-4DCC-ABC9-E45AA149784D}.Release|64.Build.0 = Release|x64
 		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}.Debug|32.ActiveCfg = Debug|Any CPU
 		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}.Debug|32.Build.0 = Debug|Any CPU
 		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}.Debug|64.ActiveCfg = Debug|Any CPU

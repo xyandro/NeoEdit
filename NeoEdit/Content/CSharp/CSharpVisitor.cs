@@ -4,9 +4,9 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using NeoEdit.Common;
-using NeoEdit.Common.Parsing;
+using NeoEdit;
 using NeoEdit.Content.CSharp.Parser;
+using NeoEdit.Parsing;
 
 namespace NeoEdit.Content.CSharp
 {

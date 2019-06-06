@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Expressions;
+using NeoEdit;
+using NeoEdit.Controls;
+using NeoEdit.Expressions;
 
 namespace NeoEdit.Dialogs
 {

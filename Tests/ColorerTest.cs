@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NeoEdit.Common.Transform;
+using NeoEdit.Transform;
 
 namespace NeoEdit.Tests
 {

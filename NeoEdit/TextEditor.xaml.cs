@@ -14,16 +14,14 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using NeoEdit.Common;
-using NeoEdit.Common.Controls;
-using NeoEdit.Common.Converters;
-using NeoEdit.Common.Dialogs;
-using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Parsing;
-using NeoEdit.Common.Transform;
+using NeoEdit.Controls;
+using NeoEdit.Converters;
 using NeoEdit.Dialogs;
+using NeoEdit.Expressions;
 using NeoEdit.Highlighting;
 using NeoEdit.Misc;
+using NeoEdit.Parsing;
+using NeoEdit.Transform;
 
 namespace NeoEdit
 {
