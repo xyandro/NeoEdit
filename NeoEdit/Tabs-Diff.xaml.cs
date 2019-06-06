@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using NeoEdit.Common;
-using NeoEdit.Common.Transform;
-using NeoEdit.Dialogs;
 
 namespace NeoEdit
 {
