@@ -29,6 +29,8 @@ TestResults
 /NeoEdit/Content/XML/Parser
 /NeoEdit/Expressions/Parser
 /NeoEdit/Properties/AssemblyInfo.cs
+/NeoEdit/Resources/ChangeLog.txt
+/NeoEdit/Resources/License.txt
 /NeoEdit/RevRegEx/Parser
 /NeoEdit/Words.txt.gz
 /Release
