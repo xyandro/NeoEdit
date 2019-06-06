@@ -18,9 +18,9 @@ namespace NeoEdit
 {
 	partial class Tabs
 	{
-		static public void Command_File_New_New(ITabs tabs, bool createTabs) => (createTabs ? ITabsCreator.CreateTabs() : tabs).Add();
+		void Command_File_New_New(bool createTabs) => (createTabs ? new Tabs() : this).Add();
 
-		static public void Command_File_New_FromClipboards(ITabs tabs)
+		void Command_File_New_FromClipboards()
 		{
 			var index = 0;
 			foreach (var clipboard in NEClipboard.Current)
@@ -37,17 +37,17 @@ namespace NeoEdit
 					sels.Add(new Range(sb.Length, start));
 					sb.Append(ending);
 				}
-				var te = tabs.Add(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+				var te = Add(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 				te.SetSelections(sels);
 			}
 		}
 
-		static public void Command_File_New_FromClipboardSelections(ITabs tabs) => NEClipboard.Current.Strings.ForEach((str, index) => tabs.Add(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
+		void Command_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => Add(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
 
-		static public OpenFileDialogResult Command_File_Open_Open_Dialog(ITabs tabs, string initialDirectory = null)
+		OpenFileDialogResult Command_File_Open_Open_Dialog(string initialDirectory = null)
 		{
-			if ((initialDirectory == null) && (tabs.TopMost != null))
-				initialDirectory = Path.GetDirectoryName(tabs.TopMost.FileName);
+			if ((initialDirectory == null) && (TopMost != null))
+				initialDirectory = Path.GetDirectoryName(TopMost.FileName);
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "txt",
@@ -62,13 +62,13 @@ namespace NeoEdit
 			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}
 
-		static public void Command_File_Open_Open(ITabs tabs, OpenFileDialogResult result) => result.files.ForEach(fileName => tabs.Add(fileName));
+		void Command_File_Open_Open(OpenFileDialogResult result) => result.files.ForEach(fileName => Add(fileName));
 
-		static public void Command_File_Open_CopiedCut(ITabs tabs)
+		void Command_File_Open_CopiedCut()
 		{
 			var files = NEClipboard.Current.Strings;
 
-			if ((files.Count > 5) && (new Message(tabs.WindowParent)
+			if ((files.Count > 5) && (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to open these {files.Count} files?",
@@ -78,31 +78,31 @@ namespace NeoEdit
 			}.Show() != MessageOptions.Yes))
 				return;
 
-			foreach (var item in tabs.Items)
+			foreach (var item in Items)
 				item.Active = false;
 			foreach (var file in files)
-				tabs.Add(file);
+				Add(file);
 		}
 
-		static public void Command_File_Operations_DragDrop(ITabs tabs)
+		void Command_File_Operations_DragDrop()
 		{
-			if (tabs.TopMost == null)
+			if (TopMost == null)
 				throw new Exception("No active file");
-			var fileNames = tabs.Items.Where(te => te.Active).Select(te => te.FileName).NonNullOrEmpty().ToList();
+			var fileNames = Items.Where(te => te.Active).Select(te => te.FileName).NonNullOrEmpty().ToList();
 			if (!fileNames.Any())
 				throw new Exception("No current files have filenames.");
 			var nonExisting = fileNames.Where(x => !File.Exists(x));
 			if (nonExisting.Any())
 				throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
-			tabs.TopMost.DragFiles = fileNames;
+			TopMost.DragFiles = fileNames;
 		}
 
-		static public void Command_File_MoveToNewWindow(ITabs tabs)
+		void Command_File_MoveToNewWindow()
 		{
-			var active = tabs.Items.Where(tab => tab.Active).ToList();
-			active.ForEach(tab => tabs.Items.Remove(tab));
+			var active = Items.Where(tab => tab.Active).ToList();
+			active.ForEach(tab => Items.Remove(tab));
 
-			var newWindow = ITabsCreator.CreateTabs();
+			var newWindow = new Tabs();
 			newWindow.SetLayout(newWindow.Layout, newWindow.Columns, newWindow.Rows);
 			active.ForEach(tab => newWindow.Add(tab));
 		}

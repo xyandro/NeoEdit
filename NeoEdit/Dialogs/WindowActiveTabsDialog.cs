@@ -14,10 +14,10 @@ namespace NeoEdit.Dialogs
 	{
 		readonly List<TextEditor> originalActive;
 		readonly TextEditor originalTopMost;
-		readonly ITabs tabs;
+		readonly Tabs tabs;
 		ListView listView;
 
-		public WindowActiveTabsDialog(ITabs tabs)
+		public WindowActiveTabsDialog(Tabs tabs)
 		{
 			this.tabs = tabs;
 			originalActive = tabs.Items.Where(item => item.Active).ToList();
@@ -174,6 +174,6 @@ namespace NeoEdit.Dialogs
 				tabs.TopMost = topMost;
 		}
 
-		public static void Run(ITabs tabs) => new WindowActiveTabsDialog(tabs) { Owner = tabs.WindowParent }.ShowDialog();
+		public static void Run(Tabs tabs) => new WindowActiveTabsDialog(tabs) { Owner = tabs.WindowParent }.ShowDialog();
 	}
 }

@@ -14,33 +14,33 @@ namespace NeoEdit
 	{
 		static string QuickMacro(int num) => $"QuickText{num}.xml";
 
-		static void ValidateNoCurrentMacro(ITabs tabs)
+		void ValidateNoCurrentMacro()
 		{
-			if (tabs.RecordingMacro == null)
+			if (RecordingMacro == null)
 				return;
 
 			throw new Exception("Cannot start recording; recording is already in progess.");
 		}
 
-		static public void Command_Macro_Record_Quick(ITabs tabs, int quickNum)
+		void Command_Macro_Record_Quick(int quickNum)
 		{
-			if (tabs.RecordingMacro == null)
-				Command_Macro_Record_Record(tabs);
+			if (RecordingMacro == null)
+				Command_Macro_Record_Record();
 			else
-				Command_Macro_Record_StopRecording(tabs, QuickMacro(quickNum));
+				Command_Macro_Record_StopRecording(QuickMacro(quickNum));
 		}
 
-		static public void Command_Macro_Record_Record(ITabs tabs)
+		void Command_Macro_Record_Record()
 		{
-			ValidateNoCurrentMacro(tabs);
-			tabs.RecordingMacro = new Macro();
+			ValidateNoCurrentMacro();
+			RecordingMacro = new Macro();
 		}
 
-		static public void Command_Macro_Record_StopRecording(ITabs tabs, string fileName = null)
+		void Command_Macro_Record_StopRecording(string fileName = null)
 		{
-			if (tabs.RecordingMacro == null)
+			if (RecordingMacro == null)
 			{
-				new Message(tabs.WindowParent)
+				new Message(WindowParent)
 				{
 					Title = "Error",
 					Text = $"Cannot stop recording; recording not in progess.",
@@ -49,32 +49,32 @@ namespace NeoEdit
 				return;
 			}
 
-			var macro = tabs.RecordingMacro;
-			tabs.RecordingMacro = null;
+			var macro = RecordingMacro;
+			RecordingMacro = null;
 			macro.Save(fileName, true);
 		}
 
-		static public void Command_Macro_Append_Quick(ITabs tabs, int quickNum)
+		void Command_Macro_Append_Quick(int quickNum)
 		{
-			if (tabs.RecordingMacro == null)
-				tabs.RecordingMacro = Macro.Load(QuickMacro(quickNum), true);
+			if (RecordingMacro == null)
+				RecordingMacro = Macro.Load(QuickMacro(quickNum), true);
 			else
-				Command_Macro_Record_StopRecording(tabs, QuickMacro(quickNum));
+				Command_Macro_Record_StopRecording(QuickMacro(quickNum));
 		}
 
-		static public void Command_Macro_Append_Append(ITabs tabs)
+		void Command_Macro_Append_Append()
 		{
-			ValidateNoCurrentMacro(tabs);
-			tabs.RecordingMacro = Macro.Load();
+			ValidateNoCurrentMacro();
+			RecordingMacro = Macro.Load();
 		}
 
-		static public void Command_Macro_Play_Quick(ITabs tabs, int quickNum) => Macro.Load(QuickMacro(quickNum), true).Play(tabs, playing => tabs.MacroPlaying = playing);
+		void Command_Macro_Play_Quick(int quickNum) => Macro.Load(QuickMacro(quickNum), true).Play(this, playing => MacroPlaying = playing);
 
-		static public void Command_Macro_Play_Play(ITabs tabs) => Macro.Load().Play(tabs, playing => tabs.MacroPlaying = playing);
+		void Command_Macro_Play_Play() => Macro.Load().Play(this, playing => MacroPlaying = playing);
 
-		static public void Command_Macro_Play_Repeat(ITabs tabs)
+		void Command_Macro_Play_Repeat()
 		{
-			var result = MacroPlayRepeatDialog.Run(tabs.WindowParent, Macro.ChooseMacro);
+			var result = MacroPlayRepeatDialog.Run(WindowParent, Macro.ChooseMacro);
 			if (result == null)
 				return;
 
@@ -87,19 +87,19 @@ namespace NeoEdit
 			Action startNext = null;
 			startNext = () =>
 			{
-				if ((tabs.TopMost == null) || (--count < 0))
+				if ((TopMost == null) || (--count < 0))
 					return;
 
 				if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Condition)
-					if (!expression.Evaluate<bool>(tabs.TopMost.GetVariables()))
+					if (!expression.Evaluate<bool>(TopMost.GetVariables()))
 						return;
 
-				macro.Play(tabs, playing => tabs.MacroPlaying = playing, startNext);
+				macro.Play(this, playing => MacroPlaying = playing, startNext);
 			};
 			startNext();
 		}
 
-		static public void Command_Macro_Play_PlayOnCopiedFiles(ITabs tabs)
+		void Command_Macro_Play_PlayOnCopiedFiles()
 		{
 			var files = new Queue<string>(NEClipboard.Current.Strings);
 			var macro = Macro.Load();
@@ -108,12 +108,12 @@ namespace NeoEdit
 			{
 				if (!files.Any())
 					return;
-				tabs.Add(files.Dequeue());
-				macro.Play(tabs, playing => tabs.MacroPlaying = playing, startNext);
+				Add(files.Dequeue());
+				macro.Play(this, playing => MacroPlaying = playing, startNext);
 			};
 			startNext();
 		}
 
-		static public void Command_Macro_Open_Quick(ITabs tabs, int quickNum) => tabs.Add(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum)));
+		void Command_Macro_Open_Quick(int quickNum) => Add(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum)));
 	}
 }

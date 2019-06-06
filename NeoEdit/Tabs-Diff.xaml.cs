@@ -11,9 +11,9 @@ namespace NeoEdit
 {
 	partial class Tabs
 	{
-		static public void Command_Diff_Diff(ITabs tabs, bool shiftDown)
+		void Command_Diff_Diff(bool shiftDown)
 		{
-			var diffTargets = tabs.Items.Count == 2 ? tabs.Items.ToList() : tabs.Items.Where(data => data.Active).ToList();
+			var diffTargets = Items.Count == 2 ? Items.ToList() : Items.Where(data => data.Active).ToList();
 			if (diffTargets.Any(item => item.DiffTarget != null))
 			{
 				diffTargets.ForEach(item => item.DiffTarget = null);
@@ -25,13 +25,13 @@ namespace NeoEdit
 
 			if (shiftDown)
 			{
-				if (!tabs.Items.Except(diffTargets).Any())
-					tabs.SetLayout(TabsLayout.Grid);
+				if (!Items.Except(diffTargets).Any())
+					SetLayout(TabsLayout.Grid);
 				else
 				{
-					diffTargets.ForEach(diffTarget => tabs.Items.Remove(diffTarget));
+					diffTargets.ForEach(diffTarget => Items.Remove(diffTarget));
 
-					var textEditTabs = ITabsCreator.CreateTabs();
+					var textEditTabs = new Tabs();
 					textEditTabs.SetLayout(TabsLayout.Grid);
 					diffTargets.ForEach(diffTarget => textEditTabs.Add(diffTarget));
 					textEditTabs.TopMost = diffTargets[0];
@@ -41,18 +41,18 @@ namespace NeoEdit
 			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
 		}
 
-		static public void Command_Diff_Select_LeftRightBothTabs(ITabs tabs, bool? left)
+		void Command_Diff_Select_LeftRightBothTabs(bool? left)
 		{
-			var topMost = tabs.TopMost;
-			var active = tabs.Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((tabs.GetIndex(item) < tabs.GetIndex(item.DiffTarget)) == left)).ToList();
-			tabs.Items.ForEach(item => item.Active = false);
+			var topMost = TopMost;
+			var active = Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetIndex(item) < GetIndex(item.DiffTarget)) == left)).ToList();
+			Items.ForEach(item => item.Active = false);
 
 			if (!active.Any())
 				return;
 
 			if (!active.Contains(topMost))
 				topMost = active.First();
-			tabs.TopMost = topMost;
+			TopMost = topMost;
 			active.ForEach(item => item.Active = true);
 		}
 	}

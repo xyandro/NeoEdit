@@ -72,7 +72,7 @@ namespace NeoEdit.Common
 
 		public void AddCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus) => macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult, multiStatus));
 
-		public void Play(ITabs tabs, Action<Macro> setMacroPlaying, Action finished = null)
+		public void Play(Tabs tabs, Action<Macro> setMacroPlaying, Action finished = null)
 		{
 			setMacroPlaying(this);
 			var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);

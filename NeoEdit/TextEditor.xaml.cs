@@ -90,7 +90,7 @@ namespace NeoEdit
 		[DepProp]
 		public JumpByType JumpBy { get { return UIHelper<TextEditor>.GetPropValue<JumpByType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); jumpBy = JumpBy; } }
 
-		public ITabs TabsParent { get; set; }
+		public Tabs TabsParent { get; set; }
 		public Window WindowParent => TabsParent as Window;
 
 		public bool CanClose() => CanClose(new AnswerResult());
