@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.UnitTest
+namespace NeoEdit.Tests
 {
 	[TestClass]
 	public partial class UnitTest

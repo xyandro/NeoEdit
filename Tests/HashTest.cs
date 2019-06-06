@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.UnitTest
+namespace NeoEdit.Tests
 {
 	public partial class UnitTest
 	{

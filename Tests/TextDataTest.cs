@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common;
 
-namespace NeoEdit.UnitTest
+namespace NeoEdit.Tests
 {
 	[TestClass]
 	public class TextDataTest

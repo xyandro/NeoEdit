@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 
-namespace NeoEdit.UnitTest
+namespace NeoEdit.Tests
 {
 	public partial class UnitTest
 	{
