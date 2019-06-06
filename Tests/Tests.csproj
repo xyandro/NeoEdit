@@ -10,9 +10,6 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(SolutionDir)Dependencies\GlobalAssemblyInfo.cs">
-      <Link>Properties\GlobalAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="CoderTest.cs" />
     <Compile Include="ColorerTest.cs" />
     <Compile Include="CompressionTest.cs" />

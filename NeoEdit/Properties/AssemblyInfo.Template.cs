@@ -3,6 +3,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 using System.Windows;
 
+[assembly: AssemblyTitle("NeoEdit.exe")]
 [assembly: AssemblyCompany("Randon Spackman")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCopyright("© Randon Spackman 2013-%YEAR%")]

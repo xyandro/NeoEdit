@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="BuildBalanced;BuildChangeLog;BuildColumns;BuildCommandLine;BuildCSharp;BuildExactColumns;BuildExpression;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;CompressWords;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" InitialTargets="BuildBalanced;BuildChangeLog;BuildColumns;BuildCommandLine;BuildCSharp;BuildExactColumns;BuildExpression;BuildAssemblyInfo;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;CompressWords;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(SolutionDir)$(SolutionName).csproj.props" />
   <PropertyGroup>
     <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
@@ -36,6 +36,10 @@
   <Target Name="BuildExpression" Inputs="Expressions\Source\ExpressionLexer.g4;Expressions\Source\ExpressionParser.g4" Outputs="Expressions\Parser\ExpressionLexer.cs;Expressions\Parser\ExpressionParser.cs;Expressions\Parser\ExpressionParserBaseVisitor.cs;Expressions\Parser\ExpressionParserVisitor.cs" Returns="">
     <Message Text="Building expression parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Expressions.Parser -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionLexer.g4&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionParser.g4&quot;" />
+  </Target>
+  <Target Name="BuildAssemblyInfo" Inputs="Properties\AssemblyInfo.Template.cs" Outputs="Properties\AssemblyInfo.cs" Returns="">
+    <Message Text="Building AssemblyInfo" Importance="High" />
+    <Exec Command="GitInfo.bat Properties\AssemblyInfo.Template.cs Properties\AssemblyInfo.cs" />
   </Target>
   <Target Name="BuildHTML" Inputs="Content\HTML\Source\HTMLLexer.g4;Content\HTML\Source\HTMLParser.g4" Outputs="Content\HTML\Parser\HTMLLexer.cs;Content\HTML\Parser\HTMLParser.cs;Content\HTML\Parser\HTMLParserBaseVisitor.cs;Content\HTML\Parser\HTMLParserVisitor.cs" Returns="">
     <Message Text="Building HTML parser" Importance="High" />
@@ -91,9 +95,6 @@
     <EmbeddedResource Include="$(SolutionDir)ChangeLog.txt">
       <Link>Resources\ChangeLog.txt</Link>
     </EmbeddedResource>
-    <Compile Include="$(SolutionDir)Dependencies\GlobalAssemblyInfo.cs">
-      <Link>Properties\GlobalAssemblyInfo.cs</Link>
-    </Compile>
     <EmbeddedResource Include="$(SolutionDir)License.txt">
       <Link>Resources\License.txt</Link>
     </EmbeddedResource>
@@ -952,6 +953,8 @@
     <Compile Include="FileSaver.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="GIFWriter.cs" />
+    <None Include="GitInfo.bat" />
+    <None Include="GitInfo.ps1" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
@@ -997,6 +1000,7 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <None Include="Properties\AssemblyInfo.Template.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="RangeList.cs" />
     <Resource Include="Resources\Checked.png" />
