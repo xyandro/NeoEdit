@@ -1,7 +1,6 @@
 ﻿<Menu Name="self" x:Class="NeoEdit.NEMenu"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:commonControls="clr-namespace:NeoEdit.Common.Controls;assembly=NeoEdit.Common"
 	xmlns:commonConverters="clr-namespace:NeoEdit.Common.Converters;assembly=NeoEdit.Common"
 	xmlns:common="clr-namespace:NeoEdit.Common;assembly=NeoEdit.Common"
 	xmlns:neoEditControls="clr-namespace:NeoEdit.Controls"
@@ -13,138 +12,138 @@
 
 	<MenuItem Header="_File">
 		<MenuItem Header="_New">
-			<commonControls:NEMenuItem Header="_New" CommandEnum="File_New_New"/>
-			<commonControls:NEMenuItem Header="From _Selections" CommandEnum="File_New_FromSelections"/>
-			<commonControls:NEMenuItem Header="From _Clipboards" CommandEnum="File_New_FromClipboards"/>
-			<commonControls:NEMenuItem Header="From C_lipboard Selections" CommandEnum="File_New_FromClipboardSelections"/>
+			<neoEditControls:NEMenuItem Header="_New" CommandEnum="File_New_New"/>
+			<neoEditControls:NEMenuItem Header="From _Selections" CommandEnum="File_New_FromSelections"/>
+			<neoEditControls:NEMenuItem Header="From _Clipboards" CommandEnum="File_New_FromClipboards"/>
+			<neoEditControls:NEMenuItem Header="From C_lipboard Selections" CommandEnum="File_New_FromClipboardSelections"/>
 		</MenuItem>
 		<MenuItem Header="_Open">
-			<commonControls:NEMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
-			<commonControls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
-			<commonControls:NEMenuItem Header="_Selected" CommandEnum="File_Open_Selected"/>
+			<neoEditControls:NEMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
+			<neoEditControls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
+			<neoEditControls:NEMenuItem Header="_Selected" CommandEnum="File_Open_Selected"/>
 		</MenuItem>
 		<MenuItem Header="_Save">
-			<commonControls:NEMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
-			<commonControls:NEMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
-			<commonControls:NEMenuItem Header="Save As By E_xpression" CommandEnum="File_Save_SaveAsByExpression"/>
+			<neoEditControls:NEMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
+			<neoEditControls:NEMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
+			<neoEditControls:NEMenuItem Header="Save As By E_xpression" CommandEnum="File_Save_SaveAsByExpression"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Copy To" CommandEnum="File_Save_CopyTo"/>
-			<commonControls:NEMenuItem Header="Copy To By Ex_pression" CommandEnum="File_Save_CopyToByExpression"/>
+			<neoEditControls:NEMenuItem Header="_Copy To" CommandEnum="File_Save_CopyTo"/>
+			<neoEditControls:NEMenuItem Header="Copy To By Ex_pression" CommandEnum="File_Save_CopyToByExpression"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="Set _Display Name" CommandEnum="File_Save_SetDisplayName"/>
+			<neoEditControls:NEMenuItem Header="Set _Display Name" CommandEnum="File_Save_SetDisplayName"/>
 		</MenuItem>
 		<MenuItem Header="O_perations">
-			<commonControls:NEMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
-			<commonControls:NEMenuItem Header="Rename By E_xpression" CommandEnum="File_Operations_RenameByExpression"/>
-			<commonControls:NEMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
-			<commonControls:NEMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
-			<commonControls:NEMenuItem Header="C_ommand Prompt" CommandEnum="File_Operations_CommandPrompt"/>
-			<commonControls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="File_Operations_DragDrop"/>
+			<neoEditControls:NEMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
+			<neoEditControls:NEMenuItem Header="Rename By E_xpression" CommandEnum="File_Operations_RenameByExpression"/>
+			<neoEditControls:NEMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
+			<neoEditControls:NEMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
+			<neoEditControls:NEMenuItem Header="C_ommand Prompt" CommandEnum="File_Operations_CommandPrompt"/>
+			<neoEditControls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="File_Operations_DragDrop"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_VCS Diff" CommandEnum="File_Operations_VCSDiff"/>
+			<neoEditControls:NEMenuItem Header="_VCS Diff" CommandEnum="File_Operations_VCSDiff"/>
 		</MenuItem>
-		<commonControls:NEMenuItem Header="C_lose" CommandEnum="File_Close"/>
-		<commonControls:NEMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
+		<neoEditControls:NEMenuItem Header="C_lose" CommandEnum="File_Close"/>
+		<neoEditControls:NEMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
 		<neoEditControls:MultiMenuItem Header="_Auto Refresh" Objects="{Binding Parent.Items, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh"/>
-		<commonControls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
+		<neoEditControls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="Move To New _Window" CommandEnum="File_MoveToNewWindow"/>
+		<neoEditControls:NEMenuItem Header="Move To New _Window" CommandEnum="File_MoveToNewWindow"/>
 		<Separator/>
 		<MenuItem Header="_Insert">
-			<commonControls:NEMenuItem Header="_Files" CommandEnum="File_Insert_Files"/>
-			<commonControls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Insert_CopiedCut"/>
-			<commonControls:NEMenuItem Header="_Selected" CommandEnum="File_Insert_Selected"/>
+			<neoEditControls:NEMenuItem Header="_Files" CommandEnum="File_Insert_Files"/>
+			<neoEditControls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Insert_CopiedCut"/>
+			<neoEditControls:NEMenuItem Header="_Selected" CommandEnum="File_Insert_Selected"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Copy">
-			<commonControls:NEMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
-			<commonControls:NEMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
-			<commonControls:NEMenuItem Header="_Display Name" CommandEnum="File_Copy_DisplayName"/>
+			<neoEditControls:NEMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
+			<neoEditControls:NEMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
+			<neoEditControls:NEMenuItem Header="_Display Name" CommandEnum="File_Copy_DisplayName"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Encoding">
-			<commonControls:NEMenuItem Header="_Encoding" CommandEnum="File_Encoding_Encoding"/>
-			<commonControls:NEMenuItem Header="_Reopen With Encoding" CommandEnum="File_Encoding_ReopenWithEncoding"/>
-			<commonControls:NEMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings"/>
+			<neoEditControls:NEMenuItem Header="_Encoding" CommandEnum="File_Encoding_Encoding"/>
+			<neoEditControls:NEMenuItem Header="_Reopen With Encoding" CommandEnum="File_Encoding_ReopenWithEncoding"/>
+			<neoEditControls:NEMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings"/>
 		</MenuItem>
 		<Separator/>
 		<neoEditControls:MultiMenuItem Header="Encr_ypt" Objects="{Binding Parent.Items, ElementName=self}" Property="AESKey" Converter="{commonConverters:NonEmptyConverter}" MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
 		<neoEditControls:MultiMenuItem Header="Co_mpress" Objects="{Binding Parent.Items, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
 		<Separator/>
 		<MenuItem Header="S_hell">
-			<commonControls:NEMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate"/>
-			<commonControls:NEMenuItem Header="_Unintegrate" CommandEnum="File_Shell_Unintegrate"/>
+			<neoEditControls:NEMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate"/>
+			<neoEditControls:NEMenuItem Header="_Unintegrate" CommandEnum="File_Shell_Unintegrate"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="E_xit" CommandEnum="File_Exit"/>
+		<neoEditControls:NEMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
-		<commonControls:NEMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
-		<commonControls:NEMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
+		<neoEditControls:NEMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
+		<neoEditControls:NEMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
 		<Separator/>
 		<MenuItem Header="_Copy">
-			<commonControls:NEMenuItem Header="_Copy" CommandEnum="Edit_Copy_Copy"/>
-			<commonControls:NEMenuItem Header="C_ut" CommandEnum="Edit_Copy_Cut"/>
+			<neoEditControls:NEMenuItem Header="_Copy" CommandEnum="Edit_Copy_Copy"/>
+			<neoEditControls:NEMenuItem Header="C_ut" CommandEnum="Edit_Copy_Cut"/>
 		</MenuItem>
 		<MenuItem Header="_Paste">
-			<commonControls:NEMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>
-			<commonControls:NEMenuItem Header="_Rotate Paste" CommandEnum="Edit_Paste_RotatePaste"/>
+			<neoEditControls:NEMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>
+			<neoEditControls:NEMenuItem Header="_Rotate Paste" CommandEnum="Edit_Paste_RotatePaste"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Find">
-			<commonControls:NEMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
-			<commonControls:NEMenuItem Header="_Next" CommandEnum="Edit_Find_Next"/>
-			<commonControls:NEMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
-			<commonControls:NEMenuItem Header="_Selected" CommandEnum="Edit_Find_Selected"/>
-			<commonControls:NEMenuItem Header="_Mass Find" CommandEnum="Edit_Find_MassFind"/>
-			<commonControls:NEMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
-			<commonControls:NEMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults"/>
+			<neoEditControls:NEMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
+			<neoEditControls:NEMenuItem Header="_Next" CommandEnum="Edit_Find_Next"/>
+			<neoEditControls:NEMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
+			<neoEditControls:NEMenuItem Header="_Selected" CommandEnum="Edit_Find_Selected"/>
+			<neoEditControls:NEMenuItem Header="_Mass Find" CommandEnum="Edit_Find_MassFind"/>
+			<neoEditControls:NEMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
+			<neoEditControls:NEMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="Copy Do_wn" CommandEnum="Edit_CopyDown"/>
-		<commonControls:NEMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate"/>
+		<neoEditControls:NEMenuItem Header="Copy Do_wn" CommandEnum="Edit_CopyDown"/>
+		<neoEditControls:NEMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="R_epeat" CommandEnum="Edit_Repeat"/>
+		<neoEditControls:NEMenuItem Header="R_epeat" CommandEnum="Edit_Repeat"/>
 		<Separator/>
 		<MenuItem Header="_Markup">
-			<commonControls:NEMenuItem Header="_Escape" CommandEnum="Edit_Markup_Escape"/>
-			<commonControls:NEMenuItem Header="_Unescape" CommandEnum="Edit_Markup_Unescape"/>
+			<neoEditControls:NEMenuItem Header="_Escape" CommandEnum="Edit_Markup_Escape"/>
+			<neoEditControls:NEMenuItem Header="_Unescape" CommandEnum="Edit_Markup_Unescape"/>
 		</MenuItem>
 		<MenuItem Header="RegE_x">
-			<commonControls:NEMenuItem Header="_Escape" CommandEnum="Edit_RegEx_Escape"/>
-			<commonControls:NEMenuItem Header="_Unescape" CommandEnum="Edit_RegEx_Unescape"/>
+			<neoEditControls:NEMenuItem Header="_Escape" CommandEnum="Edit_RegEx_Escape"/>
+			<neoEditControls:NEMenuItem Header="_Unescape" CommandEnum="Edit_RegEx_Unescape"/>
 		</MenuItem>
 		<MenuItem Header="UR_L">
-			<commonControls:NEMenuItem Header="_Escape" CommandEnum="Edit_URL_Escape"/>
-			<commonControls:NEMenuItem Header="_Unescape" CommandEnum="Edit_URL_Unescape"/>
-			<commonControls:NEMenuItem Header="_Absolute" CommandEnum="Edit_URL_Absolute"/>
+			<neoEditControls:NEMenuItem Header="_Escape" CommandEnum="Edit_URL_Escape"/>
+			<neoEditControls:NEMenuItem Header="_Unescape" CommandEnum="Edit_URL_Unescape"/>
+			<neoEditControls:NEMenuItem Header="_Absolute" CommandEnum="Edit_URL_Absolute"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Data">
-			<commonControls:NEMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash"/>
-			<commonControls:NEMenuItem Header="_Compress" CommandEnum="Edit_Data_Compress"/>
-			<commonControls:NEMenuItem Header="_Decompress" CommandEnum="Edit_Data_Decompress"/>
-			<commonControls:NEMenuItem Header="E_ncrypt" CommandEnum="Edit_Data_Encrypt"/>
-			<commonControls:NEMenuItem Header="D_ecrypt" CommandEnum="Edit_Data_Decrypt"/>
-			<commonControls:NEMenuItem Header="_Sign" CommandEnum="Edit_Data_Sign"/>
+			<neoEditControls:NEMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash"/>
+			<neoEditControls:NEMenuItem Header="_Compress" CommandEnum="Edit_Data_Compress"/>
+			<neoEditControls:NEMenuItem Header="_Decompress" CommandEnum="Edit_Data_Decompress"/>
+			<neoEditControls:NEMenuItem Header="E_ncrypt" CommandEnum="Edit_Data_Encrypt"/>
+			<neoEditControls:NEMenuItem Header="D_ecrypt" CommandEnum="Edit_Data_Decrypt"/>
+			<neoEditControls:NEMenuItem Header="_Sign" CommandEnum="Edit_Data_Sign"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
+		<neoEditControls:NEMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="Co_nvert" CommandEnum="Edit_Convert"/>
+		<neoEditControls:NEMenuItem Header="Co_nvert" CommandEnum="Edit_Convert"/>
 		<Separator/>
 		<MenuItem Header="_Bookmarks">
-			<commonControls:NEMenuItem Header="_Toggle" CommandEnum="Edit_Bookmarks_Toggle"/>
-			<commonControls:NEMenuItem Header="_Next" CommandEnum="Edit_Bookmarks_Next"/>
-			<commonControls:NEMenuItem Header="_Previous" CommandEnum="Edit_Bookmarks_Previous"/>
-			<commonControls:NEMenuItem Header="_Clear" CommandEnum="Edit_Bookmarks_Clear"/>
+			<neoEditControls:NEMenuItem Header="_Toggle" CommandEnum="Edit_Bookmarks_Toggle"/>
+			<neoEditControls:NEMenuItem Header="_Next" CommandEnum="Edit_Bookmarks_Next"/>
+			<neoEditControls:NEMenuItem Header="_Previous" CommandEnum="Edit_Bookmarks_Previous"/>
+			<neoEditControls:NEMenuItem Header="_Clear" CommandEnum="Edit_Bookmarks_Clear"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="Na_vigate">
-			<commonControls:NEMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft"/>
-			<commonControls:NEMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight"/>
-			<commonControls:NEMenuItem Header="All L_eft" CommandEnum="Edit_Navigate_AllLeft"/>
-			<commonControls:NEMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
+			<neoEditControls:NEMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft"/>
+			<neoEditControls:NEMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight"/>
+			<neoEditControls:NEMenuItem Header="All L_eft" CommandEnum="Edit_Navigate_AllLeft"/>
+			<neoEditControls:NEMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
 			<Separator/>
 			<MenuItem Header="_Jump By">
 				<neoEditControls:MultiMenuItem Header="_Words" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static common:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
@@ -156,343 +155,343 @@
 		<MenuItem Header="Esc_ape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(common:Settings.EscapeClearsSelections), Mode=TwoWay}"/>
 	</MenuItem>
 	<MenuItem Header="D_iff">
-		<commonControls:NEMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
-		<commonControls:NEMenuItem Header="Se_lections" CommandEnum="Diff_Selections"/>
-		<commonControls:NEMenuItem Header="Selected _Files" CommandEnum="Diff_SelectedFiles"/>
-		<commonControls:NEMenuItem Header="_VCS Normal Files" CommandEnum="Diff_VCSNormalFiles"/>
+		<neoEditControls:NEMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
+		<neoEditControls:NEMenuItem Header="Se_lections" CommandEnum="Diff_Selections"/>
+		<neoEditControls:NEMenuItem Header="Selected _Files" CommandEnum="Diff_SelectedFiles"/>
+		<neoEditControls:NEMenuItem Header="_VCS Normal Files" CommandEnum="Diff_VCSNormalFiles"/>
 		<MenuItem Header="Re_gions">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Diff_Regions_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Diff_Regions_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Diff_Regions_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Diff_Regions_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Diff_Regions_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Diff_Regions_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Diff_Regions_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Diff_Regions_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Diff_Regions_Region9"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Diff_Regions_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Diff_Regions_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Diff_Regions_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Diff_Regions_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Diff_Regions_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Diff_Regions_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Diff_Regions_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Diff_Regions_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Diff_Regions_Region9"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Break" CommandEnum="Diff_Break"/>
+		<neoEditControls:NEMenuItem Header="_Break" CommandEnum="Diff_Break"/>
 		<Separator/>
 		<neoEditControls:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
 		<neoEditControls:MultiMenuItem Header="Ignore _Case" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
 		<neoEditControls:MultiMenuItem Header="Ignore _Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers"/>
 		<neoEditControls:MultiMenuItem Header="Ignore Line _Endings" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings"/>
-		<commonControls:NEMenuItem Header="Ignore C_haracters" CommandEnum="Diff_IgnoreCharacters"/>
-		<commonControls:NEMenuItem Header="_Reset" CommandEnum="Diff_Reset"/>
+		<neoEditControls:NEMenuItem Header="Ignore C_haracters" CommandEnum="Diff_IgnoreCharacters"/>
+		<neoEditControls:NEMenuItem Header="_Reset" CommandEnum="Diff_Reset"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="Ne_xt" CommandEnum="Diff_Next"/>
-		<commonControls:NEMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
-		<commonControls:NEMenuItem Header="C_opy Left" CommandEnum="Diff_CopyLeft"/>
-		<commonControls:NEMenuItem Header="Cop_y Right" CommandEnum="Diff_CopyRight"/>
+		<neoEditControls:NEMenuItem Header="Ne_xt" CommandEnum="Diff_Next"/>
+		<neoEditControls:NEMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
+		<neoEditControls:NEMenuItem Header="C_opy Left" CommandEnum="Diff_CopyLeft"/>
+		<neoEditControls:NEMenuItem Header="Cop_y Right" CommandEnum="Diff_CopyRight"/>
 		<Separator/>
 		<MenuItem Header="F_ix">
-			<commonControls:NEMenuItem Header="_Whitespace" CommandEnum="Diff_Fix_Whitespace"/>
-			<commonControls:NEMenuItem Header="_Case" CommandEnum="Diff_Fix_Case"/>
-			<commonControls:NEMenuItem Header="_Numbers" CommandEnum="Diff_Fix_Numbers"/>
-			<commonControls:NEMenuItem Header="Line _Endings" CommandEnum="Diff_Fix_LineEndings"/>
-			<commonControls:NEMenuItem Header="Enc_oding" CommandEnum="Diff_Fix_Encoding"/>
+			<neoEditControls:NEMenuItem Header="_Whitespace" CommandEnum="Diff_Fix_Whitespace"/>
+			<neoEditControls:NEMenuItem Header="_Case" CommandEnum="Diff_Fix_Case"/>
+			<neoEditControls:NEMenuItem Header="_Numbers" CommandEnum="Diff_Fix_Numbers"/>
+			<neoEditControls:NEMenuItem Header="Line _Endings" CommandEnum="Diff_Fix_LineEndings"/>
+			<neoEditControls:NEMenuItem Header="Enc_oding" CommandEnum="Diff_Fix_Encoding"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<commonControls:NEMenuItem Header="_Match" CommandEnum="Diff_Select_Match"/>
-			<commonControls:NEMenuItem Header="_Diff" CommandEnum="Diff_Select_Diff"/>
+			<neoEditControls:NEMenuItem Header="_Match" CommandEnum="Diff_Select_Match"/>
+			<neoEditControls:NEMenuItem Header="_Diff" CommandEnum="Diff_Select_Diff"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Left Tab" CommandEnum="Diff_Select_LeftTab"/>
-			<commonControls:NEMenuItem Header="_Right Tab" CommandEnum="Diff_Select_RightTab"/>
-			<commonControls:NEMenuItem Header="_Both Tabs" CommandEnum="Diff_Select_BothTabs"/>
+			<neoEditControls:NEMenuItem Header="_Left Tab" CommandEnum="Diff_Select_LeftTab"/>
+			<neoEditControls:NEMenuItem Header="_Right Tab" CommandEnum="Diff_Select_RightTab"/>
+			<neoEditControls:NEMenuItem Header="_Both Tabs" CommandEnum="Diff_Select_BothTabs"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
 		<MenuItem Header="N_ame">
-			<commonControls:NEMenuItem Header="_Simplify" CommandEnum="Files_Name_Simplify"/>
-			<commonControls:NEMenuItem Header="Make _Absolute" CommandEnum="Files_Name_MakeAbsolute"/>
-			<commonControls:NEMenuItem Header="Make _Relative" CommandEnum="Files_Name_MakeRelative"/>
-			<commonControls:NEMenuItem Header="Get _Unique" CommandEnum="Files_Name_GetUnique"/>
-			<commonControls:NEMenuItem Header="Sa_nitize" CommandEnum="Files_Name_Sanitize"/>
+			<neoEditControls:NEMenuItem Header="_Simplify" CommandEnum="Files_Name_Simplify"/>
+			<neoEditControls:NEMenuItem Header="Make _Absolute" CommandEnum="Files_Name_MakeAbsolute"/>
+			<neoEditControls:NEMenuItem Header="Make _Relative" CommandEnum="Files_Name_MakeRelative"/>
+			<neoEditControls:NEMenuItem Header="Get _Unique" CommandEnum="Files_Name_GetUnique"/>
+			<neoEditControls:NEMenuItem Header="Sa_nitize" CommandEnum="Files_Name_Sanitize"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Get">
-			<commonControls:NEMenuItem Header="_Size" CommandEnum="Files_Get_Size"/>
+			<neoEditControls:NEMenuItem Header="_Size" CommandEnum="Files_Get_Size"/>
 			<MenuItem Header="_Time">
-				<commonControls:NEMenuItem Header="_Write" CommandEnum="Files_Get_Time_Write"/>
-				<commonControls:NEMenuItem Header="_Access" CommandEnum="Files_Get_Time_Access"/>
-				<commonControls:NEMenuItem Header="_Create" CommandEnum="Files_Get_Time_Create"/>
+				<neoEditControls:NEMenuItem Header="_Write" CommandEnum="Files_Get_Time_Write"/>
+				<neoEditControls:NEMenuItem Header="_Access" CommandEnum="Files_Get_Time_Access"/>
+				<neoEditControls:NEMenuItem Header="_Create" CommandEnum="Files_Get_Time_Create"/>
 			</MenuItem>
-			<commonControls:NEMenuItem Header="_Attributes" CommandEnum="Files_Get_Attributes"/>
+			<neoEditControls:NEMenuItem Header="_Attributes" CommandEnum="Files_Get_Attributes"/>
 			<Separator/>
 			<MenuItem Header="V_ersion">
-				<commonControls:NEMenuItem Header="_File" CommandEnum="Files_Get_Version_File"/>
-				<commonControls:NEMenuItem Header="_Product" CommandEnum="Files_Get_Version_Product"/>
-				<commonControls:NEMenuItem Header="_Assembly" CommandEnum="Files_Get_Version_Assembly"/>
+				<neoEditControls:NEMenuItem Header="_File" CommandEnum="Files_Get_Version_File"/>
+				<neoEditControls:NEMenuItem Header="_Product" CommandEnum="Files_Get_Version_Product"/>
+				<neoEditControls:NEMenuItem Header="_Assembly" CommandEnum="Files_Get_Version_Assembly"/>
 			</MenuItem>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Children" CommandEnum="Files_Get_Children"/>
-			<commonControls:NEMenuItem Header="_Descendants" CommandEnum="Files_Get_Descendants"/>
+			<neoEditControls:NEMenuItem Header="_Children" CommandEnum="Files_Get_Children"/>
+			<neoEditControls:NEMenuItem Header="_Descendants" CommandEnum="Files_Get_Descendants"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Version Control Status" CommandEnum="Files_Get_VersionControlStatus"/>
+			<neoEditControls:NEMenuItem Header="_Version Control Status" CommandEnum="Files_Get_VersionControlStatus"/>
 		</MenuItem>
 		<MenuItem Header="S_et">
-			<commonControls:NEMenuItem Header="_Size" CommandEnum="Files_Set_Size"/>
+			<neoEditControls:NEMenuItem Header="_Size" CommandEnum="Files_Set_Size"/>
 			<MenuItem Header="_Time">
-				<commonControls:NEMenuItem Header="_Write" CommandEnum="Files_Set_Time_Write"/>
-				<commonControls:NEMenuItem Header="_Access" CommandEnum="Files_Set_Time_Access"/>
-				<commonControls:NEMenuItem Header="_Create" CommandEnum="Files_Set_Time_Create"/>
-				<commonControls:NEMenuItem Header="A_ll" CommandEnum="Files_Set_Time_All"/>
+				<neoEditControls:NEMenuItem Header="_Write" CommandEnum="Files_Set_Time_Write"/>
+				<neoEditControls:NEMenuItem Header="_Access" CommandEnum="Files_Set_Time_Access"/>
+				<neoEditControls:NEMenuItem Header="_Create" CommandEnum="Files_Set_Time_Create"/>
+				<neoEditControls:NEMenuItem Header="A_ll" CommandEnum="Files_Set_Time_All"/>
 			</MenuItem>
-			<commonControls:NEMenuItem Header="_Attributes" CommandEnum="Files_Set_Attributes"/>
+			<neoEditControls:NEMenuItem Header="_Attributes" CommandEnum="Files_Set_Attributes"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Find">
-			<commonControls:NEMenuItem Header="_Binary" CommandEnum="Files_Find_Binary"/>
-			<commonControls:NEMenuItem Header="_Text" CommandEnum="Files_Find_Text"/>
-			<commonControls:NEMenuItem Header="_Mass Find" CommandEnum="Files_Find_MassFind"/>
+			<neoEditControls:NEMenuItem Header="_Binary" CommandEnum="Files_Find_Binary"/>
+			<neoEditControls:NEMenuItem Header="_Text" CommandEnum="Files_Find_Text"/>
+			<neoEditControls:NEMenuItem Header="_Mass Find" CommandEnum="Files_Find_MassFind"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
+		<neoEditControls:NEMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
 		<MenuItem Header="_Create">
-			<commonControls:NEMenuItem Header="_Files" CommandEnum="Files_Create_Files"/>
-			<commonControls:NEMenuItem Header="_Directories" CommandEnum="Files_Create_Directories"/>
-			<commonControls:NEMenuItem Header="From _Expressions" CommandEnum="Files_Create_FromExpressions"/>
+			<neoEditControls:NEMenuItem Header="_Files" CommandEnum="Files_Create_Files"/>
+			<neoEditControls:NEMenuItem Header="_Directories" CommandEnum="Files_Create_Directories"/>
+			<neoEditControls:NEMenuItem Header="From _Expressions" CommandEnum="Files_Create_FromExpressions"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<MenuItem Header="_Name">
-				<commonControls:NEMenuItem Header="_Directory" CommandEnum="Files_Select_Name_Directory"/>
-				<commonControls:NEMenuItem Header="_Name" CommandEnum="Files_Select_Name_Name"/>
-				<commonControls:NEMenuItem Header="File Name _w/o Extension" CommandEnum="Files_Select_Name_FileNamewoExtension"/>
-				<commonControls:NEMenuItem Header="_Extension" CommandEnum="Files_Select_Name_Extension"/>
+				<neoEditControls:NEMenuItem Header="_Directory" CommandEnum="Files_Select_Name_Directory"/>
+				<neoEditControls:NEMenuItem Header="_Name" CommandEnum="Files_Select_Name_Name"/>
+				<neoEditControls:NEMenuItem Header="File Name _w/o Extension" CommandEnum="Files_Select_Name_FileNamewoExtension"/>
+				<neoEditControls:NEMenuItem Header="_Extension" CommandEnum="Files_Select_Name_Extension"/>
 			</MenuItem>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Files" CommandEnum="Files_Select_Files"/>
-			<commonControls:NEMenuItem Header="_Directories" CommandEnum="Files_Select_Directories"/>
+			<neoEditControls:NEMenuItem Header="_Files" CommandEnum="Files_Select_Files"/>
+			<neoEditControls:NEMenuItem Header="_Directories" CommandEnum="Files_Select_Directories"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Existing" CommandEnum="Files_Select_Existing"/>
-			<commonControls:NEMenuItem Header="Non-E_xisting" CommandEnum="Files_Select_NonExisting"/>
+			<neoEditControls:NEMenuItem Header="_Existing" CommandEnum="Files_Select_Existing"/>
+			<neoEditControls:NEMenuItem Header="Non-E_xisting" CommandEnum="Files_Select_NonExisting"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Roots" CommandEnum="Files_Select_Roots"/>
-			<commonControls:NEMenuItem Header="Non-R_oots" CommandEnum="Files_Select_NonRoots"/>
+			<neoEditControls:NEMenuItem Header="_Roots" CommandEnum="Files_Select_Roots"/>
+			<neoEditControls:NEMenuItem Header="Non-R_oots" CommandEnum="Files_Select_NonRoots"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Match Depth" CommandEnum="Files_Select_MatchDepth"/>
+			<neoEditControls:NEMenuItem Header="_Match Depth" CommandEnum="Files_Select_MatchDepth"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Common Ancestor" CommandEnum="Files_Select_CommonAncestor"/>
+			<neoEditControls:NEMenuItem Header="_Common Ancestor" CommandEnum="Files_Select_CommonAncestor"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="By _Version Control Status" CommandEnum="Files_Select_ByVersionControlStatus"/>
+			<neoEditControls:NEMenuItem Header="By _Version Control Status" CommandEnum="Files_Select_ByVersionControlStatus"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Hash" CommandEnum="Files_Hash"/>
-		<commonControls:NEMenuItem Header="S_ign" CommandEnum="Files_Sign"/>
+		<neoEditControls:NEMenuItem Header="_Hash" CommandEnum="Files_Hash"/>
+		<neoEditControls:NEMenuItem Header="S_ign" CommandEnum="Files_Sign"/>
 		<Separator/>
 		<MenuItem Header="O_perations">
-			<commonControls:NEMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>
-			<commonControls:NEMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
-			<commonControls:NEMenuItem Header="_Delete" CommandEnum="Files_Operations_Delete"/>
+			<neoEditControls:NEMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>
+			<neoEditControls:NEMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
+			<neoEditControls:NEMenuItem Header="_Delete" CommandEnum="Files_Operations_Delete"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="Files_Operations_DragDrop"/>
-			<commonControls:NEMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore"/>
-			<commonControls:NEMenuItem Header="C_ommand Prompt" CommandEnum="Files_Operations_CommandPrompt"/>
+			<neoEditControls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="Files_Operations_DragDrop"/>
+			<neoEditControls:NEMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore"/>
+			<neoEditControls:NEMenuItem Header="C_ommand Prompt" CommandEnum="Files_Operations_CommandPrompt"/>
 			<Separator/>
 			<MenuItem Header="R_un Command">
-				<commonControls:NEMenuItem Header="_Parallel" CommandEnum="Files_Operations_RunCommand_Parallel"/>
-				<commonControls:NEMenuItem Header="_Sequential" CommandEnum="Files_Operations_RunCommand_Sequential"/>
-				<commonControls:NEMenuItem Header="S_hell" CommandEnum="Files_Operations_RunCommand_Shell"/>
+				<neoEditControls:NEMenuItem Header="_Parallel" CommandEnum="Files_Operations_RunCommand_Parallel"/>
+				<neoEditControls:NEMenuItem Header="_Sequential" CommandEnum="Files_Operations_RunCommand_Sequential"/>
+				<neoEditControls:NEMenuItem Header="S_hell" CommandEnum="Files_Operations_RunCommand_Shell"/>
 			</MenuItem>
 			<Separator/>
-			<commonControls:NEMenuItem Header="E_ncoding" CommandEnum="Files_Operations_Encoding"/>
+			<neoEditControls:NEMenuItem Header="E_ncoding" CommandEnum="Files_Operations_Encoding"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Split File" CommandEnum="Files_Operations_SplitFile"/>
-			<commonControls:NEMenuItem Header="Com_bine Files" CommandEnum="Files_Operations_CombineFiles"/>
+			<neoEditControls:NEMenuItem Header="_Split File" CommandEnum="Files_Operations_SplitFile"/>
+			<neoEditControls:NEMenuItem Header="Com_bine Files" CommandEnum="Files_Operations_CombineFiles"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="E_xpression">
-		<commonControls:NEMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>
-		<commonControls:NEMenuItem Header="_Copy" CommandEnum="Expression_Copy"/>
-		<commonControls:NEMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected"/>
-		<commonControls:NEMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression"/>
+		<neoEditControls:NEMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>
+		<neoEditControls:NEMenuItem Header="_Copy" CommandEnum="Expression_Copy"/>
+		<neoEditControls:NEMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected"/>
+		<neoEditControls:NEMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression"/>
 		<Separator/>
 		<MenuItem Header="_Inline Variables">
-			<commonControls:NEMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add"/>
-			<commonControls:NEMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate"/>
-			<commonControls:NEMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve"/>
+			<neoEditControls:NEMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add"/>
+			<neoEditControls:NEMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate"/>
+			<neoEditControls:NEMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve"/>
 			<neoEditControls:MultiMenuItem Header="_Include In Expressions" Objects="{Binding Parent.Items, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Text">
 		<MenuItem Header="_Select">
-			<commonControls:NEMenuItem Header="_Trim" CommandEnum="Text_Select_Trim"/>
-			<commonControls:NEMenuItem Header="_By Width" CommandEnum="Text_Select_ByWidth"/>
-			<commonControls:NEMenuItem Header="_Whole Word" CommandEnum="Text_Select_WholeWord"/>
-			<commonControls:NEMenuItem Header="B_ounded Word" CommandEnum="Text_Select_BoundedWord"/>
+			<neoEditControls:NEMenuItem Header="_Trim" CommandEnum="Text_Select_Trim"/>
+			<neoEditControls:NEMenuItem Header="_By Width" CommandEnum="Text_Select_ByWidth"/>
+			<neoEditControls:NEMenuItem Header="_Whole Word" CommandEnum="Text_Select_WholeWord"/>
+			<neoEditControls:NEMenuItem Header="B_ounded Word" CommandEnum="Text_Select_BoundedWord"/>
 			<MenuItem Header="Mi_n">
-				<commonControls:NEMenuItem Header="_Text" CommandEnum="Text_Select_Min_Text"/>
-				<commonControls:NEMenuItem Header="_Length" CommandEnum="Text_Select_Min_Length"/>
+				<neoEditControls:NEMenuItem Header="_Text" CommandEnum="Text_Select_Min_Text"/>
+				<neoEditControls:NEMenuItem Header="_Length" CommandEnum="Text_Select_Min_Length"/>
 			</MenuItem>
 			<MenuItem Header="Ma_x">
-				<commonControls:NEMenuItem Header="_Text" CommandEnum="Text_Select_Max_Text"/>
-				<commonControls:NEMenuItem Header="_Length" CommandEnum="Text_Select_Max_Length"/>
+				<neoEditControls:NEMenuItem Header="_Text" CommandEnum="Text_Select_Max_Text"/>
+				<neoEditControls:NEMenuItem Header="_Length" CommandEnum="Text_Select_Max_Length"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Case">
-			<commonControls:NEMenuItem Header="_Upper" CommandEnum="Text_Case_Upper"/>
-			<commonControls:NEMenuItem Header="_Lower" CommandEnum="Text_Case_Lower"/>
-			<commonControls:NEMenuItem Header="_Proper" CommandEnum="Text_Case_Proper"/>
-			<commonControls:NEMenuItem Header="_Toggle" CommandEnum="Text_Case_Toggle"/>
+			<neoEditControls:NEMenuItem Header="_Upper" CommandEnum="Text_Case_Upper"/>
+			<neoEditControls:NEMenuItem Header="_Lower" CommandEnum="Text_Case_Lower"/>
+			<neoEditControls:NEMenuItem Header="_Proper" CommandEnum="Text_Case_Proper"/>
+			<neoEditControls:NEMenuItem Header="_Toggle" CommandEnum="Text_Case_Toggle"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Length" CommandEnum="Text_Length"/>
-		<commonControls:NEMenuItem Header="_Width" CommandEnum="Text_Width"/>
-		<commonControls:NEMenuItem Header="_Trim" CommandEnum="Text_Trim"/>
-		<commonControls:NEMenuItem Header="S_ingle Line" CommandEnum="Text_SingleLine"/>
+		<neoEditControls:NEMenuItem Header="_Length" CommandEnum="Text_Length"/>
+		<neoEditControls:NEMenuItem Header="_Width" CommandEnum="Text_Width"/>
+		<neoEditControls:NEMenuItem Header="_Trim" CommandEnum="Text_Trim"/>
+		<neoEditControls:NEMenuItem Header="S_ingle Line" CommandEnum="Text_SingleLine"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Unicode" CommandEnum="Text_Unicode"/>
-		<commonControls:NEMenuItem Header="_GUID" CommandEnum="Text_GUID"/>
-		<commonControls:NEMenuItem Header="_Random Text" CommandEnum="Text_RandomText"/>
-		<commonControls:NEMenuItem Header="L_orem Ipsum" CommandEnum="Text_LoremIpsum"/>
-		<commonControls:NEMenuItem Header="Re_verse RegEx" CommandEnum="Text_ReverseRegEx"/>
-		<commonControls:NEMenuItem Header="_First Distinct" CommandEnum="Text_FirstDistinct"/>
+		<neoEditControls:NEMenuItem Header="_Unicode" CommandEnum="Text_Unicode"/>
+		<neoEditControls:NEMenuItem Header="_GUID" CommandEnum="Text_GUID"/>
+		<neoEditControls:NEMenuItem Header="_Random Text" CommandEnum="Text_RandomText"/>
+		<neoEditControls:NEMenuItem Header="L_orem Ipsum" CommandEnum="Text_LoremIpsum"/>
+		<neoEditControls:NEMenuItem Header="Re_verse RegEx" CommandEnum="Text_ReverseRegEx"/>
+		<neoEditControls:NEMenuItem Header="_First Distinct" CommandEnum="Text_FirstDistinct"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="R_epeat Count" CommandEnum="Text_RepeatCount"/>
-		<commonControls:NEMenuItem Header="Re_peat Index" CommandEnum="Text_RepeatIndex"/>
+		<neoEditControls:NEMenuItem Header="R_epeat Count" CommandEnum="Text_RepeatCount"/>
+		<neoEditControls:NEMenuItem Header="Re_peat Index" CommandEnum="Text_RepeatIndex"/>
 	</MenuItem>
 	<MenuItem Header="_Numeric">
 		<MenuItem Header="_Select">
-			<commonControls:NEMenuItem Header="Mi_n" CommandEnum="Numeric_Select_Min"/>
-			<commonControls:NEMenuItem Header="Ma_x" CommandEnum="Numeric_Select_Max"/>
+			<neoEditControls:NEMenuItem Header="Mi_n" CommandEnum="Numeric_Select_Min"/>
+			<neoEditControls:NEMenuItem Header="Ma_x" CommandEnum="Numeric_Select_Max"/>
 			<MenuItem Header="_Fraction">
-				<commonControls:NEMenuItem Header="_Whole" CommandEnum="Numeric_Select_Fraction_Whole"/>
-				<commonControls:NEMenuItem Header="_Fraction" CommandEnum="Numeric_Select_Fraction_Fraction"/>
+				<neoEditControls:NEMenuItem Header="_Whole" CommandEnum="Numeric_Select_Fraction_Whole"/>
+				<neoEditControls:NEMenuItem Header="_Fraction" CommandEnum="Numeric_Select_Fraction_Fraction"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Hex">
-			<commonControls:NEMenuItem Header="_To Hex" CommandEnum="Numeric_Hex_ToHex"/>
-			<commonControls:NEMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex"/>
+			<neoEditControls:NEMenuItem Header="_To Hex" CommandEnum="Numeric_Hex_ToHex"/>
+			<neoEditControls:NEMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex"/>
 		</MenuItem>
-		<commonControls:NEMenuItem Header="Con_vert Base" CommandEnum="Numeric_ConvertBase"/>
+		<neoEditControls:NEMenuItem Header="Con_vert Base" CommandEnum="Numeric_ConvertBase"/>
 		<Separator/>
 		<MenuItem Header="S_eries">
-			<commonControls:NEMenuItem Header="_Zero Based" CommandEnum="Numeric_Series_ZeroBased"/>
-			<commonControls:NEMenuItem Header="_One Based" CommandEnum="Numeric_Series_OneBased"/>
-			<commonControls:NEMenuItem Header="_Linear" CommandEnum="Numeric_Series_Linear"/>
-			<commonControls:NEMenuItem Header="_Geometric" CommandEnum="Numeric_Series_Geometric"/>
+			<neoEditControls:NEMenuItem Header="_Zero Based" CommandEnum="Numeric_Series_ZeroBased"/>
+			<neoEditControls:NEMenuItem Header="_One Based" CommandEnum="Numeric_Series_OneBased"/>
+			<neoEditControls:NEMenuItem Header="_Linear" CommandEnum="Numeric_Series_Linear"/>
+			<neoEditControls:NEMenuItem Header="_Geometric" CommandEnum="Numeric_Series_Geometric"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="S_cale" CommandEnum="Numeric_Scale"/>
+		<neoEditControls:NEMenuItem Header="S_cale" CommandEnum="Numeric_Scale"/>
 		<MenuItem Header="A_dd">
-			<commonControls:NEMenuItem Header="_Sum" CommandEnum="Numeric_Add_Sum"/>
-			<commonControls:NEMenuItem Header="_Forward Sum" CommandEnum="Numeric_Add_ForwardSum"/>
-			<commonControls:NEMenuItem Header="_Reverse Sum" CommandEnum="Numeric_Add_ReverseSum"/>
-			<commonControls:NEMenuItem Header="Undo F_orward Sum" CommandEnum="Numeric_Add_UndoForwardSum"/>
-			<commonControls:NEMenuItem Header="Undo R_everse Sum" CommandEnum="Numeric_Add_UndoReverseSum"/>
-			<commonControls:NEMenuItem Header="_Increment" CommandEnum="Numeric_Add_Increment"/>
-			<commonControls:NEMenuItem Header="_Decrement" CommandEnum="Numeric_Add_Decrement"/>
-			<commonControls:NEMenuItem Header="_Add Clipboard" CommandEnum="Numeric_Add_AddClipboard"/>
-			<commonControls:NEMenuItem Header="S_ubtract Clipboard" CommandEnum="Numeric_Add_SubtractClipboard"/>
+			<neoEditControls:NEMenuItem Header="_Sum" CommandEnum="Numeric_Add_Sum"/>
+			<neoEditControls:NEMenuItem Header="_Forward Sum" CommandEnum="Numeric_Add_ForwardSum"/>
+			<neoEditControls:NEMenuItem Header="_Reverse Sum" CommandEnum="Numeric_Add_ReverseSum"/>
+			<neoEditControls:NEMenuItem Header="Undo F_orward Sum" CommandEnum="Numeric_Add_UndoForwardSum"/>
+			<neoEditControls:NEMenuItem Header="Undo R_everse Sum" CommandEnum="Numeric_Add_UndoReverseSum"/>
+			<neoEditControls:NEMenuItem Header="_Increment" CommandEnum="Numeric_Add_Increment"/>
+			<neoEditControls:NEMenuItem Header="_Decrement" CommandEnum="Numeric_Add_Decrement"/>
+			<neoEditControls:NEMenuItem Header="_Add Clipboard" CommandEnum="Numeric_Add_AddClipboard"/>
+			<neoEditControls:NEMenuItem Header="S_ubtract Clipboard" CommandEnum="Numeric_Add_SubtractClipboard"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Fraction">
-			<commonControls:NEMenuItem Header="_Whole" CommandEnum="Numeric_Fraction_Whole"/>
-			<commonControls:NEMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction_Fraction"/>
+			<neoEditControls:NEMenuItem Header="_Whole" CommandEnum="Numeric_Fraction_Whole"/>
+			<neoEditControls:NEMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction_Fraction"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Simplify" CommandEnum="Numeric_Fraction_Simplify"/>
+			<neoEditControls:NEMenuItem Header="_Simplify" CommandEnum="Numeric_Fraction_Simplify"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="A_bsolute" CommandEnum="Numeric_Absolute"/>
-		<commonControls:NEMenuItem Header="F_loor" CommandEnum="Numeric_Floor"/>
-		<commonControls:NEMenuItem Header="Ceili_ng" CommandEnum="Numeric_Ceiling"/>
-		<commonControls:NEMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
-		<commonControls:NEMenuItem Header="L_imit" CommandEnum="Numeric_Limit"/>
-		<commonControls:NEMenuItem Header="C_ycle" CommandEnum="Numeric_Cycle"/>
+		<neoEditControls:NEMenuItem Header="A_bsolute" CommandEnum="Numeric_Absolute"/>
+		<neoEditControls:NEMenuItem Header="F_loor" CommandEnum="Numeric_Floor"/>
+		<neoEditControls:NEMenuItem Header="Ceili_ng" CommandEnum="Numeric_Ceiling"/>
+		<neoEditControls:NEMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
+		<neoEditControls:NEMenuItem Header="L_imit" CommandEnum="Numeric_Limit"/>
+		<neoEditControls:NEMenuItem Header="C_ycle" CommandEnum="Numeric_Cycle"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Trim" CommandEnum="Numeric_Trim"/>
+		<neoEditControls:NEMenuItem Header="_Trim" CommandEnum="Numeric_Trim"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="F_actor" CommandEnum="Numeric_Factor"/>
+		<neoEditControls:NEMenuItem Header="F_actor" CommandEnum="Numeric_Factor"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber"/>
-		<commonControls:NEMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
-		<commonControls:NEMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues"/>
+		<neoEditControls:NEMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber"/>
+		<neoEditControls:NEMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
+		<neoEditControls:NEMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues"/>
 	</MenuItem>
 	<MenuItem Header="_Date/Time">
-		<commonControls:NEMenuItem Header="_Now" CommandEnum="DateTime_Now"/>
-		<commonControls:NEMenuItem Header="_Utc Now" CommandEnum="DateTime_UtcNow"/>
-		<commonControls:NEMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
+		<neoEditControls:NEMenuItem Header="_Now" CommandEnum="DateTime_Now"/>
+		<neoEditControls:NEMenuItem Header="_Utc Now" CommandEnum="DateTime_UtcNow"/>
+		<neoEditControls:NEMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
 	</MenuItem>
 	<MenuItem Header="Ima_ge">
-		<commonControls:NEMenuItem Header="_Grab Color" CommandEnum="Image_GrabColor"/>
-		<commonControls:NEMenuItem Header="Grab I_mage" CommandEnum="Image_GrabImage"/>
-		<commonControls:NEMenuItem Header="A_djust Color" CommandEnum="Image_AdjustColor"/>
+		<neoEditControls:NEMenuItem Header="_Grab Color" CommandEnum="Image_GrabColor"/>
+		<neoEditControls:NEMenuItem Header="Grab I_mage" CommandEnum="Image_GrabImage"/>
+		<neoEditControls:NEMenuItem Header="A_djust Color" CommandEnum="Image_AdjustColor"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Add Color" CommandEnum="Image_AddColor"/>
-		<commonControls:NEMenuItem Header="_Overlay Color" CommandEnum="Image_OverlayColor"/>
+		<neoEditControls:NEMenuItem Header="_Add Color" CommandEnum="Image_AddColor"/>
+		<neoEditControls:NEMenuItem Header="_Overlay Color" CommandEnum="Image_OverlayColor"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Size" CommandEnum="Image_Size"/>
-		<commonControls:NEMenuItem Header="_Crop" CommandEnum="Image_Crop"/>
+		<neoEditControls:NEMenuItem Header="_Size" CommandEnum="Image_Size"/>
+		<neoEditControls:NEMenuItem Header="_Crop" CommandEnum="Image_Crop"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="Flip _Horizontal" CommandEnum="Image_FlipHorizontal"/>
-		<commonControls:NEMenuItem Header="Flip _Vertical" CommandEnum="Image_FlipVertical"/>
-		<commonControls:NEMenuItem Header="_Rotate" CommandEnum="Image_Rotate"/>
+		<neoEditControls:NEMenuItem Header="Flip _Horizontal" CommandEnum="Image_FlipHorizontal"/>
+		<neoEditControls:NEMenuItem Header="Flip _Vertical" CommandEnum="Image_FlipVertical"/>
+		<neoEditControls:NEMenuItem Header="_Rotate" CommandEnum="Image_Rotate"/>
 		<Separator/>
 		<MenuItem Header="G_IF">
-			<commonControls:NEMenuItem Header="_Animate" CommandEnum="Image_GIF_Animate"/>
-			<commonControls:NEMenuItem Header="_Split" CommandEnum="Image_GIF_Split"/>
+			<neoEditControls:NEMenuItem Header="_Animate" CommandEnum="Image_GIF_Animate"/>
+			<neoEditControls:NEMenuItem Header="_Split" CommandEnum="Image_GIF_Split"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
-		<commonControls:NEMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>
-		<commonControls:NEMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
+		<neoEditControls:NEMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>
+		<neoEditControls:NEMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="Te_xt To Table" CommandEnum="Table_TextToTable"/>
-		<commonControls:NEMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
+		<neoEditControls:NEMenuItem Header="Te_xt To Table" CommandEnum="Table_TextToTable"/>
+		<neoEditControls:NEMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
 		<MenuItem Header="Re_gion Selections To Table">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Table_RegionSelectionsToTable_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Table_RegionSelectionsToTable_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Table_RegionSelectionsToTable_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Table_RegionSelectionsToTable_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Table_RegionSelectionsToTable_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Table_RegionSelectionsToTable_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Table_RegionSelectionsToTable_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Table_RegionSelectionsToTable_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Table_RegionSelectionsToTable_Region9"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Table_RegionSelectionsToTable_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Table_RegionSelectionsToTable_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Table_RegionSelectionsToTable_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Table_RegionSelectionsToTable_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Table_RegionSelectionsToTable_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Table_RegionSelectionsToTable_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Table_RegionSelectionsToTable_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Table_RegionSelectionsToTable_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Table_RegionSelectionsToTable_Region9"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="Ed_it Table" CommandEnum="Table_EditTable"/>
-		<commonControls:NEMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
-		<commonControls:NEMenuItem Header="Add _Row" CommandEnum="Table_AddRow"/>
-		<commonControls:NEMenuItem Header="_Add Column" CommandEnum="Table_AddColumn"/>
+		<neoEditControls:NEMenuItem Header="Ed_it Table" CommandEnum="Table_EditTable"/>
+		<neoEditControls:NEMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
+		<neoEditControls:NEMenuItem Header="Add _Row" CommandEnum="Table_AddRow"/>
+		<neoEditControls:NEMenuItem Header="_Add Column" CommandEnum="Table_AddColumn"/>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<commonControls:NEMenuItem Header="Rows By _Expression" CommandEnum="Table_Select_RowsByExpression"/>
+			<neoEditControls:NEMenuItem Header="Rows By _Expression" CommandEnum="Table_Select_RowsByExpression"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="Set J_oin Source" CommandEnum="Table_SetJoinSource"/>
-		<commonControls:NEMenuItem Header="_Join" CommandEnum="Table_Join"/>
+		<neoEditControls:NEMenuItem Header="Set J_oin Source" CommandEnum="Table_SetJoinSource"/>
+		<neoEditControls:NEMenuItem Header="_Join" CommandEnum="Table_Join"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Transpose" CommandEnum="Table_Transpose"/>
+		<neoEditControls:NEMenuItem Header="_Transpose" CommandEnum="Table_Transpose"/>
 		<Separator/>
 		<MenuItem Header="_Database">
-			<commonControls:NEMenuItem Header="Generate _Inserts" CommandEnum="Table_Database_GenerateInserts"/>
-			<commonControls:NEMenuItem Header="Generate _Updates" CommandEnum="Table_Database_GenerateUpdates"/>
-			<commonControls:NEMenuItem Header="Generate _Deletes" CommandEnum="Table_Database_GenerateDeletes"/>
+			<neoEditControls:NEMenuItem Header="Generate _Inserts" CommandEnum="Table_Database_GenerateInserts"/>
+			<neoEditControls:NEMenuItem Header="Generate _Updates" CommandEnum="Table_Database_GenerateUpdates"/>
+			<neoEditControls:NEMenuItem Header="Generate _Deletes" CommandEnum="Table_Database_GenerateDeletes"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Position">
 		<MenuItem Header="_Goto">
-			<commonControls:NEMenuItem Header="_Lines" CommandEnum="Position_Goto_Lines"/>
-			<commonControls:NEMenuItem Header="_Columns" CommandEnum="Position_Goto_Columns"/>
-			<commonControls:NEMenuItem Header="_Indexes" CommandEnum="Position_Goto_Indexes"/>
-			<commonControls:NEMenuItem Header="_Positions" CommandEnum="Position_Goto_Positions"/>
+			<neoEditControls:NEMenuItem Header="_Lines" CommandEnum="Position_Goto_Lines"/>
+			<neoEditControls:NEMenuItem Header="_Columns" CommandEnum="Position_Goto_Columns"/>
+			<neoEditControls:NEMenuItem Header="_Indexes" CommandEnum="Position_Goto_Indexes"/>
+			<neoEditControls:NEMenuItem Header="_Positions" CommandEnum="Position_Goto_Positions"/>
 		</MenuItem>
 		<MenuItem Header="_Copy">
-			<commonControls:NEMenuItem Header="_Lines" CommandEnum="Position_Copy_Lines"/>
-			<commonControls:NEMenuItem Header="_Columns" CommandEnum="Position_Copy_Columns"/>
-			<commonControls:NEMenuItem Header="_Indexes" CommandEnum="Position_Copy_Indexes"/>
-			<commonControls:NEMenuItem Header="_Positions" CommandEnum="Position_Copy_Positions"/>
+			<neoEditControls:NEMenuItem Header="_Lines" CommandEnum="Position_Copy_Lines"/>
+			<neoEditControls:NEMenuItem Header="_Columns" CommandEnum="Position_Copy_Columns"/>
+			<neoEditControls:NEMenuItem Header="_Indexes" CommandEnum="Position_Copy_Indexes"/>
+			<neoEditControls:NEMenuItem Header="_Positions" CommandEnum="Position_Copy_Positions"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
-			<commonControls:NEMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension"/>
+			<neoEditControls:NEMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension"/>
 			<neoEditControls:MultiMenuItem Header="_None" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.None}" CommandEnum="Content_Type_None"/>
 			<neoEditControls:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
 			<neoEditControls:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
@@ -509,528 +508,528 @@
 		<neoEditControls:MultiMenuItem Header="_Highlight Syntax" Objects="{Binding Parent.Items, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax"/>
 		<neoEditControls:MultiMenuItem Header="_Strict Parsing" Objects="{Binding Parent.Items, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="Re_format" CommandEnum="Content_Reformat"/>
+		<neoEditControls:NEMenuItem Header="Re_format" CommandEnum="Content_Reformat"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="C_omment" CommandEnum="Content_Comment"/>
-		<commonControls:NEMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment"/>
+		<neoEditControls:NEMenuItem Header="C_omment" CommandEnum="Content_Comment"/>
+		<neoEditControls:NEMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="To_ggle Position" CommandEnum="Content_TogglePosition"/>
+		<neoEditControls:NEMenuItem Header="To_ggle Position" CommandEnum="Content_TogglePosition"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="Cu_rrent" CommandEnum="Content_Current"/>
-		<commonControls:NEMenuItem Header="_Parent" CommandEnum="Content_Parent"/>
-		<commonControls:NEMenuItem Header="A_ncestor" CommandEnum="Content_Ancestor"/>
-		<commonControls:NEMenuItem Header="_Attributes" CommandEnum="Content_Attributes"/>
-		<commonControls:NEMenuItem Header="_With Attribute" CommandEnum="Content_WithAttribute"/>
+		<neoEditControls:NEMenuItem Header="Cu_rrent" CommandEnum="Content_Current"/>
+		<neoEditControls:NEMenuItem Header="_Parent" CommandEnum="Content_Parent"/>
+		<neoEditControls:NEMenuItem Header="A_ncestor" CommandEnum="Content_Ancestor"/>
+		<neoEditControls:NEMenuItem Header="_Attributes" CommandEnum="Content_Attributes"/>
+		<neoEditControls:NEMenuItem Header="_With Attribute" CommandEnum="Content_WithAttribute"/>
 		<MenuItem Header="_Children">
-			<commonControls:NEMenuItem Header="_Children" CommandEnum="Content_Children_Children"/>
-			<commonControls:NEMenuItem Header="_Self And Children" CommandEnum="Content_Children_SelfAndChildren"/>
-			<commonControls:NEMenuItem Header="_First" CommandEnum="Content_Children_First"/>
-			<commonControls:NEMenuItem Header="_With Attribute" CommandEnum="Content_Children_WithAttribute"/>
+			<neoEditControls:NEMenuItem Header="_Children" CommandEnum="Content_Children_Children"/>
+			<neoEditControls:NEMenuItem Header="_Self And Children" CommandEnum="Content_Children_SelfAndChildren"/>
+			<neoEditControls:NEMenuItem Header="_First" CommandEnum="Content_Children_First"/>
+			<neoEditControls:NEMenuItem Header="_With Attribute" CommandEnum="Content_Children_WithAttribute"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
-			<commonControls:NEMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants"/>
-			<commonControls:NEMenuItem Header="_Self And Descendants" CommandEnum="Content_Descendants_SelfAndDescendants"/>
-			<commonControls:NEMenuItem Header="_First" CommandEnum="Content_Descendants_First"/>
-			<commonControls:NEMenuItem Header="_With Attribute" CommandEnum="Content_Descendants_WithAttribute"/>
+			<neoEditControls:NEMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants"/>
+			<neoEditControls:NEMenuItem Header="_Self And Descendants" CommandEnum="Content_Descendants_SelfAndDescendants"/>
+			<neoEditControls:NEMenuItem Header="_First" CommandEnum="Content_Descendants_First"/>
+			<neoEditControls:NEMenuItem Header="_With Attribute" CommandEnum="Content_Descendants_WithAttribute"/>
 		</MenuItem>
 		<MenuItem Header="Na_vigate">
-			<commonControls:NEMenuItem Header="_Up" CommandEnum="Content_Navigate_Up"/>
-			<commonControls:NEMenuItem Header="_Down" CommandEnum="Content_Navigate_Down"/>
-			<commonControls:NEMenuItem Header="_Left" CommandEnum="Content_Navigate_Left"/>
-			<commonControls:NEMenuItem Header="_Right" CommandEnum="Content_Navigate_Right"/>
+			<neoEditControls:NEMenuItem Header="_Up" CommandEnum="Content_Navigate_Up"/>
+			<neoEditControls:NEMenuItem Header="_Down" CommandEnum="Content_Navigate_Down"/>
+			<neoEditControls:NEMenuItem Header="_Left" CommandEnum="Content_Navigate_Left"/>
+			<neoEditControls:NEMenuItem Header="_Right" CommandEnum="Content_Navigate_Right"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Home" CommandEnum="Content_Navigate_Home"/>
-			<commonControls:NEMenuItem Header="_End" CommandEnum="Content_Navigate_End"/>
-			<commonControls:NEMenuItem Header="_PgUp" CommandEnum="Content_Navigate_PgUp"/>
-			<commonControls:NEMenuItem Header="P_gDn" CommandEnum="Content_Navigate_PgDn"/>
+			<neoEditControls:NEMenuItem Header="_Home" CommandEnum="Content_Navigate_Home"/>
+			<neoEditControls:NEMenuItem Header="_End" CommandEnum="Content_Navigate_End"/>
+			<neoEditControls:NEMenuItem Header="_PgUp" CommandEnum="Content_Navigate_PgUp"/>
+			<neoEditControls:NEMenuItem Header="P_gDn" CommandEnum="Content_Navigate_PgDn"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
-			<commonControls:NEMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
+			<neoEditControls:NEMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
+			<neoEditControls:NEMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
 		</MenuItem>
 		<neoEditControls:MultiMenuItem Header="_Keep Selections" Objects="{Binding Parent.Items, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections"/>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">
-		<commonControls:NEMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL"/>
+		<neoEditControls:NEMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
-		<commonControls:NEMenuItem Header="Fetch _Hex" CommandEnum="Network_FetchHex"/>
-		<commonControls:NEMenuItem Header="Fetch F_ile" CommandEnum="Network_FetchFile"/>
-		<commonControls:NEMenuItem Header="Fetch _Stream" CommandEnum="Network_FetchStream"/>
-		<commonControls:NEMenuItem Header="Fetch Pla_ylist" CommandEnum="Network_FetchPlaylist"/>
+		<neoEditControls:NEMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
+		<neoEditControls:NEMenuItem Header="Fetch _Hex" CommandEnum="Network_FetchHex"/>
+		<neoEditControls:NEMenuItem Header="Fetch F_ile" CommandEnum="Network_FetchFile"/>
+		<neoEditControls:NEMenuItem Header="Fetch _Stream" CommandEnum="Network_FetchStream"/>
+		<neoEditControls:NEMenuItem Header="Fetch Pla_ylist" CommandEnum="Network_FetchPlaylist"/>
 		<Separator/>
 		<MenuItem Header="_Lookup">
-			<commonControls:NEMenuItem Header="_IP" CommandEnum="Network_Lookup_IP"/>
-			<commonControls:NEMenuItem Header="_HostName" CommandEnum="Network_Lookup_HostName"/>
+			<neoEditControls:NEMenuItem Header="_IP" CommandEnum="Network_Lookup_IP"/>
+			<neoEditControls:NEMenuItem Header="_HostName" CommandEnum="Network_Lookup_HostName"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="A_dapters Info" CommandEnum="Network_AdaptersInfo"/>
+		<neoEditControls:NEMenuItem Header="A_dapters Info" CommandEnum="Network_AdaptersInfo"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Ping" CommandEnum="Network_Ping"/>
-		<commonControls:NEMenuItem Header="S_can Ports" CommandEnum="Network_ScanPorts"/>
+		<neoEditControls:NEMenuItem Header="_Ping" CommandEnum="Network_Ping"/>
+		<neoEditControls:NEMenuItem Header="S_can Ports" CommandEnum="Network_ScanPorts"/>
 	</MenuItem>
 	<MenuItem Header="D_atabase">
-		<commonControls:NEMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
-		<commonControls:NEMenuItem Header="Execute _Query" CommandEnum="Database_ExecuteQuery"/>
+		<neoEditControls:NEMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
+		<neoEditControls:NEMenuItem Header="Execute _Query" CommandEnum="Database_ExecuteQuery"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Examine" CommandEnum="Database_Examine"/>
-		<commonControls:NEMenuItem Header="_Get Sproc" CommandEnum="Database_GetSproc"/>
+		<neoEditControls:NEMenuItem Header="_Examine" CommandEnum="Database_Examine"/>
+		<neoEditControls:NEMenuItem Header="_Get Sproc" CommandEnum="Database_GetSproc"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">
-			<commonControls:NEMenuItem Header="_Keys (Case Sensitive)" CommandEnum="Keys_Set_KeysCaseSensitive"/>
-			<commonControls:NEMenuItem Header="K_eys (Case Insensitive)" CommandEnum="Keys_Set_KeysCaseInsensitive"/>
-			<commonControls:NEMenuItem Header="Values _1" CommandEnum="Keys_Set_Values1"/>
-			<commonControls:NEMenuItem Header="Values _2" CommandEnum="Keys_Set_Values2"/>
-			<commonControls:NEMenuItem Header="Values _3" CommandEnum="Keys_Set_Values3"/>
-			<commonControls:NEMenuItem Header="Values _4" CommandEnum="Keys_Set_Values4"/>
-			<commonControls:NEMenuItem Header="Values _5" CommandEnum="Keys_Set_Values5"/>
-			<commonControls:NEMenuItem Header="Values _6" CommandEnum="Keys_Set_Values6"/>
-			<commonControls:NEMenuItem Header="Values _7" CommandEnum="Keys_Set_Values7"/>
-			<commonControls:NEMenuItem Header="Values _8" CommandEnum="Keys_Set_Values8"/>
-			<commonControls:NEMenuItem Header="Values _9" CommandEnum="Keys_Set_Values9"/>
+			<neoEditControls:NEMenuItem Header="_Keys (Case Sensitive)" CommandEnum="Keys_Set_KeysCaseSensitive"/>
+			<neoEditControls:NEMenuItem Header="K_eys (Case Insensitive)" CommandEnum="Keys_Set_KeysCaseInsensitive"/>
+			<neoEditControls:NEMenuItem Header="Values _1" CommandEnum="Keys_Set_Values1"/>
+			<neoEditControls:NEMenuItem Header="Values _2" CommandEnum="Keys_Set_Values2"/>
+			<neoEditControls:NEMenuItem Header="Values _3" CommandEnum="Keys_Set_Values3"/>
+			<neoEditControls:NEMenuItem Header="Values _4" CommandEnum="Keys_Set_Values4"/>
+			<neoEditControls:NEMenuItem Header="Values _5" CommandEnum="Keys_Set_Values5"/>
+			<neoEditControls:NEMenuItem Header="Values _6" CommandEnum="Keys_Set_Values6"/>
+			<neoEditControls:NEMenuItem Header="Values _7" CommandEnum="Keys_Set_Values7"/>
+			<neoEditControls:NEMenuItem Header="Values _8" CommandEnum="Keys_Set_Values8"/>
+			<neoEditControls:NEMenuItem Header="Values _9" CommandEnum="Keys_Set_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Add">
-			<commonControls:NEMenuItem Header="_Keys" CommandEnum="Keys_Add_Keys"/>
-			<commonControls:NEMenuItem Header="Values _1" CommandEnum="Keys_Add_Values1"/>
-			<commonControls:NEMenuItem Header="Values _2" CommandEnum="Keys_Add_Values2"/>
-			<commonControls:NEMenuItem Header="Values _3" CommandEnum="Keys_Add_Values3"/>
-			<commonControls:NEMenuItem Header="Values _4" CommandEnum="Keys_Add_Values4"/>
-			<commonControls:NEMenuItem Header="Values _5" CommandEnum="Keys_Add_Values5"/>
-			<commonControls:NEMenuItem Header="Values _6" CommandEnum="Keys_Add_Values6"/>
-			<commonControls:NEMenuItem Header="Values _7" CommandEnum="Keys_Add_Values7"/>
-			<commonControls:NEMenuItem Header="Values _8" CommandEnum="Keys_Add_Values8"/>
-			<commonControls:NEMenuItem Header="Values _9" CommandEnum="Keys_Add_Values9"/>
+			<neoEditControls:NEMenuItem Header="_Keys" CommandEnum="Keys_Add_Keys"/>
+			<neoEditControls:NEMenuItem Header="Values _1" CommandEnum="Keys_Add_Values1"/>
+			<neoEditControls:NEMenuItem Header="Values _2" CommandEnum="Keys_Add_Values2"/>
+			<neoEditControls:NEMenuItem Header="Values _3" CommandEnum="Keys_Add_Values3"/>
+			<neoEditControls:NEMenuItem Header="Values _4" CommandEnum="Keys_Add_Values4"/>
+			<neoEditControls:NEMenuItem Header="Values _5" CommandEnum="Keys_Add_Values5"/>
+			<neoEditControls:NEMenuItem Header="Values _6" CommandEnum="Keys_Add_Values6"/>
+			<neoEditControls:NEMenuItem Header="Values _7" CommandEnum="Keys_Add_Values7"/>
+			<neoEditControls:NEMenuItem Header="Values _8" CommandEnum="Keys_Add_Values8"/>
+			<neoEditControls:NEMenuItem Header="Values _9" CommandEnum="Keys_Add_Values9"/>
 		</MenuItem>
 		<MenuItem Header="_Remove">
-			<commonControls:NEMenuItem Header="_Keys" CommandEnum="Keys_Remove_Keys"/>
-			<commonControls:NEMenuItem Header="Values _1" CommandEnum="Keys_Remove_Values1"/>
-			<commonControls:NEMenuItem Header="Values _2" CommandEnum="Keys_Remove_Values2"/>
-			<commonControls:NEMenuItem Header="Values _3" CommandEnum="Keys_Remove_Values3"/>
-			<commonControls:NEMenuItem Header="Values _4" CommandEnum="Keys_Remove_Values4"/>
-			<commonControls:NEMenuItem Header="Values _5" CommandEnum="Keys_Remove_Values5"/>
-			<commonControls:NEMenuItem Header="Values _6" CommandEnum="Keys_Remove_Values6"/>
-			<commonControls:NEMenuItem Header="Values _7" CommandEnum="Keys_Remove_Values7"/>
-			<commonControls:NEMenuItem Header="Values _8" CommandEnum="Keys_Remove_Values8"/>
-			<commonControls:NEMenuItem Header="Values _9" CommandEnum="Keys_Remove_Values9"/>
+			<neoEditControls:NEMenuItem Header="_Keys" CommandEnum="Keys_Remove_Keys"/>
+			<neoEditControls:NEMenuItem Header="Values _1" CommandEnum="Keys_Remove_Values1"/>
+			<neoEditControls:NEMenuItem Header="Values _2" CommandEnum="Keys_Remove_Values2"/>
+			<neoEditControls:NEMenuItem Header="Values _3" CommandEnum="Keys_Remove_Values3"/>
+			<neoEditControls:NEMenuItem Header="Values _4" CommandEnum="Keys_Remove_Values4"/>
+			<neoEditControls:NEMenuItem Header="Values _5" CommandEnum="Keys_Remove_Values5"/>
+			<neoEditControls:NEMenuItem Header="Values _6" CommandEnum="Keys_Remove_Values6"/>
+			<neoEditControls:NEMenuItem Header="Values _7" CommandEnum="Keys_Remove_Values7"/>
+			<neoEditControls:NEMenuItem Header="Values _8" CommandEnum="Keys_Remove_Values8"/>
+			<neoEditControls:NEMenuItem Header="Values _9" CommandEnum="Keys_Remove_Values9"/>
 		</MenuItem>
 		<MenuItem Header="R_eplace">
-			<commonControls:NEMenuItem Header="Values _1" CommandEnum="Keys_Replace_Values1"/>
-			<commonControls:NEMenuItem Header="Values _2" CommandEnum="Keys_Replace_Values2"/>
-			<commonControls:NEMenuItem Header="Values _3" CommandEnum="Keys_Replace_Values3"/>
-			<commonControls:NEMenuItem Header="Values _4" CommandEnum="Keys_Replace_Values4"/>
-			<commonControls:NEMenuItem Header="Values _5" CommandEnum="Keys_Replace_Values5"/>
-			<commonControls:NEMenuItem Header="Values _6" CommandEnum="Keys_Replace_Values6"/>
-			<commonControls:NEMenuItem Header="Values _7" CommandEnum="Keys_Replace_Values7"/>
-			<commonControls:NEMenuItem Header="Values _8" CommandEnum="Keys_Replace_Values8"/>
-			<commonControls:NEMenuItem Header="Values _9" CommandEnum="Keys_Replace_Values9"/>
+			<neoEditControls:NEMenuItem Header="Values _1" CommandEnum="Keys_Replace_Values1"/>
+			<neoEditControls:NEMenuItem Header="Values _2" CommandEnum="Keys_Replace_Values2"/>
+			<neoEditControls:NEMenuItem Header="Values _3" CommandEnum="Keys_Replace_Values3"/>
+			<neoEditControls:NEMenuItem Header="Values _4" CommandEnum="Keys_Replace_Values4"/>
+			<neoEditControls:NEMenuItem Header="Values _5" CommandEnum="Keys_Replace_Values5"/>
+			<neoEditControls:NEMenuItem Header="Values _6" CommandEnum="Keys_Replace_Values6"/>
+			<neoEditControls:NEMenuItem Header="Values _7" CommandEnum="Keys_Replace_Values7"/>
+			<neoEditControls:NEMenuItem Header="Values _8" CommandEnum="Keys_Replace_Values8"/>
+			<neoEditControls:NEMenuItem Header="Values _9" CommandEnum="Keys_Replace_Values9"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Select">
-		<commonControls:NEMenuItem Header="_All" CommandEnum="Select_All"/>
-		<commonControls:NEMenuItem Header="_Nothing" CommandEnum="Select_Nothing"/>
+		<neoEditControls:NEMenuItem Header="_All" CommandEnum="Select_All"/>
+		<neoEditControls:NEMenuItem Header="_Nothing" CommandEnum="Select_Nothing"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
-		<commonControls:NEMenuItem Header="L_ines" CommandEnum="Select_Lines"/>
-		<commonControls:NEMenuItem Header="_Whole Lines" CommandEnum="Select_WholeLines"/>
-		<commonControls:NEMenuItem Header="Re_ctangle" CommandEnum="Select_Rectangle"/>
+		<neoEditControls:NEMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
+		<neoEditControls:NEMenuItem Header="L_ines" CommandEnum="Select_Lines"/>
+		<neoEditControls:NEMenuItem Header="_Whole Lines" CommandEnum="Select_WholeLines"/>
+		<neoEditControls:NEMenuItem Header="Re_ctangle" CommandEnum="Select_Rectangle"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="In_vert" CommandEnum="Select_Invert"/>
-		<commonControls:NEMenuItem Header="_Join" CommandEnum="Select_Join"/>
+		<neoEditControls:NEMenuItem Header="In_vert" CommandEnum="Select_Invert"/>
+		<neoEditControls:NEMenuItem Header="_Join" CommandEnum="Select_Join"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
-		<commonControls:NEMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>
+		<neoEditControls:NEMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
+		<neoEditControls:NEMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
+		<neoEditControls:NEMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
 		<Separator/>
 		<MenuItem Header="_Repeats">
-			<commonControls:NEMenuItem Header="_Unique" CommandEnum="Select_Repeats_Unique"/>
-			<commonControls:NEMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_Duplicates"/>
+			<neoEditControls:NEMenuItem Header="_Unique" CommandEnum="Select_Repeats_Unique"/>
+			<neoEditControls:NEMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_Duplicates"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_MatchPrevious"/>
-			<commonControls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_NonMatchPrevious"/>
+			<neoEditControls:NEMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_MatchPrevious"/>
+			<neoEditControls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_NonMatchPrevious"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_Repeats_RepeatedLines"/>
-			<commonControls:NEMenuItem Header="By _Count" CommandEnum="Select_Repeats_ByCount"/>
+			<neoEditControls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_Repeats_RepeatedLines"/>
+			<neoEditControls:NEMenuItem Header="By _Count" CommandEnum="Select_Repeats_ByCount"/>
 			<Separator/>
 			<MenuItem Header="C_ase Insensitive">
-				<commonControls:NEMenuItem Header="_Unique" CommandEnum="Select_Repeats_CaseInsensitive_Unique"/>
-				<commonControls:NEMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_CaseInsensitive_Duplicates"/>
+				<neoEditControls:NEMenuItem Header="_Unique" CommandEnum="Select_Repeats_CaseInsensitive_Unique"/>
+				<neoEditControls:NEMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_CaseInsensitive_Duplicates"/>
 				<Separator/>
-				<commonControls:NEMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_CaseInsensitive_MatchPrevious"/>
-				<commonControls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_CaseInsensitive_NonMatchPrevious"/>
+				<neoEditControls:NEMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_CaseInsensitive_MatchPrevious"/>
+				<neoEditControls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_CaseInsensitive_NonMatchPrevious"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="S_plit" CommandEnum="Select_Split"/>
+		<neoEditControls:NEMenuItem Header="S_plit" CommandEnum="Select_Split"/>
 		<Separator/>
 		<MenuItem Header="_Selection">
-			<commonControls:NEMenuItem Header="_First" CommandEnum="Select_Selection_First"/>
-			<commonControls:NEMenuItem Header="Center _Vertically" CommandEnum="Select_Selection_CenterVertically"/>
-			<commonControls:NEMenuItem Header="_Center" CommandEnum="Select_Selection_Center"/>
-			<commonControls:NEMenuItem Header="_Toggle Anchor" CommandEnum="Select_Selection_ToggleAnchor"/>
-			<commonControls:NEMenuItem Header="_Next" CommandEnum="Select_Selection_Next"/>
-			<commonControls:NEMenuItem Header="_Previous" CommandEnum="Select_Selection_Previous"/>
-			<commonControls:NEMenuItem Header="_Single" CommandEnum="Select_Selection_Single"/>
-			<commonControls:NEMenuItem Header="_Remove" CommandEnum="Select_Selection_Remove"/>
-			<commonControls:NEMenuItem Header="Remove _Before Current" CommandEnum="Select_Selection_RemoveBeforeCurrent"/>
-			<commonControls:NEMenuItem Header="Remove _After Current" CommandEnum="Select_Selection_RemoveAfterCurrent"/>
+			<neoEditControls:NEMenuItem Header="_First" CommandEnum="Select_Selection_First"/>
+			<neoEditControls:NEMenuItem Header="Center _Vertically" CommandEnum="Select_Selection_CenterVertically"/>
+			<neoEditControls:NEMenuItem Header="_Center" CommandEnum="Select_Selection_Center"/>
+			<neoEditControls:NEMenuItem Header="_Toggle Anchor" CommandEnum="Select_Selection_ToggleAnchor"/>
+			<neoEditControls:NEMenuItem Header="_Next" CommandEnum="Select_Selection_Next"/>
+			<neoEditControls:NEMenuItem Header="_Previous" CommandEnum="Select_Selection_Previous"/>
+			<neoEditControls:NEMenuItem Header="_Single" CommandEnum="Select_Selection_Single"/>
+			<neoEditControls:NEMenuItem Header="_Remove" CommandEnum="Select_Selection_Remove"/>
+			<neoEditControls:NEMenuItem Header="Remove _Before Current" CommandEnum="Select_Selection_RemoveBeforeCurrent"/>
+			<neoEditControls:NEMenuItem Header="Remove _After Current" CommandEnum="Select_Selection_RemoveAfterCurrent"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Region">
-		<commonControls:NEMenuItem Header="_Modify Regions" CommandEnum="Region_ModifyRegions"/>
+		<neoEditControls:NEMenuItem Header="_Modify Regions" CommandEnum="Region_ModifyRegions"/>
 		<MenuItem Header="S_et Selections">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_SetSelections_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_SetSelections_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_SetSelections_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_SetSelections_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_SetSelections_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_SetSelections_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_SetSelections_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_SetSelections_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_SetSelections_Region9"/>
-			<commonControls:NEMenuItem Header="_All" CommandEnum="Region_SetSelections_All"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_SetSelections_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_SetSelections_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_SetSelections_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_SetSelections_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_SetSelections_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_SetSelections_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_SetSelections_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_SetSelections_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_SetSelections_Region9"/>
+			<neoEditControls:NEMenuItem Header="_All" CommandEnum="Region_SetSelections_All"/>
 		</MenuItem>
 		<MenuItem Header="_Add Selections">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_AddSelections_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_AddSelections_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_AddSelections_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_AddSelections_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_AddSelections_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_AddSelections_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_AddSelections_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_AddSelections_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_AddSelections_Region9"/>
-			<commonControls:NEMenuItem Header="_All" CommandEnum="Region_AddSelections_All"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_AddSelections_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_AddSelections_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_AddSelections_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_AddSelections_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_AddSelections_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_AddSelections_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_AddSelections_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_AddSelections_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_AddSelections_Region9"/>
+			<neoEditControls:NEMenuItem Header="_All" CommandEnum="Region_AddSelections_All"/>
 		</MenuItem>
 		<MenuItem Header="_Remove Selections">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_RemoveSelections_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_RemoveSelections_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_RemoveSelections_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_RemoveSelections_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_RemoveSelections_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_RemoveSelections_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_RemoveSelections_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_RemoveSelections_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_RemoveSelections_Region9"/>
-			<commonControls:NEMenuItem Header="_All" CommandEnum="Region_RemoveSelections_All"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_RemoveSelections_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_RemoveSelections_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_RemoveSelections_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_RemoveSelections_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_RemoveSelections_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_RemoveSelections_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_RemoveSelections_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_RemoveSelections_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_RemoveSelections_Region9"/>
+			<neoEditControls:NEMenuItem Header="_All" CommandEnum="Region_RemoveSelections_All"/>
 		</MenuItem>
 		<MenuItem Header="Re_place Selections">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_ReplaceSelections_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_ReplaceSelections_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_ReplaceSelections_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_ReplaceSelections_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_ReplaceSelections_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_ReplaceSelections_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_ReplaceSelections_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_ReplaceSelections_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_ReplaceSelections_Region9"/>
-			<commonControls:NEMenuItem Header="_All" CommandEnum="Region_ReplaceSelections_All"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_ReplaceSelections_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_ReplaceSelections_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_ReplaceSelections_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_ReplaceSelections_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_ReplaceSelections_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_ReplaceSelections_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_ReplaceSelections_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_ReplaceSelections_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_ReplaceSelections_Region9"/>
+			<neoEditControls:NEMenuItem Header="_All" CommandEnum="Region_ReplaceSelections_All"/>
 		</MenuItem>
 		<MenuItem Header="_Limit To Selections">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_LimitToSelections_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_LimitToSelections_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_LimitToSelections_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_LimitToSelections_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_LimitToSelections_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_LimitToSelections_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_LimitToSelections_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_LimitToSelections_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_LimitToSelections_Region9"/>
-			<commonControls:NEMenuItem Header="_All" CommandEnum="Region_LimitToSelections_All"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_LimitToSelections_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_LimitToSelections_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_LimitToSelections_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_LimitToSelections_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_LimitToSelections_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_LimitToSelections_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_LimitToSelections_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_LimitToSelections_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_LimitToSelections_Region9"/>
+			<neoEditControls:NEMenuItem Header="_All" CommandEnum="Region_LimitToSelections_All"/>
 		</MenuItem>
 		<MenuItem Header="_Clear">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_Clear_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_Clear_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_Clear_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_Clear_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_Clear_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_Clear_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_Clear_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_Clear_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_Clear_Region9"/>
-			<commonControls:NEMenuItem Header="_All" CommandEnum="Region_Clear_All"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_Clear_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_Clear_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_Clear_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_Clear_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_Clear_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_Clear_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_Clear_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_Clear_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_Clear_Region9"/>
+			<neoEditControls:NEMenuItem Header="_All" CommandEnum="Region_Clear_All"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="Repeat _By Selections">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_RepeatBySelections_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_RepeatBySelections_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_RepeatBySelections_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_RepeatBySelections_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_RepeatBySelections_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_RepeatBySelections_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_RepeatBySelections_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_RepeatBySelections_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_RepeatBySelections_Region9"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_RepeatBySelections_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_RepeatBySelections_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_RepeatBySelections_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_RepeatBySelections_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_RepeatBySelections_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_RepeatBySelections_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_RepeatBySelections_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_RepeatBySelections_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_RepeatBySelections_Region9"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="C_opy Enclosing Region">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_CopyEnclosingRegion_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_CopyEnclosingRegion_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_CopyEnclosingRegion_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_CopyEnclosingRegion_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_CopyEnclosingRegion_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_CopyEnclosingRegion_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegion_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegion_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegion_Region9"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_CopyEnclosingRegion_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_CopyEnclosingRegion_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_CopyEnclosingRegion_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_CopyEnclosingRegion_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_CopyEnclosingRegion_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_CopyEnclosingRegion_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegion_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegion_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegion_Region9"/>
 		</MenuItem>
 		<MenuItem Header="Copy Enclosing Region _Index">
-			<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_CopyEnclosingRegionIndex_Region1"/>
-			<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_CopyEnclosingRegionIndex_Region2"/>
-			<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_CopyEnclosingRegionIndex_Region3"/>
-			<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_CopyEnclosingRegionIndex_Region4"/>
-			<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_CopyEnclosingRegionIndex_Region5"/>
-			<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_CopyEnclosingRegionIndex_Region6"/>
-			<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegionIndex_Region7"/>
-			<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegionIndex_Region8"/>
-			<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegionIndex_Region9"/>
+			<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_CopyEnclosingRegionIndex_Region1"/>
+			<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_CopyEnclosingRegionIndex_Region2"/>
+			<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_CopyEnclosingRegionIndex_Region3"/>
+			<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_CopyEnclosingRegionIndex_Region4"/>
+			<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_CopyEnclosingRegionIndex_Region5"/>
+			<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_CopyEnclosingRegionIndex_Region6"/>
+			<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegionIndex_Region7"/>
+			<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegionIndex_Region8"/>
+			<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegionIndex_Region9"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Transform Selections">
 			<MenuItem Header="_Flatten">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Flatten_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Flatten_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Flatten_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Flatten_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Flatten_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Flatten_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Flatten_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Flatten_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Flatten_Region9"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Flatten_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Flatten_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Flatten_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Flatten_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Flatten_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Flatten_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Flatten_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Flatten_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Flatten_Region9"/>
 			</MenuItem>
 			<MenuItem Header="_Transpose">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Transpose_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Transpose_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Transpose_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Transpose_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Transpose_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Transpose_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Transpose_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Transpose_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Transpose_Region9"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Transpose_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Transpose_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Transpose_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Transpose_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Transpose_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Transpose_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Transpose_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Transpose_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Transpose_Region9"/>
 			</MenuItem>
 			<MenuItem Header="Rotate _Left">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_RotateLeft_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_RotateLeft_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_RotateLeft_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_RotateLeft_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_RotateLeft_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_RotateLeft_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateLeft_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateLeft_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateLeft_Region9"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_RotateLeft_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_RotateLeft_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_RotateLeft_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_RotateLeft_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_RotateLeft_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_RotateLeft_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateLeft_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateLeft_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateLeft_Region9"/>
 			</MenuItem>
 			<MenuItem Header="Rotate _Right">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_RotateRight_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_RotateRight_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_RotateRight_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_RotateRight_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_RotateRight_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_RotateRight_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateRight_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateRight_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateRight_Region9"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_RotateRight_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_RotateRight_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_RotateRight_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_RotateRight_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_RotateRight_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_RotateRight_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateRight_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateRight_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateRight_Region9"/>
 			</MenuItem>
 			<MenuItem Header="Rotate _180">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Rotate180_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Rotate180_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Rotate180_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Rotate180_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Rotate180_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Rotate180_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Rotate180_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Rotate180_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Rotate180_Region9"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Rotate180_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Rotate180_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Rotate180_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Rotate180_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Rotate180_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Rotate180_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Rotate180_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Rotate180_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Rotate180_Region9"/>
 			</MenuItem>
 			<MenuItem Header="Mirror _Horizontal">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region9"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region9"/>
 			</MenuItem>
 			<MenuItem Header="Mirror _Vertical">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_MirrorVertical_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_MirrorVertical_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_MirrorVertical_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_MirrorVertical_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_MirrorVertical_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_MirrorVertical_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorVertical_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorVertical_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorVertical_Region9"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_MirrorVertical_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_MirrorVertical_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_MirrorVertical_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_MirrorVertical_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_MirrorVertical_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_MirrorVertical_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorVertical_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorVertical_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorVertical_Region9"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<MenuItem Header="_Regions">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_Regions_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_Regions_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_Regions_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_Regions_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_Regions_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_Regions_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_Regions_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_Regions_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_Regions_Region9"/>
-				<commonControls:NEMenuItem Header="_All" CommandEnum="Region_Select_Regions_All"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_Regions_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_Regions_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_Regions_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_Regions_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_Regions_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_Regions_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_Regions_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_Regions_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_Regions_Region9"/>
+				<neoEditControls:NEMenuItem Header="_All" CommandEnum="Region_Select_Regions_All"/>
 			</MenuItem>
 			<MenuItem Header="_Enclosing Region">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_EnclosingRegion_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_EnclosingRegion_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_EnclosingRegion_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_EnclosingRegion_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_EnclosingRegion_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_EnclosingRegion_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_EnclosingRegion_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_EnclosingRegion_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_EnclosingRegion_Region9"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_EnclosingRegion_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_EnclosingRegion_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_EnclosingRegion_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_EnclosingRegion_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_EnclosingRegion_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_EnclosingRegion_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_EnclosingRegion_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_EnclosingRegion_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_EnclosingRegion_Region9"/>
 			</MenuItem>
 			<MenuItem Header="_With Enclosing Region">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_WithEnclosingRegion_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_WithEnclosingRegion_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_WithEnclosingRegion_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_WithEnclosingRegion_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_WithEnclosingRegion_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_WithEnclosingRegion_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_WithEnclosingRegion_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_WithEnclosingRegion_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_WithEnclosingRegion_Region9"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_WithEnclosingRegion_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_WithEnclosingRegion_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_WithEnclosingRegion_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_WithEnclosingRegion_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_WithEnclosingRegion_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_WithEnclosingRegion_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_WithEnclosingRegion_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_WithEnclosingRegion_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_WithEnclosingRegion_Region9"/>
 			</MenuItem>
 			<MenuItem Header="W_ithout Enclosing Region">
-				<commonControls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_WithoutEnclosingRegion_Region1"/>
-				<commonControls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_WithoutEnclosingRegion_Region2"/>
-				<commonControls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_WithoutEnclosingRegion_Region3"/>
-				<commonControls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_WithoutEnclosingRegion_Region4"/>
-				<commonControls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_WithoutEnclosingRegion_Region5"/>
-				<commonControls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_WithoutEnclosingRegion_Region6"/>
-				<commonControls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_WithoutEnclosingRegion_Region7"/>
-				<commonControls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_WithoutEnclosingRegion_Region8"/>
-				<commonControls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_WithoutEnclosingRegion_Region9"/>
+				<neoEditControls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_WithoutEnclosingRegion_Region1"/>
+				<neoEditControls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_WithoutEnclosingRegion_Region2"/>
+				<neoEditControls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_WithoutEnclosingRegion_Region3"/>
+				<neoEditControls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_WithoutEnclosingRegion_Region4"/>
+				<neoEditControls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_WithoutEnclosingRegion_Region5"/>
+				<neoEditControls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_WithoutEnclosingRegion_Region6"/>
+				<neoEditControls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_WithoutEnclosingRegion_Region7"/>
+				<neoEditControls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_WithoutEnclosingRegion_Region8"/>
+				<neoEditControls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_WithoutEnclosingRegion_Region9"/>
 			</MenuItem>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">
 			<MenuItem Header="_Quick">
-				<commonControls:NEMenuItem Header="1" CommandEnum="Macro_Record_Quick_1"/>
-				<commonControls:NEMenuItem Header="2" CommandEnum="Macro_Record_Quick_2"/>
-				<commonControls:NEMenuItem Header="_3" CommandEnum="Macro_Record_Quick_3"/>
-				<commonControls:NEMenuItem Header="_4" CommandEnum="Macro_Record_Quick_4"/>
-				<commonControls:NEMenuItem Header="_5" CommandEnum="Macro_Record_Quick_5"/>
-				<commonControls:NEMenuItem Header="_6" CommandEnum="Macro_Record_Quick_6"/>
-				<commonControls:NEMenuItem Header="_7" CommandEnum="Macro_Record_Quick_7"/>
-				<commonControls:NEMenuItem Header="_8" CommandEnum="Macro_Record_Quick_8"/>
-				<commonControls:NEMenuItem Header="_9" CommandEnum="Macro_Record_Quick_9"/>
-				<commonControls:NEMenuItem Header="1_0" CommandEnum="Macro_Record_Quick_10"/>
-				<commonControls:NEMenuItem Header="1_1" CommandEnum="Macro_Record_Quick_11"/>
-				<commonControls:NEMenuItem Header="1_2" CommandEnum="Macro_Record_Quick_12"/>
+				<neoEditControls:NEMenuItem Header="1" CommandEnum="Macro_Record_Quick_1"/>
+				<neoEditControls:NEMenuItem Header="2" CommandEnum="Macro_Record_Quick_2"/>
+				<neoEditControls:NEMenuItem Header="_3" CommandEnum="Macro_Record_Quick_3"/>
+				<neoEditControls:NEMenuItem Header="_4" CommandEnum="Macro_Record_Quick_4"/>
+				<neoEditControls:NEMenuItem Header="_5" CommandEnum="Macro_Record_Quick_5"/>
+				<neoEditControls:NEMenuItem Header="_6" CommandEnum="Macro_Record_Quick_6"/>
+				<neoEditControls:NEMenuItem Header="_7" CommandEnum="Macro_Record_Quick_7"/>
+				<neoEditControls:NEMenuItem Header="_8" CommandEnum="Macro_Record_Quick_8"/>
+				<neoEditControls:NEMenuItem Header="_9" CommandEnum="Macro_Record_Quick_9"/>
+				<neoEditControls:NEMenuItem Header="1_0" CommandEnum="Macro_Record_Quick_10"/>
+				<neoEditControls:NEMenuItem Header="1_1" CommandEnum="Macro_Record_Quick_11"/>
+				<neoEditControls:NEMenuItem Header="1_2" CommandEnum="Macro_Record_Quick_12"/>
 			</MenuItem>
-			<commonControls:NEMenuItem Header="_Record" CommandEnum="Macro_Record_Record"/>
-			<commonControls:NEMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording"/>
+			<neoEditControls:NEMenuItem Header="_Record" CommandEnum="Macro_Record_Record"/>
+			<neoEditControls:NEMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording"/>
 		</MenuItem>
 		<MenuItem Header="_Append">
 			<MenuItem Header="_Quick">
-				<commonControls:NEMenuItem Header="1" CommandEnum="Macro_Append_Quick_1"/>
-				<commonControls:NEMenuItem Header="2" CommandEnum="Macro_Append_Quick_2"/>
-				<commonControls:NEMenuItem Header="_3" CommandEnum="Macro_Append_Quick_3"/>
-				<commonControls:NEMenuItem Header="_4" CommandEnum="Macro_Append_Quick_4"/>
-				<commonControls:NEMenuItem Header="_5" CommandEnum="Macro_Append_Quick_5"/>
-				<commonControls:NEMenuItem Header="_6" CommandEnum="Macro_Append_Quick_6"/>
-				<commonControls:NEMenuItem Header="_7" CommandEnum="Macro_Append_Quick_7"/>
-				<commonControls:NEMenuItem Header="_8" CommandEnum="Macro_Append_Quick_8"/>
-				<commonControls:NEMenuItem Header="_9" CommandEnum="Macro_Append_Quick_9"/>
-				<commonControls:NEMenuItem Header="1_0" CommandEnum="Macro_Append_Quick_10"/>
-				<commonControls:NEMenuItem Header="1_1" CommandEnum="Macro_Append_Quick_11"/>
-				<commonControls:NEMenuItem Header="1_2" CommandEnum="Macro_Append_Quick_12"/>
+				<neoEditControls:NEMenuItem Header="1" CommandEnum="Macro_Append_Quick_1"/>
+				<neoEditControls:NEMenuItem Header="2" CommandEnum="Macro_Append_Quick_2"/>
+				<neoEditControls:NEMenuItem Header="_3" CommandEnum="Macro_Append_Quick_3"/>
+				<neoEditControls:NEMenuItem Header="_4" CommandEnum="Macro_Append_Quick_4"/>
+				<neoEditControls:NEMenuItem Header="_5" CommandEnum="Macro_Append_Quick_5"/>
+				<neoEditControls:NEMenuItem Header="_6" CommandEnum="Macro_Append_Quick_6"/>
+				<neoEditControls:NEMenuItem Header="_7" CommandEnum="Macro_Append_Quick_7"/>
+				<neoEditControls:NEMenuItem Header="_8" CommandEnum="Macro_Append_Quick_8"/>
+				<neoEditControls:NEMenuItem Header="_9" CommandEnum="Macro_Append_Quick_9"/>
+				<neoEditControls:NEMenuItem Header="1_0" CommandEnum="Macro_Append_Quick_10"/>
+				<neoEditControls:NEMenuItem Header="1_1" CommandEnum="Macro_Append_Quick_11"/>
+				<neoEditControls:NEMenuItem Header="1_2" CommandEnum="Macro_Append_Quick_12"/>
 			</MenuItem>
-			<commonControls:NEMenuItem Header="_Append" CommandEnum="Macro_Append_Append"/>
+			<neoEditControls:NEMenuItem Header="_Append" CommandEnum="Macro_Append_Append"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Play">
 			<MenuItem Header="_Quick">
-				<commonControls:NEMenuItem Header="1" CommandEnum="Macro_Play_Quick_1"/>
-				<commonControls:NEMenuItem Header="2" CommandEnum="Macro_Play_Quick_2"/>
-				<commonControls:NEMenuItem Header="_3" CommandEnum="Macro_Play_Quick_3"/>
-				<commonControls:NEMenuItem Header="_4" CommandEnum="Macro_Play_Quick_4"/>
-				<commonControls:NEMenuItem Header="_5" CommandEnum="Macro_Play_Quick_5"/>
-				<commonControls:NEMenuItem Header="_6" CommandEnum="Macro_Play_Quick_6"/>
-				<commonControls:NEMenuItem Header="_7" CommandEnum="Macro_Play_Quick_7"/>
-				<commonControls:NEMenuItem Header="_8" CommandEnum="Macro_Play_Quick_8"/>
-				<commonControls:NEMenuItem Header="_9" CommandEnum="Macro_Play_Quick_9"/>
-				<commonControls:NEMenuItem Header="1_0" CommandEnum="Macro_Play_Quick_10"/>
-				<commonControls:NEMenuItem Header="1_1" CommandEnum="Macro_Play_Quick_11"/>
-				<commonControls:NEMenuItem Header="1_2" CommandEnum="Macro_Play_Quick_12"/>
+				<neoEditControls:NEMenuItem Header="1" CommandEnum="Macro_Play_Quick_1"/>
+				<neoEditControls:NEMenuItem Header="2" CommandEnum="Macro_Play_Quick_2"/>
+				<neoEditControls:NEMenuItem Header="_3" CommandEnum="Macro_Play_Quick_3"/>
+				<neoEditControls:NEMenuItem Header="_4" CommandEnum="Macro_Play_Quick_4"/>
+				<neoEditControls:NEMenuItem Header="_5" CommandEnum="Macro_Play_Quick_5"/>
+				<neoEditControls:NEMenuItem Header="_6" CommandEnum="Macro_Play_Quick_6"/>
+				<neoEditControls:NEMenuItem Header="_7" CommandEnum="Macro_Play_Quick_7"/>
+				<neoEditControls:NEMenuItem Header="_8" CommandEnum="Macro_Play_Quick_8"/>
+				<neoEditControls:NEMenuItem Header="_9" CommandEnum="Macro_Play_Quick_9"/>
+				<neoEditControls:NEMenuItem Header="1_0" CommandEnum="Macro_Play_Quick_10"/>
+				<neoEditControls:NEMenuItem Header="1_1" CommandEnum="Macro_Play_Quick_11"/>
+				<neoEditControls:NEMenuItem Header="1_2" CommandEnum="Macro_Play_Quick_12"/>
 			</MenuItem>
-			<commonControls:NEMenuItem Header="_Play" CommandEnum="Macro_Play_Play"/>
-			<commonControls:NEMenuItem Header="_Repeat" CommandEnum="Macro_Play_Repeat"/>
-			<commonControls:NEMenuItem Header="Play On Copied _Files" CommandEnum="Macro_Play_PlayOnCopiedFiles"/>
+			<neoEditControls:NEMenuItem Header="_Play" CommandEnum="Macro_Play_Play"/>
+			<neoEditControls:NEMenuItem Header="_Repeat" CommandEnum="Macro_Play_Repeat"/>
+			<neoEditControls:NEMenuItem Header="Play On Copied _Files" CommandEnum="Macro_Play_PlayOnCopiedFiles"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Open">
 			<MenuItem Header="_Quick">
-				<commonControls:NEMenuItem Header="1" CommandEnum="Macro_Open_Quick_1"/>
-				<commonControls:NEMenuItem Header="2" CommandEnum="Macro_Open_Quick_2"/>
-				<commonControls:NEMenuItem Header="_3" CommandEnum="Macro_Open_Quick_3"/>
-				<commonControls:NEMenuItem Header="_4" CommandEnum="Macro_Open_Quick_4"/>
-				<commonControls:NEMenuItem Header="_5" CommandEnum="Macro_Open_Quick_5"/>
-				<commonControls:NEMenuItem Header="_6" CommandEnum="Macro_Open_Quick_6"/>
-				<commonControls:NEMenuItem Header="_7" CommandEnum="Macro_Open_Quick_7"/>
-				<commonControls:NEMenuItem Header="_8" CommandEnum="Macro_Open_Quick_8"/>
-				<commonControls:NEMenuItem Header="_9" CommandEnum="Macro_Open_Quick_9"/>
-				<commonControls:NEMenuItem Header="1_0" CommandEnum="Macro_Open_Quick_10"/>
-				<commonControls:NEMenuItem Header="1_1" CommandEnum="Macro_Open_Quick_11"/>
-				<commonControls:NEMenuItem Header="1_2" CommandEnum="Macro_Open_Quick_12"/>
+				<neoEditControls:NEMenuItem Header="1" CommandEnum="Macro_Open_Quick_1"/>
+				<neoEditControls:NEMenuItem Header="2" CommandEnum="Macro_Open_Quick_2"/>
+				<neoEditControls:NEMenuItem Header="_3" CommandEnum="Macro_Open_Quick_3"/>
+				<neoEditControls:NEMenuItem Header="_4" CommandEnum="Macro_Open_Quick_4"/>
+				<neoEditControls:NEMenuItem Header="_5" CommandEnum="Macro_Open_Quick_5"/>
+				<neoEditControls:NEMenuItem Header="_6" CommandEnum="Macro_Open_Quick_6"/>
+				<neoEditControls:NEMenuItem Header="_7" CommandEnum="Macro_Open_Quick_7"/>
+				<neoEditControls:NEMenuItem Header="_8" CommandEnum="Macro_Open_Quick_8"/>
+				<neoEditControls:NEMenuItem Header="_9" CommandEnum="Macro_Open_Quick_9"/>
+				<neoEditControls:NEMenuItem Header="1_0" CommandEnum="Macro_Open_Quick_10"/>
+				<neoEditControls:NEMenuItem Header="1_1" CommandEnum="Macro_Open_Quick_11"/>
+				<neoEditControls:NEMenuItem Header="1_2" CommandEnum="Macro_Open_Quick_12"/>
 			</MenuItem>
-			<commonControls:NEMenuItem Header="_Open" CommandEnum="Macro_Open_Open"/>
+			<neoEditControls:NEMenuItem Header="_Open" CommandEnum="Macro_Open_Open"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="R_epeat Last Action" CommandEnum="Macro_RepeatLastAction"/>
-		<commonControls:NEMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction"/>
+		<neoEditControls:NEMenuItem Header="R_epeat Last Action" CommandEnum="Macro_RepeatLastAction"/>
+		<neoEditControls:NEMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction"/>
 	</MenuItem>
 	<MenuItem Header="_Window">
-		<commonControls:NEMenuItem Header="_New Window" CommandEnum="Window_NewWindow"/>
+		<neoEditControls:NEMenuItem Header="_New Window" CommandEnum="Window_NewWindow"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Full" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={commonConverters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Full&quot;'}" CommandEnum="Window_Full"/>
-		<commonControls:NEMenuItem Header="_Grid" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={commonConverters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Grid&quot;'}" CommandEnum="Window_Grid"/>
-		<commonControls:NEMenuItem Header="C_ustom Grid" CommandEnum="Window_CustomGrid"/>
+		<neoEditControls:NEMenuItem Header="_Full" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={commonConverters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Full&quot;'}" CommandEnum="Window_Full"/>
+		<neoEditControls:NEMenuItem Header="_Grid" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={commonConverters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Grid&quot;'}" CommandEnum="Window_Grid"/>
+		<neoEditControls:NEMenuItem Header="C_ustom Grid" CommandEnum="Window_CustomGrid"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_ActiveTabs"/>
-		<commonControls:NEMenuItem Header="Tab _Index" CommandEnum="Window_TabIndex"/>
-		<commonControls:NEMenuItem Header="Active Tab In_dex" CommandEnum="Window_ActiveTabIndex"/>
+		<neoEditControls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_ActiveTabs"/>
+		<neoEditControls:NEMenuItem Header="Tab _Index" CommandEnum="Window_TabIndex"/>
+		<neoEditControls:NEMenuItem Header="Active Tab In_dex" CommandEnum="Window_ActiveTabIndex"/>
 		<Separator/>
-		<commonControls:NEMenuItem Header="F_ont Size" CommandEnum="Window_FontSize"/>
+		<neoEditControls:NEMenuItem Header="F_ont Size" CommandEnum="Window_FontSize"/>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<commonControls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Select_TabsWithSelections"/>
-			<commonControls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Select_TabsWithoutSelections"/>
+			<neoEditControls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Select_TabsWithSelections"/>
+			<neoEditControls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Select_TabsWithoutSelections"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Select_ModifiedTabs"/>
-			<commonControls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Select_UnmodifiedTabs"/>
+			<neoEditControls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Select_ModifiedTabs"/>
+			<neoEditControls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Select_UnmodifiedTabs"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="Tabs With Selections To _Top" CommandEnum="Window_Select_TabsWithSelectionsToTop"/>
+			<neoEditControls:NEMenuItem Header="Tabs With Selections To _Top" CommandEnum="Window_Select_TabsWithSelectionsToTop"/>
 		</MenuItem>
 		<MenuItem Header="_Close">
-			<commonControls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Close_TabsWithSelections"/>
-			<commonControls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Close_TabsWithoutSelections"/>
+			<neoEditControls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Close_TabsWithSelections"/>
+			<neoEditControls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Close_TabsWithoutSelections"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Close_ModifiedTabs"/>
-			<commonControls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Close_UnmodifiedTabs"/>
+			<neoEditControls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Close_ModifiedTabs"/>
+			<neoEditControls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Close_UnmodifiedTabs"/>
 			<Separator/>
-			<commonControls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_Close_ActiveTabs"/>
-			<commonControls:NEMenuItem Header="_Inactive Tabs" CommandEnum="Window_Close_InactiveTabs"/>
+			<neoEditControls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_Close_ActiveTabs"/>
+			<neoEditControls:NEMenuItem Header="_Inactive Tabs" CommandEnum="Window_Close_InactiveTabs"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:NEMenuItem Header="_Word List" CommandEnum="Window_WordList"/>
+		<neoEditControls:NEMenuItem Header="_Word List" CommandEnum="Window_WordList"/>
 	</MenuItem>
 	<MenuItem Header="_Help">
-		<commonControls:NEMenuItem Header="_About" CommandEnum="Help_About"/>
-		<commonControls:NEMenuItem Header="_Update" CommandEnum="Help_Update"/>
-		<commonControls:NEMenuItem Header="Run _GC" CommandEnum="Help_RunGC"/>
+		<neoEditControls:NEMenuItem Header="_About" CommandEnum="Help_About"/>
+		<neoEditControls:NEMenuItem Header="_Update" CommandEnum="Help_Update"/>
+		<neoEditControls:NEMenuItem Header="Run _GC" CommandEnum="Help_RunGC"/>
 	</MenuItem>
 
 </Menu>

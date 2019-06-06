@@ -38,7 +38,6 @@
     <Compile Include="Controls\NEExpressionResults.xaml.cs">
       <DependentUpon>NEExpressionResults.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NEMenuItem.cs" />
     <Page Include="Controls\NumericUpDown.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -127,7 +126,6 @@
     </Compile>
     <Compile Include="Enums\JumpByType.cs" />
     <Compile Include="Enums\MessageOptions.cs" />
-    <Compile Include="Enums\NECommand.cs" />
     <Compile Include="Enums\ParserType.cs" />
     <Compile Include="Enums\ReplaceType.cs" />
     <Compile Include="Enums\TabsLayout.cs" />

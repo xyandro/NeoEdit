@@ -5,9 +5,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.Controls;
 using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.Common.Controls
+namespace NeoEdit.Controls
 {
 	public class NEMenuItem : MenuItem
 	{

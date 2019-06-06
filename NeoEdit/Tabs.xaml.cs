@@ -16,6 +16,7 @@ using NeoEdit.Common.Converters;
 using NeoEdit.Common.NEClipboards;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.Controls;
 using NeoEdit.Dialogs;
 using NeoEdit.Misc;
 

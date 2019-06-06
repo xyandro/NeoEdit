@@ -170,6 +170,7 @@
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
     <Compile Include="Controls\MultiMenuItem.cs" />
+    <Compile Include="Controls\NEMenuItem.cs" />
     <Compile Include="DBConnectInfo.cs" />
     <Page Include="Dialogs\ContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -814,6 +815,7 @@
     <Compile Include="Macro.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
+    <Compile Include="NECommand.cs" />
     <Page Include="NEMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

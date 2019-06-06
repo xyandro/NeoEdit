@@ -7,10 +7,10 @@ namespace NeoEdit.Common.Controls
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
 	public class KeyGestureAttribute : Attribute
 	{
-		internal Key Key { get; }
-		internal ModifierKeys Modifiers { get; }
-		internal int Order { get; }
-		internal string GestureText { get; }
+		public Key Key { get; }
+		public ModifierKeys Modifiers { get; }
+		public int Order { get; }
+		public string GestureText { get; }
 
 		public KeyGestureAttribute(Key key, ModifierKeys modifiers = ModifierKeys.None, int order = 1)
 		{
