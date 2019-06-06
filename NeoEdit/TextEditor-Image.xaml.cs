@@ -36,12 +36,12 @@ namespace NeoEdit
 			return Colorer.ARGBToString(alpha, red, green, blue);
 		}
 
-		static void Flip(ITextEditor te, System.Drawing.RotateFlipType type)
+		void Flip(System.Drawing.RotateFlipType type)
 		{
-			var bitmap = Coder.StringToBitmap(te.AllText);
+			var bitmap = Coder.StringToBitmap(AllText);
 			bitmap.RotateFlip(type);
-			te.Replace(new List<Range> { te.FullRange }, new List<string> { Coder.BitmapToString(bitmap) });
-			te.SetSelections(new List<Range> { te.BeginRange });
+			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(bitmap) });
+			SetSelections(new List<Range> { BeginRange });
 		}
 
 		static string OverlayColor(string color1, string color2)
@@ -69,19 +69,19 @@ namespace NeoEdit
 			}
 		}
 
-		static public ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog(ITextEditor te) => ImageGrabColorDialog.Run(te.WindowParent, te.Selections.Select(range => te.GetString(range)).FirstOrDefault());
+		ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog() => ImageGrabColorDialog.Run(WindowParent, Selections.Select(range => GetString(range)).FirstOrDefault());
 
-		static public void Command_Image_GrabColor(ITextEditor te, ImageGrabColorDialog.Result result) => te.ReplaceSelections(result.Color);
+		void Command_Image_GrabColor(ImageGrabColorDialog.Result result) => ReplaceSelections(result.Color);
 
-		static public ImageGrabImageDialog.Result Command_Image_GrabImage_Dialog(ITextEditor te) => ImageGrabImageDialog.Run(te.WindowParent, te.GetVariables());
+		ImageGrabImageDialog.Result Command_Image_GrabImage_Dialog() => ImageGrabImageDialog.Run(WindowParent, GetVariables());
 
-		static public void Command_Image_GrabImage(ITextEditor te, ImageGrabImageDialog.Result result)
+		void Command_Image_GrabImage(ImageGrabImageDialog.Result result)
 		{
-			var variables = te.GetVariables();
-			var x = new NEExpression(result.GrabX).EvaluateList<int>(variables, te.Selections.Count());
-			var y = new NEExpression(result.GrabY).EvaluateList<int>(variables, te.Selections.Count());
-			var width = new NEExpression(result.GrabWidth).EvaluateList<int>(variables, te.Selections.Count());
-			var height = new NEExpression(result.GrabHeight).EvaluateList<int>(variables, te.Selections.Count());
+			var variables = GetVariables();
+			var x = new NEExpression(result.GrabX).EvaluateList<int>(variables, Selections.Count());
+			var y = new NEExpression(result.GrabY).EvaluateList<int>(variables, Selections.Count());
+			var width = new NEExpression(result.GrabWidth).EvaluateList<int>(variables, Selections.Count());
+			var height = new NEExpression(result.GrabHeight).EvaluateList<int>(variables, Selections.Count());
 
 			var strs = new List<string>();
 			for (var ctr = 0; ctr < x.Count; ++ctr)
@@ -93,43 +93,43 @@ namespace NeoEdit
 					strs.Add(Coder.BitmapToString(image));
 				}
 			}
-			te.ReplaceSelections(strs);
+			ReplaceSelections(strs);
 		}
 
-		static public ImageAdjustColorDialog.Result Command_Image_AdjustColor_Dialog(ITextEditor te) => ImageAdjustColorDialog.Run(te.WindowParent, te.GetVariables());
+		ImageAdjustColorDialog.Result Command_Image_AdjustColor_Dialog() => ImageAdjustColorDialog.Run(WindowParent, GetVariables());
 
-		static public void Command_Image_AdjustColor(ITextEditor te, ImageAdjustColorDialog.Result result)
+		void Command_Image_AdjustColor(ImageAdjustColorDialog.Result result)
 		{
-			var results = te.GetFixedExpressionResults<double>(result.Expression);
-			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => AdjustColor(te.GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
-			te.ReplaceSelections(strs);
+			var results = GetFixedExpressionResults<double>(result.Expression);
+			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AdjustColor(GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
+			ReplaceSelections(strs);
 		}
 
-		static public ImageAddOverlayColorDialog.Result Command_Image_AddOverlayColor_Dialog(ITextEditor te, bool add) => ImageAddOverlayColorDialog.Run(te.WindowParent, add, te.GetVariables());
+		ImageAddOverlayColorDialog.Result Command_Image_AddOverlayColor_Dialog(bool add) => ImageAddOverlayColorDialog.Run(WindowParent, add, GetVariables());
 
-		static public void Command_Image_AddColor(ITextEditor te, ImageAddOverlayColorDialog.Result result)
+		void Command_Image_AddColor(ImageAddOverlayColorDialog.Result result)
 		{
-			var results = te.GetFixedExpressionResults<string>(result.Expression);
-			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => AddColor(te.GetString(range), results[index])).ToList();
-			te.ReplaceSelections(strs);
+			var results = GetFixedExpressionResults<string>(result.Expression);
+			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AddColor(GetString(range), results[index])).ToList();
+			ReplaceSelections(strs);
 		}
 
-		static public void Command_Image_OverlayColor(ITextEditor te, ImageAddOverlayColorDialog.Result result)
+		void Command_Image_OverlayColor(ImageAddOverlayColorDialog.Result result)
 		{
-			var results = te.GetFixedExpressionResults<string>(result.Expression);
-			var strs = te.Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], te.GetString(range))).ToList();
-			te.ReplaceSelections(strs);
+			var results = GetFixedExpressionResults<string>(result.Expression);
+			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], GetString(range))).ToList();
+			ReplaceSelections(strs);
 		}
 
-		static public ImageSizeDialog.Result Command_Image_Size_Dialog(ITextEditor te) => ImageSizeDialog.Run(te.WindowParent, te.GetVariables());
+		ImageSizeDialog.Result Command_Image_Size_Dialog() => ImageSizeDialog.Run(WindowParent, GetVariables());
 
-		static public void Command_Image_Size(ITextEditor te, ImageSizeDialog.Result result)
+		void Command_Image_Size(ImageSizeDialog.Result result)
 		{
-			var variables = te.GetVariables();
+			var variables = GetVariables();
 			var width = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
 			var height = new NEExpression(result.HeightExpression).Evaluate<int>(variables);
 
-			var bitmap = te.GetBitmap();
+			var bitmap = GetBitmap();
 			var resultBitmap = new System.Drawing.Bitmap(width, height, bitmap.PixelFormat);
 			resultBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
 			using (var graphics = System.Drawing.Graphics.FromImage(resultBitmap))
@@ -147,15 +147,15 @@ namespace NeoEdit
 				}
 			}
 
-			te.Replace(new List<Range> { te.FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
-			te.SetSelections(new List<Range> { te.BeginRange });
+			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
+			SetSelections(new List<Range> { BeginRange });
 		}
 
-		static public ImageCropDialog.Result Command_Image_Crop_Dialog(ITextEditor te) => ImageCropDialog.Run(te.WindowParent, te.GetVariables());
+		ImageCropDialog.Result Command_Image_Crop_Dialog() => ImageCropDialog.Run(WindowParent, GetVariables());
 
-		static public void Command_Image_Crop(ITextEditor te, ImageCropDialog.Result result)
+		void Command_Image_Crop(ImageCropDialog.Result result)
 		{
-			var variables = te.GetVariables();
+			var variables = GetVariables();
 			var destX = new NEExpression(result.XExpression).Evaluate<int>(variables);
 			var destY = new NEExpression(result.YExpression).Evaluate<int>(variables);
 			var newWidth = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
@@ -163,7 +163,7 @@ namespace NeoEdit
 			if ((newWidth <= 0) || (newHeight <= 0))
 				throw new Exception("Width and height must be greater than 0");
 
-			var bitmap = te.GetBitmap();
+			var bitmap = GetBitmap();
 			var srcX = 0;
 			var srcY = 0;
 			var width = bitmap.Width;
@@ -192,22 +192,22 @@ namespace NeoEdit
 				graphics.DrawImage(bitmap, new System.Drawing.Rectangle(destX, destY, width, height), new System.Drawing.Rectangle(srcX, srcY, width, height), System.Drawing.GraphicsUnit.Pixel);
 			}
 
-			te.Replace(new List<Range> { te.FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
-			te.SetSelections(new List<Range> { te.BeginRange });
+			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
+			SetSelections(new List<Range> { BeginRange });
 		}
 
-		static public void Command_Image_FlipHorizontal(ITextEditor te) => Flip(te, System.Drawing.RotateFlipType.RotateNoneFlipX);
+		void Command_Image_FlipHorizontal() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipX);
 
-		static public void Command_Image_FlipVertical(ITextEditor te) => Flip(te, System.Drawing.RotateFlipType.RotateNoneFlipY);
+		void Command_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		static public ImageRotateDialog.Result Command_Image_Rotate_Dialog(ITextEditor te) => ImageRotateDialog.Run(te.WindowParent, te.GetVariables());
+		ImageRotateDialog.Result Command_Image_Rotate_Dialog() => ImageRotateDialog.Run(WindowParent, GetVariables());
 
-		static public void Command_Image_Rotate(ITextEditor te, ImageRotateDialog.Result result)
+		void Command_Image_Rotate(ImageRotateDialog.Result result)
 		{
-			var variables = te.GetVariables();
+			var variables = GetVariables();
 			var angle = new NEExpression(result.AngleExpression).Evaluate<float>(variables, "deg");
 
-			var bitmap = te.GetBitmap();
+			var bitmap = GetBitmap();
 			var path = new System.Drawing.Drawing2D.GraphicsPath();
 			path.AddRectangle(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height));
 			var matrix = new System.Drawing.Drawing2D.Matrix();
@@ -222,15 +222,15 @@ namespace NeoEdit
 				g.DrawImageUnscaled(bitmap, 0, 0);
 			}
 
-			te.Replace(new List<Range> { te.FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
-			te.SetSelections(new List<Range> { te.BeginRange });
+			Replace(new List<Range> { FullRange }, new List<string> { Coder.BitmapToString(resultBitmap) });
+			SetSelections(new List<Range> { BeginRange });
 		}
 
-		static public ImageGIFAnimateDialog.Result Command_Image_GIF_Animate_Dialog(ITextEditor te) => ImageGIFAnimateDialog.Run(te.WindowParent, te.GetVariables());
+		ImageGIFAnimateDialog.Result Command_Image_GIF_Animate_Dialog() => ImageGIFAnimateDialog.Run(WindowParent, GetVariables());
 
-		static public void Command_Image_GIF_Animate(ITextEditor te, ImageGIFAnimateDialog.Result result)
+		void Command_Image_GIF_Animate(ImageGIFAnimateDialog.Result result)
 		{
-			var variables = te.GetVariables();
+			var variables = GetVariables();
 			var inputFiles = new NEExpression(result.InputFiles).EvaluateList<string>(variables);
 			var outputFile = new NEExpression(result.OutputFile).Evaluate<string>(variables);
 			var delays = new NEExpression(result.Delay).EvaluateList<int>(variables, inputFiles.Count, "ms");
@@ -242,18 +242,18 @@ namespace NeoEdit
 						writer.WriteFrame(image, delays[ctr]);
 		}
 
-		static public ImageGIFSplitDialog.Result Command_Image_GIF_Split_Dialog(ITextEditor te)
+		ImageGIFSplitDialog.Result Command_Image_GIF_Split_Dialog()
 		{
-			var variables = te.GetVariables();
+			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return ImageGIFSplitDialog.Run(te.WindowParent, variables);
+			return ImageGIFSplitDialog.Run(WindowParent, variables);
 		}
 
-		static public void Command_Image_GIF_Split(ITextEditor te, ImageGIFSplitDialog.Result result)
+		void Command_Image_GIF_Split(ImageGIFSplitDialog.Result result)
 		{
-			var variables = te.GetVariables();
+			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
-			var files = te.RelativeSelectedFiles();
+			var files = RelativeSelectedFiles();
 			var outputTemplates = new NEExpression(result.OutputTemplate).EvaluateList<string>(variables, files.Count);
 			Enumerable.Range(0, files.Count).AsParallel().ForEach(index => SplitGIF(files[index], outputTemplates[index]));
 		}

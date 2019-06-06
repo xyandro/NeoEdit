@@ -42,11 +42,11 @@ namespace NeoEdit
 			}
 		}
 
-		static Range TrimRange(ITextEditor te, Range range, TextTrimDialog.Result result)
+		Range TrimRange(Range range, TextTrimDialog.Result result)
 		{
 			var index = range.Start;
 			var length = range.Length;
-			te.Data.Trim(ref index, ref length, result.TrimChars, result.Start, result.End);
+			Data.Trim(ref index, ref length, result.TrimChars, result.Start, result.End);
 			if ((index == range.Start) && (length == range.Length))
 				return range;
 			return Range.FromIndex(index, length);
@@ -69,143 +69,143 @@ namespace NeoEdit
 			return str.Substring(start, end - start);
 		}
 
-		static public TextTrimDialog.Result Command_Text_Select_Trim_Dialog(ITextEditor te) => TextTrimDialog.Run(te.WindowParent);
+		TextTrimDialog.Result Command_Text_Select_Trim_Dialog() => TextTrimDialog.Run(WindowParent);
 
-		static public void Command_Text_Select_Trim(ITextEditor te, TextTrimDialog.Result result) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Select(range => TrimRange(te, range, result)).ToList());
+		void Command_Text_Select_Trim(TextTrimDialog.Result result) => SetSelections(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList());
 
-		static public TextWidthDialog.Result Command_Text_Select_ByWidth_Dialog(ITextEditor te) => TextWidthDialog.Run(te.WindowParent, false, true, te.GetVariables());
+		TextWidthDialog.Result Command_Text_Select_ByWidth_Dialog() => TextWidthDialog.Run(WindowParent, false, true, GetVariables());
 
-		static public void Command_Text_Select_ByWidth(ITextEditor te, TextWidthDialog.Result result)
+		void Command_Text_Select_ByWidth(TextWidthDialog.Result result)
 		{
-			var results = te.GetFixedExpressionResults<int>(result.Expression);
-			te.SetSelections(te.Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList());
+			var results = GetFixedExpressionResults<int>(result.Expression);
+			SetSelections(Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList());
 		}
 
-		static public TextSelectWholeBoundedWordDialog.Result Command_Text_Select_WholeBoundedWord_Dialog(ITextEditor te, bool wholeWord) => TextSelectWholeBoundedWordDialog.Run(te.WindowParent, wholeWord);
+		TextSelectWholeBoundedWordDialog.Result Command_Text_Select_WholeBoundedWord_Dialog(bool wholeWord) => TextSelectWholeBoundedWordDialog.Run(WindowParent, wholeWord);
 
-		static public void Command_Text_Select_WholeBoundedWord(ITextEditor te, TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
+		void Command_Text_Select_WholeBoundedWord(TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
 		{
-			var minOffset = te.BeginOffset;
-			var maxOffset = te.EndOffset;
+			var minOffset = BeginOffset;
+			var maxOffset = EndOffset;
 
 			var sels = new List<Range>();
-			foreach (var range in te.Selections)
+			foreach (var range in Selections)
 			{
 				var startOffset = range.Start;
 				var endOffset = range.End;
 
 				if (result.Start)
-					while ((startOffset > minOffset) && (result.Chars.Contains(te.Data.Data[startOffset - 1]) == wholeWord))
+					while ((startOffset > minOffset) && (result.Chars.Contains(Data.Data[startOffset - 1]) == wholeWord))
 						--startOffset;
 
 				if (result.End)
-					while ((endOffset < maxOffset) && (result.Chars.Contains(te.Data.Data[endOffset]) == wholeWord))
+					while ((endOffset < maxOffset) && (result.Chars.Contains(Data.Data[endOffset]) == wholeWord))
 						++endOffset;
 
 				sels.Add(new Range(startOffset, endOffset));
 			}
-			te.SetSelections(sels);
+			SetSelections(sels);
 		}
 
-		static public void Command_Text_Select_MinMax_Text(ITextEditor te, bool max)
+		void Command_Text_Select_MinMax_Text(bool max)
 		{
-			if (!te.Selections.Any())
+			if (!Selections.Any())
 				throw new Exception("No selections");
 
-			var strings = te.GetSelectionStrings();
+			var strings = GetSelectionStrings();
 			var find = max ? strings.OrderByDescending().First() : strings.OrderBy().First();
-			te.SetSelections(strings.Indexes(str => str == find).Select(index => te.Selections[index]).ToList());
+			SetSelections(strings.Indexes(str => str == find).Select(index => Selections[index]).ToList());
 		}
 
-		static public void Command_Text_Select_MinMax_Length(ITextEditor te, bool max)
+		void Command_Text_Select_MinMax_Length(bool max)
 		{
-			if (!te.Selections.Any())
+			if (!Selections.Any())
 				throw new Exception("No selections");
 
-			var lengths = te.Selections.Select(range => range.Length).ToList();
+			var lengths = Selections.Select(range => range.Length).ToList();
 			var find = max ? lengths.OrderByDescending().First() : lengths.OrderBy().First();
-			te.SetSelections(lengths.Indexes(length => length == find).Select(index => te.Selections[index]).ToList());
+			SetSelections(lengths.Indexes(length => length == find).Select(index => Selections[index]).ToList());
 		}
 
-		static public void Command_Text_Case_Upper(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).ToUpperInvariant()).ToList());
+		void Command_Text_Case_Upper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToUpperInvariant()).ToList());
 
-		static public void Command_Text_Case_Lower(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).ToLowerInvariant()).ToList());
+		void Command_Text_Case_Lower() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToLowerInvariant()).ToList());
 
-		static public void Command_Text_Case_Proper(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).ToProper()).ToList());
+		void Command_Text_Case_Proper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToProper()).ToList());
 
-		static public void Command_Text_Case_Toggle(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).ToToggled()).ToList());
+		void Command_Text_Case_Toggle() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).ToToggled()).ToList());
 
-		static public void Command_Text_Length(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => range.Length.ToString()).ToList());
+		void Command_Text_Length() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => range.Length.ToString()).ToList());
 
-		static public TextWidthDialog.Result Command_Text_Width_Dialog(ITextEditor te)
+		TextWidthDialog.Result Command_Text_Width_Dialog()
 		{
-			var numeric = te.Selections.Any() ? te.Selections.AsParallel().All(range => te.GetString(range).IsNumeric()) : false;
-			return TextWidthDialog.Run(te.WindowParent, numeric, false, te.GetVariables());
+			var numeric = Selections.Any() ? Selections.AsParallel().All(range => GetString(range).IsNumeric()) : false;
+			return TextWidthDialog.Run(WindowParent, numeric, false, GetVariables());
 		}
 
-		static public void Command_Text_Width(ITextEditor te, TextWidthDialog.Result result)
+		void Command_Text_Width(TextWidthDialog.Result result)
 		{
-			var results = te.GetFixedExpressionResults<int>(result.Expression);
-			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(te.GetString(range), result, results[index])).ToList());
+			var results = GetFixedExpressionResults<int>(result.Expression);
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), result, results[index])).ToList());
 		}
 
-		static public TextTrimDialog.Result Command_Text_Trim_Dialog(ITextEditor te) => TextTrimDialog.Run(te.WindowParent);
+		TextTrimDialog.Result Command_Text_Trim_Dialog() => TextTrimDialog.Run(WindowParent);
 
-		static public void Command_Text_Trim(ITextEditor te, TextTrimDialog.Result result) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(str => TrimString(te.GetString(str), result)).ToList());
+		void Command_Text_Trim(TextTrimDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(GetString(str), result)).ToList());
 
-		static public void Command_Text_SingleLine(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
+		void Command_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
-		static public TextUnicodeDialog.Result Command_Text_Unicode_Dialog(ITextEditor te) => TextUnicodeDialog.Run(te.WindowParent);
+		TextUnicodeDialog.Result Command_Text_Unicode_Dialog() => TextUnicodeDialog.Run(WindowParent);
 
-		static public void Command_Text_Unicode(ITextEditor te, TextUnicodeDialog.Result result) => te.ReplaceSelections(result.Value);
+		void Command_Text_Unicode(TextUnicodeDialog.Result result) => ReplaceSelections(result.Value);
 
-		static public void Command_Text_GUID(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
+		void Command_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
-		static public TextRandomTextDialog.Result Command_Text_RandomText_Dialog(ITextEditor te) => TextRandomTextDialog.Run(te.GetVariables(), te.WindowParent);
+		TextRandomTextDialog.Result Command_Text_RandomText_Dialog() => TextRandomTextDialog.Run(GetVariables(), WindowParent);
 
-		static public void Command_Text_RandomText(ITextEditor te, TextRandomTextDialog.Result result)
+		void Command_Text_RandomText(TextRandomTextDialog.Result result)
 		{
-			var results = te.GetFixedExpressionResults<int>(result.Expression);
-			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
+			var results = GetFixedExpressionResults<int>(result.Expression);
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 
-		static public void Command_Text_LoremIpsum(ITextEditor te) => te.ReplaceSelections(new LoremGenerator().GetSentences().Take(te.Selections.Count).ToList());
+		void Command_Text_LoremIpsum() => ReplaceSelections(new LoremGenerator().GetSentences().Take(Selections.Count).ToList());
 
-		static public TextReverseRegExDialog.Result Command_Text_ReverseRegEx_Dialog(ITextEditor te)
+		TextReverseRegExDialog.Result Command_Text_ReverseRegEx_Dialog()
 		{
-			if (te.Selections.Count != 1)
+			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			return TextReverseRegExDialog.Run(te.WindowParent);
+			return TextReverseRegExDialog.Run(WindowParent);
 		}
 
-		static public void Command_Text_ReverseRegEx(ITextEditor te, TextReverseRegExDialog.Result result)
+		void Command_Text_ReverseRegEx(TextReverseRegExDialog.Result result)
 		{
-			if (te.Selections.Count != 1)
+			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
 			var data = RevRegExVisitor.Parse(result.RegEx, result.InfiniteCount);
-			var output = data.GetPossibilities().Select(str => str + te.Data.DefaultEnding).ToList();
-			te.ReplaceSelections(string.Join("", output));
+			var output = data.GetPossibilities().Select(str => str + Data.DefaultEnding).ToList();
+			ReplaceSelections(string.Join("", output));
 
-			var start = te.Selections.Single().Start;
+			var start = Selections.Single().Start;
 			var sels = new List<Range>();
 			foreach (var str in output)
 			{
-				sels.Add(Range.FromIndex(start, str.Length - te.Data.DefaultEnding.Length));
+				sels.Add(Range.FromIndex(start, str.Length - Data.DefaultEnding.Length));
 				start += str.Length;
 			}
-			te.SetSelections(sels);
+			SetSelections(sels);
 		}
 
-		static public TextFirstDistinctDialog.Result Command_Text_FirstDistinct_Dialog(ITextEditor te) => TextFirstDistinctDialog.Run(te.WindowParent);
+		TextFirstDistinctDialog.Result Command_Text_FirstDistinct_Dialog() => TextFirstDistinctDialog.Run(WindowParent);
 
-		static public void Command_Text_FirstDistinct(ITextEditor te, TextFirstDistinctDialog.Result result)
+		void Command_Text_FirstDistinct(TextFirstDistinctDialog.Result result)
 		{
-			var opResult = ProgressDialog.Run(te.WindowParent, "Finding characters...", (cancelled, progress) =>
+			var opResult = ProgressDialog.Run(WindowParent, "Finding characters...", (cancelled, progress) =>
 			{
 				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
-				var data = te.GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).Select((str, strIndex) => Tuple.Create(str, strIndex, str.Indexes(ch => valid.Contains(ch)).Distinct(index => str[index]).ToList())).OrderBy(tuple => tuple.Item3.Count).ToList();
+				var data = GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).Select((str, strIndex) => Tuple.Create(str, strIndex, str.Indexes(ch => valid.Contains(ch)).Distinct(index => str[index]).ToList())).OrderBy(tuple => tuple.Item3.Count).ToList();
 				var chars = data.Select(tuple => tuple.Item3.Select(index => tuple.Item1[index]).ToList()).ToList();
 
 				var onChar = new int[chars.Count];
@@ -273,24 +273,24 @@ namespace NeoEdit
 				for (var ctr = 0; ctr < data.Count; ++ctr)
 					map[data[ctr].Item2] = ctr;
 
-				return te.Selections.Select((range, index) => Range.FromIndex(range.Start + data[map[index]].Item3[best[map[index]]], 1)).ToList();
+				return Selections.Select((range, index) => Range.FromIndex(range.Start + data[map[index]].Item3[best[map[index]]], 1)).ToList();
 			}) as List<Range>;
 
 			if (opResult != null)
-				te.SetSelections(opResult);
+				SetSelections(opResult);
 		}
 
-		static public void Command_Text_RepeatCount(ITextEditor te)
+		void Command_Text_RepeatCount()
 		{
-			var strs = te.GetSelectionStrings();
+			var strs = GetSelectionStrings();
 			var counts = strs.GroupBy(str => str).ToDictionary(group => group.Key, group => group.Count());
-			te.ReplaceSelections(strs.Select(str => counts[str].ToString()).ToList());
+			ReplaceSelections(strs.Select(str => counts[str].ToString()).ToList());
 		}
 
-		static public void Command_Text_RepeatIndex(ITextEditor te)
+		void Command_Text_RepeatIndex()
 		{
 			var counts = new Dictionary<string, int>();
-			var strs = te.GetSelectionStrings();
+			var strs = GetSelectionStrings();
 			var newStrs = new List<string>();
 			foreach (var str in strs)
 			{
@@ -299,7 +299,7 @@ namespace NeoEdit
 				++counts[str];
 				newStrs.Add(counts[str].ToString());
 			}
-			te.ReplaceSelections(newStrs);
+			ReplaceSelections(newStrs);
 		}
 	}
 }

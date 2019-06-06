@@ -30,7 +30,7 @@ namespace NeoEdit
 
 				public override string ToString() => $"Line: {Line}, Index: {Index}, Column: {Column}, Position: {Position}";
 
-				public int? GetPosition(ITextEditor te, int offset, GotoLocation lastPosition = null)
+				public int? GetPosition(TextEditor te, int offset, GotoLocation lastPosition = null)
 				{
 					if ((Line == null) && (Index == null) && (Column == null) && (Position == null))
 						return null;
@@ -115,7 +115,7 @@ namespace NeoEdit
 				return result;
 			}
 
-			public Range GetRange(ITextEditor te, Range range, bool selecting)
+			public Range GetRange(TextEditor te, Range range, bool selecting)
 			{
 				var start = Start.GetPosition(te, range.Cursor);
 				var end = End.GetPosition(te, range.Cursor, Start);
@@ -127,32 +127,32 @@ namespace NeoEdit
 			}
 		}
 
-		static public PositionGotoDialog.Result Command_Position_Goto_Dialog(ITextEditor te, GotoType gotoType)
+		PositionGotoDialog.Result Command_Position_Goto_Dialog(GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
-			var range = te.Selections.FirstOrDefault();
+			var range = Selections.FirstOrDefault();
 			if (range != null)
 			{
-				line = te.Data.GetOffsetLine(range.Start) + 1;
-				index = te.Data.GetOffsetIndex(range.Start, line - 1) + 1;
-				column = te.Data.GetColumnFromIndex(line - 1, index - 1) + 1;
+				line = Data.GetOffsetLine(range.Start) + 1;
+				index = Data.GetOffsetIndex(range.Start, line - 1) + 1;
+				column = Data.GetColumnFromIndex(line - 1, index - 1) + 1;
 				position = range.Start;
 			}
 			int startValue;
 			switch (gotoType)
 			{
-				case GotoType.Line: startValue = te.Data.GetDiffLine(line - 1) + 1; break;
+				case GotoType.Line: startValue = Data.GetDiffLine(line - 1) + 1; break;
 				case GotoType.Column: startValue = column; break;
 				case GotoType.Index: startValue = index; break;
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return PositionGotoDialog.Run(te.WindowParent, gotoType, startValue, te.GetVariables());
+			return PositionGotoDialog.Run(WindowParent, gotoType, startValue, GetVariables());
 		}
 
-		static public void Command_Position_Goto(ITextEditor te, GotoType gotoType, bool selecting, PositionGotoDialog.Result result)
+		void Command_Position_Goto(GotoType gotoType, bool selecting, PositionGotoDialog.Result result)
 		{
-			var values = GotoRange.GetPositionsData(te.GetVariableExpressionResults<string>(result.Expression), gotoType);
+			var values = GotoRange.GetPositionsData(GetVariableExpressionResults<string>(result.Expression), gotoType);
 			if (!values.Any())
 				return;
 
@@ -191,10 +191,10 @@ namespace NeoEdit
 					throw new Exception($"The following files could not be found: {string.Join("\n", invalidFiles)}");
 			}
 
-			var active = new HashSet<ITextEditor>();
+			var active = new HashSet<TextEditor>();
 			foreach (var list in valuesByFile)
 			{
-				var useTE = list.First().File == null ? te : te.TabsParent.Add(list.First().File);
+				var useTE = list.First().File == null ? this : TabsParent.Add(list.First().File);
 				active.Add(useTE);
 
 				var sels = useTE.Selections.ToList();
@@ -214,41 +214,41 @@ namespace NeoEdit
 
 			if (hasFiles)
 			{
-				foreach (var item in te.TabsParent.Items)
+				foreach (var item in TabsParent.Items)
 					item.Active = active.Contains(item);
-				te.TabsParent.TopMost = active.First();
+				TabsParent.TopMost = active.First();
 			}
 		}
 
-		static public void Command_Position_Copy(ITextEditor te, GotoType gotoType, bool withLine)
+		void Command_Position_Copy(GotoType gotoType, bool withLine)
 		{
 			var starts = new Dictionary<GotoType, List<int>>();
 			var ends = new Dictionary<GotoType, List<int>>();
 
-			var count = te.Selections.Count;
-			starts[GotoType.Position] = te.Selections.Select(range => range.Start).ToList();
-			ends[GotoType.Position] = te.Selections.Select(range => range.End).ToList();
+			var count = Selections.Count;
+			starts[GotoType.Position] = Selections.Select(range => range.Start).ToList();
+			ends[GotoType.Position] = Selections.Select(range => range.End).ToList();
 
 			if ((gotoType == GotoType.Line) || (gotoType == GotoType.Column) || (gotoType == GotoType.Index))
 			{
-				starts[GotoType.Line] = starts[GotoType.Position].Select(pos => te.Data.GetOffsetLine(pos)).ToList();
-				ends[GotoType.Line] = ends[GotoType.Position].Select(pos => te.Data.GetOffsetLine(pos)).ToList();
+				starts[GotoType.Line] = starts[GotoType.Position].Select(pos => Data.GetOffsetLine(pos)).ToList();
+				ends[GotoType.Line] = ends[GotoType.Position].Select(pos => Data.GetOffsetLine(pos)).ToList();
 			}
 
 			if ((gotoType == GotoType.Column) || (gotoType == GotoType.Index))
 			{
-				starts[GotoType.Index] = Enumerable.Range(0, count).Select(x => te.Data.GetOffsetIndex(starts[GotoType.Position][x], starts[GotoType.Line][x])).ToList();
-				ends[GotoType.Index] = Enumerable.Range(0, count).Select(x => te.Data.GetOffsetIndex(ends[GotoType.Position][x], ends[GotoType.Line][x])).ToList();
+				starts[GotoType.Index] = Enumerable.Range(0, count).Select(x => Data.GetOffsetIndex(starts[GotoType.Position][x], starts[GotoType.Line][x])).ToList();
+				ends[GotoType.Index] = Enumerable.Range(0, count).Select(x => Data.GetOffsetIndex(ends[GotoType.Position][x], ends[GotoType.Line][x])).ToList();
 
 				if (gotoType == GotoType.Column)
 				{
-					starts[GotoType.Column] = Enumerable.Range(0, count).Select(x => te.Data.GetColumnFromIndex(starts[GotoType.Line][x], starts[GotoType.Index][x])).ToList();
-					ends[GotoType.Column] = Enumerable.Range(0, count).Select(x => te.Data.GetColumnFromIndex(ends[GotoType.Line][x], ends[GotoType.Index][x])).ToList();
+					starts[GotoType.Column] = Enumerable.Range(0, count).Select(x => Data.GetColumnFromIndex(starts[GotoType.Line][x], starts[GotoType.Index][x])).ToList();
+					ends[GotoType.Column] = Enumerable.Range(0, count).Select(x => Data.GetColumnFromIndex(ends[GotoType.Line][x], ends[GotoType.Index][x])).ToList();
 				}
 			}
 
 			var delta = gotoType == GotoType.Position ? 0 : 1;
-			te.SetClipboardStrings(Enumerable.Range(0, count).Select(index => $"{(withLine ? $"{starts[GotoType.Line][index] + 1}:" : "")}{starts[gotoType][index] + delta}{(starts[GotoType.Position][index] != ends[GotoType.Position][index] ? $"-{((withLine) && (starts[GotoType.Line][index] != ends[GotoType.Line][index]) ? $"{ends[GotoType.Line][index] + 1}:" : "")}{ends[gotoType][index] + delta}" : "")}"));
+			SetClipboardStrings(Enumerable.Range(0, count).Select(index => $"{(withLine ? $"{starts[GotoType.Line][index] + 1}:" : "")}{starts[gotoType][index] + delta}{(starts[GotoType.Position][index] != ends[GotoType.Position][index] ? $"-{((withLine) && (starts[GotoType.Line][index] != ends[GotoType.Line][index]) ? $"{ends[GotoType.Line][index] + 1}:" : "")}{ends[gotoType][index] + delta}" : "")}"));
 		}
 	}
 }

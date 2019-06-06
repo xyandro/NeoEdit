@@ -169,6 +169,7 @@
     <None Include="Content\XML\Source\XMLLexer.g4" />
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
+    <Compile Include="Controls\MultiMenuItem.cs" />
     <Compile Include="DBConnectInfo.cs" />
     <Page Include="Dialogs\ContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -809,7 +810,9 @@
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="InstanceManager.cs" />
+    <Compile Include="ITabs.cs" />
     <Compile Include="LoremGenerator.cs" />
+    <Compile Include="Macro.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
     <Page Include="NEMenu.xaml">

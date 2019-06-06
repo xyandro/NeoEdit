@@ -23,14 +23,14 @@ namespace NeoEdit
 			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
 		}
 
-		static IEnumerable<Range> FindRepetitions(ITextEditor te, Range inputRange)
+		IEnumerable<Range> FindRepetitions(Range inputRange)
 		{
-			var startLine = te.Data.GetOffsetLine(inputRange.Start);
-			var endLine = te.Data.GetOffsetLine(inputRange.End);
-			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, te.Data.GetOffset(line, 0)), Math.Min(inputRange.End, te.Data.GetOffset(line, te.Data.GetLineLength(line))))).ToList();
+			var startLine = Data.GetOffsetLine(inputRange.Start);
+			var endLine = Data.GetOffsetLine(inputRange.End);
+			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, Data.GetOffset(line, 0)), Math.Min(inputRange.End, Data.GetOffset(line, Data.GetLineLength(line))))).ToList();
 			if ((lineRanges.Count >= 2) && (!lineRanges[lineRanges.Count - 1].HasSelection))
 				lineRanges.RemoveAt(lineRanges.Count - 1);
-			var lineStrs = lineRanges.Select(range => te.GetString(range)).ToList();
+			var lineStrs = lineRanges.Select(range => GetString(range)).ToList();
 			var lines = Enumerable.Range(1, lineStrs.Count).MaxBy(x => GetRepetitionScore(lineStrs, x));
 			for (var ctr = 0; ctr < lineRanges.Count; ctr += lines)
 				yield return new Range(lineRanges[ctr + lines - 1].End, lineRanges[ctr].Start);
@@ -51,27 +51,27 @@ namespace NeoEdit
 
 		static string RepeatsValue(bool caseSensitive, string input) => caseSensitive ? input : input?.ToLowerInvariant();
 
-		static IEnumerable<Range> SelectRectangle(ITextEditor te, Range range)
+		IEnumerable<Range> SelectRectangle(Range range)
 		{
-			var startLine = te.Data.GetOffsetLine(range.Start);
-			var endLine = te.Data.GetOffsetLine(range.End);
+			var startLine = Data.GetOffsetLine(range.Start);
+			var endLine = Data.GetOffsetLine(range.End);
 			if (startLine == endLine)
 			{
 				yield return range;
 				yield break;
 			}
-			var startIndex = te.Data.GetOffsetIndex(range.Start, startLine);
-			var endIndex = te.Data.GetOffsetIndex(range.End, endLine);
+			var startIndex = Data.GetOffsetIndex(range.Start, startLine);
+			var endIndex = Data.GetOffsetIndex(range.End, endLine);
 			for (var line = startLine; line <= endLine; ++line)
 			{
-				var length = te.Data.GetLineLength(line);
-				var lineStartOffset = te.Data.GetOffset(line, Math.Min(length, startIndex));
-				var lineEndOffset = te.Data.GetOffset(line, Math.Min(length, endIndex));
+				var length = Data.GetLineLength(line);
+				var lineStartOffset = Data.GetOffset(line, Math.Min(length, startIndex));
+				var lineEndOffset = Data.GetOffset(line, Math.Min(length, endIndex));
 				yield return new Range(lineEndOffset, lineStartOffset);
 			}
 		}
 
-		static IEnumerable<Range> SelectSplit(ITextEditor te, Range range, SelectSplitDialog.Result result)
+		IEnumerable<Range> SelectSplit(Range range, SelectSplitDialog.Result result)
 		{
 			var stack = new Stack<SelectSplitEnum>();
 			stack.Push(SelectSplitEnum.None);
@@ -97,18 +97,18 @@ namespace NeoEdit
 				{
 					if (pos >= range.End)
 						throw new Exception("Incomplete string");
-					else if ((pos + 1 < range.End) && (te.Data.Data[pos] == '\\') && (!stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '\\') && (!stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
 						pos += 2;
-					else if ((pos + 1 < range.End) && (te.Data.Data[pos] == '"') && (te.Data.Data[pos + 1] == '"') && (stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '"') && (Data.Data[pos + 1] == '"') && (stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
 						pos += 2;
-					else if ((pos + 1 < range.End) && (te.Data.Data[pos] == '{') && (te.Data.Data[pos + 1] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
+					else if ((pos + 1 < range.End) && (Data.Data[pos] == '{') && (Data.Data[pos + 1] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
 						pos += 2;
-					else if ((te.Data.Data[pos] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
+					else if ((Data.Data[pos] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
 					{
 						stack.Push(SelectSplitEnum.Braces);
 						++pos;
 					}
-					else if (te.Data.Data[pos] == '"')
+					else if (Data.Data[pos] == '"')
 					{
 						stack.Pop();
 						++pos;
@@ -120,7 +120,7 @@ namespace NeoEdit
 				{
 					if ((stackTop == SelectSplitEnum.None) && (pos > matchPos))
 					{
-						var match = result.Regex.Match(te.GetString(new Range(pos, range.End)));
+						var match = result.Regex.Match(GetString(new Range(pos, range.End)));
 						if (match.Success)
 						{
 							if (match.Length == 0)
@@ -143,9 +143,9 @@ namespace NeoEdit
 						var useEnd = pos;
 						if (result.TrimWhitespace)
 						{
-							while ((useStart < pos) && (char.IsWhiteSpace(te.Data.Data[useStart])))
+							while ((useStart < pos) && (char.IsWhiteSpace(Data.Data[useStart])))
 								++useStart;
-							while ((useEnd > useStart) && (char.IsWhiteSpace(te.Data.Data[useEnd - 1])))
+							while ((useEnd > useStart) && (char.IsWhiteSpace(Data.Data[useEnd - 1])))
 								--useEnd;
 						}
 						if ((result.IncludeEmpty) || (useStart != useEnd))
@@ -157,31 +157,31 @@ namespace NeoEdit
 						pos += matchLen;
 						start = pos;
 					}
-					else if (((result.BalanceParens) && (te.Data.Data[pos] == '(')) || ((result.BalanceBrackets) && (te.Data.Data[pos] == '[')) || ((result.BalanceBraces) && (te.Data.Data[pos] == '{')))
-						stack.Push(charValue[te.Data.Data[pos++]]);
-					else if (((result.BalanceParens) && (te.Data.Data[pos] == ')')) || ((result.BalanceBrackets) && (te.Data.Data[pos] == ']')) || ((result.BalanceBraces) && (te.Data.Data[pos] == '}')))
+					else if (((result.BalanceParens) && (Data.Data[pos] == '(')) || ((result.BalanceBrackets) && (Data.Data[pos] == '[')) || ((result.BalanceBraces) && (Data.Data[pos] == '{')))
+						stack.Push(charValue[Data.Data[pos++]]);
+					else if (((result.BalanceParens) && (Data.Data[pos] == ')')) || ((result.BalanceBrackets) && (Data.Data[pos] == ']')) || ((result.BalanceBraces) && (Data.Data[pos] == '}')))
 					{
-						if (charValue[te.Data.Data[pos]] != stackTop)
-							throw new Exception($"Didn't find open for {te.Data.Data[pos]}");
+						if (charValue[Data.Data[pos]] != stackTop)
+							throw new Exception($"Didn't find open for {Data.Data[pos]}");
 						stack.Pop();
 						++pos;
 					}
-					else if ((result.BalanceStrings) && (te.Data.Data[pos] == '\"'))
+					else if ((result.BalanceStrings) && (Data.Data[pos] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.String);
 						++pos;
 					}
-					else if ((result.BalanceStrings) && (pos + 1 < range.End) && (te.Data.Data[pos] == '@') && (te.Data.Data[pos + 1] == '\"'))
+					else if ((result.BalanceStrings) && (pos + 1 < range.End) && (Data.Data[pos] == '@') && (Data.Data[pos + 1] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.VerbatimString);
 						pos += 2;
 					}
-					else if ((result.BalanceStrings) && (pos + 1 < range.End) && (te.Data.Data[pos] == '$') && (te.Data.Data[pos + 1] == '\"'))
+					else if ((result.BalanceStrings) && (pos + 1 < range.End) && (Data.Data[pos] == '$') && (Data.Data[pos + 1] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.InterpolatedString);
 						pos += 2;
 					}
-					else if ((result.BalanceStrings) && (pos + 2 < range.End) && (te.Data.Data[pos] == '$') && (te.Data.Data[pos + 1] == '@') && (te.Data.Data[pos + 2] == '\"'))
+					else if ((result.BalanceStrings) && (pos + 2 < range.End) && (Data.Data[pos] == '$') && (Data.Data[pos + 1] == '@') && (Data.Data[pos + 2] == '\"'))
 					{
 						stack.Push(SelectSplitEnum.InterpolatedVerbatimString);
 						pos += 3;
@@ -192,100 +192,100 @@ namespace NeoEdit
 			}
 		}
 
-		static public void Command_Select_All(ITextEditor te) => te.SetSelections(new List<Range> { te.FullRange });
+		void Command_Select_All() => SetSelections(new List<Range> { FullRange });
 
-		static public void Command_Select_Nothing(ITextEditor te) => te.SetSelections(new List<Range>());
+		void Command_Select_Nothing() => SetSelections(new List<Range>());
 
-		static public SelectLimitDialog.Result Command_Select_Limit_Dialog(ITextEditor te) => SelectLimitDialog.Run(te.WindowParent, te.GetVariables());
+		SelectLimitDialog.Result Command_Select_Limit_Dialog() => SelectLimitDialog.Run(WindowParent, GetVariables());
 
-		static public void Command_Select_Limit(ITextEditor te, SelectLimitDialog.Result result)
+		void Command_Select_Limit(SelectLimitDialog.Result result)
 		{
-			var variables = te.GetVariables();
+			var variables = GetVariables();
 			var firstSelection = new NEExpression(result.FirstSelection).Evaluate<int>(variables);
 			var everyNth = new NEExpression(result.EveryNth).Evaluate<int>(variables);
 			var takeCount = new NEExpression(result.TakeCount).Evaluate<int>(variables);
 			var numSels = new NEExpression(result.NumSelections).Evaluate<int>(variables);
 
-			var sels = te.Selections.Skip(firstSelection - 1);
+			var sels = Selections.Skip(firstSelection - 1);
 			if (result.JoinSelections)
 				sels = sels.Batch(everyNth).Select(batch => batch.Take(takeCount)).Select(batch => new Range(batch.Last().End, batch.First().Start));
 			else
 				sels = sels.EveryNth(everyNth, takeCount);
 			sels = sels.Take(numSels);
 
-			te.SetSelections(sels.ToList());
+			SetSelections(sels.ToList());
 		}
 
-		static public void Command_Select_Lines(ITextEditor te, bool includeEndings)
+		void Command_Select_Lines(bool includeEndings)
 		{
-			var lineSets = te.Selections.AsParallel().Select(range => new { start = te.Data.GetOffsetLine(range.Start), end = te.Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) }).ToList();
+			var lineSets = Selections.AsParallel().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) }).ToList();
 
-			var hasLine = new bool[te.Data.NumLines];
+			var hasLine = new bool[Data.NumLines];
 			foreach (var set in lineSets)
 				for (var ctr = set.start; ctr <= set.end; ++ctr)
 					hasLine[ctr] = true;
 
 			var lines = new List<int>();
 			for (var line = 0; line < hasLine.Length; ++line)
-				if ((hasLine[line]) && (!te.Data.IsDiffGapLine(line)))
+				if ((hasLine[line]) && (!Data.IsDiffGapLine(line)))
 					lines.Add(line);
 
-			te.SetSelections(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(te.Data.GetOffset(line, 0), te.Data.GetLineLength(line) + (includeEndings ? te.Data.GetEndingLength(line) : 0))).ToList());
+			SetSelections(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line) + (includeEndings ? Data.GetEndingLength(line) : 0))).ToList());
 		}
 
-		static public void Command_Select_Rectangle(ITextEditor te) => te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(te, range)).ToList());
+		void Command_Select_Rectangle() => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(range)).ToList());
 
-		static public void Command_Select_Invert(ITextEditor te)
+		void Command_Select_Invert()
 		{
-			var start = new[] { 0 }.Concat(te.Selections.Select(sel => sel.End));
-			var end = te.Selections.Select(sel => sel.Start).Concat(new[] { te.Data.NumChars });
-			te.SetSelections(Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != te.Data.NumChars))).ToList());
+			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
+			var end = Selections.Select(sel => sel.Start).Concat(new[] { Data.NumChars });
+			SetSelections(Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Data.NumChars))).ToList());
 		}
 
-		static public void Command_Select_Join(ITextEditor te)
+		void Command_Select_Join()
 		{
 			var sels = new List<Range>();
 			var start = 0;
-			while (start < te.Selections.Count)
+			while (start < Selections.Count)
 			{
 				var end = start;
-				while ((end + 1 < te.Selections.Count) && (te.Selections[end].End == te.Selections[end + 1].Start))
+				while ((end + 1 < Selections.Count) && (Selections[end].End == Selections[end + 1].Start))
 					++end;
-				sels.Add(new Range(te.Selections[end].End, te.Selections[start].Start));
+				sels.Add(new Range(Selections[end].End, Selections[start].Start));
 				start = end + 1;
 			}
-			te.SetSelections(sels);
+			SetSelections(sels);
 		}
 
-		static public void Command_Select_Empty(ITextEditor te, bool include) => te.SetSelections(te.Selections.Where(range => range.HasSelection != include).ToList());
+		void Command_Select_Empty(bool include) => SetSelections(Selections.Where(range => range.HasSelection != include).ToList());
 
-		static public void Command_Select_ToggleOpenClose(ITextEditor te, bool shiftDown)
+		void Command_Select_ToggleOpenClose(bool shiftDown)
 		{
-			te.SetSelections(te.Selections.AsParallel().AsOrdered().Select(range =>
+			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 			{
-				var newPos = te.Data.GetOppositeBracket(range.Cursor);
+				var newPos = Data.GetOppositeBracket(range.Cursor);
 				if (newPos == -1)
 					return range;
 
-				return te.MoveCursor(range, newPos, shiftDown);
+				return MoveCursor(range, newPos, shiftDown);
 			}).ToList());
 		}
 
-		static public void Command_Select_Repeats_Unique(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Distinct(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
+		void Command_Select_Repeats_Unique(bool caseSensitive) => SetSelections(Selections.AsParallel().AsOrdered().Distinct(range => RepeatsValue(caseSensitive, GetString(range))).ToList());
 
-		static public void Command_Select_Repeats_Duplicates(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Duplicate(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
+		void Command_Select_Repeats_Duplicates(bool caseSensitive) => SetSelections(Selections.AsParallel().AsOrdered().Duplicate(range => RepeatsValue(caseSensitive, GetString(range))).ToList());
 
-		static public void Command_Select_Repeats_MatchPrevious(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().Match(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
+		void Command_Select_Repeats_MatchPrevious(bool caseSensitive) => SetSelections(Selections.AsParallel().AsOrdered().Match(range => RepeatsValue(caseSensitive, GetString(range))).ToList());
 
-		static public void Command_Select_Repeats_NonMatchPrevious(ITextEditor te, bool caseSensitive) => te.SetSelections(te.Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, te.GetString(range))).ToList());
+		void Command_Select_Repeats_NonMatchPrevious(bool caseSensitive) => SetSelections(Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, GetString(range))).ToList());
 
-		static public void Command_Select_Repeats_RepeatedLines(ITextEditor te) => te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(te, range)).ToList());
+		void Command_Select_Repeats_RepeatedLines() => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(range)).ToList());
 
-		static public SelectByCountDialog.Result Command_Select_Repeats_ByCount_Dialog(ITextEditor te) => SelectByCountDialog.Run(te.WindowParent);
+		SelectByCountDialog.Result Command_Select_Repeats_ByCount_Dialog() => SelectByCountDialog.Run(WindowParent);
 
-		static public void Command_Select_Repeats_ByCount(ITextEditor te, SelectByCountDialog.Result result)
+		void Command_Select_Repeats_ByCount(SelectByCountDialog.Result result)
 		{
-			var strs = te.Selections.Select((range, index) => Tuple.Create(te.GetString(range), index)).ToList();
+			var strs = Selections.Select((range, index) => Tuple.Create(GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(result.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 			foreach (var tuple in strs)
 			{
@@ -294,76 +294,76 @@ namespace NeoEdit
 				++counts[tuple.Item1];
 			}
 			strs = strs.Where(tuple => ((!result.MinCount.HasValue) || (counts[tuple.Item1] >= result.MinCount)) && ((!result.MaxCount.HasValue) || (counts[tuple.Item1] <= result.MaxCount))).ToList();
-			te.SetSelections(strs.Select(tuple => te.Selections[tuple.Item2]).ToList());
+			SetSelections(strs.Select(tuple => Selections[tuple.Item2]).ToList());
 		}
 
-		static public SelectSplitDialog.Result Command_Select_Split_Dialog(ITextEditor te) => SelectSplitDialog.Run(te.WindowParent, te.GetVariables());
+		SelectSplitDialog.Result Command_Select_Split_Dialog() => SelectSplitDialog.Run(WindowParent, GetVariables());
 
-		static public void Command_Select_Split(ITextEditor te, SelectSplitDialog.Result result)
+		void Command_Select_Split(SelectSplitDialog.Result result)
 		{
-			var indexes = te.GetFixedExpressionResults<int>(result.Index);
-			te.SetSelections(te.Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(te, range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList());
+			var indexes = GetFixedExpressionResults<int>(result.Index);
+			SetSelections(Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList());
 		}
 
-		static public void Command_Select_Selection_First(ITextEditor te)
+		void Command_Select_Selection_First()
 		{
-			te.CurrentSelection = 0;
-			te.EnsureVisible();
+			CurrentSelection = 0;
+			EnsureVisible();
 		}
 
-		static public void Command_Select_Selection_CenterVertically(ITextEditor te) => te.EnsureVisible(true);
+		void Command_Select_Selection_CenterVertically() => EnsureVisible(true);
 
-		static public void Command_Select_Selection_Center(ITextEditor te) => te.EnsureVisible(true, true);
+		void Command_Select_Selection_Center() => EnsureVisible(true, true);
 
-		static public void Command_Pre_Select_Selection_ToggleAnchor(ITextEditor te, ref object preResult)
+		void Command_Pre_Select_Selection_ToggleAnchor(ref object preResult)
 		{
 			var anchorStart = preResult as bool?;
 			if (anchorStart == true)
 				return;
-			var types = te.Selections.Where(range => range.HasSelection).Select(range => range.Anchor < range.Cursor).Distinct().Take(2).ToList();
+			var types = Selections.Where(range => range.HasSelection).Select(range => range.Anchor < range.Cursor).Distinct().Take(2).ToList();
 			preResult = types.Count == 1 ? !types[0] : true;
 		}
 
-		static public void Command_Select_Selection_ToggleAnchor(ITextEditor te, object preResult)
+		void Command_Select_Selection_ToggleAnchor(object preResult)
 		{
 			var anchorStart = (bool)preResult;
-			te.SetSelections(te.Selections.Select(range => new Range(anchorStart ? range.End : range.Start, anchorStart ? range.Start : range.End)).ToList());
+			SetSelections(Selections.Select(range => new Range(anchorStart ? range.End : range.Start, anchorStart ? range.Start : range.End)).ToList());
 		}
 
-		static public void Command_Select_Selection_NextPrevious(ITextEditor te, bool next)
+		void Command_Select_Selection_NextPrevious(bool next)
 		{
 			var offset = next ? 1 : -1;
-			te.CurrentSelection += offset;
-			if (te.CurrentSelection < 0)
-				te.CurrentSelection = te.Selections.Count - 1;
-			if (te.CurrentSelection >= te.Selections.Count)
-				te.CurrentSelection = 0;
-			te.EnsureVisible();
+			CurrentSelection += offset;
+			if (CurrentSelection < 0)
+				CurrentSelection = Selections.Count - 1;
+			if (CurrentSelection >= Selections.Count)
+				CurrentSelection = 0;
+			EnsureVisible();
 		}
 
-		static public void Command_Select_Selection_Single(ITextEditor te)
+		void Command_Select_Selection_Single()
 		{
-			if (!te.Selections.Any())
+			if (!Selections.Any())
 				return;
-			te.SetSelections(new List<Range> { te.Selections[te.CurrentSelection] });
-			te.CurrentSelection = 0;
+			SetSelections(new List<Range> { Selections[CurrentSelection] });
+			CurrentSelection = 0;
 		}
 
-		static public void Command_Select_Selection_Remove(ITextEditor te)
+		void Command_Select_Selection_Remove()
 		{
-			te.SetSelections(te.Selections.Where((sel, index) => index != te.CurrentSelection).ToList());
-			te.CurrentSelection = Math.Max(0, Math.Min(te.CurrentSelection, te.Selections.Count - 1));
+			SetSelections(Selections.Where((sel, index) => index != CurrentSelection).ToList());
+			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
 		}
 
-		static public void Command_Select_Selection_RemoveBeforeCurrent(ITextEditor te)
+		void Command_Select_Selection_RemoveBeforeCurrent()
 		{
-			te.SetSelections(te.Selections.Where((sel, index) => index >= te.CurrentSelection).ToList());
-			te.CurrentSelection = 0;
+			SetSelections(Selections.Where((sel, index) => index >= CurrentSelection).ToList());
+			CurrentSelection = 0;
 		}
 
-		static public void Command_Select_Selection_RemoveAfterCurrent(ITextEditor te)
+		void Command_Select_Selection_RemoveAfterCurrent()
 		{
-			te.SetSelections(te.Selections.Where((sel, index) => index <= te.CurrentSelection).ToList());
+			SetSelections(Selections.Where((sel, index) => index <= CurrentSelection).ToList());
 		}
 	}
 }

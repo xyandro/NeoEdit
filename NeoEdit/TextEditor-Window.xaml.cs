@@ -11,9 +11,9 @@ namespace NeoEdit
 	partial class TextEditor
 	{
 
-		static public void Command_Window_TabIndex(ITextEditor te, bool activeOnly)
+		void Command_Window_TabIndex(bool activeOnly)
 		{
-			te.ReplaceSelections((te.TabsParent.GetIndex(te, activeOnly) + 1).ToString());
+			ReplaceSelections((TabsParent.GetIndex(this, activeOnly) + 1).ToString());
 		}
 	}
 }

@@ -8,55 +8,55 @@ namespace NeoEdit
 {
 	partial class TextEditor
 	{
-		static public void Command_Keys_Set(ITextEditor te, int index, bool caseSensitive = true)
+		void Command_Keys_Set(int index, bool caseSensitive = true)
 		{
-			te.GlobalKeys = te.TabsParent.ActiveCount == 1;
+			GlobalKeys = TabsParent.ActiveCount == 1;
 			// Handles keys as well as values
-			var values = te.GetSelectionStrings();
+			var values = GetSelectionStrings();
 			if ((index == 0) && (values.Distinct(str => caseSensitive ? str : str.ToLowerInvariant()).Count() != values.Count))
 				throw new ArgumentException("Cannot have duplicate keys");
-			te.KeysAndValues[index] = new ObservableCollection<string>(values);
+			KeysAndValues[index] = new ObservableCollection<string>(values);
 			if (index == 0)
-				te.CalculateKeysHash(caseSensitive);
+				CalculateKeysHash(caseSensitive);
 		}
 
-		static public void Command_Keys_Add(ITextEditor te, int index)
+		void Command_Keys_Add(int index)
 		{
 			// Handles keys as well as values
-			var values = te.GetSelectionStrings();
-			var caseSensitive = te.keysHash.Comparer == StringComparer.Ordinal;
-			if ((index == 0) && (te.KeysAndValues[0].Concat(values).GroupBy(key => caseSensitive ? key : key.ToLowerInvariant()).Any(group => group.Count() > 1)))
+			var values = GetSelectionStrings();
+			var caseSensitive = keysHash.Comparer == StringComparer.Ordinal;
+			if ((index == 0) && (KeysAndValues[0].Concat(values).GroupBy(key => caseSensitive ? key : key.ToLowerInvariant()).Any(group => group.Count() > 1)))
 				throw new ArgumentException("Cannot have duplicate keys");
 			foreach (var value in values)
-				te.KeysAndValues[index].Add(value);
+				KeysAndValues[index].Add(value);
 			if (index == 0)
-				te.CalculateKeysHash(caseSensitive);
+				CalculateKeysHash(caseSensitive);
 		}
 
-		static public void Command_Keys_Remove(ITextEditor te, int index)
+		void Command_Keys_Remove(int index)
 		{
 			// Handles keys as well as values
-			var values = te.GetSelectionStrings().Distinct().ToList();
+			var values = GetSelectionStrings().Distinct().ToList();
 			foreach (var value in values)
-				te.KeysAndValues[index].Remove(value);
+				KeysAndValues[index].Remove(value);
 		}
 
-		static public void Command_Keys_Replace(ITextEditor te, int index)
+		void Command_Keys_Replace(int index)
 		{
 			// Handles keys as well as values
-			if (te.KeysAndValues[0].Count != te.KeysAndValues[index].Count)
+			if (KeysAndValues[0].Count != KeysAndValues[index].Count)
 				throw new Exception("Keys and values count must match");
 
 			var strs = new List<string>();
-			foreach (var range in te.Selections)
+			foreach (var range in Selections)
 			{
-				var str = te.GetString(range);
-				if (!te.keysHash.ContainsKey(str))
+				var str = GetString(range);
+				if (!keysHash.ContainsKey(str))
 					strs.Add(str);
 				else
-					strs.Add(te.KeysAndValues[index][te.keysHash[str]]);
+					strs.Add(KeysAndValues[index][keysHash[str]]);
 			}
-			te.ReplaceSelections(strs);
+			ReplaceSelections(strs);
 		}
 	}
 }

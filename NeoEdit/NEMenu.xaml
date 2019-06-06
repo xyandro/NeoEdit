@@ -4,6 +4,7 @@
 	xmlns:commonControls="clr-namespace:NeoEdit.Common.Controls;assembly=NeoEdit.Common"
 	xmlns:commonConverters="clr-namespace:NeoEdit.Common.Converters;assembly=NeoEdit.Common"
 	xmlns:common="clr-namespace:NeoEdit.Common;assembly=NeoEdit.Common"
+	xmlns:neoEditControls="clr-namespace:NeoEdit.Controls"
 	xmlns:system="clr-namespace:System;assembly=mscorlib">
 
 	<Menu.Resources>
@@ -44,7 +45,7 @@
 		</MenuItem>
 		<commonControls:NEMenuItem Header="C_lose" CommandEnum="File_Close"/>
 		<commonControls:NEMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
-		<commonControls:MultiMenuItem Header="_Auto Refresh" Objects="{Binding Parent.Items, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh"/>
+		<neoEditControls:MultiMenuItem Header="_Auto Refresh" Objects="{Binding Parent.Items, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh"/>
 		<commonControls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
 		<commonControls:NEMenuItem Header="Move To New _Window" CommandEnum="File_MoveToNewWindow"/>
@@ -67,8 +68,8 @@
 			<commonControls:NEMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings"/>
 		</MenuItem>
 		<Separator/>
-		<commonControls:MultiMenuItem Header="Encr_ypt" Objects="{Binding Parent.Items, ElementName=self}" Property="AESKey" Converter="{commonConverters:NonEmptyConverter}" MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
-		<commonControls:MultiMenuItem Header="Co_mpress" Objects="{Binding Parent.Items, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
+		<neoEditControls:MultiMenuItem Header="Encr_ypt" Objects="{Binding Parent.Items, ElementName=self}" Property="AESKey" Converter="{commonConverters:NonEmptyConverter}" MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
+		<neoEditControls:MultiMenuItem Header="Co_mpress" Objects="{Binding Parent.Items, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
 		<Separator/>
 		<MenuItem Header="S_hell">
 			<commonControls:NEMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate"/>
@@ -146,9 +147,9 @@
 			<commonControls:NEMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
 			<Separator/>
 			<MenuItem Header="_Jump By">
-				<commonControls:MultiMenuItem Header="_Words" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static common:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
-				<commonControls:MultiMenuItem Header="_Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static common:JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
-				<commonControls:MultiMenuItem Header="_Paths" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static common:JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
+				<neoEditControls:MultiMenuItem Header="_Words" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static common:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
+				<neoEditControls:MultiMenuItem Header="_Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static common:JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
+				<neoEditControls:MultiMenuItem Header="_Paths" Objects="{Binding Parent.Items, ElementName=self}" Property="JumpBy" MultiValue="{x:Static common:JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
@@ -173,10 +174,10 @@
 		<Separator/>
 		<commonControls:NEMenuItem Header="_Break" CommandEnum="Diff_Break"/>
 		<Separator/>
-		<commonControls:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
-		<commonControls:MultiMenuItem Header="Ignore _Case" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
-		<commonControls:MultiMenuItem Header="Ignore _Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers"/>
-		<commonControls:MultiMenuItem Header="Ignore Line _Endings" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings"/>
+		<neoEditControls:MultiMenuItem Header="Ignore _Whitespace" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
+		<neoEditControls:MultiMenuItem Header="Ignore _Case" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
+		<neoEditControls:MultiMenuItem Header="Ignore _Numbers" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers"/>
+		<neoEditControls:MultiMenuItem Header="Ignore Line _Endings" Objects="{Binding Parent.Items, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings"/>
 		<commonControls:NEMenuItem Header="Ignore C_haracters" CommandEnum="Diff_IgnoreCharacters"/>
 		<commonControls:NEMenuItem Header="_Reset" CommandEnum="Diff_Reset"/>
 		<Separator/>
@@ -313,7 +314,7 @@
 			<commonControls:NEMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add"/>
 			<commonControls:NEMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate"/>
 			<commonControls:NEMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve"/>
-			<commonControls:MultiMenuItem Header="_Include In Expressions" Objects="{Binding Parent.Items, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions"/>
+			<neoEditControls:MultiMenuItem Header="_Include In Expressions" Objects="{Binding Parent.Items, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Text">
@@ -492,21 +493,21 @@
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
 			<commonControls:NEMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension"/>
-			<commonControls:MultiMenuItem Header="_None" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.None}" CommandEnum="Content_Type_None"/>
-			<commonControls:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
-			<commonControls:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
-			<commonControls:MultiMenuItem Header="C_++" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus"/>
-			<commonControls:MultiMenuItem Header="C_#" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
-			<commonControls:MultiMenuItem Header="_CSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
-			<commonControls:MultiMenuItem Header="_Exact Columns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns"/>
-			<commonControls:MultiMenuItem Header="_HTML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
-			<commonControls:MultiMenuItem Header="_JSON" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
-			<commonControls:MultiMenuItem Header="_SQL" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.SQL}" CommandEnum="Content_Type_SQL"/>
-			<commonControls:MultiMenuItem Header="_TSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
-			<commonControls:MultiMenuItem Header="_XML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.XML}" CommandEnum="Content_Type_XML"/>
+			<neoEditControls:MultiMenuItem Header="_None" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.None}" CommandEnum="Content_Type_None"/>
+			<neoEditControls:MultiMenuItem Header="_Balanced" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
+			<neoEditControls:MultiMenuItem Header="C_olumns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
+			<neoEditControls:MultiMenuItem Header="C_++" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus"/>
+			<neoEditControls:MultiMenuItem Header="C_#" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
+			<neoEditControls:MultiMenuItem Header="_CSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
+			<neoEditControls:MultiMenuItem Header="_Exact Columns" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns"/>
+			<neoEditControls:MultiMenuItem Header="_HTML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
+			<neoEditControls:MultiMenuItem Header="_JSON" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
+			<neoEditControls:MultiMenuItem Header="_SQL" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.SQL}" CommandEnum="Content_Type_SQL"/>
+			<neoEditControls:MultiMenuItem Header="_TSV" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
+			<neoEditControls:MultiMenuItem Header="_XML" Objects="{Binding Parent.Items, ElementName=self}" Property="ContentType" MultiValue="{x:Static common:ParserType.XML}" CommandEnum="Content_Type_XML"/>
 		</MenuItem>
-		<commonControls:MultiMenuItem Header="_Highlight Syntax" Objects="{Binding Parent.Items, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax"/>
-		<commonControls:MultiMenuItem Header="_Strict Parsing" Objects="{Binding Parent.Items, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing"/>
+		<neoEditControls:MultiMenuItem Header="_Highlight Syntax" Objects="{Binding Parent.Items, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax"/>
+		<neoEditControls:MultiMenuItem Header="_Strict Parsing" Objects="{Binding Parent.Items, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing"/>
 		<Separator/>
 		<commonControls:NEMenuItem Header="Re_format" CommandEnum="Content_Reformat"/>
 		<Separator/>
@@ -546,7 +547,7 @@
 			<commonControls:NEMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
 			<commonControls:NEMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
 		</MenuItem>
-		<commonControls:MultiMenuItem Header="_Keep Selections" Objects="{Binding Parent.Items, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections"/>
+		<neoEditControls:MultiMenuItem Header="_Keep Selections" Objects="{Binding Parent.Items, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections"/>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">
 		<commonControls:NEMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL"/>

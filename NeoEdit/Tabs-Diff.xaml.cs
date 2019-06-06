@@ -44,7 +44,7 @@ namespace NeoEdit
 		static public void Command_Diff_Select_LeftRightBothTabs(ITabs tabs, bool? left)
 		{
 			var topMost = tabs.TopMost;
-			var active = tabs.Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<ITextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((tabs.GetIndex(item) < tabs.GetIndex(item.DiffTarget)) == left)).ToList();
+			var active = tabs.Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((tabs.GetIndex(item) < tabs.GetIndex(item.DiffTarget)) == left)).ToList();
 			tabs.Items.ForEach(item => item.Active = false);
 
 			if (!active.Any())

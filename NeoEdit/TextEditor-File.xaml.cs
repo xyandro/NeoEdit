@@ -18,13 +18,13 @@ namespace NeoEdit
 {
 	partial class TextEditor
 	{
-		static string GetSaveFileName(ITextEditor te)
+		string GetSaveFileName()
 		{
 			var dialog = new SaveFileDialog
 			{
 				Filter = "All files|*.*",
-				FileName = Path.GetFileName(te.FileName) ?? te.DisplayName,
-				InitialDirectory = Path.GetDirectoryName(te.FileName),
+				FileName = Path.GetFileName(FileName) ?? DisplayName,
+				InitialDirectory = Path.GetDirectoryName(FileName),
 				DefaultExt = "txt",
 			};
 			if (dialog.ShowDialog() != true)
@@ -37,9 +37,9 @@ namespace NeoEdit
 			return dialog.FileName;
 		}
 
-		static void InsertFiles(ITextEditor te, IEnumerable<string> fileNames)
+		void InsertFiles(IEnumerable<string> fileNames)
 		{
-			if ((te.Selections.Count != 1) && (te.Selections.Count != fileNames.Count()))
+			if ((Selections.Count != 1) && (Selections.Count != fileNames.Count()))
 				throw new Exception("Must have either one or equal number of selections.");
 
 			var strs = new List<string>();
@@ -49,45 +49,45 @@ namespace NeoEdit
 				strs.Add(Coder.BytesToString(bytes, Coder.CodePage.AutoByBOM, true));
 			}
 
-			if (te.Selections.Count == 1)
-				te.ReplaceOneWithMany(strs, false);
-			if (te.Selections.Count == fileNames.Count())
-				te.ReplaceSelections(strs);
+			if (Selections.Count == 1)
+				ReplaceOneWithMany(strs, false);
+			if (Selections.Count == fileNames.Count())
+				ReplaceSelections(strs);
 		}
 
-		static public void Command_File_New_FromSelections(ITextEditor te) => te.GetSelectionStrings().ForEach((str, index) => te.TabsParent.Add(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: te.ContentType, modified: false));
+		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach((str, index) => TabsParent.Add(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false));
 
-		static public void Command_File_Open_Selected(ITextEditor te)
+		void Command_File_Open_Selected()
 		{
-			var files = te.RelativeSelectedFiles();
+			var files = RelativeSelectedFiles();
 			foreach (var file in files)
-				te.TabsParent.Add(file);
+				TabsParent.Add(file);
 		}
 
-		static public void Command_File_Save_Save(ITextEditor te)
+		void Command_File_Save_Save()
 		{
-			if (te.FileName == null)
-				Command_File_Save_SaveAs(te);
+			if (FileName == null)
+				Command_File_Save_SaveAs();
 			else
-				te.Save(te.FileName);
+				Save(FileName);
 		}
 
-		static public void Command_File_Save_SaveAs(ITextEditor te, bool copyOnly = false) => te.Save(GetSaveFileName(te), copyOnly);
+		void Command_File_Save_SaveAs(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		static public GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.WindowParent, te.GetVariables(), te.Selections.Count);
+		GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
-		static public void Command_File_Save_SaveAsByExpression(ITextEditor te, GetExpressionDialog.Result result, AnswerResult answer, bool copyOnly = false)
+		void Command_File_Save_SaveAsByExpression(GetExpressionDialog.Result result, AnswerResult answer, bool copyOnly = false)
 		{
-			var results = te.GetFixedExpressionResults<string>(result.Expression);
+			var results = GetFixedExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
 
-			var newFileName = te.FileName.RelativeChild(results[0]);
+			var newFileName = FileName.RelativeChild(results[0]);
 
 			if (File.Exists(newFileName))
 			{
 				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
-					answer.Answer = new Message(te.WindowParent)
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -99,52 +99,52 @@ namespace NeoEdit
 					return;
 			}
 
-			te.Save(newFileName, copyOnly);
+			Save(newFileName, copyOnly);
 		}
 
-		static public void Command_File_Save_SetDisplayName(ITextEditor te, GetExpressionDialog.Result result)
+		void Command_File_Save_SetDisplayName(GetExpressionDialog.Result result)
 		{
 			if (result.Expression == "f")
 			{
-				te.DisplayName = null;
+				DisplayName = null;
 				return;
 			}
-			var results = te.GetVariableExpressionResults<string>(result.Expression);
+			var results = GetVariableExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
 				throw new Exception("Only one value may be specified");
-			te.DisplayName = results[0];
+			DisplayName = results[0];
 		}
 
-		static public void Command_File_Operations_Rename(ITextEditor te)
+		void Command_File_Operations_Rename()
 		{
-			if (string.IsNullOrEmpty(te.FileName))
+			if (string.IsNullOrEmpty(FileName))
 			{
-				Command_File_Save_SaveAs(te);
+				Command_File_Save_SaveAs();
 				return;
 			}
 
-			var fileName = GetSaveFileName(te);
+			var fileName = GetSaveFileName();
 
-			if (!string.Equals(te.FileName, fileName, StringComparison.OrdinalIgnoreCase))
+			if (!string.Equals(FileName, fileName, StringComparison.OrdinalIgnoreCase))
 				File.Delete(fileName);
-			File.Move(te.FileName, fileName);
-			te.SetFileName(fileName);
+			File.Move(FileName, fileName);
+			SetFileName(fileName);
 		}
 
-		static public GetExpressionDialog.Result Command_File_Operations_RenameByExpression_Dialog(ITextEditor te) => GetExpressionDialog.Run(te.WindowParent, te.GetVariables(), te.Selections.Count);
+		GetExpressionDialog.Result Command_File_Operations_RenameByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
-		static public void Command_File_Operations_RenameByExpression(ITextEditor te, GetExpressionDialog.Result result, AnswerResult answer)
+		void Command_File_Operations_RenameByExpression(GetExpressionDialog.Result result, AnswerResult answer)
 		{
-			var results = te.GetFixedExpressionResults<string>(result.Expression);
+			var results = GetFixedExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
 
-			var newFileName = te.FileName.RelativeChild(results[0]);
+			var newFileName = FileName.RelativeChild(results[0]);
 
-			if ((!string.Equals(newFileName, te.FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
+			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
 				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
-					answer.Answer = new Message(te.WindowParent)
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -156,22 +156,22 @@ namespace NeoEdit
 					return;
 			}
 
-			if (te.FileName != null)
+			if (FileName != null)
 			{
-				if (!string.Equals(te.FileName, newFileName, StringComparison.OrdinalIgnoreCase))
+				if (!string.Equals(FileName, newFileName, StringComparison.OrdinalIgnoreCase))
 					File.Delete(newFileName);
-				File.Move(te.FileName, newFileName);
+				File.Move(FileName, newFileName);
 			}
-			te.SetFileName(newFileName);
+			SetFileName(newFileName);
 		}
 
-		static public void Command_File_Operations_Delete(ITextEditor te, AnswerResult answer)
+		void Command_File_Operations_Delete(AnswerResult answer)
 		{
-			if (te.FileName == null)
+			if (FileName == null)
 				return;
 
 			if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
-				answer.Answer = new Message(te.WindowParent)
+				answer.Answer = new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "Are you sure you want to delete this file?",
@@ -183,46 +183,46 @@ namespace NeoEdit
 			if ((answer.Answer != MessageOptions.Yes) && (answer.Answer != MessageOptions.YesToAll))
 				return;
 
-			File.Delete(te.FileName);
+			File.Delete(FileName);
 		}
 
-		static public void Command_File_Operations_Explore(ITextEditor te) => Process.Start("explorer.exe", $"/select,\"{te.FileName}\"");
+		void Command_File_Operations_Explore() => Process.Start("explorer.exe", $"/select,\"{FileName}\"");
 
-		static public void Command_File_Operations_CommandPrompt(ITextEditor te) => Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = Path.GetDirectoryName(te.FileName) });
+		void Command_File_Operations_CommandPrompt() => Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = Path.GetDirectoryName(FileName) });
 
-		static public void Command_File_Operations_VCSDiff(ITextEditor te)
+		void Command_File_Operations_VCSDiff()
 		{
-			if (string.IsNullOrEmpty(te.FileName))
+			if (string.IsNullOrEmpty(FileName))
 				throw new Exception("Must have filename to do diff");
-			var original = Versioner.GetUnmodifiedFile(te.FileName);
+			var original = Versioner.GetUnmodifiedFile(FileName);
 			if (original == null)
 				throw new Exception("Unable to get VCS content");
 
-			var topMost = te.TabsParent.TopMost;
-			var textEdit = te.TabsParent.Add(displayName: Path.GetFileName(te.FileName), modified: false, bytes: original, index: te.TabsParent.GetIndex(te));
-			textEdit.ContentType = te.ContentType;
-			textEdit.DiffTarget = te;
-			te.TabsParent.TopMost = topMost;
+			var topMost = TabsParent.TopMost;
+			var textEdit = TabsParent.Add(displayName: Path.GetFileName(FileName), modified: false, bytes: original, index: TabsParent.GetIndex(this));
+			textEdit.ContentType = ContentType;
+			textEdit.DiffTarget = this;
+			TabsParent.TopMost = topMost;
 		}
 
-		static public void Command_File_Close(ITextEditor te, AnswerResult answer)
+		void Command_File_Close(AnswerResult answer)
 		{
-			if (te.CanClose(answer))
-				te.TabsParent.Remove(te);
+			if (CanClose(answer))
+				TabsParent.Remove(this);
 		}
 
-		static public void Command_File_Refresh(ITextEditor te, AnswerResult answer)
+		void Command_File_Refresh(AnswerResult answer)
 		{
-			if (string.IsNullOrEmpty(te.FileName))
+			if (string.IsNullOrEmpty(FileName))
 				return;
 
-			if (!File.Exists(te.FileName))
+			if (!File.Exists(FileName))
 				throw new Exception("This file has been deleted.");
 
-			if (te.fileLastWrite != new FileInfo(te.FileName).LastWriteTime)
+			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
 				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
-					answer.Answer = new Message(te.WindowParent)
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "This file has been updated on disk. Reload?",
@@ -234,18 +234,18 @@ namespace NeoEdit
 				if ((answer.Answer != MessageOptions.Yes) && (answer.Answer != MessageOptions.YesToAll))
 					return;
 
-				Command_File_Revert(te, answer);
+				Command_File_Revert(answer);
 			}
 		}
 
-		static public void Command_File_AutoRefresh(ITextEditor te, bool? multiStatus) => te.SetAutoRefresh(multiStatus != true);
+		void Command_File_AutoRefresh(bool? multiStatus) => SetAutoRefresh(multiStatus != true);
 
-		static public void Command_File_Revert(ITextEditor te, AnswerResult answer)
+		void Command_File_Revert(AnswerResult answer)
 		{
-			if (te.IsModified)
+			if (IsModified)
 			{
 				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
-					answer.Answer = new Message(te.WindowParent)
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes. Are you sure you want to reload?",
@@ -257,14 +257,14 @@ namespace NeoEdit
 					return;
 			}
 
-			te.OpenFile(te.FileName, te.DisplayName, keepUndo: true);
+			OpenFile(FileName, DisplayName, keepUndo: true);
 		}
 
-		static public void Command_File_Insert_Files(ITextEditor te)
+		void Command_File_Insert_Files()
 		{
-			if (te.Selections.Count != 1)
+			if (Selections.Count != 1)
 			{
-				new Message(te.WindowParent)
+				new Message(WindowParent)
 				{
 					Title = "Error",
 					Text = "Must have one selection.",
@@ -275,14 +275,14 @@ namespace NeoEdit
 
 			var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2, Multiselect = true };
 			if (dialog.ShowDialog() == true)
-				InsertFiles(te, dialog.FileNames);
+				InsertFiles(dialog.FileNames);
 		}
 
-		static public void Command_File_Insert_CopiedCut(ITextEditor te)
+		void Command_File_Insert_CopiedCut()
 		{
-			if (te.Selections.Count != 1)
+			if (Selections.Count != 1)
 			{
-				new Message(te.WindowParent)
+				new Message(WindowParent)
 				{
 					Title = "Error",
 					Text = "Must have one selection.",
@@ -291,11 +291,11 @@ namespace NeoEdit
 				return;
 			}
 
-			var files = te.Clipboard;
+			var files = Clipboard;
 			if (files.Count == 0)
 				return;
 
-			if ((files.Count > 5) && (new Message(te.WindowParent)
+			if ((files.Count > 5) && (new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to insert these {files.Count} files?",
@@ -305,29 +305,29 @@ namespace NeoEdit
 			}.Show() != MessageOptions.Yes))
 				return;
 
-			InsertFiles(te, files);
+			InsertFiles(files);
 		}
 
-		static public void Command_File_Insert_Selected(ITextEditor te) => InsertFiles(te, te.RelativeSelectedFiles());
+		void Command_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
 
-		static public void Command_File_Copy_Path(ITextEditor te) => te.SetClipboardFile(te.FileName);
+		void Command_File_Copy_Path() => SetClipboardFile(FileName);
 
-		static public void Command_File_Copy_Name(ITextEditor te) => te.SetClipboardString(Path.GetFileName(te.FileName));
+		void Command_File_Copy_Name() => SetClipboardString(Path.GetFileName(FileName));
 
-		static public void Command_File_Copy_DisplayName(ITextEditor te) => te.SetClipboardString(te.DisplayName ?? Path.GetFileName(te.FileName));
+		void Command_File_Copy_DisplayName() => SetClipboardString(DisplayName ?? Path.GetFileName(FileName));
 
-		static public EncodingDialog.Result Command_File_Encoding_Encoding_Dialog(ITextEditor te) => EncodingDialog.Run(te.WindowParent, te.CodePage);
+		EncodingDialog.Result Command_File_Encoding_Encoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage);
 
-		static public void Command_File_Encoding_Encoding(ITextEditor te, EncodingDialog.Result result) => te.CodePage = result.CodePage;
+		void Command_File_Encoding_Encoding(EncodingDialog.Result result) => CodePage = result.CodePage;
 
-		static public EncodingDialog.Result Command_File_Encoding_ReopenWithEncoding_Dialog(ITextEditor te) => EncodingDialog.Run(te.WindowParent, te.CodePage);
+		EncodingDialog.Result Command_File_Encoding_ReopenWithEncoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage);
 
-		static public void Command_File_Encoding_ReopenWithEncoding(ITextEditor te, EncodingDialog.Result result, AnswerResult answer)
+		void Command_File_Encoding_ReopenWithEncoding(EncodingDialog.Result result, AnswerResult answer)
 		{
-			if (te.IsModified)
+			if (IsModified)
 			{
 				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
-					answer.Answer = new Message(te.WindowParent)
+					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes. Are you sure you want to reload?",
@@ -339,36 +339,36 @@ namespace NeoEdit
 					return;
 			}
 
-			te.OpenFile(te.FileName, codePage: result.CodePage);
+			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		static public FileEncodingLineEndingsDialog.Result Command_File_Encoding_LineEndings_Dialog(ITextEditor te) => FileEncodingLineEndingsDialog.Run(te.WindowParent, te.LineEnding ?? "");
+		FileEncodingLineEndingsDialog.Result Command_File_Encoding_LineEndings_Dialog() => FileEncodingLineEndingsDialog.Run(WindowParent, LineEnding ?? "");
 
-		static public void Command_File_Encoding_LineEndings(ITextEditor te, FileEncodingLineEndingsDialog.Result result)
+		void Command_File_Encoding_LineEndings(FileEncodingLineEndingsDialog.Result result)
 		{
-			var lines = te.Data.NumLines;
+			var lines = Data.NumLines;
 			var sel = new List<Range>();
 			for (var line = 0; line < lines; ++line)
 			{
-				var current = te.Data.GetEnding(line);
+				var current = Data.GetEnding(line);
 				if ((current.Length == 0) || (current == result.LineEndings))
 					continue;
-				var start = te.Data.GetOffset(line, te.Data.GetLineLength(line));
+				var start = Data.GetOffset(line, Data.GetLineLength(line));
 				sel.Add(Range.FromIndex(start, current.Length));
 			}
-			te.Replace(sel, sel.Select(str => result.LineEndings).ToList());
+			Replace(sel, sel.Select(str => result.LineEndings).ToList());
 		}
 
-		static public string Command_File_Encrypt_Dialog(ITextEditor te, bool? multiStatus)
+		string Command_File_Encrypt_Dialog(bool? multiStatus)
 		{
 			if (multiStatus != false)
 				return "";
 
-			return FileSaver.GetKey(te.WindowParent, true);
+			return FileSaver.GetKey(WindowParent, true);
 		}
 
-		static public void Command_File_Encrypt(ITextEditor te, string result) => te.AESKey = result == "" ? null : result;
+		void Command_File_Encrypt(string result) => AESKey = result == "" ? null : result;
 
-		static public void Command_File_Compress(ITextEditor te, bool? multiStatus) => te.Compressed = multiStatus == false;
+		void Command_File_Compress(bool? multiStatus) => Compressed = multiStatus == false;
 	}
 }

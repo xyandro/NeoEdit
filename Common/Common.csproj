@@ -31,7 +31,6 @@
     <Compile Include="Controls\EnhancedFocusManager.cs" />
     <Compile Include="Controls\KeyGestureAttribute.cs" />
     <Compile Include="Controls\ModalDialog.cs" />
-    <Compile Include="Controls\MultiMenuItem.cs" />
     <Page Include="Controls\NEExpressionResults.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -155,11 +154,8 @@
     <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="ITabs.cs" />
     <Compile Include="ItemSet.cs" />
-    <Compile Include="ITextEditor.cs" />
     <Compile Include="LCS.cs" />
-    <Compile Include="Macro.cs" />
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
     <Compile Include="NEClipboards\NEClipboard.cs" />

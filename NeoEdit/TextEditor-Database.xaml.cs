@@ -20,13 +20,13 @@ namespace NeoEdit
 
 		static string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
 
-		static List<QueryResult> RunDBSelect(ITextEditor te, string commandText)
+		List<QueryResult> RunDBSelect(string commandText)
 		{
 			try
 			{
 				var result = new List<QueryResult>();
 				var tableName = Regex.Match(commandText, @"\bFROM\b.*?([\[\]a-z\.]+)", RegexOptions.IgnoreCase).Groups[1].Value.Replace("[", "").Replace("]", "").CoalesceNullOrEmpty();
-				using (var command = te.dbConnection.CreateCommand())
+				using (var command = dbConnection.CreateCommand())
 				{
 					command.CommandText = commandText;
 					using (var reader = command.ExecuteReader())
@@ -45,34 +45,34 @@ namespace NeoEdit
 			catch (Exception ex) { return new List<QueryResult> { new QueryResult { Exception = ex } }; }
 		}
 
-		static void ValidateConnection(ITextEditor te)
+		void ValidateConnection()
 		{
-			if (te.dbConnection == null)
+			if (dbConnection == null)
 				throw new Exception("No connection.");
 		}
 
-		static public DatabaseConnectDialog.Result Command_Database_Connect_Dialog(ITextEditor te) => DatabaseConnectDialog.Run(te.WindowParent);
+		DatabaseConnectDialog.Result Command_Database_Connect_Dialog() => DatabaseConnectDialog.Run(WindowParent);
 
-		static public void Command_Database_Connect(ITextEditor te, DatabaseConnectDialog.Result result)
+		void Command_Database_Connect(DatabaseConnectDialog.Result result)
 		{
-			if (te.dbConnection != null)
+			if (dbConnection != null)
 			{
-				te.dbConnection.Dispose();
-				te.dbConnection = null;
+				dbConnection.Dispose();
+				dbConnection = null;
 			}
-			te.dbConnection = result.DBConnectInfo.GetConnection();
-			te.DBName = result.DBConnectInfo.Name;
+			dbConnection = result.DBConnectInfo.GetConnection();
+			DBName = result.DBConnectInfo.Name;
 		}
 
-		static public void Command_Database_ExecuteQuery(ITextEditor te)
+		void Command_Database_ExecuteQuery()
 		{
-			ValidateConnection(te);
-			var selections = te.Selections.ToList();
-			if ((te.Selections.Count == 1) && (!te.Selections[0].HasSelection))
-				selections = new List<Range> { te.FullRange };
-			var strs = te.GetSelectionStrings();
+			ValidateConnection();
+			var selections = Selections.ToList();
+			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
+				selections = new List<Range> { FullRange };
+			var strs = GetSelectionStrings();
 			// Not in parallel because prior selections may affect later ones
-			var results = selections.Select((range, index) => RunDBSelect(te, strs[index])).ToList();
+			var results = selections.Select((range, index) => RunDBSelect(strs[index])).ToList();
 
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
 			{
@@ -80,31 +80,31 @@ namespace NeoEdit
 				strs[ctr] += $": {(exception == null ? "Success" : $"{exception.Message}")}";
 
 				foreach (var table in results[ctr].Where(table => table.Table != null))
-					te.OpenTable(table.Table, table.TableName);
+					OpenTable(table.Table, table.TableName);
 			}
 
-			te.ReplaceSelections(strs);
+			ReplaceSelections(strs);
 		}
 
-		static public void Command_Database_Examine_Dialog(ITextEditor te)
+		void Command_Database_Examine_Dialog()
 		{
-			ValidateConnection(te);
-			DatabaseExamineDialog.Run(te.WindowParent, te.dbConnection);
+			ValidateConnection();
+			DatabaseExamineDialog.Run(WindowParent, dbConnection);
 		}
 
-		static public void Command_Database_GetSproc(ITextEditor te)
+		void Command_Database_GetSproc()
 		{
-			ValidateConnection(te);
+			ValidateConnection();
 
 			var results = new List<string>();
-			foreach (var selection in te.Selections)
+			foreach (var selection in Selections)
 			{
-				var sproc = te.GetString(selection);
+				var sproc = GetString(selection);
 				var result = "Success";
 				try
 				{
 					var text = "";
-					using (var command = te.dbConnection.CreateCommand())
+					using (var command = dbConnection.CreateCommand())
 					{
 						command.CommandText = $"sp_helptext '{sproc}'";
 						using (var reader = command.ExecuteReader())
@@ -112,12 +112,12 @@ namespace NeoEdit
 								text += reader.GetString(0);
 					}
 
-					te.TabsParent.Add(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ParserType.SQL, modified: false);
+					TabsParent.Add(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ParserType.SQL, modified: false);
 				}
 				catch (Exception ex) { result = ex.Message; }
 				results.Add($"{sproc}: {result}");
 			}
-			te.ReplaceSelections(results);
+			ReplaceSelections(results);
 		}
 	}
 }

@@ -18,62 +18,62 @@ namespace NeoEdit
 {
 	partial class TextEditor
 	{
-		static void FindNext(ITextEditor te, bool forward, bool selecting)
+		void FindNext(bool forward, bool selecting)
 		{
-			if (te.Searches.Count == 0)
+			if (Searches.Count == 0)
 			{
-				te.SetSelections(new List<Range>());
+				SetSelections(new List<Range>());
 				return;
 			}
 
 			var sels = new List<Range>();
-			foreach (var selection in te.Selections)
+			foreach (var selection in Selections)
 			{
 				int index;
 				if (forward)
 				{
-					index = te.Searches.BinaryFindFirst(range => range.Start >= selection.End);
+					index = Searches.BinaryFindFirst(range => range.Start >= selection.End);
 					if (index == -1)
 						index = 0;
 				}
 				else
 				{
-					index = te.Searches.BinaryFindLast(range => range.Start < selection.Start);
+					index = Searches.BinaryFindLast(range => range.Start < selection.Start);
 					if (index == -1)
-						index = te.Searches.Count - 1;
+						index = Searches.Count - 1;
 				}
 
 				if (!selecting)
-					sels.Add(new Range(te.Searches[index].End, te.Searches[index].Start));
+					sels.Add(new Range(Searches[index].End, Searches[index].Start));
 				else if (forward)
-					sels.Add(new Range(te.Searches[index].End, selection.Start));
+					sels.Add(new Range(Searches[index].End, selection.Start));
 				else
-					sels.Add(new Range(te.Searches[index].Start, selection.End));
+					sels.Add(new Range(Searches[index].Start, selection.End));
 			}
-			te.SetSelections(sels);
+			SetSelections(sels);
 		}
 
-		static Range GetNextPrevBookmark(ITextEditor te, Range range, bool next, bool selecting)
+		Range GetNextPrevBookmark(Range range, bool next, bool selecting)
 		{
 			int index;
 			if (next)
 			{
-				index = te.Bookmarks.BinaryFindFirst(r => r.Start > range.Cursor);
+				index = Bookmarks.BinaryFindFirst(r => r.Start > range.Cursor);
 				if (index == -1)
 					index = 0;
 			}
 			else
 			{
-				index = te.Bookmarks.BinaryFindLast(r => r.Start < range.Cursor);
+				index = Bookmarks.BinaryFindLast(r => r.Start < range.Cursor);
 				if (index == -1)
-					index = te.Bookmarks.Count - 1;
+					index = Bookmarks.Count - 1;
 			}
-			return te.MoveCursor(range, te.Bookmarks[index].Start, selecting);
+			return MoveCursor(range, Bookmarks[index].Start, selecting);
 		}
 
-		static List<int> GetOrdering(ITextEditor te, SortType type, bool caseSensitive, bool ascending)
+		List<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)
 		{
-			var entries = te.Selections.Select((range, index) => new { value = te.GetString(range), index = index }).ToList();
+			var entries = Selections.Select((range, index) => new { value = GetString(range), index = index }).ToList();
 
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 
@@ -86,10 +86,10 @@ namespace NeoEdit
 				case SortType.Float: entries = OrderByAscDesc(entries, entry => double.Parse(entry.value), ascending).ToList(); break;
 				case SortType.Hex: entries = OrderByAscDesc(entries, entry => BigInteger.Parse("0" + entry.value, NumberStyles.HexNumber), ascending).ToList(); break;
 				case SortType.DateTime: entries = OrderByAscDesc(entries, entry => DateTime.Parse(entry.value), ascending).ToList(); break;
-				case SortType.Keys: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Comparer<string>.Create((value1, value2) => (te.keysHash.ContainsKey(value1) ? te.keysHash[value1] : int.MaxValue).CompareTo(te.keysHash.ContainsKey(value2) ? te.keysHash[value2] : int.MaxValue))).ToList(); break;
+				case SortType.Keys: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Comparer<string>.Create((value1, value2) => (keysHash.ContainsKey(value1) ? keysHash[value1] : int.MaxValue).CompareTo(keysHash.ContainsKey(value2) ? keysHash[value2] : int.MaxValue))).ToList(); break;
 				case SortType.Clipboard:
 					{
-						var sort = te.Clipboard.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
+						var sort = Clipboard.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
 						entries = OrderByAscDesc(entries, entry => entry.value, ascending, Comparer<string>.Create((value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue))).ToList();
 					}
 					break;
@@ -106,20 +106,20 @@ namespace NeoEdit
 			return entries.Select(entry => entry.index).ToList();
 		}
 
-		static List<Range> GetSortLines(ITextEditor te) => te.Selections.Select(range => te.Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(te.Data.GetOffset(line, 0), te.Data.GetLineLength(line))).ToList();
+		List<Range> GetSortLines() => Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
 
-		static List<Range> GetSortSource(ITextEditor te, SortScope scope, int useRegion)
+		List<Range> GetSortSource(SortScope scope, int useRegion)
 		{
 			List<Range> sortSource = null;
 			switch (scope)
 			{
-				case SortScope.Selections: sortSource = te.Selections.ToList(); break;
-				case SortScope.Lines: sortSource = GetSortLines(te); break;
-				case SortScope.Regions: sortSource = te.GetEnclosingRegions(useRegion, true); break;
+				case SortScope.Selections: sortSource = Selections.ToList(); break;
+				case SortScope.Lines: sortSource = GetSortLines(); break;
+				case SortScope.Regions: sortSource = GetEnclosingRegions(useRegion, true); break;
 				default: throw new Exception("Invalid sort type");
 			}
 
-			if (te.Selections.Count != sortSource.Count)
+			if (Selections.Count != sortSource.Count)
 				throw new Exception("Selections and regions counts must match");
 
 			var orderedRegions = sortSource.OrderBy(range => range.Start).ToList();
@@ -131,9 +131,9 @@ namespace NeoEdit
 				pos = range.End;
 			}
 
-			for (var ctr = 0; ctr < te.Selections.Count; ++ctr)
+			for (var ctr = 0; ctr < Selections.Count; ++ctr)
 			{
-				if ((te.Selections[ctr].Start < sortSource[ctr].Start) || (te.Selections[ctr].End > sortSource[ctr].End))
+				if ((Selections[ctr].Start < sortSource[ctr].Start) || (Selections[ctr].End > sortSource[ctr].End))
 					throw new Exception("All selections must be a region");
 			}
 
@@ -154,53 +154,53 @@ namespace NeoEdit
 			return builder.ToString();
 		}
 
-		static public void Command_Edit_Undo(ITextEditor te)
+		void Command_Edit_Undo()
 		{
-			var undo = te.undoRedo.GetUndo();
+			var undo = undoRedo.GetUndo();
 			if (undo == null)
 				return;
-			te.SetSelections(undo.ranges, false);
-			te.ReplaceSelections(undo.text, replaceType: ReplaceType.Undo);
+			SetSelections(undo.ranges, false);
+			ReplaceSelections(undo.text, replaceType: ReplaceType.Undo);
 		}
 
-		static public void Command_Edit_Redo(ITextEditor te)
+		void Command_Edit_Redo()
 		{
-			var redo = te.undoRedo.GetRedo();
+			var redo = undoRedo.GetRedo();
 			if (redo == null)
 				return;
-			te.SetSelections(redo.ranges);
-			te.ReplaceSelections(redo.text, replaceType: ReplaceType.Redo);
+			SetSelections(redo.ranges);
+			ReplaceSelections(redo.text, replaceType: ReplaceType.Redo);
 		}
 
-		static public void Command_Edit_Copy_CutCopy(ITextEditor te, bool isCut)
+		void Command_Edit_Copy_CutCopy(bool isCut)
 		{
-			var strs = te.GetSelectionStrings();
+			var strs = GetSelectionStrings();
 
-			if (!te.StringsAreFiles(strs))
-				te.SetClipboardStrings(strs);
+			if (!StringsAreFiles(strs))
+				SetClipboardStrings(strs);
 			else
-				te.SetClipboardFiles(strs, isCut);
+				SetClipboardFiles(strs, isCut);
 			if (isCut)
-				te.ReplaceSelections("");
+				ReplaceSelections("");
 		}
 
-		static public void Command_Edit_Paste_Paste(ITextEditor te, bool highlight, bool rotate)
+		void Command_Edit_Paste_Paste(bool highlight, bool rotate)
 		{
-			var clipboardStrings = te.Clipboard;
-			if ((clipboardStrings.Count == 0) && (te.Selections.Count == 0))
+			var clipboardStrings = Clipboard;
+			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
 				return;
 
-			if ((te.Selections.Count == 1) && (clipboardStrings.Count != 1))
+			if ((Selections.Count == 1) && (clipboardStrings.Count != 1))
 			{
-				te.ReplaceOneWithMany(clipboardStrings, null);
+				ReplaceOneWithMany(clipboardStrings, null);
 				return;
 			}
 
 			if (clipboardStrings.Count == 0)
 				throw new Exception("Nothing on clipboard!");
 
-			var repeat = te.Selections.Count / clipboardStrings.Count;
-			if (repeat * clipboardStrings.Count != te.Selections.Count)
+			var repeat = Selections.Count / clipboardStrings.Count;
+			if (repeat * clipboardStrings.Count != Selections.Count)
 				throw new Exception("Number of selections must be a multiple of number of clipboards.");
 
 			if (repeat != 1)
@@ -209,28 +209,28 @@ namespace NeoEdit
 				else
 					clipboardStrings = clipboardStrings.SelectMany(str => Enumerable.Repeat(str, repeat)).ToList();
 
-			te.ReplaceSelections(clipboardStrings, highlight);
+			ReplaceSelections(clipboardStrings, highlight);
 		}
 
-		static public EditFindFindDialog.Result Command_Edit_Find_Find_Dialog(ITextEditor te)
+		EditFindFindDialog.Result Command_Edit_Find_Find_Dialog()
 		{
 			string text = null;
-			var selectionOnly = te.Selections.AsParallel().Any(range => range.HasSelection);
+			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
 
-			if (te.Selections.Count == 1)
+			if (Selections.Count == 1)
 			{
-				var sel = te.Selections.Single();
-				if ((selectionOnly) && (te.Data.GetOffsetLine(sel.Cursor) == te.Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
+				var sel = Selections.Single();
+				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
-					text = te.GetString(sel);
+					text = GetString(sel);
 				}
 			}
 
-			return EditFindFindDialog.Run(te.WindowParent, text, selectionOnly);
+			return EditFindFindDialog.Run(WindowParent, text, selectionOnly);
 		}
 
-		static public void Command_Edit_Find_Find(ITextEditor te, bool selecting, EditFindFindDialog.Result result)
+		void Command_Edit_Find_Find(bool selecting, EditFindFindDialog.Result result)
 		{
 			var text = result.Text;
 			if (!result.IsRegex)
@@ -247,87 +247,87 @@ namespace NeoEdit
 
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
-				te.SetSelections(te.Selections.AsParallel().AsOrdered().Where(range => regex.IsMatch(te.GetString(range)) == result.KeepMatching).ToList());
+				SetSelections(Selections.AsParallel().AsOrdered().Where(range => regex.IsMatch(GetString(range)) == result.KeepMatching).ToList());
 				return;
 			}
 
-			var regions = result.SelectionOnly ? te.Selections.ToList() : new List<Range> { te.FullRange };
-			var resultsByRegion = regions.AsParallel().AsOrdered().Select(region => te.Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false)).ToList();
+			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
+			var resultsByRegion = regions.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false)).ToList();
 
 			if (result.Type == EditFindFindDialog.ResultType.CopyCount)
 			{
-				te.SetClipboardStrings(resultsByRegion.Select(list => list.Count.ToString()));
+				SetClipboardStrings(resultsByRegion.Select(list => list.Count.ToString()));
 				return;
 			}
 
 			var results = resultsByRegion.SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			if (result.AddMatches)
-				results.AddRange(te.Selections);
+				results.AddRange(Selections);
 
 			switch (result.Type)
 			{
 				case EditFindFindDialog.ResultType.FindFirst:
-					te.SetSearches(results);
-					FindNext(te, true, selecting);
+					SetSearches(results);
+					FindNext(true, selecting);
 					break;
 				case EditFindFindDialog.ResultType.FindAll:
-					te.SetSelections(results);
+					SetSelections(results);
 					break;
 			}
 		}
 
-		static public void Command_Edit_Find_NextPrevious(ITextEditor te, bool next, bool selecting) => FindNext(te, next, selecting);
+		void Command_Edit_Find_NextPrevious(bool next, bool selecting) => FindNext(next, selecting);
 
-		static public void Command_Edit_Find_Selected(ITextEditor te, bool selecting)
+		void Command_Edit_Find_Selected(bool selecting)
 		{
-			if ((te.Selections.Count != 1) || (!te.Selections[0].HasSelection))
+			if ((Selections.Count != 1) || (!Selections[0].HasSelection))
 				throw new Exception("Must have one selection with selected text.");
 
-			var text = Regex.Escape(te.GetString(te.Selections[0]));
+			var text = Regex.Escape(GetString(Selections[0]));
 			var regex = new Regex(text, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-			te.SetSearches(te.Data.RegexMatches(regex, te.BeginOffset, te.EndOffset, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
-			FindNext(te, true, selecting);
+			SetSearches(Data.RegexMatches(regex, BeginOffset, EndOffset, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
+			FindNext(true, selecting);
 		}
 
-		static public EditFindMassFindDialog.Result Command_Edit_Find_MassFind_Dialog(ITextEditor te) => EditFindMassFindDialog.Run(te.WindowParent, te.Selections.Any(range => range.HasSelection), te.GetVariables());
+		EditFindMassFindDialog.Result Command_Edit_Find_MassFind_Dialog() => EditFindMassFindDialog.Run(WindowParent, Selections.Any(range => range.HasSelection), GetVariables());
 
-		static public void Command_Edit_Find_MassFind(ITextEditor te, EditFindMassFindDialog.Result result)
+		void Command_Edit_Find_MassFind(EditFindMassFindDialog.Result result)
 		{
-			var texts = te.GetVariableExpressionResults<string>(result.Text);
+			var texts = GetVariableExpressionResults<string>(result.Text);
 
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
 				var set = new HashSet<string>(texts, result.MatchCase ? (IEqualityComparer<string>)EqualityComparer<string>.Default : StringComparer.OrdinalIgnoreCase);
-				te.SetSelections(te.Selections.AsParallel().AsOrdered().Where(range => set.Contains(te.GetString(range)) == result.KeepMatching).ToList());
+				SetSelections(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == result.KeepMatching).ToList());
 				return;
 			}
 
 			var searcher = new Searcher(texts, result.MatchCase);
-			var selections = result.SelectionOnly ? te.Selections.ToList() : new List<Range> { te.FullRange };
-			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => te.Data.StringMatches(searcher, selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
-			te.SetSelections(ranges);
+			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
+			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => Data.StringMatches(searcher, selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			SetSelections(ranges);
 		}
 
-		static public EditFindReplaceDialog.Result Command_Edit_Find_Replace_Dialog(ITextEditor te)
+		EditFindReplaceDialog.Result Command_Edit_Find_Replace_Dialog()
 		{
 			string text = null;
-			var selectionOnly = te.Selections.AsParallel().Any(range => range.HasSelection);
+			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
 
-			if (te.Selections.Count == 1)
+			if (Selections.Count == 1)
 			{
-				var sel = te.Selections.Single();
-				if ((selectionOnly) && (te.Data.GetOffsetLine(sel.Cursor) == te.Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
+				var sel = Selections.Single();
+				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
-					text = te.GetString(sel);
+					text = GetString(sel);
 				}
 			}
 
-			return EditFindReplaceDialog.Run(te.WindowParent, text, selectionOnly);
+			return EditFindReplaceDialog.Run(WindowParent, text, selectionOnly);
 		}
 
-		static public void Command_Edit_Find_Replace(ITextEditor te, EditFindReplaceDialog.Result result)
+		void Command_Edit_Find_Replace(EditFindReplaceDialog.Result result)
 		{
 			var text = result.Text;
 			var replace = result.Replace;
@@ -345,175 +345,175 @@ namespace NeoEdit
 				options |= RegexOptions.IgnoreCase;
 			var regex = new Regex(text, options);
 
-			var regions = result.SelectionOnly ? te.Selections.ToList() : new List<Range> { te.FullRange };
-			var sels = regions.AsParallel().AsOrdered().SelectMany(region => te.Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
-			te.SetSelections(sels);
-			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => regex.Replace(te.GetString(range), result.Replace)).ToList());
+			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
+			var sels = regions.AsParallel().AsOrdered().SelectMany(region => Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			SetSelections(sels);
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => regex.Replace(GetString(range), result.Replace)).ToList());
 		}
 
-		static public void Command_Edit_Find_ClearSearchResults(ITextEditor te) => te.SetSearches(new List<Range>());
+		void Command_Edit_Find_ClearSearchResults() => SetSearches(new List<Range>());
 
-		static public void Command_Edit_CopyDown(ITextEditor te)
+		void Command_Edit_CopyDown()
 		{
-			var strs = te.GetSelectionStrings();
+			var strs = GetSelectionStrings();
 			var index = 0;
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
 				if (string.IsNullOrWhiteSpace(strs[ctr]))
 					strs[ctr] = strs[index];
 				else
 					index = ctr;
-			te.ReplaceSelections(strs);
+			ReplaceSelections(strs);
 		}
 
-		static public EditRotateDialog.Result Command_Edit_Rotate_Dialog(ITextEditor te) => EditRotateDialog.Run(te.WindowParent, te.GetVariables());
+		EditRotateDialog.Result Command_Edit_Rotate_Dialog() => EditRotateDialog.Run(WindowParent, GetVariables());
 
-		static public void Command_Edit_Rotate(ITextEditor te, EditRotateDialog.Result result)
+		void Command_Edit_Rotate(EditRotateDialog.Result result)
 		{
-			var count = new NEExpression(result.Count).Evaluate<int>(te.GetVariables());
+			var count = new NEExpression(result.Count).Evaluate<int>(GetVariables());
 
-			var strs = te.GetSelectionStrings();
+			var strs = GetSelectionStrings();
 			if (count < 0)
 				count = -count % strs.Count;
 			else
 				count = strs.Count - count % strs.Count;
 			strs.AddRange(strs.Take(count).ToList());
 			strs.RemoveRange(0, count);
-			te.ReplaceSelections(strs);
+			ReplaceSelections(strs);
 		}
 
-		static public EditRepeatDialog.Result Command_Edit_Repeat_Dialog(ITextEditor te) => EditRepeatDialog.Run(te.WindowParent, te.Selections.Count == 1, te.GetVariables());
+		EditRepeatDialog.Result Command_Edit_Repeat_Dialog() => EditRepeatDialog.Run(WindowParent, Selections.Count == 1, GetVariables());
 
-		static public void Command_Edit_Repeat(ITextEditor te, EditRepeatDialog.Result result)
+		void Command_Edit_Repeat(EditRepeatDialog.Result result)
 		{
-			var results = te.GetFixedExpressionResults<int>(result.Expression);
+			var results = GetFixedExpressionResults<int>(result.Expression);
 			if (results.Any(repeatCount => repeatCount < 0))
 				throw new Exception("Repeat count must be >= 0");
-			te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(te.GetString(range), results[index])).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(GetString(range), results[index])).ToList());
 			if (result.SelectRepetitions)
 			{
 				var sels = new List<Range>();
-				for (var ctr = 0; ctr < te.Selections.Count; ++ctr)
+				for (var ctr = 0; ctr < Selections.Count; ++ctr)
 					if (results[ctr] != 0)
 					{
-						var selection = te.Selections[ctr];
+						var selection = Selections[ctr];
 						var len = selection.Length / results[ctr];
 						for (var index = selection.Start; index < selection.End; index += len)
 							sels.Add(new Range(index + len, index));
 					}
-				te.SetSelections(sels);
+				SetSelections(sels);
 			}
 		}
 
-		static public void Command_Edit_Markup_Escape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlEncode(te.GetString(range))).ToList());
+		void Command_Edit_Markup_Escape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlEncode(GetString(range))).ToList());
 
-		static public void Command_Edit_Markup_Unescape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlDecode(te.GetString(range))).ToList());
+		void Command_Edit_Markup_Unescape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlDecode(GetString(range))).ToList());
 
-		static public void Command_Edit_RegEx_Escape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => Regex.Escape(te.GetString(range))).ToList());
+		void Command_Edit_RegEx_Escape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Escape(GetString(range))).ToList());
 
-		static public void Command_Edit_RegEx_Unescape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => Regex.Unescape(te.GetString(range))).ToList());
+		void Command_Edit_RegEx_Unescape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Unescape(GetString(range))).ToList());
 
-		static public void Command_Edit_URL_Escape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlEncode(te.GetString(range))).ToList());
+		void Command_Edit_URL_Escape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlEncode(GetString(range))).ToList());
 
-		static public void Command_Edit_URL_Unescape(ITextEditor te) => te.ReplaceSelections(te.Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(te.GetString(range))).ToList());
+		void Command_Edit_URL_Unescape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 
-		static public FilesNamesMakeAbsoluteRelativeDialog.Result Command_Edit_URL_Absolute_Dialog(ITextEditor te) => FilesNamesMakeAbsoluteRelativeDialog.Run(te.WindowParent, te.GetVariables(), true, false);
+		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Edit_URL_Absolute_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(WindowParent, GetVariables(), true, false);
 
-		static public void Command_Edit_URL_Absolute(ITextEditor te, FilesNamesMakeAbsoluteRelativeDialog.Result result)
+		void Command_Edit_URL_Absolute(FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
-			var results = te.GetFixedExpressionResults<string>(result.Expression);
-			te.ReplaceSelections(te.GetSelectionStrings().Select((str, index) =>
+			var results = GetFixedExpressionResults<string>(result.Expression);
+			ReplaceSelections(GetSelectionStrings().Select((str, index) =>
 			{
 				var uri = new Uri(new Uri(results[index]), str);
 				return uri.AbsoluteUri;
 			}).ToList());
 		}
 
-		static public EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog(ITextEditor te) => EditDataHashDialog.Run(te.WindowParent, te.CodePage);
+		EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog() => EditDataHashDialog.Run(WindowParent, CodePage);
 
-		static public void Command_Edit_Data_Hash(ITextEditor te, EditDataHashDialog.Result result)
+		void Command_Edit_Data_Hash(EditDataHashDialog.Result result)
 		{
-			var strs = te.GetSelectionStrings();
-			if (!te.CheckCanEncode(strs, result.CodePage))
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.CodePage))
 				return;
-			te.ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		static public EditDataCompressDialog.Result Command_Edit_Data_Compress_Dialog(ITextEditor te) => EditDataCompressDialog.Run(te.WindowParent, te.CodePage, true);
+		EditDataCompressDialog.Result Command_Edit_Data_Compress_Dialog() => EditDataCompressDialog.Run(WindowParent, CodePage, true);
 
-		static public void Command_Edit_Data_Compress(ITextEditor te, EditDataCompressDialog.Result result)
+		void Command_Edit_Data_Compress(EditDataCompressDialog.Result result)
 		{
-			var strs = te.GetSelectionStrings();
-			if (!te.CheckCanEncode(strs, result.InputCodePage))
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var compressed = strs.AsParallel().AsOrdered().Select(str => Compressor.Compress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
-			if (!te.CheckCanEncode(compressed, result.OutputCodePage))
+			if (!CheckCanEncode(compressed, result.OutputCodePage))
 				return;
-			te.ReplaceSelections(compressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+			ReplaceSelections(compressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static public EditDataCompressDialog.Result Command_Edit_Data_Decompress_Dialog(ITextEditor te) => EditDataCompressDialog.Run(te.WindowParent, te.CodePage, false);
+		EditDataCompressDialog.Result Command_Edit_Data_Decompress_Dialog() => EditDataCompressDialog.Run(WindowParent, CodePage, false);
 
-		static public void Command_Edit_Data_Decompress(ITextEditor te, EditDataCompressDialog.Result result)
+		void Command_Edit_Data_Decompress(EditDataCompressDialog.Result result)
 		{
-			var strs = te.GetSelectionStrings();
-			if (!te.CheckCanEncode(strs, result.InputCodePage))
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var decompressed = strs.AsParallel().AsOrdered().Select(str => Compressor.Decompress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
-			if (!te.CheckCanEncode(decompressed, result.OutputCodePage))
+			if (!CheckCanEncode(decompressed, result.OutputCodePage))
 				return;
-			te.ReplaceSelections(decompressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+			ReplaceSelections(decompressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static public EditDataEncryptDialog.Result Command_Edit_Data_Encrypt_Dialog(ITextEditor te) => EditDataEncryptDialog.Run(te.WindowParent, te.CodePage, true);
+		EditDataEncryptDialog.Result Command_Edit_Data_Encrypt_Dialog() => EditDataEncryptDialog.Run(WindowParent, CodePage, true);
 
-		static public void Command_Edit_Data_Encrypt(ITextEditor te, EditDataEncryptDialog.Result result)
+		void Command_Edit_Data_Encrypt(EditDataEncryptDialog.Result result)
 		{
-			var strs = te.GetSelectionStrings();
-			if (!te.CheckCanEncode(strs, result.InputCodePage))
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var encrypted = strs.AsParallel().AsOrdered().Select(str => Cryptor.Encrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
-			if (!te.CheckCanEncode(encrypted, result.OutputCodePage))
+			if (!CheckCanEncode(encrypted, result.OutputCodePage))
 				return;
-			te.ReplaceSelections(encrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+			ReplaceSelections(encrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static public EditDataEncryptDialog.Result Command_Edit_Data_Decrypt_Dialog(ITextEditor te) => EditDataEncryptDialog.Run(te.WindowParent, te.CodePage, false);
+		EditDataEncryptDialog.Result Command_Edit_Data_Decrypt_Dialog() => EditDataEncryptDialog.Run(WindowParent, CodePage, false);
 
-		static public void Command_Edit_Data_Decrypt(ITextEditor te, EditDataEncryptDialog.Result result)
+		void Command_Edit_Data_Decrypt(EditDataEncryptDialog.Result result)
 		{
-			var strs = te.GetSelectionStrings();
-			if (!te.CheckCanEncode(strs, result.InputCodePage))
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
 			var decrypted = strs.AsParallel().AsOrdered().Select(str => Cryptor.Decrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
-			if (!te.CheckCanEncode(decrypted, result.OutputCodePage))
+			if (!CheckCanEncode(decrypted, result.OutputCodePage))
 				return;
-			te.ReplaceSelections(decrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+			ReplaceSelections(decrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static public EditDataSignDialog.Result Command_Edit_Data_Sign_Dialog(ITextEditor te) => EditDataSignDialog.Run(te.WindowParent, te.CodePage);
+		EditDataSignDialog.Result Command_Edit_Data_Sign_Dialog() => EditDataSignDialog.Run(WindowParent, CodePage);
 
-		static public void Command_Edit_Data_Sign(ITextEditor te, EditDataSignDialog.Result result)
+		void Command_Edit_Data_Sign(EditDataSignDialog.Result result)
 		{
-			var strs = te.GetSelectionStrings();
-			if (!te.CheckCanEncode(strs, result.CodePage))
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.CodePage))
 				return;
-			te.ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
+			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		static public EditSortDialog.Result Command_Edit_Sort_Dialog(ITextEditor te) => EditSortDialog.Run(te.WindowParent);
+		EditSortDialog.Result Command_Edit_Sort_Dialog() => EditSortDialog.Run(WindowParent);
 
-		static public void Command_Edit_Sort(ITextEditor te, EditSortDialog.Result result)
+		void Command_Edit_Sort(EditSortDialog.Result result)
 		{
-			var regions = GetSortSource(te, result.SortScope, result.UseRegion);
-			var ordering = GetOrdering(te, result.SortType, result.CaseSensitive, result.Ascending);
+			var regions = GetSortSource(result.SortScope, result.UseRegion);
+			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
 			if (regions.Count != ordering.Count)
 				throw new Exception("Ordering misaligned");
 
-			var newSelections = te.Selections.ToList();
+			var newSelections = Selections.ToList();
 			var orderedRegions = ordering.Select(index => regions[index]).ToList();
-			var orderedRegionText = orderedRegions.Select(range => te.GetString(range)).ToList();
+			var orderedRegionText = orderedRegions.Select(range => GetString(range)).ToList();
 
-			te.Replace(regions, orderedRegionText);
+			Replace(regions, orderedRegionText);
 
 			var newRegions = regions.ToList();
 			var add = 0;
@@ -526,32 +526,32 @@ namespace NeoEdit
 			}
 			newSelections = ordering.Select(num => newSelections[num]).ToList();
 
-			te.SetSelections(newSelections);
+			SetSelections(newSelections);
 			if (result.SortScope == SortScope.Regions)
-				te.SetRegions(result.UseRegion, newRegions);
+				SetRegions(result.UseRegion, newRegions);
 		}
 
-		static public EditConvertDialog.Result Command_Edit_Convert_Dialog(ITextEditor te) => EditConvertDialog.Run(te.WindowParent);
+		EditConvertDialog.Result Command_Edit_Convert_Dialog() => EditConvertDialog.Run(WindowParent);
 
-		static public void Command_Edit_Convert(ITextEditor te, EditConvertDialog.Result result)
+		void Command_Edit_Convert(EditConvertDialog.Result result)
 		{
-			var strs = te.GetSelectionStrings();
-			if (!te.CheckCanEncode(strs, result.InputType))
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.InputType))
 				return;
 			var bytes = strs.AsParallel().AsOrdered().Select(str => Coder.StringToBytes(str, result.InputType, result.InputBOM)).ToList();
-			if (!te.CheckCanEncode(bytes, result.OutputType))
+			if (!CheckCanEncode(bytes, result.OutputType))
 				return;
-			te.ReplaceSelections(bytes.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
+			ReplaceSelections(bytes.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
 		}
 
-		static public void Command_Edit_Bookmarks_Toggle(ITextEditor te)
+		void Command_Edit_Bookmarks_Toggle()
 		{
-			var linePairs = te.Selections.AsParallel().AsOrdered().Select(range => new { start = te.Data.GetOffsetLine(range.Start), end = te.Data.GetOffsetLine(range.End) }).ToList();
+			var linePairs = Selections.AsParallel().AsOrdered().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End) }).ToList();
 			if (linePairs.Any(pair => pair.start != pair.end))
 				throw new Exception("Selections must be on a single line.");
 
-			var bookmarks = te.Bookmarks.ToList();
-			var lineRanges = linePairs.AsParallel().AsOrdered().Select(pair => new Range(te.Data.GetOffset(pair.start, 0))).ToList();
+			var bookmarks = Bookmarks.ToList();
+			var lineRanges = linePairs.AsParallel().AsOrdered().Select(pair => new Range(Data.GetOffset(pair.start, 0))).ToList();
 			var comparer = Comparer<Range>.Create((r1, r2) => r1.Start.CompareTo(r2.Start));
 			var indexes = lineRanges.AsParallel().Select(range => new { range = range, index = bookmarks.BinarySearch(range, comparer) }).Reverse().ToList();
 
@@ -566,39 +566,39 @@ namespace NeoEdit
 				foreach (var pair in indexes)
 					bookmarks.RemoveAt(pair.index);
 			}
-			te.SetBookmarks(bookmarks);
+			SetBookmarks(bookmarks);
 		}
 
-		static public void Command_Edit_Bookmarks_NextPreviousBookmark(ITextEditor te, bool next, bool selecting)
+		void Command_Edit_Bookmarks_NextPreviousBookmark(bool next, bool selecting)
 		{
-			if (!te.Bookmarks.Any())
+			if (!Bookmarks.Any())
 				return;
-			te.SetSelections(te.Selections.AsParallel().AsOrdered().Select(range => GetNextPrevBookmark(te, range, next, selecting)).ToList());
+			SetSelections(Selections.AsParallel().AsOrdered().Select(range => GetNextPrevBookmark(range, next, selecting)).ToList());
 		}
 
-		static public void Command_Edit_Bookmarks_Clear(ITextEditor te) => te.SetBookmarks(new List<Range>());
+		void Command_Edit_Bookmarks_Clear() => SetBookmarks(new List<Range>());
 
-		static public void Command_Edit_Navigate_WordLeftRight(ITextEditor te, bool next, bool selecting)
+		void Command_Edit_Navigate_WordLeftRight(bool next, bool selecting)
 		{
-			if ((!selecting) && (te.Selections.Any(range => range.HasSelection)))
+			if ((!selecting) && (Selections.Any(range => range.HasSelection)))
 			{
-				te.SetSelections(te.Selections.AsParallel().AsOrdered().Select(range => new Range(next ? range.End : range.Start)).ToList());
+				SetSelections(Selections.AsParallel().AsOrdered().Select(range => new Range(next ? range.End : range.Start)).ToList());
 				return;
 			}
 
-			var func = next ? (Func<int, int>)te.GetNextWord : te.GetPrevWord;
-			te.SetSelections(te.Selections.AsParallel().AsOrdered().Select(range => te.MoveCursor(range, func(range.Cursor), selecting)).ToList());
+			var func = next ? (Func<int, int>)GetNextWord : GetPrevWord;
+			SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, func(range.Cursor), selecting)).ToList());
 		}
 
-		static public void Command_Edit_Navigate_AllLeft(ITextEditor te, bool selecting)
+		void Command_Edit_Navigate_AllLeft(bool selecting)
 		{
-			if (!te.Selections.Any())
+			if (!Selections.Any())
 				return;
 
-			var offsets = te.Selections.Select(range => range.Cursor).ToList();
-			var lines = offsets.AsParallel().AsOrdered().Select(offset => te.Data.GetOffsetLine(offset)).ToList();
+			var offsets = Selections.Select(range => range.Cursor).ToList();
+			var lines = offsets.AsParallel().AsOrdered().Select(offset => Data.GetOffsetLine(offset)).ToList();
 
-			var indexes = offsets.Zip(lines, (offset, line) => te.Data.GetOffsetIndex(offset, line)).ToList();
+			var indexes = offsets.Zip(lines, (offset, line) => Data.GetOffsetIndex(offset, line)).ToList();
 			var index = Math.Min(indexes.Max() - 1, indexes.Min());
 
 			var currentIsSpace = default(bool?);
@@ -607,36 +607,36 @@ namespace NeoEdit
 			{
 				if (index < 0)
 				{
-					offsets = lines.Select(line => te.Data.GetOffset(line, 0)).ToList();
+					offsets = lines.Select(line => Data.GetOffset(line, 0)).ToList();
 					break;
 				}
 
-				var isSpace = lines.All(line => te.GetWordSkipType(line, index) == WordSkipType.Space);
+				var isSpace = lines.All(line => GetWordSkipType(line, index) == WordSkipType.Space);
 
 				if (!currentIsSpace.HasValue)
 					currentIsSpace = isSpace;
 				else if (isSpace != currentIsSpace)
 				{
-					offsets = lines.Select(line => te.Data.GetOffset(line, index + 1)).ToList();
+					offsets = lines.Select(line => Data.GetOffset(line, index + 1)).ToList();
 					break;
 				}
 
 				--index;
 			}
 
-			te.SetSelections(te.Selections.Zip(offsets, (range, offset) => te.MoveCursor(range, offset, selecting)).ToList());
+			SetSelections(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
 		}
 
-		static public void Command_Edit_Navigate_AllRight(ITextEditor te, bool selecting)
+		void Command_Edit_Navigate_AllRight(bool selecting)
 		{
-			if (!te.Selections.Any())
+			if (!Selections.Any())
 				return;
 
-			var offsets = te.Selections.Select(range => range.Cursor).ToList();
-			var lines = offsets.AsParallel().AsOrdered().Select(offset => te.Data.GetOffsetLine(offset)).ToList();
+			var offsets = Selections.Select(range => range.Cursor).ToList();
+			var lines = offsets.AsParallel().AsOrdered().Select(offset => Data.GetOffsetLine(offset)).ToList();
 
-			var index = offsets.Zip(lines, (offset, line) => te.Data.GetOffsetIndex(offset, line)).Min();
-			var endIndex = lines.Select(line => te.Data.GetLineLength(line)).Min();
+			var index = offsets.Zip(lines, (offset, line) => Data.GetOffsetIndex(offset, line)).Min();
+			var endIndex = lines.Select(line => Data.GetLineLength(line)).Min();
 
 			var currentIsSpace = default(bool?);
 
@@ -644,26 +644,26 @@ namespace NeoEdit
 			{
 				if (index > endIndex)
 				{
-					offsets = lines.Select(line => te.Data.GetOffset(line, te.Data.GetLineLength(line))).ToList();
+					offsets = lines.Select(line => Data.GetOffset(line, Data.GetLineLength(line))).ToList();
 					break;
 				}
 
-				var isSpace = lines.All(line => te.GetWordSkipType(line, index) == WordSkipType.Space);
+				var isSpace = lines.All(line => GetWordSkipType(line, index) == WordSkipType.Space);
 
 				if (!currentIsSpace.HasValue)
 					currentIsSpace = isSpace;
 				else if (isSpace != currentIsSpace)
 				{
-					offsets = lines.Select(line => te.Data.GetOffset(line, index)).ToList();
+					offsets = lines.Select(line => Data.GetOffset(line, index)).ToList();
 					break;
 				}
 
 				++index;
 			}
 
-			te.SetSelections(te.Selections.Zip(offsets, (range, offset) => te.MoveCursor(range, offset, selecting)).ToList());
+			SetSelections(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
 		}
 
-		static public void Command_Edit_Navigate_JumpBy(ITextEditor te, JumpByType jumpBy) => te.JumpBy = jumpBy;
+		void Command_Edit_Navigate_JumpBy(JumpByType jumpBy) => JumpBy = jumpBy;
 	}
 }
