@@ -22,6 +22,7 @@ namespace NeoEdit.Dialogs
 			public bool BalanceParens { get; set; }
 			public bool BalanceBrackets { get; set; }
 			public bool BalanceBraces { get; set; }
+			public bool BalanceLTGT { get; set; }
 			public bool TrimWhitespace { get; set; }
 		}
 
@@ -46,6 +47,8 @@ namespace NeoEdit.Dialogs
 		[DepProp]
 		public bool BalanceBraces { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool BalanceLTGT { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public bool TrimWhitespace { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
 
@@ -64,6 +67,7 @@ namespace NeoEdit.Dialogs
 			Index = "0";
 			MatchCase = IsRegex = IncludeResults = IncludeEmpty = false;
 			BalanceStrings = BalanceParens = BalanceBrackets = BalanceBraces = TrimWhitespace = true;
+			BalanceLTGT = false;
 		}
 
 		Result result;
@@ -88,6 +92,7 @@ namespace NeoEdit.Dialogs
 				BalanceParens = BalanceParens,
 				BalanceBrackets = BalanceBrackets,
 				BalanceBraces = BalanceBraces,
+				BalanceLTGT = BalanceLTGT,
 				TrimWhitespace = TrimWhitespace,
 			};
 

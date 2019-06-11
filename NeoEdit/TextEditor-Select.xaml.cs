@@ -16,9 +16,10 @@ namespace NeoEdit
 			Parentheses = 1,
 			Brackets = 2,
 			Braces = 4,
-			String = 8,
-			VerbatimString = 16 | String,
-			InterpolatedString = 32 | String,
+			LTGT = 8,
+			String = 16,
+			VerbatimString = 32 | String,
+			InterpolatedString = 64 | String,
 			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
 		}
 
@@ -83,6 +84,8 @@ namespace NeoEdit
 				[']'] = SelectSplitEnum.Brackets,
 				['{'] = SelectSplitEnum.Braces,
 				['}'] = SelectSplitEnum.Braces,
+				['<'] = SelectSplitEnum.LTGT,
+				['>'] = SelectSplitEnum.LTGT,
 			};
 
 			var start = range.Start;
@@ -156,9 +159,9 @@ namespace NeoEdit
 						pos += matchLen;
 						start = pos;
 					}
-					else if (((result.BalanceParens) && (Data.Data[pos] == '(')) || ((result.BalanceBrackets) && (Data.Data[pos] == '[')) || ((result.BalanceBraces) && (Data.Data[pos] == '{')))
+					else if (((result.BalanceParens) && (Data.Data[pos] == '(')) || ((result.BalanceBrackets) && (Data.Data[pos] == '[')) || ((result.BalanceBraces) && (Data.Data[pos] == '{')) || ((result.BalanceLTGT) && (Data.Data[pos] == '<')))
 						stack.Push(charValue[Data.Data[pos++]]);
-					else if (((result.BalanceParens) && (Data.Data[pos] == ')')) || ((result.BalanceBrackets) && (Data.Data[pos] == ']')) || ((result.BalanceBraces) && (Data.Data[pos] == '}')))
+					else if (((result.BalanceParens) && (Data.Data[pos] == ')')) || ((result.BalanceBrackets) && (Data.Data[pos] == ']')) || ((result.BalanceBraces) && (Data.Data[pos] == '}')) || ((result.BalanceLTGT) && (Data.Data[pos] == '>')))
 					{
 						if (charValue[Data.Data[pos]] != stackTop)
 							throw new Exception($"Didn't find open for {Data.Data[pos]}");

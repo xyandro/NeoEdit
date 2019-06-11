@@ -45,6 +45,7 @@
 						<Binding Path="BalanceParens" ElementName="self"/>
 						<Binding Path="BalanceBrackets" ElementName="self"/>
 						<Binding Path="BalanceBraces" ElementName="self"/>
+						<Binding Path="BalanceLTGT" ElementName="self"/>
 					</MultiBinding>
 				</CheckBox.IsChecked>
 			</CheckBox>
@@ -52,6 +53,7 @@
 			<CheckBox Content="_Parens" IsChecked="{Binding BalanceParens, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
 			<CheckBox Content="Brac_kets" IsChecked="{Binding BalanceBrackets, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
 			<CheckBox Content="Br_aces" IsChecked="{Binding BalanceBraces, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
+			<CheckBox Content="_Less/Greater Than" IsChecked="{Binding BalanceLTGT, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
 		</StackPanel>
 		<CheckBox Grid.Row="8" Grid.Column="1" Content="Trim _whitespace" IsChecked="{Binding TrimWhitespace, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 
