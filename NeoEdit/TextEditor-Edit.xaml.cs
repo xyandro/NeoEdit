@@ -71,37 +71,38 @@ namespace NeoEdit
 
 		List<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)
 		{
-			var entries = Selections.Select((range, index) => new { value = GetString(range), index = index }).ToList();
+			var entries = Selections.AsParallel().Select((range, index) => Tuple.Create(GetString(range), index));
 
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 
 			switch (type)
 			{
-				case SortType.Smart: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Helpers.SmartComparer(caseSensitive)).ToList(); break;
-				case SortType.String: entries = OrderByAscDesc(entries, entry => entry.value, ascending, stringComparer).ToList(); break;
-				case SortType.Length: entries = OrderByAscDesc(entries, entry => entry.value.Length, ascending).ToList(); break;
-				case SortType.Integer: entries = OrderByAscDesc(entries, entry => BigInteger.Parse(entry.value), ascending).ToList(); break;
-				case SortType.Float: entries = OrderByAscDesc(entries, entry => double.Parse(entry.value), ascending).ToList(); break;
-				case SortType.Hex: entries = OrderByAscDesc(entries, entry => BigInteger.Parse("0" + entry.value, NumberStyles.HexNumber), ascending).ToList(); break;
-				case SortType.DateTime: entries = OrderByAscDesc(entries, entry => DateTime.Parse(entry.value), ascending).ToList(); break;
-				case SortType.Keys: entries = OrderByAscDesc(entries, entry => entry.value, ascending, Comparer<string>.Create((value1, value2) => (keysHash.ContainsKey(value1) ? keysHash[value1] : int.MaxValue).CompareTo(keysHash.ContainsKey(value2) ? keysHash[value2] : int.MaxValue))).ToList(); break;
+				case SortType.Smart: entries = OrderByAscDesc(entries, entry => entry.Item1, ascending, Helpers.SmartComparer(caseSensitive)); break;
+				case SortType.String: entries = OrderByAscDesc(entries, entry => entry.Item1, ascending, stringComparer); break;
+				case SortType.Length: entries = OrderByAscDesc(entries, entry => entry.Item1.Length, ascending); break;
+				case SortType.Integer: entries = OrderByAscDesc(entries, entry => BigInteger.Parse(entry.Item1), ascending); break;
+				case SortType.Float: entries = OrderByAscDesc(entries, entry => double.Parse(entry.Item1), ascending); break;
+				case SortType.Hex: entries = OrderByAscDesc(entries, entry => BigInteger.Parse("0" + entry.Item1, NumberStyles.HexNumber), ascending); break;
+				case SortType.DateTime: entries = OrderByAscDesc(entries, entry => DateTime.Parse(entry.Item1), ascending); break;
+				case SortType.Keys: entries = OrderByAscDesc(entries, entry => entry.Item1, ascending, Comparer<string>.Create((value1, value2) => (keysHash.ContainsKey(value1) ? keysHash[value1] : int.MaxValue).CompareTo(keysHash.ContainsKey(value2) ? keysHash[value2] : int.MaxValue))); break;
 				case SortType.Clipboard:
 					{
-						var sort = Clipboard.Distinct().Select((key, index) => new { key = key, index = index }).ToDictionary(entry => entry.key, entry => entry.index);
-						entries = OrderByAscDesc(entries, entry => entry.value, ascending, Comparer<string>.Create((value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue))).ToList();
+						var sort = Clipboard.Distinct().Select((key, index) => new { key, index }).ToDictionary(entry => entry.key, entry => entry.index);
+						entries = OrderByAscDesc(entries, entry => entry.Item1, ascending, Comparer<string>.Create((value1, value2) => (sort.ContainsKey(value1) ? sort[value1] : int.MaxValue).CompareTo(sort.ContainsKey(value2) ? sort[value2] : int.MaxValue)));
 					}
 					break;
-				case SortType.Reverse: entries.Reverse(); break;
-				case SortType.Randomize: entries = entries.OrderBy(entry => random.Next()).ToList(); break;
+				case SortType.Reverse: entries = entries.Reverse(); break;
+				case SortType.Randomize: entries = entries.OrderBy(entry => random.Next()); break;
 				case SortType.Frequency:
 					{
-						var frequency = entries.GroupBy(a => a.value, stringComparer).ToDictionary(a => a.Key, a => a.Count(), stringComparer);
-						entries = OrderByAscDesc(entries, entry => frequency[entry.value], ascending).ToList();
+						entries = entries.ToList().AsParallel();
+						var frequency = entries.GroupBy(a => a.Item1, stringComparer).ToDictionary(a => a.Key, a => a.Count(), stringComparer);
+						entries = OrderByAscDesc(entries, entry => frequency[entry.Item1], ascending);
 					}
 					break;
 			}
 
-			return entries.Select(entry => entry.index).ToList();
+			return entries.Select(entry => entry.Item2).ToList();
 		}
 
 		List<Range> GetSortLines() => Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
@@ -138,10 +139,10 @@ namespace NeoEdit
 			return sortSource;
 		}
 
-		static IOrderedEnumerable<TSource> OrderByAscDesc<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)
+		static ParallelQuery<Tuple<string, int>> OrderByAscDesc<TKey>(ParallelQuery<Tuple<string, int>> source, Func<Tuple<string, int>, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)
 		{
-			var func = ascending ? (Func<IEnumerable<TSource>, Func<TSource, TKey>, IComparer<TKey>, IOrderedEnumerable<TSource>>)Enumerable.OrderBy : Enumerable.OrderByDescending;
-			return func(source, keySelector, comparer ?? Comparer<TKey>.Default);
+			var func = ascending ? (Func<ParallelQuery<Tuple<string, int>>, Func<Tuple<string, int>, TKey>, IComparer<TKey>, OrderedParallelQuery<Tuple<string, int>>>)ParallelEnumerable.OrderBy : ParallelEnumerable.OrderByDescending;
+			return func(source, keySelector, comparer ?? Comparer<TKey>.Default).ThenBy(x => x.Item2);
 		}
 
 		static public string RepeatString(string input, int count)

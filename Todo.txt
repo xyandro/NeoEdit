@@ -1,5 +1,4 @@
 Make modal dialogs modal for owning window only
-Improve sort performance for very large sets
 Selecting the already selected file without shift down should deselect the other files
 Tutorial
 Print
