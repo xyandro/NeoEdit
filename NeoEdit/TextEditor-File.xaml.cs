@@ -252,7 +252,19 @@ namespace NeoEdit
 					return;
 			}
 
+			var selections = Selections.ToList();
+			var searches = Searches.ToList();
+			var bookmarks = Bookmarks.ToList();
+			var regions = Regions.ToDictionary(r => r.Key, r => r.Value.ToList());
+
 			OpenFile(FileName, DisplayName, keepUndo: true);
+
+			Func<List<Range>, List<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(BeginOffset, Math.Min(range.Cursor, EndOffset)), Math.Max(BeginOffset, Math.Min(range.Anchor, EndOffset)))).ToList();
+			SetSelections(reformatRanges(selections));
+			SetSearches(reformatRanges(searches));
+			SetBookmarks(reformatRanges(bookmarks));
+			foreach (var pair in regions)
+				SetRegions(pair.Key, reformatRanges(pair.Value));
 		}
 
 		void Command_File_Insert_Files()
