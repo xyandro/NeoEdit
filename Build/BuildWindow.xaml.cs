@@ -37,6 +37,7 @@ namespace Build
 				new CleanAction(),
 				new DeleteReleasesAction(),
 				new ReleaseAction(),
+				new DeleteIgnoredAction(),
 			};
 
 			OnReset(null, null);
@@ -51,21 +52,7 @@ namespace Build
 			actions.SelectAll();
 		}
 
-		void OnDeleteIgnored(object sender, RoutedEventArgs e)
-		{
-			Run(writeText =>
-			{
-				writeText("Deleting ignored files...");
-				foreach (var path in Git.GetIgoredPaths())
-				{
-					writeText($"Deleting {path}...");
-					if (File.Exists(path))
-						File.Delete(path);
-					else if (Directory.Exists(path))
-						Directory.Delete(path, true);
-				}
-			});
-		}
+		void OnDeleteIgnored(object sender, RoutedEventArgs e) => Run(writeText => new DeleteIgnoredAction().Run(writeText, null, null));
 
 		void EnableButtons(bool enabled)
 		{

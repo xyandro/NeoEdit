@@ -49,6 +49,7 @@
     <Compile Include="BuildActions\BaseAction.cs" />
     <Compile Include="BuildActions\BuildAction.cs" />
     <Compile Include="BuildActions\CleanAction.cs" />
+    <Compile Include="BuildActions\DeleteIgnoredAction.cs" />
     <Compile Include="BuildActions\DeleteReleasesAction.cs" />
     <Compile Include="BuildActions\LoaderAction.cs" />
     <Compile Include="BuildActions\ReleaseAction.cs" />
