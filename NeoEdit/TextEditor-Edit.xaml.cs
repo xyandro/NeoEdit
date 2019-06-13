@@ -308,6 +308,28 @@ namespace NeoEdit
 			SetSelections(ranges);
 		}
 
+		EditFindBinaryDialog.Result Command_Edit_Find_Binary_Dialog()
+		{
+			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
+			return EditFindBinaryDialog.Run(WindowParent, selectionOnly);
+		}
+
+		void Command_Edit_Find_Binary(EditFindBinaryDialog.Result result)
+		{
+			var findStrs = result.CodePages
+				.Select(codePage => Tuple.Create(Coder.TryStringToBytes(result.Text, codePage), (!Coder.IsStr(codePage)) || (result.MatchCase) || (Coder.AlwaysCaseSensitive(codePage))))
+				.NonNull(tuple => tuple.Item1)
+				.Select(tuple => Tuple.Create(Coder.TryBytesToString(tuple.Item1, CodePage), tuple.Item2))
+				.NonNullOrEmpty(tuple => tuple.Item1)
+				.GroupBy(tuple => $"{tuple.Item1}-{tuple.Item2}")
+				.Select(group => group.First())
+				.ToList();
+			var searcher = new Searcher(findStrs);
+			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
+			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => Data.StringMatches(searcher, selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			SetSelections(ranges);
+		}
+
 		EditFindReplaceDialog.Result Command_Edit_Find_Replace_Dialog()
 		{
 			string text = null;
