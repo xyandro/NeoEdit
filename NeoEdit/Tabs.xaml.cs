@@ -284,7 +284,7 @@ namespace NeoEdit
 				case NECommand.Window_Grid: Command_Window_Type(TabsLayout.Grid, null); break;
 				case NECommand.Window_CustomGrid: Command_Window_Type(TabsLayout.Custom, dialogResult as WindowCustomGridDialog.Result); break;
 				case NECommand.Window_ActiveTabs: Command_Window_ActiveTabs(); break;
-				case NECommand.Window_FontSize: Command_Window_FontSize(); break;
+				case NECommand.Window_Font_Size: Command_Window_Font_Size(); break;
 				case NECommand.Window_Select_TabsWithSelections: Command_Window_Select_TabsWithWithoutSelections(true); break;
 				case NECommand.Window_Select_TabsWithoutSelections: Command_Window_Select_TabsWithWithoutSelections(false); break;
 				case NECommand.Window_Select_ModifiedTabs: Command_Window_Select_ModifiedUnmodifiedTabs(true); break;

@@ -299,6 +299,7 @@ namespace NeoEdit
 
 			FontSizeChanged(Font.FontSize);
 			Font.FontSizeChanged += FontSizeChanged;
+			Font.ShowSpecialCharsChanged += (s, e) => InvalidateCanvas();
 		}
 
 		public void InvalidateCanvas()

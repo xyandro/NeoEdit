@@ -673,7 +673,7 @@ namespace NeoEdit
 		[KeyGesture(Key.A, ModifierKeys.Control | ModifierKeys.Alt)] Window_ActiveTabs,
 		Window_TabIndex,
 		Window_ActiveTabIndex,
-		Window_FontSize,
+		Window_Font_Size,
 		Window_Select_TabsWithSelections,
 		Window_Select_TabsWithoutSelections,
 		Window_Select_ModifiedTabs,

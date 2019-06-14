@@ -1002,7 +1002,10 @@
 		<controls:NEMenuItem Header="Tab _Index" CommandEnum="Window_TabIndex"/>
 		<controls:NEMenuItem Header="Active Tab In_dex" CommandEnum="Window_ActiveTabIndex"/>
 		<Separator/>
-		<controls:NEMenuItem Header="F_ont Size" CommandEnum="Window_FontSize"/>
+		<MenuItem Header="F_ont">
+			<controls:NEMenuItem Header="_Size" CommandEnum="Window_Font_Size"/>
+			<MenuItem Header="S_how Special" IsCheckable="True" IsChecked="{Binding Path=(local:Font.ShowSpecialChars), Mode=TwoWay}"/>
+		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Select_TabsWithSelections"/>

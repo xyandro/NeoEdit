@@ -21,7 +21,7 @@ namespace NeoEdit
 			UpdateTopMost();
 		}
 
-		void Command_Window_FontSize() => WindowFontSizeDialog.Run(WindowParent);
+		void Command_Window_Font_Size() => WindowFontSizeDialog.Run(WindowParent);
 
 		void Command_Window_Select_TabsWithWithoutSelections(bool hasSelections)
 		{
