@@ -87,6 +87,14 @@ namespace NeoEdit
 		public bool IncludeInlineVariables { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public JumpByType JumpBy { get { return UIHelper<TextEditor>.GetPropValue<JumpByType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); jumpBy = JumpBy; } }
+		[DepProp]
+		public bool ViewValues { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public IList<byte> ViewValuesData { get { return UIHelper<TextEditor>.GetPropValue<IList<byte>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool ViewValuesHasSel { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		[DepProp]
+		public string ViewValuesFindValue { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		public Tabs TabsParent { get; set; }
 		public Window WindowParent => TabsParent as Window;
@@ -1489,6 +1497,7 @@ namespace NeoEdit
 				case NECommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 				case NECommand.Window_TabIndex: Command_Window_TabIndex(false); break;
 				case NECommand.Window_ActiveTabIndex: Command_Window_TabIndex(true); break;
+				case NECommand.Window_ViewValues: Command_Window_ViewValues(multiStatus); break;
 			}
 
 			var end = DateTime.UtcNow;
@@ -1586,6 +1595,7 @@ namespace NeoEdit
 				case Key.Escape:
 					SetSearches(new List<Range>());
 					DragFiles = null;
+					ViewValuesFindValue = null;
 					if (Settings.EscapeClearsSelections)
 					{
 						HandleCommand(NECommand.Select_Selection_Single, false, null, null, null, null);
@@ -2053,6 +2063,9 @@ namespace NeoEdit
 		{
 			var sb = new List<string>();
 
+			ViewValuesData = null;
+			ViewValuesHasSel = false;
+
 			if ((CurrentSelection < 0) || (CurrentSelection >= Selections.Count))
 			{
 				sb.Add("Selection 0/0");
@@ -2073,6 +2086,13 @@ namespace NeoEdit
 				var columnMax = Data.GetColumnFromIndex(endLine, indexMax);
 				var posMin = range.Start;
 				var posMax = range.End;
+
+				try
+				{
+					ViewValuesData = Coder.StringToBytes(Data.GetString(range.Start, Math.Min(range.HasSelection ? range.Length : 100, Data.NumChars - range.Start)), CodePage);
+					ViewValuesHasSel = range.HasSelection;
+				}
+				catch { }
 
 				sb.Add($"Selection {CurrentSelection + 1:n0}/{NumSelections:n0}");
 				sb.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");

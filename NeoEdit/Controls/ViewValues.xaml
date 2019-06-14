@@ -1,0 +1,81 @@
+﻿<UserControl Name="self" x:Class="NeoEdit.Controls.ViewValues"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.Controls"
+	xmlns:converters="clr-namespace:NeoEdit.Converters"
+	Focusable="True">
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="0"/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+
+		<TextBlock Grid.Row="0" Grid.Column="1" Text="-255" Margin="15,0,0,0"/>
+		<TextBlock Grid.Row="0" Grid.Column="2" Text="-65535" Margin="15,0,0,0"/>
+		<TextBlock Grid.Row="0" Grid.Column="3" Text="-2147483647" Margin="15,0,0,0"/>
+		<TextBlock Grid.Row="0" Grid.Column="4" Text="-9223372036854775807" Margin="15,0,0,0"/>
+
+		<StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" Orientation="Horizontal">
+			<CheckBox Content="Little Endian" Focusable="False" VerticalAlignment="Center" Margin="15,0,0,0" IsChecked="{Binding LittleEndian, ElementName=self}"/>
+			<CheckBox Content="Big Endian" Focusable="False" VerticalAlignment="Center" Margin="15,0,0,0" IsChecked="{Binding BigEndian, ElementName=self}"/>
+			<CheckBox Content="Floats" Focusable="False" VerticalAlignment="Center" Margin="15,0,0,0" IsChecked="{Binding Floats, ElementName=self}"/>
+			<Button Content="Strings" Click="OnStrings" Focusable="False" VerticalAlignment="Center" Margin="15,0,0,0"/>
+			<Button Content="Reset" Click="OnReset" Focusable="False" VerticalAlignment="Center" Margin="15,0,0,0"/>
+		</StackPanel>
+
+		<Label Grid.Row="2" Grid.Column="0" Content="UnsignedLE:" Padding="3" Visibility="{Binding LittleEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
+		<controls:ViewValue Grid.Row="2" Grid.Column="1" CodePage="UInt8" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding LittleEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="2" Grid.Column="2" CodePage="UInt16LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding LittleEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="2" Grid.Column="3" CodePage="UInt32LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding LittleEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="2" Grid.Column="4" CodePage="UInt64LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding LittleEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+
+		<Label Grid.Row="3" Grid.Column="0" Content="SignedLE:" Padding="3" Visibility="{Binding LittleEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
+		<controls:ViewValue Grid.Row="3" Grid.Column="1" CodePage="Int8" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding LittleEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="3" Grid.Column="2" CodePage="Int16LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding LittleEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="3" Grid.Column="3" CodePage="Int32LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding LittleEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="3" Grid.Column="4" CodePage="Int64LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding LittleEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+
+		<Label Grid.Row="4" Grid.Column="0" Content="UnsignedBE:" Padding="3" Visibility="{Binding BigEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
+		<controls:ViewValue Grid.Row="4" Grid.Column="1" CodePage="UInt8" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding BigEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="4" Grid.Column="2" CodePage="UInt16BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding BigEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="4" Grid.Column="3" CodePage="UInt32BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding BigEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="4" Grid.Column="4" CodePage="UInt64BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding BigEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+
+		<Label Grid.Row="5" Grid.Column="0" Content="SignedBE:" Padding="3" Visibility="{Binding BigEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
+		<controls:ViewValue Grid.Row="5" Grid.Column="1" CodePage="Int8" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding BigEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="5" Grid.Column="2" CodePage="Int16BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding BigEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="5" Grid.Column="3" CodePage="Int32BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding BigEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="5" Grid.Column="4" CodePage="Int64BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding BigEndian, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+
+		<Label Grid.Row="6" Grid.Column="0" Content="Floats:" Padding="3" Visibility="{Binding Floats, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
+		<controls:ViewValue Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" CodePage="Single" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding Floats, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+		<controls:ViewValue Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" CodePage="Double" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}" Visibility="{Binding Floats, ElementName=self, Converter={converters:BoolToVisibleConverter}}" HorizontalAlignment="Right"/>
+
+		<Label Grid.Row="7" Grid.Column="0" Content="Strings:" Padding="3"/>
+		<ItemsControl Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="5" ItemsSource="{Binding Strings, ElementName=self}">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal">
+						<Label Width="100" Content="{Binding}"/>
+						<controls:ViewValue CodePage="{Binding}" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" FindValue="{Binding FindValue, ElementName=self}"/>
+					</StackPanel>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</Grid>
+</UserControl>

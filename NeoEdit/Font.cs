@@ -62,9 +62,9 @@ namespace NeoEdit
 			var mismatch = Enumerable.Range(0, supported.Length).Where(index => supported[index] != supported2[index]).ToList();
 		}
 
-		static unsafe string GetShowSpecialText(string str)
+		public static unsafe string RemoveSpecialChars(string str)
 		{
-			if ((supported == null) || (ShowSpecialChars) || (str.Length == 0))
+			if ((supported == null) || (string.IsNullOrEmpty(str)))
 				return str;
 
 			var bytes = Encoding.UTF32.GetBytes(str);
@@ -79,6 +79,11 @@ namespace NeoEdit
 			return Encoding.UTF32.GetString(bytes);
 		}
 
-		public static FormattedText GetText(string str) => new FormattedText(GetShowSpecialText(str), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, Typeface, FontSize, Brushes.Black);
+		public static FormattedText GetText(string str)
+		{
+			if (!ShowSpecialChars)
+				str = RemoveSpecialChars(str);
+			return new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, Typeface, FontSize, Brushes.Black);
+		}
 	}
 }

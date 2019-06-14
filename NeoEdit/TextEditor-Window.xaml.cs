@@ -6,5 +6,7 @@
 		{
 			ReplaceSelections((TabsParent.GetIndex(this, activeOnly) + 1).ToString());
 		}
+
+		void Command_Window_ViewValues(bool? multiStatus) => ViewValues = multiStatus != true;
 	}
 }

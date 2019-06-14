@@ -2,6 +2,7 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Controls"
+	xmlns:converters="clr-namespace:NeoEdit.Converters"
 	Focusable="True" FocusVisualStyle="{x:Null}" Background="White">
 
 	<Grid>
@@ -18,6 +19,7 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="5"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="20"/>
 		</Grid.RowDefinitions>
 
@@ -31,7 +33,9 @@
 
 		<Rectangle Grid.Row="3" Grid.Column="5" Fill="LightGray" Focusable="False"/>
 
-		<controls:RenderCanvas x:Name="statusBar" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Background="LightGray" ClipToBounds="True" Focusable="False"/>
+		<controls:ViewValues Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Data="{Binding ViewValuesData, ElementName=self}" HasSel="{Binding ViewValuesHasSel, ElementName=self}" FindValue="{Binding ViewValuesFindValue, ElementName=self}" Visibility="{Binding ViewValues, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
+
+		<controls:RenderCanvas x:Name="statusBar" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="6" Background="LightGray" ClipToBounds="True" Focusable="False"/>
 	</Grid>
 
 </UserControl>

@@ -1008,6 +1008,8 @@
 			<MenuItem Header="S_how Special" IsCheckable="True" IsChecked="{Binding Path=(local:Font.ShowSpecialChars), Mode=TwoWay}"/>
 		</MenuItem>
 		<Separator/>
+		<controls:MultiMenuItem Header="View _Values" Objects="{Binding Parent.Items, ElementName=self}" Property="ViewValues" MultiValue="{StaticResource True}" CommandEnum="Window_ViewValues"/>
+		<Separator/>
 		<MenuItem Header="_Select">
 			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Select_TabsWithSelections"/>
 			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Select_TabsWithoutSelections"/>

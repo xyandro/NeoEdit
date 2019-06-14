@@ -212,6 +212,21 @@
     <Compile Include="Controls\PropertyChangeNotifier.cs" />
     <Compile Include="Controls\RenderCanvas.cs" />
     <Compile Include="Controls\UIHelper.cs" />
+    <Page Include="Controls\ViewValue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\ViewValue.xaml.cs">
+      <DependentUpon>ViewValue.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Controls\ViewValues.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\ViewValues.xaml.cs">
+      <DependentUpon>ViewValues.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\BoolToVisibleConverter.cs" />
     <Compile Include="Converters\HexConverter.cs" />
     <Compile Include="Converters\NEExpressionConverter.cs" />
     <Compile Include="Converters\NonEmptyConverter.cs" />
@@ -904,6 +919,13 @@
     </Page>
     <Compile Include="Dialogs\TextWidthDialog.xaml.cs">
       <DependentUpon>TextWidthDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\ViewValuesStringsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\ViewValuesStringsDialog.xaml.cs">
+      <DependentUpon>ViewValuesStringsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\WindowActiveTabsDialog.cs" />
     <Page Include="Dialogs\WindowCustomGridDialog.xaml">

@@ -327,6 +327,7 @@ namespace NeoEdit
 			var searcher = new Searcher(findStrs);
 			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
 			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => Data.StringMatches(searcher, selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			ViewValuesFindValue = result.Text;
 			SetSelections(ranges);
 		}
 
