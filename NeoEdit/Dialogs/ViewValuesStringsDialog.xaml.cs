@@ -45,26 +45,15 @@ namespace NeoEdit.Dialogs
 				checkBox.IsChecked = defaultCodePages.Contains(checkBox.CodePage);
 		}
 
-		List<Coder.CodePage> result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new List<Coder.CodePage>();
-			foreach (var checkBox in EncodingCheckBoxes)
-				if (checkBox.IsChecked == true)
-					result.Add(checkBox.CodePage);
-
-			if (result.Count == 0)
-				return;
-
 			DialogResult = true;
 		}
 
 		public static List<Coder.CodePage> Run(Window parent, List<Coder.CodePage> initialCodePages)
 		{
 			var find = new ViewValuesStringsDialog(initialCodePages) { Owner = parent };
-			if (!find.ShowDialog())
-				return null;
-			return find.result;
+			return find.ShowDialog() ? find.EncodingCheckBoxes.Where(x => x.IsChecked == true).Select(x => x.CodePage).ToList() : null;
 		}
 
 		void SelectAllNone(object sender, RoutedEventArgs e)

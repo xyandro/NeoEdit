@@ -2579,5 +2579,12 @@ namespace NeoEdit
 
 			return regions;
 		}
+
+		public void UpdateViewValue(byte[] value, int? size)
+		{
+			var sels = Selections.Select(range => Range.FromIndex(range.Start, size ?? range.Length)).ToList();
+			var values = Enumerable.Repeat(Coder.BytesToString(value, CodePage), sels.Count).ToList();
+			Replace(sels, values);
+		}
 	}
 }

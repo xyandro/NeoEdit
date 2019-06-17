@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using NeoEdit.Dialogs;
 using NeoEdit.Transform;
 
 namespace NeoEdit.Controls
@@ -43,6 +46,34 @@ namespace NeoEdit.Controls
 			}
 
 			return Coder.TryBytesToString(data as byte[], CodePage);
+		}
+
+		void OnClick(object sender, MouseButtonEventArgs e)
+		{
+			if ((Coder.IsStr(CodePage)) && (!HasSel))
+				return;
+
+			var value = GetValue();
+			if (value == null)
+				return;
+
+			byte[] newBytes;
+			while (true)
+			{
+				value = ViewValuesEditValueDialog.Run(UIHelper.FindParent<Window>(this), value);
+				if (value == null)
+					return;
+
+				newBytes = Coder.TryStringToBytes(value, CodePage);
+				if (newBytes != null)
+					break;
+			}
+
+			int? size = null;
+			if (!Coder.IsStr(CodePage))
+				size = Coder.BytesRequired(CodePage);
+
+			UIHelper.FindParent<TextEditor>(this).UpdateViewValue(newBytes, size);
 		}
 	}
 
