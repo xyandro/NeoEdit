@@ -19,6 +19,7 @@ namespace NeoEdit
 		void Command_File_New_FromClipboards()
 		{
 			var index = 0;
+			var active = new List<TextEditor>();
 			foreach (var clipboard in NEClipboard.Current)
 			{
 				++index;
@@ -33,9 +34,11 @@ namespace NeoEdit
 					sels.Add(new Range(sb.Length, start));
 					sb.Append(ending);
 				}
-				var te = Add(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+				var te = Add(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false, canReplace: index == 1);
+				active.Add(te);
 				te.SetSelections(sels);
 			}
+			active.ForEach(te => te.Active = true);
 		}
 
 		void Command_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => Add(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));

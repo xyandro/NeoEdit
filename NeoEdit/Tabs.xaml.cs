@@ -432,9 +432,9 @@ namespace NeoEdit
 			topMostTimer.Start();
 		}
 
-		public void Add(TextEditor item, int? index = null)
+		public void Add(TextEditor item, int? index = null, bool canReplace = true)
 		{
-			var replace = (!index.HasValue) && (!item.Empty()) && (TopMost != null) && (TopMost.Empty()) ? TopMost : default(TextEditor);
+			var replace = (canReplace) && (!index.HasValue) && (!item.Empty()) && (TopMost != null) && (TopMost.Empty()) ? TopMost : default(TextEditor);
 			if (replace != null)
 			{
 				replace.Closed();
@@ -445,10 +445,10 @@ namespace NeoEdit
 			TopMost = item;
 		}
 
-		public TextEditor Add(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null, int? index = null)
+		public TextEditor Add(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null, int? index = null, bool canReplace = true)
 		{
 			var textEditor = new TextEditor(fileName, displayName, bytes, codePage, contentType, modified, line, column, shutdownData);
-			Add(textEditor, index);
+			Add(textEditor, index, canReplace);
 			return textEditor;
 		}
 
