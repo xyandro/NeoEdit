@@ -1,10 +1,9 @@
 grammar CSV;
 
-root : (row CR? LF)* row EOF ;
+root : (row EOL)* row EOF ;
 row  : cell (SPLIT cell)* ;
 cell : STRING? ;
 
 SPLIT  : ',' ;
-CR     : '\r' ;
-LF     : '\n' ;
-STRING : ('"' ('""'|~'"')* '"' | ~[,\n\r"]) ~[,\n\r]* ;
+EOL    : [\r\n\u0085\u2028\u2029]+ ;
+STRING : ('"' ('""'|~'"')* '"' | ~[,\r\n\u0085\u2028\u2029"]) ~[,\r\n\u0085\u2028\u2029]* ;
