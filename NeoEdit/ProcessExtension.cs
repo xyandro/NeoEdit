@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public static class ProcessExtension
 	{

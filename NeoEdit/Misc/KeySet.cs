@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
-namespace NeoEdit.Misc
+namespace NeoEdit.Program.Misc
 {
 	public class KeySet : List<Tuple<ModifierKeys, Key, Action>>
 	{

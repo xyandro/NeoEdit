@@ -6,10 +6,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using NeoEdit;
-using NeoEdit.Controls;
+using NeoEdit.Program;
+using NeoEdit.Program.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class TableTextToTableDialog
 	{

@@ -10,15 +10,15 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using NeoEdit.Controls;
-using NeoEdit.Converters;
-using NeoEdit.Dialogs;
-using NeoEdit.Misc;
-using NeoEdit.NEClipboards;
-using NeoEdit.Parsing;
-using NeoEdit.Transform;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Converters;
+using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Misc;
+using NeoEdit.Program.NEClipboards;
+using NeoEdit.Program.Parsing;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class Tabs
 	{

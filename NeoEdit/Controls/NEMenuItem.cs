@@ -4,10 +4,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NeoEdit;
-using NeoEdit.Parsing;
+using NeoEdit.Program;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Program.Controls
 {
 	public class NEMenuItem : MenuItem
 	{

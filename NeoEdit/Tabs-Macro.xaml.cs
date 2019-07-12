@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NeoEdit.Dialogs;
-using NeoEdit.Expressions;
-using NeoEdit.NEClipboards;
+using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Expressions;
+using NeoEdit.Program.NEClipboards;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class Tabs
 	{

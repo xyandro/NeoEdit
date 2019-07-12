@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	static class YouTubeDL
 	{

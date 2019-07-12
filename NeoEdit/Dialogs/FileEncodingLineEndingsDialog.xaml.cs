@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using NeoEdit.Controls;
+using NeoEdit.Program.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class FileEncodingLineEndingsDialog
 	{

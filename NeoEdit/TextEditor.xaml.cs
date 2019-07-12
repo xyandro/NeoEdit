@@ -14,16 +14,16 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using NeoEdit.Controls;
-using NeoEdit.Converters;
-using NeoEdit.Dialogs;
-using NeoEdit.Expressions;
-using NeoEdit.Highlighting;
-using NeoEdit.Misc;
-using NeoEdit.Parsing;
-using NeoEdit.Transform;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Converters;
+using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Highlighting;
+using NeoEdit.Program.Misc;
+using NeoEdit.Program.Parsing;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{

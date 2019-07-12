@@ -1,6 +1,6 @@
-﻿using NeoEdit.Controls;
+﻿using NeoEdit.Program.Controls;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class NEMenu
 	{

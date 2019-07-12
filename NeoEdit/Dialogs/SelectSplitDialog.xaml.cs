@@ -5,10 +5,10 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.Controls;
-using NeoEdit.Expressions;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Expressions;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class SelectSplitDialog
 	{

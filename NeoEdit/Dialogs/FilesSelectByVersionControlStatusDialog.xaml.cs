@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using NeoEdit.Controls;
-using NeoEdit.Transform;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesSelectByVersionControlStatusDialog
 	{

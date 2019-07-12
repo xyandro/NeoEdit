@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
-using NeoEdit;
+using NeoEdit.Program;
 
-namespace NeoEdit.Highlighting
+namespace NeoEdit.Program.Highlighting
 {
 	public class Highlight
 	{

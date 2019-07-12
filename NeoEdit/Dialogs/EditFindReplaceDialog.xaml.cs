@@ -1,9 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit;
-using NeoEdit.Controls;
+using NeoEdit.Program;
+using NeoEdit.Program.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class EditFindReplaceDialog
 	{

@@ -8,10 +8,10 @@ using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using NeoEdit;
-using NeoEdit.Expressions.Parser;
+using NeoEdit.Program;
+using NeoEdit.Program.Expressions.Parser;
 
-namespace NeoEdit.Expressions
+namespace NeoEdit.Program.Expressions
 {
 	class ExpressionEvaluator : ExpressionParserBaseVisitor<object>
 	{

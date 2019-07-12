@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LibGit2Sharp;
-using NeoEdit;
+using NeoEdit.Program;
 using SharpSvn;
 
-namespace NeoEdit.Transform
+namespace NeoEdit.Program.Transform
 {
 	public class Versioner
 	{

@@ -4,11 +4,11 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
-using NeoEdit.Controls;
-using NeoEdit.Expressions;
-using NeoEdit.Transform;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class ImageCropDialog
 	{

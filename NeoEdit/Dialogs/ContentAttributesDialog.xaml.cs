@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Content;
-using NeoEdit.Controls;
-using NeoEdit.Parsing;
+using NeoEdit.Program.Content;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class ContentAttributesDialog
 	{

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.CommandLine
+namespace NeoEdit.Program.CommandLine
 {
 	public class CommandLineParams
 	{

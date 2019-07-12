@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public class UndoRedo
 	{

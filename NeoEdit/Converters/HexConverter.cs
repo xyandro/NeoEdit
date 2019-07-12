@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using NeoEdit.Transform;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit.Converters
+namespace NeoEdit.Program.Converters
 {
 	public class HexConverter : IValueConverter
 	{

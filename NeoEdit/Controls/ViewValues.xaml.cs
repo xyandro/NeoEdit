@@ -2,10 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Dialogs;
-using NeoEdit.Transform;
+using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Program.Controls
 {
 	partial class ViewValues
 	{

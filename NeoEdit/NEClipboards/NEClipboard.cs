@@ -8,9 +8,9 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using NeoEdit;
+using NeoEdit.Program;
 
-namespace NeoEdit.NEClipboards
+namespace NeoEdit.Program.NEClipboards
 {
 	public class NEClipboard : IEnumerable<NEClipboardList>
 	{

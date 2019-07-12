@@ -6,11 +6,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.Win32;
-using NeoEdit.Dialogs;
-using NeoEdit.NEClipboards;
-using NeoEdit.Transform;
+using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.NEClipboards;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class Tabs
 	{

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Parsing;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public static class MoreLinq
 	{

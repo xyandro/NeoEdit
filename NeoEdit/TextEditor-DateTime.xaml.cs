@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using NeoEdit.Dialogs;
+using NeoEdit.Program.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{

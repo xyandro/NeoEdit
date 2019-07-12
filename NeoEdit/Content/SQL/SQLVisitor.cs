@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using NeoEdit;
-using NeoEdit.Content.SQL.Parser;
-using NeoEdit.Parsing;
+using NeoEdit.Program;
+using NeoEdit.Program.Content.SQL.Parser;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.Content.SQL
+namespace NeoEdit.Program.Content.SQL
 {
 	class SQLVisitor : SQLParserBaseVisitor<ParserNode>
 	{

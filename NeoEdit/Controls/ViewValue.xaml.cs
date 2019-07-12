@@ -6,10 +6,10 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
-using NeoEdit.Dialogs;
-using NeoEdit.Transform;
+using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Program.Controls
 {
 	partial class ViewValue
 	{

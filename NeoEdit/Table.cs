@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using NeoEdit.Transform;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public class Table
 	{

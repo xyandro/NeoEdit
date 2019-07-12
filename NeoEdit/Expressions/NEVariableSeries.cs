@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit.Expressions
+namespace NeoEdit.Program.Expressions
 {
 	internal class NEVariableSeries : NEVariable
 	{

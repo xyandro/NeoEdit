@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public class GIFWriter : IDisposable
 	{

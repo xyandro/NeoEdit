@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit.Expressions
+namespace NeoEdit.Program.Expressions
 {
 	public class NEVariableInitializer
 	{

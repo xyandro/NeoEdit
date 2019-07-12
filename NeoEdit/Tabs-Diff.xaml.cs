@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class Tabs
 	{

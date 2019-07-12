@@ -1,4 +1,4 @@
-﻿namespace NeoEdit
+﻿namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{

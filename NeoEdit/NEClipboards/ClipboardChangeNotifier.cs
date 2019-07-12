@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace NeoEdit.NEClipboards
+namespace NeoEdit.Program.NEClipboards
 {
 	[DesignerCategory("Code")]
 	class ClipboardChangeNotifier : Form

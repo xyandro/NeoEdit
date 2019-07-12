@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
-using NeoEdit.Controls;
+using NeoEdit.Program.Controls;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public enum NECommand
 	{

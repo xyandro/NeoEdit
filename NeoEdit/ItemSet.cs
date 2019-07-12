@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public class ItemSet<T> : List<T>
 	{

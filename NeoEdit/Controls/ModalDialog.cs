@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Program.Controls
 {
 	public class ModalDialog : Window
 	{

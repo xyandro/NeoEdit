@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Controls;
+using NeoEdit.Program.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesSetAttributesDialog
 	{

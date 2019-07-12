@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml.Linq;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public static class Settings
 	{

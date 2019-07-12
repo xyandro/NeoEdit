@@ -1,4 +1,4 @@
-﻿namespace NeoEdit.Controls
+﻿namespace NeoEdit.Program.Controls
 {
 	public class AnswerResult
 	{

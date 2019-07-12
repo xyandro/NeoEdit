@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	[Flags]
 	public enum TimestampType

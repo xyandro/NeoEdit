@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit.Parsing
+namespace NeoEdit.Program.Parsing
 {
 	public class ParserException : Exception
 	{

@@ -5,10 +5,10 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
-using NeoEdit;
-using NeoEdit.Parsing;
+using NeoEdit.Program;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.Transform
+namespace NeoEdit.Program.Transform
 {
 	public static class Coder
 	{

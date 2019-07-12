@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public class RangeList : IEnumerable<Range>
 	{

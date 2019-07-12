@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
-using NeoEdit;
+using NeoEdit.Program;
 
-namespace NeoEdit.Expressions
+namespace NeoEdit.Program.Expressions
 {
 	class NumericValue : IComparable
 	{

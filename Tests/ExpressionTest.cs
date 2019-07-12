@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NeoEdit;
-using NeoEdit.Expressions;
+using NeoEdit.Program;
+using NeoEdit.Program.Expressions;
 
 namespace NeoEdit.Tests
 {

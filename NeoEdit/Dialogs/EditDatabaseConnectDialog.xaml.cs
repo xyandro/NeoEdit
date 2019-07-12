@@ -8,12 +8,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit;
-using NeoEdit.Controls;
-using NeoEdit.Converters;
-using NeoEdit.Parsing;
+using NeoEdit.Program;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Converters;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class EditDatabaseConnectDialog
 	{

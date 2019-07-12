@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Threading;
-using NeoEdit;
+using NeoEdit.Program;
 
-namespace NeoEdit.Misc
+namespace NeoEdit.Program.Misc
 {
 	public class RunOnceTimer
 	{

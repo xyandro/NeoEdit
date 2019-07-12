@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using NeoEdit.Parsing;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	class PortScanner
 	{

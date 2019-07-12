@@ -4,11 +4,11 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using NeoEdit;
-using NeoEdit.Content.CSharp.Parser;
-using NeoEdit.Parsing;
+using NeoEdit.Program;
+using NeoEdit.Program.Content.CSharp.Parser;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.Content.CSharp
+namespace NeoEdit.Program.Content.CSharp
 {
 	class CSharpVisitor : CSharpParserBaseVisitor<object>
 	{

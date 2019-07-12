@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using NeoEdit.Expressions;
+using NeoEdit.Program.Expressions;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class ExpressionHelpDialog
 	{

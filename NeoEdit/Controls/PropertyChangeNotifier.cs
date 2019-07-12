@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Program.Controls
 {
 	public sealed class PropertyChangeNotifier : DependencyObject
 	{

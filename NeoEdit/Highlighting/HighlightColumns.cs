@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Windows.Media;
 
-namespace NeoEdit.Highlighting
+namespace NeoEdit.Program.Highlighting
 {
 	class HighlightColumns : Highlight
 	{

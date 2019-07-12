@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	class LoremGenerator
 	{

@@ -9,11 +9,11 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
-using NeoEdit;
-using NeoEdit.Controls;
-using NeoEdit.Transform;
+using NeoEdit.Program;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class ImageGrabColorDialog
 	{

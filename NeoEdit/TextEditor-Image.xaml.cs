@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NeoEdit.Dialogs;
-using NeoEdit.Expressions;
-using NeoEdit.Transform;
+using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{

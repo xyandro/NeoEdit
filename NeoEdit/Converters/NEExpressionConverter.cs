@@ -6,9 +6,9 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
-using NeoEdit.Expressions;
+using NeoEdit.Program.Expressions;
 
-namespace NeoEdit.Converters
+namespace NeoEdit.Program.Converters
 {
 	public class NEExpressionConverter : MarkupExtension, IMultiValueConverter, IValueConverter
 	{

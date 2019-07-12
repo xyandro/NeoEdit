@@ -5,12 +5,12 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit;
-using NeoEdit.Controls;
-using NeoEdit.Parsing;
-using NeoEdit.Transform;
+using NeoEdit.Program;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Parsing;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class EditDataEncryptDialog
 	{

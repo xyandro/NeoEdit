@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Text;
 using System.Windows;
-using NeoEdit.Controls;
+using NeoEdit.Program.Controls;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class HelpAboutChangeLogDialog
 	{

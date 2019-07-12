@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media.Imaging;
 
-namespace NeoEdit.NEClipboards
+namespace NeoEdit.Program.NEClipboards
 {
 	public class NEClipboardList : IEnumerable<NEClipboardItem>
 	{

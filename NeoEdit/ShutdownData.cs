@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public class ShutdownData
 	{

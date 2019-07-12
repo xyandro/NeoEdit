@@ -1,7 +1,7 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
-namespace NeoEdit.Parsing
+namespace NeoEdit.Program.Parsing
 {
 	public class ParserBase
 	{

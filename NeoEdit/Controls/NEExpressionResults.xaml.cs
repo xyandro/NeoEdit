@@ -6,12 +6,12 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using NeoEdit;
-using NeoEdit.Converters;
-using NeoEdit.Expressions;
-using NeoEdit.Parsing;
+using NeoEdit.Program;
+using NeoEdit.Program.Converters;
+using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Program.Controls
 {
 	partial class NEExpressionResults
 	{

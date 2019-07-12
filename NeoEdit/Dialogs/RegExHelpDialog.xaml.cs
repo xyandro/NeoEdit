@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class RegExHelpDialog
 	{

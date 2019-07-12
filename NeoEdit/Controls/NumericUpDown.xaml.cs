@@ -5,7 +5,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
 
-namespace NeoEdit.Controls
+namespace NeoEdit.Program.Controls
 {
 	partial class NumericUpDown
 	{

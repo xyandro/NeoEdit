@@ -1,8 +1,8 @@
 ﻿using Antlr4.Runtime;
-using NeoEdit.Content.TCSV.Parser;
-using NeoEdit.Parsing;
+using NeoEdit.Program.Content.TCSV.Parser;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.Content.TCSV
+namespace NeoEdit.Program.Content.TCSV
 {
 	class CSVVisitor : CSVBaseVisitor<ParserNode>
 	{

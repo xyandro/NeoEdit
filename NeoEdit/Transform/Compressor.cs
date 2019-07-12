@@ -2,7 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace NeoEdit.Transform
+namespace NeoEdit.Program.Transform
 {
 	public static class Compressor
 	{

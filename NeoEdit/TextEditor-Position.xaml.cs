@@ -4,9 +4,9 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NeoEdit.Dialogs;
+using NeoEdit.Program.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{

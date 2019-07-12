@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NeoEdit;
-using NeoEdit.Content.Balanced;
-using NeoEdit.Content.Columns;
-using NeoEdit.Content.CSharp;
-using NeoEdit.Content.ExactColumns;
-using NeoEdit.Content.HTML;
-using NeoEdit.Content.JSON;
-using NeoEdit.Content.SQL;
-using NeoEdit.Content.TCSV;
-using NeoEdit.Content.XML;
-using NeoEdit.Parsing;
+using NeoEdit.Program;
+using NeoEdit.Program.Content.Balanced;
+using NeoEdit.Program.Content.Columns;
+using NeoEdit.Program.Content.CSharp;
+using NeoEdit.Program.Content.ExactColumns;
+using NeoEdit.Program.Content.HTML;
+using NeoEdit.Program.Content.JSON;
+using NeoEdit.Program.Content.SQL;
+using NeoEdit.Program.Content.TCSV;
+using NeoEdit.Program.Content.XML;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.Content
+namespace NeoEdit.Program.Content
 {
 	static public class Parser
 	{

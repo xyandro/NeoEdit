@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Windows;
-using NeoEdit;
-using NeoEdit.Controls;
-using NeoEdit.Expressions;
-using NeoEdit.Transform;
+using NeoEdit.Program;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesCreateFromExpressionsDialog
 	{

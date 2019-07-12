@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media.Imaging;
 
-namespace NeoEdit.NEClipboards
+namespace NeoEdit.Program.NEClipboards
 {
 	public class NEClipboardItem
 	{

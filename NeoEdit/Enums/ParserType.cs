@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public enum ParserType
 	{

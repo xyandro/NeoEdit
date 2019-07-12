@@ -5,11 +5,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using NeoEdit.CommandLine;
-using NeoEdit.Controls;
-using NeoEdit.Dialogs;
+using NeoEdit.Program.CommandLine;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class App
 	{

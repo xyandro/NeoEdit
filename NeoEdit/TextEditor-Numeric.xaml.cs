@@ -5,11 +5,11 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
-using NeoEdit.Dialogs;
-using NeoEdit.Expressions;
-using NeoEdit.Transform;
+using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{

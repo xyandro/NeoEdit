@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace NeoEdit.Converters
+namespace NeoEdit.Program.Converters
 {
 	public class BoolToVisibleConverter : MarkupExtension, IValueConverter
 	{

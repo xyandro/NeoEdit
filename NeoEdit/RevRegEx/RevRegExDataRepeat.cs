@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NeoEdit;
-using NeoEdit.Parsing;
+using NeoEdit.Program;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.RevRegEx
+namespace NeoEdit.Program.RevRegEx
 {
 	class RevRegExDataRepeat : RevRegExData
 	{

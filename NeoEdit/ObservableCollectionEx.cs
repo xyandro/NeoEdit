@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public class ObservableCollectionEx<T> : IEnumerable<T>, INotifyCollectionChanged, INotifyPropertyChanged
 	{

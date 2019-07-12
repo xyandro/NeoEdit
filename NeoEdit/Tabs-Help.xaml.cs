@@ -5,9 +5,9 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-using NeoEdit.Dialogs;
+using NeoEdit.Program.Dialogs;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	partial class Tabs
 	{

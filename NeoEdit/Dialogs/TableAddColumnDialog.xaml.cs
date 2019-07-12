@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
-using NeoEdit.Controls;
-using NeoEdit.Expressions;
+using NeoEdit.Program.Controls;
+using NeoEdit.Program.Expressions;
 
-namespace NeoEdit.Dialogs
+namespace NeoEdit.Program.Dialogs
 {
 	partial class TableAddColumnDialog
 	{

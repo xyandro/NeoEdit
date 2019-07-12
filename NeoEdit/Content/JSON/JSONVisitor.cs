@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using NeoEdit;
-using NeoEdit.Content.JSON.Parser;
-using NeoEdit.Parsing;
+using NeoEdit.Program;
+using NeoEdit.Program.Content.JSON.Parser;
+using NeoEdit.Program.Parsing;
 
-namespace NeoEdit.Content.JSON
+namespace NeoEdit.Program.Content.JSON
 {
 	class JSONVisitor : JSONBaseVisitor<ParserNode>
 	{

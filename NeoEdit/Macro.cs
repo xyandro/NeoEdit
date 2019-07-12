@@ -6,9 +6,9 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using Microsoft.Win32;
-using NeoEdit.Transform;
+using NeoEdit.Program.Transform;
 
-namespace NeoEdit
+namespace NeoEdit.Program
 {
 	public class Macro
 	{

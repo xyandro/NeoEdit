@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using NeoEdit;
+using NeoEdit.Program;
 
-namespace NeoEdit.Parsing
+namespace NeoEdit.Program.Parsing
 {
 	public class ParserNode : ParserBase
 	{
