@@ -1017,6 +1017,8 @@
 			<controls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Select_ModifiedTabs"/>
 			<controls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Select_UnmodifiedTabs"/>
 			<Separator/>
+			<controls:NEMenuItem Header="_Inactive Tabs" CommandEnum="Window_Select_InactiveTabs"/>
+			<Separator/>
 			<controls:NEMenuItem Header="Tabs With Selections To _Top" CommandEnum="Window_Select_TabsWithSelectionsToTop"/>
 		</MenuItem>
 		<MenuItem Header="_Close">

@@ -53,6 +53,15 @@ namespace NeoEdit.Program
 			active.ForEach(tab => tab.Active = true);
 		}
 
+		void Command_Window_Select_InactiveTabs()
+		{
+			var active = Items.Where(tab => !tab.Active).ToList();
+			Items.ForEach(tab => tab.Active = false);
+			if (active.Any())
+				TopMost = active.First();
+			active.ForEach(tab => tab.Active = true);
+		}
+
 		void Command_Window_Select_TabsWithSelectionsToTop()
 		{
 			var topMost = TopMost;
