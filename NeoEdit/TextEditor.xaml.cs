@@ -215,29 +215,26 @@ namespace NeoEdit.Program
 			SetupStaticKeys();
 		}
 
-		RangeList selectionsList = new RangeList(new List<Range>());
-		public RangeList Selections => selectionsList;
+		public RangeList Selections { get; private set; } = new RangeList(new List<Range>());
 		public void SetSelections(List<Range> selections, bool deOverlap = true)
 		{
-			selectionsList = new RangeList(selections, deOverlap);
+			Selections = new RangeList(selections, deOverlap);
 			EnsureVisible();
 			canvasRenderTimer.Start();
 			TabsParent?.QueueUpdateCounts();
 		}
 
-		RangeList searchesList = new RangeList(new List<Range>());
-		public RangeList Searches => searchesList;
+		public RangeList Searches { get; private set; } = new RangeList(new List<Range>());
 		public void SetSearches(List<Range> searches)
 		{
-			searchesList = new RangeList(searches.Where(range => range.HasSelection).ToList());
+			Searches = new RangeList(searches.Where(range => range.HasSelection).ToList());
 			canvasRenderTimer.Start();
 		}
 
-		RangeList bookmarksList = new RangeList(new List<Range>());
-		public RangeList Bookmarks => bookmarksList;
+		public RangeList Bookmarks { get; private set; } = new RangeList(new List<Range>());
 		public void SetBookmarks(List<Range> bookmarks)
 		{
-			bookmarksList = new RangeList(bookmarks.Select(range => MoveCursor(range, 0, 0, false, lineRel: true, indexRel: false)).ToList());
+			Bookmarks = new RangeList(bookmarks.Select(range => MoveCursor(range, 0, 0, false, lineRel: true, indexRel: false)).ToList());
 			bookmarkRenderTimer.Start();
 		}
 
