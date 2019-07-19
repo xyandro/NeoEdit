@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
@@ -212,7 +210,6 @@ namespace NeoEdit.Program
 			UIHelper<TextEditor>.AddCallback(a => a.HighlightSyntax, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
 			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
-			SetupStaticKeys();
 		}
 
 		public RangeList Selections { get; private set; } = new RangeList(new List<Range>());
@@ -263,7 +260,6 @@ namespace NeoEdit.Program
 		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null)
 		{
 			fileName = fileName?.Trim('"');
-			SetupLocalKeys();
 			this.shutdownData = shutdownData;
 
 			InitializeComponent();
@@ -460,10 +456,8 @@ namespace NeoEdit.Program
 		public void Closed()
 		{
 			DiffTarget = null;
-			globalKeysChanged -= SetupLocalOrGlobalKeys;
 			Font.FontSizeChanged -= FontSizeChanged;
 			ClearWatcher();
-			RemoveKeysAndValuesCallback();
 			shutdownData?.OnShutdown();
 		}
 
@@ -675,11 +669,13 @@ namespace NeoEdit.Program
 			var initializePosEnds = new NEVariableInitializer(() => posEnds = Selections.Select(range => range.End).ToList());
 			results.Add(NEVariable.List("posend", "Selection position end", () => posEnds, initializePosEnds));
 
-			for (var ctr = 0; ctr < KeysAndValues.Count; ++ctr)
+			for (var ctr = 0; ctr < 10; ++ctr)
 			{
 				var name = ctr == 0 ? "k" : $"v{ctr}";
 				var desc = ctr == 0 ? "Keys" : $"Values {ctr}";
-				var values = KeysAndValues[ctr];
+				var values = TabsParent.GetKeysAndValues(this, ctr, false);
+				if (values == null)
+					continue;
 				results.Add(NEVariable.List(name, desc, () => values));
 				results.Add(NEVariable.Constant($"{name}n", $"{desc} count", () => values.Count));
 				results.Add(NEVariable.List($"{name}l", $"{desc} length", () => values.Select(str => str.Length)));
@@ -2098,7 +2094,6 @@ namespace NeoEdit.Program
 			}
 
 			sb.Add($"Regions {string.Join(" / ", Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count).OrderBy(pair => pair.Key).Select(pair => $"{pair.Value:n0}"))}");
-			sb.Add($"Keys/Values {string.Join(" / ", KeysAndValues.Select(l => $"{l.Count:n0}"))}");
 			sb.Add($"Database {DBName}");
 
 			var tf = SystemFonts.MessageFontFamily.GetTypefaces().Where(x => (x.Weight == FontWeights.Normal) && (x.Style == FontStyles.Normal)).First();
@@ -2417,85 +2412,6 @@ namespace NeoEdit.Program
 			var textEditor = TabsParent.Add(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 			textEditor.ContentType = contentType;
 			textEditor.DisplayName = name;
-		}
-
-		delegate void GlobalKeysChangedDelegate();
-
-		static GlobalKeysChangedDelegate globalKeysChanged;
-		static bool globalKeys = true;
-		public bool GlobalKeys { get { return globalKeys; } set { globalKeys = value; globalKeysChanged?.Invoke(); } }
-
-		ObservableCollection<ObservableCollection<string>> _keysAndValues;
-		public ObservableCollection<ObservableCollection<string>> KeysAndValues
-		{
-			get => _keysAndValues;
-			set
-			{
-				RemoveKeysAndValuesCallback();
-				_keysAndValues = value;
-				SetKeysAndValuesCallback();
-			}
-		}
-
-		void SetKeysAndValuesCallback()
-		{
-			if (KeysAndValues == null)
-				return;
-			KeysAndValues.CollectionChanged += KeysAndValuesChanged;
-			foreach (var coll in KeysAndValues)
-				coll.CollectionChanged += KeysAndValuesChanged;
-		}
-
-		void RemoveKeysAndValuesCallback()
-		{
-			if (KeysAndValues == null)
-				return;
-			foreach (var coll in KeysAndValues)
-				coll.CollectionChanged -= KeysAndValuesChanged;
-			KeysAndValues.CollectionChanged -= KeysAndValuesChanged;
-		}
-
-		void KeysAndValuesChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			RemoveKeysAndValuesCallback();
-			SetKeysAndValuesCallback();
-			statusBarRenderTimer.Start();
-		}
-
-		static ObservableCollection<ObservableCollection<string>> staticKeysAndValues { get; set; }
-		ObservableCollection<ObservableCollection<string>> localKeysAndValues { get; set; }
-		public Dictionary<string, int> keysHash => GlobalKeys ? staticKeysHash : localKeysHash;
-		static Dictionary<string, int> staticKeysHash = new Dictionary<string, int>();
-		Dictionary<string, int> localKeysHash = new Dictionary<string, int>();
-
-		void SetupLocalKeys()
-		{
-			localKeysAndValues = new ObservableCollection<ObservableCollection<string>>(Enumerable.Repeat(default(ObservableCollection<string>), 10));
-			for (var ctr = 0; ctr < localKeysAndValues.Count; ++ctr)
-				localKeysAndValues[ctr] = new ObservableCollection<string>();
-
-			SetupLocalOrGlobalKeys();
-			globalKeysChanged += SetupLocalOrGlobalKeys;
-		}
-
-		void SetupLocalOrGlobalKeys() => KeysAndValues = GlobalKeys ? staticKeysAndValues : localKeysAndValues;
-
-		static void SetupStaticKeys()
-		{
-			staticKeysAndValues = new ObservableCollection<ObservableCollection<string>>(Enumerable.Repeat(default(ObservableCollection<string>), 10));
-			for (var ctr = 0; ctr < staticKeysAndValues.Count; ++ctr)
-				staticKeysAndValues[ctr] = new ObservableCollection<string>();
-		}
-
-		public void CalculateKeysHash(bool caseSensitive)
-		{
-			var hash = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
-			for (var pos = 0; pos < KeysAndValues[0].Count; ++pos)
-				hash[KeysAndValues[0][pos]] = pos;
-			if (GlobalKeys)
-				staticKeysHash = hash;
-			else
-				localKeysHash = hash;
 		}
 
 		string savedBitmapText;

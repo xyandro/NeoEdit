@@ -72,6 +72,15 @@
 				<TextBlock Text="{Binding ClipboardCountText, ElementName=self}"/>
 			</StatusBarItem>
 
+			<Separator/>
+
+			<StatusBarItem>
+				<TextBlock Text="Keys/Values:"/>
+			</StatusBarItem>
+			<StatusBarItem>
+				<TextBlock Text="{Binding KeysValuesCountText, ElementName=self}"/>
+			</StatusBarItem>
+
 			<StatusBarItem>
 				<!--Sometimes the last one doesn't display-->
 				<TextBlock/>

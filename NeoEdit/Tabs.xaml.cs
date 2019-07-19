@@ -15,7 +15,6 @@ using NeoEdit.Program.Converters;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Misc;
 using NeoEdit.Program.NEClipboards;
-using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -42,6 +41,8 @@ namespace NeoEdit.Program
 		public string TotalCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public string ClipboardCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public string KeysValuesCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 
 		readonly RunOnceTimer layoutTimer, topMostTimer;
 
@@ -113,6 +114,7 @@ namespace NeoEdit.Program
 			InactiveCountText = $"{plural(Items.Where(item => !item.Active).Count(), "file")}, {plural(Items.Where(item => !item.Active).Sum(item => item.NumSelections), "selection")}";
 			TotalCountText = $"{plural(Items.Count, "file")}, {plural(Items.Sum(item => item.NumSelections), "selection")}";
 			ClipboardCountText = $"{plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}";
+			KeysValuesCountText = $"{string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Count):n0}"))}";
 		}
 
 		Dictionary<TextEditor, List<string>> clipboard;
@@ -139,6 +141,102 @@ namespace NeoEdit.Program
 			}
 
 			return clipboard[textEditor];
+		}
+
+		static List<List<List<string>>> keysAndValues = Enumerable.Range(0, 10).Select(x => new List<List<string>>()).ToList();
+		static List<Dictionary<string, int>> keysHash = new List<Dictionary<string, int>>();
+		List<Dictionary<TextEditor, List<string>>> keysAndValuesLookup = keysAndValues.Select(x => default(Dictionary<TextEditor, List<string>>)).ToList();
+		Dictionary<TextEditor, Dictionary<string, int>> keysHashLookup;
+		List<List<List<string>>> newKeysAndValues;
+		bool newKeysCaseSensitive;
+
+		void SetupNewKeys()
+		{
+			if (newKeysAndValues == null)
+				return;
+
+			for (var kvIndex = 0; kvIndex < keysAndValues.Count; ++kvIndex)
+				if (newKeysAndValues[kvIndex] != null)
+				{
+					keysAndValues[kvIndex] = newKeysAndValues[kvIndex];
+					if (kvIndex == 0)
+					{
+						keysHash.Clear();
+						for (var list = 0; list < keysAndValues[0].Count; ++list)
+						{
+							var hash = new Dictionary<string, int>(newKeysCaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
+							for (var index = 0; index < keysAndValues[0][list].Count; ++index)
+								hash[keysAndValues[0][list][index]] = index;
+							keysHash.Add(hash);
+						}
+					}
+				}
+
+			UpdateStatusBarText();
+		}
+
+		public void SetKeysAndValues(int kvIndex, List<string> values, bool? caseSensitive = null)
+		{
+			if (kvIndex == 0)
+			{
+				if (caseSensitive.HasValue)
+					newKeysCaseSensitive = caseSensitive.Value;
+				if (values.Distinct(str => newKeysCaseSensitive ? str : str.ToLowerInvariant()).Count() != values.Count)
+					throw new ArgumentException("Cannot have duplicate keys");
+			}
+
+			newKeysAndValues = newKeysAndValues ?? keysAndValues.Select(x => default(List<List<string>>)).ToList();
+			newKeysAndValues[kvIndex] = newKeysAndValues[kvIndex] ?? new List<List<string>>();
+			newKeysAndValues[kvIndex].Add(values);
+		}
+
+		public bool SetupKeysAndValuesLookup(int kvIndex, bool throwOnException = true)
+		{
+			if (keysAndValuesLookup[kvIndex] == null)
+			{
+				if (keysAndValues[kvIndex].Count == 1)
+				{
+					keysAndValuesLookup[kvIndex] = Items.ToDictionary(item => item, item => keysAndValues[kvIndex][0]);
+					if (kvIndex == 0)
+						keysHashLookup = Items.ToDictionary(item => item, item => keysHash[0]);
+				}
+				else
+				{
+					var activeTabs = Items.Where(item => item.Active).ToList();
+					if (keysAndValues[kvIndex].Count != activeTabs.Count)
+					{
+						if (throwOnException)
+							throw new Exception("Tab count doesn't match keys count");
+						return false;
+					}
+					keysAndValuesLookup[kvIndex] = activeTabs.Select((item, index) => new { item, index }).ToDictionary(obj => obj.item, obj => keysAndValues[kvIndex][obj.index]);
+					if (kvIndex == 0)
+						keysHashLookup = activeTabs.Select((item, index) => new { item, index }).ToDictionary(obj => obj.item, obj => keysHash[obj.index]);
+				}
+			}
+
+			return true;
+		}
+
+		public List<string> GetKeysAndValues(TextEditor textEditor, int index, bool throwOnException = true)
+		{
+			if (!SetupKeysAndValuesLookup(index, throwOnException))
+				return null;
+			if (!keysAndValuesLookup[index].ContainsKey(textEditor))
+			{
+				if (!throwOnException)
+					return null;
+				throw new Exception("Keys/values not available");
+			}
+			return keysAndValuesLookup[index][textEditor];
+		}
+
+		public Dictionary<string, int> GetKeysHash(TextEditor textEditor)
+		{
+			SetupKeysAndValuesLookup(0);
+			if (!keysHashLookup.ContainsKey(textEditor))
+				throw new Exception("Keys hash not available");
+			return keysHashLookup[textEditor];
 		}
 
 		void OnDrop(object sender, DragEventArgs e)
@@ -318,11 +416,17 @@ namespace NeoEdit.Program
 				}
 				if (newClipboard != null)
 					NEClipboard.Current = newClipboard;
+				SetupNewKeys();
 			}
 			finally
 			{
 				clipboard = null;
 				newClipboard = null;
+
+				for (var ctr = 0; ctr < keysAndValues.Count; ++ctr)
+					keysAndValuesLookup[ctr] = null;
+				keysHashLookup = null;
+				newKeysAndValues = null;
 			}
 
 			return true;
