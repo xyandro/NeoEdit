@@ -143,15 +143,15 @@ namespace NeoEdit.Program
 
 			if (maxLoops == 0)
 			{
-				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.All))
 					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "Unable to find value. Use best match?",
-						Options = MessageOptions.YesNoYesAll,
+						Options = MessageOptions.YesNoAll,
 						DefaultCancel = MessageOptions.No,
 					}.Show();
-				if ((answer.Answer != MessageOptions.Yes) && (answer.Answer != MessageOptions.YesToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.Yes))
 					throw new Exception("Unable to find value");
 			}
 

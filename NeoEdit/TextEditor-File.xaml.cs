@@ -81,16 +81,16 @@ namespace NeoEdit.Program
 
 			if (File.Exists(newFileName))
 			{
-				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.All))
 					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
-						Options = MessageOptions.YesNoYesAllNoAllCancel,
+						Options = MessageOptions.YesNoAllCancel,
 						DefaultCancel = MessageOptions.Cancel,
 					}.Show();
 
-				if ((answer.Answer != MessageOptions.Yes) && (answer.Answer != MessageOptions.YesToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -138,16 +138,16 @@ namespace NeoEdit.Program
 
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
-				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.All))
 					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
-						Options = MessageOptions.YesNoYesAllNoAllCancel,
+						Options = MessageOptions.YesNoAllCancel,
 						DefaultCancel = MessageOptions.Cancel,
 					}.Show();
 
-				if ((answer.Answer != MessageOptions.Yes) && (answer.Answer != MessageOptions.YesToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -165,17 +165,17 @@ namespace NeoEdit.Program
 			if (FileName == null)
 				return;
 
-			if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
+			if (!answer.Answer.HasFlag(MessageOptions.All))
 				answer.Answer = new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "Are you sure you want to delete this file?",
-					Options = MessageOptions.YesNoYesAllNoAll,
+					Options = MessageOptions.YesNoAll,
 					DefaultAccept = MessageOptions.No,
-					DefaultCancel = MessageOptions.NoToAll,
+					DefaultCancel = MessageOptions.No,
 				}.Show();
 
-			if ((answer.Answer != MessageOptions.Yes) && (answer.Answer != MessageOptions.YesToAll))
+			if (!answer.Answer.HasFlag(MessageOptions.Yes))
 				return;
 
 			File.Delete(FileName);
@@ -216,17 +216,17 @@ namespace NeoEdit.Program
 
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
-				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.All))
 					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "This file has been updated on disk. Reload?",
-						Options = MessageOptions.YesNoYesAllNoAll,
+						Options = MessageOptions.YesNoAll,
 						DefaultAccept = MessageOptions.Yes,
-						DefaultCancel = MessageOptions.NoToAll,
+						DefaultCancel = MessageOptions.No,
 					}.Show();
 
-				if ((answer.Answer != MessageOptions.Yes) && (answer.Answer != MessageOptions.YesToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.Yes))
 					return;
 
 				Command_File_Revert(answer);
@@ -239,16 +239,16 @@ namespace NeoEdit.Program
 		{
 			if (IsModified)
 			{
-				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.All))
 					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes. Are you sure you want to reload?",
-						Options = MessageOptions.YesNoYesAllNoAllCancel,
+						Options = MessageOptions.YesNoAllCancel,
 						DefaultAccept = MessageOptions.No,
 						DefaultCancel = MessageOptions.No,
 					}.Show();
-				if ((answer.Answer != MessageOptions.Yes) && (answer.Answer != MessageOptions.YesToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -302,14 +302,14 @@ namespace NeoEdit.Program
 			if (files.Count == 0)
 				return;
 
-			if ((files.Count > 5) && (new Message(WindowParent)
+			if ((files.Count > 5) && (!new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to insert these {files.Count} files?",
 				Options = MessageOptions.YesNoCancel,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.Cancel,
-			}.Show() != MessageOptions.Yes))
+			}.Show().HasFlag(MessageOptions.Yes)))
 				return;
 
 			InsertFiles(files);
@@ -333,16 +333,16 @@ namespace NeoEdit.Program
 		{
 			if (IsModified)
 			{
-				if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.All))
 					answer.Answer = new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes. Are you sure you want to reload?",
-						Options = MessageOptions.YesNoYesAllNoAll,
+						Options = MessageOptions.YesNoAll,
 						DefaultAccept = MessageOptions.Yes,
-						DefaultCancel = MessageOptions.NoToAll,
+						DefaultCancel = MessageOptions.No,
 					}.Show();
-				if ((answer.Answer != MessageOptions.Yes) && (answer.Answer != MessageOptions.YesToAll))
+				if (!answer.Answer.HasFlag(MessageOptions.Yes))
 					return;
 			}
 

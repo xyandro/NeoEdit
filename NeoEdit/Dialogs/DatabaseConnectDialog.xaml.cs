@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
-using NeoEdit.Program;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Transform;
 
@@ -65,14 +64,14 @@ namespace NeoEdit.Program.Dialogs
 			if (DBConnectInfo == null)
 				return;
 
-			if (new Message(this)
+			if (!new Message(this)
 			{
 				Title = "Confirm",
 				Text = "Delete this entry?",
 				Options = MessageOptions.YesNoCancel,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.Cancel,
-			}.Show() != MessageOptions.Yes)
+			}.Show().HasFlag(MessageOptions.Yes))
 				return;
 			DBConnectInfos.Remove(DBConnectInfo);
 		}
@@ -109,8 +108,6 @@ namespace NeoEdit.Program.Dialogs
 				Title = "Information",
 				Text = DBConnectInfo.Test() ?? "Connection successful.",
 				Options = MessageOptions.Ok,
-				DefaultAccept = MessageOptions.Ok,
-				DefaultCancel = MessageOptions.Ok,
 			}.Show();
 		}
 

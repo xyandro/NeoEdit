@@ -41,14 +41,14 @@ namespace NeoEdit.Program
 				throw new Exception("Version length mismatch");
 
 			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
-			if (new Message
+			if (!new Message
 			{
 				Title = "Download new version?",
 				Text = newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?",
 				Options = MessageOptions.YesNo,
 				DefaultAccept = newer ? MessageOptions.Yes : MessageOptions.No,
 				DefaultCancel = MessageOptions.No,
-			}.Show() != MessageOptions.Yes)
+			}.Show().HasFlag(MessageOptions.Yes))
 				return;
 
 			var oldLocation = entryAssembly.Location;

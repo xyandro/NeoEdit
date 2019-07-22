@@ -54,14 +54,14 @@ namespace NeoEdit.Program.Dialogs
 
 		void RandomizeSalt(object sender, RoutedEventArgs e)
 		{
-			if (new Message(this)
+			if (!new Message(this)
 			{
 				Title = "Please confirm",
 				Text = "This value and the password together are required to generate the key. Are you sure you want to change it?",
 				Options = MessageOptions.YesNo,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.No,
-			}.Show() != MessageOptions.Yes)
+			}.Show().HasFlag(MessageOptions.Yes))
 				return;
 
 			var bytes = new byte[24];

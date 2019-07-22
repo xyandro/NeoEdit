@@ -110,14 +110,14 @@ namespace NeoEdit.Program
 			invalid = fileNames.Where(fileName => File.Exists(fileName)).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
-				if (new Message(WindowParent)
+				if (!new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
 					Options = MessageOptions.YesNo,
 					DefaultAccept = MessageOptions.Yes,
 					DefaultCancel = MessageOptions.No,
-				}.Show() != MessageOptions.Yes)
+				}.Show().HasFlag(MessageOptions.Yes))
 					return;
 			}
 

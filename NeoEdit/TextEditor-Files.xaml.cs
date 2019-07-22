@@ -23,7 +23,7 @@ namespace NeoEdit.Program
 		{
 			try
 			{
-				if (answer.Answer == MessageOptions.Cancel)
+				if (answer.Answer.HasFlag(MessageOptions.Cancel))
 					return true;
 
 				if (Directory.Exists(fileName))
@@ -58,17 +58,17 @@ namespace NeoEdit.Program
 			{
 				TabsParent.Dispatcher.Invoke(() =>
 				{
-					if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
+					if (!answer.Answer.HasFlag(MessageOptions.All))
 						answer.Answer = new Message(WindowParent)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
-							Options = MessageOptions.YesNoYesAllNoAllCancel,
+							Options = MessageOptions.YesNoAllCancel,
 							DefaultCancel = MessageOptions.Cancel,
 						}.Show();
 				});
 
-				return (answer.Answer == MessageOptions.Yes) || (answer.Answer == MessageOptions.YesToAll) || (answer.Answer == MessageOptions.Cancel);
+				return (answer.Answer.HasFlag(MessageOptions.Yes)) || (answer.Answer.HasFlag(MessageOptions.Cancel));
 			}
 		}
 
@@ -364,7 +364,7 @@ namespace NeoEdit.Program
 		{
 			try
 			{
-				if (answer.Answer == MessageOptions.Cancel)
+				if (answer.Answer.HasFlag(MessageOptions.Cancel))
 					return true;
 
 				if (Directory.Exists(fileName))
@@ -391,17 +391,17 @@ namespace NeoEdit.Program
 			{
 				TabsParent.Dispatcher.Invoke(() =>
 				{
-					if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
+					if (!answer.Answer.HasFlag(MessageOptions.All))
 						answer.Answer = new Message(WindowParent)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
-							Options = MessageOptions.YesNoYesAllNoAllCancel,
+							Options = MessageOptions.YesNoAllCancel,
 							DefaultCancel = MessageOptions.Cancel,
 						}.Show();
 				});
 
-				return (answer.Answer == MessageOptions.Yes) || (answer.Answer == MessageOptions.YesToAll) || (answer.Answer == MessageOptions.Cancel);
+				return (answer.Answer.HasFlag(MessageOptions.Yes)) || (answer.Answer.HasFlag(MessageOptions.Cancel));
 			}
 		}
 
@@ -777,27 +777,27 @@ namespace NeoEdit.Program
 			if (invalid.Any())
 				throw new Exception($"Destinations already exist:\n{string.Join("\n", invalid)}");
 
-			if (new Message(WindowParent)
+			if (!new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?",
 				Options = MessageOptions.YesNo,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.No,
-			}.Show() != MessageOptions.Yes)
+			}.Show().HasFlag(MessageOptions.Yes))
 				return;
 
 			invalid = newFileNames.Zip(oldFileNames, (newFileName, oldFileName) => new { newFileName, oldFileName }).Where(obj => (!string.Equals(obj.newFileName, obj.oldFileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(obj.newFileName))).Select(obj => obj.newFileName).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
-				if (new Message(WindowParent)
+				if (!new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
 					Options = MessageOptions.YesNo,
 					DefaultAccept = MessageOptions.Yes,
 					DefaultCancel = MessageOptions.No,
-				}.Show() != MessageOptions.Yes)
+				}.Show().HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -823,13 +823,13 @@ namespace NeoEdit.Program
 
 		void Command_Files_Operations_Delete()
 		{
-			if (new Message(WindowParent)
+			if (!new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = "Are you sure you want to delete these files/directories?",
 				Options = MessageOptions.YesNo,
 				DefaultCancel = MessageOptions.No,
-			}.Show() != MessageOptions.Yes)
+			}.Show().HasFlag(MessageOptions.Yes))
 				return;
 
 			var files = RelativeSelectedFiles();
@@ -845,17 +845,17 @@ namespace NeoEdit.Program
 				}
 				catch (Exception ex)
 				{
-					if (answer != MessageOptions.YesToAll)
+					if (!answer.HasFlag(MessageOptions.All))
 						answer = new Message(WindowParent)
 						{
 							Title = "Confirm",
 							Text = $"An error occurred:\n\n{ex.Message}\n\nContinue?",
-							Options = MessageOptions.YesNoYesAll,
+							Options = MessageOptions.YesNoAll,
 							DefaultAccept = MessageOptions.Yes,
 							DefaultCancel = MessageOptions.No,
 						}.Show();
 
-					if (answer == MessageOptions.No)
+					if (answer.HasFlag(MessageOptions.No))
 						break;
 				}
 			}

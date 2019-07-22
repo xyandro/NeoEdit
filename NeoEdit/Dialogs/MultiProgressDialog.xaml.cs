@@ -226,14 +226,14 @@ namespace NeoEdit.Program.Dialogs
 
 		void OnCancel(object sender = null, RoutedEventArgs e = null)
 		{
-			if (new Message(this)
+			if (!new Message(this)
 			{
 				Title = "Are you sure?",
 				Text = "Are you sure you wish to cancel?",
 				Options = MessageOptions.YesNo,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.No,
-			}.Show() != MessageOptions.Yes)
+			}.Show().HasFlag(MessageOptions.Yes))
 				return;
 
 			token.Cancel();

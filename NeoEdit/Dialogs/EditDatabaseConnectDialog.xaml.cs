@@ -79,8 +79,6 @@ namespace NeoEdit.Program.Dialogs
 				Title = "Information",
 				Text = GetResult().Test() ?? "Database created.",
 				Options = MessageOptions.Ok,
-				DefaultAccept = MessageOptions.Ok,
-				DefaultCancel = MessageOptions.Ok,
 			}.Show();
 		}
 
@@ -91,8 +89,6 @@ namespace NeoEdit.Program.Dialogs
 				Title = "Information",
 				Text = GetResult().Test() ?? "Connection successful.",
 				Options = MessageOptions.Ok,
-				DefaultAccept = MessageOptions.Ok,
-				DefaultCancel = MessageOptions.Ok,
 			}.Show();
 		}
 

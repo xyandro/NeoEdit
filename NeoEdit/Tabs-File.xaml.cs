@@ -67,14 +67,14 @@ namespace NeoEdit.Program
 		{
 			var files = NEClipboard.Current.Strings;
 
-			if ((files.Count > 5) && (new Message(WindowParent)
+			if ((files.Count > 5) && (!new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to open these {files.Count} files?",
 				Options = MessageOptions.YesNoCancel,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.Cancel,
-			}.Show() != MessageOptions.Yes))
+			}.Show().HasFlag(MessageOptions.Yes)))
 				return;
 
 			foreach (var item in Items)

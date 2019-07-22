@@ -420,26 +420,23 @@ namespace NeoEdit.Program
 			if (!IsModified)
 				return true;
 
-			if ((answer.Answer != MessageOptions.YesToAll) && (answer.Answer != MessageOptions.NoToAll))
+			if (!answer.Answer.HasFlag(MessageOptions.All))
 				answer.Answer = new Message(WindowParent)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
-					Options = MessageOptions.YesNoYesAllNoAllCancel,
+					Options = MessageOptions.YesNoAllCancel,
 					DefaultCancel = MessageOptions.Cancel,
 				}.Show();
 
-			switch (answer.Answer)
+			if (answer.Answer.HasFlag(MessageOptions.Cancel))
+				return false;
+			if (answer.Answer.HasFlag(MessageOptions.No))
+				return true;
+			if (answer.Answer.HasFlag(MessageOptions.Yes))
 			{
-				case MessageOptions.Cancel:
-					return false;
-				case MessageOptions.No:
-				case MessageOptions.NoToAll:
-					return true;
-				case MessageOptions.Yes:
-				case MessageOptions.YesToAll:
-					Command_File_Save_Save();
-					return !IsModified;
+				Command_File_Save_Save();
+				return !IsModified;
 			}
 			return false;
 		}
@@ -470,7 +467,7 @@ namespace NeoEdit.Program
 				Options = MessageOptions.YesNo,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.No,
-			}.Show() == MessageOptions.Yes;
+			}.Show().HasFlag(MessageOptions.Yes);
 		}
 
 		public bool Empty() => (FileName == null) && (!IsModified) && (BeginOffset == EndOffset);
@@ -2261,14 +2258,14 @@ namespace NeoEdit.Program
 					if ((triedReadOnly) || (!new FileInfo(fileName).IsReadOnly))
 						throw;
 
-					if (new Message(WindowParent)
+					if (!new Message(WindowParent)
 					{
 						Title = "Confirm",
 						Text = "Save failed. Remove read-only flag?",
 						Options = MessageOptions.YesNo,
 						DefaultAccept = MessageOptions.Yes,
 						DefaultCancel = MessageOptions.No,
-					}.Show() != MessageOptions.Yes)
+					}.Show().HasFlag(MessageOptions.Yes))
 						throw;
 					new FileInfo(fileName).IsReadOnly = false;
 					triedReadOnly = true;
@@ -2383,20 +2380,24 @@ namespace NeoEdit.Program
 			if (Data.CanEncode(CodePage))
 				return true;
 
-			switch (new Message(WindowParent)
+			var answer = new Message(WindowParent)
 			{
 				Title = "Confirm",
 				Text = "The current encoding cannot fully represent this data. Switch to UTF-8?",
 				Options = MessageOptions.YesNoCancel,
 				DefaultAccept = MessageOptions.Yes,
 				DefaultCancel = MessageOptions.Cancel,
-			}.Show())
+			}.Show();
+			if (answer.HasFlag(MessageOptions.Yes))
 			{
-				case MessageOptions.Yes: CodePage = Coder.CodePage.UTF8; return true;
-				case MessageOptions.No: return true;
-				case MessageOptions.Cancel: return false;
-				default: throw new Exception("Invalid response");
+				CodePage = Coder.CodePage.UTF8;
+				return true;
 			}
+			if (answer.HasFlag(MessageOptions.No))
+				return true;
+			if (answer.HasFlag(MessageOptions.Cancel))
+				return false;
+			throw new Exception("Invalid response");
 		}
 
 		void Command_Macro_RepeatLastAction()

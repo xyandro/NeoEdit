@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Program.Controls;
@@ -16,16 +17,6 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public MessageOptions DefaultCancel { get { return UIHelper<Message>.GetPropValue<MessageOptions>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 
-		static Dictionary<MessageOptions, string> buttonContent = new Dictionary<MessageOptions, string>()
-		{
-			[MessageOptions.Yes] = "_Yes",
-			[MessageOptions.No] = "_No",
-			[MessageOptions.YesToAll] = "Y_es to all",
-			[MessageOptions.NoToAll] = "N_o to all",
-			[MessageOptions.Ok] = "_Ok",
-			[MessageOptions.Cancel] = "_Cancel",
-		};
-
 		public new MessageOptions Show()
 		{
 			ShowDialog();
@@ -39,15 +30,11 @@ namespace NeoEdit.Program.Dialogs
 				Text = text,
 				Title = title ?? "Info",
 				Options = MessageOptions.Ok,
-				DefaultAccept = MessageOptions.Ok,
-				DefaultCancel = MessageOptions.Ok,
 			}.Show();
 		}
 
 		Dictionary<Button, MessageOptions> buttonActions = new Dictionary<Button, MessageOptions>();
 		MessageOptions Answer { get; set; }
-
-		static bool IsPowerOfTwo(int x) => (x & (x - 1)) == 0;
 
 		static Message()
 		{
@@ -71,11 +58,8 @@ namespace NeoEdit.Program.Dialogs
 		{
 			buttons.Children.Clear();
 
-			foreach (var option in Helpers.GetValues<MessageOptions>())
+			Action<string, MessageOptions> AddButton = (text, option) =>
 			{
-				if ((!IsPowerOfTwo((int)option)) || ((Options & option) == 0))
-					continue;
-
 				if (DefaultAccept == MessageOptions.None)
 					DefaultAccept = option;
 				if (DefaultCancel == MessageOptions.None)
@@ -83,13 +67,29 @@ namespace NeoEdit.Program.Dialogs
 
 				var button = new Button
 				{
-					Content = buttonContent[option],
+					Content = text,
 					IsDefault = option == DefaultAccept,
 					IsCancel = option == DefaultCancel,
 				};
 				buttonActions[button] = option;
 				buttons.Children.Add(button);
+			};
+
+			if (Options.HasFlag(MessageOptions.Yes))
+				AddButton("_Yes", MessageOptions.Yes);
+			if (Options.HasFlag(MessageOptions.No))
+				AddButton("_No", MessageOptions.No);
+			if (Options.HasFlag(MessageOptions.All))
+			{
+				if (Options.HasFlag(MessageOptions.Yes))
+					AddButton("Y_es to all", MessageOptions.Yes | MessageOptions.All);
+				if (Options.HasFlag(MessageOptions.No))
+					AddButton("N_o to all", MessageOptions.No | MessageOptions.All);
 			}
+			if (Options.HasFlag(MessageOptions.Ok))
+				AddButton("_Ok", MessageOptions.Ok);
+			if (Options.HasFlag(MessageOptions.Cancel))
+				AddButton("_Cancel", MessageOptions.Cancel);
 		}
 
 		void ButtonHandler(object sender, RoutedEventArgs e)
