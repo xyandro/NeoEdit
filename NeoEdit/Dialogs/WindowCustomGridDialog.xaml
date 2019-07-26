@@ -8,21 +8,28 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition/>
+			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Columns:" Target="{Binding ElementName=columns}" HorizontalAlignment="Right"/>
-		<controls:NumericUpDown Grid.Row="0" Grid.Column="1" x:Name="columns" Value="{Binding Columns, ElementName=self}" Minimum="0"/>
+		<Label Grid.Row="0" Grid.Column="1" Content="_Columns:" Target="{Binding ElementName=columns}"/>
+		<Label Grid.Row="0" Grid.Column="2" Content="_Rows:" Target="{Binding ElementName=rows}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Rows:" Target="{Binding ElementName=rows}" HorizontalAlignment="Right"/>
-		<controls:NumericUpDown Grid.Row="1" Grid.Column="1" x:Name="rows" Value="{Binding Rows, ElementName=self}" Minimum="0"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="Value"/>
+		<controls:NumericUpDown Grid.Row="1" Grid.Column="1" x:Name="columns" Value="{Binding Columns, ElementName=self}" Minimum="1"/>
+		<controls:NumericUpDown Grid.Row="1" Grid.Column="2" x:Name="rows" Value="{Binding Rows, ElementName=self}" Minimum="1"/>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<Label Grid.Row="2" Grid.Column="0" Content="Max"/>
+		<controls:NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding MaxColumns, ElementName=self}" Minimum="1"/>
+		<controls:NumericUpDown Grid.Row="2" Grid.Column="2" Value="{Binding MaxRows, ElementName=self}" Minimum="1"/>
+
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

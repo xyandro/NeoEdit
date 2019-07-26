@@ -995,8 +995,8 @@
 	<MenuItem Header="_Window">
 		<controls:NEMenuItem Header="_New Window" CommandEnum="Window_NewWindow"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Full" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Full&quot;'}" CommandEnum="Window_Full"/>
-		<controls:NEMenuItem Header="_Grid" IsChecked="{Binding Parent.Layout, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0 t==&quot;Grid&quot;'}" CommandEnum="Window_Grid"/>
+		<controls:NEMenuItem Header="_Full" CommandEnum="Window_Full"/>
+		<controls:NEMenuItem Header="_Grid" CommandEnum="Window_Grid"/>
 		<controls:NEMenuItem Header="C_ustom Grid" CommandEnum="Window_CustomGrid"/>
 		<Separator/>
 		<controls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_ActiveTabs"/>

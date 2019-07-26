@@ -11,9 +11,13 @@ namespace NeoEdit.Program
 	{
 		static public void Command_Window_NewWindow() => new Tabs(true);
 
-		void Command_Window_Type(TabsLayout layout, WindowCustomGridDialog.Result result) => SetLayout(layout, result?.Columns, result?.Rows);
+		void Command_Window_Full() => SetLayout(1, 1);
 
-		WindowCustomGridDialog.Result Command_Window_Type_Dialog() => WindowCustomGridDialog.Run(WindowParent, Columns, Rows);
+		void Command_Window_Grid() => SetLayout(maxColumns: 5, maxRows: 5);
+
+		WindowCustomGridDialog.Result Command_Window_CustomGrid_Dialog() => WindowCustomGridDialog.Run(WindowParent, Columns, Rows, MaxColumns, MaxRows);
+
+		void Command_Window_CustomGrid(WindowCustomGridDialog.Result result) => SetLayout(result.Columns, result.Rows, result.MaxColumns, result.MaxRows);
 
 		void Command_Window_ActiveTabs()
 		{

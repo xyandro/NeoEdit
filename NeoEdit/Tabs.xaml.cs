@@ -26,11 +26,13 @@ namespace NeoEdit.Program
 		[DepProp]
 		public TextEditor TopMost { get { return UIHelper<Tabs>.GetPropValue<TextEditor>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public TabsLayout Layout { get { return UIHelper<Tabs>.GetPropValue<TabsLayout>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
-		[DepProp]
 		public int? Columns { get { return UIHelper<Tabs>.GetPropValue<int?>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public int? Rows { get { return UIHelper<Tabs>.GetPropValue<int?>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public int? MaxColumns { get { return UIHelper<Tabs>.GetPropValue<int?>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
+		[DepProp]
+		public int? MaxRows { get { return UIHelper<Tabs>.GetPropValue<int?>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public Window WindowParent { get { return UIHelper<Tabs>.GetPropValue<Tabs>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
@@ -55,9 +57,10 @@ namespace NeoEdit.Program
 			UIHelper<Tabs>.AddObservableCallback(a => a.Items, (obj, s, e) => obj.ItemsChanged());
 			UIHelper<Tabs>.AddCallback(a => a.TopMost, (obj, o, n) => obj.TopMostChanged());
 			UIHelper<Tabs>.AddCoerce(a => a.TopMost, (obj, value) => (value != null) && (obj.Items?.Contains(value) == true) ? value : null);
-			UIHelper<Tabs>.AddCallback(a => a.Layout, (obj, o, n) => obj.layoutTimer.Start());
 			UIHelper<Tabs>.AddCallback(a => a.Rows, (obj, o, n) => obj.layoutTimer.Start());
 			UIHelper<Tabs>.AddCallback(a => a.Columns, (obj, o, n) => obj.layoutTimer.Start());
+			UIHelper<Tabs>.AddCallback(a => a.MaxRows, (obj, o, n) => obj.layoutTimer.Start());
+			UIHelper<Tabs>.AddCallback(a => a.MaxColumns, (obj, o, n) => obj.layoutTimer.Start());
 		}
 
 		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
@@ -72,7 +75,7 @@ namespace NeoEdit.Program
 			topMostTimer.AddDependency(layoutTimer);
 
 			Items = new ObservableCollection<TextEditor>();
-			Layout = TabsLayout.Full;
+			Rows = Columns = 1;
 			Focusable = true;
 			FocusVisualStyle = null;
 			AllowDrop = true;
@@ -331,7 +334,7 @@ namespace NeoEdit.Program
 			{
 				case NECommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
 				case NECommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro.MacroDirectory); break;
-				case NECommand.Window_CustomGrid: dialogResult = Command_Window_Type_Dialog(); break;
+				case NECommand.Window_CustomGrid: dialogResult = Command_Window_CustomGrid_Dialog(); break;
 				default: result = false; break;
 			}
 
@@ -378,9 +381,9 @@ namespace NeoEdit.Program
 				case NECommand.Macro_Open_Quick_12: Command_Macro_Open_Quick(12); return true;
 				case NECommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
 				case NECommand.Window_NewWindow: Command_Window_NewWindow(); break;
-				case NECommand.Window_Full: Command_Window_Type(TabsLayout.Full, null); break;
-				case NECommand.Window_Grid: Command_Window_Type(TabsLayout.Grid, null); break;
-				case NECommand.Window_CustomGrid: Command_Window_Type(TabsLayout.Custom, dialogResult as WindowCustomGridDialog.Result); break;
+				case NECommand.Window_Full: Command_Window_Full(); break;
+				case NECommand.Window_Grid: Command_Window_Grid(); break;
+				case NECommand.Window_CustomGrid: Command_Window_CustomGrid(dialogResult as WindowCustomGridDialog.Result); break;
 				case NECommand.Window_ActiveTabs: Command_Window_ActiveTabs(); break;
 				case NECommand.Window_Font_Size: Command_Window_Font_Size(); break;
 				case NECommand.Window_Select_TabsWithSelections: Command_Window_Select_TabsWithWithoutSelections(true); break;
@@ -529,11 +532,12 @@ namespace NeoEdit.Program
 			TopMost.Focus();
 		}
 
-		public void SetLayout(TabsLayout layout, int? columns = null, int? rows = null)
+		public void SetLayout(int? columns = null, int? rows = null, int? maxColumns = null, int? maxRows = null)
 		{
-			Layout = layout;
 			Columns = columns;
 			Rows = rows;
+			MaxColumns = maxColumns;
+			MaxRows = maxRows;
 			topMostTimer.Start();
 		}
 
@@ -566,8 +570,7 @@ namespace NeoEdit.Program
 			Add(textEdit1);
 			Add(textEdit2);
 			textEdit1.DiffTarget = textEdit2;
-			Layout = TabsLayout.Custom;
-			Columns = 2;
+			SetLayout(2);
 			return this;
 		}
 
@@ -817,7 +820,7 @@ namespace NeoEdit.Program
 		void DoLayout()
 		{
 			ClearLayout();
-			if (Layout == TabsLayout.Full)
+			if ((Columns == 1) && (Rows == 1))
 				DoFullLayout();
 			else
 				DoGridLayout();
@@ -888,24 +891,19 @@ namespace NeoEdit.Program
 
 		void DoGridLayout()
 		{
-			int columns, rows;
-			if (Layout == TabsLayout.Grid)
-			{
-				columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Items.Count)), 5));
-				rows = Math.Max(1, Math.Min((Items.Count + columns - 1) / columns, 5));
-			}
-			else if (!Rows.HasValue)
-			{
-				columns = Math.Max(1, Columns ?? (int)Math.Ceiling(Math.Sqrt(Items.Count)));
-				rows = Math.Max(1, (Items.Count + columns - 1) / columns);
-			}
-			else
-			{
+			int? columns = null, rows = null;
+			if (Columns.HasValue)
+				columns = Math.Max(1, Columns.Value);
+			if (Rows.HasValue)
 				rows = Math.Max(1, Rows.Value);
-				columns = Math.Max(1, Columns ?? (Items.Count + rows - 1) / rows);
-			}
+			if ((!columns.HasValue) && (!rows.HasValue))
+				columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Items.Count)), MaxColumns ?? int.MaxValue));
+			if (!rows.HasValue)
+				rows = Math.Max(1, Math.Min((Items.Count + columns.Value - 1) / columns.Value, MaxRows ?? int.MaxValue));
+			if (!columns.HasValue)
+				columns = Math.Max(1, Math.Min((Items.Count + rows.Value - 1) / rows.Value, MaxColumns ?? int.MaxValue));
 
-			var totalRows = (Items.Count + columns - 1) / columns;
+			var totalRows = (Items.Count + columns.Value - 1) / columns.Value;
 
 			var scrollBarVisibility = totalRows > rows ? Visibility.Visible : Visibility.Collapsed;
 			if (scrollBar.Visibility != scrollBarVisibility)
@@ -914,8 +912,8 @@ namespace NeoEdit.Program
 				UpdateLayout();
 			}
 
-			var width = canvas.ActualWidth / columns;
-			var height = canvas.ActualHeight / rows;
+			var width = canvas.ActualWidth / columns.Value;
+			var height = canvas.ActualHeight / rows.Value;
 
 			scrollBar.ViewportSize = scrollBar.LargeChange = canvas.ActualHeight;
 			scrollBar.Maximum = height * totalRows - scrollBar.ViewportSize;
@@ -923,7 +921,7 @@ namespace NeoEdit.Program
 			for (var ctr = 0; ctr < Items.Count; ++ctr)
 			{
 				var item = Items[ctr] as TextEditor;
-				var top = ctr / columns * height - scrollBar.Value;
+				var top = ctr / columns.Value * height - scrollBar.Value;
 				if ((top + height < 0) || (top > canvas.ActualHeight))
 					continue;
 
@@ -938,7 +936,7 @@ namespace NeoEdit.Program
 					dockPanel.Children.Add(item);
 				}
 
-				Canvas.SetLeft(dockPanel, ctr % columns * width + 1);
+				Canvas.SetLeft(dockPanel, ctr % columns.Value * width + 1);
 				Canvas.SetTop(dockPanel, top + 1);
 				dockPanel.Width = width - 2;
 				dockPanel.Height = height - 2;
@@ -950,7 +948,7 @@ namespace NeoEdit.Program
 				var index = Items.IndexOf(item);
 				if (index == -1)
 					return;
-				var top = index / columns * height;
+				var top = index / columns.Value * height;
 				scrollBar.Value = Math.Min(top, Math.Max(scrollBar.Value, top + height - scrollBar.ViewportSize));
 			};
 		}

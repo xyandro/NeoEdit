@@ -102,7 +102,7 @@ namespace NeoEdit.Program
 			active.ForEach(tab => Items.Remove(tab));
 
 			var newWindow = new Tabs();
-			newWindow.SetLayout(newWindow.Layout, newWindow.Columns, newWindow.Rows);
+			newWindow.SetLayout(newWindow.Columns, newWindow.Rows, newWindow.MaxColumns, newWindow.MaxRows);
 			active.ForEach(tab => newWindow.Add(tab));
 		}
 

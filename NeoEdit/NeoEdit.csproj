@@ -957,7 +957,6 @@
     <Compile Include="Enums\ReplaceType.cs" />
     <Compile Include="Enums\SortScope.cs" />
     <Compile Include="Enums\SortType.cs" />
-    <Compile Include="Enums\TabsLayout.cs" />
     <Compile Include="Enums\TimestampType.cs" />
     <Compile Include="Enums\WordSkipType.cs" />
     <Compile Include="Expressions\ExpressionEvaluator.cs" />

@@ -22,13 +22,13 @@ namespace NeoEdit.Program
 			if (shiftDown)
 			{
 				if (!Items.Except(diffTargets).Any())
-					SetLayout(TabsLayout.Grid);
+					SetLayout(maxColumns: 5, maxRows: 5);
 				else
 				{
 					diffTargets.ForEach(diffTarget => Items.Remove(diffTarget));
 
 					var textEditTabs = new Tabs();
-					textEditTabs.SetLayout(TabsLayout.Grid);
+					textEditTabs.SetLayout(maxColumns: 5, maxRows: 5);
 					diffTargets.ForEach(diffTarget => textEditTabs.Add(diffTarget));
 					textEditTabs.TopMost = diffTargets[0];
 				}
