@@ -319,11 +319,10 @@ namespace NeoEdit.Program
 
 		void Command_Pre_Select_Selection_ToggleAnchor(ref object preResult)
 		{
-			var anchorStart = preResult as bool?;
-			if (anchorStart == true)
-				return;
-			var types = Selections.Where(range => range.HasSelection).Select(range => range.Anchor < range.Cursor).Distinct().Take(2).ToList();
-			preResult = types.Count == 1 ? !types[0] : true;
+			if (preResult == null)
+				preResult = false;
+			if ((!(bool)preResult) && (Selections.Any(range => range.Anchor > range.Cursor)))
+				preResult = true;
 		}
 
 		void Command_Select_Selection_ToggleAnchor(object preResult)
