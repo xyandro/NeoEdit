@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	xmlns:converters="clr-namespace:NeoEdit.Program.Converters"
-	Focusable="True">
+	Focusable="True" Background="#202020">
 
 	<Grid>
 		<Grid.RowDefinitions>

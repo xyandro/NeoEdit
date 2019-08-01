@@ -101,6 +101,7 @@ namespace NeoEdit.Program
 
 		public App()
 		{
+			InitializeComponent();
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
 		}
 

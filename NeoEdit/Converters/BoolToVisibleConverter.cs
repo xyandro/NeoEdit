@@ -10,7 +10,7 @@ namespace NeoEdit.Program.Converters
 	{
 		public override object ProvideValue(IServiceProvider serviceProvider) => this;
 
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (value as bool?) == true ? Visibility.Visible : Visibility.Collapsed;
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (value as bool?) == System.Convert.ToBoolean(parameter ?? true) ? Visibility.Visible : Visibility.Collapsed;
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 	}

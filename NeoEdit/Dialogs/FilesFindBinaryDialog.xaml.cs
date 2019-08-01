@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
@@ -60,7 +61,12 @@ namespace NeoEdit.Program.Dialogs
 		{
 			InitializeComponent();
 
-			EncodingCheckBoxes = new ObservableCollection<CodePageCheckBox>(Coder.GetStringCodePages().Select(codePage => new CodePageCheckBox { CodePage = codePage }));
+			EncodingCheckBoxes = new ObservableCollection<CodePageCheckBox>(Coder.GetStringCodePages().Select(codePage =>
+			{
+				var codePageCheckBox = new CodePageCheckBox { CodePage = codePage };
+				codePageCheckBox.SetBinding(UIHelper<CodePageCheckBox>.GetProperty(x => x.FindText), new Binding(nameof(FindText)) { Source = this });
+				return codePageCheckBox;
+			}));
 			checkBoxes = this.FindLogicalChildren<CodePageCheckBox>().Concat(EncodingCheckBoxes).ToList();
 			codePages.PreviewKeyDown += (s, e) =>
 			{

@@ -3,34 +3,34 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	xmlns:converters="clr-namespace:NeoEdit.Program.Converters"
-	Focusable="True" FocusVisualStyle="{x:Null}" Background="White">
+	Focusable="True" FocusVisualStyle="{x:Null}" SnapsToDevicePixels="True">
 
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="5"/>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="5"/>
+			<ColumnDefinition/>
 			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="5"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="5"/>
+			<RowDefinition/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="20"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<controls:RenderCanvas x:Name="canvas" Grid.Row="1" Grid.Column="1" Background="Transparent" ClipToBounds="True"/>
+		<Border Grid.Row="0" Grid.Column="0" CornerRadius="8" BorderThickness="2" BorderBrush="#808080" Padding="5" Background="Black">
+			<controls:RenderCanvas x:Name="canvas" ClipToBounds="True"/>
+		</Border>
 
-		<controls:DiffScrollBar x:Name="yScroll" Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" Orientation="Vertical" Value="{Binding yScrollValue, ElementName=self}"/>
-		<controls:DiffScrollBar x:Name="xScroll" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
+		<controls:DiffScrollBar x:Name="yScroll" Grid.Row="0" Grid.Column="1" Orientation="Vertical" Value="{Binding yScrollValue, ElementName=self}"/>
+		<controls:DiffScrollBar x:Name="xScroll" Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
 
-		<Rectangle Grid.Row="3" Grid.Column="3" Fill="LightGray" Focusable="False"/>
+		<StackPanel Grid.Row="1" Grid.Column="1"/>
 
-		<controls:ViewValues Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Data="{Binding ViewValuesData, ElementName=self}" HasSel="{Binding ViewValuesHasSel, ElementName=self}" FindValue="{Binding ViewValuesFindValue, ElementName=self}" Visibility="{Binding ViewValues, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
+		<controls:ViewValues Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Data="{Binding ViewValuesData, ElementName=self}" HasSel="{Binding ViewValuesHasSel, ElementName=self}" FindValue="{Binding ViewValuesFindValue, ElementName=self}" Visibility="{Binding ViewValues, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
 
-		<controls:RenderCanvas x:Name="statusBar" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Background="LightGray" ClipToBounds="True" Focusable="False"/>
+		<Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="#c0c0c0" BorderThickness="0,2,0,0" Padding="4,0">
+			<controls:RenderCanvas Height="20" x:Name="statusBar" ClipToBounds="True" Focusable="False"/>
+		</Border>
 	</Grid>
 
 </UserControl>

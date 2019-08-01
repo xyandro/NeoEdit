@@ -17,7 +17,7 @@ namespace NeoEdit.Program.Expressions
 			this.expression = expression;
 
 			try { tree = ParserHelper.Parse<ExpressionLexer, ExpressionParser, ExpressionParser.ExprContext>(expression, parser => parser.expr(), true); }
-			catch (Exception ex) { throw new Exception("Invalid expression", ex); }
+			catch (Exception ex) { throw new Exception($"Invalid expression: {expression}", ex); }
 		}
 
 		internal object InternalEvaluate(NEVariables variables, int row, string unit) => new ExpressionEvaluator(expression, variables, row, unit).Visit(tree);

@@ -7,7 +7,7 @@
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition Width="*"/>
+			<ColumnDefinition/>
 			<ColumnDefinition Width="3*"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>

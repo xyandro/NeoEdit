@@ -4,6 +4,10 @@
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	Margin="15,0,0,0" VerticalAlignment="Center" MouseLeftButtonDown="OnClick">
 
+	<TextBlock.Resources>
+		<Style TargetType="controls:ViewValue" BasedOn="{StaticResource {x:Type TextBlock}}"/>
+	</TextBlock.Resources>
+
 	<TextBlock.Text>
 		<MultiBinding Converter="{controls:ViewValueConverter}">
 			<Binding ElementName="self"/>
@@ -11,7 +15,7 @@
 			<Binding Path="HasSel" ElementName="self"/>
 		</MultiBinding>
 	</TextBlock.Text>
-	
+
 	<TextBlock.Background>
 		<MultiBinding Converter="{controls:ViewValueConverter}">
 			<Binding ElementName="self"/>

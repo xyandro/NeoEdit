@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	xmlns:dialogs="clr-namespace:NeoEdit.Program.Dialogs"
-	Title="Join Tables" Width="800" Height="600" FocusManager.FocusedElement="{Binding ElementName=leftTable}" WindowStyle="SingleBorderWindow">
+	Title="Join Tables" Width="800" Height="600" FocusManager.FocusedElement="{Binding ElementName=leftTable}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>

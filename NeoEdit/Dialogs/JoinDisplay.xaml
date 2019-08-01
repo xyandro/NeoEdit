@@ -42,18 +42,18 @@
 			</Path.Data>
 		</Path>
 		<Canvas Visibility="{Binding CrossSection, ElementName=self, Converter={dialogs:VisibilityConverter}}">
-			<Line X1="30" Y1="30" X2="120" Y2="30" Stroke="Black"/>
-			<Line X1="30" Y1="30" X2="120" Y2="50" Stroke="Black"/>
-			<Line X1="30" Y1="30" X2="120" Y2="70" Stroke="Black"/>
-			<Line X1="30" Y1="50" X2="120" Y2="30" Stroke="Black"/>
-			<Line X1="30" Y1="50" X2="120" Y2="50" Stroke="Black"/>
-			<Line X1="30" Y1="50" X2="120" Y2="70" Stroke="Black"/>
-			<Line X1="30" Y1="70" X2="120" Y2="30" Stroke="Black"/>
-			<Line X1="30" Y1="70" X2="120" Y2="50" Stroke="Black"/>
-			<Line X1="30" Y1="70" X2="120" Y2="70" Stroke="Black"/>
+			<Line X1="30" Y1="30" X2="120" Y2="30" Stroke="White"/>
+			<Line X1="30" Y1="30" X2="120" Y2="50" Stroke="White"/>
+			<Line X1="30" Y1="30" X2="120" Y2="70" Stroke="White"/>
+			<Line X1="30" Y1="50" X2="120" Y2="30" Stroke="White"/>
+			<Line X1="30" Y1="50" X2="120" Y2="50" Stroke="White"/>
+			<Line X1="30" Y1="50" X2="120" Y2="70" Stroke="White"/>
+			<Line X1="30" Y1="70" X2="120" Y2="30" Stroke="White"/>
+			<Line X1="30" Y1="70" X2="120" Y2="50" Stroke="White"/>
+			<Line X1="30" Y1="70" X2="120" Y2="70" Stroke="White"/>
 		</Canvas>
-		<Ellipse Stroke="Black" Width="100" Height="100"/>
-		<Ellipse Canvas.Left="50" Stroke="Black" Width="100" Height="100"/>
+		<Ellipse Stroke="White" Width="100" Height="100"/>
+		<Ellipse Canvas.Left="50" Stroke="White" Width="100" Height="100"/>
 	</Canvas>
 
 	<RadioButton Name="radio" Content="{Binding JoinText, ElementName=self}" GroupName="JoinType" HorizontalAlignment="Center"/>

@@ -8,6 +8,9 @@
 
 	<Menu.Resources>
 		<system:Boolean x:Key="True">True</system:Boolean>
+		<Style TargetType="local:NEMenu" BasedOn="{StaticResource {x:Type Menu}}"/>
+		<Style TargetType="controls:NEMenuItem" BasedOn="{StaticResource {x:Type MenuItem}}"/>
+		<Style TargetType="controls:MultiMenuItem" BasedOn="{StaticResource {x:Type MenuItem}}"/>
 	</Menu.Resources>
 
 	<MenuItem Header="_File">

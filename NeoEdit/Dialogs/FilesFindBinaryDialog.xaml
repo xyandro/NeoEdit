@@ -151,24 +151,7 @@
 				<Label Grid.Row="0" Grid.Column="0" Content="_Encodings:" Target="{Binding ElementName=codePages}"/>
 				<CheckBox Grid.Row="0" Grid.Column="1" Content="Match _Case" IsChecked="{Binding MatchCase, ElementName=self}" HorizontalAlignment="Right"/>
 
-				<ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="codePages" ItemsSource="{Binding EncodingCheckBoxes, ElementName=self}" BorderBrush="{x:Null}" SelectionMode="Extended">
-					<ListBox.Style>
-						<Style>
-							<Style.Resources>
-								<Style TargetType="controls:CodePageCheckBox">
-									<Setter Property="IsEnabled">
-										<Setter.Value>
-											<MultiBinding Converter="{StaticResource ValidConv}">
-												<Binding Path="FindText" ElementName="self"/>
-												<Binding Path="CodePage"/>
-											</MultiBinding>
-										</Setter.Value>
-									</Setter>
-								</Style>
-							</Style.Resources>
-						</Style>
-					</ListBox.Style>
-				</ListBox>
+				<ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="codePages" ItemsSource="{Binding EncodingCheckBoxes, ElementName=self}" BorderBrush="{x:Null}" SelectionMode="Extended"/>
 
 				<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 					<Button Name="AllStrings" Click="SelectAllNone" Content="All" Padding="10,1"/>

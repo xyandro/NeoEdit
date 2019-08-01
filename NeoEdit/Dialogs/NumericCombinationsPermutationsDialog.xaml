@@ -38,7 +38,7 @@
 		<StackPanel Grid.Row="4" Grid.Column="1" Name="formula" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
 		<Label Grid.Row="5" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="5" Grid.Column="1" BorderBrush="Transparent" IsReadOnly="True" Text="{Binding NumResults, ElementName=self, StringFormat=n0}" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="5" Grid.Column="1" Background="Transparent" BorderBrush="Transparent" IsReadOnly="True" Text="{Binding NumResults, ElementName=self, StringFormat=n0}" HorizontalAlignment="Right"/>
 
 		<UniformGrid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

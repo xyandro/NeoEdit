@@ -212,6 +212,7 @@
     </Compile>
     <Compile Include="Controls\PropertyChangeNotifier.cs" />
     <Compile Include="Controls\RenderCanvas.cs" />
+    <Compile Include="Controls\ScrollViewerBinding.cs" />
     <Compile Include="Controls\UIHelper.cs" />
     <Page Include="Controls\ViewValue.xaml">
       <Generator>MSBuild:Compile</Generator>

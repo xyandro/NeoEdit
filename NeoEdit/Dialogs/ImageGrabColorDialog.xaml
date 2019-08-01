@@ -8,7 +8,7 @@
 
 	<controls:NEWindow.Resources>
 		<dialogs:ColorConverter x:Key="colorConverter"/>
-		<Path x:Key="EyeDropper" x:Shared="False" Fill="Blue" Width="5" Height="5" Stretch="Fill">
+		<Path x:Key="EyeDropper" x:Shared="False" Fill="White" Width="5" Height="5" Stretch="Fill">
 			<Path.Data>
 				<GeometryGroup>
 					<PathGeometry Figures="M3.72969,0.21795A0.74413,0.74413,0,0,1,4.78205,1.27031L4.20944,1.84292L3.15708,0.79056L3.72969,0.21795" />

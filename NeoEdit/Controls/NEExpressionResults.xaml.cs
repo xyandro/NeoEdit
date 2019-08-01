@@ -53,6 +53,8 @@ namespace NeoEdit.Program.Controls
 			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression3, (obj, o, n) => obj.Invalidate());
 			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression4, (obj, o, n) => obj.Invalidate());
 			RowHeight = CalcRowHeight();
+			LineBrush.Freeze();
+			HeaderBrush.Freeze();
 		}
 
 		static double CalcRowHeight()
@@ -98,11 +100,17 @@ namespace NeoEdit.Program.Controls
 			Children.Insert(index ?? Children.Count, element);
 		}
 
-		FrameworkElement GetTextBlock(string text, Brush background = null) => new TextBlock { Text = text ?? "ERROR", Foreground = text == null ? Brushes.DarkRed : Brushes.Black, Background = background };
+		FrameworkElement GetTextBlock(string text, Brush background = null)
+		{
+			var textBlock = new TextBlock { Text = text ?? "ERROR", Background = background };
+			if (text == null)
+				textBlock.Foreground = Brushes.DarkRed;
+			return textBlock;
+		}
 
 		IEnumerable<FrameworkElement> GetErrorControls()
 		{
-			var rectangle = new Rectangle { Fill = Brushes.LightGray, Opacity = .90 };
+			var rectangle = new Rectangle { RadiusX = 2, RadiusY = 2, Stroke = LineBrush, StrokeThickness = Spacing, Fill = HeaderBrush, Opacity = .90 };
 			rectangle.SetBinding(Rectangle.VisibilityProperty, new Binding(nameof(IsValid)) { Source = this, Converter = new NEExpressionConverter(), ConverterParameter = "!p0" });
 			yield return rectangle;
 
@@ -132,8 +140,9 @@ namespace NeoEdit.Program.Controls
 			UpdateChildren();
 		}
 
-		readonly Brush BackColor = Brushes.LightGray;
-		const int Spacing = 2;
+		readonly static Brush LineBrush = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+		readonly static Brush HeaderBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
+		const double Spacing = 1;
 		void UpdateChildren()
 		{
 			List<string> variables;
@@ -165,24 +174,23 @@ namespace NeoEdit.Program.Controls
 			ColumnDefinitions.Clear();
 			RowDefinitions.Clear();
 
-			Func<WidthType, int, Tuple<WidthType, List<FrameworkElement>>> GetLine = (widthType, numRows) => Tuple.Create(widthType, Enumerable.Range(0, numRows).Select(row => new Rectangle { Width = Spacing, Fill = BackColor }).Cast<FrameworkElement>().ToList());
+			Func<WidthType, int, Tuple<WidthType, List<FrameworkElement>>> GetLine = (widthType, numRows) => Tuple.Create(widthType, Enumerable.Range(0, numRows).Select(row => new Rectangle { Width = Spacing, Fill = LineBrush }).Cast<FrameworkElement>().ToList());
 
 			var columns = new List<Tuple<WidthType, List<FrameworkElement>>>();
 
 			if (MultiRow)
 			{
-				Func<WidthType, int, Tuple<WidthType, List<FrameworkElement>>> GetSpace = (widthType, numRows) => Tuple.Create(widthType, new[] { new Rectangle { Width = Spacing, Fill = BackColor } }.Concat(Enumerable.Range(0, numRows - 1).Select(row => new Rectangle { Width = Spacing })).Cast<FrameworkElement>().ToList());
-				columns.Add(GetLine(WidthType.None, results.Count + 1));
+				Func<WidthType, int, Tuple<WidthType, List<FrameworkElement>>> GetSpace = (widthType, numRows) => Tuple.Create(widthType, new[] { new Rectangle { Width = Spacing, Fill = HeaderBrush } }.Concat(Enumerable.Range(0, numRows - 1).Select(row => new Rectangle { Width = Spacing })).Cast<FrameworkElement>().ToList());
 				columns.AddRange(variables.SelectMany(variable => new[] {
 					GetSpace(WidthType.Shrink3, results.Count + 1),
-					Tuple.Create(WidthType.Expand | WidthType.Shrink4, new[] { GetTextBlock(variable, BackColor) }.Concat(Enumerable.Range(0, results.Count).Select(result => GetTextBlock(varValues[variable][result]))).ToList()),
+					Tuple.Create(WidthType.Expand | WidthType.Shrink4, new[] { GetTextBlock(variable, HeaderBrush) }.Concat(Enumerable.Range(0, results.Count).Select(result => GetTextBlock(varValues[variable][result]))).ToList()),
 					GetSpace(WidthType.Shrink3, results.Count + 1),
 					GetLine(WidthType.Shrink5, results.Count + 1),
 				}));
 				if (!variables.Any())
 				{
 					columns.Add(GetSpace(WidthType.Shrink3, results.Count + 1));
-					columns.Add(Tuple.Create(WidthType.Expand | WidthType.Shrink4, new[] { GetTextBlock("", BackColor) }.Concat(results.Select(result => GetTextBlock("<No vars>"))).ToList()));
+					columns.Add(Tuple.Create(WidthType.Expand | WidthType.Shrink4, new[] { GetTextBlock("", HeaderBrush) }.Concat(results.Select(result => GetTextBlock("<No vars>"))).ToList()));
 					columns.Add(GetSpace(WidthType.Shrink3, results.Count + 1));
 					columns.Add(GetLine(WidthType.Shrink5, results.Count + 1));
 				}
@@ -190,28 +198,22 @@ namespace NeoEdit.Program.Controls
 				columns.Add(Tuple.Create(WidthType.Shrink1, new[] { default(TextBlock) }.Concat(results.Select(result => GetTextBlock(" => "))).ToList()));
 				columns.Add(GetLine(WidthType.Shrink2, results.Count + 1));
 
-				columns.Add(Tuple.Create(WidthType.Shrink6, new[] { new Rectangle { Width = Spacing, Fill = BackColor } }.Concat(Enumerable.Repeat(default(FrameworkElement), results.Count)).ToList()));
-				columns.Add(Tuple.Create(WidthType.Expand | WidthType.Shrink7, new[] { GetTextBlock("Result", BackColor) }.Concat(results.Select(result => GetTextBlock(result))).ToList()));
-				columns.Add(Tuple.Create(WidthType.Shrink6, new[] { new Rectangle { Width = Spacing, Fill = BackColor } }.Concat(Enumerable.Repeat(default(FrameworkElement), results.Count)).ToList()));
-
-				columns.Add(GetLine(WidthType.None, results.Count + 1));
+				columns.Add(Tuple.Create(WidthType.Shrink6, new[] { new Rectangle { Width = Spacing, Fill = HeaderBrush } }.Concat(Enumerable.Repeat(default(FrameworkElement), results.Count)).ToList()));
+				columns.Add(Tuple.Create(WidthType.Expand | WidthType.Shrink7, new[] { GetTextBlock("Result", HeaderBrush) }.Concat(results.Select(result => GetTextBlock(result))).ToList()));
+				columns.Add(Tuple.Create(WidthType.Shrink6, new[] { new Rectangle { Width = Spacing, Fill = HeaderBrush } }.Concat(Enumerable.Repeat(default(FrameworkElement), results.Count)).ToList()));
 			}
 			else
 			{
 				Func<WidthType, Tuple<WidthType, List<FrameworkElement>>> GetSpace = widthType => Tuple.Create(widthType, new[] { new Rectangle { Width = Spacing } }.Cast<FrameworkElement>().ToList());
-				columns.Add(GetLine(WidthType.None, 1));
 				if (results.Count == 0)
-				{
 					columns.Add(Tuple.Create(WidthType.Expand | WidthType.Shrink1, new List<FrameworkElement> { default(FrameworkElement) }));
-					columns.Add(GetLine(WidthType.None, 1));
-				}
 				else
-					columns.AddRange(results.SelectMany(result => new[] {
+					columns.AddRange(results.SelectMany((result, index) => new[] {
+						index == 0 ? null : GetLine(WidthType.Shrink3, 1),
 						GetSpace(WidthType.Shrink1),
 						Tuple.Create(WidthType.Expand | WidthType.Shrink2, new List<FrameworkElement> { GetTextBlock(result) }),
 						GetSpace(WidthType.Shrink1),
-						GetLine(WidthType.Shrink3, 1),
-					}).ToList());
+					}).NonNull().ToList());
 			}
 
 			// Sanity check: should have same number on all columns
@@ -253,15 +255,16 @@ namespace NeoEdit.Program.Controls
 				RowDefinitions.Add(new RowDefinition { Height = new GridLength(RowHeight) });
 			RowDefinitions.Add(new RowDefinition { Height = new GridLength(Spacing) });
 
+			ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(Spacing) });
 			for (var column = 0; column < columns.Count; ++column)
 			{
 				ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength((double)widths[column] / precision) });
 				for (var row = 0; row < rows; ++row)
-					AddChild(columns[column].Item2[row], row + 1, column);
+					AddChild(columns[column].Item2[row], row + 1, column + 1);
 			}
+			ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(Spacing) });
 
-			AddChild(new Rectangle { Fill = BackColor, Height = Spacing }, 0, 0, columnSpan: ColumnDefinitions.Count);
-			AddChild(new Rectangle { Fill = BackColor, Height = Spacing }, RowDefinitions.Count - 1, 0, columnSpan: ColumnDefinitions.Count);
+			AddChild(new Border { CornerRadius = new CornerRadius(2), BorderThickness = new Thickness(Spacing), BorderBrush = LineBrush }, 0, 0, RowDefinitions.Count, ColumnDefinitions.Count);
 
 			GetErrorControls().ForEach(control => AddChild(control, 0, 0, RowDefinitions.Count, ColumnDefinitions.Count));
 		}

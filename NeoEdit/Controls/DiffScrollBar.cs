@@ -11,7 +11,7 @@ namespace NeoEdit.Program.Controls
 	public class DiffScrollBar : Grid
 	{
 		[DepProp(BindsTwoWayByDefault = true)]
-		public double Value { get { return UIHelper<DiffScrollBar>.GetPropValue<double>(this); } set { UIHelper<DiffScrollBar>.SetPropValue(this, value); } }
+		public double Value { get { return UIHelper<DiffScrollBar>.GetPropValue<double>(this); } set { UIHelper<DiffScrollBar>.SetPropValue(this, GetValidValue(value)); } }
 		[DepProp]
 		public double ViewportSize { get { return UIHelper<DiffScrollBar>.GetPropValue<double>(this); } set { UIHelper<DiffScrollBar>.SetPropValue(this, value); } }
 		[DepProp]
@@ -20,12 +20,15 @@ namespace NeoEdit.Program.Controls
 		public double Maximum { get { return UIHelper<DiffScrollBar>.GetPropValue<double>(this); } set { UIHelper<DiffScrollBar>.SetPropValue(this, value); } }
 		[DepProp]
 		public double SmallChange { get { return UIHelper<DiffScrollBar>.GetPropValue<double>(this); } set { UIHelper<DiffScrollBar>.SetPropValue(this, value); } }
-		[DepProp]
+		[DepProp(Default = Orientation.Vertical)]
 		public Orientation Orientation { get { return UIHelper<DiffScrollBar>.GetPropValue<Orientation>(this); } set { UIHelper<DiffScrollBar>.SetPropValue(this, value); } }
 
-		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(240, 240, 240));
+		public event RoutedPropertyChangedEventHandler<double> ValueChanged;
+
+		static readonly Brush ForegroundBrush = Brushes.White;
+		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
 		static readonly Brush DiffBrush = new SolidColorBrush(Color.FromRgb(239, 203, 5));
-		static readonly Brush SliderBrush = new SolidColorBrush(Color.FromArgb(32, 0, 0, 0));
+		static readonly Brush SliderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255));
 
 		List<Tuple<double, double>> diffList;
 		public List<Tuple<double, double>> DiffList { get => diffList; set { diffList = value; Invalidate(); } }
@@ -35,14 +38,15 @@ namespace NeoEdit.Program.Controls
 		static DiffScrollBar()
 		{
 			UIHelper<DiffScrollBar>.Register();
-			UIHelper<DiffScrollBar>.AddCallback(x => x.Value, (obj, o, n) => obj.Invalidate());
+			UIHelper<DiffScrollBar>.AddCallback(x => x.Value, (obj, o, n) => { obj.Invalidate(); obj.ValueChanged?.Invoke(obj, new RoutedPropertyChangedEventArgs<double>(o, n)); });
 			UIHelper<DiffScrollBar>.AddCallback(x => x.ViewportSize, (obj, o, n) => obj.Invalidate());
 			UIHelper<DiffScrollBar>.AddCallback(x => x.Minimum, (obj, o, n) => obj.Invalidate());
 			UIHelper<DiffScrollBar>.AddCallback(x => x.Maximum, (obj, o, n) => obj.Invalidate());
 			UIHelper<DiffScrollBar>.AddCallback(x => x.Maximum, (obj, o, n) => obj.Invalidate());
 			UIHelper<DiffScrollBar>.AddCallback(x => x.Orientation, (obj, o, n) => obj.DoLayout());
-			UIHelper<DiffScrollBar>.AddCoerce(x => x.Value, (obj, value) => Math.Max(obj.Minimum, Math.Min(value, obj.Maximum)));
+			UIHelper<DiffScrollBar>.AddCoerce(x => x.Value, (obj, value) => obj.GetValidValue(value));
 
+			ForegroundBrush.Freeze();
 			BackgroundBrush.Freeze();
 			DiffBrush.Freeze();
 			SliderBrush.Freeze();
@@ -57,6 +61,8 @@ namespace NeoEdit.Program.Controls
 		{
 			canvas?.InvalidateVisual();
 		}
+
+		double GetValidValue(double value) => Math.Max(Minimum, Math.Min(value, Maximum));
 
 		void DoLayout()
 		{
@@ -73,7 +79,7 @@ namespace NeoEdit.Program.Controls
 
 					RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
 
-					var leftButton = new RepeatButton { Content = "⮜", Delay = 500, Interval = 50, Background = BackgroundBrush };
+					var leftButton = new RepeatButton { Content = "⮜", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush };
 					leftButton.Click += OnUpLeftButtonClick;
 					SetColumn(leftButton, 0);
 					SetRow(leftButton, 0);
@@ -84,7 +90,7 @@ namespace NeoEdit.Program.Controls
 					SetRow(canvas, 0);
 					Children.Add(canvas);
 
-					var rightButton = new RepeatButton { Content = "⮞", Delay = 500, Interval = 50, Background = BackgroundBrush };
+					var rightButton = new RepeatButton { Content = "⮞", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush };
 					rightButton.Click += OnDownRightButtonClick;
 					SetColumn(rightButton, 2);
 					SetRow(rightButton, 0);
@@ -97,7 +103,7 @@ namespace NeoEdit.Program.Controls
 
 					ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(20) });
 
-					var upButton = new RepeatButton { Content = "⮝", Delay = 500, Interval = 50, Background = BackgroundBrush };
+					var upButton = new RepeatButton { Content = "⮝", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush };
 					upButton.Click += OnUpLeftButtonClick;
 					SetRow(upButton, 0);
 					SetColumn(upButton, 0);
@@ -108,7 +114,7 @@ namespace NeoEdit.Program.Controls
 					SetColumn(canvas, 0);
 					Children.Add(canvas);
 
-					var downButton = new RepeatButton { Content = "⮟", Delay = 500, Interval = 50, Background = BackgroundBrush };
+					var downButton = new RepeatButton { Content = "⮟", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush };
 					downButton.Click += OnDownRightButtonClick;
 					SetRow(downButton, 2);
 					SetColumn(downButton, 0);

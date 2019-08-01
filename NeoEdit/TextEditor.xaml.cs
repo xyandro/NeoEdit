@@ -161,25 +161,25 @@ namespace NeoEdit.Program
 			}
 		}
 
-		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(128, 58, 143, 205)); //9cc7e6
-		static internal readonly Brush searchBrush = new SolidColorBrush(Color.FromArgb(128, 197, 205, 173)); //e2e6d6
+		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(64, 76, 157, 239));
+		static internal readonly Brush searchBrush = new SolidColorBrush(Color.FromArgb(128, 201, 102, 12));
 		static internal readonly Dictionary<int, Brush> regionBrush = new Dictionary<int, Brush>
 		{
-			[1] = new SolidColorBrush(Color.FromArgb(64, 0, 64, 0)),
-			[2] = new SolidColorBrush(Color.FromArgb(64, 64, 0, 0)),
-			[3] = new SolidColorBrush(Color.FromArgb(64, 0, 0, 64)),
-			[4] = new SolidColorBrush(Color.FromArgb(64, 64, 64, 0)),
-			[5] = new SolidColorBrush(Color.FromArgb(64, 64, 0, 64)),
-			[6] = new SolidColorBrush(Color.FromArgb(64, 0, 64, 64)),
-			[7] = new SolidColorBrush(Color.FromArgb(64, 0, 128, 0)),
-			[8] = new SolidColorBrush(Color.FromArgb(64, 128, 0, 0)),
-			[9] = new SolidColorBrush(Color.FromArgb(64, 0, 0, 128)),
+			[1] = new SolidColorBrush(Color.FromArgb(128, 0, 64, 0)),
+			[2] = new SolidColorBrush(Color.FromArgb(128, 64, 0, 0)),
+			[3] = new SolidColorBrush(Color.FromArgb(128, 0, 0, 64)),
+			[4] = new SolidColorBrush(Color.FromArgb(128, 64, 64, 0)),
+			[5] = new SolidColorBrush(Color.FromArgb(128, 64, 0, 64)),
+			[6] = new SolidColorBrush(Color.FromArgb(128, 0, 64, 64)),
+			[7] = new SolidColorBrush(Color.FromArgb(128, 0, 128, 0)),
+			[8] = new SolidColorBrush(Color.FromArgb(128, 128, 0, 0)),
+			[9] = new SolidColorBrush(Color.FromArgb(128, 0, 0, 128)),
 		};
-		static internal readonly Brush visibleCursorBrush = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
-		static internal readonly Brush diffMajorBrush = new SolidColorBrush(Color.FromArgb(192, 239, 203, 5));
-		static internal readonly Brush diffMinorBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));
-		static internal readonly Brush cursorBrush = new SolidColorBrush(Color.FromArgb(10, 0, 0, 0));
-		static internal readonly Pen cursorPen = new Pen(new SolidColorBrush(Color.FromArgb(20, 0, 0, 0)), 1);
+		static internal readonly Brush visibleCursorBrush = new SolidColorBrush(Color.FromArgb(4, 255, 255, 255));
+		static internal readonly Brush diffMajorBrush = new SolidColorBrush(Color.FromArgb(32, 239, 203, 5));
+		static internal readonly Brush diffMinorBrush = new SolidColorBrush(Color.FromArgb(32, 239, 203, 5));
+		static internal readonly Brush cursorBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
+		static internal readonly Pen cursorPen = new Pen(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 1);
 
 		int xScrollViewportFloor => (int)Math.Floor(xScroll.ViewportSize);
 		int xScrollViewportCeiling => (int)Math.Ceiling(xScroll.ViewportSize);
@@ -1759,7 +1759,7 @@ namespace NeoEdit.Program
 						if ((cursor >= startIndexes[cursorLine]) && (cursor <= endIndexes[cursorLine]))
 						{
 							cursor = Data.GetColumnFromIndex(cursorLine, cursor);
-							dc.DrawRectangle(Brushes.Black, null, new Rect((cursor - startColumn) * Font.CharWidth - 1, y[cursorLine], 2, Font.FontSize));
+							dc.DrawRectangle(Brushes.White, null, new Rect((cursor - startColumn) * Font.CharWidth - 1, y[cursorLine], 2, Font.FontSize));
 						}
 					}
 
@@ -1898,7 +1898,7 @@ namespace NeoEdit.Program
 			sb.Add($"Database {DBName}");
 
 			var tf = SystemFonts.MessageFontFamily.GetTypefaces().Where(x => (x.Weight == FontWeights.Normal) && (x.Style == FontStyles.Normal)).First();
-			dc.DrawText(new FormattedText(string.Join(" │ ", sb), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.Black), new Point(2, 2));
+			dc.DrawText(new FormattedText(string.Join(" │ ", sb), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.White), new Point(2, 2));
 		}
 
 		void OnDrop(object sender, DragEventArgs e)

@@ -26,6 +26,9 @@ namespace NeoEdit.Program.Dialogs
 		public int YScrollValue { get { return UIHelper<TableDisplay>.GetPropValue<int>(this); } set { UIHelper<TableDisplay>.SetPropValue(this, value); } }
 
 		static readonly double RowHeight;
+		static readonly Brush HeaderBrush = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+		static readonly Brush CurrentColumnBrush = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+		static readonly Brush SelectedColumnBrush = new SolidColorBrush(Color.FromArgb(128, 76, 157, 239));
 		static TableDisplay()
 		{
 			UIHelper<TableDisplay>.Register();
@@ -34,6 +37,9 @@ namespace NeoEdit.Program.Dialogs
 			UIHelper<TableDisplay>.AddObservableCallback(a => a.Selected, (obj, o, n) => obj.SetupSelection());
 			UIHelper<TableDisplay>.AddCallback(a => a.YScrollValue, (obj, o, n) => obj.SetupTable());
 			RowHeight = CalcRowHeight();
+			HeaderBrush.Freeze();
+			CurrentColumnBrush.Freeze();
+			SelectedColumnBrush.Freeze();
 		}
 
 		static double CalcRowHeight()
@@ -132,7 +138,7 @@ namespace NeoEdit.Program.Dialogs
 			yScroller.Minimum = 0;
 			yScroller.Maximum = Math.Max(0, Table.NumRows - viewportRowsCeiling + 2);
 			yScroller.SmallChange = 1;
-			yScroller.LargeChange = yScroller.ViewportSize = Math.Max(0, viewportRowsFloor - 2);
+			yScroller.ViewportSize = Math.Max(0, viewportRowsFloor - 2);
 
 			for (var column = 0; column < Table.NumColumns; ++column)
 				tableGrid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -147,7 +153,7 @@ namespace NeoEdit.Program.Dialogs
 					if (row == 0)
 					{
 						text.Text = Table.GetHeader(column)?.Replace("\r", "").Replace("\n", "").Trim() ?? "";
-						text.Background = Brushes.DarkGray;
+						text.Background = HeaderBrush;
 					}
 					else
 						text.Text = Table[row - 1 + YScrollValue, column]?.Replace("\r", "").Replace("\n", "").Trim() ?? "";
@@ -177,14 +183,14 @@ namespace NeoEdit.Program.Dialogs
 				return;
 			}
 
-			var selection = new Rectangle { Fill = new LinearGradientBrush(Colors.LightBlue, Colors.AliceBlue, 0) };
+			var selection = new Rectangle { Fill = CurrentColumnBrush };
 			tableGrid.Children.Insert(0, selection);
 			Grid.SetColumn(selection, SelectedColumn);
 			Grid.SetRowSpan(selection, tableGrid.RowDefinitions.Count);
 
 			foreach (var selected in Selected)
 			{
-				var rect = new Rectangle { Fill = new LinearGradientBrush(Colors.LightGreen, Colors.GreenYellow, 0) { Opacity = .7 } };
+				var rect = new Rectangle { Fill = SelectedColumnBrush };
 				tableGrid.Children.Insert(1, rect);
 				Grid.SetColumn(rect, selected);
 				Grid.SetRowSpan(rect, tableGrid.RowDefinitions.Count);

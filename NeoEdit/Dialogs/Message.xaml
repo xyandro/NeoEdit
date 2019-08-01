@@ -12,7 +12,7 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		<TextBox BorderBrush="Transparent" TextWrapping="Wrap" Name="textBox" Text="{Binding Text, ElementName=self}" IsReadOnly="True"/>
+		<TextBox Background="Transparent" BorderBrush="Transparent" TextWrapping="Wrap" Name="textBox" Text="{Binding Text, ElementName=self}" IsReadOnly="True"/>
 		<StackPanel Name="buttons" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
 			<StackPanel.Resources>
 				<Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">

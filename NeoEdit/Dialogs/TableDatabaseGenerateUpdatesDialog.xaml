@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	xmlns:dialogs="clr-namespace:NeoEdit.Program.Dialogs"
-	Title="Generate Updates" Width="800" Height="500" FocusManager.FocusedElement="{Binding ElementName=update}" WindowStyle="SingleBorderWindow">
+	Title="Generate Updates" Width="800" Height="500" FocusManager.FocusedElement="{Binding ElementName=update}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>

@@ -92,7 +92,7 @@ namespace NeoEdit.Program.Dialogs
 			foreach (var lineBreak in lineBreaks)
 			{
 				var x = lineBreak * Font.CharWidth + border;
-				var line = new Line { X1 = x, Y1 = 0, X2 = x, Y2 = canvas.Height, Stroke = Brushes.Black };
+				var line = new Line { X1 = x, Y1 = 0, X2 = x, Y2 = canvas.Height, Stroke = Brushes.White };
 				canvas.Children.Add(line);
 			}
 		}

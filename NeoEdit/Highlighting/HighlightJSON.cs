@@ -7,11 +7,11 @@ namespace NeoEdit.Program.Highlighting
 	class HighlightJSON : Highlight
 	{
 		static Regex numberRE = new Regex(@"[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?", RegexOptions.Compiled);
-		static Brush numberBrush = new SolidColorBrush(Color.FromRgb(0, 0, 255));
+		static Brush numberBrush = new SolidColorBrush(Color.FromRgb(181, 206, 168));
 		static Regex stringRE = new Regex(@"""([^\\""]|\\.)*""", RegexOptions.Compiled);
-		static Brush stringBrush = new SolidColorBrush(Color.FromRgb(163, 21, 21));
+		static Brush stringBrush = new SolidColorBrush(Color.FromRgb(214, 157, 133));
 		static Regex headerRE = new Regex(@"""([^\\""]|\\.)*"":", RegexOptions.Compiled);
-		static Brush headerBrush = new SolidColorBrush(Color.FromRgb(46, 117, 182));
+		static Brush headerBrush = new SolidColorBrush(Color.FromRgb(215, 186, 125));
 
 		static HighlightJSON()
 		{

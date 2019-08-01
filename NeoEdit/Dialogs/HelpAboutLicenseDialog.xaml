@@ -1,6 +1,7 @@
-﻿<Window x:Name="self" x:Class="NeoEdit.Program.Dialogs.HelpAboutLicenseDialog"
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.Program.Dialogs.HelpAboutLicenseDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	Title="NeoEdit License" Width="600" Height="500" Visibility="Visible">
 
 	<Grid Margin="10">
@@ -18,4 +19,4 @@
 		<Button Grid.Row="2" Width="50" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" Content="Ok" Click="OKClick"/>
 	</Grid>
 
-</Window>
+</controls:NEWindow>

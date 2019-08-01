@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
-using System.Xml.Serialization;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Converters;
 using NeoEdit.Program.Dialogs;
@@ -56,6 +52,9 @@ namespace NeoEdit.Program
 		Action<TextEditor> ShowItem;
 		int itemOrder = 0;
 
+		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
+		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
+
 		static Tabs()
 		{
 			UIHelper<Tabs>.Register();
@@ -66,6 +65,8 @@ namespace NeoEdit.Program
 			UIHelper<Tabs>.AddCallback(a => a.Columns, (obj, o, n) => obj.layoutTimer.Start());
 			UIHelper<Tabs>.AddCallback(a => a.MaxRows, (obj, o, n) => obj.layoutTimer.Start());
 			UIHelper<Tabs>.AddCallback(a => a.MaxColumns, (obj, o, n) => obj.layoutTimer.Start());
+			OutlineBrush.Freeze();
+			BackgroundBrush.Freeze();
 		}
 
 		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
@@ -111,7 +112,7 @@ namespace NeoEdit.Program
 		protected override void OnSourceInitialized(EventArgs e)
 		{
 			base.OnSourceInitialized(e);
-			RestorePosition();
+			try { SetPosition(Settings.WindowPosition); } catch { }
 		}
 
 		void ItemTabs_TabsChanged()
@@ -775,15 +776,15 @@ namespace NeoEdit.Program
 				Items.Move(indexes[ctr], ctr);
 		}
 
-		DockPanel GetTabLabel(Tabs tabs, bool tiles, TextEditor item)
+		DockPanel GetTabLabel(Tabs tabs, bool tiles, TextEditor item, out BindingBase colorBinding)
 		{
-			var dockPanel = new DockPanel { Margin = new Thickness(0, 0, tiles ? 0 : 2, 1), Tag = item };
+			var dockPanel = new DockPanel { Height = 20, Margin = new Thickness(0, 0, tiles ? 0 : 2, 0), Tag = item };
 
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "p0 o== p2 ? \"CadetBlue\" : (p1 ? \"LightBlue\" : \"LightGray\")" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "p0 o== p2 ? \"#c0c0c0\" : (p1 ? \"#808080\" : \"Transparent\")" };
 			multiBinding.Bindings.Add(new Binding { Source = item });
 			multiBinding.Bindings.Add(new Binding(nameof(TextEditor.Active)) { Source = item });
 			multiBinding.Bindings.Add(new Binding(nameof(TopMost)) { Source = tabs });
-			dockPanel.SetBinding(DockPanel.BackgroundProperty, multiBinding);
+			colorBinding = multiBinding;
 
 			dockPanel.MouseLeftButtonDown += (s, e) => tabs.TopMost = item;
 			dockPanel.MouseMove += (s, e) =>
@@ -795,7 +796,7 @@ namespace NeoEdit.Program
 				}
 			};
 
-			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 2, 0) };
+			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 2, 0), Foreground = Brushes.White };
 			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditor.TabLabel)) { Source = item });
 			dockPanel.Children.Add(text);
 
@@ -806,7 +807,7 @@ namespace NeoEdit.Program
 				Style = FindResource(ToolBar.ButtonStyleKey) as Style,
 				VerticalAlignment = VerticalAlignment.Center,
 				Margin = new Thickness(2, 0, 5, 0),
-				Foreground = new SolidColorBrush(Color.FromRgb(128, 32, 32)),
+				Foreground = Brushes.Red,
 				Focusable = false,
 				HorizontalAlignment = HorizontalAlignment.Right,
 			};
@@ -852,8 +853,18 @@ namespace NeoEdit.Program
 				UpdateLayout();
 			}
 
-			var grid = new Grid { Width = canvas.ActualWidth, Height = canvas.ActualHeight, AllowDrop = true };
-			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
+			var outerBorder = new Border
+			{
+				Width = canvas.ActualWidth,
+				Height = canvas.ActualHeight,
+				BorderBrush = OutlineBrush,
+				Background = BackgroundBrush,
+				BorderThickness = new Thickness(2),
+				CornerRadius = new CornerRadius(8),
+			};
+
+			var grid = new Grid { AllowDrop = true };
+			grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 			grid.RowDefinitions.Add(new RowDefinition());
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 			grid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -864,7 +875,8 @@ namespace NeoEdit.Program
 			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
 			foreach (var item in Items)
 			{
-				var tabLabel = GetTabLabel(this, false, item);
+				var tabLabel = GetTabLabel(this, false, item, out var colorBinding);
+				tabLabel.SetBinding(DockPanel.BackgroundProperty, colorBinding);
 				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as TextEditor);
 				stackPanel.Children.Add(tabLabel);
 			}
@@ -884,13 +896,13 @@ namespace NeoEdit.Program
 			Grid.SetColumn(tabLabels, 1);
 			grid.Children.Add(tabLabels);
 
-			var moveLeft = new RepeatButton { Width = 20, Height = 20, Content = "⮜", Margin = new Thickness(0, 0, 4, 0) };
+			var moveLeft = new RepeatButton { Width = 20, Height = 20, Content = "⮜", Margin = new Thickness(0, 0, 4, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent };
 			moveLeft.Click += (s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset - 50, tabLabels.ScrollableWidth)));
 			Grid.SetRow(moveLeft, 0);
 			Grid.SetColumn(moveLeft, 0);
 			grid.Children.Add(moveLeft);
 
-			var moveRight = new RepeatButton { Width = 20, Height = 20, Content = "⮞", Margin = new Thickness(4, 0, 0, 0) };
+			var moveRight = new RepeatButton { Width = 20, Height = 20, Content = "⮞", Margin = new Thickness(4, 0, 0, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent };
 			moveRight.Click += (s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset + 50, tabLabels.ScrollableWidth)));
 			Grid.SetRow(moveRight, 0);
 			Grid.SetColumn(moveRight, 2);
@@ -903,7 +915,8 @@ namespace NeoEdit.Program
 			Grid.SetColumnSpan(contentControl, 3);
 			grid.Children.Add(contentControl);
 
-			canvas.Children.Add(grid);
+			outerBorder.Child = grid;
+			canvas.Children.Add(outerBorder);
 		}
 
 		void DoGridLayout()
@@ -932,8 +945,8 @@ namespace NeoEdit.Program
 			var width = canvas.ActualWidth / columns.Value;
 			var height = canvas.ActualHeight / rows.Value;
 
-			scrollBar.ViewportSize = scrollBar.LargeChange = canvas.ActualHeight;
-			scrollBar.Maximum = height * totalRows - scrollBar.ViewportSize;
+			scrollBar.ViewportSize = canvas.ActualHeight;
+			scrollBar.Maximum = height * totalRows - canvas.ActualHeight;
 
 			for (var ctr = 0; ctr < Items.Count; ++ctr)
 			{
@@ -942,9 +955,20 @@ namespace NeoEdit.Program
 				if ((top + height < 0) || (top > canvas.ActualHeight))
 					continue;
 
-				var dockPanel = new DockPanel { AllowDrop = true, Margin = new Thickness(0, 0, 2, 2) };
+				var border = new Border
+				{
+					BorderBrush = OutlineBrush,
+					Background = BackgroundBrush,
+					BorderThickness = new Thickness(2),
+					CornerRadius = new CornerRadius(8)
+				};
+				Canvas.SetLeft(border, ctr % columns.Value * width);
+				Canvas.SetTop(border, top);
+
+				var dockPanel = new DockPanel { AllowDrop = true };
 				dockPanel.Drop += (s, e) => OnDrop(e, item);
-				var tabLabel = GetTabLabel(this, true, item);
+				var tabLabel = GetTabLabel(this, true, item, out var colorBinding);
+				border.SetBinding(Border.BorderBrushProperty, colorBinding);
 				DockPanel.SetDock(tabLabel, Dock.Top);
 				dockPanel.Children.Add(tabLabel);
 				{
@@ -953,11 +977,11 @@ namespace NeoEdit.Program
 					dockPanel.Children.Add(item);
 				}
 
-				Canvas.SetLeft(dockPanel, ctr % columns.Value * width + 1);
-				Canvas.SetTop(dockPanel, top + 1);
-				dockPanel.Width = width - 2;
-				dockPanel.Height = height - 2;
-				canvas.Children.Add(dockPanel);
+				border.Child = dockPanel;
+
+				border.Width = width;
+				border.Height = height;
+				canvas.Children.Add(border);
 			}
 
 			ShowItem = item =>
@@ -989,7 +1013,7 @@ namespace NeoEdit.Program
 			Items.ToList().ForEach(item => item.Closed());
 			base.OnClosing(e);
 
-			SavePosition();
+			try { Settings.WindowPosition = GetPosition(); } catch { }
 		}
 
 		System.Windows.Forms.NotifyIcon ni;
@@ -1016,106 +1040,11 @@ namespace NeoEdit.Program
 			if (ni == null)
 				return false;
 
-			base.Show();
+			Show();
 			WindowState = WindowState.Normal;
 			ni.Dispose();
 			ni = null;
 			return true;
-		}
-
-		public static class Win32
-		{
-			// RECT structure required by WINDOWPLACEMENT structure
-			[Serializable]
-			[StructLayout(LayoutKind.Sequential)]
-			public struct RECT
-			{
-				public int Left;
-				public int Top;
-				public int Right;
-				public int Bottom;
-
-				public RECT(int left, int top, int right, int bottom)
-				{
-					Left = left;
-					Top = top;
-					Right = right;
-					Bottom = bottom;
-				}
-			}
-
-			// POINT structure required by WINDOWPLACEMENT structure
-			[Serializable]
-			[StructLayout(LayoutKind.Sequential)]
-			public struct POINT
-			{
-				public int X;
-				public int Y;
-
-				public POINT(int x, int y)
-				{
-					X = x;
-					Y = y;
-				}
-			}
-
-			// WINDOWPLACEMENT stores the position, size, and state of a window
-			[Serializable]
-			[StructLayout(LayoutKind.Sequential)]
-			public struct WINDOWPLACEMENT
-			{
-				public int length;
-				public int flags;
-				public int showCmd;
-				public POINT minPosition;
-				public POINT maxPosition;
-				public RECT normalPosition;
-			}
-
-			public const int SW_SHOWNORMAL = 1;
-			public const int SW_SHOWMINIMIZED = 2;
-
-			[DllImport("user32.dll")]
-			public static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
-
-			[DllImport("user32.dll")]
-			public static extern bool GetWindowPlacement(IntPtr hWnd, out WINDOWPLACEMENT lpwndpl);
-		}
-
-		public void SavePosition()
-		{
-			try
-			{
-				var placement = new Win32.WINDOWPLACEMENT();
-				Win32.GetWindowPlacement(new WindowInteropHelper(this).Handle, out placement);
-
-				using (var ms = new MemoryStream())
-				{
-					new XmlSerializer(typeof(Win32.WINDOWPLACEMENT)).Serialize(ms, placement);
-					var xmlBytes = ms.ToArray();
-					Settings.WindowPosition = Coder.BytesToString(xmlBytes, Coder.CodePage.UTF8);
-				}
-			}
-			catch { }
-		}
-
-		public void RestorePosition()
-		{
-			try
-			{
-				if (string.IsNullOrEmpty(Settings.WindowPosition))
-					return;
-
-				Win32.WINDOWPLACEMENT placement;
-				using (var ms = new MemoryStream(Coder.StringToBytes(Settings.WindowPosition, Coder.CodePage.UTF8)))
-					placement = (Win32.WINDOWPLACEMENT)new XmlSerializer(typeof(Win32.WINDOWPLACEMENT)).Deserialize(ms);
-
-				placement.length = Marshal.SizeOf(typeof(Win32.WINDOWPLACEMENT));
-				placement.flags = 0;
-				placement.showCmd = placement.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : placement.showCmd;
-				Win32.SetWindowPlacement(new WindowInteropHelper(this).Handle, ref placement);
-			}
-			catch { }
 		}
 	}
 }

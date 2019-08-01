@@ -2,12 +2,12 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using NeoEdit.Program;
+using NeoEdit.Program.Misc;
 
 namespace NeoEdit.Program.Controls
 {
@@ -21,50 +21,48 @@ namespace NeoEdit.Program.Controls
 		public IValueConverter Converter { get { return UIHelper<MultiMenuItem>.GetPropValue<IValueConverter>(this); } set { UIHelper<MultiMenuItem>.SetPropValue(this, value); } }
 		[DepProp]
 		public object MultiValue { get { return UIHelper<MultiMenuItem>.GetPropValue<object>(this); } set { UIHelper<MultiMenuItem>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool? MultiChecked { get { return UIHelper<MultiMenuItem>.GetPropValue<bool?>(this); } set { UIHelper<MultiMenuItem>.SetPropValue(this, value); MultiStatus = value; } }
 
-		static MultiMenuItem() { UIHelper<MultiMenuItem>.Register(); }
-
-		public MultiMenuItem() { SetupStyle(); }
-
-		protected override Visual GetVisualChild(int index)
+		static MultiMenuItem()
 		{
-			if ((Property == null) || (Objects == null))
-				MultiChecked = null;
-			else
-			{
-				var property = typeof(TextEditor).GetProperty(Property);
-				var match = Objects.Where(obj => obj.Active).Select(obj => property.GetValue(obj)).Select(value => Converter?.Convert(value, MultiValue.GetType(), null, CultureInfo.DefaultThreadCurrentCulture) ?? value).Select(value => value.Equals(MultiValue)).Distinct().ToList();
-				MultiChecked = match.Count == 1 ? match.First() : default(bool?);
-			}
-
-			return base.GetVisualChild(index);
+			UIHelper<MultiMenuItem>.Register();
+			UIHelper<MultiMenuItem>.AddObservableCallback(x => x.Objects, (obj, s, e) => obj.InvalidateIconBinding());
 		}
 
-		void SetupStyle()
+		readonly RunOnceTimer timer;
+
+		public MultiMenuItem() => timer = new RunOnceTimer(SetupIconBinding);
+
+		void InvalidateIconBinding() => timer.Start();
+
+		void SetupIconBinding()
 		{
-			var style = new Style();
+			var multiBinding = new MultiBinding { Converter = new AggregateConverter(this) };
+			foreach (var obj in Objects)
+				multiBinding.Bindings.Add(new Binding(Property) { Source = obj, Converter = Converter });
+			SetBinding(IconProperty, multiBinding);
+		}
 
+		class AggregateConverter : IMultiValueConverter
+		{
+			readonly MultiMenuItem multiMenuItem;
+
+			public AggregateConverter(MultiMenuItem multiMenuItem) => this.multiMenuItem = multiMenuItem;
+
+			public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 			{
-				var trigger = new DataTrigger { Binding = new Binding("MultiChecked") { Source = this }, Value = true };
-				trigger.Setters.Add(new Setter { Property = IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Checked.png")) } });
-				style.Triggers.Add(trigger);
+				var match = values?.Select(value => value.Equals(multiMenuItem.MultiValue)).Distinct().ToList();
+				multiMenuItem.MultiStatus = match?.Count == 1 ? match.First() : default(bool?);
+
+				switch (multiMenuItem.MultiStatus)
+				{
+					case true: return new Image { Stretch = Stretch.None, Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Checked.png")) };
+					case false: return new Image { Stretch = Stretch.None, Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Unchecked.png")) };
+					case null: return new Image { Stretch = Stretch.None, Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Indeterminate.png")) };
+					default: return null;
+				}
 			}
 
-			{
-				var trigger = new DataTrigger { Binding = new Binding("MultiChecked") { Source = this }, Value = false };
-				trigger.Setters.Add(new Setter { Property = IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Unchecked.png")) } });
-				style.Triggers.Add(trigger);
-			}
-
-			{
-				var trigger = new DataTrigger { Binding = new Binding("MultiChecked") { Source = this }, Value = null };
-				trigger.Setters.Add(new Setter { Property = IconProperty, Value = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Indeterminate.png")) } });
-				style.Triggers.Add(trigger);
-			}
-
-			Style = style;
+			public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
 		}
 	}
 }

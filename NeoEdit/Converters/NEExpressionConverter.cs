@@ -78,8 +78,8 @@ namespace NeoEdit.Program.Converters
 			}
 			if (targetType == typeof(Brush))
 			{
-				if (result is string)
-					result = typeof(Brushes).GetProperty(result as string).GetValue(null);
+				if (result is string s)
+					result = new BrushConverter().ConvertFrom(s);
 				if (!(result is Brush))
 					return null;
 				return result;

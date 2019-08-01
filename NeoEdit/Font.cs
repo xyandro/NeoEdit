@@ -53,7 +53,7 @@ namespace NeoEdit.Program
 			supported = new bool[chars.Keys.Max() + 1];
 			foreach (var pair in chars)
 			{
-				var fs = new FormattedText(Encoding.UTF32.GetString(BitConverter.GetBytes(pair.Key)), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, Typeface, 14, Brushes.Black);
+				var fs = new FormattedText(Encoding.UTF32.GetString(BitConverter.GetBytes(pair.Key)), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, Typeface, 14, Brushes.White);
 				supported[pair.Key] = (pair.Key == ' ') || (fs.Width == 8.43);
 			}
 		}
@@ -88,7 +88,7 @@ namespace NeoEdit.Program
 		{
 			if (!ShowSpecialChars)
 				str = RemoveSpecialChars(str);
-			return new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, Typeface, FontSize, Brushes.Black);
+			return new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, Typeface, FontSize, Brushes.White);
 		}
 	}
 }
