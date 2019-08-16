@@ -570,7 +570,7 @@ namespace NeoEdit.Program
 			Add(textEdit1);
 			Add(textEdit2);
 			textEdit1.DiffTarget = textEdit2;
-			SetLayout(2);
+			SetLayout(maxColumns: 2);
 			return this;
 		}
 

@@ -90,7 +90,7 @@ namespace NeoEdit.Program
 						if (tabs.Items[ctr + 1].ContentType == ParserType.None)
 							tabs.Items[ctr + 1].ContentType = tabs.Items[ctr].ContentType;
 					}
-					tabs.SetLayout(2);
+					tabs.SetLayout(maxColumns: 2);
 				}
 
 				return tabs;
