@@ -74,7 +74,7 @@ namespace NeoEdit.Program
 				var shutdownData = string.IsNullOrWhiteSpace(clParams.Wait) ? null : new ShutdownData(clParams.Wait, clParams.Files.Count);
 				var tabs = default(Tabs);
 				if (!clParams.Diff)
-					tabs = UIHelper<Tabs>.GetNewest();
+					tabs = UIHelper<Tabs>.GetAllWindows().OrderByDescending(x => x.LastActivated).FirstOrDefault();
 				if (tabs == null)
 					tabs = new Tabs();
 				foreach (var file in clParams.Files)

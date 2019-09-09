@@ -45,6 +45,7 @@ namespace NeoEdit.Program
 		public string ClipboardCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public string KeysValuesCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
+		public DateTime LastActivated { get; private set; }
 
 		readonly RunOnceTimer layoutTimer, topMostTimer;
 
@@ -433,6 +434,12 @@ namespace NeoEdit.Program
 			}
 
 			return true;
+		}
+
+		protected override void OnActivated(EventArgs e)
+		{
+			base.OnActivated(e);
+			LastActivated = DateTime.Now;
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)

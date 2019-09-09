@@ -128,8 +128,6 @@ namespace NeoEdit.Program.Controls
 		public static void SetPropValue<T>(ControlType control, T value, [CallerMemberName] string caller = "") => control.SetValue(dependencyProperty[caller], value);
 
 		public static List<ControlType> GetAllWindows() => Application.Current.Windows.OfType<ControlType>().Cast<ControlType>().ToList();
-
-		public static ControlType GetNewest() => GetAllWindows().LastOrDefault();
 	}
 
 	public static class UIHelper
