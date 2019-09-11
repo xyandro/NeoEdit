@@ -20,10 +20,11 @@ namespace NeoEdit.Program.Dialogs
 
 		static NumericFloorRoundCeilingDialog() { UIHelper<NumericFloorRoundCeilingDialog>.Register(); }
 
-		NumericFloorRoundCeilingDialog(NEVariables variables)
+		NumericFloorRoundCeilingDialog(string title, NEVariables variables)
 		{
 			Variables = variables;
 			InitializeComponent();
+			Title = title;
 			BaseValue = "0";
 			Interval = "1";
 		}
@@ -37,9 +38,9 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables)
+		static public Result Run(Window parent, string title, NEVariables variables)
 		{
-			var dialog = new NumericFloorRoundCeilingDialog(variables) { Owner = parent };
+			var dialog = new NumericFloorRoundCeilingDialog(title, variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

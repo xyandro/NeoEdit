@@ -302,7 +302,7 @@ namespace NeoEdit.Program
 
 		void Command_Numeric_Absolute() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => GetString(range).TrimStart('-')).ToList());
 
-		NumericFloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, GetVariables());
+		NumericFloorRoundCeilingDialog.Result Command_Numeric_Floor_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, "Floor", GetVariables());
 
 		void Command_Numeric_Floor(NumericFloorRoundCeilingDialog.Result result)
 		{
@@ -311,7 +311,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Floor((double.Parse(GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index]) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
-		NumericFloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, GetVariables());
+		NumericFloorRoundCeilingDialog.Result Command_Numeric_Ceiling_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, "Ceiling", GetVariables());
 
 		void Command_Numeric_Ceiling(NumericFloorRoundCeilingDialog.Result result)
 		{
@@ -320,7 +320,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => (Math.Ceiling((double.Parse(GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index]) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
-		NumericFloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, GetVariables());
+		NumericFloorRoundCeilingDialog.Result Command_Numeric_Round_Dialog() => NumericFloorRoundCeilingDialog.Run(WindowParent, "Round", GetVariables());
 
 		void Command_Numeric_Round(NumericFloorRoundCeilingDialog.Result result)
 		{
