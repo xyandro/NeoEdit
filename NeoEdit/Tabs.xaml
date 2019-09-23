@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:converters="clr-namespace:NeoEdit.Program.Converters"
 	xmlns:local="clr-namespace:NeoEdit.Program"
-	Width="800" Height="600" Visibility="Visible" WindowState="Maximized">
+	Width="800" Height="600" Visibility="Visible">
 
 	<Window.Title>
 		<!--A simple Binding doesn't give any title if [0] blank-->

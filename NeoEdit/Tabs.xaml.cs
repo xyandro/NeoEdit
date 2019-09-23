@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
+using System.Xml.Serialization;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Converters;
 using NeoEdit.Program.Dialogs;
@@ -102,6 +106,12 @@ namespace NeoEdit.Program
 
 			if (addEmpty)
 				Add(new TextEditor());
+		}
+
+		protected override void OnSourceInitialized(EventArgs e)
+		{
+			base.OnSourceInitialized(e);
+			RestorePosition();
 		}
 
 		void ItemTabs_TabsChanged()
@@ -978,6 +988,8 @@ namespace NeoEdit.Program
 			TopMost = topMost;
 			Items.ToList().ForEach(item => item.Closed());
 			base.OnClosing(e);
+
+			SavePosition();
 		}
 
 		System.Windows.Forms.NotifyIcon ni;
@@ -1009,6 +1021,101 @@ namespace NeoEdit.Program
 			ni.Dispose();
 			ni = null;
 			return true;
+		}
+
+		public static class Win32
+		{
+			// RECT structure required by WINDOWPLACEMENT structure
+			[Serializable]
+			[StructLayout(LayoutKind.Sequential)]
+			public struct RECT
+			{
+				public int Left;
+				public int Top;
+				public int Right;
+				public int Bottom;
+
+				public RECT(int left, int top, int right, int bottom)
+				{
+					Left = left;
+					Top = top;
+					Right = right;
+					Bottom = bottom;
+				}
+			}
+
+			// POINT structure required by WINDOWPLACEMENT structure
+			[Serializable]
+			[StructLayout(LayoutKind.Sequential)]
+			public struct POINT
+			{
+				public int X;
+				public int Y;
+
+				public POINT(int x, int y)
+				{
+					X = x;
+					Y = y;
+				}
+			}
+
+			// WINDOWPLACEMENT stores the position, size, and state of a window
+			[Serializable]
+			[StructLayout(LayoutKind.Sequential)]
+			public struct WINDOWPLACEMENT
+			{
+				public int length;
+				public int flags;
+				public int showCmd;
+				public POINT minPosition;
+				public POINT maxPosition;
+				public RECT normalPosition;
+			}
+
+			public const int SW_SHOWNORMAL = 1;
+			public const int SW_SHOWMINIMIZED = 2;
+
+			[DllImport("user32.dll")]
+			public static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
+
+			[DllImport("user32.dll")]
+			public static extern bool GetWindowPlacement(IntPtr hWnd, out WINDOWPLACEMENT lpwndpl);
+		}
+
+		public void SavePosition()
+		{
+			try
+			{
+				var placement = new Win32.WINDOWPLACEMENT();
+				Win32.GetWindowPlacement(new WindowInteropHelper(this).Handle, out placement);
+
+				using (var ms = new MemoryStream())
+				{
+					new XmlSerializer(typeof(Win32.WINDOWPLACEMENT)).Serialize(ms, placement);
+					var xmlBytes = ms.ToArray();
+					Settings.WindowPosition = Coder.BytesToString(xmlBytes, Coder.CodePage.UTF8);
+				}
+			}
+			catch { }
+		}
+
+		public void RestorePosition()
+		{
+			try
+			{
+				if (string.IsNullOrEmpty(Settings.WindowPosition))
+					return;
+
+				Win32.WINDOWPLACEMENT placement;
+				using (var ms = new MemoryStream(Coder.StringToBytes(Settings.WindowPosition, Coder.CodePage.UTF8)))
+					placement = (Win32.WINDOWPLACEMENT)new XmlSerializer(typeof(Win32.WINDOWPLACEMENT)).Deserialize(ms);
+
+				placement.length = Marshal.SizeOf(typeof(Win32.WINDOWPLACEMENT));
+				placement.flags = 0;
+				placement.showCmd = placement.showCmd == Win32.SW_SHOWMINIMIZED ? Win32.SW_SHOWNORMAL : placement.showCmd;
+				Win32.SetWindowPlacement(new WindowInteropHelper(this).Handle, ref placement);
+			}
+			catch { }
 		}
 	}
 }

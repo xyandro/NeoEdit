@@ -23,6 +23,7 @@ namespace NeoEdit.Program
 				try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
 				try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
 				try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
+				try { windowPosition = xml.Element(nameof(WindowPosition)).Value; } catch { }
 			}
 			catch { }
 		}
@@ -37,6 +38,7 @@ namespace NeoEdit.Program
 				xml.Add(new XElement(nameof(YouTubeDLPath), youTubeDLPath));
 				xml.Add(new XElement(nameof(FFmpegPath), ffmpegPath));
 				xml.Add(new XElement(nameof(Font.FontSize), Font.FontSize));
+				xml.Add(new XElement(nameof(WindowPosition), windowPosition));
 				xml.Save(settingsFile);
 			}
 			catch { }
@@ -99,5 +101,17 @@ namespace NeoEdit.Program
 
 		static EventHandler ffmpegPathChanged;
 		public static event EventHandler FFmpegPathChanged { add { ffmpegPathChanged += value; } remove { ffmpegPathChanged -= value; } }
+
+		static string windowPosition;
+		public static string WindowPosition
+		{
+			get { return windowPosition; }
+			set
+			{
+				windowPosition = value;
+				SaveSettings();
+			}
+		}
+
 	}
 }
