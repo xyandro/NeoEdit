@@ -135,6 +135,39 @@
 		<Separator/>
 		<controls:NEMenuItem Header="Co_nvert" CommandEnum="Edit_Convert"/>
 		<Separator/>
+		<controls:NEMenuItem Header="M_odify Regions" CommandEnum="Edit_ModifyRegions">
+			<MenuItem Header="_Select">
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Region9"/>
+			</MenuItem>
+			<MenuItem Header="_Add">
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Add_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Add_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Add_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Add_Region9"/>
+			</MenuItem>
+			<MenuItem Header="_Remove">
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Remove_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Remove_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Remove_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Remove_Region9"/>
+			</MenuItem>
+			<MenuItem Header="_Next">
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Next_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Next_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Next_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Next_Region9"/>
+			</MenuItem>
+			<MenuItem Header="_Previous">
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Previous_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Previous_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Previous_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Previous_Region9"/>
+			</MenuItem>
+		</controls:NEMenuItem>
+		<Separator/>
 		<MenuItem Header="Na_vigate">
 			<controls:NEMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft"/>
 			<controls:NEMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight"/>
@@ -669,244 +702,6 @@
 			<controls:NEMenuItem Header="_Remove" CommandEnum="Select_Selection_Remove"/>
 			<controls:NEMenuItem Header="Remove _Before Current" CommandEnum="Select_Selection_RemoveBeforeCurrent"/>
 			<controls:NEMenuItem Header="Remove _After Current" CommandEnum="Select_Selection_RemoveAfterCurrent"/>
-		</MenuItem>
-	</MenuItem>
-	<MenuItem Header="_Region">
-		<controls:NEMenuItem Header="_Modify Regions" CommandEnum="Region_ModifyRegions"/>
-		<MenuItem Header="S_et Selections">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_SetSelections_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_SetSelections_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_SetSelections_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_SetSelections_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_SetSelections_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_SetSelections_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_SetSelections_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_SetSelections_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_SetSelections_Region9"/>
-			<controls:NEMenuItem Header="_All" CommandEnum="Region_SetSelections_All"/>
-		</MenuItem>
-		<MenuItem Header="_Add Selections">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_AddSelections_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_AddSelections_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_AddSelections_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_AddSelections_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_AddSelections_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_AddSelections_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_AddSelections_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_AddSelections_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_AddSelections_Region9"/>
-			<controls:NEMenuItem Header="_All" CommandEnum="Region_AddSelections_All"/>
-		</MenuItem>
-		<MenuItem Header="_Remove Selections">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_RemoveSelections_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_RemoveSelections_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_RemoveSelections_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_RemoveSelections_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_RemoveSelections_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_RemoveSelections_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_RemoveSelections_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_RemoveSelections_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_RemoveSelections_Region9"/>
-			<controls:NEMenuItem Header="_All" CommandEnum="Region_RemoveSelections_All"/>
-		</MenuItem>
-		<MenuItem Header="Re_place Selections">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_ReplaceSelections_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_ReplaceSelections_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_ReplaceSelections_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_ReplaceSelections_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_ReplaceSelections_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_ReplaceSelections_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_ReplaceSelections_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_ReplaceSelections_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_ReplaceSelections_Region9"/>
-			<controls:NEMenuItem Header="_All" CommandEnum="Region_ReplaceSelections_All"/>
-		</MenuItem>
-		<MenuItem Header="_Limit To Selections">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_LimitToSelections_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_LimitToSelections_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_LimitToSelections_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_LimitToSelections_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_LimitToSelections_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_LimitToSelections_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_LimitToSelections_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_LimitToSelections_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_LimitToSelections_Region9"/>
-			<controls:NEMenuItem Header="_All" CommandEnum="Region_LimitToSelections_All"/>
-		</MenuItem>
-		<MenuItem Header="_Clear">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_Clear_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_Clear_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_Clear_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_Clear_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_Clear_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_Clear_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_Clear_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_Clear_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_Clear_Region9"/>
-			<controls:NEMenuItem Header="_All" CommandEnum="Region_Clear_All"/>
-		</MenuItem>
-		<Separator/>
-		<MenuItem Header="Repeat _By Selections">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_RepeatBySelections_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_RepeatBySelections_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_RepeatBySelections_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_RepeatBySelections_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_RepeatBySelections_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_RepeatBySelections_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_RepeatBySelections_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_RepeatBySelections_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_RepeatBySelections_Region9"/>
-		</MenuItem>
-		<Separator/>
-		<MenuItem Header="C_opy Enclosing Region">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_CopyEnclosingRegion_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_CopyEnclosingRegion_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_CopyEnclosingRegion_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_CopyEnclosingRegion_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_CopyEnclosingRegion_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_CopyEnclosingRegion_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegion_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegion_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegion_Region9"/>
-		</MenuItem>
-		<MenuItem Header="Copy Enclosing Region _Index">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Region_CopyEnclosingRegionIndex_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Region_CopyEnclosingRegionIndex_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Region_CopyEnclosingRegionIndex_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Region_CopyEnclosingRegionIndex_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Region_CopyEnclosingRegionIndex_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Region_CopyEnclosingRegionIndex_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Region_CopyEnclosingRegionIndex_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Region_CopyEnclosingRegionIndex_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Region_CopyEnclosingRegionIndex_Region9"/>
-		</MenuItem>
-		<Separator/>
-		<MenuItem Header="_Transform Selections">
-			<MenuItem Header="_Flatten">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Flatten_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Flatten_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Flatten_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Flatten_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Flatten_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Flatten_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Flatten_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Flatten_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Flatten_Region9"/>
-			</MenuItem>
-			<MenuItem Header="_Transpose">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Transpose_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Transpose_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Transpose_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Transpose_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Transpose_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Transpose_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Transpose_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Transpose_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Transpose_Region9"/>
-			</MenuItem>
-			<MenuItem Header="Rotate _Left">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_RotateLeft_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_RotateLeft_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_RotateLeft_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_RotateLeft_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_RotateLeft_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_RotateLeft_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateLeft_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateLeft_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateLeft_Region9"/>
-			</MenuItem>
-			<MenuItem Header="Rotate _Right">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_RotateRight_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_RotateRight_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_RotateRight_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_RotateRight_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_RotateRight_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_RotateRight_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_RotateRight_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_RotateRight_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_RotateRight_Region9"/>
-			</MenuItem>
-			<MenuItem Header="Rotate _180">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_Rotate180_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_Rotate180_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_Rotate180_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_Rotate180_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_Rotate180_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_Rotate180_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_Rotate180_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_Rotate180_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_Rotate180_Region9"/>
-			</MenuItem>
-			<MenuItem Header="Mirror _Horizontal">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorHorizontal_Region9"/>
-			</MenuItem>
-			<MenuItem Header="Mirror _Vertical">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_TransformSelections_MirrorVertical_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_TransformSelections_MirrorVertical_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_TransformSelections_MirrorVertical_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_TransformSelections_MirrorVertical_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_TransformSelections_MirrorVertical_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_TransformSelections_MirrorVertical_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_TransformSelections_MirrorVertical_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_TransformSelections_MirrorVertical_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_TransformSelections_MirrorVertical_Region9"/>
-			</MenuItem>
-		</MenuItem>
-		<Separator/>
-		<MenuItem Header="_Select">
-			<MenuItem Header="_Regions">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_Regions_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_Regions_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_Regions_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_Regions_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_Regions_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_Regions_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_Regions_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_Regions_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_Regions_Region9"/>
-				<controls:NEMenuItem Header="_All" CommandEnum="Region_Select_Regions_All"/>
-			</MenuItem>
-			<MenuItem Header="_Enclosing Region">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_EnclosingRegion_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_EnclosingRegion_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_EnclosingRegion_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_EnclosingRegion_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_EnclosingRegion_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_EnclosingRegion_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_EnclosingRegion_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_EnclosingRegion_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_EnclosingRegion_Region9"/>
-			</MenuItem>
-			<MenuItem Header="_With Enclosing Region">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_WithEnclosingRegion_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_WithEnclosingRegion_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_WithEnclosingRegion_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_WithEnclosingRegion_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_WithEnclosingRegion_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_WithEnclosingRegion_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_WithEnclosingRegion_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_WithEnclosingRegion_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_WithEnclosingRegion_Region9"/>
-			</MenuItem>
-			<MenuItem Header="W_ithout Enclosing Region">
-				<controls:NEMenuItem Header="Region _1" CommandEnum="Region_Select_WithoutEnclosingRegion_Region1"/>
-				<controls:NEMenuItem Header="Region _2" CommandEnum="Region_Select_WithoutEnclosingRegion_Region2"/>
-				<controls:NEMenuItem Header="Region _3" CommandEnum="Region_Select_WithoutEnclosingRegion_Region3"/>
-				<controls:NEMenuItem Header="Region _4" CommandEnum="Region_Select_WithoutEnclosingRegion_Region4"/>
-				<controls:NEMenuItem Header="Region _5" CommandEnum="Region_Select_WithoutEnclosingRegion_Region5"/>
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Region_Select_WithoutEnclosingRegion_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Region_Select_WithoutEnclosingRegion_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Region_Select_WithoutEnclosingRegion_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Region_Select_WithoutEnclosingRegion_Region9"/>
-			</MenuItem>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Macro">

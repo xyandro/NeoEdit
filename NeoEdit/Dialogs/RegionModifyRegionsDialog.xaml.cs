@@ -11,14 +11,29 @@ namespace NeoEdit.Program.Dialogs
 	{
 		public enum Action
 		{
-			Select,
-			Set,
-			Clear,
-			Remove,
-			Replace,
-			Unite,
-			Intersect,
-			Exclude,
+			Select_Select,
+			Select_Previous,
+			Select_Next,
+			Select_Enclosing,
+			Select_WithEnclosing,
+			Select_WithoutEnclosing,
+			Modify_Set,
+			Modify_Clear,
+			Modify_Remove,
+			Modify_Add,
+			Modify_Unite,
+			Modify_Intersect,
+			Modify_Exclude,
+			Modify_Repeat,
+			Copy_Enclosing,
+			Copy_EnclosingIndex,
+			Transform_Flatten,
+			Transform_Transpose,
+			Transform_RotateLeft,
+			Transform_RotateRight,
+			Transform_Rotate180,
+			Transform_MirrorHorizontal,
+			Transform_MirrorVertical,
 		}
 
 		public class Result
@@ -57,10 +72,9 @@ namespace NeoEdit.Program.Dialogs
 			InitializeComponent();
 		}
 
-		void SetButtons(object sender, RoutedEventArgs e)
-		{
-			Region1 = Region2 = Region3 = Region4 = Region5 = Region6 = Region7 = Region8 = Region9 = (bool)(sender as Button).Tag;
-		}
+		void SetButtons(object sender, RoutedEventArgs e) => Region1 = Region2 = Region3 = Region4 = Region5 = Region6 = Region7 = Region8 = Region9 = true;
+
+		void Reset(object sender, RoutedEventArgs e) => Region1 = Region2 = Region3 = Region4 = Region5 = Region6 = Region7 = Region8 = Region9 = false;
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)

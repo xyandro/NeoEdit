@@ -13,6 +13,9 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -33,35 +36,55 @@
 
 				<Separator Background="Transparent"/>
 
-				<UniformGrid Columns="3">
-					<Button Click="SetButtons" Content="_All">
-						<Button.Tag>
-							<system:Boolean>True</system:Boolean>
-						</Button.Tag>
-					</Button>
-					<Button Click="SetButtons" Content="_None">
-						<Button.Tag>
-							<system:Boolean>False</system:Boolean>
-						</Button.Tag>
-					</Button>
-				</UniformGrid>
+				<Button Click="SetButtons" Content="_All" Padding="10,0" HorizontalAlignment="Left"/>
 			</StackPanel>
 		</GroupBox>
 
-		<GroupBox Grid.Row="1" Grid.Column="0" Header="Actions">
+		<GroupBox Grid.Row="1" Grid.Column="0" Header="Select">
 			<UniformGrid Columns="3">
-				<Button Click="OkClick" Content="_Select" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Select}"/>
-				<Button Click="OkClick" Content="S_et" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Set}"/>
-				<Button Click="OkClick" Content="_Clear" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Clear}"/>
-				<Button Click="OkClick" Content="_Remove" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Remove}"/>
-				<Button Click="OkClick" Content="Re_place" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Replace}"/>
-				<Button Click="OkClick" Content="_Unite" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Unite}"/>
-				<Button Click="OkClick" Content="_Intersect" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Intersect}"/>
-				<Button Click="OkClick" Content="E_xclude" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Exclude}"/>
+				<Button Click="OkClick" Content="_Select" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Select_Select}"/>
+				<Button Click="OkClick" Content="Pre_vious" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Select_Previous}"/>
+				<Button Click="OkClick" Content="_Next" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Select_Next}"/>
+				<Button Click="OkClick" Content="Enc_losing" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Select_Enclosing}"/>
+				<Button Click="OkClick" Content="_With Enclosing" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Select_WithEnclosing}"/>
+				<Button Click="OkClick" Content="With_out Enclosing" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Select_WithoutEnclosing}"/>
 			</UniformGrid>
 		</GroupBox>
 
-		<Button Grid.Row="3" Grid.Column="0" Content="Cancel" IsCancel="True" HorizontalAlignment="Right"/>
+		<GroupBox Grid.Row="2" Grid.Column="0" Header="Modify">
+			<UniformGrid Columns="3">
+				<Button Click="OkClick" Content="S_et" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Modify_Set}"/>
+				<Button Click="OkClick" Content="_Clear" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Modify_Clear}"/>
+				<Button Click="OkClick" Content="_Remove" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Modify_Remove}"/>
+				<Button Click="OkClick" Content="A_dd" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Modify_Add}"/>
+				<Button Click="OkClick" Content="_Unite" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Modify_Unite}"/>
+				<Button Click="OkClick" Content="_Intersect" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Modify_Intersect}"/>
+				<Button Click="OkClick" Content="E_xclude" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Modify_Exclude}"/>
+				<Button Click="OkClick" Content="Re_peat" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Modify_Repeat}"/>
+			</UniformGrid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="3" Grid.Column="0" Header="Copy">
+			<UniformGrid Columns="3">
+				<Button Click="OkClick" Content="Enclosing" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Copy_Enclosing}"/>
+				<Button Click="OkClick" Content="Enclosing Index" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Copy_EnclosingIndex}"/>
+			</UniformGrid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="4" Grid.Column="0" Header="Transform">
+			<UniformGrid Columns="3">
+				<Button Click="OkClick" Content="Flatten" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Transform_Flatten}"/>
+				<Button Click="OkClick" Content="Transpose" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Transform_Transpose}"/>
+				<Button Click="OkClick" Content="Rotate Left" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Transform_RotateLeft}"/>
+				<Button Click="OkClick" Content="Rotate Right" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Transform_RotateRight}"/>
+				<Button Click="OkClick" Content="Rotate 180" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Transform_Rotate180}"/>
+				<Button Click="OkClick" Content="Mirror Horizontal" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Transform_MirrorHorizontal}"/>
+				<Button Click="OkClick" Content="Mirror Vertical" Tag="{x:Static dialogs:RegionModifyRegionsDialog+Action.Transform_MirrorVertical}"/>
+			</UniformGrid>
+		</GroupBox>
+
+		<Button Grid.Row="6" Grid.Column="0" Click="Reset" Content="Rese_t" HorizontalAlignment="Left"/>
+		<Button Grid.Row="6" Grid.Column="0" Content="Cancel" IsCancel="True" HorizontalAlignment="Right"/>
 	</Grid>
 
 </controls:ModalDialog>
