@@ -62,16 +62,16 @@ namespace NeoEdit.Program
 		void Command_File_Save_Save()
 		{
 			if (FileName == null)
-				Command_File_Save_SaveAs();
+				Command_File_SaveCopy_SaveCopy();
 			else
 				Save(FileName);
 		}
 
-		void Command_File_Save_SaveAs(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
+		void Command_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		GetExpressionDialog.Result Command_File_Save_SaveAsByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
+		GetExpressionDialog.Result Command_File_SaveCopy_SaveCopyByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
-		void Command_File_Save_SaveAsByExpression(GetExpressionDialog.Result result, AnswerResult answer, bool copyOnly = false)
+		void Command_File_SaveCopy_SaveCopyByExpression(GetExpressionDialog.Result result, AnswerResult answer, bool copyOnly = false)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
@@ -97,24 +97,17 @@ namespace NeoEdit.Program
 			Save(newFileName, copyOnly);
 		}
 
-		void Command_File_Save_SetDisplayName(GetExpressionDialog.Result result)
-		{
-			if (result.Expression == "f")
-			{
-				DisplayName = null;
-				return;
-			}
-			var results = GetVariableExpressionResults<string>(result.Expression);
-			if (results.Count != 1)
-				throw new Exception("Only one value may be specified");
-			DisplayName = results[0];
-		}
+		void Command_File_Copy_Path() => SetClipboardFile(FileName);
+
+		void Command_File_Copy_Name() => SetClipboardString(Path.GetFileName(FileName));
+
+		void Command_File_Copy_DisplayName() => SetClipboardString(DisplayName ?? Path.GetFileName(FileName));
 
 		void Command_File_Operations_Rename()
 		{
 			if (string.IsNullOrEmpty(FileName))
 			{
-				Command_File_Save_SaveAs();
+				Command_File_SaveCopy_SaveCopy();
 				return;
 			}
 
@@ -198,6 +191,19 @@ namespace NeoEdit.Program
 			textEdit.ContentType = ContentType;
 			textEdit.DiffTarget = this;
 			TabsParent.TopMost = topMost;
+		}
+
+		void Command_File_Operations_SetDisplayName(GetExpressionDialog.Result result)
+		{
+			if (result.Expression == "f")
+			{
+				DisplayName = null;
+				return;
+			}
+			var results = GetVariableExpressionResults<string>(result.Expression);
+			if (results.Count != 1)
+				throw new Exception("Only one value may be specified");
+			DisplayName = results[0];
 		}
 
 		void Command_File_Close(AnswerResult answer)
@@ -316,12 +322,6 @@ namespace NeoEdit.Program
 		}
 
 		void Command_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
-
-		void Command_File_Copy_Path() => SetClipboardFile(FileName);
-
-		void Command_File_Copy_Name() => SetClipboardString(Path.GetFileName(FileName));
-
-		void Command_File_Copy_DisplayName() => SetClipboardString(DisplayName ?? Path.GetFileName(FileName));
 
 		EncodingDialog.Result Command_File_Encoding_Encoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage);
 

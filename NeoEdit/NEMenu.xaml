@@ -26,11 +26,14 @@
 			<controls:NEMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
 			<controls:NEMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
 			<controls:NEMenuItem Header="Save As By E_xpression" CommandEnum="File_Save_SaveAsByExpression"/>
+		</MenuItem>
+		<MenuItem Header="_Copy">
+			<controls:NEMenuItem Header="_Copy To" CommandEnum="File_Copy_CopyTo"/>
+			<controls:NEMenuItem Header="Copy To By E_xpression" CommandEnum="File_Copy_CopyToByExpression"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Copy To" CommandEnum="File_Save_CopyTo"/>
-			<controls:NEMenuItem Header="Copy To By Ex_pression" CommandEnum="File_Save_CopyToByExpression"/>
-			<Separator/>
-			<controls:NEMenuItem Header="Set _Display Name" CommandEnum="File_Save_SetDisplayName"/>
+			<controls:NEMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
+			<controls:NEMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
+			<controls:NEMenuItem Header="_Display Name" CommandEnum="File_Copy_DisplayName"/>
 		</MenuItem>
 		<MenuItem Header="O_perations">
 			<controls:NEMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
@@ -41,6 +44,8 @@
 			<controls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="File_Operations_DragDrop"/>
 			<Separator/>
 			<controls:NEMenuItem Header="_VCS Diff" CommandEnum="File_Operations_VCSDiff"/>
+			<Separator/>
+			<controls:NEMenuItem Header="_Set Display Name" CommandEnum="File_Operations_SetDisplayName"/>
 		</MenuItem>
 		<controls:NEMenuItem Header="C_lose" CommandEnum="File_Close"/>
 		<controls:NEMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
@@ -53,12 +58,6 @@
 			<controls:NEMenuItem Header="_Files" CommandEnum="File_Insert_Files"/>
 			<controls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Insert_CopiedCut"/>
 			<controls:NEMenuItem Header="_Selected" CommandEnum="File_Insert_Selected"/>
-		</MenuItem>
-		<Separator/>
-		<MenuItem Header="_Copy">
-			<controls:NEMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
-			<controls:NEMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
-			<controls:NEMenuItem Header="_Display Name" CommandEnum="File_Copy_DisplayName"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Encoding">
@@ -96,7 +95,7 @@
 			<controls:NEMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
 			<controls:NEMenuItem Header="_Selected" CommandEnum="Edit_Find_Selected"/>
 			<controls:NEMenuItem Header="_Mass Find" CommandEnum="Edit_Find_MassFind"/>
-			<controls:NEMenuItem Header="_Binary" CommandEnum="Edit_Find_Replace"/>
+			<controls:NEMenuItem Header="_Binary" CommandEnum="Edit_Find_Binary"/>
 			<controls:NEMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
 			<controls:NEMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults"/>
 		</MenuItem>
