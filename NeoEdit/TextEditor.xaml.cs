@@ -202,7 +202,7 @@ namespace NeoEdit.Program
 			UIHelper<TextEditor>.Register();
 			UIHelper<TextEditor>.AddCallback(a => a.Active, (obj, o, n) => obj.TabsParent?.NotifyActiveChanged());
 			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
-			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => { obj.canvasRenderTimer.Start(); obj.bookmarkRenderTimer.Start(); });
+			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.ContentType, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.CodePage, (obj, o, n) => obj.CalculateDiff());
 			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
@@ -228,13 +228,6 @@ namespace NeoEdit.Program
 			canvasRenderTimer.Start();
 		}
 
-		public RangeList Bookmarks { get; private set; } = new RangeList(new List<Range>());
-		public void SetBookmarks(List<Range> bookmarks)
-		{
-			Bookmarks = new RangeList(bookmarks.Select(range => MoveCursor(range, 0, 0, false, lineRel: true, indexRel: false)).ToList());
-			bookmarkRenderTimer.Start();
-		}
-
 		readonly Dictionary<int, RangeList> regionsList = Enumerable.Range(1, 9).ToDictionary(num => num, num => new RangeList(new List<Range>()));
 		public IReadOnlyDictionary<int, RangeList> Regions => regionsList;
 		public void SetRegions(int region, List<Range> regions)
@@ -244,7 +237,7 @@ namespace NeoEdit.Program
 			TabsParent?.QueueUpdateCounts();
 		}
 
-		RunOnceTimer canvasRenderTimer, statusBarRenderTimer, bookmarkRenderTimer;
+		RunOnceTimer canvasRenderTimer, statusBarRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 		public UndoRedo undoRedo { get; }
 		static ThreadSafeRandom random = new ThreadSafeRandom();
@@ -265,7 +258,6 @@ namespace NeoEdit.Program
 			InitializeComponent();
 			canvasRenderTimer = new RunOnceTimer(() => { canvas.InvalidateVisual(); statusBar.InvalidateVisual(); });
 			statusBarRenderTimer = new RunOnceTimer(() => statusBar.InvalidateVisual());
-			bookmarkRenderTimer = new RunOnceTimer(() => bookmarks.InvalidateVisual());
 			AutoRefresh = KeepSelections = HighlightSyntax = true;
 			JumpBy = JumpByType.Words;
 
@@ -288,8 +280,6 @@ namespace NeoEdit.Program
 			canvas.Render += OnCanvasRender;
 			statusBar.Render += OnStatusBarRender;
 
-			bookmarks.Render += OnBookmarksRender;
-
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
 
 			Loaded += (s, e) =>
@@ -309,11 +299,7 @@ namespace NeoEdit.Program
 			statusBar.InvalidateVisual();
 		}
 
-		void FontSizeChanged(double fontSize)
-		{
-			bookmarks.Width = fontSize;
-			CalculateBoundaries();
-		}
+		void FontSizeChanged(double fontSize) => CalculateBoundaries();
 
 		public int BeginOffset => Data.GetOffset(0, 0);
 		public int EndOffset => Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
@@ -958,10 +944,6 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Data_Sign: Command_Edit_Data_Sign(dialogResult as EditDataSignDialog.Result); break;
 				case NECommand.Edit_Sort: Command_Edit_Sort(dialogResult as EditSortDialog.Result); break;
 				case NECommand.Edit_Convert: Command_Edit_Convert(dialogResult as EditConvertDialog.Result); break;
-				case NECommand.Edit_Bookmarks_Toggle: Command_Edit_Bookmarks_Toggle(); break;
-				case NECommand.Edit_Bookmarks_Next: Command_Edit_Bookmarks_NextPreviousBookmark(true, shiftDown); break;
-				case NECommand.Edit_Bookmarks_Previous: Command_Edit_Bookmarks_NextPreviousBookmark(false, shiftDown); break;
-				case NECommand.Edit_Bookmarks_Clear: Command_Edit_Bookmarks_Clear(); break;
 				case NECommand.Edit_Navigate_WordLeft: Command_Edit_Navigate_WordLeftRight(false, shiftDown); break;
 				case NECommand.Edit_Navigate_WordRight: Command_Edit_Navigate_WordLeftRight(true, shiftDown); break;
 				case NECommand.Edit_Navigate_AllLeft: Command_Edit_Navigate_AllLeft(shiftDown); break;
@@ -1854,24 +1836,6 @@ namespace NeoEdit.Program
 			return MoveCursor(range, Data.GetOffset(line, index), selecting);
 		}
 
-		void OnBookmarksRender(object sender, DrawingContext dc)
-		{
-			if ((Data == null) || (yScrollViewportCeiling == 0) || (!Bookmarks.Any()))
-				return;
-			var startLine = yScrollValue;
-			var endLine = Math.Min(Data.NumLines, startLine + yScrollViewportCeiling);
-			for (var line = startLine; line < endLine; ++line)
-			{
-				var offset = Data.GetOffset(line, 0);
-				if (!Bookmarks.Any(range => range.Start == offset))
-					continue;
-
-				var y = (line - startLine) * Font.FontSize;
-
-				dc.DrawRoundedRectangle(Brushes.CadetBlue, new Pen(Brushes.Black, 1), new Rect(1, y + 1, Font.FontSize - 2, Font.FontSize - 2), 2, 2);
-			}
-		}
-
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (DragFiles != null)
@@ -2196,13 +2160,12 @@ namespace NeoEdit.Program
 			SetModifiedFlag();
 			CalculateDiff();
 
-			var translateMap = RangeList.GetTranslateMap(ranges, strs, new RangeList[] { Selections, Searches, Bookmarks }.Concat(Regions.Values).ToArray());
+			var translateMap = RangeList.GetTranslateMap(ranges, strs, new RangeList[] { Selections, Searches }.Concat(Regions.Values).ToArray());
 			SetSelections(Selections.Translate(translateMap));
 			Regions.Keys.ToList().ForEach(key => SetRegions(key, Regions[key].Translate(translateMap)));
 			var searchLens = Searches.Select(range => range.Length).ToList();
 			SetSearches(Searches.Translate(translateMap));
 			SetSearches(Searches.Where((range, index) => searchLens[index] == range.Length).ToList());
-			SetBookmarks(Bookmarks.Translate(translateMap));
 
 			CalculateBoundaries();
 		}

@@ -7,8 +7,6 @@
 
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="0"/>
-			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="5"/>
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="5"/>
@@ -23,19 +21,16 @@
 			<RowDefinition Height="20"/>
 		</Grid.RowDefinitions>
 
-		<Canvas Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Background="LightGray"/>
-		<controls:RenderCanvas x:Name="bookmarks" Grid.Row="1" Grid.Column="1"/>
+		<controls:RenderCanvas x:Name="canvas" Grid.Row="1" Grid.Column="1" Background="Transparent" ClipToBounds="True"/>
 
-		<controls:RenderCanvas x:Name="canvas" Grid.Row="1" Grid.Column="3" Background="Transparent" ClipToBounds="True"/>
+		<ScrollBar Name="yScroll" Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" Value="{Binding yScrollValue, ElementName=self}"/>
+		<ScrollBar Name="xScroll" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
 
-		<ScrollBar Name="yScroll" Grid.Row="0" Grid.RowSpan="3" Grid.Column="5" Value="{Binding yScrollValue, ElementName=self}"/>
-		<ScrollBar Name="xScroll" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
+		<Rectangle Grid.Row="3" Grid.Column="3" Fill="LightGray" Focusable="False"/>
 
-		<Rectangle Grid.Row="3" Grid.Column="5" Fill="LightGray" Focusable="False"/>
+		<controls:ViewValues Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Data="{Binding ViewValuesData, ElementName=self}" HasSel="{Binding ViewValuesHasSel, ElementName=self}" FindValue="{Binding ViewValuesFindValue, ElementName=self}" Visibility="{Binding ViewValues, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
 
-		<controls:ViewValues Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" Data="{Binding ViewValuesData, ElementName=self}" HasSel="{Binding ViewValuesHasSel, ElementName=self}" FindValue="{Binding ViewValuesFindValue, ElementName=self}" Visibility="{Binding ViewValues, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
-
-		<controls:RenderCanvas x:Name="statusBar" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="6" Background="LightGray" ClipToBounds="True" Focusable="False"/>
+		<controls:RenderCanvas x:Name="statusBar" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Background="LightGray" ClipToBounds="True" Focusable="False"/>
 	</Grid>
 
 </UserControl>

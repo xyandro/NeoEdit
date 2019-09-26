@@ -51,24 +51,6 @@ namespace NeoEdit.Program
 			SetSelections(sels);
 		}
 
-		Range GetNextPrevBookmark(Range range, bool next, bool selecting)
-		{
-			int index;
-			if (next)
-			{
-				index = Bookmarks.BinaryFindFirst(r => r.Start > range.Cursor);
-				if (index == -1)
-					index = 0;
-			}
-			else
-			{
-				index = Bookmarks.BinaryFindLast(r => r.Start < range.Cursor);
-				if (index == -1)
-					index = Bookmarks.Count - 1;
-			}
-			return MoveCursor(range, Bookmarks[index].Start, selecting);
-		}
-
 		List<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)
 		{
 			var entries = Selections.AsParallel().Select((range, index) => Tuple.Create(GetString(range), index));
@@ -570,40 +552,6 @@ namespace NeoEdit.Program
 				return;
 			ReplaceSelections(bytes.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
 		}
-
-		void Command_Edit_Bookmarks_Toggle()
-		{
-			var linePairs = Selections.AsParallel().AsOrdered().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End) }).ToList();
-			if (linePairs.Any(pair => pair.start != pair.end))
-				throw new Exception("Selections must be on a single line.");
-
-			var bookmarks = Bookmarks.ToList();
-			var lineRanges = linePairs.AsParallel().AsOrdered().Select(pair => new Range(Data.GetOffset(pair.start, 0))).ToList();
-			var comparer = Comparer<Range>.Create((r1, r2) => r1.Start.CompareTo(r2.Start));
-			var indexes = lineRanges.AsParallel().Select(range => new { range = range, index = bookmarks.BinarySearch(range, comparer) }).Reverse().ToList();
-
-			if (indexes.Any(index => index.index < 0))
-			{
-				foreach (var pair in indexes)
-					if (pair.index < 0)
-						bookmarks.Insert(~pair.index, pair.range);
-			}
-			else
-			{
-				foreach (var pair in indexes)
-					bookmarks.RemoveAt(pair.index);
-			}
-			SetBookmarks(bookmarks);
-		}
-
-		void Command_Edit_Bookmarks_NextPreviousBookmark(bool next, bool selecting)
-		{
-			if (!Bookmarks.Any())
-				return;
-			SetSelections(Selections.AsParallel().AsOrdered().Select(range => GetNextPrevBookmark(range, next, selecting)).ToList());
-		}
-
-		void Command_Edit_Bookmarks_Clear() => SetBookmarks(new List<Range>());
 
 		void Command_Edit_Navigate_WordLeftRight(bool next, bool selecting)
 		{

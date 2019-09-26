@@ -135,13 +135,6 @@
 		<Separator/>
 		<controls:NEMenuItem Header="Co_nvert" CommandEnum="Edit_Convert"/>
 		<Separator/>
-		<MenuItem Header="_Bookmarks">
-			<controls:NEMenuItem Header="_Toggle" CommandEnum="Edit_Bookmarks_Toggle"/>
-			<controls:NEMenuItem Header="_Next" CommandEnum="Edit_Bookmarks_Next"/>
-			<controls:NEMenuItem Header="_Previous" CommandEnum="Edit_Bookmarks_Previous"/>
-			<controls:NEMenuItem Header="_Clear" CommandEnum="Edit_Bookmarks_Clear"/>
-		</MenuItem>
-		<Separator/>
 		<MenuItem Header="Na_vigate">
 			<controls:NEMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft"/>
 			<controls:NEMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight"/>
