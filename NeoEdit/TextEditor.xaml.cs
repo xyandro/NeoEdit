@@ -898,13 +898,16 @@ namespace NeoEdit.Program
 				case NECommand.File_Open_Selected: Command_File_Open_Selected(); break;
 				case NECommand.File_Save_Save: Command_File_Save_Save(); break;
 				case NECommand.File_Save_SaveAs: Command_File_SaveCopy_SaveCopy(); break;
+				case NECommand.File_Save_SaveAsClipboard: Command_File_SaveCopy_SaveCopyClipboard(answer); break;
 				case NECommand.File_Save_SaveAsByExpression: Command_File_SaveCopy_SaveCopyByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
 				case NECommand.File_Copy_CopyTo: Command_File_SaveCopy_SaveCopy(true); break;
+				case NECommand.File_Copy_CopyToClipboard: Command_File_SaveCopy_SaveCopyClipboard(answer, true); break;
 				case NECommand.File_Copy_CopyToByExpression: Command_File_SaveCopy_SaveCopyByExpression(dialogResult as GetExpressionDialog.Result, answer, true); break;
 				case NECommand.File_Copy_Path: Command_File_Copy_Path(); break;
 				case NECommand.File_Copy_Name: Command_File_Copy_Name(); break;
 				case NECommand.File_Copy_DisplayName: Command_File_Copy_DisplayName(); break;
 				case NECommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
+				case NECommand.File_Operations_RenameClipboard: Command_File_Operations_RenameClipboard(answer); break;
 				case NECommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
 				case NECommand.File_Operations_Delete: Command_File_Operations_Delete(answer); break;
 				case NECommand.File_Operations_Explore: Command_File_Operations_Explore(); break;

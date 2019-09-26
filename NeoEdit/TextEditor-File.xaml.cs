@@ -71,6 +71,32 @@ namespace NeoEdit.Program
 
 		GetExpressionDialog.Result Command_File_SaveCopy_SaveCopyByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
 
+		void Command_File_SaveCopy_SaveCopyClipboard(AnswerResult answer, bool copyOnly = false)
+		{
+			var results = Clipboard;
+			if (results.Count != 1)
+				throw new Exception("Only one filename may be specified");
+
+			var newFileName = FileName.RelativeChild(results[0]);
+
+			if (File.Exists(newFileName))
+			{
+				if (!answer.Answer.HasFlag(MessageOptions.All))
+					answer.Answer = new Message(WindowParent)
+					{
+						Title = "Confirm",
+						Text = "File already exists; overwrite?",
+						Options = MessageOptions.YesNoAllCancel,
+						DefaultCancel = MessageOptions.Cancel,
+					}.Show();
+
+				if (!answer.Answer.HasFlag(MessageOptions.Yes))
+					return;
+			}
+
+			Save(newFileName, copyOnly);
+		}
+
 		void Command_File_SaveCopy_SaveCopyByExpression(GetExpressionDialog.Result result, AnswerResult answer, bool copyOnly = false)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
@@ -120,6 +146,38 @@ namespace NeoEdit.Program
 		}
 
 		GetExpressionDialog.Result Command_File_Operations_RenameByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
+
+		void Command_File_Operations_RenameClipboard(AnswerResult answer)
+		{
+			var results = Clipboard;
+			if (results.Count != 1)
+				throw new Exception("Only one filename may be specified");
+
+			var newFileName = FileName.RelativeChild(results[0]);
+
+			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
+			{
+				if (!answer.Answer.HasFlag(MessageOptions.All))
+					answer.Answer = new Message(WindowParent)
+					{
+						Title = "Confirm",
+						Text = "File already exists; overwrite?",
+						Options = MessageOptions.YesNoAllCancel,
+						DefaultCancel = MessageOptions.Cancel,
+					}.Show();
+
+				if (!answer.Answer.HasFlag(MessageOptions.Yes))
+					return;
+			}
+
+			if (FileName != null)
+			{
+				if (!string.Equals(FileName, newFileName, StringComparison.OrdinalIgnoreCase))
+					File.Delete(newFileName);
+				File.Move(FileName, newFileName);
+			}
+			SetFileName(newFileName);
+		}
 
 		void Command_File_Operations_RenameByExpression(GetExpressionDialog.Result result, AnswerResult answer)
 		{

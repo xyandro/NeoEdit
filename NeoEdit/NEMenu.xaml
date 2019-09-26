@@ -25,10 +25,12 @@
 		<MenuItem Header="_Save">
 			<controls:NEMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
 			<controls:NEMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
+			<controls:NEMenuItem Header="Save As C_lipboard" CommandEnum="File_Save_SaveAsClipboard"/>
 			<controls:NEMenuItem Header="Save As By E_xpression" CommandEnum="File_Save_SaveAsByExpression"/>
 		</MenuItem>
 		<MenuItem Header="_Copy">
 			<controls:NEMenuItem Header="_Copy To" CommandEnum="File_Copy_CopyTo"/>
+			<controls:NEMenuItem Header="Copy To C_lipboard" CommandEnum="File_Copy_CopyToClipboard"/>
 			<controls:NEMenuItem Header="Copy To By E_xpression" CommandEnum="File_Copy_CopyToByExpression"/>
 			<Separator/>
 			<controls:NEMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
@@ -37,6 +39,7 @@
 		</MenuItem>
 		<MenuItem Header="O_perations">
 			<controls:NEMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
+			<controls:NEMenuItem Header="Rename C_lipboard" CommandEnum="File_Operations_RenameClipboard"/>
 			<controls:NEMenuItem Header="Rename By E_xpression" CommandEnum="File_Operations_RenameByExpression"/>
 			<controls:NEMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
 			<controls:NEMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
