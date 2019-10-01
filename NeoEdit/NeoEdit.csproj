@@ -359,6 +359,13 @@
     <Compile Include="Dialogs\EditFindReplaceDialog.xaml.cs">
       <DependentUpon>EditFindReplaceDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\EditModifyRegionsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\EditModifyRegionsDialog.xaml.cs">
+      <DependentUpon>EditModifyRegionsDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\EditRepeatDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -779,13 +786,6 @@
     </Page>
     <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
       <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\RegionModifyRegionsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\RegionModifyRegionsDialog.xaml.cs">
-      <DependentUpon>RegionModifyRegionsDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\SelectByCountDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

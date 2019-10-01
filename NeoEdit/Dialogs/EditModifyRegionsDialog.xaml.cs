@@ -7,7 +7,7 @@ using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
 {
-	partial class RegionModifyRegionsDialog
+	partial class EditModifyRegionsDialog
 	{
 		public enum Action
 		{
@@ -43,31 +43,31 @@ namespace NeoEdit.Program.Dialogs
 		}
 
 		[DepProp]
-		public bool Region1 { get { return UIHelper<RegionModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<RegionModifyRegionsDialog>.SetPropValue(this, value); } }
+		public bool Region1 { get { return UIHelper<EditModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<EditModifyRegionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Region2 { get { return UIHelper<RegionModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<RegionModifyRegionsDialog>.SetPropValue(this, value); } }
+		public bool Region2 { get { return UIHelper<EditModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<EditModifyRegionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Region3 { get { return UIHelper<RegionModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<RegionModifyRegionsDialog>.SetPropValue(this, value); } }
+		public bool Region3 { get { return UIHelper<EditModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<EditModifyRegionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Region4 { get { return UIHelper<RegionModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<RegionModifyRegionsDialog>.SetPropValue(this, value); } }
+		public bool Region4 { get { return UIHelper<EditModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<EditModifyRegionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Region5 { get { return UIHelper<RegionModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<RegionModifyRegionsDialog>.SetPropValue(this, value); } }
+		public bool Region5 { get { return UIHelper<EditModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<EditModifyRegionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Region6 { get { return UIHelper<RegionModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<RegionModifyRegionsDialog>.SetPropValue(this, value); } }
+		public bool Region6 { get { return UIHelper<EditModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<EditModifyRegionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Region7 { get { return UIHelper<RegionModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<RegionModifyRegionsDialog>.SetPropValue(this, value); } }
+		public bool Region7 { get { return UIHelper<EditModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<EditModifyRegionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Region8 { get { return UIHelper<RegionModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<RegionModifyRegionsDialog>.SetPropValue(this, value); } }
+		public bool Region8 { get { return UIHelper<EditModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<EditModifyRegionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Region9 { get { return UIHelper<RegionModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<RegionModifyRegionsDialog>.SetPropValue(this, value); } }
+		public bool Region9 { get { return UIHelper<EditModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<EditModifyRegionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
 
-		static RegionModifyRegionsDialog()
+		static EditModifyRegionsDialog()
 		{
-			UIHelper<RegionModifyRegionsDialog>.Register();
+			UIHelper<EditModifyRegionsDialog>.Register();
 		}
 
-		RegionModifyRegionsDialog()
+		EditModifyRegionsDialog()
 		{
 			InitializeComponent();
 		}
@@ -107,7 +107,7 @@ namespace NeoEdit.Program.Dialogs
 
 		public static Result Run(Window parent)
 		{
-			var dialog = new RegionModifyRegionsDialog { Owner = parent };
+			var dialog = new EditModifyRegionsDialog { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}
