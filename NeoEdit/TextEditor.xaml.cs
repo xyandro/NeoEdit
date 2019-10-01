@@ -949,6 +949,10 @@ namespace NeoEdit.Program
 				case NECommand.Edit_ModifyRegions_Select_Region7: Command_Edit_ModifyRegions_Shortcut(EditModifyRegionsDialog.Action.Select_Select, 7); break;
 				case NECommand.Edit_ModifyRegions_Select_Region8: Command_Edit_ModifyRegions_Shortcut(EditModifyRegionsDialog.Action.Select_Select, 8); break;
 				case NECommand.Edit_ModifyRegions_Select_Region9: Command_Edit_ModifyRegions_Shortcut(EditModifyRegionsDialog.Action.Select_Select, 9); break;
+				case NECommand.Edit_ModifyRegions_Set_Region6: Command_Edit_ModifyRegions_Shortcut(EditModifyRegionsDialog.Action.Modify_Set, 6); break;
+				case NECommand.Edit_ModifyRegions_Set_Region7: Command_Edit_ModifyRegions_Shortcut(EditModifyRegionsDialog.Action.Modify_Set, 7); break;
+				case NECommand.Edit_ModifyRegions_Set_Region8: Command_Edit_ModifyRegions_Shortcut(EditModifyRegionsDialog.Action.Modify_Set, 8); break;
+				case NECommand.Edit_ModifyRegions_Set_Region9: Command_Edit_ModifyRegions_Shortcut(EditModifyRegionsDialog.Action.Modify_Set, 9); break;
 				case NECommand.Edit_ModifyRegions_Add_Region6: Command_Edit_ModifyRegions_Shortcut(EditModifyRegionsDialog.Action.Modify_Add, 6); break;
 				case NECommand.Edit_ModifyRegions_Add_Region7: Command_Edit_ModifyRegions_Shortcut(EditModifyRegionsDialog.Action.Modify_Add, 7); break;
 				case NECommand.Edit_ModifyRegions_Add_Region8: Command_Edit_ModifyRegions_Shortcut(EditModifyRegionsDialog.Action.Modify_Add, 8); break;

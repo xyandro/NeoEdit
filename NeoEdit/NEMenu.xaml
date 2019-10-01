@@ -142,6 +142,12 @@
 				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Region8"/>
 				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Region9"/>
 			</MenuItem>
+			<MenuItem Header="S_et">
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Set_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Set_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Set_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Set_Region9"/>
+			</MenuItem>
 			<MenuItem Header="_Add">
 				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Add_Region6"/>
 				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Add_Region7"/>
