@@ -31,6 +31,8 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public string Index { get { return UIHelper<SelectSplitDialog>.GetPropValue<string>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool WholeWords { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public bool MatchCase { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsRegex { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
@@ -65,7 +67,7 @@ namespace NeoEdit.Program.Dialogs
 		void Reset(object sender = null, RoutedEventArgs e = null)
 		{
 			Index = "0";
-			MatchCase = IsRegex = IncludeResults = IncludeEmpty = false;
+			WholeWords = MatchCase = IsRegex = IncludeResults = IncludeEmpty = false;
 			BalanceStrings = BalanceParens = BalanceBrackets = BalanceBraces = TrimWhitespace = true;
 			BalanceLTGT = false;
 		}
@@ -80,6 +82,8 @@ namespace NeoEdit.Program.Dialogs
 			if (!IsRegex)
 				text = Regex.Escape(text);
 			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
+			if (WholeWords)
+				text = $"\\b{text}\\b";
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
 			result = new Result

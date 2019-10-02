@@ -33,7 +33,10 @@
 		<Label Grid.Row="2" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="2" Grid.Column="1" Expression="{Binding Index, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<CheckBox Grid.Row="3" Grid.Column="1" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
+		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>
+			<CheckBox Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Margin="4,0,0,0" Focusable="False"/>
+		</StackPanel>
 		<CheckBox Grid.Row="4" Grid.Column="1" Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 		<CheckBox Grid.Row="5" Grid.Column="1" Content="_Include find" IsChecked="{Binding IncludeResults, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 		<CheckBox Grid.Row="6" Grid.Column="1" Content="Include _empty" IsChecked="{Binding IncludeEmpty, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
@@ -55,7 +58,7 @@
 			<CheckBox Content="Br_aces" IsChecked="{Binding BalanceBraces, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
 			<CheckBox Content="_Less/Greater Than" IsChecked="{Binding BalanceLTGT, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
 		</StackPanel>
-		<CheckBox Grid.Row="8" Grid.Column="1" Content="Trim _whitespace" IsChecked="{Binding TrimWhitespace, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
+		<CheckBox Grid.Row="8" Grid.Column="1" Content="Tri_m whitespace" IsChecked="{Binding TrimWhitespace, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 
 		<StackPanel Grid.Row="10" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Left">
 			<Button Click="RegExHelp" Content="RegEx _Help"/>

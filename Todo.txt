@@ -4,3 +4,4 @@ Tutorial
 Print
 Add ability to select all attributes
 Allow tabs to move to other windows
+Show diff status in scroll bar
