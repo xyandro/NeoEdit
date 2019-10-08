@@ -20,8 +20,7 @@ namespace NeoEdit.Program
 			const string check = location + "/tag/";
 			const string exe = location + "/download/{0}/NeoEdit.exe";
 
-			var entryAssembly = Assembly.GetEntryAssembly();
-			var oldVersion = ((AssemblyFileVersionAttribute)entryAssembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
+			var oldVersion = ((AssemblyFileVersionAttribute)typeof(Tabs).Assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
 			string newVersion;
 
 			var request = WebRequest.Create(url) as HttpWebRequest;
@@ -51,7 +50,7 @@ namespace NeoEdit.Program
 			}.Show().HasFlag(MessageOptions.Yes))
 				return;
 
-			var oldLocation = entryAssembly.Location;
+			var oldLocation = Assembly.GetEntryAssembly().Location;
 			var newLocation = Path.Combine(Path.GetDirectoryName(oldLocation), $"{Path.GetFileNameWithoutExtension(oldLocation)}-Update{Path.GetExtension(oldLocation)}");
 
 			byte[] result = null;
