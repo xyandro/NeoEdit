@@ -801,7 +801,7 @@ namespace NeoEdit.Program
 
 			var closeButton = new Button
 			{
-				Content = "x",
+				Content = "🗙",
 				BorderThickness = new Thickness(0),
 				Style = FindResource(ToolBar.ButtonStyleKey) as Style,
 				VerticalAlignment = VerticalAlignment.Center,
@@ -853,7 +853,7 @@ namespace NeoEdit.Program
 			}
 
 			var grid = new Grid { Width = canvas.ActualWidth, Height = canvas.ActualHeight, AllowDrop = true };
-			grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
 			grid.RowDefinitions.Add(new RowDefinition());
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 			grid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -884,13 +884,13 @@ namespace NeoEdit.Program
 			Grid.SetColumn(tabLabels, 1);
 			grid.Children.Add(tabLabels);
 
-			var moveLeft = new RepeatButton { Content = "<", Margin = new Thickness(0, 0, 4, 0), Padding = new Thickness(5, 0, 5, 0) };
+			var moveLeft = new RepeatButton { Width = 20, Height = 20, Content = "⮜", Margin = new Thickness(0, 0, 4, 0) };
 			moveLeft.Click += (s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset - 50, tabLabels.ScrollableWidth)));
 			Grid.SetRow(moveLeft, 0);
 			Grid.SetColumn(moveLeft, 0);
 			grid.Children.Add(moveLeft);
 
-			var moveRight = new RepeatButton { Content = ">", Margin = new Thickness(2, 0, 0, 0), Padding = new Thickness(5, 0, 5, 0) };
+			var moveRight = new RepeatButton { Width = 20, Height = 20, Content = "⮞", Margin = new Thickness(4, 0, 0, 0) };
 			moveRight.Click += (s, e) => tabLabels.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabels.HorizontalOffset + 50, tabLabels.ScrollableWidth)));
 			Grid.SetRow(moveRight, 0);
 			Grid.SetColumn(moveRight, 2);

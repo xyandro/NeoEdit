@@ -190,6 +190,7 @@
       <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CodePageCheckBox.cs" />
+    <Compile Include="Controls\DiffScrollBar.cs" />
     <Compile Include="Controls\EnhancedFocusManager.cs" />
     <Compile Include="Controls\KeyGestureAttribute.cs" />
     <Compile Include="Controls\ModalDialog.cs" />

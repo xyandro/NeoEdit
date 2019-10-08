@@ -366,15 +366,15 @@ namespace NeoEdit.Program
 			xScroll.Minimum = 0;
 			xScroll.Maximum = Data.MaxColumn - xScrollViewportFloor;
 			xScroll.SmallChange = 1;
-			xScroll.LargeChange = Math.Max(0, xScroll.ViewportSize - 1);
 			xScrollValue = xScrollValue;
 
 			yScroll.ViewportSize = canvas.ActualHeight / Font.FontSize;
 			yScroll.Minimum = 0;
 			yScroll.Maximum = Data.NumLines - yScrollViewportFloor;
 			yScroll.SmallChange = 1;
-			yScroll.LargeChange = Math.Max(0, yScroll.ViewportSize - 1);
 			yScrollValue = yScrollValue;
+
+			yScroll.DiffList = Data.GetDiffRanges();
 
 			LineEnding = Data.OnlyEnding;
 

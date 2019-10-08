@@ -23,8 +23,8 @@
 
 		<controls:RenderCanvas x:Name="canvas" Grid.Row="1" Grid.Column="1" Background="Transparent" ClipToBounds="True"/>
 
-		<ScrollBar Name="yScroll" Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" Value="{Binding yScrollValue, ElementName=self}"/>
-		<ScrollBar Name="xScroll" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
+		<controls:DiffScrollBar x:Name="yScroll" Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" Orientation="Vertical" Value="{Binding yScrollValue, ElementName=self}"/>
+		<controls:DiffScrollBar x:Name="xScroll" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
 
 		<Rectangle Grid.Row="3" Grid.Column="3" Fill="LightGray" Focusable="False"/>
 

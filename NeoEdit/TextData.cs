@@ -740,6 +740,36 @@ namespace NeoEdit.Program
 			diffData = null;
 		}
 
+		public List<Tuple<double, double>> GetDiffRanges()
+		{
+			if (diffData == null)
+				return null;
+
+			var diffRanges = new List<Tuple<double, double>>();
+			var start = -1;
+			var line = -1;
+			while (true)
+			{
+				++line;
+				var stop = line >= diffData.LineCompare.Count;
+				var lineIsDiff = stop ? false : diffData.LineCompare[line] != LCS.MatchType.Match;
+
+				if ((start != -1) && (!lineIsDiff))
+				{
+					diffRanges.Add(new Tuple<double, double>(start, line));
+					start = -1;
+				}
+
+				if (stop)
+					break;
+
+				if ((start == -1) && (lineIsDiff))
+					start = line;
+			}
+
+			return diffRanges;
+		}
+
 		static public Tuple<List<Tuple<int, int>>, List<string>> GetDiffFixes(TextData src, TextData dest, int lineStartTabStop, bool? ignoreWhitespace, bool? ignoreCase, bool? ignoreNumbers, bool? ignoreLineEndings, string ignoreCharacters)
 		{
 			var textData = new TextData[] { src, dest };
