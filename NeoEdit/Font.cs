@@ -51,32 +51,37 @@ namespace NeoEdit.Program
 			Typeface.TryGetGlyphTypeface(out var glyphTypeface);
 			var chars = glyphTypeface.CharacterToGlyphMap;
 			supported = new bool[chars.Keys.Max() + 1];
-			var supported2 = new bool[chars.Keys.Max() + 1];
 			foreach (var pair in chars)
 			{
 				var fs = new FormattedText(Encoding.UTF32.GetString(BitConverter.GetBytes(pair.Key)), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, Typeface, 14, Brushes.Black);
 				supported[pair.Key] = (pair.Key == ' ') || (fs.Width == 8.43);
-				supported2[pair.Key] = true;
 			}
-
-			var mismatch = Enumerable.Range(0, supported.Length).Where(index => supported[index] != supported2[index]).ToList();
 		}
 
-		public static unsafe string RemoveSpecialChars(string str)
+		public static string RemoveSpecialChars(string str)
 		{
 			if ((supported == null) || (string.IsNullOrEmpty(str)))
 				return str;
 
-			var bytes = Encoding.UTF32.GetBytes(str);
-			var count = bytes.Length / 4;
-			fixed (byte* bytesFixed = bytes)
+			var result = new StringBuilder();
+			for (var ctr = 0; ctr < str.Length; ++ctr)
 			{
-				var intFixed = (int*)bytesFixed;
-				for (var ctr = 0; ctr < count; ++ctr)
-					if ((intFixed[ctr] >= supported.Length) || (!supported[intFixed[ctr]]))
-						intFixed[ctr] = 0;
+				var codePoint = char.ConvertToUtf32(str, ctr);
+				var isHighSurrogate = char.IsHighSurrogate(str[ctr]);
+				if (isHighSurrogate)
+					++ctr;
+
+				if ((!isHighSurrogate) && (codePoint < supported.Length) && (supported[codePoint]))
+					result.Append(char.ConvertFromUtf32(codePoint));
+				else
+				{
+					// Invalid char
+					result.Append("￿");
+					if (isHighSurrogate)
+						result.Append("￿");
+				}
 			}
-			return Encoding.UTF32.GetString(bytes);
+			return result.ToString();
 		}
 
 		public static FormattedText GetText(string str)
