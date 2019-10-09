@@ -10,22 +10,22 @@ namespace NeoEdit.Program
 
 		static Settings()
 		{
-			Font.FontSizeChanged += newSize => SaveSettings();
-
-			if (!File.Exists(settingsFile))
-				return;
-
-			try
+			if (File.Exists(settingsFile))
 			{
-				var xml = XElement.Load(settingsFile);
-				try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
-				try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
-				try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
-				try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
-				try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
-				try { windowPosition = xml.Element(nameof(WindowPosition)).Value; } catch { }
+				try
+				{
+					var xml = XElement.Load(settingsFile);
+					try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
+					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
+					try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
+					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
+					try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
+					try { windowPosition = xml.Element(nameof(WindowPosition)).Value; } catch { }
+				}
+				catch { }
 			}
-			catch { }
+
+			Font.FontSizeChanged += newSize => SaveSettings();
 		}
 
 		static void SaveSettings()
