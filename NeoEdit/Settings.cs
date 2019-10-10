@@ -6,7 +6,7 @@ namespace NeoEdit.Program
 {
 	public static class Settings
 	{
-		static readonly string settingsFile = Path.Combine(Helpers.NeoEditAppData, "Settings.xml");
+		static readonly string settingsFile = Path.Combine(Helpers.NeoEditAppData, $"Settings{(Helpers.IsDebugBuild ? "-Debug" : "")}.xml");
 
 		static Settings()
 		{
