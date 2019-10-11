@@ -2161,11 +2161,11 @@ namespace NeoEdit.Program
 		static HashSet<string> drives = new HashSet<string>(DriveInfo.GetDrives().Select(drive => drive.Name));
 		public bool StringsAreFiles(List<string> strs)
 		{
-			if (!strs.Any())
+			if ((strs.Count == 0) || (strs.Count > 500))
 				return false;
 			if (strs.Any(str => str.IndexOfAny(Path.GetInvalidPathChars()) != -1))
 				return false;
-			if (strs.Any(str => !drives.Any(drive => str.StartsWith(drive, StringComparison.OrdinalIgnoreCase))))
+			if (strs.Any(str => (!str.StartsWith("\\\\")) && (!drives.Any(drive => str.StartsWith(drive, StringComparison.OrdinalIgnoreCase)))))
 				return false;
 			if (strs.Any(str => !Helpers.FileOrDirectoryExists(str)))
 				return false;
