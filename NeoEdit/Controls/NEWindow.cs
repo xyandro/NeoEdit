@@ -2,9 +2,9 @@
 
 namespace NeoEdit.Program.Controls
 {
-	public class ModalDialog : Window
+	public class NEWindow : Window
 	{
-		public ModalDialog()
+		public NEWindow()
 		{
 			WindowStyle = WindowStyle.ToolWindow;
 		}

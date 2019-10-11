@@ -1,4 +1,4 @@
-﻿<controls:ModalDialog x:Name="self" x:Class="NeoEdit.Program.Dialogs.EditModifyRegionsDialog"
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.Program.Dialogs.EditModifyRegionsDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
@@ -87,4 +87,4 @@
 		<Button Grid.Row="6" Grid.Column="0" Content="Cancel" IsCancel="True" HorizontalAlignment="Right"/>
 	</Grid>
 
-</controls:ModalDialog>
+</controls:NEWindow>

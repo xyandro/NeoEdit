@@ -10,7 +10,7 @@ using NeoEdit.Program.Parsing;
 
 namespace NeoEdit.Program.Dialogs
 {
-	class WindowActiveTabsDialog : ModalDialog
+	class WindowActiveTabsDialog : NEWindow
 	{
 		readonly List<TextEditor> originalActive;
 		readonly TextEditor originalTopMost;

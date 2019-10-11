@@ -1,4 +1,4 @@
-﻿<controls:ModalDialog x:Name="self" x:Class="NeoEdit.Program.Dialogs.MultiProgressDialog"
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.Program.Dialogs.MultiProgressDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
@@ -21,4 +21,4 @@
 		<Button Grid.Row="2" Grid.Column="0" Content="Cancel" Padding="10,1" HorizontalAlignment="Center" Click="OnCancel"/>
 	</Grid>
 
-</controls:ModalDialog>
+</controls:NEWindow>
