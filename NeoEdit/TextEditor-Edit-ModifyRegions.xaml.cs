@@ -147,7 +147,7 @@ namespace NeoEdit.Program
 			for (var selCtr = Selections.Count - 1; selCtr >= 0; --selCtr)
 			{
 				var selection = Selections[selCtr];
-				while ((searchIndex >= 0) && ((searchList[searchIndex].Start >= selection.End) || (searchList[searchIndex] == selection)))
+				while ((searchIndex >= 0) && ((searchList[searchIndex].Start >= selection.End) || (searchList[searchIndex].Equals(selection))))
 					--searchIndex;
 
 				if (searchIndex < 0)
@@ -170,7 +170,7 @@ namespace NeoEdit.Program
 			var searchIndex = 0;
 			foreach (var selection in Selections)
 			{
-				while ((searchIndex < searchList.Count) && ((searchList[searchIndex].End <= selection.Start) || (searchList[searchIndex] == selection)))
+				while ((searchIndex < searchList.Count) && ((searchList[searchIndex].End <= selection.Start) || (searchList[searchIndex].Equals(selection))))
 					++searchIndex;
 
 				if (searchIndex == searchList.Count)
