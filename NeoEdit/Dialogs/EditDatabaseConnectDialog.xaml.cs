@@ -101,7 +101,7 @@ namespace NeoEdit.Program.Dialogs
 			else
 				dbParams.AddRange(parameters.Items.OfType<DBParam>());
 			dbParams.ForEach(dbParam => dbParam.ResetOriginal());
-			BindingOperations.GetMultiBindingExpression(parameters, DataGrid.ItemsSourceProperty).UpdateSource();
+			BindingOperations.GetMultiBindingExpression(parameters, ListView.ItemsSourceProperty).UpdateSource();
 		}
 
 		void ResetDefaultClick(object sender, RoutedEventArgs e)
@@ -113,7 +113,7 @@ namespace NeoEdit.Program.Dialogs
 			else
 				dbParams.AddRange(parameters.Items.OfType<DBParam>());
 			dbParams.ForEach(dbParam => dbParam.ResetDefault());
-			BindingOperations.GetMultiBindingExpression(parameters, DataGrid.ItemsSourceProperty).UpdateSource();
+			BindingOperations.GetMultiBindingExpression(parameters, ListView.ItemsSourceProperty).UpdateSource();
 		}
 
 		void OkClick(object sender, RoutedEventArgs e) => DialogResult = true;
@@ -154,6 +154,7 @@ namespace NeoEdit.Program.Dialogs
 				factory = new FrameworkElementFactory(typeof(TextBox));
 				factory.SetValue(TextBox.IsReadOnlyProperty, ReadOnly);
 				factory.SetValue(TextBox.BorderThicknessProperty, new Thickness(0));
+				factory.SetValue(TextBox.WidthProperty, 300d);
 				if (dbParam.Type == typeof(byte[]))
 					binding.Converter = new HexConverter();
 				factory.SetBinding(TextBox.TextProperty, binding);
@@ -184,11 +185,11 @@ namespace NeoEdit.Program.Dialogs
 
 		void ValueChanged(object sender, DataTransferEventArgs e)
 		{
-			var dataGrid = UIHelper.FindParent<DataGrid>(sender as FrameworkElement);
-			if (dataGrid == null)
+			var listView = UIHelper.FindParent<ListView>(sender as FrameworkElement);
+			if (listView == null)
 				return;
 
-			BindingOperations.GetMultiBindingExpression(dataGrid, DataGrid.ItemsSourceProperty).UpdateSource();
+			BindingOperations.GetMultiBindingExpression(listView, ListView.ItemsSourceProperty).UpdateSource();
 		}
 	}
 
