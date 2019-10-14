@@ -618,11 +618,19 @@ namespace NeoEdit.Program
 			}
 		}
 
+		public enum DiffType
+		{
+			Match = 1,
+			Mismatch = 2,
+			MismatchGap = 4 | HasGap,
+			GapMismatch = 8 | HasGap,
+			HasGap = 16,
+		}
 		class DiffData
 		{
 			public string Data;
 			public DiffParams DiffParams;
-			public List<LCS.MatchType> LineCompare;
+			public List<DiffType> LineCompare;
 			public List<Tuple<int, int>>[] ColCompare;
 			public Dictionary<int, int> LineMap, LineRevMap;
 
@@ -656,7 +664,16 @@ namespace NeoEdit.Program
 
 			for (var pass = 0; pass < 2; ++pass)
 			{
-				textData[pass].diffData.LineCompare = linesLCS.Select(val => val[pass]).ToList();
+				textData[pass].diffData.LineCompare = linesLCS.Select(val =>
+				{
+					if (val[pass] == LCS.MatchType.Match)
+						return DiffType.Match;
+					if (val[pass] == LCS.MatchType.Gap)
+						return DiffType.GapMismatch;
+					if (val[1 - pass] == LCS.MatchType.Gap)
+						return DiffType.MismatchGap;
+					return DiffType.Mismatch;
+				}).ToList();
 				for (var ctr = 0; ctr < linesLCS.Count; ++ctr)
 					if (linesLCS[ctr][pass] == LCS.MatchType.Gap)
 					{
@@ -731,7 +748,7 @@ namespace NeoEdit.Program
 				return;
 
 			for (var line = diffData.LineCompare.Count - 1; line >= 0; --line)
-				if (diffData.LineCompare[line] == LCS.MatchType.Gap)
+				if (diffData.LineCompare[line] == DiffType.GapMismatch)
 				{
 					lineOffset.RemoveAt(line);
 					endingOffset.RemoveAt(line);
@@ -752,7 +769,7 @@ namespace NeoEdit.Program
 			{
 				++line;
 				var stop = line >= diffData.LineCompare.Count;
-				var lineIsDiff = stop ? false : diffData.LineCompare[line] != LCS.MatchType.Match;
+				var lineIsDiff = stop ? false : diffData.LineCompare[line] != DiffType.Match;
 
 				if ((start != -1) && (!lineIsDiff))
 				{
@@ -779,7 +796,7 @@ namespace NeoEdit.Program
 			var diffParams = new DiffParams(ignoreWhitespace ?? true, ignoreCase ?? true, ignoreNumbers ?? true, ignoreLineEndings ?? true, ignoreCharacters, lineStartTabStop);
 			for (var pass = 0; pass < 2; ++pass)
 			{
-				lineMap[pass] = Enumerable.Range(0, textData[pass].NumLines).Indexes(line => textData[pass].diffData?.LineCompare[line] != LCS.MatchType.Gap).Select((index1, index2) => new { index1, index2 }).ToDictionary(obj => obj.index2, obj => obj.index1);
+				lineMap[pass] = Enumerable.Range(0, textData[pass].NumLines).Indexes(line => textData[pass].diffData?.LineCompare[line] != DiffType.GapMismatch).Select((index1, index2) => new { index1, index2 }).ToDictionary(obj => obj.index2, obj => obj.index1);
 				lines[pass] = lineMap[pass].Values.Select(line => textData[pass].GetLine(line, true)).ToList();
 				textLines[pass] = lines[pass].Select(line => diffParams.FormatLine(line).Item1).ToList();
 			}
@@ -863,15 +880,15 @@ namespace NeoEdit.Program
 			return Tuple.Create(ranges, strs);
 		}
 
-		public bool IsDiffGapLine(int line) => diffData == null ? false : diffData.LineCompare[line] == LCS.MatchType.Gap;
+		public bool IsDiffGapLine(int line) => diffData == null ? false : diffData.LineCompare[line] == DiffType.GapMismatch;
 		public int GetDiffLine(int line) => (diffData == null) || (line >= diffData.LineMap.Count) ? line : diffData.LineMap[line];
 		public int GetNonDiffLine(int line) => (diffData == null) || (line >= diffData.LineRevMap.Count) ? line : diffData.LineRevMap[line];
-		public bool GetLineDiffMatches(int line) => diffData == null ? true : diffData.LineCompare[line] == LCS.MatchType.Match;
+		public bool GetLineDiffMatches(int line) => diffData == null ? true : diffData.LineCompare[line] == DiffType.Match;
 		public List<Tuple<int, int>> GetLineColumnDiffs(int line) => diffData?.ColCompare[line] ?? new List<Tuple<int, int>>();
 
 		public int SkipDiffGaps(int line, int direction)
 		{
-			while ((diffData != null) && (line >= 0) && (line < diffData.LineCompare.Count) && (diffData.LineCompare[line] == LCS.MatchType.Gap))
+			while ((diffData != null) && (line >= 0) && (line < diffData.LineCompare.Count) && (diffData.LineCompare[line] == DiffType.GapMismatch))
 				line += direction;
 			return line;
 		}
@@ -888,7 +905,7 @@ namespace NeoEdit.Program
 			{
 				var end = line >= diffData.LineCompare.Count;
 
-				if ((!end) && ((diffData.LineCompare[line] == LCS.MatchType.Match) == match))
+				if ((!end) && ((diffData.LineCompare[line] == DiffType.Match) == match))
 					matchTuple = Tuple.Create(matchTuple?.Item1 ?? lineOffset[line], lineOffset[line + 1]);
 				else if (matchTuple != null)
 				{
