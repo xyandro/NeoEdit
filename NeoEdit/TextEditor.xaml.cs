@@ -1807,17 +1807,9 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void OnCanvasRender(object sender, DrawingContext dc)
+		void RenderText(DrawingContext dc, DrawBounds drawBounds)
 		{
-			if ((Data == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0) || (!canvas.IsVisible))
-				return;
-
-			var drawBounds = GetDrawBounds();
-			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
-
-			RenderCarets(dc, drawBounds);
-			RenderIndicators(dc, drawBounds, visibleCursor, Selections, selectionPen);
-			RenderIndicators(dc, drawBounds, visibleCursor, Searches, searchPen);
+			const int HighlightRegexSize = 500;
 
 			var highlightDictionary = HighlightSyntax ? Highlight.Get(ContentType)?.GetDictionary() : null;
 
@@ -1851,38 +1843,48 @@ namespace NeoEdit.Program
 				if (str.Length <= drawBounds.StartColumn)
 					continue;
 
-				var highlight = new List<Tuple<Brush, int, int>>();
-				if (highlightDictionary != null)
-				{
-					foreach (var entry in highlightDictionary)
-					{
-						var start = Math.Max(drawBounds.StartColumn - 500, 0);
-						var count = Math.Min(drawBounds.EndColumn - drawBounds.StartColumn + 500, str.Length - start);
-						var highlightStr = str.Substring(start, count);
-						var matches = entry.Key.Matches(highlightStr);
-						foreach (Match match in matches)
-							highlight.Add(new Tuple<Brush, int, int>(entry.Value, match.Index + start, match.Length));
-					}
-				}
-
 				str = str.Substring(drawBounds.StartColumn, Math.Min(drawBounds.EndColumn, str.Length) - drawBounds.StartColumn);
 				var text = Font.GetText(str);
-				foreach (var entry in highlight)
+
+				if (highlightDictionary != null)
 				{
-					var start = entry.Item2 - drawBounds.StartColumn;
-					var count = entry.Item3;
-					if (start < 0)
-					{
-						count += start;
-						start = 0;
-					}
-					count = Math.Min(count, str.Length - start);
-					if (count <= 0)
-						continue;
-					text.SetForegroundBrush(entry.Item1, start, count);
+					var highlightStart = Math.Max(drawBounds.StartColumn - HighlightRegexSize, 0);
+					var highlightCount = Math.Min(drawBounds.EndColumn - drawBounds.StartColumn + HighlightRegexSize, str.Length - highlightStart);
+					var highlightStr = str.Substring(highlightStart, highlightCount);
+
+					foreach (var entry in highlightDictionary)
+						foreach (Match match in entry.Key.Matches(highlightStr))
+						{
+							var start = match.Index + highlightStart - drawBounds.StartColumn;
+							var count = match.Length;
+							if (start < 0)
+							{
+								count += start;
+								start = 0;
+							}
+							count = Math.Min(count, str.Length - start);
+							if (count <= 0)
+								continue;
+							text.SetForegroundBrush(entry.Value, start, count);
+						}
 				}
+
 				dc.DrawText(text, new Point(0, drawBounds.Y[line]));
 			}
+		}
+
+		void OnCanvasRender(object sender, DrawingContext dc)
+		{
+			if ((Data == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0) || (!canvas.IsVisible))
+				return;
+
+			var drawBounds = GetDrawBounds();
+			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
+
+			RenderCarets(dc, drawBounds);
+			RenderIndicators(dc, drawBounds, visibleCursor, Selections, selectionPen);
+			RenderIndicators(dc, drawBounds, visibleCursor, Searches, searchPen);
+			RenderText(dc, drawBounds);
 		}
 
 		void OnStatusBarRender(object sender, DrawingContext dc)
