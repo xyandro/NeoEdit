@@ -161,8 +161,8 @@ namespace NeoEdit.Program
 			}
 		}
 
-		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(64, 76, 157, 239));
-		static internal readonly Brush searchBrush = new SolidColorBrush(Color.FromArgb(128, 201, 102, 12));
+		static internal readonly Pen selectionPen = new Pen(new SolidColorBrush(Color.FromRgb(38, 132, 255)), 1);
+		static internal readonly Pen searchPen = new Pen(new SolidColorBrush(Color.FromArgb(128, 201, 102, 12)), 1);
 		static internal readonly Dictionary<int, Brush> regionBrush = new Dictionary<int, Brush>
 		{
 			[1] = new SolidColorBrush(Color.FromArgb(128, 0, 64, 0)),
@@ -177,8 +177,8 @@ namespace NeoEdit.Program
 		};
 		static internal readonly Brush diffMajorBrush = new SolidColorBrush(Color.FromArgb(32, 239, 203, 5));
 		static internal readonly Brush diffMinorBrush = new SolidColorBrush(Color.FromArgb(32, 239, 203, 5));
-		static internal readonly Brush currentSelectionBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
-		static internal readonly Pen currentSelectionPen = new Pen(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 1);
+		static internal readonly Brush highlightRowBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
+		static internal readonly Pen lightlightRowPen = new Pen(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 1);
 
 		int xScrollViewportFloor => (int)Math.Floor(xScroll.ViewportSize);
 		int xScrollViewportCeiling => (int)Math.Ceiling(xScroll.ViewportSize);
@@ -189,13 +189,13 @@ namespace NeoEdit.Program
 
 		static TextEditor()
 		{
-			selectionBrush.Freeze();
-			searchBrush.Freeze();
+			selectionPen.Freeze();
+			searchPen.Freeze();
 			regionBrush.Values.ForEach(brush => brush.Freeze());
 			diffMajorBrush.Freeze();
 			diffMinorBrush.Freeze();
-			currentSelectionBrush.Freeze();
-			currentSelectionPen.Freeze();
+			highlightRowBrush.Freeze();
+			lightlightRowPen.Freeze();
 
 			UIHelper<TextEditor>.Register();
 			UIHelper<TextEditor>.AddCallback(a => a.Active, (obj, o, n) => obj.TabsParent?.NotifyActiveChanged());
@@ -1740,7 +1740,7 @@ namespace NeoEdit.Program
 			return drawBounds;
 		}
 
-		void AddCarets(DrawingContext dc, DrawBounds drawBounds)
+		void RenderCarets(DrawingContext dc, DrawBounds drawBounds)
 		{
 			for (var selectionCtr = 0; selectionCtr < Selections.Count; ++selectionCtr)
 			{
@@ -1759,13 +1759,50 @@ namespace NeoEdit.Program
 					continue;
 
 				if (selectionCtr == CurrentSelection)
-					dc.DrawRoundedRectangle(currentSelectionBrush, currentSelectionPen, new Rect(-2, drawBounds.Y[cursorLine], canvas.ActualWidth + 4, Font.FontSize), 4, 4);
+					dc.DrawRoundedRectangle(highlightRowBrush, lightlightRowPen, new Rect(-2, drawBounds.Y[cursorLine], canvas.ActualWidth + 4, Font.FontSize), 4, 4);
 
 				var cursor = Data.GetOffsetIndex(range.Cursor, cursorLine);
 				if ((cursor >= drawBounds.StartIndexes[cursorLine]) && (cursor <= drawBounds.EndIndexes[cursorLine]))
 				{
 					cursor = Data.GetColumnFromIndex(cursorLine, cursor);
 					dc.DrawRectangle(Brushes.White, null, new Rect((cursor - drawBounds.StartColumn) * Font.CharWidth - 1, drawBounds.Y[cursorLine], 2, Font.FontSize));
+				}
+			}
+		}
+
+		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, RangeList ranges, Pen pen)
+		{
+			foreach (var range in ranges)
+			{
+				if ((range.End < drawBounds.ScreenStart) || (range.Start > drawBounds.ScreenEnd))
+					continue;
+
+				var startLine = Data.GetOffsetLine(range.Start);
+				var endLine = Data.GetOffsetLine(range.End);
+				var cursorLine = range.Cursor == range.Start ? startLine : endLine;
+				startLine = Math.Max(drawBounds.StartLine, startLine);
+				endLine = Math.Min(drawBounds.EndLine, endLine + 1);
+
+				for (var line = startLine; line < endLine; ++line)
+				{
+					var start = Math.Max(drawBounds.LineRanges[line].Start, range.Start);
+					var end = Math.Min(drawBounds.LineRanges[line].End, range.End);
+					start = Data.GetOffsetIndex(start, line);
+					end = Data.GetOffsetIndex(end, line);
+
+					if ((start > drawBounds.EndIndexes[line]) || (end < drawBounds.StartIndexes[line]))
+						continue;
+
+					start = Data.GetColumnFromIndex(line, start);
+					end = Data.GetColumnFromIndex(line, end);
+
+					start = Math.Max(0, start - drawBounds.StartColumn);
+					end = Math.Max(0, Math.Min(drawBounds.EndColumn, end) - drawBounds.StartColumn);
+					var width = Math.Max(0, end - start);
+
+					var steps = range == visibleCursor ? 2 : 1;
+					for (var ctr = 0; ctr < steps; ++ctr)
+						dc.DrawRoundedRectangle(null, pen, new Rect(start * Font.CharWidth - 2, drawBounds.Y[line] - 1, width * Font.CharWidth + 4, Font.FontSize + 2), 4, 4);
 				}
 			}
 		}
@@ -1778,52 +1815,9 @@ namespace NeoEdit.Program
 			var drawBounds = GetDrawBounds();
 			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
 
-			AddCarets(dc, drawBounds);
-
-			var brushes = new List<Tuple<RangeList, Brush>>
-			{
-				Tuple.Create(Selections, selectionBrush),
-				Tuple.Create(Searches, searchBrush),
-			};
-			brushes.AddRange(Regions.Select(pair => Tuple.Create(pair.Value, regionBrush[pair.Key])));
-			foreach (var entry in brushes)
-			{
-				var hasSelection = entry.Item1.Any(range => range.HasSelection);
-
-				foreach (var range in entry.Item1)
-				{
-					if ((range.End < drawBounds.ScreenStart) || (range.Start > drawBounds.ScreenEnd))
-						continue;
-
-					var entryStartLine = Data.GetOffsetLine(range.Start);
-					var entryEndLine = Data.GetOffsetLine(range.End);
-					var cursorLine = range.Cursor == range.Start ? entryStartLine : entryEndLine;
-					entryStartLine = Math.Max(drawBounds.StartLine, entryStartLine);
-					entryEndLine = Math.Min(drawBounds.EndLine, entryEndLine + 1);
-
-					for (var line = entryStartLine; line < entryEndLine; ++line)
-					{
-						var start = Math.Max(drawBounds.LineRanges[line].Start, range.Start);
-						var end = Math.Min(drawBounds.LineRanges[line].End, range.End);
-						start = Data.GetOffsetIndex(start, line);
-						end = Data.GetOffsetIndex(end, line);
-
-						if ((start > drawBounds.EndIndexes[line]) || (end < drawBounds.StartIndexes[line]))
-							continue;
-
-						start = Data.GetColumnFromIndex(line, start);
-						end = Data.GetColumnFromIndex(line, end);
-
-						start = Math.Max(0, start - drawBounds.StartColumn);
-						end = Math.Max(0, Math.Min(drawBounds.EndColumn, end) - drawBounds.StartColumn);
-						var width = Math.Max(0, end - start);
-
-						var steps = range == visibleCursor ? 2 : 1;
-						for (var ctr = 0; ctr < steps; ++ctr)
-							dc.DrawRectangle(entry.Item2, null, new Rect(start * Font.CharWidth, drawBounds.Y[line], width * Font.CharWidth + 1, Font.FontSize));
-					}
-				}
-			}
+			RenderCarets(dc, drawBounds);
+			RenderIndicators(dc, drawBounds, visibleCursor, Selections, selectionPen);
+			RenderIndicators(dc, drawBounds, visibleCursor, Searches, searchPen);
 
 			var highlightDictionary = HighlightSyntax ? Highlight.Get(ContentType)?.GetDictionary() : null;
 
