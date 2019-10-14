@@ -29,6 +29,7 @@ namespace NeoEdit.Program.Controls
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
 		static readonly Brush DiffBrush = new SolidColorBrush(Color.FromRgb(239, 203, 5));
 		static readonly Brush SliderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255));
+		static readonly Pen SliderPen = new Pen(new SolidColorBrush(Color.FromArgb(128, 255, 255, 255)), 2);
 
 		List<Tuple<double, double>> diffList;
 		public List<Tuple<double, double>> DiffList { get => diffList; set { diffList = value; Invalidate(); } }
@@ -50,6 +51,7 @@ namespace NeoEdit.Program.Controls
 			BackgroundBrush.Freeze();
 			DiffBrush.Freeze();
 			SliderBrush.Freeze();
+			SliderPen.Freeze();
 		}
 
 		public DiffScrollBar()
@@ -85,16 +87,16 @@ namespace NeoEdit.Program.Controls
 					SetRow(leftButton, 0);
 					Children.Add(leftButton);
 
-					canvas = new RenderCanvas { Background = BackgroundBrush };
-					SetColumn(canvas, 1);
-					SetRow(canvas, 0);
-					Children.Add(canvas);
-
 					var rightButton = new RepeatButton { Content = "⮞", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush };
 					rightButton.Click += OnDownRightButtonClick;
 					SetColumn(rightButton, 2);
 					SetRow(rightButton, 0);
 					Children.Add(rightButton);
+
+					canvas = new RenderCanvas { Background = BackgroundBrush };
+					SetColumn(canvas, 1);
+					SetRow(canvas, 0);
+					Children.Add(canvas);
 					break;
 				case Orientation.Vertical:
 					RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
@@ -109,16 +111,16 @@ namespace NeoEdit.Program.Controls
 					SetColumn(upButton, 0);
 					Children.Add(upButton);
 
-					canvas = new RenderCanvas { Background = BackgroundBrush };
-					SetRow(canvas, 1);
-					SetColumn(canvas, 0);
-					Children.Add(canvas);
-
 					var downButton = new RepeatButton { Content = "⮟", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush };
 					downButton.Click += OnDownRightButtonClick;
 					SetRow(downButton, 2);
 					SetColumn(downButton, 0);
 					Children.Add(downButton);
+
+					canvas = new RenderCanvas { Background = BackgroundBrush };
+					SetRow(canvas, 1);
+					SetColumn(canvas, 0);
+					Children.Add(canvas);
 					break;
 			}
 
@@ -166,7 +168,16 @@ namespace NeoEdit.Program.Controls
 					dc.DrawRectangle(DiffBrush, null, GetRect(ScrollToActual(tuple.Item1), Math.Max(1, ScrollToActual(tuple.Item2 - tuple.Item1))));
 
 			if (Maximum > Minimum)
-				dc.DrawRectangle(SliderBrush, null, GetRect(ScrollToActual(Value), ScrollToActual(ViewportSize)));
+			{
+				var value = ScrollToActual(Value);
+				var size = ScrollToActual(ViewportSize);
+				if (size < 5)
+				{
+					value -= (5 - size) / 2;
+					size = 5;
+				}
+				dc.DrawRoundedRectangle(SliderBrush, SliderPen, GetRect(value, size), 4, 4);
+			}
 		}
 
 		void OnUpLeftButtonClick(object sender, RoutedEventArgs e) => Value -= SmallChange;
