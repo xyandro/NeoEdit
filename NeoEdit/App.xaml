@@ -1,8 +1,7 @@
 ﻿<Application x:Class="NeoEdit.Program.App"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
-	xmlns:converters="clr-namespace:NeoEdit.Program.Converters">
+	xmlns:controls="clr-namespace:NeoEdit.Program.Controls">
 
 	<Application.Resources>
 		<ControlTemplate x:Key="ScrollViewerTemplate" TargetType="ScrollViewer">
@@ -70,7 +69,7 @@
 									<ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemShortcut"/>
 									<ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemExpand"/>
 								</Grid.ColumnDefinitions>
-								<Image Grid.Column="0" Name="Checkbox" Stretch="None" Source="pack://application:,,,/NeoEdit;component/Resources/Unchecked.png" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="{TemplateBinding IsCheckable, Converter={converters:BoolToVisibleConverter}}"/>
+								<Image Grid.Column="0" Name="Checkbox" Stretch="None" Source="pack://application:,,,/NeoEdit;component/Resources/Unchecked.png" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="Collapsed"/>
 								<ContentPresenter Grid.Column="0" Name="Icon" Content="{TemplateBinding Icon}" ContentSource="Icon" Margin="0,0,8,0" VerticalAlignment="Center"/>
 								<ContentPresenter Grid.Column="1" RecognizesAccessKey="True" ContentSource="Header" Margin="4,2,6,2" VerticalAlignment="Center"/>
 								<TextBlock Grid.Column="2" Name="Gesture" Text="{TemplateBinding InputGestureText}" Margin="14,0,6,0" VerticalAlignment="Center"/>
@@ -83,6 +82,9 @@
 							</Grid>
 						</Border>
 						<ControlTemplate.Triggers>
+							<Trigger Property="IsCheckable" Value="True">
+								<Setter TargetName="Checkbox" Property="Visibility" Value="Visible"/>
+							</Trigger>
 							<Trigger Property="HasItems" Value="False">
 								<Setter TargetName="ShowArrow" Property="Visibility" Value="Collapsed"/>
 							</Trigger>

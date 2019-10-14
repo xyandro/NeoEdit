@@ -4,6 +4,6 @@ Tutorial
 Print
 Add ability to select all attributes
 Allow tabs to move to other windows
-Remove converters from App.xaml
 Colored borders around selections/regions/diff
 Make scrollbar have minimum size
+Change icons for checkboxes in menus?
