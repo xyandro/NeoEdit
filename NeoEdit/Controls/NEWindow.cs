@@ -326,16 +326,8 @@ namespace NeoEdit.Program.Controls
 
 		protected override void OnSourceInitialized(EventArgs e)
 		{
-			HwndSource.FromHwnd(new WindowInteropHelper(this).Handle).AddHook(new HwndSourceHook(WindowProc));
+			HwndSource.FromHwnd(new WindowInteropHelper(this).Handle).AddHook(new HwndSourceHook(Win32.WindowProc));
 			base.OnSourceInitialized(e);
-		}
-
-		IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-		{
-			if (msg == Win32.WM_GETMINMAXINFO)
-				Win32.GetMinMaxInfo(hwnd, lParam, new Point(Left, Top));
-
-			return IntPtr.Zero;
 		}
 
 		public string GetPosition() => Win32.GetPosition(new WindowInteropHelper(this).Handle);
@@ -344,14 +336,14 @@ namespace NeoEdit.Program.Controls
 
 		static class Win32
 		{
-			public static string GetPosition(IntPtr handle)
+			internal static string GetPosition(IntPtr handle)
 			{
 				var placement = new WINDOWPLACEMENT();
 				GetWindowPlacement(handle, out placement);
 				return JsonConvert.SerializeObject(placement);
 			}
 
-			public static void SetPosition(IntPtr handle, string position)
+			internal static void SetPosition(IntPtr handle, string position)
 			{
 				if (string.IsNullOrEmpty(position))
 					return;
@@ -364,27 +356,30 @@ namespace NeoEdit.Program.Controls
 				SetWindowPlacement(handle, ref placement);
 			}
 
-			public static void GetMinMaxInfo(IntPtr hwnd, IntPtr lParam, Point windowPos)
+			internal static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 			{
-				var primaryScreen = MonitorFromPoint(new POINT(), MONITOR_DEFAULTTOPRIMARY);
+				if (msg == Win32.WM_GETMINMAXINFO)
+					Win32.GetMinMaxInfo(hwnd, lParam);
+
+				return IntPtr.Zero;
+			}
+
+			static void GetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
+			{
+				var primaryMonitor = MonitorFromPoint(new POINT(), MONITOR_DEFAULTTOPRIMARY);
 				var monitorInfo = new MONITORINFO();
-				if (!GetMonitorInfo(primaryScreen, monitorInfo))
+				if (!GetMonitorInfo(primaryMonitor, monitorInfo))
 					return;
 
-				var currentScreen = MonitorFromPoint(POINT.FromPoint(windowPos), MONITOR_DEFAULTTONEAREST);
-
 				var mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
-
-				var rect = primaryScreen.Equals(currentScreen) ? monitorInfo.rcWork : monitorInfo.rcMonitor;
-				mmi.ptMaxPosition.X = rect.Left;
-				mmi.ptMaxPosition.Y = rect.Top;
-				mmi.ptMaxSize.X = rect.Right - rect.Left;
-				mmi.ptMaxSize.Y = rect.Bottom - rect.Top;
-
+				mmi.ptMaxPosition.X = monitorInfo.rcWork.Left;
+				mmi.ptMaxPosition.Y = monitorInfo.rcWork.Top;
+				mmi.ptMaxSize.X = monitorInfo.rcWork.Right - monitorInfo.rcWork.Left;
+				mmi.ptMaxSize.Y = monitorInfo.rcWork.Bottom - monitorInfo.rcWork.Top;
 				Marshal.StructureToPtr(mmi, lParam, true);
 			}
 
-			public const int WM_GETMINMAXINFO = 0x0024;
+			const int WM_GETMINMAXINFO = 0x0024;
 			const int SW_SHOWNORMAL = 1;
 			const int SW_SHOWMINIMIZED = 2;
 			const int MONITOR_DEFAULTTOPRIMARY = 0x00000001;
