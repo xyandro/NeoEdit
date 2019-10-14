@@ -884,6 +884,7 @@ namespace NeoEdit.Program
 		public int GetDiffLine(int line) => (diffData == null) || (line >= diffData.LineMap.Count) ? line : diffData.LineMap[line];
 		public int GetNonDiffLine(int line) => (diffData == null) || (line >= diffData.LineRevMap.Count) ? line : diffData.LineRevMap[line];
 		public bool GetLineDiffMatches(int line) => diffData == null ? true : diffData.LineCompare[line] == DiffType.Match;
+		public DiffType GetLineDiffType(int line) => diffData == null ? DiffType.Match : diffData.LineCompare[line];
 		public List<Tuple<int, int>> GetLineColumnDiffs(int line) => diffData?.ColCompare[line] ?? new List<Tuple<int, int>>();
 
 		public int SkipDiffGaps(int line, int direction)

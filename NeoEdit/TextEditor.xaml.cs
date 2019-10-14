@@ -175,8 +175,8 @@ namespace NeoEdit.Program
 			[8] = new SolidColorBrush(Color.FromArgb(128, 128, 0, 0)),
 			[9] = new SolidColorBrush(Color.FromArgb(128, 0, 0, 128)),
 		};
-		static internal readonly Brush diffMajorBrush = new SolidColorBrush(Color.FromArgb(32, 239, 203, 5));
-		static internal readonly Brush diffMinorBrush = new SolidColorBrush(Color.FromArgb(32, 239, 203, 5));
+		static internal readonly Brush diffBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));
+		static internal readonly Pen diffPen = new Pen(new SolidColorBrush(Color.FromRgb(120, 102, 3)), 2);
 		static internal readonly Brush highlightRowBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
 		static internal readonly Pen lightlightRowPen = new Pen(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 1);
 
@@ -192,8 +192,9 @@ namespace NeoEdit.Program
 			selectionPen.Freeze();
 			searchPen.Freeze();
 			regionBrush.Values.ForEach(brush => brush.Freeze());
-			diffMajorBrush.Freeze();
-			diffMinorBrush.Freeze();
+			diffBrush.Freeze();
+			diffPen.Freeze();
+			diffBrush.Freeze();
 			highlightRowBrush.Freeze();
 			lightlightRowPen.Freeze();
 
@@ -1721,7 +1722,7 @@ namespace NeoEdit.Program
 			public int ScreenEnd { get; private set; }
 			public Dictionary<int, int> StartIndexes { get; set; }
 			public Dictionary<int, int> EndIndexes { get; set; }
-			public Dictionary<int, double> Y { get; set; }
+			public double Y(int line) => (line - StartLine) * Font.FontSize;
 		}
 
 		DrawBounds GetDrawBounds()
@@ -1736,7 +1737,6 @@ namespace NeoEdit.Program
 			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetOffset(line, 0), Data.GetOffset(line, Data.GetLineLength(line) + 1)));
 			drawBounds.StartIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, drawBounds.StartColumn, true));
 			drawBounds.EndIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, drawBounds.EndColumn, true));
-			drawBounds.Y = lines.ToDictionary(line => line, line => (line - drawBounds.StartLine) * Font.FontSize);
 			return drawBounds;
 		}
 
@@ -1759,13 +1759,13 @@ namespace NeoEdit.Program
 					continue;
 
 				if (selectionCtr == CurrentSelection)
-					dc.DrawRoundedRectangle(highlightRowBrush, lightlightRowPen, new Rect(-2, drawBounds.Y[cursorLine], canvas.ActualWidth + 4, Font.FontSize), 4, 4);
+					dc.DrawRoundedRectangle(highlightRowBrush, lightlightRowPen, new Rect(-2, drawBounds.Y(cursorLine), canvas.ActualWidth + 4, Font.FontSize), 4, 4);
 
 				var cursor = Data.GetOffsetIndex(range.Cursor, cursorLine);
 				if ((cursor >= drawBounds.StartIndexes[cursorLine]) && (cursor <= drawBounds.EndIndexes[cursorLine]))
 				{
 					cursor = Data.GetColumnFromIndex(cursorLine, cursor);
-					dc.DrawRectangle(Brushes.White, null, new Rect((cursor - drawBounds.StartColumn) * Font.CharWidth - 1, drawBounds.Y[cursorLine], 2, Font.FontSize));
+					dc.DrawRectangle(Brushes.White, null, new Rect((cursor - drawBounds.StartColumn) * Font.CharWidth - 1, drawBounds.Y(cursorLine), 2, Font.FontSize));
 				}
 			}
 		}
@@ -1802,8 +1802,56 @@ namespace NeoEdit.Program
 
 					var steps = range == visibleCursor ? 2 : 1;
 					for (var ctr = 0; ctr < steps; ++ctr)
-						dc.DrawRoundedRectangle(null, pen, new Rect(start * Font.CharWidth - 2, drawBounds.Y[line] - 1, width * Font.CharWidth + 4, Font.FontSize + 2), 4, 4);
+						dc.DrawRoundedRectangle(null, pen, new Rect(start * Font.CharWidth - 2, drawBounds.Y(line) - 1, width * Font.CharWidth + 4, Font.FontSize + 2), 4, 4);
 				}
+			}
+		}
+
+		void RenderDiff(DrawingContext dc, DrawBounds drawBounds)
+		{
+			int? startDiff = null;
+			for (var line = drawBounds.StartLine; ; ++line)
+			{
+				var done = line == drawBounds.EndLine;
+
+				var matchType = done ? TextData.DiffType.Match : Data.GetLineDiffType(line);
+				if (matchType != TextData.DiffType.Match)
+				{
+					startDiff = startDiff ?? line;
+
+					if (!matchType.HasFlag(TextData.DiffType.HasGap))
+					{
+						startDiff = startDiff ?? line;
+
+						var map = Data.GetLineColumnMap(line, true);
+						foreach (var tuple in Data.GetLineColumnDiffs(line))
+						{
+							var start = tuple.Item1;
+							if (start != int.MaxValue)
+								start = map[start];
+							start = Math.Max(0, start - drawBounds.StartColumn);
+
+							var end = tuple.Item2;
+							if (end != int.MaxValue)
+								end = map[end];
+							end = Math.Max(0, end - drawBounds.StartColumn);
+
+							var startX = Math.Max(0, start * Font.CharWidth);
+							var endX = Math.Min(ActualWidth, end * Font.CharWidth);
+							if (endX > startX)
+								dc.DrawRectangle(diffBrush, null, new Rect(startX, drawBounds.Y(line), endX - startX, Font.FontSize));
+						}
+					}
+				}
+
+				if ((startDiff.HasValue) && (matchType == TextData.DiffType.Match))
+				{
+					dc.DrawRoundedRectangle(diffBrush, diffPen, new Rect(-2, drawBounds.Y(startDiff.Value), canvas.ActualWidth + 4, drawBounds.Y(line) - drawBounds.Y(startDiff.Value) + 1), 4, 4);
+					startDiff = null;
+				}
+
+				if (done)
+					break;
 			}
 		}
 
@@ -1815,30 +1863,6 @@ namespace NeoEdit.Program
 
 			for (var line = drawBounds.StartLine; line < drawBounds.EndLine; ++line)
 			{
-				if (!Data.GetLineDiffMatches(line))
-				{
-					dc.DrawRectangle(diffMinorBrush, null, new Rect(0, drawBounds.Y[line], canvas.ActualWidth, Font.FontSize));
-
-					var map = Data.GetLineColumnMap(line, true);
-					foreach (var tuple in Data.GetLineColumnDiffs(line))
-					{
-						var start = tuple.Item1;
-						if (start != int.MaxValue)
-							start = map[start];
-						start = Math.Max(0, start - drawBounds.StartColumn);
-
-						var end = tuple.Item2;
-						if (end != int.MaxValue)
-							end = map[end];
-						end = Math.Max(0, end - drawBounds.StartColumn);
-
-						var startX = Math.Max(0, start * Font.CharWidth);
-						var endX = Math.Min(ActualWidth, end * Font.CharWidth);
-						if (endX > startX)
-							dc.DrawRectangle(diffMajorBrush, null, new Rect(startX, drawBounds.Y[line], endX - startX, Font.FontSize));
-					}
-				}
-
 				var str = Data.GetLineColumns(line);
 				if (str.Length <= drawBounds.StartColumn)
 					continue;
@@ -1869,7 +1893,7 @@ namespace NeoEdit.Program
 						}
 				}
 
-				dc.DrawText(text, new Point(0, drawBounds.Y[line]));
+				dc.DrawText(text, new Point(0, drawBounds.Y(line)));
 			}
 		}
 
@@ -1881,10 +1905,11 @@ namespace NeoEdit.Program
 			var drawBounds = GetDrawBounds();
 			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
 
-			RenderCarets(dc, drawBounds);
+			RenderDiff(dc, drawBounds);
+			RenderText(dc, drawBounds);
 			RenderIndicators(dc, drawBounds, visibleCursor, Selections, selectionPen);
 			RenderIndicators(dc, drawBounds, visibleCursor, Searches, searchPen);
-			RenderText(dc, drawBounds);
+			RenderCarets(dc, drawBounds);
 		}
 
 		void OnStatusBarRender(object sender, DrawingContext dc)
