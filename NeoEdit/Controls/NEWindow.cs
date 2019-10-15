@@ -23,7 +23,8 @@ namespace NeoEdit.Program.Controls
 		public bool IsMainWindow { get { return UIHelper<NEWindow>.GetPropValue<bool>(this); } set { UIHelper<NEWindow>.SetPropValue(this, value); } }
 
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(32, 32, 32));
-		static readonly Brush OutlineBrush = Brushes.White;
+		static readonly Brush ActiveBrush = Brushes.White;
+		static readonly Brush InactiveBrush = Brushes.Gray;
 		static readonly BoolToVisibleConverter boolToVisibleConverter = new BoolToVisibleConverter();
 
 		Borders saveBorder;
@@ -34,7 +35,8 @@ namespace NeoEdit.Program.Controls
 		{
 			UIHelper<NEWindow>.Register();
 			BackgroundBrush.Freeze();
-			OutlineBrush.Freeze();
+			ActiveBrush.Freeze();
+			InactiveBrush.Freeze();
 		}
 
 		public NEWindow()
@@ -70,13 +72,18 @@ namespace NeoEdit.Program.Controls
 			template.Triggers.Add(rectTrigger);
 
 			var border = new FrameworkElementFactory(typeof(Border));
+			border.Name = "outerBorder";
 			border.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
 			border.SetValue(Border.BorderThicknessProperty, new Thickness(2));
 			border.SetValue(Border.BackgroundProperty, BackgroundBrush);
-			border.SetValue(Border.BorderBrushProperty, OutlineBrush);
+			border.SetValue(Border.BorderBrushProperty, ActiveBrush);
 			border.AddHandler(Border.MouseLeftButtonDownEvent, new MouseButtonEventHandler(OnBorderMouseLeftButtonDown));
 			border.AddHandler(Border.MouseLeftButtonUpEvent, new MouseButtonEventHandler(OnBorderMouseLeftButtonUp));
 			border.AddHandler(Border.MouseMoveEvent, new MouseEventHandler(OnBorderMouseMove));
+
+			var activeTrigger = new Trigger { Property = IsActiveProperty, Value = false };
+			activeTrigger.Setters.Add(new Setter { TargetName = border.Name, Property = Border.BorderBrushProperty, Value = InactiveBrush });
+			template.Triggers.Add(activeTrigger);
 
 			var grid = new FrameworkElementFactory(typeof(Grid));
 
