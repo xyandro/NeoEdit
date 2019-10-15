@@ -9,7 +9,6 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using NeoEdit.Program.Converters;
 using Newtonsoft.Json;
 
 namespace NeoEdit.Program.Controls
@@ -25,7 +24,6 @@ namespace NeoEdit.Program.Controls
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(32, 32, 32));
 		static readonly Brush ActiveBrush = Brushes.White;
 		static readonly Brush InactiveBrush = Brushes.Gray;
-		static readonly BoolToVisibleConverter boolToVisibleConverter = new BoolToVisibleConverter();
 
 		Borders saveBorder;
 		Point savePoint;
@@ -61,8 +59,7 @@ namespace NeoEdit.Program.Controls
 
 			var outerGrid = new FrameworkElementFactory(typeof(Grid));
 
-			var rect = new FrameworkElementFactory(typeof(Rectangle));
-			rect.Name = "PART_rect";
+			var rect = new FrameworkElementFactory(typeof(Rectangle)) { Name = "PART_rect" };
 			rect.SetValue(Rectangle.FillProperty, Brushes.Black);
 			rect.SetValue(Rectangle.VisibilityProperty, Visibility.Hidden);
 			outerGrid.AppendChild(rect);
@@ -71,8 +68,7 @@ namespace NeoEdit.Program.Controls
 			rectTrigger.Setters.Add(new Setter { TargetName = rect.Name, Property = VisibilityProperty, Value = Visibility.Visible });
 			template.Triggers.Add(rectTrigger);
 
-			var border = new FrameworkElementFactory(typeof(Border));
-			border.Name = "outerBorder";
+			var border = new FrameworkElementFactory(typeof(Border)) { Name = "outerBorder" };
 			border.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
 			border.SetValue(Border.BorderThicknessProperty, new Thickness(2));
 			border.SetValue(Border.BackgroundProperty, BackgroundBrush);
@@ -106,14 +102,17 @@ namespace NeoEdit.Program.Controls
 
 			var decoder = BitmapDecoder.Create(new Uri($"pack://application:,,,/NeoEdit;component/NeoEdit.ico"), BitmapCreateOptions.DelayCreation, BitmapCacheOption.OnDemand);
 			var iconImage = decoder.Frames.Where(f => f.Width == 16).OrderByDescending(f => f.Width).First();
-			var icon = new FrameworkElementFactory(typeof(Image));
+			var icon = new FrameworkElementFactory(typeof(Image)) { Name = "neWindowIcon" };
 			icon.SetValue(Image.StretchProperty, Stretch.None);
 			icon.SetValue(Image.SourceProperty, iconImage);
 			icon.SetValue(Image.MarginProperty, new Thickness(5, 0, 0, 0));
-			icon.SetBinding(Image.VisibilityProperty, new Binding(nameof(IsMainWindow)) { Source = this, Converter = boolToVisibleConverter });
 			icon.SetValue(Grid.RowProperty, 0);
 			icon.SetValue(Grid.ColumnProperty, 0);
 			grid.AppendChild(icon);
+
+			var iconTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => IsMainWindow), Value = false };
+			iconTrigger.Setters.Add(new Setter { TargetName = icon.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
+			template.Triggers.Add(iconTrigger);
 
 			var textBlock = new FrameworkElementFactory(typeof(TextBlock));
 			textBlock.SetValue(TextBlock.FontSizeProperty, 14d);
@@ -133,31 +132,35 @@ namespace NeoEdit.Program.Controls
 			stackPanel.SetValue(Grid.RowProperty, 0);
 			stackPanel.SetValue(Grid.ColumnProperty, 2);
 
-			var minimizeButton = new FrameworkElementFactory(typeof(Button));
+			var minimizeButton = new FrameworkElementFactory(typeof(Button)) { Name = "neWindowMinimize" };
 			minimizeButton.SetValue(Button.ContentProperty, "🗕");
 			minimizeButton.SetValue(Button.FontSizeProperty, 14d);
 			minimizeButton.SetValue(Button.MarginProperty, new Thickness(5, -2, 5, 0));
 			minimizeButton.SetValue(Button.ForegroundProperty, Brushes.White);
 			minimizeButton.SetValue(Button.BackgroundProperty, Brushes.Transparent);
 			minimizeButton.SetValue(Button.BorderBrushProperty, Brushes.Transparent);
-			minimizeButton.SetBinding(Button.VisibilityProperty, new Binding(nameof(IsMainWindow)) { Source = this, Converter = boolToVisibleConverter });
 			minimizeButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnMinimizeClick));
 			stackPanel.AppendChild(minimizeButton);
 
-			var maximizeButton = new FrameworkElementFactory(typeof(Button));
-			maximizeButton.Name = "maximizeButton";
+			var minimizeTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => IsMainWindow), Value = false };
+			minimizeTrigger.Setters.Add(new Setter { TargetName = minimizeButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
+			template.Triggers.Add(minimizeTrigger);
+
+			var maximizeButton = new FrameworkElementFactory(typeof(Button)) { Name = "maximizeButton" };
 			maximizeButton.SetValue(Button.FontSizeProperty, 14d);
 			maximizeButton.SetValue(Button.MarginProperty, new Thickness(5, -2, 5, 0));
 			maximizeButton.SetValue(Button.ForegroundProperty, Brushes.White);
 			maximizeButton.SetValue(Button.BackgroundProperty, Brushes.Transparent);
 			maximizeButton.SetValue(Button.BorderBrushProperty, Brushes.Transparent);
 			maximizeButton.SetValue(Button.ContentProperty, "🗖");
-			maximizeButton.SetBinding(Button.VisibilityProperty, new Binding(nameof(IsMainWindow)) { Source = this, Converter = boolToVisibleConverter });
 			maximizeButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnRestoreClick));
 			stackPanel.AppendChild(maximizeButton);
 
 			var maximizeTrigger = new Trigger { Property = WindowStateProperty, Value = WindowState.Maximized };
 			maximizeTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Button.ContentProperty, Value = "🗗" });
+			template.Triggers.Add(maximizeTrigger);
+			maximizeTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => IsMainWindow), Value = false };
+			maximizeTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
 			template.Triggers.Add(maximizeTrigger);
 
 			var closeButton = new FrameworkElementFactory(typeof(Button));
