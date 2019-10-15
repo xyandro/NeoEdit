@@ -164,7 +164,9 @@ namespace NeoEdit.Program
 			}
 		}
 
-		static internal readonly Pen selectionPen = new Pen(new SolidColorBrush(Color.FromRgb(38, 132, 255)), 2);
+		static internal readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
+		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
+		static internal readonly Pen selectionPen = new Pen(new SolidColorBrush(Color.FromArgb(96, 38, 132, 255)), 2);
 		static internal readonly Pen searchPen = new Pen(new SolidColorBrush(Color.FromArgb(128, 201, 102, 12)), 1);
 		static internal readonly Dictionary<int, Pen> regionPen = new Dictionary<int, Pen>
 		{
@@ -192,6 +194,8 @@ namespace NeoEdit.Program
 
 		static TextEditor()
 		{
+			caretBrush.Freeze();
+			selectionBrush.Freeze();
 			selectionPen.Freeze();
 			searchPen.Freeze();
 			regionPen.Values.ForEach(brush => brush.Freeze());
@@ -1769,15 +1773,14 @@ namespace NeoEdit.Program
 				if ((cursor >= drawBounds.StartIndexes[cursorLine]) && (cursor <= drawBounds.EndIndexes[cursorLine]))
 				{
 					cursor = Data.GetColumnFromIndex(cursorLine, cursor);
-					dc.DrawRectangle(Brushes.White, null, new Rect(drawBounds.X(cursor) - 1, drawBounds.Y(cursorLine), 2, Font.FontSize));
+					for (var pass = selectionCtr == CurrentSelection ? 2 : 1; pass > 0; --pass)
+						dc.DrawRectangle(caretBrush, null, new Rect(drawBounds.X(cursor) - 1, drawBounds.Y(cursorLine), 2, LineHeight));
 				}
 			}
 		}
 
-		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, RangeList ranges, Pen pen)
+		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, RangeList ranges, Brush brush, Pen pen, double leftSpacing = -2, double rightSpacing = 2)
 		{
-			const double LeftSpacing = -2;
-			const double RightSpacing = 2;
 			var radius = Math.Min(4, Font.FontSize / 2 - 1);
 
 			foreach (var range in ranges)
@@ -1798,23 +1801,23 @@ namespace NeoEdit.Program
 
 				var points = new List<Point>();
 
-				points.Add(new Point(drawBounds.X(startColumn) + LeftSpacing, drawBounds.Y(startLine) + radius + 1));
-				points.Add(new Point(drawBounds.X(startColumn) + LeftSpacing, drawBounds.Y(startLine)));
+				points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, drawBounds.Y(startLine) + radius + 1));
+				points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, drawBounds.Y(startLine)));
 				for (var line = startLine; ; ++line)
 				{
 					var done = line == endLine;
 					var length = done ? endColumn : Data.GetLineColumnsLength(line) + 1;
-					points.Add(new Point(drawBounds.X(length) + RightSpacing, drawBounds.Y(line)));
-					points.Add(new Point(drawBounds.X(length) + RightSpacing, drawBounds.Y(line) + LineHeight));
+					points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line)));
+					points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line) + LineHeight));
 					if (done)
 						break;
 				}
 				if (endLine != startLine)
 				{
-					points.Add(new Point(LeftSpacing, points[points.Count - 1].Y));
-					points.Add(new Point(LeftSpacing, drawBounds.Y(startLine) + LineHeight));
+					points.Add(new Point(leftSpacing, points[points.Count - 1].Y));
+					points.Add(new Point(leftSpacing, drawBounds.Y(startLine) + LineHeight));
 				}
-				points.Add(new Point(drawBounds.X(startColumn) + LeftSpacing, points[points.Count - 1].Y));
+				points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, points[points.Count - 1].Y));
 				points.Add(points[0]);
 
 				int CompareValue(double v1, double v2)
@@ -1832,7 +1835,7 @@ namespace NeoEdit.Program
 					{
 						if (ctr == 0)
 						{
-							ctx.BeginFigure(points[ctr], false, true);
+							ctx.BeginFigure(points[ctr], brush != null, true);
 							continue;
 						}
 
@@ -1851,7 +1854,8 @@ namespace NeoEdit.Program
 					}
 				}
 				geometry.Freeze();
-				dc.DrawGeometry(null, pen, geometry);
+				for (var pass = range == visibleCursor ? 2 : 1; pass > 0; --pass)
+					dc.DrawGeometry(brush, pen, geometry);
 			}
 		}
 
@@ -1944,13 +1948,14 @@ namespace NeoEdit.Program
 			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
 
 			RenderDiff(dc, drawBounds);
-			RenderText(dc, drawBounds);
-			RenderIndicators(dc, drawBounds, visibleCursor, Searches, searchPen);
+			RenderIndicators(dc, drawBounds, null, Searches, null, searchPen);
 			foreach (var region in Regions)
-				RenderIndicators(dc, drawBounds, visibleCursor, region.Value, regionPen[region.Key]);
-			if (Selections.Any(x => x.HasSelection))
-				RenderIndicators(dc, drawBounds, visibleCursor, Selections, selectionPen);
-			RenderCarets(dc, drawBounds);
+				RenderIndicators(dc, drawBounds, null, region.Value, null, regionPen[region.Key]);
+			if (Selections.Any(range => range.HasSelection))
+				RenderIndicators(dc, drawBounds, visibleCursor, Selections, selectionBrush, selectionPen, -1, 1);
+			else
+				RenderCarets(dc, drawBounds);
+			RenderText(dc, drawBounds);
 		}
 
 		void OnStatusBarRender(object sender, DrawingContext dc)
