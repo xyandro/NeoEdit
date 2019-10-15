@@ -1920,18 +1920,18 @@ namespace NeoEdit.Program
 
 			for (var line = drawBounds.StartLine; line < drawBounds.EndLine; ++line)
 			{
-				var str = Data.GetLineColumns(line);
-				if (str.Length <= drawBounds.StartColumn)
+				var lineColumns = Data.GetLineColumns(line);
+				if (lineColumns.Length <= drawBounds.StartColumn)
 					continue;
 
-				str = str.Substring(drawBounds.StartColumn, Math.Min(drawBounds.EndColumn, str.Length) - drawBounds.StartColumn);
+				var str = lineColumns.Substring(drawBounds.StartColumn, Math.Min(drawBounds.EndColumn, lineColumns.Length) - drawBounds.StartColumn);
 				var text = Font.GetText(str);
 
 				if (highlightDictionary != null)
 				{
 					var highlightStart = Math.Max(drawBounds.StartColumn - HighlightRegexSize, 0);
-					var highlightCount = Math.Min(drawBounds.EndColumn - drawBounds.StartColumn + HighlightRegexSize, str.Length - highlightStart);
-					var highlightStr = str.Substring(highlightStart, highlightCount);
+					var highlightCount = Math.Min(drawBounds.EndColumn - drawBounds.StartColumn + HighlightRegexSize, lineColumns.Length - highlightStart);
+					var highlightStr = lineColumns.Substring(highlightStart, highlightCount);
 
 					foreach (var entry in highlightDictionary)
 						foreach (Match match in entry.Key.Matches(highlightStr))
