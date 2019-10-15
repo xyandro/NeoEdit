@@ -27,9 +27,9 @@ namespace NeoEdit.Program.Controls
 
 		static readonly Brush ForegroundBrush = Brushes.White;
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
-		static readonly Brush DiffBrush = new SolidColorBrush(Color.FromRgb(239, 203, 5));
+		static readonly Brush DiffBrush = new SolidColorBrush(Color.FromRgb(120, 102, 3));
 		static readonly Brush SliderBrush = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255));
-		static readonly Pen SliderPen = new Pen(new SolidColorBrush(Color.FromArgb(128, 255, 255, 255)), 2);
+		static readonly Pen SliderPen = new Pen(new SolidColorBrush(Color.FromRgb(192, 192, 192)), 2);
 
 		List<Tuple<double, double>> diffList;
 		public List<Tuple<double, double>> DiffList { get => diffList; set { diffList = value; Invalidate(); } }

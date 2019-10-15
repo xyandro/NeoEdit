@@ -1872,23 +1872,17 @@ namespace NeoEdit.Program
 						var map = Data.GetLineColumnMap(line, true);
 						foreach (var tuple in Data.GetLineColumnDiffs(line))
 						{
-							var start = tuple.Item1;
-							if (start != int.MaxValue)
-								start = map[start];
-
-							var end = tuple.Item2;
-							if (end != int.MaxValue)
-								end = map[end];
-
-							if (end > start)
-								dc.DrawRectangle(diffBrush, null, new Rect(drawBounds.X(start), drawBounds.Y(line), (end - start) * Font.CharWidth, Font.FontSize));
+							var start = map[tuple.Item1];
+							var end = map[tuple.Item2];
+							if (end >= start)
+								dc.DrawRectangle(diffBrush, null, new Rect(drawBounds.X(start) - 2, drawBounds.Y(line), (end - start) * Font.CharWidth + 2, Font.FontSize));
 						}
 					}
 				}
 
 				if ((startDiff.HasValue) && (matchType == TextData.DiffType.Match))
 				{
-					dc.DrawRoundedRectangle(diffBrush, diffPen, new Rect(-2, drawBounds.Y(startDiff.Value), canvas.ActualWidth + 4, drawBounds.Y(line) - drawBounds.Y(startDiff.Value) + 1), 4, 4);
+					dc.DrawRoundedRectangle(diffBrush, diffPen, new Rect(-2, drawBounds.Y(startDiff.Value), canvas.ActualWidth + 4, drawBounds.Y(line) - drawBounds.Y(startDiff.Value) - Spacing + 1), 4, 4);
 					startDiff = null;
 				}
 

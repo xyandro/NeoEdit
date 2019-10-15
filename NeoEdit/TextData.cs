@@ -708,7 +708,6 @@ namespace NeoEdit.Program
 					if (linesLCS[line][pass] == LCS.MatchType.Gap)
 					{
 						--curLine[pass];
-						textData[1 - pass].diffData.ColCompare[line] = new List<Tuple<int, int>> { Tuple.Create(0, int.MaxValue) };
 						skip = true;
 					}
 				}
@@ -722,21 +721,25 @@ namespace NeoEdit.Program
 					var start = default(int?);
 					var pos = -1;
 					textData[pass].diffData.ColCompare[line] = new List<Tuple<int, int>>();
-					for (var ctr = 0; ctr <= colsLCS.Count; ++ctr)
+					for (var ctr = 0; ; ++ctr)
 					{
-						if ((ctr == colsLCS.Count) || (colsLCS[ctr][pass] != LCS.MatchType.Gap))
+						var done = ctr == colsLCS.Count;
+						if ((done) || (colsLCS[ctr][pass] != LCS.MatchType.Gap))
 							++pos;
 
-						if ((ctr == colsLCS.Count) || (colsLCS[ctr].IsMatch))
+						if ((done) || (colsLCS[ctr].IsMatch))
 						{
 							if (start.HasValue)
 								textData[pass].diffData.ColCompare[line].Add(Tuple.Create(map[pass][curLine[pass]][start.Value], map[pass][curLine[pass]][pos]));
 							start = null;
-							continue;
 						}
-
-						if (colsLCS[ctr][pass] == LCS.MatchType.Mismatch)
+						else if (colsLCS[ctr][pass] == LCS.MatchType.Mismatch)
 							start = start ?? pos;
+						else
+							start = start ?? pos + 1;
+
+						if (done)
+							break;
 					}
 				}
 			}

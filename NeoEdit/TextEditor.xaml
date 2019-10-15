@@ -18,7 +18,7 @@
 		</Grid.RowDefinitions>
 
 		<Border Grid.Row="0" Grid.Column="0" CornerRadius="8" BorderThickness="2" BorderBrush="#808080" Padding="3" Background="Black">
-			<Border Padding="2" ClipToBounds="True">
+			<Border Padding="3" ClipToBounds="True">
 				<controls:RenderCanvas x:Name="canvas"/>
 			</Border>
 		</Border>
