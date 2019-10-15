@@ -25,6 +25,9 @@ namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{
+		const double Spacing = 2;
+		static double LineHeight => Font.FontSize + Spacing;
+
 		class PreviousStruct
 		{
 			public NECommand Command { get; set; }
@@ -161,7 +164,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		static internal readonly Pen selectionPen = new Pen(new SolidColorBrush(Color.FromRgb(38, 132, 255)), 1);
+		static internal readonly Pen selectionPen = new Pen(new SolidColorBrush(Color.FromRgb(38, 132, 255)), 2);
 		static internal readonly Pen searchPen = new Pen(new SolidColorBrush(Color.FromArgb(128, 201, 102, 12)), 1);
 		static internal readonly Dictionary<int, Brush> regionBrush = new Dictionary<int, Brush>
 		{
@@ -367,7 +370,7 @@ namespace NeoEdit.Program
 			xScroll.SmallChange = 1;
 			xScrollValue = xScrollValue;
 
-			yScroll.ViewportSize = canvas.ActualHeight / Font.FontSize;
+			yScroll.ViewportSize = canvas.ActualHeight / LineHeight;
 			yScroll.Minimum = 0;
 			yScroll.Maximum = Data.NumLines - yScrollViewportFloor;
 			yScroll.SmallChange = 1;
@@ -1586,7 +1589,7 @@ namespace NeoEdit.Program
 		void MouseHandler(Point mousePos, int clickCount, bool selecting)
 		{
 			var sels = Selections.ToList();
-			var line = Math.Max(0, Math.Min(Data.NumLines - 1, (int)(mousePos.Y / Font.FontSize) + yScrollValue));
+			var line = Math.Max(0, Math.Min(Data.NumLines - 1, (int)(mousePos.Y / LineHeight) + yScrollValue));
 			var column = Math.Max(0, Math.Min(Data.GetLineColumnsLength(line), (int)(mousePos.X / Font.CharWidth) + xScrollValue));
 			var index = Data.GetIndexFromColumn(line, column, true);
 			var offset = Data.GetOffset(line, index);
@@ -1722,7 +1725,8 @@ namespace NeoEdit.Program
 			public int ScreenEnd { get; private set; }
 			public Dictionary<int, int> StartIndexes { get; set; }
 			public Dictionary<int, int> EndIndexes { get; set; }
-			public double Y(int line) => (line - StartLine) * Font.FontSize;
+			public double X(int column) => (column - StartColumn) * Font.CharWidth;
+			public double Y(int line) => (line - StartLine) * LineHeight;
 		}
 
 		DrawBounds GetDrawBounds()
@@ -1765,45 +1769,87 @@ namespace NeoEdit.Program
 				if ((cursor >= drawBounds.StartIndexes[cursorLine]) && (cursor <= drawBounds.EndIndexes[cursorLine]))
 				{
 					cursor = Data.GetColumnFromIndex(cursorLine, cursor);
-					dc.DrawRectangle(Brushes.White, null, new Rect((cursor - drawBounds.StartColumn) * Font.CharWidth - 1, drawBounds.Y(cursorLine), 2, Font.FontSize));
+					dc.DrawRectangle(Brushes.White, null, new Rect(drawBounds.X(cursor) - 1, drawBounds.Y(cursorLine), 2, Font.FontSize));
 				}
 			}
 		}
 
 		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, RangeList ranges, Pen pen)
 		{
+			var radius = Math.Min(8, Font.FontSize / 2 - 1);
+
 			foreach (var range in ranges)
 			{
 				if ((range.End < drawBounds.ScreenStart) || (range.Start > drawBounds.ScreenEnd))
 					continue;
 
 				var startLine = Data.GetOffsetLine(range.Start);
+				var startColumn = Data.GetColumnFromIndex(startLine, Data.GetOffsetIndex(range.Start, startLine));
+
 				var endLine = Data.GetOffsetLine(range.End);
-				var cursorLine = range.Cursor == range.Start ? startLine : endLine;
-				startLine = Math.Max(drawBounds.StartLine, startLine);
-				endLine = Math.Min(drawBounds.EndLine, endLine + 1);
-
-				for (var line = startLine; line < endLine; ++line)
+				var endColumn = Data.GetColumnFromIndex(endLine, Data.GetOffsetIndex(range.End, endLine));
+				if ((endLine != startLine) && (endColumn == 0))
 				{
-					var start = Math.Max(drawBounds.LineRanges[line].Start, range.Start);
-					var end = Math.Min(drawBounds.LineRanges[line].End, range.End);
-					start = Data.GetOffsetIndex(start, line);
-					end = Data.GetOffsetIndex(end, line);
-
-					if ((start > drawBounds.EndIndexes[line]) || (end < drawBounds.StartIndexes[line]))
-						continue;
-
-					start = Data.GetColumnFromIndex(line, start);
-					end = Data.GetColumnFromIndex(line, end);
-
-					start = Math.Max(0, start - drawBounds.StartColumn);
-					end = Math.Max(0, Math.Min(drawBounds.EndColumn, end) - drawBounds.StartColumn);
-					var width = Math.Max(0, end - start);
-
-					var steps = range == visibleCursor ? 2 : 1;
-					for (var ctr = 0; ctr < steps; ++ctr)
-						dc.DrawRoundedRectangle(null, pen, new Rect(start * Font.CharWidth - 2, drawBounds.Y(line) - 1, width * Font.CharWidth + 4, Font.FontSize + 2), 4, 4);
+					--endLine;
+					endColumn = Data.GetLineColumnsLength(endLine) + 1;
 				}
+
+				var points = new List<Point>();
+
+				points.Add(new Point(drawBounds.X(startColumn), drawBounds.Y(startLine) + radius + 1));
+				points.Add(new Point(drawBounds.X(startColumn), drawBounds.Y(startLine)));
+				for (var line = startLine; ; ++line)
+				{
+					var done = line == endLine;
+					var length = done ? endColumn : Data.GetLineColumnsLength(line) + 1;
+					points.Add(new Point(drawBounds.X(length), drawBounds.Y(line)));
+					points.Add(new Point(drawBounds.X(length), drawBounds.Y(line) + LineHeight));
+					if (done)
+						break;
+				}
+				if (endLine != startLine)
+				{
+					points.Add(new Point(0, points[points.Count - 1].Y));
+					points.Add(new Point(0, drawBounds.Y(startLine) + LineHeight));
+				}
+				points.Add(new Point(drawBounds.X(startColumn), points[points.Count - 1].Y));
+				points.Add(points[0]);
+
+				int CompareValue(double v1, double v2)
+				{
+					var result = v1.CompareTo(v2);
+					if (result != 0)
+						result /= Math.Abs(result);
+					return result;
+				}
+
+				var geometry = new StreamGeometry();
+				using (var ctx = geometry.Open())
+				{
+					for (var ctr = 0; ctr < points.Count - 1; ++ctr)
+					{
+						if (ctr == 0)
+						{
+							ctx.BeginFigure(points[ctr], false, true);
+							continue;
+						}
+
+						var prevX = CompareValue(points[ctr - 1].X, points[ctr].X);
+						var prevY = CompareValue(points[ctr - 1].Y, points[ctr].Y);
+						var nextX = CompareValue(points[ctr].X, points[ctr + 1].X);
+						var nextY = CompareValue(points[ctr].Y, points[ctr + 1].Y);
+
+						if (((prevX == 0) != (prevY == 0)) && ((nextX == 0) != (nextY == 0)) && ((prevX == 0) != (nextX == 0)))
+						{
+							ctx.LineTo(points[ctr] + new Vector(prevX * radius, prevY * radius), true, true);
+							ctx.ArcTo(points[ctr] + new Vector(-nextX * radius, -nextY * radius), new Size(radius, radius), 0, false, (prevX == 0 ? prevY != nextX : prevX == nextY) ? SweepDirection.Clockwise : SweepDirection.Counterclockwise, true, true);
+						}
+						else
+							ctx.LineTo(points[ctr], true, true);
+					}
+				}
+				geometry.Freeze();
+				dc.DrawGeometry(null, pen, geometry);
 			}
 		}
 
@@ -1829,17 +1875,13 @@ namespace NeoEdit.Program
 							var start = tuple.Item1;
 							if (start != int.MaxValue)
 								start = map[start];
-							start = Math.Max(0, start - drawBounds.StartColumn);
 
 							var end = tuple.Item2;
 							if (end != int.MaxValue)
 								end = map[end];
-							end = Math.Max(0, end - drawBounds.StartColumn);
 
-							var startX = Math.Max(0, start * Font.CharWidth);
-							var endX = Math.Min(ActualWidth, end * Font.CharWidth);
-							if (endX > startX)
-								dc.DrawRectangle(diffBrush, null, new Rect(startX, drawBounds.Y(line), endX - startX, Font.FontSize));
+							if (end > start)
+								dc.DrawRectangle(diffBrush, null, new Rect(drawBounds.X(start), drawBounds.Y(line), (end - start) * Font.CharWidth, Font.FontSize));
 						}
 					}
 				}
@@ -1907,7 +1949,8 @@ namespace NeoEdit.Program
 
 			RenderDiff(dc, drawBounds);
 			RenderText(dc, drawBounds);
-			RenderIndicators(dc, drawBounds, visibleCursor, Selections, selectionPen);
+			if (Selections.Any(x => x.HasSelection))
+				RenderIndicators(dc, drawBounds, visibleCursor, Selections, selectionPen);
 			RenderIndicators(dc, drawBounds, visibleCursor, Searches, searchPen);
 			RenderCarets(dc, drawBounds);
 		}
