@@ -1814,9 +1814,11 @@ namespace NeoEdit.Program
 
 			points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, drawBounds.Y(startLine) + Font.FontSize / 2));
 			points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, drawBounds.Y(startLine)));
-			for (var line = startLine; ; ++line)
+			var useStartLine = Math.Max(drawBounds.StartLine, startLine);
+			var useEndLine = Math.Min(drawBounds.EndLine, endLine);
+			for (var line = useStartLine; ; ++line)
 			{
-				var done = line == endLine;
+				var done = line == useEndLine;
 				var length = done ? endColumn : Data.GetLineColumnsLength(line) + 1;
 				points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line)));
 				points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line) + LineHeight));
