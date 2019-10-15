@@ -1788,75 +1788,86 @@ namespace NeoEdit.Program
 				if ((range.End < drawBounds.ScreenStart) || (range.Start > drawBounds.ScreenEnd))
 					continue;
 
-				var startLine = Data.GetOffsetLine(range.Start);
-				var startColumn = Data.GetColumnFromIndex(startLine, Data.GetOffsetIndex(range.Start, startLine));
-
-				var endLine = Data.GetOffsetLine(range.End);
-				var endColumn = Data.GetColumnFromIndex(endLine, Data.GetOffsetIndex(range.End, endLine));
-				if ((endLine != startLine) && (endColumn == 0))
-				{
-					--endLine;
-					endColumn = Data.GetLineColumnsLength(endLine) + 1;
-				}
-
-				var points = new List<Point>();
-
-				points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, drawBounds.Y(startLine) + radius + 1));
-				points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, drawBounds.Y(startLine)));
-				for (var line = startLine; ; ++line)
-				{
-					var done = line == endLine;
-					var length = done ? endColumn : Data.GetLineColumnsLength(line) + 1;
-					points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line)));
-					points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line) + LineHeight));
-					if (done)
-						break;
-				}
-				if (endLine != startLine)
-				{
-					points.Add(new Point(leftSpacing, points[points.Count - 1].Y));
-					points.Add(new Point(leftSpacing, drawBounds.Y(startLine) + LineHeight));
-				}
-				points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, points[points.Count - 1].Y));
-				points.Add(points[0]);
-
-				int CompareValue(double v1, double v2)
-				{
-					var result = v1.CompareTo(v2);
-					if (result != 0)
-						result /= Math.Abs(result);
-					return result;
-				}
-
-				var geometry = new StreamGeometry();
-				using (var ctx = geometry.Open())
-				{
-					for (var ctr = 0; ctr < points.Count - 1; ++ctr)
-					{
-						if (ctr == 0)
-						{
-							ctx.BeginFigure(points[ctr], brush != null, true);
-							continue;
-						}
-
-						var prevX = CompareValue(points[ctr - 1].X, points[ctr].X);
-						var prevY = CompareValue(points[ctr - 1].Y, points[ctr].Y);
-						var nextX = CompareValue(points[ctr].X, points[ctr + 1].X);
-						var nextY = CompareValue(points[ctr].Y, points[ctr + 1].Y);
-
-						if (((prevX == 0) != (prevY == 0)) && ((nextX == 0) != (nextY == 0)) && ((prevX == 0) != (nextX == 0)))
-						{
-							ctx.LineTo(points[ctr] + new Vector(prevX * radius, prevY * radius), true, true);
-							ctx.ArcTo(points[ctr] + new Vector(-nextX * radius, -nextY * radius), new Size(radius, radius), 0, false, (prevX == 0 ? prevY != nextX : prevX == nextY) ? SweepDirection.Clockwise : SweepDirection.Counterclockwise, true, true);
-						}
-						else
-							ctx.LineTo(points[ctr], true, true);
-					}
-				}
-				geometry.Freeze();
+				var points = GetIndicatorPoints(range, drawBounds, leftSpacing, rightSpacing);
+				var geometry = CreateIndicatorGeometry(points, radius, brush != null);
 				for (var pass = range == visibleCursor ? 2 : 1; pass > 0; --pass)
 					dc.DrawGeometry(brush, pen, geometry);
 			}
+		}
+
+		List<Point> GetIndicatorPoints(Range range, DrawBounds drawBounds, double leftSpacing, double rightSpacing)
+		{
+			var startLine = Data.GetOffsetLine(range.Start);
+			var startColumn = Data.GetColumnFromIndex(startLine, Data.GetOffsetIndex(range.Start, startLine));
+
+			var endLine = Data.GetOffsetLine(range.End);
+			var endColumn = Data.GetColumnFromIndex(endLine, Data.GetOffsetIndex(range.End, endLine));
+			if ((endLine != startLine) && (endColumn == 0))
+			{
+				--endLine;
+				endColumn = Data.GetLineColumnsLength(endLine) + 1;
+			}
+
+			var points = new List<Point>();
+
+			points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, drawBounds.Y(startLine) + Font.FontSize / 2));
+			points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, drawBounds.Y(startLine)));
+			for (var line = startLine; ; ++line)
+			{
+				var done = line == endLine;
+				var length = done ? endColumn : Data.GetLineColumnsLength(line) + 1;
+				points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line)));
+				points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line) + LineHeight));
+				if (done)
+					break;
+			}
+			if (endLine != startLine)
+			{
+				points.Add(new Point(leftSpacing, points[points.Count - 1].Y));
+				points.Add(new Point(leftSpacing, drawBounds.Y(startLine) + LineHeight));
+			}
+			points.Add(new Point(drawBounds.X(startColumn) + leftSpacing, points[points.Count - 1].Y));
+			points.Add(points[0]);
+			return points;
+		}
+
+		static StreamGeometry CreateIndicatorGeometry(List<Point> points, double radius, bool fill)
+		{
+			int CompareValue(double v1, double v2)
+			{
+				var result = v1.CompareTo(v2);
+				if (result != 0)
+					result /= Math.Abs(result);
+				return result;
+			}
+
+			var geometry = new StreamGeometry();
+			using (var ctx = geometry.Open())
+			{
+				for (var ctr = 0; ctr < points.Count - 1; ++ctr)
+				{
+					if (ctr == 0)
+					{
+						ctx.BeginFigure(points[ctr], fill, true);
+						continue;
+					}
+
+					var prevX = CompareValue(points[ctr - 1].X, points[ctr].X);
+					var prevY = CompareValue(points[ctr - 1].Y, points[ctr].Y);
+					var nextX = CompareValue(points[ctr].X, points[ctr + 1].X);
+					var nextY = CompareValue(points[ctr].Y, points[ctr + 1].Y);
+
+					if (((prevX == 0) != (prevY == 0)) && ((nextX == 0) != (nextY == 0)) && ((prevX == 0) != (nextX == 0)))
+					{
+						ctx.LineTo(points[ctr] + new Vector(prevX * radius, prevY * radius), true, true);
+						ctx.ArcTo(points[ctr] + new Vector(-nextX * radius, -nextY * radius), new Size(radius, radius), 0, false, (prevX == 0 ? prevY != nextX : prevX == nextY) ? SweepDirection.Clockwise : SweepDirection.Counterclockwise, true, true);
+					}
+					else
+						ctx.LineTo(points[ctr], true, true);
+				}
+			}
+			geometry.Freeze();
+			return geometry;
 		}
 
 		void RenderDiff(DrawingContext dc, DrawBounds drawBounds)
