@@ -4,5 +4,4 @@ Tutorial
 Print
 Add ability to select all attributes
 Allow tabs to move to other windows
-Colored borders around selections/regions/diff
 Change icons for checkboxes in menus?

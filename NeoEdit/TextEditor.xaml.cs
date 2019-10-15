@@ -167,7 +167,8 @@ namespace NeoEdit.Program
 		static internal readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
 		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
 		static internal readonly Pen selectionPen = new Pen(new SolidColorBrush(Color.FromArgb(96, 38, 132, 255)), 2);
-		static internal readonly Pen searchPen = new Pen(new SolidColorBrush(Color.FromArgb(128, 201, 102, 12)), 1);
+		static internal readonly Brush searchBrush = new SolidColorBrush(Color.FromRgb(101, 51, 6));
+		static internal readonly Pen searchPen = new Pen(new SolidColorBrush(Color.FromRgb(201, 102, 12)), 2);
 		static internal readonly Dictionary<int, Pen> regionPen = new Dictionary<int, Pen>
 		{
 			[1] = new Pen(new SolidColorBrush(Color.FromRgb(245, 53, 139)), 2),
@@ -197,6 +198,7 @@ namespace NeoEdit.Program
 			caretBrush.Freeze();
 			selectionBrush.Freeze();
 			selectionPen.Freeze();
+			searchBrush.Freeze();
 			searchPen.Freeze();
 			regionPen.Values.ForEach(brush => brush.Freeze());
 			diffBrush.Freeze();
@@ -1779,7 +1781,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, RangeList ranges, Brush brush, Pen pen, double leftSpacing = -2, double rightSpacing = 2)
+		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, RangeList ranges, Brush brush, Pen pen, double leftSpacing, double rightSpacing)
 		{
 			var radius = Math.Min(4, Font.FontSize / 2 - 1);
 
@@ -1959,9 +1961,9 @@ namespace NeoEdit.Program
 			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
 
 			RenderDiff(dc, drawBounds);
-			RenderIndicators(dc, drawBounds, null, Searches, null, searchPen);
+			RenderIndicators(dc, drawBounds, null, Searches, searchBrush, searchPen, -1, 1);
 			foreach (var region in Regions)
-				RenderIndicators(dc, drawBounds, null, region.Value, null, regionPen[region.Key]);
+				RenderIndicators(dc, drawBounds, null, region.Value, null, regionPen[region.Key], -2, 2);
 			if (Selections.Any(range => range.HasSelection))
 				RenderIndicators(dc, drawBounds, visibleCursor, Selections, selectionBrush, selectionPen, -1, 1);
 			else
