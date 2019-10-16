@@ -5,4 +5,5 @@ Print
 Add ability to select all attributes
 Allow tabs to move to other windows
 Open excel sheets
-Make paste not do different things based on one vs many selections in multiple tabs
+Select all tabs
+Select tabs by expression

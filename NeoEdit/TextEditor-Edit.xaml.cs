@@ -170,13 +170,31 @@ namespace NeoEdit.Program
 				ReplaceSelections("");
 		}
 
-		void Command_Edit_Paste_Paste(bool highlight, bool rotate)
+		void Command_Pre_Edit_Paste_Paste(ref object preResult)
+		{
+			// We want to paste OneWithMany if all Selections.Count == 1 (Item1) and any Clipboard.Count != 1 (Item2)
+
+			if (preResult == null)
+				preResult = Tuple.Create(true, false);
+			var doOneWithMany = (Tuple<bool, bool>)preResult;
+			if (doOneWithMany.Item1)
+			{
+				if (Selections.Count != 1)
+					doOneWithMany = Tuple.Create(false, false);
+				else if ((!doOneWithMany.Item2) && (Clipboard.Count != 1))
+					doOneWithMany = Tuple.Create(true, true);
+			}
+			preResult = doOneWithMany;
+		}
+
+		void Command_Edit_Paste_Paste(bool highlight, bool rotate, object preResult)
 		{
 			var clipboardStrings = Clipboard;
 			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
 				return;
 
-			if ((Selections.Count == 1) && (clipboardStrings.Count != 1))
+			var doOneWithMany = (Tuple<bool, bool>)preResult;
+			if ((doOneWithMany.Item1) && (doOneWithMany.Item2))
 			{
 				ReplaceOneWithMany(clipboardStrings, null);
 				return;

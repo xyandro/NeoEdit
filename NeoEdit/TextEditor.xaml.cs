@@ -867,6 +867,8 @@ namespace NeoEdit.Program
 		{
 			switch (command)
 			{
+				case NECommand.Edit_Paste_Paste: Command_Pre_Edit_Paste_Paste(ref preResult); break;
+				case NECommand.Edit_Paste_RotatePaste: Command_Pre_Edit_Paste_Paste(ref preResult); break;
 				case NECommand.Select_Selection_ToggleAnchor: Command_Pre_Select_Selection_ToggleAnchor(ref preResult); break;
 			}
 		}
@@ -924,8 +926,8 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Redo: Command_Edit_Redo(); break;
 				case NECommand.Edit_Copy_Copy: Command_Edit_Copy_CutCopy(false); break;
 				case NECommand.Edit_Copy_Cut: Command_Edit_Copy_CutCopy(true); break;
-				case NECommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(shiftDown, false); break;
-				case NECommand.Edit_Paste_RotatePaste: Command_Edit_Paste_Paste(true, true); break;
+				case NECommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(shiftDown, false, preResult); break;
+				case NECommand.Edit_Paste_RotatePaste: Command_Edit_Paste_Paste(true, true, preResult); break;
 				case NECommand.Edit_Find_Find: Command_Edit_Find_Find(shiftDown, dialogResult as EditFindFindDialog.Result); break;
 				case NECommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case NECommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
