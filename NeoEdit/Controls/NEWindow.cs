@@ -64,10 +64,6 @@ namespace NeoEdit.Program.Controls
 			rect.SetValue(Rectangle.VisibilityProperty, Visibility.Hidden);
 			outerGrid.AppendChild(rect);
 
-			var rectTrigger = new Trigger { Property = WindowStateProperty, Value = WindowState.Maximized };
-			rectTrigger.Setters.Add(new Setter { TargetName = rect.Name, Property = VisibilityProperty, Value = Visibility.Visible });
-			template.Triggers.Add(rectTrigger);
-
 			var border = new FrameworkElementFactory(typeof(Border)) { Name = "outerBorder" };
 			border.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
 			border.SetValue(Border.BorderThicknessProperty, new Thickness(2));
@@ -106,10 +102,6 @@ namespace NeoEdit.Program.Controls
 			icon.SetValue(Grid.ColumnProperty, 0);
 			grid.AppendChild(icon);
 
-			var iconTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => IsMainWindow), Value = false };
-			iconTrigger.Setters.Add(new Setter { TargetName = icon.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
-			template.Triggers.Add(iconTrigger);
-
 			var textBlock = new FrameworkElementFactory(typeof(TextBlock)) { Name = "neWindowTitle" };
 			textBlock.SetValue(TextBlock.FontSizeProperty, 14d);
 			textBlock.SetValue(TextBlock.ForegroundProperty, ActiveBrush);
@@ -138,10 +130,6 @@ namespace NeoEdit.Program.Controls
 			minimizeButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnMinimizeClick));
 			stackPanel.AppendChild(minimizeButton);
 
-			var minimizeTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => IsMainWindow), Value = false };
-			minimizeTrigger.Setters.Add(new Setter { TargetName = minimizeButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
-			template.Triggers.Add(minimizeTrigger);
-
 			var maximizeButton = new FrameworkElementFactory(typeof(Button)) { Name = "maximizeButton" };
 			maximizeButton.SetValue(Button.FontSizeProperty, 14d);
 			maximizeButton.SetValue(Button.MarginProperty, new Thickness(5, -2, 5, 0));
@@ -151,13 +139,6 @@ namespace NeoEdit.Program.Controls
 			maximizeButton.SetValue(Button.ContentProperty, "🗖");
 			maximizeButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnRestoreClick));
 			stackPanel.AppendChild(maximizeButton);
-
-			var maximizeTrigger = new Trigger { Property = WindowStateProperty, Value = WindowState.Maximized };
-			maximizeTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Button.ContentProperty, Value = "🗗" });
-			template.Triggers.Add(maximizeTrigger);
-			maximizeTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => IsMainWindow), Value = false };
-			maximizeTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
-			template.Triggers.Add(maximizeTrigger);
 
 			var closeButton = new FrameworkElementFactory(typeof(Button)) { Name = "neWindowClose" };
 			closeButton.SetValue(Button.ContentProperty, "🗙");
@@ -178,13 +159,24 @@ namespace NeoEdit.Program.Controls
 			contentPresenter.SetValue(Grid.ColumnSpanProperty, 3);
 			grid.AppendChild(contentPresenter);
 
-			var activeTrigger = new Trigger { Property = IsActiveProperty, Value = false };
-			activeTrigger.Setters.Add(new Setter { TargetName = border.Name, Property = Border.BorderBrushProperty, Value = InactiveBrush });
-			activeTrigger.Setters.Add(new Setter { TargetName = textBlock.Name, Property = TextBlock.ForegroundProperty, Value = InactiveBrush });
-			activeTrigger.Setters.Add(new Setter { TargetName = minimizeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
-			activeTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
-			activeTrigger.Setters.Add(new Setter { TargetName = closeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
-			template.Triggers.Add(activeTrigger);
+			var windowStateTrigger = new Trigger { Property = WindowStateProperty, Value = WindowState.Maximized };
+			windowStateTrigger.Setters.Add(new Setter { TargetName = rect.Name, Property = VisibilityProperty, Value = Visibility.Visible });
+			windowStateTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Button.ContentProperty, Value = "🗗" });
+			template.Triggers.Add(windowStateTrigger);
+
+			var isMainWindowTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => IsMainWindow), Value = false };
+			isMainWindowTrigger.Setters.Add(new Setter { TargetName = icon.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
+			isMainWindowTrigger.Setters.Add(new Setter { TargetName = minimizeButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
+			isMainWindowTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
+			template.Triggers.Add(isMainWindowTrigger);
+
+			var isActiveTrigger = new Trigger { Property = IsActiveProperty, Value = false };
+			isActiveTrigger.Setters.Add(new Setter { TargetName = border.Name, Property = Border.BorderBrushProperty, Value = InactiveBrush });
+			isActiveTrigger.Setters.Add(new Setter { TargetName = textBlock.Name, Property = TextBlock.ForegroundProperty, Value = InactiveBrush });
+			isActiveTrigger.Setters.Add(new Setter { TargetName = minimizeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
+			isActiveTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
+			isActiveTrigger.Setters.Add(new Setter { TargetName = closeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
+			template.Triggers.Add(isActiveTrigger);
 
 			border.AppendChild(grid);
 
