@@ -43,7 +43,6 @@ namespace NeoEdit.Program.Controls
 			UIHelper<DiffScrollBar>.AddCallback(x => x.ViewportSize, (obj, o, n) => obj.Invalidate());
 			UIHelper<DiffScrollBar>.AddCallback(x => x.Minimum, (obj, o, n) => obj.Invalidate());
 			UIHelper<DiffScrollBar>.AddCallback(x => x.Maximum, (obj, o, n) => obj.Invalidate());
-			UIHelper<DiffScrollBar>.AddCallback(x => x.Maximum, (obj, o, n) => obj.Invalidate());
 			UIHelper<DiffScrollBar>.AddCallback(x => x.Orientation, (obj, o, n) => obj.DoLayout());
 			UIHelper<DiffScrollBar>.AddCoerce(x => x.Value, (obj, value) => obj.GetValidValue(value));
 
