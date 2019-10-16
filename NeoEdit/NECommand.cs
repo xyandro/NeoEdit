@@ -512,6 +512,8 @@ namespace NeoEdit.Program
 		Window_ActiveTabIndex,
 		Window_Font_Size,
 		Window_ViewValues,
+		Window_Select_AllTabs,
+		Window_Select_NoTabs,
 		Window_Select_TabsWithSelections,
 		Window_Select_TabsWithoutSelections,
 		Window_Select_ModifiedTabs,

@@ -810,6 +810,9 @@
 		<controls:MultiMenuItem Header="View _Values" Objects="{Binding Parent.Items, ElementName=self}" Property="ViewValues" MultiValue="{StaticResource True}" CommandEnum="Window_ViewValues"/>
 		<Separator/>
 		<MenuItem Header="_Select">
+			<controls:NEMenuItem Header="_All tabs" CommandEnum="Window_Select_AllTabs"/>
+			<controls:NEMenuItem Header="_No tabs" CommandEnum="Window_Select_NoTabs"/>
+			<Separator/>
 			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Select_TabsWithSelections"/>
 			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Select_TabsWithoutSelections"/>
 			<Separator/>

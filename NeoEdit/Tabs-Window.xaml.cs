@@ -27,6 +27,8 @@ namespace NeoEdit.Program
 
 		void Command_Window_Font_Size() => WindowFontSizeDialog.Run(WindowParent);
 
+		void Command_Window_Select_AllNoTabs(bool all) => Items.ForEach(tab => tab.Active = all);
+
 		void Command_Window_Select_TabsWithWithoutSelections(bool hasSelections)
 		{
 			var topMost = TopMost;
