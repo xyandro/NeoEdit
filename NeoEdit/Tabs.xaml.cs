@@ -780,7 +780,7 @@ namespace NeoEdit.Program
 		{
 			var dockPanel = new DockPanel { Height = 20, Margin = new Thickness(0, 0, tiles ? 0 : 2, 0), Tag = item };
 
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "p0 o== p2 ? \"#c0c0c0\" : (p1 ? \"#808080\" : \"Transparent\")" };
+			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = "p0 o== p2 ? \"#c0c0c0\" : (p1 ? \"#a0a0a0\" : \"#606060\")" };
 			multiBinding.Bindings.Add(new Binding { Source = item });
 			multiBinding.Bindings.Add(new Binding(nameof(TextEditor.Active)) { Source = item });
 			multiBinding.Bindings.Add(new Binding(nameof(TopMost)) { Source = tabs });

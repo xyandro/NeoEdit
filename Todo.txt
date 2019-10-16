@@ -4,7 +4,6 @@ Tutorial
 Print
 Add ability to select all attributes
 Allow tabs to move to other windows
-Make inactive tabs have some border in grid mode
 Open excel sheets
 Rework what tab does in text editor (it does the wrong thing a lot)
 Allow click after end of line
