@@ -6,5 +6,4 @@ Add ability to select all attributes
 Allow tabs to move to other windows
 Open excel sheets
 Rework what tab does in text editor (it does the wrong thing a lot)
-Allow click after end of line
 Make paste not do different things based on one vs many selections in multiple tabs
