@@ -9,6 +9,17 @@
 		<GroupBox Header="What to sort:">
 			<StackPanel>
 				<UniformGrid Columns="3">
+					<UniformGrid.Resources>
+						<Style x:Key="regionStyle" TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+							<Setter Property="Foreground" Value="#808080"/>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding SortScope, ElementName=self}" Value="Regions">
+									<Setter Property="Foreground" Value="White"/>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</UniformGrid.Resources>
+
 					<RadioButton GroupName="sortScope" Content="_Selections" IsChecked="{Binding SortScope, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Selections}"/>
 					<RadioButton GroupName="sortScope" Content="_Lines" IsChecked="{Binding SortScope, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Lines}"/>
 					<RadioButton GroupName="sortScope" Content="_Regions" IsChecked="{Binding SortScope, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Regions}"/>
@@ -17,15 +28,15 @@
 					<Separator Background="Transparent"/>
 					<Separator Background="Transparent"/>
 
-					<RadioButton GroupName="useRegion" Content="Region _1" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=1}"/>
-					<RadioButton GroupName="useRegion" Content="Region _2" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=2}"/>
-					<RadioButton GroupName="useRegion" Content="Region _3" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=3}"/>
-					<RadioButton GroupName="useRegion" Content="Region _4" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=4}"/>
-					<RadioButton GroupName="useRegion" Content="Region _5" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=5}"/>
-					<RadioButton GroupName="useRegion" Content="Region _6" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=6}"/>
-					<RadioButton GroupName="useRegion" Content="Region _7" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=7}"/>
-					<RadioButton GroupName="useRegion" Content="Region _8" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=8}"/>
-					<RadioButton GroupName="useRegion" Content="Region _9" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=9}"/>
+					<RadioButton GroupName="useRegion" Style="{StaticResource regionStyle}" Content="Region _1" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=1}"/>
+					<RadioButton GroupName="useRegion" Style="{StaticResource regionStyle}" Content="Region _2" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=2}"/>
+					<RadioButton GroupName="useRegion" Style="{StaticResource regionStyle}" Content="Region _3" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=3}"/>
+					<RadioButton GroupName="useRegion" Style="{StaticResource regionStyle}" Content="Region _4" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=4}"/>
+					<RadioButton GroupName="useRegion" Style="{StaticResource regionStyle}" Content="Region _5" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=5}"/>
+					<RadioButton GroupName="useRegion" Style="{StaticResource regionStyle}" Content="Region _6" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=6}"/>
+					<RadioButton GroupName="useRegion" Style="{StaticResource regionStyle}" Content="Region _7" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=7}"/>
+					<RadioButton GroupName="useRegion" Style="{StaticResource regionStyle}" Content="Region _8" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=8}"/>
+					<RadioButton GroupName="useRegion" Style="{StaticResource regionStyle}" Content="Region _9" IsChecked="{Binding UseRegion, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=9}"/>
 				</UniformGrid>
 			</StackPanel>
 		</GroupBox>
