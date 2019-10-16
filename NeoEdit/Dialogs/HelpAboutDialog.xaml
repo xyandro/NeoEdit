@@ -15,11 +15,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Image Margin="15,0,15,15" Source="/NeoEdit;component/Resources/NeoEdit.png" Stretch="None">
-			<Image.Effect>
-				<DropShadowEffect BlurRadius="15" ShadowDepth="10"/>
-			</Image.Effect>
-		</Image>
+		<Image Margin="15,0,15,15" Source="/NeoEdit;component/Resources/NeoEdit.png" Stretch="None"/>
 		<TextBox Grid.Row="1" Background="Transparent" BorderBrush="Transparent" IsReadOnly="True">
 			<TextBox.Text>
 				<MultiBinding StringFormat="{}{0} {1}">
