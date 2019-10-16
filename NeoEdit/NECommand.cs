@@ -519,7 +519,6 @@ namespace NeoEdit.Program
 		Window_Select_ModifiedTabs,
 		Window_Select_UnmodifiedTabs,
 		Window_Select_InactiveTabs,
-		Window_Select_TabsWithSelectionsToTop,
 		Window_Close_TabsWithSelections,
 		Window_Close_TabsWithoutSelections,
 		Window_Close_ModifiedTabs,

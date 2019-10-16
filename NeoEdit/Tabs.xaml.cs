@@ -405,7 +405,6 @@ namespace NeoEdit.Program
 				case NECommand.Window_Select_ModifiedTabs: Command_Window_Select_ModifiedUnmodifiedTabs(true); break;
 				case NECommand.Window_Select_UnmodifiedTabs: Command_Window_Select_ModifiedUnmodifiedTabs(false); break;
 				case NECommand.Window_Select_InactiveTabs: Command_Window_Select_InactiveTabs(); break;
-				case NECommand.Window_Select_TabsWithSelectionsToTop: Command_Window_Select_TabsWithSelectionsToTop(); break;
 				case NECommand.Window_Close_TabsWithSelections: Command_Window_Close_TabsWithWithoutSelections(true); break;
 				case NECommand.Window_Close_TabsWithoutSelections: Command_Window_Close_TabsWithWithoutSelections(false); break;
 				case NECommand.Window_Close_ModifiedTabs: Command_Window_Close_ModifiedUnmodifiedTabs(true); break;
