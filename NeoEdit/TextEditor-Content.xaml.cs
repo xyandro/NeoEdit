@@ -21,7 +21,7 @@ namespace NeoEdit.Program
 						if (prevNode != null)
 						{
 							var overlap = e.Current.Start < prevNode.End;
-							sels.Add(new Range(prevNode.Start, overlap ? prevNode.Start : prevNode.End));
+							sels.Add(new Range(overlap ? prevNode.Start : prevNode.End, prevNode.Start));
 						}
 
 						prevNode = e.Current;
@@ -29,7 +29,7 @@ namespace NeoEdit.Program
 					else
 					{
 						if (prevNode != null)
-							sels.Add(new Range(prevNode.Start, prevNode.End));
+							sels.Add(new Range(prevNode.End, prevNode.Start));
 						break;
 					}
 

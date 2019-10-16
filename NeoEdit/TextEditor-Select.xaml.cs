@@ -122,7 +122,7 @@ namespace NeoEdit.Program
 				{
 					if ((stackTop == SelectSplitEnum.None) && (pos > matchPos))
 					{
-						var match = result.Regex.Match(GetString(new Range(pos, range.End)));
+						var match = result.Regex.Match(Data.GetString(pos, range.End - pos));
 						if (match.Success)
 						{
 							if (match.Length == 0)

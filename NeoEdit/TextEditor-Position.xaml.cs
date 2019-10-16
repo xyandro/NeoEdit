@@ -119,7 +119,7 @@ namespace NeoEdit.Program
 				var start = Start.GetPosition(te, range.Cursor);
 				var end = End.GetPosition(te, range.Cursor, Start);
 				if (end.HasValue)
-					return new Range(start.Value, end.Value);
+					return new Range(end.Value, start.Value);
 				if (selecting)
 					return new Range(start.Value, range.Anchor);
 				return Range.FromIndex(start.Value, 0);

@@ -181,7 +181,7 @@ namespace NeoEdit.Program
 			{
 				case GetPathType.FileName: return new Range(range.End, range.Start + dirTotal);
 				case GetPathType.FileNameWoExtension: return new Range(range.End - extLen, range.Start + dirTotal);
-				case GetPathType.Directory: return new Range(range.Start + dirLength, range.Start);
+				case GetPathType.Directory: return Range.FromIndex(range.Start, dirLength);
 				case GetPathType.Extension: return new Range(range.End, range.End - extLen);
 				default: throw new ArgumentException();
 			}

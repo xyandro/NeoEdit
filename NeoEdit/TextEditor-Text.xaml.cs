@@ -100,7 +100,7 @@ namespace NeoEdit.Program
 					while ((endOffset < maxOffset) && (result.Chars.Contains(Data.Data[endOffset]) == wholeWord))
 						++endOffset;
 
-				sels.Add(new Range(startOffset, endOffset));
+				sels.Add(new Range(endOffset, startOffset));
 			}
 			SetSelections(sels);
 		}

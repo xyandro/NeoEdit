@@ -425,7 +425,7 @@ namespace NeoEdit.Program
 						var selection = Selections[ctr];
 						var len = selection.Length / results[ctr];
 						for (var index = selection.Start; index < selection.End; index += len)
-							sels.Add(new Range(index + len, index));
+							sels.Add(Range.FromIndex(index, len));
 					}
 				SetSelections(sels);
 			}

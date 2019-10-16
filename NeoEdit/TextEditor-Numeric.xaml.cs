@@ -187,7 +187,7 @@ namespace NeoEdit.Program
 				var idx = str.IndexOf('.');
 				if (idx == -1)
 					return Range.FromIndex(range.End, 0);
-				return new Range(range.Start + idx, range.End);
+				return new Range(range.End, range.Start + idx);
 			}).ToList());
 		}
 
