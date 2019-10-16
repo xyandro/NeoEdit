@@ -1540,7 +1540,7 @@ namespace NeoEdit.Program
 					break;
 				case Key.Tab:
 					{
-						if (Selections.AsParallel().All(range => (!range.HasSelection) || (Data.GetOffsetLine(range.Start) == Data.GetOffsetLine(range.End))))
+						if (Selections.AsParallel().All(range => (!range.HasSelection) || (Data.GetOffsetLine(range.Start) == Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)))))
 						{
 							if (!shiftDown)
 								HandleText("\t");
