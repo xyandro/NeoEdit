@@ -218,7 +218,7 @@ namespace NeoEdit.Program
 			SetSelections(sels.ToList());
 		}
 
-		void Command_Select_Lines(bool includeEndings)
+		void Command_Select_Lines()
 		{
 			var lineSets = Selections.AsParallel().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) }).ToList();
 
@@ -232,7 +232,21 @@ namespace NeoEdit.Program
 				if ((hasLine[line]) && (!Data.IsDiffGapLine(line)))
 					lines.Add(line);
 
-			SetSelections(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line) + (includeEndings ? Data.GetEndingLength(line) : 0))).ToList());
+			SetSelections(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList());
+		}
+
+		void Command_Select_WholeLines()
+		{
+			var sels = Selections.AsParallel().AsOrdered().Select(range =>
+			{
+				var startLine = Data.GetOffsetLine(range.Start);
+				var startOffset = Data.GetOffset(startLine, 0);
+				var endLine = Data.GetOffsetLine(Math.Max(range.Start, range.End - 1));
+				var endOffset = Data.GetOffset(endLine, 0) + Data.GetLineLength(endLine) + Data.GetEndingLength(endLine);
+				return new Range(endOffset, startOffset);
+			}).ToList();
+
+			SetSelections(sels);
 		}
 
 		void Command_Select_Rectangle() => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(range)).ToList());

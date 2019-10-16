@@ -1284,8 +1284,8 @@ namespace NeoEdit.Program
 				case NECommand.Select_All: Command_Select_All(); break;
 				case NECommand.Select_Nothing: Command_Select_Nothing(); break;
 				case NECommand.Select_Limit: Command_Select_Limit(dialogResult as SelectLimitDialog.Result); break;
-				case NECommand.Select_Lines: Command_Select_Lines(false); break;
-				case NECommand.Select_WholeLines: Command_Select_Lines(true); break;
+				case NECommand.Select_Lines: Command_Select_Lines(); break;
+				case NECommand.Select_WholeLines: Command_Select_WholeLines(); break;
 				case NECommand.Select_Rectangle: Command_Select_Rectangle(); break;
 				case NECommand.Select_Invert: Command_Select_Invert(); break;
 				case NECommand.Select_Join: Command_Select_Join(); break;
