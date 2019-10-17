@@ -434,6 +434,7 @@ namespace NeoEdit.Program
 					NEClipboard.Current = newClipboard;
 				SetupNewKeys();
 			}
+			catch (OperationCanceledException) { }
 			finally
 			{
 				clipboard = null;

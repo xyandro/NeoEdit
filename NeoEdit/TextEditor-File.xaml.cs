@@ -23,7 +23,7 @@ namespace NeoEdit.Program
 				DefaultExt = "txt",
 			};
 			if (dialog.ShowDialog() != true)
-				throw new Exception("Canceled");
+				throw new OperationCanceledException();
 
 			if (Directory.Exists(dialog.FileName))
 				throw new Exception("A directory by that name already exists");
