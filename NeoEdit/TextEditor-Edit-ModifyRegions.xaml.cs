@@ -71,12 +71,12 @@ namespace NeoEdit.Program
 
 		List<Range> GetSearchRegions(List<int> regions)
 		{
+			var searchList = new List<Range>();
 			var useRegions = regions.Select(index => Regions[index]).ToList();
 			if (!useRegions.SelectMany().Any())
-				throw new Exception("No regions to search");
+				return searchList;
 
 			var useRegionPos = Enumerable.Repeat(0, useRegions.Count).ToList();
-			var searchList = new List<Range>();
 			while (true)
 			{
 				var minRegion = -1;
@@ -165,18 +165,21 @@ namespace NeoEdit.Program
 				return;
 
 			var searchList = GetSearchRegions(regions);
-
 			var newSels = new List<Range>();
-			var searchIndex = 0;
-			foreach (var selection in Selections)
-			{
-				while ((searchIndex < searchList.Count) && ((searchList[searchIndex].End <= selection.Start) || (searchList[searchIndex].Equals(selection))))
-					++searchIndex;
 
-				if (searchIndex == searchList.Count)
-					newSels.Add(searchList[0]);
-				else
-					newSels.Add(searchList[searchIndex]);
+			if (searchList.Any())
+			{
+				var searchIndex = 0;
+				foreach (var selection in Selections)
+				{
+					while ((searchIndex < searchList.Count) && ((searchList[searchIndex].End <= selection.Start) || (searchList[searchIndex].Equals(selection))))
+						++searchIndex;
+
+					if (searchIndex == searchList.Count)
+						newSels.Add(searchList[0]);
+					else
+						newSels.Add(searchList[searchIndex]);
+				}
 			}
 
 			SetSelections(newSels);

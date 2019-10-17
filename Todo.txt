@@ -5,6 +5,5 @@ Print
 Add ability to select all attributes
 Allow tabs to move to other windows
 Open excel sheets
-Remove "No regions to search"
 Select next path element
 Match between tabs
