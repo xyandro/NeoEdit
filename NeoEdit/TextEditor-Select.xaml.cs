@@ -313,6 +313,29 @@ namespace NeoEdit.Program
 			SetSelections(strs.Select(tuple => Selections[tuple.Item2]).ToList());
 		}
 
+		void Command_Pre_Select_Repeats_TabsMatchMismatch(ref object preResult, bool caseSensitive)
+		{
+			var strs = GetSelectionStrings();
+			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
+			var localRepeats = strs.GroupBy(str => str, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
+
+			if (preResult == null)
+			{
+				preResult = localRepeats;
+				return;
+			}
+
+			var globalRepeats = preResult as Dictionary<string, int>;
+			globalRepeats.Keys.Except(localRepeats.Keys, stringComparer).ToList().ForEach(key => globalRepeats.Remove(key));
+			globalRepeats.Where(pair => localRepeats[pair.Key] != pair.Value).ToList().ForEach(pair => globalRepeats.Remove(pair.Key));
+		}
+
+		void Command_Select_Repeats_TabsMatchMismatch(object preResult, bool match)
+		{
+			var globalRepeats = preResult as Dictionary<string, int>;
+			SetSelections(Selections.AsParallel().AsOrdered().Where(range => globalRepeats.ContainsKey(GetString(range)) == match).ToList());
+		}
+
 		SelectSplitDialog.Result Command_Select_Split_Dialog() => SelectSplitDialog.Run(WindowParent, GetVariables());
 
 		void Command_Select_Split(SelectSplitDialog.Result result)

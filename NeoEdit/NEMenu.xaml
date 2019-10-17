@@ -680,7 +680,7 @@
 		<Separator/>
 		<controls:NEMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
 		<Separator/>
-		<MenuItem Header="_Repeats (case sensitive)">
+		<MenuItem Header="_Repeats (Case Sensitive)">
 			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_RepeatsCaseSensitive_Unique"/>
 			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_RepeatsCaseSensitive_Duplicates"/>
 			<Separator/>
@@ -689,8 +689,11 @@
 			<Separator/>
 			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_RepeatsCaseSensitive_RepeatedLines"/>
 			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseSensitive_ByCount"/>
+			<Separator/>
+			<controls:NEMenuItem Header="Tabs _Match" CommandEnum="Select_RepeatsCaseSensitive_TabsMatch"/>
+			<controls:NEMenuItem Header="Tabs M_ismatch" CommandEnum="Select_RepeatsCaseSensitive_TabsMismatch"/>
 		</MenuItem>
-		<MenuItem Header="Repeats (case i_nsensitive)">
+		<MenuItem Header="Repeats (Case I_nsensitive)">
 			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_RepeatsCaseInsensitive_Unique"/>
 			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_RepeatsCaseInsensitive_Duplicates"/>
 			<Separator/>
@@ -699,6 +702,9 @@
 			<Separator/>
 			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_RepeatsCaseInsensitive_RepeatedLines"/>
 			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseInsensitive_ByCount"/>
+			<Separator/>
+			<controls:NEMenuItem Header="Tabs _Match" CommandEnum="Select_RepeatsCaseInsensitive_TabsMatch"/>
+			<controls:NEMenuItem Header="Tabs M_ismatch" CommandEnum="Select_RepeatsCaseInsensitive_TabsMismatch"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="S_plit" CommandEnum="Select_Split"/>
