@@ -299,6 +299,7 @@
 				<controls:NEMenuItem Header="_Name" CommandEnum="Files_Select_Name_Name"/>
 				<controls:NEMenuItem Header="File Name _w/o Extension" CommandEnum="Files_Select_Name_FileNamewoExtension"/>
 				<controls:NEMenuItem Header="_Extension" CommandEnum="Files_Select_Name_Extension"/>
+				<controls:NEMenuItem Header="Ne_xt" CommandEnum="Files_Select_Name_Next"/>
 			</MenuItem>
 			<Separator/>
 			<controls:NEMenuItem Header="_Files" CommandEnum="Files_Select_Files"/>

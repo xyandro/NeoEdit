@@ -686,6 +686,24 @@ namespace NeoEdit.Program
 
 		void Command_Files_Select_Name(GetPathType type) => SetSelections(Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList());
 
+		void Command_Files_Select_Name_Next()
+		{
+			var maxOffset = EndOffset;
+			var invalidChars = Path.GetInvalidFileNameChars();
+
+			var sels = new List<Range>();
+			foreach (var range in Selections)
+			{
+				var endOffset = range.End;
+				while ((endOffset < maxOffset) && (((endOffset - range.Start == 1) && (Data.Data[endOffset] == ':')) || ((endOffset - range.End == 0) && ((Data.Data[endOffset] == '\\') || (Data.Data[endOffset] == '/'))) || (!invalidChars.Contains(Data.Data[endOffset]))))
+					++endOffset;
+
+				sels.Add(new Range(endOffset, range.Start));
+			}
+
+			SetSelections(sels);
+		}
+
 		void Command_Files_Select_Files() => SetSelections(Selections.Where(range => File.Exists(FileName.RelativeChild(GetString(range)))).ToList());
 
 		void Command_Files_Select_Directories() => SetSelections(Selections.Where(range => Directory.Exists(FileName.RelativeChild(GetString(range)))).ToList());

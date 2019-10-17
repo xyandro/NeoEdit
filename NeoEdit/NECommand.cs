@@ -179,6 +179,7 @@ namespace NeoEdit.Program
 		Files_Select_Name_Name,
 		Files_Select_Name_FileNamewoExtension,
 		Files_Select_Name_Extension,
+		Files_Select_Name_Next,
 		Files_Select_Files,
 		Files_Select_Directories,
 		Files_Select_Existing,

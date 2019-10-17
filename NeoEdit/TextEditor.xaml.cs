@@ -1049,6 +1049,7 @@ namespace NeoEdit.Program
 				case NECommand.Files_Select_Name_Name: Command_Files_Select_Name(GetPathType.FileName); break;
 				case NECommand.Files_Select_Name_FileNamewoExtension: Command_Files_Select_Name(GetPathType.FileNameWoExtension); break;
 				case NECommand.Files_Select_Name_Extension: Command_Files_Select_Name(GetPathType.Extension); break;
+				case NECommand.Files_Select_Name_Next: Command_Files_Select_Name_Next(); break;
 				case NECommand.Files_Select_Files: Command_Files_Select_Files(); break;
 				case NECommand.Files_Select_Directories: Command_Files_Select_Directories(); break;
 				case NECommand.Files_Select_Existing: Command_Files_Select_Existing(true); break;
