@@ -22,8 +22,9 @@ namespace NeoEdit.Program.Controls
 		public bool IsMainWindow { get { return UIHelper<NEWindow>.GetPropValue<bool>(this); } set { UIHelper<NEWindow>.SetPropValue(this, value); } }
 
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(32, 32, 32));
+		static readonly Brush OuterBrush = new SolidColorBrush(Color.FromRgb(85, 85, 85));
 		static readonly Brush ActiveBrush = Brushes.White;
-		static readonly Brush InactiveBrush = Brushes.Gray;
+		static readonly Brush InactiveBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 
 		Borders saveBorder;
 		Point savePoint;
@@ -33,6 +34,7 @@ namespace NeoEdit.Program.Controls
 		{
 			UIHelper<NEWindow>.Register();
 			BackgroundBrush.Freeze();
+			OuterBrush.Freeze();
 			ActiveBrush.Freeze();
 			InactiveBrush.Freeze();
 		}
@@ -64,14 +66,20 @@ namespace NeoEdit.Program.Controls
 			rect.SetValue(Rectangle.VisibilityProperty, Visibility.Hidden);
 			outerGrid.AppendChild(rect);
 
-			var border = new FrameworkElementFactory(typeof(Border)) { Name = "outerBorder" };
-			border.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
-			border.SetValue(Border.BorderThicknessProperty, new Thickness(2));
-			border.SetValue(Border.BackgroundProperty, BackgroundBrush);
-			border.SetValue(Border.BorderBrushProperty, ActiveBrush);
-			border.AddHandler(Border.MouseLeftButtonDownEvent, new MouseButtonEventHandler(OnBorderMouseLeftButtonDown));
-			border.AddHandler(Border.MouseLeftButtonUpEvent, new MouseButtonEventHandler(OnBorderMouseLeftButtonUp));
-			border.AddHandler(Border.MouseMoveEvent, new MouseEventHandler(OnBorderMouseMove));
+			var outerBorder = new FrameworkElementFactory(typeof(Border)) { Name = "blackBorder" };
+			outerBorder.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
+			outerBorder.SetValue(Border.BorderThicknessProperty, new Thickness(2));
+			outerBorder.SetValue(Border.BackgroundProperty, OuterBrush);
+			outerBorder.SetValue(Border.BorderBrushProperty, OuterBrush);
+
+			var innerBorder = new FrameworkElementFactory(typeof(Border)) { Name = "innerBorder" };
+			innerBorder.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
+			innerBorder.SetValue(Border.BorderThicknessProperty, new Thickness(2));
+			innerBorder.SetValue(Border.BackgroundProperty, BackgroundBrush);
+			innerBorder.SetValue(Border.BorderBrushProperty, ActiveBrush);
+			innerBorder.AddHandler(Border.MouseLeftButtonDownEvent, new MouseButtonEventHandler(OnBorderMouseLeftButtonDown));
+			innerBorder.AddHandler(Border.MouseLeftButtonUpEvent, new MouseButtonEventHandler(OnBorderMouseLeftButtonUp));
+			innerBorder.AddHandler(Border.MouseMoveEvent, new MouseEventHandler(OnBorderMouseMove));
 
 			var grid = new FrameworkElementFactory(typeof(Grid));
 
@@ -159,7 +167,14 @@ namespace NeoEdit.Program.Controls
 			contentPresenter.SetValue(Grid.ColumnSpanProperty, 3);
 			grid.AppendChild(contentPresenter);
 
+			innerBorder.AppendChild(grid);
+			outerBorder.AppendChild(innerBorder);
+			outerGrid.AppendChild(outerBorder);
+
+			template.VisualTree = outerGrid;
+
 			var windowStateTrigger = new Trigger { Property = WindowStateProperty, Value = WindowState.Maximized };
+			windowStateTrigger.Setters.Add(new Setter { TargetName = outerBorder.Name, Property = Border.BorderThicknessProperty, Value = new Thickness(0) });
 			windowStateTrigger.Setters.Add(new Setter { TargetName = rect.Name, Property = VisibilityProperty, Value = Visibility.Visible });
 			windowStateTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Button.ContentProperty, Value = "🗗" });
 			template.Triggers.Add(windowStateTrigger);
@@ -171,18 +186,12 @@ namespace NeoEdit.Program.Controls
 			template.Triggers.Add(isMainWindowTrigger);
 
 			var isActiveTrigger = new Trigger { Property = IsActiveProperty, Value = false };
-			isActiveTrigger.Setters.Add(new Setter { TargetName = border.Name, Property = Border.BorderBrushProperty, Value = InactiveBrush });
+			isActiveTrigger.Setters.Add(new Setter { TargetName = innerBorder.Name, Property = Border.BorderBrushProperty, Value = InactiveBrush });
 			isActiveTrigger.Setters.Add(new Setter { TargetName = textBlock.Name, Property = TextBlock.ForegroundProperty, Value = InactiveBrush });
 			isActiveTrigger.Setters.Add(new Setter { TargetName = minimizeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
 			isActiveTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
 			isActiveTrigger.Setters.Add(new Setter { TargetName = closeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
 			template.Triggers.Add(isActiveTrigger);
-
-			border.AppendChild(grid);
-
-			outerGrid.AppendChild(border);
-
-			template.VisualTree = outerGrid;
 
 			return template;
 		}
