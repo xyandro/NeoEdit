@@ -9,15 +9,12 @@ namespace NeoEdit.Program.Dialogs
 		{
 			public int? MinCount { get; set; }
 			public int? MaxCount { get; set; }
-			public bool CaseSensitive { get; set; }
 		}
 
 		[DepProp]
 		public int? MinCount { get { return UIHelper<SelectByCountDialog>.GetPropValue<int?>(this); } set { UIHelper<SelectByCountDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public int? MaxCount { get { return UIHelper<SelectByCountDialog>.GetPropValue<int?>(this); } set { UIHelper<SelectByCountDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool CaseSensitive { get { return UIHelper<SelectByCountDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectByCountDialog>.SetPropValue(this, value); } }
 
 		static SelectByCountDialog() { UIHelper<SelectByCountDialog>.Register(); }
 
@@ -33,7 +30,7 @@ namespace NeoEdit.Program.Dialogs
 		{
 			if (((!MinCount.HasValue) && (!MaxCount.HasValue)) || (MaxCount < MinCount))
 				return;
-			result = new Result { MinCount = MinCount, MaxCount = MaxCount, CaseSensitive = CaseSensitive };
+			result = new Result { MinCount = MinCount, MaxCount = MaxCount };
 			DialogResult = true;
 		}
 

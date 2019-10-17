@@ -855,7 +855,8 @@ namespace NeoEdit.Program
 				case NECommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
 				case NECommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case NECommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
-				case NECommand.Select_Repeats_ByCount: dialogResult = Command_Select_Repeats_ByCount_Dialog(); break;
+				case NECommand.Select_RepeatsCaseSensitive_ByCount: dialogResult = Command_Select_Repeats_ByCount_Dialog(); break;
+				case NECommand.Select_RepeatsCaseInsensitive_ByCount: dialogResult = Command_Select_Repeats_ByCount_Dialog(); break;
 				case NECommand.Select_Split: dialogResult = Command_Select_Split_Dialog(); break;
 				default: return true;
 			}
@@ -1295,16 +1296,18 @@ namespace NeoEdit.Program
 				case NECommand.Select_Empty: Command_Select_Empty(true); break;
 				case NECommand.Select_NonEmpty: Command_Select_Empty(false); break;
 				case NECommand.Select_ToggleOpenClose: Command_Select_ToggleOpenClose(shiftDown); break;
-				case NECommand.Select_Repeats_Unique: Command_Select_Repeats_Unique(true); break;
-				case NECommand.Select_Repeats_Duplicates: Command_Select_Repeats_Duplicates(true); break;
-				case NECommand.Select_Repeats_MatchPrevious: Command_Select_Repeats_MatchPrevious(true); break;
-				case NECommand.Select_Repeats_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(true); break;
-				case NECommand.Select_Repeats_RepeatedLines: Command_Select_Repeats_RepeatedLines(); break;
-				case NECommand.Select_Repeats_ByCount: Command_Select_Repeats_ByCount(dialogResult as SelectByCountDialog.Result); break;
-				case NECommand.Select_Repeats_CaseInsensitive_Unique: Command_Select_Repeats_Unique(false); break;
-				case NECommand.Select_Repeats_CaseInsensitive_Duplicates: Command_Select_Repeats_Duplicates(false); break;
-				case NECommand.Select_Repeats_CaseInsensitive_MatchPrevious: Command_Select_Repeats_MatchPrevious(false); break;
-				case NECommand.Select_Repeats_CaseInsensitive_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(false); break;
+				case NECommand.Select_RepeatsCaseSensitive_Unique: Command_Select_Repeats_Unique(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Duplicates: Command_Select_Repeats_Duplicates(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_MatchPrevious: Command_Select_Repeats_MatchPrevious(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_RepeatedLines: Command_Select_Repeats_RepeatedLines(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_ByCount: Command_Select_Repeats_ByCount(dialogResult as SelectByCountDialog.Result, true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Unique: Command_Select_Repeats_Unique(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Duplicates: Command_Select_Repeats_Duplicates(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_MatchPrevious: Command_Select_Repeats_MatchPrevious(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_RepeatedLines: Command_Select_Repeats_RepeatedLines(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_ByCount: Command_Select_Repeats_ByCount(dialogResult as SelectByCountDialog.Result, false); break;
 				case NECommand.Select_Split: Command_Select_Split(dialogResult as SelectSplitDialog.Result); break;
 				case NECommand.Select_Selection_First: Command_Select_Selection_First(); break;
 				case NECommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;

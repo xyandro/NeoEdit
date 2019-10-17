@@ -23,14 +23,14 @@ namespace NeoEdit.Program
 			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
 		}
 
-		IEnumerable<Range> FindRepetitions(Range inputRange)
+		IEnumerable<Range> FindRepetitions(bool caseSensitive, Range inputRange)
 		{
 			var startLine = Data.GetOffsetLine(inputRange.Start);
 			var endLine = Data.GetOffsetLine(inputRange.End);
 			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, Data.GetOffset(line, 0)), Math.Min(inputRange.End, Data.GetOffset(line, Data.GetLineLength(line))))).ToList();
 			if ((lineRanges.Count >= 2) && (!lineRanges[lineRanges.Count - 1].HasSelection))
 				lineRanges.RemoveAt(lineRanges.Count - 1);
-			var lineStrs = lineRanges.Select(range => GetString(range)).ToList();
+			var lineStrs = lineRanges.Select(range => GetString(range)).Select(str => caseSensitive ? str : str.ToLowerInvariant()).ToList();
 			var lines = Enumerable.Range(1, lineStrs.Count).MaxBy(x => GetRepetitionScore(lineStrs, x));
 			for (var ctr = 0; ctr < lineRanges.Count; ctr += lines)
 				yield return new Range(lineRanges[ctr + lines - 1].End, lineRanges[ctr].Start);
@@ -295,14 +295,14 @@ namespace NeoEdit.Program
 
 		void Command_Select_Repeats_NonMatchPrevious(bool caseSensitive) => SetSelections(Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, GetString(range))).ToList());
 
-		void Command_Select_Repeats_RepeatedLines() => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(range)).ToList());
+		void Command_Select_Repeats_RepeatedLines(bool caseSensitive) => SetSelections(Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList());
 
 		SelectByCountDialog.Result Command_Select_Repeats_ByCount_Dialog() => SelectByCountDialog.Run(WindowParent);
 
-		void Command_Select_Repeats_ByCount(SelectByCountDialog.Result result)
+		void Command_Select_Repeats_ByCount(SelectByCountDialog.Result result, bool caseSensitive)
 		{
 			var strs = Selections.Select((range, index) => Tuple.Create(GetString(range), index)).ToList();
-			var counts = new Dictionary<string, int>(result.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
+			var counts = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 			foreach (var tuple in strs)
 			{
 				if (!counts.ContainsKey(tuple.Item1))

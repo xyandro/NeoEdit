@@ -665,7 +665,7 @@
 	</MenuItem>
 	<MenuItem Header="_Select">
 		<controls:NEMenuItem Header="_All" CommandEnum="Select_All"/>
-		<controls:NEMenuItem Header="_Nothing" CommandEnum="Select_Nothing"/>
+		<controls:NEMenuItem Header="N_othing" CommandEnum="Select_Nothing"/>
 		<Separator/>
 		<controls:NEMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
 		<controls:NEMenuItem Header="L_ines" CommandEnum="Select_Lines"/>
@@ -680,23 +680,25 @@
 		<Separator/>
 		<controls:NEMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
 		<Separator/>
-		<MenuItem Header="_Repeats">
-			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_Repeats_Unique"/>
-			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_Duplicates"/>
+		<MenuItem Header="_Repeats (case sensitive)">
+			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_RepeatsCaseSensitive_Unique"/>
+			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_RepeatsCaseSensitive_Duplicates"/>
 			<Separator/>
-			<controls:NEMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_MatchPrevious"/>
-			<controls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_NonMatchPrevious"/>
+			<controls:NEMenuItem Header="Match _Previous" CommandEnum="Select_RepeatsCaseSensitive_MatchPrevious"/>
+			<controls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_RepeatsCaseSensitive_NonMatchPrevious"/>
 			<Separator/>
-			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_Repeats_RepeatedLines"/>
-			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_Repeats_ByCount"/>
+			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_RepeatsCaseSensitive_RepeatedLines"/>
+			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseSensitive_ByCount"/>
+		</MenuItem>
+		<MenuItem Header="Repeats (case i_nsensitive)">
+			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_RepeatsCaseInsensitive_Unique"/>
+			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_RepeatsCaseInsensitive_Duplicates"/>
 			<Separator/>
-			<MenuItem Header="C_ase Insensitive">
-				<controls:NEMenuItem Header="_Unique" CommandEnum="Select_Repeats_CaseInsensitive_Unique"/>
-				<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_Repeats_CaseInsensitive_Duplicates"/>
-				<Separator/>
-				<controls:NEMenuItem Header="Match _Previous" CommandEnum="Select_Repeats_CaseInsensitive_MatchPrevious"/>
-				<controls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_Repeats_CaseInsensitive_NonMatchPrevious"/>
-			</MenuItem>
+			<controls:NEMenuItem Header="Match _Previous" CommandEnum="Select_RepeatsCaseInsensitive_MatchPrevious"/>
+			<controls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_RepeatsCaseInsensitive_NonMatchPrevious"/>
+			<Separator/>
+			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_RepeatsCaseInsensitive_RepeatedLines"/>
+			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseInsensitive_ByCount"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="S_plit" CommandEnum="Select_Split"/>
