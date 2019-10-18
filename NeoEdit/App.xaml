@@ -442,7 +442,7 @@
 							<ContentPresenter Grid.Column="0" Content="{TemplateBinding SelectionBoxItem}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" VerticalAlignment="Center" Margin="5,0"/>
 							<TextBox Grid.Column="0" Name="PART_EditableTextBox" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}" Foreground="White"/>
 							<Rectangle Grid.Column="1" Fill="#808080"/>
-							<ToggleButton Grid.Column="2" IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}">
+							<ToggleButton Grid.Column="2" IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" Focusable="False">
 								<ToggleButton.Template>
 									<ControlTemplate>
 										<TextBlock Text="⯆" Margin="5,0" VerticalAlignment="Center"/>
