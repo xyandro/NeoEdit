@@ -136,9 +136,6 @@
 							<ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 						</Border>
 						<ControlTemplate.Triggers>
-							<Trigger Property="IsDefaulted" Value="true">
-								<Setter Property="BorderThickness" TargetName="border" Value="3"/>
-							</Trigger>
 							<Trigger Property="IsEnabled" Value="false">
 								<Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
 								<Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
