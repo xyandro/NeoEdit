@@ -138,44 +138,45 @@
 		<Separator/>
 		<controls:NEMenuItem Header="Co_nvert" CommandEnum="Edit_Convert"/>
 		<Separator/>
-		<controls:NEMenuItem Header="M_odify Regions" CommandEnum="Edit_ModifyRegions">
+		<controls:NEMenuItem Header="M_odify Regions" CommandEnum="Edit_ModifyRegions"/>
+		<MenuItem Header="Mod_ify Regions Shortcuts">
 			<MenuItem Header="_Select">
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Region9"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegionsShortcuts_Select_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegionsShortcuts_Select_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegionsShortcuts_Select_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegionsShortcuts_Select_Region9"/>
 			</MenuItem>
 			<MenuItem Header="S_et">
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Set_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Set_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Set_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Set_Region9"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegionsShortcuts_Set_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegionsShortcuts_Set_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegionsShortcuts_Set_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegionsShortcuts_Set_Region9"/>
 			</MenuItem>
 			<MenuItem Header="_Add">
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Add_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Add_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Add_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Add_Region9"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegionsShortcuts_Add_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegionsShortcuts_Add_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegionsShortcuts_Add_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegionsShortcuts_Add_Region9"/>
 			</MenuItem>
 			<MenuItem Header="_Remove">
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Remove_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Remove_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Remove_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Remove_Region9"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegionsShortcuts_Remove_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegionsShortcuts_Remove_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegionsShortcuts_Remove_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegionsShortcuts_Remove_Region9"/>
 			</MenuItem>
 			<MenuItem Header="_Next">
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Next_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Next_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Next_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Next_Region9"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegionsShortcuts_Next_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegionsShortcuts_Next_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegionsShortcuts_Next_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegionsShortcuts_Next_Region9"/>
 			</MenuItem>
 			<MenuItem Header="_Previous">
-				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Previous_Region6"/>
-				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Previous_Region7"/>
-				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Previous_Region8"/>
-				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Previous_Region9"/>
+				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegionsShortcuts_Previous_Region6"/>
+				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegionsShortcuts_Previous_Region7"/>
+				<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegionsShortcuts_Previous_Region8"/>
+				<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegionsShortcuts_Previous_Region9"/>
 			</MenuItem>
-		</controls:NEMenuItem>
+		</MenuItem>
 		<Separator/>
 		<MenuItem Header="Na_vigate">
 			<controls:NEMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft"/>
