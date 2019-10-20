@@ -155,22 +155,11 @@
 				<CheckBox Grid.Row="0" Grid.Column="1" Content="Match _Case" IsChecked="{Binding MatchCase, ElementName=self}" HorizontalAlignment="Right"/>
 
 				<ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="codePages" ItemsSource="{Binding EncodingCheckBoxes, ElementName=self}" BorderBrush="{x:Null}" SelectionMode="Extended">
-					<ListBox.Style>
-						<Style>
-							<Style.Resources>
-								<Style TargetType="controls:CodePageCheckBox">
-									<Setter Property="IsEnabled">
-										<Setter.Value>
-											<MultiBinding Converter="{StaticResource ValidConv}">
-												<Binding Path="FindText" ElementName="self"/>
-												<Binding Path="CodePage"/>
-											</MultiBinding>
-										</Setter.Value>
-									</Setter>
-								</Style>
-							</Style.Resources>
+					<ListBox.Resources>
+						<Style TargetType="controls:CodePageCheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+							<Setter Property="FindText" Value="{Binding FindText, ElementName=self}"/>
 						</Style>
-					</ListBox.Style>
+					</ListBox.Resources>
 				</ListBox>
 
 				<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
