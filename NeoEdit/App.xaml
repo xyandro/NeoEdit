@@ -472,7 +472,7 @@
 		</Style>
 		<SolidColorBrush x:Key="ListItemHoverFill" Color="#FF404040"/>
 		<SolidColorBrush x:Key="ListItemSelectedFill" Color="#FF606060"/>
-		<SolidColorBrush x:Key="ListItemSelectedInactiveFill" Color="FF606060"/>
+		<SolidColorBrush x:Key="ListItemSelectedInactiveFill" Color="#FF606060"/>
 		<SolidColorBrush x:Key="ListItemSelectedHoverFill" Color="#FF808080"/>
 		<Style TargetType="ListViewItem">
 			<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
