@@ -5,4 +5,3 @@ Print
 Add ability to select all attributes
 Allow tabs to move to other windows
 Open excel sheets
-Send/receive from WCF services

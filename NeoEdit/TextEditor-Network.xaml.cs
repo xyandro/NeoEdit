@@ -11,6 +11,7 @@ using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
+using NeoEdit.Program.WCF;
 
 namespace NeoEdit.Program
 {
@@ -217,5 +218,19 @@ namespace NeoEdit.Program
 			var results = PortScanner.ScanPorts(strs.Select(str => IPAddress.Parse(str)).ToList(), result.Ports, result.Attempts, TimeSpan.FromMilliseconds(result.Timeout), result.Concurrency);
 			ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
 		}
+
+		void Command_Network_WCF_ResetClients() => WCFOperations.ResetClients();
+
+		NetworkWCFGetConfig.Result Command_Network_WCF_GetConfig_Dialog() => NetworkWCFGetConfig.Run(WindowParent);
+
+		void Command_Network_WCF_GetConfig(NetworkWCFGetConfig.Result result)
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have single selection.");
+
+			ReplaceSelections(WCFOperations.GetWCFConfig(result.URL));
+		}
+
+		void Command_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFOperations.ExecuteWCF(GetString(range))).ToList());
 	}
 }

@@ -12,12 +12,15 @@ namespace NeoEdit.Program.Highlighting
 		static Brush stringBrush = new SolidColorBrush(Color.FromRgb(214, 157, 133));
 		static Regex headerRE = new Regex(@"""([^\\""]|\\.)*"":", RegexOptions.Compiled);
 		static Brush headerBrush = new SolidColorBrush(Color.FromRgb(215, 186, 125));
+		static Regex commentRE = new Regex("//.*?$|/\\*.*?\\*/", RegexOptions.Compiled);
+		static Brush commentBrush = new SolidColorBrush(Color.FromRgb(87, 166, 74));
 
 		static HighlightJSON()
 		{
 			numberBrush.Freeze();
 			stringBrush.Freeze();
 			headerBrush.Freeze();
+			commentBrush.Freeze();
 		}
 
 		public override Dictionary<Regex, Brush> GetDictionary()
@@ -27,6 +30,7 @@ namespace NeoEdit.Program.Highlighting
 				[numberRE] = numberBrush,
 				[stringRE] = stringBrush,
 				[headerRE] = headerBrush,
+				[commentRE] = commentBrush,
 			};
 		}
 	}

@@ -711,6 +711,13 @@
     <Compile Include="Dialogs\NetworkScanPortsDialog.xaml.cs">
       <DependentUpon>NetworkScanPortsDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NetworkWCFGetConfig.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NetworkWCFGetConfig.xaml.cs">
+      <DependentUpon>NetworkWCFGetConfig.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\NumericCombinationsPermutationsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1164,6 +1171,8 @@
     <Compile Include="Transform\Versioner.cs" />
     <Compile Include="Transform\XMLConverter.cs" />
     <Compile Include="UndoRedo.cs" />
+    <Compile Include="WCF\WCFClient.cs" />
+    <Compile Include="WCF\WCFOperations.cs" />
     <Resource Include="Words.txt" />
     <EmbeddedResource Include="Words.txt.gz" />
     <Compile Include="YouTubeDL.cs" />

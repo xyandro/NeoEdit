@@ -853,6 +853,7 @@ namespace NeoEdit.Program
 				case NECommand.Network_FetchPlaylist: dialogResult = Command_Network_FetchPlaylist_Dialog(); break;
 				case NECommand.Network_Ping: dialogResult = Command_Network_Ping_Dialog(); break;
 				case NECommand.Network_ScanPorts: dialogResult = Command_Network_ScanPorts_Dialog(); break;
+				case NECommand.Network_WCF_GetConfig: dialogResult = Command_Network_WCF_GetConfig_Dialog(); break;
 				case NECommand.Database_Connect: dialogResult = Command_Database_Connect_Dialog(); break;
 				case NECommand.Database_Examine: Command_Database_Examine_Dialog(); break;
 				case NECommand.Select_Limit: dialogResult = Command_Select_Limit_Dialog(); break;
@@ -1247,6 +1248,9 @@ namespace NeoEdit.Program
 				case NECommand.Network_AdaptersInfo: Command_Network_AdaptersInfo(); break;
 				case NECommand.Network_Ping: Command_Network_Ping(dialogResult as NetworkPingDialog.Result); break;
 				case NECommand.Network_ScanPorts: Command_Network_ScanPorts(dialogResult as NetworkScanPortsDialog.Result); break;
+				case NECommand.Network_WCF_ResetClients: Command_Network_WCF_ResetClients(); break;
+				case NECommand.Network_WCF_GetConfig: Command_Network_WCF_GetConfig(dialogResult as NetworkWCFGetConfig.Result); break;
+				case NECommand.Network_WCF_Execute: Command_Network_WCF_Execute(); break;
 				case NECommand.Database_Connect: Command_Database_Connect(dialogResult as DatabaseConnectDialog.Result); break;
 				case NECommand.Database_ExecuteQuery: Command_Database_ExecuteQuery(); break;
 				case NECommand.Database_GetSproc: Command_Database_GetSproc(); break;
