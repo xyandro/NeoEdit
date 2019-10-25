@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.CSharp;
@@ -15,6 +16,9 @@ namespace NeoEdit.Program.WCF
 {
 	public class WCFOperations : MarshalByRefObject
 	{
+		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.Infrastructure)]
+		public override object InitializeLifetimeService() => null;
+
 		static AppDomain appDomain;
 		static WCFOperations _wcfOperations;
 		static WCFOperations wcfOperations
