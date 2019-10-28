@@ -73,9 +73,7 @@ namespace NeoEdit.Program
 		[DepProp]
 		public bool DiffEncodingMismatch { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public int ItemOrder { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool Active { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
+		public int TextEditorOrder { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public string TabLabel { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
@@ -98,6 +96,7 @@ namespace NeoEdit.Program
 		public string ViewValuesFindValue { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		public Tabs TabsParent { get; set; }
+		public bool IsActive => TabsParent.WindowIsActive(this);
 
 		public bool CanClose() => CanClose(new AnswerResult());
 
@@ -208,7 +207,6 @@ namespace NeoEdit.Program
 			lightlightRowPen.Freeze();
 
 			UIHelper<TextEditor>.Register();
-			UIHelper<TextEditor>.AddCallback(a => a.Active, (obj, o, n) => obj.TabsParent?.NotifyActiveChanged());
 			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
 			UIHelper<TextEditor>.AddCallback(a => a.ContentType, (obj, o, n) => obj.canvasRenderTimer.Start());
@@ -226,7 +224,7 @@ namespace NeoEdit.Program
 			Selections = new RangeList(selections, deOverlap);
 			EnsureVisible();
 			canvasRenderTimer.Start();
-			TabsParent?.QueueUpdateCounts();
+			TabsParent?.QueueUpdateStatusBar();
 		}
 
 		public RangeList Searches { get; private set; } = new RangeList(new List<Range>());
@@ -242,7 +240,7 @@ namespace NeoEdit.Program
 		{
 			regionsList[region] = new RangeList(regions);
 			canvasRenderTimer.Start();
-			TabsParent?.QueueUpdateCounts();
+			TabsParent?.QueueUpdateStatusBar();
 		}
 
 		RunOnceTimer canvasRenderTimer, statusBarRenderTimer;
@@ -260,6 +258,8 @@ namespace NeoEdit.Program
 
 		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null)
 		{
+			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
+
 			fileName = fileName?.Trim('"');
 			this.shutdownData = shutdownData;
 
@@ -401,7 +401,7 @@ namespace NeoEdit.Program
 			diffTarget.DiffIgnoreCharacters = DiffIgnoreCharacters;
 			DiffEncodingMismatch = diffTarget.DiffEncodingMismatch = CodePage != diffTarget.CodePage;
 
-			var left = TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget) ? this : DiffTarget;
+			var left = TabsParent.WindowIndex(this) < DiffTarget.TabsParent.WindowIndex(DiffTarget) ? this : DiffTarget;
 			var right = left == this ? DiffTarget : this;
 			TextData.CalculateDiff(left.Data, right.Data, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 
@@ -2352,7 +2352,8 @@ namespace NeoEdit.Program
 		public void OpenTable(Table table, string name = null)
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
-			var textEditor = TabsParent.Add(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+			TabsParent.AddTextEditor(textEditor);
 			textEditor.ContentType = contentType;
 			textEditor.DisplayName = name;
 		}

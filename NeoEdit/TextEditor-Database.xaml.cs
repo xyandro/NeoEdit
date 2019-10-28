@@ -111,7 +111,7 @@ namespace NeoEdit.Program
 								text += reader.GetString(0);
 					}
 
-					TabsParent.Add(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ParserType.SQL, modified: false);
+					TabsParent.AddTextEditor(new TextEditor(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ParserType.SQL, modified: false));
 				}
 				catch (Exception ex) { result = ex.Message; }
 				results.Add($"{sproc}: {result}");

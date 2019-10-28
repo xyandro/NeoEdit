@@ -9,7 +9,7 @@ namespace NeoEdit.Program
 	{
 		void Command_Diff_Diff(bool shiftDown)
 		{
-			var diffTargets = Items.Count == 2 ? Items.ToList() : Items.Where(data => data.Active).ToList();
+			var diffTargets = Windows.Count == 2 ? Windows.ToList() : ActiveWindows.ToList();
 			if (diffTargets.Any(item => item.DiffTarget != null))
 			{
 				diffTargets.ForEach(item => item.DiffTarget = null);
@@ -21,35 +21,21 @@ namespace NeoEdit.Program
 
 			if (shiftDown)
 			{
-				if (!Items.Except(diffTargets).Any())
+				if (!Windows.Except(diffTargets).Any())
 					SetLayout(maxColumns: 5, maxRows: 5);
 				else
 				{
-					diffTargets.ForEach(diffTarget => Items.Remove(diffTarget));
+					diffTargets.ForEach(diffTarget => RemoveTextEditor(diffTarget));
 
 					var textEditTabs = new Tabs();
 					textEditTabs.SetLayout(maxColumns: 5, maxRows: 5);
-					diffTargets.ForEach(diffTarget => textEditTabs.Add(diffTarget));
-					textEditTabs.TopMost = diffTargets[0];
+					diffTargets.ForEach(diffTarget => textEditTabs.AddTextEditor(diffTarget));
 				}
 			}
 
 			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
 		}
 
-		void Command_Diff_Select_LeftRightBothTabs(bool? left)
-		{
-			var topMost = TopMost;
-			var active = Items.Where(item => (item.Active) && (item.DiffTarget != null)).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetIndex(item) < GetIndex(item.DiffTarget)) == left)).ToList();
-			Items.ForEach(item => item.Active = false);
-
-			if (!active.Any())
-				return;
-
-			if (!active.Contains(topMost))
-				topMost = active.First();
-			TopMost = topMost;
-			active.ForEach(item => item.Active = true);
-		}
+		void Command_Diff_Select_LeftRightBothTabs(bool? left) => SetActive(ActiveWindows.Where(item => item.DiffTarget != null).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((WindowIndex(item) < WindowIndex(item.DiffTarget)) == left)).ToList());
 	}
 }

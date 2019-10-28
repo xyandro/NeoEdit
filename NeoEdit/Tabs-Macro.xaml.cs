@@ -85,11 +85,11 @@ namespace NeoEdit.Program
 			Action startNext = null;
 			startNext = () =>
 			{
-				if ((TopMost == null) || (--count < 0))
+				if ((Focused == null) || (--count < 0))
 					return;
 
 				if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Condition)
-					if (!expression.Evaluate<bool>(TopMost.GetVariables()))
+					if (!expression.Evaluate<bool>(Focused.GetVariables()))
 						return;
 
 				macro.Play(this, playing => MacroPlaying = playing, startNext);
@@ -106,12 +106,12 @@ namespace NeoEdit.Program
 			{
 				if (!files.Any())
 					return;
-				Add(files.Dequeue());
+				AddTextEditor(new TextEditor(files.Dequeue()));
 				macro.Play(this, playing => MacroPlaying = playing, startNext);
 			};
 			startNext();
 		}
 
-		void Command_Macro_Open_Quick(int quickNum) => Add(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum)));
+		void Command_Macro_Open_Quick(int quickNum) => AddTextEditor(new TextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 	}
 }

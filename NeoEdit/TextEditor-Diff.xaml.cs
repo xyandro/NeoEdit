@@ -142,7 +142,7 @@ namespace NeoEdit.Program
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			if ((TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget)) && (DiffTarget.Active))
+			if ((TabsParent.WindowIndex(this) < DiffTarget.TabsParent.WindowIndex(DiffTarget)) && (DiffTarget.IsActive))
 				return;
 
 			var lines = Selections.AsParallel().AsOrdered().Select(range => GetDiffNextPrevious(range, next)).ToList();
@@ -161,13 +161,13 @@ namespace NeoEdit.Program
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var target = TabsParent.GetIndex(this) < DiffTarget.TabsParent.GetIndex(DiffTarget) ? this : DiffTarget;
+			var target = TabsParent.WindowIndex(this) < DiffTarget.TabsParent.WindowIndex(DiffTarget) ? this : DiffTarget;
 			var source = target == this ? DiffTarget : this;
 			if (!moveLeft)
 				Helpers.Swap(ref target, ref source);
 
 			// If both tabs are active only do this from the target tab
-			var bothActive = TabsParent.TabIsActive(DiffTarget);
+			var bothActive = TabsParent.WindowIsActive(DiffTarget);
 			if ((bothActive) && (target != this))
 				return;
 

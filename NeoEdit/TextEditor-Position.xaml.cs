@@ -190,11 +190,15 @@ namespace NeoEdit.Program
 					throw new Exception($"The following files could not be found: {string.Join("\n", invalidFiles)}");
 			}
 
-			var active = new HashSet<TextEditor>();
 			foreach (var list in valuesByFile)
 			{
-				var useTE = list.First().File == null ? this : TabsParent.Add(list.First().File);
-				active.Add(useTE);
+				var useTE = this;
+				var useFile = list.First().File;
+				if (useFile != null)
+				{
+					useTE = new TextEditor(useFile);
+					TabsParent.AddTextEditor(useTE);
+				}
 
 				var sels = useTE.Selections.ToList();
 				var positions = list;
@@ -209,13 +213,6 @@ namespace NeoEdit.Program
 					throw new Exception("Expression count doesn't match selection count");
 
 				useTE.SetSelections(sels.AsParallel().AsOrdered().Select((range, ctr) => positions[ctr].GetRange(useTE, range, selecting)).ToList());
-			}
-
-			if (hasFiles)
-			{
-				foreach (var item in TabsParent.Items)
-					item.Active = active.Contains(item);
-				TabsParent.TopMost = active.First();
 			}
 		}
 

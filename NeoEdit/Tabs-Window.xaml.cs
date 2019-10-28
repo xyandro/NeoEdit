@@ -19,102 +19,45 @@ namespace NeoEdit.Program
 
 		void Command_Window_CustomGrid(WindowCustomGridDialog.Result result) => SetLayout(result.Columns, result.Rows, result.MaxColumns, result.MaxRows);
 
-		void Command_Window_ActiveTabs()
-		{
-			WindowActiveTabsDialog.Run(this);
-			UpdateTopMost();
-		}
+		void Command_Window_ActiveTabs() => WindowActiveTabsDialog.Run(this);
 
 		void Command_Window_Font_Size() => WindowFontSizeDialog.Run(this);
 
-		void Command_Window_Select_AllNoTabs(bool all) => Items.ForEach(tab => tab.Active = all);
+		void Command_Window_Select_AllTabs() => SetActive(Windows);
 
-		void Command_Window_Select_TabsWithWithoutSelections(bool hasSelections)
-		{
-			var topMost = TopMost;
-			var active = Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
-			Items.ToList().ForEach(tab => tab.Active = false);
+		void Command_Window_Select_NoTabs() => SetActive();
 
-			if (!active.Any())
-				return;
+		void Command_Window_Select_TabsWithWithoutSelections(bool hasSelections) => SetActive(ActiveWindows.Where(tab => tab.HasSelections == hasSelections).ToList());
 
-			if (!active.Contains(topMost))
-				topMost = active.First();
-			TopMost = topMost;
-			active.ForEach(tab => tab.Active = true);
-		}
+		void Command_Window_Select_ModifiedUnmodifiedTabs(bool modified) => SetActive(ActiveWindows.Where(tab => tab.IsModified == modified).ToList());
 
-		void Command_Window_Select_ModifiedUnmodifiedTabs(bool modified)
-		{
-			var topMost = TopMost;
-			var active = Items.Where(tab => (tab.Active) && (tab.IsModified == modified)).ToList();
-			Items.ToList().ForEach(tab => tab.Active = false);
-
-			if (!active.Any())
-				return;
-
-			if (!active.Contains(topMost))
-				topMost = active.First();
-			TopMost = topMost;
-			active.ForEach(tab => tab.Active = true);
-		}
-
-		void Command_Window_Select_InactiveTabs()
-		{
-			var active = Items.Where(tab => !tab.Active).ToList();
-			Items.ForEach(tab => tab.Active = false);
-			if (active.Any())
-				TopMost = active.First();
-			active.ForEach(tab => tab.Active = true);
-		}
+		void Command_Window_Select_InactiveTabs() => SetActive(Windows.Except(ActiveWindows).ToList());
 
 		void Command_Window_Close_TabsWithWithoutSelections(bool hasSelections)
 		{
-			var topMost = TopMost;
-			var active = Items.Where(tab => (tab.Active) && (tab.HasSelections != hasSelections)).ToList();
-
+			var toClose = ActiveWindows.Where(tab => tab.HasSelections == hasSelections).ToList();
 			var answer = new AnswerResult();
-			var closeTabs = Items.Where(tab => (tab.Active) && (tab.HasSelections == hasSelections)).ToList();
-			if (!closeTabs.All(tab => tab.CanClose(answer)))
+			if (!toClose.All(tab => tab.CanClose(answer)))
 				return;
-			closeTabs.ForEach(tab => Remove(tab));
-
-			if (!active.Any())
-				return;
-
-			if (!active.Contains(topMost))
-				topMost = active.First();
-			TopMost = topMost;
-			active.ForEach(tab => tab.Active = true);
+			toClose.ForEach(tab => RemoveTextEditor(tab));
 		}
 
 		void Command_Window_Close_ModifiedUnmodifiedTabs(bool modified)
 		{
-			var topMost = TopMost;
-			var active = Items.Where(tab => (tab.Active) && (tab.IsModified != modified)).ToList();
-
+			var toClose = ActiveWindows.Where(tab => tab.IsModified == modified).ToList();
 			var answer = new AnswerResult();
-			var closeTabs = Items.Where(tab => (tab.Active) && (tab.IsModified == modified)).ToList();
-			if (!closeTabs.All(tab => tab.CanClose(answer)))
+			if (!toClose.All(tab => tab.CanClose(answer)))
 				return;
-			closeTabs.ForEach(tab => Remove(tab));
-
-			if (!active.Any())
-				return;
-
-			if (!active.Contains(topMost))
-				topMost = active.First();
-			TopMost = topMost;
-			active.ForEach(tab => tab.Active = true);
+			toClose.ForEach(tab => RemoveTextEditor(tab));
 		}
 
 		void Command_Window_Close_ActiveInactiveTabs(bool active)
 		{
+			var toClose = (active ? ActiveWindows : Windows.Except(ActiveWindows)).ToList();
 			var answer = new AnswerResult();
-			var closeTabs = Items.Where(tab => tab.Active == active).ToList();
-			if (!closeTabs.All(tab => tab.CanClose(answer)))
+			if (!toClose.All(tab => tab.CanClose(answer)))
 				return;
-			closeTabs.ForEach(tab => Remove(tab));
+			toClose.ForEach(tab => RemoveTextEditor(tab));
 		}
 
 		void Command_Window_WordList()
@@ -130,7 +73,7 @@ namespace NeoEdit.Program
 
 			data = Compressor.Decompress(data, Compressor.Type.GZip);
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace("\n", "\r\n"));
-			Add(bytes: data, modified: false);
+			AddTextEditor(new TextEditor(bytes: data, modified: false));
 		}
 	}
 }

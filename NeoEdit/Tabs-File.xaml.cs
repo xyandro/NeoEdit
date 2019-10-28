@@ -14,12 +14,11 @@ namespace NeoEdit.Program
 {
 	partial class Tabs
 	{
-		void Command_File_New_New(bool createTabs) => (createTabs ? new Tabs() : this).Add();
+		void Command_File_New_New(bool createTabs) => (createTabs ? new Tabs() : this).AddTextEditor(new TextEditor());
 
 		void Command_File_New_FromClipboards()
 		{
 			var index = 0;
-			var active = new List<TextEditor>();
 			foreach (var clipboard in NEClipboard.Current)
 			{
 				++index;
@@ -34,19 +33,18 @@ namespace NeoEdit.Program
 					sels.Add(new Range(sb.Length, start));
 					sb.Append(ending);
 				}
-				var te = Add(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false, canReplace: index == 1);
-				active.Add(te);
+				var te = new TextEditor(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+				AddTextEditor(te, canReplace: index == 1);
 				te.SetSelections(sels);
 			}
-			active.ForEach(te => te.Active = true);
 		}
 
-		void Command_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => Add(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false));
+		void Command_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => AddTextEditor(new TextEditor(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 
 		OpenFileDialogResult Command_File_Open_Open_Dialog(string initialDirectory = null)
 		{
-			if ((initialDirectory == null) && (TopMost != null))
-				initialDirectory = Path.GetDirectoryName(TopMost.FileName);
+			if ((initialDirectory == null) && (Focused != null))
+				initialDirectory = Path.GetDirectoryName(Focused.FileName);
 			var dialog = new OpenFileDialog
 			{
 				DefaultExt = "txt",
@@ -61,7 +59,7 @@ namespace NeoEdit.Program
 			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}
 
-		void Command_File_Open_Open(OpenFileDialogResult result) => result.files.ForEach(fileName => Add(fileName));
+		void Command_File_Open_Open(OpenFileDialogResult result) => result.files.ForEach(fileName => AddTextEditor(new TextEditor(fileName)));
 
 		void Command_File_Open_CopiedCut()
 		{
@@ -77,33 +75,31 @@ namespace NeoEdit.Program
 			}.Show().HasFlag(MessageOptions.Yes)))
 				return;
 
-			foreach (var item in Items)
-				item.Active = false;
 			foreach (var file in files)
-				Add(file);
+				AddTextEditor(new TextEditor(file));
 		}
 
 		void Command_File_Operations_DragDrop()
 		{
-			if (TopMost == null)
+			if (Focused == null)
 				throw new Exception("No active file");
-			var fileNames = Items.Where(te => te.Active).Select(te => te.FileName).NonNullOrEmpty().ToList();
+			var fileNames = ActiveWindows.Select(te => te.FileName).NonNullOrEmpty().ToList();
 			if (!fileNames.Any())
 				throw new Exception("No current files have filenames.");
 			var nonExisting = fileNames.Where(x => !File.Exists(x));
 			if (nonExisting.Any())
 				throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
-			TopMost.DragFiles = fileNames;
+			Focused.DragFiles = fileNames;
 		}
 
 		void Command_File_MoveToNewWindow()
 		{
-			var active = Items.Where(tab => tab.Active).ToList();
-			active.ForEach(tab => Items.Remove(tab));
+			var active = ActiveWindows.ToList();
+			active.ForEach(textEditor => RemoveTextEditor(textEditor, false));
 
 			var newWindow = new Tabs();
 			newWindow.SetLayout(newWindow.Columns, newWindow.Rows, newWindow.MaxColumns, newWindow.MaxRows);
-			active.ForEach(tab => newWindow.Add(tab));
+			active.ForEach(tab => newWindow.AddTextEditor(tab));
 		}
 
 		static public void Command_File_Shell_Integrate()

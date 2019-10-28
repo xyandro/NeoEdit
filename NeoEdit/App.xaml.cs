@@ -78,17 +78,19 @@ namespace NeoEdit.Program
 				if (tabs == null)
 					tabs = new Tabs();
 				foreach (var file in clParams.Files)
-					tabs.Add(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownData: shutdownData));
+					tabs.AddTextEditor(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownData: shutdownData));
+				if (tabs.Windows.Any())
+					tabs.SetFocused(tabs.Windows[tabs.Windows.Count - 1], true);
 
 				if (clParams.Diff)
 				{
-					for (var ctr = 0; ctr + 1 < tabs.Items.Count; ctr += 2)
+					for (var ctr = 0; ctr + 1 < tabs.Windows.Count; ctr += 2)
 					{
-						tabs.Items[ctr].DiffTarget = tabs.Items[ctr + 1];
-						if (tabs.Items[ctr].ContentType == ParserType.None)
-							tabs.Items[ctr].ContentType = tabs.Items[ctr + 1].ContentType;
-						if (tabs.Items[ctr + 1].ContentType == ParserType.None)
-							tabs.Items[ctr + 1].ContentType = tabs.Items[ctr].ContentType;
+						tabs.Windows[ctr].DiffTarget = tabs.Windows[ctr + 1];
+						if (tabs.Windows[ctr].ContentType == ParserType.None)
+							tabs.Windows[ctr].ContentType = tabs.Windows[ctr + 1].ContentType;
+						if (tabs.Windows[ctr + 1].ContentType == ParserType.None)
+							tabs.Windows[ctr + 1].ContentType = tabs.Windows[ctr].ContentType;
 					}
 					tabs.SetLayout(maxColumns: 2);
 				}

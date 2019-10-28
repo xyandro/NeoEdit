@@ -50,13 +50,13 @@ namespace NeoEdit.Program
 				ReplaceSelections(strs);
 		}
 
-		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach((Func<string, int, TextEditor>)((str, index) => (TextEditor)this.TabsParent.Add(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false)));
+		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach(((str, index) => TabsParent.AddTextEditor(new TextEditor(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false))));
 
 		void Command_File_Open_Selected()
 		{
 			var files = RelativeSelectedFiles();
 			foreach (var file in files)
-				TabsParent.Add(file);
+				TabsParent.AddTextEditor(new TextEditor(file));
 		}
 
 		void Command_File_Save_Save()
@@ -244,11 +244,10 @@ namespace NeoEdit.Program
 			if (original == null)
 				throw new Exception("Unable to get VCS content");
 
-			var topMost = TabsParent.TopMost;
-			var textEdit = TabsParent.Add(displayName: Path.GetFileName(FileName), modified: false, bytes: original, index: TabsParent.GetIndex(this));
+			var textEdit = new TextEditor(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
+			TabsParent.AddTextEditor(textEdit, index: TabsParent.WindowIndex(this));
 			textEdit.ContentType = ContentType;
 			textEdit.DiffTarget = this;
-			TabsParent.TopMost = topMost;
 		}
 
 		void Command_File_Operations_SetDisplayName(GetExpressionDialog.Result result)
@@ -267,7 +266,7 @@ namespace NeoEdit.Program
 		void Command_File_Close(AnswerResult answer)
 		{
 			if (CanClose(answer))
-				TabsParent.Remove(this);
+				TabsParent.RemoveTextEditor(this);
 		}
 
 		void Command_File_Refresh(AnswerResult answer)

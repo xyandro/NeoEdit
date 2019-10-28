@@ -234,6 +234,7 @@
     <Compile Include="Controls\ViewValues.xaml.cs">
       <DependentUpon>ViewValues.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ActiveWindowConverter.cs" />
     <Compile Include="Converters\BoolToVisibleConverter.cs" />
     <Compile Include="Converters\HexConverter.cs" />
     <Compile Include="Converters\NEExpressionConverter.cs" />

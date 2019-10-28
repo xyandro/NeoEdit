@@ -1,7 +1,5 @@
 Make modal dialogs modal for owning window only
-Selecting the already selected file without shift down should deselect the other files
 Tutorial
 Print
 Add ability to select all attributes
 Allow tabs to move to other windows
-Open excel sheets

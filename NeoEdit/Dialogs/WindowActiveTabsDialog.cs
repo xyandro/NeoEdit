@@ -13,15 +13,15 @@ namespace NeoEdit.Program.Dialogs
 	class WindowActiveTabsDialog : NEWindow
 	{
 		readonly List<TextEditor> originalActive;
-		readonly TextEditor originalTopMost;
+		readonly TextEditor originalFocused;
 		readonly Tabs tabs;
 		ListView listView;
 
 		public WindowActiveTabsDialog(Tabs tabs)
 		{
 			this.tabs = tabs;
-			originalActive = tabs.Items.Where(item => item.Active).ToList();
-			originalTopMost = tabs.TopMost;
+			originalActive = tabs.ActiveWindows.ToList();
+			originalFocused = tabs.Focused;
 			Setup();
 		}
 
@@ -38,13 +38,13 @@ namespace NeoEdit.Program.Dialogs
 			grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
 			// Use a copy of Items list because events were still firing after window was closed
-			listView = new ListView { ItemsSource = tabs.Items.ToList(), Height = 400, SelectionMode = SelectionMode.Extended };
+			listView = new ListView { ItemsSource = tabs.Windows.ToList(), Height = 400, SelectionMode = SelectionMode.Extended };
 			{
 				var gridView = new GridView();
 				gridView.Columns.Add(new GridViewColumn { Header = "Label", DisplayMemberBinding = new Binding(nameof(TextEditor.TabLabel)), Width = 500 });
 				listView.View = gridView;
 			}
-			listView.SelectionChanged += (s, e) => SyncItems(listView.SelectedItems.Cast<TextEditor>());
+			listView.SelectionChanged += (s, e) => tabs.SetActive(listView.SelectedItems.Cast<TextEditor>());
 			Grid.SetRow(listView, 0);
 			Grid.SetColumn(listView, 0);
 			grid.Children.Add(listView);
@@ -78,8 +78,8 @@ namespace NeoEdit.Program.Dialogs
 			var cancelButton = new Button { IsCancel = true, Content = "Cancel", Padding = new Thickness(10, 1, 10, 1) };
 			cancelButton.Click += (s, e) =>
 			{
-				SyncItems(originalActive);
-				tabs.TopMost = originalTopMost;
+				tabs.SetActive(originalActive);
+				tabs.SetFocused(originalFocused);
 				DialogResult = false;
 			};
 			uniformGrid.Children.Add(cancelButton);
@@ -113,7 +113,7 @@ namespace NeoEdit.Program.Dialogs
 		List<int> SelectedIndexes()
 		{
 			var selected = new HashSet<TextEditor>(listView.SelectedItems.Cast<TextEditor>());
-			return tabs.Items.Indexes(tab => selected.Contains(tab)).ToList();
+			return tabs.Windows.Indexes(tab => selected.Contains(tab)).ToList();
 		}
 
 		void MoveUp_Click(object sender, RoutedEventArgs e)
@@ -121,33 +121,33 @@ namespace NeoEdit.Program.Dialogs
 			var indexes = SelectedIndexes();
 			indexes = indexes.Where((value, index) => value != index).ToList();
 			for (var ctr = 0; ctr < indexes.Count; ++ctr)
-				tabs.Items.Move(indexes[ctr], indexes[ctr] - 1);
-			listView.ItemsSource = tabs.Items.ToList();
+				tabs.Move(tabs.Windows[indexes[ctr]], indexes[ctr] - 1);
+			listView.ItemsSource = tabs.Windows.ToList();
 		}
 
 		void MoveDown_Click(object sender, RoutedEventArgs e)
 		{
 			var indexes = SelectedIndexes();
-			indexes = indexes.Where((value, index) => value != tabs.Items.Count - indexes.Count + index).ToList();
+			indexes = indexes.Where((value, index) => value != tabs.Windows.Count - indexes.Count + index).ToList();
 			for (var ctr = indexes.Count - 1; ctr >= 0; --ctr)
-				tabs.Items.Move(indexes[ctr], indexes[ctr] + 1);
-			listView.ItemsSource = tabs.Items.ToList();
+				tabs.Move(tabs.Windows[indexes[ctr]], indexes[ctr] + 1);
+			listView.ItemsSource = tabs.Windows.ToList();
 		}
 
 		void MoveToTop_Click(object sender, RoutedEventArgs e)
 		{
 			var indexes = SelectedIndexes();
 			for (var ctr = 0; ctr < indexes.Count; ++ctr)
-				tabs.Items.Move(indexes[ctr], ctr);
-			listView.ItemsSource = tabs.Items.ToList();
+				tabs.Move(tabs.Windows[indexes[ctr]], ctr);
+			listView.ItemsSource = tabs.Windows.ToList();
 		}
 
 		void MoveToBottom_Click(object sender, RoutedEventArgs e)
 		{
 			var indexes = SelectedIndexes();
 			for (var ctr = indexes.Count - 1; ctr >= 0; --ctr)
-				tabs.Items.Move(indexes[ctr], tabs.Items.Count - indexes.Count + ctr);
-			listView.ItemsSource = tabs.Items.ToList();
+				tabs.Move(tabs.Windows[indexes[ctr]], tabs.Windows.Count - indexes.Count + ctr);
+			listView.ItemsSource = tabs.Windows.ToList();
 		}
 
 		void Close_Click(object sender, RoutedEventArgs e)
@@ -158,20 +158,8 @@ namespace NeoEdit.Program.Dialogs
 			if (!selected.All(tab => tab.CanClose(answer)))
 				return;
 
-			selected.ForEach(item => tabs.Remove(item));
-			listView.ItemsSource = tabs.Items.ToList();
-		}
-
-		void SyncItems(IEnumerable<TextEditor> active)
-		{
-			var activeHash = new HashSet<TextEditor>(active);
-			foreach (var item in tabs.Items)
-				item.Active = activeHash.Contains(item);
-			var topMost = tabs.TopMost;
-			if (!activeHash.Contains(topMost))
-				topMost = active.FirstOrDefault();
-			if (topMost != null)
-				tabs.TopMost = topMost;
+			selected.ForEach(item => tabs.RemoveTextEditor(item));
+			listView.ItemsSource = tabs.Windows.ToList();
 		}
 
 		public static void Run(Tabs tabs) => new WindowActiveTabsDialog(tabs) { Owner = tabs }.ShowDialog();
