@@ -174,6 +174,6 @@ namespace NeoEdit.Program.Dialogs
 				tabs.TopMost = topMost;
 		}
 
-		public static void Run(Tabs tabs) => new WindowActiveTabsDialog(tabs) { Owner = tabs.WindowParent }.ShowDialog();
+		public static void Run(Tabs tabs) => new WindowActiveTabsDialog(tabs) { Owner = tabs }.ShowDialog();
 	}
 }

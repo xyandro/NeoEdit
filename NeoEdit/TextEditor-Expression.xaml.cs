@@ -43,17 +43,17 @@ namespace NeoEdit.Program
 			}
 		}
 
-		GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
+		GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables(), Selections.Count);
 
 		void Command_Expression_Expression(GetExpressionDialog.Result result) => ReplaceSelections(GetFixedExpressionResults<string>(result.Expression));
 
-		GetExpressionDialog.Result Command_Expression_Copy_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables());
+		GetExpressionDialog.Result Command_Expression_Copy_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables());
 
 		void Command_Expression_Copy(GetExpressionDialog.Result result) => SetClipboardStrings(GetVariableExpressionResults<string>(result.Expression));
 
 		void Command_Expression_EvaluateSelected() => ReplaceSelections(GetFixedExpressionResults<string>("Eval(x)"));
 
-		GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
+		GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables(), Selections.Count);
 
 		void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)
 		{
@@ -71,7 +71,7 @@ namespace NeoEdit.Program
 			Replace(inlineVars.Select(inlineVar => inlineVar.ValueRange).ToList(), inlineVars.Select(inlineVar => inlineVar.Value.ToString()).ToList());
 		}
 
-		ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog() => ExpressionSolveDialog.Run(WindowParent, GetVariables());
+		ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog() => ExpressionSolveDialog.Run(TabsParent, GetVariables());
 
 		void Command_Expression_InlineVariables_Solve(ExpressionSolveDialog.Result result, AnswerResult answer)
 		{
@@ -144,7 +144,7 @@ namespace NeoEdit.Program
 			if (maxLoops == 0)
 			{
 				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(WindowParent)
+					answer.Answer = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "Unable to find value. Use best match?",

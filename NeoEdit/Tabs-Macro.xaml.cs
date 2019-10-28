@@ -38,7 +38,7 @@ namespace NeoEdit.Program
 		{
 			if (RecordingMacro == null)
 			{
-				new Message(WindowParent)
+				new Message(this)
 				{
 					Title = "Error",
 					Text = $"Cannot stop recording; recording not in progess.",
@@ -72,7 +72,7 @@ namespace NeoEdit.Program
 
 		void Command_Macro_Play_Repeat()
 		{
-			var result = MacroPlayRepeatDialog.Run(WindowParent, Macro.ChooseMacro);
+			var result = MacroPlayRepeatDialog.Run(this, Macro.ChooseMacro);
 			if (result == null)
 				return;
 

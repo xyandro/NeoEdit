@@ -34,8 +34,6 @@ namespace NeoEdit.Program
 		[DepProp]
 		public int? MaxRows { get { return UIHelper<Tabs>.GetPropValue<int?>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
-		public Window WindowParent { get { return UIHelper<Tabs>.GetPropValue<Tabs>(this); } set { UIHelper<Tabs>.SetPropValue(this, value); } }
-		[DepProp]
 		public string ActiveCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }
 		[DepProp]
 		public string InactiveCountText { get { return UIHelper<Tabs>.GetPropValue<string>(this); } private set { UIHelper<Tabs>.SetPropValue(this, value); } }

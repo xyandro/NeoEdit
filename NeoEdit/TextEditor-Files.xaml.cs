@@ -59,7 +59,7 @@ namespace NeoEdit.Program
 				TabsParent.Dispatcher.Invoke(() =>
 				{
 					if (!answer.Answer.HasFlag(MessageOptions.All))
-						answer.Answer = new Message(WindowParent)
+						answer.Answer = new Message(TabsParent)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
@@ -392,7 +392,7 @@ namespace NeoEdit.Program
 				TabsParent.Dispatcher.Invoke(() =>
 				{
 					if (!answer.Answer.HasFlag(MessageOptions.All))
-						answer.Answer = new Message(WindowParent)
+						answer.Answer = new Message(TabsParent)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
@@ -407,7 +407,7 @@ namespace NeoEdit.Program
 
 		void Command_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
 
-		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeAbsolute_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(WindowParent, GetVariables(), true, true);
+		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeAbsolute_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(TabsParent, GetVariables(), true, true);
 
 		void Command_Files_Name_MakeAbsolute(FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
@@ -415,7 +415,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteRelativeDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeRelative_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(WindowParent, GetVariables(), false, true);
+		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeRelative_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(TabsParent, GetVariables(), false, true);
 
 		void Command_Files_Name_MakeRelative(FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
@@ -425,7 +425,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
 		}
 
-		FilesNamesGetUniqueDialog.Result Command_Files_Name_GetUnique_Dialog() => FilesNamesGetUniqueDialog.Run(WindowParent);
+		FilesNamesGetUniqueDialog.Result Command_Files_Name_GetUnique_Dialog() => FilesNamesGetUniqueDialog.Run(TabsParent);
 
 		void Command_Files_Name_GetUnique(FilesNamesGetUniqueDialog.Result result)
 		{
@@ -525,7 +525,7 @@ namespace NeoEdit.Program
 			var errors = new List<string>();
 			ReplaceSelections(dirs.Select(dir => string.Join(Data.DefaultEnding, GetDirectoryContents(dir, recursive, errors))).ToList());
 			if (errors.Any())
-				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors)}", "Error", WindowParent);
+				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors)}", "Error", TabsParent);
 		}
 
 		void Command_Files_Get_VersionControlStatus()
@@ -539,7 +539,7 @@ namespace NeoEdit.Program
 			var vars = GetVariables();
 			var sizes = RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			return FilesSetSizeDialog.Run(WindowParent, vars);
+			return FilesSetSizeDialog.Run(TabsParent, vars);
 		}
 
 		void Command_Files_Set_Size(FilesSetSizeDialog.Result result)
@@ -552,7 +552,7 @@ namespace NeoEdit.Program
 			files.Zip(results, (file, size) => new { file, size }).AsParallel().ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
-		FilesSetTimeDialog.Result Command_Files_Set_Time_Dialog() => FilesSetTimeDialog.Run(WindowParent, GetVariables(), $@"""{DateTime.Now}""");
+		FilesSetTimeDialog.Result Command_Files_Set_Time_Dialog() => FilesSetTimeDialog.Run(TabsParent, GetVariables(), $@"""{DateTime.Now}""");
 
 		void Command_Files_Set_Time(TimestampType type, FilesSetTimeDialog.Result result)
 		{
@@ -603,7 +603,7 @@ namespace NeoEdit.Program
 						current[availAttr] = null;
 				}
 
-			return FilesSetAttributesDialog.Run(WindowParent, current);
+			return FilesSetAttributesDialog.Run(TabsParent, current);
 		}
 
 		void Command_Files_Set_Attributes(FilesSetAttributesDialog.Result result)
@@ -619,34 +619,34 @@ namespace NeoEdit.Program
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
-		FilesFindBinaryDialog.Result Command_Files_Find_Binary_Dialog() => FilesFindBinaryDialog.Run(WindowParent);
+		FilesFindBinaryDialog.Result Command_Files_Find_Binary_Dialog() => FilesFindBinaryDialog.Run(TabsParent);
 
 		void Command_Files_Find_Binary(FilesFindBinaryDialog.Result result, AnswerResult answer)
 		{
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			var searcher = Helpers.GetSearcher(new List<string> { result.Text }, result.CodePages, result.MatchCase);
-			SetSelections(MultiProgressDialog.RunAsync(WindowParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
+			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}
 
-		FilesFindTextDialog.Result Command_Files_Find_Text_Dialog() => FilesFindTextDialog.Run(WindowParent);
+		FilesFindTextDialog.Result Command_Files_Find_Text_Dialog() => FilesFindTextDialog.Run(TabsParent);
 
 		void Command_Files_Find_Text(FilesFindTextDialog.Result result, AnswerResult answer)
 		{
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
-			SetSelections(MultiProgressDialog.RunAsync(WindowParent, "Searching files...", selected, async (obj, progress, cancel) => await TextSearchFileAsync(obj.fileName, result, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
+			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await TextSearchFileAsync(obj.fileName, result, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}
 
-		FilesFindMassFindDialog.Result Command_Files_Find_MassFind_Dialog() => FilesFindMassFindDialog.Run(WindowParent, GetVariables());
+		FilesFindMassFindDialog.Result Command_Files_Find_MassFind_Dialog() => FilesFindMassFindDialog.Run(TabsParent, GetVariables());
 
 		void Command_Files_Find_MassFind(FilesFindMassFindDialog.Result result, AnswerResult answer)
 		{
 			var findStrs = GetVariableExpressionResults<string>(result.Expression);
 			var searcher = Helpers.GetSearcher(findStrs, result.CodePages, result.MatchCase);
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
-			SetSelections(MultiProgressDialog.RunAsync(WindowParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
+			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}
 
-		FilesInsertDialog.Result Command_Files_Insert_Dialog() => FilesInsertDialog.Run(WindowParent);
+		FilesInsertDialog.Result Command_Files_Insert_Dialog() => FilesInsertDialog.Run(TabsParent);
 
 		void Command_Files_Insert(FilesInsertDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
 
@@ -668,7 +668,7 @@ namespace NeoEdit.Program
 				Directory.CreateDirectory(file);
 		}
 
-		FilesCreateFromExpressionsDialog.Result Command_Files_Create_FromExpressions_Dialog() => FilesCreateFromExpressionsDialog.Run(WindowParent, GetVariables(), CodePage);
+		FilesCreateFromExpressionsDialog.Result Command_Files_Create_FromExpressions_Dialog() => FilesCreateFromExpressionsDialog.Run(TabsParent, GetVariables(), CodePage);
 
 		void Command_Files_Create_FromExpressions(FilesCreateFromExpressionsDialog.Result result)
 		{
@@ -748,7 +748,7 @@ namespace NeoEdit.Program
 			SetSelections(Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList());
 		}
 
-		FilesSelectByVersionControlStatusDialog.Result Command_Files_Select_ByVersionControlStatus_Dialog() => FilesSelectByVersionControlStatusDialog.Run(WindowParent);
+		FilesSelectByVersionControlStatusDialog.Result Command_Files_Select_ByVersionControlStatus_Dialog() => FilesSelectByVersionControlStatusDialog.Run(TabsParent);
 
 		void Command_Files_Select_ByVersionControlStatus(FilesSelectByVersionControlStatusDialog.Result result)
 		{
@@ -758,15 +758,15 @@ namespace NeoEdit.Program
 			SetSelections(sels);
 		}
 
-		FilesHashDialog.Result Command_Files_Hash_Dialog() => FilesHashDialog.Run(WindowParent);
+		FilesHashDialog.Result Command_Files_Hash_Dialog() => FilesHashDialog.Run(TabsParent);
 
-		void Command_Files_Hash(FilesHashDialog.Result result) => ReplaceSelections(MultiProgressDialog.RunAsync(WindowParent, "Calculating hashes...", RelativeSelectedFiles(), (file, progress, cancel) => Hasher.GetAsync(file, result.HashType, result.HMACKey, progress, cancel)));
+		void Command_Files_Hash(FilesHashDialog.Result result) => ReplaceSelections(MultiProgressDialog.RunAsync(TabsParent, "Calculating hashes...", RelativeSelectedFiles(), (file, progress, cancel) => Hasher.GetAsync(file, result.HashType, result.HMACKey, progress, cancel)));
 
-		FilesSignDialog.Result Command_Files_Sign_Dialog() => FilesSignDialog.Run(WindowParent);
+		FilesSignDialog.Result Command_Files_Sign_Dialog() => FilesSignDialog.Run(TabsParent);
 
 		void Command_Files_Sign(FilesSignDialog.Result result) => ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
 
-		FilesOperationsCopyMoveDialog.Result Command_Files_Operations_CopyMove_Dialog(bool move) => FilesOperationsCopyMoveDialog.Run(WindowParent, GetVariables(), move);
+		FilesOperationsCopyMoveDialog.Result Command_Files_Operations_CopyMove_Dialog(bool move) => FilesOperationsCopyMoveDialog.Run(TabsParent, GetVariables(), move);
 
 		void Command_Files_Operations_CopyMove(FilesOperationsCopyMoveDialog.Result result, bool move)
 		{
@@ -795,7 +795,7 @@ namespace NeoEdit.Program
 			if (invalid.Any())
 				throw new Exception($"Destinations already exist:\n{string.Join("\n", invalid)}");
 
-			if (!new Message(WindowParent)
+			if (!new Message(TabsParent)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?",
@@ -808,7 +808,7 @@ namespace NeoEdit.Program
 			invalid = newFileNames.Zip(oldFileNames, (newFileName, oldFileName) => new { newFileName, oldFileName }).Where(obj => (!string.Equals(obj.newFileName, obj.oldFileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(obj.newFileName))).Select(obj => obj.newFileName).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
-				if (!new Message(WindowParent)
+				if (!new Message(TabsParent)
 				{
 					Title = "Confirm",
 					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
@@ -841,7 +841,7 @@ namespace NeoEdit.Program
 
 		void Command_Files_Operations_Delete()
 		{
-			if (!new Message(WindowParent)
+			if (!new Message(TabsParent)
 			{
 				Title = "Confirm",
 				Text = "Are you sure you want to delete these files/directories?",
@@ -864,7 +864,7 @@ namespace NeoEdit.Program
 				catch (Exception ex)
 				{
 					if (!answer.HasFlag(MessageOptions.All))
-						answer = new Message(WindowParent)
+						answer = new Message(TabsParent)
 						{
 							Title = "Confirm",
 							Text = $"An error occurred:\n\n{ex.Message}\n\nContinue?",
@@ -912,15 +912,15 @@ namespace NeoEdit.Program
 
 		void Command_Files_Operations_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
 
-		FilesOperationsEncodingDialog.Result Command_Files_Operations_Encoding_Dialog() => FilesOperationsEncodingDialog.Run(WindowParent);
+		FilesOperationsEncodingDialog.Result Command_Files_Operations_Encoding_Dialog() => FilesOperationsEncodingDialog.Run(TabsParent);
 
-		void Command_Files_Operations_Encoding(FilesOperationsEncodingDialog.Result result) => MultiProgressDialog.Run(WindowParent, "Changing encoding...", RelativeSelectedFiles(), (inputFile, progress, cancel) => ReencodeFile(inputFile, progress, cancel, result.InputCodePage, result.OutputCodePage));
+		void Command_Files_Operations_Encoding(FilesOperationsEncodingDialog.Result result) => MultiProgressDialog.Run(TabsParent, "Changing encoding...", RelativeSelectedFiles(), (inputFile, progress, cancel) => ReencodeFile(inputFile, progress, cancel, result.InputCodePage, result.OutputCodePage));
 
 		FilesOperationsSplitFileDialog.Result Command_Files_Operations_SplitFile_Dialog()
 		{
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return FilesOperationsSplitFileDialog.Run(WindowParent, variables);
+			return FilesOperationsSplitFileDialog.Run(TabsParent, variables);
 		}
 
 		void Command_Files_Operations_SplitFile(FilesOperationsSplitFileDialog.Result result)
@@ -930,10 +930,10 @@ namespace NeoEdit.Program
 			var files = RelativeSelectedFiles();
 			var outputTemplates = new NEExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
 			var chunkSizes = new NEExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
-			MultiProgressDialog.RunAsync(WindowParent, "Splitting files...", Enumerable.Range(0, Selections.Count), (index, progress, cancel) => SplitFileAsync(files[index], outputTemplates[index], chunkSizes[index], progress, cancel), index => Path.GetFileName(files[index]));
+			MultiProgressDialog.RunAsync(TabsParent, "Splitting files...", Enumerable.Range(0, Selections.Count), (index, progress, cancel) => SplitFileAsync(files[index], outputTemplates[index], chunkSizes[index], progress, cancel), index => Path.GetFileName(files[index]));
 		}
 
-		FilesOperationsCombineFilesDialog.Result Command_Files_Operations_CombineFiles_Dialog() => FilesOperationsCombineFilesDialog.Run(WindowParent, GetVariables());
+		FilesOperationsCombineFilesDialog.Result Command_Files_Operations_CombineFiles_Dialog() => FilesOperationsCombineFilesDialog.Run(TabsParent, GetVariables());
 
 		void Command_Files_Operations_CombineFiles(FilesOperationsCombineFilesDialog.Result result)
 		{
@@ -963,7 +963,7 @@ namespace NeoEdit.Program
 				inputs[current].Add(inputFile);
 			}
 
-			MultiProgressDialog.RunAsync(WindowParent, "Combining files...", Enumerable.Range(0, outputFiles.Count), (index, progress, cancel) => CombineFilesAsync(outputFiles[index], inputs[index], progress, cancel), index => Path.GetFileName(outputFiles[index]));
+			MultiProgressDialog.RunAsync(TabsParent, "Combining files...", Enumerable.Range(0, outputFiles.Count), (index, progress, cancel) => CombineFilesAsync(outputFiles[index], inputs[index], progress, cancel), index => Path.GetFileName(outputFiles[index]));
 		}
 	}
 }

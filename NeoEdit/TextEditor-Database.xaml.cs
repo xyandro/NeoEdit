@@ -50,7 +50,7 @@ namespace NeoEdit.Program
 				throw new Exception("No connection.");
 		}
 
-		DatabaseConnectDialog.Result Command_Database_Connect_Dialog() => DatabaseConnectDialog.Run(WindowParent);
+		DatabaseConnectDialog.Result Command_Database_Connect_Dialog() => DatabaseConnectDialog.Run(TabsParent);
 
 		void Command_Database_Connect(DatabaseConnectDialog.Result result)
 		{
@@ -88,7 +88,7 @@ namespace NeoEdit.Program
 		void Command_Database_Examine_Dialog()
 		{
 			ValidateConnection();
-			DatabaseExamineDialog.Run(WindowParent, dbConnection);
+			DatabaseExamineDialog.Run(TabsParent, dbConnection);
 		}
 
 		void Command_Database_GetSproc()

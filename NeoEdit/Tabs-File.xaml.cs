@@ -67,7 +67,7 @@ namespace NeoEdit.Program
 		{
 			var files = NEClipboard.Current.Strings;
 
-			if ((files.Count > 5) && (!new Message(WindowParent)
+			if ((files.Count > 5) && (!new Message(this)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to open these {files.Count} files?",

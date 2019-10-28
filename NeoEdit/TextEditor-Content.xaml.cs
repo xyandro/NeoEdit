@@ -112,15 +112,15 @@ namespace NeoEdit.Program
 
 		void Command_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
 
-		ContentAttributeDialog.Result Command_Content_Ancestor_Dialog() => ContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
+		ContentAttributeDialog.Result Command_Content_Ancestor_Dialog() => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
 
 		void Command_Content_Ancestor(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		ContentAttributesDialog.Result Command_Content_Attributes_Dialog() => ContentAttributesDialog.Run(WindowParent, GetSelectionNodes());
+		ContentAttributesDialog.Result Command_Content_Attributes_Dialog() => ContentAttributesDialog.Run(TabsParent, GetSelectionNodes());
 
 		void Command_Content_Attributes(ContentAttributesDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 
-		ContentAttributeDialog.Result Command_Content_WithAttribute_Dialog() => ContentAttributeDialog.Run(WindowParent, GetSelectionNodes());
+		ContentAttributeDialog.Result Command_Content_WithAttribute_Dialog() => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes());
 
 		void Command_Content_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
@@ -130,7 +130,7 @@ namespace NeoEdit.Program
 
 		void Command_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
 
-		ContentAttributeDialog.Result Command_Content_Children_WithAttribute_Dialog() => ContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
+		ContentAttributeDialog.Result Command_Content_Children_WithAttribute_Dialog() => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
 
 		void Command_Content_Children_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
@@ -140,7 +140,7 @@ namespace NeoEdit.Program
 
 		void Command_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
 
-		ContentAttributeDialog.Result Command_Content_Descendants_WithAttribute_Dialog() => ContentAttributeDialog.Run(WindowParent, GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+		ContentAttributeDialog.Result Command_Content_Descendants_WithAttribute_Dialog() => ContentAttributeDialog.Run(TabsParent, GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
 
 		void Command_Content_Descendants_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 

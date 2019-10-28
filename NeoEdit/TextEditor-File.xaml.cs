@@ -50,7 +50,7 @@ namespace NeoEdit.Program
 				ReplaceSelections(strs);
 		}
 
-		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach((str, index) => TabsParent.Add(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false));
+		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach((Func<string, int, TextEditor>)((str, index) => (TextEditor)this.TabsParent.Add(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false)));
 
 		void Command_File_Open_Selected()
 		{
@@ -69,7 +69,7 @@ namespace NeoEdit.Program
 
 		void Command_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		GetExpressionDialog.Result Command_File_SaveCopy_SaveCopyByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
+		GetExpressionDialog.Result Command_File_SaveCopy_SaveCopyByExpression_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables(), Selections.Count);
 
 		void Command_File_SaveCopy_SaveCopyClipboard(AnswerResult answer, bool copyOnly = false)
 		{
@@ -82,7 +82,7 @@ namespace NeoEdit.Program
 			if (File.Exists(newFileName))
 			{
 				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(WindowParent)
+					answer.Answer = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -108,7 +108,7 @@ namespace NeoEdit.Program
 			if (File.Exists(newFileName))
 			{
 				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(WindowParent)
+					answer.Answer = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -145,7 +145,7 @@ namespace NeoEdit.Program
 			SetFileName(fileName);
 		}
 
-		GetExpressionDialog.Result Command_File_Operations_RenameByExpression_Dialog() => GetExpressionDialog.Run(WindowParent, GetVariables(), Selections.Count);
+		GetExpressionDialog.Result Command_File_Operations_RenameByExpression_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables(), Selections.Count);
 
 		void Command_File_Operations_RenameClipboard(AnswerResult answer)
 		{
@@ -158,7 +158,7 @@ namespace NeoEdit.Program
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
 				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(WindowParent)
+					answer.Answer = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -190,7 +190,7 @@ namespace NeoEdit.Program
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
 				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(WindowParent)
+					answer.Answer = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -217,7 +217,7 @@ namespace NeoEdit.Program
 				return;
 
 			if (!answer.Answer.HasFlag(MessageOptions.All))
-				answer.Answer = new Message(WindowParent)
+				answer.Answer = new Message(TabsParent)
 				{
 					Title = "Confirm",
 					Text = "Are you sure you want to delete this file?",
@@ -281,7 +281,7 @@ namespace NeoEdit.Program
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
 				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(WindowParent)
+					answer.Answer = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "This file has been updated on disk. Reload?",
@@ -304,7 +304,7 @@ namespace NeoEdit.Program
 			if (IsModified)
 			{
 				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(WindowParent)
+					answer.Answer = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes. Are you sure you want to reload?",
@@ -333,7 +333,7 @@ namespace NeoEdit.Program
 		{
 			if (Selections.Count != 1)
 			{
-				new Message(WindowParent)
+				new Message(TabsParent)
 				{
 					Title = "Error",
 					Text = "Must have one selection.",
@@ -351,7 +351,7 @@ namespace NeoEdit.Program
 		{
 			if (Selections.Count != 1)
 			{
-				new Message(WindowParent)
+				new Message(TabsParent)
 				{
 					Title = "Error",
 					Text = "Must have one selection.",
@@ -364,7 +364,7 @@ namespace NeoEdit.Program
 			if (files.Count == 0)
 				return;
 
-			if ((files.Count > 5) && (!new Message(WindowParent)
+			if ((files.Count > 5) && (!new Message(TabsParent)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to insert these {files.Count} files?",
@@ -379,18 +379,18 @@ namespace NeoEdit.Program
 
 		void Command_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
 
-		EncodingDialog.Result Command_File_Encoding_Encoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage);
+		EncodingDialog.Result Command_File_Encoding_Encoding_Dialog() => EncodingDialog.Run(TabsParent, CodePage);
 
 		void Command_File_Encoding_Encoding(EncodingDialog.Result result) => CodePage = result.CodePage;
 
-		EncodingDialog.Result Command_File_Encoding_ReopenWithEncoding_Dialog() => EncodingDialog.Run(WindowParent, CodePage);
+		EncodingDialog.Result Command_File_Encoding_ReopenWithEncoding_Dialog() => EncodingDialog.Run(TabsParent, CodePage);
 
 		void Command_File_Encoding_ReopenWithEncoding(EncodingDialog.Result result, AnswerResult answer)
 		{
 			if (IsModified)
 			{
 				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(WindowParent)
+					answer.Answer = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes. Are you sure you want to reload?",
@@ -405,7 +405,7 @@ namespace NeoEdit.Program
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		FileEncodingLineEndingsDialog.Result Command_File_Encoding_LineEndings_Dialog() => FileEncodingLineEndingsDialog.Run(WindowParent, LineEnding ?? "");
+		FileEncodingLineEndingsDialog.Result Command_File_Encoding_LineEndings_Dialog() => FileEncodingLineEndingsDialog.Run(TabsParent, LineEnding ?? "");
 
 		void Command_File_Encoding_LineEndings(FileEncodingLineEndingsDialog.Result result)
 		{
@@ -427,7 +427,7 @@ namespace NeoEdit.Program
 			if (multiStatus != false)
 				return "";
 
-			return FileSaver.GetKey(WindowParent, true);
+			return FileSaver.GetKey(TabsParent, true);
 		}
 
 		void Command_File_Encrypt(string result) => AESKey = result == "" ? null : result;

@@ -98,7 +98,6 @@ namespace NeoEdit.Program
 		public string ViewValuesFindValue { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		public Tabs TabsParent { get; set; }
-		public Window WindowParent => TabsParent as Window;
 
 		public bool CanClose() => CanClose(new AnswerResult());
 
@@ -416,7 +415,7 @@ namespace NeoEdit.Program
 				return true;
 
 			if (!answer.Answer.HasFlag(MessageOptions.All))
-				answer.Answer = new Message(WindowParent)
+				answer.Answer = new Message(TabsParent)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -455,7 +454,7 @@ namespace NeoEdit.Program
 
 		bool ConfirmContinueWhenCannotEncode()
 		{
-			return new Message(WindowParent)
+			return new Message(TabsParent)
 			{
 				Title = "Confirm",
 				Text = "The specified encoding cannot fully represent the data. Continue anyway?",
@@ -1345,7 +1344,7 @@ namespace NeoEdit.Program
 			if ((command != NECommand.Macro_TimeNextAction) && (timeNext))
 			{
 				timeNext = false;
-				new Message(WindowParent)
+				new Message(TabsParent)
 				{
 					Title = "Timer",
 					Text = $"Elapsed time: {elapsed:n} ms",
@@ -2074,7 +2073,7 @@ namespace NeoEdit.Program
 					bytes = File.ReadAllBytes(FileName);
 			}
 
-			FileSaver.HandleDecrypt(WindowParent, ref bytes, out var aesKey);
+			FileSaver.HandleDecrypt(TabsParent, ref bytes, out var aesKey);
 			AESKey = aesKey;
 
 			bytes = FileSaver.Decompress(bytes, out var compressed);
@@ -2201,7 +2200,7 @@ namespace NeoEdit.Program
 					if ((triedReadOnly) || (!new FileInfo(fileName).IsReadOnly))
 						throw;
 
-					if (!new Message(WindowParent)
+					if (!new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "Save failed. Remove read-only flag?",
@@ -2323,7 +2322,7 @@ namespace NeoEdit.Program
 			if (Data.CanEncode(CodePage))
 				return true;
 
-			var answer = new Message(WindowParent)
+			var answer = new Message(TabsParent)
 			{
 				Title = "Confirm",
 				Text = "The current encoding cannot fully represent this data. Switch to UTF-8?",
