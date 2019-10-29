@@ -94,6 +94,7 @@ namespace NeoEdit.Program.WCF
 					Name = endpoint.Binding.Name,
 					CloseTimeout = TimeSpan.FromSeconds(120),
 					Namespace = endpoint.Binding.Namespace,
+					SendTimeout = TimeSpan.FromSeconds(10),
 				};
 
 				if (endpoint.Binding.Scheme == Uri.UriSchemeHttps)
@@ -114,6 +115,7 @@ namespace NeoEdit.Program.WCF
 					Name = endpoint.Binding.Name,
 					CloseTimeout = TimeSpan.FromSeconds(120),
 					Namespace = endpoint.Binding.Namespace,
+					SendTimeout = TimeSpan.FromSeconds(10),
 				};
 
 				if (endpoint.Binding.Scheme == Uri.UriSchemeHttps)
