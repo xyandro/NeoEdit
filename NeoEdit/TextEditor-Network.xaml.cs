@@ -11,7 +11,6 @@ using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
-using NeoEdit.Program.WCF;
 
 namespace NeoEdit.Program
 {
@@ -226,11 +225,11 @@ namespace NeoEdit.Program
 			if (Selections.Count != 1)
 				throw new Exception("Must have single selection.");
 
-			ReplaceSelections(WCFOperations.GetWCFConfig(result.URL));
+			ReplaceSelections(WCFClient.GetWCFConfig(result.URL));
 		}
 
-		void Command_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFOperations.ExecuteWCF(GetString(range))).ToList());
+		void Command_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFClient.ExecuteWCF(GetString(range))).ToList());
 
-		void Command_Network_WCF_ResetClients() => WCFOperations.ResetClients();
+		void Command_Network_WCF_ResetClients() => WCFClient.ResetClients();
 	}
 }

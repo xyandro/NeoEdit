@@ -1172,8 +1172,7 @@
     <Compile Include="Transform\Versioner.cs" />
     <Compile Include="Transform\XMLConverter.cs" />
     <Compile Include="UndoRedo.cs" />
-    <Compile Include="WCF\WCFClient.cs" />
-    <Compile Include="WCF\WCFOperations.cs" />
+    <Compile Include="WCFClient.cs" />
     <Resource Include="Words.txt" />
     <EmbeddedResource Include="Words.txt.gz" />
     <Compile Include="YouTubeDL.cs" />
