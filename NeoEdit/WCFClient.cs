@@ -683,7 +683,7 @@ namespace NeoEdit.WCFInterceptor
 
 			var type = obj.GetType();
 
-			if (labelTypeObjects.Contains(obj))
+			if ((showType == typeof(object)) && (labelTypeObjects.Contains(obj)))
 			{
 				labelTypes = true;
 				showType = type;
