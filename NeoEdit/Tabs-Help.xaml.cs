@@ -78,8 +78,8 @@ namespace NeoEdit.Program
 
 			File.WriteAllBytes(newLocation, result);
 
-			Message.Show("The program will be updated after exiting.");
 			Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
+			Message.Show("The program will be updated after exiting.");
 		}
 
 		static public void Command_Help_RunGC() => GC.Collect();
