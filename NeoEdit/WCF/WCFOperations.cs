@@ -150,55 +150,63 @@ namespace NeoEdit.Program.WCF
 
 		string DoGetWCFConfig(string serviceURL)
 		{
-			var wcfClient = GetWCFClient(serviceURL);
+			try
+			{
+				var wcfClient = GetWCFClient(serviceURL);
 
-			var wcfConfig = new WCFConfig();
-			foreach (var contract in wcfClient.Contracts)
-				using (var instance = wcfClient.CreateInstance(contract.Name, contract.Namespace) as IDisposable)
-					foreach (var operation in contract.Operations)
-					{
-						var wcfOperation = new WCFOperation { Operation = operation.Name, ServiceURL = serviceURL, Contract = contract.Name };
-						foreach (var parameter in instance.GetType().GetMethod(operation.Name).GetParameters())
-							wcfOperation.Parameters[parameter.Name] = CreateWCFDefaultObject(parameter.ParameterType);
-						wcfConfig.Operations.Add(wcfOperation);
-					}
-			wcfConfig.Config = wcfClient.Config;
+				var wcfConfig = new WCFConfig();
+				foreach (var contract in wcfClient.Contracts)
+					using (var instance = wcfClient.CreateInstance(contract.Name, contract.Namespace) as IDisposable)
+						foreach (var operation in contract.Operations)
+						{
+							var wcfOperation = new WCFOperation { Operation = operation.Name, ServiceURL = serviceURL, Contract = contract.Name };
+							foreach (var parameter in instance.GetType().GetMethod(operation.Name).GetParameters())
+								wcfOperation.Parameters[parameter.Name] = CreateWCFDefaultObject(parameter.ParameterType);
+							wcfConfig.Operations.Add(wcfOperation);
+						}
+				wcfConfig.Config = wcfClient.Config;
 
-			return ToJSON(wcfConfig, new HashSet<object>(wcfConfig.Operations.SelectMany(c => c.Parameters.Values)));
+				return ToJSON(wcfConfig, new HashSet<object>(wcfConfig.Operations.SelectMany(c => c.Parameters.Values)));
+			}
+			catch (Exception ex) { throw new Exception(ex.Message); }
 		}
 
 		string DoExecuteWCF(string str)
 		{
-			str = Regex.Replace(str, @"/\*.*?\*/", "", RegexOptions.Singleline | RegexOptions.Multiline);
-			var wcfOperation = JsonConvert.DeserializeObject<WCFOperation>(str);
-
-			var wcfClient = GetWCFClient(wcfOperation.ServiceURL);
-
-			var contract = wcfClient.Contracts.FirstOrDefault(x => x.Name == wcfOperation.Contract);
-			if (contract == null)
-				throw new Exception($"Contract not found: {wcfOperation.Contract}");
-
-			var operation = contract.Operations.FirstOrDefault(x => x.Name == wcfOperation.Operation);
-			if (operation == null)
-				throw new Exception($"Operation not found: {wcfOperation.Operation}");
-
-			using (var instance = wcfClient.CreateInstance(contract.Name, contract.Namespace) as IDisposable)
+			try
 			{
-				var method = instance.GetType().GetMethod(operation.Name);
-				var parameters = new List<object>();
-				foreach (var parameter in method.GetParameters())
+				str = Regex.Replace(str, @"/\*.*?\*/", "", RegexOptions.Singleline | RegexOptions.Multiline);
+				var wcfOperation = JsonConvert.DeserializeObject<WCFOperation>(str);
+
+				var wcfClient = GetWCFClient(wcfOperation.ServiceURL);
+
+				var contract = wcfClient.Contracts.FirstOrDefault(x => x.Name == wcfOperation.Contract);
+				if (contract == null)
+					throw new Exception($"Contract not found: {wcfOperation.Contract}");
+
+				var operation = contract.Operations.FirstOrDefault(x => x.Name == wcfOperation.Operation);
+				if (operation == null)
+					throw new Exception($"Operation not found: {wcfOperation.Operation}");
+
+				using (var instance = wcfClient.CreateInstance(contract.Name, contract.Namespace) as IDisposable)
 				{
-					if (!wcfOperation.Parameters.ContainsKey(parameter.Name))
-						throw new Exception($"Missing parameter: {parameter.Name}");
-					var param = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(wcfOperation.Parameters[parameter.Name]), parameter.ParameterType);
-					wcfOperation.Parameters[parameter.Name] = param;
-					parameters.Add(param);
+					var method = instance.GetType().GetMethod(operation.Name);
+					var parameters = new List<object>();
+					foreach (var parameter in method.GetParameters())
+					{
+						if (!wcfOperation.Parameters.ContainsKey(parameter.Name))
+							throw new Exception($"Missing parameter: {parameter.Name}");
+						var param = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(wcfOperation.Parameters[parameter.Name]), parameter.ParameterType);
+						wcfOperation.Parameters[parameter.Name] = param;
+						parameters.Add(param);
+					}
+
+					wcfOperation.Result = method.Invoke(instance, parameters.ToArray());
 				}
 
-				wcfOperation.Result = method.Invoke(instance, parameters.ToArray());
+				return ToJSON(wcfOperation, new HashSet<object>(wcfOperation.Parameters.Values));
 			}
-
-			return ToJSON(wcfOperation, new HashSet<object>(wcfOperation.Parameters.Values));
+			catch (Exception ex) { throw new Exception(ex.Message); }
 		}
 
 		static string GetTypeName(Type type)
