@@ -719,6 +719,13 @@
     <Compile Include="Dialogs\NetworkWCFGetConfig.xaml.cs">
       <DependentUpon>NetworkWCFGetConfig.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\NetworkWCFInterceptCallDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\NetworkWCFInterceptCallDialog.xaml.cs">
+      <DependentUpon>NetworkWCFInterceptCallDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\NumericCombinationsPermutationsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -949,6 +956,13 @@
     </Page>
     <Compile Include="Dialogs\ViewValuesStringsDialog.xaml.cs">
       <DependentUpon>ViewValuesStringsDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\WCFInterceptDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\WCFInterceptDialog.xaml.cs">
+      <DependentUpon>WCFInterceptDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\WindowActiveTabsDialog.cs" />
     <Page Include="Dialogs\WindowCustomGridDialog.xaml">

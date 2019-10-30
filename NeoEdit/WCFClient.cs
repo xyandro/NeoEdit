@@ -21,6 +21,7 @@ using System.Web.Services.Discovery;
 using System.Xml;
 using System.Xml.Schema;
 using Microsoft.CSharp;
+using NeoEdit.Program.Dialogs;
 using Newtonsoft.Json;
 using ServiceDescription = System.Web.Services.Description.ServiceDescription;
 
@@ -39,7 +40,7 @@ namespace NeoEdit.Program
 			public string Operation { get; set; }
 			public string ServiceURL { get; set; }
 			public string Contract { get; set; }
-			public Dictionary<string, object> Parameters { get; } = new Dictionary<string, object>();
+			public Dictionary<string, object> Parameters { get; set; } = new Dictionary<string, object>();
 			public object Result { get; set; }
 		}
 
@@ -66,6 +67,8 @@ namespace NeoEdit.Program
 
 			return wcfClients[serviceURL];
 		}
+
+		static public string InterceptCall(string serviceURL, string interceptURL) => GetWCFClient(serviceURL).DoInterceptCall(interceptURL);
 
 		static public void ResetClients()
 		{
@@ -338,6 +341,102 @@ namespace NeoEdit.Program
 			}
 		}
 
+		void AddInterceptor(StringWriter writer)
+		{
+			writer.Write($@"
+namespace NeoEditInterceptor
+{{
+	using System;
+	using System.Collections.Generic;
+	using System.ServiceModel;
+	using System.ServiceModel.Description;
+
+");
+
+			var className = "";
+			foreach (CodeNamespace ns in codeCompileUnit.Namespaces)
+				foreach (CodeTypeDeclaration codeType in ns.Types)
+				{
+					if (!codeType.CustomAttributes.OfType<CodeAttributeDeclaration>().Any(codeAttribute => codeAttribute.Name == typeof(ServiceContractAttribute).FullName))
+						continue;
+
+					className = codeType.Name;
+					writer.Write($@"
+	[ServiceContract]
+	public class {className}
+	{{
+");
+					foreach (CodeTypeMember codeTypeMember in codeType.Members)
+						if (codeTypeMember is CodeMemberMethod codeMemberMethod)
+						{
+							if (!codeMemberMethod.CustomAttributes.OfType<CodeAttributeDeclaration>().Any(codeAttribute => codeAttribute.Name == typeof(OperationContractAttribute).FullName))
+								continue;
+
+							var returnType = codeMemberMethod.ReturnType.BaseType;
+							if (returnType == typeof(void).FullName)
+								returnType = "void";
+
+							writer.Write($@"
+		[OperationContract]
+		public {returnType} {codeMemberMethod.Name}({string.Join(", ", codeMemberMethod.Parameters.OfType<CodeParameterDeclarationExpression>().Select(param => $"{param.Type.BaseType} {param.Name}"))})
+		{{
+			Interceptor.CurInterceptor.SetResult(""{codeMemberMethod.Name}"", ""{className}"", new Dictionary<string, object> {{ {string.Join(", ", codeMemberMethod.Parameters.OfType<CodeParameterDeclarationExpression>().Select(param => $@"{{ ""{param.Name}"", {param.Name} }}"))} }});
+			throw new Exception();
+		}}
+");
+						}
+
+					writer.Write($@"
+	}}
+");
+				}
+
+			writer.Write($@"
+	public class Interceptor
+	{{
+		static public Interceptor CurInterceptor {{ get; set; }}
+
+		public bool HasResult {{ get; private set; }}
+		public string Operation {{ get; private set; }}
+		public string Contract {{ get; private set; }}
+		public Dictionary<string, object> Parameters {{ get; private set; }}
+
+		Action finished;
+		ServiceHost host;
+
+		public Interceptor()
+		{{
+			CurInterceptor = this;
+		}}
+
+		public void Start(string uri, Action finished)
+		{{
+			this.finished = finished;
+			host = new ServiceHost(typeof({className}), new Uri(uri));
+			var smb = new ServiceMetadataBehavior {{ HttpGetEnabled = true }};
+			smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
+			host.Description.Behaviors.Add(smb);
+			host.Open();
+		}}
+
+		public void End()
+		{{
+			host.Close();
+		}}
+
+		public void SetResult(string operation, string contract, Dictionary<string, object> parameters)
+		{{
+			HasResult = true;
+			Operation = operation;
+			Contract = contract;
+			Parameters = parameters;
+			finished();
+		}}
+	}}
+}}
+");
+		}
+
 		void CompileProxyAssembly()
 		{
 			RemoveDuplicateTypes();
@@ -346,6 +445,7 @@ namespace NeoEdit.Program
 			using (var writer = new StringWriter())
 			{
 				codeDomProvider.GenerateCodeFromCompileUnit(codeCompileUnit, writer, new CodeGeneratorOptions { BracingStyle = "C" });
+				AddInterceptor(writer);
 				writer.Flush();
 				proxyCode = writer.ToString();
 			}
@@ -637,6 +737,27 @@ namespace NeoEdit.Program
 				sb.Append("}");
 				return;
 			}
+		}
+
+		string DoInterceptCall(string interceptURL)
+		{
+			try
+			{
+				dynamic interceptor = Activator.CreateInstance(compiledAssembly.GetType("NeoEditInterceptor.Interceptor"));
+				WCFInterceptDialog.Run(finished => interceptor.Start(interceptURL, finished), () => interceptor.End());
+				if (!interceptor.HasResult)
+					return null;
+
+				var wcfOperation = new WCFOperation
+				{
+					Operation = interceptor.Operation,
+					ServiceURL = ServiceURL,
+					Contract = interceptor.Contract,
+					Parameters = interceptor.Parameters,
+				};
+				return ToJSON(wcfOperation, new HashSet<object>(wcfOperation.Parameters.Values));
+			}
+			catch (Exception ex) { throw new Exception(ex.Message); }
 		}
 	}
 }

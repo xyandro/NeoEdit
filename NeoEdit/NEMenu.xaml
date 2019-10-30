@@ -611,6 +611,8 @@
 			<controls:NEMenuItem Header="Get _Config" CommandEnum="Network_WCF_GetConfig"/>
 			<controls:NEMenuItem Header="_Execute" CommandEnum="Network_WCF_Execute"/>
 			<Separator/>
+			<controls:NEMenuItem Header="_Intercept Call" CommandEnum="Network_WCF_InterceptCall"/>
+			<Separator/>
 			<controls:NEMenuItem Header="_Reset Clients" CommandEnum="Network_WCF_ResetClients"/>
 		</MenuItem>
 	</MenuItem>
