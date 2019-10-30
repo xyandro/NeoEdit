@@ -49,7 +49,7 @@ namespace NeoEdit.Program
 		readonly HashSet<TextEditor> activeWindows = new HashSet<TextEditor>();
 		public IReadOnlyList<TextEditor> ActiveWindows => Windows.Where(te => activeWindows.Contains(te)).ToList();
 
-		readonly RunOnceTimer layoutTimer, topMostTimer, addedWindowTimer;
+		readonly RunOnceTimer layoutTimer, addedWindowTimer;
 
 		Action<TextEditor> ShowTextEditor;
 		int addedCounter = 0, lastAddedCounter = -1, textEditorOrder = 0;
@@ -76,8 +76,6 @@ namespace NeoEdit.Program
 		public Tabs(bool addEmpty = false)
 		{
 			layoutTimer = new RunOnceTimer(DoLayout);
-			topMostTimer = new RunOnceTimer(ShowFocused);
-			topMostTimer.AddDependency(layoutTimer);
 			addedWindowTimer = new RunOnceTimer(() => ++addedCounter);
 
 			Rows = Columns = 1;
@@ -551,7 +549,6 @@ namespace NeoEdit.Program
 			Rows = rows;
 			MaxColumns = maxColumns;
 			MaxRows = maxRows;
-			topMostTimer.Start();
 		}
 
 		public void AddTextEditor(TextEditor textEditor, int? index = null, bool canReplace = true)
