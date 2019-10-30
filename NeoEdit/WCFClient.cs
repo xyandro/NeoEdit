@@ -60,6 +60,7 @@ namespace NeoEdit.Program
 				}
 				catch
 				{
+					wcfClients.Remove(serviceURL);
 					AppDomain.Unload(appDomain);
 					throw;
 				}

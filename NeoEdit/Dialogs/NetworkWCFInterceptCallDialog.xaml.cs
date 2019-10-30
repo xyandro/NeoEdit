@@ -21,7 +21,8 @@ namespace NeoEdit.Program.Dialogs
 		NetworkWCFInterceptCallDialog()
 		{
 			InitializeComponent();
-			WCFURL = InterceptURL = "";
+			WCFURL = wcfURL.GetLastSuggestion();
+			InterceptURL = interceptURL.GetLastSuggestion();
 		}
 
 		Result result;
@@ -29,6 +30,8 @@ namespace NeoEdit.Program.Dialogs
 		{
 			result = new Result { WCFURL = WCFURL, InterceptURL = InterceptURL };
 			DialogResult = true;
+			wcfURL.AddCurrentSuggestion();
+			interceptURL.AddCurrentSuggestion();
 		}
 
 		static public Result Run(Window parent)

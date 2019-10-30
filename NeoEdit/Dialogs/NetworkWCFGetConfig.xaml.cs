@@ -18,7 +18,7 @@ namespace NeoEdit.Program.Dialogs
 		NetworkWCFGetConfig()
 		{
 			InitializeComponent();
-			URL = "";
+			URL = url.GetLastSuggestion();
 		}
 
 		Result result;
@@ -26,6 +26,7 @@ namespace NeoEdit.Program.Dialogs
 		{
 			result = new Result { URL = URL };
 			DialogResult = true;
+			url.AddCurrentSuggestion();
 		}
 
 		static public Result Run(Window parent)

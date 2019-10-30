@@ -16,7 +16,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_URL:" Target="{Binding ElementName=url}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Name="url" Text="{Binding URL, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="url" Text="{Binding URL, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="NetworkWCFGetConfigURL"/>
 
 		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
