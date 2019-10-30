@@ -230,16 +230,27 @@ namespace NeoEdit.Program
 
 		void Command_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFClient.ExecuteWCF(GetString(range))).ToList());
 
-		NetworkWCFInterceptCallDialog.Result Command_Network_WCF_InterceptCall_Dialog() => NetworkWCFInterceptCallDialog.Run(TabsParent);
+		NetworkWCFInterceptCallsDialog.Result Command_Network_WCF_InterceptCalls_Dialog() => NetworkWCFInterceptCallsDialog.Run(TabsParent);
 
-		void Command_Network_WCF_InterceptCall(NetworkWCFInterceptCallDialog.Result result)
+		void Command_Network_WCF_InterceptCalls(NetworkWCFInterceptCallsDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have single selection.");
 
-			var value = WCFClient.InterceptCall(result.WCFURL, result.InterceptURL);
-			if (value != null)
-				ReplaceSelections(value);
+			var values = WCFClient.InterceptCalls(result.WCFURL, result.InterceptURL);
+			if (!values.Any())
+				return;
+
+			var startSel = Selections[0].Start;
+			ReplaceSelections(string.Join("", values));
+			var sels = new List<Range>();
+			foreach (var value in values)
+			{
+				var endSel = startSel + value.Length;
+				sels.Add(new Range(endSel, startSel));
+				startSel = endSel;
+			}
+			SetSelections(sels);
 		}
 
 		void Command_Network_WCF_ResetClients() => WCFClient.ResetClients();

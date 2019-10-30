@@ -719,12 +719,12 @@
     <Compile Include="Dialogs\NetworkWCFGetConfig.xaml.cs">
       <DependentUpon>NetworkWCFGetConfig.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\NetworkWCFInterceptCallDialog.xaml">
+    <Page Include="Dialogs\NetworkWCFInterceptCallsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\NetworkWCFInterceptCallDialog.xaml.cs">
-      <DependentUpon>NetworkWCFInterceptCallDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\NetworkWCFInterceptCallsDialog.xaml.cs">
+      <DependentUpon>NetworkWCFInterceptCallsDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\NumericCombinationsPermutationsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -1,33 +1,30 @@
-﻿using System;
-using System.Windows.Threading;
+﻿using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class WCFInterceptDialog
 	{
-		Action end;
+		[DepProp]
+		int CallCount { get { return UIHelper<WCFInterceptDialog>.GetPropValue<int>(this); } set { UIHelper<WCFInterceptDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		string LastCall { get { return UIHelper<WCFInterceptDialog>.GetPropValue<string>(this); } set { UIHelper<WCFInterceptDialog>.SetPropValue(this, value); } }
 
-		WCFInterceptDialog(Action<Action> start, Action end)
+		static WCFInterceptDialog() => UIHelper<WCFInterceptDialog>.Register();
+
+		public WCFInterceptDialog()
 		{
 			InitializeComponent();
-			try
-			{
-				start(() => Dispatcher.BeginInvoke((Action)Close, DispatcherPriority.ApplicationIdle));
-				this.end = end;
-			}
-			catch
-			{
-				Close();
-				throw;
-			}
+			CallCount = 0;
+			LastCall = "None";
 		}
 
-		protected override void OnClosed(EventArgs e)
+		public void AddCall(string call)
 		{
-			base.OnClosed(e);
-			end?.Invoke();
+			Dispatcher.Invoke(() =>
+			{
+				++CallCount;
+				LastCall = call;
+			});
 		}
-
-		public static void Run(Action<Action> start, Action end) => new WCFInterceptDialog(start, end).ShowDialog();
 	}
 }

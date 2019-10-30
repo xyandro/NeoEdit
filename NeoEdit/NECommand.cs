@@ -373,7 +373,7 @@ namespace NeoEdit.Program
 		Network_ScanPorts,
 		Network_WCF_GetConfig,
 		[KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift)] Network_WCF_Execute,
-		Network_WCF_InterceptCall,
+		Network_WCF_InterceptCalls,
 		Network_WCF_ResetClients,
 		Database_Connect,
 		[KeyGesture(Key.Q, ModifierKeys.Control)] Database_ExecuteQuery,

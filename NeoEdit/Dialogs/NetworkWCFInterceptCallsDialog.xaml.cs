@@ -3,7 +3,7 @@ using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
 {
-	partial class NetworkWCFInterceptCallDialog
+	partial class NetworkWCFInterceptCallsDialog
 	{
 		public class Result
 		{
@@ -12,13 +12,13 @@ namespace NeoEdit.Program.Dialogs
 		}
 
 		[DepProp]
-		public string WCFURL { get { return UIHelper<NetworkWCFInterceptCallDialog>.GetPropValue<string>(this); } set { UIHelper<NetworkWCFInterceptCallDialog>.SetPropValue(this, value); } }
+		public string WCFURL { get { return UIHelper<NetworkWCFInterceptCallsDialog>.GetPropValue<string>(this); } set { UIHelper<NetworkWCFInterceptCallsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string InterceptURL { get { return UIHelper<NetworkWCFInterceptCallDialog>.GetPropValue<string>(this); } set { UIHelper<NetworkWCFInterceptCallDialog>.SetPropValue(this, value); } }
+		public string InterceptURL { get { return UIHelper<NetworkWCFInterceptCallsDialog>.GetPropValue<string>(this); } set { UIHelper<NetworkWCFInterceptCallsDialog>.SetPropValue(this, value); } }
 
-		static NetworkWCFInterceptCallDialog() { UIHelper<NetworkWCFInterceptCallDialog>.Register(); }
+		static NetworkWCFInterceptCallsDialog() { UIHelper<NetworkWCFInterceptCallsDialog>.Register(); }
 
-		NetworkWCFInterceptCallDialog()
+		NetworkWCFInterceptCallsDialog()
 		{
 			InitializeComponent();
 			WCFURL = wcfURL.GetLastSuggestion();
@@ -36,7 +36,7 @@ namespace NeoEdit.Program.Dialogs
 
 		static public Result Run(Window parent)
 		{
-			var dialog = new NetworkWCFInterceptCallDialog() { Owner = parent };
+			var dialog = new NetworkWCFInterceptCallsDialog() { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

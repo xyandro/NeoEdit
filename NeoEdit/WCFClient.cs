@@ -70,7 +70,7 @@ namespace NeoEdit.Program
 			return wcfClients[serviceURL];
 		}
 
-		static public string InterceptCall(string serviceURL, string interceptURL) => GetWCFClient(serviceURL).DoInterceptCall(interceptURL);
+		static public List<string> InterceptCalls(string serviceURL, string interceptURL) => GetWCFClient(serviceURL).DoInterceptCalls(interceptURL);
 
 		static public void ResetClients()
 		{
@@ -408,8 +408,7 @@ namespace NeoEdit.WCFInterceptor
 				writer.Write($@"
 		{tuple.Item1} {tuple.Item2}.{tuple.Item4}.{tuple.Item5.Name}({string.Join(", ", tuple.Item5.Parameters.OfType<CodeParameterDeclarationExpression>().Select(param => $"{param.Type.BaseType} {param.Name}"))})
 		{{
-			Interceptor.CurInterceptor.SetResult(@""{tuple.Item3.Replace(@"""", @"""""")}"", ""{tuple.Item4}"", ""{tuple.Item5.Name}"", new Dictionary<string, object> {{ {string.Join(", ", tuple.Item5.Parameters.OfType<CodeParameterDeclarationExpression>().Select(param => $@"{{ ""{param.Name}"", {param.Name} }}"))} }});
-			throw new Exception();
+			{(tuple.Item1 == "void" ? "" : $"return ({tuple.Item1})")}Interceptor.CurInterceptor.AddCall(@""{tuple.Item3.Replace(@"""", @"""""")}"", ""{tuple.Item4}"", ""{tuple.Item5.Name}"", new Dictionary<string, object> {{ {string.Join(", ", tuple.Item5.Parameters.OfType<CodeParameterDeclarationExpression>().Select(param => $@"{{ ""{param.Name}"", {param.Name} }}"))} }});
 		}}
 ");
 			}
@@ -419,25 +418,33 @@ namespace NeoEdit.WCFInterceptor
 
 	public class Interceptor
 	{{
+		public class Call
+		{{
+			public string Namespace {{ get; set; }}
+			public string Contract {{ get; set; }}
+			public string Operation {{ get; set; }}
+			public Dictionary<string, object> Parameters {{ get; set; }}
+			public object Result {{ get; set; }}
+		}}
+
 		static public Interceptor CurInterceptor {{ get; set; }}
 
-		public bool HasResult {{ get; private set; }}
-		public string Namespace {{ get; private set; }}
-		public string Contract {{ get; private set; }}
-		public string Operation {{ get; private set; }}
-		public Dictionary<string, object> Parameters {{ get; private set; }}
-
-		Action finished;
+		public List<Call> Calls {{ get; private set; }}
+		Func<string, string, string, Dictionary<string, object>, object> getResult;
+		Action<string> addCall;
 		ServiceHost host;
 
 		public Interceptor()
 		{{
 			CurInterceptor = this;
+			Calls = new List<Call>();
 		}}
 
-		public void Start(string uri, Action finished)
+		public void Start(string uri, Func<string, string, string, Dictionary<string, object>, object> getResult, Action<string> addCall)
 		{{
-			this.finished = finished;
+			this.getResult = getResult;
+			this.addCall = addCall;
+
 			host = new ServiceHost(typeof(InterceptorImplementation), new Uri(uri));
 			var smb = new ServiceMetadataBehavior {{ HttpGetEnabled = true }};
 			smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
@@ -450,14 +457,19 @@ namespace NeoEdit.WCFInterceptor
 			host.Close();
 		}}
 
-		public void SetResult(string @namespace, string contract, string operation, Dictionary<string, object> parameters)
+		public object AddCall(string @namespace, string contract, string operation, Dictionary<string, object> parameters)
 		{{
-			HasResult = true;
-			Namespace = @namespace;
-			Contract = contract;
-			Operation = operation;
-			Parameters = parameters;
-			finished();
+			addCall(operation);
+			var result = getResult(@namespace, contract, operation, parameters);
+			Calls.Add(new Call
+			{{
+				Namespace = @namespace,
+				Contract = contract,
+				Operation = operation,
+				Parameters = parameters,
+				Result = result,
+			}});
+			return result;
 		}}
 	}}
 }}
@@ -582,14 +594,23 @@ namespace NeoEdit.WCFInterceptor
 			try
 			{
 				var wcfOperation = JsonConvert.DeserializeObject<WCFOperation>(str);
+				wcfOperation.Result = DoExecuteWCF(wcfOperation.Namespace, wcfOperation.Contract, wcfOperation.Operation, wcfOperation.Parameters);
+				return ToJSON(wcfOperation, new HashSet<object>(wcfOperation.Parameters.Values));
+			}
+			catch (Exception ex) { throw AggregateException(ex); }
+		}
 
-				var contract = Contracts.FirstOrDefault(x => (x.Namespace == wcfOperation.Namespace) && (x.Name == wcfOperation.Contract));
+		object DoExecuteWCF(string namespaceName, string contractName, string operationName, Dictionary<string, object> useParameters)
+		{
+			try
+			{
+				var contract = Contracts.FirstOrDefault(x => (x.Namespace == namespaceName) && (x.Name == contractName));
 				if (contract == null)
-					throw new Exception($"Contract not found: {wcfOperation.Contract}");
+					throw new Exception($"Contract not found: {contractName}");
 
-				var operation = contract.Operations.FirstOrDefault(x => x.Name == wcfOperation.Operation);
+				var operation = contract.Operations.FirstOrDefault(x => x.Name == operationName);
 				if (operation == null)
-					throw new Exception($"Operation not found: {wcfOperation.Operation}");
+					throw new Exception($"Operation not found: {operationName}");
 
 				using (var instance = CreateInstance(contract.Namespace, contract.Name) as IDisposable)
 				{
@@ -597,17 +618,15 @@ namespace NeoEdit.WCFInterceptor
 					var parameters = new List<object>();
 					foreach (var parameter in method.GetParameters())
 					{
-						if (!wcfOperation.Parameters.ContainsKey(parameter.Name))
+						if (!useParameters.ContainsKey(parameter.Name))
 							throw new Exception($"Missing parameter: {parameter.Name}");
-						var param = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(wcfOperation.Parameters[parameter.Name]), parameter.ParameterType);
-						wcfOperation.Parameters[parameter.Name] = param;
+						var param = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(useParameters[parameter.Name]), parameter.ParameterType);
+						useParameters[parameter.Name] = param;
 						parameters.Add(param);
 					}
 
-					wcfOperation.Result = method.Invoke(instance, parameters.ToArray());
+					return method.Invoke(instance, parameters.ToArray());
 				}
-
-				return ToJSON(wcfOperation, new HashSet<object>(wcfOperation.Parameters.Values));
 			}
 			catch (Exception ex) { throw AggregateException(ex); }
 		}
@@ -774,24 +793,31 @@ namespace NeoEdit.WCFInterceptor
 			}
 		}
 
-		string DoInterceptCall(string interceptURL)
+		List<string> DoInterceptCalls(string interceptURL)
 		{
 			try
 			{
+				var dialog = new WCFInterceptDialog();
 				dynamic interceptor = Activator.CreateInstance(compiledAssembly.GetType("NeoEdit.WCFInterceptor.Interceptor"));
-				WCFInterceptDialog.Run(finished => interceptor.Start(interceptURL, finished), () => interceptor.End());
-				if (!interceptor.HasResult)
-					return null;
+				interceptor.Start(interceptURL, (Func<string, string, string, Dictionary<string, object>, object>)DoExecuteWCF, (Action<string>)(call => dialog.AddCall(call)));
+				dialog.ShowDialog();
+				interceptor.End();
 
-				var wcfOperation = new WCFOperation
+				var results = new List<string>();
+				foreach (var call in interceptor.Calls)
 				{
-					ServiceURL = ServiceURL,
-					Namespace = interceptor.Namespace,
-					Contract = interceptor.Contract,
-					Operation = interceptor.Operation,
-					Parameters = interceptor.Parameters,
-				};
-				return ToJSON(wcfOperation, new HashSet<object>(wcfOperation.Parameters.Values));
+					var wcfOperation = new WCFOperation
+					{
+						ServiceURL = ServiceURL,
+						Namespace = call.Namespace,
+						Contract = call.Contract,
+						Operation = call.Operation,
+						Parameters = call.Parameters,
+						Result = call.Result,
+					};
+					results.Add(ToJSON(wcfOperation, new HashSet<object>(wcfOperation.Parameters.Values)));
+				}
+				return results;
 			}
 			catch (Exception ex) { throw AggregateException(ex); }
 		}

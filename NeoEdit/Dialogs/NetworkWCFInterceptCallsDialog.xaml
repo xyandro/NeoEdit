@@ -1,8 +1,8 @@
-﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.Program.Dialogs.NetworkWCFInterceptCallDialog"
-				   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-				   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-				   xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
-				   Title="Intercept WCF Call" SizeToContent="Height" Width="400" FocusManager.FocusedElement="{Binding ElementName=wcfURL}">
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.Program.Dialogs.NetworkWCFInterceptCallsDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
+	Title="Intercept WCF Calls" SizeToContent="Height" Width="400" FocusManager.FocusedElement="{Binding ElementName=wcfURL}">
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
