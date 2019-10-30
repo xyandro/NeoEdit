@@ -37,9 +37,10 @@ namespace NeoEdit.Program
 
 		public class WCFOperation
 		{
-			public string Operation { get; set; }
 			public string ServiceURL { get; set; }
+			public string Namespace { get; set; }
 			public string Contract { get; set; }
+			public string Operation { get; set; }
 			public Dictionary<string, object> Parameters { get; set; } = new Dictionary<string, object>();
 			public object Result { get; set; }
 		}
@@ -109,9 +110,9 @@ namespace NeoEdit.Program
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.Infrastructure)]
 		public override object InitializeLifetimeService() => null;
 
-		public object CreateInstance(string contractName, string contractNamespace)
+		public object CreateInstance(string contractNamespace, string contractName)
 		{
-			var serviceEndpoint = GetServiceEndpoint(contractName, contractNamespace);
+			var serviceEndpoint = GetServiceEndpoint(contractNamespace, contractName);
 			return Activator.CreateInstance(GetProxyType(serviceEndpoint), GetBinding(serviceEndpoint), serviceEndpoint.Address);
 		}
 
@@ -127,8 +128,9 @@ namespace NeoEdit.Program
 				var attribute = type.GetCustomAttribute<ServiceContractAttribute>();
 				if (attribute == null)
 					continue;
-				var contractName = new XmlQualifiedName(attribute.Name ?? type.Name, string.IsNullOrWhiteSpace(attribute.Namespace) ? "http://tempuri.org/" : Uri.EscapeUriString(attribute.Namespace));
-				if ((string.Compare(contractName.Name, serviceEndpoint.Contract.Name, StringComparison.OrdinalIgnoreCase) != 0) || (string.Compare(contractName.Namespace, serviceEndpoint.Contract.Namespace, StringComparison.OrdinalIgnoreCase) != 0))
+				if (string.Compare(string.IsNullOrWhiteSpace(attribute.Namespace) ? "http://tempuri.org/" : attribute.Namespace, serviceEndpoint.Contract.Namespace, StringComparison.OrdinalIgnoreCase) != 0)
+					continue;
+				if (string.Compare(attribute.Name ?? type.Name, serviceEndpoint.Contract.Name, StringComparison.OrdinalIgnoreCase) != 0)
 					continue;
 				serviceContractInterface = type;
 				break;
@@ -142,7 +144,7 @@ namespace NeoEdit.Program
 			return serviceContractType;
 		}
 
-		ServiceEndpoint GetServiceEndpoint(string contractName, string contractNamespace)
+		ServiceEndpoint GetServiceEndpoint(string contractNamespace, string contractName)
 		{
 			var endpoint = Endpoints.FirstOrDefault(ep => (string.Compare(ep.Contract.Name, contractName, StringComparison.OrdinalIgnoreCase) == 0) && (string.Compare(ep.Contract.Namespace, contractNamespace, StringComparison.OrdinalIgnoreCase) == 0));
 			if (endpoint == null)
@@ -344,7 +346,7 @@ namespace NeoEdit.Program
 		void AddInterceptor(StringWriter writer)
 		{
 			writer.Write($@"
-namespace NeoEditInterceptor
+namespace NeoEdit.WCFInterceptor
 {{
 	using System;
 	using System.Collections.Generic;
@@ -353,18 +355,25 @@ namespace NeoEditInterceptor
 
 ");
 
-			var className = "";
+			var namespaceCtr = 0;
+			var tuples = new List<Tuple<string, string, string, string, CodeMemberMethod>>();
 			foreach (CodeNamespace ns in codeCompileUnit.Namespaces)
 				foreach (CodeTypeDeclaration codeType in ns.Types)
 				{
-					if (!codeType.CustomAttributes.OfType<CodeAttributeDeclaration>().Any(codeAttribute => codeAttribute.Name == typeof(ServiceContractAttribute).FullName))
+					var attr = codeType.CustomAttributes.OfType<CodeAttributeDeclaration>().FirstOrDefault(codeAttribute => codeAttribute.Name == typeof(ServiceContractAttribute).FullName);
+					if (attr == null)
 						continue;
 
-					className = codeType.Name;
+					var contractNamespace = attr.Arguments.OfType<CodeAttributeArgument>().Where(x => x.Name == "Namespace").Select(x => x.Value).OfType<CodePrimitiveExpression>().Select(x => x.Value).OfType<string>().DefaultIfEmpty("http://tempuri.org/").First();
+					var contractName = attr.Arguments.OfType<CodeAttributeArgument>().Where(x => x.Name == "Name").Select(x => x.Value).OfType<CodePrimitiveExpression>().Select(x => x.Value).OfType<string>().DefaultIfEmpty(codeType.Name).First();
+					var codeNamespace = $"Interceptor{++namespaceCtr}";
+
 					writer.Write($@"
-	[ServiceContract]
-	public class {className}
+	namespace {codeNamespace}
 	{{
+		[ServiceContract(Namespace = @""{contractNamespace.Replace(@"""", @"""""")}"")]
+		public interface {contractName}
+		{{
 ");
 					foreach (CodeTypeMember codeTypeMember in codeType.Members)
 						if (codeTypeMember is CodeMemberMethod codeMemberMethod)
@@ -377,28 +386,44 @@ namespace NeoEditInterceptor
 								returnType = "void";
 
 							writer.Write($@"
-		[OperationContract]
-		public {returnType} {codeMemberMethod.Name}({string.Join(", ", codeMemberMethod.Parameters.OfType<CodeParameterDeclarationExpression>().Select(param => $"{param.Type.BaseType} {param.Name}"))})
-		{{
-			Interceptor.CurInterceptor.SetResult(""{codeMemberMethod.Name}"", ""{className}"", new Dictionary<string, object> {{ {string.Join(", ", codeMemberMethod.Parameters.OfType<CodeParameterDeclarationExpression>().Select(param => $@"{{ ""{param.Name}"", {param.Name} }}"))} }});
-			throw new Exception();
-		}}
+			[OperationContract] {returnType} {codeMemberMethod.Name}({string.Join(", ", codeMemberMethod.Parameters.OfType<CodeParameterDeclarationExpression>().Select(param => $"{param.Type.BaseType} {param.Name}"))});
 ");
+							tuples.Add(Tuple.Create(returnType, codeNamespace, contractNamespace, contractName, codeMemberMethod));
 						}
 
 					writer.Write($@"
+		}}
 	}}
 ");
 				}
 
 			writer.Write($@"
+	public class InterceptorImplementation : {string.Join(", ", tuples.Select(tuple => $"{tuple.Item2}.{tuple.Item4}").Distinct())}
+	{{
+");
+
+			foreach (var tuple in tuples)
+			{
+				writer.Write($@"
+		{tuple.Item1} {tuple.Item2}.{tuple.Item4}.{tuple.Item5.Name}({string.Join(", ", tuple.Item5.Parameters.OfType<CodeParameterDeclarationExpression>().Select(param => $"{param.Type.BaseType} {param.Name}"))})
+		{{
+			Interceptor.CurInterceptor.SetResult(@""{tuple.Item3.Replace(@"""", @"""""")}"", ""{tuple.Item4}"", ""{tuple.Item5.Name}"", new Dictionary<string, object> {{ {string.Join(", ", tuple.Item5.Parameters.OfType<CodeParameterDeclarationExpression>().Select(param => $@"{{ ""{param.Name}"", {param.Name} }}"))} }});
+			throw new Exception();
+		}}
+");
+			}
+
+			writer.Write($@"
+	}}
+
 	public class Interceptor
 	{{
 		static public Interceptor CurInterceptor {{ get; set; }}
 
 		public bool HasResult {{ get; private set; }}
-		public string Operation {{ get; private set; }}
+		public string Namespace {{ get; private set; }}
 		public string Contract {{ get; private set; }}
+		public string Operation {{ get; private set; }}
 		public Dictionary<string, object> Parameters {{ get; private set; }}
 
 		Action finished;
@@ -412,7 +437,7 @@ namespace NeoEditInterceptor
 		public void Start(string uri, Action finished)
 		{{
 			this.finished = finished;
-			host = new ServiceHost(typeof({className}), new Uri(uri));
+			host = new ServiceHost(typeof(InterceptorImplementation), new Uri(uri));
 			var smb = new ServiceMetadataBehavior {{ HttpGetEnabled = true }};
 			smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
 			host.Description.Behaviors.Add(smb);
@@ -424,11 +449,12 @@ namespace NeoEditInterceptor
 			host.Close();
 		}}
 
-		public void SetResult(string operation, string contract, Dictionary<string, object> parameters)
+		public void SetResult(string @namespace, string contract, string operation, Dictionary<string, object> parameters)
 		{{
 			HasResult = true;
-			Operation = operation;
+			Namespace = @namespace;
 			Contract = contract;
+			Operation = operation;
 			Parameters = parameters;
 			finished();
 		}}
@@ -535,10 +561,10 @@ namespace NeoEditInterceptor
 			{
 				var wcfConfig = new WCFConfig();
 				foreach (var contract in Contracts)
-					using (var instance = CreateInstance(contract.Name, contract.Namespace) as IDisposable)
+					using (var instance = CreateInstance(contract.Namespace, contract.Name) as IDisposable)
 						foreach (var operation in contract.Operations)
 						{
-							var wcfOperation = new WCFOperation { Operation = operation.Name, ServiceURL = ServiceURL, Contract = contract.Name };
+							var wcfOperation = new WCFOperation { ServiceURL = ServiceURL, Namespace = contract.Namespace, Contract = contract.Name, Operation = operation.Name };
 							foreach (var parameter in instance.GetType().GetMethod(operation.Name).GetParameters())
 								wcfOperation.Parameters[parameter.Name] = CreateWCFDefaultObject(parameter.ParameterType);
 							wcfConfig.Operations.Add(wcfOperation);
@@ -547,7 +573,7 @@ namespace NeoEditInterceptor
 
 				return ToJSON(wcfConfig, new HashSet<object>(wcfConfig.Operations.SelectMany(c => c.Parameters.Values)));
 			}
-			catch (Exception ex) { throw new Exception(ex.Message); }
+			catch (Exception ex) { throw AggregateException(ex); }
 		}
 
 		string DoExecuteWCF(string str)
@@ -556,7 +582,7 @@ namespace NeoEditInterceptor
 			{
 				var wcfOperation = JsonConvert.DeserializeObject<WCFOperation>(str);
 
-				var contract = Contracts.FirstOrDefault(x => x.Name == wcfOperation.Contract);
+				var contract = Contracts.FirstOrDefault(x => (x.Namespace == wcfOperation.Namespace) && (x.Name == wcfOperation.Contract));
 				if (contract == null)
 					throw new Exception($"Contract not found: {wcfOperation.Contract}");
 
@@ -564,7 +590,7 @@ namespace NeoEditInterceptor
 				if (operation == null)
 					throw new Exception($"Operation not found: {wcfOperation.Operation}");
 
-				using (var instance = CreateInstance(contract.Name, contract.Namespace) as IDisposable)
+				using (var instance = CreateInstance(contract.Namespace, contract.Name) as IDisposable)
 				{
 					var method = instance.GetType().GetMethod(operation.Name);
 					var parameters = new List<object>();
@@ -582,7 +608,15 @@ namespace NeoEditInterceptor
 
 				return ToJSON(wcfOperation, new HashSet<object>(wcfOperation.Parameters.Values));
 			}
-			catch (Exception ex) { throw new Exception(ex.Message); }
+			catch (Exception ex) { throw AggregateException(ex); }
+		}
+
+		Exception AggregateException(Exception ex)
+		{
+			var sb = new StringBuilder();
+			for (var x = ex; x != null; x = x.InnerException)
+				sb.AppendLine(x.Message);
+			return new Exception(sb.ToString());
 		}
 
 		static string GetTypeName(Type type)
@@ -743,21 +777,22 @@ namespace NeoEditInterceptor
 		{
 			try
 			{
-				dynamic interceptor = Activator.CreateInstance(compiledAssembly.GetType("NeoEditInterceptor.Interceptor"));
+				dynamic interceptor = Activator.CreateInstance(compiledAssembly.GetType("NeoEdit.WCFInterceptor.Interceptor"));
 				WCFInterceptDialog.Run(finished => interceptor.Start(interceptURL, finished), () => interceptor.End());
 				if (!interceptor.HasResult)
 					return null;
 
 				var wcfOperation = new WCFOperation
 				{
-					Operation = interceptor.Operation,
 					ServiceURL = ServiceURL,
+					Namespace = interceptor.Namespace,
 					Contract = interceptor.Contract,
+					Operation = interceptor.Operation,
 					Parameters = interceptor.Parameters,
 				};
 				return ToJSON(wcfOperation, new HashSet<object>(wcfOperation.Parameters.Values));
 			}
-			catch (Exception ex) { throw new Exception(ex.Message); }
+			catch (Exception ex) { throw AggregateException(ex); }
 		}
 	}
 }
