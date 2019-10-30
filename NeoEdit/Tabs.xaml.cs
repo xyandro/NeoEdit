@@ -89,6 +89,11 @@ namespace NeoEdit.Program
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
+			// This has to be a multibinding or it won't show a title if Focused is null
+			var titleBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = $@"$""{{p0}} - NeoEdit Text Editor{(Helpers.IsAdministrator() ? " (Administrator)" : "")}""" };
+			titleBinding.Bindings.Add(new Binding($"{nameof(Focused)}.{nameof(Focused.FileName)}") { Source = this });
+			SetBinding(TitleProperty, titleBinding);
+
 			AllowDrop = true;
 			Drop += OnDrop;
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());

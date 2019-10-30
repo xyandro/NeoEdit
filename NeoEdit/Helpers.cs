@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -500,5 +501,7 @@ namespace NeoEdit.Program
 		}
 
 		public static bool FileOrDirectoryExists(string name) => (Directory.Exists(name)) || (File.Exists(name));
+
+		public static bool IsAdministrator() => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 	}
 }
