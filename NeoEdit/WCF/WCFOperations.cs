@@ -47,6 +47,9 @@ namespace NeoEdit.Program.WCF
 
 		static public void ResetClients()
 		{
+			if (appDomain == null)
+				return;
+
 			AppDomain.Unload(appDomain);
 			_wcfOperations = null;
 			appDomain = null;

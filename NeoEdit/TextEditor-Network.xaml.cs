@@ -219,8 +219,6 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
 		}
 
-		void Command_Network_WCF_ResetClients() => WCFOperations.ResetClients();
-
 		NetworkWCFGetConfig.Result Command_Network_WCF_GetConfig_Dialog() => NetworkWCFGetConfig.Run(TabsParent);
 
 		void Command_Network_WCF_GetConfig(NetworkWCFGetConfig.Result result)
@@ -232,5 +230,7 @@ namespace NeoEdit.Program
 		}
 
 		void Command_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFOperations.ExecuteWCF(GetString(range))).ToList());
+
+		void Command_Network_WCF_ResetClients() => WCFOperations.ResetClients();
 	}
 }

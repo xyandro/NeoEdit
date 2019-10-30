@@ -608,9 +608,10 @@
 		<controls:NEMenuItem Header="S_can Ports" CommandEnum="Network_ScanPorts"/>
 		<Separator/>
 		<MenuItem Header="_WCF">
-			<controls:NEMenuItem Header="_Reset Clients" CommandEnum="Network_WCF_ResetClients"/>
 			<controls:NEMenuItem Header="Get _Config" CommandEnum="Network_WCF_GetConfig"/>
 			<controls:NEMenuItem Header="_Execute" CommandEnum="Network_WCF_Execute"/>
+			<Separator/>
+			<controls:NEMenuItem Header="_Reset Clients" CommandEnum="Network_WCF_ResetClients"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="D_atabase">
