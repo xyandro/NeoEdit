@@ -678,7 +678,7 @@
 		<controls:NEMenuItem Header="N_othing" CommandEnum="Select_Nothing"/>
 		<Separator/>
 		<controls:NEMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
-		<controls:NEMenuItem Header="L_ines" CommandEnum="Select_Lines"/>
+		<controls:NEMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
 		<controls:NEMenuItem Header="_Whole Lines" CommandEnum="Select_WholeLines"/>
 		<controls:NEMenuItem Header="Re_ctangle" CommandEnum="Select_Rectangle"/>
 		<Separator/>
@@ -703,7 +703,7 @@
 			<controls:NEMenuItem Header="Tabs _Match" CommandEnum="Select_RepeatsCaseSensitive_TabsMatch"/>
 			<controls:NEMenuItem Header="Tabs M_ismatch" CommandEnum="Select_RepeatsCaseSensitive_TabsMismatch"/>
 		</MenuItem>
-		<MenuItem Header="Repeats (Case I_nsensitive)">
+		<MenuItem Header="Repeats (Case _Insensitive)">
 			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_RepeatsCaseInsensitive_Unique"/>
 			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_RepeatsCaseInsensitive_Duplicates"/>
 			<Separator/>
