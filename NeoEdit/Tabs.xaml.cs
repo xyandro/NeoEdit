@@ -770,30 +770,42 @@ namespace NeoEdit.Program
 			statusBarTimer.Start();
 		}
 
-		DockPanel GetTabLabel(bool tiles, TextEditor textEditor, out BindingBase colorBinding)
+		UIElement GetTabLabel(bool tiles, TextEditor textEditor)
 		{
-			var dockPanel = new DockPanel { Height = 20, Margin = new Thickness(0, 0, tiles ? 0 : 2, 0), Tag = textEditor };
-
-			var multiBinding = new MultiBinding { Converter = new ActiveWindowConverter() };
-			multiBinding.Bindings.Add(new Binding { Source = textEditor });
-			multiBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
-			multiBinding.Bindings.Add(new Binding { Source = activeWindows });
-			multiBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
-			colorBinding = multiBinding;
-
-			dockPanel.MouseLeftButtonDown += (s, e) => HandleClick(textEditor);
-			dockPanel.MouseMove += (s, e) =>
+			var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = textEditor };
+			border.MouseLeftButtonDown += (s, e) => HandleClick(textEditor);
+			border.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
 					var active = textEditor.TabsParent.ActiveWindows.ToList();
-					DragDrop.DoDragDrop(s as DockPanel, new DataObject(typeof(List<TextEditor>), active), DragDropEffects.Move);
+					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<TextEditor>), active), DragDropEffects.Move);
 				}
 			};
 
-			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 2, 0), Foreground = Brushes.White };
+			var borderBinding = new MultiBinding { Converter = new ActiveWindowBorderConverter() };
+			borderBinding.Bindings.Add(new Binding { Source = textEditor });
+			borderBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
+			borderBinding.Bindings.Add(new Binding { Source = activeWindows });
+			borderBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
+			border.SetBinding(Border.BorderBrushProperty, borderBinding);
+			var backgroundBinding = new MultiBinding { Converter = new ActiveWindowBackgroundConverter() };
+			backgroundBinding.Bindings.Add(new Binding { Source = textEditor });
+			backgroundBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
+			backgroundBinding.Bindings.Add(new Binding { Source = activeWindows });
+			backgroundBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
+			border.SetBinding(Border.BackgroundProperty, backgroundBinding);
+
+			var grid = new Grid();
+			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(12) });
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Foreground = Brushes.White, Margin = new Thickness(4, -4, 0, 0) };
 			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditor.TabLabel)) { Source = textEditor });
-			dockPanel.Children.Add(text);
+			Grid.SetRow(text, 0);
+			Grid.SetColumn(text, 0);
+			grid.Children.Add(text);
 
 			var closeButton = new Button
 			{
@@ -801,7 +813,7 @@ namespace NeoEdit.Program
 				BorderThickness = new Thickness(0),
 				Style = FindResource(ToolBar.ButtonStyleKey) as Style,
 				VerticalAlignment = VerticalAlignment.Center,
-				Margin = new Thickness(2, 0, 5, 0),
+				Margin = new Thickness(2, -6, 0, 0),
 				Foreground = Brushes.Red,
 				Focusable = false,
 				HorizontalAlignment = HorizontalAlignment.Right,
@@ -811,8 +823,12 @@ namespace NeoEdit.Program
 				if (textEditor.CanClose())
 					RemoveTextEditor(textEditor);
 			};
-			dockPanel.Children.Add(closeButton);
-			return dockPanel;
+			Grid.SetRow(closeButton, 0);
+			Grid.SetColumn(closeButton, 1);
+			grid.Children.Add(closeButton);
+
+			border.Child = grid;
+			return border;
 		}
 
 		void ClearLayout()
@@ -870,8 +886,7 @@ namespace NeoEdit.Program
 			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
 			foreach (var window in Windows)
 			{
-				var tabLabel = GetTabLabel(false, window, out var colorBinding);
-				tabLabel.SetBinding(DockPanel.BackgroundProperty, colorBinding);
+				var tabLabel = GetTabLabel(false, window);
 				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as TextEditor);
 				stackPanel.Children.Add(tabLabel);
 			}
@@ -962,8 +977,7 @@ namespace NeoEdit.Program
 
 				var dockPanel = new DockPanel { AllowDrop = true };
 				dockPanel.Drop += (s, e) => OnDrop(e, textEditor);
-				var tabLabel = GetTabLabel(true, textEditor, out var colorBinding);
-				border.SetBinding(Border.BorderBrushProperty, colorBinding);
+				var tabLabel = GetTabLabel(true, textEditor);
 				DockPanel.SetDock(tabLabel, Dock.Top);
 				dockPanel.Children.Add(tabLabel);
 				{
