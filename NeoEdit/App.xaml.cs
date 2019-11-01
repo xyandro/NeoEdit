@@ -60,16 +60,8 @@ namespace NeoEdit.Program
 			try
 			{
 				var clParams = CommandLineVisitor.GetCommandLineParams(commandLine);
-
-				var windows = UIHelper<Tabs>.GetAllWindows();
-				var restored = windows.Count(window => window.Restore());
-
 				if (!clParams.Files.Any())
-				{
-					if (restored > 0)
-						return null;
 					return new Tabs(true);
-				}
 
 				var shutdownData = string.IsNullOrWhiteSpace(clParams.Wait) ? null : new ShutdownData(clParams.Wait, clParams.Files.Count);
 				var tabs = default(Tabs);

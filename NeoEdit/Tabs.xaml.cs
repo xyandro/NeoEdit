@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -1037,37 +1036,6 @@ namespace NeoEdit.Program
 			base.OnClosing(e);
 
 			try { Settings.WindowPosition = GetPosition(); } catch { }
-		}
-
-		System.Windows.Forms.NotifyIcon ni;
-		protected override void OnStateChanged(EventArgs e)
-		{
-			base.OnStateChanged(e);
-			if (WindowState == WindowState.Minimized)
-			{
-				if (Settings.MinimizeToTray)
-				{
-					ni = new System.Windows.Forms.NotifyIcon
-					{
-						Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetEntryAssembly().Location),
-						Visible = true,
-					};
-					ni.Click += (s, e2) => Restore();
-					Hide();
-				}
-			}
-		}
-
-		public bool Restore()
-		{
-			if (ni == null)
-				return false;
-
-			Show();
-			WindowState = WindowState.Normal;
-			ni.Dispose();
-			ni = null;
-			return true;
 		}
 	}
 }

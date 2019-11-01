@@ -15,7 +15,6 @@ namespace NeoEdit.Program
 				try
 				{
 					var xml = XElement.Load(settingsFile);
-					try { minimizeToTray = bool.Parse(xml.Element(nameof(MinimizeToTray)).Value); } catch { }
 					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
 					try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
 					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
@@ -33,7 +32,6 @@ namespace NeoEdit.Program
 			try
 			{
 				var xml = new XElement("Settings");
-				xml.Add(new XElement(nameof(MinimizeToTray), minimizeToTray));
 				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
 				xml.Add(new XElement(nameof(YouTubeDLPath), youTubeDLPath));
 				xml.Add(new XElement(nameof(FFmpegPath), ffmpegPath));
@@ -58,21 +56,6 @@ namespace NeoEdit.Program
 
 		static EventHandler escapeClearsSelectionsChanged;
 		public static event EventHandler EscapeClearsSelectionsChanged { add { escapeClearsSelectionsChanged += value; } remove { escapeClearsSelectionsChanged -= value; } }
-
-		static bool minimizeToTray = false;
-		public static bool MinimizeToTray
-		{
-			get { return minimizeToTray; }
-			set
-			{
-				minimizeToTray = value;
-				SaveSettings();
-				minimizeToTrayChanged?.Invoke(null, new EventArgs());
-			}
-		}
-
-		static EventHandler minimizeToTrayChanged;
-		public static event EventHandler MinimizeToTrayChanged { add { minimizeToTrayChanged += value; } remove { minimizeToTrayChanged -= value; } }
 
 		static string youTubeDLPath = "";
 		public static string YouTubeDLPath
