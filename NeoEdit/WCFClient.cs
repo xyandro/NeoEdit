@@ -29,13 +29,13 @@ namespace NeoEdit.Program
 {
 	public class WCFClient : MarshalByRefObject
 	{
-		public class WCFConfig
+		class WCFConfig
 		{
 			public List<WCFOperation> Operations { get; } = new List<WCFOperation>();
 			public string Config { get; set; }
 		}
 
-		public class WCFOperation
+		class WCFOperation
 		{
 			public string ServiceURL { get; set; }
 			public string Namespace { get; set; }
@@ -550,6 +550,8 @@ namespace NeoEdit.WCFInterceptor
 						if (value != null)
 							try { prop.SetValue(obj, value); } catch { }
 					}
+
+					seen.Remove(type);
 				}
 
 				var dictInterface = type.GetInterfaces().Where(i => (i.IsGenericType) && (i.GetGenericTypeDefinition() == typeof(IDictionary<,>))).FirstOrDefault();
