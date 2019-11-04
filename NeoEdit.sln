@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit", "NeoEdit\NeoEdit.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{990E4DBE-127E-4A5B-AA48-36765713838C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWCF", "TestWCF\TestWCF.csproj", "{672C97BB-B2B5-4566-95FD-D78A28776BB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|32 = Debug|32
@@ -64,6 +66,14 @@ Global
 		{990E4DBE-127E-4A5B-AA48-36765713838C}.Release|32.Build.0 = Release|x86
 		{990E4DBE-127E-4A5B-AA48-36765713838C}.Release|64.ActiveCfg = Release|x64
 		{990E4DBE-127E-4A5B-AA48-36765713838C}.Release|64.Build.0 = Release|x64
+		{672C97BB-B2B5-4566-95FD-D78A28776BB1}.Debug|32.ActiveCfg = Debug|Any CPU
+		{672C97BB-B2B5-4566-95FD-D78A28776BB1}.Debug|32.Build.0 = Debug|Any CPU
+		{672C97BB-B2B5-4566-95FD-D78A28776BB1}.Debug|64.ActiveCfg = Debug|Any CPU
+		{672C97BB-B2B5-4566-95FD-D78A28776BB1}.Debug|64.Build.0 = Debug|Any CPU
+		{672C97BB-B2B5-4566-95FD-D78A28776BB1}.Release|32.ActiveCfg = Release|Any CPU
+		{672C97BB-B2B5-4566-95FD-D78A28776BB1}.Release|32.Build.0 = Release|Any CPU
+		{672C97BB-B2B5-4566-95FD-D78A28776BB1}.Release|64.ActiveCfg = Release|Any CPU
+		{672C97BB-B2B5-4566-95FD-D78A28776BB1}.Release|64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
