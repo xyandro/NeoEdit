@@ -48,6 +48,8 @@
 		<Label Grid.Row="9" Grid.Column="0" Content="Result:"/>
 		<TextBox Grid.Row="9" Grid.Column="1" Text="{Binding OutputExample, ElementName=self}" IsReadOnly="True" Foreground="Gray"/>
 
+		<Button Grid.Row="11" Grid.ColumnSpan="4" HorizontalAlignment="Left" Content="_Help" Click="OnHelp" Padding="10,0"/>
+
 		<UniformGrid Grid.Row="11" Grid.ColumnSpan="4" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>

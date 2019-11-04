@@ -7,13 +7,13 @@
 	Title="Regular Expression Reference" SizeToContent="WidthAndHeight">
 
 	<Window.Resources>
-		<system:Int32 x:Key="nameColumn">160</system:Int32>
-		<system:Int32 x:Key="descColumn">200</system:Int32>
+		<system:Int32 x:Key="nameWidth">160</system:Int32>
+		<system:Int32 x:Key="descriptionWidth">200</system:Int32>
 
 		<DataTemplate x:Key="helpItemTemplate">
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Text="{Binding Name}" FontWeight="Bold" Width="{Binding DataContext.NameWidth, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"/>
-				<TextBlock Text="{Binding Description}" Width="{Binding DataContext.DescWidth, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+				<TextBlock Text="{Binding Description}" Width="{Binding DataContext.DescriptionWidth, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
 			</StackPanel>
 		</DataTemplate>
 
@@ -53,7 +53,7 @@
 		<ItemsControl ItemTemplate="{StaticResource helpItemsTemplate}">
 			<ItemsControl.Items>
 
-				<dialogs:HelpItems Name="Anchors" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+				<dialogs:HelpItems Name="Anchors" Columns="3" NameWidth="{StaticResource nameWidth}" DescriptionWidth="{StaticResource descriptionWidth}">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="^" Description="Beginning of line/selection"/>
 						<dialogs:HelpItem Name="\A" Description="Beginning of selection"/>
@@ -65,7 +65,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Characters" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+				<dialogs:HelpItems Name="Characters" Columns="3" NameWidth="{StaticResource nameWidth}" DescriptionWidth="{StaticResource descriptionWidth}">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="." Description="Any character"/>
 						<dialogs:HelpItem Name="\d" Description="Digit: [0-9]"/>
@@ -82,7 +82,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Repetition" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+				<dialogs:HelpItems Name="Repetition" Columns="3" NameWidth="{StaticResource nameWidth}" DescriptionWidth="{StaticResource descriptionWidth}">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="* / *?" Description="Zero or more: {0,}"/>
 						<dialogs:HelpItem Name="? / ??" Description="Zero or one: {0,1}"/>
@@ -93,7 +93,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Grouping" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+				<dialogs:HelpItems Name="Grouping" Columns="3" NameWidth="{StaticResource nameWidth}" DescriptionWidth="{StaticResource descriptionWidth}">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="(pattern)" Description="Capture group"/>
 						<dialogs:HelpItem Name="(?&lt;name&gt;)" Description="Capture and name group"/>
@@ -110,7 +110,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Conditional" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+				<dialogs:HelpItems Name="Conditional" Columns="3" NameWidth="{StaticResource nameWidth}" DescriptionWidth="{StaticResource descriptionWidth}">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="x|y" Description="x or y"/>
 						<dialogs:HelpItem Name="(?(expression)yes|no)" Description="Ternary"/>
@@ -118,7 +118,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Special" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+				<dialogs:HelpItems Name="Special" Columns="3" NameWidth="{StaticResource nameWidth}" DescriptionWidth="{StaticResource descriptionWidth}">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="\" Description="Escape character"/>
 						<dialogs:HelpItem Name="\f" Description="Form-feed"/>
@@ -137,7 +137,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Substitution" Columns="3" NameWidth="{StaticResource nameColumn}" DescWidth="{StaticResource descColumn}">
+				<dialogs:HelpItems Name="Substitution" Columns="3" NameWidth="{StaticResource nameWidth}" DescriptionWidth="{StaticResource descriptionWidth}">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="$number" Description="Group number"/>
 						<dialogs:HelpItem Name="$_" Description="Whole string"/>

@@ -9,7 +9,7 @@
 		<DataTemplate x:Key="helpItemTemplate">
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Text="{Binding Name}" FontWeight="Bold" Width="{Binding DataContext.NameWidth, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"/>
-				<TextBlock Text="{Binding Description}" Width="{Binding DataContext.DescWidth, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+				<TextBlock Text="{Binding Description}" Width="{Binding DataContext.DescriptionWidth, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
 			</StackPanel>
 		</DataTemplate>
 
@@ -49,7 +49,7 @@
 		<ItemsControl ItemTemplate="{StaticResource helpItemsTemplate}">
 			<ItemsControl.Items>
 
-				<dialogs:HelpItems Name="Literals" Columns="4" NameWidth="80" DescWidth="160">
+				<dialogs:HelpItems Name="Literals" Columns="4" NameWidth="80" DescriptionWidth="160">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="5" Description="Integer"/>
 						<dialogs:HelpItem Name="5.5" Description="Floating point"/>
@@ -63,7 +63,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Generic Operators" Columns="4" NameWidth="40" DescWidth="200">
+				<dialogs:HelpItems Name="Generic Operators" Columns="4" NameWidth="40" DescriptionWidth="200">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="o==" Description="Equal"/>
 						<dialogs:HelpItem Name="o!=" Description="Not equal"/>
@@ -72,7 +72,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Boolean Operators" Columns="4" NameWidth="40" DescWidth="200">
+				<dialogs:HelpItems Name="Boolean Operators" Columns="4" NameWidth="40" DescriptionWidth="200">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="&amp;&amp;" Description="Logical AND"/>
 						<dialogs:HelpItem Name="||" Description="Logical OR"/>
@@ -81,7 +81,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Numeric Operators" Columns="4" NameWidth="40" DescWidth="200">
+				<dialogs:HelpItems Name="Numeric Operators" Columns="4" NameWidth="40" DescriptionWidth="200">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="+" Description="Add"/>
 						<dialogs:HelpItem Name="-" Description="Subtract"/>
@@ -110,7 +110,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Numeric Functions" Columns="4" NameWidth="80" DescWidth="160">
+				<dialogs:HelpItems Name="Numeric Functions" Columns="4" NameWidth="80" DescriptionWidth="160">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="min(...)" Description="Minimum"/>
 						<dialogs:HelpItem Name="max(...)" Description="Maximum"/>
@@ -139,7 +139,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="String Operators" Columns="4" NameWidth="40" DescWidth="200">
+				<dialogs:HelpItems Name="String Operators" Columns="4" NameWidth="40" DescriptionWidth="200">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="t+" Description="Concat"/>
 						<dialogs:HelpItem Name="t*" Description="Repeat"/>
@@ -160,7 +160,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="String Functions" Columns="4" NameWidth="80" DescWidth="160">
+				<dialogs:HelpItems Name="String Functions" Columns="4" NameWidth="80" DescriptionWidth="160">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="tmin(...)" Description="Minimum"/>
 						<dialogs:HelpItem Name="tmax(...)" Description="Maximum"/>
@@ -168,7 +168,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Date Functions" Columns="4" NameWidth="80" DescWidth="160">
+				<dialogs:HelpItems Name="Date Functions" Columns="4" NameWidth="80" DescriptionWidth="160">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="now()" Description="Date/time in ticks"/>
 						<dialogs:HelpItem Name="date()" Description="Local date in ticks"/>
@@ -181,7 +181,7 @@
 					</dialogs:HelpItems.Items>
 				</dialogs:HelpItems>
 
-				<dialogs:HelpItems Name="Miscellaneous Functions" Columns="2" NameWidth="160" DescWidth="320">
+				<dialogs:HelpItems Name="Miscellaneous Functions" Columns="2" NameWidth="160" DescriptionWidth="320">
 					<dialogs:HelpItems.Items>
 						<dialogs:HelpItem Name="Type(x)" Description="Get type"/>
 						<dialogs:HelpItem Name="ValidRE(x)" Description="Check whether RegEx is valid"/>

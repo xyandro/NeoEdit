@@ -285,6 +285,13 @@
     <Compile Include="Dialogs\DateTimeConvertDialog.xaml.cs">
       <DependentUpon>DateTimeConvertDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\DateTimeHelpDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\DateTimeHelpDialog.xaml.cs">
+      <DependentUpon>DateTimeHelpDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\DiffFixWhitespaceDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

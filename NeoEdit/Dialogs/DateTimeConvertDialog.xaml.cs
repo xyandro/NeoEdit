@@ -257,6 +257,8 @@ namespace NeoEdit.Program.Dialogs
 			return FromDateTimeOffset(value.Value, outputFormat, outputTimeZone);
 		}
 
+		void OnHelp(object sender, RoutedEventArgs e) => DateTimeHelpDialog.Display();
+
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
