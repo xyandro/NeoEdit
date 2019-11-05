@@ -72,12 +72,12 @@ namespace NeoEdit.Program
 
 		public void AddCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus) => macroActions.Add(new MacroActionCommand(command, shiftDown, dialogResult, multiStatus));
 
-		public void Play(Tabs tabs, Action<Macro> setMacroPlaying, Action finished = null)
+		public void Play(TabsWindow tabsWindow, Action<Macro> setMacroPlaying, Action finished = null)
 		{
 			setMacroPlaying(this);
 			var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
 			var ctr = 0;
-			timer.Tick += (s, e) => tabs.Dispatcher.Invoke(() =>
+			timer.Tick += (s, e) => tabsWindow.Dispatcher.Invoke(() =>
 			{
 				try
 				{
@@ -97,17 +97,17 @@ namespace NeoEdit.Program
 					if (action is MacroActionKey)
 					{
 						var keyAction = action as MacroActionKey;
-						tabs.HandleKey(keyAction.key, keyAction.shiftDown, keyAction.controlDown, keyAction.altDown);
+						tabsWindow.HandleKey(keyAction.key, keyAction.shiftDown, keyAction.controlDown, keyAction.altDown);
 					}
 					else if (action is MacroActionText)
 					{
 						var textAction = action as MacroActionText;
-						tabs.HandleText(textAction.text);
+						tabsWindow.HandleText(textAction.text);
 					}
 					else if (action is MacroActionCommand)
 					{
 						var commandAction = action as MacroActionCommand;
-						tabs.HandleCommand(commandAction.command, commandAction.shiftDown, commandAction.dialogResult, commandAction.multiStatus);
+						tabsWindow.HandleCommand(commandAction.command, commandAction.shiftDown, commandAction.dialogResult, commandAction.multiStatus);
 					}
 				}
 				catch

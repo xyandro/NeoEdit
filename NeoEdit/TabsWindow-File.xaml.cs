@@ -12,9 +12,9 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class Tabs
+	partial class TabsWindow
 	{
-		void Command_File_New_New(bool createTabs) => (createTabs ? new Tabs() : this).AddTextEditor(new TextEditor());
+		void Command_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : this).AddTextEditor(new TextEditor());
 
 		void Command_File_New_FromClipboards()
 		{
@@ -83,7 +83,7 @@ namespace NeoEdit.Program
 		{
 			if (Focused == null)
 				throw new Exception("No active file");
-			var fileNames = ActiveWindows.Select(te => te.FileName).NonNullOrEmpty().ToList();
+			var fileNames = ActiveTabs.Select(te => te.FileName).NonNullOrEmpty().ToList();
 			if (!fileNames.Any())
 				throw new Exception("No current files have filenames.");
 			var nonExisting = fileNames.Where(x => !File.Exists(x));
@@ -94,10 +94,10 @@ namespace NeoEdit.Program
 
 		void Command_File_MoveToNewWindow()
 		{
-			var active = ActiveWindows.ToList();
+			var active = ActiveTabs.ToList();
 			active.ForEach(textEditor => RemoveTextEditor(textEditor, false));
 
-			var newWindow = new Tabs();
+			var newWindow = new TabsWindow();
 			newWindow.SetLayout(newWindow.Columns, newWindow.Rows, newWindow.MaxColumns, newWindow.MaxRows);
 			active.ForEach(tab => newWindow.AddTextEditor(tab));
 		}

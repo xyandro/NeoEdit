@@ -55,39 +55,39 @@ namespace NeoEdit.Program
 #endif
 		}
 
-		public Tabs CreateWindowsFromArgs(string commandLine)
+		public TabsWindow CreateWindowsFromArgs(string commandLine)
 		{
 			try
 			{
 				var clParams = CommandLineVisitor.GetCommandLineParams(commandLine);
 				if (!clParams.Files.Any())
-					return new Tabs(true);
+					return new TabsWindow(true);
 
 				var shutdownData = string.IsNullOrWhiteSpace(clParams.Wait) ? null : new ShutdownData(clParams.Wait, clParams.Files.Count);
-				var tabs = default(Tabs);
+				var tabsWindow = default(TabsWindow);
 				if (!clParams.Diff)
-					tabs = UIHelper<Tabs>.GetAllWindows().OrderByDescending(x => x.LastActivated).FirstOrDefault();
-				if (tabs == null)
-					tabs = new Tabs();
+					tabsWindow = UIHelper<TabsWindow>.GetAllWindows().OrderByDescending(x => x.LastActivated).FirstOrDefault();
+				if (tabsWindow == null)
+					tabsWindow = new TabsWindow();
 				foreach (var file in clParams.Files)
-					tabs.AddTextEditor(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownData: shutdownData));
-				if (tabs.Windows.Any())
-					tabs.SetFocused(tabs.Windows[tabs.Windows.Count - 1], true);
+					tabsWindow.AddTextEditor(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownData: shutdownData));
+				if (tabsWindow.Tabs.Any())
+					tabsWindow.SetFocused(tabsWindow.Tabs[tabsWindow.Tabs.Count - 1], true);
 
 				if (clParams.Diff)
 				{
-					for (var ctr = 0; ctr + 1 < tabs.Windows.Count; ctr += 2)
+					for (var ctr = 0; ctr + 1 < tabsWindow.Tabs.Count; ctr += 2)
 					{
-						tabs.Windows[ctr].DiffTarget = tabs.Windows[ctr + 1];
-						if (tabs.Windows[ctr].ContentType == ParserType.None)
-							tabs.Windows[ctr].ContentType = tabs.Windows[ctr + 1].ContentType;
-						if (tabs.Windows[ctr + 1].ContentType == ParserType.None)
-							tabs.Windows[ctr + 1].ContentType = tabs.Windows[ctr].ContentType;
+						tabsWindow.Tabs[ctr].DiffTarget = tabsWindow.Tabs[ctr + 1];
+						if (tabsWindow.Tabs[ctr].ContentType == ParserType.None)
+							tabsWindow.Tabs[ctr].ContentType = tabsWindow.Tabs[ctr + 1].ContentType;
+						if (tabsWindow.Tabs[ctr + 1].ContentType == ParserType.None)
+							tabsWindow.Tabs[ctr + 1].ContentType = tabsWindow.Tabs[ctr].ContentType;
 					}
-					tabs.SetLayout(maxColumns: 2);
+					tabsWindow.SetLayout(maxColumns: 2);
 				}
 
-				return tabs;
+				return tabsWindow;
 			}
 			catch (Exception ex) { ShowExceptionMessage(ex); }
 			return null;

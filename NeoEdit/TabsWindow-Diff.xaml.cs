@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace NeoEdit.Program
 {
-	partial class Tabs
+	partial class TabsWindow
 	{
 		void Command_Diff_Diff(bool shiftDown)
 		{
-			var diffTargets = Windows.Count == 2 ? Windows.ToList() : ActiveWindows.ToList();
+			var diffTargets = Tabs.Count == 2 ? Tabs.ToList() : ActiveTabs.ToList();
 			if (diffTargets.Any(item => item.DiffTarget != null))
 			{
 				diffTargets.ForEach(item => item.DiffTarget = null);
@@ -21,13 +21,13 @@ namespace NeoEdit.Program
 
 			if (shiftDown)
 			{
-				if (!Windows.Except(diffTargets).Any())
+				if (!Tabs.Except(diffTargets).Any())
 					SetLayout(maxColumns: 5, maxRows: 5);
 				else
 				{
 					diffTargets.ForEach(diffTarget => RemoveTextEditor(diffTarget));
 
-					var textEditTabs = new Tabs();
+					var textEditTabs = new TabsWindow();
 					textEditTabs.SetLayout(maxColumns: 5, maxRows: 5);
 					diffTargets.ForEach(diffTarget => textEditTabs.AddTextEditor(diffTarget));
 				}
@@ -36,6 +36,6 @@ namespace NeoEdit.Program
 			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
 		}
 
-		void Command_Diff_Select_LeftRightBothTabs(bool? left) => SetActive(ActiveWindows.Where(item => item.DiffTarget != null).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((WindowIndex(item) < WindowIndex(item.DiffTarget)) == left)).ToList());
+		void Command_Diff_Select_LeftRightBothTabs(bool? left) => SetActive(ActiveTabs.Where(item => item.DiffTarget != null).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetTabIndex(item) < GetTabIndex(item.DiffTarget)) == left)).ToList());
 	}
 }

@@ -7,9 +7,9 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class Tabs
+	partial class TabsWindow
 	{
-		static public void Command_Window_NewWindow() => new Tabs(true);
+		static public void Command_Window_NewWindow() => new TabsWindow(true);
 
 		void Command_Window_Full() => SetLayout(1, 1);
 
@@ -23,19 +23,19 @@ namespace NeoEdit.Program
 
 		void Command_Window_Font_Size() => WindowFontSizeDialog.Run(this);
 
-		void Command_Window_Select_AllTabs() => SetActive(Windows);
+		void Command_Window_Select_AllTabs() => SetActive(Tabs);
 
 		void Command_Window_Select_NoTabs() => SetActive();
 
-		void Command_Window_Select_TabsWithWithoutSelections(bool hasSelections) => SetActive(ActiveWindows.Where(tab => tab.HasSelections == hasSelections).ToList());
+		void Command_Window_Select_TabsWithWithoutSelections(bool hasSelections) => SetActive(ActiveTabs.Where(tab => tab.HasSelections == hasSelections).ToList());
 
-		void Command_Window_Select_ModifiedUnmodifiedTabs(bool modified) => SetActive(ActiveWindows.Where(tab => tab.IsModified == modified).ToList());
+		void Command_Window_Select_ModifiedUnmodifiedTabs(bool modified) => SetActive(ActiveTabs.Where(tab => tab.IsModified == modified).ToList());
 
-		void Command_Window_Select_InactiveTabs() => SetActive(Windows.Except(ActiveWindows).ToList());
+		void Command_Window_Select_InactiveTabs() => SetActive(Tabs.Except(ActiveTabs).ToList());
 
 		void Command_Window_Close_TabsWithWithoutSelections(bool hasSelections)
 		{
-			var toClose = ActiveWindows.Where(tab => tab.HasSelections == hasSelections).ToList();
+			var toClose = ActiveTabs.Where(tab => tab.HasSelections == hasSelections).ToList();
 			var answer = new AnswerResult();
 			if (!toClose.All(tab => tab.CanClose(answer)))
 				return;
@@ -44,7 +44,7 @@ namespace NeoEdit.Program
 
 		void Command_Window_Close_ModifiedUnmodifiedTabs(bool modified)
 		{
-			var toClose = ActiveWindows.Where(tab => tab.IsModified == modified).ToList();
+			var toClose = ActiveTabs.Where(tab => tab.IsModified == modified).ToList();
 			var answer = new AnswerResult();
 			if (!toClose.All(tab => tab.CanClose(answer)))
 				return;
@@ -53,7 +53,7 @@ namespace NeoEdit.Program
 
 		void Command_Window_Close_ActiveInactiveTabs(bool active)
 		{
-			var toClose = (active ? ActiveWindows : Windows.Except(ActiveWindows)).ToList();
+			var toClose = (active ? ActiveTabs : Tabs.Except(ActiveTabs)).ToList();
 			var answer = new AnswerResult();
 			if (!toClose.All(tab => tab.CanClose(answer)))
 				return;
@@ -63,8 +63,8 @@ namespace NeoEdit.Program
 		void Command_Window_WordList()
 		{
 			byte[] data;
-			var streamName = typeof(Tabs).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
-			using (var stream = typeof(Tabs).Assembly.GetManifestResourceStream(streamName))
+			var streamName = typeof(TabsWindow).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
+			using (var stream = typeof(TabsWindow).Assembly.GetManifestResourceStream(streamName))
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);

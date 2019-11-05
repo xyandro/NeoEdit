@@ -6,13 +6,13 @@ using System.Windows.Media;
 
 namespace NeoEdit.Program.Converters
 {
-	public class ActiveWindowBackgroundConverter : IMultiValueConverter
+	public class ActiveTabBackgroundConverter : IMultiValueConverter
 	{
 		static readonly Brush FocusedWindowBrush = new SolidColorBrush(Color.FromRgb(23, 81, 156));
 		static readonly Brush ActiveWindowBrush = new SolidColorBrush(Color.FromRgb(14, 50, 96));
 		static readonly Brush InactiveWindowBrush = Brushes.Transparent;
 
-		static ActiveWindowBackgroundConverter()
+		static ActiveTabBackgroundConverter()
 		{
 			FocusedWindowBrush.Freeze();
 			ActiveWindowBrush.Freeze();

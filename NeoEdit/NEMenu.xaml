@@ -55,7 +55,7 @@
 		</MenuItem>
 		<controls:NEMenuItem Header="C_lose" CommandEnum="File_Close"/>
 		<controls:NEMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
-		<controls:MultiMenuItem Header="_Auto Refresh" Tabs="{Binding Parent, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh"/>
+		<controls:MultiMenuItem Header="_Auto Refresh" TabsWindow="{Binding Parent, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh"/>
 		<controls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
 		<Separator/>
 		<controls:NEMenuItem Header="Move To New _Window" CommandEnum="File_MoveToNewWindow"/>
@@ -72,8 +72,8 @@
 			<controls:NEMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings"/>
 		</MenuItem>
 		<Separator/>
-		<controls:MultiMenuItem Header="Encr_ypt" Tabs="{Binding Parent, ElementName=self}" Property="AESKey" Converter="{converters:NonEmptyConverter}" MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
-		<controls:MultiMenuItem Header="Co_mpress" Tabs="{Binding Parent, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
+		<controls:MultiMenuItem Header="Encr_ypt" TabsWindow="{Binding Parent, ElementName=self}" Property="AESKey" Converter="{converters:NonEmptyConverter}" MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
+		<controls:MultiMenuItem Header="Co_mpress" TabsWindow="{Binding Parent, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
 		<Separator/>
 		<MenuItem Header="S_hell">
 			<controls:NEMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate"/>
@@ -185,9 +185,9 @@
 			<controls:NEMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
 			<Separator/>
 			<MenuItem Header="_Jump By">
-				<controls:MultiMenuItem Header="_Words" Tabs="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
-				<controls:MultiMenuItem Header="_Numbers" Tabs="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
-				<controls:MultiMenuItem Header="_Paths" Tabs="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
+				<controls:MultiMenuItem Header="_Words" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
+				<controls:MultiMenuItem Header="_Numbers" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
+				<controls:MultiMenuItem Header="_Paths" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
@@ -212,10 +212,10 @@
 		<Separator/>
 		<controls:NEMenuItem Header="_Break" CommandEnum="Diff_Break"/>
 		<Separator/>
-		<controls:MultiMenuItem Header="Ignore _Whitespace" Tabs="{Binding Parent, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
-		<controls:MultiMenuItem Header="Ignore _Case" Tabs="{Binding Parent, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
-		<controls:MultiMenuItem Header="Ignore _Numbers" Tabs="{Binding Parent, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers"/>
-		<controls:MultiMenuItem Header="Ignore Line _Endings" Tabs="{Binding Parent, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings"/>
+		<controls:MultiMenuItem Header="Ignore _Whitespace" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
+		<controls:MultiMenuItem Header="Ignore _Case" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
+		<controls:MultiMenuItem Header="Ignore _Numbers" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers"/>
+		<controls:MultiMenuItem Header="Ignore Line _Endings" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings"/>
 		<controls:NEMenuItem Header="Ignore C_haracters" CommandEnum="Diff_IgnoreCharacters"/>
 		<controls:NEMenuItem Header="_Reset" CommandEnum="Diff_Reset"/>
 		<Separator/>
@@ -353,7 +353,7 @@
 			<controls:NEMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add"/>
 			<controls:NEMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate"/>
 			<controls:NEMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve"/>
-			<controls:MultiMenuItem Header="_Include In Expressions" Tabs="{Binding Parent, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions"/>
+			<controls:MultiMenuItem Header="_Include In Expressions" TabsWindow="{Binding Parent, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Text">
@@ -532,21 +532,21 @@
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
 			<controls:NEMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension"/>
-			<controls:MultiMenuItem Header="_None" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.None}" CommandEnum="Content_Type_None"/>
-			<controls:MultiMenuItem Header="_Balanced" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
-			<controls:MultiMenuItem Header="C_olumns" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
-			<controls:MultiMenuItem Header="C_++" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus"/>
-			<controls:MultiMenuItem Header="C_#" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
-			<controls:MultiMenuItem Header="_CSV" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
-			<controls:MultiMenuItem Header="_Exact Columns" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns"/>
-			<controls:MultiMenuItem Header="_HTML" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
-			<controls:MultiMenuItem Header="_JSON" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
-			<controls:MultiMenuItem Header="_SQL" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.SQL}" CommandEnum="Content_Type_SQL"/>
-			<controls:MultiMenuItem Header="_TSV" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
-			<controls:MultiMenuItem Header="_XML" Tabs="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.XML}" CommandEnum="Content_Type_XML"/>
+			<controls:MultiMenuItem Header="_None" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.None}" CommandEnum="Content_Type_None"/>
+			<controls:MultiMenuItem Header="_Balanced" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
+			<controls:MultiMenuItem Header="C_olumns" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
+			<controls:MultiMenuItem Header="C_++" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus"/>
+			<controls:MultiMenuItem Header="C_#" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
+			<controls:MultiMenuItem Header="_CSV" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
+			<controls:MultiMenuItem Header="_Exact Columns" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns"/>
+			<controls:MultiMenuItem Header="_HTML" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
+			<controls:MultiMenuItem Header="_JSON" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
+			<controls:MultiMenuItem Header="_SQL" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.SQL}" CommandEnum="Content_Type_SQL"/>
+			<controls:MultiMenuItem Header="_TSV" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
+			<controls:MultiMenuItem Header="_XML" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.XML}" CommandEnum="Content_Type_XML"/>
 		</MenuItem>
-		<controls:MultiMenuItem Header="_Highlight Syntax" Tabs="{Binding Parent, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax"/>
-		<controls:MultiMenuItem Header="_Strict Parsing" Tabs="{Binding Parent, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing"/>
+		<controls:MultiMenuItem Header="_Highlight Syntax" TabsWindow="{Binding Parent, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax"/>
+		<controls:MultiMenuItem Header="_Strict Parsing" TabsWindow="{Binding Parent, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing"/>
 		<Separator/>
 		<controls:NEMenuItem Header="Re_format" CommandEnum="Content_Reformat"/>
 		<Separator/>
@@ -586,7 +586,7 @@
 			<controls:NEMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
 			<controls:NEMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
 		</MenuItem>
-		<controls:MultiMenuItem Header="_Keep Selections" Tabs="{Binding Parent, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections"/>
+		<controls:MultiMenuItem Header="_Keep Selections" TabsWindow="{Binding Parent, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections"/>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">
 		<controls:NEMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL"/>
@@ -826,7 +826,7 @@
 			<MenuItem Header="S_how Special" IsCheckable="True" IsChecked="{Binding Path=(local:Font.ShowSpecialChars), Mode=TwoWay}"/>
 		</MenuItem>
 		<Separator/>
-		<controls:MultiMenuItem Header="View _Values" Tabs="{Binding Parent, ElementName=self}" Property="ViewValues" MultiValue="{StaticResource True}" CommandEnum="Window_ViewValues"/>
+		<controls:MultiMenuItem Header="View _Values" TabsWindow="{Binding Parent, ElementName=self}" Property="ViewValues" MultiValue="{StaticResource True}" CommandEnum="Window_ViewValues"/>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<controls:NEMenuItem Header="_All tabs" CommandEnum="Window_Select_AllTabs"/>

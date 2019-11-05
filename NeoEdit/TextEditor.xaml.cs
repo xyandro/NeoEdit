@@ -95,8 +95,8 @@ namespace NeoEdit.Program
 		[DepProp]
 		public string ViewValuesFindValue { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
-		public Tabs TabsParent { get; set; }
-		public bool IsActive => TabsParent.WindowIsActive(this);
+		public TabsWindow TabsParent { get; set; }
+		public bool IsActive => TabsParent.TabIsActive(this);
 
 		public bool CanClose() => CanClose(new AnswerResult());
 
@@ -401,7 +401,7 @@ namespace NeoEdit.Program
 			diffTarget.DiffIgnoreCharacters = DiffIgnoreCharacters;
 			DiffEncodingMismatch = diffTarget.DiffEncodingMismatch = CodePage != diffTarget.CodePage;
 
-			var left = TabsParent.WindowIndex(this) < DiffTarget.TabsParent.WindowIndex(DiffTarget) ? this : DiffTarget;
+			var left = TabsParent.GetTabIndex(this) < DiffTarget.TabsParent.GetTabIndex(DiffTarget) ? this : DiffTarget;
 			var right = left == this ? DiffTarget : this;
 			TextData.CalculateDiff(left.Data, right.Data, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 

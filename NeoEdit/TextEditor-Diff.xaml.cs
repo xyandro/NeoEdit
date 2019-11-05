@@ -18,10 +18,10 @@ namespace NeoEdit.Program
 				throw new Exception("Must have even number of items.");
 
 			var codePage = CodePage; // Must save as other threads can't access DependencyProperties
-			var tabs = new Tabs();
+			var tabsWindow = new TabsWindow();
 			var batches = ranges.AsParallel().AsOrdered().Select(range => GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).ToList();
 			foreach (var batch in batches)
-				tabs.AddDiff(bytes1: batch[0], codePage1: codePage, modified1: false, bytes2: batch[1], codePage2: codePage, modified2: false);
+				tabsWindow.AddDiff(bytes1: batch[0], codePage1: codePage, modified1: false, bytes2: batch[1], codePage2: codePage, modified2: false);
 		}
 
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
@@ -72,10 +72,10 @@ namespace NeoEdit.Program
 			if (files.Any(file => !File.Exists(file)))
 				throw new Exception("Selections must be files.");
 
-			var tabs = new Tabs();
+			var tabsWindow = new TabsWindow();
 			var batches = files.Batch(2).ToList();
 			foreach (var batch in batches)
-				tabs.AddDiff(fileName1: batch[0], fileName2: batch[1]);
+				tabsWindow.AddDiff(fileName1: batch[0], fileName2: batch[1]);
 		}
 
 		void Command_Diff_Diff_VCSNormalFiles()
@@ -89,9 +89,9 @@ namespace NeoEdit.Program
 			if (invalidIndexes.Any())
 				throw new Exception($"Unable to get unmodified files:\n{string.Join("\n", invalidIndexes.Select(index => files[index]))}");
 
-			var tabs = new Tabs();
+			var tabsWindow = new TabsWindow();
 			for (var ctr = 0; ctr < files.Count; ctr++)
-				tabs.AddDiff(displayName1: Path.GetFileName(files[ctr]), modified1: false, bytes1: original[ctr], fileName2: files[ctr]);
+				tabsWindow.AddDiff(displayName1: Path.GetFileName(files[ctr]), modified1: false, bytes1: original[ctr], fileName2: files[ctr]);
 		}
 
 		void Command_Diff_Regions_Region(int useRegion) => DoRangesDiff(Regions[useRegion]);
@@ -142,7 +142,7 @@ namespace NeoEdit.Program
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			if ((TabsParent.WindowIndex(this) < DiffTarget.TabsParent.WindowIndex(DiffTarget)) && (DiffTarget.IsActive))
+			if ((TabsParent.GetTabIndex(this) < DiffTarget.TabsParent.GetTabIndex(DiffTarget)) && (DiffTarget.IsActive))
 				return;
 
 			var lines = Selections.AsParallel().AsOrdered().Select(range => GetDiffNextPrevious(range, next)).ToList();
@@ -161,13 +161,13 @@ namespace NeoEdit.Program
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var target = TabsParent.WindowIndex(this) < DiffTarget.TabsParent.WindowIndex(DiffTarget) ? this : DiffTarget;
+			var target = TabsParent.GetTabIndex(this) < DiffTarget.TabsParent.GetTabIndex(DiffTarget) ? this : DiffTarget;
 			var source = target == this ? DiffTarget : this;
 			if (!moveLeft)
 				Helpers.Swap(ref target, ref source);
 
 			// If both tabs are active only do this from the target tab
-			var bothActive = TabsParent.WindowIsActive(DiffTarget);
+			var bothActive = TabsParent.TabIsActive(DiffTarget);
 			if ((bothActive) && (target != this))
 				return;
 

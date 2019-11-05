@@ -245,7 +245,7 @@ namespace NeoEdit.Program
 				throw new Exception("Unable to get VCS content");
 
 			var textEdit = new TextEditor(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
-			TabsParent.AddTextEditor(textEdit, index: TabsParent.WindowIndex(this));
+			TabsParent.AddTextEditor(textEdit, index: TabsParent.GetTabIndex(this));
 			textEdit.ContentType = ContentType;
 			textEdit.DiffTarget = this;
 		}
