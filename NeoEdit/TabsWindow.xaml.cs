@@ -41,7 +41,11 @@ namespace NeoEdit.Program
 		public string KeysValuesCountText { get { return UIHelper<TabsWindow>.GetPropValue<string>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
 		[DepProp]
 		public int ActiveUpdateCount { get { return UIHelper<TabsWindow>.GetPropValue<int>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
+		[DepProp]
+		public int WindowIndex { get { return UIHelper<TabsWindow>.GetPropValue<int>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
 		public DateTime LastActivated { get; private set; }
+
+		static int curWindowIndex = 0;
 
 		readonly List<TextEditor> tabs = new List<TextEditor>();
 		public IReadOnlyList<TextEditor> Tabs => tabs;
@@ -52,6 +56,10 @@ namespace NeoEdit.Program
 
 		Action<TextEditor> ShowTextEditor;
 		int addedCounter = 0, lastAddedCounter = -1, textEditorOrder = 0;
+
+		static bool showIndex;
+		static public bool ShowIndex { get => showIndex; set { showIndex = value; ShowIndexChanged?.Invoke(null, EventArgs.Empty); } }
+		public static event EventHandler ShowIndexChanged;
 
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
@@ -88,9 +96,13 @@ namespace NeoEdit.Program
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
+			WindowIndex = ++curWindowIndex;
+
 			// This has to be a multibinding or it won't show a title if Focused is null
-			var titleBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = $@"$""{{p0}} - NeoEdit Text Editor{(Helpers.IsAdministrator() ? " (Administrator)" : "")}""" };
+			var titleBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = $@"$""{{p0}} - NeoEdit Text Editor{(Helpers.IsAdministrator() ? " (Administrator)" : "")}{{p2 ? $"" - {{p1}}"" : """"}}""" };
 			titleBinding.Bindings.Add(new Binding($"{nameof(Focused)}.{nameof(Focused.FileName)}") { Source = this });
+			titleBinding.Bindings.Add(new Binding($"{nameof(WindowIndex)}") { Source = this });
+			titleBinding.Bindings.Add(new Binding() { Path = new PropertyPath("(0)", typeof(TabsWindow).GetProperty(nameof(ShowIndex))) });
 			SetBinding(TitleProperty, titleBinding);
 
 			AllowDrop = true;

@@ -972,7 +972,13 @@
     <Compile Include="Dialogs\WCFInterceptDialog.xaml.cs">
       <DependentUpon>WCFInterceptDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\WindowActiveTabsDialog.cs" />
+    <Page Include="Dialogs\WindowActiveTabsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\WindowActiveTabsDialog.xaml.cs">
+      <DependentUpon>WindowActiveTabsDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\WindowCustomGridDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
