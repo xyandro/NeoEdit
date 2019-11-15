@@ -315,25 +315,24 @@ namespace NeoEdit.Program
 
 		void Command_Pre_Select_Repeats_TabsMatchMismatch(ref object preResult, bool caseSensitive)
 		{
-			var strs = GetSelectionStrings();
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
-			var localRepeats = strs.GroupBy(str => str, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
+			var repeats = Selections.AsParallel().GroupBy(GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
 
-			if (preResult == null)
-			{
-				preResult = localRepeats;
-				return;
-			}
+			if (preResult != null)
+				repeats = repeats.Join(preResult as Dictionary<string, int>, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);
 
-			var globalRepeats = preResult as Dictionary<string, int>;
-			globalRepeats.Keys.Except(localRepeats.Keys, stringComparer).ToList().ForEach(key => globalRepeats.Remove(key));
-			globalRepeats.Where(pair => localRepeats[pair.Key] != pair.Value).ToList().ForEach(pair => globalRepeats.Remove(pair.Key));
+			preResult = repeats;
 		}
 
 		void Command_Select_Repeats_TabsMatchMismatch(object preResult, bool match)
 		{
-			var globalRepeats = preResult as Dictionary<string, int>;
-			SetSelections(Selections.AsParallel().AsOrdered().Where(range => globalRepeats.ContainsKey(GetString(range)) == match).ToList());
+			var repeats = preResult as Dictionary<string, int>;
+			repeats = repeats.ToDictionary(pair => pair.Key, pair => pair.Value, repeats.Comparer);
+			SetSelections(Selections.Where(range =>
+			{
+				var str = GetString(range);
+				return ((repeats.ContainsKey(str)) && (repeats[str]-- > 0)) == match;
+			}).ToList());
 		}
 
 		SelectSplitDialog.Result Command_Select_Split_Dialog() => SelectSplitDialog.Run(TabsParent, GetVariables());
