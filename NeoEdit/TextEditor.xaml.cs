@@ -429,7 +429,7 @@ namespace NeoEdit.Program
 				return true;
 			if (answer[nameof(CanClose)].HasFlag(MessageOptions.Yes))
 			{
-				Command_File_Save_Save();
+				Command_File_Save_Save(answer);
 				return !IsModified;
 			}
 			return false;
@@ -899,17 +899,17 @@ namespace NeoEdit.Program
 			{
 				case NECommand.File_New_FromSelections: Command_File_New_FromSelections(); break;
 				case NECommand.File_Open_Selected: Command_File_Open_Selected(); break;
-				case NECommand.File_Save_Save: Command_File_Save_Save(); break;
-				case NECommand.File_Save_SaveAs: Command_File_SaveCopy_SaveCopy(); break;
+				case NECommand.File_Save_Save: Command_File_Save_Save(answer); break;
+				case NECommand.File_Save_SaveAs: Command_File_SaveCopy_SaveCopy(answer); break;
 				case NECommand.File_Save_SaveAsClipboard: Command_File_SaveCopy_SaveCopyClipboard(answer); break;
 				case NECommand.File_Save_SaveAsByExpression: Command_File_SaveCopy_SaveCopyByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
-				case NECommand.File_Copy_CopyTo: Command_File_SaveCopy_SaveCopy(true); break;
+				case NECommand.File_Copy_CopyTo: Command_File_SaveCopy_SaveCopy(answer, true); break;
 				case NECommand.File_Copy_CopyToClipboard: Command_File_SaveCopy_SaveCopyClipboard(answer, true); break;
 				case NECommand.File_Copy_CopyToByExpression: Command_File_SaveCopy_SaveCopyByExpression(dialogResult as GetExpressionDialog.Result, answer, true); break;
 				case NECommand.File_Copy_Path: Command_File_Copy_Path(); break;
 				case NECommand.File_Copy_Name: Command_File_Copy_Name(); break;
 				case NECommand.File_Copy_DisplayName: Command_File_Copy_DisplayName(); break;
-				case NECommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
+				case NECommand.File_Operations_Rename: Command_File_Operations_Rename(answer); break;
 				case NECommand.File_Operations_RenameClipboard: Command_File_Operations_RenameClipboard(answer); break;
 				case NECommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
 				case NECommand.File_Operations_Delete: Command_File_Operations_Delete(answer); break;
@@ -2180,9 +2180,9 @@ namespace NeoEdit.Program
 				SetSelections(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
 		}
 
-		public void Save(string fileName, bool copyOnly = false)
+		public void Save(string fileName, AnswerResult answer, bool copyOnly = false)
 		{
-			if ((Coder.IsStr(CodePage)) && ((Data.NumChars >> 20) < 50) && (!VerifyCanEncode()))
+			if ((Coder.IsStr(CodePage)) && ((Data.NumChars >> 20) < 50) && (!VerifyCanEncode(answer)))
 				return;
 
 			var triedReadOnly = false;
@@ -2319,27 +2319,28 @@ namespace NeoEdit.Program
 
 		public bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
 
-		bool VerifyCanEncode()
+		bool VerifyCanEncode(AnswerResult answer)
 		{
 			if (Data.CanEncode(CodePage))
 				return true;
 
-			var answer = new Message(TabsParent)
-			{
-				Title = "Confirm",
-				Text = "The current encoding cannot fully represent this data. Switch to UTF-8?",
-				Options = MessageOptions.YesNoCancel,
-				DefaultAccept = MessageOptions.Yes,
-				DefaultCancel = MessageOptions.Cancel,
-			}.Show();
-			if (answer.HasFlag(MessageOptions.Yes))
+			if (!answer[nameof(VerifyCanEncode)].HasFlag(MessageOptions.All))
+				answer[nameof(VerifyCanEncode)] = new Message(TabsParent)
+				{
+					Title = "Confirm",
+					Text = "The current encoding cannot fully represent this data. Switch to UTF-8?",
+					Options = MessageOptions.YesNoAllCancel,
+					DefaultAccept = MessageOptions.Yes,
+					DefaultCancel = MessageOptions.Cancel,
+				}.Show();
+			if (answer[nameof(VerifyCanEncode)].HasFlag(MessageOptions.Yes))
 			{
 				CodePage = Coder.CodePage.UTF8;
 				return true;
 			}
-			if (answer.HasFlag(MessageOptions.No))
+			if (answer[nameof(VerifyCanEncode)].HasFlag(MessageOptions.No))
 				return true;
-			if (answer.HasFlag(MessageOptions.Cancel))
+			if (answer[nameof(VerifyCanEncode)].HasFlag(MessageOptions.Cancel))
 				return false;
 			throw new Exception("Invalid response");
 		}

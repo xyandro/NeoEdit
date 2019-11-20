@@ -59,15 +59,15 @@ namespace NeoEdit.Program
 				TabsParent.AddTextEditor(new TextEditor(file));
 		}
 
-		void Command_File_Save_Save()
+		void Command_File_Save_Save(AnswerResult answer)
 		{
 			if (FileName == null)
-				Command_File_SaveCopy_SaveCopy();
+				Command_File_SaveCopy_SaveCopy(answer);
 			else
-				Save(FileName);
+				Save(FileName, answer);
 		}
 
-		void Command_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
+		void Command_File_SaveCopy_SaveCopy(AnswerResult answer, bool copyOnly = false) => Save(GetSaveFileName(), answer, copyOnly);
 
 		GetExpressionDialog.Result Command_File_SaveCopy_SaveCopyByExpression_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables(), Selections.Count);
 
@@ -94,7 +94,7 @@ namespace NeoEdit.Program
 					return;
 			}
 
-			Save(newFileName, copyOnly);
+			Save(newFileName, answer, copyOnly);
 		}
 
 		void Command_File_SaveCopy_SaveCopyByExpression(GetExpressionDialog.Result result, AnswerResult answer, bool copyOnly = false)
@@ -120,7 +120,7 @@ namespace NeoEdit.Program
 					return;
 			}
 
-			Save(newFileName, copyOnly);
+			Save(newFileName, answer, copyOnly);
 		}
 
 		void Command_File_Copy_Path() => SetClipboardFile(FileName);
@@ -129,11 +129,11 @@ namespace NeoEdit.Program
 
 		void Command_File_Copy_DisplayName() => SetClipboardString(DisplayName ?? Path.GetFileName(FileName));
 
-		void Command_File_Operations_Rename()
+		void Command_File_Operations_Rename(AnswerResult answer)
 		{
 			if (string.IsNullOrEmpty(FileName))
 			{
-				Command_File_SaveCopy_SaveCopy();
+				Command_File_SaveCopy_SaveCopy(answer);
 				return;
 			}
 
