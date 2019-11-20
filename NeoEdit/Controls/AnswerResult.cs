@@ -1,12 +1,20 @@
-﻿namespace NeoEdit.Program.Controls
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace NeoEdit.Program.Controls
 {
 	public class AnswerResult
 	{
-		public MessageOptions Answer { get; set; }
+		public bool Canceled => answers.Any(pair => pair.Value.HasFlag(MessageOptions.Cancel));
 
-		public AnswerResult(MessageOptions answer = MessageOptions.None)
+		readonly Dictionary<string, MessageOptions> answers = new Dictionary<string, MessageOptions>();
+
+		public AnswerResult() { }
+
+		public MessageOptions this[string str]
 		{
-			Answer = answer;
+			get => answers.ContainsKey(str) ? answers[str] : MessageOptions.None;
+			set => answers[str] = value;
 		}
 	}
 }

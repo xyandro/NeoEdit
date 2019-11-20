@@ -23,7 +23,7 @@ namespace NeoEdit.Program
 		{
 			try
 			{
-				if (answer.Answer.HasFlag(MessageOptions.Cancel))
+				if (answer[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Cancel))
 					return true;
 
 				if (Directory.Exists(fileName))
@@ -58,8 +58,8 @@ namespace NeoEdit.Program
 			{
 				TabsParent.Dispatcher.Invoke(() =>
 				{
-					if (!answer.Answer.HasFlag(MessageOptions.All))
-						answer.Answer = new Message(TabsParent)
+					if (!answer[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.All))
+						answer[nameof(BinarySearchFileAsync)] = new Message(TabsParent)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
@@ -68,7 +68,7 @@ namespace NeoEdit.Program
 						}.Show();
 				});
 
-				return (answer.Answer.HasFlag(MessageOptions.Yes)) || (answer.Answer.HasFlag(MessageOptions.Cancel));
+				return (answer[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Yes)) || (answer[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Cancel));
 			}
 		}
 
@@ -364,7 +364,7 @@ namespace NeoEdit.Program
 		{
 			try
 			{
-				if (answer.Answer.HasFlag(MessageOptions.Cancel))
+				if (answer[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel))
 					return true;
 
 				if (Directory.Exists(fileName))
@@ -391,8 +391,8 @@ namespace NeoEdit.Program
 			{
 				TabsParent.Dispatcher.Invoke(() =>
 				{
-					if (!answer.Answer.HasFlag(MessageOptions.All))
-						answer.Answer = new Message(TabsParent)
+					if (!answer[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.All))
+						answer[nameof(TextSearchFileAsync)] = new Message(TabsParent)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
@@ -401,7 +401,7 @@ namespace NeoEdit.Program
 						}.Show();
 				});
 
-				return (answer.Answer.HasFlag(MessageOptions.Yes)) || (answer.Answer.HasFlag(MessageOptions.Cancel));
+				return (answer[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Yes)) || (answer[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel));
 			}
 		}
 

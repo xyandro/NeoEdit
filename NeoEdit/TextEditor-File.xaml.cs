@@ -81,8 +81,8 @@ namespace NeoEdit.Program
 
 			if (File.Exists(newFileName))
 			{
-				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(TabsParent)
+				if (!answer[nameof(Command_File_SaveCopy_SaveCopyClipboard)].HasFlag(MessageOptions.All))
+					answer[nameof(Command_File_SaveCopy_SaveCopyClipboard)] = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -90,7 +90,7 @@ namespace NeoEdit.Program
 						DefaultCancel = MessageOptions.Cancel,
 					}.Show();
 
-				if (!answer.Answer.HasFlag(MessageOptions.Yes))
+				if (!answer[nameof(Command_File_SaveCopy_SaveCopyClipboard)].HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -107,8 +107,8 @@ namespace NeoEdit.Program
 
 			if (File.Exists(newFileName))
 			{
-				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(TabsParent)
+				if (!answer[nameof(Command_File_SaveCopy_SaveCopyByExpression)].HasFlag(MessageOptions.All))
+					answer[nameof(Command_File_SaveCopy_SaveCopyByExpression)] = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -116,7 +116,7 @@ namespace NeoEdit.Program
 						DefaultCancel = MessageOptions.Cancel,
 					}.Show();
 
-				if (!answer.Answer.HasFlag(MessageOptions.Yes))
+				if (!answer[nameof(Command_File_SaveCopy_SaveCopyByExpression)].HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -157,8 +157,8 @@ namespace NeoEdit.Program
 
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
-				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(TabsParent)
+				if (!answer[nameof(Command_File_Operations_RenameClipboard)].HasFlag(MessageOptions.All))
+					answer[nameof(Command_File_Operations_RenameClipboard)] = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -166,7 +166,7 @@ namespace NeoEdit.Program
 						DefaultCancel = MessageOptions.Cancel,
 					}.Show();
 
-				if (!answer.Answer.HasFlag(MessageOptions.Yes))
+				if (!answer[nameof(Command_File_Operations_RenameClipboard)].HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -189,8 +189,8 @@ namespace NeoEdit.Program
 
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
-				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(TabsParent)
+				if (!answer[nameof(Command_File_Operations_RenameByExpression)].HasFlag(MessageOptions.All))
+					answer[nameof(Command_File_Operations_RenameByExpression)] = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -198,7 +198,7 @@ namespace NeoEdit.Program
 						DefaultCancel = MessageOptions.Cancel,
 					}.Show();
 
-				if (!answer.Answer.HasFlag(MessageOptions.Yes))
+				if (!answer[nameof(Command_File_Operations_RenameByExpression)].HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -216,8 +216,8 @@ namespace NeoEdit.Program
 			if (FileName == null)
 				return;
 
-			if (!answer.Answer.HasFlag(MessageOptions.All))
-				answer.Answer = new Message(TabsParent)
+			if (!answer[nameof(Command_File_Operations_Delete)].HasFlag(MessageOptions.All))
+				answer[nameof(Command_File_Operations_Delete)] = new Message(TabsParent)
 				{
 					Title = "Confirm",
 					Text = "Are you sure you want to delete this file?",
@@ -226,7 +226,7 @@ namespace NeoEdit.Program
 					DefaultCancel = MessageOptions.No,
 				}.Show();
 
-			if (!answer.Answer.HasFlag(MessageOptions.Yes))
+			if (!answer[nameof(Command_File_Operations_Delete)].HasFlag(MessageOptions.Yes))
 				return;
 
 			File.Delete(FileName);
@@ -279,8 +279,8 @@ namespace NeoEdit.Program
 
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
-				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(TabsParent)
+				if (!answer[nameof(Command_File_Refresh)].HasFlag(MessageOptions.All))
+					answer[nameof(Command_File_Refresh)] = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "This file has been updated on disk. Reload?",
@@ -289,7 +289,7 @@ namespace NeoEdit.Program
 						DefaultCancel = MessageOptions.No,
 					}.Show();
 
-				if (!answer.Answer.HasFlag(MessageOptions.Yes))
+				if (!answer[nameof(Command_File_Refresh)].HasFlag(MessageOptions.Yes))
 					return;
 
 				Command_File_Revert(answer);
@@ -302,8 +302,8 @@ namespace NeoEdit.Program
 		{
 			if (IsModified)
 			{
-				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(TabsParent)
+				if (!answer[nameof(Command_File_Revert)].HasFlag(MessageOptions.All))
+					answer[nameof(Command_File_Revert)] = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes. Are you sure you want to reload?",
@@ -311,7 +311,7 @@ namespace NeoEdit.Program
 						DefaultAccept = MessageOptions.No,
 						DefaultCancel = MessageOptions.No,
 					}.Show();
-				if (!answer.Answer.HasFlag(MessageOptions.Yes))
+				if (!answer[nameof(Command_File_Revert)].HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -388,8 +388,8 @@ namespace NeoEdit.Program
 		{
 			if (IsModified)
 			{
-				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(TabsParent)
+				if (!answer[nameof(Command_File_Encoding_ReopenWithEncoding)].HasFlag(MessageOptions.All))
+					answer[nameof(Command_File_Encoding_ReopenWithEncoding)] = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes. Are you sure you want to reload?",
@@ -397,7 +397,7 @@ namespace NeoEdit.Program
 						DefaultAccept = MessageOptions.Yes,
 						DefaultCancel = MessageOptions.No,
 					}.Show();
-				if (!answer.Answer.HasFlag(MessageOptions.Yes))
+				if (!answer[nameof(Command_File_Encoding_ReopenWithEncoding)].HasFlag(MessageOptions.Yes))
 					return;
 			}
 

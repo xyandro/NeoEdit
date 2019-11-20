@@ -434,7 +434,7 @@ namespace NeoEdit.Program
 				foreach (var textEditor in ActiveTabs.ToList())
 				{
 					textEditor.HandleCommand(command, shiftDown, dialogResult, multiStatus, answer, preResult);
-					if (answer.Answer.HasFlag(MessageOptions.Cancel))
+					if (answer.Canceled)
 						break;
 				}
 				if (newClipboard != null)
@@ -544,7 +544,7 @@ namespace NeoEdit.Program
 				foreach (var textEditor in Tabs)
 				{
 					textEditor.Activated(answer);
-					if (answer.Answer.HasFlag(MessageOptions.Cancel))
+					if (answer.Canceled)
 						break;
 				}
 			}

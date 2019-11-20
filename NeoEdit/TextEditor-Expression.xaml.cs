@@ -143,15 +143,15 @@ namespace NeoEdit.Program
 
 			if (maxLoops == 0)
 			{
-				if (!answer.Answer.HasFlag(MessageOptions.All))
-					answer.Answer = new Message(TabsParent)
+				if (!answer[nameof(Command_Expression_InlineVariables_Solve)].HasFlag(MessageOptions.All))
+					answer[nameof(Command_Expression_InlineVariables_Solve)] = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "Unable to find value. Use best match?",
 						Options = MessageOptions.YesNoAll,
 						DefaultCancel = MessageOptions.No,
 					}.Show();
-				if (!answer.Answer.HasFlag(MessageOptions.Yes))
+				if (!answer[nameof(Command_Expression_InlineVariables_Solve)].HasFlag(MessageOptions.Yes))
 					throw new Exception("Unable to find value");
 			}
 

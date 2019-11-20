@@ -414,8 +414,8 @@ namespace NeoEdit.Program
 			if (!IsModified)
 				return true;
 
-			if (!answer.Answer.HasFlag(MessageOptions.All))
-				answer.Answer = new Message(TabsParent)
+			if (!answer[nameof(CanClose)].HasFlag(MessageOptions.All))
+				answer[nameof(CanClose)] = new Message(TabsParent)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -423,11 +423,11 @@ namespace NeoEdit.Program
 					DefaultCancel = MessageOptions.Cancel,
 				}.Show();
 
-			if (answer.Answer.HasFlag(MessageOptions.Cancel))
+			if (answer[nameof(CanClose)].HasFlag(MessageOptions.Cancel))
 				return false;
-			if (answer.Answer.HasFlag(MessageOptions.No))
+			if (answer[nameof(CanClose)].HasFlag(MessageOptions.No))
 				return true;
-			if (answer.Answer.HasFlag(MessageOptions.Yes))
+			if (answer[nameof(CanClose)].HasFlag(MessageOptions.Yes))
 			{
 				Command_File_Save_Save();
 				return !IsModified;
