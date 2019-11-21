@@ -155,7 +155,6 @@ namespace NeoEdit.Program
 					continue;
 				}
 
-
 				var newWorking = new List<SearchData>();
 				foreach (var worker in working)
 				{
