@@ -83,8 +83,8 @@
 		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
-		<controls:NEMenuItem Header="_Undo" CommandEnum="Edit_Undo"/>
-		<controls:NEMenuItem Header="_Redo" CommandEnum="Edit_Redo"/>
+		<controls:NEMenuItem Header="U_ndo" CommandEnum="Edit_Undo"/>
+		<controls:NEMenuItem Header="Red_o" CommandEnum="Edit_Redo"/>
 		<Separator/>
 		<MenuItem Header="_Copy">
 			<controls:NEMenuItem Header="_Copy" CommandEnum="Edit_Copy_Copy"/>
@@ -106,24 +106,23 @@
 			<controls:NEMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="Copy Do_wn" CommandEnum="Edit_CopyDown"/>
+		<controls:NEMenuItem Header="Cop_y Down" CommandEnum="Edit_CopyDown"/>
 		<controls:NEMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate"/>
 		<Separator/>
-		<controls:NEMenuItem Header="R_epeat" CommandEnum="Edit_Repeat"/>
+		<controls:NEMenuItem Header="Repe_at" CommandEnum="Edit_Repeat"/>
 		<Separator/>
-		<MenuItem Header="_Markup">
-			<controls:NEMenuItem Header="_Escape" CommandEnum="Edit_Markup_Escape"/>
-			<controls:NEMenuItem Header="_Unescape" CommandEnum="Edit_Markup_Unescape"/>
+		<MenuItem Header="_Escape">
+			<controls:NEMenuItem Header="_Markup" CommandEnum="Edit_Escape_Markup"/>
+			<controls:NEMenuItem Header="_RegEx" CommandEnum="Edit_Escape_RegEx"/>
+			<controls:NEMenuItem Header="_URL" CommandEnum="Edit_Escape_URL"/>
 		</MenuItem>
-		<MenuItem Header="RegE_x">
-			<controls:NEMenuItem Header="_Escape" CommandEnum="Edit_RegEx_Escape"/>
-			<controls:NEMenuItem Header="_Unescape" CommandEnum="Edit_RegEx_Unescape"/>
+		<MenuItem Header="_Unescape">
+			<controls:NEMenuItem Header="_Markup" CommandEnum="Edit_Unescape_Markup"/>
+			<controls:NEMenuItem Header="_RegEx" CommandEnum="Edit_Unescape_RegEx"/>
+			<controls:NEMenuItem Header="_URL" CommandEnum="Edit_Unescape_URL"/>
 		</MenuItem>
-		<MenuItem Header="UR_L">
-			<controls:NEMenuItem Header="_Escape" CommandEnum="Edit_URL_Escape"/>
-			<controls:NEMenuItem Header="_Unescape" CommandEnum="Edit_URL_Unescape"/>
-			<controls:NEMenuItem Header="_Absolute" CommandEnum="Edit_URL_Absolute"/>
-		</MenuItem>
+		<Separator/>
+		<controls:NEMenuItem Header="A_bsolute" CommandEnum="Edit_AbsoluteURL"/>
 		<Separator/>
 		<MenuItem Header="_Data">
 			<controls:NEMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash"/>
@@ -136,10 +135,10 @@
 		<Separator/>
 		<controls:NEMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
 		<Separator/>
-		<controls:NEMenuItem Header="Co_nvert" CommandEnum="Edit_Convert"/>
+		<controls:NEMenuItem Header="Con_vert" CommandEnum="Edit_Convert"/>
 		<Separator/>
-		<controls:NEMenuItem Header="M_odify Regions" CommandEnum="Edit_ModifyRegions"/>
-		<MenuItem Header="Mod_ify Regions Shortcuts">
+		<controls:NEMenuItem Header="_Modify Regions" CommandEnum="Edit_ModifyRegions"/>
+		<MenuItem Header="Modify _Regions Shortcuts">
 			<MenuItem Header="_Select">
 				<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegionsShortcuts_Select_Region6"/>
 				<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegionsShortcuts_Select_Region7"/>
@@ -178,7 +177,7 @@
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="Na_vigate">
+		<MenuItem Header="Nav_igate">
 			<controls:NEMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft"/>
 			<controls:NEMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight"/>
 			<controls:NEMenuItem Header="All L_eft" CommandEnum="Edit_Navigate_AllLeft"/>
@@ -191,7 +190,7 @@
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="Esc_ape Clears Selections" IsCheckable="True" IsChecked="{Binding Path=(local:Settings.EscapeClearsSelections), Mode=TwoWay}"/>
+		<MenuItem Header="Escape C_lears Selections" IsCheckable="True" IsChecked="{Binding Path=(local:Settings.EscapeClearsSelections), Mode=TwoWay}"/>
 	</MenuItem>
 	<MenuItem Header="D_iff">
 		<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>

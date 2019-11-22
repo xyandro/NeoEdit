@@ -431,21 +431,21 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void Command_Edit_Markup_Escape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlEncode(GetString(range))).ToList());
+		void Command_Edit_Escape_Markup() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlEncode(GetString(range))).ToList());
 
-		void Command_Edit_Markup_Unescape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlDecode(GetString(range))).ToList());
+		void Command_Edit_Escape_RegEx() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Escape(GetString(range))).ToList());
 
-		void Command_Edit_RegEx_Escape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Escape(GetString(range))).ToList());
+		void Command_Edit_Escape_URL() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlEncode(GetString(range))).ToList());
 
-		void Command_Edit_RegEx_Unescape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Unescape(GetString(range))).ToList());
+		void Command_Edit_Unescape_Markup() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlDecode(GetString(range))).ToList());
 
-		void Command_Edit_URL_Escape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlEncode(GetString(range))).ToList());
+		void Command_Edit_Unescape_RegEx() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Unescape(GetString(range))).ToList());
 
-		void Command_Edit_URL_Unescape() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
+		void Command_Edit_Unescape_URL() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 
-		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Edit_URL_Absolute_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(TabsParent, GetVariables(), true, false);
+		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Edit_AbsoluteURL_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(TabsParent, GetVariables(), true, false);
 
-		void Command_Edit_URL_Absolute(FilesNamesMakeAbsoluteRelativeDialog.Result result)
+		void Command_Edit_AbsoluteURL(FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
 			var results = GetFixedExpressionResults<string>(result.Expression);
 			ReplaceSelections(GetSelectionStrings().Select((str, index) =>
