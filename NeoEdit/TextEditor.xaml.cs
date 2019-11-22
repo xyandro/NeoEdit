@@ -1253,7 +1253,7 @@ namespace NeoEdit.Program
 				case NECommand.Files_Sign: Command_Files_Sign(dialogResult as FilesSignDialog.Result); break;
 				case NECommand.Files_Operations_Copy: Command_Files_Operations_CopyMove(dialogResult as FilesOperationsCopyMoveDialog.Result, false); break;
 				case NECommand.Files_Operations_Move: Command_Files_Operations_CopyMove(dialogResult as FilesOperationsCopyMoveDialog.Result, true); break;
-				case NECommand.Files_Operations_Delete: Command_Files_Operations_Delete(); break;
+				case NECommand.Files_Operations_Delete: Command_Files_Operations_Delete(answer); break;
 				case NECommand.Files_Operations_DragDrop: Command_Files_Operations_DragDrop(); break;
 				case NECommand.Files_Operations_Explore: Command_Files_Operations_Explore(); break;
 				case NECommand.Files_Operations_CommandPrompt: Command_Files_Operations_CommandPrompt(); break;

@@ -839,19 +839,30 @@ namespace NeoEdit.Program
 				}
 		}
 
-		void Command_Files_Operations_Delete()
+		void Command_Files_Operations_Delete(AnswerResult answer)
 		{
-			if (!new Message(TabsParent)
-			{
-				Title = "Confirm",
-				Text = "Are you sure you want to delete these files/directories?",
-				Options = MessageOptions.YesNo,
-				DefaultCancel = MessageOptions.No,
-			}.Show().HasFlag(MessageOptions.Yes))
+			var files = RelativeSelectedFiles();
+			if (!files.Any())
 				return;
 
-			var files = RelativeSelectedFiles();
-			var answer = MessageOptions.None;
+			var sureAnswer = $"{nameof(Command_Files_Operations_Delete)}_Sure";
+			var continueAnswer = $"{nameof(Command_Files_Operations_Delete)}_Continue";
+
+			if (!answer[sureAnswer].HasFlag(MessageOptions.All))
+				answer[sureAnswer] = new Message(TabsParent)
+				{
+					Title = "Confirm",
+					Text = "Are you sure you want to delete these files/directories?",
+					Options = MessageOptions.YesNoAllCancel,
+					DefaultAccept = MessageOptions.No,
+					DefaultCancel = MessageOptions.Cancel,
+				}.Show();
+
+			if (answer.Canceled)
+				throw new OperationCanceledException();
+			if (!answer[sureAnswer].HasFlag(MessageOptions.Yes))
+				return;
+
 			foreach (var file in files)
 			{
 				try
@@ -863,8 +874,8 @@ namespace NeoEdit.Program
 				}
 				catch (Exception ex)
 				{
-					if (!answer.HasFlag(MessageOptions.All))
-						answer = new Message(TabsParent)
+					if (!answer[continueAnswer].HasFlag(MessageOptions.All))
+						answer[continueAnswer] = new Message(TabsParent)
 						{
 							Title = "Confirm",
 							Text = $"An error occurred:\n\n{ex.Message}\n\nContinue?",
@@ -873,8 +884,8 @@ namespace NeoEdit.Program
 							DefaultCancel = MessageOptions.No,
 						}.Show();
 
-					if (answer.HasFlag(MessageOptions.No))
-						break;
+					if (!answer[continueAnswer].HasFlag(MessageOptions.Yes))
+						throw new OperationCanceledException();
 				}
 			}
 		}
