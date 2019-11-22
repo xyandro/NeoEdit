@@ -482,6 +482,6 @@ namespace NeoEdit.Program
 			SetRegionsWithSelectionsText(useRegion, regions2);
 		}
 
-		void Command_Edit_ModifyRegionsShortcuts(EditModifyRegionsDialog.Action action, int region) => Command_Edit_ModifyRegions(new EditModifyRegionsDialog.Result { Action = action, Regions = new List<int> { region } });
+		void Command_Edit_ModifyRegions(EditModifyRegionsDialog.Action action, int region) => Command_Edit_ModifyRegions(new EditModifyRegionsDialog.Result { Action = action, Regions = new List<int> { region } });
 	}
 }
