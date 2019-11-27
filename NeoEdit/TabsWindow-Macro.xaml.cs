@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.NEClipboards;
@@ -10,6 +11,8 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
+		public AnswerResult savedAnswers { get; } = new AnswerResult();
+
 		static string QuickMacro(int num) => $"QuickText{num}.xml";
 
 		void ValidateNoCurrentMacro()
@@ -37,15 +40,7 @@ namespace NeoEdit.Program
 		void Command_Macro_Record_StopRecording(string fileName = null)
 		{
 			if (RecordingMacro == null)
-			{
-				new Message(this)
-				{
-					Title = "Error",
-					Text = $"Cannot stop recording; recording not in progess.",
-					Options = MessageOptions.Ok,
-				}.Show();
-				return;
-			}
+				throw new Exception($"Cannot stop recording; recording not in progess.");
 
 			var macro = RecordingMacro;
 			RecordingMacro = null;

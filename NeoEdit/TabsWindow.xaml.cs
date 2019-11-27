@@ -430,13 +430,8 @@ namespace NeoEdit.Program
 				foreach (var textEditor in ActiveTabs.ToList())
 					textEditor.PreHandleCommand(command, ref preResult);
 
-				var answer = new AnswerResult();
 				foreach (var textEditor in ActiveTabs.ToList())
-				{
-					textEditor.HandleCommand(command, shiftDown, dialogResult, multiStatus, answer, preResult);
-					if (answer.Canceled)
-						break;
-				}
+					textEditor.HandleCommand(command, shiftDown, dialogResult, multiStatus, preResult);
 				if (newClipboard != null)
 					NEClipboard.Current = newClipboard;
 				SetupNewKeys();
@@ -451,6 +446,7 @@ namespace NeoEdit.Program
 					keysAndValuesLookup[ctr] = null;
 				keysHashLookup = null;
 				newKeysAndValues = null;
+				savedAnswers.Clear();
 			}
 
 			return true;
@@ -540,13 +536,8 @@ namespace NeoEdit.Program
 			Activated -= OnActivated;
 			try
 			{
-				var answer = new AnswerResult();
 				foreach (var textEditor in Tabs)
-				{
-					textEditor.Activated(answer);
-					if (answer.Canceled)
-						break;
-				}
+					textEditor.Activated();
 			}
 			finally { Activated += OnActivated; }
 		}
@@ -1045,11 +1036,10 @@ namespace NeoEdit.Program
 		{
 			var saveActive = ActiveTabs.ToList();
 			var saveFocused = Focused;
-			var answer = new AnswerResult();
 			foreach (var tab in Tabs)
 			{
 				SetFocused(tab, true);
-				if (!tab.CanClose(answer))
+				if (!tab.CanClose())
 				{
 					e.Cancel = true;
 					SetActive(saveActive);

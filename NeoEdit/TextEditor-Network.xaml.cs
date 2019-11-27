@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Parsing;
@@ -80,12 +81,7 @@ namespace NeoEdit.Program
 			var urls = GetSelectionStrings();
 			var results = Task.Run(() => GetURLs(urls, codePage).Result).Result;
 			if (results.Any(result => result.Item3))
-				new Message(TabsParent)
-				{
-					Title = "Error",
-					Text = $"Failed to fetch the URLs:\n{string.Join("\n", results.Where(result => result.Item3).Select(result => result.Item1))}",
-					Options = MessageOptions.Ok,
-				}.Show();
+				throw new Exception($"Failed to fetch the URLs:\n{string.Join("\n", results.Where(result => result.Item3).Select(result => result.Item1))}");
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
@@ -110,14 +106,16 @@ namespace NeoEdit.Program
 			invalid = fileNames.Where(fileName => File.Exists(fileName)).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
-				if (!new Message(TabsParent)
-				{
-					Title = "Confirm",
-					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
-					Options = MessageOptions.YesNo,
-					DefaultAccept = MessageOptions.Yes,
-					DefaultCancel = MessageOptions.No,
-				}.Show().HasFlag(MessageOptions.Yes))
+				if (!savedAnswers[nameof(Command_Network_FetchFile)].HasFlag(MessageOptions.All))
+					savedAnswers[nameof(Command_Network_FetchFile)] = new Message(TabsParent)
+					{
+						Title = "Confirm",
+						Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
+						Options = MessageOptions.YesNoAll,
+						DefaultAccept = MessageOptions.Yes,
+						DefaultCancel = MessageOptions.No,
+					}.Show();
+				if (!savedAnswers[nameof(Command_Network_FetchFile)].HasFlag(MessageOptions.Yes))
 					return;
 			}
 

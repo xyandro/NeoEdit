@@ -98,8 +98,6 @@ namespace NeoEdit.Program
 		public TabsWindow TabsParent { get; set; }
 		public bool IsActive => TabsParent.TabIsActive(this);
 
-		public bool CanClose() => CanClose(new AnswerResult());
-
 		int currentSelectionField;
 		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; canvasRenderTimer.Start(); statusBarRenderTimer.Start(); } }
 		public int NumSelections => Selections.Count;
@@ -161,6 +159,8 @@ namespace NeoEdit.Program
 				}
 			}
 		}
+
+		AnswerResult savedAnswers => TabsParent.savedAnswers;
 
 		static internal readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
 		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
@@ -409,13 +409,13 @@ namespace NeoEdit.Program
 			diffTarget.CalculateBoundaries();
 		}
 
-		public bool CanClose(AnswerResult answer)
+		public bool CanClose()
 		{
 			if (!IsModified)
 				return true;
 
-			if (!answer[nameof(CanClose)].HasFlag(MessageOptions.All))
-				answer[nameof(CanClose)] = new Message(TabsParent)
+			if (!savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.All))
+				savedAnswers[nameof(CanClose)] = new Message(TabsParent)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -423,13 +423,11 @@ namespace NeoEdit.Program
 					DefaultCancel = MessageOptions.Cancel,
 				}.Show();
 
-			if (answer[nameof(CanClose)].HasFlag(MessageOptions.Cancel))
-				return false;
-			if (answer[nameof(CanClose)].HasFlag(MessageOptions.No))
+			if (savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.No))
 				return true;
-			if (answer[nameof(CanClose)].HasFlag(MessageOptions.Yes))
+			if (savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.Yes))
 			{
-				Command_File_Save_Save(answer);
+				Command_File_Save_Save();
 				return !IsModified;
 			}
 			return false;
@@ -454,14 +452,16 @@ namespace NeoEdit.Program
 
 		bool ConfirmContinueWhenCannotEncode()
 		{
-			return new Message(TabsParent)
-			{
-				Title = "Confirm",
-				Text = "The specified encoding cannot fully represent the data. Continue anyway?",
-				Options = MessageOptions.YesNo,
-				DefaultAccept = MessageOptions.Yes,
-				DefaultCancel = MessageOptions.No,
-			}.Show().HasFlag(MessageOptions.Yes);
+			if (!savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.All))
+				savedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(TabsParent)
+				{
+					Title = "Confirm",
+					Text = "The specified encoding cannot fully represent the data. Continue anyway?",
+					Options = MessageOptions.YesNoAll,
+					DefaultAccept = MessageOptions.Yes,
+					DefaultCancel = MessageOptions.No,
+				}.Show();
+			return savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.Yes);
 		}
 
 		public bool Empty() => (FileName == null) && (!IsModified) && (BeginOffset == EndOffset);
@@ -881,7 +881,7 @@ namespace NeoEdit.Program
 		}
 
 		bool timeNext = false;
-		public void HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, AnswerResult answer, object preResult)
+		public void HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, object preResult)
 		{
 			var start = DateTime.UtcNow;
 			if (command != NECommand.Macro_RepeatLastAction)
@@ -899,33 +899,33 @@ namespace NeoEdit.Program
 			{
 				case NECommand.File_New_FromSelections: Command_File_New_FromSelections(); break;
 				case NECommand.File_Open_Selected: Command_File_Open_Selected(); break;
-				case NECommand.File_Save_Save: Command_File_Save_Save(answer); break;
-				case NECommand.File_Save_SaveAs: Command_File_SaveCopy_SaveCopy(answer); break;
-				case NECommand.File_Save_SaveAsClipboard: Command_File_SaveCopy_SaveCopyClipboard(answer); break;
-				case NECommand.File_Save_SaveAsByExpression: Command_File_SaveCopy_SaveCopyByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
-				case NECommand.File_Copy_CopyTo: Command_File_SaveCopy_SaveCopy(answer, true); break;
-				case NECommand.File_Copy_CopyToClipboard: Command_File_SaveCopy_SaveCopyClipboard(answer, true); break;
-				case NECommand.File_Copy_CopyToByExpression: Command_File_SaveCopy_SaveCopyByExpression(dialogResult as GetExpressionDialog.Result, answer, true); break;
+				case NECommand.File_Save_Save: Command_File_Save_Save(); break;
+				case NECommand.File_Save_SaveAs: Command_File_SaveCopy_SaveCopy(); break;
+				case NECommand.File_Save_SaveAsClipboard: Command_File_SaveCopy_SaveCopyClipboard(); break;
+				case NECommand.File_Save_SaveAsByExpression: Command_File_SaveCopy_SaveCopyByExpression(dialogResult as GetExpressionDialog.Result); break;
+				case NECommand.File_Copy_CopyTo: Command_File_SaveCopy_SaveCopy(true); break;
+				case NECommand.File_Copy_CopyToClipboard: Command_File_SaveCopy_SaveCopyClipboard(true); break;
+				case NECommand.File_Copy_CopyToByExpression: Command_File_SaveCopy_SaveCopyByExpression(dialogResult as GetExpressionDialog.Result, true); break;
 				case NECommand.File_Copy_Path: Command_File_Copy_Path(); break;
 				case NECommand.File_Copy_Name: Command_File_Copy_Name(); break;
 				case NECommand.File_Copy_DisplayName: Command_File_Copy_DisplayName(); break;
-				case NECommand.File_Operations_Rename: Command_File_Operations_Rename(answer); break;
-				case NECommand.File_Operations_RenameClipboard: Command_File_Operations_RenameClipboard(answer); break;
-				case NECommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(dialogResult as GetExpressionDialog.Result, answer); break;
-				case NECommand.File_Operations_Delete: Command_File_Operations_Delete(answer); break;
+				case NECommand.File_Operations_Rename: Command_File_Operations_Rename(); break;
+				case NECommand.File_Operations_RenameClipboard: Command_File_Operations_RenameClipboard(); break;
+				case NECommand.File_Operations_RenameByExpression: Command_File_Operations_RenameByExpression(dialogResult as GetExpressionDialog.Result); break;
+				case NECommand.File_Operations_Delete: Command_File_Operations_Delete(); break;
 				case NECommand.File_Operations_Explore: Command_File_Operations_Explore(); break;
 				case NECommand.File_Operations_CommandPrompt: Command_File_Operations_CommandPrompt(); break;
 				case NECommand.File_Operations_VCSDiff: Command_File_Operations_VCSDiff(); break;
 				case NECommand.File_Operations_SetDisplayName: Command_File_Operations_SetDisplayName(dialogResult as GetExpressionDialog.Result); break;
-				case NECommand.File_Close: Command_File_Close(answer); break;
-				case NECommand.File_Refresh: Command_File_Refresh(answer); break;
+				case NECommand.File_Close: Command_File_Close(); break;
+				case NECommand.File_Refresh: Command_File_Refresh(); break;
 				case NECommand.File_AutoRefresh: Command_File_AutoRefresh(multiStatus); break;
-				case NECommand.File_Revert: Command_File_Revert(answer); break;
+				case NECommand.File_Revert: Command_File_Revert(); break;
 				case NECommand.File_Insert_Files: Command_File_Insert_Files(); break;
 				case NECommand.File_Insert_CopiedCut: Command_File_Insert_CopiedCut(); break;
 				case NECommand.File_Insert_Selected: Command_File_Insert_Selected(); break;
 				case NECommand.File_Encoding_Encoding: Command_File_Encoding_Encoding(dialogResult as EncodingDialog.Result); break;
-				case NECommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result, answer); break;
+				case NECommand.File_Encoding_ReopenWithEncoding: Command_File_Encoding_ReopenWithEncoding(dialogResult as EncodingDialog.Result); break;
 				case NECommand.File_Encoding_LineEndings: Command_File_Encoding_LineEndings(dialogResult as FileEncodingLineEndingsDialog.Result); break;
 				case NECommand.File_Encrypt: Command_File_Encrypt(dialogResult as string); break;
 				case NECommand.File_Compress: Command_File_Compress(multiStatus); break;
@@ -1228,9 +1228,9 @@ namespace NeoEdit.Program
 				case NECommand.Files_Set_Time_Create: Command_Files_Set_Time(TimestampType.Create, dialogResult as FilesSetTimeDialog.Result); break;
 				case NECommand.Files_Set_Time_All: Command_Files_Set_Time(TimestampType.All, dialogResult as FilesSetTimeDialog.Result); break;
 				case NECommand.Files_Set_Attributes: Command_Files_Set_Attributes(dialogResult as FilesSetAttributesDialog.Result); break;
-				case NECommand.Files_Find_Binary: Command_Files_Find_Binary(dialogResult as FilesFindBinaryDialog.Result, answer); break;
-				case NECommand.Files_Find_Text: Command_Files_Find_Text(dialogResult as FilesFindTextDialog.Result, answer); break;
-				case NECommand.Files_Find_MassFind: Command_Files_Find_MassFind(dialogResult as FilesFindMassFindDialog.Result, answer); break;
+				case NECommand.Files_Find_Binary: Command_Files_Find_Binary(dialogResult as FilesFindBinaryDialog.Result); break;
+				case NECommand.Files_Find_Text: Command_Files_Find_Text(dialogResult as FilesFindTextDialog.Result); break;
+				case NECommand.Files_Find_MassFind: Command_Files_Find_MassFind(dialogResult as FilesFindMassFindDialog.Result); break;
 				case NECommand.Files_Insert: Command_Files_Insert(dialogResult as FilesInsertDialog.Result); break;
 				case NECommand.Files_Create_Files: Command_Files_Create_Files(); break;
 				case NECommand.Files_Create_Directories: Command_Files_Create_Directories(); break;
@@ -1253,7 +1253,7 @@ namespace NeoEdit.Program
 				case NECommand.Files_Sign: Command_Files_Sign(dialogResult as FilesSignDialog.Result); break;
 				case NECommand.Files_Operations_Copy: Command_Files_Operations_CopyMove(dialogResult as FilesOperationsCopyMoveDialog.Result, false); break;
 				case NECommand.Files_Operations_Move: Command_Files_Operations_CopyMove(dialogResult as FilesOperationsCopyMoveDialog.Result, true); break;
-				case NECommand.Files_Operations_Delete: Command_Files_Operations_Delete(answer); break;
+				case NECommand.Files_Operations_Delete: Command_Files_Operations_Delete(); break;
 				case NECommand.Files_Operations_DragDrop: Command_Files_Operations_DragDrop(); break;
 				case NECommand.Files_Operations_Explore: Command_Files_Operations_Explore(); break;
 				case NECommand.Files_Operations_CommandPrompt: Command_Files_Operations_CommandPrompt(); break;
@@ -1269,7 +1269,7 @@ namespace NeoEdit.Program
 				case NECommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
 				case NECommand.Expression_InlineVariables_Add: Command_Expression_InlineVariables_Add(); break;
 				case NECommand.Expression_InlineVariables_Calculate: Command_Expression_InlineVariables_Calculate(); break;
-				case NECommand.Expression_InlineVariables_Solve: Command_Expression_InlineVariables_Solve(dialogResult as ExpressionSolveDialog.Result, answer); break;
+				case NECommand.Expression_InlineVariables_Solve: Command_Expression_InlineVariables_Solve(dialogResult as ExpressionSolveDialog.Result); break;
 				case NECommand.Expression_InlineVariables_IncludeInExpressions: Command_Expression_InlineVariables_IncludeInExpressions(multiStatus); break;
 				case NECommand.Text_Select_Trim: Command_Text_Select_Trim(dialogResult as TextTrimDialog.Result); break;
 				case NECommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(dialogResult as TextWidthDialog.Result); break;
@@ -1621,7 +1621,7 @@ namespace NeoEdit.Program
 					ViewValuesFindValue = null;
 					if (Settings.EscapeClearsSelections)
 					{
-						HandleCommand(NECommand.Select_Selection_Single, false, null, null, null, null);
+						HandleCommand(NECommand.Select_Selection_Single, false, null, null, null);
 						if (!Selections.Any())
 						{
 							var pos = Data.GetOffset(Math.Max(0, Math.Min(yScrollValue, Data.NumLines - 1)), 0);
@@ -2363,9 +2363,9 @@ namespace NeoEdit.Program
 				SetSelections(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
 		}
 
-		public void Save(string fileName, AnswerResult answer, bool copyOnly = false)
+		public void Save(string fileName, bool copyOnly = false)
 		{
-			if ((Coder.IsStr(CodePage)) && ((Data.NumChars >> 20) < 50) && (!VerifyCanEncode(answer)))
+			if ((Coder.IsStr(CodePage)) && ((Data.NumChars >> 20) < 50) && (!VerifyCanEncode()))
 				return;
 
 			var triedReadOnly = false;
@@ -2385,14 +2385,16 @@ namespace NeoEdit.Program
 					if ((triedReadOnly) || (!new FileInfo(fileName).IsReadOnly))
 						throw;
 
-					if (!new Message(TabsParent)
-					{
-						Title = "Confirm",
-						Text = "Save failed. Remove read-only flag?",
-						Options = MessageOptions.YesNo,
-						DefaultAccept = MessageOptions.Yes,
-						DefaultCancel = MessageOptions.No,
-					}.Show().HasFlag(MessageOptions.Yes))
+					if (!savedAnswers[nameof(Save)].HasFlag(MessageOptions.All))
+						savedAnswers[nameof(Save)] = new Message(TabsParent)
+						{
+							Title = "Confirm",
+							Text = "Save failed. Remove read-only flag?",
+							Options = MessageOptions.YesNoAll,
+							DefaultAccept = MessageOptions.Yes,
+							DefaultCancel = MessageOptions.No,
+						}.Show();
+					if (!savedAnswers[nameof(Save)].HasFlag(MessageOptions.Yes))
 						throw;
 					new FileInfo(fileName).IsReadOnly = false;
 					triedReadOnly = true;
@@ -2450,13 +2452,13 @@ namespace NeoEdit.Program
 			watcher.EnableRaisingEvents = true;
 		}
 
-		public void Activated(AnswerResult answer)
+		public void Activated()
 		{
 			if (!watcherFileModified)
 				return;
 
 			watcherFileModified = false;
-			Command_File_Refresh(answer);
+			Command_File_Refresh();
 		}
 
 		void SetModifiedFlag(bool? newValue = null)
@@ -2502,13 +2504,13 @@ namespace NeoEdit.Program
 
 		public bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
 
-		bool VerifyCanEncode(AnswerResult answer)
+		bool VerifyCanEncode()
 		{
 			if (Data.CanEncode(CodePage))
 				return true;
 
-			if (!answer[nameof(VerifyCanEncode)].HasFlag(MessageOptions.All))
-				answer[nameof(VerifyCanEncode)] = new Message(TabsParent)
+			if (!savedAnswers[nameof(VerifyCanEncode)].HasFlag(MessageOptions.All))
+				savedAnswers[nameof(VerifyCanEncode)] = new Message(TabsParent)
 				{
 					Title = "Confirm",
 					Text = "The current encoding cannot fully represent this data. Switch to UTF-8?",
@@ -2516,15 +2518,13 @@ namespace NeoEdit.Program
 					DefaultAccept = MessageOptions.Yes,
 					DefaultCancel = MessageOptions.Cancel,
 				}.Show();
-			if (answer[nameof(VerifyCanEncode)].HasFlag(MessageOptions.Yes))
+			if (savedAnswers[nameof(VerifyCanEncode)].HasFlag(MessageOptions.Yes))
 			{
 				CodePage = Coder.CodePage.UTF8;
 				return true;
 			}
-			if (answer[nameof(VerifyCanEncode)].HasFlag(MessageOptions.No))
+			if (savedAnswers[nameof(VerifyCanEncode)].HasFlag(MessageOptions.No))
 				return true;
-			if (answer[nameof(VerifyCanEncode)].HasFlag(MessageOptions.Cancel))
-				return false;
 			throw new Exception("Invalid response");
 		}
 
@@ -2532,7 +2532,7 @@ namespace NeoEdit.Program
 		{
 			if (previous == null)
 				return;
-			HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus, new AnswerResult(), null);
+			HandleCommand(previous.Command, previous.ShiftDown, previous.DialogResult, previous.MultiStatus, null);
 		}
 
 		public void OpenTable(Table table, string name = null)

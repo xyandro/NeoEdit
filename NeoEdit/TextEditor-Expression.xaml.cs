@@ -73,7 +73,7 @@ namespace NeoEdit.Program
 
 		ExpressionSolveDialog.Result Command_Expression_InlineVariables_Solve_Dialog() => ExpressionSolveDialog.Run(TabsParent, GetVariables());
 
-		void Command_Expression_InlineVariables_Solve(ExpressionSolveDialog.Result result, AnswerResult answer)
+		void Command_Expression_InlineVariables_Solve(ExpressionSolveDialog.Result result)
 		{
 			var inlineVars = GetInlineVariables();
 			var setIndex = inlineVars.FindIndex(inlineVar => inlineVar.Name.Equals(result.SetVariable));
@@ -143,15 +143,15 @@ namespace NeoEdit.Program
 
 			if (maxLoops == 0)
 			{
-				if (!answer[nameof(Command_Expression_InlineVariables_Solve)].HasFlag(MessageOptions.All))
-					answer[nameof(Command_Expression_InlineVariables_Solve)] = new Message(TabsParent)
+				if (!savedAnswers[nameof(Command_Expression_InlineVariables_Solve)].HasFlag(MessageOptions.All))
+					savedAnswers[nameof(Command_Expression_InlineVariables_Solve)] = new Message(TabsParent)
 					{
 						Title = "Confirm",
 						Text = "Unable to find value. Use best match?",
 						Options = MessageOptions.YesNoAll,
 						DefaultCancel = MessageOptions.No,
 					}.Show();
-				if (!answer[nameof(Command_Expression_InlineVariables_Solve)].HasFlag(MessageOptions.Yes))
+				if (!savedAnswers[nameof(Command_Expression_InlineVariables_Solve)].HasFlag(MessageOptions.Yes))
 					throw new Exception("Unable to find value");
 			}
 

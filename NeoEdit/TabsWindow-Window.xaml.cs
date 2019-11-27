@@ -36,8 +36,7 @@ namespace NeoEdit.Program
 		void Command_Window_Close_TabsWithWithoutSelections(bool hasSelections)
 		{
 			var toClose = ActiveTabs.Where(tab => tab.HasSelections == hasSelections).ToList();
-			var answer = new AnswerResult();
-			if (!toClose.All(tab => tab.CanClose(answer)))
+			if (!toClose.All(tab => tab.CanClose()))
 				return;
 			toClose.ForEach(tab => RemoveTextEditor(tab));
 		}
@@ -45,8 +44,7 @@ namespace NeoEdit.Program
 		void Command_Window_Close_ModifiedUnmodifiedTabs(bool modified)
 		{
 			var toClose = ActiveTabs.Where(tab => tab.IsModified == modified).ToList();
-			var answer = new AnswerResult();
-			if (!toClose.All(tab => tab.CanClose(answer)))
+			if (!toClose.All(tab => tab.CanClose()))
 				return;
 			toClose.ForEach(tab => RemoveTextEditor(tab));
 		}
@@ -54,8 +52,7 @@ namespace NeoEdit.Program
 		void Command_Window_Close_ActiveInactiveTabs(bool active)
 		{
 			var toClose = (active ? ActiveTabs : Tabs.Except(ActiveTabs)).ToList();
-			var answer = new AnswerResult();
-			if (!toClose.All(tab => tab.CanClose(answer)))
+			if (!toClose.All(tab => tab.CanClose()))
 				return;
 			toClose.ForEach(tab => RemoveTextEditor(tab));
 		}

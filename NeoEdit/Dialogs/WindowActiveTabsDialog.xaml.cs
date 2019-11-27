@@ -135,8 +135,7 @@ namespace NeoEdit.Program.Dialogs
 		{
 			var selectedTextEditors = SelectedTextEditors;
 
-			var answer = new AnswerResult();
-			if (!selectedTextEditors.All(tab => tab.CanClose(answer)))
+			if (!selectedTextEditors.All(tab => tab.CanClose()))
 				return;
 
 			selectedTextEditors.ForEach(item => item.TabsParent.RemoveTextEditor(item));

@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Parsing;
@@ -19,11 +18,11 @@ namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{
-		async Task<bool> BinarySearchFileAsync(string fileName, Searcher searcher, AnswerResult answer, IProgress<ProgressReport> progress, CancellationToken cancel)
+		async Task<bool> BinarySearchFileAsync(string fileName, Searcher searcher, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{
 			try
 			{
-				if (answer[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Cancel))
+				if (savedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Cancel))
 					return true;
 
 				if (Directory.Exists(fileName))
@@ -58,17 +57,17 @@ namespace NeoEdit.Program
 			{
 				TabsParent.Dispatcher.Invoke(() =>
 				{
-					if (!answer[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.All))
-						answer[nameof(BinarySearchFileAsync)] = new Message(TabsParent)
+					if (!savedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.All))
+						savedAnswers[nameof(BinarySearchFileAsync)] = new Message(TabsParent)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
 							Options = MessageOptions.YesNoAllCancel,
 							DefaultCancel = MessageOptions.Cancel,
-						}.Show();
+						}.Show(false);
 				});
 
-				return (answer[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Yes)) || (answer[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Cancel));
+				return (savedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Yes)) || (savedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Cancel));
 			}
 		}
 
@@ -360,11 +359,11 @@ namespace NeoEdit.Program
 					}
 		}
 
-		async Task<bool> TextSearchFileAsync(string fileName, FilesFindTextDialog.Result search, AnswerResult answer, IProgress<ProgressReport> progress, CancellationToken cancel)
+		async Task<bool> TextSearchFileAsync(string fileName, FilesFindTextDialog.Result search, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{
 			try
 			{
-				if (answer[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel))
+				if (savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel))
 					return true;
 
 				if (Directory.Exists(fileName))
@@ -391,17 +390,17 @@ namespace NeoEdit.Program
 			{
 				TabsParent.Dispatcher.Invoke(() =>
 				{
-					if (!answer[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.All))
-						answer[nameof(TextSearchFileAsync)] = new Message(TabsParent)
+					if (!savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.All))
+						savedAnswers[nameof(TextSearchFileAsync)] = new Message(TabsParent)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
 							Options = MessageOptions.YesNoAllCancel,
 							DefaultCancel = MessageOptions.Cancel,
-						}.Show();
+						}.Show(false);
 				});
 
-				return (answer[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Yes)) || (answer[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel));
+				return (savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Yes)) || (savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel));
 			}
 		}
 
@@ -621,29 +620,29 @@ namespace NeoEdit.Program
 
 		FilesFindBinaryDialog.Result Command_Files_Find_Binary_Dialog() => FilesFindBinaryDialog.Run(TabsParent);
 
-		void Command_Files_Find_Binary(FilesFindBinaryDialog.Result result, AnswerResult answer)
+		void Command_Files_Find_Binary(FilesFindBinaryDialog.Result result)
 		{
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			var searcher = Helpers.GetSearcher(new List<string> { result.Text }, result.CodePages, result.MatchCase);
-			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
+			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}
 
 		FilesFindTextDialog.Result Command_Files_Find_Text_Dialog() => FilesFindTextDialog.Run(TabsParent);
 
-		void Command_Files_Find_Text(FilesFindTextDialog.Result result, AnswerResult answer)
+		void Command_Files_Find_Text(FilesFindTextDialog.Result result)
 		{
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
-			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await TextSearchFileAsync(obj.fileName, result, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
+			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await TextSearchFileAsync(obj.fileName, result, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}
 
 		FilesFindMassFindDialog.Result Command_Files_Find_MassFind_Dialog() => FilesFindMassFindDialog.Run(TabsParent, GetVariables());
 
-		void Command_Files_Find_MassFind(FilesFindMassFindDialog.Result result, AnswerResult answer)
+		void Command_Files_Find_MassFind(FilesFindMassFindDialog.Result result)
 		{
 			var findStrs = GetVariableExpressionResults<string>(result.Expression);
 			var searcher = Helpers.GetSearcher(findStrs, result.CodePages, result.MatchCase);
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
-			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, answer, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
+			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}
 
 		FilesInsertDialog.Result Command_Files_Insert_Dialog() => FilesInsertDialog.Run(TabsParent);
@@ -795,27 +794,33 @@ namespace NeoEdit.Program
 			if (invalid.Any())
 				throw new Exception($"Destinations already exist:\n{string.Join("\n", invalid)}");
 
-			if (!new Message(TabsParent)
-			{
-				Title = "Confirm",
-				Text = $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?",
-				Options = MessageOptions.YesNo,
-				DefaultAccept = MessageOptions.Yes,
-				DefaultCancel = MessageOptions.No,
-			}.Show().HasFlag(MessageOptions.Yes))
+			var confirmCopyMove = $"{nameof(Command_Files_Operations_CopyMove)}_Confirm";
+			if (!savedAnswers[confirmCopyMove].HasFlag(MessageOptions.All))
+				savedAnswers[confirmCopyMove] = new Message(TabsParent)
+				{
+					Title = "Confirm",
+					Text = $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?",
+					Options = MessageOptions.YesNoAll,
+					DefaultAccept = MessageOptions.Yes,
+					DefaultCancel = MessageOptions.No,
+				}.Show();
+			if (!savedAnswers[confirmCopyMove].HasFlag(MessageOptions.Yes))
 				return;
 
+			var overwriteCopyMove = $"{nameof(Command_Files_Operations_CopyMove)}_Overwrite";
 			invalid = newFileNames.Zip(oldFileNames, (newFileName, oldFileName) => new { newFileName, oldFileName }).Where(obj => (!string.Equals(obj.newFileName, obj.oldFileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(obj.newFileName))).Select(obj => obj.newFileName).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
-				if (!new Message(TabsParent)
-				{
-					Title = "Confirm",
-					Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
-					Options = MessageOptions.YesNo,
-					DefaultAccept = MessageOptions.Yes,
-					DefaultCancel = MessageOptions.No,
-				}.Show().HasFlag(MessageOptions.Yes))
+				if (!savedAnswers[overwriteCopyMove].HasFlag(MessageOptions.All))
+					savedAnswers[overwriteCopyMove] = new Message(TabsParent)
+					{
+						Title = "Confirm",
+						Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
+						Options = MessageOptions.YesNoAll,
+						DefaultAccept = MessageOptions.Yes,
+						DefaultCancel = MessageOptions.No,
+					}.Show();
+				if (!savedAnswers[overwriteCopyMove].HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -839,7 +844,7 @@ namespace NeoEdit.Program
 				}
 		}
 
-		void Command_Files_Operations_Delete(AnswerResult answer)
+		void Command_Files_Operations_Delete()
 		{
 			var files = RelativeSelectedFiles();
 			if (!files.Any())
@@ -848,8 +853,8 @@ namespace NeoEdit.Program
 			var sureAnswer = $"{nameof(Command_Files_Operations_Delete)}_Sure";
 			var continueAnswer = $"{nameof(Command_Files_Operations_Delete)}_Continue";
 
-			if (!answer[sureAnswer].HasFlag(MessageOptions.All))
-				answer[sureAnswer] = new Message(TabsParent)
+			if (!savedAnswers[sureAnswer].HasFlag(MessageOptions.All))
+				savedAnswers[sureAnswer] = new Message(TabsParent)
 				{
 					Title = "Confirm",
 					Text = "Are you sure you want to delete these files/directories?",
@@ -857,10 +862,7 @@ namespace NeoEdit.Program
 					DefaultAccept = MessageOptions.No,
 					DefaultCancel = MessageOptions.Cancel,
 				}.Show();
-
-			if (answer.Canceled)
-				throw new OperationCanceledException();
-			if (!answer[sureAnswer].HasFlag(MessageOptions.Yes))
+			if (!savedAnswers[sureAnswer].HasFlag(MessageOptions.Yes))
 				return;
 
 			foreach (var file in files)
@@ -874,8 +876,8 @@ namespace NeoEdit.Program
 				}
 				catch (Exception ex)
 				{
-					if (!answer[continueAnswer].HasFlag(MessageOptions.All))
-						answer[continueAnswer] = new Message(TabsParent)
+					if (!savedAnswers[continueAnswer].HasFlag(MessageOptions.All))
+						savedAnswers[continueAnswer] = new Message(TabsParent)
 						{
 							Title = "Confirm",
 							Text = $"An error occurred:\n\n{ex.Message}\n\nContinue?",
@@ -884,7 +886,7 @@ namespace NeoEdit.Program
 							DefaultCancel = MessageOptions.No,
 						}.Show();
 
-					if (!answer[continueAnswer].HasFlag(MessageOptions.Yes))
+					if (!savedAnswers[continueAnswer].HasFlag(MessageOptions.Yes))
 						throw new OperationCanceledException();
 				}
 			}

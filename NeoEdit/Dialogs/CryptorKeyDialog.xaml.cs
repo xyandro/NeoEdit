@@ -87,15 +87,7 @@ namespace NeoEdit.Program.Dialogs
 				if ((string.IsNullOrEmpty(symmetricPassword.Password)) || (string.IsNullOrEmpty(Salt)))
 					return;
 				if ((Encrypt) && (symmetricPassword.Password != symmetricConfirm.Password))
-				{
-					new Message(this)
-					{
-						Title = "Password mismatch",
-						Text = "Passwords must match.",
-						Options = MessageOptions.Ok,
-					}.Show();
-					return;
-				}
+					throw new Exception("Passwords must match.");
 				PublicKey = PrivateKey = Cryptor.GetRfc2898Key(symmetricPassword.Password, Salt, KeySize);
 			}
 			else
