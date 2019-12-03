@@ -2020,7 +2020,7 @@ namespace NeoEdit.Program
 			for (var line = startLine; ; ++line)
 			{
 				var done = line == endLine;
-				if ((line >= drawBounds.StartLine) && ((line < drawBounds.EndLine)))
+				if ((line >= drawBounds.StartLine - 1) && ((line < drawBounds.EndLine)))
 				{
 					var length = done ? endColumn : Data.GetLineColumnsLength(line) + 1;
 					points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line)));
