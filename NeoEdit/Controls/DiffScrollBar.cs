@@ -80,13 +80,13 @@ namespace NeoEdit.Program.Controls
 
 					RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
 
-					var leftButton = new RepeatButton { Content = "⮜", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush };
+					var leftButton = new RepeatButton { Content = "⮜", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush, Focusable = false };
 					leftButton.Click += OnUpLeftButtonClick;
 					SetColumn(leftButton, 0);
 					SetRow(leftButton, 0);
 					Children.Add(leftButton);
 
-					var rightButton = new RepeatButton { Content = "⮞", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush };
+					var rightButton = new RepeatButton { Content = "⮞", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush, Focusable = false };
 					rightButton.Click += OnDownRightButtonClick;
 					SetColumn(rightButton, 2);
 					SetRow(rightButton, 0);
@@ -104,13 +104,13 @@ namespace NeoEdit.Program.Controls
 
 					ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(20) });
 
-					var upButton = new RepeatButton { Content = "⮝", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush };
+					var upButton = new RepeatButton { Content = "⮝", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush, Focusable = false };
 					upButton.Click += OnUpLeftButtonClick;
 					SetRow(upButton, 0);
 					SetColumn(upButton, 0);
 					Children.Add(upButton);
 
-					var downButton = new RepeatButton { Content = "⮟", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush };
+					var downButton = new RepeatButton { Content = "⮟", Delay = 500, Interval = 50, Foreground = ForegroundBrush, Background = BackgroundBrush, BorderBrush = BackgroundBrush, Focusable = false };
 					downButton.Click += OnDownRightButtonClick;
 					SetRow(downButton, 2);
 					SetColumn(downButton, 0);
