@@ -8,7 +8,7 @@ namespace NeoEdit.Program
 {
 	public class Table
 	{
-		const string NULL = "<NULL>";
+		const string NULLSTR = "NULL";
 
 		public enum AggregateType
 		{
@@ -54,7 +54,7 @@ namespace NeoEdit.Program
 
 		public Table(List<List<string>> rows, bool hasHeaders = true)
 		{
-			Rows = rows.Select(row => row.Select(value => value ?? NULL).ToList()).ToList();
+			Rows = rows.Select(row => row.Select(value => value ?? NULLSTR).ToList()).ToList();
 			EqualizeColumns();
 
 			if ((Rows.Any()) && (hasHeaders))
@@ -68,10 +68,15 @@ namespace NeoEdit.Program
 
 		string GetDBValue(object value)
 		{
-			if ((value == DBNull.Value) || (value == null))
-				return NULL;
-			if (value is byte[])
-				return Coder.BytesToString(value as byte[], Coder.CodePage.Hex);
+			if ((value == null) || (value is DBNull))
+				return NULLSTR;
+
+			if (value is byte[] valueBytes)
+				return $"'{Coder.BytesToString(valueBytes, Coder.CodePage.Hex)}'";
+
+			if (value is string valueStr)
+				return $"'{valueStr.Replace("'", "''")}'";
+
 			return value.ToString();
 		}
 
@@ -80,7 +85,7 @@ namespace NeoEdit.Program
 			Headers = Enumerable.Range(0, reader.FieldCount).Select(column => reader.GetName(column)).ToList();
 			Rows = new List<List<string>>();
 			while (reader.Read())
-				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => reader[column]).Select(value => GetDBValue(value)).ToList());
+				Rows.Add(Enumerable.Range(0, reader.FieldCount).Select(column => GetDBValue(reader[column])).ToList());
 		}
 
 		public static ParserType GuessTableType(string input)
@@ -189,7 +194,7 @@ namespace NeoEdit.Program
 			if (results.Count != NumRows)
 				throw new ArgumentException("Invalid row count");
 			Headers.Add(columnName);
-			Enumerable.Range(0, NumRows).ForEach(row => Rows[row].Add(results[row] ?? NULL));
+			Enumerable.Range(0, NumRows).ForEach(row => Rows[row].Add(results[row] ?? NULLSTR));
 		}
 
 		string GetAggregateValue(AggregateType aggType, List<string> values)
@@ -203,7 +208,7 @@ namespace NeoEdit.Program
 				case AggregateType.Max: return values.Max();
 				case AggregateType.Sum: return values.Select(value => Convert.ToDouble(value)).Sum().ToString();
 				case AggregateType.Count: return values.Count.ToString();
-				case AggregateType.CountNonNull: return values.Where(value => value != NULL).Count().ToString();
+				case AggregateType.CountNonNull: return values.Where(value => value != NULLSTR).Count().ToString();
 				case AggregateType.Average: return (values.Select(value => Convert.ToDouble(value)).Sum() / values.Count).ToString();
 				default: throw new Exception("Invalid table type");
 			}
@@ -256,7 +261,7 @@ namespace NeoEdit.Program
 			};
 		}
 
-		static object JoinValue(string value) => value == NULL ? new object() : value;
+		static object JoinValue(string value) => value == NULLSTR ? new object() : value;
 
 		static IEnumerable<string> CombinedValue(IEnumerable<string> left, IEnumerable<string> right, JoinType joinType)
 		{
@@ -296,8 +301,8 @@ namespace NeoEdit.Program
 				default: throw new ArgumentException("Invalid join");
 			}
 
-			var emptyLeft = new List<List<string>> { Enumerable.Repeat(NULL, leftTable.NumColumns).ToList() };
-			var emptyRight = new List<List<string>> { Enumerable.Repeat(NULL, rightTable.NumColumns).ToList() };
+			var emptyLeft = new List<List<string>> { Enumerable.Repeat(NULLSTR, leftTable.NumColumns).ToList() };
+			var emptyRight = new List<List<string>> { Enumerable.Repeat(NULLSTR, rightTable.NumColumns).ToList() };
 			return new Table
 			{
 				Headers = CombinedValue(leftTable.Headers, rightTable.Headers, joinType).ToList(),
@@ -343,8 +348,8 @@ namespace NeoEdit.Program
 
 		public string this[int row, int column]
 		{
-			get { return Rows[row][column] == NULL ? null : Rows[row][column]; }
-			set { Rows[row][column] = value ?? NULL; }
+			get { return Rows[row][column] == NULLSTR ? null : Rows[row][column]; }
+			set { Rows[row][column] = value ?? NULLSTR; }
 		}
 	}
 }

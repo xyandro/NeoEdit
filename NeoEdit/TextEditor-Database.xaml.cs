@@ -17,8 +17,6 @@ namespace NeoEdit.Program
 			public Table Table { get; set; }
 		}
 
-		static string DBSanitize(string name) => (!string.IsNullOrEmpty(name)) && (!char.IsLetter(name[0])) ? $"[{name}]" : name;
-
 		List<QueryResult> RunDBSelect(string commandText)
 		{
 			try
