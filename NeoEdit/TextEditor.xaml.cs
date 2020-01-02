@@ -181,7 +181,7 @@ namespace NeoEdit.Program
 		};
 		static internal readonly Brush diffLineBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));
 		static internal readonly Pen diffLinePen = new Pen(new SolidColorBrush(Color.FromRgb(120, 102, 3)), 2);
-		static internal readonly Brush diffColBrush = new SolidColorBrush(Color.FromArgb(128, 239, 203, 5));
+		static internal readonly Brush diffColBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));
 		static internal readonly Brush highlightRowBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
 		static internal readonly Pen lightlightRowPen = new Pen(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 1);
 
