@@ -71,15 +71,15 @@ namespace NeoEdit.Program.Controls
 			outerBorder.SetValue(Border.BorderThicknessProperty, new Thickness(2));
 			outerBorder.SetValue(Border.BackgroundProperty, OuterBrush);
 			outerBorder.SetValue(Border.BorderBrushProperty, OuterBrush);
+			outerBorder.AddHandler(Border.MouseLeftButtonDownEvent, new MouseButtonEventHandler(OnBorderMouseLeftButtonDown));
+			outerBorder.AddHandler(Border.MouseLeftButtonUpEvent, new MouseButtonEventHandler(OnBorderMouseLeftButtonUp));
+			outerBorder.AddHandler(Border.MouseMoveEvent, new MouseEventHandler(OnBorderMouseMove));
 
 			var innerBorder = new FrameworkElementFactory(typeof(Border)) { Name = "innerBorder" };
 			innerBorder.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
 			innerBorder.SetValue(Border.BorderThicknessProperty, new Thickness(2));
 			innerBorder.SetValue(Border.BackgroundProperty, BackgroundBrush);
 			innerBorder.SetValue(Border.BorderBrushProperty, ActiveBrush);
-			innerBorder.AddHandler(Border.MouseLeftButtonDownEvent, new MouseButtonEventHandler(OnBorderMouseLeftButtonDown));
-			innerBorder.AddHandler(Border.MouseLeftButtonUpEvent, new MouseButtonEventHandler(OnBorderMouseLeftButtonUp));
-			innerBorder.AddHandler(Border.MouseMoveEvent, new MouseEventHandler(OnBorderMouseMove));
 
 			var grid = new FrameworkElementFactory(typeof(Grid));
 
