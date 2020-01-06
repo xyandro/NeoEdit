@@ -9,9 +9,8 @@ namespace NeoEdit.Program.NEClipboards
 	{
 		List<NEClipboardItem> neClipboardItems = new List<NEClipboardItem>();
 
-		public List<string> Strings => neClipboardItems.Where(item => item.Type == NEClipboardItem.NEClipboardItemType.String).Select(item => item.String).ToList();
-		public List<object> Objects => neClipboardItems.Where(item => item.Type == NEClipboardItem.NEClipboardItemType.Object).Select(item => item.Object).ToList();
-		public List<BitmapSource> Images => neClipboardItems.Where(item => item.Type == NEClipboardItem.NEClipboardItemType.Image).Select(item => item.Image).ToList();
+		public List<string> Strings => neClipboardItems.Where(item => item.IsString).Select(item => item.String).ToList();
+		public List<object> Objects => neClipboardItems.Where(item => !item.IsString).Select(item => item.Object).ToList();
 
 		public int Count => neClipboardItems.Count;
 

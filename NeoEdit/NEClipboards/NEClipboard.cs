@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using NeoEdit.Program;
+using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.NEClipboards
 {
@@ -45,7 +48,6 @@ namespace NeoEdit.Program.NEClipboards
 		public string String => string.Join("\r\n", Strings);
 		public List<string> Strings => neClipboardLists.SelectMany(list => list.Strings).ToList();
 		public List<object> Objects => neClipboardLists.SelectMany(list => list.Objects).ToList();
-		public List<BitmapSource> Images => neClipboardLists.SelectMany(list => list.Images).ToList();
 
 		public static NEClipboard Create(string str, bool? isCut = null) => Create(new List<string> { str }, isCut);
 		public static NEClipboard Create(IEnumerable<string> strings, bool? isCut = null) => Create(new List<IEnumerable<string>> { strings }, isCut);
@@ -97,11 +99,18 @@ namespace NeoEdit.Program.NEClipboards
 				else
 				{
 					var str = dataObj.GetData(DataFormats.UnicodeText) as string ?? dataObj.GetData(DataFormats.OemText) as string ?? dataObj.GetData(DataFormats.Text) as string ?? dataObj.GetData(typeof(string)) as string;
+
+					if ((str == null) && (dataObj.GetData(DataFormats.Bitmap, true) is BitmapSource image))
+					{
+						var bmp = new Bitmap(image.PixelWidth, image.PixelHeight, PixelFormat.Format32bppPArgb);
+						var data = bmp.LockBits(new Rectangle(System.Drawing.Point.Empty, bmp.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppPArgb);
+						image.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height * data.Stride, data.Stride);
+						bmp.UnlockBits(data);
+						str = Coder.BitmapToString(bmp);
+					}
+
 					list.Add(NEClipboardItem.Create(str));
 				}
-
-				if (dataObj.GetData(DataFormats.Bitmap, true) is BitmapSource image)
-					list.Add(NEClipboardItem.Create(image));
 
 				currentClipboard = result;
 				try { ClipboardChanged?.Invoke(); } catch { }
@@ -129,10 +138,6 @@ namespace NeoEdit.Program.NEClipboards
 					dataObj.SetFileDropList(dropList);
 					dataObj.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(IsCut == true ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
 				}
-
-				var image = Images.FirstOrDefault();
-				if (image != null)
-					dataObj.SetImage(image);
 
 				Clipboard.SetDataObject(dataObj, true);
 				currentClipboard = lastClipboard = this;
