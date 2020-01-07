@@ -313,6 +313,29 @@ namespace NeoEdit.Program
 			SetSelections(strs.Select(tuple => Selections[tuple.Item2]).ToList());
 		}
 
+		void Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref object preResult, bool caseSensitive)
+		{
+			var strs = GetSelectionStrings();
+			var matches = preResult as List<string> ?? strs;
+			while (matches.Count < strs.Count)
+				matches.Add(null);
+			while (strs.Count < matches.Count)
+				strs.Add(null);
+
+			var stringComparison = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+			for (var ctr = 0; ctr < matches.Count; ++ctr)
+				if ((matches[ctr] != null) && (!string.Equals(matches[ctr], strs[ctr], stringComparison)))
+					matches[ctr] = null;
+
+			preResult = matches;
+		}
+
+		void Command_Select_Repeats_Tabs_MatchMismatch(object preResult, bool match)
+		{
+			var matches = preResult as List<string>;
+			SetSelections(Selections.Where((range, index) => (matches[index] != null) == match).ToList());
+		}
+
 		void Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref object preResult, bool caseSensitive)
 		{
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;

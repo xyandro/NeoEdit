@@ -925,6 +925,9 @@
 			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseSensitive_ByCount"/>
 			<Separator/>
 			<MenuItem Header="_Tabs">
+				<controls:NEMenuItem Header="_Match" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Match"/>
+				<controls:NEMenuItem Header="M_ismatch" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Mismatch"/>
+				<Separator/>
 				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Common"/>
 				<controls:NEMenuItem Header="Non C_ommon" CommandEnum="Select_RepeatsCaseSensitive_Tabs_NonCommon"/>
 			</MenuItem>
@@ -940,6 +943,9 @@
 			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseInsensitive_ByCount"/>
 			<Separator/>
 			<MenuItem Header="_Tabs">
+				<controls:NEMenuItem Header="_Match" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Match"/>
+				<controls:NEMenuItem Header="M_ismatch" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Mismatch"/>
+				<Separator/>
 				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Common"/>
 				<controls:NEMenuItem Header="Non C_ommon" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_NonCommon"/>
 			</MenuItem>
