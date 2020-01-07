@@ -70,7 +70,7 @@ namespace NeoEdit.Program
 
 		ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog() => ImageGrabColorDialog.Run(TabsParent, Selections.Select(range => GetString(range)).FirstOrDefault());
 
-		void Command_Image_GrabColor(ImageGrabColorDialog.Result result) => ReplaceSelections(result.Color);
+		void Command_Image_GrabColor(ImageGrabColorDialog.Result result) => ReplaceOneWithMany(result.Colors, true);
 
 		ImageGrabImageDialog.Result Command_Image_GrabImage_Dialog() => ImageGrabImageDialog.Run(TabsParent, GetVariables());
 

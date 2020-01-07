@@ -2,40 +2,32 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
-	xmlns:converters="clr-namespace:NeoEdit.Program.Converters"
 	xmlns:dialogs="clr-namespace:NeoEdit.Program.Dialogs"
-	Title="Grab Color" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=color}" MouseLeftButtonUp="OnMouseUp" MouseMove="OnMouseMove">
+	Title="Grab Color" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=color}">
 
 	<controls:NEWindow.Resources>
 		<dialogs:ColorConverter x:Key="colorConverter"/>
-		<Path x:Key="EyeDropper" x:Shared="False" Fill="White" Width="5" Height="5" Stretch="Fill">
-			<Path.Data>
-				<GeometryGroup>
-					<PathGeometry Figures="M3.72969,0.21795A0.74413,0.74413,0,0,1,4.78205,1.27031L4.20944,1.84292L3.15708,0.79056L3.72969,0.21795" />
-					<CombinedGeometry GeometryCombineMode="Xor">
-						<CombinedGeometry.Geometry1>
-							<PathGeometry Figures="M2.73149,0.67449L4.32551,2.26851L3.80707,2.78695L3.54398,2.52386L1.49342,4.49703A2.73578,2.73578,0,0,1,0.24761,5L0,4.75239A2.73578,2.73578,0,0,1,0.50297,3.50658L2.47614,1.45602L2.21305,1.19293L2.73149,0.67449" />
-						</CombinedGeometry.Geometry1>
-						<CombinedGeometry.Geometry2>
-							<PathGeometry Figures="M2.73149,1.71137L3.28863,2.26851L1.23807,4.24168A2.73578,2.73578,0,0,1,0.42559,4.57441A2.73578,2.73578,0,0,1,0.75832,3.76193L2.73149,1.71137" />
-						</CombinedGeometry.Geometry2>
-					</CombinedGeometry>
-				</GeometryGroup>
-			</Path.Data>
-		</Path>
 	</controls:NEWindow.Resources>
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition Width="10"/>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition MinHeight="10"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Canvas Grid.Row="0" Grid.Column="0" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
+		<Canvas Grid.Row="0" Grid.RowSpan="6" Grid.Column="0" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
 			<Canvas.Background>
 				<MultiBinding Converter="{dialogs:SampleColorConverter}">
 					<Binding Path="Alpha" ElementName="self"/>
@@ -46,77 +38,41 @@
 			</Canvas.Background>
 		</Canvas>
 
-		<Grid Grid.Row="0" Grid.Column="2" Visibility="{Binding Picking, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='!p0'}">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="50"/>
-				<ColumnDefinition Width="10"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="75"/>
-				<ColumnDefinition Width="Auto"/>
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition Height="10"/>
-				<RowDefinition Height="Auto"/>
-			</Grid.RowDefinitions>
+		<Label Grid.Row="0" Grid.Column="1" Content="_Red:" Target="{Binding ElementName=red}" HorizontalAlignment="Right"/>
+		<controls:NumericUpDown Grid.Row="0" Grid.Column="2" x:Name="red" Value="{Binding Red, ElementName=self}" Minimum="0" Maximum="255"/>
 
-			<Label Grid.Row="0" Grid.Column="0" Content="_Red:" Target="{Binding ElementName=red}" HorizontalAlignment="Right"/>
-			<controls:NumericUpDown Grid.Row="0" Grid.Column="1" x:Name="red" Value="{Binding Red, ElementName=self}" Minimum="0" Maximum="255"/>
+		<Label Grid.Row="1" Grid.Column="1" Content="_Green:" Target="{Binding ElementName=green}" HorizontalAlignment="Right"/>
+		<controls:NumericUpDown Grid.Row="1" Grid.Column="2" x:Name="green" Value="{Binding Green, ElementName=self}" Minimum="0" Maximum="255"/>
 
-			<Label Grid.Row="1" Grid.Column="0" Content="_Green:" Target="{Binding ElementName=green}" HorizontalAlignment="Right"/>
-			<controls:NumericUpDown Grid.Row="1" Grid.Column="1" x:Name="green" Value="{Binding Green, ElementName=self}" Minimum="0" Maximum="255"/>
+		<Label Grid.Row="2" Grid.Column="1" Content="_Blue:" Target="{Binding ElementName=blue}" HorizontalAlignment="Right"/>
+		<controls:NumericUpDown Grid.Row="2" Grid.Column="2" x:Name="blue" Value="{Binding Blue, ElementName=self}" Minimum="0" Maximum="255"/>
 
-			<Label Grid.Row="2" Grid.Column="0" Content="_Blue:" Target="{Binding ElementName=blue}" HorizontalAlignment="Right"/>
-			<controls:NumericUpDown Grid.Row="2" Grid.Column="1" x:Name="blue" Value="{Binding Blue, ElementName=self}" Minimum="0" Maximum="255"/>
+		<Label Grid.Row="3" Grid.Column="1" Content="A_lpha:" Target="{Binding ElementName=alpha}" HorizontalAlignment="Right"/>
+		<controls:NumericUpDown Grid.Row="3" Grid.Column="2" x:Name="alpha" Value="{Binding Alpha, ElementName=self}" Minimum="0" Maximum="255"/>
 
-			<Label Grid.Row="3" Grid.Column="0" Content="_Alpha:" Target="{Binding ElementName=alpha}" HorizontalAlignment="Right"/>
-			<controls:NumericUpDown Grid.Row="3" Grid.Column="1" x:Name="alpha" Value="{Binding Alpha, ElementName=self}" Minimum="0" Maximum="255"/>
+		<Label Grid.Row="4" Grid.Column="1" Content="_Color:" Target="{Binding ElementName=color}" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="4" Grid.Column="2" x:Name="color">
+			<TextBox.Text>
+				<MultiBinding Converter="{StaticResource colorConverter}" UpdateSourceTrigger="PropertyChanged">
+					<Binding Path="Alpha" ElementName="self"/>
+					<Binding Path="Red" ElementName="self"/>
+					<Binding Path="Green" ElementName="self"/>
+					<Binding Path="Blue" ElementName="self"/>
+				</MultiBinding>
+			</TextBox.Text>
+		</TextBox>
 
-			<Label Grid.Row="0" Grid.Column="3" Content="_Color:" Target="{Binding ElementName=color}" HorizontalAlignment="Right"/>
-			<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="4" x:Name="color" CompletionTag="GrabColorDialog">
-				<controls:AutoCompleteTextBox.Text>
-					<MultiBinding Converter="{StaticResource colorConverter}" UpdateSourceTrigger="PropertyChanged">
-						<Binding Path="Alpha" ElementName="self"/>
-						<Binding Path="Red" ElementName="self"/>
-						<Binding Path="Green" ElementName="self"/>
-						<Binding Path="Blue" ElementName="self"/>
-					</MultiBinding>
-				</controls:AutoCompleteTextBox.Text>
-			</controls:AutoCompleteTextBox>
-			<StackPanel Grid.Row="0" Grid.Column="5" Name="picker" Background="Transparent" MouseLeftButtonDown="OnMouseDown" Margin="10,0,0,0">
-				<Viewbox Width="{Binding ActualHeight, ElementName=picker}">
-					<StaticResource ResourceKey="EyeDropper"/>
-				</Viewbox>
-			</StackPanel>
+		<CheckBox Grid.Row="5" Grid.Column="2" Content="_Track mouse" IsChecked="{Binding Tracking, ElementName=self}" HorizontalAlignment="Right"/>
 
-			<UniformGrid Grid.Row="5" Grid.ColumnSpan="6" HorizontalAlignment="Right" Rows="1">
-				<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
-				<Button Click="SelectClick" Content="_Select" Padding="10,1"/>
-				<Button Click="HideClick" Content="_Hide" Padding="10,1"/>
-				<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
-			</UniformGrid>
-		</Grid>
+		<Label Grid.Row="6" Grid.Column="1" Content="Count:" HorizontalAlignment="Right"/>
+		<Label Grid.Row="6" Grid.Column="2" Content="{Binding Colors.Count, ElementName=self}" HorizontalAlignment="Right"/>
 
-		<Grid Grid.Row="0" Grid.Column="2" Visibility="{Binding Picking, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='p0'}">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="75"/>
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-			</Grid.RowDefinitions>
-
-			<Viewbox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center">
-				<StaticResource ResourceKey="EyeDropper"/>
-			</Viewbox>
-			<TextBlock Grid.Row="1" Grid.Column="0" Text="Press 'H' to" HorizontalAlignment="Center"/>
-			<TextBlock Grid.Row="2" Grid.Column="0" Text="hide windows" HorizontalAlignment="Center"/>
-		</Grid>
+		<UniformGrid Grid.Row="8" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button Click="AddClick" Content="_Add" Padding="10,1"/>
+			<Button Click="HideClick" Content="_Hide" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
 	</Grid>
 
 </controls:NEWindow>

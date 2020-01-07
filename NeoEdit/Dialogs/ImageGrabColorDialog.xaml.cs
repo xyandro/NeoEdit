@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -19,7 +21,7 @@ namespace NeoEdit.Program.Dialogs
 	{
 		public class Result
 		{
-			public string Color { get; set; }
+			public List<string> Colors { get; set; }
 		}
 
 		[DepProp]
@@ -31,12 +33,21 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public byte Blue { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<byte>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool Picking { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<bool>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
+		public bool Tracking { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<bool>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public ObservableCollection<string> Colors { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<ObservableCollection<string>>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 
-		static ImageGrabColorDialog() { UIHelper<ImageGrabColorDialog>.Register(); }
+		static ImageGrabColorDialog()
+		{
+			UIHelper<ImageGrabColorDialog>.Register();
+			UIHelper<ImageGrabColorDialog>.AddCallback(x => x.Tracking, (obj, o, n) => obj.SetColorFromMousePosition());
+		}
 
+		IntPtr hook;
+		readonly Win32.HookProc hookProc; // Must remain live while it might be called
 		ImageGrabColorDialog(string color)
 		{
+			hookProc = MouseHook;
 			InitializeComponent();
 
 			try
@@ -48,109 +59,64 @@ namespace NeoEdit.Program.Dialogs
 				Blue = blue;
 			}
 			catch { Alpha = Red = Green = Blue = 255; }
+			Colors = new ObservableCollection<string>();
+			Loaded += (s, e) =>
+			{
+				using (var process = Process.GetCurrentProcess())
+				using (var module = process.MainModule)
+					hook = Win32.SetWindowsHookEx(Win32.WH_MOUSE_LL, hookProc, Win32.GetModuleHandle(module.ModuleName), 0);
+			};
 		}
 
 		protected override void OnClosed(EventArgs e)
 		{
-			hidden.ForEach(hwnd => ShowWindow(hwnd, SW_SHOWNA));
+			Win32.UnhookWindowsHookEx(hook);
+			while (hidden.Count > 0)
+				Win32.ShowWindow(hidden.Pop(), Win32.SW_SHOWNA);
 			base.OnClosed(e);
 		}
 
 		Result result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			color.AddCurrentSuggestion();
-			result = new Result { Color = color.Text };
+			if (!Colors.Any())
+				AddClick(sender, e);
+			result = new Result { Colors = Colors.ToList() };
 			DialogResult = true;
 		}
 
-		void SelectClick(object sender, RoutedEventArgs e)
+		void AddClick(object sender, RoutedEventArgs e)
 		{
-			GetCursorPos(out var point);
-			SetColor(new Point(point.X, point.Y));
+			Colors.Add(color.Text);
 			e.Handled = true;
 		}
 
+		readonly Stack<IntPtr> hidden = new Stack<IntPtr>();
 		void HideClick(object sender, RoutedEventArgs e)
 		{
-			GetCursorPos(out var point);
-			HideWindow(new Point(point.X, point.Y));
-			e.Handled = true;
-		}
-
-		Point pickStart;
-		void OnMouseDown(object sender, MouseButtonEventArgs e)
-		{
-			CaptureMouse();
-			Picking = true;
-			pickStart = new Point(Left, Top);
-			e.Handled = true;
-		}
-
-		void OnMouseMove(object sender, MouseEventArgs e)
-		{
-			if (!IsMouseCaptured)
-				return;
-
-			SetColor(PointToScreen(e.GetPosition(this)));
-			e.Handled = true;
-		}
-
-		void SetColor(Point point)
-		{
-			using (var screenPixel = new System.Drawing.Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
-			using (var dest = System.Drawing.Graphics.FromImage(screenPixel))
-			{
-				dest.CopyFromScreen((int)point.X, (int)point.Y, 0, 0, new System.Drawing.Size(1, 1));
-				var color = screenPixel.GetPixel(0, 0);
-				Alpha = color.A;
-				Red = color.R;
-				Green = color.G;
-				Blue = color.B;
-			}
-		}
-
-		readonly List<IntPtr> hidden = new List<IntPtr>();
-
-		void OnMouseUp(object sender, MouseButtonEventArgs e)
-		{
-			if (!IsMouseCaptured)
-				return;
-
-			ReleaseMouseCapture();
-			Picking = false;
-			e.Handled = true;
-			Left = pickStart.X;
-			Top = pickStart.Y;
-		}
-
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
-		{
-			if ((IsMouseCaptured) && (e.Key == Key.H))
-			{
-				HideWindow(PointToScreen(Mouse.GetPosition(this)));
-				e.Handled = true;
-			}
-
-			base.OnPreviewKeyDown(e);
-		}
-
-		void HideWindow(Point point)
-		{
-			var winPoint = new POINT { X = (int)point.X, Y = (int)point.Y };
-			var hwnd = WindowFromPoint(winPoint);
+			Win32.GetCursorPos(out var point);
+			var hwnd = Win32.WindowFromPoint(point);
 
 			if (hwnd == new WindowInteropHelper(this).Handle)
 			{
+				Rect ownerRect;
+				if (Owner.WindowState == WindowState.Maximized)
+				{
+					var useRect = System.Windows.Forms.Screen.GetWorkingArea(new System.Drawing.Point((int)Owner.Left, (int)Owner.Top));
+					ownerRect = new Rect(useRect.X, useRect.Y, useRect.Width, useRect.Height);
+				}
+				else
+					ownerRect = new Rect(Owner.Left, Owner.Top, Owner.ActualWidth, Owner.ActualHeight);
+
 				var points = new List<Point>
 				{
-					new Point(Owner.Left + 10, Owner.Top + 10), // Top left
-					new Point(Owner.Left + Owner.ActualWidth - ActualWidth - 10, Owner.Top + 10), // Top right
-					new Point(Owner.Left + 10, Owner.Top + Owner.ActualHeight - ActualHeight - 10), // Bottom left
-					new Point(Owner.Left - 10 + Owner.ActualWidth - ActualWidth, Owner.Top + Owner.ActualHeight - ActualHeight - 10), // Bottom right
+					new Point(ownerRect.Left + 10, ownerRect.Top + 10), // Top left
+					new Point(ownerRect.Left + ownerRect.Width - ActualWidth - 10, ownerRect.Top + 10), // Top right
+					new Point(ownerRect.Left + 10, ownerRect.Top + ownerRect.Height - ActualHeight - 10), // Bottom left
+					new Point(ownerRect.Left - 10 + ownerRect.Width - ActualWidth, ownerRect.Top + ownerRect.Height - ActualHeight - 10), // Bottom right
 				};
 
-				var current = new Point(Left, Top);
+				var current = new Point(point.X, point.Y);
 
 				var furthestPoint = points.OrderByDescending(testPoint => (testPoint - current).LengthSquared).First();
 
@@ -160,40 +126,68 @@ namespace NeoEdit.Program.Dialogs
 				return;
 			}
 
-			hwnd = GetAncestor(hwnd, GA_ROOT);
-			if (hwnd == GetDesktopWindow())
+			hwnd = Win32.GetAncestor(hwnd, Win32.GA_ROOT);
+			if (hwnd == Win32.GetDesktopWindow())
 				return;
 
-			ShowWindow(hwnd, SW_HIDE);
-			hidden.Add(hwnd);
+			Win32.ShowWindow(hwnd, Win32.SW_HIDE);
+			hidden.Push(hwnd);
+			e.Handled = true;
 		}
 
-		const int SW_HIDE = 0;
-		const int SW_SHOWNA = 8;
-		const int GA_ROOT = 2;
+		IntPtr MouseHook(int code, IntPtr wParam, IntPtr lParam)
+		{
+			if ((int)wParam == Win32.WM_MOUSEMOVE)
+				SetColorFromMousePosition();
 
-		[StructLayout(LayoutKind.Sequential)]
-		struct POINT { public int X, Y; }
+			return Win32.CallNextHookEx(hook, code, wParam, lParam);
+		}
 
-		[DllImport("user32.dll", SetLastError = false)]
-		static extern IntPtr WindowFromPoint(POINT Point);
+		void SetColorFromMousePosition(MouseEventArgs e = null)
+		{
+			if (!Tracking)
+				return;
 
-		[DllImport("user32.dll", SetLastError = false)]
-		static extern IntPtr GetAncestor(IntPtr hwnd, int gaFlags);
-
-		[DllImport("user32.dll", SetLastError = false)]
-		static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
-
-		[DllImport("user32.dll", SetLastError = false)]
-		static extern IntPtr GetDesktopWindow();
-
-		[DllImport("user32.dll", SetLastError = false)]
-		static extern bool GetCursorPos(out POINT lpPoint);
+			Win32.GetCursorPos(out var point);
+			using (var screenPixel = new System.Drawing.Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+			using (var dest = System.Drawing.Graphics.FromImage(screenPixel))
+			{
+				dest.CopyFromScreen(point.X, point.Y, 0, 0, new System.Drawing.Size(1, 1));
+				var color = screenPixel.GetPixel(0, 0);
+				Alpha = color.A;
+				Red = color.R;
+				Green = color.G;
+				Blue = color.B;
+			}
+		}
 
 		static public Result Run(Window parent, string color)
 		{
 			var dialog = new ImageGrabColorDialog(color) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
+		}
+
+		class Win32
+		{
+			public const int GA_ROOT = 2;
+			public const int SW_HIDE = 0;
+			public const int SW_SHOWNA = 8;
+			public const int WH_MOUSE_LL = 14;
+			public const int WM_MOUSEMOVE = 512;
+
+			public delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
+
+			[StructLayout(LayoutKind.Sequential)] public struct POINT { public int X, Y; }
+
+			[DllImport("user32.dll", SetLastError = false)] public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+			[DllImport("user32.dll", SetLastError = false)] public static extern IntPtr GetAncestor(IntPtr hwnd, int gaFlags);
+			[DllImport("user32.dll", SetLastError = false)] public static extern bool GetCursorPos(out POINT lpPoint);
+			[DllImport("user32.dll", SetLastError = false)] public static extern IntPtr GetDesktopWindow();
+			[DllImport("kernel32.dll", SetLastError = false)] public static extern IntPtr GetModuleHandle(string lpModuleName);
+			[DllImport("user32.dll", SetLastError = false)] public static extern IntPtr SetWindowsHookEx(int hookType, HookProc lpfn, IntPtr hMod, uint dwThreadId);
+			[DllImport("user32.dll", SetLastError = false)] public static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
+			[DllImport("user32.dll", SetLastError = true)] [return: MarshalAs(UnmanagedType.Bool)] public static extern bool UnhookWindowsHookEx(IntPtr hhk);
+			[DllImport("user32.dll", SetLastError = false)] public static extern IntPtr WindowFromPoint(POINT Point);
 		}
 	}
 
@@ -203,7 +197,7 @@ namespace NeoEdit.Program.Dialogs
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
-			Colorer.StringToARGB(value as string, out byte alpha, out byte red, out byte green, out byte blue);
+			Colorer.StringToARGB(value as string, out var alpha, out var red, out var green, out var blue);
 			return new object[] { alpha, red, green, blue };
 		}
 	}
