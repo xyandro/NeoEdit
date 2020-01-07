@@ -924,8 +924,10 @@
 			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_RepeatsCaseSensitive_RepeatedLines"/>
 			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseSensitive_ByCount"/>
 			<Separator/>
-			<controls:NEMenuItem Header="Tabs _Match" CommandEnum="Select_RepeatsCaseSensitive_TabsMatch"/>
-			<controls:NEMenuItem Header="Tabs M_ismatch" CommandEnum="Select_RepeatsCaseSensitive_TabsMismatch"/>
+			<MenuItem Header="_Tabs">
+				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Common"/>
+				<controls:NEMenuItem Header="Non C_ommon" CommandEnum="Select_RepeatsCaseSensitive_Tabs_NonCommon"/>
+			</MenuItem>
 		</MenuItem>
 		<MenuItem Header="Repeats (Case _Insensitive)">
 			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_RepeatsCaseInsensitive_Unique"/>
@@ -937,8 +939,10 @@
 			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_RepeatsCaseInsensitive_RepeatedLines"/>
 			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseInsensitive_ByCount"/>
 			<Separator/>
-			<controls:NEMenuItem Header="Tabs _Match" CommandEnum="Select_RepeatsCaseInsensitive_TabsMatch"/>
-			<controls:NEMenuItem Header="Tabs M_ismatch" CommandEnum="Select_RepeatsCaseInsensitive_TabsMismatch"/>
+			<MenuItem Header="_Tabs">
+				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Common"/>
+				<controls:NEMenuItem Header="Non C_ommon" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_NonCommon"/>
+			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="S_plit" CommandEnum="Select_Split"/>

@@ -313,7 +313,7 @@ namespace NeoEdit.Program
 			SetSelections(strs.Select(tuple => Selections[tuple.Item2]).ToList());
 		}
 
-		void Command_Pre_Select_Repeats_TabsMatchMismatch(ref object preResult, bool caseSensitive)
+		void Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref object preResult, bool caseSensitive)
 		{
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 			var repeats = Selections.AsParallel().GroupBy(GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
@@ -324,7 +324,7 @@ namespace NeoEdit.Program
 			preResult = repeats;
 		}
 
-		void Command_Select_Repeats_TabsMatchMismatch(object preResult, bool match)
+		void Command_Select_Repeats_Tabs_CommonNonCommon(object preResult, bool match)
 		{
 			var repeats = preResult as Dictionary<string, int>;
 			repeats = repeats.ToDictionary(pair => pair.Key, pair => pair.Value, repeats.Comparer);

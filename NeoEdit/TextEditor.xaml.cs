@@ -872,10 +872,10 @@ namespace NeoEdit.Program
 			{
 				case NECommand.Edit_Paste_Paste: Command_Pre_Edit_Paste_Paste(ref preResult); break;
 				case NECommand.Edit_Paste_RotatePaste: Command_Pre_Edit_Paste_Paste(ref preResult); break;
-				case NECommand.Select_RepeatsCaseSensitive_TabsMatch: Command_Pre_Select_Repeats_TabsMatchMismatch(ref preResult, true); break;
-				case NECommand.Select_RepeatsCaseSensitive_TabsMismatch: Command_Pre_Select_Repeats_TabsMatchMismatch(ref preResult, true); break;
-				case NECommand.Select_RepeatsCaseInsensitive_TabsMatch: Command_Pre_Select_Repeats_TabsMatchMismatch(ref preResult, false); break;
-				case NECommand.Select_RepeatsCaseInsensitive_TabsMismatch: Command_Pre_Select_Repeats_TabsMatchMismatch(ref preResult, false); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref preResult, true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref preResult, true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref preResult, false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref preResult, false); break;
 				case NECommand.Select_Selection_ToggleAnchor: Command_Pre_Select_Selection_ToggleAnchor(ref preResult); break;
 			}
 		}
@@ -1495,16 +1495,16 @@ namespace NeoEdit.Program
 				case NECommand.Select_RepeatsCaseSensitive_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(true); break;
 				case NECommand.Select_RepeatsCaseSensitive_RepeatedLines: Command_Select_Repeats_RepeatedLines(true); break;
 				case NECommand.Select_RepeatsCaseSensitive_ByCount: Command_Select_Repeats_ByCount(dialogResult as SelectByCountDialog.Result, true); break;
-				case NECommand.Select_RepeatsCaseSensitive_TabsMatch: Command_Select_Repeats_TabsMatchMismatch(preResult, true); break;
-				case NECommand.Select_RepeatsCaseSensitive_TabsMismatch: Command_Select_Repeats_TabsMatchMismatch(preResult, false); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: Command_Select_Repeats_Tabs_CommonNonCommon(preResult, true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: Command_Select_Repeats_Tabs_CommonNonCommon(preResult, false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_Unique: Command_Select_Repeats_Unique(false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_Duplicates: Command_Select_Repeats_Duplicates(false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_MatchPrevious: Command_Select_Repeats_MatchPrevious(false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_RepeatedLines: Command_Select_Repeats_RepeatedLines(false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_ByCount: Command_Select_Repeats_ByCount(dialogResult as SelectByCountDialog.Result, false); break;
-				case NECommand.Select_RepeatsCaseInsensitive_TabsMatch: Command_Select_Repeats_TabsMatchMismatch(preResult, true); break;
-				case NECommand.Select_RepeatsCaseInsensitive_TabsMismatch: Command_Select_Repeats_TabsMatchMismatch(preResult, false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: Command_Select_Repeats_Tabs_CommonNonCommon(preResult, true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: Command_Select_Repeats_Tabs_CommonNonCommon(preResult, false); break;
 				case NECommand.Select_Split: Command_Select_Split(dialogResult as SelectSplitDialog.Result); break;
 				case NECommand.Select_Selection_First: Command_Select_Selection_First(); break;
 				case NECommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;
