@@ -15,6 +15,7 @@ namespace NeoEdit.Program
 				try
 				{
 					var xml = XElement.Load(settingsFile);
+					try { exitOnClose = bool.Parse(xml.Element(nameof(ExitOnClose)).Value); } catch { }
 					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
 					try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
 					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
@@ -32,6 +33,7 @@ namespace NeoEdit.Program
 			try
 			{
 				var xml = new XElement("Settings");
+				xml.Add(new XElement(nameof(ExitOnClose), exitOnClose));
 				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
 				xml.Add(new XElement(nameof(YouTubeDLPath), youTubeDLPath));
 				xml.Add(new XElement(nameof(FFmpegPath), ffmpegPath));
@@ -41,6 +43,21 @@ namespace NeoEdit.Program
 			}
 			catch { }
 		}
+
+		static bool exitOnClose = true;
+		public static bool ExitOnClose
+		{
+			get { return exitOnClose; }
+			set
+			{
+				exitOnClose = value;
+				SaveSettings();
+				exitOnCloseChanged?.Invoke(null, new EventArgs());
+			}
+		}
+
+		static EventHandler exitOnCloseChanged;
+		public static event EventHandler ExitOnCloseChanged { add { exitOnCloseChanged += value; } remove { exitOnCloseChanged -= value; } }
 
 		static bool escapeClearsSelections = true;
 		public static bool EscapeClearsSelections

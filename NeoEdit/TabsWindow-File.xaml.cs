@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows;
 using Microsoft.Win32;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.NEClipboards;
@@ -102,7 +103,7 @@ namespace NeoEdit.Program
 			active.ForEach(tab => newWindow.AddTextEditor(tab));
 		}
 
-		static public void Command_File_Shell_Integrate()
+		static void Command_File_Shell_Integrate()
 		{
 			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
 			using (var starKey = baseKey.OpenSubKey("*"))
@@ -112,12 +113,19 @@ namespace NeoEdit.Program
 				commandKey.SetValue("", $@"""{Assembly.GetEntryAssembly().Location}"" -text ""%1""");
 		}
 
-		static public void Command_File_Shell_Unintegrate()
+		static void Command_File_Shell_Unintegrate()
 		{
 			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
 			using (var starKey = baseKey.OpenSubKey("*"))
 			using (var shellKey = starKey.OpenSubKey("shell", true))
 				shellKey.DeleteSubKeyTree("Open with NeoEdit Text Editor");
+		}
+
+		void Command_File_Exit()
+		{
+			Close();
+			if (Application.Current.Windows.Count == 0)
+				Environment.Exit(0);
 		}
 	}
 }

@@ -381,7 +381,7 @@ namespace NeoEdit.Program
 				case NECommand.File_MoveToNewWindow: Command_File_MoveToNewWindow(); break;
 				case NECommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;
 				case NECommand.File_Shell_Unintegrate: Command_File_Shell_Unintegrate(); break;
-				case NECommand.File_Exit: Close(); break;
+				case NECommand.File_Exit: Command_File_Exit(); break;
 				case NECommand.Diff_Diff: Command_Diff_Diff(shiftDown); break;
 				case NECommand.Diff_Select_LeftTab: Command_Diff_Select_LeftRightBothTabs(true); break;
 				case NECommand.Diff_Select_RightTab: Command_Diff_Select_LeftRightBothTabs(false); break;
@@ -1051,6 +1051,13 @@ namespace NeoEdit.Program
 			base.OnClosing(e);
 
 			try { Settings.WindowPosition = GetPosition(); } catch { }
+		}
+
+		protected override void OnClosed(EventArgs e)
+		{
+			base.OnClosed(e);
+			if ((Settings.ExitOnClose) && (Application.Current.Windows.Count == 0))
+				Environment.Exit(0);
 		}
 	}
 }

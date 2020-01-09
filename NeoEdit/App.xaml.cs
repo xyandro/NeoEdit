@@ -20,7 +20,6 @@ namespace NeoEdit.Program
 			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
 			CreateWindowsFromArgs(string.Join(" ", e.Args.Select(str => $"\"{str}\"")));
-			ShutdownMode = ShutdownMode.OnLastWindowClose;
 			if (Current.Windows.Count == 0)
 				Current.Shutdown();
 		}
