@@ -296,7 +296,7 @@ namespace NeoEdit.Program
 				canvasRenderTimer.Start();
 			};
 
-			FontSizeChanged(Font.FontSize);
+			FontSizeChanged(null, null);
 			Font.FontSizeChanged += FontSizeChanged;
 			Font.ShowSpecialCharsChanged += (s, e) => InvalidateCanvas();
 		}
@@ -307,7 +307,7 @@ namespace NeoEdit.Program
 			statusBar.InvalidateVisual();
 		}
 
-		void FontSizeChanged(double fontSize) => CalculateBoundaries();
+		void FontSizeChanged(object sender, EventArgs e) => CalculateBoundaries();
 
 		public int BeginOffset => Data.GetOffset(0, 0);
 		public int EndOffset => Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));

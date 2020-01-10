@@ -9,8 +9,7 @@ namespace NeoEdit.Program
 {
 	public static class Font
 	{
-		public delegate void FontSizeChangedDelegate(double newSize);
-		public static event FontSizeChangedDelegate FontSizeChanged;
+		public static event EventHandler FontSizeChanged;
 		public static FontFamily FontFamily { get; }
 		public static Typeface Typeface { get; }
 		static double fontSize;
@@ -23,7 +22,7 @@ namespace NeoEdit.Program
 				fontSize = value;
 				var formattedText = GetText("0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()");
 				CharWidth = formattedText.Width / "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()".Length;
-				FontSizeChanged?.Invoke(fontSize);
+				FontSizeChanged?.Invoke(null, new EventArgs());
 			}
 		}
 

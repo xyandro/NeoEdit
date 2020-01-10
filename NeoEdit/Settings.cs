@@ -25,7 +25,7 @@ namespace NeoEdit.Program
 				catch { }
 			}
 
-			Font.FontSizeChanged += newSize => SaveSettings();
+			Font.FontSizeChanged += (s, e) => SaveSettings();
 		}
 
 		static void SaveSettings()
