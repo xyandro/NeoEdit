@@ -349,6 +349,13 @@ namespace NeoEdit.Program.Controls
 
 		public void SetPosition(string position) => Win32.SetPosition(new WindowInteropHelper(this).Handle, position);
 
+		protected override void OnClosed(EventArgs e)
+		{
+			base.OnClosed(e);
+			if ((Settings.ExitOnClose) && (Application.Current.Windows.Count == 0))
+				Environment.Exit(0);
+		}
+
 		static class Win32
 		{
 			internal static string GetPosition(IntPtr handle)

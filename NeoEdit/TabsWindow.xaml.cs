@@ -1052,12 +1052,5 @@ namespace NeoEdit.Program
 
 			try { Settings.WindowPosition = GetPosition(); } catch { }
 		}
-
-		protected override void OnClosed(EventArgs e)
-		{
-			base.OnClosed(e);
-			if ((Settings.ExitOnClose) && (Application.Current.Windows.Count == 0))
-				Environment.Exit(0);
-		}
 	}
 }
