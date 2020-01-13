@@ -28,7 +28,7 @@ namespace NeoEdit.Program
 		{
 			if (next)
 			{
-				var endLine = Data.GetOffsetLine(range.End);
+				var endLine = Data.GetPositionLine(range.End);
 
 				while ((endLine < Data.NumLines) && (Data.GetLineDiffMatches(endLine)))
 					++endLine;
@@ -43,7 +43,7 @@ namespace NeoEdit.Program
 			}
 			else
 			{
-				var startLine = Data.GetOffsetLine(Math.Max(0, range.Start - 1));
+				var startLine = Data.GetPositionLine(Math.Max(0, range.Start - 1));
 
 				while ((startLine > 0) && (Data.GetLineDiffMatches(startLine)))
 					--startLine;
@@ -149,7 +149,7 @@ namespace NeoEdit.Program
 			for (var pass = 0; pass < 2; ++pass)
 			{
 				var target = pass == 0 ? this : DiffTarget;
-				var sels = lines.Select(tuple => new Range(target.Data.GetOffset(tuple.Item2, 0, true), target.Data.GetOffset(tuple.Item1, 0, true))).ToList();
+				var sels = lines.Select(tuple => new Range(target.Data.GetPosition(tuple.Item2, 0, true), target.Data.GetPosition(tuple.Item1, 0, true))).ToList();
 				if (shiftDown)
 					sels.AddRange(target.Selections);
 				target.SetSelections(sels);

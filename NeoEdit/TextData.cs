@@ -9,7 +9,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	// Offsets: absolute positions in data
+	// Positions: absolute positions in data
 	// Lines/indexes: positions in data as broken into lines
 	// Columns: Positions accounting for tabs
 	// Indexes go from 0 - lineLength+1 (columns have equivalent values):
@@ -20,13 +20,13 @@ namespace NeoEdit.Program
 	{
 		string _data;
 		public string Data { get { return _data; } private set { _data = value; RecalculateLines(); } }
-		List<int> lineOffset;
-		List<int> endingOffset;
+		List<int> linePosition;
+		List<int> endingPosition;
 		public string OnlyEnding { get; private set; }
 		public string DefaultEnding { get; private set; }
 		const int tabStop = 4;
 
-		public int NumLines => endingOffset.Count;
+		public int NumLines => endingPosition.Count;
 		public int NumChars => Data.Length;
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
@@ -48,8 +48,8 @@ namespace NeoEdit.Program
 			const int Ending_CRLF = 3;
 			const int Ending_Mixed = 4;
 
-			lineOffset = new List<int>();
-			endingOffset = new List<int>();
+			linePosition = new List<int>();
+			endingPosition = new List<int>();
 			MaxIndex = MaxColumn = 0;
 
 			var lineEndChars = new char[] { '\r', '\n' };
@@ -70,22 +70,22 @@ namespace NeoEdit.Program
 				startChunk = endChunk;
 			}
 
-			var chunkLineOffsets = chunks.Select(chunk => new List<int>()).ToList();
-			var chunkEndingOffsets = chunks.Select(chunk => new List<int>()).ToList();
+			var chunkLinePositions = chunks.Select(chunk => new List<int>()).ToList();
+			var chunkEndingPositions = chunks.Select(chunk => new List<int>()).ToList();
 
 			int defaultEnding = Ending_None, onlyEnding = Ending_None;
 			Parallel.ForEach(chunks, chunk =>
 			{
 				var index = chunks.IndexOf(chunk);
 				int chunkDefaultEnding = Ending_None, chunkOnlyEnding = Ending_None;
-				var chunkLineOffset = chunkLineOffsets[index];
-				var chunkEndingOffset = chunkEndingOffsets[index];
+				var chunkLinePosition = chunkLinePositions[index];
+				var chunkEndingPosition = chunkEndingPositions[index];
 				var chunkMaxIndex = 0;
 
-				var offset = chunk.Item1;
-				while (offset < chunk.Item2)
+				var position = chunk.Item1;
+				while (position < chunk.Item2)
 				{
-					var endLine = Data.IndexOfAny(lineEndChars, offset, chunk.Item2 - offset);
+					var endLine = Data.IndexOfAny(lineEndChars, position, chunk.Item2 - position);
 					var endLineLen = 1;
 					var ending = Ending_None;
 					if (endLine == -1)
@@ -110,13 +110,13 @@ namespace NeoEdit.Program
 						if (chunkOnlyEnding != ending)
 							chunkOnlyEnding = Ending_Mixed;
 					}
-					chunkLineOffset.Add(offset);
-					chunkEndingOffset.Add(endLine);
-					offset = endLine + endLineLen;
-					chunkMaxIndex = Math.Max(chunkMaxIndex, endLine - offset);
+					chunkLinePosition.Add(position);
+					chunkEndingPosition.Add(endLine);
+					position = endLine + endLineLen;
+					chunkMaxIndex = Math.Max(chunkMaxIndex, endLine - position);
 				}
 
-				lock (chunkLineOffsets)
+				lock (chunkLinePositions)
 				{
 					if (defaultEnding == Ending_None)
 						defaultEnding = chunkDefaultEnding;
@@ -128,18 +128,18 @@ namespace NeoEdit.Program
 				}
 			});
 
-			chunkLineOffsets.ForEach(values => lineOffset.AddRange(values));
-			chunkEndingOffsets.ForEach(values => endingOffset.AddRange(values));
+			chunkLinePositions.ForEach(values => linePosition.AddRange(values));
+			chunkEndingPositions.ForEach(values => endingPosition.AddRange(values));
 
 			// Always have an ending line
-			if ((endingOffset.Count == 0) || (endingOffset.Last() != Data.Length))
+			if ((endingPosition.Count == 0) || (endingPosition.Last() != Data.Length))
 			{
-				lineOffset.Add(Data.Length);
-				endingOffset.Add(Data.Length);
+				linePosition.Add(Data.Length);
+				endingPosition.Add(Data.Length);
 			}
 
 			// Used only for calculating length
-			lineOffset.Add(Data.Length);
+			linePosition.Add(Data.Length);
 
 			var endingText = new Dictionary<int, string>
 			{
@@ -168,7 +168,7 @@ namespace NeoEdit.Program
 					throw new IndexOutOfRangeException();
 				if ((index < 0) || (index >= GetLineLength(line)))
 					throw new IndexOutOfRangeException();
-				return Data[lineOffset[line] + index];
+				return Data[linePosition[line] + index];
 			}
 		}
 
@@ -176,14 +176,14 @@ namespace NeoEdit.Program
 		{
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			return endingOffset[line] - lineOffset[line];
+			return endingPosition[line] - linePosition[line];
 		}
 
 		public int GetEndingLength(int line)
 		{
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			return lineOffset[line + 1] - endingOffset[line];
+			return linePosition[line + 1] - endingPosition[line];
 		}
 
 		public int GetLineColumnsLength(int line)
@@ -191,7 +191,7 @@ namespace NeoEdit.Program
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
 
-			var index = lineOffset[line];
+			var index = linePosition[line];
 			var len = GetLineLength(line);
 			var columns = 0;
 			while (len > 0)
@@ -221,7 +221,7 @@ namespace NeoEdit.Program
 		{
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			return Data.Substring(lineOffset[line], GetLineLength(line) + (includeEnding ? GetEndingLength(line) : 0));
+			return Data.Substring(linePosition[line], GetLineLength(line) + (includeEnding ? GetEndingLength(line) : 0));
 		}
 
 		public string GetLineColumns(int line, bool includeEnding = false)
@@ -229,7 +229,7 @@ namespace NeoEdit.Program
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
 
-			var index = lineOffset[line];
+			var index = linePosition[line];
 			var len = GetLineLength(line) + (includeEnding ? GetEndingLength(line) : 0);
 			var sb = new StringBuilder();
 			while (len > 0)
@@ -261,7 +261,7 @@ namespace NeoEdit.Program
 				throw new IndexOutOfRangeException();
 
 			var result = new List<int>();
-			var index = lineOffset[line];
+			var index = linePosition[line];
 			var len = GetLineLength(line) + (includeEnding ? GetEndingLength(line) : 0);
 			var outPos = 0;
 			while (len > 0)
@@ -283,10 +283,10 @@ namespace NeoEdit.Program
 		{
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			return Data.Substring(endingOffset[line], GetEndingLength(line));
+			return Data.Substring(endingPosition[line], GetEndingLength(line));
 		}
 
-		public int GetOffset(int line, int index, bool allowJustPastEnd = false)
+		public int GetPosition(int line, int index, bool allowJustPastEnd = false)
 		{
 			if ((allowJustPastEnd) && (line == NumLines) && (index == 0))
 				return Data.Length;
@@ -296,33 +296,33 @@ namespace NeoEdit.Program
 			if ((index < 0) || (index > GetLineLength(line) + 1))
 				throw new IndexOutOfRangeException();
 			if (index == GetLineLength(line) + 1)
-				return endingOffset[line] + GetEndingLength(line);
-			return lineOffset[line] + index;
+				return endingPosition[line] + GetEndingLength(line);
+			return linePosition[line] + index;
 		}
 
-		public int GetOffsetLine(int offset)
+		public int GetPositionLine(int position)
 		{
-			if ((offset < 0) || (offset > Data.Length))
+			if ((position < 0) || (position > Data.Length))
 				throw new IndexOutOfRangeException();
-			var line = lineOffset.BinarySearch(offset);
+			var line = linePosition.BinarySearch(position);
 			if (line < 0)
 				line = ~line - 1;
-			while ((line < lineOffset.Count - 2) && (lineOffset[line] == lineOffset[line + 1]))
+			while ((line < linePosition.Count - 2) && (linePosition[line] == linePosition[line + 1]))
 				++line;
-			if (line == lineOffset.Count - 1)
+			if (line == linePosition.Count - 1)
 				--line;
 			return line;
 		}
 
-		public int GetOffsetIndex(int offset, int line)
+		public int GetPositionIndex(int position, int line)
 		{
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
-			if ((offset < lineOffset[line]) || (offset > endingOffset[line] + GetEndingLength(line)))
+			if ((position < linePosition[line]) || (position > endingPosition[line] + GetEndingLength(line)))
 				throw new IndexOutOfRangeException();
-			if (offset > endingOffset[line])
+			if (position > endingPosition[line])
 				return GetLineLength(line) + 1;
-			return offset - lineOffset[line];
+			return position - linePosition[line];
 		}
 
 		public int GetColumnFromIndex(int line, int findIndex)
@@ -333,26 +333,26 @@ namespace NeoEdit.Program
 				throw new IndexOutOfRangeException();
 
 			var column = 0;
-			var offset = lineOffset[line];
-			var findOffset = findIndex + offset;
-			var end = offset + GetLineLength(line);
-			while (offset < findOffset)
+			var position = linePosition[line];
+			var findPosition = findIndex + position;
+			var end = position + GetLineLength(line);
+			while (position < findPosition)
 			{
-				var find = Data.IndexOf('\t', offset, end - offset);
-				if (find == offset)
+				var find = Data.IndexOf('\t', position, end - position);
+				if (find == position)
 				{
 					column = (column / tabStop + 1) * tabStop;
-					++offset;
+					++position;
 					continue;
 				}
 
 				if (find == -1)
-					find = findOffset - offset;
+					find = findPosition - position;
 				else
-					find = Math.Min(find, findOffset) - offset;
+					find = Math.Min(find, findPosition) - position;
 
 				column += find;
-				offset += find;
+				position += find;
 			}
 			return column;
 		}
@@ -365,33 +365,33 @@ namespace NeoEdit.Program
 				throw new IndexOutOfRangeException();
 
 			var column = 0;
-			var offset = lineOffset[line];
-			var end = offset + GetLineLength(line);
+			var position = linePosition[line];
+			var end = position + GetLineLength(line);
 			while (column < findColumn)
 			{
-				var find = Data.IndexOf('\t', offset, end - offset);
-				if (find == offset)
+				var find = Data.IndexOf('\t', position, end - position);
+				if (find == position)
 				{
 					column = (column / tabStop + 1) * tabStop;
-					++offset;
+					++position;
 					continue;
 				}
 
 				if (find == -1)
 					find = findColumn - column;
 				else
-					find = Math.Min(find - offset, findColumn - column);
+					find = Math.Min(find - position, findColumn - column);
 
 				column += find;
-				offset += find;
+				position += find;
 			}
-			if (offset > end + 1)
+			if (position > end + 1)
 			{
 				if (returnMaxOnFail)
 					return GetLineLength(line) + 1;
 				throw new IndexOutOfRangeException();
 			}
-			return offset - lineOffset[line];
+			return position - linePosition[line];
 		}
 
 		public string GetString(int start, int length)
@@ -401,35 +401,35 @@ namespace NeoEdit.Program
 			return Data.Substring(start, length);
 		}
 
-		public void Replace(List<int> offsets, List<int> lengths, List<string> text)
+		public void Replace(List<int> positions, List<int> lengths, List<string> text)
 		{
-			if ((offsets.Count != lengths.Count) || (offsets.Count != text.Count))
+			if ((positions.Count != lengths.Count) || (positions.Count != text.Count))
 				throw new Exception("Invalid number of arguments");
 
 			int? checkPos = null;
-			for (var ctr = 0; ctr < offsets.Count; ctr++)
+			for (var ctr = 0; ctr < positions.Count; ctr++)
 			{
 				if (!checkPos.HasValue)
-					checkPos = offsets[ctr];
-				if (offsets[ctr] < checkPos)
+					checkPos = positions[ctr];
+				if (positions[ctr] < checkPos)
 					throw new Exception("Replace data out of order");
-				checkPos = offsets[ctr] + lengths[ctr];
+				checkPos = positions[ctr] + lengths[ctr];
 			}
 
 			var sb = new StringBuilder();
 			var dataPos = 0;
 			for (var listIndex = 0; listIndex <= text.Count; ++listIndex)
 			{
-				var offset = Data.Length;
+				var position = Data.Length;
 				var length = 0;
-				if (listIndex < offsets.Count)
+				if (listIndex < positions.Count)
 				{
-					offset = offsets[listIndex];
+					position = positions[listIndex];
 					length = lengths[listIndex];
 				}
 
-				sb.Append(Data, dataPos, offset - dataPos);
-				dataPos = offset;
+				sb.Append(Data, dataPos, position - dataPos);
+				dataPos = position;
 
 				if (listIndex < text.Count)
 					sb.Append(text[listIndex]);
@@ -439,9 +439,9 @@ namespace NeoEdit.Program
 			Data = sb.ToString();
 		}
 
-		public int GetOppositeBracket(int offset)
+		public int GetOppositeBracket(int position)
 		{
-			if ((offset < 0) || (offset > Data.Length))
+			if ((position < 0) || (position > Data.Length))
 				return -1;
 
 			var dict = new Dictionary<char, char>
@@ -453,81 +453,81 @@ namespace NeoEdit.Program
 			};
 
 			var found = default(KeyValuePair<char, char>);
-			if ((found.Key == 0) && (offset < Data.Length))
-				found = dict.FirstOrDefault(entry => (entry.Key == Data[offset]) || (entry.Value == Data[offset]));
+			if ((found.Key == 0) && (position < Data.Length))
+				found = dict.FirstOrDefault(entry => (entry.Key == Data[position]) || (entry.Value == Data[position]));
 			if (found.Key == 0)
 			{
-				if (--offset < 0)
+				if (--position < 0)
 					return -1;
-				found = dict.FirstOrDefault(entry => (entry.Key == Data[offset]) || (entry.Value == Data[offset]));
+				found = dict.FirstOrDefault(entry => (entry.Key == Data[position]) || (entry.Value == Data[position]));
 			}
 			if (found.Key == 0)
 				return -1;
 
-			var direction = found.Key == Data[offset] ? 1 : -1;
+			var direction = found.Key == Data[position] ? 1 : -1;
 
 			var num = 0;
-			for (; offset < Data.Length; offset += direction)
+			for (; position < Data.Length; position += direction)
 			{
-				if (Data[offset] == found.Key)
+				if (Data[position] == found.Key)
 					++num;
-				if (Data[offset] == found.Value)
+				if (Data[position] == found.Value)
 					--num;
 
 				if (num == 0)
-					return offset + Math.Max(0, direction);
+					return position + Math.Max(0, direction);
 			}
 
 			return -1;
 		}
 
-		public List<Tuple<int, int>> RegexMatches(Regex regex, int offset, int length, bool multiLine, bool regexGroups, bool firstOnly)
+		public List<Tuple<int, int>> RegexMatches(Regex regex, int position, int length, bool multiLine, bool regexGroups, bool firstOnly)
 		{
 			var result = new List<Tuple<int, int>>();
-			var endOffset = offset + length;
-			while (offset < endOffset)
+			var endPosition = position + length;
+			while (position < endPosition)
 			{
-				var nextOffset = endOffset;
+				var nextPosition = endPosition;
 				if (!multiLine)
 				{
-					var line = GetOffsetLine(offset);
-					length = Math.Max(0, Math.Min(lineOffset[line] + GetLineLength(line), endOffset) - offset); // Could have been negative if selection encompasses half of \r\n line break
-					nextOffset = Math.Min(endOffset, lineOffset[line + 1]);
+					var line = GetPositionLine(position);
+					length = Math.Max(0, Math.Min(linePosition[line] + GetLineLength(line), endPosition) - position); // Could have been negative if selection encompasses half of \r\n line break
+					nextPosition = Math.Min(endPosition, linePosition[line + 1]);
 				}
 
-				var matches = regex.Matches(Data.Substring(offset, length)).Cast<Match>();
+				var matches = regex.Matches(Data.Substring(position, length)).Cast<Match>();
 				foreach (var match in matches)
 				{
 					if ((!regexGroups) || (match.Groups.Count == 1))
-						result.Add(new Tuple<int, int>(offset + match.Index, match.Length));
+						result.Add(new Tuple<int, int>(position + match.Index, match.Length));
 					else
-						result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => new Tuple<int, int>(offset + capture.Index, capture.Length)));
+						result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => new Tuple<int, int>(position + capture.Index, capture.Length)));
 					if ((firstOnly) && (result.Count != 0))
 						return result;
 				}
-				offset = nextOffset;
+				position = nextPosition;
 			}
 
 			return result;
 		}
 
-		public List<Tuple<int, int>> StringMatches(Searcher searcher, int offset, int length)
+		public List<Tuple<int, int>> StringMatches(Searcher searcher, int position, int length)
 		{
-			return searcher.Find(Data, offset, length);
+			return searcher.Find(Data, position, length);
 		}
 
-		public void Trim(ref int offset, ref int length, HashSet<char> chars, bool start, bool end)
+		public void Trim(ref int position, ref int length, HashSet<char> chars, bool start, bool end)
 		{
 			if (end)
 			{
-				while ((length > 0) && (chars.Contains(Data[offset + length - 1])))
+				while ((length > 0) && (chars.Contains(Data[position + length - 1])))
 					--length;
 			}
 			if (start)
 			{
-				while ((length > 0) && (chars.Contains(Data[offset])))
+				while ((length > 0) && (chars.Contains(Data[position])))
 				{
-					++offset;
+					++position;
 					--length;
 				}
 			}
@@ -677,8 +677,8 @@ namespace NeoEdit.Program
 				for (var ctr = 0; ctr < linesLCS.Count; ++ctr)
 					if (linesLCS[ctr][pass] == LCS.MatchType.Gap)
 					{
-						textData[pass].lineOffset.Insert(ctr, textData[pass].lineOffset[ctr]);
-						textData[pass].endingOffset.Insert(ctr, textData[pass].lineOffset[ctr]);
+						textData[pass].linePosition.Insert(ctr, textData[pass].linePosition[ctr]);
+						textData[pass].endingPosition.Insert(ctr, textData[pass].linePosition[ctr]);
 					}
 
 				textData[pass].diffData.LineMap = new Dictionary<int, int>();
@@ -753,8 +753,8 @@ namespace NeoEdit.Program
 			for (var line = diffData.LineCompare.Count - 1; line >= 0; --line)
 				if (diffData.LineCompare[line] == DiffType.GapMismatch)
 				{
-					lineOffset.RemoveAt(line);
-					endingOffset.RemoveAt(line);
+					linePosition.RemoveAt(line);
+					endingPosition.RemoveAt(line);
 				}
 
 			diffData = null;
@@ -847,9 +847,9 @@ namespace NeoEdit.Program
 								{
 									if (start.HasValue)
 									{
-										var lineOffset = textData[pass].GetOffset(mappedCurLine[pass], 0);
-										var begin = lineOffset + map[pass][start.Value];
-										var end = lineOffset + map[pass][pos];
+										var linePosition = textData[pass].GetPosition(mappedCurLine[pass], 0);
+										var begin = linePosition + map[pass][start.Value];
+										var end = linePosition + map[pass][pos];
 										if (pass == 0)
 											strs.Add(textData[pass].GetString(begin, end - begin));
 										else
@@ -867,8 +867,8 @@ namespace NeoEdit.Program
 
 				if ((ignoreLineEndings == null) && (src.OnlyEnding != null) && (linesLCS[line][1] != LCS.MatchType.Gap))
 				{
-					var endingStart = dest.endingOffset[mappedCurLine[1]];
-					var endingEnd = dest.lineOffset[mappedCurLine[1] + 1];
+					var endingStart = dest.endingPosition[mappedCurLine[1]];
+					var endingEnd = dest.linePosition[mappedCurLine[1] + 1];
 					if (endingStart == endingEnd)
 						continue;
 
@@ -910,7 +910,7 @@ namespace NeoEdit.Program
 				var end = line >= diffData.LineCompare.Count;
 
 				if ((!end) && ((diffData.LineCompare[line] == DiffType.Match) == match))
-					matchTuple = Tuple.Create(matchTuple?.Item1 ?? lineOffset[line], lineOffset[line + 1]);
+					matchTuple = Tuple.Create(matchTuple?.Item1 ?? linePosition[line], linePosition[line + 1]);
 				else if (matchTuple != null)
 				{
 					result.Add(matchTuple);

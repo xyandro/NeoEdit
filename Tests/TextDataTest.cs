@@ -76,40 +76,40 @@ namespace NeoEdit.Tests
 			try { var test = textData.GetEnding(numLines + 1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
 
-			try { var test = textData.GetOffset(-1, 0); Assert.Fail(); }
+			try { var test = textData.GetPosition(-1, 0); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
-			try { var test = textData.GetOffset(numLines + 1, 0); Assert.Fail(); }
+			try { var test = textData.GetPosition(numLines + 1, 0); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
-			try { var test = textData.GetOffset(4, -1); Assert.Fail(); }
+			try { var test = textData.GetPosition(4, -1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
-			Assert.AreEqual(textData.GetOffset(4, 0), 30);
-			Assert.AreEqual(textData.GetOffset(4, 6), 36);
-			Assert.AreEqual(textData.GetOffset(4, 7), 38);
-			try { var test = textData.GetOffset(4, 8); Assert.Fail(); }
-			catch (IndexOutOfRangeException) { }
-
-			try { var test = textData.GetOffsetLine(-1); Assert.Fail(); }
-			catch (IndexOutOfRangeException) { }
-			Assert.AreEqual(textData.GetOffsetLine(30), 4);
-			Assert.AreEqual(textData.GetOffsetLine(36), 4);
-			Assert.AreEqual(textData.GetOffsetLine(37), 4);
-			Assert.AreEqual(textData.GetOffsetLine(38), 5);
-			try { var test = textData.GetOffsetLine(TestString.Length + 1); Assert.Fail(); }
+			Assert.AreEqual(textData.GetPosition(4, 0), 30);
+			Assert.AreEqual(textData.GetPosition(4, 6), 36);
+			Assert.AreEqual(textData.GetPosition(4, 7), 38);
+			try { var test = textData.GetPosition(4, 8); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
 
-			try { var test = textData.GetOffsetIndex(0, -1); Assert.Fail(); }
+			try { var test = textData.GetPositionLine(-1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
-			try { var test = textData.GetOffsetIndex(0, numLines + 1); Assert.Fail(); }
+			Assert.AreEqual(textData.GetPositionLine(30), 4);
+			Assert.AreEqual(textData.GetPositionLine(36), 4);
+			Assert.AreEqual(textData.GetPositionLine(37), 4);
+			Assert.AreEqual(textData.GetPositionLine(38), 5);
+			try { var test = textData.GetPositionLine(TestString.Length + 1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
-			try { var test = textData.GetOffsetIndex(29, 4); Assert.Fail(); }
+
+			try { var test = textData.GetPositionIndex(0, -1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
-			Assert.AreEqual(textData.GetOffsetIndex(30, 4), 0);
-			Assert.AreEqual(textData.GetOffsetIndex(36, 4), 6);
-			Assert.AreEqual(textData.GetOffsetIndex(37, 4), 7);
-			Assert.AreEqual(textData.GetOffsetIndex(38, 4), 7);
-			try { var test = textData.GetOffsetIndex(39, 4); Assert.Fail(); }
+			try { var test = textData.GetPositionIndex(0, numLines + 1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
-			Assert.AreEqual(textData.GetOffsetIndex(38, 5), 0);
+			try { var test = textData.GetPositionIndex(29, 4); Assert.Fail(); }
+			catch (IndexOutOfRangeException) { }
+			Assert.AreEqual(textData.GetPositionIndex(30, 4), 0);
+			Assert.AreEqual(textData.GetPositionIndex(36, 4), 6);
+			Assert.AreEqual(textData.GetPositionIndex(37, 4), 7);
+			Assert.AreEqual(textData.GetPositionIndex(38, 4), 7);
+			try { var test = textData.GetPositionIndex(39, 4); Assert.Fail(); }
+			catch (IndexOutOfRangeException) { }
+			Assert.AreEqual(textData.GetPositionIndex(38, 5), 0);
 
 			try { var test = textData.GetColumnFromIndex(-1, 0); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }

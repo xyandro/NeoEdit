@@ -25,9 +25,9 @@ namespace NeoEdit.Program
 
 		IEnumerable<Range> FindRepetitions(bool caseSensitive, Range inputRange)
 		{
-			var startLine = Data.GetOffsetLine(inputRange.Start);
-			var endLine = Data.GetOffsetLine(inputRange.End);
-			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, Data.GetOffset(line, 0)), Math.Min(inputRange.End, Data.GetOffset(line, Data.GetLineLength(line))))).ToList();
+			var startLine = Data.GetPositionLine(inputRange.Start);
+			var endLine = Data.GetPositionLine(inputRange.End);
+			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, Data.GetPosition(line, 0)), Math.Min(inputRange.End, Data.GetPosition(line, Data.GetLineLength(line))))).ToList();
 			if ((lineRanges.Count >= 2) && (!lineRanges[lineRanges.Count - 1].HasSelection))
 				lineRanges.RemoveAt(lineRanges.Count - 1);
 			var lineStrs = lineRanges.Select(range => GetString(range)).Select(str => caseSensitive ? str : str.ToLowerInvariant()).ToList();
@@ -53,21 +53,21 @@ namespace NeoEdit.Program
 
 		IEnumerable<Range> SelectRectangle(Range range)
 		{
-			var startLine = Data.GetOffsetLine(range.Start);
-			var endLine = Data.GetOffsetLine(range.End);
+			var startLine = Data.GetPositionLine(range.Start);
+			var endLine = Data.GetPositionLine(range.End);
 			if (startLine == endLine)
 			{
 				yield return range;
 				yield break;
 			}
-			var startIndex = Data.GetOffsetIndex(range.Start, startLine);
-			var endIndex = Data.GetOffsetIndex(range.End, endLine);
+			var startIndex = Data.GetPositionIndex(range.Start, startLine);
+			var endIndex = Data.GetPositionIndex(range.End, endLine);
 			for (var line = startLine; line <= endLine; ++line)
 			{
 				var length = Data.GetLineLength(line);
-				var lineStartOffset = Data.GetOffset(line, Math.Min(length, startIndex));
-				var lineEndOffset = Data.GetOffset(line, Math.Min(length, endIndex));
-				yield return new Range(lineEndOffset, lineStartOffset);
+				var lineStartPosition = Data.GetPosition(line, Math.Min(length, startIndex));
+				var lineEndPosition = Data.GetPosition(line, Math.Min(length, endIndex));
+				yield return new Range(lineEndPosition, lineStartPosition);
 			}
 		}
 
@@ -220,7 +220,7 @@ namespace NeoEdit.Program
 
 		void Command_Select_Lines()
 		{
-			var lineSets = Selections.AsParallel().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)) }).ToList();
+			var lineSets = Selections.AsParallel().Select(range => new { start = Data.GetPositionLine(range.Start), end = Data.GetPositionLine(Math.Max(range.Start, range.End - 1)) }).ToList();
 
 			var hasLine = new bool[Data.NumLines];
 			foreach (var set in lineSets)
@@ -232,18 +232,18 @@ namespace NeoEdit.Program
 				if ((hasLine[line]) && (!Data.IsDiffGapLine(line)))
 					lines.Add(line);
 
-			SetSelections(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList());
+			SetSelections(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(Data.GetPosition(line, 0), Data.GetLineLength(line))).ToList());
 		}
 
 		void Command_Select_WholeLines()
 		{
 			var sels = Selections.AsParallel().AsOrdered().Select(range =>
 			{
-				var startLine = Data.GetOffsetLine(range.Start);
-				var startOffset = Data.GetOffset(startLine, 0);
-				var endLine = Data.GetOffsetLine(Math.Max(range.Start, range.End - 1));
-				var endOffset = Data.GetOffset(endLine, 0) + Data.GetLineLength(endLine) + Data.GetEndingLength(endLine);
-				return new Range(endOffset, startOffset);
+				var startLine = Data.GetPositionLine(range.Start);
+				var startPosition = Data.GetPosition(startLine, 0);
+				var endLine = Data.GetPositionLine(Math.Max(range.Start, range.End - 1));
+				var endPosition = Data.GetPosition(endLine, 0) + Data.GetLineLength(endLine) + Data.GetEndingLength(endLine);
+				return new Range(endPosition, startPosition);
 			}).ToList();
 
 			SetSelections(sels);

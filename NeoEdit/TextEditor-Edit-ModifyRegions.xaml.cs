@@ -367,19 +367,19 @@ namespace NeoEdit.Program
 			var useRegion = regions[0];
 			var useRegions = Regions[useRegion];
 			var regionsWithSelections = GetRegionsWithSelections(useRegion);
-			var offset = 0;
+			var position = 0;
 			var newRegionStrs = new List<string>();
 			var newRegions = new List<Range>();
 			var newSelections = new List<Range>();
 			foreach (var regionsWithSelection in regionsWithSelections)
 			{
 				newRegionStrs.Add(string.Join("", Enumerable.Repeat(GetString(regionsWithSelection.Item1), regionsWithSelection.Item2.Count)));
-				offset -= regionsWithSelection.Item1.Length;
+				position -= regionsWithSelection.Item1.Length;
 				foreach (var selection in regionsWithSelection.Item2)
 				{
-					offset += regionsWithSelection.Item1.Length;
-					newRegions.Add(new Range(regionsWithSelection.Item1.Cursor + offset, regionsWithSelection.Item1.Anchor + offset));
-					newSelections.Add(new Range(selection.Cursor + offset, selection.Anchor + offset));
+					position += regionsWithSelection.Item1.Length;
+					newRegions.Add(new Range(regionsWithSelection.Item1.Cursor + position, regionsWithSelection.Item1.Anchor + position));
+					newSelections.Add(new Range(selection.Cursor + position, selection.Anchor + position));
 				}
 			}
 			Replace(useRegions.ToList(), newRegionStrs);

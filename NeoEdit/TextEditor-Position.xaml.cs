@@ -29,15 +29,15 @@ namespace NeoEdit.Program
 
 				public override string ToString() => $"Line: {Line}, Index: {Index}, Column: {Column}, Position: {Position}";
 
-				public int? GetPosition(TextEditor te, int offset, GotoLocation lastPosition = null)
+				public int? GetPosition(TextEditor te, int position, GotoLocation lastPosition = null)
 				{
 					if ((Line == null) && (Index == null) && (Column == null) && (Position == null))
 						return null;
 
 					if (Position.HasValue)
-						return Math.Max(te.BeginOffset, Math.Min(Position.Value, te.EndOffset));
+						return Math.Max(te.BeginPosition, Math.Min(Position.Value, te.EndPosition));
 
-					var line = Math.Max(0, Math.Min(te.Data.GetNonDiffLine(Line ?? lastPosition?.Line ?? te.Data.GetOffsetLine(offset)), te.Data.NumLines - 1));
+					var line = Math.Max(0, Math.Min(te.Data.GetNonDiffLine(Line ?? lastPosition?.Line ?? te.Data.GetPositionLine(position)), te.Data.NumLines - 1));
 					var index = Index ?? lastPosition?.Index;
 					if (index.HasValue)
 						index = Math.Max(0, Math.Min(index.Value, te.Data.GetLineLength(line)));
@@ -50,7 +50,7 @@ namespace NeoEdit.Program
 							index = 0;
 					}
 
-					return Math.Max(te.BeginOffset, Math.Min(te.Data.GetOffset(line, index.Value), te.EndOffset));
+					return Math.Max(te.BeginPosition, Math.Min(te.Data.GetPosition(line, index.Value), te.EndPosition));
 				}
 			}
 
@@ -132,8 +132,8 @@ namespace NeoEdit.Program
 			var range = Selections.FirstOrDefault();
 			if (range != null)
 			{
-				line = Data.GetOffsetLine(range.Start) + 1;
-				index = Data.GetOffsetIndex(range.Start, line - 1) + 1;
+				line = Data.GetPositionLine(range.Start) + 1;
+				index = Data.GetPositionIndex(range.Start, line - 1) + 1;
 				column = Data.GetColumnFromIndex(line - 1, index - 1) + 1;
 				position = range.Start;
 			}
@@ -227,14 +227,14 @@ namespace NeoEdit.Program
 
 			if ((gotoType == GotoType.Line) || (gotoType == GotoType.Column) || (gotoType == GotoType.Index))
 			{
-				starts[GotoType.Line] = starts[GotoType.Position].Select(pos => Data.GetOffsetLine(pos)).ToList();
-				ends[GotoType.Line] = ends[GotoType.Position].Select(pos => Data.GetOffsetLine(pos)).ToList();
+				starts[GotoType.Line] = starts[GotoType.Position].Select(pos => Data.GetPositionLine(pos)).ToList();
+				ends[GotoType.Line] = ends[GotoType.Position].Select(pos => Data.GetPositionLine(pos)).ToList();
 			}
 
 			if ((gotoType == GotoType.Column) || (gotoType == GotoType.Index))
 			{
-				starts[GotoType.Index] = Enumerable.Range(0, count).Select(x => Data.GetOffsetIndex(starts[GotoType.Position][x], starts[GotoType.Line][x])).ToList();
-				ends[GotoType.Index] = Enumerable.Range(0, count).Select(x => Data.GetOffsetIndex(ends[GotoType.Position][x], ends[GotoType.Line][x])).ToList();
+				starts[GotoType.Index] = Enumerable.Range(0, count).Select(x => Data.GetPositionIndex(starts[GotoType.Position][x], starts[GotoType.Line][x])).ToList();
+				ends[GotoType.Index] = Enumerable.Range(0, count).Select(x => Data.GetPositionIndex(ends[GotoType.Position][x], ends[GotoType.Line][x])).ToList();
 
 				if (gotoType == GotoType.Column)
 				{

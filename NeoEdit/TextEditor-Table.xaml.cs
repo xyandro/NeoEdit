@@ -90,7 +90,7 @@ namespace NeoEdit.Program
 			if (!Selections.Any())
 				return;
 
-			var lineSets = Selections.AsParallel().AsOrdered().Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End) }).ToList();
+			var lineSets = Selections.AsParallel().AsOrdered().Select(range => new { start = Data.GetPositionLine(range.Start), end = Data.GetPositionLine(range.End) }).ToList();
 			if (lineSets.Any(range => range.start != range.end))
 				throw new Exception("Cannot have multi-line selections");
 
@@ -151,7 +151,7 @@ namespace NeoEdit.Program
 			var variables = GetTableVariables(table);
 			var results = new NEExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
-			SetSelections(lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetOffset(line, Data.GetLineLength(line)), Data.GetOffset(line, 0))).ToList());
+			SetSelections(lines.AsParallel().AsOrdered().Select(line => new Range(Data.GetPosition(line, Data.GetLineLength(line)), Data.GetPosition(line, 0))).ToList());
 		}
 
 		void Command_Table_SetJoinSource() => joinTable = GetTable();
@@ -183,12 +183,12 @@ namespace NeoEdit.Program
 			var output = Enumerable.Range(0, table.NumRows).Batch(result.BatchSize).Select(batch => string.Join($",{Data.DefaultEnding}", batch.Select(row => $"({string.Join(", ", result.Columns.Select(column => GetDBValue(table[row, column])))})"))).Select(val => $"{header}{val}{Data.DefaultEnding}").ToList();
 			Replace(new List<Range> { FullRange }, new List<string> { string.Join("", output) });
 
-			var offset = 0;
+			var index = 0;
 			var sels = new List<Range>();
 			foreach (var item in output)
 			{
-				sels.Add(Range.FromIndex(offset, item.Length));
-				offset += item.Length;
+				sels.Add(Range.FromIndex(index, item.Length));
+				index += item.Length;
 			}
 			SetSelections(sels);
 		}
@@ -202,12 +202,12 @@ namespace NeoEdit.Program
 			var output = Enumerable.Range(0, table.NumRows).Select(row => $"UPDATE {result.TableName} SET {string.Join(", ", result.Update.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{Data.DefaultEnding}").ToList();
 			Replace(new List<Range> { FullRange }, new List<string> { string.Join("", output) });
 
-			var offset = 0;
+			var index = 0;
 			var sels = new List<Range>();
 			foreach (var item in output)
 			{
-				sels.Add(Range.FromIndex(offset, item.Length));
-				offset += item.Length;
+				sels.Add(Range.FromIndex(index, item.Length));
+				index += item.Length;
 			}
 			SetSelections(sels);
 		}
@@ -221,12 +221,12 @@ namespace NeoEdit.Program
 			var output = Enumerable.Range(0, table.NumRows).Select(row => $"DELETE FROM {result.TableName} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{Data.DefaultEnding}").ToList();
 			Replace(new List<Range> { FullRange }, new List<string> { string.Join("", output) });
 
-			var offset = 0;
+			var index = 0;
 			var sels = new List<Range>();
 			foreach (var item in output)
 			{
-				sels.Add(Range.FromIndex(offset, item.Length));
-				offset += item.Length;
+				sels.Add(Range.FromIndex(index, item.Length));
+				index += item.Length;
 			}
 			SetSelections(sels);
 		}

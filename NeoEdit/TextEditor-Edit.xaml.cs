@@ -93,7 +93,7 @@ namespace NeoEdit.Program
 			return entries.Select(entry => entry.Item2).ToList();
 		}
 
-		List<Range> GetSortLines() => Selections.Select(range => Data.GetOffsetLine(range.Start)).Select(line => Range.FromIndex(Data.GetOffset(line, 0), Data.GetLineLength(line))).ToList();
+		List<Range> GetSortLines() => Selections.Select(range => Data.GetPositionLine(range.Start)).Select(line => Range.FromIndex(Data.GetPosition(line, 0), Data.GetLineLength(line))).ToList();
 
 		List<Range> GetSortSource(SortScope scope, int useRegion)
 		{
@@ -225,7 +225,7 @@ namespace NeoEdit.Program
 			if (Selections.Count == 1)
 			{
 				var sel = Selections.Single();
-				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
+				if ((selectionOnly) && (Data.GetPositionLine(sel.Cursor) == Data.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
 					text = GetString(sel);
@@ -291,7 +291,7 @@ namespace NeoEdit.Program
 			var text = Regex.Escape(GetString(Selections[0]));
 			var regex = new Regex(text, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-			SetSearches(Data.RegexMatches(regex, BeginOffset, EndOffset, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
+			SetSearches(Data.RegexMatches(regex, BeginPosition, EndPosition, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
 			FindNext(true, selecting);
 		}
 
@@ -345,7 +345,7 @@ namespace NeoEdit.Program
 			if (Selections.Count == 1)
 			{
 				var sel = Selections.Single();
-				if ((selectionOnly) && (Data.GetOffsetLine(sel.Cursor) == Data.GetOffsetLine(sel.Anchor)) && (sel.Length < 1000))
+				if ((selectionOnly) && (Data.GetPositionLine(sel.Cursor) == Data.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
 					text = GetString(sel);
@@ -589,10 +589,10 @@ namespace NeoEdit.Program
 			if (!Selections.Any())
 				return;
 
-			var offsets = Selections.Select(range => range.Cursor).ToList();
-			var lines = offsets.AsParallel().AsOrdered().Select(offset => Data.GetOffsetLine(offset)).ToList();
+			var positions = Selections.Select(range => range.Cursor).ToList();
+			var lines = positions.AsParallel().AsOrdered().Select(position => Data.GetPositionLine(position)).ToList();
 
-			var indexes = offsets.Zip(lines, (offset, line) => Data.GetOffsetIndex(offset, line)).ToList();
+			var indexes = positions.Zip(lines, (position, line) => Data.GetPositionIndex(position, line)).ToList();
 			var index = Math.Min(indexes.Max() - 1, indexes.Min());
 
 			var currentIsSpace = default(bool?);
@@ -601,7 +601,7 @@ namespace NeoEdit.Program
 			{
 				if (index < 0)
 				{
-					offsets = lines.Select(line => Data.GetOffset(line, 0)).ToList();
+					positions = lines.Select(line => Data.GetPosition(line, 0)).ToList();
 					break;
 				}
 
@@ -611,14 +611,14 @@ namespace NeoEdit.Program
 					currentIsSpace = isSpace;
 				else if (isSpace != currentIsSpace)
 				{
-					offsets = lines.Select(line => Data.GetOffset(line, index + 1)).ToList();
+					positions = lines.Select(line => Data.GetPosition(line, index + 1)).ToList();
 					break;
 				}
 
 				--index;
 			}
 
-			SetSelections(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
+			SetSelections(Selections.Zip(positions, (range, position) => MoveCursor(range, position, selecting)).ToList());
 		}
 
 		void Command_Edit_Navigate_AllRight(bool selecting)
@@ -626,10 +626,10 @@ namespace NeoEdit.Program
 			if (!Selections.Any())
 				return;
 
-			var offsets = Selections.Select(range => range.Cursor).ToList();
-			var lines = offsets.AsParallel().AsOrdered().Select(offset => Data.GetOffsetLine(offset)).ToList();
+			var positions = Selections.Select(range => range.Cursor).ToList();
+			var lines = positions.AsParallel().AsOrdered().Select(position => Data.GetPositionLine(position)).ToList();
 
-			var index = offsets.Zip(lines, (offset, line) => Data.GetOffsetIndex(offset, line)).Min();
+			var index = positions.Zip(lines, (position, line) => Data.GetPositionIndex(position, line)).Min();
 			var endIndex = lines.Select(line => Data.GetLineLength(line)).Min();
 
 			var currentIsSpace = default(bool?);
@@ -638,7 +638,7 @@ namespace NeoEdit.Program
 			{
 				if (index > endIndex)
 				{
-					offsets = lines.Select(line => Data.GetOffset(line, Data.GetLineLength(line))).ToList();
+					positions = lines.Select(line => Data.GetPosition(line, Data.GetLineLength(line))).ToList();
 					break;
 				}
 
@@ -648,14 +648,14 @@ namespace NeoEdit.Program
 					currentIsSpace = isSpace;
 				else if (isSpace != currentIsSpace)
 				{
-					offsets = lines.Select(line => Data.GetOffset(line, index)).ToList();
+					positions = lines.Select(line => Data.GetPosition(line, index)).ToList();
 					break;
 				}
 
 				++index;
 			}
 
-			SetSelections(Selections.Zip(offsets, (range, offset) => MoveCursor(range, offset, selecting)).ToList());
+			SetSelections(Selections.Zip(positions, (range, position) => MoveCursor(range, position, selecting)).ToList());
 		}
 
 		void Command_Edit_Navigate_JumpBy(JumpByType jumpBy) => JumpBy = jumpBy;

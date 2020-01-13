@@ -22,18 +22,18 @@ namespace NeoEdit.Program.Content.CSharp
 
 		public static string Comment(TextData data, Range range)
 		{
-			var startLine = data.GetOffsetLine(range.Start);
-			var startIndex = data.GetOffsetIndex(range.Start, startLine);
-			var endLine = data.GetOffsetLine(range.End);
-			var endIndex = data.GetOffsetIndex(range.End, endLine);
+			var startLine = data.GetPositionLine(range.Start);
+			var startIndex = data.GetPositionIndex(range.Start, startLine);
+			var endLine = data.GetPositionLine(range.End);
+			var endIndex = data.GetPositionIndex(range.End, endLine);
 			var result = "";
 			for (var line = startLine; line <= endLine; ++line)
 			{
-				var lineOffset = data.GetOffset(line, 0);
+				var linePosition = data.GetPosition(line, 0);
 				var start = line == startLine ? startIndex : 0;
 				var contentEnd = line == endLine ? endIndex : data.GetLineLength(line);
 				var end = line == endLine ? endIndex : contentEnd + data.GetEndingLength(line);
-				var str = data.GetString(lineOffset + start, end - start);
+				var str = data.GetString(linePosition + start, end - start);
 				if (start != contentEnd)
 					str = $"//{str}";
 				result += str;
@@ -43,18 +43,18 @@ namespace NeoEdit.Program.Content.CSharp
 
 		public static string Uncomment(TextData data, Range range)
 		{
-			var startLine = data.GetOffsetLine(range.Start);
-			var startIndex = data.GetOffsetIndex(range.Start, startLine);
-			var endLine = data.GetOffsetLine(range.End);
-			var endIndex = data.GetOffsetIndex(range.End, endLine);
+			var startLine = data.GetPositionLine(range.Start);
+			var startIndex = data.GetPositionIndex(range.Start, startLine);
+			var endLine = data.GetPositionLine(range.End);
+			var endIndex = data.GetPositionIndex(range.End, endLine);
 			var result = "";
 			for (var line = startLine; line <= endLine; ++line)
 			{
-				var lineOffset = data.GetOffset(line, 0);
+				var linePosition = data.GetPosition(line, 0);
 				var start = line == startLine ? startIndex : 0;
 				var contentEnd = line == endLine ? endIndex : data.GetLineLength(line);
 				var end = line == endLine ? endIndex : contentEnd + data.GetEndingLength(line);
-				var str = data.GetString(lineOffset + start, end - start);
+				var str = data.GetString(linePosition + start, end - start);
 				if (str.StartsWith("//"))
 					str = str.Substring(2);
 				result += str;

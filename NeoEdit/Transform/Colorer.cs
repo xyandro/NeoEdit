@@ -8,23 +8,23 @@ namespace NeoEdit.Program.Transform
 
 		public static uint StringToValue(string str)
 		{
-			var offset = 0;
-			var value = ReadWhileIsColor(str, ref offset);
-			if (offset != str.Length)
+			var index = 0;
+			var value = ReadWhileIsColor(str, ref index);
+			if (index != str.Length)
 				throw new Exception("Invalid color");
 			return value;
 		}
 
-		public static uint ReadWhileIsColor(string str, ref int offset)
+		public static uint ReadWhileIsColor(string str, ref int index)
 		{
-			var start = offset;
+			var start = index;
 			uint value = 0;
-			while (offset < str.Length)
+			while (index < str.Length)
 			{
-				if (offset - start > 8)
+				if (index - start > 8)
 					throw new Exception("Invalid color");
 
-				var c = str[offset];
+				var c = str[index];
 				if ((c >= '0') && (c <= '9'))
 					value = value * 16 + c - '0';
 				else if ((c >= 'a') && (c <= 'f'))
@@ -33,10 +33,10 @@ namespace NeoEdit.Program.Transform
 					value = value * 16 + c - 'A' + 10;
 				else
 					break;
-				++offset;
+				++index;
 			}
 
-			switch (offset - start)
+			switch (index - start)
 			{
 				case 1: return 0xff000000 | (value << 20) | (value << 16) | (value << 12) | (value << 8) | (value << 4) | (value << 0);
 				case 2: return 0xff000000 | (value << 16) | (value << 8) | (value << 0);

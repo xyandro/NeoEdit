@@ -321,7 +321,7 @@ namespace NeoEdit.Program
 
 			OpenFile(FileName, DisplayName, keepUndo: true);
 
-			Func<List<Range>, List<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(BeginOffset, Math.Min(range.Cursor, EndOffset)), Math.Max(BeginOffset, Math.Min(range.Anchor, EndOffset)))).ToList();
+			Func<List<Range>, List<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(BeginPosition, Math.Min(range.Cursor, EndPosition)), Math.Max(BeginPosition, Math.Min(range.Anchor, EndPosition)))).ToList();
 			SetSelections(reformatRanges(selections));
 			SetSearches(reformatRanges(searches));
 			foreach (var pair in regions)
@@ -404,7 +404,7 @@ namespace NeoEdit.Program
 				var current = Data.GetEnding(line);
 				if ((current.Length == 0) || (current == result.LineEndings))
 					continue;
-				var start = Data.GetOffset(line, Data.GetLineLength(line));
+				var start = Data.GetPosition(line, Data.GetLineLength(line));
 				sel.Add(Range.FromIndex(start, current.Length));
 			}
 			Replace(sel, sel.Select(str => result.LineEndings).ToList());

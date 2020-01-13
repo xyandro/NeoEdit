@@ -383,7 +383,7 @@ namespace NeoEdit.Program
 				}
 
 				var data = new TextData(Coder.BytesToString(buffer, Coder.CodePage.AutoByBOM, true));
-				var start = data.GetOffset(0, 0);
+				var start = data.GetPosition(0, 0);
 				return data.RegexMatches(search.Regex, start, data.NumChars - start, search.MultiLine, false, true).Any();
 			}
 			catch (Exception ex)
@@ -687,17 +687,17 @@ namespace NeoEdit.Program
 
 		void Command_Files_Select_Name_Next()
 		{
-			var maxOffset = EndOffset;
+			var maxPosition = EndPosition;
 			var invalidChars = Path.GetInvalidFileNameChars();
 
 			var sels = new List<Range>();
 			foreach (var range in Selections)
 			{
-				var endOffset = range.End;
-				while ((endOffset < maxOffset) && (((endOffset - range.Start == 1) && (Data.Data[endOffset] == ':')) || ((endOffset - range.End == 0) && ((Data.Data[endOffset] == '\\') || (Data.Data[endOffset] == '/'))) || (!invalidChars.Contains(Data.Data[endOffset]))))
-					++endOffset;
+				var endPosition = range.End;
+				while ((endPosition < maxPosition) && (((endPosition - range.Start == 1) && (Data.Data[endPosition] == ':')) || ((endPosition - range.End == 0) && ((Data.Data[endPosition] == '\\') || (Data.Data[endPosition] == '/'))) || (!invalidChars.Contains(Data.Data[endPosition]))))
+					++endPosition;
 
-				sels.Add(new Range(endOffset, range.Start));
+				sels.Add(new Range(endPosition, range.Start));
 			}
 
 			SetSelections(sels);

@@ -83,24 +83,24 @@ namespace NeoEdit.Program
 
 		void Command_Text_Select_WholeBoundedWord(TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
 		{
-			var minOffset = BeginOffset;
-			var maxOffset = EndOffset;
+			var minPosition = BeginPosition;
+			var maxPosition = EndPosition;
 
 			var sels = new List<Range>();
 			foreach (var range in Selections)
 			{
-				var startOffset = range.Start;
-				var endOffset = range.End;
+				var startPosition = range.Start;
+				var endPosition = range.End;
 
 				if (result.Start)
-					while ((startOffset > minOffset) && (result.Chars.Contains(Data.Data[startOffset - 1]) == wholeWord))
-						--startOffset;
+					while ((startPosition > minPosition) && (result.Chars.Contains(Data.Data[startPosition - 1]) == wholeWord))
+						--startPosition;
 
 				if (result.End)
-					while ((endOffset < maxOffset) && (result.Chars.Contains(Data.Data[endOffset]) == wholeWord))
-						++endOffset;
+					while ((endPosition < maxPosition) && (result.Chars.Contains(Data.Data[endPosition]) == wholeWord))
+						++endPosition;
 
-				sels.Add(new Range(endOffset, startOffset));
+				sels.Add(new Range(endPosition, startPosition));
 			}
 			SetSelections(sels);
 		}

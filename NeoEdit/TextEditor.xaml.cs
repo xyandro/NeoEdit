@@ -309,11 +309,11 @@ namespace NeoEdit.Program
 
 		void FontSizeChanged(object sender, EventArgs e) => CalculateBoundaries();
 
-		public int BeginOffset => Data.GetOffset(0, 0);
-		public int EndOffset => Data.GetOffset(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
-		public Range BeginRange => new Range(BeginOffset);
-		Range EndRange => new Range(EndOffset);
-		public Range FullRange => new Range(EndOffset, BeginOffset);
+		public int BeginPosition => Data.GetPosition(0, 0);
+		public int EndPosition => Data.GetPosition(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
+		public Range BeginRange => new Range(BeginPosition);
+		Range EndRange => new Range(EndPosition);
+		public Range FullRange => new Range(EndPosition, BeginPosition);
 		public string AllText => GetString(FullRange);
 
 		void BlockSelDown()
@@ -321,17 +321,17 @@ namespace NeoEdit.Program
 			var sels = new List<Range>();
 			foreach (var range in Selections)
 			{
-				var cursorLine = Data.GetOffsetLine(range.Cursor);
-				var highlightLine = Data.GetOffsetLine(range.Anchor);
-				var cursorIndex = Data.GetOffsetIndex(range.Cursor, cursorLine);
-				var highlightIndex = Data.GetOffsetIndex(range.Anchor, highlightLine);
+				var cursorLine = Data.GetPositionLine(range.Cursor);
+				var highlightLine = Data.GetPositionLine(range.Anchor);
+				var cursorIndex = Data.GetPositionIndex(range.Cursor, cursorLine);
+				var highlightIndex = Data.GetPositionIndex(range.Anchor, highlightLine);
 
 				cursorLine = Math.Max(0, Math.Min(cursorLine + 1, Data.NumLines - 1));
 				highlightLine = Math.Max(0, Math.Min(highlightLine + 1, Data.NumLines - 1));
 				cursorIndex = Math.Max(0, Math.Min(cursorIndex, Data.GetLineLength(cursorLine)));
 				highlightIndex = Math.Max(0, Math.Min(highlightIndex, Data.GetLineLength(highlightLine)));
 
-				sels.Add(new Range(Data.GetOffset(cursorLine, cursorIndex), Data.GetOffset(highlightLine, highlightIndex)));
+				sels.Add(new Range(Data.GetPosition(cursorLine, cursorIndex), Data.GetPosition(highlightLine, highlightIndex)));
 			}
 			SetSelections(Selections.Concat(sels).ToList());
 		}
@@ -345,17 +345,17 @@ namespace NeoEdit.Program
 			var sels = new List<Range>();
 			foreach (var range in Selections.ToList())
 			{
-				var startLine = Data.GetOffsetLine(range.Start);
-				var endLine = Data.GetOffsetLine(range.End);
-				var startIndex = Data.GetOffsetIndex(range.Start, startLine);
-				var endIndex = Data.GetOffsetIndex(range.End, endLine);
+				var startLine = Data.GetPositionLine(range.Start);
+				var endLine = Data.GetPositionLine(range.End);
+				var startIndex = Data.GetPositionIndex(range.Start, startLine);
+				var endIndex = Data.GetPositionIndex(range.End, endLine);
 
 				startLine = Math.Max(0, Math.Min(startLine - 1, Data.NumLines - 1));
 				endLine = Math.Max(0, Math.Min(endLine - 1, Data.NumLines - 1));
 				startIndex = Math.Max(0, Math.Min(startIndex, Data.GetLineLength(startLine)));
 				endIndex = Math.Max(0, Math.Min(endIndex, Data.GetLineLength(endLine)));
 
-				var prevLineRange = new Range(Data.GetOffset(startLine, startIndex), Data.GetOffset(endLine, endIndex));
+				var prevLineRange = new Range(Data.GetPosition(startLine, startIndex), Data.GetPosition(endLine, endIndex));
 				if (found.Contains(prevLineRange.ToString()))
 					sels.Add(prevLineRange);
 				else
@@ -464,7 +464,7 @@ namespace NeoEdit.Program
 			return savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.Yes);
 		}
 
-		public bool Empty() => (FileName == null) && (!IsModified) && (BeginOffset == EndOffset);
+		public bool Empty() => (FileName == null) && (!IsModified) && (BeginPosition == EndPosition);
 
 		public void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
 		{
@@ -473,10 +473,10 @@ namespace NeoEdit.Program
 				return;
 
 			var range = Selections[CurrentSelection];
-			var lineMin = Data.GetOffsetLine(range.Start);
-			var lineMax = Data.GetOffsetLine(range.End);
-			var indexMin = Data.GetOffsetIndex(range.Start, lineMin);
-			var indexMax = Data.GetOffsetIndex(range.End, lineMax);
+			var lineMin = Data.GetPositionLine(range.Start);
+			var lineMax = Data.GetPositionLine(range.End);
+			var indexMin = Data.GetPositionIndex(range.Start, lineMin);
+			var indexMax = Data.GetPositionIndex(range.End, lineMax);
 
 			if (centerVertically)
 			{
@@ -487,8 +487,8 @@ namespace NeoEdit.Program
 					xScrollValue = 0;
 			}
 
-			var line = Data.GetOffsetLine(range.Cursor);
-			var index = Data.GetOffsetIndex(range.Cursor, line);
+			var line = Data.GetPositionLine(range.Cursor);
+			var index = Data.GetPositionIndex(range.Cursor, line);
 			var x = Data.GetColumnFromIndex(line, index);
 			yScrollValue = Math.Min(line, Math.Max(line - yScrollViewportFloor + 1, yScrollValue));
 			xScrollValue = Math.Min(x, Math.Max(x - xScrollViewportFloor + 1, xScrollValue));
@@ -523,19 +523,19 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public int GetNextWord(int offset)
+		public int GetNextWord(int position)
 		{
 			WordSkipType moveType = WordSkipType.None;
 
-			var line = Data.GetOffsetLine(offset);
-			var index = Math.Min(Data.GetLineLength(line), Data.GetOffsetIndex(offset, line) - 1);
+			var line = Data.GetPositionLine(position);
+			var index = Math.Min(Data.GetLineLength(line), Data.GetPositionIndex(position, line) - 1);
 			while (true)
 			{
 				if (index >= Data.GetLineLength(line))
 				{
 					++line;
 					if (line >= Data.NumLines)
-						return EndOffset;
+						return EndPosition;
 					index = -1;
 				}
 
@@ -546,23 +546,23 @@ namespace NeoEdit.Program
 					moveType = current;
 
 				if (current != moveType)
-					return Data.GetOffset(line, index);
+					return Data.GetPosition(line, index);
 			}
 		}
 
-		public int GetPrevWord(int offset)
+		public int GetPrevWord(int position)
 		{
 			WordSkipType moveType = WordSkipType.None;
 
-			var line = Data.GetOffsetLine(offset);
-			var index = Math.Min(Data.GetLineLength(line), Data.GetOffsetIndex(offset, line));
+			var line = Data.GetPositionLine(position);
+			var index = Math.Min(Data.GetLineLength(line), Data.GetPositionIndex(position, line));
 			while (true)
 			{
 				if (index < 0)
 				{
 					--line;
 					if (line < 0)
-						return BeginOffset;
+						return BeginPosition;
 					index = Data.GetLineLength(line);
 					continue;
 				}
@@ -574,7 +574,7 @@ namespace NeoEdit.Program
 					moveType = current;
 
 				if (current != moveType)
-					return Data.GetOffset(line, index + 1);
+					return Data.GetPosition(line, index + 1);
 			}
 		}
 
@@ -640,17 +640,17 @@ namespace NeoEdit.Program
 			results.Add(NEVariable.Constant("d", "Display name", () => displayName));
 
 			var lineStarts = default(List<int>);
-			var initializeLineStarts = new NEVariableInitializer(() => lineStarts = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.Start) + 1).ToList());
+			var initializeLineStarts = new NEVariableInitializer(() => lineStarts = Selections.AsParallel().AsOrdered().Select(range => Data.GetPositionLine(range.Start) + 1).ToList());
 			results.Add(NEVariable.List("line", "Selection line start", () => lineStarts, initializeLineStarts));
 			var lineEnds = default(List<int>);
-			var initializeLineEnds = new NEVariableInitializer(() => lineEnds = Selections.AsParallel().AsOrdered().Select(range => Data.GetOffsetLine(range.End) + 1).ToList());
+			var initializeLineEnds = new NEVariableInitializer(() => lineEnds = Selections.AsParallel().AsOrdered().Select(range => Data.GetPositionLine(range.End) + 1).ToList());
 			results.Add(NEVariable.List("lineend", "Selection line end", () => lineEnds, initializeLineEnds));
 
 			var colStarts = default(List<int>);
-			var initializeColStarts = new NEVariableInitializer(() => colStarts = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
+			var initializeColStarts = new NEVariableInitializer(() => colStarts = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetPositionIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
 			results.Add(NEVariable.List("col", "Selection column start", () => colStarts, initializeColStarts));
 			var colEnds = default(List<int>);
-			var initializeColEnds = new NEVariableInitializer(() => colEnds = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetOffsetIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
+			var initializeColEnds = new NEVariableInitializer(() => colEnds = Selections.AsParallel().AsOrdered().Select((range, index) => Data.GetPositionIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
 			results.Add(NEVariable.List("colend", "Selection column end", () => colEnds, initializeColEnds));
 
 			var posStarts = default(List<int>);
@@ -734,7 +734,7 @@ namespace NeoEdit.Program
 		{
 			var useLine = Math.Max(0, Math.Min(line ?? 1, Data.NumLines) - 1);
 			var index = Data.GetIndexFromColumn(useLine, Math.Max(0, (column ?? 1) - 1), true);
-			SetSelections(Selections.Concat(new Range(Data.GetOffset(useLine, index))).ToList());
+			SetSelections(Selections.Concat(new Range(Data.GetPosition(useLine, index))).ToList());
 		}
 
 		public bool GetDialogResult(NECommand command, out object dialogResult, bool? multiStatus)
@@ -1575,26 +1575,26 @@ namespace NeoEdit.Program
 
 						Replace(Selections.AsParallel().AsOrdered().Select(range =>
 						{
-							var offset = range.Start;
+							var position = range.Start;
 							var anchor = range.Anchor;
 
 							if (controlDown)
 							{
 								if (key == Key.Back)
-									offset = GetPrevWord(offset);
+									position = GetPrevWord(position);
 								else
-									offset = GetNextWord(offset);
+									position = GetNextWord(position);
 							}
 							else if ((shiftDown) && (key == Key.Delete))
 							{
-								var line = Data.GetOffsetLine(offset);
-								offset = Data.GetOffset(line, 0);
-								anchor = offset + Data.GetLineLength(line) + Data.GetEndingLength(line);
+								var line = Data.GetPositionLine(position);
+								position = Data.GetPosition(line, 0);
+								anchor = position + Data.GetLineLength(line) + Data.GetEndingLength(line);
 							}
 							else
 							{
-								var line = Data.GetOffsetLine(offset);
-								var index = Data.GetOffsetIndex(offset, line);
+								var line = Data.GetPositionLine(position);
+								var index = Data.GetPositionIndex(position, line);
 
 								if (key == Key.Back)
 									--index;
@@ -1616,10 +1616,10 @@ namespace NeoEdit.Program
 									index = 0;
 								}
 
-								offset = Data.GetOffset(line, index);
+								position = Data.GetPosition(line, index);
 							}
 
-							return new Range(offset, anchor);
+							return new Range(position, anchor);
 						}).Where(range => range != null).ToList(), null);
 					}
 					break;
@@ -1632,7 +1632,7 @@ namespace NeoEdit.Program
 						HandleCommand(NECommand.Select_Selection_Single, false, null, null, null);
 						if (!Selections.Any())
 						{
-							var pos = Data.GetOffset(Math.Max(0, Math.Min(yScrollValue, Data.NumLines - 1)), 0);
+							var pos = Data.GetPosition(Math.Max(0, Math.Min(yScrollValue, Data.NumLines - 1)), 0);
 							SetSelections(new List<Range> { new Range(pos) });
 						}
 					}
@@ -1641,8 +1641,8 @@ namespace NeoEdit.Program
 					{
 						SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 						{
-							var line = Data.GetOffsetLine(range.Cursor);
-							var index = Data.GetOffsetIndex(range.Cursor, line);
+							var line = Data.GetPositionLine(range.Cursor);
+							var index = Data.GetPositionIndex(range.Cursor, line);
 							if ((!shiftDown) && ((bool)previousData))
 								return new Range(range.Start);
 							else if ((index == 0) && (line != 0))
@@ -1656,8 +1656,8 @@ namespace NeoEdit.Program
 					{
 						SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 						{
-							var line = Data.GetOffsetLine(range.Cursor);
-							var index = Data.GetOffsetIndex(range.Cursor, line);
+							var line = Data.GetPositionLine(range.Cursor);
+							var index = Data.GetPositionIndex(range.Cursor, line);
 							if ((!shiftDown) && ((bool)previousData))
 								return new Range(range.End);
 							else if ((index == Data.GetLineLength(line)) && (line != Data.NumLines - 1))
@@ -1684,7 +1684,7 @@ namespace NeoEdit.Program
 				case Key.Home:
 					if (controlDown)
 					{
-						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, BeginOffset, shiftDown)).ToList(); // Have to use MoveCursor for selection
+						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, BeginPosition, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
 							sels.Add(BeginRange);
 						SetSelections(sels);
@@ -1695,8 +1695,8 @@ namespace NeoEdit.Program
 						bool changed = false;
 						foreach (var selection in Selections)
 						{
-							var line = Data.GetOffsetLine(selection.Cursor);
-							var index = Data.GetOffsetIndex(selection.Cursor, line);
+							var line = Data.GetPositionLine(selection.Cursor);
+							var index = Data.GetPositionIndex(selection.Cursor, line);
 
 							int first;
 							var end = Data.GetLineLength(line);
@@ -1723,7 +1723,7 @@ namespace NeoEdit.Program
 				case Key.End:
 					if (controlDown)
 					{
-						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, EndOffset, shiftDown)).ToList(); // Have to use MoveCursor for selection
+						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, EndPosition, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
 							sels.Add(EndRange);
 						SetSelections(sels);
@@ -1751,7 +1751,7 @@ namespace NeoEdit.Program
 					break;
 				case Key.Tab:
 					{
-						if (Selections.AsParallel().All(range => (!range.HasSelection) || (Data.GetOffsetLine(range.Start) == Data.GetOffsetLine(Math.Max(range.Start, range.End - 1)))))
+						if (Selections.AsParallel().All(range => (!range.HasSelection) || (Data.GetPositionLine(range.Start) == Data.GetPositionLine(Math.Max(range.Start, range.End - 1)))))
 						{
 							if (!shiftDown)
 								HandleText("\t");
@@ -1763,24 +1763,24 @@ namespace NeoEdit.Program
 							break;
 						}
 
-						var selLines = Selections.AsParallel().AsOrdered().Where(a => a.HasSelection).Select(range => new { start = Data.GetOffsetLine(range.Start), end = Data.GetOffsetLine(range.End - 1) }).ToList();
-						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy().ToDictionary(line => line, line => Data.GetOffset(line, 0));
-						int offset;
+						var selLines = Selections.AsParallel().AsOrdered().Where(a => a.HasSelection).Select(range => new { start = Data.GetPositionLine(range.Start), end = Data.GetPositionLine(range.End - 1) }).ToList();
+						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy().ToDictionary(line => line, line => Data.GetPosition(line, 0));
+						int length;
 						string replace;
 						if (shiftDown)
 						{
-							offset = 1;
+							length = 1;
 							replace = "";
 							lines = lines.Where(entry => (Data.GetLineLength(entry.Key) != 0) && (Data[entry.Key, 0] == '\t')).ToDictionary(entry => entry.Key, entry => entry.Value);
 						}
 						else
 						{
-							offset = 0;
+							length = 0;
 							replace = "\t";
 							lines = lines.Where(entry => Data.GetLineLength(entry.Key) != 0).ToDictionary(entry => entry.Key, entry => entry.Value);
 						}
 
-						var sels = lines.Select(line => Range.FromIndex(line.Value, offset)).ToList();
+						var sels = lines.Select(line => Range.FromIndex(line.Value, length)).ToList();
 						var insert = sels.Select(range => replace).ToList();
 						Replace(sels, insert);
 					}
@@ -1809,7 +1809,7 @@ namespace NeoEdit.Program
 			var line = Math.Max(0, Math.Min(Data.NumLines - 1, (int)(mousePos.Y / LineHeight) + yScrollValue));
 			var column = Math.Max(0, Math.Min(Data.GetLineColumnsLength(line), (int)(mousePos.X / Font.CharWidth) + xScrollValue));
 			var index = Data.GetIndexFromColumn(line, column, true);
-			var offset = Data.GetOffset(line, index);
+			var position = Data.GetPosition(line, index);
 			var mouseRange = CurrentSelection < sels.Count ? sels[CurrentSelection] : null;
 
 			var currentSelection = default(Range);
@@ -1821,21 +1821,21 @@ namespace NeoEdit.Program
 					var anchor = mouseRange.Anchor;
 					if (clickCount != 1)
 					{
-						if (offset < anchor)
-							offset = GetPrevWord(offset + 1);
+						if (position < anchor)
+							position = GetPrevWord(position + 1);
 						else
-							offset = GetNextWord(offset);
+							position = GetNextWord(position);
 
-						if ((mouseRange.Cursor <= anchor) != (offset <= anchor))
+						if ((mouseRange.Cursor <= anchor) != (position <= anchor))
 						{
-							if (offset <= anchor)
+							if (position <= anchor)
 								anchor = GetNextWord(anchor);
 							else
 								anchor = GetPrevWord(anchor);
 						}
 					}
 
-					currentSelection = new Range(offset, anchor);
+					currentSelection = new Range(position, anchor);
 				}
 			}
 			else
@@ -1844,12 +1844,12 @@ namespace NeoEdit.Program
 					sels.Clear();
 
 				if (clickCount == 1)
-					currentSelection = new Range(offset);
+					currentSelection = new Range(position);
 				else
 				{
 					if (mouseRange != null)
 						sels.Remove(mouseRange);
-					currentSelection = new Range(GetNextWord(offset), GetPrevWord(Math.Min(offset + 1, EndOffset)));
+					currentSelection = new Range(GetNextWord(position), GetPrevWord(Math.Min(position + 1, EndPosition)));
 				}
 			}
 
@@ -1862,7 +1862,7 @@ namespace NeoEdit.Program
 
 		public Range MoveCursor(Range range, int cursor, bool selecting)
 		{
-			cursor = Math.Max(BeginOffset, Math.Min(cursor, EndOffset));
+			cursor = Math.Max(BeginPosition, Math.Min(cursor, EndPosition));
 			if (selecting)
 				if (range.Cursor == cursor)
 					return range;
@@ -1878,8 +1878,8 @@ namespace NeoEdit.Program
 		{
 			if ((lineRel) || (indexRel))
 			{
-				var startLine = Data.GetOffsetLine(range.Cursor);
-				var startIndex = Data.GetOffsetIndex(range.Cursor, startLine);
+				var startLine = Data.GetPositionLine(range.Cursor);
+				var startIndex = Data.GetPositionIndex(range.Cursor, startLine);
 
 				if (lineRel)
 					line = Data.SkipDiffGaps(line + startLine, line > 0 ? 1 : -1);
@@ -1889,7 +1889,7 @@ namespace NeoEdit.Program
 
 			line = Math.Max(0, Math.Min(line, Data.NumLines - 1));
 			index = Math.Max(0, Math.Min(index, Data.GetLineLength(line)));
-			return MoveCursor(range, Data.GetOffset(line, index), selecting);
+			return MoveCursor(range, Data.GetPosition(line, index), selecting);
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1955,7 +1955,7 @@ namespace NeoEdit.Program
 			drawBounds.EndColumn = Math.Min(Data.MaxColumn + 1, drawBounds.StartColumn + xScrollViewportCeiling);
 
 			var lines = Enumerable.Range(drawBounds.StartLine, drawBounds.EndLine - drawBounds.StartLine);
-			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetOffset(line, 0), Data.GetOffset(line, Data.GetLineLength(line) + 1)));
+			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetPosition(line, 0), Data.GetPosition(line, Data.GetLineLength(line) + 1)));
 			drawBounds.StartIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, drawBounds.StartColumn, true));
 			drawBounds.EndIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, drawBounds.EndColumn, true));
 			return drawBounds;
@@ -1970,8 +1970,8 @@ namespace NeoEdit.Program
 				if ((range.End < drawBounds.ScreenStart) || (range.Start > drawBounds.ScreenEnd))
 					continue;
 
-				var startLine = Data.GetOffsetLine(range.Start);
-				var endLine = Data.GetOffsetLine(range.End);
+				var startLine = Data.GetPositionLine(range.Start);
+				var endLine = Data.GetPositionLine(range.End);
 				var cursorLine = range.Cursor == range.Start ? startLine : endLine;
 				startLine = Math.Max(drawBounds.StartLine, startLine);
 				endLine = Math.Min(drawBounds.EndLine, endLine + 1);
@@ -1982,7 +1982,7 @@ namespace NeoEdit.Program
 				if (selectionCtr == CurrentSelection)
 					dc.DrawRoundedRectangle(highlightRowBrush, lightlightRowPen, new Rect(-2, drawBounds.Y(cursorLine), canvas.ActualWidth + 4, Font.FontSize), 4, 4);
 
-				var cursor = Data.GetOffsetIndex(range.Cursor, cursorLine);
+				var cursor = Data.GetPositionIndex(range.Cursor, cursorLine);
 				if ((cursor >= drawBounds.StartIndexes[cursorLine]) && (cursor <= drawBounds.EndIndexes[cursorLine]))
 				{
 					cursor = Data.GetColumnFromIndex(cursorLine, cursor);
@@ -2010,11 +2010,11 @@ namespace NeoEdit.Program
 
 		List<Point> GetIndicatorPoints(Range range, DrawBounds drawBounds, double leftSpacing, double rightSpacing)
 		{
-			var startLine = Data.GetOffsetLine(range.Start);
-			var startColumn = Data.GetColumnFromIndex(startLine, Data.GetOffsetIndex(range.Start, startLine));
+			var startLine = Data.GetPositionLine(range.Start);
+			var startColumn = Data.GetColumnFromIndex(startLine, Data.GetPositionIndex(range.Start, startLine));
 
-			var endLine = Data.GetOffsetLine(range.End);
-			var endColumn = Data.GetColumnFromIndex(endLine, Data.GetOffsetIndex(range.End, endLine));
+			var endLine = Data.GetPositionLine(range.End);
+			var endColumn = Data.GetColumnFromIndex(endLine, Data.GetPositionIndex(range.End, endLine));
 			if ((endLine != startLine) && (endColumn == 0))
 			{
 				--endLine;
@@ -2202,10 +2202,10 @@ namespace NeoEdit.Program
 			else
 			{
 				var range = Selections[CurrentSelection];
-				var startLine = Data.GetOffsetLine(range.Start);
-				var endLine = Data.GetOffsetLine(range.End);
-				var indexMin = Data.GetOffsetIndex(range.Start, startLine);
-				var indexMax = Data.GetOffsetIndex(range.End, endLine);
+				var startLine = Data.GetPositionLine(range.Start);
+				var endLine = Data.GetPositionLine(range.End);
+				var indexMin = Data.GetPositionIndex(range.Start, startLine);
+				var indexMax = Data.GetPositionIndex(range.End, endLine);
 				var lineMin = Data.GetDiffLine(startLine);
 				var lineMax = Data.GetDiffLine(endLine);
 				var columnMin = Data.GetColumnFromIndex(startLine, indexMin);
@@ -2347,14 +2347,14 @@ namespace NeoEdit.Program
 			var ending = addNewLines ?? strs.Any(str => !str.EndsWith(Data.DefaultEnding)) ? Data.DefaultEnding : "";
 			if (ending.Length != 0)
 				strs = strs.Select(str => str + ending).ToList();
-			var offset = Selections.Single().Start;
+			var position = Selections.Single().Start;
 			ReplaceSelections(string.Join("", strs));
 
 			var sels = new List<Range>();
 			foreach (var str in strs)
 			{
-				sels.Add(Range.FromIndex(offset, str.Length - ending.Length));
-				offset += str.Length;
+				sels.Add(Range.FromIndex(position, str.Length - ending.Length));
+				position += str.Length;
 			}
 			SetSelections(sels);
 		}
@@ -2584,7 +2584,7 @@ namespace NeoEdit.Program
 			var inlineVars = new List<InlineVariable>();
 			var regex = new Regex(@"\[(\w*):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			var found = new HashSet<string>();
-			foreach (var tuple in Data.RegexMatches(regex, BeginOffset, EndOffset - BeginOffset, false, false, false))
+			foreach (var tuple in Data.RegexMatches(regex, BeginPosition, EndPosition - BeginPosition, false, false, false))
 			{
 				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
 				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);
