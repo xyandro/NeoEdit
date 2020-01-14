@@ -455,11 +455,13 @@ namespace NeoEdit.Program
 			var found = default(KeyValuePair<char, char>);
 			if ((found.Key == 0) && (position < Data.Length))
 				found = dict.FirstOrDefault(entry => (entry.Key == Data[position]) || (entry.Value == Data[position]));
+			var posAdjust = 1;
 			if (found.Key == 0)
 			{
 				if (--position < 0)
 					return -1;
 				found = dict.FirstOrDefault(entry => (entry.Key == Data[position]) || (entry.Value == Data[position]));
+				posAdjust = 0;
 			}
 			if (found.Key == 0)
 				return -1;
@@ -467,7 +469,7 @@ namespace NeoEdit.Program
 			var direction = found.Key == Data[position] ? 1 : -1;
 
 			var num = 0;
-			for (; position < Data.Length; position += direction)
+			for (; (position >= 0) && (position < Data.Length); position += direction)
 			{
 				if (Data[position] == found.Key)
 					++num;
@@ -475,7 +477,7 @@ namespace NeoEdit.Program
 					--num;
 
 				if (num == 0)
-					return position + Math.Max(0, direction);
+					return position + posAdjust;
 			}
 
 			return -1;
