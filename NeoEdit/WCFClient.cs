@@ -52,10 +52,14 @@ namespace NeoEdit.Program
 		{
 			if (!wcfClients.ContainsKey(serviceURL))
 			{
+				var wcfClientAssemblyName = typeof(WCFClient).Assembly.Location;
+				if (string.IsNullOrWhiteSpace(wcfClientAssemblyName))
+					throw new Exception($"Can't resolve {nameof(WCFClient)} assembly. It most likely needs to be extracted from the loader.");
+
 				var appDomain = AppDomain.CreateDomain(serviceURL);
 				try
 				{
-					wcfClients[serviceURL] = appDomain.CreateInstanceAndUnwrap(typeof(WCFClient).Assembly.FullName, typeof(WCFClient).FullName) as WCFClient;
+					wcfClients[serviceURL] = appDomain.CreateInstanceFromAndUnwrap(wcfClientAssemblyName, typeof(WCFClient).FullName) as WCFClient;
 					wcfClients[serviceURL].Load(serviceURL);
 				}
 				catch
@@ -70,7 +74,13 @@ namespace NeoEdit.Program
 			return wcfClients[serviceURL];
 		}
 
-		static public List<string> InterceptCalls(string serviceURL, string interceptURL) => GetWCFClient(serviceURL).DoInterceptCalls(interceptURL);
+		static public List<string> InterceptCalls(string serviceURL, string interceptURL)
+		{
+			var wcfClient = GetWCFClient(serviceURL);
+			wcfClient.StartInterceptCalls(interceptURL);
+			WCFInterceptDialog.Run();
+			return wcfClient.EndInterceptCalls();
+		}
 
 		static public void ResetClients()
 		{
@@ -431,7 +441,6 @@ namespace NeoEdit.WCFInterceptor
 
 		public List<Call> Calls {{ get; private set; }}
 		Func<string, string, string, Dictionary<string, object>, object> getResult;
-		Action<string> addCall;
 		ServiceHost host;
 
 		public Interceptor()
@@ -440,10 +449,9 @@ namespace NeoEdit.WCFInterceptor
 			Calls = new List<Call>();
 		}}
 
-		public void Start(string uri, Func<string, string, string, Dictionary<string, object>, object> getResult, Action<string> addCall)
+		public void Start(string uri, Func<string, string, string, Dictionary<string, object>, object> getResult)
 		{{
 			this.getResult = getResult;
-			this.addCall = addCall;
 
 			host = new ServiceHost(typeof(InterceptorImplementation), new Uri(uri));
 			var smb = new ServiceMetadataBehavior {{ HttpGetEnabled = true }};
@@ -459,7 +467,6 @@ namespace NeoEdit.WCFInterceptor
 
 		public object AddCall(string @namespace, string contract, string operation, Dictionary<string, object> parameters)
 		{{
-			addCall(operation);
 			var result = getResult(@namespace, contract, operation, parameters);
 			Calls.Add(new Call
 			{{
@@ -795,14 +802,21 @@ namespace NeoEdit.WCFInterceptor
 			}
 		}
 
-		List<string> DoInterceptCalls(string interceptURL)
+		dynamic interceptor;
+		void StartInterceptCalls(string interceptURL)
 		{
 			try
 			{
-				var dialog = new WCFInterceptDialog();
-				dynamic interceptor = Activator.CreateInstance(compiledAssembly.GetType("NeoEdit.WCFInterceptor.Interceptor"));
-				interceptor.Start(interceptURL, (Func<string, string, string, Dictionary<string, object>, object>)DoExecuteWCF, (Action<string>)(call => dialog.AddCall(call)));
-				dialog.ShowDialog();
+				interceptor = Activator.CreateInstance(compiledAssembly.GetType("NeoEdit.WCFInterceptor.Interceptor"));
+				interceptor.Start(interceptURL, (Func<string, string, string, Dictionary<string, object>, object>)DoExecuteWCF);
+			}
+			catch (Exception ex) { throw AggregateException(ex); }
+		}
+
+		List<string> EndInterceptCalls()
+		{
+			try
+			{
 				interceptor.End();
 
 				var results = new List<string>();
