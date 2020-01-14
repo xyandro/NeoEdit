@@ -2584,7 +2584,7 @@ namespace NeoEdit.Program
 			var inlineVars = new List<InlineVariable>();
 			var regex = new Regex(@"\[(\w*):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			var found = new HashSet<string>();
-			foreach (var tuple in Data.RegexMatches(regex, BeginPosition, EndPosition - BeginPosition, false, false, false))
+			foreach (var tuple in Data.RegexMatches(regex, BeginPosition, EndPosition - BeginPosition, false, false))
 			{
 				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
 				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);

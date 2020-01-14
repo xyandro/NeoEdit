@@ -11,7 +11,6 @@ namespace NeoEdit.Program.Dialogs
 		{
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
-			public bool MultiLine { get; set; }
 			public bool IsRegex { get; set; }
 			public bool EntireSelection { get; set; }
 		}
@@ -22,7 +21,6 @@ namespace NeoEdit.Program.Dialogs
 			public string Replace { get; set; }
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
-			public bool MultiLine { get; set; }
 			public bool IsRegex { get; set; }
 			public bool SelectionOnly { get; set; }
 			public bool EntireSelection { get; set; }
@@ -36,8 +34,6 @@ namespace NeoEdit.Program.Dialogs
 		public bool WholeWords { get { return UIHelper<EditFindReplaceDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindReplaceDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool MatchCase { get { return UIHelper<EditFindReplaceDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindReplaceDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool MultiLine { get { return UIHelper<EditFindReplaceDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindReplaceDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsRegex { get { return UIHelper<EditFindReplaceDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindReplaceDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -68,7 +64,6 @@ namespace NeoEdit.Program.Dialogs
 			{
 				WholeWords = WholeWords,
 				MatchCase = MatchCase,
-				MultiLine = MultiLine,
 				IsRegex = IsRegex,
 				EntireSelection = EntireSelection,
 			};
@@ -81,7 +76,6 @@ namespace NeoEdit.Program.Dialogs
 
 			WholeWords = checkBoxStatus.WholeWords;
 			MatchCase = checkBoxStatus.MatchCase;
-			MultiLine = checkBoxStatus.MultiLine;
 			IsRegex = checkBoxStatus.IsRegex;
 			EntireSelection = checkBoxStatus.EntireSelection;
 		}
@@ -97,7 +91,7 @@ namespace NeoEdit.Program.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new Result { Text = Text, Replace = Replace, WholeWords = WholeWords, MatchCase = MatchCase, MultiLine = MultiLine, IsRegex = IsRegex, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection };
+			result = new Result { Text = Text, Replace = Replace, WholeWords = WholeWords, MatchCase = MatchCase, IsRegex = IsRegex, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection };
 			text.AddCurrentSuggestion(GetCheckBoxStatus());
 			replace.AddCurrentSuggestion();
 
@@ -106,7 +100,7 @@ namespace NeoEdit.Program.Dialogs
 
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
-		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = MultiLine = IsRegex = SelectionOnly = EntireSelection = false;
+		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = IsRegex = SelectionOnly = EntireSelection = false;
 
 		static public Result Run(Window parent, string text, bool selectionOnly)
 		{

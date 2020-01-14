@@ -483,31 +483,18 @@ namespace NeoEdit.Program
 			return -1;
 		}
 
-		public List<Tuple<int, int>> RegexMatches(Regex regex, int position, int length, bool multiLine, bool regexGroups, bool firstOnly)
+		public List<Tuple<int, int>> RegexMatches(Regex regex, int position, int length, bool regexGroups, bool firstOnly)
 		{
 			var result = new List<Tuple<int, int>>();
-			var endPosition = position + length;
-			while (position < endPosition)
+			var matches = regex.Matches(Data.Substring(position, length)).Cast<Match>();
+			foreach (var match in matches)
 			{
-				var nextPosition = endPosition;
-				if (!multiLine)
-				{
-					var line = GetPositionLine(position);
-					length = Math.Max(0, Math.Min(linePosition[line] + GetLineLength(line), endPosition) - position); // Could have been negative if selection encompasses half of \r\n line break
-					nextPosition = Math.Min(endPosition, linePosition[line + 1]);
-				}
-
-				var matches = regex.Matches(Data.Substring(position, length)).Cast<Match>();
-				foreach (var match in matches)
-				{
-					if ((!regexGroups) || (match.Groups.Count == 1))
-						result.Add(new Tuple<int, int>(position + match.Index, match.Length));
-					else
-						result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => new Tuple<int, int>(position + capture.Index, capture.Length)));
-					if ((firstOnly) && (result.Count != 0))
-						return result;
-				}
-				position = nextPosition;
+				if ((!regexGroups) || (match.Groups.Count == 1))
+					result.Add(new Tuple<int, int>(position + match.Index, match.Length));
+				else
+					result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => new Tuple<int, int>(position + capture.Index, capture.Length)));
+				if ((firstOnly) && (result.Count != 0))
+					return result;
 			}
 
 			return result;

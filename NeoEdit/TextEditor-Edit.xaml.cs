@@ -257,7 +257,7 @@ namespace NeoEdit.Program
 			}
 
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var resultsByRegion = regions.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, result.RegexGroups, false)).ToList();
+			var resultsByRegion = regions.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, result.RegexGroups, false)).ToList();
 
 			if (result.Type == EditFindFindDialog.ResultType.CopyCount)
 			{
@@ -291,7 +291,7 @@ namespace NeoEdit.Program
 			var text = Regex.Escape(GetString(Selections[0]));
 			var regex = new Regex(text, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-			SetSearches(Data.RegexMatches(regex, BeginPosition, EndPosition, false, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
+			SetSearches(Data.RegexMatches(regex, BeginPosition, EndPosition, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
 			FindNext(true, selecting);
 		}
 
@@ -374,7 +374,7 @@ namespace NeoEdit.Program
 			var regex = new Regex(text, options);
 
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var sels = regions.AsParallel().AsOrdered().SelectMany(region => Data.RegexMatches(regex, region.Start, region.Length, result.MultiLine, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			var sels = regions.AsParallel().AsOrdered().SelectMany(region => Data.RegexMatches(regex, region.Start, region.Length, false, false)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			SetSelections(sels);
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => regex.Replace(GetString(range), result.Replace)).ToList());
 		}

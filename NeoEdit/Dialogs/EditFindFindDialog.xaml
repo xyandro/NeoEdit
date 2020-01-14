@@ -25,7 +25,6 @@
 		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>
 			<CheckBox Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Margin="5,0,0,0" Focusable="False"/>
-			<CheckBox Content="_Multi-line" IsChecked="{Binding MultiLine, ElementName=self}" Margin="5,0,0,0" Focusable="False"/>
 		</StackPanel>
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>

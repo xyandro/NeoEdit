@@ -14,7 +14,6 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -29,11 +28,10 @@
 			<Button Content="Escape" Click="Escape" Focusable="False" VerticalAlignment="Center" Margin="5,0,0,0"/>
 			<Button Content="Unescape" Click="Unescape" Focusable="False" VerticalAlignment="Center"/>
 		</StackPanel>
-		<CheckBox Grid.Row="4" Grid.Column="1" Content="_Multi-line" IsChecked="{Binding MultiLine, ElementName=self}" Focusable="False"/>
 
-		<Button Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Left" Click="RegExHelp" Content="RegEx _Help"/>
+		<Button Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" Click="RegExHelp" Content="RegEx _Help"/>
 
-		<UniformGrid Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Find" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

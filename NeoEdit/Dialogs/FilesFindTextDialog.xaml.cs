@@ -9,7 +9,6 @@ namespace NeoEdit.Program.Dialogs
 		public class Result
 		{
 			public Regex Regex { get; set; }
-			public bool MultiLine { get; set; }
 		}
 
 		[DepProp]
@@ -20,10 +19,8 @@ namespace NeoEdit.Program.Dialogs
 		public bool MatchCase { get { return UIHelper<FilesFindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsRegex { get { return UIHelper<FilesFindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool MultiLine { get { return UIHelper<FilesFindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
 
-		static bool wholeWordsVal, matchCaseVal, isRegexVal, multiLineVal;
+		static bool wholeWordsVal, matchCaseVal, isRegexVal;
 
 		static FilesFindTextDialog() { UIHelper<FilesFindTextDialog>.Register(); }
 
@@ -35,7 +32,6 @@ namespace NeoEdit.Program.Dialogs
 			WholeWords = wholeWordsVal;
 			MatchCase = matchCaseVal;
 			IsRegex = isRegexVal;
-			MultiLine = multiLineVal;
 		}
 
 		void Escape(object sender, RoutedEventArgs e) => Text = Regex.Escape(Text);
@@ -55,12 +51,11 @@ namespace NeoEdit.Program.Dialogs
 			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
-			result = new Result { Regex = new Regex(text, options), MultiLine = MultiLine };
+			result = new Result { Regex = new Regex(text, options) };
 
 			wholeWordsVal = WholeWords;
 			matchCaseVal = MatchCase;
 			isRegexVal = IsRegex;
-			multiLineVal = MultiLine;
 
 			text = Text;
 			this.text.AddCurrentSuggestion();
