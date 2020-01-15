@@ -21,6 +21,12 @@ namespace NeoEdit.Program.CommandLine
 
 		CommandLineParams clParams = new CommandLineParams();
 
+		public override object VisitBackground([NotNull] CommandLineParser.BackgroundContext context)
+		{
+			clParams.Background = true;
+			return base.VisitBackground(context);
+		}
+
 		public override object VisitDiff([NotNull] CommandLineParser.DiffContext context)
 		{
 			clParams.Diff = true;

@@ -12,6 +12,7 @@ namespace NeoEdit.Program.CommandLine
 			public int Column { get; set; } = 1;
 		}
 
+		public bool Background { get; set; }
 		public bool Diff { get; set; }
 		public List<File> Files { get; } = new List<File>();
 		public string Wait { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
 using System.IO.Pipes;
@@ -26,6 +27,7 @@ namespace NeoEdit.Program
 			ClearModifierKeys();
 
 			var args = Environment.GetCommandLineArgs().Skip(1).ToList();
+			CheckWaitPID(args);
 			var multi = args.Any(arg => arg == "-multi");
 
 			var masterPid = default(int?);
@@ -75,6 +77,13 @@ namespace NeoEdit.Program
 			while ((waitEvent?.WaitOne(1000) == false) && (!proc.HasExited)) { }
 		}
 
+		static void CheckWaitPID(List<string> args)
+		{
+			var wait = args.Where(arg => arg.StartsWith("-waitpid=")).FirstOrDefault();
+			if (wait != null)
+				Process.GetProcessById(int.Parse(wait.Substring("-waitpid=".Length)))?.WaitForExit();
+		}
+
 		[DllImport("user32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -95,7 +104,7 @@ namespace NeoEdit.Program
 
 				app.Dispatcher.Invoke(() =>
 				{
-					var window = app.CreateWindowsFromArgs(commandLine);
+					var window = app.CreateWindowsFromArgs(commandLine, false);
 					if (window != null)
 					{
 						window.Activate();

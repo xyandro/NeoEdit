@@ -123,7 +123,10 @@ namespace NeoEdit.Program
 
 		void Command_File_Exit()
 		{
+			Application.Current.ShutdownMode = ShutdownMode.OnLastWindowClose;
 			Close();
+			Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
 			if (Application.Current.Windows.Count == 0)
 				Environment.Exit(0);
 		}

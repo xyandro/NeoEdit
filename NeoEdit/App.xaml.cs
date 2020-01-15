@@ -19,9 +19,7 @@ namespace NeoEdit.Program
 			base.OnStartup(e);
 			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
-			CreateWindowsFromArgs(string.Join(" ", e.Args.Select(str => $"\"{str}\"")));
-			if (Current.Windows.Count == 0)
-				Current.Shutdown();
+			CreateWindowsFromArgs(string.Join(" ", e.Args.Select(str => $"\"{str}\"")), true);
 		}
 
 		void ShowExceptionMessage(Exception ex)
@@ -54,11 +52,14 @@ namespace NeoEdit.Program
 #endif
 		}
 
-		public TabsWindow CreateWindowsFromArgs(string commandLine)
+		public TabsWindow CreateWindowsFromArgs(string commandLine, bool shutdownIfNoWindow)
 		{
 			try
 			{
 				var clParams = CommandLineVisitor.GetCommandLineParams(commandLine);
+				if (clParams.Background)
+					return null;
+
 				if (!clParams.Files.Any())
 					return new TabsWindow(true);
 
@@ -89,6 +90,8 @@ namespace NeoEdit.Program
 				return tabsWindow;
 			}
 			catch (Exception ex) { ShowExceptionMessage(ex); }
+			if ((shutdownIfNoWindow) && (Current.Windows.Count == 0))
+				Current.Shutdown();
 			return null;
 		}
 

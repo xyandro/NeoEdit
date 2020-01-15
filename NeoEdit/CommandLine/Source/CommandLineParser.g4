@@ -2,13 +2,15 @@ parser grammar CommandLineParser;
 
 options { tokenVocab = CommandLineLexer; }
 
-expr      : parameter* EOF ;
+expr       : parameter* EOF ;
 
-parameter : diff | multi | file | wait ;
+parameter  : background | diff | multi | file | wait | waitpid ;
 
-diff      : DIFF ;
-multi     : MULTI ;
-file      : filename=param (LINE EQUALS? line=NUMBER)? (COLUMN EQUALS? column=NUMBER)? (DISPLAY EQUALS? display=param)? ;
-wait      : WAIT guid=STRING? ;
+background : BACKGROUND ;
+diff       : DIFF ;
+multi      : MULTI ;
+file       : filename=param (LINE EQUALS? line=NUMBER)? (COLUMN EQUALS? column=NUMBER)? (DISPLAY EQUALS? display=param)? ;
+wait       : WAIT guid=STRING? ;
+waitpid    : WAITPID EQUALS NUMBER ;
 
-param     : STRING | NUMBER ;
+param      : STRING | NUMBER ;

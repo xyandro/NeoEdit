@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -352,8 +353,23 @@ namespace NeoEdit.Program.Controls
 		protected override void OnClosed(EventArgs e)
 		{
 			base.OnClosed(e);
-			if ((!Settings.DontExitOnClose) && (Application.Current.Windows.Count == 0))
-				Environment.Exit(0);
+			if ((Application.Current.ShutdownMode == ShutdownMode.OnExplicitShutdown) && (Application.Current.Windows.Count == 0))
+			{
+				if (!Settings.DontExitOnClose)
+					Environment.Exit(0);
+
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				GC.Collect();
+
+				// Restart if memory usage is more than 1/2 GB
+				var process = Process.GetCurrentProcess();
+				if (process.PrivateMemorySize64 > (1 << 29))
+				{
+					Process.Start(Environment.GetCommandLineArgs()[0], $"-background -waitpid={process.Id}");
+					Environment.Exit(0);
+				}
+			}
 		}
 
 		static class Win32
