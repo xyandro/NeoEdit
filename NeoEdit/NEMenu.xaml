@@ -80,7 +80,7 @@
 			<controls:NEMenuItem Header="_Unintegrate" CommandEnum="File_Shell_Unintegrate"/>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="Exi_t On Close" IsCheckable="True" IsChecked="{Binding Path=(local:Settings.ExitOnClose), Mode=TwoWay}"/>
+		<MenuItem Header="Don't Exi_t On Close" IsCheckable="True" IsChecked="{Binding Path=(local:Settings.DontExitOnClose), Mode=TwoWay}"/>
 		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">

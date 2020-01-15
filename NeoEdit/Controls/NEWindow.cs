@@ -352,7 +352,7 @@ namespace NeoEdit.Program.Controls
 		protected override void OnClosed(EventArgs e)
 		{
 			base.OnClosed(e);
-			if ((Settings.ExitOnClose) && (Application.Current.Windows.Count == 0))
+			if ((!Settings.DontExitOnClose) && (Application.Current.Windows.Count == 0))
 				Environment.Exit(0);
 		}
 

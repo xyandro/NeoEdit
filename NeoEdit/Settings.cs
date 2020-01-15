@@ -15,7 +15,7 @@ namespace NeoEdit.Program
 				try
 				{
 					var xml = XElement.Load(settingsFile);
-					try { exitOnClose = bool.Parse(xml.Element(nameof(ExitOnClose)).Value); } catch { }
+					try { dontExitOnClose = bool.Parse(xml.Element(nameof(DontExitOnClose)).Value); } catch { }
 					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
 					try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
 					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
@@ -33,7 +33,7 @@ namespace NeoEdit.Program
 			try
 			{
 				var xml = new XElement("Settings");
-				xml.Add(new XElement(nameof(ExitOnClose), exitOnClose));
+				xml.Add(new XElement(nameof(DontExitOnClose), dontExitOnClose));
 				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
 				xml.Add(new XElement(nameof(YouTubeDLPath), youTubeDLPath));
 				xml.Add(new XElement(nameof(FFmpegPath), ffmpegPath));
@@ -44,20 +44,19 @@ namespace NeoEdit.Program
 			catch { }
 		}
 
-		static bool exitOnClose = true;
-		public static bool ExitOnClose
+		static bool dontExitOnClose = false;
+		public static bool DontExitOnClose
 		{
-			get { return exitOnClose; }
+			get { return dontExitOnClose; }
 			set
 			{
-				exitOnClose = value;
+				dontExitOnClose = value;
 				SaveSettings();
-				exitOnCloseChanged?.Invoke(null, new EventArgs());
+				DontExitOnCloseChanged?.Invoke(null, new EventArgs());
 			}
 		}
 
-		static EventHandler exitOnCloseChanged;
-		public static event EventHandler ExitOnCloseChanged { add { exitOnCloseChanged += value; } remove { exitOnCloseChanged -= value; } }
+		public static event EventHandler DontExitOnCloseChanged;
 
 		static bool escapeClearsSelections = true;
 		public static bool EscapeClearsSelections
@@ -67,12 +66,11 @@ namespace NeoEdit.Program
 			{
 				escapeClearsSelections = value;
 				SaveSettings();
-				escapeClearsSelectionsChanged?.Invoke(null, new EventArgs());
+				EscapeClearsSelectionsChanged?.Invoke(null, new EventArgs());
 			}
 		}
 
-		static EventHandler escapeClearsSelectionsChanged;
-		public static event EventHandler EscapeClearsSelectionsChanged { add { escapeClearsSelectionsChanged += value; } remove { escapeClearsSelectionsChanged -= value; } }
+		public static event EventHandler EscapeClearsSelectionsChanged;
 
 		static string youTubeDLPath = "";
 		public static string YouTubeDLPath
@@ -82,11 +80,11 @@ namespace NeoEdit.Program
 			{
 				youTubeDLPath = value;
 				SaveSettings();
+				YouTubeDLPathChanged?.Invoke(null, new EventArgs());
 			}
 		}
 
-		static EventHandler youTubeDLPathChanged;
-		public static event EventHandler YouTubeDLPathChanged { add { youTubeDLPathChanged += value; } remove { youTubeDLPathChanged -= value; } }
+		public static event EventHandler YouTubeDLPathChanged;
 
 		static string ffmpegPath = "";
 		public static string FFmpegPath
@@ -96,11 +94,11 @@ namespace NeoEdit.Program
 			{
 				ffmpegPath = value;
 				SaveSettings();
+				FFmpegPathChanged?.Invoke(null, new EventArgs());
 			}
 		}
 
-		static EventHandler ffmpegPathChanged;
-		public static event EventHandler FFmpegPathChanged { add { ffmpegPathChanged += value; } remove { ffmpegPathChanged -= value; } }
+		public static event EventHandler FFmpegPathChanged;
 
 		static string windowPosition;
 		public static string WindowPosition
