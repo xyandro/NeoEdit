@@ -169,15 +169,15 @@ namespace NeoEdit.Program
 		static internal readonly Pen searchPen = new Pen(new SolidColorBrush(Color.FromRgb(201, 102, 12)), 2);
 		static internal readonly Dictionary<int, Pen> regionPen = new Dictionary<int, Pen>
 		{
-			[1] = new Pen(new SolidColorBrush(Color.FromRgb(245, 53, 139)), 2),
-			[2] = new Pen(new SolidColorBrush(Color.FromRgb(238, 138, 98)), 2),
-			[3] = new Pen(new SolidColorBrush(Color.FromRgb(182, 62, 95)), 2),
-			[4] = new Pen(new SolidColorBrush(Color.FromRgb(105, 47, 111)), 2),
-			[5] = new Pen(new SolidColorBrush(Color.FromRgb(237, 223, 184)), 2),
-			[6] = new Pen(new SolidColorBrush(Color.FromRgb(248, 118, 109)), 2),
-			[7] = new Pen(new SolidColorBrush(Color.FromRgb(124, 174, 0)), 2),
-			[8] = new Pen(new SolidColorBrush(Color.FromRgb(0, 191, 196)), 2),
-			[9] = new Pen(new SolidColorBrush(Color.FromRgb(199, 124, 255)), 2),
+			[1] = new Pen(new SolidColorBrush(Color.FromRgb(248, 118, 109)), 2),
+			[2] = new Pen(new SolidColorBrush(Color.FromRgb(124, 174, 0)), 2),
+			[3] = new Pen(new SolidColorBrush(Color.FromRgb(0, 191, 196)), 2),
+			[4] = new Pen(new SolidColorBrush(Color.FromRgb(199, 124, 255)), 2),
+			[5] = new Pen(new SolidColorBrush(Color.FromRgb(245, 53, 139)), 2),
+			[6] = new Pen(new SolidColorBrush(Color.FromRgb(238, 138, 98)), 2),
+			[7] = new Pen(new SolidColorBrush(Color.FromRgb(182, 62, 95)), 2),
+			[8] = new Pen(new SolidColorBrush(Color.FromRgb(105, 47, 111)), 2),
+			[9] = new Pen(new SolidColorBrush(Color.FromRgb(237, 223, 184)), 2),
 		};
 		static internal readonly Brush diffLineBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));
 		static internal readonly Pen diffLinePen = new Pen(new SolidColorBrush(Color.FromRgb(120, 102, 3)), 2);
