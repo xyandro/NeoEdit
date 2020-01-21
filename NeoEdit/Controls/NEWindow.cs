@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -6,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -16,11 +16,16 @@ namespace NeoEdit.Program.Controls
 {
 	public class NEWindow : Window
 	{
-		const double ResizeBorder = 5;
+		const double ResizeBorder = 10;
 		const double DragDetect = 10;
+
+		readonly static List<Rect> monitors = new List<Rect>();
+		readonly static List<(Size, List<Rect>)> fullScreenRects = new List<(Size, List<Rect>)>();
 
 		[DepProp]
 		public bool IsMainWindow { get { return UIHelper<NEWindow>.GetPropValue<bool>(this); } set { UIHelper<NEWindow>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool IsFullScreen { get { return UIHelper<NEWindow>.GetPropValue<bool>(this); } set { UIHelper<NEWindow>.SetPropValue(this, value); } }
 
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(32, 32, 32));
 		static readonly Brush OuterBrush = new SolidColorBrush(Color.FromRgb(85, 85, 85));
@@ -30,6 +35,10 @@ namespace NeoEdit.Program.Controls
 		Borders saveBorder;
 		Point savePoint;
 		Rect saveWindowPosition;
+		Rect nonFullScreenRect = new Rect(0, 0, 800, 600);
+		readonly Win32.HookProc hookProc; // Must remain live while it might be called
+		IntPtr hook;
+		bool winDown;
 
 		static NEWindow()
 		{
@@ -38,10 +47,46 @@ namespace NeoEdit.Program.Controls
 			OuterBrush.Freeze();
 			ActiveBrush.Freeze();
 			InactiveBrush.Freeze();
+			Win32.EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, MonitorEnumProc, IntPtr.Zero);
+			GetFullScreenRects();
+		}
+
+		static bool MonitorEnumProc(IntPtr monitor, IntPtr hdc, IntPtr lprcMonitor, IntPtr lParam)
+		{
+			var monitorInfo = new Win32.MONITORINFO();
+			Win32.GetMonitorInfo(monitor, monitorInfo);
+			monitors.Add(new Rect(monitorInfo.rcWork.Left, monitorInfo.rcWork.Top, monitorInfo.rcWork.Right - monitorInfo.rcWork.Left, monitorInfo.rcWork.Bottom - monitorInfo.rcWork.Top));
+			return true;
+		}
+
+		static void GetFullScreenRects()
+		{
+			Rect GetRect(List<Rect> rects)
+			{
+				var left = rects.Min(x => x.Left);
+				var top = rects.Min(x => x.Top);
+				var right = rects.Max(x => x.Right);
+				var bottom = rects.Max(x => x.Bottom);
+				return new Rect(left, top, right - left, bottom - top);
+			}
+
+			var useMonitors = new List<List<Rect>> { new List<Rect>() };
+			foreach (var monitor in monitors)
+			{
+				var newInclude = new List<List<Rect>>();
+				foreach (var value in useMonitors)
+				{
+					newInclude.Add(value.Concat(monitor).ToList());
+					newInclude.Add(value.ToList());
+				}
+				useMonitors = newInclude;
+			}
+			fullScreenRects.AddRange(useMonitors.Where(list => list.Any()).Select(GetRect).Distinct().GroupBy(x => x.Size).Select(g => (g.Key, g.ToList())).OrderBy(tuple => tuple.Item1.Width * tuple.Item1.Height).ThenBy(tuple => tuple.Item1.Width));
 		}
 
 		public NEWindow()
 		{
+			hookProc = HookProc;
 			WindowStyle = WindowStyle.None;
 			Visibility = Visibility.Visible;
 			ResizeMode = ResizeMode.CanResizeWithGrip;
@@ -139,15 +184,25 @@ namespace NeoEdit.Program.Controls
 			minimizeButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnMinimizeClick));
 			stackPanel.AppendChild(minimizeButton);
 
-			var maximizeButton = new FrameworkElementFactory(typeof(Button)) { Name = "maximizeButton" };
-			maximizeButton.SetValue(Button.FontSizeProperty, 14d);
-			maximizeButton.SetValue(Button.MarginProperty, new Thickness(5, -2, 5, 0));
-			maximizeButton.SetValue(Button.ForegroundProperty, ActiveBrush);
-			maximizeButton.SetValue(Button.BackgroundProperty, Brushes.Transparent);
-			maximizeButton.SetValue(Button.BorderBrushProperty, Brushes.Transparent);
-			maximizeButton.SetValue(Button.ContentProperty, "🗖");
-			maximizeButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnRestoreClick));
-			stackPanel.AppendChild(maximizeButton);
+			var shrinkButton = new FrameworkElementFactory(typeof(Button)) { Name = "shrinkButton" };
+			shrinkButton.SetValue(Button.FontSizeProperty, 14d);
+			shrinkButton.SetValue(Button.MarginProperty, new Thickness(5, -2, 5, 0));
+			shrinkButton.SetValue(Button.ForegroundProperty, ActiveBrush);
+			shrinkButton.SetValue(Button.BackgroundProperty, Brushes.Transparent);
+			shrinkButton.SetValue(Button.BorderBrushProperty, Brushes.Transparent);
+			shrinkButton.SetValue(Button.ContentProperty, "🗗");
+			shrinkButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnShrinkClick));
+			stackPanel.AppendChild(shrinkButton);
+
+			var growButton = new FrameworkElementFactory(typeof(Button)) { Name = "growButton" };
+			growButton.SetValue(Button.FontSizeProperty, 14d);
+			growButton.SetValue(Button.MarginProperty, new Thickness(5, -2, 5, 0));
+			growButton.SetValue(Button.ForegroundProperty, ActiveBrush);
+			growButton.SetValue(Button.BackgroundProperty, Brushes.Transparent);
+			growButton.SetValue(Button.BorderBrushProperty, Brushes.Transparent);
+			growButton.SetValue(Button.ContentProperty, "🗖");
+			growButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnGrowClick));
+			stackPanel.AppendChild(growButton);
 
 			var closeButton = new FrameworkElementFactory(typeof(Button)) { Name = "neWindowClose" };
 			closeButton.SetValue(Button.ContentProperty, "🗙");
@@ -174,23 +229,24 @@ namespace NeoEdit.Program.Controls
 
 			template.VisualTree = outerGrid;
 
-			var windowStateTrigger = new Trigger { Property = WindowStateProperty, Value = WindowState.Maximized };
+			var windowStateTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => x.IsFullScreen), Value = true };
 			windowStateTrigger.Setters.Add(new Setter { TargetName = outerBorder.Name, Property = Border.BorderThicknessProperty, Value = new Thickness(0) });
 			windowStateTrigger.Setters.Add(new Setter { TargetName = rect.Name, Property = VisibilityProperty, Value = Visibility.Visible });
-			windowStateTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Button.ContentProperty, Value = "🗗" });
 			template.Triggers.Add(windowStateTrigger);
 
 			var isMainWindowTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => IsMainWindow), Value = false };
 			isMainWindowTrigger.Setters.Add(new Setter { TargetName = icon.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
 			isMainWindowTrigger.Setters.Add(new Setter { TargetName = minimizeButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
-			isMainWindowTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
+			isMainWindowTrigger.Setters.Add(new Setter { TargetName = shrinkButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
+			isMainWindowTrigger.Setters.Add(new Setter { TargetName = growButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
 			template.Triggers.Add(isMainWindowTrigger);
 
 			var isActiveTrigger = new Trigger { Property = IsActiveProperty, Value = false };
 			isActiveTrigger.Setters.Add(new Setter { TargetName = innerBorder.Name, Property = Border.BorderBrushProperty, Value = InactiveBrush });
 			isActiveTrigger.Setters.Add(new Setter { TargetName = textBlock.Name, Property = TextBlock.ForegroundProperty, Value = InactiveBrush });
 			isActiveTrigger.Setters.Add(new Setter { TargetName = minimizeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
-			isActiveTrigger.Setters.Add(new Setter { TargetName = maximizeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
+			isActiveTrigger.Setters.Add(new Setter { TargetName = shrinkButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
+			isActiveTrigger.Setters.Add(new Setter { TargetName = growButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
 			isActiveTrigger.Setters.Add(new Setter { TargetName = closeButton.Name, Property = Button.ForegroundProperty, Value = InactiveBrush });
 			template.Triggers.Add(isActiveTrigger);
 
@@ -213,7 +269,7 @@ namespace NeoEdit.Program.Controls
 
 		Borders GetMouseBorder(Point pos)
 		{
-			if (WindowState == WindowState.Maximized)
+			if (IsFullScreen)
 				return Borders.None;
 
 			var moveBorder = Borders.None;
@@ -292,8 +348,13 @@ namespace NeoEdit.Program.Controls
 		void OnTitleMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ClickCount == 2)
-				OnRestoreClick(null, null);
-			else if (WindowState == WindowState.Maximized)
+			{
+				if (IsFullScreen)
+					OnShrinkClick(null, null);
+				else
+					OnGrowClick(null, null);
+			}
+			else if (IsFullScreen)
 			{
 				savePoint = e.GetPosition(this);
 				(sender as TextBlock).CaptureMouse();
@@ -325,7 +386,7 @@ namespace NeoEdit.Program.Controls
 				title.ReleaseMouseCapture();
 
 				var startPos = PointToScreen(newPoint);
-				WindowState = WindowState.Normal;
+				SetNonFullScreen();
 				var dist = PointToScreen(savePoint) - startPos;
 				Left = startPos.X - ActualWidth / 2;
 				Top -= dist.Y;
@@ -334,21 +395,170 @@ namespace NeoEdit.Program.Controls
 			e.Handled = true;
 		}
 
+		Rect GetMonitor(Rect rect)
+		{
+			int GetMonitorPercent(Rect monitor)
+			{
+				var intersect = Rect.Intersect(rect, monitor);
+				if (intersect == Rect.Empty)
+					intersect = new Rect();
+				return (int)((intersect.Width * intersect.Height) / (monitor.Width * monitor.Height) * 100 + 0.5);
+			}
+
+			return monitors.OrderByDescending(GetMonitorPercent).First();
+		}
+
+		void SetNonFullScreen()
+		{
+			if (!IsFullScreen)
+				return;
+
+			var monitor = GetMonitor(new Rect(Left, Top, ActualWidth, ActualHeight));
+			var rect = new Rect(nonFullScreenRect.Left + monitor.Left, nonFullScreenRect.Top + monitor.Top, nonFullScreenRect.Width, nonFullScreenRect.Height);
+			rect.Width = Math.Max(100, Math.Min(rect.Width, monitor.Width));
+			rect.Height = Math.Max(100, Math.Min(rect.Height, monitor.Height));
+			rect.X = Math.Max(monitor.Left, Math.Min(rect.Left, monitor.Right - rect.Width));
+			rect.Y = Math.Max(monitor.Top, Math.Min(rect.Top, monitor.Bottom - rect.Height));
+
+			Left = rect.Left;
+			Top = rect.Top;
+			Width = rect.Width;
+			Height = rect.Height;
+			IsFullScreen = false;
+		}
+
 		void OnMinimizeClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
-		void OnRestoreClick(object sender, RoutedEventArgs e) => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+		void OnShrinkClick(object sender, RoutedEventArgs e)
+		{
+			if (WindowState == WindowState.Minimized)
+				return;
+
+			if (!IsFullScreen)
+			{
+				WindowState = WindowState.Minimized;
+				return;
+			}
+
+			var size = new Size(Width, Height);
+			var index = fullScreenRects.FindIndex(x => x.Item1 == size) - 1;
+
+			if (index < 0)
+			{
+				SetNonFullScreen();
+				return;
+			}
+
+			var center = new Point(Left + Width / 2, Top + Height / 2);
+			var newRect = fullScreenRects[index].Item2.OrderBy(x => (new Point(x.Left + x.Width / 2, x.Top + x.Height / 2) - center).LengthSquared).First();
+			Left = newRect.Left;
+			Top = newRect.Top;
+			Width = newRect.Width;
+			Height = newRect.Height;
+			IsFullScreen = true;
+		}
+
+		void OnGrowClick(object sender, RoutedEventArgs e)
+		{
+			if (WindowState == WindowState.Minimized)
+			{
+				WindowState = WindowState.Normal;
+				return;
+			}
+
+			var index = 0;
+			if (IsFullScreen)
+			{
+				var size = new Size(Width, Height);
+				index = fullScreenRects.FindIndex(x => x.Item1 == size) + 1;
+			}
+			else
+			{
+				nonFullScreenRect = new Rect(Left, Top, Width, Height);
+				var monitor = GetMonitor(nonFullScreenRect);
+				nonFullScreenRect.X -= monitor.Left;
+				nonFullScreenRect.Y -= monitor.Top;
+			}
+
+			index = Math.Min(index, fullScreenRects.Count - 1);
+			var center = new Point(Left + Width / 2, Top + Height / 2);
+			var newRect = fullScreenRects[index].Item2.OrderBy(x => (new Point(x.Left + x.Width / 2, x.Top + x.Height / 2) - center).LengthSquared).First();
+			Left = newRect.Left;
+			Top = newRect.Top;
+			Width = newRect.Width;
+			Height = newRect.Height;
+			IsFullScreen = true;
+		}
 
 		void OnCloseClick(object sender, RoutedEventArgs e) => Close();
 
-		protected override void OnSourceInitialized(EventArgs e)
+		static void QueueEscape()
 		{
-			HwndSource.FromHwnd(new WindowInteropHelper(this).Handle).AddHook(new HwndSourceHook(Win32.WindowProc));
-			base.OnSourceInitialized(e);
+			var inputs = new Win32.INPUT[1] { new Win32.INPUT { type = Win32.InputType.KEYBOARD, ki = new Win32.INPUT.KEYBDINPUT { wVk = 69, dwFlags = Win32.KEYEVENTF.KEYUP } } };
+			Win32.SendInput(inputs.Length, inputs, Win32.INPUT.Size);
 		}
 
-		public string GetPosition() => Win32.GetPosition(new WindowInteropHelper(this).Handle);
+		IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam)
+		{
+			if (code >= 0)
+			{
+				var kbd = (Win32.KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(Win32.KBDLLHOOKSTRUCT));
+				if (kbd.vkCode == 91)
+					winDown = (Win32.Message)wParam == Win32.Message.WM_KEYDOWN;
+				if ((kbd.vkCode == 38) && (winDown) && ((Win32.Message)wParam == Win32.Message.WM_KEYDOWN))
+				{
+					QueueEscape();
+					OnGrowClick(null, null);
+					return (IntPtr)1;
+				}
+				if ((kbd.vkCode == 40) && (winDown) && ((Win32.Message)wParam == Win32.Message.WM_KEYDOWN))
+				{
+					QueueEscape();
+					OnShrinkClick(null, null);
+					return (IntPtr)1;
+				}
+			}
 
-		public void SetPosition(string position) => Win32.SetPosition(new WindowInteropHelper(this).Handle, position);
+			return Win32.CallNextHookEx(hook, code, wParam, lParam);
+		}
+
+		protected override void OnActivated(EventArgs e)
+		{
+			using (var process = Process.GetCurrentProcess())
+			using (var module = process.MainModule)
+				hook = Win32.SetWindowsHookEx(Win32.HookType.WH_KEYBOARD_LL, hookProc, Win32.GetModuleHandle(module.ModuleName), 0);
+			base.OnActivated(e);
+		}
+
+		protected override void OnDeactivated(EventArgs e)
+		{
+			Win32.UnhookWindowsHookEx(hook);
+			base.OnDeactivated(e);
+		}
+
+		class ScreenPosition
+		{
+			public Rect Position { get; set; }
+			public Rect NonFullScreenPosition { get; set; }
+			public bool IsFullScreen { get; set; }
+
+			public override string ToString() => JsonConvert.SerializeObject(this);
+			public static ScreenPosition FromString(string str) => JsonConvert.DeserializeObject<ScreenPosition>(str);
+		}
+
+		public string GetPosition() => new ScreenPosition { Position = new Rect(Left, Top, Width, Height), NonFullScreenPosition = nonFullScreenRect, IsFullScreen = IsFullScreen }.ToString();
+
+		public void SetPosition(string position)
+		{
+			var screenPosition = ScreenPosition.FromString(position);
+			WindowState = WindowState.Normal;
+			Left = screenPosition.Position.Left;
+			Top = screenPosition.Position.Top;
+			Width = screenPosition.Position.Width;
+			Height = screenPosition.Position.Height;
+			IsFullScreen = screenPosition.IsFullScreen;
+			nonFullScreenRect = screenPosition.NonFullScreenPosition;
+		}
 
 		protected override void OnClosed(EventArgs e)
 		{
@@ -374,59 +584,7 @@ namespace NeoEdit.Program.Controls
 
 		static class Win32
 		{
-			internal static string GetPosition(IntPtr handle)
-			{
-				var placement = new WINDOWPLACEMENT();
-				GetWindowPlacement(handle, out placement);
-				return JsonConvert.SerializeObject(placement);
-			}
-
-			internal static void SetPosition(IntPtr handle, string position)
-			{
-				if (string.IsNullOrEmpty(position))
-					return;
-
-				WINDOWPLACEMENT placement;
-				placement = JsonConvert.DeserializeObject<WINDOWPLACEMENT>(position);
-				placement.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
-				placement.flags = 0;
-				placement.showCmd = placement.showCmd == SW_SHOWMINIMIZED ? SW_SHOWNORMAL : placement.showCmd;
-				SetWindowPlacement(handle, ref placement);
-			}
-
-			internal static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-			{
-				if (msg == Win32.WM_GETMINMAXINFO)
-					Win32.GetMinMaxInfo(hwnd, lParam);
-
-				return IntPtr.Zero;
-			}
-
-			static void GetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
-			{
-				var primaryMonitor = MonitorFromPoint(new POINT(), MONITOR_DEFAULTTOPRIMARY);
-				var monitorInfo = new MONITORINFO();
-				if (!GetMonitorInfo(primaryMonitor, monitorInfo))
-					return;
-
-				var mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
-				mmi.ptMaxPosition.X = monitorInfo.rcWork.Left;
-				mmi.ptMaxPosition.Y = monitorInfo.rcWork.Top;
-				mmi.ptMaxSize.X = monitorInfo.rcWork.Right - monitorInfo.rcWork.Left;
-				mmi.ptMaxSize.Y = monitorInfo.rcWork.Bottom - monitorInfo.rcWork.Top;
-				Marshal.StructureToPtr(mmi, lParam, true);
-			}
-
-			const int WM_GETMINMAXINFO = 0x0024;
-			const int SW_SHOWNORMAL = 1;
-			const int SW_SHOWMINIMIZED = 2;
-			const int MONITOR_DEFAULTTOPRIMARY = 0x00000001;
-			const int MONITOR_DEFAULTTONEAREST = 0x00000002;
-
-			[DllImport("user32.dll")] static extern IntPtr MonitorFromPoint(POINT pt, int dwFlags);
-			[DllImport("user32.dll")] static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
-			[DllImport("user32.dll")] static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
-			[DllImport("user32.dll")] static extern bool GetWindowPlacement(IntPtr hWnd, out WINDOWPLACEMENT lpwndpl);
+			[DllImport("user32.dll")] public static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
 
 			[Serializable]
 			[StructLayout(LayoutKind.Sequential)]
@@ -436,14 +594,8 @@ namespace NeoEdit.Program.Controls
 				public static POINT FromPoint(Point point) => new POINT { X = (int)(point.X + 0.5), Y = (int)(point.Y + 0.5) };
 			}
 
-			[StructLayout(LayoutKind.Sequential)]
-			struct MINMAXINFO
-			{
-				public POINT ptReserved, ptMaxSize, ptMaxPosition, ptMinTrackSize, ptMaxTrackSize;
-			};
-
 			[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-			class MONITORINFO
+			public class MONITORINFO
 			{
 				public int cbSize = Marshal.SizeOf(typeof(MONITORINFO));
 				public RECT rcMonitor = new RECT();
@@ -453,19 +605,90 @@ namespace NeoEdit.Program.Controls
 
 			[Serializable]
 			[StructLayout(LayoutKind.Sequential)]
-			struct RECT
+			public struct RECT
 			{
 				public int Left, Top, Right, Bottom;
 			}
 
-			[Serializable]
 			[StructLayout(LayoutKind.Sequential)]
-			struct WINDOWPLACEMENT
+			public struct KBDLLHOOKSTRUCT
 			{
-				public int length, flags, showCmd;
-				public POINT minPosition, maxPosition;
-				public RECT normalPosition;
+				public int vkCode;
+				public int scanCode;
+				public int flags;
+				public int time;
+				public IntPtr dwExtraInfo;
 			}
+
+			public enum InputType : uint
+			{
+				KEYBOARD = 1,
+			}
+
+			[Flags]
+			public enum KEYEVENTF : uint
+			{
+				EXTENDEDKEY = 0x0001,
+				KEYUP = 0x0002,
+			}
+
+			[StructLayout(LayoutKind.Sequential)]
+			public struct INPUT
+			{
+				public InputType type;
+				[StructLayout(LayoutKind.Sequential)]
+				public struct KEYBDINPUT
+				{
+					public short wVk;
+					public short wScan;
+					public KEYEVENTF dwFlags;
+					public int time;
+					public UIntPtr dwExtraInfo;
+				}
+				public KEYBDINPUT ki;
+				[MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+				public byte[] padding;
+
+				public static int Size
+				{
+					get { return Marshal.SizeOf(typeof(INPUT)); }
+				}
+			}
+
+			public enum HookType : int
+			{
+				WH_JOURNALRECORD = 0,
+				WH_JOURNALPLAYBACK = 1,
+				WH_KEYBOARD = 2,
+				WH_GETMESSAGE = 3,
+				WH_CALLWNDPROC = 4,
+				WH_CBT = 5,
+				WH_SYSMSGFILTER = 6,
+				WH_MOUSE = 7,
+				WH_HARDWARE = 8,
+				WH_DEBUG = 9,
+				WH_SHELL = 10,
+				WH_FOREGROUNDIDLE = 11,
+				WH_CALLWNDPROCRET = 12,
+				WH_KEYBOARD_LL = 13,
+				WH_MOUSE_LL = 14
+			}
+
+			public enum Message
+			{
+				WM_KEYDOWN = 0x0100,
+				WM_KEYUP = 0x0101,
+			}
+
+			public delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
+			public delegate bool MonitorEnumProc(IntPtr monitor, IntPtr hdc, IntPtr lprcMonitor, IntPtr lParam);
+
+			[DllImport("user32.dll", SetLastError = true)] public static extern IntPtr SetWindowsHookEx(HookType hookType, HookProc lpfn, IntPtr hMod, uint dwThreadId);
+			[DllImport("user32.dll", SetLastError = true)] public static extern bool UnhookWindowsHookEx(IntPtr hhk);
+			[DllImport("user32.dll", SetLastError = true)] public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+			[DllImport("kernel32.dll", SetLastError = false)] public static extern IntPtr GetModuleHandle(string lpModuleName);
+			[DllImport("user32.dll", SetLastError = true)] public static extern uint SendInput(int nInputs, [MarshalAs(UnmanagedType.LPArray), In] INPUT[] pInputs, int cbSize);
+			[DllImport("user32.dll", SetLastError = true)] public static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lprcClip, MonitorEnumProc lpfnEnum, IntPtr dwData);
 		}
 	}
 }
