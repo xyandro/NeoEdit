@@ -395,17 +395,12 @@ namespace NeoEdit.Program.Controls
 			e.Handled = true;
 		}
 
-		Rect GetMonitor(Rect rect)
+		static int GetMonitorPercent(Rect rect, Rect monitor)
 		{
-			int GetMonitorPercent(Rect monitor)
-			{
-				var intersect = Rect.Intersect(rect, monitor);
-				if (intersect == Rect.Empty)
-					intersect = new Rect();
-				return (int)((intersect.Width * intersect.Height) / (monitor.Width * monitor.Height) * 100 + 0.5);
-			}
-
-			return monitors.OrderByDescending(GetMonitorPercent).First();
+			var intersect = Rect.Intersect(rect, monitor);
+			if (intersect == Rect.Empty)
+				intersect = new Rect();
+			return (int)((intersect.Width * intersect.Height) / (monitor.Width * monitor.Height) * 100 + 0.5);
 		}
 
 		void SetNonFullScreen()
@@ -413,18 +408,25 @@ namespace NeoEdit.Program.Controls
 			if (!IsFullScreen)
 				return;
 
-			var monitor = GetMonitor(new Rect(Left, Top, ActualWidth, ActualHeight));
-			var rect = new Rect(nonFullScreenRect.Left + monitor.Left, nonFullScreenRect.Top + monitor.Top, nonFullScreenRect.Width, nonFullScreenRect.Height);
-			rect.Width = Math.Max(100, Math.Min(rect.Width, monitor.Width));
-			rect.Height = Math.Max(100, Math.Min(rect.Height, monitor.Height));
-			rect.X = Math.Max(monitor.Left, Math.Min(rect.Left, monitor.Right - rect.Width));
-			rect.Y = Math.Max(monitor.Top, Math.Min(rect.Top, monitor.Bottom - rect.Height));
+			var monitor = monitors.OrderByDescending(x => GetMonitorPercent(this.nonFullScreenRect, x)).First();
+			nonFullScreenRect.Width = Math.Max(100, Math.Min(nonFullScreenRect.Width, monitor.Width));
+			nonFullScreenRect.Height = Math.Max(100, Math.Min(nonFullScreenRect.Height, monitor.Height));
+			nonFullScreenRect.X = Math.Max(monitor.Left, Math.Min(nonFullScreenRect.Left, monitor.Right - nonFullScreenRect.Width));
+			nonFullScreenRect.Y = Math.Max(monitor.Top, Math.Min(nonFullScreenRect.Top, monitor.Bottom - nonFullScreenRect.Height));
 
+			SetPosition(nonFullScreenRect);
+			IsFullScreen = false;
+		}
+
+		void SetPosition(Rect rect)
+		{
+			var isFullScreen = IsFullScreen;
+			IsFullScreen = false;
 			Left = rect.Left;
 			Top = rect.Top;
 			Width = rect.Width;
 			Height = rect.Height;
-			IsFullScreen = false;
+			IsFullScreen = isFullScreen;
 		}
 
 		void OnMinimizeClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
@@ -449,13 +451,9 @@ namespace NeoEdit.Program.Controls
 				return;
 			}
 
-			var center = new Point(Left + Width / 2, Top + Height / 2);
+			var center = new Point(nonFullScreenRect.Left + nonFullScreenRect.Width / 2, nonFullScreenRect.Top + nonFullScreenRect.Height / 2);
 			var newRect = fullScreenRects[index].Item2.OrderBy(x => (new Point(x.Left + x.Width / 2, x.Top + x.Height / 2) - center).LengthSquared).First();
-			Left = newRect.Left;
-			Top = newRect.Top;
-			Width = newRect.Width;
-			Height = newRect.Height;
-			IsFullScreen = true;
+			SetPosition(newRect);
 		}
 
 		void OnGrowClick(object sender, RoutedEventArgs e)
@@ -470,24 +468,17 @@ namespace NeoEdit.Program.Controls
 			if (IsFullScreen)
 			{
 				var size = new Size(Width, Height);
-				index = fullScreenRects.FindIndex(x => x.Item1 == size) + 1;
+				index = Math.Min(fullScreenRects.FindIndex(x => x.Item1 == size) + 1, fullScreenRects.Count - 1);
 			}
 			else
 			{
 				nonFullScreenRect = new Rect(Left, Top, Width, Height);
-				var monitor = GetMonitor(nonFullScreenRect);
-				nonFullScreenRect.X -= monitor.Left;
-				nonFullScreenRect.Y -= monitor.Top;
+				IsFullScreen = true;
 			}
 
-			index = Math.Min(index, fullScreenRects.Count - 1);
-			var center = new Point(Left + Width / 2, Top + Height / 2);
+			var center = new Point(nonFullScreenRect.Left + nonFullScreenRect.Width / 2, nonFullScreenRect.Top + nonFullScreenRect.Height / 2);
 			var newRect = fullScreenRects[index].Item2.OrderBy(x => (new Point(x.Left + x.Width / 2, x.Top + x.Height / 2) - center).LengthSquared).First();
-			Left = newRect.Left;
-			Top = newRect.Top;
-			Width = newRect.Width;
-			Height = newRect.Height;
-			IsFullScreen = true;
+			SetPosition(newRect);
 		}
 
 		void OnCloseClick(object sender, RoutedEventArgs e) => Close();
@@ -522,6 +513,17 @@ namespace NeoEdit.Program.Controls
 			return Win32.CallNextHookEx(hook, code, wParam, lParam);
 		}
 
+		Point lastLocation;
+		protected override void OnLocationChanged(EventArgs e)
+		{
+			base.OnLocationChanged(e);
+
+			var location = new Point(Left, Top);
+			if (IsFullScreen)
+				nonFullScreenRect.Offset(location - lastLocation);
+			lastLocation = location;
+		}
+
 		protected override void OnActivated(EventArgs e)
 		{
 			using (var process = Process.GetCurrentProcess())
@@ -552,12 +554,9 @@ namespace NeoEdit.Program.Controls
 		{
 			var screenPosition = ScreenPosition.FromString(position);
 			WindowState = WindowState.Normal;
-			Left = screenPosition.Position.Left;
-			Top = screenPosition.Position.Top;
-			Width = screenPosition.Position.Width;
-			Height = screenPosition.Position.Height;
-			IsFullScreen = screenPosition.IsFullScreen;
+			SetPosition(screenPosition.Position);
 			nonFullScreenRect = screenPosition.NonFullScreenPosition;
+			IsFullScreen = screenPosition.IsFullScreen;
 		}
 
 		protected override void OnClosed(EventArgs e)
