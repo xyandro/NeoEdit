@@ -19,9 +19,6 @@ namespace NeoEdit.Program.Controls
 		const double ResizeBorder = 10;
 		const double DragDetect = 10;
 
-		readonly static List<Rect> monitors = new List<Rect>();
-		readonly static List<(Size, List<Rect>)> fullScreenRects = new List<(Size, List<Rect>)>();
-
 		[DepProp]
 		public bool IsMainWindow { get { return UIHelper<NEWindow>.GetPropValue<bool>(this); } set { UIHelper<NEWindow>.SetPropValue(this, value); } }
 		[DepProp]
@@ -47,19 +44,24 @@ namespace NeoEdit.Program.Controls
 			OuterBrush.Freeze();
 			ActiveBrush.Freeze();
 			InactiveBrush.Freeze();
-			Win32.EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, MonitorEnumProc, IntPtr.Zero);
-			GetFullScreenRects();
 		}
 
-		static bool MonitorEnumProc(IntPtr monitor, IntPtr hdc, IntPtr lprcMonitor, IntPtr lParam)
+		List<Rect> GetMonitors()
 		{
-			var monitorInfo = new Win32.MONITORINFO();
-			Win32.GetMonitorInfo(monitor, monitorInfo);
-			monitors.Add(new Rect(monitorInfo.rcWork.Left, monitorInfo.rcWork.Top, monitorInfo.rcWork.Right - monitorInfo.rcWork.Left, monitorInfo.rcWork.Bottom - monitorInfo.rcWork.Top));
-			return true;
+			var monitors = new List<Rect>();
+			bool MonitorEnumProc(IntPtr monitor, IntPtr hdc, IntPtr lprcMonitor, IntPtr lParam)
+			{
+				var monitorInfo = new Win32.MONITORINFO();
+				Win32.GetMonitorInfo(monitor, monitorInfo);
+				monitors.Add(new Rect(monitorInfo.rcWork.Left, monitorInfo.rcWork.Top, monitorInfo.rcWork.Right - monitorInfo.rcWork.Left, monitorInfo.rcWork.Bottom - monitorInfo.rcWork.Top));
+				return true;
+			}
+
+			Win32.EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, MonitorEnumProc, IntPtr.Zero);
+			return monitors;
 		}
 
-		static void GetFullScreenRects()
+		List<(Size, List<Rect>)> GetFullScreenRects()
 		{
 			Rect GetRect(List<Rect> rects)
 			{
@@ -70,8 +72,9 @@ namespace NeoEdit.Program.Controls
 				return new Rect(left, top, right - left, bottom - top);
 			}
 
+			var fullScreenRects = new List<(Size, List<Rect>)>();
 			var useMonitors = new List<List<Rect>> { new List<Rect>() };
-			foreach (var monitor in monitors)
+			foreach (var monitor in GetMonitors())
 			{
 				var newInclude = new List<List<Rect>>();
 				foreach (var value in useMonitors)
@@ -82,6 +85,7 @@ namespace NeoEdit.Program.Controls
 				useMonitors = newInclude;
 			}
 			fullScreenRects.AddRange(useMonitors.Where(list => list.Any()).Select(GetRect).Distinct().GroupBy(x => x.Size).Select(g => (g.Key, g.ToList())).OrderBy(tuple => tuple.Item1.Width * tuple.Item1.Height).ThenBy(tuple => tuple.Item1.Width));
+			return fullScreenRects;
 		}
 
 		public NEWindow()
@@ -408,7 +412,7 @@ namespace NeoEdit.Program.Controls
 			if (!IsFullScreen)
 				return;
 
-			var monitor = monitors.OrderByDescending(x => GetMonitorPercent(this.nonFullScreenRect, x)).First();
+			var monitor = GetMonitors().OrderByDescending(x => GetMonitorPercent(nonFullScreenRect, x)).First();
 			nonFullScreenRect.Width = Math.Max(100, Math.Min(nonFullScreenRect.Width, monitor.Width));
 			nonFullScreenRect.Height = Math.Max(100, Math.Min(nonFullScreenRect.Height, monitor.Height));
 			nonFullScreenRect.X = Math.Max(monitor.Left, Math.Min(nonFullScreenRect.Left, monitor.Right - nonFullScreenRect.Width));
@@ -443,6 +447,7 @@ namespace NeoEdit.Program.Controls
 			}
 
 			var size = new Size(Width, Height);
+			var fullScreenRects = GetFullScreenRects();
 			var index = fullScreenRects.FindIndex(x => x.Item1 == size) - 1;
 
 			if (index < 0)
@@ -464,6 +469,7 @@ namespace NeoEdit.Program.Controls
 				return;
 			}
 
+			var fullScreenRects = GetFullScreenRects();
 			var index = 0;
 			if (IsFullScreen)
 			{
