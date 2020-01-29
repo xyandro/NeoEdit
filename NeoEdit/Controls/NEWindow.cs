@@ -61,6 +61,19 @@ namespace NeoEdit.Program.Controls
 			return monitors;
 		}
 
+		Rect GetMainMonitor()
+		{
+			var useRect = IsFullScreen ? nonFullScreenRect : new Rect(Left, Top, Width, Height);
+
+			return GetMonitors().OrderByDescending(x =>
+			{
+				var intersect = Rect.Intersect(useRect, x);
+				if (intersect == Rect.Empty)
+					intersect = new Rect();
+				return (int)((intersect.Width * intersect.Height) / (x.Width * x.Height) * 100 + 0.5);
+			}).First();
+		}
+
 		List<(Size, List<Rect>)> GetFullScreenRects()
 		{
 			Rect GetRect(List<Rect> rects)
@@ -72,6 +85,7 @@ namespace NeoEdit.Program.Controls
 				return new Rect(left, top, right - left, bottom - top);
 			}
 
+			var mustInclude = GetMainMonitor();
 			var fullScreenRects = new List<(Size, List<Rect>)>();
 			var useMonitors = new List<List<Rect>> { new List<Rect>() };
 			foreach (var monitor in GetMonitors())
@@ -80,7 +94,8 @@ namespace NeoEdit.Program.Controls
 				foreach (var value in useMonitors)
 				{
 					newInclude.Add(value.Concat(monitor).ToList());
-					newInclude.Add(value.ToList());
+					if (monitor != mustInclude)
+						newInclude.Add(value.ToList());
 				}
 				useMonitors = newInclude;
 			}
@@ -399,20 +414,12 @@ namespace NeoEdit.Program.Controls
 			e.Handled = true;
 		}
 
-		static int GetMonitorPercent(Rect rect, Rect monitor)
-		{
-			var intersect = Rect.Intersect(rect, monitor);
-			if (intersect == Rect.Empty)
-				intersect = new Rect();
-			return (int)((intersect.Width * intersect.Height) / (monitor.Width * monitor.Height) * 100 + 0.5);
-		}
-
 		void SetNonFullScreen()
 		{
 			if (!IsFullScreen)
 				return;
 
-			var monitor = GetMonitors().OrderByDescending(x => GetMonitorPercent(nonFullScreenRect, x)).First();
+			var monitor = GetMainMonitor();
 			nonFullScreenRect.Width = Math.Max(100, Math.Min(nonFullScreenRect.Width, monitor.Width));
 			nonFullScreenRect.Height = Math.Max(100, Math.Min(nonFullScreenRect.Height, monitor.Height));
 			nonFullScreenRect.X = Math.Max(monitor.Left, Math.Min(nonFullScreenRect.Left, monitor.Right - nonFullScreenRect.Width));
@@ -517,6 +524,13 @@ namespace NeoEdit.Program.Controls
 			}
 
 			return Win32.CallNextHookEx(hook, code, wParam, lParam);
+		}
+
+		protected override void OnStateChanged(EventArgs e)
+		{
+			base.OnStateChanged(e);
+			if (WindowState == WindowState.Maximized)
+				WindowState = WindowState.Normal;
 		}
 
 		Point lastLocation;
