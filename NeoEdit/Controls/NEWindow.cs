@@ -546,6 +546,7 @@ namespace NeoEdit.Program.Controls
 
 		protected override void OnActivated(EventArgs e)
 		{
+			winDown = false;
 			using (var process = Process.GetCurrentProcess())
 			using (var module = process.MainModule)
 				hook = Win32.SetWindowsHookEx(Win32.HookType.WH_KEYBOARD_LL, hookProc, Win32.GetModuleHandle(module.ModuleName), 0);
