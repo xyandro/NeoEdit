@@ -726,6 +726,7 @@ namespace NeoEdit.Program
 		Window_WordList,
 		Help_About,
 		Help_Update,
+		Help_Extract,
 		Help_RunGC,
 	}
 }

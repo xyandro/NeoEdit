@@ -1091,6 +1091,7 @@
 	<MenuItem Header="_Help">
 		<controls:NEMenuItem Header="_About" CommandEnum="Help_About"/>
 		<controls:NEMenuItem Header="_Update" CommandEnum="Help_Update"/>
+		<controls:NEMenuItem Visibility="{Binding Path=(local:Settings.CanExtract), Converter={converters:BoolToVisibleConverter}}" Header="_Extract" CommandEnum="Help_Extract"/>
 		<controls:NEMenuItem Header="Run _GC" CommandEnum="Help_RunGC"/>
 	</MenuItem>
 

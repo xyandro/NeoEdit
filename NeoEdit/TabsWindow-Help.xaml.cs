@@ -11,9 +11,9 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		static public void Command_Help_About() => HelpAboutDialog.Run();
+		static void Command_Help_About() => HelpAboutDialog.Run();
 
-		static public void Command_Help_Update()
+		static void Command_Help_Update()
 		{
 			const string location = "https://github.com/xyandro/NeoEdit/releases";
 			const string url = location + "/latest";
@@ -82,6 +82,23 @@ namespace NeoEdit.Program
 			Message.Show("The program will be updated after exiting.");
 		}
 
-		static public void Command_Help_RunGC() => GC.Collect();
+		static void Command_Help_Extract()
+		{
+			var location = Assembly.GetEntryAssembly().Location;
+
+			if (!new Message
+			{
+				Title = "Extract files",
+				Text = $"Files will be extracted from {location} after program exits.",
+				Options = MessageOptions.OkCancel,
+				DefaultAccept = MessageOptions.Ok,
+				DefaultCancel = MessageOptions.Cancel,
+			}.Show().HasFlag(MessageOptions.Ok))
+				return;
+
+			Process.Start(location, $@"-extract {Process.GetCurrentProcess().Id}");
+		}
+
+		static void Command_Help_RunGC() => GC.Collect();
 	}
 }

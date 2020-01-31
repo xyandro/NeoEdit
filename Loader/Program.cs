@@ -58,14 +58,12 @@ namespace NeoEdit.Loader
 		{
 			SetupPassword();
 
-			if ((args.Length >= 5) && (args[0] == "-extractor"))
+			if ((args.Length >= 3) && (args[0] == "-extractor"))
 			{
 				var bitDepth = (BitDepths)Enum.Parse(typeof(BitDepths), args[1]);
 				var pid = int.Parse(args[2]);
 				var fileName = args[3];
-				var startExe = bool.Parse(args[4]);
-				var argsStr = args.Length > 5 ? args[5] : null;
-				Extractor.RunExtractor(bitDepth, pid, fileName, startExe, argsStr);
+				Extractor.RunExtractor(bitDepth, pid, fileName);
 			}
 			else if ((args.Length == 3) && (args[0] == "-update"))
 			{
@@ -73,12 +71,15 @@ namespace NeoEdit.Loader
 				var pid = int.Parse(args[2]);
 				Extractor.RunUpdate(pid, fileName);
 			}
-			else if ((ResourceReader.Config.CanExtract) && ((Keyboard.IsKeyDown(Key.Tab)) || ((args.Length == 1) && (args[0] == "-extract")) || (FilesAreExtracted())))
+			else if ((ResourceReader.Config.CanExtract) && ((Keyboard.IsKeyDown(Key.Tab)) || ((args.Length >= 1) && (args[0] == "-extract")) || (FilesAreExtracted())))
 			{
+				if (args.Length >= 2)
+					Extractor.WaitForParentExit(int.Parse(args[1]));
+
 				var result = MessageBox.Show("Do you want to extract the contents of this archive?", "Confirm", MessageBoxButton.YesNoCancel);
 				switch (result)
 				{
-					case MessageBoxResult.Yes: Extractor.Extract(Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32, (args.Length != 1) || (args[0] != "-extract"), args); break;
+					case MessageBoxResult.Yes: Extractor.Extract(Environment.Is64BitProcess ? BitDepths.x64 : BitDepths.x32); break;
 					case MessageBoxResult.No: Extractor.RunProgram(args); break;
 					case MessageBoxResult.Cancel: return;
 				}

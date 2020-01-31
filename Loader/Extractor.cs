@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows;
 
 namespace NeoEdit.Loader
@@ -30,35 +29,15 @@ namespace NeoEdit.Loader
 			});
 		}
 
-		static string ArgsToStr(string[] args)
-		{
-			var bytes = Encoding.UTF8.GetBytes(string.Join("\r", args));
-			var sb = new StringBuilder(bytes.Length * 2);
-			foreach (var b in bytes)
-				sb.Append($"{b:x2}");
-			return sb.ToString();
-		}
-
-		static string[] StrToArgs(string str)
-		{
-			if (str == null)
-				return new string[0];
-
-			var bytes = new byte[str.Length / 2];
-			for (var ctr = 0; ctr < str.Length; ctr += 2)
-				bytes[ctr / 2] = Convert.ToByte(str.Substring(ctr, 2), 16);
-			return Encoding.UTF8.GetString(bytes).Split('\r');
-		}
-
-		public static void Extract(BitDepths bitDepth, bool startExe, string[] args)
+		public static void Extract(BitDepths bitDepth)
 		{
 			var location = typeof(Program).Assembly.Location;
 			var newLocation = Path.Combine(Path.GetDirectoryName(location), $"{Path.GetFileNameWithoutExtension(location)}.Extractor{Path.GetExtension(location)}");
 			File.Copy(location, newLocation, true);
-			Process.Start(newLocation, $"-extractor {bitDepth} {Process.GetCurrentProcess().Id} \"{location}\" {startExe} {ArgsToStr(args)}");
+			Process.Start(newLocation, $"-extractor {bitDepth} {Process.GetCurrentProcess().Id} \"{location}\"");
 		}
 
-		static void WaitForParentExit(int pid) { try { Process.GetProcessById(pid).WaitForExit(); } catch { } }
+		public static void WaitForParentExit(int pid) { try { Process.GetProcessById(pid).WaitForExit(); } catch { } }
 
 		static void RunNGen(string assembly)
 		{
@@ -87,7 +66,7 @@ namespace NeoEdit.Loader
 			}).WaitForExit();
 		}
 
-		public static void RunExtractor(BitDepths bitDepth, int? parentPid, string parentPath, bool startExe, string argsStr)
+		public static void RunExtractor(BitDepths bitDepth, int? parentPid, string parentPath)
 		{
 			if (parentPid.HasValue)
 				WaitForParentExit(parentPid.Value);
@@ -106,11 +85,7 @@ namespace NeoEdit.Loader
 			var newExeFile = Path.Combine(location, bitDepth == BitDepths.x64 ? ResourceReader.Config.X64Start : ResourceReader.Config.X32Start);
 			RunNGen(newExeFile);
 
-			if (startExe)
-			{
-				var args = StrToArgs(argsStr);
-				Process.Start(newExeFile, string.Join(" ", args.Select(x => $"\"{x}\"")));
-			}
+			Process.Start(newExeFile);
 
 			DeleteDelayed(exeFile);
 		}

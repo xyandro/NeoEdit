@@ -111,5 +111,6 @@ namespace NeoEdit.Program
 			}
 		}
 
+		public static bool CanExtract { get; } = string.IsNullOrEmpty(typeof(Settings).Assembly.Location);
 	}
 }
