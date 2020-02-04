@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
@@ -13,7 +14,11 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public string URL { get { return UIHelper<NetworkWCFGetConfig>.GetPropValue<string>(this); } set { UIHelper<NetworkWCFGetConfig>.SetPropValue(this, value); } }
 
-		static NetworkWCFGetConfig() { UIHelper<NetworkWCFGetConfig>.Register(); }
+		static NetworkWCFGetConfig()
+		{
+			UIHelper<NetworkWCFGetConfig>.Register();
+			AutoCompleteTextBox.AddTagSuggestions("NetworkWCFGetConfigURL", Settings.WCFURLs.ToArray());
+		}
 
 		NetworkWCFGetConfig()
 		{

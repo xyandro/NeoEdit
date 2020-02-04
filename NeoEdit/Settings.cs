@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 
@@ -21,6 +22,7 @@ namespace NeoEdit.Program
 					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
 					try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
 					try { windowPosition = xml.Element(nameof(WindowPosition)).Value; } catch { }
+					try { wcfURLs = new List<string>(xml.Element(nameof(WCFURLs)).Value.Split('\n')); } catch { }
 				}
 				catch { }
 			}
@@ -39,6 +41,7 @@ namespace NeoEdit.Program
 				xml.Add(new XElement(nameof(FFmpegPath), ffmpegPath));
 				xml.Add(new XElement(nameof(Font.FontSize), Font.FontSize));
 				xml.Add(new XElement(nameof(WindowPosition), windowPosition));
+				xml.Add(new XElement(nameof(WCFURLs), string.Join("\n", wcfURLs)));
 				xml.Save(settingsFile);
 			}
 			catch { }
@@ -109,6 +112,15 @@ namespace NeoEdit.Program
 				windowPosition = value;
 				SaveSettings();
 			}
+		}
+
+		public static List<string> wcfURLs = new List<string>();
+		public static IReadOnlyList<string> WCFURLs => wcfURLs;
+		public static void AddWCFUrl(string url)
+		{
+			wcfURLs.Remove(url);
+			wcfURLs.Insert(0, url);
+			SaveSettings();
 		}
 
 		public static bool CanExtract { get; } = string.IsNullOrEmpty(typeof(Settings).Assembly.Location);

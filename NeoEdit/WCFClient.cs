@@ -71,6 +71,7 @@ namespace NeoEdit.Program
 				appDomains.Add(appDomain);
 			}
 
+			Settings.AddWCFUrl(serviceURL);
 			return wcfClients[serviceURL];
 		}
 
