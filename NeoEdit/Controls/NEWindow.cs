@@ -547,15 +547,22 @@ namespace NeoEdit.Program.Controls
 		protected override void OnActivated(EventArgs e)
 		{
 			winDown = false;
-			using (var process = Process.GetCurrentProcess())
-			using (var module = process.MainModule)
-				hook = Win32.SetWindowsHookEx(Win32.HookType.WH_KEYBOARD_LL, hookProc, Win32.GetModuleHandle(module.ModuleName), 0);
+			if (!Helpers.IsDebugBuild)
+			{
+				using (var process = Process.GetCurrentProcess())
+				using (var module = process.MainModule)
+					hook = Win32.SetWindowsHookEx(Win32.HookType.WH_KEYBOARD_LL, hookProc, Win32.GetModuleHandle(module.ModuleName), 0);
+			}
 			base.OnActivated(e);
 		}
 
 		protected override void OnDeactivated(EventArgs e)
 		{
-			Win32.UnhookWindowsHookEx(hook);
+			if (hook != IntPtr.Zero)
+			{
+				Win32.UnhookWindowsHookEx(hook);
+				hook = IntPtr.Zero;
+			}
 			base.OnDeactivated(e);
 		}
 
