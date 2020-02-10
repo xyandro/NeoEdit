@@ -21,11 +21,10 @@ using System.Web.Services.Discovery;
 using System.Xml;
 using System.Xml.Schema;
 using Microsoft.CSharp;
-using NeoEdit.Program.Dialogs;
 using Newtonsoft.Json;
 using ServiceDescription = System.Web.Services.Description.ServiceDescription;
 
-namespace NeoEdit.Program
+namespace NeoEdit.WCF
 {
 	public class WCFClient : MarshalByRefObject
 	{
@@ -54,7 +53,16 @@ namespace NeoEdit.Program
 			{
 				var wcfClientAssemblyName = typeof(WCFClient).Assembly.Location;
 				if (string.IsNullOrWhiteSpace(wcfClientAssemblyName))
-					throw new Exception($"Can't resolve {nameof(WCFClient)} assembly. It most likely needs to be extracted from the loader.");
+				{
+					var wcfAssembly = typeof(WCFClient).Assembly;
+					var jsonAssembly = typeof(JsonConvert).Assembly;
+					wcfClientAssemblyName = Path.Combine(Path.GetTempPath(), $"{wcfAssembly.GetName().Name}.dll");
+					var newtonsoftAssemblyName = Path.Combine(Path.GetTempPath(), $"{jsonAssembly.GetName().Name}.dll");
+					var extractor = AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetType("NeoEdit.Loader.Extractor")).Where(x => x != null).First();
+					var getAssembly = extractor.GetMethod("GetAssembly", BindingFlags.Static | BindingFlags.Public);
+					File.WriteAllBytes(wcfClientAssemblyName, getAssembly.Invoke(null, new object[] { wcfAssembly.FullName }) as byte[]);
+					File.WriteAllBytes(newtonsoftAssemblyName, getAssembly.Invoke(null, new object[] { jsonAssembly.FullName }) as byte[]);
+				}
 
 				var appDomain = AppDomain.CreateDomain(serviceURL);
 				try
@@ -71,17 +79,12 @@ namespace NeoEdit.Program
 				appDomains.Add(appDomain);
 			}
 
-			Settings.AddWCFUrl(serviceURL);
 			return wcfClients[serviceURL];
 		}
 
-		static public List<string> InterceptCalls(string serviceURL, string interceptURL)
-		{
-			var wcfClient = GetWCFClient(serviceURL);
-			wcfClient.StartInterceptCalls(interceptURL);
-			WCFInterceptDialog.Run();
-			return wcfClient.EndInterceptCalls();
-		}
+		static public void StartInterceptCalls(string serviceURL, string interceptURL) => GetWCFClient(serviceURL).DoStartInterceptCalls(interceptURL);
+
+		static public List<string> EndInterceptCalls(string serviceURL) => GetWCFClient(serviceURL).DoEndInterceptCalls();
 
 		static public void ResetClients()
 		{
@@ -804,7 +807,7 @@ namespace NeoEdit.WCFInterceptor
 		}
 
 		dynamic interceptor;
-		void StartInterceptCalls(string interceptURL)
+		void DoStartInterceptCalls(string interceptURL)
 		{
 			try
 			{
@@ -814,7 +817,7 @@ namespace NeoEdit.WCFInterceptor
 			catch (Exception ex) { throw AggregateException(ex); }
 		}
 
-		List<string> EndInterceptCalls()
+		List<string> DoEndInterceptCalls()
 		{
 			try
 			{
@@ -837,6 +840,12 @@ namespace NeoEdit.WCFInterceptor
 				return results;
 			}
 			catch (Exception ex) { throw AggregateException(ex); }
+		}
+
+		public static string GetServiceURL(string request)
+		{
+			request = Regex.Replace(request, @"/\*.*?\*/", "", RegexOptions.Singleline | RegexOptions.Multiline);
+			return JsonConvert.DeserializeObject<WCFOperation>(request).ServiceURL;
 		}
 	}
 }

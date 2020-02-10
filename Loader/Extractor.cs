@@ -98,6 +98,17 @@ namespace NeoEdit.Loader
 			DeleteDelayed(src);
 		}
 
+		public static byte[] GetAssembly(string aname)
+		{
+			// Called in WCFClient to fetch assemblies
+			var name = new AssemblyName(aname).Name;
+			var resourceHeader = ResourceReader.ResourceHeaders.SingleOrDefault(res => res.NameMatch(name));
+			if (resourceHeader == null)
+				return null;
+			var resource = Resource.CreateFromHeader(resourceHeader);
+			return resource.RawData;
+		}
+
 		static Dictionary<string, Assembly> resolved = new Dictionary<string, Assembly>();
 		static Assembly AssemblyResolve(ResolveEventArgs args, string dllPath)
 		{

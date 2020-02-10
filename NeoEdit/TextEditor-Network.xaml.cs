@@ -7,11 +7,11 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
-using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
+using NeoEdit.WCF;
 
 namespace NeoEdit.Program
 {
@@ -224,6 +224,7 @@ namespace NeoEdit.Program
 				throw new Exception("Must have single selection.");
 
 			ReplaceSelections(WCFClient.GetWCFConfig(result.URL));
+			Settings.AddWCFUrl(result.URL);
 		}
 
 		void Command_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFClient.ExecuteWCF(GetString(range))).ToList());
@@ -235,7 +236,9 @@ namespace NeoEdit.Program
 			if (Selections.Count != 1)
 				throw new Exception("Must have single selection.");
 
-			var values = WCFClient.InterceptCalls(result.WCFURL, result.InterceptURL);
+			WCFClient.StartInterceptCalls(result.WCFURL, result.InterceptURL);
+			WCFInterceptDialog.Run();
+			var values = WCFClient.EndInterceptCalls(result.WCFURL);
 			if (!values.Any())
 				return;
 
