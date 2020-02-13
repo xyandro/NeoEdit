@@ -37,11 +37,11 @@ namespace NeoEdit.Tests
 			try { var test = textData.GetLine(numLines + 1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
 
-			try { var test = textData.GetLineColumns(-1); Assert.Fail(); }
+			try { var test = textData.GetLineColumns(-1, 0, 0); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
-			Assert.AreEqual(textData.GetLineColumns(3), "Line 3");
-			Assert.AreEqual(textData.GetLineColumns(5), "    Line    5   ");
-			try { var test = textData.GetLineColumns(numLines + 1); Assert.Fail(); }
+			Assert.AreEqual(textData.GetLineColumns(3, 1, 7), "Line 3");
+			Assert.AreEqual(textData.GetLineColumns(5, 1, 17), "    Line    5   ");
+			try { var test = textData.GetLineColumns(numLines + 1, 0, 0); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
 
 			try { var test = textData[-1, 0]; Assert.Fail(); }

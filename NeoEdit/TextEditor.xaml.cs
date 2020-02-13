@@ -2130,35 +2130,28 @@ namespace NeoEdit.Program
 
 			var highlightDictionary = HighlightSyntax ? Highlight.Get(ContentType)?.GetDictionary() : null;
 
+			var startColumn = Math.Max(drawBounds.StartColumn - HighlightRegexSize, 0);
+			var startOffset = drawBounds.StartColumn - startColumn;
+			var endColumn = drawBounds.EndColumn + HighlightRegexSize;
 			for (var line = drawBounds.StartLine; line < drawBounds.EndLine; ++line)
 			{
-				var lineColumns = Data.GetLineColumns(line);
-				if (lineColumns.Length <= drawBounds.StartColumn)
+				var lineColumns = Data.GetLineColumns(line, startColumn, endColumn);
+				if (lineColumns.Length <= startOffset)
 					continue;
 
-				var str = lineColumns.Substring(drawBounds.StartColumn, Math.Min(drawBounds.EndColumn, lineColumns.Length) - drawBounds.StartColumn);
-				var text = Font.GetText(str);
+				var text = Font.GetText(lineColumns.Substring(startOffset));
 
 				if (highlightDictionary != null)
 				{
-					var highlightStart = Math.Max(drawBounds.StartColumn - HighlightRegexSize, 0);
-					var highlightCount = Math.Min(drawBounds.EndColumn - drawBounds.StartColumn + HighlightRegexSize, lineColumns.Length - highlightStart);
-					var highlightStr = lineColumns.Substring(highlightStart, highlightCount);
-
 					foreach (var entry in highlightDictionary)
-						foreach (Match match in entry.Key.Matches(highlightStr))
+						foreach (Match match in entry.Key.Matches(lineColumns))
 						{
-							var start = match.Index + highlightStart - drawBounds.StartColumn;
-							var count = match.Length;
-							if (start < 0)
-							{
-								count += start;
-								start = 0;
-							}
-							count = Math.Min(count, str.Length - start);
-							if (count <= 0)
+							var start = match.Index - startOffset;
+							var end = start + match.Length;
+							if (end < 0)
 								continue;
-							text.SetForegroundBrush(entry.Value, start, count);
+							start = Math.Max(0, start);
+							text.SetForegroundBrush(entry.Value, start, end - start);
 						}
 				}
 

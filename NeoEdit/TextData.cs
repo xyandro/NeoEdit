@@ -224,32 +224,47 @@ namespace NeoEdit.Program
 			return Data.Substring(linePosition[line], GetLineLength(line) + (includeEnding ? GetEndingLength(line) : 0));
 		}
 
-		public string GetLineColumns(int line, bool includeEnding = false)
+		public string GetLineColumns(int line, int startColumn, int endColumn)
 		{
 			if ((line < 0) || (line >= NumLines))
 				throw new IndexOutOfRangeException();
 
+			var column = 0;
 			var index = linePosition[line];
-			var len = GetLineLength(line) + (includeEnding ? GetEndingLength(line) : 0);
+			var endIndex = index + GetLineLength(line);
 			var sb = new StringBuilder();
-			while (len > 0)
+			while ((column < endColumn) && (index < endIndex))
 			{
-				var find = Data.IndexOf('\t', index, len);
-				if (find == index)
+				var skipColumns = Math.Max(0, startColumn - column);
+				var takeColumns = endColumn - column;
+
+				var tabIndex = Data.IndexOf('\t', index, Math.Min(endIndex - index, takeColumns));
+				if (tabIndex == index)
 				{
-					sb.Append(' ', (sb.Length / tabStop + 1) * tabStop - sb.Length);
+					var repeatCount = (column / tabStop + 1) * tabStop - column;
+					var useColumns = Math.Min(Math.Max(0, repeatCount - skipColumns), takeColumns);
+					sb.Append(' ', useColumns);
+					column += repeatCount;
 					++index;
-					--len;
 					continue;
 				}
 
-				if (find == -1)
-					find = len;
-				else
-					find -= index;
-				sb.Append(Data, index, find);
-				index += find;
-				len -= find;
+				if (tabIndex == -1)
+					tabIndex = endIndex;
+
+				if (skipColumns > 0)
+				{
+					var useColumns = Math.Min(skipColumns, tabIndex - index);
+					index += useColumns;
+					column += useColumns;
+				}
+
+				{
+					var useColumns = Math.Min(tabIndex - index, takeColumns);
+					sb.Append(Data, index, useColumns);
+					column += useColumns;
+					index += useColumns;
+				}
 			}
 
 			return sb.ToString();
