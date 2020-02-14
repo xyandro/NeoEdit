@@ -2561,7 +2561,7 @@ namespace NeoEdit.Program
 			var inlineVars = new List<InlineVariable>();
 			var regex = new Regex(@"\[(\w*):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			var found = new HashSet<string>();
-			foreach (var tuple in Data.RegexMatches(regex, 0, Data.MaxPosition - 0, false, false))
+			foreach (var tuple in RegexMatches(regex, 0, Data.MaxPosition - 0, false, false))
 			{
 				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
 				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);
@@ -2614,5 +2614,25 @@ namespace NeoEdit.Program
 			var values = Enumerable.Repeat(Coder.BytesToString(value, CodePage), sels.Count).ToList();
 			Replace(sels, values);
 		}
+
+		static List<Tuple<int, int>> RegexMatches(TextData data, Regex regex, int position, int length, bool regexGroups, bool firstOnly)
+		{
+			var result = new List<Tuple<int, int>>();
+			var matches = regex.Matches(data.GetString(position, length)).Cast<Match>();
+			foreach (var match in matches)
+			{
+				if ((!regexGroups) || (match.Groups.Count == 1))
+					result.Add(new Tuple<int, int>(position + match.Index, match.Length));
+				else
+					result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => new Tuple<int, int>(position + capture.Index, capture.Length)));
+				if ((firstOnly) && (result.Count != 0))
+					return result;
+			}
+
+			return result;
+		}
+
+		List<Tuple<int, int>> RegexMatches(Regex regex, int position, int length, bool regexGroups, bool firstOnly) => RegexMatches(Data, regex, position, length, regexGroups, firstOnly);
+
 	}
 }

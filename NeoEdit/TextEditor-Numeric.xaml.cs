@@ -112,7 +112,7 @@ namespace NeoEdit.Program
 		void SelectRegEx(string pattern)
 		{
 			var regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-			var results = Selections.AsParallel().AsOrdered().Select(region => Data.RegexMatches(regex, region.Start, region.Length, false, false)).SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			var results = Selections.AsParallel().AsOrdered().Select(region => RegexMatches(regex, region.Start, region.Length, false, false)).SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			SetSelections(results);
 		}
 
