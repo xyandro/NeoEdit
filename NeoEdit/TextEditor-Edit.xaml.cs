@@ -310,7 +310,7 @@ namespace NeoEdit.Program
 
 			var searcher = new Searcher(texts, result.MatchCase);
 			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => Data.StringMatches(searcher, selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => searcher.Find(Data.GetString(selection.Start, selection.Length))).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			SetSelections(ranges);
 		}
 
@@ -332,7 +332,7 @@ namespace NeoEdit.Program
 				.ToList();
 			var searcher = new Searcher(findStrs);
 			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => Data.StringMatches(searcher, selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => searcher.Find(Data.GetString(selection.Start, selection.Length))).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			ViewValuesFindValue = result.Text;
 			SetSelections(ranges);
 		}

@@ -463,11 +463,6 @@ namespace NeoEdit.Program
 			Data = sb.ToString();
 		}
 
-		public List<Tuple<int, int>> StringMatches(Searcher searcher, int position, int length)
-		{
-			return searcher.Find(Data, position, length);
-		}
-
 		public void Trim(ref int position, ref int length, HashSet<char> chars, bool start, bool end)
 		{
 			if (end)
