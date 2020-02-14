@@ -159,6 +159,16 @@ namespace NeoEdit.Program
 			diffData = null;
 		}
 
+		public char this[int position]
+		{
+			get
+			{
+				if ((position < 0) || (position >= Data.Length))
+					throw new IndexOutOfRangeException();
+				return Data[position];
+			}
+		}
+
 		public char this[int line, int index]
 		{
 			get

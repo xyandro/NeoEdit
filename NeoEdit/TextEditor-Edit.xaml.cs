@@ -605,7 +605,7 @@ namespace NeoEdit.Program
 					break;
 				}
 
-				var isSpace = lines.All(line => GetWordSkipType(line, index) == WordSkipType.Space);
+				var isSpace = lines.All(line => GetWordSkipType(Data.GetPosition(line, index)) == WordSkipType.Space);
 
 				if (!currentIsSpace.HasValue)
 					currentIsSpace = isSpace;
@@ -642,7 +642,7 @@ namespace NeoEdit.Program
 					break;
 				}
 
-				var isSpace = lines.All(line => GetWordSkipType(line, index) == WordSkipType.Space);
+				var isSpace = lines.All(line => GetWordSkipType(Data.GetPosition(line, index)) == WordSkipType.Space);
 
 				if (!currentIsSpace.HasValue)
 					currentIsSpace = isSpace;

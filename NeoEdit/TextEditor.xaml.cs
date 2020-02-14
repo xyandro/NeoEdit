@@ -498,12 +498,12 @@ namespace NeoEdit.Program
 
 		public List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables(), Selections.Count());
 
-		public WordSkipType GetWordSkipType(int line, int index)
+		public WordSkipType GetWordSkipType(int position)
 		{
-			if ((index < 0) || (index >= Data.GetLineLength(line)))
+			if ((position < 0) || (position >= Data.NumChars))
 				return WordSkipType.Space;
 
-			var c = Data[line, index];
+			var c = Data[position];
 			switch (jumpBy)
 			{
 				case JumpByType.Words:
@@ -527,26 +527,20 @@ namespace NeoEdit.Program
 		{
 			WordSkipType moveType = WordSkipType.None;
 
-			var line = Data.GetPositionLine(position);
-			var index = Math.Min(Data.GetLineLength(line), Data.GetPositionIndex(position, line) - 1);
+			--position;
 			while (true)
 			{
-				if (index >= Data.GetLineLength(line))
-				{
-					++line;
-					if (line >= Data.NumLines)
-						return EndPosition;
-					index = -1;
-				}
+				if (position >= Data.NumChars)
+					return EndPosition;
 
-				++index;
-				var current = GetWordSkipType(line, index);
+				++position;
+				var current = GetWordSkipType(position);
 
 				if (moveType == WordSkipType.None)
 					moveType = current;
 
 				if (current != moveType)
-					return Data.GetPosition(line, index);
+					return position;
 			}
 		}
 
@@ -554,27 +548,19 @@ namespace NeoEdit.Program
 		{
 			WordSkipType moveType = WordSkipType.None;
 
-			var line = Data.GetPositionLine(position);
-			var index = Math.Min(Data.GetLineLength(line), Data.GetPositionIndex(position, line));
 			while (true)
 			{
-				if (index < 0)
-				{
-					--line;
-					if (line < 0)
-						return BeginPosition;
-					index = Data.GetLineLength(line);
-					continue;
-				}
+				if (position < 0)
+					return BeginPosition;
 
-				--index;
-				var current = GetWordSkipType(line, index);
+				--position;
+				var current = GetWordSkipType(position);
 
 				if (moveType == WordSkipType.None)
 					moveType = current;
 
 				if (current != moveType)
-					return Data.GetPosition(line, index + 1);
+					return position + 1;
 			}
 		}
 
