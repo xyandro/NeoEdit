@@ -463,23 +463,6 @@ namespace NeoEdit.Program
 			Data = sb.ToString();
 		}
 
-		public void Trim(ref int position, ref int length, HashSet<char> chars, bool start, bool end)
-		{
-			if (end)
-			{
-				while ((length > 0) && (chars.Contains(Data[position + length - 1])))
-					--length;
-			}
-			if (start)
-			{
-				while ((length > 0) && (chars.Contains(Data[position])))
-				{
-					++position;
-					--length;
-				}
-			}
-		}
-
 		class DiffParams
 		{
 			public readonly bool IgnoreWhitespace, IgnoreCase, IgnoreNumbers, IgnoreLineEndings;

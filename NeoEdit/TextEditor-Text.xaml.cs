@@ -42,12 +42,24 @@ namespace NeoEdit.Program
 
 		Range TrimRange(Range range, TextTrimDialog.Result result)
 		{
-			var index = range.Start;
+			var position = range.Start;
 			var length = range.Length;
-			Data.Trim(ref index, ref length, result.TrimChars, result.Start, result.End);
-			if ((index == range.Start) && (length == range.Length))
+			if (result.End)
+			{
+				while ((length > 0) && (result.TrimChars.Contains(Data[position + length - 1])))
+					--length;
+			}
+			if (result.Start)
+			{
+				while ((length > 0) && (result.TrimChars.Contains(Data[position])))
+				{
+					++position;
+					--length;
+				}
+			}
+			if ((position == range.Start) && (length == range.Length))
 				return range;
-			return Range.FromIndex(index, length);
+			return Range.FromIndex(position, length);
 		}
 
 		static string TrimString(string str, TextTrimDialog.Result result)
