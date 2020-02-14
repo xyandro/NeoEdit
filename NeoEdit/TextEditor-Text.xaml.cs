@@ -83,8 +83,8 @@ namespace NeoEdit.Program
 
 		void Command_Text_Select_WholeBoundedWord(TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
 		{
-			var minPosition = BeginPosition;
-			var maxPosition = EndPosition;
+			var minPosition = 0;
+			var maxPosition = Data.MaxPosition;
 
 			var sels = new List<Range>();
 			foreach (var range in Selections)

@@ -309,11 +309,9 @@ namespace NeoEdit.Program
 
 		void FontSizeChanged(object sender, EventArgs e) => CalculateBoundaries();
 
-		public int BeginPosition => Data.GetPosition(0, 0);
-		public int EndPosition => Data.GetPosition(Data.NumLines - 1, Data.GetLineLength(Data.NumLines - 1));
-		public Range BeginRange => new Range(BeginPosition);
-		Range EndRange => new Range(EndPosition);
-		public Range FullRange => new Range(EndPosition, BeginPosition);
+		public Range BeginRange => new Range(0);
+		Range EndRange => new Range(Data.MaxPosition);
+		public Range FullRange => new Range(Data.MaxPosition, 0);
 		public string AllText => GetString(FullRange);
 
 		void BlockSelDown()
@@ -464,7 +462,7 @@ namespace NeoEdit.Program
 			return savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.Yes);
 		}
 
-		public bool Empty() => (FileName == null) && (!IsModified) && (BeginPosition == EndPosition);
+		public bool Empty() => (FileName == null) && (!IsModified) && (0 == Data.MaxPosition);
 
 		public void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
 		{
@@ -500,7 +498,7 @@ namespace NeoEdit.Program
 
 		public WordSkipType GetWordSkipType(int position)
 		{
-			if ((position < 0) || (position >= Data.NumChars))
+			if ((position < 0) || (position >= Data.MaxPosition))
 				return WordSkipType.Space;
 
 			var c = Data[position];
@@ -530,8 +528,8 @@ namespace NeoEdit.Program
 			--position;
 			while (true)
 			{
-				if (position >= Data.NumChars)
-					return EndPosition;
+				if (position >= Data.MaxPosition)
+					return Data.MaxPosition;
 
 				++position;
 				var current = GetWordSkipType(position);
@@ -551,7 +549,7 @@ namespace NeoEdit.Program
 			while (true)
 			{
 				if (position < 0)
-					return BeginPosition;
+					return 0;
 
 				--position;
 				var current = GetWordSkipType(position);
@@ -1670,7 +1668,7 @@ namespace NeoEdit.Program
 				case Key.Home:
 					if (controlDown)
 					{
-						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, BeginPosition, shiftDown)).ToList(); // Have to use MoveCursor for selection
+						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
 							sels.Add(BeginRange);
 						SetSelections(sels);
@@ -1709,7 +1707,7 @@ namespace NeoEdit.Program
 				case Key.End:
 					if (controlDown)
 					{
-						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, EndPosition, shiftDown)).ToList(); // Have to use MoveCursor for selection
+						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, Data.MaxPosition, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
 							sels.Add(EndRange);
 						SetSelections(sels);
@@ -1835,7 +1833,7 @@ namespace NeoEdit.Program
 				{
 					if (mouseRange != null)
 						sels.Remove(mouseRange);
-					currentSelection = new Range(GetNextWord(position), GetPrevWord(Math.Min(position + 1, EndPosition)));
+					currentSelection = new Range(GetNextWord(position), GetPrevWord(Math.Min(position + 1, Data.MaxPosition)));
 				}
 			}
 
@@ -1848,7 +1846,7 @@ namespace NeoEdit.Program
 
 		public Range MoveCursor(Range range, int cursor, bool selecting)
 		{
-			cursor = Math.Max(BeginPosition, Math.Min(cursor, EndPosition));
+			cursor = Math.Max(0, Math.Min(cursor, Data.MaxPosition));
 			if (selecting)
 				if (range.Cursor == cursor)
 					return range;
@@ -2194,7 +2192,7 @@ namespace NeoEdit.Program
 
 				try
 				{
-					ViewValuesData = Coder.StringToBytes(Data.GetString(range.Start, Math.Min(range.HasSelection ? range.Length : 100, Data.NumChars - range.Start)), CodePage);
+					ViewValuesData = Coder.StringToBytes(Data.GetString(range.Start, Math.Min(range.HasSelection ? range.Length : 100, Data.MaxPosition - range.Start)), CodePage);
 					ViewValuesHasSel = range.HasSelection;
 				}
 				catch { }
@@ -2352,7 +2350,7 @@ namespace NeoEdit.Program
 
 		public void Save(string fileName, bool copyOnly = false)
 		{
-			if ((Coder.IsStr(CodePage)) && ((Data.NumChars >> 20) < 50) && (!VerifyCanEncode()))
+			if ((Coder.IsStr(CodePage)) && ((Data.MaxPosition >> 20) < 50) && (!VerifyCanEncode()))
 				return;
 
 			var triedReadOnly = false;
@@ -2563,7 +2561,7 @@ namespace NeoEdit.Program
 			var inlineVars = new List<InlineVariable>();
 			var regex = new Regex(@"\[(\w*):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 			var found = new HashSet<string>();
-			foreach (var tuple in Data.RegexMatches(regex, BeginPosition, EndPosition - BeginPosition, false, false))
+			foreach (var tuple in Data.RegexMatches(regex, 0, Data.MaxPosition - 0, false, false))
 			{
 				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
 				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);

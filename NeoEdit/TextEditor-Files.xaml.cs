@@ -384,7 +384,7 @@ namespace NeoEdit.Program
 
 				var data = new TextData(Coder.BytesToString(buffer, Coder.CodePage.AutoByBOM, true));
 				var start = data.GetPosition(0, 0);
-				return data.RegexMatches(search.Regex, start, data.NumChars - start, false, true).Any();
+				return data.RegexMatches(search.Regex, start, data.MaxPosition - start, false, true).Any();
 			}
 			catch (Exception ex)
 			{
@@ -687,7 +687,7 @@ namespace NeoEdit.Program
 
 		void Command_Files_Select_Name_Next()
 		{
-			var maxPosition = EndPosition;
+			var maxPosition = Data.MaxPosition;
 			var invalidChars = Path.GetInvalidFileNameChars();
 
 			var sels = new List<Range>();

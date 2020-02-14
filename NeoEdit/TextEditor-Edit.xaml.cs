@@ -291,7 +291,7 @@ namespace NeoEdit.Program
 			var text = Regex.Escape(GetString(Selections[0]));
 			var regex = new Regex(text, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-			SetSearches(Data.RegexMatches(regex, BeginPosition, EndPosition, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
+			SetSearches(Data.RegexMatches(regex, 0, Data.MaxPosition, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
 			FindNext(true, selecting);
 		}
 

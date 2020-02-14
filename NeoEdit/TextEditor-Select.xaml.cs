@@ -254,8 +254,8 @@ namespace NeoEdit.Program
 		void Command_Select_Invert()
 		{
 			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
-			var end = Selections.Select(sel => sel.Start).Concat(new[] { Data.NumChars });
-			SetSelections(Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Data.NumChars))).ToList());
+			var end = Selections.Select(sel => sel.Start).Concat(new[] { Data.MaxPosition });
+			SetSelections(Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Data.MaxPosition))).ToList());
 		}
 
 		void Command_Select_Join()

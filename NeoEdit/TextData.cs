@@ -27,7 +27,7 @@ namespace NeoEdit.Program
 		const int tabStop = 4;
 
 		public int NumLines => endingPosition.Count;
-		public int NumChars => Data.Length;
+		public int MaxPosition => Data.Length;
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
 
