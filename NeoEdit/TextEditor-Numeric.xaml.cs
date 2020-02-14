@@ -162,7 +162,7 @@ namespace NeoEdit.Program
 			if (!Selections.Any())
 				throw new Exception("No selections");
 
-			var values = Selections.AsParallel().AsOrdered().Select(range => double.Parse(GetString(range))).ToList();
+			var values = Selections.AsParallel().AsOrdered().Select(range => new NumericValue(GetString(range))).ToList();
 			var find = max ? values.OrderByDescending().First() : values.OrderBy().First();
 			SetSelections(values.Indexes(value => value == find).Select(index => Selections[index]).ToList());
 		}
@@ -235,15 +235,16 @@ namespace NeoEdit.Program
 			if (result == null)
 				result = Selections[Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1))];
 
-			var sum = Selections.AsParallel().Where(range => range.HasSelection).Select(range => double.Parse(GetString(range))).Sum();
+			var total = new NumericValue(0);
+			var sum = Selections.Where(range => range.HasSelection).ForEach(range => total += new NumericValue(GetString(range)));
 			SetSelections(new List<Range> { result });
 			ReplaceSelections(sum.ToString());
 		}
 
 		void Command_Numeric_Add_ForwardReverseSum(bool forward, bool undo)
 		{
-			var numbers = Selections.AsParallel().AsOrdered().Select(range => double.Parse(GetString(range))).ToList();
-			double total = 0;
+			var numbers = Selections.AsParallel().AsOrdered().Select(range => new NumericValue(GetString(range))).ToList();
+			var total = new NumericValue(0);
 			var start = forward ? 0 : numbers.Count - 1;
 			var end = forward ? numbers.Count : -1;
 			var step = forward ? 1 : -1;
@@ -258,7 +259,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(numbers.Select(num => num.ToString()).ToList());
 		}
 
-		void Command_Numeric_Add_IncrementDecrement(bool add) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (double.Parse(GetString(range)) + (add ? 1 : -1)).ToString()).ToList());
+		void Command_Numeric_Add_IncrementDecrement(bool add) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (new NumericValue(GetString(range)) + new NumericValue(add ? 1 : -1)).ToString()).ToList());
 
 		void Command_Numeric_Add_AddSubtractClipboard(bool add)
 		{
@@ -272,8 +273,8 @@ namespace NeoEdit.Program
 			if (Selections.Count != clipboardStrings.Count())
 				throw new Exception("Must have either one or equal number of clipboards.");
 
-			var mult = add ? 1 : -1;
-			ReplaceSelections(Selections.Zip(clipboardStrings, (sel, clip) => new { sel, clip }).AsParallel().AsOrdered().Select(obj => (double.Parse(GetString(obj.sel)) + double.Parse(obj.clip) * mult).ToString()).ToList());
+			var mult = new NumericValue(add ? 1 : -1);
+			ReplaceSelections(Selections.Zip(clipboardStrings, (sel, clip) => new { sel, clip }).AsParallel().AsOrdered().Select(obj => (new NumericValue(GetString(obj.sel)) + new NumericValue(obj.clip) * mult).ToString()).ToList());
 		}
 
 		void Command_Numeric_Fraction_Whole()
