@@ -194,6 +194,50 @@ namespace NeoEdit.Program
 			}
 		}
 
+		int GetOppositeBracket(int position)
+		{
+			if ((position < 0) || (position > Data.MaxPosition))
+				return -1;
+
+			var dict = new Dictionary<char, char>
+			{
+				{ '(', ')' },
+				{ '{', '}' },
+				{ '[', ']' },
+				{ '<', '>' },
+			};
+
+			var found = default(KeyValuePair<char, char>);
+			if ((found.Key == 0) && (position < Data.MaxPosition))
+				found = dict.FirstOrDefault(entry => (entry.Key == Data[position]) || (entry.Value == Data[position]));
+			var posAdjust = 1;
+			if (found.Key == 0)
+			{
+				if (--position < 0)
+					return -1;
+				found = dict.FirstOrDefault(entry => (entry.Key == Data[position]) || (entry.Value == Data[position]));
+				posAdjust = 0;
+			}
+			if (found.Key == 0)
+				return -1;
+
+			var direction = found.Key == Data[position] ? 1 : -1;
+
+			var num = 0;
+			for (; (position >= 0) && (position < Data.MaxPosition); position += direction)
+			{
+				if (Data[position] == found.Key)
+					++num;
+				if (Data[position] == found.Value)
+					--num;
+
+				if (num == 0)
+					return position + posAdjust;
+			}
+
+			return -1;
+		}
+
 		void Command_Select_All() => SetSelections(new List<Range> { FullRange });
 
 		void Command_Select_Nothing() => SetSelections(new List<Range>());
@@ -279,7 +323,7 @@ namespace NeoEdit.Program
 		{
 			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
 			{
-				var newPos = Data.GetOppositeBracket(range.Cursor);
+				var newPos = GetOppositeBracket(range.Cursor);
 				if (newPos == -1)
 					return range;
 

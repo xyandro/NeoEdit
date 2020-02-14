@@ -463,50 +463,6 @@ namespace NeoEdit.Program
 			Data = sb.ToString();
 		}
 
-		public int GetOppositeBracket(int position)
-		{
-			if ((position < 0) || (position > Data.Length))
-				return -1;
-
-			var dict = new Dictionary<char, char>
-			{
-				{ '(', ')' },
-				{ '{', '}' },
-				{ '[', ']' },
-				{ '<', '>' },
-			};
-
-			var found = default(KeyValuePair<char, char>);
-			if ((found.Key == 0) && (position < Data.Length))
-				found = dict.FirstOrDefault(entry => (entry.Key == Data[position]) || (entry.Value == Data[position]));
-			var posAdjust = 1;
-			if (found.Key == 0)
-			{
-				if (--position < 0)
-					return -1;
-				found = dict.FirstOrDefault(entry => (entry.Key == Data[position]) || (entry.Value == Data[position]));
-				posAdjust = 0;
-			}
-			if (found.Key == 0)
-				return -1;
-
-			var direction = found.Key == Data[position] ? 1 : -1;
-
-			var num = 0;
-			for (; (position >= 0) && (position < Data.Length); position += direction)
-			{
-				if (Data[position] == found.Key)
-					++num;
-				if (Data[position] == found.Value)
-					--num;
-
-				if (num == 0)
-					return position + posAdjust;
-			}
-
-			return -1;
-		}
-
 		public List<Tuple<int, int>> RegexMatches(Regex regex, int position, int length, bool regexGroups, bool firstOnly)
 		{
 			var result = new List<Tuple<int, int>>();

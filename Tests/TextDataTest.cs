@@ -156,11 +156,6 @@ namespace NeoEdit.Tests
 			try { var test = textData.GetString(0, TestString.Length + 1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
 			Assert.AreEqual(textData.GetString(0, TestString.Length), TestString);
-
-			Assert.AreEqual(textData.GetOppositeBracket(-1), -1);
-			Assert.AreEqual(textData.GetOppositeBracket(TestString.Length + 1), -1);
-			Assert.AreEqual(textData.GetOppositeBracket(48), 54);
-			Assert.AreEqual(textData.GetOppositeBracket(54), 48);
 		}
 	}
 }
