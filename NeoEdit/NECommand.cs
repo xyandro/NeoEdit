@@ -456,6 +456,7 @@ namespace NeoEdit.Program
 		DateTime_Now,
 		DateTime_UtcNow,
 		DateTime_Convert,
+		DateTime_Simplify,
 		DateTime_ToUtc,
 		DateTime_ToLocal,
 		Image_GrabColor,
