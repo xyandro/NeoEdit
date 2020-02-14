@@ -1321,6 +1321,8 @@ namespace NeoEdit.Program
 				case NECommand.DateTime_Now: Command_DateTime_Now(); break;
 				case NECommand.DateTime_UtcNow: Command_DateTime_UtcNow(); break;
 				case NECommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as DateTimeConvertDialog.Result); break;
+				case NECommand.DateTime_ToUtc: Command_DateTime_ToUtc(); break;
+				case NECommand.DateTime_ToLocal: Command_DateTime_ToLocal(); break;
 				case NECommand.Image_GrabColor: Command_Image_GrabColor(dialogResult as ImageGrabColorDialog.Result); break;
 				case NECommand.Image_GrabImage: Command_Image_GrabImage(dialogResult as ImageGrabImageDialog.Result); break;
 				case NECommand.Image_AdjustColor: Command_Image_AdjustColor(dialogResult as ImageAdjustColorDialog.Result); break;

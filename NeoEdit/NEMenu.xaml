@@ -679,8 +679,11 @@
 	</MenuItem>
 	<MenuItem Header="_Date/Time">
 		<controls:NEMenuItem Header="_Now" CommandEnum="DateTime_Now"/>
-		<controls:NEMenuItem Header="_Utc Now" CommandEnum="DateTime_UtcNow"/>
+		<controls:NEMenuItem Header="UTC N_ow" CommandEnum="DateTime_UtcNow"/>
 		<controls:NEMenuItem Header="_Convert" CommandEnum="DateTime_Convert"/>
+		<Separator/>
+		<controls:NEMenuItem Header="To _UTC" CommandEnum="DateTime_ToUtc"/>
+		<controls:NEMenuItem Header="To _Local" CommandEnum="DateTime_ToLocal"/>
 	</MenuItem>
 	<MenuItem Header="Ima_ge">
 		<controls:NEMenuItem Header="_Grab Color" CommandEnum="Image_GrabColor"/>
