@@ -159,7 +159,6 @@ namespace NeoEdit.Program
 			diffData = null;
 		}
 
-		public string this[int line] => GetLine(line);
 		public char this[int line, int index]
 		{
 			get

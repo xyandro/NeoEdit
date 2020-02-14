@@ -24,10 +24,10 @@ namespace NeoEdit.Tests
 		{
 			var textData = GetTextData();
 
-			try { var test = textData[-1]; Assert.Fail(); }
+			try { var test = textData.GetLine(-1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
-			Assert.AreEqual(textData[3], "Line 3");
-			try { var test = textData[numLines + 1]; Assert.Fail(); }
+			Assert.AreEqual(textData.GetLine(3), "Line 3");
+			try { var test = textData.GetLine(numLines + 1); Assert.Fail(); }
 			catch (IndexOutOfRangeException) { }
 
 			try { var test = textData.GetLine(-1); Assert.Fail(); }
