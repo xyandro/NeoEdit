@@ -801,7 +801,8 @@ namespace NeoEdit.Program
 				case NECommand.Numeric_RandomNumber: dialogResult = Command_Numeric_RandomNumber_Dialog(); break;
 				case NECommand.Numeric_CombinationsPermutations: dialogResult = Command_Numeric_CombinationsPermutations_Dialog(); break;
 				case NECommand.Numeric_MinMaxValues: dialogResult = Command_Numeric_MinMaxValues_Dialog(); break;
-				case NECommand.DateTime_Convert: dialogResult = Command_DateTime_Convert_Dialog(); break;
+				case NECommand.DateTime_Format: dialogResult = Command_DateTime_Format_Dialog(); break;
+				case NECommand.DateTime_ToTimeZone: dialogResult = Command_DateTime_ToTimeZone_Dialog(); break;
 				case NECommand.Image_GrabColor: dialogResult = Command_Image_GrabColor_Dialog(); break;
 				case NECommand.Image_GrabImage: dialogResult = Command_Image_GrabImage_Dialog(); break;
 				case NECommand.Image_AdjustColor: dialogResult = Command_Image_AdjustColor_Dialog(); break;
@@ -1320,10 +1321,10 @@ namespace NeoEdit.Program
 				case NECommand.Numeric_MinMaxValues: Command_Numeric_MinMaxValues(dialogResult as NumericMinMaxValuesDialog.Result); break;
 				case NECommand.DateTime_Now: Command_DateTime_Now(); break;
 				case NECommand.DateTime_UtcNow: Command_DateTime_UtcNow(); break;
-				case NECommand.DateTime_Convert: Command_DateTime_Convert(dialogResult as DateTimeConvertDialog.Result); break;
-				case NECommand.DateTime_ToStandard: Command_DateTime_ToStandard(); break;
+				case NECommand.DateTime_Format: Command_DateTime_Format(dialogResult as DateTimeFormatDialog.Result); break;
 				case NECommand.DateTime_ToUtc: Command_DateTime_ToUtc(); break;
 				case NECommand.DateTime_ToLocal: Command_DateTime_ToLocal(); break;
+				case NECommand.DateTime_ToTimeZone: Command_DateTime_ToTimeZone(dialogResult as DateTimeToTimeZoneDialog.Result); break;
 				case NECommand.Image_GrabColor: Command_Image_GrabColor(dialogResult as ImageGrabColorDialog.Result); break;
 				case NECommand.Image_GrabImage: Command_Image_GrabImage(dialogResult as ImageGrabImageDialog.Result); break;
 				case NECommand.Image_AdjustColor: Command_Image_AdjustColor(dialogResult as ImageAdjustColorDialog.Result); break;
