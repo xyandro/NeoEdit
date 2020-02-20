@@ -459,6 +459,8 @@ namespace NeoEdit.Program
 		DateTime_ToUtc,
 		DateTime_ToLocal,
 		DateTime_ToTimeZone,
+		DateTime_AddClipboard,
+		DateTime_SubtractClipboard,
 		Image_GrabColor,
 		Image_GrabImage,
 		Image_AdjustColor,

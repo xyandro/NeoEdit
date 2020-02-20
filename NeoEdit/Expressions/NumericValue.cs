@@ -14,6 +14,17 @@ namespace NeoEdit.Program.Expressions
 
 		public int IntValue => (int)GetInteger;
 		public long LongValue => (long)GetInteger;
+		public long RoundedLongValue
+		{
+			get
+			{
+				if (Value is BigInteger bi)
+					return (long)bi;
+				if (Value is double d)
+					return (long)(d + 0.5);
+				throw new Exception("Invalid value");
+			}
+		}
 
 		bool IsInteger => Value is BigInteger;
 
@@ -212,6 +223,11 @@ namespace NeoEdit.Program.Expressions
 
 		public static bool operator ==(NumericValue val1, NumericValue val2)
 		{
+			if (ReferenceEquals(val1, val2))
+				return true;
+			if ((ReferenceEquals(val1, null)) || (ReferenceEquals(val2, null)))
+				return false;
+
 			if (!val1.Units.Equals(val2.Units))
 			{
 				var conversion1 = ExpressionUnitsConversion.GetBaseConversion(val1.Units);
@@ -226,6 +242,11 @@ namespace NeoEdit.Program.Expressions
 
 		public static bool operator !=(NumericValue val1, NumericValue val2)
 		{
+			if (ReferenceEquals(val1, val2))
+				return false;
+			if ((ReferenceEquals(val1, null)) || (ReferenceEquals(val2, null)))
+				return true;
+
 			if (!val1.Units.Equals(val2.Units))
 			{
 				var conversion1 = ExpressionUnitsConversion.GetBaseConversion(val1.Units);
