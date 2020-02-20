@@ -730,6 +730,7 @@ namespace NeoEdit.Program
 		Window_Close_InactiveTabs,
 		Window_WordList,
 		Help_About,
+		Help_Tutorial,
 		Help_Update,
 		Help_Extract,
 		Help_RunGC,

@@ -1,0 +1,18 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:tutorial="clr-namespace:NeoEdit.Program.Tutorial">
+
+	<tutorial:TutorialPage x:Key="Home" Title="Home">
+		<Paragraph>
+			<Span>List here:</Span>
+			Click <Hyperlink Tag="Page:GettingStarted">Here</Hyperlink> for page2
+		</Paragraph>
+		<List>
+			<ListItem><Paragraph>Click <Hyperlink Tag="Data:Tutorial:H4sIAAAAAAAEAC3MuQ3AIBAAwRyJXtgzfiiBQhySuX+BxUaTTf/eUcip/4YeWvXUS299tG0p6ocffvjhhx9++OEX65u2d28loAAAAA==">Here</Hyperlink> for data</Paragraph></ListItem>
+			<ListItem><Paragraph><tutorial:TutorialCommand CommandEnum="Select_All"/></Paragraph></ListItem>
+			<ListItem><Paragraph><tutorial:TutorialCommand CommandEnum="Select_Lines"/></Paragraph></ListItem>
+		</List>
+	</tutorial:TutorialPage>
+
+</ResourceDictionary>

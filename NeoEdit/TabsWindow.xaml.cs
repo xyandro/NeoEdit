@@ -420,6 +420,7 @@ namespace NeoEdit.Program
 				case NECommand.Window_Close_InactiveTabs: Command_Window_Close_ActiveInactiveTabs(false); break;
 				case NECommand.Window_WordList: Command_Window_WordList(); break;
 				case NECommand.Help_About: Command_Help_About(); break;
+				case NECommand.Help_Tutorial: Command_Help_Tutorial(); break;
 				case NECommand.Help_Update: Command_Help_Update(); break;
 				case NECommand.Help_Extract: Command_Help_Extract(); break;
 				case NECommand.Help_RunGC: Command_Help_RunGC(); break;

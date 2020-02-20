@@ -1,4 +1,3 @@
 Make modal dialogs modal for owning window only
-Tutorial
 Print
 Add ability to select all attributes

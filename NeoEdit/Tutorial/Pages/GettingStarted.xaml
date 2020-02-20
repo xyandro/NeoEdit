@@ -1,0 +1,24 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:tutorial="clr-namespace:NeoEdit.Program.Tutorial">
+
+	<tutorial:TutorialPage x:Key="GettingStarted" Title="Getting Started">
+		<Paragraph>
+			Click <Hyperlink Tag="Page:Home">Here</Hyperlink> for home
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+				First, do a thing.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+				Next, do another thing.
+				</Paragraph>
+			</ListItem>
+		</List>
+	</tutorial:TutorialPage>
+
+</ResourceDictionary>

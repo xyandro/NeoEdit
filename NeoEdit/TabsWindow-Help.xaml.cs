@@ -6,12 +6,15 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Tutorial;
 
 namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
 		static void Command_Help_About() => HelpAboutDialog.Run();
+
+		void Command_Help_Tutorial() => new TutorialWindow(this);
 
 		static void Command_Help_Update()
 		{
