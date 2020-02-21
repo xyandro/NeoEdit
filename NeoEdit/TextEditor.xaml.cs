@@ -1614,7 +1614,11 @@ namespace NeoEdit.Program
 					}
 					break;
 				case Key.Escape:
-					SetSearches(new List<Range>());
+					if (Searches.Any())
+					{
+						SetSearches(new List<Range>());
+						break;
+					}
 					DragFiles = null;
 					ViewValuesFindValue = null;
 					if (Settings.EscapeClearsSelections)
