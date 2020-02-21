@@ -23,7 +23,7 @@ namespace NeoEdit.Program.Dialogs
 		{
 			None,
 			CopyCount,
-			FindFirst,
+			FindNext,
 			FindAll,
 		}
 
@@ -128,8 +128,8 @@ namespace NeoEdit.Program.Dialogs
 			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, AddMatches = AddMatches };
 			if (sender == copyCount)
 				result.Type = ResultType.CopyCount;
-			else if (sender == findFirst)
-				result.Type = ResultType.FindFirst;
+			else if (sender == findNext)
+				result.Type = ResultType.FindNext;
 			else if (sender == findAll)
 				result.Type = ResultType.FindAll;
 			else

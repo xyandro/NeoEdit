@@ -235,7 +235,7 @@ namespace NeoEdit.Program
 			return EditFindFindDialog.Run(TabsParent, text, selectionOnly);
 		}
 
-		void Command_Edit_Find_Find(bool selecting, EditFindFindDialog.Result result)
+		void Command_Edit_Find_Find(EditFindFindDialog.Result result)
 		{
 			var text = result.Text;
 			if (!result.IsRegex)
@@ -271,9 +271,9 @@ namespace NeoEdit.Program
 
 			switch (result.Type)
 			{
-				case EditFindFindDialog.ResultType.FindFirst:
+				case EditFindFindDialog.ResultType.FindNext:
 					SetSearches(results);
-					FindNext(true, selecting);
+					FindNext(true, true);
 					break;
 				case EditFindFindDialog.ResultType.FindAll:
 					SetSelections(results);

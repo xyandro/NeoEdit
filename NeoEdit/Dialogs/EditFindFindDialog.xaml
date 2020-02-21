@@ -55,7 +55,7 @@
 					</MultiBinding>
 				</Button.Visibility>
 			</Button>
-			<Button Click="OkClick" Name="findFirst" Content="Find F_irst" Padding="10,1">
+			<Button Click="OkClick" Name="findNext" Content="Find _Next" Padding="10,1">
 				<Button.Visibility>
 					<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="!p0 &amp;&amp; !p1 &amp;&amp; !p2">
 						<Binding Path="KeepMatching" ElementName="self"/>

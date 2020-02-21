@@ -54,7 +54,7 @@ namespace NeoEdit.Program
 		[KeyGesture(Key.X, ModifierKeys.Control)] Edit_Copy_Cut,
 		[KeyGesture(Key.V, ModifierKeys.Control)] [KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Paste_Paste,
 		[KeyGesture(Key.V, ModifierKeys.Control | ModifierKeys.Alt)] Edit_Paste_RotatePaste,
-		[KeyGesture(Key.F, ModifierKeys.Control)] [KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Find_Find,
+		[KeyGesture(Key.F, ModifierKeys.Control)] Edit_Find_Find,
 		[KeyGesture(Key.F3)] [KeyGesture(Key.F3, ModifierKeys.Shift, 2)] Edit_Find_Next,
 		[KeyGesture(Key.F4)] [KeyGesture(Key.F4, ModifierKeys.Shift, 2)] Edit_Find_Previous,
 		[KeyGesture(Key.F3, ModifierKeys.Control)] [KeyGesture(Key.F3, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Find_Selected,
