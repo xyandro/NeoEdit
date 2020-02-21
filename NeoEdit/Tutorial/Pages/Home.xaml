@@ -3,15 +3,55 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:tutorial="clr-namespace:NeoEdit.Program.Tutorial">
 
-	<tutorial:TutorialPage x:Key="Home" Title="Home">
+	<tutorial:TutorialPage x:Key="Home" Title="NeoEdit">
 		<Paragraph>
-			<Span>List here:</Span>
-			Click <Hyperlink Tag="Page:GettingStarted">Here</Hyperlink> for page2
+			NeoEdit is a powerful text editor that allows finding and editing multiple selections, in multiple files, visually, at the same time.
+		</Paragraph>
+		<Paragraph>
+			To get best results, you'll want to mainly use the keyboard. The mouse works, but it can't really handle multiple selections at once.
+		</Paragraph>
+		<Paragraph>
+			The major focuses of the program are selecting and editing. There are many ways to select the data you want to change, and many ways to edit that data.
+		</Paragraph>
+		<Paragraph>
+			Click on the pages below to see how to use the program.
 		</Paragraph>
 		<List>
-			<ListItem><Paragraph>Click <Hyperlink Tag="Data:Tutorial:H4sIAAAAAAAEAC3MuQ3AIBAAwRyJXtgzfiiBQhySuX+BxUaTTf/eUcip/4YeWvXUS299tG0p6ocffvjhhx9++OEX65u2d28loAAAAA==">Here</Hyperlink> for data</Paragraph></ListItem>
-			<ListItem><Paragraph><tutorial:TutorialCommand CommandEnum="Select_All"/></Paragraph></ListItem>
-			<ListItem><Paragraph><tutorial:TutorialCommand CommandEnum="Select_Lines"/></Paragraph></ListItem>
+			<ListItem>
+				<Paragraph>
+					<Hyperlink Tag="Page:LinesToColumns">Lines to columns</Hyperlink>
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					<Hyperlink Tag="Page:ColumnsToLines">Columns to lines</Hyperlink>
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					<Hyperlink Tag="Page:Clipboard">Clipboard</Hyperlink>
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					<Hyperlink Tag="Page:Expressions">Expressions</Hyperlink>
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					<Hyperlink Tag="Page:GeneratingData">Generating Data</Hyperlink>
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					<Hyperlink Tag="Page:Sorting">Sorting</Hyperlink>
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					<Hyperlink Tag="Page:AdvancedFind">Advanced Find</Hyperlink>
+				</Paragraph>
+			</ListItem>
 		</List>
 	</tutorial:TutorialPage>
 

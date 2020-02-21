@@ -1,0 +1,179 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:tutorial="clr-namespace:NeoEdit.Program.Tutorial">
+
+	<tutorial:TutorialPage x:Key="Expressions" Title="Expressions">
+		<Paragraph>
+			NeoEdit has a built-in expression evaluator that lets you select and modify selections using mathematical expressions. It has a set of built-in variables (x, y, etc.) that represent the selected text, its selection position, and other useful things.
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<Hyperlink Tag="Data:Expressions:H4sIAAAAAAAEAB1NywoCMQy8B/JTuiCoJ1e8x91AAyWFaRfp35vsaWaSeawCYboKKtNNIXVnesoP6psyXXAkPGQUTA+iNgrTWgxVZzjbYZ3prr3bFj2LiYf/Y9toMMkPMDNXa8DS/Bx4tZndNob4TPlVjLyo7xF6F4X2IH8DMzYpnQAAAA==">here</Hyperlink> to open a file with test data.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Let's start by numbering the lines:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_All"/> .
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/> .
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Press the Home key.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+				</Paragraph>
+				<Paragraph>
+					In the dialog, enter "y" as the expression. "y" is one of the predefined variables.  It represents the selection's position, starting with 1.
+				</Paragraph>
+				<Paragraph>
+					Press "Ok".
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Press the Right arrow, then the Tab key.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Let's number the lines by 5's:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Select the numbers:
+				</Paragraph>
+				<Paragraph>
+					Click the Home key, then Ctrl+Shift+Right
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+				</Paragraph>
+				<Paragraph>
+					In the dialog, enter "y*5".
+				</Paragraph>
+				<Paragraph>
+					Press "Ok".
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Let's double the numbers:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+				</Paragraph>
+				<Paragraph>
+					In the dialog, enter "x*2". "x" is another predefined variable.  It represents the currently selected value.
+				</Paragraph>
+				<Paragraph>
+					Press "Ok".
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Let's copy the numbers and generate a number based on an expression:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy_Copy"/> .
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Hit Right arrow key and Tab.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+				</Paragraph>
+				<Paragraph>
+					In the dialog, enter "100+c*3". "c" represents the clipboard value for each selection. Note that order of operations (PEMDAS) is observed.
+				</Paragraph>
+				<Paragraph>
+					Press "Ok".
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Let's select the numbers 400 or more:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Expression_SelectByExpression"/> .
+				</Paragraph>
+				<Paragraph>
+					In the dialog, enter "x>=400".
+				</Paragraph>
+				<Paragraph>
+					Press "Ok".
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Some useful variables: (To see a full list, click "Expression Help" in the expression dialog, then "Variables" at the bottom.)
+		</Paragraph>
+		<List>
+			<List.Resources>
+				<Style TargetType="ListItem">
+					<Setter Property="Margin" Value="0,0,0,0"/>
+				</Style>
+			</List.Resources>
+			<ListItem>
+				<Paragraph>x (Current value)</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>xn (Number of selected values)</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>xl (Length of selected value)</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>xmin/xmax (Lowest/highest selected value)</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>y (One-based position)</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>z (Zero-based position)</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>c (Clipboard value)</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>cn (Number of clipboard values)</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>cl (Length of clipboard value)</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Click
+			<Hyperlink Tag="Page:GeneratingData">here</Hyperlink> to go the next page, generating data.
+		</Paragraph>
+	</tutorial:TutorialPage>
+
+</ResourceDictionary>

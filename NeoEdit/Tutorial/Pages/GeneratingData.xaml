@@ -1,0 +1,103 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:tutorial="clr-namespace:NeoEdit.Program.Tutorial">
+
+	<tutorial:TutorialPage x:Key="GeneratingData" Title="Generating Data">
+		<Paragraph>
+			Let's use what we've learned so far to duplicate a template for multiple people:
+		</Paragraph>
+		<Paragraph>
+			We'll start by copying the names of the people.
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<Hyperlink Tag="Data:Names:H4sIAAAAAAAEAB1NywoCMQy8B/JTuiCoJ1e8x91AAyWFaRfp35vsaWaSeawCYboKKtNNIXVnesoP6psyXXAkPGQUTA+iNgrTWgxVZzjbYZ3prr3bFj2LiYf/Y9toMMkPMDNXa8DS/Bx4tZndNob4TPlVjLyo7xF6F4X2IH8DMzYpnQAAAA==">here</Hyperlink> to open a file with a list of names.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_All"/> .
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/> .
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy_Copy"/> .
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="File_Close"/> .
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Now we'll open the template and customize it.
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<Hyperlink Tag="Data:Template:H4sIAAAAAAAEALMJSM0vyEm14+XitAlILSrOz1PwdLFVMlBS8EvMTbVVApFKCvpAeRt9uFIAjfd+0TUAAAA=">here</Hyperlink> to open the template.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Press Down, then Shift+Down to select the "Person" line, including the newline at the end.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Repeat"/> .
+				</Paragraph>
+				<Paragraph>
+					In the dialog, enter "cn" as the count. Many of the dialogs in NeoEdit will accept expressions as values. The variable "cn" represents the number of items on the clipboard.
+				</Paragraph>
+				<Paragraph>
+					Click "Ok".
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Select the ID value from each line:
+				</Paragraph>
+				<Paragraph>
+					Press Left, then Ctrl+Right six times, then Ctrl+Shift+Right.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+				</Paragraph>
+				<Paragraph>
+					In the dialog, enter "y". This will set the IDs in order.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Select the name value from each line:
+				</Paragraph>
+				<Paragraph>
+					Press Ctrl+Right five times, then Ctrl+Shift+Right.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Paste_Paste"/> .
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Click
+			<Hyperlink Tag="Page:Sorting">here</Hyperlink> to go the next page, sorting.
+		</Paragraph>
+	</tutorial:TutorialPage>
+
+</ResourceDictionary>

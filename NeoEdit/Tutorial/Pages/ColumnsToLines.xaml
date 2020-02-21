@@ -1,0 +1,42 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:tutorial="clr-namespace:NeoEdit.Program.Tutorial">
+
+	<tutorial:TutorialPage x:Key="ColumnsToLines" Title="Columns to Lines">
+		<Paragraph>
+			Let's change a list in columns to lines:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<Hyperlink Tag="Data:Columns to Lines:H4sIAAAAAAAEAFWOwQ3AMAgDV+kAfQABgkfIIH321/3VSnEi9eUTlrHHc92KzPMYH1XYhBS4xOSg6a3Dll8tujKUhK3GpGIqslTIqqALlLAhiiff9euleP/PMGMK9gIJE24ZvQAAAA==">here</Hyperlink> to open a file with test data.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/>. In the dialog that comes up, type a comma and a space, then hit Enter. This selects every occurrence of a comma and space.
+				</Paragraph>
+				<Paragraph>
+					Whatever you do happens in each selection.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Hit the Enter key. This will replace the selections with new lines.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_All"/> .  This replaces all current selections with one that has the entire file.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Click
+			<Hyperlink Tag="Page:Clipboard">here</Hyperlink> to go the next page, clipboard.
+		</Paragraph>
+	</tutorial:TutorialPage>
+
+</ResourceDictionary>

@@ -1217,13 +1217,37 @@
     <Compile Include="Transform\Hasher.cs" />
     <Compile Include="Transform\Versioner.cs" />
     <Compile Include="Transform\XMLConverter.cs" />
-    <Page Include="Tutorial\Pages\GettingStarted.xaml">
+    <Page Include="Tutorial\Pages\AdvancedFind.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tutorial\Pages\Clipboard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tutorial\Pages\ColumnsToLines.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tutorial\Pages\Expressions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tutorial\Pages\GeneratingData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Tutorial\Pages\Home.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tutorial\Pages\LinesToColumns.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tutorial\Pages\Sorting.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Compile Include="Tutorial\TutorialCommand.cs" />
     <Compile Include="Tutorial\TutorialPage.cs" />

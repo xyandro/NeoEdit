@@ -8,28 +8,47 @@
 	<controls:NEWindow.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Pages\AdvancedFind.xaml"/>
+				<ResourceDictionary Source="Pages\Clipboard.xaml"/>
+				<ResourceDictionary Source="Pages\ColumnsToLines.xaml"/>
+				<ResourceDictionary Source="Pages\Expressions.xaml"/>
+				<ResourceDictionary Source="Pages\GeneratingData.xaml"/>
 				<ResourceDictionary Source="Pages\Home.xaml"/>
-				<ResourceDictionary Source="Pages\GettingStarted.xaml"/>
+				<ResourceDictionary Source="Pages\LinesToColumns.xaml"/>
+				<ResourceDictionary Source="Pages\Sorting.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</controls:NEWindow.Resources>
 
-	<StackPanel>
-		<StackPanel Background="White" Height="2"/>
-		<DockPanel>
-			<Button DockPanel.Dock="Left" Content="⭠" FontSize="{Binding Path=(program:Font.FontSize)}" Click="BackClick" BorderBrush="Transparent" Background="Transparent"/>
-			<Button DockPanel.Dock="Right" Content="⭢" FontSize="{Binding Path=(program:Font.FontSize)}" Click="ForwardClick" BorderBrush="Transparent" Background="Transparent"/>
-			<TextBlock Name="title" FontSize="{Binding Path=(program:Font.FontSize)}" HorizontalAlignment="Center"/>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="0" Background="White" Height="2"/>
+		<DockPanel Grid.Row="1">
+			<Button DockPanel.Dock="Left" Content="⭠" FontSize="20" Click="BackClick" BorderBrush="Transparent" Background="Transparent"/>
+			<Button DockPanel.Dock="Right" Content="⭢" FontSize="20" Click="ForwardClick" BorderBrush="Transparent" Background="Transparent"/>
+			<TextBlock Name="title" FontSize="24" HorizontalAlignment="Center"/>
 		</DockPanel>
-		<StackPanel Background="White" Height="2"/>
-		<RichTextBox x:Name="content" FontFamily="Comic Sans MS" FontSize="{Binding Path=(program:Font.FontSize)}" Padding="8" Foreground="White" Background="Transparent" BorderThickness="0" FocusVisualStyle="{x:Null}" IsReadOnly="True" IsDocumentEnabled="True">
+		<StackPanel Grid.Row="2" Background="White" Height="2"/>
+		<RichTextBox Grid.Row="3" x:Name="content" FontSize="16" Padding="8" Foreground="White" Background="Transparent" BorderThickness="0" FocusVisualStyle="{x:Null}" IsReadOnly="True" IsDocumentEnabled="True" VerticalScrollBarVisibility="Auto">
 			<RichTextBox.Resources>
 				<Style TargetType="Hyperlink">
 					<Setter Property="Foreground" Value="White"/>
 					<EventSetter Event="Click" Handler="OnLinkClick"/>
 				</Style>
+				<Style TargetType="Paragraph">
+					<Setter Property="TextAlignment" Value="Left"/>
+				</Style>
+				<Style TargetType="ListItem">
+					<Setter Property="Margin" Value="0,0,0,20"/>
+				</Style>
 			</RichTextBox.Resources>
 		</RichTextBox>
-	</StackPanel>
+	</Grid>
 
 </controls:NEWindow>
