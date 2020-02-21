@@ -351,6 +351,83 @@
 		<SolidColorBrush x:Key="TextBox.Static.Border" Color="#FF808080"/>
 		<SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FFA0A0A0"/>
 		<SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FFC0C0C0"/>
+		<Style x:Key="TextBoxBase" TargetType="TextBoxBase">
+			<Setter Property="Background" Value="#404040"/>
+			<Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+			<Setter Property="HorizontalContentAlignment" Value="Left"/>
+			<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+			<Setter Property="AllowDrop" Value="true"/>
+			<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+			<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="TextBoxBase">
+						<Border x:Name="border" CornerRadius="4" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+							<ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Template="{StaticResource ScrollViewerTemplate}"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Opacity" TargetName="border" Value="0.56"/>
+							</Trigger>
+							<Trigger Property="IsMouseOver" Value="true">
+								<Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+							</Trigger>
+							<Trigger Property="IsKeyboardFocused" Value="true">
+								<Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Style.Triggers>
+				<MultiTrigger>
+					<MultiTrigger.Conditions>
+						<Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+						<Condition Property="IsSelectionActive" Value="false"/>
+					</MultiTrigger.Conditions>
+					<Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+				</MultiTrigger>
+			</Style.Triggers>
+		</Style>
+		<Style x:Key="Hyperlink" TargetType="Hyperlink">
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"/>
+			<Setter Property="TextDecorations" Value="Underline"/>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="true">
+					<Setter Property="Foreground" Value="Red"/>
+				</Trigger>
+				<Trigger Property="IsEnabled" Value="false">
+					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+				</Trigger>
+				<Trigger Property="IsEnabled" Value="true">
+					<Setter Property="Cursor" Value="Hand"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+		<Style TargetType="RichTextBox">
+			<Style.Resources>
+				<Style x:Key="FlowDocument" TargetType="FlowDocument">
+					<Setter Property="OverridesDefaultStyle" Value="true"/>
+				</Style>
+				<Style x:Key="Hyperlink" BasedOn="{StaticResource Hyperlink}" TargetType="Hyperlink">
+					<Style.Triggers>
+						<Trigger Property="IsMouseOver" Value="true">
+							<Setter Property="Foreground" Value="Blue"/>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="false">
+							<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</Style.Resources>
+			<Setter Property="MinWidth" Value="10"/>
+			<Style.BasedOn>
+				<StaticResource ResourceKey="TextBoxBase"/>
+			</Style.BasedOn>
+		</Style>
 		<Style TargetType="TextBox">
 			<Setter Property="Background" Value="#404040"/>
 			<Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
