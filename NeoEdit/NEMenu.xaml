@@ -15,1095 +15,1095 @@
 
 	<MenuItem Header="_File">
 		<MenuItem Header="_New">
-			<controls:NEMenuItem Header="_New" CommandEnum="File_New_New"/>
-			<controls:NEMenuItem Header="From _Selections" CommandEnum="File_New_FromSelections"/>
-			<controls:NEMenuItem Header="From _Clipboards" CommandEnum="File_New_FromClipboards"/>
-			<controls:NEMenuItem Header="From C_lipboard Selections" CommandEnum="File_New_FromClipboardSelections"/>
+			<controls:NEMenuItem Header="_New" CommandEnum="File_New_New" ToolTip="Open a new empty window"/>
+			<controls:NEMenuItem Header="From _Selections" CommandEnum="File_New_FromSelections" ToolTip="Create a new file for each selection"/>
+			<controls:NEMenuItem Header="From _Clipboards" CommandEnum="File_New_FromClipboards" ToolTip="Create a new file for each file on the clipboard"/>
+			<controls:NEMenuItem Header="From C_lipboard Selections" CommandEnum="File_New_FromClipboardSelections" ToolTip="Create a new file for each value on the clipboard"/>
 		</MenuItem>
 		<MenuItem Header="_Open">
-			<controls:NEMenuItem Header="_Open" CommandEnum="File_Open_Open"/>
-			<controls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut"/>
-			<controls:NEMenuItem Header="_Selected" CommandEnum="File_Open_Selected"/>
+			<controls:NEMenuItem Header="_Open" CommandEnum="File_Open_Open" ToolTip="Open files chosen from disk"/>
+			<controls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Open_CopiedCut" ToolTip="Open files copied/cut on the clipboard"/>
+			<controls:NEMenuItem Header="_Selected" CommandEnum="File_Open_Selected" ToolTip="Open selected files (must be file paths)"/>
 		</MenuItem>
 		<MenuItem Header="_Save">
-			<controls:NEMenuItem Header="_Save" CommandEnum="File_Save_Save"/>
-			<controls:NEMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs"/>
-			<controls:NEMenuItem Header="Save As C_lipboard" CommandEnum="File_Save_SaveAsClipboard"/>
-			<controls:NEMenuItem Header="Save As By E_xpression" CommandEnum="File_Save_SaveAsByExpression"/>
+			<controls:NEMenuItem Header="_Save" CommandEnum="File_Save_Save" ToolTip="Save active files"/>
+			<controls:NEMenuItem Header="Save _As" CommandEnum="File_Save_SaveAs" ToolTip="Save active files to new locations"/>
+			<controls:NEMenuItem Header="Save As C_lipboard" CommandEnum="File_Save_SaveAsClipboard" ToolTip="Save active files to paths on clipboard"/>
+			<controls:NEMenuItem Header="Save As By E_xpression" CommandEnum="File_Save_SaveAsByExpression" ToolTip="Save active files to paths given by expression"/>
 		</MenuItem>
 		<MenuItem Header="_Copy">
-			<controls:NEMenuItem Header="_Copy To" CommandEnum="File_Copy_CopyTo"/>
-			<controls:NEMenuItem Header="Copy To C_lipboard" CommandEnum="File_Copy_CopyToClipboard"/>
-			<controls:NEMenuItem Header="Copy To By E_xpression" CommandEnum="File_Copy_CopyToByExpression"/>
+			<controls:NEMenuItem Header="_Copy To" CommandEnum="File_Copy_CopyTo" ToolTip="Copy active files to new locations"/>
+			<controls:NEMenuItem Header="Copy To C_lipboard" CommandEnum="File_Copy_CopyToClipboard" ToolTip="Copy active files to paths on clipboard"/>
+			<controls:NEMenuItem Header="Copy To By E_xpression" CommandEnum="File_Copy_CopyToByExpression" ToolTip="Copy active files to paths given by expression"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Path" CommandEnum="File_Copy_Path"/>
-			<controls:NEMenuItem Header="_Name" CommandEnum="File_Copy_Name"/>
-			<controls:NEMenuItem Header="_Display Name" CommandEnum="File_Copy_DisplayName"/>
+			<controls:NEMenuItem Header="_Path" CommandEnum="File_Copy_Path" ToolTip="Copy active files' paths to clipboard"/>
+			<controls:NEMenuItem Header="_Name" CommandEnum="File_Copy_Name" ToolTip="Copy active files' names to clipboard"/>
+			<controls:NEMenuItem Header="_Display Name" CommandEnum="File_Copy_DisplayName" ToolTip="Copy active files' display texts to clipboard"/>
 		</MenuItem>
 		<MenuItem Header="O_perations">
-			<controls:NEMenuItem Header="_Rename" CommandEnum="File_Operations_Rename"/>
-			<controls:NEMenuItem Header="Rename C_lipboard" CommandEnum="File_Operations_RenameClipboard"/>
-			<controls:NEMenuItem Header="Rename By E_xpression" CommandEnum="File_Operations_RenameByExpression"/>
-			<controls:NEMenuItem Header="_Delete" CommandEnum="File_Operations_Delete"/>
-			<controls:NEMenuItem Header="_Explore" CommandEnum="File_Operations_Explore"/>
-			<controls:NEMenuItem Header="C_ommand Prompt" CommandEnum="File_Operations_CommandPrompt"/>
-			<controls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="File_Operations_DragDrop"/>
+			<controls:NEMenuItem Header="_Rename" CommandEnum="File_Operations_Rename" ToolTip="Rename active files to new locations"/>
+			<controls:NEMenuItem Header="Rename C_lipboard" CommandEnum="File_Operations_RenameClipboard" ToolTip="Rename active files to paths on clipboard"/>
+			<controls:NEMenuItem Header="Rename By E_xpression" CommandEnum="File_Operations_RenameByExpression" ToolTip="Rename active files to paths given by expression"/>
+			<controls:NEMenuItem Header="_Delete" CommandEnum="File_Operations_Delete" ToolTip="Delete active files"/>
+			<controls:NEMenuItem Header="_Explore" CommandEnum="File_Operations_Explore" ToolTip="Open explorer to current file's path"/>
+			<controls:NEMenuItem Header="C_ommand Prompt" CommandEnum="File_Operations_CommandPrompt" ToolTip="Open command prompt to current file's path"/>
+			<controls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="File_Operations_DragDrop" ToolTip="Enable drag/drop for active files (so you can drag/drop to another window)"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_VCS Diff" CommandEnum="File_Operations_VCSDiff"/>
+			<controls:NEMenuItem Header="_VCS Diff" CommandEnum="File_Operations_VCSDiff" ToolTip="Diff active files against VCS version"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Set Display Name" CommandEnum="File_Operations_SetDisplayName"/>
+			<controls:NEMenuItem Header="_Set Display Name" CommandEnum="File_Operations_SetDisplayName" ToolTip="Set display name for active files"/>
 		</MenuItem>
-		<controls:NEMenuItem Header="C_lose" CommandEnum="File_Close"/>
-		<controls:NEMenuItem Header="_Refresh" CommandEnum="File_Refresh"/>
-		<controls:MultiMenuItem Header="_Auto Refresh" TabsWindow="{Binding Parent, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh"/>
-		<controls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert"/>
+		<controls:NEMenuItem Header="C_lose" CommandEnum="File_Close" ToolTip="Close active files"/>
+		<controls:NEMenuItem Header="_Refresh" CommandEnum="File_Refresh" ToolTip="Refresh active files"/>
+		<controls:MultiMenuItem Header="_Auto Refresh" TabsWindow="{Binding Parent, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh" ToolTip="Set whether active files update when changed on disk"/>
+		<controls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert" ToolTip="Revert active files to current version on disk"/>
 		<Separator/>
-		<controls:NEMenuItem Header="Move To New _Window" CommandEnum="File_MoveToNewWindow"/>
+		<controls:NEMenuItem Header="Move To New _Window" CommandEnum="File_MoveToNewWindow" ToolTip="Move active files to a new window"/>
 		<Separator/>
 		<MenuItem Header="_Insert">
-			<controls:NEMenuItem Header="_Files" CommandEnum="File_Insert_Files"/>
-			<controls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Insert_CopiedCut"/>
-			<controls:NEMenuItem Header="_Selected" CommandEnum="File_Insert_Selected"/>
+			<controls:NEMenuItem Header="_Files" CommandEnum="File_Insert_Files" ToolTip="Insert files chosen from disk"/>
+			<controls:NEMenuItem Header="_Copied/Cut" CommandEnum="File_Insert_CopiedCut" ToolTip="Insert files copied/cut on the clipboard"/>
+			<controls:NEMenuItem Header="_Selected" CommandEnum="File_Insert_Selected" ToolTip="Insert selected files (must be file paths)"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Encoding">
-			<controls:NEMenuItem Header="_Encoding" CommandEnum="File_Encoding_Encoding"/>
-			<controls:NEMenuItem Header="_Reopen With Encoding" CommandEnum="File_Encoding_ReopenWithEncoding"/>
-			<controls:NEMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings"/>
+			<controls:NEMenuItem Header="_Encoding" CommandEnum="File_Encoding_Encoding" ToolTip="Set file encoding"/>
+			<controls:NEMenuItem Header="_Reopen With Encoding" CommandEnum="File_Encoding_ReopenWithEncoding" ToolTip="Reopen file with different encoding"/>
+			<controls:NEMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings" ToolTip="Set file line endings"/>
 		</MenuItem>
 		<Separator/>
-		<controls:MultiMenuItem Header="Encr_ypt" TabsWindow="{Binding Parent, ElementName=self}" Property="AESKey" Converter="{converters:NonEmptyConverter}" MultiValue="{StaticResource True}" CommandEnum="File_Encrypt"/>
-		<controls:MultiMenuItem Header="Co_mpress" TabsWindow="{Binding Parent, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress"/>
+		<controls:MultiMenuItem Header="Encr_ypt" TabsWindow="{Binding Parent, ElementName=self}" Property="AESKey" Converter="{converters:NonEmptyConverter}" MultiValue="{StaticResource True}" CommandEnum="File_Encrypt" ToolTip="Set whether file is encrypted on save"/>
+		<controls:MultiMenuItem Header="Co_mpress" TabsWindow="{Binding Parent, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress" ToolTip="Set whether file is compressed on save"/>
 		<Separator/>
 		<MenuItem Header="S_hell">
-			<controls:NEMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate"/>
-			<controls:NEMenuItem Header="_Unintegrate" CommandEnum="File_Shell_Unintegrate"/>
+			<controls:NEMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate" ToolTip="Enable Windows Explorer option to open files with NeoEdit"/>
+			<controls:NEMenuItem Header="_Unintegrate" CommandEnum="File_Shell_Unintegrate" ToolTip="Remove Windows Explorer option to open files with NeoEdit"/>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="Don't Exi_t On Close" IsCheckable="True" IsChecked="{Binding Path=(local:Settings.DontExitOnClose), Mode=TwoWay}"/>
-		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit"/>
+		<MenuItem Header="Don't Exi_t On Close" IsCheckable="True" IsChecked="{Binding Path=(local:Settings.DontExitOnClose), Mode=TwoWay}" ToolTip="Toggle whether program stays in memory when all windows closed"/>
+		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit" ToolTip="Close the program"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
-		<controls:NEMenuItem Header="U_ndo" CommandEnum="Edit_Undo"/>
-		<controls:NEMenuItem Header="Red_o" CommandEnum="Edit_Redo"/>
+		<controls:NEMenuItem Header="U_ndo" CommandEnum="Edit_Undo" ToolTip="Undo last change"/>
+		<controls:NEMenuItem Header="Red_o" CommandEnum="Edit_Redo" ToolTip="Redo last change"/>
 		<Separator/>
 		<MenuItem Header="_Copy">
-			<controls:NEMenuItem Header="_Copy" CommandEnum="Edit_Copy_Copy"/>
-			<controls:NEMenuItem Header="C_ut" CommandEnum="Edit_Copy_Cut"/>
+			<controls:NEMenuItem Header="_Copy" CommandEnum="Edit_Copy_Copy" ToolTip="Copy selections to clipboard"/>
+			<controls:NEMenuItem Header="C_ut" CommandEnum="Edit_Copy_Cut" ToolTip="Cut selections to clipboard"/>
 		</MenuItem>
 		<MenuItem Header="_Paste">
-			<controls:NEMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste"/>
-			<controls:NEMenuItem Header="_Rotate Paste" CommandEnum="Edit_Paste_RotatePaste"/>
+			<controls:NEMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste" ToolTip="Paste clipboard values; if there are extra selections, duplicate clipboard values"/>
+			<controls:NEMenuItem Header="_Rotate Paste" CommandEnum="Edit_Paste_RotatePaste" ToolTip="Paste clipboard values; if there are extra selections, rotate clipboard values"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Find">
-			<controls:NEMenuItem Header="_Find" CommandEnum="Edit_Find_Find"/>
-			<controls:NEMenuItem Header="_Next" CommandEnum="Edit_Find_Next"/>
-			<controls:NEMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous"/>
-			<controls:NEMenuItem Header="_Selected" CommandEnum="Edit_Find_Selected"/>
-			<controls:NEMenuItem Header="_Mass Find" CommandEnum="Edit_Find_MassFind"/>
-			<controls:NEMenuItem Header="_Binary" CommandEnum="Edit_Find_Binary"/>
-			<controls:NEMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace"/>
-			<controls:NEMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults"/>
+			<controls:NEMenuItem Header="_Find" CommandEnum="Edit_Find_Find" ToolTip="Find text"/>
+			<controls:NEMenuItem Header="_Next" CommandEnum="Edit_Find_Next" ToolTip="Jump to next search result (hold shift to select)"/>
+			<controls:NEMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous" ToolTip="Jump to previous search result (hold shift to select)"/>
+			<controls:NEMenuItem Header="_Selected" CommandEnum="Edit_Find_Selected" ToolTip="Find selected text"/>
+			<controls:NEMenuItem Header="_Mass Find" CommandEnum="Edit_Find_MassFind" ToolTip="Find based on expression"/>
+			<controls:NEMenuItem Header="_Binary" CommandEnum="Edit_Find_Binary" ToolTip="Find binary data"/>
+			<controls:NEMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace" ToolTip="Find/replace"/>
+			<controls:NEMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults" ToolTip="Clear search results"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="Cop_y Down" CommandEnum="Edit_CopyDown"/>
-		<controls:NEMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate"/>
+		<controls:NEMenuItem Header="Cop_y Down" CommandEnum="Edit_CopyDown" ToolTip="Copy current selections down into empty selections"/>
+		<controls:NEMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate" ToolTip="Rotate selections (move them all down n items)"/>
 		<Separator/>
-		<controls:NEMenuItem Header="Repe_at" CommandEnum="Edit_Repeat"/>
+		<controls:NEMenuItem Header="Repe_at" CommandEnum="Edit_Repeat" ToolTip="Repeat the currently selected text (include the newline in selection if desired)"/>
 		<Separator/>
 		<MenuItem Header="_Escape">
-			<controls:NEMenuItem Header="_Markup" CommandEnum="Edit_Escape_Markup"/>
-			<controls:NEMenuItem Header="_RegEx" CommandEnum="Edit_Escape_RegEx"/>
-			<controls:NEMenuItem Header="_URL" CommandEnum="Edit_Escape_URL"/>
+			<controls:NEMenuItem Header="_Markup" CommandEnum="Edit_Escape_Markup" ToolTip="Escape markup text"/>
+			<controls:NEMenuItem Header="_RegEx" CommandEnum="Edit_Escape_RegEx" ToolTip="Escape regular expression"/>
+			<controls:NEMenuItem Header="_URL" CommandEnum="Edit_Escape_URL" ToolTip="Escape URL"/>
 		</MenuItem>
 		<MenuItem Header="_Unescape">
-			<controls:NEMenuItem Header="_Markup" CommandEnum="Edit_Unescape_Markup"/>
-			<controls:NEMenuItem Header="_RegEx" CommandEnum="Edit_Unescape_RegEx"/>
-			<controls:NEMenuItem Header="_URL" CommandEnum="Edit_Unescape_URL"/>
+			<controls:NEMenuItem Header="_Markup" CommandEnum="Edit_Unescape_Markup" ToolTip="Unescape markup text"/>
+			<controls:NEMenuItem Header="_RegEx" CommandEnum="Edit_Unescape_RegEx" ToolTip="Unescape regular expression"/>
+			<controls:NEMenuItem Header="_URL" CommandEnum="Edit_Unescape_URL" ToolTip="Unescape URL"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="A_bsolute" CommandEnum="Edit_AbsoluteURL"/>
+		<controls:NEMenuItem Header="A_bsolute" CommandEnum="Edit_AbsoluteURL" ToolTip="Make URL absolute given base URL"/>
 		<Separator/>
 		<MenuItem Header="_Data">
-			<controls:NEMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash"/>
-			<controls:NEMenuItem Header="_Compress" CommandEnum="Edit_Data_Compress"/>
-			<controls:NEMenuItem Header="_Decompress" CommandEnum="Edit_Data_Decompress"/>
-			<controls:NEMenuItem Header="E_ncrypt" CommandEnum="Edit_Data_Encrypt"/>
-			<controls:NEMenuItem Header="D_ecrypt" CommandEnum="Edit_Data_Decrypt"/>
-			<controls:NEMenuItem Header="_Sign" CommandEnum="Edit_Data_Sign"/>
+			<controls:NEMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash" ToolTip="Hash data"/>
+			<controls:NEMenuItem Header="_Compress" CommandEnum="Edit_Data_Compress" ToolTip="Compress data"/>
+			<controls:NEMenuItem Header="_Decompress" CommandEnum="Edit_Data_Decompress" ToolTip="Decompress data"/>
+			<controls:NEMenuItem Header="E_ncrypt" CommandEnum="Edit_Data_Encrypt" ToolTip="Encrypt data"/>
+			<controls:NEMenuItem Header="D_ecrypt" CommandEnum="Edit_Data_Decrypt" ToolTip="Decrypt data"/>
+			<controls:NEMenuItem Header="_Sign" CommandEnum="Edit_Data_Sign" ToolTip="Sign data"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="_Sort" CommandEnum="Edit_Sort"/>
+		<controls:NEMenuItem Header="_Sort" CommandEnum="Edit_Sort" ToolTip="Sort based on selections"/>
 		<Separator/>
-		<controls:NEMenuItem Header="Con_vert" CommandEnum="Edit_Convert"/>
+		<controls:NEMenuItem Header="Con_vert" CommandEnum="Edit_Convert" ToolTip="Convert between different encodings (base64, hex, etc)"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Modify Regions" CommandEnum="Edit_ModifyRegions"/>
+		<controls:NEMenuItem Header="_Modify Regions" CommandEnum="Edit_ModifyRegions" ToolTip="Dialog to modify regions"/>
 		<MenuItem Header="Modify _Regions">
 			<MenuItem Header="_Select">
 				<MenuItem Header="_Select">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_Select_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_Select_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_Select_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_Select_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_Select_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_Select_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_Select_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Select_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Select_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_Select_Region1" ToolTip="Select all value in region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_Select_Region2" ToolTip="Select all value in region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_Select_Region3" ToolTip="Select all value in region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_Select_Region4" ToolTip="Select all value in region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_Select_Region5" ToolTip="Select all value in region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_Select_Region6" ToolTip="Select all value in region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_Select_Region7" ToolTip="Select all value in region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Select_Region8" ToolTip="Select all value in region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Select_Region9" ToolTip="Select all value in region 9"/>
 				</MenuItem>
 				<MenuItem Header="_Previous">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_Previous_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_Previous_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_Previous_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_Previous_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_Previous_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_Previous_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_Previous_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Previous_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Previous_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_Previous_Region1" ToolTip="Find the previous value in region 1 for selection"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_Previous_Region2" ToolTip="Find the previous value in region 2 for selection"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_Previous_Region3" ToolTip="Find the previous value in region 3 for selection"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_Previous_Region4" ToolTip="Find the previous value in region 4 for selection"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_Previous_Region5" ToolTip="Find the previous value in region 5 for selection"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_Previous_Region6" ToolTip="Find the previous value in region 6 for selection"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_Previous_Region7" ToolTip="Find the previous value in region 7 for selection"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Previous_Region8" ToolTip="Find the previous value in region 8 for selection"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Previous_Region9" ToolTip="Find the previous value in region 9 for selection"/>
 				</MenuItem>
 				<MenuItem Header="_Next">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_Next_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_Next_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_Next_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_Next_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_Next_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_Next_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_Next_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Next_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Next_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_Next_Region1" ToolTip="Find the next value in region 1 for selection"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_Next_Region2" ToolTip="Find the next value in region 2 for selection"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_Next_Region3" ToolTip="Find the next value in region 3 for selection"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_Next_Region4" ToolTip="Find the next value in region 4 for selection"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_Next_Region5" ToolTip="Find the next value in region 5 for selection"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_Next_Region6" ToolTip="Find the next value in region 6 for selection"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_Next_Region7" ToolTip="Find the next value in region 7 for selection"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Next_Region8" ToolTip="Find the next value in region 8 for selection"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Next_Region9" ToolTip="Find the next value in region 9 for selection"/>
 				</MenuItem>
 				<MenuItem Header="_Enclosing">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region1" ToolTip="Find the value in region 1 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region2" ToolTip="Find the value in region 2 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region3" ToolTip="Find the value in region 3 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region4" ToolTip="Find the value in region 4 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region5" ToolTip="Find the value in region 5 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region6" ToolTip="Find the value in region 6 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region7" ToolTip="Find the value in region 7 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region8" ToolTip="Find the value in region 8 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_Enclosing_Region9" ToolTip="Find the value in region 9 that encloses selection"/>
 				</MenuItem>
 				<MenuItem Header="_With Enclosing">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region1" ToolTip="Leave selections contained in any region 1 value"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region2" ToolTip="Leave selections contained in any region 2 value"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region3" ToolTip="Leave selections contained in any region 3 value"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region4" ToolTip="Leave selections contained in any region 4 value"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region5" ToolTip="Leave selections contained in any region 5 value"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region6" ToolTip="Leave selections contained in any region 6 value"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region7" ToolTip="Leave selections contained in any region 7 value"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region8" ToolTip="Leave selections contained in any region 8 value"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region9" ToolTip="Leave selections contained in any region 9 value"/>
 				</MenuItem>
 				<MenuItem Header="W_ithout Enclosing">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region1" ToolTip="Leave selections not contained in any region 1 value"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region2" ToolTip="Leave selections not contained in any region 2 value"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region3" ToolTip="Leave selections not contained in any region 3 value"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region4" ToolTip="Leave selections not contained in any region 4 value"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region5" ToolTip="Leave selections not contained in any region 5 value"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region6" ToolTip="Leave selections not contained in any region 6 value"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region7" ToolTip="Leave selections not contained in any region 7 value"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region8" ToolTip="Leave selections not contained in any region 8 value"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region9" ToolTip="Leave selections not contained in any region 9 value"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Modify">
 				<MenuItem Header="_Set">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Set_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Set_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Set_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Set_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Set_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Set_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Set_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Set_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Set_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Set_Region1" ToolTip="Set region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Set_Region2" ToolTip="Set region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Set_Region3" ToolTip="Set region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Set_Region4" ToolTip="Set region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Set_Region5" ToolTip="Set region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Set_Region6" ToolTip="Set region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Set_Region7" ToolTip="Set region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Set_Region8" ToolTip="Set region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Set_Region9" ToolTip="Set region 9"/>
 				</MenuItem>
 				<MenuItem Header="_Clear">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region1" ToolTip="Clear region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region2" ToolTip="Clear region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region3" ToolTip="Clear region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region4" ToolTip="Clear region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region5" ToolTip="Clear region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region6" ToolTip="Clear region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region7" ToolTip="Clear region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region8" ToolTip="Clear region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Clear_Region9" ToolTip="Clear region 9"/>
 				</MenuItem>
 				<MenuItem Header="_Remove">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region1" ToolTip="Remove selections from region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region2" ToolTip="Remove selections from region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region3" ToolTip="Remove selections from region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region4" ToolTip="Remove selections from region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region5" ToolTip="Remove selections from region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region6" ToolTip="Remove selections from region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region7" ToolTip="Remove selections from region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region8" ToolTip="Remove selections from region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Remove_Region9" ToolTip="Remove selections from region 9"/>
 				</MenuItem>
 				<MenuItem Header="_Add">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Add_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Add_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Add_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Add_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Add_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Add_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Add_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Add_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Add_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Add_Region1" ToolTip="Add selections from region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Add_Region2" ToolTip="Add selections from region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Add_Region3" ToolTip="Add selections from region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Add_Region4" ToolTip="Add selections from region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Add_Region5" ToolTip="Add selections from region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Add_Region6" ToolTip="Add selections from region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Add_Region7" ToolTip="Add selections from region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Add_Region8" ToolTip="Add selections from region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Add_Region9" ToolTip="Add selections from region 9"/>
 				</MenuItem>
 				<MenuItem Header="_Unite">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region1" ToolTip="Unite selections to region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region2" ToolTip="Unite selections to region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region3" ToolTip="Unite selections to region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region4" ToolTip="Unite selections to region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region5" ToolTip="Unite selections to region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region6" ToolTip="Unite selections to region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region7" ToolTip="Unite selections to region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region8" ToolTip="Unite selections to region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Unite_Region9" ToolTip="Unite selections to region 9"/>
 				</MenuItem>
 				<MenuItem Header="_Intersect">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region1" ToolTip="Intersect selections with region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region2" ToolTip="Intersect selections with region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region3" ToolTip="Intersect selections with region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region4" ToolTip="Intersect selections with region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region5" ToolTip="Intersect selections with region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region6" ToolTip="Intersect selections with region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region7" ToolTip="Intersect selections with region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region8" ToolTip="Intersect selections with region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Intersect_Region9" ToolTip="Intersect selections with region 9"/>
 				</MenuItem>
 				<MenuItem Header="E_xclude">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region1" ToolTip="Remove selected text from region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region2" ToolTip="Remove selected text from region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region3" ToolTip="Remove selected text from region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region4" ToolTip="Remove selected text from region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region5" ToolTip="Remove selected text from region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region6" ToolTip="Remove selected text from region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region7" ToolTip="Remove selected text from region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region8" ToolTip="Remove selected text from region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Exclude_Region9" ToolTip="Remove selected text from region 9"/>
 				</MenuItem>
 				<MenuItem Header="R_epeat">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region1" ToolTip="Repeat region 1, leaving a selection for each selected value"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region2" ToolTip="Repeat region 2, leaving a selection for each selected value"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region3" ToolTip="Repeat region 3, leaving a selection for each selected value"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region4" ToolTip="Repeat region 4, leaving a selection for each selected value"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region5" ToolTip="Repeat region 5, leaving a selection for each selected value"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region6" ToolTip="Repeat region 6, leaving a selection for each selected value"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region7" ToolTip="Repeat region 7, leaving a selection for each selected value"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region8" ToolTip="Repeat region 8, leaving a selection for each selected value"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Modify_Repeat_Region9" ToolTip="Repeat region 9, leaving a selection for each selected value"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Copy">
 				<MenuItem Header="_Enclosing">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region1" ToolTip="Copy index of value in region 1 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region2" ToolTip="Copy index of value in region 2 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region3" ToolTip="Copy index of value in region 3 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region4" ToolTip="Copy index of value in region 4 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region5" ToolTip="Copy index of value in region 5 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region6" ToolTip="Copy index of value in region 6 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region7" ToolTip="Copy index of value in region 7 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region8" ToolTip="Copy index of value in region 8 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Copy_Enclosing_Region9" ToolTip="Copy index of value in region 9 that encloses selection"/>
 				</MenuItem>
 				<MenuItem Header="Enclosing _Index">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region1" ToolTip="Copy value in region 1 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region2" ToolTip="Copy value in region 2 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region3" ToolTip="Copy value in region 3 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region4" ToolTip="Copy value in region 4 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region5" ToolTip="Copy value in region 5 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region6" ToolTip="Copy value in region 6 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region7" ToolTip="Copy value in region 7 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region8" ToolTip="Copy value in region 8 that encloses selection"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Copy_EnclosingIndex_Region9" ToolTip="Copy value in region 9 that encloses selection"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="_Transform">
 				<MenuItem Header="_Flatten">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region1" ToolTip="Flatten region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region2" ToolTip="Flatten region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region3" ToolTip="Flatten region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region4" ToolTip="Flatten region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region5" ToolTip="Flatten region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region6" ToolTip="Flatten region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region7" ToolTip="Flatten region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region8" ToolTip="Flatten region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_Flatten_Region9" ToolTip="Flatten region 9"/>
 				</MenuItem>
 				<MenuItem Header="_Transpose">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region1" ToolTip="Transpose region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region2" ToolTip="Transpose region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region3" ToolTip="Transpose region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region4" ToolTip="Transpose region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region5" ToolTip="Transpose region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region6" ToolTip="Transpose region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region7" ToolTip="Transpose region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region8" ToolTip="Transpose region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_Transpose_Region9" ToolTip="Transpose region 9"/>
 				</MenuItem>
 				<MenuItem Header="Rotate _Left">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region1" ToolTip="Rotate selections in region 1 left"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region2" ToolTip="Rotate selections in region 2 left"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region3" ToolTip="Rotate selections in region 3 left"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region4" ToolTip="Rotate selections in region 4 left"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region5" ToolTip="Rotate selections in region 5 left"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region6" ToolTip="Rotate selections in region 6 left"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region7" ToolTip="Rotate selections in region 7 left"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region8" ToolTip="Rotate selections in region 8 left"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_RotateLeft_Region9" ToolTip="Rotate selections in region 9 left"/>
 				</MenuItem>
 				<MenuItem Header="Rotate _Right">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region1" ToolTip="Rotate selections in region 1 right"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region2" ToolTip="Rotate selections in region 2 right"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region3" ToolTip="Rotate selections in region 3 right"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region4" ToolTip="Rotate selections in region 4 right"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region5" ToolTip="Rotate selections in region 5 right"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region6" ToolTip="Rotate selections in region 6 right"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region7" ToolTip="Rotate selections in region 7 right"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region8" ToolTip="Rotate selections in region 8 right"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_RotateRight_Region9" ToolTip="Rotate selections in region 9 right"/>
 				</MenuItem>
 				<MenuItem Header="Rotate _180">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region1" ToolTip="Rotate selections in region 1 180 degress"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region2" ToolTip="Rotate selections in region 2 180 degress"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region3" ToolTip="Rotate selections in region 3 180 degress"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region4" ToolTip="Rotate selections in region 4 180 degress"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region5" ToolTip="Rotate selections in region 5 180 degress"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region6" ToolTip="Rotate selections in region 6 180 degress"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region7" ToolTip="Rotate selections in region 7 180 degress"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region8" ToolTip="Rotate selections in region 8 180 degress"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_Rotate180_Region9" ToolTip="Rotate selections in region 9 180 degress"/>
 				</MenuItem>
 				<MenuItem Header="Mirror _Horizontal">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region1" ToolTip="Horizontal mirror selections in region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region2" ToolTip="Horizontal mirror selections in region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region3" ToolTip="Horizontal mirror selections in region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region4" ToolTip="Horizontal mirror selections in region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region5" ToolTip="Horizontal mirror selections in region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region6" ToolTip="Horizontal mirror selections in region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region7" ToolTip="Horizontal mirror selections in region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region8" ToolTip="Horizontal mirror selections in region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_MirrorHorizontal_Region9" ToolTip="Horizontal mirror selections in region 9"/>
 				</MenuItem>
 				<MenuItem Header="Mirror _Vertical">
-					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region1"/>
-					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region2"/>
-					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region3"/>
-					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region4"/>
-					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region5"/>
-					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region6"/>
-					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region7"/>
-					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region8"/>
-					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region9"/>
+					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region1" ToolTip="Vertical mirror selections in region 1"/>
+					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region2" ToolTip="Vertical mirror selections in region 2"/>
+					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region3" ToolTip="Vertical mirror selections in region 3"/>
+					<controls:NEMenuItem Header="Region _4" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region4" ToolTip="Vertical mirror selections in region 4"/>
+					<controls:NEMenuItem Header="Region _5" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region5" ToolTip="Vertical mirror selections in region 5"/>
+					<controls:NEMenuItem Header="Region _6" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region6" ToolTip="Vertical mirror selections in region 6"/>
+					<controls:NEMenuItem Header="Region _7" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region7" ToolTip="Vertical mirror selections in region 7"/>
+					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region8" ToolTip="Vertical mirror selections in region 8"/>
+					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Transform_MirrorVertical_Region9" ToolTip="Vertical mirror selections in region 9"/>
 				</MenuItem>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="Nav_igate">
-			<controls:NEMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft"/>
-			<controls:NEMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight"/>
-			<controls:NEMenuItem Header="All L_eft" CommandEnum="Edit_Navigate_AllLeft"/>
-			<controls:NEMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight"/>
+			<controls:NEMenuItem Header="Word _Left" CommandEnum="Edit_Navigate_WordLeft" ToolTip="Copy cursors on word to the left"/>
+			<controls:NEMenuItem Header="Word _Right" CommandEnum="Edit_Navigate_WordRight" ToolTip="Copy cursors on word to the right"/>
+			<controls:NEMenuItem Header="All L_eft" CommandEnum="Edit_Navigate_AllLeft" ToolTip="Copy cursors on word to the left"/>
+			<controls:NEMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight" ToolTip="Copy cursors on word to the right"/>
 			<Separator/>
 			<MenuItem Header="_Jump By">
-				<controls:MultiMenuItem Header="_Words" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words"/>
-				<controls:MultiMenuItem Header="_Numbers" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers"/>
-				<controls:MultiMenuItem Header="_Paths" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths"/>
+				<controls:MultiMenuItem Header="_Words" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words" ToolTip="Set Ctrl+Left/Right to jump by words (default)"/>
+				<controls:MultiMenuItem Header="_Numbers" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers" ToolTip="Set Ctrl+Left/Right to jump by numbers"/>
+				<controls:MultiMenuItem Header="_Paths" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths" ToolTip="Set Ctrl+Left/Right to jump by paths"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="Escape C_lears Selections" IsCheckable="True" IsChecked="{Binding Path=(local:Settings.EscapeClearsSelections), Mode=TwoWay}"/>
+		<MenuItem Header="Escape C_lears Selections" IsCheckable="True" IsChecked="{Binding Path=(local:Settings.EscapeClearsSelections), Mode=TwoWay}" ToolTip="Toggle whether the Esc key removes extra selections"/>
 	</MenuItem>
 	<MenuItem Header="D_iff">
-		<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Diff"/>
-		<controls:NEMenuItem Header="Se_lections" CommandEnum="Diff_Selections"/>
-		<controls:NEMenuItem Header="Selected _Files" CommandEnum="Diff_SelectedFiles"/>
-		<controls:NEMenuItem Header="_VCS Normal Files" CommandEnum="Diff_VCSNormalFiles"/>
+		<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Diff" ToolTip="Diff active files"/>
+		<controls:NEMenuItem Header="Se_lections" CommandEnum="Diff_Selections" ToolTip="Open new windows to diff current selections"/>
+		<controls:NEMenuItem Header="Selected _Files" CommandEnum="Diff_SelectedFiles" ToolTip="Open new windows to diff selected files (must be paths)"/>
+		<controls:NEMenuItem Header="_VCS Normal Files" CommandEnum="Diff_VCSNormalFiles" ToolTip="Diff against unchanged VCS file"/>
 		<MenuItem Header="Re_gions">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Diff_Regions_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Diff_Regions_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Diff_Regions_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Diff_Regions_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Diff_Regions_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Diff_Regions_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Diff_Regions_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Diff_Regions_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Diff_Regions_Region9"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Diff_Regions_Region1" ToolTip="Diff items in region 1"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Diff_Regions_Region2" ToolTip="Diff items in region 2"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Diff_Regions_Region3" ToolTip="Diff items in region 3"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Diff_Regions_Region4" ToolTip="Diff items in region 4"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Diff_Regions_Region5" ToolTip="Diff items in region 5"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Diff_Regions_Region6" ToolTip="Diff items in region 6"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Diff_Regions_Region7" ToolTip="Diff items in region 7"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Diff_Regions_Region8" ToolTip="Diff items in region 8"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Diff_Regions_Region9" ToolTip="Diff items in region 9"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="_Break" CommandEnum="Diff_Break"/>
+		<controls:NEMenuItem Header="_Break" CommandEnum="Diff_Break" ToolTip="Disable diff"/>
 		<Separator/>
-		<controls:MultiMenuItem Header="Ignore _Whitespace" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace"/>
-		<controls:MultiMenuItem Header="Ignore _Case" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase"/>
-		<controls:MultiMenuItem Header="Ignore _Numbers" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers"/>
-		<controls:MultiMenuItem Header="Ignore Line _Endings" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings"/>
-		<controls:NEMenuItem Header="Ignore C_haracters" CommandEnum="Diff_IgnoreCharacters"/>
-		<controls:NEMenuItem Header="_Reset" CommandEnum="Diff_Reset"/>
+		<controls:MultiMenuItem Header="Ignore _Whitespace" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace" ToolTip="Make diff ignore white space"/>
+		<controls:MultiMenuItem Header="Ignore _Case" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase" ToolTip="Make diff ignore case"/>
+		<controls:MultiMenuItem Header="Ignore _Numbers" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers" ToolTip="Make diff ignore numbers"/>
+		<controls:MultiMenuItem Header="Ignore Line _Endings" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings" ToolTip="Make diff ignore line endings"/>
+		<controls:NEMenuItem Header="Ignore C_haracters" CommandEnum="Diff_IgnoreCharacters" ToolTip="Make diff ignore specific characters"/>
+		<controls:NEMenuItem Header="_Reset" CommandEnum="Diff_Reset" ToolTip="Reset diff ignore"/>
 		<Separator/>
-		<controls:NEMenuItem Header="Ne_xt" CommandEnum="Diff_Next"/>
-		<controls:NEMenuItem Header="_Previous" CommandEnum="Diff_Previous"/>
-		<controls:NEMenuItem Header="C_opy Left" CommandEnum="Diff_CopyLeft"/>
-		<controls:NEMenuItem Header="Cop_y Right" CommandEnum="Diff_CopyRight"/>
+		<controls:NEMenuItem Header="Ne_xt" CommandEnum="Diff_Next" ToolTip="Move to next difference"/>
+		<controls:NEMenuItem Header="_Previous" CommandEnum="Diff_Previous" ToolTip="Move to previous difference"/>
+		<controls:NEMenuItem Header="C_opy Left" CommandEnum="Diff_CopyLeft" ToolTip="Copy difference from left file to right"/>
+		<controls:NEMenuItem Header="Cop_y Right" CommandEnum="Diff_CopyRight" ToolTip="Copy difference from right file to left"/>
 		<Separator/>
 		<MenuItem Header="F_ix">
-			<controls:NEMenuItem Header="_Whitespace" CommandEnum="Diff_Fix_Whitespace"/>
-			<controls:NEMenuItem Header="_Case" CommandEnum="Diff_Fix_Case"/>
-			<controls:NEMenuItem Header="_Numbers" CommandEnum="Diff_Fix_Numbers"/>
-			<controls:NEMenuItem Header="Line _Endings" CommandEnum="Diff_Fix_LineEndings"/>
-			<controls:NEMenuItem Header="Enc_oding" CommandEnum="Diff_Fix_Encoding"/>
+			<controls:NEMenuItem Header="_Whitespace" CommandEnum="Diff_Fix_Whitespace" ToolTip="On line that match except for whitespace, copy the whitespace"/>
+			<controls:NEMenuItem Header="_Case" CommandEnum="Diff_Fix_Case" ToolTip="On line that match except for case, copy the case"/>
+			<controls:NEMenuItem Header="_Numbers" CommandEnum="Diff_Fix_Numbers" ToolTip="On line that match except for numbers, copy the numbers"/>
+			<controls:NEMenuItem Header="Line _Endings" CommandEnum="Diff_Fix_LineEndings" ToolTip="On line that match except for line endings, copy the line endings"/>
+			<controls:NEMenuItem Header="Enc_oding" CommandEnum="Diff_Fix_Encoding" ToolTip="On line that match except for encoding, copy the encoding"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<controls:NEMenuItem Header="_Match" CommandEnum="Diff_Select_Match"/>
-			<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Select_Diff"/>
+			<controls:NEMenuItem Header="_Match" CommandEnum="Diff_Select_Match" ToolTip="Select all matching text"/>
+			<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Select_Diff" ToolTip="Select all non-matching text"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Left Tab" CommandEnum="Diff_Select_LeftTab"/>
-			<controls:NEMenuItem Header="_Right Tab" CommandEnum="Diff_Select_RightTab"/>
-			<controls:NEMenuItem Header="_Both Tabs" CommandEnum="Diff_Select_BothTabs"/>
+			<controls:NEMenuItem Header="_Left Tab" CommandEnum="Diff_Select_LeftTab" ToolTip="Select left tab of diff"/>
+			<controls:NEMenuItem Header="_Right Tab" CommandEnum="Diff_Select_RightTab" ToolTip="Select right tab of diff"/>
+			<controls:NEMenuItem Header="_Both Tabs" CommandEnum="Diff_Select_BothTabs" ToolTip="Select both tabs"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
 		<MenuItem Header="N_ame">
-			<controls:NEMenuItem Header="_Simplify" CommandEnum="Files_Name_Simplify"/>
-			<controls:NEMenuItem Header="Make _Absolute" CommandEnum="Files_Name_MakeAbsolute"/>
-			<controls:NEMenuItem Header="Make _Relative" CommandEnum="Files_Name_MakeRelative"/>
-			<controls:NEMenuItem Header="Get _Unique" CommandEnum="Files_Name_GetUnique"/>
-			<controls:NEMenuItem Header="Sa_nitize" CommandEnum="Files_Name_Sanitize"/>
+			<controls:NEMenuItem Header="_Simplify" CommandEnum="Files_Name_Simplify" ToolTip="Simplify file name (remove .., etc.)"/>
+			<controls:NEMenuItem Header="Make _Absolute" CommandEnum="Files_Name_MakeAbsolute" ToolTip="Make file name absolute"/>
+			<controls:NEMenuItem Header="Make _Relative" CommandEnum="Files_Name_MakeRelative" ToolTip="Make file name relative"/>
+			<controls:NEMenuItem Header="Get _Unique" CommandEnum="Files_Name_GetUnique" ToolTip="Get non-existing filenames to use"/>
+			<controls:NEMenuItem Header="Sa_nitize" CommandEnum="Files_Name_Sanitize" ToolTip="Remove invalid characters from filename"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Get">
-			<controls:NEMenuItem Header="_Size" CommandEnum="Files_Get_Size"/>
+			<controls:NEMenuItem Header="_Size" CommandEnum="Files_Get_Size" ToolTip="Get size of selected files"/>
 			<MenuItem Header="_Time">
-				<controls:NEMenuItem Header="_Write" CommandEnum="Files_Get_Time_Write"/>
-				<controls:NEMenuItem Header="_Access" CommandEnum="Files_Get_Time_Access"/>
-				<controls:NEMenuItem Header="_Create" CommandEnum="Files_Get_Time_Create"/>
+				<controls:NEMenuItem Header="_Write" CommandEnum="Files_Get_Time_Write" ToolTip="Get write time of selected files"/>
+				<controls:NEMenuItem Header="_Access" CommandEnum="Files_Get_Time_Access" ToolTip="Get access time of selected files"/>
+				<controls:NEMenuItem Header="_Create" CommandEnum="Files_Get_Time_Create" ToolTip="Get create time of selected files"/>
 			</MenuItem>
-			<controls:NEMenuItem Header="_Attributes" CommandEnum="Files_Get_Attributes"/>
+			<controls:NEMenuItem Header="_Attributes" CommandEnum="Files_Get_Attributes" ToolTip="Get attributes of selected files"/>
 			<Separator/>
 			<MenuItem Header="V_ersion">
-				<controls:NEMenuItem Header="_File" CommandEnum="Files_Get_Version_File"/>
-				<controls:NEMenuItem Header="_Product" CommandEnum="Files_Get_Version_Product"/>
-				<controls:NEMenuItem Header="_Assembly" CommandEnum="Files_Get_Version_Assembly"/>
+				<controls:NEMenuItem Header="_File" CommandEnum="Files_Get_Version_File" ToolTip="Get version of selected files"/>
+				<controls:NEMenuItem Header="_Product" CommandEnum="Files_Get_Version_Product" ToolTip="Get product version of selected files"/>
+				<controls:NEMenuItem Header="_Assembly" CommandEnum="Files_Get_Version_Assembly" ToolTip="Get assembly version of selected files"/>
 			</MenuItem>
 			<Separator/>
-			<controls:NEMenuItem Header="_Children" CommandEnum="Files_Get_Children"/>
-			<controls:NEMenuItem Header="_Descendants" CommandEnum="Files_Get_Descendants"/>
+			<controls:NEMenuItem Header="_Children" CommandEnum="Files_Get_Children" ToolTip="Get children of selected files (must be directories)"/>
+			<controls:NEMenuItem Header="_Descendants" CommandEnum="Files_Get_Descendants" ToolTip="Get descendants of selected files (must be directories)"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Version Control Status" CommandEnum="Files_Get_VersionControlStatus"/>
+			<controls:NEMenuItem Header="_Version Control Status" CommandEnum="Files_Get_VersionControlStatus" ToolTip="Get version control status of selected files"/>
 		</MenuItem>
 		<MenuItem Header="S_et">
-			<controls:NEMenuItem Header="_Size" CommandEnum="Files_Set_Size"/>
+			<controls:NEMenuItem Header="_Size" CommandEnum="Files_Set_Size" ToolTip="Set file size of selected files (files with be expanded or truncated)"/>
 			<MenuItem Header="_Time">
-				<controls:NEMenuItem Header="_Write" CommandEnum="Files_Set_Time_Write"/>
-				<controls:NEMenuItem Header="_Access" CommandEnum="Files_Set_Time_Access"/>
-				<controls:NEMenuItem Header="_Create" CommandEnum="Files_Set_Time_Create"/>
-				<controls:NEMenuItem Header="A_ll" CommandEnum="Files_Set_Time_All"/>
+				<controls:NEMenuItem Header="_Write" CommandEnum="Files_Set_Time_Write" ToolTip="Set write time of selected files"/>
+				<controls:NEMenuItem Header="_Access" CommandEnum="Files_Set_Time_Access" ToolTip="Set access time of selected files"/>
+				<controls:NEMenuItem Header="_Create" CommandEnum="Files_Set_Time_Create" ToolTip="Set create time of selected files"/>
+				<controls:NEMenuItem Header="A_ll" CommandEnum="Files_Set_Time_All" ToolTip="Set all time stamps of selected files"/>
 			</MenuItem>
-			<controls:NEMenuItem Header="_Attributes" CommandEnum="Files_Set_Attributes"/>
+			<controls:NEMenuItem Header="_Attributes" CommandEnum="Files_Set_Attributes" ToolTip="Set attributes of selected files"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Find">
-			<controls:NEMenuItem Header="_Binary" CommandEnum="Files_Find_Binary"/>
-			<controls:NEMenuItem Header="_Text" CommandEnum="Files_Find_Text"/>
-			<controls:NEMenuItem Header="_Mass Find" CommandEnum="Files_Find_MassFind"/>
+			<controls:NEMenuItem Header="_Binary" CommandEnum="Files_Find_Binary" ToolTip="Leave selected files that contain specific binary data"/>
+			<controls:NEMenuItem Header="_Text" CommandEnum="Files_Find_Text" ToolTip="Leave selected files that contain specific text"/>
+			<controls:NEMenuItem Header="_Mass Find" CommandEnum="Files_Find_MassFind" ToolTip="Leave selected files that contain anything matching an expression"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="I_nsert" CommandEnum="Files_Insert"/>
+		<controls:NEMenuItem Header="I_nsert" CommandEnum="Files_Insert" ToolTip="Insert selected files into current file"/>
 		<MenuItem Header="_Create">
-			<controls:NEMenuItem Header="_Files" CommandEnum="Files_Create_Files"/>
-			<controls:NEMenuItem Header="_Directories" CommandEnum="Files_Create_Directories"/>
-			<controls:NEMenuItem Header="From _Expressions" CommandEnum="Files_Create_FromExpressions"/>
+			<controls:NEMenuItem Header="_Files" CommandEnum="Files_Create_Files" ToolTip="Create files with names given by selections"/>
+			<controls:NEMenuItem Header="_Directories" CommandEnum="Files_Create_Directories" ToolTip="Create directories with names given by selections"/>
+			<controls:NEMenuItem Header="From _Expressions" CommandEnum="Files_Create_FromExpressions" ToolTip="Create files with names given by expression"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<MenuItem Header="_Name">
-				<controls:NEMenuItem Header="_Directory" CommandEnum="Files_Select_Name_Directory"/>
-				<controls:NEMenuItem Header="_Name" CommandEnum="Files_Select_Name_Name"/>
-				<controls:NEMenuItem Header="File Name _w/o Extension" CommandEnum="Files_Select_Name_FileNamewoExtension"/>
-				<controls:NEMenuItem Header="_Extension" CommandEnum="Files_Select_Name_Extension"/>
-				<controls:NEMenuItem Header="Ne_xt" CommandEnum="Files_Select_Name_Next"/>
+				<controls:NEMenuItem Header="_Directory" CommandEnum="Files_Select_Name_Directory" ToolTip="Select directory part of currently selected files"/>
+				<controls:NEMenuItem Header="_Name" CommandEnum="Files_Select_Name_Name" ToolTip="Select name part of currently selected files"/>
+				<controls:NEMenuItem Header="File Name _w/o Extension" CommandEnum="Files_Select_Name_FileNamewoExtension" ToolTip="Select name but not extension of currently selected files"/>
+				<controls:NEMenuItem Header="_Extension" CommandEnum="Files_Select_Name_Extension" ToolTip="Select extension of currently selected files"/>
+				<controls:NEMenuItem Header="Ne_xt" CommandEnum="Files_Select_Name_Next" ToolTip="Expand selection to next part of currently selected files"/>
 			</MenuItem>
 			<Separator/>
-			<controls:NEMenuItem Header="_Files" CommandEnum="Files_Select_Files"/>
-			<controls:NEMenuItem Header="_Directories" CommandEnum="Files_Select_Directories"/>
+			<controls:NEMenuItem Header="_Files" CommandEnum="Files_Select_Files" ToolTip="Leave selected only selections containing file names"/>
+			<controls:NEMenuItem Header="_Directories" CommandEnum="Files_Select_Directories" ToolTip="Leave selected only selections containing directories"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Existing" CommandEnum="Files_Select_Existing"/>
-			<controls:NEMenuItem Header="Non-E_xisting" CommandEnum="Files_Select_NonExisting"/>
+			<controls:NEMenuItem Header="_Existing" CommandEnum="Files_Select_Existing" ToolTip="Leave selected only selections containing existing paths"/>
+			<controls:NEMenuItem Header="Non-E_xisting" CommandEnum="Files_Select_NonExisting" ToolTip="Leave selected only selections not containing existing paths"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Roots" CommandEnum="Files_Select_Roots"/>
-			<controls:NEMenuItem Header="Non-R_oots" CommandEnum="Files_Select_NonRoots"/>
+			<controls:NEMenuItem Header="_Roots" CommandEnum="Files_Select_Roots" ToolTip="Leave selected parent directories"/>
+			<controls:NEMenuItem Header="Non-R_oots" CommandEnum="Files_Select_NonRoots" ToolTip="Leave selected non-parent directories"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Match Depth" CommandEnum="Files_Select_MatchDepth"/>
+			<controls:NEMenuItem Header="_Match Depth" CommandEnum="Files_Select_MatchDepth" ToolTip="Make selections have the same number of path entries"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Common Ancestor" CommandEnum="Files_Select_CommonAncestor"/>
+			<controls:NEMenuItem Header="_Common Ancestor" CommandEnum="Files_Select_CommonAncestor" ToolTip="Select largest part of path all files have in common"/>
 			<Separator/>
-			<controls:NEMenuItem Header="By _Version Control Status" CommandEnum="Files_Select_ByVersionControlStatus"/>
+			<controls:NEMenuItem Header="By _Version Control Status" CommandEnum="Files_Select_ByVersionControlStatus" ToolTip="Leave selected files based on version control status"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="_Hash" CommandEnum="Files_Hash"/>
-		<controls:NEMenuItem Header="S_ign" CommandEnum="Files_Sign"/>
+		<controls:NEMenuItem Header="_Hash" CommandEnum="Files_Hash" ToolTip="Hash files"/>
+		<controls:NEMenuItem Header="S_ign" CommandEnum="Files_Sign" ToolTip="Sign files"/>
 		<Separator/>
 		<MenuItem Header="O_perations">
-			<controls:NEMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy"/>
-			<controls:NEMenuItem Header="_Move" CommandEnum="Files_Operations_Move"/>
-			<controls:NEMenuItem Header="_Delete" CommandEnum="Files_Operations_Delete"/>
+			<controls:NEMenuItem Header="_Copy" CommandEnum="Files_Operations_Copy" ToolTip="Copy files based on expressions"/>
+			<controls:NEMenuItem Header="_Move" CommandEnum="Files_Operations_Move" ToolTip="Move files based on expressions"/>
+			<controls:NEMenuItem Header="_Delete" CommandEnum="Files_Operations_Delete" ToolTip="Delete selected files"/>
 			<Separator/>
-			<controls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="Files_Operations_DragDrop"/>
-			<controls:NEMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore"/>
-			<controls:NEMenuItem Header="C_ommand Prompt" CommandEnum="Files_Operations_CommandPrompt"/>
+			<controls:NEMenuItem Header="Dr_ag/Drop" CommandEnum="Files_Operations_DragDrop" ToolTip="Enable drag/drop for selected files (so you can drag/drop to another program)"/>
+			<controls:NEMenuItem Header="_Explore" CommandEnum="Files_Operations_Explore" ToolTip="Open explorer at location of selected file"/>
+			<controls:NEMenuItem Header="C_ommand Prompt" CommandEnum="Files_Operations_CommandPrompt" ToolTip="Open command prompt at location of selected file"/>
 			<Separator/>
 			<MenuItem Header="R_un Command">
-				<controls:NEMenuItem Header="_Parallel" CommandEnum="Files_Operations_RunCommand_Parallel"/>
-				<controls:NEMenuItem Header="_Sequential" CommandEnum="Files_Operations_RunCommand_Sequential"/>
-				<controls:NEMenuItem Header="S_hell" CommandEnum="Files_Operations_RunCommand_Shell"/>
+				<controls:NEMenuItem Header="_Parallel" CommandEnum="Files_Operations_RunCommand_Parallel" ToolTip="Run selected commands in parallel"/>
+				<controls:NEMenuItem Header="_Sequential" CommandEnum="Files_Operations_RunCommand_Sequential" ToolTip="Run selected commands on at a time"/>
+				<controls:NEMenuItem Header="S_hell" CommandEnum="Files_Operations_RunCommand_Shell" ToolTip="Run selected commands through the shell"/>
 			</MenuItem>
 			<Separator/>
-			<controls:NEMenuItem Header="E_ncoding" CommandEnum="Files_Operations_Encoding"/>
+			<controls:NEMenuItem Header="E_ncoding" CommandEnum="Files_Operations_Encoding" ToolTip="Change encoding on selected files"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Split File" CommandEnum="Files_Operations_SplitFile"/>
-			<controls:NEMenuItem Header="Com_bine Files" CommandEnum="Files_Operations_CombineFiles"/>
+			<controls:NEMenuItem Header="_Split File" CommandEnum="Files_Operations_SplitFile" ToolTip="Split selected files into smaller ones"/>
+			<controls:NEMenuItem Header="Com_bine Files" CommandEnum="Files_Operations_CombineFiles" ToolTip="Combine selected files into bigger one"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="E_xpression">
-		<controls:NEMenuItem Header="_Expression" CommandEnum="Expression_Expression"/>
-		<controls:NEMenuItem Header="_Copy" CommandEnum="Expression_Copy"/>
-		<controls:NEMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected"/>
-		<controls:NEMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression"/>
+		<controls:NEMenuItem Header="_Expression" CommandEnum="Expression_Expression" ToolTip="Evaluate expression"/>
+		<controls:NEMenuItem Header="_Copy" CommandEnum="Expression_Copy" ToolTip="Copy expression results to clipboard"/>
+		<controls:NEMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected" ToolTip="Run selected text as an expression and give the result"/>
+		<controls:NEMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression" ToolTip="Leave selected only selections matching an expression"/>
 		<Separator/>
 		<MenuItem Header="_Inline Variables">
-			<controls:NEMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add"/>
-			<controls:NEMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate"/>
-			<controls:NEMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve"/>
-			<controls:MultiMenuItem Header="_Include In Expressions" TabsWindow="{Binding Parent, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions"/>
+			<controls:NEMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add" ToolTip="Add inline variable"/>
+			<controls:NEMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate" ToolTip="Calculate inline variables"/>
+			<controls:NEMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve" ToolTip="Solve for inline variable"/>
+			<controls:MultiMenuItem Header="_Include In Expressions" TabsWindow="{Binding Parent, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions" ToolTip="Set flag for whether to make inline variables available in expressions"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Text">
 		<MenuItem Header="_Select">
-			<controls:NEMenuItem Header="_Trim" CommandEnum="Text_Select_Trim"/>
-			<controls:NEMenuItem Header="_By Width" CommandEnum="Text_Select_ByWidth"/>
-			<controls:NEMenuItem Header="_Whole Word" CommandEnum="Text_Select_WholeWord"/>
-			<controls:NEMenuItem Header="B_ounded Word" CommandEnum="Text_Select_BoundedWord"/>
+			<controls:NEMenuItem Header="_Trim" CommandEnum="Text_Select_Trim" ToolTip="Trim selections (not text) based on specific set of characters"/>
+			<controls:NEMenuItem Header="_By Width" CommandEnum="Text_Select_ByWidth" ToolTip="Trim selection based on width"/>
+			<controls:NEMenuItem Header="_Whole Word" CommandEnum="Text_Select_WholeWord" ToolTip="Expand start and/or end of selection to include anything in given set of characters"/>
+			<controls:NEMenuItem Header="B_ounded Word" CommandEnum="Text_Select_BoundedWord" ToolTip="Expand start and/or end of selection until hitting anything in given set of characters"/>
 			<MenuItem Header="Mi_n">
-				<controls:NEMenuItem Header="_Text" CommandEnum="Text_Select_Min_Text"/>
-				<controls:NEMenuItem Header="_Length" CommandEnum="Text_Select_Min_Length"/>
+				<controls:NEMenuItem Header="_Text" CommandEnum="Text_Select_Min_Text" ToolTip="Copy selections with minimum value"/>
+				<controls:NEMenuItem Header="_Length" CommandEnum="Text_Select_Min_Length" ToolTip="Keep selections with shortest length"/>
 			</MenuItem>
 			<MenuItem Header="Ma_x">
-				<controls:NEMenuItem Header="_Text" CommandEnum="Text_Select_Max_Text"/>
-				<controls:NEMenuItem Header="_Length" CommandEnum="Text_Select_Max_Length"/>
+				<controls:NEMenuItem Header="_Text" CommandEnum="Text_Select_Max_Text" ToolTip="Copy selections with maximum value"/>
+				<controls:NEMenuItem Header="_Length" CommandEnum="Text_Select_Max_Length" ToolTip="Keep selections with longest length"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Case">
-			<controls:NEMenuItem Header="_Upper" CommandEnum="Text_Case_Upper"/>
-			<controls:NEMenuItem Header="_Lower" CommandEnum="Text_Case_Lower"/>
-			<controls:NEMenuItem Header="_Proper" CommandEnum="Text_Case_Proper"/>
-			<controls:NEMenuItem Header="_Toggle" CommandEnum="Text_Case_Toggle"/>
+			<controls:NEMenuItem Header="_Upper" CommandEnum="Text_Case_Upper" ToolTip="Make selections upper case"/>
+			<controls:NEMenuItem Header="_Lower" CommandEnum="Text_Case_Lower" ToolTip="Make selections lower case"/>
+			<controls:NEMenuItem Header="_Proper" CommandEnum="Text_Case_Proper" ToolTip="Make selections proper case (first letter of every word capitalized)"/>
+			<controls:NEMenuItem Header="_Toggle" CommandEnum="Text_Case_Toggle" ToolTip="Toggle case in selections"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="_Length" CommandEnum="Text_Length"/>
-		<controls:NEMenuItem Header="_Width" CommandEnum="Text_Width"/>
-		<controls:NEMenuItem Header="_Trim" CommandEnum="Text_Trim"/>
-		<controls:NEMenuItem Header="S_ingle Line" CommandEnum="Text_SingleLine"/>
+		<controls:NEMenuItem Header="_Length" CommandEnum="Text_Length" ToolTip="Replace selections with selection length"/>
+		<controls:NEMenuItem Header="_Width" CommandEnum="Text_Width" ToolTip="Make selections longer or shorter based on expression"/>
+		<controls:NEMenuItem Header="_Trim" CommandEnum="Text_Trim" ToolTip="Trim text (not selections) based on specific set of characters"/>
+		<controls:NEMenuItem Header="S_ingle Line" CommandEnum="Text_SingleLine" ToolTip="Make selection into single line (remove newlines)"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Unicode" CommandEnum="Text_Unicode"/>
-		<controls:NEMenuItem Header="_GUID" CommandEnum="Text_GUID"/>
-		<controls:NEMenuItem Header="_Random Text" CommandEnum="Text_RandomText"/>
-		<controls:NEMenuItem Header="L_orem Ipsum" CommandEnum="Text_LoremIpsum"/>
-		<controls:NEMenuItem Header="Re_verse RegEx" CommandEnum="Text_ReverseRegEx"/>
-		<controls:NEMenuItem Header="_First Distinct" CommandEnum="Text_FirstDistinct"/>
+		<controls:NEMenuItem Header="_Unicode" CommandEnum="Text_Unicode" ToolTip="Insert unicode characters"/>
+		<controls:NEMenuItem Header="_GUID" CommandEnum="Text_GUID" ToolTip="Insert GUIDs"/>
+		<controls:NEMenuItem Header="_Random Text" CommandEnum="Text_RandomText" ToolTip="Create random text"/>
+		<controls:NEMenuItem Header="L_orem Ipsum" CommandEnum="Text_LoremIpsum" ToolTip="Add lorem ipsum text"/>
+		<controls:NEMenuItem Header="Re_verse RegEx" CommandEnum="Text_ReverseRegEx" ToolTip="Inserts all strings that would match given regular expression"/>
+		<controls:NEMenuItem Header="_First Distinct" CommandEnum="Text_FirstDistinct" ToolTip="Select the distinct set of characters from all selections"/>
 		<Separator/>
-		<controls:NEMenuItem Header="R_epeat Count" CommandEnum="Text_RepeatCount"/>
-		<controls:NEMenuItem Header="Re_peat Index" CommandEnum="Text_RepeatIndex"/>
+		<controls:NEMenuItem Header="R_epeat Count" CommandEnum="Text_RepeatCount" ToolTip="Replace selections with how many times each occurs"/>
+		<controls:NEMenuItem Header="Re_peat Index" CommandEnum="Text_RepeatIndex" ToolTip="Replace selections with how many times they've been seen so far"/>
 	</MenuItem>
 	<MenuItem Header="_Numeric">
 		<MenuItem Header="_Select">
-			<controls:NEMenuItem Header="Mi_n" CommandEnum="Numeric_Select_Min"/>
-			<controls:NEMenuItem Header="Ma_x" CommandEnum="Numeric_Select_Max"/>
+			<controls:NEMenuItem Header="Mi_n" CommandEnum="Numeric_Select_Min" ToolTip="Copy selections with minimum value"/>
+			<controls:NEMenuItem Header="Ma_x" CommandEnum="Numeric_Select_Max" ToolTip="Copy selections with maximum value"/>
 			<MenuItem Header="_Fraction">
-				<controls:NEMenuItem Header="_Whole" CommandEnum="Numeric_Select_Fraction_Whole"/>
-				<controls:NEMenuItem Header="_Fraction" CommandEnum="Numeric_Select_Fraction_Fraction"/>
+				<controls:NEMenuItem Header="_Whole" CommandEnum="Numeric_Select_Fraction_Whole" ToolTip="Select whole numbers part of decimal"/>
+				<controls:NEMenuItem Header="_Fraction" CommandEnum="Numeric_Select_Fraction_Fraction" ToolTip="Select decimal part of decimal"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Hex">
-			<controls:NEMenuItem Header="_To Hex" CommandEnum="Numeric_Hex_ToHex"/>
-			<controls:NEMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex"/>
+			<controls:NEMenuItem Header="_To Hex" CommandEnum="Numeric_Hex_ToHex" ToolTip="Convert selected integers to hex"/>
+			<controls:NEMenuItem Header="_From Hex" CommandEnum="Numeric_Hex_FromHex" ToolTip="Convert selected integers from hex"/>
 		</MenuItem>
-		<controls:NEMenuItem Header="Con_vert Base" CommandEnum="Numeric_ConvertBase"/>
+		<controls:NEMenuItem Header="Con_vert Base" CommandEnum="Numeric_ConvertBase" ToolTip="Convert selected integers from any base to another"/>
 		<Separator/>
 		<MenuItem Header="S_eries">
-			<controls:NEMenuItem Header="_Zero Based" CommandEnum="Numeric_Series_ZeroBased"/>
-			<controls:NEMenuItem Header="_One Based" CommandEnum="Numeric_Series_OneBased"/>
-			<controls:NEMenuItem Header="_Linear" CommandEnum="Numeric_Series_Linear"/>
-			<controls:NEMenuItem Header="_Geometric" CommandEnum="Numeric_Series_Geometric"/>
+			<controls:NEMenuItem Header="_Zero Based" CommandEnum="Numeric_Series_ZeroBased" ToolTip="Gives a linear series starting at 0"/>
+			<controls:NEMenuItem Header="_One Based" CommandEnum="Numeric_Series_OneBased" ToolTip="Gives a linear series starting at 1"/>
+			<controls:NEMenuItem Header="_Linear" CommandEnum="Numeric_Series_Linear" ToolTip="Gives a linear series"/>
+			<controls:NEMenuItem Header="_Geometric" CommandEnum="Numeric_Series_Geometric" ToolTip="Gives a geometric series"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="S_cale" CommandEnum="Numeric_Scale"/>
+		<controls:NEMenuItem Header="S_cale" CommandEnum="Numeric_Scale" ToolTip="Changes the scale of selected values"/>
 		<MenuItem Header="A_dd">
-			<controls:NEMenuItem Header="_Sum" CommandEnum="Numeric_Add_Sum"/>
-			<controls:NEMenuItem Header="_Forward Sum" CommandEnum="Numeric_Add_ForwardSum"/>
-			<controls:NEMenuItem Header="_Reverse Sum" CommandEnum="Numeric_Add_ReverseSum"/>
-			<controls:NEMenuItem Header="Undo F_orward Sum" CommandEnum="Numeric_Add_UndoForwardSum"/>
-			<controls:NEMenuItem Header="Undo R_everse Sum" CommandEnum="Numeric_Add_UndoReverseSum"/>
-			<controls:NEMenuItem Header="_Increment" CommandEnum="Numeric_Add_Increment"/>
-			<controls:NEMenuItem Header="_Decrement" CommandEnum="Numeric_Add_Decrement"/>
-			<controls:NEMenuItem Header="_Add Clipboard" CommandEnum="Numeric_Add_AddClipboard"/>
-			<controls:NEMenuItem Header="S_ubtract Clipboard" CommandEnum="Numeric_Add_SubtractClipboard"/>
+			<controls:NEMenuItem Header="_Sum" CommandEnum="Numeric_Add_Sum" ToolTip="Add selected values to get the sum"/>
+			<controls:NEMenuItem Header="_Forward Sum" CommandEnum="Numeric_Add_ForwardSum" ToolTip="Replaces selections with forward sum (each is the sum of all previous selections)"/>
+			<controls:NEMenuItem Header="_Reverse Sum" CommandEnum="Numeric_Add_ReverseSum" ToolTip="Replaces selections with reverse sum (each is the sum of all following selections)"/>
+			<controls:NEMenuItem Header="Undo F_orward Sum" CommandEnum="Numeric_Add_UndoForwardSum" ToolTip="Replaces selections to undo forward sum (subtracts all previous selections)"/>
+			<controls:NEMenuItem Header="Undo R_everse Sum" CommandEnum="Numeric_Add_UndoReverseSum" ToolTip="Replaces selections to undo reverse sum (subtracts all following selections)"/>
+			<controls:NEMenuItem Header="_Increment" CommandEnum="Numeric_Add_Increment" ToolTip="Adds one to selected values"/>
+			<controls:NEMenuItem Header="_Decrement" CommandEnum="Numeric_Add_Decrement" ToolTip="Subtracts one from selected values"/>
+			<controls:NEMenuItem Header="_Add Clipboard" CommandEnum="Numeric_Add_AddClipboard" ToolTip="Adds values to clipboard to selected values"/>
+			<controls:NEMenuItem Header="S_ubtract Clipboard" CommandEnum="Numeric_Add_SubtractClipboard" ToolTip="Subtracts values to clipboard from selected values"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Fraction">
-			<controls:NEMenuItem Header="_Whole" CommandEnum="Numeric_Fraction_Whole"/>
-			<controls:NEMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction_Fraction"/>
+			<controls:NEMenuItem Header="_Whole" CommandEnum="Numeric_Fraction_Whole" ToolTip="Replaces selections with whole number part of decimal"/>
+			<controls:NEMenuItem Header="_Fraction" CommandEnum="Numeric_Fraction_Fraction" ToolTip="Replaces selections with decimal part of decimal"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Simplify" CommandEnum="Numeric_Fraction_Simplify"/>
+			<controls:NEMenuItem Header="_Simplify" CommandEnum="Numeric_Fraction_Simplify" ToolTip="Replace selections with reduced fractions"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="A_bsolute" CommandEnum="Numeric_Absolute"/>
-		<controls:NEMenuItem Header="F_loor" CommandEnum="Numeric_Floor"/>
-		<controls:NEMenuItem Header="Ceili_ng" CommandEnum="Numeric_Ceiling"/>
-		<controls:NEMenuItem Header="Ro_und" CommandEnum="Numeric_Round"/>
-		<controls:NEMenuItem Header="L_imit" CommandEnum="Numeric_Limit"/>
-		<controls:NEMenuItem Header="C_ycle" CommandEnum="Numeric_Cycle"/>
+		<controls:NEMenuItem Header="A_bsolute" CommandEnum="Numeric_Absolute" ToolTip="Replace selections with absolute values"/>
+		<controls:NEMenuItem Header="F_loor" CommandEnum="Numeric_Floor" ToolTip="Replace selections with floor values"/>
+		<controls:NEMenuItem Header="Ceili_ng" CommandEnum="Numeric_Ceiling" ToolTip="Replace selections with ceiling values"/>
+		<controls:NEMenuItem Header="Ro_und" CommandEnum="Numeric_Round" ToolTip="Replace selections with rounded values"/>
+		<controls:NEMenuItem Header="L_imit" CommandEnum="Numeric_Limit" ToolTip="Keep selections based on minimum/maximum values"/>
+		<controls:NEMenuItem Header="C_ycle" CommandEnum="Numeric_Cycle" ToolTip="For cyclic values, move to first cycle"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Trim" CommandEnum="Numeric_Trim"/>
+		<controls:NEMenuItem Header="_Trim" CommandEnum="Numeric_Trim" ToolTip="Remove extra zeros from text while keeping value the same"/>
 		<Separator/>
-		<controls:NEMenuItem Header="F_actor" CommandEnum="Numeric_Factor"/>
+		<controls:NEMenuItem Header="F_actor" CommandEnum="Numeric_Factor" ToolTip="Replace selection integers with factors"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber"/>
-		<controls:NEMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations"/>
-		<controls:NEMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues"/>
+		<controls:NEMenuItem Header="_Random Number" CommandEnum="Numeric_RandomNumber" ToolTip="Generate random numbers"/>
+		<controls:NEMenuItem Header="C_ombinations/Permutations" CommandEnum="Numeric_CombinationsPermutations" ToolTip="Generate combinations/permutations"/>
+		<controls:NEMenuItem Header="_Min/Max Values" CommandEnum="Numeric_MinMaxValues" ToolTip="Get min/max values for various data types"/>
 	</MenuItem>
 	<MenuItem Header="_Date/Time">
-		<controls:NEMenuItem Header="_Now" CommandEnum="DateTime_Now"/>
-		<controls:NEMenuItem Header="UTC N_ow" CommandEnum="DateTime_UtcNow"/>
+		<controls:NEMenuItem Header="_Now" CommandEnum="DateTime_Now" ToolTip="Get current local time"/>
+		<controls:NEMenuItem Header="UTC N_ow" CommandEnum="DateTime_UtcNow" ToolTip="Get current UTC time"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Format" CommandEnum="DateTime_Format"/>
+		<controls:NEMenuItem Header="_Format" CommandEnum="DateTime_Format" ToolTip="Change date/time format"/>
 		<Separator/>
-		<controls:NEMenuItem Header="To _UTC" CommandEnum="DateTime_ToUtc"/>
-		<controls:NEMenuItem Header="To _Local" CommandEnum="DateTime_ToLocal"/>
-		<controls:NEMenuItem Header="To _Time Zone" CommandEnum="DateTime_ToTimeZone"/>
+		<controls:NEMenuItem Header="To _UTC" CommandEnum="DateTime_ToUtc" ToolTip="Convert to UTC"/>
+		<controls:NEMenuItem Header="To _Local" CommandEnum="DateTime_ToLocal" ToolTip="Convert to local"/>
+		<controls:NEMenuItem Header="To _Time Zone" CommandEnum="DateTime_ToTimeZone" ToolTip="Convert to selected time zone"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Add Clipboard" CommandEnum="DateTime_AddClipboard"/>
-		<controls:NEMenuItem Header="_Subtract Clipboard" CommandEnum="DateTime_SubtractClipboard"/>
+		<controls:NEMenuItem Header="_Add Clipboard" CommandEnum="DateTime_AddClipboard" ToolTip="Add values on clipboard to current selections"/>
+		<controls:NEMenuItem Header="_Subtract Clipboard" CommandEnum="DateTime_SubtractClipboard" ToolTip="Subtract values on clipboard from current selections"/>
 	</MenuItem>
 	<MenuItem Header="Ima_ge">
-		<controls:NEMenuItem Header="_Grab Color" CommandEnum="Image_GrabColor"/>
-		<controls:NEMenuItem Header="Grab I_mage" CommandEnum="Image_GrabImage"/>
-		<controls:NEMenuItem Header="A_djust Color" CommandEnum="Image_AdjustColor"/>
+		<controls:NEMenuItem Header="_Grab Color" CommandEnum="Image_GrabColor" ToolTip="Pick a color off the screen"/>
+		<controls:NEMenuItem Header="Grab I_mage" CommandEnum="Image_GrabImage" ToolTip="Grab an image off the screen"/>
+		<controls:NEMenuItem Header="A_djust Color" CommandEnum="Image_AdjustColor" ToolTip="Multiply color by value"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Add Color" CommandEnum="Image_AddColor"/>
-		<controls:NEMenuItem Header="_Overlay Color" CommandEnum="Image_OverlayColor"/>
+		<controls:NEMenuItem Header="_Add Color" CommandEnum="Image_AddColor" ToolTip="Add color given by expression to selections"/>
+		<controls:NEMenuItem Header="_Overlay Color" CommandEnum="Image_OverlayColor" ToolTip="Overlay color on top of another (handles transparency)"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Size" CommandEnum="Image_Size"/>
-		<controls:NEMenuItem Header="_Crop" CommandEnum="Image_Crop"/>
+		<controls:NEMenuItem Header="_Size" CommandEnum="Image_Size" ToolTip="Resize image"/>
+		<controls:NEMenuItem Header="_Crop" CommandEnum="Image_Crop" ToolTip="Crop image"/>
 		<Separator/>
-		<controls:NEMenuItem Header="Flip _Horizontal" CommandEnum="Image_FlipHorizontal"/>
-		<controls:NEMenuItem Header="Flip _Vertical" CommandEnum="Image_FlipVertical"/>
-		<controls:NEMenuItem Header="_Rotate" CommandEnum="Image_Rotate"/>
+		<controls:NEMenuItem Header="Flip _Horizontal" CommandEnum="Image_FlipHorizontal" ToolTip="Flip image horizontally"/>
+		<controls:NEMenuItem Header="Flip _Vertical" CommandEnum="Image_FlipVertical" ToolTip="Flip image vertically"/>
+		<controls:NEMenuItem Header="_Rotate" CommandEnum="Image_Rotate" ToolTip="Rotate image"/>
 		<Separator/>
 		<MenuItem Header="G_IF">
-			<controls:NEMenuItem Header="_Animate" CommandEnum="Image_GIF_Animate"/>
-			<controls:NEMenuItem Header="_Split" CommandEnum="Image_GIF_Split"/>
+			<controls:NEMenuItem Header="_Animate" CommandEnum="Image_GIF_Animate" ToolTip="Combine still pictures to GIF"/>
+			<controls:NEMenuItem Header="_Split" CommandEnum="Image_GIF_Split" ToolTip="Split GIF to still pictures"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
-		<controls:NEMenuItem Header="D_etect Type" CommandEnum="Table_DetectType"/>
-		<controls:NEMenuItem Header="_Convert" CommandEnum="Table_Convert"/>
+		<controls:NEMenuItem Header="D_etect Type" CommandEnum="Table_DetectType" ToolTip="Auto-detect table type"/>
+		<controls:NEMenuItem Header="_Convert" CommandEnum="Table_Convert" ToolTip="Convert table to different type"/>
 		<Separator/>
-		<controls:NEMenuItem Header="Te_xt To Table" CommandEnum="Table_TextToTable"/>
-		<controls:NEMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable"/>
+		<controls:NEMenuItem Header="Te_xt To Table" CommandEnum="Table_TextToTable" ToolTip="Convert text to table"/>
+		<controls:NEMenuItem Header="_Line Selections To Table" CommandEnum="Table_LineSelectionsToTable" ToolTip="Convert selections in lines to table"/>
 		<MenuItem Header="Re_gion Selections To Table">
-			<controls:NEMenuItem Header="Region _1" CommandEnum="Table_RegionSelectionsToTable_Region1"/>
-			<controls:NEMenuItem Header="Region _2" CommandEnum="Table_RegionSelectionsToTable_Region2"/>
-			<controls:NEMenuItem Header="Region _3" CommandEnum="Table_RegionSelectionsToTable_Region3"/>
-			<controls:NEMenuItem Header="Region _4" CommandEnum="Table_RegionSelectionsToTable_Region4"/>
-			<controls:NEMenuItem Header="Region _5" CommandEnum="Table_RegionSelectionsToTable_Region5"/>
-			<controls:NEMenuItem Header="Region _6" CommandEnum="Table_RegionSelectionsToTable_Region6"/>
-			<controls:NEMenuItem Header="Region _7" CommandEnum="Table_RegionSelectionsToTable_Region7"/>
-			<controls:NEMenuItem Header="Region _8" CommandEnum="Table_RegionSelectionsToTable_Region8"/>
-			<controls:NEMenuItem Header="Region _9" CommandEnum="Table_RegionSelectionsToTable_Region9"/>
+			<controls:NEMenuItem Header="Region _1" CommandEnum="Table_RegionSelectionsToTable_Region1" ToolTip="Convert selections in region 1 to table"/>
+			<controls:NEMenuItem Header="Region _2" CommandEnum="Table_RegionSelectionsToTable_Region2" ToolTip="Convert selections in region 2 to table"/>
+			<controls:NEMenuItem Header="Region _3" CommandEnum="Table_RegionSelectionsToTable_Region3" ToolTip="Convert selections in region 3 to table"/>
+			<controls:NEMenuItem Header="Region _4" CommandEnum="Table_RegionSelectionsToTable_Region4" ToolTip="Convert selections in region 4 to table"/>
+			<controls:NEMenuItem Header="Region _5" CommandEnum="Table_RegionSelectionsToTable_Region5" ToolTip="Convert selections in region 5 to table"/>
+			<controls:NEMenuItem Header="Region _6" CommandEnum="Table_RegionSelectionsToTable_Region6" ToolTip="Convert selections in region 6 to table"/>
+			<controls:NEMenuItem Header="Region _7" CommandEnum="Table_RegionSelectionsToTable_Region7" ToolTip="Convert selections in region 7 to table"/>
+			<controls:NEMenuItem Header="Region _8" CommandEnum="Table_RegionSelectionsToTable_Region8" ToolTip="Convert selections in region 8 to table"/>
+			<controls:NEMenuItem Header="Region _9" CommandEnum="Table_RegionSelectionsToTable_Region9" ToolTip="Convert selections in region 9 to table"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="Ed_it Table" CommandEnum="Table_EditTable"/>
-		<controls:NEMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders"/>
-		<controls:NEMenuItem Header="Add _Row" CommandEnum="Table_AddRow"/>
-		<controls:NEMenuItem Header="_Add Column" CommandEnum="Table_AddColumn"/>
+		<controls:NEMenuItem Header="Ed_it Table" CommandEnum="Table_EditTable" ToolTip="Add/delete/group rows in edit table dialog"/>
+		<controls:NEMenuItem Header="Add _Headers" CommandEnum="Table_AddHeaders" ToolTip="Add header row"/>
+		<controls:NEMenuItem Header="Add _Row" CommandEnum="Table_AddRow" ToolTip="Add row to end of table"/>
+		<controls:NEMenuItem Header="_Add Column" CommandEnum="Table_AddColumn" ToolTip="Add column based on expression"/>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<controls:NEMenuItem Header="Rows By _Expression" CommandEnum="Table_Select_RowsByExpression"/>
+			<controls:NEMenuItem Header="Rows By _Expression" CommandEnum="Table_Select_RowsByExpression" ToolTip="Select rows based on expression"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="Set J_oin Source" CommandEnum="Table_SetJoinSource"/>
-		<controls:NEMenuItem Header="_Join" CommandEnum="Table_Join"/>
+		<controls:NEMenuItem Header="Set J_oin Source" CommandEnum="Table_SetJoinSource" ToolTip="Set table as source for join"/>
+		<controls:NEMenuItem Header="_Join" CommandEnum="Table_Join" ToolTip="Join from join source to current table"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Transpose" CommandEnum="Table_Transpose"/>
+		<controls:NEMenuItem Header="_Transpose" CommandEnum="Table_Transpose" ToolTip="Transpose table"/>
 		<Separator/>
 		<MenuItem Header="_Database">
-			<controls:NEMenuItem Header="Generate _Inserts" CommandEnum="Table_Database_GenerateInserts"/>
-			<controls:NEMenuItem Header="Generate _Updates" CommandEnum="Table_Database_GenerateUpdates"/>
-			<controls:NEMenuItem Header="Generate _Deletes" CommandEnum="Table_Database_GenerateDeletes"/>
+			<controls:NEMenuItem Header="Generate _Inserts" CommandEnum="Table_Database_GenerateInserts" ToolTip="Give text required to insert into SQL database"/>
+			<controls:NEMenuItem Header="Generate _Updates" CommandEnum="Table_Database_GenerateUpdates" ToolTip="Give text required to update SQL database"/>
+			<controls:NEMenuItem Header="Generate _Deletes" CommandEnum="Table_Database_GenerateDeletes" ToolTip="Give text required to delete from SQL database"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Position">
 		<MenuItem Header="_Goto">
-			<controls:NEMenuItem Header="_Lines" CommandEnum="Position_Goto_Lines"/>
-			<controls:NEMenuItem Header="_Columns" CommandEnum="Position_Goto_Columns"/>
-			<controls:NEMenuItem Header="_Indexes" CommandEnum="Position_Goto_Indexes"/>
-			<controls:NEMenuItem Header="_Positions" CommandEnum="Position_Goto_Positions"/>
+			<controls:NEMenuItem Header="_Lines" CommandEnum="Position_Goto_Lines" ToolTip="Go to lines based on expression"/>
+			<controls:NEMenuItem Header="_Columns" CommandEnum="Position_Goto_Columns" ToolTip="Go to columns based on expression"/>
+			<controls:NEMenuItem Header="_Indexes" CommandEnum="Position_Goto_Indexes" ToolTip="Go to indexes based on expression"/>
+			<controls:NEMenuItem Header="_Positions" CommandEnum="Position_Goto_Positions" ToolTip="Go to positions based on expression"/>
 		</MenuItem>
 		<MenuItem Header="_Copy">
-			<controls:NEMenuItem Header="_Lines" CommandEnum="Position_Copy_Lines"/>
-			<controls:NEMenuItem Header="_Columns" CommandEnum="Position_Copy_Columns"/>
-			<controls:NEMenuItem Header="_Indexes" CommandEnum="Position_Copy_Indexes"/>
-			<controls:NEMenuItem Header="_Positions" CommandEnum="Position_Copy_Positions"/>
+			<controls:NEMenuItem Header="_Lines" CommandEnum="Position_Copy_Lines" ToolTip="Copy selected lines to clipboard"/>
+			<controls:NEMenuItem Header="_Columns" CommandEnum="Position_Copy_Columns" ToolTip="Copy selected columns to clipboard"/>
+			<controls:NEMenuItem Header="_Indexes" CommandEnum="Position_Copy_Indexes" ToolTip="Copy selected indexes to clipboard"/>
+			<controls:NEMenuItem Header="_Positions" CommandEnum="Position_Copy_Positions" ToolTip="Copy selected positions to clipboard"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
-			<controls:NEMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension"/>
-			<controls:MultiMenuItem Header="_None" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.None}" CommandEnum="Content_Type_None"/>
-			<controls:MultiMenuItem Header="_Balanced" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.Balanced}" CommandEnum="Content_Type_Balanced"/>
-			<controls:MultiMenuItem Header="C_olumns" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.Columns}" CommandEnum="Content_Type_Columns"/>
-			<controls:MultiMenuItem Header="C_++" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus"/>
-			<controls:MultiMenuItem Header="C_#" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CSharp}" CommandEnum="Content_Type_CSharp"/>
-			<controls:MultiMenuItem Header="_CSV" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CSV}" CommandEnum="Content_Type_CSV"/>
-			<controls:MultiMenuItem Header="_Exact Columns" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns"/>
-			<controls:MultiMenuItem Header="_HTML" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.HTML}" CommandEnum="Content_Type_HTML"/>
-			<controls:MultiMenuItem Header="_JSON" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.JSON}" CommandEnum="Content_Type_JSON"/>
-			<controls:MultiMenuItem Header="_SQL" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.SQL}" CommandEnum="Content_Type_SQL"/>
-			<controls:MultiMenuItem Header="_TSV" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.TSV}" CommandEnum="Content_Type_TSV"/>
-			<controls:MultiMenuItem Header="_XML" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.XML}" CommandEnum="Content_Type_XML"/>
+			<controls:NEMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension" ToolTip="Set content type based on file extension"/>
+			<controls:MultiMenuItem Header="_None" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.None}" CommandEnum="Content_Type_None" ToolTip="Set content type to none"/>
+			<controls:MultiMenuItem Header="_Balanced" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.Balanced}" CommandEnum="Content_Type_Balanced" ToolTip="Set content type to balanced"/>
+			<controls:MultiMenuItem Header="C_olumns" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.Columns}" CommandEnum="Content_Type_Columns" ToolTip="Set content type to columns"/>
+			<controls:MultiMenuItem Header="C_++" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus" ToolTip="Set content type to C++"/>
+			<controls:MultiMenuItem Header="C_#" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CSharp}" CommandEnum="Content_Type_CSharp" ToolTip="Set content type to C#"/>
+			<controls:MultiMenuItem Header="_CSV" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CSV}" CommandEnum="Content_Type_CSV" ToolTip="Set content type to CSV"/>
+			<controls:MultiMenuItem Header="_Exact Columns" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns" ToolTip="Set content type to exact columns"/>
+			<controls:MultiMenuItem Header="_HTML" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.HTML}" CommandEnum="Content_Type_HTML" ToolTip="Set content type to HTML"/>
+			<controls:MultiMenuItem Header="_JSON" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.JSON}" CommandEnum="Content_Type_JSON" ToolTip="Set content type to JSON"/>
+			<controls:MultiMenuItem Header="_SQL" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.SQL}" CommandEnum="Content_Type_SQL" ToolTip="Set content type to SQL"/>
+			<controls:MultiMenuItem Header="_TSV" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.TSV}" CommandEnum="Content_Type_TSV" ToolTip="Set content type to TSV"/>
+			<controls:MultiMenuItem Header="_XML" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.XML}" CommandEnum="Content_Type_XML" ToolTip="Set content type to XML"/>
 		</MenuItem>
-		<controls:MultiMenuItem Header="_Highlight Syntax" TabsWindow="{Binding Parent, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax"/>
-		<controls:MultiMenuItem Header="_Strict Parsing" TabsWindow="{Binding Parent, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing"/>
+		<controls:MultiMenuItem Header="_Highlight Syntax" TabsWindow="{Binding Parent, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax" ToolTip="Toggle syntax highlighting"/>
+		<controls:MultiMenuItem Header="_Strict Parsing" TabsWindow="{Binding Parent, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing" ToolTip="Toggle strict parsing"/>
 		<Separator/>
-		<controls:NEMenuItem Header="Re_format" CommandEnum="Content_Reformat"/>
+		<controls:NEMenuItem Header="Re_format" CommandEnum="Content_Reformat" ToolTip="Reformat selections based on current content type"/>
 		<Separator/>
-		<controls:NEMenuItem Header="C_omment" CommandEnum="Content_Comment"/>
-		<controls:NEMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment"/>
+		<controls:NEMenuItem Header="C_omment" CommandEnum="Content_Comment" ToolTip="Comment selections based on current content type"/>
+		<controls:NEMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment" ToolTip="Uncomment selections based on current content type"/>
 		<Separator/>
-		<controls:NEMenuItem Header="To_ggle Position" CommandEnum="Content_TogglePosition"/>
+		<controls:NEMenuItem Header="To_ggle Position" CommandEnum="Content_TogglePosition" ToolTip="Jump selections beginning/end"/>
 		<Separator/>
-		<controls:NEMenuItem Header="Cu_rrent" CommandEnum="Content_Current"/>
-		<controls:NEMenuItem Header="_Parent" CommandEnum="Content_Parent"/>
-		<controls:NEMenuItem Header="A_ncestor" CommandEnum="Content_Ancestor"/>
-		<controls:NEMenuItem Header="_Attributes" CommandEnum="Content_Attributes"/>
-		<controls:NEMenuItem Header="_With Attribute" CommandEnum="Content_WithAttribute"/>
+		<controls:NEMenuItem Header="Cu_rrent" CommandEnum="Content_Current" ToolTip="Select current content node"/>
+		<controls:NEMenuItem Header="_Parent" CommandEnum="Content_Parent" ToolTip="Go to parent node"/>
+		<controls:NEMenuItem Header="A_ncestor" CommandEnum="Content_Ancestor" ToolTip="Go to ancestor node"/>
+		<controls:NEMenuItem Header="_Attributes" CommandEnum="Content_Attributes" ToolTip="Select attribute"/>
+		<controls:NEMenuItem Header="_With Attribute" CommandEnum="Content_WithAttribute" ToolTip="Select content with attributes"/>
 		<MenuItem Header="_Children">
-			<controls:NEMenuItem Header="_Children" CommandEnum="Content_Children_Children"/>
-			<controls:NEMenuItem Header="_Self And Children" CommandEnum="Content_Children_SelfAndChildren"/>
-			<controls:NEMenuItem Header="_First" CommandEnum="Content_Children_First"/>
-			<controls:NEMenuItem Header="_With Attribute" CommandEnum="Content_Children_WithAttribute"/>
+			<controls:NEMenuItem Header="_Children" CommandEnum="Content_Children_Children" ToolTip="Select children"/>
+			<controls:NEMenuItem Header="_Self And Children" CommandEnum="Content_Children_SelfAndChildren" ToolTip="Select self and children"/>
+			<controls:NEMenuItem Header="_First" CommandEnum="Content_Children_First" ToolTip="Select first child"/>
+			<controls:NEMenuItem Header="_With Attribute" CommandEnum="Content_Children_WithAttribute" ToolTip="Select children with attribute"/>
 		</MenuItem>
 		<MenuItem Header="_Descendants">
-			<controls:NEMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants"/>
-			<controls:NEMenuItem Header="_Self And Descendants" CommandEnum="Content_Descendants_SelfAndDescendants"/>
-			<controls:NEMenuItem Header="_First" CommandEnum="Content_Descendants_First"/>
-			<controls:NEMenuItem Header="_With Attribute" CommandEnum="Content_Descendants_WithAttribute"/>
+			<controls:NEMenuItem Header="_Descendants" CommandEnum="Content_Descendants_Descendants" ToolTip="Select descendants"/>
+			<controls:NEMenuItem Header="_Self And Descendants" CommandEnum="Content_Descendants_SelfAndDescendants" ToolTip="Select self and descendants"/>
+			<controls:NEMenuItem Header="_First" CommandEnum="Content_Descendants_First" ToolTip="Select first descendant"/>
+			<controls:NEMenuItem Header="_With Attribute" CommandEnum="Content_Descendants_WithAttribute" ToolTip="Select descendants with attribute"/>
 		</MenuItem>
 		<MenuItem Header="Na_vigate">
-			<controls:NEMenuItem Header="_Up" CommandEnum="Content_Navigate_Up"/>
-			<controls:NEMenuItem Header="_Down" CommandEnum="Content_Navigate_Down"/>
-			<controls:NEMenuItem Header="_Left" CommandEnum="Content_Navigate_Left"/>
-			<controls:NEMenuItem Header="_Right" CommandEnum="Content_Navigate_Right"/>
+			<controls:NEMenuItem Header="_Up" CommandEnum="Content_Navigate_Up" ToolTip="Navigate up"/>
+			<controls:NEMenuItem Header="_Down" CommandEnum="Content_Navigate_Down" ToolTip="Navigate down"/>
+			<controls:NEMenuItem Header="_Left" CommandEnum="Content_Navigate_Left" ToolTip="Navigate left"/>
+			<controls:NEMenuItem Header="_Right" CommandEnum="Content_Navigate_Right" ToolTip="Navigate right"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Home" CommandEnum="Content_Navigate_Home"/>
-			<controls:NEMenuItem Header="_End" CommandEnum="Content_Navigate_End"/>
-			<controls:NEMenuItem Header="_PgUp" CommandEnum="Content_Navigate_PgUp"/>
-			<controls:NEMenuItem Header="P_gDn" CommandEnum="Content_Navigate_PgDn"/>
+			<controls:NEMenuItem Header="_Home" CommandEnum="Content_Navigate_Home" ToolTip="Navigate home"/>
+			<controls:NEMenuItem Header="_End" CommandEnum="Content_Navigate_End" ToolTip="Navigate end"/>
+			<controls:NEMenuItem Header="_PgUp" CommandEnum="Content_Navigate_PgUp" ToolTip="Navigate page up"/>
+			<controls:NEMenuItem Header="P_gDn" CommandEnum="Content_Navigate_PgDn" ToolTip="Navigate page down"/>
 			<Separator/>
-			<controls:NEMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row"/>
-			<controls:NEMenuItem Header="_Column" CommandEnum="Content_Navigate_Column"/>
+			<controls:NEMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row" ToolTip="Select entire row"/>
+			<controls:NEMenuItem Header="_Column" CommandEnum="Content_Navigate_Column" ToolTip="Select entire column"/>
 		</MenuItem>
-		<controls:MultiMenuItem Header="_Keep Selections" TabsWindow="{Binding Parent, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections"/>
+		<controls:MultiMenuItem Header="_Keep Selections" TabsWindow="{Binding Parent, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections" ToolTip="Toggle whether to keep selections when moving past the end of a list"/>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">
-		<controls:NEMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL"/>
+		<controls:NEMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL" ToolTip="Make selected URLs absolute given base URL"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Fetch" CommandEnum="Network_Fetch"/>
-		<controls:NEMenuItem Header="Fetch _Hex" CommandEnum="Network_FetchHex"/>
-		<controls:NEMenuItem Header="Fetch F_ile" CommandEnum="Network_FetchFile"/>
-		<controls:NEMenuItem Header="Fetch _Stream" CommandEnum="Network_FetchStream"/>
-		<controls:NEMenuItem Header="Fetch Pla_ylist" CommandEnum="Network_FetchPlaylist"/>
+		<controls:NEMenuItem Header="_Fetch" CommandEnum="Network_Fetch" ToolTip="Fetch selected URLs"/>
+		<controls:NEMenuItem Header="Fetch _Hex" CommandEnum="Network_FetchHex" ToolTip="Fetch selected URLs as hex"/>
+		<controls:NEMenuItem Header="Fetch F_ile" CommandEnum="Network_FetchFile" ToolTip="Fetch selected URLs into files"/>
+		<controls:NEMenuItem Header="Fetch _Stream" CommandEnum="Network_FetchStream" ToolTip="Fetch video from selected URLs"/>
+		<controls:NEMenuItem Header="Fetch Pla_ylist" CommandEnum="Network_FetchPlaylist" ToolTip="Fetch playlist from selected URLs"/>
 		<Separator/>
 		<MenuItem Header="_Lookup">
-			<controls:NEMenuItem Header="_IP" CommandEnum="Network_Lookup_IP"/>
-			<controls:NEMenuItem Header="_HostName" CommandEnum="Network_Lookup_HostName"/>
+			<controls:NEMenuItem Header="_IP" CommandEnum="Network_Lookup_IP" ToolTip="Lookup IPs from selected hostnames"/>
+			<controls:NEMenuItem Header="_HostName" CommandEnum="Network_Lookup_HostName" ToolTip="Lookup hostnames from selected IPs"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="A_dapters Info" CommandEnum="Network_AdaptersInfo"/>
+		<controls:NEMenuItem Header="A_dapters Info" CommandEnum="Network_AdaptersInfo" ToolTip="Get network adapters info"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Ping" CommandEnum="Network_Ping"/>
-		<controls:NEMenuItem Header="S_can Ports" CommandEnum="Network_ScanPorts"/>
+		<controls:NEMenuItem Header="_Ping" CommandEnum="Network_Ping" ToolTip="Ping selected IPs"/>
+		<controls:NEMenuItem Header="S_can Ports" CommandEnum="Network_ScanPorts" ToolTip="Scan selected ports to see if they respond"/>
 		<Separator/>
 		<MenuItem Header="_WCF">
-			<controls:NEMenuItem Header="Get _Config" CommandEnum="Network_WCF_GetConfig"/>
-			<controls:NEMenuItem Header="_Execute" CommandEnum="Network_WCF_Execute"/>
+			<controls:NEMenuItem Header="Get _Config" CommandEnum="Network_WCF_GetConfig" ToolTip="Get WCF config"/>
+			<controls:NEMenuItem Header="_Execute" CommandEnum="Network_WCF_Execute" ToolTip="Execute selected WCF calls"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Intercept Calls" CommandEnum="Network_WCF_InterceptCalls"/>
+			<controls:NEMenuItem Header="_Intercept Calls" CommandEnum="Network_WCF_InterceptCalls" ToolTip="Do a man-in-the-middle to get WCF call data"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Reset Clients" CommandEnum="Network_WCF_ResetClients"/>
+			<controls:NEMenuItem Header="_Reset Clients" CommandEnum="Network_WCF_ResetClients" ToolTip="Reset WCF clients (for when they change)"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="D_atabase">
-		<controls:NEMenuItem Header="_Connect" CommandEnum="Database_Connect"/>
-		<controls:NEMenuItem Header="Execute _Query" CommandEnum="Database_ExecuteQuery"/>
+		<controls:NEMenuItem Header="_Connect" CommandEnum="Database_Connect" ToolTip="Connect to database"/>
+		<controls:NEMenuItem Header="Execute _Query" CommandEnum="Database_ExecuteQuery" ToolTip="Execute selected SQL queries"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Examine" CommandEnum="Database_Examine"/>
-		<controls:NEMenuItem Header="_Get Sproc" CommandEnum="Database_GetSproc"/>
+		<controls:NEMenuItem Header="_Examine" CommandEnum="Database_Examine" ToolTip="Examine database info"/>
+		<controls:NEMenuItem Header="_Get Sproc" CommandEnum="Database_GetSproc" ToolTip="Fetch sproc from database"/>
 	</MenuItem>
 	<MenuItem Header="_Keys">
 		<MenuItem Header="_Set">
-			<controls:NEMenuItem Header="_Keys (Case Sensitive)" CommandEnum="Keys_Set_KeysCaseSensitive"/>
-			<controls:NEMenuItem Header="K_eys (Case Insensitive)" CommandEnum="Keys_Set_KeysCaseInsensitive"/>
-			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Set_Values1"/>
-			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Set_Values2"/>
-			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Set_Values3"/>
-			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Set_Values4"/>
-			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Set_Values5"/>
-			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Set_Values6"/>
-			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Set_Values7"/>
-			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Set_Values8"/>
-			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Set_Values9"/>
+			<controls:NEMenuItem Header="_Keys (Case Sensitive)" CommandEnum="Keys_Set_KeysCaseSensitive" ToolTip="Set keys (case sensitive)"/>
+			<controls:NEMenuItem Header="K_eys (Case Insensitive)" CommandEnum="Keys_Set_KeysCaseInsensitive" ToolTip="Set keys (case insensitive)"/>
+			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Set_Values1" ToolTip="Set values 1"/>
+			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Set_Values2" ToolTip="Set values 2"/>
+			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Set_Values3" ToolTip="Set values 3"/>
+			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Set_Values4" ToolTip="Set values 4"/>
+			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Set_Values5" ToolTip="Set values 5"/>
+			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Set_Values6" ToolTip="Set values 6"/>
+			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Set_Values7" ToolTip="Set values 7"/>
+			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Set_Values8" ToolTip="Set values 8"/>
+			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Set_Values9" ToolTip="Set values 9"/>
 		</MenuItem>
 		<MenuItem Header="_Add">
-			<controls:NEMenuItem Header="_Keys" CommandEnum="Keys_Add_Keys"/>
-			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Add_Values1"/>
-			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Add_Values2"/>
-			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Add_Values3"/>
-			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Add_Values4"/>
-			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Add_Values5"/>
-			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Add_Values6"/>
-			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Add_Values7"/>
-			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Add_Values8"/>
-			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Add_Values9"/>
+			<controls:NEMenuItem Header="_Keys" CommandEnum="Keys_Add_Keys" ToolTip="Add selections to keys"/>
+			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Add_Values1" ToolTip="Add selections to values 1"/>
+			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Add_Values2" ToolTip="Add selections to values 2"/>
+			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Add_Values3" ToolTip="Add selections to values 3"/>
+			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Add_Values4" ToolTip="Add selections to values 4"/>
+			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Add_Values5" ToolTip="Add selections to values 5"/>
+			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Add_Values6" ToolTip="Add selections to values 6"/>
+			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Add_Values7" ToolTip="Add selections to values 7"/>
+			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Add_Values8" ToolTip="Add selections to values 8"/>
+			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Add_Values9" ToolTip="Add selections to values 9"/>
 		</MenuItem>
 		<MenuItem Header="_Remove">
-			<controls:NEMenuItem Header="_Keys" CommandEnum="Keys_Remove_Keys"/>
-			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Remove_Values1"/>
-			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Remove_Values2"/>
-			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Remove_Values3"/>
-			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Remove_Values4"/>
-			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Remove_Values5"/>
-			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Remove_Values6"/>
-			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Remove_Values7"/>
-			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Remove_Values8"/>
-			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Remove_Values9"/>
+			<controls:NEMenuItem Header="_Keys" CommandEnum="Keys_Remove_Keys" ToolTip="Remove selections from keys"/>
+			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Remove_Values1" ToolTip="Remove selections from values 1"/>
+			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Remove_Values2" ToolTip="Remove selections from values 2"/>
+			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Remove_Values3" ToolTip="Remove selections from values 3"/>
+			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Remove_Values4" ToolTip="Remove selections from values 4"/>
+			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Remove_Values5" ToolTip="Remove selections from values 5"/>
+			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Remove_Values6" ToolTip="Remove selections from values 6"/>
+			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Remove_Values7" ToolTip="Remove selections from values 7"/>
+			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Remove_Values8" ToolTip="Remove selections from values 8"/>
+			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Remove_Values9" ToolTip="Remove selections from values 9"/>
 		</MenuItem>
 		<MenuItem Header="R_eplace">
-			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Replace_Values1"/>
-			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Replace_Values2"/>
-			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Replace_Values3"/>
-			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Replace_Values4"/>
-			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Replace_Values5"/>
-			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Replace_Values6"/>
-			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Replace_Values7"/>
-			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Replace_Values8"/>
-			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Replace_Values9"/>
+			<controls:NEMenuItem Header="Values _1" CommandEnum="Keys_Replace_Values1" ToolTip="Replace values 1 with selections"/>
+			<controls:NEMenuItem Header="Values _2" CommandEnum="Keys_Replace_Values2" ToolTip="Replace values 2 with selections"/>
+			<controls:NEMenuItem Header="Values _3" CommandEnum="Keys_Replace_Values3" ToolTip="Replace values 3 with selections"/>
+			<controls:NEMenuItem Header="Values _4" CommandEnum="Keys_Replace_Values4" ToolTip="Replace values 4 with selections"/>
+			<controls:NEMenuItem Header="Values _5" CommandEnum="Keys_Replace_Values5" ToolTip="Replace values 5 with selections"/>
+			<controls:NEMenuItem Header="Values _6" CommandEnum="Keys_Replace_Values6" ToolTip="Replace values 6 with selections"/>
+			<controls:NEMenuItem Header="Values _7" CommandEnum="Keys_Replace_Values7" ToolTip="Replace values 7 with selections"/>
+			<controls:NEMenuItem Header="Values _8" CommandEnum="Keys_Replace_Values8" ToolTip="Replace values 8 with selections"/>
+			<controls:NEMenuItem Header="Values _9" CommandEnum="Keys_Replace_Values9" ToolTip="Replace values 9 with selections"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Select">
-		<controls:NEMenuItem Header="_All" CommandEnum="Select_All"/>
-		<controls:NEMenuItem Header="N_othing" CommandEnum="Select_Nothing"/>
+		<controls:NEMenuItem Header="_All" CommandEnum="Select_All" ToolTip="Select everything (one selection)"/>
+		<controls:NEMenuItem Header="N_othing" CommandEnum="Select_Nothing" ToolTip="Select nothing (no selections)"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Limit" CommandEnum="Select_Limit"/>
-		<controls:NEMenuItem Header="Li_nes" CommandEnum="Select_Lines"/>
-		<controls:NEMenuItem Header="_Whole Lines" CommandEnum="Select_WholeLines"/>
-		<controls:NEMenuItem Header="Re_ctangle" CommandEnum="Select_Rectangle"/>
+		<controls:NEMenuItem Header="_Limit" CommandEnum="Select_Limit" ToolTip="Keep selections based on starting selection, every nth selection, total selection count"/>
+		<controls:NEMenuItem Header="Li_nes" CommandEnum="Select_Lines" ToolTip="Select line (except newline) of any selections"/>
+		<controls:NEMenuItem Header="_Whole Lines" CommandEnum="Select_WholeLines" ToolTip="Select line (including newline) of all selections"/>
+		<controls:NEMenuItem Header="Re_ctangle" CommandEnum="Select_Rectangle" ToolTip="Select rectangle"/>
 		<Separator/>
-		<controls:NEMenuItem Header="In_vert" CommandEnum="Select_Invert"/>
-		<controls:NEMenuItem Header="_Join" CommandEnum="Select_Join"/>
+		<controls:NEMenuItem Header="In_vert" CommandEnum="Select_Invert" ToolTip="Invert selections (select anything not selected)"/>
+		<controls:NEMenuItem Header="_Join" CommandEnum="Select_Join" ToolTip="Join selections (join any selections that touch into one)"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Empty" CommandEnum="Select_Empty"/>
-		<controls:NEMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty"/>
+		<controls:NEMenuItem Header="_Empty" CommandEnum="Select_Empty" ToolTip="Keep selections that are empty"/>
+		<controls:NEMenuItem Header="Non-E_mpty" CommandEnum="Select_NonEmpty" ToolTip="Keep selections that aren't empty"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose"/>
+		<controls:NEMenuItem Header="_Toggle Open/Close" CommandEnum="Select_ToggleOpenClose" ToolTip="Jump between opening and closing parentheses, brackets, or braces"/>
 		<Separator/>
 		<MenuItem Header="_Repeats (Case Sensitive)">
-			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_RepeatsCaseSensitive_Unique"/>
-			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_RepeatsCaseSensitive_Duplicates"/>
+			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_RepeatsCaseSensitive_Unique" ToolTip="Select each value ones (case sensitive)"/>
+			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_RepeatsCaseSensitive_Duplicates" ToolTip="Select duplicates (case sensitive)"/>
 			<Separator/>
-			<controls:NEMenuItem Header="Match _Previous" CommandEnum="Select_RepeatsCaseSensitive_MatchPrevious"/>
-			<controls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_RepeatsCaseSensitive_NonMatchPrevious"/>
+			<controls:NEMenuItem Header="Match _Previous" CommandEnum="Select_RepeatsCaseSensitive_MatchPrevious" ToolTip="Keep selections that match the previous selection (case sensitive)"/>
+			<controls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_RepeatsCaseSensitive_NonMatchPrevious" ToolTip="Keep selections that don't match the previous selection (case sensitive)"/>
 			<Separator/>
-			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_RepeatsCaseSensitive_RepeatedLines"/>
-			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseSensitive_ByCount"/>
+			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_RepeatsCaseSensitive_RepeatedLines" ToolTip="Join selections that repeat lines (case sensitive)"/>
+			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseSensitive_ByCount" ToolTip="Keep selections based on how many there are (case sensitive)"/>
 			<Separator/>
 			<MenuItem Header="_Tabs">
-				<controls:NEMenuItem Header="_Match" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Match"/>
-				<controls:NEMenuItem Header="M_ismatch" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Mismatch"/>
+				<controls:NEMenuItem Header="_Match" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Match" ToolTip="Keep selections that match text and position in all tabs (case sensitive)"/>
+				<controls:NEMenuItem Header="M_ismatch" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Mismatch" ToolTip="Keep selections that don't match text and position in all tabs (case sensitive)"/>
 				<Separator/>
-				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Common"/>
-				<controls:NEMenuItem Header="Non C_ommon" CommandEnum="Select_RepeatsCaseSensitive_Tabs_NonCommon"/>
+				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Common" ToolTip="Keep selections that match text in all tabs (case sensitive)"/>
+				<controls:NEMenuItem Header="Non C_ommon" CommandEnum="Select_RepeatsCaseSensitive_Tabs_NonCommon" ToolTip="Keep selections that don't match text in all tabs (case sensitive)"/>
 			</MenuItem>
 		</MenuItem>
 		<MenuItem Header="Repeats (Case _Insensitive)">
-			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_RepeatsCaseInsensitive_Unique"/>
-			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_RepeatsCaseInsensitive_Duplicates"/>
+			<controls:NEMenuItem Header="_Unique" CommandEnum="Select_RepeatsCaseInsensitive_Unique" ToolTip="Select each value ones (case insensitive)"/>
+			<controls:NEMenuItem Header="_Duplicates" CommandEnum="Select_RepeatsCaseInsensitive_Duplicates" ToolTip="Select duplicates (case insensitive)"/>
 			<Separator/>
-			<controls:NEMenuItem Header="Match _Previous" CommandEnum="Select_RepeatsCaseInsensitive_MatchPrevious"/>
-			<controls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_RepeatsCaseInsensitive_NonMatchPrevious"/>
+			<controls:NEMenuItem Header="Match _Previous" CommandEnum="Select_RepeatsCaseInsensitive_MatchPrevious" ToolTip="Keep selections that match the previous selection (case insensitive)"/>
+			<controls:NEMenuItem Header="Non Match P_revious" CommandEnum="Select_RepeatsCaseInsensitive_NonMatchPrevious" ToolTip="Keep selections that don't match the previous selection (case insensitive)"/>
 			<Separator/>
-			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_RepeatsCaseInsensitive_RepeatedLines"/>
-			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseInsensitive_ByCount"/>
+			<controls:NEMenuItem Header="R_epeated Lines" CommandEnum="Select_RepeatsCaseInsensitive_RepeatedLines" ToolTip="Join selections that repeat lines (case insensitive)"/>
+			<controls:NEMenuItem Header="By _Count" CommandEnum="Select_RepeatsCaseInsensitive_ByCount" ToolTip="Keep selections based on how many there are (case insensitive)"/>
 			<Separator/>
 			<MenuItem Header="_Tabs">
-				<controls:NEMenuItem Header="_Match" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Match"/>
-				<controls:NEMenuItem Header="M_ismatch" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Mismatch"/>
+				<controls:NEMenuItem Header="_Match" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Match" ToolTip="Keep selections that match text and position in all tabs (case insensitive)"/>
+				<controls:NEMenuItem Header="M_ismatch" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Mismatch" ToolTip="Keep selections that don't match text and position in all tabs (case insensitive)"/>
 				<Separator/>
-				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Common"/>
-				<controls:NEMenuItem Header="Non C_ommon" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_NonCommon"/>
+				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Common" ToolTip="Keep selections that match text in all tabs (case insensitive)"/>
+				<controls:NEMenuItem Header="Non C_ommon" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_NonCommon" ToolTip="Keep selections that don't match text in all tabs (case insensitive)"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="S_plit" CommandEnum="Select_Split"/>
+		<controls:NEMenuItem Header="S_plit" CommandEnum="Select_Split" ToolTip="Split selections into multiple selections based on delimiters"/>
 		<Separator/>
 		<MenuItem Header="_Selection">
-			<controls:NEMenuItem Header="_First" CommandEnum="Select_Selection_First"/>
-			<controls:NEMenuItem Header="Center _Vertically" CommandEnum="Select_Selection_CenterVertically"/>
-			<controls:NEMenuItem Header="_Center" CommandEnum="Select_Selection_Center"/>
-			<controls:NEMenuItem Header="_Toggle Anchor" CommandEnum="Select_Selection_ToggleAnchor"/>
-			<controls:NEMenuItem Header="_Next" CommandEnum="Select_Selection_Next"/>
-			<controls:NEMenuItem Header="_Previous" CommandEnum="Select_Selection_Previous"/>
-			<controls:NEMenuItem Header="_Single" CommandEnum="Select_Selection_Single"/>
-			<controls:NEMenuItem Header="_Remove" CommandEnum="Select_Selection_Remove"/>
-			<controls:NEMenuItem Header="Remove _Before Current" CommandEnum="Select_Selection_RemoveBeforeCurrent"/>
-			<controls:NEMenuItem Header="Remove _After Current" CommandEnum="Select_Selection_RemoveAfterCurrent"/>
+			<controls:NEMenuItem Header="_First" CommandEnum="Select_Selection_First" ToolTip="Make selection 1 focused selection"/>
+			<controls:NEMenuItem Header="Center _Vertically" CommandEnum="Select_Selection_CenterVertically" ToolTip="Center focused selection vertically"/>
+			<controls:NEMenuItem Header="_Center" CommandEnum="Select_Selection_Center" ToolTip="Center focused selection"/>
+			<controls:NEMenuItem Header="_Toggle Anchor" CommandEnum="Select_Selection_ToggleAnchor" ToolTip="Toggle anchor between left/right side of selections"/>
+			<controls:NEMenuItem Header="_Next" CommandEnum="Select_Selection_Next" ToolTip="Focus next selection"/>
+			<controls:NEMenuItem Header="_Previous" CommandEnum="Select_Selection_Previous" ToolTip="Focus previous selection"/>
+			<controls:NEMenuItem Header="_Single" CommandEnum="Select_Selection_Single" ToolTip="Keep only focused selection"/>
+			<controls:NEMenuItem Header="_Remove" CommandEnum="Select_Selection_Remove" ToolTip="Remove focused selection"/>
+			<controls:NEMenuItem Header="Remove _Before Current" CommandEnum="Select_Selection_RemoveBeforeCurrent" ToolTip="Remove all selections before focused selection"/>
+			<controls:NEMenuItem Header="Remove _After Current" CommandEnum="Select_Selection_RemoveAfterCurrent" ToolTip="Remove all selections after focused selection"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Macro">
 		<MenuItem Header="_Record">
 			<MenuItem Header="_Quick">
-				<controls:NEMenuItem Header="1" CommandEnum="Macro_Record_Quick_1"/>
-				<controls:NEMenuItem Header="2" CommandEnum="Macro_Record_Quick_2"/>
-				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Record_Quick_3"/>
-				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Record_Quick_4"/>
-				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Record_Quick_5"/>
-				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Record_Quick_6"/>
-				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Record_Quick_7"/>
-				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Record_Quick_8"/>
-				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Record_Quick_9"/>
-				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Record_Quick_10"/>
-				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Record_Quick_11"/>
-				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Record_Quick_12"/>
+				<controls:NEMenuItem Header="1" CommandEnum="Macro_Record_Quick_1" ToolTip="Record quick macro 1"/>
+				<controls:NEMenuItem Header="2" CommandEnum="Macro_Record_Quick_2" ToolTip="Record quick macro 2"/>
+				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Record_Quick_3" ToolTip="Record quick macro 3"/>
+				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Record_Quick_4" ToolTip="Record quick macro 4"/>
+				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Record_Quick_5" ToolTip="Record quick macro 5"/>
+				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Record_Quick_6" ToolTip="Record quick macro 6"/>
+				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Record_Quick_7" ToolTip="Record quick macro 7"/>
+				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Record_Quick_8" ToolTip="Record quick macro 8"/>
+				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Record_Quick_9" ToolTip="Record quick macro 9"/>
+				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Record_Quick_10" ToolTip="Record quick macro 10"/>
+				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Record_Quick_11" ToolTip="Record quick macro 11"/>
+				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Record_Quick_12" ToolTip="Record quick macro 12"/>
 			</MenuItem>
-			<controls:NEMenuItem Header="_Record" CommandEnum="Macro_Record_Record"/>
-			<controls:NEMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording"/>
+			<controls:NEMenuItem Header="_Record" CommandEnum="Macro_Record_Record" ToolTip="Record macro"/>
+			<controls:NEMenuItem Header="_Stop Recording" CommandEnum="Macro_Record_StopRecording" ToolTip="Stop recording macro"/>
 		</MenuItem>
 		<MenuItem Header="_Append">
 			<MenuItem Header="_Quick">
-				<controls:NEMenuItem Header="1" CommandEnum="Macro_Append_Quick_1"/>
-				<controls:NEMenuItem Header="2" CommandEnum="Macro_Append_Quick_2"/>
-				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Append_Quick_3"/>
-				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Append_Quick_4"/>
-				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Append_Quick_5"/>
-				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Append_Quick_6"/>
-				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Append_Quick_7"/>
-				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Append_Quick_8"/>
-				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Append_Quick_9"/>
-				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Append_Quick_10"/>
-				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Append_Quick_11"/>
-				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Append_Quick_12"/>
+				<controls:NEMenuItem Header="1" CommandEnum="Macro_Append_Quick_1" ToolTip="Append new steps to quick macro 1"/>
+				<controls:NEMenuItem Header="2" CommandEnum="Macro_Append_Quick_2" ToolTip="Append new steps to quick macro 2"/>
+				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Append_Quick_3" ToolTip="Append new steps to quick macro 3"/>
+				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Append_Quick_4" ToolTip="Append new steps to quick macro 4"/>
+				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Append_Quick_5" ToolTip="Append new steps to quick macro 5"/>
+				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Append_Quick_6" ToolTip="Append new steps to quick macro 6"/>
+				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Append_Quick_7" ToolTip="Append new steps to quick macro 7"/>
+				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Append_Quick_8" ToolTip="Append new steps to quick macro 8"/>
+				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Append_Quick_9" ToolTip="Append new steps to quick macro 9"/>
+				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Append_Quick_10" ToolTip="Append new steps to quick macro 10"/>
+				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Append_Quick_11" ToolTip="Append new steps to quick macro 11"/>
+				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Append_Quick_12" ToolTip="Append new steps to quick macro 12"/>
 			</MenuItem>
-			<controls:NEMenuItem Header="_Append" CommandEnum="Macro_Append_Append"/>
+			<controls:NEMenuItem Header="_Append" CommandEnum="Macro_Append_Append" ToolTip="Append new steps to macro"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Play">
 			<MenuItem Header="_Quick">
-				<controls:NEMenuItem Header="1" CommandEnum="Macro_Play_Quick_1"/>
-				<controls:NEMenuItem Header="2" CommandEnum="Macro_Play_Quick_2"/>
-				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Play_Quick_3"/>
-				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Play_Quick_4"/>
-				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Play_Quick_5"/>
-				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Play_Quick_6"/>
-				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Play_Quick_7"/>
-				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Play_Quick_8"/>
-				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Play_Quick_9"/>
-				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Play_Quick_10"/>
-				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Play_Quick_11"/>
-				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Play_Quick_12"/>
+				<controls:NEMenuItem Header="1" CommandEnum="Macro_Play_Quick_1" ToolTip="Play quick macro 1"/>
+				<controls:NEMenuItem Header="2" CommandEnum="Macro_Play_Quick_2" ToolTip="Play quick macro 2"/>
+				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Play_Quick_3" ToolTip="Play quick macro 3"/>
+				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Play_Quick_4" ToolTip="Play quick macro 4"/>
+				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Play_Quick_5" ToolTip="Play quick macro 5"/>
+				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Play_Quick_6" ToolTip="Play quick macro 6"/>
+				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Play_Quick_7" ToolTip="Play quick macro 7"/>
+				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Play_Quick_8" ToolTip="Play quick macro 8"/>
+				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Play_Quick_9" ToolTip="Play quick macro 9"/>
+				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Play_Quick_10" ToolTip="Play quick macro 10"/>
+				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Play_Quick_11" ToolTip="Play quick macro 11"/>
+				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Play_Quick_12" ToolTip="Play quick macro 12"/>
 			</MenuItem>
-			<controls:NEMenuItem Header="_Play" CommandEnum="Macro_Play_Play"/>
-			<controls:NEMenuItem Header="_Repeat" CommandEnum="Macro_Play_Repeat"/>
-			<controls:NEMenuItem Header="Play On Copied _Files" CommandEnum="Macro_Play_PlayOnCopiedFiles"/>
+			<controls:NEMenuItem Header="_Play" CommandEnum="Macro_Play_Play" ToolTip="Play macro"/>
+			<controls:NEMenuItem Header="_Repeat" CommandEnum="Macro_Play_Repeat" ToolTip="Repeat macro"/>
+			<controls:NEMenuItem Header="Play On Copied _Files" CommandEnum="Macro_Play_PlayOnCopiedFiles" ToolTip="Play macro on copied files"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Open">
 			<MenuItem Header="_Quick">
-				<controls:NEMenuItem Header="1" CommandEnum="Macro_Open_Quick_1"/>
-				<controls:NEMenuItem Header="2" CommandEnum="Macro_Open_Quick_2"/>
-				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Open_Quick_3"/>
-				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Open_Quick_4"/>
-				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Open_Quick_5"/>
-				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Open_Quick_6"/>
-				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Open_Quick_7"/>
-				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Open_Quick_8"/>
-				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Open_Quick_9"/>
-				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Open_Quick_10"/>
-				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Open_Quick_11"/>
-				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Open_Quick_12"/>
+				<controls:NEMenuItem Header="1" CommandEnum="Macro_Open_Quick_1" ToolTip="Open quick macro 1"/>
+				<controls:NEMenuItem Header="2" CommandEnum="Macro_Open_Quick_2" ToolTip="Open quick macro 2"/>
+				<controls:NEMenuItem Header="_3" CommandEnum="Macro_Open_Quick_3" ToolTip="Open quick macro 3"/>
+				<controls:NEMenuItem Header="_4" CommandEnum="Macro_Open_Quick_4" ToolTip="Open quick macro 4"/>
+				<controls:NEMenuItem Header="_5" CommandEnum="Macro_Open_Quick_5" ToolTip="Open quick macro 5"/>
+				<controls:NEMenuItem Header="_6" CommandEnum="Macro_Open_Quick_6" ToolTip="Open quick macro 6"/>
+				<controls:NEMenuItem Header="_7" CommandEnum="Macro_Open_Quick_7" ToolTip="Open quick macro 7"/>
+				<controls:NEMenuItem Header="_8" CommandEnum="Macro_Open_Quick_8" ToolTip="Open quick macro 8"/>
+				<controls:NEMenuItem Header="_9" CommandEnum="Macro_Open_Quick_9" ToolTip="Open quick macro 9"/>
+				<controls:NEMenuItem Header="1_0" CommandEnum="Macro_Open_Quick_10" ToolTip="Open quick macro 10"/>
+				<controls:NEMenuItem Header="1_1" CommandEnum="Macro_Open_Quick_11" ToolTip="Open quick macro 11"/>
+				<controls:NEMenuItem Header="1_2" CommandEnum="Macro_Open_Quick_12" ToolTip="Open quick macro 12"/>
 			</MenuItem>
-			<controls:NEMenuItem Header="_Open" CommandEnum="Macro_Open_Open"/>
+			<controls:NEMenuItem Header="_Open" CommandEnum="Macro_Open_Open" ToolTip="Open macro"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="R_epeat Last Action" CommandEnum="Macro_RepeatLastAction"/>
-		<controls:NEMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction"/>
+		<controls:NEMenuItem Header="R_epeat Last Action" CommandEnum="Macro_RepeatLastAction" ToolTip="Repeat last action"/>
+		<controls:NEMenuItem Header="_Time Next Action" CommandEnum="Macro_TimeNextAction" ToolTip="Time next action"/>
 	</MenuItem>
 	<MenuItem Header="_Window">
-		<controls:NEMenuItem Header="_New Window" CommandEnum="Window_NewWindow"/>
+		<controls:NEMenuItem Header="_New Window" CommandEnum="Window_NewWindow" ToolTip="Create new window"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Full" CommandEnum="Window_Full"/>
-		<controls:NEMenuItem Header="_Grid" CommandEnum="Window_Grid"/>
-		<controls:NEMenuItem Header="C_ustom Grid" CommandEnum="Window_CustomGrid"/>
+		<controls:NEMenuItem Header="_Full" CommandEnum="Window_Full" ToolTip="Make current file full screen"/>
+		<controls:NEMenuItem Header="_Grid" CommandEnum="Window_Grid" ToolTip="Show files in grid"/>
+		<controls:NEMenuItem Header="C_ustom Grid" CommandEnum="Window_CustomGrid" ToolTip="Show files in custom grid"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_ActiveTabs"/>
-		<controls:NEMenuItem Header="Tab _Index" CommandEnum="Window_TabIndex"/>
-		<controls:NEMenuItem Header="Active Tab In_dex" CommandEnum="Window_ActiveTabIndex"/>
+		<controls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_ActiveTabs" ToolTip="Change which files are active"/>
+		<controls:NEMenuItem Header="Tab _Index" CommandEnum="Window_TabIndex" ToolTip="Replace selections with tab index"/>
+		<controls:NEMenuItem Header="Active Tab In_dex" CommandEnum="Window_ActiveTabIndex" ToolTip="Replace selections with tab index (active tabs only)"/>
 		<Separator/>
 		<MenuItem Header="F_ont">
-			<controls:NEMenuItem Header="_Size" CommandEnum="Window_Font_Size"/>
-			<MenuItem Header="S_how Special" IsCheckable="True" IsChecked="{Binding Path=(local:Font.ShowSpecialChars), Mode=TwoWay}"/>
+			<controls:NEMenuItem Header="_Size" CommandEnum="Window_Font_Size" ToolTip="Change font size"/>
+			<MenuItem Header="S_how Special" IsCheckable="True" IsChecked="{Binding Path=(local:Font.ShowSpecialChars), Mode=TwoWay}" ToolTip="Toggle whether to show special characters"/>
 		</MenuItem>
 		<Separator/>
-		<controls:MultiMenuItem Header="View _Values" TabsWindow="{Binding Parent, ElementName=self}" Property="ViewValues" MultiValue="{StaticResource True}" CommandEnum="Window_ViewValues"/>
+		<controls:MultiMenuItem Header="View _Values" TabsWindow="{Binding Parent, ElementName=self}" Property="ViewValues" MultiValue="{StaticResource True}" CommandEnum="Window_ViewValues" ToolTip="View binary values"/>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<controls:NEMenuItem Header="_All tabs" CommandEnum="Window_Select_AllTabs"/>
-			<controls:NEMenuItem Header="_No tabs" CommandEnum="Window_Select_NoTabs"/>
+			<controls:NEMenuItem Header="_All tabs" CommandEnum="Window_Select_AllTabs" ToolTip="Select all files"/>
+			<controls:NEMenuItem Header="_No tabs" CommandEnum="Window_Select_NoTabs" ToolTip="Select no files"/>
 			<Separator/>
-			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Select_TabsWithSelections"/>
-			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Select_TabsWithoutSelections"/>
+			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Select_TabsWithSelections" ToolTip="Selected files with selections"/>
+			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Select_TabsWithoutSelections" ToolTip="Selected files without selection"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Select_ModifiedTabs"/>
-			<controls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Select_UnmodifiedTabs"/>
+			<controls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Select_ModifiedTabs" ToolTip="Selected files that are modified"/>
+			<controls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Select_UnmodifiedTabs" ToolTip="Selected files that aren't modified"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Inactive Tabs" CommandEnum="Window_Select_InactiveTabs"/>
+			<controls:NEMenuItem Header="_Inactive Tabs" CommandEnum="Window_Select_InactiveTabs" ToolTip="Selected files that aren't selected"/>
 		</MenuItem>
 		<MenuItem Header="_Close">
-			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Close_TabsWithSelections"/>
-			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Close_TabsWithoutSelections"/>
+			<controls:NEMenuItem Header="Tabs _With Selections" CommandEnum="Window_Close_TabsWithSelections" ToolTip="Close selected files with selections"/>
+			<controls:NEMenuItem Header="Tabs With_out Selections" CommandEnum="Window_Close_TabsWithoutSelections" ToolTip="Close selected files without selections"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Close_ModifiedTabs"/>
-			<controls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Close_UnmodifiedTabs"/>
+			<controls:NEMenuItem Header="_Modified Tabs" CommandEnum="Window_Close_ModifiedTabs" ToolTip="Close selected files that are modified"/>
+			<controls:NEMenuItem Header="_Unmodified Tabs" CommandEnum="Window_Close_UnmodifiedTabs" ToolTip="Close selected files that aren't modified"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_Close_ActiveTabs"/>
-			<controls:NEMenuItem Header="_Inactive Tabs" CommandEnum="Window_Close_InactiveTabs"/>
+			<controls:NEMenuItem Header="_Active Tabs" CommandEnum="Window_Close_ActiveTabs" ToolTip="Close selected files"/>
+			<controls:NEMenuItem Header="_Inactive Tabs" CommandEnum="Window_Close_InactiveTabs" ToolTip="Close unselected files"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="_Word List" CommandEnum="Window_WordList"/>
+		<controls:NEMenuItem Header="_Word List" CommandEnum="Window_WordList" ToolTip="Get list of English words"/>
 	</MenuItem>
 	<MenuItem Header="_Help">
-		<controls:NEMenuItem Header="_About" CommandEnum="Help_About"/>
-		<controls:NEMenuItem Header="_Tutorial" CommandEnum="Help_Tutorial"/>
+		<controls:NEMenuItem Header="_About" CommandEnum="Help_About" ToolTip="About NeoEdit"/>
+		<controls:NEMenuItem Header="_Tutorial" CommandEnum="Help_Tutorial" ToolTip="A tutorial to learn the basics"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Update" CommandEnum="Help_Update"/>
+		<controls:NEMenuItem Header="_Update" CommandEnum="Help_Update" ToolTip="Update"/>
 		<Separator/>
-		<controls:NEMenuItem Visibility="{Binding Path=(local:Settings.CanExtract), Converter={converters:BoolToVisibleConverter}}" Header="_Extract" CommandEnum="Help_Extract"/>
-		<controls:NEMenuItem Header="Run _GC" CommandEnum="Help_RunGC"/>
+		<controls:NEMenuItem Visibility="{Binding Path=(local:Settings.CanExtract), Converter={converters:BoolToVisibleConverter}}" Header="_Extract" CommandEnum="Help_Extract" ToolTip="Extract files on disk (speeds up load time)"/>
+		<controls:NEMenuItem Header="Run _GC" CommandEnum="Help_RunGC" ToolTip="Run garbage collection (mainly for debugging)"/>
 	</MenuItem>
 
 </Menu>
