@@ -16,6 +16,7 @@ namespace NeoEdit.Program.Controls
 {
 	public class NEWindow : Window
 	{
+		const double MinWindowSize = 50;
 		const double ResizeBorder = 10;
 		const double DragDetect = 10;
 
@@ -420,8 +421,8 @@ namespace NeoEdit.Program.Controls
 				return;
 
 			var monitor = GetMainMonitor();
-			nonFullScreenRect.Width = Math.Max(100, Math.Min(nonFullScreenRect.Width, monitor.Width));
-			nonFullScreenRect.Height = Math.Max(100, Math.Min(nonFullScreenRect.Height, monitor.Height));
+			nonFullScreenRect.Width = Math.Max(MinWindowSize, Math.Min(nonFullScreenRect.Width, monitor.Width));
+			nonFullScreenRect.Height = Math.Max(MinWindowSize, Math.Min(nonFullScreenRect.Height, monitor.Height));
 			nonFullScreenRect.X = Math.Max(monitor.Left, Math.Min(nonFullScreenRect.Left, monitor.Right - nonFullScreenRect.Width));
 			nonFullScreenRect.Y = Math.Max(monitor.Top, Math.Min(nonFullScreenRect.Top, monitor.Bottom - nonFullScreenRect.Height));
 
@@ -435,8 +436,8 @@ namespace NeoEdit.Program.Controls
 			IsFullScreen = false;
 			Left = rect.Left;
 			Top = rect.Top;
-			Width = rect.Width;
-			Height = rect.Height;
+			Width = Math.Max(MinWindowSize, rect.Width);
+			Height = Math.Max(MinWindowSize, rect.Height);
 			IsFullScreen = isFullScreen;
 		}
 
