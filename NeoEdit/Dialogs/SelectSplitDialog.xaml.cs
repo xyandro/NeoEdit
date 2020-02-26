@@ -17,7 +17,7 @@ namespace NeoEdit.Program.Dialogs
 			public Regex Regex { get; set; }
 			public string Index { get; set; }
 			public bool IncludeResults { get; set; }
-			public bool IncludeEmpty { get; set; }
+			public bool ExcludeEmpty { get; set; }
 			public bool BalanceStrings { get; set; }
 			public bool BalanceParens { get; set; }
 			public bool BalanceBrackets { get; set; }
@@ -39,7 +39,7 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public bool IncludeResults { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IncludeEmpty { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
+		public bool ExcludeEmpty { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool BalanceStrings { get { return UIHelper<SelectSplitDialog>.GetPropValue<bool>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -67,7 +67,7 @@ namespace NeoEdit.Program.Dialogs
 		void Reset(object sender = null, RoutedEventArgs e = null)
 		{
 			Index = "0";
-			WholeWords = MatchCase = IsRegex = IncludeResults = IncludeEmpty = false;
+			WholeWords = MatchCase = IsRegex = IncludeResults = ExcludeEmpty = false;
 			BalanceStrings = BalanceParens = BalanceBrackets = BalanceBraces = TrimWhitespace = true;
 			BalanceLTGT = false;
 		}
@@ -91,7 +91,7 @@ namespace NeoEdit.Program.Dialogs
 				Regex = new Regex(text, options),
 				Index = Index,
 				IncludeResults = IncludeResults,
-				IncludeEmpty = IncludeEmpty,
+				ExcludeEmpty = ExcludeEmpty,
 				BalanceStrings = BalanceStrings,
 				BalanceParens = BalanceParens,
 				BalanceBrackets = BalanceBrackets,

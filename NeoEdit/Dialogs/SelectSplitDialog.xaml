@@ -39,7 +39,7 @@
 		</StackPanel>
 		<CheckBox Grid.Row="4" Grid.Column="1" Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 		<CheckBox Grid.Row="5" Grid.Column="1" Content="_Include find" IsChecked="{Binding IncludeResults, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
-		<CheckBox Grid.Row="6" Grid.Column="1" Content="Include _empty" IsChecked="{Binding IncludeEmpty, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
+		<CheckBox Grid.Row="6" Grid.Column="1" Content="Exclude _empty" IsChecked="{Binding ExcludeEmpty, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 		<StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" Focusable="False" VerticalAlignment="Center">
 			<CheckBox Content="_Balance: " Focusable="False" VerticalAlignment="Center">
 				<CheckBox.IsChecked>

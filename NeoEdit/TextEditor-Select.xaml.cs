@@ -150,7 +150,7 @@ namespace NeoEdit.Program
 							while ((useEnd > useStart) && (char.IsWhiteSpace(Data.Data[useEnd - 1])))
 								--useEnd;
 						}
-						if ((result.IncludeEmpty) || (useStart != useEnd))
+						if ((!result.ExcludeEmpty) || (useStart != useEnd))
 							yield return new Range(useEnd, useStart);
 						if (pos >= range.End)
 							break;
