@@ -48,10 +48,11 @@
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" Name="copyCount" Content="C_opy Count" Padding="10,1">
 				<Button.Visibility>
-					<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="!p0 &amp;&amp; !p1 &amp;&amp; !p2">
+					<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="!p0 &amp;&amp; !p1 &amp;&amp; !p2 &amp;&amp; p3">
 						<Binding Path="KeepMatching" ElementName="self"/>
 						<Binding Path="RemoveMatching" ElementName="self"/>
 						<Binding Path="AddMatches" ElementName="self"/>
+						<Binding Path="SelectionOnly" ElementName="self"/>
 					</MultiBinding>
 				</Button.Visibility>
 			</Button>

@@ -67,11 +67,11 @@ namespace NeoEdit.Program.Dialogs
 		{
 			UIHelper<EditFindFindDialog>.Register();
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsRegex, (obj, o, n) => { if (!obj.IsRegex) obj.RegexGroups = false; });
-			UIHelper<EditFindFindDialog>.AddCallback(a => a.RegexGroups, (obj, o, n) => { if (obj.RegexGroups) obj.IsRegex = true; });
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.RegexGroups, (obj, o, n) => { if (obj.RegexGroups) { obj.IsRegex = true; obj.KeepMatching = obj.RemoveMatching = false; } });
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) => { if (!obj.SelectionOnly) obj.EntireSelection = obj.KeepMatching = obj.RemoveMatching = false; else obj.AddMatches = false; });
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.EntireSelection, (obj, o, n) => { if (obj.EntireSelection) obj.SelectionOnly = true; });
-			UIHelper<EditFindFindDialog>.AddCallback(a => a.KeepMatching, (obj, o, n) => { if (obj.KeepMatching) { obj.SelectionOnly = true; obj.RemoveMatching = false; } });
-			UIHelper<EditFindFindDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = false; } });
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.KeepMatching, (obj, o, n) => { if (obj.KeepMatching) { obj.SelectionOnly = true; obj.RemoveMatching = obj.RegexGroups = false; } });
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = obj.RegexGroups = false; } });
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.AddMatches, (obj, o, n) => { if (obj.AddMatches) { obj.SelectionOnly = false; } });
 		}
 
