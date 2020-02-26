@@ -52,7 +52,7 @@ namespace NeoEdit.Program
 		readonly HashSet<TextEditor> activeTabs = new HashSet<TextEditor>();
 		public IReadOnlyList<TextEditor> ActiveTabs => Tabs.Where(te => activeTabs.Contains(te)).ToList();
 
-		readonly RunOnceTimer layoutTimer, addedTabTimer;
+		readonly RunOnceTimer layoutTimer, showFocusedTimer, addedTabTimer;
 
 		Action<TextEditor> ShowTextEditor;
 		int addedCounter = 0, lastAddedCounter = -1, textEditorOrder = 0;
@@ -67,10 +67,10 @@ namespace NeoEdit.Program
 		static TabsWindow()
 		{
 			UIHelper<TabsWindow>.Register();
-			UIHelper<TabsWindow>.AddCallback(a => a.Rows, (obj, o, n) => obj.layoutTimer.Start());
-			UIHelper<TabsWindow>.AddCallback(a => a.Columns, (obj, o, n) => obj.layoutTimer.Start());
-			UIHelper<TabsWindow>.AddCallback(a => a.MaxRows, (obj, o, n) => obj.layoutTimer.Start());
-			UIHelper<TabsWindow>.AddCallback(a => a.MaxColumns, (obj, o, n) => obj.layoutTimer.Start());
+			UIHelper<TabsWindow>.AddCallback(a => a.Rows, (obj, o, n) => obj.QueueUpdateLayout());
+			UIHelper<TabsWindow>.AddCallback(a => a.Columns, (obj, o, n) => obj.QueueUpdateLayout());
+			UIHelper<TabsWindow>.AddCallback(a => a.MaxRows, (obj, o, n) => obj.QueueUpdateLayout());
+			UIHelper<TabsWindow>.AddCallback(a => a.MaxColumns, (obj, o, n) => obj.QueueUpdateLayout());
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
 		}
@@ -83,6 +83,8 @@ namespace NeoEdit.Program
 		public TabsWindow(bool addEmpty = false)
 		{
 			layoutTimer = new RunOnceTimer(DoLayout);
+			showFocusedTimer = new RunOnceTimer(ShowFocused);
+			showFocusedTimer.AddDependency(layoutTimer);
 			addedTabTimer = new RunOnceTimer(() => ++addedCounter);
 
 			Rows = Columns = 1;
@@ -112,14 +114,21 @@ namespace NeoEdit.Program
 			NEClipboard.ClipboardChanged += () => statusBarTimer.Start();
 			Activated += OnActivated;
 
-			SizeChanged += (s, e) => layoutTimer.Start();
-			scrollBar.ValueChanged += (s, e) => layoutTimer.Start();
+			SizeChanged += (s, e) => QueueUpdateLayout();
+			scrollBar.ValueChanged += (s, e) => QueueUpdateLayout(false);
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
 			UpdateStatusBarText();
 
 			if (addEmpty)
 				AddTextEditor(new TextEditor());
+		}
+
+		void QueueUpdateLayout(bool showFocused = true)
+		{
+			layoutTimer.Start();
+			if (showFocused)
+				showFocusedTimer.Start();
 		}
 
 		protected override void OnSourceInitialized(EventArgs e)
@@ -583,7 +592,7 @@ namespace NeoEdit.Program
 			AddActive(textEditor);
 
 			statusBarTimer.Start();
-			layoutTimer.Start();
+			QueueUpdateLayout();
 		}
 
 		public void RemoveTextEditor(TextEditor textEditor, bool close = true)
@@ -594,7 +603,7 @@ namespace NeoEdit.Program
 				textEditor.Closed();
 			UpdateFocused(true);
 			statusBarTimer.Start();
-			layoutTimer.Start();
+			QueueUpdateLayout();
 		}
 
 		public void AddDiff(TextEditor textEdit1, TextEditor textEdit2)
@@ -857,7 +866,6 @@ namespace NeoEdit.Program
 				DoFullLayout();
 			else
 				DoGridLayout();
-			ShowFocused();
 		}
 
 		void DoFullLayout()
@@ -1031,7 +1039,7 @@ namespace NeoEdit.Program
 
 			tabs.RemoveAt(oldIndex);
 			tabs.Insert(newIndex, tab);
-			layoutTimer.Start();
+			QueueUpdateLayout();
 		}
 
 		protected override void OnClosing(CancelEventArgs e)
