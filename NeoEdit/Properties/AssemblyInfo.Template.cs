@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 using System.Windows;
 
 [assembly: AssemblyTitle("NeoEdit.exe")]
-[assembly: AssemblyCompany("Randon Spackman")]
+[assembly: AssemblyCompany("Randon Spackensen")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCopyright("© Randon Spackman 2013-%YEAR%")]
+[assembly: AssemblyCopyright("© Randon Spackensen 2013-%YEAR%")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("NeoEdit")]
