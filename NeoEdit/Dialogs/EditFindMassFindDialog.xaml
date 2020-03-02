@@ -13,6 +13,7 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -24,15 +25,20 @@
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" Expression="{Binding Text, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-			<CheckBox Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
-			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
+			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>
+			<CheckBox Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
+		</StackPanel>
+
+		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Focusable="False"/>
+			<CheckBox Content="_Entire selection" IsChecked="{Binding EntireSelection, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 			<CheckBox Content="_Keep matches" IsChecked="{Binding KeepMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 			<CheckBox Content="Remo_ve matches" IsChecked="{Binding RemoveMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 		</StackPanel>
 
-		<Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Click="Reset" Content="Rese_t"/>
+		<Button Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Click="Reset" Content="Rese_t"/>
 
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Find" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

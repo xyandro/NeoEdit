@@ -304,7 +304,7 @@ namespace NeoEdit.Program
 				return;
 			}
 
-			var searcher = new StringsSearcher(texts, result.MatchCase);
+			var searcher = new StringsSearcher(texts, result.WholeWords, result.MatchCase, result.EntireSelection);
 			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
 			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => searcher.Find(Data.GetString(selection.Start, selection.Length)).Select(range => Range.FromIndex(range.Start + selection.Start, range.Length))).ToList();
 			SetSelections(ranges);

@@ -444,7 +444,16 @@ namespace NeoEdit.Program
 			return new BinarySearcher(data);
 		}
 
-		static Helpers() { Directory.CreateDirectory(NeoEditAppData); }
+		static bool[] isWordChar = new bool[char.MaxValue + 1];
+
+		static Helpers()
+		{
+			Directory.CreateDirectory(NeoEditAppData);
+			var wordRegex = new Regex(@"\w");
+			for (var ctr = 0; ctr < isWordChar.Length; ++ctr)
+				if (wordRegex.IsMatch(((char)ctr).ToString()))
+					isWordChar[ctr] = true;
+		}
 
 		public static void Swap<T>(ref T item1, ref T item2)
 		{
@@ -503,5 +512,16 @@ namespace NeoEdit.Program
 		public static bool FileOrDirectoryExists(string name) => (Directory.Exists(name)) || (File.Exists(name));
 
 		public static bool IsAdministrator() => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+
+		public static bool IsWordBoundary(string input, int startIndex, int endIndex, int index)
+		{
+			if (startIndex == endIndex)
+				return false;
+			if (index == startIndex)
+				return isWordChar[input[index]];
+			if (index == endIndex)
+				return isWordChar[input[index - 1]];
+			return isWordChar[input[index - 1]] != isWordChar[input[index]];
+		}
 	}
 }

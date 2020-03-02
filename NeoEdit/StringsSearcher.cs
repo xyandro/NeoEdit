@@ -37,11 +37,13 @@ namespace NeoEdit.Program
 			public readonly SearchNode[] data;
 			public int length = NOMATCH;
 			public readonly CharMap charMap;
+			public readonly bool start;
 
-			public SearchNode(CharMap charMap)
+			public SearchNode(CharMap charMap, bool start)
 			{
 				data = new SearchNode[charMap.numChars];
 				this.charMap = charMap;
+				this.start = start;
 			}
 
 			public void Add(string str)
@@ -53,7 +55,7 @@ namespace NeoEdit.Program
 				{
 					var index = charMap.index[str[ctr]];
 					if (node.data[index] == null)
-						node.data[index] = new SearchNode(charMap);
+						node.data[index] = new SearchNode(charMap, false);
 					node = node.data[index];
 				}
 				node.length = str.Length;
@@ -61,12 +63,14 @@ namespace NeoEdit.Program
 		}
 
 		readonly SearchNode matchCaseStartNode, ignoreCaseStartNode;
-		readonly bool firstMatchOnly;
+		readonly bool wholeWords, entireSelection, firstMatchOnly;
 
-		public StringsSearcher(IEnumerable<string> findStrs, bool matchCase = false, bool firstMatchOnly = false) : this(findStrs.Select(str => (str, matchCase)).ToList(), firstMatchOnly) { }
+		public StringsSearcher(IEnumerable<string> findStrs, bool wholeWords = false, bool matchCase = false, bool entireSelection = false, bool firstMatchOnly = false) : this(findStrs.Select(str => (str, matchCase)).ToList(), wholeWords, entireSelection, firstMatchOnly) { }
 
-		public StringsSearcher(List<(string, bool)> findStrs, bool firstMatchOnly = false)
+		public StringsSearcher(List<(string, bool)> findStrs, bool wholeWords = false, bool entireSelection = false, bool firstMatchOnly = false)
 		{
+			this.wholeWords = wholeWords;
+			this.entireSelection = entireSelection;
 			this.firstMatchOnly = firstMatchOnly;
 
 			var matchCaseCharMap = new CharMap(true);
@@ -77,8 +81,8 @@ namespace NeoEdit.Program
 				node.Add(findStrs[ctr].Item1);
 			}
 
-			matchCaseStartNode = new SearchNode(matchCaseCharMap);
-			ignoreCaseStartNode = new SearchNode(ignoreCaseCharMap);
+			matchCaseStartNode = new SearchNode(matchCaseCharMap, true);
+			ignoreCaseStartNode = new SearchNode(ignoreCaseCharMap, true);
 
 			for (var ctr = 0; ctr < findStrs.Count; ++ctr)
 			{
@@ -87,27 +91,26 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public List<Range> Find(string input, bool firstMatchOnly = false) => Find(input, 0, input.Length);
+		public List<Range> Find(string input) => Find(input, 0, input.Length);
 
 		public List<Range> Find(string input, int startIndex, int length)
 		{
 			var result = new List<Range>();
 			var endIndex = startIndex + length;
 			var curNodes = new List<SearchNode>();
+			var startNodes = new SearchNode[] { matchCaseStartNode, ignoreCaseStartNode };
 			for (var index = startIndex; index < endIndex; ++index)
 			{
 				var found = false;
 
-				if (matchCaseStartNode.charMap.index[input[index]] != -1)
+				foreach (var node in startNodes)
 				{
-					curNodes.Add(matchCaseStartNode);
-					found = true;
-				}
-
-				if (ignoreCaseStartNode.charMap.index[input[index]] != -1)
-				{
-					curNodes.Add(ignoreCaseStartNode);
-					found = true;
+					if (node.charMap.index[input[index]] != -1)
+					{
+						if ((!entireSelection) || (index == startIndex))
+							curNodes.Add(node);
+						found = true;
+					}
 				}
 
 				// Quick check: if the current char doesn't appear in the search at all, skip everything and go on
@@ -128,16 +131,27 @@ namespace NeoEdit.Program
 					if (newNode == null)
 						continue;
 
+					if ((wholeWords) && (node.start) && (!Helpers.IsWordBoundary(input, startIndex, endIndex, index)))
+						continue;
+
 					newNodes.Add(newNode);
 
 					if (newNode.length != NOMATCH)
 					{
+						if ((wholeWords) && (!Helpers.IsWordBoundary(input, startIndex, endIndex, index + 1)))
+							continue;
+						if ((entireSelection) && (index + 1 != endIndex))
+							continue;
 						result.Add(Range.FromIndex(index - newNode.length + 1, newNode.length));
 						if (firstMatchOnly)
 							return result;
 					}
 				}
 				curNodes = newNodes;
+
+				// If we don't have any nodes, we won't get any
+				if ((entireSelection) && (curNodes.Count == 0))
+					break;
 			}
 
 			// Take longest values

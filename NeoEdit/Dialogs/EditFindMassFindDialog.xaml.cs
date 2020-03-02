@@ -10,8 +10,10 @@ namespace NeoEdit.Program.Dialogs
 		public class Result
 		{
 			public string Text { get; set; }
+			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
 			public bool SelectionOnly { get; set; }
+			public bool EntireSelection { get; set; }
 			public bool KeepMatching { get; set; }
 			public bool RemoveMatching { get; set; }
 		}
@@ -19,9 +21,13 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public string Text { get { return UIHelper<EditFindMassFindDialog>.GetPropValue<string>(this); } set { UIHelper<EditFindMassFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool WholeWords { get { return UIHelper<EditFindMassFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindMassFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public bool MatchCase { get { return UIHelper<EditFindMassFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindMassFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool SelectionOnly { get { return UIHelper<EditFindMassFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindMassFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool EntireSelection { get { return UIHelper<EditFindMassFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindMassFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool KeepMatching { get { return UIHelper<EditFindMassFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindMassFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -29,12 +35,13 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public NEVariables Variables { get { return UIHelper<EditFindMassFindDialog>.GetPropValue<NEVariables>(this); } set { UIHelper<EditFindMassFindDialog>.SetPropValue(this, value); } }
 
-		static bool matchCaseVal, keepMatchingVal, removeMatchingVal;
+		static bool wholeWordsVal, matchCaseVal, entireSelectionVal, keepMatchingVal, removeMatchingVal;
 
 		static EditFindMassFindDialog()
 		{
 			UIHelper<EditFindMassFindDialog>.Register();
-			UIHelper<EditFindMassFindDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) => { if (!obj.SelectionOnly) obj.KeepMatching = obj.RemoveMatching = false; });
+			UIHelper<EditFindMassFindDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) => { if (!obj.SelectionOnly) obj.EntireSelection = obj.KeepMatching = obj.RemoveMatching = false; });
+			UIHelper<EditFindMassFindDialog>.AddCallback(a => a.EntireSelection, (obj, o, n) => { if (obj.EntireSelection) obj.SelectionOnly = true; });
 			UIHelper<EditFindMassFindDialog>.AddCallback(a => a.KeepMatching, (obj, o, n) => { if (obj.KeepMatching) { obj.SelectionOnly = true; obj.RemoveMatching = false; } });
 			UIHelper<EditFindMassFindDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = false; } });
 		}
@@ -44,7 +51,9 @@ namespace NeoEdit.Program.Dialogs
 			InitializeComponent();
 
 			Text = text.GetLastSuggestion().CoalesceNullOrEmpty("k");
+			WholeWords = wholeWordsVal;
 			MatchCase = matchCaseVal;
+			EntireSelection = entireSelectionVal;
 			KeepMatching = keepMatchingVal;
 			RemoveMatching = removeMatchingVal;
 			SelectionOnly = selectionOnly;
@@ -57,9 +66,11 @@ namespace NeoEdit.Program.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new Result { Text = Text, MatchCase = MatchCase, SelectionOnly = SelectionOnly, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching };
+			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching };
 
+			wholeWordsVal = WholeWords;
 			matchCaseVal = MatchCase;
+			entireSelectionVal = EntireSelection;
 			keepMatchingVal = KeepMatching;
 			removeMatchingVal = RemoveMatching;
 
@@ -68,7 +79,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		void Reset(object sender, RoutedEventArgs e) => MatchCase = SelectionOnly = KeepMatching = RemoveMatching = false;
+		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
 
 		static public Result Run(Window parent, bool selectionOnly, NEVariables variables)
 		{
