@@ -57,7 +57,7 @@ namespace NeoEdit.Program
 			var newLocation = Path.Combine(Path.GetDirectoryName(oldLocation), $"{Path.GetFileNameWithoutExtension(oldLocation)}-Update{Path.GetExtension(oldLocation)}");
 
 			byte[] result = null;
-			ProgressDialog.Run(null, "Downloading new version...", (cancelled, progress) =>
+			ProgressDialog.Run(null, "Downloading new version...", (canceled, progress) =>
 			{
 				var finished = new ManualResetEvent(false);
 				using (var client = new WebClient())
@@ -71,7 +71,7 @@ namespace NeoEdit.Program
 					};
 					client.DownloadDataAsync(new Uri(string.Format(exe, newVersion)));
 					while (!finished.WaitOne(500))
-						if (cancelled())
+						if (canceled())
 							client.CancelAsync();
 				}
 			});

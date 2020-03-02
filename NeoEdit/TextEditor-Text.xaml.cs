@@ -212,7 +212,7 @@ namespace NeoEdit.Program
 
 		void Command_Text_FirstDistinct(TextFirstDistinctDialog.Result result)
 		{
-			var opResult = ProgressDialog.Run(TabsParent, "Finding characters...", (cancelled, progress) =>
+			var opResult = ProgressDialog.Run(TabsParent, "Finding characters...", (canceled, progress) =>
 			{
 				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
 				var data = GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).Select((str, strIndex) => Tuple.Create(str, strIndex, str.Indexes(ch => valid.Contains(ch)).Distinct(index => str[index]).ToList())).OrderBy(tuple => tuple.Item3.Count).ToList();
@@ -230,7 +230,7 @@ namespace NeoEdit.Program
 
 				while (true)
 				{
-					if (cancelled())
+					if (canceled())
 						break;
 
 					if (moveBack)

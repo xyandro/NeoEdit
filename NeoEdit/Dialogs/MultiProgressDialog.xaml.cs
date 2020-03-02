@@ -48,12 +48,12 @@ namespace NeoEdit.Program.Dialogs
 		readonly Func<object, IProgress<ProgressReport>, CancellationToken, Task<object>> GetTask;
 		readonly Func<object, string> GetName;
 		readonly List<RunTask> Running = new List<RunTask>();
-		readonly List<Exception> Exceptions = new List<Exception>();
 		readonly Dictionary<object, object> Result = new Dictionary<object, object>();
 		readonly BackgroundWorker Worker;
 		readonly CancellationTokenSource token = new CancellationTokenSource();
 		readonly AutoResetEvent Event = new AutoResetEvent(false);
 		int Current = 0, Finished = 0;
+		Exception Exception = null;
 		bool IsFinished = false;
 
 		static MultiProgressDialog() { UIHelper<MultiProgressDialog>.Register(); }
@@ -110,7 +110,9 @@ namespace NeoEdit.Program.Dialogs
 					Running.Remove(runTask);
 					if (finished.Exception != null)
 					{
-						Exceptions.AddRange(finished.Exception.InnerExceptions);
+						token.Cancel();
+						if (Exception == null)
+							Exception = new AggregateException(finished.Exception.InnerExceptions);
 						Event.Set();
 					}
 					else if (finished.Status == TaskStatus.RanToCompletion)
@@ -125,8 +127,8 @@ namespace NeoEdit.Program.Dialogs
 		{
 			DialogResult = IsFinished = true;
 			Event.Set();
-			if (token.IsCancellationRequested)
-				throw new Exception("Cancelled");
+			if ((token.IsCancellationRequested) && (Exception == null))
+				Exception = new Exception("Canceled");
 		}
 
 		void UpdateUIThread()
@@ -198,12 +200,6 @@ namespace NeoEdit.Program.Dialogs
 					}
 				}
 			}
-			errors.Text = null;
-			if (Exceptions.Any())
-			{
-				var exceptionTypes = Exceptions.GroupBy(ex => ex.Message).Select(group => new { message = group.Key, count = group.Count() }).OrderByDescending(obj => obj.count).ToList();
-				errors.Text = "Error(s): " + string.Join(", ", exceptionTypes.Select(obj => $"{obj.message} ({obj.count})"));
-			}
 		}
 
 		ProgressData AddProgress(int row, int column, int columnSpan = 1)
@@ -249,22 +245,15 @@ namespace NeoEdit.Program.Dialogs
 
 			var dialog = new MultiProgressDialog(objItems, objGetTask, objGetName, concurrency) { Owner = parent, Title = title };
 			dialog.ShowDialog();
+			if (dialog.Exception != null)
+				throw dialog.Exception;
 			return dialog.Items.Select(item => dialog.Result.ContainsKey(item) ? (TResult)dialog.Result[item] : default(TResult)).ToList();
 		}
 
-		static public void RunAsync<TSource>(Window parent, string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task> getTask, Func<TSource, string> getName = null, int concurrency = DefaultConcurrency)
-		{
-			RunAsync(parent, title, items, async (item, progress, cancellationToken) => { await getTask(item, progress, cancellationToken); return default(object); }, getName, concurrency);
-		}
+		static public void RunAsync<TSource>(Window parent, string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task> getTask, Func<TSource, string> getName = null, int concurrency = DefaultConcurrency) => RunAsync(parent, title, items, async (item, progress, cancellationToken) => { await getTask(item, progress, cancellationToken); return default(object); }, getName, concurrency);
 
-		static public List<TResult> Run<TSource, TResult>(Window parent, string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, TResult> getTask, Func<TSource, string> getName = null, int concurrency = DefaultConcurrency)
-		{
-			return RunAsync(parent, title, items, (item, progress, cancellationToken) => Task.Run(() => getTask(item, progress, cancellationToken)), getName, concurrency);
-		}
+		static public List<TResult> Run<TSource, TResult>(Window parent, string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, TResult> getTask, Func<TSource, string> getName = null, int concurrency = DefaultConcurrency) => RunAsync(parent, title, items, (item, progress, cancellationToken) => Task.Run(() => getTask(item, progress, cancellationToken)), getName, concurrency);
 
-		static public void Run<TSource>(Window parent, string title, IEnumerable<TSource> items, Action<TSource, IProgress<ProgressReport>, CancellationToken> getTask, Func<TSource, string> getName = null, int concurrency = DefaultConcurrency)
-		{
-			RunAsync(parent, title, items, (item, progress, isCancelled) => Task.Run(() => { getTask(item, progress, isCancelled); return default(object); }), getName, concurrency);
-		}
+		static public void Run<TSource>(Window parent, string title, IEnumerable<TSource> items, Action<TSource, IProgress<ProgressReport>, CancellationToken> getTask, Func<TSource, string> getName = null, int concurrency = DefaultConcurrency) => RunAsync(parent, title, items, (item, progress, isCanceled) => Task.Run(() => { getTask(item, progress, isCanceled); return default(object); }), getName, concurrency);
 	}
 }

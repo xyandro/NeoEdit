@@ -267,7 +267,7 @@ namespace NeoEdit.Program.Transform
 				while (stream.Position < stream.Length)
 				{
 					if (cancel?.IsCancellationRequested == true)
-						throw new Exception("Cancelled");
+						throw new Exception("Canceled");
 					progress?.Report(new ProgressReport(stream.Position, stream.Length));
 
 					var block = await stream.ReadAsync(buffer, 0, buffer.Length);

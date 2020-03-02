@@ -52,6 +52,6 @@ namespace NeoEdit.Program.Dialogs
 			return dialog.result;
 		}
 
-		static public void Run(Window parent, string text, Action<Func<bool>, Action<int>> action) => Run(parent, text, (cancelled, progress) => { action(cancelled, progress); return null; });
+		static public void Run(Window parent, string text, Action<Func<bool>, Action<int>> action) => Run(parent, text, (canceled, progress) => { action(canceled, progress); return null; });
 	}
 }

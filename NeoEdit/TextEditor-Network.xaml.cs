@@ -132,7 +132,7 @@ namespace NeoEdit.Program
 
 			var now = DateTime.Now;
 			var data = urls.Select((url, index) => Tuple.Create(url, now + TimeSpan.FromSeconds(index))).ToList();
-			MultiProgressDialog.RunAsync(TabsParent, "Downloading...", data, async (item, progress, cancelled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, cancelled));
+			MultiProgressDialog.RunAsync(TabsParent, "Downloading...", data, async (item, progress, canceled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, canceled));
 		}
 
 		NetworkFetchStreamDialog.Result Command_Network_FetchPlaylist_Dialog() => NetworkFetchStreamDialog.Run(TabsParent, GetVariables(), null);
@@ -143,7 +143,7 @@ namespace NeoEdit.Program
 			if (!urls.Any())
 				return;
 
-			var items = MultiProgressDialog.RunAsync(TabsParent, "Getting playlist contents...", urls, async (item, progress, cancelled) => await YouTubeDL.GetPlayListItems(item, progress, cancelled)).ToList();
+			var items = MultiProgressDialog.RunAsync(TabsParent, "Getting playlist contents...", urls, async (item, progress, canceled) => await YouTubeDL.GetPlayListItems(item, progress, canceled)).ToList();
 			ReplaceSelections(items.Select(l => string.Join(Data.DefaultEnding, l)).ToList());
 		}
 
