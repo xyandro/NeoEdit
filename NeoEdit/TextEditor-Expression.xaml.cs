@@ -6,22 +6,21 @@ namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{
-		GetExpressionDialog.Result Command_Expression_Expression_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables(), Selections.Count);
+		ExpressionExpressionDialog.Result Command_Expression_Expression_Dialog() => ExpressionExpressionDialog.Run(TabsParent, GetVariables());
 
-		void Command_Expression_Expression(GetExpressionDialog.Result result) => ReplaceSelections(GetFixedExpressionResults<string>(result.Expression));
-
-		GetExpressionDialog.Result Command_Expression_Copy_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables());
-
-		void Command_Expression_Copy(GetExpressionDialog.Result result) => SetClipboardStrings(GetVariableExpressionResults<string>(result.Expression));
+		void Command_Expression_Expression(ExpressionExpressionDialog.Result result)
+		{
+			switch (result.Action)
+			{
+				case ExpressionExpressionDialog.Action.Evaluate: ReplaceSelections(GetFixedExpressionResults<string>(result.Expression)); break;
+				case ExpressionExpressionDialog.Action.Copy: SetClipboardStrings(GetVariableExpressionResults<string>(result.Expression)); break;
+				case ExpressionExpressionDialog.Action.Select:
+					var results = GetFixedExpressionResults<bool>(result.Expression);
+					SetSelections(Selections.Where((str, num) => results[num]).ToList());
+					break;
+			}
+		}
 
 		void Command_Expression_EvaluateSelected() => ReplaceSelections(GetFixedExpressionResults<string>("Eval(x)"));
-
-		GetExpressionDialog.Result Command_Expression_SelectByExpression_Dialog() => GetExpressionDialog.Run(TabsParent, GetVariables(), Selections.Count);
-
-		void Command_Expression_SelectByExpression(GetExpressionDialog.Result result)
-		{
-			var results = GetFixedExpressionResults<bool>(result.Expression);
-			SetSelections(Selections.Where((str, num) => results[num]).ToList());
-		}
 	}
 }

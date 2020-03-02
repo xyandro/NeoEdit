@@ -570,9 +570,7 @@
 	</MenuItem>
 	<MenuItem Header="E_xpression">
 		<controls:NEMenuItem Header="_Expression" CommandEnum="Expression_Expression" ToolTip="Evaluate expression"/>
-		<controls:NEMenuItem Header="_Copy" CommandEnum="Expression_Copy" ToolTip="Copy expression results to clipboard"/>
 		<controls:NEMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected" ToolTip="Run selected text as an expression and give the result"/>
-		<controls:NEMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression" ToolTip="Leave selected only selections matching an expression"/>
 	</MenuItem>
 	<MenuItem Header="_Text">
 		<MenuItem Header="_Select">

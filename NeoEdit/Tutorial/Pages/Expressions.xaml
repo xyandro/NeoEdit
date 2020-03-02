@@ -123,13 +123,13 @@
 		<List>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Expression_SelectByExpression"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
 				</Paragraph>
 				<Paragraph>
 					In the dialog, enter "x>=400".
 				</Paragraph>
 				<Paragraph>
-					Press "Ok".
+					Press "Select".
 				</Paragraph>
 			</ListItem>
 		</List>
