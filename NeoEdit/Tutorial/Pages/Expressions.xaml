@@ -36,7 +36,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Expression_Expression"/> .
 				</Paragraph>
 				<Paragraph>
 					In the dialog, enter "y" as the expression. "y" is one of the predefined variables.  It represents the selection's position, starting with 1.
@@ -65,7 +65,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Expression_Expression"/> .
 				</Paragraph>
 				<Paragraph>
 					In the dialog, enter "y*5".
@@ -81,7 +81,7 @@
 		<List>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Expression_Expression"/> .
 				</Paragraph>
 				<Paragraph>
 					In the dialog, enter "x*2". "x" is another predefined variable.  It represents the currently selected value.
@@ -107,7 +107,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Expression_Expression"/> .
 				</Paragraph>
 				<Paragraph>
 					In the dialog, enter "100+c*3". "c" represents the clipboard value for each selection. Note that order of operations (PEMDAS) is observed.
@@ -123,7 +123,7 @@
 		<List>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Expression_Expression"/> .
 				</Paragraph>
 				<Paragraph>
 					In the dialog, enter "x>=400".

@@ -7,7 +7,6 @@ using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Parsing;
@@ -392,6 +391,23 @@ namespace NeoEdit.Program
 					index = ctr;
 			ReplaceSelections(strs);
 		}
+
+		EditExpressionExpressionDialog.Result Command_Edit_Expression_Expression_Dialog() => EditExpressionExpressionDialog.Run(TabsParent, GetVariables());
+
+		void Command_Edit_Expression_Expression(EditExpressionExpressionDialog.Result result)
+		{
+			switch (result.Action)
+			{
+				case EditExpressionExpressionDialog.Action.Evaluate: ReplaceSelections(GetFixedExpressionResults<string>(result.Expression)); break;
+				case EditExpressionExpressionDialog.Action.Copy: SetClipboardStrings(GetVariableExpressionResults<string>(result.Expression)); break;
+				case EditExpressionExpressionDialog.Action.Select:
+					var results = GetFixedExpressionResults<bool>(result.Expression);
+					SetSelections(Selections.Where((str, num) => results[num]).ToList());
+					break;
+			}
+		}
+
+		void Command_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetFixedExpressionResults<string>("Eval(x)"));
 
 		EditRotateDialog.Result Command_Edit_Rotate_Dialog() => EditRotateDialog.Run(TabsParent, GetVariables());
 

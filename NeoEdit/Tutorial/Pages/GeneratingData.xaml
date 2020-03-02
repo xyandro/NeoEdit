@@ -74,7 +74,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Expression_Expression"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Edit_Expression_Expression"/> .
 				</Paragraph>
 				<Paragraph>
 					In the dialog, enter "y". This will set the IDs in order.

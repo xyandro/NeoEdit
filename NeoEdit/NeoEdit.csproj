@@ -365,6 +365,13 @@
     <Compile Include="Dialogs\EditDataSignDialog.xaml.cs">
       <DependentUpon>EditDataSignDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\EditExpressionExpressionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\EditExpressionExpressionDialog.xaml.cs">
+      <DependentUpon>EditExpressionExpressionDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\EditFindBinaryDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -427,13 +434,6 @@
     </Page>
     <Compile Include="Dialogs\EncodingDialog.xaml.cs">
       <DependentUpon>EncodingDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ExpressionExpressionDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ExpressionExpressionDialog.xaml.cs">
-      <DependentUpon>ExpressionExpressionDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\ExpressionHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1162,9 +1162,6 @@
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-Edit.xaml.cs">
-      <DependentUpon>TextEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Expression.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextEditor-File.xaml.cs">

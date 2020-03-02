@@ -5,7 +5,7 @@ using NeoEdit.Program.Expressions;
 
 namespace NeoEdit.Program.Dialogs
 {
-	partial class ExpressionExpressionDialog
+	partial class EditExpressionExpressionDialog
 	{
 		public enum Action
 		{
@@ -21,17 +21,17 @@ namespace NeoEdit.Program.Dialogs
 		}
 
 		[DepProp]
-		public string Expression { get { return UIHelper<ExpressionExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<ExpressionExpressionDialog>.SetPropValue(this, value); } }
+		public string Expression { get { return UIHelper<EditExpressionExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<EditExpressionExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public NEVariables Variables { get { return UIHelper<ExpressionExpressionDialog>.GetPropValue<NEVariables>(this); } set { UIHelper<ExpressionExpressionDialog>.SetPropValue(this, value); } }
+		public NEVariables Variables { get { return UIHelper<EditExpressionExpressionDialog>.GetPropValue<NEVariables>(this); } set { UIHelper<EditExpressionExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? NumRows { get { return UIHelper<ExpressionExpressionDialog>.GetPropValue<int?>(this); } set { UIHelper<ExpressionExpressionDialog>.SetPropValue(this, value); } }
+		public int? NumRows { get { return UIHelper<EditExpressionExpressionDialog>.GetPropValue<int?>(this); } set { UIHelper<EditExpressionExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IsValid { get { return UIHelper<ExpressionExpressionDialog>.GetPropValue<bool>(this); } set { UIHelper<ExpressionExpressionDialog>.SetPropValue(this, value); } }
+		public bool IsValid { get { return UIHelper<EditExpressionExpressionDialog>.GetPropValue<bool>(this); } set { UIHelper<EditExpressionExpressionDialog>.SetPropValue(this, value); } }
 
-		static ExpressionExpressionDialog() { UIHelper<ExpressionExpressionDialog>.Register(); }
+		static EditExpressionExpressionDialog() { UIHelper<EditExpressionExpressionDialog>.Register(); }
 
-		ExpressionExpressionDialog(NEVariables variables, int? numRows)
+		EditExpressionExpressionDialog(NEVariables variables, int? numRows)
 		{
 			InitializeComponent();
 
@@ -55,7 +55,7 @@ namespace NeoEdit.Program.Dialogs
 
 		static public Result Run(Window parent, NEVariables variables, int? numRows = null)
 		{
-			var dialog = new ExpressionExpressionDialog(variables, numRows) { Owner = parent };
+			var dialog = new EditExpressionExpressionDialog(variables, numRows) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

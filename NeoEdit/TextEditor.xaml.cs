@@ -770,7 +770,7 @@ namespace NeoEdit.Program
 				case NECommand.Files_Operations_Encoding: dialogResult = Command_Files_Operations_Encoding_Dialog(); break;
 				case NECommand.Files_Operations_SplitFile: dialogResult = Command_Files_Operations_SplitFile_Dialog(); break;
 				case NECommand.Files_Operations_CombineFiles: dialogResult = Command_Files_Operations_CombineFiles_Dialog(); break;
-				case NECommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
+				case NECommand.Edit_Expression_Expression: dialogResult = Command_Edit_Expression_Expression_Dialog(); break;
 				case NECommand.Text_Select_Trim: dialogResult = Command_Text_Select_Trim_Dialog(); break;
 				case NECommand.Text_Select_ByWidth: dialogResult = Command_Text_Select_ByWidth_Dialog(); break;
 				case NECommand.Text_Select_WholeWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(true); break;
@@ -1244,8 +1244,8 @@ namespace NeoEdit.Program
 				case NECommand.Files_Operations_Encoding: Command_Files_Operations_Encoding(dialogResult as FilesOperationsEncodingDialog.Result); break;
 				case NECommand.Files_Operations_SplitFile: Command_Files_Operations_SplitFile(dialogResult as FilesOperationsSplitFileDialog.Result); break;
 				case NECommand.Files_Operations_CombineFiles: Command_Files_Operations_CombineFiles(dialogResult as FilesOperationsCombineFilesDialog.Result); break;
-				case NECommand.Expression_Expression: Command_Expression_Expression(dialogResult as ExpressionExpressionDialog.Result); break;
-				case NECommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;
+				case NECommand.Edit_Expression_Expression: Command_Edit_Expression_Expression(dialogResult as EditExpressionExpressionDialog.Result); break;
+				case NECommand.Edit_Expression_EvaluateSelected: Command_Edit_Expression_EvaluateSelected(); break;
 				case NECommand.Text_Select_Trim: Command_Text_Select_Trim(dialogResult as TextTrimDialog.Result); break;
 				case NECommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(dialogResult as TextWidthDialog.Result); break;
 				case NECommand.Text_Select_WholeWord: Command_Text_Select_WholeBoundedWord(dialogResult as TextSelectWholeBoundedWordDialog.Result, true); break;

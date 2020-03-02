@@ -107,6 +107,11 @@
 			<controls:NEMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults" ToolTip="Clear search results"/>
 		</MenuItem>
 		<Separator/>
+		<MenuItem Header="E_xpression">
+			<controls:NEMenuItem Header="_Expression" CommandEnum="Edit_Expression_Expression" ToolTip="Evaluate expression"/>
+			<controls:NEMenuItem Header="E_valuate Selected" CommandEnum="Edit_Expression_EvaluateSelected" ToolTip="Run selected text as an expression and give the result"/>
+		</MenuItem>
+		<Separator/>
 		<controls:NEMenuItem Header="Cop_y Down" CommandEnum="Edit_CopyDown" ToolTip="Copy current selections down into empty selections"/>
 		<controls:NEMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate" ToolTip="Rotate selections (move them all down n items)"/>
 		<Separator/>
@@ -567,10 +572,6 @@
 			<controls:NEMenuItem Header="_Split File" CommandEnum="Files_Operations_SplitFile" ToolTip="Split selected files into smaller ones"/>
 			<controls:NEMenuItem Header="Com_bine Files" CommandEnum="Files_Operations_CombineFiles" ToolTip="Combine selected files into bigger one"/>
 		</MenuItem>
-	</MenuItem>
-	<MenuItem Header="E_xpression">
-		<controls:NEMenuItem Header="_Expression" CommandEnum="Expression_Expression" ToolTip="Evaluate expression"/>
-		<controls:NEMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected" ToolTip="Run selected text as an expression and give the result"/>
 	</MenuItem>
 	<MenuItem Header="_Text">
 		<MenuItem Header="_Select">
