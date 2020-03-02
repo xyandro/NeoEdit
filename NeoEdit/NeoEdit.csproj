@@ -449,13 +449,6 @@
     <Compile Include="Dialogs\ExpressionHelpVariablesDialog.xaml.cs">
       <DependentUpon>ExpressionHelpVariablesDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ExpressionSolveDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ExpressionSolveDialog.xaml.cs">
-      <DependentUpon>ExpressionSolveDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\FileEncodingLineEndingsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1024,7 +1017,6 @@
     <Compile Include="Expressions\ExpressionUnit.cs" />
     <Compile Include="Expressions\ExpressionUnits.cs" />
     <Compile Include="Expressions\ExpressionUnitsConversion.cs" />
-    <Compile Include="Expressions\InlineVariable.cs" />
     <Compile Include="Expressions\NEExpression.cs" />
     <Compile Include="Expressions\NEVariable.cs" />
     <Compile Include="Expressions\NEVariableConstant.cs" />

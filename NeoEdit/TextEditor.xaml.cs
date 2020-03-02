@@ -83,8 +83,6 @@ namespace NeoEdit.Program
 		[DepProp]
 		public bool StrictParsing { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IncludeInlineVariables { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
 		public JumpByType JumpBy { get { return UIHelper<TextEditor>.GetPropValue<JumpByType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); jumpBy = JumpBy; } }
 		[DepProp]
 		public bool ViewValues { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -708,9 +706,6 @@ namespace NeoEdit.Program
 			results.Add(NEVariable.Constant("geostart", "Geometric series start", () => geoStart, initializeGeoSeries));
 			results.Add(NEVariable.Constant("geoincrement", "Geometric series increment", () => geoIncrement, initializeGeoSeries));
 
-			if (IncludeInlineVariables)
-				GetInlineVariables().NonNullOrEmpty(inlineVar => inlineVar.Name).Where(inlineVar => !results.Contains(inlineVar.Name)).ForEach(inlineVar => results.Add(NEVariable.Constant(inlineVar.Name, "Inline variable", inlineVar.Value)));
-
 			return results;
 		}
 
@@ -778,7 +773,6 @@ namespace NeoEdit.Program
 				case NECommand.Expression_Expression: dialogResult = Command_Expression_Expression_Dialog(); break;
 				case NECommand.Expression_Copy: dialogResult = Command_Expression_Copy_Dialog(); break;
 				case NECommand.Expression_SelectByExpression: dialogResult = Command_Expression_SelectByExpression_Dialog(); break;
-				case NECommand.Expression_InlineVariables_Solve: dialogResult = Command_Expression_InlineVariables_Solve_Dialog(); break;
 				case NECommand.Text_Select_Trim: dialogResult = Command_Text_Select_Trim_Dialog(); break;
 				case NECommand.Text_Select_ByWidth: dialogResult = Command_Text_Select_ByWidth_Dialog(); break;
 				case NECommand.Text_Select_WholeWord: dialogResult = Command_Text_Select_WholeBoundedWord_Dialog(true); break;
@@ -1256,10 +1250,6 @@ namespace NeoEdit.Program
 				case NECommand.Expression_Copy: Command_Expression_Copy(dialogResult as GetExpressionDialog.Result); break;
 				case NECommand.Expression_EvaluateSelected: Command_Expression_EvaluateSelected(); break;
 				case NECommand.Expression_SelectByExpression: Command_Expression_SelectByExpression(dialogResult as GetExpressionDialog.Result); break;
-				case NECommand.Expression_InlineVariables_Add: Command_Expression_InlineVariables_Add(); break;
-				case NECommand.Expression_InlineVariables_Calculate: Command_Expression_InlineVariables_Calculate(); break;
-				case NECommand.Expression_InlineVariables_Solve: Command_Expression_InlineVariables_Solve(dialogResult as ExpressionSolveDialog.Result); break;
-				case NECommand.Expression_InlineVariables_IncludeInExpressions: Command_Expression_InlineVariables_IncludeInExpressions(multiStatus); break;
 				case NECommand.Text_Select_Trim: Command_Text_Select_Trim(dialogResult as TextTrimDialog.Result); break;
 				case NECommand.Text_Select_ByWidth: Command_Text_Select_ByWidth(dialogResult as TextWidthDialog.Result); break;
 				case NECommand.Text_Select_WholeWord: Command_Text_Select_WholeBoundedWord(dialogResult as TextSelectWholeBoundedWordDialog.Result, true); break;
@@ -2565,27 +2555,6 @@ namespace NeoEdit.Program
 		public CacheValue previousData { get; } = new CacheValue();
 		public ParserType previousType { get; set; }
 		public ParserNode previousRoot { get; set; }
-
-		public List<InlineVariable> GetInlineVariables()
-		{
-			var inlineVars = new List<InlineVariable>();
-			var regex = new Regex(@"\[(\w*):'(.*?)'=(.*?)\]", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-			var found = new HashSet<string>();
-			foreach (var tuple in RegexMatches(regex, 0, Data.MaxPosition - 0, false, false))
-			{
-				var match = regex.Match(Data.GetString(tuple.Item1, tuple.Item2));
-				var valueRange = Range.FromIndex(tuple.Item1 + match.Groups[3].Index, match.Groups[3].Length);
-				var inlineVar = new InlineVariable(match.Groups[1].Value, match.Groups[2].Value, Range.FromIndex(tuple.Item1 + match.Groups[2].Index, match.Groups[2].Length), GetString(valueRange), valueRange);
-				if (!string.IsNullOrEmpty(inlineVar.Name))
-				{
-					if (found.Contains(inlineVar.Name))
-						throw new Exception($"Duplicate inline variable: {inlineVar.Name}");
-					found.Add(inlineVar.Name);
-				}
-				inlineVars.Add(inlineVar);
-			}
-			return inlineVars;
-		}
 
 		public List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
 		{

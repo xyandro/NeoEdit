@@ -573,13 +573,6 @@
 		<controls:NEMenuItem Header="_Copy" CommandEnum="Expression_Copy" ToolTip="Copy expression results to clipboard"/>
 		<controls:NEMenuItem Header="E_valuate Selected" CommandEnum="Expression_EvaluateSelected" ToolTip="Run selected text as an expression and give the result"/>
 		<controls:NEMenuItem Header="_Select By Expression" CommandEnum="Expression_SelectByExpression" ToolTip="Leave selected only selections matching an expression"/>
-		<Separator/>
-		<MenuItem Header="_Inline Variables">
-			<controls:NEMenuItem Header="_Add" CommandEnum="Expression_InlineVariables_Add" ToolTip="Add inline variable"/>
-			<controls:NEMenuItem Header="_Calculate" CommandEnum="Expression_InlineVariables_Calculate" ToolTip="Calculate inline variables"/>
-			<controls:NEMenuItem Header="_Solve" CommandEnum="Expression_InlineVariables_Solve" ToolTip="Solve for inline variable"/>
-			<controls:MultiMenuItem Header="_Include In Expressions" TabsWindow="{Binding Parent, ElementName=self}" Property="IncludeInlineVariables" MultiValue="{StaticResource True}" CommandEnum="Expression_InlineVariables_IncludeInExpressions" ToolTip="Set flag for whether to make inline variables available in expressions"/>
-		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Text">
 		<MenuItem Header="_Select">
