@@ -406,7 +406,7 @@ namespace NeoEdit.Program
 
 		void Command_Select_Split(SelectSplitDialog.Result result)
 		{
-			var indexes = GetFixedExpressionResults<int>(result.Index);
+			var indexes = GetExpressionResults<int>(result.Index, Selections.Count());
 			SetSelections(Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList());
 		}
 

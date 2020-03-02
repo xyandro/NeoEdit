@@ -492,8 +492,6 @@ namespace NeoEdit.Program
 			statusBarRenderTimer.Start();
 		}
 
-		public List<T> GetFixedExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables(), Selections.Count());
-
 		public WordSkipType GetWordSkipType(int position)
 		{
 			if ((position < 0) || (position >= Data.MaxPosition))
@@ -564,7 +562,7 @@ namespace NeoEdit.Program
 
 		public string GetString(Range range) => Data.GetString(range.Start, range.Length);
 
-		public List<T> GetVariableExpressionResults<T>(string expression) => new NEExpression(expression).EvaluateList<T>(GetVariables());
+		public List<T> GetExpressionResults<T>(string expression, int? count = null) => new NEExpression(expression).EvaluateList<T>(GetVariables(), count);
 
 		public NEVariables GetVariables()
 		{

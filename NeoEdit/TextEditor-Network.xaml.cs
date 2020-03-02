@@ -71,7 +71,7 @@ namespace NeoEdit.Program
 
 		void Command_Network_AbsoluteURL(NetworkAbsoluteURLDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			var newStrs = Selections.Zip(results, (range, baseUrl) => new { range, baseUrl }).AsParallel().AsOrdered().Select(obj => new Uri(new Uri(obj.baseUrl), GetString(obj.range)).AbsoluteUri).ToList();
 			ReplaceSelections(newStrs);
 		}
@@ -126,7 +126,7 @@ namespace NeoEdit.Program
 
 		void Command_Network_FetchStream(NetworkFetchStreamDialog.Result result)
 		{
-			var urls = GetVariableExpressionResults<string>(result.Expression);
+			var urls = GetExpressionResults<string>(result.Expression);
 			if (!urls.Any())
 				return;
 
@@ -139,7 +139,7 @@ namespace NeoEdit.Program
 
 		void Command_Network_FetchPlaylist(NetworkFetchStreamDialog.Result result)
 		{
-			var urls = GetVariableExpressionResults<string>(result.Expression);
+			var urls = GetExpressionResults<string>(result.Expression);
 			if (!urls.Any())
 				return;
 

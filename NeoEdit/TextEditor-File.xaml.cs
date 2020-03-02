@@ -99,7 +99,7 @@ namespace NeoEdit.Program
 
 		void Command_File_SaveCopy_SaveCopyByExpression(GetExpressionDialog.Result result, bool copyOnly = false)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
 
@@ -181,7 +181,7 @@ namespace NeoEdit.Program
 
 		void Command_File_Operations_RenameByExpression(GetExpressionDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
 
@@ -257,7 +257,7 @@ namespace NeoEdit.Program
 				DisplayName = null;
 				return;
 			}
-			var results = GetVariableExpressionResults<string>(result.Expression);
+			var results = GetExpressionResults<string>(result.Expression);
 			if (results.Count != 1)
 				throw new Exception("Only one value may be specified");
 			DisplayName = results[0];

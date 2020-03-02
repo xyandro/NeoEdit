@@ -87,7 +87,7 @@ namespace NeoEdit.Program
 
 		void Command_Text_Select_ByWidth(TextWidthDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<int>(result.Expression);
+			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			SetSelections(Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList());
 		}
 
@@ -155,7 +155,7 @@ namespace NeoEdit.Program
 
 		void Command_Text_Width(TextWidthDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<int>(result.Expression);
+			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(GetString(range), result, results[index])).ToList());
 		}
 
@@ -175,7 +175,7 @@ namespace NeoEdit.Program
 
 		void Command_Text_RandomText(TextRandomTextDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<int>(result.Expression);
+			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 

@@ -298,7 +298,7 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Find_MassFind(EditFindMassFindDialog.Result result)
 		{
-			var texts = GetVariableExpressionResults<string>(result.Text);
+			var texts = GetExpressionResults<string>(result.Text);
 
 			if ((result.KeepMatching) || (result.RemoveMatching))
 			{
@@ -398,16 +398,16 @@ namespace NeoEdit.Program
 		{
 			switch (result.Action)
 			{
-				case EditExpressionExpressionDialog.Action.Evaluate: ReplaceSelections(GetFixedExpressionResults<string>(result.Expression)); break;
-				case EditExpressionExpressionDialog.Action.Copy: SetClipboardStrings(GetVariableExpressionResults<string>(result.Expression)); break;
+				case EditExpressionExpressionDialog.Action.Evaluate: ReplaceSelections(GetExpressionResults<string>(result.Expression, Selections.Count())); break;
+				case EditExpressionExpressionDialog.Action.Copy: SetClipboardStrings(GetExpressionResults<string>(result.Expression)); break;
 				case EditExpressionExpressionDialog.Action.Select:
-					var results = GetFixedExpressionResults<bool>(result.Expression);
+					var results = GetExpressionResults<bool>(result.Expression, Selections.Count());
 					SetSelections(Selections.Where((str, num) => results[num]).ToList());
 					break;
 			}
 		}
 
-		void Command_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetFixedExpressionResults<string>("Eval(x)"));
+		void Command_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetExpressionResults<string>("Eval(x)", Selections.Count()));
 
 		EditRotateDialog.Result Command_Edit_Rotate_Dialog() => EditRotateDialog.Run(TabsParent, GetVariables());
 
@@ -429,7 +429,7 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Repeat(EditRepeatDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<int>(result.Expression);
+			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			if (results.Any(repeatCount => repeatCount < 0))
 				throw new Exception("Repeat count must be >= 0");
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(GetString(range), results[index])).ToList());
@@ -464,7 +464,7 @@ namespace NeoEdit.Program
 
 		void Command_Edit_AbsoluteURL(FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			ReplaceSelections(GetSelectionStrings().Select((str, index) =>
 			{
 				var uri = new Uri(new Uri(results[index]), str);

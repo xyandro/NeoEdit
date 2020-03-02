@@ -99,7 +99,7 @@ namespace NeoEdit.Program
 
 		void Command_Image_AdjustColor(ImageAdjustColorDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<double>(result.Expression);
+			var results = GetExpressionResults<double>(result.Expression, Selections.Count());
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AdjustColor(GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
 			ReplaceSelections(strs);
 		}
@@ -108,14 +108,14 @@ namespace NeoEdit.Program
 
 		void Command_Image_AddColor(ImageAddOverlayColorDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AddColor(GetString(range), results[index])).ToList();
 			ReplaceSelections(strs);
 		}
 
 		void Command_Image_OverlayColor(ImageAddOverlayColorDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], GetString(range))).ToList();
 			ReplaceSelections(strs);
 		}

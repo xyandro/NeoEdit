@@ -410,7 +410,7 @@ namespace NeoEdit.Program
 
 		void Command_Files_Name_MakeAbsolute(FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteRelativeDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
@@ -418,7 +418,7 @@ namespace NeoEdit.Program
 
 		void Command_Files_Name_MakeRelative(FilesNamesMakeAbsoluteRelativeDialog.Result result)
 		{
-			var results = GetFixedExpressionResults<string>(result.Expression);
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (result.Type == FilesNamesMakeAbsoluteRelativeDialog.ResultType.File)
 				results = results.Select(str => Path.GetDirectoryName(str)).ToList();
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
@@ -555,7 +555,7 @@ namespace NeoEdit.Program
 
 		void Command_Files_Set_Time(TimestampType type, FilesSetTimeDialog.Result result)
 		{
-			var dateTimes = GetFixedExpressionResults<DateTime>(result.Expression);
+			var dateTimes = GetExpressionResults<DateTime>(result.Expression, Selections.Count());
 			var files = RelativeSelectedFiles();
 			for (var ctr = 0; ctr < files.Count; ++ctr)
 			{
@@ -639,7 +639,7 @@ namespace NeoEdit.Program
 
 		void Command_Files_Find_MassFind(FilesFindMassFindDialog.Result result)
 		{
-			var findStrs = GetVariableExpressionResults<string>(result.Expression);
+			var findStrs = GetExpressionResults<string>(result.Expression);
 			var searcher = Helpers.GetSearcher(findStrs, result.CodePages, result.MatchCase);
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
