@@ -76,7 +76,7 @@ namespace NeoEdit.Program.Controls
 			UpdateChildren();
 		}
 
-		int ResultCount => Variables.ResultCount(new List<string> { Expression, CountExpression1, CountExpression2, CountExpression3, CountExpression4 }.NonNullOrWhiteSpace().Select(expr => new NEExpression(expr)).ToArray());
+		int ResultCount => Variables.ResultCount(new List<string> { Expression, CountExpression1, CountExpression2, CountExpression3, CountExpression4 }.NonNullOrWhiteSpace().Select(expr => new NEExpression(expr)).ToArray()) ?? MaxResults;
 
 		protected override Size MeasureOverride(Size constraint)
 		{

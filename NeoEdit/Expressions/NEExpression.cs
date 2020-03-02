@@ -46,7 +46,7 @@ namespace NeoEdit.Program.Expressions
 			{
 				if (rowCount < 0)
 					throw new ArgumentException($"{nameof(rowCount)} must be positive");
-				var count = rowCount ?? variables.ResultCount(Variables);
+				var count = rowCount ?? variables.ResultCount(Variables) ?? 1;
 				return Enumerable.Range(0, count).Select(row => ChangeType<T>(InternalEvaluate(variables, row, unit))).ToList();
 			}
 			catch (AggregateException ex) { throw ex.InnerException ?? ex; }
