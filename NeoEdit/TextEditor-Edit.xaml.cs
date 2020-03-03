@@ -304,9 +304,9 @@ namespace NeoEdit.Program
 				return;
 			}
 
-			var searcher = new Searcher(texts, result.MatchCase);
+			var searcher = new StringsSearcher(texts, result.MatchCase);
 			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => searcher.Find(Data.GetString(selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1 + selection.Start, tuple.Item2))).ToList();
+			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => searcher.Find(Data.GetString(selection.Start, selection.Length)).Select(range => Range.FromIndex(range.Start + selection.Start, range.Length))).ToList();
 			SetSelections(ranges);
 		}
 
@@ -319,16 +319,16 @@ namespace NeoEdit.Program
 		void Command_Edit_Find_Binary(EditFindBinaryDialog.Result result)
 		{
 			var findStrs = result.CodePages
-				.Select(codePage => Tuple.Create(Coder.TryStringToBytes(result.Text, codePage), (!Coder.IsStr(codePage)) || (result.MatchCase) || (Coder.AlwaysCaseSensitive(codePage))))
+				.Select(codePage => (Coder.TryStringToBytes(result.Text, codePage), (!Coder.IsStr(codePage)) || (result.MatchCase) || (Coder.AlwaysCaseSensitive(codePage))))
 				.NonNull(tuple => tuple.Item1)
-				.Select(tuple => Tuple.Create(Coder.TryBytesToString(tuple.Item1, CodePage), tuple.Item2))
+				.Select(tuple => (Coder.TryBytesToString(tuple.Item1, CodePage), tuple.Item2))
 				.NonNullOrEmpty(tuple => tuple.Item1)
 				.GroupBy(tuple => $"{tuple.Item1}-{tuple.Item2}")
 				.Select(group => group.First())
 				.ToList();
-			var searcher = new Searcher(findStrs);
+			var searcher = new StringsSearcher(findStrs);
 			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => searcher.Find(Data.GetString(selection.Start, selection.Length)).Select(tuple => Range.FromIndex(tuple.Item1 + selection.Start, tuple.Item2))).ToList();
+			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => searcher.Find(Data.GetString(selection.Start, selection.Length)).Select(range => Range.FromIndex(range.Start + selection.Start, range.Length))).ToList();
 			ViewValuesFindValue = result.Text;
 			SetSelections(ranges);
 		}

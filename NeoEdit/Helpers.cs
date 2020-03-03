@@ -430,18 +430,18 @@ namespace NeoEdit.Program
 
 		public static string NeoEditAppData => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NeoEdit");
 
-		public static Searcher GetSearcher(List<string> findStrs, List<Coder.CodePage> codePages, bool matchCase)
+		public static BinarySearcher GetBinarySearcher(List<string> findStrs, List<Coder.CodePage> codePages, bool matchCase)
 		{
-			var data = new List<Tuple<byte[], bool>>();
+			var data = new List<(byte[], bool)>();
 			foreach (var findStr in findStrs)
 				foreach (var codePage in codePages)
 				{
 					var bytes = Coder.TryStringToBytes(findStr, codePage);
 					if (bytes != null)
-						data.Add(Tuple.Create(bytes, (!Coder.IsStr(codePage)) || (matchCase) || (Coder.AlwaysCaseSensitive(codePage))));
+						data.Add((bytes, (!Coder.IsStr(codePage)) || (matchCase) || (Coder.AlwaysCaseSensitive(codePage))));
 				}
 			data = data.Distinct(tuple => $"{Coder.BytesToString(tuple.Item1, Coder.CodePage.Hex)}-{tuple.Item2}").ToList();
-			return new Searcher(data);
+			return new BinarySearcher(data);
 		}
 
 		static Helpers() { Directory.CreateDirectory(NeoEditAppData); }

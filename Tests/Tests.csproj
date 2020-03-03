@@ -42,7 +42,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SearcherTest.cs" />
     <Compile Include="TextDataTest.cs" />
     <Compile Include="UnicodeTest.cs" />
     <Compile Include="UnitTest.cs" />

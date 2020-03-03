@@ -117,6 +117,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BinarySearcher.cs" />
     <Compile Include="CacheValue.cs" />
     <Compile Include="CommandLine\CommandLineParams.cs" />
     <Compile Include="CommandLine\CommandLineVisitor.cs" />
@@ -1111,17 +1112,9 @@
     <Compile Include="RevRegEx\RevRegExVisitor.cs" />
     <None Include="RevRegEx\Source\RevRegExLexer.g4" />
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
-    <Compile Include="Searcher.cs">
-      <DependentUpon>Searcher.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Content Include="Searcher.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Searcher.cs</LastGenOutput>
-    </Content>
     <Compile Include="Settings.cs" />
     <Compile Include="ShutdownData.cs" />
+    <Compile Include="StringsSearcher.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="TabsWindow-Diff.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>

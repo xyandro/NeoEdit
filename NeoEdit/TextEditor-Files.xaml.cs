@@ -18,7 +18,7 @@ namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{
-		async Task<bool> BinarySearchFileAsync(string fileName, Searcher searcher, IProgress<ProgressReport> progress, CancellationToken cancel)
+		async Task<bool> BinarySearchFileAsync(string fileName, BinarySearcher searcher, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{
 			try
 			{
@@ -42,8 +42,7 @@ namespace NeoEdit.Program
 						used += block;
 						progress.Report(new ProgressReport(stream.Position, stream.Length));
 
-						var result = searcher.Find(buffer, 0, used, true);
-						if (result.Any())
+						if (searcher.Find(buffer, 0, used))
 							return true;
 
 						var keep = Math.Min(used, findLen - 1);
@@ -623,7 +622,7 @@ namespace NeoEdit.Program
 		void Command_Files_Find_Binary(FilesFindBinaryDialog.Result result)
 		{
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
-			var searcher = Helpers.GetSearcher(new List<string> { result.Text }, result.CodePages, result.MatchCase);
+			var searcher = Helpers.GetBinarySearcher(new List<string> { result.Text }, result.CodePages, result.MatchCase);
 			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}
 
@@ -640,7 +639,7 @@ namespace NeoEdit.Program
 		void Command_Files_Find_MassFind(FilesFindMassFindDialog.Result result)
 		{
 			var findStrs = GetExpressionResults<string>(result.Expression);
-			var searcher = Helpers.GetSearcher(findStrs, result.CodePages, result.MatchCase);
+			var searcher = Helpers.GetBinarySearcher(findStrs, result.CodePages, result.MatchCase);
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}

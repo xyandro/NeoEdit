@@ -231,8 +231,8 @@ namespace NeoEdit.Program
 
 		public static IEnumerable<TSource> Null<TSource>(this IEnumerable<TSource> source) => source.Where(item => item == null);
 		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<TSource> source) where TSource : class => source.Where(item => item != null);
-		public static IEnumerable<TSource> NonNull<TSource, TElement>(this IEnumerable<TSource> source, Func<TSource, TElement> selector) where TSource : class => source.Where(item => selector(item) != null);
 		public static IEnumerable<TSource> NonNull<TSource>(this IEnumerable<TSource?> source) where TSource : struct => source.Where(item => item.HasValue).Select(item => item.Value);
+		public static IEnumerable<TSource> NonNull<TSource, TElement>(this IEnumerable<TSource> source, Func<TSource, TElement> selector) => source.Where(item => selector(item) != null);
 
 		public static IEnumerable<string> NullOrEmpty(this IEnumerable<string> source) => source.Where(str => string.IsNullOrEmpty(str));
 		public static IEnumerable<TSource> NullOrEmpty<TSource>(this IEnumerable<TSource> source, Func<TSource, string> selector) => source.Where(obj => string.IsNullOrEmpty(selector(obj)));
