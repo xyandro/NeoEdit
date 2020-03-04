@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Expressions;
 
 namespace NeoEdit.Program.Dialogs
 {
@@ -11,6 +12,9 @@ namespace NeoEdit.Program.Dialogs
 		{
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
+			public bool IsExpression { get; set; }
+			public bool AlignSelections { get; set; }
+			public bool IsBoolean { get; set; }
 			public bool IsRegex { get; set; }
 			public bool RegexGroups { get; set; }
 			public bool EntireSelection { get; set; }
@@ -31,6 +35,9 @@ namespace NeoEdit.Program.Dialogs
 			public string Text { get; set; }
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
+			public bool IsExpression { get; set; }
+			public bool AlignSelections { get; set; }
+			public bool IsBoolean { get; set; }
 			public bool IsRegex { get; set; }
 			public bool RegexGroups { get; set; }
 			public bool SelectionOnly { get; set; }
@@ -47,6 +54,12 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public bool MatchCase { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool IsExpression { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool AlignSelections { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool IsBoolean { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public bool IsRegex { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool RegexGroups { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
@@ -59,19 +72,86 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public bool RemoveMatching { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 
+		public NEVariables Variables { get; }
+
 		static EditFindFindDialog()
 		{
 			UIHelper<EditFindFindDialog>.Register();
-			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsRegex, (obj, o, n) => { if (!obj.IsRegex) obj.RegexGroups = false; });
-			UIHelper<EditFindFindDialog>.AddCallback(a => a.RegexGroups, (obj, o, n) => { if (obj.RegexGroups) { obj.IsRegex = true; obj.KeepMatching = obj.RemoveMatching = false; } });
-			UIHelper<EditFindFindDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) => { if (!obj.SelectionOnly) obj.EntireSelection = obj.KeepMatching = obj.RemoveMatching = false; });
-			UIHelper<EditFindFindDialog>.AddCallback(a => a.EntireSelection, (obj, o, n) => { if (obj.EntireSelection) obj.SelectionOnly = true; });
-			UIHelper<EditFindFindDialog>.AddCallback(a => a.KeepMatching, (obj, o, n) => { if (obj.KeepMatching) { obj.SelectionOnly = true; obj.RemoveMatching = obj.RegexGroups = false; } });
-			UIHelper<EditFindFindDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) => { if (obj.RemoveMatching) { obj.SelectionOnly = true; obj.KeepMatching = obj.RegexGroups = false; } });
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsExpression, (obj, o, n) =>
+			{
+				if (obj.IsExpression)
+					obj.IsRegex = false;
+				else
+					obj.AlignSelections = false;
+			});
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.AlignSelections, (obj, o, n) =>
+			{
+				if (obj.AlignSelections)
+					obj.IsExpression = obj.SelectionOnly = true;
+				else
+					obj.IsBoolean = false;
+			});
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsBoolean, (obj, o, n) =>
+			{
+				if (obj.IsBoolean)
+				{
+					obj.AlignSelections = true;
+					if (!obj.RemoveMatching)
+						obj.KeepMatching = true;
+				}
+			});
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsRegex, (obj, o, n) =>
+			{
+				if (obj.IsRegex)
+					obj.IsExpression = false;
+				else
+					obj.RegexGroups = false;
+			});
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.RegexGroups, (obj, o, n) =>
+			{
+				if (obj.RegexGroups)
+				{
+					obj.IsRegex = true;
+					obj.KeepMatching = obj.RemoveMatching = false;
+				}
+			});
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) =>
+			{
+				if (!obj.SelectionOnly)
+					obj.AlignSelections = obj.EntireSelection = obj.KeepMatching = obj.RemoveMatching = false;
+			});
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.EntireSelection, (obj, o, n) =>
+			{
+				if (obj.EntireSelection)
+					obj.SelectionOnly = true;
+			});
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.KeepMatching, (obj, o, n) =>
+			{
+				if (obj.KeepMatching)
+				{
+					obj.SelectionOnly = true;
+					obj.RemoveMatching = obj.RegexGroups = false;
+				}
+				else if (!obj.RemoveMatching)
+					obj.IsBoolean = false;
+			});
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) =>
+			{
+				if (obj.RemoveMatching)
+				{
+					obj.SelectionOnly = true;
+					obj.KeepMatching = obj.RegexGroups = false;
+				}
+				else if (!obj.KeepMatching)
+					obj.IsBoolean = false;
+			});
 		}
 
-		EditFindFindDialog(string text, bool selectionOnly)
+
+		EditFindFindDialog(string text, bool selectionOnly, NEVariables variables)
 		{
+			Variables = variables;
+
 			InitializeComponent();
 
 			SelectionOnly = selectionOnly;
@@ -85,6 +165,9 @@ namespace NeoEdit.Program.Dialogs
 			{
 				WholeWords = WholeWords,
 				MatchCase = MatchCase,
+				IsExpression = IsExpression,
+				AlignSelections = AlignSelections,
+				IsBoolean = IsBoolean,
 				IsRegex = IsRegex,
 				RegexGroups = RegexGroups,
 				EntireSelection = EntireSelection,
@@ -100,6 +183,9 @@ namespace NeoEdit.Program.Dialogs
 
 			WholeWords = checkBoxStatus.WholeWords;
 			MatchCase = checkBoxStatus.MatchCase;
+			IsExpression = checkBoxStatus.IsExpression;
+			AlignSelections = checkBoxStatus.AlignSelections;
+			IsBoolean = checkBoxStatus.IsBoolean;
 			IsRegex = checkBoxStatus.IsRegex;
 			RegexGroups = checkBoxStatus.RegexGroups;
 			EntireSelection = checkBoxStatus.EntireSelection;
@@ -118,7 +204,7 @@ namespace NeoEdit.Program.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching };
+			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsExpression = IsExpression, AlignSelections = AlignSelections, IsBoolean = IsBoolean, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching };
 			if (sender == copyCount)
 				result.Type = ResultType.CopyCount;
 			else if (sender == findNext)
@@ -135,11 +221,11 @@ namespace NeoEdit.Program.Dialogs
 
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
-		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = IsRegex = RegexGroups = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
+		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = IsExpression = AlignSelections = IsBoolean = IsRegex = RegexGroups = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
 
-		static public Result Run(Window parent, string text, bool selectionOnly)
+		static public Result Run(Window parent, string text, bool selectionOnly, NEVariables variables)
 		{
-			var dialog = new EditFindFindDialog(text, selectionOnly) { Owner = parent };
+			var dialog = new EditFindFindDialog(text, selectionOnly, variables) { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 	}

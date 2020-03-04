@@ -10,6 +10,7 @@ using System.Web;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Parsing;
+using NeoEdit.Program.Searchers;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -231,40 +232,22 @@ namespace NeoEdit.Program
 				}
 			}
 
-			return EditFindFindDialog.Run(TabsParent, text, selectionOnly);
+			return EditFindFindDialog.Run(TabsParent, text, selectionOnly, GetVariables());
 		}
 
 		void Command_Edit_Find_Find(EditFindFindDialog.Result result)
 		{
-			var text = result.Text;
-			if (!result.IsRegex)
-				text = Regex.Escape(text);
-			text = $"(?:{text})";
-			if (result.WholeWords)
-				text = $"\\b{text}\\b";
-			if (result.EntireSelection)
-				text = $"\\A{text}\\Z";
-			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
-			if (!result.MatchCase)
-				options |= RegexOptions.IgnoreCase;
-			var regex = new Regex(text, options);
+			List<Range> results;
+			if (result.IsExpression)
+				results = Command_Edit_Find_Find_Expression(result);
+			else if (result.IsRegex)
+				results = Command_Edit_Find_Find_Regex(result);
+			else
+				results = Command_Edit_Find_Find_Text(result);
 
-			if ((result.KeepMatching) || (result.RemoveMatching))
-			{
-				SetSelections(Selections.AsParallel().AsOrdered().Where(range => regex.IsMatch(GetString(range)) == result.KeepMatching).ToList());
+			if (results == null)
 				return;
-			}
 
-			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var resultsByRegion = regions.AsParallel().AsOrdered().Select(region => RegexMatches(regex, region.Start, region.Length, result.RegexGroups, false)).ToList();
-
-			if (result.Type == EditFindFindDialog.ResultType.CopyCount)
-			{
-				SetClipboardStrings(resultsByRegion.Select(list => list.Count.ToString()));
-				return;
-			}
-
-			var results = resultsByRegion.SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
 			switch (result.Type)
 			{
 				case EditFindFindDialog.ResultType.FindNext:
@@ -275,6 +258,88 @@ namespace NeoEdit.Program
 					SetSelections(results);
 					break;
 			}
+		}
+
+		List<Range> Command_Edit_Find_Find_Expression(EditFindFindDialog.Result result)
+		{
+			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
+
+			var expressionResults = GetExpressionResults<object>(result.Text, result.AlignSelections ? selections.Count : default(int?));
+
+			if (result.IsBoolean) // AlignSelections and either KeepMatching or RemoveMatching will also be true
+				return selections.Where((range, index) => (bool)expressionResults[index] == result.KeepMatching).ToList();
+
+			var firstMatchOnly = (result.KeepMatching) || (result.RemoveMatching);
+			List<List<Range>> searchResults;
+			if (result.AlignSelections)
+				searchResults = selections.AsParallel().AsOrdered().Select((range, index) => new StringSearcher(expressionResults[index]?.ToString() ?? "", result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly).Find(GetString(range), range.Start)).ToList();
+			else
+			{
+				var searcher = new StringsSearcher(expressionResults.Select(x => x?.ToString() ?? ""), result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly);
+				searchResults = selections.AsParallel().AsOrdered().Select(range => searcher.Find(GetString(range), range.Start)).ToList();
+			}
+
+			if (firstMatchOnly)
+				return selections.Where((tuple, index) => searchResults[index].Any() == result.KeepMatching).ToList();
+
+			if (result.Type == EditFindFindDialog.ResultType.CopyCount)
+			{
+				SetClipboardStrings(searchResults.Select(list => list.Count.ToString()));
+				return null;
+			}
+
+			return searchResults.SelectMany().ToList();
+		}
+
+		List<Range> Command_Edit_Find_Find_Regex(EditFindFindDialog.Result result)
+		{
+			var text = $"(?:{result.Text})";
+			if (result.WholeWords)
+				text = $"\\b{text}\\b";
+			if (result.EntireSelection)
+				text = $"\\A{text}\\Z";
+			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
+			if (!result.MatchCase)
+				options |= RegexOptions.IgnoreCase;
+			var regex = new Regex(text, options);
+
+			if ((result.KeepMatching) || (result.RemoveMatching))
+				return Selections.AsParallel().AsOrdered().Where(range => regex.IsMatch(GetString(range)) == result.KeepMatching).ToList();
+
+			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
+			var resultsBySelection = selections.AsParallel().AsOrdered().Select(range => RegexMatches(regex, range.Start, range.Length, result.RegexGroups, false)).ToList();
+
+			if (result.Type == EditFindFindDialog.ResultType.CopyCount)
+			{
+				SetClipboardStrings(resultsBySelection.Select(list => list.Count.ToString()));
+				return null;
+			}
+
+			return resultsBySelection.SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
+		}
+
+		List<Range> Command_Edit_Find_Find_Text(EditFindFindDialog.Result result)
+		{
+			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
+
+			var firstMatchOnly = (result.KeepMatching) || (result.RemoveMatching);
+			var searcher = new StringSearcher(result.Text, result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly);
+
+			if (result.IsBoolean) // AlignSelections and either KeepMatching or RemoveMatching will also be true
+				return selections.AsParallel().AsOrdered().Where(range => searcher.Find(GetString(range)).Any() == result.KeepMatching).ToList();
+
+			var searchResults = selections.AsParallel().AsOrdered().Select(range => searcher.Find(GetString(range), range.Start)).ToList();
+
+			if (firstMatchOnly)
+				return selections.Where((tuple, index) => searchResults[index].Any() == result.KeepMatching).ToList();
+
+			if (result.Type == EditFindFindDialog.ResultType.CopyCount)
+			{
+				SetClipboardStrings(searchResults.Select(list => list.Count.ToString()));
+				return null;
+			}
+
+			return searchResults.SelectMany().ToList();
 		}
 
 		void Command_Edit_Find_NextPrevious(bool next, bool selecting) => FindNext(next, selecting);
@@ -289,25 +354,6 @@ namespace NeoEdit.Program
 
 			SetSearches(RegexMatches(regex, 0, Data.MaxPosition, false, false).Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList());
 			FindNext(true, selecting);
-		}
-
-		EditFindMassFindDialog.Result Command_Edit_Find_MassFind_Dialog() => EditFindMassFindDialog.Run(TabsParent, Selections.Any(range => range.HasSelection), GetVariables());
-
-		void Command_Edit_Find_MassFind(EditFindMassFindDialog.Result result)
-		{
-			var texts = GetExpressionResults<string>(result.Text);
-
-			if ((result.KeepMatching) || (result.RemoveMatching))
-			{
-				var set = new HashSet<string>(texts, result.MatchCase ? (IEqualityComparer<string>)EqualityComparer<string>.Default : StringComparer.OrdinalIgnoreCase);
-				SetSelections(Selections.AsParallel().AsOrdered().Where(range => set.Contains(GetString(range)) == result.KeepMatching).ToList());
-				return;
-			}
-
-			var searcher = new StringsSearcher(texts, result.WholeWords, result.MatchCase, result.EntireSelection);
-			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => searcher.Find(Data.GetString(selection.Start, selection.Length)).Select(range => Range.FromIndex(range.Start + selection.Start, range.Length))).ToList();
-			SetSelections(ranges);
 		}
 
 		EditFindBinaryDialog.Result Command_Edit_Find_Binary_Dialog()
@@ -328,7 +374,7 @@ namespace NeoEdit.Program
 				.ToList();
 			var searcher = new StringsSearcher(findStrs);
 			var selections = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => searcher.Find(Data.GetString(selection.Start, selection.Length)).Select(range => Range.FromIndex(range.Start + selection.Start, range.Length))).ToList();
+			var ranges = selections.AsParallel().AsOrdered().SelectMany(selection => searcher.Find(Data.GetString(selection.Start, selection.Length), selection.Start)).ToList();
 			ViewValuesFindValue = result.Text;
 			SetSelections(ranges);
 		}

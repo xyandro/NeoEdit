@@ -154,7 +154,7 @@ namespace NeoEdit.Program.Controls
 				var expression = new NEExpression(Expression);
 				variables = new List<string>(expression.Variables);
 				var resultCount = Math.Min(NumResults ?? ResultCount, useResults);
-				results = expression.EvaluateList<string>(Variables, resultCount).Coalesce("").ToList();
+				results = expression.EvaluateList<string>(Variables, resultCount, forceCount: false).Coalesce("").ToList();
 				varValues = variables.ToDictionary(variable => variable, variable => Variables.GetValues(variable, resultCount).Select(val => val?.ToString()).ToList());
 				IsValid = true;
 				ErrorMessage = null;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit.Program
+namespace NeoEdit.Program.Searchers
 {
 	public class BinarySearcher
 	{

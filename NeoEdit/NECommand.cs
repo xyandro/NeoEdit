@@ -58,7 +58,6 @@ namespace NeoEdit.Program
 		[KeyGesture(Key.F3)] [KeyGesture(Key.F3, ModifierKeys.Shift, 2)] Edit_Find_Next,
 		[KeyGesture(Key.F4)] [KeyGesture(Key.F4, ModifierKeys.Shift, 2)] Edit_Find_Previous,
 		[KeyGesture(Key.F3, ModifierKeys.Control)] [KeyGesture(Key.F3, ModifierKeys.Control | ModifierKeys.Shift, 2)] Edit_Find_Selected,
-		[KeyGesture(Key.M, ModifierKeys.Control)] Edit_Find_MassFind,
 		[KeyGesture(Key.B, ModifierKeys.Control)] Edit_Find_Binary,
 		Edit_Find_Replace,
 		Edit_Find_ClearSearchResults,

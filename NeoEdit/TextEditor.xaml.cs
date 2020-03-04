@@ -729,7 +729,6 @@ namespace NeoEdit.Program
 				case NECommand.File_Encoding_LineEndings: dialogResult = Command_File_Encoding_LineEndings_Dialog(); break;
 				case NECommand.File_Encrypt: dialogResult = Command_File_Encrypt_Dialog(multiStatus); break;
 				case NECommand.Edit_Find_Find: dialogResult = Command_Edit_Find_Find_Dialog(); break;
-				case NECommand.Edit_Find_MassFind: dialogResult = Command_Edit_Find_MassFind_Dialog(); break;
 				case NECommand.Edit_Find_Binary: dialogResult = Command_Edit_Find_Binary_Dialog(); break;
 				case NECommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_Replace_Dialog(); break;
 				case NECommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(); break;
@@ -918,7 +917,6 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
 				case NECommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
 				case NECommand.Edit_Find_Selected: Command_Edit_Find_Selected(shiftDown); break;
-				case NECommand.Edit_Find_MassFind: Command_Edit_Find_MassFind(dialogResult as EditFindMassFindDialog.Result); break;
 				case NECommand.Edit_Find_Binary: Command_Edit_Find_Binary(dialogResult as EditFindBinaryDialog.Result); break;
 				case NECommand.Edit_Find_Replace: Command_Edit_Find_Replace(dialogResult as EditFindReplaceDialog.Result); break;
 				case NECommand.Edit_Find_ClearSearchResults: Command_Edit_Find_ClearSearchResults(); break;

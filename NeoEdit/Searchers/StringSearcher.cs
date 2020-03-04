@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
-namespace NeoEdit.Program
+namespace NeoEdit.Program.Searchers
 {
 	public class StringSearcher
 	{
@@ -17,17 +16,14 @@ namespace NeoEdit.Program
 			this.firstMatchOnly = firstMatchOnly;
 		}
 
-		public List<Range> Find(string input) => Find(input, 0, input.Length);
-
-		public List<Range> Find(string input, int startIndex, int length)
+		public List<Range> Find(string input, int addOffset = 0)
 		{
 			var result = new List<Range>();
 			if ((entireSelection) && (input.Length != findStr1.Length))
 				return result;
 
-			var endIndex = startIndex + length;
-			var endSearch = endIndex - findStr1.Length;
-			for (var index = startIndex; index <= endSearch;)
+			var endSearch = input.Length - findStr1.Length;
+			for (var index = 0; index <= endSearch;)
 			{
 				var found = true;
 				for (var strIndex = 0; strIndex < findStr1.Length; ++strIndex)
@@ -38,16 +34,16 @@ namespace NeoEdit.Program
 						break;
 					}
 
-					if ((wholeWords) && (strIndex == 0) && (!Helpers.IsWordBoundary(input, startIndex, endIndex, index)))
+					if ((wholeWords) && (strIndex == 0) && (!Helpers.IsWordBoundary(input, index)))
 					{
 						found = false;
 						break;
 					}
 				}
 
-				if ((found) && ((!wholeWords) || (Helpers.IsWordBoundary(input, startIndex, endIndex, index + findStr1.Length))))
+				if ((found) && ((!wholeWords) || (Helpers.IsWordBoundary(input, index + findStr1.Length))))
 				{
-					result.Add(Range.FromIndex(index, findStr1.Length));
+					result.Add(Range.FromIndex(index + addOffset, findStr1.Length));
 					if (firstMatchOnly)
 						return result;
 					index += findStr1.Length;

@@ -117,7 +117,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BinarySearcher.cs" />
     <Compile Include="CacheValue.cs" />
     <Compile Include="CommandLine\CommandLineParams.cs" />
     <Compile Include="CommandLine\CommandLineVisitor.cs" />
@@ -386,13 +385,6 @@
     </Page>
     <Compile Include="Dialogs\EditFindFindDialog.xaml.cs">
       <DependentUpon>EditFindFindDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\EditFindMassFindDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\EditFindMassFindDialog.xaml.cs">
-      <DependentUpon>EditFindMassFindDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\EditFindReplaceDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1112,10 +1104,11 @@
     <Compile Include="RevRegEx\RevRegExVisitor.cs" />
     <None Include="RevRegEx\Source\RevRegExLexer.g4" />
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
+    <Compile Include="Searchers\BinarySearcher.cs" />
+    <Compile Include="Searchers\StringSearcher.cs" />
+    <Compile Include="Searchers\StringsSearcher.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ShutdownData.cs" />
-    <Compile Include="StringSearcher.cs" />
-    <Compile Include="StringsSearcher.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="TabsWindow-Diff.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>

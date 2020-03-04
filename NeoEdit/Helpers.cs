@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NeoEdit.Program.Parsing;
+using NeoEdit.Program.Searchers;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -513,13 +514,13 @@ namespace NeoEdit.Program
 
 		public static bool IsAdministrator() => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
-		public static bool IsWordBoundary(string input, int startIndex, int endIndex, int index)
+		public static bool IsWordBoundary(string input, int index)
 		{
-			if (startIndex == endIndex)
+			if (input.Length == 0)
 				return false;
-			if (index == startIndex)
+			if (index == 0)
 				return isWordChar[input[index]];
-			if (index == endIndex)
+			if (index == input.Length)
 				return isWordChar[input[index - 1]];
 			return isWordChar[input[index - 1]] != isWordChar[input[index]];
 		}

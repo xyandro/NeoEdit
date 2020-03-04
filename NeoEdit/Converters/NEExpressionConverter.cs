@@ -52,17 +52,22 @@ namespace NeoEdit.Program.Converters
 				return result;
 			if (targetType == typeof(string))
 				return result.ToString();
-			if ((targetType == typeof(bool)) || (targetType == typeof(Visibility)))
+			if (targetType == typeof(bool))
 			{
 				TryStringConversion<bool>(ref result, bool.TryParse);
-
-				if (!(result is bool))
-					return null;
-
-				var val = (bool)result;
-				if (targetType == typeof(Visibility))
+				return result as bool?;
+			}
+			if (targetType == typeof(Visibility))
+			{
+				TryStringConversion<bool>(ref result, bool.TryParse);
+				if ((result is bool val))
 					return val ? Visibility.Visible : Visibility.Collapsed;
-				return val;
+
+				if (result is string s)
+					if (Enum.TryParse<Visibility>(s, out var visibility))
+						return visibility;
+
+				return null;
 			}
 			if ((targetType == typeof(double)) || (targetType == typeof(Thickness)))
 			{

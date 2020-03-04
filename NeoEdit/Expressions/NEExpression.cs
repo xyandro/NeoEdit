@@ -40,13 +40,16 @@ namespace NeoEdit.Program.Expressions
 			return (T)Convert.ChangeType(value, typeof(T));
 		}
 
-		public List<T> EvaluateList<T>(NEVariables variables, int? rowCount = null, string unit = null)
+		public List<T> EvaluateList<T>(NEVariables variables, int? rowCount = null, string unit = null, bool forceCount = true)
 		{
 			try
 			{
 				if (rowCount < 0)
 					throw new ArgumentException($"{nameof(rowCount)} must be positive");
-				var count = rowCount ?? variables.ResultCount(Variables) ?? 1;
+				var resultCount = variables.ResultCount(Variables);
+				var count = rowCount ?? resultCount ?? 1;
+				if ((forceCount) && (count != (resultCount ?? count)))
+					throw new Exception($"Result count mismatch: expression has {resultCount} results, but {count} were requested");
 				return Enumerable.Range(0, count).Select(row => ChangeType<T>(InternalEvaluate(variables, row, unit))).ToList();
 			}
 			catch (AggregateException ex) { throw ex.InnerException ?? ex; }

@@ -7,10 +7,12 @@
 
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="50"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
@@ -22,32 +24,40 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
 		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="EditFindFindDialogText" OnAcceptSuggestion="OnAcceptSuggestion"/>
 
-		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+		<Label Grid.Row="1" Grid.Column="0" Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleConverter}}" Content="Results:" HorizontalAlignment="Right"/>
+		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleConverter}}" MultiRow="True" Expression="{Binding Text, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
+
+		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Focusable="False"/>
 			<CheckBox Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Margin="5,0,0,0" Focusable="False"/>
 		</StackPanel>
-		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+			<CheckBox Content="E_xpression" IsChecked="{Binding IsExpression, ElementName=self}" Focusable="False"/>
+			<CheckBox Content="A_lign selections" IsChecked="{Binding AlignSelections, ElementName=self}" Margin="5,0,0,0" Focusable="False"/>
+			<CheckBox Content="_Boolean" IsChecked="{Binding IsBoolean, ElementName=self}" Margin="5,0,0,0" Focusable="False"/>
+		</StackPanel>
+		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 			<CheckBox Content="by _group" IsChecked="{Binding RegexGroups, ElementName=self}" Focusable="False" Margin="5,0,0,0" VerticalAlignment="Center"/>
 			<Button Content="Esca_pe" Click="Escape" Focusable="False" VerticalAlignment="Center" Margin="5,0,0,0"/>
 			<Button Content="_Unescape" Click="Unescape" Focusable="False" VerticalAlignment="Center"/>
 		</StackPanel>
-		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+		<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Focusable="False"/>
 			<CheckBox Content="_Entire selection" IsChecked="{Binding EntireSelection, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 			<CheckBox Content="_Keep matches" IsChecked="{Binding KeepMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 			<CheckBox Content="Remo_ve matches" IsChecked="{Binding RemoveMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
+		<UniformGrid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
 			<Button Click="RegExHelp" Content="RegEx _Help"/>
 			<Button Click="Reset" Content="Rese_t"/>
 		</UniformGrid>
 
-		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" Name="copyCount" Content="C_opy Count" Padding="10,1">
 				<Button.Visibility>
-					<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="!p0 &amp;&amp; !p1 &amp;&amp; p2">
+					<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="(!p0 &amp;&amp; !p1 &amp;&amp; p2) ? &quot;Visible&quot; : &quot;Hidden&quot;">
 						<Binding Path="KeepMatching" ElementName="self"/>
 						<Binding Path="RemoveMatching" ElementName="self"/>
 						<Binding Path="SelectionOnly" ElementName="self"/>
@@ -56,7 +66,7 @@
 			</Button>
 			<Button Click="OkClick" Name="findNext" Content="Find _Next" Padding="10,1">
 				<Button.Visibility>
-					<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="!p0 &amp;&amp; !p1">
+					<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="(!p0 &amp;&amp; !p1) ? &quot;Visible&quot; : &quot;Hidden&quot;">
 						<Binding Path="KeepMatching" ElementName="self"/>
 						<Binding Path="RemoveMatching" ElementName="self"/>
 					</MultiBinding>

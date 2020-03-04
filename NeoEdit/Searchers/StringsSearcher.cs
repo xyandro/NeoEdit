@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit.Program
+namespace NeoEdit.Program.Searchers
 {
 	public class StringsSearcher
 	{
@@ -91,15 +91,12 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public List<Range> Find(string input) => Find(input, 0, input.Length);
-
-		public List<Range> Find(string input, int startIndex, int length)
+		public List<Range> Find(string input, int addOffset = 0)
 		{
 			var result = new List<Range>();
-			var endIndex = startIndex + length;
 			var curNodes = new List<SearchNode>();
 			var startNodes = new SearchNode[] { matchCaseStartNode, ignoreCaseStartNode };
-			for (var index = startIndex; index < endIndex; ++index)
+			for (var index = 0; index < input.Length; ++index)
 			{
 				var found = false;
 
@@ -107,7 +104,7 @@ namespace NeoEdit.Program
 				{
 					if (node.charMap.index[input[index]] != -1)
 					{
-						if ((!entireSelection) || (index == startIndex))
+						if ((!entireSelection) || (index == 0))
 							curNodes.Add(node);
 						found = true;
 					}
@@ -131,18 +128,18 @@ namespace NeoEdit.Program
 					if (newNode == null)
 						continue;
 
-					if ((wholeWords) && (node.start) && (!Helpers.IsWordBoundary(input, startIndex, endIndex, index)))
+					if ((wholeWords) && (node.start) && (!Helpers.IsWordBoundary(input, index)))
 						continue;
 
 					newNodes.Add(newNode);
 
 					if (newNode.length != NOMATCH)
 					{
-						if ((wholeWords) && (!Helpers.IsWordBoundary(input, startIndex, endIndex, index + 1)))
+						if ((wholeWords) && (!Helpers.IsWordBoundary(input, index + 1)))
 							continue;
-						if ((entireSelection) && (index + 1 != endIndex))
+						if ((entireSelection) && (index + 1 != input.Length))
 							continue;
-						result.Add(Range.FromIndex(index - newNode.length + 1, newNode.length));
+						result.Add(Range.FromIndex(index - newNode.length + 1 + addOffset, newNode.length));
 						if (firstMatchOnly)
 							return result;
 					}

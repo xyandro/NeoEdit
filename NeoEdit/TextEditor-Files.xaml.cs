@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Parsing;
+using NeoEdit.Program.Searchers;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
