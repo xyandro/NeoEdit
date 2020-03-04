@@ -1114,6 +1114,7 @@
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
     <Compile Include="Settings.cs" />
     <Compile Include="ShutdownData.cs" />
+    <Compile Include="StringSearcher.cs" />
     <Compile Include="StringsSearcher.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="TabsWindow-Diff.xaml.cs">
