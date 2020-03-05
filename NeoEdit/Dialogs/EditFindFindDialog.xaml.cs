@@ -219,6 +219,8 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
+		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
+
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
 		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = IsExpression = AlignSelections = IsBoolean = IsRegex = RegexGroups = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;

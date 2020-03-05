@@ -11,7 +11,7 @@
 	<TextBox.Template>
 		<ControlTemplate TargetType="TextBox">
 			<Grid SnapsToDevicePixels="True">
-				<Border CornerRadius="4" Padding="2" BorderThickness="2" Background="#404040" BorderBrush="#808080" Visibility="{TemplateBinding IsReadOnly, Converter={converters:BoolToVisibleConverter}, ConverterParameter=false}"/>
+				<Border CornerRadius="4" Padding="2" BorderThickness="2" Background="#404040" BorderBrush="#808080" Visibility="{TemplateBinding IsReadOnly, Converter={converters:BoolToVisibleCollapsedConverter}, ConverterParameter=false}"/>
 				<ScrollViewer Margin="2" Name="PART_ContentHost" VerticalAlignment="Center"/>
 				<Popup AllowsTransparency="true" Placement="Bottom" IsOpen="{Binding IsDropDownOpen, ElementName=self}">
 					<Border CornerRadius="2" Padding="2" BorderThickness="1" Background="#404040" BorderBrush="#808080">

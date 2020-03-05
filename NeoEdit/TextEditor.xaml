@@ -28,7 +28,7 @@
 
 		<StackPanel Grid.Row="1" Grid.Column="1"/>
 
-		<controls:ViewValues Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Data="{Binding ViewValuesData, ElementName=self}" HasSel="{Binding ViewValuesHasSel, ElementName=self}" FindValue="{Binding ViewValuesFindValue, ElementName=self}" Visibility="{Binding ViewValues, ElementName=self, Converter={converters:BoolToVisibleConverter}}"/>
+		<controls:ViewValues Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Data="{Binding ViewValuesData, ElementName=self}" HasSel="{Binding ViewValuesHasSel, ElementName=self}" FindValue="{Binding ViewValuesFindValue, ElementName=self}" Visibility="{Binding ViewValues, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}"/>
 
 		<Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="#c0c0c0" BorderThickness="0,2,0,0" Padding="4,0">
 			<controls:RenderCanvas Height="20" x:Name="statusBar" ClipToBounds="True" Focusable="False"/>

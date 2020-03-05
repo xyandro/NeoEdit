@@ -246,7 +246,8 @@
     </Compile>
     <Compile Include="Converters\ActiveTabBackgroundConverter.cs" />
     <Compile Include="Converters\ActiveTabBorderConverter.cs" />
-    <Compile Include="Converters\BoolToVisibleConverter.cs" />
+    <Compile Include="Converters\BoolToVisibleCollapsedConverter.cs" />
+    <Compile Include="Converters\BoolToVisibleHiddenConverter.cs" />
     <Compile Include="Converters\HexConverter.cs" />
     <Compile Include="Converters\NEExpressionConverter.cs" />
     <Compile Include="Converters\NonEmptyConverter.cs" />

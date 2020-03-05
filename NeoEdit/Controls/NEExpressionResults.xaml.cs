@@ -76,7 +76,7 @@ namespace NeoEdit.Program.Controls
 			UpdateChildren();
 		}
 
-		int ResultCount => Variables.ResultCount(new List<string> { Expression, CountExpression1, CountExpression2, CountExpression3, CountExpression4 }.NonNullOrWhiteSpace().Select(expr => new NEExpression(expr)).ToArray()) ?? MaxResults;
+		int ResultCount => Variables.ResultCount(new List<string> { Expression, CountExpression1, CountExpression2, CountExpression3, CountExpression4 }.NonNullOrWhiteSpace().Select(expr => new NEExpression(expr)).ToArray()) ?? 1;
 
 		protected override Size MeasureOverride(Size constraint)
 		{
@@ -166,8 +166,6 @@ namespace NeoEdit.Program.Controls
 				varValues = new Dictionary<string, List<string>>();
 				IsValid = false;
 				ErrorMessage = ex.Message;
-				if ((Children.Count != 0) || (ActualHeight == 0) || (ActualWidth == 0))
-					return;
 			}
 
 			Children.Clear();

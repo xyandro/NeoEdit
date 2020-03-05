@@ -6,7 +6,7 @@ using System.Windows.Markup;
 
 namespace NeoEdit.Program.Converters
 {
-	public class BoolToVisibleConverter : MarkupExtension, IValueConverter
+	public class BoolToVisibleCollapsedConverter : MarkupExtension, IValueConverter
 	{
 		public override object ProvideValue(IServiceProvider serviceProvider) => this;
 
