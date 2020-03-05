@@ -3,6 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	xmlns:converters="clr-namespace:NeoEdit.Program.Converters"
+	xmlns:dialogs="clr-namespace:NeoEdit.Program.Dialogs"
 	Title="Find" SizeToContent="Height" Width="600" FocusManager.FocusedElement="{Binding ElementName=text}">
 
 	<Grid Margin="10">
@@ -49,36 +50,45 @@
 			<CheckBox Content="Remo_ve matches" IsChecked="{Binding RemoveMatching, ElementName=self}" Focusable="False" Margin="5,0,0,0"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
-			<Button Click="Reset" Content="Rese_t"/>
-			<Grid>
+		<Grid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+
+			<Button Grid.Column="0" HorizontalAlignment="Left" Click="Reset" Content="Rese_t"/>
+
+			<Grid Grid.Column="2" HorizontalAlignment="Center" >
 				<Button Click="ExpressionHelp" Content="Expression _Help" Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleHiddenConverter}}"/>
 				<Button Click="RegExHelp" Content="RegEx _Help" Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleHiddenConverter}}"/>
 			</Grid>
-		</UniformGrid>
 
-		<UniformGrid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
-			<Grid>
-				<Button Click="OkClick" Name="copyCount" Content="C_opy Count" Padding="10,1">
-					<Button.Visibility>
-						<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="(!p0 &amp;&amp; !p1 &amp;&amp; p2) ? &quot;Visible&quot; : &quot;Hidden&quot;">
-							<Binding Path="KeepMatching" ElementName="self"/>
-							<Binding Path="RemoveMatching" ElementName="self"/>
-							<Binding Path="SelectionOnly" ElementName="self"/>
-						</MultiBinding>
-					</Button.Visibility>
-				</Button>
-				<Button Click="OkClick" Name="findNext" Content="Find _Next" Padding="10,1">
-					<Button.Visibility>
-						<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="(!p0) ? &quot;Visible&quot; : &quot;Hidden&quot;">
-							<Binding Path="SelectionOnly" ElementName="self"/>
-						</MultiBinding>
-					</Button.Visibility>
-				</Button>
-			</Grid>
-			<Button Click="OkClick" Name="findAll" IsDefault="True" Content="Find _All" Padding="10,1"/>
-			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
-		</UniformGrid>
+			<UniformGrid Grid.Column="4" HorizontalAlignment="Right" Rows="1">
+				<Grid>
+					<Button Click="OkClick" Tag="{x:Static dialogs:EditFindFindDialog+ResultType.CopyCount}" Content="C_opy Count" Padding="10,1">
+						<Button.Visibility>
+							<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="(!p0 &amp;&amp; !p1 &amp;&amp; p2) ? &quot;Visible&quot; : &quot;Hidden&quot;">
+								<Binding Path="KeepMatching" ElementName="self"/>
+								<Binding Path="RemoveMatching" ElementName="self"/>
+								<Binding Path="SelectionOnly" ElementName="self"/>
+							</MultiBinding>
+						</Button.Visibility>
+					</Button>
+					<Button Click="OkClick" Tag="{x:Static dialogs:EditFindFindDialog+ResultType.FindNext}" Content="Find _Next" Padding="10,1">
+						<Button.Visibility>
+							<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="(!p0) ? &quot;Visible&quot; : &quot;Hidden&quot;">
+								<Binding Path="SelectionOnly" ElementName="self"/>
+							</MultiBinding>
+						</Button.Visibility>
+					</Button>
+				</Grid>
+				<Button Click="OkClick" Tag="{x:Static dialogs:EditFindFindDialog+ResultType.FindAll}" IsDefault="True" Content="Find _All" Padding="10,1"/>
+				<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+			</UniformGrid>
+		</Grid>
 	</Grid>
 
 </controls:NEWindow>

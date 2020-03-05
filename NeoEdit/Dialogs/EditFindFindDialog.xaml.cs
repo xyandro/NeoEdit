@@ -204,16 +204,8 @@ namespace NeoEdit.Program.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsExpression = IsExpression, AlignSelections = AlignSelections, IsBoolean = IsBoolean, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching };
-			if (sender == copyCount)
-				result.Type = ResultType.CopyCount;
-			else if (sender == findNext)
-				result.Type = ResultType.FindNext;
-			else if (sender == findAll)
-				result.Type = ResultType.FindAll;
-			else
-				throw new Exception("Invalid search type");
 
+			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsExpression = IsExpression, AlignSelections = AlignSelections, IsBoolean = IsBoolean, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, Type = (ResultType)(sender as FrameworkElement).Tag };
 			text.AddCurrentSuggestion(GetCheckBoxStatus());
 
 			DialogResult = true;
