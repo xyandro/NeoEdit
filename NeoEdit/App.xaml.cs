@@ -70,7 +70,7 @@ namespace NeoEdit.Program
 				if (tabsWindow == null)
 					tabsWindow = new TabsWindow();
 				foreach (var file in clParams.Files)
-					tabsWindow.AddTextEditor(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, shutdownData: shutdownData));
+					tabsWindow.AddTextEditor(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData));
 				if (tabsWindow.Tabs.Any())
 					tabsWindow.SetFocused(tabsWindow.Tabs[tabsWindow.Tabs.Count - 1], true);
 

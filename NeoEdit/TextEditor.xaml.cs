@@ -243,7 +243,7 @@ namespace NeoEdit.Program
 		FileSystemWatcher watcher = null;
 		ShutdownData shutdownData;
 
-		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, ShutdownData shutdownData = null)
+		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
 
@@ -265,7 +265,7 @@ namespace NeoEdit.Program
 			undoRedo = new UndoRedo();
 
 			OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
-			Goto(line, column);
+			Goto(line, column, index);
 
 			localCallbacks = UIHelper<TextEditor>.GetLocalCallbacks(this);
 
@@ -696,11 +696,23 @@ namespace NeoEdit.Program
 			return results;
 		}
 
-		void Goto(int? line, int? column)
+		void Goto(int? line, int? column, int? index)
 		{
-			var useLine = Math.Max(0, Math.Min(line ?? 1, Data.NumLines) - 1);
-			var index = Data.GetIndexFromColumn(useLine, Math.Max(0, (column ?? 1) - 1), true);
-			SetSelections(Selections.Concat(new Range(Data.GetPosition(useLine, index))).ToList());
+			var pos = 0;
+			if (line.HasValue)
+			{
+				var useLine = Math.Max(0, Math.Min(line.Value, Data.NumLines) - 1);
+				int useIndex;
+				if (column.HasValue)
+					useIndex = Data.GetIndexFromColumn(useLine, Math.Max(0, column.Value - 1), true);
+				else if (index.HasValue)
+					useIndex = Math.Max(0, Math.Min(index.Value - 1, Data.GetLineLength(useLine)));
+				else
+					useIndex = 0;
+
+				pos = Data.GetPosition(useLine, useIndex);
+			}
+			SetSelections(new List<Range> { new Range(pos) });
 		}
 
 		public bool GetDialogResult(NECommand command, out object dialogResult, bool? multiStatus)

@@ -39,8 +39,9 @@ namespace NeoEdit.Program.CommandLine
 			{
 				FileName = context.filename.GetText(),
 				DisplayName = context.display?.GetText(),
-				Line = context.line == null ? 1 : int.Parse(context.line.Text),
-				Column = context.column == null ? 1 : int.Parse(context.column.Text),
+				Line = context.line == null ? default(int?) : int.Parse(context.line.Text),
+				Column = context.column == null ? default(int?) : int.Parse(context.column.Text),
+				Index = context.index == null ? default(int?) : int.Parse(context.index.Text),
 			});
 			return base.VisitFile(context);
 		}

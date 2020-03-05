@@ -8,8 +8,9 @@ namespace NeoEdit.Program.CommandLine
 		{
 			public string FileName { get; set; }
 			public string DisplayName { get; set; }
-			public int Line { get; set; } = 1;
-			public int Column { get; set; } = 1;
+			public int? Line { get; set; }
+			public int? Column { get; set; }
+			public int? Index { get; set; }
 		}
 
 		public bool Background { get; set; }
