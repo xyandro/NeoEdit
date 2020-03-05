@@ -202,24 +202,95 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Find_Find(EditFindFindDialog.Result result)
 		{
-			var selections = ((result.SelectionOnly) || (result.Type == EditFindFindDialog.ResultType.FindNext)) ? Selections.ToList() : new List<Range> { FullRange };
-
+			// Determine selections to search
+			List<Range> selections;
+			var firstMatchOnly = (result.KeepMatching) || (result.RemoveMatching);
 			if (result.Type == EditFindFindDialog.ResultType.FindNext)
 			{
-				var newSelections = new List<Range>();
-				for (var ctr = 0; ctr < selections.Count; ++ctr)
-					newSelections.Add(new Range(selections[ctr].End, ctr + 1 == selections.Count ? Data.MaxPosition : selections[ctr + 1].Start));
-				selections = newSelections;
+				firstMatchOnly = true;
+				selections = new List<Range>();
+				for (var ctr = 0; ctr < Selections.Count; ++ctr)
+					selections.Add(new Range(Selections[ctr].End, ctr + 1 == Selections.Count ? Data.MaxPosition : Selections[ctr + 1].Start));
+			}
+			else if (result.SelectionOnly)
+				selections = Selections.ToList();
+			else
+				selections = new List<Range> { FullRange };
+
+			if (!selections.Any())
+				return;
+
+			// For each selection, determine strings to find. The boolean is for MatchCase, since even if MatchCase is false some should be true (INT16LE 30000 = 0u, NOT 0U)
+			List<List<(string, bool)>> stringsToFind;
+
+			if (result.IsExpression)
+			{
+				var expressionResults = GetExpressionResults<string>(result.Text, result.AlignSelections ? selections.Count : default(int?));
+				if (result.AlignSelections)
+				{
+					if (result.IsBoolean) // Either KeepMatching or RemoveMatching will also be true
+					{
+						SetSelections(Selections.Where((range, index) => (expressionResults[index] == "True") == result.KeepMatching).ToList());
+						return;
+					}
+
+					stringsToFind = selections.Select((x, index) => new List<(string, bool)> { (expressionResults[index], result.MatchCase) }).ToList();
+				}
+				else
+					stringsToFind = Enumerable.Repeat(expressionResults.Select(x => (x, result.KeepMatching)).ToList(), selections.Count).ToList();
+			}
+			else
+				stringsToFind = Enumerable.Repeat(new List<(string, bool)> { (result.Text, result.MatchCase) }, selections.Count).ToList();
+
+			// If the strings are binary convert them to all codepages
+			if (result.IsBinary)
+			{
+				var mapping = stringsToFind
+					.Distinct()
+					.ToDictionary(
+						list => list,
+						list => list.SelectMany(
+							item => result.CodePages
+								.Select(codePage => (Coder.TryStringToBytes(item.Item1, codePage), (item.Item2) || (Coder.AlwaysCaseSensitive(codePage))))
+								.NonNull(tuple => tuple.Item1)
+								.Select(tuple => (Coder.TryBytesToString(tuple.Item1, CodePage), tuple.Item2))
+								.NonNullOrEmpty(tuple => tuple.Item1)
+							).Distinct().ToList());
+
+				stringsToFind = stringsToFind.Select(list => mapping[list]).ToList();
 			}
 
-			var firstMatchOnly = (result.KeepMatching) || (result.RemoveMatching) || (result.Type == EditFindFindDialog.ResultType.FindNext);
-			List<List<Range>> results;
-			if (result.IsExpression)
-				results = Command_Edit_Find_Find_Expression(result, selections, firstMatchOnly);
-			else if (result.IsRegex)
-				results = Command_Edit_Find_Find_Regex(result, selections, firstMatchOnly);
+			// Create searchers
+			Dictionary<List<(string, bool)>, ISearcher> searchers;
+			if (result.IsRegex)
+			{
+				searchers = stringsToFind
+					.Distinct()
+					.ToDictionary(
+						list => list,
+						list =>
+						{
+							if (list.Count != 1) // Shouldn't be possible
+								throw new Exception("All items must have exactly one value for regex");
+							return new RegexSearcher(list[0].Item1, result.WholeWords, list[0].Item2, result.EntireSelection, firstMatchOnly, result.RegexGroups) as ISearcher;
+						});
+			}
 			else
-				results = Command_Edit_Find_Find_Text(result, selections, firstMatchOnly);
+			{
+				searchers = stringsToFind
+					.Distinct()
+					.ToDictionary(
+						list => list,
+						list =>
+						{
+							if (list.Count == 1)
+								return new StringSearcher(list[0].Item1, result.WholeWords, list[0].Item2, result.EntireSelection, firstMatchOnly) as ISearcher;
+							return new StringsSearcher(list, result.WholeWords, result.EntireSelection, firstMatchOnly) as ISearcher;
+						});
+			}
+
+			// Perform search
+			var results = selections.AsParallel().AsOrdered().Select((range, index) => searchers[stringsToFind[index]].Find(GetString(range), range.Start)).ToList();
 
 			switch (result.Type)
 			{
@@ -248,37 +319,6 @@ namespace NeoEdit.Program
 						SetSelections(results.SelectMany().ToList());
 					break;
 			}
-		}
-
-		List<List<Range>> Command_Edit_Find_Find_Expression(EditFindFindDialog.Result result, List<Range> selections, bool firstMatchOnly)
-		{
-			var expressionResults = GetExpressionResults<object>(result.Text, result.AlignSelections ? selections.Count : default(int?));
-
-			if (result.IsBoolean) // AlignSelections and either KeepMatching or RemoveMatching will also be true
-				return selections.Select((range, index) => (bool)expressionResults[index] == result.KeepMatching ? new List<Range> { range } : new List<Range>()).ToList();
-
-			List<List<Range>> searchResults;
-			if (result.AlignSelections)
-				searchResults = selections.AsParallel().AsOrdered().Select((range, index) => new StringSearcher(expressionResults[index].ToString(), result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly).Find(GetString(range), range.Start)).ToList();
-			else
-			{
-				var searcher = new StringsSearcher(expressionResults.Select(x => x.ToString()), result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly);
-				searchResults = selections.AsParallel().AsOrdered().Select(range => searcher.Find(GetString(range), range.Start)).ToList();
-			}
-
-			return searchResults;
-		}
-
-		List<List<Range>> Command_Edit_Find_Find_Regex(EditFindFindDialog.Result result, List<Range> selections, bool firstMatchOnly)
-		{
-			var searcher = new RegexSearcher(result.Text, result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly, result.RegexGroups);
-			return selections.AsParallel().AsOrdered().Select(range => searcher.Find(GetString(range), range.Start)).ToList();
-		}
-
-		List<List<Range>> Command_Edit_Find_Find_Text(EditFindFindDialog.Result result, List<Range> selections, bool firstMatchOnly)
-		{
-			var searcher = new StringSearcher(result.Text, result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly);
-			return selections.AsParallel().AsOrdered().Select(range => searcher.Find(GetString(range), range.Start)).ToList();
 		}
 
 		EditFindBinaryDialog.Result Command_Edit_Find_Binary_Dialog()

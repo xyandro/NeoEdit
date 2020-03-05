@@ -1,8 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
@@ -15,6 +16,8 @@ namespace NeoEdit.Program.Dialogs
 			public bool IsBoolean { get; set; }
 			public bool IsRegex { get; set; }
 			public bool RegexGroups { get; set; }
+			public bool IsBinary { get; set; }
+			public HashSet<Coder.CodePage> CodePages { get; set; }
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
 			public bool EntireSelection { get; set; }
@@ -38,6 +41,8 @@ namespace NeoEdit.Program.Dialogs
 			public bool IsBoolean { get; set; }
 			public bool IsRegex { get; set; }
 			public bool RegexGroups { get; set; }
+			public bool IsBinary { get; set; }
+			public HashSet<Coder.CodePage> CodePages { get; set; }
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
 			public bool SelectionOnly { get; set; }
@@ -59,6 +64,10 @@ namespace NeoEdit.Program.Dialogs
 		public bool IsRegex { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool RegexGroups { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool IsBinary { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public HashSet<Coder.CodePage> CodePages { get { return UIHelper<EditFindFindDialog>.GetPropValue<HashSet<Coder.CodePage>>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool WholeWords { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -98,6 +107,7 @@ namespace NeoEdit.Program.Dialogs
 					obj.AlignSelections = true;
 					if (!obj.RemoveMatching)
 						obj.KeepMatching = true;
+					obj.IsBinary = false;
 				}
 			});
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsRegex, (obj, o, n) =>
@@ -114,6 +124,11 @@ namespace NeoEdit.Program.Dialogs
 					obj.IsRegex = true;
 					obj.KeepMatching = obj.RemoveMatching = false;
 				}
+			});
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsBinary, (obj, o, n) =>
+			{
+				if (obj.IsBinary)
+					obj.IsRegex = obj.IsBoolean = false;
 			});
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) =>
 			{
@@ -154,6 +169,7 @@ namespace NeoEdit.Program.Dialogs
 
 			InitializeComponent();
 
+			Reset();
 			SelectionOnly = selectionOnly;
 			Text = text.CoalesceNullOrEmpty(this.text.GetLastSuggestion(), "");
 			SetCheckBoxStatus(this.text.GetLastSuggestionData() as CheckBoxStatus);
@@ -168,6 +184,8 @@ namespace NeoEdit.Program.Dialogs
 				IsBoolean = IsBoolean,
 				IsRegex = IsRegex,
 				RegexGroups = RegexGroups,
+				IsBinary = IsBinary,
+				CodePages = CodePages,
 				WholeWords = WholeWords,
 				MatchCase = MatchCase,
 				EntireSelection = EntireSelection,
@@ -186,6 +204,8 @@ namespace NeoEdit.Program.Dialogs
 			IsBoolean = checkBoxStatus.IsBoolean;
 			IsRegex = checkBoxStatus.IsRegex;
 			RegexGroups = checkBoxStatus.RegexGroups;
+			IsBinary = checkBoxStatus.IsBinary;
+			CodePages = checkBoxStatus.CodePages;
 			WholeWords = checkBoxStatus.WholeWords;
 			MatchCase = checkBoxStatus.MatchCase;
 			EntireSelection = checkBoxStatus.EntireSelection;
@@ -205,17 +225,31 @@ namespace NeoEdit.Program.Dialogs
 				return;
 
 
-			result = new Result { Text = Text, IsExpression = IsExpression, AlignSelections = AlignSelections, IsBoolean = IsBoolean, IsRegex = IsRegex, RegexGroups = RegexGroups, WholeWords = WholeWords, MatchCase = MatchCase, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, Type = (ResultType)(sender as FrameworkElement).Tag };
+			result = new Result { Text = Text, IsExpression = IsExpression, AlignSelections = AlignSelections, IsBoolean = IsBoolean, IsRegex = IsRegex, RegexGroups = RegexGroups, IsBinary = IsBinary, CodePages = IsBinary ? CodePages : null, WholeWords = WholeWords, MatchCase = MatchCase, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, Type = (ResultType)(sender as FrameworkElement).Tag };
 			text.AddCurrentSuggestion(GetCheckBoxStatus());
 
 			DialogResult = true;
+		}
+
+		void OnCodePagesClick(object sender, RoutedEventArgs e)
+		{
+			var codePages = CodePagesDialog.Run(this, CodePages);
+			if (codePages == null)
+				return;
+
+			IsBinary = true;
+			CodePages = codePages;
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
-		void Reset(object sender, RoutedEventArgs e) => IsExpression = AlignSelections = IsBoolean = IsRegex = RegexGroups = WholeWords = MatchCase = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
+		void Reset(object sender = null, RoutedEventArgs e = null)
+		{
+			IsExpression = AlignSelections = IsBoolean = IsRegex = RegexGroups = IsBinary = WholeWords = MatchCase = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
+			CodePages = new HashSet<Coder.CodePage>(CodePagesDialog.DefaultCodePages);
+		}
 
 		static public Result Run(Window parent, string text, bool selectionOnly, NEVariables variables)
 		{

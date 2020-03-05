@@ -254,6 +254,13 @@
     <Compile Include="Converters\RadioConverter.cs" />
     <Compile Include="Converters\ValidValueConverter.cs" />
     <Compile Include="DBConnectInfo.cs" />
+    <Page Include="Dialogs\CodePagesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\CodePagesDialog.xaml.cs">
+      <DependentUpon>CodePagesDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ContentAttributeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -18,6 +18,7 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -38,17 +39,21 @@
 			<CheckBox Content="by _group" IsChecked="{Binding RegexGroups, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 		</StackPanel>
 		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+			<CheckBox Content="B_inary" IsChecked="{Binding IsBinary, ElementName=self}" VerticalAlignment="Center" Margin="0,0,5,0" Focusable="False"/>
+			<Button Content="{Binding CodePages.Count, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='$&quot;Co_de pages ({p0})&quot;'}" Click="OnCodePagesClick" VerticalAlignment="Center" Margin="0,0,5,0" Focusable="False"/>
+		</StackPanel>
+		<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 			<CheckBox Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 		</StackPanel>
-		<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+		<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 			<CheckBox Content="_Entire selection" IsChecked="{Binding EntireSelection, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 			<CheckBox Content="_Keep matches" IsChecked="{Binding KeepMatching, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 			<CheckBox Content="Remo_ve matches" IsChecked="{Binding RemoveMatching, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 		</StackPanel>
 
-		<Grid Grid.Row="7" Grid.Column="1">
+		<Grid Grid.Row="8" Grid.Column="1">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition/>
@@ -59,12 +64,11 @@
 
 			<Button Grid.Column="0" Click="Reset" Content="Rese_t" Padding="2,1" Focusable="False"/>
 
-			<Button Grid.Column="2" Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="ExpressionHelp" Content="Expression _Help" Padding="2,1" Focusable="False"/>
-
-			<StackPanel Grid.Column="2" Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Orientation="Horizontal">
-				<Button Click="RegExHelp" Content="RegEx _Help" Padding="2,1" Focusable="False"/>
-				<Button Content="Esca_pe" Click="Escape" Padding="2,1" Focusable="False"/>
-				<Button Content="_Unescape" Click="Unescape" Padding="2,1" Focusable="False"/>
+			<StackPanel Grid.Column="2" Orientation="Horizontal">
+				<Button Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="ExpressionHelp" Content="Expression _Help" Padding="2,1" Focusable="False"/>
+				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="RegExHelp" Content="RegEx _Help" Padding="2,1" Focusable="False"/>
+				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="Esca_pe" Click="Escape" Padding="2,1" Focusable="False"/>
+				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="_Unescape" Click="Unescape" Padding="2,1" Focusable="False"/>
 			</StackPanel>
 
 			<UniformGrid Grid.Column="4" Rows="1">

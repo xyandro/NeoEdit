@@ -765,7 +765,7 @@ namespace NeoEdit.Program.Transform
 			return NEEncodingDictionary[codePage].description;
 		}
 
-		public static bool AlwaysCaseSensitive(CodePage codePage) => (codePage == CodePage.Hex) || (codePage == CodePage.HexRev) || (codePage == CodePage.Base64);
+		public static bool AlwaysCaseSensitive(CodePage codePage) => (IsNumeric(codePage)) || (codePage == CodePage.Base64);
 
 		public static Encoding GetEncoding(CodePage codePage) => NEEncodingDictionary[codePage].encoding;
 

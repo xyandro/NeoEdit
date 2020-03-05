@@ -1,0 +1,170 @@
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.Program.Dialogs.CodePagesDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
+	xmlns:converters="clr-namespace:NeoEdit.Program.Converters"
+	xmlns:dialogs="clr-namespace:NeoEdit.Program.Dialogs"
+	Title="Select Code Pages" SizeToContent="Width" Height="600">
+
+	<Grid Margin="10,5">
+		<Grid.Style>
+			<Style>
+				<Style.Resources>
+					<Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+						<Setter Property="Padding" Value="0,0,10,0"/>
+					</Style>
+					<Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+						<Setter Property="Margin" Value="0,0,10,0"/>
+						<Setter Property="IsChecked" Value="True"/>
+						<Setter Property="Focusable" Value="False"/>
+					</Style>
+					<Style TargetType="dialogs:CodePagesDialogCheckBox" BasedOn="{StaticResource {x:Type CheckBox}}"/>
+					<Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+						<Setter Property="Padding" Value="4,1"/>
+						<Setter Property="Focusable" Value="False"/>
+					</Style>
+				</Style.Resources>
+			</Style>
+		</Grid.Style>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="0" Orientation="Horizontal">
+			<Label Content="Show:" Margin="0,0,5,0"/>
+			<CheckBox Content="_Little Endian" IsChecked="{Binding ShowLE, ElementName=self}"/>
+			<CheckBox Content="_Big Endian" IsChecked="{Binding ShowBE, ElementName=self}"/>
+			<CheckBox Content="_Integers" IsChecked="{Binding ShowInt, ElementName=self}"/>
+			<CheckBox Content="_Floats" IsChecked="{Binding ShowFloat, ElementName=self}"/>
+			<CheckBox Content="_Strings" IsChecked="{Binding ShowStr, ElementName=self}"/>
+		</StackPanel>
+
+		<GroupBox Grid.Row="1" Header="Integers">
+			<GroupBox.Visibility>
+				<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="p0 &amp;&amp; (p1 || p2)">
+					<Binding Path="ShowInt" ElementName="self"/>
+					<Binding Path="ShowLE" ElementName="self"/>
+					<Binding Path="ShowBE" ElementName="self"/>
+				</MultiBinding>
+			</GroupBox.Visibility>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition x:Name="col0"/>
+					<ColumnDefinition x:Name="col1"/>
+					<ColumnDefinition x:Name="col2"/>
+					<ColumnDefinition x:Name="col3"/>
+					<ColumnDefinition x:Name="col4"/>
+				</Grid.ColumnDefinitions>
+
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<Label Grid.Row="0" Grid.Column="0" Content="Unsigned LE:" Visibility="{Binding ShowLE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+
+				<dialogs:CodePagesDialogCheckBox Grid.Row="0" Grid.Column="1" CodePage="UInt8" x:Name="UInt8" Visibility="{Binding ShowLE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="0" Grid.Column="2" CodePage="UInt16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="0" Grid.Column="3" CodePage="UInt32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="0" Grid.Column="4" CodePage="UInt64LE" Visibility="{Binding ShowLE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+
+				<Label Grid.Row="1" Grid.Column="0" Content="Signed LE:" Visibility="{Binding ShowLE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="1" Grid.Column="1" CodePage="Int8" x:Name="Int8" Visibility="{Binding ShowLE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="1" Grid.Column="2" CodePage="Int16LE" Visibility="{Binding ShowLE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="1" Grid.Column="3" CodePage="Int32LE" Visibility="{Binding ShowLE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="1" Grid.Column="4" CodePage="Int64LE" Visibility="{Binding ShowLE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+
+				<Label Grid.Row="2" Grid.Column="0" Content="Unsigned BE:" Visibility="{Binding ShowBE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="2" Grid.Column="1" CodePage="UInt8" IsChecked="{Binding IsChecked, ElementName=UInt8}" Visibility="{Binding ShowBE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="2" Grid.Column="2" CodePage="UInt16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="2" Grid.Column="3" CodePage="UInt32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="2" Grid.Column="4" CodePage="UInt64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+
+				<Label Grid.Row="3" Grid.Column="0" Content="Signed BE:" Visibility="{Binding ShowBE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="3" Grid.Column="1" CodePage="Int8" IsChecked="{Binding IsChecked, ElementName=Int8}" Visibility="{Binding ShowBE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="3" Grid.Column="2" CodePage="Int16BE" Visibility="{Binding ShowBE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="3" Grid.Column="3" CodePage="Int32BE" Visibility="{Binding ShowBE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Row="3" Grid.Column="4" CodePage="Int64BE" Visibility="{Binding ShowBE, ElementName=self, Converter={converters:NEExpressionConverter}}"/>
+
+				<UniformGrid Grid.Row="4" Grid.ColumnSpan="5" HorizontalAlignment="Right" Rows="1">
+					<Button Click="SelectAllNoneNumerics" Tag="all" Content="All"/>
+					<Button Click="SelectAllNoneNumerics" Tag="none" Content="None"/>
+				</UniformGrid>
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="2" Header="Floats" Visibility="{Binding ShowFloat, ElementName=self, Converter={converters:NEExpressionConverter}}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="{Binding Width, ElementName=col0}"/>
+					<ColumnDefinition Width="{Binding Width, ElementName=col1}"/>
+					<ColumnDefinition Width="{Binding Width, ElementName=col2}"/>
+					<ColumnDefinition Width="{Binding Width, ElementName=col3}"/>
+					<ColumnDefinition Width="{Binding Width, ElementName=col4}"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<dialogs:CodePagesDialogCheckBox Grid.Column="1" CodePage="Single"/>
+				<dialogs:CodePagesDialogCheckBox Grid.Column="2" CodePage="Double"/>
+
+				<UniformGrid Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Right" Rows="1">
+					<Button Click="SelectAllNoneNumerics" Tag="all" Content="All"/>
+					<Button Click="SelectAllNoneNumerics" Tag="none" Content="None"/>
+				</UniformGrid>
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="3" Header="Strings" Visibility="{Binding ShowStr, ElementName=self, Converter={converters:NEExpressionConverter}}">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+
+				<Label Grid.Row="0" Content="_Encodings:" Target="{Binding ElementName=codePages}"/>
+
+				<ListBox Grid.Row="1" Name="codePages" ItemsSource="{Binding EncodingCheckBoxes, ElementName=self}" BorderBrush="{x:Null}" SelectionMode="Extended" PreviewKeyDown="CodePagesPreviewKeyDown"/>
+
+				<UniformGrid Grid.Row="2" HorizontalAlignment="Right" Rows="1">
+					<Button Click="SelectAllNoneStrings" Tag="all" Content="All"/>
+					<Button Click="SelectAllNoneStrings" Tag="none" Content="None"/>
+				</UniformGrid>
+			</Grid>
+		</GroupBox>
+
+		<Grid Grid.Row="5">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			
+			<Button Grid.Column="0" Click="Reset" Content="Rese_t"/>
+
+			<UniformGrid Grid.Column="2" Rows="1">
+				<Button Click="SelectAllNoneGlobal" Tag="all" Content="_All"/>
+				<Button Click="SelectAllNoneGlobal" Tag="none" Content="_None"/>
+			</UniformGrid>
+
+			<UniformGrid Grid.Column="4" Rows="1">
+				<Button Click="OkClick" IsDefault="True" Content="Ok"/>
+				<Button IsCancel="True" Content="Cancel"/>
+			</UniformGrid>
+		</Grid>
+	</Grid>
+</controls:NEWindow>
