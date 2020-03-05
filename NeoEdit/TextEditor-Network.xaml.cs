@@ -72,8 +72,7 @@ namespace NeoEdit.Program
 		void Command_Network_AbsoluteURL(NetworkAbsoluteURLDialog.Result result)
 		{
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
-			var newStrs = Selections.Zip(results, (range, baseUrl) => new { range, baseUrl }).AsParallel().AsOrdered().Select(obj => new Uri(new Uri(obj.baseUrl), GetString(obj.range)).AbsoluteUri).ToList();
-			ReplaceSelections(newStrs);
+			ReplaceSelections(Selections.Select((range, index) => new Uri(new Uri(results[index]), GetString(range)).AbsoluteUri).ToList());
 		}
 
 		void Command_Network_Fetch(Coder.CodePage codePage = Coder.CodePage.None)

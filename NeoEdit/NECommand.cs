@@ -68,7 +68,6 @@ namespace NeoEdit.Program
 		Edit_Unescape_Markup,
 		Edit_Unescape_RegEx,
 		Edit_Unescape_URL,
-		Edit_AbsoluteURL,
 		Edit_Data_Hash,
 		Edit_Data_Compress,
 		Edit_Data_Decompress,

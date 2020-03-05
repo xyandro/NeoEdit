@@ -123,8 +123,6 @@
 			<controls:NEMenuItem Header="_URL" CommandEnum="Edit_Unescape_URL" ToolTip="Unescape URL"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="A_bsolute" CommandEnum="Edit_AbsoluteURL" ToolTip="Make URL absolute given base URL"/>
-		<Separator/>
 		<MenuItem Header="_Data">
 			<controls:NEMenuItem Header="_Hash" CommandEnum="Edit_Data_Hash" ToolTip="Hash data"/>
 			<controls:NEMenuItem Header="_Compress" CommandEnum="Edit_Data_Compress" ToolTip="Compress data"/>

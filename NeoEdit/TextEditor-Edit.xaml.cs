@@ -431,18 +431,6 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Unescape_URL() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(GetString(range))).ToList());
 
-		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Edit_AbsoluteURL_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(TabsParent, GetVariables(), true, false);
-
-		void Command_Edit_AbsoluteURL(FilesNamesMakeAbsoluteRelativeDialog.Result result)
-		{
-			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
-			ReplaceSelections(GetSelectionStrings().Select((str, index) =>
-			{
-				var uri = new Uri(new Uri(results[index]), str);
-				return uri.AbsoluteUri;
-			}).ToList());
-		}
-
 		EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog() => EditDataHashDialog.Run(TabsParent, CodePage);
 
 		void Command_Edit_Data_Hash(EditDataHashDialog.Result result)

@@ -722,7 +722,6 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_Replace_Dialog(); break;
 				case NECommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(); break;
 				case NECommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
-				case NECommand.Edit_AbsoluteURL: dialogResult = Command_Edit_AbsoluteURL_Dialog(); break;
 				case NECommand.Edit_Data_Hash: dialogResult = Command_Edit_Data_Hash_Dialog(); break;
 				case NECommand.Edit_Data_Compress: dialogResult = Command_Edit_Data_Compress_Dialog(); break;
 				case NECommand.Edit_Data_Decompress: dialogResult = Command_Edit_Data_Decompress_Dialog(); break;
@@ -914,7 +913,6 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Unescape_Markup: Command_Edit_Unescape_Markup(); break;
 				case NECommand.Edit_Unescape_RegEx: Command_Edit_Unescape_RegEx(); break;
 				case NECommand.Edit_Unescape_URL: Command_Edit_Unescape_URL(); break;
-				case NECommand.Edit_AbsoluteURL: Command_Edit_AbsoluteURL(dialogResult as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
 				case NECommand.Edit_Data_Hash: Command_Edit_Data_Hash(dialogResult as EditDataHashDialog.Result); break;
 				case NECommand.Edit_Data_Compress: Command_Edit_Data_Compress(dialogResult as EditDataCompressDialog.Result); break;
 				case NECommand.Edit_Data_Decompress: Command_Edit_Data_Decompress(dialogResult as EditDataCompressDialog.Result); break;
