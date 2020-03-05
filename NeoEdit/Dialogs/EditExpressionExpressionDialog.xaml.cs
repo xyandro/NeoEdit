@@ -11,7 +11,6 @@ namespace NeoEdit.Program.Dialogs
 		{
 			Evaluate,
 			Copy,
-			Select,
 		}
 
 		public class Result

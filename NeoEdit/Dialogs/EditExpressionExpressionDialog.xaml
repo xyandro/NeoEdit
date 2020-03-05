@@ -30,7 +30,6 @@
 		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" Tag="{x:Static dialogs:EditExpressionExpressionDialog+Action.Evaluate}" IsDefault="True" Content="Evaluate" Padding="10,1"/>
 			<Button Click="OkClick" Tag="{x:Static dialogs:EditExpressionExpressionDialog+Action.Copy}" Content="_Copy" Padding="10,1"/>
-			<Button Click="OkClick" Tag="{x:Static dialogs:EditExpressionExpressionDialog+Action.Select}" Content="_Select" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>

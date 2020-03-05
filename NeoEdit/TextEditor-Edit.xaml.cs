@@ -443,10 +443,6 @@ namespace NeoEdit.Program
 			{
 				case EditExpressionExpressionDialog.Action.Evaluate: ReplaceSelections(GetExpressionResults<string>(result.Expression, Selections.Count())); break;
 				case EditExpressionExpressionDialog.Action.Copy: SetClipboardStrings(GetExpressionResults<string>(result.Expression)); break;
-				case EditExpressionExpressionDialog.Action.Select:
-					var results = GetExpressionResults<bool>(result.Expression, Selections.Count());
-					SetSelections(Selections.Where((str, num) => results[num]).ToList());
-					break;
 			}
 		}
 
