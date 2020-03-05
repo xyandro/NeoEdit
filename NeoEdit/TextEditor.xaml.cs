@@ -163,8 +163,6 @@ namespace NeoEdit.Program
 		static internal readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
 		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
 		static internal readonly Pen selectionPen = new Pen(new SolidColorBrush(Color.FromArgb(96, 38, 132, 255)), 2);
-		static internal readonly Brush searchBrush = new SolidColorBrush(Color.FromRgb(101, 51, 6));
-		static internal readonly Pen searchPen = new Pen(new SolidColorBrush(Color.FromRgb(201, 102, 12)), 2);
 		static internal readonly Dictionary<int, Pen> regionPen = new Dictionary<int, Pen>
 		{
 			[1] = new Pen(new SolidColorBrush(Color.FromRgb(248, 118, 109)), 2),
@@ -195,8 +193,6 @@ namespace NeoEdit.Program
 			caretBrush.Freeze();
 			selectionBrush.Freeze();
 			selectionPen.Freeze();
-			searchBrush.Freeze();
-			searchPen.Freeze();
 			regionPen.Values.ForEach(brush => brush.Freeze());
 			diffLineBrush.Freeze();
 			diffLinePen.Freeze();
@@ -223,13 +219,6 @@ namespace NeoEdit.Program
 			EnsureVisible();
 			canvasRenderTimer.Start();
 			TabsParent?.QueueUpdateStatusBar();
-		}
-
-		public RangeList Searches { get; private set; } = new RangeList(new List<Range>());
-		public void SetSearches(List<Range> searches)
-		{
-			Searches = new RangeList(searches.Where(range => range.HasSelection).ToList());
-			canvasRenderTimer.Start();
 		}
 
 		readonly Dictionary<int, RangeList> regionsList = Enumerable.Range(1, 9).ToDictionary(num => num, num => new RangeList(new List<Range>()));
@@ -914,12 +903,8 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Paste_Paste: Command_Edit_Paste_Paste(shiftDown, false, preResult); break;
 				case NECommand.Edit_Paste_RotatePaste: Command_Edit_Paste_Paste(true, true, preResult); break;
 				case NECommand.Edit_Find_Find: Command_Edit_Find_Find(dialogResult as EditFindFindDialog.Result); break;
-				case NECommand.Edit_Find_Next: Command_Edit_Find_NextPrevious(true, shiftDown); break;
-				case NECommand.Edit_Find_Previous: Command_Edit_Find_NextPrevious(false, shiftDown); break;
-				case NECommand.Edit_Find_Selected: Command_Edit_Find_Selected(shiftDown); break;
 				case NECommand.Edit_Find_Binary: Command_Edit_Find_Binary(dialogResult as EditFindBinaryDialog.Result); break;
 				case NECommand.Edit_Find_Replace: Command_Edit_Find_Replace(dialogResult as EditFindReplaceDialog.Result); break;
-				case NECommand.Edit_Find_ClearSearchResults: Command_Edit_Find_ClearSearchResults(); break;
 				case NECommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case NECommand.Edit_Rotate: Command_Edit_Rotate(dialogResult as EditRotateDialog.Result); break;
 				case NECommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as EditRepeatDialog.Result); break;
@@ -1596,11 +1581,6 @@ namespace NeoEdit.Program
 					}
 					break;
 				case Key.Escape:
-					if (Searches.Any())
-					{
-						SetSearches(new List<Range>());
-						break;
-					}
 					DragFiles = null;
 					ViewValuesFindValue = null;
 					if (Settings.EscapeClearsSelections)
@@ -2143,7 +2123,6 @@ namespace NeoEdit.Program
 			var drawBounds = GetDrawBounds();
 			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
 
-			RenderIndicators(dc, drawBounds, null, Searches, searchBrush, searchPen, -1, 1);
 			foreach (var region in Regions)
 				RenderIndicators(dc, drawBounds, null, region.Value, null, regionPen[region.Key], -2, 2);
 			if (Selections.Any(range => range.HasSelection))
@@ -2298,12 +2277,9 @@ namespace NeoEdit.Program
 			SetModifiedFlag();
 			CalculateDiff();
 
-			var translateMap = RangeList.GetTranslateMap(ranges, strs, new RangeList[] { Selections, Searches }.Concat(Regions.Values).ToArray());
+			var translateMap = RangeList.GetTranslateMap(ranges, strs, new RangeList[] { Selections }.Concat(Regions.Values).ToArray());
 			SetSelections(Selections.Translate(translateMap));
 			Regions.Keys.ToList().ForEach(key => SetRegions(key, Regions[key].Translate(translateMap)));
-			var searchLens = Searches.Select(range => range.Length).ToList();
-			SetSearches(Searches.Translate(translateMap));
-			SetSearches(Searches.Where((range, index) => searchLens[index] == range.Length).ToList());
 
 			CalculateBoundaries();
 		}
@@ -2586,24 +2562,21 @@ namespace NeoEdit.Program
 			Replace(sels, values);
 		}
 
-		static List<Tuple<int, int>> RegexMatches(TextData data, Regex regex, int position, int length, bool regexGroups, bool firstOnly)
+		static List<Range> RegexMatches(Regex regex, string input, int addOffset, bool regexGroups, bool firstMatchOnly)
 		{
-			var result = new List<Tuple<int, int>>();
-			var matches = regex.Matches(data.GetString(position, length)).Cast<Match>();
+			var result = new List<Range>();
+			var matches = regex.Matches(input).Cast<Match>();
 			foreach (var match in matches)
 			{
 				if ((!regexGroups) || (match.Groups.Count == 1))
-					result.Add(new Tuple<int, int>(position + match.Index, match.Length));
+					result.Add(Range.FromIndex(match.Index + addOffset, match.Length));
 				else
-					result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => new Tuple<int, int>(position + capture.Index, capture.Length)));
-				if ((firstOnly) && (result.Count != 0))
+					result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => Range.FromIndex(capture.Index + addOffset, capture.Length)));
+				if ((firstMatchOnly) && (result.Count != 0))
 					return result;
 			}
 
 			return result;
 		}
-
-		List<Tuple<int, int>> RegexMatches(Regex regex, int position, int length, bool regexGroups, bool firstOnly) => RegexMatches(Data, regex, position, length, regexGroups, firstOnly);
-
 	}
 }

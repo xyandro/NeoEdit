@@ -384,7 +384,7 @@ namespace NeoEdit.Program
 
 				var data = new TextData(Coder.BytesToString(buffer, Coder.CodePage.AutoByBOM, true));
 				var start = data.GetPosition(0, 0);
-				return RegexMatches(data, search.Regex, start, data.MaxPosition - start, false, true).Any();
+				return RegexMatches(search.Regex, data.GetString(start, data.MaxPosition - start), start, false, true).Any();
 			}
 			catch (Exception ex)
 			{

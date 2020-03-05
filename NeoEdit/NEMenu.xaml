@@ -98,12 +98,8 @@
 		<Separator/>
 		<MenuItem Header="_Find">
 			<controls:NEMenuItem Header="_Find" CommandEnum="Edit_Find_Find" ToolTip="Find text"/>
-			<controls:NEMenuItem Header="_Next" CommandEnum="Edit_Find_Next" ToolTip="Jump to next search result (hold shift to select)"/>
-			<controls:NEMenuItem Header="_Previous" CommandEnum="Edit_Find_Previous" ToolTip="Jump to previous search result (hold shift to select)"/>
-			<controls:NEMenuItem Header="_Selected" CommandEnum="Edit_Find_Selected" ToolTip="Find selected text"/>
 			<controls:NEMenuItem Header="_Binary" CommandEnum="Edit_Find_Binary" ToolTip="Find binary data"/>
 			<controls:NEMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace" ToolTip="Find/replace"/>
-			<controls:NEMenuItem Header="_Clear Search Results" CommandEnum="Edit_Find_ClearSearchResults" ToolTip="Clear search results"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="E_xpression">

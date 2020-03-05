@@ -4,7 +4,6 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Text.RegularExpressions;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Transform;
@@ -107,13 +106,6 @@ namespace NeoEdit.Program
 			if (value > maximum)
 				value = maximum;
 			return value;
-		}
-
-		void SelectRegEx(string pattern)
-		{
-			var regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-			var results = Selections.AsParallel().AsOrdered().Select(region => RegexMatches(regex, region.Start, region.Length, false, false)).SelectMany().Select(tuple => Range.FromIndex(tuple.Item1, tuple.Item2)).ToList();
-			SetSelections(results);
 		}
 
 		static string SimplifyFraction(string str)

@@ -316,14 +316,12 @@ namespace NeoEdit.Program
 			}
 
 			var selections = Selections.ToList();
-			var searches = Searches.ToList();
 			var regions = Regions.ToDictionary(r => r.Key, r => r.Value.ToList());
 
 			OpenFile(FileName, DisplayName, keepUndo: true);
 
 			Func<List<Range>, List<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(0, Math.Min(range.Cursor, Data.MaxPosition)), Math.Max(0, Math.Min(range.Anchor, Data.MaxPosition)))).ToList();
 			SetSelections(reformatRanges(selections));
-			SetSearches(reformatRanges(searches));
 			foreach (var pair in regions)
 				SetRegions(pair.Key, reformatRanges(pair.Value));
 		}
