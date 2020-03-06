@@ -98,7 +98,6 @@
 		<Separator/>
 		<MenuItem Header="_Find">
 			<controls:NEMenuItem Header="_Find" CommandEnum="Edit_Find_Find" ToolTip="Find text"/>
-			<controls:NEMenuItem Header="_Binary" CommandEnum="Edit_Find_Binary" ToolTip="Find binary data"/>
 			<controls:NEMenuItem Header="Regex _Replace" CommandEnum="Edit_Find_RegexReplace" ToolTip="Regex find/replace"/>
 		</MenuItem>
 		<Separator/>

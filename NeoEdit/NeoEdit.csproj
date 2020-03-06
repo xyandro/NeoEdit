@@ -380,13 +380,6 @@
     <Compile Include="Dialogs\EditExpressionExpressionDialog.xaml.cs">
       <DependentUpon>EditExpressionExpressionDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\EditFindBinaryDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\EditFindBinaryDialog.xaml.cs">
-      <DependentUpon>EditFindBinaryDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\EditFindFindDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
