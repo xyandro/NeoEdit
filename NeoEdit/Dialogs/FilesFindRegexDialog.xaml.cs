@@ -8,7 +8,9 @@ namespace NeoEdit.Program.Dialogs
 	{
 		public class Result
 		{
-			public Regex Regex { get; set; }
+			public string Text { get; set; }
+			public bool WholeWords { get; set; }
+			public bool MatchCase { get; set; }
 		}
 
 		[DepProp]
@@ -42,18 +44,12 @@ namespace NeoEdit.Program.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			var text = Text;
-			if (WholeWords)
-				text = $"\\b{text}\\b";
-			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
-			if (!MatchCase)
-				options |= RegexOptions.IgnoreCase;
-			result = new Result { Regex = new Regex(text, options) };
+			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase };
 
 			wholeWordsVal = WholeWords;
 			matchCaseVal = MatchCase;
 
-			this.text.AddCurrentSuggestion();
+			text.AddCurrentSuggestion();
 
 			DialogResult = true;
 		}

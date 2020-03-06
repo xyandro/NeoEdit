@@ -2571,22 +2571,5 @@ namespace NeoEdit.Program
 			var values = Enumerable.Repeat(Coder.BytesToString(value, CodePage), sels.Count).ToList();
 			Replace(sels, values);
 		}
-
-		static List<Range> RegexMatches(Regex regex, string input, int addOffset, bool regexGroups, bool firstMatchOnly)
-		{
-			var result = new List<Range>();
-			var matches = regex.Matches(input).Cast<Match>();
-			foreach (var match in matches)
-			{
-				if ((!regexGroups) || (match.Groups.Count == 1))
-					result.Add(Range.FromIndex(match.Index + addOffset, match.Length));
-				else
-					result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => Range.FromIndex(capture.Index + addOffset, capture.Length)));
-				if ((firstMatchOnly) && (result.Count != 0))
-					return result;
-			}
-
-			return result;
-		}
 	}
 }

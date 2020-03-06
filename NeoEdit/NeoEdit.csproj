@@ -1106,6 +1106,8 @@
     <None Include="RevRegEx\Source\RevRegExLexer.g4" />
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
     <Compile Include="Searchers\BinarySearcher.cs" />
+    <Compile Include="Searchers\ISearcher.cs" />
+    <Compile Include="Searchers\RegexSearcher.cs" />
     <Compile Include="Searchers\StringSearcher.cs" />
     <Compile Include="Searchers\StringsSearcher.cs" />
     <Compile Include="Settings.cs" />

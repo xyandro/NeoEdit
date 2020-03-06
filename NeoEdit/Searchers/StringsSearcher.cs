@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace NeoEdit.Program.Searchers
 {
-	public class StringsSearcher
+	public class StringsSearcher : ISearcher
 	{
 		const int NOMATCH = -1;
 

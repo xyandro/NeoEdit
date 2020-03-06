@@ -2,7 +2,7 @@
 
 namespace NeoEdit.Program.Searchers
 {
-	public class StringSearcher
+	public class StringSearcher : ISearcher
 	{
 		readonly string findStr1, findStr2;
 		readonly bool wholeWords, entireSelection, firstMatchOnly;

@@ -271,17 +271,8 @@ namespace NeoEdit.Program
 
 		List<List<Range>> Command_Edit_Find_Find_Regex(EditFindFindDialog.Result result, List<Range> selections, bool firstMatchOnly)
 		{
-			var text = $"(?:{result.Text})";
-			if (result.WholeWords)
-				text = $"\\b{text}\\b";
-			if (result.EntireSelection)
-				text = $"\\A{text}\\Z";
-			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
-			if (!result.MatchCase)
-				options |= RegexOptions.IgnoreCase;
-			var regex = new Regex(text, options);
-
-			return selections.AsParallel().AsOrdered().Select(range => RegexMatches(regex, GetString(range), range.Start, result.RegexGroups, firstMatchOnly)).ToList();
+			var searcher = new RegexSearcher(result.Text, result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly, result.RegexGroups);
+			return selections.AsParallel().AsOrdered().Select(range => searcher.Find(GetString(range), range.Start)).ToList();
 		}
 
 		List<List<Range>> Command_Edit_Find_Find_Text(EditFindFindDialog.Result result, List<Range> selections, bool firstMatchOnly)
@@ -333,21 +324,11 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Find_RegexReplace(EditFindRegexReplaceDialog.Result result)
 		{
-			var text = result.Text;
-			var replace = result.Replace;
-			if (result.WholeWords)
-				text = $"\\b{text}\\b";
-			if (result.EntireSelection)
-				text = $"\\A{text}\\Z";
-			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
-			if (!result.MatchCase)
-				options |= RegexOptions.IgnoreCase;
-			var regex = new Regex(text, options);
-
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var sels = regions.AsParallel().AsOrdered().SelectMany(region => RegexMatches(regex, GetString(region), region.Start, false, false)).ToList();
+			var searcher = new RegexSearcher(result.Text, result.WholeWords, result.MatchCase, result.EntireSelection);
+			var sels = regions.AsParallel().AsOrdered().SelectMany(region => searcher.Find(GetString(region), region.Start)).ToList();
 			SetSelections(sels);
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => regex.Replace(GetString(range), result.Replace)).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => searcher.regex.Replace(GetString(range), result.Replace)).ToList());
 		}
 
 		void Command_Edit_CopyDown()
