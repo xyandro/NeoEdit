@@ -10,13 +10,13 @@ namespace NeoEdit.Program.Dialogs
 	{
 		class CheckBoxStatus
 		{
-			public bool WholeWords { get; set; }
-			public bool MatchCase { get; set; }
 			public bool IsExpression { get; set; }
 			public bool AlignSelections { get; set; }
 			public bool IsBoolean { get; set; }
 			public bool IsRegex { get; set; }
 			public bool RegexGroups { get; set; }
+			public bool WholeWords { get; set; }
+			public bool MatchCase { get; set; }
 			public bool EntireSelection { get; set; }
 			public bool KeepMatching { get; set; }
 			public bool RemoveMatching { get; set; }
@@ -33,13 +33,13 @@ namespace NeoEdit.Program.Dialogs
 		public class Result
 		{
 			public string Text { get; set; }
-			public bool WholeWords { get; set; }
-			public bool MatchCase { get; set; }
 			public bool IsExpression { get; set; }
 			public bool AlignSelections { get; set; }
 			public bool IsBoolean { get; set; }
 			public bool IsRegex { get; set; }
 			public bool RegexGroups { get; set; }
+			public bool WholeWords { get; set; }
+			public bool MatchCase { get; set; }
 			public bool SelectionOnly { get; set; }
 			public bool EntireSelection { get; set; }
 			public bool KeepMatching { get; set; }
@@ -50,10 +50,6 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public string Text { get { return UIHelper<EditFindFindDialog>.GetPropValue<string>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool WholeWords { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool MatchCase { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
-		[DepProp]
 		public bool IsExpression { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool AlignSelections { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
@@ -63,6 +59,10 @@ namespace NeoEdit.Program.Dialogs
 		public bool IsRegex { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool RegexGroups { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool WholeWords { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool MatchCase { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool SelectionOnly { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -163,13 +163,13 @@ namespace NeoEdit.Program.Dialogs
 		{
 			return new CheckBoxStatus
 			{
-				WholeWords = WholeWords,
-				MatchCase = MatchCase,
 				IsExpression = IsExpression,
 				AlignSelections = AlignSelections,
 				IsBoolean = IsBoolean,
 				IsRegex = IsRegex,
 				RegexGroups = RegexGroups,
+				WholeWords = WholeWords,
+				MatchCase = MatchCase,
 				EntireSelection = EntireSelection,
 				KeepMatching = KeepMatching,
 				RemoveMatching = RemoveMatching,
@@ -181,13 +181,13 @@ namespace NeoEdit.Program.Dialogs
 			if (checkBoxStatus == null)
 				return;
 
-			WholeWords = checkBoxStatus.WholeWords;
-			MatchCase = checkBoxStatus.MatchCase;
 			IsExpression = checkBoxStatus.IsExpression;
 			AlignSelections = checkBoxStatus.AlignSelections;
 			IsBoolean = checkBoxStatus.IsBoolean;
 			IsRegex = checkBoxStatus.IsRegex;
 			RegexGroups = checkBoxStatus.RegexGroups;
+			WholeWords = checkBoxStatus.WholeWords;
+			MatchCase = checkBoxStatus.MatchCase;
 			EntireSelection = checkBoxStatus.EntireSelection;
 			KeepMatching = checkBoxStatus.KeepMatching;
 			RemoveMatching = checkBoxStatus.RemoveMatching;
@@ -205,7 +205,7 @@ namespace NeoEdit.Program.Dialogs
 				return;
 
 
-			result = new Result { Text = Text, WholeWords = WholeWords, MatchCase = MatchCase, IsExpression = IsExpression, AlignSelections = AlignSelections, IsBoolean = IsBoolean, IsRegex = IsRegex, RegexGroups = RegexGroups, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, Type = (ResultType)(sender as FrameworkElement).Tag };
+			result = new Result { Text = Text, IsExpression = IsExpression, AlignSelections = AlignSelections, IsBoolean = IsBoolean, IsRegex = IsRegex, RegexGroups = RegexGroups, WholeWords = WholeWords, MatchCase = MatchCase, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, Type = (ResultType)(sender as FrameworkElement).Tag };
 			text.AddCurrentSuggestion(GetCheckBoxStatus());
 
 			DialogResult = true;
@@ -215,7 +215,7 @@ namespace NeoEdit.Program.Dialogs
 
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
-		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = IsExpression = AlignSelections = IsBoolean = IsRegex = RegexGroups = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
+		void Reset(object sender, RoutedEventArgs e) => IsExpression = AlignSelections = IsBoolean = IsRegex = RegexGroups = WholeWords = MatchCase = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
 
 		static public Result Run(Window parent, string text, bool selectionOnly, NEVariables variables)
 		{
