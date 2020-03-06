@@ -4,7 +4,7 @@ using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
 {
-	partial class FilesFindTextDialog
+	partial class FilesFindRegexDialog
 	{
 		public class Result
 		{
@@ -12,27 +12,26 @@ namespace NeoEdit.Program.Dialogs
 		}
 
 		[DepProp]
-		public string Text { get { return UIHelper<FilesFindTextDialog>.GetPropValue<string>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
+		public string Text { get { return UIHelper<FilesFindRegexDialog>.GetPropValue<string>(this); } set { UIHelper<FilesFindRegexDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool WholeWords { get { return UIHelper<FilesFindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
+		public bool WholeWords { get { return UIHelper<FilesFindRegexDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindRegexDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool MatchCase { get { return UIHelper<FilesFindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool IsRegex { get { return UIHelper<FilesFindTextDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindTextDialog>.SetPropValue(this, value); } }
+		public bool MatchCase { get { return UIHelper<FilesFindRegexDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindRegexDialog>.SetPropValue(this, value); } }
 
-		static bool wholeWordsVal, matchCaseVal, isRegexVal;
+		static bool wholeWordsVal, matchCaseVal;
 
-		static FilesFindTextDialog() { UIHelper<FilesFindTextDialog>.Register(); }
+		static FilesFindRegexDialog() { UIHelper<FilesFindRegexDialog>.Register(); }
 
-		FilesFindTextDialog()
+		FilesFindRegexDialog()
 		{
 			InitializeComponent();
 
 			Text = text.GetLastSuggestion() ?? "";
 			WholeWords = wholeWordsVal;
 			MatchCase = matchCaseVal;
-			IsRegex = isRegexVal;
 		}
+
+		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = false;
 
 		void Escape(object sender, RoutedEventArgs e) => Text = Regex.Escape(Text);
 		void Unescape(object sender, RoutedEventArgs e) => Text = Regex.Unescape(Text);
@@ -44,8 +43,6 @@ namespace NeoEdit.Program.Dialogs
 				return;
 
 			var text = Text;
-			if (!IsRegex)
-				text = Regex.Escape(text);
 			if (WholeWords)
 				text = $"\\b{text}\\b";
 			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
@@ -55,9 +52,7 @@ namespace NeoEdit.Program.Dialogs
 
 			wholeWordsVal = WholeWords;
 			matchCaseVal = MatchCase;
-			isRegexVal = IsRegex;
 
-			text = Text;
 			this.text.AddCurrentSuggestion();
 
 			DialogResult = true;
@@ -65,7 +60,7 @@ namespace NeoEdit.Program.Dialogs
 
 		static public Result Run(Window parent)
 		{
-			var dialog = new FilesFindTextDialog() { Owner = parent };
+			var dialog = new FilesFindRegexDialog() { Owner = parent };
 			return dialog.ShowDialog() ? dialog.result : null;
 		}
 

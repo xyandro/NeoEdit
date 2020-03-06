@@ -99,7 +99,7 @@
 		<MenuItem Header="_Find">
 			<controls:NEMenuItem Header="_Find" CommandEnum="Edit_Find_Find" ToolTip="Find text"/>
 			<controls:NEMenuItem Header="_Binary" CommandEnum="Edit_Find_Binary" ToolTip="Find binary data"/>
-			<controls:NEMenuItem Header="_Replace" CommandEnum="Edit_Find_Replace" ToolTip="Find/replace"/>
+			<controls:NEMenuItem Header="Regex _Replace" CommandEnum="Edit_Find_RegexReplace" ToolTip="Regex find/replace"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="E_xpression">
@@ -506,7 +506,7 @@
 		<Separator/>
 		<MenuItem Header="_Find">
 			<controls:NEMenuItem Header="_Binary" CommandEnum="Files_Find_Binary" ToolTip="Leave selected files that contain specific binary data"/>
-			<controls:NEMenuItem Header="_Text" CommandEnum="Files_Find_Text" ToolTip="Leave selected files that contain specific text"/>
+			<controls:NEMenuItem Header="_Regex" CommandEnum="Files_Find_Regex" ToolTip="Leave selected files that contain specific regex"/>
 			<controls:NEMenuItem Header="_Mass Find" CommandEnum="Files_Find_MassFind" ToolTip="Leave selected files that contain anything matching an expression"/>
 		</MenuItem>
 		<Separator/>

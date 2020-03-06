@@ -731,7 +731,7 @@ namespace NeoEdit.Program
 				case NECommand.File_Encrypt: dialogResult = Command_File_Encrypt_Dialog(multiStatus); break;
 				case NECommand.Edit_Find_Find: dialogResult = Command_Edit_Find_Find_Dialog(); break;
 				case NECommand.Edit_Find_Binary: dialogResult = Command_Edit_Find_Binary_Dialog(); break;
-				case NECommand.Edit_Find_Replace: dialogResult = Command_Edit_Find_Replace_Dialog(); break;
+				case NECommand.Edit_Find_RegexReplace: dialogResult = Command_Edit_Find_RegexReplace_Dialog(); break;
 				case NECommand.Edit_Rotate: dialogResult = Command_Edit_Rotate_Dialog(); break;
 				case NECommand.Edit_Repeat: dialogResult = Command_Edit_Repeat_Dialog(); break;
 				case NECommand.Edit_Data_Hash: dialogResult = Command_Edit_Data_Hash_Dialog(); break;
@@ -755,7 +755,7 @@ namespace NeoEdit.Program
 				case NECommand.Files_Set_Time_All: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case NECommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
 				case NECommand.Files_Find_Binary: dialogResult = Command_Files_Find_Binary_Dialog(); break;
-				case NECommand.Files_Find_Text: dialogResult = Command_Files_Find_Text_Dialog(); break;
+				case NECommand.Files_Find_Regex: dialogResult = Command_Files_Find_Regex_Dialog(); break;
 				case NECommand.Files_Find_MassFind: dialogResult = Command_Files_Find_MassFind_Dialog(); break;
 				case NECommand.Files_Insert: dialogResult = Command_Files_Insert_Dialog(); break;
 				case NECommand.Files_Create_FromExpressions: dialogResult = Command_Files_Create_FromExpressions_Dialog(); break;
@@ -915,7 +915,7 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Paste_RotatePaste: Command_Edit_Paste_Paste(true, true, preResult); break;
 				case NECommand.Edit_Find_Find: Command_Edit_Find_Find(dialogResult as EditFindFindDialog.Result); break;
 				case NECommand.Edit_Find_Binary: Command_Edit_Find_Binary(dialogResult as EditFindBinaryDialog.Result); break;
-				case NECommand.Edit_Find_Replace: Command_Edit_Find_Replace(dialogResult as EditFindReplaceDialog.Result); break;
+				case NECommand.Edit_Find_RegexReplace: Command_Edit_Find_RegexReplace(dialogResult as EditFindRegexReplaceDialog.Result); break;
 				case NECommand.Edit_CopyDown: Command_Edit_CopyDown(); break;
 				case NECommand.Edit_Rotate: Command_Edit_Rotate(dialogResult as EditRotateDialog.Result); break;
 				case NECommand.Edit_Repeat: Command_Edit_Repeat(dialogResult as EditRepeatDialog.Result); break;
@@ -1201,7 +1201,7 @@ namespace NeoEdit.Program
 				case NECommand.Files_Set_Time_All: Command_Files_Set_Time(TimestampType.All, dialogResult as FilesSetTimeDialog.Result); break;
 				case NECommand.Files_Set_Attributes: Command_Files_Set_Attributes(dialogResult as FilesSetAttributesDialog.Result); break;
 				case NECommand.Files_Find_Binary: Command_Files_Find_Binary(dialogResult as FilesFindBinaryDialog.Result); break;
-				case NECommand.Files_Find_Text: Command_Files_Find_Text(dialogResult as FilesFindTextDialog.Result); break;
+				case NECommand.Files_Find_Regex: Command_Files_Find_Regex(dialogResult as FilesFindRegexDialog.Result); break;
 				case NECommand.Files_Find_MassFind: Command_Files_Find_MassFind(dialogResult as FilesFindMassFindDialog.Result); break;
 				case NECommand.Files_Insert: Command_Files_Insert(dialogResult as FilesInsertDialog.Result); break;
 				case NECommand.Files_Create_Files: Command_Files_Create_Files(); break;

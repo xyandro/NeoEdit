@@ -313,7 +313,7 @@ namespace NeoEdit.Program
 			SetSelections(ranges);
 		}
 
-		EditFindReplaceDialog.Result Command_Edit_Find_Replace_Dialog()
+		EditFindRegexReplaceDialog.Result Command_Edit_Find_RegexReplace_Dialog()
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
@@ -328,18 +328,13 @@ namespace NeoEdit.Program
 				}
 			}
 
-			return EditFindReplaceDialog.Run(TabsParent, text, selectionOnly);
+			return EditFindRegexReplaceDialog.Run(TabsParent, text, selectionOnly);
 		}
 
-		void Command_Edit_Find_Replace(EditFindReplaceDialog.Result result)
+		void Command_Edit_Find_RegexReplace(EditFindRegexReplaceDialog.Result result)
 		{
 			var text = result.Text;
 			var replace = result.Replace;
-			if (!result.IsRegex)
-			{
-				text = Regex.Escape(text);
-				replace = replace.Replace("$", "$$");
-			}
 			if (result.WholeWords)
 				text = $"\\b{text}\\b";
 			if (result.EntireSelection)

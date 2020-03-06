@@ -359,7 +359,7 @@ namespace NeoEdit.Program
 					}
 		}
 
-		async Task<bool> TextSearchFileAsync(string fileName, FilesFindTextDialog.Result search, IProgress<ProgressReport> progress, CancellationToken cancel)
+		async Task<bool> TextSearchFileAsync(string fileName, FilesFindRegexDialog.Result search, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{
 			try
 			{
@@ -627,9 +627,9 @@ namespace NeoEdit.Program
 			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
 		}
 
-		FilesFindTextDialog.Result Command_Files_Find_Text_Dialog() => FilesFindTextDialog.Run(TabsParent);
+		FilesFindRegexDialog.Result Command_Files_Find_Regex_Dialog() => FilesFindRegexDialog.Run(TabsParent);
 
-		void Command_Files_Find_Text(FilesFindTextDialog.Result result)
+		void Command_Files_Find_Regex(FilesFindRegexDialog.Result result)
 		{
 			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
 			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await TextSearchFileAsync(obj.fileName, result, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());

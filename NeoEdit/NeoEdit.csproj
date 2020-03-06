@@ -387,12 +387,12 @@
     <Compile Include="Dialogs\EditFindFindDialog.xaml.cs">
       <DependentUpon>EditFindFindDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\EditFindReplaceDialog.xaml">
+    <Page Include="Dialogs\EditFindRegexReplaceDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\EditFindReplaceDialog.xaml.cs">
-      <DependentUpon>EditFindReplaceDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\EditFindRegexReplaceDialog.xaml.cs">
+      <DependentUpon>EditFindRegexReplaceDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\EditModifyRegionsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -478,12 +478,12 @@
     <Compile Include="Dialogs\FilesFindMassFindDialog.xaml.cs">
       <DependentUpon>FilesFindMassFindDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\FilesFindTextDialog.xaml">
+    <Page Include="Dialogs\FilesFindRegexDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\FilesFindTextDialog.xaml.cs">
-      <DependentUpon>FilesFindTextDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\FilesFindRegexDialog.xaml.cs">
+      <DependentUpon>FilesFindRegexDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\FilesHashDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
