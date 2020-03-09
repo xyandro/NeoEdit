@@ -503,11 +503,7 @@
 			<controls:NEMenuItem Header="_Attributes" CommandEnum="Files_Set_Attributes" ToolTip="Set attributes of selected files"/>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="_Find">
-			<controls:NEMenuItem Header="_Binary" CommandEnum="Files_Find_Binary" ToolTip="Leave selected files that contain specific binary data"/>
-			<controls:NEMenuItem Header="_Regex" CommandEnum="Files_Find_Regex" ToolTip="Leave selected files that contain specific regex"/>
-			<controls:NEMenuItem Header="_Mass Find" CommandEnum="Files_Find_MassFind" ToolTip="Leave selected files that contain anything matching an expression"/>
-		</MenuItem>
+		<controls:NEMenuItem Header="_Find" CommandEnum="Files_Find" ToolTip="Leave selected files that contain specific data"/>
 		<Separator/>
 		<controls:NEMenuItem Header="I_nsert" CommandEnum="Files_Insert" ToolTip="Insert selected files into current file"/>
 		<MenuItem Header="_Create">

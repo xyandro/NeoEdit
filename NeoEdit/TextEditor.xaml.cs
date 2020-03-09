@@ -751,9 +751,7 @@ namespace NeoEdit.Program
 				case NECommand.Files_Set_Time_Create: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case NECommand.Files_Set_Time_All: dialogResult = Command_Files_Set_Time_Dialog(); break;
 				case NECommand.Files_Set_Attributes: dialogResult = Command_Files_Set_Attributes_Dialog(); break;
-				case NECommand.Files_Find_Binary: dialogResult = Command_Files_Find_Binary_Dialog(); break;
-				case NECommand.Files_Find_Regex: dialogResult = Command_Files_Find_Regex_Dialog(); break;
-				case NECommand.Files_Find_MassFind: dialogResult = Command_Files_Find_MassFind_Dialog(); break;
+				case NECommand.Files_Find: dialogResult = Command_Files_Find_Dialog(); break;
 				case NECommand.Files_Insert: dialogResult = Command_Files_Insert_Dialog(); break;
 				case NECommand.Files_Create_FromExpressions: dialogResult = Command_Files_Create_FromExpressions_Dialog(); break;
 				case NECommand.Files_Select_ByVersionControlStatus: dialogResult = Command_Files_Select_ByVersionControlStatus_Dialog(); break;
@@ -1196,9 +1194,7 @@ namespace NeoEdit.Program
 				case NECommand.Files_Set_Time_Create: Command_Files_Set_Time(TimestampType.Create, dialogResult as FilesSetTimeDialog.Result); break;
 				case NECommand.Files_Set_Time_All: Command_Files_Set_Time(TimestampType.All, dialogResult as FilesSetTimeDialog.Result); break;
 				case NECommand.Files_Set_Attributes: Command_Files_Set_Attributes(dialogResult as FilesSetAttributesDialog.Result); break;
-				case NECommand.Files_Find_Binary: Command_Files_Find_Binary(dialogResult as FilesFindBinaryDialog.Result); break;
-				case NECommand.Files_Find_Regex: Command_Files_Find_Regex(dialogResult as FilesFindRegexDialog.Result); break;
-				case NECommand.Files_Find_MassFind: Command_Files_Find_MassFind(dialogResult as FilesFindMassFindDialog.Result); break;
+				case NECommand.Files_Find: Command_Files_Find(dialogResult as FilesFindDialog.Result); break;
 				case NECommand.Files_Insert: Command_Files_Insert(dialogResult as FilesInsertDialog.Result); break;
 				case NECommand.Files_Create_Files: Command_Files_Create_Files(); break;
 				case NECommand.Files_Create_Directories: Command_Files_Create_Directories(); break;

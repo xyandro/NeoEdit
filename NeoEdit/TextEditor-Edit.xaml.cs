@@ -237,7 +237,7 @@ namespace NeoEdit.Program
 					stringsToFind = selections.Select((x, index) => new List<(string, bool)> { (expressionResults[index], result.MatchCase) }).ToList();
 				}
 				else
-					stringsToFind = Enumerable.Repeat(expressionResults.Select(x => (x, result.KeepMatching)).ToList(), selections.Count).ToList();
+					stringsToFind = Enumerable.Repeat(expressionResults.Select(x => (x, result.MatchCase)).ToList(), selections.Count).ToList();
 			}
 			else
 				stringsToFind = Enumerable.Repeat(new List<(string, bool)> { (result.Text, result.MatchCase) }, selections.Count).ToList();

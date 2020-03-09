@@ -464,26 +464,12 @@
     <Compile Include="Dialogs\FilesCreateFromExpressionsDialog.xaml.cs">
       <DependentUpon>FilesCreateFromExpressionsDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\FilesFindBinaryDialog.xaml">
+    <Page Include="Dialogs\FilesFindDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\FilesFindBinaryDialog.xaml.cs">
-      <DependentUpon>FilesFindBinaryDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesFindMassFindDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesFindMassFindDialog.xaml.cs">
-      <DependentUpon>FilesFindMassFindDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\FilesFindRegexDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\FilesFindRegexDialog.xaml.cs">
-      <DependentUpon>FilesFindRegexDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\FilesFindDialog.xaml.cs">
+      <DependentUpon>FilesFindDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\FilesHashDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

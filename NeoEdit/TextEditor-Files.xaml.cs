@@ -71,6 +71,51 @@ namespace NeoEdit.Program
 			}
 		}
 
+		async Task<bool> TextSearchFileAsync(string fileName, ISearcher searcher, IProgress<ProgressReport> progress, CancellationToken cancel)
+		{
+			try
+			{
+				if (savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel))
+					return true;
+
+				if (Directory.Exists(fileName))
+					return false;
+
+				byte[] buffer;
+				using (var input = File.OpenRead(fileName))
+				{
+					buffer = new byte[input.Length];
+					var read = 0;
+					while ((read < input.Length) && (!cancel.IsCancellationRequested))
+					{
+						var block = await input.ReadAsync(buffer, read, (int)(input.Length - read));
+						progress.Report(new ProgressReport(input.Position, input.Length));
+						read += block;
+					}
+				}
+
+				var data = new TextData(Coder.BytesToString(buffer, Coder.CodePage.AutoByBOM, true));
+				var start = data.GetPosition(0, 0);
+				return searcher.Find(data.GetString(start, data.MaxPosition - start), start).Any();
+			}
+			catch (Exception ex)
+			{
+				TabsParent.Dispatcher.Invoke(() =>
+				{
+					if (!savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.All))
+						savedAnswers[nameof(TextSearchFileAsync)] = new Message(TabsParent)
+						{
+							Title = "Confirm",
+							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
+							Options = MessageOptions.YesNoAllCancel,
+							DefaultCancel = MessageOptions.Cancel,
+						}.Show(false);
+				});
+
+				return (savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Yes)) || (savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel));
+			}
+		}
+
 		static async Task CombineFilesAsync(string outputFile, List<string> inputFiles, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{
 			var total = inputFiles.Sum(file => new FileInfo(file).Length);
@@ -359,52 +404,6 @@ namespace NeoEdit.Program
 					}
 		}
 
-		async Task<bool> TextSearchFileAsync(string fileName, FilesFindRegexDialog.Result search, IProgress<ProgressReport> progress, CancellationToken cancel)
-		{
-			try
-			{
-				if (savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel))
-					return true;
-
-				if (Directory.Exists(fileName))
-					return false;
-
-				byte[] buffer;
-				using (var input = File.OpenRead(fileName))
-				{
-					buffer = new byte[input.Length];
-					var read = 0;
-					while ((read < input.Length) && (!cancel.IsCancellationRequested))
-					{
-						var block = await input.ReadAsync(buffer, read, (int)(input.Length - read));
-						progress.Report(new ProgressReport(input.Position, input.Length));
-						read += block;
-					}
-				}
-
-				var data = new TextData(Coder.BytesToString(buffer, Coder.CodePage.AutoByBOM, true));
-				var start = data.GetPosition(0, 0);
-				var searcher = new RegexesSearcher(new List<string> { search.Text }, search.WholeWords, search.MatchCase, firstMatchOnly: true);
-				return searcher.Find(data.GetString(start, data.MaxPosition - start), start).Any();
-			}
-			catch (Exception ex)
-			{
-				TabsParent.Dispatcher.Invoke(() =>
-				{
-					if (!savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.All))
-						savedAnswers[nameof(TextSearchFileAsync)] = new Message(TabsParent)
-						{
-							Title = "Confirm",
-							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
-							Options = MessageOptions.YesNoAllCancel,
-							DefaultCancel = MessageOptions.Cancel,
-						}.Show(false);
-				});
-
-				return (savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Yes)) || (savedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel));
-			}
-		}
-
 		void Command_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(GetString(range))).ToList());
 
 		FilesNamesMakeAbsoluteRelativeDialog.Result Command_Files_Name_MakeAbsolute_Dialog() => FilesNamesMakeAbsoluteRelativeDialog.Run(TabsParent, GetVariables(), true, true);
@@ -619,31 +618,69 @@ namespace NeoEdit.Program
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
-		FilesFindBinaryDialog.Result Command_Files_Find_Binary_Dialog() => FilesFindBinaryDialog.Run(TabsParent);
+		FilesFindDialog.Result Command_Files_Find_Dialog() => FilesFindDialog.Run(TabsParent, GetVariables());
 
-		void Command_Files_Find_Binary(FilesFindBinaryDialog.Result result)
+		void Command_Files_Find(FilesFindDialog.Result result)
 		{
-			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
-			var searcher = Helpers.GetBinarySearcher(new List<string> { result.Text }, result.CodePages, result.MatchCase);
-			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
-		}
+			// For each file, determine strings to find
+			List<List<string>> stringsToFind;
 
-		FilesFindRegexDialog.Result Command_Files_Find_Regex_Dialog() => FilesFindRegexDialog.Run(TabsParent);
+			if (result.IsExpression)
+			{
+				var expressionResults = GetExpressionResults<string>(result.Text, result.AlignSelections ? Selections.Count : default(int?));
+				if (result.AlignSelections)
+					stringsToFind = Enumerable.Range(0, Selections.Count).Select(index => new List<string> { expressionResults[index] }).ToList();
+				else
+					stringsToFind = Enumerable.Repeat(expressionResults, Selections.Count).ToList();
+			}
+			else
+				stringsToFind = Enumerable.Repeat(new List<string> { result.Text }, Selections.Count).ToList();
 
-		void Command_Files_Find_Regex(FilesFindRegexDialog.Result result)
-		{
-			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
-			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await TextSearchFileAsync(obj.fileName, result, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
-		}
+			List<bool> results;
+			if (result.IsBinary)
+			{
+				var searchers = stringsToFind
+					.Distinct()
+					.ToDictionary(
+						list => list,
+						list => new BinarySearcher(list.SelectMany(
+							item => result.CodePages
+								.Select(codePage => (Coder.TryStringToBytes(item, codePage), (result.MatchCase) || (Coder.AlwaysCaseSensitive(codePage))))
+								.Where(tuple => (tuple.Item1 != null) && (tuple.Item1.Length != 0))
+							).Distinct().ToList()));
 
-		FilesFindMassFindDialog.Result Command_Files_Find_MassFind_Dialog() => FilesFindMassFindDialog.Run(TabsParent, GetVariables());
+				results = MultiProgressDialog.RunAsync(TabsParent, "Searching files...", RelativeSelectedFiles().Select((file, index) => (file, index)), async (obj, progress, cancel) => await BinarySearchFileAsync(obj.file, searchers[stringsToFind[obj.index]], progress, cancel), obj => Path.GetFileName(obj.file));
+			}
+			else
+			{
+				// Create searchers
+				Dictionary<List<string>, ISearcher> searchers;
+				if (result.IsRegex)
+				{
+					searchers = stringsToFind
+						.Distinct()
+						.ToDictionary(
+							list => list,
+							list => new RegexesSearcher(list, matchCase: result.MatchCase, firstMatchOnly: true) as ISearcher);
+				}
+				else
+				{
+					searchers = stringsToFind
+						.Distinct()
+						.ToDictionary(
+							list => list,
+							list =>
+							{
+								if (list.Count == 1)
+									return new StringSearcher(list[0], matchCase: result.MatchCase, firstMatchOnly: true) as ISearcher;
+								return new StringsSearcher(list, matchCase: result.MatchCase, firstMatchOnly: true) as ISearcher;
+							});
+				}
 
-		void Command_Files_Find_MassFind(FilesFindMassFindDialog.Result result)
-		{
-			var findStrs = GetExpressionResults<string>(result.Expression);
-			var searcher = Helpers.GetBinarySearcher(findStrs, result.CodePages, result.MatchCase);
-			var selected = RelativeSelectedFiles().Zip(Selections, (fileName, range) => new { fileName, range }).ToList();
-			SetSelections(MultiProgressDialog.RunAsync(TabsParent, "Searching files...", selected, async (obj, progress, cancel) => await BinarySearchFileAsync(obj.fileName, searcher, progress, cancel) ? obj.range : null, obj => Path.GetFileName(obj.fileName)).NonNull().ToList());
+				results = MultiProgressDialog.RunAsync(TabsParent, "Searching files...", RelativeSelectedFiles().Select((file, index) => (file, index)), async (obj, progress, cancel) => await TextSearchFileAsync(obj.file, searchers[stringsToFind[obj.index]], progress, cancel), obj => Path.GetFileName(obj.file));
+			}
+
+			SetSelections(Selections.Where((range, index) => results[index]).ToList());
 		}
 
 		FilesInsertDialog.Result Command_Files_Insert_Dialog() => FilesInsertDialog.Run(TabsParent);
