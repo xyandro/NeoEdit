@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NeoEdit.Program.Searchers
 {
@@ -73,7 +76,6 @@ namespace NeoEdit.Program.Searchers
 		}
 
 		readonly SearchNode matchCaseStartNode, ignoreCaseStartNode;
-		public readonly int MaxLen = 0;
 
 		public BinarySearcher(IEnumerable<byte[]> findBytes, bool matchCase = false) : this(findBytes.Select(bytes => (bytes, matchCase)).ToList()) { }
 
@@ -85,7 +87,6 @@ namespace NeoEdit.Program.Searchers
 			{
 				var node = findBytes[ctr].Item2 ? matchCaseCharMap : ignoreCaseCharMap;
 				node.Add(findBytes[ctr].Item1);
-				MaxLen = Math.Max(MaxLen, findBytes[ctr].Item1.Length);
 			}
 
 			matchCaseStartNode = new SearchNode(matchCaseCharMap);
@@ -98,51 +99,78 @@ namespace NeoEdit.Program.Searchers
 			}
 		}
 
-		public bool Find(byte[] input) => Find(input, 0, input.Length);
-
-		public bool Find(byte[] input, int startIndex, int length)
+		public async Task<bool> FindAsync(string fileName, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{
-			var endIndex = startIndex + length;
-			var curNodes = new List<SearchNode>();
-			for (var index = startIndex; index < endIndex; ++index)
+			const int bits = 16;
+			const int bitMask = (1 << bits) - 1;
+
+			using (var stream = File.OpenRead(fileName))
 			{
-				var found = false;
+				var data = new byte[1 << bits];
+				long curBlock = -1;
 
-				if (matchCaseStartNode.charMap.exists[input[index]])
+				var curNodes = new List<SearchNode>();
+				for (var index = 0L; index < stream.Length; ++index)
 				{
-					curNodes.Add(matchCaseStartNode);
-					found = true;
-				}
+					var found = false;
 
-				if (ignoreCaseStartNode.charMap.exists[input[index]])
-				{
-					curNodes.Add(ignoreCaseStartNode);
-					found = true;
-				}
+					var block = index >> bits;
+					var offset = index & bitMask;
 
-				// Quick check: if the current byte doesn't appear in the search at all, skip everything and go on
-				if (!found)
-				{
-					curNodes.Clear();
-					continue;
-				}
+					if (block != curBlock)
+					{
+						if (cancel.IsCancellationRequested)
+							break;
 
-				var newNodes = new List<SearchNode>();
-				for (var ctr = 0; ctr < curNodes.Count; ++ctr)
-				{
-					var newNode = curNodes[ctr].data[input[index]];
-					if (newNode == null)
+						curBlock = block;
+						var startPosition = block << bits;
+						var length = (int)Math.Min(data.Length, stream.Length - startPosition);
+						stream.Position = startPosition;
+						var read = await stream.ReadAsync(data, 0, length);
+						if (read != length)
+							throw new Exception("Failed to read block");
+
+						progress.Report(new ProgressReport(stream.Position, stream.Length));
+					}
+
+					var b = data[offset];
+
+					if (matchCaseStartNode.charMap.exists[b])
+					{
+						curNodes.Add(matchCaseStartNode);
+						found = true;
+					}
+
+					if (ignoreCaseStartNode.charMap.exists[b])
+					{
+						curNodes.Add(ignoreCaseStartNode);
+						found = true;
+					}
+
+					// Quick check: if the current byte doesn't appear in the search at all, skip everything and go on
+					if (!found)
+					{
+						curNodes.Clear();
 						continue;
+					}
 
-					newNodes.Add(newNode);
+					var newNodes = new List<SearchNode>();
+					for (var ctr = 0; ctr < curNodes.Count; ++ctr)
+					{
+						var newNode = curNodes[ctr].data[b];
+						if (newNode == null)
+							continue;
 
-					if (newNode.length != NOMATCH)
-						return true;
+						newNodes.Add(newNode);
+
+						if (newNode.length != NOMATCH)
+							return true;
+					}
+					curNodes = newNodes;
 				}
-				curNodes = newNodes;
-			}
 
-			return false;
+				return false;
+			}
 		}
 	}
 }

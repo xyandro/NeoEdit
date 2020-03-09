@@ -29,35 +29,13 @@ namespace NeoEdit.Program
 				if (Directory.Exists(fileName))
 					return false;
 
-				var findLen = searcher.MaxLen;
-				if (findLen == 0)
-					return false;
-				var buffer = new byte[8192];
-				var used = 0;
-				using (var stream = File.OpenRead(fileName))
-					while (!cancel.IsCancellationRequested)
-					{
-						var block = await stream.ReadAsync(buffer, used, buffer.Length - used);
-						if (block == 0)
-							break;
-						used += block;
-						progress.Report(new ProgressReport(stream.Position, stream.Length));
-
-						if (searcher.Find(buffer, 0, used))
-							return true;
-
-						var keep = Math.Min(used, findLen - 1);
-						Array.Copy(buffer, used - keep, buffer, 0, keep);
-						used = keep;
-					}
-
-				return false;
+				return await searcher.FindAsync(fileName, progress, cancel);
 			}
 			catch (Exception ex)
 			{
-				TabsParent.Dispatcher.Invoke(() =>
-				{
-					if (!savedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.All))
+				if (!savedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.All))
+					TabsParent.Dispatcher.Invoke(() =>
+					{
 						savedAnswers[nameof(BinarySearchFileAsync)] = new Message(TabsParent)
 						{
 							Title = "Confirm",
@@ -65,7 +43,7 @@ namespace NeoEdit.Program
 							Options = MessageOptions.YesNoAllCancel,
 							DefaultCancel = MessageOptions.Cancel,
 						}.Show(false);
-				});
+					});
 
 				return (savedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Yes)) || (savedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Cancel));
 			}
