@@ -228,9 +228,9 @@ namespace NeoEdit.Program
 				result = Selections[Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1))];
 
 			var total = new NumericValue(0);
-			var sum = Selections.Where(range => range.HasSelection).ForEach(range => total += new NumericValue(GetString(range)));
+			Selections.Where(range => range.HasSelection).ForEach(range => total += new NumericValue(GetString(range)));
 			SetSelections(new List<Range> { result });
-			ReplaceSelections(sum.ToString());
+			ReplaceSelections(total.ToString());
 		}
 
 		void Command_Numeric_Add_ForwardReverseSum(bool forward, bool undo)
