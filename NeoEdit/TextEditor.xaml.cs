@@ -90,8 +90,6 @@ namespace NeoEdit.Program
 		public IList<byte> ViewValuesData { get { return UIHelper<TextEditor>.GetPropValue<IList<byte>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool ViewValuesHasSel { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public string ViewValuesFindValue { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		public TabsWindow TabsParent { get; set; }
 		public bool IsActive => TabsParent.TabIsActive(this);
@@ -1590,7 +1588,6 @@ namespace NeoEdit.Program
 					break;
 				case Key.Escape:
 					DragFiles = null;
-					ViewValuesFindValue = null;
 					if (Settings.EscapeClearsSelections)
 					{
 						HandleCommand(NECommand.Select_Selection_Single, false, null, null, null);

@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
-using System.Windows.Media;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Transform;
 
@@ -19,8 +18,6 @@ namespace NeoEdit.Program.Controls
 		public IList<byte> Data { get { return UIHelper<ViewValue>.GetPropValue<IList<byte>>(this); } set { UIHelper<ViewValue>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool HasSel { get { return UIHelper<ViewValue>.GetPropValue<bool>(this); } set { UIHelper<ViewValue>.SetPropValue(this, value); } }
-		[DepProp]
-		public string FindValue { get { return UIHelper<ViewValue>.GetPropValue<string>(this); } set { UIHelper<ViewValue>.SetPropValue(this, value); } }
 
 		static ViewValue() => UIHelper<ViewValue>.Register();
 
@@ -81,24 +78,7 @@ namespace NeoEdit.Program.Controls
 	{
 		public override object ProvideValue(IServiceProvider serviceProvider) => this;
 
-		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-		{
-			var viewValue = values[0] as ViewValue;
-			if (viewValue == null)
-				return null;
-
-			var value = viewValue.GetValue();
-			if (targetType == typeof(string))
-				return Font.RemoveSpecialChars(value);
-
-			if (targetType == typeof(Brush))
-				if ((value != null) && (viewValue.FindValue != null) && (value.Equals(viewValue.FindValue, StringComparison.OrdinalIgnoreCase)))
-					return Brushes.LightBlue;
-				else
-					return Brushes.Transparent;
-
-			throw new Exception("Invalid converter");
-		}
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => Font.RemoveSpecialChars((values[0] as ViewValue)?.GetValue() ?? "");
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
 	}

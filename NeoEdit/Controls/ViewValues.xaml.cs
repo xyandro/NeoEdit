@@ -14,8 +14,6 @@ namespace NeoEdit.Program.Controls
 		[DepProp]
 		public bool HasSel { get { return UIHelper<ViewValues>.GetPropValue<bool>(this); } set { UIHelper<ViewValues>.SetPropValue(this, value); } }
 		[DepProp]
-		public string FindValue { get { return UIHelper<ViewValues>.GetPropValue<string>(this); } set { UIHelper<ViewValues>.SetPropValue(this, value); } }
-		[DepProp]
 		public bool LittleEndian { get { return UIHelper<ViewValues>.GetPropValue<bool>(this); } set { UIHelper<ViewValues>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool BigEndian { get { return UIHelper<ViewValues>.GetPropValue<bool>(this); } set { UIHelper<ViewValues>.SetPropValue(this, value); } }

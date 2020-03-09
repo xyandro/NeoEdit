@@ -15,13 +15,4 @@
 			<Binding Path="HasSel" ElementName="self"/>
 		</MultiBinding>
 	</TextBlock.Text>
-
-	<TextBlock.Background>
-		<MultiBinding Converter="{controls:ViewValueConverter}">
-			<Binding ElementName="self"/>
-			<Binding Path="Data" ElementName="self"/>
-			<Binding Path="HasSel" ElementName="self"/>
-			<Binding Path="FindValue" ElementName="self"/>
-		</MultiBinding>
-	</TextBlock.Background>
 </TextBlock>
