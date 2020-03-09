@@ -268,12 +268,7 @@ namespace NeoEdit.Program
 					.Distinct()
 					.ToDictionary(
 						list => list,
-						list =>
-						{
-							if (list.Count != 1) // Shouldn't be possible
-								throw new Exception("All items must have exactly one value for regex");
-							return new RegexSearcher(list[0].Item1, result.WholeWords, list[0].Item2, result.EntireSelection, firstMatchOnly, result.RegexGroups) as ISearcher;
-						});
+						list => new RegexesSearcher(list.Select(x => x.Item1).ToList(), result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly, result.RegexGroups) as ISearcher);
 			}
 			else
 			{
@@ -342,10 +337,10 @@ namespace NeoEdit.Program
 		void Command_Edit_Find_RegexReplace(EditFindRegexReplaceDialog.Result result)
 		{
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { FullRange };
-			var searcher = new RegexSearcher(result.Text, result.WholeWords, result.MatchCase, result.EntireSelection);
+			var searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, result.EntireSelection);
 			var sels = regions.AsParallel().AsOrdered().SelectMany(region => searcher.Find(GetString(region), region.Start)).ToList();
 			SetSelections(sels);
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => searcher.regex.Replace(GetString(range), result.Replace)).ToList());
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => searcher.regexes[0].Replace(GetString(range), result.Replace)).ToList());
 		}
 
 		void Command_Edit_CopyDown()

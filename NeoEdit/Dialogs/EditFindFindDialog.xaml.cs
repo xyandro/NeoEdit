@@ -88,9 +88,7 @@ namespace NeoEdit.Program.Dialogs
 			UIHelper<EditFindFindDialog>.Register();
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsExpression, (obj, o, n) =>
 			{
-				if (obj.IsExpression)
-					obj.IsRegex = false;
-				else
+				if (!obj.IsExpression)
 					obj.AlignSelections = false;
 			});
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.AlignSelections, (obj, o, n) =>
@@ -113,7 +111,7 @@ namespace NeoEdit.Program.Dialogs
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsRegex, (obj, o, n) =>
 			{
 				if (obj.IsRegex)
-					obj.IsExpression = false;
+					obj.IsBinary = false;
 				else
 					obj.RegexGroups = false;
 			});
