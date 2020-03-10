@@ -269,7 +269,7 @@ namespace NeoEdit.Program
 				TabsParent.RemoveTextEditor(this);
 		}
 
-		void Command_File_Refresh()
+		public void Command_File_Refresh()
 		{
 			if (string.IsNullOrEmpty(FileName))
 				return;

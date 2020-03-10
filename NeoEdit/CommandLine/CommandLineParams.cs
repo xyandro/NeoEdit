@@ -6,6 +6,7 @@ namespace NeoEdit.Program.CommandLine
 	{
 		public class File
 		{
+			public bool Existing { get; set; }
 			public string FileName { get; set; }
 			public string DisplayName { get; set; }
 			public int? Line { get; set; }

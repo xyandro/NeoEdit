@@ -694,7 +694,7 @@ namespace NeoEdit.Program
 			return results;
 		}
 
-		void Goto(int? line, int? column, int? index)
+		public void Goto(int? line, int? column, int? index)
 		{
 			var pos = 0;
 			if (line.HasValue)

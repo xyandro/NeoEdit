@@ -1062,5 +1062,17 @@ namespace NeoEdit.Program
 
 			try { Settings.WindowPosition = GetPosition(); } catch { }
 		}
+
+		public bool GotoTab(string fileName, int? line, int? column, int? index)
+		{
+			var tab = Tabs.FirstOrDefault(x => x.FileName == fileName);
+			if (tab == null)
+				return false;
+			Activate();
+			SetFocused(tab, true);
+			tab.Command_File_Refresh();
+			tab.Goto(line, column, index);
+			return true;
+		}
 	}
 }

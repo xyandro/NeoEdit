@@ -37,6 +37,7 @@ namespace NeoEdit.Program.CommandLine
 		{
 			clParams.Files.Add(new CommandLineParams.File
 			{
+				Existing = context.EXISTING() != null,
 				FileName = context.filename.GetText(),
 				DisplayName = context.display?.GetText(),
 				Line = context.line == null ? default(int?) : int.Parse(context.line.Text),
