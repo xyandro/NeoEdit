@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
@@ -13,13 +14,16 @@ namespace NeoEdit.Program
 		public TextEditorData()
 		{
 			Text = new NEText(File.ReadAllText(@"..\..\a.txt"));
+			Selections = new List<Range>();
+			for (var region = 1; region <= 9; ++region)
+				SetRegions(region, new List<Range>());
 			Commit();
 		}
 
 		NEText text, newText;
 		public NEText Text
 		{
-			get => newText ?? text;
+			get => newText;
 			private set
 			{
 				newText = value;
@@ -41,33 +45,30 @@ namespace NeoEdit.Program
 		NETextView textView, newTextView;
 		public NETextView TextView
 		{
-			get => newTextView ?? textView;
+			get => newTextView;
 			set => newTextView = value;
 		}
 
 		public int NumLines => TextView.NumLines;
 
-		int maxColumn;
-		int? newMaxColumn;
+		int maxColumn, newMaxColumn;
 		public int MaxColumn
 		{
-			get => newMaxColumn ?? maxColumn;
+			get => newMaxColumn;
 			set => newMaxColumn = value;
 		}
 
-		int currentSelection;
-		int? newCurrentSelection;
+		int currentSelection, newCurrentSelection;
 		public int CurrentSelection
 		{
-			get => newCurrentSelection ?? currentSelection;
+			get => newCurrentSelection;
 			set => newCurrentSelection = Math.Max(0, Math.Min(value, Selections.Count - 1));
 		}
 
-		List<Range> selections = new List<Range>();
-		List<Range> newSelections;
+		List<Range> selections, newSelections;
 		public List<Range> Selections
 		{
-			get => newSelections ?? selections;
+			get => newSelections;
 			set
 			{
 				newSelections = value;
@@ -77,13 +78,13 @@ namespace NeoEdit.Program
 
 		public void SetSelections(List<Range> selections) => Selections = DeOverlap(selections);
 
-		readonly List<Range>[] regions = Enumerable.Range(0, 9).Select(num => new List<Range>()).ToArray();
+		readonly List<Range>[] regions = new List<Range>[9];
 		readonly List<Range>[] newRegions = new List<Range>[9];
 		public List<Range> GetRegions(int region)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			return newRegions[region - 1] ?? regions[region - 1];
+			return newRegions[region - 1];
 		}
 
 		public void SetRegions(int region, List<Range> regions)
@@ -93,26 +94,243 @@ namespace NeoEdit.Program
 			newRegions[region - 1] = DeOverlap(regions);
 		}
 
+		string displayName, newDisplayName;
+		public string DisplayName
+		{
+			get => newDisplayName;
+			set => newDisplayName = value;
+		}
+
+		string fileName, newFileName;
+		public string FileName
+		{
+			get => newFileName;
+			set => newFileName = value;
+		}
+
+		bool isModified, newIsModified;
+		public bool IsModified
+		{
+			get => newIsModified;
+			set => newIsModified = value;
+		}
+
+		bool autoRefresh, newAutoRefresh;
+		public bool AutoRefresh
+		{
+			get => newAutoRefresh;
+			set => newAutoRefresh = value;
+		}
+
+		ParserType contentType, newContentType;
+		public ParserType ContentType
+		{
+			get => newContentType;
+			set => newContentType = value;
+		}
+
+		Coder.CodePage codePage, newCodePage;
+		public Coder.CodePage CodePage
+		{
+			get => newCodePage;
+			set => newCodePage = value;
+		}
+
+		string aesKey, newAESKey;
+		public string AESKey
+		{
+			get => newAESKey;
+			set => newAESKey = value;
+		}
+
+		bool compressed, newCompressed;
+		public bool Compressed
+		{
+			get => newCompressed;
+			set => newCompressed = value;
+		}
+
+		string lineEnding, newLineEnding;
+		public string LineEnding
+		{
+			get => newLineEnding;
+			set => newLineEnding = value;
+		}
+
+		bool diffIgnoreWhitespace, newDiffIgnoreWhitespace;
+		public bool DiffIgnoreWhitespace
+		{
+			get => newDiffIgnoreWhitespace;
+			set => newDiffIgnoreWhitespace = value;
+		}
+
+		bool diffIgnoreCase, newDiffIgnoreCase;
+		public bool DiffIgnoreCase
+		{
+			get => newDiffIgnoreCase;
+			set => newDiffIgnoreCase = value;
+		}
+
+		bool diffIgnoreNumbers, newDiffIgnoreNumbers;
+		public bool DiffIgnoreNumbers
+		{
+			get => newDiffIgnoreNumbers;
+			set => newDiffIgnoreNumbers = value;
+		}
+
+		bool diffIgnoreLineEndings, newDiffIgnoreLineEndings;
+		public bool DiffIgnoreLineEndings
+		{
+			get => newDiffIgnoreLineEndings;
+			set => newDiffIgnoreLineEndings = value;
+		}
+
+		bool isDiff, newIsDiff;
+		public bool IsDiff
+		{
+			get => newIsDiff;
+			set => newIsDiff = value;
+		}
+
+		bool diffEncodingMismatch, newDiffEncodingMismatch;
+		public bool DiffEncodingMismatch
+		{
+			get => newDiffEncodingMismatch;
+			set => newDiffEncodingMismatch = value;
+		}
+
+		int textEditorOrder, newTextEditorOrder;
+		public int TextEditorOrder
+		{
+			get => newTextEditorOrder;
+			set => newTextEditorOrder = value;
+		}
+
+		string tabLabel, newTabLabel;
+		public string TabLabel
+		{
+			get => newTabLabel;
+			set => newTabLabel = value;
+		}
+
+		bool keepSelections, newKeepSelections;
+		public bool KeepSelections
+		{
+			get => newKeepSelections;
+			set => newKeepSelections = value;
+		}
+
+		bool highlightSyntax, newHighlightSyntax;
+		public bool HighlightSyntax
+		{
+			get => newHighlightSyntax;
+			set => newHighlightSyntax = value;
+		}
+
+		bool strictParsing, newStrictParsing;
+		public bool StrictParsing
+		{
+			get => newStrictParsing;
+			set => newStrictParsing = value;
+		}
+
+		JumpByType jumpBy, newJumpBy;
+		public JumpByType JumpBy
+		{
+			get => newJumpBy;
+			set => newJumpBy = value;
+		}
+
+		bool viewValues, newViewValues;
+		public bool ViewValues
+		{
+			get => newViewValues;
+			set => newViewValues = value;
+		}
+
+		IList<byte> viewValuesData, newViewValuesData;
+		public IList<byte> ViewValuesData
+		{
+			get => newViewValuesData;
+			set => newViewValuesData = value;
+		}
+
+		bool viewValuesHasSel, newViewValuesHasSel;
+		public bool ViewValuesHasSel
+		{
+			get => newViewValuesHasSel;
+			set => newViewValuesHasSel = value;
+		}
+
+
 		public void Commit()
 		{
-			text = newText ?? text;
-			textView = newTextView ?? textView;
-			maxColumn = newMaxColumn ?? maxColumn;
-			currentSelection = newCurrentSelection ?? currentSelection;
-			selections = newSelections ?? selections;
+			text = newText;
+			textView = newTextView;
+			maxColumn = newMaxColumn;
+			currentSelection = newCurrentSelection;
+			selections = newSelections;
 			for (var ctr = 0; ctr < regions.Length; ++ctr)
-				regions[ctr] = newRegions[ctr] ?? regions[ctr];
+				regions[ctr] = newRegions[ctr];
+			displayName = newDisplayName;
+			fileName = newFileName;
+			isModified = newIsModified;
+			autoRefresh = newAutoRefresh;
+			contentType = newContentType;
+			codePage = newCodePage;
+			aesKey = newAESKey;
+			compressed = newCompressed;
+			lineEnding = newLineEnding;
+			diffIgnoreWhitespace = newDiffIgnoreWhitespace;
+			diffIgnoreCase = newDiffIgnoreCase;
+			diffIgnoreNumbers = newDiffIgnoreNumbers;
+			diffIgnoreLineEndings = newDiffIgnoreLineEndings;
+			isDiff = newIsDiff;
+			diffEncodingMismatch = newDiffEncodingMismatch;
+			textEditorOrder = newTextEditorOrder;
+			tabLabel = newTabLabel;
+			keepSelections = newKeepSelections;
+			highlightSyntax = newHighlightSyntax;
+			strictParsing = newStrictParsing;
+			jumpBy = newJumpBy;
+			viewValues = newViewValues;
+			viewValuesData = newViewValuesData;
+			viewValuesHasSel = newViewValuesHasSel;
 		}
 
 		public void Rollback()
 		{
-			newText = null;
-			newTextView = null;
-			newMaxColumn = null;
-			newCurrentSelection = null;
-			newSelections = null;
+			newText = text;
+			newTextView = textView;
+			newMaxColumn = maxColumn;
+			newCurrentSelection = currentSelection;
+			newSelections = selections;
 			for (var ctr = 0; ctr < regions.Length; ++ctr)
-				newRegions[ctr] = null;
+				newRegions[ctr] = regions[ctr];
+			newDisplayName = displayName;
+			newFileName = fileName;
+			newIsModified = isModified;
+			newAutoRefresh = autoRefresh;
+			newContentType = contentType;
+			newCodePage = codePage;
+			newAESKey = aesKey;
+			newCompressed = compressed;
+			newLineEnding = lineEnding;
+			newDiffIgnoreWhitespace = diffIgnoreWhitespace;
+			newDiffIgnoreCase = diffIgnoreCase;
+			newDiffIgnoreNumbers = diffIgnoreNumbers;
+			newDiffIgnoreLineEndings = diffIgnoreLineEndings;
+			newIsDiff = isDiff;
+			newDiffEncodingMismatch = diffEncodingMismatch;
+			newTextEditorOrder = textEditorOrder;
+			newTabLabel = tabLabel;
+			newKeepSelections = keepSelections;
+			newHighlightSyntax = highlightSyntax;
+			newStrictParsing = strictParsing;
+			newJumpBy = jumpBy;
+			newViewValues = viewValues;
+			newViewValuesData = viewValuesData;
+			newViewValuesHasSel = viewValuesHasSel;
 		}
 
 		#region Translate
