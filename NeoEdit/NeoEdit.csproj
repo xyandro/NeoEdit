@@ -1052,6 +1052,8 @@
     <Compile Include="NEMenu.xaml.cs">
       <DependentUpon>NEMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NEText.cs" />
+    <Compile Include="NETextView.cs" />
     <Compile Include="NoDelayClipboard.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="OpenFileDialogResult.cs" />
@@ -1180,6 +1182,10 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextEditorData-Select.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />
     <Compile Include="Transform\Colorer.cs" />
