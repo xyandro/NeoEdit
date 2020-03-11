@@ -6,7 +6,8 @@ namespace NeoEdit.Program
 	public enum NECommand
 	{
 		None,
-		Text,
+		Internal_Key,
+		Internal_Text,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New_New,
 		File_New_FromSelections,
 		File_New_FromClipboards,

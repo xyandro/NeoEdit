@@ -357,7 +357,7 @@ namespace NeoEdit.Program
 		{
 			try
 			{
-				// PreHandleCommand (active tabs)
+				PreHandleCommand(state);
 
 				// GetCommandParameters (focused tab)
 
@@ -371,6 +371,13 @@ namespace NeoEdit.Program
 				Tabs.ForEach(tab => tab.TextEditorData.Rollback());
 				throw;
 			}
+		}
+
+		void PreHandleCommand(CommandState state)
+		{
+			var activeTabs = ActiveTabs.Select(x => x.TextEditorData).ToList();
+			foreach (var tab in activeTabs)
+				tab.PreHandleCommand(state);
 		}
 
 		void ExecuteCommand(CommandState state)
@@ -509,17 +516,13 @@ namespace NeoEdit.Program
 			if (e.Handled)
 				return;
 
-			var shiftDown = this.shiftDown;
-			var controlDown = this.controlDown;
-			var altDown = this.altDown;
-
 			var key = e.Key;
 			if (key == Key.System)
 				key = e.SystemKey;
-			e.Handled = HandleKey(key, shiftDown, controlDown, altDown);
 
-			if ((RecordingMacro != null) && (e.Handled))
-				RecordingMacro.AddKey(key, shiftDown, controlDown, altDown);
+			var state = new CommandState(NECommand.Internal_Key) { Parameters = key, ShiftDown = shiftDown, ControlDown = controlDown, AltDown = altDown };
+			HandleCommand(state);
+			e.Handled = state.Result;
 		}
 
 		public bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
@@ -546,7 +549,7 @@ namespace NeoEdit.Program
 			if (e.Source is MenuItem)
 				return;
 
-			HandleCommand(new CommandState(NECommand.Text) { Parameters = e.Text });
+			HandleCommand(new CommandState(NECommand.Internal_Text) { Parameters = e.Text });
 			e.Handled = true;
 		}
 
