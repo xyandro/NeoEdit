@@ -74,50 +74,50 @@ namespace NeoEdit.Program
 
 		public void Play(TabsWindow tabsWindow, Action<Macro> setMacroPlaying, Action finished = null)
 		{
-			setMacroPlaying(this);
-			var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
-			var ctr = 0;
-			timer.Tick += (s, e) => tabsWindow.Dispatcher.Invoke(() =>
-			{
-				try
-				{
-					if (stop)
-						throw new Exception("Macro processing aborted.");
+			//setMacroPlaying(this);
+			//var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
+			//var ctr = 0;
+			//timer.Tick += (s, e) => tabsWindow.Dispatcher.Invoke(() =>
+			//{
+			//	try
+			//	{
+			//		if (stop)
+			//			throw new Exception("Macro processing aborted.");
 
-					if (ctr >= macroActions.Count)
-					{
-						timer.Stop();
-						setMacroPlaying(null);
-						if (finished != null)
-							finished();
-						return;
-					}
+			//		if (ctr >= macroActions.Count)
+			//		{
+			//			timer.Stop();
+			//			setMacroPlaying(null);
+			//			if (finished != null)
+			//				finished();
+			//			return;
+			//		}
 
-					var action = macroActions[ctr++];
-					if (action is MacroActionKey)
-					{
-						var keyAction = action as MacroActionKey;
-						tabsWindow.HandleKey(keyAction.key, keyAction.shiftDown, keyAction.controlDown, keyAction.altDown);
-					}
-					else if (action is MacroActionText)
-					{
-						var textAction = action as MacroActionText;
-						tabsWindow.HandleText(textAction.text);
-					}
-					else if (action is MacroActionCommand)
-					{
-						var commandAction = action as MacroActionCommand;
-						tabsWindow.HandleCommand(commandAction.command, commandAction.shiftDown, commandAction.dialogResult, commandAction.multiStatus);
-					}
-				}
-				catch
-				{
-					timer.Stop();
-					setMacroPlaying(null);
-					throw;
-				}
-			});
-			timer.Start();
+			//		var action = macroActions[ctr++];
+			//		if (action is MacroActionKey)
+			//		{
+			//			var keyAction = action as MacroActionKey;
+			//			tabsWindow.HandleKey(keyAction.key, keyAction.shiftDown, keyAction.controlDown, keyAction.altDown);
+			//		}
+			//		else if (action is MacroActionText)
+			//		{
+			//			var textAction = action as MacroActionText;
+			//			tabsWindow.HandleText(textAction.text);
+			//		}
+			//		else if (action is MacroActionCommand)
+			//		{
+			//			var commandAction = action as MacroActionCommand;
+			//			tabsWindow.HandleCommand(commandAction.command, commandAction.shiftDown, commandAction.dialogResult, commandAction.multiStatus);
+			//		}
+			//	}
+			//	catch
+			//	{
+			//		timer.Stop();
+			//		setMacroPlaying(null);
+			//		throw;
+			//	}
+			//});
+			//timer.Start();
 		}
 
 		public void Stop() => stop = true;

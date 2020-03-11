@@ -126,6 +126,7 @@
     <Compile Include="CommandLine\Parser\CommandLineParserVisitor.cs" />
     <None Include="CommandLine\Source\CommandLineLexer.g4" />
     <None Include="CommandLine\Source\CommandLineParser.g4" />
+    <Compile Include="CommandState.cs" />
     <Compile Include="Content\Balanced\BalancedVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedBaseVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedLexer.cs" />

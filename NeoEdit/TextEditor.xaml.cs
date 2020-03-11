@@ -37,6 +37,7 @@ namespace NeoEdit.Program
 		}
 
 		public TextData Data { get; } = new TextData();
+		public TextEditorData TextEditorData { get; } = new TextEditorData();
 
 		[DepProp]
 		public string DisplayName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
@@ -1907,14 +1908,14 @@ namespace NeoEdit.Program
 		{
 			var drawBounds = new DrawBounds();
 			drawBounds.StartLine = yScrollValue;
-			drawBounds.EndLine = Math.Min(Data.NumLines, drawBounds.StartLine + yScrollViewportCeiling);
+			drawBounds.EndLine = Math.Min(TextEditorData.NumLines, drawBounds.StartLine + yScrollViewportCeiling);
 			drawBounds.StartColumn = xScrollValue;
-			drawBounds.EndColumn = Math.Min(Data.MaxColumn + 1, drawBounds.StartColumn + xScrollViewportCeiling);
+			drawBounds.EndColumn = Math.Min(TextEditorData.MaxColumn + 1, drawBounds.StartColumn + xScrollViewportCeiling);
 
 			var lines = Enumerable.Range(drawBounds.StartLine, drawBounds.EndLine - drawBounds.StartLine);
-			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(Data.GetPosition(line, 0), Data.GetPosition(line, Data.GetLineLength(line) + 1)));
-			drawBounds.StartIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, drawBounds.StartColumn, true));
-			drawBounds.EndIndexes = lines.ToDictionary(line => line, line => Data.GetIndexFromColumn(line, drawBounds.EndColumn, true));
+			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(TextEditorData.GetPosition(line, 0), TextEditorData.GetPosition(line, TextEditorData.GetLineLength(line) + 1)));
+			drawBounds.StartIndexes = lines.ToDictionary(line => line, line => TextEditorData.GetIndexFromColumn(line, drawBounds.StartColumn, true));
+			drawBounds.EndIndexes = lines.ToDictionary(line => line, line => TextEditorData.GetIndexFromColumn(line, drawBounds.EndColumn, true));
 			return drawBounds;
 		}
 
@@ -1949,7 +1950,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, RangeList ranges, Brush brush, Pen pen, double leftSpacing, double rightSpacing)
+		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, List<Range> ranges, Brush brush, Pen pen, double leftSpacing, double rightSpacing)
 		{
 			var radius = Math.Min(4, Font.FontSize / 2 - 1);
 
@@ -1967,15 +1968,15 @@ namespace NeoEdit.Program
 
 		List<Point> GetIndicatorPoints(Range range, DrawBounds drawBounds, double leftSpacing, double rightSpacing)
 		{
-			var startLine = Data.GetPositionLine(range.Start);
-			var startColumn = Data.GetColumnFromIndex(startLine, Data.GetPositionIndex(range.Start, startLine));
+			var startLine = TextEditorData.GetPositionLine(range.Start);
+			var startColumn = TextEditorData.GetColumnFromIndex(startLine, TextEditorData.GetPositionIndex(range.Start, startLine));
 
-			var endLine = Data.GetPositionLine(range.End);
-			var endColumn = Data.GetColumnFromIndex(endLine, Data.GetPositionIndex(range.End, endLine));
+			var endLine = TextEditorData.GetPositionLine(range.End);
+			var endColumn = TextEditorData.GetColumnFromIndex(endLine, TextEditorData.GetPositionIndex(range.End, endLine));
 			if ((endLine != startLine) && (endColumn == 0))
 			{
 				--endLine;
-				endColumn = Data.GetLineColumnsLength(endLine) + 1;
+				endColumn = TextEditorData.GetLineColumnsLength(endLine) + 1;
 			}
 
 			var points = new List<Point>();
@@ -1987,7 +1988,7 @@ namespace NeoEdit.Program
 				var done = line == endLine;
 				if ((line >= drawBounds.StartLine - 1) && ((line < drawBounds.EndLine)))
 				{
-					var length = done ? endColumn : Data.GetLineColumnsLength(line) + 1;
+					var length = done ? endColumn : TextEditorData.GetLineColumnsLength(line) + 1;
 					points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line)));
 					points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line) + LineHeight));
 				}
@@ -2092,7 +2093,7 @@ namespace NeoEdit.Program
 			var endColumn = drawBounds.EndColumn + HighlightRegexSize;
 			for (var line = drawBounds.StartLine; line < drawBounds.EndLine; ++line)
 			{
-				var lineColumns = Data.GetLineColumns(line, startColumn, endColumn);
+				var lineColumns = TextEditorData.GetLineColumns(line, startColumn, endColumn);
 				if (lineColumns.Length <= startOffset)
 					continue;
 
@@ -2122,12 +2123,12 @@ namespace NeoEdit.Program
 				return;
 
 			var drawBounds = GetDrawBounds();
-			var visibleCursor = (CurrentSelection >= 0) && (CurrentSelection < Selections.Count) ? Selections[CurrentSelection] : null;
+			var visibleCursor = (TextEditorData.CurrentSelection >= 0) && (TextEditorData.CurrentSelection < TextEditorData.Selections.Count) ? TextEditorData.Selections[TextEditorData.CurrentSelection] : null;
 
-			foreach (var region in Regions)
-				RenderIndicators(dc, drawBounds, null, region.Value, null, regionPen[region.Key], -2, 2);
-			if (Selections.Any(range => range.HasSelection))
-				RenderIndicators(dc, drawBounds, visibleCursor, Selections, selectionBrush, selectionPen, -1, 1);
+			for (var ctr = 1; ctr <= 9; ++ctr)
+				RenderIndicators(dc, drawBounds, null, TextEditorData.GetRegions(ctr), null, regionPen[ctr], -2, 2);
+			if (TextEditorData.Selections.Any(range => range.HasSelection))
+				RenderIndicators(dc, drawBounds, visibleCursor, TextEditorData.Selections, selectionBrush, selectionPen, -1, 1);
 			else
 				RenderCarets(dc, drawBounds);
 			RenderDiff(dc, drawBounds);

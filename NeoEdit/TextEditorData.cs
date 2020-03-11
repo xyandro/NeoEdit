@@ -1,11 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditorData
+	public partial class TextEditorData
 	{
+		const int tabStop = 4;
+
+		public TextEditorData()
+		{
+			Text = new NEText(File.ReadAllText(@"..\..\a.txt"));
+			Commit();
+		}
+
 		NEText text, newText;
 		public NEText Text
 		{
@@ -13,7 +23,8 @@ namespace NeoEdit.Program
 			private set
 			{
 				newText = value;
-				newTextView = new NETextView(newText);
+				TextView = new NETextView(newText);
+				MaxColumn = Enumerable.Range(0, TextView.NumLines).AsParallel().Max(line => GetLineColumnsLength(line));
 			}
 		}
 
@@ -28,13 +39,40 @@ namespace NeoEdit.Program
 		}
 
 		NETextView textView, newTextView;
-		public NETextView TextView => newTextView ?? textView;
+		public NETextView TextView
+		{
+			get => newTextView ?? textView;
+			set => newTextView = value;
+		}
 
-		List<Range> selections, newSelections;
+		public int NumLines => TextView.NumLines;
+
+		int maxColumn;
+		int? newMaxColumn;
+		public int MaxColumn
+		{
+			get => newMaxColumn ?? maxColumn;
+			set => newMaxColumn = value;
+		}
+
+		int currentSelection;
+		int? newCurrentSelection;
+		public int CurrentSelection
+		{
+			get => newCurrentSelection ?? currentSelection;
+			set => newCurrentSelection = Math.Max(0, Math.Min(value, Selections.Count - 1));
+		}
+
+		List<Range> selections = new List<Range>();
+		List<Range> newSelections;
 		public List<Range> Selections
 		{
 			get => newSelections ?? selections;
-			set => newSelections = value;
+			set
+			{
+				newSelections = value;
+				CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
+			}
 		}
 
 		public void SetSelections(List<Range> selections) => Selections = DeOverlap(selections);
@@ -59,6 +97,8 @@ namespace NeoEdit.Program
 		{
 			text = newText ?? text;
 			textView = newTextView ?? textView;
+			maxColumn = newMaxColumn ?? maxColumn;
+			currentSelection = newCurrentSelection ?? currentSelection;
 			selections = newSelections ?? selections;
 			for (var ctr = 0; ctr < regions.Length; ++ctr)
 				regions[ctr] = newRegions[ctr] ?? regions[ctr];
@@ -68,6 +108,8 @@ namespace NeoEdit.Program
 		{
 			newText = null;
 			newTextView = null;
+			newMaxColumn = null;
+			newCurrentSelection = null;
 			newSelections = null;
 			for (var ctr = 0; ctr < regions.Length; ++ctr)
 				newRegions[ctr] = null;
@@ -235,5 +277,167 @@ namespace NeoEdit.Program
 			return result;
 		}
 		#endregion
+
+		#region Columns
+		public int GetPositionLine(int position) => TextView.GetPositionLine(position);
+		public int GetPositionIndex(int position, int line) => TextView.GetPositionIndex(position, line);
+		public int GetLineLength(int line) => TextView.GetLineLength(line);
+		public int GetPosition(int line, int index, bool allowJustPastEnd = false) => TextView.GetPosition(line, index, allowJustPastEnd);
+
+		public int GetIndexFromColumn(int line, int findColumn, bool returnMaxOnFail = false)
+		{
+			if ((line < 0) || (line >= NumLines))
+				throw new IndexOutOfRangeException();
+			if (findColumn < 0)
+				throw new IndexOutOfRangeException();
+
+			var column = 0;
+			var position = TextView.GetPosition(line, 0);
+			var end = position + GetLineLength(line);
+			while (column < findColumn)
+			{
+				var find = Text.IndexOf('\t', position, end - position);
+				if (find == position)
+				{
+					column = (column / tabStop + 1) * tabStop;
+					++position;
+					continue;
+				}
+
+				if (find == -1)
+					find = findColumn - column;
+				else
+					find = Math.Min(find - position, findColumn - column);
+
+				column += find;
+				position += find;
+			}
+			if (position > end + 1)
+			{
+				if (returnMaxOnFail)
+					return GetLineLength(line) + 1;
+				throw new IndexOutOfRangeException();
+			}
+			return position - TextView.GetPosition(line, 0);
+		}
+
+		public int GetColumnFromIndex(int line, int findIndex)
+		{
+			if ((line < 0) || (line >= NumLines))
+				throw new IndexOutOfRangeException();
+			if ((findIndex < 0) || (findIndex > GetLineLength(line) + 1))
+				throw new IndexOutOfRangeException();
+
+			var column = 0;
+			var position = TextView.GetPosition(line, 0);
+			var findPosition = findIndex + position;
+			var end = position + GetLineLength(line);
+			while (position < findPosition)
+			{
+				var find = Text.IndexOf('\t', position, end - position);
+				if (find == position)
+				{
+					column = (column / tabStop + 1) * tabStop;
+					++position;
+					continue;
+				}
+
+				if (find == -1)
+					find = findPosition - position;
+				else
+					find = Math.Min(find, findPosition) - position;
+
+				column += find;
+				position += find;
+			}
+			return column;
+		}
+
+		public int GetLineColumnsLength(int line)
+		{
+			if ((line < 0) || (line >= NumLines))
+				throw new IndexOutOfRangeException();
+
+			var index = TextView.GetPosition(line, 0);
+			var len = TextView.GetLineLength(line);
+			var columns = 0;
+			while (len > 0)
+			{
+				var find = Text.IndexOf('\t', index, len);
+				if (find == index)
+				{
+					columns = (columns / tabStop + 1) * tabStop;
+					++index;
+					--len;
+					continue;
+				}
+
+				if (find == -1)
+					find = len;
+				else
+					find -= index;
+				columns += find;
+				index += find;
+				len -= find;
+			}
+
+			return columns;
+		}
+
+		public string GetLineColumns(int line, int startColumn, int endColumn)
+		{
+			if ((line < 0) || (line >= TextView.NumLines))
+				throw new IndexOutOfRangeException();
+
+			var column = 0;
+			var index = TextView.GetPosition(line, 0);
+			var endIndex = index + TextView.GetLineLength(line);
+			var sb = new StringBuilder();
+			while ((column < endColumn) && (index < endIndex))
+			{
+				var skipColumns = Math.Max(0, startColumn - column);
+				var takeColumns = endColumn - column;
+
+				var tabIndex = Text.IndexOf('\t', index, Math.Min(endIndex - index, takeColumns));
+				if (tabIndex == index)
+				{
+					var repeatCount = (column / tabStop + 1) * tabStop - column;
+					var useColumns = Math.Min(Math.Max(0, repeatCount - skipColumns), takeColumns);
+					sb.Append(' ', useColumns);
+					column += repeatCount;
+					++index;
+					continue;
+				}
+
+				if (tabIndex == -1)
+					tabIndex = endIndex;
+
+				if (skipColumns > 0)
+				{
+					var useColumns = Math.Min(skipColumns, tabIndex - index);
+					index += useColumns;
+					column += useColumns;
+				}
+
+				{
+					var useColumns = Math.Min(tabIndex - index, takeColumns);
+					sb.Append(Text.GetString(index, useColumns));
+					column += useColumns;
+					index += useColumns;
+				}
+			}
+
+			return sb.ToString();
+		}
+		#endregion
+
+		public void ExecuteCommand(CommandState state)
+		{
+			switch (state.Command)
+			{
+				case NECommand.Select_All: Command_Select_All(); break;
+				case NECommand.Select_Lines: Command_Select_Lines(); break;
+			}
+		}
 	}
 }

@@ -94,7 +94,7 @@ namespace NeoEdit.Program
 			VerticalAlignment = VerticalAlignment.Stretch;
 			Drop += (s, e) => OnDrop(e, null);
 
-			NEMenuItem.RegisterCommands(this, (command, multiStatus) => RunCommand(command, multiStatus));
+			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new CommandState(command)));
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
@@ -282,68 +282,68 @@ namespace NeoEdit.Program
 		public Macro RecordingMacro { get; set; }
 		public Macro MacroPlaying { get; set; }
 
-		internal void RunCommand(NECommand command, bool? multiStatus)
-		{
-			if (MacroPlaying != null)
-				return;
+		//internal void RunCommand(NECommand command, bool? multiStatus)
+		//{
+		//	if (MacroPlaying != null)
+		//		return;
 
-			switch (command)
-			{
-				case NECommand.Macro_Record_Quick_1: Command_Macro_Record_Quick(1); return;
-				case NECommand.Macro_Record_Quick_2: Command_Macro_Record_Quick(2); return;
-				case NECommand.Macro_Record_Quick_3: Command_Macro_Record_Quick(3); return;
-				case NECommand.Macro_Record_Quick_4: Command_Macro_Record_Quick(4); return;
-				case NECommand.Macro_Record_Quick_5: Command_Macro_Record_Quick(5); return;
-				case NECommand.Macro_Record_Quick_6: Command_Macro_Record_Quick(6); return;
-				case NECommand.Macro_Record_Quick_7: Command_Macro_Record_Quick(7); return;
-				case NECommand.Macro_Record_Quick_8: Command_Macro_Record_Quick(8); return;
-				case NECommand.Macro_Record_Quick_9: Command_Macro_Record_Quick(9); return;
-				case NECommand.Macro_Record_Quick_10: Command_Macro_Record_Quick(10); return;
-				case NECommand.Macro_Record_Quick_11: Command_Macro_Record_Quick(11); return;
-				case NECommand.Macro_Record_Quick_12: Command_Macro_Record_Quick(12); return;
-				case NECommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
-				case NECommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
-				case NECommand.Macro_Append_Quick_1: Command_Macro_Append_Quick(1); return;
-				case NECommand.Macro_Append_Quick_2: Command_Macro_Append_Quick(2); return;
-				case NECommand.Macro_Append_Quick_3: Command_Macro_Append_Quick(3); return;
-				case NECommand.Macro_Append_Quick_4: Command_Macro_Append_Quick(4); return;
-				case NECommand.Macro_Append_Quick_5: Command_Macro_Append_Quick(5); return;
-				case NECommand.Macro_Append_Quick_6: Command_Macro_Append_Quick(6); return;
-				case NECommand.Macro_Append_Quick_7: Command_Macro_Append_Quick(7); return;
-				case NECommand.Macro_Append_Quick_8: Command_Macro_Append_Quick(8); return;
-				case NECommand.Macro_Append_Quick_9: Command_Macro_Append_Quick(9); return;
-				case NECommand.Macro_Append_Quick_10: Command_Macro_Append_Quick(10); return;
-				case NECommand.Macro_Append_Quick_11: Command_Macro_Append_Quick(11); return;
-				case NECommand.Macro_Append_Quick_12: Command_Macro_Append_Quick(12); return;
-				case NECommand.Macro_Append_Append: Command_Macro_Append_Append(); return;
-				case NECommand.Macro_Play_Quick_1: Command_Macro_Play_Quick(1); return;
-				case NECommand.Macro_Play_Quick_2: Command_Macro_Play_Quick(2); return;
-				case NECommand.Macro_Play_Quick_3: Command_Macro_Play_Quick(3); return;
-				case NECommand.Macro_Play_Quick_4: Command_Macro_Play_Quick(4); return;
-				case NECommand.Macro_Play_Quick_5: Command_Macro_Play_Quick(5); return;
-				case NECommand.Macro_Play_Quick_6: Command_Macro_Play_Quick(6); return;
-				case NECommand.Macro_Play_Quick_7: Command_Macro_Play_Quick(7); return;
-				case NECommand.Macro_Play_Quick_8: Command_Macro_Play_Quick(8); return;
-				case NECommand.Macro_Play_Quick_9: Command_Macro_Play_Quick(9); return;
-				case NECommand.Macro_Play_Quick_10: Command_Macro_Play_Quick(10); return;
-				case NECommand.Macro_Play_Quick_11: Command_Macro_Play_Quick(11); return;
-				case NECommand.Macro_Play_Quick_12: Command_Macro_Play_Quick(12); return;
-				case NECommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
-				case NECommand.Macro_Play_Repeat: Command_Macro_Play_Repeat(); return;
-				case NECommand.Macro_Play_PlayOnCopiedFiles: Command_Macro_Play_PlayOnCopiedFiles(); return;
-			}
+		//	switch (command)
+		//	{
+		//		case NECommand.Macro_Record_Quick_1: Command_Macro_Record_Quick(1); return;
+		//		case NECommand.Macro_Record_Quick_2: Command_Macro_Record_Quick(2); return;
+		//		case NECommand.Macro_Record_Quick_3: Command_Macro_Record_Quick(3); return;
+		//		case NECommand.Macro_Record_Quick_4: Command_Macro_Record_Quick(4); return;
+		//		case NECommand.Macro_Record_Quick_5: Command_Macro_Record_Quick(5); return;
+		//		case NECommand.Macro_Record_Quick_6: Command_Macro_Record_Quick(6); return;
+		//		case NECommand.Macro_Record_Quick_7: Command_Macro_Record_Quick(7); return;
+		//		case NECommand.Macro_Record_Quick_8: Command_Macro_Record_Quick(8); return;
+		//		case NECommand.Macro_Record_Quick_9: Command_Macro_Record_Quick(9); return;
+		//		case NECommand.Macro_Record_Quick_10: Command_Macro_Record_Quick(10); return;
+		//		case NECommand.Macro_Record_Quick_11: Command_Macro_Record_Quick(11); return;
+		//		case NECommand.Macro_Record_Quick_12: Command_Macro_Record_Quick(12); return;
+		//		case NECommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
+		//		case NECommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
+		//		case NECommand.Macro_Append_Quick_1: Command_Macro_Append_Quick(1); return;
+		//		case NECommand.Macro_Append_Quick_2: Command_Macro_Append_Quick(2); return;
+		//		case NECommand.Macro_Append_Quick_3: Command_Macro_Append_Quick(3); return;
+		//		case NECommand.Macro_Append_Quick_4: Command_Macro_Append_Quick(4); return;
+		//		case NECommand.Macro_Append_Quick_5: Command_Macro_Append_Quick(5); return;
+		//		case NECommand.Macro_Append_Quick_6: Command_Macro_Append_Quick(6); return;
+		//		case NECommand.Macro_Append_Quick_7: Command_Macro_Append_Quick(7); return;
+		//		case NECommand.Macro_Append_Quick_8: Command_Macro_Append_Quick(8); return;
+		//		case NECommand.Macro_Append_Quick_9: Command_Macro_Append_Quick(9); return;
+		//		case NECommand.Macro_Append_Quick_10: Command_Macro_Append_Quick(10); return;
+		//		case NECommand.Macro_Append_Quick_11: Command_Macro_Append_Quick(11); return;
+		//		case NECommand.Macro_Append_Quick_12: Command_Macro_Append_Quick(12); return;
+		//		case NECommand.Macro_Append_Append: Command_Macro_Append_Append(); return;
+		//		case NECommand.Macro_Play_Quick_1: Command_Macro_Play_Quick(1); return;
+		//		case NECommand.Macro_Play_Quick_2: Command_Macro_Play_Quick(2); return;
+		//		case NECommand.Macro_Play_Quick_3: Command_Macro_Play_Quick(3); return;
+		//		case NECommand.Macro_Play_Quick_4: Command_Macro_Play_Quick(4); return;
+		//		case NECommand.Macro_Play_Quick_5: Command_Macro_Play_Quick(5); return;
+		//		case NECommand.Macro_Play_Quick_6: Command_Macro_Play_Quick(6); return;
+		//		case NECommand.Macro_Play_Quick_7: Command_Macro_Play_Quick(7); return;
+		//		case NECommand.Macro_Play_Quick_8: Command_Macro_Play_Quick(8); return;
+		//		case NECommand.Macro_Play_Quick_9: Command_Macro_Play_Quick(9); return;
+		//		case NECommand.Macro_Play_Quick_10: Command_Macro_Play_Quick(10); return;
+		//		case NECommand.Macro_Play_Quick_11: Command_Macro_Play_Quick(11); return;
+		//		case NECommand.Macro_Play_Quick_12: Command_Macro_Play_Quick(12); return;
+		//		case NECommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
+		//		case NECommand.Macro_Play_Repeat: Command_Macro_Play_Repeat(); return;
+		//		case NECommand.Macro_Play_PlayOnCopiedFiles: Command_Macro_Play_PlayOnCopiedFiles(); return;
+		//	}
 
-			var shiftDown = this.shiftDown;
+		//	var shiftDown = this.shiftDown;
 
-			object dialogResult;
-			if (!GetDialogResult(command, out dialogResult, multiStatus))
-				return;
+		//	object dialogResult;
+		//	if (!GetDialogResult(command, out dialogResult, multiStatus))
+		//		return;
 
-			if (RecordingMacro != null)
-				RecordingMacro.AddCommand(command, shiftDown, dialogResult, multiStatus);
+		//	if (RecordingMacro != null)
+		//		RecordingMacro.AddCommand(command, shiftDown, dialogResult, multiStatus);
 
-			HandleCommand(command, shiftDown, dialogResult, multiStatus);
-		}
+		//	HandleCommand(command, shiftDown, dialogResult, multiStatus);
+		//}
 
 		NEClipboard newClipboard;
 		public void AddClipboardStrings(IEnumerable<string> strings, bool? isCut = null)
@@ -353,115 +353,142 @@ namespace NeoEdit.Program
 			newClipboard.IsCut = isCut;
 		}
 
-		bool GetDialogResult(NECommand command, out object dialogResult, bool? multiStatus)
+		void HandleCommand(CommandState state)
 		{
-			dialogResult = null;
-
-			var result = true;
-			switch (command)
-			{
-				case NECommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
-				case NECommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro.MacroDirectory); break;
-				case NECommand.Window_CustomGrid: dialogResult = Command_Window_CustomGrid_Dialog(); break;
-				default: result = false; break;
-			}
-
-			if (result)
-				return dialogResult != null;
-
-			if (Focused == null)
-				return true;
-
-			return Focused.GetDialogResult(command, out dialogResult, multiStatus);
-		}
-
-		public bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
-		{
-			Tabs.ForEach(textEditor => textEditor.DragFiles = null);
-
-			switch (command)
-			{
-				case NECommand.File_New_New: Command_File_New_New(shiftDown); break;
-				case NECommand.File_New_FromClipboards: Command_File_New_FromClipboards(); break;
-				case NECommand.File_New_FromClipboardSelections: Command_File_New_FromClipboardSelections(); break;
-				case NECommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
-				case NECommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
-				case NECommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(); break;
-				case NECommand.File_MoveToNewWindow: Command_File_MoveToNewWindow(); break;
-				case NECommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;
-				case NECommand.File_Shell_Unintegrate: Command_File_Shell_Unintegrate(); break;
-				case NECommand.File_Exit: Command_File_Exit(); break;
-				case NECommand.Diff_Diff: Command_Diff_Diff(shiftDown); break;
-				case NECommand.Diff_Select_LeftTab: Command_Diff_Select_LeftRightBothTabs(true); break;
-				case NECommand.Diff_Select_RightTab: Command_Diff_Select_LeftRightBothTabs(false); break;
-				case NECommand.Diff_Select_BothTabs: Command_Diff_Select_LeftRightBothTabs(null); break;
-				case NECommand.Macro_Open_Quick_1: Command_Macro_Open_Quick(1); return true;
-				case NECommand.Macro_Open_Quick_2: Command_Macro_Open_Quick(2); return true;
-				case NECommand.Macro_Open_Quick_3: Command_Macro_Open_Quick(3); return true;
-				case NECommand.Macro_Open_Quick_4: Command_Macro_Open_Quick(4); return true;
-				case NECommand.Macro_Open_Quick_5: Command_Macro_Open_Quick(5); return true;
-				case NECommand.Macro_Open_Quick_6: Command_Macro_Open_Quick(6); return true;
-				case NECommand.Macro_Open_Quick_7: Command_Macro_Open_Quick(7); return true;
-				case NECommand.Macro_Open_Quick_8: Command_Macro_Open_Quick(8); return true;
-				case NECommand.Macro_Open_Quick_9: Command_Macro_Open_Quick(9); return true;
-				case NECommand.Macro_Open_Quick_10: Command_Macro_Open_Quick(10); return true;
-				case NECommand.Macro_Open_Quick_11: Command_Macro_Open_Quick(11); return true;
-				case NECommand.Macro_Open_Quick_12: Command_Macro_Open_Quick(12); return true;
-				case NECommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
-				case NECommand.Window_NewWindow: Command_Window_NewWindow(); break;
-				case NECommand.Window_Full: Command_Window_Full(); break;
-				case NECommand.Window_Grid: Command_Window_Grid(); break;
-				case NECommand.Window_CustomGrid: Command_Window_CustomGrid(dialogResult as WindowCustomGridDialog.Result); break;
-				case NECommand.Window_ActiveTabs: Command_Window_ActiveTabs(); break;
-				case NECommand.Window_Font_Size: Command_Window_Font_Size(); break;
-				case NECommand.Window_Select_AllTabs: Command_Window_Select_AllTabs(); break;
-				case NECommand.Window_Select_NoTabs: Command_Window_Select_NoTabs(); break;
-				case NECommand.Window_Select_TabsWithSelections: Command_Window_Select_TabsWithWithoutSelections(true); break;
-				case NECommand.Window_Select_TabsWithoutSelections: Command_Window_Select_TabsWithWithoutSelections(false); break;
-				case NECommand.Window_Select_ModifiedTabs: Command_Window_Select_ModifiedUnmodifiedTabs(true); break;
-				case NECommand.Window_Select_UnmodifiedTabs: Command_Window_Select_ModifiedUnmodifiedTabs(false); break;
-				case NECommand.Window_Select_InactiveTabs: Command_Window_Select_InactiveTabs(); break;
-				case NECommand.Window_Close_TabsWithSelections: Command_Window_Close_TabsWithWithoutSelections(true); break;
-				case NECommand.Window_Close_TabsWithoutSelections: Command_Window_Close_TabsWithWithoutSelections(false); break;
-				case NECommand.Window_Close_ModifiedTabs: Command_Window_Close_ModifiedUnmodifiedTabs(true); break;
-				case NECommand.Window_Close_UnmodifiedTabs: Command_Window_Close_ModifiedUnmodifiedTabs(false); break;
-				case NECommand.Window_Close_ActiveTabs: Command_Window_Close_ActiveInactiveTabs(true); break;
-				case NECommand.Window_Close_InactiveTabs: Command_Window_Close_ActiveInactiveTabs(false); break;
-				case NECommand.Window_WordList: Command_Window_WordList(); break;
-				case NECommand.Help_About: Command_Help_About(); break;
-				case NECommand.Help_Tutorial: Command_Help_Tutorial(); break;
-				case NECommand.Help_Update: Command_Help_Update(); break;
-				case NECommand.Help_Extract: Command_Help_Extract(); break;
-				case NECommand.Help_RunGC: Command_Help_RunGC(); break;
-			}
-
 			try
 			{
-				var preResult = default(object);
-				foreach (var textEditor in ActiveTabs.ToList())
-					textEditor.PreHandleCommand(command, ref preResult);
+				// PreHandleCommand (active tabs)
 
-				foreach (var textEditor in ActiveTabs.ToList())
-					textEditor.HandleCommand(command, shiftDown, dialogResult, multiStatus, preResult);
-				if (newClipboard != null)
-					NEClipboard.Current = newClipboard;
-				SetupNewKeys();
+				// GetCommandParameters (focused tab)
+
+				ExecuteCommand(state);
+
+				Tabs.ForEach(tab => tab.TextEditorData.Commit());
+				Tabs.ForEach(tab => tab.InvalidateCanvas());
 			}
-			catch (OperationCanceledException) { }
-			finally
+			catch
 			{
-				clipboard = null;
-				newClipboard = null;
-
-				for (var ctr = 0; ctr < keysAndValues.Count; ++ctr)
-					keysAndValuesLookup[ctr] = null;
-				keysHashLookup = null;
-				newKeysAndValues = null;
-				savedAnswers.Clear();
+				Tabs.ForEach(tab => tab.TextEditorData.Rollback());
+				throw;
 			}
-
-			return true;
 		}
+
+		void ExecuteCommand(CommandState state)
+		{
+			var activeTabs = ActiveTabs.Select(x => x.TextEditorData).ToList();
+			foreach (var tab in activeTabs)
+				tab.ExecuteCommand(state);
+		}
+
+		//bool GetDialogResult(NECommand command, out object dialogResult, bool? multiStatus)
+		//{
+		//	dialogResult = null;
+
+		//	var result = true;
+		//	switch (command)
+		//	{
+		//		case NECommand.File_Open_Open: dialogResult = Command_File_Open_Open_Dialog(); break;
+		//		case NECommand.Macro_Open_Open: dialogResult = Command_File_Open_Open_Dialog(Macro.MacroDirectory); break;
+		//		case NECommand.Window_CustomGrid: dialogResult = Command_Window_CustomGrid_Dialog(); break;
+		//		default: result = false; break;
+		//	}
+
+		//	if (result)
+		//		return dialogResult != null;
+
+		//	if (Focused == null)
+		//		return true;
+
+		//	return Focused.GetDialogResult(command, out dialogResult, multiStatus);
+		//}
+
+		//public bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
+		//{
+		//	Tabs.ForEach(textEditor => textEditor.DragFiles = null);
+
+		//	switch (command)
+		//	{
+		//		case NECommand.File_New_New: Command_File_New_New(shiftDown); break;
+		//		case NECommand.File_New_FromClipboards: Command_File_New_FromClipboards(); break;
+		//		case NECommand.File_New_FromClipboardSelections: Command_File_New_FromClipboardSelections(); break;
+		//		case NECommand.File_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); break;
+		//		case NECommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
+		//		case NECommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(); break;
+		//		case NECommand.File_MoveToNewWindow: Command_File_MoveToNewWindow(); break;
+		//		case NECommand.File_Shell_Integrate: Command_File_Shell_Integrate(); break;
+		//		case NECommand.File_Shell_Unintegrate: Command_File_Shell_Unintegrate(); break;
+		//		case NECommand.File_Exit: Command_File_Exit(); break;
+		//		case NECommand.Diff_Diff: Command_Diff_Diff(shiftDown); break;
+		//		case NECommand.Diff_Select_LeftTab: Command_Diff_Select_LeftRightBothTabs(true); break;
+		//		case NECommand.Diff_Select_RightTab: Command_Diff_Select_LeftRightBothTabs(false); break;
+		//		case NECommand.Diff_Select_BothTabs: Command_Diff_Select_LeftRightBothTabs(null); break;
+		//		case NECommand.Macro_Open_Quick_1: Command_Macro_Open_Quick(1); return true;
+		//		case NECommand.Macro_Open_Quick_2: Command_Macro_Open_Quick(2); return true;
+		//		case NECommand.Macro_Open_Quick_3: Command_Macro_Open_Quick(3); return true;
+		//		case NECommand.Macro_Open_Quick_4: Command_Macro_Open_Quick(4); return true;
+		//		case NECommand.Macro_Open_Quick_5: Command_Macro_Open_Quick(5); return true;
+		//		case NECommand.Macro_Open_Quick_6: Command_Macro_Open_Quick(6); return true;
+		//		case NECommand.Macro_Open_Quick_7: Command_Macro_Open_Quick(7); return true;
+		//		case NECommand.Macro_Open_Quick_8: Command_Macro_Open_Quick(8); return true;
+		//		case NECommand.Macro_Open_Quick_9: Command_Macro_Open_Quick(9); return true;
+		//		case NECommand.Macro_Open_Quick_10: Command_Macro_Open_Quick(10); return true;
+		//		case NECommand.Macro_Open_Quick_11: Command_Macro_Open_Quick(11); return true;
+		//		case NECommand.Macro_Open_Quick_12: Command_Macro_Open_Quick(12); return true;
+		//		case NECommand.Macro_Open_Open: Command_File_Open_Open(dialogResult as OpenFileDialogResult); return true;
+		//		case NECommand.Window_NewWindow: Command_Window_NewWindow(); break;
+		//		case NECommand.Window_Full: Command_Window_Full(); break;
+		//		case NECommand.Window_Grid: Command_Window_Grid(); break;
+		//		case NECommand.Window_CustomGrid: Command_Window_CustomGrid(dialogResult as WindowCustomGridDialog.Result); break;
+		//		case NECommand.Window_ActiveTabs: Command_Window_ActiveTabs(); break;
+		//		case NECommand.Window_Font_Size: Command_Window_Font_Size(); break;
+		//		case NECommand.Window_Select_AllTabs: Command_Window_Select_AllTabs(); break;
+		//		case NECommand.Window_Select_NoTabs: Command_Window_Select_NoTabs(); break;
+		//		case NECommand.Window_Select_TabsWithSelections: Command_Window_Select_TabsWithWithoutSelections(true); break;
+		//		case NECommand.Window_Select_TabsWithoutSelections: Command_Window_Select_TabsWithWithoutSelections(false); break;
+		//		case NECommand.Window_Select_ModifiedTabs: Command_Window_Select_ModifiedUnmodifiedTabs(true); break;
+		//		case NECommand.Window_Select_UnmodifiedTabs: Command_Window_Select_ModifiedUnmodifiedTabs(false); break;
+		//		case NECommand.Window_Select_InactiveTabs: Command_Window_Select_InactiveTabs(); break;
+		//		case NECommand.Window_Close_TabsWithSelections: Command_Window_Close_TabsWithWithoutSelections(true); break;
+		//		case NECommand.Window_Close_TabsWithoutSelections: Command_Window_Close_TabsWithWithoutSelections(false); break;
+		//		case NECommand.Window_Close_ModifiedTabs: Command_Window_Close_ModifiedUnmodifiedTabs(true); break;
+		//		case NECommand.Window_Close_UnmodifiedTabs: Command_Window_Close_ModifiedUnmodifiedTabs(false); break;
+		//		case NECommand.Window_Close_ActiveTabs: Command_Window_Close_ActiveInactiveTabs(true); break;
+		//		case NECommand.Window_Close_InactiveTabs: Command_Window_Close_ActiveInactiveTabs(false); break;
+		//		case NECommand.Window_WordList: Command_Window_WordList(); break;
+		//		case NECommand.Help_About: Command_Help_About(); break;
+		//		case NECommand.Help_Tutorial: Command_Help_Tutorial(); break;
+		//		case NECommand.Help_Update: Command_Help_Update(); break;
+		//		case NECommand.Help_Extract: Command_Help_Extract(); break;
+		//		case NECommand.Help_RunGC: Command_Help_RunGC(); break;
+		//	}
+
+		//	try
+		//	{
+		//		var preResult = default(object);
+		//		foreach (var textEditor in ActiveTabs.ToList())
+		//			textEditor.PreHandleCommand(command, ref preResult);
+
+		//		foreach (var textEditor in ActiveTabs.ToList())
+		//			textEditor.HandleCommand(command, shiftDown, dialogResult, multiStatus, preResult);
+		//		if (newClipboard != null)
+		//			NEClipboard.Current = newClipboard;
+		//		SetupNewKeys();
+		//	}
+		//	catch (OperationCanceledException) { }
+		//	finally
+		//	{
+		//		clipboard = null;
+		//		newClipboard = null;
+
+		//		for (var ctr = 0; ctr < keysAndValues.Count; ++ctr)
+		//			keysAndValuesLookup[ctr] = null;
+		//		keysHashLookup = null;
+		//		newKeysAndValues = null;
+		//		savedAnswers.Clear();
+		//	}
+
+		//	return true;
+		//}
 
 		protected override void OnActivated(EventArgs e)
 		{
