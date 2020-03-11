@@ -546,10 +546,8 @@ namespace NeoEdit.Program
 			if (e.Source is MenuItem)
 				return;
 
-			e.Handled = HandleText(e.Text);
-
-			if ((RecordingMacro != null) && (e.Handled))
-				RecordingMacro.AddText(e.Text);
+			HandleCommand(new CommandState(NECommand.Text) { Parameters = e.Text });
+			e.Handled = true;
 		}
 
 		public bool HandleText(string text)

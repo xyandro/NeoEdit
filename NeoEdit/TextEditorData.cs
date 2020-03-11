@@ -17,8 +17,11 @@ namespace NeoEdit.Program
 			Selections = new List<Range>();
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, new List<Range>());
+			undoRedo = newUndoRedo = new UndoRedo2();
 			Commit();
 		}
+
+		UndoRedo2 undoRedo, newUndoRedo;
 
 		NEText text, newText;
 		public NEText Text
@@ -32,8 +35,43 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void ReplaceText(List<Range> ranges, List<string> strs)
+		public void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false) => ReplaceSelections(Enumerable.Repeat(str, Selections.Count).ToList(), highlight, replaceType, tryJoinUndo);
+
+		public void ReplaceSelections(List<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
+			Replace(Selections.ToList(), strs, replaceType, tryJoinUndo);
+
+			if (highlight)
+				SetSelections(Selections.AsParallel().AsOrdered().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList());
+			else
+				SetSelections(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
+		}
+
+		public void Replace(List<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		{
+			if (ranges.Count != strs.Count)
+				throw new Exception("Invalid string count");
+
+			var undoRanges = new List<Range>();
+			var undoText = new List<string>();
+
+			var change = 0;
+			for (var ctr = 0; ctr < ranges.Count; ++ctr)
+			{
+				var undoRange = Range.FromIndex(ranges[ctr].Start + change, strs[ctr].Length);
+				undoRanges.Add(undoRange);
+				undoText.Add(Text.GetString(ranges[ctr]));
+				change = undoRange.End - ranges[ctr].End;
+			}
+
+			var textCanvasUndoRedo = new UndoRedo2.UndoRedoStep(undoRanges, undoText, tryJoinUndo);
+			switch (replaceType)
+			{
+				case ReplaceType.Undo: UndoRedo2.AddUndone(ref newUndoRedo, textCanvasUndoRedo); break;
+				case ReplaceType.Redo: UndoRedo2.AddRedone(ref newUndoRedo, textCanvasUndoRedo); break;
+				case ReplaceType.Normal: UndoRedo2.AddUndo(ref newUndoRedo, textCanvasUndoRedo, IsModified); break;
+			}
+
 			Text = Text.Replace(ranges, strs);
 
 			var translateMap = GetTranslateMap(ranges, strs, new List<List<Range>> { Selections }.Concat(Enumerable.Range(1, 9).Select(region => GetRegions(region))).ToList());
@@ -266,6 +304,7 @@ namespace NeoEdit.Program
 		public void Commit()
 		{
 			text = newText;
+			undoRedo = newUndoRedo;
 			textView = newTextView;
 			maxColumn = newMaxColumn;
 			currentSelection = newCurrentSelection;
@@ -301,6 +340,7 @@ namespace NeoEdit.Program
 		public void Rollback()
 		{
 			newText = text;
+			newUndoRedo = undoRedo;
 			newTextView = textView;
 			newMaxColumn = maxColumn;
 			newCurrentSelection = currentSelection;
@@ -653,9 +693,15 @@ namespace NeoEdit.Program
 		{
 			switch (state.Command)
 			{
+				case NECommand.Text: Command_Text(state.Parameters as string); break;
+				case NECommand.Edit_Undo: Command_Edit_Undo(); break;
+				case NECommand.Edit_Redo: Command_Edit_Redo(); break;
 				case NECommand.Select_All: Command_Select_All(); break;
 				case NECommand.Select_Lines: Command_Select_Lines(); break;
+				case NECommand.Select_WholeLines: Command_Select_WholeLines(); break;
 			}
 		}
+
+		void Command_Text(string text) => ReplaceSelections(text, false, tryJoinUndo: true);
 	}
 }

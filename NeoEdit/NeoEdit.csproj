@@ -1183,6 +1183,9 @@
     <Compile Include="TextEditor.xaml.cs">
       <DependentUpon>TextEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextEditorData-Edit.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextEditorData-Select.cs">
       <DependentUpon>TextEditorData.cs</DependentUpon>
     </Compile>
@@ -1238,6 +1241,7 @@
       <DependentUpon>TutorialWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UndoRedo.cs" />
+    <Compile Include="UndoRedo2.cs" />
     <Resource Include="Words.txt" />
     <EmbeddedResource Include="Words.txt.gz" />
     <Compile Include="YouTubeDL.cs" />

@@ -25,5 +25,19 @@ namespace NeoEdit.Program
 
 			SetSelections(lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(TextView.GetPosition(line, 0), TextView.GetLineLength(line))).ToList());
 		}
+
+		void Command_Select_WholeLines()
+		{
+			var sels = Selections.AsParallel().AsOrdered().Select(range =>
+			{
+				var startLine = TextView.GetPositionLine(range.Start);
+				var startPosition = TextView.GetPosition(startLine, 0);
+				var endLine = TextView.GetPositionLine(Math.Max(range.Start, range.End - 1));
+				var endPosition = TextView.GetPosition(endLine, 0) + TextView.GetLineLength(endLine) + TextView.GetEndingLength(endLine);
+				return new Range(endPosition, startPosition);
+			}).ToList();
+
+			SetSelections(sels);
+		}
 	}
 }

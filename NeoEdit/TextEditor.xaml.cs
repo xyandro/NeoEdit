@@ -1921,15 +1921,15 @@ namespace NeoEdit.Program
 
 		void RenderCarets(DrawingContext dc, DrawBounds drawBounds)
 		{
-			for (var selectionCtr = 0; selectionCtr < Selections.Count; ++selectionCtr)
+			for (var selectionCtr = 0; selectionCtr < TextEditorData.Selections.Count; ++selectionCtr)
 			{
-				var range = Selections[selectionCtr];
+				var range = TextEditorData.Selections[selectionCtr];
 
 				if ((range.End < drawBounds.ScreenStart) || (range.Start > drawBounds.ScreenEnd))
 					continue;
 
-				var startLine = Data.GetPositionLine(range.Start);
-				var endLine = Data.GetPositionLine(range.End);
+				var startLine = TextEditorData.GetPositionLine(range.Start);
+				var endLine = TextEditorData.GetPositionLine(range.End);
 				var cursorLine = range.Cursor == range.Start ? startLine : endLine;
 				startLine = Math.Max(drawBounds.StartLine, startLine);
 				endLine = Math.Min(drawBounds.EndLine, endLine + 1);
@@ -1940,10 +1940,10 @@ namespace NeoEdit.Program
 				if (selectionCtr == CurrentSelection)
 					dc.DrawRoundedRectangle(highlightRowBrush, lightlightRowPen, new Rect(-2, drawBounds.Y(cursorLine), canvas.ActualWidth + 4, Font.FontSize), 4, 4);
 
-				var cursor = Data.GetPositionIndex(range.Cursor, cursorLine);
+				var cursor = TextEditorData.GetPositionIndex(range.Cursor, cursorLine);
 				if ((cursor >= drawBounds.StartIndexes[cursorLine]) && (cursor <= drawBounds.EndIndexes[cursorLine]))
 				{
-					cursor = Data.GetColumnFromIndex(cursorLine, cursor);
+					cursor = TextEditorData.GetColumnFromIndex(cursorLine, cursor);
 					for (var pass = selectionCtr == CurrentSelection ? 2 : 1; pass > 0; --pass)
 						dc.DrawRectangle(caretBrush, null, new Rect(drawBounds.X(cursor) - 1, drawBounds.Y(cursorLine), 2, LineHeight));
 				}
