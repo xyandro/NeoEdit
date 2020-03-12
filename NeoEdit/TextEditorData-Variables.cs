@@ -102,6 +102,13 @@ namespace NeoEdit.Program
 			set => newAutoRefresh = value;
 		}
 
+		string oldDBName, newDBName;
+		public string DBName
+		{
+			get => newDBName;
+			set => newDBName = value;
+		}
+
 		ParserType oldContentType, newContentType;
 		public ParserType ContentType
 		{
@@ -290,6 +297,7 @@ namespace NeoEdit.Program
 			oldIsModified = newIsModified;
 			oldClipboard = newClipboard;
 			oldAutoRefresh = newAutoRefresh;
+			oldDBName = newDBName;
 			oldContentType = newContentType;
 			oldCodePage = newCodePage;
 			oldAESKey = newAESKey;
@@ -331,6 +339,7 @@ namespace NeoEdit.Program
 			newIsModified = oldIsModified;
 			newClipboard = oldClipboard;
 			newAutoRefresh = oldAutoRefresh;
+			newDBName = oldDBName;
 			newContentType = oldContentType;
 			newCodePage = oldCodePage;
 			newAESKey = oldAESKey;

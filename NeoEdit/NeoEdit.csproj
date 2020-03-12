@@ -1187,6 +1187,9 @@
     <Compile Include="TextEditorData-Content.cs">
       <DependentUpon>TextEditorData.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextEditorData-Database.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextEditorData-Edit.cs">
       <DependentUpon>TextEditorData.cs</DependentUpon>
     </Compile>

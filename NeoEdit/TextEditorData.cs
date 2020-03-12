@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -1122,6 +1123,17 @@ namespace NeoEdit.Program
 					DefaultCancel = MessageOptions.No,
 				}.Show();
 			return savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.Yes);
+		}
+
+		public DbConnection dbConnection { get; set; }
+
+		public void OpenTable(Table table, string name = null)
+		{
+			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
+			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+			TabsParent.AddTextEditor(textEditor);
+			textEditor.ContentType = contentType;
+			textEditor.DisplayName = name;
 		}
 	}
 }
