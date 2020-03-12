@@ -70,7 +70,8 @@ namespace NeoEdit.Program.Controls
 			if (!Coder.IsStr(CodePage))
 				size = Coder.BytesRequired(CodePage);
 
-			UIHelper.FindParent<TextEditor>(this).UpdateViewValue(newBytes, size);
+			//TODO
+			//UIHelper.FindParent<TextEditor>(this).UpdateViewValue(newBytes, size);
 		}
 	}
 

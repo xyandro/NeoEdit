@@ -1,9 +1,8 @@
 ﻿<UserControl x:Name="self" x:Class="NeoEdit.Program.TextEditor"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
-	xmlns:converters="clr-namespace:NeoEdit.Program.Converters"
-	Focusable="True" FocusVisualStyle="{x:Null}" SnapsToDevicePixels="True">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
+    Focusable="True" FocusVisualStyle="{x:Null}" SnapsToDevicePixels="True" AllowDrop="True">
 
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -19,17 +18,17 @@
 
 		<Border Grid.Row="0" Grid.Column="0" CornerRadius="8" BorderThickness="2" BorderBrush="#808080" Padding="3" Background="Black">
 			<Border Padding="3" ClipToBounds="True">
-				<controls:RenderCanvas x:Name="canvas" Background="Transparent"/>
+				<controls:RenderCanvas x:Name="canvas" Background="Transparent" Render="OnCanvasRender"/>
 			</Border>
 		</Border>
 
-		<controls:DiffScrollBar x:Name="yScroll" Grid.Row="0" Grid.Column="1" Orientation="Vertical" Value="{Binding yScrollValue, ElementName=self}"/>
-		<controls:DiffScrollBar x:Name="xScroll" Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Value="{Binding xScrollValue, ElementName=self}"/>
+		<controls:DiffScrollBar x:Name="yScroll" Grid.Row="0" Grid.Column="1" Orientation="Vertical"/>
+		<controls:DiffScrollBar x:Name="xScroll" Grid.Row="1" Grid.Column="0" Orientation="Horizontal"/>
 
 		<StackPanel Grid.Row="1" Grid.Column="1"/>
 
-		<Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="#c0c0c0" BorderThickness="0,2,0,0" Visibility="{Binding ViewValues, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}">
-			<controls:ViewValues Data="{Binding ViewValuesData, ElementName=self}" HasSel="{Binding ViewValuesHasSel, ElementName=self}"/>
+		<Border x:Name="viewValuesControl" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="#c0c0c0" BorderThickness="0,2,0,0">
+			<controls:ViewValues x:Name="viewValues"/>
 		</Border>
 
 		<Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="#c0c0c0" BorderThickness="0,2,0,0" Padding="4,0">

@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Converters;
-using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Highlighting;
-using NeoEdit.Program.Misc;
-using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
@@ -22,79 +15,7 @@ namespace NeoEdit.Program
 		const double Spacing = 2;
 		static double LineHeight => Font.FontSize + Spacing;
 
-		class PreviousStruct
-		{
-			public NECommand Command { get; set; }
-			public bool ShiftDown { get; set; }
-			public object DialogResult { get; set; }
-			public bool? MultiStatus { get; set; }
-		}
-
 		public TextEditorData TextEditorData { get; } = new TextEditorData();
-
-		[DepProp]
-		public string DisplayName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public string FileName { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool IsModified { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool AutoRefresh { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public ParserType ContentType { get { return UIHelper<TextEditor>.GetPropValue<ParserType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public Coder.CodePage CodePage { get { return UIHelper<TextEditor>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public string AESKey { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool Compressed { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int xScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int yScrollValue { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public string LineEnding { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool DiffIgnoreWhitespace { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool DiffIgnoreCase { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool DiffIgnoreNumbers { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool DiffIgnoreLineEndings { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool IsDiff { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool DiffEncodingMismatch { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public int TextEditorOrder { get { return UIHelper<TextEditor>.GetPropValue<int>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public string TabLabel { get { return UIHelper<TextEditor>.GetPropValue<string>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool KeepSelections { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool HighlightSyntax { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool StrictParsing { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public JumpByType JumpBy { get { return UIHelper<TextEditor>.GetPropValue<JumpByType>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); jumpBy = JumpBy; } }
-		[DepProp]
-		public bool ViewValues { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public IList<byte> ViewValuesData { get { return UIHelper<TextEditor>.GetPropValue<IList<byte>>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool ViewValuesHasSel { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
-
-		public TabsWindow TabsParent { get; set; }
-
-		int currentSelectionField;
-		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; canvasRenderTimer.Start(); } }
-		public int NumSelections => Selections.Count;
-		JumpByType jumpBy;
-
-		bool watcherFileModified = false;
-
-		AnswerResult savedAnswers => TabsParent.savedAnswers;
 
 		static internal readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
 		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
@@ -117,13 +38,6 @@ namespace NeoEdit.Program
 		static internal readonly Brush highlightRowBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
 		static internal readonly Pen lightlightRowPen = new Pen(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 1);
 
-		int xScrollViewportFloor => (int)Math.Floor(xScroll.ViewportSize);
-		int xScrollViewportCeiling => (int)Math.Ceiling(xScroll.ViewportSize);
-		int yScrollViewportFloor => (int)Math.Floor(yScroll.ViewportSize);
-		int yScrollViewportCeiling => (int)Math.Ceiling(yScroll.ViewportSize);
-
-		public bool HasSelections => Selections.Any();
-
 		static TextEditor()
 		{
 			caretBrush.Freeze();
@@ -135,88 +49,47 @@ namespace NeoEdit.Program
 			diffColBrush.Freeze();
 			highlightRowBrush.Freeze();
 			lightlightRowPen.Freeze();
-
-			UIHelper<TextEditor>.Register();
-			UIHelper<TextEditor>.AddCallback(a => a.xScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
-			UIHelper<TextEditor>.AddCallback(a => a.yScrollValue, (obj, o, n) => obj.canvasRenderTimer.Start());
-			UIHelper<TextEditor>.AddCallback(a => a.ContentType, (obj, o, n) => obj.canvasRenderTimer.Start());
-			//TODO UIHelper<TextEditor>.AddCallback(a => a.CodePage, (obj, o, n) => obj.CalculateDiff());
-			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualWidthProperty, obj => obj.CalculateBoundaries());
-			UIHelper<TextEditor>.AddCallback(a => a.canvas, Canvas.ActualHeightProperty, obj => obj.CalculateBoundaries());
-			UIHelper<TextEditor>.AddCallback(a => a.HighlightSyntax, (obj, o, n) => obj.canvasRenderTimer.Start());
-			UIHelper<TextEditor>.AddCoerce(a => a.xScrollValue, (obj, value) => (int)Math.Max(obj.xScroll.Minimum, Math.Min(obj.xScroll.Maximum, value)));
-			UIHelper<TextEditor>.AddCoerce(a => a.yScrollValue, (obj, value) => (int)Math.Max(obj.yScroll.Minimum, Math.Min(obj.yScroll.Maximum, value)));
 		}
-
-		public RangeList Selections { get; private set; } = new RangeList(new List<Range>());
-
-
-		readonly Dictionary<int, RangeList> regionsList = Enumerable.Range(1, 9).ToDictionary(num => num, num => new RangeList(new List<Range>()));
-		public IReadOnlyDictionary<int, RangeList> Regions => regionsList;
-
-
-		RunOnceTimer canvasRenderTimer;
-		List<PropertyChangeNotifier> localCallbacks;
-		static ThreadSafeRandom random = new ThreadSafeRandom();
-		public DateTime fileLastWrite { get; set; }
-		int mouseClickCount = 0;
-		public List<string> DragFiles { get; set; }
-		public string DiffIgnoreCharacters { get; set; }
-		PreviousStruct previous = null;
-		FileSystemWatcher watcher = null;
-		ShutdownData shutdownData;
 
 		internal TextEditor(TextEditorData TextEditorData)
 		{
 			this.TextEditorData = TextEditorData;
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
-
 			InitializeComponent();
-			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
-			AutoRefresh = KeepSelections = HighlightSyntax = true;
-			JumpBy = JumpByType.Words;
-
-			SetupTabLabel();
-
-			AllowDrop = true;
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
-			//Drop += OnDrop;
-
-			//TODO OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
-			//TODO Goto(line, column, index);
-
-			localCallbacks = UIHelper<TextEditor>.GetLocalCallbacks(this);
-
-			canvas.MouseLeftButtonDown += OnCanvasMouseLeftButtonDown;
-			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonUp;
-			canvas.MouseMove += OnCanvasMouseMove;
-			canvas.Render += OnCanvasRender;
-
-			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
-
-			Loaded += (s, e) =>
-			{
-				EnsureVisible();
-				canvasRenderTimer.Start();
-			};
-
-			FontSizeChanged(null, null);
-			//Font.FontSizeChanged += FontSizeChanged;
-			//Font.ShowSpecialCharsChanged += (s, e) => InvalidateCanvas();
+			//TODO Drop += OnDrop;
 		}
 
 		public void DrawAll()
 		{
+			SetupScrollBars();
+			SetupStatusBar();
+			SetupViewValues();
 			canvas.InvalidateVisual();
-			SetStatusBarText();
 		}
 
-		void SetStatusBarText()
+		void SetupScrollBars()
+		{
+			var xScrollValue = xScroll.Value;
+			var yScrollValue = yScroll.Value;
+			xScroll.ViewportSize = canvas.ActualWidth / Font.CharWidth;
+			xScroll.Minimum = 0;
+			xScroll.Maximum = TextEditorData.MaxColumn - Math.Floor(xScroll.ViewportSize);
+			xScroll.SmallChange = 1;
+			xScroll.Value = Math.Max(xScroll.Minimum, Math.Min(xScrollValue, xScroll.Maximum));
+
+			yScroll.ViewportSize = canvas.ActualHeight / LineHeight;
+			yScroll.Minimum = 0;
+			yScroll.Maximum = TextEditorData.NumLines - Math.Floor(yScroll.ViewportSize);
+			yScroll.SmallChange = 1;
+			yScroll.Value = Math.Max(yScroll.Minimum, Math.Min(yScrollValue, yScroll.Maximum));
+
+			//TODO yScroll.DiffList = DataQwer.GetDiffRanges();
+		}
+
+		void SetupStatusBar()
 		{
 			statusBar.Items.Clear();
-
-			ViewValuesData = null;
-			ViewValuesHasSel = false;
 
 			if (!TextEditorData.Selections.Any())
 			{
@@ -240,13 +113,6 @@ namespace NeoEdit.Program
 				var posMin = range.Start;
 				var posMax = range.End;
 
-				try
-				{
-					ViewValuesData = Coder.StringToBytes(TextEditorData.GetString(range.Start, Math.Min(range.HasSelection ? range.Length : 100, TextEditorData.Length - range.Start)), CodePage);
-					ViewValuesHasSel = range.HasSelection;
-				}
-				catch { }
-
 				statusBar.Items.Add($"Selection {TextEditorData.CurrentSelection + 1:n0}/{TextEditorData.NumSelections:n0}");
 				statusBar.Items.Add(new Separator());
 				statusBar.Items.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
@@ -257,242 +123,22 @@ namespace NeoEdit.Program
 			}
 
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Regions {string.Join(" / ", Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count).OrderBy(pair => pair.Key).Select(pair => $"{pair.Value:n0}"))}");
+			statusBar.Items.Add($"Regions {string.Join(" / ", Enumerable.Range(1, 9).Select(region => $"{TextEditorData.GetRegions(region).Count:n0}"))}");
 			statusBar.Items.Add(new Separator());
 			statusBar.Items.Add($"Database {TextEditorData.DBName}");
-
-			//var tf = SystemFonts.MessageFontFamily.GetTypefaces().Where(x => (x.Weight == FontWeights.Normal) && (x.Style == FontStyles.Normal)).First();
-			//dc.DrawText(new FormattedText(string.Join(" │ ", sb), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.White, 1), new Point(2, 2));
 		}
 
-		void FontSizeChanged(object sender, EventArgs e) => CalculateBoundaries();
-
-		void CalculateBoundaries()
+		void SetupViewValues()
 		{
-			if ((canvas.ActualWidth <= 0) || (canvas.ActualHeight <= 0))
-				return;
-
-			xScroll.ViewportSize = canvas.ActualWidth / Font.CharWidth;
-			xScroll.Minimum = 0;
-			xScroll.Maximum = TextEditorData.MaxColumn - xScrollViewportFloor;
-			xScroll.SmallChange = 1;
-			xScrollValue = xScrollValue;
-
-			yScroll.ViewportSize = canvas.ActualHeight / LineHeight;
-			yScroll.Minimum = 0;
-			yScroll.Maximum = TextEditorData.NumLines - yScrollViewportFloor;
-			yScroll.SmallChange = 1;
-			yScrollValue = yScrollValue;
-
-			//TODO yScroll.DiffList = DataQwer.GetDiffRanges();
-
-			LineEnding = TextEditorData.OnlyEnding;
-
-			canvasRenderTimer.Start();
-		}
-
-		public bool CanClose()
-		{
-			if (!IsModified)
-				return true;
-
-			if (!savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.All))
-				savedAnswers[nameof(CanClose)] = new Message(TabsParent)
-				{
-					Title = "Confirm",
-					Text = "Do you want to save changes?",
-					Options = MessageOptions.YesNoAllCancel,
-					DefaultCancel = MessageOptions.Cancel,
-				}.Show(false);
-
-			if (savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.No))
-				return true;
-			//if (savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.Yes))
-			//{
-			//	Command_File_Save_Save();
-			//	return !IsModified;
-			//}
-			return false;
-		}
-
-		void ClearWatcher()
-		{
-			if (watcher != null)
+			if (!TextEditorData.ViewValues)
 			{
-				watcher.Dispose();
-				watcher = null;
-			}
-		}
-
-		public void Closed()
-		{
-			Font.FontSizeChanged -= FontSizeChanged;
-			ClearWatcher();
-			shutdownData?.OnShutdown();
-		}
-
-		bool ConfirmContinueWhenCannotEncode()
-		{
-			if (!savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.All))
-				savedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(TabsParent)
-				{
-					Title = "Confirm",
-					Text = "The specified encoding cannot fully represent the data. Continue anyway?",
-					Options = MessageOptions.YesNoAll,
-					DefaultAccept = MessageOptions.Yes,
-					DefaultCancel = MessageOptions.No,
-				}.Show();
-			return savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.Yes);
-		}
-
-		public void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
-		{
-			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
-			if (!Selections.Any())
-				return;
-
-			var range = Selections[CurrentSelection];
-			var lineMin = TextEditorData.GetPositionLine(range.Start);
-			var lineMax = TextEditorData.GetPositionLine(range.End);
-			var indexMin = TextEditorData.GetPositionIndex(range.Start, lineMin);
-			var indexMax = TextEditorData.GetPositionIndex(range.End, lineMax);
-
-			if (centerVertically)
-			{
-				yScrollValue = (lineMin + lineMax - yScrollViewportFloor) / 2;
-				if (centerHorizontally)
-					xScrollValue = (TextEditorData.GetColumnFromIndex(lineMin, indexMin) + TextEditorData.GetColumnFromIndex(lineMax, indexMax) - xScrollViewportFloor) / 2;
-				else
-					xScrollValue = 0;
-			}
-
-			var line = TextEditorData.GetPositionLine(range.Cursor);
-			var index = TextEditorData.GetPositionIndex(range.Cursor, line);
-			var x = TextEditorData.GetColumnFromIndex(line, index);
-			yScrollValue = Math.Min(line, Math.Max(line - yScrollViewportFloor + 1, yScrollValue));
-			xScrollValue = Math.Min(x, Math.Max(x - xScrollViewportFloor + 1, xScrollValue));
-		}
-
-		public void HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, object preResult)
-		{
-			var start = DateTime.UtcNow;
-			if (command != NECommand.Macro_RepeatLastAction)
-			{
-				previous = new PreviousStruct
-				{
-					Command = command,
-					ShiftDown = shiftDown,
-					DialogResult = dialogResult,
-					MultiStatus = multiStatus,
-				};
-			}
-
-			//switch (command)
-			//{
-			//}
-
-			var end = DateTime.UtcNow;
-			var elapsed = (end - start).TotalMilliseconds;
-
-			// TODO
-			//if ((command != NECommand.Macro_TimeNextAction) && (timeNext))
-			//{
-			//	timeNext = false;
-			//	new Message(TabsParent)
-			//	{
-			//		Title = "Timer",
-			//		Text = $"Elapsed time: {elapsed:n} ms",
-			//		Options = MessageOptions.Ok,
-			//	}.Show();
-			//}
-		}
-
-		void MouseHandler(Point mousePos, int clickCount, bool selecting)
-		{
-			//TODO
-			//var sels = Selections.ToList();
-			//var line = Math.Max(0, Math.Min(DataQwer.NumLines - 1, (int)(mousePos.Y / LineHeight) + yScrollValue));
-			//var column = Math.Max(0, Math.Min(DataQwer.GetLineColumnsLength(line), (int)(mousePos.X / Font.CharWidth) + xScrollValue));
-			//var index = DataQwer.GetIndexFromColumn(line, column, true);
-			//var position = DataQwer.GetPosition(line, index);
-			//var mouseRange = CurrentSelection < sels.Count ? sels[CurrentSelection] : null;
-
-			//var currentSelection = default(Range);
-			//if (selecting)
-			//{
-			//	if (mouseRange != null)
-			//	{
-			//		sels.Remove(mouseRange);
-			//		var anchor = mouseRange.Anchor;
-			//		if (clickCount != 1)
-			//		{
-			//			if (position < anchor)
-			//				position = GetPrevWord(position + 1);
-			//			else
-			//				position = GetNextWord(position);
-
-			//			if ((mouseRange.Cursor <= anchor) != (position <= anchor))
-			//			{
-			//				if (position <= anchor)
-			//					anchor = GetNextWord(anchor);
-			//				else
-			//					anchor = GetPrevWord(anchor);
-			//			}
-			//		}
-
-			//		currentSelection = new Range(position, anchor);
-			//	}
-			//}
-			//else
-			//{
-			//	if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.None)
-			//		sels.Clear();
-
-			//	if (clickCount == 1)
-			//		currentSelection = new Range(position);
-			//	else
-			//	{
-			//		if (mouseRange != null)
-			//			sels.Remove(mouseRange);
-			//		currentSelection = new Range(GetNextWord(position), GetPrevWord(Math.Min(position + 1, DataQwer.MaxPosition)));
-			//	}
-			//}
-
-			//if (currentSelection != null)
-			//	sels.Add(currentSelection);
-			//SetSelections(sels);
-			//if (currentSelection != null)
-			//	CurrentSelection = Selections.IndexOf(currentSelection);
-		}
-
-		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			if (DragFiles != null)
-			{
-				DragDrop.DoDragDrop(this, new DataObject(DataFormats.FileDrop, DragFiles.ToArray()), DragDropEffects.Copy);
-				DragFiles = null;
+				viewValuesControl.Visibility = Visibility.Collapsed;
 				return;
 			}
 
-			mouseClickCount = e.ClickCount;
-			MouseHandler(e.GetPosition(canvas), e.ClickCount, (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None);
-			canvas.CaptureMouse();
-			e.Handled = true;
-		}
-
-		void OnCanvasMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-		{
-			canvas.ReleaseMouseCapture();
-			e.Handled = true;
-		}
-
-		void OnCanvasMouseMove(object sender, MouseEventArgs e)
-		{
-			if (!canvas.IsMouseCaptured)
-				return;
-
-			MouseHandler(e.GetPosition(canvas), mouseClickCount, true);
-			e.Handled = true;
+			viewValuesControl.Visibility = Visibility.Visible;
+			viewValues.Data = TextEditorData.ViewValuesData;
+			viewValues.HasSel = TextEditorData.ViewValuesHasSel;
 		}
 
 		class DrawBounds
@@ -552,14 +198,14 @@ namespace NeoEdit.Program
 				if ((cursorLine < startLine) || (cursorLine >= endLine))
 					continue;
 
-				if (selectionCtr == CurrentSelection)
+				if (selectionCtr == TextEditorData.CurrentSelection)
 					dc.DrawRoundedRectangle(highlightRowBrush, lightlightRowPen, new Rect(-2, drawBounds.Y(cursorLine), canvas.ActualWidth + 4, Font.FontSize), 4, 4);
 
 				var cursor = TextEditorData.GetPositionIndex(range.Cursor, cursorLine);
 				if ((cursor >= drawBounds.StartIndexes[cursorLine]) && (cursor <= drawBounds.EndIndexes[cursorLine]))
 				{
 					cursor = TextEditorData.GetColumnFromIndex(cursorLine, cursor);
-					for (var pass = selectionCtr == CurrentSelection ? 2 : 1; pass > 0; --pass)
+					for (var pass = selectionCtr == TextEditorData.CurrentSelection ? 2 : 1; pass > 0; --pass)
 						dc.DrawRectangle(caretBrush, null, new Rect(drawBounds.X(cursor) - 1, drawBounds.Y(cursorLine), 2, LineHeight));
 				}
 			}
@@ -701,7 +347,7 @@ namespace NeoEdit.Program
 		{
 			const int HighlightRegexSize = 500;
 
-			var highlightDictionary = HighlightSyntax ? Highlight.Get(ContentType)?.GetDictionary() : null;
+			var highlightDictionary = TextEditorData.HighlightSyntax ? Highlight.Get(TextEditorData.ContentType)?.GetDictionary() : null;
 
 			var startColumn = Math.Max(drawBounds.StartColumn - HighlightRegexSize, 0);
 			var startOffset = drawBounds.StartColumn - startColumn;
@@ -748,55 +394,6 @@ namespace NeoEdit.Program
 				RenderCarets(dc, drawBounds);
 			RenderDiff(dc, drawBounds);
 			RenderText(dc, drawBounds);
-		}
-
-		//TODO
-		//void OnDrop(object sender, DragEventArgs e)
-		//{
-		//	// If we get a file list, return and let the tabs window handle it
-		//	var fileList = e.Data.GetData("FileDrop") as string[];
-		//	if (fileList != null)
-		//		return;
-
-		//	if (Selections.Count != 1)
-		//		throw new Exception("Must have one selection.");
-
-		//	var data = (e.Data.GetData("UnicodeText") ?? e.Data.GetData("Text") ?? e.Data.GetData(typeof(string))) as string;
-		//	if (data == null)
-		//		return;
-
-		//	ReplaceSelections(data);
-		//	e.Handled = true;
-		//}
-
-		public void Activated()
-		{
-			if (!watcherFileModified)
-				return;
-
-			watcherFileModified = false;
-			//TODO Command_File_Refresh();
-		}
-
-		void SetupTabLabel()
-		{
-			var multiBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = @"(p0 ?? FileName(p1) ?? ""[Untitled]"")t+(p2?""*"":"""")t+(p3?"" (Diff""t+(p4?"" - Encoding mismatch"":"""")t+"")"":"""")" };
-			multiBinding.Bindings.Add(new Binding(nameof(DisplayName)) { Source = this });
-			multiBinding.Bindings.Add(new Binding(nameof(FileName)) { Source = this });
-			multiBinding.Bindings.Add(new Binding(nameof(IsModified)) { Source = this });
-			multiBinding.Bindings.Add(new Binding(nameof(IsDiff)) { Source = this });
-			multiBinding.Bindings.Add(new Binding(nameof(DiffEncodingMismatch)) { Source = this });
-			SetBinding(UIHelper<TextEditor>.GetProperty(a => a.TabLabel), multiBinding);
-		}
-
-		public override string ToString() => FileName ?? DisplayName;
-
-		public void UpdateViewValue(byte[] value, int? size)
-		{
-			//TODO
-			//var sels = Selections.Select(range => Range.FromIndex(range.Start, size ?? range.Length)).ToList();
-			//var values = Enumerable.Repeat(Coder.BytesToString(value, CodePage), sels.Count).ToList();
-			//Replace(sels, values);
 		}
 	}
 }
