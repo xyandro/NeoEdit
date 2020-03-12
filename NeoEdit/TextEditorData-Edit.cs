@@ -109,7 +109,7 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Undo()
 		{
-			var step = UndoRedo2.GetUndo(ref newUndoRedo);
+			var step = UndoRedo.GetUndo(ref newUndoRedo);
 			if (step == null)
 				return;
 
@@ -128,7 +128,7 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Redo()
 		{
-			var step = UndoRedo2.GetRedo(ref newUndoRedo);
+			var step = UndoRedo.GetRedo(ref newUndoRedo);
 			if (step == null)
 				return;
 

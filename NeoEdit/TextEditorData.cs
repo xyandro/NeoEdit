@@ -26,7 +26,7 @@ namespace NeoEdit.Program
 			Selections = new List<Range>();
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, new List<Range>());
-			undoRedo = newUndoRedo = new UndoRedo2();
+			undoRedo = newUndoRedo = new UndoRedo();
 			Commit();
 
 			fileName = fileName?.Trim('"');
@@ -43,9 +43,9 @@ namespace NeoEdit.Program
 
 		void SetTabLabel() => TabLabel = $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(IsDiff ? $" (Diff{(DiffEncodingMismatch ? " - Encoding mismatch" : "")})" : "")}";
 
-		UndoRedo2 undoRedo, newUndoRedo;
-		CacheValue2 modifiedChecksum = new CacheValue2();
-		CacheValue2 previousData = new CacheValue2();
+		UndoRedo undoRedo, newUndoRedo;
+		CacheValue modifiedChecksum = new CacheValue();
+		CacheValue previousData = new CacheValue();
 		ParserType previousType;
 		ParserNode previousRoot;
 
@@ -78,12 +78,12 @@ namespace NeoEdit.Program
 				change = undoRange.End - ranges[ctr].End;
 			}
 
-			var textCanvasUndoRedo = new UndoRedo2.UndoRedoStep(undoRanges, undoText, tryJoinUndo);
+			var textCanvasUndoRedo = new UndoRedo.UndoRedoStep(undoRanges, undoText, tryJoinUndo);
 			switch (replaceType)
 			{
-				case ReplaceType.Undo: UndoRedo2.AddUndone(ref newUndoRedo, textCanvasUndoRedo); break;
-				case ReplaceType.Redo: UndoRedo2.AddRedone(ref newUndoRedo, textCanvasUndoRedo); break;
-				case ReplaceType.Normal: UndoRedo2.AddUndo(ref newUndoRedo, textCanvasUndoRedo, IsModified); break;
+				case ReplaceType.Undo: UndoRedo.AddUndone(ref newUndoRedo, textCanvasUndoRedo); break;
+				case ReplaceType.Redo: UndoRedo.AddRedone(ref newUndoRedo, textCanvasUndoRedo); break;
+				case ReplaceType.Normal: UndoRedo.AddUndo(ref newUndoRedo, textCanvasUndoRedo, IsModified); break;
 			}
 
 			Text = Text.Replace(ranges, strs);
@@ -1988,7 +1988,7 @@ namespace NeoEdit.Program
 				isModified = !Coder.CanExactlyEncode(bytes, CodePage);
 
 			if (!keepUndo)
-				UndoRedo2.Clear(ref newUndoRedo);
+				UndoRedo.Clear(ref newUndoRedo);
 			SetModifiedFlag(isModified);
 		}
 

@@ -9,61 +9,70 @@ namespace NeoEdit.Program
 		{
 			public List<Range> ranges { get; }
 			public List<string> text { get; }
-			internal bool tryJoinLast { get; }
+			public bool tryJoinLast { get; }
 
-			public UndoRedoStep(List<Range> _ranges, List<string> _text, bool _tryJoinLast)
+			public UndoRedoStep(List<Range> ranges, List<string> text, bool tryJoinLast)
 			{
-				ranges = _ranges;
-				text = _text;
-				tryJoinLast = _tryJoinLast;
+				this.ranges = ranges;
+				this.text = text;
+				this.tryJoinLast = tryJoinLast;
 			}
 		}
 
-		readonly List<UndoRedoStep> undo = new List<UndoRedoStep>();
-		readonly List<UndoRedoStep> redo = new List<UndoRedoStep>();
+		readonly IReadOnlyList<UndoRedoStep> undo;
+		readonly IReadOnlyList<UndoRedoStep> redo;
 
-		public UndoRedo() { }
-
-		public void Clear()
+		public UndoRedo()
 		{
-			undo.Clear();
-			redo.Clear();
+			undo = new List<UndoRedoStep>();
+			redo = new List<UndoRedoStep>();
 		}
 
-		public UndoRedoStep GetUndo()
+		UndoRedo(IReadOnlyList<UndoRedoStep> undo, IReadOnlyList<UndoRedoStep> redo)
 		{
-			if (undo.Count == 0)
+			this.undo = undo;
+			this.redo = redo;
+		}
+
+		public static void Clear(ref UndoRedo undoRedo)
+		{
+			undoRedo = new UndoRedo(new List<UndoRedoStep>(), new List<UndoRedoStep>());
+		}
+
+		public static UndoRedoStep GetUndo(ref UndoRedo undoRedo)
+		{
+			if (undoRedo.undo.Count == 0)
 				return null;
 
-			var step = undo.Last();
-			undo.Remove(step);
+			var result = undoRedo.undo.Last();
+			undoRedo = new UndoRedo(undoRedo.undo.Take(undoRedo.undo.Count - 1).ToList(), undoRedo.redo);
+			return result;
+		}
+
+		public static UndoRedoStep GetRedo(ref UndoRedo undoRedo)
+		{
+			if (undoRedo.redo.Count == 0)
+				return null;
+
+			var step = undoRedo.redo.Last();
+			undoRedo = new UndoRedo(undoRedo.undo, undoRedo.redo.Take(undoRedo.redo.Count - 1).ToList());
 			return step;
 		}
 
-		public UndoRedoStep GetRedo()
+		public static void AddUndone(ref UndoRedo undoRedo, UndoRedoStep current)
 		{
-			if (redo.Count == 0)
-				return null;
-
-			var step = redo.Last();
-			redo.Remove(step);
-			return step;
+			undoRedo = new UndoRedo(undoRedo.undo, undoRedo.redo.Concat(current).ToList());
 		}
 
-		public void AddUndone(UndoRedoStep current)
+		public static void AddRedone(ref UndoRedo undoRedo, UndoRedoStep current)
 		{
-			redo.Add(current);
-		}
-
-		public void AddRedone(UndoRedoStep current)
-		{
-			undo.Add(current);
+			undoRedo = new UndoRedo(undoRedo.undo.Concat(current).ToList(), undoRedo.redo);
 		}
 
 		const int maxUndo = 1048576 * 10;
-		public void AddUndo(UndoRedoStep current, bool modified)
+		public static void AddUndo(ref UndoRedo undoRedo, UndoRedoStep current, bool modified)
 		{
-			redo.Clear();
+			var undo = undoRedo.undo.ToList();
 
 			// See if we can add this one to the last one
 			var done = false;
@@ -98,9 +107,7 @@ namespace NeoEdit.Program
 			}
 
 			if (!done)
-			{
 				undo.Add(current);
-			}
 
 			// Limit undo buffer
 			while (true)
@@ -110,6 +117,8 @@ namespace NeoEdit.Program
 					break;
 				undo.RemoveAt(0);
 			}
+
+			undoRedo = new UndoRedo(undo, new List<UndoRedoStep>());
 		}
 	}
 }

@@ -157,12 +157,10 @@ namespace NeoEdit.Program
 
 		RunOnceTimer canvasRenderTimer, statusBarRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
-		public UndoRedo undoRedo { get; }
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		public DateTime fileLastWrite { get; set; }
 		int mouseClickCount = 0;
 		public List<string> DragFiles { get; set; }
-		CacheValue modifiedChecksum = new CacheValue();
 		public string DiffIgnoreCharacters { get; set; }
 		PreviousStruct previous = null;
 		FileSystemWatcher watcher = null;
@@ -184,8 +182,6 @@ namespace NeoEdit.Program
 			AllowDrop = true;
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
 			//Drop += OnDrop;
-
-			undoRedo = new UndoRedo();
 
 			//TODO OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
 			//TODO Goto(line, column, index);

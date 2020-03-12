@@ -118,7 +118,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CacheValue.cs" />
-    <Compile Include="CacheValue2.cs" />
     <Compile Include="CommandLine\CommandLineParams.cs" />
     <Compile Include="CommandLine\CommandLineVisitor.cs" />
     <Compile Include="CommandLine\Parser\CommandLineLexer.cs" />
@@ -1241,7 +1240,6 @@
       <DependentUpon>TutorialWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UndoRedo.cs" />
-    <Compile Include="UndoRedo2.cs" />
     <Resource Include="Words.txt" />
     <EmbeddedResource Include="Words.txt.gz" />
     <Compile Include="YouTubeDL.cs" />

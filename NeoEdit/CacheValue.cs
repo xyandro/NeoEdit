@@ -2,23 +2,23 @@
 {
 	public class CacheValue
 	{
-		string value;
+		NEText value;
 		bool invalid = true;
 
-		public bool Match(string value)
+		public bool Match(NEText value)
 		{
 			if (invalid)
 				return false;
 
 			if (ReferenceEquals(this.value, value))
 				return true;
-			if (this.value != value)
+			if (!this.value.Equals(value))
 				return false;
 			this.value = value;
 			return true;
 		}
 
-		public void SetValue(string value)
+		public void SetValue(NEText value)
 		{
 			this.value = value;
 			invalid = false;
