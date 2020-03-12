@@ -18,7 +18,6 @@ namespace NeoEdit.Program
 	public partial class TextEditor
 	{
 		const int tabStop = 4;
-		AnswerResult savedAnswers => state.TabsWindow.savedAnswers;
 		ExecuteState state;
 
 		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
@@ -1804,8 +1803,8 @@ namespace NeoEdit.Program
 
 		bool ConfirmContinueWhenCannotEncode()
 		{
-			if (!savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.All))
-				savedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(state.TabsWindow)
+			if (!state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.All))
+				state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(state.TabsWindow)
 				{
 					Title = "Confirm",
 					Text = "The specified encoding cannot fully represent the data. Continue anyway?",
@@ -1813,7 +1812,7 @@ namespace NeoEdit.Program
 					DefaultAccept = MessageOptions.Yes,
 					DefaultCancel = MessageOptions.No,
 				}.Show();
-			return savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.Yes);
+			return state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.Yes);
 		}
 
 		public DbConnection dbConnection { get; set; }
@@ -1897,8 +1896,8 @@ namespace NeoEdit.Program
 			if (!IsModified)
 				return true;
 
-			if (!savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.All))
-				savedAnswers[nameof(CanClose)] = new Message(state.TabsWindow)
+			if (!state.SavedAnswers[nameof(CanClose)].HasFlag(MessageOptions.All))
+				state.SavedAnswers[nameof(CanClose)] = new Message(state.TabsWindow)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -1906,9 +1905,9 @@ namespace NeoEdit.Program
 					DefaultCancel = MessageOptions.Cancel,
 				}.Show(false);
 
-			if (savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.No))
+			if (state.SavedAnswers[nameof(CanClose)].HasFlag(MessageOptions.No))
 				return true;
-			if (savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.Yes))
+			if (state.SavedAnswers[nameof(CanClose)].HasFlag(MessageOptions.Yes))
 			{
 				Command_File_Save_Save();
 				return !IsModified;

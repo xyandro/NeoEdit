@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program
 {
@@ -18,6 +19,8 @@ namespace NeoEdit.Program
 		public object PreHandleData;
 		public bool Result;
 		public bool? MultiStatus;
+		public AnswerResult SavedAnswers = new AnswerResult();
+
 
 		public ExecuteState(NECommand command) => Command = command;
 

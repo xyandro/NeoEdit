@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NeoEdit.Program.Controls;
-using NeoEdit.Program.Dialogs;
-using NeoEdit.Program.Expressions;
 using NeoEdit.Program.NEClipboards;
 
 namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		public AnswerResult savedAnswers { get; } = new AnswerResult();
-
 		static string QuickMacro(int num) => $"QuickText{num}.xml";
 
 		void ValidateNoCurrentMacro()

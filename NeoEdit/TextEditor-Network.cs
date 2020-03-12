@@ -105,8 +105,8 @@ namespace NeoEdit.Program
 			invalid = fileNames.Where(fileName => File.Exists(fileName)).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
-				if (!savedAnswers[nameof(Command_Network_FetchFile)].HasFlag(MessageOptions.All))
-					savedAnswers[nameof(Command_Network_FetchFile)] = new Message(state.TabsWindow)
+				if (!state.SavedAnswers[nameof(Command_Network_FetchFile)].HasFlag(MessageOptions.All))
+					state.SavedAnswers[nameof(Command_Network_FetchFile)] = new Message(state.TabsWindow)
 					{
 						Title = "Confirm",
 						Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
@@ -114,7 +114,7 @@ namespace NeoEdit.Program
 						DefaultAccept = MessageOptions.Yes,
 						DefaultCancel = MessageOptions.No,
 					}.Show();
-				if (!savedAnswers[nameof(Command_Network_FetchFile)].HasFlag(MessageOptions.Yes))
+				if (!state.SavedAnswers[nameof(Command_Network_FetchFile)].HasFlag(MessageOptions.Yes))
 					return;
 			}
 
