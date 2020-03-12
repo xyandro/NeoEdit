@@ -9,7 +9,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Converters;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Misc;
 using NeoEdit.Program.NEClipboards;
@@ -63,17 +62,12 @@ namespace NeoEdit.Program
 		readonly RunOnceTimer doActivatedTimer;
 		public TabsWindow(bool addEmpty = false)
 		{
-			newTabs = newActiveTabs = new List<TextEditorData>();
-			Rows = Columns = 1;
-			Commit();
-
-			//addedTabTimer = new RunOnceTimer(() => ++addedCounter);
+			oldTabs = newTabs = oldActiveTabs = newActiveTabs = new List<TextEditorData>();
+			oldRows = newRows = oldColumns = newColumns = 1;
 
 			Focusable = true;
 			FocusVisualStyle = null;
-			AllowDrop = true;
 			VerticalAlignment = VerticalAlignment.Stretch;
-			Drop += (s, e) => OnDrop(e, null);
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new CommandState(command)));
 			InitializeComponent();
@@ -794,7 +788,7 @@ namespace NeoEdit.Program
 			else
 				DoGridLayout();
 
-			Title = $"{Focused?.FileName} - NeoEdit Text Editor{(Helpers.IsAdministrator() ? " (Administrator)" : "")}{(ShowIndex ? $" - {WindowIndex}" : "")}";
+			Title = $"{(Focused == null ? "" : $"{Focused.FileName} - ")}NeoEdit Text Editor{(Helpers.IsAdministrator() ? " (Administrator)" : "")}{(ShowIndex ? $" - {WindowIndex}" : "")}";
 			SetStatusBarText();
 			SetMenuCheckboxes();
 		}
@@ -985,6 +979,7 @@ namespace NeoEdit.Program
 					textEditor.FocusVisualStyle = null;
 					dockPanel.Children.Add(textEditor);
 				}
+				textEditor.DrawAll();
 
 				border.Child = dockPanel;
 
