@@ -1,16 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
+		bool inTransaction = false;
+		void EnsureInTransaction()
+		{
+			if (!inTransaction)
+				throw new Exception("Must start transaction before editing data");
+		}
+
 		IReadOnlyList<TextEditorData> oldTabs, newTabs;
 		IReadOnlyList<TextEditorData> Tabs
 		{
 			get => newTabs;
 			set
 			{
+				EnsureInTransaction();
 				newTabs = value;
 				var notSeen = newTabs.Except(oldTabs).ToList();
 				if (notSeen.Any())
@@ -26,6 +35,7 @@ namespace NeoEdit.Program
 			get => newActiveTabs;
 			set
 			{
+				EnsureInTransaction();
 				newActiveTabs = value.Where(tab => Tabs.Contains(tab)).ToList();
 				if (!ActiveTabs.Contains(Focused))
 					Focused = ActiveTabs.FirstOrDefault();
@@ -38,6 +48,7 @@ namespace NeoEdit.Program
 			get => newFocused;
 			set
 			{
+				EnsureInTransaction();
 				if (!Tabs.Contains(value))
 					value = null;
 				newFocused = value;
@@ -50,33 +61,58 @@ namespace NeoEdit.Program
 		public int? Columns
 		{
 			get => newColumns;
-			set => newColumns = value;
+			set
+			{
+				EnsureInTransaction();
+				newColumns = value;
+			}
 		}
 
 		int? oldRows, newRows;
 		public int? Rows
 		{
 			get => newRows;
-			set => newRows = value;
+			set
+			{
+				EnsureInTransaction();
+				newRows = value;
+			}
 		}
 
 		int? oldMaxColumns, newMaxColumns;
 		public int? MaxColumns
 		{
 			get => newMaxColumns;
-			set => newMaxColumns = value;
+			set
+			{
+				EnsureInTransaction();
+				newMaxColumns = value;
+			}
 		}
 
 		int? oldMaxRows, newMaxRows;
 		public int? MaxRows
 		{
 			get => newMaxRows;
-			set => newMaxRows = value;
+			set
+			{
+				EnsureInTransaction();
+				newMaxRows = value;
+			}
 		}
 
 
+		void BeginTransaction()
+		{
+			if (inTransaction)
+				throw new Exception("Already in a transaction");
+			inTransaction = true;
+		}
+
 		void Rollback()
 		{
+			EnsureInTransaction();
+
 			newTabs = oldTabs;
 			newActiveTabs = oldActiveTabs;
 			newFocused = oldFocused;
@@ -84,10 +120,14 @@ namespace NeoEdit.Program
 			newRows = oldRows;
 			newMaxColumns = oldMaxColumns;
 			newMaxRows = oldMaxRows;
+
+			inTransaction = false;
 		}
 
 		void Commit()
 		{
+			EnsureInTransaction();
+
 			oldTabs = newTabs;
 			oldActiveTabs = newActiveTabs;
 			oldFocused = newFocused;
@@ -95,6 +135,8 @@ namespace NeoEdit.Program
 			oldRows = newRows;
 			oldMaxColumns = newMaxColumns;
 			oldMaxRows = newMaxRows;
+
+			inTransaction = false;
 		}
 	}
 }

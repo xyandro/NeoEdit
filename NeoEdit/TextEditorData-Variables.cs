@@ -7,6 +7,13 @@ namespace NeoEdit.Program
 {
 	public partial class TextEditorData
 	{
+		bool inTransaction = false;
+		void EnsureInTransaction()
+		{
+			if (!inTransaction)
+				throw new Exception("Must start transaction before editing data");
+		}
+
 		NEText oldText, newText;
 		public NEText Text
 		{
@@ -304,50 +311,17 @@ namespace NeoEdit.Program
 
 		UndoRedo oldUndoRedo, newUndoRedo;
 
-		public void Commit()
+		public void BeginTransaction()
 		{
-			oldText = newText;
-			oldUndoRedo = newUndoRedo;
-			oldTextView = newTextView;
-			oldMaxColumn = newMaxColumn;
-			oldCurrentSelection = newCurrentSelection;
-			oldSelections = newSelections;
-			for (var ctr = 0; ctr < oldRegions.Length; ++ctr)
-				oldRegions[ctr] = newRegions[ctr];
-			oldDisplayName = newDisplayName;
-			oldFileName = newFileName;
-			oldIsModified = newIsModified;
-			oldClipboard = newClipboard;
-			oldAutoRefresh = newAutoRefresh;
-			oldDBName = newDBName;
-			oldContentType = newContentType;
-			oldCodePage = newCodePage;
-			oldAESKey = newAESKey;
-			oldCompressed = newCompressed;
-			oldLineEnding = newLineEnding;
-			oldDiffIgnoreWhitespace = newDiffIgnoreWhitespace;
-			oldDiffIgnoreCase = newDiffIgnoreCase;
-			oldDiffIgnoreNumbers = newDiffIgnoreNumbers;
-			oldDiffIgnoreLineEndings = newDiffIgnoreLineEndings;
-			oldIsDiff = newIsDiff;
-			oldDiffEncodingMismatch = newDiffEncodingMismatch;
-			oldTextEditorOrder = newTextEditorOrder;
-			oldTabLabel = newTabLabel;
-			oldKeepSelections = newKeepSelections;
-			oldHighlightSyntax = newHighlightSyntax;
-			oldStrictParsing = newStrictParsing;
-			oldJumpBy = newJumpBy;
-			oldViewValues = newViewValues;
-			oldViewValuesData = newViewValuesData;
-			oldViewValuesHasSel = newViewValuesHasSel;
-			oldXScrollValue = newXScrollValue;
-			oldYScrollValue = newYScrollValue;
-			oldXScrollViewport = newXScrollViewport;
-			oldYScrollViewport = newYScrollViewport;
+			if (inTransaction)
+				throw new Exception("Already in a transaction");
+			inTransaction = true;
 		}
 
 		public void Rollback()
 		{
+			EnsureInTransaction();
+
 			newText = oldText;
 			newUndoRedo = oldUndoRedo;
 			newTextView = oldTextView;
@@ -386,6 +360,53 @@ namespace NeoEdit.Program
 			newYScrollValue = oldYScrollValue;
 			newXScrollViewport = oldXScrollViewport;
 			newYScrollViewport = oldYScrollViewport;
+
+			inTransaction = false;
+		}
+
+		public void Commit()
+		{
+			EnsureInTransaction();
+			oldText = newText;
+			oldUndoRedo = newUndoRedo;
+			oldTextView = newTextView;
+			oldMaxColumn = newMaxColumn;
+			oldCurrentSelection = newCurrentSelection;
+			oldSelections = newSelections;
+			for (var ctr = 0; ctr < oldRegions.Length; ++ctr)
+				oldRegions[ctr] = newRegions[ctr];
+			oldDisplayName = newDisplayName;
+			oldFileName = newFileName;
+			oldIsModified = newIsModified;
+			oldClipboard = newClipboard;
+			oldAutoRefresh = newAutoRefresh;
+			oldDBName = newDBName;
+			oldContentType = newContentType;
+			oldCodePage = newCodePage;
+			oldAESKey = newAESKey;
+			oldCompressed = newCompressed;
+			oldLineEnding = newLineEnding;
+			oldDiffIgnoreWhitespace = newDiffIgnoreWhitespace;
+			oldDiffIgnoreCase = newDiffIgnoreCase;
+			oldDiffIgnoreNumbers = newDiffIgnoreNumbers;
+			oldDiffIgnoreLineEndings = newDiffIgnoreLineEndings;
+			oldIsDiff = newIsDiff;
+			oldDiffEncodingMismatch = newDiffEncodingMismatch;
+			oldTextEditorOrder = newTextEditorOrder;
+			oldTabLabel = newTabLabel;
+			oldKeepSelections = newKeepSelections;
+			oldHighlightSyntax = newHighlightSyntax;
+			oldStrictParsing = newStrictParsing;
+			oldJumpBy = newJumpBy;
+			oldViewValues = newViewValues;
+			oldViewValuesData = newViewValuesData;
+			oldViewValuesHasSel = newViewValuesHasSel;
+			oldXScrollValue = newXScrollValue;
+			oldYScrollValue = newYScrollValue;
+			oldXScrollViewport = newXScrollViewport;
+			oldYScrollViewport = newYScrollViewport;
+
+			inTransaction = false;
 		}
 	}
 }

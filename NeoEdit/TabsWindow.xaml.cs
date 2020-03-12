@@ -304,6 +304,9 @@ namespace NeoEdit.Program
 		{
 			try
 			{
+				BeginTransaction();
+				Tabs.ForEach(tab => tab.BeginTransaction());
+
 				PreExecuteCommand(state);
 
 				GetCommandParameters(state);
@@ -317,8 +320,8 @@ namespace NeoEdit.Program
 			}
 			catch
 			{
-				Tabs.ForEach(tab => tab.Rollback());
 				Rollback();
+				Tabs.ForEach(tab => tab.Rollback());
 				throw;
 			}
 		}
