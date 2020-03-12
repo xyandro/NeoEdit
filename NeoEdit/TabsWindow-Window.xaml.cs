@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using NeoEdit.Program.Controls;
@@ -19,19 +20,22 @@ namespace NeoEdit.Program
 
 		void Command_Window_CustomGrid(WindowCustomGridDialog.Result result) => SetLayout(result.Columns, result.Rows, result.MaxColumns, result.MaxRows);
 
-		void Command_Window_ActiveTabs() => WindowActiveTabsDialog.Run(this);
+		void Command_Window_ActiveTabs()
+		{
+			//TODOWindowActiveTabsDialog.Run(this);
+		}
 
 		void Command_Window_Font_Size() => WindowFontSizeDialog.Run(this);
 
-		void Command_Window_Select_AllTabs() => SetActive(Tabs);
+		void Command_Window_Select_AllTabs() => ActiveTabs = Tabs;
 
-		void Command_Window_Select_NoTabs() => SetActive();
+		void Command_Window_Select_NoTabs() => ActiveTabs = new List<TextEditorData>();
 
-		void Command_Window_Select_TabsWithWithoutSelections(bool hasSelections) => SetActive(ActiveTabs.Where(tab => tab.HasSelections == hasSelections).ToList());
+		void Command_Window_Select_TabsWithWithoutSelections(bool hasSelections) => ActiveTabs = ActiveTabs.Where(tab => tab.HasSelections == hasSelections).ToList();
 
-		void Command_Window_Select_ModifiedUnmodifiedTabs(bool modified) => SetActive(ActiveTabs.Where(tab => tab.IsModified == modified).ToList());
+		void Command_Window_Select_ModifiedUnmodifiedTabs(bool modified) => ActiveTabs = ActiveTabs.Where(tab => tab.IsModified == modified).ToList();
 
-		void Command_Window_Select_InactiveTabs() => SetActive(Tabs.Except(ActiveTabs).ToList());
+		void Command_Window_Select_InactiveTabs() => ActiveTabs = Tabs.Except(ActiveTabs).ToList();
 
 		void Command_Window_Close_TabsWithWithoutSelections(bool hasSelections)
 		{

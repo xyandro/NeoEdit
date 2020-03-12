@@ -1115,6 +1115,9 @@
     <Compile Include="TabsWindow-Macro.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TabsWindow-Variables.xaml.cs">
+      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TabsWindow-Window.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
     </Compile>

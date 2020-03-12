@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +9,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Converters;
-using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Misc;
 using NeoEdit.Program.NEClipboards;
 using NeoEdit.Program.Transform;
@@ -19,8 +17,6 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		[DepProp]
-		public TextEditorData Focused { get { return UIHelper<TabsWindow>.GetPropValue<TextEditorData>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
 		[DepProp]
 		public int? Columns { get { return UIHelper<TabsWindow>.GetPropValue<int?>(this); } set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
 		[DepProp]
@@ -46,11 +42,6 @@ namespace NeoEdit.Program
 		public DateTime LastActivated { get; private set; }
 
 		static int curWindowIndex = 0;
-
-		readonly List<TextEditorData> tabs = new List<TextEditorData>();
-		public IReadOnlyList<TextEditorData> Tabs => tabs;
-		readonly HashSet<TextEditorData> activeTabs = new HashSet<TextEditorData>();
-		public IReadOnlyList<TextEditorData> ActiveTabs => Tabs.Where(te => activeTabs.Contains(te)).ToList();
 
 		readonly RunOnceTimer layoutTimer, showFocusedTimer, addedTabTimer;
 
@@ -694,6 +685,11 @@ namespace NeoEdit.Program
 				SetFocused(Tabs[index], !shiftDown);
 		}
 
+		void SetFocused(TextEditorData textEditorData, bool v = false)
+		{
+			Focused = textEditorData;
+		}
+
 		void MoveNext()
 		{
 			if (Focused == null)
@@ -719,17 +715,17 @@ namespace NeoEdit.Program
 			SetFocused(ordering[current], !shiftDown);
 		}
 
-		bool HandleClick(TextEditorData textEditor)
-		{
-			if (!shiftDown)
-				SetActive(textEditor);
-			else if (Focused != textEditor)
-			{
-				SetFocused(textEditor);
-				return true;
-			}
-			return false;
-		}
+		//bool HandleClick(TextEditorData textEditor)
+		//{
+		//	if (!shiftDown)
+		//		SetActive(textEditor);
+		//	else if (Focused != textEditor)
+		//	{
+		//		SetFocused(textEditor);
+		//		return true;
+		//	}
+		//	return false;
+		//}
 
 		//TODO
 		//protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -769,90 +765,67 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public void AddActive(params TextEditorData[] textEditors) => AddActive(textEditors.AsEnumerable());
-
-		public void AddActive(IEnumerable<TextEditorData> textEditors)
-		{
-			foreach (var textEditor in textEditors)
-				if (textEditor != null)
-					activeTabs.Add(textEditor);
-			UpdateFocused();
-			++ActiveUpdateCount;
-			statusBarTimer.Start();
-		}
-
-		public void SetActive(params TextEditorData[] textEditors) => SetActive(textEditors.AsEnumerable());
-
-		public void SetActive(IEnumerable<TextEditorData> textEditors)
-		{
-			activeTabs.Clear();
-			foreach (var textEditor in textEditors)
-				if (textEditor != null)
-					activeTabs.Add(textEditor);
-			UpdateFocused();
-			++ActiveUpdateCount;
-			statusBarTimer.Start();
-		}
-
 		UIElement GetTabLabel(bool tiles, TextEditorData textEditor)
 		{
-			var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = textEditor };
-			border.MouseLeftButtonDown += (s, e) => HandleClick(textEditor);
-			border.MouseMove += (s, e) =>
-			{
-				if (e.LeftButton == MouseButtonState.Pressed)
-				{
-					var active = textEditor.TabsParent.ActiveTabs.ToList();
-					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<TextEditorData>), active), DragDropEffects.Move);
-				}
-			};
+			return default;
+			//TODO
+			//var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = textEditor };
+			//border.MouseLeftButtonDown += (s, e) => HandleClick(textEditor);
+			//border.MouseMove += (s, e) =>
+			//{
+			//	if (e.LeftButton == MouseButtonState.Pressed)
+			//	{
+			//		var active = textEditor.TabsParent.ActiveTabs.ToList();
+			//		DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<TextEditorData>), active), DragDropEffects.Move);
+			//	}
+			//};
 
-			var borderBinding = new MultiBinding { Converter = new ActiveTabBorderConverter() };
-			borderBinding.Bindings.Add(new Binding { Source = textEditor });
-			borderBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
-			borderBinding.Bindings.Add(new Binding { Source = activeTabs });
-			borderBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
-			border.SetBinding(Border.BorderBrushProperty, borderBinding);
-			var backgroundBinding = new MultiBinding { Converter = new ActiveTabBackgroundConverter() };
-			backgroundBinding.Bindings.Add(new Binding { Source = textEditor });
-			backgroundBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
-			backgroundBinding.Bindings.Add(new Binding { Source = activeTabs });
-			backgroundBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
-			border.SetBinding(Border.BackgroundProperty, backgroundBinding);
+			//var borderBinding = new MultiBinding { Converter = new ActiveTabBorderConverter() };
+			//borderBinding.Bindings.Add(new Binding { Source = textEditor });
+			//borderBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
+			//borderBinding.Bindings.Add(new Binding { Source = activeTabs });
+			//borderBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
+			//border.SetBinding(Border.BorderBrushProperty, borderBinding);
+			//var backgroundBinding = new MultiBinding { Converter = new ActiveTabBackgroundConverter() };
+			//backgroundBinding.Bindings.Add(new Binding { Source = textEditor });
+			//backgroundBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
+			//backgroundBinding.Bindings.Add(new Binding { Source = activeTabs });
+			//backgroundBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
+			//border.SetBinding(Border.BackgroundProperty, backgroundBinding);
 
-			var grid = new Grid();
-			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(12) });
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+			//var grid = new Grid();
+			//grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(12) });
+			//grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+			//grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Foreground = Brushes.White, Margin = new Thickness(4, -4, 0, 0) };
-			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditorData.TabLabel)) { Source = textEditor });
-			Grid.SetRow(text, 0);
-			Grid.SetColumn(text, 0);
-			grid.Children.Add(text);
+			//var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Foreground = Brushes.White, Margin = new Thickness(4, -4, 0, 0) };
+			//text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditorData.TabLabel)) { Source = textEditor });
+			//Grid.SetRow(text, 0);
+			//Grid.SetColumn(text, 0);
+			//grid.Children.Add(text);
 
-			var closeButton = new Button
-			{
-				Content = "🗙",
-				BorderThickness = new Thickness(0),
-				Style = FindResource(ToolBar.ButtonStyleKey) as Style,
-				VerticalAlignment = VerticalAlignment.Center,
-				Margin = new Thickness(2, -6, 0, 0),
-				Foreground = Brushes.Red,
-				Focusable = false,
-				HorizontalAlignment = HorizontalAlignment.Right,
-			};
-			closeButton.Click += (s, e) =>
-			{
-				if (textEditor.CanClose())
-					RemoveTextEditor(textEditor);
-			};
-			Grid.SetRow(closeButton, 0);
-			Grid.SetColumn(closeButton, 1);
-			grid.Children.Add(closeButton);
+			//var closeButton = new Button
+			//{
+			//	Content = "🗙",
+			//	BorderThickness = new Thickness(0),
+			//	Style = FindResource(ToolBar.ButtonStyleKey) as Style,
+			//	VerticalAlignment = VerticalAlignment.Center,
+			//	Margin = new Thickness(2, -6, 0, 0),
+			//	Foreground = Brushes.Red,
+			//	Focusable = false,
+			//	HorizontalAlignment = HorizontalAlignment.Right,
+			//};
+			//closeButton.Click += (s, e) =>
+			//{
+			//	if (textEditor.CanClose())
+			//		RemoveTextEditor(textEditor);
+			//};
+			//Grid.SetRow(closeButton, 0);
+			//Grid.SetColumn(closeButton, 1);
+			//grid.Children.Add(closeButton);
 
-			border.Child = grid;
-			return border;
+			//border.Child = grid;
+			//return border;
 		}
 
 		void ClearLayout()
@@ -1027,30 +1000,16 @@ namespace NeoEdit.Program
 			//};
 		}
 
-		public void SetFocused(TextEditorData textEditor, bool deselectOthers = false)
-		{
-			if (textEditor != Focused)
-			{
-				if (!Tabs.Contains(textEditor))
-					textEditor = null;
-
-				if (deselectOthers)
-					SetActive();
-				Focused = textEditor;
-				AddActive(Focused);
-			}
-
-			ShowFocused();
-		}
-
 		public void Move(TextEditorData tab, int newIndex)
 		{
 			var oldIndex = GetTabIndex(tab);
 			if (oldIndex == -1)
 				return;
 
+			var tabs = Tabs.ToList();
 			tabs.RemoveAt(oldIndex);
 			tabs.Insert(newIndex, tab);
+			Tabs = tabs;
 			QueueUpdateLayout();
 		}
 
