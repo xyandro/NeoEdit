@@ -79,6 +79,13 @@ namespace NeoEdit.Program
 				HandleCommand(new CommandState(NECommand.File_New_New));
 		}
 
+		CommandState CreateCommandState(NECommand command)
+		{
+			var state = new CommandState(command) { ShiftDown = shiftDown, ControlDown = controlDown, AltDown = altDown };
+
+			return state;
+		}
+
 		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
 		{
 			base.OnRenderSizeChanged(sizeInfo);
@@ -298,6 +305,11 @@ namespace NeoEdit.Program
 		{
 			try
 			{
+				state.TabsWindow = this;
+				state.ShiftDown = shiftDown;
+				state.ControlDown = controlDown;
+				state.AltDown = altDown;
+
 				BeginTransaction();
 				Tabs.ForEach(tab => tab.BeginTransaction());
 
@@ -467,7 +479,7 @@ namespace NeoEdit.Program
 			if (key == Key.System)
 				key = e.SystemKey;
 
-			var state = new CommandState(NECommand.Internal_Key) { Parameters = key, ShiftDown = shiftDown, ControlDown = controlDown, AltDown = altDown };
+			var state = new CommandState(NECommand.Internal_Key) { Parameters = key };
 			HandleCommand(state);
 			e.Handled = state.Result;
 		}

@@ -2,6 +2,7 @@
 {
 	public class CommandState
 	{
+		public TabsWindow TabsWindow;
 		public NECommand Command;
 		public object Parameters;
 		public bool ShiftDown;
@@ -12,5 +13,6 @@
 		public bool? MultiStatus;
 
 		public CommandState(NECommand command) => Command = command;
+
 	}
 }

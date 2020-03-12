@@ -415,6 +415,7 @@ namespace NeoEdit.Program
 		{
 			switch (state.Command)
 			{
+				case NECommand.Internal_Key: PreCommand_Key((Key)state.Parameters, ref state.PreHandleData); break;
 				case NECommand.Edit_Paste_Paste: Command_Pre_Edit_Paste_Paste(ref state.PreHandleData); break;
 				case NECommand.Edit_Paste_RotatePaste: Command_Pre_Edit_Paste_Paste(ref state.PreHandleData); break;
 				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref state.PreHandleData, true); break;
@@ -551,6 +552,8 @@ namespace NeoEdit.Program
 		{
 			switch (state.Command)
 			{
+				case NECommand.Internal_Key: Command_Internal_Key((Key)state.Parameters, state.ShiftDown, state.ControlDown, state.AltDown, state.PreHandleData); break;
+				case NECommand.Internal_Text: Command_Internal_Text(state.Parameters as string); break;
 				case NECommand.File_New_FromSelections: Command_File_New_FromSelections(); break;
 				case NECommand.File_Open_Selected: Command_File_Open_Selected(); break;
 				case NECommand.File_Save_Save: Command_File_Save_Save(); break;
