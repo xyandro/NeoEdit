@@ -204,13 +204,6 @@
     <Compile Include="Controls\DiffScrollBar.cs" />
     <Compile Include="Controls\EnhancedFocusManager.cs" />
     <Compile Include="Controls\KeyGestureAttribute.cs" />
-    <Page Include="Controls\MultiMenuItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Controls\MultiMenuItem.xaml.cs">
-      <DependentUpon>MultiMenuItem.xaml</DependentUpon>
-    </Compile>
     <Page Include="Controls\NEExpressionResults.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

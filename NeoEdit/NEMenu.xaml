@@ -10,7 +10,6 @@
 		<system:Boolean x:Key="True">True</system:Boolean>
 		<Style TargetType="local:NEMenu" BasedOn="{StaticResource {x:Type Menu}}"/>
 		<Style TargetType="controls:NEMenuItem" BasedOn="{StaticResource {x:Type MenuItem}}"/>
-		<Style TargetType="controls:MultiMenuItem" BasedOn="{StaticResource {x:Type MenuItem}}"/>
 	</Menu.Resources>
 
 	<MenuItem Header="_File">
@@ -55,7 +54,7 @@
 		</MenuItem>
 		<controls:NEMenuItem Header="C_lose" CommandEnum="File_Close" ToolTip="Close active files"/>
 		<controls:NEMenuItem Header="_Refresh" CommandEnum="File_Refresh" ToolTip="Refresh active files"/>
-		<controls:MultiMenuItem Header="_Auto Refresh" TabsWindow="{Binding Parent, ElementName=self}" Property="AutoRefresh" MultiValue="{StaticResource True}" CommandEnum="File_AutoRefresh" ToolTip="Set whether active files update when changed on disk"/>
+		<controls:NEMenuItem x:Name="file_AutoRefresh" Header="_Auto Refresh" CommandEnum="File_AutoRefresh" ToolTip="Set whether active files update when changed on disk"/>
 		<controls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert" ToolTip="Revert active files to current version on disk"/>
 		<Separator/>
 		<controls:NEMenuItem Header="Move To New _Window" CommandEnum="File_MoveToNewWindow" ToolTip="Move active files to a new window"/>
@@ -72,8 +71,8 @@
 			<controls:NEMenuItem Header="_Line Endings" CommandEnum="File_Encoding_LineEndings" ToolTip="Set file line endings"/>
 		</MenuItem>
 		<Separator/>
-		<controls:MultiMenuItem Header="Encr_ypt" TabsWindow="{Binding Parent, ElementName=self}" Property="AESKey" Converter="{converters:NonEmptyConverter}" MultiValue="{StaticResource True}" CommandEnum="File_Encrypt" ToolTip="Set whether file is encrypted on save"/>
-		<controls:MultiMenuItem Header="Co_mpress" TabsWindow="{Binding Parent, ElementName=self}" Property="Compressed" MultiValue="{StaticResource True}" CommandEnum="File_Compress" ToolTip="Set whether file is compressed on save"/>
+		<controls:NEMenuItem x:Name="file_Encrypt" Header="Encr_ypt" CommandEnum="File_Encrypt" ToolTip="Set whether file is encrypted on save"/>
+		<controls:NEMenuItem x:Name="file_Compress" Header="Co_mpress" CommandEnum="File_Compress" ToolTip="Set whether file is compressed on save"/>
 		<Separator/>
 		<MenuItem Header="S_hell">
 			<controls:NEMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate" ToolTip="Enable Windows Explorer option to open files with NeoEdit"/>
@@ -407,9 +406,9 @@
 			<controls:NEMenuItem Header="All R_ight" CommandEnum="Edit_Navigate_AllRight" ToolTip="Copy cursors on word to the right"/>
 			<Separator/>
 			<MenuItem Header="_Jump By">
-				<controls:MultiMenuItem Header="_Words" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Words}" CommandEnum="Edit_Navigate_JumpBy_Words" ToolTip="Set Ctrl+Left/Right to jump by words (default)"/>
-				<controls:MultiMenuItem Header="_Numbers" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Numbers}" CommandEnum="Edit_Navigate_JumpBy_Numbers" ToolTip="Set Ctrl+Left/Right to jump by numbers"/>
-				<controls:MultiMenuItem Header="_Paths" TabsWindow="{Binding Parent, ElementName=self}" Property="JumpBy" MultiValue="{x:Static local:JumpByType.Paths}" CommandEnum="Edit_Navigate_JumpBy_Paths" ToolTip="Set Ctrl+Left/Right to jump by paths"/>
+				<controls:NEMenuItem x:Name="edit_Navigate_JumpBy_Words" Header="_Words" CommandEnum="Edit_Navigate_JumpBy_Words" ToolTip="Set Ctrl+Left/Right to jump by words (default)"/>
+				<controls:NEMenuItem x:Name="edit_Navigate_JumpBy_Numbers" Header="_Numbers" CommandEnum="Edit_Navigate_JumpBy_Numbers" ToolTip="Set Ctrl+Left/Right to jump by numbers"/>
+				<controls:NEMenuItem x:Name="edit_Navigate_JumpBy_Paths" Header="_Paths" CommandEnum="Edit_Navigate_JumpBy_Paths" ToolTip="Set Ctrl+Left/Right to jump by paths"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
@@ -434,10 +433,10 @@
 		<Separator/>
 		<controls:NEMenuItem Header="_Break" CommandEnum="Diff_Break" ToolTip="Disable diff"/>
 		<Separator/>
-		<controls:MultiMenuItem Header="Ignore _Whitespace" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreWhitespace" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreWhitespace" ToolTip="Make diff ignore white space"/>
-		<controls:MultiMenuItem Header="Ignore _Case" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreCase" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreCase" ToolTip="Make diff ignore case"/>
-		<controls:MultiMenuItem Header="Ignore _Numbers" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreNumbers" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreNumbers" ToolTip="Make diff ignore numbers"/>
-		<controls:MultiMenuItem Header="Ignore Line _Endings" TabsWindow="{Binding Parent, ElementName=self}" Property="DiffIgnoreLineEndings" MultiValue="{StaticResource True}" CommandEnum="Diff_IgnoreLineEndings" ToolTip="Make diff ignore line endings"/>
+		<controls:NEMenuItem x:Name="diff_IgnoreWhitespace" Header="Ignore _Whitespace" CommandEnum="Diff_IgnoreWhitespace" ToolTip="Make diff ignore white space"/>
+		<controls:NEMenuItem x:Name="diff_IgnoreCase" Header="Ignore _Case" CommandEnum="Diff_IgnoreCase" ToolTip="Make diff ignore case"/>
+		<controls:NEMenuItem x:Name="diff_IgnoreNumbers" Header="Ignore _Numbers" CommandEnum="Diff_IgnoreNumbers" ToolTip="Make diff ignore numbers"/>
+		<controls:NEMenuItem x:Name="diff_IgnoreLineEndings" Header="Ignore Line _Endings" CommandEnum="Diff_IgnoreLineEndings" ToolTip="Make diff ignore line endings"/>
 		<controls:NEMenuItem Header="Ignore C_haracters" CommandEnum="Diff_IgnoreCharacters" ToolTip="Make diff ignore specific characters"/>
 		<controls:NEMenuItem Header="_Reset" CommandEnum="Diff_Reset" ToolTip="Reset diff ignore"/>
 		<Separator/>
@@ -745,21 +744,21 @@
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
 			<controls:NEMenuItem Header="Set _From Extension" CommandEnum="Content_Type_SetFromExtension" ToolTip="Set content type based on file extension"/>
-			<controls:MultiMenuItem Header="_None" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.None}" CommandEnum="Content_Type_None" ToolTip="Set content type to none"/>
-			<controls:MultiMenuItem Header="_Balanced" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.Balanced}" CommandEnum="Content_Type_Balanced" ToolTip="Set content type to balanced"/>
-			<controls:MultiMenuItem Header="C_olumns" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.Columns}" CommandEnum="Content_Type_Columns" ToolTip="Set content type to columns"/>
-			<controls:MultiMenuItem Header="C_++" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CPlusPlus}" CommandEnum="Content_Type_CPlusPlus" ToolTip="Set content type to C++"/>
-			<controls:MultiMenuItem Header="C_#" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CSharp}" CommandEnum="Content_Type_CSharp" ToolTip="Set content type to C#"/>
-			<controls:MultiMenuItem Header="_CSV" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.CSV}" CommandEnum="Content_Type_CSV" ToolTip="Set content type to CSV"/>
-			<controls:MultiMenuItem Header="_Exact Columns" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.ExactColumns}" CommandEnum="Content_Type_ExactColumns" ToolTip="Set content type to exact columns"/>
-			<controls:MultiMenuItem Header="_HTML" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.HTML}" CommandEnum="Content_Type_HTML" ToolTip="Set content type to HTML"/>
-			<controls:MultiMenuItem Header="_JSON" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.JSON}" CommandEnum="Content_Type_JSON" ToolTip="Set content type to JSON"/>
-			<controls:MultiMenuItem Header="_SQL" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.SQL}" CommandEnum="Content_Type_SQL" ToolTip="Set content type to SQL"/>
-			<controls:MultiMenuItem Header="_TSV" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.TSV}" CommandEnum="Content_Type_TSV" ToolTip="Set content type to TSV"/>
-			<controls:MultiMenuItem Header="_XML" TabsWindow="{Binding Parent, ElementName=self}" Property="ContentType" MultiValue="{x:Static local:ParserType.XML}" CommandEnum="Content_Type_XML" ToolTip="Set content type to XML"/>
+			<controls:NEMenuItem x:Name="content_Type_None" Header="_None" CommandEnum="Content_Type_None" ToolTip="Set content type to none"/>
+			<controls:NEMenuItem x:Name="content_Type_Balanced" Header="_Balanced" CommandEnum="Content_Type_Balanced" ToolTip="Set content type to balanced"/>
+			<controls:NEMenuItem x:Name="content_Type_Columns" Header="C_olumns" CommandEnum="Content_Type_Columns" ToolTip="Set content type to columns"/>
+			<controls:NEMenuItem x:Name="content_Type_CPlusPlus" Header="C_++" CommandEnum="Content_Type_CPlusPlus" ToolTip="Set content type to C++"/>
+			<controls:NEMenuItem x:Name="content_Type_CSharp" Header="C_#" CommandEnum="Content_Type_CSharp" ToolTip="Set content type to C#"/>
+			<controls:NEMenuItem x:Name="content_Type_CSV" Header="_CSV" CommandEnum="Content_Type_CSV" ToolTip="Set content type to CSV"/>
+			<controls:NEMenuItem x:Name="content_Type_ExactColumns" Header="_Exact Columns" CommandEnum="Content_Type_ExactColumns" ToolTip="Set content type to exact columns"/>
+			<controls:NEMenuItem x:Name="content_Type_HTML" Header="_HTML" CommandEnum="Content_Type_HTML" ToolTip="Set content type to HTML"/>
+			<controls:NEMenuItem x:Name="content_Type_JSON" Header="_JSON" CommandEnum="Content_Type_JSON" ToolTip="Set content type to JSON"/>
+			<controls:NEMenuItem x:Name="content_Type_SQL" Header="_SQL" CommandEnum="Content_Type_SQL" ToolTip="Set content type to SQL"/>
+			<controls:NEMenuItem x:Name="content_Type_TSV" Header="_TSV" CommandEnum="Content_Type_TSV" ToolTip="Set content type to TSV"/>
+			<controls:NEMenuItem x:Name="content_Type_XML" Header="_XML" CommandEnum="Content_Type_XML" ToolTip="Set content type to XML"/>
 		</MenuItem>
-		<controls:MultiMenuItem Header="_Highlight Syntax" TabsWindow="{Binding Parent, ElementName=self}" Property="HighlightSyntax" MultiValue="{StaticResource True}" CommandEnum="Content_HighlightSyntax" ToolTip="Toggle syntax highlighting"/>
-		<controls:MultiMenuItem Header="_Strict Parsing" TabsWindow="{Binding Parent, ElementName=self}" Property="StrictParsing" MultiValue="{StaticResource True}" CommandEnum="Content_StrictParsing" ToolTip="Toggle strict parsing"/>
+		<controls:NEMenuItem x:Name="content_HighlightSyntax" Header="_Highlight Syntax" CommandEnum="Content_HighlightSyntax" ToolTip="Toggle syntax highlighting"/>
+		<controls:NEMenuItem x:Name="content_StrictParsing" Header="_Strict Parsing" CommandEnum="Content_StrictParsing" ToolTip="Toggle strict parsing"/>
 		<Separator/>
 		<controls:NEMenuItem Header="Re_format" CommandEnum="Content_Reformat" ToolTip="Reformat selections based on current content type"/>
 		<Separator/>
@@ -799,7 +798,7 @@
 			<controls:NEMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row" ToolTip="Select entire row"/>
 			<controls:NEMenuItem Header="_Column" CommandEnum="Content_Navigate_Column" ToolTip="Select entire column"/>
 		</MenuItem>
-		<controls:MultiMenuItem Header="_Keep Selections" TabsWindow="{Binding Parent, ElementName=self}" Property="KeepSelections" MultiValue="{StaticResource True}" CommandEnum="Content_KeepSelections" ToolTip="Toggle whether to keep selections when moving past the end of a list"/>
+		<controls:NEMenuItem x:Name="content_KeepSelections" Header="_Keep Selections" CommandEnum="Content_KeepSelections" ToolTip="Toggle whether to keep selections when moving past the end of a list"/>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">
 		<controls:NEMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL" ToolTip="Make selected URLs absolute given base URL"/>
@@ -1049,7 +1048,7 @@
 			<MenuItem Header="S_how Special" IsCheckable="True" IsChecked="{Binding Path=(local:Font.ShowSpecialChars), Mode=TwoWay}" ToolTip="Toggle whether to show special characters"/>
 		</MenuItem>
 		<Separator/>
-		<controls:MultiMenuItem Header="View _Values" TabsWindow="{Binding Parent, ElementName=self}" Property="ViewValues" MultiValue="{StaticResource True}" CommandEnum="Window_ViewValues" ToolTip="View binary values"/>
+		<controls:NEMenuItem x:Name="window_ViewValues" Header="View _Values" CommandEnum="Window_ViewValues" ToolTip="View binary values"/>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<controls:NEMenuItem Header="_All tabs" CommandEnum="Window_Select_AllTabs" ToolTip="Select all files"/>
