@@ -36,7 +36,7 @@ namespace NeoEdit.Program
 				}
 				var te = new TextEditorData(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 				AddTextEditor(te, canReplace: index == 1);
-				te.SetSelections(sels);
+				te.Selections = sels;
 			}
 		}
 

@@ -33,7 +33,7 @@ namespace NeoEdit.Program
 						break;
 					}
 
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		List<ParserNode> GetSelectionNodes()
@@ -105,7 +105,7 @@ namespace NeoEdit.Program
 		{
 			var nodes = GetSelectionNodes();
 			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All();
-			SetSelections(nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList());
+			Selections = nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList();
 		}
 
 		void Command_Content_Current() => ContentReplaceSelections(GetSelectionNodes());

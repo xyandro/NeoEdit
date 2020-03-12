@@ -123,7 +123,7 @@ namespace NeoEdit.Program
 				offset += step.text[ctr].Length - step.ranges[ctr].Length;
 			}
 
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		void Command_Edit_Redo()
@@ -142,7 +142,7 @@ namespace NeoEdit.Program
 				offset += step.text[ctr].Length - step.ranges[ctr].Length;
 			}
 
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		void Command_Edit_Copy_CutCopy(bool isCut)
@@ -251,7 +251,7 @@ namespace NeoEdit.Program
 				{
 					if (result.IsBoolean) // Either KeepMatching or RemoveMatching will also be true
 					{
-						SetSelections(Selections.Where((range, index) => (expressionResults[index] == "True") == result.KeepMatching).ToList());
+						Selections = Selections.Where((range, index) => (expressionResults[index] == "True") == result.KeepMatching).ToList();
 						return;
 					}
 
@@ -326,13 +326,13 @@ namespace NeoEdit.Program
 							endPos = TextView.MaxPosition;
 						newSels.Add(new Range(endPos, Selections[ctr].Start));
 					}
-					SetSelections(newSels);
+					Selections = newSels;
 					break;
 				case EditFindFindDialog.ResultType.FindAll:
 					if ((result.KeepMatching) || (result.RemoveMatching))
-						SetSelections(selections.Where((range, index) => results[index].Any() == result.KeepMatching).ToList());
+						Selections = selections.Where((range, index) => results[index].Any() == result.KeepMatching).ToList();
 					else
-						SetSelections(results.SelectMany().ToList());
+						Selections = results.SelectMany().ToList();
 					break;
 			}
 		}
@@ -360,7 +360,7 @@ namespace NeoEdit.Program
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { Range.FromIndex(0, Text.Length) };
 			var searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, result.EntireSelection);
 			var sels = regions.AsParallel().AsOrdered().SelectMany(region => searcher.Find(Text.GetString(region), region.Start)).ToList();
-			SetSelections(sels);
+			Selections = sels;
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => searcher.regexes[0].Replace(Text.GetString(range), result.Replace)).ToList());
 		}
 
@@ -424,7 +424,7 @@ namespace NeoEdit.Program
 						for (var index = selection.Start; index < selection.End; index += len)
 							sels.Add(Range.FromIndex(index, len));
 					}
-				SetSelections(sels);
+				Selections = sels;
 			}
 		}
 
@@ -538,7 +538,7 @@ namespace NeoEdit.Program
 			}
 			newSelections = ordering.Select(num => newSelections[num]).ToList();
 
-			SetSelections(newSelections);
+			Selections = newSelections;
 			if (result.SortScope == SortScope.Regions)
 				SetRegions(result.UseRegion, newRegions);
 		}
@@ -560,12 +560,12 @@ namespace NeoEdit.Program
 		{
 			if ((!selecting) && (Selections.Any(range => range.HasSelection)))
 			{
-				SetSelections(Selections.AsParallel().AsOrdered().Select(range => new Range(next ? range.End : range.Start)).ToList());
+				Selections = Selections.AsParallel().AsOrdered().Select(range => new Range(next ? range.End : range.Start)).ToList();
 				return;
 			}
 
 			var func = next ? (Func<int, int>)GetNextWord : GetPrevWord;
-			SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, func(range.Cursor), selecting)).ToList());
+			Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, func(range.Cursor), selecting)).ToList();
 		}
 
 		void Command_Edit_Navigate_AllLeft(bool selecting)
@@ -602,7 +602,7 @@ namespace NeoEdit.Program
 				--index;
 			}
 
-			SetSelections(Selections.Zip(positions, (range, position) => MoveCursor(range, position, selecting)).ToList());
+			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, selecting)).ToList();
 		}
 
 		void Command_Edit_Navigate_AllRight(bool selecting)
@@ -639,7 +639,7 @@ namespace NeoEdit.Program
 				++index;
 			}
 
-			SetSelections(Selections.Zip(positions, (range, position) => MoveCursor(range, position, selecting)).ToList());
+			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, selecting)).ToList();
 		}
 
 		void Command_Edit_Navigate_JumpBy(JumpByType jumpBy) => JumpBy = jumpBy;

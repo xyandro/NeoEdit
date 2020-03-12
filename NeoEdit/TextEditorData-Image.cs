@@ -40,7 +40,7 @@ namespace NeoEdit.Program
 			var bitmap = Coder.StringToBitmap(Text.GetString());
 			bitmap.RotateFlip(type);
 			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(bitmap) });
-			SetSelections(new List<Range> { new Range() });
+			Selections = new List<Range> { new Range() };
 		}
 
 		static string OverlayColor(string color1, string color2)
@@ -147,7 +147,7 @@ namespace NeoEdit.Program
 			}
 
 			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(resultBitmap) });
-			SetSelections(new List<Range> { new Range() });
+			Selections = new List<Range> { new Range() };
 		}
 
 		ImageCropDialog.Result Command_Image_Crop_Dialog() => ImageCropDialog.Run(TabsParent, GetVariables());
@@ -192,7 +192,7 @@ namespace NeoEdit.Program
 			}
 
 			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(resultBitmap) });
-			SetSelections(new List<Range> { new Range() });
+			Selections = new List<Range> { new Range() };
 		}
 
 		void Command_Image_FlipHorizontal() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipX);
@@ -222,7 +222,7 @@ namespace NeoEdit.Program
 			}
 
 			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(resultBitmap) });
-			SetSelections(new List<Range> { new Range() });
+			Selections = new List<Range> { new Range() };
 		}
 
 		ImageGIFAnimateDialog.Result Command_Image_GIF_Animate_Dialog() => ImageGIFAnimateDialog.Run(TabsParent, GetVariables());

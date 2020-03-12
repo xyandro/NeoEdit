@@ -656,7 +656,7 @@ namespace NeoEdit.Program
 				results = MultiProgressDialog.RunAsync(TabsParent, "Searching files...", RelativeSelectedFiles().Select((file, index) => (file, index)), async (obj, progress, cancel) => await TextSearchFileAsync(obj.file, searchers[stringsToFind[obj.index]], progress, cancel), obj => Path.GetFileName(obj.file));
 			}
 
-			SetSelections(Selections.Where((range, index) => results[index]).ToList());
+			Selections = Selections.Where((range, index) => results[index]).ToList();
 		}
 
 		FilesInsertDialog.Result Command_Files_Insert_Dialog() => FilesInsertDialog.Run(TabsParent);
@@ -697,7 +697,7 @@ namespace NeoEdit.Program
 				File.WriteAllBytes(filename[ctr], Coder.StringToBytes(data[ctr], result.CodePage, true));
 		}
 
-		void Command_Files_Select_Name(GetPathType type) => SetSelections(Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList());
+		void Command_Files_Select_Name(GetPathType type) => Selections = Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList();
 
 		void Command_Files_Select_Name_Next()
 		{
@@ -714,14 +714,14 @@ namespace NeoEdit.Program
 				sels.Add(new Range(endPosition, range.Start));
 			}
 
-			SetSelections(sels);
+			Selections = sels;
 		}
 
-		void Command_Files_Select_Files() => SetSelections(Selections.Where(range => File.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList());
+		void Command_Files_Select_Files() => Selections = Selections.Where(range => File.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList();
 
-		void Command_Files_Select_Directories() => SetSelections(Selections.Where(range => Directory.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList());
+		void Command_Files_Select_Directories() => Selections = Selections.Where(range => Directory.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList();
 
-		void Command_Files_Select_Existing(bool existing) => SetSelections(Selections.Where(range => Helpers.FileOrDirectoryExists(FileName.RelativeChild(Text.GetString(range))) == existing).ToList());
+		void Command_Files_Select_Existing(bool existing) => Selections = Selections.Where(range => Helpers.FileOrDirectoryExists(FileName.RelativeChild(Text.GetString(range))) == existing).ToList();
 
 		void Command_Files_Select_Roots(bool include)
 		{
@@ -738,14 +738,14 @@ namespace NeoEdit.Program
 				root = file;
 			}
 
-			SetSelections(sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList());
+			Selections = sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList();
 		}
 
 		void Command_Files_Select_MatchDepth()
 		{
 			var strs = GetSelectionStrings();
 			var minDepth = strs.Select(str => str.Count(c => c == '\\') + 1).DefaultIfEmpty(0).Min();
-			SetSelections(Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], minDepth))).ToList());
+			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], minDepth))).ToList();
 		}
 
 		void Command_Files_Select_CommonAncestor()
@@ -758,7 +758,7 @@ namespace NeoEdit.Program
 				strs.Skip(1).ForEach(str => FindCommonLength(strs[0], str, ref length));
 				depth = strs[0].Substring(0, length).Count(c => c == '\\');
 			}
-			SetSelections(Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList());
+			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList();
 		}
 
 		FilesSelectByVersionControlStatusDialog.Result Command_Files_Select_ByVersionControlStatus_Dialog() => FilesSelectByVersionControlStatusDialog.Run(TabsParent);
@@ -768,7 +768,7 @@ namespace NeoEdit.Program
 			var versioner = new Versioner();
 			var statuses = RelativeSelectedFiles().Select(x => versioner.GetStatus(x)).ToList();
 			var sels = Selections.Zip(statuses, (range, status) => new { range, status }).Where(obj => result.Statuses.HasFlag(obj.status)).Select(obj => obj.range).ToList();
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		FilesHashDialog.Result Command_Files_Hash_Dialog() => FilesHashDialog.Run(TabsParent);

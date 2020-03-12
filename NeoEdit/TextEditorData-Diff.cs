@@ -153,7 +153,7 @@ namespace NeoEdit.Program
 		//		var sels = lines.Select(tuple => new Range(target.TextView.GetPosition(tuple.Item2, 0, true), target.TextView.GetPosition(tuple.Item1, 0, true))).ToList();
 		//		if (shiftDown)
 		//			sels.AddRange(target.Selections);
-		//		target.SetSelections(sels);
+		//		target.Selections = sels;
 		//	}
 		//}
 
@@ -187,7 +187,7 @@ namespace NeoEdit.Program
 		//		throw new Exception("Diff not in progress");
 
 		//	var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, result.LineStartTabStop, null, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
-		//	SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
+		//	Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
 		//	ReplaceSelections(fixes.Item2);
 		//}
 
@@ -197,7 +197,7 @@ namespace NeoEdit.Program
 		//		throw new Exception("Diff not in progress");
 
 		//	var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, null, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
-		//	SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
+		//	Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
 		//	ReplaceSelections(fixes.Item2);
 		//}
 
@@ -207,7 +207,7 @@ namespace NeoEdit.Program
 		//		throw new Exception("Diff not in progress");
 
 		//	var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, null, DiffIgnoreLineEndings, DiffIgnoreCharacters);
-		//	SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
+		//	Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
 		//	ReplaceSelections(fixes.Item2);
 		//}
 
@@ -217,7 +217,7 @@ namespace NeoEdit.Program
 		//		throw new Exception("Diff not in progress");
 
 		//	var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, null, DiffIgnoreCharacters);
-		//	SetSelections(fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList());
+		//	Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
 		//	ReplaceSelections(fixes.Item2);
 		//}
 
@@ -234,7 +234,7 @@ namespace NeoEdit.Program
 		//	if (DiffTarget == null)
 		//		throw new Exception("Diff not in progress");
 
-		//	SetSelections(Data.GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)).ToList());
+		//	Selections = Data.GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)).ToList();
 		//}
 	}
 }

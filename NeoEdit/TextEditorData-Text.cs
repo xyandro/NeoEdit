@@ -81,14 +81,14 @@ namespace NeoEdit.Program
 
 		TextTrimDialog.Result Command_Text_Select_Trim_Dialog() => TextTrimDialog.Run(TabsParent);
 
-		void Command_Text_Select_Trim(TextTrimDialog.Result result) => SetSelections(Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList());
+		void Command_Text_Select_Trim(TextTrimDialog.Result result) => Selections = Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList();
 
 		TextWidthDialog.Result Command_Text_Select_ByWidth_Dialog() => TextWidthDialog.Run(TabsParent, false, true, GetVariables());
 
 		void Command_Text_Select_ByWidth(TextWidthDialog.Result result)
 		{
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
-			SetSelections(Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList());
+			Selections = Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList();
 		}
 
 		TextSelectWholeBoundedWordDialog.Result Command_Text_Select_WholeBoundedWord_Dialog(bool wholeWord) => TextSelectWholeBoundedWordDialog.Run(TabsParent, wholeWord);
@@ -114,7 +114,7 @@ namespace NeoEdit.Program
 
 				sels.Add(new Range(endPosition, startPosition));
 			}
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		void Command_Text_Select_MinMax_Text(bool max)
@@ -124,7 +124,7 @@ namespace NeoEdit.Program
 
 			var strings = GetSelectionStrings();
 			var find = max ? strings.OrderByDescending().First() : strings.OrderBy().First();
-			SetSelections(strings.Indexes(str => str == find).Select(index => Selections[index]).ToList());
+			Selections = strings.Indexes(str => str == find).Select(index => Selections[index]).ToList();
 		}
 
 		void Command_Text_Select_MinMax_Length(bool max)
@@ -134,7 +134,7 @@ namespace NeoEdit.Program
 
 			var lengths = Selections.Select(range => range.Length).ToList();
 			var find = max ? lengths.OrderByDescending().First() : lengths.OrderBy().First();
-			SetSelections(lengths.Indexes(length => length == find).Select(index => Selections[index]).ToList());
+			Selections = lengths.Indexes(length => length == find).Select(index => Selections[index]).ToList();
 		}
 
 		void Command_Text_Case_Upper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToUpperInvariant()).ToList());
@@ -205,7 +205,7 @@ namespace NeoEdit.Program
 				sels.Add(Range.FromIndex(start, str.Length - TextView.DefaultEnding.Length));
 				start += str.Length;
 			}
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		TextFirstDistinctDialog.Result Command_Text_FirstDistinct_Dialog() => TextFirstDistinctDialog.Run(TabsParent);
@@ -287,7 +287,7 @@ namespace NeoEdit.Program
 			}) as List<Range>;
 
 			if (opResult != null)
-				SetSelections(opResult);
+				Selections = opResult;
 		}
 
 		void Command_Text_RepeatCount()

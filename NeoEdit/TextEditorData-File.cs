@@ -323,7 +323,7 @@ namespace NeoEdit.Program
 			OpenFile(FileName, DisplayName, keepUndo: true);
 
 			Func<IReadOnlyList<Range>, IReadOnlyList<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(0, Math.Min(range.Cursor, TextView.MaxPosition)), Math.Max(0, Math.Min(range.Anchor, TextView.MaxPosition)))).ToList();
-			SetSelections(reformatRanges(selections));
+			Selections = reformatRanges(selections);
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, reformatRanges(GetRegions(region)));
 		}

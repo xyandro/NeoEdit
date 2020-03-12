@@ -47,7 +47,7 @@ namespace NeoEdit.Program
 		{
 			var output = GetTableText(table);
 			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { output });
-			SetSelections(new List<Range> { new Range() });
+			Selections = new List<Range> { new Range() };
 		}
 
 		void Command_Table_DetectType() => ContentType = Table.GuessTableType(Text.GetString());
@@ -151,7 +151,7 @@ namespace NeoEdit.Program
 			var variables = GetTableVariables(table);
 			var results = new NEExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
-			SetSelections(lines.AsParallel().AsOrdered().Select(line => new Range(TextView.GetPosition(line, TextView.GetLineLength(line)), TextView.GetPosition(line, 0))).ToList());
+			Selections = lines.AsParallel().AsOrdered().Select(line => new Range(TextView.GetPosition(line, TextView.GetLineLength(line)), TextView.GetPosition(line, 0))).ToList();
 		}
 
 		void Command_Table_SetJoinSource() => joinTable = GetTable();
@@ -190,7 +190,7 @@ namespace NeoEdit.Program
 				sels.Add(Range.FromIndex(index, item.Length));
 				index += item.Length;
 			}
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		TableDatabaseGenerateUpdatesDialog.Result Command_Table_Database_GenerateUpdates_Dialog() => TableDatabaseGenerateUpdatesDialog.Run(TabsParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
@@ -209,7 +209,7 @@ namespace NeoEdit.Program
 				sels.Add(Range.FromIndex(index, item.Length));
 				index += item.Length;
 			}
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		TableDatabaseGenerateDeletesDialog.Result Command_Table_Database_GenerateDeletes_Dialog() => TableDatabaseGenerateDeletesDialog.Run(TabsParent, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
@@ -228,7 +228,7 @@ namespace NeoEdit.Program
 				sels.Add(Range.FromIndex(index, item.Length));
 				index += item.Length;
 			}
-			SetSelections(sels);
+			Selections = sels;
 		}
 	}
 }

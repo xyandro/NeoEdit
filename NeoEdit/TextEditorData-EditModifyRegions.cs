@@ -66,7 +66,7 @@ namespace NeoEdit.Program
 			strs.AddRange(Enumerable.Repeat("", useRegions.Count - 1));
 			Replace(useRegions.ToList(), strs);
 			SetRegions(useRegion, newRegions);
-			SetSelections(newSelections);
+			Selections = newSelections;
 		}
 
 		List<Range> GetSearchRegions(List<int> regions)
@@ -133,7 +133,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void Command_Edit_ModifyRegions_Select_Select(List<int> regions) => SetSelections(regions.SelectMany(useRegion => GetRegions(useRegion)).ToList());
+		void Command_Edit_ModifyRegions_Select_Select(List<int> regions) => Selections = regions.SelectMany(useRegion => GetRegions(useRegion)).ToList();
 
 		void Command_Edit_ModifyRegions_Select_Previous(List<int> regions)
 		{
@@ -156,7 +156,7 @@ namespace NeoEdit.Program
 					newSels.Add(searchList[searchIndex]);
 			}
 			newSels.Reverse();
-			SetSelections(newSels);
+			Selections = newSels;
 		}
 
 		void Command_Edit_ModifyRegions_Select_Next(List<int> regions)
@@ -182,7 +182,7 @@ namespace NeoEdit.Program
 				}
 			}
 
-			SetSelections(newSels);
+			Selections = newSels;
 		}
 
 		void Command_Edit_ModifyRegions_Select_Enclosing(List<int> regions)
@@ -191,7 +191,7 @@ namespace NeoEdit.Program
 				throw new Exception("Can only select single region");
 
 			var useRegion = regions[0];
-			SetSelections(GetEnclosingRegions(useRegion));
+			Selections = GetEnclosingRegions(useRegion);
 		}
 
 		void Command_Edit_ModifyRegions_Select_WithEnclosing(List<int> regions)
@@ -200,7 +200,7 @@ namespace NeoEdit.Program
 				throw new Exception("Can only select single region");
 
 			var useRegion = regions[0];
-			SetSelections(Selections.Zip(GetEnclosingRegions(useRegion, mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList());
+			Selections = Selections.Zip(GetEnclosingRegions(useRegion, mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList();
 		}
 
 		void Command_Edit_ModifyRegions_Select_WithoutEnclosing(List<int> regions)
@@ -209,7 +209,7 @@ namespace NeoEdit.Program
 				throw new Exception("Can only select single region");
 
 			var useRegion = regions[0];
-			SetSelections(Selections.Zip(GetEnclosingRegions(useRegion, mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList());
+			Selections = Selections.Zip(GetEnclosingRegions(useRegion, mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList();
 		}
 
 		void Command_Edit_ModifyRegions_Modify_Set(List<int> regions) => regions.ForEach(useRegion => SetRegions(useRegion, Selections.ToList()));
@@ -384,7 +384,7 @@ namespace NeoEdit.Program
 			}
 			Replace(useRegions.ToList(), newRegionStrs);
 			SetRegions(useRegion, newRegions);
-			SetSelections(newSelections);
+			Selections = newSelections;
 		}
 
 		void Command_Edit_ModifyRegions_Copy_Enclosing(List<int> regions)

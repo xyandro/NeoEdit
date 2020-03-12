@@ -156,31 +156,31 @@ namespace NeoEdit.Program
 
 			var values = Selections.AsParallel().AsOrdered().Select(range => new NumericValue(Text.GetString(range))).ToList();
 			var find = max ? values.OrderByDescending().First() : values.OrderBy().First();
-			SetSelections(values.Indexes(value => value == find).Select(index => Selections[index]).ToList());
+			Selections = values.Indexes(value => value == find).Select(index => Selections[index]).ToList();
 		}
 
 		void Command_Numeric_Select_Fraction_Whole()
 		{
-			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
+			Selections = Selections.AsParallel().AsOrdered().Select(range =>
 			{
 				var str = Text.GetString(range);
 				var idx = str.IndexOf('.');
 				if (idx == -1)
 					return range;
 				return Range.FromIndex(range.Start, idx);
-			}).ToList());
+			}).ToList();
 		}
 
 		void Command_Numeric_Select_Fraction_Fraction()
 		{
-			SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
+			Selections = Selections.AsParallel().AsOrdered().Select(range =>
 			{
 				var str = Text.GetString(range);
 				var idx = str.IndexOf('.');
 				if (idx == -1)
 					return Range.FromIndex(range.End, 0);
 				return new Range(range.End, range.Start + idx);
-			}).ToList());
+			}).ToList();
 		}
 
 		void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse(Text.GetString(range)).ToString("x").TrimStart('0')).Select(str => str.Length == 0 ? "0" : str).ToList());
@@ -229,7 +229,7 @@ namespace NeoEdit.Program
 
 			var total = new NumericValue(0);
 			Selections.Where(range => range.HasSelection).ForEach(range => total += new NumericValue(Text.GetString(range)));
-			SetSelections(new List<Range> { result });
+			Selections = new List<Range> { result };
 			ReplaceSelections(total.ToString());
 		}
 
@@ -419,7 +419,7 @@ namespace NeoEdit.Program
 				}
 				start += TextView.DefaultEnding.Length - 1; // -1 is for space added before
 			}
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		NumericMinMaxValuesDialog.Result Command_Numeric_MinMaxValues_Dialog() => NumericMinMaxValuesDialog.Run(TabsParent);

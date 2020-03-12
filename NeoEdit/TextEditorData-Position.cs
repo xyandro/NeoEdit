@@ -216,7 +216,7 @@ namespace NeoEdit.Program
 			//	if (positions.Count != sels.Count)
 			//		throw new Exception("Expression count doesn't match selection count");
 
-			//	useTE.SetSelections(sels.AsParallel().AsOrdered().Select((range, ctr) => positions[ctr].GetRange(useTE, range, selecting)).ToList());
+			//	useTE.Selections = sels.AsParallel().AsOrdered().Select((range, ctr) => positions[ctr].GetRange(useTE, range, selecting)).ToList();
 			//}
 		}
 

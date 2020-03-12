@@ -250,7 +250,7 @@ namespace NeoEdit.Program
 				sels.Add(new Range(endSel, startSel));
 				startSel = endSel;
 			}
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		void Command_Network_WCF_ResetClients() => WCFClient.ResetClients();

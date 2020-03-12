@@ -54,9 +54,9 @@ namespace NeoEdit.Program
 			Replace(Selections, strs, replaceType, tryJoinUndo);
 
 			if (highlight)
-				SetSelections(Selections.AsParallel().AsOrdered().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList());
+				Selections = Selections.AsParallel().AsOrdered().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList();
 			else
-				SetSelections(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
+				Selections = Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList();
 		}
 
 		public void Replace(IReadOnlyList<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
@@ -88,14 +88,12 @@ namespace NeoEdit.Program
 			SetModifiedFlag();
 
 			var translateMap = GetTranslateMap(ranges, strs, new List<IReadOnlyList<Range>> { Selections }.Concat(Enumerable.Range(1, 9).Select(region => GetRegions(region))).ToList());
-			SetSelections(Translate(Selections, translateMap));
+			Selections = Translate(Selections, translateMap);
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, Translate(GetRegions(region), translateMap));
 		}
 
 		public int NumLines => TextView.NumLines;
-
-		public void SetSelections(IReadOnlyList<Range> selections) => Selections = selections;
 
 		#region Translate
 		static int[] GetTranslateNums(IReadOnlyList<IReadOnlyList<Range>> rangeLists)
@@ -1291,7 +1289,7 @@ namespace NeoEdit.Program
 
 				sels.Add(new Range(TextView.GetPosition(cursorLine, cursorIndex), TextView.GetPosition(highlightLine, highlightIndex)));
 			}
-			SetSelections(Selections.Concat(sels).ToList());
+			Selections = Selections.Concat(sels).ToList();
 		}
 
 		void BlockSelUp()
@@ -1320,7 +1318,7 @@ namespace NeoEdit.Program
 					sels.Add(range);
 			}
 
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		void SetModifiedFlag(bool? newValue = null)
@@ -1420,13 +1418,13 @@ namespace NeoEdit.Program
 						//if (!Selections.Any())
 						//{
 						//	var pos = TextView.GetPosition(Math.Max(0, Math.Min(YScrollValue, TextView.NumLines - 1)), 0);
-						//	SetSelections(new List<Range> { new Range(pos) });
+						//	Selections = new List<Range> { new Range(pos) };
 						//}
 					}
 					break;
 				case Key.Left:
 					{
-						SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
+						Selections = Selections.AsParallel().AsOrdered().Select(range =>
 						{
 							var line = TextView.GetPositionLine(range.Cursor);
 							var index = TextView.GetPositionIndex(range.Cursor, line);
@@ -1436,12 +1434,12 @@ namespace NeoEdit.Program
 								return MoveCursor(range, -1, int.MaxValue, shiftDown, indexRel: false);
 							else
 								return MoveCursor(range, 0, -1, shiftDown);
-						}).ToList());
+						}).ToList();
 					}
 					break;
 				case Key.Right:
 					{
-						SetSelections(Selections.AsParallel().AsOrdered().Select(range =>
+						Selections = Selections.AsParallel().AsOrdered().Select(range =>
 						{
 							var line = TextView.GetPositionLine(range.Cursor);
 							var index = TextView.GetPositionIndex(range.Cursor, line);
@@ -1451,7 +1449,7 @@ namespace NeoEdit.Program
 								return MoveCursor(range, 1, 0, shiftDown, indexRel: false);
 							else
 								return MoveCursor(range, 0, 1, shiftDown);
-						}).ToList());
+						}).ToList();
 					}
 					break;
 				case Key.Up:
@@ -1459,7 +1457,7 @@ namespace NeoEdit.Program
 					{
 						var mult = key == Key.Up ? -1 : 1;
 						if (!controlDown)
-							SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, mult, 0, shiftDown)).ToList());
+							Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, mult, 0, shiftDown)).ToList();
 						else if (!shiftDown)
 							YScrollValue += mult;
 						else if (key == Key.Down)
@@ -1474,7 +1472,7 @@ namespace NeoEdit.Program
 						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
 							sels.Add(new Range());
-						SetSelections(sels);
+						Selections = sels;
 					}
 					else
 					{
@@ -1504,7 +1502,7 @@ namespace NeoEdit.Program
 							sels = sels.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, 0, shiftDown, indexRel: false)).ToList();
 							XScrollValue = 0;
 						}
-						SetSelections(sels);
+						Selections = sels;
 					}
 					break;
 				case Key.End:
@@ -1513,10 +1511,10 @@ namespace NeoEdit.Program
 						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, Text.Length, shiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!shiftDown))
 							sels.Add(new Range(Text.Length));
-						SetSelections(sels);
+						Selections = sels;
 					}
 					else
-						SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, int.MaxValue, shiftDown, indexRel: false)).ToList());
+						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, int.MaxValue, shiftDown, indexRel: false)).ToList();
 					break;
 				case Key.PageUp:
 					if (controlDown)
@@ -1524,7 +1522,7 @@ namespace NeoEdit.Program
 					else
 					{
 						var savedYScrollViewportFloor = YScrollViewportFloor;
-						SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - savedYScrollViewportFloor, 0, shiftDown)).ToList());
+						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - savedYScrollViewportFloor, 0, shiftDown)).ToList();
 					}
 					break;
 				case Key.PageDown:
@@ -1533,7 +1531,7 @@ namespace NeoEdit.Program
 					else
 					{
 						var savedYScrollViewportFloor = YScrollViewportFloor;
-						SetSelections(Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, savedYScrollViewportFloor - 1, 0, shiftDown)).ToList());
+						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, savedYScrollViewportFloor - 1, 0, shiftDown)).ToList();
 					}
 					break;
 				case Key.Tab:
@@ -1799,7 +1797,7 @@ namespace NeoEdit.Program
 				sels.Add(Range.FromIndex(position, str.Length - ending.Length));
 				position += str.Length;
 			}
-			SetSelections(sels);
+			Selections = sels;
 		}
 
 		public bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanEncode(data, codePage))) || (ConfirmContinueWhenCannotEncode());
@@ -2006,7 +2004,7 @@ namespace NeoEdit.Program
 
 				pos = TextView.GetPosition(useLine, useIndex);
 			}
-			SetSelections(new List<Range> { new Range(pos) });
+			Selections = new List<Range> { new Range(pos) };
 		}
 
 		public List<string> DragFiles { get; set; }
