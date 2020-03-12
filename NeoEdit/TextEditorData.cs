@@ -59,7 +59,7 @@ namespace NeoEdit.Program
 				SetSelections(Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList());
 		}
 
-		public void Replace(List<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		public void Replace(IReadOnlyList<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
 			if (ranges.Count != strs.Count)
 				throw new Exception("Invalid string count");
@@ -87,7 +87,7 @@ namespace NeoEdit.Program
 			Text = Text.Replace(ranges, strs);
 			SetModifiedFlag();
 
-			var translateMap = GetTranslateMap(ranges, strs, new List<List<Range>> { Selections }.Concat(Enumerable.Range(1, 9).Select(region => GetRegions(region))).ToList());
+			var translateMap = GetTranslateMap(ranges, strs, new List<IReadOnlyList<Range>> { Selections }.Concat(Enumerable.Range(1, 9).Select(region => GetRegions(region))).ToList());
 			SetSelections(Translate(Selections, translateMap));
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, Translate(GetRegions(region), translateMap));
@@ -95,10 +95,10 @@ namespace NeoEdit.Program
 
 		public int NumLines => TextView.NumLines;
 
-		public void SetSelections(List<Range> selections) => Selections = selections;
+		public void SetSelections(IReadOnlyList<Range> selections) => Selections = selections;
 
 		#region Translate
-		static int[] GetTranslateNums(List<List<Range>> rangeLists)
+		static int[] GetTranslateNums(IReadOnlyList<IReadOnlyList<Range>> rangeLists)
 		{
 			var nums = new int[rangeLists.Sum(rangeList => rangeList.Count * 2)];
 			var numsStart = 0;
@@ -131,7 +131,7 @@ namespace NeoEdit.Program
 			return nums;
 		}
 
-		static Tuple<int[], int[]> GetTranslateMap(List<Range> replaceRanges, List<string> strs, List<List<Range>> rangeLists)
+		static Tuple<int[], int[]> GetTranslateMap(IReadOnlyList<Range> replaceRanges, IReadOnlyList<string> strs, IReadOnlyList<IReadOnlyList<Range>> rangeLists)
 		{
 			var translateNums = GetTranslateNums(rangeLists);
 			var translateResults = new int[translateNums.Length];
@@ -166,7 +166,7 @@ namespace NeoEdit.Program
 			return Tuple.Create(translateNums, translateResults);
 		}
 
-		static List<Range> Translate(List<Range> ranges, Tuple<int[], int[]> translateMap)
+		static IReadOnlyList<Range> Translate(IReadOnlyList<Range> ranges, Tuple<int[], int[]> translateMap)
 		{
 			var result = Helpers.PartitionedParallelForEach<Range>(ranges.Count, Math.Max(65536, (ranges.Count + 31) / 32), (start, end, list) =>
 			{
@@ -194,7 +194,7 @@ namespace NeoEdit.Program
 			Done,
 		}
 
-		static List<Range> DeOverlap(List<Range> items)
+		static IReadOnlyList<Range> DeOverlap(IReadOnlyList<Range> items)
 		{
 			while (true)
 			{
@@ -208,7 +208,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		static DeOverlapStep GetDeOverlapStep(List<Range> items)
+		static DeOverlapStep GetDeOverlapStep(IReadOnlyList<Range> items)
 		{
 			var result = DeOverlapStep.Done;
 			for (var ctr = 1; ctr < items.Count; ++ctr)
@@ -223,7 +223,7 @@ namespace NeoEdit.Program
 			return result;
 		}
 
-		static List<Range> DoDeOverlap(List<Range> items)
+		static IReadOnlyList<Range> DoDeOverlap(IReadOnlyList<Range> items)
 		{
 			var result = new List<Range>();
 

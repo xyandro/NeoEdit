@@ -121,6 +121,15 @@ namespace NeoEdit.Program
 			}
 		}
 
+		public static int IndexOf<TSource>(this IEnumerable<TSource> source, TSource value) where TSource : class
+		{
+			var index = 0;
+			foreach (var item in source)
+				if (item == value)
+					return index;
+			return -1;
+		}
+
 		public static bool Matches<TSource>(this IEnumerable<TSource> source1, IEnumerable<TSource> source2)
 		{
 			using (var enum1 = source1.GetEnumerator())

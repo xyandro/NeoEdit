@@ -211,7 +211,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, List<Range> ranges, Brush brush, Pen pen, double leftSpacing, double rightSpacing)
+		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, IReadOnlyList<Range> ranges, Brush brush, Pen pen, double leftSpacing, double rightSpacing)
 		{
 			var radius = Math.Min(4, Font.FontSize / 2 - 1);
 

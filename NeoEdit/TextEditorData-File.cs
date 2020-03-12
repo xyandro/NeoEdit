@@ -318,14 +318,14 @@ namespace NeoEdit.Program
 			}
 
 			var selections = Selections.ToList();
-			var regions = Enumerable.Range(1,9).ToDictionary(index => index, index => GetRegions(index));
+			var regions = Enumerable.Range(1, 9).ToDictionary(index => index, index => GetRegions(index));
 
 			OpenFile(FileName, DisplayName, keepUndo: true);
 
-			Func<List<Range>, List<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(0, Math.Min(range.Cursor, TextView.MaxPosition)), Math.Max(0, Math.Min(range.Anchor, TextView.MaxPosition)))).ToList();
+			Func<IReadOnlyList<Range>, IReadOnlyList<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(0, Math.Min(range.Cursor, TextView.MaxPosition)), Math.Max(0, Math.Min(range.Anchor, TextView.MaxPosition)))).ToList();
 			SetSelections(reformatRanges(selections));
-			foreach (var pair in regions)
-				SetRegions(pair.Key, reformatRanges(pair.Value));
+			for (var region = 1; region <= 9; ++region)
+				SetRegions(region, reformatRanges(GetRegions(region)));
 		}
 
 		void Command_File_Insert_Files()

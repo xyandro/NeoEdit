@@ -38,45 +38,7 @@ namespace NeoEdit.Program
 			return text.Substring(start, length);
 		}
 
-		public NEText Replace(List<int> positions, List<int> lengths, List<string> text)
-		{
-			if ((positions.Count != lengths.Count) || (positions.Count != text.Count))
-				throw new Exception("Invalid number of arguments");
-
-			int? checkPos = null;
-			for (var ctr = 0; ctr < positions.Count; ctr++)
-			{
-				if (!checkPos.HasValue)
-					checkPos = positions[ctr];
-				if (positions[ctr] < checkPos)
-					throw new Exception("Replace data out of order");
-				checkPos = positions[ctr] + lengths[ctr];
-			}
-
-			var sb = new StringBuilder();
-			var dataPos = 0;
-			for (var listIndex = 0; listIndex <= text.Count; ++listIndex)
-			{
-				var position = this.text.Length;
-				var length = 0;
-				if (listIndex < positions.Count)
-				{
-					position = positions[listIndex];
-					length = lengths[listIndex];
-				}
-
-				sb.Append(this.text, dataPos, position - dataPos);
-				dataPos = position;
-
-				if (listIndex < text.Count)
-					sb.Append(text[listIndex]);
-				dataPos += length;
-			}
-
-			return new NEText(sb.ToString());
-		}
-
-		public NEText Replace(List<Range> ranges, List<string> text)
+		public NEText Replace(IReadOnlyList<Range> ranges, List<string> text)
 		{
 			if (ranges.Count != text.Count)
 				throw new Exception("Invalid number of arguments");

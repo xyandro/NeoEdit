@@ -47,8 +47,8 @@ namespace NeoEdit.Program
 			set => newCurrentSelection = Math.Max(0, Math.Min(value, Selections.Count - 1));
 		}
 
-		List<Range> oldSelections, newSelections;
-		public List<Range> Selections
+		IReadOnlyList<Range> oldSelections, newSelections;
+		public IReadOnlyList<Range> Selections
 		{
 			get => newSelections;
 			set
@@ -58,20 +58,20 @@ namespace NeoEdit.Program
 			}
 		}
 
-		readonly List<Range>[] oldRegions = new List<Range>[9];
-		readonly List<Range>[] newRegions = new List<Range>[9];
-		public List<Range> GetRegions(int region)
+		readonly IReadOnlyList<Range>[] oldRegions = new IReadOnlyList<Range>[9];
+		readonly IReadOnlyList<Range>[] newRegions = new IReadOnlyList<Range>[9];
+		public IReadOnlyList<Range> GetRegions(int region)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
 			return newRegions[region - 1];
 		}
 
-		public void SetRegions(int region, List<Range> oldRegions)
+		public void SetRegions(int region, IReadOnlyList<Range> regions)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			newRegions[region - 1] = DeOverlap(oldRegions);
+			newRegions[region - 1] = DeOverlap(regions);
 		}
 
 		string oldDisplayName, newDisplayName;
