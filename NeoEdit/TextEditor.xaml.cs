@@ -149,22 +149,11 @@ namespace NeoEdit.Program
 		}
 
 		public RangeList Selections { get; private set; } = new RangeList(new List<Range>());
-		public void SetSelections(List<Range> selections, bool deOverlap = true)
-		{
-			Selections = new RangeList(selections, deOverlap);
-			EnsureVisible();
-			canvasRenderTimer.Start();
-			TabsParent?.QueueUpdateStatusBar();
-		}
+		
 
 		readonly Dictionary<int, RangeList> regionsList = Enumerable.Range(1, 9).ToDictionary(num => num, num => new RangeList(new List<Range>()));
 		public IReadOnlyDictionary<int, RangeList> Regions => regionsList;
-		public void SetRegions(int region, List<Range> regions)
-		{
-			regionsList[region] = new RangeList(regions);
-			canvasRenderTimer.Start();
-			TabsParent?.QueueUpdateStatusBar();
-		}
+		
 
 		RunOnceTimer canvasRenderTimer, statusBarRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;

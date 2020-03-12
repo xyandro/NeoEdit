@@ -26,16 +26,6 @@ namespace NeoEdit.Program
 		[DepProp]
 		public int? MaxRows { get { return UIHelper<TabsWindow>.GetPropValue<int?>(this); } set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
 		[DepProp]
-		public string ActiveCountText { get { return UIHelper<TabsWindow>.GetPropValue<string>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
-		[DepProp]
-		public string InactiveCountText { get { return UIHelper<TabsWindow>.GetPropValue<string>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
-		[DepProp]
-		public string TotalCountText { get { return UIHelper<TabsWindow>.GetPropValue<string>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
-		[DepProp]
-		public string ClipboardCountText { get { return UIHelper<TabsWindow>.GetPropValue<string>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
-		[DepProp]
-		public string KeysValuesCountText { get { return UIHelper<TabsWindow>.GetPropValue<string>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
-		[DepProp]
 		public int ActiveUpdateCount { get { return UIHelper<TabsWindow>.GetPropValue<int>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
 		[DepProp]
 		public int WindowIndex { get { return UIHelper<TabsWindow>.GetPropValue<int>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
@@ -69,7 +59,7 @@ namespace NeoEdit.Program
 		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 		bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
 
-		readonly RunOnceTimer doActivatedTimer, statusBarTimer;
+		readonly RunOnceTimer doActivatedTimer;
 		public TabsWindow(bool addEmpty = false)
 		{
 			newTabs = newActiveTabs = new List<TextEditorData>();
@@ -93,35 +83,23 @@ namespace NeoEdit.Program
 			AllowDrop = true;
 			Drop += OnDrop;
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());
-			statusBarTimer = new RunOnceTimer(() => UpdateStatusBarText());
-			NEClipboard.ClipboardChanged += () => statusBarTimer.Start();
+			NEClipboard.ClipboardChanged += () => UpdateStatusBarText();
 			Activated += OnActivated;
 
 			//SizeChanged += (s, e) => QueueUpdateLayout();
 			//scrollBar.ValueChanged += (s, e) => QueueUpdateLayout(false);
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
-			UpdateStatusBarText();
-
 			if (addEmpty)
 				AddTextEditor(new TextEditorData());
+
+			DoLayout();
 		}
 
 		protected override void OnSourceInitialized(EventArgs e)
 		{
 			base.OnSourceInitialized(e);
 			try { SetPosition(Settings.WindowPosition); } catch { }
-		}
-
-		void UpdateStatusBarText()
-		{
-			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
-
-			ActiveCountText = $"{plural(ActiveTabs.Count(), "file")}, {plural(ActiveTabs.Sum(textEditor => textEditor.NumSelections), "selection")}";
-			InactiveCountText = $"{plural(Tabs.Except(ActiveTabs).Count(), "file")}, {plural(Tabs.Except(ActiveTabs).Sum(textEditor => textEditor.NumSelections), "selection")}";
-			TotalCountText = $"{plural(Tabs.Count, "file")}, {plural(Tabs.Sum(textEditor => textEditor.NumSelections), "selection")}";
-			ClipboardCountText = $"{plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}";
-			KeysValuesCountText = $"{string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Count):n0}"))}";
 		}
 
 		Dictionary<TextEditorData, List<string>> clipboard;
@@ -178,8 +156,6 @@ namespace NeoEdit.Program
 						}
 					}
 				}
-
-			statusBarTimer.Start();
 		}
 
 		public void SetKeysAndValues(int kvIndex, List<string> values, bool? caseSensitive = null)
@@ -531,8 +507,6 @@ namespace NeoEdit.Program
 
 		public void QueueDoActivated() => doActivatedTimer.Start();
 
-		public void QueueUpdateStatusBar() => statusBarTimer.Start();
-
 		void OnActivated(object sender, EventArgs e) => QueueDoActivated();
 
 		void DoActivated()
@@ -586,9 +560,6 @@ namespace NeoEdit.Program
 
 			activeTabs.Add(textEditor);
 			ActiveTabs = activeTabs;
-
-			statusBarTimer.Start();
-			//QueueUpdateLayout();
 		}
 
 		public void RemoveTextEditor(TextEditorData textEditor, bool close = true)
@@ -832,6 +803,23 @@ namespace NeoEdit.Program
 				DoGridLayout();
 
 			Title = $"{Focused?.FileName} - NeoEdit Text Editor{(Helpers.IsAdministrator() ? " (Administrator)" : "")}{(ShowIndex ? $" - {WindowIndex}" : "")}";
+			UpdateStatusBarText();
+		}
+
+		void UpdateStatusBarText()
+		{
+			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
+			statusBar.Items.Clear();
+			statusBar.Items.Add($"Active: {plural(ActiveTabs.Count(), "file")}, {plural(ActiveTabs.Sum(textEditor => textEditor.NumSelections), "selection")}");
+			statusBar.Items.Add(new Separator());
+			statusBar.Items.Add($"Inactive: {plural(Tabs.Except(ActiveTabs).Count(), "file")}, {plural(Tabs.Except(ActiveTabs).Sum(textEditor => textEditor.NumSelections), "selection")}");
+			statusBar.Items.Add(new Separator());
+			statusBar.Items.Add($"Total: {plural(Tabs.Count, "file")}, {plural(Tabs.Sum(textEditor => textEditor.NumSelections), "selection")}");
+			statusBar.Items.Add(new Separator());
+			statusBar.Items.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
+			statusBar.Items.Add(new Separator());
+			statusBar.Items.Add($"Keys/Values: {string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Count):n0}"))}");
+
 		}
 
 		void DoFullLayout()

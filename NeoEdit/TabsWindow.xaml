@@ -30,55 +30,7 @@
 			<controls:DiffScrollBar Grid.Row="0" Grid.Column="1" x:Name="scrollBar"/>
 		</Grid>
 
-		<StatusBar Grid.Row="2" Grid.Column="0" Foreground="White" Background="Transparent">
-			<StatusBarItem>
-				<TextBlock Text="Active:"/>
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding ActiveCountText, ElementName=self}"/>
-			</StatusBarItem>
-
-			<Separator Background="White"/>
-
-			<StatusBarItem>
-				<TextBlock Text="Inactive:"/>
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding InactiveCountText, ElementName=self}"/>
-			</StatusBarItem>
-
-			<Separator Background="White"/>
-
-			<StatusBarItem>
-				<TextBlock Text="Total:"/>
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding TotalCountText, ElementName=self}"/>
-			</StatusBarItem>
-
-			<Separator Background="White"/>
-
-			<StatusBarItem>
-				<TextBlock Text="Clipboard:"/>
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding ClipboardCountText, ElementName=self}"/>
-			</StatusBarItem>
-
-			<Separator Background="White"/>
-
-			<StatusBarItem>
-				<TextBlock Text="Keys/Values:"/>
-			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding KeysValuesCountText, ElementName=self}"/>
-			</StatusBarItem>
-
-			<StatusBarItem>
-				<!--Sometimes the last one doesn't display-->
-				<TextBlock/>
-			</StatusBarItem>
-		</StatusBar>
+		<StatusBar Grid.Row="2" Grid.Column="0" Foreground="White" Name="statusBar" Background="Transparent"/>
 
 	</Grid>
 
