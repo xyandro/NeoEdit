@@ -36,10 +36,8 @@ namespace NeoEdit.Program
 			AutoRefresh = KeepSelections = HighlightSyntax = true;
 			JumpBy = JumpByType.Words;
 
-			SetTabLabel();
-
 			OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
-			//Goto(line, column, index);
+			Goto(line, column, index);
 		}
 
 		void SetTabLabel() => TabLabel = $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(IsDiff ? $" (Diff{(DiffEncodingMismatch ? " - Encoding mismatch" : "")})" : "")}";
@@ -53,7 +51,7 @@ namespace NeoEdit.Program
 
 		public void ReplaceSelections(List<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
-			Replace(Selections.ToList(), strs, replaceType, tryJoinUndo);
+			Replace(Selections, strs, replaceType, tryJoinUndo);
 
 			if (highlight)
 				SetSelections(Selections.AsParallel().AsOrdered().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList());
@@ -1303,7 +1301,7 @@ namespace NeoEdit.Program
 				found.Add(range.ToString());
 
 			var sels = new List<Range>();
-			foreach (var range in Selections.ToList())
+			foreach (var range in Selections)
 			{
 				var startLine = TextView.GetPositionLine(range.Start);
 				var endLine = TextView.GetPositionLine(range.End);
@@ -1990,6 +1988,25 @@ namespace NeoEdit.Program
 			if (!keepUndo)
 				UndoRedo.Clear(ref newUndoRedo);
 			SetModifiedFlag(isModified);
+		}
+
+		public void Goto(int? line, int? column, int? index)
+		{
+			var pos = 0;
+			if (line.HasValue)
+			{
+				var useLine = Math.Max(0, Math.Min(line.Value, TextView.NumLines) - 1);
+				int useIndex;
+				if (column.HasValue)
+					useIndex = GetIndexFromColumn(useLine, Math.Max(0, column.Value - 1), true);
+				else if (index.HasValue)
+					useIndex = Math.Max(0, Math.Min(index.Value - 1, TextView.GetLineLength(useLine)));
+				else
+					useIndex = 0;
+
+				pos = TextView.GetPosition(useLine, useIndex);
+			}
+			SetSelections(new List<Range> { new Range(pos) });
 		}
 
 		public List<string> DragFiles { get; set; }
