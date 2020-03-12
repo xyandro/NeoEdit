@@ -294,7 +294,7 @@ namespace NeoEdit.Program
 				BeginTransaction();
 				Tabs.ForEach(tab => tab.BeginTransaction());
 
-				PreExecuteCommand(state);
+				PreExecute(state);
 
 				GetCommandParameters(state);
 
@@ -325,7 +325,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void PreExecuteCommand(ExecuteState state) => ActiveTabs.ForEach(tab => tab.PreHandleCommand());
+		void PreExecute(ExecuteState state) => ActiveTabs.ForEach(tab => tab.PreExecute());
 
 		void GetCommandParameters(ExecuteState state)
 		{

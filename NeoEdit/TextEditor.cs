@@ -411,22 +411,22 @@ namespace NeoEdit.Program
 		}
 		#endregion
 
-		public void PreHandleCommand()
+		public void PreExecute()
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Key: PreCommand_Key((Key)state.Parameters, ref state.PreHandleData); break;
-				case NECommand.Edit_Paste_Paste: Command_Pre_Edit_Paste_Paste(ref state.PreHandleData); break;
-				case NECommand.Edit_Paste_RotatePaste: Command_Pre_Edit_Paste_Paste(ref state.PreHandleData); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref state.PreHandleData, true); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref state.PreHandleData, true); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref state.PreHandleData, false); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref state.PreHandleData, false); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref state.PreHandleData, true); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref state.PreHandleData, true); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref state.PreHandleData, false); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref state.PreHandleData, false); break;
-				case NECommand.Select_Selection_ToggleAnchor: Command_Pre_Select_Selection_ToggleAnchor(ref state.PreHandleData); break;
+				case NECommand.Internal_Key: PreExecute_Internal_Key(); break;
+				case NECommand.Edit_Paste_Paste: PreExecute_Edit_Paste_Paste(); break;
+				case NECommand.Edit_Paste_RotatePaste: PreExecute_Edit_Paste_Paste(); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: PreExecute_Select_Repeats_Tabs_MatchMismatch(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: PreExecute_Select_Repeats_Tabs_MatchMismatch(true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: PreExecute_Select_Repeats_Tabs_MatchMismatch(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: PreExecute_Select_Repeats_Tabs_MatchMismatch(false); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: PreExecute_Select_Repeats_Tabs_CommonNonCommon(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: PreExecute_Select_Repeats_Tabs_CommonNonCommon(true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: PreExecute_Select_Repeats_Tabs_CommonNonCommon(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: PreExecute_Select_Repeats_Tabs_CommonNonCommon(false); break;
+				case NECommand.Select_Selection_ToggleAnchor: PreExecute_Select_Selection_ToggleAnchor(); break;
 			}
 		}
 
@@ -1336,15 +1336,15 @@ namespace NeoEdit.Program
 			IsModified = !modifiedChecksum.Match(Text);
 		}
 
-		void PreCommand_Key(Key key, ref object previousData)
+		void PreExecute_Internal_Key()
 		{
-			switch (key)
+			switch ((Key)state.Parameters)
 			{
 				case Key.Back:
 				case Key.Delete:
 				case Key.Left:
 				case Key.Right:
-					previousData = (previousData as bool? ?? false) || (Selections.Any(range => range.HasSelection));
+					state.PreHandleData = (state.PreHandleData as bool? ?? false) || (Selections.Any(range => range.HasSelection));
 					break;
 			}
 		}

@@ -356,10 +356,10 @@ namespace NeoEdit.Program
 			Selections = strs.Select(tuple => Selections[tuple.Item2]).ToList();
 		}
 
-		void Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref object preResult, bool caseSensitive)
+		void PreExecute_Select_Repeats_Tabs_MatchMismatch(bool caseSensitive)
 		{
 			var strs = GetSelectionStrings();
-			var matches = preResult as List<string> ?? strs;
+			var matches = state.PreHandleData as List<string> ?? strs;
 			while (matches.Count < strs.Count)
 				matches.Add(null);
 			while (strs.Count < matches.Count)
@@ -370,7 +370,7 @@ namespace NeoEdit.Program
 				if ((matches[ctr] != null) && (!string.Equals(matches[ctr], strs[ctr], stringComparison)))
 					matches[ctr] = null;
 
-			preResult = matches;
+			state.PreHandleData = matches;
 		}
 
 		void Command_Select_Repeats_Tabs_MatchMismatch(object preResult, bool match)
@@ -379,15 +379,15 @@ namespace NeoEdit.Program
 			Selections = Selections.Where((range, index) => (matches[index] != null) == match).ToList();
 		}
 
-		void Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref object preResult, bool caseSensitive)
+		void PreExecute_Select_Repeats_Tabs_CommonNonCommon(bool caseSensitive)
 		{
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 			var repeats = Selections.AsParallel().GroupBy(Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
 
-			if (preResult != null)
-				repeats = repeats.Join(preResult as Dictionary<string, int>, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);
+			if (state.PreHandleData != null)
+				repeats = repeats.Join(state.PreHandleData as Dictionary<string, int>, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);
 
-			preResult = repeats;
+			state.PreHandleData = repeats;
 		}
 
 		void Command_Select_Repeats_Tabs_CommonNonCommon(object preResult, bool match)
@@ -419,12 +419,12 @@ namespace NeoEdit.Program
 
 		void Command_Select_Selection_Center() => EnsureVisible(true, true);
 
-		void Command_Pre_Select_Selection_ToggleAnchor(ref object preResult)
+		void PreExecute_Select_Selection_ToggleAnchor()
 		{
-			if (preResult == null)
-				preResult = false;
-			if ((!(bool)preResult) && (Selections.Any(range => range.Anchor > range.Cursor)))
-				preResult = true;
+			if (state.PreHandleData == null)
+				state.PreHandleData = false;
+			if ((!(bool)state.PreHandleData) && (Selections.Any(range => range.Anchor > range.Cursor)))
+				state.PreHandleData = true;
 		}
 
 		void Command_Select_Selection_ToggleAnchor(object preResult)
