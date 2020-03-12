@@ -8,7 +8,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditorData
+	partial class TextEditor
 	{
 		object GetAddSubtractValue(string str)
 		{

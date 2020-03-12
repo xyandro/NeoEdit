@@ -102,12 +102,12 @@ namespace NeoEdit.Program
 			{
 				if (!files.Any())
 					return;
-				AddTextEditor(new TextEditorData(files.Dequeue()));
+				AddTextEditor(new TextEditor(files.Dequeue()));
 				macro.Play(this, playing => MacroPlaying = playing, startNext);
 			};
 			startNext();
 		}
 
-		void Command_Macro_Open_Quick(int quickNum) => AddTextEditor(new TextEditorData(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
+		void Command_Macro_Open_Quick(int quickNum) => AddTextEditor(new TextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 	}
 }

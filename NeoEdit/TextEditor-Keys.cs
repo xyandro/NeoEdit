@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditorData
+	partial class TextEditor
 	{
 		void Command_Keys_Set(int index, bool caseSensitive = true) => TabsParent.SetKeysAndValues(index, GetSelectionStrings(), caseSensitive);
 

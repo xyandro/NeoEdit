@@ -15,12 +15,12 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	public partial class TextEditorData
+	public partial class TextEditor
 	{
 		const int tabStop = 4;
 		AnswerResult savedAnswers => TabsParent.savedAnswers;
 
-		public TextEditorData(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
+		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
 			BeginTransaction();
 

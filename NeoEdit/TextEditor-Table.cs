@@ -7,7 +7,7 @@ using NeoEdit.Program.Expressions;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditorData
+	partial class TextEditor
 	{
 		static Table joinTable;
 

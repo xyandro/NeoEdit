@@ -29,7 +29,7 @@ namespace NeoEdit.Program
 
 		void Command_Window_Select_AllTabs() => ActiveTabs = Tabs;
 
-		void Command_Window_Select_NoTabs() => ActiveTabs = new List<TextEditorData>();
+		void Command_Window_Select_NoTabs() => ActiveTabs = new List<TextEditor>();
 
 		void Command_Window_Select_TabsWithWithoutSelections(bool hasSelections) => ActiveTabs = ActiveTabs.Where(tab => tab.HasSelections == hasSelections).ToList();
 
@@ -74,7 +74,7 @@ namespace NeoEdit.Program
 
 			data = Compressor.Decompress(data, Compressor.Type.GZip);
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace("\n", "\r\n"));
-			AddTextEditor(new TextEditorData(bytes: data, modified: false));
+			AddTextEditor(new TextEditor(bytes: data, modified: false));
 		}
 	}
 }

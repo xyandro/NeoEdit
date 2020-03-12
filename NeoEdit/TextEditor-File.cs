@@ -11,7 +11,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditorData
+	partial class TextEditor
 	{
 		string GetSaveFileName()
 		{
@@ -50,13 +50,13 @@ namespace NeoEdit.Program
 				ReplaceSelections(strs);
 		}
 
-		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach(((str, index) => TabsParent.AddTextEditor(new TextEditorData(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false))));
+		void Command_File_New_FromSelections() => GetSelectionStrings().ForEach(((str, index) => TabsParent.AddTextEditor(new TextEditor(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false))));
 
 		void Command_File_Open_Selected()
 		{
 			var files = RelativeSelectedFiles();
 			foreach (var file in files)
-				TabsParent.AddTextEditor(new TextEditorData(file));
+				TabsParent.AddTextEditor(new TextEditor(file));
 		}
 
 		void Command_File_Save_Save()

@@ -8,7 +8,7 @@ using NeoEdit.Program.Dialogs;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditorData
+	partial class TextEditor
 	{
 		class GotoRange
 		{
@@ -29,7 +29,7 @@ namespace NeoEdit.Program
 
 				public override string ToString() => $"Line: {Line}, Index: {Index}, Column: {Column}, Position: {Position}";
 
-				public int? GetPosition(TextEditor te, int position, GotoLocation lastPosition = null)
+				public int? GetPosition(TextEditorWindow te, int position, GotoLocation lastPosition = null)
 				{
 					// TODO
 					return default;
@@ -117,7 +117,7 @@ namespace NeoEdit.Program
 				return result;
 			}
 
-			public Range GetRange(TextEditor te, Range range, bool selecting)
+			public Range GetRange(TextEditorWindow te, Range range, bool selecting)
 			{
 				var start = Start.GetPosition(te, range.Cursor);
 				var end = End.GetPosition(te, range.Cursor, Start);

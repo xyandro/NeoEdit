@@ -6,7 +6,7 @@ using NeoEdit.Program.Dialogs;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditorData
+	partial class TextEditor
 	{
 		List<Tuple<Range, List<Range>>> GetRegionsWithSelections(int useRegion)
 		{

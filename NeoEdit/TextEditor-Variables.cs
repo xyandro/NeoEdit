@@ -5,7 +5,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	public partial class TextEditorData
+	public partial class TextEditor
 	{
 		bool inTransaction = false;
 		void EnsureInTransaction()

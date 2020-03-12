@@ -7,7 +7,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditorData
+	partial class TextEditor
 	{
 		// TODO: Everything here
 		//void DoRangesDiff(RangeList ranges)
