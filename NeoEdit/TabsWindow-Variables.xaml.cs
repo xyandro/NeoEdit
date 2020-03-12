@@ -42,11 +42,44 @@ namespace NeoEdit.Program
 			}
 		}
 
+		int? oldColumns, newColumns;
+		public int? Columns
+		{
+			get => newColumns;
+			set => newColumns = value;
+		}
+
+		int? oldRows, newRows;
+		public int? Rows
+		{
+			get => newRows;
+			set => newRows = value;
+		}
+
+		int? oldMaxColumns, newMaxColumns;
+		public int? MaxColumns
+		{
+			get => newMaxColumns;
+			set => newMaxColumns = value;
+		}
+
+		int? oldMaxRows, newMaxRows;
+		public int? MaxRows
+		{
+			get => newMaxRows;
+			set => newMaxRows = value;
+		}
+
+
 		void Rollback()
 		{
 			newTabs = oldTabs;
 			newActiveTabs = oldActiveTabs;
 			newFocused = oldFocused;
+			newColumns = oldColumns;
+			newRows = oldRows;
+			newMaxColumns = oldMaxColumns;
+			newMaxRows = oldMaxRows;
 		}
 
 		void Commit()
@@ -54,6 +87,10 @@ namespace NeoEdit.Program
 			oldTabs = newTabs;
 			oldActiveTabs = newActiveTabs;
 			oldFocused = newFocused;
+			oldColumns = newColumns;
+			oldRows = newRows;
+			oldMaxColumns = newMaxColumns;
+			oldMaxRows = newMaxRows;
 		}
 	}
 }
