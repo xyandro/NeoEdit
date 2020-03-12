@@ -20,15 +20,27 @@ namespace NeoEdit.Program
 		const int tabStop = 4;
 		AnswerResult savedAnswers => TabsParent.savedAnswers;
 
-		public TextEditorData()
+		public TextEditorData(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
-			Text = new NEText(File.ReadAllText(@"..\..\a.txt"));
 			Selections = new List<Range>();
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, new List<Range>());
 			undoRedo = newUndoRedo = new UndoRedo2();
 			Commit();
+
+			fileName = fileName?.Trim('"');
+			this.shutdownData = shutdownData;
+
+			AutoRefresh = KeepSelections = HighlightSyntax = true;
+			JumpBy = JumpByType.Words;
+
+			SetTabLabel();
+
+			OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
+			//Goto(line, column, index);
 		}
+
+		void SetTabLabel() => TabLabel = $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(IsDiff ? $" (Diff{(DiffEncodingMismatch ? " - Encoding mismatch" : "")})" : "")}";
 
 		UndoRedo2 undoRedo, newUndoRedo;
 		CacheValue2 modifiedChecksum = new CacheValue2();
@@ -1718,7 +1730,7 @@ namespace NeoEdit.Program
 
 		List<T> GetExpressionResults<T>(string expression, int? count = null) => new NEExpression(expression).EvaluateList<T>(GetVariables(), count);
 
-		TabsWindow TabsParent = null; // TODO
+		public TabsWindow TabsParent = null; // TODO
 
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
@@ -1813,11 +1825,12 @@ namespace NeoEdit.Program
 
 		public void OpenTable(Table table, string name = null)
 		{
-			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
-			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-			TabsParent.AddTextEditor(textEditor);
-			textEditor.ContentType = contentType;
-			textEditor.DisplayName = name;
+			//TODO
+			//var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
+			//var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+			//TabsParent.AddTextEditor(textEditor);
+			//textEditor.ContentType = contentType;
+			//textEditor.DisplayName = name;
 		}
 
 		public List<string> RelativeSelectedFiles()
@@ -1982,6 +1995,8 @@ namespace NeoEdit.Program
 
 		string savedBitmapText;
 		System.Drawing.Bitmap savedBitmap;
+		private ShutdownData shutdownData;
+
 		public System.Drawing.Bitmap GetBitmap()
 		{
 			if (!Coder.IsImage(CodePage))
@@ -2046,5 +2061,9 @@ namespace NeoEdit.Program
 			var tf = SystemFonts.MessageFontFamily.GetTypefaces().Where(x => (x.Weight == FontWeights.Normal) && (x.Style == FontStyles.Normal)).First();
 			//TODO dc.DrawText(new FormattedText(string.Join(" │ ", sb), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.White, 1), new Point(2, 2));
 		}
+
+		public bool HasSelections => Selections.Any();
+
+		public int NumSelections => Selections.Count;
 	}
 }

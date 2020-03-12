@@ -71,21 +71,33 @@ namespace NeoEdit.Program
 		public string DisplayName
 		{
 			get => newDisplayName;
-			set => newDisplayName = value;
+			set
+			{
+				newDisplayName = value;
+				SetTabLabel();
+			}
 		}
 
 		string oldFileName, newFileName;
 		public string FileName
 		{
 			get => newFileName;
-			set => newFileName = value;
+			set
+			{
+				newFileName = value;
+				SetTabLabel();
+			}
 		}
 
 		bool oldIsModified, newIsModified;
 		public bool IsModified
 		{
 			get => newIsModified;
-			set => newIsModified = value;
+			set
+			{
+				newIsModified = value;
+				SetTabLabel();
+			}
 		}
 
 		List<string> oldClipboard, newClipboard;
@@ -176,14 +188,22 @@ namespace NeoEdit.Program
 		public bool IsDiff
 		{
 			get => newIsDiff;
-			set => newIsDiff = value;
+			set
+			{
+				newIsDiff = value;
+				SetTabLabel();
+			}
 		}
 
 		bool oldDiffEncodingMismatch, newDiffEncodingMismatch;
 		public bool DiffEncodingMismatch
 		{
 			get => newDiffEncodingMismatch;
-			set => newDiffEncodingMismatch = value;
+			set
+			{
+				newDiffEncodingMismatch = value;
+				SetTabLabel();
+			}
 		}
 
 		int oldTextEditorOrder, newTextEditorOrder;

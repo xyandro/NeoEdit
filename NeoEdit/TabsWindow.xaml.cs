@@ -20,7 +20,7 @@ namespace NeoEdit.Program
 	partial class TabsWindow
 	{
 		[DepProp]
-		public TextEditor Focused { get { return UIHelper<TabsWindow>.GetPropValue<TextEditor>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
+		public TextEditorData Focused { get { return UIHelper<TabsWindow>.GetPropValue<TextEditorData>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
 		[DepProp]
 		public int? Columns { get { return UIHelper<TabsWindow>.GetPropValue<int?>(this); } set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
 		[DepProp]
@@ -47,14 +47,14 @@ namespace NeoEdit.Program
 
 		static int curWindowIndex = 0;
 
-		readonly List<TextEditor> tabs = new List<TextEditor>();
-		public IReadOnlyList<TextEditor> Tabs => tabs;
-		readonly HashSet<TextEditor> activeTabs = new HashSet<TextEditor>();
-		public IReadOnlyList<TextEditor> ActiveTabs => Tabs.Where(te => activeTabs.Contains(te)).ToList();
+		readonly List<TextEditorData> tabs = new List<TextEditorData>();
+		public IReadOnlyList<TextEditorData> Tabs => tabs;
+		readonly HashSet<TextEditorData> activeTabs = new HashSet<TextEditorData>();
+		public IReadOnlyList<TextEditorData> ActiveTabs => Tabs.Where(te => activeTabs.Contains(te)).ToList();
 
 		readonly RunOnceTimer layoutTimer, showFocusedTimer, addedTabTimer;
 
-		Action<TextEditor> ShowTextEditor;
+		Action<TextEditorData> ShowTextEditor;
 		int addedCounter = 0, lastAddedCounter = -1, textEditorOrder = 0;
 
 		static bool showIndex;
@@ -121,7 +121,7 @@ namespace NeoEdit.Program
 			UpdateStatusBarText();
 
 			if (addEmpty)
-				AddTextEditor(new TextEditor());
+				AddTextEditor(new TextEditorData());
 		}
 
 		void QueueUpdateLayout(bool showFocused = true)
@@ -148,8 +148,8 @@ namespace NeoEdit.Program
 			KeysValuesCountText = $"{string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Count):n0}"))}";
 		}
 
-		Dictionary<TextEditor, List<string>> clipboard;
-		public List<string> GetClipboard(TextEditor textEditor)
+		Dictionary<TextEditorData, List<string>> clipboard;
+		public List<string> GetClipboard(TextEditorData textEditor)
 		{
 			if (clipboard == null)
 			{
@@ -176,8 +176,8 @@ namespace NeoEdit.Program
 
 		static List<List<List<string>>> keysAndValues = Enumerable.Range(0, 10).Select(x => new List<List<string>>()).ToList();
 		static List<Dictionary<string, int>> keysHash = new List<Dictionary<string, int>>();
-		List<Dictionary<TextEditor, List<string>>> keysAndValuesLookup = keysAndValues.Select(x => default(Dictionary<TextEditor, List<string>>)).ToList();
-		Dictionary<TextEditor, Dictionary<string, int>> keysHashLookup;
+		List<Dictionary<TextEditorData, List<string>>> keysAndValuesLookup = keysAndValues.Select(x => default(Dictionary<TextEditorData, List<string>>)).ToList();
+		Dictionary<TextEditorData, Dictionary<string, int>> keysHashLookup;
 		List<List<List<string>>> newKeysAndValues;
 		bool newKeysCaseSensitive;
 
@@ -249,7 +249,7 @@ namespace NeoEdit.Program
 			return true;
 		}
 
-		public List<string> GetKeysAndValues(TextEditor textEditor, int index, bool throwOnException = true)
+		public List<string> GetKeysAndValues(TextEditorData textEditor, int index, bool throwOnException = true)
 		{
 			if (!SetupKeysAndValuesLookup(index, throwOnException))
 				return null;
@@ -262,13 +262,7 @@ namespace NeoEdit.Program
 			return keysAndValuesLookup[index][textEditor];
 		}
 
-		public List<string> GetKeysAndValues(TextEditorData textEditor, int index, bool throwOnException = true)
-		{
-			// TODO
-			return default;
-		}
-
-		public Dictionary<string, int> GetKeysHash(TextEditor textEditor)
+		public Dictionary<string, int> GetKeysHash(TextEditorData textEditor)
 		{
 			SetupKeysAndValuesLookup(0);
 			if (!keysHashLookup.ContainsKey(textEditor))
@@ -276,18 +270,12 @@ namespace NeoEdit.Program
 			return keysHashLookup[textEditor];
 		}
 
-		public Dictionary<string, int> GetKeysHash(TextEditorData textEditor)
-		{
-			// TODO
-			return default;
-		}
-
 		void OnDrop(object sender, DragEventArgs e)
 		{
 			var fileList = e.Data.GetData("FileDrop") as string[];
 			if (fileList == null)
 				return;
-			fileList.ForEach(file => AddTextEditor(new TextEditor(file)));
+			fileList.ForEach(file => AddTextEditor(new TextEditorData(file)));
 			e.Handled = true;
 		}
 
@@ -369,43 +357,32 @@ namespace NeoEdit.Program
 		{
 			try
 			{
-				PreHandleCommand(state);
+				PreExecuteCommand(state);
 
 				GetCommandParameters(state);
 
 				ExecuteCommand(state);
 
-				Tabs.ForEach(tab => tab.TextEditorData.Commit());
-				Tabs.ForEach(tab => tab.InvalidateCanvas());
+				Tabs.ForEach(tab => tab.Commit());
 			}
 			catch
 			{
-				Tabs.ForEach(tab => tab.TextEditorData.Rollback());
+				Tabs.ForEach(tab => tab.Rollback());
 				throw;
 			}
 		}
 
-		void PreHandleCommand(CommandState state)
-		{
-			var activeTabs = ActiveTabs.Select(x => x.TextEditorData).ToList();
-			foreach (var tab in activeTabs)
-				tab.PreHandleCommand(state);
-		}
+		void PreExecuteCommand(CommandState state) => ActiveTabs.ForEach(tab => tab.PreHandleCommand(state));
 
 		void GetCommandParameters(CommandState state)
 		{
 			if (Focused == null)
 				return;
 
-			Focused.TextEditorData.GetCommandParameters(state, this);
+			Focused.GetCommandParameters(state, this);
 		}
 
-		void ExecuteCommand(CommandState state)
-		{
-			var activeTabs = ActiveTabs.Select(x => x.TextEditorData).ToList();
-			foreach (var tab in activeTabs)
-				tab.ExecuteCommand(state);
-		}
+		void ExecuteCommand(CommandState state) => ActiveTabs.ForEach(tab => tab.ExecuteCommand(state));
 
 		//bool GetDialogResult(NECommand command, out object dialogResult, bool? multiStatus)
 		//{
@@ -569,24 +546,26 @@ namespace NeoEdit.Program
 
 		void DoActivated()
 		{
-			if (!IsActive)
-				return;
+			//TODO
+			//if (!IsActive)
+			//	return;
 
-			Activated -= OnActivated;
-			try
-			{
-				foreach (var textEditor in Tabs)
-					textEditor.Activated();
-			}
-			finally { Activated += OnActivated; }
+			//Activated -= OnActivated;
+			//try
+			//{
+			//	foreach (var textEditor in Tabs)
+			//		textEditor.Activated();
+			//}
+			//finally { Activated += OnActivated; }
 		}
 
 		void ShowFocused()
 		{
-			if (Focused == null)
-				return;
-			ShowTextEditor?.Invoke(Focused);
-			Focused.Focus();
+			//TODO
+			//if (Focused == null)
+			//	return;
+			//ShowTextEditor?.Invoke(Focused);
+			//Focused.Focus();
 		}
 
 		public void SetLayout(int? columns = null, int? rows = null, int? maxColumns = null, int? maxRows = null)
@@ -597,12 +576,12 @@ namespace NeoEdit.Program
 			MaxRows = maxRows;
 		}
 
-		public void AddTextEditor(TextEditor textEditor, int? index = null, bool canReplace = true)
+		public void AddTextEditor(TextEditorData textEditor, int? index = null, bool canReplace = true)
 		{
 			//TODO
 			//textEditor.TabsParent = this;
 
-			//var replace = (canReplace) && (!index.HasValue) && (!textEditor.Empty()) && (Focused != null) && (Focused.Empty()) ? Focused : default(TextEditor);
+			//var replace = (canReplace) && (!index.HasValue) && (!textEditor.Empty()) && (Focused != null) && (Focused.Empty()) ? Focused : default(TextEditorData);
 			//if (replace != null)
 			//{
 			//	replace.Closed();
@@ -624,18 +603,19 @@ namespace NeoEdit.Program
 			//QueueUpdateLayout();
 		}
 
-		public void RemoveTextEditor(TextEditor textEditor, bool close = true)
+		public void RemoveTextEditor(TextEditorData textEditor, bool close = true)
 		{
-			activeTabs.Remove(textEditor);
-			tabs.Remove(textEditor);
-			if (close)
-				textEditor.Closed();
-			UpdateFocused(true);
-			statusBarTimer.Start();
-			QueueUpdateLayout();
+			//TODO
+			//activeTabs.Remove(textEditor);
+			//tabs.Remove(textEditor);
+			//if (close)
+			//	textEditor.Closed();
+			//UpdateFocused(true);
+			//statusBarTimer.Start();
+			//QueueUpdateLayout();
 		}
 
-		public void AddDiff(TextEditor textEdit1, TextEditor textEdit2)
+		public void AddDiff(TextEditorData textEdit1, TextEditorData textEdit2)
 		{
 			//TODO
 			//if (textEdit1.ContentType == ParserType.None)
@@ -650,8 +630,8 @@ namespace NeoEdit.Program
 
 		public void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, ParserType contentType1 = ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, int? index1 = null, ShutdownData shutdownData1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, ParserType contentType2 = ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, int? index2 = null, ShutdownData shutdownData2 = null)
 		{
-			var te1 = new TextEditor(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, index1, shutdownData1);
-			var te2 = new TextEditor(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, index2, shutdownData2);
+			var te1 = new TextEditorData(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, index1, shutdownData1);
+			var te2 = new TextEditorData(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, index2, shutdownData2);
 			AddDiff(te1, te2);
 		}
 
@@ -667,20 +647,14 @@ namespace NeoEdit.Program
 			SetFocused(focused);
 		}
 
-		public bool TabIsActive(TextEditor textEditor) => ActiveTabs.Contains(textEditor);
+		public bool TabIsActive(TextEditorData textEditor) => ActiveTabs.Contains(textEditor);
 
-		public int GetTabIndex(TextEditor textEditor, bool activeOnly = false)
+		public int GetTabIndex(TextEditorData textEditor, bool activeOnly = false)
 		{
 			var index = (activeOnly ? ActiveTabs : Tabs).Indexes(x => x == textEditor).DefaultIfEmpty(-1).First();
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;
-		}
-
-		public int GetTabIndex(TextEditorData textEditor, bool activeOnly = false)
-		{
-			//TODO
-			return default;
 		}
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
@@ -745,7 +719,7 @@ namespace NeoEdit.Program
 			SetFocused(ordering[current], !shiftDown);
 		}
 
-		bool HandleClick(TextEditor textEditor)
+		bool HandleClick(TextEditorData textEditor)
 		{
 			if (!shiftDown)
 				SetActive(textEditor);
@@ -757,24 +731,25 @@ namespace NeoEdit.Program
 			return false;
 		}
 
-		protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
-		{
-			for (var source = e.OriginalSource as FrameworkElement; source != null; source = source.Parent as FrameworkElement)
-				if (source is TextEditor textEditor)
-				{
-					if (HandleClick(textEditor))
-					{
-						e.Handled = true;
-						return;
-					}
-					break;
-				}
-			base.OnPreviewMouseLeftButtonDown(e);
-		}
+		//TODO
+		//protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+		//{
+		//	for (var source = e.OriginalSource as FrameworkElement; source != null; source = source.Parent as FrameworkElement)
+		//		if (source is TextEditorData textEditor)
+		//		{
+		//			if (HandleClick(textEditor))
+		//			{
+		//				e.Handled = true;
+		//				return;
+		//			}
+		//			break;
+		//		}
+		//	base.OnPreviewMouseLeftButtonDown(e);
+		//}
 
-		void OnDrop(DragEventArgs e, TextEditor toTextEditor)
+		void OnDrop(DragEventArgs e, TextEditorData toTextEditor)
 		{
-			var fromTabs = e.Data.GetData(typeof(List<TextEditor>)) as List<TextEditor>;
+			var fromTabs = e.Data.GetData(typeof(List<TextEditorData>)) as List<TextEditorData>;
 			if (fromTabs == null)
 				return;
 
@@ -794,9 +769,9 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public void AddActive(params TextEditor[] textEditors) => AddActive(textEditors.AsEnumerable());
+		public void AddActive(params TextEditorData[] textEditors) => AddActive(textEditors.AsEnumerable());
 
-		public void AddActive(IEnumerable<TextEditor> textEditors)
+		public void AddActive(IEnumerable<TextEditorData> textEditors)
 		{
 			foreach (var textEditor in textEditors)
 				if (textEditor != null)
@@ -806,9 +781,9 @@ namespace NeoEdit.Program
 			statusBarTimer.Start();
 		}
 
-		public void SetActive(params TextEditor[] textEditors) => SetActive(textEditors.AsEnumerable());
+		public void SetActive(params TextEditorData[] textEditors) => SetActive(textEditors.AsEnumerable());
 
-		public void SetActive(IEnumerable<TextEditor> textEditors)
+		public void SetActive(IEnumerable<TextEditorData> textEditors)
 		{
 			activeTabs.Clear();
 			foreach (var textEditor in textEditors)
@@ -819,7 +794,7 @@ namespace NeoEdit.Program
 			statusBarTimer.Start();
 		}
 
-		UIElement GetTabLabel(bool tiles, TextEditor textEditor)
+		UIElement GetTabLabel(bool tiles, TextEditorData textEditor)
 		{
 			var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = textEditor };
 			border.MouseLeftButtonDown += (s, e) => HandleClick(textEditor);
@@ -828,7 +803,7 @@ namespace NeoEdit.Program
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
 					var active = textEditor.TabsParent.ActiveTabs.ToList();
-					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<TextEditor>), active), DragDropEffects.Move);
+					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<TextEditorData>), active), DragDropEffects.Move);
 				}
 			};
 
@@ -851,7 +826,7 @@ namespace NeoEdit.Program
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
 			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Foreground = Brushes.White, Margin = new Thickness(4, -4, 0, 0) };
-			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditor.TabLabel)) { Source = textEditor });
+			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditorData.TabLabel)) { Source = textEditor });
 			Grid.SetRow(text, 0);
 			Grid.SetColumn(text, 0);
 			grid.Children.Add(text);
@@ -883,16 +858,17 @@ namespace NeoEdit.Program
 		void ClearLayout()
 		{
 			canvas.Children.Clear();
-			foreach (var tab in Tabs)
-			{
-				var parent = (tab as FrameworkElement).Parent;
-				if (parent is Panel p)
-					p.Children.Clear();
-				else if (parent is ContentControl cc)
-					cc.Content = null;
-				else if (parent != null)
-					throw new Exception("Don't know how to disconnect item");
-			}
+			//TODO
+			//foreach (var tab in Tabs)
+			//{
+			//	var parent = (tab as FrameworkElement).Parent;
+			//	if (parent is Panel p)
+			//		p.Children.Clear();
+			//	else if (parent is ContentControl cc)
+			//		cc.Content = null;
+			//	else if (parent != null)
+			//		throw new Exception("Don't know how to disconnect item");
+			//}
 		}
 
 		void DoLayout()
@@ -935,7 +911,7 @@ namespace NeoEdit.Program
 			foreach (var tab in Tabs)
 			{
 				var tabLabel = GetTabLabel(false, tab);
-				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as TextEditor);
+				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as TextEditorData);
 				stackPanel.Children.Add(tabLabel);
 			}
 
@@ -979,79 +955,79 @@ namespace NeoEdit.Program
 
 		void DoGridLayout()
 		{
-			int? columns = null, rows = null;
-			if (Columns.HasValue)
-				columns = Math.Max(1, Columns.Value);
-			if (Rows.HasValue)
-				rows = Math.Max(1, Rows.Value);
-			if ((!columns.HasValue) && (!rows.HasValue))
-				columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.Count)), MaxColumns ?? int.MaxValue));
-			if (!rows.HasValue)
-				rows = Math.Max(1, Math.Min((Tabs.Count + columns.Value - 1) / columns.Value, MaxRows ?? int.MaxValue));
-			if (!columns.HasValue)
-				columns = Math.Max(1, Math.Min((Tabs.Count + rows.Value - 1) / rows.Value, MaxColumns ?? int.MaxValue));
+			//int? columns = null, rows = null;
+			//if (Columns.HasValue)
+			//	columns = Math.Max(1, Columns.Value);
+			//if (Rows.HasValue)
+			//	rows = Math.Max(1, Rows.Value);
+			//if ((!columns.HasValue) && (!rows.HasValue))
+			//	columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.Count)), MaxColumns ?? int.MaxValue));
+			//if (!rows.HasValue)
+			//	rows = Math.Max(1, Math.Min((Tabs.Count + columns.Value - 1) / columns.Value, MaxRows ?? int.MaxValue));
+			//if (!columns.HasValue)
+			//	columns = Math.Max(1, Math.Min((Tabs.Count + rows.Value - 1) / rows.Value, MaxColumns ?? int.MaxValue));
 
-			var totalRows = (Tabs.Count + columns.Value - 1) / columns.Value;
+			//var totalRows = (Tabs.Count + columns.Value - 1) / columns.Value;
 
-			var scrollBarVisibility = totalRows > rows ? Visibility.Visible : Visibility.Collapsed;
-			if (scrollBar.Visibility != scrollBarVisibility)
-			{
-				scrollBar.Visibility = scrollBarVisibility;
-				UpdateLayout();
-			}
+			//var scrollBarVisibility = totalRows > rows ? Visibility.Visible : Visibility.Collapsed;
+			//if (scrollBar.Visibility != scrollBarVisibility)
+			//{
+			//	scrollBar.Visibility = scrollBarVisibility;
+			//	UpdateLayout();
+			//}
 
-			var width = canvas.ActualWidth / columns.Value;
-			var height = canvas.ActualHeight / rows.Value;
+			//var width = canvas.ActualWidth / columns.Value;
+			//var height = canvas.ActualHeight / rows.Value;
 
-			scrollBar.ViewportSize = canvas.ActualHeight;
-			scrollBar.Maximum = height * totalRows - canvas.ActualHeight;
+			//scrollBar.ViewportSize = canvas.ActualHeight;
+			//scrollBar.Maximum = height * totalRows - canvas.ActualHeight;
 
-			for (var ctr = 0; ctr < Tabs.Count; ++ctr)
-			{
-				var textEditor = Tabs[ctr] as TextEditor;
-				var top = ctr / columns.Value * height - scrollBar.Value;
-				if ((top + height < 0) || (top > canvas.ActualHeight))
-					continue;
+			//for (var ctr = 0; ctr < Tabs.Count; ++ctr)
+			//{
+			//	var textEditor = Tabs[ctr] as TextEditorData;
+			//	var top = ctr / columns.Value * height - scrollBar.Value;
+			//	if ((top + height < 0) || (top > canvas.ActualHeight))
+			//		continue;
 
-				var border = new Border
-				{
-					BorderBrush = OutlineBrush,
-					Background = BackgroundBrush,
-					BorderThickness = new Thickness(2),
-					CornerRadius = new CornerRadius(8)
-				};
-				Canvas.SetLeft(border, ctr % columns.Value * width);
-				Canvas.SetTop(border, top);
+			//	var border = new Border
+			//	{
+			//		BorderBrush = OutlineBrush,
+			//		Background = BackgroundBrush,
+			//		BorderThickness = new Thickness(2),
+			//		CornerRadius = new CornerRadius(8)
+			//	};
+			//	Canvas.SetLeft(border, ctr % columns.Value * width);
+			//	Canvas.SetTop(border, top);
 
-				var dockPanel = new DockPanel { AllowDrop = true };
-				dockPanel.Drop += (s, e) => OnDrop(e, textEditor);
-				var tabLabel = GetTabLabel(true, textEditor);
-				DockPanel.SetDock(tabLabel, Dock.Top);
-				dockPanel.Children.Add(tabLabel);
-				{
-					textEditor.SetValue(DockPanel.DockProperty, Dock.Bottom);
-					textEditor.FocusVisualStyle = null;
-					dockPanel.Children.Add(textEditor);
-				}
+			//	var dockPanel = new DockPanel { AllowDrop = true };
+			//	dockPanel.Drop += (s, e) => OnDrop(e, textEditor);
+			//	var tabLabel = GetTabLabel(true, textEditor);
+			//	DockPanel.SetDock(tabLabel, Dock.Top);
+			//	dockPanel.Children.Add(tabLabel);
+			//	{
+			//		textEditor.SetValue(DockPanel.DockProperty, Dock.Bottom);
+			//		textEditor.FocusVisualStyle = null;
+			//		dockPanel.Children.Add(textEditor);
+			//	}
 
-				border.Child = dockPanel;
+			//	border.Child = dockPanel;
 
-				border.Width = width;
-				border.Height = height;
-				canvas.Children.Add(border);
-			}
+			//	border.Width = width;
+			//	border.Height = height;
+			//	canvas.Children.Add(border);
+			//}
 
-			ShowTextEditor = textEditor =>
-			{
-				var index = GetTabIndex(textEditor);
-				if (index == -1)
-					return;
-				var top = index / columns.Value * height;
-				scrollBar.Value = Math.Min(top, Math.Max(scrollBar.Value, top + height - scrollBar.ViewportSize));
-			};
+			//ShowTextEditor = textEditor =>
+			//{
+			//	var index = GetTabIndex(textEditor);
+			//	if (index == -1)
+			//		return;
+			//	var top = index / columns.Value * height;
+			//	scrollBar.Value = Math.Min(top, Math.Max(scrollBar.Value, top + height - scrollBar.ViewportSize));
+			//};
 		}
 
-		public void SetFocused(TextEditor textEditor, bool deselectOthers = false)
+		public void SetFocused(TextEditorData textEditor, bool deselectOthers = false)
 		{
 			if (textEditor != Focused)
 			{
@@ -1067,7 +1043,7 @@ namespace NeoEdit.Program
 			ShowFocused();
 		}
 
-		public void Move(TextEditor tab, int newIndex)
+		public void Move(TextEditorData tab, int newIndex)
 		{
 			var oldIndex = GetTabIndex(tab);
 			if (oldIndex == -1)
@@ -1078,26 +1054,27 @@ namespace NeoEdit.Program
 			QueueUpdateLayout();
 		}
 
-		protected override void OnClosing(CancelEventArgs e)
-		{
-			var saveActive = ActiveTabs.ToList();
-			var saveFocused = Focused;
-			foreach (var tab in Tabs)
-			{
-				SetFocused(tab, true);
-				if (!tab.CanClose())
-				{
-					e.Cancel = true;
-					SetActive(saveActive);
-					SetFocused(saveFocused);
-					return;
-				}
-			}
-			Tabs.ToList().ForEach(textEditor => textEditor.Closed());
-			base.OnClosing(e);
+		//TODO
+		//protected override void OnClosing(CancelEventArgs e)
+		//{
+		//	var saveActive = ActiveTabs.ToList();
+		//	var saveFocused = Focused;
+		//	foreach (var tab in Tabs)
+		//	{
+		//		SetFocused(tab, true);
+		//		if (!tab.CanClose())
+		//		{
+		//			e.Cancel = true;
+		//			SetActive(saveActive);
+		//			SetFocused(saveFocused);
+		//			return;
+		//		}
+		//	}
+		//	Tabs.ToList().ForEach(textEditor => textEditor.Closed());
+		//	base.OnClosing(e);
 
-			try { Settings.WindowPosition = GetPosition(); } catch { }
-		}
+		//	try { Settings.WindowPosition = GetPosition(); } catch { }
+		//}
 
 		public bool GotoTab(string fileName, int? line, int? column, int? index)
 		{

@@ -15,7 +15,7 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		void Command_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : this).AddTextEditor(new TextEditor());
+		void Command_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : this).AddTextEditor(new TextEditorData());
 
 		void Command_File_New_FromClipboards()
 		{
@@ -34,13 +34,13 @@ namespace NeoEdit.Program
 					sels.Add(new Range(sb.Length, start));
 					sb.Append(ending);
 				}
-				var te = new TextEditor(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+				var te = new TextEditorData(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 				AddTextEditor(te, canReplace: index == 1);
 				te.SetSelections(sels);
 			}
 		}
 
-		void Command_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => AddTextEditor(new TextEditor(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
+		void Command_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => AddTextEditor(new TextEditorData(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 
 		OpenFileDialogResult Command_File_Open_Open_Dialog(string initialDirectory = null)
 		{
@@ -60,7 +60,7 @@ namespace NeoEdit.Program
 			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}
 
-		void Command_File_Open_Open(OpenFileDialogResult result) => result.files.ForEach(fileName => AddTextEditor(new TextEditor(fileName)));
+		void Command_File_Open_Open(OpenFileDialogResult result) => result.files.ForEach(fileName => AddTextEditor(new TextEditorData(fileName)));
 
 		void Command_File_Open_CopiedCut()
 		{
@@ -77,7 +77,7 @@ namespace NeoEdit.Program
 				return;
 
 			foreach (var file in files)
-				AddTextEditor(new TextEditor(file));
+				AddTextEditor(new TextEditorData(file));
 		}
 
 		void Command_File_Operations_DragDrop()

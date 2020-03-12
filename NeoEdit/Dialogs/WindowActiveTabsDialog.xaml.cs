@@ -13,7 +13,7 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		List<TabsWindow> TabsWindows { get { return UIHelper<WindowActiveTabsDialog>.GetPropValue<List<TabsWindow>>(this); } set { UIHelper<WindowActiveTabsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		List<TextEditor> TextEditors { get { return UIHelper<WindowActiveTabsDialog>.GetPropValue<List<TextEditor>>(this); } set { UIHelper<WindowActiveTabsDialog>.SetPropValue(this, value); } }
+		List<TextEditorData> TextEditors { get { return UIHelper<WindowActiveTabsDialog>.GetPropValue<List<TextEditorData>>(this); } set { UIHelper<WindowActiveTabsDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		bool OneTabSelected { get { return UIHelper<WindowActiveTabsDialog>.GetPropValue<bool>(this); } set { UIHelper<WindowActiveTabsDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -22,7 +22,7 @@ namespace NeoEdit.Program.Dialogs
 		readonly TabsWindow currentTabWindow;
 
 		List<TabsWindow> SelectedTabsWindows => tabsWindows.SelectedItems.OfType<TabsWindow>().ToList();
-		List<TextEditor> SelectedTextEditors => textEditors.SelectedItems.OfType<TextEditor>().ToList();
+		List<TextEditorData> SelectedTextEditors => textEditors.SelectedItems.OfType<TextEditorData>().ToList();
 		TabsWindow SelectedTabsWindow => tabsWindows.SelectedItems.OfType<TabsWindow>().Single();
 
 		static WindowActiveTabsDialog() => UIHelper<WindowActiveTabsDialog>.Register();
@@ -74,7 +74,7 @@ namespace NeoEdit.Program.Dialogs
 
 		List<int> SelectedIndexes(TabsWindow tabsWindow)
 		{
-			var selected = new HashSet<TextEditor>(textEditors.SelectedItems.OfType<TextEditor>());
+			var selected = new HashSet<TextEditorData>(textEditors.SelectedItems.OfType<TextEditorData>());
 			return tabsWindow.Tabs.Indexes(tab => selected.Contains(tab)).ToList();
 		}
 
@@ -163,7 +163,7 @@ namespace NeoEdit.Program.Dialogs
 
 		void OnTextEditorsSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			var newActive = SelectedTabsWindows.ToDictionary(tabsWindow => tabsWindow, tabsWindow => new List<TextEditor>());
+			var newActive = SelectedTabsWindows.ToDictionary(tabsWindow => tabsWindow, tabsWindow => new List<TextEditorData>());
 			foreach (var textEditor in SelectedTextEditors)
 				newActive[textEditor.TabsParent].Add(textEditor);
 			newActive.ForEach(pair => pair.Key.SetActive(pair.Value));

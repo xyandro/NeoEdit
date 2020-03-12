@@ -86,12 +86,10 @@ namespace NeoEdit.Program
 		public bool ViewValuesHasSel { get { return UIHelper<TextEditor>.GetPropValue<bool>(this); } set { UIHelper<TextEditor>.SetPropValue(this, value); } }
 
 		public TabsWindow TabsParent { get; set; }
-		public bool IsActive => TabsParent.TabIsActive(this);
 
 		int currentSelectionField;
 		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; canvasRenderTimer.Start(); statusBarRenderTimer.Start(); } }
 		public int NumSelections => Selections.Count;
-		public List<string> Clipboard => TabsParent.GetClipboard(this);
 		JumpByType jumpBy;
 
 		bool watcherFileModified = false;

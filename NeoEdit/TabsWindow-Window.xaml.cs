@@ -70,7 +70,7 @@ namespace NeoEdit.Program
 
 			data = Compressor.Decompress(data, Compressor.Type.GZip);
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace("\n", "\r\n"));
-			AddTextEditor(new TextEditor(bytes: data, modified: false));
+			AddTextEditor(new TextEditorData(bytes: data, modified: false));
 		}
 	}
 }
