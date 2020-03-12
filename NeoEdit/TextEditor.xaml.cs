@@ -88,7 +88,7 @@ namespace NeoEdit.Program
 		public TabsWindow TabsParent { get; set; }
 
 		int currentSelectionField;
-		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; canvasRenderTimer.Start(); statusBarRenderTimer.Start(); } }
+		public int CurrentSelection { get => currentSelectionField; set { currentSelectionField = value; canvasRenderTimer.Start(); } }
 		public int NumSelections => Selections.Count;
 		JumpByType jumpBy;
 
@@ -149,13 +149,13 @@ namespace NeoEdit.Program
 		}
 
 		public RangeList Selections { get; private set; } = new RangeList(new List<Range>());
-		
+
 
 		readonly Dictionary<int, RangeList> regionsList = Enumerable.Range(1, 9).ToDictionary(num => num, num => new RangeList(new List<Range>()));
 		public IReadOnlyDictionary<int, RangeList> Regions => regionsList;
-		
 
-		RunOnceTimer canvasRenderTimer, statusBarRenderTimer;
+
+		RunOnceTimer canvasRenderTimer;
 		List<PropertyChangeNotifier> localCallbacks;
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		public DateTime fileLastWrite { get; set; }
@@ -172,8 +172,7 @@ namespace NeoEdit.Program
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
 
 			InitializeComponent();
-			canvasRenderTimer = new RunOnceTimer(() => { canvas.InvalidateVisual(); statusBar.InvalidateVisual(); });
-			statusBarRenderTimer = new RunOnceTimer(() => statusBar.InvalidateVisual());
+			canvasRenderTimer = new RunOnceTimer(() => canvas.InvalidateVisual());
 			AutoRefresh = KeepSelections = HighlightSyntax = true;
 			JumpBy = JumpByType.Words;
 
@@ -192,7 +191,6 @@ namespace NeoEdit.Program
 			canvas.MouseLeftButtonUp += OnCanvasMouseLeftButtonUp;
 			canvas.MouseMove += OnCanvasMouseMove;
 			canvas.Render += OnCanvasRender;
-			// TODO statusBar.Render += OnStatusBarRender;
 
 			MouseWheel += (s, e) => yScrollValue -= e.Delta / 40;
 
@@ -203,14 +201,68 @@ namespace NeoEdit.Program
 			};
 
 			FontSizeChanged(null, null);
-			Font.FontSizeChanged += FontSizeChanged;
-			Font.ShowSpecialCharsChanged += (s, e) => InvalidateCanvas();
+			//Font.FontSizeChanged += FontSizeChanged;
+			//Font.ShowSpecialCharsChanged += (s, e) => InvalidateCanvas();
 		}
 
-		public void InvalidateCanvas()
+		public void DrawAll()
 		{
 			canvas.InvalidateVisual();
-			statusBar.InvalidateVisual();
+			SetStatusBarText();
+		}
+
+		void SetStatusBarText()
+		{
+			statusBar.Items.Clear();
+
+			ViewValuesData = null;
+			ViewValuesHasSel = false;
+
+			if (!TextEditorData.Selections.Any())
+			{
+				statusBar.Items.Add("Selection 0/0");
+				statusBar.Items.Add(new Separator());
+				statusBar.Items.Add("Col");
+				statusBar.Items.Add(new Separator());
+				statusBar.Items.Add("In");
+				statusBar.Items.Add(new Separator());
+				statusBar.Items.Add("Pos");
+			}
+			else
+			{
+				var range = TextEditorData.Selections[TextEditorData.CurrentSelection];
+				var lineMin = TextEditorData.GetPositionLine(range.Start);
+				var lineMax = TextEditorData.GetPositionLine(range.End);
+				var indexMin = TextEditorData.GetPositionIndex(range.Start, lineMin);
+				var indexMax = TextEditorData.GetPositionIndex(range.End, lineMax);
+				var columnMin = TextEditorData.GetColumnFromIndex(lineMin, indexMin);
+				var columnMax = TextEditorData.GetColumnFromIndex(lineMax, indexMax);
+				var posMin = range.Start;
+				var posMax = range.End;
+
+				try
+				{
+					ViewValuesData = Coder.StringToBytes(TextEditorData.GetString(range.Start, Math.Min(range.HasSelection ? range.Length : 100, TextEditorData.Length - range.Start)), CodePage);
+					ViewValuesHasSel = range.HasSelection;
+				}
+				catch { }
+
+				statusBar.Items.Add($"Selection {TextEditorData.CurrentSelection + 1:n0}/{TextEditorData.NumSelections:n0}");
+				statusBar.Items.Add(new Separator());
+				statusBar.Items.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
+				statusBar.Items.Add(new Separator());
+				statusBar.Items.Add($"In {lineMin + 1:n0}:{indexMin + 1:n0}{((lineMin == lineMax) && (indexMin == indexMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{indexMax + 1:n0}")}");
+				statusBar.Items.Add(new Separator());
+				statusBar.Items.Add($"Pos {posMin:n0}{(posMin == posMax ? "" : $"-{posMax:n0} ({posMax - posMin:n0})")}");
+			}
+
+			statusBar.Items.Add(new Separator());
+			statusBar.Items.Add($"Regions {string.Join(" / ", Regions.ToDictionary(pair => pair.Key, pair => pair.Value.Count).OrderBy(pair => pair.Key).Select(pair => $"{pair.Value:n0}"))}");
+			statusBar.Items.Add(new Separator());
+			statusBar.Items.Add($"Database {TextEditorData.DBName}");
+
+			//var tf = SystemFonts.MessageFontFamily.GetTypefaces().Where(x => (x.Weight == FontWeights.Normal) && (x.Style == FontStyles.Normal)).First();
+			//dc.DrawText(new FormattedText(string.Join(" │ ", sb), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.White, 1), new Point(2, 2));
 		}
 
 		void FontSizeChanged(object sender, EventArgs e) => CalculateBoundaries();
@@ -319,8 +371,6 @@ namespace NeoEdit.Program
 			var x = TextEditorData.GetColumnFromIndex(line, index);
 			yScrollValue = Math.Min(line, Math.Max(line - yScrollViewportFloor + 1, yScrollValue));
 			xScrollValue = Math.Min(x, Math.Max(x - xScrollViewportFloor + 1, xScrollValue));
-
-			statusBarRenderTimer.Start();
 		}
 
 		public void HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus, object preResult)

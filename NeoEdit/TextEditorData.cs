@@ -2066,5 +2066,9 @@ namespace NeoEdit.Program
 		public bool HasSelections => Selections.Any();
 
 		public int NumSelections => Selections.Count;
+
+		public int Length => Text.Length;
+
+		public string GetString(int start, int length) => Text.GetString(start, length);
 	}
 }

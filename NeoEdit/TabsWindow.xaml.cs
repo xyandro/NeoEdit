@@ -94,7 +94,7 @@ namespace NeoEdit.Program
 			if (addEmpty)
 				AddTextEditor(new TextEditorData());
 
-			DoLayout();
+			DrawAll();
 		}
 
 		protected override void OnSourceInitialized(EventArgs e)
@@ -319,7 +319,7 @@ namespace NeoEdit.Program
 				Commit();
 				Tabs.ForEach(tab => tab.Commit());
 
-				DoLayout();
+				DrawAll();
 			}
 			catch
 			{
@@ -795,7 +795,7 @@ namespace NeoEdit.Program
 			return border;
 		}
 
-		void DoLayout()
+		void DrawAll()
 		{
 			canvas.Children.Clear();
 			if ((Columns == 1) && (Rows == 1))
@@ -935,6 +935,7 @@ namespace NeoEdit.Program
 				Grid.SetColumn(content, 0);
 				Grid.SetColumnSpan(content, 3);
 				grid.Children.Add(content);
+				content.DrawAll();
 			}
 
 			outerBorder.Child = grid;
