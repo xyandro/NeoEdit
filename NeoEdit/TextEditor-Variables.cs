@@ -9,7 +9,7 @@ namespace NeoEdit.Program
 	{
 		void EnsureInTransaction()
 		{
-			if (commandState == null)
+			if (state == null)
 				throw new Exception("Must start transaction before editing data");
 		}
 
@@ -126,7 +126,7 @@ namespace NeoEdit.Program
 			get
 			{
 				if (newClipboard == null)
-					oldClipboard = newClipboard = commandState.GetClipboard(this);
+					oldClipboard = newClipboard = state.GetClipboard(this);
 
 				return newClipboard;
 			}
@@ -433,11 +433,11 @@ namespace NeoEdit.Program
 
 		UndoRedo oldUndoRedo, newUndoRedo;
 
-		public void BeginTransaction(CommandState state = null)
+		public void BeginTransaction(ExecuteState state = null)
 		{
-			if (commandState != null)
+			if (this.state != null)
 				throw new Exception("Already in a transaction");
-			commandState = state ?? new CommandState(NECommand.None);
+			this.state = state ?? new ExecuteState(NECommand.None);
 			oldClipboard = newClipboard = null;
 			oldClipboardIsCut = newClipboardIsCut = null;
 		}
@@ -484,7 +484,7 @@ namespace NeoEdit.Program
 			newXScrollViewport = oldXScrollViewport;
 			newYScrollViewport = oldYScrollViewport;
 
-			commandState = null;
+			state = null;
 		}
 
 		public void Commit()
@@ -528,7 +528,7 @@ namespace NeoEdit.Program
 			oldXScrollViewport = newXScrollViewport;
 			oldYScrollViewport = newYScrollViewport;
 
-			commandState = null;
+			state = null;
 		}
 	}
 }

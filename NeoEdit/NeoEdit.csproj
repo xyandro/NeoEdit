@@ -126,7 +126,6 @@
     <Compile Include="CommandLine\Parser\CommandLineParserVisitor.cs" />
     <None Include="CommandLine\Source\CommandLineLexer.g4" />
     <None Include="CommandLine\Source\CommandLineParser.g4" />
-    <Compile Include="CommandState.cs" />
     <Compile Include="Content\Balanced\BalancedVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedBaseVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedLexer.cs" />
@@ -992,6 +991,7 @@
     <Compile Include="Enums\SortType.cs" />
     <Compile Include="Enums\TimestampType.cs" />
     <Compile Include="Enums\WordSkipType.cs" />
+    <Compile Include="ExecuteState.cs" />
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
     <Compile Include="Expressions\ExpressionUnit.cs" />
     <Compile Include="Expressions\ExpressionUnits.cs" />

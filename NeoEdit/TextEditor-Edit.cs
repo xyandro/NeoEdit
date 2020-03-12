@@ -221,7 +221,7 @@ namespace NeoEdit.Program
 				}
 			}
 
-			return EditFindFindDialog.Run(commandState.TabsWindow, text, selectionOnly, GetVariables());
+			return EditFindFindDialog.Run(state.TabsWindow, text, selectionOnly, GetVariables());
 		}
 
 		void Command_Edit_Find_Find(EditFindFindDialog.Result result)
@@ -355,7 +355,7 @@ namespace NeoEdit.Program
 				}
 			}
 
-			return EditFindRegexReplaceDialog.Run(commandState.TabsWindow, text, selectionOnly);
+			return EditFindRegexReplaceDialog.Run(state.TabsWindow, text, selectionOnly);
 		}
 
 		void Command_Edit_Find_RegexReplace(EditFindRegexReplaceDialog.Result result)
@@ -379,7 +379,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		EditExpressionExpressionDialog.Result Command_Edit_Expression_Expression_Dialog() => EditExpressionExpressionDialog.Run(commandState.TabsWindow, GetVariables());
+		EditExpressionExpressionDialog.Result Command_Edit_Expression_Expression_Dialog() => EditExpressionExpressionDialog.Run(state.TabsWindow, GetVariables());
 
 		void Command_Edit_Expression_Expression(EditExpressionExpressionDialog.Result result)
 		{
@@ -392,7 +392,7 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetExpressionResults<string>("Eval(x)", Selections.Count()));
 
-		EditRotateDialog.Result Command_Edit_Rotate_Dialog() => EditRotateDialog.Run(commandState.TabsWindow, GetVariables());
+		EditRotateDialog.Result Command_Edit_Rotate_Dialog() => EditRotateDialog.Run(state.TabsWindow, GetVariables());
 
 		void Command_Edit_Rotate(EditRotateDialog.Result result)
 		{
@@ -408,7 +408,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		EditRepeatDialog.Result Command_Edit_Repeat_Dialog() => EditRepeatDialog.Run(commandState.TabsWindow, Selections.Count == 1, GetVariables());
+		EditRepeatDialog.Result Command_Edit_Repeat_Dialog() => EditRepeatDialog.Run(state.TabsWindow, Selections.Count == 1, GetVariables());
 
 		void Command_Edit_Repeat(EditRepeatDialog.Result result)
 		{
@@ -443,7 +443,7 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Unescape_URL() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
 
-		EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog() => EditDataHashDialog.Run(commandState.TabsWindow, CodePage);
+		EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog() => EditDataHashDialog.Run(state.TabsWindow, CodePage);
 
 		void Command_Edit_Data_Hash(EditDataHashDialog.Result result)
 		{
@@ -453,7 +453,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		EditDataCompressDialog.Result Command_Edit_Data_Compress_Dialog() => EditDataCompressDialog.Run(commandState.TabsWindow, CodePage, true);
+		EditDataCompressDialog.Result Command_Edit_Data_Compress_Dialog() => EditDataCompressDialog.Run(state.TabsWindow, CodePage, true);
 
 		void Command_Edit_Data_Compress(EditDataCompressDialog.Result result)
 		{
@@ -466,7 +466,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(compressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataCompressDialog.Result Command_Edit_Data_Decompress_Dialog() => EditDataCompressDialog.Run(commandState.TabsWindow, CodePage, false);
+		EditDataCompressDialog.Result Command_Edit_Data_Decompress_Dialog() => EditDataCompressDialog.Run(state.TabsWindow, CodePage, false);
 
 		void Command_Edit_Data_Decompress(EditDataCompressDialog.Result result)
 		{
@@ -479,7 +479,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(decompressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataEncryptDialog.Result Command_Edit_Data_Encrypt_Dialog() => EditDataEncryptDialog.Run(commandState.TabsWindow, CodePage, true);
+		EditDataEncryptDialog.Result Command_Edit_Data_Encrypt_Dialog() => EditDataEncryptDialog.Run(state.TabsWindow, CodePage, true);
 
 		void Command_Edit_Data_Encrypt(EditDataEncryptDialog.Result result)
 		{
@@ -492,7 +492,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(encrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataEncryptDialog.Result Command_Edit_Data_Decrypt_Dialog() => EditDataEncryptDialog.Run(commandState.TabsWindow, CodePage, false);
+		EditDataEncryptDialog.Result Command_Edit_Data_Decrypt_Dialog() => EditDataEncryptDialog.Run(state.TabsWindow, CodePage, false);
 
 		void Command_Edit_Data_Decrypt(EditDataEncryptDialog.Result result)
 		{
@@ -505,7 +505,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(decrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataSignDialog.Result Command_Edit_Data_Sign_Dialog() => EditDataSignDialog.Run(commandState.TabsWindow, CodePage);
+		EditDataSignDialog.Result Command_Edit_Data_Sign_Dialog() => EditDataSignDialog.Run(state.TabsWindow, CodePage);
 
 		void Command_Edit_Data_Sign(EditDataSignDialog.Result result)
 		{
@@ -515,7 +515,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		EditSortDialog.Result Command_Edit_Sort_Dialog() => EditSortDialog.Run(commandState.TabsWindow);
+		EditSortDialog.Result Command_Edit_Sort_Dialog() => EditSortDialog.Run(state.TabsWindow);
 
 		void Command_Edit_Sort(EditSortDialog.Result result)
 		{
@@ -546,7 +546,7 @@ namespace NeoEdit.Program
 				SetRegions(result.UseRegion, newRegions);
 		}
 
-		EditConvertDialog.Result Command_Edit_Convert_Dialog() => EditConvertDialog.Run(commandState.TabsWindow);
+		EditConvertDialog.Result Command_Edit_Convert_Dialog() => EditConvertDialog.Run(state.TabsWindow);
 
 		void Command_Edit_Convert(EditConvertDialog.Result result)
 		{

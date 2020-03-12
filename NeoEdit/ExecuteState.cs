@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NeoEdit.Program
 {
-	public class CommandState
+	public class ExecuteState
 	{
 		Dictionary<TextEditor, IReadOnlyList<string>> ClipboardMap;
 
@@ -19,7 +19,7 @@ namespace NeoEdit.Program
 		public bool Result;
 		public bool? MultiStatus;
 
-		public CommandState(NECommand command) => Command = command;
+		public ExecuteState(NECommand command) => Command = command;
 
 		public IReadOnlyList<string> GetClipboard(TextEditor textEditor)
 		{

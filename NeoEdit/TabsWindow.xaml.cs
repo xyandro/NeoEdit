@@ -61,7 +61,7 @@ namespace NeoEdit.Program
 			oldTabs = newTabs = oldActiveTabs = newActiveTabs = new List<TextEditor>();
 			oldRows = newRows = oldColumns = newColumns = 1;
 
-			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new CommandState(command)));
+			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command)));
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
@@ -76,14 +76,7 @@ namespace NeoEdit.Program
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
 			if (addEmpty)
-				HandleCommand(new CommandState(NECommand.File_New_New));
-		}
-
-		CommandState CreateCommandState(NECommand command)
-		{
-			var state = new CommandState(command) { ShiftDown = shiftDown, ControlDown = controlDown, AltDown = altDown };
-
-			return state;
+				HandleCommand(new ExecuteState(NECommand.File_New_New));
 		}
 
 		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -287,7 +280,7 @@ namespace NeoEdit.Program
 		//	HandleCommand(command, shiftDown, dialogResult, multiStatus);
 		//}
 
-		public void HandleCommand(CommandState state)
+		public void HandleCommand(ExecuteState state)
 		{
 			try
 			{
@@ -332,9 +325,9 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void PreExecuteCommand(CommandState state) => ActiveTabs.ForEach(tab => tab.PreHandleCommand(state));
+		void PreExecuteCommand(ExecuteState state) => ActiveTabs.ForEach(tab => tab.PreHandleCommand());
 
-		void GetCommandParameters(CommandState state)
+		void GetCommandParameters(ExecuteState state)
 		{
 			var found = true;
 			switch (state.Command)
@@ -350,10 +343,10 @@ namespace NeoEdit.Program
 			if (Focused == null)
 				return;
 
-			Focused.GetCommandParameters(state, this);
+			Focused.GetCommandParameters();
 		}
 
-		void ExecuteCommand(CommandState state)
+		void ExecuteCommand(ExecuteState state)
 		{
 			var done = true;
 			switch (state.Command)
@@ -415,7 +408,7 @@ namespace NeoEdit.Program
 			}
 
 			if (!done)
-				ActiveTabs.ForEach(tab => tab.ExecuteCommand(state));
+				ActiveTabs.ForEach(tab => tab.ExecuteCommand());
 		}
 
 		void Command_Internal_AddTextEditor(TextEditor textEditor) => Tabs = Tabs.Concat(textEditor).ToList();
@@ -479,7 +472,7 @@ namespace NeoEdit.Program
 			if (key == Key.System)
 				key = e.SystemKey;
 
-			var state = new CommandState(NECommand.Internal_Key) { Parameters = key };
+			var state = new ExecuteState(NECommand.Internal_Key) { Parameters = key };
 			HandleCommand(state);
 			e.Handled = state.Result;
 		}
@@ -496,7 +489,7 @@ namespace NeoEdit.Program
 			if (e.Source is MenuItem)
 				return;
 
-			HandleCommand(new CommandState(NECommand.Internal_Text) { Parameters = e.Text });
+			HandleCommand(new ExecuteState(NECommand.Internal_Text) { Parameters = e.Text });
 			e.Handled = true;
 		}
 

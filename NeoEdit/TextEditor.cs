@@ -18,8 +18,8 @@ namespace NeoEdit.Program
 	public partial class TextEditor
 	{
 		const int tabStop = 4;
-		AnswerResult savedAnswers => commandState.TabsWindow.savedAnswers;
-		CommandState commandState;
+		AnswerResult savedAnswers => state.TabsWindow.savedAnswers;
+		ExecuteState state;
 
 		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
@@ -412,9 +412,8 @@ namespace NeoEdit.Program
 		}
 		#endregion
 
-		public void PreHandleCommand(CommandState state)
+		public void PreHandleCommand()
 		{
-			commandState = state;
 			switch (state.Command)
 			{
 				case NECommand.Internal_Key: PreCommand_Key((Key)state.Parameters, ref state.PreHandleData); break;
@@ -432,7 +431,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public void GetCommandParameters(CommandState state, TabsWindow TabsParent)
+		public void GetCommandParameters()
 		{
 			switch (state.Command)
 			{
@@ -550,7 +549,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public void ExecuteCommand(CommandState state)
+		public void ExecuteCommand()
 		{
 			switch (state.Command)
 			{
@@ -1806,7 +1805,7 @@ namespace NeoEdit.Program
 		bool ConfirmContinueWhenCannotEncode()
 		{
 			if (!savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.All))
-				savedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(commandState.TabsWindow)
+				savedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(state.TabsWindow)
 				{
 					Title = "Confirm",
 					Text = "The specified encoding cannot fully represent the data. Continue anyway?",
@@ -1899,7 +1898,7 @@ namespace NeoEdit.Program
 				return true;
 
 			if (!savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.All))
-				savedAnswers[nameof(CanClose)] = new Message(commandState.TabsWindow)
+				savedAnswers[nameof(CanClose)] = new Message(state.TabsWindow)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -1958,7 +1957,7 @@ namespace NeoEdit.Program
 					bytes = File.ReadAllBytes(FileName);
 			}
 
-			FileSaver.HandleDecrypt(commandState.TabsWindow, ref bytes, out var aesKey);
+			FileSaver.HandleDecrypt(state.TabsWindow, ref bytes, out var aesKey);
 			AESKey = aesKey;
 
 			bytes = FileSaver.Decompress(bytes, out var compressed);
