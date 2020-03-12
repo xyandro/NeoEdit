@@ -103,7 +103,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Edit_ModifyRegions() => state.Configuration = EditModifyRegionsDialog.Run(state.TabsWindow);
 
-		void Command_Edit_ModifyRegions(EditModifyRegionsDialog.Result result)
+		void Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Result result)
 		{
 			switch (result.Action)
 			{
@@ -482,6 +482,6 @@ namespace NeoEdit.Program
 			SetRegionsWithSelectionsText(useRegion, regions2);
 		}
 
-		void Command_Edit_ModifyRegions(EditModifyRegionsDialog.Action action, int region) => Command_Edit_ModifyRegions(new EditModifyRegionsDialog.Result { Action = action, Regions = new List<int> { region } });
+		void Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Action action, int region) => Execute_Edit_ModifyRegions(new EditModifyRegionsDialog.Result { Action = action, Regions = new List<int> { region } });
 	}
 }

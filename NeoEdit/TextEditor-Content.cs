@@ -78,86 +78,86 @@ namespace NeoEdit.Program
 			return previousRoot;
 		}
 
-		void Command_Content_Type_SetFromExtension() => ContentType = ParserExtensions.GetParserType(FileName);
+		void Execute_Content_Type_SetFromExtension() => ContentType = ParserExtensions.GetParserType(FileName);
 
-		void Command_Content_Type(ParserType contentType) => ContentType = contentType;
+		void Execute_Content_Type(ParserType contentType) => ContentType = contentType;
 
-		void Command_Content_HighlightSyntax(bool? multiStatus) => HighlightSyntax = multiStatus == false;
+		void Execute_Content_HighlightSyntax(bool? multiStatus) => HighlightSyntax = multiStatus == false;
 
-		void Command_Content_StrictParsing(bool? multiStatus)
+		void Execute_Content_StrictParsing(bool? multiStatus)
 		{
 			StrictParsing = multiStatus == false;
 			previousData.Invalidate();
 		}
 
-		void Command_Content_Reformat()
+		void Execute_Content_Reformat()
 		{
 			var root = RootNode();
 			var str = Parser.Reformat(root, Text.GetString(), ContentType);
 			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { str });
 		}
 
-		void Command_Content_Comment() => ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Text, TextView, range)).ToList());
+		void Execute_Content_Comment() => ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Text, TextView, range)).ToList());
 
-		void Command_Content_Uncomment() => ReplaceSelections(Selections.Select(range => Parser.Uncomment(ContentType, Text, TextView, range)).ToList());
+		void Execute_Content_Uncomment() => ReplaceSelections(Selections.Select(range => Parser.Uncomment(ContentType, Text, TextView, range)).ToList());
 
-		void Command_Content_TogglePosition(bool shiftDown)
+		void Execute_Content_TogglePosition(bool shiftDown)
 		{
 			var nodes = GetSelectionNodes();
 			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All();
 			Selections = nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, shiftDown)).ToList();
 		}
 
-		void Command_Content_Current() => ContentReplaceSelections(GetSelectionNodes());
+		void Execute_Content_Current() => ContentReplaceSelections(GetSelectionNodes());
 
-		void Command_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
+		void Execute_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
 
 		void ConfigureExecute_Content_Ancestor() => state.Configuration = ContentAttributeDialog.Run(state.TabsWindow, GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
 
-		void Command_Content_Ancestor(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Execute_Content_Ancestor(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
 		void ConfigureExecute_Content_Attributes() => state.Configuration = ContentAttributesDialog.Run(state.TabsWindow, GetSelectionNodes());
 
-		void Command_Content_Attributes(ContentAttributesDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
+		void Execute_Content_Attributes(ContentAttributesDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 
 		void ConfigureExecute_Content_WithAttribute() => state.Configuration = ContentAttributeDialog.Run(state.TabsWindow, GetSelectionNodes());
 
-		void Command_Content_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Execute_Content_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		void Command_Content_Children_Children() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()));
+		void Execute_Content_Children_Children() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()));
 
-		void Command_Content_Children_SelfAndChildren() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndChildren()));
+		void Execute_Content_Children_SelfAndChildren() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndChildren()));
 
-		void Command_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
+		void Execute_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
 
 		void ConfigureExecute_Content_Children_WithAttribute() => state.Configuration = ContentAttributeDialog.Run(state.TabsWindow, GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
 
-		void Command_Content_Children_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Execute_Content_Children_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		void Command_Content_Descendants_Descendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()));
+		void Execute_Content_Descendants_Descendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()));
 
-		void Command_Content_Descendants_SelfAndDescendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndDescendants()));
+		void Execute_Content_Descendants_SelfAndDescendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndDescendants()));
 
-		void Command_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
+		void Execute_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
 
 		void ConfigureExecute_Content_Descendants_WithAttribute() => state.Configuration = ContentAttributeDialog.Run(state.TabsWindow, GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
 
-		void Command_Content_Descendants_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+		void Execute_Content_Descendants_WithAttribute(ContentAttributeDialog.Result result) => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 
-		void Command_Content_Navigate(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown)
+		void Execute_Content_Navigate(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown)
 		{
 			if (ContentType == ParserType.None)
 			{
 				switch (direction)
 				{
-					case ParserNode.ParserNavigationDirectionEnum.Left: Command_Edit_Navigate_AllLeft(shiftDown); break;
-					case ParserNode.ParserNavigationDirectionEnum.Right: Command_Edit_Navigate_AllRight(shiftDown); break;
+					case ParserNode.ParserNavigationDirectionEnum.Left: Execute_Edit_Navigate_AllLeft(shiftDown); break;
+					case ParserNode.ParserNavigationDirectionEnum.Right: Execute_Edit_Navigate_AllRight(shiftDown); break;
 				}
 			}
 			else
 				ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown, KeepSelections)));
 		}
 
-		void Command_Content_KeepSelections(bool? multiStatus) => KeepSelections = multiStatus != true;
+		void Execute_Content_KeepSelections(bool? multiStatus) => KeepSelections = multiStatus != true;
 	}
 }

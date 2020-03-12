@@ -103,6 +103,6 @@ namespace NeoEdit.Program
 			startNext();
 		}
 
-		void Command_Macro_Open_Quick(int quickNum) => AddTextEditor(new TextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
+		void Execute_Macro_Open_Quick(int quickNum) => AddTextEditor(new TextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 	}
 }

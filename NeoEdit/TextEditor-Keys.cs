@@ -6,16 +6,16 @@ namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{
-		void Command_Keys_Set(int index, bool caseSensitive = true) => state.TabsWindow.SetKeysAndValues(index, GetSelectionStrings(), caseSensitive);
+		void Execute_Keys_Set(int index, bool caseSensitive = true) => state.TabsWindow.SetKeysAndValues(index, GetSelectionStrings(), caseSensitive);
 
-		void Command_Keys_Add(int index)
+		void Execute_Keys_Add(int index)
 		{
 			var values = state.TabsWindow.GetKeysAndValues(this, index);
 			values.AddRange(GetSelectionStrings());
 			state.TabsWindow.SetKeysAndValues(index, values);
 		}
 
-		void Command_Keys_Remove(int index)
+		void Execute_Keys_Remove(int index)
 		{
 			var values = state.TabsWindow.GetKeysAndValues(this, index);
 			foreach (var value in GetSelectionStrings().Distinct())
@@ -23,7 +23,7 @@ namespace NeoEdit.Program
 			state.TabsWindow.SetKeysAndValues(index, values);
 		}
 
-		void Command_Keys_Replace(int index)
+		void Execute_Keys_Replace(int index)
 		{
 			var keysHash = state.TabsWindow.GetKeysHash(this);
 			var values = state.TabsWindow.GetKeysAndValues(this, index);

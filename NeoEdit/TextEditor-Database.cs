@@ -50,7 +50,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Database_Connect() => state.Configuration = DatabaseConnectDialog.Run(state.TabsWindow);
 
-		void Command_Database_Connect(DatabaseConnectDialog.Result result)
+		void Execute_Database_Connect(DatabaseConnectDialog.Result result)
 		{
 			if (dbConnection != null)
 			{
@@ -61,7 +61,7 @@ namespace NeoEdit.Program
 			DBName = result.DBConnectInfo.Name;
 		}
 
-		void Command_Database_ExecuteQuery()
+		void Execute_Database_ExecuteQuery()
 		{
 			ValidateConnection();
 			var selections = Selections.ToList();
@@ -89,7 +89,7 @@ namespace NeoEdit.Program
 			DatabaseExamineDialog.Run(state.TabsWindow, dbConnection);
 		}
 
-		void Command_Database_GetSproc()
+		void Execute_Database_GetSproc()
 		{
 			ValidateConnection();
 

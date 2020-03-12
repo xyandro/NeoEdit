@@ -7,7 +7,7 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		void Command_Diff_Diff(bool shiftDown)
+		void Execute_Diff_Diff(bool shiftDown)
 		{
 			//TODO
 			//var diffTargets = Tabs.Count == 2 ? Tabs.ToList() : ActiveTabs.ToList();
@@ -37,7 +37,7 @@ namespace NeoEdit.Program
 			//diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
 		}
 
-		void Command_Diff_Select_LeftRightBothTabs(bool? left)
+		void Execute_Diff_Select_LeftRightBothTabs(bool? left)
 		{
 			//TODO
 			//SetActive(ActiveTabs.Where(item => item.DiffTarget != null).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetTabIndex(item) < GetTabIndex(item.DiffTarget)) == left)).ToList());

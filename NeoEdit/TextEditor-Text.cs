@@ -81,11 +81,11 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Text_Select_Trim() => state.Configuration = TextTrimDialog.Run(state.TabsWindow);
 
-		void Command_Text_Select_Trim(TextTrimDialog.Result result) => Selections = Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList();
+		void Execute_Text_Select_Trim(TextTrimDialog.Result result) => Selections = Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList();
 
 		void ConfigureExecute_Text_Select_ByWidth() => state.Configuration = TextWidthDialog.Run(state.TabsWindow, false, true, GetVariables());
 
-		void Command_Text_Select_ByWidth(TextWidthDialog.Result result)
+		void Execute_Text_Select_ByWidth(TextWidthDialog.Result result)
 		{
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			Selections = Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList();
@@ -93,7 +93,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Text_Select_WholeBoundedWord(bool wholeWord) => state.Configuration = TextSelectWholeBoundedWordDialog.Run(state.TabsWindow, wholeWord);
 
-		void Command_Text_Select_WholeBoundedWord(TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
+		void Execute_Text_Select_WholeBoundedWord(TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
 		{
 			var minPosition = 0;
 			var maxPosition = TextView.MaxPosition;
@@ -117,7 +117,7 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void Command_Text_Select_MinMax_Text(bool max)
+		void Execute_Text_Select_MinMax_Text(bool max)
 		{
 			if (!Selections.Any())
 				throw new Exception("No selections");
@@ -127,7 +127,7 @@ namespace NeoEdit.Program
 			Selections = strings.Indexes(str => str == find).Select(index => Selections[index]).ToList();
 		}
 
-		void Command_Text_Select_MinMax_Length(bool max)
+		void Execute_Text_Select_MinMax_Length(bool max)
 		{
 			if (!Selections.Any())
 				throw new Exception("No selections");
@@ -137,15 +137,15 @@ namespace NeoEdit.Program
 			Selections = lengths.Indexes(length => length == find).Select(index => Selections[index]).ToList();
 		}
 
-		void Command_Text_Case_Upper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToUpperInvariant()).ToList());
+		void Execute_Text_Case_Upper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToUpperInvariant()).ToList());
 
-		void Command_Text_Case_Lower() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToLowerInvariant()).ToList());
+		void Execute_Text_Case_Lower() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToLowerInvariant()).ToList());
 
-		void Command_Text_Case_Proper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToProper()).ToList());
+		void Execute_Text_Case_Proper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToProper()).ToList());
 
-		void Command_Text_Case_Toggle() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToToggled()).ToList());
+		void Execute_Text_Case_Toggle() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToToggled()).ToList());
 
-		void Command_Text_Length() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => range.Length.ToString()).ToList());
+		void Execute_Text_Length() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => range.Length.ToString()).ToList());
 
 		void ConfigureExecute_Text_Width()
 		{
@@ -153,7 +153,7 @@ namespace NeoEdit.Program
 			state.Configuration = TextWidthDialog.Run(state.TabsWindow, numeric, false, GetVariables());
 		}
 
-		void Command_Text_Width(TextWidthDialog.Result result)
+		void Execute_Text_Width(TextWidthDialog.Result result)
 		{
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
@@ -161,25 +161,25 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Text_Trim() => state.Configuration = TextTrimDialog.Run(state.TabsWindow);
 
-		void Command_Text_Trim(TextTrimDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(Text.GetString(str), result)).ToList());
+		void Execute_Text_Trim(TextTrimDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(Text.GetString(str), result)).ToList());
 
-		void Command_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
+		void Execute_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
 		void ConfigureExecute_Text_Unicode() => state.Configuration = TextUnicodeDialog.Run(state.TabsWindow);
 
-		void Command_Text_Unicode(TextUnicodeDialog.Result result) => ReplaceSelections(result.Value);
+		void Execute_Text_Unicode(TextUnicodeDialog.Result result) => ReplaceSelections(result.Value);
 
-		void Command_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
+		void Execute_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
 		void ConfigureExecute_Text_RandomText() => state.Configuration = TextRandomTextDialog.Run(GetVariables(), state.TabsWindow);
 
-		void Command_Text_RandomText(TextRandomTextDialog.Result result)
+		void Execute_Text_RandomText(TextRandomTextDialog.Result result)
 		{
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 
-		void Command_Text_LoremIpsum() => ReplaceSelections(new LoremGenerator().GetSentences().Take(Selections.Count).ToList());
+		void Execute_Text_LoremIpsum() => ReplaceSelections(new LoremGenerator().GetSentences().Take(Selections.Count).ToList());
 
 		void ConfigureExecute_Text_ReverseRegEx()
 		{
@@ -189,7 +189,7 @@ namespace NeoEdit.Program
 			state.Configuration = TextReverseRegExDialog.Run(state.TabsWindow);
 		}
 
-		void Command_Text_ReverseRegEx(TextReverseRegExDialog.Result result)
+		void Execute_Text_ReverseRegEx(TextReverseRegExDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -210,7 +210,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Text_FirstDistinct() => state.Configuration = TextFirstDistinctDialog.Run(state.TabsWindow);
 
-		void Command_Text_FirstDistinct(TextFirstDistinctDialog.Result result)
+		void Execute_Text_FirstDistinct(TextFirstDistinctDialog.Result result)
 		{
 			var opResult = ProgressDialog.Run(state.TabsWindow, "Finding characters...", (canceled, progress) =>
 			{
@@ -290,14 +290,14 @@ namespace NeoEdit.Program
 				Selections = opResult;
 		}
 
-		void Command_Text_RepeatCount()
+		void Execute_Text_RepeatCount()
 		{
 			var strs = GetSelectionStrings();
 			var counts = strs.GroupBy(str => str).ToDictionary(group => group.Key, group => group.Count());
 			ReplaceSelections(strs.Select(str => counts[str].ToString()).ToList());
 		}
 
-		void Command_Text_RepeatIndex()
+		void Execute_Text_RepeatIndex()
 		{
 			var counts = new Dictionary<string, int>();
 			var strs = GetSelectionStrings();

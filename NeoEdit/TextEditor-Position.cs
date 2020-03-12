@@ -152,7 +152,7 @@ namespace NeoEdit.Program
 			state.Configuration = PositionGotoDialog.Run(state.TabsWindow, gotoType, startValue, GetVariables());
 		}
 
-		void Command_Position_Goto(GotoType gotoType, bool selecting, PositionGotoDialog.Result result)
+		void Execute_Position_Goto(GotoType gotoType, bool selecting, PositionGotoDialog.Result result)
 		{
 			var values = GotoRange.GetPositionsData(GetExpressionResults<string>(result.Expression), gotoType);
 			if (!values.Any())
@@ -220,7 +220,7 @@ namespace NeoEdit.Program
 			//}
 		}
 
-		void Command_Position_Copy(GotoType gotoType, bool withLine)
+		void Execute_Position_Copy(GotoType gotoType, bool withLine)
 		{
 			var starts = new Dictionary<GotoType, List<int>>();
 			var ends = new Dictionary<GotoType, List<int>>();

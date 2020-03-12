@@ -149,7 +149,7 @@ namespace NeoEdit.Program
 			return number;
 		}
 
-		void Command_Numeric_Select_MinMax(bool max)
+		void Execute_Numeric_Select_MinMax(bool max)
 		{
 			if (!Selections.Any())
 				throw new Exception("No selections");
@@ -159,7 +159,7 @@ namespace NeoEdit.Program
 			Selections = values.Indexes(value => value == find).Select(index => Selections[index]).ToList();
 		}
 
-		void Command_Numeric_Select_Fraction_Whole()
+		void Execute_Numeric_Select_Fraction_Whole()
 		{
 			Selections = Selections.AsParallel().AsOrdered().Select(range =>
 			{
@@ -171,7 +171,7 @@ namespace NeoEdit.Program
 			}).ToList();
 		}
 
-		void Command_Numeric_Select_Fraction_Fraction()
+		void Execute_Numeric_Select_Fraction_Fraction()
 		{
 			Selections = Selections.AsParallel().AsOrdered().Select(range =>
 			{
@@ -183,21 +183,21 @@ namespace NeoEdit.Program
 			}).ToList();
 		}
 
-		void Command_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse(Text.GetString(range)).ToString("x").TrimStart('0')).Select(str => str.Length == 0 ? "0" : str).ToList());
+		void Execute_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse(Text.GetString(range)).ToString("x").TrimStart('0')).Select(str => str.Length == 0 ? "0" : str).ToList());
 
-		void Command_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse("0" + Text.GetString(range), NumberStyles.HexNumber).ToString()).ToList());
+		void Execute_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => BigInteger.Parse("0" + Text.GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 
 		void ConfigureExecute_Numeric_ConvertBase() => state.Configuration = NumericConvertBaseDialog.Run(state.TabsWindow);
 
-		void Command_Numeric_ConvertBase(NumericConvertBaseDialog.Result result) => ReplaceSelections(GetSelectionStrings().Select(str => ConvertBase(str, result.InputSet, result.OutputSet)).ToList());
+		void Execute_Numeric_ConvertBase(NumericConvertBaseDialog.Result result) => ReplaceSelections(GetSelectionStrings().Select(str => ConvertBase(str, result.InputSet, result.OutputSet)).ToList());
 
-		void Command_Numeric_Series_ZeroBased() => ReplaceSelections(Selections.Select((range, index) => index.ToString()).ToList());
+		void Execute_Numeric_Series_ZeroBased() => ReplaceSelections(Selections.Select((range, index) => index.ToString()).ToList());
 
-		void Command_Numeric_Series_OneBased() => ReplaceSelections(Selections.Select((range, index) => (index + 1).ToString()).ToList());
+		void Execute_Numeric_Series_OneBased() => ReplaceSelections(Selections.Select((range, index) => (index + 1).ToString()).ToList());
 
 		void ConfigureExecute_Numeric_Series_LinearGeometric(bool linear) => state.Configuration = NumericSeriesDialog.Run(state.TabsWindow, linear, GetVariables());
 
-		void Command_Numeric_Series_LinearGeometric(NumericSeriesDialog.Result result, bool linear)
+		void Execute_Numeric_Series_LinearGeometric(NumericSeriesDialog.Result result, bool linear)
 		{
 			var variables = GetVariables();
 			var start = new NEExpression(result.StartExpression).Evaluate<double>(variables);
@@ -207,7 +207,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Numeric_Scale() => state.Configuration = NumericScaleDialog.Run(state.TabsWindow, GetVariables());
 
-		void Command_Numeric_Scale(NumericScaleDialog.Result result)
+		void Execute_Numeric_Scale(NumericScaleDialog.Result result)
 		{
 			var variables = GetVariables();
 			var prevMins = new NEExpression(result.PrevMin).EvaluateList<double>(variables, Selections.Count());
@@ -218,7 +218,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => ((double.Parse(Text.GetString(range)) - prevMins[index]) * (newMaxs[index] - newMins[index]) / (prevMaxs[index] - prevMins[index]) + newMins[index]).ToString()).ToList());
 		}
 
-		void Command_Numeric_Add_Sum()
+		void Execute_Numeric_Add_Sum()
 		{
 			if (!Selections.Any())
 				return;
@@ -233,7 +233,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(total.ToString());
 		}
 
-		void Command_Numeric_Add_ForwardReverseSum(bool forward, bool undo)
+		void Execute_Numeric_Add_ForwardReverseSum(bool forward, bool undo)
 		{
 			var numbers = Selections.AsParallel().AsOrdered().Select(range => new NumericValue(Text.GetString(range))).ToList();
 			var total = new NumericValue(0);
@@ -251,9 +251,9 @@ namespace NeoEdit.Program
 			ReplaceSelections(numbers.Select(num => num.ToString()).ToList());
 		}
 
-		void Command_Numeric_Add_IncrementDecrement(bool add) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (new NumericValue(Text.GetString(range)) + new NumericValue(add ? 1 : -1)).ToString()).ToList());
+		void Execute_Numeric_Add_IncrementDecrement(bool add) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (new NumericValue(Text.GetString(range)) + new NumericValue(add ? 1 : -1)).ToString()).ToList());
 
-		void Command_Numeric_Add_AddSubtractClipboard(bool add)
+		void Execute_Numeric_Add_AddSubtractClipboard(bool add)
 		{
 			if (Selections.Count == 0)
 				return;
@@ -269,7 +269,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(Selections.Zip(clipboardStrings, (sel, clip) => new { sel, clip }).AsParallel().AsOrdered().Select(obj => (new NumericValue(Text.GetString(obj.sel)) + new NumericValue(obj.clip) * mult).ToString()).ToList());
 		}
 
-		void Command_Numeric_Fraction_Whole()
+		void Execute_Numeric_Fraction_Whole()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range)).Select(str =>
 			{
@@ -280,7 +280,7 @@ namespace NeoEdit.Program
 			}).ToList());
 		}
 
-		void Command_Numeric_Fraction_Fraction()
+		void Execute_Numeric_Fraction_Fraction()
 		{
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range)).Select(str =>
 			{
@@ -291,13 +291,13 @@ namespace NeoEdit.Program
 			}).ToList());
 		}
 
-		void Command_Numeric_Fraction_Simplify() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range)).Select(SimplifyFraction).ToList());
+		void Execute_Numeric_Fraction_Simplify() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range)).Select(SimplifyFraction).ToList());
 
-		void Command_Numeric_Absolute() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).TrimStart('-')).ToList());
+		void Execute_Numeric_Absolute() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).TrimStart('-')).ToList());
 
 		void ConfigureExecute_Numeric_Floor() => state.Configuration = NumericFloorRoundCeilingDialog.Run(state.TabsWindow, "Floor", GetVariables());
 
-		void Command_Numeric_Floor(NumericFloorRoundCeilingDialog.Result result)
+		void Execute_Numeric_Floor(NumericFloorRoundCeilingDialog.Result result)
 		{
 			var baseValue = new NEExpression(result.BaseValue).EvaluateList<double>(GetVariables(), Selections.Count());
 			var interval = new NEExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
@@ -306,7 +306,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Numeric_Ceiling() => state.Configuration = NumericFloorRoundCeilingDialog.Run(state.TabsWindow, "Ceiling", GetVariables());
 
-		void Command_Numeric_Ceiling(NumericFloorRoundCeilingDialog.Result result)
+		void Execute_Numeric_Ceiling(NumericFloorRoundCeilingDialog.Result result)
 		{
 			var baseValue = new NEExpression(result.BaseValue).EvaluateList<double>(GetVariables(), Selections.Count());
 			var interval = new NEExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
@@ -315,7 +315,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Numeric_Round() => state.Configuration = NumericFloorRoundCeilingDialog.Run(state.TabsWindow, "Round", GetVariables());
 
-		void Command_Numeric_Round(NumericFloorRoundCeilingDialog.Result result)
+		void Execute_Numeric_Round(NumericFloorRoundCeilingDialog.Result result)
 		{
 			var baseValue = new NEExpression(result.BaseValue).EvaluateList<double>(GetVariables(), Selections.Count());
 			var interval = new NEExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
@@ -324,7 +324,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Numeric_Limit() => state.Configuration = NumericLimitDialog.Run(state.TabsWindow, GetVariables());
 
-		void Command_Numeric_Limit(NumericLimitDialog.Result result)
+		void Execute_Numeric_Limit(NumericLimitDialog.Result result)
 		{
 			var variables = GetVariables();
 			var minimums = new NEExpression(result.Minimum).EvaluateList<double>(variables, Selections.Count());
@@ -335,7 +335,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Numeric_Cycle() => state.Configuration = NumericCycleDialog.Run(state.TabsWindow, GetVariables());
 
-		void Command_Numeric_Cycle(NumericCycleDialog.Result result)
+		void Execute_Numeric_Cycle(NumericCycleDialog.Result result)
 		{
 			var variables = GetVariables();
 			var minimums = new NEExpression(result.Minimum).EvaluateList<double>(variables, Selections.Count());
@@ -343,13 +343,13 @@ namespace NeoEdit.Program
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => Cycle(double.Parse(Text.GetString(range)), minimums[index], maximums[index], result.IncludeBeginning).ToString()).ToList());
 		}
 
-		void Command_Numeric_Trim() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => TrimNumeric(Text.GetString(range))).ToList());
+		void Execute_Numeric_Trim() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => TrimNumeric(Text.GetString(range))).ToList());
 
-		void Command_Numeric_Factor() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Factor(BigInteger.Parse(Text.GetString(range)))).ToList());
+		void Execute_Numeric_Factor() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Factor(BigInteger.Parse(Text.GetString(range)))).ToList());
 
 		void ConfigureExecute_Numeric_RandomNumber() => state.Configuration = NumericRandomNumberDialog.Run(state.TabsWindow, GetVariables());
 
-		void Command_Numeric_RandomNumber(NumericRandomNumberDialog.Result result)
+		void Execute_Numeric_RandomNumber(NumericRandomNumberDialog.Result result)
 		{
 			var variables = GetVariables();
 			var minValues = new NEExpression(result.MinValue).EvaluateList<int>(variables, Selections.Count());
@@ -365,7 +365,7 @@ namespace NeoEdit.Program
 			state.Configuration = NumericCombinationsPermutationsDialog.Run(state.TabsWindow);
 		}
 
-		void Command_Numeric_CombinationsPermutations(NumericCombinationsPermutationsDialog.Result result)
+		void Execute_Numeric_CombinationsPermutations(NumericCombinationsPermutationsDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -424,6 +424,6 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Numeric_MinMaxValues() => state.Configuration = NumericMinMaxValuesDialog.Run(state.TabsWindow);
 
-		void Command_Numeric_MinMaxValues(NumericMinMaxValuesDialog.Result result) => ReplaceSelections(string.Join(" ", new List<string> { result.Min ? result.CodePage.MinValue() : null, result.Max ? result.CodePage.MaxValue() : null }.Where(str => !string.IsNullOrEmpty(str))));
+		void Execute_Numeric_MinMaxValues(NumericMinMaxValuesDialog.Result result) => ReplaceSelections(string.Join(" ", new List<string> { result.Min ? result.CodePage.MinValue() : null, result.Max ? result.CodePage.MaxValue() : null }.Where(str => !string.IsNullOrEmpty(str))));
 	}
 }

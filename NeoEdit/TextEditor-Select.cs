@@ -237,13 +237,13 @@ namespace NeoEdit.Program
 			return -1;
 		}
 
-		void Command_Select_All() => Selections = new List<Range> { Range.FromIndex(0, Text.Length) };
+		void Execute_Select_All() => Selections = new List<Range> { Range.FromIndex(0, Text.Length) };
 
-		void Command_Select_Nothing() => Selections = new List<Range>();
+		void Execute_Select_Nothing() => Selections = new List<Range>();
 
 		void ConfigureExecute_Select_Limit() => state.Configuration = SelectLimitDialog.Run(state.TabsWindow, GetVariables());
 
-		void Command_Select_Limit(SelectLimitDialog.Result result)
+		void Execute_Select_Limit(SelectLimitDialog.Result result)
 		{
 			var variables = GetVariables();
 			var firstSelection = new NEExpression(result.FirstSelection).Evaluate<int>(variables);
@@ -261,7 +261,7 @@ namespace NeoEdit.Program
 			Selections = sels.ToList();
 		}
 
-		void Command_Select_Lines()
+		void Execute_Select_Lines()
 		{
 			var lineSets = Selections.AsParallel().Select(range => new { start = TextView.GetPositionLine(range.Start), end = TextView.GetPositionLine(Math.Max(range.Start, range.End - 1)) }).ToList();
 
@@ -278,7 +278,7 @@ namespace NeoEdit.Program
 			Selections = lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(TextView.GetPosition(line, 0), TextView.GetLineLength(line))).ToList();
 		}
 
-		void Command_Select_WholeLines()
+		void Execute_Select_WholeLines()
 		{
 			var sels = Selections.AsParallel().AsOrdered().Select(range =>
 			{
@@ -292,16 +292,16 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void Command_Select_Rectangle() => Selections = Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(range)).ToList();
+		void Execute_Select_Rectangle() => Selections = Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(range)).ToList();
 
-		void Command_Select_Invert()
+		void Execute_Select_Invert()
 		{
 			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
 			var end = Selections.Select(sel => sel.Start).Concat(new[] { TextView.MaxPosition });
 			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != TextView.MaxPosition))).ToList();
 		}
 
-		void Command_Select_Join()
+		void Execute_Select_Join()
 		{
 			var sels = new List<Range>();
 			var start = 0;
@@ -316,9 +316,9 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void Command_Select_Empty(bool include) => Selections = Selections.Where(range => range.HasSelection != include).ToList();
+		void Execute_Select_Empty(bool include) => Selections = Selections.Where(range => range.HasSelection != include).ToList();
 
-		void Command_Select_ToggleOpenClose(bool shiftDown)
+		void Execute_Select_ToggleOpenClose(bool shiftDown)
 		{
 			Selections = Selections.AsParallel().AsOrdered().Select(range =>
 			{
@@ -330,19 +330,19 @@ namespace NeoEdit.Program
 			}).ToList();
 		}
 
-		void Command_Select_Repeats_Unique(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().Distinct(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+		void Execute_Select_Repeats_Unique(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().Distinct(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
-		void Command_Select_Repeats_Duplicates(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().Duplicate(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+		void Execute_Select_Repeats_Duplicates(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().Duplicate(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
-		void Command_Select_Repeats_MatchPrevious(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().Match(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+		void Execute_Select_Repeats_MatchPrevious(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().Match(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
-		void Command_Select_Repeats_NonMatchPrevious(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+		void Execute_Select_Repeats_NonMatchPrevious(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
-		void Command_Select_Repeats_RepeatedLines(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList();
+		void Execute_Select_Repeats_RepeatedLines(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList();
 
 		void ConfigureExecute_Select_Repeats_ByCount() => state.Configuration = SelectByCountDialog.Run(state.TabsWindow);
 
-		void Command_Select_Repeats_ByCount(SelectByCountDialog.Result result, bool caseSensitive)
+		void Execute_Select_Repeats_ByCount(SelectByCountDialog.Result result, bool caseSensitive)
 		{
 			var strs = Selections.Select((range, index) => Tuple.Create(Text.GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
@@ -373,7 +373,7 @@ namespace NeoEdit.Program
 			state.PreHandleData = matches;
 		}
 
-		void Command_Select_Repeats_Tabs_MatchMismatch(object preResult, bool match)
+		void Execute_Select_Repeats_Tabs_MatchMismatch(object preResult, bool match)
 		{
 			var matches = preResult as List<string>;
 			Selections = Selections.Where((range, index) => (matches[index] != null) == match).ToList();
@@ -390,7 +390,7 @@ namespace NeoEdit.Program
 			state.PreHandleData = repeats;
 		}
 
-		void Command_Select_Repeats_Tabs_CommonNonCommon(object preResult, bool match)
+		void Execute_Select_Repeats_Tabs_CommonNonCommon(object preResult, bool match)
 		{
 			var repeats = preResult as Dictionary<string, int>;
 			repeats = repeats.ToDictionary(pair => pair.Key, pair => pair.Value, repeats.Comparer);
@@ -403,21 +403,21 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Select_Split() => state.Configuration = SelectSplitDialog.Run(state.TabsWindow, GetVariables());
 
-		void Command_Select_Split(SelectSplitDialog.Result result)
+		void Execute_Select_Split(SelectSplitDialog.Result result)
 		{
 			var indexes = GetExpressionResults<int>(result.Index, Selections.Count());
 			Selections = Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList();
 		}
 
-		void Command_Select_Selection_First()
+		void Execute_Select_Selection_First()
 		{
 			CurrentSelection = 0;
 			EnsureVisible();
 		}
 
-		void Command_Select_Selection_CenterVertically() => EnsureVisible(true);
+		void Execute_Select_Selection_CenterVertically() => EnsureVisible(true);
 
-		void Command_Select_Selection_Center() => EnsureVisible(true, true);
+		void Execute_Select_Selection_Center() => EnsureVisible(true, true);
 
 		void PreExecute_Select_Selection_ToggleAnchor()
 		{
@@ -427,13 +427,13 @@ namespace NeoEdit.Program
 				state.PreHandleData = true;
 		}
 
-		void Command_Select_Selection_ToggleAnchor(object preResult)
+		void Execute_Select_Selection_ToggleAnchor(object preResult)
 		{
 			var anchorStart = (bool)preResult;
 			Selections = Selections.Select(range => new Range(anchorStart ? range.End : range.Start, anchorStart ? range.Start : range.End)).ToList();
 		}
 
-		void Command_Select_Selection_NextPrevious(bool next)
+		void Execute_Select_Selection_NextPrevious(bool next)
 		{
 			var offset = next ? 1 : -1;
 			CurrentSelection += offset;
@@ -444,7 +444,7 @@ namespace NeoEdit.Program
 			EnsureVisible();
 		}
 
-		void Command_Select_Selection_Single()
+		void Execute_Select_Selection_Single()
 		{
 			if (!Selections.Any())
 				return;
@@ -452,19 +452,19 @@ namespace NeoEdit.Program
 			CurrentSelection = 0;
 		}
 
-		void Command_Select_Selection_Remove()
+		void Execute_Select_Selection_Remove()
 		{
 			Selections = Selections.Where((sel, index) => index != CurrentSelection).ToList();
 			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
 		}
 
-		void Command_Select_Selection_RemoveBeforeCurrent()
+		void Execute_Select_Selection_RemoveBeforeCurrent()
 		{
 			Selections = Selections.Where((sel, index) => index >= CurrentSelection).ToList();
 			CurrentSelection = 0;
 		}
 
-		void Command_Select_Selection_RemoveAfterCurrent()
+		void Execute_Select_Selection_RemoveAfterCurrent()
 		{
 			Selections = Selections.Where((sel, index) => index <= CurrentSelection).ToList();
 		}

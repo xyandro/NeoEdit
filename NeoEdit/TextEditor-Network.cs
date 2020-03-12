@@ -69,13 +69,13 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Network_AbsoluteURL() => state.Configuration = NetworkAbsoluteURLDialog.Run(state.TabsWindow, GetVariables());
 
-		void Command_Network_AbsoluteURL(NetworkAbsoluteURLDialog.Result result)
+		void Execute_Network_AbsoluteURL(NetworkAbsoluteURLDialog.Result result)
 		{
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.Select((range, index) => new Uri(new Uri(results[index]), Text.GetString(range)).AbsoluteUri).ToList());
 		}
 
-		void Command_Network_Fetch(Coder.CodePage codePage = Coder.CodePage.None)
+		void Execute_Network_Fetch(Coder.CodePage codePage = Coder.CodePage.None)
 		{
 			var urls = GetSelectionStrings();
 			var results = Task.Run(() => GetURLs(urls, codePage).Result).Result;
@@ -86,7 +86,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Network_FetchFile() => state.Configuration = NetworkFetchFileDialog.Run(state.TabsWindow, GetVariables());
 
-		void Command_Network_FetchFile(NetworkFetchFileDialog.Result result)
+		void Execute_Network_FetchFile(NetworkFetchFileDialog.Result result)
 		{
 			var variables = GetVariables();
 
@@ -105,8 +105,8 @@ namespace NeoEdit.Program
 			invalid = fileNames.Where(fileName => File.Exists(fileName)).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
-				if (!state.SavedAnswers[nameof(Command_Network_FetchFile)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Command_Network_FetchFile)] = new Message(state.TabsWindow)
+				if (!state.SavedAnswers[nameof(Execute_Network_FetchFile)].HasFlag(MessageOptions.All))
+					state.SavedAnswers[nameof(Execute_Network_FetchFile)] = new Message(state.TabsWindow)
 					{
 						Title = "Confirm",
 						Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
@@ -114,7 +114,7 @@ namespace NeoEdit.Program
 						DefaultAccept = MessageOptions.Yes,
 						DefaultCancel = MessageOptions.No,
 					}.Show();
-				if (!state.SavedAnswers[nameof(Command_Network_FetchFile)].HasFlag(MessageOptions.Yes))
+				if (!state.SavedAnswers[nameof(Execute_Network_FetchFile)].HasFlag(MessageOptions.Yes))
 					return;
 			}
 
@@ -123,7 +123,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Network_FetchStream() => state.Configuration = NetworkFetchStreamDialog.Run(state.TabsWindow, GetVariables(), Path.GetDirectoryName(FileName) ?? "");
 
-		void Command_Network_FetchStream(NetworkFetchStreamDialog.Result result)
+		void Execute_Network_FetchStream(NetworkFetchStreamDialog.Result result)
 		{
 			var urls = GetExpressionResults<string>(result.Expression);
 			if (!urls.Any())
@@ -136,7 +136,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Network_FetchPlaylist() => state.Configuration = NetworkFetchStreamDialog.Run(state.TabsWindow, GetVariables(), null);
 
-		void Command_Network_FetchPlaylist(NetworkFetchStreamDialog.Result result)
+		void Execute_Network_FetchPlaylist(NetworkFetchStreamDialog.Result result)
 		{
 			var urls = GetExpressionResults<string>(result.Expression);
 			if (!urls.Any())
@@ -146,11 +146,11 @@ namespace NeoEdit.Program
 			ReplaceSelections(items.Select(l => string.Join(TextView.DefaultEnding, l)).ToList());
 		}
 
-		void Command_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
+		void Execute_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
-		void Command_Network_Lookup_HostName() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
+		void Execute_Network_Lookup_HostName() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return (await Dns.GetHostEntryAsync(name)).HostName; } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
 
-		void Command_Network_AdaptersInfo()
+		void Execute_Network_AdaptersInfo()
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -182,7 +182,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Network_Ping() => state.Configuration = NetworkPingDialog.Run(state.TabsWindow);
 
-		void Command_Network_Ping(NetworkPingDialog.Result result)
+		void Execute_Network_Ping(NetworkPingDialog.Result result)
 		{
 			var replies = Task.Run(async () =>
 			{
@@ -208,7 +208,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Network_ScanPorts() => state.Configuration = NetworkScanPortsDialog.Run(state.TabsWindow);
 
-		void Command_Network_ScanPorts(NetworkScanPortsDialog.Result result)
+		void Execute_Network_ScanPorts(NetworkScanPortsDialog.Result result)
 		{
 			var strs = GetSelectionStrings();
 			var results = PortScanner.ScanPorts(strs.Select(str => IPAddress.Parse(str)).ToList(), result.Ports, result.Attempts, TimeSpan.FromMilliseconds(result.Timeout), result.Concurrency);
@@ -217,7 +217,7 @@ namespace NeoEdit.Program
 
 		void ConfigureExecute_Network_WCF_GetConfig() => state.Configuration = NetworkWCFGetConfig.Run(state.TabsWindow);
 
-		void Command_Network_WCF_GetConfig(NetworkWCFGetConfig.Result result)
+		void Execute_Network_WCF_GetConfig(NetworkWCFGetConfig.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have single selection.");
@@ -226,11 +226,11 @@ namespace NeoEdit.Program
 			Settings.AddWCFUrl(result.URL);
 		}
 
-		void Command_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFClient.ExecuteWCF(Text.GetString(range))).ToList());
+		void Execute_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFClient.ExecuteWCF(Text.GetString(range))).ToList());
 
 		void ConfigureExecute_Network_WCF_InterceptCalls() => state.Configuration = NetworkWCFInterceptCallsDialog.Run(state.TabsWindow);
 
-		void Command_Network_WCF_InterceptCalls(NetworkWCFInterceptCallsDialog.Result result)
+		void Execute_Network_WCF_InterceptCalls(NetworkWCFInterceptCallsDialog.Result result)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have single selection.");
@@ -253,6 +253,6 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void Command_Network_WCF_ResetClients() => WCFClient.ResetClients();
+		void Execute_Network_WCF_ResetClients() => WCFClient.ResetClients();
 	}
 }
