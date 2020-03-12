@@ -93,17 +93,25 @@ namespace NeoEdit.Program
 
 		void Execute_DateTime_UtcNow() => ReplaceSelections(Dater.DateTimeOffsetToString(DateTimeOffset.UtcNow));
 
-		void ConfigureExecute_DateTime_Format() => state.Configuration = DateTimeFormatDialog.Run(state.TabsWindow, Selections.Select(range => Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
+		void ConfigureExecute_DateTime_Format() => state.ConfigureExecuteData = DateTimeFormatDialog.Run(state.TabsWindow, Selections.Select(range => Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
 
-		void Execute_DateTime_Format(DateTimeFormatDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.StringToDateTimeOffset(Text.GetString(range), result.InputFormat), result.OutputFormat)).ToList());
+		void Execute_DateTime_Format()
+		{
+			var result = state.ConfigureExecuteData as DateTimeFormatDialog.Result;
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.StringToDateTimeOffset(Text.GetString(range), result.InputFormat), result.OutputFormat)).ToList());
+		}
 
 		void Execute_DateTime_ToUtc() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: Dater.UTC), Dater.UTC))).ToList());
 
 		void Execute_DateTime_ToLocal() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: Dater.Local), Dater.Local))).ToList());
 
-		void ConfigureExecute_DateTime_ToTimeZone() => state.Configuration = DateTimeToTimeZoneDialog.Run(state.TabsWindow);
+		void ConfigureExecute_DateTime_ToTimeZone() => state.ConfigureExecuteData = DateTimeToTimeZoneDialog.Run(state.TabsWindow);
 
-		void Execute_DateTime_ToTimeZone(DateTimeToTimeZoneDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: result.TimeZone), result.TimeZone))).ToList());
+		void Execute_DateTime_ToTimeZone()
+		{
+			var result = state.ConfigureExecuteData as DateTimeToTimeZoneDialog.Result;
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: result.TimeZone), result.TimeZone))).ToList());
+		}
 
 		void Execute_DateTime_AddClipboard()
 		{

@@ -69,7 +69,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		void ConfigureExecute_File_SaveCopy_SaveCopyByExpression() => state.Configuration = GetExpressionDialog.Run(state.TabsWindow, GetVariables(), Selections.Count);
+		void ConfigureExecute_File_SaveCopy_SaveCopyByExpression() => state.ConfigureExecuteData = GetExpressionDialog.Run(state.TabsWindow, GetVariables(), Selections.Count);
 
 		void Execute_File_SaveCopy_SaveCopyClipboard(bool copyOnly = false)
 		{
@@ -97,8 +97,9 @@ namespace NeoEdit.Program
 			Save(newFileName, copyOnly);
 		}
 
-		void Execute_File_SaveCopy_SaveCopyByExpression(GetExpressionDialog.Result result, bool copyOnly = false)
+		void Execute_File_SaveCopy_SaveCopyByExpression(bool copyOnly = false)
 		{
+			var result = state.ConfigureExecuteData as GetExpressionDialog.Result;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
@@ -149,7 +150,7 @@ namespace NeoEdit.Program
 			SetFileName(fileName);
 		}
 
-		void ConfigureExecute_File_Operations_RenameByExpression() => state.Configuration = GetExpressionDialog.Run(state.TabsWindow, GetVariables(), Selections.Count);
+		void ConfigureExecute_File_Operations_RenameByExpression() => state.ConfigureExecuteData = GetExpressionDialog.Run(state.TabsWindow, GetVariables(), Selections.Count);
 
 		void Execute_File_Operations_RenameClipboard()
 		{
@@ -183,8 +184,9 @@ namespace NeoEdit.Program
 			SetFileName(newFileName);
 		}
 
-		void Execute_File_Operations_RenameByExpression(GetExpressionDialog.Result result)
+		void Execute_File_Operations_RenameByExpression()
 		{
+			var result = state.ConfigureExecuteData as GetExpressionDialog.Result;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
@@ -255,8 +257,9 @@ namespace NeoEdit.Program
 			//textEdit.DiffTarget = this;
 		}
 
-		void Execute_File_Operations_SetDisplayName(GetExpressionDialog.Result result)
+		void Execute_File_Operations_SetDisplayName()
 		{
+			var result = state.ConfigureExecuteData as GetExpressionDialog.Result;
 			if (result.Expression == "f")
 			{
 				DisplayName = null;
@@ -302,7 +305,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void Execute_File_AutoRefresh(bool? multiStatus) => SetAutoRefresh(multiStatus != true);
+		void Execute_File_AutoRefresh() => SetAutoRefresh(state.MultiStatus != true);
 
 		void Execute_File_Revert()
 		{
@@ -371,14 +374,19 @@ namespace NeoEdit.Program
 
 		void Execute_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
 
-		void ConfigureExecute_File_Encoding_Encoding() => state.Configuration = EncodingDialog.Run(state.TabsWindow, CodePage);
+		void ConfigureExecute_File_Encoding_Encoding() => state.ConfigureExecuteData = EncodingDialog.Run(state.TabsWindow, CodePage);
 
-		void Execute_File_Encoding_Encoding(EncodingDialog.Result result) => CodePage = result.CodePage;
-
-		void ConfigureExecute_File_Encoding_ReopenWithEncoding() => state.Configuration = EncodingDialog.Run(state.TabsWindow, CodePage);
-
-		void Execute_File_Encoding_ReopenWithEncoding(EncodingDialog.Result result)
+		void Execute_File_Encoding_Encoding()
 		{
+			var result = state.ConfigureExecuteData as EncodingDialog.Result;
+			CodePage = result.CodePage;
+		}
+
+		void ConfigureExecute_File_Encoding_ReopenWithEncoding() => state.ConfigureExecuteData = EncodingDialog.Run(state.TabsWindow, CodePage);
+
+		void Execute_File_Encoding_ReopenWithEncoding()
+		{
+			var result = state.ConfigureExecuteData as EncodingDialog.Result;
 			if (IsModified)
 			{
 				if (!state.SavedAnswers[nameof(Execute_File_Encoding_ReopenWithEncoding)].HasFlag(MessageOptions.All))
@@ -397,10 +405,11 @@ namespace NeoEdit.Program
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		void ConfigureExecute_File_Encoding_LineEndings() => state.Configuration = FileEncodingLineEndingsDialog.Run(state.TabsWindow, LineEnding ?? "");
+		void ConfigureExecute_File_Encoding_LineEndings() => state.ConfigureExecuteData = FileEncodingLineEndingsDialog.Run(state.TabsWindow, LineEnding ?? "");
 
-		void Execute_File_Encoding_LineEndings(FileEncodingLineEndingsDialog.Result result)
+		void Execute_File_Encoding_LineEndings()
 		{
+			var result = state.ConfigureExecuteData as FileEncodingLineEndingsDialog.Result;
 			var lines = TextView.NumLines;
 			var sel = new List<Range>();
 			for (var line = 0; line < lines; ++line)
@@ -417,13 +426,17 @@ namespace NeoEdit.Program
 		void ConfigureExecute_File_Encrypt()
 		{
 			if (state.MultiStatus != false)
-				state.Configuration = "";
+				state.ConfigureExecuteData = "";
 			else
-				state.Configuration = FileSaver.GetKey(state.TabsWindow, true);
+				state.ConfigureExecuteData = FileSaver.GetKey(state.TabsWindow, true);
 		}
 
-		void Execute_File_Encrypt(string result) => AESKey = result == "" ? null : result;
+		void Execute_File_Encrypt()
+		{
+			var result = state.ConfigureExecuteData as string;
+			AESKey = result == "" ? null : result;
+		}
 
-		void Execute_File_Compress(bool? multiStatus) => Compressed = multiStatus == false;
+		void Execute_File_Compress() => Compressed = state.MultiStatus == false;
 	}
 }

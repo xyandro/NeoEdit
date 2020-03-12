@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Parsing;
@@ -552,66 +551,66 @@ namespace NeoEdit.Program
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Key: Execute_Internal_Key((Key)state.Configuration, state.ShiftDown, state.ControlDown, state.AltDown, state.PreHandleData); break;
-				case NECommand.Internal_Text: Execute_Internal_Text(state.Configuration as string); break;
+				case NECommand.Internal_Key: Execute_Internal_Key(); break;
+				case NECommand.Internal_Text: Execute_Internal_Text(); break;
 				case NECommand.File_New_FromSelections: Execute_File_New_FromSelections(); break;
 				case NECommand.File_Open_Selected: Execute_File_Open_Selected(); break;
 				case NECommand.File_Save_Save: Execute_File_Save_Save(); break;
 				case NECommand.File_Save_SaveAs: Execute_File_SaveCopy_SaveCopy(); break;
 				case NECommand.File_Save_SaveAsClipboard: Execute_File_SaveCopy_SaveCopyClipboard(); break;
-				case NECommand.File_Save_SaveAsByExpression: Execute_File_SaveCopy_SaveCopyByExpression(state.Configuration as GetExpressionDialog.Result); break;
+				case NECommand.File_Save_SaveAsByExpression: Execute_File_SaveCopy_SaveCopyByExpression(); break;
 				case NECommand.File_Copy_CopyTo: Execute_File_SaveCopy_SaveCopy(true); break;
 				case NECommand.File_Copy_CopyToClipboard: Execute_File_SaveCopy_SaveCopyClipboard(true); break;
-				case NECommand.File_Copy_CopyToByExpression: Execute_File_SaveCopy_SaveCopyByExpression(state.Configuration as GetExpressionDialog.Result, true); break;
+				case NECommand.File_Copy_CopyToByExpression: Execute_File_SaveCopy_SaveCopyByExpression(true); break;
 				case NECommand.File_Copy_Path: Execute_File_Copy_Path(); break;
 				case NECommand.File_Copy_Name: Execute_File_Copy_Name(); break;
 				case NECommand.File_Copy_DisplayName: Execute_File_Copy_DisplayName(); break;
 				case NECommand.File_Operations_Rename: Execute_File_Operations_Rename(); break;
 				case NECommand.File_Operations_RenameClipboard: Execute_File_Operations_RenameClipboard(); break;
-				case NECommand.File_Operations_RenameByExpression: Execute_File_Operations_RenameByExpression(state.Configuration as GetExpressionDialog.Result); break;
+				case NECommand.File_Operations_RenameByExpression: Execute_File_Operations_RenameByExpression(); break;
 				case NECommand.File_Operations_Delete: Execute_File_Operations_Delete(); break;
 				case NECommand.File_Operations_Explore: Execute_File_Operations_Explore(); break;
 				case NECommand.File_Operations_CommandPrompt: Execute_File_Operations_CommandPrompt(); break;
 				case NECommand.File_Operations_VCSDiff: Execute_File_Operations_VCSDiff(); break;
-				case NECommand.File_Operations_SetDisplayName: Execute_File_Operations_SetDisplayName(state.Configuration as GetExpressionDialog.Result); break;
+				case NECommand.File_Operations_SetDisplayName: Execute_File_Operations_SetDisplayName(); break;
 				case NECommand.File_Close: Execute_File_Close(); break;
 				case NECommand.File_Refresh: Execute_File_Refresh(); break;
-				case NECommand.File_AutoRefresh: Execute_File_AutoRefresh(state.MultiStatus); break;
+				case NECommand.File_AutoRefresh: Execute_File_AutoRefresh(); break;
 				case NECommand.File_Revert: Execute_File_Revert(); break;
 				case NECommand.File_Insert_Files: Execute_File_Insert_Files(); break;
 				case NECommand.File_Insert_CopiedCut: Execute_File_Insert_CopiedCut(); break;
 				case NECommand.File_Insert_Selected: Execute_File_Insert_Selected(); break;
-				case NECommand.File_Encoding_Encoding: Execute_File_Encoding_Encoding(state.Configuration as EncodingDialog.Result); break;
-				case NECommand.File_Encoding_ReopenWithEncoding: Execute_File_Encoding_ReopenWithEncoding(state.Configuration as EncodingDialog.Result); break;
-				case NECommand.File_Encoding_LineEndings: Execute_File_Encoding_LineEndings(state.Configuration as FileEncodingLineEndingsDialog.Result); break;
-				case NECommand.File_Encrypt: Execute_File_Encrypt(state.Configuration as string); break;
-				case NECommand.File_Compress: Execute_File_Compress(state.MultiStatus); break;
+				case NECommand.File_Encoding_Encoding: Execute_File_Encoding_Encoding(); break;
+				case NECommand.File_Encoding_ReopenWithEncoding: Execute_File_Encoding_ReopenWithEncoding(); break;
+				case NECommand.File_Encoding_LineEndings: Execute_File_Encoding_LineEndings(); break;
+				case NECommand.File_Encrypt: Execute_File_Encrypt(); break;
+				case NECommand.File_Compress: Execute_File_Compress(); break;
 				case NECommand.Edit_Undo: Execute_Edit_Undo(); break;
 				case NECommand.Edit_Redo: Execute_Edit_Redo(); break;
 				case NECommand.Edit_Copy_Copy: Execute_Edit_Copy_CutCopy(false); break;
 				case NECommand.Edit_Copy_Cut: Execute_Edit_Copy_CutCopy(true); break;
-				case NECommand.Edit_Paste_Paste: Execute_Edit_Paste_Paste(state.ShiftDown, false, state.PreHandleData); break;
-				case NECommand.Edit_Paste_RotatePaste: Execute_Edit_Paste_Paste(true, true, state.PreHandleData); break;
-				case NECommand.Edit_Find_Find: Execute_Edit_Find_Find(state.Configuration as EditFindFindDialog.Result); break;
-				case NECommand.Edit_Find_RegexReplace: Execute_Edit_Find_RegexReplace(state.Configuration as EditFindRegexReplaceDialog.Result); break;
+				case NECommand.Edit_Paste_Paste: Execute_Edit_Paste_Paste(state.ShiftDown, false); break;
+				case NECommand.Edit_Paste_RotatePaste: Execute_Edit_Paste_Paste(true, true); break;
+				case NECommand.Edit_Find_Find: Execute_Edit_Find_Find(); break;
+				case NECommand.Edit_Find_RegexReplace: Execute_Edit_Find_RegexReplace(); break;
 				case NECommand.Edit_CopyDown: Execute_Edit_CopyDown(); break;
-				case NECommand.Edit_Rotate: Execute_Edit_Rotate(state.Configuration as EditRotateDialog.Result); break;
-				case NECommand.Edit_Repeat: Execute_Edit_Repeat(state.Configuration as EditRepeatDialog.Result); break;
+				case NECommand.Edit_Rotate: Execute_Edit_Rotate(); break;
+				case NECommand.Edit_Repeat: Execute_Edit_Repeat(); break;
 				case NECommand.Edit_Escape_Markup: Execute_Edit_Escape_Markup(); break;
 				case NECommand.Edit_Escape_RegEx: Execute_Edit_Escape_RegEx(); break;
 				case NECommand.Edit_Escape_URL: Execute_Edit_Escape_URL(); break;
 				case NECommand.Edit_Unescape_Markup: Execute_Edit_Unescape_Markup(); break;
 				case NECommand.Edit_Unescape_RegEx: Execute_Edit_Unescape_RegEx(); break;
 				case NECommand.Edit_Unescape_URL: Execute_Edit_Unescape_URL(); break;
-				case NECommand.Edit_Data_Hash: Execute_Edit_Data_Hash(state.Configuration as EditDataHashDialog.Result); break;
-				case NECommand.Edit_Data_Compress: Execute_Edit_Data_Compress(state.Configuration as EditDataCompressDialog.Result); break;
-				case NECommand.Edit_Data_Decompress: Execute_Edit_Data_Decompress(state.Configuration as EditDataCompressDialog.Result); break;
-				case NECommand.Edit_Data_Encrypt: Execute_Edit_Data_Encrypt(state.Configuration as EditDataEncryptDialog.Result); break;
-				case NECommand.Edit_Data_Decrypt: Execute_Edit_Data_Decrypt(state.Configuration as EditDataEncryptDialog.Result); break;
-				case NECommand.Edit_Data_Sign: Execute_Edit_Data_Sign(state.Configuration as EditDataSignDialog.Result); break;
-				case NECommand.Edit_Sort: Execute_Edit_Sort(state.Configuration as EditSortDialog.Result); break;
-				case NECommand.Edit_Convert: Execute_Edit_Convert(state.Configuration as EditConvertDialog.Result); break;
-				case NECommand.Edit_ModifyRegions: Execute_Edit_ModifyRegions(state.Configuration as EditModifyRegionsDialog.Result); break;
+				case NECommand.Edit_Data_Hash: Execute_Edit_Data_Hash(); break;
+				case NECommand.Edit_Data_Compress: Execute_Edit_Data_Compress(); break;
+				case NECommand.Edit_Data_Decompress: Execute_Edit_Data_Decompress(); break;
+				case NECommand.Edit_Data_Encrypt: Execute_Edit_Data_Encrypt(); break;
+				case NECommand.Edit_Data_Decrypt: Execute_Edit_Data_Decrypt(); break;
+				case NECommand.Edit_Data_Sign: Execute_Edit_Data_Sign(); break;
+				case NECommand.Edit_Sort: Execute_Edit_Sort(); break;
+				case NECommand.Edit_Convert: Execute_Edit_Convert(); break;
+				case NECommand.Edit_ModifyRegions: Execute_Edit_ModifyRegions(state.ConfigureExecuteData as EditModifyRegionsDialog.Result); break;
 				case NECommand.Edit_ModifyRegions_Select_Select_Region1: Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Action.Select_Select, 1); break;
 				case NECommand.Edit_ModifyRegions_Select_Select_Region2: Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Action.Select_Select, 2); break;
 				case NECommand.Edit_ModifyRegions_Select_Select_Region3: Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Action.Select_Select, 3); break;
@@ -819,10 +818,10 @@ namespace NeoEdit.Program
 				case NECommand.Edit_ModifyRegions_Transform_MirrorVertical_Region7: Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Action.Transform_MirrorVertical, 7); break;
 				case NECommand.Edit_ModifyRegions_Transform_MirrorVertical_Region8: Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Action.Transform_MirrorVertical, 8); break;
 				case NECommand.Edit_ModifyRegions_Transform_MirrorVertical_Region9: Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Action.Transform_MirrorVertical, 9); break;
-				case NECommand.Edit_Navigate_WordLeft: Execute_Edit_Navigate_WordLeftRight(false, state.ShiftDown); break;
-				case NECommand.Edit_Navigate_WordRight: Execute_Edit_Navigate_WordLeftRight(true, state.ShiftDown); break;
-				case NECommand.Edit_Navigate_AllLeft: Execute_Edit_Navigate_AllLeft(state.ShiftDown); break;
-				case NECommand.Edit_Navigate_AllRight: Execute_Edit_Navigate_AllRight(state.ShiftDown); break;
+				case NECommand.Edit_Navigate_WordLeft: Execute_Edit_Navigate_WordLeftRight(false); break;
+				case NECommand.Edit_Navigate_WordRight: Execute_Edit_Navigate_WordLeftRight(true); break;
+				case NECommand.Edit_Navigate_AllLeft: Execute_Edit_Navigate_AllLeft(); break;
+				case NECommand.Edit_Navigate_AllRight: Execute_Edit_Navigate_AllRight(); break;
 				case NECommand.Edit_Navigate_JumpBy_Words: Execute_Edit_Navigate_JumpBy(JumpByType.Words); break;
 				case NECommand.Edit_Navigate_JumpBy_Numbers: Execute_Edit_Navigate_JumpBy(JumpByType.Numbers); break;
 				case NECommand.Edit_Navigate_JumpBy_Paths: Execute_Edit_Navigate_JumpBy(JumpByType.Paths); break;
@@ -858,9 +857,9 @@ namespace NeoEdit.Program
 				//case NECommand.Diff_Select_Match: Command_Diff_Select_MatchDiff(true); break;
 				//case NECommand.Diff_Select_Diff: Command_Diff_Select_MatchDiff(false); break;
 				case NECommand.Files_Name_Simplify: Execute_Files_Name_Simplify(); break;
-				case NECommand.Files_Name_MakeAbsolute: Execute_Files_Name_MakeAbsolute(state.Configuration as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
-				case NECommand.Files_Name_MakeRelative: Execute_Files_Name_MakeRelative(state.Configuration as FilesNamesMakeAbsoluteRelativeDialog.Result); break;
-				case NECommand.Files_Name_GetUnique: Execute_Files_Name_GetUnique(state.Configuration as FilesNamesGetUniqueDialog.Result); break;
+				case NECommand.Files_Name_MakeAbsolute: Execute_Files_Name_MakeAbsolute(); break;
+				case NECommand.Files_Name_MakeRelative: Execute_Files_Name_MakeRelative(); break;
+				case NECommand.Files_Name_GetUnique: Execute_Files_Name_GetUnique(); break;
 				case NECommand.Files_Name_Sanitize: Execute_Files_Name_Sanitize(); break;
 				case NECommand.Files_Get_Size: Execute_Files_Get_Size(); break;
 				case NECommand.Files_Get_Time_Write: Execute_Files_Get_Time(TimestampType.Write); break;
@@ -873,17 +872,17 @@ namespace NeoEdit.Program
 				case NECommand.Files_Get_Children: Execute_Files_Get_ChildrenDescendants(false); break;
 				case NECommand.Files_Get_Descendants: Execute_Files_Get_ChildrenDescendants(true); break;
 				case NECommand.Files_Get_VersionControlStatus: Execute_Files_Get_VersionControlStatus(); break;
-				case NECommand.Files_Set_Size: Execute_Files_Set_Size(state.Configuration as FilesSetSizeDialog.Result); break;
-				case NECommand.Files_Set_Time_Write: Execute_Files_Set_Time(TimestampType.Write, state.Configuration as FilesSetTimeDialog.Result); break;
-				case NECommand.Files_Set_Time_Access: Execute_Files_Set_Time(TimestampType.Access, state.Configuration as FilesSetTimeDialog.Result); break;
-				case NECommand.Files_Set_Time_Create: Execute_Files_Set_Time(TimestampType.Create, state.Configuration as FilesSetTimeDialog.Result); break;
-				case NECommand.Files_Set_Time_All: Execute_Files_Set_Time(TimestampType.All, state.Configuration as FilesSetTimeDialog.Result); break;
-				case NECommand.Files_Set_Attributes: Execute_Files_Set_Attributes(state.Configuration as FilesSetAttributesDialog.Result); break;
-				case NECommand.Files_Find: Execute_Files_Find(state.Configuration as FilesFindDialog.Result); break;
-				case NECommand.Files_Insert: Execute_Files_Insert(state.Configuration as FilesInsertDialog.Result); break;
+				case NECommand.Files_Set_Size: Execute_Files_Set_Size(); break;
+				case NECommand.Files_Set_Time_Write: Execute_Files_Set_Time(TimestampType.Write); break;
+				case NECommand.Files_Set_Time_Access: Execute_Files_Set_Time(TimestampType.Access); break;
+				case NECommand.Files_Set_Time_Create: Execute_Files_Set_Time(TimestampType.Create); break;
+				case NECommand.Files_Set_Time_All: Execute_Files_Set_Time(TimestampType.All); break;
+				case NECommand.Files_Set_Attributes: Execute_Files_Set_Attributes(); break;
+				case NECommand.Files_Find: Execute_Files_Find(); break;
+				case NECommand.Files_Insert: Execute_Files_Insert(); break;
 				case NECommand.Files_Create_Files: Execute_Files_Create_Files(); break;
 				case NECommand.Files_Create_Directories: Execute_Files_Create_Directories(); break;
-				case NECommand.Files_Create_FromExpressions: Execute_Files_Create_FromExpressions(state.Configuration as FilesCreateFromExpressionsDialog.Result); break;
+				case NECommand.Files_Create_FromExpressions: Execute_Files_Create_FromExpressions(); break;
 				case NECommand.Files_Select_Name_Directory: Execute_Files_Select_Name(GetPathType.Directory); break;
 				case NECommand.Files_Select_Name_Name: Execute_Files_Select_Name(GetPathType.FileName); break;
 				case NECommand.Files_Select_Name_FileNamewoExtension: Execute_Files_Select_Name(GetPathType.FileNameWoExtension); break;
@@ -897,11 +896,11 @@ namespace NeoEdit.Program
 				case NECommand.Files_Select_NonRoots: Execute_Files_Select_Roots(false); break;
 				case NECommand.Files_Select_MatchDepth: Execute_Files_Select_MatchDepth(); break;
 				case NECommand.Files_Select_CommonAncestor: Execute_Files_Select_CommonAncestor(); break;
-				case NECommand.Files_Select_ByVersionControlStatus: Execute_Files_Select_ByVersionControlStatus(state.Configuration as FilesSelectByVersionControlStatusDialog.Result); break;
-				case NECommand.Files_Hash: Execute_Files_Hash(state.Configuration as FilesHashDialog.Result); break;
-				case NECommand.Files_Sign: Execute_Files_Sign(state.Configuration as FilesSignDialog.Result); break;
-				case NECommand.Files_Operations_Copy: Execute_Files_Operations_CopyMove(state.Configuration as FilesOperationsCopyMoveDialog.Result, false); break;
-				case NECommand.Files_Operations_Move: Execute_Files_Operations_CopyMove(state.Configuration as FilesOperationsCopyMoveDialog.Result, true); break;
+				case NECommand.Files_Select_ByVersionControlStatus: Execute_Files_Select_ByVersionControlStatus(); break;
+				case NECommand.Files_Hash: Execute_Files_Hash(); break;
+				case NECommand.Files_Sign: Execute_Files_Sign(); break;
+				case NECommand.Files_Operations_Copy: Execute_Files_Operations_CopyMove(false); break;
+				case NECommand.Files_Operations_Move: Execute_Files_Operations_CopyMove(true); break;
 				case NECommand.Files_Operations_Delete: Execute_Files_Operations_Delete(); break;
 				case NECommand.Files_Operations_DragDrop: Execute_Files_Operations_DragDrop(); break;
 				case NECommand.Files_Operations_Explore: Execute_Files_Operations_Explore(); break;
@@ -909,15 +908,15 @@ namespace NeoEdit.Program
 				case NECommand.Files_Operations_RunCommand_Parallel: Execute_Files_Operations_RunCommand_Parallel(); break;
 				case NECommand.Files_Operations_RunCommand_Sequential: Execute_Files_Operations_RunCommand_Sequential(); break;
 				case NECommand.Files_Operations_RunCommand_Shell: Execute_Files_Operations_RunCommand_Shell(); break;
-				case NECommand.Files_Operations_Encoding: Execute_Files_Operations_Encoding(state.Configuration as FilesOperationsEncodingDialog.Result); break;
-				case NECommand.Files_Operations_SplitFile: Execute_Files_Operations_SplitFile(state.Configuration as FilesOperationsSplitFileDialog.Result); break;
-				case NECommand.Files_Operations_CombineFiles: Execute_Files_Operations_CombineFiles(state.Configuration as FilesOperationsCombineFilesDialog.Result); break;
-				case NECommand.Edit_Expression_Expression: Execute_Edit_Expression_Expression(state.Configuration as EditExpressionExpressionDialog.Result); break;
+				case NECommand.Files_Operations_Encoding: Execute_Files_Operations_Encoding(); break;
+				case NECommand.Files_Operations_SplitFile: Execute_Files_Operations_SplitFile(); break;
+				case NECommand.Files_Operations_CombineFiles: Execute_Files_Operations_CombineFiles(); break;
+				case NECommand.Edit_Expression_Expression: Execute_Edit_Expression_Expression(); break;
 				case NECommand.Edit_Expression_EvaluateSelected: Execute_Edit_Expression_EvaluateSelected(); break;
-				case NECommand.Text_Select_Trim: Execute_Text_Select_Trim(state.Configuration as TextTrimDialog.Result); break;
-				case NECommand.Text_Select_ByWidth: Execute_Text_Select_ByWidth(state.Configuration as TextWidthDialog.Result); break;
-				case NECommand.Text_Select_WholeWord: Execute_Text_Select_WholeBoundedWord(state.Configuration as TextSelectWholeBoundedWordDialog.Result, true); break;
-				case NECommand.Text_Select_BoundedWord: Execute_Text_Select_WholeBoundedWord(state.Configuration as TextSelectWholeBoundedWordDialog.Result, false); break;
+				case NECommand.Text_Select_Trim: Execute_Text_Select_Trim(); break;
+				case NECommand.Text_Select_ByWidth: Execute_Text_Select_ByWidth(); break;
+				case NECommand.Text_Select_WholeWord: Execute_Text_Select_WholeBoundedWord(true); break;
+				case NECommand.Text_Select_BoundedWord: Execute_Text_Select_WholeBoundedWord(false); break;
 				case NECommand.Text_Select_Min_Text: Execute_Text_Select_MinMax_Text(false); break;
 				case NECommand.Text_Select_Min_Length: Execute_Text_Select_MinMax_Length(false); break;
 				case NECommand.Text_Select_Max_Text: Execute_Text_Select_MinMax_Text(true); break;
@@ -927,15 +926,15 @@ namespace NeoEdit.Program
 				case NECommand.Text_Case_Proper: Execute_Text_Case_Proper(); break;
 				case NECommand.Text_Case_Toggle: Execute_Text_Case_Toggle(); break;
 				case NECommand.Text_Length: Execute_Text_Length(); break;
-				case NECommand.Text_Width: Execute_Text_Width(state.Configuration as TextWidthDialog.Result); break;
-				case NECommand.Text_Trim: Execute_Text_Trim(state.Configuration as TextTrimDialog.Result); break;
+				case NECommand.Text_Width: Execute_Text_Width(); break;
+				case NECommand.Text_Trim: Execute_Text_Trim(); break;
 				case NECommand.Text_SingleLine: Execute_Text_SingleLine(); break;
-				case NECommand.Text_Unicode: Execute_Text_Unicode(state.Configuration as TextUnicodeDialog.Result); break;
+				case NECommand.Text_Unicode: Execute_Text_Unicode(); break;
 				case NECommand.Text_GUID: Execute_Text_GUID(); break;
-				case NECommand.Text_RandomText: Execute_Text_RandomText(state.Configuration as TextRandomTextDialog.Result); break;
+				case NECommand.Text_RandomText: Execute_Text_RandomText(); break;
 				case NECommand.Text_LoremIpsum: Execute_Text_LoremIpsum(); break;
-				case NECommand.Text_ReverseRegEx: Execute_Text_ReverseRegEx(state.Configuration as TextReverseRegExDialog.Result); break;
-				case NECommand.Text_FirstDistinct: Execute_Text_FirstDistinct(state.Configuration as TextFirstDistinctDialog.Result); break;
+				case NECommand.Text_ReverseRegEx: Execute_Text_ReverseRegEx(); break;
+				case NECommand.Text_FirstDistinct: Execute_Text_FirstDistinct(); break;
 				case NECommand.Text_RepeatCount: Execute_Text_RepeatCount(); break;
 				case NECommand.Text_RepeatIndex: Execute_Text_RepeatIndex(); break;
 				case NECommand.Numeric_Select_Min: Execute_Numeric_Select_MinMax(false); break;
@@ -944,12 +943,12 @@ namespace NeoEdit.Program
 				case NECommand.Numeric_Select_Fraction_Fraction: Execute_Numeric_Select_Fraction_Fraction(); break;
 				case NECommand.Numeric_Hex_ToHex: Execute_Numeric_Hex_ToHex(); break;
 				case NECommand.Numeric_Hex_FromHex: Execute_Numeric_Hex_FromHex(); break;
-				case NECommand.Numeric_ConvertBase: Execute_Numeric_ConvertBase(state.Configuration as NumericConvertBaseDialog.Result); break;
+				case NECommand.Numeric_ConvertBase: Execute_Numeric_ConvertBase(); break;
 				case NECommand.Numeric_Series_ZeroBased: Execute_Numeric_Series_ZeroBased(); break;
 				case NECommand.Numeric_Series_OneBased: Execute_Numeric_Series_OneBased(); break;
-				case NECommand.Numeric_Series_Linear: Execute_Numeric_Series_LinearGeometric(state.Configuration as NumericSeriesDialog.Result, true); break;
-				case NECommand.Numeric_Series_Geometric: Execute_Numeric_Series_LinearGeometric(state.Configuration as NumericSeriesDialog.Result, false); break;
-				case NECommand.Numeric_Scale: Execute_Numeric_Scale(state.Configuration as NumericScaleDialog.Result); break;
+				case NECommand.Numeric_Series_Linear: Execute_Numeric_Series_LinearGeometric(true); break;
+				case NECommand.Numeric_Series_Geometric: Execute_Numeric_Series_LinearGeometric(false); break;
+				case NECommand.Numeric_Scale: Execute_Numeric_Scale(); break;
 				case NECommand.Numeric_Add_Sum: Execute_Numeric_Add_Sum(); break;
 				case NECommand.Numeric_Add_ForwardSum: Execute_Numeric_Add_ForwardReverseSum(true, false); break;
 				case NECommand.Numeric_Add_ReverseSum: Execute_Numeric_Add_ForwardReverseSum(false, false); break;
@@ -963,39 +962,39 @@ namespace NeoEdit.Program
 				case NECommand.Numeric_Fraction_Fraction: Execute_Numeric_Fraction_Fraction(); break;
 				case NECommand.Numeric_Fraction_Simplify: Execute_Numeric_Fraction_Simplify(); break;
 				case NECommand.Numeric_Absolute: Execute_Numeric_Absolute(); break;
-				case NECommand.Numeric_Floor: Execute_Numeric_Floor(state.Configuration as NumericFloorRoundCeilingDialog.Result); break;
-				case NECommand.Numeric_Ceiling: Execute_Numeric_Ceiling(state.Configuration as NumericFloorRoundCeilingDialog.Result); break;
-				case NECommand.Numeric_Round: Execute_Numeric_Round(state.Configuration as NumericFloorRoundCeilingDialog.Result); break;
-				case NECommand.Numeric_Limit: Execute_Numeric_Limit(state.Configuration as NumericLimitDialog.Result); break;
-				case NECommand.Numeric_Cycle: Execute_Numeric_Cycle(state.Configuration as NumericCycleDialog.Result); break;
+				case NECommand.Numeric_Floor: Execute_Numeric_Floor(); break;
+				case NECommand.Numeric_Ceiling: Execute_Numeric_Ceiling(); break;
+				case NECommand.Numeric_Round: Execute_Numeric_Round(); break;
+				case NECommand.Numeric_Limit: Execute_Numeric_Limit(); break;
+				case NECommand.Numeric_Cycle: Execute_Numeric_Cycle(); break;
 				case NECommand.Numeric_Trim: Execute_Numeric_Trim(); break;
 				case NECommand.Numeric_Factor: Execute_Numeric_Factor(); break;
-				case NECommand.Numeric_RandomNumber: Execute_Numeric_RandomNumber(state.Configuration as NumericRandomNumberDialog.Result); break;
-				case NECommand.Numeric_CombinationsPermutations: Execute_Numeric_CombinationsPermutations(state.Configuration as NumericCombinationsPermutationsDialog.Result); break;
-				case NECommand.Numeric_MinMaxValues: Execute_Numeric_MinMaxValues(state.Configuration as NumericMinMaxValuesDialog.Result); break;
+				case NECommand.Numeric_RandomNumber: Execute_Numeric_RandomNumber(); break;
+				case NECommand.Numeric_CombinationsPermutations: Execute_Numeric_CombinationsPermutations(); break;
+				case NECommand.Numeric_MinMaxValues: Execute_Numeric_MinMaxValues(); break;
 				case NECommand.DateTime_Now: Execute_DateTime_Now(); break;
 				case NECommand.DateTime_UtcNow: Execute_DateTime_UtcNow(); break;
-				case NECommand.DateTime_Format: Execute_DateTime_Format(state.Configuration as DateTimeFormatDialog.Result); break;
+				case NECommand.DateTime_Format: Execute_DateTime_Format(); break;
 				case NECommand.DateTime_ToUtc: Execute_DateTime_ToUtc(); break;
 				case NECommand.DateTime_ToLocal: Execute_DateTime_ToLocal(); break;
-				case NECommand.DateTime_ToTimeZone: Execute_DateTime_ToTimeZone(state.Configuration as DateTimeToTimeZoneDialog.Result); break;
+				case NECommand.DateTime_ToTimeZone: Execute_DateTime_ToTimeZone(); break;
 				case NECommand.DateTime_AddClipboard: Execute_DateTime_AddClipboard(); break;
 				case NECommand.DateTime_SubtractClipboard: Execute_DateTime_SubtractClipboard(); break;
-				case NECommand.Image_GrabColor: Execute_Image_GrabColor(state.Configuration as ImageGrabColorDialog.Result); break;
-				case NECommand.Image_GrabImage: Execute_Image_GrabImage(state.Configuration as ImageGrabImageDialog.Result); break;
-				case NECommand.Image_AdjustColor: Execute_Image_AdjustColor(state.Configuration as ImageAdjustColorDialog.Result); break;
-				case NECommand.Image_AddColor: Execute_Image_AddColor(state.Configuration as ImageAddOverlayColorDialog.Result); break;
-				case NECommand.Image_OverlayColor: Execute_Image_OverlayColor(state.Configuration as ImageAddOverlayColorDialog.Result); break;
-				case NECommand.Image_Size: Execute_Image_Size(state.Configuration as ImageSizeDialog.Result); break;
-				case NECommand.Image_Crop: Execute_Image_Crop(state.Configuration as ImageCropDialog.Result); break;
+				case NECommand.Image_GrabColor: Execute_Image_GrabColor(); break;
+				case NECommand.Image_GrabImage: Execute_Image_GrabImage(); break;
+				case NECommand.Image_AdjustColor: Execute_Image_AdjustColor(); break;
+				case NECommand.Image_AddColor: Execute_Image_AddColor(); break;
+				case NECommand.Image_OverlayColor: Execute_Image_OverlayColor(); break;
+				case NECommand.Image_Size: Execute_Image_Size(); break;
+				case NECommand.Image_Crop: Execute_Image_Crop(); break;
 				case NECommand.Image_FlipHorizontal: Execute_Image_FlipHorizontal(); break;
 				case NECommand.Image_FlipVertical: Execute_Image_FlipVertical(); break;
-				case NECommand.Image_Rotate: Execute_Image_Rotate(state.Configuration as ImageRotateDialog.Result); break;
-				case NECommand.Image_GIF_Animate: Execute_Image_GIF_Animate(state.Configuration as ImageGIFAnimateDialog.Result); break;
-				case NECommand.Image_GIF_Split: Execute_Image_GIF_Split(state.Configuration as ImageGIFSplitDialog.Result); break;
+				case NECommand.Image_Rotate: Execute_Image_Rotate(); break;
+				case NECommand.Image_GIF_Animate: Execute_Image_GIF_Animate(); break;
+				case NECommand.Image_GIF_Split: Execute_Image_GIF_Split(); break;
 				case NECommand.Table_DetectType: Execute_Table_DetectType(); break;
-				case NECommand.Table_Convert: Execute_Table_Convert(state.Configuration as TableConvertDialog.Result); break;
-				case NECommand.Table_TextToTable: Execute_Table_TextToTable(state.Configuration as TableTextToTableDialog.Result); break;
+				case NECommand.Table_Convert: Execute_Table_Convert(); break;
+				case NECommand.Table_TextToTable: Execute_Table_TextToTable(); break;
 				case NECommand.Table_LineSelectionsToTable: Execute_Table_LineSelectionsToTable(); break;
 				case NECommand.Table_RegionSelectionsToTable_Region1: Execute_Table_RegionSelectionsToTable_Region(1); break;
 				case NECommand.Table_RegionSelectionsToTable_Region2: Execute_Table_RegionSelectionsToTable_Region(2); break;
@@ -1006,21 +1005,21 @@ namespace NeoEdit.Program
 				case NECommand.Table_RegionSelectionsToTable_Region7: Execute_Table_RegionSelectionsToTable_Region(7); break;
 				case NECommand.Table_RegionSelectionsToTable_Region8: Execute_Table_RegionSelectionsToTable_Region(8); break;
 				case NECommand.Table_RegionSelectionsToTable_Region9: Execute_Table_RegionSelectionsToTable_Region(9); break;
-				case NECommand.Table_EditTable: Execute_Table_EditTable(state.Configuration as TableEditTableDialog.Result); break;
+				case NECommand.Table_EditTable: Execute_Table_EditTable(); break;
 				case NECommand.Table_AddHeaders: Execute_Table_AddHeaders(); break;
 				case NECommand.Table_AddRow: Execute_Table_AddRow(); break;
-				case NECommand.Table_AddColumn: Execute_Table_AddColumn(state.Configuration as TableAddColumnDialog.Result); break;
-				case NECommand.Table_Select_RowsByExpression: Execute_Table_Select_RowsByExpression(state.Configuration as GetExpressionDialog.Result); break;
+				case NECommand.Table_AddColumn: Execute_Table_AddColumn(); break;
+				case NECommand.Table_Select_RowsByExpression: Execute_Table_Select_RowsByExpression(); break;
 				case NECommand.Table_SetJoinSource: Execute_Table_SetJoinSource(); break;
-				case NECommand.Table_Join: Execute_Table_Join(state.Configuration as TableJoinDialog.Result); break;
+				case NECommand.Table_Join: Execute_Table_Join(); break;
 				case NECommand.Table_Transpose: Execute_Table_Transpose(); break;
-				case NECommand.Table_Database_GenerateInserts: Execute_Table_Database_GenerateInserts(state.Configuration as TableDatabaseGenerateInsertsDialog.Result); break;
-				case NECommand.Table_Database_GenerateUpdates: Execute_Table_Database_GenerateUpdates(state.Configuration as TableDatabaseGenerateUpdatesDialog.Result); break;
-				case NECommand.Table_Database_GenerateDeletes: Execute_Table_Database_GenerateDeletes(state.Configuration as TableDatabaseGenerateDeletesDialog.Result); break;
-				case NECommand.Position_Goto_Lines: Execute_Position_Goto(GotoType.Line, state.ShiftDown, state.Configuration as PositionGotoDialog.Result); break;
-				case NECommand.Position_Goto_Columns: Execute_Position_Goto(GotoType.Column, state.ShiftDown, state.Configuration as PositionGotoDialog.Result); break;
-				case NECommand.Position_Goto_Indexes: Execute_Position_Goto(GotoType.Index, state.ShiftDown, state.Configuration as PositionGotoDialog.Result); break;
-				case NECommand.Position_Goto_Positions: Execute_Position_Goto(GotoType.Position, state.ShiftDown, state.Configuration as PositionGotoDialog.Result); break;
+				case NECommand.Table_Database_GenerateInserts: Execute_Table_Database_GenerateInserts(); break;
+				case NECommand.Table_Database_GenerateUpdates: Execute_Table_Database_GenerateUpdates(); break;
+				case NECommand.Table_Database_GenerateDeletes: Execute_Table_Database_GenerateDeletes(); break;
+				case NECommand.Position_Goto_Lines: Execute_Position_Goto(GotoType.Line, state.ShiftDown); break;
+				case NECommand.Position_Goto_Columns: Execute_Position_Goto(GotoType.Column, state.ShiftDown); break;
+				case NECommand.Position_Goto_Indexes: Execute_Position_Goto(GotoType.Index, state.ShiftDown); break;
+				case NECommand.Position_Goto_Positions: Execute_Position_Goto(GotoType.Position, state.ShiftDown); break;
 				case NECommand.Position_Copy_Lines: Execute_Position_Copy(GotoType.Line, false); break;
 				case NECommand.Position_Copy_Columns: Execute_Position_Copy(GotoType.Column, !state.ShiftDown); break;
 				case NECommand.Position_Copy_Indexes: Execute_Position_Copy(GotoType.Index, !state.ShiftDown); break;
@@ -1038,25 +1037,25 @@ namespace NeoEdit.Program
 				case NECommand.Content_Type_SQL: Execute_Content_Type(ParserType.SQL); break;
 				case NECommand.Content_Type_TSV: Execute_Content_Type(ParserType.TSV); break;
 				case NECommand.Content_Type_XML: Execute_Content_Type(ParserType.XML); break;
-				case NECommand.Content_HighlightSyntax: Execute_Content_HighlightSyntax(state.MultiStatus); break;
-				case NECommand.Content_StrictParsing: Execute_Content_StrictParsing(state.MultiStatus); break;
+				case NECommand.Content_HighlightSyntax: Execute_Content_HighlightSyntax(); break;
+				case NECommand.Content_StrictParsing: Execute_Content_StrictParsing(); break;
 				case NECommand.Content_Reformat: Execute_Content_Reformat(); break;
 				case NECommand.Content_Comment: Execute_Content_Comment(); break;
 				case NECommand.Content_Uncomment: Execute_Content_Uncomment(); break;
-				case NECommand.Content_TogglePosition: Execute_Content_TogglePosition(state.ShiftDown); break;
+				case NECommand.Content_TogglePosition: Execute_Content_TogglePosition(); break;
 				case NECommand.Content_Current: Execute_Content_Current(); break;
 				case NECommand.Content_Parent: Execute_Content_Parent(); break;
-				case NECommand.Content_Ancestor: Execute_Content_Ancestor(state.Configuration as ContentAttributeDialog.Result); break;
-				case NECommand.Content_Attributes: Execute_Content_Attributes(state.Configuration as ContentAttributesDialog.Result); break;
-				case NECommand.Content_WithAttribute: Execute_Content_WithAttribute(state.Configuration as ContentAttributeDialog.Result); break;
+				case NECommand.Content_Ancestor: Execute_Content_Ancestor(); break;
+				case NECommand.Content_Attributes: Execute_Content_Attributes(); break;
+				case NECommand.Content_WithAttribute: Execute_Content_WithAttribute(); break;
 				case NECommand.Content_Children_Children: Execute_Content_Children_Children(); break;
 				case NECommand.Content_Children_SelfAndChildren: Execute_Content_Children_SelfAndChildren(); break;
 				case NECommand.Content_Children_First: Execute_Content_Children_First(); break;
-				case NECommand.Content_Children_WithAttribute: Execute_Content_Children_WithAttribute(state.Configuration as ContentAttributeDialog.Result); break;
+				case NECommand.Content_Children_WithAttribute: Execute_Content_Children_WithAttribute(); break;
 				case NECommand.Content_Descendants_Descendants: Execute_Content_Descendants_Descendants(); break;
 				case NECommand.Content_Descendants_SelfAndDescendants: Execute_Content_Descendants_SelfAndDescendants(); break;
 				case NECommand.Content_Descendants_First: Execute_Content_Descendants_First(); break;
-				case NECommand.Content_Descendants_WithAttribute: Execute_Content_Descendants_WithAttribute(state.Configuration as ContentAttributeDialog.Result); break;
+				case NECommand.Content_Descendants_WithAttribute: Execute_Content_Descendants_WithAttribute(); break;
 				case NECommand.Content_Navigate_Up: Execute_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Up, state.ShiftDown); break;
 				case NECommand.Content_Navigate_Down: Execute_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Down, state.ShiftDown); break;
 				case NECommand.Content_Navigate_Left: Execute_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Left, state.ShiftDown); break;
@@ -1067,23 +1066,23 @@ namespace NeoEdit.Program
 				case NECommand.Content_Navigate_PgDn: Execute_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.PgDn, state.ShiftDown); break;
 				case NECommand.Content_Navigate_Row: Execute_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Row, true); break;
 				case NECommand.Content_Navigate_Column: Execute_Content_Navigate(ParserNode.ParserNavigationDirectionEnum.Column, true); break;
-				case NECommand.Content_KeepSelections: Execute_Content_KeepSelections(state.MultiStatus); break;
-				case NECommand.Network_AbsoluteURL: Execute_Network_AbsoluteURL(state.Configuration as NetworkAbsoluteURLDialog.Result); break;
+				case NECommand.Content_KeepSelections: Execute_Content_KeepSelections(); break;
+				case NECommand.Network_AbsoluteURL: Execute_Network_AbsoluteURL(); break;
 				case NECommand.Network_Fetch: Execute_Network_Fetch(); break;
 				case NECommand.Network_FetchHex: Execute_Network_Fetch(Coder.CodePage.Hex); break;
-				case NECommand.Network_FetchFile: Execute_Network_FetchFile(state.Configuration as NetworkFetchFileDialog.Result); break;
-				case NECommand.Network_FetchStream: Execute_Network_FetchStream(state.Configuration as NetworkFetchStreamDialog.Result); break;
-				case NECommand.Network_FetchPlaylist: Execute_Network_FetchPlaylist(state.Configuration as NetworkFetchStreamDialog.Result); break;
+				case NECommand.Network_FetchFile: Execute_Network_FetchFile(); break;
+				case NECommand.Network_FetchStream: Execute_Network_FetchStream(); break;
+				case NECommand.Network_FetchPlaylist: Execute_Network_FetchPlaylist(); break;
 				case NECommand.Network_Lookup_IP: Execute_Network_Lookup_IP(); break;
 				case NECommand.Network_Lookup_HostName: Execute_Network_Lookup_HostName(); break;
 				case NECommand.Network_AdaptersInfo: Execute_Network_AdaptersInfo(); break;
-				case NECommand.Network_Ping: Execute_Network_Ping(state.Configuration as NetworkPingDialog.Result); break;
-				case NECommand.Network_ScanPorts: Execute_Network_ScanPorts(state.Configuration as NetworkScanPortsDialog.Result); break;
-				case NECommand.Network_WCF_GetConfig: Execute_Network_WCF_GetConfig(state.Configuration as NetworkWCFGetConfig.Result); break;
+				case NECommand.Network_Ping: Execute_Network_Ping(); break;
+				case NECommand.Network_ScanPorts: Execute_Network_ScanPorts(); break;
+				case NECommand.Network_WCF_GetConfig: Execute_Network_WCF_GetConfig(); break;
 				case NECommand.Network_WCF_Execute: Execute_Network_WCF_Execute(); break;
-				case NECommand.Network_WCF_InterceptCalls: Execute_Network_WCF_InterceptCalls(state.Configuration as NetworkWCFInterceptCallsDialog.Result); break;
+				case NECommand.Network_WCF_InterceptCalls: Execute_Network_WCF_InterceptCalls(); break;
 				case NECommand.Network_WCF_ResetClients: Execute_Network_WCF_ResetClients(); break;
-				case NECommand.Database_Connect: Execute_Database_Connect(state.Configuration as DatabaseConnectDialog.Result); break;
+				case NECommand.Database_Connect: Execute_Database_Connect(); break;
 				case NECommand.Database_ExecuteQuery: Execute_Database_ExecuteQuery(); break;
 				case NECommand.Database_GetSproc: Execute_Database_GetSproc(); break;
 				case NECommand.Keys_Set_KeysCaseSensitive: Execute_Keys_Set(0, true); break;
@@ -1128,7 +1127,7 @@ namespace NeoEdit.Program
 				case NECommand.Keys_Replace_Values9: Execute_Keys_Replace(9); break;
 				case NECommand.Select_All: Execute_Select_All(); break;
 				case NECommand.Select_Nothing: Execute_Select_Nothing(); break;
-				case NECommand.Select_Limit: Execute_Select_Limit(state.Configuration as SelectLimitDialog.Result); break;
+				case NECommand.Select_Limit: Execute_Select_Limit(); break;
 				case NECommand.Select_Lines: Execute_Select_Lines(); break;
 				case NECommand.Select_WholeLines: Execute_Select_WholeLines(); break;
 				case NECommand.Select_Rectangle: Execute_Select_Rectangle(); break;
@@ -1136,32 +1135,32 @@ namespace NeoEdit.Program
 				case NECommand.Select_Join: Execute_Select_Join(); break;
 				case NECommand.Select_Empty: Execute_Select_Empty(true); break;
 				case NECommand.Select_NonEmpty: Execute_Select_Empty(false); break;
-				case NECommand.Select_ToggleOpenClose: Execute_Select_ToggleOpenClose(state.ShiftDown); break;
+				case NECommand.Select_ToggleOpenClose: Execute_Select_ToggleOpenClose(); break;
 				case NECommand.Select_RepeatsCaseSensitive_Unique: Execute_Select_Repeats_Unique(true); break;
 				case NECommand.Select_RepeatsCaseSensitive_Duplicates: Execute_Select_Repeats_Duplicates(true); break;
 				case NECommand.Select_RepeatsCaseSensitive_MatchPrevious: Execute_Select_Repeats_MatchPrevious(true); break;
 				case NECommand.Select_RepeatsCaseSensitive_NonMatchPrevious: Execute_Select_Repeats_NonMatchPrevious(true); break;
 				case NECommand.Select_RepeatsCaseSensitive_RepeatedLines: Execute_Select_Repeats_RepeatedLines(true); break;
-				case NECommand.Select_RepeatsCaseSensitive_ByCount: Execute_Select_Repeats_ByCount(state.Configuration as SelectByCountDialog.Result, true); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: Execute_Select_Repeats_Tabs_MatchMismatch(state.PreHandleData, true); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: Execute_Select_Repeats_Tabs_MatchMismatch(state.PreHandleData, false); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: Execute_Select_Repeats_Tabs_CommonNonCommon(state.PreHandleData, true); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: Execute_Select_Repeats_Tabs_CommonNonCommon(state.PreHandleData, false); break;
+				case NECommand.Select_RepeatsCaseSensitive_ByCount: Execute_Select_Repeats_ByCount(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: Execute_Select_Repeats_Tabs_MatchMismatch(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: Execute_Select_Repeats_Tabs_MatchMismatch(false); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: Execute_Select_Repeats_Tabs_CommonNonCommon(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: Execute_Select_Repeats_Tabs_CommonNonCommon(false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_Unique: Execute_Select_Repeats_Unique(false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_Duplicates: Execute_Select_Repeats_Duplicates(false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_MatchPrevious: Execute_Select_Repeats_MatchPrevious(false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_NonMatchPrevious: Execute_Select_Repeats_NonMatchPrevious(false); break;
 				case NECommand.Select_RepeatsCaseInsensitive_RepeatedLines: Execute_Select_Repeats_RepeatedLines(false); break;
-				case NECommand.Select_RepeatsCaseInsensitive_ByCount: Execute_Select_Repeats_ByCount(state.Configuration as SelectByCountDialog.Result, false); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: Execute_Select_Repeats_Tabs_MatchMismatch(state.PreHandleData, true); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: Execute_Select_Repeats_Tabs_MatchMismatch(state.PreHandleData, false); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: Execute_Select_Repeats_Tabs_CommonNonCommon(state.PreHandleData, true); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: Execute_Select_Repeats_Tabs_CommonNonCommon(state.PreHandleData, false); break;
-				case NECommand.Select_Split: Execute_Select_Split(state.Configuration as SelectSplitDialog.Result); break;
+				case NECommand.Select_RepeatsCaseInsensitive_ByCount: Execute_Select_Repeats_ByCount(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: Execute_Select_Repeats_Tabs_MatchMismatch(true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: Execute_Select_Repeats_Tabs_MatchMismatch(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: Execute_Select_Repeats_Tabs_CommonNonCommon(true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: Execute_Select_Repeats_Tabs_CommonNonCommon(false); break;
+				case NECommand.Select_Split: Execute_Select_Split(); break;
 				case NECommand.Select_Selection_First: Execute_Select_Selection_First(); break;
 				case NECommand.Select_Selection_CenterVertically: Execute_Select_Selection_CenterVertically(); break;
 				case NECommand.Select_Selection_Center: Execute_Select_Selection_Center(); break;
-				case NECommand.Select_Selection_ToggleAnchor: Execute_Select_Selection_ToggleAnchor(state.PreHandleData); break;
+				case NECommand.Select_Selection_ToggleAnchor: Execute_Select_Selection_ToggleAnchor(); break;
 				case NECommand.Select_Selection_Next: Execute_Select_Selection_NextPrevious(true); break;
 				case NECommand.Select_Selection_Previous: Execute_Select_Selection_NextPrevious(false); break;
 				case NECommand.Select_Selection_Single: Execute_Select_Selection_Single(); break;
@@ -1173,7 +1172,7 @@ namespace NeoEdit.Program
 				//case NECommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 				case NECommand.Window_TabIndex: Execute_Window_TabIndex(false); break;
 				case NECommand.Window_ActiveTabIndex: Execute_Window_TabIndex(true); break;
-				case NECommand.Window_ViewValues: Execute_Window_ViewValues(state.MultiStatus); break;
+				case NECommand.Window_ViewValues: Execute_Window_ViewValues(); break;
 			}
 		}
 
@@ -1338,26 +1337,27 @@ namespace NeoEdit.Program
 
 		void PreExecute_Internal_Key()
 		{
-			switch ((Key)state.Configuration)
+			switch ((Key)state.ConfigureExecuteData)
 			{
 				case Key.Back:
 				case Key.Delete:
 				case Key.Left:
 				case Key.Right:
-					state.PreHandleData = (state.PreHandleData as bool? ?? false) || (Selections.Any(range => range.HasSelection));
+					state.PreExecuteData = (state.PreExecuteData as bool? ?? false) || (Selections.Any(range => range.HasSelection));
 					break;
 			}
 		}
 
-		bool Execute_Internal_Key(Key key, bool shiftDown, bool controlDown, bool altDown, object previousData)
+		bool Execute_Internal_Key()
 		{
 			var ret = true;
+			var key = (Key)state.ConfigureExecuteData;
 			switch (key)
 			{
 				case Key.Back:
 				case Key.Delete:
 					{
-						if ((bool)previousData)
+						if ((bool)state.PreExecuteData)
 						{
 							ReplaceSelections("");
 							break;
@@ -1368,14 +1368,14 @@ namespace NeoEdit.Program
 							var position = range.Start;
 							var anchor = range.Anchor;
 
-							if (controlDown)
+							if (state.ControlDown)
 							{
 								if (key == Key.Back)
 									position = GetPrevWord(position);
 								else
 									position = GetNextWord(position);
 							}
-							else if ((shiftDown) && (key == Key.Delete))
+							else if ((state.ShiftDown) && (key == Key.Delete))
 							{
 								var line = TextView.GetPositionLine(position);
 								position = TextView.GetPosition(line, 0);
@@ -1431,12 +1431,12 @@ namespace NeoEdit.Program
 						{
 							var line = TextView.GetPositionLine(range.Cursor);
 							var index = TextView.GetPositionIndex(range.Cursor, line);
-							if ((!shiftDown) && ((bool)previousData))
+							if ((!state.ShiftDown) && ((bool)state.PreExecuteData))
 								return new Range(range.Start);
 							else if ((index == 0) && (line != 0))
-								return MoveCursor(range, -1, int.MaxValue, shiftDown, indexRel: false);
+								return MoveCursor(range, -1, int.MaxValue, state.ShiftDown, indexRel: false);
 							else
-								return MoveCursor(range, 0, -1, shiftDown);
+								return MoveCursor(range, 0, -1, state.ShiftDown);
 						}).ToList();
 					}
 					break;
@@ -1446,12 +1446,12 @@ namespace NeoEdit.Program
 						{
 							var line = TextView.GetPositionLine(range.Cursor);
 							var index = TextView.GetPositionIndex(range.Cursor, line);
-							if ((!shiftDown) && ((bool)previousData))
+							if ((!state.ShiftDown) && ((bool)state.PreExecuteData))
 								return new Range(range.End);
 							else if ((index == TextView.GetLineLength(line)) && (line != TextView.NumLines - 1))
-								return MoveCursor(range, 1, 0, shiftDown, indexRel: false);
+								return MoveCursor(range, 1, 0, state.ShiftDown, indexRel: false);
 							else
-								return MoveCursor(range, 0, 1, shiftDown);
+								return MoveCursor(range, 0, 1, state.ShiftDown);
 						}).ToList();
 					}
 					break;
@@ -1459,9 +1459,9 @@ namespace NeoEdit.Program
 				case Key.Down:
 					{
 						var mult = key == Key.Up ? -1 : 1;
-						if (!controlDown)
-							Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, mult, 0, shiftDown)).ToList();
-						else if (!shiftDown)
+						if (!state.ControlDown)
+							Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, mult, 0, state.ShiftDown)).ToList();
+						else if (!state.ShiftDown)
 							YScrollValue += mult;
 						else if (key == Key.Down)
 							BlockSelDown();
@@ -1470,10 +1470,10 @@ namespace NeoEdit.Program
 					}
 					break;
 				case Key.Home:
-					if (controlDown)
+					if (state.ControlDown)
 					{
-						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, shiftDown)).ToList(); // Have to use MoveCursor for selection
-						if ((!sels.Any()) && (!shiftDown))
+						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, state.ShiftDown)).ToList(); // Have to use MoveCursor for selection
+						if ((!sels.Any()) && (!state.ShiftDown))
 							sels.Add(new Range());
 						Selections = sels;
 					}
@@ -1498,51 +1498,51 @@ namespace NeoEdit.Program
 
 							if (first != index)
 								changed = true;
-							sels.Add(MoveCursor(selection, 0, first, shiftDown, indexRel: false));
+							sels.Add(MoveCursor(selection, 0, first, state.ShiftDown, indexRel: false));
 						}
 						if (!changed)
 						{
-							sels = sels.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, 0, shiftDown, indexRel: false)).ToList();
+							sels = sels.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, 0, state.ShiftDown, indexRel: false)).ToList();
 							XScrollValue = 0;
 						}
 						Selections = sels;
 					}
 					break;
 				case Key.End:
-					if (controlDown)
+					if (state.ControlDown)
 					{
-						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, Text.Length, shiftDown)).ToList(); // Have to use MoveCursor for selection
-						if ((!sels.Any()) && (!shiftDown))
+						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, Text.Length, state.ShiftDown)).ToList(); // Have to use MoveCursor for selection
+						if ((!sels.Any()) && (!state.ShiftDown))
 							sels.Add(new Range(Text.Length));
 						Selections = sels;
 					}
 					else
-						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, int.MaxValue, shiftDown, indexRel: false)).ToList();
+						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, int.MaxValue, state.ShiftDown, indexRel: false)).ToList();
 					break;
 				case Key.PageUp:
-					if (controlDown)
+					if (state.ControlDown)
 						YScrollValue -= YScrollViewportFloor / 2;
 					else
 					{
 						var savedYScrollViewportFloor = YScrollViewportFloor;
-						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - savedYScrollViewportFloor, 0, shiftDown)).ToList();
+						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - savedYScrollViewportFloor, 0, state.ShiftDown)).ToList();
 					}
 					break;
 				case Key.PageDown:
-					if (controlDown)
+					if (state.ControlDown)
 						YScrollValue += YScrollViewportFloor / 2;
 					else
 					{
 						var savedYScrollViewportFloor = YScrollViewportFloor;
-						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, savedYScrollViewportFloor - 1, 0, shiftDown)).ToList();
+						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, savedYScrollViewportFloor - 1, 0, state.ShiftDown)).ToList();
 					}
 					break;
 				case Key.Tab:
 					{
 						if (Selections.AsParallel().All(range => (!range.HasSelection) || (TextView.GetPositionLine(range.Start) == TextView.GetPositionLine(Math.Max(range.Start, range.End - 1)))))
 						{
-							if (!shiftDown)
-								Execute_Internal_Text("\t");
+							if (!state.ShiftDown)
+								Execute_Internal_Text();
 							else
 							{
 								var tabs = Selections.AsParallel().AsOrdered().Where(range => (range.Start != 0) && (Text.GetString(range.Start - 1, 1) == "\t")).Select(range => Range.FromIndex(range.Start - 1, 1)).ToList();
@@ -1555,7 +1555,7 @@ namespace NeoEdit.Program
 						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy().ToDictionary(line => line, line => TextView.GetPosition(line, 0));
 						int length;
 						string replace;
-						if (shiftDown)
+						if (state.ShiftDown)
 						{
 							length = 1;
 							replace = "";
@@ -1574,7 +1574,7 @@ namespace NeoEdit.Program
 					}
 					break;
 				case Key.Enter:
-					Execute_Internal_Text(TextView.DefaultEnding);
+					Execute_Internal_Text();
 					break;
 				default: ret = false; break;
 			}
@@ -1582,7 +1582,7 @@ namespace NeoEdit.Program
 			return ret;
 		}
 
-		void Execute_Internal_Text(string text) => ReplaceSelections(text, false, tryJoinUndo: true);
+		void Execute_Internal_Text() => ReplaceSelections(state.ConfigureExecuteData as string, false, tryJoinUndo: true);
 
 		List<string> GetSelectionStrings() => Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range)).ToList();
 

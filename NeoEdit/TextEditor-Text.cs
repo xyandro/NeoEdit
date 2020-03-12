@@ -79,22 +79,28 @@ namespace NeoEdit.Program
 			return str.Substring(start, end - start);
 		}
 
-		void ConfigureExecute_Text_Select_Trim() => state.Configuration = TextTrimDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Text_Select_Trim() => state.ConfigureExecuteData = TextTrimDialog.Run(state.TabsWindow);
 
-		void Execute_Text_Select_Trim(TextTrimDialog.Result result) => Selections = Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList();
-
-		void ConfigureExecute_Text_Select_ByWidth() => state.Configuration = TextWidthDialog.Run(state.TabsWindow, false, true, GetVariables());
-
-		void Execute_Text_Select_ByWidth(TextWidthDialog.Result result)
+		void Execute_Text_Select_Trim()
 		{
+			var result = state.ConfigureExecuteData as TextTrimDialog.Result;
+			Selections = Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList();
+		}
+
+		void ConfigureExecute_Text_Select_ByWidth() => state.ConfigureExecuteData = TextWidthDialog.Run(state.TabsWindow, false, true, GetVariables());
+
+		void Execute_Text_Select_ByWidth()
+		{
+			var result = state.ConfigureExecuteData as TextWidthDialog.Result;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			Selections = Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList();
 		}
 
-		void ConfigureExecute_Text_Select_WholeBoundedWord(bool wholeWord) => state.Configuration = TextSelectWholeBoundedWordDialog.Run(state.TabsWindow, wholeWord);
+		void ConfigureExecute_Text_Select_WholeBoundedWord(bool wholeWord) => state.ConfigureExecuteData = TextSelectWholeBoundedWordDialog.Run(state.TabsWindow, wholeWord);
 
-		void Execute_Text_Select_WholeBoundedWord(TextSelectWholeBoundedWordDialog.Result result, bool wholeWord)
+		void Execute_Text_Select_WholeBoundedWord(bool wholeWord)
 		{
+			var result = state.ConfigureExecuteData as TextSelectWholeBoundedWordDialog.Result;
 			var minPosition = 0;
 			var maxPosition = TextView.MaxPosition;
 
@@ -150,31 +156,41 @@ namespace NeoEdit.Program
 		void ConfigureExecute_Text_Width()
 		{
 			var numeric = Selections.Any() ? Selections.AsParallel().All(range => Text.GetString(range).IsNumeric()) : false;
-			state.Configuration = TextWidthDialog.Run(state.TabsWindow, numeric, false, GetVariables());
+			state.ConfigureExecuteData = TextWidthDialog.Run(state.TabsWindow, numeric, false, GetVariables());
 		}
 
-		void Execute_Text_Width(TextWidthDialog.Result result)
+		void Execute_Text_Width()
 		{
+			var result = state.ConfigureExecuteData as TextWidthDialog.Result;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
 		}
 
-		void ConfigureExecute_Text_Trim() => state.Configuration = TextTrimDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Text_Trim() => state.ConfigureExecuteData = TextTrimDialog.Run(state.TabsWindow);
 
-		void Execute_Text_Trim(TextTrimDialog.Result result) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(Text.GetString(str), result)).ToList());
+		void Execute_Text_Trim()
+		{
+			var result = state.ConfigureExecuteData as TextTrimDialog.Result;
+			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(Text.GetString(str), result)).ToList());
+		}
 
 		void Execute_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
-		void ConfigureExecute_Text_Unicode() => state.Configuration = TextUnicodeDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Text_Unicode() => state.ConfigureExecuteData = TextUnicodeDialog.Run(state.TabsWindow);
 
-		void Execute_Text_Unicode(TextUnicodeDialog.Result result) => ReplaceSelections(result.Value);
+		void Execute_Text_Unicode()
+		{
+			var result = state.ConfigureExecuteData as TextUnicodeDialog.Result;
+			ReplaceSelections(result.Value);
+		}
 
 		void Execute_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
-		void ConfigureExecute_Text_RandomText() => state.Configuration = TextRandomTextDialog.Run(GetVariables(), state.TabsWindow);
+		void ConfigureExecute_Text_RandomText() => state.ConfigureExecuteData = TextRandomTextDialog.Run(GetVariables(), state.TabsWindow);
 
-		void Execute_Text_RandomText(TextRandomTextDialog.Result result)
+		void Execute_Text_RandomText()
 		{
+			var result = state.ConfigureExecuteData as TextRandomTextDialog.Result;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
@@ -186,11 +202,12 @@ namespace NeoEdit.Program
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			state.Configuration = TextReverseRegExDialog.Run(state.TabsWindow);
+			state.ConfigureExecuteData = TextReverseRegExDialog.Run(state.TabsWindow);
 		}
 
-		void Execute_Text_ReverseRegEx(TextReverseRegExDialog.Result result)
+		void Execute_Text_ReverseRegEx()
 		{
+			var result = state.ConfigureExecuteData as TextReverseRegExDialog.Result;
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
@@ -208,10 +225,11 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void ConfigureExecute_Text_FirstDistinct() => state.Configuration = TextFirstDistinctDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Text_FirstDistinct() => state.ConfigureExecuteData = TextFirstDistinctDialog.Run(state.TabsWindow);
 
-		void Execute_Text_FirstDistinct(TextFirstDistinctDialog.Result result)
+		void Execute_Text_FirstDistinct()
 		{
+			var result = state.ConfigureExecuteData as TextFirstDistinctDialog.Result;
 			var opResult = ProgressDialog.Run(state.TabsWindow, "Finding characters...", (canceled, progress) =>
 			{
 				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));

@@ -241,10 +241,11 @@ namespace NeoEdit.Program
 
 		void Execute_Select_Nothing() => Selections = new List<Range>();
 
-		void ConfigureExecute_Select_Limit() => state.Configuration = SelectLimitDialog.Run(state.TabsWindow, GetVariables());
+		void ConfigureExecute_Select_Limit() => state.ConfigureExecuteData = SelectLimitDialog.Run(state.TabsWindow, GetVariables());
 
-		void Execute_Select_Limit(SelectLimitDialog.Result result)
+		void Execute_Select_Limit()
 		{
+			var result = state.ConfigureExecuteData as SelectLimitDialog.Result;
 			var variables = GetVariables();
 			var firstSelection = new NEExpression(result.FirstSelection).Evaluate<int>(variables);
 			var everyNth = new NEExpression(result.EveryNth).Evaluate<int>(variables);
@@ -318,7 +319,7 @@ namespace NeoEdit.Program
 
 		void Execute_Select_Empty(bool include) => Selections = Selections.Where(range => range.HasSelection != include).ToList();
 
-		void Execute_Select_ToggleOpenClose(bool shiftDown)
+		void Execute_Select_ToggleOpenClose()
 		{
 			Selections = Selections.AsParallel().AsOrdered().Select(range =>
 			{
@@ -326,7 +327,7 @@ namespace NeoEdit.Program
 				if (newPos == -1)
 					return range;
 
-				return MoveCursor(range, newPos, shiftDown);
+				return MoveCursor(range, newPos, state.ShiftDown);
 			}).ToList();
 		}
 
@@ -340,10 +341,11 @@ namespace NeoEdit.Program
 
 		void Execute_Select_Repeats_RepeatedLines(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList();
 
-		void ConfigureExecute_Select_Repeats_ByCount() => state.Configuration = SelectByCountDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Select_Repeats_ByCount() => state.ConfigureExecuteData = SelectByCountDialog.Run(state.TabsWindow);
 
-		void Execute_Select_Repeats_ByCount(SelectByCountDialog.Result result, bool caseSensitive)
+		void Execute_Select_Repeats_ByCount(bool caseSensitive)
 		{
+			var result = state.ConfigureExecuteData as SelectByCountDialog.Result;
 			var strs = Selections.Select((range, index) => Tuple.Create(Text.GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 			foreach (var tuple in strs)
@@ -359,7 +361,7 @@ namespace NeoEdit.Program
 		void PreExecute_Select_Repeats_Tabs_MatchMismatch(bool caseSensitive)
 		{
 			var strs = GetSelectionStrings();
-			var matches = state.PreHandleData as List<string> ?? strs;
+			var matches = state.PreExecuteData as List<string> ?? strs;
 			while (matches.Count < strs.Count)
 				matches.Add(null);
 			while (strs.Count < matches.Count)
@@ -370,12 +372,12 @@ namespace NeoEdit.Program
 				if ((matches[ctr] != null) && (!string.Equals(matches[ctr], strs[ctr], stringComparison)))
 					matches[ctr] = null;
 
-			state.PreHandleData = matches;
+			state.PreExecuteData = matches;
 		}
 
-		void Execute_Select_Repeats_Tabs_MatchMismatch(object preResult, bool match)
+		void Execute_Select_Repeats_Tabs_MatchMismatch(bool match)
 		{
-			var matches = preResult as List<string>;
+			var matches = state.PreExecuteData as List<string>;
 			Selections = Selections.Where((range, index) => (matches[index] != null) == match).ToList();
 		}
 
@@ -384,15 +386,15 @@ namespace NeoEdit.Program
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 			var repeats = Selections.AsParallel().GroupBy(Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
 
-			if (state.PreHandleData != null)
-				repeats = repeats.Join(state.PreHandleData as Dictionary<string, int>, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);
+			if (state.PreExecuteData != null)
+				repeats = repeats.Join(state.PreExecuteData as Dictionary<string, int>, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);
 
-			state.PreHandleData = repeats;
+			state.PreExecuteData = repeats;
 		}
 
-		void Execute_Select_Repeats_Tabs_CommonNonCommon(object preResult, bool match)
+		void Execute_Select_Repeats_Tabs_CommonNonCommon(bool match)
 		{
-			var repeats = preResult as Dictionary<string, int>;
+			var repeats = state.PreExecuteData as Dictionary<string, int>;
 			repeats = repeats.ToDictionary(pair => pair.Key, pair => pair.Value, repeats.Comparer);
 			Selections = Selections.Where(range =>
 			{
@@ -401,10 +403,11 @@ namespace NeoEdit.Program
 			}).ToList();
 		}
 
-		void ConfigureExecute_Select_Split() => state.Configuration = SelectSplitDialog.Run(state.TabsWindow, GetVariables());
+		void ConfigureExecute_Select_Split() => state.ConfigureExecuteData = SelectSplitDialog.Run(state.TabsWindow, GetVariables());
 
-		void Execute_Select_Split(SelectSplitDialog.Result result)
+		void Execute_Select_Split()
 		{
+			var result = state.ConfigureExecuteData as SelectSplitDialog.Result;
 			var indexes = GetExpressionResults<int>(result.Index, Selections.Count());
 			Selections = Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList();
 		}
@@ -421,15 +424,15 @@ namespace NeoEdit.Program
 
 		void PreExecute_Select_Selection_ToggleAnchor()
 		{
-			if (state.PreHandleData == null)
-				state.PreHandleData = false;
-			if ((!(bool)state.PreHandleData) && (Selections.Any(range => range.Anchor > range.Cursor)))
-				state.PreHandleData = true;
+			if (state.PreExecuteData == null)
+				state.PreExecuteData = false;
+			if ((!(bool)state.PreExecuteData) && (Selections.Any(range => range.Anchor > range.Cursor)))
+				state.PreExecuteData = true;
 		}
 
-		void Execute_Select_Selection_ToggleAnchor(object preResult)
+		void Execute_Select_Selection_ToggleAnchor()
 		{
-			var anchorStart = (bool)preResult;
+			var anchorStart = (bool)state.PreExecuteData;
 			Selections = Selections.Select(range => new Range(anchorStart ? range.End : range.Start, anchorStart ? range.Start : range.End)).ToList();
 		}
 

@@ -164,9 +164,9 @@ namespace NeoEdit.Program
 		{
 			// We want to paste OneWithMany if all Selections.Count == 1 (Item1) and any Clipboard.Count != 1 (Item2)
 
-			if (state.PreHandleData == null)
-				state.PreHandleData = Tuple.Create(true, false);
-			var doOneWithMany = (Tuple<bool, bool>)state.PreHandleData;
+			if (state.PreExecuteData == null)
+				state.PreExecuteData = Tuple.Create(true, false);
+			var doOneWithMany = (Tuple<bool, bool>)state.PreExecuteData;
 			if (doOneWithMany.Item1)
 			{
 				if (Selections.Count != 1)
@@ -174,16 +174,16 @@ namespace NeoEdit.Program
 				else if ((!doOneWithMany.Item2) && (Clipboard.Count != 1))
 					doOneWithMany = Tuple.Create(true, true);
 			}
-			state.PreHandleData = doOneWithMany;
+			state.PreExecuteData = doOneWithMany;
 		}
 
-		void Execute_Edit_Paste_Paste(bool highlight, bool rotate, object preResult)
+		void Execute_Edit_Paste_Paste(bool highlight, bool rotate)
 		{
 			var clipboardStrings = Clipboard;
 			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
 				return;
 
-			var doOneWithMany = (Tuple<bool, bool>)preResult;
+			var doOneWithMany = (Tuple<bool, bool>)state.PreExecuteData;
 			if ((doOneWithMany.Item1) && (doOneWithMany.Item2))
 			{
 				ReplaceOneWithMany(clipboardStrings, null);
@@ -221,11 +221,12 @@ namespace NeoEdit.Program
 				}
 			}
 
-			state.Configuration = EditFindFindDialog.Run(state.TabsWindow, text, selectionOnly, GetVariables());
+			state.ConfigureExecuteData = EditFindFindDialog.Run(state.TabsWindow, text, selectionOnly, GetVariables());
 		}
 
-		void Execute_Edit_Find_Find(EditFindFindDialog.Result result)
+		void Execute_Edit_Find_Find()
 		{
+			var result = state.ConfigureExecuteData as EditFindFindDialog.Result;
 			// Determine selections to search
 			List<Range> selections;
 			var firstMatchOnly = (result.KeepMatching) || (result.RemoveMatching);
@@ -355,11 +356,12 @@ namespace NeoEdit.Program
 				}
 			}
 
-			state.Configuration = EditFindRegexReplaceDialog.Run(state.TabsWindow, text, selectionOnly);
+			state.ConfigureExecuteData = EditFindRegexReplaceDialog.Run(state.TabsWindow, text, selectionOnly);
 		}
 
-		void Execute_Edit_Find_RegexReplace(EditFindRegexReplaceDialog.Result result)
+		void Execute_Edit_Find_RegexReplace()
 		{
+			var result = state.ConfigureExecuteData as EditFindRegexReplaceDialog.Result;
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { Range.FromIndex(0, Text.Length) };
 			var searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, result.EntireSelection);
 			var sels = regions.AsParallel().AsOrdered().SelectMany(region => searcher.Find(Text.GetString(region), region.Start)).ToList();
@@ -379,10 +381,11 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		void ConfigureExecute_Edit_Expression_Expression() => state.Configuration = EditExpressionExpressionDialog.Run(state.TabsWindow, GetVariables());
+		void ConfigureExecute_Edit_Expression_Expression() => state.ConfigureExecuteData = EditExpressionExpressionDialog.Run(state.TabsWindow, GetVariables());
 
-		void Execute_Edit_Expression_Expression(EditExpressionExpressionDialog.Result result)
+		void Execute_Edit_Expression_Expression()
 		{
+			var result = state.ConfigureExecuteData as EditExpressionExpressionDialog.Result;
 			switch (result.Action)
 			{
 				case EditExpressionExpressionDialog.Action.Evaluate: ReplaceSelections(GetExpressionResults<string>(result.Expression, Selections.Count())); break;
@@ -392,10 +395,11 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetExpressionResults<string>("Eval(x)", Selections.Count()));
 
-		void ConfigureExecute_Edit_Rotate() => state.Configuration = EditRotateDialog.Run(state.TabsWindow, GetVariables());
+		void ConfigureExecute_Edit_Rotate() => state.ConfigureExecuteData = EditRotateDialog.Run(state.TabsWindow, GetVariables());
 
-		void Execute_Edit_Rotate(EditRotateDialog.Result result)
+		void Execute_Edit_Rotate()
 		{
+			var result = state.ConfigureExecuteData as EditRotateDialog.Result;
 			var count = new NEExpression(result.Count).Evaluate<int>(GetVariables());
 
 			var strs = GetSelectionStrings();
@@ -408,10 +412,11 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		void ConfigureExecute_Edit_Repeat() => state.Configuration = EditRepeatDialog.Run(state.TabsWindow, Selections.Count == 1, GetVariables());
+		void ConfigureExecute_Edit_Repeat() => state.ConfigureExecuteData = EditRepeatDialog.Run(state.TabsWindow, Selections.Count == 1, GetVariables());
 
-		void Execute_Edit_Repeat(EditRepeatDialog.Result result)
+		void Execute_Edit_Repeat()
 		{
+			var result = state.ConfigureExecuteData as EditRepeatDialog.Result;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			if (results.Any(repeatCount => repeatCount < 0))
 				throw new Exception("Repeat count must be >= 0");
@@ -443,20 +448,22 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Unescape_URL() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
 
-		void ConfigureExecute_Edit_Data_Hash() => state.Configuration = EditDataHashDialog.Run(state.TabsWindow, CodePage);
+		void ConfigureExecute_Edit_Data_Hash() => state.ConfigureExecuteData = EditDataHashDialog.Run(state.TabsWindow, CodePage);
 
-		void Execute_Edit_Data_Hash(EditDataHashDialog.Result result)
+		void Execute_Edit_Data_Hash()
 		{
+			var result = state.ConfigureExecuteData as EditDataHashDialog.Result;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		void ConfigureExecute_Edit_Data_Compress() => state.Configuration = EditDataCompressDialog.Run(state.TabsWindow, CodePage, true);
+		void ConfigureExecute_Edit_Data_Compress() => state.ConfigureExecuteData = EditDataCompressDialog.Run(state.TabsWindow, CodePage, true);
 
-		void Execute_Edit_Data_Compress(EditDataCompressDialog.Result result)
+		void Execute_Edit_Data_Compress()
 		{
+			var result = state.ConfigureExecuteData as EditDataCompressDialog.Result;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -466,10 +473,11 @@ namespace NeoEdit.Program
 			ReplaceSelections(compressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		void ConfigureExecute_Edit_Data_Decompress() => state.Configuration = EditDataCompressDialog.Run(state.TabsWindow, CodePage, false);
+		void ConfigureExecute_Edit_Data_Decompress() => state.ConfigureExecuteData = EditDataCompressDialog.Run(state.TabsWindow, CodePage, false);
 
-		void Execute_Edit_Data_Decompress(EditDataCompressDialog.Result result)
+		void Execute_Edit_Data_Decompress()
 		{
+			var result = state.ConfigureExecuteData as EditDataCompressDialog.Result;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -479,10 +487,11 @@ namespace NeoEdit.Program
 			ReplaceSelections(decompressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		void ConfigureExecute_Edit_Data_Encrypt() => state.Configuration = EditDataEncryptDialog.Run(state.TabsWindow, CodePage, true);
+		void ConfigureExecute_Edit_Data_Encrypt() => state.ConfigureExecuteData = EditDataEncryptDialog.Run(state.TabsWindow, CodePage, true);
 
-		void Execute_Edit_Data_Encrypt(EditDataEncryptDialog.Result result)
+		void Execute_Edit_Data_Encrypt()
 		{
+			var result = state.ConfigureExecuteData as EditDataEncryptDialog.Result;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -492,10 +501,11 @@ namespace NeoEdit.Program
 			ReplaceSelections(encrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		void ConfigureExecute_Edit_Data_Decrypt() => state.Configuration = EditDataEncryptDialog.Run(state.TabsWindow, CodePage, false);
+		void ConfigureExecute_Edit_Data_Decrypt() => state.ConfigureExecuteData = EditDataEncryptDialog.Run(state.TabsWindow, CodePage, false);
 
-		void Execute_Edit_Data_Decrypt(EditDataEncryptDialog.Result result)
+		void Execute_Edit_Data_Decrypt()
 		{
+			var result = state.ConfigureExecuteData as EditDataEncryptDialog.Result;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -505,20 +515,22 @@ namespace NeoEdit.Program
 			ReplaceSelections(decrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		void ConfigureExecute_Edit_Data_Sign() => state.Configuration = EditDataSignDialog.Run(state.TabsWindow, CodePage);
+		void ConfigureExecute_Edit_Data_Sign() => state.ConfigureExecuteData = EditDataSignDialog.Run(state.TabsWindow, CodePage);
 
-		void Execute_Edit_Data_Sign(EditDataSignDialog.Result result)
+		void Execute_Edit_Data_Sign()
 		{
+			var result = state.ConfigureExecuteData as EditDataSignDialog.Result;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		void ConfigureExecute_Edit_Sort() => state.Configuration = EditSortDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Edit_Sort() => state.ConfigureExecuteData = EditSortDialog.Run(state.TabsWindow);
 
-		void Execute_Edit_Sort(EditSortDialog.Result result)
+		void Execute_Edit_Sort()
 		{
+			var result = state.ConfigureExecuteData as EditSortDialog.Result;
 			var regions = GetSortSource(result.SortScope, result.UseRegion);
 			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
 			if (regions.Count != ordering.Count)
@@ -546,10 +558,11 @@ namespace NeoEdit.Program
 				SetRegions(result.UseRegion, newRegions);
 		}
 
-		void ConfigureExecute_Edit_Convert() => state.Configuration = EditConvertDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Edit_Convert() => state.ConfigureExecuteData = EditConvertDialog.Run(state.TabsWindow);
 
-		void Execute_Edit_Convert(EditConvertDialog.Result result)
+		void Execute_Edit_Convert()
 		{
+			var result = state.ConfigureExecuteData as EditConvertDialog.Result;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputType))
 				return;
@@ -559,19 +572,19 @@ namespace NeoEdit.Program
 			ReplaceSelections(bytes.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
 		}
 
-		void Execute_Edit_Navigate_WordLeftRight(bool next, bool selecting)
+		void Execute_Edit_Navigate_WordLeftRight(bool next)
 		{
-			if ((!selecting) && (Selections.Any(range => range.HasSelection)))
+			if ((!state.ShiftDown) && (Selections.Any(range => range.HasSelection)))
 			{
 				Selections = Selections.AsParallel().AsOrdered().Select(range => new Range(next ? range.End : range.Start)).ToList();
 				return;
 			}
 
 			var func = next ? (Func<int, int>)GetNextWord : GetPrevWord;
-			Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, func(range.Cursor), selecting)).ToList();
+			Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, func(range.Cursor), state.ShiftDown)).ToList();
 		}
 
-		void Execute_Edit_Navigate_AllLeft(bool selecting)
+		void Execute_Edit_Navigate_AllLeft()
 		{
 			if (!Selections.Any())
 				return;
@@ -605,10 +618,10 @@ namespace NeoEdit.Program
 				--index;
 			}
 
-			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, selecting)).ToList();
+			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, state.ShiftDown)).ToList();
 		}
 
-		void Execute_Edit_Navigate_AllRight(bool selecting)
+		void Execute_Edit_Navigate_AllRight()
 		{
 			if (!Selections.Any())
 				return;
@@ -642,7 +655,7 @@ namespace NeoEdit.Program
 				++index;
 			}
 
-			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, selecting)).ToList();
+			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, state.ShiftDown)).ToList();
 		}
 
 		void Execute_Edit_Navigate_JumpBy(JumpByType jumpBy) => JumpBy = jumpBy;

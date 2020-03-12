@@ -48,10 +48,11 @@ namespace NeoEdit.Program
 				throw new Exception("No connection.");
 		}
 
-		void ConfigureExecute_Database_Connect() => state.Configuration = DatabaseConnectDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Database_Connect() => state.ConfigureExecuteData = DatabaseConnectDialog.Run(state.TabsWindow);
 
-		void Execute_Database_Connect(DatabaseConnectDialog.Result result)
+		void Execute_Database_Connect()
 		{
+			var result = state.ConfigureExecuteData as DatabaseConnectDialog.Result;
 			if (dbConnection != null)
 			{
 				dbConnection.Dispose();

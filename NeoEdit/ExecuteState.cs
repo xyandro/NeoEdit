@@ -12,11 +12,11 @@ namespace NeoEdit.Program
 
 		public TabsWindow TabsWindow;
 		public NECommand Command;
-		public object Configuration;
+		public object PreExecuteData;
+		public object ConfigureExecuteData;
 		public bool ShiftDown;
 		public bool ControlDown;
 		public bool AltDown;
-		public object PreHandleData;
 		public bool Result;
 		public bool? MultiStatus;
 		public AnswerResult SavedAnswers = new AnswerResult();

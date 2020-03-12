@@ -7,6 +7,6 @@
 			ReplaceSelections((state.TabsWindow.GetTabIndex(this, activeOnly) + 1).ToString());
 		}
 
-		void Execute_Window_ViewValues(bool? multiStatus) => ViewValues = multiStatus != true;
+		void Execute_Window_ViewValues() => ViewValues = state.MultiStatus != true;
 	}
 }

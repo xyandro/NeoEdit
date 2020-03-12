@@ -101,7 +101,7 @@ namespace NeoEdit.Program
 			return searchList;
 		}
 
-		void ConfigureExecute_Edit_ModifyRegions() => state.Configuration = EditModifyRegionsDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Edit_ModifyRegions() => state.ConfigureExecuteData = EditModifyRegionsDialog.Run(state.TabsWindow);
 
 		void Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Result result)
 		{
