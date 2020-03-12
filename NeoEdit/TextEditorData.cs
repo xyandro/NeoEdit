@@ -26,7 +26,7 @@ namespace NeoEdit.Program
 			Selections = new List<Range>();
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, new List<Range>());
-			undoRedo = newUndoRedo = new UndoRedo();
+			oldUndoRedo = newUndoRedo = new UndoRedo();
 			Commit();
 
 			fileName = fileName?.Trim('"');
@@ -43,7 +43,6 @@ namespace NeoEdit.Program
 
 		void SetTabLabel() => TabLabel = $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(IsDiff ? $" (Diff{(DiffEncodingMismatch ? " - Encoding mismatch" : "")})" : "")}";
 
-		UndoRedo undoRedo, newUndoRedo;
 		CacheValue modifiedChecksum = new CacheValue();
 		CacheValue previousData = new CacheValue();
 		ParserType previousType;

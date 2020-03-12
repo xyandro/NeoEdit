@@ -522,10 +522,10 @@ namespace NeoEdit.Program
 		DrawBounds GetDrawBounds()
 		{
 			var drawBounds = new DrawBounds();
-			drawBounds.StartLine = yScrollValue;
-			drawBounds.EndLine = Math.Min(TextEditorData.NumLines, drawBounds.StartLine + yScrollViewportCeiling);
-			drawBounds.StartColumn = xScrollValue;
-			drawBounds.EndColumn = Math.Min(TextEditorData.MaxColumn + 1, drawBounds.StartColumn + xScrollViewportCeiling);
+			drawBounds.StartLine = (int)yScroll.Value;
+			drawBounds.EndLine = Math.Min(TextEditorData.NumLines, drawBounds.StartLine + (int)Math.Ceiling(canvas.ActualHeight / LineHeight));
+			drawBounds.StartColumn = (int)xScroll.Value;
+			drawBounds.EndColumn = Math.Min(TextEditorData.MaxColumn + 1, drawBounds.StartColumn + (int)Math.Ceiling(canvas.ActualWidth / Font.CharWidth));
 
 			var lines = Enumerable.Range(drawBounds.StartLine, drawBounds.EndLine - drawBounds.StartLine);
 			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(TextEditorData.GetPosition(line, 0), TextEditorData.GetPosition(line, TextEditorData.GetLineLength(line) + 1)));
@@ -734,7 +734,7 @@ namespace NeoEdit.Program
 
 		void OnCanvasRender(object sender, DrawingContext dc)
 		{
-			if ((TextEditorData == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0) || (!canvas.IsVisible))
+			if ((TextEditorData == null) || (canvas.ActualWidth <= 0) || (double.IsNaN(canvas.ActualWidth)) || (canvas.ActualHeight <= 0) || (double.IsNaN(canvas.ActualHeight)) || (!canvas.IsVisible))
 				return;
 
 			var drawBounds = GetDrawBounds();

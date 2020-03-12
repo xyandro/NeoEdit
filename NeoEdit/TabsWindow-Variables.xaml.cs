@@ -12,7 +12,11 @@ namespace NeoEdit.Program
 			set
 			{
 				newTabs = value;
-				ActiveTabs = ActiveTabs;
+				var notSeen = newTabs.Except(oldTabs).ToList();
+				if (notSeen.Any())
+					ActiveTabs = notSeen;
+				else
+					ActiveTabs = ActiveTabs;
 			}
 		}
 

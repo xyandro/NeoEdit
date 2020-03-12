@@ -302,10 +302,12 @@ namespace NeoEdit.Program
 		int YScrollViewportFloor => (int)Math.Floor(YScrollViewport);
 		int YScrollViewportCeiling => (int)Math.Ceiling(YScrollViewport);
 
+		UndoRedo oldUndoRedo, newUndoRedo;
+
 		public void Commit()
 		{
 			oldText = newText;
-			undoRedo = newUndoRedo;
+			oldUndoRedo = newUndoRedo;
 			oldTextView = newTextView;
 			oldMaxColumn = newMaxColumn;
 			oldCurrentSelection = newCurrentSelection;
@@ -347,7 +349,7 @@ namespace NeoEdit.Program
 		public void Rollback()
 		{
 			newText = oldText;
-			newUndoRedo = undoRedo;
+			newUndoRedo = oldUndoRedo;
 			newTextView = oldTextView;
 			newMaxColumn = oldMaxColumn;
 			newCurrentSelection = oldCurrentSelection;

@@ -349,6 +349,7 @@ namespace NeoEdit.Program
 			var done = true;
 			switch (state.Command)
 			{
+				case NECommand.Internal_AddTextEditor: Command_Internal_AddTextEditor(state.Parameters as TextEditorData); break;
 				case NECommand.File_New_New: Command_File_New_New(shiftDown); break;
 				case NECommand.File_New_FromClipboards: Command_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Command_File_New_FromClipboardSelections(); break;
@@ -407,6 +408,8 @@ namespace NeoEdit.Program
 			if (!done)
 				ActiveTabs.ForEach(tab => tab.ExecuteCommand(state));
 		}
+
+		void Command_Internal_AddTextEditor(TextEditorData textEditor) => Tabs = Tabs.Concat(textEditor).ToList();
 
 		//public bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
 		//{
