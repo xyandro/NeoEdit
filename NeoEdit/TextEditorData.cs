@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Transform;
@@ -13,6 +14,7 @@ namespace NeoEdit.Program
 	public partial class TextEditorData
 	{
 		const int tabStop = 4;
+		AnswerResult savedAnswers => TabsParent.savedAnswers;
 
 		public TextEditorData()
 		{
@@ -1026,5 +1028,96 @@ namespace NeoEdit.Program
 		}
 
 		List<T> GetExpressionResults<T>(string expression, int? count = null) => new NEExpression(expression).EvaluateList<T>(GetVariables(), count);
+
+		TabsWindow TabsParent = null; // TODO
+
+		static ThreadSafeRandom random = new ThreadSafeRandom();
+
+		public List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
+		{
+			var useRegions = GetRegions(useRegion);
+			var regions = new List<Range>();
+			var currentRegion = 0;
+			var used = false;
+			foreach (var selection in Selections)
+			{
+				while ((currentRegion < useRegions.Count) && (useRegions[currentRegion].End <= selection.Start))
+				{
+					if ((useAllRegions) && (!used))
+						throw new Exception("Extra regions found.");
+					used = false;
+					++currentRegion;
+				}
+				if ((currentRegion < useRegions.Count) && (selection.Start >= useRegions[currentRegion].Start) && (selection.End <= useRegions[currentRegion].End))
+				{
+					regions.Add(useRegions[currentRegion]);
+					used = true;
+				}
+				else if (mustBeInRegion)
+					throw new Exception("No region found. All selections must be inside a region.");
+				else
+					regions.Add(null);
+			}
+			if ((Selections.Any()) && (useAllRegions) && (currentRegion != useRegions.Count - 1))
+				throw new Exception("Extra regions found.");
+
+			return regions;
+		}
+
+		static HashSet<string> drives = new HashSet<string>(DriveInfo.GetDrives().Select(drive => drive.Name));
+		public bool StringsAreFiles(List<string> strs)
+		{
+			if ((strs.Count == 0) || (strs.Count > 500))
+				return false;
+			if (strs.Any(str => str.IndexOfAny(Path.GetInvalidPathChars()) != -1))
+				return false;
+			if (strs.Any(str => (!str.StartsWith("\\\\")) && (!drives.Any(drive => str.StartsWith(drive, StringComparison.OrdinalIgnoreCase)))))
+				return false;
+			if (strs.Any(str => !Helpers.FileOrDirectoryExists(str)))
+				return false;
+			return true;
+		}
+
+		public void SetClipboardStrings(IEnumerable<string> strs) => TabsParent.AddClipboardStrings(strs);
+
+		public void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => TabsParent.AddClipboardStrings(fileNames, isCut);
+
+		public void ReplaceOneWithMany(List<string> strs, bool? addNewLines)
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have one selection.");
+
+			var ending = addNewLines ?? strs.Any(str => !str.EndsWith(TextView.DefaultEnding)) ? TextView.DefaultEnding : "";
+			if (ending.Length != 0)
+				strs = strs.Select(str => str + ending).ToList();
+			var position = Selections.Single().Start;
+			ReplaceSelections(string.Join("", strs));
+
+			var sels = new List<Range>();
+			foreach (var str in strs)
+			{
+				sels.Add(Range.FromIndex(position, str.Length - ending.Length));
+				position += str.Length;
+			}
+			SetSelections(sels);
+		}
+
+		public bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanEncode(data, codePage))) || (ConfirmContinueWhenCannotEncode());
+
+		public bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
+
+		bool ConfirmContinueWhenCannotEncode()
+		{
+			if (!savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.All))
+				savedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(TabsParent)
+				{
+					Title = "Confirm",
+					Text = "The specified encoding cannot fully represent the data. Continue anyway?",
+					Options = MessageOptions.YesNoAll,
+					DefaultAccept = MessageOptions.Yes,
+					DefaultCancel = MessageOptions.No,
+				}.Show();
+			return savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.Yes);
+		}
 	}
 }
