@@ -20,6 +20,7 @@ namespace NeoEdit.Program
 			get => newText;
 			private set
 			{
+				EnsureInTransaction();
 				newText = value;
 				TextView = new NETextView(newText);
 				MaxColumn = Enumerable.Range(0, TextView.NumLines).AsParallel().Max(line => GetLineColumnsLength(line));
@@ -30,21 +31,33 @@ namespace NeoEdit.Program
 		public NETextView TextView
 		{
 			get => newTextView;
-			set => newTextView = value;
+			set
+			{
+				EnsureInTransaction();
+				newTextView = value;
+			}
 		}
 
 		int oldMaxColumn, newMaxColumn;
 		public int MaxColumn
 		{
 			get => newMaxColumn;
-			set => newMaxColumn = value;
+			set
+			{
+				EnsureInTransaction();
+				newMaxColumn = value;
+			}
 		}
 
 		int oldCurrentSelection, newCurrentSelection;
 		public int CurrentSelection
 		{
 			get => newCurrentSelection;
-			set => newCurrentSelection = Math.Max(0, Math.Min(value, Selections.Count - 1));
+			set
+			{
+				EnsureInTransaction();
+				newCurrentSelection = Math.Max(0, Math.Min(value, Selections.Count - 1));
+			}
 		}
 
 		IReadOnlyList<Range> oldSelections, newSelections;
@@ -53,8 +66,9 @@ namespace NeoEdit.Program
 			get => newSelections;
 			set
 			{
+				EnsureInTransaction();
 				newSelections = DeOverlap(value);
-				CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
+				CurrentSelection = CurrentSelection;
 			}
 		}
 
@@ -80,8 +94,8 @@ namespace NeoEdit.Program
 			get => newDisplayName;
 			set
 			{
+				EnsureInTransaction();
 				newDisplayName = value;
-				SetTabLabel();
 			}
 		}
 
@@ -91,8 +105,8 @@ namespace NeoEdit.Program
 			get => newFileName;
 			set
 			{
+				EnsureInTransaction();
 				newFileName = value;
-				SetTabLabel();
 			}
 		}
 
@@ -102,8 +116,8 @@ namespace NeoEdit.Program
 			get => newIsModified;
 			set
 			{
+				EnsureInTransaction();
 				newIsModified = value;
-				SetTabLabel();
 			}
 		}
 
@@ -111,84 +125,132 @@ namespace NeoEdit.Program
 		public List<string> Clipboard
 		{
 			get => newClipboard;
-			set => newClipboard = value;
+			set
+			{
+				EnsureInTransaction();
+				newClipboard = value;
+			}
 		}
 
 		bool oldAutoRefresh, newAutoRefresh;
 		public bool AutoRefresh
 		{
 			get => newAutoRefresh;
-			set => newAutoRefresh = value;
+			set
+			{
+				EnsureInTransaction();
+				newAutoRefresh = value;
+			}
 		}
 
 		string oldDBName, newDBName;
 		public string DBName
 		{
 			get => newDBName;
-			set => newDBName = value;
+			set
+			{
+				EnsureInTransaction();
+				newDBName = value;
+			}
 		}
 
 		ParserType oldContentType, newContentType;
 		public ParserType ContentType
 		{
 			get => newContentType;
-			set => newContentType = value;
+			set
+			{
+				EnsureInTransaction();
+				newContentType = value;
+			}
 		}
 
 		Coder.CodePage oldCodePage, newCodePage;
 		public Coder.CodePage CodePage
 		{
 			get => newCodePage;
-			set => newCodePage = value;
+			set
+			{
+				EnsureInTransaction();
+				newCodePage = value;
+			}
 		}
 
 		string oldAESKey, newAESKey;
 		public string AESKey
 		{
 			get => newAESKey;
-			set => newAESKey = value;
+			set
+			{
+				EnsureInTransaction();
+				newAESKey = value;
+			}
 		}
 
 		bool oldCompressed, newCompressed;
 		public bool Compressed
 		{
 			get => newCompressed;
-			set => newCompressed = value;
+			set
+			{
+				EnsureInTransaction();
+				newCompressed = value;
+			}
 		}
 
 		string oldLineEnding, newLineEnding;
 		public string LineEnding
 		{
 			get => newLineEnding;
-			set => newLineEnding = value;
+			set
+			{
+				EnsureInTransaction();
+				newLineEnding = value;
+			}
 		}
 
 		bool oldDiffIgnoreWhitespace, newDiffIgnoreWhitespace;
 		public bool DiffIgnoreWhitespace
 		{
 			get => newDiffIgnoreWhitespace;
-			set => newDiffIgnoreWhitespace = value;
+			set
+			{
+				EnsureInTransaction();
+				newDiffIgnoreWhitespace = value;
+			}
 		}
 
 		bool oldDiffIgnoreCase, newDiffIgnoreCase;
 		public bool DiffIgnoreCase
 		{
 			get => newDiffIgnoreCase;
-			set => newDiffIgnoreCase = value;
+			set
+			{
+				EnsureInTransaction();
+				newDiffIgnoreCase = value;
+			}
 		}
 
 		bool oldDiffIgnoreNumbers, newDiffIgnoreNumbers;
 		public bool DiffIgnoreNumbers
 		{
 			get => newDiffIgnoreNumbers;
-			set => newDiffIgnoreNumbers = value;
+			set
+			{
+				EnsureInTransaction();
+				newDiffIgnoreNumbers = value;
+			}
 		}
 
 		bool oldDiffIgnoreLineEndings, newDiffIgnoreLineEndings;
 		public bool DiffIgnoreLineEndings
 		{
 			get => newDiffIgnoreLineEndings;
-			set => newDiffIgnoreLineEndings = value;
+			set
+			{
+				EnsureInTransaction();
+				newDiffIgnoreLineEndings = value;
+			}
 		}
 
 		bool oldIsDiff, newIsDiff;
@@ -197,8 +259,8 @@ namespace NeoEdit.Program
 			get => newIsDiff;
 			set
 			{
+				EnsureInTransaction();
 				newIsDiff = value;
-				SetTabLabel();
 			}
 		}
 
@@ -208,8 +270,8 @@ namespace NeoEdit.Program
 			get => newDiffEncodingMismatch;
 			set
 			{
+				EnsureInTransaction();
 				newDiffEncodingMismatch = value;
-				SetTabLabel();
 			}
 		}
 
@@ -217,91 +279,132 @@ namespace NeoEdit.Program
 		public int TextEditorOrder
 		{
 			get => newTextEditorOrder;
-			set => newTextEditorOrder = value;
-		}
-
-		string oldTabLabel, newTabLabel;
-		public string TabLabel
-		{
-			get => newTabLabel;
-			set => newTabLabel = value;
+			set
+			{
+				EnsureInTransaction();
+				newTextEditorOrder = value;
+			}
 		}
 
 		bool oldKeepSelections, newKeepSelections;
 		public bool KeepSelections
 		{
 			get => newKeepSelections;
-			set => newKeepSelections = value;
+			set
+			{
+				EnsureInTransaction();
+				newKeepSelections = value;
+			}
 		}
 
 		bool oldHighlightSyntax, newHighlightSyntax;
 		public bool HighlightSyntax
 		{
 			get => newHighlightSyntax;
-			set => newHighlightSyntax = value;
+			set
+			{
+				EnsureInTransaction();
+				newHighlightSyntax = value;
+			}
 		}
 
 		bool oldStrictParsing, newStrictParsing;
 		public bool StrictParsing
 		{
 			get => newStrictParsing;
-			set => newStrictParsing = value;
+			set
+			{
+				EnsureInTransaction();
+				newStrictParsing = value;
+			}
 		}
 
 		JumpByType oldJumpBy, newJumpBy;
 		public JumpByType JumpBy
 		{
 			get => newJumpBy;
-			set => newJumpBy = value;
+			set
+			{
+				EnsureInTransaction();
+				newJumpBy = value;
+			}
 		}
 
 		bool oldViewValues, newViewValues;
 		public bool ViewValues
 		{
 			get => newViewValues;
-			set => newViewValues = value;
+			set
+			{
+				EnsureInTransaction();
+				newViewValues = value;
+			}
 		}
 
 		IList<byte> oldViewValuesData, newViewValuesData;
 		public IList<byte> ViewValuesData
 		{
 			get => newViewValuesData;
-			set => newViewValuesData = value;
+			set
+			{
+				EnsureInTransaction();
+				newViewValuesData = value;
+			}
 		}
 
 		bool oldViewValuesHasSel, newViewValuesHasSel;
 		public bool ViewValuesHasSel
 		{
 			get => newViewValuesHasSel;
-			set => newViewValuesHasSel = value;
+			set
+			{
+				EnsureInTransaction();
+				newViewValuesHasSel = value;
+			}
 		}
 
 		double oldXScrollValue, newXScrollValue;
 		double XScrollValue
 		{
 			get => newXScrollValue;
-			set => newXScrollValue = value;
+			set
+			{
+				EnsureInTransaction();
+				newXScrollValue = value;
+			}
 		}
 
 		double oldYScrollValue, newYScrollValue;
 		double YScrollValue
 		{
 			get => newYScrollValue;
-			set => newYScrollValue = value;
+			set
+			{
+				EnsureInTransaction();
+				newYScrollValue = value;
+			}
 		}
 
 		double oldXScrollViewport, newXScrollViewport;
 		double XScrollViewport
 		{
 			get => newXScrollViewport;
-			set => newXScrollViewport = value;
+			set
+			{
+				EnsureInTransaction();
+				newXScrollViewport = value;
+			}
 		}
 
 		double oldYScrollViewport, newYScrollViewport;
 		double YScrollViewport
 		{
 			get => newYScrollViewport;
-			set => newYScrollViewport = value;
+			set
+			{
+				EnsureInTransaction();
+				newYScrollViewport = value;
+			}
 		}
 
 		int XScrollViewportFloor => (int)Math.Floor(XScrollViewport);
@@ -348,7 +451,6 @@ namespace NeoEdit.Program
 			newIsDiff = oldIsDiff;
 			newDiffEncodingMismatch = oldDiffEncodingMismatch;
 			newTextEditorOrder = oldTextEditorOrder;
-			newTabLabel = oldTabLabel;
 			newKeepSelections = oldKeepSelections;
 			newHighlightSyntax = oldHighlightSyntax;
 			newStrictParsing = oldStrictParsing;
@@ -393,7 +495,6 @@ namespace NeoEdit.Program
 			oldIsDiff = newIsDiff;
 			oldDiffEncodingMismatch = newDiffEncodingMismatch;
 			oldTextEditorOrder = newTextEditorOrder;
-			oldTabLabel = newTabLabel;
 			oldKeepSelections = newKeepSelections;
 			oldHighlightSyntax = newHighlightSyntax;
 			oldStrictParsing = newStrictParsing;

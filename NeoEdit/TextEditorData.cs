@@ -40,7 +40,7 @@ namespace NeoEdit.Program
 			Goto(line, column, index);
 		}
 
-		void SetTabLabel() => TabLabel = $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(IsDiff ? $" (Diff{(DiffEncodingMismatch ? " - Encoding mismatch" : "")})" : "")}";
+		public string TabLabel => $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(IsDiff ? $" (Diff{(DiffEncodingMismatch ? " - Encoding mismatch" : "")})" : "")}";
 
 		CacheValue modifiedChecksum = new CacheValue();
 		CacheValue previousData = new CacheValue();
