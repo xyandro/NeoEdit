@@ -23,6 +23,7 @@ namespace NeoEdit.Program
 		}
 
 		UndoRedo2 undoRedo, newUndoRedo;
+		CacheValue2 modifiedChecksum = new CacheValue2();
 
 		public void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false) => ReplaceSelections(Enumerable.Repeat(str, Selections.Count).ToList(), highlight, replaceType, tryJoinUndo);
 
@@ -62,6 +63,7 @@ namespace NeoEdit.Program
 			}
 
 			Text = Text.Replace(ranges, strs);
+			SetModifiedFlag();
 
 			var translateMap = GetTranslateMap(ranges, strs, new List<List<Range>> { Selections }.Concat(Enumerable.Range(1, 9).Select(region => GetRegions(region))).ToList());
 			SetSelections(Translate(Selections, translateMap));
@@ -556,6 +558,18 @@ namespace NeoEdit.Program
 			}
 
 			SetSelections(sels);
+		}
+
+		void SetModifiedFlag(bool? newValue = null)
+		{
+			if (newValue.HasValue)
+			{
+				if (newValue == false)
+					modifiedChecksum.SetValue(Text);
+				else
+					modifiedChecksum.Invalidate(); // Nothing will match, file will be perpetually modified
+			}
+			IsModified = !modifiedChecksum.Match(Text);
 		}
 
 		void PreCommand_Key(Key key, ref object previousData)

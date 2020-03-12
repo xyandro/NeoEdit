@@ -118,6 +118,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CacheValue.cs" />
+    <Compile Include="CacheValue2.cs" />
     <Compile Include="CommandLine\CommandLineParams.cs" />
     <Compile Include="CommandLine\CommandLineVisitor.cs" />
     <Compile Include="CommandLine\Parser\CommandLineLexer.cs" />
