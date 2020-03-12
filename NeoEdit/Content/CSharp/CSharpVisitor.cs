@@ -4,7 +4,6 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using NeoEdit.Program;
 using NeoEdit.Program.Content.CSharp.Parser;
 using NeoEdit.Program.Parsing;
 
@@ -18,28 +17,6 @@ namespace NeoEdit.Program.Content.CSharp
 			var visitor = new CSharpVisitor(input);
 			visitor.Visit(tree);
 			return visitor.Root;
-		}
-
-		public static string Comment(TextData data, Range range)
-		{
-			// TODO: Remove
-			var startLine = data.GetPositionLine(range.Start);
-			var startIndex = data.GetPositionIndex(range.Start, startLine);
-			var endLine = data.GetPositionLine(range.End);
-			var endIndex = data.GetPositionIndex(range.End, endLine);
-			var result = "";
-			for (var line = startLine; line <= endLine; ++line)
-			{
-				var linePosition = data.GetPosition(line, 0);
-				var start = line == startLine ? startIndex : 0;
-				var contentEnd = line == endLine ? endIndex : data.GetLineLength(line);
-				var end = line == endLine ? endIndex : contentEnd + data.GetEndingLength(line);
-				var str = data.GetString(linePosition + start, end - start);
-				if (start != contentEnd)
-					str = $"//{str}";
-				result += str;
-			}
-			return result;
 		}
 
 		public static string Comment(NEText text, NETextView textView, Range range)
@@ -58,28 +35,6 @@ namespace NeoEdit.Program.Content.CSharp
 				var str = text.GetString(linePosition + start, end - start);
 				if (start != contentEnd)
 					str = $"//{str}";
-				result += str;
-			}
-			return result;
-		}
-
-		public static string Uncomment(TextData data, Range range)
-		{
-			// TODO: Remove
-			var startLine = data.GetPositionLine(range.Start);
-			var startIndex = data.GetPositionIndex(range.Start, startLine);
-			var endLine = data.GetPositionLine(range.End);
-			var endIndex = data.GetPositionIndex(range.End, endLine);
-			var result = "";
-			for (var line = startLine; line <= endLine; ++line)
-			{
-				var linePosition = data.GetPosition(line, 0);
-				var start = line == startLine ? startIndex : 0;
-				var contentEnd = line == endLine ? endIndex : data.GetLineLength(line);
-				var end = line == endLine ? endIndex : contentEnd + data.GetEndingLength(line);
-				var str = data.GetString(linePosition + start, end - start);
-				if (str.StartsWith("//"))
-					str = str.Substring(2);
 				result += str;
 			}
 			return result;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using NeoEdit.Program;
 using NeoEdit.Program.Content.HTML.Parser;
 using NeoEdit.Program.Parsing;
 
@@ -95,30 +94,12 @@ namespace NeoEdit.Program.Content.HTML
 
 		public static string Format(ParserNode document, string input) => string.Join("", rFormat(document, input).Item1.Select(str => $"{str.TrimEnd()}\r\n"));
 
-		public static string Comment(TextData data, Range range)
-		{
-			// TODO: Remove
-			var str = data.GetString(range.Start, range.Length);
-			if (string.IsNullOrWhiteSpace(str))
-				return str;
-			return $"<!--{str.Replace("-->", "--><!--")}-->";
-		}
-
 		public static string Comment(NEText text, Range range)
 		{
 			var str = text.GetString(range.Start, range.Length);
 			if (string.IsNullOrWhiteSpace(str))
 				return str;
 			return $"<!--{str.Replace("-->", "--><!--")}-->";
-		}
-
-		public static string Uncomment(TextData data, Range range)
-		{
-			// TODO: Remove
-			var str = data.GetString(range.Start, range.Length);
-			if ((string.IsNullOrWhiteSpace(str)) || (!str.StartsWith("<!--")) || (!str.EndsWith("-->")))
-				return str;
-			return str.Substring(4, str.Length - 7).Replace("--><!--", "-->");
 		}
 
 		public static string Uncomment(NEText text, Range range)

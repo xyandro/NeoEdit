@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -11,14 +8,11 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Converters;
 using NeoEdit.Program.Dialogs;
-using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Highlighting;
 using NeoEdit.Program.Misc;
-using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -36,7 +30,6 @@ namespace NeoEdit.Program
 			public bool? MultiStatus { get; set; }
 		}
 
-		public TextData DataQwer { get; } = new TextData();
 		public TextEditorData TextEditorData { get; } = new TextEditorData();
 
 		[DepProp]
@@ -637,40 +630,40 @@ namespace NeoEdit.Program
 
 		void RenderDiff(DrawingContext dc, DrawBounds drawBounds)
 		{
-			int? startDiff = null;
-			for (var line = drawBounds.StartLine; ; ++line)
-			{
-				var done = line == drawBounds.EndLine;
+			//int? startDiff = null;
+			//for (var line = drawBounds.StartLine; ; ++line)
+			//{
+			//	var done = line == drawBounds.EndLine;
 
-				var matchType = done ? TextData.DiffType.Match : DataQwer.GetLineDiffType(line);
-				if (matchType != TextData.DiffType.Match)
-				{
-					startDiff = startDiff ?? line;
+			//	var matchType = done ? TextData.DiffType.Match : DataQwer.GetLineDiffType(line);
+			//	if (matchType != TextData.DiffType.Match)
+			//	{
+			//		startDiff = startDiff ?? line;
 
-					if (!matchType.HasFlag(TextData.DiffType.HasGap))
-					{
-						startDiff = startDiff ?? line;
+			//		if (!matchType.HasFlag(TextData.DiffType.HasGap))
+			//		{
+			//			startDiff = startDiff ?? line;
 
-						var map = DataQwer.GetLineColumnMap(line, true);
-						foreach (var tuple in DataQwer.GetLineColumnDiffs(line))
-						{
-							var start = map[tuple.Item1];
-							var end = map[tuple.Item2];
-							if (end >= start)
-								dc.DrawRectangle(diffColBrush, null, new Rect(drawBounds.X(start) - 1, drawBounds.Y(line), (end - start) * Font.CharWidth + 2, Font.FontSize));
-						}
-					}
-				}
+			//			var map = DataQwer.GetLineColumnMap(line, true);
+			//			foreach (var tuple in DataQwer.GetLineColumnDiffs(line))
+			//			{
+			//				var start = map[tuple.Item1];
+			//				var end = map[tuple.Item2];
+			//				if (end >= start)
+			//					dc.DrawRectangle(diffColBrush, null, new Rect(drawBounds.X(start) - 1, drawBounds.Y(line), (end - start) * Font.CharWidth + 2, Font.FontSize));
+			//			}
+			//		}
+			//	}
 
-				if ((startDiff.HasValue) && (matchType == TextData.DiffType.Match))
-				{
-					dc.DrawRoundedRectangle(diffLineBrush, diffLinePen, new Rect(-2, drawBounds.Y(startDiff.Value), canvas.ActualWidth + 4, drawBounds.Y(line) - drawBounds.Y(startDiff.Value) - Spacing + 1), 4, 4);
-					startDiff = null;
-				}
+			//	if ((startDiff.HasValue) && (matchType == TextData.DiffType.Match))
+			//	{
+			//		dc.DrawRoundedRectangle(diffLineBrush, diffLinePen, new Rect(-2, drawBounds.Y(startDiff.Value), canvas.ActualWidth + 4, drawBounds.Y(line) - drawBounds.Y(startDiff.Value) - Spacing + 1), 4, 4);
+			//		startDiff = null;
+			//	}
 
-				if (done)
-					break;
-			}
+			//	if (done)
+			//		break;
+			//}
 		}
 
 		void RenderText(DrawingContext dc, DrawBounds drawBounds)
@@ -710,7 +703,7 @@ namespace NeoEdit.Program
 
 		void OnCanvasRender(object sender, DrawingContext dc)
 		{
-			if ((DataQwer == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0) || (!canvas.IsVisible))
+			if ((TextEditorData == null) || (yScrollViewportCeiling == 0) || (xScrollViewportCeiling == 0) || (!canvas.IsVisible))
 				return;
 
 			var drawBounds = GetDrawBounds();
