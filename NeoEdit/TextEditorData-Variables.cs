@@ -88,6 +88,13 @@ namespace NeoEdit.Program
 			set => newIsModified = value;
 		}
 
+		List<string> oldClipboard, newClipboard;
+		public List<string> Clipboard
+		{
+			get => newClipboard;
+			set => newClipboard = value;
+		}
+
 		bool oldAutoRefresh, newAutoRefresh;
 		public bool AutoRefresh
 		{
@@ -281,6 +288,7 @@ namespace NeoEdit.Program
 			oldDisplayName = newDisplayName;
 			oldFileName = newFileName;
 			oldIsModified = newIsModified;
+			oldClipboard = newClipboard;
 			oldAutoRefresh = newAutoRefresh;
 			oldContentType = newContentType;
 			oldCodePage = newCodePage;
@@ -321,6 +329,7 @@ namespace NeoEdit.Program
 			newDisplayName = oldDisplayName;
 			newFileName = oldFileName;
 			newIsModified = oldIsModified;
+			newClipboard = oldClipboard;
 			newAutoRefresh = oldAutoRefresh;
 			newContentType = oldContentType;
 			newCodePage = oldCodePage;

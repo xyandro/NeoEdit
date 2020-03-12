@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -396,6 +398,26 @@ namespace NeoEdit.Program
 			switch (state.Command)
 			{
 				case NECommand.Internal_Key: PreCommand_Key((Key)state.Parameters, ref state.PreHandleData); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref state.PreHandleData, true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref state.PreHandleData, true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref state.PreHandleData, false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: Command_Pre_Select_Repeats_Tabs_MatchMismatch(ref state.PreHandleData, false); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref state.PreHandleData, true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref state.PreHandleData, true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref state.PreHandleData, false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: Command_Pre_Select_Repeats_Tabs_CommonNonCommon(ref state.PreHandleData, false); break;
+				case NECommand.Select_Selection_ToggleAnchor: Command_Pre_Select_Selection_ToggleAnchor(ref state.PreHandleData); break;
+			}
+		}
+
+		public void GetCommandParameters(CommandState state, TabsWindow TabsParent)
+		{
+			switch (state.Command)
+			{
+				case NECommand.Select_Limit: state.Parameters = Command_Select_Limit_Dialog(TabsParent); break;
+				case NECommand.Select_RepeatsCaseSensitive_ByCount: state.Parameters = Command_Select_Repeats_ByCount_Dialog(TabsParent); break;
+				case NECommand.Select_RepeatsCaseInsensitive_ByCount: state.Parameters = Command_Select_Repeats_ByCount_Dialog(TabsParent); break;
+				case NECommand.Select_Split: state.Parameters = Command_Select_Split_Dialog(TabsParent); break;
 			}
 		}
 
@@ -408,8 +430,47 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Undo: Command_Edit_Undo(); break;
 				case NECommand.Edit_Redo: Command_Edit_Redo(); break;
 				case NECommand.Select_All: Command_Select_All(); break;
+				case NECommand.Select_Nothing: Command_Select_Nothing(); break;
+				case NECommand.Select_Limit: Command_Select_Limit(state.Parameters as SelectLimitDialog.Result); break;
 				case NECommand.Select_Lines: Command_Select_Lines(); break;
 				case NECommand.Select_WholeLines: Command_Select_WholeLines(); break;
+				case NECommand.Select_Rectangle: Command_Select_Rectangle(); break;
+				case NECommand.Select_Invert: Command_Select_Invert(); break;
+				case NECommand.Select_Join: Command_Select_Join(); break;
+				case NECommand.Select_Empty: Command_Select_Empty(true); break;
+				case NECommand.Select_NonEmpty: Command_Select_Empty(false); break;
+				case NECommand.Select_ToggleOpenClose: Command_Select_ToggleOpenClose(state.ShiftDown); break;
+				case NECommand.Select_RepeatsCaseSensitive_Unique: Command_Select_Repeats_Unique(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Duplicates: Command_Select_Repeats_Duplicates(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_MatchPrevious: Command_Select_Repeats_MatchPrevious(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_RepeatedLines: Command_Select_Repeats_RepeatedLines(true); break;
+				case NECommand.Select_RepeatsCaseSensitive_ByCount: Command_Select_Repeats_ByCount(state.Parameters as SelectByCountDialog.Result, true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: Command_Select_Repeats_Tabs_MatchMismatch(state.PreHandleData, true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: Command_Select_Repeats_Tabs_MatchMismatch(state.PreHandleData, false); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: Command_Select_Repeats_Tabs_CommonNonCommon(state.PreHandleData, true); break;
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: Command_Select_Repeats_Tabs_CommonNonCommon(state.PreHandleData, false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Unique: Command_Select_Repeats_Unique(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Duplicates: Command_Select_Repeats_Duplicates(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_MatchPrevious: Command_Select_Repeats_MatchPrevious(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_NonMatchPrevious: Command_Select_Repeats_NonMatchPrevious(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_RepeatedLines: Command_Select_Repeats_RepeatedLines(false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_ByCount: Command_Select_Repeats_ByCount(state.Parameters as SelectByCountDialog.Result, false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: Command_Select_Repeats_Tabs_MatchMismatch(state.PreHandleData, true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: Command_Select_Repeats_Tabs_MatchMismatch(state.PreHandleData, false); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: Command_Select_Repeats_Tabs_CommonNonCommon(state.PreHandleData, true); break;
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: Command_Select_Repeats_Tabs_CommonNonCommon(state.PreHandleData, false); break;
+				case NECommand.Select_Split: Command_Select_Split(state.Parameters as SelectSplitDialog.Result); break;
+				case NECommand.Select_Selection_First: Command_Select_Selection_First(); break;
+				case NECommand.Select_Selection_CenterVertically: Command_Select_Selection_CenterVertically(); break;
+				case NECommand.Select_Selection_Center: Command_Select_Selection_Center(); break;
+				case NECommand.Select_Selection_ToggleAnchor: Command_Select_Selection_ToggleAnchor(state.PreHandleData); break;
+				case NECommand.Select_Selection_Next: Command_Select_Selection_NextPrevious(true); break;
+				case NECommand.Select_Selection_Previous: Command_Select_Selection_NextPrevious(false); break;
+				case NECommand.Select_Selection_Single: Command_Select_Selection_Single(); break;
+				case NECommand.Select_Selection_Remove: Command_Select_Selection_Remove(); break;
+				case NECommand.Select_Selection_RemoveBeforeCurrent: Command_Select_Selection_RemoveBeforeCurrent(); break;
+				case NECommand.Select_Selection_RemoveAfterCurrent: Command_Select_Selection_RemoveAfterCurrent(); break;
 			}
 		}
 
@@ -819,5 +880,151 @@ namespace NeoEdit.Program
 		}
 
 		void Command_Internal_Text(string text) => ReplaceSelections(text, false, tryJoinUndo: true);
+
+		List<string> GetSelectionStrings() => Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range)).ToList();
+
+		void EnsureVisible(bool a = true, bool b = true) { }
+
+		NEVariables GetVariables()
+		{
+			// Can't access DependencyProperties/clipboard from other threads; grab a copy:
+			var results = new NEVariables();
+
+			var strs = default(List<string>);
+			var initializeStrs = new NEVariableInitializer(() => strs = Selections.Select(range => Text.GetString(range)).ToList());
+			results.Add(NEVariable.List("x", "Selection", () => strs, initializeStrs));
+			results.Add(NEVariable.Constant("xn", "Selection count", () => Selections.Count));
+			results.Add(NEVariable.List("xl", "Selection length", () => Selections.Select(range => range.Length)));
+			results.Add(NEVariable.Constant("xlmin", "Selection min length", () => Selections.Select(range => range.Length).DefaultIfEmpty(0).Min()));
+			results.Add(NEVariable.Constant("xlmax", "Selection max length", () => Selections.Select(range => range.Length).DefaultIfEmpty(0).Max()));
+
+			results.Add(NEVariable.Constant("xmin", "Selection numeric min", () => Selections.AsParallel().Select(range => Text.GetString(range)).Distinct().Select(str => double.Parse(str)).DefaultIfEmpty(0).Min()));
+			results.Add(NEVariable.Constant("xmax", "Selection numeric max", () => Selections.AsParallel().Select(range => Text.GetString(range)).Distinct().Select(str => double.Parse(str)).DefaultIfEmpty(0).Max()));
+
+			results.Add(NEVariable.Constant("xtmin", "Selection text min", () => Selections.AsParallel().Select(range => Text.GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).First()));
+			results.Add(NEVariable.Constant("xtmax", "Selection text max", () => Selections.AsParallel().Select(range => Text.GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).Last()));
+
+			for (var region = 1; region <= 9; ++region)
+			{
+				var regions = default(List<string>);
+				var initializeRegions = new NEVariableInitializer(() => regions = GetRegions(region).Select(range => Text.GetString(range)).ToList());
+				results.Add(NEVariable.List($"r{region}", $"Region {region}", () => regions, initializeRegions));
+				results.Add(NEVariable.Constant($"r{region}n", $"Region {region} count", () => GetRegions(region).Count));
+				results.Add(NEVariable.List($"r{region}l", $"Region {region} length", () => GetRegions(region).Select(range => range.Length)));
+				results.Add(NEVariable.Constant($"r{region}lmin", $"Region {region} min length", () => GetRegions(region).Select(range => range.Length).DefaultIfEmpty(0).Min()));
+				results.Add(NEVariable.Constant($"r{region}lmax", $"Region {region} max length", () => GetRegions(region).Select(range => range.Length).DefaultIfEmpty(0).Max()));
+			}
+
+			results.Add(NEVariable.Series("y", "One-based index", index => index + 1));
+			results.Add(NEVariable.Series("z", "Zero-based index", index => index));
+
+			if (Clipboard.Count == 1)
+			{
+				results.Add(NEVariable.Constant("c", "Clipboard", () => Clipboard[0]));
+				results.Add(NEVariable.Constant("cl", "Clipboard length", () => Clipboard[0].Length));
+				results.Add(NEVariable.Constant("clmin", "Clipboard min length", () => Clipboard[0].Length));
+				results.Add(NEVariable.Constant("clmax", "Clipboard max length", () => Clipboard[0].Length));
+			}
+			else
+			{
+				results.Add(NEVariable.List("c", "Clipboard", () => Clipboard));
+				results.Add(NEVariable.List("cl", "Clipboard length", () => Clipboard.Select(str => str.Length)));
+				results.Add(NEVariable.Constant("clmin", "Clipboard min length", () => Clipboard.Select(str => str.Length).DefaultIfEmpty(0).Min()));
+				results.Add(NEVariable.Constant("clmax", "Clipboard max length", () => Clipboard.Select(str => str.Length).DefaultIfEmpty(0).Max()));
+			}
+			results.Add(NEVariable.Constant("cn", "Clipboard count", () => Clipboard.Count));
+
+			results.Add(NEVariable.Constant("f", "Filename", () => FileName));
+			results.Add(NEVariable.Constant("d", "Display name", () => DisplayName));
+
+			var lineStarts = default(List<int>);
+			var initializeLineStarts = new NEVariableInitializer(() => lineStarts = Selections.AsParallel().AsOrdered().Select(range => TextView.GetPositionLine(range.Start) + 1).ToList());
+			results.Add(NEVariable.List("line", "Selection line start", () => lineStarts, initializeLineStarts));
+			var lineEnds = default(List<int>);
+			var initializeLineEnds = new NEVariableInitializer(() => lineEnds = Selections.AsParallel().AsOrdered().Select(range => TextView.GetPositionLine(range.End) + 1).ToList());
+			results.Add(NEVariable.List("lineend", "Selection line end", () => lineEnds, initializeLineEnds));
+
+			var colStarts = default(List<int>);
+			var initializeColStarts = new NEVariableInitializer(() => colStarts = Selections.AsParallel().AsOrdered().Select((range, index) => TextView.GetPositionIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
+			results.Add(NEVariable.List("col", "Selection column start", () => colStarts, initializeColStarts));
+			var colEnds = default(List<int>);
+			var initializeColEnds = new NEVariableInitializer(() => colEnds = Selections.AsParallel().AsOrdered().Select((range, index) => TextView.GetPositionIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
+			results.Add(NEVariable.List("colend", "Selection column end", () => colEnds, initializeColEnds));
+
+			var posStarts = default(List<int>);
+			var initializePosStarts = new NEVariableInitializer(() => posStarts = Selections.Select(range => range.Start).ToList());
+			results.Add(NEVariable.List("pos", "Selection position start", () => posStarts, initializePosStarts));
+			var posEnds = default(List<int>);
+			var initializePosEnds = new NEVariableInitializer(() => posEnds = Selections.Select(range => range.End).ToList());
+			results.Add(NEVariable.List("posend", "Selection position end", () => posEnds, initializePosEnds));
+
+			//for (var ctr = 0; ctr < 10; ++ctr)
+			//{
+			//	var name = ctr == 0 ? "k" : $"v{ctr}";
+			//	var desc = ctr == 0 ? "Keys" : $"Values {ctr}";
+			//	var values = TabsParent.GetKeysAndValues(this, ctr, false);
+			//	if (values == null)
+			//		continue;
+			//	results.Add(NEVariable.List(name, desc, () => values));
+			//	results.Add(NEVariable.Constant($"{name}n", $"{desc} count", () => values.Count));
+			//	results.Add(NEVariable.List($"{name}l", $"{desc} length", () => values.Select(str => str.Length)));
+			//	results.Add(NEVariable.Constant($"{name}lmin", $"{desc} min length", () => values.Select(str => str.Length).DefaultIfEmpty(0).Min()));
+			//	results.Add(NEVariable.Constant($"{name}lmax", $"{desc} max length", () => values.Select(str => str.Length).DefaultIfEmpty(0).Max()));
+			//}
+
+			//if (Coder.IsImage(CodePage))
+			//{
+			//	results.Add(NEVariable.Constant("width", "Image width", () => GetBitmap().Width));
+			//	results.Add(NEVariable.Constant("height", "Image height", () => GetBitmap().Height));
+			//}
+
+			var nonNulls = default(List<Tuple<double, int>>);
+			double lineStart = 0, lineIncrement = 0, geoStart = 0, geoIncrement = 0;
+			var initializeNonNulls = new NEVariableInitializer(() => nonNulls = Selections.AsParallel().AsOrdered().Select((range, index) => new { str = Text.GetString(range), index }).NonNullOrWhiteSpace(obj => obj.str).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList());
+			var initializeLineSeries = new NEVariableInitializer(() =>
+			{
+				if (nonNulls.Count == 0)
+					lineStart = lineIncrement = 1;
+				else if (nonNulls.Count == 1)
+				{
+					lineStart = nonNulls[0].Item1;
+					lineIncrement = 1;
+				}
+				else
+				{
+					var first = nonNulls.First();
+					var last = nonNulls.Last();
+
+					lineIncrement = (last.Item1 - first.Item1) / (last.Item2 - first.Item2);
+					lineStart = first.Item1 - lineIncrement * first.Item2;
+				}
+			}, initializeNonNulls);
+			var initializeGeoSeries = new NEVariableInitializer(() =>
+			{
+				if (nonNulls.Count == 0)
+					geoStart = geoIncrement = 1;
+				else if (nonNulls.Count == 1)
+				{
+					geoStart = nonNulls[0].Item1;
+					geoIncrement = 1;
+				}
+				else
+				{
+					var first = nonNulls.First();
+					var last = nonNulls.Last();
+
+					geoIncrement = Math.Pow(last.Item1 / first.Item1, 1.0 / (last.Item2 - first.Item2));
+					geoStart = first.Item1 / Math.Pow(geoIncrement, first.Item2);
+				}
+			}, initializeNonNulls);
+			results.Add(NEVariable.Constant("linestart", "Linear series start", () => lineStart, initializeLineSeries));
+			results.Add(NEVariable.Constant("lineincrement", "Linear series increment", () => lineIncrement, initializeLineSeries));
+			results.Add(NEVariable.Constant("geostart", "Geometric series start", () => geoStart, initializeGeoSeries));
+			results.Add(NEVariable.Constant("geoincrement", "Geometric series increment", () => geoIncrement, initializeGeoSeries));
+
+			return results;
+		}
+
+		List<T> GetExpressionResults<T>(string expression, int? count = null) => new NEExpression(expression).EvaluateList<T>(GetVariables(), count);
 	}
 }

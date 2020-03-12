@@ -359,7 +359,7 @@ namespace NeoEdit.Program
 			{
 				PreHandleCommand(state);
 
-				// GetCommandParameters (focused tab)
+				GetCommandParameters(state);
 
 				ExecuteCommand(state);
 
@@ -378,6 +378,14 @@ namespace NeoEdit.Program
 			var activeTabs = ActiveTabs.Select(x => x.TextEditorData).ToList();
 			foreach (var tab in activeTabs)
 				tab.PreHandleCommand(state);
+		}
+
+		void GetCommandParameters(CommandState state)
+		{
+			if (Focused == null)
+				return;
+
+			Focused.TextEditorData.GetCommandParameters(state, this);
 		}
 
 		void ExecuteCommand(CommandState state)
