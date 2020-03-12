@@ -150,9 +150,12 @@ namespace NeoEdit.Program
 			var strs = GetSelectionStrings();
 
 			if (!StringsAreFiles(strs))
-				SetClipboardStrings(strs);
+				Clipboard = strs;
 			else
-				SetClipboardFiles(strs, isCut);
+			{
+				Clipboard = strs;
+				ClipboardIsCut = isCut;
+			}
 			if (isCut)
 				ReplaceSelections("");
 		}
@@ -311,7 +314,7 @@ namespace NeoEdit.Program
 			switch (result.Type)
 			{
 				case EditFindFindDialog.ResultType.CopyCount:
-					SetClipboardStrings(results.Select(list => list.Count.ToString()));
+					Clipboard = results.Select(list => list.Count.ToString()).ToList();
 					break;
 				case EditFindFindDialog.ResultType.FindNext:
 					var newSels = new List<Range>();
@@ -383,7 +386,7 @@ namespace NeoEdit.Program
 			switch (result.Action)
 			{
 				case EditExpressionExpressionDialog.Action.Evaluate: ReplaceSelections(GetExpressionResults<string>(result.Expression, Selections.Count())); break;
-				case EditExpressionExpressionDialog.Action.Copy: SetClipboardStrings(GetExpressionResults<string>(result.Expression)); break;
+				case EditExpressionExpressionDialog.Action.Copy: Clipboard = GetExpressionResults<string>(result.Expression); break;
 			}
 		}
 

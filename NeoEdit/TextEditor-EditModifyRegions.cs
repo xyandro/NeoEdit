@@ -393,7 +393,7 @@ namespace NeoEdit.Program
 				throw new Exception("Can only select single region");
 
 			var useRegion = regions[0];
-			SetClipboardStrings(GetEnclosingRegions(useRegion).Select(range => Text.GetString(range)).ToList());
+			Clipboard = GetEnclosingRegions(useRegion).Select(range => Text.GetString(range)).ToList();
 		}
 
 		void Command_Edit_ModifyRegions_Copy_EnclosingIndex(List<int> regions)
@@ -402,7 +402,7 @@ namespace NeoEdit.Program
 				throw new Exception("Can only select single region");
 
 			var useRegion = regions[0];
-			SetClipboardStrings(GetEnclosingRegions(useRegion).Select(region => (GetRegions(useRegion).IndexOf(region) + 1).ToString()).ToList());
+			Clipboard = GetEnclosingRegions(useRegion).Select(region => (GetRegions(useRegion).IndexOf(region) + 1).ToString()).ToList();
 		}
 
 		void Command_Edit_ModifyRegions_Transform_Flatten(List<int> regions)

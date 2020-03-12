@@ -123,11 +123,15 @@ namespace NeoEdit.Program
 			Save(newFileName, copyOnly);
 		}
 
-		void Command_File_Copy_Path() => SetClipboardFile(FileName);
+		void Command_File_Copy_Path()
+		{
+			Clipboard = new List<string> { FileName };
+			ClipboardIsCut = false;
+		}
 
-		void Command_File_Copy_Name() => SetClipboardString(Path.GetFileName(FileName));
+		void Command_File_Copy_Name() => Clipboard = new List<string> { Path.GetFileName(FileName) };
 
-		void Command_File_Copy_DisplayName() => SetClipboardString(DisplayName ?? Path.GetFileName(FileName));
+		void Command_File_Copy_DisplayName() => Clipboard = new List<string> { DisplayName ?? Path.GetFileName(FileName) };
 
 		void Command_File_Operations_Rename()
 		{

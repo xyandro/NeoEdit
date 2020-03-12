@@ -98,30 +98,24 @@ namespace NeoEdit.Program
 			try { SetPosition(Settings.WindowPosition); } catch { }
 		}
 
-		Dictionary<TextEditor, List<string>> clipboard;
-		public List<string> GetClipboard(TextEditor textEditor)
+		public Dictionary<TextEditor, IReadOnlyList<string>> GetClipboardMap()
 		{
-			if (clipboard == null)
+			var empty = new List<string>() as IReadOnlyList<string>;
+			var clipboardMap = Tabs.ToDictionary(x => x, x => empty);
+
+			if (NEClipboard.Current.Count == ActiveTabs.Count)
+				NEClipboard.Current.ForEach((cb, index) => clipboardMap[ActiveTabs[index]] = cb.Strings);
+			else if (NEClipboard.Current.ChildCount == ActiveTabs.Count)
+				NEClipboard.Current.Strings.ForEach((str, index) => clipboardMap[ActiveTabs[index]] = new List<string> { str });
+			else if (((NEClipboard.Current.Count == 1) || (NEClipboard.Current.Count == NEClipboard.Current.ChildCount)) && (NEClipboard.Current.ChildCount == ActiveTabs.Sum(tab => tab.NumSelections)))
+				NEClipboard.Current.Strings.Take(ActiveTabs.Select(tab => tab.NumSelections)).ForEach((obj, index) => clipboardMap[ActiveTabs[index]] = obj.ToList());
+			else
 			{
-				var empty = new List<string>();
-				clipboard = Tabs.ToDictionary(x => x, x => empty);
-
-				var activeTabs = ActiveTabs.ToList();
-
-				if (NEClipboard.Current.Count == activeTabs.Count)
-					NEClipboard.Current.ForEach((cb, index) => clipboard[activeTabs[index]] = cb.Strings);
-				else if (NEClipboard.Current.ChildCount == activeTabs.Count)
-					NEClipboard.Current.Strings.ForEach((str, index) => clipboard[activeTabs[index]] = new List<string> { str });
-				else if (((NEClipboard.Current.Count == 1) || (NEClipboard.Current.Count == NEClipboard.Current.ChildCount)) && (NEClipboard.Current.ChildCount == activeTabs.Sum(tab => tab.NumSelections)))
-					NEClipboard.Current.Strings.Take(activeTabs.Select(tab => tab.NumSelections)).ForEach((obj, index) => clipboard[activeTabs[index]] = obj.ToList());
-				else
-				{
-					var strs = NEClipboard.Current.Strings;
-					activeTabs.ForEach(tab => clipboard[tab] = strs);
-				}
+				var strs = NEClipboard.Current.Strings;
+				ActiveTabs.ForEach(tab => clipboardMap[tab] = strs);
 			}
 
-			return clipboard[textEditor];
+			return clipboardMap;
 		}
 
 		static List<List<List<string>>> keysAndValues = Enumerable.Range(0, 10).Select(x => new List<List<string>>()).ToList();
@@ -293,18 +287,12 @@ namespace NeoEdit.Program
 		//	HandleCommand(command, shiftDown, dialogResult, multiStatus);
 		//}
 
-		NEClipboard newClipboard;
-		public void AddClipboardStrings(IEnumerable<string> strings, bool? isCut = null)
-		{
-			newClipboard = newClipboard ?? new NEClipboard();
-			newClipboard.Add(NEClipboardList.Create(strings));
-			newClipboard.IsCut = isCut;
-		}
-
 		public void HandleCommand(CommandState state)
 		{
 			try
 			{
+				state.GetClipboardMap = GetClipboardMap;
+
 				state.TabsWindow = this;
 				state.ShiftDown = shiftDown;
 				state.ControlDown = controlDown;
@@ -318,6 +306,18 @@ namespace NeoEdit.Program
 				GetCommandParameters(state);
 
 				ExecuteCommand(state);
+
+				var clipboards = Tabs.Select(tab => tab.ChangedClipboard).NonNull().ToList();
+				if (clipboards.Any())
+				{
+					var newClipboard = new NEClipboard();
+					foreach (var clipboard in clipboards)
+					{
+						newClipboard.Add(NEClipboardList.Create(clipboard.Item1));
+						newClipboard.IsCut = clipboard.Item2;
+					}
+					NEClipboard.Current = newClipboard;
+				}
 
 				Commit();
 				Tabs.ForEach(tab => tab.Commit());

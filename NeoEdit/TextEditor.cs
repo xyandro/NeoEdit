@@ -19,6 +19,7 @@ namespace NeoEdit.Program
 	{
 		const int tabStop = 4;
 		AnswerResult savedAnswers => TabsParent.savedAnswers;
+		CommandState commandState;
 
 		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
@@ -49,7 +50,7 @@ namespace NeoEdit.Program
 
 		public void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false) => ReplaceSelections(Enumerable.Repeat(str, Selections.Count).ToList(), highlight, replaceType, tryJoinUndo);
 
-		public void ReplaceSelections(List<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		public void ReplaceSelections(IReadOnlyList<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
 			Replace(Selections, strs, replaceType, tryJoinUndo);
 
@@ -59,7 +60,7 @@ namespace NeoEdit.Program
 				Selections = Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList();
 		}
 
-		public void Replace(IReadOnlyList<Range> ranges, List<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		public void Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
 			if (ranges.Count != strs.Count)
 				throw new Exception("Invalid string count");
@@ -413,6 +414,7 @@ namespace NeoEdit.Program
 
 		public void PreHandleCommand(CommandState state)
 		{
+			commandState = state;
 			switch (state.Command)
 			{
 				case NECommand.Internal_Key: PreCommand_Key((Key)state.Parameters, ref state.PreHandleData); break;
@@ -1779,11 +1781,7 @@ namespace NeoEdit.Program
 			return true;
 		}
 
-		public void SetClipboardStrings(IEnumerable<string> strs) => TabsParent.AddClipboardStrings(strs);
-
-		public void SetClipboardFiles(IEnumerable<string> fileNames, bool isCut = false) => TabsParent.AddClipboardStrings(fileNames, isCut);
-
-		public void ReplaceOneWithMany(List<string> strs, bool? addNewLines)
+		public void ReplaceOneWithMany(IReadOnlyList<string> strs, bool? addNewLines)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -1884,10 +1882,6 @@ namespace NeoEdit.Program
 			//	SetFileName(fileName);
 			//}
 		}
-
-		public void SetClipboardFile(string fileName, bool isCut = false) => SetClipboardFiles(new List<string> { fileName }, isCut);
-
-		public void SetClipboardString(string text) => SetClipboardStrings(new List<string> { text });
 
 		public void SetFileName(string fileName)
 		{

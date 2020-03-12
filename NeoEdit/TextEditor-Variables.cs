@@ -121,14 +121,34 @@ namespace NeoEdit.Program
 			}
 		}
 
-		List<string> oldClipboard, newClipboard;
-		public List<string> Clipboard
+		IReadOnlyList<string> oldClipboard, newClipboard;
+		public IReadOnlyList<string> Clipboard
 		{
-			get => newClipboard;
+			get
+			{
+				if (newClipboard == null)
+					oldClipboard = newClipboard = commandState.GetClipboard(this);
+
+				return newClipboard;
+			}
+
 			set
 			{
 				EnsureInTransaction();
 				newClipboard = value;
+			}
+		}
+
+		public Tuple<IReadOnlyList<string>, bool?> ChangedClipboard => (oldClipboard == newClipboard) ? default : Tuple.Create(newClipboard, newClipboardIsCut);
+
+		bool? oldClipboardIsCut, newClipboardIsCut;
+		public bool? ClipboardIsCut
+		{
+			get => newClipboardIsCut;
+			set
+			{
+				EnsureInTransaction();
+				newClipboardIsCut = value;
 			}
 		}
 
@@ -419,6 +439,8 @@ namespace NeoEdit.Program
 			if (inTransaction)
 				throw new Exception("Already in a transaction");
 			inTransaction = true;
+			oldClipboard = newClipboard = null;
+			oldClipboardIsCut = newClipboardIsCut = null;
 		}
 
 		public void Rollback()

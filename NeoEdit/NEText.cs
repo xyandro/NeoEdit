@@ -38,7 +38,7 @@ namespace NeoEdit.Program
 			return text.Substring(start, length);
 		}
 
-		public NEText Replace(IReadOnlyList<Range> ranges, List<string> text)
+		public NEText Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> text)
 		{
 			if (ranges.Count != text.Count)
 				throw new Exception("Invalid number of arguments");
