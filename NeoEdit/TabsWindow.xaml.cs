@@ -19,15 +19,10 @@ namespace NeoEdit.Program
 	partial class TabsWindow
 	{
 		[DepProp]
-		public int ActiveUpdateCount { get { return UIHelper<TabsWindow>.GetPropValue<int>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
-		[DepProp]
 		public int WindowIndex { get { return UIHelper<TabsWindow>.GetPropValue<int>(this); } private set { UIHelper<TabsWindow>.SetPropValue(this, value); } }
 		public DateTime LastActivated { get; private set; }
 
 		static int curWindowIndex = 0;
-
-		Action<TextEditor> ShowTextEditor;
-		int addedCounter = 0, lastAddedCounter = -1, textEditorOrder = 0;
 
 		static bool showIndex;
 		static public bool ShowIndex { get => showIndex; set { showIndex = value; ShowIndexChanged?.Invoke(null, EventArgs.Empty); } }
@@ -45,6 +40,7 @@ namespace NeoEdit.Program
 		static TabsWindow()
 		{
 			UIHelper<TabsWindow>.Register();
+
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
 			FocusedWindowBorderBrush.Freeze();
@@ -65,18 +61,12 @@ namespace NeoEdit.Program
 			oldTabs = newTabs = oldActiveTabs = newActiveTabs = new List<TextEditor>();
 			oldRows = newRows = oldColumns = newColumns = 1;
 
-			Focusable = true;
-			FocusVisualStyle = null;
-			VerticalAlignment = VerticalAlignment.Stretch;
-
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new CommandState(command)));
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
 			WindowIndex = ++curWindowIndex;
 
-			AllowDrop = true;
-			Drop += OnDrop;
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());
 			NEClipboard.ClipboardChanged += () => SetStatusBarText();
 			Activated += OnActivated;
@@ -86,8 +76,12 @@ namespace NeoEdit.Program
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
 			if (addEmpty)
-				AddTextEditor(new TextEditor());
+				HandleCommand(new CommandState(NECommand.File_New_New));
+		}
 
+		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+		{
+			base.OnRenderSizeChanged(sizeInfo);
 			DrawAll();
 		}
 
@@ -518,7 +512,6 @@ namespace NeoEdit.Program
 			//TODO
 			//if (Focused == null)
 			//	return;
-			//ShowTextEditor?.Invoke(Focused);
 			//Focused.Focus();
 		}
 
@@ -622,12 +615,9 @@ namespace NeoEdit.Program
 			}
 		}
 
-		protected override void OnPreviewKeyUp(KeyEventArgs e)
+		void SetFocused(TextEditor textEditorData, bool deselectOthers = false)
 		{
-			base.OnPreviewKeyUp(e);
-			if ((e.Key == Key.LeftCtrl) || (e.Key == Key.RightCtrl))
-				if (Focused != null)
-					Focused.TextEditorOrder = ++textEditorOrder;
+			Focused = textEditorData;
 		}
 
 		void MovePrev()
@@ -640,11 +630,6 @@ namespace NeoEdit.Program
 				index = Tabs.Count - 1;
 			if (index >= 0)
 				SetFocused(Tabs[index], !shiftDown);
-		}
-
-		void SetFocused(TextEditor textEditorData, bool v = false)
-		{
-			Focused = textEditorData;
 		}
 
 		void MoveNext()
@@ -892,16 +877,6 @@ namespace NeoEdit.Program
 				stackPanel.Children.Add(tabLabel);
 			}
 
-			//ShowTextEditor = textEditor =>
-			//{
-			//	var show = stackPanel.Children.OfType<FrameworkElement>().Where(x => x.Tag == textEditor).FirstOrDefault();
-			//	if (show == null)
-			//		return;
-			//	tabLabels.UpdateLayout();
-			//	var left = show.TranslatePoint(new Point(0, 0), tabLabels).X + tabLabels.HorizontalOffset;
-			//	tabLabels.ScrollToHorizontalOffset(Math.Min(left, Math.Max(tabLabels.HorizontalOffset, left + show.ActualWidth - tabLabels.ViewportWidth)));
-			//};
-
 			tabLabels.Content = stackPanel;
 			Grid.SetRow(tabLabels, 0);
 			Grid.SetColumn(tabLabels, 1);
@@ -993,15 +968,6 @@ namespace NeoEdit.Program
 				border.Height = height;
 				canvas.Children.Add(border);
 			}
-
-			ShowTextEditor = textEditor =>
-			{
-				var index = GetTabIndex(textEditor);
-				if (index == -1)
-					return;
-				var top = index / columns.Value * height;
-				scrollBar.Value = Math.Min(top, Math.Max(scrollBar.Value, top + height - scrollBar.ViewportSize));
-			};
 		}
 
 		public void Move(TextEditor tab, int newIndex)

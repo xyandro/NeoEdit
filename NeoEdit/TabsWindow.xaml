@@ -3,6 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	xmlns:local="clr-namespace:NeoEdit.Program"
+	FocusVisualStyle="{x:Null}" Focusable="True" VerticalAlignment="Stretch" AllowDrop="True" Drop="OnDrop" Activated="OnActivated"
 	Width="800" Height="600" Visibility="Visible" IsMainWindow="True">
 
 	<Grid>
