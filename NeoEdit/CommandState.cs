@@ -9,6 +9,7 @@
 		public bool AltDown;
 		public object PreHandleData;
 		public bool Result;
+		public bool? MultiStatus;
 
 		public CommandState(NECommand command) => Command = command;
 	}

@@ -1124,7 +1124,8 @@ namespace NeoEdit.Program
 				return false;
 			Activate();
 			SetFocused(tab, true);
-			tab.Command_File_Refresh();
+			//TODO
+			//tab.Command_File_Refresh();
 			tab.Goto(line, column, index);
 			return true;
 		}

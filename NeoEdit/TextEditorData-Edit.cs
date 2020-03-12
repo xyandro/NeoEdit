@@ -203,7 +203,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(clipboardStrings, highlight);
 		}
 
-		EditFindFindDialog.Result Command_Edit_Find_Find_Dialog(TabsWindow TabsParent)
+		EditFindFindDialog.Result Command_Edit_Find_Find_Dialog()
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
@@ -337,7 +337,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		EditFindRegexReplaceDialog.Result Command_Edit_Find_RegexReplace_Dialog(TabsWindow TabsParent)
+		EditFindRegexReplaceDialog.Result Command_Edit_Find_RegexReplace_Dialog()
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
@@ -376,7 +376,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		EditExpressionExpressionDialog.Result Command_Edit_Expression_Expression_Dialog(TabsWindow TabsParent) => EditExpressionExpressionDialog.Run(TabsParent, GetVariables());
+		EditExpressionExpressionDialog.Result Command_Edit_Expression_Expression_Dialog() => EditExpressionExpressionDialog.Run(TabsParent, GetVariables());
 
 		void Command_Edit_Expression_Expression(EditExpressionExpressionDialog.Result result)
 		{
@@ -389,7 +389,7 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetExpressionResults<string>("Eval(x)", Selections.Count()));
 
-		EditRotateDialog.Result Command_Edit_Rotate_Dialog(TabsWindow TabsParent) => EditRotateDialog.Run(TabsParent, GetVariables());
+		EditRotateDialog.Result Command_Edit_Rotate_Dialog() => EditRotateDialog.Run(TabsParent, GetVariables());
 
 		void Command_Edit_Rotate(EditRotateDialog.Result result)
 		{
@@ -405,7 +405,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		EditRepeatDialog.Result Command_Edit_Repeat_Dialog(TabsWindow TabsParent) => EditRepeatDialog.Run(TabsParent, Selections.Count == 1, GetVariables());
+		EditRepeatDialog.Result Command_Edit_Repeat_Dialog() => EditRepeatDialog.Run(TabsParent, Selections.Count == 1, GetVariables());
 
 		void Command_Edit_Repeat(EditRepeatDialog.Result result)
 		{
@@ -440,7 +440,7 @@ namespace NeoEdit.Program
 
 		void Command_Edit_Unescape_URL() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
 
-		EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog(TabsWindow TabsParent) => EditDataHashDialog.Run(TabsParent, CodePage);
+		EditDataHashDialog.Result Command_Edit_Data_Hash_Dialog() => EditDataHashDialog.Run(TabsParent, CodePage);
 
 		void Command_Edit_Data_Hash(EditDataHashDialog.Result result)
 		{
@@ -450,7 +450,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		EditDataCompressDialog.Result Command_Edit_Data_Compress_Dialog(TabsWindow TabsParent) => EditDataCompressDialog.Run(TabsParent, CodePage, true);
+		EditDataCompressDialog.Result Command_Edit_Data_Compress_Dialog() => EditDataCompressDialog.Run(TabsParent, CodePage, true);
 
 		void Command_Edit_Data_Compress(EditDataCompressDialog.Result result)
 		{
@@ -463,7 +463,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(compressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataCompressDialog.Result Command_Edit_Data_Decompress_Dialog(TabsWindow TabsParent) => EditDataCompressDialog.Run(TabsParent, CodePage, false);
+		EditDataCompressDialog.Result Command_Edit_Data_Decompress_Dialog() => EditDataCompressDialog.Run(TabsParent, CodePage, false);
 
 		void Command_Edit_Data_Decompress(EditDataCompressDialog.Result result)
 		{
@@ -476,7 +476,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(decompressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataEncryptDialog.Result Command_Edit_Data_Encrypt_Dialog(TabsWindow TabsParent) => EditDataEncryptDialog.Run(TabsParent, CodePage, true);
+		EditDataEncryptDialog.Result Command_Edit_Data_Encrypt_Dialog() => EditDataEncryptDialog.Run(TabsParent, CodePage, true);
 
 		void Command_Edit_Data_Encrypt(EditDataEncryptDialog.Result result)
 		{
@@ -489,7 +489,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(encrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataEncryptDialog.Result Command_Edit_Data_Decrypt_Dialog(TabsWindow TabsParent) => EditDataEncryptDialog.Run(TabsParent, CodePage, false);
+		EditDataEncryptDialog.Result Command_Edit_Data_Decrypt_Dialog() => EditDataEncryptDialog.Run(TabsParent, CodePage, false);
 
 		void Command_Edit_Data_Decrypt(EditDataEncryptDialog.Result result)
 		{
@@ -502,7 +502,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(decrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		EditDataSignDialog.Result Command_Edit_Data_Sign_Dialog(TabsWindow TabsParent) => EditDataSignDialog.Run(TabsParent, CodePage);
+		EditDataSignDialog.Result Command_Edit_Data_Sign_Dialog() => EditDataSignDialog.Run(TabsParent, CodePage);
 
 		void Command_Edit_Data_Sign(EditDataSignDialog.Result result)
 		{
@@ -512,7 +512,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		EditSortDialog.Result Command_Edit_Sort_Dialog(TabsWindow TabsParent) => EditSortDialog.Run(TabsParent);
+		EditSortDialog.Result Command_Edit_Sort_Dialog() => EditSortDialog.Run(TabsParent);
 
 		void Command_Edit_Sort(EditSortDialog.Result result)
 		{
@@ -543,7 +543,7 @@ namespace NeoEdit.Program
 				SetRegions(result.UseRegion, newRegions);
 		}
 
-		EditConvertDialog.Result Command_Edit_Convert_Dialog(TabsWindow TabsParent) => EditConvertDialog.Run(TabsParent);
+		EditConvertDialog.Result Command_Edit_Convert_Dialog() => EditConvertDialog.Run(TabsParent);
 
 		void Command_Edit_Convert(EditConvertDialog.Result result)
 		{
