@@ -43,8 +43,6 @@ namespace NeoEdit.Program
 
 		static int curWindowIndex = 0;
 
-		readonly RunOnceTimer layoutTimer, showFocusedTimer, addedTabTimer;
-
 		Action<TextEditorData> ShowTextEditor;
 		int addedCounter = 0, lastAddedCounter = -1, textEditorOrder = 0;
 
@@ -58,10 +56,11 @@ namespace NeoEdit.Program
 		static TabsWindow()
 		{
 			UIHelper<TabsWindow>.Register();
-			UIHelper<TabsWindow>.AddCallback(a => a.Rows, (obj, o, n) => obj.QueueUpdateLayout());
-			UIHelper<TabsWindow>.AddCallback(a => a.Columns, (obj, o, n) => obj.QueueUpdateLayout());
-			UIHelper<TabsWindow>.AddCallback(a => a.MaxRows, (obj, o, n) => obj.QueueUpdateLayout());
-			UIHelper<TabsWindow>.AddCallback(a => a.MaxColumns, (obj, o, n) => obj.QueueUpdateLayout());
+			//TODO
+			//UIHelper<TabsWindow>.AddCallback(a => a.Rows, (obj, o, n) => obj.QueueUpdateLayout());
+			//UIHelper<TabsWindow>.AddCallback(a => a.Columns, (obj, o, n) => obj.QueueUpdateLayout());
+			//UIHelper<TabsWindow>.AddCallback(a => a.MaxRows, (obj, o, n) => obj.QueueUpdateLayout());
+			//UIHelper<TabsWindow>.AddCallback(a => a.MaxColumns, (obj, o, n) => obj.QueueUpdateLayout());
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
 		}
@@ -73,10 +72,10 @@ namespace NeoEdit.Program
 		readonly RunOnceTimer doActivatedTimer, statusBarTimer;
 		public TabsWindow(bool addEmpty = false)
 		{
-			layoutTimer = new RunOnceTimer(DoLayout);
-			showFocusedTimer = new RunOnceTimer(ShowFocused);
-			showFocusedTimer.AddDependency(layoutTimer);
-			addedTabTimer = new RunOnceTimer(() => ++addedCounter);
+			newTabs = newActiveTabs = new List<TextEditorData>();
+			Commit();
+
+			//addedTabTimer = new RunOnceTimer(() => ++addedCounter);
 
 			Rows = Columns = 1;
 			Focusable = true;
@@ -91,13 +90,6 @@ namespace NeoEdit.Program
 
 			WindowIndex = ++curWindowIndex;
 
-			// This has to be a multibinding or it won't show a title if Focused is null
-			var titleBinding = new MultiBinding { Converter = new NEExpressionConverter(), ConverterParameter = $@"$""{{p0}} - NeoEdit Text Editor{(Helpers.IsAdministrator() ? " (Administrator)" : "")}{{p2 ? $"" - {{p1}}"" : """"}}""" };
-			titleBinding.Bindings.Add(new Binding($"{nameof(Focused)}.{nameof(Focused.FileName)}") { Source = this });
-			titleBinding.Bindings.Add(new Binding($"{nameof(WindowIndex)}") { Source = this });
-			titleBinding.Bindings.Add(new Binding() { Path = new PropertyPath("(0)", typeof(TabsWindow).GetProperty(nameof(ShowIndex))) });
-			SetBinding(TitleProperty, titleBinding);
-
 			AllowDrop = true;
 			Drop += OnDrop;
 			doActivatedTimer = new RunOnceTimer(() => DoActivated());
@@ -105,21 +97,14 @@ namespace NeoEdit.Program
 			NEClipboard.ClipboardChanged += () => statusBarTimer.Start();
 			Activated += OnActivated;
 
-			SizeChanged += (s, e) => QueueUpdateLayout();
-			scrollBar.ValueChanged += (s, e) => QueueUpdateLayout(false);
+			//SizeChanged += (s, e) => QueueUpdateLayout();
+			//scrollBar.ValueChanged += (s, e) => QueueUpdateLayout(false);
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
 			UpdateStatusBarText();
 
 			if (addEmpty)
 				AddTextEditor(new TextEditorData());
-		}
-
-		void QueueUpdateLayout(bool showFocused = true)
-		{
-			layoutTimer.Start();
-			if (showFocused)
-				showFocusedTimer.Start();
 		}
 
 		protected override void OnSourceInitialized(EventArgs e)
@@ -344,7 +329,7 @@ namespace NeoEdit.Program
 			newClipboard.IsCut = isCut;
 		}
 
-		void HandleCommand(CommandState state)
+		public void HandleCommand(CommandState state)
 		{
 			try
 			{
@@ -354,11 +339,15 @@ namespace NeoEdit.Program
 
 				ExecuteCommand(state);
 
+				Commit();
 				Tabs.ForEach(tab => tab.Commit());
+
+				DoLayout();
 			}
 			catch
 			{
 				Tabs.ForEach(tab => tab.Rollback());
+				Rollback();
 				throw;
 			}
 		}
@@ -373,7 +362,18 @@ namespace NeoEdit.Program
 			Focused.GetCommandParameters(state, this);
 		}
 
-		void ExecuteCommand(CommandState state) => ActiveTabs.ForEach(tab => tab.ExecuteCommand(state));
+		void ExecuteCommand(CommandState state)
+		{
+			var done = true;
+			switch (state.Command)
+			{
+				case NECommand.File_New_New: AddTextEditor(state.Parameters as TextEditorData); break;
+				default: done = false; break;
+			}
+
+			if (!done)
+				ActiveTabs.ForEach(tab => tab.ExecuteCommand(state));
+		}
 
 		//bool GetDialogResult(NECommand command, out object dialogResult, bool? multiStatus)
 		//{
@@ -569,28 +569,25 @@ namespace NeoEdit.Program
 
 		public void AddTextEditor(TextEditorData textEditor, int? index = null, bool canReplace = true)
 		{
-			//TODO
-			//textEditor.TabsParent = this;
+			textEditor.TabsParent = this;
 
-			//var replace = (canReplace) && (!index.HasValue) && (!textEditor.Empty()) && (Focused != null) && (Focused.Empty()) ? Focused : default(TextEditorData);
-			//if (replace != null)
-			//{
-			//	replace.Closed();
-			//	tabs[tabs.IndexOf(replace)] = textEditor;
-			//}
-			//else
-			//	tabs.Insert(index ?? tabs.Count, textEditor);
+			var tabs = Tabs.ToList();
+			var replace = (canReplace) && (!index.HasValue) && (!textEditor.Empty()) && (Focused != null) && (Focused.Empty()) ? Focused : default(TextEditorData);
+			if (replace != null)
+				tabs[tabs.IndexOf(replace)] = textEditor;
+			else
+				tabs.Insert(index ?? tabs.Count, textEditor);
 
-			//if (lastAddedCounter != addedCounter)
-			//{
-			//	lastAddedCounter = addedCounter;
-			//	SetActive();
-			//	addedTabTimer.Start();
-			//}
+			Tabs = tabs;
 
-			//AddActive(textEditor);
+			var activeTabs = ActiveTabs.ToList();
+			if (oldActiveTabs == newActiveTabs)
+				activeTabs.Clear();
 
-			//statusBarTimer.Start();
+			activeTabs.Add(textEditor);
+			ActiveTabs = activeTabs;
+
+			statusBarTimer.Start();
 			//QueueUpdateLayout();
 		}
 
@@ -715,17 +712,17 @@ namespace NeoEdit.Program
 			SetFocused(ordering[current], !shiftDown);
 		}
 
-		//bool HandleClick(TextEditorData textEditor)
-		//{
-		//	if (!shiftDown)
-		//		SetActive(textEditor);
-		//	else if (Focused != textEditor)
-		//	{
-		//		SetFocused(textEditor);
-		//		return true;
-		//	}
-		//	return false;
-		//}
+		bool HandleClick(TextEditorData textEditor)
+		{
+			if (!shiftDown)
+				ActiveTabs = new List<TextEditorData> { textEditor };
+			else if (Focused != textEditor)
+			{
+				SetFocused(textEditor);
+				return true;
+			}
+			return false;
+		}
 
 		//TODO
 		//protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -767,90 +764,74 @@ namespace NeoEdit.Program
 
 		UIElement GetTabLabel(bool tiles, TextEditorData textEditor)
 		{
-			return default;
-			//TODO
-			//var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = textEditor };
-			//border.MouseLeftButtonDown += (s, e) => HandleClick(textEditor);
-			//border.MouseMove += (s, e) =>
-			//{
-			//	if (e.LeftButton == MouseButtonState.Pressed)
-			//	{
-			//		var active = textEditor.TabsParent.ActiveTabs.ToList();
-			//		DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<TextEditorData>), active), DragDropEffects.Move);
-			//	}
-			//};
+			var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = textEditor };
+			border.MouseLeftButtonDown += (s, e) => HandleClick(textEditor);
+			border.MouseMove += (s, e) =>
+			{
+				if (e.LeftButton == MouseButtonState.Pressed)
+				{
+					var active = textEditor.TabsParent.ActiveTabs.ToList();
+					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<TextEditorData>), active), DragDropEffects.Move);
+				}
+			};
 
-			//var borderBinding = new MultiBinding { Converter = new ActiveTabBorderConverter() };
-			//borderBinding.Bindings.Add(new Binding { Source = textEditor });
-			//borderBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
-			//borderBinding.Bindings.Add(new Binding { Source = activeTabs });
-			//borderBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
-			//border.SetBinding(Border.BorderBrushProperty, borderBinding);
-			//var backgroundBinding = new MultiBinding { Converter = new ActiveTabBackgroundConverter() };
-			//backgroundBinding.Bindings.Add(new Binding { Source = textEditor });
-			//backgroundBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
-			//backgroundBinding.Bindings.Add(new Binding { Source = activeTabs });
-			//backgroundBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
-			//border.SetBinding(Border.BackgroundProperty, backgroundBinding);
+			var borderBinding = new MultiBinding { Converter = new ActiveTabBorderConverter() };
+			borderBinding.Bindings.Add(new Binding { Source = textEditor });
+			borderBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
+			borderBinding.Bindings.Add(new Binding { Source = ActiveTabs });
+			borderBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
+			border.SetBinding(Border.BorderBrushProperty, borderBinding);
+			var backgroundBinding = new MultiBinding { Converter = new ActiveTabBackgroundConverter() };
+			backgroundBinding.Bindings.Add(new Binding { Source = textEditor });
+			backgroundBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
+			backgroundBinding.Bindings.Add(new Binding { Source = ActiveTabs });
+			backgroundBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
+			border.SetBinding(Border.BackgroundProperty, backgroundBinding);
 
-			//var grid = new Grid();
-			//grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(12) });
-			//grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-			//grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+			var grid = new Grid();
+			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(12) });
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-			//var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Foreground = Brushes.White, Margin = new Thickness(4, -4, 0, 0) };
-			//text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditorData.TabLabel)) { Source = textEditor });
-			//Grid.SetRow(text, 0);
-			//Grid.SetColumn(text, 0);
-			//grid.Children.Add(text);
+			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Foreground = Brushes.White, Margin = new Thickness(4, -4, 0, 0) };
+			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditorData.TabLabel)) { Source = textEditor });
+			Grid.SetRow(text, 0);
+			Grid.SetColumn(text, 0);
+			grid.Children.Add(text);
 
-			//var closeButton = new Button
-			//{
-			//	Content = "🗙",
-			//	BorderThickness = new Thickness(0),
-			//	Style = FindResource(ToolBar.ButtonStyleKey) as Style,
-			//	VerticalAlignment = VerticalAlignment.Center,
-			//	Margin = new Thickness(2, -6, 0, 0),
-			//	Foreground = Brushes.Red,
-			//	Focusable = false,
-			//	HorizontalAlignment = HorizontalAlignment.Right,
-			//};
-			//closeButton.Click += (s, e) =>
-			//{
-			//	if (textEditor.CanClose())
-			//		RemoveTextEditor(textEditor);
-			//};
-			//Grid.SetRow(closeButton, 0);
-			//Grid.SetColumn(closeButton, 1);
-			//grid.Children.Add(closeButton);
+			var closeButton = new Button
+			{
+				Content = "🗙",
+				BorderThickness = new Thickness(0),
+				Style = FindResource(ToolBar.ButtonStyleKey) as Style,
+				VerticalAlignment = VerticalAlignment.Center,
+				Margin = new Thickness(2, -6, 0, 0),
+				Foreground = Brushes.Red,
+				Focusable = false,
+				HorizontalAlignment = HorizontalAlignment.Right,
+			};
+			closeButton.Click += (s, e) =>
+			{
+				if (textEditor.CanClose())
+					RemoveTextEditor(textEditor);
+			};
+			Grid.SetRow(closeButton, 0);
+			Grid.SetColumn(closeButton, 1);
+			grid.Children.Add(closeButton);
 
-			//border.Child = grid;
-			//return border;
-		}
-
-		void ClearLayout()
-		{
-			canvas.Children.Clear();
-			//TODO
-			//foreach (var tab in Tabs)
-			//{
-			//	var parent = (tab as FrameworkElement).Parent;
-			//	if (parent is Panel p)
-			//		p.Children.Clear();
-			//	else if (parent is ContentControl cc)
-			//		cc.Content = null;
-			//	else if (parent != null)
-			//		throw new Exception("Don't know how to disconnect item");
-			//}
+			border.Child = grid;
+			return border;
 		}
 
 		void DoLayout()
 		{
-			ClearLayout();
+			canvas.Children.Clear();
 			if ((Columns == 1) && (Rows == 1))
 				DoFullLayout();
 			else
 				DoGridLayout();
+
+			Title = $"{Focused?.FileName} - NeoEdit Text Editor{(Helpers.IsAdministrator() ? " (Administrator)" : "")}{(ShowIndex ? $" - {WindowIndex}" : "")}";
 		}
 
 		void DoFullLayout()
@@ -888,15 +869,15 @@ namespace NeoEdit.Program
 				stackPanel.Children.Add(tabLabel);
 			}
 
-			ShowTextEditor = textEditor =>
-			{
-				var show = stackPanel.Children.OfType<FrameworkElement>().Where(x => x.Tag == textEditor).FirstOrDefault();
-				if (show == null)
-					return;
-				tabLabels.UpdateLayout();
-				var left = show.TranslatePoint(new Point(0, 0), tabLabels).X + tabLabels.HorizontalOffset;
-				tabLabels.ScrollToHorizontalOffset(Math.Min(left, Math.Max(tabLabels.HorizontalOffset, left + show.ActualWidth - tabLabels.ViewportWidth)));
-			};
+			//ShowTextEditor = textEditor =>
+			//{
+			//	var show = stackPanel.Children.OfType<FrameworkElement>().Where(x => x.Tag == textEditor).FirstOrDefault();
+			//	if (show == null)
+			//		return;
+			//	tabLabels.UpdateLayout();
+			//	var left = show.TranslatePoint(new Point(0, 0), tabLabels).X + tabLabels.HorizontalOffset;
+			//	tabLabels.ScrollToHorizontalOffset(Math.Min(left, Math.Max(tabLabels.HorizontalOffset, left + show.ActualWidth - tabLabels.ViewportWidth)));
+			//};
 
 			tabLabels.Content = stackPanel;
 			Grid.SetRow(tabLabels, 0);
@@ -915,12 +896,14 @@ namespace NeoEdit.Program
 			Grid.SetColumn(moveRight, 2);
 			grid.Children.Add(moveRight);
 
-			var contentControl = new ContentControl { FocusVisualStyle = null };
-			contentControl.SetBinding(ContentControl.ContentProperty, new Binding(nameof(Focused)) { Source = this });
-			Grid.SetRow(contentControl, 1);
-			Grid.SetColumn(contentControl, 0);
-			Grid.SetColumnSpan(contentControl, 3);
-			grid.Children.Add(contentControl);
+			if (Focused != null)
+			{
+				var content = new TextEditor(Focused);
+				Grid.SetRow(content, 1);
+				Grid.SetColumn(content, 0);
+				Grid.SetColumnSpan(content, 3);
+				grid.Children.Add(content);
+			}
 
 			outerBorder.Child = grid;
 			canvas.Children.Add(outerBorder);
@@ -928,76 +911,76 @@ namespace NeoEdit.Program
 
 		void DoGridLayout()
 		{
-			//int? columns = null, rows = null;
-			//if (Columns.HasValue)
-			//	columns = Math.Max(1, Columns.Value);
-			//if (Rows.HasValue)
-			//	rows = Math.Max(1, Rows.Value);
-			//if ((!columns.HasValue) && (!rows.HasValue))
-			//	columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.Count)), MaxColumns ?? int.MaxValue));
-			//if (!rows.HasValue)
-			//	rows = Math.Max(1, Math.Min((Tabs.Count + columns.Value - 1) / columns.Value, MaxRows ?? int.MaxValue));
-			//if (!columns.HasValue)
-			//	columns = Math.Max(1, Math.Min((Tabs.Count + rows.Value - 1) / rows.Value, MaxColumns ?? int.MaxValue));
+			int? columns = null, rows = null;
+			if (Columns.HasValue)
+				columns = Math.Max(1, Columns.Value);
+			if (Rows.HasValue)
+				rows = Math.Max(1, Rows.Value);
+			if ((!columns.HasValue) && (!rows.HasValue))
+				columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.Count)), MaxColumns ?? int.MaxValue));
+			if (!rows.HasValue)
+				rows = Math.Max(1, Math.Min((Tabs.Count + columns.Value - 1) / columns.Value, MaxRows ?? int.MaxValue));
+			if (!columns.HasValue)
+				columns = Math.Max(1, Math.Min((Tabs.Count + rows.Value - 1) / rows.Value, MaxColumns ?? int.MaxValue));
 
-			//var totalRows = (Tabs.Count + columns.Value - 1) / columns.Value;
+			var totalRows = (Tabs.Count + columns.Value - 1) / columns.Value;
 
-			//var scrollBarVisibility = totalRows > rows ? Visibility.Visible : Visibility.Collapsed;
-			//if (scrollBar.Visibility != scrollBarVisibility)
-			//{
-			//	scrollBar.Visibility = scrollBarVisibility;
-			//	UpdateLayout();
-			//}
+			var scrollBarVisibility = totalRows > rows ? Visibility.Visible : Visibility.Collapsed;
+			if (scrollBar.Visibility != scrollBarVisibility)
+			{
+				scrollBar.Visibility = scrollBarVisibility;
+				UpdateLayout();
+			}
 
-			//var width = canvas.ActualWidth / columns.Value;
-			//var height = canvas.ActualHeight / rows.Value;
+			var width = canvas.ActualWidth / columns.Value;
+			var height = canvas.ActualHeight / rows.Value;
 
-			//scrollBar.ViewportSize = canvas.ActualHeight;
-			//scrollBar.Maximum = height * totalRows - canvas.ActualHeight;
+			scrollBar.ViewportSize = canvas.ActualHeight;
+			scrollBar.Maximum = height * totalRows - canvas.ActualHeight;
 
-			//for (var ctr = 0; ctr < Tabs.Count; ++ctr)
-			//{
-			//	var textEditor = Tabs[ctr] as TextEditorData;
-			//	var top = ctr / columns.Value * height - scrollBar.Value;
-			//	if ((top + height < 0) || (top > canvas.ActualHeight))
-			//		continue;
+			for (var ctr = 0; ctr < Tabs.Count; ++ctr)
+			{
+				var textEditor = Tabs[ctr] as TextEditorData;
+				var top = ctr / columns.Value * height - scrollBar.Value;
+				if ((top + height < 0) || (top > canvas.ActualHeight))
+					continue;
 
-			//	var border = new Border
-			//	{
-			//		BorderBrush = OutlineBrush,
-			//		Background = BackgroundBrush,
-			//		BorderThickness = new Thickness(2),
-			//		CornerRadius = new CornerRadius(8)
-			//	};
-			//	Canvas.SetLeft(border, ctr % columns.Value * width);
-			//	Canvas.SetTop(border, top);
+				var border = new Border
+				{
+					BorderBrush = OutlineBrush,
+					Background = BackgroundBrush,
+					BorderThickness = new Thickness(2),
+					CornerRadius = new CornerRadius(8)
+				};
+				Canvas.SetLeft(border, ctr % columns.Value * width);
+				Canvas.SetTop(border, top);
 
-			//	var dockPanel = new DockPanel { AllowDrop = true };
-			//	dockPanel.Drop += (s, e) => OnDrop(e, textEditor);
-			//	var tabLabel = GetTabLabel(true, textEditor);
-			//	DockPanel.SetDock(tabLabel, Dock.Top);
-			//	dockPanel.Children.Add(tabLabel);
-			//	{
-			//		textEditor.SetValue(DockPanel.DockProperty, Dock.Bottom);
-			//		textEditor.FocusVisualStyle = null;
-			//		dockPanel.Children.Add(textEditor);
-			//	}
+				var dockPanel = new DockPanel { AllowDrop = true };
+				dockPanel.Drop += (s, e) => OnDrop(e, textEditor);
+				var tabLabel = GetTabLabel(true, textEditor);
+				DockPanel.SetDock(tabLabel, Dock.Top);
+				//dockPanel.Children.Add(tabLabel);
+				//{
+				//	textEditor.SetValue(DockPanel.DockProperty, Dock.Bottom);
+				//	textEditor.FocusVisualStyle = null;
+				//	dockPanel.Children.Add(textEditor);
+				//}
 
-			//	border.Child = dockPanel;
+				border.Child = dockPanel;
 
-			//	border.Width = width;
-			//	border.Height = height;
-			//	canvas.Children.Add(border);
-			//}
+				border.Width = width;
+				border.Height = height;
+				canvas.Children.Add(border);
+			}
 
-			//ShowTextEditor = textEditor =>
-			//{
-			//	var index = GetTabIndex(textEditor);
-			//	if (index == -1)
-			//		return;
-			//	var top = index / columns.Value * height;
-			//	scrollBar.Value = Math.Min(top, Math.Max(scrollBar.Value, top + height - scrollBar.ViewportSize));
-			//};
+			ShowTextEditor = textEditor =>
+			{
+				var index = GetTabIndex(textEditor);
+				if (index == -1)
+					return;
+				var top = index / columns.Value * height;
+				scrollBar.Value = Math.Min(top, Math.Max(scrollBar.Value, top + height - scrollBar.ViewportSize));
+			};
 		}
 
 		public void Move(TextEditorData tab, int newIndex)
@@ -1010,7 +993,7 @@ namespace NeoEdit.Program
 			tabs.RemoveAt(oldIndex);
 			tabs.Insert(newIndex, tab);
 			Tabs = tabs;
-			QueueUpdateLayout();
+			//QueueUpdateLayout();
 		}
 
 		//TODO

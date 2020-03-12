@@ -179,12 +179,10 @@ namespace NeoEdit.Program
 		FileSystemWatcher watcher = null;
 		ShutdownData shutdownData;
 
-		internal TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
+		internal TextEditor(TextEditorData TextEditorData)
 		{
+			this.TextEditorData = TextEditorData;
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
-
-			fileName = fileName?.Trim('"');
-			this.shutdownData = shutdownData;
 
 			InitializeComponent();
 			canvasRenderTimer = new RunOnceTimer(() => { canvas.InvalidateVisual(); statusBar.InvalidateVisual(); });
