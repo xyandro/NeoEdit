@@ -36,12 +36,24 @@ namespace NeoEdit.Program
 
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
+		static readonly Brush FocusedWindowBorderBrush = new SolidColorBrush(Color.FromRgb(31, 113, 216));
+		static readonly Brush ActiveWindowBorderBrush = new SolidColorBrush(Color.FromRgb(28, 101, 193));
+		static readonly Brush InactiveWindowBorderBrush = Brushes.Transparent;
+		static readonly Brush FocusedWindowBackgroundBrush = new SolidColorBrush(Color.FromRgb(23, 81, 156));
+		static readonly Brush ActiveWindowBackgroundBrush = new SolidColorBrush(Color.FromRgb(14, 50, 96));
+		static readonly Brush InactiveWindowBackgroundBrush = Brushes.Transparent;
 
 		static TabsWindow()
 		{
 			UIHelper<TabsWindow>.Register();
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
+			FocusedWindowBorderBrush.Freeze();
+			ActiveWindowBorderBrush.Freeze();
+			InactiveWindowBorderBrush.Freeze();
+			FocusedWindowBackgroundBrush.Freeze();
+			ActiveWindowBackgroundBrush.Freeze();
+			InactiveWindowBackgroundBrush.Freeze();
 		}
 
 		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
@@ -723,18 +735,21 @@ namespace NeoEdit.Program
 				}
 			};
 
-			var borderBinding = new MultiBinding { Converter = new ActiveTabBorderConverter() };
-			borderBinding.Bindings.Add(new Binding { Source = textEditor });
-			borderBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
-			borderBinding.Bindings.Add(new Binding { Source = ActiveTabs });
-			borderBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
-			border.SetBinding(Border.BorderBrushProperty, borderBinding);
-			var backgroundBinding = new MultiBinding { Converter = new ActiveTabBackgroundConverter() };
-			backgroundBinding.Bindings.Add(new Binding { Source = textEditor });
-			backgroundBinding.Bindings.Add(new Binding(nameof(Focused)) { Source = this });
-			backgroundBinding.Bindings.Add(new Binding { Source = ActiveTabs });
-			backgroundBinding.Bindings.Add(new Binding(nameof(ActiveUpdateCount)) { Source = this });
-			border.SetBinding(Border.BackgroundProperty, backgroundBinding);
+			if (Focused == textEditor)
+			{
+				border.BorderBrush = FocusedWindowBorderBrush;
+				border.Background = FocusedWindowBackgroundBrush;
+			}
+			else if (ActiveTabs.Contains(textEditor))
+			{
+				border.BorderBrush = ActiveWindowBorderBrush;
+				border.Background = ActiveWindowBackgroundBrush;
+			}
+			else
+			{
+				border.BorderBrush = InactiveWindowBorderBrush;
+				border.Background = InactiveWindowBackgroundBrush;
+			}
 
 			var grid = new Grid();
 			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(12) });
@@ -934,12 +949,8 @@ namespace NeoEdit.Program
 
 			var totalRows = (Tabs.Count + columns.Value - 1) / columns.Value;
 
-			var scrollBarVisibility = totalRows > rows ? Visibility.Visible : Visibility.Collapsed;
-			if (scrollBar.Visibility != scrollBarVisibility)
-			{
-				scrollBar.Visibility = scrollBarVisibility;
-				UpdateLayout();
-			}
+			scrollBar.Visibility = totalRows > rows ? Visibility.Visible : Visibility.Collapsed;
+			UpdateLayout();
 
 			var width = canvas.ActualWidth / columns.Value;
 			var height = canvas.ActualHeight / rows.Value;
@@ -949,7 +960,6 @@ namespace NeoEdit.Program
 
 			for (var ctr = 0; ctr < Tabs.Count; ++ctr)
 			{
-				var textEditor = Tabs[ctr] as TextEditorData;
 				var top = ctr / columns.Value * height - scrollBar.Value;
 				if ((top + height < 0) || (top > canvas.ActualHeight))
 					continue;
@@ -964,16 +974,17 @@ namespace NeoEdit.Program
 				Canvas.SetLeft(border, ctr % columns.Value * width);
 				Canvas.SetTop(border, top);
 
+				var textEditor = new TextEditor(Tabs[ctr]);
 				var dockPanel = new DockPanel { AllowDrop = true };
-				dockPanel.Drop += (s, e) => OnDrop(e, textEditor);
-				var tabLabel = GetTabLabel(true, textEditor);
+				dockPanel.Drop += (s, e) => OnDrop(e, Tabs[ctr]);
+				var tabLabel = GetTabLabel(true, Tabs[ctr]);
 				DockPanel.SetDock(tabLabel, Dock.Top);
-				//dockPanel.Children.Add(tabLabel);
-				//{
-				//	textEditor.SetValue(DockPanel.DockProperty, Dock.Bottom);
-				//	textEditor.FocusVisualStyle = null;
-				//	dockPanel.Children.Add(textEditor);
-				//}
+				dockPanel.Children.Add(tabLabel);
+				{
+					textEditor.SetValue(DockPanel.DockProperty, Dock.Bottom);
+					textEditor.FocusVisualStyle = null;
+					dockPanel.Children.Add(textEditor);
+				}
 
 				border.Child = dockPanel;
 
