@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
@@ -1824,9 +1826,50 @@ namespace NeoEdit.Program
 			return Selections.AsParallel().AsOrdered().Select(range => fileName.RelativeChild(Text.GetString(range))).ToList();
 		}
 
-		void Save(string fileName, bool b = false)
+		public void Save(string fileName, bool copyOnly = false)
 		{
-			//TODO
+			//if ((Coder.IsStr(CodePage)) && ((DataQwer.MaxPosition >> 20) < 50) && (!VerifyCanEncode()))
+			//	return;
+
+			//var triedReadOnly = false;
+			//while (true)
+			//{
+			//	try
+			//	{
+			//		if ((!copyOnly) && (watcher != null))
+			//			watcher.EnableRaisingEvents = false;
+			//		File.WriteAllBytes(fileName, FileSaver.Encrypt(FileSaver.Compress(DataQwer.GetBytes(CodePage), Compressed), AESKey));
+			//		if ((!copyOnly) && (watcher != null))
+			//			watcher.EnableRaisingEvents = true;
+			//		break;
+			//	}
+			//	catch (UnauthorizedAccessException)
+			//	{
+			//		if ((triedReadOnly) || (!new FileInfo(fileName).IsReadOnly))
+			//			throw;
+
+			//		if (!savedAnswers[nameof(Save)].HasFlag(MessageOptions.All))
+			//			savedAnswers[nameof(Save)] = new Message(TabsParent)
+			//			{
+			//				Title = "Confirm",
+			//				Text = "Save failed. Remove read-only flag?",
+			//				Options = MessageOptions.YesNoAll,
+			//				DefaultAccept = MessageOptions.Yes,
+			//				DefaultCancel = MessageOptions.No,
+			//			}.Show();
+			//		if (!savedAnswers[nameof(Save)].HasFlag(MessageOptions.Yes))
+			//			throw;
+			//		new FileInfo(fileName).IsReadOnly = false;
+			//		triedReadOnly = true;
+			//	}
+			//}
+
+			//if (!copyOnly)
+			//{
+			//	fileLastWrite = new FileInfo(fileName).LastWriteTime;
+			//	SetModifiedFlag(false);
+			//	SetFileName(fileName);
+			//}
 		}
 
 		public void SetClipboardFile(string fileName, bool isCut = false) => SetClipboardFiles(new List<string> { fileName }, isCut);
@@ -1952,6 +1995,56 @@ namespace NeoEdit.Program
 				savedBitmap = Coder.StringToBitmap(Text.GetString());
 			}
 			return savedBitmap;
+		}
+
+		public bool Empty() => (FileName == null) && (!IsModified) && (Text.Length == 0);
+
+		public string OnlyEnding { get; internal set; }
+
+		void OnStatusBarRender()
+		{
+			var sb = new List<string>();
+
+			ViewValuesData = null;
+			ViewValuesHasSel = false;
+
+			if ((CurrentSelection < 0) || (CurrentSelection >= Selections.Count))
+			{
+				sb.Add("Selection 0/0");
+				sb.Add("Col");
+				sb.Add("In");
+				sb.Add("Pos");
+			}
+			else
+			{
+				var range = Selections[CurrentSelection];
+				var lineMin = TextView.GetPositionLine(range.Start);
+				var lineMax = TextView.GetPositionLine(range.End);
+				var indexMin = TextView.GetPositionIndex(range.Start, lineMin);
+				var indexMax = TextView.GetPositionIndex(range.End, lineMax);
+				var columnMin = GetColumnFromIndex(lineMin, indexMin);
+				var columnMax = GetColumnFromIndex(lineMax, indexMax);
+				var posMin = range.Start;
+				var posMax = range.End;
+
+				try
+				{
+					ViewValuesData = Coder.StringToBytes(Text.GetString(range.Start, Math.Min(range.HasSelection ? range.Length : 100, Text.Length - range.Start)), CodePage);
+					ViewValuesHasSel = range.HasSelection;
+				}
+				catch { }
+
+				sb.Add($"Selection {CurrentSelection + 1:n0}/{Selections.Count:n0}");
+				sb.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
+				sb.Add($"In {lineMin + 1:n0}:{indexMin + 1:n0}{((lineMin == lineMax) && (indexMin == indexMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{indexMax + 1:n0}")}");
+				sb.Add($"Pos {posMin:n0}{(posMin == posMax ? "" : $"-{posMax:n0} ({posMax - posMin:n0})")}");
+			}
+
+			sb.Add($"Regions {string.Join(" / ", Enumerable.Range(1, 9).ToDictionary(index => index, index => GetRegions(index)).OrderBy(pair => pair.Key).Select(pair => $"{pair.Value:n0}"))}");
+			sb.Add($"Database {DBName}");
+
+			var tf = SystemFonts.MessageFontFamily.GetTypefaces().Where(x => (x.Weight == FontWeights.Normal) && (x.Style == FontStyles.Normal)).First();
+			//TODO dc.DrawText(new FormattedText(string.Join(" │ ", sb), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.White, 1), new Point(2, 2));
 		}
 	}
 }

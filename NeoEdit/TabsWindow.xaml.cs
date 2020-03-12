@@ -545,18 +545,6 @@ namespace NeoEdit.Program
 			e.Handled = state.Result;
 		}
 
-		public bool HandleKey(Key key, bool shiftDown, bool controlDown, bool altDown)
-		{
-			var result = false;
-			var activeTabs = ActiveTabs.ToList();
-			var previousData = default(object);
-			foreach (var textEditors in activeTabs)
-				textEditors.PreHandleKey(key, shiftDown, controlDown, altDown, ref previousData);
-			foreach (var textEditors in activeTabs)
-				result = textEditors.HandleKey(key, shiftDown, controlDown, altDown, previousData) || result;
-			return result;
-		}
-
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
 			if (MacroPlaying != null)
@@ -571,14 +559,6 @@ namespace NeoEdit.Program
 
 			HandleCommand(new CommandState(NECommand.Internal_Text) { Parameters = e.Text });
 			e.Handled = true;
-		}
-
-		public bool HandleText(string text)
-		{
-			var result = false;
-			foreach (var textEditors in ActiveTabs.ToList())
-				result = textEditors.HandleText(text) || result;
-			return result;
 		}
 
 		public void QueueDoActivated() => doActivatedTimer.Start();
@@ -619,28 +599,29 @@ namespace NeoEdit.Program
 
 		public void AddTextEditor(TextEditor textEditor, int? index = null, bool canReplace = true)
 		{
-			textEditor.TabsParent = this;
+			//TODO
+			//textEditor.TabsParent = this;
 
-			var replace = (canReplace) && (!index.HasValue) && (!textEditor.Empty()) && (Focused != null) && (Focused.Empty()) ? Focused : default(TextEditor);
-			if (replace != null)
-			{
-				replace.Closed();
-				tabs[tabs.IndexOf(replace)] = textEditor;
-			}
-			else
-				tabs.Insert(index ?? tabs.Count, textEditor);
+			//var replace = (canReplace) && (!index.HasValue) && (!textEditor.Empty()) && (Focused != null) && (Focused.Empty()) ? Focused : default(TextEditor);
+			//if (replace != null)
+			//{
+			//	replace.Closed();
+			//	tabs[tabs.IndexOf(replace)] = textEditor;
+			//}
+			//else
+			//	tabs.Insert(index ?? tabs.Count, textEditor);
 
-			if (lastAddedCounter != addedCounter)
-			{
-				lastAddedCounter = addedCounter;
-				SetActive();
-				addedTabTimer.Start();
-			}
+			//if (lastAddedCounter != addedCounter)
+			//{
+			//	lastAddedCounter = addedCounter;
+			//	SetActive();
+			//	addedTabTimer.Start();
+			//}
 
-			AddActive(textEditor);
+			//AddActive(textEditor);
 
-			statusBarTimer.Start();
-			QueueUpdateLayout();
+			//statusBarTimer.Start();
+			//QueueUpdateLayout();
 		}
 
 		public void RemoveTextEditor(TextEditor textEditor, bool close = true)
@@ -656,14 +637,15 @@ namespace NeoEdit.Program
 
 		public void AddDiff(TextEditor textEdit1, TextEditor textEdit2)
 		{
-			if (textEdit1.ContentType == ParserType.None)
-				textEdit1.ContentType = textEdit2.ContentType;
-			if (textEdit2.ContentType == ParserType.None)
-				textEdit2.ContentType = textEdit1.ContentType;
-			AddTextEditor(textEdit1);
-			AddTextEditor(textEdit2);
-			textEdit1.DiffTarget = textEdit2;
-			SetLayout(maxColumns: 2);
+			//TODO
+			//if (textEdit1.ContentType == ParserType.None)
+			//	textEdit1.ContentType = textEdit2.ContentType;
+			//if (textEdit2.ContentType == ParserType.None)
+			//	textEdit2.ContentType = textEdit1.ContentType;
+			//AddTextEditor(textEdit1);
+			//AddTextEditor(textEdit2);
+			//textEdit1.DiffTarget = textEdit2;
+			//SetLayout(maxColumns: 2);
 		}
 
 		public void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, ParserType contentType1 = ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, int? index1 = null, ShutdownData shutdownData1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, ParserType contentType2 = ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, int? index2 = null, ShutdownData shutdownData2 = null)
@@ -1126,7 +1108,7 @@ namespace NeoEdit.Program
 			SetFocused(tab, true);
 			//TODO
 			//tab.Command_File_Refresh();
-			tab.Goto(line, column, index);
+			//tab.Goto(line, column, index);
 			return true;
 		}
 	}

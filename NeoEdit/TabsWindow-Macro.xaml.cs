@@ -67,29 +67,30 @@ namespace NeoEdit.Program
 
 		void Command_Macro_Play_Repeat()
 		{
-			var result = MacroPlayRepeatDialog.Run(this, Macro.ChooseMacro);
-			if (result == null)
-				return;
+			//TODO
+			//var result = MacroPlayRepeatDialog.Run(this, Macro.ChooseMacro);
+			//if (result == null)
+			//	return;
 
-			var macro = Macro.Load(result.Macro);
-			var expression = new NEExpression(result.Expression);
-			var count = int.MaxValue;
-			if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Number)
-				count = expression.Evaluate<int>();
+			//var macro = Macro.Load(result.Macro);
+			//var expression = new NEExpression(result.Expression);
+			//var count = int.MaxValue;
+			//if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Number)
+			//	count = expression.Evaluate<int>();
 
-			Action startNext = null;
-			startNext = () =>
-			{
-				if ((Focused == null) || (--count < 0))
-					return;
+			//Action startNext = null;
+			//startNext = () =>
+			//{
+			//	if ((Focused == null) || (--count < 0))
+			//		return;
 
-				if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Condition)
-					if (!expression.Evaluate<bool>(Focused.GetVariables()))
-						return;
+			//	if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Condition)
+			//		if (!expression.Evaluate<bool>(Focused.GetVariables()))
+			//			return;
 
-				macro.Play(this, playing => MacroPlaying = playing, startNext);
-			};
-			startNext();
+			//	macro.Play(this, playing => MacroPlaying = playing, startNext);
+			//};
+			//startNext();
 		}
 
 		void Command_Macro_Play_PlayOnCopiedFiles()

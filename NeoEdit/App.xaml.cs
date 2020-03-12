@@ -77,18 +77,18 @@ namespace NeoEdit.Program
 					tabsWindow.AddTextEditor(new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData));
 				}
 
-				if (clParams.Diff)
-				{
-					for (var ctr = 0; ctr + 1 < tabsWindow.Tabs.Count; ctr += 2)
-					{
-						tabsWindow.Tabs[ctr].DiffTarget = tabsWindow.Tabs[ctr + 1];
-						if (tabsWindow.Tabs[ctr].ContentType == ParserType.None)
-							tabsWindow.Tabs[ctr].ContentType = tabsWindow.Tabs[ctr + 1].ContentType;
-						if (tabsWindow.Tabs[ctr + 1].ContentType == ParserType.None)
-							tabsWindow.Tabs[ctr + 1].ContentType = tabsWindow.Tabs[ctr].ContentType;
-					}
-					tabsWindow.SetLayout(maxColumns: 2);
-				}
+				//if (clParams.Diff)
+				//{
+				//	for (var ctr = 0; ctr + 1 < tabsWindow.Tabs.Count; ctr += 2)
+				//	{
+				//		tabsWindow.Tabs[ctr].DiffTarget = tabsWindow.Tabs[ctr + 1];
+				//		if (tabsWindow.Tabs[ctr].ContentType == ParserType.None)
+				//			tabsWindow.Tabs[ctr].ContentType = tabsWindow.Tabs[ctr + 1].ContentType;
+				//		if (tabsWindow.Tabs[ctr + 1].ContentType == ParserType.None)
+				//			tabsWindow.Tabs[ctr + 1].ContentType = tabsWindow.Tabs[ctr].ContentType;
+				//	}
+				//	tabsWindow.SetLayout(maxColumns: 2);
+				//}
 
 				return tabsWindow;
 			}

@@ -118,17 +118,18 @@ namespace NeoEdit.Program.Dialogs
 
 		void OnTextEditorDiffClick(object sender, RoutedEventArgs e)
 		{
-			var textEditors = SelectedTextEditors;
-			if (textEditors.Any(textEditor => textEditor.DiffTarget != null))
-			{
-				textEditors.ForEach(textEditor => textEditor.DiffTarget = null);
-				return;
-			}
+			//TODO
+			//var textEditors = SelectedTextEditors;
+			//if (textEditors.Any(textEditor => textEditor.DiffTarget != null))
+			//{
+			//	textEditors.ForEach(textEditor => textEditor.DiffTarget = null);
+			//	return;
+			//}
 
-			if (textEditors.Count % 2 != 0)
-				throw new Exception("Must have an even number of tabs selected");
-			for (var ctr = 0; ctr < textEditors.Count; ctr += 2)
-				textEditors[ctr].DiffTarget = textEditors[ctr + 1];
+			//if (textEditors.Count % 2 != 0)
+			//	throw new Exception("Must have an even number of tabs selected");
+			//for (var ctr = 0; ctr < textEditors.Count; ctr += 2)
+			//	textEditors[ctr].DiffTarget = textEditors[ctr + 1];
 		}
 
 		void OnTextEditorCloseClick(object sender, RoutedEventArgs e)
