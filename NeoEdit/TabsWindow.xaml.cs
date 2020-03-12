@@ -537,8 +537,6 @@ namespace NeoEdit.Program
 
 		public void AddTextEditor(TextEditor textEditor, int? index = null, bool canReplace = true)
 		{
-			textEditor.TabsParent = this;
-
 			var tabs = Tabs.ToList();
 			var replace = (canReplace) && (!index.HasValue) && (!textEditor.Empty()) && (Focused != null) && (Focused.Empty()) ? Focused : default(TextEditor);
 			if (replace != null)
@@ -699,27 +697,28 @@ namespace NeoEdit.Program
 
 		void OnDrop(DragEventArgs e, TextEditor toTextEditor)
 		{
-			var fromTabs = e.Data.GetData(typeof(List<TextEditor>)) as List<TextEditor>;
-			if (fromTabs == null)
-				return;
+			//TODO
+			//var fromTabs = e.Data.GetData(typeof(List<TextEditor>)) as List<TextEditor>;
+			//if (fromTabs == null)
+			//	return;
 
-			var toIndex = GetTabIndex(toTextEditor);
-			fromTabs.ForEach(fromTextEditor => fromTextEditor.TabsParent.RemoveTextEditor(fromTextEditor));
+			//var toIndex = GetTabIndex(toTextEditor);
+			//fromTabs.ForEach(fromTextEditor => fromTextEditor.TabsParent.RemoveTextEditor(fromTextEditor));
 
-			if (toIndex == -1)
-				toIndex = Tabs.Count;
-			else
-				toIndex = Math.Min(toIndex, Tabs.Count);
+			//if (toIndex == -1)
+			//	toIndex = Tabs.Count;
+			//else
+			//	toIndex = Math.Min(toIndex, Tabs.Count);
 
-			foreach (var fromTab in fromTabs)
-			{
-				AddTextEditor(fromTab, toIndex);
-				++toIndex;
-				e.Handled = true;
-			}
+			//foreach (var fromTab in fromTabs)
+			//{
+			//	AddTextEditor(fromTab, toIndex);
+			//	++toIndex;
+			//	e.Handled = true;
+			//}
 		}
 
-		UIElement GetTabLabel(bool tiles, TextEditor textEditor)
+		UIElement GetTabLabel(TextEditor textEditor)
 		{
 			var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = textEditor };
 			border.MouseLeftButtonDown += (s, e) => HandleClick(textEditor);
@@ -727,7 +726,7 @@ namespace NeoEdit.Program
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
-					var active = textEditor.TabsParent.ActiveTabs.ToList();
+					var active = ActiveTabs.ToList();
 					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<TextEditor>), active), DragDropEffects.Move);
 				}
 			};
@@ -884,7 +883,7 @@ namespace NeoEdit.Program
 			var stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
 			foreach (var tab in Tabs)
 			{
-				var tabLabel = GetTabLabel(false, tab);
+				var tabLabel = GetTabLabel(tab);
 				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as TextEditor);
 				stackPanel.Children.Add(tabLabel);
 			}
@@ -964,7 +963,7 @@ namespace NeoEdit.Program
 				var textEditor = new TextEditorWindow(Tabs[ctr]);
 				var dockPanel = new DockPanel { AllowDrop = true };
 				dockPanel.Drop += (s, e) => OnDrop(e, Tabs[ctr]);
-				var tabLabel = GetTabLabel(true, Tabs[ctr]);
+				var tabLabel = GetTabLabel(Tabs[ctr]);
 				DockPanel.SetDock(tabLabel, Dock.Top);
 				dockPanel.Children.Add(tabLabel);
 				{

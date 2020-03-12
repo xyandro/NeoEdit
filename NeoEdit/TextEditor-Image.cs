@@ -68,11 +68,11 @@ namespace NeoEdit.Program
 			}
 		}
 
-		ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog() => ImageGrabColorDialog.Run(TabsParent, Selections.Select(range => Text.GetString(range)).FirstOrDefault());
+		ImageGrabColorDialog.Result Command_Image_GrabColor_Dialog() => ImageGrabColorDialog.Run(commandState.TabsWindow, Selections.Select(range => Text.GetString(range)).FirstOrDefault());
 
 		void Command_Image_GrabColor(ImageGrabColorDialog.Result result) => ReplaceOneWithMany(result.Colors, true);
 
-		ImageGrabImageDialog.Result Command_Image_GrabImage_Dialog() => ImageGrabImageDialog.Run(TabsParent, GetVariables());
+		ImageGrabImageDialog.Result Command_Image_GrabImage_Dialog() => ImageGrabImageDialog.Run(commandState.TabsWindow, GetVariables());
 
 		void Command_Image_GrabImage(ImageGrabImageDialog.Result result)
 		{
@@ -95,7 +95,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		ImageAdjustColorDialog.Result Command_Image_AdjustColor_Dialog() => ImageAdjustColorDialog.Run(TabsParent, GetVariables());
+		ImageAdjustColorDialog.Result Command_Image_AdjustColor_Dialog() => ImageAdjustColorDialog.Run(commandState.TabsWindow, GetVariables());
 
 		void Command_Image_AdjustColor(ImageAdjustColorDialog.Result result)
 		{
@@ -104,7 +104,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		ImageAddOverlayColorDialog.Result Command_Image_AddOverlayColor_Dialog(bool add) => ImageAddOverlayColorDialog.Run(TabsParent, add, GetVariables());
+		ImageAddOverlayColorDialog.Result Command_Image_AddOverlayColor_Dialog(bool add) => ImageAddOverlayColorDialog.Run(commandState.TabsWindow, add, GetVariables());
 
 		void Command_Image_AddColor(ImageAddOverlayColorDialog.Result result)
 		{
@@ -120,7 +120,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		ImageSizeDialog.Result Command_Image_Size_Dialog() => ImageSizeDialog.Run(TabsParent, GetVariables());
+		ImageSizeDialog.Result Command_Image_Size_Dialog() => ImageSizeDialog.Run(commandState.TabsWindow, GetVariables());
 
 		void Command_Image_Size(ImageSizeDialog.Result result)
 		{
@@ -150,7 +150,7 @@ namespace NeoEdit.Program
 			Selections = new List<Range> { new Range() };
 		}
 
-		ImageCropDialog.Result Command_Image_Crop_Dialog() => ImageCropDialog.Run(TabsParent, GetVariables());
+		ImageCropDialog.Result Command_Image_Crop_Dialog() => ImageCropDialog.Run(commandState.TabsWindow, GetVariables());
 
 		void Command_Image_Crop(ImageCropDialog.Result result)
 		{
@@ -199,7 +199,7 @@ namespace NeoEdit.Program
 
 		void Command_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		ImageRotateDialog.Result Command_Image_Rotate_Dialog() => ImageRotateDialog.Run(TabsParent, GetVariables());
+		ImageRotateDialog.Result Command_Image_Rotate_Dialog() => ImageRotateDialog.Run(commandState.TabsWindow, GetVariables());
 
 		void Command_Image_Rotate(ImageRotateDialog.Result result)
 		{
@@ -225,7 +225,7 @@ namespace NeoEdit.Program
 			Selections = new List<Range> { new Range() };
 		}
 
-		ImageGIFAnimateDialog.Result Command_Image_GIF_Animate_Dialog() => ImageGIFAnimateDialog.Run(TabsParent, GetVariables());
+		ImageGIFAnimateDialog.Result Command_Image_GIF_Animate_Dialog() => ImageGIFAnimateDialog.Run(commandState.TabsWindow, GetVariables());
 
 		void Command_Image_GIF_Animate(ImageGIFAnimateDialog.Result result)
 		{
@@ -245,7 +245,7 @@ namespace NeoEdit.Program
 		{
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return ImageGIFSplitDialog.Run(TabsParent, variables);
+			return ImageGIFSplitDialog.Run(commandState.TabsWindow, variables);
 		}
 
 		void Command_Image_GIF_Split(ImageGIFSplitDialog.Result result)

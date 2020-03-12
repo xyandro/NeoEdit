@@ -7,10 +7,9 @@ namespace NeoEdit.Program
 {
 	public partial class TextEditor
 	{
-		bool inTransaction = false;
 		void EnsureInTransaction()
 		{
-			if (!inTransaction)
+			if (commandState == null)
 				throw new Exception("Must start transaction before editing data");
 		}
 
@@ -434,11 +433,11 @@ namespace NeoEdit.Program
 
 		UndoRedo oldUndoRedo, newUndoRedo;
 
-		public void BeginTransaction()
+		public void BeginTransaction(CommandState state = null)
 		{
-			if (inTransaction)
+			if (commandState != null)
 				throw new Exception("Already in a transaction");
-			inTransaction = true;
+			commandState = state ?? new CommandState(NECommand.None);
 			oldClipboard = newClipboard = null;
 			oldClipboardIsCut = newClipboardIsCut = null;
 		}
@@ -485,7 +484,7 @@ namespace NeoEdit.Program
 			newXScrollViewport = oldXScrollViewport;
 			newYScrollViewport = oldYScrollViewport;
 
-			inTransaction = false;
+			commandState = null;
 		}
 
 		public void Commit()
@@ -529,7 +528,7 @@ namespace NeoEdit.Program
 			oldXScrollViewport = newXScrollViewport;
 			oldYScrollViewport = newYScrollViewport;
 
-			inTransaction = false;
+			commandState = null;
 		}
 	}
 }

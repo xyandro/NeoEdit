@@ -6,27 +6,27 @@ namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{
-		void Command_Keys_Set(int index, bool caseSensitive = true) => TabsParent.SetKeysAndValues(index, GetSelectionStrings(), caseSensitive);
+		void Command_Keys_Set(int index, bool caseSensitive = true) => commandState.TabsWindow.SetKeysAndValues(index, GetSelectionStrings(), caseSensitive);
 
 		void Command_Keys_Add(int index)
 		{
-			var values = TabsParent.GetKeysAndValues(this, index);
+			var values = commandState.TabsWindow.GetKeysAndValues(this, index);
 			values.AddRange(GetSelectionStrings());
-			TabsParent.SetKeysAndValues(index, values);
+			commandState.TabsWindow.SetKeysAndValues(index, values);
 		}
 
 		void Command_Keys_Remove(int index)
 		{
-			var values = TabsParent.GetKeysAndValues(this, index);
+			var values = commandState.TabsWindow.GetKeysAndValues(this, index);
 			foreach (var value in GetSelectionStrings().Distinct())
 				values.Remove(value);
-			TabsParent.SetKeysAndValues(index, values);
+			commandState.TabsWindow.SetKeysAndValues(index, values);
 		}
 
 		void Command_Keys_Replace(int index)
 		{
-			var keysHash = TabsParent.GetKeysHash(this);
-			var values = TabsParent.GetKeysAndValues(this, index);
+			var keysHash = commandState.TabsWindow.GetKeysHash(this);
+			var values = commandState.TabsWindow.GetKeysAndValues(this, index);
 
 			if (keysHash.Count != values.Count)
 				throw new Exception("Keys and values count must match");

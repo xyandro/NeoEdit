@@ -18,7 +18,7 @@ namespace NeoEdit.Program
 	public partial class TextEditor
 	{
 		const int tabStop = 4;
-		AnswerResult savedAnswers => TabsParent.savedAnswers;
+		AnswerResult savedAnswers => commandState.TabsWindow.savedAnswers;
 		CommandState commandState;
 
 		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
@@ -1732,8 +1732,6 @@ namespace NeoEdit.Program
 
 		List<T> GetExpressionResults<T>(string expression, int? count = null) => new NEExpression(expression).EvaluateList<T>(GetVariables(), count);
 
-		public TabsWindow TabsParent = null; // TODO
-
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
 		public List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
@@ -1808,7 +1806,7 @@ namespace NeoEdit.Program
 		bool ConfirmContinueWhenCannotEncode()
 		{
 			if (!savedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.All))
-				savedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(TabsParent)
+				savedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(commandState.TabsWindow)
 				{
 					Title = "Confirm",
 					Text = "The specified encoding cannot fully represent the data. Continue anyway?",
@@ -1901,7 +1899,7 @@ namespace NeoEdit.Program
 				return true;
 
 			if (!savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.All))
-				savedAnswers[nameof(CanClose)] = new Message(TabsParent)
+				savedAnswers[nameof(CanClose)] = new Message(commandState.TabsWindow)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -1960,7 +1958,7 @@ namespace NeoEdit.Program
 					bytes = File.ReadAllBytes(FileName);
 			}
 
-			FileSaver.HandleDecrypt(TabsParent, ref bytes, out var aesKey);
+			FileSaver.HandleDecrypt(commandState.TabsWindow, ref bytes, out var aesKey);
 			AESKey = aesKey;
 
 			bytes = FileSaver.Decompress(bytes, out var compressed);
