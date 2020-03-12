@@ -241,7 +241,7 @@ namespace NeoEdit.Program
 
 		void Command_Select_Nothing() => Selections = new List<Range>();
 
-		SelectLimitDialog.Result Command_Select_Limit_Dialog() => SelectLimitDialog.Run(state.TabsWindow, GetVariables());
+		void ConfigureExecute_Select_Limit() => state.Configuration = SelectLimitDialog.Run(state.TabsWindow, GetVariables());
 
 		void Command_Select_Limit(SelectLimitDialog.Result result)
 		{
@@ -340,7 +340,7 @@ namespace NeoEdit.Program
 
 		void Command_Select_Repeats_RepeatedLines(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList();
 
-		SelectByCountDialog.Result Command_Select_Repeats_ByCount_Dialog() => SelectByCountDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Select_Repeats_ByCount() => state.Configuration = SelectByCountDialog.Run(state.TabsWindow);
 
 		void Command_Select_Repeats_ByCount(SelectByCountDialog.Result result, bool caseSensitive)
 		{
@@ -401,7 +401,7 @@ namespace NeoEdit.Program
 			}).ToList();
 		}
 
-		SelectSplitDialog.Result Command_Select_Split_Dialog() => SelectSplitDialog.Run(state.TabsWindow, GetVariables());
+		void ConfigureExecute_Select_Split() => state.Configuration = SelectSplitDialog.Run(state.TabsWindow, GetVariables());
 
 		void Command_Select_Split(SelectSplitDialog.Result result)
 		{

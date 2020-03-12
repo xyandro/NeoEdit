@@ -12,7 +12,7 @@ namespace NeoEdit.Program
 
 		public TabsWindow TabsWindow;
 		public NECommand Command;
-		public object Parameters;
+		public object Configuration;
 		public bool ShiftDown;
 		public bool ControlDown;
 		public bool AltDown;

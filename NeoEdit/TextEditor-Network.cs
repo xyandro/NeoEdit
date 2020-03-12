@@ -67,7 +67,7 @@ namespace NeoEdit.Program
 			return results;
 		}
 
-		NetworkAbsoluteURLDialog.Result Command_Network_AbsoluteURL_Dialog() => NetworkAbsoluteURLDialog.Run(state.TabsWindow, GetVariables());
+		void ConfigureExecute_Network_AbsoluteURL() => state.Configuration = NetworkAbsoluteURLDialog.Run(state.TabsWindow, GetVariables());
 
 		void Command_Network_AbsoluteURL(NetworkAbsoluteURLDialog.Result result)
 		{
@@ -84,7 +84,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		NetworkFetchFileDialog.Result Command_Network_FetchFile_Dialog() => NetworkFetchFileDialog.Run(state.TabsWindow, GetVariables());
+		void ConfigureExecute_Network_FetchFile() => state.Configuration = NetworkFetchFileDialog.Run(state.TabsWindow, GetVariables());
 
 		void Command_Network_FetchFile(NetworkFetchFileDialog.Result result)
 		{
@@ -121,7 +121,7 @@ namespace NeoEdit.Program
 			MultiProgressDialog.RunAsync(state.TabsWindow, "Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
 		}
 
-		NetworkFetchStreamDialog.Result Command_Network_FetchStream_Dialog() => NetworkFetchStreamDialog.Run(state.TabsWindow, GetVariables(), Path.GetDirectoryName(FileName) ?? "");
+		void ConfigureExecute_Network_FetchStream() => state.Configuration = NetworkFetchStreamDialog.Run(state.TabsWindow, GetVariables(), Path.GetDirectoryName(FileName) ?? "");
 
 		void Command_Network_FetchStream(NetworkFetchStreamDialog.Result result)
 		{
@@ -134,7 +134,7 @@ namespace NeoEdit.Program
 			MultiProgressDialog.RunAsync(state.TabsWindow, "Downloading...", data, async (item, progress, canceled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, canceled));
 		}
 
-		NetworkFetchStreamDialog.Result Command_Network_FetchPlaylist_Dialog() => NetworkFetchStreamDialog.Run(state.TabsWindow, GetVariables(), null);
+		void ConfigureExecute_Network_FetchPlaylist() => state.Configuration = NetworkFetchStreamDialog.Run(state.TabsWindow, GetVariables(), null);
 
 		void Command_Network_FetchPlaylist(NetworkFetchStreamDialog.Result result)
 		{
@@ -180,7 +180,7 @@ namespace NeoEdit.Program
 			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
 		}
 
-		NetworkPingDialog.Result Command_Network_Ping_Dialog() => NetworkPingDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Network_Ping() => state.Configuration = NetworkPingDialog.Run(state.TabsWindow);
 
 		void Command_Network_Ping(NetworkPingDialog.Result result)
 		{
@@ -206,7 +206,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(replies);
 		}
 
-		NetworkScanPortsDialog.Result Command_Network_ScanPorts_Dialog() => NetworkScanPortsDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Network_ScanPorts() => state.Configuration = NetworkScanPortsDialog.Run(state.TabsWindow);
 
 		void Command_Network_ScanPorts(NetworkScanPortsDialog.Result result)
 		{
@@ -215,7 +215,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
 		}
 
-		NetworkWCFGetConfig.Result Command_Network_WCF_GetConfig_Dialog() => NetworkWCFGetConfig.Run(state.TabsWindow);
+		void ConfigureExecute_Network_WCF_GetConfig() => state.Configuration = NetworkWCFGetConfig.Run(state.TabsWindow);
 
 		void Command_Network_WCF_GetConfig(NetworkWCFGetConfig.Result result)
 		{
@@ -228,7 +228,7 @@ namespace NeoEdit.Program
 
 		void Command_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFClient.ExecuteWCF(Text.GetString(range))).ToList());
 
-		NetworkWCFInterceptCallsDialog.Result Command_Network_WCF_InterceptCalls_Dialog() => NetworkWCFInterceptCallsDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Network_WCF_InterceptCalls() => state.Configuration = NetworkWCFInterceptCallsDialog.Run(state.TabsWindow);
 
 		void Command_Network_WCF_InterceptCalls(NetworkWCFInterceptCallsDialog.Result result)
 		{

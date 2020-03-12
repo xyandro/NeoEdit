@@ -292,11 +292,11 @@ namespace NeoEdit.Program
 				state.AltDown = altDown;
 
 				BeginTransaction();
-				Tabs.ForEach(tab => tab.BeginTransaction());
+				Tabs.ForEach(tab => tab.BeginTransaction(state));
 
 				PreExecute(state);
 
-				GetCommandParameters(state);
+				ConfigureExecute(state);
 
 				ExecuteCommand(state);
 
@@ -327,35 +327,28 @@ namespace NeoEdit.Program
 
 		void PreExecute(ExecuteState state) => ActiveTabs.ForEach(tab => tab.PreExecute());
 
-		void GetCommandParameters(ExecuteState state)
+		void ConfigureExecute(ExecuteState state)
 		{
-			var found = true;
 			switch (state.Command)
 			{
-				case NECommand.File_Open_Open: state.Parameters = Command_File_Open_Open_Dialog(); break;
-				case NECommand.Macro_Open_Open: state.Parameters = Command_File_Open_Open_Dialog(Macro.MacroDirectory); break;
-				case NECommand.Window_CustomGrid: state.Parameters = Command_Window_CustomGrid_Dialog(); break;
-				default: found = false; break;
+				case NECommand.File_Open_Open: state.Configuration = ConfigureExecute_File_Open_Open(); break;
+				case NECommand.Macro_Open_Open: state.Configuration = ConfigureExecute_File_Open_Open(Macro.MacroDirectory); break;
+				case NECommand.Window_CustomGrid: state.Configuration = ConfigureExecute_Window_CustomGrid(); break;
 			}
-			if (found)
-				return;
 
-			if (Focused == null)
-				return;
-
-			Focused.GetCommandParameters();
+			if (Focused != null)
+				Focused.ConfigureExecute();
 		}
 
 		void ExecuteCommand(ExecuteState state)
 		{
-			var done = true;
 			switch (state.Command)
 			{
-				case NECommand.Internal_AddTextEditor: Command_Internal_AddTextEditor(state.Parameters as TextEditor); break;
+				case NECommand.Internal_AddTextEditor: Command_Internal_AddTextEditor(state.Configuration as TextEditor); break;
 				case NECommand.File_New_New: Command_File_New_New(shiftDown); break;
 				case NECommand.File_New_FromClipboards: Command_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Command_File_New_FromClipboardSelections(); break;
-				case NECommand.File_Open_Open: Command_File_Open_Open(state.Parameters as OpenFileDialogResult); break;
+				case NECommand.File_Open_Open: Command_File_Open_Open(state.Configuration as OpenFileDialogResult); break;
 				case NECommand.File_Open_CopiedCut: Command_File_Open_CopiedCut(); break;
 				case NECommand.File_Operations_DragDrop: Command_File_Operations_DragDrop(); break;
 				case NECommand.File_MoveToNewWindow: Command_File_MoveToNewWindow(); break;
@@ -378,11 +371,11 @@ namespace NeoEdit.Program
 				case NECommand.Macro_Open_Quick_10: Command_Macro_Open_Quick(10); break;
 				case NECommand.Macro_Open_Quick_11: Command_Macro_Open_Quick(11); break;
 				case NECommand.Macro_Open_Quick_12: Command_Macro_Open_Quick(12); break;
-				case NECommand.Macro_Open_Open: Command_File_Open_Open(state.Parameters as OpenFileDialogResult); break;
+				case NECommand.Macro_Open_Open: Command_File_Open_Open(state.Configuration as OpenFileDialogResult); break;
 				case NECommand.Window_NewWindow: Command_Window_NewWindow(); break;
 				case NECommand.Window_Full: Command_Window_Full(); break;
 				case NECommand.Window_Grid: Command_Window_Grid(); break;
-				case NECommand.Window_CustomGrid: Command_Window_CustomGrid(state.Parameters as WindowCustomGridDialog.Result); break;
+				case NECommand.Window_CustomGrid: Command_Window_CustomGrid(state.Configuration as WindowCustomGridDialog.Result); break;
 				case NECommand.Window_ActiveTabs: Command_Window_ActiveTabs(); break;
 				case NECommand.Window_Font_Size: Command_Window_Font_Size(); break;
 				case NECommand.Window_Select_AllTabs: Command_Window_Select_AllTabs(); break;
@@ -404,11 +397,9 @@ namespace NeoEdit.Program
 				case NECommand.Help_Update: Command_Help_Update(); break;
 				case NECommand.Help_Extract: Command_Help_Extract(); break;
 				case NECommand.Help_RunGC: Command_Help_RunGC(); break;
-				default: done = false; break;
 			}
 
-			if (!done)
-				ActiveTabs.ForEach(tab => tab.ExecuteCommand());
+			ActiveTabs.ForEach(tab => tab.ExecuteCommand());
 		}
 
 		void Command_Internal_AddTextEditor(TextEditor textEditor) => Tabs = Tabs.Concat(textEditor).ToList();
@@ -472,7 +463,7 @@ namespace NeoEdit.Program
 			if (key == Key.System)
 				key = e.SystemKey;
 
-			var state = new ExecuteState(NECommand.Internal_Key) { Parameters = key };
+			var state = new ExecuteState(NECommand.Internal_Key) { Configuration = key };
 			HandleCommand(state);
 			e.Handled = state.Result;
 		}
@@ -489,7 +480,7 @@ namespace NeoEdit.Program
 			if (e.Source is MenuItem)
 				return;
 
-			HandleCommand(new ExecuteState(NECommand.Internal_Text) { Parameters = e.Text });
+			HandleCommand(new ExecuteState(NECommand.Internal_Text) { Configuration = e.Text });
 			e.Handled = true;
 		}
 

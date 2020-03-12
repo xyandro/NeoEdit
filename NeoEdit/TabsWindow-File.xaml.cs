@@ -42,7 +42,7 @@ namespace NeoEdit.Program
 
 		void Command_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => AddTextEditor(new TextEditor(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 
-		OpenFileDialogResult Command_File_Open_Open_Dialog(string initialDirectory = null)
+		OpenFileDialogResult ConfigureExecute_File_Open_Open(string initialDirectory = null)
 		{
 			if ((initialDirectory == null) && (Focused != null))
 				initialDirectory = Path.GetDirectoryName(Focused.FileName);

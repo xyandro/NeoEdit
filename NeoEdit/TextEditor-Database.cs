@@ -48,7 +48,7 @@ namespace NeoEdit.Program
 				throw new Exception("No connection.");
 		}
 
-		DatabaseConnectDialog.Result Command_Database_Connect_Dialog() => DatabaseConnectDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Database_Connect() => state.Configuration = DatabaseConnectDialog.Run(state.TabsWindow);
 
 		void Command_Database_Connect(DatabaseConnectDialog.Result result)
 		{
@@ -83,7 +83,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		void Command_Database_Examine_Dialog()
+		void ConfigureExecute_Database_Examine()
 		{
 			ValidateConnection();
 			DatabaseExamineDialog.Run(state.TabsWindow, dbConnection);
