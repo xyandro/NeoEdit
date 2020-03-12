@@ -7,6 +7,7 @@ using System.Windows.Input;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -28,6 +29,9 @@ namespace NeoEdit.Program
 
 		UndoRedo2 undoRedo, newUndoRedo;
 		CacheValue2 modifiedChecksum = new CacheValue2();
+		CacheValue2 previousData = new CacheValue2();
+		ParserType previousType;
+		ParserNode previousRoot;
 
 		public void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false) => ReplaceSelections(Enumerable.Repeat(str, Selections.Count).ToList(), highlight, replaceType, tryJoinUndo);
 

@@ -37,6 +37,7 @@ namespace NeoEdit.Program.Content
 
 		static internal string Comment(ParserType type, TextData data, Range range)
 		{
+			// TODO: Remove
 			switch (type)
 			{
 				case ParserType.CSharp: return CSharpVisitor.Comment(data, range);
@@ -47,14 +48,39 @@ namespace NeoEdit.Program.Content
 			}
 		}
 
+		static internal string Comment(ParserType type, NEText text, NETextView textView, Range range)
+		{
+			switch (type)
+			{
+				case ParserType.CSharp: return CSharpVisitor.Comment(text, textView, range);
+				case ParserType.HTML:
+				case ParserType.XML:
+					return HTMLVisitor.Comment(text, range);
+				default: throw new Exception("Cannot comment this content type");
+			}
+		}
+
 		static internal string Uncomment(ParserType type, TextData data, Range range)
 		{
+			// TODO: Remove
 			switch (type)
 			{
 				case ParserType.CSharp: return CSharpVisitor.Uncomment(data, range);
 				case ParserType.HTML:
 				case ParserType.XML:
 					return HTMLVisitor.Uncomment(data, range);
+				default: throw new Exception("Cannot comment this content type");
+			}
+		}
+
+		static internal string Uncomment(ParserType type, NEText text, NETextView textView, Range range)
+		{
+			switch (type)
+			{
+				case ParserType.CSharp: return CSharpVisitor.Uncomment(text, textView, range);
+				case ParserType.HTML:
+				case ParserType.XML:
+					return HTMLVisitor.Uncomment(text, range);
 				default: throw new Exception("Cannot comment this content type");
 			}
 		}
