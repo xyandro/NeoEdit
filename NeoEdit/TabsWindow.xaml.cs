@@ -262,12 +262,24 @@ namespace NeoEdit.Program
 			return keysAndValuesLookup[index][textEditor];
 		}
 
+		public List<string> GetKeysAndValues(TextEditorData textEditor, int index, bool throwOnException = true)
+		{
+			// TODO
+			return default;
+		}
+
 		public Dictionary<string, int> GetKeysHash(TextEditor textEditor)
 		{
 			SetupKeysAndValuesLookup(0);
 			if (!keysHashLookup.ContainsKey(textEditor))
 				throw new Exception("Keys hash not available");
 			return keysHashLookup[textEditor];
+		}
+
+		public Dictionary<string, int> GetKeysHash(TextEditorData textEditor)
+		{
+			// TODO
+			return default;
 		}
 
 		void OnDrop(object sender, DragEventArgs e)
@@ -681,6 +693,12 @@ namespace NeoEdit.Program
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;
+		}
+
+		public int GetTabIndex(TextEditorData textEditor, bool activeOnly = false)
+		{
+			//TODO
+			return default;
 		}
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)

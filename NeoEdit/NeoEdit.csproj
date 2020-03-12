@@ -1190,13 +1190,52 @@
     <Compile Include="TextEditorData-Database.cs">
       <DependentUpon>TextEditorData.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextEditorData-DateTime.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-Diff.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextEditorData-Edit.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-EditModifyRegions.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-File.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-Files.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-Image.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-Keys.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-Network.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-Numeric.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-Position.cs">
       <DependentUpon>TextEditorData.cs</DependentUpon>
     </Compile>
     <Compile Include="TextEditorData-Select.cs">
       <DependentUpon>TextEditorData.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextEditorData-Table.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-Text.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextEditorData-Variables.cs">
+      <DependentUpon>TextEditorData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextEditorData-Window.cs">
       <DependentUpon>TextEditorData.cs</DependentUpon>
     </Compile>
     <Compile Include="TextEditorData.cs" />

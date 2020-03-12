@@ -1135,5 +1135,141 @@ namespace NeoEdit.Program
 			textEditor.ContentType = contentType;
 			textEditor.DisplayName = name;
 		}
+
+		public List<string> RelativeSelectedFiles()
+		{
+			var fileName = FileName;
+			return Selections.AsParallel().AsOrdered().Select(range => fileName.RelativeChild(Text.GetString(range))).ToList();
+		}
+
+		void Save(string fileName, bool b = false)
+		{
+			//TODO
+		}
+
+		public void SetClipboardFile(string fileName, bool isCut = false) => SetClipboardFiles(new List<string> { fileName }, isCut);
+
+		public void SetClipboardString(string text) => SetClipboardStrings(new List<string> { text });
+
+		public void SetFileName(string fileName)
+		{
+			if (FileName == fileName)
+				return;
+
+			FileName = fileName;
+			ContentType = ParserExtensions.GetParserType(FileName);
+			DisplayName = null;
+
+			// TODO SetAutoRefresh();
+		}
+
+		public bool CanClose()
+		{
+			if (!IsModified)
+				return true;
+
+			if (!savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.All))
+				savedAnswers[nameof(CanClose)] = new Message(TabsParent)
+				{
+					Title = "Confirm",
+					Text = "Do you want to save changes?",
+					Options = MessageOptions.YesNoAllCancel,
+					DefaultCancel = MessageOptions.Cancel,
+				}.Show(false);
+
+			if (savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.No))
+				return true;
+			if (savedAnswers[nameof(CanClose)].HasFlag(MessageOptions.Yes))
+			{
+				Command_File_Save_Save();
+				return !IsModified;
+			}
+			return false;
+		}
+
+		public DateTime fileLastWrite { get; set; }
+
+		public void SetAutoRefresh(bool? value = null)
+		{
+			//TODO
+			//ClearWatcher();
+
+			//if (value.HasValue)
+			//	AutoRefresh = value.Value;
+			//if ((!AutoRefresh) || (!File.Exists(FileName)))
+			//	return;
+
+			//watcher = new FileSystemWatcher
+			//{
+			//	Path = Path.GetDirectoryName(FileName),
+			//	NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime,
+			//	Filter = Path.GetFileName(FileName),
+			//};
+			//watcher.Changed += (s1, e1) =>
+			//{
+			//	watcherFileModified = true;
+			//	Dispatcher.Invoke(() => TabsParent.QueueDoActivated());
+			//};
+			//watcher.EnableRaisingEvents = true;
+		}
+
+		public void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, bool keepUndo = false)
+		{
+			SetFileName(fileName);
+			if (ContentType == ParserType.None)
+				ContentType = contentType;
+			DisplayName = displayName;
+			var isModified = modified ?? bytes != null;
+			if (bytes == null)
+			{
+				if (FileName == null)
+					bytes = new byte[0];
+				else
+					bytes = File.ReadAllBytes(FileName);
+			}
+
+			FileSaver.HandleDecrypt(TabsParent, ref bytes, out var aesKey);
+			AESKey = aesKey;
+
+			bytes = FileSaver.Decompress(bytes, out var compressed);
+			Compressed = compressed;
+
+			if (codePage == Coder.CodePage.AutoByBOM)
+				codePage = Coder.CodePageFromBOM(bytes);
+			CodePage = codePage;
+
+			var data = Coder.BytesToString(bytes, codePage, true);
+			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { data });
+
+			if (File.Exists(FileName))
+				fileLastWrite = new FileInfo(FileName).LastWriteTime;
+
+			// If encoding can't exactly express bytes mark as modified (only for < 50 MB)
+			if ((!isModified) && ((bytes.Length >> 20) < 50))
+				isModified = !Coder.CanExactlyEncode(bytes, CodePage);
+
+			if (!keepUndo)
+				UndoRedo2.Clear(ref newUndoRedo);
+			SetModifiedFlag(isModified);
+		}
+
+		public List<string> DragFiles { get; set; }
+
+		string savedBitmapText;
+		System.Drawing.Bitmap savedBitmap;
+		public System.Drawing.Bitmap GetBitmap()
+		{
+			if (!Coder.IsImage(CodePage))
+			{
+				savedBitmapText = null;
+				savedBitmap = null;
+			}
+			else if (Text.GetString() != savedBitmapText)
+			{
+				savedBitmapText = Text.GetString();
+				savedBitmap = Coder.StringToBitmap(Text.GetString());
+			}
+			return savedBitmap;
+		}
 	}
 }
