@@ -1144,6 +1144,9 @@
     <Compile Include="TextEditor-Image.cs">
       <DependentUpon>TextEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextEditor-Internal.cs">
+      <DependentUpon>TextEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="TextEditor-Keys.cs">
       <DependentUpon>TextEditor.cs</DependentUpon>
     </Compile>
