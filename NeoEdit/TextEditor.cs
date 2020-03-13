@@ -1203,6 +1203,50 @@ namespace NeoEdit.Program
 		}
 		#endregion
 
+		#region Watcher
+		bool watcherFileModified = false;
+		FileSystemWatcher watcher = null;
+		DateTime fileLastWrite { get; set; }
+
+		public void Activated()
+		{
+			if (!watcherFileModified)
+				return;
+
+			watcherFileModified = false;
+			Execute_File_Refresh();
+		}
+
+		void ClearWatcher()
+		{
+			watcher?.Dispose();
+			watcher = null;
+		}
+
+		void SetAutoRefresh(bool? value = null)
+		{
+			ClearWatcher();
+
+			if (value.HasValue)
+				AutoRefresh = value.Value;
+			if ((!AutoRefresh) || (!File.Exists(FileName)))
+				return;
+
+			watcher = new FileSystemWatcher
+			{
+				Path = Path.GetDirectoryName(FileName),
+				NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime,
+				Filter = Path.GetFileName(FileName),
+			};
+			watcher.Changed += (s1, e1) =>
+			{
+				watcherFileModified = true;
+				tabsWindow.QueueActivateTabs();
+			};
+			watcher.EnableRaisingEvents = true;
+		}
+		#endregion
+
 		void SetModifiedFlag(bool? newValue = null)
 		{
 			if (newValue.HasValue)
@@ -1475,11 +1519,11 @@ namespace NeoEdit.Program
 			{
 				try
 				{
-					//if ((!copyOnly) && (watcher != null))
-					//	watcher.EnableRaisingEvents = false;
+					if ((!copyOnly) && (watcher != null))
+						watcher.EnableRaisingEvents = false;
 					File.WriteAllBytes(fileName, FileSaver.Encrypt(FileSaver.Compress(Text.GetBytes(CodePage), Compressed), AESKey));
-					//if ((!copyOnly) && (watcher != null))
-					//	watcher.EnableRaisingEvents = true;
+					if ((!copyOnly) && (watcher != null))
+						watcher.EnableRaisingEvents = true;
 					break;
 				}
 				catch (UnauthorizedAccessException)
@@ -1520,7 +1564,7 @@ namespace NeoEdit.Program
 			ContentType = ParserExtensions.GetParserType(FileName);
 			DisplayName = null;
 
-			// TODO SetAutoRefresh();
+			SetAutoRefresh();
 		}
 
 		public bool CanClose()
@@ -1545,32 +1589,6 @@ namespace NeoEdit.Program
 				return !IsModified;
 			}
 			return false;
-		}
-
-		DateTime fileLastWrite { get; set; }
-
-		void SetAutoRefresh(bool? value = null)
-		{
-			//TODO
-			//ClearWatcher();
-
-			//if (value.HasValue)
-			//	AutoRefresh = value.Value;
-			//if ((!AutoRefresh) || (!File.Exists(FileName)))
-			//	return;
-
-			//watcher = new FileSystemWatcher
-			//{
-			//	Path = Path.GetDirectoryName(FileName),
-			//	NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime,
-			//	Filter = Path.GetFileName(FileName),
-			//};
-			//watcher.Changed += (s1, e1) =>
-			//{
-			//	watcherFileModified = true;
-			//	Dispatcher.Invoke(() => TabsParent.QueueDoActivated());
-			//};
-			//watcher.EnableRaisingEvents = true;
 		}
 
 		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, bool keepUndo = false)
@@ -1658,7 +1676,7 @@ namespace NeoEdit.Program
 		public void Closed()
 		{
 			//DiffTarget = null;
-			//ClearWatcher();
+			ClearWatcher();
 			shutdownData?.OnShutdown();
 		}
 	}
