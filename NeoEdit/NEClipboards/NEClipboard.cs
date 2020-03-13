@@ -10,12 +10,11 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using NeoEdit.Program;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.NEClipboards
 {
-	public class NEClipboard : IEnumerable<NEClipboardList>
+	public class NEClipboard : IEnumerable<IReadOnlyList<string>>
 	{
 		public delegate void ClipboardChangedDelegate();
 		public static event ClipboardChangedDelegate ClipboardChanged;
@@ -36,30 +35,15 @@ namespace NeoEdit.Program.NEClipboards
 
 		static readonly int PID = Process.GetCurrentProcess().Id;
 
-		List<NEClipboardList> neClipboardLists = new List<NEClipboardList>();
+		List<IReadOnlyList<string>> stringLists = new List<IReadOnlyList<string>>();
 		public bool? IsCut { get; set; } = null;
 
-		public void Add(NEClipboardList items) => neClipboardLists.Add(items);
-		public int Count => neClipboardLists.Count;
-		public int ChildCount => neClipboardLists.Sum(list => list.Count);
-
-		public NEClipboardList this[int index] => neClipboardLists[index];
+		public void Add(IReadOnlyList<string> items) => stringLists.Add(items);
+		public int Count => stringLists.Count;
+		public int ChildCount => stringLists.Sum(list => list.Count);
 
 		public string String => string.Join("\r\n", Strings);
-		public List<string> Strings => neClipboardLists.SelectMany(list => list.Strings).ToList();
-		public List<object> Objects => neClipboardLists.SelectMany(list => list.Objects).ToList();
-
-		public static NEClipboard Create(string str, bool? isCut = null) => Create(new List<string> { str }, isCut);
-		public static NEClipboard Create(IEnumerable<string> strings, bool? isCut = null) => Create(new List<IEnumerable<string>> { strings }, isCut);
-		public static NEClipboard Create(IEnumerable<IEnumerable<string>> strings, bool? isCut = null) => new NEClipboard() { neClipboardLists = strings.Select(list => NEClipboardList.Create(list)).ToList(), IsCut = isCut };
-
-		public static NEClipboard Create(object obj) => Create(new List<object> { obj });
-		public static NEClipboard Create(IEnumerable<object> objects) => Create(new List<IEnumerable<object>> { objects });
-		public static NEClipboard Create(IEnumerable<IEnumerable<object>> objects) => new NEClipboard() { neClipboardLists = objects.Select(list => NEClipboardList.Create(list)).ToList() };
-
-		public static NEClipboard Create(BitmapSource image) => Create(new List<BitmapSource> { image });
-		public static NEClipboard Create(IEnumerable<BitmapSource> images) => Create(new List<IEnumerable<BitmapSource>> { images });
-		public static NEClipboard Create(IEnumerable<IEnumerable<BitmapSource>> images) => new NEClipboard() { neClipboardLists = images.Select(list => NEClipboardList.Create(list)).ToList() };
+		public IReadOnlyList<string> Strings => stringLists.SelectMany().ToList();
 
 		static NEClipboard GetSystem()
 		{
@@ -76,7 +60,7 @@ namespace NeoEdit.Program.NEClipboards
 				}
 
 				var result = new NEClipboard();
-				var list = new NEClipboardList();
+				var list = new List<string>();
 				result.Add(list);
 
 				var dropList = (dataObj.GetData(DataFormats.FileDrop) as string[])?.OrderBy(Helpers.SmartComparer(false)).ToList();
@@ -93,7 +77,7 @@ namespace NeoEdit.Program.NEClipboards
 						}
 						catch { }
 					}
-					list.Add(dropList.Select(str => NEClipboardItem.Create(str)));
+					list.AddRange(dropList);
 					result.IsCut = isCut;
 				}
 				else
@@ -109,7 +93,7 @@ namespace NeoEdit.Program.NEClipboards
 						str = Coder.BitmapToString(bmp);
 					}
 
-					list.Add(NEClipboardItem.Create(str));
+					list.Add(str);
 				}
 
 				currentClipboard = result;
@@ -146,7 +130,7 @@ namespace NeoEdit.Program.NEClipboards
 			catch { }
 		}
 
-		public IEnumerator<NEClipboardList> GetEnumerator() => neClipboardLists.GetEnumerator();
+		public IEnumerator<IReadOnlyList<string>> GetEnumerator() => stringLists.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}
 }

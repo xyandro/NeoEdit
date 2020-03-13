@@ -1035,8 +1035,6 @@
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
     <Compile Include="NEClipboards\NEClipboard.cs" />
-    <Compile Include="NEClipboards\NEClipboardItem.cs" />
-    <Compile Include="NEClipboards\NEClipboardList.cs" />
     <Compile Include="NECommand.cs" />
     <Page Include="NEMenu.xaml">
       <SubType>Designer</SubType>

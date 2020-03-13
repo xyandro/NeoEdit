@@ -20,10 +20,9 @@ namespace NeoEdit.Program
 		void Execute_File_New_FromClipboards()
 		{
 			var index = 0;
-			foreach (var clipboard in NEClipboard.Current)
+			foreach (var strs in NEClipboard.Current)
 			{
 				++index;
-				var strs = clipboard.Strings;
 				var ending = strs.Any(str => (!str.EndsWith("\r")) && (!str.EndsWith("\n"))) ? "\r\n" : "";
 				var sb = new StringBuilder(strs.Sum(str => str.Length + ending.Length));
 				var sels = new List<Range>();
