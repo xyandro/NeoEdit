@@ -270,6 +270,7 @@ namespace NeoEdit.Program
 		{
 			switch (state.Command)
 			{
+				case NECommand.Internal_Key: Execute_Internal_Key(state); break;
 				case NECommand.Internal_AddTextEditor: Execute_Internal_AddTextEditor(state.ConfigureExecuteData as TextEditor); break;
 				case NECommand.File_New_New: Execute_File_New_New(shiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
@@ -328,6 +329,23 @@ namespace NeoEdit.Program
 			ActiveTabs.ForEach(tab => tab.Execute());
 		}
 
+		void Execute_Internal_Key(ExecuteState state)
+		{
+			if ((state.ControlDown) && (!state.AltDown))
+			{
+				var handled = true;
+				switch ((Key)state.ConfigureExecuteData)
+				{
+					case Key.PageUp: MovePrev(); break;
+					case Key.PageDown: MoveNext(); break;
+					case Key.Tab: MoveTabOrder(); break;
+					default: handled = false; break;
+				}
+				if (handled)
+					state.Result = true;
+			}
+		}
+
 		void Execute_Internal_AddTextEditor(TextEditor textEditor) => Tabs = Tabs.Concat(textEditor).ToList();
 
 		//public bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
@@ -370,6 +388,17 @@ namespace NeoEdit.Program
 		{
 			base.OnActivated(e);
 			LastActivated = DateTime.Now;
+		}
+
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		{
+			base.OnPreviewKeyDown(e);
+			if (e.Handled)
+				return;
+
+			var state = new ExecuteState(NECommand.Internal_Key) { ConfigureExecuteData = e.Key };
+			HandleCommand(state);
+			e.Handled = state.Result;
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -516,23 +545,6 @@ namespace NeoEdit.Program
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;
-		}
-
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
-		{
-			base.OnPreviewKeyDown(e);
-
-			if ((controlDown) && (!altDown))
-			{
-				e.Handled = true;
-				switch (e.Key)
-				{
-					case Key.PageUp: MovePrev(); break;
-					case Key.PageDown: MoveNext(); break;
-					case Key.Tab: MoveTabOrder(); break;
-					default: e.Handled = false; break;
-				}
-			}
 		}
 
 		void SetFocused(TextEditor textEditorData, bool deselectOthers = false)
