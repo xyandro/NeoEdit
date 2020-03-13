@@ -31,6 +31,7 @@ namespace NeoEdit.Program
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
 		static readonly Brush FocusedWindowBorderBrush = new SolidColorBrush(Color.FromRgb(31, 113, 216));
+
 		static readonly Brush ActiveWindowBorderBrush = new SolidColorBrush(Color.FromRgb(28, 101, 193));
 		static readonly Brush InactiveWindowBorderBrush = Brushes.Transparent;
 		static readonly Brush FocusedWindowBackgroundBrush = new SolidColorBrush(Color.FromRgb(23, 81, 156));
@@ -91,7 +92,7 @@ namespace NeoEdit.Program
 			try { SetPosition(Settings.WindowPosition); } catch { }
 		}
 
-		public Dictionary<TextEditor, IReadOnlyList<string>> GetClipboardMap()
+		public IReadOnlyDictionary<TextEditor, IReadOnlyList<string>> GetClipboardMap()
 		{
 			var empty = new List<string>() as IReadOnlyList<string>;
 			var clipboardMap = Tabs.ToDictionary(x => x, x => empty);
@@ -111,98 +112,18 @@ namespace NeoEdit.Program
 			return clipboardMap;
 		}
 
-		static List<List<List<string>>> keysAndValues = Enumerable.Range(0, 10).Select(x => new List<List<string>>()).ToList();
-		static List<Dictionary<string, int>> keysHash = new List<Dictionary<string, int>>();
-		List<Dictionary<TextEditor, List<string>>> keysAndValuesLookup = keysAndValues.Select(x => default(Dictionary<TextEditor, List<string>>)).ToList();
-		Dictionary<TextEditor, Dictionary<string, int>> keysHashLookup;
-		List<List<List<string>>> newKeysAndValues;
-		bool newKeysCaseSensitive;
-
-		void SetupNewKeys()
+		IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
+		public Dictionary<TextEditor, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
 		{
-			if (newKeysAndValues == null)
-				return;
+			var empty = new KeysAndValues(new List<string>(), kvIndex == 0);
+			var keysAndValuesMap = Tabs.ToDictionary(x => x, x => empty);
 
-			for (var kvIndex = 0; kvIndex < keysAndValues.Count; ++kvIndex)
-				if (newKeysAndValues[kvIndex] != null)
-				{
-					keysAndValues[kvIndex] = newKeysAndValues[kvIndex];
-					if (kvIndex == 0)
-					{
-						keysHash.Clear();
-						for (var list = 0; list < keysAndValues[0].Count; ++list)
-						{
-							var hash = new Dictionary<string, int>(newKeysCaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
-							for (var index = 0; index < keysAndValues[0][list].Count; ++index)
-								hash[keysAndValues[0][list][index]] = index;
-							keysHash.Add(hash);
-						}
-					}
-				}
-		}
+			if (keysAndValues[kvIndex].Count == 1)
+				Tabs.ForEach(tab => keysAndValuesMap[tab] = keysAndValues[kvIndex][0]);
+			else if (keysAndValues[kvIndex].Count == ActiveTabs.Count)
+				ActiveTabs.ForEach((tab, index) => keysAndValuesMap[tab] = keysAndValues[kvIndex][index]);
 
-		public void SetKeysAndValues(int kvIndex, List<string> values, bool? caseSensitive = null)
-		{
-			if (kvIndex == 0)
-			{
-				if (caseSensitive.HasValue)
-					newKeysCaseSensitive = caseSensitive.Value;
-				if (values.Distinct(str => newKeysCaseSensitive ? str : str.ToLowerInvariant()).Count() != values.Count)
-					throw new ArgumentException("Cannot have duplicate keys");
-			}
-
-			newKeysAndValues = newKeysAndValues ?? keysAndValues.Select(x => default(List<List<string>>)).ToList();
-			newKeysAndValues[kvIndex] = newKeysAndValues[kvIndex] ?? new List<List<string>>();
-			newKeysAndValues[kvIndex].Add(values);
-		}
-
-		public bool SetupKeysAndValuesLookup(int kvIndex, bool throwOnException = true)
-		{
-			if (keysAndValuesLookup[kvIndex] == null)
-			{
-				if (keysAndValues[kvIndex].Count == 1)
-				{
-					keysAndValuesLookup[kvIndex] = Tabs.ToDictionary(textEditor => textEditor, textEditor => keysAndValues[kvIndex][0]);
-					if (kvIndex == 0)
-						keysHashLookup = Tabs.ToDictionary(textEditor => textEditor, textEditor => keysHash[0]);
-				}
-				else
-				{
-					var activeTabs = ActiveTabs.ToList();
-					if (keysAndValues[kvIndex].Count != activeTabs.Count)
-					{
-						if (throwOnException)
-							throw new Exception("Tab count doesn't match keys count");
-						return false;
-					}
-					keysAndValuesLookup[kvIndex] = activeTabs.Select((textEditor, index) => new { textEditor, index }).ToDictionary(obj => obj.textEditor, obj => keysAndValues[kvIndex][obj.index]);
-					if (kvIndex == 0)
-						keysHashLookup = activeTabs.Select((textEditor, index) => new { textEditor, index }).ToDictionary(obj => obj.textEditor, obj => keysHash[obj.index]);
-				}
-			}
-
-			return true;
-		}
-
-		public List<string> GetKeysAndValues(TextEditor textEditor, int index, bool throwOnException = true)
-		{
-			if (!SetupKeysAndValuesLookup(index, throwOnException))
-				return null;
-			if (!keysAndValuesLookup[index].ContainsKey(textEditor))
-			{
-				if (!throwOnException)
-					return null;
-				throw new Exception("Keys/values not available");
-			}
-			return keysAndValuesLookup[index][textEditor];
-		}
-
-		public Dictionary<string, int> GetKeysHash(TextEditor textEditor)
-		{
-			SetupKeysAndValuesLookup(0);
-			if (!keysHashLookup.ContainsKey(textEditor))
-				throw new Exception("Keys hash not available");
-			return keysHashLookup[textEditor];
+			return keysAndValuesMap;
 		}
 
 		void OnDrop(object sender, DragEventArgs e)
@@ -284,8 +205,6 @@ namespace NeoEdit.Program
 		{
 			try
 			{
-				state.GetClipboardMap = GetClipboardMap;
-
 				state.TabsWindow = this;
 				state.ShiftDown = shiftDown;
 				state.ControlDown = controlDown;
@@ -310,6 +229,13 @@ namespace NeoEdit.Program
 						newClipboard.IsCut = clipboard.Item2;
 					}
 					NEClipboard.Current = newClipboard;
+				}
+
+				for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
+				{
+					var newKeysAndValues = Tabs.Select(tab => tab.GetChangedKeysAndValues(kvIndex)).NonNull().ToList();
+					if (newKeysAndValues.Any())
+						keysAndValues[kvIndex] = newKeysAndValues;
 				}
 
 				Commit();
@@ -791,7 +717,7 @@ namespace NeoEdit.Program
 			statusBar.Items.Add(new Separator());
 			statusBar.Items.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Keys/Values: {string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Count):n0}"))}");
+			statusBar.Items.Add($"Keys/Values: {string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
 
 		}
 

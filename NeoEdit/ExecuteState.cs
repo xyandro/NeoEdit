@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program
 {
 	public class ExecuteState
 	{
-		Dictionary<TextEditor, IReadOnlyList<string>> ClipboardMap;
-
-		public Func<Dictionary<TextEditor, IReadOnlyList<string>>> GetClipboardMap;
+		IReadOnlyDictionary<TextEditor, IReadOnlyList<string>> ClipboardMap;
+		IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
 
 		public TabsWindow TabsWindow;
 		public NECommand Command;
@@ -28,12 +27,20 @@ namespace NeoEdit.Program
 		{
 			if (ClipboardMap == null)
 				lock (this)
-				{
 					if (ClipboardMap == null)
-						ClipboardMap = GetClipboardMap();
-				}
+						ClipboardMap = TabsWindow.GetClipboardMap();
 
 			return ClipboardMap[textEditor];
+		}
+
+		public KeysAndValues GetKeysAndValues(int kvIndex, TextEditor textEditor)
+		{
+			if (KeysAndValuesMap[kvIndex] == null)
+				lock (this)
+					if (KeysAndValuesMap[kvIndex] == null)
+						KeysAndValuesMap[kvIndex] = TabsWindow.GetKeysAndValuesMap(kvIndex);
+
+			return KeysAndValuesMap[kvIndex][textEditor];
 		}
 	}
 }

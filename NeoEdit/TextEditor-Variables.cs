@@ -87,6 +87,36 @@ namespace NeoEdit.Program
 			newRegions[region - 1] = DeOverlap(regions);
 		}
 
+		readonly KeysAndValues[] newKeysAndValues = new KeysAndValues[10];
+		readonly KeysAndValues[] changedKeysAndValues = new KeysAndValues[10];
+		public KeysAndValues GetKeysAndValues(int kvIndex)
+		{
+			if ((kvIndex < 0) || (kvIndex > 9))
+				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
+
+			if (newKeysAndValues[kvIndex] == null)
+				newKeysAndValues[kvIndex] = state.GetKeysAndValues(kvIndex, this);
+
+			return newKeysAndValues[kvIndex];
+		}
+
+		public void SetKeysAndValues(int kvIndex, IReadOnlyList<string> values, bool matchCase = false)
+		{
+			if ((kvIndex < 0) || (kvIndex > 9))
+				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
+
+			EnsureInTransaction();
+			newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = new KeysAndValues(values, kvIndex == 0, matchCase);
+		}
+
+		public KeysAndValues GetChangedKeysAndValues(int kvIndex)
+		{
+			if ((kvIndex < 0) || (kvIndex > 9))
+				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
+
+			return changedKeysAndValues[kvIndex];
+		}
+
 		string oldDisplayName, newDisplayName;
 		public string DisplayName
 		{
@@ -440,6 +470,8 @@ namespace NeoEdit.Program
 			this.state = state ?? new ExecuteState(NECommand.None);
 			oldClipboard = newClipboard = null;
 			oldClipboardIsCut = newClipboardIsCut = null;
+			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
+				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 		}
 
 		public void Rollback()
@@ -458,6 +490,8 @@ namespace NeoEdit.Program
 			newFileName = oldFileName;
 			newIsModified = oldIsModified;
 			newClipboard = oldClipboard;
+			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
+				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 			newAutoRefresh = oldAutoRefresh;
 			newDBName = oldDBName;
 			newContentType = oldContentType;
@@ -502,6 +536,8 @@ namespace NeoEdit.Program
 			oldFileName = newFileName;
 			oldIsModified = newIsModified;
 			oldClipboard = newClipboard;
+			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
+				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 			oldAutoRefresh = newAutoRefresh;
 			oldDBName = newDBName;
 			oldContentType = newContentType;

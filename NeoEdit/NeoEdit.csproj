@@ -1026,6 +1026,7 @@
     <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="InstanceManager.cs" />
     <Compile Include="ItemSet.cs" />
+    <Compile Include="KeysAndValues.cs" />
     <Compile Include="LCS.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />

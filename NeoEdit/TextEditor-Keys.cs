@@ -6,27 +6,24 @@ namespace NeoEdit.Program
 {
 	partial class TextEditor
 	{
-		void Execute_Keys_Set(int index, bool caseSensitive = true) => state.TabsWindow.SetKeysAndValues(index, GetSelectionStrings(), caseSensitive);
+		void Execute_Keys_Set(int index, bool matchCase = true) => SetKeysAndValues(index, GetSelectionStrings(), matchCase);
 
 		void Execute_Keys_Add(int index)
 		{
-			var values = state.TabsWindow.GetKeysAndValues(this, index);
-			values.AddRange(GetSelectionStrings());
-			state.TabsWindow.SetKeysAndValues(index, values);
+			var keysAndValues = GetKeysAndValues(index);
+			SetKeysAndValues(index, keysAndValues.Values.Concat(GetSelectionStrings()).ToList(), keysAndValues.MatchCase);
 		}
 
 		void Execute_Keys_Remove(int index)
 		{
-			var values = state.TabsWindow.GetKeysAndValues(this, index);
-			foreach (var value in GetSelectionStrings().Distinct())
-				values.Remove(value);
-			state.TabsWindow.SetKeysAndValues(index, values);
+			var keysAndValues = GetKeysAndValues(index);
+			SetKeysAndValues(index, keysAndValues.Values.Except(GetSelectionStrings()).ToList(), keysAndValues.MatchCase);
 		}
 
 		void Execute_Keys_Replace(int index)
 		{
-			var keysHash = state.TabsWindow.GetKeysHash(this);
-			var values = state.TabsWindow.GetKeysAndValues(this, index);
+			var keysHash = GetKeysAndValues(0).Lookup;
+			var values = GetKeysAndValues(index).Values;
 
 			if (keysHash.Count != values.Count)
 				throw new Exception("Keys and values count must match");
