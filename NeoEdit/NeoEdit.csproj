@@ -1101,6 +1101,9 @@
     <Compile Include="TabsWindow-Help.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TabsWindow-Internal.xaml.cs">
+      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TabsWindow-Macro.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
     </Compile>
