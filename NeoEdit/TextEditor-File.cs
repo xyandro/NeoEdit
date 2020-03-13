@@ -272,7 +272,7 @@ namespace NeoEdit.Program
 				tabsWindow.RemoveTextEditor(this);
 		}
 
-		public void Execute_File_Refresh()
+		void Execute_File_Refresh()
 		{
 			if (string.IsNullOrEmpty(FileName))
 				return;

@@ -48,7 +48,7 @@ namespace NeoEdit.Program
 		ParserType previousType;
 		ParserNode previousRoot;
 
-		public void ReplaceOneWithMany(IReadOnlyList<string> strs, bool? addNewLines)
+		void ReplaceOneWithMany(IReadOnlyList<string> strs, bool? addNewLines)
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
@@ -68,9 +68,9 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		public void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false) => ReplaceSelections(Enumerable.Repeat(str, Selections.Count).ToList(), highlight, replaceType, tryJoinUndo);
+		void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false) => ReplaceSelections(Enumerable.Repeat(str, Selections.Count).ToList(), highlight, replaceType, tryJoinUndo);
 
-		public void ReplaceSelections(IReadOnlyList<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		void ReplaceSelections(IReadOnlyList<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
 			Replace(Selections, strs, replaceType, tryJoinUndo);
 
@@ -80,7 +80,7 @@ namespace NeoEdit.Program
 				Selections = Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList();
 		}
 
-		public void Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		void Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
 			if (ranges.Count != strs.Count)
 				throw new Exception("Invalid string count");
@@ -1758,7 +1758,7 @@ namespace NeoEdit.Program
 
 		List<T> GetExpressionResults<T>(string expression, int? count = null) => new NEExpression(expression).EvaluateList<T>(GetVariables(), count);
 
-		public List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
+		List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
 		{
 			var useRegions = GetRegions(useRegion);
 			var regions = new List<Range>();
@@ -1790,7 +1790,7 @@ namespace NeoEdit.Program
 		}
 
 		static HashSet<string> drives = new HashSet<string>(DriveInfo.GetDrives().Select(drive => drive.Name));
-		public bool StringsAreFiles(List<string> strs)
+		bool StringsAreFiles(List<string> strs)
 		{
 			if ((strs.Count == 0) || (strs.Count > 500))
 				return false;
@@ -1803,9 +1803,9 @@ namespace NeoEdit.Program
 			return true;
 		}
 
-		public bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanEncode(data, codePage))) || (ConfirmContinueWhenCannotEncode());
+		bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanEncode(data, codePage))) || (ConfirmContinueWhenCannotEncode());
 
-		public bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
+		bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
 
 		bool ConfirmContinueWhenCannotEncode()
 		{
@@ -1821,9 +1821,9 @@ namespace NeoEdit.Program
 			return state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.Yes);
 		}
 
-		public DbConnection dbConnection { get; set; }
+		DbConnection dbConnection { get; set; }
 
-		public void OpenTable(Table table, string name = null)
+		void OpenTable(Table table, string name = null)
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
 			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
@@ -1832,7 +1832,7 @@ namespace NeoEdit.Program
 			textEditor.DisplayName = name;
 		}
 
-		public List<string> RelativeSelectedFiles()
+		List<string> RelativeSelectedFiles()
 		{
 			var fileName = FileName;
 			return Selections.AsParallel().AsOrdered().Select(range => fileName.RelativeChild(Text.GetString(range))).ToList();
@@ -1862,7 +1862,7 @@ namespace NeoEdit.Program
 			throw new Exception("Invalid response");
 		}
 
-		public void Save(string fileName, bool copyOnly = false)
+		void Save(string fileName, bool copyOnly = false)
 		{
 			if ((Coder.IsStr(CodePage)) && ((Text.Length >> 20) < 50) && (!VerifyCanEncode()))
 				return;
@@ -1908,7 +1908,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public void SetFileName(string fileName)
+		void SetFileName(string fileName)
 		{
 			if (FileName == fileName)
 				return;
@@ -1944,9 +1944,9 @@ namespace NeoEdit.Program
 			return false;
 		}
 
-		public DateTime fileLastWrite { get; set; }
+		DateTime fileLastWrite { get; set; }
 
-		public void SetAutoRefresh(bool? value = null)
+		void SetAutoRefresh(bool? value = null)
 		{
 			//TODO
 			//ClearWatcher();
@@ -1970,7 +1970,7 @@ namespace NeoEdit.Program
 			//watcher.EnableRaisingEvents = true;
 		}
 
-		public void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, bool keepUndo = false)
+		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, bool keepUndo = false)
 		{
 			SetFileName(fileName);
 			if (ContentType == ParserType.None)
@@ -2010,7 +2010,7 @@ namespace NeoEdit.Program
 			SetModifiedFlag(isModified);
 		}
 
-		public void Goto(int? line, int? column, int? index)
+		void Goto(int? line, int? column, int? index)
 		{
 			var pos = 0;
 			if (line.HasValue)
@@ -2035,7 +2035,7 @@ namespace NeoEdit.Program
 		System.Drawing.Bitmap savedBitmap;
 		private ShutdownData shutdownData;
 
-		public System.Drawing.Bitmap GetBitmap()
+		System.Drawing.Bitmap GetBitmap()
 		{
 			if (!Coder.IsImage(CodePage))
 			{

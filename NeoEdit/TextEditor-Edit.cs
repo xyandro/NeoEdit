@@ -99,7 +99,7 @@ namespace NeoEdit.Program
 			return func(source, keySelector, comparer ?? Comparer<TKey>.Default).ThenBy(x => x.Item2);
 		}
 
-		static public string RepeatString(string input, int count)
+		static string RepeatString(string input, int count)
 		{
 			var builder = new StringBuilder(input.Length * count);
 			for (int ctr = 0; ctr < count; ++ctr)

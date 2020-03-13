@@ -14,10 +14,10 @@ namespace NeoEdit.Program
 		}
 
 		NEText oldText, newText;
-		public NEText Text
+		NEText Text
 		{
 			get => newText;
-			private set
+			set
 			{
 				EnsureInTransaction();
 				newText = value;
@@ -27,7 +27,7 @@ namespace NeoEdit.Program
 		}
 
 		NETextView oldTextView, newTextView;
-		public NETextView TextView
+		NETextView TextView
 		{
 			get => newTextView;
 			set
@@ -41,7 +41,7 @@ namespace NeoEdit.Program
 		public int MaxColumn
 		{
 			get => newMaxColumn;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newMaxColumn = value;
@@ -52,7 +52,7 @@ namespace NeoEdit.Program
 		public int CurrentSelection
 		{
 			get => newCurrentSelection;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newCurrentSelection = Math.Max(0, Math.Min(value, Selections.Count - 1));
@@ -80,7 +80,7 @@ namespace NeoEdit.Program
 			return newRegions[region - 1];
 		}
 
-		public void SetRegions(int region, IReadOnlyList<Range> regions)
+		void SetRegions(int region, IReadOnlyList<Range> regions)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
@@ -89,7 +89,7 @@ namespace NeoEdit.Program
 
 		readonly KeysAndValues[] newKeysAndValues = new KeysAndValues[10];
 		readonly KeysAndValues[] changedKeysAndValues = new KeysAndValues[10];
-		public KeysAndValues GetKeysAndValues(int kvIndex)
+		KeysAndValues GetKeysAndValues(int kvIndex)
 		{
 			if ((kvIndex < 0) || (kvIndex > 9))
 				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
@@ -100,7 +100,7 @@ namespace NeoEdit.Program
 			return newKeysAndValues[kvIndex];
 		}
 
-		public void SetKeysAndValues(int kvIndex, IReadOnlyList<string> values, bool matchCase = false)
+		void SetKeysAndValues(int kvIndex, IReadOnlyList<string> values, bool matchCase = false)
 		{
 			if ((kvIndex < 0) || (kvIndex > 9))
 				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
@@ -118,7 +118,7 @@ namespace NeoEdit.Program
 		}
 
 		string oldDisplayName, newDisplayName;
-		public string DisplayName
+		string DisplayName
 		{
 			get => newDisplayName;
 			set
@@ -132,7 +132,7 @@ namespace NeoEdit.Program
 		public string FileName
 		{
 			get => newFileName;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newFileName = value;
@@ -143,7 +143,7 @@ namespace NeoEdit.Program
 		public bool IsModified
 		{
 			get => newIsModified;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newIsModified = value;
@@ -151,7 +151,7 @@ namespace NeoEdit.Program
 		}
 
 		Tuple<IReadOnlyList<string>, bool?> newClipboardData;
-		public Tuple<IReadOnlyList<string>, bool?> ClipboardData
+		Tuple<IReadOnlyList<string>, bool?> ClipboardData
 		{
 			get
 			{
@@ -168,9 +168,9 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public IReadOnlyList<string> Clipboard { get => ClipboardData.Item1; set => ClipboardData = Tuple.Create(value, default(bool?)); }
-		public IReadOnlyList<string> ClipboardCopy { set => ClipboardData = Tuple.Create(value, (bool?)false); }
-		public IReadOnlyList<string> ClipboardCut { set => ClipboardData = Tuple.Create(value, (bool?)true); }
+		IReadOnlyList<string> Clipboard { get => ClipboardData.Item1; set => ClipboardData = Tuple.Create(value, default(bool?)); }
+		IReadOnlyList<string> ClipboardCopy { set => ClipboardData = Tuple.Create(value, (bool?)false); }
+		IReadOnlyList<string> ClipboardCut { set => ClipboardData = Tuple.Create(value, (bool?)true); }
 
 		public Tuple<IReadOnlyList<string>, bool?> ChangedClipboardData { get; private set; }
 
@@ -178,7 +178,7 @@ namespace NeoEdit.Program
 		public bool AutoRefresh
 		{
 			get => newAutoRefresh;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newAutoRefresh = value;
@@ -189,7 +189,7 @@ namespace NeoEdit.Program
 		public string DBName
 		{
 			get => newDBName;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newDBName = value;
@@ -200,7 +200,7 @@ namespace NeoEdit.Program
 		public ParserType ContentType
 		{
 			get => newContentType;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newContentType = value;
@@ -208,7 +208,7 @@ namespace NeoEdit.Program
 		}
 
 		Coder.CodePage oldCodePage, newCodePage;
-		public Coder.CodePage CodePage
+		Coder.CodePage CodePage
 		{
 			get => newCodePage;
 			set
@@ -222,7 +222,7 @@ namespace NeoEdit.Program
 		public string AESKey
 		{
 			get => newAESKey;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newAESKey = value;
@@ -233,7 +233,7 @@ namespace NeoEdit.Program
 		public bool Compressed
 		{
 			get => newCompressed;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newCompressed = value;
@@ -241,7 +241,7 @@ namespace NeoEdit.Program
 		}
 
 		string oldLineEnding, newLineEnding;
-		public string LineEnding
+		string LineEnding
 		{
 			get => newLineEnding;
 			set
@@ -255,7 +255,7 @@ namespace NeoEdit.Program
 		public bool DiffIgnoreWhitespace
 		{
 			get => newDiffIgnoreWhitespace;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newDiffIgnoreWhitespace = value;
@@ -266,7 +266,7 @@ namespace NeoEdit.Program
 		public bool DiffIgnoreCase
 		{
 			get => newDiffIgnoreCase;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newDiffIgnoreCase = value;
@@ -277,7 +277,7 @@ namespace NeoEdit.Program
 		public bool DiffIgnoreNumbers
 		{
 			get => newDiffIgnoreNumbers;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newDiffIgnoreNumbers = value;
@@ -288,7 +288,7 @@ namespace NeoEdit.Program
 		public bool DiffIgnoreLineEndings
 		{
 			get => newDiffIgnoreLineEndings;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newDiffIgnoreLineEndings = value;
@@ -296,7 +296,7 @@ namespace NeoEdit.Program
 		}
 
 		bool oldIsDiff, newIsDiff;
-		public bool IsDiff
+		bool IsDiff
 		{
 			get => newIsDiff;
 			set
@@ -307,7 +307,7 @@ namespace NeoEdit.Program
 		}
 
 		bool oldDiffEncodingMismatch, newDiffEncodingMismatch;
-		public bool DiffEncodingMismatch
+		bool DiffEncodingMismatch
 		{
 			get => newDiffEncodingMismatch;
 			set
@@ -321,7 +321,7 @@ namespace NeoEdit.Program
 		public int TextEditorOrder
 		{
 			get => newTextEditorOrder;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newTextEditorOrder = value;
@@ -332,7 +332,7 @@ namespace NeoEdit.Program
 		public bool KeepSelections
 		{
 			get => newKeepSelections;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newKeepSelections = value;
@@ -343,7 +343,7 @@ namespace NeoEdit.Program
 		public bool HighlightSyntax
 		{
 			get => newHighlightSyntax;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newHighlightSyntax = value;
@@ -354,7 +354,7 @@ namespace NeoEdit.Program
 		public bool StrictParsing
 		{
 			get => newStrictParsing;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newStrictParsing = value;
@@ -365,7 +365,7 @@ namespace NeoEdit.Program
 		public JumpByType JumpBy
 		{
 			get => newJumpBy;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newJumpBy = value;
@@ -376,7 +376,7 @@ namespace NeoEdit.Program
 		public bool ViewValues
 		{
 			get => newViewValues;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newViewValues = value;
@@ -387,7 +387,7 @@ namespace NeoEdit.Program
 		public IList<byte> ViewValuesData
 		{
 			get => newViewValuesData;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newViewValuesData = value;
@@ -398,7 +398,7 @@ namespace NeoEdit.Program
 		public bool ViewValuesHasSel
 		{
 			get => newViewValuesHasSel;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newViewValuesHasSel = value;
