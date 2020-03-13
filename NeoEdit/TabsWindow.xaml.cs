@@ -92,24 +92,24 @@ namespace NeoEdit.Program
 			try { SetPosition(Settings.WindowPosition); } catch { }
 		}
 
-		public IReadOnlyDictionary<TextEditor, IReadOnlyList<string>> GetClipboardMap()
+		public IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
 		{
-			var empty = new List<string>() as IReadOnlyList<string>;
-			var clipboardMap = Tabs.ToDictionary(x => x, x => empty);
+			var empty = Tuple.Create(new List<string>() as IReadOnlyList<string>, default(bool?));
+			var clipboardDataMap = Tabs.ToDictionary(x => x, x => empty);
 
 			if (NEClipboard.Current.Count == ActiveTabs.Count)
-				NEClipboard.Current.ForEach((cb, index) => clipboardMap[ActiveTabs[index]] = cb.Strings);
+				NEClipboard.Current.ForEach((cb, index) => clipboardDataMap[ActiveTabs[index]] = Tuple.Create(cb.Strings, NEClipboard.Current.IsCut));
 			else if (NEClipboard.Current.ChildCount == ActiveTabs.Count)
-				NEClipboard.Current.Strings.ForEach((str, index) => clipboardMap[ActiveTabs[index]] = new List<string> { str });
+				NEClipboard.Current.Strings.ForEach((str, index) => clipboardDataMap[ActiveTabs[index]] = new Tuple<IReadOnlyList<string>, bool?>(new List<string> { str }, NEClipboard.Current.IsCut));
 			else if (((NEClipboard.Current.Count == 1) || (NEClipboard.Current.Count == NEClipboard.Current.ChildCount)) && (NEClipboard.Current.ChildCount == ActiveTabs.Sum(tab => tab.NumSelections)))
-				NEClipboard.Current.Strings.Take(ActiveTabs.Select(tab => tab.NumSelections)).ForEach((obj, index) => clipboardMap[ActiveTabs[index]] = obj.ToList());
+				NEClipboard.Current.Strings.Take(ActiveTabs.Select(tab => tab.NumSelections)).ForEach((obj, index) => clipboardDataMap[ActiveTabs[index]] = new Tuple<IReadOnlyList<string>, bool?>(obj.ToList(), NEClipboard.Current.IsCut));
 			else
 			{
 				var strs = NEClipboard.Current.Strings;
-				ActiveTabs.ForEach(tab => clipboardMap[tab] = strs);
+				ActiveTabs.ForEach(tab => clipboardDataMap[tab] = new Tuple<IReadOnlyList<string>, bool?>(strs, NEClipboard.Current.IsCut));
 			}
 
-			return clipboardMap;
+			return clipboardDataMap;
 		}
 
 		IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
@@ -219,14 +219,14 @@ namespace NeoEdit.Program
 
 				Execute(state);
 
-				var clipboards = Tabs.Select(tab => tab.ChangedClipboard).NonNull().ToList();
-				if (clipboards.Any())
+				var clipboardDatas = Tabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
+				if (clipboardDatas.Any())
 				{
 					var newClipboard = new NEClipboard();
-					foreach (var clipboard in clipboards)
+					foreach (var clipboardData in clipboardDatas)
 					{
-						newClipboard.Add(NEClipboardList.Create(clipboard.Item1));
-						newClipboard.IsCut = clipboard.Item2;
+						newClipboard.Add(NEClipboardList.Create(clipboardData.Item1));
+						newClipboard.IsCut = clipboardData.Item2;
 					}
 					NEClipboard.Current = newClipboard;
 				}

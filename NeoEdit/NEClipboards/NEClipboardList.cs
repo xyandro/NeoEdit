@@ -9,7 +9,7 @@ namespace NeoEdit.Program.NEClipboards
 	{
 		List<NEClipboardItem> neClipboardItems = new List<NEClipboardItem>();
 
-		public List<string> Strings => neClipboardItems.Where(item => item.IsString).Select(item => item.String).ToList();
+		public IReadOnlyList<string> Strings => neClipboardItems.Where(item => item.IsString).Select(item => item.String).ToList();
 		public List<object> Objects => neClipboardItems.Where(item => !item.IsString).Select(item => item.Object).ToList();
 
 		public int Count => neClipboardItems.Count;

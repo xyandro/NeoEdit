@@ -151,11 +151,10 @@ namespace NeoEdit.Program
 
 			if (!StringsAreFiles(strs))
 				Clipboard = strs;
+			else if (isCut)
+				ClipboardCut = strs;
 			else
-			{
-				Clipboard = strs;
-				ClipboardIsCut = isCut;
-			}
+				ClipboardCopy = strs;
 			if (isCut)
 				ReplaceSelections("");
 		}

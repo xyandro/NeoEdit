@@ -150,36 +150,29 @@ namespace NeoEdit.Program
 			}
 		}
 
-		IReadOnlyList<string> oldClipboard, newClipboard;
-		public IReadOnlyList<string> Clipboard
+		Tuple<IReadOnlyList<string>, bool?> newClipboardData;
+		public Tuple<IReadOnlyList<string>, bool?> ClipboardData
 		{
 			get
 			{
-				if (newClipboard == null)
-					oldClipboard = newClipboard = state.GetClipboard(this);
+				if (newClipboardData == null)
+					newClipboardData = state.GetClipboardData(this);
 
-				return newClipboard;
+				return newClipboardData;
 			}
 
 			set
 			{
 				EnsureInTransaction();
-				newClipboard = value;
+				newClipboardData = ChangedClipboardData = value;
 			}
 		}
 
-		public Tuple<IReadOnlyList<string>, bool?> ChangedClipboard => (oldClipboard == newClipboard) ? default : Tuple.Create(newClipboard, newClipboardIsCut);
+		public IReadOnlyList<string> Clipboard { get => ClipboardData.Item1; set => ClipboardData = Tuple.Create(value, default(bool?)); }
+		public IReadOnlyList<string> ClipboardCopy { set => ClipboardData = Tuple.Create(value, (bool?)false); }
+		public IReadOnlyList<string> ClipboardCut { set => ClipboardData = Tuple.Create(value, (bool?)true); }
 
-		bool? oldClipboardIsCut, newClipboardIsCut;
-		public bool? ClipboardIsCut
-		{
-			get => newClipboardIsCut;
-			set
-			{
-				EnsureInTransaction();
-				newClipboardIsCut = value;
-			}
-		}
+		public Tuple<IReadOnlyList<string>, bool?> ChangedClipboardData { get; private set; }
 
 		bool oldAutoRefresh, newAutoRefresh;
 		public bool AutoRefresh
@@ -468,8 +461,7 @@ namespace NeoEdit.Program
 			if (this.state != null)
 				throw new Exception("Already in a transaction");
 			this.state = state ?? new ExecuteState(NECommand.None);
-			oldClipboard = newClipboard = null;
-			oldClipboardIsCut = newClipboardIsCut = null;
+			newClipboardData = ChangedClipboardData = null;
 			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 		}
@@ -489,9 +481,6 @@ namespace NeoEdit.Program
 			newDisplayName = oldDisplayName;
 			newFileName = oldFileName;
 			newIsModified = oldIsModified;
-			newClipboard = oldClipboard;
-			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
-				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 			newAutoRefresh = oldAutoRefresh;
 			newDBName = oldDBName;
 			newContentType = oldContentType;
@@ -518,6 +507,9 @@ namespace NeoEdit.Program
 			newXScrollViewport = oldXScrollViewport;
 			newYScrollViewport = oldYScrollViewport;
 
+			ChangedClipboardData = newClipboardData = null;
+			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
+				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 			state = null;
 		}
 
@@ -535,9 +527,6 @@ namespace NeoEdit.Program
 			oldDisplayName = newDisplayName;
 			oldFileName = newFileName;
 			oldIsModified = newIsModified;
-			oldClipboard = newClipboard;
-			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
-				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 			oldAutoRefresh = newAutoRefresh;
 			oldDBName = newDBName;
 			oldContentType = newContentType;
@@ -564,6 +553,9 @@ namespace NeoEdit.Program
 			oldXScrollViewport = newXScrollViewport;
 			oldYScrollViewport = newYScrollViewport;
 
+			newClipboardData = ChangedClipboardData = null;
+			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
+				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 			state = null;
 		}
 	}
