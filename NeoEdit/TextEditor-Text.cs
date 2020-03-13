@@ -79,7 +79,7 @@ namespace NeoEdit.Program
 			return str.Substring(start, end - start);
 		}
 
-		void ConfigureExecute_Text_Select_Trim() => state.ConfigureExecuteData = TextTrimDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Text_Select_Trim() => state.ConfigureExecuteData = TextTrimDialog.Run(tabsWindow);
 
 		void Execute_Text_Select_Trim()
 		{
@@ -87,7 +87,7 @@ namespace NeoEdit.Program
 			Selections = Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList();
 		}
 
-		void ConfigureExecute_Text_Select_ByWidth() => state.ConfigureExecuteData = TextWidthDialog.Run(state.TabsWindow, false, true, GetVariables());
+		void ConfigureExecute_Text_Select_ByWidth() => state.ConfigureExecuteData = TextWidthDialog.Run(tabsWindow, false, true, GetVariables());
 
 		void Execute_Text_Select_ByWidth()
 		{
@@ -96,7 +96,7 @@ namespace NeoEdit.Program
 			Selections = Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList();
 		}
 
-		void ConfigureExecute_Text_Select_WholeBoundedWord(bool wholeWord) => state.ConfigureExecuteData = TextSelectWholeBoundedWordDialog.Run(state.TabsWindow, wholeWord);
+		void ConfigureExecute_Text_Select_WholeBoundedWord(bool wholeWord) => state.ConfigureExecuteData = TextSelectWholeBoundedWordDialog.Run(tabsWindow, wholeWord);
 
 		void Execute_Text_Select_WholeBoundedWord(bool wholeWord)
 		{
@@ -156,7 +156,7 @@ namespace NeoEdit.Program
 		void ConfigureExecute_Text_Width()
 		{
 			var numeric = Selections.Any() ? Selections.AsParallel().All(range => Text.GetString(range).IsNumeric()) : false;
-			state.ConfigureExecuteData = TextWidthDialog.Run(state.TabsWindow, numeric, false, GetVariables());
+			state.ConfigureExecuteData = TextWidthDialog.Run(tabsWindow, numeric, false, GetVariables());
 		}
 
 		void Execute_Text_Width()
@@ -166,7 +166,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
 		}
 
-		void ConfigureExecute_Text_Trim() => state.ConfigureExecuteData = TextTrimDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Text_Trim() => state.ConfigureExecuteData = TextTrimDialog.Run(tabsWindow);
 
 		void Execute_Text_Trim()
 		{
@@ -176,7 +176,7 @@ namespace NeoEdit.Program
 
 		void Execute_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
-		void ConfigureExecute_Text_Unicode() => state.ConfigureExecuteData = TextUnicodeDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Text_Unicode() => state.ConfigureExecuteData = TextUnicodeDialog.Run(tabsWindow);
 
 		void Execute_Text_Unicode()
 		{
@@ -186,7 +186,7 @@ namespace NeoEdit.Program
 
 		void Execute_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
-		void ConfigureExecute_Text_RandomText() => state.ConfigureExecuteData = TextRandomTextDialog.Run(GetVariables(), state.TabsWindow);
+		void ConfigureExecute_Text_RandomText() => state.ConfigureExecuteData = TextRandomTextDialog.Run(GetVariables(), tabsWindow);
 
 		void Execute_Text_RandomText()
 		{
@@ -202,7 +202,7 @@ namespace NeoEdit.Program
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			state.ConfigureExecuteData = TextReverseRegExDialog.Run(state.TabsWindow);
+			state.ConfigureExecuteData = TextReverseRegExDialog.Run(tabsWindow);
 		}
 
 		void Execute_Text_ReverseRegEx()
@@ -225,12 +225,12 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void ConfigureExecute_Text_FirstDistinct() => state.ConfigureExecuteData = TextFirstDistinctDialog.Run(state.TabsWindow);
+		void ConfigureExecute_Text_FirstDistinct() => state.ConfigureExecuteData = TextFirstDistinctDialog.Run(tabsWindow);
 
 		void Execute_Text_FirstDistinct()
 		{
 			var result = state.ConfigureExecuteData as TextFirstDistinctDialog.Result;
-			var opResult = ProgressDialog.Run(state.TabsWindow, "Finding characters...", (canceled, progress) =>
+			var opResult = ProgressDialog.Run(tabsWindow, "Finding characters...", (canceled, progress) =>
 			{
 				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
 				var data = GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).Select((str, strIndex) => Tuple.Create(str, strIndex, str.Indexes(ch => valid.Contains(ch)).Distinct(index => str[index]).ToList())).OrderBy(tuple => tuple.Item3.Count).ToList();

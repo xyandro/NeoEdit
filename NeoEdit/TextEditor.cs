@@ -18,6 +18,7 @@ namespace NeoEdit.Program
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		const int tabStop = 4;
 
+		public TabsWindow tabsWindow;
 		ExecuteState state;
 
 		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
@@ -1809,7 +1810,7 @@ namespace NeoEdit.Program
 		bool ConfirmContinueWhenCannotEncode()
 		{
 			if (!state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.All))
-				state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(state.TabsWindow)
+				state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(tabsWindow)
 				{
 					Title = "Confirm",
 					Text = "The specified encoding cannot fully represent the data. Continue anyway?",
@@ -1826,7 +1827,7 @@ namespace NeoEdit.Program
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
 			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-			state.TabsWindow.AddTextEditor(textEditor);
+			tabsWindow.AddTextEditor(textEditor);
 			textEditor.ContentType = contentType;
 			textEditor.DisplayName = name;
 		}
@@ -1843,7 +1844,7 @@ namespace NeoEdit.Program
 				return true;
 
 			if (!state.SavedAnswers[nameof(VerifyCanEncode)].HasFlag(MessageOptions.All))
-				state.SavedAnswers[nameof(VerifyCanEncode)] = new Message(state.TabsWindow)
+				state.SavedAnswers[nameof(VerifyCanEncode)] = new Message(tabsWindow)
 				{
 					Title = "Confirm",
 					Text = "The current encoding cannot fully represent this data. Switch to UTF-8?",
@@ -1884,7 +1885,7 @@ namespace NeoEdit.Program
 						throw;
 
 					if (!state.SavedAnswers[nameof(Save)].HasFlag(MessageOptions.All))
-						state.SavedAnswers[nameof(Save)] = new Message(state.TabsWindow)
+						state.SavedAnswers[nameof(Save)] = new Message(tabsWindow)
 						{
 							Title = "Confirm",
 							Text = "Save failed. Remove read-only flag?",
@@ -1925,7 +1926,7 @@ namespace NeoEdit.Program
 				return true;
 
 			if (!state.SavedAnswers[nameof(CanClose)].HasFlag(MessageOptions.All))
-				state.SavedAnswers[nameof(CanClose)] = new Message(state.TabsWindow)
+				state.SavedAnswers[nameof(CanClose)] = new Message(tabsWindow)
 				{
 					Title = "Confirm",
 					Text = "Do you want to save changes?",
@@ -1984,7 +1985,7 @@ namespace NeoEdit.Program
 					bytes = File.ReadAllBytes(FileName);
 			}
 
-			FileSaver.HandleDecrypt(state.TabsWindow, ref bytes, out var aesKey);
+			FileSaver.HandleDecrypt(tabsWindow, ref bytes, out var aesKey);
 			AESKey = aesKey;
 
 			bytes = FileSaver.Decompress(bytes, out var compressed);

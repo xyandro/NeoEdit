@@ -8,9 +8,11 @@ namespace NeoEdit.Program
 	public class ExecuteState
 	{
 		IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> ClipboardDataMap;
-		IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
+		public Func<IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>>> ClipboardDataMapFunc;
 
-		public TabsWindow TabsWindow;
+		IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
+		public Func<int, IReadOnlyDictionary<TextEditor, KeysAndValues>> KeysAndValuesFunc;
+
 		public NECommand Command;
 		public object PreExecuteData;
 		public object ConfigureExecuteData;
@@ -29,7 +31,7 @@ namespace NeoEdit.Program
 			if (ClipboardDataMap == null)
 				lock (this)
 					if (ClipboardDataMap == null)
-						ClipboardDataMap = TabsWindow.GetClipboardDataMap();
+						ClipboardDataMap = ClipboardDataMapFunc();
 
 			return ClipboardDataMap[textEditor];
 		}
@@ -39,7 +41,7 @@ namespace NeoEdit.Program
 			if (KeysAndValuesMap[kvIndex] == null)
 				lock (this)
 					if (KeysAndValuesMap[kvIndex] == null)
-						KeysAndValuesMap[kvIndex] = TabsWindow.GetKeysAndValuesMap(kvIndex);
+						KeysAndValuesMap[kvIndex] = KeysAndValuesFunc(kvIndex);
 
 			return KeysAndValuesMap[kvIndex][textEditor];
 		}

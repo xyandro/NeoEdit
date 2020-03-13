@@ -20,7 +20,13 @@ namespace NeoEdit.Program
 			set
 			{
 				EnsureInTransaction();
+
+				Tabs.ForEach(x => x.tabsWindow = null);
+
 				newTabs = value;
+
+				Tabs.ForEach(x => x.tabsWindow = this);
+
 				var notSeen = newTabs.Except(oldTabs).ToList();
 				if (notSeen.Any())
 					ActiveTabs = notSeen;

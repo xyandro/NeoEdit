@@ -205,7 +205,8 @@ namespace NeoEdit.Program
 		{
 			try
 			{
-				state.TabsWindow = this;
+				state.ClipboardDataMapFunc = GetClipboardDataMap;
+				state.KeysAndValuesFunc = GetKeysAndValuesMap;
 				state.ShiftDown = shiftDown;
 				state.ControlDown = controlDown;
 				state.AltDown = altDown;
