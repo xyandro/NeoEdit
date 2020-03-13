@@ -6,6 +6,7 @@ namespace NeoEdit.Program
 	public enum NECommand
 	{
 		None,
+		Internal_PreviewKey,
 		Internal_Key,
 		Internal_Text,
 		Internal_AddTextEditor,

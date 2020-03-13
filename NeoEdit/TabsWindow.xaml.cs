@@ -271,7 +271,7 @@ namespace NeoEdit.Program
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Key: Execute_Internal_Key(state); break;
+				case NECommand.Internal_PreviewKey: Execute_Internal_PreviewKey(state); break;
 				case NECommand.Internal_AddTextEditor: Execute_Internal_AddTextEditor(state.ConfigureExecuteData as TextEditor); break;
 				case NECommand.File_New_New: Execute_File_New_New(shiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
@@ -330,7 +330,7 @@ namespace NeoEdit.Program
 			ActiveTabs.ForEach(tab => tab.Execute());
 		}
 
-		void Execute_Internal_Key(ExecuteState state)
+		void Execute_Internal_PreviewKey(ExecuteState state)
 		{
 			if ((state.ControlDown) && (!state.AltDown))
 			{
@@ -397,7 +397,7 @@ namespace NeoEdit.Program
 			if (e.Handled)
 				return;
 
-			var state = new ExecuteState(NECommand.Internal_Key) { ConfigureExecuteData = e.Key };
+			var state = new ExecuteState(NECommand.Internal_PreviewKey) { ConfigureExecuteData = e.Key };
 			HandleCommand(state);
 			e.Handled = state.Result;
 		}
