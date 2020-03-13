@@ -249,7 +249,17 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void PreExecute(ExecuteState state) => ActiveTabs.ForEach(tab => tab.PreExecute());
+		void PreExecute(ExecuteState state)
+		{
+			switch (state.Command)
+			{
+				case NECommand.Internal_Activate: state.IsValid = false; break;
+				case NECommand.Internal_AddTextEditor: state.IsValid = false; break;
+				case NECommand.Internal_Key: state.IsValid = false; break;
+			}
+
+			ActiveTabs.ForEach(tab => tab.PreExecute());
+		}
 
 		void ConfigureExecute(ExecuteState state)
 		{
@@ -270,8 +280,8 @@ namespace NeoEdit.Program
 			switch (state.Command)
 			{
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
-				case NECommand.Internal_PreviewKey: Execute_Internal_PreviewKey(state); break;
 				case NECommand.Internal_AddTextEditor: Execute_Internal_AddTextEditor(state.ConfigureExecuteData as TextEditor); break;
+				case NECommand.Internal_Key: Execute_Internal_Key(state); break;
 				case NECommand.File_New_New: Execute_File_New_New(shiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;
@@ -365,17 +375,6 @@ namespace NeoEdit.Program
 		//	return true;
 		//}
 
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
-		{
-			base.OnPreviewKeyDown(e);
-			if (e.Handled)
-				return;
-
-			var state = new ExecuteState(NECommand.Internal_PreviewKey) { ConfigureExecuteData = e.Key };
-			HandleCommand(state);
-			e.Handled = state.Result;
-		}
-
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			if (MacroPlaying != null)
@@ -395,7 +394,7 @@ namespace NeoEdit.Program
 
 			var state = new ExecuteState(NECommand.Internal_Key) { ConfigureExecuteData = key };
 			HandleCommand(state);
-			e.Handled = state.Result;
+			e.Handled = state.IsValid;
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)

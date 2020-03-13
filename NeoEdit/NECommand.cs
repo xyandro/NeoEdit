@@ -8,7 +8,6 @@ namespace NeoEdit.Program
 		None,
 		Internal_Activate,
 		Internal_AddTextEditor,
-		Internal_PreviewKey,
 		Internal_Key,
 		Internal_Text,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New_New,

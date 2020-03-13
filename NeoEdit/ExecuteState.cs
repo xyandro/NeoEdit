@@ -19,10 +19,9 @@ namespace NeoEdit.Program
 		public bool ShiftDown;
 		public bool ControlDown;
 		public bool AltDown;
-		public bool Result;
 		public bool? MultiStatus;
 		public AnswerResult SavedAnswers = new AnswerResult();
-
+		public bool IsValid;
 
 		public ExecuteState(NECommand command) => Command = command;
 

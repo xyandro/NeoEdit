@@ -37,20 +37,19 @@ namespace NeoEdit.Program
 			finally { Activated += OnActivated; }
 		}
 
-		void Execute_Internal_PreviewKey(ExecuteState state)
+		void Execute_Internal_Key(ExecuteState state)
 		{
 			if ((state.ControlDown) && (!state.AltDown))
 			{
-				var handled = true;
+				var oldState = state.IsValid;
+				state.IsValid = true;
 				switch ((Key)state.ConfigureExecuteData)
 				{
 					case Key.PageUp: MovePrev(); break;
 					case Key.PageDown: MoveNext(); break;
 					case Key.Tab: MoveTabOrder(); break;
-					default: handled = false; break;
+					default: state.IsValid = oldState; break;
 				}
-				if (handled)
-					state.Result = true;
 			}
 		}
 

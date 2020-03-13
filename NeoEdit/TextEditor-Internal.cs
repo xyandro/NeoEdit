@@ -168,9 +168,11 @@ namespace NeoEdit.Program
 			}
 		}
 
-		bool Execute_Internal_Key()
+		void Execute_Internal_Key()
 		{
-			var ret = true;
+			var oldState = state.IsValid;
+			state.IsValid = true;
+
 			var key = (Key)state.ConfigureExecuteData;
 			switch (key)
 			{
@@ -396,10 +398,8 @@ namespace NeoEdit.Program
 				case Key.Enter:
 					Execute_Internal_Text();
 					break;
-				default: ret = false; break;
+				default: state.IsValid = oldState; break;
 			}
-
-			return ret;
 		}
 
 		void Execute_Internal_Text() => ReplaceSelections(state.ConfigureExecuteData as string, false, tryJoinUndo: true);
