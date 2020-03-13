@@ -101,8 +101,8 @@ namespace NeoEdit.Program
 				NEClipboard.Current.ForEach((cb, index) => clipboardDataMap[ActiveTabs[index]] = Tuple.Create(cb, NEClipboard.Current.IsCut));
 			else if (NEClipboard.Current.ChildCount == ActiveTabs.Count)
 				NEClipboard.Current.Strings.ForEach((str, index) => clipboardDataMap[ActiveTabs[index]] = new Tuple<IReadOnlyList<string>, bool?>(new List<string> { str }, NEClipboard.Current.IsCut));
-			else if (((NEClipboard.Current.Count == 1) || (NEClipboard.Current.Count == NEClipboard.Current.ChildCount)) && (NEClipboard.Current.ChildCount == ActiveTabs.Sum(tab => tab.NumSelections)))
-				NEClipboard.Current.Strings.Take(ActiveTabs.Select(tab => tab.NumSelections)).ForEach((obj, index) => clipboardDataMap[ActiveTabs[index]] = new Tuple<IReadOnlyList<string>, bool?>(obj.ToList(), NEClipboard.Current.IsCut));
+			else if (((NEClipboard.Current.Count == 1) || (NEClipboard.Current.Count == NEClipboard.Current.ChildCount)) && (NEClipboard.Current.ChildCount == ActiveTabs.Sum(tab => tab.Selections.Count)))
+				NEClipboard.Current.Strings.Take(ActiveTabs.Select(tab => tab.Selections.Count)).ForEach((obj, index) => clipboardDataMap[ActiveTabs[index]] = new Tuple<IReadOnlyList<string>, bool?>(obj.ToList(), NEClipboard.Current.IsCut));
 			else
 			{
 				var strs = NEClipboard.Current.Strings;
@@ -495,14 +495,10 @@ namespace NeoEdit.Program
 
 		public void RemoveTextEditor(TextEditor textEditor, bool close = true)
 		{
-			//TODO
-			//activeTabs.Remove(textEditor);
-			//tabs.Remove(textEditor);
-			//if (close)
-			//	textEditor.Closed();
-			//UpdateFocused(true);
-			//statusBarTimer.Start();
-			//QueueUpdateLayout();
+			Tabs = Tabs.Except(textEditor).ToList();
+			if (close)
+				textEditor.Closed();
+			UpdateFocused(true);
 		}
 
 		public void AddDiff(TextEditor textEdit1, TextEditor textEdit2)
@@ -721,11 +717,11 @@ namespace NeoEdit.Program
 		{
 			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
 			statusBar.Items.Clear();
-			statusBar.Items.Add($"Active: {plural(ActiveTabs.Count(), "file")}, {plural(ActiveTabs.Sum(textEditor => textEditor.NumSelections), "selection")}");
+			statusBar.Items.Add($"Active: {plural(ActiveTabs.Count(), "file")}, {plural(ActiveTabs.Sum(textEditor => textEditor.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Inactive: {plural(Tabs.Except(ActiveTabs).Count(), "file")}, {plural(Tabs.Except(ActiveTabs).Sum(textEditor => textEditor.NumSelections), "selection")}");
+			statusBar.Items.Add($"Inactive: {plural(Tabs.Except(ActiveTabs).Count(), "file")}, {plural(Tabs.Except(ActiveTabs).Sum(textEditor => textEditor.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Total: {plural(Tabs.Count, "file")}, {plural(Tabs.Sum(textEditor => textEditor.NumSelections), "selection")}");
+			statusBar.Items.Add($"Total: {plural(Tabs.Count, "file")}, {plural(Tabs.Sum(textEditor => textEditor.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
 			statusBar.Items.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
 			statusBar.Items.Add(new Separator());

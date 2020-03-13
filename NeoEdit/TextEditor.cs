@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
@@ -16,7 +15,9 @@ namespace NeoEdit.Program
 {
 	public partial class TextEditor
 	{
+		static ThreadSafeRandom random = new ThreadSafeRandom();
 		const int tabStop = 4;
+
 		ExecuteState state;
 
 		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
@@ -45,6 +46,26 @@ namespace NeoEdit.Program
 		CacheValue previousData = new CacheValue();
 		ParserType previousType;
 		ParserNode previousRoot;
+
+		public void ReplaceOneWithMany(IReadOnlyList<string> strs, bool? addNewLines)
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Must have one selection.");
+
+			var ending = addNewLines ?? strs.Any(str => !str.EndsWith(TextView.DefaultEnding)) ? TextView.DefaultEnding : "";
+			if (ending.Length != 0)
+				strs = strs.Select(str => str + ending).ToList();
+			var position = Selections.Single().Start;
+			ReplaceSelections(string.Join("", strs));
+
+			var sels = new List<Range>();
+			foreach (var str in strs)
+			{
+				sels.Add(Range.FromIndex(position, str.Length - ending.Length));
+				position += str.Length;
+			}
+			Selections = sels;
+		}
 
 		public void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false) => ReplaceSelections(Enumerable.Repeat(str, Selections.Count).ToList(), highlight, replaceType, tryJoinUndo);
 
@@ -410,6 +431,7 @@ namespace NeoEdit.Program
 		}
 		#endregion
 
+		#region PreExecute
 		public void PreExecute()
 		{
 			switch (state.Command)
@@ -429,6 +451,21 @@ namespace NeoEdit.Program
 			}
 		}
 
+		void PreExecute_Internal_Key()
+		{
+			switch ((Key)state.ConfigureExecuteData)
+			{
+				case Key.Back:
+				case Key.Delete:
+				case Key.Left:
+				case Key.Right:
+					state.PreExecuteData = (state.PreExecuteData as bool? ?? false) || (Selections.Any(range => range.HasSelection));
+					break;
+			}
+		}
+		#endregion
+
+		#region ConfigureExecute
 		public void ConfigureExecute()
 		{
 			switch (state.Command)
@@ -546,7 +583,9 @@ namespace NeoEdit.Program
 				case NECommand.Select_Split: ConfigureExecute_Select_Split(); break;
 			}
 		}
+		#endregion
 
+		#region Execute
 		public void Execute()
 		{
 			switch (state.Command)
@@ -1323,31 +1362,6 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void SetModifiedFlag(bool? newValue = null)
-		{
-			if (newValue.HasValue)
-			{
-				if (newValue == false)
-					modifiedChecksum.SetValue(Text);
-				else
-					modifiedChecksum.Invalidate(); // Nothing will match, file will be perpetually modified
-			}
-			IsModified = !modifiedChecksum.Match(Text);
-		}
-
-		void PreExecute_Internal_Key()
-		{
-			switch ((Key)state.ConfigureExecuteData)
-			{
-				case Key.Back:
-				case Key.Delete:
-				case Key.Left:
-				case Key.Right:
-					state.PreExecuteData = (state.PreExecuteData as bool? ?? false) || (Selections.Any(range => range.HasSelection));
-					break;
-			}
-		}
-
 		bool Execute_Internal_Key()
 		{
 			var ret = true;
@@ -1583,6 +1597,19 @@ namespace NeoEdit.Program
 		}
 
 		void Execute_Internal_Text() => ReplaceSelections(state.ConfigureExecuteData as string, false, tryJoinUndo: true);
+		#endregion
+
+		void SetModifiedFlag(bool? newValue = null)
+		{
+			if (newValue.HasValue)
+			{
+				if (newValue == false)
+					modifiedChecksum.SetValue(Text);
+				else
+					modifiedChecksum.Invalidate(); // Nothing will match, file will be perpetually modified
+			}
+			IsModified = !modifiedChecksum.Match(Text);
+		}
 
 		List<string> GetSelectionStrings() => Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range)).ToList();
 
@@ -1661,25 +1688,25 @@ namespace NeoEdit.Program
 			var initializePosEnds = new NEVariableInitializer(() => posEnds = Selections.Select(range => range.End).ToList());
 			results.Add(NEVariable.List("posend", "Selection position end", () => posEnds, initializePosEnds));
 
-			//for (var ctr = 0; ctr < 10; ++ctr)
-			//{
-			//	var name = ctr == 0 ? "k" : $"v{ctr}";
-			//	var desc = ctr == 0 ? "Keys" : $"Values {ctr}";
-			//	var values = TabsParent.GetKeysAndValues(this, ctr, false);
-			//	if (values == null)
-			//		continue;
-			//	results.Add(NEVariable.List(name, desc, () => values));
-			//	results.Add(NEVariable.Constant($"{name}n", $"{desc} count", () => values.Count));
-			//	results.Add(NEVariable.List($"{name}l", $"{desc} length", () => values.Select(str => str.Length)));
-			//	results.Add(NEVariable.Constant($"{name}lmin", $"{desc} min length", () => values.Select(str => str.Length).DefaultIfEmpty(0).Min()));
-			//	results.Add(NEVariable.Constant($"{name}lmax", $"{desc} max length", () => values.Select(str => str.Length).DefaultIfEmpty(0).Max()));
-			//}
+			for (var ctr = 0; ctr < 10; ++ctr)
+			{
+				var name = ctr == 0 ? "k" : $"v{ctr}";
+				var desc = ctr == 0 ? "Keys" : $"Values {ctr}";
+				var values = GetKeysAndValues(ctr).Values;
+				if (values == null)
+					continue;
+				results.Add(NEVariable.List(name, desc, () => values));
+				results.Add(NEVariable.Constant($"{name}n", $"{desc} count", () => values.Count));
+				results.Add(NEVariable.List($"{name}l", $"{desc} length", () => values.Select(str => str.Length)));
+				results.Add(NEVariable.Constant($"{name}lmin", $"{desc} min length", () => values.Select(str => str.Length).DefaultIfEmpty(0).Min()));
+				results.Add(NEVariable.Constant($"{name}lmax", $"{desc} max length", () => values.Select(str => str.Length).DefaultIfEmpty(0).Max()));
+			}
 
-			//if (Coder.IsImage(CodePage))
-			//{
-			//	results.Add(NEVariable.Constant("width", "Image width", () => GetBitmap().Width));
-			//	results.Add(NEVariable.Constant("height", "Image height", () => GetBitmap().Height));
-			//}
+			if (Coder.IsImage(CodePage))
+			{
+				results.Add(NEVariable.Constant("width", "Image width", () => GetBitmap().Width));
+				results.Add(NEVariable.Constant("height", "Image height", () => GetBitmap().Height));
+			}
 
 			var nonNulls = default(List<Tuple<double, int>>);
 			double lineStart = 0, lineIncrement = 0, geoStart = 0, geoIncrement = 0;
@@ -1730,8 +1757,6 @@ namespace NeoEdit.Program
 
 		List<T> GetExpressionResults<T>(string expression, int? count = null) => new NEExpression(expression).EvaluateList<T>(GetVariables(), count);
 
-		static ThreadSafeRandom random = new ThreadSafeRandom();
-
 		public List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
 		{
 			var useRegions = GetRegions(useRegion);
@@ -1777,26 +1802,6 @@ namespace NeoEdit.Program
 			return true;
 		}
 
-		public void ReplaceOneWithMany(IReadOnlyList<string> strs, bool? addNewLines)
-		{
-			if (Selections.Count != 1)
-				throw new Exception("Must have one selection.");
-
-			var ending = addNewLines ?? strs.Any(str => !str.EndsWith(TextView.DefaultEnding)) ? TextView.DefaultEnding : "";
-			if (ending.Length != 0)
-				strs = strs.Select(str => str + ending).ToList();
-			var position = Selections.Single().Start;
-			ReplaceSelections(string.Join("", strs));
-
-			var sels = new List<Range>();
-			foreach (var str in strs)
-			{
-				sels.Add(Range.FromIndex(position, str.Length - ending.Length));
-				position += str.Length;
-			}
-			Selections = sels;
-		}
-
 		public bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanEncode(data, codePage))) || (ConfirmContinueWhenCannotEncode());
 
 		public bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
@@ -1819,12 +1824,11 @@ namespace NeoEdit.Program
 
 		public void OpenTable(Table table, string name = null)
 		{
-			//TODO
-			//var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
-			//var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-			//TabsParent.AddTextEditor(textEditor);
-			//textEditor.ContentType = contentType;
-			//textEditor.DisplayName = name;
+			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
+			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+			state.TabsWindow.AddTextEditor(textEditor);
+			textEditor.ContentType = contentType;
+			textEditor.DisplayName = name;
 		}
 
 		public List<string> RelativeSelectedFiles()
@@ -1833,50 +1837,74 @@ namespace NeoEdit.Program
 			return Selections.AsParallel().AsOrdered().Select(range => fileName.RelativeChild(Text.GetString(range))).ToList();
 		}
 
+		bool VerifyCanEncode()
+		{
+			if (Text.CanEncode(CodePage))
+				return true;
+
+			if (!state.SavedAnswers[nameof(VerifyCanEncode)].HasFlag(MessageOptions.All))
+				state.SavedAnswers[nameof(VerifyCanEncode)] = new Message(state.TabsWindow)
+				{
+					Title = "Confirm",
+					Text = "The current encoding cannot fully represent this data. Switch to UTF-8?",
+					Options = MessageOptions.YesNoAllCancel,
+					DefaultAccept = MessageOptions.Yes,
+					DefaultCancel = MessageOptions.Cancel,
+				}.Show();
+			if (state.SavedAnswers[nameof(VerifyCanEncode)].HasFlag(MessageOptions.Yes))
+			{
+				CodePage = Coder.CodePage.UTF8;
+				return true;
+			}
+			if (state.SavedAnswers[nameof(VerifyCanEncode)].HasFlag(MessageOptions.No))
+				return true;
+			throw new Exception("Invalid response");
+		}
+
 		public void Save(string fileName, bool copyOnly = false)
 		{
-			//if ((Coder.IsStr(CodePage)) && ((DataQwer.MaxPosition >> 20) < 50) && (!VerifyCanEncode()))
-			//	return;
+			if ((Coder.IsStr(CodePage)) && ((Text.Length >> 20) < 50) && (!VerifyCanEncode()))
+				return;
 
-			//var triedReadOnly = false;
-			//while (true)
-			//{
-			//	try
-			//	{
-			//		if ((!copyOnly) && (watcher != null))
-			//			watcher.EnableRaisingEvents = false;
-			//		File.WriteAllBytes(fileName, FileSaver.Encrypt(FileSaver.Compress(DataQwer.GetBytes(CodePage), Compressed), AESKey));
-			//		if ((!copyOnly) && (watcher != null))
-			//			watcher.EnableRaisingEvents = true;
-			//		break;
-			//	}
-			//	catch (UnauthorizedAccessException)
-			//	{
-			//		if ((triedReadOnly) || (!new FileInfo(fileName).IsReadOnly))
-			//			throw;
+			var triedReadOnly = false;
+			while (true)
+			{
+				try
+				{
+					//if ((!copyOnly) && (watcher != null))
+					//	watcher.EnableRaisingEvents = false;
+					File.WriteAllBytes(fileName, FileSaver.Encrypt(FileSaver.Compress(Text.GetBytes(CodePage), Compressed), AESKey));
+					//if ((!copyOnly) && (watcher != null))
+					//	watcher.EnableRaisingEvents = true;
+					break;
+				}
+				catch (UnauthorizedAccessException)
+				{
+					if ((triedReadOnly) || (!new FileInfo(fileName).IsReadOnly))
+						throw;
 
-			//		if (!savedAnswers[nameof(Save)].HasFlag(MessageOptions.All))
-			//			savedAnswers[nameof(Save)] = new Message(TabsParent)
-			//			{
-			//				Title = "Confirm",
-			//				Text = "Save failed. Remove read-only flag?",
-			//				Options = MessageOptions.YesNoAll,
-			//				DefaultAccept = MessageOptions.Yes,
-			//				DefaultCancel = MessageOptions.No,
-			//			}.Show();
-			//		if (!savedAnswers[nameof(Save)].HasFlag(MessageOptions.Yes))
-			//			throw;
-			//		new FileInfo(fileName).IsReadOnly = false;
-			//		triedReadOnly = true;
-			//	}
-			//}
+					if (!state.SavedAnswers[nameof(Save)].HasFlag(MessageOptions.All))
+						state.SavedAnswers[nameof(Save)] = new Message(state.TabsWindow)
+						{
+							Title = "Confirm",
+							Text = "Save failed. Remove read-only flag?",
+							Options = MessageOptions.YesNoAll,
+							DefaultAccept = MessageOptions.Yes,
+							DefaultCancel = MessageOptions.No,
+						}.Show();
+					if (!state.SavedAnswers[nameof(Save)].HasFlag(MessageOptions.Yes))
+						throw;
+					new FileInfo(fileName).IsReadOnly = false;
+					triedReadOnly = true;
+				}
+			}
 
-			//if (!copyOnly)
-			//{
-			//	fileLastWrite = new FileInfo(fileName).LastWriteTime;
-			//	SetModifiedFlag(false);
-			//	SetFileName(fileName);
-			//}
+			if (!copyOnly)
+			{
+				fileLastWrite = new FileInfo(fileName).LastWriteTime;
+				SetModifiedFlag(false);
+				SetFileName(fileName);
+			}
 		}
 
 		public void SetFileName(string fileName)
@@ -2023,60 +2051,11 @@ namespace NeoEdit.Program
 
 		public bool Empty() => (FileName == null) && (!IsModified) && (Text.Length == 0);
 
-		public string OnlyEnding { get; internal set; }
-
-		void OnStatusBarRender()
+		public void Closed()
 		{
-			var sb = new List<string>();
-
-			ViewValuesData = null;
-			ViewValuesHasSel = false;
-
-			if ((CurrentSelection < 0) || (CurrentSelection >= Selections.Count))
-			{
-				sb.Add("Selection 0/0");
-				sb.Add("Col");
-				sb.Add("In");
-				sb.Add("Pos");
-			}
-			else
-			{
-				var range = Selections[CurrentSelection];
-				var lineMin = TextView.GetPositionLine(range.Start);
-				var lineMax = TextView.GetPositionLine(range.End);
-				var indexMin = TextView.GetPositionIndex(range.Start, lineMin);
-				var indexMax = TextView.GetPositionIndex(range.End, lineMax);
-				var columnMin = GetColumnFromIndex(lineMin, indexMin);
-				var columnMax = GetColumnFromIndex(lineMax, indexMax);
-				var posMin = range.Start;
-				var posMax = range.End;
-
-				try
-				{
-					ViewValuesData = Coder.StringToBytes(Text.GetString(range.Start, Math.Min(range.HasSelection ? range.Length : 100, Text.Length - range.Start)), CodePage);
-					ViewValuesHasSel = range.HasSelection;
-				}
-				catch { }
-
-				sb.Add($"Selection {CurrentSelection + 1:n0}/{Selections.Count:n0}");
-				sb.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
-				sb.Add($"In {lineMin + 1:n0}:{indexMin + 1:n0}{((lineMin == lineMax) && (indexMin == indexMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{indexMax + 1:n0}")}");
-				sb.Add($"Pos {posMin:n0}{(posMin == posMax ? "" : $"-{posMax:n0} ({posMax - posMin:n0})")}");
-			}
-
-			sb.Add($"Regions {string.Join(" / ", Enumerable.Range(1, 9).ToDictionary(index => index, index => GetRegions(index)).OrderBy(pair => pair.Key).Select(pair => $"{pair.Value:n0}"))}");
-			sb.Add($"Database {DBName}");
-
-			var tf = SystemFonts.MessageFontFamily.GetTypefaces().Where(x => (x.Weight == FontWeights.Normal) && (x.Style == FontStyles.Normal)).First();
-			//TODO dc.DrawText(new FormattedText(string.Join(" │ ", sb), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, tf, SystemFonts.MessageFontSize, Brushes.White, 1), new Point(2, 2));
+			//DiffTarget = null;
+			//ClearWatcher();
+			shutdownData?.OnShutdown();
 		}
-
-		public bool HasSelections => Selections.Any();
-
-		public int NumSelections => Selections.Count;
-
-		public int Length => Text.Length;
-
-		public string GetString(int start, int length) => Text.GetString(start, length);
 	}
 }

@@ -268,9 +268,8 @@ namespace NeoEdit.Program
 
 		void Execute_File_Close()
 		{
-			//TODO
-			//if (CanClose())
-			//	TabsParent.RemoveTextEditor(this);
+			if (CanClose())
+				state.TabsWindow.RemoveTextEditor(this);
 		}
 
 		public void Execute_File_Refresh()

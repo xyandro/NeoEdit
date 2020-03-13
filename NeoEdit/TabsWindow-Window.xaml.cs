@@ -31,7 +31,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Select_NoTabs() => ActiveTabs = new List<TextEditor>();
 
-		void Execute_Window_Select_TabsWithWithoutSelections(bool hasSelections) => ActiveTabs = ActiveTabs.Where(tab => tab.HasSelections == hasSelections).ToList();
+		void Execute_Window_Select_TabsWithWithoutSelections(bool hasSelections) => ActiveTabs = ActiveTabs.Where(tab => tab.Selections.Any() == hasSelections).ToList();
 
 		void Execute_Window_Select_ModifiedUnmodifiedTabs(bool modified) => ActiveTabs = ActiveTabs.Where(tab => tab.IsModified == modified).ToList();
 
@@ -39,7 +39,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Close_TabsWithWithoutSelections(bool hasSelections)
 		{
-			var toClose = ActiveTabs.Where(tab => tab.HasSelections == hasSelections).ToList();
+			var toClose = ActiveTabs.Where(tab => tab.Selections.Any() == hasSelections).ToList();
 			if (!toClose.All(tab => tab.CanClose()))
 				return;
 			toClose.ForEach(tab => RemoveTextEditor(tab));

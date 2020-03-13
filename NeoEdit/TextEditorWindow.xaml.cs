@@ -113,7 +113,7 @@ namespace NeoEdit.Program
 				var posMin = range.Start;
 				var posMax = range.End;
 
-				statusBar.Items.Add($"Selection {TextEditor.CurrentSelection + 1:n0}/{TextEditor.NumSelections:n0}");
+				statusBar.Items.Add($"Selection {TextEditor.CurrentSelection + 1:n0}/{TextEditor.Selections.Count:n0}");
 				statusBar.Items.Add(new Separator());
 				statusBar.Items.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
 				statusBar.Items.Add(new Separator());
