@@ -212,6 +212,7 @@
     </Compile>
     <Compile Include="Controls\NEMenuItem.cs" />
     <Compile Include="Controls\NEWindow.cs" />
+    <Compile Include="Controls\NoMacroAttribute.cs" />
     <Page Include="Controls\NumericUpDown.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -37,9 +37,12 @@ namespace NeoEdit.Program
 		static readonly Brush ActiveWindowBackgroundBrush = new SolidColorBrush(Color.FromRgb(14, 50, 96));
 		static readonly Brush InactiveWindowBackgroundBrush = Brushes.Transparent;
 
+		static readonly Dictionary<NECommand, bool?> macroInclude;
 		static TabsWindow()
 		{
 			UIHelper<TabsWindow>.Register();
+
+			macroInclude = Helpers.GetValues<NECommand>().ToDictionary(command => command, command => typeof(NECommand).GetMember(command.ToString()).First().GetCustomAttributes(typeof(NoMacroAttribute), false).Cast<NoMacroAttribute>().Select(attr => attr.IncludeHandled ? default(bool?) : false).DefaultIfEmpty(true).First());
 
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
@@ -69,7 +72,6 @@ namespace NeoEdit.Program
 			activateTabsTimer = new RunOnceTimer(() => ActivateTabs());
 			NEClipboard.ClipboardChanged += () => SetStatusBarText();
 
-			//SizeChanged += (s, e) => QueueUpdateLayout();
 			//scrollBar.ValueChanged += (s, e) => QueueUpdateLayout(false);
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
@@ -142,48 +144,6 @@ namespace NeoEdit.Program
 
 		//	switch (command)
 		//	{
-		//		case NECommand.Macro_Record_Quick_1: Command_Macro_Record_Quick(1); return;
-		//		case NECommand.Macro_Record_Quick_2: Command_Macro_Record_Quick(2); return;
-		//		case NECommand.Macro_Record_Quick_3: Command_Macro_Record_Quick(3); return;
-		//		case NECommand.Macro_Record_Quick_4: Command_Macro_Record_Quick(4); return;
-		//		case NECommand.Macro_Record_Quick_5: Command_Macro_Record_Quick(5); return;
-		//		case NECommand.Macro_Record_Quick_6: Command_Macro_Record_Quick(6); return;
-		//		case NECommand.Macro_Record_Quick_7: Command_Macro_Record_Quick(7); return;
-		//		case NECommand.Macro_Record_Quick_8: Command_Macro_Record_Quick(8); return;
-		//		case NECommand.Macro_Record_Quick_9: Command_Macro_Record_Quick(9); return;
-		//		case NECommand.Macro_Record_Quick_10: Command_Macro_Record_Quick(10); return;
-		//		case NECommand.Macro_Record_Quick_11: Command_Macro_Record_Quick(11); return;
-		//		case NECommand.Macro_Record_Quick_12: Command_Macro_Record_Quick(12); return;
-		//		case NECommand.Macro_Record_Record: Command_Macro_Record_Record(); return;
-		//		case NECommand.Macro_Record_StopRecording: Command_Macro_Record_StopRecording(); return;
-		//		case NECommand.Macro_Append_Quick_1: Command_Macro_Append_Quick(1); return;
-		//		case NECommand.Macro_Append_Quick_2: Command_Macro_Append_Quick(2); return;
-		//		case NECommand.Macro_Append_Quick_3: Command_Macro_Append_Quick(3); return;
-		//		case NECommand.Macro_Append_Quick_4: Command_Macro_Append_Quick(4); return;
-		//		case NECommand.Macro_Append_Quick_5: Command_Macro_Append_Quick(5); return;
-		//		case NECommand.Macro_Append_Quick_6: Command_Macro_Append_Quick(6); return;
-		//		case NECommand.Macro_Append_Quick_7: Command_Macro_Append_Quick(7); return;
-		//		case NECommand.Macro_Append_Quick_8: Command_Macro_Append_Quick(8); return;
-		//		case NECommand.Macro_Append_Quick_9: Command_Macro_Append_Quick(9); return;
-		//		case NECommand.Macro_Append_Quick_10: Command_Macro_Append_Quick(10); return;
-		//		case NECommand.Macro_Append_Quick_11: Command_Macro_Append_Quick(11); return;
-		//		case NECommand.Macro_Append_Quick_12: Command_Macro_Append_Quick(12); return;
-		//		case NECommand.Macro_Append_Append: Command_Macro_Append_Append(); return;
-		//		case NECommand.Macro_Play_Quick_1: Command_Macro_Play_Quick(1); return;
-		//		case NECommand.Macro_Play_Quick_2: Command_Macro_Play_Quick(2); return;
-		//		case NECommand.Macro_Play_Quick_3: Command_Macro_Play_Quick(3); return;
-		//		case NECommand.Macro_Play_Quick_4: Command_Macro_Play_Quick(4); return;
-		//		case NECommand.Macro_Play_Quick_5: Command_Macro_Play_Quick(5); return;
-		//		case NECommand.Macro_Play_Quick_6: Command_Macro_Play_Quick(6); return;
-		//		case NECommand.Macro_Play_Quick_7: Command_Macro_Play_Quick(7); return;
-		//		case NECommand.Macro_Play_Quick_8: Command_Macro_Play_Quick(8); return;
-		//		case NECommand.Macro_Play_Quick_9: Command_Macro_Play_Quick(9); return;
-		//		case NECommand.Macro_Play_Quick_10: Command_Macro_Play_Quick(10); return;
-		//		case NECommand.Macro_Play_Quick_11: Command_Macro_Play_Quick(11); return;
-		//		case NECommand.Macro_Play_Quick_12: Command_Macro_Play_Quick(12); return;
-		//		case NECommand.Macro_Play_Play: Command_Macro_Play_Play(); return;
-		//		case NECommand.Macro_Play_Repeat: Command_Macro_Play_Repeat(); return;
-		//		case NECommand.Macro_Play_PlayOnCopiedFiles: Command_Macro_Play_PlayOnCopiedFiles(); return;
 		//	}
 
 		//	var shiftDown = this.shiftDown;
@@ -198,22 +158,29 @@ namespace NeoEdit.Program
 		//	HandleCommand(command, shiftDown, dialogResult, multiStatus);
 		//}
 
-		public void HandleCommand(ExecuteState state)
+		public void HandleCommand(ExecuteState state, bool fromMacro = false)
 		{
 			try
 			{
 				state.ClipboardDataMapFunc = GetClipboardDataMap;
 				state.KeysAndValuesFunc = GetKeysAndValuesMap;
-				state.ShiftDown = shiftDown;
-				state.ControlDown = controlDown;
-				state.AltDown = altDown;
+
+				if (!fromMacro)
+				{
+					state.ShiftDown = shiftDown;
+					state.ControlDown = controlDown;
+					state.AltDown = altDown;
+				}
 
 				BeginTransaction();
 				Tabs.ForEach(tab => tab.BeginTransaction(state));
 
-				PreExecute(state);
+				if (!fromMacro)
+				{
+					PreExecute(state);
 
-				ConfigureExecute(state);
+					ConfigureExecute(state);
+				}
 
 				Execute(state);
 
@@ -239,6 +206,9 @@ namespace NeoEdit.Program
 				Commit();
 				Tabs.ForEach(tab => tab.Commit());
 
+				if ((RecordingMacro != null) && (macroInclude[state.Command] ?? !state.Unhandled))
+					RecordingMacro.AddAction(state);
+
 				DrawAll();
 			}
 			catch
@@ -253,9 +223,7 @@ namespace NeoEdit.Program
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Activate: state.IsValid = false; break;
-				case NECommand.Internal_AddTextEditor: state.IsValid = false; break;
-				case NECommand.Internal_Key: state.IsValid = false; break;
+				case NECommand.Internal_Key: state.Unhandled = true; break;
 			}
 
 			ActiveTabs.ForEach(tab => tab.PreExecute());
@@ -296,6 +264,48 @@ namespace NeoEdit.Program
 				case NECommand.Diff_Select_LeftTab: Execute_Diff_Select_LeftRightBothTabs(true); break;
 				case NECommand.Diff_Select_RightTab: Execute_Diff_Select_LeftRightBothTabs(false); break;
 				case NECommand.Diff_Select_BothTabs: Execute_Diff_Select_LeftRightBothTabs(null); break;
+				case NECommand.Macro_Record_Quick_1: Execute_Macro_Record_Quick(1); break;
+				case NECommand.Macro_Record_Quick_2: Execute_Macro_Record_Quick(2); break;
+				case NECommand.Macro_Record_Quick_3: Execute_Macro_Record_Quick(3); break;
+				case NECommand.Macro_Record_Quick_4: Execute_Macro_Record_Quick(4); break;
+				case NECommand.Macro_Record_Quick_5: Execute_Macro_Record_Quick(5); break;
+				case NECommand.Macro_Record_Quick_6: Execute_Macro_Record_Quick(6); break;
+				case NECommand.Macro_Record_Quick_7: Execute_Macro_Record_Quick(7); break;
+				case NECommand.Macro_Record_Quick_8: Execute_Macro_Record_Quick(8); break;
+				case NECommand.Macro_Record_Quick_9: Execute_Macro_Record_Quick(9); break;
+				case NECommand.Macro_Record_Quick_10: Execute_Macro_Record_Quick(10); break;
+				case NECommand.Macro_Record_Quick_11: Execute_Macro_Record_Quick(11); break;
+				case NECommand.Macro_Record_Quick_12: Execute_Macro_Record_Quick(12); break;
+				case NECommand.Macro_Record_Record: Execute_Macro_Record_Record(); break;
+				case NECommand.Macro_Record_StopRecording: Execute_Macro_Record_StopRecording(); break;
+				case NECommand.Macro_Append_Quick_1: Execute_Macro_Append_Quick(1); break;
+				case NECommand.Macro_Append_Quick_2: Execute_Macro_Append_Quick(2); break;
+				case NECommand.Macro_Append_Quick_3: Execute_Macro_Append_Quick(3); break;
+				case NECommand.Macro_Append_Quick_4: Execute_Macro_Append_Quick(4); break;
+				case NECommand.Macro_Append_Quick_5: Execute_Macro_Append_Quick(5); break;
+				case NECommand.Macro_Append_Quick_6: Execute_Macro_Append_Quick(6); break;
+				case NECommand.Macro_Append_Quick_7: Execute_Macro_Append_Quick(7); break;
+				case NECommand.Macro_Append_Quick_8: Execute_Macro_Append_Quick(8); break;
+				case NECommand.Macro_Append_Quick_9: Execute_Macro_Append_Quick(9); break;
+				case NECommand.Macro_Append_Quick_10: Execute_Macro_Append_Quick(10); break;
+				case NECommand.Macro_Append_Quick_11: Execute_Macro_Append_Quick(11); break;
+				case NECommand.Macro_Append_Quick_12: Execute_Macro_Append_Quick(12); break;
+				case NECommand.Macro_Append_Append: Execute_Macro_Append_Append(); break;
+				case NECommand.Macro_Play_Quick_1: Execute_Macro_Play_Quick(1); break;
+				case NECommand.Macro_Play_Quick_2: Execute_Macro_Play_Quick(2); break;
+				case NECommand.Macro_Play_Quick_3: Execute_Macro_Play_Quick(3); break;
+				case NECommand.Macro_Play_Quick_4: Execute_Macro_Play_Quick(4); break;
+				case NECommand.Macro_Play_Quick_5: Execute_Macro_Play_Quick(5); break;
+				case NECommand.Macro_Play_Quick_6: Execute_Macro_Play_Quick(6); break;
+				case NECommand.Macro_Play_Quick_7: Execute_Macro_Play_Quick(7); break;
+				case NECommand.Macro_Play_Quick_8: Execute_Macro_Play_Quick(8); break;
+				case NECommand.Macro_Play_Quick_9: Execute_Macro_Play_Quick(9); break;
+				case NECommand.Macro_Play_Quick_10: Execute_Macro_Play_Quick(10); break;
+				case NECommand.Macro_Play_Quick_11: Execute_Macro_Play_Quick(11); break;
+				case NECommand.Macro_Play_Quick_12: Execute_Macro_Play_Quick(12); break;
+				case NECommand.Macro_Play_Play: Execute_Macro_Play_Play(); break;
+				case NECommand.Macro_Play_Repeat: Execute_Macro_Play_Repeat(); break;
+				case NECommand.Macro_Play_PlayOnCopiedFiles: Execute_Macro_Play_PlayOnCopiedFiles(); break;
 				case NECommand.Macro_Open_Quick_1: Execute_Macro_Open_Quick(1); break;
 				case NECommand.Macro_Open_Quick_2: Execute_Macro_Open_Quick(2); break;
 				case NECommand.Macro_Open_Quick_3: Execute_Macro_Open_Quick(3); break;
@@ -342,37 +352,6 @@ namespace NeoEdit.Program
 		//public bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
 		//{
 		//	Tabs.ForEach(textEditor => textEditor.DragFiles = null);
-
-		//	switch (command)
-		//	{
-		//	}
-
-		//	try
-		//	{
-		//		var preResult = default(object);
-		//		foreach (var textEditor in ActiveTabs.ToList())
-		//			textEditor.PreHandleCommand(command, ref preResult);
-
-		//		foreach (var textEditor in ActiveTabs.ToList())
-		//			textEditor.HandleCommand(command, shiftDown, dialogResult, multiStatus, preResult);
-		//		if (newClipboard != null)
-		//			NEClipboard.Current = newClipboard;
-		//		SetupNewKeys();
-		//	}
-		//	catch (OperationCanceledException) { }
-		//	finally
-		//	{
-		//		clipboard = null;
-		//		newClipboard = null;
-
-		//		for (var ctr = 0; ctr < keysAndValues.Count; ++ctr)
-		//			keysAndValuesLookup[ctr] = null;
-		//		keysHashLookup = null;
-		//		newKeysAndValues = null;
-		//		savedAnswers.Clear();
-		//	}
-
-		//	return true;
 		//}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -392,9 +371,9 @@ namespace NeoEdit.Program
 			if (key == Key.System)
 				key = e.SystemKey;
 
-			var state = new ExecuteState(NECommand.Internal_Key) { ConfigureExecuteData = key };
+			var state = new ExecuteState(NECommand.Internal_Key) { Key = key };
 			HandleCommand(state);
-			e.Handled = state.IsValid;
+			e.Handled = !state.Unhandled;
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)
@@ -409,7 +388,7 @@ namespace NeoEdit.Program
 			if (e.Source is MenuItem)
 				return;
 
-			HandleCommand(new ExecuteState(NECommand.Internal_Text) { ConfigureExecuteData = e.Text });
+			HandleCommand(new ExecuteState(NECommand.Internal_Text) { Text = e.Text });
 			e.Handled = true;
 		}
 

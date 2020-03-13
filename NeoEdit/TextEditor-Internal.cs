@@ -157,7 +157,7 @@ namespace NeoEdit.Program
 
 		void PreExecute_Internal_Key()
 		{
-			switch ((Key)state.ConfigureExecuteData)
+			switch (state.Key)
 			{
 				case Key.Back:
 				case Key.Delete:
@@ -170,11 +170,10 @@ namespace NeoEdit.Program
 
 		void Execute_Internal_Key()
 		{
-			var oldState = state.IsValid;
-			state.IsValid = true;
+			var oldUnhandled = state.Unhandled;
+			state.Unhandled = false;
 
-			var key = (Key)state.ConfigureExecuteData;
-			switch (key)
+			switch (state.Key)
 			{
 				case Key.Back:
 				case Key.Delete:
@@ -192,12 +191,12 @@ namespace NeoEdit.Program
 
 							if (state.ControlDown)
 							{
-								if (key == Key.Back)
+								if (state.Key == Key.Back)
 									position = GetPrevWord(position);
 								else
 									position = GetNextWord(position);
 							}
-							else if ((state.ShiftDown) && (key == Key.Delete))
+							else if ((state.ShiftDown) && (state.Key == Key.Delete))
 							{
 								var line = TextView.GetPositionLine(position);
 								position = TextView.GetPosition(line, 0);
@@ -208,7 +207,7 @@ namespace NeoEdit.Program
 								var line = TextView.GetPositionLine(position);
 								var index = TextView.GetPositionIndex(position, line);
 
-								if (key == Key.Back)
+								if (state.Key == Key.Back)
 									--index;
 								else
 									++index;
@@ -280,12 +279,12 @@ namespace NeoEdit.Program
 				case Key.Up:
 				case Key.Down:
 					{
-						var mult = key == Key.Up ? -1 : 1;
+						var mult = state.Key == Key.Up ? -1 : 1;
 						if (!state.ControlDown)
 							Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, mult, 0, state.ShiftDown)).ToList();
 						else if (!state.ShiftDown)
 							YScrollValue += mult;
-						else if (key == Key.Down)
+						else if (state.Key == Key.Down)
 							BlockSelDown();
 						else
 							BlockSelUp();
@@ -398,10 +397,10 @@ namespace NeoEdit.Program
 				case Key.Enter:
 					Execute_Internal_Text();
 					break;
-				default: state.IsValid = oldState; break;
+				default: state.Unhandled = oldUnhandled; break;
 			}
 		}
 
-		void Execute_Internal_Text() => ReplaceSelections(state.ConfigureExecuteData as string, false, tryJoinUndo: true);
+		void Execute_Internal_Text() => ReplaceSelections(state.Text, false, tryJoinUndo: true);
 	}
 }

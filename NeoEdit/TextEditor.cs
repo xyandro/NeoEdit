@@ -1263,7 +1263,7 @@ namespace NeoEdit.Program
 
 		void EnsureVisible(bool a = true, bool b = true) { }
 
-		NEVariables GetVariables()
+		public NEVariables GetVariables()
 		{
 			// Can't access DependencyProperties/clipboard from other threads; grab a copy:
 			var results = new NEVariables();

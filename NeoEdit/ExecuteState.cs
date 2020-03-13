@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
 	public class ExecuteState
 	{
-		IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> ClipboardDataMap;
+		[XMLConverter.NoXML] IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> ClipboardDataMap;
 		public Func<IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>>> ClipboardDataMapFunc;
 
-		IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
+		[XMLConverter.NoXML] IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
 		public Func<int, IReadOnlyDictionary<TextEditor, KeysAndValues>> KeysAndValuesFunc;
+
+		[XMLConverter.NoXML] public AnswerResult SavedAnswers = new AnswerResult();
 
 		public NECommand Command;
 		public object PreExecuteData;
@@ -20,8 +24,9 @@ namespace NeoEdit.Program
 		public bool ControlDown;
 		public bool AltDown;
 		public bool? MultiStatus;
-		public AnswerResult SavedAnswers = new AnswerResult();
-		public bool IsValid;
+		public bool Unhandled;
+		public Key Key;
+		public string Text;
 
 		public ExecuteState(NECommand command) => Command = command;
 
