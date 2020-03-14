@@ -237,6 +237,8 @@ namespace NeoEdit.Program
 
 		void Execute_File_Operations_CommandPrompt() => Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = Path.GetDirectoryName(FileName) });
 
+		void Execute_File_Operations_DragDrop() => ChangedDragFiles = new List<string> { FileName };
+
 		void Execute_File_Operations_VCSDiff()
 		{
 			//TODO

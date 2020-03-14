@@ -933,7 +933,7 @@ namespace NeoEdit.Program
 			var strs = RelativeSelectedFiles();
 			if (!StringsAreFiles(strs))
 				throw new Exception("Selections must be files.");
-			DragFiles = strs;
+			ChangedDragFiles = strs;
 		}
 
 		void Execute_Files_Operations_Explore()

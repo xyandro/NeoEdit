@@ -597,6 +597,7 @@ namespace NeoEdit.Program
 				case NECommand.File_Operations_Delete: Execute_File_Operations_Delete(); break;
 				case NECommand.File_Operations_Explore: Execute_File_Operations_Explore(); break;
 				case NECommand.File_Operations_CommandPrompt: Execute_File_Operations_CommandPrompt(); break;
+				case NECommand.File_Operations_DragDrop: Execute_File_Operations_DragDrop(); break;
 				case NECommand.File_Operations_VCSDiff: Execute_File_Operations_VCSDiff(); break;
 				case NECommand.File_Operations_SetDisplayName: Execute_File_Operations_SetDisplayName(); break;
 				case NECommand.File_Close: Execute_File_Close(); break;
@@ -619,6 +620,8 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Paste_RotatePaste: Execute_Edit_Paste_Paste(true, true); break;
 				case NECommand.Edit_Find_Find: Execute_Edit_Find_Find(); break;
 				case NECommand.Edit_Find_RegexReplace: Execute_Edit_Find_RegexReplace(); break;
+				case NECommand.Edit_Expression_Expression: Execute_Edit_Expression_Expression(); break;
+				case NECommand.Edit_Expression_EvaluateSelected: Execute_Edit_Expression_EvaluateSelected(); break;
 				case NECommand.Edit_CopyDown: Execute_Edit_CopyDown(); break;
 				case NECommand.Edit_Rotate: Execute_Edit_Rotate(); break;
 				case NECommand.Edit_Repeat: Execute_Edit_Repeat(); break;
@@ -937,8 +940,6 @@ namespace NeoEdit.Program
 				case NECommand.Files_Operations_Encoding: Execute_Files_Operations_Encoding(); break;
 				case NECommand.Files_Operations_SplitFile: Execute_Files_Operations_SplitFile(); break;
 				case NECommand.Files_Operations_CombineFiles: Execute_Files_Operations_CombineFiles(); break;
-				case NECommand.Edit_Expression_Expression: Execute_Edit_Expression_Expression(); break;
-				case NECommand.Edit_Expression_EvaluateSelected: Execute_Edit_Expression_EvaluateSelected(); break;
 				case NECommand.Text_Select_Trim: Execute_Text_Select_Trim(); break;
 				case NECommand.Text_Select_ByWidth: Execute_Text_Select_ByWidth(); break;
 				case NECommand.Text_Select_WholeWord: Execute_Text_Select_WholeBoundedWord(true); break;
@@ -1649,8 +1650,6 @@ namespace NeoEdit.Program
 			}
 			Selections = new List<Range> { new Range(pos) };
 		}
-
-		public List<string> DragFiles { get; set; }
 
 		string savedBitmapText;
 		System.Drawing.Bitmap savedBitmap;

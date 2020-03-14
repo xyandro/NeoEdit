@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -219,7 +220,6 @@ namespace NeoEdit.Program
 				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;
 				case NECommand.File_Open_Open: Execute_File_Open_Open(state.Configuration as OpenFileDialogResult); break;
 				case NECommand.File_Open_CopiedCut: Execute_File_Open_CopiedCut(); break;
-				case NECommand.File_Operations_DragDrop: Execute_File_Operations_DragDrop(); break;
 				case NECommand.File_MoveToNewWindow: Execute_File_MoveToNewWindow(); break;
 				case NECommand.File_Shell_Integrate: Execute_File_Shell_Integrate(); break;
 				case NECommand.File_Shell_Unintegrate: Execute_File_Shell_Unintegrate(); break;
@@ -333,12 +333,14 @@ namespace NeoEdit.Program
 				if (newKeysAndValues.Any())
 					keysAndValues[kvIndex] = newKeysAndValues;
 			}
-		}
 
-		//public bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
-		//{
-		//	Tabs.ForEach(textEditor => textEditor.DragFiles = null);
-		//}
+			var dragFiles = Tabs.SelectMany(tab => tab.ChangedDragFiles.NonNullOrWhiteSpace()).ToList();
+			var nonExisting = dragFiles.Where(x => !File.Exists(x)).ToList();
+			if (nonExisting.Any())
+				throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
+			// TODO: Make these files actually do something
+			//Focused.DragFiles = fileNames;
+		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{

@@ -79,19 +79,6 @@ namespace NeoEdit.Program
 				AddTextEditor(new TextEditor(file));
 		}
 
-		void Execute_File_Operations_DragDrop()
-		{
-			if (Focused == null)
-				throw new Exception("No active file");
-			var fileNames = ActiveTabs.Select(te => te.FileName).NonNullOrEmpty().ToList();
-			if (!fileNames.Any())
-				throw new Exception("No current files have filenames.");
-			var nonExisting = fileNames.Where(x => !File.Exists(x));
-			if (nonExisting.Any())
-				throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
-			Focused.DragFiles = fileNames;
-		}
-
 		void Execute_File_MoveToNewWindow()
 		{
 			var active = ActiveTabs.ToList();

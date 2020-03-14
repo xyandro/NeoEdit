@@ -181,6 +181,8 @@ namespace NeoEdit.Program
 
 		public Tuple<IReadOnlyList<string>, bool?> ChangedClipboardData { get; private set; }
 
+		public IReadOnlyList<string> ChangedDragFiles { get; private set; }
+
 		bool oldAutoRefresh, newAutoRefresh;
 		public bool AutoRefresh
 		{
@@ -471,6 +473,7 @@ namespace NeoEdit.Program
 			newClipboardData = ChangedClipboardData = null;
 			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
+			ChangedDragFiles = null;
 		}
 
 		public void Rollback()
