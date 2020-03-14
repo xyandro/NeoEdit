@@ -159,22 +159,7 @@ namespace NeoEdit.Program
 				ReplaceSelections("");
 		}
 
-		void PreExecute_Edit_Paste_Paste()
-		{
-			// We want to paste OneWithMany if all Selections.Count == 1 (Item1) and any Clipboard.Count != 1 (Item2)
-
-			if (state.PreExecuteData == null)
-				state.PreExecuteData = Tuple.Create(true, false);
-			var doOneWithMany = (Tuple<bool, bool>)state.PreExecuteData;
-			if (doOneWithMany.Item1)
-			{
-				if (Selections.Count != 1)
-					doOneWithMany = Tuple.Create(false, false);
-				else if ((!doOneWithMany.Item2) && (Clipboard.Count != 1))
-					doOneWithMany = Tuple.Create(true, true);
-			}
-			state.PreExecuteData = doOneWithMany;
-		}
+		object Configure_Edit_Paste_Paste() => (state.ActiveTabs.All(tab => tab.Selections.Count == 1)) && (state.ActiveTabs.Any(tab => tab.Clipboard.Count != 1));
 
 		void Execute_Edit_Paste_Paste(bool highlight, bool rotate)
 		{
@@ -182,8 +167,7 @@ namespace NeoEdit.Program
 			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
 				return;
 
-			var doOneWithMany = (Tuple<bool, bool>)state.PreExecuteData;
-			if ((doOneWithMany.Item1) && (doOneWithMany.Item2))
+			if ((bool)state.Configuration)
 			{
 				ReplaceOneWithMany(clipboardStrings, null);
 				return;

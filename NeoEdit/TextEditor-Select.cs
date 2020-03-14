@@ -358,43 +358,53 @@ namespace NeoEdit.Program
 			Selections = strs.Select(tuple => Selections[tuple.Item2]).ToList();
 		}
 
-		void PreExecute_Select_Repeats_Tabs_MatchMismatch(bool caseSensitive)
+		object Configure_Select_Repeats_Tabs_MatchMismatch(bool caseSensitive)
 		{
-			var strs = GetSelectionStrings();
-			var matches = state.PreExecuteData as List<string> ?? strs;
-			while (matches.Count < strs.Count)
-				matches.Add(null);
-			while (strs.Count < matches.Count)
-				strs.Add(null);
+			List<string> result = null;
+			foreach (var tab in state.ActiveTabs)
+			{
+				var strs = tab.GetSelectionStrings();
+				var matches = result ?? strs;
+				while (matches.Count < strs.Count)
+					matches.Add(null);
+				while (strs.Count < matches.Count)
+					strs.Add(null);
 
-			var stringComparison = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
-			for (var ctr = 0; ctr < matches.Count; ++ctr)
-				if ((matches[ctr] != null) && (!string.Equals(matches[ctr], strs[ctr], stringComparison)))
-					matches[ctr] = null;
+				var stringComparison = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+				for (var ctr = 0; ctr < matches.Count; ++ctr)
+					if ((matches[ctr] != null) && (!string.Equals(matches[ctr], strs[ctr], stringComparison)))
+						matches[ctr] = null;
 
-			state.PreExecuteData = matches;
+				result = matches;
+			}
+			return result;
 		}
 
 		void Execute_Select_Repeats_Tabs_MatchMismatch(bool match)
 		{
-			var matches = state.PreExecuteData as List<string>;
+			var matches = state.Configuration as List<string>;
 			Selections = Selections.Where((range, index) => (matches[index] != null) == match).ToList();
 		}
 
-		void PreExecute_Select_Repeats_Tabs_CommonNonCommon(bool caseSensitive)
+		object Configure_Select_Repeats_Tabs_CommonNonCommon(bool caseSensitive)
 		{
+			Dictionary<string, int> result = null;
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
-			var repeats = Selections.AsParallel().GroupBy(Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
+			foreach (var tab in state.ActiveTabs)
+			{
+				var repeats = tab.Selections.AsParallel().GroupBy(tab.Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
 
-			if (state.PreExecuteData != null)
-				repeats = repeats.Join(state.PreExecuteData as Dictionary<string, int>, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);
+				if (result != null)
+					repeats = repeats.Join(result, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);
 
-			state.PreExecuteData = repeats;
+				result = repeats;
+			}
+			return result;
 		}
 
 		void Execute_Select_Repeats_Tabs_CommonNonCommon(bool match)
 		{
-			var repeats = state.PreExecuteData as Dictionary<string, int>;
+			var repeats = state.Configuration as Dictionary<string, int>;
 			repeats = repeats.ToDictionary(pair => pair.Key, pair => pair.Value, repeats.Comparer);
 			Selections = Selections.Where(range =>
 			{
@@ -422,17 +432,11 @@ namespace NeoEdit.Program
 
 		void Execute_Select_Selection_Center() => EnsureVisible(true, true);
 
-		void PreExecute_Select_Selection_ToggleAnchor()
-		{
-			if (state.PreExecuteData == null)
-				state.PreExecuteData = false;
-			if ((!(bool)state.PreExecuteData) && (Selections.Any(range => range.Anchor > range.Cursor)))
-				state.PreExecuteData = true;
-		}
+		object Configure_Select_Selection_ToggleAnchor() => state.ActiveTabs.Any(tab => tab.Selections.Any(range => range.Anchor > range.Cursor));
 
 		void Execute_Select_Selection_ToggleAnchor()
 		{
-			var anchorStart = (bool)state.PreExecuteData;
+			var anchorStart = (bool)state.Configuration;
 			Selections = Selections.Select(range => new Range(anchorStart ? range.End : range.Start, anchorStart ? range.Start : range.End)).ToList();
 		}
 

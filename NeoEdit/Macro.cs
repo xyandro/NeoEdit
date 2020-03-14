@@ -40,7 +40,6 @@ namespace NeoEdit.Program
 			// Only save relevant fields
 			state = new ExecuteState(state.Command)
 			{
-				PreExecuteData = state.PreExecuteData,
 				Configuration = state.Configuration,
 				ShiftDown = state.ShiftDown,
 				ControlDown = state.ControlDown,

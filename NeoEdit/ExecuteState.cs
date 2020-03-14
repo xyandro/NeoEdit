@@ -15,7 +15,6 @@ namespace NeoEdit.Program
 		public bool Handled = true;
 
 		public NECommand Command;
-		public object PreExecuteData;
 		public object Configuration;
 		public bool ShiftDown;
 		public bool ControlDown;

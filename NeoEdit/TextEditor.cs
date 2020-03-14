@@ -430,32 +430,12 @@ namespace NeoEdit.Program
 		}
 		#endregion
 
-		#region PreExecute
-		public void PreExecute()
-		{
-			switch (state.Command)
-			{
-				case NECommand.Internal_Key: PreExecute_Internal_Key(); break;
-				case NECommand.Edit_Paste_Paste: PreExecute_Edit_Paste_Paste(); break;
-				case NECommand.Edit_Paste_RotatePaste: PreExecute_Edit_Paste_Paste(); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: PreExecute_Select_Repeats_Tabs_MatchMismatch(true); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: PreExecute_Select_Repeats_Tabs_MatchMismatch(true); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: PreExecute_Select_Repeats_Tabs_MatchMismatch(false); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: PreExecute_Select_Repeats_Tabs_MatchMismatch(false); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: PreExecute_Select_Repeats_Tabs_CommonNonCommon(true); break;
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: PreExecute_Select_Repeats_Tabs_CommonNonCommon(true); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: PreExecute_Select_Repeats_Tabs_CommonNonCommon(false); break;
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: PreExecute_Select_Repeats_Tabs_CommonNonCommon(false); break;
-				case NECommand.Select_Selection_ToggleAnchor: PreExecute_Select_Selection_ToggleAnchor(); break;
-			}
-		}
-		#endregion
-
 		#region Configure
 		public object Configure()
 		{
 			switch (state.Command)
 			{
+				case NECommand.Internal_Key: return Configure_Internal_Key();
 				case NECommand.File_Save_SaveAsByExpression: return Configure_File_SaveCopy_SaveCopyByExpression();
 				case NECommand.File_Copy_CopyToByExpression: return Configure_File_SaveCopy_SaveCopyByExpression();
 				case NECommand.File_Operations_RenameByExpression: return Configure_File_Operations_RenameByExpression();
@@ -464,8 +444,11 @@ namespace NeoEdit.Program
 				case NECommand.File_Encoding_ReopenWithEncoding: return Configure_File_Encoding_ReopenWithEncoding();
 				case NECommand.File_Encoding_LineEndings: return Configure_File_Encoding_LineEndings();
 				case NECommand.File_Encrypt: return Configure_File_Encrypt();
+				case NECommand.Edit_Paste_Paste: return Configure_Edit_Paste_Paste();
+				case NECommand.Edit_Paste_RotatePaste: return Configure_Edit_Paste_Paste();
 				case NECommand.Edit_Find_Find: return Configure_Edit_Find_Find();
 				case NECommand.Edit_Find_RegexReplace: return Configure_Edit_Find_RegexReplace();
+				case NECommand.Edit_Expression_Expression: return Configure_Edit_Expression_Expression();
 				case NECommand.Edit_Rotate: return Configure_Edit_Rotate();
 				case NECommand.Edit_Repeat: return Configure_Edit_Repeat();
 				case NECommand.Edit_Data_Hash: return Configure_Edit_Data_Hash();
@@ -477,7 +460,6 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Sort: return Configure_Edit_Sort();
 				case NECommand.Edit_Convert: return Configure_Edit_Convert();
 				case NECommand.Edit_ModifyRegions: return Configure_Edit_ModifyRegions();
-				//TODO
 				//case NECommand.Diff_IgnoreCharacters: Command_Diff_IgnoreCharacters_Dialog(); break;
 				//case NECommand.Diff_Fix_Whitespace: Command_Diff_Fix_Whitespace_Dialog(); break;
 				case NECommand.Files_Name_MakeAbsolute: return Configure_Files_Name_MakeAbsolute();
@@ -500,7 +482,6 @@ namespace NeoEdit.Program
 				case NECommand.Files_Operations_Encoding: return Configure_Files_Operations_Encoding();
 				case NECommand.Files_Operations_SplitFile: return Configure_Files_Operations_SplitFile();
 				case NECommand.Files_Operations_CombineFiles: return Configure_Files_Operations_CombineFiles();
-				case NECommand.Edit_Expression_Expression: return Configure_Edit_Expression_Expression();
 				case NECommand.Text_Select_Trim: return Configure_Text_Select_Trim();
 				case NECommand.Text_Select_ByWidth: return Configure_Text_Select_ByWidth();
 				case NECommand.Text_Select_WholeWord: return Configure_Text_Select_WholeBoundedWord(true);
@@ -565,8 +546,17 @@ namespace NeoEdit.Program
 				case NECommand.Database_Examine: return Configure_Database_Examine();
 				case NECommand.Select_Limit: return Configure_Select_Limit();
 				case NECommand.Select_RepeatsCaseSensitive_ByCount: return Configure_Select_Repeats_ByCount();
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: return Configure_Select_Repeats_Tabs_MatchMismatch(true);
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: return Configure_Select_Repeats_Tabs_MatchMismatch(true);
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: return Configure_Select_Repeats_Tabs_CommonNonCommon(true);
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: return Configure_Select_Repeats_Tabs_CommonNonCommon(true);
 				case NECommand.Select_RepeatsCaseInsensitive_ByCount: return Configure_Select_Repeats_ByCount();
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: return Configure_Select_Repeats_Tabs_MatchMismatch(false);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: return Configure_Select_Repeats_Tabs_MatchMismatch(false);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: return Configure_Select_Repeats_Tabs_CommonNonCommon(false);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: return Configure_Select_Repeats_Tabs_CommonNonCommon(false);
 				case NECommand.Select_Split: return Configure_Select_Split();
+				case NECommand.Select_Selection_ToggleAnchor: return Configure_Select_Selection_ToggleAnchor();
 				default: return ExecuteState.ConfigureUnnecessary;
 			}
 		}
@@ -854,7 +844,6 @@ namespace NeoEdit.Program
 				case NECommand.Edit_Navigate_JumpBy_Words: Execute_Edit_Navigate_JumpBy(JumpByType.Words); break;
 				case NECommand.Edit_Navigate_JumpBy_Numbers: Execute_Edit_Navigate_JumpBy(JumpByType.Numbers); break;
 				case NECommand.Edit_Navigate_JumpBy_Paths: Execute_Edit_Navigate_JumpBy(JumpByType.Paths); break;
-				//TODO
 				//case NECommand.Diff_Selections: Command_Diff_Selections(); break;
 				//case NECommand.Diff_SelectedFiles: Command_Diff_SelectedFiles(); break;
 				//case NECommand.Diff_VCSNormalFiles: Command_Diff_Diff_VCSNormalFiles(); break;
@@ -1194,7 +1183,6 @@ namespace NeoEdit.Program
 				case NECommand.Select_Selection_Remove: Execute_Select_Selection_Remove(); break;
 				case NECommand.Select_Selection_RemoveBeforeCurrent: Execute_Select_Selection_RemoveBeforeCurrent(); break;
 				case NECommand.Select_Selection_RemoveAfterCurrent: Execute_Select_Selection_RemoveAfterCurrent(); break;
-				//TODO
 				//case NECommand.Macro_RepeatLastAction: Command_Macro_RepeatLastAction(); break;
 				//case NECommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 				case NECommand.Window_TabIndex: Execute_Window_TabIndex(false); break;

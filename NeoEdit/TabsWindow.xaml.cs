@@ -153,7 +153,7 @@ namespace NeoEdit.Program
 					state.ShiftDown = shiftDown;
 					state.ControlDown = controlDown;
 					state.AltDown = altDown;
-					PreExecute(state);
+
 					state.Configuration = Configure(state);
 
 					if (state.Configuration == null)
@@ -182,18 +182,11 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void PreExecute(ExecuteState state)
-		{
-			switch (state.Command)
-			{
-				case NECommand.Internal_Key: state.Handled = false; break;
-			}
-
-			ActiveTabs.ForEach(tab => tab.PreExecute());
-		}
-
 		object Configure(ExecuteState state)
 		{
+			if (state.Command == NECommand.Internal_Key)
+				state.Handled = false;
+
 			switch (state.Command)
 			{
 				case NECommand.File_Open_Open: return Configure_File_Open_Open();

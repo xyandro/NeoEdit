@@ -155,7 +155,7 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void PreExecute_Internal_Key()
+		object Configure_Internal_Key()
 		{
 			switch (state.Key)
 			{
@@ -163,8 +163,8 @@ namespace NeoEdit.Program
 				case Key.Delete:
 				case Key.Left:
 				case Key.Right:
-					state.PreExecuteData = (state.PreExecuteData as bool? ?? false) || (Selections.Any(range => range.HasSelection));
-					break;
+					return state.ActiveTabs.Any(tab => tab.Selections.Any(range => range.HasSelection));
+				default: return ExecuteState.ConfigureUnnecessary;
 			}
 		}
 
@@ -178,7 +178,7 @@ namespace NeoEdit.Program
 				case Key.Back:
 				case Key.Delete:
 					{
-						if ((bool)state.PreExecuteData)
+						if ((bool)state.Configuration)
 						{
 							ReplaceSelections("");
 							break;
@@ -252,7 +252,7 @@ namespace NeoEdit.Program
 						{
 							var line = TextView.GetPositionLine(range.Cursor);
 							var index = TextView.GetPositionIndex(range.Cursor, line);
-							if ((!state.ShiftDown) && ((bool)state.PreExecuteData))
+							if ((!state.ShiftDown) && ((bool)state.Configuration))
 								return new Range(range.Start);
 							else if ((index == 0) && (line != 0))
 								return MoveCursor(range, -1, int.MaxValue, state.ShiftDown, indexRel: false);
@@ -267,7 +267,7 @@ namespace NeoEdit.Program
 						{
 							var line = TextView.GetPositionLine(range.Cursor);
 							var index = TextView.GetPositionIndex(range.Cursor, line);
-							if ((!state.ShiftDown) && ((bool)state.PreExecuteData))
+							if ((!state.ShiftDown) && ((bool)state.Configuration))
 								return new Range(range.End);
 							else if ((index == TextView.GetLineLength(line)) && (line != TextView.NumLines - 1))
 								return MoveCursor(range, 1, 0, state.ShiftDown, indexRel: false);
