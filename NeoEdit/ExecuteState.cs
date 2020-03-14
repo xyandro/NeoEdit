@@ -23,7 +23,7 @@ namespace NeoEdit.Program
 		public bool ControlDown;
 		public bool AltDown;
 		public bool? MultiStatus;
-		public bool Unhandled;
+		public bool Handled = true;
 		public Key Key;
 		public string Text;
 

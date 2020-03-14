@@ -196,7 +196,7 @@ namespace NeoEdit.Program
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Key: state.Unhandled = true; break;
+				case NECommand.Internal_Key: state.Handled = false; break;
 			}
 
 			ActiveTabs.ForEach(tab => tab.PreExecute());
@@ -346,7 +346,7 @@ namespace NeoEdit.Program
 
 			var state = new ExecuteState(NECommand.Internal_Key) { Key = key };
 			HandleCommand(state);
-			e.Handled = !state.Unhandled;
+			e.Handled = state.Handled;
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)

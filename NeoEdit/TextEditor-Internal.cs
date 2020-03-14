@@ -170,8 +170,8 @@ namespace NeoEdit.Program
 
 		void Execute_Internal_Key()
 		{
-			var oldUnhandled = state.Unhandled;
-			state.Unhandled = false;
+			var oldHandled = state.Handled;
+			state.Handled = true;
 
 			switch (state.Key)
 			{
@@ -397,7 +397,7 @@ namespace NeoEdit.Program
 				case Key.Enter:
 					Execute_Internal_Text();
 					break;
-				default: state.Unhandled = oldUnhandled; break;
+				default: state.Handled = oldHandled; break;
 			}
 		}
 

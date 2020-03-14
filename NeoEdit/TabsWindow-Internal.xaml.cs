@@ -41,14 +41,14 @@ namespace NeoEdit.Program
 		{
 			if ((state.ControlDown) && (!state.AltDown))
 			{
-				var oldUnhandled = state.Unhandled;
-				state.Unhandled = false;
+				var oldHandled = state.Handled;
+				state.Handled = true;
 				switch (state.Key)
 				{
 					case Key.PageUp: MovePrev(); break;
 					case Key.PageDown: MoveNext(); break;
 					case Key.Tab: MoveTabOrder(); break;
-					default: state.Unhandled = oldUnhandled; break;
+					default: state.Handled = oldHandled; break;
 				}
 			}
 		}

@@ -34,7 +34,7 @@ namespace NeoEdit.Program
 
 		public void AddAction(ExecuteState state)
 		{
-			if (!(macroInclude[state.Command] ?? !state.Unhandled))
+			if (!(macroInclude[state.Command] ?? state.Handled))
 				return;
 
 			// Only save relevant fields
