@@ -61,7 +61,7 @@ namespace NeoEdit.Program
 
 		public TabsWindow(bool addEmpty = false)
 		{
-			oldTabs = newTabs = oldActiveTabs = newActiveTabs = new List<TextEditor>();
+			oldTabs = newTabs = oldActiveTabs = newActiveTabs = new List<Tab>();
 			oldRows = newRows = oldColumns = newColumns = 1;
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
@@ -92,7 +92,7 @@ namespace NeoEdit.Program
 			try { SetPosition(Settings.WindowPosition); } catch { }
 		}
 
-		public IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
+		public IReadOnlyDictionary<Tab, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
 		{
 			var empty = Tuple.Create(new List<string>() as IReadOnlyList<string>, default(bool?));
 			var clipboardDataMap = Tabs.ToDictionary(x => x, x => empty);
@@ -113,7 +113,7 @@ namespace NeoEdit.Program
 		}
 
 		IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
-		public Dictionary<TextEditor, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
+		public Dictionary<Tab, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
 		{
 			var empty = new KeysAndValues(new List<string>(), kvIndex == 0);
 			var keysAndValuesMap = Tabs.ToDictionary(x => x, x => empty);
@@ -131,7 +131,7 @@ namespace NeoEdit.Program
 			var fileList = e.Data.GetData("FileDrop") as string[];
 			if (fileList == null)
 				return;
-			fileList.ForEach(file => AddTextEditor(new TextEditor(file)));
+			fileList.ForEach(file => AddTab(new Tab(file)));
 			e.Handled = true;
 		}
 
@@ -254,7 +254,7 @@ namespace NeoEdit.Program
 			switch (state.Command)
 			{
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
-				case NECommand.Internal_AddTextEditor: Execute_Internal_AddTextEditor(state.Configuration as TextEditor); break;
+				case NECommand.Internal_AddTab: Execute_Internal_AddTab(state.Configuration as Tab); break;
 				case NECommand.Internal_Key: Execute_Internal_Key(state); break;
 				case NECommand.File_New_New: Execute_File_New_New(shiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
@@ -439,14 +439,14 @@ namespace NeoEdit.Program
 			MaxRows = maxRows;
 		}
 
-		public void AddTextEditor(TextEditor textEditor, int? index = null, bool canReplace = true)
+		public void AddTab(Tab tab, int? index = null, bool canReplace = true)
 		{
 			var tabs = Tabs.ToList();
-			var replace = (canReplace) && (!index.HasValue) && (!textEditor.Empty()) && (Focused != null) && (Focused.Empty()) ? Focused : default(TextEditor);
+			var replace = (canReplace) && (!index.HasValue) && (!tab.Empty()) && (Focused != null) && (Focused.Empty()) ? Focused : default(Tab);
 			if (replace != null)
-				tabs[tabs.IndexOf(replace)] = textEditor;
+				tabs[tabs.IndexOf(replace)] = tab;
 			else
-				tabs.Insert(index ?? tabs.Count, textEditor);
+				tabs.Insert(index ?? tabs.Count, tab);
 
 			Tabs = tabs;
 
@@ -454,35 +454,35 @@ namespace NeoEdit.Program
 			if (oldActiveTabs == newActiveTabs)
 				activeTabs.Clear();
 
-			activeTabs.Add(textEditor);
+			activeTabs.Add(tab);
 			ActiveTabs = activeTabs;
 		}
 
-		public void RemoveTextEditor(TextEditor textEditor, bool close = true)
+		public void RemoveTab(Tab tab, bool close = true)
 		{
-			Tabs = Tabs.Except(textEditor).ToList();
+			Tabs = Tabs.Except(tab).ToList();
 			if (close)
-				textEditor.Closed();
+				tab.Closed();
 			UpdateFocused(true);
 		}
 
-		public void AddDiff(TextEditor textEdit1, TextEditor textEdit2)
+		public void AddDiff(Tab tab1, Tab tab2)
 		{
 			//TODO
-			//if (textEdit1.ContentType == ParserType.None)
-			//	textEdit1.ContentType = textEdit2.ContentType;
-			//if (textEdit2.ContentType == ParserType.None)
-			//	textEdit2.ContentType = textEdit1.ContentType;
-			//AddTextEditor(textEdit1);
-			//AddTextEditor(textEdit2);
-			//textEdit1.DiffTarget = textEdit2;
+			//if (tab1.ContentType == ParserType.None)
+			//	tab1.ContentType = tab2.ContentType;
+			//if (tab2.ContentType == ParserType.None)
+			//	tab2.ContentType = tab1.ContentType;
+			//AddTab(tab1);
+			//AddTab(tab2);
+			//tab1.DiffTarget = tab2;
 			//SetLayout(maxColumns: 2);
 		}
 
 		public void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, ParserType contentType1 = ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, int? index1 = null, ShutdownData shutdownData1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, ParserType contentType2 = ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, int? index2 = null, ShutdownData shutdownData2 = null)
 		{
-			var te1 = new TextEditor(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, index1, shutdownData1);
-			var te2 = new TextEditor(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, index2, shutdownData2);
+			var te1 = new Tab(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, index1, shutdownData1);
+			var te2 = new Tab(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, index2, shutdownData2);
 			AddDiff(te1, te2);
 		}
 
@@ -492,25 +492,25 @@ namespace NeoEdit.Program
 			if (!ActiveTabs.Contains(focused))
 				focused = null;
 			if (focused == null)
-				focused = ActiveTabs.OrderByDescending(tab => tab.TextEditorOrder).FirstOrDefault();
+				focused = ActiveTabs.OrderByDescending(tab => tab.TabOrder).FirstOrDefault();
 			if ((focused == null) && (focusInactive))
-				focused = Tabs.OrderByDescending(tab => tab.TextEditorOrder).FirstOrDefault();
+				focused = Tabs.OrderByDescending(tab => tab.TabOrder).FirstOrDefault();
 			SetFocused(focused);
 		}
 
-		public bool TabIsActive(TextEditor textEditor) => ActiveTabs.Contains(textEditor);
+		public bool TabIsActive(Tab tab) => ActiveTabs.Contains(tab);
 
-		public int GetTabIndex(TextEditor textEditor, bool activeOnly = false)
+		public int GetTabIndex(Tab tab, bool activeOnly = false)
 		{
-			var index = (activeOnly ? ActiveTabs : Tabs).Indexes(x => x == textEditor).DefaultIfEmpty(-1).First();
+			var index = (activeOnly ? ActiveTabs : Tabs).Indexes(x => x == tab).DefaultIfEmpty(-1).First();
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;
 		}
 
-		void SetFocused(TextEditor textEditorData, bool deselectOthers = false)
+		void SetFocused(Tab tab, bool deselectOthers = false)
 		{
-			Focused = textEditorData;
+			Focused = tab;
 		}
 
 		void MovePrev()
@@ -541,7 +541,7 @@ namespace NeoEdit.Program
 		{
 			if (Focused == null)
 				return;
-			var ordering = Tabs.OrderBy(textEditor => textEditor.TextEditorOrder).ToList();
+			var ordering = Tabs.OrderBy(tab => tab.TabOrder).ToList();
 			var current = ordering.IndexOf(Focused) - 1;
 			if (current == -2) // Not found
 				return;
@@ -550,13 +550,13 @@ namespace NeoEdit.Program
 			SetFocused(ordering[current], !shiftDown);
 		}
 
-		bool HandleClick(TextEditor textEditor)
+		bool HandleClick(Tab tab)
 		{
 			if (!shiftDown)
-				ActiveTabs = new List<TextEditor> { textEditor };
-			else if (Focused != textEditor)
+				ActiveTabs = new List<Tab> { tab };
+			else if (Focused != tab)
 			{
-				SetFocused(textEditor);
+				SetFocused(tab);
 				return true;
 			}
 			return false;
@@ -566,9 +566,9 @@ namespace NeoEdit.Program
 		//protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
 		//{
 		//	for (var source = e.OriginalSource as FrameworkElement; source != null; source = source.Parent as FrameworkElement)
-		//		if (source is TextEditorData textEditor)
+		//		if (source is TabData tab)
 		//		{
-		//			if (HandleClick(textEditor))
+		//			if (HandleClick(tab))
 		//			{
 		//				e.Handled = true;
 		//				return;
@@ -578,15 +578,15 @@ namespace NeoEdit.Program
 		//	base.OnPreviewMouseLeftButtonDown(e);
 		//}
 
-		void OnDrop(DragEventArgs e, TextEditor toTextEditor)
+		void OnDrop(DragEventArgs e, Tab toTab)
 		{
 			//TODO
-			//var fromTabs = e.Data.GetData(typeof(List<TextEditor>)) as List<TextEditor>;
+			//var fromTabs = e.Data.GetData(typeof(List<Tab>)) as List<Tab>;
 			//if (fromTabs == null)
 			//	return;
 
-			//var toIndex = GetTabIndex(toTextEditor);
-			//fromTabs.ForEach(fromTextEditor => fromTextEditor.TabsParent.RemoveTextEditor(fromTextEditor));
+			//var toIndex = GetTabIndex(toTab);
+			//fromTabs.ForEach(fromTab => fromTab.TabsParent.RemoveTab(fromTab));
 
 			//if (toIndex == -1)
 			//	toIndex = Tabs.Count;
@@ -595,31 +595,31 @@ namespace NeoEdit.Program
 
 			//foreach (var fromTab in fromTabs)
 			//{
-			//	AddTextEditor(fromTab, toIndex);
+			//	AddTab(fromTab, toIndex);
 			//	++toIndex;
 			//	e.Handled = true;
 			//}
 		}
 
-		UIElement GetTabLabel(TextEditor textEditor)
+		UIElement GetTabLabel(Tab tab)
 		{
-			var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = textEditor };
-			border.MouseLeftButtonDown += (s, e) => HandleClick(textEditor);
+			var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = tab };
+			border.MouseLeftButtonDown += (s, e) => HandleClick(tab);
 			border.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
 					var active = ActiveTabs.ToList();
-					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<TextEditor>), active), DragDropEffects.Move);
+					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<Tab>), active), DragDropEffects.Move);
 				}
 			};
 
-			if (Focused == textEditor)
+			if (Focused == tab)
 			{
 				border.BorderBrush = FocusedWindowBorderBrush;
 				border.Background = FocusedWindowBackgroundBrush;
 			}
-			else if (ActiveTabs.Contains(textEditor))
+			else if (ActiveTabs.Contains(tab))
 			{
 				border.BorderBrush = ActiveWindowBorderBrush;
 				border.Background = ActiveWindowBackgroundBrush;
@@ -636,7 +636,7 @@ namespace NeoEdit.Program
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
 			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Foreground = Brushes.White, Margin = new Thickness(4, -4, 0, 0) };
-			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(TextEditor.TabLabel)) { Source = textEditor });
+			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(Tab.TabLabel)) { Source = tab });
 			Grid.SetRow(text, 0);
 			Grid.SetColumn(text, 0);
 			grid.Children.Add(text);
@@ -654,8 +654,8 @@ namespace NeoEdit.Program
 			};
 			closeButton.Click += (s, e) =>
 			{
-				if (textEditor.CanClose())
-					RemoveTextEditor(textEditor);
+				if (tab.CanClose())
+					RemoveTab(tab);
 			};
 			Grid.SetRow(closeButton, 0);
 			Grid.SetColumn(closeButton, 1);
@@ -673,7 +673,7 @@ namespace NeoEdit.Program
 			else
 				DoGridLayout();
 
-			Title = $"{(Focused == null ? "" : $"{Focused.FileName} - ")}NeoEdit Text Editor{(Helpers.IsAdministrator() ? " (Administrator)" : "")}{(ShowIndex ? $" - {WindowIndex}" : "")}";
+			Title = $"{(Focused == null ? "" : $"{Focused.FileName} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}{(ShowIndex ? $" - {WindowIndex}" : "")}";
 			SetStatusBarText();
 			SetMenuCheckboxes();
 		}
@@ -682,11 +682,11 @@ namespace NeoEdit.Program
 		{
 			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
 			statusBar.Items.Clear();
-			statusBar.Items.Add($"Active: {plural(ActiveTabs.Count(), "file")}, {plural(ActiveTabs.Sum(textEditor => textEditor.Selections.Count), "selection")}");
+			statusBar.Items.Add($"Active: {plural(ActiveTabs.Count(), "file")}, {plural(ActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Inactive: {plural(Tabs.Except(ActiveTabs).Count(), "file")}, {plural(Tabs.Except(ActiveTabs).Sum(textEditor => textEditor.Selections.Count), "selection")}");
+			statusBar.Items.Add($"Inactive: {plural(Tabs.Except(ActiveTabs).Count(), "file")}, {plural(Tabs.Except(ActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Total: {plural(Tabs.Count, "file")}, {plural(Tabs.Sum(textEditor => textEditor.Selections.Count), "selection")}");
+			statusBar.Items.Add($"Total: {plural(Tabs.Count, "file")}, {plural(Tabs.Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
 			statusBar.Items.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
 			statusBar.Items.Add(new Separator());
@@ -696,7 +696,7 @@ namespace NeoEdit.Program
 
 		void SetMenuCheckboxes()
 		{
-			bool? GetMultiStatus(Func<TextEditor, bool> func)
+			bool? GetMultiStatus(Func<Tab, bool> func)
 			{
 				var results = ActiveTabs.Select(func).Distinct().ToList();
 				if (results.Count != 1)
@@ -763,7 +763,7 @@ namespace NeoEdit.Program
 			foreach (var tab in Tabs)
 			{
 				var tabLabel = GetTabLabel(tab);
-				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as TextEditor);
+				tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as Tab);
 				stackPanel.Children.Add(tabLabel);
 			}
 
@@ -786,7 +786,7 @@ namespace NeoEdit.Program
 
 			if (Focused != null)
 			{
-				var content = new TextEditorWindow(Focused);
+				var content = new TabWindow(Focused);
 				Grid.SetRow(content, 1);
 				Grid.SetColumn(content, 0);
 				Grid.SetColumnSpan(content, 3);
@@ -839,18 +839,18 @@ namespace NeoEdit.Program
 				Canvas.SetLeft(border, ctr % columns.Value * width);
 				Canvas.SetTop(border, top);
 
-				var textEditor = new TextEditorWindow(Tabs[ctr]);
+				var tabWindow = new TabWindow(Tabs[ctr]);
 				var dockPanel = new DockPanel { AllowDrop = true };
 				dockPanel.Drop += (s, e) => OnDrop(e, Tabs[ctr]);
 				var tabLabel = GetTabLabel(Tabs[ctr]);
 				DockPanel.SetDock(tabLabel, Dock.Top);
 				dockPanel.Children.Add(tabLabel);
 				{
-					textEditor.SetValue(DockPanel.DockProperty, Dock.Bottom);
-					textEditor.FocusVisualStyle = null;
-					dockPanel.Children.Add(textEditor);
+					tabWindow.SetValue(DockPanel.DockProperty, Dock.Bottom);
+					tabWindow.FocusVisualStyle = null;
+					dockPanel.Children.Add(tabWindow);
 				}
-				textEditor.DrawAll();
+				tabWindow.DrawAll();
 
 				border.Child = dockPanel;
 
@@ -860,7 +860,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public void Move(TextEditor tab, int newIndex)
+		public void Move(Tab tab, int newIndex)
 		{
 			var oldIndex = GetTabIndex(tab);
 			if (oldIndex == -1)
@@ -889,7 +889,7 @@ namespace NeoEdit.Program
 		//			return;
 		//		}
 		//	}
-		//	Tabs.ToList().ForEach(textEditor => textEditor.Closed());
+		//	Tabs.ToList().ForEach(tab => tab.Closed());
 		//	base.OnClosing(e);
 
 		//	try { Settings.WindowPosition = GetPosition(); } catch { }

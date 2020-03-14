@@ -17,7 +17,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		async Task<bool> BinarySearchFileAsync(string fileName, BinarySearcher searcher, IProgress<ProgressReport> progress, CancellationToken cancel)
 		{

@@ -1,6 +1,6 @@
 ﻿namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		void Execute_Window_TabIndex(bool activeOnly)
 		{

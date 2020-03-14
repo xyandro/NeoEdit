@@ -10,12 +10,12 @@ using NeoEdit.Program.Highlighting;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditorWindow
+	partial class TabWindow
 	{
 		const double Spacing = 2;
 		static double LineHeight => Font.FontSize + Spacing;
 
-		public TextEditor TextEditor { get; } = new TextEditor();
+		public Tab Tab { get; } = new Tab();
 
 		static internal readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
 		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
@@ -38,7 +38,7 @@ namespace NeoEdit.Program
 		static internal readonly Brush highlightRowBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
 		static internal readonly Pen lightlightRowPen = new Pen(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 1);
 
-		static TextEditorWindow()
+		static TabWindow()
 		{
 			caretBrush.Freeze();
 			selectionBrush.Freeze();
@@ -51,9 +51,9 @@ namespace NeoEdit.Program
 			lightlightRowPen.Freeze();
 		}
 
-		internal TextEditorWindow(TextEditor TextEditorData)
+		internal TabWindow(Tab tab)
 		{
-			this.TextEditor = TextEditorData;
+			Tab = tab;
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
 			InitializeComponent();
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
@@ -74,13 +74,13 @@ namespace NeoEdit.Program
 			var yScrollValue = yScroll.Value;
 			xScroll.ViewportSize = canvas.ActualWidth / Font.CharWidth;
 			xScroll.Minimum = 0;
-			xScroll.Maximum = TextEditor.MaxColumn - Math.Floor(xScroll.ViewportSize);
+			xScroll.Maximum = Tab.MaxColumn - Math.Floor(xScroll.ViewportSize);
 			xScroll.SmallChange = 1;
 			xScroll.Value = Math.Max(xScroll.Minimum, Math.Min(xScrollValue, xScroll.Maximum));
 
 			yScroll.ViewportSize = canvas.ActualHeight / LineHeight;
 			yScroll.Minimum = 0;
-			yScroll.Maximum = TextEditor.NumLines - Math.Floor(yScroll.ViewportSize);
+			yScroll.Maximum = Tab.NumLines - Math.Floor(yScroll.ViewportSize);
 			yScroll.SmallChange = 1;
 			yScroll.Value = Math.Max(yScroll.Minimum, Math.Min(yScrollValue, yScroll.Maximum));
 
@@ -91,7 +91,7 @@ namespace NeoEdit.Program
 		{
 			statusBar.Items.Clear();
 
-			if (!TextEditor.Selections.Any())
+			if (!Tab.Selections.Any())
 			{
 				statusBar.Items.Add("Selection 0/0");
 				statusBar.Items.Add(new Separator());
@@ -103,17 +103,17 @@ namespace NeoEdit.Program
 			}
 			else
 			{
-				var range = TextEditor.Selections[TextEditor.CurrentSelection];
-				var lineMin = TextEditor.GetPositionLine(range.Start);
-				var lineMax = TextEditor.GetPositionLine(range.End);
-				var indexMin = TextEditor.GetPositionIndex(range.Start, lineMin);
-				var indexMax = TextEditor.GetPositionIndex(range.End, lineMax);
-				var columnMin = TextEditor.GetColumnFromIndex(lineMin, indexMin);
-				var columnMax = TextEditor.GetColumnFromIndex(lineMax, indexMax);
+				var range = Tab.Selections[Tab.CurrentSelection];
+				var lineMin = Tab.GetPositionLine(range.Start);
+				var lineMax = Tab.GetPositionLine(range.End);
+				var indexMin = Tab.GetPositionIndex(range.Start, lineMin);
+				var indexMax = Tab.GetPositionIndex(range.End, lineMax);
+				var columnMin = Tab.GetColumnFromIndex(lineMin, indexMin);
+				var columnMax = Tab.GetColumnFromIndex(lineMax, indexMax);
 				var posMin = range.Start;
 				var posMax = range.End;
 
-				statusBar.Items.Add($"Selection {TextEditor.CurrentSelection + 1:n0}/{TextEditor.Selections.Count:n0}");
+				statusBar.Items.Add($"Selection {Tab.CurrentSelection + 1:n0}/{Tab.Selections.Count:n0}");
 				statusBar.Items.Add(new Separator());
 				statusBar.Items.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
 				statusBar.Items.Add(new Separator());
@@ -123,22 +123,22 @@ namespace NeoEdit.Program
 			}
 
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Regions {string.Join(" / ", Enumerable.Range(1, 9).Select(region => $"{TextEditor.GetRegions(region).Count:n0}"))}");
+			statusBar.Items.Add($"Regions {string.Join(" / ", Enumerable.Range(1, 9).Select(region => $"{Tab.GetRegions(region).Count:n0}"))}");
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Database {TextEditor.DBName}");
+			statusBar.Items.Add($"Database {Tab.DBName}");
 		}
 
 		void SetupViewValues()
 		{
-			if (!TextEditor.ViewValues)
+			if (!Tab.ViewValues)
 			{
 				viewValuesControl.Visibility = Visibility.Collapsed;
 				return;
 			}
 
 			viewValuesControl.Visibility = Visibility.Visible;
-			viewValues.Data = TextEditor.ViewValuesData;
-			viewValues.HasSel = TextEditor.ViewValuesHasSel;
+			viewValues.Data = Tab.ViewValuesData;
+			viewValues.HasSel = Tab.ViewValuesHasSel;
 		}
 
 		class DrawBounds
@@ -169,28 +169,28 @@ namespace NeoEdit.Program
 		{
 			var drawBounds = new DrawBounds();
 			drawBounds.StartLine = (int)yScroll.Value;
-			drawBounds.EndLine = Math.Min(TextEditor.NumLines, drawBounds.StartLine + (int)Math.Ceiling(canvas.ActualHeight / LineHeight));
+			drawBounds.EndLine = Math.Min(Tab.NumLines, drawBounds.StartLine + (int)Math.Ceiling(canvas.ActualHeight / LineHeight));
 			drawBounds.StartColumn = (int)xScroll.Value;
-			drawBounds.EndColumn = Math.Min(TextEditor.MaxColumn + 1, drawBounds.StartColumn + (int)Math.Ceiling(canvas.ActualWidth / Font.CharWidth));
+			drawBounds.EndColumn = Math.Min(Tab.MaxColumn + 1, drawBounds.StartColumn + (int)Math.Ceiling(canvas.ActualWidth / Font.CharWidth));
 
 			var lines = Enumerable.Range(drawBounds.StartLine, drawBounds.EndLine - drawBounds.StartLine);
-			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(TextEditor.GetPosition(line, 0), TextEditor.GetPosition(line, TextEditor.GetLineLength(line) + 1)));
-			drawBounds.StartIndexes = lines.ToDictionary(line => line, line => TextEditor.GetIndexFromColumn(line, drawBounds.StartColumn, true));
-			drawBounds.EndIndexes = lines.ToDictionary(line => line, line => TextEditor.GetIndexFromColumn(line, drawBounds.EndColumn, true));
+			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(Tab.GetPosition(line, 0), Tab.GetPosition(line, Tab.GetLineLength(line) + 1)));
+			drawBounds.StartIndexes = lines.ToDictionary(line => line, line => Tab.GetIndexFromColumn(line, drawBounds.StartColumn, true));
+			drawBounds.EndIndexes = lines.ToDictionary(line => line, line => Tab.GetIndexFromColumn(line, drawBounds.EndColumn, true));
 			return drawBounds;
 		}
 
 		void RenderCarets(DrawingContext dc, DrawBounds drawBounds)
 		{
-			for (var selectionCtr = 0; selectionCtr < TextEditor.Selections.Count; ++selectionCtr)
+			for (var selectionCtr = 0; selectionCtr < Tab.Selections.Count; ++selectionCtr)
 			{
-				var range = TextEditor.Selections[selectionCtr];
+				var range = Tab.Selections[selectionCtr];
 
 				if ((range.End < drawBounds.ScreenStart) || (range.Start > drawBounds.ScreenEnd))
 					continue;
 
-				var startLine = TextEditor.GetPositionLine(range.Start);
-				var endLine = TextEditor.GetPositionLine(range.End);
+				var startLine = Tab.GetPositionLine(range.Start);
+				var endLine = Tab.GetPositionLine(range.End);
 				var cursorLine = range.Cursor == range.Start ? startLine : endLine;
 				startLine = Math.Max(drawBounds.StartLine, startLine);
 				endLine = Math.Min(drawBounds.EndLine, endLine + 1);
@@ -198,14 +198,14 @@ namespace NeoEdit.Program
 				if ((cursorLine < startLine) || (cursorLine >= endLine))
 					continue;
 
-				if (selectionCtr == TextEditor.CurrentSelection)
+				if (selectionCtr == Tab.CurrentSelection)
 					dc.DrawRoundedRectangle(highlightRowBrush, lightlightRowPen, new Rect(-2, drawBounds.Y(cursorLine), canvas.ActualWidth + 4, Font.FontSize), 4, 4);
 
-				var cursor = TextEditor.GetPositionIndex(range.Cursor, cursorLine);
+				var cursor = Tab.GetPositionIndex(range.Cursor, cursorLine);
 				if ((cursor >= drawBounds.StartIndexes[cursorLine]) && (cursor <= drawBounds.EndIndexes[cursorLine]))
 				{
-					cursor = TextEditor.GetColumnFromIndex(cursorLine, cursor);
-					for (var pass = selectionCtr == TextEditor.CurrentSelection ? 2 : 1; pass > 0; --pass)
+					cursor = Tab.GetColumnFromIndex(cursorLine, cursor);
+					for (var pass = selectionCtr == Tab.CurrentSelection ? 2 : 1; pass > 0; --pass)
 						dc.DrawRectangle(caretBrush, null, new Rect(drawBounds.X(cursor) - 1, drawBounds.Y(cursorLine), 2, LineHeight));
 				}
 			}
@@ -229,15 +229,15 @@ namespace NeoEdit.Program
 
 		List<Point> GetIndicatorPoints(Range range, DrawBounds drawBounds, double leftSpacing, double rightSpacing)
 		{
-			var startLine = TextEditor.GetPositionLine(range.Start);
-			var startColumn = TextEditor.GetColumnFromIndex(startLine, TextEditor.GetPositionIndex(range.Start, startLine));
+			var startLine = Tab.GetPositionLine(range.Start);
+			var startColumn = Tab.GetColumnFromIndex(startLine, Tab.GetPositionIndex(range.Start, startLine));
 
-			var endLine = TextEditor.GetPositionLine(range.End);
-			var endColumn = TextEditor.GetColumnFromIndex(endLine, TextEditor.GetPositionIndex(range.End, endLine));
+			var endLine = Tab.GetPositionLine(range.End);
+			var endColumn = Tab.GetColumnFromIndex(endLine, Tab.GetPositionIndex(range.End, endLine));
 			if ((endLine != startLine) && (endColumn == 0))
 			{
 				--endLine;
-				endColumn = TextEditor.GetLineColumnsLength(endLine) + 1;
+				endColumn = Tab.GetLineColumnsLength(endLine) + 1;
 			}
 
 			var points = new List<Point>();
@@ -249,7 +249,7 @@ namespace NeoEdit.Program
 				var done = line == endLine;
 				if ((line >= drawBounds.StartLine - 1) && ((line < drawBounds.EndLine)))
 				{
-					var length = done ? endColumn : TextEditor.GetLineColumnsLength(line) + 1;
+					var length = done ? endColumn : Tab.GetLineColumnsLength(line) + 1;
 					points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line)));
 					points.Add(new Point(drawBounds.X(length) + rightSpacing, drawBounds.Y(line) + LineHeight));
 				}
@@ -347,14 +347,14 @@ namespace NeoEdit.Program
 		{
 			const int HighlightRegexSize = 500;
 
-			var highlightDictionary = TextEditor.HighlightSyntax ? Highlight.Get(TextEditor.ContentType)?.GetDictionary() : null;
+			var highlightDictionary = Tab.HighlightSyntax ? Highlight.Get(Tab.ContentType)?.GetDictionary() : null;
 
 			var startColumn = Math.Max(drawBounds.StartColumn - HighlightRegexSize, 0);
 			var startOffset = drawBounds.StartColumn - startColumn;
 			var endColumn = drawBounds.EndColumn + HighlightRegexSize;
 			for (var line = drawBounds.StartLine; line < drawBounds.EndLine; ++line)
 			{
-				var lineColumns = TextEditor.GetLineColumns(line, startColumn, endColumn);
+				var lineColumns = Tab.GetLineColumns(line, startColumn, endColumn);
 				if (lineColumns.Length <= startOffset)
 					continue;
 
@@ -380,19 +380,19 @@ namespace NeoEdit.Program
 
 		void OnCanvasRender(object sender, DrawingContext dc)
 		{
-			if ((TextEditor == null) || (canvas.ActualWidth <= 0) || (double.IsNaN(canvas.ActualWidth)) || (canvas.ActualHeight <= 0) || (double.IsNaN(canvas.ActualHeight)) || (!canvas.IsVisible))
+			if ((Tab == null) || (canvas.ActualWidth <= 0) || (double.IsNaN(canvas.ActualWidth)) || (canvas.ActualHeight <= 0) || (double.IsNaN(canvas.ActualHeight)) || (!canvas.IsVisible))
 				return;
 
 			var drawBounds = GetDrawBounds();
-			var visibleCursor = (TextEditor.CurrentSelection >= 0) && (TextEditor.CurrentSelection < TextEditor.Selections.Count) ? TextEditor.Selections[TextEditor.CurrentSelection] : null;
+			var visibleCursor = (Tab.CurrentSelection >= 0) && (Tab.CurrentSelection < Tab.Selections.Count) ? Tab.Selections[Tab.CurrentSelection] : null;
 
 			for (var region = 1; region <= 9; ++region)
 			{
 				var multiplier = (region - 1) / 8d * 4.5 + 2;
-				RenderIndicators(dc, drawBounds, null, TextEditor.GetRegions(region), null, regionPen[region], -2 * multiplier, 2 * multiplier);
+				RenderIndicators(dc, drawBounds, null, Tab.GetRegions(region), null, regionPen[region], -2 * multiplier, 2 * multiplier);
 			}
-			if (TextEditor.Selections.Any(range => range.HasSelection))
-				RenderIndicators(dc, drawBounds, visibleCursor, TextEditor.Selections, selectionBrush, selectionPen, -1, 1);
+			if (Tab.Selections.Any(range => range.HasSelection))
+				RenderIndicators(dc, drawBounds, visibleCursor, Tab.Selections, selectionBrush, selectionPen, -1, 1);
 			else
 				RenderCarets(dc, drawBounds);
 			RenderDiff(dc, drawBounds);

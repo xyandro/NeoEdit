@@ -5,7 +5,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	public partial class TextEditor
+	public partial class Tab
 	{
 		void EnsureInTransaction()
 		{
@@ -326,14 +326,14 @@ namespace NeoEdit.Program
 			}
 		}
 
-		int oldTextEditorOrder, newTextEditorOrder;
-		public int TextEditorOrder
+		int oldTabOrder, newTabOrder;
+		public int TabOrder
 		{
-			get => newTextEditorOrder;
+			get => newTabOrder;
 			private set
 			{
 				EnsureInTransaction();
-				newTextEditorOrder = value;
+				newTabOrder = value;
 			}
 		}
 
@@ -505,7 +505,7 @@ namespace NeoEdit.Program
 			newDiffIgnoreLineEndings = oldDiffIgnoreLineEndings;
 			newIsDiff = oldIsDiff;
 			newDiffEncodingMismatch = oldDiffEncodingMismatch;
-			newTextEditorOrder = oldTextEditorOrder;
+			newTabOrder = oldTabOrder;
 			newKeepSelections = oldKeepSelections;
 			newHighlightSyntax = oldHighlightSyntax;
 			newStrictParsing = oldStrictParsing;
@@ -550,7 +550,7 @@ namespace NeoEdit.Program
 			oldDiffIgnoreLineEndings = newDiffIgnoreLineEndings;
 			oldIsDiff = newIsDiff;
 			oldDiffEncodingMismatch = newDiffEncodingMismatch;
-			oldTextEditorOrder = newTextEditorOrder;
+			oldTabOrder = newTabOrder;
 			oldKeepSelections = newKeepSelections;
 			oldHighlightSyntax = newHighlightSyntax;
 			oldStrictParsing = newStrictParsing;

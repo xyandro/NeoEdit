@@ -7,7 +7,7 @@ using NeoEdit.Program.Expressions;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		enum SelectSplitEnum
 		{

@@ -13,8 +13,8 @@ namespace NeoEdit.Program
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		IReadOnlyList<TextEditor> oldTabs, newTabs;
-		IReadOnlyList<TextEditor> Tabs
+		IReadOnlyList<Tab> oldTabs, newTabs;
+		IReadOnlyList<Tab> Tabs
 		{
 			get => newTabs;
 			set
@@ -35,8 +35,8 @@ namespace NeoEdit.Program
 			}
 		}
 
-		IReadOnlyList<TextEditor> oldActiveTabs, newActiveTabs;
-		IReadOnlyList<TextEditor> ActiveTabs
+		IReadOnlyList<Tab> oldActiveTabs, newActiveTabs;
+		IReadOnlyList<Tab> ActiveTabs
 		{
 			get => newActiveTabs;
 			set
@@ -48,8 +48,8 @@ namespace NeoEdit.Program
 			}
 		}
 
-		TextEditor oldFocused, newFocused;
-		TextEditor Focused
+		Tab oldFocused, newFocused;
+		Tab Focused
 		{
 			get => newFocused;
 			set
@@ -59,7 +59,7 @@ namespace NeoEdit.Program
 					value = null;
 				newFocused = value;
 				if ((newFocused != null) && (!ActiveTabs.Contains(newFocused)))
-					ActiveTabs = new List<TextEditor> { newFocused };
+					ActiveTabs = new List<Tab> { newFocused };
 			}
 		}
 

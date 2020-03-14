@@ -1093,6 +1093,64 @@
     <Compile Include="Searchers\StringsSearcher.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ShutdownData.cs" />
+    <Compile Include="Tab-Content.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Database.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-DateTime.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Diff.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Edit.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-EditModifyRegions.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-File.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Files.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Image.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Internal.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Keys.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Network.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Numeric.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Position.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Select.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Table.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Text.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Variables.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Window.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="TabsWindow-Diff.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
@@ -1122,70 +1180,12 @@
     <Compile Include="TabsWindow.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TextEditor-Content.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Database.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-DateTime.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Diff.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Edit.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-EditModifyRegions.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-File.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Files.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Image.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Internal.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Keys.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Network.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Numeric.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Position.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Select.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Table.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Text.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Variables.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor-Window.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextEditor.cs" />
-    <Page Include="TextEditorWindow.xaml">
+    <Page Include="TabWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="TextEditorWindow.xaml.cs">
-      <DependentUpon>TextEditorWindow.xaml</DependentUpon>
+    <Compile Include="TabWindow.xaml.cs">
+      <DependentUpon>TabWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />

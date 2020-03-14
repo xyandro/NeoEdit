@@ -8,7 +8,7 @@ using NeoEdit.Program.RevRegEx;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		static string GetRandomData(string chars, int length) => new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
 

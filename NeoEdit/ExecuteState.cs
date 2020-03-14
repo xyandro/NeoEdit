@@ -10,7 +10,7 @@ namespace NeoEdit.Program
 	{
 		public static readonly object ConfigureUnnecessary = new object();
 
-		public IReadOnlyList<TextEditor> ActiveTabs;
+		public IReadOnlyList<Tab> ActiveTabs;
 		public bool Handled = true;
 
 		public NECommand Command;
@@ -35,30 +35,30 @@ namespace NeoEdit.Program
 			}
 		}
 
-		IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> ClipboardDataMap;
-		public Func<IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>>> ClipboardDataMapFunc;
-		public Tuple<IReadOnlyList<string>, bool?> GetClipboardData(TextEditor textEditor)
+		IReadOnlyDictionary<Tab, Tuple<IReadOnlyList<string>, bool?>> ClipboardDataMap;
+		public Func<IReadOnlyDictionary<Tab, Tuple<IReadOnlyList<string>, bool?>>> ClipboardDataMapFunc;
+		public Tuple<IReadOnlyList<string>, bool?> GetClipboardData(Tab tab)
 		{
 			if (ClipboardDataMap == null)
 				lock (this)
 					if (ClipboardDataMap == null)
 						ClipboardDataMap = ClipboardDataMapFunc();
 
-			return ClipboardDataMap[textEditor];
+			return ClipboardDataMap[tab];
 		}
 
-		IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap;
-		public Func<int, IReadOnlyDictionary<TextEditor, KeysAndValues>> KeysAndValuesFunc;
-		public KeysAndValues GetKeysAndValues(int kvIndex, TextEditor textEditor)
+		IReadOnlyDictionary<Tab, KeysAndValues>[] KeysAndValuesMap;
+		public Func<int, IReadOnlyDictionary<Tab, KeysAndValues>> KeysAndValuesFunc;
+		public KeysAndValues GetKeysAndValues(int kvIndex, Tab tab)
 		{
 			if (KeysAndValuesMap == null)
-				KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
+				KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<Tab, KeysAndValues>), 10).ToArray();
 			if (KeysAndValuesMap[kvIndex] == null)
 				lock (this)
 					if (KeysAndValuesMap[kvIndex] == null)
 						KeysAndValuesMap[kvIndex] = KeysAndValuesFunc(kvIndex);
 
-			return KeysAndValuesMap[kvIndex][textEditor];
+			return KeysAndValuesMap[kvIndex][tab];
 		}
 	}
 }

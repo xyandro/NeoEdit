@@ -53,6 +53,6 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void Execute_Internal_AddTextEditor(TextEditor textEditor) => Tabs = Tabs.Concat(textEditor).ToList();
+		void Execute_Internal_AddTab(Tab tab) => Tabs = Tabs.Concat(tab).ToList();
 	}
 }

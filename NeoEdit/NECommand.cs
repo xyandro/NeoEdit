@@ -7,7 +7,7 @@ namespace NeoEdit.Program
 	{
 		None,
 		[NoMacro] Internal_Activate,
-		[NoMacro] Internal_AddTextEditor,
+		[NoMacro] Internal_AddTab,
 		Internal_Key,
 		Internal_Text,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New_New,

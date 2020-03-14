@@ -15,7 +15,7 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		void Execute_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : this).AddTextEditor(new TextEditor());
+		void Execute_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : this).AddTab(new Tab());
 
 		void Execute_File_New_FromClipboards()
 		{
@@ -33,13 +33,13 @@ namespace NeoEdit.Program
 					sels.Add(new Range(sb.Length, start));
 					sb.Append(ending);
 				}
-				var te = new TextEditor(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-				AddTextEditor(te, canReplace: index == 1);
+				var te = new Tab(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+				AddTab(te, canReplace: index == 1);
 				te.Selections = sels;
 			}
 		}
 
-		void Execute_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => AddTextEditor(new TextEditor(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
+		void Execute_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => AddTab(new Tab(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 
 		OpenFileDialogResult Configure_File_Open_Open(string initialDirectory = null)
 		{
@@ -59,7 +59,7 @@ namespace NeoEdit.Program
 			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}
 
-		void Execute_File_Open_Open(OpenFileDialogResult result) => result.files.ForEach(fileName => AddTextEditor(new TextEditor(fileName)));
+		void Execute_File_Open_Open(OpenFileDialogResult result) => result.files.ForEach(fileName => AddTab(new Tab(fileName)));
 
 		void Execute_File_Open_CopiedCut()
 		{
@@ -76,17 +76,17 @@ namespace NeoEdit.Program
 				return;
 
 			foreach (var file in files)
-				AddTextEditor(new TextEditor(file));
+				AddTab(new Tab(file));
 		}
 
 		void Execute_File_MoveToNewWindow()
 		{
 			var active = ActiveTabs.ToList();
-			active.ForEach(textEditor => RemoveTextEditor(textEditor, false));
+			active.ForEach(tab => RemoveTab(tab, false));
 
 			var newWindow = new TabsWindow();
 			newWindow.SetLayout(newWindow.Columns, newWindow.Rows, newWindow.MaxColumns, newWindow.MaxRows);
-			active.ForEach(tab => newWindow.AddTextEditor(tab));
+			active.ForEach(tab => newWindow.AddTab(tab));
 		}
 
 		static void Execute_File_Shell_Integrate()
@@ -94,7 +94,7 @@ namespace NeoEdit.Program
 			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
 			using (var starKey = baseKey.OpenSubKey("*"))
 			using (var shellKey = starKey.OpenSubKey("shell", true))
-			using (var neoEditKey = shellKey.CreateSubKey("Open with NeoEdit Text Editor"))
+			using (var neoEditKey = shellKey.CreateSubKey("Open with NeoEdit"))
 			using (var commandKey = neoEditKey.CreateSubKey("command"))
 				commandKey.SetValue("", $@"""{Assembly.GetEntryAssembly().Location}"" -text ""%1""");
 		}
@@ -104,7 +104,7 @@ namespace NeoEdit.Program
 			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
 			using (var starKey = baseKey.OpenSubKey("*"))
 			using (var shellKey = starKey.OpenSubKey("shell", true))
-				shellKey.DeleteSubKeyTree("Open with NeoEdit Text Editor");
+				shellKey.DeleteSubKeyTree("Open with NeoEdit");
 		}
 
 		void Execute_File_Exit()

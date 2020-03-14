@@ -71,7 +71,7 @@ namespace NeoEdit.Program.Controls
 				size = Coder.BytesRequired(CodePage);
 
 			//TODO
-			//UIHelper.FindParent<TextEditor>(this).UpdateViewValue(newBytes, size);
+			//UIHelper.FindParent<Tab>(this).UpdateViewValue(newBytes, size);
 		}
 	}
 

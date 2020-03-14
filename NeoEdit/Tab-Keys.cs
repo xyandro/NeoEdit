@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		void Execute_Keys_Set(int index, bool matchCase = true) => SetKeysAndValues(index, GetSelectionStrings(), matchCase);
 

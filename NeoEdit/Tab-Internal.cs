@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		WordSkipType GetWordSkipType(int position)
 		{

@@ -10,7 +10,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		string GetSaveFileName()
 		{
@@ -49,13 +49,13 @@ namespace NeoEdit.Program
 				ReplaceSelections(strs);
 		}
 
-		void Execute_File_New_FromSelections() => GetSelectionStrings().ForEach(((str, index) => TabsWindow.AddTextEditor(new TextEditor(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false))));
+		void Execute_File_New_FromSelections() => GetSelectionStrings().ForEach(((str, index) => TabsWindow.AddTab(new Tab(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false))));
 
 		void Execute_File_Open_Selected()
 		{
 			var files = RelativeSelectedFiles();
 			foreach (var file in files)
-				TabsWindow.AddTextEditor(new TextEditor(file));
+				TabsWindow.AddTab(new Tab(file));
 		}
 
 		void Execute_File_Save_Save()
@@ -248,10 +248,10 @@ namespace NeoEdit.Program
 			//if (original == null)
 			//	throw new Exception("Unable to get VCS content");
 
-			//var textEdit = new TextEditor(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
-			//TabsParent.AddTextEditor(textEdit, index: TabsParent.GetTabIndex(this));
-			//textEdit.ContentType = ContentType;
-			//textEdit.DiffTarget = this;
+			//var tab = new Tab(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
+			//TabsParent.AddTab(tab, index: TabsParent.GetTabIndex(this));
+			//tab.ContentType = ContentType;
+			//tab.DiffTarget = this;
 		}
 
 		void Execute_File_Operations_SetDisplayName()
@@ -271,7 +271,7 @@ namespace NeoEdit.Program
 		void Execute_File_Close()
 		{
 			if (CanClose())
-				TabsWindow.RemoveTextEditor(this);
+				TabsWindow.RemoveTab(this);
 		}
 
 		void Execute_File_Refresh()

@@ -15,7 +15,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		List<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)
 		{

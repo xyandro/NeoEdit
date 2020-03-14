@@ -13,7 +13,7 @@
 //		[DepProp]
 //		List<TabsWindow> TabsWindows { get { return UIHelper<WindowActiveTabsDialog>.GetPropValue<List<TabsWindow>>(this); } set { UIHelper<WindowActiveTabsDialog>.SetPropValue(this, value); } }
 //		[DepProp]
-//		List<TextEditorData> TextEditors { get { return UIHelper<WindowActiveTabsDialog>.GetPropValue<List<TextEditorData>>(this); } set { UIHelper<WindowActiveTabsDialog>.SetPropValue(this, value); } }
+//		List<TabData> Tabs { get { return UIHelper<WindowActiveTabsDialog>.GetPropValue<List<TabData>>(this); } set { UIHelper<WindowActiveTabsDialog>.SetPropValue(this, value); } }
 //		[DepProp]
 //		bool OneTabSelected { get { return UIHelper<WindowActiveTabsDialog>.GetPropValue<bool>(this); } set { UIHelper<WindowActiveTabsDialog>.SetPropValue(this, value); } }
 //		[DepProp]
@@ -22,7 +22,7 @@
 //		readonly TabsWindow currentTabWindow;
 
 //		List<TabsWindow> SelectedTabsWindows => tabsWindows.SelectedItems.OfType<TabsWindow>().ToList();
-//		List<TextEditorData> SelectedTextEditors => textEditors.SelectedItems.OfType<TextEditorData>().ToList();
+//		List<TabData> SelectedTabs => tabs.SelectedItems.OfType<TabData>().ToList();
 //		TabsWindow SelectedTabsWindow => tabsWindows.SelectedItems.OfType<TabsWindow>().Single();
 
 //		static WindowActiveTabsDialog() => UIHelper<WindowActiveTabsDialog>.Register();
@@ -51,12 +51,12 @@
 //			var activeTabs = TabsWindows.SelectMany(tabsWindow => tabsWindow.ActiveTabs).ToList();
 
 //			var selectedTabsWindows = SelectedTabsWindows;
-//			TextEditors = selectedTabsWindows.SelectMany(tabsWindow => tabsWindow.Tabs).ToList();
+//			Tabs = selectedTabsWindows.SelectMany(tabsWindow => tabsWindow.Tabs).ToList();
 //			OneTabSelected = tabsWindows.SelectedItems.Count == 1;
 
-//			textEditors.SelectedItems.Clear();
+//			tabs.SelectedItems.Clear();
 //			foreach (var tab in activeTabs)
-//				textEditors.SelectedItems.Add(tab);
+//				tabs.SelectedItems.Add(tab);
 
 //		}
 
@@ -74,11 +74,11 @@
 
 //		List<int> SelectedIndexes(TabsWindow tabsWindow)
 //		{
-//			var selected = new HashSet<TextEditorData>(textEditors.SelectedItems.OfType<TextEditorData>());
+//			var selected = new HashSet<TabData>(tabs.SelectedItems.OfType<TabData>());
 //			return tabsWindow.Tabs.Indexes(tab => selected.Contains(tab)).ToList();
 //		}
 
-//		void OnTextEditorMoveUpClick(object sender, RoutedEventArgs e)
+//		void OnTabMoveUpClick(object sender, RoutedEventArgs e)
 //		{
 //			var tabsWindow = SelectedTabsWindow;
 //			var indexes = SelectedIndexes(tabsWindow);
@@ -88,7 +88,7 @@
 //			OnTabsWindowsSelectionChanged();
 //		}
 
-//		void OnTextEditorMoveDownClick(object sender, RoutedEventArgs e)
+//		void OnTabMoveDownClick(object sender, RoutedEventArgs e)
 //		{
 //			var tabsWindow = SelectedTabsWindow;
 //			var indexes = SelectedIndexes(tabsWindow);
@@ -98,7 +98,7 @@
 //			OnTabsWindowsSelectionChanged();
 //		}
 
-//		void OnTextEditorMoveToTopClick(object sender, RoutedEventArgs e)
+//		void OnTabMoveToTopClick(object sender, RoutedEventArgs e)
 //		{
 //			var tabsWindow = SelectedTabsWindow;
 //			var indexes = SelectedIndexes(tabsWindow);
@@ -107,7 +107,7 @@
 //			OnTabsWindowsSelectionChanged();
 //		}
 
-//		void OnTextEditorMoveToBottomClick(object sender, RoutedEventArgs e)
+//		void OnTabMoveToBottomClick(object sender, RoutedEventArgs e)
 //		{
 //			var tabsWindow = SelectedTabsWindow;
 //			var indexes = SelectedIndexes(tabsWindow);
@@ -116,41 +116,41 @@
 //			OnTabsWindowsSelectionChanged();
 //		}
 
-//		void OnTextEditorDiffClick(object sender, RoutedEventArgs e)
+//		void OnTabDiffClick(object sender, RoutedEventArgs e)
 //		{
 //			//TODO
-//			//var textEditors = SelectedTextEditors;
-//			//if (textEditors.Any(textEditor => textEditor.DiffTarget != null))
+//			//var tabs = SelectedTabs;
+//			//if (tabs.Any(tab => tab.DiffTarget != null))
 //			//{
-//			//	textEditors.ForEach(textEditor => textEditor.DiffTarget = null);
+//			//	tabs.ForEach(tab => tab.DiffTarget = null);
 //			//	return;
 //			//}
 
-//			//if (textEditors.Count % 2 != 0)
+//			//if (tabs.Count % 2 != 0)
 //			//	throw new Exception("Must have an even number of tabs selected");
-//			//for (var ctr = 0; ctr < textEditors.Count; ctr += 2)
-//			//	textEditors[ctr].DiffTarget = textEditors[ctr + 1];
+//			//for (var ctr = 0; ctr < tabs.Count; ctr += 2)
+//			//	tabs[ctr].DiffTarget = tabs[ctr + 1];
 //		}
 
-//		void OnTextEditorCloseClick(object sender, RoutedEventArgs e)
+//		void OnTabCloseClick(object sender, RoutedEventArgs e)
 //		{
-//			var selectedTextEditors = SelectedTextEditors;
+//			var selectedTabs = SelectedTabs;
 
-//			if (!selectedTextEditors.All(tab => tab.CanClose()))
+//			if (!selectedTabs.All(tab => tab.CanClose()))
 //				return;
 
-//			selectedTextEditors.ForEach(item => item.TabsParent.RemoveTextEditor(item));
+//			selectedTabs.ForEach(item => item.TabsParent.RemoveTab(item));
 //			OnTabsWindowsSelectionChanged();
 //		}
 
-//		void OnTextEditorMoveClick(object sender, RoutedEventArgs e)
+//		void OnTabMoveClick(object sender, RoutedEventArgs e)
 //		{
 //			if (MoveToTabsWindow == null)
 //				return;
 
-//			var selectedTextEditors = SelectedTextEditors;
-//			selectedTextEditors.ForEach(textEditor => textEditor.TabsParent.RemoveTextEditor(textEditor));
-//			selectedTextEditors.ForEach(textEditor => MoveToTabsWindow.AddTextEditor(textEditor));
+//			var selectedTabs = SelectedTabs;
+//			selectedTabs.ForEach(tab => tab.TabsParent.RemoveTab(tab));
+//			selectedTabs.ForEach(tab => MoveToTabsWindow.AddTab(tab));
 //			OnTabsWindowsSelectionChanged();
 //		}
 
@@ -161,11 +161,11 @@
 //			finally { TabsWindow.ShowIndex = false; }
 //		}
 
-//		void OnTextEditorsSelectionChanged(object sender, SelectionChangedEventArgs e)
+//		void OnTabsSelectionChanged(object sender, SelectionChangedEventArgs e)
 //		{
-//			var newActive = SelectedTabsWindows.ToDictionary(tabsWindow => tabsWindow, tabsWindow => new List<TextEditorData>());
-//			foreach (var textEditor in SelectedTextEditors)
-//				newActive[textEditor.TabsParent].Add(textEditor);
+//			var newActive = SelectedTabsWindows.ToDictionary(tabsWindow => tabsWindow, tabsWindow => new List<TabData>());
+//			foreach (var tab in SelectedTabs)
+//				newActive[tab.TabsParent].Add(tab);
 //			newActive.ForEach(pair => pair.Key.SetActive(pair.Value));
 //		}
 

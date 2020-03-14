@@ -26,11 +26,11 @@ namespace NeoEdit.Program
 			//		SetLayout(maxColumns: 5, maxRows: 5);
 			//	else
 			//	{
-			//		diffTargets.ForEach(diffTarget => RemoveTextEditor(diffTarget));
+			//		diffTargets.ForEach(diffTarget => RemoveTab(diffTarget));
 
-			//		var textEditTabs = new TabsWindow();
-			//		textEditTabs.SetLayout(maxColumns: 5, maxRows: 5);
-			//		diffTargets.ForEach(diffTarget => textEditTabs.AddTextEditor(diffTarget));
+			//		var tabsWindow = new TabsWindow();
+			//		tabsWindow.SetLayout(maxColumns: 5, maxRows: 5);
+			//		diffTargets.ForEach(diffTarget => tabsWindow.AddTab(diffTarget));
 			//	}
 			//}
 
@@ -40,7 +40,7 @@ namespace NeoEdit.Program
 		void Execute_Diff_Select_LeftRightBothTabs(bool? left)
 		{
 			//TODO
-			//SetActive(ActiveTabs.Where(item => item.DiffTarget != null).SelectMany(item => new List<TextEditor> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetTabIndex(item) < GetTabIndex(item.DiffTarget)) == left)).ToList());
+			//SetActive(ActiveTabs.Where(item => item.DiffTarget != null).SelectMany(item => new List<Tab> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetTabIndex(item) < GetTabIndex(item.DiffTarget)) == left)).ToList());
 		}
 	}
 }

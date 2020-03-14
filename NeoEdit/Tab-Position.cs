@@ -8,7 +8,7 @@ using NeoEdit.Program.Dialogs;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		class GotoRange
 		{
@@ -29,7 +29,7 @@ namespace NeoEdit.Program
 
 				public override string ToString() => $"Line: {Line}, Index: {Index}, Column: {Column}, Position: {Position}";
 
-				public int? GetPosition(TextEditorWindow te, int position, GotoLocation lastPosition = null)
+				public int? GetPosition(TabWindow tab, int position, GotoLocation lastPosition = null)
 				{
 					// TODO
 					return default;
@@ -38,22 +38,22 @@ namespace NeoEdit.Program
 					//	return null;
 
 					//if (Position.HasValue)
-					//	return Math.Max(0, Math.Min(Position.Value, te.TextView.MaxPosition));
+					//	return Math.Max(0, Math.Min(Position.Value, tab.TextView.MaxPosition));
 
-					//var line = Math.Max(0, Math.Min(te.Data.GetNonDiffLine(Line ?? lastPosition?.Line ?? te.TextView.GetPositionLine(position)), te.TextView.NumLines - 1));
+					//var line = Math.Max(0, Math.Min(tab.Data.GetNonDiffLine(Line ?? lastPosition?.Line ?? tab.TextView.GetPositionLine(position)), tab.TextView.NumLines - 1));
 					//var index = Index ?? lastPosition?.Index;
 					//if (index.HasValue)
-					//	index = Math.Max(0, Math.Min(index.Value, te.TextView.GetLineLength(line)));
+					//	index = Math.Max(0, Math.Min(index.Value, tab.TextView.GetLineLength(line)));
 					//else
 					//{
 					//	var column = Column ?? lastPosition?.Column;
 					//	if (column.HasValue)
-					//		index = te.Data.GetIndexFromColumn(line, Math.Max(0, column.Value), true);
+					//		index = tab.Data.GetIndexFromColumn(line, Math.Max(0, column.Value), true);
 					//	else
 					//		index = 0;
 					//}
 
-					//return Math.Max(0, Math.Min(te.TextView.GetPosition(line, index.Value), te.TextView.MaxPosition));
+					//return Math.Max(0, Math.Min(tab.TextView.GetPosition(line, index.Value), tab.TextView.MaxPosition));
 				}
 			}
 
@@ -117,7 +117,7 @@ namespace NeoEdit.Program
 				return result;
 			}
 
-			public Range GetRange(TextEditorWindow te, Range range, bool selecting)
+			public Range GetRange(TabWindow te, Range range, bool selecting)
 			{
 				var start = Start.GetPosition(te, range.Cursor);
 				var end = End.GetPosition(te, range.Cursor, Start);
@@ -201,8 +201,8 @@ namespace NeoEdit.Program
 			//	var useFile = list.First().File;
 			//	if (useFile != null)
 			//	{
-			//		useTE = new TextEditor(useFile);
-			//		TabsParent.AddTextEditor(useTE);
+			//		useTE = new Tab(useFile);
+			//		TabsParent.AddTab(useTE);
 			//	}
 
 			//	var sels = useTE.Selections.ToList();

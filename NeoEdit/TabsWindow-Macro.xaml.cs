@@ -98,13 +98,13 @@ namespace NeoEdit.Program
 			{
 				if (!files.Any())
 					return;
-				AddTextEditor(new TextEditor(files.Dequeue()));
+				AddTab(new Tab(files.Dequeue()));
 				macro.Play(this, playing => MacroPlaying = playing, startNext);
 			};
 			startNext();
 		}
 
-		void Execute_Macro_Open_Quick(int quickNum) => AddTextEditor(new TextEditor(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
+		void Execute_Macro_Open_Quick(int quickNum) => AddTab(new Tab(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 
 		void Execute_Macro_TimeNextAction() => timeNextAction = true;
 	}

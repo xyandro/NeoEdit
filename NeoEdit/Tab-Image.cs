@@ -8,7 +8,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		static string AddColor(string color1, string color2)
 		{

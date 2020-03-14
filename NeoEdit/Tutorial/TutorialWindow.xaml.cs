@@ -157,7 +157,7 @@ namespace NeoEdit.Program.Tutorial
 		void LoadData(string pageName, string data)
 		{
 			var bytes = Compressor.Decompress(Coder.StringToBytes(data, Coder.CodePage.Base64), Compressor.Type.GZip);
-			tabsWindow.AddTextEditor(new TextEditor(displayName: pageName, bytes: bytes, codePage: Coder.CodePage.UTF8, modified: false));
+			tabsWindow.AddTab(new Tab(displayName: pageName, bytes: bytes, codePage: Coder.CodePage.UTF8, modified: false));
 		}
 	}
 }

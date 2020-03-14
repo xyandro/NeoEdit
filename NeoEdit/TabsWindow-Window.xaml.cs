@@ -29,7 +29,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Select_AllTabs() => ActiveTabs = Tabs;
 
-		void Execute_Window_Select_NoTabs() => ActiveTabs = new List<TextEditor>();
+		void Execute_Window_Select_NoTabs() => ActiveTabs = new List<Tab>();
 
 		void Execute_Window_Select_TabsWithWithoutSelections(bool hasSelections) => ActiveTabs = ActiveTabs.Where(tab => tab.Selections.Any() == hasSelections).ToList();
 
@@ -42,7 +42,7 @@ namespace NeoEdit.Program
 			var toClose = ActiveTabs.Where(tab => tab.Selections.Any() == hasSelections).ToList();
 			if (!toClose.All(tab => tab.CanClose()))
 				return;
-			toClose.ForEach(tab => RemoveTextEditor(tab));
+			toClose.ForEach(tab => RemoveTab(tab));
 		}
 
 		void Execute_Window_Close_ModifiedUnmodifiedTabs(bool modified)
@@ -50,7 +50,7 @@ namespace NeoEdit.Program
 			var toClose = ActiveTabs.Where(tab => tab.IsModified == modified).ToList();
 			if (!toClose.All(tab => tab.CanClose()))
 				return;
-			toClose.ForEach(tab => RemoveTextEditor(tab));
+			toClose.ForEach(tab => RemoveTab(tab));
 		}
 
 		void Execute_Window_Close_ActiveInactiveTabs(bool active)
@@ -58,7 +58,7 @@ namespace NeoEdit.Program
 			var toClose = (active ? ActiveTabs : Tabs.Except(ActiveTabs)).ToList();
 			if (!toClose.All(tab => tab.CanClose()))
 				return;
-			toClose.ForEach(tab => RemoveTextEditor(tab));
+			toClose.ForEach(tab => RemoveTab(tab));
 		}
 
 		void Execute_Window_WordList()
@@ -74,7 +74,7 @@ namespace NeoEdit.Program
 
 			data = Compressor.Decompress(data, Compressor.Type.GZip);
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace("\n", "\r\n"));
-			AddTextEditor(new TextEditor(bytes: data, modified: false));
+			AddTab(new Tab(bytes: data, modified: false));
 		}
 	}
 }

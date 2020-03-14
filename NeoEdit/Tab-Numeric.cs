@@ -10,7 +10,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		static string ConvertBase(string str, Dictionary<char, int> inputSet, Dictionary<int, char> outputSet)
 		{

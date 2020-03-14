@@ -12,14 +12,14 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	public partial class TextEditor
+	public partial class Tab
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		const int tabStop = 4;
 
 		ExecuteState state;
 
-		public TextEditor(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
+		public Tab(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
 			BeginTransaction();
 
@@ -1460,10 +1460,10 @@ namespace NeoEdit.Program
 		void OpenTable(Table table, string name = null)
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
-			var textEditor = new TextEditor(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-			TabsWindow.AddTextEditor(textEditor);
-			textEditor.ContentType = contentType;
-			textEditor.DisplayName = name;
+			var tab = new Tab(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+			TabsWindow.AddTab(tab);
+			tab.ContentType = contentType;
+			tab.DisplayName = name;
 		}
 
 		List<string> RelativeSelectedFiles()

@@ -7,7 +7,7 @@ using NeoEdit.Program.Parsing;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		void ContentReplaceSelections(IEnumerable<ParserBase> nodes)
 		{

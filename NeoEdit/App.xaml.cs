@@ -74,7 +74,7 @@ namespace NeoEdit.Program
 					if ((file.Existing) && (UIHelper<TabsWindow>.GetAllWindows().OrderByDescending(x => x.LastActivated).Select(x => x.GotoTab(file.FileName, file.Line, file.Column, file.Index)).FirstOrDefault(x => x)))
 						continue;
 
-					tabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_AddTextEditor) { Configuration = new TextEditor(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });
+					tabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });
 				}
 
 				//if (clParams.Diff)

@@ -15,7 +15,7 @@ using NeoEdit.WCF;
 
 namespace NeoEdit.Program
 {
-	partial class TextEditor
+	partial class Tab
 	{
 		static async Task FetchURL(string url, string fileName)
 		{
