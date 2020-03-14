@@ -154,7 +154,8 @@ namespace NeoEdit.Program
 					state.ControlDown = controlDown;
 					state.AltDown = altDown;
 
-					state.Configuration = Configure(state);
+					if (state.Configuration == null)
+						state.Configuration = Configure(state);
 
 					if (state.Configuration == null)
 						throw new OperationCanceledException();
@@ -327,12 +328,15 @@ namespace NeoEdit.Program
 					keysAndValues[kvIndex] = newKeysAndValues;
 			}
 
-			var dragFiles = Tabs.SelectMany(tab => tab.ChangedDragFiles.NonNullOrWhiteSpace()).ToList();
-			var nonExisting = dragFiles.Where(x => !File.Exists(x)).ToList();
-			if (nonExisting.Any())
-				throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
-			// TODO: Make these files actually do something
-			//Focused.DragFiles = fileNames;
+			var dragFiles = Tabs.Select(tab => tab.ChangedDragFiles).NonNull().SelectMany().Distinct().ToList();
+			if (dragFiles.Any())
+			{
+				var nonExisting = dragFiles.Where(x => !File.Exists(x)).ToList();
+				if (nonExisting.Any())
+					throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
+				// TODO: Make these files actually do something
+				//Focused.DragFiles = fileNames;
+			}
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
