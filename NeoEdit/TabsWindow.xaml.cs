@@ -7,7 +7,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Misc;
@@ -60,7 +59,7 @@ namespace NeoEdit.Program
 			oldTabs = newTabs = oldActiveTabs = newActiveTabs = new List<TextEditor>();
 			oldRows = newRows = oldColumns = newColumns = 1;
 
-			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command)));
+			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
@@ -639,44 +638,40 @@ namespace NeoEdit.Program
 
 		void SetMenuCheckboxes()
 		{
-			Image GetIcon(Func<TextEditor, bool> func)
+			bool? GetMultiStatus(Func<TextEditor, bool> func)
 			{
 				var results = ActiveTabs.Select(func).Distinct().ToList();
-				switch (results.Count == 1 ? results.First() : default(bool?))
-				{
-					case true: return new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Checked.png")) };
-					case false: return new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Unchecked.png")) };
-					case null: return new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Indeterminate.png")) };
-					default: throw new Exception("Invalid");
-				}
+				if (results.Count != 1)
+					return default;
+				return results[0];
 			}
 
-			menu.file_AutoRefresh.Icon = GetIcon(x => x.AutoRefresh);
-			menu.file_Encrypt.Icon = GetIcon(x => !string.IsNullOrWhiteSpace(x.AESKey));
-			menu.file_Compress.Icon = GetIcon(x => x.Compressed);
-			menu.edit_Navigate_JumpBy_Words.Icon = GetIcon(x => x.JumpBy == JumpByType.Words);
-			menu.edit_Navigate_JumpBy_Numbers.Icon = GetIcon(x => x.JumpBy == JumpByType.Numbers);
-			menu.edit_Navigate_JumpBy_Paths.Icon = GetIcon(x => x.JumpBy == JumpByType.Paths);
-			menu.diff_IgnoreWhitespace.Icon = GetIcon(x => x.DiffIgnoreWhitespace);
-			menu.diff_IgnoreCase.Icon = GetIcon(x => x.DiffIgnoreCase);
-			menu.diff_IgnoreNumbers.Icon = GetIcon(x => x.DiffIgnoreNumbers);
-			menu.diff_IgnoreLineEndings.Icon = GetIcon(x => x.DiffIgnoreLineEndings);
-			menu.content_Type_None.Icon = GetIcon(x => x.ContentType == ParserType.None);
-			menu.content_Type_Balanced.Icon = GetIcon(x => x.ContentType == ParserType.Balanced);
-			menu.content_Type_Columns.Icon = GetIcon(x => x.ContentType == ParserType.Columns);
-			menu.content_Type_CPlusPlus.Icon = GetIcon(x => x.ContentType == ParserType.CPlusPlus);
-			menu.content_Type_CSharp.Icon = GetIcon(x => x.ContentType == ParserType.CSharp);
-			menu.content_Type_CSV.Icon = GetIcon(x => x.ContentType == ParserType.CSV);
-			menu.content_Type_ExactColumns.Icon = GetIcon(x => x.ContentType == ParserType.ExactColumns);
-			menu.content_Type_HTML.Icon = GetIcon(x => x.ContentType == ParserType.HTML);
-			menu.content_Type_JSON.Icon = GetIcon(x => x.ContentType == ParserType.JSON);
-			menu.content_Type_SQL.Icon = GetIcon(x => x.ContentType == ParserType.SQL);
-			menu.content_Type_TSV.Icon = GetIcon(x => x.ContentType == ParserType.TSV);
-			menu.content_Type_XML.Icon = GetIcon(x => x.ContentType == ParserType.XML);
-			menu.content_HighlightSyntax.Icon = GetIcon(x => x.HighlightSyntax);
-			menu.content_StrictParsing.Icon = GetIcon(x => x.StrictParsing);
-			menu.content_KeepSelections.Icon = GetIcon(x => x.KeepSelections);
-			menu.window_ViewValues.Icon = GetIcon(x => x.ViewValues);
+			menu.file_AutoRefresh.MultiStatus = GetMultiStatus(x => x.AutoRefresh);
+			menu.file_Encrypt.MultiStatus = GetMultiStatus(x => !string.IsNullOrWhiteSpace(x.AESKey));
+			menu.file_Compress.MultiStatus = GetMultiStatus(x => x.Compressed);
+			menu.edit_Navigate_JumpBy_Words.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Words);
+			menu.edit_Navigate_JumpBy_Numbers.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Numbers);
+			menu.edit_Navigate_JumpBy_Paths.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Paths);
+			menu.diff_IgnoreWhitespace.MultiStatus = GetMultiStatus(x => x.DiffIgnoreWhitespace);
+			menu.diff_IgnoreCase.MultiStatus = GetMultiStatus(x => x.DiffIgnoreCase);
+			menu.diff_IgnoreNumbers.MultiStatus = GetMultiStatus(x => x.DiffIgnoreNumbers);
+			menu.diff_IgnoreLineEndings.MultiStatus = GetMultiStatus(x => x.DiffIgnoreLineEndings);
+			menu.content_Type_None.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.None);
+			menu.content_Type_Balanced.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.Balanced);
+			menu.content_Type_Columns.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.Columns);
+			menu.content_Type_CPlusPlus.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CPlusPlus);
+			menu.content_Type_CSharp.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CSharp);
+			menu.content_Type_CSV.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CSV);
+			menu.content_Type_ExactColumns.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.ExactColumns);
+			menu.content_Type_HTML.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.HTML);
+			menu.content_Type_JSON.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.JSON);
+			menu.content_Type_SQL.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.SQL);
+			menu.content_Type_TSV.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.TSV);
+			menu.content_Type_XML.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.XML);
+			menu.content_HighlightSyntax.MultiStatus = GetMultiStatus(x => x.HighlightSyntax);
+			menu.content_StrictParsing.MultiStatus = GetMultiStatus(x => x.StrictParsing);
+			menu.content_KeepSelections.MultiStatus = GetMultiStatus(x => x.KeepSelections);
+			menu.window_ViewValues.MultiStatus = GetMultiStatus(x => x.ViewValues);
 		}
 
 		void DoFullLayout()

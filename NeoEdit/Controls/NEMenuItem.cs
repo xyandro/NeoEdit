@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using NeoEdit.Program;
 using NeoEdit.Program.Parsing;
 
@@ -37,7 +38,24 @@ namespace NeoEdit.Program.Controls
 			}
 		}
 
-		public bool? MultiStatus { get { return command?.MultiStatus; } protected set { if (command != null) command.MultiStatus = value; } }
+		public bool? MultiStatus
+		{
+			get => command?.MultiStatus;
+			set
+			{
+				if (command != null)
+				{
+					command.MultiStatus = value;
+					switch (command.MultiStatus)
+					{
+						case true: Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Checked.png")) }; break;
+						case false: Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Unchecked.png")) }; break;
+						case null: Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Indeterminate.png")) }; break;
+						default: throw new Exception("Invalid");
+					}
+				}
+			}
+		}
 		NEMenuItemCommand command { get; set; }
 
 		static NEMenuItem()
