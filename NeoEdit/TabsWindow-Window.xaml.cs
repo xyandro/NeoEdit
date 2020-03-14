@@ -16,7 +16,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Grid() => SetLayout(maxColumns: 5, maxRows: 5);
 
-		WindowCustomGridDialog.Result ConfigureExecute_Window_CustomGrid() => WindowCustomGridDialog.Run(this, Columns, Rows, MaxColumns, MaxRows);
+		WindowCustomGridDialog.Result Configure_Window_CustomGrid() => WindowCustomGridDialog.Run(this, Columns, Rows, MaxColumns, MaxRows);
 
 		void Execute_Window_CustomGrid(WindowCustomGridDialog.Result result) => SetLayout(result.Columns, result.Rows, result.MaxColumns, result.MaxRows);
 

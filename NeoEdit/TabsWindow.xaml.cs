@@ -153,7 +153,7 @@ namespace NeoEdit.Program
 					state.AltDown = altDown;
 
 					PreExecute(state);
-					ConfigureExecute(state);
+					Configure(state);
 				}
 
 				Execute(state);
@@ -202,17 +202,17 @@ namespace NeoEdit.Program
 			ActiveTabs.ForEach(tab => tab.PreExecute());
 		}
 
-		void ConfigureExecute(ExecuteState state)
+		void Configure(ExecuteState state)
 		{
 			switch (state.Command)
 			{
-				case NECommand.File_Open_Open: state.ConfigureExecuteData = ConfigureExecute_File_Open_Open(); break;
-				case NECommand.Macro_Open_Open: state.ConfigureExecuteData = ConfigureExecute_File_Open_Open(Macro.MacroDirectory); break;
-				case NECommand.Window_CustomGrid: state.ConfigureExecuteData = ConfigureExecute_Window_CustomGrid(); break;
+				case NECommand.File_Open_Open: state.Configuration = Configure_File_Open_Open(); break;
+				case NECommand.Macro_Open_Open: state.Configuration = Configure_File_Open_Open(Macro.MacroDirectory); break;
+				case NECommand.Window_CustomGrid: state.Configuration = Configure_Window_CustomGrid(); break;
 			}
 
 			if (Focused != null)
-				Focused.ConfigureExecute();
+				Focused.Configure();
 		}
 
 
@@ -221,12 +221,12 @@ namespace NeoEdit.Program
 			switch (state.Command)
 			{
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
-				case NECommand.Internal_AddTextEditor: Execute_Internal_AddTextEditor(state.ConfigureExecuteData as TextEditor); break;
+				case NECommand.Internal_AddTextEditor: Execute_Internal_AddTextEditor(state.Configuration as TextEditor); break;
 				case NECommand.Internal_Key: Execute_Internal_Key(state); break;
 				case NECommand.File_New_New: Execute_File_New_New(shiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;
-				case NECommand.File_Open_Open: Execute_File_Open_Open(state.ConfigureExecuteData as OpenFileDialogResult); break;
+				case NECommand.File_Open_Open: Execute_File_Open_Open(state.Configuration as OpenFileDialogResult); break;
 				case NECommand.File_Open_CopiedCut: Execute_File_Open_CopiedCut(); break;
 				case NECommand.File_Operations_DragDrop: Execute_File_Operations_DragDrop(); break;
 				case NECommand.File_MoveToNewWindow: Execute_File_MoveToNewWindow(); break;
@@ -291,11 +291,11 @@ namespace NeoEdit.Program
 				case NECommand.Macro_Open_Quick_10: Execute_Macro_Open_Quick(10); break;
 				case NECommand.Macro_Open_Quick_11: Execute_Macro_Open_Quick(11); break;
 				case NECommand.Macro_Open_Quick_12: Execute_Macro_Open_Quick(12); break;
-				case NECommand.Macro_Open_Open: Execute_File_Open_Open(state.ConfigureExecuteData as OpenFileDialogResult); break;
+				case NECommand.Macro_Open_Open: Execute_File_Open_Open(state.Configuration as OpenFileDialogResult); break;
 				case NECommand.Window_NewWindow: Execute_Window_NewWindow(); break;
 				case NECommand.Window_Full: Execute_Window_Full(); break;
 				case NECommand.Window_Grid: Execute_Window_Grid(); break;
-				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(state.ConfigureExecuteData as WindowCustomGridDialog.Result); break;
+				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(state.Configuration as WindowCustomGridDialog.Result); break;
 				case NECommand.Window_ActiveTabs: Execute_Window_ActiveTabs(); break;
 				case NECommand.Window_Font_Size: Execute_Window_Font_Size(); break;
 				case NECommand.Window_Select_AllTabs: Execute_Window_Select_AllTabs(); break;

@@ -93,11 +93,11 @@ namespace NeoEdit.Program
 
 		void Execute_DateTime_UtcNow() => ReplaceSelections(Dater.DateTimeOffsetToString(DateTimeOffset.UtcNow));
 
-		void ConfigureExecute_DateTime_Format() => state.ConfigureExecuteData = DateTimeFormatDialog.Run(TabsWindow, Selections.Select(range => Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
+		void Configure_DateTime_Format() => state.Configuration = DateTimeFormatDialog.Run(TabsWindow, Selections.Select(range => Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
 
 		void Execute_DateTime_Format()
 		{
-			var result = state.ConfigureExecuteData as DateTimeFormatDialog.Result;
+			var result = state.Configuration as DateTimeFormatDialog.Result;
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.StringToDateTimeOffset(Text.GetString(range), result.InputFormat), result.OutputFormat)).ToList());
 		}
 
@@ -105,11 +105,11 @@ namespace NeoEdit.Program
 
 		void Execute_DateTime_ToLocal() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: Dater.Local), Dater.Local))).ToList());
 
-		void ConfigureExecute_DateTime_ToTimeZone() => state.ConfigureExecuteData = DateTimeToTimeZoneDialog.Run(TabsWindow);
+		void Configure_DateTime_ToTimeZone() => state.Configuration = DateTimeToTimeZoneDialog.Run(TabsWindow);
 
 		void Execute_DateTime_ToTimeZone()
 		{
-			var result = state.ConfigureExecuteData as DateTimeToTimeZoneDialog.Result;
+			var result = state.Configuration as DateTimeToTimeZoneDialog.Result;
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: result.TimeZone), result.TimeZone))).ToList());
 		}
 

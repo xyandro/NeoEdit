@@ -241,11 +241,11 @@ namespace NeoEdit.Program
 
 		void Execute_Select_Nothing() => Selections = new List<Range>();
 
-		void ConfigureExecute_Select_Limit() => state.ConfigureExecuteData = SelectLimitDialog.Run(TabsWindow, GetVariables());
+		void Configure_Select_Limit() => state.Configuration = SelectLimitDialog.Run(TabsWindow, GetVariables());
 
 		void Execute_Select_Limit()
 		{
-			var result = state.ConfigureExecuteData as SelectLimitDialog.Result;
+			var result = state.Configuration as SelectLimitDialog.Result;
 			var variables = GetVariables();
 			var firstSelection = new NEExpression(result.FirstSelection).Evaluate<int>(variables);
 			var everyNth = new NEExpression(result.EveryNth).Evaluate<int>(variables);
@@ -341,11 +341,11 @@ namespace NeoEdit.Program
 
 		void Execute_Select_Repeats_RepeatedLines(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList();
 
-		void ConfigureExecute_Select_Repeats_ByCount() => state.ConfigureExecuteData = SelectByCountDialog.Run(TabsWindow);
+		void Configure_Select_Repeats_ByCount() => state.Configuration = SelectByCountDialog.Run(TabsWindow);
 
 		void Execute_Select_Repeats_ByCount(bool caseSensitive)
 		{
-			var result = state.ConfigureExecuteData as SelectByCountDialog.Result;
+			var result = state.Configuration as SelectByCountDialog.Result;
 			var strs = Selections.Select((range, index) => Tuple.Create(Text.GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 			foreach (var tuple in strs)
@@ -403,11 +403,11 @@ namespace NeoEdit.Program
 			}).ToList();
 		}
 
-		void ConfigureExecute_Select_Split() => state.ConfigureExecuteData = SelectSplitDialog.Run(TabsWindow, GetVariables());
+		void Configure_Select_Split() => state.Configuration = SelectSplitDialog.Run(TabsWindow, GetVariables());
 
 		void Execute_Select_Split()
 		{
-			var result = state.ConfigureExecuteData as SelectSplitDialog.Result;
+			var result = state.Configuration as SelectSplitDialog.Result;
 			var indexes = GetExpressionResults<int>(result.Index, Selections.Count());
 			Selections = Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList();
 		}

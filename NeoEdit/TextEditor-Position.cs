@@ -129,7 +129,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void ConfigureExecute_Position_Goto(GotoType gotoType)
+		void Configure_Position_Goto(GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
 			var range = Selections.FirstOrDefault();
@@ -149,12 +149,12 @@ namespace NeoEdit.Program
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			state.ConfigureExecuteData = PositionGotoDialog.Run(TabsWindow, gotoType, startValue, GetVariables());
+			state.Configuration = PositionGotoDialog.Run(TabsWindow, gotoType, startValue, GetVariables());
 		}
 
 		void Execute_Position_Goto(GotoType gotoType, bool selecting)
 		{
-			var result = state.ConfigureExecuteData as PositionGotoDialog.Result;
+			var result = state.Configuration as PositionGotoDialog.Result;
 			var values = GotoRange.GetPositionsData(GetExpressionResults<string>(result.Expression), gotoType);
 			if (!values.Any())
 				return;

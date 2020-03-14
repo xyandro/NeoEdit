@@ -41,7 +41,7 @@ namespace NeoEdit.Program
 			state = new ExecuteState(state.Command)
 			{
 				PreExecuteData = state.PreExecuteData,
-				ConfigureExecuteData = state.ConfigureExecuteData,
+				Configuration = state.Configuration,
 				ShiftDown = state.ShiftDown,
 				ControlDown = state.ControlDown,
 				AltDown = state.AltDown,

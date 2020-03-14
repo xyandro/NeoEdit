@@ -68,19 +68,19 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void ConfigureExecute_Image_GrabColor() => state.ConfigureExecuteData = ImageGrabColorDialog.Run(TabsWindow, Selections.Select(range => Text.GetString(range)).FirstOrDefault());
+		void Configure_Image_GrabColor() => state.Configuration = ImageGrabColorDialog.Run(TabsWindow, Selections.Select(range => Text.GetString(range)).FirstOrDefault());
 
 		void Execute_Image_GrabColor()
 		{
-			var result = state.ConfigureExecuteData as ImageGrabColorDialog.Result;
+			var result = state.Configuration as ImageGrabColorDialog.Result;
 			ReplaceOneWithMany(result.Colors, true);
 		}
 
-		void ConfigureExecute_Image_GrabImage() => state.ConfigureExecuteData = ImageGrabImageDialog.Run(TabsWindow, GetVariables());
+		void Configure_Image_GrabImage() => state.Configuration = ImageGrabImageDialog.Run(TabsWindow, GetVariables());
 
 		void Execute_Image_GrabImage()
 		{
-			var result = state.ConfigureExecuteData as ImageGrabImageDialog.Result;
+			var result = state.Configuration as ImageGrabImageDialog.Result;
 			var variables = GetVariables();
 			var x = new NEExpression(result.GrabX).EvaluateList<int>(variables, Selections.Count());
 			var y = new NEExpression(result.GrabY).EvaluateList<int>(variables, Selections.Count());
@@ -100,21 +100,21 @@ namespace NeoEdit.Program
 			ReplaceSelections(strs);
 		}
 
-		void ConfigureExecute_Image_AdjustColor() => state.ConfigureExecuteData = ImageAdjustColorDialog.Run(TabsWindow, GetVariables());
+		void Configure_Image_AdjustColor() => state.Configuration = ImageAdjustColorDialog.Run(TabsWindow, GetVariables());
 
 		void Execute_Image_AdjustColor()
 		{
-			var result = state.ConfigureExecuteData as ImageAdjustColorDialog.Result;
+			var result = state.Configuration as ImageAdjustColorDialog.Result;
 			var results = GetExpressionResults<double>(result.Expression, Selections.Count());
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AdjustColor(Text.GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
 			ReplaceSelections(strs);
 		}
 
-		void ConfigureExecute_Image_AddOverlayColor(bool add) => state.ConfigureExecuteData = ImageAddOverlayColorDialog.Run(TabsWindow, add, GetVariables());
+		void Configure_Image_AddOverlayColor(bool add) => state.Configuration = ImageAddOverlayColorDialog.Run(TabsWindow, add, GetVariables());
 
 		void Execute_Image_AddColor()
 		{
-			var result = state.ConfigureExecuteData as ImageAddOverlayColorDialog.Result;
+			var result = state.Configuration as ImageAddOverlayColorDialog.Result;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AddColor(Text.GetString(range), results[index])).ToList();
 			ReplaceSelections(strs);
@@ -122,17 +122,17 @@ namespace NeoEdit.Program
 
 		void Execute_Image_OverlayColor()
 		{
-			var result = state.ConfigureExecuteData as ImageAddOverlayColorDialog.Result;
+			var result = state.Configuration as ImageAddOverlayColorDialog.Result;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], Text.GetString(range))).ToList();
 			ReplaceSelections(strs);
 		}
 
-		void ConfigureExecute_Image_Size() => state.ConfigureExecuteData = ImageSizeDialog.Run(TabsWindow, GetVariables());
+		void Configure_Image_Size() => state.Configuration = ImageSizeDialog.Run(TabsWindow, GetVariables());
 
 		void Execute_Image_Size()
 		{
-			var result = state.ConfigureExecuteData as ImageSizeDialog.Result;
+			var result = state.Configuration as ImageSizeDialog.Result;
 			var variables = GetVariables();
 			var width = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
 			var height = new NEExpression(result.HeightExpression).Evaluate<int>(variables);
@@ -159,11 +159,11 @@ namespace NeoEdit.Program
 			Selections = new List<Range> { new Range() };
 		}
 
-		void ConfigureExecute_Image_Crop() => state.ConfigureExecuteData = ImageCropDialog.Run(TabsWindow, GetVariables());
+		void Configure_Image_Crop() => state.Configuration = ImageCropDialog.Run(TabsWindow, GetVariables());
 
 		void Execute_Image_Crop()
 		{
-			var result = state.ConfigureExecuteData as ImageCropDialog.Result;
+			var result = state.Configuration as ImageCropDialog.Result;
 			var variables = GetVariables();
 			var destX = new NEExpression(result.XExpression).Evaluate<int>(variables);
 			var destY = new NEExpression(result.YExpression).Evaluate<int>(variables);
@@ -209,11 +209,11 @@ namespace NeoEdit.Program
 
 		void Execute_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		void ConfigureExecute_Image_Rotate() => state.ConfigureExecuteData = ImageRotateDialog.Run(TabsWindow, GetVariables());
+		void Configure_Image_Rotate() => state.Configuration = ImageRotateDialog.Run(TabsWindow, GetVariables());
 
 		void Execute_Image_Rotate()
 		{
-			var result = state.ConfigureExecuteData as ImageRotateDialog.Result;
+			var result = state.Configuration as ImageRotateDialog.Result;
 			var variables = GetVariables();
 			var angle = new NEExpression(result.AngleExpression).Evaluate<float>(variables, "deg");
 
@@ -236,11 +236,11 @@ namespace NeoEdit.Program
 			Selections = new List<Range> { new Range() };
 		}
 
-		void ConfigureExecute_Image_GIF_Animate() => state.ConfigureExecuteData = ImageGIFAnimateDialog.Run(TabsWindow, GetVariables());
+		void Configure_Image_GIF_Animate() => state.Configuration = ImageGIFAnimateDialog.Run(TabsWindow, GetVariables());
 
 		void Execute_Image_GIF_Animate()
 		{
-			var result = state.ConfigureExecuteData as ImageGIFAnimateDialog.Result;
+			var result = state.Configuration as ImageGIFAnimateDialog.Result;
 			var variables = GetVariables();
 			var inputFiles = new NEExpression(result.InputFiles).EvaluateList<string>(variables);
 			var outputFile = new NEExpression(result.OutputFile).Evaluate<string>(variables);
@@ -253,16 +253,16 @@ namespace NeoEdit.Program
 						writer.WriteFrame(image, delays[ctr]);
 		}
 
-		void ConfigureExecute_Image_GIF_Split()
+		void Configure_Image_GIF_Split()
 		{
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			state.ConfigureExecuteData = ImageGIFSplitDialog.Run(TabsWindow, variables);
+			state.Configuration = ImageGIFSplitDialog.Run(TabsWindow, variables);
 		}
 
 		void Execute_Image_GIF_Split()
 		{
-			var result = state.ConfigureExecuteData as ImageGIFSplitDialog.Result;
+			var result = state.Configuration as ImageGIFSplitDialog.Result;
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
 			var files = RelativeSelectedFiles();

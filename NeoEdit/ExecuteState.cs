@@ -18,7 +18,7 @@ namespace NeoEdit.Program
 
 		public NECommand Command;
 		public object PreExecuteData;
-		public object ConfigureExecuteData;
+		public object Configuration;
 		public bool ShiftDown;
 		public bool ControlDown;
 		public bool AltDown;
