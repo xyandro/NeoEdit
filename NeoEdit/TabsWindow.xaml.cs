@@ -57,6 +57,7 @@ namespace NeoEdit.Program
 		bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
 
 		bool timeNextAction;
+		MacroAction lastAction;
 
 		public TabsWindow(bool addEmpty = false)
 		{
@@ -142,6 +143,14 @@ namespace NeoEdit.Program
 			bool commit = false;
 			try
 			{
+				if (state.Command == NECommand.Macro_RepeatLastAction)
+				{
+					if (lastAction == null)
+						throw new Exception("No last action available");
+					state = lastAction.GetExecuteState();
+					configure = false;
+				}
+
 				BeginTransaction();
 				Tabs.ForEach(tab => tab.BeginTransaction(state));
 
@@ -166,6 +175,8 @@ namespace NeoEdit.Program
 
 					if (state.Configuration == ExecuteState.ConfigureUnnecessary)
 						state.Configuration = null;
+
+					state.ActiveTabs = null;
 				}
 
 				Stopwatch sw = null;
@@ -200,8 +211,12 @@ namespace NeoEdit.Program
 					PostExecute();
 
 					var action = MacroAction.GetMacroAction(state);
-					if ((RecordingMacro != null) && (action != null))
-						RecordingMacro?.AddAction(action);
+					if (action != null)
+					{
+						lastAction = action;
+						if (RecordingMacro != null)
+							RecordingMacro?.AddAction(action);
+					}
 
 					DrawAll();
 				}
