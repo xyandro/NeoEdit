@@ -2,5 +2,3 @@ Make modal dialogs modal for owning window only
 Print
 Add ability to select all attributes
 Separate tabs from view
-Combine pre and configure, make static
-Return value on configure or cancel

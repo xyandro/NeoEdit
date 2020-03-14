@@ -79,7 +79,7 @@ namespace NeoEdit.Program
 			return str.Substring(start, end - start);
 		}
 
-		void Configure_Text_Select_Trim() => state.Configuration = TextTrimDialog.Run(TabsWindow);
+		object Configure_Text_Select_Trim() => TextTrimDialog.Run(TabsWindow);
 
 		void Execute_Text_Select_Trim()
 		{
@@ -87,7 +87,7 @@ namespace NeoEdit.Program
 			Selections = Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList();
 		}
 
-		void Configure_Text_Select_ByWidth() => state.Configuration = TextWidthDialog.Run(TabsWindow, false, true, GetVariables());
+		object Configure_Text_Select_ByWidth() => TextWidthDialog.Run(TabsWindow, false, true, GetVariables());
 
 		void Execute_Text_Select_ByWidth()
 		{
@@ -96,7 +96,7 @@ namespace NeoEdit.Program
 			Selections = Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList();
 		}
 
-		void Configure_Text_Select_WholeBoundedWord(bool wholeWord) => state.Configuration = TextSelectWholeBoundedWordDialog.Run(TabsWindow, wholeWord);
+		object Configure_Text_Select_WholeBoundedWord(bool wholeWord) => TextSelectWholeBoundedWordDialog.Run(TabsWindow, wholeWord);
 
 		void Execute_Text_Select_WholeBoundedWord(bool wholeWord)
 		{
@@ -153,10 +153,10 @@ namespace NeoEdit.Program
 
 		void Execute_Text_Length() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => range.Length.ToString()).ToList());
 
-		void Configure_Text_Width()
+		object Configure_Text_Width()
 		{
 			var numeric = Selections.Any() ? Selections.AsParallel().All(range => Text.GetString(range).IsNumeric()) : false;
-			state.Configuration = TextWidthDialog.Run(TabsWindow, numeric, false, GetVariables());
+			return TextWidthDialog.Run(TabsWindow, numeric, false, GetVariables());
 		}
 
 		void Execute_Text_Width()
@@ -166,7 +166,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
 		}
 
-		void Configure_Text_Trim() => state.Configuration = TextTrimDialog.Run(TabsWindow);
+		object Configure_Text_Trim() => TextTrimDialog.Run(TabsWindow);
 
 		void Execute_Text_Trim()
 		{
@@ -176,7 +176,7 @@ namespace NeoEdit.Program
 
 		void Execute_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
-		void Configure_Text_Unicode() => state.Configuration = TextUnicodeDialog.Run(TabsWindow);
+		object Configure_Text_Unicode() => TextUnicodeDialog.Run(TabsWindow);
 
 		void Execute_Text_Unicode()
 		{
@@ -186,7 +186,7 @@ namespace NeoEdit.Program
 
 		void Execute_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
-		void Configure_Text_RandomText() => state.Configuration = TextRandomTextDialog.Run(GetVariables(), TabsWindow);
+		object Configure_Text_RandomText() => TextRandomTextDialog.Run(GetVariables(), TabsWindow);
 
 		void Execute_Text_RandomText()
 		{
@@ -197,12 +197,12 @@ namespace NeoEdit.Program
 
 		void Execute_Text_LoremIpsum() => ReplaceSelections(new LoremGenerator().GetSentences().Take(Selections.Count).ToList());
 
-		void Configure_Text_ReverseRegEx()
+		object Configure_Text_ReverseRegEx()
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			state.Configuration = TextReverseRegExDialog.Run(TabsWindow);
+			return TextReverseRegExDialog.Run(TabsWindow);
 		}
 
 		void Execute_Text_ReverseRegEx()
@@ -225,7 +225,7 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void Configure_Text_FirstDistinct() => state.Configuration = TextFirstDistinctDialog.Run(TabsWindow);
+		object Configure_Text_FirstDistinct() => TextFirstDistinctDialog.Run(TabsWindow);
 
 		void Execute_Text_FirstDistinct()
 		{

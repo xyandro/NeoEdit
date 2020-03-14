@@ -148,12 +148,18 @@ namespace NeoEdit.Program
 					if (MacroPlaying != null)
 						return;
 
+					state.ActiveTabs = ActiveTabs;
 					state.ShiftDown = shiftDown;
 					state.ControlDown = controlDown;
 					state.AltDown = altDown;
-
 					PreExecute(state);
-					Configure(state);
+					state.Configuration = Configure(state);
+
+					if (state.Configuration == null)
+						throw new OperationCanceledException();
+
+					if (state.Configuration == ExecuteState.ConfigureUnnecessary)
+						state.Configuration = null;
 				}
 
 				Execute(state);
@@ -202,17 +208,19 @@ namespace NeoEdit.Program
 			ActiveTabs.ForEach(tab => tab.PreExecute());
 		}
 
-		void Configure(ExecuteState state)
+		object Configure(ExecuteState state)
 		{
 			switch (state.Command)
 			{
-				case NECommand.File_Open_Open: state.Configuration = Configure_File_Open_Open(); break;
-				case NECommand.Macro_Open_Open: state.Configuration = Configure_File_Open_Open(Macro.MacroDirectory); break;
-				case NECommand.Window_CustomGrid: state.Configuration = Configure_Window_CustomGrid(); break;
+				case NECommand.File_Open_Open: return Configure_File_Open_Open();
+				case NECommand.Macro_Open_Open: return Configure_File_Open_Open(Macro.MacroDirectory);
+				case NECommand.Window_CustomGrid: return Configure_Window_CustomGrid();
 			}
 
-			if (Focused != null)
-				Focused.Configure();
+			if (Focused == null)
+				return ExecuteState.ConfigureUnnecessary;
+
+			return Focused.Configure();
 		}
 
 

@@ -8,13 +8,11 @@ namespace NeoEdit.Program
 {
 	public class ExecuteState
 	{
-		IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> ClipboardDataMap;
-		public Func<IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>>> ClipboardDataMapFunc;
+		public static readonly object ConfigureUnnecessary = new object();
 
-		IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
-		public Func<int, IReadOnlyDictionary<TextEditor, KeysAndValues>> KeysAndValuesFunc;
-
+		public IReadOnlyList<TextEditor> ActiveTabs;
 		public AnswerResult SavedAnswers = new AnswerResult();
+		public bool Handled = true;
 
 		public NECommand Command;
 		public object PreExecuteData;
@@ -23,12 +21,13 @@ namespace NeoEdit.Program
 		public bool ControlDown;
 		public bool AltDown;
 		public bool? MultiStatus;
-		public bool Handled = true;
 		public Key Key;
 		public string Text;
 
 		public ExecuteState(NECommand command) => Command = command;
 
+		IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> ClipboardDataMap;
+		public Func<IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>>> ClipboardDataMapFunc;
 		public Tuple<IReadOnlyList<string>, bool?> GetClipboardData(TextEditor textEditor)
 		{
 			if (ClipboardDataMap == null)
@@ -38,6 +37,9 @@ namespace NeoEdit.Program
 
 			return ClipboardDataMap[textEditor];
 		}
+
+		IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
+		public Func<int, IReadOnlyDictionary<TextEditor, KeysAndValues>> KeysAndValuesFunc;
 
 		public KeysAndValues GetKeysAndValues(int kvIndex, TextEditor textEditor)
 		{
