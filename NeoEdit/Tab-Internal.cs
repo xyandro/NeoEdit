@@ -363,11 +363,11 @@ namespace NeoEdit.Program
 						if (Selections.AsParallel().All(range => (!range.HasSelection) || (TextView.GetPositionLine(range.Start) == TextView.GetPositionLine(Math.Max(range.Start, range.End - 1)))))
 						{
 							if (!state.ShiftDown)
-								Execute_Internal_Text();
+								ReplaceSelections("\t", false, tryJoinUndo: true);
 							else
 							{
 								var tabs = Selections.AsParallel().AsOrdered().Where(range => (range.Start != 0) && (Text.GetString(range.Start - 1, 1) == "\t")).Select(range => Range.FromIndex(range.Start - 1, 1)).ToList();
-								Replace(tabs, null);
+								Replace(tabs, Enumerable.Repeat("", tabs.Count).ToList());
 							}
 							break;
 						}
@@ -395,7 +395,7 @@ namespace NeoEdit.Program
 					}
 					break;
 				case Key.Enter:
-					Execute_Internal_Text();
+					ReplaceSelections(TextView.DefaultEnding, false, tryJoinUndo: true);
 					break;
 				default: state.Handled = oldHandled; break;
 			}

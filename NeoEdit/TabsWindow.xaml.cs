@@ -62,7 +62,6 @@ namespace NeoEdit.Program
 		public TabsWindow(bool addEmpty = false)
 		{
 			oldTabs = newTabs = oldActiveTabs = newActiveTabs = new List<Tab>();
-			oldRows = newRows = oldColumns = newColumns = 1;
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
 			InitializeComponent();

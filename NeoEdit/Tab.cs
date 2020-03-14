@@ -1664,5 +1664,7 @@ namespace NeoEdit.Program
 			ClearWatcher();
 			shutdownData?.OnShutdown();
 		}
+
+		public override string ToString() => DisplayName ?? FileName;
 	}
 }

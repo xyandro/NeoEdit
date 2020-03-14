@@ -381,6 +381,17 @@ namespace NeoEdit.Program
 			}
 		}
 
+		DateTime oldLastActive, newLastActive;
+		public DateTime LastActive
+		{
+			get => newLastActive;
+			set
+			{
+				EnsureInTransaction();
+				newLastActive = value;
+			}
+		}
+
 		bool oldViewValues, newViewValues;
 		public bool ViewValues
 		{
@@ -510,6 +521,7 @@ namespace NeoEdit.Program
 			newHighlightSyntax = oldHighlightSyntax;
 			newStrictParsing = oldStrictParsing;
 			newJumpBy = oldJumpBy;
+			newLastActive = oldLastActive;
 			newViewValues = oldViewValues;
 			newViewValuesData = oldViewValuesData;
 			newViewValuesHasSel = oldViewValuesHasSel;
@@ -555,6 +567,7 @@ namespace NeoEdit.Program
 			oldHighlightSyntax = newHighlightSyntax;
 			oldStrictParsing = newStrictParsing;
 			oldJumpBy = newJumpBy;
+			oldLastActive = newLastActive;
 			oldViewValues = newViewValues;
 			oldViewValuesData = newViewValuesData;
 			oldViewValuesHasSel = newViewValuesHasSel;

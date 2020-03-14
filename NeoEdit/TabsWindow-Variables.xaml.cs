@@ -42,7 +42,7 @@ namespace NeoEdit.Program
 			set
 			{
 				EnsureInTransaction();
-				newActiveTabs = value.Where(tab => Tabs.Contains(tab)).ToList();
+				newActiveTabs = value.Where(tab => Tabs.Contains(tab)).Distinct().ToList();
 				if (!ActiveTabs.Contains(Focused))
 					Focused = ActiveTabs.FirstOrDefault();
 			}
@@ -63,7 +63,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		int? oldColumns, newColumns;
+		int? oldColumns = 1, newColumns = 1;
 		public int? Columns
 		{
 			get => newColumns;
@@ -74,7 +74,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		int? oldRows, newRows;
+		int? oldRows = 1, newRows = 1;
 		public int? Rows
 		{
 			get => newRows;
