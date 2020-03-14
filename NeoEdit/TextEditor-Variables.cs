@@ -13,6 +13,13 @@ namespace NeoEdit.Program
 				throw new Exception("Must start transaction before editing data");
 		}
 
+		TabsWindow oldTabsWindow, newTabsWindow;
+		public TabsWindow TabsWindow
+		{
+			get => newTabsWindow;
+			set => newTabsWindow = value;
+		}
+
 		NEText oldText, newText;
 		NEText Text
 		{
@@ -470,6 +477,7 @@ namespace NeoEdit.Program
 		{
 			EnsureInTransaction();
 
+			newTabsWindow = oldTabsWindow;
 			newText = oldText;
 			newUndoRedo = oldUndoRedo;
 			newTextView = oldTextView;
@@ -513,6 +521,8 @@ namespace NeoEdit.Program
 		public void Commit()
 		{
 			EnsureInTransaction();
+
+			oldTabsWindow = newTabsWindow;
 			oldText = newText;
 			oldUndoRedo = newUndoRedo;
 			oldTextView = newTextView;

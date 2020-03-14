@@ -52,7 +52,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_DetectType() => ContentType = Table.GuessTableType(Text.GetString());
 
-		void ConfigureExecute_Table_Convert() => state.ConfigureExecuteData = TableConvertDialog.Run(tabsWindow, ContentType);
+		void ConfigureExecute_Table_Convert() => state.ConfigureExecuteData = TableConvertDialog.Run(TabsWindow, ContentType);
 
 		void Execute_Table_Convert()
 		{
@@ -69,7 +69,7 @@ namespace NeoEdit.Program
 			if (!Selections[0].HasSelection)
 				throw new Exception("Must have data selected");
 
-			state.ConfigureExecuteData = TableTextToTableDialog.Run(tabsWindow, GetSelectionStrings().Single());
+			state.ConfigureExecuteData = TableTextToTableDialog.Run(TabsWindow, GetSelectionStrings().Single());
 		}
 
 		void Execute_Table_TextToTable()
@@ -113,7 +113,7 @@ namespace NeoEdit.Program
 			OpenTable(new Table(rows, false));
 		}
 
-		void ConfigureExecute_Table_EditTable() => state.ConfigureExecuteData = TableEditTableDialog.Run(tabsWindow, GetTable());
+		void ConfigureExecute_Table_EditTable() => state.ConfigureExecuteData = TableEditTableDialog.Run(TabsWindow, GetTable());
 
 		void Execute_Table_EditTable()
 		{
@@ -133,7 +133,7 @@ namespace NeoEdit.Program
 		void ConfigureExecute_Table_AddColumn()
 		{
 			var table = GetTable();
-			state.ConfigureExecuteData = TableAddColumnDialog.Run(tabsWindow, GetTableVariables(table), table.NumRows);
+			state.ConfigureExecuteData = TableAddColumnDialog.Run(TabsWindow, GetTableVariables(table), table.NumRows);
 		}
 
 		void Execute_Table_AddColumn()
@@ -149,7 +149,7 @@ namespace NeoEdit.Program
 		void ConfigureExecute_Table_Select_RowsByExpression()
 		{
 			var table = GetTable();
-			state.ConfigureExecuteData = GetExpressionDialog.Run(tabsWindow, GetTableVariables(table), table.NumRows);
+			state.ConfigureExecuteData = GetExpressionDialog.Run(TabsWindow, GetTableVariables(table), table.NumRows);
 		}
 
 		void Execute_Table_Select_RowsByExpression()
@@ -169,7 +169,7 @@ namespace NeoEdit.Program
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
 
-			state.ConfigureExecuteData = TableJoinDialog.Run(tabsWindow, GetTable(), joinTable);
+			state.ConfigureExecuteData = TableJoinDialog.Run(TabsWindow, GetTable(), joinTable);
 		}
 
 		void Execute_Table_Join()
@@ -183,7 +183,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_Transpose() => SetText(GetTable().Transpose());
 
-		void ConfigureExecute_Table_Database_GenerateInserts() => state.ConfigureExecuteData = TableDatabaseGenerateInsertsDialog.Run(tabsWindow, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		void ConfigureExecute_Table_Database_GenerateInserts() => state.ConfigureExecuteData = TableDatabaseGenerateInsertsDialog.Run(TabsWindow, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
 		void Execute_Table_Database_GenerateInserts()
 		{
@@ -203,7 +203,7 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void ConfigureExecute_Table_Database_GenerateUpdates() => state.ConfigureExecuteData = TableDatabaseGenerateUpdatesDialog.Run(tabsWindow, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		void ConfigureExecute_Table_Database_GenerateUpdates() => state.ConfigureExecuteData = TableDatabaseGenerateUpdatesDialog.Run(TabsWindow, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
 		void Execute_Table_Database_GenerateUpdates()
 		{
@@ -223,7 +223,7 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		void ConfigureExecute_Table_Database_GenerateDeletes() => state.ConfigureExecuteData = TableDatabaseGenerateDeletesDialog.Run(tabsWindow, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		void ConfigureExecute_Table_Database_GenerateDeletes() => state.ConfigureExecuteData = TableDatabaseGenerateDeletesDialog.Run(TabsWindow, GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
 		void Execute_Table_Database_GenerateDeletes()
 		{

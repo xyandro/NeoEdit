@@ -21,11 +21,11 @@ namespace NeoEdit.Program
 			{
 				EnsureInTransaction();
 
-				Tabs.ForEach(x => x.tabsWindow = null);
+				Tabs.ForEach(x => x.TabsWindow = null);
 
 				newTabs = value;
 
-				Tabs.ForEach(x => x.tabsWindow = this);
+				Tabs.ForEach(x => x.TabsWindow = this);
 
 				var notSeen = newTabs.Except(oldTabs).ToList();
 				if (notSeen.Any())

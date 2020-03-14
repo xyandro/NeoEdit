@@ -93,7 +93,7 @@ namespace NeoEdit.Program
 
 		void Execute_DateTime_UtcNow() => ReplaceSelections(Dater.DateTimeOffsetToString(DateTimeOffset.UtcNow));
 
-		void ConfigureExecute_DateTime_Format() => state.ConfigureExecuteData = DateTimeFormatDialog.Run(tabsWindow, Selections.Select(range => Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
+		void ConfigureExecute_DateTime_Format() => state.ConfigureExecuteData = DateTimeFormatDialog.Run(TabsWindow, Selections.Select(range => Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
 
 		void Execute_DateTime_Format()
 		{
@@ -105,7 +105,7 @@ namespace NeoEdit.Program
 
 		void Execute_DateTime_ToLocal() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: Dater.Local), Dater.Local))).ToList());
 
-		void ConfigureExecute_DateTime_ToTimeZone() => state.ConfigureExecuteData = DateTimeToTimeZoneDialog.Run(tabsWindow);
+		void ConfigureExecute_DateTime_ToTimeZone() => state.ConfigureExecuteData = DateTimeToTimeZoneDialog.Run(TabsWindow);
 
 		void Execute_DateTime_ToTimeZone()
 		{
