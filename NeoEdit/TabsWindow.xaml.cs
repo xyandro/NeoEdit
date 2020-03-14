@@ -167,24 +167,7 @@ namespace NeoEdit.Program
 				Commit();
 				Tabs.ForEach(tab => tab.Commit());
 
-				var clipboardDatas = Tabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
-				if (clipboardDatas.Any())
-				{
-					var newClipboard = new NEClipboard();
-					foreach (var clipboardData in clipboardDatas)
-					{
-						newClipboard.Add(clipboardData.Item1);
-						newClipboard.IsCut = clipboardData.Item2;
-					}
-					NEClipboard.Current = newClipboard;
-				}
-
-				for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
-				{
-					var newKeysAndValues = Tabs.Select(tab => tab.GetChangedKeysAndValues(kvIndex)).NonNull().ToList();
-					if (newKeysAndValues.Any())
-						keysAndValues[kvIndex] = newKeysAndValues;
-				}
+				PostExecute();
 
 				RecordingMacro?.AddAction(state);
 
@@ -328,6 +311,28 @@ namespace NeoEdit.Program
 			}
 
 			ActiveTabs.ForEach(tab => tab.Execute());
+		}
+
+		void PostExecute()
+		{
+			var clipboardDatas = Tabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
+			if (clipboardDatas.Any())
+			{
+				var newClipboard = new NEClipboard();
+				foreach (var clipboardData in clipboardDatas)
+				{
+					newClipboard.Add(clipboardData.Item1);
+					newClipboard.IsCut = clipboardData.Item2;
+				}
+				NEClipboard.Current = newClipboard;
+			}
+
+			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
+			{
+				var newKeysAndValues = Tabs.Select(tab => tab.GetChangedKeysAndValues(kvIndex)).NonNull().ToList();
+				if (newKeysAndValues.Any())
+					keysAndValues[kvIndex] = newKeysAndValues;
+			}
 		}
 
 		//public bool HandleCommand(NECommand command, bool shiftDown, object dialogResult, bool? multiStatus)
