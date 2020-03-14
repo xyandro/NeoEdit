@@ -11,7 +11,6 @@ namespace NeoEdit.Program
 		public static readonly object ConfigureUnnecessary = new object();
 
 		public IReadOnlyList<TextEditor> ActiveTabs;
-		public AnswerResult SavedAnswers = new AnswerResult();
 		public bool Handled = true;
 
 		public NECommand Command;
@@ -25,6 +24,17 @@ namespace NeoEdit.Program
 
 		public ExecuteState(NECommand command) => Command = command;
 
+		AnswerResult savedAnswers;
+		public AnswerResult SavedAnswers
+		{
+			get
+			{
+				if (savedAnswers == null)
+					savedAnswers = new AnswerResult();
+				return savedAnswers;
+			}
+		}
+
 		IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> ClipboardDataMap;
 		public Func<IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>>> ClipboardDataMapFunc;
 		public Tuple<IReadOnlyList<string>, bool?> GetClipboardData(TextEditor textEditor)
@@ -37,11 +47,12 @@ namespace NeoEdit.Program
 			return ClipboardDataMap[textEditor];
 		}
 
-		IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
+		IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap;
 		public Func<int, IReadOnlyDictionary<TextEditor, KeysAndValues>> KeysAndValuesFunc;
-
 		public KeysAndValues GetKeysAndValues(int kvIndex, TextEditor textEditor)
 		{
+			if (KeysAndValuesMap == null)
+				KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
 			if (KeysAndValuesMap[kvIndex] == null)
 				lock (this)
 					if (KeysAndValuesMap[kvIndex] == null)

@@ -47,6 +47,7 @@ namespace NeoEdit.Program
 				MultiStatus = state.MultiStatus,
 				Key = state.Key,
 				Text = state.Text,
+				Handled = false,
 			};
 			var last = actions.LastOrDefault();
 			if ((state.Command == NECommand.Internal_Text) && (last?.Command == NECommand.Internal_Text))
