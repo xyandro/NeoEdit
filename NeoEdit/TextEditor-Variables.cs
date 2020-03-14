@@ -507,9 +507,6 @@ namespace NeoEdit.Program
 			newXScrollViewport = oldXScrollViewport;
 			newYScrollViewport = oldYScrollViewport;
 
-			ChangedClipboardData = newClipboardData = null;
-			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
-				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 			state = null;
 		}
 
@@ -553,9 +550,6 @@ namespace NeoEdit.Program
 			oldXScrollViewport = newXScrollViewport;
 			oldYScrollViewport = newYScrollViewport;
 
-			newClipboardData = ChangedClipboardData = null;
-			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
-				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 			state = null;
 		}
 	}

@@ -2,20 +2,53 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using Microsoft.Win32;
+using NeoEdit.Program.Controls;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
 	public class Macro
 	{
+		static readonly Dictionary<NECommand, bool?> macroInclude;
+
+		static Macro()
+		{
+			macroInclude = Helpers.GetValues<NECommand>().ToDictionary(command => command, command => typeof(NECommand).GetMember(command.ToString()).First().GetCustomAttributes(typeof(NoMacroAttribute), false).Cast<NoMacroAttribute>().Select(attr => attr.IncludeHandled ? default(bool?) : false).DefaultIfEmpty(true).First());
+			macroInclude = new Dictionary<NECommand, bool?>();
+			foreach (var command in Helpers.GetValues<NECommand>())
+				switch (typeof(NECommand).GetMember(command.ToString()).First().GetCustomAttribute<NoMacroAttribute>()?.IncludeHandled)
+				{
+					case true: macroInclude[command] = null; break;
+					case false: macroInclude[command] = false; break;
+					case null: macroInclude[command] = true; break;
+				}
+		}
+
+
 		bool stop = false;
 		readonly List<ExecuteState> actions = new List<ExecuteState>();
 
 		public void AddAction(ExecuteState state)
 		{
+			if (!(macroInclude[state.Command] ?? !state.Unhandled))
+				return;
+
+			// Only save relevant fields
+			state = new ExecuteState(state.Command)
+			{
+				PreExecuteData = state.PreExecuteData,
+				ConfigureExecuteData = state.ConfigureExecuteData,
+				ShiftDown = state.ShiftDown,
+				ControlDown = state.ControlDown,
+				AltDown = state.AltDown,
+				MultiStatus = state.MultiStatus,
+				Key = state.Key,
+				Text = state.Text,
+			};
 			var last = actions.LastOrDefault();
 			if ((state.Command == NECommand.Internal_Text) && (last?.Command == NECommand.Internal_Text))
 				last.Text += state.Text;

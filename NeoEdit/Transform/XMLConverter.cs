@@ -13,8 +13,6 @@ namespace NeoEdit.Program.Transform
 {
 	public static class XMLConverter
 	{
-		[AttributeUsage(AttributeTargets.Field)] public class NoXMLAttribute : Attribute { }
-
 		const string typeTag = "Type";
 		const string itemTag = "Item";
 		const string nullType = "NULL";
@@ -119,9 +117,6 @@ namespace NeoEdit.Program.Transform
 				var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 				foreach (var field in fields)
 				{
-					if (field.GetCustomAttribute<NoXMLAttribute>() != null)
-						continue;
-
 					var value = field.GetValue(obj);
 					if ((value == null) || (value is Delegate))
 						continue;

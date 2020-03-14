@@ -37,12 +37,9 @@ namespace NeoEdit.Program
 		static readonly Brush ActiveWindowBackgroundBrush = new SolidColorBrush(Color.FromRgb(14, 50, 96));
 		static readonly Brush InactiveWindowBackgroundBrush = Brushes.Transparent;
 
-		static readonly Dictionary<NECommand, bool?> macroInclude;
 		static TabsWindow()
 		{
 			UIHelper<TabsWindow>.Register();
-
-			macroInclude = Helpers.GetValues<NECommand>().ToDictionary(command => command, command => typeof(NECommand).GetMember(command.ToString()).First().GetCustomAttributes(typeof(NoMacroAttribute), false).Cast<NoMacroAttribute>().Select(attr => attr.IncludeHandled ? default(bool?) : false).DefaultIfEmpty(true).First());
 
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
@@ -137,52 +134,33 @@ namespace NeoEdit.Program
 		public Macro RecordingMacro { get; set; }
 		public Macro MacroPlaying { get; set; }
 
-		//internal void RunCommand(NECommand command, bool? multiStatus)
-		//{
-		//	if (MacroPlaying != null)
-		//		return;
-
-		//	switch (command)
-		//	{
-		//	}
-
-		//	var shiftDown = this.shiftDown;
-
-		//	object dialogResult;
-		//	if (!GetDialogResult(command, out dialogResult, multiStatus))
-		//		return;
-
-		//	if (RecordingMacro != null)
-		//		RecordingMacro.AddCommand(command, shiftDown, dialogResult, multiStatus);
-
-		//	HandleCommand(command, shiftDown, dialogResult, multiStatus);
-		//}
-
 		public void HandleCommand(ExecuteState state, bool fromMacro = false)
 		{
 			try
 			{
+				BeginTransaction();
+				Tabs.ForEach(tab => tab.BeginTransaction(state));
+
 				state.ClipboardDataMapFunc = GetClipboardDataMap;
 				state.KeysAndValuesFunc = GetKeysAndValuesMap;
 
 				if (!fromMacro)
 				{
+					if (MacroPlaying != null)
+						return;
+
 					state.ShiftDown = shiftDown;
 					state.ControlDown = controlDown;
 					state.AltDown = altDown;
-				}
 
-				BeginTransaction();
-				Tabs.ForEach(tab => tab.BeginTransaction(state));
-
-				if (!fromMacro)
-				{
 					PreExecute(state);
-
 					ConfigureExecute(state);
 				}
 
 				Execute(state);
+
+				Commit();
+				Tabs.ForEach(tab => tab.Commit());
 
 				var clipboardDatas = Tabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
 				if (clipboardDatas.Any())
@@ -203,11 +181,7 @@ namespace NeoEdit.Program
 						keysAndValues[kvIndex] = newKeysAndValues;
 				}
 
-				Commit();
-				Tabs.ForEach(tab => tab.Commit());
-
-				if ((RecordingMacro != null) && (macroInclude[state.Command] ?? !state.Unhandled))
-					RecordingMacro.AddAction(state);
+				RecordingMacro?.AddAction(state);
 
 				DrawAll();
 			}

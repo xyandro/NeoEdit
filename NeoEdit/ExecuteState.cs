@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
 	public class ExecuteState
 	{
-		[XMLConverter.NoXML] IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> ClipboardDataMap;
+		IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>> ClipboardDataMap;
 		public Func<IReadOnlyDictionary<TextEditor, Tuple<IReadOnlyList<string>, bool?>>> ClipboardDataMapFunc;
 
-		[XMLConverter.NoXML] IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
+		IReadOnlyDictionary<TextEditor, KeysAndValues>[] KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<TextEditor, KeysAndValues>), 10).ToArray();
 		public Func<int, IReadOnlyDictionary<TextEditor, KeysAndValues>> KeysAndValuesFunc;
 
-		[XMLConverter.NoXML] public AnswerResult SavedAnswers = new AnswerResult();
+		public AnswerResult SavedAnswers = new AnswerResult();
 
 		public NECommand Command;
 		public object PreExecuteData;
