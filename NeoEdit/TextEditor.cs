@@ -1184,7 +1184,6 @@ namespace NeoEdit.Program
 				case NECommand.Select_Selection_RemoveBeforeCurrent: Execute_Select_Selection_RemoveBeforeCurrent(); break;
 				case NECommand.Select_Selection_RemoveAfterCurrent: Execute_Select_Selection_RemoveAfterCurrent(); break;
 				//case NECommand.Macro_RepeatLastAction: Command_Macro_RepeatLastAction(); break;
-				//case NECommand.Macro_TimeNextAction: timeNext = !timeNext; break;
 				case NECommand.Window_TabIndex: Execute_Window_TabIndex(false); break;
 				case NECommand.Window_ActiveTabIndex: Execute_Window_TabIndex(true); break;
 				case NECommand.Window_ViewValues: Execute_Window_ViewValues(); break;

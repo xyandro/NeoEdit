@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -54,6 +55,8 @@ namespace NeoEdit.Program
 		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
 		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 		bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
+
+		bool timeNextAction;
 
 		public TabsWindow(bool addEmpty = false)
 		{
@@ -164,7 +167,22 @@ namespace NeoEdit.Program
 						state.Configuration = null;
 				}
 
+				Stopwatch sw = null;
+				if (timeNextAction)
+					sw = Stopwatch.StartNew();
+
 				Execute(state);
+
+				if ((sw != null) && (state.Handled))
+				{
+					timeNextAction = false;
+					new Message(this)
+					{
+						Title = "Timer",
+						Text = $"Elapsed time: {sw.ElapsedMilliseconds:n} ms",
+						Options = MessageOptions.Ok,
+					}.Show();
+				}
 
 				Commit();
 				Tabs.ForEach(tab => tab.Commit());
@@ -277,6 +295,7 @@ namespace NeoEdit.Program
 				case NECommand.Macro_Open_Quick_11: Execute_Macro_Open_Quick(11); break;
 				case NECommand.Macro_Open_Quick_12: Execute_Macro_Open_Quick(12); break;
 				case NECommand.Macro_Open_Open: Execute_File_Open_Open(state.Configuration as OpenFileDialogResult); break;
+				case NECommand.Macro_TimeNextAction: Execute_Macro_TimeNextAction(); break;
 				case NECommand.Window_NewWindow: Execute_Window_NewWindow(); break;
 				case NECommand.Window_Full: Execute_Window_Full(); break;
 				case NECommand.Window_Grid: Execute_Window_Grid(); break;
