@@ -137,8 +137,9 @@ namespace NeoEdit.Program
 		public Macro RecordingMacro { get; set; }
 		public Macro MacroPlaying { get; set; }
 
-		public void HandleCommand(ExecuteState state, bool fromMacro = false)
+		public bool HandleCommand(ExecuteState state, bool configure = true)
 		{
+			bool commit = false;
 			try
 			{
 				BeginTransaction();
@@ -147,10 +148,10 @@ namespace NeoEdit.Program
 				state.ClipboardDataMapFunc = GetClipboardDataMap;
 				state.KeysAndValuesFunc = GetKeysAndValuesMap;
 
-				if (!fromMacro)
+				if (configure)
 				{
 					if (MacroPlaying != null)
-						return;
+						return false;
 
 					state.ActiveTabs = ActiveTabs;
 					state.ShiftDown = shiftDown;
@@ -172,8 +173,10 @@ namespace NeoEdit.Program
 					sw = Stopwatch.StartNew();
 
 				Execute(state);
+				if (!state.Handled)
+					return false;
 
-				if ((sw != null) && (state.Handled))
+				if (sw != null)
 				{
 					timeNextAction = false;
 					new Message(this)
@@ -184,21 +187,32 @@ namespace NeoEdit.Program
 					}.Show();
 				}
 
-				Commit();
-				Tabs.ForEach(tab => tab.Commit());
-
-				PostExecute();
-
-				RecordingMacro?.AddAction(state);
-
-				DrawAll();
+				commit = true;
 			}
-			catch
+			catch (OperationCanceledException) { }
+			finally
 			{
-				Rollback();
-				Tabs.ForEach(tab => tab.Rollback());
-				throw;
+				if (commit)
+				{
+					Commit();
+					Tabs.ForEach(tab => tab.Commit());
+
+					PostExecute();
+
+					var action = MacroAction.GetMacroAction(state);
+					if ((RecordingMacro != null) && (action != null))
+						RecordingMacro?.AddAction(action);
+
+					DrawAll();
+				}
+				else
+				{
+					Rollback();
+					Tabs.ForEach(tab => tab.Rollback());
+				}
 			}
+
+			return commit;
 		}
 
 		object Configure(ExecuteState state)
@@ -375,9 +389,7 @@ namespace NeoEdit.Program
 			if (key == Key.System)
 				key = e.SystemKey;
 
-			var state = new ExecuteState(NECommand.Internal_Key) { Key = key };
-			HandleCommand(state);
-			e.Handled = state.Handled;
+			e.Handled = HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)

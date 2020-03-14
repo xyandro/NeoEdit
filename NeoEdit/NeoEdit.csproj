@@ -1031,6 +1031,7 @@
     <Compile Include="LCS.cs" />
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
+    <Compile Include="MacroAction.cs" />
     <Compile Include="Misc\KeySet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
     <Compile Include="MoreLinq.cs" />
