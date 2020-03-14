@@ -386,8 +386,11 @@ namespace NeoEdit.Program
 			var drawBounds = GetDrawBounds();
 			var visibleCursor = (TextEditor.CurrentSelection >= 0) && (TextEditor.CurrentSelection < TextEditor.Selections.Count) ? TextEditor.Selections[TextEditor.CurrentSelection] : null;
 
-			for (var ctr = 1; ctr <= 9; ++ctr)
-				RenderIndicators(dc, drawBounds, null, TextEditor.GetRegions(ctr), null, regionPen[ctr], -2, 2);
+			for (var region = 1; region <= 9; ++region)
+			{
+				var multiplier = (region - 1) / 8d * 4.5 + 2;
+				RenderIndicators(dc, drawBounds, null, TextEditor.GetRegions(region), null, regionPen[region], -2 * multiplier, 2 * multiplier);
+			}
 			if (TextEditor.Selections.Any(range => range.HasSelection))
 				RenderIndicators(dc, drawBounds, visibleCursor, TextEditor.Selections, selectionBrush, selectionPen, -1, 1);
 			else
