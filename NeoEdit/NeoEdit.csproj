@@ -1152,27 +1152,28 @@
     </Compile>
     <Compile Include="Tab.cs" />
     <Compile Include="Table.cs" />
-    <Compile Include="TabsWindow-Diff.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    <Compile Include="Tabs-Diff.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
-    <Compile Include="TabsWindow-File.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    <Compile Include="Tabs-File.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
-    <Compile Include="TabsWindow-Help.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    <Compile Include="Tabs-Help.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
-    <Compile Include="TabsWindow-Internal.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    <Compile Include="Tabs-Internal.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
-    <Compile Include="TabsWindow-Macro.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    <Compile Include="Tabs-Macro.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
-    <Compile Include="TabsWindow-Variables.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    <Compile Include="Tabs-Variables.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
-    <Compile Include="TabsWindow-Window.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    <Compile Include="Tabs-Window.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tabs.cs" />
     <Page Include="TabsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
