@@ -23,7 +23,7 @@ namespace NeoEdit.Program
 			if (!IsActive)
 				return;
 
-			HandleCommand(new ExecuteState(NECommand.Internal_Activate));
+			//HandleCommand(new ExecuteState(NECommand.Internal_Activate));
 		}
 
 		void Execute_Internal_Activate()
