@@ -72,7 +72,7 @@ namespace NeoEdit.Program
 		}
 
 		List<Tab> oldActiveTabs, newActiveTabs;
-		IReadOnlyList<Tab> ActiveTabs => newActiveTabs;
+		IReadOnlyList<Tab> ActiveTabs => Tabs.Where(tab => newActiveTabs.Contains(tab)).ToList();
 
 		void ClearAllActive()
 		{
