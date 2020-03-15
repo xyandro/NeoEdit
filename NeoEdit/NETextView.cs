@@ -9,7 +9,6 @@ namespace NeoEdit.Program
 	{
 		readonly List<int> linePosition;
 		readonly List<int> endingPosition;
-		public string OnlyEnding { get; private set; }
 		public string DefaultEnding { get; private set; }
 
 		public int NumLines => endingPosition.Count;
@@ -49,11 +48,11 @@ namespace NeoEdit.Program
 			var chunkLinePositions = chunks.Select(chunk => new List<int>()).ToList();
 			var chunkEndingPositions = chunks.Select(chunk => new List<int>()).ToList();
 
-			int defaultEnding = Ending_None, onlyEnding = Ending_None;
+			int defaultEnding = Ending_None;
 			Parallel.ForEach(chunks, chunk =>
 			{
 				var index = chunks.IndexOf(chunk);
-				int chunkDefaultEnding = Ending_None, chunkOnlyEnding = Ending_None;
+				int chunkDefaultEnding = Ending_None;
 				var chunkLinePosition = chunkLinePositions[index];
 				var chunkEndingPosition = chunkEndingPositions[index];
 				var chunkMaxIndex = 0;
@@ -81,10 +80,6 @@ namespace NeoEdit.Program
 					{
 						if (chunkDefaultEnding == Ending_None)
 							chunkDefaultEnding = ending;
-						if (chunkOnlyEnding == Ending_None)
-							chunkOnlyEnding = ending;
-						if (chunkOnlyEnding != ending)
-							chunkOnlyEnding = Ending_Mixed;
 					}
 					chunkLinePosition.Add(position);
 					chunkEndingPosition.Add(endLine);
@@ -96,10 +91,6 @@ namespace NeoEdit.Program
 				{
 					if (defaultEnding == Ending_None)
 						defaultEnding = chunkDefaultEnding;
-					if (onlyEnding == Ending_None)
-						onlyEnding = chunkOnlyEnding;
-					if (onlyEnding != chunkOnlyEnding)
-						onlyEnding = Ending_Mixed;
 					MaxIndex = Math.Max(MaxIndex, chunkMaxIndex);
 				}
 			});
@@ -127,7 +118,6 @@ namespace NeoEdit.Program
 			};
 
 			DefaultEnding = endingText[defaultEnding];
-			OnlyEnding = endingText[onlyEnding];
 			MaxPosition = text.Length;
 		}
 
