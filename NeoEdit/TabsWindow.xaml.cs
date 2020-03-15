@@ -629,7 +629,7 @@ namespace NeoEdit.Program
 			else
 				DoGridLayout();
 
-			Title = $"{(Focused == null ? "" : $"{Focused.FileName} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}{(ShowIndex ? $" - {WindowIndex}" : "")}";
+			Title = $"{(Focused == null ? "" : $"{Focused.DisplayName ?? Focused.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}{(ShowIndex ? $" - {WindowIndex}" : "")}";
 			SetStatusBarText();
 			SetMenuCheckboxes();
 		}

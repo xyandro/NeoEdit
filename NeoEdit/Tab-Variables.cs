@@ -125,10 +125,10 @@ namespace NeoEdit.Program
 		}
 
 		string oldDisplayName, newDisplayName;
-		string DisplayName
+		public string DisplayName
 		{
 			get => newDisplayName;
-			set
+			private set
 			{
 				EnsureInTransaction();
 				newDisplayName = value;
