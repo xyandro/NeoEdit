@@ -8,7 +8,7 @@ namespace NeoEdit.Program
 {
 	public class ExecuteState
 	{
-		public static readonly object ConfigureUnnecessary = new object();
+		public static readonly object NoConfiguration = new object();
 
 		public IReadOnlyList<Tab> ActiveTabs;
 		public bool Handled = true;

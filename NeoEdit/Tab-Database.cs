@@ -88,7 +88,7 @@ namespace NeoEdit.Program
 		{
 			ValidateConnection();
 			DatabaseExamineDialog.Run(state.TabsWindow, dbConnection);
-			return ExecuteState.ConfigureUnnecessary;
+			return ExecuteState.NoConfiguration;
 		}
 
 		void Execute_Database_GetSproc()

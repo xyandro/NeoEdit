@@ -164,7 +164,7 @@ namespace NeoEdit.Program
 				case Key.Left:
 				case Key.Right:
 					return state.ActiveTabs.Any(tab => tab.Selections.Any(range => range.HasSelection));
-				default: return ExecuteState.ConfigureUnnecessary;
+				default: return ExecuteState.NoConfiguration;
 			}
 		}
 

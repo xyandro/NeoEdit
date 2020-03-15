@@ -33,8 +33,16 @@ namespace NeoEdit.Program
 
 		void Execute_Internal_MouseActivate(Tab tab)
 		{
-			ClearAllActive();
+			if (!state.ShiftDown)
+				ClearAllActive();
 			SetActive(tab);
+			Focused = tab;
+		}
+
+		void Execute_Internal_CloseTab(Tab tab)
+		{
+			if (tab.CanClose())
+				RemoveTab(tab);
 		}
 	}
 }

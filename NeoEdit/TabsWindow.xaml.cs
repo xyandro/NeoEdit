@@ -46,8 +46,6 @@ namespace NeoEdit.Program
 		}
 
 		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
-		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
-		bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
 
 		public TabsWindow(bool addEmpty = false)
 		{
@@ -142,19 +140,6 @@ namespace NeoEdit.Program
 			e.Handled = true;
 		}
 
-		bool HandleClick(Tab tab)
-		{
-			if (!shiftDown)
-				HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
-			//TODO
-			//else if (Focused != tab)
-			//{
-			//	Focused = tab;
-			//	return true;
-			//}
-			return false;
-		}
-
 		//TODO
 		//protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
 		//{
@@ -219,7 +204,7 @@ namespace NeoEdit.Program
 		Border GetTabLabel(Tab tab)
 		{
 			var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = tab };
-			border.MouseLeftButtonDown += (s, e) => HandleClick(tab);
+			border.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
 			border.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
@@ -253,11 +238,7 @@ namespace NeoEdit.Program
 				Focusable = false,
 				HorizontalAlignment = HorizontalAlignment.Right,
 			};
-			closeButton.Click += (s, e) =>
-			{
-				if (tab.CanClose())
-					Tabs.RemoveTab(tab);
-			};
+			closeButton.Click += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseTab) { Configuration = tab });
 			Grid.SetRow(closeButton, 0);
 			Grid.SetColumn(closeButton, 1);
 			grid.Children.Add(closeButton);
@@ -377,7 +358,7 @@ namespace NeoEdit.Program
 				grid.ColumnDefinitions.Add(new ColumnDefinition());
 				grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-				tabLabelsScrollViewer = new ScrollViewer { HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden, VerticalScrollBarVisibility = ScrollBarVisibility.Hidden };
+				tabLabelsScrollViewer = new ScrollViewer { HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden, VerticalScrollBarVisibility = ScrollBarVisibility.Hidden, Focusable = false };
 
 				tabLabelsStackPanel = new StackPanel { Orientation = Orientation.Horizontal };
 

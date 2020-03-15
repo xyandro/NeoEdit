@@ -100,7 +100,7 @@ namespace NeoEdit.Program
 					if (state.Configuration == null)
 						throw new OperationCanceledException();
 
-					if (state.Configuration == ExecuteState.ConfigureUnnecessary)
+					if (state.Configuration == ExecuteState.NoConfiguration)
 						state.Configuration = null;
 
 					state.ActiveTabs = null;
@@ -172,7 +172,7 @@ namespace NeoEdit.Program
 			}
 
 			if (Focused == null)
-				return ExecuteState.ConfigureUnnecessary;
+				return ExecuteState.NoConfiguration;
 
 			return Focused.Configure();
 		}
@@ -185,6 +185,7 @@ namespace NeoEdit.Program
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
 				case NECommand.Internal_AddTab: Execute_Internal_AddTab(state.Configuration as Tab); break;
 				case NECommand.Internal_MouseActivate: Execute_Internal_MouseActivate(state.Configuration as Tab); break;
+				case NECommand.Internal_CloseTab: Execute_Internal_CloseTab(state.Configuration as Tab); break;
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.File_New_New: Execute_File_New_New(state.ShiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
