@@ -15,15 +15,17 @@ namespace NeoEdit.Program
 		public TabsWindow TabsWindow;
 
 		public NECommand Command;
-		public object Configuration;
-		public bool ShiftDown;
-		public bool ControlDown;
-		public bool AltDown;
+		public ModifierKeys ModifierKeys;
 		public bool? MultiStatus;
 		public Key Key;
 		public string Text;
+		public object Configuration;
 
 		public ExecuteState(NECommand command) => Command = command;
+
+		public bool ShiftDown => ModifierKeys.HasFlag(ModifierKeys.Shift);
+		public bool ControlDown => ModifierKeys.HasFlag(ModifierKeys.Control);
+		public bool AltDown => ModifierKeys.HasFlag(ModifierKeys.Alt);
 
 		AnswerResult savedAnswers;
 		public AnswerResult SavedAnswers

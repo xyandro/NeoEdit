@@ -91,10 +91,6 @@ namespace NeoEdit.Program
 						return false;
 
 					state.ActiveTabs = ActiveTabs;
-					//TODO
-					//state.ShiftDown = shiftDown;
-					//state.ControlDown = controlDown;
-					//state.AltDown = altDown;
 
 					if (state.Configuration == null)
 						state.Configuration = Configure(state);
