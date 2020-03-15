@@ -50,7 +50,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent, Coder.CodePage codePage)
 		{
 			var dialog = new EditDataHashDialog(codePage) { Owner = parent };
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

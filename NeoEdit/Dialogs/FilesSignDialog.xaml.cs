@@ -68,7 +68,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent)
 		{
 			var dialog = new FilesSignDialog { Owner = parent };
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

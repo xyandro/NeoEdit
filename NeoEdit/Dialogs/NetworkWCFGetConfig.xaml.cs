@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using NeoEdit.Program.Controls;
 
@@ -37,7 +38,9 @@ namespace NeoEdit.Program.Dialogs
 		static public Result Run(Window parent)
 		{
 			var dialog = new NetworkWCFGetConfig() { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
@@ -21,7 +22,9 @@ namespace NeoEdit.Program.Dialogs
 		public static string Run(Window parent, string value)
 		{
 			var dialog = new ViewValuesEditValueDialog(value) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.Value : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.Value;
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
 
@@ -38,7 +39,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NetworkAbsoluteURLDialog(variables) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

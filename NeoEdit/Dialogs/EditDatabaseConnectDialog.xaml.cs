@@ -121,7 +121,9 @@ namespace NeoEdit.Program.Dialogs
 		public static DBConnectInfo Run(Window parent, DBConnectInfo dbConnectInfo)
 		{
 			var dialog = new EditDatabaseConnectDialog(dbConnectInfo) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.GetResult() : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.GetResult();
 		}
 	}
 

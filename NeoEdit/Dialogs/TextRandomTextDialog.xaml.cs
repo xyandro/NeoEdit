@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
@@ -43,10 +44,12 @@ namespace NeoEdit.Program.Dialogs
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		public static Result Run(NEVariables variables, Window parent)
+		public static Result Run(Window parent, NEVariables variables)
 		{
 			var dialog = new TextRandomTextDialog(variables) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

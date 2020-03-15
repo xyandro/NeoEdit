@@ -98,11 +98,11 @@ namespace NeoEdit.Program.Dialogs
 			}
 		}
 
-		public static string Run(Window owner, Cryptor.Type type, bool encrypt)
+		public static string Run(Window parent, Cryptor.Type type, bool encrypt)
 		{
-			var dialog = new CryptorKeyDialog(type, encrypt) { Owner = owner };
+			var dialog = new CryptorKeyDialog(type, encrypt) { Owner = parent };
 			if (!dialog.ShowDialog())
-				return null;
+				throw new OperationCanceledException();
 			return dialog.result;
 		}
 	}

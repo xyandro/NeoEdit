@@ -73,7 +73,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent, Coder.CodePage codePage, bool encrypt)
 		{
 			var dialog = new EditDataEncryptDialog(codePage, encrypt) { Owner = parent };
-			return dialog.ShowDialog() == true ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 

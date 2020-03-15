@@ -197,7 +197,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageCropDialog(variables) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 

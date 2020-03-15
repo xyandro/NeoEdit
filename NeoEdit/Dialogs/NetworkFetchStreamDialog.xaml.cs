@@ -62,7 +62,9 @@ namespace NeoEdit.Program.Dialogs
 		static public Result Run(Window parent, NEVariables variables, string outputDirectory)
 		{
 			var dialog = new NetworkFetchStreamDialog(variables, outputDirectory) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

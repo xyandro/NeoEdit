@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
 
@@ -45,7 +46,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent, NEVariables variables, bool move)
 		{
 			var dialog = new FilesOperationsCopyMoveDialog(variables, move) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

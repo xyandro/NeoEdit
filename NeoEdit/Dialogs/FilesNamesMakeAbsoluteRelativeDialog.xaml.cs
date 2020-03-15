@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
@@ -72,7 +73,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent, NEVariables variables, bool absolute, bool checkType)
 		{
 			var dialog = new FilesNamesMakeAbsoluteRelativeDialog(variables, absolute, checkType) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

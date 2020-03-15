@@ -186,7 +186,7 @@ namespace NeoEdit.Program
 
 		void Execute_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
-		object Configure_Text_RandomText() => TextRandomTextDialog.Run(GetVariables(), state.TabsWindow);
+		object Configure_Text_RandomText() => TextRandomTextDialog.Run(state.TabsWindow, GetVariables());
 
 		void Execute_Text_RandomText()
 		{

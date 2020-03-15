@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
@@ -45,7 +46,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent, int? columns, int? rows, int? maxColumns, int? maxRows)
 		{
 			var dialog = new WindowCustomGridDialog(columns, rows, maxColumns, maxRows) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

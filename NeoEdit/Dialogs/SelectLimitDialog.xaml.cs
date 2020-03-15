@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
 
@@ -55,7 +56,7 @@ namespace NeoEdit.Program.Dialogs
 		{
 			var dialog = new SelectLimitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())
-				return null;
+				throw new OperationCanceledException();
 
 			return dialog.result;
 		}

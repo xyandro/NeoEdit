@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Program.Controls;
 
@@ -47,7 +48,7 @@ namespace NeoEdit.Program.Dialogs
 		{
 			var dialog = new FileEncodingLineEndingsDialog(lineEndings) { Owner = parent };
 			if (!dialog.ShowDialog())
-				return null;
+				throw new OperationCanceledException();
 			return dialog.result;
 		}
 	}

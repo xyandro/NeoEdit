@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
@@ -40,7 +41,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent, string ignoreCharacters)
 		{
 			var dialog = new DiffIgnoreCharactersDialog(ignoreCharacters) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

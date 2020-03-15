@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Program;
@@ -53,7 +54,7 @@ namespace NeoEdit.Program.Dialogs
 		{
 			var dialog = new EncodingDialog(codePage ?? Coder.DefaultCodePage, detected) { Owner = parent };
 			if (!dialog.ShowDialog())
-				return null;
+				throw new OperationCanceledException();
 			return dialog.result;
 		}
 

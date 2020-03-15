@@ -59,7 +59,7 @@ namespace NeoEdit.Program
 				InitialDirectory = initialDirectory,
 			};
 			if (dialog.ShowDialog() != true)
-				return null;
+				throw new OperationCanceledException();
 
 			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
 		}

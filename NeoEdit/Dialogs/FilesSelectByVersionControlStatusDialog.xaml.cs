@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Transform;
@@ -65,7 +66,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent)
 		{
 			var dialog = new FilesSelectByVersionControlStatusDialog() { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

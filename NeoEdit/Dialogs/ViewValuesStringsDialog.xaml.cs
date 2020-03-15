@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -53,7 +54,9 @@ namespace NeoEdit.Program.Dialogs
 		public static List<Coder.CodePage> Run(Window parent, List<Coder.CodePage> initialCodePages)
 		{
 			var find = new ViewValuesStringsDialog(initialCodePages) { Owner = parent };
-			return find.ShowDialog() ? find.EncodingCheckBoxes.Where(x => x.IsChecked == true).Select(x => x.CodePage).ToList() : null;
+			if (!find.ShowDialog())
+				throw new OperationCanceledException();
+			return find.EncodingCheckBoxes.Where(x => x.IsChecked == true).Select(x => x.CodePage).ToList();
 		}
 
 		void SelectAllNone(object sender, RoutedEventArgs e)

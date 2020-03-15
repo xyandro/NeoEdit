@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -81,7 +82,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent, Dictionary<FileAttributes, bool?> attributes)
 		{
 			var dialog = new FilesSetAttributesDialog(attributes) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

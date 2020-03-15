@@ -55,7 +55,9 @@ namespace NeoEdit.Program.Dialogs
 		static public Result Run(Window parent, NEVariables variables, int? numRows = null)
 		{
 			var dialog = new EditExpressionExpressionDialog(variables, numRows) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

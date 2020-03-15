@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -79,7 +80,9 @@ namespace NeoEdit.Program.Dialogs
 		public static Result Run(Window parent, List<ParserNode> nodes)
 		{
 			var dialog = new ContentAttributeDialog(nodes) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

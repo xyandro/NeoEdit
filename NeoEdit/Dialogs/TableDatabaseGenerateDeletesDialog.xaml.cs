@@ -50,7 +50,9 @@ namespace NeoEdit.Program.Dialogs
 		static public Result Run(Window parent, Table table, string tableName)
 		{
 			var dialog = new TableDatabaseGenerateDeletesDialog(table, tableName) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

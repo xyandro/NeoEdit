@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Program.Controls;
@@ -252,7 +253,9 @@ namespace NeoEdit.Program.Dialogs
 		static public Result Run(Window parent, string text, bool selectionOnly, NEVariables variables)
 		{
 			var dialog = new EditFindFindDialog(text, selectionOnly, variables) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

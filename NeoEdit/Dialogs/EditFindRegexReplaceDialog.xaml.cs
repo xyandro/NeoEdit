@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Program.Controls;
 
@@ -98,7 +99,9 @@ namespace NeoEdit.Program.Dialogs
 		static public Result Run(Window parent, string text, bool selectionOnly)
 		{
 			var dialog = new EditFindRegexReplaceDialog(text, selectionOnly) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }

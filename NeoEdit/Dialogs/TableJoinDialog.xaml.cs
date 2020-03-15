@@ -57,7 +57,9 @@ namespace NeoEdit.Program.Dialogs
 		static public Result Run(Window parent, Table leftTable, Table rightTable)
 		{
 			var dialog = new TableJoinDialog(leftTable, rightTable) { Owner = parent };
-			return dialog.ShowDialog() ? dialog.result : null;
+			if (!dialog.ShowDialog())
+				throw new OperationCanceledException();
+			return dialog.result;
 		}
 	}
 }
