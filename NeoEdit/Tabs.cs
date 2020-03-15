@@ -97,12 +97,6 @@ namespace NeoEdit.Program
 					if (state.Configuration == null)
 						state.Configuration = Configure();
 
-					if (state.Configuration == null)
-						throw new OperationCanceledException();
-
-					if (state.Configuration == ExecuteState.NoConfiguration)
-						state.Configuration = null;
-
 					state.ActiveTabs = null;
 				}
 
@@ -172,7 +166,7 @@ namespace NeoEdit.Program
 			}
 
 			if (Focused == null)
-				return ExecuteState.NoConfiguration;
+				return null;
 
 			return Focused.Configure();
 		}

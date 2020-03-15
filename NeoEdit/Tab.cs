@@ -559,7 +559,7 @@ namespace NeoEdit.Program
 				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: return Configure_Select_Repeats_Tabs_CommonNonCommon(false);
 				case NECommand.Select_Split: return Configure_Select_Split();
 				case NECommand.Select_Selection_ToggleAnchor: return Configure_Select_Selection_ToggleAnchor();
-				default: return ExecuteState.NoConfiguration;
+				default: return null;
 			}
 		}
 		#endregion
