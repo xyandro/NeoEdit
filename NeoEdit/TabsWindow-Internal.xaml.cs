@@ -54,5 +54,11 @@ namespace NeoEdit.Program
 		}
 
 		void Execute_Internal_AddTab(Tab tab) => AddTab(tab);
+
+		void Execute_Internal_MouseActivate(Tab tab)
+		{
+			ClearAllActive();
+			SetActive(tab);
+		}
 	}
 }

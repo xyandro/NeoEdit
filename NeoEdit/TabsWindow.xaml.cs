@@ -73,7 +73,7 @@ namespace NeoEdit.Program
 			activateTabsTimer = new RunOnceTimer(() => ActivateTabs());
 			NEClipboard.ClipboardChanged += () => SetStatusBarText();
 
-			//scrollBar.ValueChanged += (s, e) => QueueUpdateLayout(false);
+			scrollBar.ValueChanged += (s, e) => DrawAll();
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
 			if (addEmpty)
@@ -255,6 +255,7 @@ namespace NeoEdit.Program
 			{
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
 				case NECommand.Internal_AddTab: Execute_Internal_AddTab(state.Configuration as Tab); break;
+				case NECommand.Internal_MouseActivate: Execute_Internal_MouseActivate(state.Configuration as Tab); break;
 				case NECommand.Internal_Key: Execute_Internal_Key(state); break;
 				case NECommand.File_New_New: Execute_File_New_New(shiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
@@ -433,7 +434,7 @@ namespace NeoEdit.Program
 
 		public void AddTab(Tab tab, int? index = null, bool canReplace = true)
 		{
-			if ((canReplace) && (!index.HasValue) && (!tab.Empty()) && (Focused != null) && (Focused.Empty()))
+			if ((canReplace) && (!index.HasValue) && (Focused != null) && (Focused.Empty()) && (oldTabs.Contains(Focused)))
 			{
 				index = Tabs.IndexOf(Focused);
 				RemoveTab(Focused);
@@ -506,10 +507,7 @@ namespace NeoEdit.Program
 		bool HandleClick(Tab tab)
 		{
 			if (!shiftDown)
-			{
-				ClearAllActive();
-				SetActive(tab);
-			}
+				HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
 			else if (Focused != tab)
 			{
 				Focused = tab;
@@ -742,12 +740,12 @@ namespace NeoEdit.Program
 
 			if (Focused != null)
 			{
-				var content = new TabWindow(Focused);
-				Grid.SetRow(content, 1);
-				Grid.SetColumn(content, 0);
-				Grid.SetColumnSpan(content, 3);
-				grid.Children.Add(content);
-				content.DrawAll();
+				var tabWindow = new TabWindow(Focused);
+				Grid.SetRow(tabWindow, 1);
+				Grid.SetColumn(tabWindow, 0);
+				Grid.SetColumnSpan(tabWindow, 3);
+				grid.Children.Add(tabWindow);
+				tabWindow.DrawAll();
 			}
 
 			outerBorder.Child = grid;

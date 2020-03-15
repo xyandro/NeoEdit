@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,7 +14,7 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		void Execute_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : this).AddTab(new Tab());
+		void Execute_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : this).AddTab(new Tab(), canReplace: false);
 
 		void Execute_File_New_FromClipboards()
 		{
