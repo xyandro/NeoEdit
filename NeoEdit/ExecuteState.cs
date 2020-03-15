@@ -15,7 +15,9 @@ namespace NeoEdit.Program
 		public TabsWindow TabsWindow;
 
 		public NECommand Command;
-		public ModifierKeys Modifiers;
+		public bool ShiftDown;
+		public bool ControlDown;
+		public bool AltDown;
 		public bool? MultiStatus;
 		public Key Key;
 		public string Text;
@@ -23,9 +25,15 @@ namespace NeoEdit.Program
 
 		public ExecuteState(NECommand command) => Command = command;
 
-		public bool ShiftDown => Modifiers.HasFlag(ModifierKeys.Shift);
-		public bool ControlDown => Modifiers.HasFlag(ModifierKeys.Control);
-		public bool AltDown => Modifiers.HasFlag(ModifierKeys.Alt);
+		public ModifierKeys Modifiers
+		{
+			set
+			{
+				ShiftDown = value.HasFlag(ModifierKeys.Shift);
+				ControlDown = value.HasFlag(ModifierKeys.Control);
+				AltDown = value.HasFlag(ModifierKeys.Alt);
+			}
+		}
 
 		AnswerResult savedAnswers;
 		public AnswerResult SavedAnswers
