@@ -12,6 +12,7 @@ namespace NeoEdit.Program
 
 		public IReadOnlyList<Tab> ActiveTabs;
 		public bool Handled = true;
+		public TabsWindow TabsWindow;
 
 		public NECommand Command;
 		public object Configuration;

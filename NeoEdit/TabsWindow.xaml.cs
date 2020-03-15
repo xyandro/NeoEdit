@@ -47,9 +47,6 @@ namespace NeoEdit.Program
 		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 		bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
 
-		bool timeNextAction;
-		MacroAction lastAction;
-
 		public TabsWindow(bool addEmpty = false)
 		{
 			Tabs = new Tabs();

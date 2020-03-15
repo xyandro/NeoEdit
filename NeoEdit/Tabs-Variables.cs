@@ -33,7 +33,7 @@ namespace NeoEdit.Program
 
 			if (tab == null)
 				throw new ArgumentNullException();
-			if (tab.TabsWindow != null)
+			if (tab.Tabs != null)
 				throw new Exception("Tab already assigned");
 			if (newAllTabs.Contains(tab))
 				throw new Exception("Tab already in list");
@@ -57,7 +57,7 @@ namespace NeoEdit.Program
 
 			if (tab == null)
 				throw new ArgumentNullException();
-			if (tab.TabsWindow == null)
+			if (tab.Tabs == null)
 				throw new Exception("Tab not assigned");
 			if (!newAllTabs.Contains(tab))
 				throw new Exception("Tab not in list");
@@ -65,7 +65,7 @@ namespace NeoEdit.Program
 			if (newAllTabs == oldAllTabs)
 				newAllTabs = newAllTabs.ToList();
 			newAllTabs.Remove(tab);
-			tab.TabsWindow = null;
+			tab.Tabs = null;
 
 			if (newActiveTabs == oldActiveTabs)
 				newActiveTabs = new HashSet<Tab>(newActiveTabs);

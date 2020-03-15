@@ -419,5 +419,7 @@ namespace NeoEdit.Program
 			//tab.Goto(line, column, index);
 			return true;
 		}
+
+		public void QueueActivateTabs() => TabsWindow.QueueActivateTabs();
 	}
 }
