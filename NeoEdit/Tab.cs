@@ -78,8 +78,10 @@ namespace NeoEdit.Program
 				Selections = Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList();
 		}
 
-		void Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		void Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs = null, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
 		{
+			if (strs == null)
+				strs = Enumerable.Repeat("", ranges.Count).ToList();
 			if (ranges.Count != strs.Count)
 				throw new Exception("Invalid string count");
 

@@ -2,4 +2,3 @@ Make modal dialogs modal for owning window only
 Print
 Add ability to select all attributes
 Separate tabs from view
-Move transaction start to execute

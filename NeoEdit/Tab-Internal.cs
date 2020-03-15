@@ -231,7 +231,7 @@ namespace NeoEdit.Program
 							}
 
 							return new Range(position, anchor);
-						}).Where(range => range != null).ToList(), null);
+						}).Where(range => range != null).ToList());
 					}
 					break;
 				case Key.Escape:

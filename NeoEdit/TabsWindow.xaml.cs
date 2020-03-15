@@ -423,14 +423,6 @@ namespace NeoEdit.Program
 			e.Handled = true;
 		}
 
-		void ShowFocused()
-		{
-			//TODO
-			//if (Focused == null)
-			//	return;
-			//Focused.Focus();
-		}
-
 		public void SetLayout(int? columns = null, int? rows = null, int? maxColumns = null, int? maxRows = null)
 		{
 			Columns = columns;
