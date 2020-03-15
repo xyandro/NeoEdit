@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -45,13 +44,9 @@ namespace NeoEdit.Program
 			InactiveWindowBackgroundBrush.Freeze();
 		}
 
-		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
-
 		public TabsWindow(bool addEmpty = false)
 		{
 			Tabs = new Tabs();
-			if (addEmpty)
-				HandleCommand(new ExecuteState(NECommand.File_New_New));
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
 			InitializeComponent();
@@ -179,29 +174,7 @@ namespace NeoEdit.Program
 			//}
 		}
 
-		void SetColor(Border border)
-		{
-			if (border.Tag is Tab tab)
-			{
-				if (Tabs.Focused == tab)
-				{
-					border.BorderBrush = FocusedWindowBorderBrush;
-					border.Background = FocusedWindowBackgroundBrush;
-				}
-				else if (Tabs.IsActive(tab))
-				{
-					border.BorderBrush = ActiveWindowBorderBrush;
-					border.Background = ActiveWindowBackgroundBrush;
-				}
-				else
-				{
-					border.BorderBrush = InactiveWindowBorderBrush;
-					border.Background = InactiveWindowBackgroundBrush;
-				}
-			}
-		}
-
-		Border GetTabLabel(Tab tab)
+		Border GetTabLabel(Tab tab, bool getSize = false)
 		{
 			var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = tab };
 			border.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
@@ -214,7 +187,21 @@ namespace NeoEdit.Program
 				}
 			};
 
-			SetColor(border);
+			if (Tabs.Focused == tab)
+			{
+				border.BorderBrush = FocusedWindowBorderBrush;
+				border.Background = FocusedWindowBackgroundBrush;
+			}
+			else if (Tabs.IsActive(tab))
+			{
+				border.BorderBrush = ActiveWindowBorderBrush;
+				border.Background = ActiveWindowBackgroundBrush;
+			}
+			else
+			{
+				border.BorderBrush = InactiveWindowBorderBrush;
+				border.Background = InactiveWindowBackgroundBrush;
+			}
 
 			var grid = new Grid();
 			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(12) });
@@ -244,6 +231,10 @@ namespace NeoEdit.Program
 			grid.Children.Add(closeButton);
 
 			border.Child = grid;
+
+			if (getSize)
+				border.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
 			return border;
 		}
 

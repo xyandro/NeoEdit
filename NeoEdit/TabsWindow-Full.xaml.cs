@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -12,19 +11,15 @@ namespace NeoEdit.Program
 	{
 		bool lastFull = false;
 		Size lastSize;
-		IReadOnlyList<Tab> prevTabs;
-		StackPanel tabLabelsStackPanel;
-		ScrollViewer tabLabelsScrollViewer;
+		Canvas tabLabelsCanvas;
 		Grid contentGrid;
 
 		void ClearFullLayout()
 		{
-			lastFull = default;
+			lastFull = false;
 			lastSize = default;
-			prevTabs = default;
-			tabLabelsStackPanel = default;
-			tabLabelsScrollViewer = default;
-			contentGrid = default;
+			tabLabelsCanvas = null;
+			contentGrid = null;
 		}
 
 		void DoFullLayout(bool setFocus)
@@ -32,99 +27,136 @@ namespace NeoEdit.Program
 			ClearGridLayout();
 
 			if (lastSize != canvas.RenderSize)
-			{
-				lastSize = canvas.RenderSize;
-				lastFull = false;
-			}
+				ClearFullLayout();
 
 			if (!lastFull)
 			{
 				lastFull = true;
-				prevTabs = null;
-
-				canvas.Children.Clear();
-
-				if (scrollBar.Visibility != Visibility.Collapsed)
-				{
-					scrollBar.Visibility = Visibility.Collapsed;
-					UpdateLayout();
-				}
-
-				var outerBorder = new Border
-				{
-					Width = canvas.ActualWidth,
-					Height = canvas.ActualHeight,
-					BorderBrush = OutlineBrush,
-					Background = BackgroundBrush,
-					BorderThickness = new Thickness(2),
-					CornerRadius = new CornerRadius(8),
-				};
-
-				var grid = new Grid { AllowDrop = true };
-				grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-				grid.RowDefinitions.Add(new RowDefinition());
-				grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-				grid.ColumnDefinitions.Add(new ColumnDefinition());
-				grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
-				tabLabelsScrollViewer = new ScrollViewer { HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden, VerticalScrollBarVisibility = ScrollBarVisibility.Hidden, Focusable = false };
-
-				tabLabelsStackPanel = new StackPanel { Orientation = Orientation.Horizontal };
-
-				tabLabelsScrollViewer.Content = tabLabelsStackPanel;
-				Grid.SetRow(tabLabelsScrollViewer, 0);
-				Grid.SetColumn(tabLabelsScrollViewer, 1);
-				grid.Children.Add(tabLabelsScrollViewer);
-
-				var moveLeft = new RepeatButton { Width = 20, Height = 20, Content = "⮜", Margin = new Thickness(0, 0, 4, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, Focusable = false };
-				moveLeft.Click += (s, e) => tabLabelsScrollViewer.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabelsScrollViewer.HorizontalOffset - 50, tabLabelsScrollViewer.ScrollableWidth)));
-				Grid.SetRow(moveLeft, 0);
-				Grid.SetColumn(moveLeft, 0);
-				grid.Children.Add(moveLeft);
-
-				var moveRight = new RepeatButton { Width = 20, Height = 20, Content = "⮞", Margin = new Thickness(4, 0, 0, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, Focusable = false };
-				moveRight.Click += (s, e) => tabLabelsScrollViewer.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabelsScrollViewer.HorizontalOffset + 50, tabLabelsScrollViewer.ScrollableWidth)));
-				Grid.SetRow(moveRight, 0);
-				Grid.SetColumn(moveRight, 2);
-				grid.Children.Add(moveRight);
-
-				contentGrid = new Grid();
-				Grid.SetRow(contentGrid, 1);
-				Grid.SetColumn(contentGrid, 0);
-				Grid.SetColumnSpan(contentGrid, 3);
-				grid.Children.Add(contentGrid);
-
-				outerBorder.Child = grid;
-				canvas.Children.Add(outerBorder);
+				CreateFullControls();
 			}
 
-			if (prevTabs != Tabs.AllTabs)
+			CreateTabLabels();
+
+			SetContent();
+		}
+
+		private void CreateFullControls()
+		{
+			canvas.Children.Clear();
+
+			if (scrollBar.Visibility != Visibility.Collapsed)
 			{
-				prevTabs = Tabs.AllTabs;
-				tabLabelsStackPanel.Children.Clear();
-				foreach (var tab in Tabs.AllTabs)
-				{
-					var tabLabel = GetTabLabel(tab);
-					tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as Tab);
-					tabLabelsStackPanel.Children.Add(tabLabel);
-				}
-			}
-			else
-			{
-				tabLabelsStackPanel.Children.OfType<Border>().ForEach(SetColor);
+				scrollBar.Visibility = Visibility.Collapsed;
+				UpdateLayout();
 			}
 
-			if ((setFocus) && (Tabs.Focused != null))
+			var outerBorder = new Border
 			{
-				var show = tabLabelsStackPanel.Children.OfType<FrameworkElement>().Where(x => x.Tag == Tabs.Focused).FirstOrDefault();
-				if (show != null)
+				Width = canvas.ActualWidth,
+				Height = canvas.ActualHeight,
+				BorderBrush = OutlineBrush,
+				Background = BackgroundBrush,
+				BorderThickness = new Thickness(2),
+				CornerRadius = new CornerRadius(8),
+			};
+
+			var grid = new Grid { AllowDrop = true };
+			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(20) });
+			grid.RowDefinitions.Add(new RowDefinition());
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(20) });
+			grid.ColumnDefinitions.Add(new ColumnDefinition());
+			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(20) });
+
+			tabLabelsCanvas = new Canvas { ClipToBounds = true };
+			Grid.SetRow(tabLabelsCanvas, 0);
+			Grid.SetColumn(tabLabelsCanvas, 1);
+			grid.Children.Add(tabLabelsCanvas);
+
+			var moveLeft = new RepeatButton { Content = "⮜", Margin = new Thickness(0, 0, 4, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, Focusable = false };
+			//moveLeft.Click += (s, e) => tabLabelsScrollViewer.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabelsScrollViewer.HorizontalOffset - 50, tabLabelsScrollViewer.ScrollableWidth)));
+			Grid.SetRow(moveLeft, 0);
+			Grid.SetColumn(moveLeft, 0);
+			grid.Children.Add(moveLeft);
+
+			var moveRight = new RepeatButton { Content = "⮞", Margin = new Thickness(4, 0, 0, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, Focusable = false };
+			//moveRight.Click += (s, e) => tabLabelsScrollViewer.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabelsScrollViewer.HorizontalOffset + 50, tabLabelsScrollViewer.ScrollableWidth)));
+			Grid.SetRow(moveRight, 0);
+			Grid.SetColumn(moveRight, 2);
+			grid.Children.Add(moveRight);
+
+			contentGrid = new Grid();
+			Grid.SetRow(contentGrid, 1);
+			Grid.SetColumn(contentGrid, 0);
+			Grid.SetColumnSpan(contentGrid, 3);
+			grid.Children.Add(contentGrid);
+
+			outerBorder.Child = grid;
+			canvas.Children.Add(outerBorder);
+		}
+
+		void CreateTabLabels()
+		{
+			tabLabelsCanvas.Children.Clear();
+			if (Tabs.Focused == null)
+				return;
+
+			var focusedIndex = Tabs.GetTabIndex(Tabs.Focused);
+			var tabLabels = new List<Border>();
+
+			var left = double.MaxValue;
+			var right = double.MinValue;
+			var leftIndex = focusedIndex - 1;
+			var rightIndex = focusedIndex;
+			while (true)
+			{
+				if ((rightIndex < Tabs.AllTabs.Count) && (right <= canvas.ActualWidth - 40))
 				{
-					tabLabelsScrollViewer.UpdateLayout();
-					var left = show.TranslatePoint(new Point(0, 0), tabLabelsScrollViewer).X + tabLabelsScrollViewer.HorizontalOffset;
-					tabLabelsScrollViewer.ScrollToHorizontalOffset(Math.Min(left, Math.Max(tabLabelsScrollViewer.HorizontalOffset, left + show.ActualWidth - tabLabelsScrollViewer.ViewportWidth)));
+					var tabLabel = GetTabLabel(Tabs.AllTabs[rightIndex], true);
+					tabLabels.Add(tabLabel);
+					if (right == double.MinValue)
+					{
+						left = (canvas.ActualWidth - 40 - tabLabel.DesiredSize.Width) / 2;
+						right = left + tabLabel.DesiredSize.Width;
+					}
+					else
+						right += tabLabel.DesiredSize.Width;
+					++rightIndex;
 				}
+				else if (rightIndex == Tabs.AllTabs.Count)
+				{
+					++rightIndex; // Don't want to do this again
+					var offset = Math.Max(canvas.ActualWidth - 40 - 3 - right, 0);
+					left += offset;
+					right += offset;
+				}
+				else if ((leftIndex >= 0) && (left >= 0))
+				{
+					var tabLabel = GetTabLabel(Tabs.AllTabs[leftIndex], true);
+					tabLabels.Insert(0, tabLabel);
+					left -= tabLabel.DesiredSize.Width;
+					--leftIndex;
+				}
+				else if (leftIndex == -1)
+				{
+					--leftIndex; // Don't want to do this again
+					var offset = Math.Max(0, left);
+					left -= offset;
+					right -= offset;
+				}
+				else
+					break;
 			}
 
+			foreach (var tabLabel in tabLabels)
+			{
+				Canvas.SetLeft(tabLabel, left);
+				tabLabelsCanvas.Children.Add(tabLabel);
+				left += tabLabel.DesiredSize.Width;
+			}
+		}
+
+		void SetContent()
+		{
 			contentGrid.Children.Clear();
 			if (Tabs.Focused != null)
 			{
