@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow2
+	partial class Tabs
 	{
 		void Execute_Diff_Diff(bool shiftDown)
 		{

@@ -10,21 +10,21 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	public partial class TabsWindow2
+	public partial class Tabs
 	{
 		bool timeNextAction;
 		MacroAction lastAction;
 
-		public TabsWindow2()
+		public Tabs()
 		{
-			oldTabs = newTabs = new List<Tab>();
+			oldAllTabs = newAllTabs = new List<Tab>();
 			oldActiveTabs = newActiveTabs = new HashSet<Tab>();
 		}
 
 		public IReadOnlyDictionary<Tab, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
 		{
 			var empty = Tuple.Create(new List<string>() as IReadOnlyList<string>, default(bool?));
-			var clipboardDataMap = Tabs.ToDictionary(x => x, x => empty);
+			var clipboardDataMap = AllTabs.ToDictionary(x => x, x => empty);
 
 			if (NEClipboard.Current.Count == ActiveTabs.Count)
 				NEClipboard.Current.ForEach((cb, index) => clipboardDataMap[ActiveTabs[index]] = Tuple.Create(cb, NEClipboard.Current.IsCut));
@@ -45,10 +45,10 @@ namespace NeoEdit.Program
 		public Dictionary<Tab, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
 		{
 			var empty = new KeysAndValues(new List<string>(), kvIndex == 0);
-			var keysAndValuesMap = Tabs.ToDictionary(x => x, x => empty);
+			var keysAndValuesMap = AllTabs.ToDictionary(x => x, x => empty);
 
 			if (keysAndValues[kvIndex].Count == 1)
-				Tabs.ForEach(tab => keysAndValuesMap[tab] = keysAndValues[kvIndex][0]);
+				AllTabs.ForEach(tab => keysAndValuesMap[tab] = keysAndValues[kvIndex][0]);
 			else if (keysAndValues[kvIndex].Count == ActiveTabs.Count)
 				ActiveTabs.ForEach((tab, index) => keysAndValuesMap[tab] = keysAndValues[kvIndex][index]);
 
@@ -80,7 +80,7 @@ namespace NeoEdit.Program
 				}
 
 				BeginTransaction();
-				Tabs.ForEach(tab => tab.BeginTransaction(state));
+				AllTabs.ForEach(tab => tab.BeginTransaction(state));
 
 				state.ClipboardDataMapFunc = GetClipboardDataMap;
 				state.KeysAndValuesFunc = GetKeysAndValuesMap;
@@ -137,7 +137,7 @@ namespace NeoEdit.Program
 					var setFocus = oldFocused != newFocused;
 
 					Commit();
-					Tabs.ForEach(tab => tab.Commit());
+					AllTabs.ForEach(tab => tab.Commit());
 
 					PostExecute();
 
@@ -154,7 +154,7 @@ namespace NeoEdit.Program
 				else
 				{
 					Rollback();
-					Tabs.ForEach(tab => tab.Rollback());
+					AllTabs.ForEach(tab => tab.Rollback());
 				}
 			}
 
@@ -289,7 +289,7 @@ namespace NeoEdit.Program
 
 		void PostExecute()
 		{
-			var clipboardDatas = Tabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
+			var clipboardDatas = AllTabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
 			if (clipboardDatas.Any())
 			{
 				var newClipboard = new NEClipboard();
@@ -303,12 +303,12 @@ namespace NeoEdit.Program
 
 			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 			{
-				var newKeysAndValues = Tabs.Select(tab => tab.GetChangedKeysAndValues(kvIndex)).NonNull().ToList();
+				var newKeysAndValues = AllTabs.Select(tab => tab.GetChangedKeysAndValues(kvIndex)).NonNull().ToList();
 				if (newKeysAndValues.Any())
 					keysAndValues[kvIndex] = newKeysAndValues;
 			}
 
-			var dragFiles = Tabs.Select(tab => tab.ChangedDragFiles).NonNull().SelectMany().Distinct().ToList();
+			var dragFiles = AllTabs.Select(tab => tab.ChangedDragFiles).NonNull().SelectMany().Distinct().ToList();
 			if (dragFiles.Any())
 			{
 				var nonExisting = dragFiles.Where(x => !File.Exists(x)).ToList();
@@ -329,9 +329,9 @@ namespace NeoEdit.Program
 
 		public void AddTab(Tab tab, int? index = null, bool canReplace = true)
 		{
-			if ((canReplace) && (!index.HasValue) && (Focused != null) && (Focused.Empty()) && (oldTabs.Contains(Focused)))
+			if ((canReplace) && (!index.HasValue) && (Focused != null) && (Focused.Empty()) && (oldAllTabs.Contains(Focused)))
 			{
-				index = Tabs.IndexOf(Focused);
+				index = AllTabs.IndexOf(Focused);
 				RemoveTab(Focused);
 			}
 
@@ -369,7 +369,7 @@ namespace NeoEdit.Program
 
 		public int GetTabIndex(Tab tab, bool activeOnly = false)
 		{
-			var index = (activeOnly ? ActiveTabs : Tabs).Indexes(x => x == tab).DefaultIfEmpty(-1).First();
+			var index = (activeOnly ? ActiveTabs : AllTabs).Indexes(x => x == tab).DefaultIfEmpty(-1).First();
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;
@@ -377,20 +377,20 @@ namespace NeoEdit.Program
 
 		void MovePrevNext(int offset, bool shiftDown, bool orderByActive = false)
 		{
-			if (Tabs.Count == 0)
+			if (AllTabs.Count == 0)
 				return;
 
 			Tab tab;
 			if (Focused == null)
-				tab = Tabs[0];
+				tab = AllTabs[0];
 			else
 			{
-				var tabs = orderByActive ? Tabs.OrderByDescending(x => x.LastActive).ToList() : Tabs.ToList();
+				var tabs = orderByActive ? AllTabs.OrderByDescending(x => x.LastActive).ToList() : AllTabs.ToList();
 				var index = tabs.IndexOf(Focused) + offset;
 				if (index < 0)
-					index += Tabs.Count;
-				if (index >= Tabs.Count)
-					index -= Tabs.Count;
+					index += AllTabs.Count;
+				if (index >= AllTabs.Count)
+					index -= AllTabs.Count;
 				tab = tabs[index];
 			}
 			if (!shiftDown)
@@ -407,7 +407,7 @@ namespace NeoEdit.Program
 
 		public bool GotoTab(string fileName, int? line, int? column, int? index)
 		{
-			var tab = Tabs.FirstOrDefault(x => x.FileName == fileName);
+			var tab = AllTabs.FirstOrDefault(x => x.FileName == fileName);
 			if (tab == null)
 				return false;
 			//Activate();

@@ -8,7 +8,7 @@ using NeoEdit.Program.NEClipboards;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow2
+	partial class Tabs
 	{
 		static string QuickMacro(int num) => $"QuickText{num}.xml";
 

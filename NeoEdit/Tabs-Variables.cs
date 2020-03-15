@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow2
+	partial class Tabs
 	{
 		bool inTransaction = false;
 		void EnsureInTransaction()
@@ -24,8 +24,8 @@ namespace NeoEdit.Program
 			}
 		}
 
-		List<Tab> oldTabs, newTabs;
-		public IReadOnlyList<Tab> Tabs => newTabs;
+		List<Tab> oldAllTabs, newAllTabs;
+		public IReadOnlyList<Tab> AllTabs => newAllTabs;
 
 		public void InsertTab(Tab tab, int? index = null)
 		{
@@ -35,15 +35,15 @@ namespace NeoEdit.Program
 				throw new ArgumentNullException();
 			if (tab.TabsWindow != null)
 				throw new Exception("Tab already assigned");
-			if (newTabs.Contains(tab))
+			if (newAllTabs.Contains(tab))
 				throw new Exception("Tab already in list");
 
-			if (newTabs == oldTabs)
-				newTabs = newTabs.ToList();
-			newTabs.Insert(index ?? newTabs.Count, tab);
+			if (newAllTabs == oldAllTabs)
+				newAllTabs = newAllTabs.ToList();
+			newAllTabs.Insert(index ?? newAllTabs.Count, tab);
 			//TODO tab.TabsWindow = this;
 
-			if (!newActiveTabs.Except(oldTabs).Any())
+			if (!newActiveTabs.Except(oldAllTabs).Any())
 				ClearAllActive();
 
 			newActiveTabs.Add(tab);
@@ -59,12 +59,12 @@ namespace NeoEdit.Program
 				throw new ArgumentNullException();
 			if (tab.TabsWindow == null)
 				throw new Exception("Tab not assigned");
-			if (!newTabs.Contains(tab))
+			if (!newAllTabs.Contains(tab))
 				throw new Exception("Tab not in list");
 
-			if (newTabs == oldTabs)
-				newTabs = newTabs.ToList();
-			newTabs.Remove(tab);
+			if (newAllTabs == oldAllTabs)
+				newAllTabs = newAllTabs.ToList();
+			newAllTabs.Remove(tab);
 			tab.TabsWindow = null;
 
 			if (newActiveTabs == oldActiveTabs)
@@ -76,14 +76,14 @@ namespace NeoEdit.Program
 
 			if (newFocused == null)
 			{
-				newFocused = newTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
+				newFocused = newAllTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
 				if (newFocused != null)
 					newActiveTabs.Add(newFocused);
 			}
 		}
 
 		HashSet<Tab> oldActiveTabs, newActiveTabs;
-		public IReadOnlyList<Tab> ActiveTabs => Tabs.Where(tab => newActiveTabs.Contains(tab)).ToList();
+		public IReadOnlyList<Tab> ActiveTabs => AllTabs.Where(tab => newActiveTabs.Contains(tab)).ToList();
 
 		public void ClearAllActive()
 		{
@@ -188,7 +188,7 @@ namespace NeoEdit.Program
 			EnsureInTransaction();
 
 			newTabsWindow = oldTabsWindow;
-			newTabs = oldTabs;
+			newAllTabs = oldAllTabs;
 			newActiveTabs = oldActiveTabs;
 			newFocused = oldFocused;
 			newColumns = oldColumns;
@@ -204,7 +204,7 @@ namespace NeoEdit.Program
 			EnsureInTransaction();
 
 			oldTabsWindow = newTabsWindow;
-			oldTabs = newTabs;
+			oldAllTabs = newAllTabs;
 			if (oldActiveTabs != newActiveTabs)
 			{
 				var now = DateTime.Now;

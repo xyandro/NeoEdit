@@ -12,7 +12,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow2
+	partial class Tabs
 	{
 		void Execute_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : TabsWindow).AddTab(new Tab(), canReplace: false);
 

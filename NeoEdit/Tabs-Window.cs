@@ -6,7 +6,7 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow2
+	partial class Tabs
 	{
 		static public void Execute_Window_NewWindow() => new TabsWindow(true);
 
@@ -25,7 +25,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Font_Size() => WindowFontSizeDialog.Run(TabsWindow);
 
-		void Execute_Window_Select_AllTabs() => Tabs.ForEach(tab => SetActive(tab));
+		void Execute_Window_Select_AllTabs() => AllTabs.ForEach(tab => SetActive(tab));
 
 		void Execute_Window_Select_NoTabs() => ClearAllActive();
 
@@ -33,7 +33,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Select_ModifiedUnmodifiedTabs(bool modified) => ActiveTabs.ForEach(tab => SetActive(tab, tab.IsModified == modified));
 
-		void Execute_Window_Select_InactiveTabs() => Tabs.ForEach(tab => SetActive(tab, !ActiveTabs.Contains(tab)));
+		void Execute_Window_Select_InactiveTabs() => AllTabs.ForEach(tab => SetActive(tab, !ActiveTabs.Contains(tab)));
 
 		void Execute_Window_Close_TabsWithWithoutSelections(bool hasSelections)
 		{
@@ -53,7 +53,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Close_ActiveInactiveTabs(bool active)
 		{
-			var toClose = (active ? ActiveTabs : Tabs.Except(ActiveTabs)).ToList();
+			var toClose = (active ? ActiveTabs : AllTabs.Except(ActiveTabs)).ToList();
 			if (!toClose.All(tab => tab.CanClose()))
 				return;
 			toClose.ForEach(tab => RemoveTab(tab));
@@ -62,8 +62,8 @@ namespace NeoEdit.Program
 		void Execute_Window_WordList()
 		{
 			byte[] data;
-			var streamName = typeof(TabsWindow2).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
-			using (var stream = typeof(TabsWindow2).Assembly.GetManifestResourceStream(streamName))
+			var streamName = typeof(Tabs).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
+			using (var stream = typeof(Tabs).Assembly.GetManifestResourceStream(streamName))
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);

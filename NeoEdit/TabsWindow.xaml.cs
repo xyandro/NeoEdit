@@ -15,7 +15,7 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		readonly TabsWindow2 Tabs;
+		readonly Tabs Tabs;
 
 		public DateTime LastActivated => Tabs.LastActivated;
 
@@ -52,7 +52,7 @@ namespace NeoEdit.Program
 
 		public TabsWindow(bool addEmpty = false)
 		{
-			Tabs = new TabsWindow2();
+			Tabs = new Tabs();
 			if (addEmpty)
 				HandleCommand(new ExecuteState(NECommand.File_New_New));
 
@@ -282,9 +282,9 @@ namespace NeoEdit.Program
 			statusBar.Items.Clear();
 			statusBar.Items.Add($"Active: {plural(ActiveTabs.Count(), "file")}, {plural(ActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Inactive: {plural(Tabs.Tabs.Except(ActiveTabs).Count(), "file")}, {plural(Tabs.Tabs.Except(ActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
+			statusBar.Items.Add($"Inactive: {plural(Tabs.AllTabs.Except(ActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(ActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Total: {plural(Tabs.Tabs.Count, "file")}, {plural(Tabs.Tabs.Sum(tab => tab.Selections.Count), "selection")}");
+			statusBar.Items.Add($"Total: {plural(Tabs.AllTabs.Count, "file")}, {plural(Tabs.AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
 			statusBar.Items.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
 			statusBar.Items.Add(new Separator());
@@ -422,11 +422,11 @@ namespace NeoEdit.Program
 				canvas.Children.Add(outerBorder);
 			}
 
-			if (prevTabs != Tabs.Tabs)
+			if (prevTabs != Tabs.AllTabs)
 			{
-				prevTabs = Tabs.Tabs;
+				prevTabs = Tabs.AllTabs;
 				tabLabelsStackPanel.Children.Clear();
-				foreach (var tab in Tabs.Tabs)
+				foreach (var tab in Tabs.AllTabs)
 				{
 					var tabLabel = GetTabLabel(tab);
 					tabLabel.Drop += (s, e) => OnDrop(e, (s as FrameworkElement).Tag as Tab);
@@ -467,13 +467,13 @@ namespace NeoEdit.Program
 			if (Rows.HasValue)
 				rows = Math.Max(1, Rows.Value);
 			if ((!columns.HasValue) && (!rows.HasValue))
-				columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.Tabs.Count)), MaxColumns ?? int.MaxValue));
+				columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.AllTabs.Count)), MaxColumns ?? int.MaxValue));
 			if (!rows.HasValue)
-				rows = Math.Max(1, Math.Min((Tabs.Tabs.Count + columns.Value - 1) / columns.Value, MaxRows ?? int.MaxValue));
+				rows = Math.Max(1, Math.Min((Tabs.AllTabs.Count + columns.Value - 1) / columns.Value, MaxRows ?? int.MaxValue));
 			if (!columns.HasValue)
-				columns = Math.Max(1, Math.Min((Tabs.Tabs.Count + rows.Value - 1) / rows.Value, MaxColumns ?? int.MaxValue));
+				columns = Math.Max(1, Math.Min((Tabs.AllTabs.Count + rows.Value - 1) / rows.Value, MaxColumns ?? int.MaxValue));
 
-			var totalRows = (Tabs.Tabs.Count + columns.Value - 1) / columns.Value;
+			var totalRows = (Tabs.AllTabs.Count + columns.Value - 1) / columns.Value;
 
 			scrollBar.Visibility = totalRows > rows ? Visibility.Visible : Visibility.Collapsed;
 			UpdateLayout();
@@ -486,7 +486,7 @@ namespace NeoEdit.Program
 			scrollBar.ValueChanged -= OnScrollBarValueChanged;
 			if ((setFocus) && (Focused != null))
 			{
-				var index = Tabs.Tabs.Indexes(tab => tab == Focused).DefaultIfEmpty(-1).First();
+				var index = Tabs.AllTabs.Indexes(tab => tab == Focused).DefaultIfEmpty(-1).First();
 				if (index != -1)
 				{
 					var top = index / columns.Value * height;
@@ -496,7 +496,7 @@ namespace NeoEdit.Program
 			scrollBar.Value = Math.Max(0, Math.Min(scrollBar.Value, scrollBar.Maximum));
 			scrollBar.ValueChanged += OnScrollBarValueChanged;
 
-			for (var ctr = 0; ctr < Tabs.Tabs.Count; ++ctr)
+			for (var ctr = 0; ctr < Tabs.AllTabs.Count; ++ctr)
 			{
 				var top = ctr / columns.Value * height - scrollBar.Value;
 				if ((top + height < 0) || (top > canvas.ActualHeight))
@@ -512,10 +512,10 @@ namespace NeoEdit.Program
 				Canvas.SetLeft(border, ctr % columns.Value * width);
 				Canvas.SetTop(border, top);
 
-				var tabWindow = new TabWindow(Tabs.Tabs[ctr]);
+				var tabWindow = new TabWindow(Tabs.AllTabs[ctr]);
 				var dockPanel = new DockPanel { AllowDrop = true };
-				dockPanel.Drop += (s, e) => OnDrop(e, Tabs.Tabs[ctr]);
-				var tabLabel = GetTabLabel(Tabs.Tabs[ctr]);
+				dockPanel.Drop += (s, e) => OnDrop(e, Tabs.AllTabs[ctr]);
+				var tabLabel = GetTabLabel(Tabs.AllTabs[ctr]);
 				DockPanel.SetDock(tabLabel, Dock.Top);
 				dockPanel.Children.Add(tabLabel);
 				{
@@ -563,7 +563,7 @@ namespace NeoEdit.Program
 
 		public bool GotoTab(string fileName, int? line, int? column, int? index)
 		{
-			var tab = Tabs.Tabs.FirstOrDefault(x => x.FileName == fileName);
+			var tab = Tabs.AllTabs.FirstOrDefault(x => x.FileName == fileName);
 			if (tab == null)
 				return false;
 			Activate();

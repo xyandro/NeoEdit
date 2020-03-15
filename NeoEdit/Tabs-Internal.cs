@@ -3,13 +3,13 @@ using System.Windows.Input;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow2
+	partial class Tabs
 	{
 		public DateTime LastActivated { get; set; }
 
 		void Execute_Internal_Activate()
 		{
-			foreach (var tab in Tabs)
+			foreach (var tab in AllTabs)
 				tab.Activated();
 		}
 
