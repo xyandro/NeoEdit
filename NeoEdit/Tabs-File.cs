@@ -12,9 +12,9 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow
+	partial class TabsWindow2
 	{
-		void Execute_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : this).AddTab(new Tab(), canReplace: false);
+		void Execute_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : TabsWindow).AddTab(new Tab(), canReplace: false);
 
 		void Execute_File_New_FromClipboards()
 		{
@@ -64,7 +64,7 @@ namespace NeoEdit.Program
 		{
 			var files = NEClipboard.Current.Strings;
 
-			if ((files.Count > 5) && (!new Message(this)
+			if ((files.Count > 5) && (!new Message(TabsWindow)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to open these {files.Count} files?",
@@ -109,7 +109,7 @@ namespace NeoEdit.Program
 		void Execute_File_Exit()
 		{
 			Application.Current.ShutdownMode = ShutdownMode.OnLastWindowClose;
-			Close();
+			TabsWindow.Close();
 			Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
 			if (Application.Current.Windows.Count == 0)

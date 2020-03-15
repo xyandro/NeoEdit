@@ -1,40 +1,16 @@
 ﻿using System;
-using System.Linq;
 using System.Windows.Input;
-using NeoEdit.Program.Misc;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow
+	partial class TabsWindow2
 	{
-		public DateTime LastActivated { get; private set; }
-		readonly RunOnceTimer activateTabsTimer;
-
-		public void QueueActivateTabs() => Dispatcher.Invoke(() => activateTabsTimer.Start());
-
-		void OnActivated(object sender, EventArgs e)
-		{
-			LastActivated = DateTime.Now;
-			QueueActivateTabs();
-		}
-
-		void ActivateTabs()
-		{
-			if (!IsActive)
-				return;
-
-			//HandleCommand(new ExecuteState(NECommand.Internal_Activate));
-		}
+		public DateTime LastActivated { get; set; }
 
 		void Execute_Internal_Activate()
 		{
-			Activated -= OnActivated;
-			try
-			{
-				foreach (var tab in Tabs)
-					tab.Activated();
-			}
-			finally { Activated += OnActivated; }
+			foreach (var tab in Tabs)
+				tab.Activated();
 		}
 
 		void Execute_Internal_Key(ExecuteState state)
@@ -45,9 +21,9 @@ namespace NeoEdit.Program
 				state.Handled = true;
 				switch (state.Key)
 				{
-					case Key.PageUp: MovePrevNext(-1); break;
-					case Key.PageDown: MovePrevNext(1); break;
-					case Key.Tab: MovePrevNext(1, true); break;
+					case Key.PageUp: MovePrevNext(-1, state.ShiftDown); break;
+					case Key.PageDown: MovePrevNext(1, state.ShiftDown); break;
+					case Key.Tab: MovePrevNext(1, state.ShiftDown, true); break;
 					default: state.Handled = oldHandled; break;
 				}
 			}

@@ -10,11 +10,11 @@ using NeoEdit.Program.Tutorial;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow
+	partial class TabsWindow2
 	{
 		static void Execute_Help_About() => HelpAboutDialog.Run();
 
-		void Execute_Help_Tutorial() => new TutorialWindow(this);
+		void Execute_Help_Tutorial() => new TutorialWindow(TabsWindow);
 
 		static void Execute_Help_Update()
 		{
@@ -23,7 +23,7 @@ namespace NeoEdit.Program
 			const string check = location + "/tag/";
 			const string exe = location + "/download/{0}/NeoEdit.exe";
 
-			var oldVersion = ((AssemblyFileVersionAttribute)typeof(TabsWindow).Assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
+			var oldVersion = ((AssemblyFileVersionAttribute)typeof(TabsWindow2).Assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
 			string newVersion;
 
 			var request = WebRequest.Create(url) as HttpWebRequest;

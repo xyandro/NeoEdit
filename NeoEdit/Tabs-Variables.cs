@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow
+	partial class TabsWindow2
 	{
 		bool inTransaction = false;
 		void EnsureInTransaction()
@@ -13,10 +13,21 @@ namespace NeoEdit.Program
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		List<Tab> oldTabs, newTabs;
-		IReadOnlyList<Tab> Tabs => newTabs;
+		TabsWindow oldTabsWindow, newTabsWindow;
+		public TabsWindow TabsWindow
+		{
+			get => newTabsWindow;
+			private set
+			{
+				EnsureInTransaction();
+				newTabsWindow = value;
+			}
+		}
 
-		void InsertTab(Tab tab, int? index = null)
+		List<Tab> oldTabs, newTabs;
+		public IReadOnlyList<Tab> Tabs => newTabs;
+
+		public void InsertTab(Tab tab, int? index = null)
 		{
 			EnsureInTransaction();
 
@@ -30,7 +41,7 @@ namespace NeoEdit.Program
 			if (newTabs == oldTabs)
 				newTabs = newTabs.ToList();
 			newTabs.Insert(index ?? newTabs.Count, tab);
-			tab.TabsWindow = this;
+			//TODO tab.TabsWindow = this;
 
 			if (!newActiveTabs.Except(oldTabs).Any())
 				ClearAllActive();
@@ -57,7 +68,7 @@ namespace NeoEdit.Program
 			tab.TabsWindow = null;
 
 			if (newActiveTabs == oldActiveTabs)
-				newActiveTabs = newActiveTabs.ToList();
+				newActiveTabs = new HashSet<Tab>(newActiveTabs);
 			if (newActiveTabs.Contains(tab))
 				newActiveTabs.Remove(tab);
 			if (newFocused == tab)
@@ -71,17 +82,17 @@ namespace NeoEdit.Program
 			}
 		}
 
-		List<Tab> oldActiveTabs, newActiveTabs;
-		IReadOnlyList<Tab> ActiveTabs => Tabs.Where(tab => newActiveTabs.Contains(tab)).ToList();
+		HashSet<Tab> oldActiveTabs, newActiveTabs;
+		public IReadOnlyList<Tab> ActiveTabs => Tabs.Where(tab => newActiveTabs.Contains(tab)).ToList();
 
-		void ClearAllActive()
+		public void ClearAllActive()
 		{
 			EnsureInTransaction();
-			newActiveTabs = new List<Tab>();
+			newActiveTabs = new HashSet<Tab>();
 			newFocused = null;
 		}
 
-		void SetActive(Tab tab, bool active = true)
+		public void SetActive(Tab tab, bool active = true)
 		{
 			EnsureInTransaction();
 			if (tab == null)
@@ -90,7 +101,7 @@ namespace NeoEdit.Program
 				return;
 
 			if (newActiveTabs == oldActiveTabs)
-				newActiveTabs = newActiveTabs.ToList();
+				newActiveTabs = new HashSet<Tab>(newActiveTabs);
 			if (active)
 			{
 				newActiveTabs.Add(tab);
@@ -106,7 +117,7 @@ namespace NeoEdit.Program
 		}
 
 		Tab oldFocused, newFocused;
-		Tab Focused
+		public Tab Focused
 		{
 			get => newFocused;
 			set
@@ -117,6 +128,8 @@ namespace NeoEdit.Program
 				newFocused = value;
 			}
 		}
+
+		public bool IsActive(Tab tab) => newActiveTabs.Contains(tab);
 
 		int? oldColumns = 1, newColumns = 1;
 		public int? Columns
@@ -174,6 +187,7 @@ namespace NeoEdit.Program
 		{
 			EnsureInTransaction();
 
+			newTabsWindow = oldTabsWindow;
 			newTabs = oldTabs;
 			newActiveTabs = oldActiveTabs;
 			newFocused = oldFocused;
@@ -189,6 +203,7 @@ namespace NeoEdit.Program
 		{
 			EnsureInTransaction();
 
+			oldTabsWindow = newTabsWindow;
 			oldTabs = newTabs;
 			if (oldActiveTabs != newActiveTabs)
 			{

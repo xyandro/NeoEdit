@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text;
-using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow
+	partial class TabsWindow2
 	{
 		static public void Execute_Window_NewWindow() => new TabsWindow(true);
 
@@ -16,16 +14,16 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Grid() => SetLayout(maxColumns: 5, maxRows: 5);
 
-		WindowCustomGridDialog.Result Configure_Window_CustomGrid() => WindowCustomGridDialog.Run(this, Columns, Rows, MaxColumns, MaxRows);
+		WindowCustomGridDialog.Result Configure_Window_CustomGrid() => WindowCustomGridDialog.Run(TabsWindow, Columns, Rows, MaxColumns, MaxRows);
 
 		void Execute_Window_CustomGrid(WindowCustomGridDialog.Result result) => SetLayout(result.Columns, result.Rows, result.MaxColumns, result.MaxRows);
 
 		void Execute_Window_ActiveTabs()
 		{
-			//TODOWindowActiveTabsDialog.Run(this);
+			//TODOWindowActiveTabsDialog.Run(TabsWindow);
 		}
 
-		void Execute_Window_Font_Size() => WindowFontSizeDialog.Run(this);
+		void Execute_Window_Font_Size() => WindowFontSizeDialog.Run(TabsWindow);
 
 		void Execute_Window_Select_AllTabs() => Tabs.ForEach(tab => SetActive(tab));
 
@@ -64,8 +62,8 @@ namespace NeoEdit.Program
 		void Execute_Window_WordList()
 		{
 			byte[] data;
-			var streamName = typeof(TabsWindow).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
-			using (var stream = typeof(TabsWindow).Assembly.GetManifestResourceStream(streamName))
+			var streamName = typeof(TabsWindow2).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
+			using (var stream = typeof(TabsWindow2).Assembly.GetManifestResourceStream(streamName))
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);
