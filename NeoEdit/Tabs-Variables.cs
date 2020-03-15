@@ -6,22 +6,10 @@ namespace NeoEdit.Program
 {
 	partial class Tabs
 	{
-		bool inTransaction = false;
 		void EnsureInTransaction()
 		{
-			if (!inTransaction)
+			if (state == null)
 				throw new Exception("Must start transaction before editing data");
-		}
-
-		TabsWindow oldTabsWindow, newTabsWindow;
-		public TabsWindow TabsWindow
-		{
-			get => newTabsWindow;
-			private set
-			{
-				EnsureInTransaction();
-				newTabsWindow = value;
-			}
 		}
 
 		List<Tab> oldAllTabs, newAllTabs;
@@ -176,18 +164,17 @@ namespace NeoEdit.Program
 		}
 
 
-		void BeginTransaction()
+		void BeginTransaction(ExecuteState state)
 		{
-			if (inTransaction)
+			if (this.state != null)
 				throw new Exception("Already in a transaction");
-			inTransaction = true;
+			this.state = state;
 		}
 
 		void Rollback()
 		{
 			EnsureInTransaction();
 
-			newTabsWindow = oldTabsWindow;
 			newAllTabs = oldAllTabs;
 			newActiveTabs = oldActiveTabs;
 			newFocused = oldFocused;
@@ -196,14 +183,13 @@ namespace NeoEdit.Program
 			newMaxColumns = oldMaxColumns;
 			newMaxRows = oldMaxRows;
 
-			inTransaction = false;
+			state = null;
 		}
 
 		void Commit()
 		{
 			EnsureInTransaction();
 
-			oldTabsWindow = newTabsWindow;
 			oldAllTabs = newAllTabs;
 			if (oldActiveTabs != newActiveTabs)
 			{
@@ -217,7 +203,7 @@ namespace NeoEdit.Program
 			oldMaxColumns = newMaxColumns;
 			oldMaxRows = newMaxRows;
 
-			inTransaction = false;
+			state = null;
 		}
 	}
 }

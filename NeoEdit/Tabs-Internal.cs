@@ -13,7 +13,7 @@ namespace NeoEdit.Program
 				tab.Activated();
 		}
 
-		void Execute_Internal_Key(ExecuteState state)
+		void Execute_Internal_Key()
 		{
 			if ((state.ControlDown) && (!state.AltDown))
 			{

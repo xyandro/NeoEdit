@@ -11,7 +11,7 @@ namespace NeoEdit.Program
 		static readonly Dictionary<NECommand, bool> macroInclude = Helpers.GetValues<NECommand>().ToDictionary(command => command, command => typeof(NECommand).GetField(command.ToString()).GetCustomAttribute<NoMacroAttribute>() == null);
 
 		public NECommand Command;
-		public ModifierKeys ModifierKeys;
+		public ModifierKeys Modifiers;
 		public bool? MultiStatus;
 		public Key Key;
 		public string Text;
@@ -27,7 +27,7 @@ namespace NeoEdit.Program
 			return new MacroAction
 			{
 				Command = state.Command,
-				ModifierKeys = state.ModifierKeys,
+				Modifiers = state.Modifiers,
 				MultiStatus = state.MultiStatus,
 				Key = state.Key,
 				Text = state.Text,
@@ -39,7 +39,7 @@ namespace NeoEdit.Program
 		{
 			return new ExecuteState(Command)
 			{
-				ModifierKeys = ModifierKeys,
+				Modifiers = Modifiers,
 				MultiStatus = MultiStatus,
 				Key = Key,
 				Text = Text,

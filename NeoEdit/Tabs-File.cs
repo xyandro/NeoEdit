@@ -14,7 +14,16 @@ namespace NeoEdit.Program
 {
 	partial class Tabs
 	{
-		void Execute_File_New_New(bool createTabs) => (createTabs ? new TabsWindow() : TabsWindow).AddTab(new Tab(), canReplace: false);
+		void Execute_File_New_New(bool createTabs)
+		{
+			var tabs = this;
+			if (createTabs)
+			{
+				var tabsWindow = new TabsWindow();
+				tabs = tabsWindow.Tabs;
+			}
+			tabs.AddTab(new Tab(), canReplace: false);
+		}
 
 		void Execute_File_New_FromClipboards()
 		{
@@ -64,7 +73,7 @@ namespace NeoEdit.Program
 		{
 			var files = NEClipboard.Current.Strings;
 
-			if ((files.Count > 5) && (!new Message(TabsWindow)
+			if ((files.Count > 5) && (!new Message(state.TabsWindow)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to open these {files.Count} files?",
@@ -109,7 +118,7 @@ namespace NeoEdit.Program
 		void Execute_File_Exit()
 		{
 			Application.Current.ShutdownMode = ShutdownMode.OnLastWindowClose;
-			TabsWindow.Close();
+			state.TabsWindow.Close();
 			Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
 			if (Application.Current.Windows.Count == 0)

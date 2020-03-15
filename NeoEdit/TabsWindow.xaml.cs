@@ -15,7 +15,7 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		readonly Tabs Tabs;
+		public readonly Tabs Tabs;
 
 		public DateTime LastActivated => Tabs.LastActivated;
 
@@ -67,7 +67,12 @@ namespace NeoEdit.Program
 				HandleCommand(new ExecuteState(NECommand.File_New_New));
 		}
 
-		public bool HandleCommand(ExecuteState executeState, bool configure = true) => Tabs.HandleCommand(executeState, configure);
+		public bool HandleCommand(ExecuteState state, bool configure = true)
+		{
+			state.TabsWindow = this;
+			state.Modifiers = Keyboard.Modifiers;
+			return Tabs.HandleCommand(state, configure);
+		}
 
 		readonly RunOnceTimer activateTabsTimer;
 		public void QueueActivateTabs() => Dispatcher.Invoke(() => activateTabsTimer.Start());
@@ -121,7 +126,7 @@ namespace NeoEdit.Program
 			if (key == Key.System)
 				key = e.SystemKey;
 
-			e.Handled = Tabs.HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });
+			e.Handled = HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)

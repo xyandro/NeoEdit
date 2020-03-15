@@ -14,7 +14,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Grid() => SetLayout(maxColumns: 5, maxRows: 5);
 
-		WindowCustomGridDialog.Result Configure_Window_CustomGrid() => WindowCustomGridDialog.Run(TabsWindow, Columns, Rows, MaxColumns, MaxRows);
+		WindowCustomGridDialog.Result Configure_Window_CustomGrid() => WindowCustomGridDialog.Run(state.TabsWindow, Columns, Rows, MaxColumns, MaxRows);
 
 		void Execute_Window_CustomGrid(WindowCustomGridDialog.Result result) => SetLayout(result.Columns, result.Rows, result.MaxColumns, result.MaxRows);
 
@@ -23,7 +23,7 @@ namespace NeoEdit.Program
 			//TODOWindowActiveTabsDialog.Run(TabsWindow);
 		}
 
-		void Execute_Window_Font_Size() => WindowFontSizeDialog.Run(TabsWindow);
+		void Execute_Window_Font_Size() => WindowFontSizeDialog.Run(state.TabsWindow);
 
 		void Execute_Window_Select_AllTabs() => AllTabs.ForEach(tab => SetActive(tab));
 

@@ -14,7 +14,7 @@ namespace NeoEdit.Program
 	{
 		static void Execute_Help_About() => HelpAboutDialog.Run();
 
-		void Execute_Help_Tutorial() => new TutorialWindow(TabsWindow);
+		void Execute_Help_Tutorial() => new TutorialWindow(state.TabsWindow);
 
 		static void Execute_Help_Update()
 		{

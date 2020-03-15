@@ -12,6 +12,8 @@ namespace NeoEdit.Program
 {
 	public partial class Tabs
 	{
+		ExecuteState state;
+
 		bool timeNextAction;
 		MacroAction lastAction;
 
@@ -79,7 +81,7 @@ namespace NeoEdit.Program
 					configure = false;
 				}
 
-				BeginTransaction();
+				BeginTransaction(state);
 				AllTabs.ForEach(tab => tab.BeginTransaction(state));
 
 				state.ClipboardDataMapFunc = GetClipboardDataMap;
@@ -93,7 +95,7 @@ namespace NeoEdit.Program
 					state.ActiveTabs = ActiveTabs;
 
 					if (state.Configuration == null)
-						state.Configuration = Configure(state);
+						state.Configuration = Configure();
 
 					if (state.Configuration == null)
 						throw new OperationCanceledException();
@@ -108,14 +110,14 @@ namespace NeoEdit.Program
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
-				Execute(state);
+				Execute();
 				if (!state.Handled)
 					return false;
 
 				if (sw != null)
 				{
 					timeNextAction = false;
-					new Message(TabsWindow)
+					new Message(state.TabsWindow)
 					{
 						Title = "Timer",
 						Text = $"Elapsed time: {sw.ElapsedMilliseconds:n} ms",
@@ -145,7 +147,7 @@ namespace NeoEdit.Program
 							RecordingMacro?.AddAction(action);
 					}
 
-					TabsWindow.DrawAll(setFocus);
+					state.TabsWindow.DrawAll(setFocus);
 				}
 				else
 				{
@@ -157,7 +159,7 @@ namespace NeoEdit.Program
 			return commit;
 		}
 
-		object Configure(ExecuteState state)
+		object Configure()
 		{
 			if (state.Command == NECommand.Internal_Key)
 				state.Handled = false;
@@ -176,14 +178,14 @@ namespace NeoEdit.Program
 		}
 
 
-		void Execute(ExecuteState state)
+		void Execute()
 		{
 			switch (state.Command)
 			{
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
 				case NECommand.Internal_AddTab: Execute_Internal_AddTab(state.Configuration as Tab); break;
 				case NECommand.Internal_MouseActivate: Execute_Internal_MouseActivate(state.Configuration as Tab); break;
-				case NECommand.Internal_Key: Execute_Internal_Key(state); break;
+				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.File_New_New: Execute_File_New_New(state.ShiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;
@@ -416,6 +418,6 @@ namespace NeoEdit.Program
 			return true;
 		}
 
-		public void QueueActivateTabs() => TabsWindow.QueueActivateTabs();
+		public void QueueActivateTabs() => state.TabsWindow.QueueActivateTabs();
 	}
 }
