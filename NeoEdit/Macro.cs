@@ -39,8 +39,7 @@ namespace NeoEdit.Program
 					{
 						timer.Stop();
 						setMacroPlaying(null);
-						if (finished != null)
-							finished();
+						finished?.Invoke();
 						return;
 					}
 

@@ -15,9 +15,11 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		public readonly Tabs Tabs;
-
+		readonly Tabs Tabs;
 		public DateTime LastActivated => Tabs.LastActivated;
+		public void SetLayout(int? columns = null, int? rows = null, int? maxColumns = null, int? maxRows = null) => Tabs.SetLayout(columns, rows, maxColumns, maxRows);
+		public void AddTab(Tab tab, bool canReplace = true) => Tabs.AddTab(tab, canReplace: canReplace);
+
 
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
@@ -77,8 +79,6 @@ namespace NeoEdit.Program
 		readonly RunOnceTimer activateTabsTimer;
 		public void QueueActivateTabs() => Dispatcher.Invoke(() => activateTabsTimer.Start());
 
-		public void SetLayout(int? columns = null, int? rows = null, int? maxColumns = null, int? maxRows = null) => Tabs.SetLayout(columns, rows, maxColumns, maxRows);
-
 		void OnActivated(object sender, EventArgs e)
 		{
 			Tabs.LastActivated = DateTime.Now;
@@ -112,7 +112,7 @@ namespace NeoEdit.Program
 			var fileList = e.Data.GetData("FileDrop") as string[];
 			if (fileList == null)
 				return;
-			fileList.ForEach(file => AddTab(new Tab(file)));
+			fileList.ForEach(file => Tabs.AddTab(new Tab(file)));
 			e.Handled = true;
 		}
 
@@ -154,8 +154,6 @@ namespace NeoEdit.Program
 			//}
 			return false;
 		}
-
-		public void AddTab(Tab tab, int? index = null, bool canReplace = true) => Tabs.AddTab(tab, index, canReplace);
 
 		//TODO
 		//protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -258,7 +256,7 @@ namespace NeoEdit.Program
 			closeButton.Click += (s, e) =>
 			{
 				if (tab.CanClose())
-					RemoveTab(tab);
+					Tabs.RemoveTab(tab);
 			};
 			Grid.SetRow(closeButton, 0);
 			Grid.SetColumn(closeButton, 1);
@@ -268,23 +266,13 @@ namespace NeoEdit.Program
 			return border;
 		}
 
-		public IReadOnlyList<Tab> ActiveTabs => Tabs.ActiveTabs;
-
-		public int? Columns => Tabs.Columns;
-
-		public int? Rows => Tabs.Rows;
-
-		public int? MaxColumns => Tabs.MaxColumns;
-
-		public int? MaxRows => Tabs.MaxRows;
-
 		void SetStatusBarText()
 		{
 			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
 			statusBar.Items.Clear();
-			statusBar.Items.Add($"Active: {plural(ActiveTabs.Count(), "file")}, {plural(ActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
+			statusBar.Items.Add($"Active: {plural(Tabs.ActiveTabs.Count(), "file")}, {plural(Tabs.ActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Inactive: {plural(Tabs.AllTabs.Except(ActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(ActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
+			statusBar.Items.Add($"Inactive: {plural(Tabs.AllTabs.Except(Tabs.ActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(Tabs.ActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
 			statusBar.Items.Add($"Total: {plural(Tabs.AllTabs.Count, "file")}, {plural(Tabs.AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
@@ -298,7 +286,7 @@ namespace NeoEdit.Program
 		{
 			bool? GetMultiStatus(Func<Tab, bool> func)
 			{
-				var results = ActiveTabs.Select(func).Distinct().ToList();
+				var results = Tabs.ActiveTabs.Select(func).Distinct().ToList();
 				if (results.Count != 1)
 					return default;
 				return results[0];
@@ -332,17 +320,13 @@ namespace NeoEdit.Program
 			menu.window_ViewValues.MultiStatus = GetMultiStatus(x => x.ViewValues);
 		}
 
-		public void RemoveTab(Tab tab, bool close = true) => Tabs.RemoveTab(tab, close);
-
-		Tab Focused => Tabs.Focused;
-
 		public void DrawAll(bool setFocus = false)
 		{
 			SetStatusBarText();
 			SetMenuCheckboxes();
-			Title = $"{(Focused == null ? "" : $"{Focused.DisplayName ?? Focused.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
+			Title = $"{(Tabs.Focused == null ? "" : $"{Tabs.Focused.DisplayName ?? Tabs.Focused.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
 
-			if ((Columns == 1) && (Rows == 1))
+			if ((Tabs.Columns == 1) && (Tabs.Rows == 1))
 				DoFullLayout(setFocus);
 			else
 				DoGridLayout(setFocus);
@@ -440,9 +424,9 @@ namespace NeoEdit.Program
 				tabLabelsStackPanel.Children.OfType<Border>().ForEach(SetColor);
 			}
 
-			if ((setFocus) && (Focused != null))
+			if ((setFocus) && (Tabs.Focused != null))
 			{
-				var show = tabLabelsStackPanel.Children.OfType<FrameworkElement>().Where(x => x.Tag == Focused).FirstOrDefault();
+				var show = tabLabelsStackPanel.Children.OfType<FrameworkElement>().Where(x => x.Tag == Tabs.Focused).FirstOrDefault();
 				if (show != null)
 				{
 					tabLabelsScrollViewer.UpdateLayout();
@@ -452,9 +436,9 @@ namespace NeoEdit.Program
 			}
 
 			contentGrid.Children.Clear();
-			if (Focused != null)
+			if (Tabs.Focused != null)
 			{
-				var tabWindow = new TabWindow(Focused);
+				var tabWindow = new TabWindow(Tabs.Focused);
 				contentGrid.Children.Add(tabWindow);
 				tabWindow.DrawAll();
 			}
@@ -464,16 +448,16 @@ namespace NeoEdit.Program
 		{
 			canvas.Children.Clear();
 			int? columns = null, rows = null;
-			if (Columns.HasValue)
-				columns = Math.Max(1, Columns.Value);
-			if (Rows.HasValue)
-				rows = Math.Max(1, Rows.Value);
+			if (Tabs.Columns.HasValue)
+				columns = Math.Max(1, Tabs.Columns.Value);
+			if (Tabs.Rows.HasValue)
+				rows = Math.Max(1, Tabs.Rows.Value);
 			if ((!columns.HasValue) && (!rows.HasValue))
-				columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.AllTabs.Count)), MaxColumns ?? int.MaxValue));
+				columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.AllTabs.Count)), Tabs.MaxColumns ?? int.MaxValue));
 			if (!rows.HasValue)
-				rows = Math.Max(1, Math.Min((Tabs.AllTabs.Count + columns.Value - 1) / columns.Value, MaxRows ?? int.MaxValue));
+				rows = Math.Max(1, Math.Min((Tabs.AllTabs.Count + columns.Value - 1) / columns.Value, Tabs.MaxRows ?? int.MaxValue));
 			if (!columns.HasValue)
-				columns = Math.Max(1, Math.Min((Tabs.AllTabs.Count + rows.Value - 1) / rows.Value, MaxColumns ?? int.MaxValue));
+				columns = Math.Max(1, Math.Min((Tabs.AllTabs.Count + rows.Value - 1) / rows.Value, Tabs.MaxColumns ?? int.MaxValue));
 
 			var totalRows = (Tabs.AllTabs.Count + columns.Value - 1) / columns.Value;
 
@@ -486,9 +470,9 @@ namespace NeoEdit.Program
 			scrollBar.ViewportSize = canvas.ActualHeight;
 			scrollBar.Maximum = height * totalRows - canvas.ActualHeight;
 			scrollBar.ValueChanged -= OnScrollBarValueChanged;
-			if ((setFocus) && (Focused != null))
+			if ((setFocus) && (Tabs.Focused != null))
 			{
-				var index = Tabs.AllTabs.Indexes(tab => tab == Focused).DefaultIfEmpty(-1).First();
+				var index = Tabs.AllTabs.Indexes(tab => tab == Tabs.Focused).DefaultIfEmpty(-1).First();
 				if (index != -1)
 				{
 					var top = index / columns.Value * height;
@@ -537,7 +521,7 @@ namespace NeoEdit.Program
 
 		public void Move(Tab tab, int newIndex)
 		{
-			RemoveTab(tab);
+			Tabs.RemoveTab(tab);
 			Tabs.InsertTab(tab, newIndex);
 		}
 
@@ -577,7 +561,5 @@ namespace NeoEdit.Program
 			//tab.Goto(line, column, index);
 			return true;
 		}
-
-		public int GetTabIndex(Tab tab, bool activeOnly = false) => Tabs.GetTabIndex(tab, activeOnly);
 	}
 }

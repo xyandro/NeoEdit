@@ -29,7 +29,7 @@ namespace NeoEdit.Program
 			if (newAllTabs == oldAllTabs)
 				newAllTabs = newAllTabs.ToList();
 			newAllTabs.Insert(index ?? newAllTabs.Count, tab);
-			//TODO tab.TabsWindow = this;
+			tab.Tabs = this;
 
 			if (!newActiveTabs.Except(oldAllTabs).Any())
 				ClearAllActive();

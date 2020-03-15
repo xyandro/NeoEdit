@@ -16,13 +16,10 @@ namespace NeoEdit.Program
 	{
 		void Execute_File_New_New(bool createTabs)
 		{
-			var tabs = this;
+			var tabsWindow = state.TabsWindow;
 			if (createTabs)
-			{
-				var tabsWindow = new TabsWindow();
-				tabs = tabsWindow.Tabs;
-			}
-			tabs.AddTab(new Tab(), canReplace: false);
+				tabsWindow = new TabsWindow();
+			tabsWindow.AddTab(new Tab(), false);
 		}
 
 		void Execute_File_New_FromClipboards()
@@ -93,7 +90,7 @@ namespace NeoEdit.Program
 			active.ForEach(tab => RemoveTab(tab, false));
 
 			var newWindow = new TabsWindow();
-			newWindow.SetLayout(newWindow.Columns, newWindow.Rows, newWindow.MaxColumns, newWindow.MaxRows);
+			newWindow.SetLayout(Columns, Rows, MaxColumns, MaxRows);
 			active.ForEach(tab => newWindow.AddTab(tab));
 		}
 
