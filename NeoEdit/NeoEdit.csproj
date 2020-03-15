@@ -1174,6 +1174,12 @@
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
     <Compile Include="Tabs.cs" />
+    <Compile Include="TabsWindow-Full.xaml.cs">
+      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabsWindow-Grid.xaml.cs">
+      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="TabsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
