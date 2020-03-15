@@ -326,17 +326,6 @@ namespace NeoEdit.Program
 			}
 		}
 
-		int oldTabOrder, newTabOrder;
-		public int TabOrder
-		{
-			get => newTabOrder;
-			private set
-			{
-				EnsureInTransaction();
-				newTabOrder = value;
-			}
-		}
-
 		bool oldKeepSelections, newKeepSelections;
 		public bool KeepSelections
 		{
@@ -516,7 +505,6 @@ namespace NeoEdit.Program
 			newDiffIgnoreLineEndings = oldDiffIgnoreLineEndings;
 			newIsDiff = oldIsDiff;
 			newDiffEncodingMismatch = oldDiffEncodingMismatch;
-			newTabOrder = oldTabOrder;
 			newKeepSelections = oldKeepSelections;
 			newHighlightSyntax = oldHighlightSyntax;
 			newStrictParsing = oldStrictParsing;
@@ -562,7 +550,6 @@ namespace NeoEdit.Program
 			oldDiffIgnoreLineEndings = newDiffIgnoreLineEndings;
 			oldIsDiff = newIsDiff;
 			oldDiffEncodingMismatch = newDiffEncodingMismatch;
-			oldTabOrder = newTabOrder;
 			oldKeepSelections = newKeepSelections;
 			oldHighlightSyntax = newHighlightSyntax;
 			oldStrictParsing = newStrictParsing;

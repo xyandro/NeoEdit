@@ -27,15 +27,15 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Font_Size() => WindowFontSizeDialog.Run(this);
 
-		void Execute_Window_Select_AllTabs() => ActiveTabs = Tabs;
+		void Execute_Window_Select_AllTabs() => Tabs.ForEach(tab => SetActive(tab));
 
-		void Execute_Window_Select_NoTabs() => ActiveTabs = new List<Tab>();
+		void Execute_Window_Select_NoTabs() => ClearAllActive();
 
-		void Execute_Window_Select_TabsWithWithoutSelections(bool hasSelections) => ActiveTabs = ActiveTabs.Where(tab => tab.Selections.Any() == hasSelections).ToList();
+		void Execute_Window_Select_TabsWithWithoutSelections(bool hasSelections) => ActiveTabs.ForEach(tab => SetActive(tab, tab.Selections.Any() == hasSelections));
 
-		void Execute_Window_Select_ModifiedUnmodifiedTabs(bool modified) => ActiveTabs = ActiveTabs.Where(tab => tab.IsModified == modified).ToList();
+		void Execute_Window_Select_ModifiedUnmodifiedTabs(bool modified) => ActiveTabs.ForEach(tab => SetActive(tab, tab.IsModified == modified));
 
-		void Execute_Window_Select_InactiveTabs() => ActiveTabs = Tabs.Except(ActiveTabs).ToList();
+		void Execute_Window_Select_InactiveTabs() => Tabs.ForEach(tab => SetActive(tab, !ActiveTabs.Contains(tab)));
 
 		void Execute_Window_Close_TabsWithWithoutSelections(bool hasSelections)
 		{

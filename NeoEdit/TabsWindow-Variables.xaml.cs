@@ -13,38 +13,95 @@ namespace NeoEdit.Program
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		IReadOnlyList<Tab> oldTabs, newTabs;
-		IReadOnlyList<Tab> Tabs
+		List<Tab> oldTabs, newTabs;
+		IReadOnlyList<Tab> Tabs => newTabs;
+
+		void InsertTab(Tab tab, int? index = null)
 		{
-			get => newTabs;
-			set
+			EnsureInTransaction();
+
+			if (tab == null)
+				throw new ArgumentNullException();
+			if (tab.TabsWindow != null)
+				throw new Exception("Tab already assigned");
+			if (newTabs.Contains(tab))
+				throw new Exception("Tab already in list");
+
+			if (newTabs == oldTabs)
+				newTabs = newTabs.ToList();
+			newTabs.Insert(index ?? newTabs.Count, tab);
+			tab.TabsWindow = this;
+
+			if (!newActiveTabs.Except(oldTabs).Any())
+				ClearAllActive();
+
+			newActiveTabs.Add(tab);
+			if (newFocused == null)
+				newFocused = tab;
+		}
+
+		void RemoveTab(Tab tab)
+		{
+			EnsureInTransaction();
+
+			if (tab == null)
+				throw new ArgumentNullException();
+			if (tab.TabsWindow == null)
+				throw new Exception("Tab not assigned");
+			if (!newTabs.Contains(tab))
+				throw new Exception("Tab not in list");
+
+			if (newTabs == oldTabs)
+				newTabs = newTabs.ToList();
+			newTabs.Remove(tab);
+			tab.TabsWindow = null;
+
+			if (newActiveTabs == oldActiveTabs)
+				newActiveTabs = newActiveTabs.ToList();
+			if (newActiveTabs.Contains(tab))
+				newActiveTabs.Remove(tab);
+			if (newFocused == tab)
+				newFocused = newActiveTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
+
+			if (newFocused == null)
 			{
-				EnsureInTransaction();
-
-				Tabs.ForEach(x => x.TabsWindow = null);
-
-				newTabs = value;
-
-				Tabs.ForEach(x => x.TabsWindow = this);
-
-				var notSeen = newTabs.Except(oldTabs).ToList();
-				if (notSeen.Any())
-					ActiveTabs = notSeen;
-				else
-					ActiveTabs = ActiveTabs;
+				newFocused = newTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
+				if (newFocused != null)
+					newActiveTabs.Add(newFocused);
 			}
 		}
 
-		IReadOnlyList<Tab> oldActiveTabs, newActiveTabs;
-		IReadOnlyList<Tab> ActiveTabs
+		List<Tab> oldActiveTabs, newActiveTabs;
+		IReadOnlyList<Tab> ActiveTabs => newActiveTabs;
+
+		void ClearAllActive()
 		{
-			get => newActiveTabs;
-			set
+			EnsureInTransaction();
+			newActiveTabs = new List<Tab>();
+			newFocused = null;
+		}
+
+		void SetActive(Tab tab, bool active = true)
+		{
+			EnsureInTransaction();
+			if (tab == null)
+				throw new ArgumentNullException();
+			if (newActiveTabs.Contains(tab) == active)
+				return;
+
+			if (newActiveTabs == oldActiveTabs)
+				newActiveTabs = newActiveTabs.ToList();
+			if (active)
 			{
-				EnsureInTransaction();
-				newActiveTabs = value.Where(tab => Tabs.Contains(tab)).Distinct().ToList();
-				if (!ActiveTabs.Contains(Focused))
-					Focused = ActiveTabs.FirstOrDefault();
+				newActiveTabs.Add(tab);
+				if (newFocused == null)
+					newFocused = tab;
+			}
+			else
+			{
+				newActiveTabs.Remove(tab);
+				if (newFocused == tab)
+					newFocused = newActiveTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
 			}
 		}
 
@@ -55,11 +112,9 @@ namespace NeoEdit.Program
 			set
 			{
 				EnsureInTransaction();
-				if (!Tabs.Contains(value))
-					value = null;
+				if (!newActiveTabs.Contains(value))
+					throw new Exception("Value not in active set");
 				newFocused = value;
-				if ((newFocused != null) && (!ActiveTabs.Contains(newFocused)))
-					ActiveTabs = new List<Tab> { newFocused };
 			}
 		}
 
@@ -135,6 +190,11 @@ namespace NeoEdit.Program
 			EnsureInTransaction();
 
 			oldTabs = newTabs;
+			if (oldActiveTabs != newActiveTabs)
+			{
+				var now = DateTime.Now;
+				newActiveTabs.ForEach(x => x.LastActive = now);
+			}
 			oldActiveTabs = newActiveTabs;
 			oldFocused = newFocused;
 			oldColumns = newColumns;

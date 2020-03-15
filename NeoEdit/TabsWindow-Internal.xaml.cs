@@ -45,9 +45,9 @@ namespace NeoEdit.Program
 				state.Handled = true;
 				switch (state.Key)
 				{
-					case Key.PageUp: MovePrev(); break;
-					case Key.PageDown: MoveNext(); break;
-					case Key.Tab: MoveTabOrder(); break;
+					case Key.PageUp: MovePrevNext(-1); break;
+					case Key.PageDown: MovePrevNext(1); break;
+					case Key.Tab: MovePrevNext(1, true); break;
 					default: state.Handled = oldHandled; break;
 				}
 			}

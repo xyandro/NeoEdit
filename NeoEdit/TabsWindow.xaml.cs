@@ -61,7 +61,8 @@ namespace NeoEdit.Program
 
 		public TabsWindow(bool addEmpty = false)
 		{
-			oldTabs = newTabs = oldActiveTabs = newActiveTabs = new List<Tab>();
+			oldTabs = newTabs = new List<Tab>();
+			oldActiveTabs = newActiveTabs = new List<Tab>();
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
 			InitializeComponent();
@@ -440,29 +441,20 @@ namespace NeoEdit.Program
 
 		public void AddTab(Tab tab, int? index = null, bool canReplace = true)
 		{
-			var tabs = Tabs.ToList();
-			var replace = (canReplace) && (!index.HasValue) && (!tab.Empty()) && (Focused != null) && (Focused.Empty()) ? Focused : default(Tab);
-			if (replace != null)
-				tabs[tabs.IndexOf(replace)] = tab;
-			else
-				tabs.Insert(index ?? tabs.Count, tab);
+			if ((canReplace) && (!index.HasValue) && (!tab.Empty()) && (Focused != null) && (Focused.Empty()))
+			{
+				index = Tabs.IndexOf(Focused);
+				RemoveTab(Focused);
+			}
 
-			Tabs = tabs;
-
-			var activeTabs = ActiveTabs.ToList();
-			if (oldActiveTabs == newActiveTabs)
-				activeTabs.Clear();
-
-			activeTabs.Add(tab);
-			ActiveTabs = activeTabs;
+			InsertTab(tab, index);
 		}
 
 		public void RemoveTab(Tab tab, bool close = true)
 		{
-			Tabs = Tabs.Except(tab).ToList();
 			if (close)
 				tab.Closed();
-			UpdateFocused(true);
+			RemoveTab(tab);
 		}
 
 		public void AddDiff(Tab tab1, Tab tab2)
@@ -485,18 +477,6 @@ namespace NeoEdit.Program
 			AddDiff(te1, te2);
 		}
 
-		public void UpdateFocused(bool focusInactive = false)
-		{
-			var focused = Focused;
-			if (!ActiveTabs.Contains(focused))
-				focused = null;
-			if (focused == null)
-				focused = ActiveTabs.OrderByDescending(tab => tab.TabOrder).FirstOrDefault();
-			if ((focused == null) && (focusInactive))
-				focused = Tabs.OrderByDescending(tab => tab.TabOrder).FirstOrDefault();
-			SetFocused(focused);
-		}
-
 		public bool TabIsActive(Tab tab) => ActiveTabs.Contains(tab);
 
 		public int GetTabIndex(Tab tab, bool activeOnly = false)
@@ -507,55 +487,40 @@ namespace NeoEdit.Program
 			return index;
 		}
 
-		void SetFocused(Tab tab, bool deselectOthers = false)
+		void MovePrevNext(int offset, bool orderByActive = false)
 		{
+			if (Tabs.Count == 0)
+				return;
+
+			Tab tab;
+			if (Focused == null)
+				tab = Tabs[0];
+			else
+			{
+				var tabs = orderByActive ? Tabs.OrderByDescending(x => x.LastActive).ToList() : Tabs.ToList();
+				var index = tabs.IndexOf(Focused) + offset;
+				if (index < 0)
+					index += Tabs.Count;
+				if (index >= Tabs.Count)
+					index -= Tabs.Count;
+				tab = tabs[index];
+			}
+			if (!shiftDown)
+				ClearAllActive();
+			SetActive(tab);
 			Focused = tab;
-		}
-
-		void MovePrev()
-		{
-			if (Focused == null)
-				return;
-
-			var index = GetTabIndex(Focused) - 1;
-			if (index < 0)
-				index = Tabs.Count - 1;
-			if (index >= 0)
-				SetFocused(Tabs[index], !shiftDown);
-		}
-
-		void MoveNext()
-		{
-			if (Focused == null)
-				return;
-
-			var index = GetTabIndex(Focused) + 1;
-			if (index >= Tabs.Count)
-				index = 0;
-			if (index < Tabs.Count)
-				SetFocused(Tabs[index], !shiftDown);
-		}
-
-		void MoveTabOrder()
-		{
-			if (Focused == null)
-				return;
-			var ordering = Tabs.OrderBy(tab => tab.TabOrder).ToList();
-			var current = ordering.IndexOf(Focused) - 1;
-			if (current == -2) // Not found
-				return;
-			if (current == -1)
-				current = ordering.Count - 1;
-			SetFocused(ordering[current], !shiftDown);
 		}
 
 		bool HandleClick(Tab tab)
 		{
 			if (!shiftDown)
-				ActiveTabs = new List<Tab> { tab };
+			{
+				ClearAllActive();
+				SetActive(tab);
+			}
 			else if (Focused != tab)
 			{
-				SetFocused(tab);
+				Focused = tab;
 				return true;
 			}
 			return false;
@@ -861,15 +826,8 @@ namespace NeoEdit.Program
 
 		public void Move(Tab tab, int newIndex)
 		{
-			var oldIndex = GetTabIndex(tab);
-			if (oldIndex == -1)
-				return;
-
-			var tabs = Tabs.ToList();
-			tabs.RemoveAt(oldIndex);
-			tabs.Insert(newIndex, tab);
-			Tabs = tabs;
-			//QueueUpdateLayout();
+			RemoveTab(tab);
+			InsertTab(tab, newIndex);
 		}
 
 		//TODO
@@ -900,7 +858,9 @@ namespace NeoEdit.Program
 			if (tab == null)
 				return false;
 			Activate();
-			SetFocused(tab, true);
+			ClearAllActive();
+			SetActive(tab);
+			Focused = tab;
 			//TODO
 			//tab.Execute_File_Refresh();
 			//tab.Goto(line, column, index);
