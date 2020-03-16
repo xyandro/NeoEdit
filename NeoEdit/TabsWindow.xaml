@@ -28,7 +28,7 @@
 			</Grid.RowDefinitions>
 
 			<Canvas Grid.Row="0" Grid.Column="0" Name="canvas" ClipToBounds="True"/>
-			<controls:DiffScrollBar Grid.Row="0" Grid.Column="1" x:Name="scrollBar"/>
+			<controls:DiffScrollBar Grid.Row="0" Grid.Column="1" x:Name="scrollBar" ValueChanged="OnScrollBarValueChanged"/>
 		</Grid>
 
 		<controls:RenderCanvas Grid.Row="2" Grid.Column="0" x:Name="statusBar" Height="20" Background="Transparent" Render="OnStatusBarRender" ClipToBounds="True"/>

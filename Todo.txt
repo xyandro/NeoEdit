@@ -1,3 +1,4 @@
 Make modal dialogs modal for owning window only
 Print
 Add ability to select all attributes
+Style grid scrollbar

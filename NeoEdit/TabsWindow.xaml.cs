@@ -44,7 +44,6 @@ namespace NeoEdit.Program
 			drawTimer = new RunOnceTimer(() => DrawAll());
 			NEClipboard.ClipboardChanged += () => statusBar.InvalidateVisual();
 
-			scrollBar.ValueChanged += OnScrollBarValueChanged;
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 
 			if (addEmpty)
@@ -261,11 +260,6 @@ namespace NeoEdit.Program
 		{
 			Tabs.RemoveTab(tab);
 			Tabs.InsertTab(tab, newIndex);
-		}
-
-		private void RenderCanvas_Render(object s, DrawingContext dc)
-		{
-
 		}
 
 		//TODO

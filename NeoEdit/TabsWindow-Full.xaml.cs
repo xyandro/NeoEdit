@@ -30,6 +30,8 @@ namespace NeoEdit.Program
 			if (!lastFull)
 				return;
 
+			canvas.Children.Clear();
+
 			fullTabLabelsPanel = null;
 			fullContentGrid.Children.Clear();
 			fullContentGrid = null;
@@ -116,7 +118,6 @@ namespace NeoEdit.Program
 			outerBorder.Child = grid;
 			canvas.Children.Add(outerBorder);
 
-			fullTabLabelIndex = 0;
 			fullTabLabelsWidth = canvas.ActualWidth - 40 - 2;
 		}
 
