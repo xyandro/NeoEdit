@@ -17,12 +17,10 @@ namespace NeoEdit.Program.Dialogs
 		[DepProp]
 		public MessageOptions DefaultCancel { get { return UIHelper<Message>.GetPropValue<MessageOptions>(this); } set { UIHelper<Message>.SetPropValue(this, value); } }
 
-		public new MessageOptions Show() => Show(true);
-
-		public MessageOptions Show(bool throwOnCancel)
+		public new MessageOptions Show()
 		{
 			ShowDialog();
-			if ((throwOnCancel) && (Answer.HasFlag(MessageOptions.Cancel)))
+			if (Answer.HasFlag(MessageOptions.Cancel))
 				throw new OperationCanceledException();
 			return Answer;
 		}

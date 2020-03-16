@@ -1570,7 +1570,7 @@ namespace NeoEdit.Program
 					Text = "Do you want to save changes?",
 					Options = MessageOptions.YesNoAllCancel,
 					DefaultCancel = MessageOptions.Cancel,
-				}.Show(false);
+				}.Show();
 
 			if (state.SavedAnswers[nameof(CanClose)].HasFlag(MessageOptions.No))
 				return true;

@@ -42,7 +42,7 @@ namespace NeoEdit.Program
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
 							Options = MessageOptions.YesNoAllCancel,
 							DefaultCancel = MessageOptions.Cancel,
-						}.Show(false);
+						}.Show();
 					});
 
 				return (state.SavedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Cancel));
@@ -85,7 +85,7 @@ namespace NeoEdit.Program
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
 							Options = MessageOptions.YesNoAllCancel,
 							DefaultCancel = MessageOptions.Cancel,
-						}.Show(false);
+						}.Show();
 				});
 
 				return (state.SavedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel));
