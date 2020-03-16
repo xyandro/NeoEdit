@@ -76,6 +76,7 @@ namespace NeoEdit.Program
 
 		OrderedHashSet<Tab> oldActiveTabs, newActiveTabs;
 		public IReadOnlyList<Tab> ActiveTabs => AllTabs.Where(tab => newActiveTabs.Contains(tab)).ToList();
+		public IReadOnlyOrderedHashSet<Tab> UnorderedTabs => newActiveTabs;
 
 		public void ClearAllActive()
 		{

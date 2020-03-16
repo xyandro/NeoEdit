@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using NeoEdit.Program.Misc;
 
 namespace NeoEdit.Program
 {
@@ -13,6 +14,7 @@ namespace NeoEdit.Program
 		Size lastSize;
 		Canvas tabLabelsCanvas;
 		Grid contentGrid;
+		IReadOnlyOrderedHashSet<Tab> lastTabs;
 
 		void ClearFullLayout()
 		{
@@ -20,6 +22,7 @@ namespace NeoEdit.Program
 			lastSize = default;
 			tabLabelsCanvas = null;
 			contentGrid = null;
+			lastTabs = null;
 		}
 
 		void DoFullLayout(bool setFocus)
@@ -27,21 +30,23 @@ namespace NeoEdit.Program
 			ClearGridLayout();
 
 			if (lastSize != canvas.RenderSize)
-				ClearFullLayout();
-
-			if (!lastFull)
 			{
-				lastFull = true;
-				CreateFullControls();
+				ClearFullLayout();
+				lastSize = canvas.RenderSize;
 			}
 
+			CreateFullControls();
 			CreateTabLabels();
-
 			SetContent();
 		}
 
 		private void CreateFullControls()
 		{
+			if (lastFull)
+				return;
+
+			lastFull = true;
+
 			canvas.Children.Clear();
 
 			if (scrollBar.Visibility != Visibility.Collapsed)
@@ -96,6 +101,11 @@ namespace NeoEdit.Program
 
 		void CreateTabLabels()
 		{
+			if (Tabs.UnorderedTabs == lastTabs)
+				return;
+
+			lastTabs = Tabs.UnorderedTabs;
+
 			tabLabelsCanvas.Children.Clear();
 			if (Tabs.Focused == null)
 				return;
