@@ -14,15 +14,20 @@ namespace NeoEdit.Program
 		Size lastSize;
 		Canvas tabLabelsCanvas;
 		Grid contentGrid;
-		IReadOnlyOrderedHashSet<Tab> lastTabs;
+		IReadOnlyOrderedHashSet<Tab> lastActiveTabs;
 
 		void ClearFullLayout()
 		{
+			if (!lastFull)
+				return;
+
+			contentGrid.Children.Clear();
+
 			lastFull = false;
 			lastSize = default;
 			tabLabelsCanvas = null;
 			contentGrid = null;
-			lastTabs = null;
+			lastActiveTabs = null;
 		}
 
 		void DoFullLayout(bool setFocus)
@@ -101,10 +106,10 @@ namespace NeoEdit.Program
 
 		void CreateTabLabels()
 		{
-			if (Tabs.UnorderedTabs == lastTabs)
+			if (lastActiveTabs == Tabs.UnsortedActiveTabs)
 				return;
 
-			lastTabs = Tabs.UnorderedTabs;
+			lastActiveTabs = Tabs.UnsortedActiveTabs;
 
 			tabLabelsCanvas.Children.Clear();
 			if (Tabs.Focused == null)

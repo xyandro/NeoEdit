@@ -2,10 +2,8 @@
 
 namespace NeoEdit.Program.Misc
 {
-	public interface IReadOnlyOrderedHashSet<T> : IEnumerable<T>
+	public interface IReadOnlyOrderedHashSet<T> : IReadOnlyList<T>, IEnumerable<T>
 	{
-		int Count { get; }
-		T this[int index] { get; }
 		int IndexOf(T item);
 	}
 }

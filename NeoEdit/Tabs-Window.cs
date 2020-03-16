@@ -29,15 +29,15 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Select_NoTabs() => ClearAllActive();
 
-		void Execute_Window_Select_TabsWithWithoutSelections(bool hasSelections) => ActiveTabs.ForEach(tab => SetActive(tab, tab.Selections.Any() == hasSelections));
+		void Execute_Window_Select_TabsWithWithoutSelections(bool hasSelections) => UnsortedActiveTabs.ForEach(tab => SetActive(tab, tab.Selections.Any() == hasSelections));
 
-		void Execute_Window_Select_ModifiedUnmodifiedTabs(bool modified) => ActiveTabs.ForEach(tab => SetActive(tab, tab.IsModified == modified));
+		void Execute_Window_Select_ModifiedUnmodifiedTabs(bool modified) => UnsortedActiveTabs.ForEach(tab => SetActive(tab, tab.IsModified == modified));
 
-		void Execute_Window_Select_InactiveTabs() => AllTabs.ForEach(tab => SetActive(tab, !ActiveTabs.Contains(tab)));
+		void Execute_Window_Select_InactiveTabs() => AllTabs.ForEach(tab => SetActive(tab, !UnsortedActiveTabs.Contains(tab)));
 
 		void Execute_Window_Close_TabsWithWithoutSelections(bool hasSelections)
 		{
-			var toClose = ActiveTabs.Where(tab => tab.Selections.Any() == hasSelections).ToList();
+			var toClose = SortedActiveTabs.Where(tab => tab.Selections.Any() == hasSelections).ToList();
 			if (!toClose.All(tab => tab.CanClose()))
 				return;
 			toClose.ForEach(tab => RemoveTab(tab));
@@ -45,7 +45,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Close_ModifiedUnmodifiedTabs(bool modified)
 		{
-			var toClose = ActiveTabs.Where(tab => tab.IsModified == modified).ToList();
+			var toClose = SortedActiveTabs.Where(tab => tab.IsModified == modified).ToList();
 			if (!toClose.All(tab => tab.CanClose()))
 				return;
 			toClose.ForEach(tab => RemoveTab(tab));
@@ -53,7 +53,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Close_ActiveInactiveTabs(bool active)
 		{
-			var toClose = (active ? ActiveTabs : AllTabs.Except(ActiveTabs)).ToList();
+			var toClose = (active ? SortedActiveTabs : AllTabs.Except(UnsortedActiveTabs)).ToList();
 			if (!toClose.All(tab => tab.CanClose()))
 				return;
 			toClose.ForEach(tab => RemoveTab(tab));

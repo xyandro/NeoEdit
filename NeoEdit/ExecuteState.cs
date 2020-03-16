@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Misc;
 
 namespace NeoEdit.Program
 {
 	public class ExecuteState
 	{
-		public IReadOnlyList<Tab> ActiveTabs;
+		public IReadOnlyOrderedHashSet<Tab> ActiveTabs;
 		public bool Handled = true;
 		public TabsWindow TabsWindow;
 

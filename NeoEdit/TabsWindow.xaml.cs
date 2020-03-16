@@ -182,7 +182,7 @@ namespace NeoEdit.Program
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
-					var active = Tabs.ActiveTabs.ToList();
+					var active = Tabs.SortedActiveTabs.ToList();
 					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<Tab>), active), DragDropEffects.Move);
 				}
 			};
@@ -242,9 +242,9 @@ namespace NeoEdit.Program
 		{
 			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
 			statusBar.Items.Clear();
-			statusBar.Items.Add($"Active: {plural(Tabs.ActiveTabs.Count(), "file")}, {plural(Tabs.ActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
+			statusBar.Items.Add($"Active: {plural(Tabs.UnsortedActiveTabs.Count, "file")}, {plural(Tabs.UnsortedActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Inactive: {plural(Tabs.AllTabs.Except(Tabs.ActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(Tabs.ActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
+			statusBar.Items.Add($"Inactive: {plural(Tabs.AllTabs.Except(Tabs.UnsortedActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(Tabs.UnsortedActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
 			statusBar.Items.Add($"Total: {plural(Tabs.AllTabs.Count, "file")}, {plural(Tabs.AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			statusBar.Items.Add(new Separator());
@@ -258,7 +258,7 @@ namespace NeoEdit.Program
 		{
 			bool? GetMultiStatus(Func<Tab, bool> func)
 			{
-				var results = Tabs.ActiveTabs.Select(func).Distinct().ToList();
+				var results = Tabs.UnsortedActiveTabs.Select(func).Distinct().Take(2).ToList();
 				if (results.Count != 1)
 					return default;
 				return results[0];
