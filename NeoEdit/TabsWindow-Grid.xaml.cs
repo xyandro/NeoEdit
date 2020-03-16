@@ -41,7 +41,7 @@ namespace NeoEdit.Program
 			scrollBar.ValueChanged -= OnScrollBarValueChanged;
 			if ((setFocus) && (Tabs.Focused != null))
 			{
-				var index = Tabs.AllTabs.Indexes(tab => tab == Tabs.Focused).DefaultIfEmpty(-1).First();
+				var index = Tabs.AllTabs.IndexOf(Tabs.Focused);
 				if (index != -1)
 				{
 					var top = index / columns.Value * height;

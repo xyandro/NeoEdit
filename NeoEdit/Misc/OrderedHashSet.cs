@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace NeoEdit.Program.Misc
 {
-	public class OrderedHashSet<T> : KeyedCollection<T, T>
+	public class OrderedHashSet<T> : KeyedCollection<T, T>, IReadOnlyOrderedHashSet<T>
 	{
 		public OrderedHashSet() { }
 

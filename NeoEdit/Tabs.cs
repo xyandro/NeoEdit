@@ -20,7 +20,7 @@ namespace NeoEdit.Program
 
 		public Tabs()
 		{
-			oldAllTabs = newAllTabs = new List<Tab>();
+			oldAllTabs = newAllTabs = new OrderedHashSet<Tab>();
 			oldActiveTabs = newActiveTabs = new OrderedHashSet<Tab>();
 		}
 
@@ -363,7 +363,7 @@ namespace NeoEdit.Program
 
 		public int GetTabIndex(Tab tab, bool activeOnly = false)
 		{
-			var index = (activeOnly ? ActiveTabs : AllTabs).Indexes(x => x == tab).DefaultIfEmpty(-1).First();
+			var index = (activeOnly ? newActiveTabs : AllTabs).IndexOf(tab);
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;

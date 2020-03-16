@@ -13,8 +13,8 @@ namespace NeoEdit.Program
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		List<Tab> oldAllTabs, newAllTabs;
-		public IReadOnlyList<Tab> AllTabs => newAllTabs;
+		OrderedHashSet<Tab> oldAllTabs, newAllTabs;
+		public IReadOnlyOrderedHashSet<Tab> AllTabs => newAllTabs;
 
 		public void InsertTab(Tab tab, int? index = null)
 		{
@@ -28,7 +28,7 @@ namespace NeoEdit.Program
 				throw new Exception("Tab already in list");
 
 			if (newAllTabs == oldAllTabs)
-				newAllTabs = newAllTabs.ToList();
+				newAllTabs = new OrderedHashSet<Tab>(newAllTabs);
 			newAllTabs.Insert(index ?? newAllTabs.Count, tab);
 			tab.Tabs = this;
 
@@ -52,7 +52,7 @@ namespace NeoEdit.Program
 				throw new Exception("Tab not in list");
 
 			if (newAllTabs == oldAllTabs)
-				newAllTabs = newAllTabs.ToList();
+				newAllTabs = new OrderedHashSet<Tab>(newAllTabs);
 			newAllTabs.Remove(tab);
 			tab.Tabs = null;
 

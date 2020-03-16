@@ -1032,6 +1032,7 @@
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="MacroAction.cs" />
+    <Compile Include="Misc\IReadOnlyOrderedHashSet.cs" />
     <Compile Include="Misc\OrderedHashSet.cs" />
     <Compile Include="Misc\RunOnceTimer.cs" />
     <Compile Include="MoreLinq.cs" />
