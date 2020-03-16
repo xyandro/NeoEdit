@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using NeoEdit.Program.Controls;
 using NeoEdit.Program.Misc;
 
 namespace NeoEdit.Program
@@ -109,8 +111,11 @@ namespace NeoEdit.Program
 
 		void CreateTabLabels()
 		{
-			if (lastActiveTabs == Tabs.UnsortedActiveTabs)
+			if ((lastActiveTabs == Tabs.UnsortedActiveTabs) && (lastFocused == Tabs.Focused))
+			{
+				tabLabelsCanvas.Children.OfType<TabLabel>().ForEach(tabLabel => tabLabel.Refresh(Tabs));
 				return;
+			}
 
 			lastActiveTabs = Tabs.UnsortedActiveTabs;
 
@@ -119,7 +124,7 @@ namespace NeoEdit.Program
 				return;
 
 			var focusedIndex = Tabs.Focused == null ? 0 : Tabs.AllTabs.IndexOf(Tabs.Focused);
-			var tabLabels = new List<Border>();
+			var tabLabels = new List<TabLabel>();
 
 			var left = double.MaxValue;
 			var right = double.MinValue;

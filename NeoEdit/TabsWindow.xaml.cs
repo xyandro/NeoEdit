@@ -23,13 +23,6 @@ namespace NeoEdit.Program
 
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
-		static readonly Brush FocusedWindowBorderBrush = new SolidColorBrush(Color.FromRgb(31, 113, 216));
-
-		static readonly Brush ActiveWindowBorderBrush = new SolidColorBrush(Color.FromRgb(28, 101, 193));
-		static readonly Brush InactiveWindowBorderBrush = Brushes.Transparent;
-		static readonly Brush FocusedWindowBackgroundBrush = new SolidColorBrush(Color.FromRgb(23, 81, 156));
-		static readonly Brush ActiveWindowBackgroundBrush = new SolidColorBrush(Color.FromRgb(14, 50, 96));
-		static readonly Brush InactiveWindowBackgroundBrush = Brushes.Transparent;
 
 		static TabsWindow()
 		{
@@ -37,12 +30,6 @@ namespace NeoEdit.Program
 
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
-			FocusedWindowBorderBrush.Freeze();
-			ActiveWindowBorderBrush.Freeze();
-			InactiveWindowBorderBrush.Freeze();
-			FocusedWindowBackgroundBrush.Freeze();
-			ActiveWindowBackgroundBrush.Freeze();
-			InactiveWindowBackgroundBrush.Freeze();
 		}
 
 		public TabsWindow(bool addEmpty = false)
@@ -178,11 +165,11 @@ namespace NeoEdit.Program
 			//}
 		}
 
-		Border GetTabLabel(Tab tab, bool getSize = false)
+		TabLabel GetTabLabel(Tab tab, bool getSize = false)
 		{
-			var border = new Border { CornerRadius = new CornerRadius(4), Margin = new Thickness(2), BorderThickness = new Thickness(2), Tag = tab };
-			border.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
-			border.MouseMove += (s, e) =>
+			var tabLabel = new TabLabel(tab);
+			tabLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
+			tabLabel.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
@@ -190,56 +177,13 @@ namespace NeoEdit.Program
 					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<Tab>), active), DragDropEffects.Move);
 				}
 			};
+			tabLabel.CloseClicked += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseTab) { Configuration = tab });
 
-			if (Tabs.Focused == tab)
-			{
-				border.BorderBrush = FocusedWindowBorderBrush;
-				border.Background = FocusedWindowBackgroundBrush;
-			}
-			else if (Tabs.IsActive(tab))
-			{
-				border.BorderBrush = ActiveWindowBorderBrush;
-				border.Background = ActiveWindowBackgroundBrush;
-			}
-			else
-			{
-				border.BorderBrush = InactiveWindowBorderBrush;
-				border.Background = InactiveWindowBackgroundBrush;
-			}
-
-			var grid = new Grid();
-			grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(12) });
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
-			var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Foreground = Brushes.White, Margin = new Thickness(4, -4, 0, 0) };
-			text.SetBinding(TextBlock.TextProperty, new Binding(nameof(Tab.TabLabel)) { Source = tab });
-			Grid.SetRow(text, 0);
-			Grid.SetColumn(text, 0);
-			grid.Children.Add(text);
-
-			var closeButton = new Button
-			{
-				Content = "🗙",
-				BorderThickness = new Thickness(0),
-				Style = FindResource(ToolBar.ButtonStyleKey) as Style,
-				VerticalAlignment = VerticalAlignment.Center,
-				Margin = new Thickness(2, -6, 0, 0),
-				Foreground = Brushes.Red,
-				Focusable = false,
-				HorizontalAlignment = HorizontalAlignment.Right,
-			};
-			closeButton.Click += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseTab) { Configuration = tab });
-			Grid.SetRow(closeButton, 0);
-			Grid.SetColumn(closeButton, 1);
-			grid.Children.Add(closeButton);
-
-			border.Child = grid;
-
+			tabLabel.Refresh(Tabs);
 			if (getSize)
-				border.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+				tabLabel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-			return border;
+			return tabLabel;
 		}
 
 		void OnStatusBarRender(object s, DrawingContext dc)
@@ -262,7 +206,7 @@ namespace NeoEdit.Program
 				text.SetForegroundBrush(Brushes.Gray, pos, Separator.Length);
 				pos += Separator.Length;
 			}
-			dc.DrawText(text, new Point(2, 1));
+			dc.DrawText(text, new Point(6, 1));
 		}
 
 		void SetMenuCheckboxes()

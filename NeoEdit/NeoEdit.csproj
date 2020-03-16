@@ -223,6 +223,13 @@
     <Compile Include="Controls\PropertyChangeNotifier.cs" />
     <Compile Include="Controls\RenderCanvas.cs" />
     <Compile Include="Controls\ScrollViewerBinding.cs" />
+    <Page Include="Controls\TabLabel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\TabLabel.xaml.cs">
+      <DependentUpon>TabLabel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UIHelper.cs" />
     <Page Include="Controls\ViewValue.xaml">
       <Generator>MSBuild:Compile</Generator>
