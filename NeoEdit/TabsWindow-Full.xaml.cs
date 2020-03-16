@@ -69,9 +69,9 @@ namespace NeoEdit.Program
 			if (lastFull)
 				return;
 
-			if (scrollBar.Visibility != Visibility.Collapsed)
+			if (scrollBarBorder.Visibility != Visibility.Collapsed)
 			{
-				scrollBar.Visibility = Visibility.Collapsed;
+				scrollBarBorder.Visibility = Visibility.Collapsed;
 				UpdateLayout();
 			}
 

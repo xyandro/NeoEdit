@@ -84,7 +84,7 @@ namespace NeoEdit.Program
 
 				var totalRows = (Tabs.AllTabs.Count + gridColumns - 1) / gridColumns;
 
-				scrollBar.Visibility = totalRows > gridRows ? Visibility.Visible : Visibility.Collapsed;
+				scrollBarBorder.Visibility = totalRows > gridRows ? Visibility.Visible : Visibility.Collapsed;
 				UpdateLayout();
 
 				gridWidth = canvas.ActualWidth / gridColumns;
@@ -92,9 +92,6 @@ namespace NeoEdit.Program
 
 				scrollBar.ViewportSize = canvas.ActualHeight;
 				scrollBar.Maximum = gridHeight * totalRows - canvas.ActualHeight;
-				scrollBar.ValueChanged -= OnScrollBarValueChanged;
-				scrollBar.Value = Math.Max(0, Math.Min(scrollBar.Value, scrollBar.Maximum));
-				scrollBar.ValueChanged += OnScrollBarValueChanged;
 
 				lastGridAllTabs = null; // Make everything else calculate
 			}
@@ -102,15 +99,16 @@ namespace NeoEdit.Program
 
 		void SetGridScrollPosition()
 		{
-			if (Tabs.Focused == null)
-				return;
-
-			if ((lastGridAllTabs == Tabs.AllTabs) && (lastGridFocused == Tabs.Focused))
-				return;
-
-			var atTop = Tabs.AllTabs.IndexOf(Tabs.Focused) / gridColumns * gridHeight;
 			scrollBar.ValueChanged -= OnScrollBarValueChanged;
-			scrollBar.Value = Math.Min(atTop, Math.Max(scrollBar.Value, atTop + gridHeight - scrollBar.ViewportSize));
+
+			if ((Tabs.Focused != null) && ((lastGridAllTabs != Tabs.AllTabs) || (lastGridFocused != Tabs.Focused)))
+			{
+				var atTop = Tabs.AllTabs.IndexOf(Tabs.Focused) / gridColumns * gridHeight;
+				scrollBar.Value = Math.Min(atTop, Math.Max(scrollBar.Value, atTop + gridHeight - scrollBar.ViewportSize));
+			}
+
+			scrollBar.Value = Math.Max(0, Math.Min(scrollBar.Value, scrollBar.Maximum));
+
 			scrollBar.ValueChanged += OnScrollBarValueChanged;
 		}
 
