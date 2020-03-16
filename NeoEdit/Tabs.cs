@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Misc;
 using NeoEdit.Program.NEClipboards;
 using NeoEdit.Program.Transform;
 
@@ -20,7 +21,7 @@ namespace NeoEdit.Program
 		public Tabs()
 		{
 			oldAllTabs = newAllTabs = new List<Tab>();
-			oldActiveTabs = newActiveTabs = new HashSet<Tab>();
+			oldActiveTabs = newActiveTabs = new OrderedHashSet<Tab>();
 		}
 
 		public IReadOnlyDictionary<Tab, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()

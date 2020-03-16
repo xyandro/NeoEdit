@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NeoEdit.Program.Misc;
 
 namespace NeoEdit.Program
 {
@@ -56,11 +57,14 @@ namespace NeoEdit.Program
 			tab.Tabs = null;
 
 			if (newActiveTabs == oldActiveTabs)
-				newActiveTabs = new HashSet<Tab>(newActiveTabs);
+				newActiveTabs = new OrderedHashSet<Tab>(newActiveTabs);
 			if (newActiveTabs.Contains(tab))
 				newActiveTabs.Remove(tab);
 			if (newFocused == tab)
-				newFocused = newActiveTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
+				if (newActiveTabs.Count == 0)
+					newFocused = null;
+				else
+					newFocused = newActiveTabs[newActiveTabs.Count - 1];
 
 			if (newFocused == null)
 			{
@@ -70,13 +74,13 @@ namespace NeoEdit.Program
 			}
 		}
 
-		HashSet<Tab> oldActiveTabs, newActiveTabs;
+		OrderedHashSet<Tab> oldActiveTabs, newActiveTabs;
 		public IReadOnlyList<Tab> ActiveTabs => AllTabs.Where(tab => newActiveTabs.Contains(tab)).ToList();
 
 		public void ClearAllActive()
 		{
 			EnsureInTransaction();
-			newActiveTabs = new HashSet<Tab>();
+			newActiveTabs = new OrderedHashSet<Tab>();
 			newFocused = null;
 		}
 
@@ -89,7 +93,7 @@ namespace NeoEdit.Program
 				return;
 
 			if (newActiveTabs == oldActiveTabs)
-				newActiveTabs = new HashSet<Tab>(newActiveTabs);
+				newActiveTabs = new OrderedHashSet<Tab>(newActiveTabs);
 			if (active)
 			{
 				newActiveTabs.Add(tab);
