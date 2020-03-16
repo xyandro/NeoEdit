@@ -14,10 +14,11 @@ namespace NeoEdit.Program
 	{
 		bool lastFull = false;
 		Size lastSize;
-		Canvas tabLabelsCanvas;
+		StackPanel tabLabelsStackPanel;
 		Grid contentGrid;
-		IReadOnlyOrderedHashSet<Tab> lastActiveTabs;
+		IReadOnlyOrderedHashSet<Tab> lastAllTabs;
 		Tab lastFocused;
+		double lastTabLabelIndex, tabLabelIndex;
 		TabWindow tabWindow;
 
 		void ClearFullLayout()
@@ -29,9 +30,11 @@ namespace NeoEdit.Program
 
 			lastFull = false;
 			lastSize = default;
-			tabLabelsCanvas = null;
+			tabLabelsStackPanel = null;
 			contentGrid = null;
-			lastActiveTabs = null;
+			lastAllTabs = null;
+			lastTabLabelIndex = 0;
+			tabLabelIndex = 0;
 			lastFocused = null;
 		}
 
@@ -82,10 +85,10 @@ namespace NeoEdit.Program
 			grid.ColumnDefinitions.Add(new ColumnDefinition());
 			grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(20) });
 
-			tabLabelsCanvas = new Canvas { ClipToBounds = true };
-			Grid.SetRow(tabLabelsCanvas, 0);
-			Grid.SetColumn(tabLabelsCanvas, 1);
-			grid.Children.Add(tabLabelsCanvas);
+			tabLabelsStackPanel = new StackPanel { Orientation = Orientation.Horizontal, ClipToBounds = true };
+			Grid.SetRow(tabLabelsStackPanel, 0);
+			Grid.SetColumn(tabLabelsStackPanel, 1);
+			grid.Children.Add(tabLabelsStackPanel);
 
 			var moveLeft = new RepeatButton { Content = "⮜", Margin = new Thickness(0, 0, 4, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, Focusable = false };
 			//moveLeft.Click += (s, e) => tabLabelsScrollViewer.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabelsScrollViewer.HorizontalOffset - 50, tabLabelsScrollViewer.ScrollableWidth)));
@@ -111,70 +114,69 @@ namespace NeoEdit.Program
 
 		void CreateTabLabels()
 		{
-			if ((lastActiveTabs == Tabs.UnsortedActiveTabs) && (lastFocused == Tabs.Focused))
+			if ((lastAllTabs == Tabs.AllTabs) && (lastFocused == Tabs.Focused) && (lastTabLabelIndex == tabLabelIndex))
 			{
-				tabLabelsCanvas.Children.OfType<TabLabel>().ForEach(tabLabel => tabLabel.Refresh(Tabs));
+				tabLabelsStackPanel.Children.OfType<TabLabel>().ForEach(tabLabel => tabLabel.Refresh(Tabs));
 				return;
 			}
 
-			lastActiveTabs = Tabs.UnsortedActiveTabs;
+			lastAllTabs = Tabs.AllTabs;
 
-			tabLabelsCanvas.Children.Clear();
-			if (lastActiveTabs.Count == 0)
+			tabLabelsStackPanel.Children.Clear();
+			if (!lastAllTabs.Any())
 				return;
 
-			var focusedIndex = Tabs.Focused == null ? 0 : Tabs.AllTabs.IndexOf(Tabs.Focused);
-			var tabLabels = new List<TabLabel>();
-
-			var left = double.MaxValue;
-			var right = double.MinValue;
-			var leftIndex = focusedIndex - 1;
-			var rightIndex = focusedIndex;
-			while (true)
+			var tabLabels = new Dictionary<int, TabLabel>();
+			TabLabel FetchTabLabel(int index)
 			{
-				if ((rightIndex < Tabs.AllTabs.Count) && (right <= canvas.ActualWidth - 40))
+				if (tabLabels.ContainsKey(index))
+					return tabLabels[index];
+
+				var tabLabel = GetTabLabel(lastAllTabs[index]);
+				tabLabel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+				tabLabels[index] = tabLabel;
+				return tabLabel;
+			}
+
+			if ((lastFocused != Tabs.Focused) && (Tabs.Focused != null))
+			{
+				var atLeftIndex = lastAllTabs.IndexOf(Tabs.Focused);
+				var remaining = canvas.ActualWidth - 40 - 3;
+				var atRightIndex = 0d;
+				for (var ctr = atLeftIndex; ctr >= 0; --ctr)
 				{
-					var tabLabel = GetTabLabel(Tabs.AllTabs[rightIndex], true);
-					tabLabels.Add(tabLabel);
-					if (right == double.MinValue)
+					atRightIndex = ctr;
+					var width = FetchTabLabel(ctr).DesiredSize.Width;
+					remaining -= width;
+					if (remaining <= 0)
 					{
-						left = (canvas.ActualWidth - 40 - tabLabel.DesiredSize.Width) / 2;
-						right = left + tabLabel.DesiredSize.Width;
+						atRightIndex -= remaining / width;
+						break;
 					}
-					else
-						right += tabLabel.DesiredSize.Width;
-					++rightIndex;
 				}
-				else if (rightIndex == Tabs.AllTabs.Count)
-				{
-					++rightIndex; // Don't want to do this again
-					var offset = Math.Max(canvas.ActualWidth - 40 - 3 - right, 0);
-					left += offset;
-					right += offset;
-				}
-				else if ((leftIndex >= 0) && (left >= 0))
-				{
-					var tabLabel = GetTabLabel(Tabs.AllTabs[leftIndex], true);
-					tabLabels.Insert(0, tabLabel);
-					left -= tabLabel.DesiredSize.Width;
-					--leftIndex;
-				}
-				else if (leftIndex == -1)
-				{
-					--leftIndex; // Don't want to do this again
-					var offset = Math.Max(0, left);
-					left -= offset;
-					right -= offset;
-				}
-				else
-					break;
+
+				tabLabelIndex = Math.Min(atLeftIndex, Math.Max(tabLabelIndex, atRightIndex));
 			}
 
-			foreach (var tabLabel in tabLabels)
+			lastTabLabelIndex = tabLabelIndex;
 			{
-				Canvas.SetLeft(tabLabel, left);
-				tabLabelsCanvas.Children.Add(tabLabel);
-				left += tabLabel.DesiredSize.Width;
+				var remaining = canvas.ActualWidth - 40 - 3;
+				var index = (int)tabLabelIndex;
+				var offset = tabLabelIndex - index;
+				while (true)
+				{
+					if ((index >= lastAllTabs.Count) || (remaining <= 0))
+						break;
+					var tabLabel = FetchTabLabel(index);
+					remaining -= tabLabel.DesiredSize.Width;
+					if (offset != 0)
+					{
+						tabLabel.Margin = new Thickness(-tabLabel.DesiredSize.Width * offset, 0, 0, 0);
+						offset = 0;
+					}
+					tabLabelsStackPanel.Children.Add(tabLabel);
+					++index;
+				}
 			}
 		}
 

@@ -165,7 +165,7 @@ namespace NeoEdit.Program
 			//}
 		}
 
-		TabLabel GetTabLabel(Tab tab, bool getSize = false)
+		TabLabel GetTabLabel(Tab tab)
 		{
 			var tabLabel = new TabLabel(tab);
 			tabLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
@@ -180,9 +180,6 @@ namespace NeoEdit.Program
 			tabLabel.CloseClicked += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseTab) { Configuration = tab });
 
 			tabLabel.Refresh(Tabs);
-			if (getSize)
-				tabLabel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
 			return tabLabel;
 		}
 
