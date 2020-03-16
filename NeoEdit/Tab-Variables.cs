@@ -28,30 +28,30 @@ namespace NeoEdit.Program
 			{
 				EnsureInTransaction();
 				newText = value;
-				TextView = new NETextView(newText);
-				MaxColumn = Enumerable.Range(0, TextView.NumLines).AsParallel().Max(line => GetLineColumnsLength(line));
+				newTextView = null;
+				newMaxColumn = null;
 			}
 		}
 
 		NETextView oldTextView, newTextView;
 		NETextView TextView
 		{
-			get => newTextView;
-			set
+			get
 			{
-				EnsureInTransaction();
-				newTextView = value;
+				if (newTextView == null)
+					newTextView = new NETextView(newText);
+				return newTextView;
 			}
 		}
 
-		int oldMaxColumn, newMaxColumn;
+		int? oldMaxColumn, newMaxColumn;
 		public int MaxColumn
 		{
-			get => newMaxColumn;
-			private set
+			get
 			{
-				EnsureInTransaction();
-				newMaxColumn = value;
+				if (!newMaxColumn.HasValue)
+					newMaxColumn = Enumerable.Range(0, TextView.NumLines).AsParallel().Max(line => GetLineColumnsLength(line));
+				return newMaxColumn.Value;
 			}
 		}
 
