@@ -32,7 +32,7 @@
 		</Border>
 
 		<Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="#c0c0c0" BorderThickness="0,2,0,0" Padding="4,0">
-			<StatusBar Height="20" Name="statusBar" Focusable="False" Background="Transparent"/>
+			<controls:RenderCanvas x:Name="statusBar" Height="20" Background="Transparent" Render="OnStatusBarRender" ClipToBounds="True"/>
 		</Border>
 	</Grid>
 

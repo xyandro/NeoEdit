@@ -31,7 +31,7 @@
 			<controls:DiffScrollBar Grid.Row="0" Grid.Column="1" x:Name="scrollBar"/>
 		</Grid>
 
-		<StatusBar Grid.Row="2" Grid.Column="0" Foreground="White" Name="statusBar" Background="Transparent"/>
+		<controls:RenderCanvas Grid.Row="2" Grid.Column="0" x:Name="statusBar" Height="20" Background="Transparent" Render="OnStatusBarRender" ClipToBounds="True"/>
 
 	</Grid>
 

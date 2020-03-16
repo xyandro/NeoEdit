@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -54,7 +55,7 @@ namespace NeoEdit.Program
 
 			activateTabsTimer = new RunOnceTimer(() => ActivateTabs());
 			drawTimer = new RunOnceTimer(() => DrawAll());
-			NEClipboard.ClipboardChanged += () => SetStatusBarText();
+			NEClipboard.ClipboardChanged += () => statusBar.InvalidateVisual();
 
 			scrollBar.ValueChanged += OnScrollBarValueChanged;
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
@@ -241,20 +242,27 @@ namespace NeoEdit.Program
 			return border;
 		}
 
-		void SetStatusBarText()
+		void OnStatusBarRender(object s, DrawingContext dc)
 		{
-			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
-			statusBar.Items.Clear();
-			statusBar.Items.Add($"Active: {plural(Tabs.UnsortedActiveTabs.Count, "file")}, {plural(Tabs.UnsortedActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
-			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Inactive: {plural(Tabs.AllTabs.Except(Tabs.UnsortedActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(Tabs.UnsortedActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
-			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Total: {plural(Tabs.AllTabs.Count, "file")}, {plural(Tabs.AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
-			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
-			statusBar.Items.Add(new Separator());
-			statusBar.Items.Add($"Keys/Values: {string.Join(" / ", Tabs.keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
+			const string Separator = "  |  ";
 
+			var status = new List<string>();
+			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
+			status.Add($"Active: {plural(Tabs.UnsortedActiveTabs.Count, "file")}, {plural(Tabs.UnsortedActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Inactive: {plural(Tabs.AllTabs.Except(Tabs.UnsortedActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(Tabs.UnsortedActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Total: {plural(Tabs.AllTabs.Count, "file")}, {plural(Tabs.AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
+			status.Add($"Keys/Values: {string.Join(" / ", Tabs.keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
+
+			var text = new FormattedText(string.Join(Separator, status), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, new Typeface("Segoe UI"), 12, Brushes.White, 1);
+			var pos = 0;
+			for (var ctr = 0; ctr < status.Count - 1; ++ctr)
+			{
+				pos += status[ctr].Length;
+				text.SetForegroundBrush(Brushes.Gray, pos, Separator.Length);
+				pos += Separator.Length;
+			}
+			dc.DrawText(text, new Point(2, 1));
 		}
 
 		void SetMenuCheckboxes()
@@ -295,9 +303,9 @@ namespace NeoEdit.Program
 			menu.window_ViewValues.MultiStatus = GetMultiStatus(x => x.ViewValues);
 		}
 
-		void DrawAll(bool setFocus = false)
+		void DrawAll()
 		{
-			SetStatusBarText();
+			statusBar.InvalidateVisual();
 			SetMenuCheckboxes();
 			Title = $"{(Tabs.Focused == null ? "" : $"{Tabs.Focused.DisplayName ?? Tabs.Focused.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
 
@@ -312,6 +320,11 @@ namespace NeoEdit.Program
 		{
 			Tabs.RemoveTab(tab);
 			Tabs.InsertTab(tab, newIndex);
+		}
+
+		private void RenderCanvas_Render(object s, DrawingContext dc)
+		{
+
 		}
 
 		//TODO
