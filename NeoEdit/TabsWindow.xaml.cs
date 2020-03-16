@@ -165,7 +165,7 @@ namespace NeoEdit.Program
 			//}
 		}
 
-		TabLabel GetTabLabel(Tab tab)
+		TabLabel CreateTabLabel(Tab tab)
 		{
 			var tabLabel = new TabLabel(tab);
 			tabLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });

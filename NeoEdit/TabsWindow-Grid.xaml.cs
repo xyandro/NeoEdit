@@ -69,7 +69,7 @@ namespace NeoEdit.Program
 				var tabWindow = new TabWindow(Tabs.AllTabs[ctr]);
 				var dockPanel = new DockPanel { AllowDrop = true };
 				dockPanel.Drop += (s, e) => OnDrop(e, Tabs.AllTabs[ctr]);
-				var tabLabel = GetTabLabel(Tabs.AllTabs[ctr]);
+				var tabLabel = CreateTabLabel(Tabs.AllTabs[ctr]);
 				DockPanel.SetDock(tabLabel, Dock.Top);
 				dockPanel.Children.Add(tabLabel);
 				{
