@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,7 +10,7 @@ namespace NeoEdit.Program
 		{
 		}
 
-		void DoGridLayout(bool setFocus)
+		void DoGridLayout()
 		{
 			ClearFullLayout();
 
@@ -39,7 +38,7 @@ namespace NeoEdit.Program
 			scrollBar.ViewportSize = canvas.ActualHeight;
 			scrollBar.Maximum = height * totalRows - canvas.ActualHeight;
 			scrollBar.ValueChanged -= OnScrollBarValueChanged;
-			if ((setFocus) && (Tabs.Focused != null))
+			if (Tabs.Focused != null)
 			{
 				var index = Tabs.AllTabs.IndexOf(Tabs.Focused);
 				if (index != -1)

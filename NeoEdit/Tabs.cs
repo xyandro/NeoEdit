@@ -128,8 +128,6 @@ namespace NeoEdit.Program
 			{
 				if (commit)
 				{
-					var setFocus = oldFocused != newFocused;
-
 					Commit();
 					AllTabs.ForEach(tab => tab.Commit());
 
@@ -143,7 +141,7 @@ namespace NeoEdit.Program
 							RecordingMacro?.AddAction(action);
 					}
 
-					state.TabsWindow.DrawAll(setFocus);
+					state.TabsWindow.QueueDraw();
 				}
 				else
 				{

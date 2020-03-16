@@ -15,6 +15,8 @@ namespace NeoEdit.Program
 		Canvas tabLabelsCanvas;
 		Grid contentGrid;
 		IReadOnlyOrderedHashSet<Tab> lastActiveTabs;
+		Tab lastFocused;
+		TabWindow tabWindow;
 
 		void ClearFullLayout()
 		{
@@ -28,9 +30,10 @@ namespace NeoEdit.Program
 			tabLabelsCanvas = null;
 			contentGrid = null;
 			lastActiveTabs = null;
+			lastFocused = null;
 		}
 
-		void DoFullLayout(bool setFocus)
+		void DoFullLayout()
 		{
 			ClearGridLayout();
 
@@ -112,10 +115,10 @@ namespace NeoEdit.Program
 			lastActiveTabs = Tabs.UnsortedActiveTabs;
 
 			tabLabelsCanvas.Children.Clear();
-			if (Tabs.Focused == null)
+			if (lastActiveTabs.Count == 0)
 				return;
 
-			var focusedIndex = Tabs.GetTabIndex(Tabs.Focused);
+			var focusedIndex = Tabs.Focused == null ? 0 : Tabs.AllTabs.IndexOf(Tabs.Focused);
 			var tabLabels = new List<Border>();
 
 			var left = double.MaxValue;
@@ -172,13 +175,19 @@ namespace NeoEdit.Program
 
 		void SetContent()
 		{
-			contentGrid.Children.Clear();
-			if (Tabs.Focused != null)
+			if (lastFocused != Tabs.Focused)
 			{
-				var tabWindow = new TabWindow(Tabs.Focused);
-				contentGrid.Children.Add(tabWindow);
-				tabWindow.DrawAll();
+				lastFocused = Tabs.Focused;
+
+				contentGrid.Children.Clear();
+				tabWindow = null;
+				if (lastFocused != null)
+				{
+					tabWindow = new TabWindow(lastFocused);
+					contentGrid.Children.Add(tabWindow);
+				}
 			}
+			tabWindow?.DrawAll();
 		}
 	}
 }

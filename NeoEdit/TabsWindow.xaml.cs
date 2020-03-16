@@ -53,6 +53,7 @@ namespace NeoEdit.Program
 			UIHelper.AuditMenu(menu);
 
 			activateTabsTimer = new RunOnceTimer(() => ActivateTabs());
+			drawTimer = new RunOnceTimer(() => DrawAll());
 			NEClipboard.ClipboardChanged += () => SetStatusBarText();
 
 			scrollBar.ValueChanged += OnScrollBarValueChanged;
@@ -69,8 +70,10 @@ namespace NeoEdit.Program
 			return Tabs.HandleCommand(state, configure);
 		}
 
-		readonly RunOnceTimer activateTabsTimer;
+		readonly RunOnceTimer activateTabsTimer, drawTimer;
 		public void QueueActivateTabs() => Dispatcher.Invoke(() => activateTabsTimer.Start());
+
+		public void QueueDraw() => Dispatcher.Invoke(() => drawTimer.Start());
 
 		void OnActivated(object sender, EventArgs e)
 		{
@@ -86,12 +89,12 @@ namespace NeoEdit.Program
 			HandleCommand(new ExecuteState(NECommand.Internal_Activate));
 		}
 
-		void OnScrollBarValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => DrawAll();
+		void OnScrollBarValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => QueueDraw();
 
 		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
 		{
 			base.OnRenderSizeChanged(sizeInfo);
-			DrawAll();
+			QueueDraw();
 		}
 
 		protected override void OnSourceInitialized(EventArgs e)
@@ -292,16 +295,16 @@ namespace NeoEdit.Program
 			menu.window_ViewValues.MultiStatus = GetMultiStatus(x => x.ViewValues);
 		}
 
-		public void DrawAll(bool setFocus = false)
+		void DrawAll(bool setFocus = false)
 		{
 			SetStatusBarText();
 			SetMenuCheckboxes();
 			Title = $"{(Tabs.Focused == null ? "" : $"{Tabs.Focused.DisplayName ?? Tabs.Focused.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
 
 			if ((Tabs.Columns == 1) && (Tabs.Rows == 1))
-				DoFullLayout(setFocus);
+				DoFullLayout();
 			else
-				DoGridLayout(setFocus);
+				DoGridLayout();
 
 		}
 
