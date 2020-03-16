@@ -14,7 +14,6 @@ namespace NeoEdit.Program
 	{
 		StackPanel fullTabLabelsPanel;
 		Grid fullContentGrid;
-		TabWindow fullTabWindow;
 		double fullTabLabelIndex;
 		double fullTabLabelsWidth;
 		List<TabLabel> fullTabLabels;
@@ -35,7 +34,7 @@ namespace NeoEdit.Program
 			fullTabLabelsPanel = null;
 			fullContentGrid.Children.Clear();
 			fullContentGrid = null;
-			fullTabWindow = null;
+			tabWindows[0].Tab = null;
 			fullTabLabelsWidth = 0;
 			fullTabLabels = null;
 
@@ -68,6 +67,8 @@ namespace NeoEdit.Program
 		{
 			if (lastFull)
 				return;
+
+			SetTabWindowCount(1);
 
 			if (scrollBarBorder.Visibility != Visibility.Collapsed)
 			{
@@ -199,19 +200,19 @@ namespace NeoEdit.Program
 
 		void SetFullContent()
 		{
-			if (lastFullFocused != Tabs.Focused)
+			tabWindows[0].Tab = Tabs.Focused;
+			if (Tabs.Focused == null)
 			{
-				fullTabWindow = null;
-				fullContentGrid.Children.Clear();
-
-				if (Tabs.Focused != null)
-				{
-					fullTabWindow = new TabWindow(Tabs.Focused);
-					fullContentGrid.Children.Add(fullTabWindow);
-				}
+				if (lastFullFocused != null)
+					fullContentGrid.Children.Clear();
+			}
+			else
+			{
+				if (lastFullFocused == null)
+					fullContentGrid.Children.Add(tabWindows[0]);
 			}
 
-			fullTabWindow?.DrawAll();
+			tabWindows[0].DrawAll();
 		}
 	}
 }

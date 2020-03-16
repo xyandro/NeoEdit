@@ -12,7 +12,6 @@ namespace NeoEdit.Program
 		int gridColumns, gridRows;
 		double gridWidth, gridHeight;
 		List<TabLabel> gridTabLabels;
-		List<TabWindow> gridTabWindows;
 
 		bool lastGrid = false;
 		Size lastGridSize;
@@ -26,12 +25,12 @@ namespace NeoEdit.Program
 			if (!lastGrid)
 				return;
 
+			DisconnectTabWindows();
 			canvas.Children.Clear();
 
 			gridColumns = gridRows = 0;
 			gridWidth = gridHeight = 0;
 			gridTabLabels = null;
-			gridTabWindows = null;
 
 			lastGrid = false;
 			lastGridSize = default;
@@ -39,6 +38,17 @@ namespace NeoEdit.Program
 			lastGridFocused = null;
 			lastGridScrollBarValue = 0;
 			lastGridColumns = lastGridRows = lastGridMaxColumns = lastGridMaxRows = null;
+		}
+
+		void DisconnectTabWindows()
+		{
+			foreach (var tabWindow in tabWindows)
+			{
+				if (tabWindow.Tab == null)
+					continue;
+				(tabWindow.Parent as DockPanel).Children.Clear();
+				tabWindow.Tab = null;
+			}
 		}
 
 		void DoGridLayout()
@@ -94,6 +104,8 @@ namespace NeoEdit.Program
 				scrollBar.Maximum = gridHeight * totalRows - canvas.ActualHeight;
 
 				lastGridAllTabs = null; // Make everything else calculate
+
+				SetTabWindowCount(gridColumns * (gridRows + 2)); // Leave room for partial tabs on both sides (possible due to rounding errors)
 			}
 		}
 
@@ -117,13 +129,14 @@ namespace NeoEdit.Program
 			if ((lastGridAllTabs == Tabs.AllTabs) && (lastGridScrollBarValue == scrollBar.Value))
 			{
 				gridTabLabels.ForEach(tabLabel => tabLabel.Refresh(Tabs));
-				gridTabWindows.ForEach(tabWindow => tabWindow.DrawAll());
+				tabWindows.ForEach(tabWindow => tabWindow.DrawAll());
 				return;
 			}
 
 			canvas.Children.Clear();
 			gridTabLabels = new List<TabLabel>();
-			gridTabWindows = new List<TabWindow>();
+			DisconnectTabWindows();
+			var tabWindowsIndex = 0;
 			for (var ctr = 0; ctr < Tabs.AllTabs.Count; ++ctr)
 			{
 				var top = ctr / gridColumns * gridHeight - scrollBar.Value;
@@ -140,7 +153,8 @@ namespace NeoEdit.Program
 				Canvas.SetLeft(border, ctr % gridColumns * gridWidth);
 				Canvas.SetTop(border, top);
 
-				var tabWindow = new TabWindow(Tabs.AllTabs[ctr]);
+				var tabWindow = tabWindows[tabWindowsIndex++];
+				tabWindow.Tab = Tabs.AllTabs[ctr];
 				var dockPanel = new DockPanel { AllowDrop = true };
 				dockPanel.Drop += (s, e) => OnDrop(e, Tabs.AllTabs[ctr]);
 				var tabLabel = CreateTabLabel(Tabs.AllTabs[ctr]);
@@ -158,7 +172,6 @@ namespace NeoEdit.Program
 				canvas.Children.Add(border);
 
 				gridTabLabels.Add(tabLabel);
-				gridTabWindows.Add(tabWindow);
 			}
 		}
 	}

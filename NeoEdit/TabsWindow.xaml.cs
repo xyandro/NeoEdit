@@ -182,6 +182,14 @@ namespace NeoEdit.Program
 			return tabLabel;
 		}
 
+		readonly List<TabWindow> tabWindows = new List<TabWindow>();
+		void SetTabWindowCount(int desiredCount)
+		{
+			while (tabWindows.Count < desiredCount)
+				tabWindows.Add(new TabWindow());
+			tabWindows.RemoveRange(desiredCount, tabWindows.Count - desiredCount);
+		}
+
 		void OnStatusBarRender(object s, DrawingContext dc)
 		{
 			const string Separator = "  |  ";

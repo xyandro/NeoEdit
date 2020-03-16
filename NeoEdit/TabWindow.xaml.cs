@@ -15,7 +15,7 @@ namespace NeoEdit.Program
 		const double Spacing = 2;
 		static double LineHeight => Font.FontSize + Spacing;
 
-		public Tab Tab { get; } = new Tab();
+		public Tab Tab { get; set; }
 
 		static internal readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
 		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
@@ -51,9 +51,8 @@ namespace NeoEdit.Program
 			lightlightRowPen.Freeze();
 		}
 
-		internal TabWindow(Tab tab)
+		internal TabWindow()
 		{
-			Tab = tab;
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
 			InitializeComponent();
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
@@ -62,6 +61,9 @@ namespace NeoEdit.Program
 
 		public void DrawAll()
 		{
+			if (Tab == null)
+				return;
+
 			SetupScrollBars();
 			SetupViewValues();
 			canvas.InvalidateVisual();
