@@ -27,6 +27,8 @@ namespace NeoEdit.Program
 			if (newAllTabs.Contains(tab))
 				throw new Exception("Tab already in list");
 
+			AddToTransaction(tab);
+
 			if (newAllTabs == oldAllTabs)
 				newAllTabs = new OrderedHashSet<Tab>(newAllTabs);
 			newAllTabs.Insert(index ?? newAllTabs.Count, tab);
@@ -51,6 +53,8 @@ namespace NeoEdit.Program
 				throw new Exception("Tab not assigned");
 			if (!newAllTabs.Contains(tab))
 				throw new Exception("Tab not in list");
+
+			AddToTransaction(tab);
 
 			if (newAllTabs == oldAllTabs)
 				newAllTabs = new OrderedHashSet<Tab>(newAllTabs);
@@ -108,6 +112,8 @@ namespace NeoEdit.Program
 				newActiveTabs = new OrderedHashSet<Tab>(newActiveTabs);
 			if (active)
 			{
+				AddToTransaction(tab);
+
 				newActiveTabs.Add(tab);
 				if (newFocused == null)
 					newFocused = tab;
@@ -180,12 +186,22 @@ namespace NeoEdit.Program
 			}
 		}
 
+		void AddToTransaction(Tab tab)
+		{
+			if (transactionTabs.Contains(tab))
+				return;
+			transactionTabs.Add(tab);
+			tab.BeginTransaction(state);
+		}
 
+		HashSet<Tab> transactionTabs;
 		void BeginTransaction(ExecuteState state)
 		{
 			if (this.state != null)
 				throw new Exception("Already in a transaction");
 			this.state = state;
+			transactionTabs = new HashSet<Tab>();
+			UnsortedActiveTabs.ForEach(AddToTransaction);
 		}
 
 		void Rollback()
@@ -199,6 +215,9 @@ namespace NeoEdit.Program
 			newRows = oldRows;
 			newMaxColumns = oldMaxColumns;
 			newMaxRows = oldMaxRows;
+
+			transactionTabs.ForEach(tab => tab.Rollback());
+			transactionTabs = null;
 
 			state = null;
 		}
@@ -219,6 +238,9 @@ namespace NeoEdit.Program
 			oldRows = newRows;
 			oldMaxColumns = newMaxColumns;
 			oldMaxRows = newMaxRows;
+
+			transactionTabs.ForEach(tab => tab.Commit());
+			transactionTabs = null;
 
 			state = null;
 		}

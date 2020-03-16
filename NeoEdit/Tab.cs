@@ -21,7 +21,7 @@ namespace NeoEdit.Program
 
 		public Tab(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
-			BeginTransaction();
+			BeginTransaction(new ExecuteState(NECommand.None));
 
 			Text = new NEText("");
 			Selections = new List<Range>();
@@ -37,6 +37,8 @@ namespace NeoEdit.Program
 
 			OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
 			Goto(line, column, index);
+
+			Commit();
 		}
 
 		public string TabLabel => $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(IsDiff ? $" (Diff{(DiffEncodingMismatch ? " - Encoding mismatch" : "")})" : "")}";

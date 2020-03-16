@@ -84,7 +84,6 @@ namespace NeoEdit.Program
 				}
 
 				BeginTransaction(state);
-				AllTabs.ForEach(tab => tab.BeginTransaction(state));
 
 				state.ClipboardDataMapFunc = GetClipboardDataMap;
 				state.KeysAndValuesFunc = GetKeysAndValuesMap;
@@ -129,7 +128,6 @@ namespace NeoEdit.Program
 				if (commit)
 				{
 					Commit();
-					AllTabs.ForEach(tab => tab.Commit());
 
 					PostExecute();
 
@@ -146,7 +144,6 @@ namespace NeoEdit.Program
 				else
 				{
 					Rollback();
-					AllTabs.ForEach(tab => tab.Rollback());
 				}
 			}
 
@@ -282,7 +279,7 @@ namespace NeoEdit.Program
 
 		void PostExecute()
 		{
-			var clipboardDatas = AllTabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
+			var clipboardDatas = SortedActiveTabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
 			if (clipboardDatas.Any())
 			{
 				var newClipboard = new NEClipboard();
@@ -296,12 +293,12 @@ namespace NeoEdit.Program
 
 			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 			{
-				var newKeysAndValues = AllTabs.Select(tab => tab.GetChangedKeysAndValues(kvIndex)).NonNull().ToList();
+				var newKeysAndValues = SortedActiveTabs.Select(tab => tab.GetChangedKeysAndValues(kvIndex)).NonNull().ToList();
 				if (newKeysAndValues.Any())
 					keysAndValues[kvIndex] = newKeysAndValues;
 			}
 
-			var dragFiles = AllTabs.Select(tab => tab.ChangedDragFiles).NonNull().SelectMany().Distinct().ToList();
+			var dragFiles = SortedActiveTabs.Select(tab => tab.ChangedDragFiles).NonNull().SelectMany().Distinct().ToList();
 			if (dragFiles.Any())
 			{
 				var nonExisting = dragFiles.Where(x => !File.Exists(x)).ToList();
