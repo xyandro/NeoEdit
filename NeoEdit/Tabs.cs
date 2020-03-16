@@ -62,17 +62,17 @@ namespace NeoEdit.Program
 
 		public bool HandleCommand(ExecuteState state, bool configure = true)
 		{
+			if ((MacroPlaying != null) && (configure))
+			{
+				// User is trying to do something in the middle of a macro
+				if ((state.Command == NECommand.Internal_Key) && (state.Key == Key.Escape))
+					MacroPlaying.Stop();
+				return true;
+			}
+
 			bool commit = false;
 			try
 			{
-				if ((MacroPlaying != null) && (configure))
-				{
-					// User is trying to do something in the middle of a macro
-					if ((state.Command == NECommand.Internal_Key) && (state.Key == Key.Escape))
-						MacroPlaying.Stop();
-					return true;
-				}
-
 				if (state.Command == NECommand.Macro_RepeatLastAction)
 				{
 					if (lastAction == null)
