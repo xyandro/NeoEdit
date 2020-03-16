@@ -78,6 +78,9 @@ namespace NeoEdit.Program
 				if (newFocused != null)
 					newActiveTabs.Add(newFocused);
 			}
+
+			if (newFocused != null)
+				AddToTransaction(newFocused);
 		}
 
 		OrderedHashSet<Tab> oldActiveTabs, newActiveTabs;
