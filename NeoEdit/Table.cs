@@ -290,13 +290,13 @@ namespace NeoEdit.Program
 			List<ItemSet<object>> keys;
 			switch (joinType)
 			{
-				case JoinType.Inner: keys = left.Keys.Where(key => right.ContainsKey(key)).ToList(); break;
+				case JoinType.Inner: keys = left.Keys.Intersect(right.Keys).ToList(); break;
 				case JoinType.Left: keys = left.Keys.ToList(); break;
-				case JoinType.LeftExc: keys = left.Keys.Where(key => !right.ContainsKey(key)).ToList(); break;
+				case JoinType.LeftExc: keys = left.Keys.Except(right.Keys).ToList(); break;
 				case JoinType.Right: keys = right.Keys.ToList(); break;
-				case JoinType.RightExc: keys = right.Keys.Where(key => !left.ContainsKey(key)).ToList(); break;
+				case JoinType.RightExc: keys = right.Keys.Except(left.Keys).ToList(); break;
 				case JoinType.Full: keys = left.Keys.Concat(right.Keys).Distinct().ToList(); break;
-				case JoinType.FullExc: keys = left.Keys.Concat(right.Keys).Distinct().Where(key => (!left.ContainsKey(key)) || (!right.ContainsKey(key))).ToList(); break;
+				case JoinType.FullExc: keys = left.Keys.Concat(right.Keys).Distinct().Except(left.Keys).Except(right.Keys).ToList(); break;
 				case JoinType.Cross: keys = new List<ItemSet<object>> { new ItemSet<object>() }; break;
 				default: throw new ArgumentException("Invalid join");
 			}

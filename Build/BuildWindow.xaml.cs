@@ -65,9 +65,9 @@ namespace Build
 			// Preserve ordering
 			var useConfiguration = (string)configurations.SelectedItem;
 			var usePlatformsHash = new HashSet<string>(platforms.SelectedItems.Cast<string>());
-			var usePlatforms = Platforms.Where(platform => usePlatformsHash.Contains(platform)).ToList();
+			var usePlatforms = Platforms.Intersect(usePlatformsHash).ToList();
 			var useActionsHash = new HashSet<BaseAction>(actions.SelectedItems.Cast<BaseAction>());
-			var useActions = Actions.Where(action => useActionsHash.Contains(action)).ToList();
+			var useActions = Actions.Intersect(useActionsHash).ToList();
 
 			foreach (var action in useActions)
 				if (!action.Prepare())
