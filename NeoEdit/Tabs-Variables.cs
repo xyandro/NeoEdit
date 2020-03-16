@@ -30,6 +30,7 @@ namespace NeoEdit.Program
 			if (newAllTabs == oldAllTabs)
 				newAllTabs = new OrderedHashSet<Tab>(newAllTabs);
 			newAllTabs.Insert(index ?? newAllTabs.Count, tab);
+			sortedActiveTabs = null;
 			tab.Tabs = this;
 
 			if (!newActiveTabs.Except(oldAllTabs).Any())
@@ -54,6 +55,7 @@ namespace NeoEdit.Program
 			if (newAllTabs == oldAllTabs)
 				newAllTabs = new OrderedHashSet<Tab>(newAllTabs);
 			newAllTabs.Remove(tab);
+			sortedActiveTabs = null;
 			tab.Tabs = null;
 
 			if (newActiveTabs == oldActiveTabs)
@@ -76,7 +78,16 @@ namespace NeoEdit.Program
 
 		OrderedHashSet<Tab> oldActiveTabs, newActiveTabs;
 		public IReadOnlyOrderedHashSet<Tab> UnsortedActiveTabs => newActiveTabs;
-		public IReadOnlyList<Tab> SortedActiveTabs => AllTabs.Intersect(newActiveTabs).ToList();
+		IReadOnlyList<Tab> sortedActiveTabs;
+		public IReadOnlyList<Tab> SortedActiveTabs
+		{
+			get
+			{
+				if (sortedActiveTabs == null)
+					sortedActiveTabs = AllTabs.Intersect(newActiveTabs).ToList();
+				return sortedActiveTabs;
+			}
+		}
 
 		public void ClearAllActive()
 		{
@@ -107,6 +118,7 @@ namespace NeoEdit.Program
 				if (newFocused == tab)
 					newFocused = newActiveTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
 			}
+			sortedActiveTabs = null;
 		}
 
 		Tab oldFocused, newFocused;

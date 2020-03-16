@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NeoEdit.Program.Misc;
 using NeoEdit.Program.Parsing;
 
 namespace NeoEdit.Program
@@ -123,10 +124,18 @@ namespace NeoEdit.Program
 
 		public static int IndexOf<TSource>(this IEnumerable<TSource> source, TSource value) where TSource : class
 		{
+			if (source is OrderedHashSet<TSource> hashSet)
+				return hashSet.IndexOf(value);
+			if (source is List<TSource> list)
+				return list.IndexOf(value);
+
 			var index = 0;
 			foreach (var item in source)
+			{
 				if (item == value)
 					return index;
+				++index;
+			}
 			return -1;
 		}
 

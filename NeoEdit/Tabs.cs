@@ -378,7 +378,7 @@ namespace NeoEdit.Program
 				tab = AllTabs[0];
 			else
 			{
-				var tabs = orderByActive ? AllTabs.OrderByDescending(x => x.LastActive).ToList() : AllTabs.ToList();
+				var tabs = orderByActive ? AllTabs.OrderByDescending(x => x.LastActive).ToList() as IReadOnlyList<Tab> : AllTabs;
 				var index = tabs.IndexOf(Focused) + offset;
 				if (index < 0)
 					index += AllTabs.Count;
