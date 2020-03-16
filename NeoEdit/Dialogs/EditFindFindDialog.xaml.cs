@@ -137,7 +137,11 @@ namespace NeoEdit.Program.Dialogs
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.EntireSelection, (obj, o, n) =>
 			{
 				if (obj.EntireSelection)
+				{
 					obj.SelectionOnly = true;
+					if (!obj.RemoveMatching)
+						obj.KeepMatching = true;
+				}
 			});
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.KeepMatching, (obj, o, n) =>
 			{
@@ -147,7 +151,7 @@ namespace NeoEdit.Program.Dialogs
 					obj.RemoveMatching = obj.RegexGroups = false;
 				}
 				else if (!obj.RemoveMatching)
-					obj.IsBoolean = false;
+					obj.IsBoolean = obj.EntireSelection = false;
 			});
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.RemoveMatching, (obj, o, n) =>
 			{
@@ -157,7 +161,7 @@ namespace NeoEdit.Program.Dialogs
 					obj.KeepMatching = obj.RegexGroups = false;
 				}
 				else if (!obj.KeepMatching)
-					obj.IsBoolean = false;
+					obj.IsBoolean = obj.EntireSelection = false;
 			});
 		}
 
@@ -170,8 +174,7 @@ namespace NeoEdit.Program.Dialogs
 
 			Reset();
 			SelectionOnly = selectionOnly;
-			Text = text.CoalesceNullOrEmpty(this.text.GetLastSuggestion(), "");
-			SetCheckBoxStatus(this.text.GetLastSuggestionData() as CheckBoxStatus);
+			Text = text ?? "";
 		}
 
 		CheckBoxStatus GetCheckBoxStatus()
