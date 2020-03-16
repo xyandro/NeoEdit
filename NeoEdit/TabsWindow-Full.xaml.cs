@@ -91,13 +91,13 @@ namespace NeoEdit.Program
 			grid.Children.Add(tabLabelsStackPanel);
 
 			var moveLeft = new RepeatButton { Content = "⮜", Margin = new Thickness(0, 0, 4, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, Focusable = false };
-			//moveLeft.Click += (s, e) => tabLabelsScrollViewer.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabelsScrollViewer.HorizontalOffset - 50, tabLabelsScrollViewer.ScrollableWidth)));
+			moveLeft.Click += (s, e) => { --tabLabelIndex; QueueDraw(); };
 			Grid.SetRow(moveLeft, 0);
 			Grid.SetColumn(moveLeft, 0);
 			grid.Children.Add(moveLeft);
 
 			var moveRight = new RepeatButton { Content = "⮞", Margin = new Thickness(4, 0, 0, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, Focusable = false };
-			//moveRight.Click += (s, e) => tabLabelsScrollViewer.ScrollToHorizontalOffset(Math.Max(0, Math.Min(tabLabelsScrollViewer.HorizontalOffset + 50, tabLabelsScrollViewer.ScrollableWidth)));
+			moveRight.Click += (s, e) => { ++tabLabelIndex; QueueDraw(); };
 			Grid.SetRow(moveRight, 0);
 			Grid.SetColumn(moveRight, 2);
 			grid.Children.Add(moveRight);
@@ -157,6 +157,8 @@ namespace NeoEdit.Program
 
 				tabLabelIndex = Math.Min(atLeftIndex, Math.Max(tabLabelIndex, atRightIndex));
 			}
+
+			tabLabelIndex = Math.Max(0, Math.Min(tabLabelIndex, lastAllTabs.Count - 1));
 
 			lastTabLabelIndex = tabLabelIndex;
 			{
