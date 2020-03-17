@@ -16,6 +16,7 @@ namespace NeoEdit.Program
 			HasSelection = Length != 0;
 		}
 		public static Range FromIndex(int index, int length) => new Range(index + length, index);
+		public Range Move(int offset) => offset == 0 ? this : new Range(Cursor + offset, Anchor + offset);
 
 		public int Cursor { get; }
 		public int Anchor { get; }

@@ -410,10 +410,26 @@ namespace NeoEdit.Program
 
 		void Execute_Internal_SetViewValue()
 		{
-			(var value, var size) = ((byte[], int?))state.Configuration;
-			var sels = Selections.Select(range => Range.FromIndex(range.Start, size ?? range.Length)).ToList();
-			var values = Enumerable.Repeat(Coder.BytesToString(value, CodePage), sels.Count).ToList();
-			Replace(sels, values);
+			(var value, var oldSize) = ((byte[], int?))state.Configuration;
+			var newStr = Coder.BytesToString(value, CodePage);
+			var replaceRange = Selections[CurrentSelection];
+			var newSels = new List<Range>();
+			var offset = 0;
+			foreach (var range1 in Selections)
+			{
+				var range = range1;
+				if (range == replaceRange)
+				{
+					replaceRange = Range.FromIndex(replaceRange.Start, oldSize ?? replaceRange.Length);
+					offset += newStr.Length - replaceRange.Length;
+					range = Range.FromIndex(range.Start, range.Length + offset);
+				}
+				else
+					range = range.Move(offset);
+				newSels.Add(range);
+			}
+			Replace(new List<Range> { replaceRange }, new List<string> { newStr });
+			Selections = newSels;
 		}
 	}
 }
