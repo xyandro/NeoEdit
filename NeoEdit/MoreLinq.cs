@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Program.Misc;
-using NeoEdit.Program.Parsing;
 
 namespace NeoEdit.Program
 {
@@ -21,19 +19,6 @@ namespace NeoEdit.Program
 				if (child != null)
 					items.Enqueue(child);
 			}
-		}
-
-		public static IEnumerable<TSource> Resize<TSource>(this IEnumerable<TSource> source, int count, TSource expandWith) => source.Take(count).Expand(count, expandWith);
-
-		public static IEnumerable<TSource> Expand<TSource>(this IEnumerable<TSource> source, int count, TSource expandWith)
-		{
-			foreach (var item in source)
-			{
-				yield return item;
-				--count;
-			}
-			for (; count > 0; --count)
-				yield return expandWith;
 		}
 
 		public static IEnumerable<TSource> Distinct<TSource, TData>(this IEnumerable<TSource> source, Func<TSource, TData> selector)
@@ -86,29 +71,6 @@ namespace NeoEdit.Program
 				previous = data;
 				yield return item;
 			}
-		}
-
-		public static bool InOrder<TSource>(this IEnumerable<TSource> source, bool ascending = true, bool equal = false) where TSource : IComparable
-		{
-			var prev = default(TSource);
-			bool hasPrev = false;
-			foreach (var current in source)
-			{
-				if (hasPrev)
-				{
-					var compare = current.CompareTo(prev);
-					if ((compare < 0) && (ascending))
-						return false;
-					if ((compare == 0) && (!equal))
-						return false;
-					if ((compare > 0) && (!ascending))
-						return false;
-				}
-
-				prev = current;
-				hasPrev = true;
-			}
-			return true;
 		}
 
 		public static IEnumerable<int> Indexes<TSource>(this IEnumerable<TSource> source, Predicate<TSource> predicate)
@@ -274,9 +236,6 @@ namespace NeoEdit.Program
 		public static IEnumerable<string> NonNullOrWhiteSpace(this IEnumerable<string> source) => source.Where(str => !string.IsNullOrWhiteSpace(str));
 		public static IEnumerable<TSource> NonNullOrWhiteSpace<TSource>(this IEnumerable<TSource> source, Func<TSource, string> selector) => source.Where(obj => !string.IsNullOrWhiteSpace(selector(obj)));
 
-		public static void Execute(this IEnumerable<Action> source) => source.ForEach(action => action());
-		public static List<TResult> Execute<TResult>(this IEnumerable<Func<TResult>> source) => source.ForEach(action => action());
-
 		public static IEnumerable<TSource> Coalesce<TSource>(this IEnumerable<TSource> source, TSource defaultValue) where TSource : class => source.Select(val => val ?? defaultValue);
 		public static IEnumerable<TSource> Coalesce<TSource>(this IEnumerable<TSource?> source, TSource defaultValue) where TSource : struct => source.Select(val => val ?? defaultValue);
 
@@ -365,54 +324,7 @@ namespace NeoEdit.Program
 		public static TSource MinBy<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, TValue> selector) where TValue : IComparable => MinByTuple(source, selector).Item1;
 		public static TSource MaxBy<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, TValue> selector) where TValue : IComparable => MaxByTuple(source, selector).Item1;
 
-		public static IEnumerable<Tuple<TSource, TSource>> WithPrev<TSource>(this IEnumerable<TSource> source)
-		{
-			var first = true;
-			var last = default(TSource);
-			foreach (var item in source)
-			{
-				if (!first)
-					yield return Tuple.Create(last, item);
-
-				last = item;
-				first = false;
-			}
-		}
-
 		public static IEnumerable<TSource> SelectMany<TSource>(this IEnumerable<IEnumerable<TSource>> source) => source.SelectMany(items => items);
-
-		public static IEnumerable<TResult> TrySelect<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector, TResult defValue)
-		{
-			foreach (var value in source)
-			{
-				var result = defValue;
-				try { result = selector(value); } catch { }
-				yield return result;
-			}
-		}
-
-		public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<TKey> keys, IEnumerable<TValue> values)
-		{
-			var result = new Dictionary<TKey, TValue>();
-			//=> keys.Zip(values, (key, value) => new { key, value }).ToDictionary(obj => obj.key, obj => obj.value);
-			using (var keyEnumerator = keys.GetEnumerator())
-			using (var valueEnumerator = values.GetEnumerator())
-			{
-				while (true)
-				{
-					var hasKey = keyEnumerator.MoveNext();
-					var hasValue = valueEnumerator.MoveNext();
-					if (hasKey != hasValue)
-						throw new Exception("Inputs must be the same size");
-					if (!hasKey)
-						break;
-					if (result.ContainsKey(keyEnumerator.Current))
-						throw new Exception("Key already in result");
-					result[keyEnumerator.Current] = valueEnumerator.Current;
-				}
-			}
-			return result;
-		}
 
 		public static IEnumerable<TSource> Except<TSource>(this IEnumerable<TSource> source, TSource value)
 		{
