@@ -79,7 +79,7 @@
 			<controls:NEMenuItem Header="_Unintegrate" CommandEnum="File_Shell_Unintegrate" ToolTip="Remove Windows Explorer option to open files with NeoEdit"/>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="Don't Exi_t On Close" IsCheckable="True" IsChecked="{Binding Path=(local:Settings.DontExitOnClose), Mode=TwoWay}" ToolTip="Toggle whether program stays in memory when all windows closed"/>
+		<controls:NEMenuItem x:Name="menu_File_DontExitOnClose" Header="Don't Exi_t On Close" CommandEnum="File_DontExitOnClose" ToolTip="Toggle whether program stays in memory when all windows closed"/>
 		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit" ToolTip="Close the program"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
@@ -412,7 +412,7 @@
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<MenuItem Header="Escape C_lears Selections" IsCheckable="True" IsChecked="{Binding Path=(local:Settings.EscapeClearsSelections), Mode=TwoWay}" ToolTip="Toggle whether the Esc key removes extra selections"/>
+		<controls:NEMenuItem x:Name="menu_Edit_EscapeClearsSelections" Header="Escape C_lears Selections" CommandEnum="Edit_EscapeClearsSelections" ToolTip="Toggle whether the Esc key removes extra selections"/>
 	</MenuItem>
 	<MenuItem Header="D_iff">
 		<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Diff" ToolTip="Diff active files"/>
@@ -1045,7 +1045,7 @@
 		<Separator/>
 		<MenuItem Header="F_ont">
 			<controls:NEMenuItem Header="_Size" CommandEnum="Window_Font_Size" ToolTip="Change font size"/>
-			<MenuItem Header="S_how Special" IsCheckable="True" IsChecked="{Binding Path=(local:Font.ShowSpecialChars), Mode=TwoWay}" ToolTip="Toggle whether to show special characters"/>
+			<controls:NEMenuItem x:Name="menu_Window_Font_ShowSpecial" Header="S_how Special" CommandEnum="Window_Font_ShowSpecial" ToolTip="Toggle whether to show special characters"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem x:Name="menu_Window_ViewValues" Header="View _Values" CommandEnum="Window_ViewValues" ToolTip="View binary values"/>

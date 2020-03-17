@@ -112,6 +112,8 @@ namespace NeoEdit.Program
 				shellKey.DeleteSubKeyTree("Open with NeoEdit");
 		}
 
+		void Execute_File_DontExitOnClose(bool? multiStatus) => Settings.DontExitOnClose = multiStatus != true;
+
 		void Execute_File_Exit()
 		{
 			Application.Current.ShutdownMode = ShutdownMode.OnLastWindowClose;

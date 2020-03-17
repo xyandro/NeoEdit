@@ -186,7 +186,9 @@ namespace NeoEdit.Program
 				case NECommand.File_MoveToNewWindow: Execute_File_MoveToNewWindow(); break;
 				case NECommand.File_Shell_Integrate: Execute_File_Shell_Integrate(); break;
 				case NECommand.File_Shell_Unintegrate: Execute_File_Shell_Unintegrate(); break;
+				case NECommand.File_DontExitOnClose: Execute_File_DontExitOnClose(state.MultiStatus); break;
 				case NECommand.File_Exit: Execute_File_Exit(); break;
+				case NECommand.Edit_EscapeClearsSelections: Execute_Edit_EscapeClearsSelections(state.MultiStatus); break;
 				case NECommand.Diff_Diff: Execute_Diff_Diff(state.ShiftDown); break;
 				case NECommand.Diff_Select_LeftTab: Execute_Diff_Select_LeftRightBothTabs(true); break;
 				case NECommand.Diff_Select_RightTab: Execute_Diff_Select_LeftRightBothTabs(false); break;
@@ -253,6 +255,7 @@ namespace NeoEdit.Program
 				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(state.Configuration as WindowCustomGridDialog.Result); break;
 				case NECommand.Window_ActiveTabs: Execute_Window_ActiveTabs(); break;
 				case NECommand.Window_Font_Size: Execute_Window_Font_Size(); break;
+				case NECommand.Window_Font_ShowSpecial: Execute_Window_Font_ShowSpecial(state.MultiStatus); break;
 				case NECommand.Window_Select_AllTabs: Execute_Window_Select_AllTabs(); break;
 				case NECommand.Window_Select_NoTabs: Execute_Window_Select_NoTabs(); break;
 				case NECommand.Window_Select_TabsWithSelections: Execute_Window_Select_TabsWithWithoutSelections(true); break;

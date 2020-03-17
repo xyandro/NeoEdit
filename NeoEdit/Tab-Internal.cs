@@ -238,7 +238,7 @@ namespace NeoEdit.Program
 					//DragFiles = null;
 					if (Settings.EscapeClearsSelections)
 					{
-						//HandleCommand(NECommand.Select_Selection_Single, false, null, null, null);
+						Execute_Select_Selection_Single();
 						//if (!Selections.Any())
 						//{
 						//	var pos = TextView.GetPosition(Math.Max(0, Math.Min(YScrollValue, TextView.NumLines - 1)), 0);

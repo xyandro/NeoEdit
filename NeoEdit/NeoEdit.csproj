@@ -1161,6 +1161,9 @@
     <Compile Include="Tabs-Diff.cs">
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tabs-Edit.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tabs-File.cs">
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>

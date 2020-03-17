@@ -224,6 +224,10 @@ namespace NeoEdit.Program
 				return results[0];
 			}
 
+			menu.menu_File_DontExitOnClose.MultiStatus = Settings.DontExitOnClose;
+			menu.menu_Edit_EscapeClearsSelections.MultiStatus = Settings.EscapeClearsSelections;
+			menu.menu_Window_Font_ShowSpecial.MultiStatus = Font.ShowSpecialChars;
+
 			menu.menu_File_AutoRefresh.MultiStatus = GetMultiStatus(x => x.AutoRefresh);
 			menu.menu_File_Encrypt.MultiStatus = GetMultiStatus(x => !string.IsNullOrWhiteSpace(x.AESKey));
 			menu.menu_File_Compress.MultiStatus = GetMultiStatus(x => x.Compressed);

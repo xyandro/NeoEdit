@@ -55,11 +55,8 @@ namespace NeoEdit.Program
 			{
 				dontExitOnClose = value;
 				SaveSettings();
-				DontExitOnCloseChanged?.Invoke(null, new EventArgs());
 			}
 		}
-
-		public static event EventHandler DontExitOnCloseChanged;
 
 		static bool escapeClearsSelections = true;
 		public static bool EscapeClearsSelections
@@ -69,11 +66,8 @@ namespace NeoEdit.Program
 			{
 				escapeClearsSelections = value;
 				SaveSettings();
-				EscapeClearsSelectionsChanged?.Invoke(null, new EventArgs());
 			}
 		}
-
-		public static event EventHandler EscapeClearsSelectionsChanged;
 
 		static string youTubeDLPath = "";
 		public static string YouTubeDLPath
@@ -83,11 +77,8 @@ namespace NeoEdit.Program
 			{
 				youTubeDLPath = value;
 				SaveSettings();
-				YouTubeDLPathChanged?.Invoke(null, new EventArgs());
 			}
 		}
-
-		public static event EventHandler YouTubeDLPathChanged;
 
 		static string ffmpegPath = "";
 		public static string FFmpegPath
@@ -97,11 +88,8 @@ namespace NeoEdit.Program
 			{
 				ffmpegPath = value;
 				SaveSettings();
-				FFmpegPathChanged?.Invoke(null, new EventArgs());
 			}
 		}
-
-		public static event EventHandler FFmpegPathChanged;
 
 		static string windowPosition;
 		public static string WindowPosition

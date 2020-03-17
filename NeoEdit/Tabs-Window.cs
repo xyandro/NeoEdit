@@ -25,6 +25,8 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Font_Size() => WindowFontSizeDialog.Run(state.TabsWindow);
 
+		void Execute_Window_Font_ShowSpecial(bool? multiStatus) => Font.ShowSpecialChars = multiStatus != true;
+
 		void Execute_Window_Select_AllTabs() => AllTabs.ForEach(tab => SetActive(tab));
 
 		void Execute_Window_Select_NoTabs() => ClearAllActive();
