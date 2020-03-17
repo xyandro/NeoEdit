@@ -1674,7 +1674,7 @@ namespace NeoEdit.Program
 
 		public override string ToString() => DisplayName ?? FileName;
 
-		public void GetViewValues(out byte[] data, out bool hasSel)
+		public void GetViewValuesData(out byte[] data, out bool hasSel)
 		{
 			if (Selections.Any())
 			{

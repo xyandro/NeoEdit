@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Markup;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Transform;
 
@@ -12,14 +9,10 @@ namespace NeoEdit.Program.Controls
 {
 	partial class ViewValue
 	{
-		[DepProp]
-		public Coder.CodePage CodePage { get { return UIHelper<ViewValue>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<ViewValue>.SetPropValue(this, value); } }
-		[DepProp]
-		public IList<byte> Data { get { return UIHelper<ViewValue>.GetPropValue<IList<byte>>(this); } set { UIHelper<ViewValue>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool HasSel { get { return UIHelper<ViewValue>.GetPropValue<bool>(this); } set { UIHelper<ViewValue>.SetPropValue(this, value); } }
-
-		static ViewValue() => UIHelper<ViewValue>.Register();
+		public Coder.CodePage CodePage { get; set; } = Coder.CodePage.None;
+		public IList<byte> Data { get; set; }
+		public bool HasSel { get; set; }
+		public string Text { get => text.Text; set => text.Text = value; }
 
 		public ViewValue() => InitializeComponent();
 
@@ -43,6 +36,22 @@ namespace NeoEdit.Program.Controls
 			}
 
 			return Coder.TryBytesToString(data as byte[], CodePage);
+		}
+
+		public void SetData(IList<byte> data, bool hasSel)
+		{
+			if (CodePage == Coder.CodePage.None)
+				return;
+
+			if (Visibility != Visibility.Visible)
+			{
+				text.Text = null;
+				return;
+			}
+
+			Data = data;
+			HasSel = hasSel;
+			text.Text = Font.RemoveSpecialChars(GetValue() ?? "");
 		}
 
 		void OnClick(object sender, MouseButtonEventArgs e)
@@ -73,14 +82,5 @@ namespace NeoEdit.Program.Controls
 
 			UIHelper.FindParent<TabsWindow>(this).HandleCommand(new ExecuteState(NECommand.Internal_SetViewValue) { Configuration = (newBytes, size) });
 		}
-	}
-
-	class ViewValueConverter : MarkupExtension, IMultiValueConverter
-	{
-		public override object ProvideValue(IServiceProvider serviceProvider) => this;
-
-		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => Font.RemoveSpecialChars((values[0] as ViewValue)?.GetValue() ?? "");
-
-		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
 	}
 }

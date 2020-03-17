@@ -2,11 +2,10 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
-	xmlns:converters="clr-namespace:NeoEdit.Program.Converters"
 	Focusable="True" Background="#202020">
 
 	<StackPanel Orientation="Horizontal">		
-		<GroupBox Header="Little endian" Margin="4,0,4,4" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=LE}" VerticalAlignment="Top">
+		<GroupBox x:Name="LE" Tag="UInt08LE|SInt08LE|UInt16LE|SInt16LE|UInt32LE|SInt32LE|UInt64LE|SInt64LE" Header="Little endian" Margin="4,0,4,4" VerticalAlignment="Top">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
@@ -22,31 +21,31 @@
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 
-				<TextBlock Grid.Row="0" Grid.Column="1" Text="8 bit" HorizontalAlignment="Center" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int08LE}"/>
-				<TextBlock Grid.Row="0" Grid.Column="2" Text="16 bit" HorizontalAlignment="Center" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int16LE}"/>
-				<TextBlock Grid.Row="0" Grid.Column="3" Text="32 bit" HorizontalAlignment="Center" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int32LE}"/>
-				<TextBlock Grid.Row="0" Grid.Column="4" Text="64 bit" HorizontalAlignment="Center" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int64LE}"/>
+				<TextBlock x:Name="Int08LEHeader" Tag="UInt08LE|SInt08LE" Grid.Row="0" Grid.Column="1" Text="8 bit" HorizontalAlignment="Center"/>
+				<TextBlock x:Name="Int16LEHeader" Tag="UInt16LE|SInt16LE" Grid.Row="0" Grid.Column="2" Text="16 bit" HorizontalAlignment="Center"/>
+				<TextBlock x:Name="Int32LEHeader" Tag="UInt32LE|SInt32LE" Grid.Row="0" Grid.Column="3" Text="32 bit" HorizontalAlignment="Center"/>
+				<TextBlock x:Name="Int64LEHeader" Tag="UInt64LE|SInt64LE" Grid.Row="0" Grid.Column="4" Text="64 bit" HorizontalAlignment="Center"/>
 
-				<TextBlock Grid.Row="1" Grid.Column="1" Text="-255" Margin="10,0" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int08LE}"/>
-				<TextBlock Grid.Row="1" Grid.Column="2" Text="-65535" Margin="10,0" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int16LE}"/>
-				<TextBlock Grid.Row="1" Grid.Column="3" Text="-2147483647" Margin="10,0" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int32LE}"/>
-				<TextBlock Grid.Row="1" Grid.Column="4" Text="-9223372036854775807" Margin="10,0" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int64LE}"/>
+				<controls:ViewValue x:Name="Int08LESizing" Tag="UInt08LE|SInt08LE" Grid.Row="1" Grid.Column="1" Text="-255" Margin="4,0"/>
+				<controls:ViewValue x:Name="Int16LESizing" Tag="UInt16LE|SInt16LE" Grid.Row="1" Grid.Column="2" Text="-65535" Margin="4,0"/>
+				<controls:ViewValue x:Name="Int32LESizing" Tag="UInt32LE|SInt32LE" Grid.Row="1" Grid.Column="3" Text="-2147483647" Margin="4,0"/>
+				<controls:ViewValue x:Name="Int64LESizing" Tag="UInt64LE|SInt64LE" Grid.Row="1" Grid.Column="4" Text="-9223372036854775807" Margin="4,0"/>
 
-				<TextBlock Grid.Row="2" Grid.Column="0" Text="Unsigned" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=UIntLE}"/>
-				<TextBlock Grid.Row="3" Grid.Column="0" Text="Signed" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=SIntLE}"/>
+				<TextBlock x:Name="UIntLE" Tag="UInt08LE|UInt16LE|UInt32LE|UInt64LE" Grid.Row="2" Grid.Column="0" Text="Unsigned" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
+				<TextBlock x:Name="SIntLE" Tag="SInt08LE|SInt16LE|SInt32LE|SInt64LE" Grid.Row="3" Grid.Column="0" Text="Signed" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
 
-				<controls:ViewValue Grid.Row="2" Grid.Column="1" CodePage="UInt8" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=UInt08LE}"/>
-				<controls:ViewValue Grid.Row="2" Grid.Column="2" CodePage="UInt16LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=UInt16LE}"/>
-				<controls:ViewValue Grid.Row="2" Grid.Column="3" CodePage="UInt32LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=UInt32LE}"/>
-				<controls:ViewValue Grid.Row="2" Grid.Column="4" CodePage="UInt64LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=UInt64LE}"/>
-				<controls:ViewValue Grid.Row="3" Grid.Column="1" CodePage="Int8" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=SInt08LE}"/>
-				<controls:ViewValue Grid.Row="3" Grid.Column="2" CodePage="Int16LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=SInt16LE}"/>
-				<controls:ViewValue Grid.Row="3" Grid.Column="3" CodePage="Int32LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=SInt32LE}"/>
-				<controls:ViewValue Grid.Row="3" Grid.Column="4" CodePage="Int64LE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=SInt64LE}"/>
+				<controls:ViewValue x:Name="UInt08LE" Tag="UInt08LE" Grid.Row="2" Grid.Column="1" CodePage="UInt8"/>
+				<controls:ViewValue x:Name="UInt16LE" Tag="UInt16LE" Grid.Row="2" Grid.Column="2" CodePage="UInt16LE"/>
+				<controls:ViewValue x:Name="UInt32LE" Tag="UInt32LE" Grid.Row="2" Grid.Column="3" CodePage="UInt32LE"/>
+				<controls:ViewValue x:Name="UInt64LE" Tag="UInt64LE" Grid.Row="2" Grid.Column="4" CodePage="UInt64LE"/>
+				<controls:ViewValue x:Name="SInt08LE" Tag="SInt08LE" Grid.Row="3" Grid.Column="1" CodePage="Int8"/>
+				<controls:ViewValue x:Name="SInt16LE" Tag="SInt16LE" Grid.Row="3" Grid.Column="2" CodePage="Int16LE"/>
+				<controls:ViewValue x:Name="SInt32LE" Tag="SInt32LE" Grid.Row="3" Grid.Column="3" CodePage="Int32LE"/>
+				<controls:ViewValue x:Name="SInt64LE" Tag="SInt64LE" Grid.Row="3" Grid.Column="4" CodePage="Int64LE"/>
 			</Grid>
 		</GroupBox>
 
-		<GroupBox Header="Big endian" Margin="4,0,4,4" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=BE}" VerticalAlignment="Top">
+		<GroupBox x:Name="BE" Tag="UInt08BE|SInt08BE|UInt16BE|SInt16BE|UInt32BE|SInt32BE|UInt64BE|SInt64BE" Header="Big endian" Margin="4,0,4,4" VerticalAlignment="Top">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
@@ -62,31 +61,31 @@
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 
-				<TextBlock Grid.Row="0" Grid.Column="1" Text="8 bit" HorizontalAlignment="Center" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int08BE}"/>
-				<TextBlock Grid.Row="0" Grid.Column="2" Text="16 bit" HorizontalAlignment="Center" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int16BE}"/>
-				<TextBlock Grid.Row="0" Grid.Column="3" Text="32 bit" HorizontalAlignment="Center" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int32BE}"/>
-				<TextBlock Grid.Row="0" Grid.Column="4" Text="64 bit" HorizontalAlignment="Center" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int64BE}"/>
+				<TextBlock x:Name="Int08BEHeader" Tag="UInt08BE|SInt08BE" Grid.Row="0" Grid.Column="1" Text="8 bit" HorizontalAlignment="Center"/>
+				<TextBlock x:Name="Int16BEHeader" Tag="UInt16BE|SInt16BE" Grid.Row="0" Grid.Column="2" Text="16 bit" HorizontalAlignment="Center"/>
+				<TextBlock x:Name="Int32BEHeader" Tag="UInt32BE|SInt32BE" Grid.Row="0" Grid.Column="3" Text="32 bit" HorizontalAlignment="Center"/>
+				<TextBlock x:Name="Int64BEHeader" Tag="UInt64BE|SInt64BE" Grid.Row="0" Grid.Column="4" Text="64 bit" HorizontalAlignment="Center"/>
 
-				<TextBlock Grid.Row="1" Grid.Column="1" Text="-255" Margin="10,0" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int08BE}"/>
-				<TextBlock Grid.Row="1" Grid.Column="2" Text="-65535" Margin="10,0" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int16BE}"/>
-				<TextBlock Grid.Row="1" Grid.Column="3" Text="-2147483647" Margin="10,0" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int32BE}"/>
-				<TextBlock Grid.Row="1" Grid.Column="4" Text="-9223372036854775807" Margin="10,0" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Int64BE}"/>
+				<controls:ViewValue x:Name="Int08BESizing" Tag="UInt08BE|SInt08BE" Grid.Row="1" Grid.Column="1" Text="-255" Margin="4,0"/>
+				<controls:ViewValue x:Name="Int16BESizing" Tag="UInt16BE|SInt16BE" Grid.Row="1" Grid.Column="2" Text="-65535" Margin="4,0"/>
+				<controls:ViewValue x:Name="Int32BESizing" Tag="UInt32BE|SInt32BE" Grid.Row="1" Grid.Column="3" Text="-2147483647" Margin="4,0"/>
+				<controls:ViewValue x:Name="Int64BESizing" Tag="UInt64BE|SInt64BE" Grid.Row="1" Grid.Column="4" Text="-9223372036854775807" Margin="4,0"/>
 
-				<TextBlock Grid.Row="2" Grid.Column="0" Text="Unsigned" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=UIntBE}"/>
-				<TextBlock Grid.Row="3" Grid.Column="0" Text="Signed" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=SIntBE}"/>
+				<TextBlock x:Name="UIntBE" Tag="UInt08BE|UInt16BE|UInt32BE|UInt64BE" Grid.Row="2" Grid.Column="0" Text="Unsigned" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
+				<TextBlock x:Name="SIntBE" Tag="SInt08BE|SInt16BE|SInt32BE|SInt64BE" Grid.Row="3" Grid.Column="0" Text="Signed" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
 
-				<controls:ViewValue Grid.Row="2" Grid.Column="1" CodePage="UInt8" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=UInt08BE}"/>
-				<controls:ViewValue Grid.Row="2" Grid.Column="2" CodePage="UInt16BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=UInt16BE}"/>
-				<controls:ViewValue Grid.Row="2" Grid.Column="3" CodePage="UInt32BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=UInt32BE}"/>
-				<controls:ViewValue Grid.Row="2" Grid.Column="4" CodePage="UInt64BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=UInt64BE}"/>
-				<controls:ViewValue Grid.Row="3" Grid.Column="1" CodePage="Int8" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=SInt08BE}"/>
-				<controls:ViewValue Grid.Row="3" Grid.Column="2" CodePage="Int16BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=SInt16BE}"/>
-				<controls:ViewValue Grid.Row="3" Grid.Column="3" CodePage="Int32BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=SInt32BE}"/>
-				<controls:ViewValue Grid.Row="3" Grid.Column="4" CodePage="Int64BE" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=SInt64BE}"/>
+				<controls:ViewValue x:Name="UInt08BE" Tag="UInt08BE" Grid.Row="2" Grid.Column="1" CodePage="UInt8"/>
+				<controls:ViewValue x:Name="UInt16BE" Tag="UInt16BE" Grid.Row="2" Grid.Column="2" CodePage="UInt16BE"/>
+				<controls:ViewValue x:Name="UInt32BE" Tag="UInt32BE" Grid.Row="2" Grid.Column="3" CodePage="UInt32BE"/>
+				<controls:ViewValue x:Name="UInt64BE" Tag="UInt64BE" Grid.Row="2" Grid.Column="4" CodePage="UInt64BE"/>
+				<controls:ViewValue x:Name="SInt08BE" Tag="SInt08BE" Grid.Row="3" Grid.Column="1" CodePage="Int8"/>
+				<controls:ViewValue x:Name="SInt16BE" Tag="SInt16BE" Grid.Row="3" Grid.Column="2" CodePage="Int16BE"/>
+				<controls:ViewValue x:Name="SInt32BE" Tag="SInt32BE" Grid.Row="3" Grid.Column="3" CodePage="Int32BE"/>
+				<controls:ViewValue x:Name="SInt64BE" Tag="SInt64BE" Grid.Row="3" Grid.Column="4" CodePage="Int64BE"/>
 			</Grid>
 		</GroupBox>
 
-		<GroupBox Header="Floating point" Margin="4,0,4,4" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Float}" VerticalAlignment="Top">
+		<GroupBox x:Name="Float" Tag="Single|Double" Header="Floating point" Margin="4,0,4,4" VerticalAlignment="Top">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
@@ -98,14 +97,14 @@
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 
-				<TextBlock Grid.Row="0" Grid.Column="0" Text="Single" HorizontalAlignment="Center" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Single}"/>
-				<TextBlock Grid.Row="0" Grid.Column="1" Text="Double" HorizontalAlignment="Center" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Double}"/>
+				<TextBlock x:Name="SingleHeader" Tag="Single" Grid.Row="0" Grid.Column="0" Text="Single" HorizontalAlignment="Center"/>
+				<TextBlock x:Name="DoubleHeader" Tag="Double" Grid.Row="0" Grid.Column="1" Text="Double" HorizontalAlignment="Center"/>
 
-				<TextBlock Grid.Row="1" Grid.Column="0" Text="-3.402823E+38" Margin="10,0" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Single}"/>
-				<TextBlock Grid.Row="1" Grid.Column="1" Text="-1.79769313486232E+308" Margin="10,0" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Double}"/>
+				<controls:ViewValue x:Name="SingleSizing" Tag="Single" Grid.Row="1" Grid.Column="0" Text="-3.402823E+38" Margin="4,0"/>
+				<controls:ViewValue x:Name="DoubleSizing" Tag="Double" Grid.Row="1" Grid.Column="1" Text="-1.79769313486232E+308" Margin="4,0"/>
 
-				<controls:ViewValue Grid.Row="2" Grid.Column="0" CodePage="Single" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Single}"/>
-				<controls:ViewValue Grid.Row="2" Grid.Column="1" CodePage="Double" Data="{Binding Data, ElementName=self}" HasSel="{Binding HasSel, ElementName=self}" Visibility="{Binding CodePages, ElementName=self, Converter={converters:ViewValuesVisibilityConverter}, ConverterParameter=Double}"/>
+				<controls:ViewValue x:Name="Single" Tag="Single" Grid.Row="2" Grid.Column="0" CodePage="Single"/>
+				<controls:ViewValue x:Name="Double" Tag="Double" Grid.Row="2" Grid.Column="1" CodePage="Double"/>
 			</Grid>
 		</GroupBox>
 	</StackPanel>

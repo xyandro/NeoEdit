@@ -98,10 +98,8 @@ namespace NeoEdit.Program
 			}
 
 			viewValuesControl.Visibility = Visibility.Visible;
-			Tab.GetViewValues(out var data, out var hasSel);
-			viewValues.Data = data;
-			viewValues.HasSel = hasSel;
-			viewValues.CodePages = Tab.ViewValuesCodePages;
+			Tab.GetViewValuesData(out var data, out var hasSel);
+			viewValues.SetData(data, hasSel, Tab.ViewValuesCodePages);
 		}
 
 		class DrawBounds
