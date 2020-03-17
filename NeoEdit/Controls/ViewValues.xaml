@@ -4,8 +4,8 @@
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	Background="#202020">
 
-	<StackPanel Orientation="Horizontal">		
-		<GroupBox x:Name="LE" Tag="UInt08LE|SInt08LE|UInt16LE|SInt16LE|UInt32LE|SInt32LE|UInt64LE|SInt64LE" Header="Little endian" Margin="4,0,4,4" VerticalAlignment="Top">
+	<DockPanel>
+		<GroupBox DockPanel.Dock="Left" x:Name="LE" Tag="UInt08LE|SInt08LE|UInt16LE|SInt16LE|UInt32LE|SInt32LE|UInt64LE|SInt64LE" Header="Little endian" Margin="4,0,4,4" VerticalAlignment="Top">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
@@ -45,7 +45,7 @@
 			</Grid>
 		</GroupBox>
 
-		<GroupBox x:Name="BE" Tag="UInt08BE|SInt08BE|UInt16BE|SInt16BE|UInt32BE|SInt32BE|UInt64BE|SInt64BE" Header="Big endian" Margin="4,0,4,4" VerticalAlignment="Top">
+		<GroupBox DockPanel.Dock="Left" x:Name="BE" Tag="UInt08BE|SInt08BE|UInt16BE|SInt16BE|UInt32BE|SInt32BE|UInt64BE|SInt64BE" Header="Big endian" Margin="4,0,4,4" VerticalAlignment="Top">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
@@ -85,7 +85,7 @@
 			</Grid>
 		</GroupBox>
 
-		<GroupBox x:Name="Float" Tag="Single|Double" Header="Floating point" Margin="4,0,4,4" VerticalAlignment="Top">
+		<GroupBox DockPanel.Dock="Left" x:Name="Float" Tag="Single|Double" Header="Floating point" Margin="4,0,4,4" VerticalAlignment="Top">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
@@ -109,6 +109,17 @@
 				<controls:ViewValue x:Name="Double" Tag="Double" Grid.Row="3" Grid.Column="1" CodePage="Double"/>
 			</Grid>
 		</GroupBox>
-	</StackPanel>
+
+		<GroupBox Name="strings" Header="Strings" Margin="4,0,4,4" VerticalAlignment="Top" HorizontalAlignment="Stretch" MaxHeight="200">
+			<ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
+				<Grid x:Name="stringsGrid" Margin="3,0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+				</Grid>
+			</ScrollViewer>
+		</GroupBox>
+	</DockPanel>
 
 </UserControl>

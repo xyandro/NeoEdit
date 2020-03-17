@@ -27,6 +27,8 @@ namespace NeoEdit.Program.Controls
 		public IList<byte> Data { get; set; }
 		public bool HasSel { get; set; }
 		public string Text { get => text.Text; set => text.Text = value; }
+		public HorizontalAlignment TextAlignment { get => text.HorizontalAlignment; set => text.HorizontalAlignment = value; }
+		public Thickness TextMargin { get => border.Margin; set => border.Margin = value; }
 
 		public ViewValue() => InitializeComponent();
 
