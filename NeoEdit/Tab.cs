@@ -28,6 +28,7 @@ namespace NeoEdit.Program
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, new List<Range>());
 			newUndoRedo = new UndoRedo();
+			ViewValuesCodePages = new HashSet<Coder.CodePage>(CodePagesDialog.DefaultCodePages);
 
 			fileName = fileName?.Trim('"');
 			this.shutdownData = shutdownData;
@@ -561,6 +562,7 @@ namespace NeoEdit.Program
 				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: return Configure_Select_Repeats_Tabs_CommonNonCommon(false);
 				case NECommand.Select_Split: return Configure_Select_Split();
 				case NECommand.Select_Selection_ToggleAnchor: return Configure_Select_Selection_ToggleAnchor();
+				case NECommand.Window_ViewValuesCodePages: return Configure_Window_ViewValuesCodePages();
 				default: return null;
 			}
 		}
@@ -573,6 +575,7 @@ namespace NeoEdit.Program
 			{
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.Internal_Text: Execute_Internal_Text(); break;
+				case NECommand.Internal_SetViewValue: Execute_Internal_SetViewValue(); break;
 				case NECommand.File_New_FromSelections: Execute_File_New_FromSelections(); break;
 				case NECommand.File_Open_Selected: Execute_File_Open_Selected(); break;
 				case NECommand.File_Save_Save: Execute_File_Save_Save(); break;
@@ -1190,6 +1193,7 @@ namespace NeoEdit.Program
 				case NECommand.Window_TabIndex: Execute_Window_TabIndex(false); break;
 				case NECommand.Window_ActiveTabIndex: Execute_Window_TabIndex(true); break;
 				case NECommand.Window_ViewValues: Execute_Window_ViewValues(); break;
+				case NECommand.Window_ViewValuesCodePages: Execute_Window_ViewValuesCodePages(); break;
 			}
 		}
 		#endregion

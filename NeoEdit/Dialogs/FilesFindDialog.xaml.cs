@@ -130,12 +130,12 @@ namespace NeoEdit.Program.Dialogs
 
 		void OnCodePagesClick(object sender, RoutedEventArgs e)
 		{
-			var codePages = CodePagesDialog.Run(this, CodePages);
-			if (codePages == null)
-				return;
-
-			IsBinary = true;
-			CodePages = codePages;
+			try
+			{
+				CodePages = CodePagesDialog.Run(this, CodePages);
+				IsBinary = true;
+			}
+			catch { }
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);

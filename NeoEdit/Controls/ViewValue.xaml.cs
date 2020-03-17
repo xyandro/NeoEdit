@@ -55,23 +55,23 @@ namespace NeoEdit.Program.Controls
 				return;
 
 			byte[] newBytes;
-			while (true)
+			try
 			{
-				value = ViewValuesEditValueDialog.Run(UIHelper.FindParent<Window>(this), value);
-				if (value == null)
-					return;
-
-				newBytes = Coder.TryStringToBytes(value, CodePage);
-				if (newBytes != null)
-					break;
+				while (true)
+				{
+					value = ViewValuesEditValueDialog.Run(UIHelper.FindParent<Window>(this), value);
+					newBytes = Coder.TryStringToBytes(value, CodePage);
+					if (newBytes != null)
+						break;
+				}
 			}
+			catch { return; }
 
 			int? size = null;
 			if (!Coder.IsStr(CodePage))
 				size = Coder.BytesRequired(CodePage);
 
-			//TODO
-			//UIHelper.FindParent<Tab>(this).UpdateViewValue(newBytes, size);
+			UIHelper.FindParent<TabsWindow>(this).HandleCommand(new ExecuteState(NECommand.Internal_SetViewValue) { Configuration = (newBytes, size) });
 		}
 	}
 

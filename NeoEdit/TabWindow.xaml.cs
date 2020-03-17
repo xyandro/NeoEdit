@@ -101,6 +101,7 @@ namespace NeoEdit.Program
 			Tab.GetViewValues(out var data, out var hasSel);
 			viewValues.Data = data;
 			viewValues.HasSel = hasSel;
+			viewValues.CodePages = Tab.ViewValuesCodePages;
 		}
 
 		class DrawBounds

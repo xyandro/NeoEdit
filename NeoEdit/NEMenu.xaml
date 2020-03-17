@@ -1041,7 +1041,7 @@
 		<Separator/>
 		<controls:NEMenuItem Header="_Active tabs" CommandEnum="Window_ActiveTabs" ToolTip="Change which files are active"/>
 		<controls:NEMenuItem Header="Tab _index" CommandEnum="Window_TabIndex" ToolTip="Replace selections with tab index"/>
-		<controls:NEMenuItem Header="Active tab in_dex" CommandEnum="Window_ActiveTabIndex" ToolTip="Replace selections with tab index (active tabs only)"/>
+		<controls:NEMenuItem Header="Ac_tive tab index" CommandEnum="Window_ActiveTabIndex" ToolTip="Replace selections with tab index (active tabs only)"/>
 		<Separator/>
 		<MenuItem Header="F_ont">
 			<controls:NEMenuItem Header="_Size" CommandEnum="Window_Font_Size" ToolTip="Change font size"/>
@@ -1049,6 +1049,7 @@
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem x:Name="menu_Window_ViewValues" Header="View _values" CommandEnum="Window_ViewValues" ToolTip="View binary values"/>
+		<controls:NEMenuItem Header="View values co_de pages" CommandEnum="Window_ViewValuesCodePages" ToolTip="Set codepages to view binary values"/>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<controls:NEMenuItem Header="_All tabs" CommandEnum="Window_Select_AllTabs" ToolTip="Select all files"/>

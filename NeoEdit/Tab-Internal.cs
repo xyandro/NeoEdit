@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Input;
+using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {
@@ -402,5 +403,13 @@ namespace NeoEdit.Program
 		}
 
 		void Execute_Internal_Text() => ReplaceSelections(state.Text, false, tryJoinUndo: true);
+
+		void Execute_Internal_SetViewValue()
+		{
+			(var value, var size) = ((byte[], int?))state.Configuration;
+			var sels = Selections.Select(range => Range.FromIndex(range.Start, size ?? range.Length)).ToList();
+			var values = Enumerable.Repeat(Coder.BytesToString(value, CodePage), sels.Count).ToList();
+			Replace(sels, values);
+		}
 	}
 }

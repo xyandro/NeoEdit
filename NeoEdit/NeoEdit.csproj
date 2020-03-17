@@ -252,6 +252,7 @@
     <Compile Include="Converters\NonEmptyConverter.cs" />
     <Compile Include="Converters\RadioConverter.cs" />
     <Compile Include="Converters\ValidValueConverter.cs" />
+    <Compile Include="Converters\ViewValuesVisibilityConverter.cs" />
     <Compile Include="DBConnectInfo.cs" />
     <Page Include="Dialogs\CodePagesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -953,13 +954,6 @@
     </Page>
     <Compile Include="Dialogs\ViewValuesEditValueDialog.xaml.cs">
       <DependentUpon>ViewValuesEditValueDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\ViewValuesStringsDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ViewValuesStringsDialog.xaml.cs">
-      <DependentUpon>ViewValuesStringsDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\WCFInterceptDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

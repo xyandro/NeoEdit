@@ -392,6 +392,17 @@ namespace NeoEdit.Program
 			}
 		}
 
+		HashSet<Coder.CodePage> oldViewValuesCodePages, newViewValuesCodePages;
+		public HashSet<Coder.CodePage> ViewValuesCodePages
+		{
+			get => newViewValuesCodePages;
+			private set
+			{
+				EnsureInTransaction();
+				newViewValuesCodePages = value;
+			}
+		}
+
 		double oldXScrollValue, newXScrollValue;
 		double XScrollValue
 		{
@@ -489,6 +500,7 @@ namespace NeoEdit.Program
 			newJumpBy = oldJumpBy;
 			newLastActive = oldLastActive;
 			newViewValues = oldViewValues;
+			newViewValuesCodePages = oldViewValuesCodePages;
 			newXScrollValue = oldXScrollValue;
 			newYScrollValue = oldYScrollValue;
 			newXScrollViewport = oldXScrollViewport;
@@ -532,6 +544,7 @@ namespace NeoEdit.Program
 			oldJumpBy = newJumpBy;
 			oldLastActive = newLastActive;
 			oldViewValues = newViewValues;
+			oldViewValuesCodePages = newViewValuesCodePages;
 			oldXScrollValue = newXScrollValue;
 			oldYScrollValue = newYScrollValue;
 			oldXScrollViewport = newXScrollViewport;
