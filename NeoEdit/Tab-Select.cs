@@ -442,12 +442,12 @@ namespace NeoEdit.Program
 
 		void Execute_Select_Selection_NextPrevious(bool next)
 		{
-			var offset = next ? 1 : -1;
-			CurrentSelection += offset;
-			if (CurrentSelection < 0)
-				CurrentSelection = Selections.Count - 1;
-			if (CurrentSelection >= Selections.Count)
-				CurrentSelection = 0;
+			var newSelection = CurrentSelection + (next ? 1 : -1);
+			if (newSelection < 0)
+				newSelection = Selections.Count - 1;
+			if (newSelection >= Selections.Count)
+				newSelection = 0;
+			CurrentSelection = newSelection;
 			EnsureVisible();
 		}
 

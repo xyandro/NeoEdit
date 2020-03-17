@@ -58,11 +58,11 @@ namespace NeoEdit.Program
 		int oldCurrentSelection, newCurrentSelection;
 		public int CurrentSelection
 		{
-			get => newCurrentSelection;
+			get => Math.Min(Math.Max(0, newCurrentSelection), Selections.Count - 1);
 			private set
 			{
 				EnsureInTransaction();
-				newCurrentSelection = Math.Max(0, Math.Min(value, Selections.Count - 1));
+				newCurrentSelection = value;
 			}
 		}
 
