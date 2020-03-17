@@ -14,21 +14,24 @@ namespace NeoEdit.Program
 	{
 		string GetSaveFileName()
 		{
-			var dialog = new SaveFileDialog
+			return Tabs.ShowTab(this, () =>
 			{
-				Filter = "All files|*.*",
-				FileName = Path.GetFileName(FileName) ?? DisplayName,
-				InitialDirectory = Path.GetDirectoryName(FileName),
-				DefaultExt = "txt",
-			};
-			if (dialog.ShowDialog() != true)
-				throw new OperationCanceledException();
+				var dialog = new SaveFileDialog
+				{
+					Filter = "All files|*.*",
+					FileName = Path.GetFileName(FileName) ?? DisplayName,
+					InitialDirectory = Path.GetDirectoryName(FileName),
+					DefaultExt = "txt",
+				};
+				if (dialog.ShowDialog() != true)
+					throw new OperationCanceledException();
 
-			if (Directory.Exists(dialog.FileName))
-				throw new Exception("A directory by that name already exists");
-			if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
-				throw new Exception("Directory doesn't exist");
-			return dialog.FileName;
+				if (Directory.Exists(dialog.FileName))
+					throw new Exception("A directory by that name already exists");
+				if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
+					throw new Exception("Directory doesn't exist");
+				return dialog.FileName;
+			});
 		}
 
 		void InsertFiles(IEnumerable<string> fileNames)
@@ -270,8 +273,8 @@ namespace NeoEdit.Program
 
 		void Execute_File_Close()
 		{
-			if (CanClose())
-				Tabs.RemoveTab(this);
+			VerifyCanClose();
+			Tabs.RemoveTab(this);
 		}
 
 		void Execute_File_Refresh()

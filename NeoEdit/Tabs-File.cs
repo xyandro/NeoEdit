@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Windows;
 using Microsoft.Win32;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.NEClipboards;
@@ -87,7 +86,7 @@ namespace NeoEdit.Program
 		void Execute_File_MoveToNewWindow()
 		{
 			var active = SortedActiveTabs.ToList();
-			active.ForEach(tab => RemoveTab(tab, false));
+			active.ForEach(tab => RemoveTab(tab));
 
 			var newWindow = new TabsWindow();
 			newWindow.SetLayout(Columns, Rows, MaxColumns, MaxRows);
@@ -116,12 +115,14 @@ namespace NeoEdit.Program
 
 		void Execute_File_Exit()
 		{
-			Application.Current.ShutdownMode = ShutdownMode.OnLastWindowClose;
-			state.TabsWindow.Close();
-			Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-
-			if (Application.Current.Windows.Count == 0)
-				Environment.Exit(0);
+			foreach (var tab in AllTabs)
+			{
+				ClearAllActive();
+				Focused = tab;
+				state.TabsWindow.QueueDraw();
+				tab.VerifyCanClose();
+			}
+			AllTabs.ForEach(tab => RemoveTab(tab));
 		}
 	}
 }

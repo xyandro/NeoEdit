@@ -43,7 +43,7 @@ namespace NeoEdit.Program
 				newFocused = tab;
 		}
 
-		void RemoveTab(Tab tab)
+		public void RemoveTab(Tab tab)
 		{
 			EnsureInTransaction();
 
@@ -229,7 +229,11 @@ namespace NeoEdit.Program
 		{
 			EnsureInTransaction();
 
-			oldAllTabs = newAllTabs;
+			if (oldAllTabs != newAllTabs)
+			{
+				oldAllTabs.Except(newAllTabs).Null(tab => tab.Tabs).ForEach(tab => tab.Closed());
+				oldAllTabs = newAllTabs;
+			}
 			if (oldActiveTabs != newActiveTabs)
 			{
 				var now = DateTime.Now;

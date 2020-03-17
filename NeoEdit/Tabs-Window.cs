@@ -39,26 +39,29 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Close_TabsWithWithoutSelections(bool hasSelections)
 		{
-			var toClose = SortedActiveTabs.Where(tab => tab.Selections.Any() == hasSelections).ToList();
-			if (!toClose.All(tab => tab.CanClose()))
-				return;
-			toClose.ForEach(tab => RemoveTab(tab));
+			foreach (var tab in SortedActiveTabs.Where(tab => tab.Selections.Any() == hasSelections))
+			{
+				tab.VerifyCanClose();
+				RemoveTab(tab);
+			}
 		}
 
 		void Execute_Window_Close_ModifiedUnmodifiedTabs(bool modified)
 		{
-			var toClose = SortedActiveTabs.Where(tab => tab.IsModified == modified).ToList();
-			if (!toClose.All(tab => tab.CanClose()))
-				return;
-			toClose.ForEach(tab => RemoveTab(tab));
+			foreach (var tab in SortedActiveTabs.Where(tab => tab.IsModified == modified))
+			{
+				tab.VerifyCanClose();
+				RemoveTab(tab);
+			}
 		}
 
 		void Execute_Window_Close_ActiveInactiveTabs(bool active)
 		{
-			var toClose = (active ? SortedActiveTabs : AllTabs.Except(UnsortedActiveTabs)).ToList();
-			if (!toClose.All(tab => tab.CanClose()))
-				return;
-			toClose.ForEach(tab => RemoveTab(tab));
+			foreach (var tab in (active ? SortedActiveTabs : AllTabs.Except(UnsortedActiveTabs)))
+			{
+				tab.VerifyCanClose();
+				RemoveTab(tab);
+			}
 		}
 
 		void Execute_Window_WordList()

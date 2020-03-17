@@ -1558,28 +1558,27 @@ namespace NeoEdit.Program
 			SetAutoRefresh();
 		}
 
-		public bool CanClose()
+		public void VerifyCanClose()
 		{
 			if (!IsModified)
-				return true;
+				return;
 
-			if (!state.SavedAnswers[nameof(CanClose)].HasFlag(MessageOptions.All))
-				state.SavedAnswers[nameof(CanClose)] = new Message(state.TabsWindow)
-				{
-					Title = "Confirm",
-					Text = "Do you want to save changes?",
-					Options = MessageOptions.YesNoAllCancel,
-					DefaultCancel = MessageOptions.Cancel,
-				}.Show();
-
-			if (state.SavedAnswers[nameof(CanClose)].HasFlag(MessageOptions.No))
-				return true;
-			if (state.SavedAnswers[nameof(CanClose)].HasFlag(MessageOptions.Yes))
+			if (!state.SavedAnswers[nameof(VerifyCanClose)].HasFlag(MessageOptions.All))
 			{
-				Execute_File_Save_Save();
-				return !IsModified;
+				Tabs.ShowTab(this, () =>
+				{
+					state.SavedAnswers[nameof(VerifyCanClose)] = new Message(state.TabsWindow)
+					{
+						Title = "Confirm",
+						Text = "Do you want to save changes?",
+						Options = MessageOptions.YesNoAllCancel,
+						DefaultCancel = MessageOptions.Cancel,
+					}.Show();
+				});
 			}
-			return false;
+
+			if (state.SavedAnswers[nameof(VerifyCanClose)].HasFlag(MessageOptions.Yes))
+				Execute_File_Save_Save();
 		}
 
 		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, bool keepUndo = false)

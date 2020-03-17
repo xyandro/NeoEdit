@@ -41,8 +41,8 @@ namespace NeoEdit.Program
 
 		void Execute_Internal_CloseTab(Tab tab)
 		{
-			if (tab.CanClose())
-				RemoveTab(tab);
+			tab.VerifyCanClose();
+			RemoveTab(tab);
 		}
 	}
 }

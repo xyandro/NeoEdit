@@ -120,6 +120,14 @@ namespace NeoEdit.Program
 					}.Show();
 				}
 
+				var action = MacroAction.GetMacroAction(state);
+				if (action != null)
+				{
+					lastAction = action;
+					if (RecordingMacro != null)
+						RecordingMacro?.AddAction(action);
+				}
+
 				commit = true;
 			}
 			catch (OperationCanceledException) { }
@@ -128,23 +136,12 @@ namespace NeoEdit.Program
 				if (commit)
 				{
 					Commit();
-
 					PostExecute();
-
-					var action = MacroAction.GetMacroAction(state);
-					if (action != null)
-					{
-						lastAction = action;
-						if (RecordingMacro != null)
-							RecordingMacro?.AddAction(action);
-					}
-
-					state.TabsWindow.QueueDraw();
 				}
 				else
-				{
 					Rollback();
-				}
+
+				state.TabsWindow.QueueDraw();
 			}
 
 			return commit;
@@ -331,13 +328,6 @@ namespace NeoEdit.Program
 			InsertTab(tab, index);
 		}
 
-		public void RemoveTab(Tab tab, bool close = true)
-		{
-			if (close)
-				tab.Closed();
-			RemoveTab(tab);
-		}
-
 		public void AddDiff(Tab tab1, Tab tab2)
 		{
 			//TODO
@@ -414,5 +404,26 @@ namespace NeoEdit.Program
 		}
 
 		public void QueueActivateTabs() => state.TabsWindow.QueueActivateTabs();
+
+		public void ShowTab(Tab tab, Action action) => ShowTab(tab, () => { action(); return 0; });
+
+		public T ShowTab<T>(Tab tab, Func<T> action)
+		{
+			var activeTabs = UnsortedActiveTabs.ToList();
+			var focusedTab = Focused;
+			ClearAllActive();
+			SetActive(tab);
+			Focused = tab;
+			state.TabsWindow.QueueDraw();
+
+			var result = action();
+
+			ClearAllActive();
+			foreach (var activeTab in activeTabs)
+				SetActive(activeTab);
+			Focused = focusedTab;
+
+			return result;
+		}
 	}
 }
