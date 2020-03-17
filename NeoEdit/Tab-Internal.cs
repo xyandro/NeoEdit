@@ -171,7 +171,9 @@ namespace NeoEdit.Program
 
 		void Execute_Internal_Key()
 		{
-			var oldHandled = state.Handled;
+			if (state.Handled)
+				return;
+
 			state.Handled = true;
 
 			switch (state.Key)
@@ -398,7 +400,7 @@ namespace NeoEdit.Program
 				case Key.Enter:
 					ReplaceSelections(TextView.DefaultEnding, false, tryJoinUndo: true);
 					break;
-				default: state.Handled = oldHandled; break;
+				default: state.Handled = false; break;
 			}
 		}
 

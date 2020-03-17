@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Program.Controls;
@@ -82,16 +83,16 @@ namespace NeoEdit.Program
 				if (Tabs.Rows.HasValue)
 					rows = Math.Max(1, Tabs.Rows.Value);
 				if ((!columns.HasValue) && (!rows.HasValue))
-					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.AllTabsCount)), Tabs.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.AllTabs.Count())), Tabs.MaxColumns ?? int.MaxValue));
 				if (!rows.HasValue)
-					rows = Math.Max(1, Math.Min((Tabs.AllTabsCount + columns.Value - 1) / columns.Value, Tabs.MaxRows ?? int.MaxValue));
+					rows = Math.Max(1, Math.Min((Tabs.AllTabs.Count() + columns.Value - 1) / columns.Value, Tabs.MaxRows ?? int.MaxValue));
 				if (!columns.HasValue)
-					columns = Math.Max(1, Math.Min((Tabs.AllTabsCount + rows.Value - 1) / rows.Value, Tabs.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((Tabs.AllTabs.Count() + rows.Value - 1) / rows.Value, Tabs.MaxColumns ?? int.MaxValue));
 
 				gridColumns = columns.Value;
 				gridRows = rows.Value;
 
-				var totalRows = (Tabs.AllTabsCount + gridColumns - 1) / gridColumns;
+				var totalRows = (Tabs.AllTabs.Count() + gridColumns - 1) / gridColumns;
 
 				scrollBarBorder.Visibility = totalRows > gridRows ? Visibility.Visible : Visibility.Collapsed;
 				UpdateLayout();
@@ -136,7 +137,7 @@ namespace NeoEdit.Program
 			gridTabLabels = new List<TabLabel>();
 			DisconnectTabWindows();
 			var tabWindowsIndex = 0;
-			for (var ctr = 0; ctr < Tabs.AllTabsCount; ++ctr)
+			for (var ctr = 0; ctr < Tabs.AllTabs.Count(); ++ctr)
 			{
 				var top = ctr / gridColumns * gridHeight - scrollBar.Value;
 				if ((top + gridHeight < 0) || (top > canvas.ActualHeight))

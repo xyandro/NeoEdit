@@ -210,7 +210,7 @@ namespace NeoEdit.Program
 			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
 			status.Add($"Active: {plural(Tabs.UnsortedActiveTabsCount, "file")}, {plural(Tabs.UnsortedActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			status.Add($"Inactive: {plural(Tabs.AllTabs.Except(Tabs.UnsortedActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(Tabs.UnsortedActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Total: {plural(Tabs.AllTabsCount, "file")}, {plural(Tabs.AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Total: {plural(Tabs.AllTabs.Count(), "file")}, {plural(Tabs.AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			status.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
 			status.Add($"Keys/Values: {string.Join(" / ", Tabs.keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
 

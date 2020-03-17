@@ -17,14 +17,13 @@ namespace NeoEdit.Program
 		{
 			if ((state.ControlDown) && (!state.AltDown))
 			{
-				var oldHandled = state.Handled;
 				state.Handled = true;
 				switch (state.Key)
 				{
 					case Key.PageUp: MovePrevNext(-1, state.ShiftDown); break;
 					case Key.PageDown: MovePrevNext(1, state.ShiftDown); break;
 					case Key.Tab: MovePrevNext(1, state.ShiftDown, true); break;
-					default: state.Handled = oldHandled; break;
+					default: state.Handled = false; break;
 				}
 			}
 		}

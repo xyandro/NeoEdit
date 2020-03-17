@@ -360,7 +360,7 @@ namespace NeoEdit.Program
 
 		void MovePrevNext(int offset, bool shiftDown, bool orderByActive = false)
 		{
-			if (AllTabsCount == 0)
+			if (AllTabs.Count() <= 1)
 				return;
 
 			Tab tab;
@@ -371,9 +371,9 @@ namespace NeoEdit.Program
 				var tabs = (orderByActive ? AllTabs.OrderByDescending(x => x.LastActive).ToList() : AllTabs) as IList<Tab>;
 				var index = tabs.FindIndex(Focused) + offset;
 				if (index < 0)
-					index += AllTabsCount;
-				if (index >= AllTabsCount)
-					index -= AllTabsCount;
+					index += AllTabs.Count();
+				if (index >= AllTabs.Count())
+					index -= AllTabs.Count();
 				tab = tabs[index];
 			}
 			if (!shiftDown)

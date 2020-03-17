@@ -98,8 +98,6 @@ namespace NeoEdit.Program
 			if (newFocused != null)
 				AddToTransaction(newFocused);
 		}
-
-		public int AllTabsCount => newAllTabs.Count;
 		#endregion
 
 		#region ActiveTabs

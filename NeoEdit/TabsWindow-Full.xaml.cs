@@ -162,7 +162,7 @@ namespace NeoEdit.Program
 			}
 
 			if ((lastFullAllTabsHash != Tabs.AllTabsHash) || (lastFullTabLabelIndex != fullTabLabelIndex))
-				fullTabLabelIndex = Math.Max(0, Math.Min(fullTabLabelIndex, GetAtRightIndex(tabLabelMap, Tabs.AllTabsCount - 1)));
+				fullTabLabelIndex = Math.Max(0, Math.Min(fullTabLabelIndex, GetAtRightIndex(tabLabelMap, Tabs.AllTabs.Count() - 1)));
 
 			if ((lastFullAllTabsHash == Tabs.AllTabsHash) && (lastFullTabLabelIndex == fullTabLabelIndex))
 			{
@@ -180,7 +180,7 @@ namespace NeoEdit.Program
 			var offset = fullTabLabelIndex - index;
 			while (true)
 			{
-				if ((index >= Tabs.AllTabsCount) || (remaining <= 0))
+				if ((index >= Tabs.AllTabs.Count()) || (remaining <= 0))
 					break;
 
 				var tabLabel = GetTabLabel(tabLabelMap, index);
