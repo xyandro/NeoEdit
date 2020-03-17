@@ -2,3 +2,4 @@ Make modal dialogs modal for owning window only
 Print
 Add ability to select all attributes
 Round yellow diff corners in diff scrollbar
+It sometimes activates when not in a transaction, causes exception

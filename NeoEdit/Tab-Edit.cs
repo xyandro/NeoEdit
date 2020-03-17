@@ -250,10 +250,12 @@ namespace NeoEdit.Program
 			else
 				stringsToFind = Enumerable.Repeat(new List<(string, bool)> { (result.Text, result.MatchCase) }, selections.Count).ToList();
 
+			ViewValuesSearches = null;
 			// If the strings are binary convert them to all codepages
 			if (result.IsBinary)
 			{
 				ViewValuesCodePages = result.CodePages;
+				ViewValuesSearches = new HashSet<string>(stringsToFind.SelectMany().Select(item => item.Item1).Distinct());
 				var mapping = stringsToFind
 					.Distinct()
 					.ToDictionary(

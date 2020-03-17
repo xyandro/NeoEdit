@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Transform;
 
@@ -9,6 +10,19 @@ namespace NeoEdit.Program.Controls
 {
 	partial class ViewValue
 	{
+		static readonly Brush NotFoundBorderBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
+		static readonly Brush NotFoundBackgroundBrush = Brushes.Transparent;
+		static readonly Brush FoundBorderBrush = new SolidColorBrush(Color.FromArgb(192, 38, 132, 255));
+		static readonly Brush FoundBackgroundBrush = new SolidColorBrush(Color.FromArgb(32, 38, 132, 255));
+
+		static ViewValue()
+		{
+			NotFoundBorderBrush.Freeze();
+			NotFoundBackgroundBrush.Freeze();
+			FoundBorderBrush.Freeze();
+			FoundBackgroundBrush.Freeze();
+		}
+
 		public Coder.CodePage CodePage { get; set; } = Coder.CodePage.None;
 		public IList<byte> Data { get; set; }
 		public bool HasSel { get; set; }
@@ -38,8 +52,11 @@ namespace NeoEdit.Program.Controls
 			return Coder.TryBytesToString(data as byte[], CodePage);
 		}
 
-		public void SetData(IList<byte> data, bool hasSel)
+		public void SetData(IList<byte> data, bool hasSel, HashSet<string> searches)
 		{
+			border.BorderBrush = NotFoundBorderBrush;
+			border.Background = NotFoundBackgroundBrush;
+
 			if (CodePage == Coder.CodePage.None)
 				return;
 
@@ -51,7 +68,13 @@ namespace NeoEdit.Program.Controls
 
 			Data = data;
 			HasSel = hasSel;
-			text.Text = Font.RemoveSpecialChars(GetValue() ?? "");
+			var value = GetValue();
+			text.Text = Font.RemoveSpecialChars(value ?? "");
+			if ((value != null) && (searches?.Contains(value) == true))
+			{
+				border.BorderBrush = FoundBorderBrush;
+				border.Background = FoundBackgroundBrush;
+			}
 		}
 
 		void OnClick(object sender, MouseButtonEventArgs e)

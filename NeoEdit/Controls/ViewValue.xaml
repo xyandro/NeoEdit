@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	MouseLeftButtonDown="OnClick">
 
-	<Border BorderBrush="#404040" BorderThickness="1" CornerRadius="4" Background="Transparent" Margin="2">
+	<Border Name="border" BorderThickness="1" CornerRadius="4" Margin="2">
 		<TextBlock Name="text" Margin="5,2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 	</Border>
 </UserControl>

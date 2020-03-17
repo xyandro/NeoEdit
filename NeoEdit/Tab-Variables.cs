@@ -403,6 +403,17 @@ namespace NeoEdit.Program
 			}
 		}
 
+		HashSet<string> oldViewValuesSearches, newViewValuesSearches;
+		public HashSet<string> ViewValuesSearches
+		{
+			get => newViewValuesSearches;
+			private set
+			{
+				EnsureInTransaction();
+				newViewValuesSearches = value;
+			}
+		}
+
 		double oldXScrollValue, newXScrollValue;
 		double XScrollValue
 		{
@@ -501,6 +512,7 @@ namespace NeoEdit.Program
 			newLastActive = oldLastActive;
 			newViewValues = oldViewValues;
 			newViewValuesCodePages = oldViewValuesCodePages;
+			newViewValuesSearches = oldViewValuesSearches;
 			newXScrollValue = oldXScrollValue;
 			newYScrollValue = oldYScrollValue;
 			newXScrollViewport = oldXScrollViewport;
@@ -545,6 +557,7 @@ namespace NeoEdit.Program
 			oldLastActive = newLastActive;
 			oldViewValues = newViewValues;
 			oldViewValuesCodePages = newViewValuesCodePages;
+			oldViewValuesSearches = newViewValuesSearches;
 			oldXScrollValue = newXScrollValue;
 			oldYScrollValue = newYScrollValue;
 			oldXScrollViewport = newXScrollViewport;

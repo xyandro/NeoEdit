@@ -238,15 +238,17 @@ namespace NeoEdit.Program
 					}
 					break;
 				case Key.Escape:
+					if (ViewValuesSearches != null)
+					{
+						ViewValuesSearches = null;
+						break;
+					}
 					//DragFiles = null;
 					if (Settings.EscapeClearsSelections)
 					{
 						Execute_Select_Selection_Single();
-						//if (!Selections.Any())
-						//{
-						//	var pos = TextView.GetPosition(Math.Max(0, Math.Min(YScrollValue, TextView.NumLines - 1)), 0);
-						//	Selections = new List<Range> { new Range(pos) };
-						//}
+						if (!Selections.Any())
+							Selections = new List<Range> { new Range() };
 					}
 					break;
 				case Key.Left:
