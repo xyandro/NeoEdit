@@ -15,6 +15,8 @@ namespace NeoEdit.Program
 
 		void Execute_Internal_Key()
 		{
+			state.Handled = false;
+
 			if ((state.ControlDown) && (!state.AltDown))
 			{
 				state.Handled = true;

@@ -149,9 +149,6 @@ namespace NeoEdit.Program
 
 		object Configure()
 		{
-			if (state.Command == NECommand.Internal_Key)
-				state.Handled = false;
-
 			switch (state.Command)
 			{
 				case NECommand.File_Open_Open: return Configure_File_Open_Open();
