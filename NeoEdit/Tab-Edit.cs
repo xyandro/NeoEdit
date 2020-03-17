@@ -204,7 +204,7 @@ namespace NeoEdit.Program
 				}
 			}
 
-			return EditFindFindDialog.Run(state.TabsWindow, text, selectionOnly, GetVariables());
+			return EditFindFindDialog.Run(state.TabsWindow, text, selectionOnly, ViewValuesCodePages, GetVariables());
 		}
 
 		void Execute_Edit_Find_Find()
@@ -253,6 +253,7 @@ namespace NeoEdit.Program
 			// If the strings are binary convert them to all codepages
 			if (result.IsBinary)
 			{
+				ViewValuesCodePages = result.CodePages;
 				var mapping = stringsToFind
 					.Distinct()
 					.ToDictionary(

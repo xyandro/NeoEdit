@@ -18,7 +18,6 @@ namespace NeoEdit.Program.Dialogs
 			public bool IsRegex { get; set; }
 			public bool RegexGroups { get; set; }
 			public bool IsBinary { get; set; }
-			public HashSet<Coder.CodePage> CodePages { get; set; }
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
 			public bool EntireSelection { get; set; }
@@ -166,9 +165,12 @@ namespace NeoEdit.Program.Dialogs
 		}
 
 
-		EditFindFindDialog(string text, bool selectionOnly, NEVariables variables)
+		readonly HashSet<Coder.CodePage> startCodePages;
+
+		EditFindFindDialog(string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables)
 		{
 			Variables = variables;
+			startCodePages = codePages;
 
 			InitializeComponent();
 
@@ -187,7 +189,6 @@ namespace NeoEdit.Program.Dialogs
 				IsRegex = IsRegex,
 				RegexGroups = RegexGroups,
 				IsBinary = IsBinary,
-				CodePages = CodePages,
 				WholeWords = WholeWords,
 				MatchCase = MatchCase,
 				EntireSelection = EntireSelection,
@@ -207,7 +208,6 @@ namespace NeoEdit.Program.Dialogs
 			IsRegex = checkBoxStatus.IsRegex;
 			RegexGroups = checkBoxStatus.RegexGroups;
 			IsBinary = checkBoxStatus.IsBinary;
-			CodePages = checkBoxStatus.CodePages;
 			WholeWords = checkBoxStatus.WholeWords;
 			MatchCase = checkBoxStatus.MatchCase;
 			EntireSelection = checkBoxStatus.EntireSelection;
@@ -250,12 +250,12 @@ namespace NeoEdit.Program.Dialogs
 		void Reset(object sender = null, RoutedEventArgs e = null)
 		{
 			IsExpression = AlignSelections = IsBoolean = IsRegex = RegexGroups = IsBinary = WholeWords = MatchCase = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
-			CodePages = new HashSet<Coder.CodePage>(CodePagesDialog.DefaultCodePages);
+			CodePages = startCodePages;
 		}
 
-		static public Result Run(Window parent, string text, bool selectionOnly, NEVariables variables)
+		static public Result Run(Window parent, string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables)
 		{
-			var dialog = new EditFindFindDialog(text, selectionOnly, variables) { Owner = parent };
+			var dialog = new EditFindFindDialog(text, selectionOnly, codePages, variables) { Owner = parent };
 			if (!dialog.ShowDialog())
 				throw new OperationCanceledException();
 			return dialog.result;
