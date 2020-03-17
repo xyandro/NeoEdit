@@ -13,7 +13,7 @@ namespace NeoEdit.Program.Controls
 
 		public void SetData(IList<byte> data, bool hasSel, HashSet<Coder.CodePage> codePages, HashSet<string> searches)
 		{
-			var controls = new List<FrameworkElement> { LE, Int08LEHeader, Int16LEHeader, Int32LEHeader, Int64LEHeader, Int08LESizing, Int16LESizing, Int32LESizing, Int64LESizing, UIntLE, SIntLE, UInt08LE, UInt16LE, UInt32LE, UInt64LE, SInt08LE, SInt16LE, SInt32LE, SInt64LE, BE, Int08BEHeader, Int16BEHeader, Int32BEHeader, Int64BEHeader, Int08BESizing, Int16BESizing, Int32BESizing, Int64BESizing, UIntBE, SIntBE, UInt08BE, UInt16BE, UInt32BE, UInt64BE, SInt08BE, SInt16BE, SInt32BE, SInt64BE, Float, SingleHeader, DoubleHeader, SingleSizing, DoubleSizing, Single, Double };
+			var controls = new List<FrameworkElement> { LE, Int08LEHeader, Int16LEHeader, Int32LEHeader, Int64LEHeader, Int08LESizing, Int16LESizing, Int32LESizing, Int64LESizing, SIntLE, UIntLE, SInt08LE, SInt16LE, SInt32LE, SInt64LE, UInt08LE, UInt16LE, UInt32LE, UInt64LE, BE, Int08BEHeader, Int16BEHeader, Int32BEHeader, Int64BEHeader, Int08BESizing, Int16BESizing, Int32BESizing, Int64BESizing, SIntBE, UIntBE, SInt08BE, SInt16BE, SInt32BE, SInt64BE, UInt08BE, UInt16BE, UInt32BE, UInt64BE, Float, SingleHeader, DoubleHeader, SingleSizing, DoubleSizing, Single, Double };
 			controls.ForEach(control => control.Visibility = GetVisibility(codePages, control.Tag as string));
 			controls.OfType<ViewValue>().ForEach(viewValue => viewValue.SetData(data, hasSel, searches));
 		}

@@ -31,17 +31,17 @@
 				<controls:ViewValue x:Name="Int32LESizing" Tag="UInt32LE|SInt32LE" Grid.Row="1" Grid.Column="3" Text="-2147483647" Margin="4,0"/>
 				<controls:ViewValue x:Name="Int64LESizing" Tag="UInt64LE|SInt64LE" Grid.Row="1" Grid.Column="4" Text="-9223372036854775807" Margin="4,0"/>
 
-				<TextBlock x:Name="UIntLE" Tag="UInt08LE|UInt16LE|UInt32LE|UInt64LE" Grid.Row="2" Grid.Column="0" Text="Unsigned" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
-				<TextBlock x:Name="SIntLE" Tag="SInt08LE|SInt16LE|SInt32LE|SInt64LE" Grid.Row="3" Grid.Column="0" Text="Signed" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
+				<TextBlock x:Name="SIntLE" Tag="SInt08LE|SInt16LE|SInt32LE|SInt64LE" Grid.Row="2" Grid.Column="0" Text="Signed" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
+				<TextBlock x:Name="UIntLE" Tag="UInt08LE|UInt16LE|UInt32LE|UInt64LE" Grid.Row="3" Grid.Column="0" Text="Unsigned" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
 
-				<controls:ViewValue x:Name="UInt08LE" Tag="UInt08LE" Grid.Row="2" Grid.Column="1" CodePage="UInt8"/>
-				<controls:ViewValue x:Name="UInt16LE" Tag="UInt16LE" Grid.Row="2" Grid.Column="2" CodePage="UInt16LE"/>
-				<controls:ViewValue x:Name="UInt32LE" Tag="UInt32LE" Grid.Row="2" Grid.Column="3" CodePage="UInt32LE"/>
-				<controls:ViewValue x:Name="UInt64LE" Tag="UInt64LE" Grid.Row="2" Grid.Column="4" CodePage="UInt64LE"/>
-				<controls:ViewValue x:Name="SInt08LE" Tag="SInt08LE" Grid.Row="3" Grid.Column="1" CodePage="Int8"/>
-				<controls:ViewValue x:Name="SInt16LE" Tag="SInt16LE" Grid.Row="3" Grid.Column="2" CodePage="Int16LE"/>
-				<controls:ViewValue x:Name="SInt32LE" Tag="SInt32LE" Grid.Row="3" Grid.Column="3" CodePage="Int32LE"/>
-				<controls:ViewValue x:Name="SInt64LE" Tag="SInt64LE" Grid.Row="3" Grid.Column="4" CodePage="Int64LE"/>
+				<controls:ViewValue x:Name="SInt08LE" Tag="SInt08LE" Grid.Row="2" Grid.Column="1" CodePage="Int8"/>
+				<controls:ViewValue x:Name="SInt16LE" Tag="SInt16LE" Grid.Row="2" Grid.Column="2" CodePage="Int16LE"/>
+				<controls:ViewValue x:Name="SInt32LE" Tag="SInt32LE" Grid.Row="2" Grid.Column="3" CodePage="Int32LE"/>
+				<controls:ViewValue x:Name="SInt64LE" Tag="SInt64LE" Grid.Row="2" Grid.Column="4" CodePage="Int64LE"/>
+				<controls:ViewValue x:Name="UInt08LE" Tag="UInt08LE" Grid.Row="3" Grid.Column="1" CodePage="UInt8"/>
+				<controls:ViewValue x:Name="UInt16LE" Tag="UInt16LE" Grid.Row="3" Grid.Column="2" CodePage="UInt16LE"/>
+				<controls:ViewValue x:Name="UInt32LE" Tag="UInt32LE" Grid.Row="3" Grid.Column="3" CodePage="UInt32LE"/>
+				<controls:ViewValue x:Name="UInt64LE" Tag="UInt64LE" Grid.Row="3" Grid.Column="4" CodePage="UInt64LE"/>
 			</Grid>
 		</GroupBox>
 
@@ -71,17 +71,17 @@
 				<controls:ViewValue x:Name="Int32BESizing" Tag="UInt32BE|SInt32BE" Grid.Row="1" Grid.Column="3" Text="-2147483647" Margin="4,0"/>
 				<controls:ViewValue x:Name="Int64BESizing" Tag="UInt64BE|SInt64BE" Grid.Row="1" Grid.Column="4" Text="-9223372036854775807" Margin="4,0"/>
 
-				<TextBlock x:Name="UIntBE" Tag="UInt08BE|UInt16BE|UInt32BE|UInt64BE" Grid.Row="2" Grid.Column="0" Text="Unsigned" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
-				<TextBlock x:Name="SIntBE" Tag="SInt08BE|SInt16BE|SInt32BE|SInt64BE" Grid.Row="3" Grid.Column="0" Text="Signed" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
+				<TextBlock x:Name="SIntBE" Tag="SInt08BE|SInt16BE|SInt32BE|SInt64BE" Grid.Row="2" Grid.Column="0" Text="Signed" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
+				<TextBlock x:Name="UIntBE" Tag="UInt08BE|UInt16BE|UInt32BE|UInt64BE" Grid.Row="3" Grid.Column="0" Text="Unsigned" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="3,3,5,3"/>
 
-				<controls:ViewValue x:Name="UInt08BE" Tag="UInt08BE" Grid.Row="2" Grid.Column="1" CodePage="UInt8"/>
-				<controls:ViewValue x:Name="UInt16BE" Tag="UInt16BE" Grid.Row="2" Grid.Column="2" CodePage="UInt16BE"/>
-				<controls:ViewValue x:Name="UInt32BE" Tag="UInt32BE" Grid.Row="2" Grid.Column="3" CodePage="UInt32BE"/>
-				<controls:ViewValue x:Name="UInt64BE" Tag="UInt64BE" Grid.Row="2" Grid.Column="4" CodePage="UInt64BE"/>
-				<controls:ViewValue x:Name="SInt08BE" Tag="SInt08BE" Grid.Row="3" Grid.Column="1" CodePage="Int8"/>
-				<controls:ViewValue x:Name="SInt16BE" Tag="SInt16BE" Grid.Row="3" Grid.Column="2" CodePage="Int16BE"/>
-				<controls:ViewValue x:Name="SInt32BE" Tag="SInt32BE" Grid.Row="3" Grid.Column="3" CodePage="Int32BE"/>
-				<controls:ViewValue x:Name="SInt64BE" Tag="SInt64BE" Grid.Row="3" Grid.Column="4" CodePage="Int64BE"/>
+				<controls:ViewValue x:Name="SInt08BE" Tag="SInt08BE" Grid.Row="2" Grid.Column="1" CodePage="Int8"/>
+				<controls:ViewValue x:Name="SInt16BE" Tag="SInt16BE" Grid.Row="2" Grid.Column="2" CodePage="Int16BE"/>
+				<controls:ViewValue x:Name="SInt32BE" Tag="SInt32BE" Grid.Row="2" Grid.Column="3" CodePage="Int32BE"/>
+				<controls:ViewValue x:Name="SInt64BE" Tag="SInt64BE" Grid.Row="2" Grid.Column="4" CodePage="Int64BE"/>
+				<controls:ViewValue x:Name="UInt08BE" Tag="UInt08BE" Grid.Row="3" Grid.Column="1" CodePage="UInt8"/>
+				<controls:ViewValue x:Name="UInt16BE" Tag="UInt16BE" Grid.Row="3" Grid.Column="2" CodePage="UInt16BE"/>
+				<controls:ViewValue x:Name="UInt32BE" Tag="UInt32BE" Grid.Row="3" Grid.Column="3" CodePage="UInt32BE"/>
+				<controls:ViewValue x:Name="UInt64BE" Tag="UInt64BE" Grid.Row="3" Grid.Column="4" CodePage="UInt64BE"/>
 			</Grid>
 		</GroupBox>
 
