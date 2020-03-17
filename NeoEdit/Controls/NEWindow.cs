@@ -434,8 +434,9 @@ namespace NeoEdit.Program.Controls
 		{
 			var isFullScreen = IsFullScreen;
 			IsFullScreen = false;
-			Left = rect.Left;
-			Top = rect.Top;
+			var monitors = GetMonitors();
+			Left = Math.Max(monitors.Min(r => r.Left), Math.Min(rect.Left, monitors.Max(r => r.Right - rect.Width)));
+			Top = Math.Max(monitors.Min(r => r.Top), Math.Min(rect.Top, monitors.Max(r => r.Bottom - rect.Height)));
 			Width = Math.Max(MinWindowSize, rect.Width);
 			Height = Math.Max(MinWindowSize, rect.Height);
 			IsFullScreen = isFullScreen;
