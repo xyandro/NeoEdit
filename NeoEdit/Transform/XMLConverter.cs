@@ -59,6 +59,8 @@ namespace NeoEdit.Program.Transform
 			if (obj == null)
 				return new XElement(name, new XAttribute(typeTag, nullType));
 
+			if (expectedType != null)
+				expectedType = Nullable.GetUnderlyingType(expectedType) ?? expectedType;
 			var type = obj.GetType();
 			var isPrimitive = (type.IsPrimitive) || (type.IsEnum) || (type == typeof(string)) || (obj is Type);
 			if ((isPrimitive) && (type == expectedType) && (!createElement))
