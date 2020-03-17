@@ -224,32 +224,32 @@ namespace NeoEdit.Program
 				return results[0];
 			}
 
-			menu.file_AutoRefresh.MultiStatus = GetMultiStatus(x => x.AutoRefresh);
-			menu.file_Encrypt.MultiStatus = GetMultiStatus(x => !string.IsNullOrWhiteSpace(x.AESKey));
-			menu.file_Compress.MultiStatus = GetMultiStatus(x => x.Compressed);
-			menu.edit_Navigate_JumpBy_Words.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Words);
-			menu.edit_Navigate_JumpBy_Numbers.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Numbers);
-			menu.edit_Navigate_JumpBy_Paths.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Paths);
-			menu.diff_IgnoreWhitespace.MultiStatus = GetMultiStatus(x => x.DiffIgnoreWhitespace);
-			menu.diff_IgnoreCase.MultiStatus = GetMultiStatus(x => x.DiffIgnoreCase);
-			menu.diff_IgnoreNumbers.MultiStatus = GetMultiStatus(x => x.DiffIgnoreNumbers);
-			menu.diff_IgnoreLineEndings.MultiStatus = GetMultiStatus(x => x.DiffIgnoreLineEndings);
-			menu.content_Type_None.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.None);
-			menu.content_Type_Balanced.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.Balanced);
-			menu.content_Type_Columns.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.Columns);
-			menu.content_Type_CPlusPlus.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CPlusPlus);
-			menu.content_Type_CSharp.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CSharp);
-			menu.content_Type_CSV.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CSV);
-			menu.content_Type_ExactColumns.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.ExactColumns);
-			menu.content_Type_HTML.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.HTML);
-			menu.content_Type_JSON.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.JSON);
-			menu.content_Type_SQL.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.SQL);
-			menu.content_Type_TSV.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.TSV);
-			menu.content_Type_XML.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.XML);
-			menu.content_HighlightSyntax.MultiStatus = GetMultiStatus(x => x.HighlightSyntax);
-			menu.content_StrictParsing.MultiStatus = GetMultiStatus(x => x.StrictParsing);
-			menu.content_KeepSelections.MultiStatus = GetMultiStatus(x => x.KeepSelections);
-			menu.window_ViewValues.MultiStatus = GetMultiStatus(x => x.ViewValues);
+			menu.menu_File_AutoRefresh.MultiStatus = GetMultiStatus(x => x.AutoRefresh);
+			menu.menu_File_Encrypt.MultiStatus = GetMultiStatus(x => !string.IsNullOrWhiteSpace(x.AESKey));
+			menu.menu_File_Compress.MultiStatus = GetMultiStatus(x => x.Compressed);
+			menu.menu_Edit_Navigate_JumpBy_Words.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Words);
+			menu.menu_Edit_Navigate_JumpBy_Numbers.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Numbers);
+			menu.menu_Edit_Navigate_JumpBy_Paths.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Paths);
+			menu.menu_Diff_IgnoreWhitespace.MultiStatus = GetMultiStatus(x => x.DiffIgnoreWhitespace);
+			menu.menu_Diff_IgnoreCase.MultiStatus = GetMultiStatus(x => x.DiffIgnoreCase);
+			menu.menu_Diff_IgnoreNumbers.MultiStatus = GetMultiStatus(x => x.DiffIgnoreNumbers);
+			menu.menu_Diff_IgnoreLineEndings.MultiStatus = GetMultiStatus(x => x.DiffIgnoreLineEndings);
+			menu.menu_Content_Type_None.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.None);
+			menu.menu_Content_Type_Balanced.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.Balanced);
+			menu.menu_Content_Type_Columns.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.Columns);
+			menu.menu_Content_Type_CPlusPlus.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CPlusPlus);
+			menu.menu_Content_Type_CSharp.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CSharp);
+			menu.menu_Content_Type_CSV.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CSV);
+			menu.menu_Content_Type_ExactColumns.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.ExactColumns);
+			menu.menu_Content_Type_HTML.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.HTML);
+			menu.menu_Content_Type_JSON.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.JSON);
+			menu.menu_Content_Type_SQL.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.SQL);
+			menu.menu_Content_Type_TSV.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.TSV);
+			menu.menu_Content_Type_XML.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.XML);
+			menu.menu_Content_HighlightSyntax.MultiStatus = GetMultiStatus(x => x.HighlightSyntax);
+			menu.menu_Content_StrictParsing.MultiStatus = GetMultiStatus(x => x.StrictParsing);
+			menu.menu_Content_KeepSelections.MultiStatus = GetMultiStatus(x => x.KeepSelections);
+			menu.menu_Window_ViewValues.MultiStatus = GetMultiStatus(x => x.ViewValues);
 		}
 
 		void DrawAll()
