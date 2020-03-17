@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -54,7 +55,7 @@ namespace NeoEdit.Program.Controls
 			return Coder.TryBytesToString(data as byte[], CodePage);
 		}
 
-		public void SetData(IList<byte> data, bool hasSel, HashSet<string> searches)
+		public void SetData(IList<byte> data, bool hasSel, IReadOnlyList<HashSet<string>> searches)
 		{
 			border.BorderBrush = NotFoundBorderBrush;
 			border.Background = NotFoundBackgroundBrush;
@@ -72,7 +73,7 @@ namespace NeoEdit.Program.Controls
 			HasSel = hasSel;
 			var value = GetValue();
 			text.Text = Font.RemoveSpecialChars(value ?? "");
-			if ((value != null) && (searches?.Contains(value) == true))
+			if ((value != null) && (searches != null) && (searches.Any(search => search.Contains(value))))
 			{
 				border.BorderBrush = FoundBorderBrush;
 				border.Background = FoundBackgroundBrush;

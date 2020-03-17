@@ -255,7 +255,7 @@ namespace NeoEdit.Program
 			if (result.IsBinary)
 			{
 				ViewValuesCodePages = result.CodePages;
-				ViewValuesSearches = new HashSet<string>(stringsToFind.SelectMany().Select(item => item.Item1).Distinct());
+				ViewValuesSearches = stringsToFind.SelectMany().Distinct().GroupBy(x => x.Item2).Select(g => new HashSet<string>(g.Select(x => x.Item1), g.Key ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)).ToList();
 				var mapping = stringsToFind
 					.Distinct()
 					.ToDictionary(

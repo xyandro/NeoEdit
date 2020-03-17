@@ -403,8 +403,8 @@ namespace NeoEdit.Program
 			}
 		}
 
-		HashSet<string> oldViewValuesSearches, newViewValuesSearches;
-		public HashSet<string> ViewValuesSearches
+		IReadOnlyList<HashSet<string>> oldViewValuesSearches, newViewValuesSearches;
+		public IReadOnlyList<HashSet<string>> ViewValuesSearches
 		{
 			get => newViewValuesSearches;
 			private set
