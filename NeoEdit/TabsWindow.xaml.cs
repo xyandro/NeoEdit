@@ -59,7 +59,12 @@ namespace NeoEdit.Program
 		}
 
 		readonly RunOnceTimer activateTabsTimer, drawTimer;
-		public void QueueActivateTabs() => Dispatcher.Invoke(() => activateTabsTimer.Start());
+		public void QueueActivateTabs()
+		{
+			if (Helpers.IsDebugBuild)
+				return;
+			Dispatcher.Invoke(() => activateTabsTimer.Start());
+		}
 
 		public void QueueDraw() => Dispatcher.Invoke(() => drawTimer.Start());
 
