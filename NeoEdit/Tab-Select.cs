@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Searchers;
 
 namespace NeoEdit.Program
 {
@@ -70,7 +71,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		IEnumerable<Range> SelectSplit(Range range, SelectSplitDialog.Result result)
+		IEnumerable<Range> SelectSplit(Range range, SelectSplitDialog.Result result, ISearcher searcher)
 		{
 			var stack = new Stack<SelectSplitEnum>();
 			stack.Push(SelectSplitEnum.None);
@@ -121,13 +122,13 @@ namespace NeoEdit.Program
 				{
 					if ((stackTop == SelectSplitEnum.None) && (pos > matchPos))
 					{
-						var match = result.Regex.Match(Text.GetString(pos, range.End - pos));
-						if (match.Success)
+						var found = searcher.Find(Text.GetString(pos, range.End - pos), pos).FirstOrDefault();
+						if (found != null)
 						{
-							if (match.Length == 0)
+							if (found.Length == 0)
 								throw new Exception("Cannot split on empty selection");
-							matchPos = match.Index + pos;
-							matchLen = match.Length;
+							matchPos = found.Start;
+							matchLen = found.Length;
 						}
 						else
 						{
@@ -419,7 +420,15 @@ namespace NeoEdit.Program
 		{
 			var result = state.Configuration as SelectSplitDialog.Result;
 			var indexes = GetExpressionResults<int>(result.Index, Selections.Count());
-			Selections = Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList();
+
+			ISearcher searcher;
+			if (result.IsRegex)
+				searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, firstMatchOnly: true);
+			else
+				searcher = new StringSearcher(result.Text, result.WholeWords, result.MatchCase, firstMatchOnly: true);
+
+
+			Selections = Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result, searcher).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList();
 		}
 
 		void Execute_Select_Selection_First()

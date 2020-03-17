@@ -14,8 +14,11 @@ namespace NeoEdit.Program.Dialogs
 	{
 		public class Result
 		{
-			public Regex Regex { get; set; }
+			public string Text { get; set; }
 			public string Index { get; set; }
+			public bool WholeWords { get; set; }
+			public bool MatchCase { get; set; }
+			public bool IsRegex { get; set; }
 			public bool IncludeResults { get; set; }
 			public bool ExcludeEmpty { get; set; }
 			public bool BalanceStrings { get; set; }
@@ -78,18 +81,13 @@ namespace NeoEdit.Program.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			var text = Text;
-			if (!IsRegex)
-				text = Regex.Escape(text);
-			var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
-			if (WholeWords)
-				text = $"\\b{text}\\b";
-			if (!MatchCase)
-				options |= RegexOptions.IgnoreCase;
 			result = new Result
 			{
-				Regex = new Regex(text, options),
+				Text = Text,
 				Index = Index,
+				WholeWords = WholeWords,
+				MatchCase = MatchCase,
+				IsRegex = IsRegex,
 				IncludeResults = IncludeResults,
 				ExcludeEmpty = ExcludeEmpty,
 				BalanceStrings = BalanceStrings,

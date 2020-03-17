@@ -33,9 +33,12 @@ namespace NeoEdit.Program.Searchers
 			var result = new List<Range>();
 			foreach (var regex in regexes)
 			{
-				var matches = regex.Matches(input).Cast<Match>();
+				var matches = firstMatchOnly ? new List<Match> { regex.Match(input) } : regex.Matches(input).Cast<Match>();
 				foreach (var match in matches)
 				{
+					if (!match.Success)
+						continue;
+
 					if ((!regexGroups) || (match.Groups.Count == 1))
 						result.Add(Range.FromIndex(match.Index + addOffset, match.Length));
 					else
