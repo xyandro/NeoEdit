@@ -30,12 +30,12 @@ namespace NeoEdit.Program
 			var clipboardDataMap = AllTabs.ToDictionary(x => x, x => empty);
 
 			var activeTabs = SortedActiveTabs;
-			if (NEClipboard.Current.Count == activeTabs.Count)
-				NEClipboard.Current.ForEach((cb, index) => clipboardDataMap[activeTabs[index]] = Tuple.Create(cb, NEClipboard.Current.IsCut));
-			else if (NEClipboard.Current.ChildCount == activeTabs.Count)
-				NEClipboard.Current.Strings.ForEach((str, index) => clipboardDataMap[activeTabs[index]] = new Tuple<IReadOnlyList<string>, bool?>(new List<string> { str }, NEClipboard.Current.IsCut));
+			if (NEClipboard.Current.Count == UnsortedActiveTabsCount)
+				NEClipboard.Current.ForEach((cb, index) => clipboardDataMap[activeTabs.GetIndex(index)] = Tuple.Create(cb, NEClipboard.Current.IsCut));
+			else if (NEClipboard.Current.ChildCount == UnsortedActiveTabsCount)
+				NEClipboard.Current.Strings.ForEach((str, index) => clipboardDataMap[activeTabs.GetIndex(index)] = new Tuple<IReadOnlyList<string>, bool?>(new List<string> { str }, NEClipboard.Current.IsCut));
 			else if (((NEClipboard.Current.Count == 1) || (NEClipboard.Current.Count == NEClipboard.Current.ChildCount)) && (NEClipboard.Current.ChildCount == activeTabs.Sum(tab => tab.Selections.Count)))
-				NEClipboard.Current.Strings.Take(activeTabs.Select(tab => tab.Selections.Count)).ForEach((obj, index) => clipboardDataMap[activeTabs[index]] = new Tuple<IReadOnlyList<string>, bool?>(obj.ToList(), NEClipboard.Current.IsCut));
+				NEClipboard.Current.Strings.Take(activeTabs.Select(tab => tab.Selections.Count)).ForEach((obj, index) => clipboardDataMap[activeTabs.GetIndex(index)] = new Tuple<IReadOnlyList<string>, bool?>(obj.ToList(), NEClipboard.Current.IsCut));
 			else
 			{
 				var strs = NEClipboard.Current.Strings;
@@ -53,7 +53,7 @@ namespace NeoEdit.Program
 
 			if (keysAndValues[kvIndex].Count == 1)
 				AllTabs.ForEach(tab => keysAndValuesMap[tab] = keysAndValues[kvIndex][0]);
-			else if (keysAndValues[kvIndex].Count == UnsortedActiveTabs.Count)
+			else if (keysAndValues[kvIndex].Count == UnsortedActiveTabsCount)
 				SortedActiveTabs.ForEach((tab, index) => keysAndValuesMap[tab] = keysAndValues[kvIndex][index]);
 
 			return keysAndValuesMap;
@@ -321,7 +321,7 @@ namespace NeoEdit.Program
 		{
 			if ((canReplace) && (!index.HasValue) && (Focused != null) && (Focused.Empty()) && (oldAllTabs.Contains(Focused)))
 			{
-				index = AllTabs.IndexOf(Focused);
+				index = AllTabs.FindIndex(Focused);
 				RemoveTab(Focused);
 			}
 
@@ -352,7 +352,7 @@ namespace NeoEdit.Program
 
 		public int GetTabIndex(Tab tab, bool activeOnly = false)
 		{
-			var index = (activeOnly ? SortedActiveTabs : AllTabs).IndexOf(tab);
+			var index = (activeOnly ? SortedActiveTabs : AllTabs).FindIndex(tab);
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;
@@ -360,20 +360,20 @@ namespace NeoEdit.Program
 
 		void MovePrevNext(int offset, bool shiftDown, bool orderByActive = false)
 		{
-			if (AllTabs.Count == 0)
+			if (AllTabsCount == 0)
 				return;
 
 			Tab tab;
 			if (Focused == null)
-				tab = AllTabs[0];
+				tab = AllTabs.GetIndex(0);
 			else
 			{
-				var tabs = orderByActive ? AllTabs.OrderByDescending(x => x.LastActive).ToList() as IReadOnlyList<Tab> : AllTabs;
-				var index = tabs.IndexOf(Focused) + offset;
+				var tabs = (orderByActive ? AllTabs.OrderByDescending(x => x.LastActive).ToList() : AllTabs) as IList<Tab>;
+				var index = tabs.FindIndex(Focused) + offset;
 				if (index < 0)
-					index += AllTabs.Count;
-				if (index >= AllTabs.Count)
-					index -= AllTabs.Count;
+					index += AllTabsCount;
+				if (index >= AllTabsCount)
+					index -= AllTabsCount;
 				tab = tabs[index];
 			}
 			if (!shiftDown)

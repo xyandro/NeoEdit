@@ -122,11 +122,9 @@ namespace NeoEdit.Program
 			}
 		}
 
-		public static int IndexOf<TSource>(this IEnumerable<TSource> source, TSource value) where TSource : class
+		public static int FindIndex<TSource>(this IEnumerable<TSource> source, TSource value) where TSource : class
 		{
-			if (source is OrderedHashSet<TSource> hashSet)
-				return hashSet.IndexOf(value);
-			if (source is List<TSource> list)
+			if (source is IList<TSource> list)
 				return list.IndexOf(value);
 
 			var index = 0;
@@ -137,6 +135,20 @@ namespace NeoEdit.Program
 				++index;
 			}
 			return -1;
+		}
+
+		public static TSource GetIndex<TSource>(this IEnumerable<TSource> source, int index) where TSource : class
+		{
+			if (source is IList<TSource> list)
+				return list[index];
+
+			foreach (var item in source)
+			{
+				if (index == 0)
+					return item;
+				--index;
+			}
+			throw new IndexOutOfRangeException();
 		}
 
 		public static bool Matches<TSource>(this IEnumerable<TSource> source1, IEnumerable<TSource> source2)

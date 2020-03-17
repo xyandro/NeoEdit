@@ -13,8 +13,17 @@ namespace NeoEdit.Program
 				throw new Exception("Must start transaction before editing data");
 		}
 
+		#region AllTabs
+		int nextAllTabsHash = 1, oldAllTabsHash = 1, newAllTabsHash = 1;
+		public int AllTabsHash => newAllTabsHash;
+
 		OrderedHashSet<Tab> oldAllTabs, newAllTabs;
-		public IReadOnlyOrderedHashSet<Tab> AllTabs => newAllTabs;
+		public IEnumerable<Tab> AllTabs => newAllTabs;
+
+		void NewAllTabsUpdated()
+		{
+			newAllTabsHash = ++nextAllTabsHash;
+		}
 
 		public void InsertTab(Tab tab, int? index = null)
 		{
@@ -32,13 +41,14 @@ namespace NeoEdit.Program
 			if (newAllTabs == oldAllTabs)
 				newAllTabs = new OrderedHashSet<Tab>(newAllTabs);
 			newAllTabs.Insert(index ?? newAllTabs.Count, tab);
-			sortedActiveTabs = null;
+			NewAllTabsUpdated();
 			tab.Tabs = this;
 
-			if (!newActiveTabs.Except(oldAllTabs).Any())
+			if (!newActiveTabs.Where(x => !oldAllTabs.Contains(x)).Any())
 				ClearAllActive();
 
 			newActiveTabs.Add(tab);
+			NewActiveTabsUpdated();
 			if (newFocused == null)
 				newFocused = tab;
 		}
@@ -59,13 +69,16 @@ namespace NeoEdit.Program
 			if (newAllTabs == oldAllTabs)
 				newAllTabs = new OrderedHashSet<Tab>(newAllTabs);
 			newAllTabs.Remove(tab);
-			sortedActiveTabs = null;
+			NewAllTabsUpdated();
 			tab.Tabs = null;
 
 			if (newActiveTabs == oldActiveTabs)
 				newActiveTabs = new OrderedHashSet<Tab>(newActiveTabs);
 			if (newActiveTabs.Contains(tab))
+			{
 				newActiveTabs.Remove(tab);
+				NewActiveTabsUpdated();
+			}
 			if (newFocused == tab)
 				if (newActiveTabs.Count == 0)
 					newFocused = null;
@@ -76,22 +89,40 @@ namespace NeoEdit.Program
 			{
 				newFocused = newAllTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
 				if (newFocused != null)
+				{
 					newActiveTabs.Add(newFocused);
+					NewActiveTabsUpdated();
+				}
 			}
 
 			if (newFocused != null)
 				AddToTransaction(newFocused);
 		}
 
+		public int AllTabsCount => newAllTabs.Count;
+		#endregion
+
+		#region ActiveTabs
+		int nextActiveTabsHash = 1, oldActiveTabsHash = 1, newActiveTabsHash = 1;
+
 		OrderedHashSet<Tab> oldActiveTabs, newActiveTabs;
-		public IReadOnlyOrderedHashSet<Tab> UnsortedActiveTabs => newActiveTabs;
+
+		void NewActiveTabsUpdated()
+		{
+			newActiveTabsHash = ++nextActiveTabsHash;
+			sortedActiveTabs = null;
+		}
+
+		public int ActiveTabsHash => newActiveTabsHash;
+		public IEnumerable<Tab> UnsortedActiveTabs => newActiveTabs;
+		public int UnsortedActiveTabsCount => newActiveTabs.Count;
 		IReadOnlyList<Tab> sortedActiveTabs;
-		public IReadOnlyList<Tab> SortedActiveTabs
+		public IEnumerable<Tab> SortedActiveTabs
 		{
 			get
 			{
 				if (sortedActiveTabs == null)
-					sortedActiveTabs = AllTabs.Intersect(newActiveTabs).ToList();
+					sortedActiveTabs = AllTabs.Where(tab => newActiveTabs.Contains(tab)).ToList();
 				return sortedActiveTabs;
 			}
 		}
@@ -99,13 +130,16 @@ namespace NeoEdit.Program
 		public void ClearAllActive()
 		{
 			EnsureInTransaction();
+
 			newActiveTabs = new OrderedHashSet<Tab>();
+			NewActiveTabsUpdated();
 			newFocused = null;
 		}
 
 		public void SetActive(Tab tab, bool active = true)
 		{
 			EnsureInTransaction();
+
 			if (tab == null)
 				throw new ArgumentNullException();
 			if (newActiveTabs.Contains(tab) == active)
@@ -118,18 +152,24 @@ namespace NeoEdit.Program
 				AddToTransaction(tab);
 
 				newActiveTabs.Add(tab);
+				NewActiveTabsUpdated();
 				if (newFocused == null)
 					newFocused = tab;
 			}
 			else
 			{
 				newActiveTabs.Remove(tab);
+				NewActiveTabsUpdated();
 				if (newFocused == tab)
 					newFocused = newActiveTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
 			}
 			sortedActiveTabs = null;
 		}
 
+		public bool IsActive(Tab tab) => newActiveTabs.Contains(tab);
+		#endregion
+
+		#region Focused
 		Tab oldFocused, newFocused;
 		public Tab Focused
 		{
@@ -142,8 +182,17 @@ namespace NeoEdit.Program
 				newFocused = value;
 			}
 		}
+		#endregion
 
-		public bool IsActive(Tab tab) => newActiveTabs.Contains(tab);
+		HashSet<Tab> transactionTabs;
+		void AddToTransaction(Tab tab)
+		{
+			if (transactionTabs.Contains(tab))
+				return;
+			transactionTabs.Add(tab);
+			tab.BeginTransaction(state);
+		}
+
 
 		int? oldColumns = 1, newColumns = 1;
 		public int? Columns
@@ -189,22 +238,13 @@ namespace NeoEdit.Program
 			}
 		}
 
-		void AddToTransaction(Tab tab)
-		{
-			if (transactionTabs.Contains(tab))
-				return;
-			transactionTabs.Add(tab);
-			tab.BeginTransaction(state);
-		}
-
-		HashSet<Tab> transactionTabs;
 		void BeginTransaction(ExecuteState state)
 		{
 			if (this.state != null)
 				throw new Exception("Already in a transaction");
 			this.state = state;
 			transactionTabs = new HashSet<Tab>();
-			UnsortedActiveTabs.ForEach(AddToTransaction);
+			newActiveTabs.ForEach(AddToTransaction);
 		}
 
 		void Rollback()
@@ -213,8 +253,9 @@ namespace NeoEdit.Program
 
 			newAllTabs = oldAllTabs;
 			newActiveTabs = oldActiveTabs;
+			newAllTabsHash = oldAllTabsHash;
+			newActiveTabsHash = oldActiveTabsHash;
 			newFocused = oldFocused;
-			newColumns = oldColumns;
 			newRows = oldRows;
 			newMaxColumns = oldMaxColumns;
 			newMaxRows = oldMaxRows;
@@ -231,15 +272,17 @@ namespace NeoEdit.Program
 
 			if (oldAllTabs != newAllTabs)
 			{
-				oldAllTabs.Except(newAllTabs).Null(tab => tab.Tabs).ForEach(tab => tab.Closed());
+				oldAllTabs.Null(tab => tab.Tabs).Where(tab => !newAllTabs.Contains(tab)).ForEach(tab => tab.Closed());
 				oldAllTabs = newAllTabs;
 			}
 			if (oldActiveTabs != newActiveTabs)
 			{
 				var now = DateTime.Now;
 				newActiveTabs.ForEach(x => x.LastActive = now);
+				oldActiveTabs = newActiveTabs;
 			}
-			oldActiveTabs = newActiveTabs;
+			oldAllTabsHash = newAllTabsHash;
+			oldActiveTabsHash = newActiveTabsHash;
 			oldFocused = newFocused;
 			oldColumns = newColumns;
 			oldRows = newRows;
