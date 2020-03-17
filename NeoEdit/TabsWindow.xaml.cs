@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Program.Controls;
@@ -55,7 +55,13 @@ namespace NeoEdit.Program
 			state.TabsWindow = this;
 			if (configure)
 				state.Modifiers = Keyboard.Modifiers;
-			return Tabs.HandleCommand(state, configure);
+			if (!Tabs.HandleCommand(state, configure))
+				return false;
+
+			if ((state.Command == NECommand.File_Exit) && (state.Configuration == null))
+				Close();
+
+			return true;
 		}
 
 		readonly RunOnceTimer activateTabsTimer, drawTimer;
@@ -280,27 +286,17 @@ namespace NeoEdit.Program
 			Tabs.InsertTab(tab, newIndex);
 		}
 
-		//TODO
-		//protected override void OnClosing(CancelEventArgs e)
-		//{
-		//	var saveActive = ActiveTabs.ToList();
-		//	var saveFocused = Focused;
-		//	foreach (var tab in Tabs)
-		//	{
-		//		SetFocused(tab, true);
-		//		if (!tab.CanClose())
-		//		{
-		//			e.Cancel = true;
-		//			SetActive(saveActive);
-		//			SetFocused(saveFocused);
-		//			return;
-		//		}
-		//	}
-		//	Tabs.ToList().ForEach(tab => tab.Closed());
-		//	base.OnClosing(e);
+		protected override void OnClosing(CancelEventArgs e)
+		{
+			base.OnClosing(e);
+			e.Cancel = !HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = true });
+		}
 
-		//	try { Settings.WindowPosition = GetPosition(); } catch { }
-		//}
+		protected override void OnClosed(EventArgs e)
+		{
+			try { Settings.WindowPosition = GetPosition(); } catch { }
+			base.OnClosed(e);
+		}
 
 		public bool GotoTab(string fileName, int? line, int? column, int? index)
 		{

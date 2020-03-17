@@ -117,12 +117,9 @@ namespace NeoEdit.Program
 		{
 			foreach (var tab in AllTabs)
 			{
-				ClearAllActive();
-				Focused = tab;
-				state.TabsWindow.QueueDraw();
 				tab.VerifyCanClose();
+				RemoveTab(tab);
 			}
-			AllTabs.ForEach(tab => RemoveTab(tab));
 		}
 	}
 }
