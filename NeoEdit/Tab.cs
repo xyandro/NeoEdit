@@ -1669,5 +1669,20 @@ namespace NeoEdit.Program
 		}
 
 		public override string ToString() => DisplayName ?? FileName;
+
+		public void GetViewValues(out byte[] data, out bool hasSel)
+		{
+			if (Selections.Any())
+			{
+				var range = Selections[CurrentSelection];
+				data = Coder.StringToBytes(Text.GetString(range.Start, Math.Min(range.HasSelection ? range.Length : 100, Text.Length - range.Start)), CodePage);
+				hasSel = range.HasSelection;
+			}
+			else
+			{
+				data = null;
+				hasSel = false;
+			}
+		}
 	}
 }

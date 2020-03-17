@@ -392,28 +392,6 @@ namespace NeoEdit.Program
 			}
 		}
 
-		IList<byte> oldViewValuesData, newViewValuesData;
-		public IList<byte> ViewValuesData
-		{
-			get => newViewValuesData;
-			private set
-			{
-				EnsureInTransaction();
-				newViewValuesData = value;
-			}
-		}
-
-		bool oldViewValuesHasSel, newViewValuesHasSel;
-		public bool ViewValuesHasSel
-		{
-			get => newViewValuesHasSel;
-			private set
-			{
-				EnsureInTransaction();
-				newViewValuesHasSel = value;
-			}
-		}
-
 		double oldXScrollValue, newXScrollValue;
 		double XScrollValue
 		{
@@ -511,8 +489,6 @@ namespace NeoEdit.Program
 			newJumpBy = oldJumpBy;
 			newLastActive = oldLastActive;
 			newViewValues = oldViewValues;
-			newViewValuesData = oldViewValuesData;
-			newViewValuesHasSel = oldViewValuesHasSel;
 			newXScrollValue = oldXScrollValue;
 			newYScrollValue = oldYScrollValue;
 			newXScrollViewport = oldXScrollViewport;
@@ -556,8 +532,6 @@ namespace NeoEdit.Program
 			oldJumpBy = newJumpBy;
 			oldLastActive = newLastActive;
 			oldViewValues = newViewValues;
-			oldViewValuesData = newViewValuesData;
-			oldViewValuesHasSel = newViewValuesHasSel;
 			oldXScrollValue = newXScrollValue;
 			oldYScrollValue = newYScrollValue;
 			oldXScrollViewport = newXScrollViewport;
