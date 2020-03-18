@@ -111,7 +111,7 @@
 		</GroupBox>
 
 		<GroupBox Name="strings" Header="Strings" Margin="4,0,4,4" VerticalAlignment="Top" HorizontalAlignment="Stretch" MaxHeight="200">
-			<ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
+			<ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False" Template="{StaticResource ScrollViewerTemplate}">
 				<Grid x:Name="stringsGrid" Margin="3,0">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"/>
