@@ -13,7 +13,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_ViewBinary() => ViewBinary = state.MultiStatus != true;
 
-		HashSet<Coder.CodePage> Configure_Window_ViewBinaryCodePages() => CodePagesDialog.Run(state.TabsWindow, ViewBinaryCodePages);
+		HashSet<Coder.CodePage> Configure_Window_ViewBinaryCodePages() => CodePagesDialog.Run(state.Window, ViewBinaryCodePages);
 
 		void Execute_Window_ViewBinaryCodePages() => ViewBinaryCodePages = state.Configuration as HashSet<Coder.CodePage>;
 	}

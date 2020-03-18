@@ -71,7 +71,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		object Configure_File_SaveCopy_SaveCopyByExpression() => GetExpressionDialog.Run(state.TabsWindow, GetVariables(), Selections.Count);
+		object Configure_File_SaveCopy_SaveCopyByExpression() => GetExpressionDialog.Run(state.Window, GetVariables(), Selections.Count);
 
 		void Execute_File_SaveCopy_SaveCopyClipboard(bool copyOnly = false)
 		{
@@ -84,7 +84,7 @@ namespace NeoEdit.Program
 			if (File.Exists(newFileName))
 			{
 				if (!state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyClipboard)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyClipboard)] = new Message(state.TabsWindow)
+					state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyClipboard)] = new Message(state.Window)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -111,7 +111,7 @@ namespace NeoEdit.Program
 			if (File.Exists(newFileName))
 			{
 				if (!state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyByExpression)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyByExpression)] = new Message(state.TabsWindow)
+					state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyByExpression)] = new Message(state.Window)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -148,7 +148,7 @@ namespace NeoEdit.Program
 			SetFileName(fileName);
 		}
 
-		object Configure_File_Operations_RenameByExpression() => GetExpressionDialog.Run(state.TabsWindow, GetVariables(), Selections.Count);
+		object Configure_File_Operations_RenameByExpression() => GetExpressionDialog.Run(state.Window, GetVariables(), Selections.Count);
 
 		void Execute_File_Operations_RenameClipboard()
 		{
@@ -161,7 +161,7 @@ namespace NeoEdit.Program
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
 				if (!state.SavedAnswers[nameof(Execute_File_Operations_RenameClipboard)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Operations_RenameClipboard)] = new Message(state.TabsWindow)
+					state.SavedAnswers[nameof(Execute_File_Operations_RenameClipboard)] = new Message(state.Window)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -194,7 +194,7 @@ namespace NeoEdit.Program
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
 				if (!state.SavedAnswers[nameof(Execute_File_Operations_RenameByExpression)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Operations_RenameByExpression)] = new Message(state.TabsWindow)
+					state.SavedAnswers[nameof(Execute_File_Operations_RenameByExpression)] = new Message(state.Window)
 					{
 						Title = "Confirm",
 						Text = "File already exists; overwrite?",
@@ -221,7 +221,7 @@ namespace NeoEdit.Program
 				return;
 
 			if (!state.SavedAnswers[nameof(Execute_File_Operations_Delete)].HasFlag(MessageOptions.All))
-				state.SavedAnswers[nameof(Execute_File_Operations_Delete)] = new Message(state.TabsWindow)
+				state.SavedAnswers[nameof(Execute_File_Operations_Delete)] = new Message(state.Window)
 				{
 					Title = "Confirm",
 					Text = "Are you sure you want to delete this file?",
@@ -288,7 +288,7 @@ namespace NeoEdit.Program
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
 				if (!state.SavedAnswers[nameof(Execute_File_Refresh)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Refresh)] = new Message(state.TabsWindow)
+					state.SavedAnswers[nameof(Execute_File_Refresh)] = new Message(state.Window)
 					{
 						Title = "Confirm",
 						Text = "This file has been updated on disk. Reload?",
@@ -311,7 +311,7 @@ namespace NeoEdit.Program
 			if (IsModified)
 			{
 				if (!state.SavedAnswers[nameof(Execute_File_Revert)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Revert)] = new Message(state.TabsWindow)
+					state.SavedAnswers[nameof(Execute_File_Revert)] = new Message(state.Window)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes. Are you sure you want to reload?",
@@ -356,7 +356,7 @@ namespace NeoEdit.Program
 			if (files.Count > 5)
 			{
 				if (!state.SavedAnswers[nameof(Execute_File_Insert_CopiedCut)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Insert_CopiedCut)] = new Message(state.TabsWindow)
+					state.SavedAnswers[nameof(Execute_File_Insert_CopiedCut)] = new Message(state.Window)
 					{
 						Title = "Confirm",
 						Text = $"Are you sure you want to insert these {files.Count} files?",
@@ -373,7 +373,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
 
-		object Configure_File_Encoding_Encoding() => EncodingDialog.Run(state.TabsWindow, CodePage);
+		object Configure_File_Encoding_Encoding() => EncodingDialog.Run(state.Window, CodePage);
 
 		void Execute_File_Encoding_Encoding()
 		{
@@ -381,7 +381,7 @@ namespace NeoEdit.Program
 			CodePage = result.CodePage;
 		}
 
-		object Configure_File_Encoding_ReopenWithEncoding() => EncodingDialog.Run(state.TabsWindow, CodePage);
+		object Configure_File_Encoding_ReopenWithEncoding() => EncodingDialog.Run(state.Window, CodePage);
 
 		void Execute_File_Encoding_ReopenWithEncoding()
 		{
@@ -389,7 +389,7 @@ namespace NeoEdit.Program
 			if (IsModified)
 			{
 				if (!state.SavedAnswers[nameof(Execute_File_Encoding_ReopenWithEncoding)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Encoding_ReopenWithEncoding)] = new Message(state.TabsWindow)
+					state.SavedAnswers[nameof(Execute_File_Encoding_ReopenWithEncoding)] = new Message(state.Window)
 					{
 						Title = "Confirm",
 						Text = "You have unsaved changes. Are you sure you want to reload?",
@@ -404,7 +404,7 @@ namespace NeoEdit.Program
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		object Configure_File_Encoding_LineEndings() => FileEncodingLineEndingsDialog.Run(state.TabsWindow, LineEnding ?? "");
+		object Configure_File_Encoding_LineEndings() => FileEncodingLineEndingsDialog.Run(state.Window, LineEnding ?? "");
 
 		void Execute_File_Encoding_LineEndings()
 		{
@@ -427,7 +427,7 @@ namespace NeoEdit.Program
 			if (state.MultiStatus != false)
 				return "";
 			else
-				return FileSaver.GetKey(state.TabsWindow, true);
+				return FileSaver.GetKey(state.Window, true);
 		}
 
 		void Execute_File_Encrypt()

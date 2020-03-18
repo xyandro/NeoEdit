@@ -15,10 +15,13 @@ namespace NeoEdit.Program
 	{
 		void Execute_File_New_New(bool createTabs)
 		{
-			var tabsWindow = state.TabsWindow;
+			var tabs = this;
 			if (createTabs)
-				tabsWindow = new TabsWindow();
-			tabsWindow.AddTab(new Tab(), false);
+			{
+				var tabsWindow = new TabsWindow();
+				tabs = tabsWindow.Tabs;
+			}
+			tabs.AddTab(new Tab(), canReplace: false);
 		}
 
 		void Execute_File_New_FromClipboards()
@@ -69,7 +72,7 @@ namespace NeoEdit.Program
 		{
 			var files = NEClipboard.Current.Strings;
 
-			if ((files.Count > 5) && (!new Message(state.TabsWindow)
+			if ((files.Count > 5) && (!new Message(state.Window)
 			{
 				Title = "Confirm",
 				Text = $"Are you sure you want to open these {files.Count} files?",
@@ -88,9 +91,9 @@ namespace NeoEdit.Program
 			var active = SortedActiveTabs.ToList();
 			active.ForEach(tab => RemoveTab(tab));
 
-			var newWindow = new TabsWindow();
-			newWindow.SetLayout(Columns, Rows, MaxColumns, MaxRows);
-			active.ForEach(tab => newWindow.AddTab(tab));
+			var tabsWindow = new TabsWindow();
+			tabsWindow.Tabs.SetLayout(Columns, Rows, MaxColumns, MaxRows);
+			active.ForEach(tab => tabsWindow.Tabs.AddTab(tab));
 		}
 
 		static void Execute_File_Shell_Integrate()

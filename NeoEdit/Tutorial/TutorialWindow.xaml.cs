@@ -71,11 +71,11 @@ namespace NeoEdit.Program.Tutorial
 			catch (Exception ex) { MessageBox.Show(ex.Message); }
 		}
 
-		public TutorialWindow(Tabs tabs, Window owner)
+		public TutorialWindow(Tabs tabs)
 		{
 			this.tabs = tabs;
 			InitializeComponent();
-			Owner = owner;
+			Owner = tabs.TabsWindow;
 
 			if (Helpers.IsDebugBuild)
 			{

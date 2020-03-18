@@ -66,12 +66,12 @@ namespace NeoEdit.Program
 				var shutdownData = string.IsNullOrWhiteSpace(clParams.Wait) ? null : new ShutdownData(clParams.Wait, clParams.Files.Count);
 				var tabsWindow = default(TabsWindow);
 				if (!clParams.Diff)
-					tabsWindow = UIHelper<TabsWindow>.GetAllWindows().OrderByDescending(x => x.LastActivated).FirstOrDefault();
+					tabsWindow = UIHelper<TabsWindow>.GetAllWindows().OrderByDescending(x => x.Tabs.LastActivated).FirstOrDefault();
 				if (tabsWindow == null)
 					tabsWindow = new TabsWindow();
 				foreach (var file in clParams.Files)
 				{
-					if ((file.Existing) && (UIHelper<TabsWindow>.GetAllWindows().OrderByDescending(x => x.LastActivated).Select(x => x.GotoTab(file.FileName, file.Line, file.Column, file.Index)).FirstOrDefault(x => x)))
+					if ((file.Existing) && (UIHelper<TabsWindow>.GetAllWindows().OrderByDescending(x => x.Tabs.LastActivated).Select(x => x.GotoTab(file.FileName, file.Line, file.Column, file.Index)).FirstOrDefault(x => x)))
 						continue;
 
 					tabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });

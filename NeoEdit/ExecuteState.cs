@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Program.Controls;
 
@@ -10,7 +11,7 @@ namespace NeoEdit.Program
 	{
 		public IEnumerable<Tab> ActiveTabs;
 		public bool Handled = true;
-		public TabsWindow TabsWindow;
+		public Window Window; // Modal dialogs need a window
 
 		public NECommand Command;
 		public bool ShiftDown;

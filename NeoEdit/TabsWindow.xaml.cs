@@ -15,11 +15,7 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		readonly Tabs Tabs;
-		public DateTime LastActivated => Tabs.LastActivated;
-		public void SetLayout(int? columns = null, int? rows = null, int? maxColumns = null, int? maxRows = null) => Tabs.SetLayout(columns, rows, maxColumns, maxRows);
-		public void AddTab(Tab tab, bool canReplace = true) => Tabs.AddTab(tab, canReplace: canReplace);
-
+		public readonly Tabs Tabs;
 
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
@@ -34,7 +30,7 @@ namespace NeoEdit.Program
 
 		public TabsWindow(bool addEmpty = false)
 		{
-			Tabs = new Tabs();
+			Tabs = new Tabs(this);
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
 			InitializeComponent();
@@ -52,7 +48,7 @@ namespace NeoEdit.Program
 
 		public bool HandleCommand(ExecuteState state, bool configure = true)
 		{
-			state.TabsWindow = this;
+			state.Window = this;
 			if (configure)
 				state.Modifiers = Keyboard.Modifiers;
 			if (!Tabs.HandleCommand(state, configure))

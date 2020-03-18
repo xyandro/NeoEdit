@@ -1452,7 +1452,7 @@ namespace NeoEdit.Program
 		bool ConfirmContinueWhenCannotEncode()
 		{
 			if (!state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.All))
-				state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(state.TabsWindow)
+				state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = new Message(state.Window)
 				{
 					Title = "Confirm",
 					Text = "The specified encoding cannot fully represent the data. Continue anyway?",
@@ -1486,7 +1486,7 @@ namespace NeoEdit.Program
 				return true;
 
 			if (!state.SavedAnswers[nameof(VerifyCanEncode)].HasFlag(MessageOptions.All))
-				state.SavedAnswers[nameof(VerifyCanEncode)] = new Message(state.TabsWindow)
+				state.SavedAnswers[nameof(VerifyCanEncode)] = new Message(state.Window)
 				{
 					Title = "Confirm",
 					Text = "The current encoding cannot fully represent this data. Switch to UTF-8?",
@@ -1527,7 +1527,7 @@ namespace NeoEdit.Program
 						throw;
 
 					if (!state.SavedAnswers[nameof(Save)].HasFlag(MessageOptions.All))
-						state.SavedAnswers[nameof(Save)] = new Message(state.TabsWindow)
+						state.SavedAnswers[nameof(Save)] = new Message(state.Window)
 						{
 							Title = "Confirm",
 							Text = "Save failed. Remove read-only flag?",
@@ -1571,7 +1571,7 @@ namespace NeoEdit.Program
 			{
 				Tabs.ShowTab(this, () =>
 				{
-					state.SavedAnswers[nameof(VerifyCanClose)] = new Message(state.TabsWindow)
+					state.SavedAnswers[nameof(VerifyCanClose)] = new Message(state.Window)
 					{
 						Title = "Confirm",
 						Text = "Do you want to save changes?",
@@ -1600,7 +1600,7 @@ namespace NeoEdit.Program
 					bytes = File.ReadAllBytes(FileName);
 			}
 
-			FileSaver.HandleDecrypt(state.TabsWindow, ref bytes, out var aesKey);
+			FileSaver.HandleDecrypt(state.Window, ref bytes, out var aesKey);
 			AESKey = aesKey;
 
 			bytes = FileSaver.Decompress(bytes, out var compressed);

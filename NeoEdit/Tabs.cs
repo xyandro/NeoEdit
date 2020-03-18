@@ -13,13 +13,16 @@ namespace NeoEdit.Program
 {
 	public partial class Tabs
 	{
+		public TabsWindow TabsWindow { get; }
+
 		ExecuteState state;
 
 		bool timeNextAction;
 		MacroAction lastAction;
 
-		public Tabs()
+		public Tabs(TabsWindow tabsWindow)
 		{
+			TabsWindow = tabsWindow;
 			oldAllTabs = newAllTabs = new OrderedHashSet<Tab>();
 			oldActiveTabs = newActiveTabs = new OrderedHashSet<Tab>();
 		}
@@ -112,7 +115,7 @@ namespace NeoEdit.Program
 				if (sw != null)
 				{
 					timeNextAction = false;
-					new Message(state.TabsWindow)
+					new Message(state.Window)
 					{
 						Title = "Timer",
 						Text = $"Elapsed time: {sw.ElapsedMilliseconds:n} ms",
@@ -141,7 +144,7 @@ namespace NeoEdit.Program
 				else
 					Rollback();
 
-				state.TabsWindow.QueueDraw();
+				TabsWindow.QueueDraw();
 			}
 
 			return commit;
@@ -400,7 +403,7 @@ namespace NeoEdit.Program
 			return true;
 		}
 
-		public void QueueActivateTabs() => state.TabsWindow.QueueActivateTabs();
+		public void QueueActivateTabs() => TabsWindow.QueueActivateTabs();
 
 		public void ShowTab(Tab tab, Action action) => ShowTab(tab, () => { action(); return 0; });
 
@@ -411,7 +414,7 @@ namespace NeoEdit.Program
 			ClearAllActive();
 			SetActive(tab);
 			Focused = tab;
-			state.TabsWindow.QueueDraw();
+			TabsWindow.QueueDraw();
 
 			var result = action();
 
