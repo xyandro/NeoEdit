@@ -76,6 +76,9 @@ namespace NeoEdit.Program
 
 		void SetScrollBarsParameters()
 		{
+			xScroll.ValueChanged -= ScrollChanged;
+			yScroll.ValueChanged -= ScrollChanged;
+
 			xScroll.ViewportSize = canvas.ActualWidth / Font.CharWidth;
 			xScroll.Minimum = 0;
 			xScroll.Maximum = Tab.MaxColumn - Math.Floor(xScroll.ViewportSize);
@@ -89,6 +92,9 @@ namespace NeoEdit.Program
 			yScroll.Value = Math.Max(yScroll.Minimum, Math.Min(Tab.StartRow, yScroll.Maximum));
 
 			//TODO yScroll.DiffList = DataQwer.GetDiffRanges();
+
+			xScroll.ValueChanged += ScrollChanged;
+			yScroll.ValueChanged += ScrollChanged;
 		}
 
 		void SetupViewBinary()

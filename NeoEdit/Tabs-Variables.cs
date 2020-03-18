@@ -236,6 +236,17 @@ namespace NeoEdit.Program
 			}
 		}
 
+		bool oldMacroVisualize = true, newMacroVisualize = true;
+		public bool MacroVisualize
+		{
+			get => newMacroVisualize;
+			set
+			{
+				EnsureInTransaction();
+				newMacroVisualize = value;
+			}
+		}
+
 		void BeginTransaction(ExecuteState state)
 		{
 			if (this.state != null)
@@ -257,6 +268,7 @@ namespace NeoEdit.Program
 			newRows = oldRows;
 			newMaxColumns = oldMaxColumns;
 			newMaxRows = oldMaxRows;
+			newMacroVisualize = oldMacroVisualize;
 
 			transactionTabs.ForEach(tab => tab.Rollback());
 			transactionTabs = null;
@@ -286,6 +298,7 @@ namespace NeoEdit.Program
 			oldRows = newRows;
 			oldMaxColumns = newMaxColumns;
 			oldMaxRows = newMaxRows;
+			oldMacroVisualize = newMacroVisualize;
 
 			transactionTabs.ForEach(tab => tab.Commit());
 			transactionTabs = null;

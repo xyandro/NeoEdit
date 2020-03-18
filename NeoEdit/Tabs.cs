@@ -251,6 +251,7 @@ namespace NeoEdit.Program
 				case NECommand.Macro_Open_Quick_12: Execute_Macro_Open_Quick(12); break;
 				case NECommand.Macro_Open_Open: Execute_File_Open_Open(state.Configuration as OpenFileDialogResult); break;
 				case NECommand.Macro_TimeNextAction: Execute_Macro_TimeNextAction(); break;
+				case NECommand.Macro_Visualize: Execute_Macro_Visualize(state.MultiStatus); break;
 				case NECommand.Window_NewWindow: Execute_Window_NewWindow(); break;
 				case NECommand.Window_Full: Execute_Window_Full(); break;
 				case NECommand.Window_Grid: Execute_Window_Grid(); break;

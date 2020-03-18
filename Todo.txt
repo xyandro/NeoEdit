@@ -4,5 +4,4 @@ Add ability to select all attributes
 Round yellow diff corners in diff scrollbar
 Don't ask for confirmation on MultiDialog cancel
 Configuration shouldn't need transaction
-Replace key command with Internal_KeyHandled
-Add option to view macros run
+Only evaluate expressions once for all tabs

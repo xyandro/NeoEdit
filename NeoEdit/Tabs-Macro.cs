@@ -58,9 +58,9 @@ namespace NeoEdit.Program
 			RecordingMacro = Macro.Load();
 		}
 
-		void Execute_Macro_Play_Quick(int quickNum) => Macro.Load(QuickMacro(quickNum), true).Play(TabsWindow, playing => MacroPlaying = playing);
+		void Execute_Macro_Play_Quick(int quickNum) => Macro.Load(QuickMacro(quickNum), true).Play(TabsWindow, MacroVisualize, playing => MacroPlaying = playing);
 
-		void Execute_Macro_Play_Play() => Macro.Load().Play(TabsWindow, playing => MacroPlaying = playing);
+		void Execute_Macro_Play_Play() => Macro.Load().Play(TabsWindow, MacroVisualize, playing => MacroPlaying = playing);
 
 		void Execute_Macro_Play_Repeat()
 		{
@@ -82,7 +82,7 @@ namespace NeoEdit.Program
 					if (!expression.Evaluate<bool>(Focused.GetVariables()))
 						return;
 
-				macro.Play(TabsWindow, playing => MacroPlaying = playing, startNext);
+				macro.Play(TabsWindow, MacroVisualize, playing => MacroPlaying = playing, startNext);
 			};
 			startNext();
 		}
@@ -97,7 +97,7 @@ namespace NeoEdit.Program
 				if (!files.Any())
 					return;
 				AddTab(new Tab(files.Dequeue()));
-				macro.Play(TabsWindow, playing => MacroPlaying = playing, startNext);
+				macro.Play(TabsWindow, MacroVisualize, playing => MacroPlaying = playing, startNext);
 			};
 			startNext();
 		}
@@ -105,5 +105,7 @@ namespace NeoEdit.Program
 		void Execute_Macro_Open_Quick(int quickNum) => AddTab(new Tab(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 
 		void Execute_Macro_TimeNextAction() => timeNextAction = true;
+
+		void Execute_Macro_Visualize(bool? multiStatus) => MacroVisualize = multiStatus != true;
 	}
 }

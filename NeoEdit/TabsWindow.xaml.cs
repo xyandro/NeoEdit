@@ -234,6 +234,7 @@ namespace NeoEdit.Program
 
 			menu.menu_File_DontExitOnClose.MultiStatus = Settings.DontExitOnClose;
 			menu.menu_Edit_EscapeClearsSelections.MultiStatus = Settings.EscapeClearsSelections;
+			menu.menu_Macro_Visualize.MultiStatus = Tabs.MacroVisualize;
 			menu.menu_Window_Font_ShowSpecial.MultiStatus = Font.ShowSpecialChars;
 
 			menu.menu_File_AutoRefresh.MultiStatus = GetMultiStatus(x => x.AutoRefresh);

@@ -701,6 +701,7 @@ namespace NeoEdit.Program
 		Macro_Open_Open,
 		[KeyGesture(Key.OemPeriod, ModifierKeys.Control)] Macro_RepeatLastAction,
 		Macro_TimeNextAction,
+		Macro_Visualize,
 		Window_NewWindow,
 		[KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Alt)] Window_Full,
 		[KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Alt)] Window_Grid,

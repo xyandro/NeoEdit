@@ -23,10 +23,10 @@ namespace NeoEdit.Program
 				actions.Add(state);
 		}
 
-		public void Play(TabsWindow tabsWindow, Action<Macro> setMacroPlaying, Action finished = null)
+		public void Play(TabsWindow tabsWindow, bool visualize, Action<Macro> setMacroPlaying, Action finished = null)
 		{
 			setMacroPlaying(this);
-			var timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
+			var timer = new DispatcherTimer(visualize ? DispatcherPriority.ApplicationIdle : DispatcherPriority.Input);
 			var ctr = 0;
 			timer.Tick += (s, e) => tabsWindow.Dispatcher.Invoke(() =>
 			{

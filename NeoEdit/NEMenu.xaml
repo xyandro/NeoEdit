@@ -1031,6 +1031,8 @@
 		<Separator/>
 		<controls:NEMenuItem Header="R_epeat last action" CommandEnum="Macro_RepeatLastAction" ToolTip="Repeat last action"/>
 		<controls:NEMenuItem Header="_Time next action" CommandEnum="Macro_TimeNextAction" ToolTip="Time next action"/>
+		<Separator/>
+		<controls:NEMenuItem x:Name="menu_Macro_Visualize" Header="_Visualize" CommandEnum="Macro_Visualize" ToolTip="Select whether to view macros run to run internally"/>
 	</MenuItem>
 	<MenuItem Header="_Window">
 		<controls:NEMenuItem Header="_New window" CommandEnum="Window_NewWindow" ToolTip="Create new window"/>
