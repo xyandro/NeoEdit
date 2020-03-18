@@ -2,6 +2,6 @@ Make modal dialogs modal for owning window only
 Print
 Add ability to select all attributes
 Round yellow diff corners in diff scrollbar
-Don't ask for confirmation on MultiDialog cancel
 Configuration shouldn't need transaction
 Only evaluate expressions once for all tabs
+Split into different modules (build time is killing me)

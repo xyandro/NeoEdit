@@ -108,11 +108,11 @@ namespace NeoEdit.Program.Dialogs
 					var runTask = Running.First(tuple => tuple.Task == finished);
 					ProgressDatas.Single(x => x.RunTask == runTask).RunTask = null;
 					Running.Remove(runTask);
-					if (finished.Exception != null)
+					if ((finished.IsCanceled) || (finished.Exception != null))
 					{
-						token.Cancel();
+						OnCancel();
 						if (Exception == null)
-							Exception = new AggregateException(finished.Exception.InnerExceptions);
+							Exception = finished.Exception;
 						Event.Set();
 					}
 					else if (finished.Status == TaskStatus.RanToCompletion)
@@ -127,8 +127,6 @@ namespace NeoEdit.Program.Dialogs
 		{
 			DialogResult = IsFinished = true;
 			Event.Set();
-			if ((token.IsCancellationRequested) && (Exception == null))
-				Exception = new Exception("Canceled");
 		}
 
 		void UpdateUIThread()
@@ -222,17 +220,9 @@ namespace NeoEdit.Program.Dialogs
 
 		void OnCancel(object sender = null, RoutedEventArgs e = null)
 		{
-			if (!new Message(this)
-			{
-				Title = "Are you sure?",
-				Text = "Are you sure you wish to cancel?",
-				Options = MessageOptions.YesNo,
-				DefaultAccept = MessageOptions.Yes,
-				DefaultCancel = MessageOptions.No,
-			}.Show().HasFlag(MessageOptions.Yes))
-				return;
-
 			token.Cancel();
+			if (Exception == null)
+				Exception = new OperationCanceledException();
 		}
 
 		static public List<TResult> RunAsync<TSource, TResult>(Window parent, string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task<TResult>> getTask, Func<TSource, string> getName = null, int concurrency = DefaultConcurrency)
