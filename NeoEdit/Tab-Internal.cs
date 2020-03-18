@@ -171,10 +171,10 @@ namespace NeoEdit.Program
 
 		void Execute_Internal_Key()
 		{
-			if (state.Handled)
+			if (state.KeyHandled)
 				return;
 
-			state.Handled = true;
+			state.KeyHandled = true;
 
 			switch (state.Key)
 			{
@@ -288,7 +288,7 @@ namespace NeoEdit.Program
 						if (!state.ControlDown)
 							Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, mult, 0, state.ShiftDown)).ToList();
 						else if (!state.ShiftDown)
-							YScrollValue += mult;
+							StartRow += mult;
 						else if (state.Key == Key.Down)
 							BlockSelDown();
 						else
@@ -329,7 +329,7 @@ namespace NeoEdit.Program
 						if (!changed)
 						{
 							sels = sels.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, 0, state.ShiftDown, indexRel: false)).ToList();
-							XScrollValue = 0;
+							StartColumn = 0;
 						}
 						Selections = sels;
 					}
@@ -347,21 +347,15 @@ namespace NeoEdit.Program
 					break;
 				case Key.PageUp:
 					if (state.ControlDown)
-						YScrollValue -= YScrollViewportFloor / 2;
+						StartRow -= Tabs.TabRows / 2;
 					else
-					{
-						var savedYScrollViewportFloor = YScrollViewportFloor;
-						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - savedYScrollViewportFloor, 0, state.ShiftDown)).ToList();
-					}
+						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - Tabs.TabRows, 0, state.ShiftDown)).ToList();
 					break;
 				case Key.PageDown:
 					if (state.ControlDown)
-						YScrollValue += YScrollViewportFloor / 2;
+						StartRow += Tabs.TabRows / 2;
 					else
-					{
-						var savedYScrollViewportFloor = YScrollViewportFloor;
-						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, savedYScrollViewportFloor - 1, 0, state.ShiftDown)).ToList();
-					}
+						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, Tabs.TabRows - 1, 0, state.ShiftDown)).ToList();
 					break;
 				case Key.Tab:
 					{
@@ -402,7 +396,7 @@ namespace NeoEdit.Program
 				case Key.Enter:
 					ReplaceSelections(TextView.DefaultEnding, false, tryJoinUndo: true);
 					break;
-				default: state.Handled = false; break;
+				default: state.KeyHandled = false; break;
 			}
 		}
 

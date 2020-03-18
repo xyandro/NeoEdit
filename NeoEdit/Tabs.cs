@@ -15,6 +15,9 @@ namespace NeoEdit.Program
 	{
 		public TabsWindow TabsWindow { get; }
 
+		public int TabColumns { get; private set; }
+		public int TabRows { get; private set; }
+
 		ExecuteState state;
 
 		bool timeNextAction;
@@ -109,7 +112,7 @@ namespace NeoEdit.Program
 					sw = Stopwatch.StartNew();
 
 				Execute();
-				if (!state.Handled)
+				if (!state.KeyHandled)
 					return false;
 
 				if (sw != null)
@@ -144,7 +147,8 @@ namespace NeoEdit.Program
 				else
 					Rollback();
 
-				TabsWindow.QueueDraw();
+				if (state.KeyHandled)
+					TabsWindow.QueueDraw();
 			}
 
 			return commit;
@@ -175,6 +179,7 @@ namespace NeoEdit.Program
 				case NECommand.Internal_MouseActivate: Execute_Internal_MouseActivate(state.Configuration as Tab); break;
 				case NECommand.Internal_CloseTab: Execute_Internal_CloseTab(state.Configuration as Tab); break;
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
+				case NECommand.Internal_Scroll: Execute_Internal_Scroll(); break;
 				case NECommand.File_New_New: Execute_File_New_New(state.ShiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;
@@ -424,6 +429,12 @@ namespace NeoEdit.Program
 			Focused = focusedTab;
 
 			return result;
+		}
+
+		public void SetTabSize(int columns, int rows)
+		{
+			TabColumns = columns;
+			TabRows = rows;
 		}
 	}
 }

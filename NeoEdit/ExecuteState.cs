@@ -10,7 +10,7 @@ namespace NeoEdit.Program
 	public class ExecuteState
 	{
 		public IEnumerable<Tab> ActiveTabs;
-		public bool Handled = true;
+		public bool KeyHandled = true;
 		public Window Window; // Modal dialogs need a window
 
 		public NECommand Command;

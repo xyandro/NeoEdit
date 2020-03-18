@@ -15,19 +15,26 @@ namespace NeoEdit.Program
 
 		void Execute_Internal_Key()
 		{
-			state.Handled = false;
+			state.KeyHandled = false;
 
 			if ((state.ControlDown) && (!state.AltDown))
 			{
-				state.Handled = true;
+				state.KeyHandled = true;
 				switch (state.Key)
 				{
 					case Key.PageUp: MovePrevNext(-1, state.ShiftDown); break;
 					case Key.PageDown: MovePrevNext(1, state.ShiftDown); break;
 					case Key.Tab: MovePrevNext(1, state.ShiftDown, true); break;
-					default: state.Handled = false; break;
+					default: state.KeyHandled = false; break;
 				}
 			}
+		}
+
+		void Execute_Internal_Scroll()
+		{
+			(Tab tab, int newColumn, int newRow) = ((Tab, int, int))state.Configuration;
+			tab.StartColumn = newColumn;
+			tab.StartRow = newRow;
 		}
 
 		void Execute_Internal_AddTab(Tab tab) => AddTab(tab);

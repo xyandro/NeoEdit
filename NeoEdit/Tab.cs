@@ -1256,7 +1256,31 @@ namespace NeoEdit.Program
 
 		List<string> GetSelectionStrings() => Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range)).ToList();
 
-		void EnsureVisible(bool a = true, bool b = true) { }
+		void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
+		{
+			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
+			if (!Selections.Any())
+				return;
+
+			var range = Selections[CurrentSelection];
+			var lineMin = TextView.GetPositionLine(range.Start);
+			var lineMax = TextView.GetPositionLine(range.End);
+			var indexMin = TextView.GetPositionIndex(range.Start, lineMin);
+			var indexMax = TextView.GetPositionIndex(range.End, lineMax);
+
+			if (centerVertically)
+			{
+				StartRow = (lineMin + lineMax - Tabs.TabRows) / 2;
+				if (centerHorizontally)
+					StartColumn = (GetColumnFromIndex(lineMin, indexMin) + GetColumnFromIndex(lineMax, indexMax) - Tabs.TabColumns) / 2;
+			}
+
+			var line = TextView.GetPositionLine(range.Cursor);
+			var index = TextView.GetPositionIndex(range.Cursor, line);
+			var x = GetColumnFromIndex(line, index);
+			StartRow = Math.Min(line, Math.Max(line - (Tabs?.TabRows ?? 1) + 1, StartRow));
+			StartColumn = Math.Min(x, Math.Max(x - (Tabs?.TabColumns ?? 1) + 1, StartColumn));
+		}
 
 		public NEVariables GetVariables()
 		{
@@ -1688,5 +1712,7 @@ namespace NeoEdit.Program
 				hasSel = false;
 			}
 		}
+
+		public void SetTabSize(int columns, int rows) => Tabs?.SetTabSize(columns, rows);
 	}
 }

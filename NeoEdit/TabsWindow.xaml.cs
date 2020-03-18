@@ -39,6 +39,7 @@ namespace NeoEdit.Program
 			activateTabsTimer = new RunOnceTimer(() => ActivateTabs());
 			drawTimer = new RunOnceTimer(() => DrawAll());
 			NEClipboard.ClipboardChanged += () => statusBar.InvalidateVisual();
+			Font.FontSizeChanged += (s, e) => QueueDraw();
 
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 

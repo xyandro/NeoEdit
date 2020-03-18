@@ -75,6 +75,7 @@ namespace NeoEdit.Program
 				EnsureInTransaction();
 				newSelections = DeOverlap(value);
 				CurrentSelection = CurrentSelection;
+				EnsureVisible();
 			}
 		}
 
@@ -414,54 +415,27 @@ namespace NeoEdit.Program
 			}
 		}
 
-		double oldXScrollValue, newXScrollValue;
-		double XScrollValue
+		int oldStartColumn, newStartColumn;
+		public int StartColumn
 		{
-			get => newXScrollValue;
+			get => newStartColumn;
 			set
 			{
 				EnsureInTransaction();
-				newXScrollValue = value;
+				newStartColumn = value;
 			}
 		}
 
-		double oldYScrollValue, newYScrollValue;
-		double YScrollValue
+		int oldStartRow, newStartRow;
+		public int StartRow
 		{
-			get => newYScrollValue;
+			get => newStartRow;
 			set
 			{
 				EnsureInTransaction();
-				newYScrollValue = value;
+				newStartRow = value;
 			}
 		}
-
-		double oldXScrollViewport, newXScrollViewport;
-		double XScrollViewport
-		{
-			get => newXScrollViewport;
-			set
-			{
-				EnsureInTransaction();
-				newXScrollViewport = value;
-			}
-		}
-
-		double oldYScrollViewport, newYScrollViewport;
-		double YScrollViewport
-		{
-			get => newYScrollViewport;
-			set
-			{
-				EnsureInTransaction();
-				newYScrollViewport = value;
-			}
-		}
-
-		int XScrollViewportFloor => (int)Math.Floor(XScrollViewport);
-		int XScrollViewportCeiling => (int)Math.Ceiling(XScrollViewport);
-		int YScrollViewportFloor => (int)Math.Floor(YScrollViewport);
-		int YScrollViewportCeiling => (int)Math.Ceiling(YScrollViewport);
 
 		UndoRedo oldUndoRedo, newUndoRedo;
 
@@ -513,10 +487,8 @@ namespace NeoEdit.Program
 			newViewBinary = oldViewBinary;
 			newViewBinaryCodePages = oldViewBinaryCodePages;
 			newViewBinarySearches = oldViewBinarySearches;
-			newXScrollValue = oldXScrollValue;
-			newYScrollValue = oldYScrollValue;
-			newXScrollViewport = oldXScrollViewport;
-			newYScrollViewport = oldYScrollViewport;
+			newStartColumn = oldStartColumn;
+			newStartRow = oldStartRow;
 
 			state = null;
 		}
@@ -558,10 +530,8 @@ namespace NeoEdit.Program
 			oldViewBinary = newViewBinary;
 			oldViewBinaryCodePages = newViewBinaryCodePages;
 			oldViewBinarySearches = newViewBinarySearches;
-			oldXScrollValue = newXScrollValue;
-			oldYScrollValue = newYScrollValue;
-			oldXScrollViewport = newXScrollViewport;
-			oldYScrollViewport = newYScrollViewport;
+			oldStartColumn = newStartColumn;
+			oldStartRow = newStartRow;
 
 			state = null;
 		}

@@ -56,35 +56,37 @@ namespace NeoEdit.Program
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
 			InitializeComponent();
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
+			xScroll.ValueChanged += ScrollChanged;
+			yScroll.ValueChanged += ScrollChanged;
 			//TODO Drop += OnDrop;
 		}
+
+		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => Tab?.Tabs.HandleCommand(new ExecuteState(NECommand.Internal_Scroll) { Configuration = (Tab, (int)xScroll.Value, (int)yScroll.Value) });
 
 		public void DrawAll()
 		{
 			if (Tab == null)
 				return;
 
-			SetupScrollBars();
 			SetupViewBinary();
 			canvas.InvalidateVisual();
 			statusBar.InvalidateVisual();
+			UpdateLayout();
 		}
 
-		void SetupScrollBars()
+		void SetScrollBarsParameters()
 		{
-			var xScrollValue = xScroll.Value;
-			var yScrollValue = yScroll.Value;
 			xScroll.ViewportSize = canvas.ActualWidth / Font.CharWidth;
 			xScroll.Minimum = 0;
 			xScroll.Maximum = Tab.MaxColumn - Math.Floor(xScroll.ViewportSize);
 			xScroll.SmallChange = 1;
-			xScroll.Value = Math.Max(xScroll.Minimum, Math.Min(xScrollValue, xScroll.Maximum));
+			xScroll.Value = Math.Max(xScroll.Minimum, Math.Min(Tab.StartColumn, xScroll.Maximum));
 
 			yScroll.ViewportSize = canvas.ActualHeight / LineHeight;
 			yScroll.Minimum = 0;
 			yScroll.Maximum = Tab.NumLines - Math.Floor(yScroll.ViewportSize);
 			yScroll.SmallChange = 1;
-			yScroll.Value = Math.Max(yScroll.Minimum, Math.Min(yScrollValue, yScroll.Maximum));
+			yScroll.Value = Math.Max(yScroll.Minimum, Math.Min(Tab.StartRow, yScroll.Maximum));
 
 			//TODO yScroll.DiffList = DataQwer.GetDiffRanges();
 		}
@@ -343,6 +345,9 @@ namespace NeoEdit.Program
 		{
 			if ((Tab == null) || (canvas.ActualWidth <= 0) || (double.IsNaN(canvas.ActualWidth)) || (canvas.ActualHeight <= 0) || (double.IsNaN(canvas.ActualHeight)) || (!canvas.IsVisible))
 				return;
+
+			Tab.SetTabSize((int)Math.Floor(canvas.ActualWidth / Font.CharWidth), (int)Math.Floor(canvas.ActualHeight / LineHeight));
+			SetScrollBarsParameters();
 
 			var drawBounds = GetDrawBounds();
 			var visibleCursor = (Tab.CurrentSelection >= 0) && (Tab.CurrentSelection < Tab.Selections.Count) ? Tab.Selections[Tab.CurrentSelection] : null;
