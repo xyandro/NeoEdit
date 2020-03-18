@@ -656,7 +656,7 @@
 		<controls:NEMenuItem Header="C_ombinations/permutations" CommandEnum="Numeric_CombinationsPermutations" ToolTip="Generate combinations/permutations"/>
 		<controls:NEMenuItem Header="_Min/max values" CommandEnum="Numeric_MinMaxValues" ToolTip="Get min/max values for various data types"/>
 	</MenuItem>
-	<MenuItem Header="_Date/time">
+	<MenuItem Header="_Date/Time">
 		<controls:NEMenuItem Header="_Now" CommandEnum="DateTime_Now" ToolTip="Get current local time"/>
 		<controls:NEMenuItem Header="UTC n_ow" CommandEnum="DateTime_UtcNow" ToolTip="Get current UTC time"/>
 		<Separator/>
