@@ -200,6 +200,13 @@
       <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CodePageCheckBox.cs" />
+    <Page Include="Controls\CodePageToggle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\CodePageToggle.xaml.cs">
+      <DependentUpon>CodePageToggle.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DiffScrollBar.cs" />
     <Compile Include="Controls\EnhancedFocusManager.cs" />
     <Compile Include="Controls\KeyGestureAttribute.cs" />
