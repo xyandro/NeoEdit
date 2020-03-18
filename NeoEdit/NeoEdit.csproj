@@ -238,19 +238,19 @@
       <DependentUpon>TabLabel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\UIHelper.cs" />
+    <Page Include="Controls\ViewBinary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\ViewBinary.xaml.cs">
+      <DependentUpon>ViewBinary.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\ViewValue.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Controls\ViewValue.xaml.cs">
       <DependentUpon>ViewValue.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Controls\ViewValues.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Controls\ViewValues.xaml.cs">
-      <DependentUpon>ViewValues.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BoolToVisibleCollapsedConverter.cs" />
     <Compile Include="Converters\BoolToVisibleHiddenConverter.cs" />
@@ -954,12 +954,12 @@
     <Compile Include="Dialogs\TextWidthDialog.xaml.cs">
       <DependentUpon>TextWidthDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ViewValuesEditValueDialog.xaml">
+    <Page Include="Dialogs\ViewBinaryEditValueDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\ViewValuesEditValueDialog.xaml.cs">
-      <DependentUpon>ViewValuesEditValueDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\ViewBinaryEditValueDialog.xaml.cs">
+      <DependentUpon>ViewBinaryEditValueDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\WCFInterceptDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

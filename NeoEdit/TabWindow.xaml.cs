@@ -65,7 +65,7 @@ namespace NeoEdit.Program
 				return;
 
 			SetupScrollBars();
-			SetupViewValues();
+			SetupViewBinary();
 			canvas.InvalidateVisual();
 			statusBar.InvalidateVisual();
 		}
@@ -89,17 +89,17 @@ namespace NeoEdit.Program
 			//TODO yScroll.DiffList = DataQwer.GetDiffRanges();
 		}
 
-		void SetupViewValues()
+		void SetupViewBinary()
 		{
-			if (!Tab.ViewValues)
+			if (!Tab.ViewBinary)
 			{
-				viewValuesControl.Visibility = Visibility.Collapsed;
+				viewBinaryControl.Visibility = Visibility.Collapsed;
 				return;
 			}
 
-			viewValuesControl.Visibility = Visibility.Visible;
-			Tab.GetViewValuesData(out var data, out var hasSel);
-			viewValues.SetData(data, hasSel, Tab.ViewValuesCodePages, Tab.ViewValuesSearches);
+			viewBinaryControl.Visibility = Visibility.Visible;
+			Tab.GetViewBinaryData(out var data, out var hasSel);
+			viewBinary.SetData(data, hasSel, Tab.ViewBinaryCodePages, Tab.ViewBinarySearches);
 		}
 
 		class DrawBounds

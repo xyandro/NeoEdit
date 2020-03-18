@@ -1048,8 +1048,8 @@
 			<controls:NEMenuItem x:Name="menu_Window_Font_ShowSpecial" Header="S_how special" CommandEnum="Window_Font_ShowSpecial" ToolTip="Toggle whether to show special characters"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem x:Name="menu_Window_ViewValues" Header="View _values" CommandEnum="Window_ViewValues" ToolTip="View binary values"/>
-		<controls:NEMenuItem Header="View values co_de pages" CommandEnum="Window_ViewValuesCodePages" ToolTip="Set codepages to view binary values"/>
+		<controls:NEMenuItem x:Name="menu_Window_ViewBinary" Header="View _binary" CommandEnum="Window_ViewBinary" ToolTip="View binary values"/>
+		<controls:NEMenuItem Header="View binary co_de pages" CommandEnum="Window_ViewBinaryCodePages" ToolTip="Set codepages to view binary values"/>
 		<Separator/>
 		<MenuItem Header="_Select">
 			<controls:NEMenuItem Header="_All tabs" CommandEnum="Window_Select_AllTabs" ToolTip="Select all files"/>

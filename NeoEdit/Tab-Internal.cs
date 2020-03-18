@@ -238,9 +238,9 @@ namespace NeoEdit.Program
 					}
 					break;
 				case Key.Escape:
-					if (ViewValuesSearches != null)
+					if (ViewBinarySearches != null)
 					{
-						ViewValuesSearches = null;
+						ViewBinarySearches = null;
 						break;
 					}
 					//DragFiles = null;

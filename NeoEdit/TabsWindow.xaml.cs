@@ -264,7 +264,7 @@ namespace NeoEdit.Program
 			menu.menu_Content_HighlightSyntax.MultiStatus = GetMultiStatus(x => x.HighlightSyntax);
 			menu.menu_Content_StrictParsing.MultiStatus = GetMultiStatus(x => x.StrictParsing);
 			menu.menu_Content_KeepSelections.MultiStatus = GetMultiStatus(x => x.KeepSelections);
-			menu.menu_Window_ViewValues.MultiStatus = GetMultiStatus(x => x.ViewValues);
+			menu.menu_Window_ViewBinary.MultiStatus = GetMultiStatus(x => x.ViewBinary);
 		}
 
 		void DrawAll()

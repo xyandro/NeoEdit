@@ -4,14 +4,14 @@ using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
 {
-	partial class ViewValuesEditValueDialog
+	partial class ViewBinaryEditValueDialog
 	{
 		[DepProp]
-		public string Value { get { return UIHelper<ViewValuesEditValueDialog>.GetPropValue<string>(this); } set { UIHelper<ViewValuesEditValueDialog>.SetPropValue(this, value); } }
+		public string Value { get { return UIHelper<ViewBinaryEditValueDialog>.GetPropValue<string>(this); } set { UIHelper<ViewBinaryEditValueDialog>.SetPropValue(this, value); } }
 
-		static ViewValuesEditValueDialog() => UIHelper<ViewValuesEditValueDialog>.Register();
+		static ViewBinaryEditValueDialog() => UIHelper<ViewBinaryEditValueDialog>.Register();
 
-		ViewValuesEditValueDialog(string value)
+		ViewBinaryEditValueDialog(string value)
 		{
 			InitializeComponent();
 			Value = value;
@@ -21,7 +21,7 @@ namespace NeoEdit.Program.Dialogs
 
 		public static string Run(Window parent, string value)
 		{
-			var dialog = new ViewValuesEditValueDialog(value) { Owner = parent };
+			var dialog = new ViewBinaryEditValueDialog(value) { Owner = parent };
 			if (!dialog.ShowDialog())
 				throw new OperationCanceledException();
 			return dialog.Value;

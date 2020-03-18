@@ -204,7 +204,7 @@ namespace NeoEdit.Program
 				}
 			}
 
-			return EditFindFindDialog.Run(state.TabsWindow, text, selectionOnly, ViewValuesCodePages, GetVariables());
+			return EditFindFindDialog.Run(state.TabsWindow, text, selectionOnly, ViewBinaryCodePages, GetVariables());
 		}
 
 		void Execute_Edit_Find_Find()
@@ -250,12 +250,12 @@ namespace NeoEdit.Program
 			else
 				stringsToFind = Enumerable.Repeat(new List<(string, bool)> { (result.Text, result.MatchCase) }, selections.Count).ToList();
 
-			ViewValuesSearches = null;
+			ViewBinarySearches = null;
 			// If the strings are binary convert them to all codepages
 			if (result.IsBinary)
 			{
-				ViewValuesCodePages = result.CodePages;
-				ViewValuesSearches = stringsToFind.SelectMany().Distinct().GroupBy(x => x.Item2).Select(g => new HashSet<string>(g.Select(x => x.Item1), g.Key ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)).ToList();
+				ViewBinaryCodePages = result.CodePages;
+				ViewBinarySearches = stringsToFind.SelectMany().Distinct().GroupBy(x => x.Item2).Select(g => new HashSet<string>(g.Select(x => x.Item1), g.Key ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)).ToList();
 				var mapping = stringsToFind
 					.Distinct()
 					.ToDictionary(

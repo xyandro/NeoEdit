@@ -11,10 +11,10 @@ namespace NeoEdit.Program
 			ReplaceSelections((Tabs.GetTabIndex(this, activeOnly) + 1).ToString());
 		}
 
-		void Execute_Window_ViewValues() => ViewValues = state.MultiStatus != true;
+		void Execute_Window_ViewBinary() => ViewBinary = state.MultiStatus != true;
 
-		HashSet<Coder.CodePage> Configure_Window_ViewValuesCodePages() => CodePagesDialog.Run(state.TabsWindow, ViewValuesCodePages);
+		HashSet<Coder.CodePage> Configure_Window_ViewBinaryCodePages() => CodePagesDialog.Run(state.TabsWindow, ViewBinaryCodePages);
 
-		void Execute_Window_ViewValuesCodePages() => ViewValuesCodePages = state.Configuration as HashSet<Coder.CodePage>;
+		void Execute_Window_ViewBinaryCodePages() => ViewBinaryCodePages = state.Configuration as HashSet<Coder.CodePage>;
 	}
 }

@@ -27,8 +27,8 @@
 
 		<StackPanel Grid.Row="1" Grid.Column="1"/>
 
-		<Border x:Name="viewValuesControl" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="#c0c0c0" BorderThickness="0,2,0,0">
-			<controls:ViewValues x:Name="viewValues"/>
+		<Border x:Name="viewBinaryControl" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="#c0c0c0" BorderThickness="0,2,0,0">
+			<controls:ViewBinary x:Name="viewBinary"/>
 		</Border>
 
 		<Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" BorderBrush="#c0c0c0" BorderThickness="0,2,0,0" Padding="4,0">

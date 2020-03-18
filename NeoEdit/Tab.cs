@@ -28,7 +28,7 @@ namespace NeoEdit.Program
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, new List<Range>());
 			newUndoRedo = new UndoRedo();
-			ViewValuesCodePages = new HashSet<Coder.CodePage>(CodePagesDialog.DefaultCodePages);
+			ViewBinaryCodePages = new HashSet<Coder.CodePage>(CodePagesDialog.DefaultCodePages);
 
 			fileName = fileName?.Trim('"');
 			this.shutdownData = shutdownData;
@@ -562,7 +562,7 @@ namespace NeoEdit.Program
 				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: return Configure_Select_Repeats_Tabs_CommonNonCommon(false);
 				case NECommand.Select_Split: return Configure_Select_Split();
 				case NECommand.Select_Selection_ToggleAnchor: return Configure_Select_Selection_ToggleAnchor();
-				case NECommand.Window_ViewValuesCodePages: return Configure_Window_ViewValuesCodePages();
+				case NECommand.Window_ViewBinaryCodePages: return Configure_Window_ViewBinaryCodePages();
 				default: return null;
 			}
 		}
@@ -1192,8 +1192,8 @@ namespace NeoEdit.Program
 				case NECommand.Select_Selection_RemoveAfterCurrent: Execute_Select_Selection_RemoveAfterCurrent(); break;
 				case NECommand.Window_TabIndex: Execute_Window_TabIndex(false); break;
 				case NECommand.Window_ActiveTabIndex: Execute_Window_TabIndex(true); break;
-				case NECommand.Window_ViewValues: Execute_Window_ViewValues(); break;
-				case NECommand.Window_ViewValuesCodePages: Execute_Window_ViewValuesCodePages(); break;
+				case NECommand.Window_ViewBinary: Execute_Window_ViewBinary(); break;
+				case NECommand.Window_ViewBinaryCodePages: Execute_Window_ViewBinaryCodePages(); break;
 			}
 		}
 		#endregion
@@ -1674,7 +1674,7 @@ namespace NeoEdit.Program
 
 		public override string ToString() => DisplayName ?? FileName;
 
-		public void GetViewValuesData(out byte[] data, out bool hasSel)
+		public void GetViewBinaryData(out byte[] data, out bool hasSel)
 		{
 			if (Selections.Any())
 			{

@@ -381,36 +381,36 @@ namespace NeoEdit.Program
 			}
 		}
 
-		bool oldViewValues, newViewValues;
-		public bool ViewValues
+		bool oldViewBinary, newViewBinary;
+		public bool ViewBinary
 		{
-			get => newViewValues;
+			get => newViewBinary;
 			private set
 			{
 				EnsureInTransaction();
-				newViewValues = value;
+				newViewBinary = value;
 			}
 		}
 
-		HashSet<Coder.CodePage> oldViewValuesCodePages, newViewValuesCodePages;
-		public HashSet<Coder.CodePage> ViewValuesCodePages
+		HashSet<Coder.CodePage> oldViewBinaryCodePages, newViewBinaryCodePages;
+		public HashSet<Coder.CodePage> ViewBinaryCodePages
 		{
-			get => newViewValuesCodePages;
+			get => newViewBinaryCodePages;
 			private set
 			{
 				EnsureInTransaction();
-				newViewValuesCodePages = value;
+				newViewBinaryCodePages = value;
 			}
 		}
 
-		IReadOnlyList<HashSet<string>> oldViewValuesSearches, newViewValuesSearches;
-		public IReadOnlyList<HashSet<string>> ViewValuesSearches
+		IReadOnlyList<HashSet<string>> oldViewBinarySearches, newViewBinarySearches;
+		public IReadOnlyList<HashSet<string>> ViewBinarySearches
 		{
-			get => newViewValuesSearches;
+			get => newViewBinarySearches;
 			private set
 			{
 				EnsureInTransaction();
-				newViewValuesSearches = value;
+				newViewBinarySearches = value;
 			}
 		}
 
@@ -510,9 +510,9 @@ namespace NeoEdit.Program
 			newStrictParsing = oldStrictParsing;
 			newJumpBy = oldJumpBy;
 			newLastActive = oldLastActive;
-			newViewValues = oldViewValues;
-			newViewValuesCodePages = oldViewValuesCodePages;
-			newViewValuesSearches = oldViewValuesSearches;
+			newViewBinary = oldViewBinary;
+			newViewBinaryCodePages = oldViewBinaryCodePages;
+			newViewBinarySearches = oldViewBinarySearches;
 			newXScrollValue = oldXScrollValue;
 			newYScrollValue = oldYScrollValue;
 			newXScrollViewport = oldXScrollViewport;
@@ -555,9 +555,9 @@ namespace NeoEdit.Program
 			oldStrictParsing = newStrictParsing;
 			oldJumpBy = newJumpBy;
 			oldLastActive = newLastActive;
-			oldViewValues = newViewValues;
-			oldViewValuesCodePages = newViewValuesCodePages;
-			oldViewValuesSearches = newViewValuesSearches;
+			oldViewBinary = newViewBinary;
+			oldViewBinaryCodePages = newViewBinaryCodePages;
+			oldViewBinarySearches = newViewBinarySearches;
 			oldXScrollValue = newXScrollValue;
 			oldYScrollValue = newYScrollValue;
 			oldXScrollViewport = newXScrollViewport;

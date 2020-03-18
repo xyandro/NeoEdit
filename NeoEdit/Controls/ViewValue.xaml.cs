@@ -94,7 +94,7 @@ namespace NeoEdit.Program.Controls
 			{
 				while (true)
 				{
-					value = ViewValuesEditValueDialog.Run(UIHelper.FindParent<Window>(this), value);
+					value = ViewBinaryEditValueDialog.Run(UIHelper.FindParent<Window>(this), value);
 					newBytes = Coder.TryStringToBytes(value, CodePage);
 					if (newBytes != null)
 						break;

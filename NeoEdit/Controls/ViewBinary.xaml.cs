@@ -6,11 +6,11 @@ using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Controls
 {
-	partial class ViewValues
+	partial class ViewBinary
 	{
-		static ViewValues() => UIHelper<ViewValues>.Register();
+		static ViewBinary() => UIHelper<ViewBinary>.Register();
 
-		public ViewValues() => InitializeComponent();
+		public ViewBinary() => InitializeComponent();
 
 		public void SetData(IList<byte> data, bool hasSel, HashSet<Coder.CodePage> codePages, IReadOnlyList<HashSet<string>> searches)
 		{
