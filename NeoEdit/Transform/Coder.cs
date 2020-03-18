@@ -299,8 +299,10 @@ namespace NeoEdit.Program.Transform
 			fixed (char* outputFixed = output)
 			{
 				char* outputPtr = outputFixed;
-				for (var bytesPtr = bytesFixed + bytes.Length - 1; bytesPtr >= bytesFixed; --bytesPtr)
+				var bytesPtr = bytesFixed + bytes.Length;
+				while (bytesPtr > bytesFixed)
 				{
+					--bytesPtr;
 					*outputPtr++ = hexValue[*bytesPtr >> 4];
 					*outputPtr++ = hexValue[*bytesPtr & 15];
 				}
@@ -318,8 +320,11 @@ namespace NeoEdit.Program.Transform
 			fixed (byte* bytesFixed = bytes)
 			{
 				char* inputPtr = inputFixed;
-				for (var bytesPtr = bytesFixed + bytes.Length - 1; bytesPtr >= bytesFixed; --bytesPtr)
+				var bytesPtr = bytesFixed + bytes.Length;
+				while (bytesPtr > bytesFixed)
 				{
+					--bytesPtr;
+
 					var c = *inputPtr++;
 					if ((c >= '0') && (c <= '9'))
 						*bytesPtr = (byte)((c - '0') << 4);
