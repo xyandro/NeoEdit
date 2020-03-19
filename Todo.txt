@@ -5,3 +5,10 @@ Round yellow diff corners in diff scrollbar
 Configuration shouldn't need transaction
 Only evaluate expressions once for all tabs
 Split into different modules (build time is killing me)
+Refactor clipboard; only change when UI requires it, keep separate clipboard for running macros (so they don't interfere with other things system may be doing)
+Loading progress when opening lots of files
+Flag executes as being okay with parallel tabs (One at a time, .AsParallel() or .AsParallel().AsOrdered())
+Progress bar when running macros in background
+Detect brackets by greater than less than not lining up (1 > 5 vs. HashSet<int>)
+Less specific parsing (ignore method bodies, just line up {})
+Split selections on line breaks to emulate removed "multi-line" function
