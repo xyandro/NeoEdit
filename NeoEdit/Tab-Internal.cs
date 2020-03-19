@@ -425,5 +425,62 @@ namespace NeoEdit.Program
 			Replace(new List<Range> { replaceRange }, new List<string> { newStr });
 			Selections = newSels;
 		}
+
+		public void Execute_Internal_Mouse(int line, int column, int clickCount, bool? selecting)
+		{
+			var sels = Selections.ToList();
+			line = Math.Max(0, Math.Min(line, NumLines - 1));
+			column = Math.Max(0, Math.Min(column, GetLineColumnsLength(line)));
+			var index = GetIndexFromColumn(line, column, true);
+			var position = TextView.GetPosition(line, index);
+			var mouseRange = CurrentSelection < sels.Count ? sels[CurrentSelection] : null;
+
+			var currentSelection = default(Range);
+			if (selecting ?? state.ShiftDown)
+			{
+				if (mouseRange != null)
+				{
+					sels.Remove(mouseRange);
+					var anchor = mouseRange.Anchor;
+					if (clickCount != 1)
+					{
+						if (position < anchor)
+							position = GetPrevWord(position + 1);
+						else
+							position = GetNextWord(position);
+
+						if ((mouseRange.Cursor <= anchor) != (position <= anchor))
+						{
+							if (position <= anchor)
+								anchor = GetNextWord(anchor);
+							else
+								anchor = GetPrevWord(anchor);
+						}
+					}
+
+					currentSelection = new Range(position, anchor);
+				}
+			}
+			else
+			{
+				if (!state.ControlDown)
+					sels.Clear();
+
+				if (clickCount == 1)
+					currentSelection = new Range(position);
+				else
+				{
+					if (mouseRange != null)
+						sels.Remove(mouseRange);
+					currentSelection = new Range(GetNextWord(position), GetPrevWord(Math.Min(position + 1, Text.Length)));
+				}
+			}
+
+			if (currentSelection != null)
+				sels.Add(currentSelection);
+			Selections = sels;
+			if (currentSelection != null)
+				CurrentSelection = Selections.FindIndex(currentSelection);
+		}
 	}
 }

@@ -180,6 +180,7 @@ namespace NeoEdit.Program
 				case NECommand.Internal_CloseTab: Execute_Internal_CloseTab(state.Configuration as Tab); break;
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.Internal_Scroll: Execute_Internal_Scroll(); break;
+				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
 				case NECommand.File_New_New: Execute_File_New_New(state.ShiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;

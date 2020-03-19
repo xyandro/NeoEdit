@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Highlighting;
@@ -56,12 +57,10 @@ namespace NeoEdit.Program
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
 			InitializeComponent();
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
-			xScroll.ValueChanged += ScrollChanged;
-			yScroll.ValueChanged += ScrollChanged;
 			//TODO Drop += OnDrop;
 		}
 
-		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => Tab?.Tabs.HandleCommand(new ExecuteState(NECommand.Internal_Scroll) { Configuration = (Tab, (int)xScroll.Value, (int)yScroll.Value) });
+		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => Tab?.Tabs.TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Scroll) { Configuration = (Tab, (int)xScroll.Value, (int)yScroll.Value) });
 
 		public void DrawAll()
 		{
@@ -414,6 +413,41 @@ namespace NeoEdit.Program
 				pos += Separator.Length;
 			}
 			dc.DrawText(text, new Point(2, 1));
+		}
+
+		int mouseClickCount;
+		void HandleMouse(Point position, bool? selecting)
+		{
+			canvas.CaptureMouse();
+			var line = (int)(position.Y / LineHeight + yScroll.Value);
+			var column = (int)(position.X / Font.CharWidth + xScroll.Value);
+			Tab?.Tabs.TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Mouse) { Configuration = (Tab, line, column, mouseClickCount, selecting) });
+		}
+
+		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			canvas.CaptureMouse();
+			mouseClickCount = e.ClickCount;
+			HandleMouse(e.GetPosition(canvas), null);
+			e.Handled = true;
+		}
+
+		void OnCanvasMouseMove(object sender, MouseEventArgs e)
+		{
+			if (!canvas.IsMouseCaptured)
+				return;
+
+			HandleMouse(e.GetPosition(canvas), true);
+			e.Handled = true;
+		}
+
+		void OnCanvasMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			if (!canvas.IsMouseCaptured)
+				return;
+
+			canvas.ReleaseMouseCapture();
+			e.Handled = true;
 		}
 	}
 }

@@ -13,6 +13,22 @@ namespace NeoEdit.Program
 				tab.Activated();
 		}
 
+		void Execute_Internal_AddTab(Tab tab) => AddTab(tab);
+
+		void Execute_Internal_MouseActivate(Tab tab)
+		{
+			if (!state.ShiftDown)
+				ClearAllActive();
+			SetActive(tab);
+			Focused = tab;
+		}
+
+		void Execute_Internal_CloseTab(Tab tab)
+		{
+			tab.VerifyCanClose();
+			RemoveTab(tab);
+		}
+
 		void Execute_Internal_Key()
 		{
 			state.KeyHandled = false;
@@ -32,25 +48,23 @@ namespace NeoEdit.Program
 
 		void Execute_Internal_Scroll()
 		{
-			(Tab tab, int newColumn, int newRow) = ((Tab, int, int))state.Configuration;
+			(var tab, var newColumn, var newRow) = ((Tab, int, int))state.Configuration;
 			tab.StartColumn = newColumn;
 			tab.StartRow = newRow;
 		}
 
-		void Execute_Internal_AddTab(Tab tab) => AddTab(tab);
-
-		void Execute_Internal_MouseActivate(Tab tab)
+		void Execute_Internal_Mouse()
 		{
-			if (!state.ShiftDown)
+			//Tab?.Tabs.TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Mouse) { Configuration = (Tab, position, e.ClickCount) });
+			(var tab, var line, var column, var clickCount, var selecting) = ((Tab, int, int, int, bool?))state.Configuration;
+			if ((UnsortedActiveTabsCount != 1) || (!IsActive(tab)))
+			{
 				ClearAllActive();
-			SetActive(tab);
-			Focused = tab;
-		}
+				SetActive(tab);
+				return;
+			}
 
-		void Execute_Internal_CloseTab(Tab tab)
-		{
-			tab.VerifyCanClose();
-			RemoveTab(tab);
+			tab.Execute_Internal_Mouse(line, column, clickCount, selecting);
 		}
 	}
 }

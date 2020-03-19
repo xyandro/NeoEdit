@@ -18,12 +18,12 @@
 
 		<Border Grid.Row="0" Grid.Column="0" CornerRadius="8" BorderThickness="2" BorderBrush="#808080" Padding="3" Background="Black">
 			<Border Padding="3" ClipToBounds="True">
-				<controls:RenderCanvas x:Name="canvas" Background="Transparent" Render="OnCanvasRender"/>
+				<controls:RenderCanvas x:Name="canvas" Background="Transparent" Render="OnCanvasRender" MouseLeftButtonDown="OnCanvasMouseLeftButtonDown" MouseMove="OnCanvasMouseMove" MouseLeftButtonUp="OnCanvasMouseLeftButtonUp"/>
 			</Border>
 		</Border>
 
-		<controls:DiffScrollBar x:Name="yScroll" Grid.Row="0" Grid.Column="1" Orientation="Vertical"/>
-		<controls:DiffScrollBar x:Name="xScroll" Grid.Row="1" Grid.Column="0" Orientation="Horizontal"/>
+		<controls:DiffScrollBar x:Name="yScroll" Grid.Row="0" Grid.Column="1" Orientation="Vertical" ValueChanged="ScrollChanged"/>
+		<controls:DiffScrollBar x:Name="xScroll" Grid.Row="1" Grid.Column="0" Orientation="Horizontal" ValueChanged="ScrollChanged"/>
 
 		<StackPanel Grid.Row="1" Grid.Column="1"/>
 
