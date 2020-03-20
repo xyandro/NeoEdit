@@ -13,6 +13,15 @@ namespace NeoEdit.Program
 {
 	partial class Tabs
 	{
+		public void OpenFiles(IEnumerable<string> files)
+		{
+			RunTasksDialog.AddTasks(files, (file, progress) =>
+			{
+				progress.Name = Path.GetFileName(file);
+				return new Tab(file);
+			}, results => results.ForEach(tab => AddTab(tab)));
+		}
+
 		void Execute_File_New_New(bool createTabs)
 		{
 			var tabs = this;
@@ -82,8 +91,7 @@ namespace NeoEdit.Program
 			}.Show().HasFlag(MessageOptions.Yes)))
 				return;
 
-			foreach (var file in files)
-				AddTab(new Tab(file));
+			OpenFiles(files);
 		}
 
 		void Execute_File_MoveToNewWindow()

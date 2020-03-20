@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using Classless.Hasher;
 using Classless.Hasher.Mac;
 
@@ -252,9 +250,7 @@ namespace NeoEdit.Program.Transform
 			return Coder.BytesToString(hashAlg.ComputeHash(data), Coder.CodePage.Hex);
 		}
 
-		public static string Get(string fileName, Type type, byte[] key = null, IProgress<ProgressReport> progress = null, CancellationToken? cancel = null) => Task.Run(() => GetAsync(fileName, type, key, progress, cancel)).Result;
-
-		async public static Task<string> GetAsync(string fileName, Type type, byte[] key = null, IProgress<ProgressReport> progress = null, CancellationToken? cancel = null)
+		public static string Get(string fileName, Type type, byte[] key = null, ProgressData progress = null)
 		{
 			using (var stream = File.OpenRead(fileName))
 			{
@@ -266,11 +262,14 @@ namespace NeoEdit.Program.Transform
 				var buffer = new byte[65536];
 				while (stream.Position < stream.Length)
 				{
-					if (cancel?.IsCancellationRequested == true)
-						throw new Exception("Canceled");
-					progress?.Report(new ProgressReport(stream.Position, stream.Length));
+					if (progress != null)
+					{
+						if (progress.Cancel)
+							throw new OperationCanceledException();
+						progress.Percent = (int)(stream.Position * 100 / stream.Length);
+					}
 
-					var block = await stream.ReadAsync(buffer, 0, buffer.Length);
+					var block = stream.Read(buffer, 0, buffer.Length);
 					hashAlg.TransformBlock(buffer, 0, block, null, 0);
 				}
 				hashAlg.TransformFinalBlock(buffer, 0, 0);

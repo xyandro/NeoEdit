@@ -821,6 +821,13 @@
     <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
       <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\RunTasksDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\RunTasksDialog.xaml.cs">
+      <DependentUpon>RunTasksDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\SelectByCountDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1066,6 +1073,7 @@
     <Compile Include="Parsing\ParserHelper.cs" />
     <Compile Include="Parsing\ParserNode.cs" />
     <Compile Include="PortScanner.cs" />
+    <Compile Include="ProgressData.cs" />
     <Compile Include="ProgressReport.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">

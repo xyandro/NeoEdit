@@ -7,8 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Parsing;
@@ -19,24 +17,24 @@ namespace NeoEdit.Program
 {
 	partial class Tab
 	{
-		async Task<bool> BinarySearchFileAsync(string fileName, BinarySearcher searcher, IProgress<ProgressReport> progress, CancellationToken cancel)
+		bool BinarySearchFile(string fileName, BinarySearcher searcher, ProgressData progress)
 		{
 			try
 			{
-				if (state.SavedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Cancel))
+				if (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Cancel))
 					return true;
 
 				if (Directory.Exists(fileName))
 					return false;
 
-				return await searcher.FindAsync(fileName, progress, cancel);
+				return searcher.Find(fileName, progress);
 			}
 			catch (Exception ex)
 			{
-				if (!state.SavedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.All))
+				if (!state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.All))
 					state.Window.Dispatcher.Invoke(() =>
 					{
-						state.SavedAnswers[nameof(BinarySearchFileAsync)] = new Message(state.Window)
+						state.SavedAnswers[nameof(BinarySearchFile)] = new Message(state.Window)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
@@ -45,15 +43,15 @@ namespace NeoEdit.Program
 						}.Show();
 					});
 
-				return (state.SavedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(BinarySearchFileAsync)].HasFlag(MessageOptions.Cancel));
+				return (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Cancel));
 			}
 		}
 
-		async Task<bool> TextSearchFileAsync(string fileName, ISearcher searcher, IProgress<ProgressReport> progress, CancellationToken cancel)
+		bool TextSearchFile(string fileName, ISearcher searcher, ProgressData progress)
 		{
 			try
 			{
-				if (state.SavedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel))
+				if (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Cancel))
 					return true;
 
 				if (Directory.Exists(fileName))
@@ -64,10 +62,10 @@ namespace NeoEdit.Program
 				{
 					buffer = new byte[input.Length];
 					var read = 0;
-					while ((read < input.Length) && (!cancel.IsCancellationRequested))
+					while ((read < input.Length) && (!progress.Cancel))
 					{
-						var block = await input.ReadAsync(buffer, read, (int)(input.Length - read));
-						progress.Report(new ProgressReport(input.Position, input.Length));
+						var block = input.Read(buffer, read, (int)(input.Length - read));
+						progress.Percent = (int)(input.Position * 100 / input.Length);
 						read += block;
 					}
 				}
@@ -78,8 +76,8 @@ namespace NeoEdit.Program
 			{
 				state.Window.Dispatcher.Invoke(() =>
 				{
-					if (!state.SavedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.All))
-						state.SavedAnswers[nameof(TextSearchFileAsync)] = new Message(state.Window)
+					if (!state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.All))
+						state.SavedAnswers[nameof(TextSearchFile)] = new Message(state.Window)
 						{
 							Title = "Confirm",
 							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
@@ -88,11 +86,11 @@ namespace NeoEdit.Program
 						}.Show();
 				});
 
-				return (state.SavedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(TextSearchFileAsync)].HasFlag(MessageOptions.Cancel));
+				return (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Cancel));
 			}
 		}
 
-		static async Task CombineFilesAsync(string outputFile, List<string> inputFiles, IProgress<ProgressReport> progress, CancellationToken cancel)
+		static void CombineFiles(string outputFile, List<string> inputFiles, ProgressData progress)
 		{
 			var total = inputFiles.Sum(file => new FileInfo(file).Length);
 			var written = 0L;
@@ -102,15 +100,15 @@ namespace NeoEdit.Program
 					using (var inputStream = File.OpenRead(inputFile))
 						while (true)
 						{
-							if (cancel.IsCancellationRequested)
+							if (progress.Cancel)
 								return;
 
-							var block = await inputStream.ReadAsync(buffer, 0, buffer.Length);
+							var block = inputStream.Read(buffer, 0, buffer.Length);
 							if (block == 0)
 								break;
-							await outputStream.WriteAsync(buffer, 0, block);
+							outputStream.Write(buffer, 0, block);
 							written += block;
-							progress.Report(new ProgressReport(written, total));
+							progress.Percent = (int)(written * 100 / total);
 						}
 		}
 
@@ -248,9 +246,9 @@ namespace NeoEdit.Program
 			return "INVALID";
 		}
 
-		static void ReencodeFile(string inputFile, IProgress<ProgressReport> progress, CancellationToken cancel, Coder.CodePage inputCodePage, Coder.CodePage outputCodePage)
+		static void ReencodeFile(string inputFile, ProgressData progress, Coder.CodePage inputCodePage, Coder.CodePage outputCodePage)
 		{
-			if (cancel.IsCancellationRequested)
+			if (progress.Cancel)
 				return;
 
 			var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), Guid.NewGuid().ToString());
@@ -276,7 +274,7 @@ namespace NeoEdit.Program
 						var bytes = new byte[chars.Length * 5]; // Should be big enough to hold any resulting output
 						while (input.Position != input.Length)
 						{
-							if (cancel.IsCancellationRequested)
+							if (progress.Cancel)
 								throw new OperationCanceledException();
 
 							var inByteCount = input.Read(bytes, 0, (int)Math.Min(chars.Length, input.Length - input.Position));
@@ -286,7 +284,7 @@ namespace NeoEdit.Program
 
 							output.Write(bytes, 0, outByteCount);
 
-							progress.Report(new ProgressReport(input.Position, input.Length));
+							progress.Percent = (int)(input.Position * 100 / input.Length);
 						}
 					}
 				}
@@ -354,7 +352,7 @@ namespace NeoEdit.Program
 				file.SetLength(value);
 		}
 
-		static async Task SplitFileAsync(string fileName, string outputTemplate, long chunkSize, IProgress<ProgressReport> progress, CancellationToken cancel)
+		static void SplitFile(string fileName, string outputTemplate, long chunkSize, ProgressData progress)
 		{
 			if (chunkSize <= 0)
 				throw new Exception($"Invalid chunk size: {chunkSize}");
@@ -368,14 +366,14 @@ namespace NeoEdit.Program
 						var endChunk = Math.Min(inputFile.Position + chunkSize, inputFile.Length);
 						while (inputFile.Position < endChunk)
 						{
-							if (cancel.IsCancellationRequested)
+							if (progress.Cancel)
 								break;
 
-							var block = await inputFile.ReadAsync(buffer, 0, (int)Math.Min(buffer.Length, endChunk - inputFile.Position));
+							var block = inputFile.Read(buffer, 0, (int)Math.Min(buffer.Length, endChunk - inputFile.Position));
 							if (block <= 0)
 								throw new Exception("Failed to read file");
-							progress.Report(new ProgressReport(inputFile.Position, inputFile.Length));
-							await outputFile.WriteAsync(buffer, 0, block);
+							progress.Percent = (int)(inputFile.Position * 100 / inputFile.Length);
+							outputFile.Write(buffer, 0, block);
 						}
 					}
 		}
@@ -528,7 +526,7 @@ namespace NeoEdit.Program
 			var sizes = files.AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
 			var results = state.GetExpression(result.Expression).EvaluateList<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
-			files.Zip(results, (file, size) => new { file, size }).AsParallel().ForEach(obj => SetFileSize(obj.file, obj.size));
+			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
 		object Configure_Files_Set_Time() => FilesSetTimeDialog.Run(state.Window, GetVariables(), $@"""{DateTime.Now}""");
@@ -619,7 +617,6 @@ namespace NeoEdit.Program
 			else
 				stringsToFind = Enumerable.Repeat(new List<string> { result.Text }, Selections.Count).ToList();
 
-			List<bool> results;
 			if (result.IsBinary)
 			{
 				var searchers = stringsToFind
@@ -632,7 +629,11 @@ namespace NeoEdit.Program
 								.Where(tuple => (tuple.Item1 != null) && (tuple.Item1.Length != 0))
 							).Distinct().ToList()));
 
-				results = MultiProgressDialog.RunAsync(state.Window, "Searching files...", RelativeSelectedFiles().Select((file, index) => (file, index)), async (obj, progress, cancel) => await BinarySearchFileAsync(obj.file, searchers[stringsToFind[obj.index]], progress, cancel), obj => Path.GetFileName(obj.file));
+				Tabs.RunTasksDialog.AddTasks(RelativeSelectedFiles().Select((file, index) => (file, index)), (obj, progress) =>
+				{
+					progress.Name = Path.GetFileName(obj.file);
+					return BinarySearchFile(obj.file, searchers[stringsToFind[obj.index]], progress);
+				}, results => Selections = Selections.Where((range, index) => results[index]).ToList());
 			}
 			else
 			{
@@ -660,10 +661,12 @@ namespace NeoEdit.Program
 							});
 				}
 
-				results = MultiProgressDialog.RunAsync(state.Window, "Searching files...", RelativeSelectedFiles().Select((file, index) => (file, index)), async (obj, progress, cancel) => await TextSearchFileAsync(obj.file, searchers[stringsToFind[obj.index]], progress, cancel), obj => Path.GetFileName(obj.file));
+				Tabs.RunTasksDialog.AddTasks(RelativeSelectedFiles().Select((file, index) => (file, index)), (obj, progress) =>
+				{
+					progress.Name = Path.GetFileName(obj.file);
+					return TextSearchFile(obj.file, searchers[stringsToFind[obj.index]], progress);
+				}, results => Selections = Selections.Where((range, index) => results[index]).ToList());
 			}
-
-			Selections = Selections.Where((range, index) => results[index]).ToList();
 		}
 
 		object Configure_Files_Insert() => FilesInsertDialog.Run(state.Window);
@@ -789,7 +792,11 @@ namespace NeoEdit.Program
 		void Execute_Files_Hash()
 		{
 			var result = state.Configuration as FilesHashDialog.Result;
-			ReplaceSelections(MultiProgressDialog.RunAsync(state.Window, "Calculating hashes...", RelativeSelectedFiles(), (file, progress, cancel) => Hasher.GetAsync(file, result.HashType, result.HMACKey, progress, cancel)));
+			Tabs.RunTasksDialog.AddTasks(RelativeSelectedFiles(), (file, progress) =>
+			{
+				progress.Name = Path.GetFileName(file);
+				return Hasher.Get(file, result.HashType, result.HMACKey, progress);
+			}, results => ReplaceSelections(results));
 		}
 
 		object Configure_Files_Sign() => FilesSignDialog.Run(state.Window);
@@ -966,7 +973,11 @@ namespace NeoEdit.Program
 		void Execute_Files_Operations_Encoding()
 		{
 			var result = state.Configuration as FilesOperationsEncodingDialog.Result;
-			MultiProgressDialog.Run(state.Window, "Changing encoding...", RelativeSelectedFiles(), (inputFile, progress, cancel) => ReencodeFile(inputFile, progress, cancel, result.InputCodePage, result.OutputCodePage));
+			Tabs.RunTasksDialog.AddTasks(RelativeSelectedFiles(), (inputFile, progress) =>
+			{
+				progress.Name = Path.GetFileName(inputFile);
+				ReencodeFile(inputFile, progress, result.InputCodePage, result.OutputCodePage);
+			});
 		}
 
 		object Configure_Files_Operations_SplitFile()
@@ -984,7 +995,11 @@ namespace NeoEdit.Program
 			var files = RelativeSelectedFiles();
 			var outputTemplates = state.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
 			var chunkSizes = state.GetExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
-			MultiProgressDialog.RunAsync(state.Window, "Splitting files...", Enumerable.Range(0, Selections.Count), (index, progress, cancel) => SplitFileAsync(files[index], outputTemplates[index], chunkSizes[index], progress, cancel), index => Path.GetFileName(files[index]));
+			Tabs.RunTasksDialog.AddTasks(Enumerable.Range(0, Selections.Count), (index, progress) =>
+			{
+				progress.Name = Path.GetFileName(files[index]);
+				SplitFile(files[index], outputTemplates[index], chunkSizes[index], progress);
+			});
 		}
 
 		object Configure_Files_Operations_CombineFiles() => FilesOperationsCombineFilesDialog.Run(state.Window, GetVariables());
@@ -1018,7 +1033,11 @@ namespace NeoEdit.Program
 				inputs[current].Add(inputFile);
 			}
 
-			MultiProgressDialog.RunAsync(state.Window, "Combining files...", Enumerable.Range(0, outputFiles.Count), (index, progress, cancel) => CombineFilesAsync(outputFiles[index], inputs[index], progress, cancel), index => Path.GetFileName(outputFiles[index]));
+			Tabs.RunTasksDialog.AddTasks(Enumerable.Range(0, outputFiles.Count), (index, progress) =>
+			{
+				progress.Name = Path.GetFileName(outputFiles[index]);
+				CombineFiles(outputFiles[index], inputs[index], progress);
+			});
 		}
 	}
 }

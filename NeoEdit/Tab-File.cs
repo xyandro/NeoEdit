@@ -54,12 +54,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_New_FromSelections() => GetSelectionStrings().ForEach(((str, index) => Tabs.AddTab(new Tab(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false))));
 
-		void Execute_File_Open_Selected()
-		{
-			var files = RelativeSelectedFiles();
-			foreach (var file in files)
-				Tabs.AddTab(new Tab(file));
-		}
+		void Execute_File_Open_Selected() => Tabs.OpenFiles(RelativeSelectedFiles());
 
 		void Execute_File_Save_Save()
 		{

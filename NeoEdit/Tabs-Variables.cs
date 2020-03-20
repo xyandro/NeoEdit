@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Misc;
 
 namespace NeoEdit.Program
@@ -247,6 +248,20 @@ namespace NeoEdit.Program
 			}
 		}
 
+		RunTasksDialog newRunTasksDialog;
+		public RunTasksDialog RunTasksDialog
+		{
+			get
+			{
+				EnsureInTransaction();
+				if (newRunTasksDialog == null)
+					lock (this)
+						if (newRunTasksDialog == null)
+							TabsWindow.Dispatcher.Invoke(() => newRunTasksDialog = new RunTasksDialog());
+				return newRunTasksDialog;
+			}
+		}
+
 		void BeginTransaction(ExecuteState state)
 		{
 			if (this.state != null)
@@ -272,6 +287,8 @@ namespace NeoEdit.Program
 
 			transactionTabs.ForEach(tab => tab.Rollback());
 			transactionTabs = null;
+
+			newRunTasksDialog = null;
 
 			state = null;
 		}
@@ -302,6 +319,8 @@ namespace NeoEdit.Program
 
 			transactionTabs.ForEach(tab => tab.Commit());
 			transactionTabs = null;
+
+			newRunTasksDialog = null;
 
 			state = null;
 		}

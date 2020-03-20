@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace NeoEdit.Program.Searchers
@@ -99,7 +98,7 @@ namespace NeoEdit.Program.Searchers
 			}
 		}
 
-		public async Task<bool> FindAsync(string fileName, IProgress<ProgressReport> progress, CancellationToken cancel)
+		public bool Find(string fileName, ProgressData progress)
 		{
 			const int bits = 16;
 			const int bitMask = (1 << bits) - 1;
@@ -119,18 +118,18 @@ namespace NeoEdit.Program.Searchers
 
 					if (block != curBlock)
 					{
-						if (cancel.IsCancellationRequested)
+						if (progress.Cancel)
 							break;
 
 						curBlock = block;
 						var startPosition = block << bits;
 						var length = (int)Math.Min(data.Length, stream.Length - startPosition);
 						stream.Position = startPosition;
-						var read = await stream.ReadAsync(data, 0, length);
+						var read = stream.Read(data, 0, length);
 						if (read != length)
 							throw new Exception("Failed to read block");
 
-						progress.Report(new ProgressReport(stream.Position, stream.Length));
+						progress.Percent = (int)(stream.Position * 100 / stream.Length);
 					}
 
 					var b = data[offset];

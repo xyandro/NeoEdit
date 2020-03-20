@@ -135,6 +135,7 @@ namespace NeoEdit.Program
 				commit = true;
 			}
 			catch (OperationCanceledException) { }
+			catch (Exception ex) { App.ShowExceptionMessage(ex); }
 			finally
 			{
 				if (commit)
@@ -279,6 +280,9 @@ namespace NeoEdit.Program
 			}
 
 			SortedActiveTabs.ForEach(tab => tab.Execute());
+
+			if (newRunTasksDialog != null)
+				newRunTasksDialog.Run();
 		}
 
 		void PostExecute()

@@ -22,7 +22,7 @@ namespace NeoEdit.Program
 			CreateWindowsFromArgs(string.Join(" ", e.Args.Select(str => $"\"{str}\"")), true);
 		}
 
-		void ShowExceptionMessage(Exception ex)
+		public static void ShowExceptionMessage(Exception ex)
 		{
 			var message = "";
 			for (var ex2 = ex; ex2 != null; ex2 = ex2.InnerException)
