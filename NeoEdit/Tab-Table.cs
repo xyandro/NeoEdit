@@ -141,7 +141,7 @@ namespace NeoEdit.Program
 			var result = state.Configuration as TableAddColumnDialog.Result;
 			var table = GetTable();
 			var variables = GetTableVariables(table);
-			var results = new NEExpression(result.Expression).EvaluateList<string>(variables, table.NumRows);
+			var results = state.GetExpression(result.Expression).EvaluateList<string>(variables, table.NumRows);
 			table.AddColumn(result.ColumnName, results);
 			SetText(table);
 		}
@@ -157,7 +157,7 @@ namespace NeoEdit.Program
 			var result = state.Configuration as GetExpressionDialog.Result;
 			var table = GetTable();
 			var variables = GetTableVariables(table);
-			var results = new NEExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
+			var results = state.GetExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
 			Selections = lines.AsParallel().AsOrdered().Select(line => new Range(TextView.GetPosition(line, TextView.GetLineLength(line)), TextView.GetPosition(line, 0))).ToList();
 		}

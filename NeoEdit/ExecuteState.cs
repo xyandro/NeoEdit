@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Expressions;
 
 namespace NeoEdit.Program
 {
@@ -69,6 +70,16 @@ namespace NeoEdit.Program
 						KeysAndValuesMap[kvIndex] = KeysAndValuesFunc(kvIndex);
 
 			return KeysAndValuesMap[kvIndex][tab];
+		}
+
+		Dictionary<string, NEExpression> expressions;
+		public NEExpression GetExpression(string expression)
+		{
+			if (expressions == null)
+				expressions = new Dictionary<string, NEExpression>();
+			if (!expressions.ContainsKey(expression))
+				expressions[expression] = new NEExpression(expression);
+			return expressions[expression];
 		}
 	}
 }

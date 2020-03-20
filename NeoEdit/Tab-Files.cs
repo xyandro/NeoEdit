@@ -527,7 +527,7 @@ namespace NeoEdit.Program
 			var files = RelativeSelectedFiles();
 			var sizes = files.AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			var results = new NEExpression(result.Expression).EvaluateList<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
+			var results = state.GetExpression(result.Expression).EvaluateList<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
 			files.Zip(results, (file, size) => new { file, size }).AsParallel().ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
@@ -699,8 +699,8 @@ namespace NeoEdit.Program
 			var result = state.Configuration as FilesCreateFromExpressionsDialog.Result;
 			var variables = GetVariables();
 
-			var filenameExpression = new NEExpression(result.FileName);
-			var dataExpression = new NEExpression(result.Data);
+			var filenameExpression = state.GetExpression(result.FileName);
+			var dataExpression = state.GetExpression(result.Data);
 			var resultCount = variables.ResultCount(filenameExpression, dataExpression);
 
 			var filename = filenameExpression.EvaluateList<string>(variables, resultCount);
@@ -807,8 +807,8 @@ namespace NeoEdit.Program
 			var result = state.Configuration as FilesOperationsCopyMoveDialog.Result;
 			var variables = GetVariables();
 
-			var oldFileNameExpression = new NEExpression(result.OldFileName);
-			var newFileNameExpression = new NEExpression(result.NewFileName);
+			var oldFileNameExpression = state.GetExpression(result.OldFileName);
+			var newFileNameExpression = state.GetExpression(result.NewFileName);
 			var resultCount = variables.ResultCount(oldFileNameExpression, newFileNameExpression);
 
 			var oldFileNames = oldFileNameExpression.EvaluateList<string>(variables, resultCount);
@@ -982,8 +982,8 @@ namespace NeoEdit.Program
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
 			var files = RelativeSelectedFiles();
-			var outputTemplates = new NEExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
-			var chunkSizes = new NEExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
+			var outputTemplates = state.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
+			var chunkSizes = state.GetExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
 			MultiProgressDialog.RunAsync(state.Window, "Splitting files...", Enumerable.Range(0, Selections.Count), (index, progress, cancel) => SplitFileAsync(files[index], outputTemplates[index], chunkSizes[index], progress, cancel), index => Path.GetFileName(files[index]));
 		}
 
@@ -994,11 +994,11 @@ namespace NeoEdit.Program
 			var result = state.Configuration as FilesOperationsCombineFilesDialog.Result;
 			var variables = GetVariables();
 
-			var inputFileCountExpr = new NEExpression(result.InputFileCount);
-			var outputFilesExpr = new NEExpression(result.OutputFiles);
+			var inputFileCountExpr = state.GetExpression(result.InputFileCount);
+			var outputFilesExpr = state.GetExpression(result.OutputFiles);
 			var count = variables.ResultCount(inputFileCountExpr, outputFilesExpr);
 
-			var inputFiles = new NEExpression(result.InputFiles).EvaluateList<string>(variables);
+			var inputFiles = state.GetExpression(result.InputFiles).EvaluateList<string>(variables);
 			var inputFileCount = inputFileCountExpr.EvaluateList<int>(variables, count);
 			var outputFiles = outputFilesExpr.EvaluateList<string>(variables, count);
 

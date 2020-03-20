@@ -82,10 +82,10 @@ namespace NeoEdit.Program
 		{
 			var result = state.Configuration as ImageGrabImageDialog.Result;
 			var variables = GetVariables();
-			var x = new NEExpression(result.GrabX).EvaluateList<int>(variables, Selections.Count());
-			var y = new NEExpression(result.GrabY).EvaluateList<int>(variables, Selections.Count());
-			var width = new NEExpression(result.GrabWidth).EvaluateList<int>(variables, Selections.Count());
-			var height = new NEExpression(result.GrabHeight).EvaluateList<int>(variables, Selections.Count());
+			var x = state.GetExpression(result.GrabX).EvaluateList<int>(variables, Selections.Count());
+			var y = state.GetExpression(result.GrabY).EvaluateList<int>(variables, Selections.Count());
+			var width = state.GetExpression(result.GrabWidth).EvaluateList<int>(variables, Selections.Count());
+			var height = state.GetExpression(result.GrabHeight).EvaluateList<int>(variables, Selections.Count());
 
 			var strs = new List<string>();
 			for (var ctr = 0; ctr < x.Count; ++ctr)
@@ -134,8 +134,8 @@ namespace NeoEdit.Program
 		{
 			var result = state.Configuration as ImageSizeDialog.Result;
 			var variables = GetVariables();
-			var width = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
-			var height = new NEExpression(result.HeightExpression).Evaluate<int>(variables);
+			var width = state.GetExpression(result.WidthExpression).Evaluate<int>(variables);
+			var height = state.GetExpression(result.HeightExpression).Evaluate<int>(variables);
 
 			var bitmap = GetBitmap();
 			var resultBitmap = new System.Drawing.Bitmap(width, height, bitmap.PixelFormat);
@@ -165,10 +165,10 @@ namespace NeoEdit.Program
 		{
 			var result = state.Configuration as ImageCropDialog.Result;
 			var variables = GetVariables();
-			var destX = new NEExpression(result.XExpression).Evaluate<int>(variables);
-			var destY = new NEExpression(result.YExpression).Evaluate<int>(variables);
-			var newWidth = new NEExpression(result.WidthExpression).Evaluate<int>(variables);
-			var newHeight = new NEExpression(result.HeightExpression).Evaluate<int>(variables);
+			var destX = state.GetExpression(result.XExpression).Evaluate<int>(variables);
+			var destY = state.GetExpression(result.YExpression).Evaluate<int>(variables);
+			var newWidth = state.GetExpression(result.WidthExpression).Evaluate<int>(variables);
+			var newHeight = state.GetExpression(result.HeightExpression).Evaluate<int>(variables);
 			if ((newWidth <= 0) || (newHeight <= 0))
 				throw new Exception("Width and height must be greater than 0");
 
@@ -215,7 +215,7 @@ namespace NeoEdit.Program
 		{
 			var result = state.Configuration as ImageRotateDialog.Result;
 			var variables = GetVariables();
-			var angle = new NEExpression(result.AngleExpression).Evaluate<float>(variables, "deg");
+			var angle = state.GetExpression(result.AngleExpression).Evaluate<float>(variables, "deg");
 
 			var bitmap = GetBitmap();
 			var path = new System.Drawing.Drawing2D.GraphicsPath();
@@ -242,10 +242,10 @@ namespace NeoEdit.Program
 		{
 			var result = state.Configuration as ImageGIFAnimateDialog.Result;
 			var variables = GetVariables();
-			var inputFiles = new NEExpression(result.InputFiles).EvaluateList<string>(variables);
-			var outputFile = new NEExpression(result.OutputFile).Evaluate<string>(variables);
-			var delays = new NEExpression(result.Delay).EvaluateList<int>(variables, inputFiles.Count, "ms");
-			var repeat = new NEExpression(result.Repeat).Evaluate<int>(variables);
+			var inputFiles = state.GetExpression(result.InputFiles).EvaluateList<string>(variables);
+			var outputFile = state.GetExpression(result.OutputFile).Evaluate<string>(variables);
+			var delays = state.GetExpression(result.Delay).EvaluateList<int>(variables, inputFiles.Count, "ms");
+			var repeat = state.GetExpression(result.Repeat).Evaluate<int>(variables);
 
 			using (var writer = new GIFWriter(outputFile, repeat))
 				for (var ctr = 0; ctr < inputFiles.Count; ++ctr)
@@ -266,7 +266,7 @@ namespace NeoEdit.Program
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
 			var files = RelativeSelectedFiles();
-			var outputTemplates = new NEExpression(result.OutputTemplate).EvaluateList<string>(variables, files.Count);
+			var outputTemplates = state.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, files.Count);
 			Enumerable.Range(0, files.Count).AsParallel().ForEach(index => SplitGIF(files[index], outputTemplates[index]));
 		}
 	}

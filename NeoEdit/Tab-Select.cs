@@ -248,10 +248,10 @@ namespace NeoEdit.Program
 		{
 			var result = state.Configuration as SelectLimitDialog.Result;
 			var variables = GetVariables();
-			var firstSelection = new NEExpression(result.FirstSelection).Evaluate<int>(variables);
-			var everyNth = new NEExpression(result.EveryNth).Evaluate<int>(variables);
-			var takeCount = new NEExpression(result.TakeCount).Evaluate<int>(variables);
-			var numSels = new NEExpression(result.NumSelections).Evaluate<int>(variables);
+			var firstSelection = state.GetExpression(result.FirstSelection).Evaluate<int>(variables);
+			var everyNth = state.GetExpression(result.EveryNth).Evaluate<int>(variables);
+			var takeCount = state.GetExpression(result.TakeCount).Evaluate<int>(variables);
+			var numSels = state.GetExpression(result.NumSelections).Evaluate<int>(variables);
 
 			var sels = Selections.Skip(firstSelection - 1);
 			if (result.JoinSelections)

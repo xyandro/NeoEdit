@@ -1422,7 +1422,7 @@ namespace NeoEdit.Program
 			return results;
 		}
 
-		List<T> GetExpressionResults<T>(string expression, int? count = null) => new NEExpression(expression).EvaluateList<T>(GetVariables(), count);
+		List<T> GetExpressionResults<T>(string expression, int? count = null) => state.GetExpression(expression).EvaluateList<T>(GetVariables(), count);
 
 		List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
 		{

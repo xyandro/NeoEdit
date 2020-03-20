@@ -3,7 +3,6 @@ Print
 Add ability to select all attributes
 Round yellow diff corners in diff scrollbar
 Configuration shouldn't need transaction
-Only evaluate expressions once for all tabs
 Split into different modules (build time is killing me)
 Refactor clipboard; only change when UI requires it, keep separate clipboard for running macros (so they don't interfere with other things system may be doing)
 Loading progress when opening lots of files

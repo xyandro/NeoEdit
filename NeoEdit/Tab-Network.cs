@@ -92,8 +92,8 @@ namespace NeoEdit.Program
 			var result = state.Configuration as NetworkFetchFileDialog.Result;
 			var variables = GetVariables();
 
-			var urlExpression = new NEExpression(result.URL);
-			var fileNameExpression = new NEExpression(result.FileName);
+			var urlExpression = state.GetExpression(result.URL);
+			var fileNameExpression = state.GetExpression(result.FileName);
 			var resultCount = variables.ResultCount(urlExpression, fileNameExpression);
 
 			var urls = urlExpression.EvaluateList<string>(variables, resultCount);

@@ -386,7 +386,7 @@ namespace NeoEdit.Program
 		void Execute_Edit_Rotate()
 		{
 			var result = state.Configuration as EditRotateDialog.Result;
-			var count = new NEExpression(result.Count).Evaluate<int>(GetVariables());
+			var count = state.GetExpression(result.Count).Evaluate<int>(GetVariables());
 
 			var strs = GetSelectionStrings();
 			if (count < 0)
