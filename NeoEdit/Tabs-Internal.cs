@@ -29,21 +29,19 @@ namespace NeoEdit.Program
 			RemoveTab(tab);
 		}
 
-		void Execute_Internal_Key()
+		bool Execute_Internal_Key()
 		{
-			state.KeyHandled = false;
+			if ((!state.ControlDown) || (state.AltDown))
+				return false;
 
-			if ((state.ControlDown) && (!state.AltDown))
+			switch (state.Key)
 			{
-				state.KeyHandled = true;
-				switch (state.Key)
-				{
-					case Key.PageUp: MovePrevNext(-1, state.ShiftDown); break;
-					case Key.PageDown: MovePrevNext(1, state.ShiftDown); break;
-					case Key.Tab: MovePrevNext(1, state.ShiftDown, true); break;
-					default: state.KeyHandled = false; break;
-				}
+				case Key.PageUp: MovePrevNext(-1, state.ShiftDown); break;
+				case Key.PageDown: MovePrevNext(1, state.ShiftDown); break;
+				case Key.Tab: MovePrevNext(1, state.ShiftDown, true); break;
+				default: return false;
 			}
+			return true;
 		}
 
 		void Execute_Internal_Scroll()
