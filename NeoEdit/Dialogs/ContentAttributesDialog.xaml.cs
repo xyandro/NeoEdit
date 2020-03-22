@@ -4,18 +4,13 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program.Content;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class ContentAttributesDialog
 	{
-		public class Result
-		{
-			public string Attribute { get; set; }
-			public bool FirstOnly { get; set; }
-		}
-
 		[DepProp]
 		public List<string> Attributes { get { return UIHelper<ContentAttributesDialog>.GetPropValue<List<string>>(this); } set { UIHelper<ContentAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -32,14 +27,14 @@ namespace NeoEdit.Program.Dialogs
 			Attribute = Attributes.FirstOrDefault();
 		}
 
-		Result result;
+		ContentAttributesDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Attribute = Attribute, FirstOnly = FirstOnly };
+			result = new ContentAttributesDialogResult { Attribute = Attribute, FirstOnly = FirstOnly };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, List<ParserNode> nodes)
+		public static ContentAttributesDialogResult Run(Window parent, List<ParserNode> nodes)
 		{
 			var dialog = new ContentAttributesDialog(nodes) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -3,28 +3,16 @@ using System.IO;
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesNamesMakeAbsoluteRelativeDialog
 	{
-		public enum ResultType
-		{
-			None,
-			File,
-			Directory,
-		}
-
-		public class Result
-		{
-			public string Expression { get; set; }
-			public ResultType Type { get; set; }
-		}
-
 		[DepProp]
 		public string Expression { get { return UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.GetPropValue<string>(this); } set { UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public ResultType Type { get { return UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.GetPropValue<ResultType>(this); } set { UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.SetPropValue(this, value); } }
+		public FilesNamesMakeAbsoluteRelativeDialogResult.ResultType Type { get { return UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.GetPropValue<FilesNamesMakeAbsoluteRelativeDialogResult.ResultType>(this); } set { UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool CheckType { get { return UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
@@ -55,22 +43,22 @@ namespace NeoEdit.Program.Dialogs
 				if (value == null)
 					return;
 				if (File.Exists(value))
-					Type = ResultType.File;
+					Type = FilesNamesMakeAbsoluteRelativeDialogResult.ResultType.File;
 				else if (Directory.Exists(value))
-					Type = ResultType.Directory;
+					Type = FilesNamesMakeAbsoluteRelativeDialogResult.ResultType.Directory;
 			}
 			catch { }
 		}
 
-		Result result;
+		FilesNamesMakeAbsoluteRelativeDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = Expression, Type = Type };
+			result = new FilesNamesMakeAbsoluteRelativeDialogResult { Expression = Expression, Type = Type };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables, bool absolute, bool checkType)
+		public static FilesNamesMakeAbsoluteRelativeDialogResult Run(Window parent, NEVariables variables, bool absolute, bool checkType)
 		{
 			var dialog = new FilesNamesMakeAbsoluteRelativeDialog(variables, absolute, checkType) { Owner = parent };
 			if (!dialog.ShowDialog())

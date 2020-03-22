@@ -2,16 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class EditRotateDialog
 	{
-		public class Result
-		{
-			public string Count { get; set; }
-		}
-
 		[DepProp]
 		public string Count { get { return UIHelper<EditRotateDialog>.GetPropValue<string>(this); } set { UIHelper<EditRotateDialog>.SetPropValue(this, value); } }
 
@@ -26,15 +22,15 @@ namespace NeoEdit.Program.Dialogs
 			Count = "1";
 		}
 
-		Result result = null;
+		EditRotateDialogResult result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			count.AddCurrentSuggestion();
-			result = new Result { Count = Count };
+			result = new EditRotateDialogResult { Count = Count };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables)
+		public static EditRotateDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new EditRotateDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

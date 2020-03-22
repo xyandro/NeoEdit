@@ -2,23 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class EditExpressionExpressionDialog
 	{
-		public enum Action
-		{
-			Evaluate,
-			Copy,
-		}
-
-		public class Result
-		{
-			public string Expression { get; set; }
-			public Action Action { get; set; }
-		}
-
 		[DepProp]
 		public string Expression { get { return UIHelper<EditExpressionExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<EditExpressionExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -41,18 +30,18 @@ namespace NeoEdit.Program.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		EditExpressionExpressionDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (!IsValid)
 				throw new Exception("Invalid expression");
 
 			expression.AddCurrentSuggestion();
-			result = new Result { Expression = Expression, Action = (Action)(e.Source as FrameworkElement).Tag };
+			result = new EditExpressionExpressionDialogResult { Expression = Expression, Action = (EditExpressionExpressionDialogResult.Actions)(e.Source as FrameworkElement).Tag };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables, int? numRows = null)
+		static public EditExpressionExpressionDialogResult Run(Window parent, NEVariables variables, int? numRows = null)
 		{
 			var dialog = new EditExpressionExpressionDialog(variables, numRows) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NetworkPingDialog
 	{
-		public class Result
-		{
-			public int Timeout { get; set; }
-		}
-
 		[DepProp]
 		public int Timeout { get { return UIHelper<NetworkPingDialog>.GetPropValue<int>(this); } set { UIHelper<NetworkPingDialog>.SetPropValue(this, value); } }
 
@@ -23,14 +19,14 @@ namespace NeoEdit.Program.Dialogs
 			Timeout = 1000;
 		}
 
-		Result result;
+		NetworkPingDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Timeout = Timeout };
+			result = new NetworkPingDialogResult { Timeout = Timeout };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent)
+		static public NetworkPingDialogResult Run(Window parent)
 		{
 			var dialog = new NetworkPingDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

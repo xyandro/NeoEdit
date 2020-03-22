@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program
 {
@@ -103,33 +104,33 @@ namespace NeoEdit.Program
 
 		object Configure_Edit_ModifyRegions() => EditModifyRegionsDialog.Run(state.Window);
 
-		void Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Result result)
+		void Execute_Edit_ModifyRegions(EditModifyRegionsDialogResult result)
 		{
 			switch (result.Action)
 			{
-				case EditModifyRegionsDialog.Action.Select_Select: Command_Edit_ModifyRegions_Select_Select(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Select_Previous: Command_Edit_ModifyRegions_Select_Previous(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Select_Next: Command_Edit_ModifyRegions_Select_Next(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Select_Enclosing: Command_Edit_ModifyRegions_Select_Enclosing(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Select_WithEnclosing: Command_Edit_ModifyRegions_Select_WithEnclosing(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Select_WithoutEnclosing: Command_Edit_ModifyRegions_Select_WithoutEnclosing(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Modify_Set: Command_Edit_ModifyRegions_Modify_Set(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Modify_Clear: Command_Edit_ModifyRegions_Modify_Clear(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Modify_Remove: Command_Edit_ModifyRegions_Modify_Remove(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Modify_Add: Command_Edit_ModifyRegions_Modify_Add(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Modify_Unite: Command_Edit_ModifyRegions_Modify_Unite(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Modify_Intersect: Command_Edit_ModifyRegions_Modify_Intersect(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Modify_Exclude: Command_Edit_ModifyRegions_Modify_Exclude(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Modify_Repeat: Command_Edit_ModifyRegions_Modify_Repeat(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Copy_Enclosing: Command_Edit_ModifyRegions_Copy_Enclosing(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Copy_EnclosingIndex: Command_Edit_ModifyRegions_Copy_EnclosingIndex(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Transform_Flatten: Command_Edit_ModifyRegions_Transform_Flatten(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Transform_Transpose: Command_Edit_ModifyRegions_Transform_Transpose(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Transform_RotateLeft: Command_Edit_ModifyRegions_Transform_RotateLeft(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Transform_RotateRight: Command_Edit_ModifyRegions_Transform_RotateRight(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Transform_Rotate180: Command_Edit_ModifyRegions_Transform_Rotate180(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Transform_MirrorHorizontal: Command_Edit_ModifyRegions_Transform_MirrorHorizontal(result.Regions); break;
-				case EditModifyRegionsDialog.Action.Transform_MirrorVertical: Command_Edit_ModifyRegions_Transform_MirrorVertical(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Select_Select: Command_Edit_ModifyRegions_Select_Select(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Select_Previous: Command_Edit_ModifyRegions_Select_Previous(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Select_Next: Command_Edit_ModifyRegions_Select_Next(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Select_Enclosing: Command_Edit_ModifyRegions_Select_Enclosing(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Select_WithEnclosing: Command_Edit_ModifyRegions_Select_WithEnclosing(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Select_WithoutEnclosing: Command_Edit_ModifyRegions_Select_WithoutEnclosing(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Modify_Set: Command_Edit_ModifyRegions_Modify_Set(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Modify_Clear: Command_Edit_ModifyRegions_Modify_Clear(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Modify_Remove: Command_Edit_ModifyRegions_Modify_Remove(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Modify_Add: Command_Edit_ModifyRegions_Modify_Add(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Modify_Unite: Command_Edit_ModifyRegions_Modify_Unite(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Modify_Intersect: Command_Edit_ModifyRegions_Modify_Intersect(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Modify_Exclude: Command_Edit_ModifyRegions_Modify_Exclude(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Modify_Repeat: Command_Edit_ModifyRegions_Modify_Repeat(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Copy_Enclosing: Command_Edit_ModifyRegions_Copy_Enclosing(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Copy_EnclosingIndex: Command_Edit_ModifyRegions_Copy_EnclosingIndex(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Transform_Flatten: Command_Edit_ModifyRegions_Transform_Flatten(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Transform_Transpose: Command_Edit_ModifyRegions_Transform_Transpose(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Transform_RotateLeft: Command_Edit_ModifyRegions_Transform_RotateLeft(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Transform_RotateRight: Command_Edit_ModifyRegions_Transform_RotateRight(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Transform_Rotate180: Command_Edit_ModifyRegions_Transform_Rotate180(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Transform_MirrorHorizontal: Command_Edit_ModifyRegions_Transform_MirrorHorizontal(result.Regions); break;
+				case EditModifyRegionsDialogResult.Actions.Transform_MirrorVertical: Command_Edit_ModifyRegions_Transform_MirrorVertical(result.Regions); break;
 			}
 		}
 
@@ -482,6 +483,6 @@ namespace NeoEdit.Program
 			SetRegionsWithSelectionsText(useRegion, regions2);
 		}
 
-		void Execute_Edit_ModifyRegions(EditModifyRegionsDialog.Action action, int region) => Execute_Edit_ModifyRegions(new EditModifyRegionsDialog.Result { Action = action, Regions = new List<int> { region } });
+		void Execute_Edit_ModifyRegions(EditModifyRegionsDialogResult.Actions action, int region) => Execute_Edit_ModifyRegions(new EditModifyRegionsDialogResult { Action = action, Regions = new List<int> { region } });
 	}
 }

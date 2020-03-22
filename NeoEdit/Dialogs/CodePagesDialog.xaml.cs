@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs

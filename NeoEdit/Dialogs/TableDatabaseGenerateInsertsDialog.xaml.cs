@@ -4,18 +4,12 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class TableDatabaseGenerateInsertsDialog
 	{
-		public class Result
-		{
-			public List<int> Columns { get; set; }
-			public int BatchSize { get; set; }
-			public string TableName { get; set; }
-		}
-
 		[DepProp]
 		public Table Table { get { return UIHelper<TableDatabaseGenerateInsertsDialog>.GetPropValue<Table>(this); } set { UIHelper<TableDatabaseGenerateInsertsDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -34,7 +28,7 @@ namespace NeoEdit.Program.Dialogs
 			BatchSize = 500;
 		}
 
-		Result result;
+		TableDatabaseGenerateInsertsDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrWhiteSpace(TableName))
@@ -44,7 +38,7 @@ namespace NeoEdit.Program.Dialogs
 			if (table.Selected.Count == 0)
 				throw new Exception("Please select the columns to use");
 
-			result = new Result
+			result = new TableDatabaseGenerateInsertsDialogResult
 			{
 				Columns = table.Selected.ToList(),
 				BatchSize = BatchSize,
@@ -53,7 +47,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, Table table, string tableName)
+		static public TableDatabaseGenerateInsertsDialogResult Run(Window parent, Table table, string tableName)
 		{
 			var dialog = new TableDatabaseGenerateInsertsDialog(table, tableName) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -3,17 +3,13 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesInsertDialog
 	{
-		public class Result
-		{
-			public Coder.CodePage CodePage { get; set; }
-		}
-
 		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<FilesInsertDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<FilesInsertDialog>.SetPropValue(this, value); } }
 
@@ -30,14 +26,14 @@ namespace NeoEdit.Program.Dialogs
 			codePage.DisplayMemberPath = "Value";
 		}
 
-		Result result;
+		FilesInsertDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { CodePage = CodePage };
+			result = new FilesInsertDialogResult { CodePage = CodePage };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static FilesInsertDialogResult Run(Window parent)
 		{
 			var dialog = new FilesInsertDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

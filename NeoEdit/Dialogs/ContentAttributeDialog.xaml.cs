@@ -5,19 +5,13 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Program.Content;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class ContentAttributeDialog
 	{
-		public class Result
-		{
-			public string Attribute { get; set; }
-			public Regex Regex { get; set; }
-			public bool Invert { get; set; }
-		}
-
 		[DepProp]
 		public List<string> Attributes { get { return UIHelper<ContentAttributeDialog>.GetPropValue<List<string>>(this); } set { UIHelper<ContentAttributeDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -59,7 +53,7 @@ namespace NeoEdit.Program.Dialogs
 			Value = Values.FirstOrDefault();
 		}
 
-		Result result;
+		ContentAttributeDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var text = Value;
@@ -73,11 +67,11 @@ namespace NeoEdit.Program.Dialogs
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
 
-			result = new Result { Attribute = Attribute, Regex = new Regex(text, options), Invert = Invert };
+			result = new ContentAttributeDialogResult { Attribute = Attribute, Regex = new Regex(text, options), Invert = Invert };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, List<ParserNode> nodes)
+		public static ContentAttributeDialogResult Run(Window parent, List<ParserNode> nodes)
 		{
 			var dialog = new ContentAttributeDialog(nodes) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -6,18 +6,12 @@ using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class ImageSizeDialog
 	{
-		public class Result
-		{
-			public string WidthExpression { get; set; }
-			public string HeightExpression { get; set; }
-			public InterpolationMode InterpolationMode { get; set; }
-		}
-
 		[DepProp]
 		public string WidthExpression { get { return UIHelper<ImageSizeDialog>.GetPropValue<string>(this); } set { UIHelper<ImageSizeDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -75,16 +69,16 @@ namespace NeoEdit.Program.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		ImageSizeDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { WidthExpression = WidthExpression, HeightExpression = HeightExpression, InterpolationMode = InterpolationMode };
+			result = new ImageSizeDialogResult { WidthExpression = WidthExpression, HeightExpression = HeightExpression, InterpolationMode = InterpolationMode };
 			widthExpression.AddCurrentSuggestion();
 			heightExpression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables)
+		public static ImageSizeDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageSizeDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -3,6 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	xmlns:dialogs="clr-namespace:NeoEdit.Program.Dialogs"
+	xmlns:models="clr-namespace:NeoEdit.Program.Models"
 	Title="Expression" SizeToContent="Height" Width="1000" FocusManager.FocusedElement="{Binding ElementName=expression}">
 
 	<Grid Margin="10">
@@ -28,8 +29,8 @@
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
-			<Button Click="OkClick" Tag="{x:Static dialogs:EditExpressionExpressionDialog+Action.Evaluate}" IsDefault="True" Content="Evaluate" Padding="10,1"/>
-			<Button Click="OkClick" Tag="{x:Static dialogs:EditExpressionExpressionDialog+Action.Copy}" Content="_Copy" Padding="10,1"/>
+			<Button Click="OkClick" Tag="{x:Static models:EditExpressionExpressionDialogResult+Actions.Evaluate}" IsDefault="True" Content="Evaluate" Padding="10,1"/>
+			<Button Click="OkClick" Tag="{x:Static models:EditExpressionExpressionDialogResult+Actions.Copy}" Content="_Copy" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>
 	</Grid>

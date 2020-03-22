@@ -7,28 +7,12 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class SelectSplitDialog
 	{
-		public class Result
-		{
-			public string Text { get; set; }
-			public string Index { get; set; }
-			public bool WholeWords { get; set; }
-			public bool MatchCase { get; set; }
-			public bool IsRegex { get; set; }
-			public bool IncludeResults { get; set; }
-			public bool ExcludeEmpty { get; set; }
-			public bool BalanceStrings { get; set; }
-			public bool BalanceParens { get; set; }
-			public bool BalanceBrackets { get; set; }
-			public bool BalanceBraces { get; set; }
-			public bool BalanceLTGT { get; set; }
-			public bool TrimWhitespace { get; set; }
-		}
-
 		[DepProp]
 		public string Text { get { return UIHelper<SelectSplitDialog>.GetPropValue<string>(this); } set { UIHelper<SelectSplitDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -75,13 +59,13 @@ namespace NeoEdit.Program.Dialogs
 			BalanceLTGT = false;
 		}
 
-		Result result;
+		SelectSplitDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new Result
+			result = new SelectSplitDialogResult
 			{
 				Text = Text,
 				Index = Index,
@@ -105,7 +89,7 @@ namespace NeoEdit.Program.Dialogs
 
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
-		static public Result Run(Window parent, NEVariables variables)
+		static public SelectSplitDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new SelectSplitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

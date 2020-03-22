@@ -3,17 +3,12 @@ using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class TextRandomTextDialog
 	{
-		public class Result
-		{
-			public string Expression { get; set; }
-			public string Chars { get; set; }
-		}
-
 		[DepProp]
 		public string Expression { get { return UIHelper<TextRandomTextDialog>.GetPropValue<string>(this); } set { UIHelper<TextRandomTextDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -30,21 +25,21 @@ namespace NeoEdit.Program.Dialogs
 			Expression = "x";
 		}
 
-		Result result;
+		TextRandomTextDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var chars = Helpers.GetCharsFromCharString(Chars);
 			if (chars.Length == 0)
 				return;
 
-			result = new Result { Expression = Expression, Chars = chars };
+			result = new TextRandomTextDialogResult { Expression = Expression, Chars = chars };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		public static Result Run(Window parent, NEVariables variables)
+		public static TextRandomTextDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new TextRandomTextDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

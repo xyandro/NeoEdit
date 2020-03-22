@@ -13,17 +13,13 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class ImageGrabColorDialog
 	{
-		public class Result
-		{
-			public List<string> Colors { get; set; }
-		}
-
 		[DepProp]
 		public byte Alpha { get { return UIHelper<ImageGrabColorDialog>.GetPropValue<byte>(this); } set { UIHelper<ImageGrabColorDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -76,12 +72,12 @@ namespace NeoEdit.Program.Dialogs
 			base.OnClosed(e);
 		}
 
-		Result result;
+		ImageGrabColorDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (!Colors.Any())
 				AddClick(sender, e);
-			result = new Result { Colors = Colors.ToList() };
+			result = new ImageGrabColorDialogResult { Colors = Colors.ToList() };
 			DialogResult = true;
 		}
 
@@ -161,7 +157,7 @@ namespace NeoEdit.Program.Dialogs
 			}
 		}
 
-		static public Result Run(Window parent, string color)
+		static public ImageGrabColorDialogResult Run(Window parent, string color)
 		{
 			var dialog = new ImageGrabColorDialog(color) { Owner = parent };
 			if (!dialog.ShowDialog())

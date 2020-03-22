@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class DateTimeToTimeZoneDialog
 	{
-		public class Result
-		{
-			public string TimeZone { get; set; }
-		}
-
 		[DepProp]
 		public string TimeZone { get { return UIHelper<DateTimeToTimeZoneDialog>.GetPropValue<string>(this); } set { UIHelper<DateTimeToTimeZoneDialog>.SetPropValue(this, value); } }
 
@@ -23,14 +19,14 @@ namespace NeoEdit.Program.Dialogs
 			timeZone.AddSuggestions(Dater.GetAllTimeZones().ToArray());
 		}
 
-		Result result;
+		DateTimeToTimeZoneDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { TimeZone = TimeZone };
+			result = new DateTimeToTimeZoneDialogResult { TimeZone = TimeZone };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static DateTimeToTimeZoneDialogResult Run(Window parent)
 		{
 			var dialog = new DateTimeToTimeZoneDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

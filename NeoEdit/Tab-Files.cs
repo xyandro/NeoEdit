@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Searchers;
 using NeoEdit.Program.Transform;
@@ -384,18 +385,18 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Name_MakeAbsolute()
 		{
-			var result = state.Configuration as FilesNamesMakeAbsoluteRelativeDialog.Result;
+			var result = state.Configuration as FilesNamesMakeAbsoluteRelativeDialogResult;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
-			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteRelativeDialog.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
+			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteRelativeDialogResult.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
 		object Configure_Files_Name_MakeRelative() => FilesNamesMakeAbsoluteRelativeDialog.Run(state.Window, GetVariables(), false, true);
 
 		void Execute_Files_Name_MakeRelative()
 		{
-			var result = state.Configuration as FilesNamesMakeAbsoluteRelativeDialog.Result;
+			var result = state.Configuration as FilesNamesMakeAbsoluteRelativeDialogResult;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
-			if (result.Type == FilesNamesMakeAbsoluteRelativeDialog.ResultType.File)
+			if (result.Type == FilesNamesMakeAbsoluteRelativeDialogResult.ResultType.File)
 				results = results.Select(str => Path.GetDirectoryName(str)).ToList();
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
 		}
@@ -404,7 +405,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Name_GetUnique()
 		{
-			var result = state.Configuration as FilesNamesGetUniqueDialog.Result;
+			var result = state.Configuration as FilesNamesGetUniqueDialogResult;
 			var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 			if (!result.Format.Contains("{Unique}"))
 				throw new Exception("Format must contain \"{Unique}\" tag");
@@ -533,7 +534,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Set_Time(TimestampType type)
 		{
-			var result = state.Configuration as FilesSetTimeDialog.Result;
+			var result = state.Configuration as FilesSetTimeDialogResult;
 			var dateTimes = GetExpressionResults<DateTime>(result.Expression, Selections.Count());
 			var files = RelativeSelectedFiles();
 			for (var ctr = 0; ctr < files.Count; ++ctr)
@@ -602,7 +603,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Find()
 		{
-			var result = state.Configuration as FilesFindDialog.Result;
+			var result = state.Configuration as FilesFindDialogResult;
 			// For each file, determine strings to find
 			List<List<string>> stringsToFind;
 
@@ -673,7 +674,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Insert()
 		{
-			var result = state.Configuration as FilesInsertDialog.Result;
+			var result = state.Configuration as FilesInsertDialogResult;
 			ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
 		}
 
@@ -699,7 +700,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Create_FromExpressions()
 		{
-			var result = state.Configuration as FilesCreateFromExpressionsDialog.Result;
+			var result = state.Configuration as FilesCreateFromExpressionsDialogResult;
 			var variables = GetVariables();
 
 			var filenameExpression = state.GetExpression(result.FileName);
@@ -780,7 +781,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Select_ByVersionControlStatus()
 		{
-			var result = state.Configuration as FilesSelectByVersionControlStatusDialog.Result;
+			var result = state.Configuration as FilesSelectByVersionControlStatusDialogResult;
 			var versioner = new Versioner();
 			var statuses = RelativeSelectedFiles().Select(x => versioner.GetStatus(x)).ToList();
 			var sels = Selections.Zip(statuses, (range, status) => new { range, status }).Where(obj => result.Statuses.HasFlag(obj.status)).Select(obj => obj.range).ToList();
@@ -791,7 +792,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Hash()
 		{
-			var result = state.Configuration as FilesHashDialog.Result;
+			var result = state.Configuration as FilesHashDialogResult;
 			Tabs.RunTasksDialog.AddTasks(RelativeSelectedFiles(), (file, progress) =>
 			{
 				progress.Name = Path.GetFileName(file);
@@ -803,7 +804,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Sign()
 		{
-			var result = state.Configuration as FilesSignDialog.Result;
+			var result = state.Configuration as FilesSignDialogResult;
 			ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
@@ -811,7 +812,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Operations_CopyMove(bool move)
 		{
-			var result = state.Configuration as FilesOperationsCopyMoveDialog.Result;
+			var result = state.Configuration as FilesOperationsCopyMoveDialogResult;
 			var variables = GetVariables();
 
 			var oldFileNameExpression = state.GetExpression(result.OldFileName);
@@ -972,7 +973,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Operations_Encoding()
 		{
-			var result = state.Configuration as FilesOperationsEncodingDialog.Result;
+			var result = state.Configuration as FilesOperationsEncodingDialogResult;
 			Tabs.RunTasksDialog.AddTasks(RelativeSelectedFiles(), (inputFile, progress) =>
 			{
 				progress.Name = Path.GetFileName(inputFile);
@@ -1006,7 +1007,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Operations_CombineFiles()
 		{
-			var result = state.Configuration as FilesOperationsCombineFilesDialog.Result;
+			var result = state.Configuration as FilesOperationsCombineFilesDialogResult;
 			var variables = GetVariables();
 
 			var inputFileCountExpr = state.GetExpression(result.InputFileCount);

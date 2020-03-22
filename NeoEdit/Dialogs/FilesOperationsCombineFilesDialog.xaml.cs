@@ -2,18 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesOperationsCombineFilesDialog
 	{
-		public class Result
-		{
-			public string InputFiles { get; set; }
-			public string InputFileCount { get; set; }
-			public string OutputFiles { get; set; }
-		}
-
 		[DepProp]
 		public string InputFiles { get { return UIHelper<FilesOperationsCombineFilesDialog>.GetPropValue<string>(this); } set { UIHelper<FilesOperationsCombineFilesDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -33,14 +27,14 @@ namespace NeoEdit.Program.Dialogs
 			OutputFiles = @"$@""{directoryname(xtmin)}\{filenamewithoutextension(xtmin)}-Combine{extension(xtmin)}""";
 		}
 
-		Result result;
+		FilesOperationsCombineFilesDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { InputFiles = InputFiles, InputFileCount = InputFileCount, OutputFiles = OutputFiles };
+			result = new FilesOperationsCombineFilesDialogResult { InputFiles = InputFiles, InputFileCount = InputFileCount, OutputFiles = OutputFiles };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables)
+		static public FilesOperationsCombineFilesDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new FilesOperationsCombineFilesDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -4,19 +4,12 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class ImageGrabImageDialog
 	{
-		public class Result
-		{
-			public string GrabX;
-			public string GrabY;
-			public string GrabWidth;
-			public string GrabHeight;
-		}
-
 		[DepProp]
 		public string GrabX { get { return UIHelper<ImageGrabImageDialog>.GetPropValue<string>(this); } set { UIHelper<ImageGrabImageDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -91,10 +84,10 @@ namespace NeoEdit.Program.Dialogs
 			return result.Value;
 		}
 
-		Result result;
+		ImageGrabImageDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result
+			result = new ImageGrabImageDialogResult
 			{
 				GrabX = GrabX,
 				GrabY = GrabY,
@@ -104,7 +97,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables)
+		static public ImageGrabImageDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageGrabImageDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -97,7 +98,7 @@ namespace NeoEdit.Program
 
 		void Execute_DateTime_Format()
 		{
-			var result = state.Configuration as DateTimeFormatDialog.Result;
+			var result = state.Configuration as DateTimeFormatDialogResult;
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.StringToDateTimeOffset(Text.GetString(range), result.InputFormat), result.OutputFormat)).ToList());
 		}
 
@@ -109,7 +110,7 @@ namespace NeoEdit.Program
 
 		void Execute_DateTime_ToTimeZone()
 		{
-			var result = state.Configuration as DateTimeToTimeZoneDialog.Result;
+			var result = state.Configuration as DateTimeToTimeZoneDialogResult;
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: result.TimeZone), result.TimeZone))).ToList());
 		}
 

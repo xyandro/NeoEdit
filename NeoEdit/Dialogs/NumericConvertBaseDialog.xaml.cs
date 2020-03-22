@@ -4,17 +4,12 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NumericConvertBaseDialog
 	{
-		public class Result
-		{
-			public Dictionary<char, int> InputSet { get; set; }
-			public Dictionary<int, char> OutputSet { get; set; }
-		}
-
 		[DepProp]
 		public int? InputBase { get { return UIHelper<NumericConvertBaseDialog>.GetPropValue<int?>(this); } set { UIHelper<NumericConvertBaseDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -93,7 +88,7 @@ namespace NeoEdit.Program.Dialogs
 			return result;
 		}
 
-		Result result;
+		NumericConvertBaseDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var inputChars = Helpers.GetCharsFromCharString(InputSet);
@@ -101,7 +96,7 @@ namespace NeoEdit.Program.Dialogs
 			if (((inputChars.GroupBy(ch => ch).Any(group => group.Count() > 1))) || (outputChars.GroupBy(ch => ch).Any(group => group.Count() > 1)))
 				throw new ArgumentException("Can't have same number more than once");
 
-			result = new Result
+			result = new NumericConvertBaseDialogResult
 			{
 				InputSet = inputChars.Select((ch, index) => new { ch, index }).ToDictionary(pair => pair.ch, pair => pair.index),
 				OutputSet = outputChars.Select((ch, index) => new { ch, index }).ToDictionary(pair => pair.index, pair => pair.ch),
@@ -115,7 +110,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent)
+		static public NumericConvertBaseDialogResult Run(Window parent)
 		{
 			var dialog = new NumericConvertBaseDialog { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -2,20 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class ImageAdjustColorDialog
 	{
-		public class Result
-		{
-			public string Expression { get; set; }
-			public bool Alpha { get; set; }
-			public bool Red { get; set; }
-			public bool Green { get; set; }
-			public bool Blue { get; set; }
-		}
-
 		[DepProp]
 		public string Expression { get { return UIHelper<ImageAdjustColorDialog>.GetPropValue<string>(this); } set { UIHelper<ImageAdjustColorDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -38,15 +30,15 @@ namespace NeoEdit.Program.Dialogs
 			Red = Green = Blue = true;
 		}
 
-		Result result;
+		ImageAdjustColorDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			expression.AddCurrentSuggestion();
-			result = new Result { Expression = Expression, Alpha = Alpha, Red = Red, Green = Green, Blue = Blue };
+			result = new ImageAdjustColorDialogResult { Expression = Expression, Alpha = Alpha, Red = Red, Green = Green, Blue = Blue };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables)
+		static public ImageAdjustColorDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageAdjustColorDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -3,20 +3,13 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class EditConvertDialog
 	{
-		public class Result
-		{
-			public Coder.CodePage InputType { get; set; }
-			public bool InputBOM { get; set; }
-			public Coder.CodePage OutputType { get; set; }
-			public bool OutputBOM { get; set; }
-		}
-
 		[DepProp]
 		public Coder.CodePage InputType { get { return UIHelper<EditConvertDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<EditConvertDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -48,14 +41,14 @@ namespace NeoEdit.Program.Dialogs
 			OutputBOM = true;
 		}
 
-		Result result;
+		EditConvertDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { InputType = InputType, InputBOM = InputBOM, OutputType = OutputType, OutputBOM = OutputBOM };
+			result = new EditConvertDialogResult { InputType = InputType, InputBOM = InputBOM, OutputType = OutputType, OutputBOM = OutputBOM };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent)
+		static public EditConvertDialogResult Run(Window parent)
 		{
 			var dialog = new EditConvertDialog { Owner = parent };
 			if (!dialog.ShowDialog())

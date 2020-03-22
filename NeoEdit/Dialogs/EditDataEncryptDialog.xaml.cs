@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
 
@@ -14,14 +15,6 @@ namespace NeoEdit.Program.Dialogs
 {
 	partial class EditDataEncryptDialog
 	{
-		public class Result
-		{
-			public Coder.CodePage InputCodePage { get; set; }
-			public Cryptor.Type CryptorType { get; set; }
-			public string Key { get; set; }
-			public Coder.CodePage OutputCodePage { get; set; }
-		}
-
 		[DepProp]
 		Dictionary<Coder.CodePage, string> CodePages { get { return UIHelper<EditDataEncryptDialog>.GetPropValue<Dictionary<Coder.CodePage, string>>(this); } set { UIHelper<EditDataEncryptDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -60,17 +53,17 @@ namespace NeoEdit.Program.Dialogs
 				Key = key;
 		}
 
-		Result result = null;
+		EditDataEncryptDialogResult result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (Key == null)
 				return;
 
-			result = new Result { InputCodePage = InputCodePage, CryptorType = CryptorType, Key = Key, OutputCodePage = OutputCodePage };
+			result = new EditDataEncryptDialogResult { InputCodePage = InputCodePage, CryptorType = CryptorType, Key = Key, OutputCodePage = OutputCodePage };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, Coder.CodePage codePage, bool encrypt)
+		public static EditDataEncryptDialogResult Run(Window parent, Coder.CodePage codePage, bool encrypt)
 		{
 			var dialog = new EditDataEncryptDialog(codePage, encrypt) { Owner = parent };
 			if (!dialog.ShowDialog())

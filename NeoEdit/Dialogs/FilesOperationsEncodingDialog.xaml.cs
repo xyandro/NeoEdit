@@ -2,18 +2,13 @@
 using System.Linq;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesOperationsEncodingDialog
 	{
-		public class Result
-		{
-			public Coder.CodePage InputCodePage { get; set; }
-			public Coder.CodePage OutputCodePage { get; set; }
-		}
-
 		[DepProp]
 		public Coder.CodePage InputCodePage { get { return UIHelper<FilesOperationsEncodingDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<FilesOperationsEncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -34,14 +29,14 @@ namespace NeoEdit.Program.Dialogs
 			OutputCodePage = Coder.CodePage.UTF8;
 		}
 
-		Result result;
+		FilesOperationsEncodingDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { InputCodePage = InputCodePage, OutputCodePage = OutputCodePage };
+			result = new FilesOperationsEncodingDialogResult { InputCodePage = InputCodePage, OutputCodePage = OutputCodePage };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent)
+		static public FilesOperationsEncodingDialogResult Run(Window parent)
 		{
 			var dialog = new FilesOperationsEncodingDialog { Owner = parent };
 			if (!dialog.ShowDialog())

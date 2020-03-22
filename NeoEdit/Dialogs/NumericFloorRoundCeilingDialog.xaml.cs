@@ -2,17 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NumericFloorRoundCeilingDialog
 	{
-		public class Result
-		{
-			public string BaseValue { get; set; }
-			public string Interval { get; set; }
-		}
-
 		[DepProp]
 		public string BaseValue { get { return UIHelper<NumericFloorRoundCeilingDialog>.GetPropValue<string>(this); } set { UIHelper<NumericFloorRoundCeilingDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -30,16 +25,16 @@ namespace NeoEdit.Program.Dialogs
 			Interval = "1";
 		}
 
-		Result result;
+		NumericFloorRoundCeilingDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { BaseValue = BaseValue, Interval = Interval };
+			result = new NumericFloorRoundCeilingDialogResult { BaseValue = BaseValue, Interval = Interval };
 			baseValue.AddCurrentSuggestion();
 			interval.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, string title, NEVariables variables)
+		static public NumericFloorRoundCeilingDialogResult Run(Window parent, string title, NEVariables variables)
 		{
 			var dialog = new NumericFloorRoundCeilingDialog(title, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

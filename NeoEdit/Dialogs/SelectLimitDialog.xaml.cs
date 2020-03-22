@@ -2,20 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class SelectLimitDialog
 	{
-		public class Result
-		{
-			public string FirstSelection { get; set; }
-			public string EveryNth { get; set; }
-			public string TakeCount { get; set; }
-			public string NumSelections { get; set; }
-			public bool JoinSelections { get; set; }
-		}
-
 		[DepProp]
 		public string FirstSelection { get { return UIHelper<SelectLimitDialog>.GetPropValue<string>(this); } set { UIHelper<SelectLimitDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -41,18 +33,18 @@ namespace NeoEdit.Program.Dialogs
 			JoinSelections = false;
 		}
 
-		Result result = null;
+		SelectLimitDialogResult result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			firstSelection.AddCurrentSuggestion();
 			everyNth.AddCurrentSuggestion();
 			takeCount.AddCurrentSuggestion();
 			numSelections.AddCurrentSuggestion();
-			result = new Result { FirstSelection = FirstSelection, EveryNth = EveryNth, TakeCount = TakeCount, NumSelections = NumSelections, JoinSelections = JoinSelections };
+			result = new SelectLimitDialogResult { FirstSelection = FirstSelection, EveryNth = EveryNth, TakeCount = TakeCount, NumSelections = NumSelections, JoinSelections = JoinSelections };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables)
+		public static SelectLimitDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new SelectLimitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

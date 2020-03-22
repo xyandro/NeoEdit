@@ -3,19 +3,13 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NumericMinMaxValuesDialog
 	{
-		public class Result
-		{
-			public Coder.CodePage CodePage { get; set; }
-			public bool Min { get; set; }
-			public bool Max { get; set; }
-		}
-
 		[DepProp]
 		public Coder.CodePage CodePage { get { return UIHelper<NumericMinMaxValuesDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<NumericMinMaxValuesDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -39,16 +33,16 @@ namespace NeoEdit.Program.Dialogs
 			Max = true;
 		}
 
-		Result result;
+		NumericMinMaxValuesDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if ((!Min) && (!Max))
 				return;
-			result = new Result { CodePage = CodePage, Min = Min, Max = Max };
+			result = new NumericMinMaxValuesDialogResult { CodePage = CodePage, Min = Min, Max = Max };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent)
+		static public NumericMinMaxValuesDialogResult Run(Window parent)
 		{
 			var dialog = new NumericMinMaxValuesDialog { Owner = parent };
 			if (!dialog.ShowDialog())

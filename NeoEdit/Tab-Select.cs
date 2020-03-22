@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Searchers;
 
 namespace NeoEdit.Program
@@ -71,7 +72,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		IEnumerable<Range> SelectSplit(Range range, SelectSplitDialog.Result result, ISearcher searcher)
+		IEnumerable<Range> SelectSplit(Range range, SelectSplitDialogResult result, ISearcher searcher)
 		{
 			var stack = new Stack<SelectSplitEnum>();
 			stack.Push(SelectSplitEnum.None);
@@ -246,7 +247,7 @@ namespace NeoEdit.Program
 
 		void Execute_Select_Limit()
 		{
-			var result = state.Configuration as SelectLimitDialog.Result;
+			var result = state.Configuration as SelectLimitDialogResult;
 			var variables = GetVariables();
 			var firstSelection = state.GetExpression(result.FirstSelection).Evaluate<int>(variables);
 			var everyNth = state.GetExpression(result.EveryNth).Evaluate<int>(variables);
@@ -346,7 +347,7 @@ namespace NeoEdit.Program
 
 		void Execute_Select_Repeats_ByCount(bool caseSensitive)
 		{
-			var result = state.Configuration as SelectByCountDialog.Result;
+			var result = state.Configuration as SelectByCountDialogResult;
 			var strs = Selections.Select((range, index) => Tuple.Create(Text.GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 			foreach (var tuple in strs)
@@ -418,7 +419,7 @@ namespace NeoEdit.Program
 
 		void Execute_Select_Split()
 		{
-			var result = state.Configuration as SelectSplitDialog.Result;
+			var result = state.Configuration as SelectSplitDialogResult;
 			var indexes = GetExpressionResults<int>(result.Index, Selections.Count());
 
 			ISearcher searcher;

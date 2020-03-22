@@ -5,44 +5,12 @@ using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class EditModifyRegionsDialog
 	{
-		public enum Action
-		{
-			Select_Select,
-			Select_Previous,
-			Select_Next,
-			Select_Enclosing,
-			Select_WithEnclosing,
-			Select_WithoutEnclosing,
-			Modify_Set,
-			Modify_Clear,
-			Modify_Remove,
-			Modify_Add,
-			Modify_Unite,
-			Modify_Intersect,
-			Modify_Exclude,
-			Modify_Repeat,
-			Copy_Enclosing,
-			Copy_EnclosingIndex,
-			Transform_Flatten,
-			Transform_Transpose,
-			Transform_RotateLeft,
-			Transform_RotateRight,
-			Transform_Rotate180,
-			Transform_MirrorHorizontal,
-			Transform_MirrorVertical,
-		}
-
-		public class Result
-		{
-			public List<int> Regions { get; set; }
-			public Action Action { get; set; }
-		}
-
 		[DepProp]
 		public bool Region1 { get { return UIHelper<EditModifyRegionsDialog>.GetPropValue<bool>(this); } set { UIHelper<EditModifyRegionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -77,7 +45,7 @@ namespace NeoEdit.Program.Dialogs
 
 		void Reset(object sender, RoutedEventArgs e) => Region1 = Region2 = Region3 = Region4 = Region5 = Region6 = Region7 = Region8 = Region9 = false;
 
-		Result result;
+		EditModifyRegionsDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var regions = new List<int>();
@@ -102,11 +70,11 @@ namespace NeoEdit.Program.Dialogs
 			if (!regions.Any())
 				return;
 
-			result = new Result { Regions = regions, Action = (Action)(sender as Button).Tag };
+			result = new EditModifyRegionsDialogResult { Regions = regions, Action = (EditModifyRegionsDialogResult.Actions)(sender as Button).Tag };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static EditModifyRegionsDialogResult Run(Window parent)
 		{
 			var dialog = new EditModifyRegionsDialog { Owner = parent };
 			if (!dialog.ShowDialog())

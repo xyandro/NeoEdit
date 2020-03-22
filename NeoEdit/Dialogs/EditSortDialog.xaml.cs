@@ -1,20 +1,12 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class EditSortDialog
 	{
-		public class Result
-		{
-			public SortScope SortScope { get; set; }
-			public int UseRegion { get; set; }
-			public SortType SortType { get; set; }
-			public bool CaseSensitive { get; set; }
-			public bool Ascending { get; set; }
-		}
-
 		[DepProp]
 		public SortScope SortScope { get { return UIHelper<EditSortDialog>.GetPropValue<SortScope>(this); } set { UIHelper<EditSortDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -42,14 +34,14 @@ namespace NeoEdit.Program.Dialogs
 			ascending.IsChecked = true;
 		}
 
-		Result result;
+		EditSortDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { SortScope = SortScope, UseRegion = UseRegion, SortType = SortType, CaseSensitive = CaseSensitive, Ascending = Ascending };
+			result = new EditSortDialogResult { SortScope = SortScope, UseRegion = UseRegion, SortType = SortType, CaseSensitive = CaseSensitive, Ascending = Ascending };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static EditSortDialogResult Run(Window parent)
 		{
 			var dialog = new EditSortDialog { Owner = parent };
 			if (!dialog.ShowDialog())

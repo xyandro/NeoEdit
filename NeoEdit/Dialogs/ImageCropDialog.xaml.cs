@@ -6,21 +6,13 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class ImageCropDialog
 	{
-		public class Result
-		{
-			public string XExpression { get; set; }
-			public string YExpression { get; set; }
-			public string WidthExpression { get; set; }
-			public string HeightExpression { get; set; }
-			public string FillColor { get; set; }
-		}
-
 		[DepProp]
 		public string XExpression { get { return UIHelper<ImageCropDialog>.GetPropValue<string>(this); } set { UIHelper<ImageCropDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -181,10 +173,10 @@ namespace NeoEdit.Program.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		ImageCropDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { XExpression = XExpression, YExpression = YExpression, WidthExpression = WidthExpression, HeightExpression = HeightExpression, FillColor = Colorer.StringToString(FillColor) };
+			result = new ImageCropDialogResult { XExpression = XExpression, YExpression = YExpression, WidthExpression = WidthExpression, HeightExpression = HeightExpression, FillColor = Colorer.StringToString(FillColor) };
 			xExpression.AddCurrentSuggestion();
 			yExpression.AddCurrentSuggestion();
 			widthExpression.AddCurrentSuggestion();
@@ -194,7 +186,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables)
+		public static ImageCropDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageCropDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

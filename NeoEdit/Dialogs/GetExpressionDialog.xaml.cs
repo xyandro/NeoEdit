@@ -2,16 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class GetExpressionDialog
 	{
-		public class Result
-		{
-			public string Expression { get; set; }
-		}
-
 		[DepProp]
 		public string Expression { get { return UIHelper<GetExpressionDialog>.GetPropValue<string>(this); } set { UIHelper<GetExpressionDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -34,18 +30,18 @@ namespace NeoEdit.Program.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		GetExpressionDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (!IsValid)
 				throw new Exception("Invalid expression");
 
 			expression.AddCurrentSuggestion();
-			result = new Result { Expression = Expression };
+			result = new GetExpressionDialogResult { Expression = Expression };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables, int? numRows = null)
+		static public GetExpressionDialogResult Run(Window parent, NEVariables variables, int? numRows = null)
 		{
 			var dialog = new GetExpressionDialog(variables, numRows) { Owner = parent };
 			if (!dialog.ShowDialog())

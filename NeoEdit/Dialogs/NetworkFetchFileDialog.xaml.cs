@@ -2,17 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NetworkFetchFileDialog
 	{
-		public class Result
-		{
-			public string URL { get; set; }
-			public string FileName { get; set; }
-		}
-
 		[DepProp]
 		public string URL { get { return UIHelper<NetworkFetchFileDialog>.GetPropValue<string>(this); } set { UIHelper<NetworkFetchFileDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -31,16 +26,16 @@ namespace NeoEdit.Program.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		NetworkFetchFileDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { URL = URL, FileName = FileName };
+			result = new NetworkFetchFileDialogResult { URL = URL, FileName = FileName };
 			url.AddCurrentSuggestion();
 			fileName.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables)
+		public static NetworkFetchFileDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NetworkFetchFileDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

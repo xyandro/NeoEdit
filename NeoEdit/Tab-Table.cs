@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program
 {
@@ -56,7 +57,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_Convert()
 		{
-			var result = state.Configuration as TableConvertDialog.Result;
+			var result = state.Configuration as TableConvertDialogResult;
 			var table = GetTable();
 			ContentType = result.TableType;
 			SetText(table);
@@ -117,7 +118,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_EditTable()
 		{
-			var result = state.Configuration as TableEditTableDialog.Result;
+			var result = state.Configuration as TableEditTableDialogResult;
 			SetText(GetTable().Aggregate(result.AggregateData).Sort(result.SortData));
 		}
 
@@ -154,7 +155,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_Select_RowsByExpression()
 		{
-			var result = state.Configuration as GetExpressionDialog.Result;
+			var result = state.Configuration as GetExpressionDialogResult;
 			var table = GetTable();
 			var variables = GetTableVariables(table);
 			var results = state.GetExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
@@ -187,7 +188,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_Database_GenerateInserts()
 		{
-			var result = state.Configuration as TableDatabaseGenerateInsertsDialog.Result;
+			var result = state.Configuration as TableDatabaseGenerateInsertsDialogResult;
 			var table = GetTable();
 			var header = $"INSERT INTO {result.TableName} ({string.Join(", ", Enumerable.Range(0, table.NumColumns).Select(column => table.GetHeader(column)))}) VALUES{(result.BatchSize == 1 ? " " : TextView.DefaultEnding)}";
 			var output = Enumerable.Range(0, table.NumRows).Batch(result.BatchSize).Select(batch => string.Join($",{TextView.DefaultEnding}", batch.Select(row => $"({string.Join(", ", result.Columns.Select(column => GetDBValue(table[row, column])))})"))).Select(val => $"{header}{val}{TextView.DefaultEnding}").ToList();
@@ -207,7 +208,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_Database_GenerateUpdates()
 		{
-			var result = state.Configuration as TableDatabaseGenerateUpdatesDialog.Result;
+			var result = state.Configuration as TableDatabaseGenerateUpdatesDialogResult;
 			var table = GetTable();
 
 			var output = Enumerable.Range(0, table.NumRows).Select(row => $"UPDATE {result.TableName} SET {string.Join(", ", result.Update.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{TextView.DefaultEnding}").ToList();
@@ -227,7 +228,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_Database_GenerateDeletes()
 		{
-			var result = state.Configuration as TableDatabaseGenerateDeletesDialog.Result;
+			var result = state.Configuration as TableDatabaseGenerateDeletesDialogResult;
 			var table = GetTable();
 
 			var output = Enumerable.Range(0, table.NumRows).Select(row => $"DELETE FROM {result.TableName} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{TextView.DefaultEnding}").ToList();

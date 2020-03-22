@@ -2,19 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class ImageGIFAnimateDialog
 	{
-		public class Result
-		{
-			public string InputFiles { get; set; }
-			public string OutputFile { get; set; }
-			public string Delay { get; set; }
-			public string Repeat { get; set; }
-		}
-
 		[DepProp]
 		public string InputFiles { get { return UIHelper<ImageGIFAnimateDialog>.GetPropValue<string>(this); } set { UIHelper<ImageGIFAnimateDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -39,10 +32,10 @@ namespace NeoEdit.Program.Dialogs
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		ImageGIFAnimateDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { InputFiles = InputFiles, OutputFile = OutputFile, Delay = Delay, Repeat = Repeat };
+			result = new ImageGIFAnimateDialogResult { InputFiles = InputFiles, OutputFile = OutputFile, Delay = Delay, Repeat = Repeat };
 			inputFiles.AddCurrentSuggestion();
 			outputFile.AddCurrentSuggestion();
 			delay.AddCurrentSuggestion();
@@ -50,7 +43,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables)
+		public static ImageGIFAnimateDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageGIFAnimateDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

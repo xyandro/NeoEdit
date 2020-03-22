@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NetworkWCFInterceptCallsDialog
 	{
-		public class Result
-		{
-			public string WCFURL { get; set; }
-			public string InterceptURL { get; set; }
-		}
-
 		[DepProp]
 		public string WCFURL { get { return UIHelper<NetworkWCFInterceptCallsDialog>.GetPropValue<string>(this); } set { UIHelper<NetworkWCFInterceptCallsDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -26,16 +21,16 @@ namespace NeoEdit.Program.Dialogs
 			InterceptURL = interceptURL.GetLastSuggestion();
 		}
 
-		Result result;
+		NetworkWCFInterceptCallsDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { WCFURL = WCFURL, InterceptURL = InterceptURL };
+			result = new NetworkWCFInterceptCallsDialogResult { WCFURL = WCFURL, InterceptURL = InterceptURL };
 			DialogResult = true;
 			wcfURL.AddCurrentSuggestion();
 			interceptURL.AddCurrentSuggestion();
 		}
 
-		static public Result Run(Window parent)
+		static public NetworkWCFInterceptCallsDialogResult Run(Window parent)
 		{
 			var dialog = new NetworkWCFInterceptCallsDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

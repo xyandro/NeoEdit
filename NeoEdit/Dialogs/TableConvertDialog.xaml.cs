@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class TableConvertDialog
 	{
-		public class Result
-		{
-			public ParserType TableType { get; set; }
-		}
-
 		[DepProp]
 		public ParserType TableType { get { return UIHelper<TableConvertDialog>.GetPropValue<ParserType>(this); } set { UIHelper<TableConvertDialog>.SetPropValue(this, value); } }
 
@@ -26,14 +22,14 @@ namespace NeoEdit.Program.Dialogs
 			TableType = tableType;
 		}
 
-		Result result;
+		TableConvertDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { TableType = TableType };
+			result = new TableConvertDialogResult { TableType = TableType };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, ParserType tableType)
+		static public TableConvertDialogResult Run(Window parent, ParserType tableType)
 		{
 			var dialog = new TableConvertDialog(tableType) { Owner = parent };
 			if (!dialog.ShowDialog())

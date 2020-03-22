@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
 using NeoEdit.WCF;
@@ -71,7 +72,7 @@ namespace NeoEdit.Program
 
 		void Execute_Network_AbsoluteURL()
 		{
-			var result = state.Configuration as NetworkAbsoluteURLDialog.Result;
+			var result = state.Configuration as NetworkAbsoluteURLDialogResult;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.Select((range, index) => new Uri(new Uri(results[index]), Text.GetString(range)).AbsoluteUri).ToList());
 		}
@@ -89,7 +90,7 @@ namespace NeoEdit.Program
 
 		void Execute_Network_FetchFile()
 		{
-			var result = state.Configuration as NetworkFetchFileDialog.Result;
+			var result = state.Configuration as NetworkFetchFileDialogResult;
 			var variables = GetVariables();
 
 			var urlExpression = state.GetExpression(result.URL);
@@ -127,7 +128,7 @@ namespace NeoEdit.Program
 
 		void Execute_Network_FetchStream()
 		{
-			var result = state.Configuration as NetworkFetchStreamDialog.Result;
+			var result = state.Configuration as NetworkFetchStreamDialogResult;
 			var urls = GetExpressionResults<string>(result.Expression);
 			if (!urls.Any())
 				return;
@@ -141,7 +142,7 @@ namespace NeoEdit.Program
 
 		void Execute_Network_FetchPlaylist()
 		{
-			var result = state.Configuration as NetworkFetchStreamDialog.Result;
+			var result = state.Configuration as NetworkFetchStreamDialogResult;
 			var urls = GetExpressionResults<string>(result.Expression);
 			if (!urls.Any())
 				return;
@@ -188,7 +189,7 @@ namespace NeoEdit.Program
 
 		void Execute_Network_Ping()
 		{
-			var result = state.Configuration as NetworkPingDialog.Result;
+			var result = state.Configuration as NetworkPingDialogResult;
 			var replies = Task.Run(async () =>
 			{
 				var strs = GetSelectionStrings().Select(async str =>
@@ -215,7 +216,7 @@ namespace NeoEdit.Program
 
 		void Execute_Network_ScanPorts()
 		{
-			var result = state.Configuration as NetworkScanPortsDialog.Result;
+			var result = state.Configuration as NetworkScanPortsDialogResult;
 			var strs = GetSelectionStrings();
 			var results = PortScanner.ScanPorts(strs.Select(str => IPAddress.Parse(str)).ToList(), result.Ports, result.Attempts, TimeSpan.FromMilliseconds(result.Timeout), result.Concurrency);
 			ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
@@ -239,7 +240,7 @@ namespace NeoEdit.Program
 
 		void Execute_Network_WCF_InterceptCalls()
 		{
-			var result = state.Configuration as NetworkWCFInterceptCallsDialog.Result;
+			var result = state.Configuration as NetworkWCFInterceptCallsDialogResult;
 			if (Selections.Count != 1)
 				throw new Exception("Must have single selection.");
 

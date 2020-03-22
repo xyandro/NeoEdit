@@ -2,17 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class EditRepeatDialog
 	{
-		public class Result
-		{
-			public string Expression { get; set; }
-			public bool SelectRepetitions { get; set; }
-		}
-
 		[DepProp]
 		public string Expression { get { return UIHelper<EditRepeatDialog>.GetPropValue<string>(this); } set { UIHelper<EditRepeatDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -32,15 +27,15 @@ namespace NeoEdit.Program.Dialogs
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		EditRepeatDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = Expression, SelectRepetitions = SelectRepetitions };
+			result = new EditRepeatDialogResult { Expression = Expression, SelectRepetitions = SelectRepetitions };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, bool selectRepetitions, NEVariables variables)
+		static public EditRepeatDialogResult Run(Window parent, bool selectRepetitions, NEVariables variables)
 		{
 			var dialog = new EditRepeatDialog(selectRepetitions, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

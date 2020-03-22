@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
 
@@ -10,13 +11,6 @@ namespace NeoEdit.Program.Dialogs
 {
 	partial class EditDataCompressDialog
 	{
-		public class Result
-		{
-			public Coder.CodePage InputCodePage { get; set; }
-			public Compressor.Type CompressorType { get; set; }
-			public Coder.CodePage OutputCodePage { get; set; }
-		}
-
 		[DepProp]
 		Coder.CodePage InputCodePage { get { return UIHelper<EditDataCompressDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<EditDataCompressDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -56,14 +50,14 @@ namespace NeoEdit.Program.Dialogs
 			}
 		}
 
-		Result result = null;
+		EditDataCompressDialogResult result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { InputCodePage = InputCodePage, CompressorType = CompressorType, OutputCodePage = OutputCodePage };
+			result = new EditDataCompressDialogResult { InputCodePage = InputCodePage, CompressorType = CompressorType, OutputCodePage = OutputCodePage };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, Coder.CodePage codePage, bool compress)
+		public static EditDataCompressDialogResult Run(Window parent, Coder.CodePage codePage, bool compress)
 		{
 			var dialog = new EditDataCompressDialog(codePage, compress) { Owner = parent };
 			if (!dialog.ShowDialog())

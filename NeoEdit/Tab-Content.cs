@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Program.Content;
 using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 
 namespace NeoEdit.Program
@@ -116,7 +117,7 @@ namespace NeoEdit.Program
 
 		void Execute_Content_Ancestor()
 		{
-			var result = state.Configuration as ContentAttributeDialog.Result;
+			var result = state.Configuration as ContentAttributeDialogResult;
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
@@ -124,7 +125,7 @@ namespace NeoEdit.Program
 
 		void Execute_Content_Attributes()
 		{
-			var result = state.Configuration as ContentAttributesDialog.Result;
+			var result = state.Configuration as ContentAttributesDialogResult;
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 		}
 
@@ -132,7 +133,7 @@ namespace NeoEdit.Program
 
 		void Execute_Content_WithAttribute()
 		{
-			var result = state.Configuration as ContentAttributeDialog.Result;
+			var result = state.Configuration as ContentAttributeDialogResult;
 			ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
@@ -146,7 +147,7 @@ namespace NeoEdit.Program
 
 		void Execute_Content_Children_WithAttribute()
 		{
-			var result = state.Configuration as ContentAttributeDialog.Result;
+			var result = state.Configuration as ContentAttributeDialogResult;
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
@@ -160,7 +161,7 @@ namespace NeoEdit.Program
 
 		void Execute_Content_Descendants_WithAttribute()
 		{
-			var result = state.Configuration as ContentAttributeDialog.Result;
+			var result = state.Configuration as ContentAttributeDialogResult;
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 

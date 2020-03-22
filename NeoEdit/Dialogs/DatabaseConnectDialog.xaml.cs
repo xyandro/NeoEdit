@@ -6,17 +6,13 @@ using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class DatabaseConnectDialog
 	{
-		public class Result
-		{
-			public DBConnectInfo DBConnectInfo { get; internal set; }
-		}
-
 		[DepProp]
 		ObservableCollection<DBConnectInfo> DBConnectInfos { get { return UIHelper<DatabaseConnectDialog>.GetPropValue<ObservableCollection<DBConnectInfo>>(this); } set { UIHelper<DatabaseConnectDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -111,7 +107,7 @@ namespace NeoEdit.Program.Dialogs
 			}.Show();
 		}
 
-		Result result;
+		DatabaseConnectDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (DBConnectInfo == null)
@@ -119,11 +115,11 @@ namespace NeoEdit.Program.Dialogs
 
 			XMLConverter.ToXML(DBConnectInfos.ToList()).Save(dbConfigFile);
 
-			result = new Result { DBConnectInfo = DBConnectInfo };
+			result = new DatabaseConnectDialogResult { DBConnectInfo = DBConnectInfo };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static DatabaseConnectDialogResult Run(Window parent)
 		{
 			var dialog = new DatabaseConnectDialog { Owner = parent };
 			if (!dialog.ShowDialog())

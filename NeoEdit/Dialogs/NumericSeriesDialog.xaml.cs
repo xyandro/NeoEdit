@@ -2,17 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NumericSeriesDialog
 	{
-		public class Result
-		{
-			public string StartExpression { get; set; }
-			public string IncrementExpression { get; set; }
-		}
-
 		[DepProp]
 		public string StartExpression { get { return UIHelper<NumericSeriesDialog>.GetPropValue<string>(this); } set { UIHelper<NumericSeriesDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -41,14 +36,14 @@ namespace NeoEdit.Program.Dialogs
 			}
 		}
 
-		Result result;
+		NumericSeriesDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { StartExpression = StartExpression, IncrementExpression = IncrementExpression };
+			result = new NumericSeriesDialogResult { StartExpression = StartExpression, IncrementExpression = IncrementExpression };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, bool linear, NEVariables variables)
+		static public NumericSeriesDialogResult Run(Window parent, bool linear, NEVariables variables)
 		{
 			var dialog = new NumericSeriesDialog(linear, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

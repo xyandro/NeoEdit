@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Win32;
 using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -96,7 +97,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_SaveCopy_SaveCopyByExpression(bool copyOnly = false)
 		{
-			var result = state.Configuration as GetExpressionDialog.Result;
+			var result = state.Configuration as GetExpressionDialogResult;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
@@ -179,7 +180,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_Operations_RenameByExpression()
 		{
-			var result = state.Configuration as GetExpressionDialog.Result;
+			var result = state.Configuration as GetExpressionDialogResult;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
@@ -254,7 +255,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_Operations_SetDisplayName()
 		{
-			var result = state.Configuration as GetExpressionDialog.Result;
+			var result = state.Configuration as GetExpressionDialogResult;
 			if (result.Expression == "f")
 			{
 				DisplayName = null;
@@ -372,7 +373,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_Encoding_Encoding()
 		{
-			var result = state.Configuration as EncodingDialog.Result;
+			var result = state.Configuration as EncodingDialogResult;
 			CodePage = result.CodePage;
 		}
 
@@ -380,7 +381,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_Encoding_ReopenWithEncoding()
 		{
-			var result = state.Configuration as EncodingDialog.Result;
+			var result = state.Configuration as EncodingDialogResult;
 			if (IsModified)
 			{
 				if (!state.SavedAnswers[nameof(Execute_File_Encoding_ReopenWithEncoding)].HasFlag(MessageOptions.All))
@@ -403,7 +404,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_Encoding_LineEndings()
 		{
-			var result = state.Configuration as FileEncodingLineEndingsDialog.Result;
+			var result = state.Configuration as FileEncodingLineEndingsDialogResult;
 			var lines = TextView.NumLines;
 			var sel = new List<Range>();
 			for (var line = 0; line < lines; ++line)

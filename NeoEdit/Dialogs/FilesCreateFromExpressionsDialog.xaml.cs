@@ -4,19 +4,13 @@ using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesCreateFromExpressionsDialog
 	{
-		public class Result
-		{
-			public string FileName { get; set; }
-			public string Data { get; set; }
-			public Coder.CodePage CodePage { get; set; }
-		}
-
 		[DepProp]
 		public string FileName { get { return UIHelper<FilesCreateFromExpressionsDialog>.GetPropValue<string>(this); } set { UIHelper<FilesCreateFromExpressionsDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -43,16 +37,16 @@ namespace NeoEdit.Program.Dialogs
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		FilesCreateFromExpressionsDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { FileName = FileName, Data = Data, CodePage = CodePage };
+			result = new FilesCreateFromExpressionsDialogResult { FileName = FileName, Data = Data, CodePage = CodePage };
 			data.AddCurrentSuggestion();
 			fileName.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables, Coder.CodePage codePage)
+		public static FilesCreateFromExpressionsDialogResult Run(Window parent, NEVariables variables, Coder.CodePage codePage)
 		{
 			var dialog = new FilesCreateFromExpressionsDialog(variables, codePage) { Owner = parent };
 			if (!dialog.ShowDialog())

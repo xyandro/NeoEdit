@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Searchers;
 using NeoEdit.Program.Transform;
@@ -371,11 +372,11 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Expression_Expression()
 		{
-			var result = state.Configuration as EditExpressionExpressionDialog.Result;
+			var result = state.Configuration as EditExpressionExpressionDialogResult;
 			switch (result.Action)
 			{
-				case EditExpressionExpressionDialog.Action.Evaluate: ReplaceSelections(GetExpressionResults<string>(result.Expression, Selections.Count())); break;
-				case EditExpressionExpressionDialog.Action.Copy: Clipboard = GetExpressionResults<string>(result.Expression); break;
+				case EditExpressionExpressionDialogResult.Actions.Evaluate: ReplaceSelections(GetExpressionResults<string>(result.Expression, Selections.Count())); break;
+				case EditExpressionExpressionDialogResult.Actions.Copy: Clipboard = GetExpressionResults<string>(result.Expression); break;
 			}
 		}
 
@@ -385,7 +386,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Rotate()
 		{
-			var result = state.Configuration as EditRotateDialog.Result;
+			var result = state.Configuration as EditRotateDialogResult;
 			var count = state.GetExpression(result.Count).Evaluate<int>(GetVariables());
 
 			var strs = GetSelectionStrings();
@@ -402,7 +403,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Repeat()
 		{
-			var result = state.Configuration as EditRepeatDialog.Result;
+			var result = state.Configuration as EditRepeatDialogResult;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			if (results.Any(repeatCount => repeatCount < 0))
 				throw new Exception("Repeat count must be >= 0");
@@ -438,7 +439,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Data_Hash()
 		{
-			var result = state.Configuration as EditDataHashDialog.Result;
+			var result = state.Configuration as EditDataHashDialogResult;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
@@ -449,7 +450,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Data_Compress()
 		{
-			var result = state.Configuration as EditDataCompressDialog.Result;
+			var result = state.Configuration as EditDataCompressDialogResult;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -463,7 +464,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Data_Decompress()
 		{
-			var result = state.Configuration as EditDataCompressDialog.Result;
+			var result = state.Configuration as EditDataCompressDialogResult;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -477,7 +478,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Data_Encrypt()
 		{
-			var result = state.Configuration as EditDataEncryptDialog.Result;
+			var result = state.Configuration as EditDataEncryptDialogResult;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -491,7 +492,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Data_Decrypt()
 		{
-			var result = state.Configuration as EditDataEncryptDialog.Result;
+			var result = state.Configuration as EditDataEncryptDialogResult;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -505,7 +506,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Data_Sign()
 		{
-			var result = state.Configuration as EditDataSignDialog.Result;
+			var result = state.Configuration as EditDataSignDialogResult;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
@@ -516,7 +517,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Sort()
 		{
-			var result = state.Configuration as EditSortDialog.Result;
+			var result = state.Configuration as EditSortDialogResult;
 			var regions = GetSortSource(result.SortScope, result.UseRegion);
 			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
 			if (regions.Count != ordering.Count)
@@ -548,7 +549,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Convert()
 		{
-			var result = state.Configuration as EditConvertDialog.Result;
+			var result = state.Configuration as EditConvertDialogResult;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputType))
 				return;

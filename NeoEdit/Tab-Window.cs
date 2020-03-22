@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program

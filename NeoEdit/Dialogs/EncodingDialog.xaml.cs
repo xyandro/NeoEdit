@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
 
@@ -11,11 +12,6 @@ namespace NeoEdit.Program.Dialogs
 {
 	partial class EncodingDialog
 	{
-		public class Result
-		{
-			public Coder.CodePage CodePage { get; set; }
-		}
-
 		[DepProp]
 		Coder.CodePage CodePage { get { return UIHelper<EncodingDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<EncodingDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -43,14 +39,14 @@ namespace NeoEdit.Program.Dialogs
 			}
 		}
 
-		Result result = null;
+		EncodingDialogResult result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { CodePage = CodePage };
+			result = new EncodingDialogResult { CodePage = CodePage };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None)
+		public static EncodingDialogResult Run(Window parent, Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None)
 		{
 			var dialog = new EncodingDialog(codePage ?? Coder.DefaultCodePage, detected) { Owner = parent };
 			if (!dialog.ShowDialog())

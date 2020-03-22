@@ -2,19 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NumericScaleDialog
 	{
-		public class Result
-		{
-			public string PrevMin { get; set; }
-			public string PrevMax { get; set; }
-			public string NewMin { get; set; }
-			public string NewMax { get; set; }
-		}
-
 		[DepProp]
 		public string PrevMin { get { return UIHelper<NumericScaleDialog>.GetPropValue<string>(this); } set { UIHelper<NumericScaleDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -36,14 +29,14 @@ namespace NeoEdit.Program.Dialogs
 			PrevMax = NewMax = "xmax";
 		}
 
-		Result result;
+		NumericScaleDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { PrevMin = PrevMin, PrevMax = PrevMax, NewMin = NewMin, NewMax = NewMax };
+			result = new NumericScaleDialogResult { PrevMin = PrevMin, PrevMax = PrevMax, NewMin = NewMin, NewMax = NewMax };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables)
+		static public NumericScaleDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NumericScaleDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

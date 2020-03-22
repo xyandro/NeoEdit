@@ -2,17 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NumericRandomNumberDialog
 	{
-		public class Result
-		{
-			public string MinValue { get; set; }
-			public string MaxValue { get; set; }
-		}
-
 		[DepProp]
 		public string MinValue { get { return UIHelper<NumericRandomNumberDialog>.GetPropValue<string>(this); } set { UIHelper<NumericRandomNumberDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -30,14 +25,14 @@ namespace NeoEdit.Program.Dialogs
 			MaxValue = "1000";
 		}
 
-		Result result;
+		NumericRandomNumberDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { MinValue = MinValue, MaxValue = MaxValue };
+			result = new NumericRandomNumberDialogResult { MinValue = MinValue, MaxValue = MaxValue };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables)
+		static public NumericRandomNumberDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NumericRandomNumberDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

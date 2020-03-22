@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
 
@@ -11,13 +12,6 @@ namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesSignDialog
 	{
-		public class Result
-		{
-			public Cryptor.Type CryptorType { get; set; }
-			public string Key { get; set; }
-			public string Hash { get; set; }
-		}
-
 		[DepProp]
 		List<Cryptor.Type> CryptorTypes { get { return UIHelper<FilesSignDialog>.GetPropValue<List<Cryptor.Type>>(this); } set { UIHelper<FilesSignDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -55,17 +49,17 @@ namespace NeoEdit.Program.Dialogs
 				Key = key;
 		}
 
-		Result result = null;
+		FilesSignDialogResult result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (Key == null)
 				return;
 
-			result = new Result { CryptorType = CryptorType, Key = Key, Hash = Hash };
+			result = new FilesSignDialogResult { CryptorType = CryptorType, Key = Key, Hash = Hash };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static FilesSignDialogResult Run(Window parent)
 		{
 			var dialog = new FilesSignDialog { Owner = parent };
 			if (!dialog.ShowDialog())

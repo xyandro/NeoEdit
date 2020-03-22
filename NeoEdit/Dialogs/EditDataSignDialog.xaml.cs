@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
 
@@ -11,14 +12,6 @@ namespace NeoEdit.Program.Dialogs
 {
 	partial class EditDataSignDialog
 	{
-		public class Result
-		{
-			public Coder.CodePage CodePage { get; set; }
-			public Cryptor.Type CryptorType { get; set; }
-			public string Key { get; set; }
-			public string Hash { get; set; }
-		}
-
 		[DepProp]
 		Dictionary<Coder.CodePage, string> CodePages { get { return UIHelper<EditDataSignDialog>.GetPropValue<Dictionary<Coder.CodePage, string>>(this); } set { UIHelper<EditDataSignDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -64,17 +57,17 @@ namespace NeoEdit.Program.Dialogs
 				Key = key;
 		}
 
-		Result result = null;
+		EditDataSignDialogResult result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (Key == null)
 				return;
 
-			result = new Result { CodePage = CodePage, CryptorType = CryptorType, Key = Key, Hash = Hash };
+			result = new EditDataSignDialogResult { CodePage = CodePage, CryptorType = CryptorType, Key = Key, Hash = Hash };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, Coder.CodePage codePage)
+		public static EditDataSignDialogResult Run(Window parent, Coder.CodePage codePage)
 		{
 			var dialog = new EditDataSignDialog(codePage) { Owner = parent };
 			if (!dialog.ShowDialog())

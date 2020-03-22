@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
@@ -20,13 +21,6 @@ namespace NeoEdit.Program.Dialogs
 			Start = 1,
 			End = 2,
 			Both = Start | End,
-		}
-
-		public class Result
-		{
-			public HashSet<char> Chars { get; set; }
-			public bool Start { get; set; }
-			public bool End { get; set; }
 		}
 
 		[DepProp]
@@ -50,10 +44,10 @@ namespace NeoEdit.Program.Dialogs
 			Location = TrimLocation.Both;
 		}
 
-		Result result;
+		TextSelectWholeBoundedWordDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result
+			result = new TextSelectWholeBoundedWordDialogResult
 			{
 				Chars = new HashSet<char>(Helpers.GetCharsFromCharString(Chars).ToCharArray()),
 				Start = Location.HasFlag(TrimLocation.Start),
@@ -63,7 +57,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, bool wholeWord)
+		public static TextSelectWholeBoundedWordDialogResult Run(Window parent, bool wholeWord)
 		{
 			var dialog = new TextSelectWholeBoundedWordDialog(wholeWord) { Owner = parent };
 			if (!dialog.ShowDialog())

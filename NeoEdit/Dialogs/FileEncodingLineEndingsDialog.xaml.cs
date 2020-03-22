@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FileEncodingLineEndingsDialog
 	{
-		public class Result
-		{
-			public string LineEndings { get; set; }
-		}
-
 		[DepProp]
 		string LineEndings { get { return UIHelper<FileEncodingLineEndingsDialog>.GetPropValue<string>(this); } set { UIHelper<FileEncodingLineEndingsDialog>.SetPropValue(this, value); } }
 
@@ -35,16 +31,16 @@ namespace NeoEdit.Program.Dialogs
 			LineEndings = _LineEndings;
 		}
 
-		Result result = null;
+		FileEncodingLineEndingsDialogResult result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (LineEndings == "")
 				return;
-			result = new Result { LineEndings = LineEndings };
+			result = new FileEncodingLineEndingsDialogResult { LineEndings = LineEndings };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, string lineEndings)
+		public static FileEncodingLineEndingsDialogResult Run(Window parent, string lineEndings)
 		{
 			var dialog = new FileEncodingLineEndingsDialog(lineEndings) { Owner = parent };
 			if (!dialog.ShowDialog())

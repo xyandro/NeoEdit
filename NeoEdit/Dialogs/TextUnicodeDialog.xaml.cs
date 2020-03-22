@@ -8,16 +8,12 @@ using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class TextUnicodeDialog
 	{
-		public class Result
-		{
-			public string Value { get; set; }
-		}
-
 		public class CodePointData : INotifyPropertyChanged
 		{
 			public event PropertyChangedEventHandler PropertyChanged;
@@ -126,17 +122,17 @@ namespace NeoEdit.Program.Dialogs
 
 		void OnCodePointsDoubleClick(object sender, MouseButtonEventArgs e) => OkClick(null, null);
 
-		Result result;
+		TextUnicodeDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (CodePoint == null)
 				return;
 
-			result = new Result { Value = CodePoint.Display };
+			result = new TextUnicodeDialogResult { Value = CodePoint.Display };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static TextUnicodeDialogResult Run(Window parent)
 		{
 			var dialog = new TextUnicodeDialog { Owner = parent };
 			if (!dialog.ShowDialog())

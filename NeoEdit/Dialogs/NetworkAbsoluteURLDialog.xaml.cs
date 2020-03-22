@@ -2,16 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NetworkAbsoluteURLDialog
 	{
-		public class Result
-		{
-			public string Expression { get; set; }
-		}
-
 		[DepProp]
 		public string Expression { get { return UIHelper<NetworkAbsoluteURLDialog>.GetPropValue<string>(this); } set { UIHelper<NetworkAbsoluteURLDialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
@@ -28,15 +24,15 @@ namespace NeoEdit.Program.Dialogs
 			Expression = "c";
 		}
 
-		Result result;
+		NetworkAbsoluteURLDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = Expression };
+			result = new NetworkAbsoluteURLDialogResult { Expression = Expression };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables)
+		public static NetworkAbsoluteURLDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NetworkAbsoluteURLDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Transform;
 
@@ -10,13 +11,6 @@ namespace NeoEdit.Program.Dialogs
 {
 	partial class EditDataHashDialog
 	{
-		public class Result
-		{
-			public Coder.CodePage CodePage { get; set; }
-			public Hasher.Type HashType { get; set; }
-			public byte[] HMACKey { get; set; }
-		}
-
 		[DepProp]
 		Coder.CodePage CodePage { get { return UIHelper<EditDataHashDialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<EditDataHashDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -40,14 +34,14 @@ namespace NeoEdit.Program.Dialogs
 			HashType = Hasher.Type.SHA1;
 		}
 
-		Result result = null;
+		EditDataHashDialogResult result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { CodePage = CodePage, HashType = HashType, HMACKey = HMACKey };
+			result = new EditDataHashDialogResult { CodePage = CodePage, HashType = HashType, HMACKey = HMACKey };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, Coder.CodePage codePage)
+		public static EditDataHashDialogResult Run(Window parent, Coder.CodePage codePage)
 		{
 			var dialog = new EditDataHashDialog(codePage) { Owner = parent };
 			if (!dialog.ShowDialog())

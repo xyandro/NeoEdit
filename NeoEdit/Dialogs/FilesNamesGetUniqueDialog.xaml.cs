@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesNamesGetUniqueDialog
 	{
-		public class Result
-		{
-			public string Format { get; set; }
-			public bool CheckExisting { get; set; }
-			public bool RenameAll { get; set; }
-			public bool UseGUIDs { get; set; }
-		}
-
 		[DepProp]
 		public string Format { get { return UIHelper<FilesNamesGetUniqueDialog>.GetPropValue<string>(this); } set { UIHelper<FilesNamesGetUniqueDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -32,10 +25,10 @@ namespace NeoEdit.Program.Dialogs
 			CheckExisting = true;
 		}
 
-		Result result;
+		FilesNamesGetUniqueDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Format = Format, CheckExisting = CheckExisting, RenameAll = RenameAll, UseGUIDs = UseGUIDs };
+			result = new FilesNamesGetUniqueDialogResult { Format = Format, CheckExisting = CheckExisting, RenameAll = RenameAll, UseGUIDs = UseGUIDs };
 			DialogResult = true;
 		}
 
@@ -53,7 +46,7 @@ namespace NeoEdit.Program.Dialogs
 			}
 		}
 
-		public static Result Run(Window parent)
+		public static FilesNamesGetUniqueDialogResult Run(Window parent)
 		{
 			var dialog = new FilesNamesGetUniqueDialog { Owner = parent };
 			if (!dialog.ShowDialog())

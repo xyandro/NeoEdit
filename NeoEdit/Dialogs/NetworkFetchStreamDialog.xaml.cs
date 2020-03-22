@@ -4,17 +4,12 @@ using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NetworkFetchStreamDialog
 	{
-		public class Result
-		{
-			public string Expression { get; set; }
-			public string OutputDirectory { get; set; }
-		}
-
 		[DepProp]
 		public string Expression { get { return UIHelper<NetworkFetchStreamDialog>.GetPropValue<string>(this); } set { UIHelper<NetworkFetchStreamDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -42,7 +37,7 @@ namespace NeoEdit.Program.Dialogs
 
 		void OnUpdateYouTubeDL(object sender, RoutedEventArgs e) => YouTubeDL.Update();
 
-		Result result;
+		NetworkFetchStreamDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if ((OutputDirectory != null) && (!Directory.Exists(OutputDirectory)))
@@ -51,7 +46,7 @@ namespace NeoEdit.Program.Dialogs
 			Settings.FFmpegPath = FFmpegPath;
 			expression.AddCurrentSuggestion();
 			outputDirectory.AddCurrentSuggestion();
-			result = new Result
+			result = new NetworkFetchStreamDialogResult
 			{
 				Expression = Expression,
 				OutputDirectory = OutputDirectory,
@@ -59,7 +54,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables, string outputDirectory)
+		static public NetworkFetchStreamDialogResult Run(Window parent, NEVariables variables, string outputDirectory)
 		{
 			var dialog = new NetworkFetchStreamDialog(variables, outputDirectory) { Owner = parent };
 			if (!dialog.ShowDialog())

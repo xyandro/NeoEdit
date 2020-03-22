@@ -2,17 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesOperationsCopyMoveDialog
 	{
-		public class Result
-		{
-			public string OldFileName { get; set; }
-			public string NewFileName { get; set; }
-		}
-
 		[DepProp]
 		public string OldFileName { get { return UIHelper<FilesOperationsCopyMoveDialog>.GetPropValue<string>(this); } set { UIHelper<FilesOperationsCopyMoveDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -34,16 +29,16 @@ namespace NeoEdit.Program.Dialogs
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		FilesOperationsCopyMoveDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { OldFileName = OldFileName, NewFileName = NewFileName };
+			result = new FilesOperationsCopyMoveDialogResult { OldFileName = OldFileName, NewFileName = NewFileName };
 			oldFileName.AddCurrentSuggestion();
 			newFileName.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, NEVariables variables, bool move)
+		public static FilesOperationsCopyMoveDialogResult Run(Window parent, NEVariables variables, bool move)
 		{
 			var dialog = new FilesOperationsCopyMoveDialog(variables, move) { Owner = parent };
 			if (!dialog.ShowDialog())

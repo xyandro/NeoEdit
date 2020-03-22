@@ -2,17 +2,13 @@
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesSelectByVersionControlStatusDialog
 	{
-		public class Result
-		{
-			public Versioner.Status Statuses { get; set; }
-		}
-
 		[DepProp]
 		public bool Normal { get { return UIHelper<FilesSelectByVersionControlStatusDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesSelectByVersionControlStatusDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -46,10 +42,10 @@ namespace NeoEdit.Program.Dialogs
 			}
 		}
 
-		Result result;
+		FilesSelectByVersionControlStatusDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result();
+			result = new FilesSelectByVersionControlStatusDialogResult();
 			if (Normal)
 				result.Statuses |= Versioner.Status.Normal;
 			if (Modified)
@@ -63,7 +59,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static FilesSelectByVersionControlStatusDialogResult Run(Window parent)
 		{
 			var dialog = new FilesSelectByVersionControlStatusDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -5,17 +5,12 @@ using System.Windows;
 using System.Windows.Input;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class TableEditTableDialog
 	{
-		public class Result
-		{
-			public List<Table.AggregateData> AggregateData { get; set; }
-			public List<Table.SortData> SortData { get; set; }
-		}
-
 		[DepProp]
 		public Table Table { get { return UIHelper<TableEditTableDialog>.GetPropValue<Table>(this); } set { UIHelper<TableEditTableDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -141,14 +136,14 @@ namespace NeoEdit.Program.Dialogs
 			Reset();
 		}
 
-		Result result;
+		TableEditTableDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { AggregateData = AggregateData, SortData = SortData };
+			result = new TableEditTableDialogResult { AggregateData = AggregateData, SortData = SortData };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, Table input)
+		static public TableEditTableDialogResult Run(Window parent, Table input)
 		{
 			var dialog = new TableEditTableDialog(input) { Owner = parent };
 			if (!dialog.ShowDialog())

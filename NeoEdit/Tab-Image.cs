@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -72,7 +73,7 @@ namespace NeoEdit.Program
 
 		void Execute_Image_GrabColor()
 		{
-			var result = state.Configuration as ImageGrabColorDialog.Result;
+			var result = state.Configuration as ImageGrabColorDialogResult;
 			ReplaceOneWithMany(result.Colors, true);
 		}
 
@@ -80,7 +81,7 @@ namespace NeoEdit.Program
 
 		void Execute_Image_GrabImage()
 		{
-			var result = state.Configuration as ImageGrabImageDialog.Result;
+			var result = state.Configuration as ImageGrabImageDialogResult;
 			var variables = GetVariables();
 			var x = state.GetExpression(result.GrabX).EvaluateList<int>(variables, Selections.Count());
 			var y = state.GetExpression(result.GrabY).EvaluateList<int>(variables, Selections.Count());
@@ -104,7 +105,7 @@ namespace NeoEdit.Program
 
 		void Execute_Image_AdjustColor()
 		{
-			var result = state.Configuration as ImageAdjustColorDialog.Result;
+			var result = state.Configuration as ImageAdjustColorDialogResult;
 			var results = GetExpressionResults<double>(result.Expression, Selections.Count());
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AdjustColor(Text.GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
 			ReplaceSelections(strs);
@@ -114,7 +115,7 @@ namespace NeoEdit.Program
 
 		void Execute_Image_AddColor()
 		{
-			var result = state.Configuration as ImageAddOverlayColorDialog.Result;
+			var result = state.Configuration as ImageAddOverlayColorDialogResult;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AddColor(Text.GetString(range), results[index])).ToList();
 			ReplaceSelections(strs);
@@ -122,7 +123,7 @@ namespace NeoEdit.Program
 
 		void Execute_Image_OverlayColor()
 		{
-			var result = state.Configuration as ImageAddOverlayColorDialog.Result;
+			var result = state.Configuration as ImageAddOverlayColorDialogResult;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], Text.GetString(range))).ToList();
 			ReplaceSelections(strs);
@@ -132,7 +133,7 @@ namespace NeoEdit.Program
 
 		void Execute_Image_Size()
 		{
-			var result = state.Configuration as ImageSizeDialog.Result;
+			var result = state.Configuration as ImageSizeDialogResult;
 			var variables = GetVariables();
 			var width = state.GetExpression(result.WidthExpression).Evaluate<int>(variables);
 			var height = state.GetExpression(result.HeightExpression).Evaluate<int>(variables);
@@ -163,7 +164,7 @@ namespace NeoEdit.Program
 
 		void Execute_Image_Crop()
 		{
-			var result = state.Configuration as ImageCropDialog.Result;
+			var result = state.Configuration as ImageCropDialogResult;
 			var variables = GetVariables();
 			var destX = state.GetExpression(result.XExpression).Evaluate<int>(variables);
 			var destY = state.GetExpression(result.YExpression).Evaluate<int>(variables);
@@ -213,7 +214,7 @@ namespace NeoEdit.Program
 
 		void Execute_Image_Rotate()
 		{
-			var result = state.Configuration as ImageRotateDialog.Result;
+			var result = state.Configuration as ImageRotateDialogResult;
 			var variables = GetVariables();
 			var angle = state.GetExpression(result.AngleExpression).Evaluate<float>(variables, "deg");
 
@@ -240,7 +241,7 @@ namespace NeoEdit.Program
 
 		void Execute_Image_GIF_Animate()
 		{
-			var result = state.Configuration as ImageGIFAnimateDialog.Result;
+			var result = state.Configuration as ImageGIFAnimateDialogResult;
 			var variables = GetVariables();
 			var inputFiles = state.GetExpression(result.InputFiles).EvaluateList<string>(variables);
 			var outputFile = state.GetExpression(result.OutputFile).Evaluate<string>(variables);

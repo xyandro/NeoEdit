@@ -4,17 +4,12 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class TableDatabaseGenerateDeletesDialog
 	{
-		public class Result
-		{
-			public List<int> Where { get; set; }
-			public string TableName { get; set; }
-		}
-
 		[DepProp]
 		public Table Table { get { return UIHelper<TableDatabaseGenerateDeletesDialog>.GetPropValue<Table>(this); } set { UIHelper<TableDatabaseGenerateDeletesDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -31,7 +26,7 @@ namespace NeoEdit.Program.Dialogs
 			TableName = tableName;
 		}
 
-		Result result;
+		TableDatabaseGenerateDeletesDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrWhiteSpace(TableName))
@@ -39,7 +34,7 @@ namespace NeoEdit.Program.Dialogs
 			if (where.Selected.Count == 0)
 				throw new Exception("Please select the columns to limit the update");
 
-			result = new Result
+			result = new TableDatabaseGenerateDeletesDialogResult
 			{
 				Where = where.Selected.ToList(),
 				TableName = TableName,
@@ -47,7 +42,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, Table table, string tableName)
+		static public TableDatabaseGenerateDeletesDialogResult Run(Window parent, Table table, string tableName)
 		{
 			var dialog = new TableDatabaseGenerateDeletesDialog(table, tableName) { Owner = parent };
 			if (!dialog.ShowDialog())

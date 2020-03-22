@@ -3,6 +3,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program

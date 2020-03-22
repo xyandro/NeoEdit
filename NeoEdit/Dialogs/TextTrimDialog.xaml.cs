@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
@@ -15,13 +16,6 @@ namespace NeoEdit.Program.Dialogs
 			Start = 1,
 			End = 2,
 			Both = Start | End,
-		}
-
-		public class Result
-		{
-			public HashSet<char> TrimChars { get; set; }
-			public bool Start { get; set; }
-			public bool End { get; set; }
 		}
 
 		[DepProp]
@@ -51,11 +45,11 @@ namespace NeoEdit.Program.Dialogs
 			public int GetHashCode(char val) => char.ToLowerInvariant(val).GetHashCode();
 		}
 
-		Result result;
+		TextTrimDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var comparer = MatchCase ? EqualityComparer<char>.Default : (IEqualityComparer<char>)new NoCaseCharComparer();
-			result = new Result
+			result = new TextTrimDialogResult
 			{
 				TrimChars = new HashSet<char>(Helpers.GetCharsFromCharString(TrimChars).ToCharArray(), comparer),
 				Start = Location.HasFlag(TrimLocation.Start),
@@ -65,7 +59,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static TextTrimDialogResult Run(Window parent)
 		{
 			var dialog = new TextTrimDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

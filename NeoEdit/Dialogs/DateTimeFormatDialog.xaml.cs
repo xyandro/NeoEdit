@@ -4,18 +4,13 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class DateTimeFormatDialog
 	{
-		public class Result
-		{
-			public string InputFormat { get; set; }
-			public string OutputFormat { get; set; }
-		}
-
 		[DepProp]
 		public string InputFormat { get { return UIHelper<DateTimeFormatDialog>.GetPropValue<string>(this); } set { UIHelper<DateTimeFormatDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -78,14 +73,14 @@ namespace NeoEdit.Program.Dialogs
 
 		void OnHelp(object sender, RoutedEventArgs e) => DateTimeHelpDialog.Display();
 
-		Result result;
+		DateTimeFormatDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { InputFormat = InputFormat, OutputFormat = OutputFormat };
+			result = new DateTimeFormatDialogResult { InputFormat = InputFormat, OutputFormat = OutputFormat };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, string example)
+		public static DateTimeFormatDialogResult Run(Window parent, string example)
 		{
 			var dialog = new DateTimeFormatDialog(example) { Owner = parent };
 			if (!dialog.ShowDialog())

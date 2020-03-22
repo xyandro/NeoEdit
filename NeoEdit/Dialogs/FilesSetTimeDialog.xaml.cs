@@ -2,16 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesSetTimeDialog
 	{
-		public class Result
-		{
-			public string Expression { get; set; }
-		}
-
 		[DepProp]
 		public NEVariables Variables { get { return UIHelper<FilesSetTimeDialog>.GetPropValue<NEVariables>(this); } set { UIHelper<FilesSetTimeDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -27,14 +23,14 @@ namespace NeoEdit.Program.Dialogs
 			Expression = expression;
 		}
 
-		Result result;
+		FilesSetTimeDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = Expression };
+			result = new FilesSetTimeDialogResult { Expression = Expression };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables, string expression)
+		static public FilesSetTimeDialogResult Run(Window parent, NEVariables variables, string expression)
 		{
 			var dialog = new FilesSetTimeDialog(variables, expression) { Owner = parent };
 			if (!dialog.ShowDialog())

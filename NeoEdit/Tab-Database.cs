@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -52,7 +53,7 @@ namespace NeoEdit.Program
 
 		void Execute_Database_Connect()
 		{
-			var result = state.Configuration as DatabaseConnectDialog.Result;
+			var result = state.Configuration as DatabaseConnectDialogResult;
 			if (dbConnection != null)
 			{
 				dbConnection.Dispose();
