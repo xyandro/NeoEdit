@@ -90,17 +90,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		public static void Show(string text, string title = null, Window owner = null)
-		{
-			new Message(owner)
-			{
-				Text = text,
-				Title = title ?? "Info",
-				Options = MessageOptions.Ok,
-			}.Show();
-		}
-
-		public static MessageOptions Run(Window owner, string title, string text, MessageOptions options, MessageOptions defaultAccept, MessageOptions defaultCancel)
+		public static MessageOptions Run(Window owner, string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None)
 		{
 			return new Message(owner)
 			{

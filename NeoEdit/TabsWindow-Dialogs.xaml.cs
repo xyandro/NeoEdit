@@ -11,7 +11,7 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		public MessageOptions RunMessageDialog(string title, string text, MessageOptions options, MessageOptions defaultAccept, MessageOptions defaultCancel) => Message.Run(this, title, text, options, defaultAccept, defaultCancel);
+		public MessageOptions RunMessageDialog(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None) => Message.Run(this, title, text, options, defaultAccept, defaultCancel);
 		public ContentAttributeDialogResult RunContentAttributeDialog(List<ParserNode> nodes) => ContentAttributeDialog.Run(this, nodes);
 		public ContentAttributesDialogResult RunContentAttributesDialog(List<ParserNode> nodes) => ContentAttributesDialog.Run(this, nodes);
 		public DatabaseConnectDialogResult RunDatabaseConnectDialog() => DatabaseConnectDialog.Run(this);

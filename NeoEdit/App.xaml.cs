@@ -29,7 +29,7 @@ namespace NeoEdit.Program
 				message += $"{ex2.Message}\n";
 
 			var window = Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
-			Message.Show(message, "Error", window);
+			Message.Run(window, "Error", message);
 
 #if DEBUG
 			if ((Debugger.IsAttached) && ((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None))

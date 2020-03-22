@@ -16,7 +16,7 @@ namespace NeoEdit.Program
 
 		void Execute_Help_Tutorial() => new TutorialWindow(this);
 
-		static void Execute_Help_Update()
+		void Execute_Help_Update()
 		{
 			const string location = "https://github.com/xyandro/NeoEdit/releases";
 			const string url = location + "/latest";
@@ -82,7 +82,7 @@ namespace NeoEdit.Program
 			File.WriteAllBytes(newLocation, result);
 
 			Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
-			Message.Show("The program will be updated after exiting.");
+			state.ParentWindow.RunMessageDialog("Info", "The program will be updated after exiting.");
 		}
 
 		static void Execute_Help_Extract()

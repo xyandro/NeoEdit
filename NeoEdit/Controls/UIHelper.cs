@@ -206,7 +206,7 @@ namespace NeoEdit.Program.Controls
 			var errors = new List<string>();
 			AuditMenu("Menu", menu, errors);
 			if (errors.Any())
-				Message.Show($"Menu errors:\r\n{string.Join("\r\n", errors)}");
+				Message.Run(null, "Error", $"Menu errors:\r\n{string.Join("\r\n", errors)}");
 		}
 	}
 }

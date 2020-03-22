@@ -490,7 +490,7 @@ namespace NeoEdit.Program
 			var errors = new List<string>();
 			ReplaceSelections(dirs.Select(dir => string.Join(TextView.DefaultEnding, GetDirectoryContents(dir, recursive, errors))).ToList());
 			if (errors.Any())
-				Message.Show($"The following error(s) occurred:\n{string.Join("\n", errors)}", "Error", state.Window);
+				Message.Run(state.Window, "Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
 		}
 
 		void Execute_Files_Get_VersionControlStatus()
