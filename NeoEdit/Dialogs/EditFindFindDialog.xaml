@@ -4,6 +4,7 @@
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	xmlns:converters="clr-namespace:NeoEdit.Program.Converters"
 	xmlns:dialogs="clr-namespace:NeoEdit.Program.Dialogs"
+	xmlns:models="clr-namespace:NeoEdit.Program.Models"
 	Title="Find" SizeToContent="Height" Width="600" FocusManager.FocusedElement="{Binding ElementName=text}">
 
 	<Grid Margin="10">
@@ -73,7 +74,7 @@
 
 			<UniformGrid Grid.Column="4" Rows="1">
 				<Grid>
-					<Button Click="OkClick" Tag="{x:Static dialogs:EditFindFindDialog+ResultType.CopyCount}" Content="C_opy Count" Padding="2,1" Focusable="False">
+					<Button Click="OkClick" Tag="{x:Static models:EditFindFindDialogResult+ResultType.CopyCount}" Content="C_opy Count" Padding="2,1" Focusable="False">
 						<Button.Visibility>
 							<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="(!p0 &amp;&amp; !p1 &amp;&amp; p2) ? &quot;Visible&quot; : &quot;Hidden&quot;">
 								<Binding Path="KeepMatching" ElementName="self"/>
@@ -82,7 +83,7 @@
 							</MultiBinding>
 						</Button.Visibility>
 					</Button>
-					<Button Click="OkClick" Tag="{x:Static dialogs:EditFindFindDialog+ResultType.FindNext}" Content="Find _Next" Padding="2,1" Focusable="False">
+					<Button Click="OkClick" Tag="{x:Static models:EditFindFindDialogResult+ResultType.FindNext}" Content="Find _Next" Padding="2,1" Focusable="False">
 						<Button.Visibility>
 							<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="(!p0) ? &quot;Visible&quot; : &quot;Hidden&quot;">
 								<Binding Path="SelectionOnly" ElementName="self"/>
@@ -90,7 +91,7 @@
 						</Button.Visibility>
 					</Button>
 				</Grid>
-				<Button Click="OkClick" Tag="{x:Static dialogs:EditFindFindDialog+ResultType.FindAll}" IsDefault="True" Content="Find _All" Padding="2,1" Focusable="False"/>
+				<Button Click="OkClick" Tag="{x:Static models:EditFindFindDialogResult+ResultType.FindAll}" IsDefault="True" Content="Find _All" Padding="2,1" Focusable="False"/>
 				<Button IsCancel="True" Content="Cancel" Padding="2,1" Focusable="False"/>
 			</UniformGrid>
 		</Grid>

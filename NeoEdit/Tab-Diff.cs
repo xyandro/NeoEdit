@@ -124,9 +124,9 @@ namespace NeoEdit.Program
 		//	CalculateDiff();
 		//}
 
-		//DiffIgnoreCharactersDialog.Result Command_Diff_IgnoreCharacters_Dialog() => DiffIgnoreCharactersDialog.Run(TabsParent, DiffIgnoreCharacters);
+		//DiffIgnoreCharactersDialogResult Command_Diff_IgnoreCharacters_Dialog() => DiffIgnoreCharactersDialog.Run(TabsParent, DiffIgnoreCharacters);
 
-		//void Command_Diff_IgnoreCharacters(DiffIgnoreCharactersDialog.Result result)
+		//void Command_Diff_IgnoreCharacters(DiffIgnoreCharactersDialogResult result)
 		//{
 		//	DiffIgnoreCharacters = result.IgnoreCharacters;
 		//	CalculateDiff();
@@ -180,9 +180,9 @@ namespace NeoEdit.Program
 		//		source.ReplaceSelections(strs);
 		//}
 
-		//DiffFixWhitespaceDialog.Result Command_Diff_Fix_Whitespace_Dialog() => DiffFixWhitespaceDialog.Run(TabsParent);
+		//DiffFixWhitespaceDialogResult Command_Diff_Fix_Whitespace_Dialog() => DiffFixWhitespaceDialog.Run(TabsParent);
 
-		//void Command_Diff_Fix_Whitespace(DiffFixWhitespaceDialog.Result result)
+		//void Command_Diff_Fix_Whitespace(DiffFixWhitespaceDialogResult result)
 		//{
 		//	if (DiffTarget == null)
 		//		throw new Exception("Diff not in progress");

@@ -2,17 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class PositionGotoDialog
 	{
-		public class Result
-		{
-			public string Expression { get; set; }
-			public bool OpenFilesOnce { get; set; }
-		}
-
 		[DepProp]
 		public string Expression { get { return UIHelper<PositionGotoDialog>.GetPropValue<string>(this); } set { UIHelper<PositionGotoDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -33,15 +28,15 @@ namespace NeoEdit.Program.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		PositionGotoDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = Expression, OpenFilesOnce = OpenFilesOnce };
+			result = new PositionGotoDialogResult { Expression = Expression, OpenFilesOnce = OpenFilesOnce };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, GotoType gotoType, int startValue, NEVariables variables)
+		public static PositionGotoDialogResult Run(Window parent, GotoType gotoType, int startValue, NEVariables variables)
 		{
 			var dialog = new PositionGotoDialog(gotoType, startValue, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

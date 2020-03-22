@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
@@ -11,16 +12,6 @@ namespace NeoEdit.Program.Dialogs
 		{
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
-			public bool EntireSelection { get; set; }
-		}
-
-		public class Result
-		{
-			public string Text { get; set; }
-			public string Replace { get; set; }
-			public bool WholeWords { get; set; }
-			public bool MatchCase { get; set; }
-			public bool SelectionOnly { get; set; }
 			public bool EntireSelection { get; set; }
 		}
 
@@ -79,13 +70,13 @@ namespace NeoEdit.Program.Dialogs
 		void Escape(object sender, RoutedEventArgs e) => Text = Regex.Escape(Text);
 		void Unescape(object sender, RoutedEventArgs e) => Text = Regex.Unescape(Text);
 
-		Result result;
+		EditFindRegexReplaceDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new Result { Text = Text, Replace = Replace, WholeWords = WholeWords, MatchCase = MatchCase, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection };
+			result = new EditFindRegexReplaceDialogResult { Text = Text, Replace = Replace, WholeWords = WholeWords, MatchCase = MatchCase, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection };
 			text.AddCurrentSuggestion(GetCheckBoxStatus());
 			replace.AddCurrentSuggestion();
 
@@ -96,7 +87,7 @@ namespace NeoEdit.Program.Dialogs
 
 		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = SelectionOnly = EntireSelection = false;
 
-		static public Result Run(Window parent, string text, bool selectionOnly)
+		static public EditFindRegexReplaceDialogResult Run(Window parent, string text, bool selectionOnly)
 		{
 			var dialog = new EditFindRegexReplaceDialog(text, selectionOnly) { Owner = parent };
 			if (!dialog.ShowDialog())

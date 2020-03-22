@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.NEClipboards;
 
 namespace NeoEdit.Program
@@ -69,7 +70,7 @@ namespace NeoEdit.Program
 			var macro = Macro.Load(result.Macro);
 			var expression = new NEExpression(result.Expression);
 			var count = int.MaxValue;
-			if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Number)
+			if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Number)
 				count = expression.Evaluate<int>();
 
 			Action startNext = null;
@@ -78,7 +79,7 @@ namespace NeoEdit.Program
 				if ((Focused == null) || (--count < 0))
 					return;
 
-				if (result.RepeatType == MacroPlayRepeatDialog.RepeatTypeEnum.Condition)
+				if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Condition)
 					if (!expression.Evaluate<bool>(Focused.GetVariables()))
 						return;
 

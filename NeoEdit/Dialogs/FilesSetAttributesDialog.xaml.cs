@@ -4,16 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesSetAttributesDialog
 	{
-		public class Result
-		{
-			public Dictionary<FileAttributes, bool?> Attributes { get; set; }
-		}
-
 		[DepProp]
 		public bool? ReadOnlyAttr { get { return UIHelper<FilesSetAttributesDialog>.GetPropValue<bool?>(this); } set { UIHelper<FilesSetAttributesDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -57,10 +53,10 @@ namespace NeoEdit.Program.Dialogs
 			NotContentIndexedThreeState = initial[FileAttributes.NotContentIndexed] == null;
 		}
 
-		Result result;
+		FilesSetAttributesDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result
+			result = new FilesSetAttributesDialogResult
 			{
 				Attributes = new Dictionary<FileAttributes, bool?>
 				{
@@ -79,7 +75,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent, Dictionary<FileAttributes, bool?> attributes)
+		public static FilesSetAttributesDialogResult Run(Window parent, Dictionary<FileAttributes, bool?> attributes)
 		{
 			var dialog = new FilesSetAttributesDialog(attributes) { Owner = parent };
 			if (!dialog.ShowDialog())

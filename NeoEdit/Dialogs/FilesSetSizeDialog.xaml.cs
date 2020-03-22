@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesSetSizeDialog
 	{
-		public class Result
-		{
-			public string Expression { get; set; }
-			public long Factor { get; set; }
-		}
-
 		[DepProp]
 		public string Expression { get { return UIHelper<FilesSetSizeDialog>.GetPropValue<string>(this); } set { UIHelper<FilesSetSizeDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -38,17 +33,17 @@ namespace NeoEdit.Program.Dialogs
 			Factor = 1;
 		}
 
-		Result result;
+		FilesSetSizeDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { Expression = Expression, Factor = Factor };
+			result = new FilesSetSizeDialogResult { Expression = Expression, Factor = Factor };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		public static Result Run(Window parent, NEVariables variables)
+		public static FilesSetSizeDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new FilesSetSizeDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

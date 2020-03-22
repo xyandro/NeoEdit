@@ -208,7 +208,7 @@ namespace NeoEdit.Program
 
 		void Execute_Text_ReverseRegEx()
 		{
-			var result = state.Configuration as TextReverseRegExDialog.Result;
+			var result = state.Configuration as TextReverseRegExDialogResult;
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 

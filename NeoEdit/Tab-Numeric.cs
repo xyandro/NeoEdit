@@ -380,7 +380,7 @@ namespace NeoEdit.Program
 
 		void Execute_Numeric_CombinationsPermutations()
 		{
-			var result = state.Configuration as NumericCombinationsPermutationsDialog.Result;
+			var result = state.Configuration as NumericCombinationsPermutationsDialogResult;
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
@@ -407,7 +407,7 @@ namespace NeoEdit.Program
 				++onNum;
 				if (onNum < result.UseCount)
 				{
-					if (result.Type == NumericCombinationsPermutationsDialog.CombinationsPermutationsType.Combinations)
+					if (result.Type == NumericCombinationsPermutationsDialogResult.CombinationsPermutationsType.Combinations)
 						nums[onNum] = nums[onNum - 1] - 1;
 					else
 						nums[onNum] = -1;

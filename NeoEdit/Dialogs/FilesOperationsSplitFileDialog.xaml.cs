@@ -2,17 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class FilesOperationsSplitFileDialog
 	{
-		public class Result
-		{
-			public string OutputTemplate { get; set; }
-			public string ChunkSize { get; set; }
-		}
-
 		[DepProp]
 		public string OutputTemplate { get { return UIHelper<FilesOperationsSplitFileDialog>.GetPropValue<string>(this); } set { UIHelper<FilesOperationsSplitFileDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -29,14 +24,14 @@ namespace NeoEdit.Program.Dialogs
 			ChunkSize = "20 mb";
 		}
 
-		Result result;
+		FilesOperationsSplitFileDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { OutputTemplate = OutputTemplate, ChunkSize = ChunkSize };
+			result = new FilesOperationsSplitFileDialogResult { OutputTemplate = OutputTemplate, ChunkSize = ChunkSize };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables)
+		static public FilesOperationsSplitFileDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new FilesOperationsSplitFileDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

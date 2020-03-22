@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -14,9 +15,9 @@ namespace NeoEdit.Program
 
 		void Execute_Window_Grid() => SetLayout(maxColumns: 5, maxRows: 5);
 
-		WindowCustomGridDialog.Result Configure_Window_CustomGrid() => WindowCustomGridDialog.Run(state.Window, Columns, Rows, MaxColumns, MaxRows);
+		WindowCustomGridDialogResult Configure_Window_CustomGrid() => WindowCustomGridDialog.Run(state.Window, Columns, Rows, MaxColumns, MaxRows);
 
-		void Execute_Window_CustomGrid(WindowCustomGridDialog.Result result) => SetLayout(result.Columns, result.Rows, result.MaxColumns, result.MaxRows);
+		void Execute_Window_CustomGrid(WindowCustomGridDialogResult result) => SetLayout(result.Columns, result.Rows, result.MaxColumns, result.MaxRows);
 
 		void Execute_Window_ActiveTabs()
 		{

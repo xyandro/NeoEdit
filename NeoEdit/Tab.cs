@@ -869,13 +869,13 @@ namespace NeoEdit.Program
 				//case NECommand.Diff_IgnoreCase: Command_Diff_IgnoreCase(state.MultiStatus); break;
 				//case NECommand.Diff_IgnoreNumbers: Command_Diff_IgnoreNumbers(state.MultiStatus); break;
 				//case NECommand.Diff_IgnoreLineEndings: Command_Diff_IgnoreLineEndings(state.MultiStatus); break;
-				//case NECommand.Diff_IgnoreCharacters: Command_Diff_IgnoreCharacters(state.Parameters as DiffIgnoreCharactersDialog.Result); break;
+				//case NECommand.Diff_IgnoreCharacters: Command_Diff_IgnoreCharacters(state.Parameters as DiffIgnoreCharactersDialogResult); break;
 				//case NECommand.Diff_Reset: Command_Diff_Reset(); break;
 				//case NECommand.Diff_Next: Command_Diff_NextPrevious(true, state.ShiftDown); break;
 				//case NECommand.Diff_Previous: Command_Diff_NextPrevious(false, state.ShiftDown); break;
 				//case NECommand.Diff_CopyLeft: Command_Diff_CopyLeftRight(true); break;
 				//case NECommand.Diff_CopyRight: Command_Diff_CopyLeftRight(false); break;
-				//case NECommand.Diff_Fix_Whitespace: Command_Diff_Fix_Whitespace(state.Parameters as DiffFixWhitespaceDialog.Result); break;
+				//case NECommand.Diff_Fix_Whitespace: Command_Diff_Fix_Whitespace(state.Parameters as DiffFixWhitespaceDialogResult); break;
 				//case NECommand.Diff_Fix_Case: Command_Diff_Fix_Case(); break;
 				//case NECommand.Diff_Fix_Numbers: Command_Diff_Fix_Numbers(); break;
 				//case NECommand.Diff_Fix_LineEndings: Command_Diff_Fix_LineEndings(); break;

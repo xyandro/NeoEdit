@@ -4,18 +4,12 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class TableJoinDialog
 	{
-		public class Result
-		{
-			public List<int> LeftColumns { get; set; }
-			public List<int> RightColumns { get; set; }
-			public Table.JoinType JoinType { get; set; }
-		}
-
 		[DepProp]
 		public Table LeftTable { get { return UIHelper<TableJoinDialog>.GetPropValue<Table>(this); } set { UIHelper<TableJoinDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -33,13 +27,13 @@ namespace NeoEdit.Program.Dialogs
 			JoinType = Table.JoinType.Left;
 		}
 
-		Result result;
+		TableJoinDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (leftTable.Selected.Count != rightTable.Selected.Count)
 				throw new Exception("Tables must have same selection count");
 
-			result = new Result
+			result = new TableJoinDialogResult
 			{
 				LeftColumns = leftTable.Selected.ToList(),
 				RightColumns = rightTable.Selected.ToList(),
@@ -54,7 +48,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, Table leftTable, Table rightTable)
+		static public TableJoinDialogResult Run(Window parent, Table leftTable, Table rightTable)
 		{
 			var dialog = new TableJoinDialog(leftTable, rightTable) { Owner = parent };
 			if (!dialog.ShowDialog())

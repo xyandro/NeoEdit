@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.RevRegEx;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class TextReverseRegExDialog
 	{
-		public class Result
-		{
-			public string RegEx { get; set; }
-			public int InfiniteCount { get; set; }
-		}
-
 		[DepProp]
 		public string RegEx { get { return UIHelper<TextReverseRegExDialog>.GetPropValue<string>(this); } set { UIHelper<TextReverseRegExDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -34,10 +29,10 @@ namespace NeoEdit.Program.Dialogs
 			InfiniteCount = 10;
 		}
 
-		Result result;
+		TextReverseRegExDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { RegEx = RegEx, InfiniteCount = InfiniteCount };
+			result = new TextReverseRegExDialogResult { RegEx = RegEx, InfiniteCount = InfiniteCount };
 			regex.AddCurrentSuggestion();
 			DialogResult = true;
 		}
@@ -48,7 +43,7 @@ namespace NeoEdit.Program.Dialogs
 			catch { NumResults = null; }
 		}
 
-		public static Result Run(Window parent)
+		public static TextReverseRegExDialogResult Run(Window parent)
 		{
 			var dialog = new TextReverseRegExDialog { Owner = parent };
 			if (!dialog.ShowDialog())

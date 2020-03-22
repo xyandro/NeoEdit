@@ -2,17 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class TableAddColumnDialog
 	{
-		public class Result
-		{
-			public string ColumnName { get; set; }
-			public string Expression { get; set; }
-		}
-
 		[DepProp]
 		public string ColumnName { get { return UIHelper<TableAddColumnDialog>.GetPropValue<string>(this); } set { UIHelper<TableAddColumnDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -37,7 +32,7 @@ namespace NeoEdit.Program.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Result result;
+		TableAddColumnDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (!IsValid)
@@ -45,11 +40,11 @@ namespace NeoEdit.Program.Dialogs
 
 			columnName.AddCurrentSuggestion();
 			expression.AddCurrentSuggestion();
-			result = new Result { ColumnName = ColumnName, Expression = Expression };
+			result = new TableAddColumnDialogResult { ColumnName = ColumnName, Expression = Expression };
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables, int numRows)
+		static public TableAddColumnDialogResult Run(Window parent, NEVariables variables, int numRows)
 		{
 			var dialog = new TableAddColumnDialog(variables, numRows) { Owner = parent };
 			if (!dialog.ShowDialog())

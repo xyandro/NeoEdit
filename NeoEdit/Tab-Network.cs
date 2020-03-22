@@ -226,7 +226,7 @@ namespace NeoEdit.Program
 
 		void Execute_Network_WCF_GetConfig()
 		{
-			var result = state.Configuration as NetworkWCFGetConfig.Result;
+			var result = state.Configuration as NetworkWCFGetConfigResult;
 			if (Selections.Count != 1)
 				throw new Exception("Must have single selection.");
 

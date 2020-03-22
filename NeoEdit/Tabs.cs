@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Misc;
+using NeoEdit.Program.Models;
 using NeoEdit.Program.NEClipboards;
 using NeoEdit.Program.Transform;
 
@@ -254,7 +255,7 @@ namespace NeoEdit.Program
 				case NECommand.Window_NewWindow: Execute_Window_NewWindow(); break;
 				case NECommand.Window_Full: Execute_Window_Full(); break;
 				case NECommand.Window_Grid: Execute_Window_Grid(); break;
-				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(state.Configuration as WindowCustomGridDialog.Result); break;
+				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(state.Configuration as WindowCustomGridDialogResult); break;
 				case NECommand.Window_ActiveTabs: Execute_Window_ActiveTabs(); break;
 				case NECommand.Window_Font_Size: Execute_Window_Font_Size(); break;
 				case NECommand.Window_Font_ShowSpecial: Execute_Window_Font_ShowSpecial(state.MultiStatus); break;

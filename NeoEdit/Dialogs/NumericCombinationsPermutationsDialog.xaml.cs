@@ -4,31 +4,18 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class NumericCombinationsPermutationsDialog
 	{
-		public enum CombinationsPermutationsType
-		{
-			Combinations,
-			Permutations,
-		}
-
-		public class Result
-		{
-			public int ItemCount { get; set; }
-			public int UseCount { get; set; }
-			public CombinationsPermutationsType Type { get; set; }
-			public bool Repeat { get; set; }
-		}
-
 		[DepProp]
 		public int ItemCount { get { return UIHelper<NumericCombinationsPermutationsDialog>.GetPropValue<int>(this); } set { UIHelper<NumericCombinationsPermutationsDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public int UseCount { get { return UIHelper<NumericCombinationsPermutationsDialog>.GetPropValue<int>(this); } set { UIHelper<NumericCombinationsPermutationsDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public CombinationsPermutationsType Type { get { return UIHelper<NumericCombinationsPermutationsDialog>.GetPropValue<CombinationsPermutationsType>(this); } set { UIHelper<NumericCombinationsPermutationsDialog>.SetPropValue(this, value); } }
+		public NumericCombinationsPermutationsDialogResult.CombinationsPermutationsType Type { get { return UIHelper<NumericCombinationsPermutationsDialog>.GetPropValue<NumericCombinationsPermutationsDialogResult.CombinationsPermutationsType>(this); } set { UIHelper<NumericCombinationsPermutationsDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool Repeat { get { return UIHelper<NumericCombinationsPermutationsDialog>.GetPropValue<bool>(this); } set { UIHelper<NumericCombinationsPermutationsDialog>.SetPropValue(this, value); } }
 		[DepProp]
@@ -49,7 +36,7 @@ namespace NeoEdit.Program.Dialogs
 			SetFormula();
 		}
 
-		Result result;
+		NumericCombinationsPermutationsDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (!(NumResults > 0))
@@ -57,7 +44,7 @@ namespace NeoEdit.Program.Dialogs
 				MessageBox.Show("No results.");
 				return;
 			}
-			result = new Result { ItemCount = ItemCount, UseCount = UseCount, Type = Type, Repeat = Repeat };
+			result = new NumericCombinationsPermutationsDialogResult { ItemCount = ItemCount, UseCount = UseCount, Type = Type, Repeat = Repeat };
 			DialogResult = true;
 		}
 
@@ -81,7 +68,7 @@ namespace NeoEdit.Program.Dialogs
 
 			switch (Type)
 			{
-				case CombinationsPermutationsType.Combinations:
+				case NumericCombinationsPermutationsDialogResult.CombinationsPermutationsType.Combinations:
 					switch (Repeat)
 					{
 						case true:
@@ -96,7 +83,7 @@ namespace NeoEdit.Program.Dialogs
 							break;
 					}
 					break;
-				case CombinationsPermutationsType.Permutations:
+				case NumericCombinationsPermutationsDialogResult.CombinationsPermutationsType.Permutations:
 					switch (Repeat)
 					{
 						case true:
@@ -123,14 +110,14 @@ namespace NeoEdit.Program.Dialogs
 
 			switch (Type)
 			{
-				case CombinationsPermutationsType.Combinations:
+				case NumericCombinationsPermutationsDialogResult.CombinationsPermutationsType.Combinations:
 					switch (Repeat)
 					{
 						case true: NumResults = Factorial(ItemCount + UseCount - 1) / Factorial(UseCount) / Factorial(ItemCount - 1); break;
 						case false: NumResults = Factorial(ItemCount) / Factorial(ItemCount - UseCount) / Factorial(UseCount); break;
 					}
 					break;
-				case CombinationsPermutationsType.Permutations:
+				case NumericCombinationsPermutationsDialogResult.CombinationsPermutationsType.Permutations:
 					switch (Repeat)
 					{
 						case true: NumResults = BigInteger.Pow(ItemCount, UseCount); break;
@@ -140,7 +127,7 @@ namespace NeoEdit.Program.Dialogs
 			}
 		}
 
-		public static Result Run(Window parent)
+		public static NumericCombinationsPermutationsDialogResult Run(Window parent)
 		{
 			var dialog = new NumericCombinationsPermutationsDialog { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -521,7 +521,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Set_Size()
 		{
-			var result = state.Configuration as FilesSetSizeDialog.Result;
+			var result = state.Configuration as FilesSetSizeDialogResult;
 			var vars = GetVariables();
 			var files = RelativeSelectedFiles();
 			var sizes = files.AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
@@ -587,7 +587,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Set_Attributes()
 		{
-			var result = state.Configuration as FilesSetAttributesDialog.Result;
+			var result = state.Configuration as FilesSetAttributesDialogResult;
 			FileAttributes andMask = 0, orMask = 0;
 			foreach (var pair in result.Attributes)
 			{
@@ -990,7 +990,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Operations_SplitFile()
 		{
-			var result = state.Configuration as FilesOperationsSplitFileDialog.Result;
+			var result = state.Configuration as FilesOperationsSplitFileDialogResult;
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
 			var files = RelativeSelectedFiles();

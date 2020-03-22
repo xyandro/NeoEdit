@@ -75,7 +75,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_TextToTable()
 		{
-			var result = state.Configuration as TableTextToTableDialog.Result;
+			var result = state.Configuration as TableTextToTableDialogResult;
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection");
 			if (!Selections[0].HasSelection)
@@ -139,7 +139,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_AddColumn()
 		{
-			var result = state.Configuration as TableAddColumnDialog.Result;
+			var result = state.Configuration as TableAddColumnDialogResult;
 			var table = GetTable();
 			var variables = GetTableVariables(table);
 			var results = state.GetExpression(result.Expression).EvaluateList<string>(variables, table.NumRows);
@@ -175,7 +175,7 @@ namespace NeoEdit.Program
 
 		void Execute_Table_Join()
 		{
-			var result = state.Configuration as TableJoinDialog.Result;
+			var result = state.Configuration as TableJoinDialogResult;
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
 

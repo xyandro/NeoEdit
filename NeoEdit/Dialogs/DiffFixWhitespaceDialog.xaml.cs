@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class DiffFixWhitespaceDialog
 	{
-		public class Result
-		{
-			public int LineStartTabStop { get; set; }
-		}
-
 		[DepProp]
 		public int LineStartTabStop { get { return UIHelper<DiffFixWhitespaceDialog>.GetPropValue<int>(this); } set { UIHelper<DiffFixWhitespaceDialog>.SetPropValue(this, value); } }
 
@@ -22,14 +18,14 @@ namespace NeoEdit.Program.Dialogs
 			LineStartTabStop = 4;
 		}
 
-		Result result;
+		DiffFixWhitespaceDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { LineStartTabStop = LineStartTabStop };
+			result = new DiffFixWhitespaceDialogResult { LineStartTabStop = LineStartTabStop };
 			DialogResult = true;
 		}
 
-		public static Result Run(Window parent)
+		public static DiffFixWhitespaceDialogResult Run(Window parent)
 		{
 			var dialog = new DiffFixWhitespaceDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

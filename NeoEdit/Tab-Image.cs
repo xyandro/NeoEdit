@@ -263,7 +263,7 @@ namespace NeoEdit.Program
 
 		void Execute_Image_GIF_Split()
 		{
-			var result = state.Configuration as ImageGIFSplitDialog.Result;
+			var result = state.Configuration as ImageGIFSplitDialogResult;
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
 			var files = RelativeSelectedFiles();

@@ -155,7 +155,7 @@ namespace NeoEdit.Program
 
 		void Execute_Position_Goto(GotoType gotoType, bool selecting)
 		{
-			var result = state.Configuration as PositionGotoDialog.Result;
+			var result = state.Configuration as PositionGotoDialogResult;
 			var values = GotoRange.GetPositionsData(GetExpressionResults<string>(result.Expression), gotoType);
 			if (!values.Any())
 				return;

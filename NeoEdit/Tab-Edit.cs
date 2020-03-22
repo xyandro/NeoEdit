@@ -210,11 +210,11 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Find_Find()
 		{
-			var result = state.Configuration as EditFindFindDialog.Result;
+			var result = state.Configuration as EditFindFindDialogResult;
 			// Determine selections to search
 			List<Range> selections;
 			var firstMatchOnly = (result.KeepMatching) || (result.RemoveMatching);
-			if (result.Type == EditFindFindDialog.ResultType.FindNext)
+			if (result.Type == EditFindFindDialogResult.ResultType.FindNext)
 			{
 				firstMatchOnly = true;
 				selections = new List<Range>();
@@ -301,10 +301,10 @@ namespace NeoEdit.Program
 
 			switch (result.Type)
 			{
-				case EditFindFindDialog.ResultType.CopyCount:
+				case EditFindFindDialogResult.ResultType.CopyCount:
 					Clipboard = results.Select(list => list.Count.ToString()).ToList();
 					break;
-				case EditFindFindDialog.ResultType.FindNext:
+				case EditFindFindDialogResult.ResultType.FindNext:
 					var newSels = new List<Range>();
 					for (var ctr = 0; ctr < Selections.Count; ++ctr)
 					{
@@ -319,7 +319,7 @@ namespace NeoEdit.Program
 					}
 					Selections = newSels;
 					break;
-				case EditFindFindDialog.ResultType.FindAll:
+				case EditFindFindDialogResult.ResultType.FindAll:
 					if ((result.KeepMatching) || (result.RemoveMatching))
 						Selections = selections.Where((range, index) => results[index].Any() == result.KeepMatching).ToList();
 					else
@@ -348,7 +348,7 @@ namespace NeoEdit.Program
 
 		void Execute_Edit_Find_RegexReplace()
 		{
-			var result = state.Configuration as EditFindRegexReplaceDialog.Result;
+			var result = state.Configuration as EditFindRegexReplaceDialogResult;
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { Range.FromIndex(0, Text.Length) };
 			var searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, result.EntireSelection);
 			var sels = regions.AsParallel().AsOrdered().SelectMany(region => searcher.Find(Text.GetString(region), region.Start)).ToList();

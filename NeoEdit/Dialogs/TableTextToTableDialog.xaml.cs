@@ -8,17 +8,13 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class TableTextToTableDialog
 	{
 		const double border = 2;
-
-		public class Result
-		{
-			public List<int> LineBreaks { get; set; }
-		}
 
 		List<string> lines;
 		HashSet<int> lineBreaks;
@@ -59,10 +55,10 @@ namespace NeoEdit.Program.Dialogs
 			lineBreaks = new HashSet<int>(shouldBreak.Indexes(pos => pos));
 		}
 
-		Result result;
+		TableTextToTableDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { LineBreaks = lineBreaks.OrderBy().ToList() };
+			result = new TableTextToTableDialogResult { LineBreaks = lineBreaks.OrderBy().ToList() };
 			DialogResult = true;
 		}
 
@@ -107,7 +103,7 @@ namespace NeoEdit.Program.Dialogs
 			SetupCanvas();
 		}
 
-		static public Result Run(Window parent, string text)
+		static public TableTextToTableDialogResult Run(Window parent, string text)
 		{
 			var dialog = new TableTextToTableDialog(text) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -2,16 +2,12 @@
 using System.Windows;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
+using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
 	partial class ImageGIFSplitDialog
 	{
-		public class Result
-		{
-			public string OutputTemplate { get; set; }
-		}
-
 		[DepProp]
 		public string OutputTemplate { get { return UIHelper<ImageGIFSplitDialog>.GetPropValue<string>(this); } set { UIHelper<ImageGIFSplitDialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
@@ -25,15 +21,15 @@ namespace NeoEdit.Program.Dialogs
 			OutputTemplate = @"$@""{directoryname(x)}\{filenamewithoutextension(x)}-{chunk}.png""";
 		}
 
-		Result result;
+		ImageGIFSplitDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Result { OutputTemplate = OutputTemplate };
+			result = new ImageGIFSplitDialogResult { OutputTemplate = OutputTemplate };
 			outputTemplate.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		static public Result Run(Window parent, NEVariables variables)
+		static public ImageGIFSplitDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageGIFSplitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())
