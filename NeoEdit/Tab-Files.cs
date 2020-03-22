@@ -33,10 +33,7 @@ namespace NeoEdit.Program
 			catch (Exception ex)
 			{
 				if (!state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.All))
-					state.Window.Dispatcher.Invoke(() =>
-					{
-						state.SavedAnswers[nameof(BinarySearchFile)] = state.ParentWindow.RunMessageDialog("Confirm", $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
-					});
+					state.SavedAnswers[nameof(BinarySearchFile)] = state.TabsWindow.RunMessageDialog("Confirm", $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
 
 				return (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Cancel));
 			}
@@ -69,12 +66,8 @@ namespace NeoEdit.Program
 			}
 			catch (Exception ex)
 			{
-				state.Window.Dispatcher.Invoke(() =>
-				{
-					if (!state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.All))
-						state.SavedAnswers[nameof(TextSearchFile)] = state.ParentWindow.RunMessageDialog("Confirm", $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
-				});
-
+				if (!state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.All))
+					state.SavedAnswers[nameof(TextSearchFile)] = state.TabsWindow.RunMessageDialog("Confirm", $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
 				return (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Cancel));
 			}
 		}
@@ -369,7 +362,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(Text.GetString(range))).ToList());
 
-		object Configure_Files_Name_MakeAbsolute() => state.ParentWindow.RunFilesNamesMakeAbsoluteRelativeDialog(GetVariables(), true, true);
+		object Configure_Files_Name_MakeAbsolute() => state.TabsWindow.RunFilesNamesMakeAbsoluteRelativeDialog(GetVariables(), true, true);
 
 		void Execute_Files_Name_MakeAbsolute()
 		{
@@ -378,7 +371,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteRelativeDialogResult.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		object Configure_Files_Name_MakeRelative() => state.ParentWindow.RunFilesNamesMakeAbsoluteRelativeDialog(GetVariables(), false, true);
+		object Configure_Files_Name_MakeRelative() => state.TabsWindow.RunFilesNamesMakeAbsoluteRelativeDialog(GetVariables(), false, true);
 
 		void Execute_Files_Name_MakeRelative()
 		{
@@ -389,7 +382,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
 		}
 
-		object Configure_Files_Name_GetUnique() => state.ParentWindow.RunFilesNamesGetUniqueDialog();
+		object Configure_Files_Name_GetUnique() => state.TabsWindow.RunFilesNamesGetUniqueDialog();
 
 		void Execute_Files_Name_GetUnique()
 		{
@@ -490,7 +483,7 @@ namespace NeoEdit.Program
 			var errors = new List<string>();
 			ReplaceSelections(dirs.Select(dir => string.Join(TextView.DefaultEnding, GetDirectoryContents(dir, recursive, errors))).ToList());
 			if (errors.Any())
-				Message.Run(state.Window, "Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
+				state.TabsWindow.RunMessageDialog("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
 		}
 
 		void Execute_Files_Get_VersionControlStatus()
@@ -504,7 +497,7 @@ namespace NeoEdit.Program
 			var vars = GetVariables();
 			var sizes = RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			return state.ParentWindow.RunFilesSetSizeDialog(vars);
+			return state.TabsWindow.RunFilesSetSizeDialog(vars);
 		}
 
 		void Execute_Files_Set_Size()
@@ -518,7 +511,7 @@ namespace NeoEdit.Program
 			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
-		object Configure_Files_Set_Time() => state.ParentWindow.RunFilesSetTimeDialog(GetVariables(), $@"""{DateTime.Now}""");
+		object Configure_Files_Set_Time() => state.TabsWindow.RunFilesSetTimeDialog(GetVariables(), $@"""{DateTime.Now}""");
 
 		void Execute_Files_Set_Time(TimestampType type)
 		{
@@ -570,7 +563,7 @@ namespace NeoEdit.Program
 						current[availAttr] = null;
 				}
 
-			return state.ParentWindow.RunFilesSetAttributesDialog(current);
+			return state.TabsWindow.RunFilesSetAttributesDialog(current);
 		}
 
 		void Execute_Files_Set_Attributes()
@@ -587,7 +580,7 @@ namespace NeoEdit.Program
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
-		object Configure_Files_Find() => state.ParentWindow.RunFilesFindDialog(GetVariables());
+		object Configure_Files_Find() => state.TabsWindow.RunFilesFindDialog(GetVariables());
 
 		void Execute_Files_Find()
 		{
@@ -658,7 +651,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		object Configure_Files_Insert() => state.ParentWindow.RunFilesInsertDialog();
+		object Configure_Files_Insert() => state.TabsWindow.RunFilesInsertDialog();
 
 		void Execute_Files_Insert()
 		{
@@ -684,7 +677,7 @@ namespace NeoEdit.Program
 				Directory.CreateDirectory(file);
 		}
 
-		object Configure_Files_Create_FromExpressions() => state.ParentWindow.RunFilesCreateFromExpressionsDialog(GetVariables(), CodePage);
+		object Configure_Files_Create_FromExpressions() => state.TabsWindow.RunFilesCreateFromExpressionsDialog(GetVariables(), CodePage);
 
 		void Execute_Files_Create_FromExpressions()
 		{
@@ -765,7 +758,7 @@ namespace NeoEdit.Program
 			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList();
 		}
 
-		object Configure_Files_Select_ByVersionControlStatus() => state.ParentWindow.RunFilesSelectByVersionControlStatusDialog();
+		object Configure_Files_Select_ByVersionControlStatus() => state.TabsWindow.RunFilesSelectByVersionControlStatusDialog();
 
 		void Execute_Files_Select_ByVersionControlStatus()
 		{
@@ -776,7 +769,7 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		object Configure_Files_Hash() => state.ParentWindow.RunFilesHashDialog();
+		object Configure_Files_Hash() => state.TabsWindow.RunFilesHashDialog();
 
 		void Execute_Files_Hash()
 		{
@@ -788,7 +781,7 @@ namespace NeoEdit.Program
 			}, results => ReplaceSelections(results));
 		}
 
-		object Configure_Files_Sign() => state.ParentWindow.RunFilesSignDialog();
+		object Configure_Files_Sign() => state.TabsWindow.RunFilesSignDialog();
 
 		void Execute_Files_Sign()
 		{
@@ -796,7 +789,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		object Configure_Files_Operations_CopyMove(bool move) => state.ParentWindow.RunFilesOperationsCopyMoveDialog(GetVariables(), move);
+		object Configure_Files_Operations_CopyMove(bool move) => state.TabsWindow.RunFilesOperationsCopyMoveDialog(GetVariables(), move);
 
 		void Execute_Files_Operations_CopyMove(bool move)
 		{
@@ -828,7 +821,7 @@ namespace NeoEdit.Program
 
 			var confirmCopyMove = $"{nameof(Execute_Files_Operations_CopyMove)}_Confirm";
 			if (!state.SavedAnswers[confirmCopyMove].HasFlag(MessageOptions.All))
-				state.SavedAnswers[confirmCopyMove] = state.ParentWindow.RunMessageDialog("Confirm", $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
+				state.SavedAnswers[confirmCopyMove] = state.TabsWindow.RunMessageDialog("Confirm", $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
 			if (!state.SavedAnswers[confirmCopyMove].HasFlag(MessageOptions.Yes))
 				return;
 
@@ -837,7 +830,7 @@ namespace NeoEdit.Program
 			if (invalid.Any())
 			{
 				if (!state.SavedAnswers[overwriteCopyMove].HasFlag(MessageOptions.All))
-					state.SavedAnswers[overwriteCopyMove] = state.ParentWindow.RunMessageDialog("Confirm", $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
+					state.SavedAnswers[overwriteCopyMove] = state.TabsWindow.RunMessageDialog("Confirm", $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
 				if (!state.SavedAnswers[overwriteCopyMove].HasFlag(MessageOptions.Yes))
 					return;
 			}
@@ -872,7 +865,7 @@ namespace NeoEdit.Program
 			var continueAnswer = $"{nameof(Execute_Files_Operations_Delete)}_Continue";
 
 			if (!state.SavedAnswers[sureAnswer].HasFlag(MessageOptions.All))
-				state.SavedAnswers[sureAnswer] = state.ParentWindow.RunMessageDialog("Confirm", "Are you sure you want to delete these files/directories?", MessageOptions.YesNoAllCancel, MessageOptions.No, MessageOptions.Cancel);
+				state.SavedAnswers[sureAnswer] = state.TabsWindow.RunMessageDialog("Confirm", "Are you sure you want to delete these files/directories?", MessageOptions.YesNoAllCancel, MessageOptions.No, MessageOptions.Cancel);
 			if (!state.SavedAnswers[sureAnswer].HasFlag(MessageOptions.Yes))
 				return;
 
@@ -888,7 +881,7 @@ namespace NeoEdit.Program
 				catch (Exception ex)
 				{
 					if (!state.SavedAnswers[continueAnswer].HasFlag(MessageOptions.All))
-						state.SavedAnswers[continueAnswer] = state.ParentWindow.RunMessageDialog("Confirm", $"An error occurred:\n\n{ex.Message}\n\nContinue?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
+						state.SavedAnswers[continueAnswer] = state.TabsWindow.RunMessageDialog("Confirm", $"An error occurred:\n\n{ex.Message}\n\nContinue?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
 
 					if (!state.SavedAnswers[continueAnswer].HasFlag(MessageOptions.Yes))
 						throw new OperationCanceledException();
@@ -929,7 +922,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Operations_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
 
-		object Configure_Files_Operations_Encoding() => state.ParentWindow.RunFilesOperationsEncodingDialog();
+		object Configure_Files_Operations_Encoding() => state.TabsWindow.RunFilesOperationsEncodingDialog();
 
 		void Execute_Files_Operations_Encoding()
 		{
@@ -945,7 +938,7 @@ namespace NeoEdit.Program
 		{
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return state.ParentWindow.RunFilesOperationsSplitFileDialog(variables);
+			return state.TabsWindow.RunFilesOperationsSplitFileDialog(variables);
 		}
 
 		void Execute_Files_Operations_SplitFile()
@@ -963,7 +956,7 @@ namespace NeoEdit.Program
 			});
 		}
 
-		object Configure_Files_Operations_CombineFiles() => state.ParentWindow.RunFilesOperationsCombineFilesDialog(GetVariables());
+		object Configure_Files_Operations_CombineFiles() => state.TabsWindow.RunFilesOperationsCombineFilesDialog(GetVariables());
 
 		void Execute_Files_Operations_CombineFiles()
 		{

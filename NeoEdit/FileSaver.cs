@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
-using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -14,8 +12,6 @@ namespace NeoEdit.Program
 		readonly static byte[] EncryptedValidate = Encoding.UTF8.GetBytes("\u0000VALID\u0000");
 		readonly static byte[] CompressedHeader = Encoding.UTF8.GetBytes("\u0000NEGZIP\u0000");
 		readonly static HashSet<string> keyVault = new HashSet<string>();
-
-		public static string GetKey(Window parent, bool encrypt) => CryptorKeyDialog.Run(parent, Cryptor.Type.AES, encrypt);
 
 		public static byte[] Encrypt(byte[] data, string AESKey)
 		{
@@ -39,7 +35,7 @@ namespace NeoEdit.Program
 			catch { return null; }
 		}
 
-		public static void HandleDecrypt(Window parent, ref byte[] bytes, out string AESKey)
+		public static void HandleDecrypt(TabsWindow window, ref byte[] bytes, out string AESKey)
 		{
 			AESKey = null;
 			if ((bytes.Length < EncryptedHeader.Length) || (!bytes.Equal(EncryptedHeader, EncryptedHeader.Length)))
@@ -60,7 +56,7 @@ namespace NeoEdit.Program
 
 			while (true)
 			{
-				var key = GetKey(parent, false);
+				var key = window.RunCryptorKeyDialog(Cryptor.Type.AES, false);
 				if (string.IsNullOrEmpty(key))
 					throw new Exception("Failed to decrypt file");
 

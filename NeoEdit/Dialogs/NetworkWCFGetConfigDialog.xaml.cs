@@ -6,18 +6,18 @@ using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {
-	partial class NetworkWCFGetConfig
+	partial class NetworkWCFGetConfigDialog
 	{
 		[DepProp]
-		public string URL { get { return UIHelper<NetworkWCFGetConfig>.GetPropValue<string>(this); } set { UIHelper<NetworkWCFGetConfig>.SetPropValue(this, value); } }
+		public string URL { get { return UIHelper<NetworkWCFGetConfigDialog>.GetPropValue<string>(this); } set { UIHelper<NetworkWCFGetConfigDialog>.SetPropValue(this, value); } }
 
-		static NetworkWCFGetConfig()
+		static NetworkWCFGetConfigDialog()
 		{
-			UIHelper<NetworkWCFGetConfig>.Register();
+			UIHelper<NetworkWCFGetConfigDialog>.Register();
 			AutoCompleteTextBox.AddTagSuggestions("NetworkWCFGetConfigURL", Settings.WCFURLs.ToArray());
 		}
 
-		NetworkWCFGetConfig()
+		NetworkWCFGetConfigDialog()
 		{
 			InitializeComponent();
 			URL = url.GetLastSuggestion();
@@ -33,7 +33,7 @@ namespace NeoEdit.Program.Dialogs
 
 		static public NetworkWCFGetConfigResult Run(Window parent)
 		{
-			var dialog = new NetworkWCFGetConfig() { Owner = parent };
+			var dialog = new NetworkWCFGetConfigDialog() { Owner = parent };
 			if (!dialog.ShowDialog())
 				throw new OperationCanceledException();
 			return dialog.result;

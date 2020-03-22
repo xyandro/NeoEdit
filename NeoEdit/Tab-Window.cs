@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using NeoEdit.Program.Dialogs;
-using NeoEdit.Program.Models;
 using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
@@ -14,7 +12,7 @@ namespace NeoEdit.Program
 
 		void Execute_Window_ViewBinary() => ViewBinary = state.MultiStatus != true;
 
-		HashSet<Coder.CodePage> Configure_Window_ViewBinaryCodePages() => CodePagesDialog.Run(state.Window, ViewBinaryCodePages);
+		HashSet<Coder.CodePage> Configure_Window_ViewBinaryCodePages() => state.TabsWindow.RunCodePagesDialog(ViewBinaryCodePages);
 
 		void Execute_Window_ViewBinaryCodePages() => ViewBinaryCodePages = state.Configuration as HashSet<Coder.CodePage>;
 	}

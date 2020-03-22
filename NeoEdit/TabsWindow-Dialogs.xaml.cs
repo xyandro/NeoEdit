@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Models;
@@ -14,7 +17,9 @@ namespace NeoEdit.Program
 		public MessageOptions RunMessageDialog(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None) => Message.Run(this, title, text, options, defaultAccept, defaultCancel);
 		public ContentAttributeDialogResult RunContentAttributeDialog(List<ParserNode> nodes) => ContentAttributeDialog.Run(this, nodes);
 		public ContentAttributesDialogResult RunContentAttributesDialog(List<ParserNode> nodes) => ContentAttributesDialog.Run(this, nodes);
+		public string RunCryptorKeyDialog(Cryptor.Type type, bool encrypt) => CryptorKeyDialog.Run(this, type, encrypt);
 		public DatabaseConnectDialogResult RunDatabaseConnectDialog() => DatabaseConnectDialog.Run(this);
+		public void RunDatabaseExamineDialog(DbConnection dbConnection) => DatabaseExamineDialog.Run(this, dbConnection);
 		public DateTimeFormatDialogResult RunDateTimeFormatDialog(string example) => DateTimeFormatDialog.Run(this, example);
 		public DateTimeToTimeZoneDialogResult RunDateTimeToTimeZoneDialog() => DateTimeToTimeZoneDialog.Run(this);
 		public DiffFixWhitespaceDialogResult RunDiffFixWhitespaceDialog() => DiffFixWhitespaceDialog.Run(this);
@@ -94,5 +99,14 @@ namespace NeoEdit.Program
 		public TextUnicodeDialogResult RunTextUnicodeDialog() => TextUnicodeDialog.Run(this);
 		public TextWidthDialogResult RunTextWidthDialog(bool numeric, bool isSelect, NEVariables variables) => TextWidthDialog.Run(this, numeric, isSelect, variables);
 		public WindowCustomGridDialogResult RunWindowCustomGridDialog(int? columns, int? rows, int? maxColumns, int? maxRows) => WindowCustomGridDialog.Run(this, columns, rows, maxColumns, maxRows);
+		public void RunWindowFontSizeDialog(Tabs tabs) => WindowFontSizeDialog.Run(this);
+		public NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog() => NetworkWCFGetConfigDialog.Run(this);
+		public object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action) => ProgressDialog.Run(this, text, action);
+		public HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null) => CodePagesDialog.Run(this, startCodePages);
+
+		public List<TResult> RunMultiProgressDialogAsync<TSource, TResult>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task<TResult>> getTask, Func<TSource, string> getName = null) => MultiProgressDialog.RunAsync<TSource, TResult>(this, title, items, getTask, getName);
+		public void RunMultiProgressDialogAsync<TSource>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task> getTask, Func<TSource, string> getName = null) => MultiProgressDialog.RunAsync<TSource>(this, title, items, getTask, getName);
+		public List<TResult> RunMultiProgressDialog<TSource, TResult>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, TResult> getTask, Func<TSource, string> getName = null) => MultiProgressDialog.Run<TSource, TResult>(this, title, items, getTask, getName);
+		public void RunMultiProgressDialog<TSource>(string title, IEnumerable<TSource> items, Action<TSource, IProgress<ProgressReport>, CancellationToken> getTask, Func<TSource, string> getName = null) => MultiProgressDialog.Run<TSource>(this, title, items, getTask, getName);
 	}
 }

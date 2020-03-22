@@ -82,7 +82,7 @@ namespace NeoEdit.Program
 			File.WriteAllBytes(newLocation, result);
 
 			Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
-			state.ParentWindow.RunMessageDialog("Info", "The program will be updated after exiting.");
+			state.TabsWindow.RunMessageDialog("Info", "The program will be updated after exiting.");
 		}
 
 		static void Execute_Help_Extract()

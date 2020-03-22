@@ -723,12 +723,12 @@
     <Compile Include="Dialogs\NetworkScanPortsDialog.xaml.cs">
       <DependentUpon>NetworkScanPortsDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\NetworkWCFGetConfig.xaml">
+    <Page Include="Dialogs\NetworkWCFGetConfigDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\NetworkWCFGetConfig.xaml.cs">
-      <DependentUpon>NetworkWCFGetConfig.xaml</DependentUpon>
+    <Compile Include="Dialogs\NetworkWCFGetConfigDialog.xaml.cs">
+      <DependentUpon>NetworkWCFGetConfigDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\NetworkWCFInterceptCallsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -150,7 +150,7 @@ namespace NeoEdit.Program
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return state.ParentWindow.RunPositionGotoDialog(gotoType, startValue, GetVariables());
+			return state.TabsWindow.RunPositionGotoDialog(gotoType, startValue, GetVariables());
 		}
 
 		void Execute_Position_Goto(GotoType gotoType, bool selecting)
