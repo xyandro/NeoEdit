@@ -11,3 +11,4 @@ Detect brackets by greater than less than not lining up (1 > 5 vs. HashSet<int>)
 Less specific parsing (ignore method bodies, just line up {})
 Split selections on line breaks to emulate removed "multi-line" function
 Make "Exit" actually shut down program if it's the last window
+Encode everything UTF-8, windows line endings

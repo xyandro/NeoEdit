@@ -35,13 +35,7 @@ namespace NeoEdit.Program
 				if (!state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.All))
 					state.Window.Dispatcher.Invoke(() =>
 					{
-						state.SavedAnswers[nameof(BinarySearchFile)] = new Message(state.Window)
-						{
-							Title = "Confirm",
-							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
-							Options = MessageOptions.YesNoAllCancel,
-							DefaultCancel = MessageOptions.Cancel,
-						}.Show();
+						state.SavedAnswers[nameof(BinarySearchFile)] = state.ParentWindow.RunMessageDialog("Confirm", $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
 					});
 
 				return (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Cancel));
@@ -78,13 +72,7 @@ namespace NeoEdit.Program
 				state.Window.Dispatcher.Invoke(() =>
 				{
 					if (!state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.All))
-						state.SavedAnswers[nameof(TextSearchFile)] = new Message(state.Window)
-						{
-							Title = "Confirm",
-							Text = $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?",
-							Options = MessageOptions.YesNoAllCancel,
-							DefaultCancel = MessageOptions.Cancel,
-						}.Show();
+						state.SavedAnswers[nameof(TextSearchFile)] = state.ParentWindow.RunMessageDialog("Confirm", $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
 				});
 
 				return (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Cancel));
@@ -840,14 +828,7 @@ namespace NeoEdit.Program
 
 			var confirmCopyMove = $"{nameof(Execute_Files_Operations_CopyMove)}_Confirm";
 			if (!state.SavedAnswers[confirmCopyMove].HasFlag(MessageOptions.All))
-				state.SavedAnswers[confirmCopyMove] = new Message(state.Window)
-				{
-					Title = "Confirm",
-					Text = $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?",
-					Options = MessageOptions.YesNoAll,
-					DefaultAccept = MessageOptions.Yes,
-					DefaultCancel = MessageOptions.No,
-				}.Show();
+				state.SavedAnswers[confirmCopyMove] = state.ParentWindow.RunMessageDialog("Confirm", $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
 			if (!state.SavedAnswers[confirmCopyMove].HasFlag(MessageOptions.Yes))
 				return;
 
@@ -856,14 +837,7 @@ namespace NeoEdit.Program
 			if (invalid.Any())
 			{
 				if (!state.SavedAnswers[overwriteCopyMove].HasFlag(MessageOptions.All))
-					state.SavedAnswers[overwriteCopyMove] = new Message(state.Window)
-					{
-						Title = "Confirm",
-						Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
-						Options = MessageOptions.YesNoAll,
-						DefaultAccept = MessageOptions.Yes,
-						DefaultCancel = MessageOptions.No,
-					}.Show();
+					state.SavedAnswers[overwriteCopyMove] = state.ParentWindow.RunMessageDialog("Confirm", $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
 				if (!state.SavedAnswers[overwriteCopyMove].HasFlag(MessageOptions.Yes))
 					return;
 			}
@@ -898,14 +872,7 @@ namespace NeoEdit.Program
 			var continueAnswer = $"{nameof(Execute_Files_Operations_Delete)}_Continue";
 
 			if (!state.SavedAnswers[sureAnswer].HasFlag(MessageOptions.All))
-				state.SavedAnswers[sureAnswer] = new Message(state.Window)
-				{
-					Title = "Confirm",
-					Text = "Are you sure you want to delete these files/directories?",
-					Options = MessageOptions.YesNoAllCancel,
-					DefaultAccept = MessageOptions.No,
-					DefaultCancel = MessageOptions.Cancel,
-				}.Show();
+				state.SavedAnswers[sureAnswer] = state.ParentWindow.RunMessageDialog("Confirm", "Are you sure you want to delete these files/directories?", MessageOptions.YesNoAllCancel, MessageOptions.No, MessageOptions.Cancel);
 			if (!state.SavedAnswers[sureAnswer].HasFlag(MessageOptions.Yes))
 				return;
 
@@ -921,14 +888,7 @@ namespace NeoEdit.Program
 				catch (Exception ex)
 				{
 					if (!state.SavedAnswers[continueAnswer].HasFlag(MessageOptions.All))
-						state.SavedAnswers[continueAnswer] = new Message(state.Window)
-						{
-							Title = "Confirm",
-							Text = $"An error occurred:\n\n{ex.Message}\n\nContinue?",
-							Options = MessageOptions.YesNoAll,
-							DefaultAccept = MessageOptions.Yes,
-							DefaultCancel = MessageOptions.No,
-						}.Show();
+						state.SavedAnswers[continueAnswer] = state.ParentWindow.RunMessageDialog("Confirm", $"An error occurred:\n\n{ex.Message}\n\nContinue?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
 
 					if (!state.SavedAnswers[continueAnswer].HasFlag(MessageOptions.Yes))
 						throw new OperationCanceledException();

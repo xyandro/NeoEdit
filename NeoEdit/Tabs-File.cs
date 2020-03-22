@@ -81,14 +81,7 @@ namespace NeoEdit.Program
 		{
 			var files = NEClipboard.Current.Strings;
 
-			if ((files.Count > 5) && (!new Message(state.Window)
-			{
-				Title = "Confirm",
-				Text = $"Are you sure you want to open these {files.Count} files?",
-				Options = MessageOptions.YesNoCancel,
-				DefaultAccept = MessageOptions.Yes,
-				DefaultCancel = MessageOptions.Cancel,
-			}.Show().HasFlag(MessageOptions.Yes)))
+			if ((files.Count > 5) && (!state.ParentWindow.RunMessageDialog("Confirm", $"Are you sure you want to open these {files.Count} files?", MessageOptions.YesNoCancel, MessageOptions.Yes, MessageOptions.Cancel).HasFlag(MessageOptions.Yes)))
 				return;
 
 			OpenFiles(files);

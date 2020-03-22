@@ -25,16 +25,6 @@ namespace NeoEdit.Program.Dialogs
 			return Answer;
 		}
 
-		public static void Show(string text, string title = null, Window owner = null)
-		{
-			new Message(owner)
-			{
-				Text = text,
-				Title = title ?? "Info",
-				Options = MessageOptions.Ok,
-			}.Show();
-		}
-
 		Dictionary<Button, MessageOptions> buttonActions = new Dictionary<Button, MessageOptions>();
 		MessageOptions Answer { get; set; }
 
@@ -98,6 +88,28 @@ namespace NeoEdit.Program.Dialogs
 		{
 			Answer = buttonActions[sender as Button];
 			DialogResult = true;
+		}
+
+		public static void Show(string text, string title = null, Window owner = null)
+		{
+			new Message(owner)
+			{
+				Text = text,
+				Title = title ?? "Info",
+				Options = MessageOptions.Ok,
+			}.Show();
+		}
+
+		public static MessageOptions Run(Window owner, string title, string text, MessageOptions options, MessageOptions defaultAccept, MessageOptions defaultCancel)
+		{
+			return new Message(owner)
+			{
+				Title = title,
+				Text = text,
+				Options = options,
+				DefaultAccept = defaultAccept,
+				DefaultCancel = defaultCancel,
+			}.Show();
 		}
 	}
 }

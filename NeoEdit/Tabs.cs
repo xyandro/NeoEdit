@@ -117,12 +117,7 @@ namespace NeoEdit.Program
 				if (sw != null)
 				{
 					timeNextAction = false;
-					new Message(state.Window)
-					{
-						Title = "Timer",
-						Text = $"Elapsed time: {sw.ElapsedMilliseconds:n} ms",
-						Options = MessageOptions.Ok,
-					}.Show();
+					state.ParentWindow.RunMessageDialog("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
 				}
 
 				var action = MacroAction.GetMacroAction(state);

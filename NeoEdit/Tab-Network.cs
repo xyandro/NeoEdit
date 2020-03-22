@@ -109,14 +109,7 @@ namespace NeoEdit.Program
 			if (invalid.Any())
 			{
 				if (!state.SavedAnswers[nameof(Execute_Network_FetchFile)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_Network_FetchFile)] = new Message(state.Window)
-					{
-						Title = "Confirm",
-						Text = $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}",
-						Options = MessageOptions.YesNoAll,
-						DefaultAccept = MessageOptions.Yes,
-						DefaultCancel = MessageOptions.No,
-					}.Show();
+					state.SavedAnswers[nameof(Execute_Network_FetchFile)] = state.ParentWindow.RunMessageDialog("Confirm", $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
 				if (!state.SavedAnswers[nameof(Execute_Network_FetchFile)].HasFlag(MessageOptions.Yes))
 					return;
 			}
