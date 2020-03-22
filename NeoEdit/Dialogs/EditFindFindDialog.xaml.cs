@@ -227,7 +227,7 @@ namespace NeoEdit.Program.Dialogs
 			CodePages = startCodePages;
 		}
 
-		static public EditFindFindDialogResult Run(Window parent, string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables)
+		public static EditFindFindDialogResult Run(Window parent, string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables)
 		{
 			var dialog = new EditFindFindDialog(text, selectionOnly, codePages, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

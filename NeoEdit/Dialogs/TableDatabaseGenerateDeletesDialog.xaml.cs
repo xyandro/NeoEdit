@@ -42,7 +42,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public TableDatabaseGenerateDeletesDialogResult Run(Window parent, Table table, string tableName)
+		public static TableDatabaseGenerateDeletesDialogResult Run(Window parent, Table table, string tableName)
 		{
 			var dialog = new TableDatabaseGenerateDeletesDialog(table, tableName) { Owner = parent };
 			if (!dialog.ShowDialog())

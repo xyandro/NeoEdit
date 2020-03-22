@@ -68,7 +68,7 @@ namespace NeoEdit.Program
 			return results;
 		}
 
-		object Configure_Network_AbsoluteURL() => NetworkAbsoluteURLDialog.Run(state.Window, GetVariables());
+		object Configure_Network_AbsoluteURL() => state.ParentWindow.RunNetworkAbsoluteURLDialog(GetVariables());
 
 		void Execute_Network_AbsoluteURL()
 		{
@@ -86,7 +86,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		object Configure_Network_FetchFile() => NetworkFetchFileDialog.Run(state.Window, GetVariables());
+		object Configure_Network_FetchFile() => state.ParentWindow.RunNetworkFetchFileDialog(GetVariables());
 
 		void Execute_Network_FetchFile()
 		{
@@ -124,7 +124,7 @@ namespace NeoEdit.Program
 			MultiProgressDialog.RunAsync(state.Window, "Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
 		}
 
-		object Configure_Network_FetchStream() => NetworkFetchStreamDialog.Run(state.Window, GetVariables(), Path.GetDirectoryName(FileName) ?? "");
+		object Configure_Network_FetchStream() => state.ParentWindow.RunNetworkFetchStreamDialog(GetVariables(), Path.GetDirectoryName(FileName) ?? "");
 
 		void Execute_Network_FetchStream()
 		{
@@ -138,7 +138,7 @@ namespace NeoEdit.Program
 			MultiProgressDialog.RunAsync(state.Window, "Downloading...", data, async (item, progress, canceled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, canceled));
 		}
 
-		object Configure_Network_FetchPlaylist() => NetworkFetchStreamDialog.Run(state.Window, GetVariables(), null);
+		object Configure_Network_FetchPlaylist() => state.ParentWindow.RunNetworkFetchStreamDialog(GetVariables(), null);
 
 		void Execute_Network_FetchPlaylist()
 		{
@@ -185,7 +185,7 @@ namespace NeoEdit.Program
 			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
 		}
 
-		object Configure_Network_Ping() => NetworkPingDialog.Run(state.Window);
+		object Configure_Network_Ping() => state.ParentWindow.RunNetworkPingDialog();
 
 		void Execute_Network_Ping()
 		{
@@ -212,7 +212,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(replies);
 		}
 
-		object Configure_Network_ScanPorts() => NetworkScanPortsDialog.Run(state.Window);
+		object Configure_Network_ScanPorts() => state.ParentWindow.RunNetworkScanPortsDialog();
 
 		void Execute_Network_ScanPorts()
 		{
@@ -236,7 +236,7 @@ namespace NeoEdit.Program
 
 		void Execute_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFClient.ExecuteWCF(Text.GetString(range))).ToList());
 
-		object Configure_Network_WCF_InterceptCalls() => NetworkWCFInterceptCallsDialog.Run(state.Window);
+		object Configure_Network_WCF_InterceptCalls() => state.ParentWindow.RunNetworkWCFInterceptCallsDialog();
 
 		void Execute_Network_WCF_InterceptCalls()
 		{

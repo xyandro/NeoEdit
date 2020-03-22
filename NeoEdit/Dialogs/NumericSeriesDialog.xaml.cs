@@ -43,7 +43,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public NumericSeriesDialogResult Run(Window parent, bool linear, NEVariables variables)
+		public static NumericSeriesDialogResult Run(Window parent, bool linear, NEVariables variables)
 		{
 			var dialog = new NumericSeriesDialog(linear, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -34,7 +34,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public NumericFloorRoundCeilingDialogResult Run(Window parent, string title, NEVariables variables)
+		public static NumericFloorRoundCeilingDialogResult Run(Window parent, string title, NEVariables variables)
 		{
 			var dialog = new NumericFloorRoundCeilingDialog(title, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

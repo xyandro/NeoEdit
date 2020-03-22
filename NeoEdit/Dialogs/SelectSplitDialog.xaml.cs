@@ -89,7 +89,7 @@ namespace NeoEdit.Program.Dialogs
 
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
-		static public SelectSplitDialogResult Run(Window parent, NEVariables variables)
+		public static SelectSplitDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new SelectSplitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -48,7 +48,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public EditConvertDialogResult Run(Window parent)
+		public static EditConvertDialogResult Run(Window parent)
 		{
 			var dialog = new EditConvertDialog { Owner = parent };
 			if (!dialog.ShowDialog())

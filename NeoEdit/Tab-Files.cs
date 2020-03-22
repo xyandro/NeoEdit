@@ -381,7 +381,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(Text.GetString(range))).ToList());
 
-		object Configure_Files_Name_MakeAbsolute() => FilesNamesMakeAbsoluteRelativeDialog.Run(state.Window, GetVariables(), true, true);
+		object Configure_Files_Name_MakeAbsolute() => state.ParentWindow.RunFilesNamesMakeAbsoluteRelativeDialog(GetVariables(), true, true);
 
 		void Execute_Files_Name_MakeAbsolute()
 		{
@@ -390,7 +390,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteRelativeDialogResult.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		object Configure_Files_Name_MakeRelative() => FilesNamesMakeAbsoluteRelativeDialog.Run(state.Window, GetVariables(), false, true);
+		object Configure_Files_Name_MakeRelative() => state.ParentWindow.RunFilesNamesMakeAbsoluteRelativeDialog(GetVariables(), false, true);
 
 		void Execute_Files_Name_MakeRelative()
 		{
@@ -401,7 +401,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
 		}
 
-		object Configure_Files_Name_GetUnique() => FilesNamesGetUniqueDialog.Run(state.Window);
+		object Configure_Files_Name_GetUnique() => state.ParentWindow.RunFilesNamesGetUniqueDialog();
 
 		void Execute_Files_Name_GetUnique()
 		{
@@ -516,7 +516,7 @@ namespace NeoEdit.Program
 			var vars = GetVariables();
 			var sizes = RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			return FilesSetSizeDialog.Run(state.Window, vars);
+			return state.ParentWindow.RunFilesSetSizeDialog(vars);
 		}
 
 		void Execute_Files_Set_Size()
@@ -530,7 +530,7 @@ namespace NeoEdit.Program
 			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
-		object Configure_Files_Set_Time() => FilesSetTimeDialog.Run(state.Window, GetVariables(), $@"""{DateTime.Now}""");
+		object Configure_Files_Set_Time() => state.ParentWindow.RunFilesSetTimeDialog(GetVariables(), $@"""{DateTime.Now}""");
 
 		void Execute_Files_Set_Time(TimestampType type)
 		{
@@ -582,7 +582,7 @@ namespace NeoEdit.Program
 						current[availAttr] = null;
 				}
 
-			return FilesSetAttributesDialog.Run(state.Window, current);
+			return state.ParentWindow.RunFilesSetAttributesDialog(current);
 		}
 
 		void Execute_Files_Set_Attributes()
@@ -599,7 +599,7 @@ namespace NeoEdit.Program
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
-		object Configure_Files_Find() => FilesFindDialog.Run(state.Window, GetVariables());
+		object Configure_Files_Find() => state.ParentWindow.RunFilesFindDialog(GetVariables());
 
 		void Execute_Files_Find()
 		{
@@ -670,7 +670,7 @@ namespace NeoEdit.Program
 			}
 		}
 
-		object Configure_Files_Insert() => FilesInsertDialog.Run(state.Window);
+		object Configure_Files_Insert() => state.ParentWindow.RunFilesInsertDialog();
 
 		void Execute_Files_Insert()
 		{
@@ -696,7 +696,7 @@ namespace NeoEdit.Program
 				Directory.CreateDirectory(file);
 		}
 
-		object Configure_Files_Create_FromExpressions() => FilesCreateFromExpressionsDialog.Run(state.Window, GetVariables(), CodePage);
+		object Configure_Files_Create_FromExpressions() => state.ParentWindow.RunFilesCreateFromExpressionsDialog(GetVariables(), CodePage);
 
 		void Execute_Files_Create_FromExpressions()
 		{
@@ -777,7 +777,7 @@ namespace NeoEdit.Program
 			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList();
 		}
 
-		object Configure_Files_Select_ByVersionControlStatus() => FilesSelectByVersionControlStatusDialog.Run(state.Window);
+		object Configure_Files_Select_ByVersionControlStatus() => state.ParentWindow.RunFilesSelectByVersionControlStatusDialog();
 
 		void Execute_Files_Select_ByVersionControlStatus()
 		{
@@ -788,7 +788,7 @@ namespace NeoEdit.Program
 			Selections = sels;
 		}
 
-		object Configure_Files_Hash() => FilesHashDialog.Run(state.Window);
+		object Configure_Files_Hash() => state.ParentWindow.RunFilesHashDialog();
 
 		void Execute_Files_Hash()
 		{
@@ -800,7 +800,7 @@ namespace NeoEdit.Program
 			}, results => ReplaceSelections(results));
 		}
 
-		object Configure_Files_Sign() => FilesSignDialog.Run(state.Window);
+		object Configure_Files_Sign() => state.ParentWindow.RunFilesSignDialog();
 
 		void Execute_Files_Sign()
 		{
@@ -808,7 +808,7 @@ namespace NeoEdit.Program
 			ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		object Configure_Files_Operations_CopyMove(bool move) => FilesOperationsCopyMoveDialog.Run(state.Window, GetVariables(), move);
+		object Configure_Files_Operations_CopyMove(bool move) => state.ParentWindow.RunFilesOperationsCopyMoveDialog(GetVariables(), move);
 
 		void Execute_Files_Operations_CopyMove(bool move)
 		{
@@ -969,7 +969,7 @@ namespace NeoEdit.Program
 
 		void Execute_Files_Operations_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
 
-		object Configure_Files_Operations_Encoding() => FilesOperationsEncodingDialog.Run(state.Window);
+		object Configure_Files_Operations_Encoding() => state.ParentWindow.RunFilesOperationsEncodingDialog();
 
 		void Execute_Files_Operations_Encoding()
 		{
@@ -985,7 +985,7 @@ namespace NeoEdit.Program
 		{
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return FilesOperationsSplitFileDialog.Run(state.Window, variables);
+			return state.ParentWindow.RunFilesOperationsSplitFileDialog(variables);
 		}
 
 		void Execute_Files_Operations_SplitFile()
@@ -1003,7 +1003,7 @@ namespace NeoEdit.Program
 			});
 		}
 
-		object Configure_Files_Operations_CombineFiles() => FilesOperationsCombineFilesDialog.Run(state.Window, GetVariables());
+		object Configure_Files_Operations_CombineFiles() => state.ParentWindow.RunFilesOperationsCombineFilesDialog(GetVariables());
 
 		void Execute_Files_Operations_CombineFiles()
 		{

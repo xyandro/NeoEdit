@@ -12,6 +12,7 @@ namespace NeoEdit.Program
 	{
 		public IEnumerable<Tab> ActiveTabs;
 		public Window Window; // Modal dialogs need a window
+		public TabsWindow ParentWindow;
 
 		public NECommand Command;
 		public bool ShiftDown;
@@ -72,6 +73,7 @@ namespace NeoEdit.Program
 		}
 
 		Dictionary<string, NEExpression> expressions;
+
 		public NEExpression GetExpression(string expression)
 		{
 			if (expressions == null)

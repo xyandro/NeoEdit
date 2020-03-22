@@ -124,7 +124,7 @@ namespace NeoEdit.Program
 		//	CalculateDiff();
 		//}
 
-		//DiffIgnoreCharactersDialogResult Command_Diff_IgnoreCharacters_Dialog() => DiffIgnoreCharactersDialog.Run(TabsParent, DiffIgnoreCharacters);
+		//DiffIgnoreCharactersDialogResult Command_Diff_IgnoreCharacters_Dialog() => state.ParentWindow.RunDiffIgnoreCharactersDialog(TabsParent, DiffIgnoreCharacters);
 
 		//void Command_Diff_IgnoreCharacters(DiffIgnoreCharactersDialogResult result)
 		//{
@@ -180,7 +180,7 @@ namespace NeoEdit.Program
 		//		source.ReplaceSelections(strs);
 		//}
 
-		//DiffFixWhitespaceDialogResult Command_Diff_Fix_Whitespace_Dialog() => DiffFixWhitespaceDialog.Run(TabsParent);
+		//DiffFixWhitespaceDialogResult Command_Diff_Fix_Whitespace_Dialog() => state.ParentWindow.RunDiffFixWhitespaceDialog(TabsParent);
 
 		//void Command_Diff_Fix_Whitespace(DiffFixWhitespaceDialogResult result)
 		//{

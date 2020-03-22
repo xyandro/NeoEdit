@@ -67,7 +67,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		object Configure_File_SaveCopy_SaveCopyByExpression() => GetExpressionDialog.Run(state.Window, GetVariables(), Selections.Count);
+		object Configure_File_SaveCopy_SaveCopyByExpression() => state.ParentWindow.RunGetExpressionDialog(GetVariables(), Selections.Count);
 
 		void Execute_File_SaveCopy_SaveCopyClipboard(bool copyOnly = false)
 		{
@@ -144,7 +144,7 @@ namespace NeoEdit.Program
 			SetFileName(fileName);
 		}
 
-		object Configure_File_Operations_RenameByExpression() => GetExpressionDialog.Run(state.Window, GetVariables(), Selections.Count);
+		object Configure_File_Operations_RenameByExpression() => state.ParentWindow.RunGetExpressionDialog(GetVariables(), Selections.Count);
 
 		void Execute_File_Operations_RenameClipboard()
 		{
@@ -369,7 +369,7 @@ namespace NeoEdit.Program
 
 		void Execute_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
 
-		object Configure_File_Encoding_Encoding() => EncodingDialog.Run(state.Window, CodePage);
+		object Configure_File_Encoding_Encoding() => state.ParentWindow.RunEncodingDialog(CodePage);
 
 		void Execute_File_Encoding_Encoding()
 		{
@@ -377,7 +377,7 @@ namespace NeoEdit.Program
 			CodePage = result.CodePage;
 		}
 
-		object Configure_File_Encoding_ReopenWithEncoding() => EncodingDialog.Run(state.Window, CodePage);
+		object Configure_File_Encoding_ReopenWithEncoding() => state.ParentWindow.RunEncodingDialog(CodePage);
 
 		void Execute_File_Encoding_ReopenWithEncoding()
 		{
@@ -400,7 +400,7 @@ namespace NeoEdit.Program
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		object Configure_File_Encoding_LineEndings() => FileEncodingLineEndingsDialog.Run(state.Window, LineEnding ?? "");
+		object Configure_File_Encoding_LineEndings() => state.ParentWindow.RunFileEncodingLineEndingsDialog(LineEnding ?? "");
 
 		void Execute_File_Encoding_LineEndings()
 		{

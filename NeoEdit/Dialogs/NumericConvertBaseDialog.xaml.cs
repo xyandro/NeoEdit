@@ -110,7 +110,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public NumericConvertBaseDialogResult Run(Window parent)
+		public static NumericConvertBaseDialogResult Run(Window parent)
 		{
 			var dialog = new NumericConvertBaseDialog { Owner = parent };
 			if (!dialog.ShowDialog())

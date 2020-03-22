@@ -41,7 +41,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public GetExpressionDialogResult Run(Window parent, NEVariables variables, int? numRows = null)
+		public static GetExpressionDialogResult Run(Window parent, NEVariables variables, int? numRows = null)
 		{
 			var dialog = new GetExpressionDialog(variables, numRows) { Owner = parent };
 			if (!dialog.ShowDialog())

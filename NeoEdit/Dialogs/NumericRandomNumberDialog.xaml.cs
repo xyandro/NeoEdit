@@ -32,7 +32,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public NumericRandomNumberDialogResult Run(Window parent, NEVariables variables)
+		public static NumericRandomNumberDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NumericRandomNumberDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

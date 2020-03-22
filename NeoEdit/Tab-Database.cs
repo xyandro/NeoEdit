@@ -49,7 +49,7 @@ namespace NeoEdit.Program
 				throw new Exception("No connection.");
 		}
 
-		object Configure_Database_Connect() => DatabaseConnectDialog.Run(state.Window);
+		object Configure_Database_Connect() => state.ParentWindow.RunDatabaseConnectDialog();
 
 		void Execute_Database_Connect()
 		{

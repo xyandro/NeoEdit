@@ -36,7 +36,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public NumericScaleDialogResult Run(Window parent, NEVariables variables)
+		public static NumericScaleDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NumericScaleDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

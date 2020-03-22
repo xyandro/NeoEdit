@@ -29,7 +29,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public TableConvertDialogResult Run(Window parent, ParserType tableType)
+		public static TableConvertDialogResult Run(Window parent, ParserType tableType)
 		{
 			var dialog = new TableConvertDialog(tableType) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -143,7 +143,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public TableEditTableDialogResult Run(Window parent, Table input)
+		public static TableEditTableDialogResult Run(Window parent, Table input)
 		{
 			var dialog = new TableEditTableDialog(input) { Owner = parent };
 			if (!dialog.ShowDialog())

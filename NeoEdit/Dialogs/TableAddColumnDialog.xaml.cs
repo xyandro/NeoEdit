@@ -44,7 +44,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public TableAddColumnDialogResult Run(Window parent, NEVariables variables, int numRows)
+		public static TableAddColumnDialogResult Run(Window parent, NEVariables variables, int numRows)
 		{
 			var dialog = new TableAddColumnDialog(variables, numRows) { Owner = parent };
 			if (!dialog.ShowDialog())

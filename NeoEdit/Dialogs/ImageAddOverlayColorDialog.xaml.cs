@@ -30,7 +30,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public ImageAddOverlayColorDialogResult Run(Window parent, bool add, NEVariables variables)
+		public static ImageAddOverlayColorDialogResult Run(Window parent, bool add, NEVariables variables)
 		{
 			var dialog = new ImageAddOverlayColorDialog(add, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

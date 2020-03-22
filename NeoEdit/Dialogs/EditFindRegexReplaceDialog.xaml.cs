@@ -87,7 +87,7 @@ namespace NeoEdit.Program.Dialogs
 
 		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = SelectionOnly = EntireSelection = false;
 
-		static public EditFindRegexReplaceDialogResult Run(Window parent, string text, bool selectionOnly)
+		public static EditFindRegexReplaceDialogResult Run(Window parent, string text, bool selectionOnly)
 		{
 			var dialog = new EditFindRegexReplaceDialog(text, selectionOnly) { Owner = parent };
 			if (!dialog.ShowDialog())

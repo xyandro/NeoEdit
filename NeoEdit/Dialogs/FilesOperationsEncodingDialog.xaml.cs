@@ -36,7 +36,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public FilesOperationsEncodingDialogResult Run(Window parent)
+		public static FilesOperationsEncodingDialogResult Run(Window parent)
 		{
 			var dialog = new FilesOperationsEncodingDialog { Owner = parent };
 			if (!dialog.ShowDialog())

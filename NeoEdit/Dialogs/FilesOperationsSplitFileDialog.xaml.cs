@@ -31,7 +31,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public FilesOperationsSplitFileDialogResult Run(Window parent, NEVariables variables)
+		public static FilesOperationsSplitFileDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new FilesOperationsSplitFileDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

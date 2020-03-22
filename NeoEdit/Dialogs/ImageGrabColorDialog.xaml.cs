@@ -157,7 +157,7 @@ namespace NeoEdit.Program.Dialogs
 			}
 		}
 
-		static public ImageGrabColorDialogResult Run(Window parent, string color)
+		public static ImageGrabColorDialogResult Run(Window parent, string color)
 		{
 			var dialog = new ImageGrabColorDialog(color) { Owner = parent };
 			if (!dialog.ShowDialog())

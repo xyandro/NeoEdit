@@ -30,7 +30,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public FilesSetTimeDialogResult Run(Window parent, NEVariables variables, string expression)
+		public static FilesSetTimeDialogResult Run(Window parent, NEVariables variables, string expression)
 		{
 			var dialog = new FilesSetTimeDialog(variables, expression) { Owner = parent };
 			if (!dialog.ShowDialog())

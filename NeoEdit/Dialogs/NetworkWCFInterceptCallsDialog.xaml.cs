@@ -30,7 +30,7 @@ namespace NeoEdit.Program.Dialogs
 			interceptURL.AddCurrentSuggestion();
 		}
 
-		static public NetworkWCFInterceptCallsDialogResult Run(Window parent)
+		public static NetworkWCFInterceptCallsDialogResult Run(Window parent)
 		{
 			var dialog = new NetworkWCFInterceptCallsDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

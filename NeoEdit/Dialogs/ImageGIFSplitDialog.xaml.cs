@@ -29,7 +29,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public ImageGIFSplitDialogResult Run(Window parent, NEVariables variables)
+		public static ImageGIFSplitDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageGIFSplitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

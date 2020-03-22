@@ -42,7 +42,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public NumericMinMaxValuesDialogResult Run(Window parent)
+		public static NumericMinMaxValuesDialogResult Run(Window parent)
 		{
 			var dialog = new NumericMinMaxValuesDialog { Owner = parent };
 			if (!dialog.ShowDialog())

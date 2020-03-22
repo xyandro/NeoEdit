@@ -97,7 +97,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public ImageGrabImageDialogResult Run(Window parent, NEVariables variables)
+		public static ImageGrabImageDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageGrabImageDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

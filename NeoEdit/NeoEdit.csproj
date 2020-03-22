@@ -1274,6 +1274,9 @@
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
     <Compile Include="Tabs.cs" />
+    <Compile Include="TabsWindow-Dialogs.xaml.cs">
+      <DependentUpon>TabsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TabsWindow-Full.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>
     </Compile>

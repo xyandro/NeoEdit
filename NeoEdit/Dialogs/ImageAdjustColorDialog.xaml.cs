@@ -38,7 +38,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public ImageAdjustColorDialogResult Run(Window parent, NEVariables variables)
+		public static ImageAdjustColorDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageAdjustColorDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

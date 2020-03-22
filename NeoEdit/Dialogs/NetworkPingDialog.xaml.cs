@@ -26,7 +26,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public NetworkPingDialogResult Run(Window parent)
+		public static NetworkPingDialogResult Run(Window parent)
 		{
 			var dialog = new NetworkPingDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

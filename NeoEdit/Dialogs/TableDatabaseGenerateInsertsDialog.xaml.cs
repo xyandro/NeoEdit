@@ -47,7 +47,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public TableDatabaseGenerateInsertsDialogResult Run(Window parent, Table table, string tableName)
+		public static TableDatabaseGenerateInsertsDialogResult Run(Window parent, Table table, string tableName)
 		{
 			var dialog = new TableDatabaseGenerateInsertsDialog(table, tableName) { Owner = parent };
 			if (!dialog.ShowDialog())

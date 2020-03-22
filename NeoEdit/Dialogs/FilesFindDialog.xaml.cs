@@ -139,7 +139,7 @@ namespace NeoEdit.Program.Dialogs
 			CodePages = new HashSet<Coder.CodePage>(CodePagesDialog.DefaultCodePages);
 		}
 
-		static public FilesFindDialogResult Run(Window parent, NEVariables variables)
+		public static FilesFindDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new FilesFindDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Models;
 using NeoEdit.Program.NEClipboards;
@@ -65,7 +64,7 @@ namespace NeoEdit.Program
 
 		void Execute_Macro_Play_Repeat()
 		{
-			var result = MacroPlayRepeatDialog.Run(TabsWindow, Macro.ChooseMacro);
+			var result = state.ParentWindow.RunMacroPlayRepeatDialog(Macro.ChooseMacro);
 
 			var macro = Macro.Load(result.Macro);
 			var expression = new NEExpression(result.Expression);

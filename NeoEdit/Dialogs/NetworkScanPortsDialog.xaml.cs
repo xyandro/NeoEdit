@@ -39,7 +39,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public NetworkScanPortsDialogResult Run(Window parent)
+		public static NetworkScanPortsDialogResult Run(Window parent)
 		{
 			var dialog = new NetworkScanPortsDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

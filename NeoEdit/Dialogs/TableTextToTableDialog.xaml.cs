@@ -103,7 +103,7 @@ namespace NeoEdit.Program.Dialogs
 			SetupCanvas();
 		}
 
-		static public TableTextToTableDialogResult Run(Window parent, string text)
+		public static TableTextToTableDialogResult Run(Window parent, string text)
 		{
 			var dialog = new TableTextToTableDialog(text) { Owner = parent };
 			if (!dialog.ShowDialog())

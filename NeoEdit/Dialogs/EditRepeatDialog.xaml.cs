@@ -35,7 +35,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public EditRepeatDialogResult Run(Window parent, bool selectRepetitions, NEVariables variables)
+		public static EditRepeatDialogResult Run(Window parent, bool selectRepetitions, NEVariables variables)
 		{
 			var dialog = new EditRepeatDialog(selectRepetitions, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

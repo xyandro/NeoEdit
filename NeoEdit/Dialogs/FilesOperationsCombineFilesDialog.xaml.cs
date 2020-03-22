@@ -34,7 +34,7 @@ namespace NeoEdit.Program.Dialogs
 			DialogResult = true;
 		}
 
-		static public FilesOperationsCombineFilesDialogResult Run(Window parent, NEVariables variables)
+		public static FilesOperationsCombineFilesDialogResult Run(Window parent, NEVariables variables)
 		{
 			var dialog = new FilesOperationsCombineFilesDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())
