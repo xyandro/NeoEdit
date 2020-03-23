@@ -590,28 +590,6 @@ namespace NeoEdit.Program.Controls
 			IsFullScreen = screenPosition.IsFullScreen;
 		}
 
-		protected override void OnClosed(EventArgs e)
-		{
-			base.OnClosed(e);
-			if ((Application.Current.ShutdownMode == ShutdownMode.OnExplicitShutdown) && (Application.Current.Windows.Count == 0))
-			{
-				if (!Settings.DontExitOnClose)
-					Environment.Exit(0);
-
-				GC.Collect();
-				GC.WaitForPendingFinalizers();
-				GC.Collect();
-
-				// Restart if memory usage is more than 1/2 GB
-				var process = Process.GetCurrentProcess();
-				if (process.PrivateMemorySize64 > (1 << 29))
-				{
-					Process.Start(Environment.GetCommandLineArgs()[0], $"-background -waitpid={process.Id}");
-					Environment.Exit(0);
-				}
-			}
-		}
-
 		static class Win32
 		{
 			[DllImport("user32.dll")] public static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);

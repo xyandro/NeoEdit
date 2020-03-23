@@ -78,6 +78,8 @@ namespace NeoEdit.Program
 
 		public bool HandleCommand(ExecuteState state, bool configure = true)
 		{
+			state.TabsWindow = TabsWindow;
+
 			if ((MacroPlaying != null) && (configure))
 			{
 				// User is trying to do something in the middle of a macro

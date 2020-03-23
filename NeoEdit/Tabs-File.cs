@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -123,10 +124,25 @@ namespace NeoEdit.Program
 				RemoveTab(tab);
 			}
 			Instances.Remove(this);
-			TabsWindow.Close();
+			TabsWindow.CloseWindow();
 
-			if ((!Instances.Any()) && (!Settings.DontExitOnClose))
-				Environment.Exit(0);
+			if (!Instances.Any())
+			{
+				if ((state.Configuration as bool? != false) || (!Settings.DontExitOnClose))
+					Environment.Exit(0);
+
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				GC.Collect();
+
+				// Restart if memory usage is more than 1/2 GB
+				var process = Process.GetCurrentProcess();
+				if (process.PrivateMemorySize64 > (1 << 29))
+				{
+					Process.Start(Environment.GetCommandLineArgs()[0], $"-background -waitpid={process.Id}");
+					Environment.Exit(0);
+				}
+			}
 		}
 	}
 }

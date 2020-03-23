@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Misc;
@@ -45,20 +46,14 @@ namespace NeoEdit.Program
 			Font.FontSizeChanged += (s, e) => QueueDraw();
 
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
+			Closing += OnClosing;
 		}
 
 		public bool HandleCommand(ExecuteState state, bool configure = true)
 		{
-			state.TabsWindow = this;
 			if (configure)
 				state.Modifiers = Keyboard.Modifiers;
-			if (!Tabs.HandleCommand(state, configure))
-				return false;
-
-			if ((state.Command == NECommand.File_Exit) && (state.Configuration == null))
-				Close();
-
-			return true;
+			return Tabs.HandleCommand(state, configure);
 		}
 
 		readonly RunOnceTimer activateTabsTimer, drawTimer;
@@ -173,6 +168,24 @@ namespace NeoEdit.Program
 			//}
 		}
 
+		private void OnClosing(object sender, CancelEventArgs args)
+		{
+			var timer = new DispatcherTimer();
+			timer.Tick += (s, e) =>
+			{
+				(s as DispatcherTimer).Stop();
+				HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = false });
+			};
+			timer.Start();
+			args.Cancel = true;
+		}
+
+		public void CloseWindow()
+		{
+			Closing -= OnClosing;
+			Close();
+		}
+
 		TabLabel CreateTabLabel(Tab tab)
 		{
 			var tabLabel = new TabLabel(tab);
@@ -282,12 +295,6 @@ namespace NeoEdit.Program
 		{
 			Tabs.RemoveTab(tab);
 			Tabs.InsertTab(tab, newIndex);
-		}
-
-		protected override void OnClosing(CancelEventArgs e)
-		{
-			base.OnClosing(e);
-			e.Cancel = !HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = true });
 		}
 
 		protected override void OnClosed(EventArgs e)

@@ -29,7 +29,7 @@ namespace NeoEdit.Program
 			setMacroPlaying(this);
 			var timer = new DispatcherTimer(visualize ? DispatcherPriority.ApplicationIdle : DispatcherPriority.Input);
 			var ctr = 0;
-			timer.Tick += (s, e) => tabsWindow.Dispatcher.Invoke(() =>
+			timer.Tick += (s, e) =>
 			{
 				try
 				{
@@ -53,7 +53,7 @@ namespace NeoEdit.Program
 					setMacroPlaying(null);
 					throw;
 				}
-			});
+			};
 			timer.Start();
 		}
 
