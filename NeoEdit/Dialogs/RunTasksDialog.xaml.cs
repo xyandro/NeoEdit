@@ -10,7 +10,7 @@ using NeoEdit.Common;
 
 namespace NeoEdit.Program.Dialogs
 {
-	partial class RunTasksDialog
+	partial class RunTasksDialog : IRunTasksDialog
 	{
 		const int Columns = 3;
 		const int Rows = 3;
@@ -48,8 +48,10 @@ namespace NeoEdit.Program.Dialogs
 		List<Task> tasks = new List<Task>();
 		int nextTask;
 
-		public RunTasksDialog()
+		public RunTasksDialog(Window owner)
 		{
+			Owner = owner;
+
 			InitializeComponent();
 
 			for (var column = 0; column < Columns; ++column)

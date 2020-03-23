@@ -103,6 +103,7 @@ namespace NeoEdit.Program
 		public NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog() => NetworkWCFGetConfigDialog.Run(this);
 		public object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action) => ProgressDialog.Run(this, text, action);
 		public HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null) => CodePagesDialog.Run(this, startCodePages);
+		public IRunTasksDialog CreateIRunTasksDialog() => new RunTasksDialog(this);
 
 		public List<TResult> RunMultiProgressDialogAsync<TSource, TResult>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task<TResult>> getTask, Func<TSource, string> getName = null) => MultiProgressDialog.RunAsync<TSource, TResult>(this, title, items, getTask, getName);
 		public void RunMultiProgressDialogAsync<TSource>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task> getTask, Func<TSource, string> getName = null) => MultiProgressDialog.RunAsync<TSource>(this, title, items, getTask, getName);

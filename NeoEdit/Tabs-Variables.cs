@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
-using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Misc;
 
 namespace NeoEdit.Program
@@ -249,8 +248,8 @@ namespace NeoEdit.Program
 			}
 		}
 
-		RunTasksDialog newRunTasksDialog;
-		public RunTasksDialog RunTasksDialog
+		IRunTasksDialog newRunTasksDialog;
+		public IRunTasksDialog RunTasksDialog
 		{
 			get
 			{
@@ -258,7 +257,7 @@ namespace NeoEdit.Program
 				if (newRunTasksDialog == null)
 					lock (this)
 						if (newRunTasksDialog == null)
-							TabsWindow.Dispatcher.Invoke(() => newRunTasksDialog = new RunTasksDialog());
+							newRunTasksDialog = TabsWindow.CreateIRunTasksDialog();
 				return newRunTasksDialog;
 			}
 		}
