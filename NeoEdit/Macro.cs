@@ -24,7 +24,7 @@ namespace NeoEdit.Program
 				actions.Add(state);
 		}
 
-		public void Play(TabsWindow tabsWindow, bool visualize, Action<Macro> setMacroPlaying, Action finished = null)
+		public void Play(Tabs tabs, bool visualize, Action<Macro> setMacroPlaying, Action finished = null)
 		{
 			setMacroPlaying(this);
 			var timer = new DispatcherTimer(visualize ? DispatcherPriority.ApplicationIdle : DispatcherPriority.Input);
@@ -45,7 +45,7 @@ namespace NeoEdit.Program
 					}
 
 					var action = actions[ctr++].GetExecuteState();
-					tabsWindow.HandleCommand(action, false);
+					tabs.HandleCommand(action, false);
 				}
 				catch
 				{
