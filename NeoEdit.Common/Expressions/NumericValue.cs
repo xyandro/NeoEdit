@@ -5,9 +5,9 @@ using System.Numerics;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
 
-namespace NeoEdit.Program.Expressions
+namespace NeoEdit.Common.Expressions
 {
-	class NumericValue : IComparable
+	public class NumericValue : IComparable
 	{
 		public object Value { get; private set; }
 		public ExpressionUnits Units { get; }

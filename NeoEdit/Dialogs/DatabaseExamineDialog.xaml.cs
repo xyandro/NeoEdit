@@ -3,8 +3,8 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Program.Controls;
 using NeoEdit.Common.Parsing;
+using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
 {

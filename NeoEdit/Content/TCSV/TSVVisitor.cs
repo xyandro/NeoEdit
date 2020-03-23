@@ -1,6 +1,6 @@
 ﻿using Antlr4.Runtime;
-using NeoEdit.Program.Content.TCSV.Parser;
 using NeoEdit.Common.Parsing;
+using NeoEdit.Program.Content.TCSV.Parser;
 
 namespace NeoEdit.Program.Content.TCSV
 {

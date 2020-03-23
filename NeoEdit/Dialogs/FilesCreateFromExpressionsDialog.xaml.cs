@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Transform;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Models;
-using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {

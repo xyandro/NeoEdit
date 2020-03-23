@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Program.Controls;
 using NeoEdit.Common.Transform;
+using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
 {

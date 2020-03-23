@@ -8,9 +8,9 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
-using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Models;
 using NeoEdit.Program.Searchers;
 

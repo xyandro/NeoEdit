@@ -7,11 +7,11 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
-using NeoEdit.Program.Dialogs;
-using NeoEdit.Program.Expressions;
-using NeoEdit.Program.Models;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.Program.Dialogs;
+using NeoEdit.Program.Models;
 using NeoEdit.WCF;
 
 namespace NeoEdit.Program

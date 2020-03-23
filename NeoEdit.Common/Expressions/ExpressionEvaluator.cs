@@ -9,9 +9,9 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
-using NeoEdit.Program.Expressions.Parser;
+using NeoEdit.Common.Expressions.Parser;
 
-namespace NeoEdit.Program.Expressions
+namespace NeoEdit.Common.Expressions
 {
 	class ExpressionEvaluator : ExpressionParserBaseVisitor<object>
 	{

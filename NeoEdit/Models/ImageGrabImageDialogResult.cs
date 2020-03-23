@@ -2,8 +2,8 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Expressions;
 
 namespace NeoEdit.Program.Models
 {

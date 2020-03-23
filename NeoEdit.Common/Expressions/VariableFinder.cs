@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime.Tree;
-using NeoEdit.Program.Expressions.Parser;
+using NeoEdit.Common.Expressions.Parser;
 
-namespace NeoEdit.Program.Expressions
+namespace NeoEdit.Common.Expressions
 {
 	class VariableFinder : ExpressionParserBaseVisitor<object>
 	{

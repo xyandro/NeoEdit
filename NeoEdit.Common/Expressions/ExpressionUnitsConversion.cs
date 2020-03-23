@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Program;
+using NeoEdit.Common;
 
-namespace NeoEdit.Program.Expressions
+namespace NeoEdit.Common.Expressions
 {
 	public class ExpressionUnitsConversion
 	{

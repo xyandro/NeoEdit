@@ -7,9 +7,9 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Program.Converters;
-using NeoEdit.Program.Expressions;
 
 namespace NeoEdit.Program.Controls
 {

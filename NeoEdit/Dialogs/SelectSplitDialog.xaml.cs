@@ -5,8 +5,8 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs

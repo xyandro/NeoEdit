@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="BuildGlobalAssemblyInfo" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="BuildExpression;BuildGlobalAssemblyInfo" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Target Name="BuildExpression" Inputs="Expressions\Source\ExpressionLexer.g4;Expressions\Source\ExpressionParser.g4" Outputs="Expressions\Parser\ExpressionLexer.cs;Expressions\Parser\ExpressionParser.cs;Expressions\Parser\ExpressionParserBaseVisitor.cs;Expressions\Parser\ExpressionParserVisitor.cs" Returns="">
+    <Message Text="Building expression parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Common.Expressions.Parser -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionLexer.g4&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionParser.g4&quot;" />
+  </Target>
   <Target Name="BuildGlobalAssemblyInfo" Inputs="Properties\GlobalAssemblyInfo.Template.cs" Outputs="Properties\GlobalAssemblyInfo.cs" Returns="">
     <Message Text="Building GlobalAssemblyInfo" Importance="High" />
     <Exec Command="GitInfo.bat Properties\GlobalAssemblyInfo.Template.cs Properties\GlobalAssemblyInfo.cs" />
@@ -44,6 +48,23 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Expressions\ExpressionEvaluator.cs" />
+    <Compile Include="Expressions\ExpressionUnit.cs" />
+    <Compile Include="Expressions\ExpressionUnits.cs" />
+    <Compile Include="Expressions\ExpressionUnitsConversion.cs" />
+    <Compile Include="Expressions\NEExpression.cs" />
+    <Compile Include="Expressions\NEVariable.cs" />
+    <Compile Include="Expressions\NEVariableConstant.cs" />
+    <Compile Include="Expressions\NEVariableInitializer.cs" />
+    <Compile Include="Expressions\NEVariableList.cs" />
+    <Compile Include="Expressions\NEVariables.cs" />
+    <Compile Include="Expressions\NEVariableSeries.cs" />
+    <Compile Include="Expressions\NumericValue.cs" />
+    <Compile Include="Expressions\Parser\ExpressionLexer.cs" />
+    <Compile Include="Expressions\Parser\ExpressionParser.cs" />
+    <Compile Include="Expressions\Parser\ExpressionParserBaseVisitor.cs" />
+    <Compile Include="Expressions\Parser\ExpressionParserVisitor.cs" />
+    <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="MoreLinq.cs" />
     <Compile Include="Parsing\AntlrParserExtensions.cs" />
@@ -61,7 +82,10 @@
     <Compile Include="Properties\GlobalAssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <None Include="Expressions\Source\ExpressionLexer.g4" />
+    <None Include="Expressions\Source\ExpressionParser.g4" />
     <None Include="Properties\GlobalAssemblyInfo.Template.cs" />
+    <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />
     <Compile Include="Transform\Colorer.cs" />
     <Compile Include="Transform\Compressor.cs" />
@@ -120,12 +144,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)WCF\WCF.csproj">
-      <Project>{3a49c899-545a-4849-b6d0-2686d1a32983}</Project>
-      <Name>WCF</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

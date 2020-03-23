@@ -5,10 +5,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.Program;
-using NeoEdit.Program.Controls;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.Program;
+using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Models
 {

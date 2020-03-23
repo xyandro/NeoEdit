@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using NeoEdit.Common.Transform;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
-using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program.Models
 {

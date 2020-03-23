@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NeoEdit.Common.Parsing;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
-using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Program.Dialogs
 {

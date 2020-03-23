@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NeoEdit.Program;
 using NeoEdit.Common.Parsing;
+using NeoEdit.Program;
 
 namespace NeoEdit.Program.RevRegEx
 {

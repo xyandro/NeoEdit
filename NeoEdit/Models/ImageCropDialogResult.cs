@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
-using NeoEdit.Program.Controls;
-using NeoEdit.Program.Expressions;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
+using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Models
 {

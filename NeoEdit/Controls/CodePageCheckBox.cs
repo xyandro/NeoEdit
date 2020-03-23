@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Data;
-using NeoEdit.Program.Converters;
 using NeoEdit.Common.Transform;
+using NeoEdit.Program.Converters;
 
 namespace NeoEdit.Program.Controls
 {

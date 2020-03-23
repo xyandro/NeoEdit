@@ -6,9 +6,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using NeoEdit.Common.Parsing;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
-using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Program.Dialogs
 {

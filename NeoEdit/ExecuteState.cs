@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Expressions;
 
 namespace NeoEdit.Program
 {

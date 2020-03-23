@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using NeoEdit.Program.Controls;
 using NeoEdit.Common.Transform;
+using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Models
 {

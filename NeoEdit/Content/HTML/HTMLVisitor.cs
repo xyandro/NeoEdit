@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
-using NeoEdit.Program.Content.HTML.Parser;
 using NeoEdit.Common.Parsing;
+using NeoEdit.Program.Content.HTML.Parser;
 
 namespace NeoEdit.Program.Content.HTML
 {

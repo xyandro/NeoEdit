@@ -5,8 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
-using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program

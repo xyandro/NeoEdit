@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Expressions;
 
 namespace NeoEdit.Program.Models
 {

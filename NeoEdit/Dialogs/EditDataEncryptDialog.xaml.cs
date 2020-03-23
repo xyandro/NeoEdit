@@ -5,11 +5,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Models;
-using NeoEdit.Common.Parsing;
-using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {

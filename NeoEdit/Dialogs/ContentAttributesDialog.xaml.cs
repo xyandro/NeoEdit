@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using NeoEdit.Common.Parsing;
 using NeoEdit.Program.Content;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Models;
-using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Program.Dialogs
 {

@@ -4,8 +4,8 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows;
 using NeoEdit.Common;
+using NeoEdit.Common.Expressions;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs

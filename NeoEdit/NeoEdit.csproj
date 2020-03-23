@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="BuildBalanced;BuildChangeLog;BuildColumns;BuildCommandLine;BuildCSharp;BuildExactColumns;BuildExpression;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;CompressWords;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="BuildBalanced;BuildChangeLog;BuildColumns;BuildCommandLine;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML;CompressWords;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs" Returns="">
     <Message Text="Building Balanced parser" Importance="High" />
@@ -24,10 +24,6 @@
   <Target Name="BuildExactColumns" Inputs="Content\ExactColumns\Source\ExactColumns.g4" Outputs="Content\ExactColumns\Parser\ExactColumnsBaseVisitor.cs;Content\ExactColumns\Parser\ExactColumnsLexer.cs;Content\ExactColumns\Parser\ExactColumnsParser.cs;Content\ExactColumns\Parser\ExactColumnsVisitor.cs" Returns="">
     <Message Text="Building ExactColumns parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Program.Content.ExactColumns.Parser -o &quot;$(ProjectDir)Content\ExactColumns\Parser&quot; &quot;$(ProjectDir)Content\ExactColumns\Source\ExactColumns.g4&quot;" />
-  </Target>
-  <Target Name="BuildExpression" Inputs="Expressions\Source\ExpressionLexer.g4;Expressions\Source\ExpressionParser.g4" Outputs="Expressions\Parser\ExpressionLexer.cs;Expressions\Parser\ExpressionParser.cs;Expressions\Parser\ExpressionParserBaseVisitor.cs;Expressions\Parser\ExpressionParserVisitor.cs" Returns="">
-    <Message Text="Building expression parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Program.Expressions.Parser -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionLexer.g4&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionParser.g4&quot;" />
   </Target>
   <Target Name="BuildHTML" Inputs="Content\HTML\Source\HTMLLexer.g4;Content\HTML\Source\HTMLParser.g4" Outputs="Content\HTML\Parser\HTMLLexer.cs;Content\HTML\Parser\HTMLParser.cs;Content\HTML\Parser\HTMLParserBaseVisitor.cs;Content\HTML\Parser\HTMLParserVisitor.cs" Returns="">
     <Message Text="Building HTML parser" Importance="High" />
@@ -1006,25 +1002,6 @@
     <Compile Include="Enums\TimestampType.cs" />
     <Compile Include="Enums\WordSkipType.cs" />
     <Compile Include="ExecuteState.cs" />
-    <Compile Include="Expressions\ExpressionEvaluator.cs" />
-    <Compile Include="Expressions\ExpressionUnit.cs" />
-    <Compile Include="Expressions\ExpressionUnits.cs" />
-    <Compile Include="Expressions\ExpressionUnitsConversion.cs" />
-    <Compile Include="Expressions\NEExpression.cs" />
-    <Compile Include="Expressions\NEVariable.cs" />
-    <Compile Include="Expressions\NEVariableConstant.cs" />
-    <Compile Include="Expressions\NEVariableInitializer.cs" />
-    <Compile Include="Expressions\NEVariableList.cs" />
-    <Compile Include="Expressions\NEVariables.cs" />
-    <Compile Include="Expressions\NEVariableSeries.cs" />
-    <Compile Include="Expressions\NumericValue.cs" />
-    <Compile Include="Expressions\Parser\ExpressionLexer.cs" />
-    <Compile Include="Expressions\Parser\ExpressionParser.cs" />
-    <Compile Include="Expressions\Parser\ExpressionParserBaseVisitor.cs" />
-    <Compile Include="Expressions\Parser\ExpressionParserVisitor.cs" />
-    <None Include="Expressions\Source\ExpressionLexer.g4" />
-    <None Include="Expressions\Source\ExpressionParser.g4" />
-    <Compile Include="Expressions\VariableFinder.cs" />
     <Compile Include="FileSaver.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="GIFWriter.cs" />
@@ -1283,7 +1260,6 @@
     <Compile Include="TabWindow.xaml.cs">
       <DependentUpon>TabWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ThreadSafeRandom.cs" />
     <Page Include="Tutorial\Pages\AdvancedFind.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
