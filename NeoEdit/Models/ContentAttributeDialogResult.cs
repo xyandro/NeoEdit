@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Program.Content;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Parsing;
+using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Program.Models
 {

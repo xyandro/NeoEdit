@@ -8,9 +8,9 @@ using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NeoEdit.Program.Parsing;
+using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.Program
+namespace NeoEdit.Common
 {
 	public static class Helpers
 	{

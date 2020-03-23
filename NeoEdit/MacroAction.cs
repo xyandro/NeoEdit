@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
+using NeoEdit.Common;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program

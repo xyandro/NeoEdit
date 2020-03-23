@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeoEdit.Program
+namespace NeoEdit.Common
 {
 	public static class MoreLinq
 	{

@@ -9,7 +9,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
 
-namespace NeoEdit.Program.Parsing
+namespace NeoEdit.Common.Parsing
 {
 	public static class ParserHelper
 	{

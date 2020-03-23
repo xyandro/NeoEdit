@@ -7,12 +7,11 @@ using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using NeoEdit.Program.Dialogs;
-using NeoEdit.Program.Expressions;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 using NeoEdit.Program.Models;
-using NeoEdit.Program.Parsing;
 using NeoEdit.Program.Searchers;
-using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {

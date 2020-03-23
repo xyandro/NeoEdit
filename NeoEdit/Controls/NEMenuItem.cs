@@ -5,8 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using NeoEdit.Program;
-using NeoEdit.Program.Parsing;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Program.Controls
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using NeoEdit.Program;
+using NeoEdit.Common;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Models;
 

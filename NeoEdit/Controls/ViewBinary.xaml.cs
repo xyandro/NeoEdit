@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program.Controls
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit.Program.Parsing
+namespace NeoEdit.Common.Parsing
 {
 	public class ParserAttribute : ParserBase
 	{

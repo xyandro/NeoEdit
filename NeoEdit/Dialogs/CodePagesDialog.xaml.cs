@@ -4,9 +4,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using NeoEdit.Common;
+using NeoEdit.Common.Transform;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Models;
-using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program.Dialogs
 {

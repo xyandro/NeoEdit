@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program
 {

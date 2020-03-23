@@ -1,4 +1,4 @@
-﻿namespace NeoEdit.Program
+﻿namespace NeoEdit.Common
 {
 	public class ProgressData
 	{

@@ -6,7 +6,7 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Expressions;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program.Models
 {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program.Models
 {

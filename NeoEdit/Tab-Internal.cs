@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Input;
-using NeoEdit.Program.Models;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program
 {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NeoEdit.Program.Dialogs;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 using NeoEdit.Program.Models;
-using NeoEdit.Program.Parsing;
 using NeoEdit.Program.RevRegEx;
 
 namespace NeoEdit.Program

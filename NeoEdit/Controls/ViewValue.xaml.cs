@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Program.Dialogs;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program.Controls
 {

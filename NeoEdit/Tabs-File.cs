@@ -5,9 +5,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.Win32;
+using NeoEdit.Common;
+using NeoEdit.Common.Transform;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.NEClipboards;
-using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {

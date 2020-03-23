@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using NeoEdit.Program;
+using NeoEdit.Common;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Models;
 

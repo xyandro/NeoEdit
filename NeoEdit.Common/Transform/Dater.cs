@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace NeoEdit.Program.Transform
+namespace NeoEdit.Common.Transform
 {
 	public static class Dater
 	{

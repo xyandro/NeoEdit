@@ -8,7 +8,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Parsing;
+using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Program.Dialogs
 {

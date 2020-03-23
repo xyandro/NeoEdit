@@ -3,7 +3,7 @@ using System.Linq;
 using Antlr4.Runtime;
 using NeoEdit.Program;
 using NeoEdit.Program.Content.JSON.Parser;
-using NeoEdit.Program.Parsing;
+using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Program.Content.JSON
 {

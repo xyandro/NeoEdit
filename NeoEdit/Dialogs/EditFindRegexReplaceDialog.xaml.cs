@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
+using NeoEdit.Common;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Models;
 

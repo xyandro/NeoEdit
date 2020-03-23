@@ -10,9 +10,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using NeoEdit.Program;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 using NeoEdit.Program.Dialogs;
-using NeoEdit.Program.Parsing;
 
 namespace NeoEdit.Program.Controls
 {

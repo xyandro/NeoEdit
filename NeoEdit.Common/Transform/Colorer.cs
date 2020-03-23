@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit.Program.Transform
+namespace NeoEdit.Common.Transform
 {
 	public static class Colorer
 	{

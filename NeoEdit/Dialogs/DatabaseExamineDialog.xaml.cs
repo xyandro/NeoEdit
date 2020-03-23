@@ -4,7 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Windows;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Parsing;
+using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Program.Dialogs
 {

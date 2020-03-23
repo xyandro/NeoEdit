@@ -6,10 +6,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using NeoEdit.Program;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 using NeoEdit.Program.Converters;
 using NeoEdit.Program.Expressions;
-using NeoEdit.Program.Parsing;
 
 namespace NeoEdit.Program.Controls
 {

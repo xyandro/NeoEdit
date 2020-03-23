@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace NeoEdit.Program.Transform
+namespace NeoEdit.Common.Transform
 {
 	public static class Cryptor
 	{

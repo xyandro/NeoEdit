@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace NeoEdit.Program.Transform
+namespace NeoEdit.Common.Transform
 {
 	public static class XMLConverter
 	{

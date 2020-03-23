@@ -5,11 +5,12 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Models;
-using NeoEdit.Program.Parsing;
-using NeoEdit.Program.Transform;
 
 namespace NeoEdit.Program
 {

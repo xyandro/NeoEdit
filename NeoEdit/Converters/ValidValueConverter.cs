@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program.Converters
 {

@@ -3,7 +3,7 @@ using System.IO;
 using Classless.Hasher;
 using Classless.Hasher.Mac;
 
-namespace NeoEdit.Program.Transform
+namespace NeoEdit.Common.Transform
 {
 	public static class Hasher
 	{

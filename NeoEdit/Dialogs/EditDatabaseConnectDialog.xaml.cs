@@ -8,10 +8,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
-using NeoEdit.Program;
+using NeoEdit.Common;
+using NeoEdit.Common.Parsing;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Converters;
-using NeoEdit.Program.Parsing;
 
 namespace NeoEdit.Program.Dialogs
 {

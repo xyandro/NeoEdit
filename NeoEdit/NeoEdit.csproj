@@ -1030,7 +1030,6 @@
     <Compile Include="GIFWriter.cs" />
     <None Include="GitInfo.bat" />
     <None Include="GitInfo.ps1" />
-    <Compile Include="Helpers.cs" />
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
@@ -1131,7 +1130,6 @@
     <Compile Include="Models\TextUnicodeDialogResult.cs" />
     <Compile Include="Models\TextWidthDialogResult.cs" />
     <Compile Include="Models\WindowCustomGridDialogResult.cs" />
-    <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboards\ClipboardChangeNotifier.cs" />
     <Compile Include="NEClipboards\NEClipboard.cs" />
     <Compile Include="NECommand.cs" />
@@ -1147,15 +1145,7 @@
     <Compile Include="NoDelayClipboard.cs" />
     <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="OpenFileDialogResult.cs" />
-    <Compile Include="Parsing\AntlrParserExtensions.cs" />
-    <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
-    <Compile Include="Parsing\ParserAttribute.cs" />
-    <Compile Include="Parsing\ParserBase.cs" />
-    <Compile Include="Parsing\ParserException.cs" />
-    <Compile Include="Parsing\ParserHelper.cs" />
-    <Compile Include="Parsing\ParserNode.cs" />
     <Compile Include="PortScanner.cs" />
-    <Compile Include="ProgressData.cs" />
     <Compile Include="ProgressReport.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1294,14 +1284,6 @@
       <DependentUpon>TabWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ThreadSafeRandom.cs" />
-    <Compile Include="Transform\Coder.cs" />
-    <Compile Include="Transform\Colorer.cs" />
-    <Compile Include="Transform\Compressor.cs" />
-    <Compile Include="Transform\Cryptor.cs" />
-    <Compile Include="Transform\Dater.cs" />
-    <Compile Include="Transform\Hasher.cs" />
-    <Compile Include="Transform\Versioner.cs" />
-    <Compile Include="Transform\XMLConverter.cs" />
     <Page Include="Tutorial\Pages\AdvancedFind.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

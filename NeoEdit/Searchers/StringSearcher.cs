@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NeoEdit.Common;
 
 namespace NeoEdit.Program.Searchers
 {

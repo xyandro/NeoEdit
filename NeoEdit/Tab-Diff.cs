@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Models;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program
 {

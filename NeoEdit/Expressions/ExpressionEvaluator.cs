@@ -8,7 +8,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using NeoEdit.Program;
+using NeoEdit.Common;
 using NeoEdit.Program.Expressions.Parser;
 
 namespace NeoEdit.Program.Expressions

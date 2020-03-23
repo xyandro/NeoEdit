@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using NeoEdit.Common;
 using Newtonsoft.Json;
 
 namespace NeoEdit.Program.Controls

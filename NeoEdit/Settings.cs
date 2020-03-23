@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
+using NeoEdit.Common;
 
 namespace NeoEdit.Program
 {

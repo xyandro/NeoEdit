@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program
 {

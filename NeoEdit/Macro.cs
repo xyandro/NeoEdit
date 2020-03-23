@@ -5,7 +5,8 @@ using System.Linq;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using Microsoft.Win32;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program
 {

@@ -13,7 +13,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Program.Models
 {

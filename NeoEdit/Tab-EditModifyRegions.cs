@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NeoEdit.Program.Dialogs;
+using NeoEdit.Common;
 using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program

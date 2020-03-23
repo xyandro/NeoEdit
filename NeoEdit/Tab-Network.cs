@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using NeoEdit.Program.Dialogs;
 using NeoEdit.Program.Expressions;
 using NeoEdit.Program.Models;
-using NeoEdit.Program.Parsing;
-using NeoEdit.Program.Transform;
+using NeoEdit.Common.Parsing;
+using NeoEdit.Common.Transform;
 using NeoEdit.WCF;
 
 namespace NeoEdit.Program
