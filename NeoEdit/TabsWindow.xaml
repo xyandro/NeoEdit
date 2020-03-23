@@ -16,7 +16,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<local:NEMenu Grid.Row="0" Grid.Column="0" x:Name="menu" Parent="{Binding ElementName=self}"/>
+		<local:NEMenu Grid.Row="0" Grid.Column="0" x:Name="menu"/>
 
 		<Grid Grid.Row="1" Grid.Column="0">
 			<Grid.ColumnDefinitions>

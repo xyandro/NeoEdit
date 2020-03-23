@@ -17,7 +17,7 @@ using NeoEdit.Program.NEClipboards;
 
 namespace NeoEdit.Program
 {
-	partial class TabsWindow
+	partial class TabsWindow : ITabsWindow
 	{
 		readonly Tabs Tabs;
 

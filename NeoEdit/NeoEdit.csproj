@@ -1005,8 +1005,6 @@
     <Compile Include="FileSaver.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="GIFWriter.cs" />
-    <None Include="GitInfo.bat" />
-    <None Include="GitInfo.ps1" />
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
@@ -1016,6 +1014,7 @@
     <Compile Include="Highlighting\HighlightSQL.cs" />
     <Compile Include="InstanceManager.cs" />
     <Compile Include="IRunTasksDialog.cs" />
+    <Compile Include="ITabsWindow.cs" />
     <Compile Include="ItemSet.cs" />
     <Compile Include="KeysAndValues.cs" />
     <Compile Include="LCS.cs" />

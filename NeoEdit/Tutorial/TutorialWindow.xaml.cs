@@ -76,7 +76,7 @@ namespace NeoEdit.Program.Tutorial
 		{
 			this.tabs = tabs;
 			InitializeComponent();
-			Owner = tabs.TabsWindow;
+			//TODO Owner = tabs.TabsWindow;
 
 			if (Helpers.IsDebugBuild)
 			{

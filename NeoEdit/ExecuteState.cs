@@ -10,7 +10,7 @@ namespace NeoEdit.Program
 	public class ExecuteState
 	{
 		public IEnumerable<Tab> ActiveTabs;
-		public TabsWindow TabsWindow;
+		public ITabsWindow TabsWindow;
 
 		public NECommand Command;
 		public bool ShiftDown;

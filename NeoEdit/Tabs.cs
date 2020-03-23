@@ -16,7 +16,7 @@ namespace NeoEdit.Program
 	{
 		public static List<Tabs> Instances { get; } = new List<Tabs>();
 
-		public TabsWindow TabsWindow { get; }
+		public ITabsWindow TabsWindow { get; }
 
 		public int TabColumns { get; private set; }
 		public int TabRows { get; private set; }

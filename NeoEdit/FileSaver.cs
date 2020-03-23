@@ -36,7 +36,7 @@ namespace NeoEdit.Program
 			catch { return null; }
 		}
 
-		public static void HandleDecrypt(TabsWindow window, ref byte[] bytes, out string AESKey)
+		public static void HandleDecrypt(ITabsWindow window, ref byte[] bytes, out string AESKey)
 		{
 			AESKey = null;
 			if ((bytes.Length < EncryptedHeader.Length) || (!bytes.Equal(EncryptedHeader, EncryptedHeader.Length)))
