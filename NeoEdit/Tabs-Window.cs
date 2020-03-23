@@ -9,7 +9,7 @@ namespace NeoEdit.Program
 {
 	partial class Tabs
 	{
-		static public void Execute_Window_NewWindow() => new TabsWindow(true);
+		static public void Execute_Window_NewWindow() => new Tabs(true);
 
 		void Execute_Window_Full() => SetLayout(1, 1);
 

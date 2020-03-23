@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using NeoEdit.Common;
 using NeoEdit.Program.Controls;
@@ -16,7 +18,7 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow
 	{
-		public readonly Tabs Tabs;
+		readonly Tabs Tabs;
 
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
@@ -29,9 +31,9 @@ namespace NeoEdit.Program
 			BackgroundBrush.Freeze();
 		}
 
-		public TabsWindow(bool addEmpty = false)
+		public TabsWindow(Tabs tabs)
 		{
-			Tabs = new Tabs(this);
+			Tabs = tabs;
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
 			InitializeComponent();
@@ -43,9 +45,6 @@ namespace NeoEdit.Program
 			Font.FontSizeChanged += (s, e) => QueueDraw();
 
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
-
-			if (addEmpty)
-				HandleCommand(new ExecuteState(NECommand.File_New_New));
 		}
 
 		public bool HandleCommand(ExecuteState state, bool configure = true)
@@ -310,6 +309,17 @@ namespace NeoEdit.Program
 			//tab.Execute_File_Refresh();
 			//tab.Goto(line, column, index);
 			return true;
+		}
+
+		[DllImport("user32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		static extern bool SetForegroundWindow(IntPtr hWnd);
+
+		public void SetForeground()
+		{
+			Activate();
+			Show();
+			SetForegroundWindow(new WindowInteropHelper(this).Handle);
 		}
 	}
 }

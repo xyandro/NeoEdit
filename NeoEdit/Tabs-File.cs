@@ -27,10 +27,7 @@ namespace NeoEdit.Program
 		{
 			var tabs = this;
 			if (createTabs)
-			{
-				var tabsWindow = new TabsWindow();
-				tabs = tabsWindow.Tabs;
-			}
+				tabs = new Tabs();
 			tabs.AddTab(new Tab(), canReplace: false);
 		}
 
@@ -93,9 +90,9 @@ namespace NeoEdit.Program
 			var active = SortedActiveTabs.ToList();
 			active.ForEach(tab => RemoveTab(tab));
 
-			var tabsWindow = new TabsWindow();
-			tabsWindow.Tabs.SetLayout(Columns, Rows, MaxColumns, MaxRows);
-			active.ForEach(tab => tabsWindow.Tabs.AddTab(tab));
+			var tabs = new Tabs();
+			tabs.SetLayout(Columns, Rows, MaxColumns, MaxRows);
+			active.ForEach(tab => tabs.AddTab(tab));
 		}
 
 		static void Execute_File_Shell_Integrate()
@@ -125,6 +122,11 @@ namespace NeoEdit.Program
 				tab.VerifyCanClose();
 				RemoveTab(tab);
 			}
+			Instances.Remove(this);
+			TabsWindow.Close();
+
+			if ((!Instances.Any()) && (!Settings.DontExitOnClose))
+				Environment.Exit(0);
 		}
 	}
 }

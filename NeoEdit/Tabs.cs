@@ -14,6 +14,8 @@ namespace NeoEdit.Program
 {
 	public partial class Tabs
 	{
+		public static List<Tabs> Instances { get; } = new List<Tabs>();
+
 		public TabsWindow TabsWindow { get; }
 
 		public int TabColumns { get; private set; }
@@ -24,11 +26,16 @@ namespace NeoEdit.Program
 		bool timeNextAction;
 		MacroAction lastAction;
 
-		public Tabs(TabsWindow tabsWindow)
+		public Tabs(bool addEmpty = false)
 		{
-			TabsWindow = tabsWindow;
+			Instances.Add(this);
+
+			TabsWindow = new TabsWindow(this);
 			oldAllTabs = newAllTabs = new OrderedHashSet<Tab>();
 			oldActiveTabs = newActiveTabs = new OrderedHashSet<Tab>();
+
+			if (addEmpty)
+				HandleCommand(new ExecuteState(NECommand.File_New_New));
 		}
 
 		public IReadOnlyDictionary<Tab, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
@@ -435,5 +442,7 @@ namespace NeoEdit.Program
 			TabColumns = columns;
 			TabRows = rows;
 		}
+
+		public void SetForeground() => TabsWindow.SetForeground();
 	}
 }

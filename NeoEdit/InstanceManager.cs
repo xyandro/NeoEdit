@@ -84,10 +84,6 @@ namespace NeoEdit.Program
 				Process.GetProcessById(int.Parse(wait.Substring("-waitpid=".Length)))?.WaitForExit();
 		}
 
-		[DllImport("user32.dll", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		static extern bool SetForegroundWindow(IntPtr hWnd);
-
 		static void SetupPipeWait(App app)
 		{
 			var pipe = new NamedPipeServerStream(IPCName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
@@ -104,13 +100,9 @@ namespace NeoEdit.Program
 
 				app.Dispatcher.Invoke(() =>
 				{
-					var window = app.CreateWindowsFromArgs(commandLine, false);
-					if (window != null)
-					{
-						window.Activate();
-						window.Show();
-						SetForegroundWindow(new WindowInteropHelper(window).Handle);
-					}
+					var tabs = app.CreateTabsFromArgs(commandLine, false);
+					if (tabs != null)
+						tabs.SetForeground();
 				});
 
 				SetupPipeWait(app);

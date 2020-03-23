@@ -19,7 +19,7 @@ namespace NeoEdit.Program
 			base.OnStartup(e);
 			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
-			CreateWindowsFromArgs(string.Join(" ", e.Args.Select(str => $"\"{str}\"")), true);
+			CreateTabsFromArgs(string.Join(" ", e.Args.Select(str => $"\"{str}\"")), true);
 		}
 
 		public static void ShowExceptionMessage(Exception ex)
@@ -52,7 +52,7 @@ namespace NeoEdit.Program
 #endif
 		}
 
-		public TabsWindow CreateWindowsFromArgs(string commandLine, bool shutdownIfNoWindow)
+		public Tabs CreateTabsFromArgs(string commandLine, bool shutdownIfNoWindow)
 		{
 			try
 			{
@@ -61,20 +61,20 @@ namespace NeoEdit.Program
 					return null;
 
 				if (!clParams.Files.Any())
-					return new TabsWindow(true);
+					return new Tabs(true);
 
 				var shutdownData = string.IsNullOrWhiteSpace(clParams.Wait) ? null : new ShutdownData(clParams.Wait, clParams.Files.Count);
-				var tabsWindow = default(TabsWindow);
+				var tabs = default(Tabs);
 				if (!clParams.Diff)
-					tabsWindow = UIHelper<TabsWindow>.GetAllWindows().OrderByDescending(x => x.Tabs.LastActivated).FirstOrDefault();
-				if (tabsWindow == null)
-					tabsWindow = new TabsWindow();
+					tabs = Tabs.Instances.OrderByDescending(x => x.LastActivated).FirstOrDefault();
+				if (tabs == null)
+					tabs = new Tabs();
 				foreach (var file in clParams.Files)
 				{
-					if ((file.Existing) && (UIHelper<TabsWindow>.GetAllWindows().OrderByDescending(x => x.Tabs.LastActivated).Select(x => x.GotoTab(file.FileName, file.Line, file.Column, file.Index)).FirstOrDefault(x => x)))
+					if ((file.Existing) && (Tabs.Instances.OrderByDescending(x => x.LastActivated).Select(x => x.GotoTab(file.FileName, file.Line, file.Column, file.Index)).FirstOrDefault(x => x)))
 						continue;
 
-					tabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });
+					tabs.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });
 				}
 
 				//if (clParams.Diff)
@@ -90,7 +90,7 @@ namespace NeoEdit.Program
 				//	tabsWindow.SetLayout(maxColumns: 2);
 				//}
 
-				return tabsWindow;
+				return tabs;
 			}
 			catch (Exception ex) { ShowExceptionMessage(ex); }
 			if ((shutdownIfNoWindow) && (Current.Windows.Count == 0))
