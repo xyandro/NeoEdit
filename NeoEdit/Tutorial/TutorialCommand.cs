@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Controls;
-using NeoEdit.Editor;
+using NeoEdit.Common;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Tutorial

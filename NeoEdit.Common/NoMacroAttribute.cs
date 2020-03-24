@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeoEdit.Editor
+namespace NeoEdit.Common
 {
 	[AttributeUsage(AttributeTargets.Field)]
 	public class NoMacroAttribute : Attribute { }

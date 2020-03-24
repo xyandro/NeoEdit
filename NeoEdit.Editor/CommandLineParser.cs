@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using NeoEdit.Common;
 using NeoEdit.Program.CommandLine;
 
 namespace NeoEdit.Editor

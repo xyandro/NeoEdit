@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NeoEdit.Editor
+namespace NeoEdit.Common
 {
 	public class KeysAndValues
 	{

@@ -14,7 +14,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
-	public partial class Tab
+	public partial class Tab : ITab
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		const int tabStop = 4;

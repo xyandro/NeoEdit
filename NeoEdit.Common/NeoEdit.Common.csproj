@@ -63,6 +63,7 @@
     <Compile Include="Enums\SortType.cs" />
     <Compile Include="Enums\TimestampType.cs" />
     <Compile Include="Enums\WordSkipType.cs" />
+    <Compile Include="ExecuteState.cs" />
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
     <Compile Include="Expressions\ExpressionUnit.cs" />
     <Compile Include="Expressions\ExpressionUnits.cs" />
@@ -79,6 +80,12 @@
     <Compile Include="Expressions\Parser\ExpressionParser.cs" />
     <Compile Include="Expressions\Parser\ExpressionParserBaseVisitor.cs" />
     <Compile Include="Expressions\Parser\ExpressionParserVisitor.cs" />
+    <Compile Include="ITab.cs" />
+    <Compile Include="ITabs.cs" />
+    <Compile Include="KeyGestureAttribute.cs" />
+    <Compile Include="KeysAndValues.cs" />
+    <Compile Include="NECommand.cs" />
+    <Compile Include="NoMacroAttribute.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />

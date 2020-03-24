@@ -11,7 +11,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
-	public partial class Tabs
+	public partial class Tabs : ITabs
 	{
 		public static Func<Tabs, ITabsWindow> CreateITabsWindow { get; set; }
 		public static List<Tabs> Instances { get; } = new List<Tabs>();
@@ -38,10 +38,10 @@ namespace NeoEdit.Editor
 			Commit();
 		}
 
-		public IReadOnlyDictionary<Tab, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
+		public IReadOnlyDictionary<ITab, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
 		{
 			var empty = Tuple.Create(new List<string>() as IReadOnlyList<string>, default(bool?));
-			var clipboardDataMap = AllTabs.ToDictionary(x => x, x => empty);
+			var clipboardDataMap = AllTabs.ToDictionary(x => x as ITab, x => empty);
 
 			var activeTabs = SortedActiveTabs;
 			if (NEClipboard.Current.Count == UnsortedActiveTabsCount)
@@ -60,10 +60,10 @@ namespace NeoEdit.Editor
 		}
 
 		public IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
-		public Dictionary<Tab, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
+		public Dictionary<ITab, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
 		{
 			var empty = new KeysAndValues(new List<string>(), kvIndex == 0);
-			var keysAndValuesMap = AllTabs.ToDictionary(x => x, x => empty);
+			var keysAndValuesMap = AllTabs.ToDictionary(x => x as ITab, x => empty);
 
 			if (keysAndValues[kvIndex].Count == 1)
 				AllTabs.ForEach(tab => keysAndValuesMap[tab] = keysAndValues[kvIndex][0]);

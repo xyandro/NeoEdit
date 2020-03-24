@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace NeoEdit.Editor
+namespace NeoEdit.Common
 {
 	public enum NECommand
 	{
