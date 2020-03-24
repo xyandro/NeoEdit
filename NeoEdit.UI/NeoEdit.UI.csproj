@@ -885,6 +885,7 @@
     <Resource Include="Resources\Indeterminate.png" />
     <EmbeddedResource Include="Resources\License.txt" />
     <Resource Include="Resources\Unchecked.png" />
+    <EmbeddedResource Include="Resources\Unicode.dat" />
     <Compile Include="RunOnceTimer.cs" />
     <Compile Include="TabsWindow-Dialogs.xaml.cs">
       <DependentUpon>TabsWindow.xaml</DependentUpon>

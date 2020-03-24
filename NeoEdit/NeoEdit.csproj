@@ -48,7 +48,6 @@
     <Compile Include="InstanceManager.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Resources\Unicode.dat" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)Lib\$(BitDepth)\git2-e0902fb.dll">
