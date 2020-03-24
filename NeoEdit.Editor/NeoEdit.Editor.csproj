@@ -85,7 +85,6 @@
     </Compile>
     <Compile Include="CommandLineParser.cs" />
     <Compile Include="CacheValue.cs" />
-    <Compile Include="ClipboardChangeNotifier.cs" />
     <Compile Include="CommandLine\CommandLineParams.cs" />
     <Compile Include="CommandLine\CommandLineVisitor.cs" />
     <Compile Include="CommandLine\Parser\CommandLineLexer.cs" />
@@ -149,7 +148,6 @@
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="MacroAction.cs" />
-    <Compile Include="NEClipboard.cs" />
     <Compile Include="NEText.cs" />
     <Compile Include="NETextView.cs" />
     <Compile Include="PortScanner.cs" />

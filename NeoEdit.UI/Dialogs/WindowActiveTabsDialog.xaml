@@ -1,0 +1,52 @@
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.Dialogs.WindowActiveTabsDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
+	Title="Active Tabs" Height="600" Width="600" FocusManager.FocusedElement="{Binding ElementName=tabs}">
+
+	<!--<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="1*"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="2*"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="_Windows" Target="{Binding ElementName=tabsWindows}"/>
+		<ListBox Grid.Row="1" Grid.Column="0" Name="tabsWindows" ItemsSource="{Binding TabsWindows, ElementName=self}" SelectionMode="Extended" SelectionChanged="OnTabsWindowsSelectionChanged" DisplayMemberPath="Title"/>
+		<StackPanel Grid.Row="1" Grid.Column="1">
+			<Button Content="_New" Click="OnTabsWindowNewClick"/>
+			<Button Content="C_lose" Click="OnTabsWindowCloseClick"/>
+		</StackPanel>
+
+		<Label Grid.Row="2" Grid.Column="0" Content="T_abs" Target="{Binding ElementName=tabs}"/>
+		<ListBox Grid.Row="3" Grid.Column="0" Name="tabs" ItemsSource="{Binding Tabs, ElementName=self}" SelectionMode="Extended" SelectionChanged="OnTabsSelectionChanged" DisplayMemberPath="TabLabel"/>
+		<StackPanel Grid.Row="3" Grid.Column="1">
+			<Button Content="Move _Up" Click="OnTabMoveUpClick" IsEnabled="{Binding OneTabSelected, ElementName=self}"/>
+			<Button Content="Move _Down" Click="OnTabMoveDownClick" IsEnabled="{Binding OneTabSelected, ElementName=self}"/>
+			<Button Content="Move To _Top" Click="OnTabMoveToTopClick" Margin="0,10,0,0" IsEnabled="{Binding OneTabSelected, ElementName=self}"/>
+			<Button Content="Move To _Bottom" Click="OnTabMoveToBottomClick" IsEnabled="{Binding OneTabSelected, ElementName=self}"/>
+			<Button Content="D_iff" Click="OnTabDiffClick" Margin="0,10,0,0"/>
+			<Button Content="_Close" Click="OnTabCloseClick" Margin="0,10,0,0"/>
+		</StackPanel>
+
+		<Label Grid.Row="4" Grid.Column="0" Content="D_estination" Target="{Binding ElementName=moveToTabsWindow}"/>
+		<ComboBox Grid.Row="5" Grid.Column="0" Name="moveToTabsWindow" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding MoveToTabsWindow, ElementName=self}" IsEditable="False" IsReadOnly="True"/>
+		<StackPanel Grid.Row="5" Grid.Column="1">
+			<Button Content="_Move" Click="OnTabMoveClick"/>
+		</StackPanel>
+
+		<UniformGrid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OnOKClick" IsDefault="True" IsCancel="True" Content="Ok" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>-->
+
+</controls:NEWindow>

@@ -1,0 +1,138 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:tutorial="clr-namespace:NeoEdit.UI.Tutorial">
+
+	<tutorial:TutorialPage x:Key="Sorting" Title="Sorting">
+		<Paragraph>Let's do a simple sort:</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<Hyperlink Tag="Data:Sorting:H4sIAAAAAAAEAFWOwQnAMAwD/4XuYru2Y42QQfrsr/vTQJRAXzosZKm/96PIPI8+qMImpMAlJgdNvxps+XVFU4aSsNWYVExFlgpZFXSBEjZE8eS7fr0Ub/8ZZkxhbPkA78PkVb8AAAA=">here</Hyperlink> to open a file with test data.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_All"/>.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/>.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Sort"/>. Click Ok in the dialog to accept the defaults.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>Let's do some more advanced sorts:</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<Hyperlink Tag="Data:AdvancedSorting:H4sIAAAAAAAEAEWQzW6DMAzHz0biHfIEqNCua49wKBUbUrd1q7SbB6ZEhERyQBNvP1Na7RTlJ/v/4RhycnwldUHfansdnA2DBArXWpXW2PswWMO5dT16VVDTEPt5YgMF9uRVibW+gacHcJYdhcF2kXgbta2mh9IzpLZm+lUFVt1tbQcl8qCt+kKrspFJ2B4u2hiNvTqS5UkdkXkxiVeL6nkyxPKN76YvkTo50wlJ4BurFmXrjJNx89AaSpFDrtVB3t6xpIs3cGC0nRHnkyauZvaokI2iYHH220L6w9hKlFfp4czM/ktIlCXWDj7N5L3sfkQqF+FB4B7ex6ElbpxYZ5HUmEhukKzuNjlyo8nUYfAH7cvrvYQBAAA=">here</Hyperlink> to open a file with test data.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_All"/>.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/>.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			To sort by last name:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Hit the End key.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Ctrl+Shift+Left Arrow key to select the last names.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Sort"/>.
+				</Paragraph>
+				<Paragraph>
+					In the dialog, notice that "What to sort" is set to "Selections".
+				</Paragraph>
+				<Paragraph>
+					Click "Ok".
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Now we have a problem. Since the "What to sort" was set to "Selections", only the selections were sorted, and the first and last names no longer match.
+				</Paragraph>
+				<Paragraph>
+					This isn't what we want, so click <tutorial:TutorialCommand CommandEnum="Edit_Undo"/>
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Sort"/>.
+				</Paragraph>
+				<Paragraph>
+					Change "What to sort" to "Lines", then click "Ok".
+				</Paragraph>
+				<Paragraph>
+					The lines are now sorted by last name.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			To sort by first name:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Hit the Home key.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Press Ctrl+Right twice to skip the number at the beginning.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Press Ctrl+Shift+Right to select the first names.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Sort"/>.
+				</Paragraph>
+				<Paragraph>
+					Change "What to sort" to "Lines", then click "Ok".
+				</Paragraph>
+				<Paragraph>
+					The lines are now sorted by first name.
+				</Paragraph>
+				<Paragraph>
+					Sort by "Lines" again, but setting the "Order" to "Descending".
+				</Paragraph>
+				<Paragraph>
+					Sort by "Lines" again, but setting the "How to sort it" to "Length" (number of characters), or "Frequency" (number of duplicates).
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Click
+			<Hyperlink Tag="Page:AdvancedFind">here</Hyperlink> to go the next page, advanced find.
+		</Paragraph>
+	</tutorial:TutorialPage>
+
+</ResourceDictionary>

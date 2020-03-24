@@ -52,6 +52,7 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ClipboardChangeNotifier.cs" />
     <Compile Include="DBConnectInfo.cs" />
     <Compile Include="Enums\GetPathType.cs" />
     <Compile Include="Enums\GotoType.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="ITabs.cs" />
     <Compile Include="KeyGestureAttribute.cs" />
     <Compile Include="KeysAndValues.cs" />
+    <Compile Include="NEClipboard.cs" />
     <Compile Include="NECommand.cs" />
     <Compile Include="NoMacroAttribute.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />

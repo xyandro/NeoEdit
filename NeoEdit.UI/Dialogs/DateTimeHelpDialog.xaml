@@ -1,0 +1,133 @@
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.Dialogs.DateTimeHelpDialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
+	xmlns:dialogs="clr-namespace:NeoEdit.UI.Dialogs"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	Title="Date/Time Format Reference" SizeToContent="WidthAndHeight">
+
+	<Window.Resources>
+		<system:Int32 x:Key="nameWidth">160</system:Int32>
+		<system:Int32 x:Key="descriptionWidth">200</system:Int32>
+		<system:Int32 x:Key="exampleWidth">720</system:Int32>
+
+		<DataTemplate x:Key="helpItemTemplate">
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="{Binding Name}" FontWeight="Bold" Width="{Binding DataContext.NameWidth, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"/>
+				<TextBlock Text="{Binding Description}" Width="{Binding DataContext.DescriptionWidth, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+				<TextBlock Text="{Binding Example}" Width="{Binding DataContext.ExampleWidth, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+			</StackPanel>
+		</DataTemplate>
+	</Window.Resources>
+
+	<StackPanel Margin="10" Orientation="Vertical">
+		<StackPanel.Style>
+			<Style>
+				<Style.Resources>
+					<Style TargetType="Label">
+						<Setter Property="Margin" Value="0"/>
+						<Setter Property="Padding" Value="2,0"/>
+					</Style>
+				</Style.Resources>
+			</Style>
+		</StackPanel.Style>
+
+		<TextBlock Margin="0,0,0,10">
+			<Italic>Date/Time Format Reference</Italic>
+		</TextBlock>
+
+		<ItemsControl>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<GroupBox>
+						<GroupBox.Header>
+							<TextBlock Text="{Binding Name}" FontStyle="Italic"/>
+						</GroupBox.Header>
+
+						<ItemsControl ItemTemplate="{StaticResource helpItemTemplate}" ItemsSource="{Binding Items}">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<StackPanel/>
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+						</ItemsControl>
+					</GroupBox>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+			<ItemsControl.Items>
+				<dialogs:HelpItems Name="Standard" Columns="1" NameWidth="{StaticResource nameWidth}" DescriptionWidth="{StaticResource descriptionWidth}" ExampleWidth="{StaticResource exampleWidth}">
+					<dialogs:HelpItems.Items>
+						<dialogs:HelpItem Name="G" Description="Short date/full time" Example="2009-06-15T13:45:30 -&gt; 6/15/2009 1:45:30 PM (en-US)"/>
+						<dialogs:HelpItem Name="g" Description="Short date/short time" Example="2009-06-15T13:45:30 -&gt; 6/15/2009 1:45 PM (en-US)"/>
+						<dialogs:HelpItem Name="D" Description="Full date" Example="2009-06-15T13:45:30 -&gt; Monday, June 15, 2009 (en-US)"/>
+						<dialogs:HelpItem Name="F" Description="Full date/full time" Example="2009-06-15T13:45:30 -&gt; Monday, June 15, 2009 1:45:30 PM (en-US)"/>
+						<dialogs:HelpItem Name="f" Description="Full date/short time" Example="2009-06-15T13:45:30 -&gt; Monday, June 15, 2009 1:45 PM (en-US)"/>
+						<dialogs:HelpItem Name="U" Description="UTC full date/time" Example="2009-06-15T13:45:30 -&gt; Monday, June 15, 2009 8:45:30 PM (en-US)"/>
+						<dialogs:HelpItem Name="u" Description="UTC sortable date/time" Example="DateTime: 2009-06-15T13:45:30 -> 2009-06-15 13:45:30Z&#x0a;DateTimeOffset: 2009-06-15T13:45:30 -> 2009-06-15 20:45:30Z"/>
+						<dialogs:HelpItem Name="O/o" Description="Round-trip date/time" Example="DateTime: 2009-06-15T13:45:30 (Local) -> 2009-06-15T13:45:30.0000000-07:00&#x0a;DateTime: 2009-06-15T13:45:30 (Utc) -> 2009-06-15T13:45:30.0000000Z&#x0a;DateTime: 2009-06-15T13:45:30 (Unspecified) -> 2009-06-15T13:45:30.0000000&#x0a;DateTimeOffset: 2009-06-15T13:45:30-07:00 -> 2009-06-15T13:45:30.0000000-07:00"/>
+						<dialogs:HelpItem Name="s" Description="Sortable date/time" Example="2009-06-15T13:45:30 (Local) -> 2009-06-15T13:45:30&#x0a;2009-06-15T13:45:30 (Utc) -> 2009-06-15T13:45:30"/>
+						<dialogs:HelpItem Name="d" Description="Short date" Example="2009-06-15T13:45:30 -&gt; 6/15/2009 (en-US)"/>
+						<dialogs:HelpItem Name="M/m" Description="Month/day" Example="2009-06-15T13:45:30 -&gt; June 15 (en-US)"/>
+						<dialogs:HelpItem Name="T" Description="Full time" Example="2009-06-15T13:45:30 -&gt; 1:45:30 PM (en-US)"/>
+						<dialogs:HelpItem Name="t" Description="Short time" Example="2009-06-15T13:45:30 -&gt; 1:45 PM (en-US)"/>
+						<dialogs:HelpItem Name="Y/y" Description="Year/month" Example="2009-06-15T13:45:30 -&gt; June, 2009 (en-US)"/>
+						<dialogs:HelpItem Name="R/r" Description="RFC1123" Example="2009-06-15T13:45:30 -> Mon, 15 Jun 2009 20:45:30 GMT"/>
+					</dialogs:HelpItems.Items>
+				</dialogs:HelpItems>
+			</ItemsControl.Items>
+		</ItemsControl>
+
+		<ItemsControl>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<GroupBox>
+						<GroupBox.Header>
+							<TextBlock Text="{Binding Name}" FontStyle="Italic"/>
+						</GroupBox.Header>
+
+						<ItemsControl ItemTemplate="{StaticResource helpItemTemplate}" ItemsSource="{Binding Items}">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<UniformGrid Columns="{Binding Columns}"/>
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+						</ItemsControl>
+					</GroupBox>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+			<ItemsControl.Items>
+				<dialogs:HelpItems Name="Custom" Columns="3" NameWidth="{StaticResource nameWidth}" DescriptionWidth="{StaticResource descriptionWidth}">
+					<dialogs:HelpItems.Items>
+						<dialogs:HelpItem Name="y-yyyyy" Description="Year"/>
+						<dialogs:HelpItem Name="/" Description="Date separator"/>
+						<dialogs:HelpItem/>
+						<dialogs:HelpItem Name="M-MM" Description="Month (1-12)"/>
+						<dialogs:HelpItem Name="MMM" Description="Short month name"/>
+						<dialogs:HelpItem Name="MMMM" Description="Full month name"/>
+						<dialogs:HelpItem Name="d-dd" Description="Day (1-31)"/>
+						<dialogs:HelpItem Name="ddd" Description="Short day name"/>
+						<dialogs:HelpItem Name="dddd" Description="Full day name"/>
+						<dialogs:HelpItem Name="h-hh" Description="Hour (1-12)"/>
+						<dialogs:HelpItem Name="H-HH" Description="Hour (0-23)"/>
+						<dialogs:HelpItem Name="m-mm" Description="Minute (0-59)"/>
+						<dialogs:HelpItem Name="s-ss" Description="Second (0-59)"/>
+						<dialogs:HelpItem Name="f-fffffff" Description="Second decimal places"/>
+						<dialogs:HelpItem Name="F-FFFFFFF" Description="Second decimal places (Non-zero)"/>
+						<dialogs:HelpItem Name=":" Description="Time separator"/>
+						<dialogs:HelpItem Name="t-tt" Description="AM/PM"/>
+						<dialogs:HelpItem Name="g/gg" Description="BC/AD"/>
+						<dialogs:HelpItem Name="K" Description="Time zone"/>
+						<dialogs:HelpItem Name="z-zzz" Description="UTC offset"/>
+						<dialogs:HelpItem Name="&quot;...&quot;/&#39;...&#39;" Description="Literal"/>
+						<dialogs:HelpItem Name="%" Description="Next char is custom"/>
+						<dialogs:HelpItem Name="\" Description="Escape"/>
+						<dialogs:HelpItem Name="Other" Description="Copied unchanged"/>
+					</dialogs:HelpItems.Items>
+				</dialogs:HelpItems>
+			</ItemsControl.Items>
+		</ItemsControl>
+
+		<Button Click="OkClick" IsDefault="True" IsCancel="True" Content="Ok" Margin="0,10,0,0" Padding="20,1" HorizontalAlignment="Right"/>
+	</StackPanel>
+
+</controls:NEWindow>

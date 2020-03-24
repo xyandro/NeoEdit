@@ -1,0 +1,245 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:tutorial="clr-namespace:NeoEdit.UI.Tutorial">
+
+	<tutorial:TutorialPage x:Key="AdvancedFind" Title="Advanced Find">
+		<Paragraph>
+			Let's explore the find feature:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<Hyperlink Tag="Data:Advanced Find:H4sIAAAAAAAEAE2O0WrDMAxF3w35B/1K8tCUbIFuy1rYmxYrtYkjgZxQ/PfTQsP2JCz5nnNbEr0T3DCHyPdVuHKdBIba45IrNwRZMENH00Sa9ysulKFHH/8/hVXoGX3bIo/lINTslR7Q4TjvgR51jQxXZGg2JdvcYkoRFzgTa4Ezqj7Rv7ChJNJD8wIXSXPlvnAMaH8HLEns2hsB1cPJ5iJqRU6KPCfzXCLpSAeg2SzIaPD6WzGY9NW6SuK/nibd7Z+p5GyRD2iNtVbufVsD6STmaaxloXxQW9QpUvKV+wFN5I0bTgEAAA==">here</Hyperlink> to open a file with test data.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter "John".
+				</Paragraph>
+				<Paragraph>
+					Make sure none of the boxes are checked.
+				</Paragraph>
+				<Paragraph>
+					Hit "Find All".
+				</Paragraph>
+				<Paragraph>
+					In addition to "John" alone, it also found the "John" in "Johnson".
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter "John".
+				</Paragraph>
+				<Paragraph>
+					Make it so "Whole words only" is the only box checked.
+				</Paragraph>
+				<Paragraph>
+					Hit "Find All".
+				</Paragraph>
+				<Paragraph>
+					It only finds "John" alone now.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Select_Lines"/> to select the full line from the matching selections.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter "t".
+				</Paragraph>
+				<Paragraph>
+					Make it so "Selection only", and "Keep matches" are the only boxes checked.
+				</Paragraph>
+				<Paragraph>
+					Hit "Find All".
+				</Paragraph>
+				<Paragraph>
+					Only the values containing a "t" remain selected.  Notice this was case-insensitive.  To match case, click the "Match case" box.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Let's find things using regular expressions. First, let's find all the presidents with middle names:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter "\w+ \w+ \w+". (This regular expression finds three words separated by spaces.)
+				</Paragraph>
+				<Paragraph>
+					Make it so "Regex" is the only box checked.
+				</Paragraph>
+				<Paragraph>
+					Hit "Find All".
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Next, let's find all the middle names:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter "\w+ (\w+) \w+". (This regular expression finds three words separated by spaces, with the middle name marked as a group by parenthesis.)
+				</Paragraph>
+				<Paragraph>
+					Make it so "Regex" and "by group" are the only boxes checked.
+				</Paragraph>
+				<Paragraph>
+					Hit "Find All".  Note that only the middle name is selected.  This is because the regular expression grouped the middle word and the "Find" dialog "by group" was checked.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			For more information about regular expressions, click the "RegEx Help" button.
+		</Paragraph>
+		<Paragraph>
+			Let's look at a more complicated file:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<Hyperlink Tag="Data:Advanced Find 2:H4sIAAAAAAAEAI2Vz27iMBDG75X6Dn6AHpr9v3CCagvqFsQu7Fba25AYYpHYyE5UpU+/Q8EeOza0l9JDMr/5vvlmMm/rNdcDlg3ZHGo+YBOu9JazJzClkNtGySF7FDtuBmzcai0aZW7YXSnyHZdsrxq2F/yGLcTLCwzZFJrDgz9kXooKCsBHp1CvWyyo8f8FPq4VmOb6an7CfrDYB1VKNiqgNo4XvHoAYDWsUKitcSjqaYF18YklyOJZ5CU3BPloIatS1WDYA99ssKonzdZNSFvuYVvyphGOGfR1pL62R8BPThX+NWwGhUjToqaTEN9P1w7RPvdoSmrFHcx/2Q2gP7EL+l9bJNiXYGC/WiHzrj83kke8Xt2kTrLB10zsr5Y9koXmz6g33wW++rWsT34pRz3FKR52Ij3fLHUGuhGS/QV5iB2XSYs97jnJvky/Zesbob9b9JOoKgE1m3KpO3wJQ+8Lj3Sk00Pyj7GjQdk1InR2Gwx61VVcnw9wmCZfoOcHNeVhsjC8PzEz1S4B8j223fbHmZy/x3LH5h/kJaCRK+gqRbK8uEa3J3ncYt+jEWbu+MxwhqALdo+/tdI8IdI3LhZJ3b1lqrs/9xrkrsLQLgTXOSHPp/TyjT363DsJWe8AjVt0V0J6L3sHmzJDHfljiP10B2i01lDiTjziCVIV0U6RJFB8wft3MHLB40VHB9fh3bsXarT2ET2xd+7c/Kk6Y9DOJZvgFJv0ZzHUmj4xtKzhVypz5+V325RcbxSmc4wlOm7elRQnJMnt9eZ982/DvExAbwSviuQeJnYjEcwLS3l99R8wZzJR4wgAAA==">here</Hyperlink> to open a file with test data.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Find the full name of all Presidents whose name starts with J:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter "Name:".
+				</Paragraph>
+				<Paragraph>
+					Make it so none of the boxes are checked.
+				</Paragraph>
+				<Paragraph>
+					Hit "Find All".
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Select the first letter of the first name.
+				</Paragraph>
+				<Paragraph>
+					(Right arrow twice, then Shift+right arrow once.)
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Filter selections, only keeping ones that start with "J".
+				</Paragraph>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter "J", make "Selection only" the only check, and hit "Find All".
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Select all text until the next semicolon.
+				</Paragraph>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter ";", uncheck all boxes, and hit "Find Next". (NOT "Find All")
+				</Paragraph>
+				<Paragraph>
+					Now, the entire name is selected and the semicolon.  Remove the semicolon from the selection by pressing Shift+Left arrow.
+				</Paragraph>
+				<Paragraph>
+					Press Esc to clear find results.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Find the last name of all Presidents who like Pizza:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter "Likes:".  Make it so none of the boxes are checked. Hit "Find All".
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Select the list of foods liked, by selecting all text up through the next ";".
+				</Paragraph>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter ";", uncheck all boxes, and hit "Find Next". (NOT "Find All")
+				</Paragraph>
+				<Paragraph>
+					(You can press Esc after to get rid of the find results.)
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Filter selections, only keeping ones that contain with "Pizza".
+				</Paragraph>
+				<Paragraph>
+					Click
+					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+				</Paragraph>
+				<Paragraph>
+					In the find dialog, enter "Pizza", make "Selection only" and "Keep matches" the only checks, and hit "Find All".
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Select the last name.
+				</Paragraph>
+				<Paragraph>
+					Press Ctrl+Left three times, then Ctrl+Shift+Left once to select the last name.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<!--<Paragraph>
+			Click
+			<Hyperlink Tag="Page:AdvancedFind">here</Hyperlink> to go the next page, advanced find.
+		</Paragraph>-->
+	</tutorial:TutorialPage>
+
+</ResourceDictionary>

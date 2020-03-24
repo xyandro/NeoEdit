@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor;
 
 namespace NeoEdit.Program
 {
@@ -16,7 +15,7 @@ namespace NeoEdit.Program
 		const string IPCName = "NeoEdit-{1e5bef22-1257-4cbd-a84b-36679ed79b07}";
 		const string ShutdownEventName = "NeoEdit-Wait-{0}";
 
-		static MemoryMappedFile mmfile;
+		//static MemoryMappedFile mmfile;
 
 		[DllImport("user32.dll", SetLastError = true)]
 		static extern bool AllowSetForegroundWindow(int dwProcessId);
@@ -40,19 +39,19 @@ namespace NeoEdit.Program
 			}
 			catch { }
 
-			if (!masterPid.HasValue)
-			{
-				var app = new App();
-				if (!multi)
-				{
-					mmfile = MemoryMappedFile.CreateNew(IPCName, 4);
-					using (var va = mmfile.CreateViewAccessor())
-						va.Write(0, Process.GetCurrentProcess().Id);
-					SetupPipeWait(app);
-				}
-				app.Run();
-				return;
-			}
+			//if (!masterPid.HasValue)
+			//{
+			//	var app = new App();
+			//	if (!multi)
+			//	{
+			//		mmfile = MemoryMappedFile.CreateNew(IPCName, 4);
+			//		using (var va = mmfile.CreateViewAccessor())
+			//			va.Write(0, Process.GetCurrentProcess().Id);
+			//		SetupPipeWait(app);
+			//	}
+			//	app.Run();
+			//	return;
+			//}
 
 			var proc = Process.GetProcessById(masterPid.Value);
 			AllowSetForegroundWindow(proc.Id);
@@ -84,25 +83,25 @@ namespace NeoEdit.Program
 				Process.GetProcessById(int.Parse(wait.Substring("-waitpid=".Length)))?.WaitForExit();
 		}
 
-		static void SetupPipeWait(App app)
-		{
-			var pipe = new NamedPipeServerStream(IPCName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
-			pipe.BeginWaitForConnection(result =>
-			{
-				pipe.EndWaitForConnection(result);
+		//static void SetupPipeWait(App app)
+		//{
+		//	var pipe = new NamedPipeServerStream(IPCName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
+		//	pipe.BeginWaitForConnection(result =>
+		//	{
+		//		pipe.EndWaitForConnection(result);
 
-				var buf = new byte[sizeof(int)];
-				pipe.Read(buf, 0, buf.Length);
-				var len = BitConverter.ToInt32(buf, 0);
-				buf = new byte[len];
-				pipe.Read(buf, 0, buf.Length);
-				var commandLine = Coder.BytesToString(buf, Coder.CodePage.UTF8);
+		//		var buf = new byte[sizeof(int)];
+		//		pipe.Read(buf, 0, buf.Length);
+		//		var len = BitConverter.ToInt32(buf, 0);
+		//		buf = new byte[len];
+		//		pipe.Read(buf, 0, buf.Length);
+		//		var commandLine = Coder.BytesToString(buf, Coder.CodePage.UTF8);
 
-				app.Dispatcher.Invoke(() => CommandLineParser.CreateTabs(commandLine));
+		//		app.Dispatcher.Invoke(() => CommandLineParser.CreateTabs(commandLine));
 
-				SetupPipeWait(app);
-			}, null);
-		}
+		//		SetupPipeWait(app);
+		//	}, null);
+		//}
 
 		[StructLayout(LayoutKind.Sequential)]
 		struct INPUT

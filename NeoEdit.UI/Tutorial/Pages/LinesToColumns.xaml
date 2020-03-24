@@ -1,0 +1,79 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:tutorial="clr-namespace:NeoEdit.UI.Tutorial">
+
+	<tutorial:TutorialPage x:Key="LinesToColumns" Title="Lines to Columns">
+		<Paragraph>
+			Let's change a list in lines to columns:
+		</Paragraph>
+		<List>
+			<ListItem>
+				<Paragraph>
+					Click <Hyperlink Tag="Data:Lines to Columns:H4sIAAAAAAAEAFWOwQnAMAwD/4XuYru2Y42QQfrsr/vTQJRAXzosZKm/96PIPI8+qMImpMAlJgdNvxps+XVFU4aSsNWYVExFlgpZFXSBEjZE8eS7fr0Ub/8ZZkxhbPkA78PkVb8AAAA=">here</Hyperlink> to open a file with test data.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_All"/>.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/>.
+				</Paragraph>
+				<Paragraph>
+					Notice the text at the bottom left:  Selection 1/20.  This means there are 20 independent selections, with the first one being focused.  Focus will be discussed later.
+				</Paragraph>
+				<Paragraph>
+					You have 20 cursors!  Everything you do will be done to each selection, meaning you can change them all at once.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click the End key to go to the end of each line.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Type a comma and a space.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click the Delete key.
+				</Paragraph>
+				<Paragraph>
+					Note everything is now on one line.  You still have 20 selections.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click the End key. Each of the selections will jump to the end of the current line.
+				</Paragraph>
+				<Paragraph TextAlignment="Left">
+					The 20 selections now overlap. NeoEdit doesn't allow overlapping selections, so they're combined into one.
+					With only one selection, NeoEdit behaves like a standard editor.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click the Backspace key twice to delete the trailing space and comma.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Hold the Shift key, then click the Home key to select the line.
+				</Paragraph>
+			</ListItem>
+			<ListItem>
+				<Paragraph>
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy_Copy"/> to copy the new line. It can be pasted where ever it's useful.
+				</Paragraph>
+			</ListItem>
+		</List>
+		<Paragraph>
+			Click <Hyperlink Tag="Page:ColumnsToLines">here</Hyperlink> to go the next page, columns to lines.
+		</Paragraph>
+	</tutorial:TutorialPage>
+</ResourceDictionary>
