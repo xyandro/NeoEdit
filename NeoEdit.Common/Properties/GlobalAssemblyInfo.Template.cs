@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
-using System.Windows;
 
 [assembly: AssemblyCompany("Randon Spackensen")]
 [assembly: AssemblyConfiguration("")]
@@ -11,7 +10,6 @@ using System.Windows;
 [assembly: AssemblyProduct("NeoEdit")]
 [assembly: AssemblyTrademark("")]
 [assembly: ComVisible(false)]
-[assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 
 [assembly: AssemblyVersion("4.0.1.%NUMREVS%")]
