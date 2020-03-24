@@ -1,17 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="BuildChangeLog;CompressWords;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="CompressWords" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Target Name="BuildChangeLog" Inputs="NeoEdit.csproj" Outputs="Resources\ChangeLog.txt" Returns="">
-    <Message Text="Building ChangeLog" Importance="High" />
-    <Exec Command="ChangeLog.bat &quot;Resources\ChangeLog.txt&quot;" />
-  </Target>
   <Target Name="CompressWords" Inputs="Words.txt" Outputs="Words.txt.gz" Returns="">
     <Message Text="Compressing word list" Importance="High" />
     <Exec Command="&quot;$(SolutionDir)Compress\bin\$(Configuration)\Compress.exe&quot; &quot;$(ProjectDir)Words.txt&quot; &quot;$(ProjectDir)Words.txt.gz&quot;" />
-  </Target>
-  <Target Name="License" Inputs="$(SolutionDir)License.txt" Outputs="Resources\License.txt" Returns="">
-    <Message Text="Copy license" Importance="High" />
-    <Exec Command="xcopy /y &quot;$(SolutionDir)License.txt&quot; &quot;Resources\&quot;" />
   </Target>
   <PropertyGroup>
     <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
@@ -53,9 +45,6 @@
     <Resource Include="$(SolutionDir)Photoshop\NeoEdit.ico">
       <Link>NeoEdit.ico</Link>
     </Resource>
-    <Resource Include="$(SolutionDir)Photoshop\NeoEdit.png">
-      <Link>Resources\NeoEdit.png</Link>
-    </Resource>
     <Compile Include="..\NeoEdit.Common\Properties\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
@@ -63,9 +52,6 @@
     <Compile Include="InstanceManager.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Resources\ChangeLog.txt" />
-    <Resource Include="Resources\DejaVuSansMono.ttf" />
-    <EmbeddedResource Include="Resources\License.txt" />
     <EmbeddedResource Include="Resources\Unicode.dat" />
     <Resource Include="Words.txt" />
     <EmbeddedResource Include="Words.txt.gz" />

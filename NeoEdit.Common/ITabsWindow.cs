@@ -106,6 +106,7 @@ namespace NeoEdit.Common
 		object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action);
 		HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null);
 		IRunTasksDialog CreateIRunTasksDialog();
+		void RunHelpAboutDialog();
 
 		List<TResult> RunMultiProgressDialogAsync<TSource, TResult>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task<TResult>> getTask, Func<TSource, string> getName = null);
 		void RunMultiProgressDialogAsync<TSource>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task> getTask, Func<TSource, string> getName = null);

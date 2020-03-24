@@ -11,7 +11,7 @@ namespace NeoEdit.Editor
 {
 	partial class Tabs
 	{
-		static void Execute_Help_About() { }//TODO => HelpAboutDialog.Run();
+		void Execute_Help_About() => state.TabsWindow.RunHelpAboutDialog();
 
 		void Execute_Help_Tutorial() { }//TODO => new TutorialWindow(this);
 

@@ -111,5 +111,6 @@ namespace NeoEdit.UI
 		public void RunMultiProgressDialogAsync<TSource>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task> getTask, Func<TSource, string> getName = null) => MultiProgressDialog.RunAsync<TSource>(this, title, items, getTask, getName);
 		public List<TResult> RunMultiProgressDialog<TSource, TResult>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, TResult> getTask, Func<TSource, string> getName = null) => MultiProgressDialog.Run<TSource, TResult>(this, title, items, getTask, getName);
 		public void RunMultiProgressDialog<TSource>(string title, IEnumerable<TSource> items, Action<TSource, IProgress<ProgressReport>, CancellationToken> getTask, Func<TSource, string> getName = null) => MultiProgressDialog.Run<TSource>(this, title, items, getTask, getName);
+		public void RunHelpAboutDialog() => HelpAboutDialog.Run(this);
 	}
 }

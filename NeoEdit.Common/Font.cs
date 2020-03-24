@@ -43,7 +43,7 @@ namespace NeoEdit.Common
 
 		static Font()
 		{
-			FontFamily = new FontFamily(new Uri("pack://application:,,,/NeoEdit;component/"), "./Resources/#DejaVu Sans Mono");
+			FontFamily = new FontFamily(new Uri("pack://application:,,,/NeoEdit.UI;component/"), "./Resources/#DejaVu Sans Mono");
 			Typeface = FontFamily.GetTypefaces().First();
 			FontSize = 14;
 
