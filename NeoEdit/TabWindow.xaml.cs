@@ -20,7 +20,7 @@ namespace NeoEdit.Program
 		const double Spacing = 2;
 		static double LineHeight => Font.FontSize + Spacing;
 
-		public Tab Tab { get; set; }
+		public ITab Tab { get; set; }
 
 		static internal readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
 		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));

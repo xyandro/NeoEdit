@@ -18,7 +18,7 @@ namespace NeoEdit.Program.Tutorial
 		const string StartPage = "Home";
 
 		readonly bool LoadFromFile = false;
-		readonly Tabs tabs;
+		readonly ITabs tabs;
 		readonly List<string> pages = new List<string>();
 		int currentPage = 0;
 
@@ -73,7 +73,7 @@ namespace NeoEdit.Program.Tutorial
 			catch (Exception ex) { MessageBox.Show(ex.Message); }
 		}
 
-		public TutorialWindow(Tabs tabs)
+		public TutorialWindow(ITabs tabs)
 		{
 			this.tabs = tabs;
 			InitializeComponent();
@@ -158,8 +158,9 @@ namespace NeoEdit.Program.Tutorial
 
 		void LoadData(string pageName, string data)
 		{
-			var bytes = Compressor.Decompress(Coder.StringToBytes(data, Coder.CodePage.Base64), Compressor.Type.GZip);
-			tabs.AddTab(new Tab(displayName: pageName, bytes: bytes, codePage: Coder.CodePage.UTF8, modified: false));
+			//TODO
+			//var bytes = Compressor.Decompress(Coder.StringToBytes(data, Coder.CodePage.Base64), Compressor.Type.GZip);
+			//tabs.AddTab(new ITab(displayName: pageName, bytes: bytes, codePage: Coder.CodePage.UTF8, modified: false));
 		}
 	}
 }

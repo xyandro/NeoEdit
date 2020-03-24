@@ -19,6 +19,7 @@ namespace NeoEdit.Editor
 
 		OrderedHashSet<Tab> oldAllTabs, newAllTabs;
 		public IEnumerable<Tab> AllTabs => newAllTabs;
+		public IEnumerable<ITab> AllITabs => newAllTabs;
 
 		void NewAllTabsUpdated()
 		{
@@ -113,6 +114,7 @@ namespace NeoEdit.Editor
 
 		public int ActiveTabsHash => newActiveTabsHash;
 		public IEnumerable<Tab> UnsortedActiveTabs => newActiveTabs;
+		public IEnumerable<ITab> UnsortedActiveITabs => UnsortedActiveTabs;
 		public int UnsortedActiveTabsCount => newActiveTabs.Count;
 		IReadOnlyList<Tab> sortedActiveTabs;
 		public IEnumerable<Tab> SortedActiveTabs
@@ -124,6 +126,7 @@ namespace NeoEdit.Editor
 				return sortedActiveTabs;
 			}
 		}
+		public IEnumerable<ITab> SortedActiveITabs => SortedActiveTabs;
 
 		public void ClearAllActive()
 		{
@@ -165,6 +168,7 @@ namespace NeoEdit.Editor
 		}
 
 		public bool IsActive(Tab tab) => newActiveTabs.Contains(tab);
+		public bool IsActive(ITab tab) => newActiveTabs.Contains(tab);
 		#endregion
 
 		#region Focused
@@ -180,6 +184,7 @@ namespace NeoEdit.Editor
 				newFocused = value;
 			}
 		}
+		public ITab FocusedITab => Focused;
 		#endregion
 
 		HashSet<Tab> transactionTabs;

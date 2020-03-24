@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -100,6 +101,11 @@ namespace NeoEdit.Program.Controls
 			for (var ctr = 0; ctr < gridView.Columns.Count - 1; ++ctr)
 				width -= gridView.Columns[ctr].ActualWidth;
 			gridView.Columns[gridView.Columns.Count - 1].Width = width;
+		}
+
+		internal void SetData(object data, object hasSel, object viewBinaryCodePages, object viewBinarySearches)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

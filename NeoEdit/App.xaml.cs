@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using NeoEdit.Editor;
-using NeoEdit.Program.CommandLine;
 using NeoEdit.Program.Dialogs;
 
 namespace NeoEdit.Program

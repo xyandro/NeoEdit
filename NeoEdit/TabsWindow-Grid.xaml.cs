@@ -18,7 +18,7 @@ namespace NeoEdit.Program
 		bool lastGrid = false;
 		Size lastGridSize;
 		int lastGridAllTabsHash;
-		Tab lastGridFocused;
+		ITab lastGridFocused;
 		double lastGridScrollBarValue;
 		int? lastGridColumns, lastGridRows, lastGridMaxColumns, lastGridMaxRows;
 
@@ -67,7 +67,7 @@ namespace NeoEdit.Program
 			lastGrid = true;
 			lastGridSize = canvas.RenderSize;
 			lastGridAllTabsHash = Tabs.AllTabsHash;
-			lastGridFocused = Tabs.Focused;
+			lastGridFocused = Tabs.FocusedITab;
 			lastGridScrollBarValue = scrollBar.Value;
 			lastGridColumns = Tabs.Columns;
 			lastGridRows = Tabs.Rows;
@@ -85,16 +85,16 @@ namespace NeoEdit.Program
 				if (Tabs.Rows.HasValue)
 					rows = Math.Max(1, Tabs.Rows.Value);
 				if ((!columns.HasValue) && (!rows.HasValue))
-					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.AllTabs.Count())), Tabs.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.AllITabs.Count())), Tabs.MaxColumns ?? int.MaxValue));
 				if (!rows.HasValue)
-					rows = Math.Max(1, Math.Min((Tabs.AllTabs.Count() + columns.Value - 1) / columns.Value, Tabs.MaxRows ?? int.MaxValue));
+					rows = Math.Max(1, Math.Min((Tabs.AllITabs.Count() + columns.Value - 1) / columns.Value, Tabs.MaxRows ?? int.MaxValue));
 				if (!columns.HasValue)
-					columns = Math.Max(1, Math.Min((Tabs.AllTabs.Count() + rows.Value - 1) / rows.Value, Tabs.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((Tabs.AllITabs.Count() + rows.Value - 1) / rows.Value, Tabs.MaxColumns ?? int.MaxValue));
 
 				gridColumns = columns.Value;
 				gridRows = rows.Value;
 
-				var totalRows = (Tabs.AllTabs.Count() + gridColumns - 1) / gridColumns;
+				var totalRows = (Tabs.AllITabs.Count() + gridColumns - 1) / gridColumns;
 
 				scrollBarBorder.Visibility = totalRows > gridRows ? Visibility.Visible : Visibility.Collapsed;
 				UpdateLayout();
@@ -115,9 +115,9 @@ namespace NeoEdit.Program
 		{
 			scrollBar.ValueChanged -= OnScrollBarValueChanged;
 
-			if ((Tabs.Focused != null) && ((lastGridAllTabsHash != Tabs.AllTabsHash) || (lastGridFocused != Tabs.Focused)))
+			if ((Tabs.FocusedITab != null) && ((lastGridAllTabsHash != Tabs.AllTabsHash) || (lastGridFocused != Tabs.FocusedITab)))
 			{
-				var atTop = Tabs.AllTabs.FindIndex(Tabs.Focused) / gridColumns * gridHeight;
+				var atTop = Tabs.AllITabs.FindIndex(Tabs.FocusedITab) / gridColumns * gridHeight;
 				scrollBar.Value = Math.Min(atTop, Math.Max(scrollBar.Value, atTop + gridHeight - scrollBar.ViewportSize));
 			}
 
@@ -143,7 +143,7 @@ namespace NeoEdit.Program
 			for (var row = 0; row < gridRows; ++row)
 				for (var column = 0; column < gridColumns; ++column)
 				{
-					if (tabIndex >= Tabs.AllTabs.Count())
+					if (tabIndex >= Tabs.AllITabs.Count())
 						break;
 
 					var top = row * gridHeight;
@@ -159,7 +159,7 @@ namespace NeoEdit.Program
 					Canvas.SetTop(border, top);
 
 					var tabWindow = tabWindows[tabWindowsIndex++];
-					tabWindow.Tab = Tabs.AllTabs.GetIndex(tabIndex++);
+					tabWindow.Tab = Tabs.AllITabs.GetIndex(tabIndex++);
 					var dockPanel = new DockPanel { AllowDrop = true };
 					dockPanel.Drop += (s, e) => OnDrop(e, tabWindow.Tab);
 					var tabLabel = CreateTabLabel(tabWindow.Tab);

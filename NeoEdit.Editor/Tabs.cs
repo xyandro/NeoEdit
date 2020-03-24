@@ -440,5 +440,7 @@ namespace NeoEdit.Editor
 		}
 
 		public void SetForeground() => state.TabsWindow.SetForeground();
+
+		public string KeysAndValuesStatus => string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"));
 	}
 }

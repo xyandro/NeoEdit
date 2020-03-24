@@ -20,7 +20,7 @@ namespace NeoEdit.Program
 {
 	partial class TabsWindow : ITabsWindow
 	{
-		readonly Tabs Tabs;
+		readonly ITabs Tabs;
 
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
@@ -33,7 +33,7 @@ namespace NeoEdit.Program
 			BackgroundBrush.Freeze();
 		}
 
-		public TabsWindow(Tabs tabs)
+		public TabsWindow(ITabs tabs)
 		{
 			Tabs = tabs;
 
@@ -98,11 +98,12 @@ namespace NeoEdit.Program
 
 		void OnDrop(object sender, DragEventArgs e)
 		{
-			var fileList = e.Data.GetData("FileDrop") as string[];
-			if (fileList == null)
-				return;
-			fileList.ForEach(file => Tabs.AddTab(new Tab(file)));
-			e.Handled = true;
+			//TODO
+			//var fileList = e.Data.GetData("FileDrop") as string[];
+			//if (fileList == null)
+			//	return;
+			//fileList.ForEach(file => Tabs.AddTab(new ITab(file)));
+			//e.Handled = true;
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -147,7 +148,7 @@ namespace NeoEdit.Program
 		//	base.OnPreviewMouseLeftButtonDown(e);
 		//}
 
-		void OnDrop(DragEventArgs e, Tab toTab)
+		void OnDrop(DragEventArgs e, ITab toTab)
 		{
 			//TODO
 			//var fromTabs = e.Data.GetData(typeof(List<Tab>)) as List<Tab>;
@@ -188,7 +189,7 @@ namespace NeoEdit.Program
 			Close();
 		}
 
-		TabLabel CreateTabLabel(Tab tab)
+		TabLabel CreateTabLabel(ITab tab)
 		{
 			var tabLabel = new TabLabel(tab);
 			tabLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
@@ -196,8 +197,8 @@ namespace NeoEdit.Program
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
-					var active = Tabs.SortedActiveTabs.ToList();
-					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<Tab>), active), DragDropEffects.Move);
+					var active = Tabs.SortedActiveITabs.ToList();
+					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<ITab>), active), DragDropEffects.Move);
 				}
 			};
 			tabLabel.CloseClicked += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseTab) { Configuration = tab });
@@ -220,11 +221,11 @@ namespace NeoEdit.Program
 
 			var status = new List<string>();
 			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
-			status.Add($"Active: {plural(Tabs.UnsortedActiveTabsCount, "file")}, {plural(Tabs.UnsortedActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Inactive: {plural(Tabs.AllTabs.Except(Tabs.UnsortedActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(Tabs.UnsortedActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Total: {plural(Tabs.AllTabs.Count(), "file")}, {plural(Tabs.AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Active: {plural(Tabs.UnsortedActiveTabsCount, "file")}, {plural(Tabs.UnsortedActiveITabs.Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Inactive: {plural(Tabs.AllITabs.Except(Tabs.UnsortedActiveITabs).Count(), "file")}, {plural(Tabs.AllITabs.Except(Tabs.UnsortedActiveITabs).Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Total: {plural(Tabs.AllITabs.Count(), "file")}, {plural(Tabs.AllITabs.Sum(tab => tab.Selections.Count), "selection")}");
 			status.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
-			status.Add($"Keys/Values: {string.Join(" / ", Tabs.keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
+			status.Add($"Keys/Values: {Tabs.KeysAndValuesStatus}");
 
 			var text = new FormattedText(string.Join(Separator, status), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, new Typeface("Segoe UI"), 12, Brushes.White, 1);
 			var pos = 0;
@@ -239,9 +240,9 @@ namespace NeoEdit.Program
 
 		void SetMenuCheckboxes()
 		{
-			bool? GetMultiStatus(Func<Tab, bool> func)
+			bool? GetMultiStatus(Func<ITab, bool> func)
 			{
-				var results = Tabs.UnsortedActiveTabs.Select(func).Distinct().Take(2).ToList();
+				var results = Tabs.UnsortedActiveITabs.Select(func).Distinct().Take(2).ToList();
 				if (results.Count != 1)
 					return default;
 				return results[0];
@@ -284,19 +285,13 @@ namespace NeoEdit.Program
 		{
 			statusBar.InvalidateVisual();
 			SetMenuCheckboxes();
-			Title = $"{(Tabs.Focused == null ? "" : $"{Tabs.Focused.DisplayName ?? Tabs.Focused.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
+			Title = $"{(Tabs.FocusedITab == null ? "" : $"{Tabs.FocusedITab.DisplayName ?? Tabs.FocusedITab.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
 
 			if ((Tabs.Columns == 1) && (Tabs.Rows == 1))
 				DoFullLayout();
 			else
 				DoGridLayout();
 
-		}
-
-		public void Move(Tab tab, int newIndex)
-		{
-			Tabs.RemoveTab(tab);
-			Tabs.InsertTab(tab, newIndex);
 		}
 
 		protected override void OnClosed(EventArgs e)
@@ -307,14 +302,14 @@ namespace NeoEdit.Program
 
 		public bool GotoTab(string fileName, int? line, int? column, int? index)
 		{
-			var tab = Tabs.AllTabs.FirstOrDefault(x => x.FileName == fileName);
+			var tab = Tabs.AllITabs.FirstOrDefault(x => x.FileName == fileName);
 			if (tab == null)
 				return false;
-			Activate();
-			Tabs.ClearAllActive();
-			Tabs.SetActive(tab);
-			Tabs.Focused = tab;
 			//TODO
+			//Activate();
+			//Tabs.ClearAllActive();
+			//Tabs.SetActive(tab);
+			//Tabs.FocusedITab = tab;
 			//tab.Execute_File_Refresh();
 			//tab.Goto(line, column, index);
 			return true;

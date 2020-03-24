@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using NeoEdit.Editor;
+using NeoEdit.Common;
 
 namespace NeoEdit.Program.Controls
 {
@@ -24,18 +24,18 @@ namespace NeoEdit.Program.Controls
 			InactiveWindowBackgroundBrush.Freeze();
 		}
 
-		public TabLabel(Tab tab)
+		public TabLabel(ITab tab)
 		{
 			Tab = tab;
 			InitializeComponent();
 			close.Style = FindResource(ToolBar.ButtonStyleKey) as Style;
 		}
 
-		public Tab Tab { get; }
+		public ITab Tab { get; }
 
-		public void Refresh(Tabs tabs)
+		public void Refresh(ITabs tabs)
 		{
-			if (tabs.Focused == Tab)
+			if (tabs.FocusedITab == Tab)
 			{
 				border.BorderBrush = FocusedWindowBorderBrush;
 				border.Background = FocusedWindowBackgroundBrush;
