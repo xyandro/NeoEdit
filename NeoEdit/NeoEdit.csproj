@@ -64,11 +64,8 @@
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Resources\ChangeLog.txt" />
-    <Resource Include="Resources\Checked.png" />
     <Resource Include="Resources\DejaVuSansMono.ttf" />
-    <Resource Include="Resources\Indeterminate.png" />
     <EmbeddedResource Include="Resources\License.txt" />
-    <Resource Include="Resources\Unchecked.png" />
     <EmbeddedResource Include="Resources\Unicode.dat" />
     <Resource Include="Words.txt" />
     <EmbeddedResource Include="Words.txt.gz" />

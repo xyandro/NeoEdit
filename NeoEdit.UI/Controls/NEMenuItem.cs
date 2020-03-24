@@ -48,9 +48,9 @@ namespace NeoEdit.UI.Controls
 					command.MultiStatus = value;
 					switch (command.MultiStatus)
 					{
-						case true: Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Checked.png")) }; break;
-						case false: Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Unchecked.png")) }; break;
-						case null: Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit;component/Resources/Indeterminate.png")) }; break;
+						case true: Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit.UI;component/Resources/Checked.png")) }; break;
+						case false: Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit.UI;component/Resources/Unchecked.png")) }; break;
+						case null: Icon = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/NeoEdit.UI;component/Resources/Indeterminate.png")) }; break;
 						default: throw new Exception("Invalid");
 					}
 				}

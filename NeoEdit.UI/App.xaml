@@ -74,7 +74,7 @@
 									<ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemShortcut"/>
 									<ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemExpand"/>
 								</Grid.ColumnDefinitions>
-								<Image Grid.Column="0" Name="Checkbox" Stretch="None" Source="pack://application:,,,/NeoEdit;component/Resources/Unchecked.png" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+								<Image Grid.Column="0" Name="Checkbox" Stretch="None" Source="pack://application:,,,/NeoEdit.UI;component/Resources/Unchecked.png" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="Collapsed"/>
 								<ContentPresenter Grid.Column="0" Name="Icon" Content="{TemplateBinding Icon}" ContentSource="Icon" Margin="0,0,8,0" VerticalAlignment="Center"/>
 								<ContentPresenter Grid.Column="1" RecognizesAccessKey="True" ContentSource="Header" Margin="4,2,6,2" VerticalAlignment="Center"/>
 								<TextBlock Grid.Column="2" Name="Gesture" Text="{TemplateBinding InputGestureText}" Margin="14,0,6,0" VerticalAlignment="Center"/>
@@ -106,7 +106,7 @@
 								<Setter TargetName="Border" Property="BorderBrush" Value="#808080"/>
 							</Trigger>
 							<Trigger Property="IsChecked" Value="true">
-								<Setter TargetName="Checkbox" Property="Source" Value="pack://application:,,,/NeoEdit;component/Resources/Checked.png"/>
+								<Setter TargetName="Checkbox" Property="Source" Value="pack://application:,,,/NeoEdit.UI;component/Resources/Checked.png"/>
 							</Trigger>
 						</ControlTemplate.Triggers>
 					</ControlTemplate>

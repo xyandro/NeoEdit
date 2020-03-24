@@ -996,5 +996,14 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Checked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Unchecked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Indeterminate.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
