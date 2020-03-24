@@ -109,12 +109,8 @@ namespace NeoEdit.Editor
 					if (MacroPlaying != null)
 						return false;
 
-					state.ActiveTabs = UnsortedActiveTabs;
-
 					if (state.Configuration == null)
 						state.Configuration = Configure();
-
-					state.ActiveTabs = null;
 				}
 
 				Stopwatch sw = null;

@@ -166,7 +166,7 @@ namespace NeoEdit.Editor
 				case Key.Delete:
 				case Key.Left:
 				case Key.Right:
-					return state.ActiveTabs.Any(tab => tab.Selections.Any(range => range.HasSelection));
+					return Tabs.UnsortedActiveTabs.Any(tab => tab.Selections.Any(range => range.HasSelection));
 				default: return null;
 			}
 		}

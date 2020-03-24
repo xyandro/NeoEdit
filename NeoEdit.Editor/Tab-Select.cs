@@ -362,7 +362,7 @@ namespace NeoEdit.Editor
 		object Configure_Select_Repeats_Tabs_MatchMismatch(bool caseSensitive)
 		{
 			List<string> result = null;
-			foreach (var tab in state.ActiveTabs)
+			foreach (var tab in Tabs.UnsortedActiveTabs)
 			{
 				var strs = tab.GetSelectionStrings();
 				var matches = result ?? strs;
@@ -391,7 +391,7 @@ namespace NeoEdit.Editor
 		{
 			Dictionary<string, int> result = null;
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
-			foreach (var tab in state.ActiveTabs)
+			foreach (var tab in Tabs.UnsortedActiveTabs)
 			{
 				var repeats = tab.Selections.AsParallel().GroupBy(tab.Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
 
@@ -441,7 +441,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Select_Selection_Center() => EnsureVisible(true, true);
 
-		object Configure_Select_Selection_ToggleAnchor() => state.ActiveTabs.Any(tab => tab.Selections.Any(range => range.Anchor > range.Cursor));
+		object Configure_Select_Selection_ToggleAnchor() => Tabs.UnsortedActiveTabs.Any(tab => tab.Selections.Any(range => range.Anchor > range.Cursor));
 
 		void Execute_Select_Selection_ToggleAnchor()
 		{

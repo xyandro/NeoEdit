@@ -10,7 +10,6 @@ namespace NeoEdit.Editor
 {
 	public class ExecuteState
 	{
-		public IEnumerable<Tab> ActiveTabs;
 		public ITabsWindow TabsWindow;
 
 		public NECommand Command;
