@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="CompressWords" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Target Name="CompressWords" Inputs="Words.txt" Outputs="Words.txt.gz" Returns="">
-    <Message Text="Compressing word list" Importance="High" />
-    <Exec Command="&quot;$(SolutionDir)Compress\bin\$(Configuration)\Compress.exe&quot; &quot;$(ProjectDir)Words.txt&quot; &quot;$(ProjectDir)Words.txt.gz&quot;" />
-  </Target>
   <PropertyGroup>
     <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -53,8 +49,6 @@
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Resources\Unicode.dat" />
-    <Resource Include="Words.txt" />
-    <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)Lib\$(BitDepth)\git2-e0902fb.dll">

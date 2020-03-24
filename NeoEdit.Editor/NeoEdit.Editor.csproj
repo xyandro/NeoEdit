@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="BuildBalanced;BuildColumns;BuildCommandLine;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildSQL;BuildTCSV;BuildXML" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="BuildBalanced;BuildColumns;BuildCommandLine;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildSQL;BuildTCSV;BuildXML;CompressWords" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs" Returns="">
     <Message Text="Building Balanced parser" Importance="High" />
@@ -40,6 +40,10 @@
   <Target Name="BuildXML" Inputs="Content\XML\Source\XMLLexer.g4;Content\XML\Source\XMLParser.g4" Outputs="Content\XML\Parser\XMLLexer.cs;Content\XML\Parser\XMLParser.cs;Content\XML\Parser\XMLParserBaseVisitor.cs;Content\XML\Parser\XMLParserVisitor.cs" Returns="">
     <Message Text="Building XML parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
+  </Target>
+  <Target Name="CompressWords" Inputs="Words.txt" Outputs="Words.txt.gz" Returns="">
+    <Message Text="Compressing word list" Importance="High" />
+    <Exec Command="&quot;$(SolutionDir)Compress\bin\$(Configuration)\Compress.exe&quot; &quot;$(ProjectDir)Words.txt&quot; &quot;$(ProjectDir)Words.txt.gz&quot;" />
   </Target>
   <PropertyGroup>
     <ProjectGuid>{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}</ProjectGuid>
@@ -83,7 +87,6 @@
     <Compile Include="..\NeoEdit.Common\Properties\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CommandLineParser.cs" />
     <Compile Include="CacheValue.cs" />
     <Compile Include="CommandLine\CommandLineParams.cs" />
     <Compile Include="CommandLine\CommandLineVisitor.cs" />
@@ -91,41 +94,54 @@
     <Compile Include="CommandLine\Parser\CommandLineParser.cs" />
     <Compile Include="CommandLine\Parser\CommandLineParserBaseVisitor.cs" />
     <Compile Include="CommandLine\Parser\CommandLineParserVisitor.cs" />
+    <None Include="CommandLine\Source\CommandLineLexer.g4" />
+    <None Include="CommandLine\Source\CommandLineParser.g4" />
+    <Compile Include="CommandLineParser.cs" />
     <Compile Include="Content\Balanced\BalancedVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedBaseVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedLexer.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedParser.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedVisitor.cs" />
+    <None Include="Content\Balanced\Source\Balanced.g4" />
     <Compile Include="Content\Columns\ColumnsVisitor.cs" />
     <Compile Include="Content\Columns\Parser\ColumnsBaseVisitor.cs" />
     <Compile Include="Content\Columns\Parser\ColumnsLexer.cs" />
     <Compile Include="Content\Columns\Parser\ColumnsParser.cs" />
     <Compile Include="Content\Columns\Parser\ColumnsVisitor.cs" />
+    <None Include="Content\Columns\Source\Columns.g4" />
     <Compile Include="Content\CSharp\CSharpVisitor.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpLexer.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpParser.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpParserBaseVisitor.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpParserVisitor.cs" />
+    <None Include="Content\CSharp\Source\CSharpLexer.g4" />
+    <None Include="Content\CSharp\Source\CSharpParser.g4" />
     <Compile Include="Content\ExactColumns\ExactColumnsVisitor.cs" />
     <Compile Include="Content\ExactColumns\Parser\ExactColumnsBaseVisitor.cs" />
     <Compile Include="Content\ExactColumns\Parser\ExactColumnsLexer.cs" />
     <Compile Include="Content\ExactColumns\Parser\ExactColumnsParser.cs" />
     <Compile Include="Content\ExactColumns\Parser\ExactColumnsVisitor.cs" />
+    <None Include="Content\ExactColumns\Source\ExactColumns.g4" />
     <Compile Include="Content\HTML\HTMLVisitor.cs" />
     <Compile Include="Content\HTML\Parser\HTMLLexer.cs" />
     <Compile Include="Content\HTML\Parser\HTMLParser.cs" />
     <Compile Include="Content\HTML\Parser\HTMLParserBaseVisitor.cs" />
     <Compile Include="Content\HTML\Parser\HTMLParserVisitor.cs" />
+    <None Include="Content\HTML\Source\HTMLLexer.g4" />
+    <None Include="Content\HTML\Source\HTMLParser.g4" />
     <Compile Include="Content\JSON\JSONVisitor.cs" />
     <Compile Include="Content\JSON\Parser\JSONBaseVisitor.cs" />
     <Compile Include="Content\JSON\Parser\JSONLexer.cs" />
     <Compile Include="Content\JSON\Parser\JSONParser.cs" />
     <Compile Include="Content\JSON\Parser\JSONVisitor.cs" />
+    <None Include="Content\JSON\Source\JSON.g4" />
     <Compile Include="Content\Parser.cs" />
     <Compile Include="Content\SQL\Parser\SQLLexer.cs" />
     <Compile Include="Content\SQL\Parser\SQLParser.cs" />
     <Compile Include="Content\SQL\Parser\SQLParserBaseVisitor.cs" />
     <Compile Include="Content\SQL\Parser\SQLParserVisitor.cs" />
+    <None Include="Content\SQL\Source\SQLLexer.g4" />
+    <None Include="Content\SQL\Source\SQLParser.g4" />
     <Compile Include="Content\SQL\SQLVisitor.cs" />
     <Compile Include="Content\TCSV\CSVVisitor.cs" />
     <Compile Include="Content\TCSV\Parser\CSVBaseVisitor.cs" />
@@ -136,11 +152,15 @@
     <Compile Include="Content\TCSV\Parser\TSVLexer.cs" />
     <Compile Include="Content\TCSV\Parser\TSVParser.cs" />
     <Compile Include="Content\TCSV\Parser\TSVVisitor.cs" />
+    <None Include="Content\TCSV\Source\CSV.g4" />
+    <None Include="Content\TCSV\Source\TSV.g4" />
     <Compile Include="Content\TCSV\TSVVisitor.cs" />
     <Compile Include="Content\XML\Parser\XMLLexer.cs" />
     <Compile Include="Content\XML\Parser\XMLParser.cs" />
     <Compile Include="Content\XML\Parser\XMLParserBaseVisitor.cs" />
     <Compile Include="Content\XML\Parser\XMLParserVisitor.cs" />
+    <None Include="Content\XML\Source\XMLLexer.g4" />
+    <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
     <Compile Include="FileSaver.cs" />
     <Compile Include="GIFWriter.cs" />
@@ -242,6 +262,7 @@
     </Compile>
     <Compile Include="Tabs.cs" />
     <Compile Include="UndoRedo.cs" />
+    <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Antlr4.Runtime">
@@ -302,24 +323,6 @@
       <Project>{3a49c899-545a-4849-b6d0-2686d1a32983}</Project>
       <Name>NeoEdit.WCF</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="CommandLine\Source\CommandLineLexer.g4" />
-    <None Include="CommandLine\Source\CommandLineParser.g4" />
-    <None Include="Content\Balanced\Source\Balanced.g4" />
-    <None Include="Content\Columns\Source\Columns.g4" />
-    <None Include="Content\CSharp\Source\CSharpLexer.g4" />
-    <None Include="Content\CSharp\Source\CSharpParser.g4" />
-    <None Include="Content\ExactColumns\Source\ExactColumns.g4" />
-    <None Include="Content\HTML\Source\HTMLLexer.g4" />
-    <None Include="Content\HTML\Source\HTMLParser.g4" />
-    <None Include="Content\JSON\Source\JSON.g4" />
-    <None Include="Content\SQL\Source\SQLLexer.g4" />
-    <None Include="Content\SQL\Source\SQLParser.g4" />
-    <None Include="Content\TCSV\Source\CSV.g4" />
-    <None Include="Content\TCSV\Source\TSV.g4" />
-    <None Include="Content\XML\Source\XMLLexer.g4" />
-    <None Include="Content\XML\Source\XMLParser.g4" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
