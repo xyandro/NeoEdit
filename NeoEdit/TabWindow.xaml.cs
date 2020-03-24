@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Common;
+using NeoEdit.Editor;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Highlighting;
 

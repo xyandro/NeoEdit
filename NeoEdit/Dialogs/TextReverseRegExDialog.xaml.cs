@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.Common.Models;
+using NeoEdit.Editor.RevRegEx;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.RevRegEx;
 
 namespace NeoEdit.Program.Dialogs
 {

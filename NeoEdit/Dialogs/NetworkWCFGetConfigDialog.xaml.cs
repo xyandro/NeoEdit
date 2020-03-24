@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using NeoEdit.Common;
 using NeoEdit.Common.Models;
 using NeoEdit.Program.Controls;
 

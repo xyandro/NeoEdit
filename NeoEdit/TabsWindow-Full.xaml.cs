@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using NeoEdit.Common;
+using NeoEdit.Editor;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program

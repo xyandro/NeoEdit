@@ -136,7 +136,7 @@ namespace NeoEdit.Program.Dialogs
 		{
 			IsExpression = AlignSelections = IsRegex = MatchCase = false;
 			IsBinary = true;
-			CodePages = new HashSet<Coder.CodePage>(CodePagesDialog.DefaultCodePages);
+			CodePages = new HashSet<Coder.CodePage>(Coder.DefaultCodePages);
 		}
 
 		public static FilesFindDialogResult Run(Window parent, NEVariables variables)

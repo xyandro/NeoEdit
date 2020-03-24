@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Tutorial

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
+using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
-using NeoEdit.Program;
+using NeoEdit.Editor;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs

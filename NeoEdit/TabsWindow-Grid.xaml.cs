@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Common;
+using NeoEdit.Editor;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program

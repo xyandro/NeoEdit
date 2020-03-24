@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using NeoEdit.Program;
+using NeoEdit.Common;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs

@@ -12,9 +12,9 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
+using NeoEdit.Editor;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Misc;
-using NeoEdit.Program.NEClipboards;
 
 namespace NeoEdit.Program
 {
@@ -329,5 +329,7 @@ namespace NeoEdit.Program
 			Show();
 			SetForegroundWindow(new WindowInteropHelper(this).Handle);
 		}
+
+		public void ShowExceptionMessage(Exception ex) => App.ShowExceptionMessage(ex);
 	}
 }

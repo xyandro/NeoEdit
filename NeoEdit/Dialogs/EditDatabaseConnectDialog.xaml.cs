@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Converters;

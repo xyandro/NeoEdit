@@ -101,7 +101,7 @@ namespace NeoEdit.Program
 		public TextUnicodeDialogResult RunTextUnicodeDialog() => TextUnicodeDialog.Run(this);
 		public TextWidthDialogResult RunTextWidthDialog(bool numeric, bool isSelect, NEVariables variables) => TextWidthDialog.Run(this, numeric, isSelect, variables);
 		public WindowCustomGridDialogResult RunWindowCustomGridDialog(int? columns, int? rows, int? maxColumns, int? maxRows) => WindowCustomGridDialog.Run(this, columns, rows, maxColumns, maxRows);
-		public void RunWindowFontSizeDialog(Tabs tabs) => WindowFontSizeDialog.Run(this);
+		public void RunWindowFontSizeDialog() => WindowFontSizeDialog.Run(this);
 		public NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog() => NetworkWCFGetConfigDialog.Run(this);
 		public object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action) => ProgressDialog.Run(this, text, action);
 		public HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null) => CodePagesDialog.Run(this, startCodePages);

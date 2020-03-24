@@ -49,9 +49,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DBConnectInfo.cs" />
+    <Compile Include="Enums\GetPathType.cs" />
+    <Compile Include="Enums\GotoType.cs" />
+    <Compile Include="Enums\JumpByType.cs" />
+    <Compile Include="Enums\MessageOptions.cs" />
     <Compile Include="Enums\ParserType.cs" />
+    <Compile Include="Enums\ReplaceType.cs" />
     <Compile Include="Enums\SortScope.cs" />
     <Compile Include="Enums\SortType.cs" />
+    <Compile Include="Enums\TimestampType.cs" />
+    <Compile Include="Enums\WordSkipType.cs" />
     <Compile Include="Expressions\ExpressionEvaluator.cs" />
     <Compile Include="Expressions\ExpressionUnit.cs" />
     <Compile Include="Expressions\ExpressionUnits.cs" />
@@ -71,8 +78,13 @@
     <None Include="Expressions\Source\ExpressionLexer.g4" />
     <None Include="Expressions\Source\ExpressionParser.g4" />
     <Compile Include="Expressions\VariableFinder.cs" />
+    <Compile Include="Font.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="IReadOnlyOrderedHashSet.cs" />
+    <Compile Include="IRunTasksDialog.cs" />
+    <Compile Include="ITabsWindow.cs" />
     <Compile Include="ItemSet.cs" />
+    <Compile Include="Models\AnswerResult.cs" />
     <Compile Include="Models\ContentAttributeDialogResult.cs" />
     <Compile Include="Models\ContentAttributesDialogResult.cs" />
     <Compile Include="Models\DatabaseConnectDialogResult.cs" />
@@ -136,6 +148,7 @@
     <Compile Include="Models\NumericRandomNumberDialogResult.cs" />
     <Compile Include="Models\NumericScaleDialogResult.cs" />
     <Compile Include="Models\NumericSeriesDialogResult.cs" />
+    <Compile Include="Models\OpenFileDialogResult.cs" />
     <Compile Include="Models\PositionGotoDialogResult.cs" />
     <Compile Include="Models\SelectByCountDialogResult.cs" />
     <Compile Include="Models\SelectLimitDialogResult.cs" />
@@ -157,6 +170,7 @@
     <Compile Include="Models\TextWidthDialogResult.cs" />
     <Compile Include="Models\WindowCustomGridDialogResult.cs" />
     <Compile Include="MoreLinq.cs" />
+    <Compile Include="OrderedHashSet.cs" />
     <Compile Include="Parsing\AntlrParserExtensions.cs" />
     <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
     <Compile Include="Parsing\ParserAttribute.cs" />
@@ -166,6 +180,7 @@
     <Compile Include="Parsing\ParserNode.cs" />
     <Compile Include="ProgressData.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="ProgressReport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -173,6 +188,8 @@
       <SubType>Code</SubType>
     </Compile>
     <None Include="Properties\GlobalAssemblyInfo.Template.cs" />
+    <Compile Include="Range.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using NeoEdit.Common;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor;
 using NeoEdit.Program.Dialogs;
 
 namespace NeoEdit.Program.Controls

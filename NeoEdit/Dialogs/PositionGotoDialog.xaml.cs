@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
 using NeoEdit.Program.Controls;

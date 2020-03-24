@@ -64,6 +64,7 @@ namespace NeoEdit.Common.Transform
 			UTF32BE = 12001,
 		}
 
+		public static IReadOnlyCollection<CodePage> DefaultCodePages { get; } = new HashSet<CodePage> { CodePage.UInt8, CodePage.UInt16LE, CodePage.UInt32LE, CodePage.UInt64LE, CodePage.Int8, CodePage.Int16LE, CodePage.Int32LE, CodePage.Int64LE, DefaultCodePage, CodePage.UTF8, CodePage.UTF16LE };
 		public static CodePage DefaultCodePage { get; } = (CodePage)Encoding.Default.CodePage;
 
 		public static int BytesRequired(this CodePage codePage)
@@ -154,7 +155,7 @@ namespace NeoEdit.Common.Transform
 				shortDescription = description = _description;
 
 				if (!string.IsNullOrWhiteSpace(_preamble))
-					preamble = Coder.StringToBytes(_preamble, CodePage.Hex);
+					preamble = StringToBytes(_preamble, CodePage.Hex);
 
 				if (codePage >= 0)
 				{

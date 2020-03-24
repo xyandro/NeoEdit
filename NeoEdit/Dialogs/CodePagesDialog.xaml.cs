@@ -12,8 +12,6 @@ namespace NeoEdit.Program.Dialogs
 {
 	partial class CodePagesDialog
 	{
-		public static IReadOnlyCollection<Coder.CodePage> DefaultCodePages { get; } = new HashSet<Coder.CodePage> { Coder.CodePage.UInt8, Coder.CodePage.UInt16LE, Coder.CodePage.UInt32LE, Coder.CodePage.UInt64LE, Coder.CodePage.Int8, Coder.CodePage.Int16LE, Coder.CodePage.Int32LE, Coder.CodePage.Int64LE, Coder.DefaultCodePage, Coder.CodePage.UTF8, Coder.CodePage.UTF16LE };
-
 		readonly HashSet<string> codePages = new HashSet<string>();
 		readonly List<FrameworkElement> checkBoxes = new List<FrameworkElement>();
 		CodePagesDialog(HashSet<Coder.CodePage> startCodePages)
@@ -108,7 +106,7 @@ namespace NeoEdit.Program.Dialogs
 			UpdateCheckBoxes();
 		}
 
-		void Reset(object sender = null, RoutedEventArgs e = null) => SetCodePages(DefaultCodePages);
+		void Reset(object sender = null, RoutedEventArgs e = null) => SetCodePages(Coder.DefaultCodePages);
 
 		HashSet<Coder.CodePage> result;
 		void OkClick(object sender, RoutedEventArgs e)

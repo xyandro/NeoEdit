@@ -1,0 +1,336 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" InitialTargets="BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs" Returns="">
+    <Message Text="Building Balanced parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.Balanced.Parser -o &quot;$(ProjectDir)Content\Balanced\Parser&quot; &quot;$(ProjectDir)Content\Balanced\Source\Balanced.g4&quot;" />
+  </Target>
+  <Target Name="BuildColumns" Inputs="Content\Columns\Source\Columns.g4" Outputs="Content\Columns\Parser\ColumnsBaseVisitor.cs;Content\Columns\Parser\ColumnsLexer.cs;Content\Columns\Parser\ColumnsParser.cs;Content\Columns\Parser\ColumnsVisitor.cs" Returns="">
+    <Message Text="Building Columns parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.Columns.Parser -o &quot;$(ProjectDir)Content\Columns\Parser&quot; &quot;$(ProjectDir)Content\Columns\Source\Columns.g4&quot;" />
+  </Target>
+  <Target Name="BuildCSharp" Inputs="Content\CSharp\Source\CSharpLexer.g4;Content\CSharp\Source\CSharpParser.g4" Outputs="Content\CSharp\Parser\CSharpParserBaseVisitor.cs;Content\CSharp\Parser\CSharpParserVisitor.cs;Content\CSharp\Parser\CSharpLexer.cs;Content\CSharp\Parser\CSharpParser.cs" Returns="">
+    <Message Text="Building CSharp parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.CSharp.Parser -o &quot;$(ProjectDir)Content\CSharp\Parser&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpLexer.g4&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpParser.g4&quot;" />
+  </Target>
+  <Target Name="BuildExactColumns" Inputs="Content\ExactColumns\Source\ExactColumns.g4" Outputs="Content\ExactColumns\Parser\ExactColumnsBaseVisitor.cs;Content\ExactColumns\Parser\ExactColumnsLexer.cs;Content\ExactColumns\Parser\ExactColumnsParser.cs;Content\ExactColumns\Parser\ExactColumnsVisitor.cs" Returns="">
+    <Message Text="Building ExactColumns parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.ExactColumns.Parser -o &quot;$(ProjectDir)Content\ExactColumns\Parser&quot; &quot;$(ProjectDir)Content\ExactColumns\Source\ExactColumns.g4&quot;" />
+  </Target>
+  <Target Name="BuildHTML" Inputs="Content\HTML\Source\HTMLLexer.g4;Content\HTML\Source\HTMLParser.g4" Outputs="Content\HTML\Parser\HTMLLexer.cs;Content\HTML\Parser\HTMLParser.cs;Content\HTML\Parser\HTMLParserBaseVisitor.cs;Content\HTML\Parser\HTMLParserVisitor.cs" Returns="">
+    <Message Text="Building HTML parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.HTML.Parser -o &quot;$(ProjectDir)Content\HTML\Parser&quot; &quot;$(ProjectDir)Content\HTML\Source\HTMLLexer.g4&quot; &quot;$(ProjectDir)Content\HTML\Source\HTMLParser.g4&quot;" />
+  </Target>
+  <Target Name="BuildJSON" Inputs="Content\JSON\Source\JSON.g4" Outputs="Content\JSON\Parser\JSONBaseVisitor.cs;Content\JSON\Parser\JSONLexer.cs;Content\JSON\Parser\JSONParser.cs;Content\JSON\Parser\JSONVisitor.cs" Returns="">
+    <Message Text="Building JSON parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.JSON.Parser -o &quot;$(ProjectDir)Content\JSON\Parser&quot; &quot;$(ProjectDir)Content\JSON\Source\JSON.g4&quot;" />
+  </Target>
+  <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegExLexer.g4;RevRegEx\Source\RevRegExParser.g4" Outputs="RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExParserBaseVisitor.cs;RevRegEx\Parser\RevRegExParserVisitor.cs" Returns="">
+    <Message Text="Building RevRegEx parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
+  </Target>
+  <Target Name="BuildSQL" Inputs="Content\SQL\Source\SQLLexer.g4;Content\SQL\Source\SQLParser.g4" Outputs="Content\SQL\Parser\SQLLexer.cs;Content\SQL\Parser\SQLParser.cs;Content\SQL\Parser\SQLParserBaseVisitor.cs;Content\SQL\Parser\SQLParserVisitor.cs" Returns="">
+    <Message Text="Building SQL parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.SQL.Parser -o &quot;$(ProjectDir)Content\SQL\Parser&quot; &quot;$(ProjectDir)Content\SQL\Source\SQLLexer.g4&quot; &quot;$(ProjectDir)Content\SQL\Source\SQLParser.g4&quot;" />
+  </Target>
+  <Target Name="BuildTCSV" Inputs="Content\TCSV\Source\CSV.g4;Content\TCSV\Source\TSV.g4" Outputs="Content\TCSV\Parser\CSVBaseVisitor.cs;Content\TCSV\Parser\CSVLexer.cs;Content\TCSV\Parser\CSVParser.cs;Content\TCSV\Parser\CSVVisitor.cs;Content\TCSV\Parser\TSVBaseVisitor.cs;Content\TCSV\Parser\TSVLexer.cs;Content\TCSV\Parser\TSVParser.cs;Content\TCSV\Parser\TSVVisitor.cs" Returns="">
+    <Message Text="Building TCSV parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.TCSV.Parser -o &quot;$(ProjectDir)Content\TCSV\Parser&quot; &quot;$(ProjectDir)Content\TCSV\Source\CSV.g4&quot; &quot;$(ProjectDir)Content\TCSV\Source\TSV.g4&quot;" />
+  </Target>
+  <Target Name="BuildXML" Inputs="Content\XML\Source\XMLLexer.g4;Content\XML\Source\XMLParser.g4" Outputs="Content\XML\Parser\XMLLexer.cs;Content\XML\Parser\XMLParser.cs;Content\XML\Parser\XMLParserBaseVisitor.cs;Content\XML\Parser\XMLParserVisitor.cs" Returns="">
+    <Message Text="Building XML parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
+  </Target>
+  <PropertyGroup>
+    <ProjectGuid>{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>NeoEdit.Editor</RootNamespace>
+    <AssemblyName>NeoEdit.Editor</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <ErrorReport>prompt</ErrorReport>
+    <BitDepth Condition="'$(Platform)' == 'x86'">32</BitDepth>
+    <BitDepth Condition="'$(Platform)' == 'x64'">64</BitDepth>
+    <OutputPath>$(SolutionDir)bin\$(Configuration).$(BitDepth)\</OutputPath>
+    <PlatformTarget>$(Platform)</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CopyRetryCount>0</CopyRetryCount>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <NoWarn>3021</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\NeoEdit.Common\Properties\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="CacheValue.cs" />
+    <Compile Include="ClipboardChangeNotifier.cs" />
+    <Compile Include="Content\Balanced\BalancedVisitor.cs" />
+    <Compile Include="Content\Balanced\Parser\BalancedBaseVisitor.cs" />
+    <Compile Include="Content\Balanced\Parser\BalancedLexer.cs" />
+    <Compile Include="Content\Balanced\Parser\BalancedParser.cs" />
+    <Compile Include="Content\Balanced\Parser\BalancedVisitor.cs" />
+    <Compile Include="Content\Columns\ColumnsVisitor.cs" />
+    <Compile Include="Content\Columns\Parser\ColumnsBaseVisitor.cs" />
+    <Compile Include="Content\Columns\Parser\ColumnsLexer.cs" />
+    <Compile Include="Content\Columns\Parser\ColumnsParser.cs" />
+    <Compile Include="Content\Columns\Parser\ColumnsVisitor.cs" />
+    <Compile Include="Content\CSharp\CSharpVisitor.cs" />
+    <Compile Include="Content\CSharp\Parser\CSharpLexer.cs" />
+    <Compile Include="Content\CSharp\Parser\CSharpParser.cs" />
+    <Compile Include="Content\CSharp\Parser\CSharpParserBaseVisitor.cs" />
+    <Compile Include="Content\CSharp\Parser\CSharpParserVisitor.cs" />
+    <Compile Include="Content\ExactColumns\ExactColumnsVisitor.cs" />
+    <Compile Include="Content\ExactColumns\Parser\ExactColumnsBaseVisitor.cs" />
+    <Compile Include="Content\ExactColumns\Parser\ExactColumnsLexer.cs" />
+    <Compile Include="Content\ExactColumns\Parser\ExactColumnsParser.cs" />
+    <Compile Include="Content\ExactColumns\Parser\ExactColumnsVisitor.cs" />
+    <Compile Include="Content\HTML\HTMLVisitor.cs" />
+    <Compile Include="Content\HTML\Parser\HTMLLexer.cs" />
+    <Compile Include="Content\HTML\Parser\HTMLParser.cs" />
+    <Compile Include="Content\HTML\Parser\HTMLParserBaseVisitor.cs" />
+    <Compile Include="Content\HTML\Parser\HTMLParserVisitor.cs" />
+    <Compile Include="Content\JSON\JSONVisitor.cs" />
+    <Compile Include="Content\JSON\Parser\JSONBaseVisitor.cs" />
+    <Compile Include="Content\JSON\Parser\JSONLexer.cs" />
+    <Compile Include="Content\JSON\Parser\JSONParser.cs" />
+    <Compile Include="Content\JSON\Parser\JSONVisitor.cs" />
+    <Compile Include="Content\Parser.cs" />
+    <Compile Include="Content\SQL\Parser\SQLLexer.cs" />
+    <Compile Include="Content\SQL\Parser\SQLParser.cs" />
+    <Compile Include="Content\SQL\Parser\SQLParserBaseVisitor.cs" />
+    <Compile Include="Content\SQL\Parser\SQLParserVisitor.cs" />
+    <Compile Include="Content\SQL\SQLVisitor.cs" />
+    <Compile Include="Content\TCSV\CSVVisitor.cs" />
+    <Compile Include="Content\TCSV\Parser\CSVBaseVisitor.cs" />
+    <Compile Include="Content\TCSV\Parser\CSVLexer.cs" />
+    <Compile Include="Content\TCSV\Parser\CSVParser.cs" />
+    <Compile Include="Content\TCSV\Parser\CSVVisitor.cs" />
+    <Compile Include="Content\TCSV\Parser\TSVBaseVisitor.cs" />
+    <Compile Include="Content\TCSV\Parser\TSVLexer.cs" />
+    <Compile Include="Content\TCSV\Parser\TSVParser.cs" />
+    <Compile Include="Content\TCSV\Parser\TSVVisitor.cs" />
+    <Compile Include="Content\TCSV\TSVVisitor.cs" />
+    <Compile Include="Content\XML\Parser\XMLLexer.cs" />
+    <Compile Include="Content\XML\Parser\XMLParser.cs" />
+    <Compile Include="Content\XML\Parser\XMLParserBaseVisitor.cs" />
+    <Compile Include="Content\XML\Parser\XMLParserVisitor.cs" />
+    <Compile Include="Content\XML\XMLVisitor.cs" />
+    <Compile Include="ExecuteState.cs" />
+    <Compile Include="FileSaver.cs" />
+    <Compile Include="GIFWriter.cs" />
+    <Compile Include="KeyGestureAttribute.cs" />
+    <Compile Include="KeysAndValues.cs" />
+    <Compile Include="LCS.cs" />
+    <Compile Include="LoremGenerator.cs" />
+    <Compile Include="Macro.cs" />
+    <Compile Include="MacroAction.cs" />
+    <Compile Include="NEClipboard.cs" />
+    <Compile Include="NECommand.cs" />
+    <Compile Include="NEText.cs" />
+    <Compile Include="NETextView.cs" />
+    <Compile Include="NoMacroAttribute.cs" />
+    <Compile Include="PortScanner.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParserVisitor.cs" />
+    <Compile Include="RevRegEx\RevRegExData.cs" />
+    <Compile Include="RevRegEx\RevRegExDataChar.cs" />
+    <Compile Include="RevRegEx\RevRegExDataJoin.cs" />
+    <Compile Include="RevRegEx\RevRegExDataList.cs" />
+    <Compile Include="RevRegEx\RevRegExDataRepeat.cs" />
+    <Compile Include="RevRegEx\RevRegExVisitor.cs" />
+    <Compile Include="Searchers\BinarySearcher.cs" />
+    <Compile Include="Searchers\ISearcher.cs" />
+    <Compile Include="Searchers\RegexesSearcher.cs" />
+    <Compile Include="Searchers\StringSearcher.cs" />
+    <Compile Include="Searchers\StringsSearcher.cs" />
+    <Compile Include="ShutdownData.cs" />
+    <Compile Include="Tab-Content.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Database.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-DateTime.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Diff.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Edit.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-EditModifyRegions.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-File.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Files.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Image.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Internal.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Keys.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Network.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Numeric.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Position.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Select.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Table.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Text.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Variables.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Window.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab.cs" />
+    <Compile Include="Tabs-Diff.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-Edit.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-File.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-Help.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-Internal.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-Macro.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-Variables.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs-Window.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tabs.cs" />
+    <Compile Include="UndoRedo.cs" />
+    <Compile Include="YouTubeDL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Antlr4.Runtime">
+      <HintPath>$(SolutionDir)Lib\ANTLR\Antlr4.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Classless.Hasher">
+      <HintPath>$(SolutionDir)Lib\Classless.Hasher.dll</HintPath>
+    </Reference>
+    <Reference Include="LibGit2Sharp">
+      <HintPath>$(SolutionDir)Lib\LibGit2Sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data">
+      <HintPath>$(SolutionDir)Lib\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(SolutionDir)Lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SharpSvn">
+      <HintPath>$(SolutionDir)Lib\$(BitDepth)\SharpSvn.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>$(SolutionDir)Lib\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe">
+      <HintPath>$(SolutionDir)Lib\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj">
+      <Project>{becbf5d9-9770-4caa-ac34-97335094d335}</Project>
+      <Name>NeoEdit.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WCF\WCF.csproj">
+      <Project>{3a49c899-545a-4849-b6d0-2686d1a32983}</Project>
+      <Name>WCF</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\Balanced\Source\Balanced.g4" />
+    <None Include="Content\Columns\Source\Columns.g4" />
+    <None Include="Content\CSharp\Source\CSharpLexer.g4" />
+    <None Include="Content\CSharp\Source\CSharpParser.g4" />
+    <None Include="Content\ExactColumns\Source\ExactColumns.g4" />
+    <None Include="Content\HTML\Source\HTMLLexer.g4" />
+    <None Include="Content\HTML\Source\HTMLParser.g4" />
+    <None Include="Content\JSON\Source\JSON.g4" />
+    <None Include="Content\SQL\Source\SQLLexer.g4" />
+    <None Include="Content\SQL\Source\SQLParser.g4" />
+    <None Include="Content\TCSV\Source\CSV.g4" />
+    <None Include="Content\TCSV\Source\TSV.g4" />
+    <None Include="Content\XML\Source\XMLLexer.g4" />
+    <None Include="Content\XML\Source\XMLParser.g4" />
+    <None Include="RevRegEx\Source\RevRegExLexer.g4" />
+    <None Include="RevRegEx\Source\RevRegExParser.g4" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

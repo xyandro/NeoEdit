@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using NeoEdit.Common.Enums;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs

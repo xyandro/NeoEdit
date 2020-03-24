@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
+using NeoEdit.Editor;
 
 namespace NeoEdit.Program.Controls
 {

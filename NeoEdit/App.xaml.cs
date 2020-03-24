@@ -5,8 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using NeoEdit.Editor;
 using NeoEdit.Program.CommandLine;
-using NeoEdit.Program.Controls;
 using NeoEdit.Program.Dialogs;
 
 namespace NeoEdit.Program
@@ -15,6 +15,7 @@ namespace NeoEdit.Program
 	{
 		protected override void OnStartup(StartupEventArgs e)
 		{
+			Tabs.CreateITabsWindow = tabs => new TabsWindow(tabs);
 			EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, e2) => (s as TextBox).SelectAll()));
 			base.OnStartup(e);
 			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
