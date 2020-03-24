@@ -20,7 +20,7 @@ namespace NeoEdit.Program
 			base.OnStartup(e);
 			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
-			CreateTabsFromArgs(string.Join(" ", e.Args.Select(str => $"\"{str}\"")), true);
+			CommandLineParser.CreateTabs(string.Join(" ", e.Args.Select(str => $"\"{str}\"")));
 		}
 
 		public static void ShowExceptionMessage(Exception ex)
@@ -51,52 +51,6 @@ namespace NeoEdit.Program
 				Debugger.Break();
 			}
 #endif
-		}
-
-		public Tabs CreateTabsFromArgs(string commandLine, bool shutdownIfNoWindow)
-		{
-			try
-			{
-				var clParams = CommandLineVisitor.GetCommandLineParams(commandLine);
-				if (clParams.Background)
-					return null;
-
-				if (!clParams.Files.Any())
-					return new Tabs(true);
-
-				var shutdownData = string.IsNullOrWhiteSpace(clParams.Wait) ? null : new ShutdownData(clParams.Wait, clParams.Files.Count);
-				var tabs = default(Tabs);
-				if (!clParams.Diff)
-					tabs = Tabs.Instances.OrderByDescending(x => x.LastActivated).FirstOrDefault();
-				if (tabs == null)
-					tabs = new Tabs();
-				foreach (var file in clParams.Files)
-				{
-					if ((file.Existing) && (Tabs.Instances.OrderByDescending(x => x.LastActivated).Select(x => x.GotoTab(file.FileName, file.Line, file.Column, file.Index)).FirstOrDefault(x => x)))
-						continue;
-
-					tabs.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });
-				}
-
-				//if (clParams.Diff)
-				//{
-				//	for (var ctr = 0; ctr + 1 < tabsWindow.Tabs.Count; ctr += 2)
-				//	{
-				//		tabsWindow.Tabs[ctr].DiffTarget = tabsWindow.Tabs[ctr + 1];
-				//		if (tabsWindow.Tabs[ctr].ContentType == ParserType.None)
-				//			tabsWindow.Tabs[ctr].ContentType = tabsWindow.Tabs[ctr + 1].ContentType;
-				//		if (tabsWindow.Tabs[ctr + 1].ContentType == ParserType.None)
-				//			tabsWindow.Tabs[ctr + 1].ContentType = tabsWindow.Tabs[ctr].ContentType;
-				//	}
-				//	tabsWindow.SetLayout(maxColumns: 2);
-				//}
-
-				return tabs;
-			}
-			catch (Exception ex) { ShowExceptionMessage(ex); }
-			if ((shutdownIfNoWindow) && (Current.Windows.Count == 0))
-				Current.Shutdown();
-			return null;
 		}
 
 		public App()

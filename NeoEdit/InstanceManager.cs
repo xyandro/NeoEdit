@@ -6,8 +6,8 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Windows.Interop;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor;
 
 namespace NeoEdit.Program
 {
@@ -98,12 +98,7 @@ namespace NeoEdit.Program
 				pipe.Read(buf, 0, buf.Length);
 				var commandLine = Coder.BytesToString(buf, Coder.CodePage.UTF8);
 
-				app.Dispatcher.Invoke(() =>
-				{
-					var tabs = app.CreateTabsFromArgs(commandLine, false);
-					if (tabs != null)
-						tabs.SetForeground();
-				});
+				app.Dispatcher.Invoke(() => CommandLineParser.CreateTabs(commandLine));
 
 				SetupPipeWait(app);
 			}, null);

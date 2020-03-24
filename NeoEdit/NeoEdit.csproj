@@ -1,13 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="BuildChangeLog;BuildCommandLine;CompressWords;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="BuildChangeLog;CompressWords;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Target Name="BuildChangeLog" Inputs="NeoEdit.csproj" Outputs="Resources\ChangeLog.txt" Returns="">
     <Message Text="Building ChangeLog" Importance="High" />
     <Exec Command="ChangeLog.bat &quot;Resources\ChangeLog.txt&quot;" />
-  </Target>
-  <Target Name="BuildCommandLine" Inputs="CommandLine\Source\CommandLineLexer.g4;CommandLine\Source\CommandLineParser.g4" Outputs="CommandLine\Parser\CommandLineLexer.cs;CommandLine\Parser\CommandLineParser.cs;CommandLine\Parser\CommandLineParserBaseVisitor.cs;CommandLine\Parser\CommandLineParserVisitor.cs" Returns="">
-    <Message Text="Building CommandLine parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Program.CommandLine.Parser -o &quot;$(ProjectDir)CommandLine\Parser&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineLexer.g4&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineParser.g4&quot;" />
   </Target>
   <Target Name="CompressWords" Inputs="Words.txt" Outputs="Words.txt.gz" Returns="">
     <Message Text="Compressing word list" Importance="High" />
@@ -72,14 +68,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CommandLine\CommandLineParams.cs" />
-    <Compile Include="CommandLine\CommandLineVisitor.cs" />
-    <Compile Include="CommandLine\Parser\CommandLineLexer.cs" />
-    <Compile Include="CommandLine\Parser\CommandLineParser.cs" />
-    <Compile Include="CommandLine\Parser\CommandLineParserBaseVisitor.cs" />
-    <Compile Include="CommandLine\Parser\CommandLineParserVisitor.cs" />
-    <None Include="CommandLine\Source\CommandLineLexer.g4" />
-    <None Include="CommandLine\Source\CommandLineParser.g4" />
     <Page Include="Controls\AutoCompleteTextBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
