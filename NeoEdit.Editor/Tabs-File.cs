@@ -124,7 +124,7 @@ namespace NeoEdit.Editor
 				RemoveTab(tab);
 			}
 			Instances.Remove(this);
-			TabsWindow.CloseWindow();
+			state.TabsWindow.CloseWindow();
 
 			if (!Instances.Any())
 			{

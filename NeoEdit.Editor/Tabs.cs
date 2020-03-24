@@ -16,8 +16,6 @@ namespace NeoEdit.Editor
 		public static Func<Tabs, ITabsWindow> CreateITabsWindow { get; set; }
 		public static List<Tabs> Instances { get; } = new List<Tabs>();
 
-		public ITabsWindow TabsWindow { get; }
-
 		public int TabColumns { get; private set; }
 		public int TabRows { get; private set; }
 
@@ -30,12 +28,14 @@ namespace NeoEdit.Editor
 		{
 			Instances.Add(this);
 
-			TabsWindow = CreateITabsWindow(this);
 			oldAllTabs = newAllTabs = new OrderedHashSet<Tab>();
 			oldActiveTabs = newActiveTabs = new OrderedHashSet<Tab>();
 
+			BeginTransaction(new ExecuteState(NECommand.None));
+			state.TabsWindow = CreateITabsWindow(this);
 			if (addEmpty)
-				HandleCommand(new ExecuteState(NECommand.File_New_New));
+				Execute_File_New_New(false);
+			Commit();
 		}
 
 		public IReadOnlyDictionary<Tab, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
@@ -78,8 +78,6 @@ namespace NeoEdit.Editor
 
 		public bool HandleCommand(ExecuteState state, bool configure = true)
 		{
-			state.TabsWindow = TabsWindow;
-
 			if ((MacroPlaying != null) && (configure))
 			{
 				// User is trying to do something in the middle of a macro
@@ -136,7 +134,7 @@ namespace NeoEdit.Editor
 				commit = true;
 			}
 			catch (OperationCanceledException) { }
-			catch (Exception ex) { TabsWindow.ShowExceptionMessage(ex); }
+			catch (Exception ex) { state.TabsWindow.ShowExceptionMessage(ex); }
 			finally
 			{
 				if (commit)
@@ -147,7 +145,7 @@ namespace NeoEdit.Editor
 				else
 					Rollback();
 
-				TabsWindow.QueueDraw();
+				state.TabsWindow.QueueDraw();
 			}
 
 			return commit;
@@ -412,7 +410,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		public void QueueActivateTabs() => TabsWindow.QueueActivateTabs();
+		public void QueueActivateTabs() => state.TabsWindow.QueueActivateTabs();
 
 		public void ShowTab(Tab tab, Action action) => ShowTab(tab, () => { action(); return 0; });
 
@@ -423,7 +421,7 @@ namespace NeoEdit.Editor
 			ClearAllActive();
 			SetActive(tab);
 			Focused = tab;
-			TabsWindow.QueueDraw();
+			state.TabsWindow.QueueDraw();
 
 			var result = action();
 
@@ -441,6 +439,6 @@ namespace NeoEdit.Editor
 			TabRows = rows;
 		}
 
-		public void SetForeground() => TabsWindow.SetForeground();
+		public void SetForeground() => state.TabsWindow.SetForeground();
 	}
 }

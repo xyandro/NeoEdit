@@ -256,7 +256,7 @@ namespace NeoEdit.Editor
 				if (newRunTasksDialog == null)
 					lock (this)
 						if (newRunTasksDialog == null)
-							newRunTasksDialog = TabsWindow.CreateIRunTasksDialog();
+							newRunTasksDialog = state.TabsWindow.CreateIRunTasksDialog();
 				return newRunTasksDialog;
 			}
 		}

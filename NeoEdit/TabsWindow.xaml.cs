@@ -52,6 +52,7 @@ namespace NeoEdit.Program
 
 		public bool HandleCommand(ExecuteState state, bool configure = true)
 		{
+			state.TabsWindow = this;
 			if (configure)
 				state.Modifiers = Keyboard.Modifiers;
 			return Tabs.HandleCommand(state, configure);
@@ -209,7 +210,7 @@ namespace NeoEdit.Program
 		void SetTabWindowCount(int desiredCount)
 		{
 			while (tabWindows.Count < desiredCount)
-				tabWindows.Add(new TabWindow());
+				tabWindows.Add(new TabWindow(this));
 			tabWindows.RemoveRange(desiredCount, tabWindows.Count - desiredCount);
 		}
 

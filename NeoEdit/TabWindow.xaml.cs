@@ -15,6 +15,8 @@ namespace NeoEdit.Program
 {
 	partial class TabWindow
 	{
+		public TabsWindow TabsWindow { get; }
+
 		const double Spacing = 2;
 		static double LineHeight => Font.FontSize + Spacing;
 
@@ -54,15 +56,16 @@ namespace NeoEdit.Program
 			lightlightRowPen.Freeze();
 		}
 
-		internal TabWindow()
+		internal TabWindow(TabsWindow tabsWindow)
 		{
+			TabsWindow = tabsWindow;
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
 			InitializeComponent();
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
 			//TODO Drop += OnDrop;
 		}
 
-		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => Tab?.Tabs.HandleCommand(new ExecuteState(NECommand.Internal_Scroll) { Configuration = (Tab, (int)xScroll.Value, (int)yScroll.Value) });
+		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Scroll) { Configuration = (Tab, (int)xScroll.Value, (int)yScroll.Value) });
 
 		public void DrawAll()
 		{
@@ -423,7 +426,7 @@ namespace NeoEdit.Program
 			canvas.CaptureMouse();
 			var line = (int)(position.Y / LineHeight + yScroll.Value);
 			var column = (int)(position.X / Font.CharWidth + xScroll.Value);
-			Tab?.Tabs.HandleCommand(new ExecuteState(NECommand.Internal_Mouse) { Configuration = (Tab, line, column, mouseClickCount, selecting) });
+			TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Mouse) { Configuration = (Tab, line, column, mouseClickCount, selecting) });
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
