@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildRevRegEx;BuildSQL;BuildTCSV;BuildXML" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildSQL;BuildTCSV;BuildXML" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs" Returns="">
     <Message Text="Building Balanced parser" Importance="High" />
@@ -24,10 +24,6 @@
   <Target Name="BuildJSON" Inputs="Content\JSON\Source\JSON.g4" Outputs="Content\JSON\Parser\JSONBaseVisitor.cs;Content\JSON\Parser\JSONLexer.cs;Content\JSON\Parser\JSONParser.cs;Content\JSON\Parser\JSONVisitor.cs" Returns="">
     <Message Text="Building JSON parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.JSON.Parser -o &quot;$(ProjectDir)Content\JSON\Parser&quot; &quot;$(ProjectDir)Content\JSON\Source\JSON.g4&quot;" />
-  </Target>
-  <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegExLexer.g4;RevRegEx\Source\RevRegExParser.g4" Outputs="RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExParserBaseVisitor.cs;RevRegEx\Parser\RevRegExParserVisitor.cs" Returns="">
-    <Message Text="Building RevRegEx parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
   </Target>
   <Target Name="BuildSQL" Inputs="Content\SQL\Source\SQLLexer.g4;Content\SQL\Source\SQLParser.g4" Outputs="Content\SQL\Parser\SQLLexer.cs;Content\SQL\Parser\SQLParser.cs;Content\SQL\Parser\SQLParserBaseVisitor.cs;Content\SQL\Parser\SQLParserVisitor.cs" Returns="">
     <Message Text="Building SQL parser" Importance="High" />
@@ -152,16 +148,6 @@
     <Compile Include="NoMacroAttribute.cs" />
     <Compile Include="PortScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExParserVisitor.cs" />
-    <Compile Include="RevRegEx\RevRegExData.cs" />
-    <Compile Include="RevRegEx\RevRegExDataChar.cs" />
-    <Compile Include="RevRegEx\RevRegExDataJoin.cs" />
-    <Compile Include="RevRegEx\RevRegExDataList.cs" />
-    <Compile Include="RevRegEx\RevRegExDataRepeat.cs" />
-    <Compile Include="RevRegEx\RevRegExVisitor.cs" />
     <Compile Include="Searchers\BinarySearcher.cs" />
     <Compile Include="Searchers\ISearcher.cs" />
     <Compile Include="Searchers\RegexesSearcher.cs" />
@@ -252,7 +238,6 @@
     </Compile>
     <Compile Include="Tabs.cs" />
     <Compile Include="UndoRedo.cs" />
-    <Compile Include="YouTubeDL.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Antlr4.Runtime">
@@ -329,8 +314,6 @@
     <None Include="Content\TCSV\Source\TSV.g4" />
     <None Include="Content\XML\Source\XMLLexer.g4" />
     <None Include="Content\XML\Source\XMLParser.g4" />
-    <None Include="RevRegEx\Source\RevRegExLexer.g4" />
-    <None Include="RevRegEx\Source\RevRegExParser.g4" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

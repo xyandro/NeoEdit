@@ -7,10 +7,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NeoEdit.Common;
 using Newtonsoft.Json.Linq;
 
-namespace NeoEdit.Editor
+namespace NeoEdit.Common
 {
 	public static class YouTubeDL
 	{

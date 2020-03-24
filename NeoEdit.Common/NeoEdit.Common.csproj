@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="BuildExpression;BuildGlobalAssemblyInfo" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="BuildExpression;BuildGlobalAssemblyInfo;BuildRevRegEx" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Target Name="BuildExpression" Inputs="Expressions\Source\ExpressionLexer.g4;Expressions\Source\ExpressionParser.g4" Outputs="Expressions\Parser\ExpressionLexer.cs;Expressions\Parser\ExpressionParser.cs;Expressions\Parser\ExpressionParserBaseVisitor.cs;Expressions\Parser\ExpressionParserVisitor.cs" Returns="">
     <Message Text="Building expression parser" Importance="High" />
@@ -8,6 +8,10 @@
   <Target Name="BuildGlobalAssemblyInfo" Inputs="Properties\GlobalAssemblyInfo.Template.cs" Outputs="Properties\GlobalAssemblyInfo.cs" Returns="">
     <Message Text="Building GlobalAssemblyInfo" Importance="High" />
     <Exec Command="GitInfo.bat Properties\GlobalAssemblyInfo.Template.cs Properties\GlobalAssemblyInfo.cs" />
+  </Target>
+  <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegExLexer.g4;RevRegEx\Source\RevRegExParser.g4" Outputs="RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExParserBaseVisitor.cs;RevRegEx\Parser\RevRegExParserVisitor.cs" Returns="">
+    <Message Text="Building RevRegEx parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.5.3-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Common.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
   </Target>
   <PropertyGroup>
     <ProjectGuid>{BECBF5D9-9770-4CAA-AC34-97335094D335}</ProjectGuid>
@@ -75,6 +79,17 @@
     <Compile Include="Expressions\Parser\ExpressionParser.cs" />
     <Compile Include="Expressions\Parser\ExpressionParserBaseVisitor.cs" />
     <Compile Include="Expressions\Parser\ExpressionParserVisitor.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParserVisitor.cs" />
+    <Compile Include="RevRegEx\RevRegExData.cs" />
+    <Compile Include="RevRegEx\RevRegExDataChar.cs" />
+    <Compile Include="RevRegEx\RevRegExDataJoin.cs" />
+    <Compile Include="RevRegEx\RevRegExDataList.cs" />
+    <Compile Include="RevRegEx\RevRegExDataRepeat.cs" />
+    <Compile Include="RevRegEx\RevRegExVisitor.cs" />
+    <Compile Include="YouTubeDL.cs" />
     <None Include="Expressions\Source\ExpressionLexer.g4" />
     <None Include="Expressions\Source\ExpressionParser.g4" />
     <Compile Include="Expressions\VariableFinder.cs" />
@@ -200,6 +215,8 @@
     <Compile Include="Transform\Hasher.cs" />
     <Compile Include="Transform\Versioner.cs" />
     <Compile Include="Transform\XMLConverter.cs" />
+    <None Include="RevRegEx\Source\RevRegExLexer.g4" />
+    <None Include="RevRegEx\Source\RevRegExParser.g4" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Antlr4.Runtime">

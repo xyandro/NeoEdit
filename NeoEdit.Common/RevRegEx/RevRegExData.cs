@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.Editor.RevRegEx
+namespace NeoEdit.Common.RevRegEx
 {
 	public abstract class RevRegExData
 	{

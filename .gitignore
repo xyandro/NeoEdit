@@ -19,6 +19,7 @@ TestResults
 /ChangeLog.txt
 /NeoEdit.Common/Expressions/Parser
 /NeoEdit.Common/Properties/GlobalAssemblyInfo.cs
+/NeoEdit.Common/RevRegEx/Parser
 /NeoEdit.Editor/Content/Balanced/Parser
 /NeoEdit.Editor/Content/Columns/Parser
 /NeoEdit.Editor/Content/CSharp/Parser
@@ -28,7 +29,6 @@ TestResults
 /NeoEdit.Editor/Content/SQL/Parser
 /NeoEdit.Editor/Content/TCSV/Parser
 /NeoEdit.Editor/Content/XML/Parser
-/NeoEdit.Editor/RevRegEx/Parser
 /NeoEdit/CommandLine/Parser
 /NeoEdit/Resources/ChangeLog.txt
 /NeoEdit/Resources/License.txt

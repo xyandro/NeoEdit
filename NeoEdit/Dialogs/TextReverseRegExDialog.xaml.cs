@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.Common.Models;
-using NeoEdit.Editor.RevRegEx;
+using NeoEdit.Common.RevRegEx;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs

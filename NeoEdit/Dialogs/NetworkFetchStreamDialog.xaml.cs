@@ -4,7 +4,6 @@ using System.Windows;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
-using NeoEdit.Editor;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs

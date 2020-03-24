@@ -5,7 +5,7 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
-using NeoEdit.Editor.RevRegEx;
+using NeoEdit.Common.RevRegEx;
 
 namespace NeoEdit.Editor
 {

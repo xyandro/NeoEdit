@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
-using NeoEdit.Editor.Content;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
@@ -23,7 +22,7 @@ namespace NeoEdit.Program.Dialogs
 		ContentAttributesDialog(List<ParserNode> nodes)
 		{
 			InitializeComponent();
-			Attributes = Parser.GetAvailableAttrs(nodes, true);
+			Attributes = ParserNode.GetAvailableAttrs(nodes, true);
 			Attribute = Attributes.FirstOrDefault();
 		}
 

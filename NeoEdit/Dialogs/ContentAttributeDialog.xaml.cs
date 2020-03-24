@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
-using NeoEdit.Editor.Content;
 using NeoEdit.Program.Controls;
 
 namespace NeoEdit.Program.Dialogs
@@ -42,14 +41,14 @@ namespace NeoEdit.Program.Dialogs
 		{
 			InitializeComponent();
 			this.nodes = nodes;
-			Attributes = Parser.GetAvailableAttrs(nodes);
+			Attributes = ParserNode.GetAvailableAttrs(nodes);
 			Attribute = Attributes.FirstOrDefault();
 			AllContents = true;
 		}
 
 		void UpdateAttrValues()
 		{
-			Values = Parser.GetAvailableValues(nodes, Attribute);
+			Values = ParserNode.GetAvailableValues(nodes, Attribute);
 			Value = Values.FirstOrDefault();
 		}
 
