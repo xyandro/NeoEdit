@@ -298,9 +298,9 @@
       <Project>{becbf5d9-9770-4caa-ac34-97335094d335}</Project>
       <Name>NeoEdit.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WCF\WCF.csproj">
+    <ProjectReference Include="..\NeoEdit.WCF\NeoEdit.WCF.csproj">
       <Project>{3a49c899-545a-4849-b6d0-2686d1a32983}</Project>
-      <Name>WCF</Name>
+      <Name>NeoEdit.WCF</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

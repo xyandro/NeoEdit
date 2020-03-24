@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit.Editor", "NeoEdit.E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit.UI", "NeoEdit.UI\NeoEdit.UI.csproj", "{BF989B15-1E74-49D5-8487-426A94902012}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCF", "WCF\WCF.csproj", "{3A49C899-545A-4849-B6D0-2686D1A32983}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit.WCF", "NeoEdit.WCF\NeoEdit.WCF.csproj", "{3A49C899-545A-4849-B6D0-2686D1A32983}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
