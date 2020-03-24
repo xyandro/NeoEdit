@@ -101,12 +101,12 @@ namespace NeoEdit.Program
 				gridWidth = canvas.ActualWidth / gridColumns;
 				gridHeight = canvas.ActualHeight / gridRows;
 
-				scrollBar.ViewportSize = canvas.ActualHeight;
-				scrollBar.Maximum = gridHeight * totalRows - canvas.ActualHeight;
+				scrollBar.ViewportSize = gridRows;
+				scrollBar.Maximum = totalRows - scrollBar.ViewportSize;
 
 				lastGridAllTabsHash = 0; // Make everything else calculate
 
-				SetTabWindowCount(gridColumns * (gridRows + 2)); // Leave room for partial tabs on both sides (possible due to rounding errors)
+				SetTabWindowCount(gridColumns * gridRows);
 			}
 		}
 
@@ -138,42 +138,45 @@ namespace NeoEdit.Program
 			gridTabLabels = new List<TabLabel>();
 			DisconnectTabWindows();
 			var tabWindowsIndex = 0;
-			for (var ctr = 0; ctr < Tabs.AllTabs.Count(); ++ctr)
-			{
-				var top = ctr / gridColumns * gridHeight - scrollBar.Value;
-				if ((top + gridHeight < 0) || (top > canvas.ActualHeight))
-					continue;
-
-				var border = new Border
+			var tabIndex = (int)(scrollBar.Value + 0.5) * gridColumns;
+			for (var row = 0; row < gridRows; ++row)
+				for (var column = 0; column < gridColumns; ++column)
 				{
-					BorderBrush = OutlineBrush,
-					Background = BackgroundBrush,
-					BorderThickness = new Thickness(2),
-					CornerRadius = new CornerRadius(8)
-				};
-				Canvas.SetLeft(border, ctr % gridColumns * gridWidth);
-				Canvas.SetTop(border, top);
+					if (tabIndex >= Tabs.AllTabs.Count())
+						break;
 
-				var tabWindow = tabWindows[tabWindowsIndex++];
-				tabWindow.Tab = Tabs.AllTabs.GetIndex(ctr);
-				var dockPanel = new DockPanel { AllowDrop = true };
-				dockPanel.Drop += (s, e) => OnDrop(e, tabWindow.Tab);
-				var tabLabel = CreateTabLabel(tabWindow.Tab);
-				DockPanel.SetDock(tabLabel, Dock.Top);
-				dockPanel.Children.Add(tabLabel);
-				tabWindow.SetValue(DockPanel.DockProperty, Dock.Bottom);
-				tabWindow.FocusVisualStyle = null;
-				dockPanel.Children.Add(tabWindow);
-				tabWindow.DrawAll();
+					var top = row * gridHeight;
 
-				border.Child = dockPanel;
+					var border = new Border
+					{
+						BorderBrush = OutlineBrush,
+						Background = BackgroundBrush,
+						BorderThickness = new Thickness(2),
+						CornerRadius = new CornerRadius(8)
+					};
+					Canvas.SetLeft(border, column * gridWidth);
+					Canvas.SetTop(border, top);
 
-				border.Width = gridWidth;
-				border.Height = gridHeight;
-				canvas.Children.Add(border);
+					var tabWindow = tabWindows[tabWindowsIndex++];
+					tabWindow.Tab = Tabs.AllTabs.GetIndex(tabIndex++);
+					var dockPanel = new DockPanel { AllowDrop = true };
+					dockPanel.Drop += (s, e) => OnDrop(e, tabWindow.Tab);
+					var tabLabel = CreateTabLabel(tabWindow.Tab);
+					DockPanel.SetDock(tabLabel, Dock.Top);
+					dockPanel.Children.Add(tabLabel);
+					tabWindow.SetValue(DockPanel.DockProperty, Dock.Bottom);
+					tabWindow.FocusVisualStyle = null;
+					dockPanel.Children.Add(tabWindow);
+					tabWindow.DrawAll();
 
-				gridTabLabels.Add(tabLabel);
-			}
+					border.Child = dockPanel;
+
+					border.Width = gridWidth;
+					border.Height = gridHeight;
+					canvas.Children.Add(border);
+
+					gridTabLabels.Add(tabLabel);
+				}
 		}
 	}
 }
