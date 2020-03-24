@@ -61,7 +61,6 @@
     </Compile>
     <None Include="App.config" />
     <Compile Include="InstanceManager.cs" />
-    <Compile Include="ObservableCollectionEx.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Resources\ChangeLog.txt" />

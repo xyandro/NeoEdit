@@ -11,13 +11,15 @@ namespace NeoEdit.UI
 {
 	partial class App
 	{
+		static public Action<string> RunCommandLine { get; set; }
+
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, e2) => (s as TextBox).SelectAll()));
 			base.OnStartup(e);
 			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
-			//CommandLineParser.CreateTabs(string.Join(" ", e.Args.Select(str => $"\"{str}\"")));
+			RunCommandLine(string.Join(" ", e.Args.Select(str => $"\"{str}\"")));
 		}
 
 		public static void ShowExceptionMessage(Exception ex)
