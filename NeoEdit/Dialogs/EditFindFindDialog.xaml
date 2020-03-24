@@ -4,7 +4,7 @@
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	xmlns:converters="clr-namespace:NeoEdit.Program.Converters"
 	xmlns:dialogs="clr-namespace:NeoEdit.Program.Dialogs"
-	xmlns:models="clr-namespace:NeoEdit.Program.Models"
+	xmlns:models="clr-namespace:NeoEdit.Common.Models;assembly=NeoEdit.Common"
 	Title="Find" SizeToContent="Height" Width="600" FocusManager.FocusedElement="{Binding ElementName=text}">
 
 	<Grid Margin="10">

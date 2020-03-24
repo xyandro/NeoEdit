@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using NeoEdit.Common.Models;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {

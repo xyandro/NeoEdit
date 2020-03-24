@@ -11,6 +11,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
 using NeoEdit.Program.Controls;
 using NeoEdit.Program.Misc;
 using NeoEdit.Program.NEClipboards;

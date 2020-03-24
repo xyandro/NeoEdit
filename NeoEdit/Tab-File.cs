@@ -6,8 +6,8 @@ using System.IO;
 using System.Linq;
 using Microsoft.Win32;
 using NeoEdit.Common;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program
 {

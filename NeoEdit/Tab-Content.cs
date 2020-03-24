@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Program.Content;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program
 {

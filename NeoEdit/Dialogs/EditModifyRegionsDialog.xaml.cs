@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using NeoEdit.Common.Models;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {

@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.Program.Controls"
 	xmlns:dialogs="clr-namespace:NeoEdit.Program.Dialogs"
-	xmlns:models="clr-namespace:NeoEdit.Program.Models"
+	xmlns:models="clr-namespace:NeoEdit.Common.Models;assembly=NeoEdit.Common"
 	xmlns:system="clr-namespace:System;assembly=mscorlib"
 	Title="Modify Regions" SizeToContent="Height" Width="400">
 

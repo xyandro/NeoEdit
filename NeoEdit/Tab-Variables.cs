@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NeoEdit.Common;
-using NeoEdit.Program.Models;
+using NeoEdit.Common.Models;
 
 namespace NeoEdit.Program
 {

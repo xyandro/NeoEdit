@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Program.Content.Balanced;
 using NeoEdit.Program.Content.Columns;

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
-using NeoEdit.Program.Models;
 using NeoEdit.Program.RevRegEx;
 
 namespace NeoEdit.Program

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
-using NeoEdit.Program.Models;
+using NeoEdit.Common.Models;
 
 namespace NeoEdit.Program
 {

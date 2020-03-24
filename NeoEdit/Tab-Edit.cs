@@ -8,9 +8,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
-using NeoEdit.Program.Models;
 using NeoEdit.Program.Searchers;
 
 namespace NeoEdit.Program

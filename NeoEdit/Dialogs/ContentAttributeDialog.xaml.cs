@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Program.Content;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {

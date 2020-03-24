@@ -6,9 +6,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using NeoEdit.Common.Models;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {

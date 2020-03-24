@@ -4,11 +4,13 @@ using System.Data.Common;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using NeoEdit.Common;
+using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Program.Dialogs;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program
 {

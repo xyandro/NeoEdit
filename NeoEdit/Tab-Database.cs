@@ -4,8 +4,9 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program
 {

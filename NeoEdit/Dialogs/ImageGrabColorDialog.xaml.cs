@@ -11,10 +11,10 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Program;
 using NeoEdit.Program.Controls;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program.Dialogs
 {

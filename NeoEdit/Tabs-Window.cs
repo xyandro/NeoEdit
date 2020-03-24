@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using NeoEdit.Common;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
-using NeoEdit.Program.Models;
 
 namespace NeoEdit.Program
 {

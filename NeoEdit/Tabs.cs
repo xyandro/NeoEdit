@@ -5,9 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Program.Misc;
-using NeoEdit.Program.Models;
 using NeoEdit.Program.NEClipboards;
 
 namespace NeoEdit.Program
