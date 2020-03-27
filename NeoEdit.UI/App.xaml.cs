@@ -11,7 +11,15 @@ namespace NeoEdit.UI
 {
 	partial class App
 	{
-		static public Action<string> RunCommandLine { get; set; }
+		static App app;
+
+		Action startAction;
+		App(Action action)
+		{
+			startAction = action;
+			InitializeComponent();
+			DispatcherUnhandledException += App_DispatcherUnhandledException;
+		}
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
@@ -19,7 +27,7 @@ namespace NeoEdit.UI
 			base.OnStartup(e);
 			// Without the ShutdownMode lines, the program will close if a dialog is displayed and closed before any windows
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
-			RunCommandLine(string.Join(" ", e.Args.Select(str => $"\"{str}\"")));
+			startAction();
 		}
 
 		public static void ShowExceptionMessage(Exception ex)
@@ -52,16 +60,22 @@ namespace NeoEdit.UI
 #endif
 		}
 
-		public App()
-		{
-			InitializeComponent();
-			DispatcherUnhandledException += App_DispatcherUnhandledException;
-		}
-
 		void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
 			ShowExceptionMessage(e.Exception);
 			e.Handled = true;
+		}
+
+		public static void Run(Action action)
+		{
+			if (app != null)
+			{
+				app.Dispatcher.Invoke(action);
+				return;
+			}
+
+			app = new App(action);
+			app.Run();
 		}
 	}
 }

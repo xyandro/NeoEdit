@@ -1,9 +1,9 @@
 ﻿using System;
 using Antlr4.Runtime.Misc;
+using NeoEdit.CommandLine.Parser;
 using NeoEdit.Common.Parsing;
-using NeoEdit.Editor.CommandLine.Parser;
 
-namespace NeoEdit.Program.CommandLine
+namespace NeoEdit.CommandLine
 {
 	class CommandLineVisitor : CommandLineParserBaseVisitor<object>
 	{
@@ -25,6 +25,12 @@ namespace NeoEdit.Program.CommandLine
 		{
 			clParams.Background = true;
 			return base.VisitBackground(context);
+		}
+
+		public override object VisitMulti([NotNull] CommandLineParser.MultiContext context)
+		{
+			clParams.Multi = true;
+			return base.VisitMulti(context);
 		}
 
 		public override object VisitDiff([NotNull] CommandLineParser.DiffContext context)
@@ -49,8 +55,14 @@ namespace NeoEdit.Program.CommandLine
 
 		public override object VisitWait([NotNull] CommandLineParser.WaitContext context)
 		{
-			clParams.Wait = context.guid?.Text;
+			clParams.Wait = "";
 			return base.VisitWait(context);
+		}
+
+		public override object VisitWaitpid([NotNull] CommandLineParser.WaitpidContext context)
+		{
+			clParams.WaitPID = int.Parse(context.pid.Text);
+			return base.VisitWaitpid(context);
 		}
 	}
 }
