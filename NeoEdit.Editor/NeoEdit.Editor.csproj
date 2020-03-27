@@ -265,6 +265,14 @@
     <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj">
+      <Project>{becbf5d9-9770-4caa-ac34-97335094d335}</Project>
+      <Name>NeoEdit.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeoEdit.WCF\NeoEdit.WCF.csproj">
+      <Project>{3a49c899-545a-4849-b6d0-2686d1a32983}</Project>
+      <Name>NeoEdit.WCF</Name>
+    </ProjectReference>
     <Reference Include="Antlr4.Runtime">
       <HintPath>$(SolutionDir)Lib\ANTLR\Antlr4.Runtime.dll</HintPath>
     </Reference>
@@ -313,16 +321,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj">
-      <Project>{becbf5d9-9770-4caa-ac34-97335094d335}</Project>
-      <Name>NeoEdit.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NeoEdit.WCF\NeoEdit.WCF.csproj">
-      <Project>{3a49c899-545a-4849-b6d0-2686d1a32983}</Project>
-      <Name>NeoEdit.WCF</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

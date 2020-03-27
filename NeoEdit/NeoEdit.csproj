@@ -50,6 +50,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj">
+      <Project>{becbf5d9-9770-4caa-ac34-97335094d335}</Project>
+      <Name>NeoEdit.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeoEdit.Editor\NeoEdit.Editor.csproj">
+      <Project>{7b8783a3-c995-4de5-84ff-1d7060e1f1fb}</Project>
+      <Name>NeoEdit.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeoEdit.UI\NeoEdit.UI.csproj">
+      <Project>{bf989b15-1e74-49d5-8487-426a94902012}</Project>
+      <Name>NeoEdit.UI</Name>
+    </ProjectReference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -83,20 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj">
-      <Project>{becbf5d9-9770-4caa-ac34-97335094d335}</Project>
-      <Name>NeoEdit.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NeoEdit.Editor\NeoEdit.Editor.csproj">
-      <Project>{7b8783a3-c995-4de5-84ff-1d7060e1f1fb}</Project>
-      <Name>NeoEdit.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NeoEdit.UI\NeoEdit.UI.csproj">
-      <Project>{bf989b15-1e74-49d5-8487-426a94902012}</Project>
-      <Name>NeoEdit.UI</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
