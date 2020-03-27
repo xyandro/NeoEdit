@@ -11,7 +11,7 @@ namespace NeoEdit.Editor
 {
 	partial class Tabs
 	{
-		void Execute_Help_About() => state.TabsWindow.RunHelpAboutDialog();
+		void Execute_Help_About() => TabsWindow.RunHelpAboutDialog();
 
 		void Execute_Help_Tutorial() { }//TODO => new TutorialWindow(this);
 
@@ -42,7 +42,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Version length mismatch");
 
 			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
-			if (!state.TabsWindow.RunMessageDialog("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
+			if (!TabsWindow.RunMessageDialog("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
 				return;
 
 			var oldLocation = Assembly.GetEntryAssembly().Location;
@@ -75,14 +75,14 @@ namespace NeoEdit.Editor
 			File.WriteAllBytes(newLocation, result);
 
 			Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
-			state.TabsWindow.RunMessageDialog("Info", "The program will be updated after exiting.");
+			TabsWindow.RunMessageDialog("Info", "The program will be updated after exiting.");
 		}
 
 		void Execute_Help_Extract()
 		{
 			var location = Assembly.GetEntryAssembly().Location;
 
-			if (!state.TabsWindow.RunMessageDialog("Extract files", $"Files will be extracted from {location} after program exits.", MessageOptions.OkCancel, MessageOptions.Ok, MessageOptions.Cancel).HasFlag(MessageOptions.Ok))
+			if (!TabsWindow.RunMessageDialog("Extract files", $"Files will be extracted from {location} after program exits.", MessageOptions.OkCancel, MessageOptions.Ok, MessageOptions.Cancel).HasFlag(MessageOptions.Ok))
 				return;
 
 			Process.Start(location, $@"-extract {Process.GetCurrentProcess().Id}");

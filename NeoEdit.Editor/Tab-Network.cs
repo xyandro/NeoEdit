@@ -68,7 +68,7 @@ namespace NeoEdit.Editor
 			return results;
 		}
 
-		object Configure_Network_AbsoluteURL() => state.TabsWindow.RunNetworkAbsoluteURLDialog(GetVariables());
+		object Configure_Network_AbsoluteURL() => Tabs.TabsWindow.RunNetworkAbsoluteURLDialog(GetVariables());
 
 		void Execute_Network_AbsoluteURL()
 		{
@@ -86,7 +86,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		object Configure_Network_FetchFile() => state.TabsWindow.RunNetworkFetchFileDialog(GetVariables());
+		object Configure_Network_FetchFile() => Tabs.TabsWindow.RunNetworkFetchFileDialog(GetVariables());
 
 		void Execute_Network_FetchFile()
 		{
@@ -109,15 +109,15 @@ namespace NeoEdit.Editor
 			if (invalid.Any())
 			{
 				if (!state.SavedAnswers[nameof(Execute_Network_FetchFile)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_Network_FetchFile)] = state.TabsWindow.RunMessageDialog("Confirm", $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
+					state.SavedAnswers[nameof(Execute_Network_FetchFile)] = Tabs.TabsWindow.RunMessageDialog("Confirm", $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
 				if (!state.SavedAnswers[nameof(Execute_Network_FetchFile)].HasFlag(MessageOptions.Yes))
 					return;
 			}
 
-			state.TabsWindow.RunMultiProgressDialogAsync("Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
+			Tabs.TabsWindow.RunMultiProgressDialogAsync("Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
 		}
 
-		object Configure_Network_FetchStream() => state.TabsWindow.RunNetworkFetchStreamDialog(GetVariables(), Path.GetDirectoryName(FileName) ?? "");
+		object Configure_Network_FetchStream() => Tabs.TabsWindow.RunNetworkFetchStreamDialog(GetVariables(), Path.GetDirectoryName(FileName) ?? "");
 
 		void Execute_Network_FetchStream()
 		{
@@ -128,10 +128,10 @@ namespace NeoEdit.Editor
 
 			var now = DateTime.Now;
 			var data = urls.Select((url, index) => Tuple.Create(url, now + TimeSpan.FromSeconds(index))).ToList();
-			state.TabsWindow.RunMultiProgressDialogAsync("Downloading...", data, async (item, progress, canceled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, canceled));
+			Tabs.TabsWindow.RunMultiProgressDialogAsync("Downloading...", data, async (item, progress, canceled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, canceled));
 		}
 
-		object Configure_Network_FetchPlaylist() => state.TabsWindow.RunNetworkFetchStreamDialog(GetVariables(), null);
+		object Configure_Network_FetchPlaylist() => Tabs.TabsWindow.RunNetworkFetchStreamDialog(GetVariables(), null);
 
 		void Execute_Network_FetchPlaylist()
 		{
@@ -140,7 +140,7 @@ namespace NeoEdit.Editor
 			if (!urls.Any())
 				return;
 
-			var items = state.TabsWindow.RunMultiProgressDialogAsync("Getting playlist contents...", urls, async (item, progress, canceled) => await YouTubeDL.GetPlayListItems(item, progress, canceled)).ToList();
+			var items = Tabs.TabsWindow.RunMultiProgressDialogAsync("Getting playlist contents...", urls, async (item, progress, canceled) => await YouTubeDL.GetPlayListItems(item, progress, canceled)).ToList();
 			ReplaceSelections(items.Select(l => string.Join(TextView.DefaultEnding, l)).ToList());
 		}
 
@@ -178,7 +178,7 @@ namespace NeoEdit.Editor
 			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
 		}
 
-		object Configure_Network_Ping() => state.TabsWindow.RunNetworkPingDialog();
+		object Configure_Network_Ping() => Tabs.TabsWindow.RunNetworkPingDialog();
 
 		void Execute_Network_Ping()
 		{
@@ -205,7 +205,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(replies);
 		}
 
-		object Configure_Network_ScanPorts() => state.TabsWindow.RunNetworkScanPortsDialog();
+		object Configure_Network_ScanPorts() => Tabs.TabsWindow.RunNetworkScanPortsDialog();
 
 		void Execute_Network_ScanPorts()
 		{
@@ -215,7 +215,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
 		}
 
-		object Configure_Network_WCF_GetConfig() => state.TabsWindow.RunNetworkWCFGetConfigDialog();
+		object Configure_Network_WCF_GetConfig() => Tabs.TabsWindow.RunNetworkWCFGetConfigDialog();
 
 		void Execute_Network_WCF_GetConfig()
 		{
@@ -229,7 +229,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFClient.ExecuteWCF(Text.GetString(range))).ToList());
 
-		object Configure_Network_WCF_InterceptCalls() => state.TabsWindow.RunNetworkWCFInterceptCallsDialog();
+		object Configure_Network_WCF_InterceptCalls() => Tabs.TabsWindow.RunNetworkWCFInterceptCallsDialog();
 
 		void Execute_Network_WCF_InterceptCalls()
 		{

@@ -80,7 +80,7 @@ namespace NeoEdit.Editor
 			return str.Substring(start, end - start);
 		}
 
-		object Configure_Text_Select_Trim() => state.TabsWindow.RunTextTrimDialog();
+		object Configure_Text_Select_Trim() => Tabs.TabsWindow.RunTextTrimDialog();
 
 		void Execute_Text_Select_Trim()
 		{
@@ -88,7 +88,7 @@ namespace NeoEdit.Editor
 			Selections = Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList();
 		}
 
-		object Configure_Text_Select_ByWidth() => state.TabsWindow.RunTextWidthDialog(false, true, GetVariables());
+		object Configure_Text_Select_ByWidth() => Tabs.TabsWindow.RunTextWidthDialog(false, true, GetVariables());
 
 		void Execute_Text_Select_ByWidth()
 		{
@@ -97,7 +97,7 @@ namespace NeoEdit.Editor
 			Selections = Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList();
 		}
 
-		object Configure_Text_Select_WholeBoundedWord(bool wholeWord) => state.TabsWindow.RunTextSelectWholeBoundedWordDialog(wholeWord);
+		object Configure_Text_Select_WholeBoundedWord(bool wholeWord) => Tabs.TabsWindow.RunTextSelectWholeBoundedWordDialog(wholeWord);
 
 		void Execute_Text_Select_WholeBoundedWord(bool wholeWord)
 		{
@@ -157,7 +157,7 @@ namespace NeoEdit.Editor
 		object Configure_Text_Width()
 		{
 			var numeric = Selections.Any() ? Selections.AsParallel().All(range => Text.GetString(range).IsNumeric()) : false;
-			return state.TabsWindow.RunTextWidthDialog(numeric, false, GetVariables());
+			return Tabs.TabsWindow.RunTextWidthDialog(numeric, false, GetVariables());
 		}
 
 		void Execute_Text_Width()
@@ -167,7 +167,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
 		}
 
-		object Configure_Text_Trim() => state.TabsWindow.RunTextTrimDialog();
+		object Configure_Text_Trim() => Tabs.TabsWindow.RunTextTrimDialog();
 
 		void Execute_Text_Trim()
 		{
@@ -177,7 +177,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
-		object Configure_Text_Unicode() => state.TabsWindow.RunTextUnicodeDialog();
+		object Configure_Text_Unicode() => Tabs.TabsWindow.RunTextUnicodeDialog();
 
 		void Execute_Text_Unicode()
 		{
@@ -187,7 +187,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
 
-		object Configure_Text_RandomText() => state.TabsWindow.RunTextRandomTextDialog(GetVariables());
+		object Configure_Text_RandomText() => Tabs.TabsWindow.RunTextRandomTextDialog(GetVariables());
 
 		void Execute_Text_RandomText()
 		{
@@ -203,7 +203,7 @@ namespace NeoEdit.Editor
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			return state.TabsWindow.RunTextReverseRegExDialog();
+			return Tabs.TabsWindow.RunTextReverseRegExDialog();
 		}
 
 		void Execute_Text_ReverseRegEx()
@@ -226,12 +226,12 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		object Configure_Text_FirstDistinct() => state.TabsWindow.RunTextFirstDistinctDialog();
+		object Configure_Text_FirstDistinct() => Tabs.TabsWindow.RunTextFirstDistinctDialog();
 
 		void Execute_Text_FirstDistinct()
 		{
 			var result = state.Configuration as TextFirstDistinctDialogResult;
-			var opResult = state.TabsWindow.RunProgressDialog("Finding characters...", (canceled, progress) =>
+			var opResult = Tabs.TabsWindow.RunProgressDialog("Finding characters...", (canceled, progress) =>
 			{
 				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
 				var data = GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).Select((str, strIndex) => Tuple.Create(str, strIndex, str.Indexes(ch => valid.Contains(ch)).Distinct(index => str[index]).ToList())).OrderBy(tuple => tuple.Item3.Count).ToList();

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using NeoEdit.Common;
 using NeoEdit.UI.Dialogs;
 
 namespace NeoEdit.UI
@@ -12,6 +13,11 @@ namespace NeoEdit.UI
 	partial class App
 	{
 		static App app;
+
+		static App()
+		{
+			NoWindowDialogs.RunCryptorKeyDialog = (type, encrypt) => CryptorKeyDialog.Run(null, type, encrypt);
+		}
 
 		Action startAction;
 		App(Action action)

@@ -54,7 +54,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_DetectType() => ContentType = Table.GuessTableType(Text.GetString());
 
-		object Configure_Table_Convert() => state.TabsWindow.RunTableConvertDialog(ContentType);
+		object Configure_Table_Convert() => Tabs.TabsWindow.RunTableConvertDialog(ContentType);
 
 		void Execute_Table_Convert()
 		{
@@ -71,7 +71,7 @@ namespace NeoEdit.Editor
 			if (!Selections[0].HasSelection)
 				throw new Exception("Must have data selected");
 
-			return state.TabsWindow.RunTableTextToTableDialog(GetSelectionStrings().Single());
+			return Tabs.TabsWindow.RunTableTextToTableDialog(GetSelectionStrings().Single());
 		}
 
 		void Execute_Table_TextToTable()
@@ -115,7 +115,7 @@ namespace NeoEdit.Editor
 			OpenTable(new Table(rows, false));
 		}
 
-		object Configure_Table_EditTable() => state.TabsWindow.RunTableEditTableDialog(GetTable());
+		object Configure_Table_EditTable() => Tabs.TabsWindow.RunTableEditTableDialog(GetTable());
 
 		void Execute_Table_EditTable()
 		{
@@ -135,7 +135,7 @@ namespace NeoEdit.Editor
 		object Configure_Table_AddColumn()
 		{
 			var table = GetTable();
-			return state.TabsWindow.RunTableAddColumnDialog(GetTableVariables(table), table.NumRows);
+			return Tabs.TabsWindow.RunTableAddColumnDialog(GetTableVariables(table), table.NumRows);
 		}
 
 		void Execute_Table_AddColumn()
@@ -151,7 +151,7 @@ namespace NeoEdit.Editor
 		object Configure_Table_Select_RowsByExpression()
 		{
 			var table = GetTable();
-			return state.TabsWindow.RunGetExpressionDialog(GetTableVariables(table), table.NumRows);
+			return Tabs.TabsWindow.RunGetExpressionDialog(GetTableVariables(table), table.NumRows);
 		}
 
 		void Execute_Table_Select_RowsByExpression()
@@ -171,7 +171,7 @@ namespace NeoEdit.Editor
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
 
-			return state.TabsWindow.RunTableJoinDialog(GetTable(), joinTable);
+			return Tabs.TabsWindow.RunTableJoinDialog(GetTable(), joinTable);
 		}
 
 		void Execute_Table_Join()
@@ -185,7 +185,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_Transpose() => SetText(GetTable().Transpose());
 
-		object Configure_Table_Database_GenerateInserts() => state.TabsWindow.RunTableDatabaseGenerateInsertsDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		object Configure_Table_Database_GenerateInserts() => Tabs.TabsWindow.RunTableDatabaseGenerateInsertsDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
 		void Execute_Table_Database_GenerateInserts()
 		{
@@ -205,7 +205,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		object Configure_Table_Database_GenerateUpdates() => state.TabsWindow.RunTableDatabaseGenerateUpdatesDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		object Configure_Table_Database_GenerateUpdates() => Tabs.TabsWindow.RunTableDatabaseGenerateUpdatesDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
 		void Execute_Table_Database_GenerateUpdates()
 		{
@@ -225,7 +225,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		object Configure_Table_Database_GenerateDeletes() => state.TabsWindow.RunTableDatabaseGenerateDeletesDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		object Configure_Table_Database_GenerateDeletes() => Tabs.TabsWindow.RunTableDatabaseGenerateDeletesDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
 		void Execute_Table_Database_GenerateDeletes()
 		{

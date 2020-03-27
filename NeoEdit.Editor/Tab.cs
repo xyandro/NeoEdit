@@ -1478,7 +1478,7 @@ namespace NeoEdit.Editor
 		bool ConfirmContinueWhenCannotEncode()
 		{
 			if (!state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.All))
-				state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = state.TabsWindow.RunMessageDialog("Confirm", "The specified encoding cannot fully represent the data. Continue anyway?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
+				state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "The specified encoding cannot fully represent the data. Continue anyway?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
 			return state.SavedAnswers[nameof(ConfirmContinueWhenCannotEncode)].HasFlag(MessageOptions.Yes);
 		}
 
@@ -1505,7 +1505,7 @@ namespace NeoEdit.Editor
 				return true;
 
 			if (!state.SavedAnswers[nameof(VerifyCanEncode)].HasFlag(MessageOptions.All))
-				state.SavedAnswers[nameof(VerifyCanEncode)] = state.TabsWindow.RunMessageDialog("Confirm", "The current encoding cannot fully represent this data. Switch to UTF-8?", MessageOptions.YesNoAllCancel, MessageOptions.Yes, MessageOptions.Cancel);
+				state.SavedAnswers[nameof(VerifyCanEncode)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "The current encoding cannot fully represent this data. Switch to UTF-8?", MessageOptions.YesNoAllCancel, MessageOptions.Yes, MessageOptions.Cancel);
 			if (state.SavedAnswers[nameof(VerifyCanEncode)].HasFlag(MessageOptions.Yes))
 			{
 				CodePage = Coder.CodePage.UTF8;
@@ -1539,7 +1539,7 @@ namespace NeoEdit.Editor
 						throw;
 
 					if (!state.SavedAnswers[nameof(Save)].HasFlag(MessageOptions.All))
-						state.SavedAnswers[nameof(Save)] = state.TabsWindow.RunMessageDialog("Confirm", "Save failed. Remove read-only flag?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
+						state.SavedAnswers[nameof(Save)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "Save failed. Remove read-only flag?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
 					if (!state.SavedAnswers[nameof(Save)].HasFlag(MessageOptions.Yes))
 						throw;
 					new FileInfo(fileName).IsReadOnly = false;
@@ -1576,7 +1576,7 @@ namespace NeoEdit.Editor
 			{
 				Tabs.ShowTab(this, () =>
 				{
-					state.SavedAnswers[nameof(VerifyCanClose)] = state.TabsWindow.RunMessageDialog("Confirm", "Do you want to save changes?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
+					state.SavedAnswers[nameof(VerifyCanClose)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "Do you want to save changes?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
 				});
 			}
 
@@ -1599,7 +1599,7 @@ namespace NeoEdit.Editor
 					bytes = File.ReadAllBytes(FileName);
 			}
 
-			FileSaver.HandleDecrypt(state.TabsWindow, ref bytes, out var aesKey);
+			FileSaver.HandleDecrypt(ref bytes, out var aesKey);
 			AESKey = aesKey;
 
 			bytes = FileSaver.Decompress(bytes, out var compressed);

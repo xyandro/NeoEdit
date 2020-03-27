@@ -114,7 +114,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
 
-		object Configure_Content_Ancestor() => state.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
+		object Configure_Content_Ancestor() => Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
 
 		void Execute_Content_Ancestor()
 		{
@@ -122,7 +122,7 @@ namespace NeoEdit.Editor
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
-		object Configure_Content_Attributes() => state.TabsWindow.RunContentAttributesDialog(GetSelectionNodes());
+		object Configure_Content_Attributes() => Tabs.TabsWindow.RunContentAttributesDialog(GetSelectionNodes());
 
 		void Execute_Content_Attributes()
 		{
@@ -130,7 +130,7 @@ namespace NeoEdit.Editor
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 		}
 
-		object Configure_Content_WithAttribute() => state.TabsWindow.RunContentAttributeDialog(GetSelectionNodes());
+		object Configure_Content_WithAttribute() => Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes());
 
 		void Execute_Content_WithAttribute()
 		{
@@ -144,7 +144,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
 
-		object Configure_Content_Children_WithAttribute() => state.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
+		object Configure_Content_Children_WithAttribute() => Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
 
 		void Execute_Content_Children_WithAttribute()
 		{
@@ -158,7 +158,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
 
-		object Configure_Content_Descendants_WithAttribute() => state.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+		object Configure_Content_Descendants_WithAttribute() => Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
 
 		void Execute_Content_Descendants_WithAttribute()
 		{

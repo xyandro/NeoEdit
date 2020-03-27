@@ -64,7 +64,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Macro_Play_Repeat()
 		{
-			var result = state.TabsWindow.RunMacroPlayRepeatDialog(Macro.ChooseMacro);
+			var result = TabsWindow.RunMacroPlayRepeatDialog(Macro.ChooseMacro);
 
 			var macro = Macro.Load(result.Macro);
 			var expression = new NEExpression(result.Expression);

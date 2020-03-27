@@ -13,6 +13,8 @@ namespace NeoEdit.Editor
 {
 	public partial class Tabs : ITabs
 	{
+		public ITabsWindow TabsWindow { get; }
+
 		public static Func<Tabs, ITabsWindow> CreateITabsWindow { get; set; }
 		public static List<Tabs> Instances { get; } = new List<Tabs>();
 
@@ -32,7 +34,7 @@ namespace NeoEdit.Editor
 			oldActiveTabs = newActiveTabs = new OrderedHashSet<Tab>();
 
 			BeginTransaction(new ExecuteState(NECommand.None));
-			state.TabsWindow = CreateITabsWindow(this);
+			TabsWindow = CreateITabsWindow(this);
 			if (addEmpty)
 				Execute_File_New_New(false);
 			Commit();
@@ -120,7 +122,7 @@ namespace NeoEdit.Editor
 				if (sw != null)
 				{
 					timeNextAction = false;
-					state.TabsWindow.RunMessageDialog("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
+					TabsWindow.RunMessageDialog("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
 				}
 
 				var action = MacroAction.GetMacroAction(state);
@@ -134,7 +136,7 @@ namespace NeoEdit.Editor
 				commit = true;
 			}
 			catch (OperationCanceledException) { }
-			catch (Exception ex) { state.TabsWindow.ShowExceptionMessage(ex); }
+			catch (Exception ex) { TabsWindow.ShowExceptionMessage(ex); }
 			finally
 			{
 				if (commit)
@@ -145,7 +147,7 @@ namespace NeoEdit.Editor
 				else
 					Rollback();
 
-				state.TabsWindow.QueueDraw();
+				TabsWindow.QueueDraw();
 			}
 
 			return commit;
@@ -410,7 +412,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		public void QueueActivateTabs() => state.TabsWindow.QueueActivateTabs();
+		public void QueueActivateTabs() => TabsWindow.QueueActivateTabs();
 
 		public void ShowTab(Tab tab, Action action) => ShowTab(tab, () => { action(); return 0; });
 
@@ -421,7 +423,7 @@ namespace NeoEdit.Editor
 			ClearAllActive();
 			SetActive(tab);
 			Focused = tab;
-			state.TabsWindow.QueueDraw();
+			TabsWindow.QueueDraw();
 
 			var result = action();
 
@@ -439,7 +441,7 @@ namespace NeoEdit.Editor
 			TabRows = rows;
 		}
 
-		public void SetForeground() => state.TabsWindow.SetForeground();
+		public void SetForeground() => TabsWindow.SetForeground();
 
 		public string KeysAndValuesStatus => string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"));
 	}

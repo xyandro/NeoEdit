@@ -50,7 +50,6 @@ namespace NeoEdit.UI
 
 		public bool HandleCommand(ExecuteState state, bool configure = true)
 		{
-			state.TabsWindow = this;
 			if (configure)
 				state.Modifiers = Keyboard.Modifiers;
 			return Tabs.HandleCommand(state, configure);

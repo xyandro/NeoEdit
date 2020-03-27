@@ -50,7 +50,7 @@ namespace NeoEdit.Editor
 				throw new Exception("No connection.");
 		}
 
-		object Configure_Database_Connect() => state.TabsWindow.RunDatabaseConnectDialog();
+		object Configure_Database_Connect() => Tabs.TabsWindow.RunDatabaseConnectDialog();
 
 		void Execute_Database_Connect()
 		{
@@ -89,7 +89,7 @@ namespace NeoEdit.Editor
 		object Configure_Database_Examine()
 		{
 			ValidateConnection();
-			state.TabsWindow.RunDatabaseExamineDialog(dbConnection);
+			Tabs.TabsWindow.RunDatabaseExamineDialog(dbConnection);
 			return null;
 		}
 

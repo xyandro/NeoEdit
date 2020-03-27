@@ -81,24 +81,6 @@
     <Compile Include="Expressions\Parser\ExpressionParser.cs" />
     <Compile Include="Expressions\Parser\ExpressionParserBaseVisitor.cs" />
     <Compile Include="Expressions\Parser\ExpressionParserVisitor.cs" />
-    <Compile Include="ITab.cs" />
-    <Compile Include="ITabs.cs" />
-    <Compile Include="KeyGestureAttribute.cs" />
-    <Compile Include="KeysAndValues.cs" />
-    <Compile Include="NEClipboard.cs" />
-    <Compile Include="NECommand.cs" />
-    <Compile Include="NoMacroAttribute.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />
-    <Compile Include="RevRegEx\Parser\RevRegExParserVisitor.cs" />
-    <Compile Include="RevRegEx\RevRegExData.cs" />
-    <Compile Include="RevRegEx\RevRegExDataChar.cs" />
-    <Compile Include="RevRegEx\RevRegExDataJoin.cs" />
-    <Compile Include="RevRegEx\RevRegExDataList.cs" />
-    <Compile Include="RevRegEx\RevRegExDataRepeat.cs" />
-    <Compile Include="RevRegEx\RevRegExVisitor.cs" />
-    <Compile Include="YouTubeDL.cs" />
     <None Include="Expressions\Source\ExpressionLexer.g4" />
     <None Include="Expressions\Source\ExpressionParser.g4" />
     <Compile Include="Expressions\VariableFinder.cs" />
@@ -106,8 +88,12 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="IReadOnlyOrderedHashSet.cs" />
     <Compile Include="IRunTasksDialog.cs" />
+    <Compile Include="ITab.cs" />
+    <Compile Include="ITabs.cs" />
     <Compile Include="ITabsWindow.cs" />
     <Compile Include="ItemSet.cs" />
+    <Compile Include="KeyGestureAttribute.cs" />
+    <Compile Include="KeysAndValues.cs" />
     <Compile Include="Models\AnswerResult.cs" />
     <Compile Include="Models\ContentAttributeDialogResult.cs" />
     <Compile Include="Models\ContentAttributesDialogResult.cs" />
@@ -194,6 +180,10 @@
     <Compile Include="Models\TextWidthDialogResult.cs" />
     <Compile Include="Models\WindowCustomGridDialogResult.cs" />
     <Compile Include="MoreLinq.cs" />
+    <Compile Include="NEClipboard.cs" />
+    <Compile Include="NECommand.cs" />
+    <Compile Include="NoMacroAttribute.cs" />
+    <Compile Include="NoWindowDialogs.cs" />
     <Compile Include="OrderedHashSet.cs" />
     <Compile Include="Parsing\AntlrParserExtensions.cs" />
     <Compile Include="Parsing\CaseInsensitiveInputStream.cs" />
@@ -203,8 +193,8 @@
     <Compile Include="Parsing\ParserHelper.cs" />
     <Compile Include="Parsing\ParserNode.cs" />
     <Compile Include="ProgressData.cs" />
-    <AppDesigner Include="Properties\" />
     <Compile Include="ProgressReport.cs" />
+    <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -213,6 +203,18 @@
     </Compile>
     <None Include="Properties\GlobalAssemblyInfo.Template.cs" />
     <Compile Include="Range.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />
+    <Compile Include="RevRegEx\Parser\RevRegExParserVisitor.cs" />
+    <Compile Include="RevRegEx\RevRegExData.cs" />
+    <Compile Include="RevRegEx\RevRegExDataChar.cs" />
+    <Compile Include="RevRegEx\RevRegExDataJoin.cs" />
+    <Compile Include="RevRegEx\RevRegExDataList.cs" />
+    <Compile Include="RevRegEx\RevRegExDataRepeat.cs" />
+    <Compile Include="RevRegEx\RevRegExVisitor.cs" />
+    <None Include="RevRegEx\Source\RevRegExLexer.g4" />
+    <None Include="RevRegEx\Source\RevRegExParser.g4" />
     <Compile Include="Settings.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
@@ -224,8 +226,7 @@
     <Compile Include="Transform\Hasher.cs" />
     <Compile Include="Transform\Versioner.cs" />
     <Compile Include="Transform\XMLConverter.cs" />
-    <None Include="RevRegEx\Source\RevRegExLexer.g4" />
-    <None Include="RevRegEx\Source\RevRegExParser.g4" />
+    <Compile Include="YouTubeDL.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Antlr4.Runtime">

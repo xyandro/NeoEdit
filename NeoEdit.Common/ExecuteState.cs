@@ -9,8 +9,6 @@ namespace NeoEdit.Common
 {
 	public class ExecuteState
 	{
-		public ITabsWindow TabsWindow;
-
 		public NECommand Command;
 		public bool ShiftDown;
 		public bool ControlDown;

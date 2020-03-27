@@ -102,7 +102,7 @@ namespace NeoEdit.Editor
 			return searchList;
 		}
 
-		object Configure_Edit_ModifyRegions() => state.TabsWindow.RunEditModifyRegionsDialog();
+		object Configure_Edit_ModifyRegions() => Tabs.TabsWindow.RunEditModifyRegionsDialog();
 
 		void Execute_Edit_ModifyRegions(EditModifyRegionsDialogResult result)
 		{
