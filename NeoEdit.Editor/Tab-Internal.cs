@@ -401,7 +401,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Internal_Text() => ReplaceSelections(state.Text, false, tryJoinUndo: true);
 
-		void Execute_Internal_SetViewValue()
+		void Execute_Internal_SetBinaryValue()
 		{
 			(var value, var oldSize) = ((byte[], int?))state.Configuration;
 			var newStr = Coder.BytesToString(value, CodePage);

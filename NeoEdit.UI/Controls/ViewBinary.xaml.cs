@@ -24,7 +24,7 @@ namespace NeoEdit.UI.Controls
 		{
 			var controls = new List<FrameworkElement> { LE, Int08LEHeader, Int16LEHeader, Int32LEHeader, Int64LEHeader, Int08LESizing, Int16LESizing, Int32LESizing, Int64LESizing, SIntLEHeader, UIntLEHeader, SInt08LE, SInt16LE, SInt32LE, SInt64LE, UInt08LE, UInt16LE, UInt32LE, UInt64LE, BE, Int08BEHeader, Int16BEHeader, Int32BEHeader, Int64BEHeader, Int08BESizing, Int16BESizing, Int32BESizing, Int64BESizing, SIntBEHeader, UIntBEHeader, SInt08BE, SInt16BE, SInt32BE, SInt64BE, UInt08BE, UInt16BE, UInt32BE, UInt64BE, Float, SingleHeader, DoubleHeader, Single, Double };
 			controls.ForEach(control => control.Visibility = GetVisibility(codePages, control.Tag as string));
-			controls.OfType<ViewValue>().ForEach(viewValue => viewValue.SetData(data, hasSel, searches));
+			controls.OfType<BinaryValue>().ForEach(binaryValue => binaryValue.SetData(data, hasSel, searches));
 		}
 
 		bool HasCodePage(HashSet<Coder.CodePage> codePages, string find)
@@ -79,17 +79,17 @@ namespace NeoEdit.UI.Controls
 				Grid.SetRow(textBlock, ctr);
 				stringsGrid.Children.Add(textBlock);
 
-				var viewValue = new ViewValue
+				var binaryValue = new BinaryValue
 				{
 					CodePage = strCodePages[ctr],
 					VerticalAlignment = VerticalAlignment.Center,
 					TextAlignment = HorizontalAlignment.Left,
 					TextMargin = new Thickness(4, 0, 4, 0),
 				};
-				viewValue.SetData(data, hasSel, searches);
-				Grid.SetColumn(viewValue, 1);
-				Grid.SetRow(viewValue, ctr);
-				stringsGrid.Children.Add(viewValue);
+				binaryValue.SetData(data, hasSel, searches);
+				Grid.SetColumn(binaryValue, 1);
+				Grid.SetRow(binaryValue, ctr);
+				stringsGrid.Children.Add(binaryValue);
 			}
 		}
 

@@ -10,14 +10,14 @@ using NeoEdit.UI.Dialogs;
 
 namespace NeoEdit.UI.Controls
 {
-	partial class ViewValue
+	partial class BinaryValue
 	{
 		static readonly Brush NotFoundBorderBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
 		static readonly Brush NotFoundBackgroundBrush = Brushes.Transparent;
 		static readonly Brush FoundBorderBrush = new SolidColorBrush(Color.FromArgb(192, 38, 132, 255));
 		static readonly Brush FoundBackgroundBrush = new SolidColorBrush(Color.FromArgb(32, 38, 132, 255));
 
-		static ViewValue()
+		static BinaryValue()
 		{
 			NotFoundBorderBrush.Freeze();
 			NotFoundBackgroundBrush.Freeze();
@@ -32,7 +32,7 @@ namespace NeoEdit.UI.Controls
 		public HorizontalAlignment TextAlignment { get => text.HorizontalAlignment; set => text.HorizontalAlignment = value; }
 		public Thickness TextMargin { get => border.Margin; set => border.Margin = value; }
 
-		public ViewValue() => InitializeComponent();
+		public BinaryValue() => InitializeComponent();
 
 		public string GetValue()
 		{
@@ -107,7 +107,7 @@ namespace NeoEdit.UI.Controls
 			if (!Coder.IsStr(CodePage))
 				size = Coder.BytesRequired(CodePage);
 
-			UIHelper.FindParent<TabsWindow>(this).HandleCommand(new ExecuteState(NECommand.Internal_SetViewValue) { Configuration = (newBytes, size) });
+			UIHelper.FindParent<TabsWindow>(this).HandleCommand(new ExecuteState(NECommand.Internal_SetBinaryValue) { Configuration = (newBytes, size) });
 		}
 	}
 }

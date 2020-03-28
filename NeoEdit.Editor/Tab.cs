@@ -433,7 +433,7 @@ namespace NeoEdit.Editor
 			{
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.Internal_Text: Execute_Internal_Text(); break;
-				case NECommand.Internal_SetViewValue: Execute_Internal_SetViewValue(); break;
+				case NECommand.Internal_SetBinaryValue: Execute_Internal_SetBinaryValue(); break;
 				case NECommand.File_New_FromSelections: Execute_File_New_FromSelections(); break;
 				case NECommand.File_Open_Selected: Execute_File_Open_Selected(); break;
 				case NECommand.File_Save_Save: Execute_File_Save_Save(); break;

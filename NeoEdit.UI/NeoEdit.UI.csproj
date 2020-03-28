@@ -68,6 +68,13 @@
     <Compile Include="Controls\AutoCompleteTextBox.xaml.cs">
       <DependentUpon>AutoCompleteTextBox.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\BinaryValue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\BinaryValue.xaml.cs">
+      <DependentUpon>BinaryValue.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CodePageCheckBox.cs" />
     <Page Include="Controls\CodePageToggle.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -111,13 +118,6 @@
     </Page>
     <Compile Include="Controls\ViewBinary.xaml.cs">
       <DependentUpon>ViewBinary.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Controls\ViewValue.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Controls\ViewValue.xaml.cs">
-      <DependentUpon>ViewValue.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BoolToVisibleCollapsedConverter.cs" />
     <Compile Include="Converters\BoolToVisibleHiddenConverter.cs" />

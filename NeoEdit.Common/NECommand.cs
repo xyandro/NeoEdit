@@ -11,7 +11,7 @@ namespace NeoEdit.Common
 		[NoMacro] Internal_CloseTab,
 		Internal_Key,
 		Internal_Text,
-		Internal_SetViewValue,
+		Internal_SetBinaryValue,
 		[NoMacro] Internal_Scroll,
 		[NoMacro] Internal_Mouse,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New_New,
