@@ -52,7 +52,7 @@ namespace NeoEdit.Editor
 			get
 			{
 				if (!newMaxColumn.HasValue)
-					newMaxColumn = Enumerable.Range(0, TextView.NumLines).AsParallel().Max(line => GetLineColumnsLength(line));
+					newMaxColumn = TextView.GetMaxColumn(Text);
 				return newMaxColumn.Value;
 			}
 		}
