@@ -77,18 +77,18 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		Range MoveCursor(Range range, int cursor, bool selecting)
+		Range MoveCursor(Range range, int position, bool selecting)
 		{
-			cursor = Math.Max(0, Math.Min(cursor, Text.Length));
+			position = Math.Max(0, Math.Min(position, Text.Length));
 			if (selecting)
-				if (range.Cursor == cursor)
+				if (range.Cursor == position)
 					return range;
 				else
-					return new Range(cursor, range.Anchor);
+					return new Range(position, range.Anchor);
 
-			if ((range.Cursor == cursor) && (range.Anchor == cursor))
+			if ((range.Cursor == position) && (range.Anchor == position))
 				return range;
-			return new Range(cursor);
+			return new Range(position);
 		}
 
 		Range MoveCursor(Range range, int line, int index, bool selecting, bool lineRel = true, bool indexRel = true)
@@ -252,14 +252,15 @@ namespace NeoEdit.Editor
 					{
 						Selections = Selections.AsParallel().AsOrdered().Select(range =>
 						{
-							var line = TextView.GetPositionLine(range.Cursor);
-							var index = TextView.GetPositionIndex(range.Cursor, line);
 							if ((!state.ShiftDown) && ((bool)state.Configuration))
 								return new Range(range.Start);
-							else if ((index == 0) && (line != 0))
-								return MoveCursor(range, -1, int.MaxValue, state.ShiftDown, indexRel: false);
+
+							var line = TextView.GetPositionLine(range.Cursor);
+							var index = TextView.GetPositionIndex(range.Cursor, line);
+							if ((index == 0) && (line != 0))
+								return MoveCursor(range, range.Cursor - Math.Max(1, TextView.GetEndingLength(line - 1)), state.ShiftDown);
 							else
-								return MoveCursor(range, 0, -1, state.ShiftDown);
+								return MoveCursor(range, range.Cursor - 1, state.ShiftDown);
 						}).ToList();
 					}
 					break;
@@ -267,14 +268,15 @@ namespace NeoEdit.Editor
 					{
 						Selections = Selections.AsParallel().AsOrdered().Select(range =>
 						{
-							var line = TextView.GetPositionLine(range.Cursor);
-							var index = TextView.GetPositionIndex(range.Cursor, line);
 							if ((!state.ShiftDown) && ((bool)state.Configuration))
 								return new Range(range.End);
-							else if ((index == TextView.GetLineLength(line)) && (line != TextView.NumLines - 1))
-								return MoveCursor(range, 1, 0, state.ShiftDown, indexRel: false);
+
+							var line = TextView.GetPositionLine(range.Cursor);
+							var index = TextView.GetPositionIndex(range.Cursor, line);
+							if ((index == TextView.GetLineLength(line)) && (line != TextView.NumLines - 1))
+								return MoveCursor(range, range.Cursor + Math.Max(1, TextView.GetEndingLength(line)), state.ShiftDown);
 							else
-								return MoveCursor(range, 0, 1, state.ShiftDown);
+								return MoveCursor(range, range.Cursor + 1, state.ShiftDown);
 						}).ToList();
 					}
 					break;
@@ -302,33 +304,33 @@ namespace NeoEdit.Editor
 					}
 					else
 					{
-						var sels = new List<Range>();
-						bool changed = false;
+						var startTextSels = new List<Range>();
+						var startLineSels = new List<Range>();
+						bool moveToStartText = false;
 						foreach (var selection in Selections)
 						{
 							var line = TextView.GetPositionLine(selection.Cursor);
 							var index = TextView.GetPositionIndex(selection.Cursor, line);
 
-							int first;
+							int startText;
 							var end = TextView.GetLineLength(line);
-							for (first = 0; first < end; ++first)
+							for (startText = 0; startText < end; ++startText)
 							{
-								if (!char.IsWhiteSpace(Text[TextView.GetPosition(line, first)]))
+								if (!char.IsWhiteSpace(Text[TextView.GetPosition(line, startText)]))
 									break;
 							}
-							if (first == end)
-								first = 0;
+							if (startText == end)
+								startText = 0;
 
-							if (first != index)
-								changed = true;
-							sels.Add(MoveCursor(selection, 0, first, state.ShiftDown, indexRel: false));
+							if (startText != index)
+								moveToStartText = true;
+							startTextSels.Add(MoveCursor(selection, TextView.GetPosition(line, startText), state.ShiftDown));
+							startLineSels.Add(MoveCursor(selection, TextView.GetPosition(line, 0), state.ShiftDown));
 						}
-						if (!changed)
-						{
-							sels = sels.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, 0, state.ShiftDown, indexRel: false)).ToList();
-							StartColumn = 0;
-						}
-						Selections = sels;
+						if (moveToStartText)
+							Selections = startTextSels;
+						else
+							Selections = startLineSels;
 					}
 					break;
 				case Key.End:
