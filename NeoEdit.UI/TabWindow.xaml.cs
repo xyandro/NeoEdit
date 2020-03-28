@@ -64,6 +64,8 @@ namespace NeoEdit.UI
 			//TODO Drop += OnDrop;
 		}
 
+		void OnMouseWheel(object sender, MouseWheelEventArgs e) => yScroll.Value -= e.Delta / 40;
+
 		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Scroll) { Configuration = (Tab, (int)xScroll.Value, (int)yScroll.Value) });
 
 		public void DrawAll()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using NeoEdit.Common;
 
 namespace NeoEdit.Editor
 {
@@ -46,15 +47,16 @@ namespace NeoEdit.Editor
 
 		void Execute_Internal_Scroll()
 		{
-			(var tab, var newColumn, var newRow) = ((Tab, int, int))state.Configuration;
+			(var itab, var newColumn, var newRow) = ((ITab, int, int))state.Configuration;
+			var tab = itab as Tab;
 			tab.StartColumn = newColumn;
 			tab.StartRow = newRow;
 		}
 
 		void Execute_Internal_Mouse()
 		{
-			//Tab?.Tabs.TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Mouse) { Configuration = (Tab, position, e.ClickCount) });
-			(var tab, var line, var column, var clickCount, var selecting) = ((Tab, int, int, int, bool?))state.Configuration;
+			(var itab, var line, var column, var clickCount, var selecting) = ((ITab, int, int, int, bool?))state.Configuration;
+			var tab = itab as Tab;
 			if ((UnsortedActiveTabsCount != 1) || (!IsActive(tab)))
 			{
 				ClearAllActive();
