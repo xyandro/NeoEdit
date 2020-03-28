@@ -11,6 +11,7 @@ using NeoEdit.Editor.Content.JSON;
 using NeoEdit.Editor.Content.SQL;
 using NeoEdit.Editor.Content.TCSV;
 using NeoEdit.Editor.Content.XML;
+using NeoEdit.Editor.View;
 
 namespace NeoEdit.Editor.Content
 {
@@ -34,7 +35,7 @@ namespace NeoEdit.Editor.Content
 			}
 		}
 
-		static internal string Comment(ParserType type, NEText text, NETextView textView, Range range)
+		static internal string Comment(ParserType type, NEText text, INEView textView, Range range)
 		{
 			switch (type)
 			{
@@ -46,7 +47,7 @@ namespace NeoEdit.Editor.Content
 			}
 		}
 
-		static internal string Uncomment(ParserType type, NEText text, NETextView textView, Range range)
+		static internal string Uncomment(ParserType type, NEText text, INEView textView, Range range)
 		{
 			switch (type)
 			{

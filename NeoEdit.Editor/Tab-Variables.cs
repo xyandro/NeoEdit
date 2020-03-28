@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.View;
 
 namespace NeoEdit.Editor
 {
@@ -35,13 +35,18 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		NETextView oldTextView, newTextView;
-		NETextView TextView
+		INEView oldTextView, newTextView;
+		INEView TextView
 		{
 			get
 			{
 				if (newTextView == null)
-					newTextView = new NETextView(newText);
+				{
+					if (ViewBinary)
+						newTextView = new NEHexView(newText.Length, 32);
+					else
+						newTextView = new NETextView(newText);
+				}
 				return newTextView;
 			}
 		}
@@ -392,6 +397,7 @@ namespace NeoEdit.Editor
 			{
 				EnsureInTransaction();
 				newViewBinary = value;
+				newTextView = null;
 			}
 		}
 

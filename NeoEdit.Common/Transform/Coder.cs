@@ -65,7 +65,7 @@ namespace NeoEdit.Common.Transform
 		}
 
 		public static IReadOnlyCollection<CodePage> DefaultCodePages { get; } = new HashSet<CodePage> { CodePage.UInt8, CodePage.UInt16LE, CodePage.UInt32LE, CodePage.UInt64LE, CodePage.Int8, CodePage.Int16LE, CodePage.Int32LE, CodePage.Int64LE, DefaultCodePage, CodePage.UTF8, CodePage.UTF16LE };
-		public static CodePage DefaultCodePage { get; } = (CodePage)Encoding.Default.CodePage;
+		public static CodePage DefaultCodePage => (CodePage)Encoding.Default.CodePage;
 
 		public static int BytesRequired(this CodePage codePage)
 		{

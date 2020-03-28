@@ -7,6 +7,7 @@ using Antlr4.Runtime.Tree;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Editor.Content.CSharp.Parser;
+using NeoEdit.Editor.View;
 
 namespace NeoEdit.Editor.Content.CSharp
 {
@@ -20,7 +21,7 @@ namespace NeoEdit.Editor.Content.CSharp
 			return visitor.Root;
 		}
 
-		public static string Comment(NEText text, NETextView textView, Range range)
+		public static string Comment(NEText text, INEView textView, Range range)
 		{
 			var startLine = textView.GetPositionLine(range.Start);
 			var startIndex = textView.GetPositionIndex(range.Start, startLine);
@@ -41,7 +42,7 @@ namespace NeoEdit.Editor.Content.CSharp
 			return result;
 		}
 
-		public static string Uncomment(NEText text, NETextView textView, Range range)
+		public static string Uncomment(NEText text, INEView textView, Range range)
 		{
 			var startLine = textView.GetPositionLine(range.Start);
 			var startIndex = textView.GetPositionIndex(range.Start, startLine);

@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using NeoEdit.Common;
 
-namespace NeoEdit.Editor
+namespace NeoEdit.Editor.View
 {
-	public class NETextView
+	public class NETextView : INEView
 	{
 		const int tabStop = 4;
 
