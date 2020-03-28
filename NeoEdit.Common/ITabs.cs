@@ -13,13 +13,12 @@ namespace NeoEdit.Common
 		int? MaxColumns { get; }
 		int? MaxRows { get; }
 		DateTime LastActivated { get; set; }
-		int UnsortedActiveTabsCount { get; }
 		IEnumerable<ITab> SortedActiveITabs { get; }
 		IEnumerable<ITab> UnsortedActiveITabs { get; }
-		string KeysAndValuesStatus { get; }
 		bool MacroVisualize { get; }
 
 		bool IsActive(ITab tab);
 		bool HandleCommand(ExecuteState state, bool configure = true);
+		List<string> GetStatusBar();
 	}
 }

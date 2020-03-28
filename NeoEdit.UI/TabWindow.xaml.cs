@@ -378,36 +378,7 @@ namespace NeoEdit.UI
 		{
 			const string Separator = "  |  ";
 
-			var status = new List<string>();
-
-			if (!Tab.Selections.Any())
-			{
-				status.Add("Selection 0/0");
-				status.Add("Col");
-				status.Add("In");
-				status.Add("Pos");
-			}
-			else
-			{
-				var range = Tab.Selections[Tab.CurrentSelection];
-				var lineMin = Tab.GetPositionLine(range.Start);
-				var lineMax = Tab.GetPositionLine(range.End);
-				var indexMin = Tab.GetPositionIndex(range.Start, lineMin);
-				var indexMax = Tab.GetPositionIndex(range.End, lineMax);
-				var columnMin = Tab.GetColumnFromIndex(lineMin, indexMin);
-				var columnMax = Tab.GetColumnFromIndex(lineMax, indexMax);
-				var posMin = range.Start;
-				var posMax = range.End;
-
-				status.Add($"Selection {Tab.CurrentSelection + 1:n0}/{Tab.Selections.Count:n0}");
-				status.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
-				status.Add($"In {lineMin + 1:n0}:{indexMin + 1:n0}{((lineMin == lineMax) && (indexMin == indexMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{indexMax + 1:n0}")}");
-				status.Add($"Pos {posMin:n0}{(posMin == posMax ? "" : $"-{posMax:n0} ({posMax - posMin:n0})")}");
-			}
-
-			status.Add($"Regions {string.Join(" / ", Enumerable.Range(1, 9).Select(region => $"{Tab.GetRegions(region).Count:n0}"))}");
-			status.Add($"Database {Tab.DBName}");
-
+			var status = Tab.GetStatusBar();
 			var text = new FormattedText(string.Join(Separator, status), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, new Typeface("Segoe UI"), 12, Brushes.White, 1);
 			var pos = 0;
 			for (var ctr = 0; ctr < status.Count - 1; ++ctr)

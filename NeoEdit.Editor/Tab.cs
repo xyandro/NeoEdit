@@ -1689,5 +1689,40 @@ namespace NeoEdit.Editor
 		}
 
 		public void SetTabSize(int columns, int rows) => Tabs?.SetTabSize(columns, rows);
+
+		public List<string> GetStatusBar()
+		{
+			var status = new List<string>();
+
+			if (!Selections.Any())
+			{
+				status.Add("Selection 0/0");
+				status.Add("Col");
+				status.Add("In");
+				status.Add("Pos");
+			}
+			else
+			{
+				var range = Selections[CurrentSelection];
+				var lineMin = GetPositionLine(range.Start);
+				var lineMax = GetPositionLine(range.End);
+				var indexMin = GetPositionIndex(range.Start, lineMin);
+				var indexMax = GetPositionIndex(range.End, lineMax);
+				var columnMin = GetColumnFromIndex(lineMin, indexMin);
+				var columnMax = GetColumnFromIndex(lineMax, indexMax);
+				var posMin = range.Start;
+				var posMax = range.End;
+
+				status.Add($"Selection {CurrentSelection + 1:n0}/{Selections.Count:n0}");
+				status.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
+				status.Add($"In {lineMin + 1:n0}:{indexMin + 1:n0}{((lineMin == lineMax) && (indexMin == indexMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{indexMax + 1:n0}")}");
+				status.Add($"Pos {posMin:n0}{(posMin == posMax ? "" : $"-{posMax:n0} ({posMax - posMin:n0})")}");
+			}
+
+			status.Add($"Regions {string.Join(" / ", Enumerable.Range(1, 9).Select(region => $"{GetRegions(region).Count:n0}"))}");
+			status.Add($"Database {DBName}");
+
+			return status;
+		}
 	}
 }

@@ -216,14 +216,7 @@ namespace NeoEdit.UI
 		{
 			const string Separator = "  |  ";
 
-			var status = new List<string>();
-			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
-			status.Add($"Active: {plural(Tabs.UnsortedActiveTabsCount, "file")}, {plural(Tabs.UnsortedActiveITabs.Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Inactive: {plural(Tabs.AllITabs.Except(Tabs.UnsortedActiveITabs).Count(), "file")}, {plural(Tabs.AllITabs.Except(Tabs.UnsortedActiveITabs).Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Total: {plural(Tabs.AllITabs.Count(), "file")}, {plural(Tabs.AllITabs.Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
-			status.Add($"Keys/Values: {Tabs.KeysAndValuesStatus}");
-
+			var status = Tabs.GetStatusBar();
 			var text = new FormattedText(string.Join(Separator, status), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, new Typeface("Segoe UI"), 12, Brushes.White, 1);
 			var pos = 0;
 			for (var ctr = 0; ctr < status.Count - 1; ++ctr)

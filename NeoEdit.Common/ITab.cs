@@ -43,5 +43,6 @@ namespace NeoEdit.Common
 		string GetLineColumns(int line, int startColumn, int endColumn);
 		void SetTabSize(int columns, int rows);
 		IReadOnlyList<Range> GetRegions(int region);
+		List<string> GetStatusBar();
 	}
 }
