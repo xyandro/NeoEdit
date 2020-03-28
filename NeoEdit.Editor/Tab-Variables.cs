@@ -43,13 +43,15 @@ namespace NeoEdit.Editor
 				if (newTextView == null)
 				{
 					if (ViewBinary)
-						newTextView = new NEHexView(newText.Length, 32);
+						newTextView = new NEHexView(newText.Length, Tabs.TabColumns - 1);
 					else
 						newTextView = new NETextView(newText);
 				}
 				return newTextView;
 			}
 		}
+
+		public void ResetView() => newTextView = null;
 
 		int? oldMaxColumn, newMaxColumn;
 		public int MaxColumn

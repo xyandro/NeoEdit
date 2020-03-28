@@ -18,7 +18,16 @@ namespace NeoEdit.Editor
 		public static Func<Tabs, ITabsWindow> CreateITabsWindow { get; set; }
 		public static List<Tabs> Instances { get; } = new List<Tabs>();
 
-		public int TabColumns { get; private set; }
+		int tabColumns;
+		public int TabColumns
+		{
+			get => tabColumns; private set
+			{
+				tabColumns = value;
+				AllTabs.ForEach(tab => tab.ResetView());
+			}
+		}
+
 		public int TabRows { get; private set; }
 
 		ExecuteState state;
