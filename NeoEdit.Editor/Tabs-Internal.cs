@@ -30,19 +30,21 @@ namespace NeoEdit.Editor
 			RemoveTab(tab);
 		}
 
-		bool Execute_Internal_Key()
+		void Execute_Internal_Key()
 		{
 			if ((!state.ControlDown) || (state.AltDown))
-				return false;
+			{
+				ExecuteActiveTabs();
+				return;
+			}
 
 			switch (state.Key)
 			{
 				case Key.PageUp: MovePrevNext(-1, state.ShiftDown); break;
 				case Key.PageDown: MovePrevNext(1, state.ShiftDown); break;
 				case Key.Tab: MovePrevNext(1, state.ShiftDown, true); break;
-				default: return false;
+				default: ExecuteActiveTabs(); break;
 			}
-			return true;
 		}
 
 		void Execute_Internal_Scroll()

@@ -186,7 +186,7 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_AddTab: Execute_Internal_AddTab(state.Configuration as Tab); break;
 				case NECommand.Internal_MouseActivate: Execute_Internal_MouseActivate(state.Configuration as Tab); break;
 				case NECommand.Internal_CloseTab: Execute_Internal_CloseTab(state.Configuration as Tab); break;
-				case NECommand.Internal_Key: if (Execute_Internal_Key()) return; break;
+				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.Internal_Scroll: Execute_Internal_Scroll(); break;
 				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
 				case NECommand.File_New_New: Execute_File_New_New(state.ShiftDown); break;
@@ -287,12 +287,16 @@ namespace NeoEdit.Editor
 				case NECommand.Help_Update: Execute_Help_Update(); break;
 				case NECommand.Help_Extract: Execute_Help_Extract(); break;
 				case NECommand.Help_RunGC: Execute_Help_RunGC(); break;
+				default: ExecuteActiveTabs(); break;
 			}
-
-			SortedActiveTabs.ForEach(tab => tab.Execute());
 
 			if (newRunTasksDialog != null)
 				newRunTasksDialog.Run();
+		}
+
+		void ExecuteActiveTabs()
+		{
+			SortedActiveTabs.ForEach(tab => tab.Execute());
 		}
 
 		void PostExecute()
