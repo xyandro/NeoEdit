@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace NeoEdit.Common
@@ -29,8 +28,10 @@ namespace NeoEdit.Common
 			}
 		}
 
-		public static async Task<List<string>> GetPlayListItems(string url, IProgress<ProgressReport> progress = null, CancellationToken cancellationToken = default(CancellationToken))
+		public static List<string> GetPlayListItems(string url, TaskProgress progress)
 		{
+			progress.Name = url;
+
 			var startInfo = new ProcessStartInfo
 			{
 				FileName = Settings.YouTubeDLPath,
@@ -44,7 +45,7 @@ namespace NeoEdit.Common
 			string result;
 			using (var process = Process.Start(startInfo))
 			{
-				result = await process.StandardOutput.ReadToEndAsync();
+				result = process.StandardOutput.ReadToEnd();
 				process.WaitForExit();
 			}
 
@@ -53,7 +54,7 @@ namespace NeoEdit.Common
 
 		public static void Update() => Process.Start(Settings.YouTubeDLPath, "-U");
 
-		public static async Task DownloadStream(string directory, string url, DateTime? fileTime = null, IProgress<ProgressReport> progress = null, CancellationToken cancellationToken = default(CancellationToken))
+		public static void DownloadStream(string directory, string url, DateTime fileTime, TaskProgress progress)
 		{
 			using (var process = new Process
 			{
@@ -79,10 +80,7 @@ namespace NeoEdit.Common
 
 					var match = Regex.Match(e.Data, @"^\[download\]\s*([0-9.]+)%(?:\s|$)");
 					if (match.Success)
-					{
-						var percent = double.Parse(match.Groups[1].Value);
-						progress?.Report(new ProgressReport(percent, 100));
-					}
+						progress.Percent = double.Parse(match.Groups[1].Value) / 100d;
 
 					match = Regex.Match(e.Data, @"^\[download\]\s*(?:Destination:\s*(.*?)|(.*?) has already been downloaded)(?:$)");
 					if (match.Success)
@@ -93,19 +91,17 @@ namespace NeoEdit.Common
 				process.BeginOutputReadLine();
 				process.BeginErrorReadLine();
 
-				var tcs = new TaskCompletionSource<object>();
+				var done = new AutoResetEvent(false);
 				process.EnableRaisingEvents = true;
-				process.Exited += (s, e) => { process.WaitForExit(); tcs.TrySetResult(null); };
-				if (cancellationToken != default(CancellationToken))
-					cancellationToken.Register(tcs.SetCanceled);
+				process.Exited += (s, e) => { process.WaitForExit(); done.Set(); };
 				try
 				{
-					await tcs.Task;
-					if ((fileName != null) && (fileTime.HasValue))
+					done.WaitOne();
+					if (fileName != null)
 					{
 						var fileInfo = new FileInfo(Path.Combine(directory, fileName));
 						if (fileInfo.Exists)
-							fileInfo.LastWriteTime = fileTime.Value;
+							fileInfo.LastWriteTime = fileTime;
 					}
 				}
 				catch when (!process.HasExited)

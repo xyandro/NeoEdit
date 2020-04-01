@@ -252,20 +252,6 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		IRunTasksDialog newRunTasksDialog;
-		public IRunTasksDialog RunTasksDialog
-		{
-			get
-			{
-				EnsureInTransaction();
-				if (newRunTasksDialog == null)
-					lock (this)
-						if (newRunTasksDialog == null)
-							newRunTasksDialog = TabsWindow.CreateIRunTasksDialog();
-				return newRunTasksDialog;
-			}
-		}
-
 		void BeginTransaction(ExecuteState state)
 		{
 			if (this.state != null)
@@ -291,8 +277,6 @@ namespace NeoEdit.Editor
 
 			transactionTabs.ForEach(tab => tab.Rollback());
 			transactionTabs = null;
-
-			newRunTasksDialog = null;
 
 			state = null;
 		}
@@ -323,8 +307,6 @@ namespace NeoEdit.Editor
 
 			transactionTabs.ForEach(tab => tab.Commit());
 			transactionTabs = null;
-
-			newRunTasksDialog = null;
 
 			state = null;
 		}

@@ -547,13 +547,6 @@
     <Compile Include="Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\MultiProgressDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\MultiProgressDialog.xaml.cs">
-      <DependentUpon>MultiProgressDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\NetworkAbsoluteURLDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -687,13 +680,6 @@
     <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
       <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\RunTasksDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\RunTasksDialog.xaml.cs">
-      <DependentUpon>RunTasksDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\SelectByCountDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -777,6 +763,13 @@
     </Page>
     <Compile Include="Dialogs\TableTextToTableDialog.xaml.cs">
       <DependentUpon>TableTextToTableDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\TaskRunnerDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\TaskRunnerDialog.xaml.cs">
+      <DependentUpon>TaskRunnerDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\TextFirstDistinctDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -113,7 +113,7 @@ namespace NeoEdit.Editor
 								text += reader.GetString(0);
 					}
 
-					Tabs.AddTab(new Tab(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ParserType.SQL, modified: false));
+					QueueAddTab(new Tab(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ParserType.SQL, modified: false));
 				}
 				catch (Exception ex) { result = ex.Message; }
 				results.Add($"{sproc}: {result}");

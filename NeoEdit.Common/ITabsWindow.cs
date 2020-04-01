@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
@@ -105,13 +104,8 @@ namespace NeoEdit.Common
 		NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog();
 		object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action);
 		HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null);
-		IRunTasksDialog CreateIRunTasksDialog();
 		void RunHelpAboutDialog();
-
-		List<TResult> RunMultiProgressDialogAsync<TSource, TResult>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task<TResult>> getTask, Func<TSource, string> getName = null);
-		void RunMultiProgressDialogAsync<TSource>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, Task> getTask, Func<TSource, string> getName = null);
-		List<TResult> RunMultiProgressDialog<TSource, TResult>(string title, IEnumerable<TSource> items, Func<TSource, IProgress<ProgressReport>, CancellationToken, TResult> getTask, Func<TSource, string> getName = null);
-		void RunMultiProgressDialog<TSource>(string title, IEnumerable<TSource> items, Action<TSource, IProgress<ProgressReport>, CancellationToken> getTask, Func<TSource, string> getName = null);
+		bool RunTaskRunnerDialog(IReadOnlyList<TaskProgress> progresses, EventWaitHandle waitHandle);
 
 		void CloseWindow();
 		void QueueActivateTabs();

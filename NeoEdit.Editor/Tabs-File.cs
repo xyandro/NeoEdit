@@ -17,11 +17,11 @@ namespace NeoEdit.Editor
 	{
 		public void OpenFiles(IEnumerable<string> files)
 		{
-			RunTasksDialog.AddTasks(files, (file, progress) =>
+			TaskRunner.Add(files.Select(file => (Func<TaskProgress, Tab>)(progress =>
 			{
 				progress.Name = Path.GetFileName(file);
 				return new Tab(file);
-			}, results => results.ForEach(tab => AddTab(tab)));
+			})), tab => AddTab(tab));
 		}
 
 		void Execute_File_New_New(bool createTabs)

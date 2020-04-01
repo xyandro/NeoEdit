@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,6 +14,7 @@ using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.UI.Controls;
+using NeoEdit.UI.Dialogs;
 
 namespace NeoEdit.UI
 {
@@ -186,8 +188,11 @@ namespace NeoEdit.UI
 
 		public void CloseWindow()
 		{
-			Closing -= OnClosing;
-			Close();
+			Dispatcher.Invoke(() =>
+			{
+				Closing -= OnClosing;
+				Close();
+			});
 		}
 
 		TabLabel CreateTabLabel(ITab tab)
@@ -321,5 +326,7 @@ namespace NeoEdit.UI
 		}
 
 		public void ShowExceptionMessage(Exception ex) => App.ShowExceptionMessage(ex);
+
+		public bool RunTaskRunnerDialog(IReadOnlyList<TaskProgress> progresses, EventWaitHandle waitHandle) => TaskRunnerDialog.Run(this, progresses, waitHandle);
 	}
 }

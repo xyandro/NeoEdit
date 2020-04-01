@@ -126,7 +126,9 @@ namespace NeoEdit.Editor
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
-				Execute();
+				TaskRunner.Add(Execute);
+				TaskRunner.WaitForFinish(TabsWindow);
+				PostExecute();
 
 				if (sw != null)
 				{
@@ -149,10 +151,7 @@ namespace NeoEdit.Editor
 			finally
 			{
 				if (commit)
-				{
 					Commit();
-					PostExecute();
-				}
 				else
 					Rollback();
 
@@ -176,8 +175,9 @@ namespace NeoEdit.Editor
 		}
 
 
-		void Execute()
+		void Execute(TaskProgress progress)
 		{
+			progress.Name = "Tabs";
 			switch (state.Command)
 			{
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
@@ -287,18 +287,14 @@ namespace NeoEdit.Editor
 				case NECommand.Help_RunGC: Execute_Help_RunGC(); break;
 				default: ExecuteActiveTabs(); break;
 			}
-
-			if (newRunTasksDialog != null)
-				newRunTasksDialog.Run();
 		}
 
-		void ExecuteActiveTabs()
-		{
-			SortedActiveTabs.ForEach(tab => tab.Execute());
-		}
+		void ExecuteActiveTabs() => TaskRunner.Add(UnsortedActiveTabs.Select(tab => (Action<TaskProgress>)tab.Execute));
 
 		void PostExecute()
 		{
+			SortedActiveTabs.Select(tab => tab.TabsToAdd).NonNull().SelectMany().ForEach(tab => AddTab(tab));
+
 			var clipboardDatas = SortedActiveTabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
 			if (clipboardDatas.Any())
 			{

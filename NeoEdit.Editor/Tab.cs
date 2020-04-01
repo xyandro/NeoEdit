@@ -427,8 +427,9 @@ namespace NeoEdit.Editor
 		#endregion
 
 		#region Execute
-		public void Execute()
+		public void Execute(TaskProgress progress)
 		{
+			progress.Name = TabLabel;
 			switch (state.Command)
 			{
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
@@ -1343,10 +1344,11 @@ namespace NeoEdit.Editor
 		void OpenTable(Table table, string name = null)
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
-			var tab = new Tab(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-			Tabs.AddTab(tab);
-			tab.ContentType = contentType;
-			tab.DisplayName = name;
+			QueueAddTab(new Tab(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)
+			{
+				ContentType = contentType,
+				DisplayName = name,
+			});
 		}
 
 		List<string> RelativeSelectedFiles()

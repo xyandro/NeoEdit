@@ -167,6 +167,16 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		List<Tab> newTabsToAdd;
+		public IReadOnlyList<Tab> TabsToAdd => newTabsToAdd;
+		void QueueAddTab(Tab tab)
+		{
+			EnsureInTransaction();
+			if (newTabsToAdd == null)
+				newTabsToAdd = new List<Tab>();
+			newTabsToAdd.Add(tab);
+		}
+
 		Tuple<IReadOnlyList<string>, bool?> newClipboardData;
 		Tuple<IReadOnlyList<string>, bool?> ClipboardData
 		{
@@ -454,10 +464,18 @@ namespace NeoEdit.Editor
 			if (this.state != null)
 				throw new Exception("Already in a transaction");
 			this.state = state ?? new ExecuteState(NECommand.None);
+		}
+
+		void ClearState()
+		{
+			EnsureInTransaction();
+
 			newClipboardData = ChangedClipboardData = null;
 			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
 			ChangedDragFiles = null;
+			newTabsToAdd = null;
+			state = null;
 		}
 
 		public void Rollback()
@@ -500,7 +518,7 @@ namespace NeoEdit.Editor
 			newStartColumn = oldStartColumn;
 			newStartRow = oldStartRow;
 
-			state = null;
+			ClearState();
 		}
 
 		public void Commit()
@@ -543,7 +561,7 @@ namespace NeoEdit.Editor
 			oldStartColumn = newStartColumn;
 			oldStartRow = newStartRow;
 
-			state = null;
+			ClearState();
 		}
 	}
 }

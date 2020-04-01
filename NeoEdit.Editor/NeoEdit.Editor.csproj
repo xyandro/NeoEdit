@@ -247,6 +247,7 @@
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
     <Compile Include="Tabs.cs" />
+    <Compile Include="TaskRunner.cs" />
     <Compile Include="UndoRedo.cs" />
     <Compile Include="View\INEView.cs" />
     <Compile Include="View\NEHexView.cs" />

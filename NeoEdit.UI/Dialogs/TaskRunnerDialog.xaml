@@ -1,10 +1,10 @@
-﻿<controls:NEWindow x:Class="NeoEdit.UI.Dialogs.RunTasksDialog"
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.Dialogs.TaskRunnerDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
 	Title="Working..." Width="800" Height="600">
 
-	<Grid>
+	<Grid Margin="10">
 		<Grid.RowDefinitions>
 			<RowDefinition/>
 			<RowDefinition Height="10"/>
@@ -15,5 +15,4 @@
 
 		<Button Grid.Row="2" Content="Cancel" HorizontalAlignment="Center" IsCancel="True" Padding="10,1"/>
 	</Grid>
-
 </controls:NEWindow>

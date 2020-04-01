@@ -18,13 +18,15 @@ namespace NeoEdit.Editor
 {
 	partial class Tab
 	{
-		static async Task FetchURL(string url, string fileName)
+		static void FetchURL(string url, string fileName, TaskProgress progress)
 		{
+			progress.Name = url;
+
 			using (var client = new WebClient())
 			{
 				client.Headers["User-Agent"] = "Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)";
 				client.Encoding = Encoding.UTF8;
-				await client.DownloadFileTaskAsync(url, fileName);
+				client.DownloadFile(url, fileName);
 			}
 		}
 
@@ -114,7 +116,7 @@ namespace NeoEdit.Editor
 					return;
 			}
 
-			Tabs.TabsWindow.RunMultiProgressDialogAsync("Fetching URLs", urls.Zip(fileNames, (url, fileName) => new { url, fileName }), (obj, progress, cancellationToken) => FetchURL(obj.url, obj.fileName), obj => obj.url);
+			TaskRunner.Add(Enumerable.Range(0, urls.Count).Select(index => (Action<TaskProgress>)(progress => FetchURL(urls[index], fileNames[index], progress))));
 		}
 
 		object Configure_Network_FetchStream() => Tabs.TabsWindow.RunNetworkFetchStreamDialog(GetVariables(), Path.GetDirectoryName(FileName) ?? "");
@@ -128,7 +130,7 @@ namespace NeoEdit.Editor
 
 			var now = DateTime.Now;
 			var data = urls.Select((url, index) => Tuple.Create(url, now + TimeSpan.FromSeconds(index))).ToList();
-			Tabs.TabsWindow.RunMultiProgressDialogAsync("Downloading...", data, async (item, progress, canceled) => await YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress, canceled));
+			TaskRunner.Add(data.Select(item => (Action<TaskProgress>)(progress => YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress))));
 		}
 
 		object Configure_Network_FetchPlaylist() => Tabs.TabsWindow.RunNetworkFetchStreamDialog(GetVariables(), null);
@@ -140,8 +142,9 @@ namespace NeoEdit.Editor
 			if (!urls.Any())
 				return;
 
-			var items = Tabs.TabsWindow.RunMultiProgressDialogAsync("Getting playlist contents...", urls, async (item, progress, canceled) => await YouTubeDL.GetPlayListItems(item, progress, canceled)).ToList();
-			ReplaceSelections(items.Select(l => string.Join(TextView.DefaultEnding, l)).ToList());
+			var taskResults = new List<string>();
+			TaskRunner.Add(urls.Select(url => (Func<TaskProgress, string>)(progress => string.Join(TextView.DefaultEnding, YouTubeDL.GetPlayListItems(url, progress)))), taskResult => taskResults.Add(taskResult));
+			TaskRunner.AddResult(() => ReplaceSelections(taskResults));
 		}
 
 		void Execute_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }

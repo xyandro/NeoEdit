@@ -19,10 +19,12 @@ namespace NeoEdit.Editor
 {
 	partial class Tab
 	{
-		bool BinarySearchFile(string fileName, BinarySearcher searcher, ProgressData progress)
+		bool BinarySearchFile(string fileName, BinarySearcher searcher, TaskProgress progress)
 		{
 			try
 			{
+				progress.Name = Path.GetFileName(fileName);
+
 				if (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Cancel))
 					return true;
 
@@ -40,10 +42,12 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		bool TextSearchFile(string fileName, ISearcher searcher, ProgressData progress)
+		bool TextSearchFile(string fileName, ISearcher searcher, TaskProgress progress)
 		{
 			try
 			{
+				progress.Name = Path.GetFileName(fileName);
+
 				if (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Cancel))
 					return true;
 
@@ -58,7 +62,7 @@ namespace NeoEdit.Editor
 					while ((read < input.Length) && (!progress.Cancel))
 					{
 						var block = input.Read(buffer, read, (int)(input.Length - read));
-						progress.Percent = (int)(input.Position * 100 / input.Length);
+						progress.Percent = (double)input.Position / input.Length;
 						read += block;
 					}
 				}
@@ -73,8 +77,10 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static void CombineFiles(string outputFile, List<string> inputFiles, ProgressData progress)
+		static void CombineFiles(string outputFile, List<string> inputFiles, TaskProgress progress)
 		{
+			progress.Name = Path.GetFileName(outputFile);
+
 			var total = inputFiles.Sum(file => new FileInfo(file).Length);
 			var written = 0L;
 			var buffer = new byte[65536];
@@ -91,7 +97,7 @@ namespace NeoEdit.Editor
 								break;
 							outputStream.Write(buffer, 0, block);
 							written += block;
-							progress.Percent = (int)(written * 100 / total);
+							progress.Percent = (double)written / total;
 						}
 		}
 
@@ -229,10 +235,9 @@ namespace NeoEdit.Editor
 			return "INVALID";
 		}
 
-		static void ReencodeFile(string inputFile, ProgressData progress, Coder.CodePage inputCodePage, Coder.CodePage outputCodePage)
+		static void ReencodeFile(string inputFile, TaskProgress progress, Coder.CodePage inputCodePage, Coder.CodePage outputCodePage)
 		{
-			if (progress.Cancel)
-				return;
+			progress.Name = Path.GetFileName(inputFile);
 
 			var outputFile = Path.Combine(Path.GetDirectoryName(inputFile), Guid.NewGuid().ToString());
 			try
@@ -267,7 +272,7 @@ namespace NeoEdit.Editor
 
 							output.Write(bytes, 0, outByteCount);
 
-							progress.Percent = (int)(input.Position * 100 / input.Length);
+							progress.Percent = (double)input.Position / input.Length;
 						}
 					}
 				}
@@ -335,8 +340,10 @@ namespace NeoEdit.Editor
 				file.SetLength(value);
 		}
 
-		static void SplitFile(string fileName, string outputTemplate, long chunkSize, ProgressData progress)
+		static void SplitFile(string fileName, string outputTemplate, long chunkSize, TaskProgress progress)
 		{
+			progress.Name = Path.GetFileName(fileName);
+
 			if (chunkSize <= 0)
 				throw new Exception($"Invalid chunk size: {chunkSize}");
 
@@ -355,7 +362,7 @@ namespace NeoEdit.Editor
 							var block = inputFile.Read(buffer, 0, (int)Math.Min(buffer.Length, endChunk - inputFile.Position));
 							if (block <= 0)
 								throw new Exception("Failed to read file");
-							progress.Percent = (int)(inputFile.Position * 100 / inputFile.Length);
+							progress.Percent = (double)inputFile.Position / inputFile.Length;
 							outputFile.Write(buffer, 0, block);
 						}
 					}
@@ -612,11 +619,9 @@ namespace NeoEdit.Editor
 								.Where(tuple => (tuple.Item1 != null) && (tuple.Item1.Length != 0))
 							).Distinct().ToList()));
 
-				Tabs.RunTasksDialog.AddTasks(RelativeSelectedFiles().Select((file, index) => (file, index)), (obj, progress) =>
-				{
-					progress.Name = Path.GetFileName(obj.file);
-					return BinarySearchFile(obj.file, searchers[stringsToFind[obj.index]], progress);
-				}, results => Selections = Selections.Where((range, index) => results[index]).ToList());
+				var taskResults = new List<bool>();
+				TaskRunner.Add(Enumerable.Range(0, Selections.Count).Select(index => (Func<TaskProgress, bool>)(progress => BinarySearchFile(FileName.RelativeChild(Text.GetString(Selections[index])), searchers[stringsToFind[index]], progress))), taskResult => taskResults.Add(taskResult));
+				TaskRunner.AddResult(() => Selections = Selections.Where((range, index) => taskResults[index]).ToList());
 			}
 			else
 			{
@@ -644,11 +649,9 @@ namespace NeoEdit.Editor
 							});
 				}
 
-				Tabs.RunTasksDialog.AddTasks(RelativeSelectedFiles().Select((file, index) => (file, index)), (obj, progress) =>
-				{
-					progress.Name = Path.GetFileName(obj.file);
-					return TextSearchFile(obj.file, searchers[stringsToFind[obj.index]], progress);
-				}, results => Selections = Selections.Where((range, index) => results[index]).ToList());
+				var taskResults = new List<bool>();
+				TaskRunner.Add(Enumerable.Range(0, Selections.Count).Select(index => (Func<TaskProgress, bool>)(progress => TextSearchFile(FileName.RelativeChild(Text.GetString(Selections[index])), searchers[stringsToFind[index]], progress))), taskResult => taskResults.Add(taskResult));
+				TaskRunner.AddResult(() => Selections = Selections.Where((range, index) => taskResults[index]).ToList());
 			}
 		}
 
@@ -775,11 +778,9 @@ namespace NeoEdit.Editor
 		void Execute_Files_Hash()
 		{
 			var result = state.Configuration as FilesHashDialogResult;
-			Tabs.RunTasksDialog.AddTasks(RelativeSelectedFiles(), (file, progress) =>
-			{
-				progress.Name = Path.GetFileName(file);
-				return Hasher.Get(file, result.HashType, result.HMACKey, progress);
-			}, results => ReplaceSelections(results));
+			var taskResults = new List<string>();
+			TaskRunner.Add(Selections.Select(range => (Func<TaskProgress, string>)(progress => Hasher.Get(FileName.RelativeChild(Text.GetString(range)), result.HashType, result.HMACKey, progress))), taskResult => taskResults.Add(taskResult));
+			TaskRunner.AddResult(() => ReplaceSelections(taskResults));
 		}
 
 		object Configure_Files_Sign() => Tabs.TabsWindow.RunFilesSignDialog();
@@ -928,11 +929,7 @@ namespace NeoEdit.Editor
 		void Execute_Files_Operations_Encoding()
 		{
 			var result = state.Configuration as FilesOperationsEncodingDialogResult;
-			Tabs.RunTasksDialog.AddTasks(RelativeSelectedFiles(), (inputFile, progress) =>
-			{
-				progress.Name = Path.GetFileName(inputFile);
-				ReencodeFile(inputFile, progress, result.InputCodePage, result.OutputCodePage);
-			});
+			TaskRunner.Add(Selections.Select(range => (Action<TaskProgress>)(progress => ReencodeFile(FileName.RelativeChild(Text.GetString(range)), progress, result.InputCodePage, result.OutputCodePage))));
 		}
 
 		object Configure_Files_Operations_SplitFile()
@@ -950,11 +947,7 @@ namespace NeoEdit.Editor
 			var files = RelativeSelectedFiles();
 			var outputTemplates = state.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
 			var chunkSizes = state.GetExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
-			Tabs.RunTasksDialog.AddTasks(Enumerable.Range(0, Selections.Count), (index, progress) =>
-			{
-				progress.Name = Path.GetFileName(files[index]);
-				SplitFile(files[index], outputTemplates[index], chunkSizes[index], progress);
-			});
+			TaskRunner.Add(Enumerable.Range(0, Selections.Count).Select(index => (Action<TaskProgress>)(progress => SplitFile(FileName.RelativeChild(Text.GetString(Selections[index])), outputTemplates[index], chunkSizes[index], progress))));
 		}
 
 		object Configure_Files_Operations_CombineFiles() => Tabs.TabsWindow.RunFilesOperationsCombineFilesDialog(GetVariables());
@@ -988,11 +981,7 @@ namespace NeoEdit.Editor
 				inputs[current].Add(inputFile);
 			}
 
-			Tabs.RunTasksDialog.AddTasks(Enumerable.Range(0, outputFiles.Count), (index, progress) =>
-			{
-				progress.Name = Path.GetFileName(outputFiles[index]);
-				CombineFiles(outputFiles[index], inputs[index], progress);
-			});
+			TaskRunner.Add(Enumerable.Range(0, outputFiles.Count).Select(index => (Action<TaskProgress>)(progress => CombineFiles(outputFiles[index], inputs[index], progress))));
 		}
 	}
 }

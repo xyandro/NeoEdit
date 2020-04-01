@@ -1,10 +1,10 @@
 ﻿namespace NeoEdit.Common
 {
-	public class ProgressData
+	public class TaskProgress
 	{
 		public string Name { get; set; }
-		public int Percent { get; set; }
+		public double? Percent { get; set; }
 		public bool Cancel { get; set; }
-		public bool Done { get; set; } = true;
+		public bool Working { get; set; }
 	}
 }
