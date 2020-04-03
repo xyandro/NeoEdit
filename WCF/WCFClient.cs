@@ -47,6 +47,7 @@ namespace NeoEdit.WCF
 		readonly static List<AppDomain> appDomains = new List<AppDomain>();
 		readonly static Dictionary<string, WCFClient> wcfClients = new Dictionary<string, WCFClient>();
 
+		static bool hasWrittenWCFClientDLL = false;
 		static WCFClient GetWCFClient(string serviceURL)
 		{
 			if (!wcfClients.ContainsKey(serviceURL))
@@ -55,13 +56,17 @@ namespace NeoEdit.WCF
 				if (string.IsNullOrWhiteSpace(wcfClientAssemblyName))
 				{
 					var wcfAssembly = typeof(WCFClient).Assembly;
-					var jsonAssembly = typeof(JsonConvert).Assembly;
 					wcfClientAssemblyName = Path.Combine(Path.GetTempPath(), $"{wcfAssembly.GetName().Name}.dll");
-					var newtonsoftAssemblyName = Path.Combine(Path.GetTempPath(), $"{jsonAssembly.GetName().Name}.dll");
-					var extractor = AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetType("NeoEdit.Loader.Extractor")).Where(x => x != null).First();
-					var getAssembly = extractor.GetMethod("GetAssembly", BindingFlags.Static | BindingFlags.Public);
-					File.WriteAllBytes(wcfClientAssemblyName, getAssembly.Invoke(null, new object[] { wcfAssembly.FullName }) as byte[]);
-					File.WriteAllBytes(newtonsoftAssemblyName, getAssembly.Invoke(null, new object[] { jsonAssembly.FullName }) as byte[]);
+					if (!hasWrittenWCFClientDLL)
+					{
+						var jsonAssembly = typeof(JsonConvert).Assembly;
+						var newtonsoftAssemblyName = Path.Combine(Path.GetTempPath(), $"{jsonAssembly.GetName().Name}.dll");
+						var extractor = AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetType("NeoEdit.Loader.Extractor")).Where(x => x != null).First();
+						var getAssembly = extractor.GetMethod("GetAssembly", BindingFlags.Static | BindingFlags.Public);
+						File.WriteAllBytes(wcfClientAssemblyName, getAssembly.Invoke(null, new object[] { wcfAssembly.FullName }) as byte[]);
+						File.WriteAllBytes(newtonsoftAssemblyName, getAssembly.Invoke(null, new object[] { jsonAssembly.FullName }) as byte[]);
+						hasWrittenWCFClientDLL = true;
+					}
 				}
 
 				var appDomain = AppDomain.CreateDomain(serviceURL);
