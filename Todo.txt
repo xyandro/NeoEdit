@@ -12,7 +12,6 @@ Encode everything UTF-8, windows line endings
 Min/max selections in any tab on status bar
 Copy tabs active status so we can apply to another tabs window
 Add content menu item to copy (and maybe others?) current tag, could handle nested
-Stack macros
 If tab created or deleted move recording/playing macro
 Refactor clipboard; only change when UI requires it, keep separate clipboard for running macros (so they don't interfere with other things system may be doing)
 Refresh clipboard in handle command (if not macro)

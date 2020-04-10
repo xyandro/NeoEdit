@@ -10,11 +10,19 @@ namespace NeoEdit.Editor
 {
 	partial class Tabs
 	{
+		Macro playingMacro, recordingMacro;
+		Action playingMacroNextAction;
+		void PlayMacro(Macro macro, Action action = null)
+		{
+			playingMacro = macro;
+			playingMacroNextAction = action;
+		}
+
 		static string QuickMacro(int num) => $"QuickText{num}.xml";
 
-		void ValidateNoCurrentMacro()
+		void EnsureNotRecording()
 		{
-			if (RecordingMacro == null)
+			if (recordingMacro == null)
 				return;
 
 			throw new Exception("Cannot start recording; recording is already in progess.");
@@ -22,7 +30,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Macro_Record_Quick(int quickNum)
 		{
-			if (RecordingMacro == null)
+			if (recordingMacro == null)
 				Execute_Macro_Record_Record();
 			else
 				Execute_Macro_Record_StopRecording(QuickMacro(quickNum));
@@ -30,37 +38,37 @@ namespace NeoEdit.Editor
 
 		void Execute_Macro_Record_Record()
 		{
-			ValidateNoCurrentMacro();
-			RecordingMacro = new Macro();
+			EnsureNotRecording();
+			recordingMacro = new Macro();
 		}
 
 		void Execute_Macro_Record_StopRecording(string fileName = null)
 		{
-			if (RecordingMacro == null)
+			if (recordingMacro == null)
 				throw new Exception($"Cannot stop recording; recording not in progess.");
 
-			var macro = RecordingMacro;
-			RecordingMacro = null;
+			var macro = recordingMacro;
+			recordingMacro = null;
 			macro.Save(fileName, true);
 		}
 
 		void Execute_Macro_Append_Quick(int quickNum)
 		{
-			if (RecordingMacro == null)
-				RecordingMacro = Macro.Load(QuickMacro(quickNum), true);
+			if (recordingMacro == null)
+				recordingMacro = Macro.Load(QuickMacro(quickNum), true);
 			else
 				Execute_Macro_Record_StopRecording(QuickMacro(quickNum));
 		}
 
 		void Execute_Macro_Append_Append()
 		{
-			ValidateNoCurrentMacro();
-			RecordingMacro = Macro.Load();
+			EnsureNotRecording();
+			recordingMacro = Macro.Load();
 		}
 
-		void Execute_Macro_Play_Quick(int quickNum) => Macro.Load(QuickMacro(quickNum), true).Play(this, MacroVisualize, playing => MacroPlaying = playing);
+		void Execute_Macro_Play_Quick(int quickNum) => PlayMacro(Macro.Load(QuickMacro(quickNum), true));
 
-		void Execute_Macro_Play_Play() => Macro.Load().Play(this, MacroVisualize, playing => MacroPlaying = playing);
+		void Execute_Macro_Play_Play() => PlayMacro(Macro.Load());
 
 		void Execute_Macro_Play_Repeat()
 		{
@@ -82,7 +90,7 @@ namespace NeoEdit.Editor
 					if (!expression.Evaluate<bool>(Focused.GetVariables()))
 						return;
 
-				macro.Play(this, MacroVisualize, playing => MacroPlaying = playing, startNext);
+				PlayMacro(macro, startNext);
 			};
 			startNext();
 		}
@@ -97,7 +105,7 @@ namespace NeoEdit.Editor
 				if (!files.Any())
 					return;
 				AddTab(new Tab(files.Dequeue()));
-				macro.Play(this, MacroVisualize, playing => MacroPlaying = playing, startNext);
+				PlayMacro(macro, startNext);
 			};
 			startNext();
 		}

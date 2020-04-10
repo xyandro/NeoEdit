@@ -84,16 +84,39 @@ namespace NeoEdit.Editor
 			return keysAndValuesMap;
 		}
 
-		public Macro RecordingMacro { get; set; }
-		public Macro MacroPlaying { get; set; }
-
-		public void HandleCommand(ExecuteState state, bool configure = true)
+		void PlayMacro()
 		{
-			if ((MacroPlaying != null) && (configure))
+			var stepIndex = 0;
+			while (playingMacro != null)
+			{
+				var step = playingMacro.GetStep(stepIndex++);
+				if (step == null)
+				{
+					var action = playingMacroNextAction;
+					playingMacro = null;
+					playingMacroNextAction = null;
+					stepIndex = 0;
+					action?.Invoke();
+					continue;
+				}
+
+				RunCommand(step, true);
+			}
+		}
+
+		public void HandleCommand(ExecuteState state)
+		{
+			RunCommand(state);
+			PlayMacro();
+		}
+
+		void RunCommand(ExecuteState state, bool inMacro = false)
+		{
+			if ((playingMacro != null) && (!inMacro))
 			{
 				// User is trying to do something in the middle of a macro
 				if ((state.Command == NECommand.Internal_Key) && (state.Key == Key.Escape))
-					MacroPlaying.Stop();
+					playingMacro = null;
 				return;
 			}
 
@@ -105,7 +128,7 @@ namespace NeoEdit.Editor
 					if (lastAction == null)
 						throw new Exception("No last action available");
 					state = lastAction.GetExecuteState();
-					configure = false;
+					inMacro = true;
 				}
 
 				BeginTransaction(state);
@@ -113,9 +136,9 @@ namespace NeoEdit.Editor
 				state.ClipboardDataMapFunc = GetClipboardDataMap;
 				state.KeysAndValuesFunc = GetKeysAndValuesMap;
 
-				if (configure)
+				if (!inMacro)
 				{
-					if (MacroPlaying != null)
+					if (playingMacro != null)
 						return;
 
 					if (state.Configuration == null)
@@ -140,8 +163,7 @@ namespace NeoEdit.Editor
 				if (action != null)
 				{
 					lastAction = action;
-					if (RecordingMacro != null)
-						RecordingMacro?.AddAction(action);
+					recordingMacro?.AddAction(action);
 				}
 
 				commit = true;

@@ -19,7 +19,7 @@ namespace NeoEdit.Common
 		bool MacroVisualize { get; }
 
 		bool IsActive(ITab tab);
-		void HandleCommand(ExecuteState state, bool configure = true);
+		void HandleCommand(ExecuteState state);
 		bool HandlesKey(ModifierKeys modifiers, Key key);
 		List<string> GetStatusBar();
 	}

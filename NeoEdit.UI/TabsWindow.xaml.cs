@@ -50,11 +50,10 @@ namespace NeoEdit.UI
 			Closing += OnClosing;
 		}
 
-		public void HandleCommand(ExecuteState state, bool configure = true)
+		public void HandleCommand(ExecuteState state)
 		{
-			if (configure)
-				state.Modifiers = Keyboard.Modifiers;
-			Tabs.HandleCommand(state, configure);
+			state.Modifiers = Keyboard.Modifiers;
+			Tabs.HandleCommand(state);
 		}
 
 		readonly RunOnceTimer activateTabsTimer, drawTimer;

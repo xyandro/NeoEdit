@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Threading;
 using System.Xml.Linq;
 using Microsoft.Win32;
 using NeoEdit.Common;
@@ -12,7 +10,6 @@ namespace NeoEdit.Editor
 {
 	public class Macro
 	{
-		bool stop = false;
 		readonly List<MacroAction> actions = new List<MacroAction>();
 
 		public void AddAction(MacroAction state)
@@ -23,41 +20,6 @@ namespace NeoEdit.Editor
 			else
 				actions.Add(state);
 		}
-
-		public void Play(Tabs tabs, bool visualize, Action<Macro> setMacroPlaying, Action finished = null)
-		{
-			setMacroPlaying(this);
-			var timer = new DispatcherTimer(visualize ? DispatcherPriority.ApplicationIdle : DispatcherPriority.Input);
-			var ctr = 0;
-			timer.Tick += (s, e) =>
-			{
-				try
-				{
-					if (stop)
-						throw new Exception("Macro processing aborted.");
-
-					if (ctr >= actions.Count)
-					{
-						timer.Stop();
-						setMacroPlaying(null);
-						finished?.Invoke();
-						return;
-					}
-
-					var action = actions[ctr++].GetExecuteState();
-					tabs.HandleCommand(action, false);
-				}
-				catch
-				{
-					timer.Stop();
-					setMacroPlaying(null);
-					throw;
-				}
-			};
-			timer.Start();
-		}
-
-		public void Stop() => stop = true;
 
 		public readonly static string MacroDirectory = Path.Combine(Helpers.NeoEditAppData, "Macro");
 
@@ -101,7 +63,7 @@ namespace NeoEdit.Editor
 		{
 			if (fileName == null)
 			{
-				fileName = Macro.ChooseMacro();
+				fileName = ChooseMacro();
 				if (fileName == null)
 					return null;
 			}
@@ -110,5 +72,7 @@ namespace NeoEdit.Editor
 
 			return XMLConverter.FromXML<Macro>(XElement.Load(fileName));
 		}
+
+		public ExecuteState GetStep(int step) => step < actions.Count ? actions[step].GetExecuteState() : null;
 	}
 }
