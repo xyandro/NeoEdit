@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
@@ -90,40 +89,31 @@ namespace NeoEdit.Editor
 			if (playingMacro == null)
 				return;
 
-			var progress = new TaskProgress { Name = "Macro", Working = true };
-			var finished = new ManualResetEvent(false);
-			new Thread(() =>
+			var stepIndex = 0;
+			while (true)
 			{
-				var stepIndex = 0;
-				while (true)
+				var macro = playingMacro;
+				if (macro == null)
+					break;
+
+				if (stepIndex == macro.Actions.Count)
 				{
-					var macro = playingMacro;
-					if (macro == null)
-						break;
-
-					if (stepIndex == macro.Actions.Count)
-					{
-						var action = playingMacroNextAction;
-						playingMacro = null;
-						playingMacroNextAction = null;
-						stepIndex = 0;
-						// The action may queue up another macro
-						action?.Invoke();
-						continue;
-					}
-
-					progress.Percent = (double)stepIndex / macro.Actions.Count;
-					RunCommand(macro.Actions[stepIndex++].GetExecuteState(), true);
-					if (MacroVisualize)
-						TabsWindow.QueueDraw();
+					var action = playingMacroNextAction;
+					playingMacro = null;
+					playingMacroNextAction = null;
+					stepIndex = 0;
+					// The action may queue up another macro
+					action?.Invoke();
+					continue;
 				}
-				finished.Set();
-			}).Start();
-			if (!TabsWindow.RunTaskRunnerDialog(new List<TaskProgress> { progress }, finished))
-			{
-				playingMacro = null;
-				playingMacroNextAction = null;
+
+				TabsWindow.SetMacroProgress((double)stepIndex / macro.Actions.Count);
+				RunCommand(macro.Actions[stepIndex++].GetExecuteState(), true);
+				if (MacroVisualize)
+					TabsWindow.QueueDraw();
 			}
+			if (!MacroVisualize)
+				TabsWindow.QueueDraw();
 		}
 
 		public void HandleCommand(ExecuteState state)
@@ -465,30 +455,6 @@ namespace NeoEdit.Editor
 		}
 
 		public void QueueActivateTabs() => TabsWindow.QueueActivateTabs();
-
-		public void ShowTab(Tab tab, Action action) => ShowTab(tab, () => { action(); return 0; });
-
-		public T ShowTab<T>(Tab tab, Func<T> action)
-		{
-			lock (this)
-			{
-				var activeTabs = UnsortedActiveTabs.ToList();
-				var focusedTab = Focused;
-				ClearAllActive();
-				SetActive(tab);
-				Focused = tab;
-				TabsWindow.QueueDraw();
-
-				var result = action();
-
-				ClearAllActive();
-				foreach (var activeTab in activeTabs)
-					SetActive(activeTab);
-				Focused = focusedTab;
-
-				return result;
-			}
-		}
 
 		public void SetTabSize(int columns, int rows)
 		{

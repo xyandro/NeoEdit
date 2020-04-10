@@ -16,24 +16,21 @@ namespace NeoEdit.Editor
 	{
 		string GetSaveFileName()
 		{
-			return Tabs.ShowTab(this, () =>
+			var dialog = new SaveFileDialog
 			{
-				var dialog = new SaveFileDialog
-				{
-					Filter = "All files|*.*",
-					FileName = Path.GetFileName(FileName) ?? DisplayName,
-					InitialDirectory = Path.GetDirectoryName(FileName),
-					DefaultExt = "txt",
-				};
-				if (dialog.ShowDialog() != true)
-					throw new OperationCanceledException();
+				Filter = "All files|*.*",
+				FileName = Path.GetFileName(FileName) ?? DisplayName,
+				InitialDirectory = Path.GetDirectoryName(FileName),
+				DefaultExt = "txt",
+			};
+			if (dialog.ShowDialog() != true)
+				throw new OperationCanceledException();
 
-				if (Directory.Exists(dialog.FileName))
-					throw new Exception("A directory by that name already exists");
-				if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
-					throw new Exception("Directory doesn't exist");
-				return dialog.FileName;
-			});
+			if (Directory.Exists(dialog.FileName))
+				throw new Exception("A directory by that name already exists");
+			if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
+				throw new Exception("Directory doesn't exist");
+			return dialog.FileName;
 		}
 
 		void InsertFiles(IEnumerable<string> fileNames)

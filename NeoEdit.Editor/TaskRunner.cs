@@ -8,7 +8,6 @@ namespace NeoEdit.Editor
 {
 	static public class TaskRunner
 	{
-		const int DelayBeforeUI = 500;
 		const int NumThreads = 9;
 
 		static readonly IReadOnlyList<TaskProgress> progresses = new List<TaskProgress>(Enumerable.Range(0, NumThreads + 1).Select(x => new TaskProgress()));
@@ -150,26 +149,17 @@ namespace NeoEdit.Editor
 
 		static public void WaitForFinish(ITabsWindow tabsWindow)
 		{
-			// Lock so only one instance can be waiting
-			lock (finished)
-			{
-				if (!finished.WaitOne(DelayBeforeUI))
-					if (!tabsWindow.RunTaskRunnerDialog(progresses, finished))
-					{
-						Cancel(new OperationCanceledException());
-						finished.WaitOne();
-					}
+			finished.WaitOne();
 
-				lock (tasks)
-				{
-					var toThrow = exception;
-					exception = null;
-					tasks.Clear();
-					nextTask = nextResult = 0;
-					progresses.ForEach(progress => progress.Cancel = false);
-					if (toThrow != null)
-						throw toThrow;
-				}
+			lock (tasks)
+			{
+				var toThrow = exception;
+				exception = null;
+				tasks.Clear();
+				nextTask = nextResult = 0;
+				progresses.ForEach(progress => progress.Cancel = false);
+				if (toThrow != null)
+					throw toThrow;
 			}
 		}
 	}

@@ -77,5 +77,7 @@ namespace NeoEdit.Common
 				expressions[expression] = new NEExpression(expression);
 			return expressions[expression];
 		}
+
+		public override string ToString() => Command.ToString();
 	}
 }

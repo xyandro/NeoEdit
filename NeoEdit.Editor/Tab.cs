@@ -1569,7 +1569,7 @@ namespace NeoEdit.Editor
 			lock (state)
 			{
 				if ((!state.SavedAnswers[name].HasFlag(MessageOptions.All)) && (!state.SavedAnswers[name].HasFlag(MessageOptions.Cancel)))
-					Tabs.ShowTab(this, () => state.SavedAnswers[name] = Tabs.TabsWindow.RunMessageDialog("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
+					state.SavedAnswers[name] = Tabs.TabsWindow.RunMessageDialog("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel);
 				if (state.SavedAnswers[name] == MessageOptions.Cancel)
 					throw new OperationCanceledException();
 				return state.SavedAnswers[name].HasFlag(MessageOptions.Yes);

@@ -764,13 +764,6 @@
     <Compile Include="Dialogs\TableTextToTableDialog.xaml.cs">
       <DependentUpon>TableTextToTableDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\TaskRunnerDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\TaskRunnerDialog.xaml.cs">
-      <DependentUpon>TaskRunnerDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\TextFirstDistinctDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

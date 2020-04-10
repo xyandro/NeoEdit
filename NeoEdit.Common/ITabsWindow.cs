@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
-using System.Threading;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
@@ -105,10 +104,11 @@ namespace NeoEdit.Common
 		object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action);
 		HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null);
 		void RunHelpAboutDialog();
-		bool RunTaskRunnerDialog(IReadOnlyList<TaskProgress> progresses, EventWaitHandle waitHandle);
 
 		void CloseWindow();
 		void QueueActivateTabs();
 		void SetForeground();
+		void SetMacroProgress(double? percent);
+		void SetTaskRunnerProgress(double? percent);
 	}
 }

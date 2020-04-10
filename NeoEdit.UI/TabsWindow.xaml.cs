@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -14,12 +15,20 @@ using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.UI.Controls;
-using NeoEdit.UI.Dialogs;
 
 namespace NeoEdit.UI
 {
 	partial class TabsWindow : ITabsWindow
 	{
+		readonly static BlockingCollection<Action> commands = new BlockingCollection<Action>(new ConcurrentQueue<Action>());
+
+		static void RunCommandsThread()
+		{
+			// We shouldn't run commands on the main thread because the UI can't update (and we may need a dialog to finish a command)
+			while (true)
+				commands.Take()();
+		}
+
 		readonly ITabs Tabs;
 
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
@@ -31,6 +40,8 @@ namespace NeoEdit.UI
 
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
+
+			new Thread(() => RunCommandsThread()).Start();
 		}
 
 		public TabsWindow(ITabs tabs)
@@ -53,7 +64,7 @@ namespace NeoEdit.UI
 		public void HandleCommand(ExecuteState state)
 		{
 			state.Modifiers = Keyboard.Modifiers;
-			Tabs.HandleCommand(state);
+			commands.Add(() => Tabs.HandleCommand(state));
 		}
 
 		readonly RunOnceTimer activateTabsTimer, drawTimer;
@@ -326,6 +337,8 @@ namespace NeoEdit.UI
 
 		public void ShowExceptionMessage(Exception ex) => Dispatcher.Invoke(() => App.ShowExceptionMessage(ex));
 
-		public bool RunTaskRunnerDialog(IReadOnlyList<TaskProgress> progresses, EventWaitHandle waitHandle) => TaskRunnerDialog.Run(this, progresses, waitHandle);
+		double? macroProgress, taskRunnerProgress;
+		public void SetMacroProgress(double? percent) => macroProgress = percent;
+		public void SetTaskRunnerProgress(double? percent) => taskRunnerProgress = percent;
 	}
 }
