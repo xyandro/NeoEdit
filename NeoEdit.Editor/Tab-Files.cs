@@ -25,9 +25,6 @@ namespace NeoEdit.Editor
 			{
 				progress.Name = Path.GetFileName(fileName);
 
-				if (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Cancel))
-					return true;
-
 				if (Directory.Exists(fileName))
 					return false;
 
@@ -35,10 +32,7 @@ namespace NeoEdit.Editor
 			}
 			catch (Exception ex)
 			{
-				if (!state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(BinarySearchFile)] = Tabs.TabsWindow.RunMessageDialog("Confirm", $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
-
-				return (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(BinarySearchFile)].HasFlag(MessageOptions.Cancel));
+				return QueryUser(nameof(BinarySearchFile), $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.None);
 			}
 		}
 
@@ -47,9 +41,6 @@ namespace NeoEdit.Editor
 			try
 			{
 				progress.Name = Path.GetFileName(fileName);
-
-				if (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Cancel))
-					return true;
 
 				if (Directory.Exists(fileName))
 					return false;
@@ -71,9 +62,7 @@ namespace NeoEdit.Editor
 			}
 			catch (Exception ex)
 			{
-				if (!state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(TextSearchFile)] = Tabs.TabsWindow.RunMessageDialog("Confirm", $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
-				return (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Yes)) || (state.SavedAnswers[nameof(TextSearchFile)].HasFlag(MessageOptions.Cancel));
+				return QueryUser(nameof(TextSearchFile), $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.None);
 			}
 		}
 
@@ -822,18 +811,14 @@ namespace NeoEdit.Editor
 				throw new Exception($"Destinations already exist:\n{string.Join("\n", invalid)}");
 
 			var confirmCopyMove = $"{nameof(Execute_Files_Operations_CopyMove)}_Confirm";
-			if (!state.SavedAnswers[confirmCopyMove].HasFlag(MessageOptions.All))
-				state.SavedAnswers[confirmCopyMove] = Tabs.TabsWindow.RunMessageDialog("Confirm", $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
-			if (!state.SavedAnswers[confirmCopyMove].HasFlag(MessageOptions.Yes))
+			if (!QueryUser(confirmCopyMove, $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?", MessageOptions.Yes))
 				return;
 
 			var overwriteCopyMove = $"{nameof(Execute_Files_Operations_CopyMove)}_Overwrite";
 			invalid = newFileNames.Zip(oldFileNames, (newFileName, oldFileName) => new { newFileName, oldFileName }).Where(obj => (!string.Equals(obj.newFileName, obj.oldFileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(obj.newFileName))).Select(obj => obj.newFileName).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
-				if (!state.SavedAnswers[overwriteCopyMove].HasFlag(MessageOptions.All))
-					state.SavedAnswers[overwriteCopyMove] = Tabs.TabsWindow.RunMessageDialog("Confirm", $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
-				if (!state.SavedAnswers[overwriteCopyMove].HasFlag(MessageOptions.Yes))
+				if (!QueryUser(overwriteCopyMove, $"Are you sure you want to overwrite these files:\n{string.Join("\n", invalid)}", MessageOptions.Yes))
 					return;
 			}
 
@@ -866,9 +851,7 @@ namespace NeoEdit.Editor
 			var sureAnswer = $"{nameof(Execute_Files_Operations_Delete)}_Sure";
 			var continueAnswer = $"{nameof(Execute_Files_Operations_Delete)}_Continue";
 
-			if (!state.SavedAnswers[sureAnswer].HasFlag(MessageOptions.All))
-				state.SavedAnswers[sureAnswer] = Tabs.TabsWindow.RunMessageDialog("Confirm", "Are you sure you want to delete these files/directories?", MessageOptions.YesNoAllCancel, MessageOptions.No, MessageOptions.Cancel);
-			if (!state.SavedAnswers[sureAnswer].HasFlag(MessageOptions.Yes))
+			if (!QueryUser(sureAnswer, "Are you sure you want to delete these files/directories?", MessageOptions.No))
 				return;
 
 			foreach (var file in files)
@@ -882,10 +865,7 @@ namespace NeoEdit.Editor
 				}
 				catch (Exception ex)
 				{
-					if (!state.SavedAnswers[continueAnswer].HasFlag(MessageOptions.All))
-						state.SavedAnswers[continueAnswer] = Tabs.TabsWindow.RunMessageDialog("Confirm", $"An error occurred:\n\n{ex.Message}\n\nContinue?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
-
-					if (!state.SavedAnswers[continueAnswer].HasFlag(MessageOptions.Yes))
+					if (!QueryUser(continueAnswer, $"An error occurred:\n\n{ex.Message}\n\nContinue?", MessageOptions.Yes))
 						throw new OperationCanceledException();
 				}
 			}

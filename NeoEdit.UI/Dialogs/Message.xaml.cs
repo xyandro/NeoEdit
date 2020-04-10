@@ -21,8 +21,6 @@ namespace NeoEdit.UI.Dialogs
 		public new MessageOptions Show()
 		{
 			ShowDialog();
-			if (Answer.HasFlag(MessageOptions.Cancel))
-				throw new OperationCanceledException();
 			return Answer;
 		}
 

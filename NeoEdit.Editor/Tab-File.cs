@@ -80,10 +80,7 @@ namespace NeoEdit.Editor
 
 			if (File.Exists(newFileName))
 			{
-				if (!state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyClipboard)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyClipboard)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "File already exists; overwrite?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
-
-				if (!state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyClipboard)].HasFlag(MessageOptions.Yes))
+				if (!QueryUser(nameof(Execute_File_SaveCopy_SaveCopyClipboard), "File already exists; overwrite?", MessageOptions.None))
 					return;
 			}
 
@@ -101,10 +98,7 @@ namespace NeoEdit.Editor
 
 			if (File.Exists(newFileName))
 			{
-				if (!state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyByExpression)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyByExpression)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "File already exists; overwrite?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
-
-				if (!state.SavedAnswers[nameof(Execute_File_SaveCopy_SaveCopyByExpression)].HasFlag(MessageOptions.Yes))
+				if (!QueryUser(nameof(Execute_File_SaveCopy_SaveCopyByExpression), "File already exists; overwrite?", MessageOptions.None))
 					return;
 			}
 
@@ -145,10 +139,7 @@ namespace NeoEdit.Editor
 
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
-				if (!state.SavedAnswers[nameof(Execute_File_Operations_RenameClipboard)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Operations_RenameClipboard)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "File already exists; overwrite?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
-
-				if (!state.SavedAnswers[nameof(Execute_File_Operations_RenameClipboard)].HasFlag(MessageOptions.Yes))
+				if (!QueryUser(nameof(Execute_File_Operations_RenameClipboard), "File already exists; overwrite?", MessageOptions.None))
 					return;
 			}
 
@@ -172,10 +163,7 @@ namespace NeoEdit.Editor
 
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
-				if (!state.SavedAnswers[nameof(Execute_File_Operations_RenameByExpression)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Operations_RenameByExpression)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "File already exists; overwrite?", MessageOptions.YesNoAllCancel, MessageOptions.None, MessageOptions.Cancel);
-
-				if (!state.SavedAnswers[nameof(Execute_File_Operations_RenameByExpression)].HasFlag(MessageOptions.Yes))
+				if (!QueryUser(nameof(Execute_File_Operations_RenameByExpression), "File already exists; overwrite?", MessageOptions.None))
 					return;
 			}
 
@@ -193,10 +181,7 @@ namespace NeoEdit.Editor
 			if (FileName == null)
 				return;
 
-			if (!state.SavedAnswers[nameof(Execute_File_Operations_Delete)].HasFlag(MessageOptions.All))
-				state.SavedAnswers[nameof(Execute_File_Operations_Delete)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "Are you sure you want to delete this file?", MessageOptions.YesNoAll, MessageOptions.No, MessageOptions.No);
-
-			if (!state.SavedAnswers[nameof(Execute_File_Operations_Delete)].HasFlag(MessageOptions.Yes))
+			if (!QueryUser(nameof(Execute_File_Operations_Delete), "Are you sure you want to delete this file?", MessageOptions.No))
 				return;
 
 			File.Delete(FileName);
@@ -253,10 +238,7 @@ namespace NeoEdit.Editor
 
 			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
 			{
-				if (!state.SavedAnswers[nameof(Execute_File_Refresh)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Refresh)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "This file has been updated on disk. Reload?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
-
-				if (!state.SavedAnswers[nameof(Execute_File_Refresh)].HasFlag(MessageOptions.Yes))
+				if (!QueryUser(nameof(Execute_File_Refresh), "This file has been updated on disk. Reload?", MessageOptions.Yes))
 					return;
 
 				Execute_File_Revert();
@@ -269,9 +251,7 @@ namespace NeoEdit.Editor
 		{
 			if (IsModified)
 			{
-				if (!state.SavedAnswers[nameof(Execute_File_Revert)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Revert)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "You have unsaved changes. Are you sure you want to reload?", MessageOptions.YesNoAllCancel, MessageOptions.No, MessageOptions.No);
-				if (!state.SavedAnswers[nameof(Execute_File_Revert)].HasFlag(MessageOptions.Yes))
+				if (!QueryUser(nameof(Execute_File_Revert), "You have unsaved changes. Are you sure you want to reload?", MessageOptions.No))
 					return;
 			}
 
@@ -307,9 +287,7 @@ namespace NeoEdit.Editor
 
 			if (files.Count > 5)
 			{
-				if (!state.SavedAnswers[nameof(Execute_File_Insert_CopiedCut)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Insert_CopiedCut)] = Tabs.TabsWindow.RunMessageDialog("Confirm", $"Are you sure you want to insert these {files.Count} files?", MessageOptions.YesNoAllCancel, MessageOptions.Yes, MessageOptions.Cancel);
-				if (!state.SavedAnswers[nameof(Execute_File_Insert_CopiedCut)].HasFlag(MessageOptions.Yes))
+				if (!QueryUser(nameof(Execute_File_Insert_CopiedCut), $"Are you sure you want to insert these {files.Count} files?", MessageOptions.Yes))
 					return;
 			}
 
@@ -333,9 +311,7 @@ namespace NeoEdit.Editor
 			var result = state.Configuration as EncodingDialogResult;
 			if (IsModified)
 			{
-				if (!state.SavedAnswers[nameof(Execute_File_Encoding_ReopenWithEncoding)].HasFlag(MessageOptions.All))
-					state.SavedAnswers[nameof(Execute_File_Encoding_ReopenWithEncoding)] = Tabs.TabsWindow.RunMessageDialog("Confirm", "You have unsaved changes. Are you sure you want to reload?", MessageOptions.YesNoAll, MessageOptions.Yes, MessageOptions.No);
-				if (!state.SavedAnswers[nameof(Execute_File_Encoding_ReopenWithEncoding)].HasFlag(MessageOptions.Yes))
+				if (!QueryUser(nameof(Execute_File_Encoding_ReopenWithEncoding), "You have unsaved changes. Are you sure you want to reload?", MessageOptions.Yes))
 					return;
 			}
 
