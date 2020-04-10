@@ -11,6 +11,7 @@ namespace NeoEdit.Editor
 	public class Macro
 	{
 		readonly List<MacroAction> actions = new List<MacroAction>();
+		public IReadOnlyList<MacroAction> Actions => actions;
 
 		public void AddAction(MacroAction state)
 		{
@@ -72,7 +73,5 @@ namespace NeoEdit.Editor
 
 			return XMLConverter.FromXML<Macro>(XElement.Load(fileName));
 		}
-
-		public ExecuteState GetStep(int step) => step < actions.Count ? actions[step].GetExecuteState() : null;
 	}
 }

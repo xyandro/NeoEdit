@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
@@ -86,21 +87,42 @@ namespace NeoEdit.Editor
 
 		void PlayMacro()
 		{
-			var stepIndex = 0;
-			while (playingMacro != null)
-			{
-				var step = playingMacro.GetStep(stepIndex++);
-				if (step == null)
-				{
-					var action = playingMacroNextAction;
-					playingMacro = null;
-					playingMacroNextAction = null;
-					stepIndex = 0;
-					action?.Invoke();
-					continue;
-				}
+			if (playingMacro == null)
+				return;
 
-				RunCommand(step, true);
+			var progress = new TaskProgress { Name = "Macro", Working = true };
+			var finished = new ManualResetEvent(false);
+			new Thread(() =>
+			{
+				var stepIndex = 0;
+				while (true)
+				{
+					var macro = playingMacro;
+					if (macro == null)
+						break;
+
+					if (stepIndex == macro.Actions.Count)
+					{
+						var action = playingMacroNextAction;
+						playingMacro = null;
+						playingMacroNextAction = null;
+						stepIndex = 0;
+						// The action may queue up another macro
+						action?.Invoke();
+						continue;
+					}
+
+					progress.Percent = (double)stepIndex / macro.Actions.Count;
+					RunCommand(macro.Actions[stepIndex++].GetExecuteState(), true);
+					if (MacroVisualize)
+						TabsWindow.QueueDraw();
+				}
+				finished.Set();
+			}).Start();
+			if (!TabsWindow.RunTaskRunnerDialog(new List<TaskProgress> { progress }, finished))
+			{
+				playingMacro = null;
+				playingMacroNextAction = null;
 			}
 		}
 
@@ -177,7 +199,8 @@ namespace NeoEdit.Editor
 				else
 					Rollback();
 
-				TabsWindow.QueueDraw();
+				if (!inMacro)
+					TabsWindow.QueueDraw();
 			}
 		}
 

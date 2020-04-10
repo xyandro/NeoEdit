@@ -324,7 +324,7 @@ namespace NeoEdit.UI
 			SetForegroundWindow(new WindowInteropHelper(this).Handle);
 		}
 
-		public void ShowExceptionMessage(Exception ex) => App.ShowExceptionMessage(ex);
+		public void ShowExceptionMessage(Exception ex) => Dispatcher.Invoke(() => App.ShowExceptionMessage(ex));
 
 		public bool RunTaskRunnerDialog(IReadOnlyList<TaskProgress> progresses, EventWaitHandle waitHandle) => TaskRunnerDialog.Run(this, progresses, waitHandle);
 	}

@@ -34,7 +34,7 @@ namespace NeoEdit.UI.Dialogs
 
 		void CreateUI()
 		{
-			var columns = (int)(Math.Sqrt(progresses.Count - 1) + 0.5);
+			var columns = Math.Max(1, (int)(Math.Sqrt(progresses.Count - 1) + 0.5));
 			var rows = (progresses.Count - 1 + columns - 1) / columns + 1;
 
 			for (var column = 0; column < columns; ++column)
