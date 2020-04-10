@@ -48,11 +48,11 @@ namespace NeoEdit.UI
 			Closing += OnClosing;
 		}
 
-		public bool HandleCommand(ExecuteState state, bool configure = true)
+		public void HandleCommand(ExecuteState state, bool configure = true)
 		{
 			if (configure)
 				state.Modifiers = Keyboard.Modifiers;
-			return Tabs.HandleCommand(state, configure);
+			Tabs.HandleCommand(state, configure);
 		}
 
 		readonly RunOnceTimer activateTabsTimer, drawTimer;
@@ -113,7 +113,11 @@ namespace NeoEdit.UI
 			if (key == Key.System)
 				key = e.SystemKey;
 
-			e.Handled = HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });
+			if (Tabs.HandlesKey(Keyboard.Modifiers, key))
+			{
+				HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });
+				e.Handled = true;
+			}
 		}
 
 		protected override void OnTextInput(TextCompositionEventArgs e)

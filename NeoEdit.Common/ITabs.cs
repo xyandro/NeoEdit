@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace NeoEdit.Common
 {
@@ -18,7 +19,8 @@ namespace NeoEdit.Common
 		bool MacroVisualize { get; }
 
 		bool IsActive(ITab tab);
-		bool HandleCommand(ExecuteState state, bool configure = true);
+		void HandleCommand(ExecuteState state, bool configure = true);
+		bool HandlesKey(ModifierKeys modifiers, Key key);
 		List<string> GetStatusBar();
 	}
 }

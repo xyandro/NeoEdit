@@ -87,14 +87,14 @@ namespace NeoEdit.Editor
 		public Macro RecordingMacro { get; set; }
 		public Macro MacroPlaying { get; set; }
 
-		public bool HandleCommand(ExecuteState state, bool configure = true)
+		public void HandleCommand(ExecuteState state, bool configure = true)
 		{
 			if ((MacroPlaying != null) && (configure))
 			{
 				// User is trying to do something in the middle of a macro
 				if ((state.Command == NECommand.Internal_Key) && (state.Key == Key.Escape))
 					MacroPlaying.Stop();
-				return true;
+				return;
 			}
 
 			bool commit = false;
@@ -116,7 +116,7 @@ namespace NeoEdit.Editor
 				if (configure)
 				{
 					if (MacroPlaying != null)
-						return false;
+						return;
 
 					if (state.Configuration == null)
 						state.Configuration = Configure();
@@ -158,8 +158,6 @@ namespace NeoEdit.Editor
 
 				TabsWindow.QueueDraw();
 			}
-
-			return commit;
 		}
 
 		object Configure()
@@ -468,5 +466,30 @@ namespace NeoEdit.Editor
 			status.Add($"Keys/Values: {string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
 			return status;
 		}
+
+		public static bool CheckHandlesKey(ModifierKeys modifiers, Key key)
+		{
+			switch (key)
+			{
+				case Key.Back:
+				case Key.Delete:
+				case Key.Escape:
+				case Key.Left:
+				case Key.Right:
+				case Key.Up:
+				case Key.Down:
+				case Key.Home:
+				case Key.End:
+				case Key.PageUp:
+				case Key.PageDown:
+				case Key.Tab:
+				case Key.Enter:
+					return true;
+			}
+
+			return false;
+		}
+
+		public bool HandlesKey(ModifierKeys modifiers, Key key) => CheckHandlesKey(modifiers, key);
 	}
 }
