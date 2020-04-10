@@ -56,48 +56,51 @@ namespace NeoEdit.Editor
 
 		public void RemoveTab(Tab tab)
 		{
-			EnsureInTransaction();
-
-			if (tab == null)
-				throw new ArgumentNullException();
-			if (tab.Tabs == null)
-				throw new Exception("Tab not assigned");
-			if (!newAllTabs.Contains(tab))
-				throw new Exception("Tab not in list");
-
-			AddToTransaction(tab);
-
-			if (newAllTabs == oldAllTabs)
-				newAllTabs = new OrderedHashSet<Tab>(newAllTabs);
-			newAllTabs.Remove(tab);
-			NewAllTabsUpdated();
-			tab.Tabs = null;
-
-			if (newActiveTabs == oldActiveTabs)
-				newActiveTabs = new OrderedHashSet<Tab>(newActiveTabs);
-			if (newActiveTabs.Contains(tab))
+			lock (this)
 			{
-				newActiveTabs.Remove(tab);
-				NewActiveTabsUpdated();
-			}
-			if (newFocused == tab)
-				if (newActiveTabs.Count == 0)
-					newFocused = null;
-				else
-					newFocused = newActiveTabs[newActiveTabs.Count - 1];
+				EnsureInTransaction();
 
-			if (newFocused == null)
-			{
-				newFocused = newAllTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
-				if (newFocused != null)
+				if (tab == null)
+					throw new ArgumentNullException();
+				if (tab.Tabs == null)
+					throw new Exception("Tab not assigned");
+				if (!newAllTabs.Contains(tab))
+					throw new Exception("Tab not in list");
+
+				AddToTransaction(tab);
+
+				if (newAllTabs == oldAllTabs)
+					newAllTabs = new OrderedHashSet<Tab>(newAllTabs);
+				newAllTabs.Remove(tab);
+				NewAllTabsUpdated();
+				tab.Tabs = null;
+
+				if (newActiveTabs == oldActiveTabs)
+					newActiveTabs = new OrderedHashSet<Tab>(newActiveTabs);
+				if (newActiveTabs.Contains(tab))
 				{
-					newActiveTabs.Add(newFocused);
+					newActiveTabs.Remove(tab);
 					NewActiveTabsUpdated();
 				}
-			}
+				if (newFocused == tab)
+					if (newActiveTabs.Count == 0)
+						newFocused = null;
+					else
+						newFocused = newActiveTabs[newActiveTabs.Count - 1];
 
-			if (newFocused != null)
-				AddToTransaction(newFocused);
+				if (newFocused == null)
+				{
+					newFocused = newAllTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
+					if (newFocused != null)
+					{
+						newActiveTabs.Add(newFocused);
+						NewActiveTabsUpdated();
+					}
+				}
+
+				if (newFocused != null)
+					AddToTransaction(newFocused);
+			}
 		}
 		#endregion
 

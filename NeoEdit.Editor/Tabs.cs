@@ -425,21 +425,24 @@ namespace NeoEdit.Editor
 
 		public T ShowTab<T>(Tab tab, Func<T> action)
 		{
-			var activeTabs = UnsortedActiveTabs.ToList();
-			var focusedTab = Focused;
-			ClearAllActive();
-			SetActive(tab);
-			Focused = tab;
-			TabsWindow.QueueDraw();
+			lock (this)
+			{
+				var activeTabs = UnsortedActiveTabs.ToList();
+				var focusedTab = Focused;
+				ClearAllActive();
+				SetActive(tab);
+				Focused = tab;
+				TabsWindow.QueueDraw();
 
-			var result = action();
+				var result = action();
 
-			ClearAllActive();
-			foreach (var activeTab in activeTabs)
-				SetActive(activeTab);
-			Focused = focusedTab;
+				ClearAllActive();
+				foreach (var activeTab in activeTabs)
+					SetActive(activeTab);
+				Focused = focusedTab;
 
-			return result;
+				return result;
+			}
 		}
 
 		public void SetTabSize(int columns, int rows)

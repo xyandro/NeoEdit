@@ -133,7 +133,8 @@ namespace NeoEdit.Editor
 					}
 					isLast = nextResult == tasks.Count;
 				}
-				useTasks.ForEach(task => task.NextAction?.Invoke(task.Result));
+				if (exception == null)
+					useTasks.ForEach(task => task.NextAction?.Invoke(task.Result));
 				useTasks.Clear();
 
 				if (isLast)

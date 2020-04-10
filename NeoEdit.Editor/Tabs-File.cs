@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Text;
 using Microsoft.Win32;
 using NeoEdit.Common;
-using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 
@@ -76,15 +75,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Open_Open(OpenFileDialogResult result) => result.files.ForEach(fileName => AddTab(new Tab(fileName)));
 
-		void Execute_File_Open_CopiedCut()
-		{
-			var files = NEClipboard.Current.Strings;
-
-			if ((files.Count > 5) && (!TabsWindow.RunMessageDialog("Confirm", $"Are you sure you want to open these {files.Count} files?", MessageOptions.YesNoCancel, MessageOptions.Yes, MessageOptions.Cancel).HasFlag(MessageOptions.Yes)))
-				return;
-
-			OpenFiles(files);
-		}
+		void Execute_File_Open_CopiedCut() => OpenFiles(NEClipboard.Current.Strings);
 
 		void Execute_File_MoveToNewWindow()
 		{
