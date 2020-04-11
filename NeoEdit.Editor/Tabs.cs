@@ -110,10 +110,10 @@ namespace NeoEdit.Editor
 				TabsWindow.SetMacroProgress((double)stepIndex / macro.Actions.Count);
 				RunCommand(macro.Actions[stepIndex++].GetExecuteState(), true);
 				if (MacroVisualize)
-					TabsWindow.QueueDraw();
+					TabsWindow.Render();
 			}
 			if (!MacroVisualize)
-				TabsWindow.QueueDraw();
+				TabsWindow.Render();
 		}
 
 		public void HandleCommand(ExecuteState state)
@@ -190,7 +190,7 @@ namespace NeoEdit.Editor
 					Rollback();
 
 				if (!inMacro)
-					TabsWindow.QueueDraw();
+					TabsWindow.Render();
 			}
 		}
 

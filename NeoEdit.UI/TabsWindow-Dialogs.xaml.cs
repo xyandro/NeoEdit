@@ -103,7 +103,6 @@ namespace NeoEdit.UI
 		public NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog() => Dispatcher.Invoke(() => NetworkWCFGetConfigDialog.Run(this));
 		public object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action) => Dispatcher.Invoke(() => ProgressDialog.Run(this, text, action));
 		public HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null) => Dispatcher.Invoke(() => CodePagesDialog.Run(this, startCodePages));
-
 		public void RunHelpAboutDialog() => Dispatcher.Invoke(() => HelpAboutDialog.Run(this));
 	}
 }

@@ -29,8 +29,6 @@ namespace NeoEdit.UI
 				commands.Take()();
 		}
 
-		readonly ITabs Tabs;
-
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
 
@@ -44,6 +42,9 @@ namespace NeoEdit.UI
 			new Thread(() => RunCommandsThread()).Start();
 		}
 
+		readonly ITabs Tabs;
+		bool drawing = false;
+
 		public TabsWindow(ITabs tabs)
 		{
 			Tabs = tabs;
@@ -52,10 +53,8 @@ namespace NeoEdit.UI
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
 
-			activateTabsTimer = new RunOnceTimer(() => ActivateTabs());
-			drawTimer = new RunOnceTimer(() => DrawAll());
-			NEClipboard.ClipboardChanged += () => statusBar.InvalidateVisual();
-			Font.FontSizeChanged += (s, e) => QueueDraw();
+			//NEClipboard.ClipboardChanged += () => statusBar.InvalidateVisual();
+			Font.FontSizeChanged += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_Redraw));
 
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 			Closing += OnClosing;
@@ -67,15 +66,13 @@ namespace NeoEdit.UI
 			commands.Add(() => Tabs.HandleCommand(state));
 		}
 
-		readonly RunOnceTimer activateTabsTimer, drawTimer;
 		public void QueueActivateTabs()
 		{
-			if (Helpers.IsDebugBuild)
+			if ((Helpers.IsDebugBuild) || (!IsActive))
 				return;
-			Dispatcher.Invoke(() => activateTabsTimer.Start());
-		}
 
-		public void QueueDraw() => Dispatcher.Invoke(() => drawTimer.Start());
+			HandleCommand(new ExecuteState(NECommand.Internal_Activate));
+		}
 
 		void OnActivated(object sender, EventArgs e)
 		{
@@ -83,20 +80,12 @@ namespace NeoEdit.UI
 			QueueActivateTabs();
 		}
 
-		void ActivateTabs()
-		{
-			if (!IsActive)
-				return;
-
-			HandleCommand(new ExecuteState(NECommand.Internal_Activate));
-		}
-
-		void OnScrollBarValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => QueueDraw();
+		void OnScrollBarValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => HandleCommand(new ExecuteState(NECommand.Internal_Redraw));
 
 		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
 		{
 			base.OnRenderSizeChanged(sizeInfo);
-			QueueDraw();
+			HandleCommand(new ExecuteState(NECommand.Internal_Redraw));
 		}
 
 		protected override void OnSourceInitialized(EventArgs e)
@@ -118,8 +107,6 @@ namespace NeoEdit.UI
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
-			if (e.Handled)
-				return;
 
 			var key = e.Key;
 			if (key == Key.System)
@@ -135,8 +122,6 @@ namespace NeoEdit.UI
 		protected override void OnTextInput(TextCompositionEventArgs e)
 		{
 			base.OnTextInput(e);
-			if (e.Handled)
-				return;
 
 			if (e.Source is MenuItem)
 				return;
@@ -186,14 +171,14 @@ namespace NeoEdit.UI
 
 		private void OnClosing(object sender, CancelEventArgs args)
 		{
-			var timer = new DispatcherTimer();
-			timer.Tick += (s, e) =>
-			{
-				(s as DispatcherTimer).Stop();
-				HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = false });
-			};
-			timer.Start();
+			HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = false });
 			args.Cancel = true;
+		}
+
+		protected override void OnClosed(EventArgs e)
+		{
+			try { Settings.WindowPosition = GetPosition(); } catch { }
+			base.OnClosed(e);
 		}
 
 		public void CloseWindow()
@@ -233,6 +218,9 @@ namespace NeoEdit.UI
 
 		void OnStatusBarRender(object s, DrawingContext dc)
 		{
+			if (!drawing)
+				return;
+
 			const string Separator = "  |  ";
 
 			var status = Tabs.GetStatusBar();
@@ -290,8 +278,11 @@ namespace NeoEdit.UI
 			menu.menu_Window_ViewBinary.MultiStatus = GetMultiStatus(x => x.ViewBinary);
 		}
 
+		public void Render() => Dispatcher.Invoke(() => DrawAll());
+
 		void DrawAll()
 		{
+			drawing = true;
 			statusBar.InvalidateVisual();
 			SetMenuCheckboxes();
 			Title = $"{(Tabs.FocusedITab == null ? "" : $"{Tabs.FocusedITab.DisplayName ?? Tabs.FocusedITab.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
@@ -300,13 +291,8 @@ namespace NeoEdit.UI
 				DoFullLayout();
 			else
 				DoGridLayout();
-
-		}
-
-		protected override void OnClosed(EventArgs e)
-		{
-			try { Settings.WindowPosition = GetPosition(); } catch { }
-			base.OnClosed(e);
+			UpdateLayout();
+			drawing = false;
 		}
 
 		public bool GotoTab(string fileName, int? line, int? column, int? index)

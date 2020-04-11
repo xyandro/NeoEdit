@@ -65,10 +65,8 @@ namespace NeoEdit.Common
 		NetworkAbsoluteURLDialogResult RunNetworkAbsoluteURLDialog(NEVariables variables);
 		NetworkFetchFileDialogResult RunNetworkFetchFileDialog(NEVariables variables);
 		NetworkFetchStreamDialogResult RunNetworkFetchStreamDialog(NEVariables variables, string outputDirectory);
-		void ShowExceptionMessage(Exception ex);
 		NetworkPingDialogResult RunNetworkPingDialog();
 		NetworkScanPortsDialogResult RunNetworkScanPortsDialog();
-		void QueueDraw();
 		NetworkWCFInterceptCallsDialogResult RunNetworkWCFInterceptCallsDialog();
 		NumericCombinationsPermutationsDialogResult RunNumericCombinationsPermutationsDialog();
 		NumericConvertBaseDialogResult RunNumericConvertBaseDialog();
@@ -105,6 +103,8 @@ namespace NeoEdit.Common
 		HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null);
 		void RunHelpAboutDialog();
 
+		void Render();
+		void ShowExceptionMessage(Exception ex);
 		void CloseWindow();
 		void QueueActivateTabs();
 		void SetForeground();
