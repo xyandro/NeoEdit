@@ -52,7 +52,6 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ClipboardChangeNotifier.cs" />
     <Compile Include="DBConnectInfo.cs" />
     <Compile Include="Enums\GetPathType.cs" />
     <Compile Include="Enums\GotoType.cs" />

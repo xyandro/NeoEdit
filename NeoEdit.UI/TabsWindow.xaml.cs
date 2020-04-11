@@ -63,7 +63,14 @@ namespace NeoEdit.UI
 		public void HandleCommand(ExecuteState state)
 		{
 			state.Modifiers = Keyboard.Modifiers;
-			commands.Add(() => Tabs.HandleCommand(state));
+			commands.Add(() =>
+			{
+				if (NEClipboard.System == null)
+					Dispatcher.Invoke(() => Clipboarder.GetSystem());
+				Tabs.HandleCommand(state);
+				if (NEClipboard.Current != NEClipboard.System)
+					Dispatcher.Invoke(() => Clipboarder.SetSystem());
+			});
 		}
 
 		public void QueueActivateTabs()
