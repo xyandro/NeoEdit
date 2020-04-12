@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,15 +18,7 @@ namespace NeoEdit.UI
 {
 	partial class TabsWindow : ITabsWindow
 	{
-		readonly static BlockingCollection<Action> commands = new BlockingCollection<Action>(new ConcurrentQueue<Action>());
-
-		static void RunCommandsThread()
-		{
-			// We shouldn't run commands on the main thread because the UI can't update (and we may need a dialog to finish a command)
-			while (true)
-				commands.Take()();
-		}
-
+		static readonly ActionRunner commandRunner = new ActionRunner();
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
 
@@ -38,8 +28,6 @@ namespace NeoEdit.UI
 
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
-
-			new Thread(() => RunCommandsThread()).Start();
 		}
 
 		readonly ITabs Tabs;
@@ -64,11 +52,11 @@ namespace NeoEdit.UI
 		public void HandleCommand(ExecuteState state)
 		{
 			state.Modifiers = Keyboard.Modifiers;
-			commands.Add(() =>
+			commandRunner.Add(moreQueued =>
 			{
 				if (NEClipboard.System == null)
 					Dispatcher.Invoke(() => Clipboarder.GetSystem());
-				Tabs.HandleCommand(state);
+				Tabs.HandleCommand(state, moreQueued);
 				if (NEClipboard.Current != NEClipboard.System)
 					Dispatcher.Invoke(() => Clipboarder.SetSystem());
 			});

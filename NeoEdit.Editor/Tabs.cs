@@ -114,14 +114,14 @@ namespace NeoEdit.Editor
 				if (MacroVisualize)
 					TabsWindow.Render();
 			}
-			if (!MacroVisualize)
-				TabsWindow.Render();
 		}
 
-		public void HandleCommand(ExecuteState state)
+		public void HandleCommand(ExecuteState state, Func<bool> skipDraw = null)
 		{
 			RunCommand(state);
 			PlayMacro();
+			if ((skipDraw == null) || (!skipDraw()))
+				TabsWindow.Render();
 		}
 
 		void RunCommand(ExecuteState state, bool inMacro = false)
@@ -190,9 +190,6 @@ namespace NeoEdit.Editor
 					Commit();
 				else
 					Rollback();
-
-				if (!inMacro)
-					TabsWindow.Render();
 			}
 		}
 
