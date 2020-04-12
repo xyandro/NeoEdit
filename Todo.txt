@@ -13,3 +13,5 @@ Copy tabs active status so we can apply to another tabs window
 Add content menu item to copy (and maybe others?) current tag, could handle nested
 If tab created or deleted move recording/playing macro
 Only save modified by default (Split to save modified/save all)
+Track pristine in undo history for large files
+Don't redraw if more actions queued

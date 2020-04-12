@@ -714,7 +714,7 @@ namespace NeoEdit.Common
 		Window_Font_ShowSpecial,
 		Window_ViewBinary,
 		Window_ViewBinaryCodePages,
-		Window_Select_AllTabs,
+		[KeyGesture(Key.A, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Window_Select_AllTabs,
 		Window_Select_NoTabs,
 		Window_Select_TabsWithSelections,
 		Window_Select_TabsWithoutSelections,
