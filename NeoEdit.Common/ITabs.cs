@@ -6,7 +6,6 @@ namespace NeoEdit.Common
 {
 	public interface ITabs
 	{
-		int AllTabsHash { get; }
 		ITab FocusedITab { get; }
 		IReadOnlyList<ITab> AllITabs { get; }
 		WindowLayout WindowLayout { get; }

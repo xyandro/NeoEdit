@@ -20,7 +20,7 @@ namespace NeoEdit.UI
 
 		bool lastFull = false;
 		Size lastFullSize;
-		int lastFullAllTabsHash;
+		IReadOnlyList<ITab> lastFullAllITabs;
 		ITab lastFullFocused;
 		double lastFullTabLabelIndex;
 
@@ -40,7 +40,7 @@ namespace NeoEdit.UI
 
 			lastFull = false;
 			lastFullSize = default;
-			lastFullAllTabsHash = 0;
+			lastFullAllITabs = null;
 			lastFullFocused = null;
 			lastFullTabLabelIndex = 0;
 		}
@@ -58,7 +58,7 @@ namespace NeoEdit.UI
 
 			lastFull = true;
 			lastFullSize = canvas.RenderSize;
-			lastFullAllTabsHash = Tabs.AllTabsHash;
+			lastFullAllITabs = Tabs.AllITabs;
 			lastFullFocused = Tabs.FocusedITab;
 			lastFullTabLabelIndex = fullTabLabelIndex;
 		}
@@ -155,17 +155,17 @@ namespace NeoEdit.UI
 		void CreateFullTabLabels()
 		{
 			var tabLabelMap = new Dictionary<int, TabLabel>();
-			if ((Tabs.FocusedITab != null) && ((lastFullAllTabsHash != Tabs.AllTabsHash) || (lastFullFocused != Tabs.FocusedITab)))
+			if ((Tabs.FocusedITab != null) && ((lastFullAllITabs != Tabs.AllITabs) || (lastFullFocused != Tabs.FocusedITab)))
 			{
 				var atLeftIndex = Tabs.AllITabs.FindIndex(Tabs.FocusedITab);
 				var atRightIndex = GetAtRightIndex(tabLabelMap, atLeftIndex);
 				fullTabLabelIndex = Math.Min(atLeftIndex, Math.Max(fullTabLabelIndex, atRightIndex));
 			}
 
-			if ((lastFullAllTabsHash != Tabs.AllTabsHash) || (lastFullTabLabelIndex != fullTabLabelIndex))
+			if ((lastFullAllITabs != Tabs.AllITabs) || (lastFullTabLabelIndex != fullTabLabelIndex))
 				fullTabLabelIndex = Math.Max(0, Math.Min(fullTabLabelIndex, GetAtRightIndex(tabLabelMap, Tabs.AllITabs.Count() - 1)));
 
-			if ((lastFullAllTabsHash == Tabs.AllTabsHash) && (lastFullTabLabelIndex == fullTabLabelIndex))
+			if ((lastFullAllITabs == Tabs.AllITabs) && (lastFullTabLabelIndex == fullTabLabelIndex))
 			{
 				fullTabLabels.ForEach(tabLabel => tabLabel.Refresh(Tabs));
 				return;

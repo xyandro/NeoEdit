@@ -22,8 +22,6 @@ namespace NeoEdit.Editor
 			return newTabsList;
 		}
 
-		public int AllTabsHash => newTabsList.AllTabsHash;
-
 		public IReadOnlyList<Tab> AllTabs => newTabsList.AllTabs;
 		public IReadOnlyList<ITab> AllITabs => newTabsList.AllTabs;
 
@@ -39,7 +37,6 @@ namespace NeoEdit.Editor
 				GetUpdateTabsList().RemoveTab(tab);
 		}
 
-		public int ActiveTabsHash => newTabsList.ActiveTabsHash;
 		public IReadOnlyList<Tab> ActiveTabs => newTabsList.ActiveTabs;
 		public IReadOnlyList<ITab> ActiveITabs => newTabsList.ActiveTabs;
 

@@ -16,7 +16,7 @@ namespace NeoEdit.UI
 
 		bool lastGrid = false;
 		Size lastGridSize;
-		int lastGridAllTabsHash;
+		IReadOnlyList<ITab> lastGridAllITabs;
 		ITab lastGridFocused;
 		double lastGridScrollBarValue;
 		WindowLayout lastWindowLayout;
@@ -35,7 +35,7 @@ namespace NeoEdit.UI
 
 			lastGrid = false;
 			lastGridSize = default;
-			lastGridAllTabsHash = 0;
+			lastGridAllITabs = null;
 			lastGridFocused = null;
 			lastGridScrollBarValue = 0;
 			lastWindowLayout = new WindowLayout();
@@ -65,7 +65,7 @@ namespace NeoEdit.UI
 
 			lastGrid = true;
 			lastGridSize = canvas.RenderSize;
-			lastGridAllTabsHash = Tabs.AllTabsHash;
+			lastGridAllITabs = Tabs.AllITabs;
 			lastGridFocused = Tabs.FocusedITab;
 			lastGridScrollBarValue = scrollBar.Value;
 			lastWindowLayout = Tabs.WindowLayout;
@@ -73,7 +73,7 @@ namespace NeoEdit.UI
 
 		void CalculateGridParameters()
 		{
-			if ((lastGridAllTabsHash != Tabs.AllTabsHash) || (lastWindowLayout != Tabs.WindowLayout))
+			if ((lastGridAllITabs != Tabs.AllITabs) || (lastWindowLayout != Tabs.WindowLayout))
 			{
 				int? columns = null, rows = null;
 				if (Tabs.WindowLayout.Columns.HasValue)
@@ -101,7 +101,7 @@ namespace NeoEdit.UI
 				scrollBar.ViewportSize = gridRows;
 				scrollBar.Maximum = totalRows - scrollBar.ViewportSize;
 
-				lastGridAllTabsHash = 0; // Make everything else calculate
+				lastGridAllITabs = null; // Make everything else calculate
 
 				SetTabWindowCount(gridColumns * gridRows);
 			}
@@ -111,7 +111,7 @@ namespace NeoEdit.UI
 		{
 			scrollBar.ValueChanged -= OnScrollBarValueChanged;
 
-			if ((Tabs.FocusedITab != null) && ((lastGridAllTabsHash != Tabs.AllTabsHash) || (lastGridFocused != Tabs.FocusedITab)))
+			if ((Tabs.FocusedITab != null) && ((lastGridAllITabs != Tabs.AllITabs) || (lastGridFocused != Tabs.FocusedITab)))
 			{
 				var atTop = Tabs.AllITabs.FindIndex(Tabs.FocusedITab) / gridColumns * gridHeight;
 				scrollBar.Value = Math.Min(atTop, Math.Max(scrollBar.Value, atTop + gridHeight - scrollBar.ViewportSize));
@@ -124,7 +124,7 @@ namespace NeoEdit.UI
 
 		void SetGridLayout()
 		{
-			if ((lastGridAllTabsHash == Tabs.AllTabsHash) && (lastGridScrollBarValue == scrollBar.Value))
+			if ((lastGridAllITabs == Tabs.AllITabs) && (lastGridScrollBarValue == scrollBar.Value))
 			{
 				gridTabLabels.ForEach(tabLabel => tabLabel.Refresh(Tabs));
 				tabWindows.ForEach(tabWindow => tabWindow.DrawAll());

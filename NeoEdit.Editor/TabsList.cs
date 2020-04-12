@@ -11,7 +11,6 @@ namespace NeoEdit.Editor
 		OrderedHashSet<Tab> allTabs, activeTabs;
 		bool activeTabsSorted;
 		Tab focused;
-		int nextAllTabsHash, nextActiveTabsHash;
 
 		public TabsList(Tabs tabs)
 		{
@@ -20,8 +19,6 @@ namespace NeoEdit.Editor
 			activeTabs = new OrderedHashSet<Tab>();
 			activeTabsSorted = true;
 			focused = null;
-			AllTabsHash = ActiveTabsHash = 1;
-			nextAllTabsHash = nextActiveTabsHash = 1;
 		}
 
 		public TabsList(TabsList old)
@@ -31,13 +28,7 @@ namespace NeoEdit.Editor
 			activeTabs = new OrderedHashSet<Tab>(old.activeTabs);
 			activeTabsSorted = old.activeTabsSorted;
 			focused = old.focused;
-			AllTabsHash = old.AllTabsHash;
-			ActiveTabsHash = old.ActiveTabsHash;
-			nextAllTabsHash = old.nextAllTabsHash;
-			nextActiveTabsHash = old.nextActiveTabsHash;
 		}
-
-		public int AllTabsHash { get; private set; } = 1;
 
 		public IReadOnlyList<Tab> AllTabs => allTabs;
 
@@ -53,7 +44,6 @@ namespace NeoEdit.Editor
 			tabs.AddToTransaction(tab);
 
 			allTabs.Insert(index ?? allTabs.Count, tab);
-			AllTabsHash = ++nextAllTabsHash;
 			tab.Tabs = tabs;
 
 			if (!activeTabs.Where(x => !old.Contains(x)).Any())
@@ -61,7 +51,6 @@ namespace NeoEdit.Editor
 
 			activeTabs.Add(tab);
 			activeTabsSorted = false;
-			ActiveTabsHash = ++nextActiveTabsHash;
 			if (focused == null)
 				focused = tab;
 		}
@@ -78,14 +67,9 @@ namespace NeoEdit.Editor
 			tabs.AddToTransaction(tab);
 
 			allTabs.Remove(tab);
-			AllTabsHash = ++nextAllTabsHash;
 			tab.Tabs = null;
 
-			if (activeTabs.Contains(tab))
-			{
-				activeTabs.Remove(tab);
-				ActiveTabsHash = ++nextActiveTabsHash;
-			}
+			activeTabs.Remove(tab);
 			if (focused == tab)
 				focused = activeTabs.LastOrDefault();
 
@@ -96,7 +80,6 @@ namespace NeoEdit.Editor
 				{
 					activeTabs.Add(focused);
 					activeTabsSorted = false;
-					ActiveTabsHash = ++nextActiveTabsHash;
 				}
 			}
 
@@ -104,7 +87,6 @@ namespace NeoEdit.Editor
 				tabs.AddToTransaction(focused);
 		}
 
-		public int ActiveTabsHash { get; private set; } = 1;
 		public IReadOnlyList<Tab> ActiveTabs
 		{
 			get
@@ -122,7 +104,6 @@ namespace NeoEdit.Editor
 		{
 			activeTabs = new OrderedHashSet<Tab>();
 			activeTabsSorted = true;
-			ActiveTabsHash = ++nextActiveTabsHash;
 			focused = null;
 		}
 
@@ -141,14 +122,12 @@ namespace NeoEdit.Editor
 
 				activeTabs.Add(tab);
 				activeTabsSorted = false;
-				ActiveTabsHash = ++nextActiveTabsHash;
 				if (focused == null)
 					focused = tab;
 			}
 			else
 			{
 				activeTabs.Remove(tab);
-				ActiveTabsHash = ++nextActiveTabsHash;
 				if (focused == tab)
 					focused = activeTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
 			}
