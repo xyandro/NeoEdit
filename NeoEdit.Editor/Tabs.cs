@@ -15,7 +15,6 @@ namespace NeoEdit.Editor
 	{
 		public ITabsWindow TabsWindow { get; }
 
-		public static Func<Tabs, ITabsWindow> CreateITabsWindow { get; set; }
 		public static List<Tabs> Instances { get; } = new List<Tabs>();
 
 		int tabColumns;
@@ -44,7 +43,7 @@ namespace NeoEdit.Editor
 			oldWindowLayout = newWindowLayout = new WindowLayout(1, 1);
 
 			BeginTransaction(new ExecuteState(NECommand.None));
-			TabsWindow = CreateITabsWindow(this);
+			TabsWindow = TabsWindowCreator.CreateITabsWindow(this);
 			if (addEmpty)
 				Execute_File_New_New(false);
 			Commit();

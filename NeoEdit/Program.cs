@@ -16,11 +16,6 @@ namespace NeoEdit
 {
 	class Program
 	{
-		static Program()
-		{
-			Tabs.CreateITabsWindow = tabs => new TabsWindow(tabs);
-		}
-
 		const string IPCName = "NeoEdit-{1e5bef22-1257-4cbd-a84b-36679ed79b07}";
 		const string ShutdownEventName = "NeoEdit-Wait-{0}";
 

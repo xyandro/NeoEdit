@@ -22,6 +22,7 @@ namespace NeoEdit.UI
 		Action startAction;
 		App(Action action)
 		{
+			TabsWindowCreator.CreateITabsWindow = tabs => Dispatcher.Invoke(() => new TabsWindow(tabs));
 			startAction = action;
 			InitializeComponent();
 			DispatcherUnhandledException += App_DispatcherUnhandledException;

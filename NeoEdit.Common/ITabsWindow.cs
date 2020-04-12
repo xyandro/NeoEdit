@@ -10,6 +10,11 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Common
 {
+	public class TabsWindowCreator
+	{
+		public static Func<ITabs, ITabsWindow> CreateITabsWindow { get; set; }
+	}
+
 	public interface ITabsWindow
 	{
 		MessageOptions RunMessageDialog(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None);

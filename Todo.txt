@@ -14,4 +14,3 @@ Add content menu item to copy (and maybe others?) current tag, could handle nest
 If tab created or deleted move recording/playing macro
 Track pristine in undo history for large files
 Modified should track by saving file, not transactional
-Can't create new window
