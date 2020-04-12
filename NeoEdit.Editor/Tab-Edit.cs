@@ -160,7 +160,7 @@ namespace NeoEdit.Editor
 				ReplaceSelections("");
 		}
 
-		object Configure_Edit_Paste_Paste() => (Tabs.UnsortedActiveTabs.All(tab => tab.Selections.Count == 1)) && (Tabs.UnsortedActiveTabs.Any(tab => tab.Clipboard.Count != 1));
+		object Configure_Edit_Paste_Paste() => (Tabs.ActiveTabs.All(tab => tab.Selections.Count == 1)) && (Tabs.ActiveTabs.Any(tab => tab.Clipboard.Count != 1));
 
 		void Execute_Edit_Paste_Paste(bool highlight, bool rotate)
 		{

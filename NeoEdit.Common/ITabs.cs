@@ -8,11 +8,10 @@ namespace NeoEdit.Common
 	{
 		int AllTabsHash { get; }
 		ITab FocusedITab { get; }
-		IEnumerable<ITab> AllITabs { get; }
+		IReadOnlyList<ITab> AllITabs { get; }
 		WindowLayout WindowLayout { get; }
 		DateTime LastActivated { get; set; }
-		IEnumerable<ITab> SortedActiveITabs { get; }
-		IEnumerable<ITab> UnsortedActiveITabs { get; }
+		IReadOnlyList<ITab> ActiveITabs { get; }
 		bool MacroVisualize { get; }
 
 		bool IsActive(ITab tab);

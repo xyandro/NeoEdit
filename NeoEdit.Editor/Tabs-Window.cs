@@ -31,15 +31,15 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_Select_NoTabs() => ClearAllActive();
 
-		void Execute_Window_Select_TabsWithWithoutSelections(bool hasSelections) => UnsortedActiveTabs.ForEach(tab => SetActive(tab, tab.Selections.Any() == hasSelections));
+		void Execute_Window_Select_TabsWithWithoutSelections(bool hasSelections) => ActiveTabs.ForEach(tab => SetActive(tab, tab.Selections.Any() == hasSelections));
 
-		void Execute_Window_Select_ModifiedUnmodifiedTabs(bool modified) => UnsortedActiveTabs.ForEach(tab => SetActive(tab, tab.IsModified == modified));
+		void Execute_Window_Select_ModifiedUnmodifiedTabs(bool modified) => ActiveTabs.ForEach(tab => SetActive(tab, tab.IsModified == modified));
 
-		void Execute_Window_Select_InactiveTabs() => AllTabs.ForEach(tab => SetActive(tab, !UnsortedActiveTabs.Contains(tab)));
+		void Execute_Window_Select_InactiveTabs() => AllTabs.ForEach((System.Action<Tab>)(tab => SetActive(tab, !Enumerable.Contains<Tab>(this.ActiveTabs, (Tab)tab))));
 
 		void Execute_Window_Close_TabsWithWithoutSelections(bool hasSelections)
 		{
-			foreach (var tab in SortedActiveTabs.Where(tab => tab.Selections.Any() == hasSelections))
+			foreach (var tab in ActiveTabs.Where(tab => tab.Selections.Any() == hasSelections))
 			{
 				tab.VerifyCanClose();
 				RemoveTab(tab);
@@ -48,7 +48,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_Close_ModifiedUnmodifiedTabs(bool modified)
 		{
-			foreach (var tab in SortedActiveTabs.Where(tab => tab.IsModified == modified))
+			foreach (var tab in ActiveTabs.Where(tab => tab.IsModified == modified))
 			{
 				tab.VerifyCanClose();
 				RemoveTab(tab);
@@ -57,7 +57,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_Close_ActiveInactiveTabs(bool active)
 		{
-			foreach (var tab in (active ? SortedActiveTabs : AllTabs.Except(UnsortedActiveTabs)))
+			foreach (var tab in (active ? ActiveTabs : AllTabs.Except(ActiveTabs)))
 			{
 				tab.VerifyCanClose();
 				RemoveTab(tab);

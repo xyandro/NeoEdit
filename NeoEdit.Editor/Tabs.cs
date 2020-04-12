@@ -40,9 +40,8 @@ namespace NeoEdit.Editor
 		{
 			Instances.Add(this);
 
+			oldTabsList = newTabsList = new TabsList(this);
 			oldWindowLayout = newWindowLayout = new WindowLayout(1, 1);
-			oldAllTabs = newAllTabs = new OrderedHashSet<Tab>();
-			oldActiveTabs = newActiveTabs = new OrderedHashSet<Tab>();
 
 			BeginTransaction(new ExecuteState(NECommand.None));
 			TabsWindow = CreateITabsWindow(this);
@@ -56,17 +55,16 @@ namespace NeoEdit.Editor
 			var empty = Tuple.Create(new List<string>() as IReadOnlyList<string>, default(bool?));
 			var clipboardDataMap = AllTabs.ToDictionary(x => x as ITab, x => empty);
 
-			var activeTabs = SortedActiveTabs;
-			if (NEClipboard.Current.Count == UnsortedActiveTabsCount)
-				NEClipboard.Current.ForEach((cb, index) => clipboardDataMap[activeTabs.GetIndex(index)] = Tuple.Create(cb, NEClipboard.Current.IsCut));
-			else if (NEClipboard.Current.ChildCount == UnsortedActiveTabsCount)
-				NEClipboard.Current.Strings.ForEach((str, index) => clipboardDataMap[activeTabs.GetIndex(index)] = new Tuple<IReadOnlyList<string>, bool?>(new List<string> { str }, NEClipboard.Current.IsCut));
-			else if (((NEClipboard.Current.Count == 1) || (NEClipboard.Current.Count == NEClipboard.Current.ChildCount)) && (NEClipboard.Current.ChildCount == activeTabs.Sum(tab => tab.Selections.Count)))
-				NEClipboard.Current.Strings.Take(activeTabs.Select(tab => tab.Selections.Count)).ForEach((obj, index) => clipboardDataMap[activeTabs.GetIndex(index)] = new Tuple<IReadOnlyList<string>, bool?>(obj.ToList(), NEClipboard.Current.IsCut));
+			if (NEClipboard.Current.Count == ActiveTabs.Count)
+				NEClipboard.Current.ForEach((cb, index) => clipboardDataMap[ActiveTabs.GetIndex(index)] = Tuple.Create(cb, NEClipboard.Current.IsCut));
+			else if (NEClipboard.Current.ChildCount == ActiveTabs.Count)
+				NEClipboard.Current.Strings.ForEach((str, index) => clipboardDataMap[ActiveTabs.GetIndex(index)] = new Tuple<IReadOnlyList<string>, bool?>(new List<string> { str }, NEClipboard.Current.IsCut));
+			else if (((NEClipboard.Current.Count == 1) || (NEClipboard.Current.Count == NEClipboard.Current.ChildCount)) && (NEClipboard.Current.ChildCount == ActiveTabs.Sum(tab => tab.Selections.Count)))
+				NEClipboard.Current.Strings.Take(ActiveTabs.Select(tab => tab.Selections.Count)).ForEach((obj, index) => clipboardDataMap[ActiveTabs.GetIndex(index)] = new Tuple<IReadOnlyList<string>, bool?>(obj.ToList(), NEClipboard.Current.IsCut));
 			else
 			{
 				var strs = NEClipboard.Current.Strings;
-				activeTabs.ForEach(tab => clipboardDataMap[tab] = new Tuple<IReadOnlyList<string>, bool?>(strs, NEClipboard.Current.IsCut));
+				ActiveTabs.ForEach(tab => clipboardDataMap[tab] = new Tuple<IReadOnlyList<string>, bool?>(strs, NEClipboard.Current.IsCut));
 			}
 
 			return clipboardDataMap;
@@ -80,8 +78,8 @@ namespace NeoEdit.Editor
 
 			if (keysAndValues[kvIndex].Count == 1)
 				AllTabs.ForEach(tab => keysAndValuesMap[tab] = keysAndValues[kvIndex][0]);
-			else if (keysAndValues[kvIndex].Count == UnsortedActiveTabsCount)
-				SortedActiveTabs.ForEach((tab, index) => keysAndValuesMap[tab] = keysAndValues[kvIndex][index]);
+			else if (keysAndValues[kvIndex].Count == ActiveTabs.Count)
+				ActiveTabs.ForEach((tab, index) => keysAndValuesMap[tab] = keysAndValues[kvIndex][index]);
 
 			return keysAndValuesMap;
 		}
@@ -323,13 +321,13 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void ExecuteActiveTabs() => TaskRunner.Add(UnsortedActiveTabs.Select(tab => (Action<TaskProgress>)tab.Execute));
+		void ExecuteActiveTabs() => TaskRunner.Add(ActiveTabs.Select(tab => (Action<TaskProgress>)tab.Execute));
 
 		void PostExecute()
 		{
-			SortedActiveTabs.Select(tab => tab.TabsToAdd).NonNull().SelectMany().ForEach(tab => AddTab(tab));
+			ActiveTabs.Select(tab => tab.TabsToAdd).NonNull().SelectMany().ForEach(tab => AddTab(tab));
 
-			var clipboardDatas = SortedActiveTabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
+			var clipboardDatas = ActiveTabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
 			if (clipboardDatas.Any())
 			{
 				var newClipboard = new NEClipboard();
@@ -343,12 +341,12 @@ namespace NeoEdit.Editor
 
 			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 			{
-				var newKeysAndValues = SortedActiveTabs.Select(tab => tab.GetChangedKeysAndValues(kvIndex)).NonNull().ToList();
+				var newKeysAndValues = ActiveTabs.Select(tab => tab.GetChangedKeysAndValues(kvIndex)).NonNull().ToList();
 				if (newKeysAndValues.Any())
 					keysAndValues[kvIndex] = newKeysAndValues;
 			}
 
-			var dragFiles = SortedActiveTabs.Select(tab => tab.ChangedDragFiles).NonNull().SelectMany().Distinct().ToList();
+			var dragFiles = ActiveTabs.Select(tab => tab.ChangedDragFiles).NonNull().SelectMany().Distinct().ToList();
 			if (dragFiles.Any())
 			{
 				var nonExisting = dragFiles.Where(x => !File.Exists(x)).ToList();
@@ -363,7 +361,7 @@ namespace NeoEdit.Editor
 
 		public void AddTab(Tab tab, int? index = null, bool canReplace = true)
 		{
-			if ((canReplace) && (!index.HasValue) && (Focused != null) && (Focused.Empty()) && (oldAllTabs.Contains(Focused)))
+			if ((canReplace) && (!index.HasValue) && (Focused != null) && (Focused.Empty()) && (oldTabsList.Contains(Focused)))
 			{
 				index = AllTabs.FindIndex(Focused);
 				RemoveTab(Focused);
@@ -392,11 +390,11 @@ namespace NeoEdit.Editor
 			AddDiff(te1, te2);
 		}
 
-		public bool TabIsActive(Tab tab) => UnsortedActiveTabs.Contains(tab);
+		public bool TabIsActive(Tab tab) => ActiveTabs.Contains(tab);
 
 		public int GetTabIndex(Tab tab, bool activeOnly = false)
 		{
-			var index = (activeOnly ? SortedActiveTabs : AllTabs).FindIndex(tab);
+			var index = (activeOnly ? ActiveTabs : AllTabs).FindIndex(tab);
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;
@@ -462,9 +460,9 @@ namespace NeoEdit.Editor
 			var Tabs = this;
 			var status = new List<string>();
 			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
-			status.Add($"Active: {plural(Tabs.UnsortedActiveTabsCount, "file")}, {plural(Tabs.UnsortedActiveITabs.Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Inactive: {plural(Tabs.AllITabs.Except(Tabs.UnsortedActiveITabs).Count(), "file")}, {plural(Tabs.AllITabs.Except(Tabs.UnsortedActiveITabs).Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Total: {plural(Tabs.AllITabs.Count(), "file")}, {plural(Tabs.AllITabs.Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Active: {plural(Tabs.ActiveTabs.Count, "file")}, {plural(Tabs.ActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Inactive: {plural(Tabs.AllTabs.Except(Tabs.ActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(Tabs.ActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Total: {plural(Tabs.AllTabs.Count(), "file")}, {plural(Tabs.AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			status.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
 			status.Add($"Keys/Values: {string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
 			return status;

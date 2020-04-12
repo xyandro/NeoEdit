@@ -79,7 +79,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_MoveToNewWindow()
 		{
-			var active = SortedActiveTabs.ToList();
+			var active = ActiveTabs.ToList();
 			active.ForEach(tab => RemoveTab(tab));
 
 			var tabs = new Tabs();

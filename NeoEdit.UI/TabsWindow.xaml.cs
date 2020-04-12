@@ -194,7 +194,7 @@ namespace NeoEdit.UI
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 				{
-					var active = Tabs.SortedActiveITabs.ToList();
+					var active = Tabs.ActiveITabs.ToList();
 					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<ITab>), active), DragDropEffects.Move);
 				}
 			};
@@ -235,7 +235,7 @@ namespace NeoEdit.UI
 		{
 			bool? GetMultiStatus(Func<ITab, bool> func)
 			{
-				var results = Tabs.UnsortedActiveITabs.Select(func).Distinct().Take(2).ToList();
+				var results = Tabs.ActiveITabs.Select(func).Distinct().Take(2).ToList();
 				if (results.Count != 1)
 					return default;
 				return results[0];

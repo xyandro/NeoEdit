@@ -59,7 +59,7 @@ namespace NeoEdit.Editor
 		{
 			(var itab, var line, var column, var clickCount, var selecting) = ((ITab, int, int, int, bool?))state.Configuration;
 			var tab = itab as Tab;
-			if ((UnsortedActiveTabsCount != 1) || (!IsActive(tab)))
+			if ((ActiveTabs.Count != 1) || (!IsActive(tab)))
 			{
 				ClearAllActive();
 				SetActive(tab);
