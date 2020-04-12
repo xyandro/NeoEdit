@@ -54,8 +54,6 @@ namespace NeoEdit.UI
 		const double Spacing = 2;
 		static double LineHeight => Font.FontSize + Spacing;
 
-		bool drawing = false;
-
 		internal TabWindow(TabsWindow tabsWindow)
 		{
 			TabsWindow = tabsWindow;
@@ -74,12 +72,9 @@ namespace NeoEdit.UI
 			if (Tab == null)
 				return;
 
-			drawing = true;
 			SetupViewBinary();
 			canvas.InvalidateVisual();
 			statusBar.InvalidateVisual();
-			UpdateLayout();
-			drawing = false;
 		}
 
 		void SetScrollBarsParameters()
@@ -357,7 +352,7 @@ namespace NeoEdit.UI
 
 		void OnCanvasRender(object sender, DrawingContext dc)
 		{
-			if (!drawing)
+			if (!TabsWindow.Drawing)
 				return;
 
 			Tab.SetTabSize((int)Math.Floor(canvas.ActualWidth / Font.CharWidth), (int)Math.Floor(canvas.ActualHeight / LineHeight));
@@ -381,7 +376,7 @@ namespace NeoEdit.UI
 
 		void OnStatusBarRender(object s, DrawingContext dc)
 		{
-			if (!drawing)
+			if (!TabsWindow.Drawing)
 				return;
 
 			const string Separator = "  |  ";

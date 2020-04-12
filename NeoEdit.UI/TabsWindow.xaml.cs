@@ -43,7 +43,8 @@ namespace NeoEdit.UI
 		}
 
 		readonly ITabs Tabs;
-		bool drawing = false;
+
+		public bool Drawing { get; private set; } = false;
 
 		public TabsWindow(ITabs tabs)
 		{
@@ -225,7 +226,7 @@ namespace NeoEdit.UI
 
 		void OnStatusBarRender(object s, DrawingContext dc)
 		{
-			if (!drawing)
+			if (!Drawing)
 				return;
 
 			const string Separator = "  |  ";
@@ -289,7 +290,7 @@ namespace NeoEdit.UI
 
 		void DrawAll()
 		{
-			drawing = true;
+			Drawing = true;
 			statusBar.InvalidateVisual();
 			SetMenuCheckboxes();
 			Title = $"{(Tabs.FocusedITab == null ? "" : $"{Tabs.FocusedITab.DisplayName ?? Tabs.FocusedITab.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
@@ -299,7 +300,7 @@ namespace NeoEdit.UI
 			else
 				DoGridLayout();
 			UpdateLayout();
-			drawing = false;
+			Drawing = false;
 		}
 
 		public bool GotoTab(string fileName, int? line, int? column, int? index)

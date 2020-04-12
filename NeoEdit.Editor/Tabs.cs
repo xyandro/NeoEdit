@@ -21,7 +21,8 @@ namespace NeoEdit.Editor
 		int tabColumns;
 		public int TabColumns
 		{
-			get => tabColumns; private set
+			get => tabColumns;
+			private set
 			{
 				tabColumns = value;
 				AllTabs.ForEach(tab => tab.ResetView());
