@@ -14,6 +14,8 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -29,7 +31,11 @@
 		<controls:NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding MaxColumns, ElementName=self}" Minimum="1"/>
 		<controls:NumericUpDown Grid.Row="2" Grid.Column="2" Value="{Binding MaxRows, ElementName=self}" Minimum="1"/>
 
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<CheckBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Content="_Active tabs first" IsChecked="{Binding ActiveFirst, ElementName=self}"/>
+
+		<CheckBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Content="Active tabs _only" IsChecked="{Binding ActiveOnly, ElementName=self}"/>
+
+		<UniformGrid Grid.Row="6" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

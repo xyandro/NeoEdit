@@ -108,7 +108,7 @@ namespace NeoEdit.Common
 		HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null);
 		void RunHelpAboutDialog();
 
-		void Render();
+		void Render(RenderParameters renderParameters);
 		void ShowExceptionMessage(Exception ex);
 		void CloseWindow();
 		void QueueActivateTabs();

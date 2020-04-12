@@ -83,6 +83,8 @@ namespace NeoEdit.Editor
 			return keysAndValuesMap;
 		}
 
+		void RenderTabsWindow() => TabsWindow.Render(new RenderParameters(WindowLayout.ActiveFirst ? ActiveFirstTabs : AllTabs, ActiveTabs, Focused, WindowLayout.ActiveOnly ? ActiveTabs.Count : AllTabs.Count, WindowLayout));
+
 		void PlayMacro()
 		{
 			if (playingMacro == null)
@@ -109,7 +111,7 @@ namespace NeoEdit.Editor
 				TabsWindow.SetMacroProgress((double)stepIndex / macro.Actions.Count);
 				RunCommand(macro.Actions[stepIndex++].GetExecuteState(), true);
 				if (MacroVisualize)
-					TabsWindow.Render();
+					RenderTabsWindow();
 			}
 		}
 
@@ -118,7 +120,7 @@ namespace NeoEdit.Editor
 			RunCommand(state);
 			PlayMacro();
 			if ((skipDraw == null) || (!skipDraw()))
-				TabsWindow.Render();
+				RenderTabsWindow();
 		}
 
 		void RunCommand(ExecuteState state, bool inMacro = false)

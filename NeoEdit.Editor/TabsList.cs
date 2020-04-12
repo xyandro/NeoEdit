@@ -8,7 +8,7 @@ namespace NeoEdit.Editor
 	public class TabsList
 	{
 		Tabs tabs;
-		OrderedHashSet<Tab> allTabs, activeTabs;
+		OrderedHashSet<Tab> allTabs, activeTabs, activeFirstTabs;
 		bool activeTabsSorted;
 		Tab focused;
 
@@ -17,6 +17,7 @@ namespace NeoEdit.Editor
 			this.tabs = tabs;
 			allTabs = new OrderedHashSet<Tab>();
 			activeTabs = new OrderedHashSet<Tab>();
+			activeFirstTabs = new OrderedHashSet<Tab>();
 			activeTabsSorted = true;
 			focused = null;
 		}
@@ -26,6 +27,7 @@ namespace NeoEdit.Editor
 			tabs = old.tabs;
 			allTabs = new OrderedHashSet<Tab>(old.allTabs);
 			activeTabs = new OrderedHashSet<Tab>(old.activeTabs);
+			activeFirstTabs = old.activeFirstTabs;
 			activeTabsSorted = old.activeTabsSorted;
 			focused = old.focused;
 		}
@@ -45,6 +47,7 @@ namespace NeoEdit.Editor
 
 			allTabs.Insert(index ?? allTabs.Count, tab);
 			tab.Tabs = tabs;
+			activeFirstTabs = null;
 
 			if (!activeTabs.Where(x => !old.Contains(x)).Any())
 				ClearActive();
@@ -68,6 +71,7 @@ namespace NeoEdit.Editor
 
 			allTabs.Remove(tab);
 			tab.Tabs = null;
+			activeFirstTabs = null;
 
 			activeTabs.Remove(tab);
 			if (focused == tab)
@@ -104,6 +108,7 @@ namespace NeoEdit.Editor
 		{
 			activeTabs = new OrderedHashSet<Tab>();
 			activeTabsSorted = true;
+			activeFirstTabs = null;
 			focused = null;
 		}
 
@@ -131,9 +136,20 @@ namespace NeoEdit.Editor
 				if (focused == tab)
 					focused = activeTabs.OrderByDescending(x => x.LastActive).FirstOrDefault();
 			}
+			activeFirstTabs = null;
 		}
 
 		public bool IsActive(Tab tab) => activeTabs.Contains(tab);
+
+		public IReadOnlyList<Tab> ActiveFirstTabs
+		{
+			get
+			{
+				if (activeFirstTabs == null)
+					activeFirstTabs = new OrderedHashSet<Tab>(ActiveTabs.Concat(AllTabs).Distinct());
+				return activeFirstTabs;
+			}
+		}
 
 		public Tab Focused
 		{

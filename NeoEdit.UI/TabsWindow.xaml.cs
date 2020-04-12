@@ -186,21 +186,18 @@ namespace NeoEdit.UI
 			});
 		}
 
-		TabLabel CreateTabLabel(ITab tab)
+		TabLabel CreateTabLabel(ITab tab, RenderParameters renderParameters)
 		{
 			var tabLabel = new TabLabel(tab);
 			tabLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
 			tabLabel.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
-				{
-					var active = Tabs.ActiveITabs.ToList();
-					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<ITab>), active), DragDropEffects.Move);
-				}
+					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<ITab>), renderParameters.ActiveTabs), DragDropEffects.Move);
 			};
 			tabLabel.CloseClicked += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseTab) { Configuration = tab });
 
-			tabLabel.Refresh(Tabs);
+			tabLabel.Refresh(renderParameters.ActiveTabs, renderParameters.FocusedTab);
 			return tabLabel;
 		}
 
@@ -231,11 +228,11 @@ namespace NeoEdit.UI
 			dc.DrawText(text, new Point(6, 1));
 		}
 
-		void SetMenuCheckboxes()
+		void SetMenuCheckboxes(RenderParameters renderParameters)
 		{
 			bool? GetMultiStatus(Func<ITab, bool> func)
 			{
-				var results = Tabs.ActiveITabs.Select(func).Distinct().Take(2).ToList();
+				var results = renderParameters.ActiveTabs.Select(func).Distinct().Take(2).ToList();
 				if (results.Count != 1)
 					return default;
 				return results[0];
@@ -246,65 +243,65 @@ namespace NeoEdit.UI
 			menu.menu_Macro_Visualize.MultiStatus = Tabs.MacroVisualize;
 			menu.menu_Window_Font_ShowSpecial.MultiStatus = Font.ShowSpecialChars;
 
-			menu.menu_File_AutoRefresh.MultiStatus = GetMultiStatus(x => x.AutoRefresh);
-			menu.menu_File_Encrypt.MultiStatus = GetMultiStatus(x => !string.IsNullOrWhiteSpace(x.AESKey));
-			menu.menu_File_Compress.MultiStatus = GetMultiStatus(x => x.Compressed);
-			menu.menu_Edit_Navigate_JumpBy_Words.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Words);
-			menu.menu_Edit_Navigate_JumpBy_Numbers.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Numbers);
-			menu.menu_Edit_Navigate_JumpBy_Paths.MultiStatus = GetMultiStatus(x => x.JumpBy == JumpByType.Paths);
-			menu.menu_Diff_IgnoreWhitespace.MultiStatus = GetMultiStatus(x => x.DiffIgnoreWhitespace);
-			menu.menu_Diff_IgnoreCase.MultiStatus = GetMultiStatus(x => x.DiffIgnoreCase);
-			menu.menu_Diff_IgnoreNumbers.MultiStatus = GetMultiStatus(x => x.DiffIgnoreNumbers);
-			menu.menu_Diff_IgnoreLineEndings.MultiStatus = GetMultiStatus(x => x.DiffIgnoreLineEndings);
-			menu.menu_Content_Type_None.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.None);
-			menu.menu_Content_Type_Balanced.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.Balanced);
-			menu.menu_Content_Type_Columns.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.Columns);
-			menu.menu_Content_Type_CPlusPlus.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CPlusPlus);
-			menu.menu_Content_Type_CSharp.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CSharp);
-			menu.menu_Content_Type_CSV.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.CSV);
-			menu.menu_Content_Type_ExactColumns.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.ExactColumns);
-			menu.menu_Content_Type_HTML.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.HTML);
-			menu.menu_Content_Type_JSON.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.JSON);
-			menu.menu_Content_Type_SQL.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.SQL);
-			menu.menu_Content_Type_TSV.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.TSV);
-			menu.menu_Content_Type_XML.MultiStatus = GetMultiStatus(x => x.ContentType == ParserType.XML);
-			menu.menu_Content_HighlightSyntax.MultiStatus = GetMultiStatus(x => x.HighlightSyntax);
-			menu.menu_Content_StrictParsing.MultiStatus = GetMultiStatus(x => x.StrictParsing);
-			menu.menu_Content_KeepSelections.MultiStatus = GetMultiStatus(x => x.KeepSelections);
-			menu.menu_Window_ViewBinary.MultiStatus = GetMultiStatus(x => x.ViewBinary);
+			menu.menu_File_AutoRefresh.MultiStatus = GetMultiStatus(tab => tab.AutoRefresh);
+			menu.menu_File_Encrypt.MultiStatus = GetMultiStatus(tab => !string.IsNullOrWhiteSpace(tab.AESKey));
+			menu.menu_File_Compress.MultiStatus = GetMultiStatus(tab => tab.Compressed);
+			menu.menu_Edit_Navigate_JumpBy_Words.MultiStatus = GetMultiStatus(tab => tab.JumpBy == JumpByType.Words);
+			menu.menu_Edit_Navigate_JumpBy_Numbers.MultiStatus = GetMultiStatus(tab => tab.JumpBy == JumpByType.Numbers);
+			menu.menu_Edit_Navigate_JumpBy_Paths.MultiStatus = GetMultiStatus(tab => tab.JumpBy == JumpByType.Paths);
+			menu.menu_Diff_IgnoreWhitespace.MultiStatus = GetMultiStatus(tab => tab.DiffIgnoreWhitespace);
+			menu.menu_Diff_IgnoreCase.MultiStatus = GetMultiStatus(tab => tab.DiffIgnoreCase);
+			menu.menu_Diff_IgnoreNumbers.MultiStatus = GetMultiStatus(tab => tab.DiffIgnoreNumbers);
+			menu.menu_Diff_IgnoreLineEndings.MultiStatus = GetMultiStatus(tab => tab.DiffIgnoreLineEndings);
+			menu.menu_Content_Type_None.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.None);
+			menu.menu_Content_Type_Balanced.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.Balanced);
+			menu.menu_Content_Type_Columns.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.Columns);
+			menu.menu_Content_Type_CPlusPlus.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.CPlusPlus);
+			menu.menu_Content_Type_CSharp.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.CSharp);
+			menu.menu_Content_Type_CSV.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.CSV);
+			menu.menu_Content_Type_ExactColumns.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.ExactColumns);
+			menu.menu_Content_Type_HTML.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.HTML);
+			menu.menu_Content_Type_JSON.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.JSON);
+			menu.menu_Content_Type_SQL.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.SQL);
+			menu.menu_Content_Type_TSV.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.TSV);
+			menu.menu_Content_Type_XML.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.XML);
+			menu.menu_Content_HighlightSyntax.MultiStatus = GetMultiStatus(tab => tab.HighlightSyntax);
+			menu.menu_Content_StrictParsing.MultiStatus = GetMultiStatus(tab => tab.StrictParsing);
+			menu.menu_Content_KeepSelections.MultiStatus = GetMultiStatus(tab => tab.KeepSelections);
+			menu.menu_Window_ViewBinary.MultiStatus = GetMultiStatus(tab => tab.ViewBinary);
 		}
 
-		public void Render() => Dispatcher.Invoke(() => DrawAll());
+		public void Render(RenderParameters renderParameters) => Dispatcher.Invoke(() => DrawAll(renderParameters));
 
-		void DrawAll()
+		void DrawAll(RenderParameters renderParameters)
 		{
 			Drawing = true;
 			statusBar.InvalidateVisual();
-			SetMenuCheckboxes();
-			Title = $"{(Tabs.FocusedITab == null ? "" : $"{Tabs.FocusedITab.DisplayName ?? Tabs.FocusedITab.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
+			SetMenuCheckboxes(renderParameters);
+			Title = $"{(renderParameters.FocusedTab == null ? "" : $"{renderParameters.FocusedTab.DisplayName ?? renderParameters.FocusedTab.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
 
-			if ((Tabs.WindowLayout.Columns == 1) && (Tabs.WindowLayout.Rows == 1))
-				DoFullLayout();
+			if ((renderParameters.WindowLayout.Columns == 1) && (renderParameters.WindowLayout.Rows == 1))
+				DoFullLayout(renderParameters);
 			else
-				DoGridLayout();
+				DoGridLayout(renderParameters);
 			UpdateLayout();
 			Drawing = false;
 		}
 
-		public bool GotoTab(string fileName, int? line, int? column, int? index)
-		{
-			var tab = Tabs.AllITabs.FirstOrDefault(x => x.FileName == fileName);
-			if (tab == null)
-				return false;
-			//TODO
-			//Activate();
-			//Tabs.ClearAllActive();
-			//Tabs.SetActive(tab);
-			//Tabs.FocusedITab = tab;
-			//tab.Execute_File_Refresh();
-			//tab.Goto(line, column, index);
-			return true;
-		}
+		//public bool GotoTab(string fileName, int? line, int? column, int? index)
+		//{
+		//	var tab = Tabs.AllITabs.FirstOrDefault(x => x.FileName == fileName);
+		//	if (tab == null)
+		//		return false;
+		//	//TODO
+		//	//Activate();
+		//	//Tabs.ClearAllActive();
+		//	//Tabs.SetActive(tab);
+		//	//Tabs.FocusedITab = tab;
+		//	//tab.Execute_File_Refresh();
+		//	//tab.Goto(line, column, index);
+		//	return true;
+		//}
 
 		[DllImport("user32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]

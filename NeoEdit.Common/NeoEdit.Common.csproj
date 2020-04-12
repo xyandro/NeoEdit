@@ -198,6 +198,7 @@
     </Compile>
     <None Include="Properties\GlobalAssemblyInfo.Template.cs" />
     <Compile Include="Range.cs" />
+    <Compile Include="RenderParameters.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParserBaseVisitor.cs" />

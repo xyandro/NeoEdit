@@ -23,7 +23,6 @@ namespace NeoEdit.Editor
 		}
 
 		public IReadOnlyList<Tab> AllTabs => newTabsList.AllTabs;
-		public IReadOnlyList<ITab> AllITabs => newTabsList.AllTabs;
 
 		public void InsertTab(Tab tab, int? index = null)
 		{
@@ -38,21 +37,20 @@ namespace NeoEdit.Editor
 		}
 
 		public IReadOnlyList<Tab> ActiveTabs => newTabsList.ActiveTabs;
-		public IReadOnlyList<ITab> ActiveITabs => newTabsList.ActiveTabs;
 
 		public void ClearAllActive() => GetUpdateTabsList().ClearActive();
 
 		public void SetActive(Tab tab, bool active = true) => GetUpdateTabsList().SetActive(tab, active);
 
 		public bool IsActive(Tab tab) => newTabsList.IsActive(tab);
-		public bool IsActive(ITab tab) => newTabsList.IsActive(tab as Tab);
+
+		public IReadOnlyList<Tab> ActiveFirstTabs => newTabsList.ActiveFirstTabs;
 
 		public Tab Focused
 		{
 			get => newTabsList.Focused;
 			set => GetUpdateTabsList().Focused = value;
 		}
-		public ITab FocusedITab => Focused;
 
 		HashSet<Tab> transactionTabs;
 		public void AddToTransaction(Tab tab)
