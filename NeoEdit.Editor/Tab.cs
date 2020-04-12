@@ -438,6 +438,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_New_FromSelections: Execute_File_New_FromSelections(); break;
 				case NECommand.File_Open_Selected: Execute_File_Open_Selected(); break;
 				case NECommand.File_Save_Save: Execute_File_Save_Save(); break;
+				case NECommand.File_Save_SaveModified: Execute_File_Save_SaveModified(); break;
 				case NECommand.File_Save_SaveAs: Execute_File_SaveCopy_SaveCopy(); break;
 				case NECommand.File_Save_SaveAsClipboard: Execute_File_SaveCopy_SaveCopyClipboard(); break;
 				case NECommand.File_Save_SaveAsByExpression: Execute_File_SaveCopy_SaveCopyByExpression(); break;

@@ -63,6 +63,13 @@ namespace NeoEdit.Editor
 				Save(FileName);
 		}
 
+		void Execute_File_Save_SaveModified()
+		{
+			if (!IsModified)
+				return;
+			Execute_File_Save_Save();
+		}
+
 		void Execute_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
 		object Configure_File_SaveCopy_SaveCopyByExpression() => Tabs.TabsWindow.RunGetExpressionDialog(GetVariables(), Selections.Count);
