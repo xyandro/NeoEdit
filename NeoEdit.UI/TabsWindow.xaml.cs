@@ -295,7 +295,7 @@ namespace NeoEdit.UI
 			SetMenuCheckboxes();
 			Title = $"{(Tabs.FocusedITab == null ? "" : $"{Tabs.FocusedITab.DisplayName ?? Tabs.FocusedITab.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
 
-			if ((Tabs.Columns == 1) && (Tabs.Rows == 1))
+			if ((Tabs.WindowLayout.Columns == 1) && (Tabs.WindowLayout.Rows == 1))
 				DoFullLayout();
 			else
 				DoGridLayout();

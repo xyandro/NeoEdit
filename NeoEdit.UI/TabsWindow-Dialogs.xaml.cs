@@ -98,7 +98,7 @@ namespace NeoEdit.UI
 		public TextTrimDialogResult RunTextTrimDialog() => Dispatcher.Invoke(() => TextTrimDialog.Run(this));
 		public TextUnicodeDialogResult RunTextUnicodeDialog() => Dispatcher.Invoke(() => TextUnicodeDialog.Run(this));
 		public TextWidthDialogResult RunTextWidthDialog(bool numeric, bool isSelect, NEVariables variables) => Dispatcher.Invoke(() => TextWidthDialog.Run(this, numeric, isSelect, variables));
-		public WindowCustomGridDialogResult RunWindowCustomGridDialog(int? columns, int? rows, int? maxColumns, int? maxRows) => Dispatcher.Invoke(() => WindowCustomGridDialog.Run(this, columns, rows, maxColumns, maxRows));
+		public WindowLayout RunWindowCustomGridDialog(WindowLayout windowLayout) => Dispatcher.Invoke(() => WindowCustomGridDialog.Run(this, windowLayout));
 		public void RunWindowFontSizeDialog() => Dispatcher.Invoke(() => WindowFontSizeDialog.Run(this));
 		public NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog() => Dispatcher.Invoke(() => NetworkWCFGetConfigDialog.Run(this));
 		public object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action) => Dispatcher.Invoke(() => ProgressDialog.Run(this, text, action));

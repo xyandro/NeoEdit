@@ -83,7 +83,7 @@ namespace NeoEdit.Editor
 			active.ForEach(tab => RemoveTab(tab));
 
 			var tabs = new Tabs();
-			tabs.SetLayout(Columns, Rows, MaxColumns, MaxRows);
+			tabs.SetLayout(WindowLayout);
 			active.ForEach(tab => tabs.AddTab(tab));
 		}
 

@@ -96,7 +96,7 @@ namespace NeoEdit.Common
 		TextTrimDialogResult RunTextTrimDialog();
 		TextUnicodeDialogResult RunTextUnicodeDialog();
 		TextWidthDialogResult RunTextWidthDialog(bool numeric, bool isSelect, NEVariables variables);
-		WindowCustomGridDialogResult RunWindowCustomGridDialog(int? columns, int? rows, int? maxColumns, int? maxRows);
+		WindowLayout RunWindowCustomGridDialog(WindowLayout windowLayout);
 		void RunWindowFontSizeDialog();
 		NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog();
 		object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action);

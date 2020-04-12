@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using NeoEdit.Common.Models;
+using NeoEdit.Common;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs
@@ -18,27 +18,27 @@ namespace NeoEdit.UI.Dialogs
 
 		static WindowCustomGridDialog() { UIHelper<WindowCustomGridDialog>.Register(); }
 
-		WindowCustomGridDialog(int? columns, int? rows, int? maxColumns, int? maxRows)
+		WindowCustomGridDialog(WindowLayout windowLayout)
 		{
 			InitializeComponent();
-			Columns = columns;
-			Rows = rows;
-			MaxColumns = maxColumns;
-			MaxRows = maxRows;
+			Columns = windowLayout.Columns;
+			Rows = windowLayout.Rows;
+			MaxColumns = windowLayout.MaxColumns;
+			MaxRows = windowLayout.MaxRows;
 		}
 
-		WindowCustomGridDialogResult result;
+		WindowLayout result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if ((Columns < 1) || (Rows < 1) || (MaxColumns < 1) || (MaxRows < 1))
 				return;
-			result = new WindowCustomGridDialogResult { Columns = Columns, Rows = Rows, MaxColumns = MaxColumns, MaxRows = MaxRows };
+			result = new WindowLayout(Columns, Rows, MaxColumns, MaxRows);
 			DialogResult = true;
 		}
 
-		public static WindowCustomGridDialogResult Run(Window parent, int? columns, int? rows, int? maxColumns, int? maxRows)
+		public static WindowLayout Run(Window parent, WindowLayout windowLayout)
 		{
-			var dialog = new WindowCustomGridDialog(columns, rows, maxColumns, maxRows) { Owner = parent };
+			var dialog = new WindowCustomGridDialog(windowLayout) { Owner = parent };
 			if (!dialog.ShowDialog())
 				throw new OperationCanceledException();
 			return dialog.result;

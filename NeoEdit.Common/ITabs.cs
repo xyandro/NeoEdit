@@ -9,10 +9,7 @@ namespace NeoEdit.Common
 		int AllTabsHash { get; }
 		ITab FocusedITab { get; }
 		IEnumerable<ITab> AllITabs { get; }
-		int? Columns { get; }
-		int? Rows { get; }
-		int? MaxColumns { get; }
-		int? MaxRows { get; }
+		WindowLayout WindowLayout { get; }
 		DateTime LastActivated { get; set; }
 		IEnumerable<ITab> SortedActiveITabs { get; }
 		IEnumerable<ITab> UnsortedActiveITabs { get; }

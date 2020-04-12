@@ -19,7 +19,7 @@ namespace NeoEdit.UI
 		int lastGridAllTabsHash;
 		ITab lastGridFocused;
 		double lastGridScrollBarValue;
-		int? lastGridColumns, lastGridRows, lastGridMaxColumns, lastGridMaxRows;
+		WindowLayout lastWindowLayout;
 
 		void ClearGridLayout()
 		{
@@ -38,7 +38,7 @@ namespace NeoEdit.UI
 			lastGridAllTabsHash = 0;
 			lastGridFocused = null;
 			lastGridScrollBarValue = 0;
-			lastGridColumns = lastGridRows = lastGridMaxColumns = lastGridMaxRows = null;
+			lastWindowLayout = new WindowLayout();
 		}
 
 		void DisconnectTabWindows()
@@ -68,27 +68,24 @@ namespace NeoEdit.UI
 			lastGridAllTabsHash = Tabs.AllTabsHash;
 			lastGridFocused = Tabs.FocusedITab;
 			lastGridScrollBarValue = scrollBar.Value;
-			lastGridColumns = Tabs.Columns;
-			lastGridRows = Tabs.Rows;
-			lastGridMaxColumns = Tabs.MaxColumns;
-			lastGridMaxRows = Tabs.MaxRows;
+			lastWindowLayout = Tabs.WindowLayout;
 		}
 
 		void CalculateGridParameters()
 		{
-			if ((lastGridAllTabsHash != Tabs.AllTabsHash) || (lastGridColumns != Tabs.Columns) || (lastGridRows != Tabs.Rows) || (lastGridMaxColumns != Tabs.MaxColumns) || (lastGridMaxRows != Tabs.MaxRows))
+			if ((lastGridAllTabsHash != Tabs.AllTabsHash) || (lastWindowLayout != Tabs.WindowLayout))
 			{
 				int? columns = null, rows = null;
-				if (Tabs.Columns.HasValue)
-					columns = Math.Max(1, Tabs.Columns.Value);
-				if (Tabs.Rows.HasValue)
-					rows = Math.Max(1, Tabs.Rows.Value);
+				if (Tabs.WindowLayout.Columns.HasValue)
+					columns = Math.Max(1, Tabs.WindowLayout.Columns.Value);
+				if (Tabs.WindowLayout.Rows.HasValue)
+					rows = Math.Max(1, Tabs.WindowLayout.Rows.Value);
 				if ((!columns.HasValue) && (!rows.HasValue))
-					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.AllITabs.Count())), Tabs.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(Tabs.AllITabs.Count())), Tabs.WindowLayout.MaxColumns ?? int.MaxValue));
 				if (!rows.HasValue)
-					rows = Math.Max(1, Math.Min((Tabs.AllITabs.Count() + columns.Value - 1) / columns.Value, Tabs.MaxRows ?? int.MaxValue));
+					rows = Math.Max(1, Math.Min((Tabs.AllITabs.Count() + columns.Value - 1) / columns.Value, Tabs.WindowLayout.MaxRows ?? int.MaxValue));
 				if (!columns.HasValue)
-					columns = Math.Max(1, Math.Min((Tabs.AllITabs.Count() + rows.Value - 1) / rows.Value, Tabs.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((Tabs.AllITabs.Count() + rows.Value - 1) / rows.Value, Tabs.WindowLayout.MaxColumns ?? int.MaxValue));
 
 				gridColumns = columns.Value;
 				gridRows = rows.Value;

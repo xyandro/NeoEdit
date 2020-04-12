@@ -40,6 +40,7 @@ namespace NeoEdit.Editor
 		{
 			Instances.Add(this);
 
+			oldWindowLayout = newWindowLayout = new WindowLayout(1, 1);
 			oldAllTabs = newAllTabs = new OrderedHashSet<Tab>();
 			oldActiveTabs = newActiveTabs = new OrderedHashSet<Tab>();
 
@@ -298,7 +299,7 @@ namespace NeoEdit.Editor
 				case NECommand.Window_NewWindow: Execute_Window_NewWindow(); break;
 				case NECommand.Window_Full: Execute_Window_Full(); break;
 				case NECommand.Window_Grid: Execute_Window_Grid(); break;
-				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(state.Configuration as WindowCustomGridDialogResult); break;
+				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(state.Configuration as WindowLayout); break;
 				case NECommand.Window_ActiveTabs: Execute_Window_ActiveTabs(); break;
 				case NECommand.Window_Font_Size: Execute_Window_Font_Size(); break;
 				case NECommand.Window_Font_ShowSpecial: Execute_Window_Font_ShowSpecial(state.MultiStatus); break;
@@ -361,13 +362,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void SetLayout(int? columns = null, int? rows = null, int? maxColumns = null, int? maxRows = null)
-		{
-			Columns = columns;
-			Rows = rows;
-			MaxColumns = maxColumns;
-			MaxRows = maxRows;
-		}
+		public void SetLayout(WindowLayout windowLayout) => WindowLayout = windowLayout;
 
 		public void AddTab(Tab tab, int? index = null, bool canReplace = true)
 		{

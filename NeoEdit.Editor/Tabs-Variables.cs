@@ -200,47 +200,14 @@ namespace NeoEdit.Editor
 		}
 
 
-		int? oldColumns = 1, newColumns = 1;
-		public int? Columns
+		WindowLayout oldWindowLayout, newWindowLayout;
+		public WindowLayout WindowLayout
 		{
-			get => newColumns;
+			get => newWindowLayout;
 			set
 			{
 				EnsureInTransaction();
-				newColumns = value;
-			}
-		}
-
-		int? oldRows = 1, newRows = 1;
-		public int? Rows
-		{
-			get => newRows;
-			set
-			{
-				EnsureInTransaction();
-				newRows = value;
-			}
-		}
-
-		int? oldMaxColumns, newMaxColumns;
-		public int? MaxColumns
-		{
-			get => newMaxColumns;
-			set
-			{
-				EnsureInTransaction();
-				newMaxColumns = value;
-			}
-		}
-
-		int? oldMaxRows, newMaxRows;
-		public int? MaxRows
-		{
-			get => newMaxRows;
-			set
-			{
-				EnsureInTransaction();
-				newMaxRows = value;
+				newWindowLayout = value;
 			}
 		}
 
@@ -273,9 +240,7 @@ namespace NeoEdit.Editor
 			newAllTabsHash = oldAllTabsHash;
 			newActiveTabsHash = oldActiveTabsHash;
 			newFocused = oldFocused;
-			newRows = oldRows;
-			newMaxColumns = oldMaxColumns;
-			newMaxRows = oldMaxRows;
+			newWindowLayout = oldWindowLayout;
 			newMacroVisualize = oldMacroVisualize;
 
 			transactionTabs.ForEach(tab => tab.Rollback());
@@ -302,10 +267,7 @@ namespace NeoEdit.Editor
 			oldAllTabsHash = newAllTabsHash;
 			oldActiveTabsHash = newActiveTabsHash;
 			oldFocused = newFocused;
-			oldColumns = newColumns;
-			oldRows = newRows;
-			oldMaxColumns = newMaxColumns;
-			oldMaxRows = newMaxRows;
+			oldWindowLayout = newWindowLayout;
 			oldMacroVisualize = newMacroVisualize;
 
 			transactionTabs.ForEach(tab => tab.Commit());

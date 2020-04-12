@@ -176,7 +176,6 @@
     <Compile Include="Models\TextTrimDialogResult.cs" />
     <Compile Include="Models\TextUnicodeDialogResult.cs" />
     <Compile Include="Models\TextWidthDialogResult.cs" />
-    <Compile Include="Models\WindowCustomGridDialogResult.cs" />
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboard.cs" />
     <Compile Include="NECommand.cs" />
@@ -223,6 +222,7 @@
     <Compile Include="Transform\Hasher.cs" />
     <Compile Include="Transform\Versioner.cs" />
     <Compile Include="Transform\XMLConverter.cs" />
+    <Compile Include="WindowLayout.cs" />
     <Compile Include="YouTubeDL.cs" />
   </ItemGroup>
   <ItemGroup>
