@@ -239,7 +239,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Must have single selection.");
 
 			WCFClient.StartInterceptCalls(result.WCFURL, result.InterceptURL);
-			//TODO WCFInterceptDialog.Run();
+			Tabs.TabsWindow.RunWCFInterceptDialog();
 			var values = WCFClient.EndInterceptCalls(result.WCFURL);
 			if (!values.Any())
 				return;

@@ -104,6 +104,7 @@ namespace NeoEdit.Common
 		WindowLayout RunWindowCustomGridDialog(WindowLayout windowLayout);
 		void RunWindowFontSizeDialog();
 		NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog();
+		void RunWCFInterceptDialog();
 		object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action);
 		HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null);
 		void RunHelpAboutDialog();

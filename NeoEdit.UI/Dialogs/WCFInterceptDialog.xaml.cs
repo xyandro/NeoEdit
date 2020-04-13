@@ -1,9 +1,11 @@
-﻿namespace NeoEdit.UI.Dialogs
+﻿using System.Windows;
+
+namespace NeoEdit.UI.Dialogs
 {
 	partial class WCFInterceptDialog
 	{
 		public WCFInterceptDialog() => InitializeComponent();
 
-		public static void Run() => new WCFInterceptDialog().ShowDialog();
+		public static void Run(Window window) => new WCFInterceptDialog { Owner = window }.ShowDialog();
 	}
 }
