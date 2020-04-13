@@ -35,9 +35,8 @@ namespace NeoEdit.Editor
 				case SortType.DateTime: entries = OrderByAscDesc(entries, entry => DateTime.Parse(entry.Item1), ascending); break;
 				case SortType.Keys:
 					{
-						//TODO
-						//var keysHash = TabsParent.GetKeysHash(this);
-						//entries = OrderByAscDesc(entries, entry => entry.Item1, ascending, Comparer<string>.Create((value1, value2) => (keysHash.ContainsKey(value1) ? keysHash[value1] : int.MaxValue).CompareTo(keysHash.ContainsKey(value2) ? keysHash[value2] : int.MaxValue)));
+						var keysHash = state.GetKeysAndValues(0, this).Lookup;
+						entries = OrderByAscDesc(entries, entry => entry.Item1, ascending, Comparer<string>.Create((value1, value2) => (keysHash.ContainsKey(value1) ? keysHash[value1] : int.MaxValue).CompareTo(keysHash.ContainsKey(value2) ? keysHash[value2] : int.MaxValue)));
 					}
 					break;
 				case SortType.Clipboard:
