@@ -362,10 +362,7 @@ namespace NeoEdit.UI
 			var visibleCursor = (Tab.CurrentSelection >= 0) && (Tab.CurrentSelection < Tab.Selections.Count) ? Tab.Selections[Tab.CurrentSelection] : null;
 
 			for (var region = 1; region <= 9; ++region)
-			{
-				var multiplier = (region - 1) / 8d * 4.5 + 2;
-				RenderIndicators(dc, drawBounds, null, Tab.GetRegions(region), null, regionPen[region], -2 * multiplier, 2 * multiplier);
-			}
+				RenderIndicators(dc, drawBounds, null, Tab.GetRegions(region), null, regionPen[region], -2, 2);
 			if (Tab.Selections.Any(range => range.HasSelection))
 				RenderIndicators(dc, drawBounds, visibleCursor, Tab.Selections, selectionBrush, selectionPen, -1, 1);
 			else
