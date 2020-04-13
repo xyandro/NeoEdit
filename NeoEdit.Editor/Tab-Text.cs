@@ -303,7 +303,7 @@ namespace NeoEdit.Editor
 					map[data[ctr].Item2] = ctr;
 
 				return Selections.Select((range, index) => Range.FromIndex(range.Start + data[map[index]].Item3[best[map[index]]], 1)).ToList();
-			}) as List<Range>;
+			});
 
 			if (opResult != null)
 				Selections = opResult;

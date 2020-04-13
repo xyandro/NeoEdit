@@ -45,13 +45,13 @@ namespace NeoEdit.UI.Dialogs
 
 		void OnCancel(object sender, RoutedEventArgs e) => worker.CancelAsync();
 
-		static public object Run(Window parent, string text, Func<Func<bool>, Action<int>, object> action)
+		static public T Run<T>(Window parent, string text, Func<Func<bool>, Action<int>, T> action)
 		{
-			var dialog = new ProgressDialog(text, action) { Owner = parent };
+			var dialog = new ProgressDialog(text, (canceled, progress) => action(canceled, progress)) { Owner = parent };
 			dialog.ShowDialog();
-			return dialog.result;
+			return (T)dialog.result;
 		}
 
-		static public void Run(Window parent, string text, Action<Func<bool>, Action<int>> action) => Run(parent, text, (canceled, progress) => { action(canceled, progress); return null; });
+		static public void Run(Window parent, string text, Action<Func<bool>, Action<int>> action) => Run(parent, text, (canceled, progress) => { action(canceled, progress); return false; });
 	}
 }

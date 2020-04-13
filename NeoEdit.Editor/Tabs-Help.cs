@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 
@@ -20,7 +21,7 @@ namespace NeoEdit.Editor
 			const string location = "https://github.com/xyandro/NeoEdit/releases";
 			const string url = location + "/latest";
 			const string check = location + "/tag/";
-			//const string exe = location + "/download/{0}/NeoEdit.exe";
+			const string exe = location + "/download/{0}/NeoEdit.exe";
 
 			var oldVersion = ((AssemblyFileVersionAttribute)typeof(Tabs).Assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
 			string newVersion;
@@ -49,25 +50,25 @@ namespace NeoEdit.Editor
 			var newLocation = Path.Combine(Path.GetDirectoryName(oldLocation), $"{Path.GetFileNameWithoutExtension(oldLocation)}-Update{Path.GetExtension(oldLocation)}");
 
 			byte[] result = null;
-			//TODO
-			//ProgressDialog.Run(null, "Downloading new version...", (canceled, progress) =>
-			//{
-			//	var finished = new ManualResetEvent(false);
-			//	using (var client = new WebClient())
-			//	{
-			//		client.DownloadProgressChanged += (s, e) => progress(e.ProgressPercentage);
-			//		client.DownloadDataCompleted += (s, e) =>
-			//		{
-			//			if (!e.Cancelled)
-			//				result = e.Result;
-			//			finished.Set();
-			//		};
-			//		client.DownloadDataAsync(new Uri(string.Format(exe, newVersion)));
-			//		while (!finished.WaitOne(500))
-			//			if (canceled())
-			//				client.CancelAsync();
-			//	}
-			//});
+
+			TabsWindow.RunProgressDialog("Downloading new version...", (canceled, progress) =>
+			{
+				var finished = new ManualResetEvent(false);
+				using (var client = new WebClient())
+				{
+					client.DownloadProgressChanged += (s, e) => progress(e.ProgressPercentage);
+					client.DownloadDataCompleted += (s, e) =>
+					{
+						if (!e.Cancelled)
+							result = e.Result;
+						finished.Set();
+					};
+					client.DownloadDataAsync(new Uri(string.Format(exe, newVersion)));
+					while (!finished.WaitOne(500))
+						if (canceled())
+							client.CancelAsync();
+				}
+			});
 
 			if (result == null)
 				return;

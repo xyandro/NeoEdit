@@ -102,7 +102,8 @@ namespace NeoEdit.UI
 		public void RunWindowFontSizeDialog() => Dispatcher.Invoke(() => WindowFontSizeDialog.Run(this));
 		public NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog() => Dispatcher.Invoke(() => NetworkWCFGetConfigDialog.Run(this));
 		public void RunWCFInterceptDialog() => Dispatcher.Invoke(() => WCFInterceptDialog.Run(this));
-		public object RunProgressDialog(string text, Func<Func<bool>, Action<int>, object> action) => Dispatcher.Invoke(() => ProgressDialog.Run(this, text, action));
+		public T RunProgressDialog<T>(string text, Func<Func<bool>, Action<int>, T> action) => Dispatcher.Invoke(() => ProgressDialog.Run(this, text, action));
+		public void RunProgressDialog(string text, Action<Func<bool>, Action<int>> action) => Dispatcher.Invoke(() => ProgressDialog.Run(this, text, action));
 		public HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null) => Dispatcher.Invoke(() => CodePagesDialog.Run(this, startCodePages));
 		public void RunHelpAboutDialog() => Dispatcher.Invoke(() => HelpAboutDialog.Run(this));
 	}
