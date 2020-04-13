@@ -49,7 +49,7 @@ namespace NeoEdit.Editor
 			Commit();
 		}
 
-		public IReadOnlyDictionary<ITab, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
+		IReadOnlyDictionary<ITab, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
 		{
 			var empty = Tuple.Create(new List<string>() as IReadOnlyList<string>, default(bool?));
 			var clipboardDataMap = AllTabs.ToDictionary(x => x as ITab, x => empty);
@@ -69,8 +69,8 @@ namespace NeoEdit.Editor
 			return clipboardDataMap;
 		}
 
-		public IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
-		public Dictionary<ITab, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
+		IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
+		Dictionary<ITab, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
 		{
 			var empty = new KeysAndValues(new List<string>(), kvIndex == 0);
 			var keysAndValuesMap = AllTabs.ToDictionary(x => x as ITab, x => empty);
@@ -358,7 +358,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void SetLayout(WindowLayout windowLayout) => WindowLayout = windowLayout;
+		void SetLayout(WindowLayout windowLayout) => WindowLayout = windowLayout;
 
 		public void AddTab(Tab tab, int? index = null, bool canReplace = true)
 		{
@@ -371,7 +371,7 @@ namespace NeoEdit.Editor
 			InsertTab(tab, index);
 		}
 
-		public void AddDiff(Tab tab1, Tab tab2)
+		void AddDiff(Tab tab1, Tab tab2)
 		{
 			//TODO
 			//if (tab1.ContentType == ParserType.None)
@@ -384,14 +384,14 @@ namespace NeoEdit.Editor
 			//SetLayout(maxColumns: 2);
 		}
 
-		public void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, ParserType contentType1 = ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, int? index1 = null, ShutdownData shutdownData1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, ParserType contentType2 = ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, int? index2 = null, ShutdownData shutdownData2 = null)
+		void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, ParserType contentType1 = ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, int? index1 = null, ShutdownData shutdownData1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, ParserType contentType2 = ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, int? index2 = null, ShutdownData shutdownData2 = null)
 		{
 			var te1 = new Tab(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, index1, shutdownData1);
 			var te2 = new Tab(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, index2, shutdownData2);
 			AddDiff(te1, te2);
 		}
 
-		public bool TabIsActive(Tab tab) => ActiveTabs.Contains(tab);
+		bool TabIsActive(Tab tab) => ActiveTabs.Contains(tab);
 
 		public int GetTabIndex(Tab tab, bool activeOnly = false)
 		{
@@ -425,7 +425,7 @@ namespace NeoEdit.Editor
 			Focused = tab;
 		}
 
-		public void Move(Tab tab, int newIndex)
+		void Move(Tab tab, int newIndex)
 		{
 			RemoveTab(tab);
 			InsertTab(tab, newIndex);
@@ -473,7 +473,7 @@ namespace NeoEdit.Editor
 			TabRows = rows;
 		}
 
-		public void SetForeground() => TabsWindow.SetForeground();
+		void SetForeground() => TabsWindow.SetForeground();
 
 		List<string> GetStatusBar()
 		{

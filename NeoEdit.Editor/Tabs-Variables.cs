@@ -22,9 +22,9 @@ namespace NeoEdit.Editor
 			return newTabsList;
 		}
 
-		public IReadOnlyOrderedHashSet<Tab> AllTabs => newTabsList.AllTabs;
+		IReadOnlyOrderedHashSet<Tab> AllTabs => newTabsList.AllTabs;
 
-		public void InsertTab(Tab tab, int? index = null)
+		void InsertTab(Tab tab, int? index = null)
 		{
 			lock (this)
 				GetUpdateTabsList().InsertTab(oldTabsList, tab, index);
@@ -36,7 +36,7 @@ namespace NeoEdit.Editor
 				GetUpdateTabsList().RemoveTab(tab);
 		}
 
-		public void MoveTab(Tab tab, int index)
+		void MoveTab(Tab tab, int index)
 		{
 			lock (this)
 				GetUpdateTabsList().MoveTab(tab, index);
@@ -44,15 +44,15 @@ namespace NeoEdit.Editor
 
 		public IReadOnlyOrderedHashSet<Tab> ActiveTabs => newTabsList.ActiveTabs;
 
-		public void ClearAllActive() => GetUpdateTabsList().ClearActive();
+		void ClearAllActive() => GetUpdateTabsList().ClearActive();
 
-		public void SetActive(Tab tab, bool active = true) => GetUpdateTabsList().SetActive(tab, active);
+		void SetActive(Tab tab, bool active = true) => GetUpdateTabsList().SetActive(tab, active);
 
-		public bool IsActive(Tab tab) => newTabsList.IsActive(tab);
+		bool IsActive(Tab tab) => newTabsList.IsActive(tab);
 
-		public IReadOnlyOrderedHashSet<Tab> ActiveFirstTabs => newTabsList.ActiveFirstTabs;
+		IReadOnlyOrderedHashSet<Tab> ActiveFirstTabs => newTabsList.ActiveFirstTabs;
 
-		public Tab Focused
+		Tab Focused
 		{
 			get => newTabsList.Focused;
 			set => GetUpdateTabsList().Focused = value;
@@ -69,7 +69,7 @@ namespace NeoEdit.Editor
 
 
 		WindowLayout oldWindowLayout, newWindowLayout;
-		public WindowLayout WindowLayout
+		WindowLayout WindowLayout
 		{
 			get => newWindowLayout;
 			set
@@ -80,7 +80,7 @@ namespace NeoEdit.Editor
 		}
 
 		bool oldMacroVisualize = true, newMacroVisualize = true;
-		public bool MacroVisualize
+		bool MacroVisualize
 		{
 			get => newMacroVisualize;
 			set
