@@ -50,8 +50,6 @@ namespace NeoEdit.Editor
 
 		bool IsActive(Tab tab) => newTabsList.IsActive(tab);
 
-		IReadOnlyOrderedHashSet<Tab> ActiveFirstTabs => newTabsList.ActiveFirstTabs;
-
 		Tab Focused
 		{
 			get => newTabsList.Focused;
