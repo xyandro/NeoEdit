@@ -38,6 +38,11 @@ namespace NeoEdit.UI.Dialogs
 			ActiveOnly = windowLayout.ActiveOnly;
 		}
 
+		void OnReset(object sender, RoutedEventArgs e)
+		{
+			ActiveFirst = ActiveOnly = false;
+		}
+
 		WindowLayout result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{

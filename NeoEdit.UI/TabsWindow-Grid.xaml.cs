@@ -80,16 +80,16 @@ namespace NeoEdit.UI
 				if (renderParameters.WindowLayout.Rows.HasValue)
 					rows = Math.Max(1, renderParameters.WindowLayout.Rows.Value);
 				if ((!columns.HasValue) && (!rows.HasValue))
-					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(renderParameters.Count)), renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(renderParameters.AllTabs.Count)), renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
 				if (!rows.HasValue)
-					rows = Math.Max(1, Math.Min((renderParameters.Count + columns.Value - 1) / columns.Value, renderParameters.WindowLayout.MaxRows ?? int.MaxValue));
+					rows = Math.Max(1, Math.Min((renderParameters.AllTabs.Count + columns.Value - 1) / columns.Value, renderParameters.WindowLayout.MaxRows ?? int.MaxValue));
 				if (!columns.HasValue)
-					columns = Math.Max(1, Math.Min((renderParameters.Count + rows.Value - 1) / rows.Value, renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((renderParameters.AllTabs.Count + rows.Value - 1) / rows.Value, renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
 
 				gridColumns = columns.Value;
 				gridRows = rows.Value;
 
-				var totalRows = (renderParameters.Count + gridColumns - 1) / gridColumns;
+				var totalRows = (renderParameters.AllTabs.Count + gridColumns - 1) / gridColumns;
 
 				scrollBarBorder.Visibility = totalRows > gridRows ? Visibility.Visible : Visibility.Collapsed;
 				UpdateLayout();

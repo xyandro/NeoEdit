@@ -87,10 +87,9 @@ namespace NeoEdit.Editor
 		{
 			var renderParameters = new RenderParameters
 			{
-				AllTabs = WindowLayout.ActiveFirst ? ActiveFirstTabs : AllTabs,
+				AllTabs = WindowLayout.ActiveOnly ? ActiveTabs : WindowLayout.ActiveFirst ? ActiveFirstTabs : AllTabs,
 				ActiveTabs = ActiveTabs,
 				FocusedTab = Focused,
-				Count = WindowLayout.ActiveOnly ? ActiveTabs.Count : AllTabs.Count,
 				WindowLayout = WindowLayout,
 				StatusBar = GetStatusBar(),
 				MenuStatus = GetMenuStatus(),
