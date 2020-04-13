@@ -59,7 +59,7 @@ namespace NeoEdit.UI.Dialogs
 			if (!IsRegex)
 				text = Regex.Escape(text);
 			if (WholeWords)
-				text = $"\\b{text}\\b";
+				text = $@"(?:\b(?=\w)|(?=\W)){text}(?:(?<=\w)\b|(?<=\W))";
 			if (AllContents)
 				text = $"^{text}$";
 			var options = RegexOptions.Compiled | RegexOptions.Singleline;

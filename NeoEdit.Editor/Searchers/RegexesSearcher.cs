@@ -16,9 +16,9 @@ namespace NeoEdit.Editor.Searchers
 			{
 				var str = $"(?:{text})";
 				if (wholeWords)
-					str = $"\\b{str}\\b";
+					str = $@"(?:\b(?=\w)|(?=\W)){str}(?:(?<=\w)\b|(?<=\W))";
 				if (entireSelection)
-					str = $"\\A{str}\\Z";
+					str = $@"\A{str}\Z";
 				var options = RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.Multiline;
 				if (!matchCase)
 					options |= RegexOptions.IgnoreCase;
