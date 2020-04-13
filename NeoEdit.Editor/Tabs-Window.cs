@@ -13,7 +13,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_Full() => SetLayout(new WindowLayout(1, 1));
 
-		void Execute_Window_Grid() => SetLayout(new WindowLayout(maxColumns: 5, maxRows: 5));
+		void Execute_Window_Grid() => SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 
 		WindowLayout Configure_Window_CustomGrid() => TabsWindow.RunWindowCustomGridDialog(WindowLayout);
 
