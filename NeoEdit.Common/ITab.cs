@@ -18,17 +18,6 @@ namespace NeoEdit.Common
 		bool HighlightSyntax { get; }
 		ParserType ContentType { get; }
 		string TabLabel { get; }
-		string DBName { get; }
-		bool AutoRefresh { get; }
-		string AESKey { get; }
-		bool Compressed { get; }
-		JumpByType JumpBy { get; }
-		bool DiffIgnoreWhitespace { get; }
-		bool DiffIgnoreCase { get; }
-		bool DiffIgnoreNumbers { get; }
-		bool DiffIgnoreLineEndings { get; }
-		bool StrictParsing { get; }
-		bool KeepSelections { get; }
 		string DisplayName { get; }
 		string FileName { get; }
 

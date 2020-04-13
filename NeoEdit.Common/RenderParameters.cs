@@ -10,6 +10,6 @@ namespace NeoEdit.Common
 		public int Count { get; set; }
 		public WindowLayout WindowLayout { get; set; }
 		public List<string> StatusBar { get; set; }
-		public bool? MacroVisualize { get; set; }
+		public Dictionary<string, bool?> MenuStatus { get; set; }
 	}
 }

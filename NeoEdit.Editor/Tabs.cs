@@ -93,9 +93,54 @@ namespace NeoEdit.Editor
 				Count = WindowLayout.ActiveOnly ? ActiveTabs.Count : AllTabs.Count,
 				WindowLayout = WindowLayout,
 				StatusBar = GetStatusBar(),
-				MacroVisualize = MacroVisualize,
+				MenuStatus = GetMenuStatus(),
 			};
 			TabsWindow.Render(renderParameters);
+		}
+
+		Dictionary<string, bool?> GetMenuStatus()
+		{
+			bool? GetMultiStatus(Func<Tab, bool> func)
+			{
+				var results = ActiveTabs.Select(func).Distinct().Take(2).ToList();
+				if (results.Count != 1)
+					return default;
+				return results[0];
+			}
+
+			return new Dictionary<string, bool?>
+			{
+				[nameof(NECommand.File_AutoRefresh)] = GetMultiStatus(tab => tab.AutoRefresh),
+				[nameof(NECommand.File_Encrypt)] = GetMultiStatus(tab => !string.IsNullOrWhiteSpace(tab.AESKey)),
+				[nameof(NECommand.File_Compress)] = GetMultiStatus(tab => tab.Compressed),
+				[nameof(NECommand.File_DontExitOnClose)] = Settings.DontExitOnClose,
+				[nameof(NECommand.Edit_Navigate_JumpBy_Words)] = GetMultiStatus(tab => tab.JumpBy == JumpByType.Words),
+				[nameof(NECommand.Edit_Navigate_JumpBy_Numbers)] = GetMultiStatus(tab => tab.JumpBy == JumpByType.Numbers),
+				[nameof(NECommand.Edit_Navigate_JumpBy_Paths)] = GetMultiStatus(tab => tab.JumpBy == JumpByType.Paths),
+				[nameof(NECommand.Edit_EscapeClearsSelections)] = Settings.EscapeClearsSelections,
+				[nameof(NECommand.Diff_IgnoreWhitespace)] = GetMultiStatus(tab => tab.DiffIgnoreWhitespace),
+				[nameof(NECommand.Diff_IgnoreCase)] = GetMultiStatus(tab => tab.DiffIgnoreCase),
+				[nameof(NECommand.Diff_IgnoreNumbers)] = GetMultiStatus(tab => tab.DiffIgnoreNumbers),
+				[nameof(NECommand.Diff_IgnoreLineEndings)] = GetMultiStatus(tab => tab.DiffIgnoreLineEndings),
+				[nameof(NECommand.Content_Type_None)] = GetMultiStatus(tab => tab.ContentType == ParserType.None),
+				[nameof(NECommand.Content_Type_Balanced)] = GetMultiStatus(tab => tab.ContentType == ParserType.Balanced),
+				[nameof(NECommand.Content_Type_Columns)] = GetMultiStatus(tab => tab.ContentType == ParserType.Columns),
+				[nameof(NECommand.Content_Type_CPlusPlus)] = GetMultiStatus(tab => tab.ContentType == ParserType.CPlusPlus),
+				[nameof(NECommand.Content_Type_CSharp)] = GetMultiStatus(tab => tab.ContentType == ParserType.CSharp),
+				[nameof(NECommand.Content_Type_CSV)] = GetMultiStatus(tab => tab.ContentType == ParserType.CSV),
+				[nameof(NECommand.Content_Type_ExactColumns)] = GetMultiStatus(tab => tab.ContentType == ParserType.ExactColumns),
+				[nameof(NECommand.Content_Type_HTML)] = GetMultiStatus(tab => tab.ContentType == ParserType.HTML),
+				[nameof(NECommand.Content_Type_JSON)] = GetMultiStatus(tab => tab.ContentType == ParserType.JSON),
+				[nameof(NECommand.Content_Type_SQL)] = GetMultiStatus(tab => tab.ContentType == ParserType.SQL),
+				[nameof(NECommand.Content_Type_TSV)] = GetMultiStatus(tab => tab.ContentType == ParserType.TSV),
+				[nameof(NECommand.Content_Type_XML)] = GetMultiStatus(tab => tab.ContentType == ParserType.XML),
+				[nameof(NECommand.Content_HighlightSyntax)] = GetMultiStatus(tab => tab.HighlightSyntax),
+				[nameof(NECommand.Content_StrictParsing)] = GetMultiStatus(tab => tab.StrictParsing),
+				[nameof(NECommand.Content_KeepSelections)] = GetMultiStatus(tab => tab.KeepSelections),
+				[nameof(NECommand.Macro_Visualize)] = MacroVisualize,
+				[nameof(NECommand.Window_Font_ShowSpecial)] = Font.ShowSpecialChars,
+				[nameof(NECommand.Window_ViewBinary)] = GetMultiStatus(tab => tab.ViewBinary),
+			};
 		}
 
 		void PlayMacro()

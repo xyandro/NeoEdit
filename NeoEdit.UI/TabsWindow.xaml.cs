@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +10,6 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using NeoEdit.Common;
-using NeoEdit.Common.Enums;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI
@@ -229,45 +227,36 @@ namespace NeoEdit.UI
 
 		void SetMenuCheckboxes()
 		{
-			bool? GetMultiStatus(Func<ITab, bool> func)
-			{
-				var results = renderParameters.ActiveTabs.Select(func).Distinct().Take(2).ToList();
-				if (results.Count != 1)
-					return default;
-				return results[0];
-			}
-
-			menu.menu_File_DontExitOnClose.MultiStatus = Settings.DontExitOnClose;
-			menu.menu_Edit_EscapeClearsSelections.MultiStatus = Settings.EscapeClearsSelections;
-			menu.menu_Macro_Visualize.MultiStatus = renderParameters.MacroVisualize;
-			menu.menu_Window_Font_ShowSpecial.MultiStatus = Font.ShowSpecialChars;
-
-			menu.menu_File_AutoRefresh.MultiStatus = GetMultiStatus(tab => tab.AutoRefresh);
-			menu.menu_File_Encrypt.MultiStatus = GetMultiStatus(tab => !string.IsNullOrWhiteSpace(tab.AESKey));
-			menu.menu_File_Compress.MultiStatus = GetMultiStatus(tab => tab.Compressed);
-			menu.menu_Edit_Navigate_JumpBy_Words.MultiStatus = GetMultiStatus(tab => tab.JumpBy == JumpByType.Words);
-			menu.menu_Edit_Navigate_JumpBy_Numbers.MultiStatus = GetMultiStatus(tab => tab.JumpBy == JumpByType.Numbers);
-			menu.menu_Edit_Navigate_JumpBy_Paths.MultiStatus = GetMultiStatus(tab => tab.JumpBy == JumpByType.Paths);
-			menu.menu_Diff_IgnoreWhitespace.MultiStatus = GetMultiStatus(tab => tab.DiffIgnoreWhitespace);
-			menu.menu_Diff_IgnoreCase.MultiStatus = GetMultiStatus(tab => tab.DiffIgnoreCase);
-			menu.menu_Diff_IgnoreNumbers.MultiStatus = GetMultiStatus(tab => tab.DiffIgnoreNumbers);
-			menu.menu_Diff_IgnoreLineEndings.MultiStatus = GetMultiStatus(tab => tab.DiffIgnoreLineEndings);
-			menu.menu_Content_Type_None.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.None);
-			menu.menu_Content_Type_Balanced.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.Balanced);
-			menu.menu_Content_Type_Columns.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.Columns);
-			menu.menu_Content_Type_CPlusPlus.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.CPlusPlus);
-			menu.menu_Content_Type_CSharp.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.CSharp);
-			menu.menu_Content_Type_CSV.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.CSV);
-			menu.menu_Content_Type_ExactColumns.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.ExactColumns);
-			menu.menu_Content_Type_HTML.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.HTML);
-			menu.menu_Content_Type_JSON.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.JSON);
-			menu.menu_Content_Type_SQL.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.SQL);
-			menu.menu_Content_Type_TSV.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.TSV);
-			menu.menu_Content_Type_XML.MultiStatus = GetMultiStatus(tab => tab.ContentType == ParserType.XML);
-			menu.menu_Content_HighlightSyntax.MultiStatus = GetMultiStatus(tab => tab.HighlightSyntax);
-			menu.menu_Content_StrictParsing.MultiStatus = GetMultiStatus(tab => tab.StrictParsing);
-			menu.menu_Content_KeepSelections.MultiStatus = GetMultiStatus(tab => tab.KeepSelections);
-			menu.menu_Window_ViewBinary.MultiStatus = GetMultiStatus(tab => tab.ViewBinary);
+			menu.menu_File_AutoRefresh.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_AutoRefresh)];
+			menu.menu_File_Encrypt.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Encrypt)];
+			menu.menu_File_Compress.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Compress)];
+			menu.menu_File_DontExitOnClose.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_DontExitOnClose)];
+			menu.menu_Edit_Navigate_JumpBy_Words.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Words)];
+			menu.menu_Edit_Navigate_JumpBy_Numbers.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Numbers)];
+			menu.menu_Edit_Navigate_JumpBy_Paths.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Paths)];
+			menu.menu_Edit_EscapeClearsSelections.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_EscapeClearsSelections)];
+			menu.menu_Diff_IgnoreWhitespace.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreWhitespace)];
+			menu.menu_Diff_IgnoreCase.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreCase)];
+			menu.menu_Diff_IgnoreNumbers.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreNumbers)];
+			menu.menu_Diff_IgnoreLineEndings.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreLineEndings)];
+			menu.menu_Content_Type_None.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_None)];
+			menu.menu_Content_Type_Balanced.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_Balanced)];
+			menu.menu_Content_Type_Columns.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_Columns)];
+			menu.menu_Content_Type_CPlusPlus.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_CPlusPlus)];
+			menu.menu_Content_Type_CSharp.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_CSharp)];
+			menu.menu_Content_Type_CSV.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_CSV)];
+			menu.menu_Content_Type_ExactColumns.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_ExactColumns)];
+			menu.menu_Content_Type_HTML.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_HTML)];
+			menu.menu_Content_Type_JSON.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_JSON)];
+			menu.menu_Content_Type_SQL.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_SQL)];
+			menu.menu_Content_Type_TSV.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_TSV)];
+			menu.menu_Content_Type_XML.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_XML)];
+			menu.menu_Content_HighlightSyntax.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_HighlightSyntax)];
+			menu.menu_Content_StrictParsing.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_StrictParsing)];
+			menu.menu_Content_KeepSelections.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_KeepSelections)];
+			menu.menu_Macro_Visualize.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Macro_Visualize)];
+			menu.menu_Window_Font_ShowSpecial.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_Font_ShowSpecial)];
+			menu.menu_Window_ViewBinary.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_ViewBinary)];
 		}
 
 		public void Render(RenderParameters renderParameters)
