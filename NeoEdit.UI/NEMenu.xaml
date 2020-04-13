@@ -4,12 +4,12 @@
 	xmlns:common="clr-namespace:NeoEdit.Common;assembly=NeoEdit.Common"
 	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
 	xmlns:converters="clr-namespace:NeoEdit.UI.Converters"
-	xmlns:local="clr-namespace:NeoEdit.UI"
-	xmlns:system="clr-namespace:System;assembly=mscorlib">
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	xmlns:ui="clr-namespace:NeoEdit.UI">
 
 	<Menu.Resources>
 		<system:Boolean x:Key="True">True</system:Boolean>
-		<Style TargetType="local:NEMenu" BasedOn="{StaticResource {x:Type Menu}}"/>
+		<Style TargetType="ui:NEMenu" BasedOn="{StaticResource {x:Type Menu}}"/>
 		<Style TargetType="controls:NEMenuItem" BasedOn="{StaticResource {x:Type MenuItem}}"/>
 	</Menu.Resources>
 

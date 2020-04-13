@@ -2,7 +2,6 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
-	xmlns:dialogs="clr-namespace:NeoEdit.UI.Dialogs"
 	xmlns:models="clr-namespace:NeoEdit.Common.Models;assembly=NeoEdit.Common"
 	Title="Expression" SizeToContent="Height" Width="1000" FocusManager.FocusedElement="{Binding ElementName=expression}">
 

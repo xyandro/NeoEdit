@@ -2,7 +2,6 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
-	xmlns:program="clr-namespace:NeoEdit.UI"
 	Title="NeoEdit Tutorial" Width="600" Height="600" IsMainWindow="True">
 
 	<controls:NEWindow.Resources>
