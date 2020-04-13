@@ -109,7 +109,12 @@ namespace NeoEdit.Editor
 				}
 
 				TabsWindow.SetMacroProgress((double)stepIndex / macro.Actions.Count);
-				RunCommand(macro.Actions[stepIndex++].GetExecuteState(), true);
+				if (!RunCommand(macro.Actions[stepIndex++].GetExecuteState(), true))
+				{
+					playingMacro = null;
+					playingMacroNextAction = null;
+					break;
+				}
 				if (MacroVisualize)
 					RenderTabsWindow();
 			}
@@ -123,17 +128,8 @@ namespace NeoEdit.Editor
 				RenderTabsWindow();
 		}
 
-		void RunCommand(ExecuteState state, bool inMacro = false)
+		bool RunCommand(ExecuteState state, bool inMacro = false)
 		{
-			if ((playingMacro != null) && (!inMacro))
-			{
-				// User is trying to do something in the middle of a macro
-				if ((state.Command == NECommand.Internal_Key) && (state.Key == Key.Escape))
-					playingMacro = null;
-				return;
-			}
-
-			bool commit = false;
 			try
 			{
 				if (state.Command == NECommand.Macro_RepeatLastAction)
@@ -149,14 +145,8 @@ namespace NeoEdit.Editor
 				state.ClipboardDataMapFunc = GetClipboardDataMap;
 				state.KeysAndValuesFunc = GetKeysAndValuesMap;
 
-				if (!inMacro)
-				{
-					if (playingMacro != null)
-						return;
-
-					if (state.Configuration == null)
-						state.Configuration = Configure();
-				}
+				if ((!inMacro) && (state.Configuration == null))
+					state.Configuration = Configure();
 
 				Stopwatch sw = null;
 				if (timeNextAction)
@@ -179,17 +169,14 @@ namespace NeoEdit.Editor
 					recordingMacro?.AddAction(action);
 				}
 
-				commit = true;
+				Commit();
+				return true;
 			}
 			catch (OperationCanceledException) { }
 			catch (Exception ex) { TabsWindow.ShowExceptionMessage(ex); }
-			finally
-			{
-				if (commit)
-					Commit();
-				else
-					Rollback();
-			}
+
+			Rollback();
+			return false;
 		}
 
 		object Configure()
