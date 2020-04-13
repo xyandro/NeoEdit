@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using NeoEdit.Common;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
@@ -20,7 +21,37 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_ActiveTabs()
 		{
-			//TODOWindowActiveTabsDialog.Run(TabsWindow);
+			var data = new WindowActiveTabsDialogData();
+			void RecalculateData()
+			{
+				data.AllTabs = AllTabs.Select(tab => tab.TabLabel).ToList();
+				data.ActiveIndexes = ActiveTabs.Select(tab => AllTabs.IndexOf(tab)).ToList();
+				data.FocusedIndex = AllTabs.IndexOf(Focused);
+			}
+			RecalculateData();
+			data.SetActiveIndexes = list =>
+			{
+				ClearAllActive();
+				list.Select(index => AllTabs[index]).ForEach(tab => SetActive(tab));
+				RecalculateData();
+				RenderTabsWindow();
+			};
+			data.CloseTabs = list =>
+			{
+				var tabs = list.Select(index => AllTabs[index]).ToList();
+				tabs.ForEach(tab => tab.VerifyCanClose());
+				tabs.ForEach(tab => RemoveTab(tab));
+				RecalculateData();
+				RenderTabsWindow();
+			};
+			data.DoMoves = moves =>
+			{
+				moves.ForEach(((int oldIndex, int newIndex) move) => MoveTab(AllTabs[move.oldIndex], move.newIndex));
+				RecalculateData();
+				RenderTabsWindow();
+			};
+
+			TabsWindow.RunWindowActiveTabsDialog(data);
 		}
 
 		void Execute_Window_Font_Size() => TabsWindow.RunWindowFontSizeDialog();

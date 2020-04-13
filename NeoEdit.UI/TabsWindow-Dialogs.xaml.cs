@@ -99,6 +99,7 @@ namespace NeoEdit.UI
 		public TextUnicodeDialogResult RunTextUnicodeDialog() => Dispatcher.Invoke(() => TextUnicodeDialog.Run(this));
 		public TextWidthDialogResult RunTextWidthDialog(bool numeric, bool isSelect, NEVariables variables) => Dispatcher.Invoke(() => TextWidthDialog.Run(this, numeric, isSelect, variables));
 		public WindowLayout RunWindowCustomGridDialog(WindowLayout windowLayout) => Dispatcher.Invoke(() => WindowCustomGridDialog.Run(this, windowLayout));
+		public void RunWindowActiveTabsDialog(WindowActiveTabsDialogData data) => Dispatcher.Invoke(() => WindowActiveTabsDialog.Run(this, data));
 		public void RunWindowFontSizeDialog() => Dispatcher.Invoke(() => WindowFontSizeDialog.Run(this));
 		public NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog() => Dispatcher.Invoke(() => NetworkWCFGetConfigDialog.Run(this));
 		public void RunWCFInterceptDialog() => Dispatcher.Invoke(() => WCFInterceptDialog.Run(this));

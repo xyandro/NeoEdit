@@ -22,7 +22,7 @@ namespace NeoEdit.Editor
 			return newTabsList;
 		}
 
-		public IReadOnlyList<Tab> AllTabs => newTabsList.AllTabs;
+		public IReadOnlyOrderedHashSet<Tab> AllTabs => newTabsList.AllTabs;
 
 		public void InsertTab(Tab tab, int? index = null)
 		{
@@ -36,7 +36,13 @@ namespace NeoEdit.Editor
 				GetUpdateTabsList().RemoveTab(tab);
 		}
 
-		public IReadOnlyList<Tab> ActiveTabs => newTabsList.ActiveTabs;
+		public void MoveTab(Tab tab, int index)
+		{
+			lock (this)
+				GetUpdateTabsList().MoveTab(tab, index);
+		}
+
+		public IReadOnlyOrderedHashSet<Tab> ActiveTabs => newTabsList.ActiveTabs;
 
 		public void ClearAllActive() => GetUpdateTabsList().ClearActive();
 
@@ -44,7 +50,7 @@ namespace NeoEdit.Editor
 
 		public bool IsActive(Tab tab) => newTabsList.IsActive(tab);
 
-		public IReadOnlyList<Tab> ActiveFirstTabs => newTabsList.ActiveFirstTabs;
+		public IReadOnlyOrderedHashSet<Tab> ActiveFirstTabs => newTabsList.ActiveFirstTabs;
 
 		public Tab Focused
 		{

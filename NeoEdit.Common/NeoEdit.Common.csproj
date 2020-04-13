@@ -176,6 +176,7 @@
     <Compile Include="Models\TextTrimDialogResult.cs" />
     <Compile Include="Models\TextUnicodeDialogResult.cs" />
     <Compile Include="Models\TextWidthDialogResult.cs" />
+    <Compile Include="Models\WindowActiveTabsDialogData.cs" />
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboard.cs" />
     <Compile Include="NECommand.cs" />

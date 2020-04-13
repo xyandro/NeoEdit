@@ -102,6 +102,7 @@ namespace NeoEdit.Common
 		TextUnicodeDialogResult RunTextUnicodeDialog();
 		TextWidthDialogResult RunTextWidthDialog(bool numeric, bool isSelect, NEVariables variables);
 		WindowLayout RunWindowCustomGridDialog(WindowLayout windowLayout);
+		void RunWindowActiveTabsDialog(WindowActiveTabsDialogData data);
 		void RunWindowFontSizeDialog();
 		NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog();
 		void RunWCFInterceptDialog();

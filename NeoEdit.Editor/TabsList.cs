@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 
@@ -32,7 +31,7 @@ namespace NeoEdit.Editor
 			focused = old.focused;
 		}
 
-		public IReadOnlyList<Tab> AllTabs => allTabs;
+		public IReadOnlyOrderedHashSet<Tab> AllTabs => allTabs;
 
 		public void InsertTab(TabsList old, Tab tab, int? index = null)
 		{
@@ -91,7 +90,17 @@ namespace NeoEdit.Editor
 				tabs.AddToTransaction(focused);
 		}
 
-		public IReadOnlyList<Tab> ActiveTabs
+		public void MoveTab(Tab tab, int index)
+		{
+			var oldIndex = allTabs.IndexOf(tab);
+			if (oldIndex == -1)
+				throw new Exception("Tab not found");
+			allTabs.RemoveAt(oldIndex);
+			allTabs.Insert(index, tab);
+			activeTabsSorted = false;
+		}
+
+		public IReadOnlyOrderedHashSet<Tab> ActiveTabs
 		{
 			get
 			{
@@ -141,7 +150,7 @@ namespace NeoEdit.Editor
 
 		public bool IsActive(Tab tab) => activeTabs.Contains(tab);
 
-		public IReadOnlyList<Tab> ActiveFirstTabs
+		public IReadOnlyOrderedHashSet<Tab> ActiveFirstTabs
 		{
 			get
 			{
