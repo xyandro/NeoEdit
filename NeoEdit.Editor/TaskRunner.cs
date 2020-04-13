@@ -159,7 +159,14 @@ namespace NeoEdit.Editor
 
 		static public void WaitForFinish(ITabsWindow tabsWindow)
 		{
-			finished.WaitOne();
+			tabsWindow.SetTaskRunnerProgress(0);
+			while (true)
+			{
+				if (finished.WaitOne(100))
+					break;
+				tabsWindow.SetTaskRunnerProgress(progresses[0].Percent);
+			}
+			tabsWindow.SetTaskRunnerProgress(null);
 
 			lock (tasks)
 			{

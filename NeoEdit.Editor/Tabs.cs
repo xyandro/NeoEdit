@@ -161,7 +161,9 @@ namespace NeoEdit.Editor
 			if (playingMacro == null)
 				return;
 
+			TabsWindow.SetMacroProgress(0);
 			var stepIndex = 0;
+			DateTime lastTime = DateTime.MinValue;
 			while (true)
 			{
 				var macro = playingMacro;
@@ -179,7 +181,13 @@ namespace NeoEdit.Editor
 					continue;
 				}
 
-				TabsWindow.SetMacroProgress((double)stepIndex / macro.Actions.Count);
+				var now = DateTime.Now;
+				if ((now - lastTime).TotalMilliseconds >= 100)
+				{
+					lastTime = now;
+					TabsWindow.SetMacroProgress((double)stepIndex / macro.Actions.Count);
+				}
+
 				if (!RunCommand(macro.Actions[stepIndex++].GetExecuteState(), true))
 				{
 					playingMacro = null;
@@ -189,6 +197,7 @@ namespace NeoEdit.Editor
 				if (MacroVisualize)
 					RenderTabsWindow();
 			}
+			TabsWindow.SetMacroProgress(null);
 		}
 
 		public void HandleCommand(ExecuteState state, Func<bool> skipDraw = null)

@@ -34,6 +34,21 @@
 		</Grid>
 
 		<controls:RenderCanvas Grid.Row="2" Grid.Column="0" x:Name="statusBar" Height="20" Background="Transparent" Render="OnStatusBarRender" ClipToBounds="True"/>
+		<Grid Grid.Row="2" Grid.Column="0" Height="20" HorizontalAlignment="Right">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition x:Name="progressColumn" Width="200"/>
+				<ColumnDefinition Width="6"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1"/>
+				<RowDefinition x:Name="macroProgressRow"/>
+				<RowDefinition/>
+				<RowDefinition Height="1"/>
+			</Grid.RowDefinitions>
+
+			<ProgressBar Grid.Row="1" Grid.Column="0" Name="macroProgressBar" Foreground="#808080" Minimum="0" Maximum="1" Visibility="Collapsed" Margin="0,1"/>
+			<ProgressBar Grid.Row="2" Grid.Column="0" Name="taskRunnerProgressBar" Foreground="#808080" Minimum="0" Maximum="1" Visibility="Collapsed" Margin="0,1"/>
+		</Grid>
 
 	</Grid>
 
