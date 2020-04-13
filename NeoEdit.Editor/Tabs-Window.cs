@@ -107,8 +107,8 @@ namespace NeoEdit.Editor
 			}
 
 			data = Compressor.Decompress(data, Compressor.Type.GZip);
-			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data).Replace("\n", "\r\n"));
-			AddTab(new Tab(bytes: data, modified: false));
+			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data));
+			AddTab(new Tab(displayName: "Word List", bytes: data, modified: false));
 		}
 	}
 }

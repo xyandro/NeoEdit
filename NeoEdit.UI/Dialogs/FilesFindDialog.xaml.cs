@@ -63,7 +63,6 @@ namespace NeoEdit.UI.Dialogs
 			});
 		}
 
-
 		FilesFindDialog(NEVariables variables)
 		{
 			Variables = variables;

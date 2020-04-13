@@ -1,4 +1,4 @@
-$inputfile = $args[0]
+﻿$inputfile = $args[0]
 $outputfile = $args[1]
 
 $encoding = [Text.Encoding]::Unicode

@@ -274,7 +274,6 @@ namespace NeoEdit.Editor
 			return Focused.Configure();
 		}
 
-
 		void Execute(TaskProgress progress)
 		{
 			progress.Name = "Tabs";

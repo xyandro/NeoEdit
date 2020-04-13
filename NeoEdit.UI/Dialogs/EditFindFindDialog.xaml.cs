@@ -138,7 +138,6 @@ namespace NeoEdit.UI.Dialogs
 			});
 		}
 
-
 		readonly HashSet<Coder.CodePage> startCodePages;
 
 		EditFindFindDialog(string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables)
@@ -199,7 +198,6 @@ namespace NeoEdit.UI.Dialogs
 		{
 			if (string.IsNullOrEmpty(Text))
 				return;
-
 
 			result = new EditFindFindDialogResult { Text = Text, IsExpression = IsExpression, AlignSelections = AlignSelections, IsBoolean = IsBoolean, IsRegex = IsRegex, RegexGroups = RegexGroups, IsBinary = IsBinary, CodePages = IsBinary ? CodePages : null, WholeWords = WholeWords, MatchCase = MatchCase, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, Type = (EditFindFindDialogResult.ResultType)(sender as FrameworkElement).Tag };
 			text.AddCurrentSuggestion(GetCheckBoxStatus());

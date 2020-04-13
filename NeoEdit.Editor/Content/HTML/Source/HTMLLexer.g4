@@ -1,7 +1,7 @@
 lexer grammar HTMLLexer;
 
 COMMENT       : '<!--' .*? '-->' ;
-DTD           : '<!' .*? '>' ; 
+DTD           : '<!' .*? '>' ;
 
 SPECIAL       : '<?' .*? '?>' ;
 

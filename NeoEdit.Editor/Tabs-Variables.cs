@@ -67,7 +67,6 @@ namespace NeoEdit.Editor
 			tab.BeginTransaction(state);
 		}
 
-
 		WindowLayout oldWindowLayout, newWindowLayout;
 		WindowLayout WindowLayout
 		{

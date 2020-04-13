@@ -427,7 +427,6 @@ namespace NeoEdit.Editor
 			else
 				searcher = new StringSearcher(result.Text, result.WholeWords, result.MatchCase, firstMatchOnly: true);
 
-
 			Selections = Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result, searcher).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList();
 		}
 
