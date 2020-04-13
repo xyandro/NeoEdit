@@ -33,29 +33,26 @@ namespace NeoEdit.Editor
 
 				public int? GetPosition(Tab tab, int position, GotoLocation lastPosition = null)
 				{
-					// TODO
-					return default;
+					if ((Line == null) && (Index == null) && (Column == null) && (Position == null))
+						return null;
 
-					//if ((Line == null) && (Index == null) && (Column == null) && (Position == null))
-					//	return null;
+					if (Position.HasValue)
+						return Math.Max(0, Math.Min(Position.Value, tab.TextView.MaxPosition));
 
-					//if (Position.HasValue)
-					//	return Math.Max(0, Math.Min(Position.Value, tab.TextView.MaxPosition));
+					var line = Math.Max(0, Math.Min(tab.TextView.GetPositionLine(Line ?? lastPosition?.Line ?? tab.TextView.GetPositionLine(position)), tab.TextView.NumLines - 1));
+					var index = Index ?? lastPosition?.Index;
+					if (index.HasValue)
+						index = Math.Max(0, Math.Min(index.Value, tab.TextView.GetLineLength(line)));
+					else
+					{
+						var column = Column ?? lastPosition?.Column;
+						if (column.HasValue)
+							index = tab.TextView.GetIndexFromColumn(tab.Text, line, Math.Max(0, column.Value), true);
+						else
+							index = 0;
+					}
 
-					//var line = Math.Max(0, Math.Min(tab.Data.GetNonDiffLine(Line ?? lastPosition?.Line ?? tab.TextView.GetPositionLine(position)), tab.TextView.NumLines - 1));
-					//var index = Index ?? lastPosition?.Index;
-					//if (index.HasValue)
-					//	index = Math.Max(0, Math.Min(index.Value, tab.TextView.GetLineLength(line)));
-					//else
-					//{
-					//	var column = Column ?? lastPosition?.Column;
-					//	if (column.HasValue)
-					//		index = tab.Data.GetIndexFromColumn(line, Math.Max(0, column.Value), true);
-					//	else
-					//		index = 0;
-					//}
-
-					//return Math.Max(0, Math.Min(tab.TextView.GetPosition(line, index.Value), tab.TextView.MaxPosition));
+					return Math.Max(0, Math.Min(tab.TextView.GetPosition(line, index.Value), tab.TextView.MaxPosition));
 				}
 			}
 
@@ -196,31 +193,30 @@ namespace NeoEdit.Editor
 					throw new Exception($"The following files could not be found: {string.Join("\n", invalidFiles)}");
 			}
 
-			// TODO
-			//foreach (var list in valuesByFile)
-			//{
-			//	var useTE = this;
-			//	var useFile = list.First().File;
-			//	if (useFile != null)
-			//	{
-			//		useTE = new Tab(useFile);
-			//		TabsParent.AddTab(useTE);
-			//	}
+			foreach (var list in valuesByFile)
+			{
+				var useTE = this;
+				var useFile = list.First().File;
+				if (useFile != null)
+				{
+					useTE = new Tab(useFile);
+					Tabs.AddTab(useTE);
+				}
 
-			//	var sels = useTE.Selections.ToList();
-			//	var positions = list;
+				var sels = useTE.Selections.ToList();
+				var positions = list;
 
-			//	if ((sels.Count == 0) && ((gotoType == GotoType.Line) || (gotoType == GotoType.Position)))
-			//		sels.Add(new Range());
-			//	if (sels.Count == 1)
-			//		sels = sels.Resize(positions.Count, sels[0]).ToList();
-			//	if (positions.Count == 1)
-			//		positions = positions.Expand(sels.Count, positions[0]).ToList();
-			//	if (positions.Count != sels.Count)
-			//		throw new Exception("Expression count doesn't match selection count");
+				if ((sels.Count == 0) && ((gotoType == GotoType.Line) || (gotoType == GotoType.Position)))
+					sels.Add(new Range());
+				if (sels.Count == 1)
+					sels = Enumerable.Repeat(sels[0], positions.Count).ToList();
+				if (positions.Count == 1)
+					positions = Enumerable.Repeat(positions[0], sels.Count).ToList();
+				if (positions.Count != sels.Count)
+					throw new Exception("Expression count doesn't match selection count");
 
-			//	useTE.Selections = sels.AsParallel().AsOrdered().Select((range, ctr) => positions[ctr].GetRange(useTE, range, selecting)).ToList();
-			//}
+				useTE.Selections = sels.AsParallel().AsOrdered().Select((range, ctr) => positions[ctr].GetRange(useTE, range, selecting)).ToList();
+			}
 		}
 
 		void Execute_Position_Copy(GotoType gotoType, bool withLine)

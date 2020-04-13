@@ -49,8 +49,11 @@ namespace NeoEdit.Editor
 
 		static void Add(IEnumerable<Task> newTasks)
 		{
-			finished.Reset();
 			var useTasks = newTasks.ToList();
+			if (useTasks.Count == 0)
+				return;
+
+			finished.Reset();
 			lock (tasks)
 				tasks.AddRange(useTasks);
 			taskSemaphore.Release(useTasks.Count);
