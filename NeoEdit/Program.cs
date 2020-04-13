@@ -16,7 +16,7 @@ namespace NeoEdit
 {
 	class Program
 	{
-		const string IPCName = "NeoEdit-{1e5bef22-1257-4cbd-a84b-36679ed79b07}";
+		const string IPCName = "NeoEdit-{debe0282-0e9d-47fd-836c-60f500dbaeb5}";
 		const string ShutdownEventName = "NeoEdit-Wait-{0}";
 
 		static MemoryMappedFile mmfile;
