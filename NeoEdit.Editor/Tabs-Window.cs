@@ -58,7 +58,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_Font_ShowSpecial(bool? multiStatus) => Font.ShowSpecialChars = multiStatus != true;
 
-		void Execute_Window_Select_AllTabs() => AllTabs.ForEach(tab => SetActive(tab));
+		void Execute_Window_Select_AllTabs()
+		{
+			AllTabs.ForEach(tab => SetActive(tab));
+			Focused = AllTabs.FirstOrDefault();
+		}
 
 		void Execute_Window_Select_NoTabs() => ClearAllActive();
 
