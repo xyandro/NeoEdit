@@ -547,7 +547,7 @@ namespace NeoEdit.Editor
 			string plural(int count, string item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
 
 			var status = new List<string>();
-			status.Add($"Active: {plural(ActiveTabs.Count, "file")}, {plural(ActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Active: {plural(ActiveTabs.Count, "file")}, {plural(ActiveTabs.Sum(tab => tab.Selections.Count), "selection")}, {ActiveTabs.Min(tab => tab.Selections.Count):n0} min / {ActiveTabs.Max(tab => tab.Selections.Count):n0} max");
 			status.Add($"Inactive: {plural(AllTabs.Except(ActiveTabs).Count(), "file")}, {plural(AllTabs.Except(ActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
 			status.Add($"Total: {plural(AllTabs.Count(), "file")}, {plural(AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
 			status.Add($"Clipboard: {plural(NEClipboard.Current?.Count ?? 0, "file")}, {plural(NEClipboard.Current?.ChildCount ?? 0, "selection")}");
