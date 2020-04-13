@@ -59,21 +59,13 @@ namespace NeoEdit.Editor
 		{
 			if ((initialDirectory == null) && (Focused != null))
 				initialDirectory = Path.GetDirectoryName(Focused.FileName);
-			var dialog = new OpenFileDialog
-			{
-				DefaultExt = "txt",
-				Filter = "Text files|*.txt|All files|*.*",
-				FilterIndex = 2,
-				Multiselect = true,
-				InitialDirectory = initialDirectory,
-			};
-			if (dialog.ShowDialog() != true)
+			var result = TabsWindow.RunOpenFileDialog("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
+			if (result == null)
 				throw new OperationCanceledException();
-
-			return new OpenFileDialogResult { files = dialog.FileNames.ToList() };
+			return result;
 		}
 
-		void Execute_File_Open_Open(OpenFileDialogResult result) => result.files.ForEach(fileName => AddTab(new Tab(fileName)));
+		void Execute_File_Open_Open(OpenFileDialogResult result) => result.FileNames.ForEach(fileName => AddTab(new Tab(fileName)));
 
 		void Execute_File_Open_CopiedCut() => OpenFiles(NEClipboard.Current.Strings);
 

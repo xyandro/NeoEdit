@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
@@ -24,35 +23,24 @@ namespace NeoEdit.Editor
 
 		public readonly static string MacroDirectory = Path.Combine(Helpers.NeoEditAppData, "Macro");
 
-		public static string ChooseMacro()
+		public static string ChooseMacro(ITabsWindow tabsWindow)
 		{
-			var dialog = new OpenFileDialog
-			{
-				DefaultExt = "xml",
-				Filter = "Macro files|*.xml|All files|*.*",
-				InitialDirectory = MacroDirectory,
-			};
-			if (dialog.ShowDialog() != true)
+			var result = tabsWindow.RunOpenFileDialog("xml", MacroDirectory, "Macro files|*.xml|All files|*.*");
+			if (result == null)
 				return null;
-			return dialog.FileName;
+			return result.FileNames[0];
 		}
 
-		public void Save(string fileName = null, bool macroDirRelative = false)
+		public void Save(ITabsWindow tabsWindow, string fileName = null, bool macroDirRelative = false)
 		{
 			Directory.CreateDirectory(MacroDirectory);
 			if (fileName == null)
 			{
-				var dialog = new SaveFileDialog
-				{
-					DefaultExt = "xml",
-					Filter = "Macro files|*.xml|All files|*.*",
-					FileName = "Macro.xml",
-					InitialDirectory = MacroDirectory,
-				};
-				if (dialog.ShowDialog() != true)
+				var result = tabsWindow.RunSaveFileDialog("Macro.xml", "xml", MacroDirectory, "Macro files|*.xml|All files|*.*");
+				if (result == null)
 					return;
 
-				fileName = dialog.FileName;
+				fileName = result.FileName;
 			}
 			else if (macroDirRelative)
 				fileName = Path.Combine(MacroDirectory, fileName);
@@ -60,11 +48,11 @@ namespace NeoEdit.Editor
 			XMLConverter.ToXML(this).Save(fileName);
 		}
 
-		public static Macro Load(string fileName = null, bool macroDirRelative = false)
+		public static Macro Load(ITabsWindow tabsWindow, string fileName = null, bool macroDirRelative = false)
 		{
 			if (fileName == null)
 			{
-				fileName = ChooseMacro();
+				fileName = ChooseMacro(tabsWindow);
 				if (fileName == null)
 					return null;
 			}

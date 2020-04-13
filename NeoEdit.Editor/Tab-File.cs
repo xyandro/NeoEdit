@@ -4,7 +4,6 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
@@ -18,21 +17,15 @@ namespace NeoEdit.Editor
 		{
 			return Tabs.ShowTab(this, () =>
 			{
-				var dialog = new SaveFileDialog
-				{
-					Filter = "All files|*.*",
-					FileName = Path.GetFileName(FileName) ?? DisplayName,
-					InitialDirectory = Path.GetDirectoryName(FileName),
-					DefaultExt = "txt",
-				};
-				if (dialog.ShowDialog() != true)
+				var result = Tabs.TabsWindow.RunSaveFileDialog(Path.GetFileName(FileName) ?? DisplayName, "txt", Path.GetDirectoryName(FileName), "All files|*.*");
+				if (result == null)
 					throw new OperationCanceledException();
 
-				if (Directory.Exists(dialog.FileName))
+				if (Directory.Exists(result.FileName))
 					throw new Exception("A directory by that name already exists");
-				if (!Directory.Exists(Path.GetDirectoryName(dialog.FileName)))
+				if (!Directory.Exists(Path.GetDirectoryName(result.FileName)))
 					throw new Exception("Directory doesn't exist");
-				return dialog.FileName;
+				return result.FileName;
 			});
 		}
 
@@ -278,9 +271,9 @@ namespace NeoEdit.Editor
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var dialog = new OpenFileDialog { DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*", FilterIndex = 2, Multiselect = true };
-			if (dialog.ShowDialog() == true)
-				InsertFiles(dialog.FileNames);
+			var result = Tabs.TabsWindow.RunOpenFileDialog("txt", filter: "Text files|*.txt|All files|*.*", filterIndex: 2, multiselect: true);
+			if (result != null)
+				InsertFiles(result.FileNames);
 		}
 
 		void Execute_File_Insert_CopiedCut()

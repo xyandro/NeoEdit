@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
+using System.Linq;
+using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
@@ -107,5 +109,40 @@ namespace NeoEdit.UI
 		public void RunProgressDialog(string text, Action<Func<bool>, Action<int>> action) => Dispatcher.Invoke(() => ProgressDialog.Run(this, text, action));
 		public HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null) => Dispatcher.Invoke(() => CodePagesDialog.Run(this, startCodePages));
 		public void RunHelpAboutDialog() => Dispatcher.Invoke(() => HelpAboutDialog.Run(this));
+
+		public OpenFileDialogResult RunOpenFileDialog(string defaultExt, string initialDirectory = null, string filter = null, int filterIndex = 0, bool multiselect = false)
+		{
+			return Dispatcher.Invoke(() =>
+			{
+				var dialog = new OpenFileDialog
+				{
+					DefaultExt = defaultExt,
+					InitialDirectory = initialDirectory,
+					Filter = filter,
+					FilterIndex = filterIndex,
+					Multiselect = multiselect,
+				};
+				if (dialog.ShowDialog() != true)
+					return null;
+				return new OpenFileDialogResult { FileNames = dialog.FileNames.ToList() };
+			});
+		}
+
+		public SaveFileDialogResult RunSaveFileDialog(string fileName, string defaultExt, string initialDirectory, string filter)
+		{
+			return Dispatcher.Invoke(() =>
+			{
+				var dialog = new SaveFileDialog
+				{
+					FileName = fileName,
+					DefaultExt = defaultExt,
+					InitialDirectory = initialDirectory,
+					Filter = filter,
+				};
+				if (dialog.ShowDialog() != true)
+					return null;
+				return new SaveFileDialogResult { FileName = dialog.FileName };
+			});
+		}
 	}
 }

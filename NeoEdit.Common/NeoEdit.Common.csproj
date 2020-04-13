@@ -158,6 +158,7 @@
     <Compile Include="Models\NumericSeriesDialogResult.cs" />
     <Compile Include="Models\OpenFileDialogResult.cs" />
     <Compile Include="Models\PositionGotoDialogResult.cs" />
+    <Compile Include="Models\SaveFileDialogResult.cs" />
     <Compile Include="Models\SelectByCountDialogResult.cs" />
     <Compile Include="Models\SelectLimitDialogResult.cs" />
     <Compile Include="Models\SelectSplitDialogResult.cs" />

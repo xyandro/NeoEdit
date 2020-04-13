@@ -110,6 +110,8 @@ namespace NeoEdit.Common
 		void RunProgressDialog(string text, Action<Func<bool>, Action<int>> action);
 		HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null);
 		void RunHelpAboutDialog();
+		OpenFileDialogResult RunOpenFileDialog(string defaultExt, string initialDirectory = null, string filter = null, int filterIndex = 0, bool multiselect = false);
+		SaveFileDialogResult RunSaveFileDialog(string fileName, string defaultExt, string initialDirectory, string filter);
 
 		void Render(RenderParameters renderParameters);
 		void ShowExceptionMessage(Exception ex);

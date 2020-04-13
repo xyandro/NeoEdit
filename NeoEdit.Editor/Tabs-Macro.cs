@@ -49,13 +49,13 @@ namespace NeoEdit.Editor
 
 			var macro = recordingMacro;
 			recordingMacro = null;
-			macro.Save(fileName, true);
+			macro.Save(TabsWindow, fileName, true);
 		}
 
 		void Execute_Macro_Append_Quick(int quickNum)
 		{
 			if (recordingMacro == null)
-				recordingMacro = Macro.Load(QuickMacro(quickNum), true);
+				recordingMacro = Macro.Load(TabsWindow, QuickMacro(quickNum), true);
 			else
 				Execute_Macro_Record_StopRecording(QuickMacro(quickNum));
 		}
@@ -63,18 +63,18 @@ namespace NeoEdit.Editor
 		void Execute_Macro_Append_Append()
 		{
 			EnsureNotRecording();
-			recordingMacro = Macro.Load();
+			recordingMacro = Macro.Load(TabsWindow);
 		}
 
-		void Execute_Macro_Play_Quick(int quickNum) => PlayMacro(Macro.Load(QuickMacro(quickNum), true));
+		void Execute_Macro_Play_Quick(int quickNum) => PlayMacro(Macro.Load(TabsWindow, QuickMacro(quickNum), true));
 
-		void Execute_Macro_Play_Play() => PlayMacro(Macro.Load());
+		void Execute_Macro_Play_Play() => PlayMacro(Macro.Load(TabsWindow));
 
 		void Execute_Macro_Play_Repeat()
 		{
-			var result = TabsWindow.RunMacroPlayRepeatDialog(Macro.ChooseMacro);
+			var result = TabsWindow.RunMacroPlayRepeatDialog(() => Macro.ChooseMacro(TabsWindow));
 
-			var macro = Macro.Load(result.Macro);
+			var macro = Macro.Load(TabsWindow, result.Macro);
 			var expression = new NEExpression(result.Expression);
 			var count = int.MaxValue;
 			if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Number)
@@ -98,7 +98,7 @@ namespace NeoEdit.Editor
 		void Execute_Macro_Play_PlayOnCopiedFiles()
 		{
 			var files = new Queue<string>(NEClipboard.Current.Strings);
-			var macro = Macro.Load();
+			var macro = Macro.Load(TabsWindow);
 			Action startNext = null;
 			startNext = () =>
 			{
