@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace NeoEdit.Common
 {
+	public static class ITabsStatic
+	{
+		public static Func<ModifierKeys, Key, bool> HandlesKey { get; set; }
+	}
+
 	public interface ITabs
 	{
-		DateTime LastActivated { get; set; }
-		bool MacroVisualize { get; }
-
 		void HandleCommand(ExecuteState state, Func<bool> skipDraw = null);
-		bool HandlesKey(ModifierKeys modifiers, Key key);
-		List<string> GetStatusBar();
 	}
 }

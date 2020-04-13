@@ -43,7 +43,7 @@ namespace NeoEdit.Editor
 			oldWindowLayout = newWindowLayout = new WindowLayout(1, 1);
 
 			BeginTransaction(new ExecuteState(NECommand.None));
-			TabsWindow = TabsWindowCreator.CreateITabsWindow(this);
+			TabsWindow = ITabsWindowStatic.CreateITabsWindow(this);
 			if (addEmpty)
 				Execute_File_New_New(false);
 			Commit();
@@ -83,7 +83,20 @@ namespace NeoEdit.Editor
 			return keysAndValuesMap;
 		}
 
-		void RenderTabsWindow() => TabsWindow.Render(new RenderParameters(WindowLayout.ActiveFirst ? ActiveFirstTabs : AllTabs, ActiveTabs, Focused, WindowLayout.ActiveOnly ? ActiveTabs.Count : AllTabs.Count, WindowLayout));
+		void RenderTabsWindow()
+		{
+			var renderParameters = new RenderParameters
+			{
+				AllTabs = WindowLayout.ActiveFirst ? ActiveFirstTabs : AllTabs,
+				ActiveTabs = ActiveTabs,
+				FocusedTab = Focused,
+				Count = WindowLayout.ActiveOnly ? ActiveTabs.Count : AllTabs.Count,
+				WindowLayout = WindowLayout,
+				StatusBar = GetStatusBar(),
+				MacroVisualize = MacroVisualize,
+			};
+			TabsWindow.Render(renderParameters);
+		}
 
 		void PlayMacro()
 		{
@@ -462,20 +475,20 @@ namespace NeoEdit.Editor
 
 		public void SetForeground() => TabsWindow.SetForeground();
 
-		public List<string> GetStatusBar()
+		List<string> GetStatusBar()
 		{
-			var Tabs = this;
+			string plural(int count, string item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
+
 			var status = new List<string>();
-			Func<int, string, string> plural = (count, item) => $"{count:n0} {item}{(count == 1 ? "" : "s")}";
-			status.Add($"Active: {plural(Tabs.ActiveTabs.Count, "file")}, {plural(Tabs.ActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Inactive: {plural(Tabs.AllTabs.Except(Tabs.ActiveTabs).Count(), "file")}, {plural(Tabs.AllTabs.Except(Tabs.ActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Total: {plural(Tabs.AllTabs.Count(), "file")}, {plural(Tabs.AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
-			status.Add($"Clipboard: {plural(NEClipboard.Current.Count, "file")}, {plural(NEClipboard.Current.ChildCount, "selection")}");
+			status.Add($"Active: {plural(ActiveTabs.Count, "file")}, {plural(ActiveTabs.Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Inactive: {plural(AllTabs.Except(ActiveTabs).Count(), "file")}, {plural(AllTabs.Except(ActiveTabs).Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Total: {plural(AllTabs.Count(), "file")}, {plural(AllTabs.Sum(tab => tab.Selections.Count), "selection")}");
+			status.Add($"Clipboard: {plural(NEClipboard.Current?.Count ?? 0, "file")}, {plural(NEClipboard.Current?.ChildCount ?? 0, "selection")}");
 			status.Add($"Keys/Values: {string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
 			return status;
 		}
 
-		public static bool CheckHandlesKey(ModifierKeys modifiers, Key key)
+		public static bool HandlesKey(ModifierKeys modifiers, Key key)
 		{
 			switch (key)
 			{
@@ -497,7 +510,5 @@ namespace NeoEdit.Editor
 
 			return false;
 		}
-
-		public bool HandlesKey(ModifierKeys modifiers, Key key) => CheckHandlesKey(modifiers, key);
 	}
 }

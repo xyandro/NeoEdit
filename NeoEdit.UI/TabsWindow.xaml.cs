@@ -32,7 +32,7 @@ namespace NeoEdit.UI
 
 		readonly ITabs Tabs;
 
-		public bool Drawing { get; private set; } = false;
+		public RenderParameters renderParameters;
 
 		public TabsWindow(ITabs tabs)
 		{
@@ -72,7 +72,6 @@ namespace NeoEdit.UI
 
 		void OnActivated(object sender, EventArgs e)
 		{
-			Tabs.LastActivated = DateTime.Now;
 			QueueActivateTabs();
 		}
 
@@ -108,7 +107,7 @@ namespace NeoEdit.UI
 			if (key == Key.System)
 				key = e.SystemKey;
 
-			if (Tabs.HandlesKey(Keyboard.Modifiers, key))
+			if (ITabsStatic.HandlesKey(Keyboard.Modifiers, key))
 			{
 				HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });
 				e.Handled = true;
@@ -186,7 +185,7 @@ namespace NeoEdit.UI
 			});
 		}
 
-		TabLabel CreateTabLabel(ITab tab, RenderParameters renderParameters)
+		TabLabel CreateTabLabel(ITab tab)
 		{
 			var tabLabel = new TabLabel(tab);
 			tabLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
@@ -197,7 +196,7 @@ namespace NeoEdit.UI
 			};
 			tabLabel.CloseClicked += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseTab) { Configuration = tab });
 
-			tabLabel.Refresh(renderParameters.ActiveTabs, renderParameters.FocusedTab);
+			tabLabel.Refresh(renderParameters);
 			return tabLabel;
 		}
 
@@ -211,12 +210,12 @@ namespace NeoEdit.UI
 
 		void OnStatusBarRender(object s, DrawingContext dc)
 		{
-			if (!Drawing)
+			if (renderParameters == null)
 				return;
 
 			const string Separator = "  |  ";
 
-			var status = Tabs.GetStatusBar();
+			var status = renderParameters.StatusBar;
 			var text = new FormattedText(string.Join(Separator, status), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, new Typeface("Segoe UI"), 12, Brushes.White, 1);
 			var pos = 0;
 			for (var ctr = 0; ctr < status.Count - 1; ++ctr)
@@ -228,7 +227,7 @@ namespace NeoEdit.UI
 			dc.DrawText(text, new Point(6, 1));
 		}
 
-		void SetMenuCheckboxes(RenderParameters renderParameters)
+		void SetMenuCheckboxes()
 		{
 			bool? GetMultiStatus(Func<ITab, bool> func)
 			{
@@ -240,7 +239,7 @@ namespace NeoEdit.UI
 
 			menu.menu_File_DontExitOnClose.MultiStatus = Settings.DontExitOnClose;
 			menu.menu_Edit_EscapeClearsSelections.MultiStatus = Settings.EscapeClearsSelections;
-			menu.menu_Macro_Visualize.MultiStatus = Tabs.MacroVisualize;
+			menu.menu_Macro_Visualize.MultiStatus = renderParameters.MacroVisualize;
 			menu.menu_Window_Font_ShowSpecial.MultiStatus = Font.ShowSpecialChars;
 
 			menu.menu_File_AutoRefresh.MultiStatus = GetMultiStatus(tab => tab.AutoRefresh);
@@ -271,21 +270,23 @@ namespace NeoEdit.UI
 			menu.menu_Window_ViewBinary.MultiStatus = GetMultiStatus(tab => tab.ViewBinary);
 		}
 
-		public void Render(RenderParameters renderParameters) => Dispatcher.Invoke(() => DrawAll(renderParameters));
-
-		void DrawAll(RenderParameters renderParameters)
+		public void Render(RenderParameters renderParameters)
 		{
-			Drawing = true;
+			this.renderParameters = renderParameters;
+			Dispatcher.Invoke(() => DrawAll());
+		}
+
+		void DrawAll()
+		{
 			statusBar.InvalidateVisual();
-			SetMenuCheckboxes(renderParameters);
+			SetMenuCheckboxes();
 			Title = $"{(renderParameters.FocusedTab == null ? "" : $"{renderParameters.FocusedTab.DisplayName ?? renderParameters.FocusedTab.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
 
 			if ((renderParameters.WindowLayout.Columns == 1) && (renderParameters.WindowLayout.Rows == 1))
-				DoFullLayout(renderParameters);
+				DoFullLayout();
 			else
-				DoGridLayout(renderParameters);
+				DoGridLayout();
 			UpdateLayout();
-			Drawing = false;
 		}
 
 		//public bool GotoTab(string fileName, int? line, int? column, int? index)

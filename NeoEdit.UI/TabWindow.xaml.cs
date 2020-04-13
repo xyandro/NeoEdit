@@ -125,8 +125,8 @@ namespace NeoEdit.UI
 				get => lineRanges; set
 				{
 					lineRanges = value;
-					ScreenStart = lineRanges.First().Value.Start;
-					ScreenEnd = lineRanges.Last().Value.End + 1;
+					ScreenStart = lineRanges.Select(x => x.Value.Start).DefaultIfEmpty(0).First();
+					ScreenEnd = lineRanges.Select(x => x.Value.End + 1).DefaultIfEmpty(0).Last();
 				}
 			}
 			public int ScreenStart { get; private set; }
@@ -352,7 +352,7 @@ namespace NeoEdit.UI
 
 		void OnCanvasRender(object sender, DrawingContext dc)
 		{
-			if (!TabsWindow.Drawing)
+			if (TabsWindow.renderParameters == null)
 				return;
 
 			Tab.SetTabSize((int)Math.Floor(canvas.ActualWidth / Font.CharWidth), (int)Math.Floor(canvas.ActualHeight / LineHeight));
@@ -376,7 +376,7 @@ namespace NeoEdit.UI
 
 		void OnStatusBarRender(object s, DrawingContext dc)
 		{
-			if (!TabsWindow.Drawing)
+			if (TabsWindow.renderParameters == null)
 				return;
 
 			const string Separator = "  |  ";

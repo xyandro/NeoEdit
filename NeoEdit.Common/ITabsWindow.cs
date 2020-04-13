@@ -10,7 +10,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Common
 {
-	public class TabsWindowCreator
+	public static class ITabsWindowStatic
 	{
 		public static Func<ITabs, ITabsWindow> CreateITabsWindow { get; set; }
 	}

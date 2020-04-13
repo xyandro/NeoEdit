@@ -51,16 +51,16 @@ namespace NeoEdit.UI
 			}
 		}
 
-		void DoGridLayout(RenderParameters renderParameters)
+		void DoGridLayout()
 		{
 			ClearFullLayout();
 
 			if (lastGridSize != canvas.RenderSize)
 				ClearGridLayout();
 
-			CalculateGridParameters(renderParameters);
-			SetGridScrollPosition(renderParameters);
-			SetGridLayout(renderParameters);
+			CalculateGridParameters();
+			SetGridScrollPosition();
+			SetGridLayout();
 
 			lastGrid = true;
 			lastGridSize = canvas.RenderSize;
@@ -70,7 +70,7 @@ namespace NeoEdit.UI
 			lastWindowLayout = renderParameters.WindowLayout;
 		}
 
-		void CalculateGridParameters(RenderParameters renderParameters)
+		void CalculateGridParameters()
 		{
 			if ((lastGridAllTabs != renderParameters.AllTabs) || (lastWindowLayout != renderParameters.WindowLayout))
 			{
@@ -106,7 +106,7 @@ namespace NeoEdit.UI
 			}
 		}
 
-		void SetGridScrollPosition(RenderParameters renderParameters)
+		void SetGridScrollPosition()
 		{
 			scrollBar.ValueChanged -= OnScrollBarValueChanged;
 
@@ -121,11 +121,11 @@ namespace NeoEdit.UI
 			scrollBar.ValueChanged += OnScrollBarValueChanged;
 		}
 
-		void SetGridLayout(RenderParameters renderParameters)
+		void SetGridLayout()
 		{
 			if ((lastGridAllTabs == renderParameters.AllTabs) && (lastGridScrollBarValue == scrollBar.Value))
 			{
-				gridTabLabels.ForEach(tabLabel => tabLabel.Refresh(renderParameters.ActiveTabs, renderParameters.FocusedTab));
+				gridTabLabels.ForEach(tabLabel => tabLabel.Refresh(renderParameters));
 				tabWindows.ForEach(tabWindow => tabWindow.DrawAll());
 				return;
 			}
@@ -157,7 +157,7 @@ namespace NeoEdit.UI
 					tabWindow.Tab = renderParameters.AllTabs.GetIndex(tabIndex++);
 					var dockPanel = new DockPanel { AllowDrop = true };
 					dockPanel.Drop += (s, e) => OnDrop(e, tabWindow.Tab);
-					var tabLabel = CreateTabLabel(tabWindow.Tab, renderParameters);
+					var tabLabel = CreateTabLabel(tabWindow.Tab);
 					DockPanel.SetDock(tabLabel, Dock.Top);
 					dockPanel.Children.Add(tabLabel);
 					tabWindow.SetValue(DockPanel.DockProperty, Dock.Bottom);

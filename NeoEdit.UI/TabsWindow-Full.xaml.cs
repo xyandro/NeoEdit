@@ -45,7 +45,7 @@ namespace NeoEdit.UI
 			lastFullTabLabelIndex = 0;
 		}
 
-		void DoFullLayout(RenderParameters renderParameters)
+		void DoFullLayout()
 		{
 			ClearGridLayout();
 
@@ -53,8 +53,8 @@ namespace NeoEdit.UI
 				ClearFullLayout();
 
 			CreateFullLayout();
-			CreateFullTabLabels(renderParameters);
-			SetFullContent(renderParameters);
+			CreateFullTabLabels();
+			SetFullContent();
 
 			lastFull = true;
 			lastFullSize = canvas.RenderSize;
@@ -122,25 +122,25 @@ namespace NeoEdit.UI
 			fullTabLabelsWidth = canvas.ActualWidth - 40 - 2;
 		}
 
-		TabLabel GetTabLabel(RenderParameters renderParameters, Dictionary<int, TabLabel> tabLabelDict, int index)
+		TabLabel GetTabLabel(Dictionary<int, TabLabel> tabLabelDict, int index)
 		{
 			if (tabLabelDict.ContainsKey(index))
 				return tabLabelDict[index];
 
-			var tabLabel = CreateTabLabel(renderParameters.AllTabs.GetIndex(index), renderParameters);
+			var tabLabel = CreateTabLabel(renderParameters.AllTabs.GetIndex(index));
 			tabLabel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 			tabLabelDict[index] = tabLabel;
 			return tabLabel;
 		}
 
-		double GetAtRightIndex(RenderParameters renderParameters, Dictionary<int, TabLabel> tabLabelDict, int index)
+		double GetAtRightIndex(Dictionary<int, TabLabel> tabLabelDict, int index)
 		{
 			var remaining = fullTabLabelsWidth;
 			var atRightIndex = 0d;
 			while (index >= 0)
 			{
 				atRightIndex = index;
-				var width = GetTabLabel(renderParameters, tabLabelDict, index).DesiredSize.Width;
+				var width = GetTabLabel(tabLabelDict, index).DesiredSize.Width;
 				remaining -= width;
 				if (remaining <= 0)
 				{
@@ -152,22 +152,22 @@ namespace NeoEdit.UI
 			return atRightIndex;
 		}
 
-		void CreateFullTabLabels(RenderParameters renderParameters)
+		void CreateFullTabLabels()
 		{
 			var tabLabelMap = new Dictionary<int, TabLabel>();
 			if ((renderParameters.FocusedTab != null) && ((lastFullAllTabs != renderParameters.AllTabs) || (lastFullFocused != renderParameters.FocusedTab)))
 			{
 				var atLeftIndex = renderParameters.AllTabs.FindIndex(renderParameters.FocusedTab);
-				var atRightIndex = GetAtRightIndex(renderParameters, tabLabelMap, atLeftIndex);
+				var atRightIndex = GetAtRightIndex(tabLabelMap, atLeftIndex);
 				fullTabLabelIndex = Math.Min(atLeftIndex, Math.Max(fullTabLabelIndex, atRightIndex));
 			}
 
 			if ((lastFullAllTabs != renderParameters.AllTabs) || (lastFullTabLabelIndex != fullTabLabelIndex))
-				fullTabLabelIndex = Math.Max(0, Math.Min(fullTabLabelIndex, GetAtRightIndex(renderParameters, tabLabelMap, renderParameters.AllTabs.Count - 1)));
+				fullTabLabelIndex = Math.Max(0, Math.Min(fullTabLabelIndex, GetAtRightIndex(tabLabelMap, renderParameters.AllTabs.Count - 1)));
 
 			if ((lastFullAllTabs == renderParameters.AllTabs) && (lastFullTabLabelIndex == fullTabLabelIndex))
 			{
-				fullTabLabels.ForEach(tabLabel => tabLabel.Refresh(renderParameters.ActiveTabs, renderParameters.FocusedTab));
+				fullTabLabels.ForEach(tabLabel => tabLabel.Refresh(renderParameters));
 				return;
 			}
 
@@ -184,7 +184,7 @@ namespace NeoEdit.UI
 				if ((index >= renderParameters.AllTabs.Count) || (remaining <= 0))
 					break;
 
-				var tabLabel = GetTabLabel(renderParameters, tabLabelMap, index);
+				var tabLabel = GetTabLabel(tabLabelMap, index);
 				if (offset != 0)
 				{
 					tabLabel.Margin = new Thickness(-tabLabel.DesiredSize.Width * offset, 0, 0, 0);
@@ -198,7 +198,7 @@ namespace NeoEdit.UI
 			}
 		}
 
-		void SetFullContent(RenderParameters renderParameters)
+		void SetFullContent()
 		{
 			tabWindows[0].Tab = renderParameters.FocusedTab;
 			if (renderParameters.FocusedTab == null)

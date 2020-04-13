@@ -16,6 +16,11 @@ namespace NeoEdit
 {
 	class Program
 	{
+		static Program()
+		{
+			ITabsStatic.HandlesKey = Tabs.HandlesKey;
+		}
+
 		const string IPCName = "NeoEdit-{debe0282-0e9d-47fd-836c-60f500dbaeb5}";
 		const string ShutdownEventName = "NeoEdit-Wait-{0}";
 

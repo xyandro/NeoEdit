@@ -10,6 +10,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Internal_Activate()
 		{
+			LastActivated = DateTime.Now;
 			foreach (var tab in AllTabs)
 				tab.Activated();
 		}

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -35,14 +34,14 @@ namespace NeoEdit.UI.Controls
 
 		public ITab Tab { get; }
 
-		public void Refresh(IReadOnlyList<ITab> activeTabs, ITab focusedTab)
+		public void Refresh(RenderParameters renderParameters)
 		{
-			if (focusedTab == Tab)
+			if (renderParameters.FocusedTab == Tab)
 			{
 				border.BorderBrush = FocusedWindowBorderBrush;
 				border.Background = FocusedWindowBackgroundBrush;
 			}
-			else if (activeTabs.Contains(Tab))
+			else if (renderParameters.ActiveTabs.Contains(Tab))
 			{
 				border.BorderBrush = ActiveWindowBorderBrush;
 				border.Background = ActiveWindowBackgroundBrush;
