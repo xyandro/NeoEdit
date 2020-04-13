@@ -36,7 +36,9 @@ namespace NeoEdit.Common
 			get
 			{
 				if (savedAnswers == null)
-					savedAnswers = new AnswerResult();
+					lock (this)
+						if (savedAnswers == null)
+							savedAnswers = new AnswerResult();
 				return savedAnswers;
 			}
 		}
@@ -58,7 +60,9 @@ namespace NeoEdit.Common
 		public KeysAndValues GetKeysAndValues(int kvIndex, ITab tab)
 		{
 			if (KeysAndValuesMap == null)
-				KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<ITab, KeysAndValues>), 10).ToArray();
+				lock (this)
+					if (KeysAndValuesMap == null)
+						KeysAndValuesMap = Enumerable.Repeat(default(IReadOnlyDictionary<ITab, KeysAndValues>), 10).ToArray();
 			if (KeysAndValuesMap[kvIndex] == null)
 				lock (this)
 					if (KeysAndValuesMap[kvIndex] == null)
@@ -72,10 +76,18 @@ namespace NeoEdit.Common
 		public NEExpression GetExpression(string expression)
 		{
 			if (expressions == null)
-				expressions = new Dictionary<string, NEExpression>();
-			if (!expressions.ContainsKey(expression))
-				expressions[expression] = new NEExpression(expression);
-			return expressions[expression];
+				lock (this)
+					if (expressions == null)
+						expressions = new Dictionary<string, NEExpression>();
+
+			lock (this)
+				if (expressions.ContainsKey(expression))
+					return expressions[expression];
+
+			var neExpression = new NEExpression(expression);
+			lock (this)
+				expressions[expression] = neExpression;
+			return neExpression;
 		}
 
 		public override string ToString() => Command.ToString();
