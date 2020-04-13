@@ -498,15 +498,6 @@ namespace NeoEdit.Common
 
 		public static bool IsAdministrator() => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
-		public static bool IsWordBoundary(string input, int index)
-		{
-			if (input.Length == 0)
-				return false;
-			if (index == 0)
-				return isWordChar[input[index]];
-			if (index == input.Length)
-				return isWordChar[input[index - 1]];
-			return isWordChar[input[index - 1]] != isWordChar[input[index]];
-		}
+		public static bool IsWordBoundary(string input, int index) => (input.Length != 0) && ((index == 0) || (index == input.Length) || (!isWordChar[input[index - 1]]) || (!isWordChar[input[index]]));
 	}
 }
