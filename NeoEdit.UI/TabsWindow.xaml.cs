@@ -232,7 +232,7 @@ namespace NeoEdit.UI
 			}
 			dc.DrawText(text, new Point(6, 1));
 
-			progressColumn.Width = new GridLength(Math.Max(100, statusBar.ActualWidth - text.Width) - 20);
+			progressBars.Width = Math.Max(100, statusBar.ActualWidth - text.Width - 6);
 		}
 
 		void SetMenuCheckboxes()
@@ -316,33 +316,25 @@ namespace NeoEdit.UI
 
 		public void ShowExceptionMessage(Exception ex) => Dispatcher.Invoke(() => App.ShowExceptionMessage(ex));
 
-		void SetProgress(ProgressBar progressBar, RowDefinition row, double? percent)
+		void SetProgress(ProgressBar progressBar, double? percent)
 		{
 			Dispatcher.Invoke(() =>
 			{
 				if (percent.HasValue)
 				{
 					if (progressBar.Visibility != Visibility.Visible)
-					{
 						progressBar.Visibility = Visibility.Visible;
-						if (row != null)
-							row.Height = new GridLength(1, GridUnitType.Star);
-					}
 					progressBar.Value = percent.Value;
 				}
 				else
 				{
-					if (progressBar.Visibility != Visibility.Collapsed)
-					{
-						progressBar.Visibility = Visibility.Collapsed;
-						if (row != null)
-							row.Height = new GridLength(0);
-					}
+					if (progressBar.Visibility != Visibility.Hidden)
+						progressBar.Visibility = Visibility.Hidden;
 				}
 			});
 		}
 
-		public void SetMacroProgress(double? percent) => SetProgress(macroProgressBar, macroProgressRow, percent);
-		public void SetTaskRunnerProgress(double? percent) => SetProgress(taskRunnerProgressBar, null, percent);
+		public void SetMacroProgress(double? percent) => SetProgress(macroProgressBar, percent);
+		public void SetTaskRunnerProgress(double? percent) => SetProgress(taskRunnerProgressBar, percent);
 	}
 }

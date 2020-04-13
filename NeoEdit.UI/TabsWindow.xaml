@@ -34,20 +34,22 @@
 		</Grid>
 
 		<controls:RenderCanvas Grid.Row="2" Grid.Column="0" x:Name="statusBar" Height="20" Background="Transparent" Render="OnStatusBarRender" ClipToBounds="True"/>
-		<Grid Grid.Row="2" Grid.Column="0" Height="20" HorizontalAlignment="Right">
+		<Grid x:Name="progressBars" Grid.Row="2" Grid.Column="0" Width="200" Height="20" HorizontalAlignment="Right">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition x:Name="progressColumn" Width="200"/>
+				<ColumnDefinition Width="6"/>
+				<ColumnDefinition/>
 				<ColumnDefinition Width="6"/>
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="1"/>
-				<RowDefinition x:Name="macroProgressRow"/>
+				<RowDefinition Height="2"/>
 				<RowDefinition/>
-				<RowDefinition Height="1"/>
+				<RowDefinition Height="2"/>
+				<RowDefinition/>
+				<RowDefinition Height="2"/>
 			</Grid.RowDefinitions>
 
-			<ProgressBar Grid.Row="1" Grid.Column="0" Name="macroProgressBar" Foreground="#808080" Minimum="0" Maximum="1" Visibility="Collapsed" Margin="0,1"/>
-			<ProgressBar Grid.Row="2" Grid.Column="0" Name="taskRunnerProgressBar" Foreground="#808080" Minimum="0" Maximum="1" Visibility="Collapsed" Margin="0,1"/>
+			<ProgressBar Grid.Row="1" Grid.Column="1" Name="macroProgressBar" Foreground="#808080" Minimum="0" Maximum="1" Visibility="Hidden"/>
+			<ProgressBar Grid.Row="3" Grid.Column="1" Name="taskRunnerProgressBar" Foreground="#808080" Minimum="0" Maximum="1" Visibility="Hidden"/>
 		</Grid>
 
 	</Grid>
