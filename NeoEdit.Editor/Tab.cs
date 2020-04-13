@@ -1161,8 +1161,9 @@ namespace NeoEdit.Editor
 			results.Add(NEVariable.Constant("xtmin", "Selection text min", () => Selections.AsParallel().Select(range => Text.GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).First()));
 			results.Add(NEVariable.Constant("xtmax", "Selection text max", () => Selections.AsParallel().Select(range => Text.GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).Last()));
 
-			for (var region = 1; region <= 9; ++region)
+			for (var ctr = 1; ctr <= 9; ++ctr)
 			{
+				var region = ctr; // If we don't copy this variable it passes the most recent value (10 after it's done) to GetRegions
 				var regions = default(List<string>);
 				var initializeRegions = new NEVariableInitializer(() => regions = GetRegions(region).Select(range => Text.GetString(range)).ToList());
 				results.Add(NEVariable.List($"r{region}", $"Region {region}", () => regions, initializeRegions));
