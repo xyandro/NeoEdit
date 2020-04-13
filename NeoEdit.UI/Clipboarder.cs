@@ -105,6 +105,8 @@ namespace NeoEdit.UI
 		{
 			try
 			{
+				lastClipboard = NEClipboard.System = NEClipboard.Current;
+
 				var dataObj = new DataObject();
 
 				dataObj.SetText(NEClipboard.Current.String, TextDataFormat.UnicodeText);
@@ -119,8 +121,6 @@ namespace NeoEdit.UI
 				}
 
 				Clipboard.SetDataObject(dataObj, true);
-				lastClipboard = NEClipboard.Current;
-				NEClipboard.System = NEClipboard.Current;
 			}
 			catch { }
 		}
