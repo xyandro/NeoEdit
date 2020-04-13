@@ -435,6 +435,25 @@ namespace NeoEdit.Editor
 
 		public void QueueActivateTabs() => TabsWindow.QueueActivateTabs();
 
+		public T ShowTab<T>(Tab tab, Func<T> action)
+		{
+			lock (this)
+			{
+				var oldTabsData = newTabsList;
+				newTabsList = new TabsList(newTabsList);
+
+				ClearAllActive();
+				SetActive(tab);
+				RenderTabsWindow();
+
+				var result = action();
+
+				newTabsList = oldTabsData;
+
+				return result;
+			}
+		}
+
 		public void SetTabSize(int columns, int rows)
 		{
 			TabColumns = columns;
