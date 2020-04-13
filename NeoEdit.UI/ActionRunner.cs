@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using NeoEdit.Common;
 
 namespace NeoEdit.UI
 {
@@ -58,6 +60,19 @@ namespace NeoEdit.UI
 			lock (semaphore)
 				actions.Enqueue(action);
 			semaphore.Release();
+		}
+
+		public bool CancelActive()
+		{
+			lock (semaphore)
+			{
+				if (!actions.Any())
+					return false;
+
+				actions.ForEach(action => semaphore.WaitOne());
+				actions.Clear();
+				return true;
+			}
 		}
 	}
 }

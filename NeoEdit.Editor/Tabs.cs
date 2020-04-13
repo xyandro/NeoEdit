@@ -143,6 +143,19 @@ namespace NeoEdit.Editor
 			};
 		}
 
+		public bool CancelActive()
+		{
+			var result = false;
+			if (playingMacro != null)
+			{
+				playingMacro = null;
+				result = true;
+			}
+			if (TaskRunner.Cancel())
+				result = true;
+			return result;
+		}
+
 		void PlayMacro()
 		{
 			if (playingMacro == null)

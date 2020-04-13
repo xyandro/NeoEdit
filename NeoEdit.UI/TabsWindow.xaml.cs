@@ -105,6 +105,14 @@ namespace NeoEdit.UI
 			if (key == Key.System)
 				key = e.SystemKey;
 
+			if (key == Key.Escape)
+			{
+				e.Handled = Tabs.CancelActive() || e.Handled;
+				e.Handled = commandRunner.CancelActive() || e.Handled;
+				if (e.Handled)
+					return;
+			}
+
 			if (ITabsStatic.HandlesKey(Keyboard.Modifiers, key))
 			{
 				HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });

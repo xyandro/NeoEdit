@@ -87,10 +87,17 @@ namespace NeoEdit.Editor
 
 		static public void AddResult(Action next) => Add(new Task { NextAction = obj => next() });
 
-		static void Cancel(Exception ex)
+		public static bool Cancel(Exception ex = null)
 		{
-			exception = ex;
-			progresses.ForEach(progress => progress.Cancel = true);
+			lock (tasks)
+			{
+				if (tasks.Count == 0)
+					return false;
+
+				exception = ex ?? new OperationCanceledException();
+				progresses.ForEach(progress => progress.Cancel = true);
+				return true;
+			}
 		}
 
 		static void WorkerThread(TaskProgress progress)

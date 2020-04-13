@@ -11,5 +11,6 @@ namespace NeoEdit.Common
 	public interface ITabs
 	{
 		void HandleCommand(ExecuteState state, Func<bool> skipDraw = null);
+		bool CancelActive();
 	}
 }

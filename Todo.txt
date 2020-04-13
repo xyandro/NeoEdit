@@ -14,7 +14,6 @@ Add content menu item to copy (and maybe others?) current tag, could handle nest
 If tab created or deleted move recording/playing macro
 Track pristine in undo history for large files
 Modified should track by saving file, not transactional
-Cancel active tasks
 Detect beginning/end of line from current position
 If a key comes in multiple times handle them together, aggregate in macros too
 Default binary checked when searching in binary view
