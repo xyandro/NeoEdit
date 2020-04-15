@@ -60,11 +60,10 @@ namespace NeoEdit.Editor.TaskRunning
 			var remaining = result.Count;
 			data.Action = (index, obj, progress) =>
 			{
-				result[index] = (T)obj;
-
 				bool runAction;
 				lock (result)
 				{
+					result[index] = (T)obj;
 					--remaining;
 					runAction = remaining == 0;
 				}
