@@ -10,18 +10,44 @@ namespace NeoEdit.Editor.TaskRunning
 	static class TaskRunner
 	{
 		const int DefaultTaskTotal = 1;
+
 		static readonly int NumThreads = Environment.ProcessorCount;
 
-		public static FluentTaskRunner<T> AsTaskRunner<T>(this IEnumerable<T> items) => new FluentTaskRunner<T>(items.Cast<object>().ToList());
-
-		static TaskRunner() => Enumerable.Range(0, NumThreads).ForEach(x => new Thread(TaskRunnerThread).Start());
+		public static FluentTaskRunner<T> AsTaskRunner<T>(this IReadOnlyList<T> list) => new FluentTaskRunner<T>(list, list.Count);
+		public static FluentTaskRunner<T> Create<T>(this IEnumerable<T> list, int count) => new FluentTaskRunner<T>(list, count);
+		public static void Run(Action action) => new FluentTaskRunner<int>(new List<int> { 0 }, 1).ParallelForEach(obj => action());
+		public static FluentTaskRunner<int> Range(int start, int count) => Create(Enumerable.Range(start, count), count);
+		public static FluentTaskRunner<T> Repeat<T>(T item, int count) => Create(Enumerable.Repeat(item, count), count);
 
 		static readonly ManualResetEvent finished = new ManualResetEvent(true);
 		static readonly Semaphore semaphore = new Semaphore(0, int.MaxValue);
-		static readonly Queue<Action<ITaskRunnerProgress>> tasks = new Queue<Action<ITaskRunnerProgress>>();
+		static readonly Queue<TaskRunnerData> tasks = new Queue<TaskRunnerData>();
 		static long current = 0, total = 0;
-		static int running = -1;
+		static int running = 0;
 		static Exception exception;
+
+		static TaskRunner() => Enumerable.Range(0, NumThreads).ForEach(x => new Thread(TaskRunnerThread).Start());
+
+		internal static void Add(TaskRunnerData data)
+		{
+			if (data.Count == 0)
+				return;
+
+			lock (semaphore)
+			{
+				if (exception != null)
+				{
+					ExceptionDispatchInfo.Capture(exception).Throw();
+					throw exception;
+				}
+
+				finished.Reset();
+				lock (finished)
+					total += data.Count * DefaultTaskTotal;
+				tasks.Enqueue(data);
+				semaphore.Release(data.Count);
+			}
+		}
 
 		public static bool Cancel(Exception ex = null)
 		{
@@ -32,26 +58,6 @@ namespace NeoEdit.Editor.TaskRunning
 				if (exception == null)
 					exception = ex ?? new OperationCanceledException();
 				return true;
-			}
-		}
-
-		public static void AddTask(Action task) => AddTask(progress => task());
-
-		public static void AddTask(Action<ITaskRunnerProgress> task)
-		{
-			lock (semaphore)
-			{
-				if (exception != null)
-				{
-					ExceptionDispatchInfo.Capture(exception).Throw();
-					throw exception;
-				}
-				finished.Reset();
-				tasks.Enqueue(task);
-				lock (finished)
-					total += DefaultTaskTotal;
-				if (running != -1)
-					semaphore.Release();
 			}
 		}
 
@@ -69,8 +75,9 @@ namespace NeoEdit.Editor.TaskRunning
 				lock (finished)
 				{
 					current += newCurrent - lastCurrent;
-					total += newTotal - lastTotal;
 					lastCurrent = newCurrent;
+
+					total += newTotal - lastTotal;
 					lastTotal = newTotal;
 				}
 			}
@@ -80,10 +87,30 @@ namespace NeoEdit.Editor.TaskRunning
 			{
 				semaphore.WaitOne();
 
-				Action<ITaskRunnerProgress> task;
+				TaskRunnerData task;
+				object obj = null;
+				int index;
+
 				lock (semaphore)
 				{
-					task = tasks.Dequeue();
+					task = tasks.Peek();
+					if (exception == null)
+					{
+						if (task.Enumerator.MoveNext())
+							obj = task.Enumerator.Current;
+						else
+							Cancel(new Exception("Too few items in enumerable"));
+					}
+
+					index = task.NextIndex++;
+					if (task.NextIndex == task.Count)
+					{
+						if ((exception == null) && (task.Enumerator.MoveNext()))
+							Cancel(new Exception("Too many items in enumerable"));
+						task.Enumerator.Dispose();
+						tasks.Dequeue();
+					}
+
 					++running;
 				}
 
@@ -93,7 +120,10 @@ namespace NeoEdit.Editor.TaskRunning
 				{
 					try
 					{
-						task(progress);
+						var result = obj;
+						if (task.Func != null)
+							result = task.Func(obj, progress);
+						task.Action?.Invoke(index, result, progress);
 						ReportProgress(lastTotal, lastTotal);
 					}
 					catch (Exception ex) { Cancel(ex); }
@@ -102,7 +132,7 @@ namespace NeoEdit.Editor.TaskRunning
 				lock (semaphore)
 				{
 					--running;
-					if ((tasks.Count == 0) && (running == 0))
+					if ((running == 0) && (tasks.Count == 0))
 						finished.Set();
 				}
 			}
@@ -111,12 +141,8 @@ namespace NeoEdit.Editor.TaskRunning
 		public static void WaitForFinish(ITabsWindow tabsWindow)
 		{
 			lock (semaphore)
-			{
 				if (tasks.Count == 0)
 					return;
-				running = 0;
-				semaphore.Release(tasks.Count);
-			}
 
 			tabsWindow.SetTaskRunnerProgress(0);
 			while (true)
@@ -131,7 +157,6 @@ namespace NeoEdit.Editor.TaskRunning
 			{
 				var ex = exception;
 
-				running = -1;
 				exception = null;
 				current = total = 0;
 

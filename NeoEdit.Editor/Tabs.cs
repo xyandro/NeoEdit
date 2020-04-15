@@ -232,7 +232,7 @@ namespace NeoEdit.Editor
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
-				TaskRunner.AddTask(Execute);
+				TaskRunner.Run(Execute);
 				TaskRunner.WaitForFinish(TabsWindow);
 				PostExecute();
 

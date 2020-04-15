@@ -112,7 +112,7 @@ namespace NeoEdit.Editor
 					return;
 			}
 
-			Enumerable.Range(0, urls.Count).AsTaskRunner().ParallelForEach(index => FetchURL(urls[index], fileNames[index]));
+			TaskRunner.Range(0, urls.Count).ParallelForEach(index => FetchURL(urls[index], fileNames[index]));
 		}
 
 		object Configure_Network_FetchStream() => Tabs.TabsWindow.RunNetworkFetchStreamDialog(GetVariables(), Path.GetDirectoryName(FileName) ?? "");

@@ -7,88 +7,71 @@ namespace NeoEdit.Editor.TaskRunning
 {
 	class FluentTaskRunner<T>
 	{
-		Transform startTransform;
+		TaskRunnerData data;
 
-		public FluentTaskRunner(IEnumerable<object> values)
+		public FluentTaskRunner(IEnumerable<T> items, int count)
 		{
-			var transform = new Transform();
-			transform.Runner = _ =>
+			data = new TaskRunnerData
 			{
-				if (transform.NextTransform == null)
-					return;
-
-				transform.NextTransform.AddTasks(values);
-				transform.NextTransform.Run();
+				Enumerator = items.Cast<object>().GetEnumerator(),
+				Count = count,
 			};
-			AddTransform(transform);
 		}
 
-		public FluentTaskRunner(Transform startTransform)
-		{
-			this.startTransform = startTransform;
-		}
-
-		FluentTaskRunner<TResult> GetTaskRunnerData<TResult>()
-		{
-			if (typeof(T) == typeof(TResult))
-				return (FluentTaskRunner<TResult>)(object)this;
-			return new FluentTaskRunner<TResult>(startTransform);
-		}
+		FluentTaskRunner(TaskRunnerData data) => this.data = data;
 
 		public FluentTaskRunner<TResult> Select<TResult>(Func<T, TResult> func)
 		{
-			AddTransform(new Transform { DoTask = (value, progress) => new List<object> { func((T)value) } });
-			return GetTaskRunnerData<TResult>();
+			if (data.Func == null)
+				data.Func = (obj, progress) => func((T)obj);
+			else
+				data.Func = (obj, progress) => func((T)data.Func(obj, progress));
+			return new FluentTaskRunner<TResult>(data);
 		}
 
 		public FluentTaskRunner<TResult> Select<TResult>(Func<T, ITaskRunnerProgress, TResult> func)
 		{
-			AddTransform(new Transform { DoTask = (value, progress) => new List<object> { func((T)value, progress) } });
-			return GetTaskRunnerData<TResult>();
-		}
-
-		public FluentTaskRunner<TResult> SelectMany<TResult>(Func<T, IEnumerable<TResult>> func)
-		{
-			AddTransform(new Transform { DoTask = (value, progress) => func((T)value).Cast<object>() });
-			return GetTaskRunnerData<TResult>();
-		}
-
-		public void ForEach(Action<T> action)
-		{
-			AddTransform(new Transform { Runner = values => values.ForEach(value => action((T)value)) });
-			startTransform.Run();
+			if (data.Func == null)
+				data.Func = (obj, progress) => func((T)obj, progress);
+			else
+				data.Func = (obj, progress) => func((T)data.Func(obj, progress), progress);
+			return new FluentTaskRunner<TResult>(data);
 		}
 
 		public void ParallelForEach(Action<T> action)
 		{
-			AddTransform(new Transform { Runner = values => values.ForEach(value => TaskRunner.AddTask(progress => action((T)value))) });
-			startTransform.Run();
+			data.Action = (index, obj, progress) => action((T)obj);
+			TaskRunner.Add(data);
 		}
 
 		public void ParallelForEach(Action<T, ITaskRunnerProgress> action)
 		{
-			AddTransform(new Transform { Runner = values => values.ForEach(value => TaskRunner.AddTask(progress => action((T)value, progress))) });
-			startTransform.Run();
+			data.Action = (index, obj, progress) => action((T)obj, progress);
+			TaskRunner.Add(data);
 		}
+
+		public void SequentialForEach(Action<T> action) => ToList(list => list.ForEach(action));
 
 		public void ToList(Action<List<T>> action)
 		{
-			AddTransform(new Transform { Runner = values => action(values.Cast<T>().ToList()) });
-			startTransform.Run();
-		}
-
-		void AddTransform(Transform transform)
-		{
-			if (startTransform == null)
+			var result = new List<T>(data.Count);
+			for (var ctr = 0; ctr < data.Count; ++ctr)
+				result.Add(default);
+			var remaining = result.Count;
+			data.Action = (index, obj, progress) =>
 			{
-				startTransform = transform;
-				return;
-			}
+				result[index] = (T)obj;
 
-			var next = startTransform;
-			while (next.NextTransform != null)
-				next = next.NextTransform;
-			next.NextTransform = transform;
+				bool runAction;
+				lock (result)
+				{
+					--remaining;
+					runAction = remaining == 0;
+				}
+				if (runAction)
+					action(result);
+			};
+			TaskRunner.Add(data);
 		}
 	}
 }

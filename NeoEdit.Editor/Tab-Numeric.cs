@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -8,6 +7,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -258,7 +258,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(numbers.Select(num => num.ToString()).ToList());
 		}
 
-		void Execute_Numeric_Add_IncrementDecrement(bool add) => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => (new NumericValue(Text.GetString(range)) + new NumericValue(add ? 1 : -1)).ToString()).ToList());
+		void Execute_Numeric_Add_IncrementDecrement(bool add)
+		{
+			var toAdd = new NumericValue(add ? 1 : -1);
+			Selections.AsTaskRunner().Select(range => (new NumericValue(Text.GetString(range)) + toAdd).ToString()).ToList(sels => ReplaceSelections(sels));
+		}
 
 		void Execute_Numeric_Add_AddSubtractClipboard(bool add)
 		{

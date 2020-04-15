@@ -589,7 +589,7 @@ namespace NeoEdit.Editor
 								.Where(tuple => (tuple.Item1 != null) && (tuple.Item1.Length != 0))
 							).Distinct().ToList()));
 
-				Enumerable.Range(0, Selections.Count).AsTaskRunner()
+				TaskRunner.Range(0, Selections.Count)
 					.Select((index, progress) => BinarySearchFile(FileName.RelativeChild(Text.GetString(Selections[index])), searchers[stringsToFind[index]], progress))
 					.ToList(taskResults => Selections = Selections.Where((range, index) => taskResults[index]).ToList());
 			}
@@ -619,7 +619,7 @@ namespace NeoEdit.Editor
 							});
 				}
 
-				Enumerable.Range(0, Selections.Count).AsTaskRunner()
+				TaskRunner.Range(0, Selections.Count)
 					.Select((index, progress) => TextSearchFile(FileName.RelativeChild(Text.GetString(Selections[index])), searchers[stringsToFind[index]], progress))
 					.ToList(taskResults => Selections = Selections.Where((range, index) => taskResults[index]).ToList());
 			}
@@ -908,7 +908,7 @@ namespace NeoEdit.Editor
 			var files = RelativeSelectedFiles();
 			var outputTemplates = state.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
 			var chunkSizes = state.GetExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
-			Enumerable.Range(0, Selections.Count).AsTaskRunner().ParallelForEach((index, progress) => SplitFile(FileName.RelativeChild(Text.GetString(Selections[index])), outputTemplates[index], chunkSizes[index], progress));
+			TaskRunner.Range(0, Selections.Count).ParallelForEach((index, progress) => SplitFile(FileName.RelativeChild(Text.GetString(Selections[index])), outputTemplates[index], chunkSizes[index], progress));
 		}
 
 		object Configure_Files_Operations_CombineFiles() => Tabs.TabsWindow.RunFilesOperationsCombineFilesDialog(GetVariables());
@@ -942,7 +942,7 @@ namespace NeoEdit.Editor
 				inputs[current].Add(inputFile);
 			}
 
-			Enumerable.Range(0, outputFiles.Count).AsTaskRunner().ParallelForEach((index, progress) => CombineFiles(outputFiles[index], inputs[index], progress));
+			TaskRunner.Range(0, outputFiles.Count).ParallelForEach((index, progress) => CombineFiles(outputFiles[index], inputs[index], progress));
 		}
 	}
 }

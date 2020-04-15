@@ -15,7 +15,7 @@ namespace NeoEdit.Editor
 {
 	partial class Tabs
 	{
-		public void OpenFiles(IEnumerable<string> files) => files.AsTaskRunner().Select(file => new Tab(file)).ForEach(tab => AddTab(tab));
+		public void OpenFiles(IReadOnlyList<string> files) => files.AsTaskRunner().Select(file => new Tab(file)).SequentialForEach(tab => AddTab(tab));
 
 		void Execute_File_New_New(bool createTabs)
 		{
