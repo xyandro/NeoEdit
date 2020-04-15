@@ -22,3 +22,5 @@ Pass count to task runner so it doesn't use tolist
 Make task runner run in command thread
 Sort by expression
 Can't select multiple tabs in grid view unless you click title
+Add finalizers to check that all UI resources get deleted
+Make sure grid shows focused file
