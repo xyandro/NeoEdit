@@ -515,16 +515,20 @@ namespace NeoEdit.Editor
 		{
 			lock (this)
 			{
-				var oldTabsData = newTabsList;
+				var saveTabsList = newTabsList;
 				newTabsList = new TabsList(newTabsList);
-
 				ClearAllActive();
 				SetActive(tab);
+
+				var saveWindowLayout = newWindowLayout;
+				WindowLayout = new WindowLayout(1, 1);
+
 				RenderTabsWindow();
 
 				var result = action();
 
-				newTabsList = oldTabsData;
+				newTabsList = saveTabsList;
+				newWindowLayout = saveWindowLayout;
 
 				return result;
 			}
