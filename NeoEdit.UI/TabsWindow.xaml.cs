@@ -62,15 +62,19 @@ namespace NeoEdit.UI
 
 		public void QueueActivateTabs()
 		{
-			if ((Helpers.IsDebugBuild) || (!IsActive))
-				return;
+			RunOnUIThread(() =>
+			{
+				if (!IsActive)
+					return;
 
-			HandleCommand(new ExecuteState(NECommand.Internal_Activate));
+				HandleCommand(new ExecuteState(NECommand.Internal_Activate));
+			});
 		}
 
 		void OnActivated(object sender, EventArgs e)
 		{
-			QueueActivateTabs();
+			if (!Helpers.IsDebugBuild)
+				QueueActivateTabs();
 		}
 
 		void OnScrollBarValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => HandleCommand(new ExecuteState(NECommand.Internal_Redraw));
@@ -336,5 +340,13 @@ namespace NeoEdit.UI
 
 		public void SetMacroProgress(double? percent) => SetProgress(macroProgressBar, percent);
 		public void SetTaskRunnerProgress(double? percent) => SetProgress(taskRunnerProgressBar, percent);
+
+		void RunOnUIThread(Action action)
+		{
+			if (!Dispatcher.CheckAccess())
+				Dispatcher.Invoke(action);
+			else
+				action();
+		}
 	}
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
@@ -1095,7 +1094,7 @@ namespace NeoEdit.Editor
 			watcher.Changed += (s1, e1) =>
 			{
 				watcherFileModified = true;
-				Tabs.QueueActivateTabs();
+				try { Tabs.TabsWindow.QueueActivateTabs(); } catch { }
 			};
 			watcher.EnableRaisingEvents = true;
 		}

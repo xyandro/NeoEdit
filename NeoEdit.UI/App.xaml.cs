@@ -46,8 +46,7 @@ namespace NeoEdit.UI
 			var window = Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
 			Message.Run(window, "Error", message);
 
-#if DEBUG
-			if ((Debugger.IsAttached) && ((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None))
+			if ((Helpers.IsDebugBuild) && (Debugger.IsAttached) && ((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None))
 			{
 				var inner = ex;
 				while (inner.InnerException != null)
@@ -64,7 +63,6 @@ namespace NeoEdit.UI
 				}
 				Debugger.Break();
 			}
-#endif
 		}
 
 		void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

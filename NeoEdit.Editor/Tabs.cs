@@ -511,8 +511,6 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		public void QueueActivateTabs() => TabsWindow.QueueActivateTabs();
-
 		public T ShowTab<T>(Tab tab, Func<T> action)
 		{
 			lock (this)
