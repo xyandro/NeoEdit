@@ -8,6 +8,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -203,7 +204,7 @@ namespace NeoEdit.Editor
 		{
 			RunCommand(state);
 			PlayMacro();
-			if ((skipDraw == null) || (!skipDraw()))
+			if (skipDraw?.Invoke() != true)
 				RenderTabsWindow();
 		}
 
@@ -231,7 +232,7 @@ namespace NeoEdit.Editor
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
-				TaskRunner.Add(Execute);
+				TaskRunner.AddTask(Execute);
 				TaskRunner.WaitForFinish(TabsWindow);
 				PostExecute();
 
@@ -273,9 +274,8 @@ namespace NeoEdit.Editor
 			return Focused.Configure();
 		}
 
-		void Execute(TaskProgress progress)
+		void Execute()
 		{
-			progress.Name = "Tabs";
 			switch (state.Command)
 			{
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
@@ -387,7 +387,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void ExecuteActiveTabs() => TaskRunner.Add(ActiveTabs.Select(tab => (Action<TaskProgress>)tab.Execute));
+		void ExecuteActiveTabs() => ActiveTabs.AsTaskRunner().ParallelForEach(tab => tab.Execute());
 
 		void PostExecute()
 		{

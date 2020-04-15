@@ -89,6 +89,7 @@
     <Compile Include="ITab.cs" />
     <Compile Include="ITabs.cs" />
     <Compile Include="ITabsWindow.cs" />
+    <Compile Include="ITaskRunnerProgress.cs" />
     <Compile Include="ItemSet.cs" />
     <Compile Include="KeyGestureAttribute.cs" />
     <Compile Include="KeysAndValues.cs" />
@@ -215,7 +216,6 @@
     <None Include="RevRegEx\Source\RevRegExParser.g4" />
     <Compile Include="Settings.cs" />
     <Compile Include="Table.cs" />
-    <Compile Include="TaskProgress.cs" />
     <Compile Include="ThreadSafeRandom.cs" />
     <Compile Include="Transform\Coder.cs" />
     <Compile Include="Transform\Colorer.cs" />

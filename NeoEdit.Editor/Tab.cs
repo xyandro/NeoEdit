@@ -427,9 +427,8 @@ namespace NeoEdit.Editor
 		#endregion
 
 		#region Execute
-		public void Execute(TaskProgress progress)
+		public void Execute()
 		{
-			progress.Name = TabLabel;
 			switch (state.Command)
 			{
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;

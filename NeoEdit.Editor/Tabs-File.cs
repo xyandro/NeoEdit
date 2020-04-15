@@ -9,19 +9,13 @@ using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.TaskRunning;
 
 namespace NeoEdit.Editor
 {
 	partial class Tabs
 	{
-		public void OpenFiles(IEnumerable<string> files)
-		{
-			TaskRunner.Add(files.Select(file => (Func<TaskProgress, Tab>)(progress =>
-			{
-				progress.Name = Path.GetFileName(file);
-				return new Tab(file);
-			})), tab => AddTab(tab));
-		}
+		public void OpenFiles(IEnumerable<string> files) => files.AsTaskRunner().Select(file => new Tab(file)).ForEach(tab => AddTab(tab));
 
 		void Execute_File_New_New(bool createTabs)
 		{

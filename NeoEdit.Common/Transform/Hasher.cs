@@ -250,10 +250,8 @@ namespace NeoEdit.Common.Transform
 			return Coder.BytesToString(hashAlg.ComputeHash(data), Coder.CodePage.Hex);
 		}
 
-		public static string Get(string fileName, Type type, byte[] key, TaskProgress progress)
+		public static string Get(string fileName, Type type, byte[] key, ITaskRunnerProgress progress)
 		{
-			progress.Name = Path.GetFileName(fileName);
-
 			using (var stream = File.OpenRead(fileName))
 			{
 				if (type == Type.QuickHash)
@@ -266,9 +264,7 @@ namespace NeoEdit.Common.Transform
 				var buffer = new byte[65536];
 				while (stream.Position < stream.Length)
 				{
-					if (progress.Cancel)
-						throw new OperationCanceledException();
-					progress.Percent = (double)stream.Position / stream.Length;
+					progress.SetProgress(stream.Position, stream.Length);
 
 					var block = stream.Read(buffer, 0, buffer.Length);
 					hashAlg.TransformBlock(buffer, 0, block, null, 0);

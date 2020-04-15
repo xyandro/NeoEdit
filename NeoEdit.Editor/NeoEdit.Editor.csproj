@@ -248,7 +248,10 @@
     </Compile>
     <Compile Include="Tabs.cs" />
     <Compile Include="TabsList.cs" />
-    <Compile Include="TaskRunner.cs" />
+    <Compile Include="TaskRunning\FluentTaskRunner.cs" />
+    <Compile Include="TaskRunning\TaskRunner.cs" />
+    <Compile Include="TaskRunning\TaskRunnerProgress.cs" />
+    <Compile Include="TaskRunning\Transform.cs" />
     <Compile Include="UndoRedo.cs" />
     <Compile Include="View\INEView.cs" />
     <Compile Include="View\NEHexView.cs" />

@@ -98,7 +98,7 @@ namespace NeoEdit.Editor.Searchers
 			}
 		}
 
-		public bool Find(string fileName, TaskProgress progress)
+		public bool Find(string fileName, ITaskRunnerProgress progress)
 		{
 			const int bits = 16;
 			const int bitMask = (1 << bits) - 1;
@@ -118,9 +118,6 @@ namespace NeoEdit.Editor.Searchers
 
 					if (block != curBlock)
 					{
-						if (progress.Cancel)
-							break;
-
 						curBlock = block;
 						var startPosition = block << bits;
 						var length = (int)Math.Min(data.Length, stream.Length - startPosition);
@@ -129,7 +126,7 @@ namespace NeoEdit.Editor.Searchers
 						if (read != length)
 							throw new Exception("Failed to read block");
 
-						progress.Percent = (double)stream.Position / stream.Length;
+						progress.SetProgress(stream.Position, stream.Length);
 					}
 
 					var b = data[offset];

@@ -28,10 +28,8 @@ namespace NeoEdit.Common
 			}
 		}
 
-		public static List<string> GetPlayListItems(string url, TaskProgress progress)
+		public static List<string> GetPlayListItems(string url)
 		{
-			progress.Name = url;
-
 			var startInfo = new ProcessStartInfo
 			{
 				FileName = Settings.YouTubeDLPath,
@@ -54,7 +52,7 @@ namespace NeoEdit.Common
 
 		public static void Update() => Process.Start(Settings.YouTubeDLPath, "-U");
 
-		public static void DownloadStream(string directory, string url, DateTime fileTime, TaskProgress progress)
+		public static void DownloadStream(string directory, string url, DateTime fileTime, ITaskRunnerProgress progress)
 		{
 			using (var process = new Process
 			{
@@ -80,7 +78,7 @@ namespace NeoEdit.Common
 
 					var match = Regex.Match(e.Data, @"^\[download\]\s*([0-9.]+)%(?:\s|$)");
 					if (match.Success)
-						progress.Percent = double.Parse(match.Groups[1].Value) / 100d;
+						progress.SetProgress(int.Parse(match.Groups[1].Value), 100);
 
 					match = Regex.Match(e.Data, @"^\[download\]\s*(?:Destination:\s*(.*?)|(.*?) has already been downloaded)(?:$)");
 					if (match.Success)
