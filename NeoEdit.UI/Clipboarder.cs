@@ -47,7 +47,6 @@ namespace NeoEdit.UI
 		static ClipboardChangeNotifier clipboardChangeNotifier = new ClipboardChangeNotifier(() => NEClipboard.System = null);
 
 		static readonly int PID = Process.GetCurrentProcess().Id;
-		static NEClipboard lastClipboard = null;
 
 		static public void GetSystem()
 		{
@@ -56,7 +55,7 @@ namespace NeoEdit.UI
 				var dataObj = Clipboard.GetDataObject();
 				if (dataObj.GetData(typeof(NEClipboard)) as int? == PID)
 				{
-					NEClipboard.System = NEClipboard.Current = lastClipboard;
+					NEClipboard.System = NEClipboard.Current;
 					return;
 				}
 
@@ -105,7 +104,7 @@ namespace NeoEdit.UI
 		{
 			try
 			{
-				lastClipboard = NEClipboard.System = NEClipboard.Current;
+				NEClipboard.System = NEClipboard.Current;
 
 				var dataObj = new DataObject();
 
