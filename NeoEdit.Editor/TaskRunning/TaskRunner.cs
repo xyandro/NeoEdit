@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using NeoEdit.Common;
 
@@ -41,7 +42,10 @@ namespace NeoEdit.Editor.TaskRunning
 			lock (semaphore)
 			{
 				if (exception != null)
+				{
+					ExceptionDispatchInfo.Capture(exception).Throw();
 					throw exception;
+				}
 				finished.Reset();
 				tasks.Enqueue(task);
 				lock (finished)
@@ -57,7 +61,10 @@ namespace NeoEdit.Editor.TaskRunning
 			void ReportProgress(long newCurrent, long newTotal)
 			{
 				if (exception != null)
+				{
+					ExceptionDispatchInfo.Capture(exception).Throw();
 					throw exception;
+				}
 
 				lock (finished)
 				{
@@ -129,7 +136,10 @@ namespace NeoEdit.Editor.TaskRunning
 				current = total = 0;
 
 				if (ex != null)
+				{
+					ExceptionDispatchInfo.Capture(ex).Throw();
 					throw ex;
+				}
 			}
 		}
 	}
