@@ -149,7 +149,7 @@ namespace NeoEdit.Editor
 			get => focused;
 			set
 			{
-				if (!activeTabs.Contains(value))
+				if ((value != null) && (!activeTabs.Contains(value)))
 					throw new Exception("Value not in active set");
 				focused = value;
 			}
