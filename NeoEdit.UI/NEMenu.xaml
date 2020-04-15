@@ -767,6 +767,8 @@
 		<controls:NEMenuItem Header="C_omment" CommandEnum="Content_Comment" ToolTip="Comment selections based on current content type"/>
 		<controls:NEMenuItem Header="_Uncomment" CommandEnum="Content_Uncomment" ToolTip="Uncomment selections based on current content type"/>
 		<Separator/>
+		<controls:NEMenuItem Header="Cop_y" CommandEnum="Content_Copy" ToolTip="Comment current selection; handles overlapping selections"/>
+		<Separator/>
 		<controls:NEMenuItem Header="To_ggle position" CommandEnum="Content_TogglePosition" ToolTip="Jump selections beginning/end"/>
 		<Separator/>
 		<controls:NEMenuItem Header="Cu_rrent" CommandEnum="Content_Current" ToolTip="Select current content node"/>

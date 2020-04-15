@@ -520,6 +520,7 @@ namespace NeoEdit.Common
 		Content_Reformat,
 		[KeyGesture(Key.OemQuestion, ModifierKeys.Control)] Content_Comment,
 		[KeyGesture(Key.OemQuestion, ModifierKeys.Control | ModifierKeys.Shift)] Content_Uncomment,
+		Content_Copy,
 		[KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift, 2)] Content_TogglePosition,
 		[KeyGesture(Key.Enter, ModifierKeys.Control | ModifierKeys.Alt)] Content_Current,
 		Content_Parent,

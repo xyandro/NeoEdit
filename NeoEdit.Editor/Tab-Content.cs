@@ -103,6 +103,8 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Uncomment() => ReplaceSelections(Selections.Select(range => Parser.Uncomment(ContentType, Text, TextView, range)).ToList());
 
+		void Execute_Content_Copy() => Clipboard = GetSelectionNodes().Select(node => Text.GetString(node.Start, node.Length)).ToList();
+
 		void Execute_Content_TogglePosition()
 		{
 			var nodes = GetSelectionNodes();

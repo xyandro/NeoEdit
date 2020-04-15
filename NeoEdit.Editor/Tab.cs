@@ -923,6 +923,7 @@ namespace NeoEdit.Editor
 				case NECommand.Content_Reformat: Execute_Content_Reformat(); break;
 				case NECommand.Content_Comment: Execute_Content_Comment(); break;
 				case NECommand.Content_Uncomment: Execute_Content_Uncomment(); break;
+				case NECommand.Content_Copy: Execute_Content_Copy(); break;
 				case NECommand.Content_TogglePosition: Execute_Content_TogglePosition(); break;
 				case NECommand.Content_Current: Execute_Content_Current(); break;
 				case NECommand.Content_Parent: Execute_Content_Parent(); break;
