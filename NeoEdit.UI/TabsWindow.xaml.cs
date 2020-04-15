@@ -176,6 +176,9 @@ namespace NeoEdit.UI
 
 		private void OnClosing(object sender, CancelEventArgs args)
 		{
+			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+				Environment.Exit(0);
+
 			HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = false });
 			args.Cancel = true;
 		}

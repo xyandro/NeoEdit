@@ -4,7 +4,6 @@ Add ability to select all attributes
 Round yellow diff corners in diff scrollbar
 Configuration shouldn't need transaction
 Flag executes as being okay with parallel tabs (One at a time, .AsParallel() or .AsParallel().AsOrdered())
-Detect brackets by greater than less than not lining up (1 > 5 vs. HashSet<int>)
 Less specific parsing (ignore method bodies, just line up {})
 Split selections on line breaks to emulate removed "multi-line" function
 Copy tabs active status so we can apply to another tabs window
@@ -24,3 +23,10 @@ Sort by expression
 Can't select multiple tabs in grid view unless you click title
 Add finalizers to check that all UI resources get deleted
 Make sure grid shows focused file
+Show which tab exception comes from
+Calculate boolean expression from truth table
+If users presses esc again before everything is canceled terminate and restart TaskRunner threads
+New content parsing - Handle nodes that contain other nodes
+Draw nodes instead of selections if available
+Nodes navigation - UpDown/LeftRight/ParentChild/Sequential
+All content types should have a parent that includes entire document
