@@ -26,6 +26,8 @@ namespace NeoEdit.UI
 
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
+
+			Clipboarder.Initialize();
 		}
 
 		readonly ITabs Tabs;
@@ -52,11 +54,9 @@ namespace NeoEdit.UI
 			state.Modifiers = Keyboard.Modifiers;
 			actionRunner.Add(moreQueued =>
 			{
-				if (NEClipboard.System == null)
-					Dispatcher.Invoke(() => Clipboarder.GetSystem());
+				Clipboarder.GetSystem(Dispatcher);
 				Tabs.HandleCommand(state, moreQueued);
-				if (NEClipboard.Current != NEClipboard.System)
-					Dispatcher.Invoke(() => Clipboarder.SetSystem());
+				Clipboarder.SetSystem(Dispatcher);
 			});
 		}
 

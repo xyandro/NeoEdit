@@ -6,8 +6,7 @@ namespace NeoEdit.Common
 {
 	public class NEClipboard : IEnumerable<IReadOnlyList<string>>
 	{
-		public static NEClipboard System { get; set; }
-		public static NEClipboard Current { get; set; }
+		public static NEClipboard Current { get; set; } = new NEClipboard();
 
 		List<IReadOnlyList<string>> stringLists = new List<IReadOnlyList<string>>();
 		public bool? IsCut { get; set; } = null;
