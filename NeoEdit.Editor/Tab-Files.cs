@@ -614,7 +614,7 @@ namespace NeoEdit.Editor
 							list =>
 							{
 								if (list.Count == 1)
-									return new StringSearcher(list[0], matchCase: result.MatchCase, firstMatchOnly: true) as ISearcher;
+									return new StringSearcher(list[0], matchCase: result.MatchCase, skipSpace: result.SkipSpace, firstMatchOnly: true) as ISearcher;
 								return new StringsSearcher(list, matchCase: result.MatchCase, firstMatchOnly: true) as ISearcher;
 							});
 				}

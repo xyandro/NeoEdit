@@ -31,3 +31,5 @@ Draw nodes instead of selections if available
 Nodes navigation - UpDown/LeftRight/ParentChild/Sequential
 All content types should have a parent that includes entire document
 Type qualify/unqualify all names (intellisense)
+Make searchers accept NEText with index and length
+Make configuration dialogs return some interface

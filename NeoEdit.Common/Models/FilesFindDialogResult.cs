@@ -12,5 +12,6 @@ namespace NeoEdit.Common.Models
 		public bool IsBinary { get; set; }
 		public HashSet<Coder.CodePage> CodePages { get; set; }
 		public bool MatchCase { get; set; }
+		public bool SkipSpace { get; set; }
 	}
 }

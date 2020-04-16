@@ -21,6 +21,7 @@ namespace NeoEdit.UI.Dialogs
 			public bool IsBinary { get; set; }
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
+			public bool SkipSpace { get; set; }
 			public bool EntireSelection { get; set; }
 			public bool KeepMatching { get; set; }
 			public bool RemoveMatching { get; set; }
@@ -47,6 +48,8 @@ namespace NeoEdit.UI.Dialogs
 		[DepProp]
 		public bool MatchCase { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
+		public bool SkipSpace { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
 		public bool SelectionOnly { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool EntireSelection { get { return UIHelper<EditFindFindDialog>.GetPropValue<bool>(this); } set { UIHelper<EditFindFindDialog>.SetPropValue(this, value); } }
@@ -62,7 +65,9 @@ namespace NeoEdit.UI.Dialogs
 			UIHelper<EditFindFindDialog>.Register();
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsExpression, (obj, o, n) =>
 			{
-				if (!obj.IsExpression)
+				if (obj.IsExpression)
+					obj.SkipSpace = false;
+				else
 					obj.AlignSelections = false;
 			});
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.AlignSelections, (obj, o, n) =>
@@ -85,7 +90,7 @@ namespace NeoEdit.UI.Dialogs
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsRegex, (obj, o, n) =>
 			{
 				if (obj.IsRegex)
-					obj.IsBinary = false;
+					obj.IsBinary = obj.SkipSpace = false;
 				else
 					obj.RegexGroups = false;
 			});
@@ -100,7 +105,12 @@ namespace NeoEdit.UI.Dialogs
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.IsBinary, (obj, o, n) =>
 			{
 				if (obj.IsBinary)
-					obj.IsRegex = obj.IsBoolean = false;
+					obj.IsBoolean = obj.IsRegex = obj.SkipSpace = false;
+			});
+			UIHelper<EditFindFindDialog>.AddCallback(a => a.SkipSpace, (obj, o, n) =>
+			{
+				if (obj.SkipSpace)
+					obj.IsExpression = obj.IsRegex = obj.IsBinary = false;
 			});
 			UIHelper<EditFindFindDialog>.AddCallback(a => a.SelectionOnly, (obj, o, n) =>
 			{
@@ -121,7 +131,7 @@ namespace NeoEdit.UI.Dialogs
 				if (obj.KeepMatching)
 				{
 					obj.SelectionOnly = true;
-					obj.RemoveMatching = obj.RegexGroups = false;
+					obj.RegexGroups = obj.RemoveMatching = false;
 				}
 				else if (!obj.RemoveMatching)
 					obj.IsBoolean = obj.EntireSelection = false;
@@ -131,7 +141,7 @@ namespace NeoEdit.UI.Dialogs
 				if (obj.RemoveMatching)
 				{
 					obj.SelectionOnly = true;
-					obj.KeepMatching = obj.RegexGroups = false;
+					obj.RegexGroups = obj.KeepMatching = false;
 				}
 				else if (!obj.KeepMatching)
 					obj.IsBoolean = obj.EntireSelection = false;
@@ -164,6 +174,7 @@ namespace NeoEdit.UI.Dialogs
 				IsBinary = IsBinary,
 				WholeWords = WholeWords,
 				MatchCase = MatchCase,
+				SkipSpace = SkipSpace,
 				EntireSelection = EntireSelection,
 				KeepMatching = KeepMatching,
 				RemoveMatching = RemoveMatching,
@@ -183,6 +194,7 @@ namespace NeoEdit.UI.Dialogs
 			IsBinary = checkBoxStatus.IsBinary;
 			WholeWords = checkBoxStatus.WholeWords;
 			MatchCase = checkBoxStatus.MatchCase;
+			SkipSpace = checkBoxStatus.SkipSpace;
 			EntireSelection = checkBoxStatus.EntireSelection;
 			KeepMatching = checkBoxStatus.KeepMatching;
 			RemoveMatching = checkBoxStatus.RemoveMatching;
@@ -199,7 +211,25 @@ namespace NeoEdit.UI.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new EditFindFindDialogResult { Text = Text, IsExpression = IsExpression, AlignSelections = AlignSelections, IsBoolean = IsBoolean, IsRegex = IsRegex, RegexGroups = RegexGroups, IsBinary = IsBinary, CodePages = IsBinary ? CodePages : null, WholeWords = WholeWords, MatchCase = MatchCase, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection, KeepMatching = KeepMatching, RemoveMatching = RemoveMatching, Type = (EditFindFindDialogResult.ResultType)(sender as FrameworkElement).Tag };
+			result = new EditFindFindDialogResult
+			{
+				Text = Text,
+				IsExpression = IsExpression,
+				AlignSelections = AlignSelections,
+				IsBoolean = IsBoolean,
+				IsRegex = IsRegex,
+				RegexGroups = RegexGroups,
+				IsBinary = IsBinary,
+				CodePages = IsBinary ? CodePages : null,
+				WholeWords = WholeWords,
+				MatchCase = MatchCase,
+				SkipSpace = SkipSpace,
+				SelectionOnly = SelectionOnly,
+				EntireSelection = EntireSelection,
+				KeepMatching = KeepMatching,
+				RemoveMatching = RemoveMatching,
+				Type = (EditFindFindDialogResult.ResultType)(sender as FrameworkElement).Tag
+			};
 			text.AddCurrentSuggestion(GetCheckBoxStatus());
 
 			DialogResult = true;
@@ -221,7 +251,7 @@ namespace NeoEdit.UI.Dialogs
 
 		void Reset(object sender = null, RoutedEventArgs e = null)
 		{
-			IsExpression = AlignSelections = IsBoolean = IsRegex = RegexGroups = IsBinary = WholeWords = MatchCase = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
+			IsExpression = AlignSelections = IsBoolean = IsRegex = RegexGroups = IsBinary = WholeWords = MatchCase = SkipSpace = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
 			CodePages = startCodePages;
 		}
 

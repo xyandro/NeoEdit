@@ -19,6 +19,7 @@ namespace NeoEdit.UI.Dialogs
 			public bool IsBinary { get; set; }
 			public HashSet<Coder.CodePage> CodePages { get; set; }
 			public bool MatchCase { get; set; }
+			public bool SkipSpace { get; set; }
 		}
 
 		[DepProp]
@@ -35,6 +36,8 @@ namespace NeoEdit.UI.Dialogs
 		public HashSet<Coder.CodePage> CodePages { get { return UIHelper<FilesFindDialog>.GetPropValue<HashSet<Coder.CodePage>>(this); } set { UIHelper<FilesFindDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool MatchCase { get { return UIHelper<FilesFindDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindDialog>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool SkipSpace { get { return UIHelper<FilesFindDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesFindDialog>.SetPropValue(this, value); } }
 
 		public NEVariables Variables { get; }
 
@@ -43,7 +46,9 @@ namespace NeoEdit.UI.Dialogs
 			UIHelper<FilesFindDialog>.Register();
 			UIHelper<FilesFindDialog>.AddCallback(a => a.IsExpression, (obj, o, n) =>
 			{
-				if (!obj.IsExpression)
+				if (obj.IsExpression)
+					obj.SkipSpace = false;
+				else
 					obj.AlignSelections = false;
 			});
 			UIHelper<FilesFindDialog>.AddCallback(a => a.AlignSelections, (obj, o, n) =>
@@ -54,12 +59,17 @@ namespace NeoEdit.UI.Dialogs
 			UIHelper<FilesFindDialog>.AddCallback(a => a.IsRegex, (obj, o, n) =>
 			{
 				if (obj.IsRegex)
-					obj.IsBinary = false;
+					obj.IsBinary = obj.SkipSpace = false;
 			});
 			UIHelper<FilesFindDialog>.AddCallback(a => a.IsBinary, (obj, o, n) =>
 			{
 				if (obj.IsBinary)
-					obj.IsRegex = false;
+					obj.IsRegex = obj.SkipSpace = false;
+			});
+			UIHelper<FilesFindDialog>.AddCallback(a => a.SkipSpace, (obj, o, n) =>
+			{
+				if (obj.SkipSpace)
+					obj.IsExpression = obj.IsRegex = obj.IsBinary = false;
 			});
 		}
 
@@ -84,6 +94,7 @@ namespace NeoEdit.UI.Dialogs
 				IsBinary = IsBinary,
 				CodePages = CodePages,
 				MatchCase = MatchCase,
+				SkipSpace = SkipSpace,
 			};
 		}
 
@@ -98,6 +109,7 @@ namespace NeoEdit.UI.Dialogs
 			IsBinary = checkBoxStatus.IsBinary;
 			CodePages = checkBoxStatus.CodePages;
 			MatchCase = checkBoxStatus.MatchCase;
+			SkipSpace = checkBoxStatus.SkipSpace;
 		}
 
 		void OnAcceptSuggestion(string text, object data) => SetCheckBoxStatus(data as CheckBoxStatus);
@@ -111,7 +123,17 @@ namespace NeoEdit.UI.Dialogs
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new FilesFindDialogResult { Text = Text, IsExpression = IsExpression, AlignSelections = AlignSelections, IsRegex = IsRegex, IsBinary = IsBinary, CodePages = IsBinary ? CodePages : null, MatchCase = MatchCase };
+			result = new FilesFindDialogResult
+			{
+				Text = Text,
+				IsExpression = IsExpression,
+				AlignSelections = AlignSelections,
+				IsRegex = IsRegex,
+				IsBinary = IsBinary,
+				CodePages = IsBinary ? CodePages : null,
+				MatchCase = MatchCase,
+				SkipSpace = SkipSpace,
+			};
 			text.AddCurrentSuggestion(GetCheckBoxStatus());
 
 			DialogResult = true;
@@ -133,7 +155,7 @@ namespace NeoEdit.UI.Dialogs
 
 		void Reset(object sender = null, RoutedEventArgs e = null)
 		{
-			IsExpression = AlignSelections = IsRegex = MatchCase = false;
+			IsExpression = AlignSelections = IsRegex = MatchCase = SkipSpace = false;
 			IsBinary = true;
 			CodePages = new HashSet<Coder.CodePage>(Coder.DefaultCodePages);
 		}

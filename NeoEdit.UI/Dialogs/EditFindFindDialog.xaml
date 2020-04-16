@@ -45,6 +45,7 @@
 		<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 			<CheckBox Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
+			<CheckBox Content="Skip s_pace" IsChecked="{Binding SkipSpace, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 		</StackPanel>
 		<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Selection only" IsChecked="{Binding SelectionOnly, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
@@ -67,8 +68,8 @@
 			<StackPanel Grid.Column="2" Orientation="Horizontal">
 				<Button Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="ExpressionHelp" Content="Expression _Help" Padding="2,1" Focusable="False"/>
 				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="RegExHelp" Content="RegEx _Help" Padding="2,1" Focusable="False"/>
-				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="Esca_pe" Click="Escape" Padding="2,1" Focusable="False"/>
-				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="_Unescape" Click="Unescape" Padding="2,1" Focusable="False"/>
+				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="Escape" Click="Escape" Padding="2,1" Focusable="False"/>
+				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="Unescape" Click="Unescape" Padding="2,1" Focusable="False"/>
 			</StackPanel>
 
 			<UniformGrid Grid.Column="4" Rows="1">

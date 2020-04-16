@@ -23,6 +23,7 @@ namespace NeoEdit.Common.Models
 		public HashSet<Coder.CodePage> CodePages { get; set; }
 		public bool WholeWords { get; set; }
 		public bool MatchCase { get; set; }
+		public bool SkipSpace { get; set; }
 		public bool SelectionOnly { get; set; }
 		public bool EntireSelection { get; set; }
 		public bool KeepMatching { get; set; }
