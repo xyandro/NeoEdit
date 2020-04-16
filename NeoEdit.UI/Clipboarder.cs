@@ -45,9 +45,13 @@ namespace NeoEdit.UI
 			[return: MarshalAs(UnmanagedType.Bool)]
 			static extern bool AddClipboardFormatListener(IntPtr hwnd);
 		}
-		static ClipboardChangeNotifier clipboardChangeNotifier = new ClipboardChangeNotifier(() => clipboardChanged = true);
+		static ClipboardChangeNotifier clipboardChangeNotifier;
 
-		static public void Initialize() { } // Must be called from dispatcher thread to set up listener properly
+		static public void Initialize()
+		{
+			// Must be called from dispatcher thread to set up listener properly
+			clipboardChangeNotifier = new ClipboardChangeNotifier(() => clipboardChanged = true);
+		}
 
 		static readonly int PID = Process.GetCurrentProcess().Id;
 		static bool clipboardChanged = true;
