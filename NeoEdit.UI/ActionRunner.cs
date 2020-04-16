@@ -29,10 +29,7 @@ namespace NeoEdit.UI
 			}
 		}
 
-		public ActionRunner()
-		{
-			new Thread(() => RunActionsThread()).Start();
-		}
+		public ActionRunner() => new Thread(RunActionsThread) { Name = nameof(ActionRunner) }.Start();
 
 		public bool SkipDraw()
 		{

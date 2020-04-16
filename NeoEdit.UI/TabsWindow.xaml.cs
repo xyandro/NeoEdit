@@ -16,7 +16,7 @@ namespace NeoEdit.UI
 {
 	partial class TabsWindow : ITabsWindow
 	{
-		static readonly ActionRunner commandRunner = new ActionRunner();
+		static readonly ActionRunner actionRunner = new ActionRunner();
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
 
@@ -50,7 +50,7 @@ namespace NeoEdit.UI
 		public void HandleCommand(ExecuteState state)
 		{
 			state.Modifiers = Keyboard.Modifiers;
-			commandRunner.Add(moreQueued =>
+			actionRunner.Add(moreQueued =>
 			{
 				if (NEClipboard.System == null)
 					Dispatcher.Invoke(() => Clipboarder.GetSystem());
@@ -112,7 +112,7 @@ namespace NeoEdit.UI
 			if (key == Key.Escape)
 			{
 				e.Handled = Tabs.CancelActive() || e.Handled;
-				e.Handled = commandRunner.CancelActive() || e.Handled;
+				e.Handled = actionRunner.CancelActive() || e.Handled;
 				if (e.Handled)
 					return;
 			}

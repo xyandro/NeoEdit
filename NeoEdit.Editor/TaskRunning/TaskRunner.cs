@@ -26,7 +26,7 @@ namespace NeoEdit.Editor.TaskRunning
 		static int running = 0;
 		static Exception exception;
 
-		static TaskRunner() => Enumerable.Range(0, NumThreads).ForEach(x => new Thread(TaskRunnerThread).Start());
+		static TaskRunner() => Enumerable.Range(1, NumThreads).ForEach(x => new Thread(TaskRunnerThread) { Name = $"TaskRunner {x}" }.Start());
 
 		internal static void Add(TaskRunnerData data)
 		{
