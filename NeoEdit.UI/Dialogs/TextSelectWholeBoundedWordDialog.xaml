@@ -13,6 +13,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -27,7 +28,13 @@
 			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 		</StackPanel>
 
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
+			<Button Click="OnTypeClick" Tag="Words" Content="_Words" Padding="10,1"/>
+			<Button Click="OnTypeClick" Tag="Space" Content="S_pace" Padding="10,1"/>
+			<Button Click="OnTypeClick" Tag="Strings" Content="S_trings" Padding="10,1"/>
+		</UniformGrid>
+
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

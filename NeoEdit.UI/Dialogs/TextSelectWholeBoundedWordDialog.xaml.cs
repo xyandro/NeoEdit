@@ -44,6 +44,16 @@ namespace NeoEdit.UI.Dialogs
 			Location = TrimLocation.Both;
 		}
 
+		void OnTypeClick(object sender, RoutedEventArgs e)
+		{
+			switch ((sender as FrameworkElement).Tag)
+			{
+				case "Words": Chars = ALPHANUMERIC; break;
+				case "Space": Chars = WHITESPACE; break;
+				case "Strings": Chars = STRING; break;
+			}
+		}
+
 		TextSelectWholeBoundedWordDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{

@@ -30,3 +30,4 @@ New content parsing - Handle nodes that contain other nodes
 Draw nodes instead of selections if available
 Nodes navigation - UpDown/LeftRight/ParentChild/Sequential
 All content types should have a parent that includes entire document
+Type qualify/unqualify all names (intellisense)
