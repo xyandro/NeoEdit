@@ -39,7 +39,7 @@ namespace NeoEdit.Editor
 					if (Position.HasValue)
 						return Math.Max(0, Math.Min(Position.Value, tab.TextView.MaxPosition));
 
-					var line = Math.Max(0, Math.Min(tab.TextView.GetPositionLine(Line ?? lastPosition?.Line ?? tab.TextView.GetPositionLine(position)), tab.TextView.NumLines - 1));
+					var line = Math.Max(0, Math.Min(Line ?? lastPosition?.Line ?? tab.TextView.GetPositionLine(position), tab.TextView.NumLines - 1));
 					var index = Index ?? lastPosition?.Index;
 					if (index.HasValue)
 						index = Math.Max(0, Math.Min(index.Value, tab.TextView.GetLineLength(line)));
