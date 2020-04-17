@@ -106,8 +106,6 @@ namespace NeoEdit.Common
 		void RunWindowFontSizeDialog();
 		NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog();
 		void RunWCFInterceptDialog();
-		T RunProgressDialog<T>(string text, Func<Func<bool>, Action<int>, T> action);
-		void RunProgressDialog(string text, Action<Func<bool>, Action<int>> action);
 		HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null);
 		void RunHelpAboutDialog();
 		OpenFileDialogResult RunOpenFileDialog(string defaultExt, string initialDirectory = null, string filter = null, int filterIndex = 0, bool multiselect = false);

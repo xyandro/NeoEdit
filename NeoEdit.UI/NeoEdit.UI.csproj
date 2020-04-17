@@ -668,13 +668,6 @@
     <Compile Include="Dialogs\PositionGotoDialog.xaml.cs">
       <DependentUpon>PositionGotoDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\ProgressDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\ProgressDialog.xaml.cs">
-      <DependentUpon>ProgressDialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\RegExHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

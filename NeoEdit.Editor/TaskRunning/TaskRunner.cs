@@ -17,6 +17,7 @@ namespace NeoEdit.Editor.TaskRunning
 		public static FluentTaskRunner<T> AsTaskRunner<T>(this IReadOnlyList<T> list) => new FluentTaskRunner<T>(list, list.Count);
 		public static FluentTaskRunner<T> Create<T>(this IEnumerable<T> list, int count) => new FluentTaskRunner<T>(list, count);
 		public static void Run(Action action) => new FluentTaskRunner<int>(new List<int> { 0 }, 1).ParallelForEach(obj => action());
+		public static void Run(Action<ITaskRunnerProgress> action) => new FluentTaskRunner<int>(new List<int> { 0 }, 1).ParallelForEach((obj, progress) => action(progress));
 		public static FluentTaskRunner<int> Range(int start, int count) => Create(Enumerable.Range(start, count), count);
 		public static FluentTaskRunner<T> Repeat<T>(T item, int count) => Create(Enumerable.Repeat(item, count), count);
 

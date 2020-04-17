@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
+using NeoEdit.Editor.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -49,14 +50,18 @@ namespace NeoEdit.Editor
 			var oldLocation = Assembly.GetEntryAssembly().Location;
 			var newLocation = Path.Combine(Path.GetDirectoryName(oldLocation), $"{Path.GetFileNameWithoutExtension(oldLocation)}-Update{Path.GetExtension(oldLocation)}");
 
-			byte[] result = null;
-
-			TabsWindow.RunProgressDialog("Downloading new version...", (canceled, progress) =>
+			TaskRunner.Run(progress =>
 			{
+				byte[] result = null;
+
 				var finished = new ManualResetEvent(false);
 				using (var client = new WebClient())
 				{
-					client.DownloadProgressChanged += (s, e) => progress(e.ProgressPercentage);
+					client.DownloadProgressChanged += (s, e) =>
+					{
+						try { progress.SetProgress(e.ProgressPercentage, 100); }
+						catch { client.CancelAsync(); }
+					};
 					client.DownloadDataCompleted += (s, e) =>
 					{
 						if (!e.Cancelled)
@@ -64,19 +69,17 @@ namespace NeoEdit.Editor
 						finished.Set();
 					};
 					client.DownloadDataAsync(new Uri(string.Format(exe, newVersion)));
-					while (!finished.WaitOne(500))
-						if (canceled())
-							client.CancelAsync();
+					finished.WaitOne();
 				}
+
+				if (result == null)
+					return;
+
+				File.WriteAllBytes(newLocation, result);
+
+				Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
+				TabsWindow.RunMessageDialog("Info", "The program will be updated after exiting.");
 			});
-
-			if (result == null)
-				return;
-
-			File.WriteAllBytes(newLocation, result);
-
-			Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
-			TabsWindow.RunMessageDialog("Info", "The program will be updated after exiting.");
 		}
 
 		void Execute_Help_Extract()

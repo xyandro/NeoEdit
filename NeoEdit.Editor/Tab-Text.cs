@@ -6,6 +6,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.RevRegEx;
+using NeoEdit.Editor.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -231,7 +232,7 @@ namespace NeoEdit.Editor
 		void Execute_Text_FirstDistinct()
 		{
 			var result = state.Configuration as TextFirstDistinctDialogResult;
-			var opResult = Tabs.TabsWindow.RunProgressDialog("Finding characters...", (canceled, progress) =>
+			TaskRunner.Run(progress =>
 			{
 				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
 				var data = GetSelectionStrings().Select(str => result.MatchCase ? str : str.ToLowerInvariant()).Select((str, strIndex) => Tuple.Create(str, strIndex, str.Indexes(ch => valid.Contains(ch)).Distinct(index => str[index]).ToList())).OrderBy(tuple => tuple.Item3.Count).ToList();
@@ -249,9 +250,7 @@ namespace NeoEdit.Editor
 
 				while (true)
 				{
-					if (canceled())
-						break;
-
+					progress.SetProgress(0, 1); // Will throw if task has been canceled
 					if (moveBack)
 					{
 						currentScore -= score[current];
@@ -302,11 +301,8 @@ namespace NeoEdit.Editor
 				for (var ctr = 0; ctr < data.Count; ++ctr)
 					map[data[ctr].Item2] = ctr;
 
-				return Selections.Select((range, index) => Range.FromIndex(range.Start + data[map[index]].Item3[best[map[index]]], 1)).ToList();
+				Selections = Selections.Select((range, index) => Range.FromIndex(range.Start + data[map[index]].Item3[best[map[index]]], 1)).ToList();
 			});
-
-			if (opResult != null)
-				Selections = opResult;
 		}
 
 		void Execute_Text_RepeatCount()
