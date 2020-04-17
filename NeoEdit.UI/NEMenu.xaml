@@ -1091,7 +1091,7 @@
 		<controls:NEMenuItem Visibility="{Binding Path=(common:Settings.CanExtract), Converter={converters:BoolToVisibleCollapsedConverter}}" Header="_Extract" CommandEnum="Help_Extract" ToolTip="Extract files on disk (speeds up load time)"/>
 		<Separator/>
 		<controls:NEMenuItem Header="Run _GC" CommandEnum="Help_RunGC" ToolTip="Run garbage collection (mainly for debugging)"/>
-		<MenuItem Header="_Stop tasks" InputGestureText="Ctrl+Break" Click="OnStopTasks" ToolTip="Stop all running tasks"/>
+		<MenuItem Header="_Stop tasks" InputGestureText="Esc" Click="OnStopTasks" ToolTip="Stop all running tasks"/>
 		<MenuItem Header="_Kill tasks" InputGestureText="Ctrl+Break" Click="OnKillTasks" ToolTip="Kill all running tasks (can cause program to crash)"/>
 	</MenuItem>
 
