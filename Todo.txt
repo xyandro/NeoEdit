@@ -34,4 +34,3 @@ Type qualify/unqualify all names (intellisense)
 Make searchers accept NEText with index and length
 Make each configuration return own type (maybe an interface with an object implementing several for duplicates)
 Save maybe 10 levels of previous selections
-On exception dialog in release mode, copy exceptions and stack trace on shift+click
