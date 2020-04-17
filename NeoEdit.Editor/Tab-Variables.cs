@@ -105,9 +105,8 @@ namespace NeoEdit.Editor
 			newRegions[region - 1] = DeOverlap(regions);
 		}
 
-		readonly KeysAndValues[] newKeysAndValues = new KeysAndValues[10];
-		readonly KeysAndValues[] changedKeysAndValues = new KeysAndValues[10];
-		KeysAndValues GetKeysAndValues(int kvIndex)
+		readonly KeysAndValues[] newKeysAndValues = new KeysAndValues[Tabs.KeysAndValuesCount];
+		public KeysAndValues GetKeysAndValues(int kvIndex)
 		{
 			if ((kvIndex < 0) || (kvIndex > 9))
 				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
@@ -118,21 +117,24 @@ namespace NeoEdit.Editor
 			return newKeysAndValues[kvIndex];
 		}
 
+		readonly bool[] keysAndValuesSet = new bool[Tabs.KeysAndValuesCount];
+
 		void SetKeysAndValues(int kvIndex, IReadOnlyList<string> values, bool matchCase = false)
 		{
 			if ((kvIndex < 0) || (kvIndex > 9))
 				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
 
 			EnsureInTransaction();
-			newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = new KeysAndValues(values, kvIndex == 0, matchCase);
+			newKeysAndValues[kvIndex] = new KeysAndValues(values, kvIndex == 0, matchCase);
+			keysAndValuesSet[kvIndex] = true;
 		}
 
-		public KeysAndValues GetChangedKeysAndValues(int kvIndex)
+		public bool KeysAndValuesSet(int kvIndex)
 		{
 			if ((kvIndex < 0) || (kvIndex > 9))
 				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
 
-			return changedKeysAndValues[kvIndex];
+			return keysAndValuesSet[kvIndex];
 		}
 
 		string oldDisplayName, newDisplayName;
@@ -168,18 +170,17 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		List<Tab> newTabsToAdd;
+		readonly List<Tab> newTabsToAdd = new List<Tab>();
 		public IReadOnlyList<Tab> TabsToAdd => newTabsToAdd;
 		void QueueAddTab(Tab tab)
 		{
 			EnsureInTransaction();
-			if (newTabsToAdd == null)
-				newTabsToAdd = new List<Tab>();
 			newTabsToAdd.Add(tab);
 		}
 
 		Tuple<IReadOnlyList<string>, bool?> newClipboardData;
-		Tuple<IReadOnlyList<string>, bool?> ClipboardData
+		public bool ClipboardDataSet { get; set; }
+		public Tuple<IReadOnlyList<string>, bool?> ClipboardData
 		{
 			get
 			{
@@ -192,7 +193,8 @@ namespace NeoEdit.Editor
 			set
 			{
 				EnsureInTransaction();
-				newClipboardData = ChangedClipboardData = value;
+				newClipboardData = value;
+				ClipboardDataSet = true;
 			}
 		}
 
@@ -200,9 +202,8 @@ namespace NeoEdit.Editor
 		IReadOnlyList<string> ClipboardCopy { set => ClipboardData = Tuple.Create(value, (bool?)false); }
 		IReadOnlyList<string> ClipboardCut { set => ClipboardData = Tuple.Create(value, (bool?)true); }
 
-		public Tuple<IReadOnlyList<string>, bool?> ChangedClipboardData { get; private set; }
-
-		public IReadOnlyList<string> ChangedDragFiles { get; private set; }
+		readonly List<string> newDragFiles = new List<string>();
+		public IReadOnlyList<string> DragFiles => newDragFiles;
 
 		bool oldAutoRefresh, newAutoRefresh;
 		public bool AutoRefresh
@@ -471,11 +472,15 @@ namespace NeoEdit.Editor
 		{
 			EnsureInTransaction();
 
-			newClipboardData = ChangedClipboardData = null;
-			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
-				newKeysAndValues[kvIndex] = changedKeysAndValues[kvIndex] = null;
-			ChangedDragFiles = null;
-			newTabsToAdd = null;
+			newTabsToAdd.Clear();
+			newClipboardData = null;
+			ClipboardDataSet = false;
+			for (var kvIndex = 0; kvIndex < Tabs.KeysAndValuesCount; ++kvIndex)
+			{
+				newKeysAndValues[kvIndex] = null;
+				keysAndValuesSet[kvIndex] = false;
+			}
+			newDragFiles.Clear();
 			state = null;
 		}
 

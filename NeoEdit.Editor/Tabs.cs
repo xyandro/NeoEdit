@@ -15,6 +15,8 @@ namespace NeoEdit.Editor
 {
 	public partial class Tabs : ITabs
 	{
+		public const int KeysAndValuesCount = 10;
+
 		public ITabsWindow TabsWindow { get; }
 
 		public static List<Tabs> Instances { get; } = new List<Tabs>();
@@ -54,7 +56,7 @@ namespace NeoEdit.Editor
 		IReadOnlyDictionary<ITab, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
 		{
 			var empty = Tuple.Create(new List<string>() as IReadOnlyList<string>, default(bool?));
-			var clipboardDataMap = AllTabs.ToDictionary(x => x as ITab, x => empty);
+			var clipboardDataMap = ActiveTabs.ToDictionary(x => x as ITab, x => empty);
 
 			if (NEClipboard.Current.Count == ActiveTabs.Count)
 				NEClipboard.Current.ForEach((cb, index) => clipboardDataMap[ActiveTabs.GetIndex(index)] = Tuple.Create(cb, NEClipboard.Current.IsCut));
@@ -71,7 +73,7 @@ namespace NeoEdit.Editor
 			return clipboardDataMap;
 		}
 
-		static IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
+		static IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), KeysAndValuesCount).ToArray();
 		Dictionary<ITab, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
 		{
 			var empty = new KeysAndValues(new List<string>(), kvIndex == 0);
@@ -392,28 +394,42 @@ namespace NeoEdit.Editor
 
 		void PostExecute()
 		{
-			ActiveTabs.Select(tab => tab.TabsToAdd).NonNull().SelectMany().ForEach(tab => AddTab(tab));
-
-			var clipboardDatas = ActiveTabs.Select(tab => tab.ChangedClipboardData).NonNull().ToList();
-			if (clipboardDatas.Any())
+			NEClipboard setClipboard = null;
+			List<KeysAndValues>[] setKeysAndValues = null;
+			var dragFiles = new List<string>();
+			foreach (var tab in ActiveTabs)
 			{
-				var newClipboard = new NEClipboard();
-				foreach (var clipboardData in clipboardDatas)
+				tab.TabsToAdd.ForEach(newTab => AddTab(newTab));
+
+				if (tab.ClipboardDataSet)
 				{
-					newClipboard.Add(clipboardData.Item1);
-					newClipboard.IsCut = clipboardData.Item2;
+					if (setClipboard == null)
+						setClipboard = new NEClipboard();
+					setClipboard.Add(tab.ClipboardData.Item1);
+					setClipboard.IsCut = tab.ClipboardData.Item2;
 				}
-				NEClipboard.Current = newClipboard;
+
+				for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
+					if (tab.KeysAndValuesSet(kvIndex))
+					{
+						if (setKeysAndValues == null)
+							setKeysAndValues = new List<KeysAndValues>[KeysAndValuesCount];
+						if (setKeysAndValues[kvIndex] == null)
+							setKeysAndValues[kvIndex] = new List<KeysAndValues>();
+						setKeysAndValues[kvIndex].Add(tab.GetKeysAndValues(kvIndex));
+					}
+
+				dragFiles.AddRange(tab.DragFiles);
 			}
 
-			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
-			{
-				var newKeysAndValues = ActiveTabs.Select(tab => tab.GetChangedKeysAndValues(kvIndex)).NonNull().ToList();
-				if (newKeysAndValues.Any())
-					keysAndValues[kvIndex] = newKeysAndValues;
-			}
+			if (setClipboard != null)
+				NEClipboard.Current = setClipboard;
 
-			var dragFiles = ActiveTabs.Select(tab => tab.ChangedDragFiles).NonNull().SelectMany().Distinct().ToList();
+			if (setKeysAndValues != null)
+				for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
+					if (setKeysAndValues[kvIndex] != null)
+						keysAndValues[kvIndex] = setKeysAndValues[kvIndex];
+
 			if (dragFiles.Any())
 			{
 				var nonExisting = dragFiles.Where(x => !File.Exists(x)).ToList();
