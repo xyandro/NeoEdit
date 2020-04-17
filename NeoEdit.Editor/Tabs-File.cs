@@ -97,6 +97,7 @@ namespace NeoEdit.Editor
 		{
 			foreach (var tab in AllTabs)
 			{
+				AddToTransaction(tab);
 				tab.VerifyCanClose();
 				RemoveTab(tab);
 			}

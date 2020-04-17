@@ -12,7 +12,10 @@ namespace NeoEdit.Editor
 		{
 			LastActivated = DateTime.Now;
 			foreach (var tab in AllTabs)
+			{
+				AddToTransaction(tab);
 				tab.Activated();
+			}
 		}
 
 		void Execute_Internal_AddTab(Tab tab) => AddTab(tab);

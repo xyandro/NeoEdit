@@ -34,4 +34,3 @@ Make searchers accept NEText with index and length
 Make each configuration return own type (maybe an interface with an object implementing several for duplicates)
 Save maybe 10 levels of previous selections
 Make everything use TaskRunner so we can see progress/cancel
-Editing a macro while it's open gives error
