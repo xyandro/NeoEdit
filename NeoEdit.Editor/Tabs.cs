@@ -146,7 +146,7 @@ namespace NeoEdit.Editor
 			};
 		}
 
-		public bool CancelActive()
+		public bool StopTasks()
 		{
 			var result = false;
 			if (playingMacro != null)
@@ -157,6 +157,13 @@ namespace NeoEdit.Editor
 			if (TaskRunner.Cancel())
 				result = true;
 			return result;
+		}
+
+		public bool KillTasks()
+		{
+			playingMacro = null;
+			TaskRunner.ForceCancel();
+			return true;
 		}
 
 		void PlayMacro()

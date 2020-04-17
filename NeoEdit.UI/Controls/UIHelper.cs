@@ -172,11 +172,11 @@ namespace NeoEdit.UI.Controls
 
 		static void AuditMenu(string path, ItemsControl menu, List<string> errors)
 		{
-			var children = menu.Items.OfType<MenuItem>().Cast<MenuItem>().ToList();
+			var children = menu.Items.OfType<MenuItem>().ToList();
 			if (!children.Any())
 				return;
 
-			children.ForEach(child => AuditMenu($"{path} -> {child.Header.ToString()}", child, errors));
+			children.ForEach(child => AuditMenu($"{path} -> {child.Header}", child, errors));
 
 			var headers = children.Select(child => child.Header.ToString()).ToList();
 

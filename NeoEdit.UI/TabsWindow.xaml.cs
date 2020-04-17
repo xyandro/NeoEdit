@@ -41,6 +41,8 @@ namespace NeoEdit.UI
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
 			InitializeComponent();
 			UIHelper.AuditMenu(menu);
+			menu.StopTasks += StopTasks;
+			menu.KillTasks += KillTasks;
 
 			//NEClipboard.ClipboardChanged += () => statusBar.InvalidateVisual();
 			Font.FontSizeChanged += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_Redraw));
@@ -101,6 +103,23 @@ namespace NeoEdit.UI
 			//e.Handled = true;
 		}
 
+		bool StopTasks()
+		{
+			var result = false;
+			if (actionRunner.CancelActive())
+				result = true;
+			if (Tabs.StopTasks())
+				result = true;
+			return result;
+		}
+
+		bool KillTasks()
+		{
+			actionRunner.CancelActive();
+			Tabs.KillTasks();
+			return true;
+		}
+
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
@@ -110,14 +129,12 @@ namespace NeoEdit.UI
 				key = e.SystemKey;
 
 			if (key == Key.Escape)
-			{
-				e.Handled = Tabs.CancelActive() || e.Handled;
-				e.Handled = actionRunner.CancelActive() || e.Handled;
-				if (e.Handled)
-					return;
-			}
+				e.Handled = StopTasks();
 
-			if (ITabsStatic.HandlesKey(Keyboard.Modifiers, key))
+			if (key == Key.Cancel)
+				e.Handled = KillTasks();
+
+			if ((!e.Handled) && (ITabsStatic.HandlesKey(Keyboard.Modifiers, key)))
 			{
 				HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });
 				e.Handled = true;

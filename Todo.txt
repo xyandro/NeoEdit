@@ -25,7 +25,6 @@ Add finalizers to check that all UI resources get deleted
 Make sure grid shows focused file
 Show which tab exception comes from
 Calculate boolean expression from truth table
-If users presses esc again before everything is canceled terminate and restart TaskRunner threads
 New content parsing - Handle nodes that contain other nodes
 Draw nodes instead of selections if available
 Nodes navigation - UpDown/LeftRight/ParentChild/Sequential
@@ -34,3 +33,5 @@ Type qualify/unqualify all names (intellisense)
 Make searchers accept NEText with index and length
 Make each configuration return own type (maybe an interface with an object implementing several for duplicates)
 Save maybe 10 levels of previous selections
+Style task progress bars better
+Make everything use TaskRunner so we can see progress/cancel

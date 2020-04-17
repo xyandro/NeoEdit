@@ -10,6 +10,7 @@ namespace NeoEdit.Editor.TaskRunning
 	static class TaskRunner
 	{
 		const int DefaultTaskTotal = 1;
+		const int ResetWait = 5000;
 
 		static readonly int NumThreads = Environment.ProcessorCount;
 
@@ -19,21 +20,32 @@ namespace NeoEdit.Editor.TaskRunning
 		public static FluentTaskRunner<int> Range(int start, int count) => Create(Enumerable.Range(start, count), count);
 		public static FluentTaskRunner<T> Repeat<T>(T item, int count) => Create(Enumerable.Repeat(item, count), count);
 
+		static object lockObj = new object();
 		static readonly ManualResetEvent finished = new ManualResetEvent(true);
-		static readonly Semaphore semaphore = new Semaphore(0, int.MaxValue);
+		static Semaphore semaphore;
 		static readonly Queue<TaskRunnerData> tasks = new Queue<TaskRunnerData>();
 		static long current = 0, total = 0;
 		static int running = 0;
 		static Exception exception;
 
-		static TaskRunner() => Enumerable.Range(1, NumThreads).ForEach(x => new Thread(TaskRunnerThread) { Name = $"TaskRunner {x}" }.Start());
+		static List<Thread> threads;
+
+		static TaskRunner() => Start();
+
+		static void Start()
+		{
+			semaphore = new Semaphore(0, int.MaxValue);
+
+			threads = Enumerable.Range(1, NumThreads).ForEach(x => new Thread(TaskRunnerThread) { Name = $"TaskRunner {x}" }).ToList();
+			threads.ForEach(thread => thread.Start());
+		}
 
 		internal static void Add(TaskRunnerData data)
 		{
 			if (data.Count == 0)
 				return;
 
-			lock (semaphore)
+			lock (lockObj)
 			{
 				if (exception != null)
 				{
@@ -42,16 +54,43 @@ namespace NeoEdit.Editor.TaskRunning
 				}
 
 				finished.Reset();
-				lock (finished)
-					total += data.Count * DefaultTaskTotal;
+				total += data.Count * DefaultTaskTotal;
 				tasks.Enqueue(data);
 				semaphore.Release(data.Count);
 			}
 		}
 
+		public static void ForceCancel()
+		{
+			lock (lockObj)
+			{
+				if (finished.WaitOne(0))
+					return;
+				exception = new Exception($"All active tasks killed. Program may be unstable as a result of this operation.");
+			}
+
+			threads.ForEach(thread => thread.Abort());
+			var endWait = DateTime.Now.AddMilliseconds(ResetWait);
+			foreach (var thread in threads)
+				if (!thread.Join(Math.Max(0, (int)(endWait - DateTime.Now).TotalMilliseconds)))
+					throw new Exception("Attempt to abort failed. Everything's probably broken now.");
+
+			lock (lockObj)
+			{
+				finished.Set();
+				semaphore.Dispose();
+				semaphore = null;
+				tasks.Clear();
+				threads = null;
+				current = total = running = 0;
+
+				Start();
+			}
+		}
+
 		public static bool Cancel(Exception ex = null)
 		{
-			lock (semaphore)
+			lock (lockObj)
 			{
 				if (finished.WaitOne(0))
 					return false;
@@ -72,7 +111,7 @@ namespace NeoEdit.Editor.TaskRunning
 					throw exception;
 				}
 
-				lock (finished)
+				lock (lockObj)
 				{
 					current += newCurrent - lastCurrent;
 					lastCurrent = newCurrent;
@@ -91,9 +130,10 @@ namespace NeoEdit.Editor.TaskRunning
 				object obj = null;
 				int index;
 
-				lock (semaphore)
+				lock (lockObj)
 				{
 					task = tasks.Peek();
+
 					if (exception == null)
 					{
 						if (task.Enumerator.MoveNext())
@@ -114,22 +154,24 @@ namespace NeoEdit.Editor.TaskRunning
 					++running;
 				}
 
-				lastCurrent = 0;
-				lastTotal = DefaultTaskTotal;
 				if (exception == null)
 				{
 					try
 					{
+						lastCurrent = 0;
+						lastTotal = DefaultTaskTotal;
+
 						var result = obj;
 						if (task.Func != null)
 							result = task.Func(obj, progress);
 						task.Action?.Invoke(index, result, progress);
+
 						ReportProgress(lastTotal, lastTotal);
 					}
-					catch (Exception ex) { Cancel(ex); }
+					catch (Exception ex) when (!(ex is ThreadAbortException)) { Cancel(ex); }
 				}
 
-				lock (semaphore)
+				lock (lockObj)
 				{
 					--running;
 					if ((running == 0) && (tasks.Count == 0))
@@ -140,8 +182,8 @@ namespace NeoEdit.Editor.TaskRunning
 
 		public static void WaitForFinish(ITabsWindow tabsWindow)
 		{
-			lock (semaphore)
-				if (tasks.Count == 0)
+			lock (lockObj)
+				if (finished.WaitOne(0))
 					return;
 
 			tabsWindow.SetTaskRunnerProgress(0);
@@ -153,7 +195,7 @@ namespace NeoEdit.Editor.TaskRunning
 			}
 			tabsWindow.SetTaskRunnerProgress(null);
 
-			lock (semaphore)
+			lock (lockObj)
 			{
 				var ex = exception;
 
