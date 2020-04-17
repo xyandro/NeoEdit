@@ -18,4 +18,4 @@ LPAREN   : '(' ;
 RPAREN   : ')' ;
 
 STRING   : '"' (~'"' | '""')* '"' -> skip ;
-CONTENT  : ~[<>{}\[\]()"]+ -> skip ;
+CONTENT  : ~[<>{}[\]()"]+ -> skip ;

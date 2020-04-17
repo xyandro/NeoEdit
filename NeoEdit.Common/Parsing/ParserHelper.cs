@@ -15,7 +15,7 @@ namespace NeoEdit.Common.Parsing
 	{
 		class ErrorListener<T> : IAntlrErrorListener<T>
 		{
-			public void SyntaxError(IRecognizer recognizer, T offendingSymbol, int line, int pos, string msg, RecognitionException e)
+			public void SyntaxError(TextWriter output, IRecognizer recognizer, T offendingSymbol, int line, int pos, string msg, RecognitionException e)
 			{
 				throw new ParserException(line, pos, msg, e);
 			}
@@ -65,7 +65,7 @@ namespace NeoEdit.Common.Parsing
 				parser.RemoveErrorListeners();
 				parser.AddErrorListener(new ErrorListener<IToken>());
 			}
-			parser.Interpreter.PredictionMode = PredictionMode.Sll;
+			parser.Interpreter.PredictionMode = PredictionMode.SLL;
 
 			TreeT tree;
 			try
@@ -76,7 +76,7 @@ namespace NeoEdit.Common.Parsing
 			{
 				tokens.Reset();
 				parser.Reset();
-				parser.Interpreter.PredictionMode = PredictionMode.Ll;
+				parser.Interpreter.PredictionMode = PredictionMode.LL;
 				tree = parse(parser);
 			}
 			if (debugPath != null)

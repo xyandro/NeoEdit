@@ -8,7 +8,7 @@ PIPE          : '|' ;
 ASTERISK      : '*' ;
 PLUS          : '+' ;
 QUESTION      : '?' ;
-CHAR          : '\\' . | ~[{\[()|?] ;
+CHAR          : '\\' . | ~[{[()|?] ;
 
 mode REPEAT;
 COUNT         : [0-9]+ ;

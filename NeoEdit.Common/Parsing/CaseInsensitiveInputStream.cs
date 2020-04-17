@@ -6,9 +6,9 @@ namespace NeoEdit.Common.Parsing
 	{
 		public CaseInsensitiveInputStream(string input) : base(input) { }
 
-		public override int La(int i)
+		public override int LA(int i)
 		{
-			var value = base.La(i);
+			var value = base.LA(i);
 			if ((value >= char.MinValue) && (value <= char.MaxValue))
 				value = char.ToLower((char)value);
 			return value;
