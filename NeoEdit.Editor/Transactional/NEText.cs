@@ -4,7 +4,7 @@ using System.Text;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Editor
+namespace NeoEdit.Editor.Transactional
 {
 	public class NEText
 	{

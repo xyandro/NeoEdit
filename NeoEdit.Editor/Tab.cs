@@ -9,6 +9,7 @@ using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.Transactional;
 
 namespace NeoEdit.Editor
 {

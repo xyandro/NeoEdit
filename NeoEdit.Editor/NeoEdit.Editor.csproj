@@ -155,7 +155,6 @@
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="MacroAction.cs" />
-    <Compile Include="NEText.cs" />
     <Compile Include="PortScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Searchers\BinarySearcher.cs" />
@@ -247,15 +246,16 @@
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
     <Compile Include="Tabs.cs" />
-    <Compile Include="TabsList.cs" />
     <Compile Include="TaskRunning\FluentTaskRunner.cs" />
     <Compile Include="TaskRunning\TaskRunner.cs" />
     <Compile Include="TaskRunning\TaskRunnerData.cs" />
     <Compile Include="TaskRunning\TaskRunnerProgress.cs" />
-    <Compile Include="UndoRedo.cs" />
-    <Compile Include="View\INEView.cs" />
-    <Compile Include="View\NEHexView.cs" />
-    <Compile Include="View\NETextView.cs" />
+    <Compile Include="Transactional\NEText.cs" />
+    <Compile Include="Transactional\TabsList.cs" />
+    <Compile Include="Transactional\UndoRedo.cs" />
+    <Compile Include="Transactional\View\INEView.cs" />
+    <Compile Include="Transactional\View\NEHexView.cs" />
+    <Compile Include="Transactional\View\NETextView.cs" />
     <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>
   <ItemGroup>

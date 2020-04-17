@@ -5,6 +5,7 @@ using Antlr4.Runtime;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Editor.Content.HTML.Parser;
+using NeoEdit.Editor.Transactional;
 
 namespace NeoEdit.Editor.Content.HTML
 {

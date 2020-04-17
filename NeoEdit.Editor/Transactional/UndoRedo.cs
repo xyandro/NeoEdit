@@ -2,7 +2,7 @@
 using System.Linq;
 using NeoEdit.Common;
 
-namespace NeoEdit.Editor
+namespace NeoEdit.Editor.Transactional
 {
 	public class UndoRedo
 	{

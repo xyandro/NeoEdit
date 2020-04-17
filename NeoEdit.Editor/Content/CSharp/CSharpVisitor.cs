@@ -7,7 +7,8 @@ using Antlr4.Runtime.Tree;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Editor.Content.CSharp.Parser;
-using NeoEdit.Editor.View;
+using NeoEdit.Editor.Transactional;
+using NeoEdit.Editor.Transactional.View;
 
 namespace NeoEdit.Editor.Content.CSharp
 {

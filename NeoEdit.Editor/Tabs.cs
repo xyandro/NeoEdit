@@ -9,6 +9,7 @@ using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.TaskRunning;
+using NeoEdit.Editor.Transactional;
 
 namespace NeoEdit.Editor
 {

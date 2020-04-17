@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.View;
+using NeoEdit.Editor.Transactional;
+using NeoEdit.Editor.Transactional.View;
 
 namespace NeoEdit.Editor
 {

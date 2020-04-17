@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NeoEdit.Common;
 
-namespace NeoEdit.Editor.View
+namespace NeoEdit.Editor.Transactional.View
 {
 	public class NETextView : INEView
 	{

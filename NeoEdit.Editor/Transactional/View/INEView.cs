@@ -1,6 +1,6 @@
 ﻿using NeoEdit.Common;
 
-namespace NeoEdit.Editor.View
+namespace NeoEdit.Editor.Transactional.View
 {
 	public interface INEView
 	{

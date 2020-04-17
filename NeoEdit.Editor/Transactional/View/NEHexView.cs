@@ -1,7 +1,7 @@
 ﻿using System;
 using NeoEdit.Common;
 
-namespace NeoEdit.Editor.View
+namespace NeoEdit.Editor.Transactional.View
 {
 	public class NEHexView : INEView
 	{
