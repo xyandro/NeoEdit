@@ -873,52 +873,20 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
-		<SolidColorBrush x:Key="ProgressBar.Progress" Color="White"/>
-		<SolidColorBrush x:Key="ProgressBar.Background" Color="#404040"/>
-		<SolidColorBrush x:Key="ProgressBar.Border" Color="#808080"/>
 		<Style TargetType="ProgressBar">
-			<Setter Property="Foreground" Value="{StaticResource ProgressBar.Progress}"/>
-			<Setter Property="Background" Value="{StaticResource ProgressBar.Background}"/>
-			<Setter Property="BorderBrush" Value="{StaticResource ProgressBar.Border}"/>
+			<Setter Property="Foreground" Value="#17519c"/>
+			<Setter Property="Background" Value="#0b284d"/>
+			<Setter Property="BorderBrush" Value="#1f71d8"/>
 			<Setter Property="BorderThickness" Value="1"/>
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="ProgressBar">
 						<Grid x:Name="TemplateRoot">
-							<VisualStateManager.VisualStateGroups>
-								<VisualStateGroup x:Name="CommonStates">
-									<VisualState x:Name="Determinate"/>
-									<VisualState x:Name="Indeterminate">
-										<Storyboard RepeatBehavior="Forever">
-											<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="Animation">
-												<EasingDoubleKeyFrame KeyTime="0" Value="0.25"/>
-												<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.25"/>
-												<EasingDoubleKeyFrame KeyTime="0:0:2" Value="0.25"/>
-											</DoubleAnimationUsingKeyFrames>
-											<PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="Animation">
-												<EasingPointKeyFrame KeyTime="0" Value="-0.5,0.5"/>
-												<EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,0.5"/>
-												<EasingPointKeyFrame KeyTime="0:0:2" Value="1.5,0.5"/>
-											</PointAnimationUsingKeyFrames>
-										</Storyboard>
-									</VisualState>
-								</VisualStateGroup>
-							</VisualStateManager.VisualStateGroups>
-							<Border CornerRadius="4" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
-							<Rectangle RadiusX="4" RadiusY="4" x:Name="PART_Track"/>
+							<Rectangle RadiusX="3" RadiusY="3" x:Name="PART_Track" Fill="{TemplateBinding Background}"/>
 							<Grid x:Name="PART_Indicator" ClipToBounds="true" HorizontalAlignment="Left">
-								<Rectangle RadiusX="4" RadiusY="4" x:Name="Indicator" Fill="{TemplateBinding Foreground}"/>
-								<Rectangle RadiusX="4" RadiusY="4" x:Name="Animation" Fill="{TemplateBinding Foreground}" RenderTransformOrigin="0.5,0.5">
-									<Rectangle.RenderTransform>
-										<TransformGroup>
-											<ScaleTransform/>
-											<SkewTransform/>
-											<RotateTransform/>
-											<TranslateTransform/>
-										</TransformGroup>
-									</Rectangle.RenderTransform>
-								</Rectangle>
+								<Rectangle RadiusX="3" RadiusY="3" Fill="{TemplateBinding Foreground}"/>
 							</Grid>
+							<Border CornerRadius="3" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
 						</Grid>
 						<ControlTemplate.Triggers>
 							<Trigger Property="Orientation" Value="Vertical">
@@ -927,9 +895,6 @@
 										<RotateTransform Angle="-90"/>
 									</Setter.Value>
 								</Setter>
-							</Trigger>
-							<Trigger Property="IsIndeterminate" Value="true">
-								<Setter Property="Visibility" TargetName="Indicator" Value="Collapsed"/>
 							</Trigger>
 						</ControlTemplate.Triggers>
 					</ControlTemplate>

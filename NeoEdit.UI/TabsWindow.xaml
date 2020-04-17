@@ -48,8 +48,8 @@
 				<RowDefinition Height="2"/>
 			</Grid.RowDefinitions>
 
-			<ProgressBar Grid.Row="1" Grid.Column="1" Name="macroProgressBar" Foreground="#808080" Minimum="0" Maximum="1" Visibility="Hidden"/>
-			<ProgressBar Grid.Row="3" Grid.Column="1" Name="taskRunnerProgressBar" Foreground="#808080" Minimum="0" Maximum="1" Visibility="Hidden"/>
+			<ProgressBar Grid.Row="1" Grid.Column="1" Name="macroProgressBar" Minimum="0" Maximum="1" Visibility="Hidden"/>
+			<ProgressBar Grid.Row="3" Grid.Column="1" Name="taskRunnerProgressBar" Minimum="0" Maximum="1" Visibility="Hidden"/>
 		</Grid>
 
 	</Grid>
