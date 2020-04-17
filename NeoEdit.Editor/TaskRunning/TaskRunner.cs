@@ -12,14 +12,14 @@ namespace NeoEdit.Editor.TaskRunning
 		const int DefaultTaskTotal = 1;
 		const int ResetWait = 5000;
 
-		static readonly int NumThreads = Environment.ProcessorCount;
+		static readonly int NumThreads = Environment.ProcessorCount; // Use 0 to run synchronously
 
 		public static FluentTaskRunner<T> AsTaskRunner<T>(this IReadOnlyList<T> list) => new FluentTaskRunner<T>(list, list.Count);
-		public static FluentTaskRunner<T> Create<T>(this IEnumerable<T> list, int count) => new FluentTaskRunner<T>(list, count);
+		public static FluentTaskRunner<T> AsTaskRunner<T>(this IEnumerable<T> list, int count) => new FluentTaskRunner<T>(list, count);
 		public static void Run(Action action) => new FluentTaskRunner<int>(new List<int> { 0 }, 1).ParallelForEach(obj => action());
 		public static void Run(Action<ITaskRunnerProgress> action) => new FluentTaskRunner<int>(new List<int> { 0 }, 1).ParallelForEach((obj, progress) => action(progress));
-		public static FluentTaskRunner<int> Range(int start, int count) => Create(Enumerable.Range(start, count), count);
-		public static FluentTaskRunner<T> Repeat<T>(T item, int count) => Create(Enumerable.Repeat(item, count), count);
+		public static FluentTaskRunner<int> Range(int start, int count) => Enumerable.Range(start, count).AsTaskRunner(count);
+		public static FluentTaskRunner<T> Repeat<T>(T item, int count) => Enumerable.Repeat(item, count).AsTaskRunner(count);
 
 		static object lockObj = new object();
 		static readonly ManualResetEvent finished = new ManualResetEvent(true);
@@ -29,7 +29,7 @@ namespace NeoEdit.Editor.TaskRunning
 		static int running = 0;
 		static Exception exception;
 
-		static List<Thread> threads;
+		static readonly List<Thread> threads = new List<Thread>();
 
 		static TaskRunner() => Start();
 
@@ -37,12 +37,18 @@ namespace NeoEdit.Editor.TaskRunning
 		{
 			semaphore = new Semaphore(0, int.MaxValue);
 
-			threads = Enumerable.Range(1, NumThreads).ForEach(x => new Thread(TaskRunnerThread) { Name = $"TaskRunner {x}" }).ToList();
+			threads.AddRange(Enumerable.Range(1, NumThreads).ForEach(x => new Thread(TaskRunnerThread) { Name = $"TaskRunner {x}" }));
 			threads.ForEach(thread => thread.Start());
 		}
 
-		internal static void Add(TaskRunnerData data)
+		public static void Add(TaskRunnerData data)
 		{
+			if (threads.Count == 0)
+			{
+				RunImmediately(data);
+				return;
+			}
+
 			if (data.Count == 0)
 				return;
 
@@ -59,6 +65,26 @@ namespace NeoEdit.Editor.TaskRunning
 				tasks.Enqueue(data);
 				semaphore.Release(data.Count);
 			}
+		}
+
+		static ITaskRunnerProgress progress;
+		static void RunImmediately(TaskRunnerData data)
+		{
+			if (progress == null)
+				progress = new TaskRunnerProgress();
+
+			while (data.Enumerator.MoveNext())
+			{
+				var result = data.Enumerator.Current;
+				if (data.Func != null)
+					result = data.Func(result, progress);
+				data.Action?.Invoke(data.NextIndex, result, progress);
+				data.NextIndex++;
+			}
+			if (data.NextIndex != data.Count)
+				throw new Exception("Too few items in enumerable");
+			if (data.Enumerator.MoveNext())
+				throw new Exception("Too many items in enumerable");
 		}
 
 		public static void ForceCancel()
@@ -82,7 +108,7 @@ namespace NeoEdit.Editor.TaskRunning
 				semaphore.Dispose();
 				semaphore = null;
 				tasks.Clear();
-				threads = null;
+				threads.Clear();
 				current = total = running = 0;
 
 				Start();

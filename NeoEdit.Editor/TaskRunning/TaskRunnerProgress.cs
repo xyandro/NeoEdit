@@ -7,6 +7,6 @@ namespace NeoEdit.Editor.TaskRunning
 	{
 		public Action<long, long> SetProgressAction;
 
-		public void SetProgress(long current, long total) => SetProgressAction(current, total);
+		public void SetProgress(long current, long total) => SetProgressAction?.Invoke(current, total);
 	}
 }
