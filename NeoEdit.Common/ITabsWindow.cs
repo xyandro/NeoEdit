@@ -12,7 +12,10 @@ namespace NeoEdit.Common
 {
 	public static class ITabsWindowStatic
 	{
+		public delegate string RunCryptorKeyDialogDelegate(Cryptor.Type type, bool encrypt);
+		public static RunCryptorKeyDialogDelegate RunCryptorKeyDialog { get; set; }
 		public static Func<ITabs, ITabsWindow> CreateITabsWindow { get; set; }
+		public static Action<Exception> ShowExceptionMessage { get; set; }
 	}
 
 	public interface ITabsWindow

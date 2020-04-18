@@ -1,9 +1,10 @@
 ﻿using System;
 using Antlr4.Runtime.Misc;
 using NeoEdit.CommandLine.Parser;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 
-namespace NeoEdit.CommandLine
+namespace NeoEdit.Editor.CommandLine
 {
 	class CommandLineVisitor : CommandLineParserBaseVisitor<object>
 	{

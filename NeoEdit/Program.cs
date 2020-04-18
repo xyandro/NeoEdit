@@ -5,8 +5,8 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using NeoEdit.CommandLine;
 using NeoEdit.Common;
+using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor;
 using NeoEdit.UI;
@@ -33,7 +33,7 @@ namespace NeoEdit
 		static void Main()
 		{
 			var commandLine = string.Join(" ", Environment.GetCommandLineArgs().Skip(1).Select(str => $"\"{str}\""));
-			var commandLineParams = CommandLineParams.Parse(commandLine);
+			var commandLineParams = Tabs.ParseCommandLine(commandLine);
 			HandleWaitPID(commandLineParams);
 
 			var masterPid = default(int?);
@@ -46,7 +46,7 @@ namespace NeoEdit
 					SetMasterPID();
 					SetupPipeWait();
 				}
-				App.Run(() => CreateTabs(commandLineParams));
+				App.Run(() => Tabs.CreateTabs(commandLineParams));
 				return;
 			}
 
@@ -69,49 +69,6 @@ namespace NeoEdit
 			pipeClient.Write(buf, 0, buf.Length);
 
 			while ((waitEvent?.WaitOne(1000) == false) && (!proc.HasExited)) { }
-		}
-
-		static void CreateTabs(CommandLineParams commandLineParams)
-		{
-			try
-			{
-				if (commandLineParams.Background)
-					return;
-
-				if (!commandLineParams.Files.Any())
-				{
-					new Tabs(true);
-					return;
-				}
-
-				var shutdownData = string.IsNullOrWhiteSpace(commandLineParams.Wait) ? null : new ShutdownData(commandLineParams.Wait, commandLineParams.Files.Count);
-				var tabs = default(Tabs);
-				if (!commandLineParams.Diff)
-					tabs = Tabs.Instances.OrderByDescending(x => x.LastActivated).FirstOrDefault();
-				if (tabs == null)
-					tabs = new Tabs();
-				foreach (var file in commandLineParams.Files)
-				{
-					if ((file.Existing) && (Tabs.Instances.OrderByDescending(x => x.LastActivated).Select(x => x.GotoTab(file.FileName, file.Line, file.Column, file.Index)).FirstOrDefault(x => x)))
-						continue;
-
-					tabs.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });
-				}
-
-				//if (clParams.Diff)
-				//{
-				//	for (var ctr = 0; ctr + 1 < tabsWindow.Tabs.Count; ctr += 2)
-				//	{
-				//		tabsWindow.Tabs[ctr].DiffTarget = tabsWindow.Tabs[ctr + 1];
-				//		if (tabsWindow.Tabs[ctr].ContentType == ParserType.None)
-				//			tabsWindow.Tabs[ctr].ContentType = tabsWindow.Tabs[ctr + 1].ContentType;
-				//		if (tabsWindow.Tabs[ctr + 1].ContentType == ParserType.None)
-				//			tabsWindow.Tabs[ctr + 1].ContentType = tabsWindow.Tabs[ctr].ContentType;
-				//	}
-				//	tabsWindow.SetLayout(maxColumns: 2);
-				//}
-			}
-			catch (Exception ex) { App.ShowExceptionMessage(ex); }
 		}
 
 		static void HandleWaitPID(CommandLineParams commandLineParams)
@@ -152,7 +109,7 @@ namespace NeoEdit
 				pipe.Read(buf, 0, buf.Length);
 				var commandLineParams = JsonConvert.DeserializeObject<CommandLineParams>(Coder.BytesToString(buf, Coder.CodePage.UTF8));
 
-				App.Run(() => CreateTabs(commandLineParams));
+				App.Run(() => Tabs.CreateTabs(commandLineParams));
 
 				SetupPipeWait();
 			}, null);

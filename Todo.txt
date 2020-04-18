@@ -35,3 +35,5 @@ Make each configuration return own type (maybe an interface with an object imple
 Save maybe 10 levels of previous selections
 Make everything use TaskRunner so we can see progress/cancel
 Fix cursor in binary view
+Different modes (content, text, etc.)
+Eye tracking hardware for cursor

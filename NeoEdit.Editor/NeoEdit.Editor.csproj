@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildSQL;BuildTCSV;BuildXML;CompressWords" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="BuildBalanced;BuildColumns;BuildCommandLine;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildSQL;BuildTCSV;BuildXML;CompressWords" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs" Returns="">
     <Message Text="Building Balanced parser" Importance="High" />
@@ -8,6 +8,10 @@
   <Target Name="BuildColumns" Inputs="Content\Columns\Source\Columns.g4" Outputs="Content\Columns\Parser\ColumnsBaseVisitor.cs;Content\Columns\Parser\ColumnsLexer.cs;Content\Columns\Parser\ColumnsParser.cs;Content\Columns\Parser\ColumnsVisitor.cs" Returns="">
     <Message Text="Building Columns parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.Columns.Parser -o &quot;$(ProjectDir)Content\Columns\Parser&quot; &quot;$(ProjectDir)Content\Columns\Source\Columns.g4&quot;" />
+  </Target>
+  <Target Name="BuildCommandLine" Inputs="CommandLine\Source\CommandLineLexer.g4;CommandLine\Source\CommandLineParser.g4" Outputs="CommandLine\Parser\CommandLineLexer.cs;CommandLine\Parser\CommandLineParser.cs;CommandLine\Parser\CommandLineParserBaseVisitor.cs;CommandLine\Parser\CommandLineParserVisitor.cs" Returns="">
+    <Message Text="Building CommandLine parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Lib\ANTLR\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.CommandLine.Parser -o &quot;$(ProjectDir)CommandLine\Parser&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineLexer.g4&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineParser.g4&quot;" />
   </Target>
   <Target Name="BuildCSharp" Inputs="Content\CSharp\Source\CSharpLexer.g4;Content\CSharp\Source\CSharpParser.g4" Outputs="Content\CSharp\Parser\CSharpParserBaseVisitor.cs;Content\CSharp\Parser\CSharpParserVisitor.cs;Content\CSharp\Parser\CSharpLexer.cs;Content\CSharp\Parser\CSharpParser.cs" Returns="">
     <Message Text="Building CSharp parser" Importance="High" />
@@ -84,6 +88,13 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CacheValue.cs" />
+    <Compile Include="CommandLine\CommandLineVisitor.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineLexer.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineParser.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineParserBaseVisitor.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineParserVisitor.cs" />
+    <None Include="CommandLine\Source\CommandLineLexer.g4" />
+    <None Include="CommandLine\Source\CommandLineParser.g4" />
     <Compile Include="Content\Balanced\BalancedVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedBaseVisitor.cs" />
     <Compile Include="Content\Balanced\Parser\BalancedLexer.cs" />

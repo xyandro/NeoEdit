@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.UI.Controls;
+using NeoEdit.UI.Dialogs;
 
 namespace NeoEdit.UI
 {
@@ -338,8 +342,6 @@ namespace NeoEdit.UI
 			SetForegroundWindow(new WindowInteropHelper(this).Handle);
 		}
 
-		public void ShowExceptionMessage(Exception ex) => Dispatcher.Invoke(() => App.ShowExceptionMessage(ex));
-
 		void SetProgress(ProgressBar progressBar, double? percent)
 		{
 			Dispatcher.Invoke(() =>
@@ -367,6 +369,61 @@ namespace NeoEdit.UI
 				Dispatcher.Invoke(action);
 			else
 				action();
+		}
+
+		public void ShowExceptionMessage(Exception ex)
+		{
+			var window = this;
+			if (!window.IsVisible)
+				window = null;
+			ShowExceptionMessage(ex, window);
+		}
+
+		public static void ShowExceptionMessage(Exception ex, Window window = null)
+		{
+			var message = "";
+			for (var ex2 = ex; ex2 != null; ex2 = ex2.InnerException)
+				message += $"{ex2.Message}\n";
+
+			Message.Run(window, "Error", message);
+
+			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+			{
+				var exceptions = new List<Exception> { ex };
+				while (exceptions[0].InnerException != null)
+					exceptions.Insert(0, exceptions[0].InnerException);
+
+				if ((Helpers.IsDebugBuild) && (Debugger.IsAttached))
+				{
+					var inner = exceptions.First();
+					var er = inner?.StackTrace?.Split('\r', '\n').FirstOrDefault(a => a.Contains(":line"));
+					if (er != null)
+					{
+						var idx = er.LastIndexOf(" in ");
+						if (idx != -1)
+							er = er.Substring(idx + 4);
+						idx = er.IndexOf(":line ");
+						er = $"{er.Substring(0, idx)} {er.Substring(idx + 6)}";
+						NoDelayClipboard.SetText(er);
+					}
+					Debugger.Break();
+				}
+				else
+				{
+					var sb = new StringBuilder();
+					var first = true;
+					foreach (var exception in exceptions)
+					{
+						if (first)
+							first = false;
+						else
+							sb.AppendLine();
+						sb.AppendLine($"Message: {exception?.Message ?? ""}");
+						sb.AppendLine($"StackTrace:\r\n{exception?.StackTrace ?? ""}");
+					}
+					Clipboard.SetText(sb.ToString());
+				}
+			}
 		}
 	}
 }

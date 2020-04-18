@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.CommandLine
+namespace NeoEdit.Common.Models
 {
 	public class CommandLineParams
 	{
@@ -20,7 +20,5 @@ namespace NeoEdit.CommandLine
 		public List<File> Files { get; } = new List<File>();
 		public string Wait { get; set; }
 		public int WaitPID { get; set; }
-
-		public static CommandLineParams Parse(string commandLine) => CommandLineVisitor.GetCommandLineParams(commandLine);
 	}
 }

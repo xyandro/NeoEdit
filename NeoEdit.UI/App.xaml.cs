@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.UI.Dialogs;
@@ -16,15 +11,13 @@ namespace NeoEdit.UI
 	{
 		static App app;
 
-		static App()
-		{
-			NoWindowDialogs.RunCryptorKeyDialog = (type, encrypt) => CryptorKeyDialog.Run(null, type, encrypt);
-		}
-
 		Action startAction;
 		App(Action action)
 		{
+			ITabsWindowStatic.RunCryptorKeyDialog = (type, encrypt) => CryptorKeyDialog.Run(null, type, encrypt);
 			ITabsWindowStatic.CreateITabsWindow = tabs => Dispatcher.Invoke(() => new TabsWindow(tabs));
+			ITabsWindowStatic.ShowExceptionMessage = ex => TabsWindow.ShowExceptionMessage(ex);
+
 			startAction = action;
 			InitializeComponent();
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
@@ -39,57 +32,9 @@ namespace NeoEdit.UI
 			startAction();
 		}
 
-		public static void ShowExceptionMessage(Exception ex)
-		{
-			var message = "";
-			for (var ex2 = ex; ex2 != null; ex2 = ex2.InnerException)
-				message += $"{ex2.Message}\n";
-
-			var window = Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
-			Message.Run(window, "Error", message);
-
-			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
-			{
-				var exceptions = new List<Exception> { ex };
-				while (exceptions[0].InnerException != null)
-					exceptions.Insert(0, exceptions[0].InnerException);
-
-				if ((Helpers.IsDebugBuild) && (Debugger.IsAttached))
-				{
-					var inner = exceptions.First();
-					var er = inner?.StackTrace?.Split('\r', '\n').FirstOrDefault(a => a.Contains(":line"));
-					if (er != null)
-					{
-						var idx = er.LastIndexOf(" in ");
-						if (idx != -1)
-							er = er.Substring(idx + 4);
-						idx = er.IndexOf(":line ");
-						er = $"{er.Substring(0, idx)} {er.Substring(idx + 6)}";
-						NoDelayClipboard.SetText(er);
-					}
-					Debugger.Break();
-				}
-				else
-				{
-					var sb = new StringBuilder();
-					var first = true;
-					foreach (var exception in exceptions)
-					{
-						if (first)
-							first = false;
-						else
-							sb.AppendLine();
-						sb.AppendLine($"Message: {exception?.Message ?? ""}");
-						sb.AppendLine($"StackTrace:\r\n{exception?.StackTrace ?? ""}");
-					}
-					Clipboard.SetText(sb.ToString());
-				}
-			}
-		}
-
 		void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-			ShowExceptionMessage(e.Exception);
+			TabsWindow.ShowExceptionMessage(e.Exception);
 			e.Handled = true;
 		}
 

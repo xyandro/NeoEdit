@@ -8,6 +8,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.CommandLine;
 using NeoEdit.Editor.TaskRunning;
 using NeoEdit.Editor.Transactional;
 
@@ -600,6 +601,57 @@ namespace NeoEdit.Editor
 			}
 
 			return false;
+		}
+
+		public static CommandLineParams ParseCommandLine(string commandLine) => CommandLineVisitor.GetCommandLineParams(commandLine);
+
+		public static void CreateTabs(CommandLineParams commandLineParams)
+		{
+			Tabs tabs = null;
+			try
+			{
+				if (commandLineParams.Background)
+					return;
+
+				if (!commandLineParams.Files.Any())
+				{
+					new Tabs(true);
+					return;
+				}
+
+				var shutdownData = string.IsNullOrWhiteSpace(commandLineParams.Wait) ? null : new ShutdownData(commandLineParams.Wait, commandLineParams.Files.Count);
+				if (!commandLineParams.Diff)
+					tabs = Tabs.Instances.OrderByDescending(x => x.LastActivated).FirstOrDefault();
+				if (tabs == null)
+					tabs = new Tabs();
+				foreach (var file in commandLineParams.Files)
+				{
+					if ((file.Existing) && (Tabs.Instances.OrderByDescending(x => x.LastActivated).Select(x => x.GotoTab(file.FileName, file.Line, file.Column, file.Index)).FirstOrDefault(x => x)))
+						continue;
+
+					tabs.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });
+				}
+
+				//if (clParams.Diff)
+				//{
+				//	for (var ctr = 0; ctr + 1 < tabsWindow.Tabs.Count; ctr += 2)
+				//	{
+				//		tabsWindow.Tabs[ctr].DiffTarget = tabsWindow.Tabs[ctr + 1];
+				//		if (tabsWindow.Tabs[ctr].ContentType == ParserType.None)
+				//			tabsWindow.Tabs[ctr].ContentType = tabsWindow.Tabs[ctr + 1].ContentType;
+				//		if (tabsWindow.Tabs[ctr + 1].ContentType == ParserType.None)
+				//			tabsWindow.Tabs[ctr + 1].ContentType = tabsWindow.Tabs[ctr].ContentType;
+				//	}
+				//	tabsWindow.SetLayout(maxColumns: 2);
+				//}
+			}
+			catch (Exception ex)
+			{
+				if (tabs != null)
+					tabs.TabsWindow.ShowExceptionMessage(ex);
+				else
+					ITabsWindowStatic.ShowExceptionMessage(ex);
+			}
 		}
 	}
 }
