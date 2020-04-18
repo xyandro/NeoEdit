@@ -43,6 +43,7 @@ namespace NeoEdit.UI.Dialogs
 			Answer = DefaultCancel;
 
 			Loaded += (s, e) => SetupButtons();
+			Closed += OnClosed;
 		}
 
 		void SetupButtons()
@@ -86,8 +87,11 @@ namespace NeoEdit.UI.Dialogs
 		void ButtonHandler(object sender, RoutedEventArgs e)
 		{
 			Answer = buttonActions[sender as Button];
+			Closed -= OnClosed;
 			DialogResult = true;
 		}
+
+		void OnClosed(object sender, EventArgs e) => Answer = DefaultCancel;
 
 		public static MessageOptions Run(Window owner, string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None)
 		{
