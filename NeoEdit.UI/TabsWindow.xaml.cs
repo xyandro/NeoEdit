@@ -212,7 +212,7 @@ namespace NeoEdit.UI
 
 		public void CloseWindow()
 		{
-			Dispatcher.Invoke(() =>
+			RunOnUIThread(() =>
 			{
 				Closing -= OnClosing;
 				Close();
@@ -300,7 +300,7 @@ namespace NeoEdit.UI
 		public void Render(RenderParameters renderParameters)
 		{
 			this.renderParameters = renderParameters;
-			Dispatcher.Invoke(() => DrawAll());
+			RunOnUIThread(() => DrawAll());
 		}
 
 		void DrawAll()
@@ -344,7 +344,7 @@ namespace NeoEdit.UI
 
 		void SetProgress(ProgressBar progressBar, double? percent)
 		{
-			Dispatcher.Invoke(() =>
+			RunOnUIThread(() =>
 			{
 				if (percent.HasValue)
 				{
@@ -371,12 +371,20 @@ namespace NeoEdit.UI
 				action();
 		}
 
+		T RunOnUIThread<T>(Func<T> func)
+		{
+			if (!Dispatcher.CheckAccess())
+				return Dispatcher.Invoke(func);
+			else
+				return func();
+		}
+
 		public void ShowExceptionMessage(Exception ex)
 		{
 			var window = this;
 			if (!window.IsVisible)
 				window = null;
-			ShowExceptionMessage(ex, window);
+			RunOnUIThread(() => ShowExceptionMessage(ex, window));
 		}
 
 		public static void ShowExceptionMessage(Exception ex, Window window = null)

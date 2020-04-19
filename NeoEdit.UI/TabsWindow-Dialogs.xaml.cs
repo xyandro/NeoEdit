@@ -16,101 +16,101 @@ namespace NeoEdit.UI
 {
 	partial class TabsWindow
 	{
-		public MessageOptions RunMessageDialog(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None) => Dispatcher.Invoke(() => Message.Run(this, title, text, options, defaultAccept, defaultCancel));
-		public ContentAttributeDialogResult RunContentAttributeDialog(List<ParserNode> nodes) => Dispatcher.Invoke(() => ContentAttributeDialog.Run(this, nodes));
-		public ContentAttributesDialogResult RunContentAttributesDialog(List<ParserNode> nodes) => Dispatcher.Invoke(() => ContentAttributesDialog.Run(this, nodes));
-		public string RunCryptorKeyDialog(Cryptor.Type type, bool encrypt) => Dispatcher.Invoke(() => CryptorKeyDialog.Run(this, type, encrypt));
-		public DatabaseConnectDialogResult RunDatabaseConnectDialog() => Dispatcher.Invoke(() => DatabaseConnectDialog.Run(this));
-		public void RunDatabaseExamineDialog(DbConnection dbConnection) => Dispatcher.Invoke(() => DatabaseExamineDialog.Run(this, dbConnection));
-		public DateTimeFormatDialogResult RunDateTimeFormatDialog(string example) => Dispatcher.Invoke(() => DateTimeFormatDialog.Run(this, example));
-		public DateTimeToTimeZoneDialogResult RunDateTimeToTimeZoneDialog() => Dispatcher.Invoke(() => DateTimeToTimeZoneDialog.Run(this));
-		public DiffFixWhitespaceDialogResult RunDiffFixWhitespaceDialog() => Dispatcher.Invoke(() => DiffFixWhitespaceDialog.Run(this));
-		public DiffIgnoreCharactersDialogResult RunDiffIgnoreCharactersDialog(string ignoreCharacters) => Dispatcher.Invoke(() => DiffIgnoreCharactersDialog.Run(this, ignoreCharacters));
-		public EditConvertDialogResult RunEditConvertDialog() => Dispatcher.Invoke(() => EditConvertDialog.Run(this));
-		public EditDataCompressDialogResult RunEditDataCompressDialog(Coder.CodePage codePage, bool compress) => Dispatcher.Invoke(() => EditDataCompressDialog.Run(this, codePage, compress));
-		public EditDataEncryptDialogResult RunEditDataEncryptDialog(Coder.CodePage codePage, bool encrypt) => Dispatcher.Invoke(() => EditDataEncryptDialog.Run(this, codePage, encrypt));
-		public EditDataHashDialogResult RunEditDataHashDialog(Coder.CodePage codePage) => Dispatcher.Invoke(() => EditDataHashDialog.Run(this, codePage));
-		public EditDataSignDialogResult RunEditDataSignDialog(Coder.CodePage codePage) => Dispatcher.Invoke(() => EditDataSignDialog.Run(this, codePage));
-		public EditExpressionExpressionDialogResult RunEditExpressionExpressionDialog(NEVariables variables, int? numRows = null) => Dispatcher.Invoke(() => EditExpressionExpressionDialog.Run(this, variables, numRows));
-		public EditFindFindDialogResult RunEditFindFindDialog(string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables) => Dispatcher.Invoke(() => EditFindFindDialog.Run(this, text, selectionOnly, codePages, variables));
-		public EditFindRegexReplaceDialogResult RunEditFindRegexReplaceDialog(string text, bool selectionOnly) => Dispatcher.Invoke(() => EditFindRegexReplaceDialog.Run(this, text, selectionOnly));
-		public EditModifyRegionsDialogResult RunEditModifyRegionsDialog() => Dispatcher.Invoke(() => EditModifyRegionsDialog.Run(this));
-		public EditRepeatDialogResult RunEditRepeatDialog(bool selectRepetitions, NEVariables variables) => Dispatcher.Invoke(() => EditRepeatDialog.Run(this, selectRepetitions, variables));
-		public EditRotateDialogResult RunEditRotateDialog(NEVariables variables) => Dispatcher.Invoke(() => EditRotateDialog.Run(this, variables));
-		public EditSortDialogResult RunEditSortDialog() => Dispatcher.Invoke(() => EditSortDialog.Run(this));
-		public EncodingDialogResult RunEncodingDialog(Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None) => Dispatcher.Invoke(() => EncodingDialog.Run(this, codePage, detected));
-		public FileEncodingLineEndingsDialogResult RunFileEncodingLineEndingsDialog(string lineEndings) => Dispatcher.Invoke(() => FileEncodingLineEndingsDialog.Run(this, lineEndings));
-		public FilesCreateFromExpressionsDialogResult RunFilesCreateFromExpressionsDialog(NEVariables variables, Coder.CodePage codePage) => Dispatcher.Invoke(() => FilesCreateFromExpressionsDialog.Run(this, variables, codePage));
-		public FilesFindDialogResult RunFilesFindDialog(NEVariables variables) => Dispatcher.Invoke(() => FilesFindDialog.Run(this, variables));
-		public FilesHashDialogResult RunFilesHashDialog() => Dispatcher.Invoke(() => FilesHashDialog.Run(this));
-		public FilesInsertDialogResult RunFilesInsertDialog() => Dispatcher.Invoke(() => FilesInsertDialog.Run(this));
-		public FilesNamesGetUniqueDialogResult RunFilesNamesGetUniqueDialog() => Dispatcher.Invoke(() => FilesNamesGetUniqueDialog.Run(this));
-		public FilesNamesMakeAbsoluteRelativeDialogResult RunFilesNamesMakeAbsoluteRelativeDialog(NEVariables variables, bool absolute, bool checkType) => Dispatcher.Invoke(() => FilesNamesMakeAbsoluteRelativeDialog.Run(this, variables, absolute, checkType));
-		public FilesOperationsCombineFilesDialogResult RunFilesOperationsCombineFilesDialog(NEVariables variables) => Dispatcher.Invoke(() => FilesOperationsCombineFilesDialog.Run(this, variables));
-		public FilesOperationsCopyMoveDialogResult RunFilesOperationsCopyMoveDialog(NEVariables variables, bool move) => Dispatcher.Invoke(() => FilesOperationsCopyMoveDialog.Run(this, variables, move));
-		public FilesOperationsEncodingDialogResult RunFilesOperationsEncodingDialog() => Dispatcher.Invoke(() => FilesOperationsEncodingDialog.Run(this));
-		public FilesOperationsSplitFileDialogResult RunFilesOperationsSplitFileDialog(NEVariables variables) => Dispatcher.Invoke(() => FilesOperationsSplitFileDialog.Run(this, variables));
-		public FilesSelectByVersionControlStatusDialogResult RunFilesSelectByVersionControlStatusDialog() => Dispatcher.Invoke(() => FilesSelectByVersionControlStatusDialog.Run(this));
-		public FilesSetAttributesDialogResult RunFilesSetAttributesDialog(Dictionary<FileAttributes, bool?> attributes) => Dispatcher.Invoke(() => FilesSetAttributesDialog.Run(this, attributes));
-		public FilesSetSizeDialogResult RunFilesSetSizeDialog(NEVariables variables) => Dispatcher.Invoke(() => FilesSetSizeDialog.Run(this, variables));
-		public FilesSetTimeDialogResult RunFilesSetTimeDialog(NEVariables variables, string expression) => Dispatcher.Invoke(() => FilesSetTimeDialog.Run(this, variables, expression));
-		public FilesSignDialogResult RunFilesSignDialog() => Dispatcher.Invoke(() => FilesSignDialog.Run(this));
-		public GetExpressionDialogResult RunGetExpressionDialog(NEVariables variables, int? numRows = null) => Dispatcher.Invoke(() => GetExpressionDialog.Run(this, variables, numRows));
-		public ImageAddOverlayColorDialogResult RunImageAddOverlayColorDialog(bool add, NEVariables variables) => Dispatcher.Invoke(() => ImageAddOverlayColorDialog.Run(this, add, variables));
-		public ImageAdjustColorDialogResult RunImageAdjustColorDialog(NEVariables variables) => Dispatcher.Invoke(() => ImageAdjustColorDialog.Run(this, variables));
-		public ImageCropDialogResult RunImageCropDialog(NEVariables variables) => Dispatcher.Invoke(() => ImageCropDialog.Run(this, variables));
-		public ImageGIFAnimateDialogResult RunImageGIFAnimateDialog(NEVariables variables) => Dispatcher.Invoke(() => ImageGIFAnimateDialog.Run(this, variables));
-		public ImageGIFSplitDialogResult RunImageGIFSplitDialog(NEVariables variables) => Dispatcher.Invoke(() => ImageGIFSplitDialog.Run(this, variables));
-		public ImageGrabColorDialogResult RunImageGrabColorDialog(string color) => Dispatcher.Invoke(() => ImageGrabColorDialog.Run(this, color));
-		public ImageGrabImageDialogResult RunImageGrabImageDialog(NEVariables variables) => Dispatcher.Invoke(() => ImageGrabImageDialog.Run(this, variables));
-		public ImageRotateDialogResult RunImageRotateDialog(NEVariables variables) => Dispatcher.Invoke(() => ImageRotateDialog.Run(this, variables));
-		public ImageSizeDialogResult RunImageSizeDialog(NEVariables variables) => Dispatcher.Invoke(() => ImageSizeDialog.Run(this, variables));
-		public MacroPlayRepeatDialogResult RunMacroPlayRepeatDialog(Func<string> chooseMacro) => Dispatcher.Invoke(() => MacroPlayRepeatDialog.Run(this, chooseMacro));
-		public NetworkAbsoluteURLDialogResult RunNetworkAbsoluteURLDialog(NEVariables variables) => Dispatcher.Invoke(() => NetworkAbsoluteURLDialog.Run(this, variables));
-		public NetworkFetchFileDialogResult RunNetworkFetchFileDialog(NEVariables variables) => Dispatcher.Invoke(() => NetworkFetchFileDialog.Run(this, variables));
-		public NetworkFetchStreamDialogResult RunNetworkFetchStreamDialog(NEVariables variables, string outputDirectory) => Dispatcher.Invoke(() => NetworkFetchStreamDialog.Run(this, variables, outputDirectory));
-		public NetworkPingDialogResult RunNetworkPingDialog() => Dispatcher.Invoke(() => NetworkPingDialog.Run(this));
-		public NetworkScanPortsDialogResult RunNetworkScanPortsDialog() => Dispatcher.Invoke(() => NetworkScanPortsDialog.Run(this));
-		public NetworkWCFInterceptCallsDialogResult RunNetworkWCFInterceptCallsDialog() => Dispatcher.Invoke(() => NetworkWCFInterceptCallsDialog.Run(this));
-		public NumericCombinationsPermutationsDialogResult RunNumericCombinationsPermutationsDialog() => Dispatcher.Invoke(() => NumericCombinationsPermutationsDialog.Run(this));
-		public NumericConvertBaseDialogResult RunNumericConvertBaseDialog() => Dispatcher.Invoke(() => NumericConvertBaseDialog.Run(this));
-		public NumericCycleDialogResult RunNumericCycleDialog(NEVariables variables) => Dispatcher.Invoke(() => NumericCycleDialog.Run(this, variables));
-		public NumericFloorRoundCeilingDialogResult RunNumericFloorRoundCeilingDialog(string title, NEVariables variables) => Dispatcher.Invoke(() => NumericFloorRoundCeilingDialog.Run(this, title, variables));
-		public NumericLimitDialogResult RunNumericLimitDialog(NEVariables variables) => Dispatcher.Invoke(() => NumericLimitDialog.Run(this, variables));
-		public NumericMinMaxValuesDialogResult RunNumericMinMaxValuesDialog() => Dispatcher.Invoke(() => NumericMinMaxValuesDialog.Run(this));
-		public NumericRandomNumberDialogResult RunNumericRandomNumberDialog(NEVariables variables) => Dispatcher.Invoke(() => NumericRandomNumberDialog.Run(this, variables));
-		public NumericScaleDialogResult RunNumericScaleDialog(NEVariables variables) => Dispatcher.Invoke(() => NumericScaleDialog.Run(this, variables));
-		public NumericSeriesDialogResult RunNumericSeriesDialog(bool linear, NEVariables variables) => Dispatcher.Invoke(() => NumericSeriesDialog.Run(this, linear, variables));
-		public PositionGotoDialogResult RunPositionGotoDialog(GotoType gotoType, int startValue, NEVariables variables) => Dispatcher.Invoke(() => PositionGotoDialog.Run(this, gotoType, startValue, variables));
-		public SelectByCountDialogResult RunSelectByCountDialog() => Dispatcher.Invoke(() => SelectByCountDialog.Run(this));
-		public SelectLimitDialogResult RunSelectLimitDialog(NEVariables variables) => Dispatcher.Invoke(() => SelectLimitDialog.Run(this, variables));
-		public SelectSplitDialogResult RunSelectSplitDialog(NEVariables variables) => Dispatcher.Invoke(() => SelectSplitDialog.Run(this, variables));
-		public TableAddColumnDialogResult RunTableAddColumnDialog(NEVariables variables, int numRows) => Dispatcher.Invoke(() => TableAddColumnDialog.Run(this, variables, numRows));
-		public TableConvertDialogResult RunTableConvertDialog(ParserType tableType) => Dispatcher.Invoke(() => TableConvertDialog.Run(this, tableType));
-		public TableDatabaseGenerateDeletesDialogResult RunTableDatabaseGenerateDeletesDialog(Table table, string tableName) => Dispatcher.Invoke(() => TableDatabaseGenerateDeletesDialog.Run(this, table, tableName));
-		public TableDatabaseGenerateInsertsDialogResult RunTableDatabaseGenerateInsertsDialog(Table table, string tableName) => Dispatcher.Invoke(() => TableDatabaseGenerateInsertsDialog.Run(this, table, tableName));
-		public TableDatabaseGenerateUpdatesDialogResult RunTableDatabaseGenerateUpdatesDialog(Table table, string tableName) => Dispatcher.Invoke(() => TableDatabaseGenerateUpdatesDialog.Run(this, table, tableName));
-		public TableEditTableDialogResult RunTableEditTableDialog(Table input) => Dispatcher.Invoke(() => TableEditTableDialog.Run(this, input));
-		public TableJoinDialogResult RunTableJoinDialog(Table leftTable, Table rightTable) => Dispatcher.Invoke(() => TableJoinDialog.Run(this, leftTable, rightTable));
-		public TableTextToTableDialogResult RunTableTextToTableDialog(string text) => Dispatcher.Invoke(() => TableTextToTableDialog.Run(this, text));
-		public TextFirstDistinctDialogResult RunTextFirstDistinctDialog() => Dispatcher.Invoke(() => TextFirstDistinctDialog.Run(this));
-		public TextRandomTextDialogResult RunTextRandomTextDialog(NEVariables variables) => Dispatcher.Invoke(() => TextRandomTextDialog.Run(this, variables));
-		public TextReverseRegExDialogResult RunTextReverseRegExDialog() => Dispatcher.Invoke(() => TextReverseRegExDialog.Run(this));
-		public TextSelectWholeBoundedWordDialogResult RunTextSelectWholeBoundedWordDialog(bool wholeWord) => Dispatcher.Invoke(() => TextSelectWholeBoundedWordDialog.Run(this, wholeWord));
-		public TextTrimDialogResult RunTextTrimDialog() => Dispatcher.Invoke(() => TextTrimDialog.Run(this));
-		public TextUnicodeDialogResult RunTextUnicodeDialog() => Dispatcher.Invoke(() => TextUnicodeDialog.Run(this));
-		public TextWidthDialogResult RunTextWidthDialog(bool numeric, bool isSelect, NEVariables variables) => Dispatcher.Invoke(() => TextWidthDialog.Run(this, numeric, isSelect, variables));
-		public WindowLayout RunWindowCustomGridDialog(WindowLayout windowLayout) => Dispatcher.Invoke(() => WindowCustomGridDialog.Run(this, windowLayout));
-		public void RunWindowActiveTabsDialog(WindowActiveTabsDialogData data) => Dispatcher.Invoke(() => WindowActiveTabsDialog.Run(this, data));
-		public void RunWindowFontSizeDialog() => Dispatcher.Invoke(() => WindowFontSizeDialog.Run(this));
-		public NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog() => Dispatcher.Invoke(() => NetworkWCFGetConfigDialog.Run(this));
-		public void RunWCFInterceptDialog() => Dispatcher.Invoke(() => WCFInterceptDialog.Run(this));
-		public HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null) => Dispatcher.Invoke(() => CodePagesDialog.Run(this, startCodePages));
-		public void RunHelpAboutDialog() => Dispatcher.Invoke(() => HelpAboutDialog.Run(this));
+		public MessageOptions RunMessageDialog(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None) => RunOnUIThread(() => Message.Run(this, title, text, options, defaultAccept, defaultCancel));
+		public ContentAttributeDialogResult RunContentAttributeDialog(List<ParserNode> nodes) => RunOnUIThread(() => ContentAttributeDialog.Run(this, nodes));
+		public ContentAttributesDialogResult RunContentAttributesDialog(List<ParserNode> nodes) => RunOnUIThread(() => ContentAttributesDialog.Run(this, nodes));
+		public string RunCryptorKeyDialog(Cryptor.Type type, bool encrypt) => RunOnUIThread(() => CryptorKeyDialog.Run(this, type, encrypt));
+		public DatabaseConnectDialogResult RunDatabaseConnectDialog() => RunOnUIThread(() => DatabaseConnectDialog.Run(this));
+		public void RunDatabaseExamineDialog(DbConnection dbConnection) => RunOnUIThread(() => DatabaseExamineDialog.Run(this, dbConnection));
+		public DateTimeFormatDialogResult RunDateTimeFormatDialog(string example) => RunOnUIThread(() => DateTimeFormatDialog.Run(this, example));
+		public DateTimeToTimeZoneDialogResult RunDateTimeToTimeZoneDialog() => RunOnUIThread(() => DateTimeToTimeZoneDialog.Run(this));
+		public DiffFixWhitespaceDialogResult RunDiffFixWhitespaceDialog() => RunOnUIThread(() => DiffFixWhitespaceDialog.Run(this));
+		public DiffIgnoreCharactersDialogResult RunDiffIgnoreCharactersDialog(string ignoreCharacters) => RunOnUIThread(() => DiffIgnoreCharactersDialog.Run(this, ignoreCharacters));
+		public EditConvertDialogResult RunEditConvertDialog() => RunOnUIThread(() => EditConvertDialog.Run(this));
+		public EditDataCompressDialogResult RunEditDataCompressDialog(Coder.CodePage codePage, bool compress) => RunOnUIThread(() => EditDataCompressDialog.Run(this, codePage, compress));
+		public EditDataEncryptDialogResult RunEditDataEncryptDialog(Coder.CodePage codePage, bool encrypt) => RunOnUIThread(() => EditDataEncryptDialog.Run(this, codePage, encrypt));
+		public EditDataHashDialogResult RunEditDataHashDialog(Coder.CodePage codePage) => RunOnUIThread(() => EditDataHashDialog.Run(this, codePage));
+		public EditDataSignDialogResult RunEditDataSignDialog(Coder.CodePage codePage) => RunOnUIThread(() => EditDataSignDialog.Run(this, codePage));
+		public EditExpressionExpressionDialogResult RunEditExpressionExpressionDialog(NEVariables variables, int? numRows = null) => RunOnUIThread(() => EditExpressionExpressionDialog.Run(this, variables, numRows));
+		public EditFindFindDialogResult RunEditFindFindDialog(string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables) => RunOnUIThread(() => EditFindFindDialog.Run(this, text, selectionOnly, codePages, variables));
+		public EditFindRegexReplaceDialogResult RunEditFindRegexReplaceDialog(string text, bool selectionOnly) => RunOnUIThread(() => EditFindRegexReplaceDialog.Run(this, text, selectionOnly));
+		public EditModifyRegionsDialogResult RunEditModifyRegionsDialog() => RunOnUIThread(() => EditModifyRegionsDialog.Run(this));
+		public EditRepeatDialogResult RunEditRepeatDialog(bool selectRepetitions, NEVariables variables) => RunOnUIThread(() => EditRepeatDialog.Run(this, selectRepetitions, variables));
+		public EditRotateDialogResult RunEditRotateDialog(NEVariables variables) => RunOnUIThread(() => EditRotateDialog.Run(this, variables));
+		public EditSortDialogResult RunEditSortDialog() => RunOnUIThread(() => EditSortDialog.Run(this));
+		public EncodingDialogResult RunEncodingDialog(Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None) => RunOnUIThread(() => EncodingDialog.Run(this, codePage, detected));
+		public FileEncodingLineEndingsDialogResult RunFileEncodingLineEndingsDialog(string lineEndings) => RunOnUIThread(() => FileEncodingLineEndingsDialog.Run(this, lineEndings));
+		public FilesCreateFromExpressionsDialogResult RunFilesCreateFromExpressionsDialog(NEVariables variables, Coder.CodePage codePage) => RunOnUIThread(() => FilesCreateFromExpressionsDialog.Run(this, variables, codePage));
+		public FilesFindDialogResult RunFilesFindDialog(NEVariables variables) => RunOnUIThread(() => FilesFindDialog.Run(this, variables));
+		public FilesHashDialogResult RunFilesHashDialog() => RunOnUIThread(() => FilesHashDialog.Run(this));
+		public FilesInsertDialogResult RunFilesInsertDialog() => RunOnUIThread(() => FilesInsertDialog.Run(this));
+		public FilesNamesGetUniqueDialogResult RunFilesNamesGetUniqueDialog() => RunOnUIThread(() => FilesNamesGetUniqueDialog.Run(this));
+		public FilesNamesMakeAbsoluteRelativeDialogResult RunFilesNamesMakeAbsoluteRelativeDialog(NEVariables variables, bool absolute, bool checkType) => RunOnUIThread(() => FilesNamesMakeAbsoluteRelativeDialog.Run(this, variables, absolute, checkType));
+		public FilesOperationsCombineFilesDialogResult RunFilesOperationsCombineFilesDialog(NEVariables variables) => RunOnUIThread(() => FilesOperationsCombineFilesDialog.Run(this, variables));
+		public FilesOperationsCopyMoveDialogResult RunFilesOperationsCopyMoveDialog(NEVariables variables, bool move) => RunOnUIThread(() => FilesOperationsCopyMoveDialog.Run(this, variables, move));
+		public FilesOperationsEncodingDialogResult RunFilesOperationsEncodingDialog() => RunOnUIThread(() => FilesOperationsEncodingDialog.Run(this));
+		public FilesOperationsSplitFileDialogResult RunFilesOperationsSplitFileDialog(NEVariables variables) => RunOnUIThread(() => FilesOperationsSplitFileDialog.Run(this, variables));
+		public FilesSelectByVersionControlStatusDialogResult RunFilesSelectByVersionControlStatusDialog() => RunOnUIThread(() => FilesSelectByVersionControlStatusDialog.Run(this));
+		public FilesSetAttributesDialogResult RunFilesSetAttributesDialog(Dictionary<FileAttributes, bool?> attributes) => RunOnUIThread(() => FilesSetAttributesDialog.Run(this, attributes));
+		public FilesSetSizeDialogResult RunFilesSetSizeDialog(NEVariables variables) => RunOnUIThread(() => FilesSetSizeDialog.Run(this, variables));
+		public FilesSetTimeDialogResult RunFilesSetTimeDialog(NEVariables variables, string expression) => RunOnUIThread(() => FilesSetTimeDialog.Run(this, variables, expression));
+		public FilesSignDialogResult RunFilesSignDialog() => RunOnUIThread(() => FilesSignDialog.Run(this));
+		public GetExpressionDialogResult RunGetExpressionDialog(NEVariables variables, int? numRows = null) => RunOnUIThread(() => GetExpressionDialog.Run(this, variables, numRows));
+		public ImageAddOverlayColorDialogResult RunImageAddOverlayColorDialog(bool add, NEVariables variables) => RunOnUIThread(() => ImageAddOverlayColorDialog.Run(this, add, variables));
+		public ImageAdjustColorDialogResult RunImageAdjustColorDialog(NEVariables variables) => RunOnUIThread(() => ImageAdjustColorDialog.Run(this, variables));
+		public ImageCropDialogResult RunImageCropDialog(NEVariables variables) => RunOnUIThread(() => ImageCropDialog.Run(this, variables));
+		public ImageGIFAnimateDialogResult RunImageGIFAnimateDialog(NEVariables variables) => RunOnUIThread(() => ImageGIFAnimateDialog.Run(this, variables));
+		public ImageGIFSplitDialogResult RunImageGIFSplitDialog(NEVariables variables) => RunOnUIThread(() => ImageGIFSplitDialog.Run(this, variables));
+		public ImageGrabColorDialogResult RunImageGrabColorDialog(string color) => RunOnUIThread(() => ImageGrabColorDialog.Run(this, color));
+		public ImageGrabImageDialogResult RunImageGrabImageDialog(NEVariables variables) => RunOnUIThread(() => ImageGrabImageDialog.Run(this, variables));
+		public ImageRotateDialogResult RunImageRotateDialog(NEVariables variables) => RunOnUIThread(() => ImageRotateDialog.Run(this, variables));
+		public ImageSizeDialogResult RunImageSizeDialog(NEVariables variables) => RunOnUIThread(() => ImageSizeDialog.Run(this, variables));
+		public MacroPlayRepeatDialogResult RunMacroPlayRepeatDialog(Func<string> chooseMacro) => RunOnUIThread(() => MacroPlayRepeatDialog.Run(this, chooseMacro));
+		public NetworkAbsoluteURLDialogResult RunNetworkAbsoluteURLDialog(NEVariables variables) => RunOnUIThread(() => NetworkAbsoluteURLDialog.Run(this, variables));
+		public NetworkFetchFileDialogResult RunNetworkFetchFileDialog(NEVariables variables) => RunOnUIThread(() => NetworkFetchFileDialog.Run(this, variables));
+		public NetworkFetchStreamDialogResult RunNetworkFetchStreamDialog(NEVariables variables, string outputDirectory) => RunOnUIThread(() => NetworkFetchStreamDialog.Run(this, variables, outputDirectory));
+		public NetworkPingDialogResult RunNetworkPingDialog() => RunOnUIThread(() => NetworkPingDialog.Run(this));
+		public NetworkScanPortsDialogResult RunNetworkScanPortsDialog() => RunOnUIThread(() => NetworkScanPortsDialog.Run(this));
+		public NetworkWCFInterceptCallsDialogResult RunNetworkWCFInterceptCallsDialog() => RunOnUIThread(() => NetworkWCFInterceptCallsDialog.Run(this));
+		public NumericCombinationsPermutationsDialogResult RunNumericCombinationsPermutationsDialog() => RunOnUIThread(() => NumericCombinationsPermutationsDialog.Run(this));
+		public NumericConvertBaseDialogResult RunNumericConvertBaseDialog() => RunOnUIThread(() => NumericConvertBaseDialog.Run(this));
+		public NumericCycleDialogResult RunNumericCycleDialog(NEVariables variables) => RunOnUIThread(() => NumericCycleDialog.Run(this, variables));
+		public NumericFloorRoundCeilingDialogResult RunNumericFloorRoundCeilingDialog(string title, NEVariables variables) => RunOnUIThread(() => NumericFloorRoundCeilingDialog.Run(this, title, variables));
+		public NumericLimitDialogResult RunNumericLimitDialog(NEVariables variables) => RunOnUIThread(() => NumericLimitDialog.Run(this, variables));
+		public NumericMinMaxValuesDialogResult RunNumericMinMaxValuesDialog() => RunOnUIThread(() => NumericMinMaxValuesDialog.Run(this));
+		public NumericRandomNumberDialogResult RunNumericRandomNumberDialog(NEVariables variables) => RunOnUIThread(() => NumericRandomNumberDialog.Run(this, variables));
+		public NumericScaleDialogResult RunNumericScaleDialog(NEVariables variables) => RunOnUIThread(() => NumericScaleDialog.Run(this, variables));
+		public NumericSeriesDialogResult RunNumericSeriesDialog(bool linear, NEVariables variables) => RunOnUIThread(() => NumericSeriesDialog.Run(this, linear, variables));
+		public PositionGotoDialogResult RunPositionGotoDialog(GotoType gotoType, int startValue, NEVariables variables) => RunOnUIThread(() => PositionGotoDialog.Run(this, gotoType, startValue, variables));
+		public SelectByCountDialogResult RunSelectByCountDialog() => RunOnUIThread(() => SelectByCountDialog.Run(this));
+		public SelectLimitDialogResult RunSelectLimitDialog(NEVariables variables) => RunOnUIThread(() => SelectLimitDialog.Run(this, variables));
+		public SelectSplitDialogResult RunSelectSplitDialog(NEVariables variables) => RunOnUIThread(() => SelectSplitDialog.Run(this, variables));
+		public TableAddColumnDialogResult RunTableAddColumnDialog(NEVariables variables, int numRows) => RunOnUIThread(() => TableAddColumnDialog.Run(this, variables, numRows));
+		public TableConvertDialogResult RunTableConvertDialog(ParserType tableType) => RunOnUIThread(() => TableConvertDialog.Run(this, tableType));
+		public TableDatabaseGenerateDeletesDialogResult RunTableDatabaseGenerateDeletesDialog(Table table, string tableName) => RunOnUIThread(() => TableDatabaseGenerateDeletesDialog.Run(this, table, tableName));
+		public TableDatabaseGenerateInsertsDialogResult RunTableDatabaseGenerateInsertsDialog(Table table, string tableName) => RunOnUIThread(() => TableDatabaseGenerateInsertsDialog.Run(this, table, tableName));
+		public TableDatabaseGenerateUpdatesDialogResult RunTableDatabaseGenerateUpdatesDialog(Table table, string tableName) => RunOnUIThread(() => TableDatabaseGenerateUpdatesDialog.Run(this, table, tableName));
+		public TableEditTableDialogResult RunTableEditTableDialog(Table input) => RunOnUIThread(() => TableEditTableDialog.Run(this, input));
+		public TableJoinDialogResult RunTableJoinDialog(Table leftTable, Table rightTable) => RunOnUIThread(() => TableJoinDialog.Run(this, leftTable, rightTable));
+		public TableTextToTableDialogResult RunTableTextToTableDialog(string text) => RunOnUIThread(() => TableTextToTableDialog.Run(this, text));
+		public TextFirstDistinctDialogResult RunTextFirstDistinctDialog() => RunOnUIThread(() => TextFirstDistinctDialog.Run(this));
+		public TextRandomTextDialogResult RunTextRandomTextDialog(NEVariables variables) => RunOnUIThread(() => TextRandomTextDialog.Run(this, variables));
+		public TextReverseRegExDialogResult RunTextReverseRegExDialog() => RunOnUIThread(() => TextReverseRegExDialog.Run(this));
+		public TextSelectWholeBoundedWordDialogResult RunTextSelectWholeBoundedWordDialog(bool wholeWord) => RunOnUIThread(() => TextSelectWholeBoundedWordDialog.Run(this, wholeWord));
+		public TextTrimDialogResult RunTextTrimDialog() => RunOnUIThread(() => TextTrimDialog.Run(this));
+		public TextUnicodeDialogResult RunTextUnicodeDialog() => RunOnUIThread(() => TextUnicodeDialog.Run(this));
+		public TextWidthDialogResult RunTextWidthDialog(bool numeric, bool isSelect, NEVariables variables) => RunOnUIThread(() => TextWidthDialog.Run(this, numeric, isSelect, variables));
+		public WindowLayout RunWindowCustomGridDialog(WindowLayout windowLayout) => RunOnUIThread(() => WindowCustomGridDialog.Run(this, windowLayout));
+		public void RunWindowActiveTabsDialog(WindowActiveTabsDialogData data) => RunOnUIThread(() => WindowActiveTabsDialog.Run(this, data));
+		public void RunWindowFontSizeDialog() => RunOnUIThread(() => WindowFontSizeDialog.Run(this));
+		public NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog() => RunOnUIThread(() => NetworkWCFGetConfigDialog.Run(this));
+		public void RunWCFInterceptDialog() => RunOnUIThread(() => WCFInterceptDialog.Run(this));
+		public HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null) => RunOnUIThread(() => CodePagesDialog.Run(this, startCodePages));
+		public void RunHelpAboutDialog() => RunOnUIThread(() => HelpAboutDialog.Run(this));
 
 		public OpenFileDialogResult RunOpenFileDialog(string defaultExt, string initialDirectory = null, string filter = null, int filterIndex = 0, bool multiselect = false)
 		{
-			return Dispatcher.Invoke(() =>
+			return RunOnUIThread(() =>
 			{
 				var dialog = new OpenFileDialog
 				{
@@ -128,7 +128,7 @@ namespace NeoEdit.UI
 
 		public SaveFileDialogResult RunSaveFileDialog(string fileName, string defaultExt, string initialDirectory, string filter)
 		{
-			return Dispatcher.Invoke(() =>
+			return RunOnUIThread(() =>
 			{
 				var dialog = new SaveFileDialog
 				{
