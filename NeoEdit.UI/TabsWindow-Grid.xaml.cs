@@ -112,8 +112,8 @@ namespace NeoEdit.UI
 
 			if ((renderParameters.FocusedTab != null) && ((lastGridAllTabs != renderParameters.AllTabs) || (lastGridFocused != renderParameters.FocusedTab)))
 			{
-				var atTop = renderParameters.AllTabs.FindIndex(renderParameters.FocusedTab) / gridColumns * gridHeight;
-				scrollBar.Value = Math.Min(atTop, Math.Max(scrollBar.Value, atTop + gridHeight - scrollBar.ViewportSize));
+				var atTop = renderParameters.AllTabs.FindIndex(renderParameters.FocusedTab) / gridColumns;
+				scrollBar.Value = Math.Min(atTop, Math.Max(scrollBar.Value, atTop + 1 - scrollBar.ViewportSize));
 			}
 
 			scrollBar.Value = Math.Max(0, Math.Min(scrollBar.Value, scrollBar.Maximum));

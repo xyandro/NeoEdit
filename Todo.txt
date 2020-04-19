@@ -22,7 +22,6 @@ Make task runner run in command thread
 Sort by expression
 Can't select multiple tabs in grid view unless you click title
 Add finalizers to check that all UI resources get deleted
-Make sure grid shows focused file
 Show which tab exception comes from
 Calculate boolean expression from truth table
 New content parsing - Handle nodes that contain other nodes
@@ -37,3 +36,4 @@ Make everything use TaskRunner so we can see progress/cancel
 Fix cursor in binary view
 Different modes (content, text, etc.)
 Eye tracking hardware for cursor
+Only make menu appear when ready
