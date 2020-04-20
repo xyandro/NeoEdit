@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 
@@ -43,8 +44,8 @@ namespace NeoEdit.Editor
 
 		void Execute_Diff_Select_LeftRightBothTabs(bool? left)
 		{
-			//TODO
-			//SetActive(ActiveTabs.Where(item => item.DiffTarget != null).SelectMany(item => new List<Tab> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetTabIndex(item) < GetTabIndex(item.DiffTarget)) == left)).ToList());
+			var active = new HashSet<Tab>(ActiveTabs.NonNull(item => item.DiffTarget).SelectMany(item => new List<Tab> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((GetTabIndex(item) < GetTabIndex(item.DiffTarget)) == left)));
+			AllTabs.ForEach(tab => SetActive(tab, active.Contains(tab)));
 		}
 	}
 }
