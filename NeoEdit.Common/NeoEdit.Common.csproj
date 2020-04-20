@@ -53,6 +53,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DBConnectInfo.cs" />
+    <Compile Include="DiffType.cs" />
     <Compile Include="Enums\GetPathType.cs" />
     <Compile Include="Enums\GotoType.cs" />
     <Compile Include="Enums\JumpByType.cs" />

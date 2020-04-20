@@ -37,3 +37,4 @@ Fix cursor in binary view
 Different modes (content, text, etc.)
 Eye tracking hardware for cursor
 Only make menu appear when ready
+If I delete the entire block a region is in delete the region

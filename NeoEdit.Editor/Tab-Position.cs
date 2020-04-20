@@ -136,7 +136,7 @@ namespace NeoEdit.Editor
 			{
 				line = TextView.GetPositionLine(range.Start) + 1;
 				index = TextView.GetPositionIndex(range.Start, line - 1) + 1;
-				column = GetColumnFromIndex(line - 1, index - 1) + 1;
+				column = TextView.GetColumnFromIndex(Text, line - 1, index - 1) + 1;
 				position = range.Start;
 			}
 			int startValue;
@@ -241,8 +241,8 @@ namespace NeoEdit.Editor
 
 				if (gotoType == GotoType.Column)
 				{
-					starts[GotoType.Column] = Enumerable.Range(0, count).Select(x => GetColumnFromIndex(starts[GotoType.Line][x], starts[GotoType.Index][x])).ToList();
-					ends[GotoType.Column] = Enumerable.Range(0, count).Select(x => GetColumnFromIndex(ends[GotoType.Line][x], ends[GotoType.Index][x])).ToList();
+					starts[GotoType.Column] = Enumerable.Range(0, count).Select(x => TextView.GetColumnFromIndex(Text, starts[GotoType.Line][x], starts[GotoType.Index][x])).ToList();
+					ends[GotoType.Column] = Enumerable.Range(0, count).Select(x => TextView.GetColumnFromIndex(Text, ends[GotoType.Line][x], ends[GotoType.Index][x])).ToList();
 				}
 			}
 

@@ -9,7 +9,7 @@ namespace NeoEdit.Editor.Transactional.View
 {
 	public class NETextView : INEView
 	{
-		const int tabStop = 4;
+		public const int TabStop = 4;
 
 		readonly List<int> linePosition;
 		readonly List<int> endingPosition;
@@ -27,8 +27,12 @@ namespace NeoEdit.Editor.Transactional.View
 			const int Ending_CRLF = 3;
 			const int Ending_Mixed = 4;
 
-			linePosition = new List<int>();
-			endingPosition = new List<int>();
+			var linePosition = new List<int>();
+			var endingPosition = new List<int>();
+
+			this.linePosition = linePosition;
+			this.endingPosition = endingPosition;
+
 			MaxIndex = 0;
 
 			var lineEndChars = new char[] { '\r', '\n' };
@@ -126,6 +130,27 @@ namespace NeoEdit.Editor.Transactional.View
 			NumLines = endingPosition.Count;
 		}
 
+		public NETextView(NETextView textView, List<LCS.LCSResult> linesLCS, int pass)
+		{
+			MaxIndex = textView.MaxIndex;
+			DefaultEnding = textView.DefaultEnding;
+			NumLines = textView.NumLines;
+			MaxPosition = textView.MaxPosition;
+
+			var linePosition = textView.linePosition.ToList();
+			var endingPosition = textView.endingPosition.ToList();
+			for (var ctr = 0; ctr < linesLCS.Count; ++ctr)
+				if (linesLCS[ctr][pass] == LCS.MatchType.Gap)
+				{
+					linePosition.Insert(ctr, linePosition[ctr]);
+					endingPosition.Insert(ctr, linePosition[ctr]);
+					++NumLines;
+				}
+
+			this.linePosition = linePosition;
+			this.endingPosition = endingPosition;
+		}
+
 		public int GetLineLength(int line)
 		{
 			if ((line < 0) || (line >= NumLines))
@@ -208,7 +233,7 @@ namespace NeoEdit.Editor.Transactional.View
 				var find = text.IndexOf('\t', position, end - position);
 				if (find == position)
 				{
-					column = (column / tabStop + 1) * tabStop;
+					column = (column / TabStop + 1) * TabStop;
 					++position;
 					continue;
 				}
@@ -246,7 +271,7 @@ namespace NeoEdit.Editor.Transactional.View
 				var find = text.IndexOf('\t', position, end - position);
 				if (find == position)
 				{
-					column = (column / tabStop + 1) * tabStop;
+					column = (column / TabStop + 1) * TabStop;
 					++position;
 					continue;
 				}
@@ -275,7 +300,7 @@ namespace NeoEdit.Editor.Transactional.View
 				var find = text.IndexOf('\t', index, len);
 				if (find == index)
 				{
-					columns = (columns / tabStop + 1) * tabStop;
+					columns = (columns / TabStop + 1) * TabStop;
 					++index;
 					--len;
 					continue;
@@ -310,7 +335,7 @@ namespace NeoEdit.Editor.Transactional.View
 				var tabIndex = text.IndexOf('\t', index, Math.Min(endIndex - index, takeColumns));
 				if (tabIndex == index)
 				{
-					var repeatCount = (column / tabStop + 1) * tabStop - column;
+					var repeatCount = (column / TabStop + 1) * TabStop - column;
 					var useColumns = Math.Min(Math.Max(0, repeatCount - skipColumns), takeColumns);
 					sb.Append(' ', useColumns);
 					column += repeatCount;

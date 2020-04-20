@@ -296,6 +296,7 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.Internal_Scroll: Execute_Internal_Scroll(); break;
 				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
+				case NECommand.Internal_SetupDiff: Execute_Internal_SetupDiff(); break;
 				case NECommand.File_New_New: Execute_File_New_New(state.ShiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;
@@ -632,18 +633,8 @@ namespace NeoEdit.Editor
 					tabs.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });
 				}
 
-				//if (clParams.Diff)
-				//{
-				//	for (var ctr = 0; ctr + 1 < tabsWindow.Tabs.Count; ctr += 2)
-				//	{
-				//		tabsWindow.Tabs[ctr].DiffTarget = tabsWindow.Tabs[ctr + 1];
-				//		if (tabsWindow.Tabs[ctr].ContentType == ParserType.None)
-				//			tabsWindow.Tabs[ctr].ContentType = tabsWindow.Tabs[ctr + 1].ContentType;
-				//		if (tabsWindow.Tabs[ctr + 1].ContentType == ParserType.None)
-				//			tabsWindow.Tabs[ctr + 1].ContentType = tabsWindow.Tabs[ctr].ContentType;
-				//	}
-				//	tabsWindow.SetLayout(maxColumns: 2);
-				//}
+				if (commandLineParams.Diff)
+					tabs.HandleCommand(new ExecuteState(NECommand.Internal_SetupDiff));
 			}
 			catch (Exception ex)
 			{

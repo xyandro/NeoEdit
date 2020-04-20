@@ -160,6 +160,8 @@
     <None Include="Content\XML\Source\XMLLexer.g4" />
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
+    <Compile Include="DiffData.cs" />
+    <Compile Include="DiffParams.cs" />
     <Compile Include="FileSaver.cs" />
     <Compile Include="GIFWriter.cs" />
     <Compile Include="LCS.cs" />

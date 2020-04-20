@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
 
 namespace NeoEdit.Editor
 {
@@ -71,6 +72,20 @@ namespace NeoEdit.Editor
 			}
 
 			tab.Execute_Internal_Mouse(line, column, clickCount, selecting);
+		}
+
+		void Execute_Internal_SetupDiff()
+		{
+			AllTabs.ForEach(tab => AddToTransaction(tab));
+			for (var ctr = 0; ctr + 1 < AllTabs.Count; ctr += 2)
+			{
+				AllTabs[ctr].DiffTarget = AllTabs[ctr + 1];
+				if (AllTabs[ctr].ContentType == ParserType.None)
+					AllTabs[ctr].ContentType = AllTabs[ctr + 1].ContentType;
+				if (AllTabs[ctr + 1].ContentType == ParserType.None)
+					AllTabs[ctr + 1].ContentType = AllTabs[ctr].ContentType;
+			}
+			SetLayout(new WindowLayout(maxColumns: 2));
 		}
 	}
 }

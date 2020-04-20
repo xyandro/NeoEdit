@@ -44,6 +44,9 @@ namespace NeoEdit.Editor.Transactional
 			if (ranges.Count != text.Count)
 				throw new Exception("Invalid number of arguments");
 
+			if (ranges.Count == 0)
+				return this;
+
 			int? checkPos = null;
 			for (var ctr = 0; ctr < ranges.Count; ctr++)
 			{

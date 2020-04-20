@@ -2,7 +2,6 @@
 {
 	partial class Tab
 	{
-		// TODO: Everything here
 		//void DoRangesDiff(RangeList ranges)
 		//{
 		//	if (!ranges.Any())

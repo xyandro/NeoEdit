@@ -15,6 +15,7 @@ namespace NeoEdit.Common
 		[NoMacro] Internal_Scroll,
 		[NoMacro] Internal_Mouse,
 		[NoMacro] Internal_Redraw,
+		[NoMacro] Internal_SetupDiff,
 		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New_New,
 		File_New_FromSelections,
 		File_New_FromClipboards,

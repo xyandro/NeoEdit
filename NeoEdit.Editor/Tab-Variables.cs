@@ -31,8 +31,7 @@ namespace NeoEdit.Editor
 			{
 				EnsureInTransaction();
 				newText = value;
-				newTextView = null;
-				newMaxColumn = null;
+				ResetView();
 			}
 		}
 
@@ -52,15 +51,60 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void ResetView() => newTextView = null;
+		INEView diffView;
+		INEView DiffView
+		{
+			get
+			{
+				if (DiffTarget != null)
+				{
+					CalculateDiff();
+					return diffView;
+				}
+
+				return TextView;
+			}
+		}
+
+		public void ResetView()
+		{
+			newTextView = null;
+			newMaxColumn = null;
+		}
+
+		Tab oldDiffTarget, newDiffTarget;
+		public Tab DiffTarget
+		{
+			get => newDiffTarget;
+			set
+			{
+				EnsureInTransaction();
+				if (value == null)
+				{
+					if (newDiffTarget == null)
+						throw new Exception("Already not in diff");
+					newDiffTarget = newDiffTarget.newDiffTarget = null;
+				}
+				else
+				{
+					if (newDiffTarget != null)
+						throw new Exception("Already in diff");
+					if (value.newDiffTarget != null)
+						throw new Exception("DiffTarget already in diff");
+					newDiffTarget = value;
+					newDiffTarget.newDiffTarget = this;
+				}
+				ResetView();
+			}
+		}
 
 		int? oldMaxColumn, newMaxColumn;
-		public int MaxColumn
+		public int ViewMaxColumn
 		{
 			get
 			{
 				if (!newMaxColumn.HasValue)
-					newMaxColumn = TextView.GetMaxColumn(Text);
+					newMaxColumn = DiffView.GetMaxColumn(Text);
 				return newMaxColumn.Value;
 			}
 		}
@@ -231,7 +275,7 @@ namespace NeoEdit.Editor
 		public ParserType ContentType
 		{
 			get => newContentType;
-			private set
+			set
 			{
 				EnsureInTransaction();
 				newContentType = value;
@@ -326,25 +370,14 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		bool oldIsDiff, newIsDiff;
-		bool IsDiff
+		string oldDiffIgnoreCharacters, newDiffIgnoreCharacters;
+		public string DiffIgnoreCharacters
 		{
-			get => newIsDiff;
-			set
+			get => newDiffIgnoreCharacters;
+			private set
 			{
 				EnsureInTransaction();
-				newIsDiff = value;
-			}
-		}
-
-		bool oldDiffEncodingMismatch, newDiffEncodingMismatch;
-		bool DiffEncodingMismatch
-		{
-			get => newDiffEncodingMismatch;
-			set
-			{
-				EnsureInTransaction();
-				newDiffEncodingMismatch = value;
+				newDiffIgnoreCharacters = value;
 			}
 		}
 
@@ -411,7 +444,7 @@ namespace NeoEdit.Editor
 			{
 				EnsureInTransaction();
 				newViewBinary = value;
-				newTextView = null;
+				ResetView();
 			}
 		}
 
@@ -511,8 +544,7 @@ namespace NeoEdit.Editor
 			newDiffIgnoreCase = oldDiffIgnoreCase;
 			newDiffIgnoreNumbers = oldDiffIgnoreNumbers;
 			newDiffIgnoreLineEndings = oldDiffIgnoreLineEndings;
-			newIsDiff = oldIsDiff;
-			newDiffEncodingMismatch = oldDiffEncodingMismatch;
+			newDiffIgnoreCharacters = oldDiffIgnoreCharacters;
 			newKeepSelections = oldKeepSelections;
 			newHighlightSyntax = oldHighlightSyntax;
 			newStrictParsing = oldStrictParsing;
@@ -523,6 +555,7 @@ namespace NeoEdit.Editor
 			newViewBinarySearches = oldViewBinarySearches;
 			newStartColumn = oldStartColumn;
 			newStartRow = oldStartRow;
+			newDiffTarget = oldDiffTarget;
 
 			ClearState();
 		}
@@ -554,8 +587,7 @@ namespace NeoEdit.Editor
 			oldDiffIgnoreCase = newDiffIgnoreCase;
 			oldDiffIgnoreNumbers = newDiffIgnoreNumbers;
 			oldDiffIgnoreLineEndings = newDiffIgnoreLineEndings;
-			oldIsDiff = newIsDiff;
-			oldDiffEncodingMismatch = newDiffEncodingMismatch;
+			oldDiffIgnoreCharacters = newDiffIgnoreCharacters;
 			oldKeepSelections = newKeepSelections;
 			oldHighlightSyntax = newHighlightSyntax;
 			oldStrictParsing = newStrictParsing;
@@ -566,6 +598,7 @@ namespace NeoEdit.Editor
 			oldViewBinarySearches = newViewBinarySearches;
 			oldStartColumn = newStartColumn;
 			oldStartRow = newStartRow;
+			oldDiffTarget = newDiffTarget;
 
 			ClearState();
 		}

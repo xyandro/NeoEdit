@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
+using NeoEdit.Common;
 
 namespace NeoEdit.Editor
 {
@@ -9,32 +8,37 @@ namespace NeoEdit.Editor
 	{
 		void Execute_Diff_Diff(bool shiftDown)
 		{
-			//TODO
-			//var diffTargets = Tabs.Count == 2 ? Tabs.ToList() : ActiveTabs.ToList();
-			//if (diffTargets.Any(item => item.DiffTarget != null))
-			//{
-			//	diffTargets.ForEach(item => item.DiffTarget = null);
-			//	return;
-			//}
+			var diffTargets = AllTabs.Count == 2 ? AllTabs.ToList() : ActiveTabs.ToList();
+			diffTargets.ForEach(diffTarget => AddToTransaction(diffTarget));
 
-			//if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
-			//	throw new Exception("Must have even number of files active for diff.");
+			var inDiff = false;
+			for (var ctr = 0; ctr < diffTargets.Count; ++ctr)
+				if (diffTargets[ctr].DiffTarget != null)
+				{
+					inDiff = true;
+					diffTargets[ctr].DiffTarget = null;
+				}
+			if (inDiff)
+				return;
 
-			//if (shiftDown)
-			//{
-			//	if (!Tabs.Except(diffTargets).Any())
-			//		SetLayout(maxColumns: 5, maxRows: 5);
-			//	else
-			//	{
-			//		diffTargets.ForEach(diffTarget => RemoveTab(diffTarget));
+			if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
+				throw new Exception("Must have even number of files active for diff.");
 
-			//		var tabsWindow = new TabsWindow();
-			//		tabsWindow.SetLayout(maxColumns: 5, maxRows: 5);
-			//		diffTargets.ForEach(diffTarget => tabsWindow.AddTab(diffTarget));
-			//	}
-			//}
+			if (shiftDown)
+			{
+				if (!AllTabs.Except(diffTargets).Any())
+					SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+				else
+				{
+					diffTargets.ForEach(diffTarget => RemoveTab(diffTarget));
 
-			//diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
+					var tabs = new Tabs();
+					tabs.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+					diffTargets.ForEach(diffTarget => tabs.AddTab(diffTarget));
+				}
+			}
+
+			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
 		}
 
 		void Execute_Diff_Select_LeftRightBothTabs(bool? left)
