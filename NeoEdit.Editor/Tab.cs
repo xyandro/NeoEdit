@@ -327,7 +327,7 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Convert: return Configure_Edit_Convert();
 				case NECommand.Edit_ModifyRegions: return Configure_Edit_ModifyRegions();
 				case NECommand.Diff_IgnoreCharacters: return Configure_Diff_IgnoreCharacters();
-				//case NECommand.Diff_Fix_Whitespace: Execute_Diff_Fix_Whitespace_Dialog(); break;
+				case NECommand.Diff_Fix_Whitespace: return Configure_Diff_Fix_Whitespace_Dialog();
 				case NECommand.Files_Name_MakeAbsolute: return Configure_Files_Name_MakeAbsolute();
 				case NECommand.Files_Name_MakeRelative: return Configure_Files_Name_MakeRelative();
 				case NECommand.Files_Name_GetUnique: return Configure_Files_Name_GetUnique();
@@ -736,10 +736,10 @@ namespace NeoEdit.Editor
 				case NECommand.Diff_Previous: Execute_Diff_NextPrevious(false, state.ShiftDown); break;
 				case NECommand.Diff_CopyLeft: Execute_Diff_CopyLeftRight(true); break;
 				case NECommand.Diff_CopyRight: Execute_Diff_CopyLeftRight(false); break;
-				//case NECommand.Diff_Fix_Whitespace: Execute_Diff_Fix_Whitespace(state.Parameters as DiffFixWhitespaceDialogResult); break;
-				//case NECommand.Diff_Fix_Case: Execute_Diff_Fix_Case(); break;
-				//case NECommand.Diff_Fix_Numbers: Execute_Diff_Fix_Numbers(); break;
-				//case NECommand.Diff_Fix_LineEndings: Execute_Diff_Fix_LineEndings(); break;
+				case NECommand.Diff_Fix_Whitespace: Execute_Diff_Fix_Whitespace(); break;
+				case NECommand.Diff_Fix_Case: Execute_Diff_Fix_Case(); break;
+				case NECommand.Diff_Fix_Numbers: Execute_Diff_Fix_Numbers(); break;
+				case NECommand.Diff_Fix_LineEndings: Execute_Diff_Fix_LineEndings(); break;
 				case NECommand.Diff_Fix_Encoding: Execute_Diff_Fix_Encoding(); break;
 				//case NECommand.Diff_Select_Match: Execute_Diff_Select_MatchDiff(true); break;
 				//case NECommand.Diff_Select_Diff: Execute_Diff_Select_MatchDiff(false); break;

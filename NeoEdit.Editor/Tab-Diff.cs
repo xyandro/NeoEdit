@@ -61,6 +61,99 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		static public Tuple<List<Tuple<int, int>>, List<string>> GetDiffFixes(Tab src, Tab dest, int lineStartTabStop, bool? ignoreWhitespace, bool? ignoreCase, bool? ignoreNumbers, bool? ignoreLineEndings, string ignoreCharacters)
+		{
+			var tab = new Tab[] { src, dest };
+			var lineMap = new Dictionary<int, int>[2];
+			var lines = new List<string>[2];
+			var textLines = new List<string>[2];
+			var diffParams = new DiffParams(ignoreWhitespace ?? true, ignoreCase ?? true, ignoreNumbers ?? true, ignoreLineEndings ?? true, ignoreCharacters, lineStartTabStop);
+			for (var pass = 0; pass < 2; ++pass)
+			{
+				lineMap[pass] = Enumerable.Range(0, tab[pass].DiffView.NumLines).Indexes(line => tab[pass].diffData?.LineCompare[line] != DiffType.GapMismatch).Select((index1, index2) => new { index1, index2 }).ToDictionary(obj => obj.index2, obj => obj.index1);
+				lines[pass] = lineMap[pass].Values.Select(line => tab[pass].Text.GetString(tab[pass].DiffView.GetLine(line, true))).ToList();
+				textLines[pass] = lines[pass].Select(line => diffParams.FormatLine(line).Item1).ToList();
+			}
+
+			var linesLCS = LCS.GetLCS(textLines[0], textLines[1], (str1, str2) => string.IsNullOrWhiteSpace(str1) == string.IsNullOrWhiteSpace(str2));
+
+			var ranges = new List<Tuple<int, int>>();
+			var strs = new List<string>();
+			var curLine = new int[] { -1, -1 };
+			diffParams = new DiffParams(ignoreWhitespace ?? false, ignoreCase ?? false, ignoreNumbers ?? false, ignoreLineEndings ?? false, ignoreCharacters);
+			for (var line = 0; line < linesLCS.Count; ++line)
+			{
+				var mappedCurLine = new int[2];
+				for (var pass = 0; pass < 2; ++pass)
+					if (linesLCS[line][pass] != LCS.MatchType.Gap)
+					{
+						++curLine[pass];
+						mappedCurLine[pass] = lineMap[pass][curLine[pass]];
+					}
+
+				if (linesLCS[line].IsMatch)
+				{
+					var colLines = new string[2];
+					var map = new List<int>[2];
+					for (var pass = 0; pass < 2; ++pass)
+					{
+						var formatDiffLine = diffParams.FormatLine(lines[pass][curLine[pass]]);
+						colLines[pass] = formatDiffLine.Item1;
+						map[pass] = formatDiffLine.Item2;
+					}
+
+					if (colLines[0] != colLines[1])
+					{
+						var colsLCS = LCS.GetLCS(colLines[0], colLines[1]);
+						for (var pass = 0; pass < 2; ++pass)
+						{
+							var start = default(int?);
+							var pos = -1;
+							for (var ctr = 0; ctr <= colsLCS.Count; ++ctr)
+							{
+								if ((ctr == colsLCS.Count) || (colsLCS[ctr][pass] != LCS.MatchType.Gap))
+									++pos;
+
+								if ((ctr == colsLCS.Count) || (colsLCS[ctr].IsMatch))
+								{
+									if (start.HasValue)
+									{
+										var linePosition = tab[pass].DiffView.GetPosition(mappedCurLine[pass], 0);
+										var begin = linePosition + map[pass][start.Value];
+										var end = linePosition + map[pass][pos];
+										if (pass == 0)
+											strs.Add(tab[pass].Text.GetString(begin, end - begin));
+										else
+											ranges.Add(Tuple.Create(begin, end));
+										start = null;
+									}
+									continue;
+								}
+
+								start = start ?? pos + (colsLCS[ctr][pass] == LCS.MatchType.Gap ? 1 : 0);
+							}
+						}
+					}
+				}
+
+				//if ((ignoreLineEndings == null) && (src.OnlyEnding != null) && (linesLCS[line][1] != LCS.MatchType.Gap))
+				//{
+				//	var endingStart = dest.endingPosition[mappedCurLine[1]];
+				//	var endingEnd = dest.linePosition[mappedCurLine[1] + 1];
+				//	if (endingStart == endingEnd)
+				//		continue;
+
+				//	if (dest.Data.Substring(endingStart, endingEnd - endingStart) != src.OnlyEnding)
+				//	{
+				//		ranges.Add(Tuple.Create(endingStart, endingEnd));
+				//		strs.Add(src.OnlyEnding);
+				//	}
+				//}
+			}
+
+			return Tuple.Create(ranges, strs);
+		}
+
 		void Execute_Diff_Selections() => DoRangesDiff(Selections);
 
 		void Execute_Diff_SelectedFiles()
@@ -184,47 +277,48 @@ namespace NeoEdit.Editor
 				source.ReplaceSelections(strs);
 		}
 
-		//DiffFixWhitespaceDialogResult Execute_Diff_Fix_Whitespace_Dialog() => Tabs.TabsWindow.RunDiffFixWhitespaceDialog();
+		DiffFixWhitespaceDialogResult Configure_Diff_Fix_Whitespace_Dialog() => Tabs.TabsWindow.RunDiffFixWhitespaceDialog();
 
-		//void Execute_Diff_Fix_Whitespace(DiffFixWhitespaceDialogResult result)
-		//{
-		//	if (DiffTarget == null)
-		//		throw new Exception("Diff not in progress");
+		void Execute_Diff_Fix_Whitespace()
+		{
+			if (DiffTarget == null)
+				throw new Exception("Diff not in progress");
 
-		//	var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, result.LineStartTabStop, null, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
-		//	Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
-		//	ReplaceSelections(fixes.Item2);
-		//}
+			var result = state.Configuration as DiffFixWhitespaceDialogResult;
+			var fixes = GetDiffFixes(DiffTarget, this, result.LineStartTabStop, null, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
+			Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
+			ReplaceSelections(fixes.Item2);
+		}
 
-		//void Execute_Diff_Fix_Case()
-		//{
-		//	if (DiffTarget == null)
-		//		throw new Exception("Diff not in progress");
+		void Execute_Diff_Fix_Case()
+		{
+			if (DiffTarget == null)
+				throw new Exception("Diff not in progress");
 
-		//	var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, null, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
-		//	Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
-		//	ReplaceSelections(fixes.Item2);
-		//}
+			var fixes = GetDiffFixes(DiffTarget, this, 0, DiffIgnoreWhitespace, null, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
+			Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
+			ReplaceSelections(fixes.Item2);
+		}
 
-		//void Execute_Diff_Fix_Numbers()
-		//{
-		//	if (DiffTarget == null)
-		//		throw new Exception("Diff not in progress");
+		void Execute_Diff_Fix_Numbers()
+		{
+			if (DiffTarget == null)
+				throw new Exception("Diff not in progress");
 
-		//	var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, null, DiffIgnoreLineEndings, DiffIgnoreCharacters);
-		//	Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
-		//	ReplaceSelections(fixes.Item2);
-		//}
+			var fixes = GetDiffFixes(DiffTarget, this, 0, DiffIgnoreWhitespace, DiffIgnoreCase, null, DiffIgnoreLineEndings, DiffIgnoreCharacters);
+			Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
+			ReplaceSelections(fixes.Item2);
+		}
 
-		//void Execute_Diff_Fix_LineEndings()
-		//{
-		//	if (DiffTarget == null)
-		//		throw new Exception("Diff not in progress");
+		void Execute_Diff_Fix_LineEndings()
+		{
+			if (DiffTarget == null)
+				throw new Exception("Diff not in progress");
 
-		//	var fixes = TextData.GetDiffFixes(DiffTarget.Data, Data, 0, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, null, DiffIgnoreCharacters);
-		//	Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
-		//	ReplaceSelections(fixes.Item2);
-		//}
+			var fixes = GetDiffFixes(DiffTarget, this, 0, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, null, DiffIgnoreCharacters);
+			Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
+			ReplaceSelections(fixes.Item2);
+		}
 
 		void Execute_Diff_Fix_Encoding()
 		{
