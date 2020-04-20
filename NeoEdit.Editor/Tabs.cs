@@ -462,17 +462,16 @@ namespace NeoEdit.Editor
 			InsertTab(tab, index);
 		}
 
-		void AddDiff(Tab tab1, Tab tab2)
+		public void AddDiff(Tab tab1, Tab tab2)
 		{
-			//TODO
-			//if (tab1.ContentType == ParserType.None)
-			//	tab1.ContentType = tab2.ContentType;
-			//if (tab2.ContentType == ParserType.None)
-			//	tab2.ContentType = tab1.ContentType;
-			//AddTab(tab1);
-			//AddTab(tab2);
-			//tab1.DiffTarget = tab2;
-			//SetLayout(maxColumns: 2);
+			if (tab1.ContentType == ParserType.None)
+				tab1.ContentType = tab2.ContentType;
+			if (tab2.ContentType == ParserType.None)
+				tab2.ContentType = tab1.ContentType;
+			AddTab(tab1);
+			AddTab(tab2);
+			tab1.DiffTarget = tab2;
+			SetLayout(new WindowLayout(maxColumns: 2));
 		}
 
 		void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, ParserType contentType1 = ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, int? index1 = null, ShutdownData shutdownData1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, ParserType contentType2 = ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, int? index2 = null, ShutdownData shutdownData2 = null)

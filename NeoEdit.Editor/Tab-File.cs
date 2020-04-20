@@ -195,17 +195,13 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Operations_VCSDiff()
 		{
-			//TODO
-			//if (string.IsNullOrEmpty(FileName))
-			//	throw new Exception("Must have filename to do diff");
-			//var original = Versioner.GetUnmodifiedFile(FileName);
-			//if (original == null)
-			//	throw new Exception("Unable to get VCS content");
+			if (string.IsNullOrEmpty(FileName))
+				throw new Exception("Must have filename to do diff");
+			var original = Versioner.GetUnmodifiedFile(FileName);
+			if (original == null)
+				throw new Exception("Unable to get VCS content");
 
-			//var tab = new Tab(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
-			//TabsParent.AddTab(tab, index: TabsParent.GetTabIndex(this));
-			//tab.ContentType = ContentType;
-			//tab.DiffTarget = this;
+			QueueAddTab(new Tab(displayName: Path.GetFileName(FileName), modified: false, bytes: original) { ContentType = ContentType, DiffTarget = this });
 		}
 
 		void Execute_File_Operations_SetDisplayName()
