@@ -154,6 +154,34 @@ namespace NeoEdit.Editor
 			return Tuple.Create(ranges, strs);
 		}
 
+		List<Range> GetDiffMatches(bool match)
+		{
+			if (diffData == null)
+				throw new ArgumentException("No diff in progress");
+
+			var result = new List<Range>();
+			var matchTuple = default(Range);
+			var line = 0;
+			while (true)
+			{
+				var end = line >= diffData.LineCompare.Count;
+
+				if ((!end) && ((diffData.LineCompare[line] == DiffType.Match) == match))
+					matchTuple = matchTuple ?? DiffView.GetLine(line, true);
+				else if (matchTuple != null)
+				{
+					result.Add(matchTuple);
+					matchTuple = null;
+				}
+
+				if (end)
+					break;
+
+				++line;
+			}
+			return result;
+		}
+
 		void Execute_Diff_Selections() => DoRangesDiff(Selections);
 
 		void Execute_Diff_SelectedFiles()
@@ -328,12 +356,12 @@ namespace NeoEdit.Editor
 			CodePage = DiffTarget.CodePage;
 		}
 
-		//void Execute_Diff_Select_MatchDiff(bool matching)
-		//{
-		//	if (DiffTarget == null)
-		//		throw new Exception("Diff not in progress");
+		void Execute_Diff_Select_MatchDiff(bool matching)
+		{
+			if (DiffTarget == null)
+				throw new Exception("Diff not in progress");
 
-		//	Selections = GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)).ToList();
-		//}
+			Selections = GetDiffMatches(matching);
+		}
 	}
 }

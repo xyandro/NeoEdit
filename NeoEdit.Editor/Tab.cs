@@ -741,8 +741,8 @@ namespace NeoEdit.Editor
 				case NECommand.Diff_Fix_Numbers: Execute_Diff_Fix_Numbers(); break;
 				case NECommand.Diff_Fix_LineEndings: Execute_Diff_Fix_LineEndings(); break;
 				case NECommand.Diff_Fix_Encoding: Execute_Diff_Fix_Encoding(); break;
-				//case NECommand.Diff_Select_Match: Execute_Diff_Select_MatchDiff(true); break;
-				//case NECommand.Diff_Select_Diff: Execute_Diff_Select_MatchDiff(false); break;
+				case NECommand.Diff_Select_Match: Execute_Diff_Select_MatchDiff(true); break;
+				case NECommand.Diff_Select_Diff: Execute_Diff_Select_MatchDiff(false); break;
 				case NECommand.Files_Name_Simplify: Execute_Files_Name_Simplify(); break;
 				case NECommand.Files_Name_MakeAbsolute: Execute_Files_Name_MakeAbsolute(); break;
 				case NECommand.Files_Name_MakeRelative: Execute_Files_Name_MakeRelative(); break;
