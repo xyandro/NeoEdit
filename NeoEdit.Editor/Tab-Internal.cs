@@ -428,10 +428,10 @@ namespace NeoEdit.Editor
 		public void Execute_Internal_Mouse(int line, int column, int clickCount, bool? selecting)
 		{
 			var sels = Selections.ToList();
-			line = Math.Max(0, Math.Min(line, ViewNumLines - 1));
-			column = Math.Max(0, Math.Min(column, ViewGetLineColumnsLength(line)));
-			var index = ViewGetIndexFromColumn(line, column, true);
-			var position = TextView.GetPosition(line, index);
+			line = Math.Max(0, Math.Min(line, DiffView.NumLines - 1));
+			column = Math.Max(0, Math.Min(column, DiffView.GetLineColumnsLength(Text, line)));
+			var index = DiffView.GetIndexFromColumn(Text, line, column, true);
+			var position = DiffView.GetPosition(line, index);
 			var mouseRange = CurrentSelection < sels.Count ? sels[CurrentSelection] : null;
 
 			var currentSelection = default(Range);

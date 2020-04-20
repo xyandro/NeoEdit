@@ -1126,10 +1126,10 @@ namespace NeoEdit.Editor
 				return;
 
 			var range = Selections[CurrentSelection];
-			var lineMin = TextView.GetPositionLine(range.Start);
-			var lineMax = TextView.GetPositionLine(range.End);
-			var indexMin = TextView.GetPositionIndex(range.Start, lineMin);
-			var indexMax = TextView.GetPositionIndex(range.End, lineMax);
+			var lineMin = DiffView.GetPositionLine(range.Start);
+			var lineMax = DiffView.GetPositionLine(range.End);
+			var indexMin = DiffView.GetPositionIndex(range.Start, lineMin);
+			var indexMax = DiffView.GetPositionIndex(range.End, lineMax);
 
 			if (centerVertically)
 			{
@@ -1138,9 +1138,9 @@ namespace NeoEdit.Editor
 					StartColumn = (ViewGetColumnFromIndex(lineMin, indexMin) + ViewGetColumnFromIndex(lineMax, indexMax) - Tabs.TabColumns) / 2;
 			}
 
-			var line = TextView.GetPositionLine(range.Cursor);
-			var index = TextView.GetPositionIndex(range.Cursor, line);
-			var x = ViewGetColumnFromIndex(line, index);
+			var line = DiffView.GetPositionLine(range.Cursor);
+			var index = DiffView.GetPositionIndex(range.Cursor, line);
+			var x = DiffView.GetColumnFromIndex(Text, line, index);
 			StartRow = Math.Min(line, Math.Max(line - (Tabs?.TabRows ?? 1) + 1, StartRow));
 			StartColumn = Math.Min(x, Math.Max(x - (Tabs?.TabColumns ?? 1) + 1, StartColumn));
 		}
@@ -1549,12 +1549,12 @@ namespace NeoEdit.Editor
 			else
 			{
 				var range = Selections[CurrentSelection];
-				var lineMin = ViewGetPositionLine(range.Start);
-				var lineMax = ViewGetPositionLine(range.End);
-				var indexMin = ViewGetPositionIndex(range.Start, lineMin);
-				var indexMax = ViewGetPositionIndex(range.End, lineMax);
-				var columnMin = ViewGetColumnFromIndex(lineMin, indexMin);
-				var columnMax = ViewGetColumnFromIndex(lineMax, indexMax);
+				var lineMin = TextView.GetPositionLine(range.Start);
+				var lineMax = TextView.GetPositionLine(range.End);
+				var indexMin = TextView.GetPositionIndex(range.Start, lineMin);
+				var indexMax = TextView.GetPositionIndex(range.End, lineMax);
+				var columnMin = TextView.GetColumnFromIndex(Text, lineMin, indexMin);
+				var columnMax = TextView.GetColumnFromIndex(Text, lineMax, indexMax);
 				var posMin = range.Start;
 				var posMax = range.End;
 
@@ -1601,97 +1601,100 @@ namespace NeoEdit.Editor
 		DiffData diffData;
 		static void CalculateDiff(Tab tab0, Tab tab1, bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings, string ignoreCharacters)
 		{
-			var diffParams = new DiffParams(ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings, ignoreCharacters);
-			if ((tab0.diffData != null) && (tab1.diffData != null) && (tab0.diffData.Text == tab0.Text) && (tab1.diffData.Text == tab1.Text) && (tab0.diffData.DiffParams.Equals(diffParams)) && (tab1.diffData.DiffParams.Equals(diffParams)))
-				return;
-
-			var tab = new Tab[] { tab0, tab1 };
-			var lines = new List<string>[2];
-			var map = new List<List<int>>[2];
-			for (var pass = 0; pass < 2; ++pass)
+			lock (tab0)
 			{
-				tab[pass].diffData = new DiffData(tab[pass].Text, diffParams);
-				var formatDiffLine = Enumerable.Range(0, tab[pass].TextView.NumLines).Select(line => diffParams.FormatLine(tab[pass].Text.GetString(tab[pass].TextView.GetLine(line, true)))).ToList();
-				lines[pass] = formatDiffLine.Select(val => val.Item1).ToList();
-				map[pass] = formatDiffLine.Select(val => val.Item2).ToList();
-			}
+				var diffParams = new DiffParams(ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings, ignoreCharacters);
+				if ((tab0.diffData != null) && (tab1.diffData != null) && (tab0.diffData.Text == tab0.Text) && (tab1.diffData.Text == tab1.Text) && (tab0.diffData.DiffParams.Equals(diffParams)) && (tab1.diffData.DiffParams.Equals(diffParams)))
+					return;
 
-			var linesLCS = LCS.GetLCS(lines[0], lines[1], (str1, str2) => (string.IsNullOrWhiteSpace(str1) == string.IsNullOrWhiteSpace(str2)));
-
-			for (var pass = 0; pass < 2; ++pass)
-			{
-				tab[pass].diffData.LineCompare = linesLCS.Select(val =>
+				var tab = new Tab[] { tab0, tab1 };
+				var lines = new List<string>[2];
+				var map = new List<List<int>>[2];
+				for (var pass = 0; pass < 2; ++pass)
 				{
-					if (val[pass] == LCS.MatchType.Match)
-						return DiffType.Match;
-					if (val[pass] == LCS.MatchType.Gap)
-						return DiffType.GapMismatch;
-					if (val[1 - pass] == LCS.MatchType.Gap)
-						return DiffType.MismatchGap;
-					return DiffType.Mismatch;
-				}).ToList();
-
-				tab[pass].diffView = new NETextView(tab[pass].TextView as NETextView, linesLCS, pass);
-
-				tab[pass].diffData.LineMap = new Dictionary<int, int>();
-				var pos = -1;
-				for (var line = 0; line < linesLCS.Count; ++line)
-				{
-					if (linesLCS[line][pass] != LCS.MatchType.Gap)
-						++pos;
-					tab[pass].diffData.LineMap[line] = pos;
+					tab[pass].diffData = new DiffData(tab[pass].Text, diffParams);
+					var formatDiffLine = Enumerable.Range(0, tab[pass].TextView.NumLines).Select(line => diffParams.FormatLine(tab[pass].Text.GetString(tab[pass].TextView.GetLine(line, true)))).ToList();
+					lines[pass] = formatDiffLine.Select(val => val.Item1).ToList();
+					map[pass] = formatDiffLine.Select(val => val.Item2).ToList();
 				}
-				tab[pass].diffData.LineRevMap = tab[pass].diffData.LineMap.GroupBy(pair => pair.Value).ToDictionary(group => group.Key, group => group.Min(pair => pair.Key));
-				tab[pass].diffData.ColCompare = new List<Tuple<int, int>>[linesLCS.Count];
-			}
 
-			var curLine = new int[] { -1, -1 };
-			for (var line = 0; line < tab0.diffData.ColCompare.Length; ++line)
-			{
-				for (var pass = 0; pass < 2; ++pass)
-					++curLine[pass];
+				var linesLCS = LCS.GetLCS(lines[0], lines[1], (str1, str2) => (string.IsNullOrWhiteSpace(str1) == string.IsNullOrWhiteSpace(str2)));
 
-				if (linesLCS[line].IsMatch)
-					continue;
-
-				var skip = false;
 				for (var pass = 0; pass < 2; ++pass)
 				{
-					if (linesLCS[line][pass] == LCS.MatchType.Gap)
+					tab[pass].diffData.LineCompare = linesLCS.Select(val =>
 					{
-						--curLine[pass];
-						skip = true;
-					}
-				}
-				if (skip)
-					continue;
+						if (val[pass] == LCS.MatchType.Match)
+							return DiffType.Match;
+						if (val[pass] == LCS.MatchType.Gap)
+							return DiffType.GapMismatch;
+						if (val[1 - pass] == LCS.MatchType.Gap)
+							return DiffType.MismatchGap;
+						return DiffType.Mismatch;
+					}).ToList();
 
-				var colsLCS = LCS.GetLCS(lines[0][curLine[0]], lines[1][curLine[1]], (ch1, ch2) => (char.IsLetterOrDigit(ch1) && char.IsLetterOrDigit(ch2)) || (char.IsWhiteSpace(ch1) && char.IsWhiteSpace(ch2)));
+					tab[pass].diffView = new NETextView(tab[pass].TextView as NETextView, linesLCS, pass);
 
-				for (var pass = 0; pass < 2; ++pass)
-				{
-					var start = default(int?);
+					tab[pass].diffData.LineMap = new Dictionary<int, int>();
 					var pos = -1;
-					tab[pass].diffData.ColCompare[line] = new List<Tuple<int, int>>();
-					for (var ctr = 0; ; ++ctr)
+					for (var line = 0; line < linesLCS.Count; ++line)
 					{
-						var done = ctr == colsLCS.Count;
-						if ((done) || (colsLCS[ctr][pass] != LCS.MatchType.Gap))
+						if (linesLCS[line][pass] != LCS.MatchType.Gap)
 							++pos;
+						tab[pass].diffData.LineMap[line] = pos;
+					}
+					tab[pass].diffData.LineRevMap = tab[pass].diffData.LineMap.GroupBy(pair => pair.Value).ToDictionary(group => group.Key, group => group.Min(pair => pair.Key));
+					tab[pass].diffData.ColCompare = new List<Tuple<int, int>>[linesLCS.Count];
+				}
 
-						if ((done) || (colsLCS[ctr].IsMatch))
+				var curLine = new int[] { -1, -1 };
+				for (var line = 0; line < tab0.diffData.ColCompare.Length; ++line)
+				{
+					for (var pass = 0; pass < 2; ++pass)
+						++curLine[pass];
+
+					if (linesLCS[line].IsMatch)
+						continue;
+
+					var skip = false;
+					for (var pass = 0; pass < 2; ++pass)
+					{
+						if (linesLCS[line][pass] == LCS.MatchType.Gap)
 						{
-							if (start.HasValue)
-								tab[pass].diffData.ColCompare[line].Add(Tuple.Create(map[pass][curLine[pass]][start.Value], map[pass][curLine[pass]][pos]));
-							start = null;
+							--curLine[pass];
+							skip = true;
 						}
-						else if (colsLCS[ctr][pass] == LCS.MatchType.Mismatch)
-							start = start ?? pos;
-						else
-							start = start ?? pos + 1;
+					}
+					if (skip)
+						continue;
 
-						if (done)
-							break;
+					var colsLCS = LCS.GetLCS(lines[0][curLine[0]], lines[1][curLine[1]], (ch1, ch2) => (char.IsLetterOrDigit(ch1) && char.IsLetterOrDigit(ch2)) || (char.IsWhiteSpace(ch1) && char.IsWhiteSpace(ch2)));
+
+					for (var pass = 0; pass < 2; ++pass)
+					{
+						var start = default(int?);
+						var pos = -1;
+						tab[pass].diffData.ColCompare[line] = new List<Tuple<int, int>>();
+						for (var ctr = 0; ; ++ctr)
+						{
+							var done = ctr == colsLCS.Count;
+							if ((done) || (colsLCS[ctr][pass] != LCS.MatchType.Gap))
+								++pos;
+
+							if ((done) || (colsLCS[ctr].IsMatch))
+							{
+								if (start.HasValue)
+									tab[pass].diffData.ColCompare[line].Add(Tuple.Create(map[pass][curLine[pass]][start.Value], map[pass][curLine[pass]][pos]));
+								start = null;
+							}
+							else if (colsLCS[ctr][pass] == LCS.MatchType.Mismatch)
+								start = start ?? pos;
+							else
+								start = start ?? pos + 1;
+
+							if (done)
+								break;
+						}
 					}
 				}
 			}
