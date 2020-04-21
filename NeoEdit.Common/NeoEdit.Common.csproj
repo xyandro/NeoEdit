@@ -96,6 +96,7 @@
     <Compile Include="KeysAndValues.cs" />
     <Compile Include="Models\AnswerResult.cs" />
     <Compile Include="Models\CommandLineParams.cs" />
+    <Compile Include="Models\Configuration_Internal_GotoTab.cs" />
     <Compile Include="Models\ContentAttributeDialogResult.cs" />
     <Compile Include="Models\ContentAttributesDialogResult.cs" />
     <Compile Include="Models\DatabaseConnectDialogResult.cs" />

@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
+using NeoEdit.Common.Models;
 
 namespace NeoEdit.Editor
 {
@@ -86,6 +87,12 @@ namespace NeoEdit.Editor
 					AllTabs[ctr + 1].ContentType = AllTabs[ctr].ContentType;
 			}
 			SetLayout(new WindowLayout(maxColumns: 2));
+		}
+
+		void Execute_Internal_GotoTab()
+		{
+			var result = state.Configuration as Configuration_Internal_GotoTab;
+			(result.Tab as Tab).Goto(result.Line, result.Column, result.Index);
 		}
 	}
 }

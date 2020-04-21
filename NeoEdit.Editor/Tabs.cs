@@ -297,6 +297,7 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_Scroll: Execute_Internal_Scroll(); break;
 				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
 				case NECommand.Internal_SetupDiff: Execute_Internal_SetupDiff(); break;
+				case NECommand.Internal_GotoTab: Execute_Internal_GotoTab(); break;
 				case NECommand.File_New_New: Execute_File_New_New(state.ShiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;
@@ -622,19 +623,28 @@ namespace NeoEdit.Editor
 
 				var shutdownData = string.IsNullOrWhiteSpace(commandLineParams.Wait) ? null : new ShutdownData(commandLineParams.Wait, commandLineParams.Files.Count);
 				if (!commandLineParams.Diff)
-					tabs = Tabs.Instances.OrderByDescending(x => x.LastActivated).FirstOrDefault();
+					tabs = Instances.OrderByDescending(x => x.LastActivated).FirstOrDefault();
 				if (tabs == null)
 					tabs = new Tabs();
 				foreach (var file in commandLineParams.Files)
 				{
-					if ((file.Existing) && (Tabs.Instances.OrderByDescending(x => x.LastActivated).Select(x => x.GotoTab(file.FileName, file.Line, file.Column, file.Index)).FirstOrDefault(x => x)))
-						continue;
+					if (commandLineParams.Existing)
+					{
+						var tab = Instances.OrderByDescending(x => x.LastActivated).Select(x => x.GetTab(file.FileName)).NonNull().FirstOrDefault();
+						if (tab != null)
+						{
+							tabs.HandleCommand(new ExecuteState(NECommand.Internal_GotoTab) { Configuration = new Configuration_Internal_GotoTab { Tab = tab, Line = file.Line, Column = file.Column, Index = file.Index } });
+							continue;
+						}
+					}
 
 					tabs.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });
 				}
 
 				if (commandLineParams.Diff)
 					tabs.HandleCommand(new ExecuteState(NECommand.Internal_SetupDiff));
+
+				tabs.TabsWindow.SetForeground();
 			}
 			catch (Exception ex)
 			{
@@ -644,5 +654,7 @@ namespace NeoEdit.Editor
 					ITabsWindowStatic.ShowExceptionMessage(ex);
 			}
 		}
+
+		Tab GetTab(string fileName) => ActiveTabs.FirstOrDefault(tab => tab.FileName == fileName);
 	}
 }

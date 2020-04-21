@@ -34,6 +34,12 @@ namespace NeoEdit.Editor.CommandLine
 			return base.VisitMulti(context);
 		}
 
+		public override object VisitExisting([NotNull] CommandLineParser.ExistingContext context)
+		{
+			clParams.Existing = true;
+			return base.VisitExisting(context);
+		}
+
 		public override object VisitDiff([NotNull] CommandLineParser.DiffContext context)
 		{
 			clParams.Diff = true;
@@ -44,7 +50,6 @@ namespace NeoEdit.Editor.CommandLine
 		{
 			clParams.Files.Add(new CommandLineParams.File
 			{
-				Existing = context.EXISTING() != null,
 				FileName = context.filename.GetText(),
 				DisplayName = context.display?.GetText(),
 				Line = context.line == null ? default(int?) : int.Parse(context.line.Text),
