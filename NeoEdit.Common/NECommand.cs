@@ -736,5 +736,6 @@ namespace NeoEdit.Common
 		Help_Update,
 		Help_Extract,
 		Help_RunGC,
+		Help_CopyCommandLine,
 	}
 }

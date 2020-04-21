@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -93,5 +94,12 @@ namespace NeoEdit.Editor
 		}
 
 		static void Execute_Help_RunGC() => GC.Collect();
+
+		void Execute_Help_CopyCommandLine()
+		{
+			var clipboard = new NEClipboard();
+			clipboard.Add(new List<string> { Environment.CommandLine });
+			NEClipboard.Current = clipboard;
+		}
 	}
 }

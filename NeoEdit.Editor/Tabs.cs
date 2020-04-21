@@ -395,6 +395,7 @@ namespace NeoEdit.Editor
 				case NECommand.Help_Update: Execute_Help_Update(); break;
 				case NECommand.Help_Extract: Execute_Help_Extract(); break;
 				case NECommand.Help_RunGC: Execute_Help_RunGC(); break;
+				case NECommand.Help_CopyCommandLine: Execute_Help_CopyCommandLine(); break;
 				default: ExecuteActiveTabs(); break;
 			}
 		}
