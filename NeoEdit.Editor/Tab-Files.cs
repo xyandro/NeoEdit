@@ -446,11 +446,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		void Execute_Files_Get_Version_File() => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => FileVersionInfo.GetVersionInfo(file).FileVersion).ToList());
+		void Execute_Files_Get_Version_File() => Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => FileVersionInfo.GetVersionInfo(file).FileVersion).ToList(result => ReplaceSelections(result));
 
-		void Execute_Files_Get_Version_Product() => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => FileVersionInfo.GetVersionInfo(file).ProductVersion).ToList());
+		void Execute_Files_Get_Version_Product() => Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => FileVersionInfo.GetVersionInfo(file).ProductVersion).ToList(result => ReplaceSelections(result));
 
-		void Execute_Files_Get_Version_Assembly() => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => AssemblyName.GetAssemblyName(file).Version.ToString()).ToList());
+		void Execute_Files_Get_Version_Assembly() => Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => AssemblyName.GetAssemblyName(file).Version.ToString()).ToList(result => ReplaceSelections(result));
 
 		void Execute_Files_Get_ChildrenDescendants(bool recursive)
 		{
@@ -467,7 +467,7 @@ namespace NeoEdit.Editor
 		void Execute_Files_Get_VersionControlStatus()
 		{
 			var versioner = new Versioner();
-			ReplaceSelections(RelativeSelectedFiles().Select(x => versioner.GetStatus(x).ToString()).ToList());
+			Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(x => versioner.GetStatus(x).ToString()).ToList(result => ReplaceSelections(result));
 		}
 
 		object Configure_Files_Set_Size()
