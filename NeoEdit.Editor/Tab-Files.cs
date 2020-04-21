@@ -688,11 +688,11 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		void Execute_Files_Select_Files() => Selections = Selections.Where(range => File.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList();
+		void Execute_Files_Select_Files() => Selections.AsTaskRunner().Select(range => File.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList(result => Selections = Selections.Where((range, index) => result[index]).ToList());
 
-		void Execute_Files_Select_Directories() => Selections = Selections.Where(range => Directory.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList();
+		void Execute_Files_Select_Directories() => Selections.AsTaskRunner().Select(range => Directory.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList(result => Selections = Selections.Where((range, index) => result[index]).ToList());
 
-		void Execute_Files_Select_Existing(bool existing) => Selections = Selections.Where(range => Helpers.FileOrDirectoryExists(FileName.RelativeChild(Text.GetString(range))) == existing).ToList();
+		void Execute_Files_Select_Existing(bool existing) => Selections.AsTaskRunner().Select(range => Helpers.FileOrDirectoryExists(FileName.RelativeChild(Text.GetString(range))) == existing).ToList(result => Selections = Selections.Where((range, index) => result[index]).ToList());
 
 		void Execute_Files_Select_Roots(bool include)
 		{
