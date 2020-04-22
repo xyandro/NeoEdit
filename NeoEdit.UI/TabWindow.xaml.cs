@@ -94,7 +94,7 @@ namespace NeoEdit.UI
 			yScroll.SmallChange = 1;
 			yScroll.Value = Math.Max(yScroll.Minimum, Math.Min(Tab.StartRow, yScroll.Maximum));
 
-			//TODO yScroll.DiffList = DataQwer.GetDiffRanges();
+			yScroll.DiffList = Tab.ViewGetDiffRanges();
 
 			xScroll.ValueChanged += ScrollChanged;
 			yScroll.ValueChanged += ScrollChanged;

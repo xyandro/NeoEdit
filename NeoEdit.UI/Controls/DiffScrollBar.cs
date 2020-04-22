@@ -164,7 +164,7 @@ namespace NeoEdit.UI.Controls
 		{
 			if (diffList != null)
 				foreach (var tuple in diffList)
-					dc.DrawRectangle(DiffBrush, null, GetRect(ScrollToActual(tuple.Item1), Math.Max(1, ScrollToActual(tuple.Item2 - tuple.Item1))));
+					dc.DrawRoundedRectangle(DiffBrush, null, GetRect(ScrollToActual(tuple.Item1), Math.Max(1, ScrollToActual(tuple.Item2 - tuple.Item1))), 4, 4);
 
 			if (Maximum > Minimum)
 			{

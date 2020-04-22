@@ -37,5 +37,6 @@ namespace NeoEdit.Common
 		DiffType ViewGetLineDiffType(int line);
 		List<int> ViewGetLineColumnMap(int line, bool includeEnding = false);
 		List<Tuple<int, int>> ViewGetLineColumnDiffs(int line);
+		List<Tuple<double, double>> ViewGetDiffRanges();
 	}
 }

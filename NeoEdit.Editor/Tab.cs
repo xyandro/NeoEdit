@@ -1732,5 +1732,35 @@ namespace NeoEdit.Editor
 		}
 
 		public List<Tuple<int, int>> ViewGetLineColumnDiffs(int line) => diffData?.ColCompare[line] ?? new List<Tuple<int, int>>();
+
+		public List<Tuple<double, double>> ViewGetDiffRanges()
+		{
+			if (diffData == null)
+				return null;
+
+			var diffRanges = new List<Tuple<double, double>>();
+			var start = -1;
+			var line = -1;
+			while (true)
+			{
+				++line;
+				var stop = line >= diffData.LineCompare.Count;
+				var lineIsDiff = stop ? false : diffData.LineCompare[line] != DiffType.Match;
+
+				if ((start != -1) && (!lineIsDiff))
+				{
+					diffRanges.Add(new Tuple<double, double>(start, line));
+					start = -1;
+				}
+
+				if (stop)
+					break;
+
+				if ((start == -1) && (lineIsDiff))
+					start = line;
+			}
+
+			return diffRanges;
+		}
 	}
 }

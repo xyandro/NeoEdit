@@ -1,7 +1,6 @@
 ﻿Make modal dialogs modal for owning window only
 Print
 Add ability to select all attributes
-Round yellow diff corners in diff scrollbar
 Configuration shouldn't need transaction
 Flag executes as being okay with parallel tabs (One at a time, .AsParallel() or .AsParallel().AsOrdered())
 Less specific parsing (ignore method bodies, just line up {})
