@@ -57,6 +57,7 @@ namespace NeoEdit.Editor
 		{
 			(var itab, var newColumn, var newRow) = ((ITab, int, int))state.Configuration;
 			var tab = itab as Tab;
+			AddToTransaction(tab);
 			tab.StartColumn = newColumn;
 			tab.StartRow = newRow;
 		}

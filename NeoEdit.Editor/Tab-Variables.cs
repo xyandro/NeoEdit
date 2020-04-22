@@ -489,6 +489,11 @@ namespace NeoEdit.Editor
 			{
 				EnsureInTransaction();
 				newStartRow = value;
+				if (DiffTarget != null)
+				{
+					Tabs.AddToTransaction(DiffTarget);
+					DiffTarget.newStartRow = value;
+				}
 			}
 		}
 
