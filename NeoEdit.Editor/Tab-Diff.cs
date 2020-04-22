@@ -31,11 +31,11 @@ namespace NeoEdit.Editor
 		{
 			if (next)
 			{
-				var endLine = TextView.GetPositionLine(range.End);
+				var endLine = DiffView.GetPositionLine(range.End);
 
-				while ((endLine < TextView.NumLines) && (GetLineDiffMatches(endLine)))
+				while ((endLine < DiffView.NumLines) && (GetLineDiffMatches(endLine)))
 					++endLine;
-				while ((endLine < TextView.NumLines) && (!GetLineDiffMatches(endLine)))
+				while ((endLine < DiffView.NumLines) && (!GetLineDiffMatches(endLine)))
 					++endLine;
 
 				var startLine = endLine;
@@ -46,7 +46,7 @@ namespace NeoEdit.Editor
 			}
 			else
 			{
-				var startLine = TextView.GetPositionLine(Math.Max(0, range.Start - 1));
+				var startLine = DiffView.GetPositionLine(Math.Max(0, range.Start - 1));
 
 				while ((startLine > 0) && (GetLineDiffMatches(startLine)))
 					--startLine;
@@ -54,7 +54,7 @@ namespace NeoEdit.Editor
 					--startLine;
 
 				var endLine = startLine;
-				while ((endLine < TextView.NumLines) && (!GetLineDiffMatches(endLine)))
+				while ((endLine < DiffView.NumLines) && (!GetLineDiffMatches(endLine)))
 					++endLine;
 
 				return Tuple.Create(startLine, endLine);
@@ -164,10 +164,16 @@ namespace NeoEdit.Editor
 			var line = 0;
 			while (true)
 			{
-				var end = line >= diffData.LineCompare.Count;
+				var end = line >= DiffView.NumLines;
 
-				if ((!end) && ((diffData.LineCompare[line] == DiffType.Match) == match))
-					matchTuple = matchTuple ?? DiffView.GetLine(line, true);
+				if ((!end) && (GetLineDiffMatches(line) == match))
+				{
+					var lineRange = DiffView.GetLine(line, true);
+					if (matchTuple == default)
+						matchTuple = lineRange;
+					else
+						matchTuple = new Range(lineRange.End, matchTuple.Start);
+				}
 				else if (matchTuple != null)
 				{
 					result.Add(matchTuple);
@@ -275,7 +281,7 @@ namespace NeoEdit.Editor
 			for (var pass = 0; pass < 2; ++pass)
 			{
 				var target = pass == 0 ? this : DiffTarget;
-				var sels = lines.Select(tuple => new Range(target.TextView.GetPosition(tuple.Item2, 0, true), target.TextView.GetPosition(tuple.Item1, 0, true))).ToList();
+				var sels = lines.Select(tuple => new Range(target.DiffView.GetPosition(tuple.Item2, 0, true), target.DiffView.GetPosition(tuple.Item1, 0, true))).ToList();
 				if (shiftDown)
 					sels.AddRange(target.Selections);
 				target.Selections = sels;
