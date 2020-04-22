@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -201,7 +200,11 @@ namespace NeoEdit.Editor
 			if (original == null)
 				throw new Exception("Unable to get VCS content");
 
-			QueueAddTab(new Tab(displayName: Path.GetFileName(FileName), modified: false, bytes: original) { ContentType = ContentType, DiffTarget = this });
+			var tab = new Tab(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
+			Tabs.AddToTransaction(tab);
+			tab.ContentType = ContentType;
+			tab.DiffTarget = this;
+			QueueAddTab(tab);
 		}
 
 		void Execute_File_Operations_SetDisplayName()
