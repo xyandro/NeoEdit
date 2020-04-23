@@ -58,8 +58,12 @@ namespace NeoEdit.Editor
 			var ending = addNewLines ?? strs.Any(str => !str.EndsWith(TextView.DefaultEnding)) ? TextView.DefaultEnding : "";
 			if (ending.Length != 0)
 				strs = strs.Select(str => str + ending).ToList();
-			var ranges = new List<Range> { Selections[0] };
-			ranges.AddRange(Enumerable.Repeat(new Range(Selections[0].End), strs.Count - 1));
+			var ranges = new List<Range>();
+			if (strs.Count > 0)
+			{
+				ranges.Add(Selections[0]);
+				ranges.AddRange(Enumerable.Repeat(new Range(Selections[0].End), strs.Count - 1));
+			}
 			var position = Selections.Single().Start;
 			Replace(ranges, strs);
 
