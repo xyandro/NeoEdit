@@ -432,7 +432,7 @@ namespace NeoEdit.Editor
 			column = Math.Max(0, Math.Min(column, DiffView.GetLineColumnsLength(Text, line)));
 			var index = DiffView.GetIndexFromColumn(Text, line, column, true);
 			var position = DiffView.GetPosition(line, index);
-			var mouseRange = CurrentSelection < sels.Count ? sels[CurrentSelection] : null;
+			var mouseRange = (CurrentSelection >= 0) && (CurrentSelection < sels.Count) ? sels[CurrentSelection] : null;
 
 			var currentSelection = default(Range);
 			if (selecting ?? state.ShiftDown)
