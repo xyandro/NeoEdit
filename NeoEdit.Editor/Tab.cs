@@ -9,6 +9,7 @@ using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.Content;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.Editor.Transactional.View;
 
@@ -47,8 +48,8 @@ namespace NeoEdit.Editor
 
 		CacheValue modifiedChecksum = new CacheValue();
 		CacheValue previousData = new CacheValue();
-		//ParserType previousType;
-		//ParserNode previousRoot;
+		ParserType previousType;
+		NewNode previousRoot;
 
 		void ReplaceOneWithMany(IReadOnlyList<string> strs, bool? addNewLines)
 		{

@@ -25,6 +25,8 @@ namespace NeoEdit.Common
 		public int Length { get; }
 		public bool HasSelection { get; }
 
+		public bool Contains(Range range) => (range.Start >= Start) && (range.End <= End);
+
 		public override string ToString() => $"({Start:0000000000})->({End:0000000000})";
 
 		public bool Equals(Range range) => (Start == range.Start) && (End == range.End);

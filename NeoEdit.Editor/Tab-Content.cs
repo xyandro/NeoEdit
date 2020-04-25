@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
@@ -11,75 +12,46 @@ namespace NeoEdit.Editor
 {
 	partial class Tab
 	{
-		void ContentReplaceSelections(IEnumerable<ParserBase> nodes)
+		IReadOnlyList<NewNode> GetSelectionNodes()
 		{
-			nodes = nodes.NonNull().Distinct().OrderBy(node => node.Start).ThenBy(node => node.End);
-			var sels = new List<Range>();
-			var prevNode = default(ParserBase);
-			using (var e = nodes.GetEnumerator())
+			if (Nodes != null)
+				return Nodes;
+
+			var node = RootNode();
+
+			//node.ToXML().Save(@"C:\Dev\NeoEdit\a.xml");
+
+			var result = new OrderedHashSet<NewNode>();
+			foreach (var range in Selections)
+			{
+				while (!node.Range.Contains(range))
+					node = node.Parent;
+
 				while (true)
-					if (e.MoveNext())
-					{
-						if (prevNode != null)
-						{
-							var overlap = e.Current.Start < prevNode.End;
-							sels.Add(new Range(overlap ? prevNode.Start : prevNode.End, prevNode.Start));
-						}
-
-						prevNode = e.Current;
-					}
+				{
+					var child = node.Children.FirstOrDefault(x => x.Range.Contains(range));
+					if (child != null)
+						node = child;
 					else
-					{
-						if (prevNode != null)
-							sels.Add(new Range(prevNode.End, prevNode.Start));
 						break;
-					}
+				}
 
-			Selections = sels;
-		}
+				if (!result.Contains(node))
+					result.Add(node);
+			}
 
-		List<NewNode> GetSelectionNodes()
-		{
-			return new List<NewNode>();
-			//var nodes = RootNode().GetAllNodes();
-			//var fullLocation = new Dictionary<int, Dictionary<int, ParserNode>>();
-			//var startLocation = new Dictionary<int, ParserNode>();
-			//foreach (var node in nodes)
-			//{
-			//	if (!fullLocation.ContainsKey(node.Start))
-			//		fullLocation[node.Start] = new Dictionary<int, ParserNode>();
-			//	fullLocation[node.Start][node.End] = node;
-
-			//	startLocation[node.Start] = node;
-			//}
-
-			//var result = new List<ParserNode>();
-			//foreach (var range in Selections)
-			//{
-			//	ParserNode found = null;
-			//	if ((fullLocation.ContainsKey(range.Start)) && (fullLocation[range.Start].ContainsKey(range.End)))
-			//		found = fullLocation[range.Start][range.End];
-			//	else if (startLocation.ContainsKey(range.Cursor))
-			//		found = startLocation[range.Cursor];
-			//	else
-			//		found = nodes.Where(node => (range.Start >= node.Start) && (range.End <= node.End)).OrderBy(node => node.Depth).LastOrDefault();
-			//	if (found == null)
-			//		throw new Exception("No node found");
-			//	result.Add(found);
-			//}
-			//return result;
+			return result;
 		}
 
 		NewNode RootNode()
 		{
-			return NewParser.Parse(ContentType, Text.GetString(), StrictParsing);
-			//if ((!previousData.Match(Text)) || (previousType != ContentType))
-			//{
-			//	previousRoot = Parser.Parse(Text.GetString(), ContentType, StrictParsing);
-			//	previousData.SetValue(Text);
-			//	previousType = ContentType;
-			//}
-			//return previousRoot;
+			if ((!previousData.Match(Text)) || (previousType != ContentType))
+			{
+				previousRoot = NewParser.Parse(ContentType, Text.GetString(), StrictParsing);
+				previousData.SetValue(Text);
+				previousType = ContentType;
+			}
+			return previousRoot;
 		}
 
 		void Execute_Content_Type_SetFromExtension() => ContentType = ParserExtensions.GetParserType(FileName);
@@ -114,21 +86,7 @@ namespace NeoEdit.Editor
 			Selections = nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.Range.End : node.Range.Start, state.ShiftDown)).ToList();
 		}
 
-		void rAddNode(List<NewNode> list, NewNode node)
-		{
-			list.Add(node);
-			foreach (var child in node.Children)
-				rAddNode(list, child);
-		}
-
-		void Execute_Content_Current()
-		{
-			var root = RootNode();
-			var list = new List<NewNode>();
-			rAddNode(list, root);
-			Nodes = list;
-			//ContentReplaceSelections(GetSelectionNodes());
-		}
+		void Execute_Content_Current() => Nodes = GetSelectionNodes();
 
 		void Execute_Content_Parent()
 		{

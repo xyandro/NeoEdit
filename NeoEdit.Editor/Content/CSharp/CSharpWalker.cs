@@ -31,15 +31,33 @@ namespace NeoEdit.Editor.Content.CSharp
 
 		public CSharpWalker(Range range)
 		{
-			document = curNode = new NewNode(range);
+			document = curNode = new NewNode("Document", range);
 		}
 
 		void AddNode(SyntaxNode node, Action action)
 		{
+			var kind = (SyntaxKind)node.RawKind;
+			switch (kind)
+			{
+				case SyntaxKind.NamespaceDeclaration:
+				case SyntaxKind.ClassDeclaration:
+				case SyntaxKind.MethodDeclaration:
+				case SyntaxKind.Block:
+				case SyntaxKind.ArrowExpressionClause:
+				case SyntaxKind.FieldDeclaration:
+				case SyntaxKind.PropertyDeclaration:
+				case SyntaxKind.AccessorList:
+				case SyntaxKind.GetAccessorDeclaration:
+				case SyntaxKind.SetAccessorDeclaration:
+				case SyntaxKind.NumericLiteralExpression:
+					break;
+				default: action(); return;
+			}
+
 			var range = Range.FromIndex(node.Span.Start, node.Span.Length);
 			var newNode = curNode;
 			if (curNode.Range != range)
-				newNode = new NewNode(range);
+				newNode = new NewNode(node.Kind().ToString(), range);
 
 			newNode.Parent = curNode;
 			curNode.Children.Add(newNode);
@@ -52,29 +70,6 @@ namespace NeoEdit.Editor.Content.CSharp
 			curNode = prevNode;
 		}
 
-		public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
-		{
-			AddNode(node, () => base.VisitNamespaceDeclaration(node));
-		}
-
-		public override void VisitClassDeclaration(ClassDeclarationSyntax node)
-		{
-			AddNode(node, () => base.VisitClassDeclaration(node));
-		}
-
-		public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
-		{
-			AddNode(node, () => base.VisitMethodDeclaration(node));
-		}
-
-		public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
-		{
-			AddNode(node, () => base.VisitPropertyDeclaration(node));
-		}
-
-		public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
-		{
-			AddNode(node, () => base.VisitFieldDeclaration(node));
-		}
+		public override void Visit(SyntaxNode node) => AddNode(node, () => base.Visit(node));
 	}
 }
