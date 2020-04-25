@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
-using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Editor.Content;
 
@@ -19,7 +16,7 @@ namespace NeoEdit.Editor
 
 			var node = RootNode();
 
-			//node.ToXML().Save(@"C:\Dev\NeoEdit\a.xml");
+			node.ToXML().Save(@"C:\Dev\NeoEdit\a.xml");
 
 			var result = new OrderedHashSet<NewNode>();
 			foreach (var range in Selections)
