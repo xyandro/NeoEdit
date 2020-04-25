@@ -403,7 +403,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		bool oldStrictParsing, newStrictParsing;
+		bool oldStrictParsing = true, newStrictParsing = true;
 		public bool StrictParsing
 		{
 			get => newStrictParsing;
