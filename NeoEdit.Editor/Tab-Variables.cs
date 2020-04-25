@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.Content;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.Editor.Transactional.View;
 
@@ -122,54 +120,15 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		IReadOnlyList<NewNode> oldNodes, newNodes;
-		public IReadOnlyList<NewNode> Nodes
-		{
-			get => newNodes;
-			set
-			{
-				EnsureInTransaction();
-				newNodes = value;
-				newSelections = null;
-				viewSelections = null;
-			}
-		}
-
-		IReadOnlyList<Range> viewSelections;
-		public IReadOnlyList<Range> ViewSelections
-		{
-			get
-			{
-				if (viewSelections == null)
-				{
-					if (newNodes != null)
-						viewSelections = newNodes.Select(node => node.Range).ToList();
-					else if (newSelections != null)
-						viewSelections = newSelections;
-					else
-						throw new Exception("No current selections found");
-				}
-				return viewSelections;
-			}
-		}
-
 		IReadOnlyList<Range> oldSelections, newSelections;
 		public IReadOnlyList<Range> Selections
 		{
-			get
-			{
-				if ((newSelections == null) && (newNodes != null))
-					newSelections = DeOverlap(newNodes.Select(node => node.Range).ToList());
-				return newSelections;
-			}
-
+			get => newSelections;
 			set
 			{
 				EnsureInTransaction();
 				newSelections = DeOverlap(value);
-				newNodes = null;
 				CurrentSelection = CurrentSelection;
-				viewSelections = null;
 				EnsureVisible();
 			}
 		}
@@ -444,7 +403,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		bool oldStrictParsing = true, newStrictParsing = true;
+		bool oldStrictParsing, newStrictParsing;
 		public bool StrictParsing
 		{
 			get => newStrictParsing;
@@ -574,7 +533,6 @@ namespace NeoEdit.Editor
 			newMaxColumn = oldMaxColumn;
 			newCurrentSelection = oldCurrentSelection;
 			newSelections = oldSelections;
-			newNodes = oldNodes;
 			for (var ctr = 0; ctr < oldRegions.Length; ++ctr)
 				newRegions[ctr] = oldRegions[ctr];
 			newDisplayName = oldDisplayName;
@@ -618,7 +576,6 @@ namespace NeoEdit.Editor
 			oldMaxColumn = newMaxColumn;
 			oldCurrentSelection = newCurrentSelection;
 			oldSelections = newSelections;
-			oldNodes = newNodes;
 			for (var ctr = 0; ctr < oldRegions.Length; ++ctr)
 				oldRegions[ctr] = newRegions[ctr];
 			oldDisplayName = newDisplayName;

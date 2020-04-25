@@ -107,7 +107,7 @@
     <Compile Include="Content\Columns\Parser\ColumnsParser.cs" />
     <Compile Include="Content\Columns\Parser\ColumnsVisitor.cs" />
     <None Include="Content\Columns\Source\Columns.g4" />
-    <Compile Include="Content\CSharp\CSharpWalker.cs" />
+    <Compile Include="Content\CSharp\CSharpVisitor.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpLexer.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpParser.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpParserBaseVisitor.cs" />
@@ -133,8 +133,6 @@
     <Compile Include="Content\JSON\Parser\JSONParser.cs" />
     <Compile Include="Content\JSON\Parser\JSONVisitor.cs" />
     <None Include="Content\JSON\Source\JSON.g4" />
-    <Compile Include="Content\NewNode.cs" />
-    <Compile Include="Content\NewParser.cs" />
     <Compile Include="Content\Parser.cs" />
     <Compile Include="Content\SQL\Parser\SQLLexer.cs" />
     <Compile Include="Content\SQL\Parser\SQLParser.cs" />
@@ -170,7 +168,6 @@
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="MacroAction.cs" />
-    <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Searchers\BinarySearcher.cs" />
@@ -286,40 +283,10 @@
     <Reference Include="Antlr4.Runtime.Standard">
       <HintPath>$(SolutionDir)Lib\ANTLR\Antlr4.Runtime.Standard.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CodeAnalysis, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.3.5.0\lib\netstandard2.0\Microsoft.CodeAnalysis.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.3.5.0\lib\netstandard2.0\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
-    </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reflection.Metadata, Version=1.4.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reflection.Metadata.1.6.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.6.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Encoding.CodePages, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encoding.CodePages.4.5.1\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.3\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />

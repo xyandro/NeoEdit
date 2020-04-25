@@ -154,9 +154,9 @@ namespace NeoEdit.UI
 
 		void RenderCarets(DrawingContext dc, DrawBounds drawBounds)
 		{
-			for (var selectionCtr = 0; selectionCtr < Tab.ViewSelections.Count; ++selectionCtr)
+			for (var selectionCtr = 0; selectionCtr < Tab.Selections.Count; ++selectionCtr)
 			{
-				var range = Tab.ViewSelections[selectionCtr];
+				var range = Tab.Selections[selectionCtr];
 
 				if ((range.End < drawBounds.ScreenStart) || (range.Start > drawBounds.ScreenEnd))
 					continue;
@@ -359,12 +359,12 @@ namespace NeoEdit.UI
 			SetScrollBarsParameters();
 
 			var drawBounds = GetDrawBounds();
-			var visibleCursor = (Tab.CurrentSelection >= 0) && (Tab.CurrentSelection < Tab.ViewSelections.Count) ? Tab.ViewSelections[Tab.CurrentSelection] : null;
+			var visibleCursor = (Tab.CurrentSelection >= 0) && (Tab.CurrentSelection < Tab.Selections.Count) ? Tab.Selections[Tab.CurrentSelection] : null;
 
 			for (var region = 1; region <= 9; ++region)
 				RenderIndicators(dc, drawBounds, null, Tab.GetRegions(region), null, regionPen[region], -2, 2);
-			if (Tab.ViewSelections.Any(range => range.HasSelection))
-				RenderIndicators(dc, drawBounds, visibleCursor, Tab.ViewSelections, selectionBrush, selectionPen, -1, 1);
+			if (Tab.Selections.Any(range => range.HasSelection))
+				RenderIndicators(dc, drawBounds, visibleCursor, Tab.Selections, selectionBrush, selectionPen, -1, 1);
 			else
 				RenderCarets(dc, drawBounds);
 			RenderDiff(dc, drawBounds);
