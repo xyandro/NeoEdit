@@ -38,46 +38,48 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		List<ParserNode> GetSelectionNodes()
+		List<NewNode> GetSelectionNodes()
 		{
-			var nodes = RootNode().GetAllNodes();
-			var fullLocation = new Dictionary<int, Dictionary<int, ParserNode>>();
-			var startLocation = new Dictionary<int, ParserNode>();
-			foreach (var node in nodes)
-			{
-				if (!fullLocation.ContainsKey(node.Start))
-					fullLocation[node.Start] = new Dictionary<int, ParserNode>();
-				fullLocation[node.Start][node.End] = node;
+			return new List<NewNode>();
+			//var nodes = RootNode().GetAllNodes();
+			//var fullLocation = new Dictionary<int, Dictionary<int, ParserNode>>();
+			//var startLocation = new Dictionary<int, ParserNode>();
+			//foreach (var node in nodes)
+			//{
+			//	if (!fullLocation.ContainsKey(node.Start))
+			//		fullLocation[node.Start] = new Dictionary<int, ParserNode>();
+			//	fullLocation[node.Start][node.End] = node;
 
-				startLocation[node.Start] = node;
-			}
+			//	startLocation[node.Start] = node;
+			//}
 
-			var result = new List<ParserNode>();
-			foreach (var range in Selections)
-			{
-				ParserNode found = null;
-				if ((fullLocation.ContainsKey(range.Start)) && (fullLocation[range.Start].ContainsKey(range.End)))
-					found = fullLocation[range.Start][range.End];
-				else if (startLocation.ContainsKey(range.Cursor))
-					found = startLocation[range.Cursor];
-				else
-					found = nodes.Where(node => (range.Start >= node.Start) && (range.End <= node.End)).OrderBy(node => node.Depth).LastOrDefault();
-				if (found == null)
-					throw new Exception("No node found");
-				result.Add(found);
-			}
-			return result;
+			//var result = new List<ParserNode>();
+			//foreach (var range in Selections)
+			//{
+			//	ParserNode found = null;
+			//	if ((fullLocation.ContainsKey(range.Start)) && (fullLocation[range.Start].ContainsKey(range.End)))
+			//		found = fullLocation[range.Start][range.End];
+			//	else if (startLocation.ContainsKey(range.Cursor))
+			//		found = startLocation[range.Cursor];
+			//	else
+			//		found = nodes.Where(node => (range.Start >= node.Start) && (range.End <= node.End)).OrderBy(node => node.Depth).LastOrDefault();
+			//	if (found == null)
+			//		throw new Exception("No node found");
+			//	result.Add(found);
+			//}
+			//return result;
 		}
 
-		ParserNode RootNode()
+		NewNode RootNode()
 		{
-			if ((!previousData.Match(Text)) || (previousType != ContentType))
-			{
-				previousRoot = Parser.Parse(Text.GetString(), ContentType, StrictParsing);
-				previousData.SetValue(Text);
-				previousType = ContentType;
-			}
-			return previousRoot;
+			return NewParser.Parse(ContentType, Text.GetString(), StrictParsing);
+			//if ((!previousData.Match(Text)) || (previousType != ContentType))
+			//{
+			//	previousRoot = Parser.Parse(Text.GetString(), ContentType, StrictParsing);
+			//	previousData.SetValue(Text);
+			//	previousType = ContentType;
+			//}
+			//return previousRoot;
 		}
 
 		void Execute_Content_Type_SetFromExtension() => ContentType = ParserExtensions.GetParserType(FileName);
@@ -94,92 +96,147 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Reformat()
 		{
-			var root = RootNode();
-			var str = Parser.Reformat(root, Text.GetString(), ContentType);
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { str });
+			//var root = RootNode();
+			//var str = Parser.Reformat(root, Text.GetString(), ContentType);
+			//Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { str });
 		}
 
 		void Execute_Content_Comment() => ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Text, TextView, range)).ToList());
 
 		void Execute_Content_Uncomment() => ReplaceSelections(Selections.Select(range => Parser.Uncomment(ContentType, Text, TextView, range)).ToList());
 
-		void Execute_Content_Copy() => Clipboard = GetSelectionNodes().Select(node => Text.GetString(node.Start, node.Length)).ToList();
+		void Execute_Content_Copy() => Clipboard = GetSelectionNodes().Select(node => Text.GetString(node.Range.Start, node.Range.Length)).ToList();
 
 		void Execute_Content_TogglePosition()
 		{
 			var nodes = GetSelectionNodes();
-			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All();
-			Selections = nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, state.ShiftDown)).ToList();
+			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Range.Start).All();
+			Selections = nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.Range.End : node.Range.Start, state.ShiftDown)).ToList();
 		}
 
-		void Execute_Content_Current() => ContentReplaceSelections(GetSelectionNodes());
+		void rAddNode(List<NewNode> list, NewNode node)
+		{
+			list.Add(node);
+			foreach (var child in node.Children)
+				rAddNode(list, child);
+		}
 
-		void Execute_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
+		void Execute_Content_Current()
+		{
+			var root = RootNode();
+			var list = new List<NewNode>();
+			rAddNode(list, root);
+			Nodes = list;
+			//ContentReplaceSelections(GetSelectionNodes());
+		}
 
-		object Configure_Content_Ancestor() => Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
+		void Execute_Content_Parent()
+		{
+			//ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
+		}
+
+		object Configure_Content_Ancestor()
+		{
+			return default;
+			//return Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
+		}
 
 		void Execute_Content_Ancestor()
 		{
-			var result = state.Configuration as ContentAttributeDialogResult;
-			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+			//var result = state.Configuration as ContentAttributeDialogResult;
+			//ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
-		object Configure_Content_Attributes() => Tabs.TabsWindow.RunContentAttributesDialog(GetSelectionNodes());
+		object Configure_Content_Attributes()
+		{
+			return default;
+			//return Tabs.TabsWindow.RunContentAttributesDialog(GetSelectionNodes());
+		}
 
 		void Execute_Content_Attributes()
 		{
-			var result = state.Configuration as ContentAttributesDialogResult;
-			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
+			//var result = state.Configuration as ContentAttributesDialogResult;
+			//ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 		}
 
-		object Configure_Content_WithAttribute() => Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes());
+		object Configure_Content_WithAttribute()
+		{
+			return default;
+			//return Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes());
+		}
 
 		void Execute_Content_WithAttribute()
 		{
-			var result = state.Configuration as ContentAttributeDialogResult;
-			ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+			//var result = state.Configuration as ContentAttributeDialogResult;
+			//ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
-		void Execute_Content_Children_Children() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()));
+		void Execute_Content_Children_Children()
+		{
+			//ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()));
+		}
 
-		void Execute_Content_Children_SelfAndChildren() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndChildren()));
+		void Execute_Content_Children_SelfAndChildren()
+		{
+			//ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndChildren()));
+		}
 
-		void Execute_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
+		void Execute_Content_Children_First()
+		{
+			//ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
+		}
 
-		object Configure_Content_Children_WithAttribute() => Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
+		object Configure_Content_Children_WithAttribute()
+		{
+			return default;
+			//return Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
+		}
 
 		void Execute_Content_Children_WithAttribute()
 		{
-			var result = state.Configuration as ContentAttributeDialogResult;
-			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+			//var result = state.Configuration as ContentAttributeDialogResult;
+			//ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
-		void Execute_Content_Descendants_Descendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()));
+		void Execute_Content_Descendants_Descendants()
+		{
+			//ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()));
+		}
 
-		void Execute_Content_Descendants_SelfAndDescendants() => ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndDescendants()));
+		void Execute_Content_Descendants_SelfAndDescendants()
+		{
+			//ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.SelfAndDescendants()));
+		}
 
-		void Execute_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
+		void Execute_Content_Descendants_First()
+		{
+			//ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
+		}
 
-		object Configure_Content_Descendants_WithAttribute() => Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+		object Configure_Content_Descendants_WithAttribute()
+		{
+			return default;
+			//return Tabs.TabsWindow.RunContentAttributeDialog(GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+		}
 
 		void Execute_Content_Descendants_WithAttribute()
 		{
-			var result = state.Configuration as ContentAttributeDialogResult;
-			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
+			//var result = state.Configuration as ContentAttributeDialogResult;
+			//ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
 		void Execute_Content_Navigate(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown)
 		{
-			if (ContentType == ParserType.None)
-			{
-				switch (direction)
-				{
-					case ParserNode.ParserNavigationDirectionEnum.Left: Execute_Edit_Navigate_AllLeft(); break;
-					case ParserNode.ParserNavigationDirectionEnum.Right: Execute_Edit_Navigate_AllRight(); break;
-				}
-			}
-			else
-				ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown, KeepSelections)));
+			//if (ContentType == ParserType.None)
+			//{
+			//	switch (direction)
+			//	{
+			//		case ParserNode.ParserNavigationDirectionEnum.Left: Execute_Edit_Navigate_AllLeft(); break;
+			//		case ParserNode.ParserNavigationDirectionEnum.Right: Execute_Edit_Navigate_AllRight(); break;
+			//	}
+			//}
+			//else
+			//	ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Navigate(direction, shiftDown, KeepSelections)));
 		}
 
 		void Execute_Content_KeepSelections() => KeepSelections = state.MultiStatus != true;

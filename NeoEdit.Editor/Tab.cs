@@ -47,8 +47,8 @@ namespace NeoEdit.Editor
 
 		CacheValue modifiedChecksum = new CacheValue();
 		CacheValue previousData = new CacheValue();
-		ParserType previousType;
-		ParserNode previousRoot;
+		//ParserType previousType;
+		//ParserNode previousRoot;
 
 		void ReplaceOneWithMany(IReadOnlyList<string> strs, bool? addNewLines)
 		{
@@ -1543,7 +1543,7 @@ namespace NeoEdit.Editor
 		{
 			var status = new List<string>();
 
-			if (!Selections.Any())
+			if (!ViewSelections.Any())
 			{
 				status.Add("Selection 0/0");
 				status.Add("Col");
@@ -1552,7 +1552,7 @@ namespace NeoEdit.Editor
 			}
 			else
 			{
-				var range = Selections[CurrentSelection];
+				var range = ViewSelections[CurrentSelection];
 				var lineMin = TextView.GetPositionLine(range.Start);
 				var lineMax = TextView.GetPositionLine(range.End);
 				var indexMin = TextView.GetPositionIndex(range.Start, lineMin);
@@ -1562,7 +1562,7 @@ namespace NeoEdit.Editor
 				var posMin = range.Start;
 				var posMax = range.End;
 
-				status.Add($"Selection {CurrentSelection + 1:n0}/{Selections.Count:n0}");
+				status.Add($"Selection {CurrentSelection + 1:n0}/{ViewSelections.Count:n0}");
 				status.Add($"Col {lineMin + 1:n0}:{columnMin + 1:n0}{((lineMin == lineMax) && (columnMin == columnMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{columnMax + 1:n0}")}");
 				status.Add($"In {lineMin + 1:n0}:{indexMin + 1:n0}{((lineMin == lineMax) && (indexMin == indexMax) ? "" : $"-{(lineMin == lineMax ? "" : $"{lineMax + 1:n0}:")}{indexMax + 1:n0}")}");
 				status.Add($"Pos {posMin:n0}{(posMin == posMax ? "" : $"-{posMax:n0} ({posMax - posMin:n0})")}");

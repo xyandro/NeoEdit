@@ -107,7 +107,7 @@
     <Compile Include="Content\Columns\Parser\ColumnsParser.cs" />
     <Compile Include="Content\Columns\Parser\ColumnsVisitor.cs" />
     <None Include="Content\Columns\Source\Columns.g4" />
-    <Compile Include="Content\CSharp\CSharpVisitor.cs" />
+    <Compile Include="Content\CSharp\CSharpWalker.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpLexer.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpParser.cs" />
     <Compile Include="Content\CSharp\Parser\CSharpParserBaseVisitor.cs" />
@@ -133,6 +133,8 @@
     <Compile Include="Content\JSON\Parser\JSONParser.cs" />
     <Compile Include="Content\JSON\Parser\JSONVisitor.cs" />
     <None Include="Content\JSON\Source\JSON.g4" />
+    <Compile Include="Content\NewNode.cs" />
+    <Compile Include="Content\NewParser.cs" />
     <Compile Include="Content\Parser.cs" />
     <Compile Include="Content\SQL\Parser\SQLLexer.cs" />
     <Compile Include="Content\SQL\Parser\SQLParser.cs" />
@@ -168,6 +170,7 @@
     <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="MacroAction.cs" />
+    <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Searchers\BinarySearcher.cs" />
@@ -270,7 +273,6 @@
     <Compile Include="Transactional\View\NEHexView.cs" />
     <Compile Include="Transactional\View\NETextView.cs" />
     <EmbeddedResource Include="Words.txt.gz" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj">

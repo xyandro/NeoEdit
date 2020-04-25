@@ -14,7 +14,7 @@ namespace NeoEdit.Common
 		bool ViewBinary { get; }
 		IReadOnlyList<HashSet<string>> ViewBinarySearches { get; }
 		HashSet<Coder.CodePage> ViewBinaryCodePages { get; }
-		IReadOnlyList<Range> Selections { get; }
+		IReadOnlyList<Range> ViewSelections { get; }
 		int CurrentSelection { get; }
 		bool HighlightSyntax { get; }
 		ParserType ContentType { get; }
