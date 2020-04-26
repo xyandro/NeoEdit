@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
@@ -107,7 +108,7 @@ namespace NeoEdit.Common
 		WindowLayout RunWindowCustomGridDialog(WindowLayout windowLayout);
 		void RunWindowActiveTabsDialog(WindowActiveTabsDialogData data);
 		void RunWindowFontSizeDialog();
-		NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog();
+		NetworkWCFGetConfigDialogResult RunNetworkWCFGetConfigDialog();
 		void RunWCFInterceptDialog();
 		HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null);
 		void RunHelpAboutDialog();

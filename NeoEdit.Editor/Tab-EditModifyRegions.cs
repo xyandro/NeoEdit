@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NeoEdit.Common;
-using NeoEdit.Common.Models;
+using NeoEdit.Common.Configuration;
 
 namespace NeoEdit.Editor
 {
@@ -102,7 +102,7 @@ namespace NeoEdit.Editor
 			return searchList;
 		}
 
-		object Configure_Edit_ModifyRegions() => Tabs.TabsWindow.RunEditModifyRegionsDialog();
+		EditModifyRegionsDialogResult Configure_Edit_ModifyRegions() => Tabs.TabsWindow.RunEditModifyRegionsDialog();
 
 		void Execute_Edit_ModifyRegions(EditModifyRegionsDialogResult result)
 		{

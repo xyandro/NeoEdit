@@ -4,8 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
-using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
@@ -50,7 +50,7 @@ namespace NeoEdit.Editor
 				throw new Exception("No connection.");
 		}
 
-		object Configure_Database_Connect() => Tabs.TabsWindow.RunDatabaseConnectDialog();
+		DatabaseConnectDialogResult Configure_Database_Connect() => Tabs.TabsWindow.RunDatabaseConnectDialog();
 
 		void Execute_Database_Connect()
 		{
@@ -86,11 +86,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		object Configure_Database_Examine()
+		Configuration_Database_Examine Configure_Database_Examine()
 		{
 			ValidateConnection();
 			Tabs.TabsWindow.RunDatabaseExamineDialog(dbConnection);
-			return null;
+			return new Configuration_Database_Examine();
 		}
 
 		void Execute_Database_GetSproc()

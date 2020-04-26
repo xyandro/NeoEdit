@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 
 namespace NeoEdit.Editor
 {
@@ -17,7 +18,7 @@ namespace NeoEdit.Editor
 		public bool? MultiStatus;
 		public Key Key;
 		public string Text;
-		public object Configuration;
+		public IConfiguration Configuration;
 
 		MacroAction() { }
 

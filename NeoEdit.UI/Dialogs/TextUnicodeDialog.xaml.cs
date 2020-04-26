@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using NeoEdit.Common.Models;
+using NeoEdit.Common.Configuration;
 using NeoEdit.UI;
 using NeoEdit.UI.Controls;
 

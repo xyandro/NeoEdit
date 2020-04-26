@@ -1,8 +1,8 @@
 ﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.Dialogs.EditModifyRegionsDialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:configuration="clr-namespace:NeoEdit.Common.Configuration;assembly=NeoEdit.Common"
 	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
-	xmlns:models="clr-namespace:NeoEdit.Common.Models;assembly=NeoEdit.Common"
 	Title="Modify Regions" SizeToContent="Height" Width="400">
 
 	<Grid Margin="10">
@@ -41,44 +41,44 @@
 
 		<GroupBox Grid.Row="1" Grid.Column="0" Header="Select">
 			<UniformGrid Columns="3">
-				<Button Click="OkClick" Content="_Select" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Select_Select}"/>
-				<Button Click="OkClick" Content="Pre_vious" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Select_Previous}"/>
-				<Button Click="OkClick" Content="_Next" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Select_Next}"/>
-				<Button Click="OkClick" Content="Enc_losing" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Select_Enclosing}"/>
-				<Button Click="OkClick" Content="_With Enclosing" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Select_WithEnclosing}"/>
-				<Button Click="OkClick" Content="With_out Enclosing" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Select_WithoutEnclosing}"/>
+				<Button Click="OkClick" Content="_Select" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Select_Select}"/>
+				<Button Click="OkClick" Content="Pre_vious" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Select_Previous}"/>
+				<Button Click="OkClick" Content="_Next" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Select_Next}"/>
+				<Button Click="OkClick" Content="Enc_losing" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Select_Enclosing}"/>
+				<Button Click="OkClick" Content="_With Enclosing" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Select_WithEnclosing}"/>
+				<Button Click="OkClick" Content="With_out Enclosing" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Select_WithoutEnclosing}"/>
 			</UniformGrid>
 		</GroupBox>
 
 		<GroupBox Grid.Row="2" Grid.Column="0" Header="Modify">
 			<UniformGrid Columns="3">
-				<Button Click="OkClick" Content="S_et" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Modify_Set}"/>
-				<Button Click="OkClick" Content="_Clear" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Modify_Clear}"/>
-				<Button Click="OkClick" Content="_Remove" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Modify_Remove}"/>
-				<Button Click="OkClick" Content="A_dd" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Modify_Add}"/>
-				<Button Click="OkClick" Content="_Unite" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Modify_Unite}"/>
-				<Button Click="OkClick" Content="_Intersect" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Modify_Intersect}"/>
-				<Button Click="OkClick" Content="E_xclude" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Modify_Exclude}"/>
-				<Button Click="OkClick" Content="Re_peat" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Modify_Repeat}"/>
+				<Button Click="OkClick" Content="S_et" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Modify_Set}"/>
+				<Button Click="OkClick" Content="_Clear" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Modify_Clear}"/>
+				<Button Click="OkClick" Content="_Remove" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Modify_Remove}"/>
+				<Button Click="OkClick" Content="A_dd" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Modify_Add}"/>
+				<Button Click="OkClick" Content="_Unite" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Modify_Unite}"/>
+				<Button Click="OkClick" Content="_Intersect" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Modify_Intersect}"/>
+				<Button Click="OkClick" Content="E_xclude" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Modify_Exclude}"/>
+				<Button Click="OkClick" Content="Re_peat" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Modify_Repeat}"/>
 			</UniformGrid>
 		</GroupBox>
 
 		<GroupBox Grid.Row="3" Grid.Column="0" Header="Copy">
 			<UniformGrid Columns="3">
-				<Button Click="OkClick" Content="Enclosing" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Copy_Enclosing}"/>
-				<Button Click="OkClick" Content="Enclosing Index" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Copy_EnclosingIndex}"/>
+				<Button Click="OkClick" Content="Enclosing" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Copy_Enclosing}"/>
+				<Button Click="OkClick" Content="Enclosing Index" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Copy_EnclosingIndex}"/>
 			</UniformGrid>
 		</GroupBox>
 
 		<GroupBox Grid.Row="4" Grid.Column="0" Header="Transform">
 			<UniformGrid Columns="3">
-				<Button Click="OkClick" Content="Flatten" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Transform_Flatten}"/>
-				<Button Click="OkClick" Content="Transpose" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Transform_Transpose}"/>
-				<Button Click="OkClick" Content="Rotate Left" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Transform_RotateLeft}"/>
-				<Button Click="OkClick" Content="Rotate Right" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Transform_RotateRight}"/>
-				<Button Click="OkClick" Content="Rotate 180" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Transform_Rotate180}"/>
-				<Button Click="OkClick" Content="Mirror Horizontal" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Transform_MirrorHorizontal}"/>
-				<Button Click="OkClick" Content="Mirror Vertical" Tag="{x:Static models:EditModifyRegionsDialogResult+Actions.Transform_MirrorVertical}"/>
+				<Button Click="OkClick" Content="Flatten" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Transform_Flatten}"/>
+				<Button Click="OkClick" Content="Transpose" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Transform_Transpose}"/>
+				<Button Click="OkClick" Content="Rotate Left" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Transform_RotateLeft}"/>
+				<Button Click="OkClick" Content="Rotate Right" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Transform_RotateRight}"/>
+				<Button Click="OkClick" Content="Rotate 180" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Transform_Rotate180}"/>
+				<Button Click="OkClick" Content="Mirror Horizontal" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Transform_MirrorHorizontal}"/>
+				<Button Click="OkClick" Content="Mirror Vertical" Tag="{x:Static configuration:EditModifyRegionsDialogResult+Actions.Transform_MirrorVertical}"/>
 			</UniformGrid>
 		</GroupBox>
 

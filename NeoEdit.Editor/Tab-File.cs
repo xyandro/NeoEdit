@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
-using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
@@ -67,7 +67,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		object Configure_File_SaveCopy_SaveCopyByExpression() => Tabs.TabsWindow.RunGetExpressionDialog(GetVariables(), Selections.Count);
+		GetExpressionDialogResult Configure_File_SaveCopy_SaveCopyByExpression() => Tabs.TabsWindow.RunGetExpressionDialog(GetVariables(), Selections.Count);
 
 		void Execute_File_SaveCopy_SaveCopyClipboard(bool copyOnly = false)
 		{
@@ -126,7 +126,7 @@ namespace NeoEdit.Editor
 			SetFileName(fileName);
 		}
 
-		object Configure_File_Operations_RenameByExpression() => Tabs.TabsWindow.RunGetExpressionDialog(GetVariables(), Selections.Count);
+		GetExpressionDialogResult Configure_File_Operations_RenameByExpression() => Tabs.TabsWindow.RunGetExpressionDialog(GetVariables(), Selections.Count);
 
 		void Execute_File_Operations_RenameClipboard()
 		{
@@ -295,7 +295,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
 
-		object Configure_File_Encoding_Encoding() => Tabs.TabsWindow.RunEncodingDialog(CodePage);
+		EncodingDialogResult Configure_File_Encoding_Encoding() => Tabs.TabsWindow.RunEncodingDialog(CodePage);
 
 		void Execute_File_Encoding_Encoding()
 		{
@@ -303,7 +303,7 @@ namespace NeoEdit.Editor
 			CodePage = result.CodePage;
 		}
 
-		object Configure_File_Encoding_ReopenWithEncoding() => Tabs.TabsWindow.RunEncodingDialog(CodePage);
+		EncodingDialogResult Configure_File_Encoding_ReopenWithEncoding() => Tabs.TabsWindow.RunEncodingDialog(CodePage);
 
 		void Execute_File_Encoding_ReopenWithEncoding()
 		{
@@ -317,7 +317,7 @@ namespace NeoEdit.Editor
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		object Configure_File_Encoding_LineEndings() => Tabs.TabsWindow.RunFileEncodingLineEndingsDialog(LineEnding ?? "");
+		FileEncodingLineEndingsDialogResult Configure_File_Encoding_LineEndings() => Tabs.TabsWindow.RunFileEncodingLineEndingsDialog(LineEnding ?? "");
 
 		void Execute_File_Encoding_LineEndings()
 		{
@@ -335,17 +335,19 @@ namespace NeoEdit.Editor
 			Replace(sel, sel.Select(str => result.LineEndings).ToList());
 		}
 
-		object Configure_File_Encrypt()
+		Configuration_File_Encrypt Configure_File_Encrypt()
 		{
+			var configuration = new Configuration_File_Encrypt();
 			if (state.MultiStatus != false)
-				return "";
+				configuration.Key = "";
 			else
-				return Tabs.TabsWindow.RunCryptorKeyDialog(Cryptor.Type.AES, true);
+				configuration.Key = Tabs.TabsWindow.RunCryptorKeyDialog(Cryptor.Type.AES, true);
+			return configuration;
 		}
 
 		void Execute_File_Encrypt()
 		{
-			var result = state.Configuration as string;
+			var result = (state.Configuration as Configuration_File_Encrypt).Key;
 			AESKey = result == "" ? null : result;
 		}
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -8,8 +7,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
-using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.Searchers;
@@ -160,7 +159,12 @@ namespace NeoEdit.Editor
 				ReplaceSelections("");
 		}
 
-		object Configure_Edit_Paste_Paste() => (Tabs.ActiveTabs.All(tab => tab.Selections.Count == 1)) && (Tabs.ActiveTabs.Any(tab => tab.Clipboard.Count != 1));
+		Configuration_Edit_Paste_Paste Configure_Edit_Paste_Paste()
+		{
+			var configuration = new Configuration_Edit_Paste_Paste();
+			configuration.ReplaceOneWithMany = (Tabs.ActiveTabs.All(tab => tab.Selections.Count == 1)) && (Tabs.ActiveTabs.Any(tab => tab.Clipboard.Count != 1));
+			return configuration;
+		}
 
 		void Execute_Edit_Paste_Paste(bool highlight, bool rotate)
 		{
@@ -168,7 +172,7 @@ namespace NeoEdit.Editor
 			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
 				return;
 
-			if ((bool)state.Configuration)
+			if ((state.Configuration as Configuration_Edit_Paste_Paste).ReplaceOneWithMany)
 			{
 				ReplaceOneWithMany(clipboardStrings, null);
 				return;
@@ -190,7 +194,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(clipboardStrings, highlight);
 		}
 
-		object Configure_Edit_Find_Find()
+		EditFindFindDialogResult Configure_Edit_Find_Find()
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
@@ -328,7 +332,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		object Configure_Edit_Find_RegexReplace()
+		EditFindRegexReplaceDialogResult Configure_Edit_Find_RegexReplace()
 		{
 			string text = null;
 			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
@@ -368,7 +372,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		object Configure_Edit_Expression_Expression() => Tabs.TabsWindow.RunEditExpressionExpressionDialog(GetVariables());
+		EditExpressionExpressionDialogResult Configure_Edit_Expression_Expression() => Tabs.TabsWindow.RunEditExpressionExpressionDialog(GetVariables());
 
 		void Execute_Edit_Expression_Expression()
 		{
@@ -382,7 +386,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetExpressionResults<string>("Eval(x)", Selections.Count()));
 
-		object Configure_Edit_Rotate() => Tabs.TabsWindow.RunEditRotateDialog(GetVariables());
+		EditRotateDialogResult Configure_Edit_Rotate() => Tabs.TabsWindow.RunEditRotateDialog(GetVariables());
 
 		void Execute_Edit_Rotate()
 		{
@@ -399,7 +403,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		object Configure_Edit_Repeat() => Tabs.TabsWindow.RunEditRepeatDialog(Selections.Count == 1, GetVariables());
+		EditRepeatDialogResult Configure_Edit_Repeat() => Tabs.TabsWindow.RunEditRepeatDialog(Selections.Count == 1, GetVariables());
 
 		void Execute_Edit_Repeat()
 		{
@@ -435,7 +439,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Unescape_URL() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
 
-		object Configure_Edit_Data_Hash() => Tabs.TabsWindow.RunEditDataHashDialog(CodePage);
+		EditDataHashDialogResult Configure_Edit_Data_Hash() => Tabs.TabsWindow.RunEditDataHashDialog(CodePage);
 
 		void Execute_Edit_Data_Hash()
 		{
@@ -446,7 +450,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		object Configure_Edit_Data_Compress() => Tabs.TabsWindow.RunEditDataCompressDialog(CodePage, true);
+		EditDataCompressDialogResult Configure_Edit_Data_Compress() => Tabs.TabsWindow.RunEditDataCompressDialog(CodePage, true);
 
 		void Execute_Edit_Data_Compress()
 		{
@@ -460,7 +464,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(compressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		object Configure_Edit_Data_Decompress() => Tabs.TabsWindow.RunEditDataCompressDialog(CodePage, false);
+		EditDataCompressDialogResult Configure_Edit_Data_Decompress() => Tabs.TabsWindow.RunEditDataCompressDialog(CodePage, false);
 
 		void Execute_Edit_Data_Decompress()
 		{
@@ -474,7 +478,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(decompressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		object Configure_Edit_Data_Encrypt() => Tabs.TabsWindow.RunEditDataEncryptDialog(CodePage, true);
+		EditDataEncryptDialogResult Configure_Edit_Data_Encrypt() => Tabs.TabsWindow.RunEditDataEncryptDialog(CodePage, true);
 
 		void Execute_Edit_Data_Encrypt()
 		{
@@ -488,7 +492,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(encrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		object Configure_Edit_Data_Decrypt() => Tabs.TabsWindow.RunEditDataEncryptDialog(CodePage, false);
+		EditDataEncryptDialogResult Configure_Edit_Data_Decrypt() => Tabs.TabsWindow.RunEditDataEncryptDialog(CodePage, false);
 
 		void Execute_Edit_Data_Decrypt()
 		{
@@ -502,7 +506,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(decrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		object Configure_Edit_Data_Sign() => Tabs.TabsWindow.RunEditDataSignDialog(CodePage);
+		EditDataSignDialogResult Configure_Edit_Data_Sign() => Tabs.TabsWindow.RunEditDataSignDialog(CodePage);
 
 		void Execute_Edit_Data_Sign()
 		{
@@ -513,7 +517,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		object Configure_Edit_Sort() => Tabs.TabsWindow.RunEditSortDialog();
+		EditSortDialogResult Configure_Edit_Sort() => Tabs.TabsWindow.RunEditSortDialog();
 
 		void Execute_Edit_Sort()
 		{
@@ -545,7 +549,7 @@ namespace NeoEdit.Editor
 				SetRegions(result.UseRegion, newRegions);
 		}
 
-		object Configure_Edit_Convert() => Tabs.TabsWindow.RunEditConvertDialog();
+		EditConvertDialogResult Configure_Edit_Convert() => Tabs.TabsWindow.RunEditConvertDialog();
 
 		void Execute_Edit_Convert()
 		{

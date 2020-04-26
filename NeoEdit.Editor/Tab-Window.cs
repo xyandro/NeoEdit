@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using NeoEdit.Common.Transform;
+﻿using NeoEdit.Common.Configuration;
 
 namespace NeoEdit.Editor
 {
@@ -12,8 +11,8 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_ViewBinary() => ViewBinary = state.MultiStatus != true;
 
-		HashSet<Coder.CodePage> Configure_Window_ViewBinaryCodePages() => Tabs.TabsWindow.RunCodePagesDialog(ViewBinaryCodePages);
+		Configuration_Window_ViewBinaryCodePages Configure_Window_ViewBinaryCodePages() => new Configuration_Window_ViewBinaryCodePages { CodePages = Tabs.TabsWindow.RunCodePagesDialog(ViewBinaryCodePages) };
 
-		void Execute_Window_ViewBinaryCodePages() => ViewBinaryCodePages = state.Configuration as HashSet<Coder.CodePage>;
+		void Execute_Window_ViewBinaryCodePages() => ViewBinaryCodePages = (state.Configuration as Configuration_Window_ViewBinaryCodePages).CodePages;
 	}
 }

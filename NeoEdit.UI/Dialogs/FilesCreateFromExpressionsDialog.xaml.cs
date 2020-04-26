@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.UI;
 using NeoEdit.UI.Controls;

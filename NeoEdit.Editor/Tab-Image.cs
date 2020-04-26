@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
@@ -69,7 +69,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		object Configure_Image_GrabColor() => Tabs.TabsWindow.RunImageGrabColorDialog(Selections.Select(range => Text.GetString(range)).FirstOrDefault());
+		ImageGrabColorDialogResult Configure_Image_GrabColor() => Tabs.TabsWindow.RunImageGrabColorDialog(Selections.Select(range => Text.GetString(range)).FirstOrDefault());
 
 		void Execute_Image_GrabColor()
 		{
@@ -77,7 +77,7 @@ namespace NeoEdit.Editor
 			ReplaceOneWithMany(result.Colors, true);
 		}
 
-		object Configure_Image_GrabImage() => Tabs.TabsWindow.RunImageGrabImageDialog(GetVariables());
+		ImageGrabImageDialogResult Configure_Image_GrabImage() => Tabs.TabsWindow.RunImageGrabImageDialog(GetVariables());
 
 		void Execute_Image_GrabImage()
 		{
@@ -101,7 +101,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		object Configure_Image_AdjustColor() => Tabs.TabsWindow.RunImageAdjustColorDialog(GetVariables());
+		ImageAdjustColorDialogResult Configure_Image_AdjustColor() => Tabs.TabsWindow.RunImageAdjustColorDialog(GetVariables());
 
 		void Execute_Image_AdjustColor()
 		{
@@ -111,7 +111,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		object Configure_Image_AddOverlayColor(bool add) => Tabs.TabsWindow.RunImageAddOverlayColorDialog(add, GetVariables());
+		ImageAddOverlayColorDialogResult Configure_Image_AddOverlayColor(bool add) => Tabs.TabsWindow.RunImageAddOverlayColorDialog(add, GetVariables());
 
 		void Execute_Image_AddColor()
 		{
@@ -129,7 +129,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		object Configure_Image_Size() => Tabs.TabsWindow.RunImageSizeDialog(GetVariables());
+		ImageSizeDialogResult Configure_Image_Size() => Tabs.TabsWindow.RunImageSizeDialog(GetVariables());
 
 		void Execute_Image_Size()
 		{
@@ -160,7 +160,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		object Configure_Image_Crop() => Tabs.TabsWindow.RunImageCropDialog(GetVariables());
+		ImageCropDialogResult Configure_Image_Crop() => Tabs.TabsWindow.RunImageCropDialog(GetVariables());
 
 		void Execute_Image_Crop()
 		{
@@ -210,7 +210,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		object Configure_Image_Rotate() => Tabs.TabsWindow.RunImageRotateDialog(GetVariables());
+		ImageRotateDialogResult Configure_Image_Rotate() => Tabs.TabsWindow.RunImageRotateDialog(GetVariables());
 
 		void Execute_Image_Rotate()
 		{
@@ -237,7 +237,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		object Configure_Image_GIF_Animate() => Tabs.TabsWindow.RunImageGIFAnimateDialog(GetVariables());
+		ImageGIFAnimateDialogResult Configure_Image_GIF_Animate() => Tabs.TabsWindow.RunImageGIFAnimateDialog(GetVariables());
 
 		void Execute_Image_GIF_Animate()
 		{
@@ -254,7 +254,7 @@ namespace NeoEdit.Editor
 						writer.WriteFrame(image, delays[ctr]);
 		}
 
-		object Configure_Image_GIF_Split()
+		ImageGIFSplitDialogResult Configure_Image_GIF_Split()
 		{
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));

@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
-using NeoEdit.Common.Models;
 
 namespace NeoEdit.Editor
 {
@@ -128,7 +128,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		object Configure_Position_Goto(GotoType gotoType)
+		PositionGotoDialogResult Configure_Position_Goto(GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
 			var range = Selections.FirstOrDefault();

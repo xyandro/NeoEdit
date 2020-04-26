@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using NeoEdit.Common.Models;
+using NeoEdit.Common.Configuration;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs

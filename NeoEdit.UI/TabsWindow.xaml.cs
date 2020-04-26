@@ -13,6 +13,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.UI.Controls;
 using NeoEdit.UI.Dialogs;
 
@@ -200,7 +201,7 @@ namespace NeoEdit.UI
 			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
 				Environment.Exit(0);
 
-			HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = false });
+			HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = new Configuration_File_Exit { FromMenu = false } });
 			args.Cancel = true;
 		}
 
@@ -222,13 +223,13 @@ namespace NeoEdit.UI
 		TabLabel CreateTabLabel(ITab tab)
 		{
 			var tabLabel = new TabLabel(tab);
-			tabLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = tab });
+			tabLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = new Configuration_Internal_MouseActivate { Tab = tab } });
 			tabLabel.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<ITab>), renderParameters.ActiveTabs), DragDropEffects.Move);
 			};
-			tabLabel.CloseClicked += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseTab) { Configuration = tab });
+			tabLabel.CloseClicked += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseTab) { Configuration = new Configuration_Internal_CloseTab { Tab = tab } });
 
 			tabLabel.Refresh(renderParameters);
 			return tabLabel;

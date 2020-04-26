@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
 using NeoEdit.UI.Dialogs;
 
@@ -107,7 +108,7 @@ namespace NeoEdit.UI.Controls
 			if (!Coder.IsStr(CodePage))
 				size = Coder.BytesRequired(CodePage);
 
-			UIHelper.FindParent<TabsWindow>(this).HandleCommand(new ExecuteState(NECommand.Internal_SetBinaryValue) { Configuration = (newBytes, size) });
+			UIHelper.FindParent<TabsWindow>(this).HandleCommand(new ExecuteState(NECommand.Internal_SetBinaryValue) { Configuration = new Configuration_Internal_SetBinaryValue { Value = newBytes, OldSize = size } });
 		}
 	}
 }

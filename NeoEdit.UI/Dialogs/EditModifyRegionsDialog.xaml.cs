@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using NeoEdit.Common.Models;
+using NeoEdit.Common.Configuration;
 using NeoEdit.UI;
 using NeoEdit.UI.Controls;
 

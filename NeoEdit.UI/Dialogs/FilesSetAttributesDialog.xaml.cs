@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using NeoEdit.Common.Models;
+using NeoEdit.Common.Configuration;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs

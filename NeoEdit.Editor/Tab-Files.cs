@@ -7,9 +7,9 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.Searchers;
@@ -340,7 +340,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(Text.GetString(range))).ToList());
 
-		object Configure_Files_Name_MakeAbsolute() => Tabs.TabsWindow.RunFilesNamesMakeAbsoluteRelativeDialog(GetVariables(), true, true);
+		FilesNamesMakeAbsoluteRelativeDialogResult Configure_Files_Name_MakeAbsolute() => Tabs.TabsWindow.RunFilesNamesMakeAbsoluteRelativeDialog(GetVariables(), true, true);
 
 		void Execute_Files_Name_MakeAbsolute()
 		{
@@ -349,7 +349,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == FilesNamesMakeAbsoluteRelativeDialogResult.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		object Configure_Files_Name_MakeRelative() => Tabs.TabsWindow.RunFilesNamesMakeAbsoluteRelativeDialog(GetVariables(), false, true);
+		FilesNamesMakeAbsoluteRelativeDialogResult Configure_Files_Name_MakeRelative() => Tabs.TabsWindow.RunFilesNamesMakeAbsoluteRelativeDialog(GetVariables(), false, true);
 
 		void Execute_Files_Name_MakeRelative()
 		{
@@ -360,7 +360,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
 		}
 
-		object Configure_Files_Name_GetUnique() => Tabs.TabsWindow.RunFilesNamesGetUniqueDialog();
+		FilesNamesGetUniqueDialogResult Configure_Files_Name_GetUnique() => Tabs.TabsWindow.RunFilesNamesGetUniqueDialog();
 
 		void Execute_Files_Name_GetUnique()
 		{
@@ -470,7 +470,7 @@ namespace NeoEdit.Editor
 			Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(x => versioner.GetStatus(x).ToString()).ToList(result => ReplaceSelections(result));
 		}
 
-		object Configure_Files_Set_Size()
+		FilesSetSizeDialogResult Configure_Files_Set_Size()
 		{
 			var vars = GetVariables();
 			var sizes = RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
@@ -489,7 +489,7 @@ namespace NeoEdit.Editor
 			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
-		object Configure_Files_Set_Time() => Tabs.TabsWindow.RunFilesSetTimeDialog(GetVariables(), $@"""{DateTime.Now}""");
+		FilesSetTimeDialogResult Configure_Files_Set_Time() => Tabs.TabsWindow.RunFilesSetTimeDialog(GetVariables(), $@"""{DateTime.Now}""");
 
 		void Execute_Files_Set_Time(TimestampType type)
 		{
@@ -526,7 +526,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		object Configure_Files_Set_Attributes()
+		FilesSetAttributesDialogResult Configure_Files_Set_Attributes()
 		{
 			var filesAttrs = Selections.Select(range => Text.GetString(range)).Select(file => new DirectoryInfo(file).Attributes).ToList();
 			var availAttrs = Helpers.GetValues<FileAttributes>();
@@ -558,7 +558,7 @@ namespace NeoEdit.Editor
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
-		object Configure_Files_Find() => Tabs.TabsWindow.RunFilesFindDialog(GetVariables());
+		FilesFindDialogResult Configure_Files_Find() => Tabs.TabsWindow.RunFilesFindDialog(GetVariables());
 
 		void Execute_Files_Find()
 		{
@@ -625,7 +625,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		object Configure_Files_Insert() => Tabs.TabsWindow.RunFilesInsertDialog();
+		FilesInsertDialogResult Configure_Files_Insert() => Tabs.TabsWindow.RunFilesInsertDialog();
 
 		void Execute_Files_Insert()
 		{
@@ -651,7 +651,7 @@ namespace NeoEdit.Editor
 				Directory.CreateDirectory(file);
 		}
 
-		object Configure_Files_Create_FromExpressions() => Tabs.TabsWindow.RunFilesCreateFromExpressionsDialog(GetVariables(), CodePage);
+		FilesCreateFromExpressionsDialogResult Configure_Files_Create_FromExpressions() => Tabs.TabsWindow.RunFilesCreateFromExpressionsDialog(GetVariables(), CodePage);
 
 		void Execute_Files_Create_FromExpressions()
 		{
@@ -732,7 +732,7 @@ namespace NeoEdit.Editor
 			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList();
 		}
 
-		object Configure_Files_Select_ByVersionControlStatus() => Tabs.TabsWindow.RunFilesSelectByVersionControlStatusDialog();
+		FilesSelectByVersionControlStatusDialogResult Configure_Files_Select_ByVersionControlStatus() => Tabs.TabsWindow.RunFilesSelectByVersionControlStatusDialog();
 
 		void Execute_Files_Select_ByVersionControlStatus()
 		{
@@ -743,7 +743,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		object Configure_Files_Hash() => Tabs.TabsWindow.RunFilesHashDialog();
+		FilesHashDialogResult Configure_Files_Hash() => Tabs.TabsWindow.RunFilesHashDialog();
 
 		void Execute_Files_Hash()
 		{
@@ -753,7 +753,7 @@ namespace NeoEdit.Editor
 				.ToList(taskResults => ReplaceSelections(taskResults));
 		}
 
-		object Configure_Files_Sign() => Tabs.TabsWindow.RunFilesSignDialog();
+		FilesSignDialogResult Configure_Files_Sign() => Tabs.TabsWindow.RunFilesSignDialog();
 
 		void Execute_Files_Sign()
 		{
@@ -761,7 +761,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		object Configure_Files_Operations_CopyMove(bool move) => Tabs.TabsWindow.RunFilesOperationsCopyMoveDialog(GetVariables(), move);
+		FilesOperationsCopyMoveDialogResult Configure_Files_Operations_CopyMove(bool move) => Tabs.TabsWindow.RunFilesOperationsCopyMoveDialog(GetVariables(), move);
 
 		void Execute_Files_Operations_CopyMove(bool move)
 		{
@@ -885,7 +885,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Operations_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
 
-		object Configure_Files_Operations_Encoding() => Tabs.TabsWindow.RunFilesOperationsEncodingDialog();
+		FilesOperationsEncodingDialogResult Configure_Files_Operations_Encoding() => Tabs.TabsWindow.RunFilesOperationsEncodingDialog();
 
 		void Execute_Files_Operations_Encoding()
 		{
@@ -893,7 +893,7 @@ namespace NeoEdit.Editor
 			Selections.AsTaskRunner().ParallelForEach((range, progress) => ReencodeFile(FileName.RelativeChild(Text.GetString(range)), progress, result.InputCodePage, result.OutputCodePage));
 		}
 
-		object Configure_Files_Operations_SplitFile()
+		FilesOperationsSplitFileDialogResult Configure_Files_Operations_SplitFile()
 		{
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
@@ -911,7 +911,7 @@ namespace NeoEdit.Editor
 			TaskRunner.Range(0, Selections.Count).ParallelForEach((index, progress) => SplitFile(FileName.RelativeChild(Text.GetString(Selections[index])), outputTemplates[index], chunkSizes[index], progress));
 		}
 
-		object Configure_Files_Operations_CombineFiles() => Tabs.TabsWindow.RunFilesOperationsCombineFilesDialog(GetVariables());
+		FilesOperationsCombineFilesDialogResult Configure_Files_Operations_CombineFiles() => Tabs.TabsWindow.RunFilesOperationsCombineFilesDialog(GetVariables());
 
 		void Execute_Files_Operations_CombineFiles()
 		{

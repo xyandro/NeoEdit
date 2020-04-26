@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
 
@@ -16,7 +17,7 @@ namespace NeoEdit.Common
 		public bool? MultiStatus;
 		public Key Key;
 		public string Text;
-		public object Configuration;
+		public IConfiguration Configuration;
 
 		public ExecuteState(NECommand command) => Command = command;
 

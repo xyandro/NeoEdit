@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Win32;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
@@ -103,7 +104,7 @@ namespace NeoEdit.UI
 		public WindowLayout RunWindowCustomGridDialog(WindowLayout windowLayout) => RunOnUIThread(() => WindowCustomGridDialog.Run(this, windowLayout));
 		public void RunWindowActiveTabsDialog(WindowActiveTabsDialogData data) => RunOnUIThread(() => WindowActiveTabsDialog.Run(this, data));
 		public void RunWindowFontSizeDialog() => RunOnUIThread(() => WindowFontSizeDialog.Run(this));
-		public NetworkWCFGetConfigResult RunNetworkWCFGetConfigDialog() => RunOnUIThread(() => NetworkWCFGetConfigDialog.Run(this));
+		public NetworkWCFGetConfigDialogResult RunNetworkWCFGetConfigDialog() => RunOnUIThread(() => NetworkWCFGetConfigDialog.Run(this));
 		public void RunWCFInterceptDialog() => RunOnUIThread(() => WCFInterceptDialog.Run(this));
 		public HashSet<Coder.CodePage> RunCodePagesDialog(HashSet<Coder.CodePage> startCodePages = null) => RunOnUIThread(() => CodePagesDialog.Run(this, startCodePages));
 		public void RunHelpAboutDialog() => RunOnUIThread(() => HelpAboutDialog.Run(this));

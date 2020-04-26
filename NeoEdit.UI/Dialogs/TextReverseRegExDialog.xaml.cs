@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using NeoEdit.Common.Models;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.RevRegEx;
 using NeoEdit.UI.Controls;
 

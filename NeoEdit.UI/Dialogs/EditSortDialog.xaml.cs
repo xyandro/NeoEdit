@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
-using NeoEdit.Common.Models;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs

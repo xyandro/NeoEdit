@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows;
 using NeoEdit.Common;
-using NeoEdit.Common.Models;
+using NeoEdit.Common.Configuration;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs
@@ -24,15 +24,15 @@ namespace NeoEdit.UI.Dialogs
 			URL = url.GetLastSuggestion();
 		}
 
-		NetworkWCFGetConfigResult result;
+		NetworkWCFGetConfigDialogResult result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NetworkWCFGetConfigResult { URL = URL };
+			result = new NetworkWCFGetConfigDialogResult { URL = URL };
 			DialogResult = true;
 			url.AddCurrentSuggestion();
 		}
 
-		static public NetworkWCFGetConfigResult Run(Window parent)
+		static public NetworkWCFGetConfigDialogResult Run(Window parent)
 		{
 			var dialog = new NetworkWCFGetConfigDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

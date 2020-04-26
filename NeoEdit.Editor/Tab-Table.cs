@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Models;
 
 namespace NeoEdit.Editor
 {
@@ -54,7 +54,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_DetectType() => ContentType = Table.GuessTableType(Text.GetString());
 
-		object Configure_Table_Convert() => Tabs.TabsWindow.RunTableConvertDialog(ContentType);
+		TableConvertDialogResult Configure_Table_Convert() => Tabs.TabsWindow.RunTableConvertDialog(ContentType);
 
 		void Execute_Table_Convert()
 		{
@@ -64,7 +64,7 @@ namespace NeoEdit.Editor
 			SetText(table);
 		}
 
-		object Configure_Table_TextToTable()
+		TableTextToTableDialogResult Configure_Table_TextToTable()
 		{
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection");
@@ -115,7 +115,7 @@ namespace NeoEdit.Editor
 			OpenTable(new Table(rows, false));
 		}
 
-		object Configure_Table_EditTable() => Tabs.TabsWindow.RunTableEditTableDialog(GetTable());
+		TableEditTableDialogResult Configure_Table_EditTable() => Tabs.TabsWindow.RunTableEditTableDialog(GetTable());
 
 		void Execute_Table_EditTable()
 		{
@@ -132,7 +132,7 @@ namespace NeoEdit.Editor
 			SetText(table);
 		}
 
-		object Configure_Table_AddColumn()
+		TableAddColumnDialogResult Configure_Table_AddColumn()
 		{
 			var table = GetTable();
 			return Tabs.TabsWindow.RunTableAddColumnDialog(GetTableVariables(table), table.NumRows);
@@ -148,7 +148,7 @@ namespace NeoEdit.Editor
 			SetText(table);
 		}
 
-		object Configure_Table_Select_RowsByExpression()
+		GetExpressionDialogResult Configure_Table_Select_RowsByExpression()
 		{
 			var table = GetTable();
 			return Tabs.TabsWindow.RunGetExpressionDialog(GetTableVariables(table), table.NumRows);
@@ -166,7 +166,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_SetJoinSource() => joinTable = GetTable();
 
-		object Configure_Table_Join()
+		TableJoinDialogResult Configure_Table_Join()
 		{
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
@@ -185,7 +185,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_Transpose() => SetText(GetTable().Transpose());
 
-		object Configure_Table_Database_GenerateInserts() => Tabs.TabsWindow.RunTableDatabaseGenerateInsertsDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		TableDatabaseGenerateInsertsDialogResult Configure_Table_Database_GenerateInserts() => Tabs.TabsWindow.RunTableDatabaseGenerateInsertsDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
 		void Execute_Table_Database_GenerateInserts()
 		{
@@ -205,7 +205,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		object Configure_Table_Database_GenerateUpdates() => Tabs.TabsWindow.RunTableDatabaseGenerateUpdatesDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		TableDatabaseGenerateUpdatesDialogResult Configure_Table_Database_GenerateUpdates() => Tabs.TabsWindow.RunTableDatabaseGenerateUpdatesDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
 		void Execute_Table_Database_GenerateUpdates()
 		{
@@ -225,7 +225,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		object Configure_Table_Database_GenerateDeletes() => Tabs.TabsWindow.RunTableDatabaseGenerateDeletesDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
+		TableDatabaseGenerateDeletesDialogResult Configure_Table_Database_GenerateDeletes() => Tabs.TabsWindow.RunTableDatabaseGenerateDeletesDialog(GetTable(), FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(FileName));
 
 		void Execute_Table_Database_GenerateDeletes()
 		{

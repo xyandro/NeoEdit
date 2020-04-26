@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.UI.Controls;
 using NeoEdit.UI.Highlighting;
 
@@ -65,7 +66,7 @@ namespace NeoEdit.UI
 
 		void OnMouseWheel(object sender, MouseWheelEventArgs e) => yScroll.Value -= e.Delta / 40;
 
-		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Scroll) { Configuration = (Tab, (int)xScroll.Value, (int)yScroll.Value) });
+		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Scroll) { Configuration = new Configuration_Internal_Scroll { Tab = Tab, Column = (int)xScroll.Value, Row = (int)yScroll.Value } });
 
 		public void DrawAll()
 		{
@@ -396,7 +397,7 @@ namespace NeoEdit.UI
 			canvas.CaptureMouse();
 			var line = (int)(position.Y / LineHeight + yScroll.Value);
 			var column = (int)(position.X / Font.CharWidth + xScroll.Value);
-			TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Mouse) { Configuration = (Tab, line, column, mouseClickCount, selecting) });
+			TabsWindow.HandleCommand(new ExecuteState(NECommand.Internal_Mouse) { Configuration = new Configuration_Internal_Mouse { Tab = Tab, Line = line, Column = column, ClickCount = mouseClickCount, Selecting = selecting } });
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

@@ -4,9 +4,9 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
-using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.Transactional;
@@ -301,7 +301,7 @@ namespace NeoEdit.Editor
 		#endregion
 
 		#region Configure
-		public object Configure()
+		public IConfiguration Configure()
 		{
 			switch (state.Command)
 			{

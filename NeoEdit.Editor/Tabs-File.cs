@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.Win32;
 using NeoEdit.Common;
-using NeoEdit.Common.Models;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.TaskRunning;
 
@@ -106,7 +106,7 @@ namespace NeoEdit.Editor
 
 			if (!Instances.Any())
 			{
-				if ((state.Configuration as bool? != false) || (!Settings.DontExitOnClose))
+				if (((state.Configuration as Configuration_File_Exit).FromMenu) || (!Settings.DontExitOnClose))
 					Environment.Exit(0);
 
 				GC.Collect();

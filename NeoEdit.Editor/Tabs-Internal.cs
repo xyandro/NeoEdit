@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 
@@ -55,17 +56,18 @@ namespace NeoEdit.Editor
 
 		void Execute_Internal_Scroll()
 		{
-			(var itab, var newColumn, var newRow) = ((ITab, int, int))state.Configuration;
-			var tab = itab as Tab;
+			var configuration = state.Configuration as Configuration_Internal_Scroll;
+			var tab = configuration.Tab as Tab;
 			AddToTransaction(tab);
-			tab.StartColumn = newColumn;
-			tab.StartRow = newRow;
+			tab.StartColumn = configuration.Column;
+			tab.StartRow = configuration.Row;
 		}
 
 		void Execute_Internal_Mouse()
 		{
-			(var itab, var line, var column, var clickCount, var selecting) = ((ITab, int, int, int, bool?))state.Configuration;
-			var tab = itab as Tab;
+			var configuration = state.Configuration as Configuration_Internal_Mouse;
+			var tab = configuration.Tab as Tab;
+
 			if ((ActiveTabs.Count != 1) || (!IsActive(tab)))
 			{
 				ClearAllActive();
@@ -73,7 +75,7 @@ namespace NeoEdit.Editor
 				return;
 			}
 
-			tab.Execute_Internal_Mouse(line, column, clickCount, selecting);
+			tab.Execute_Internal_Mouse(configuration.Line, configuration.Column, configuration.ClickCount, configuration.Selecting);
 		}
 
 		void Execute_Internal_SetupDiff()

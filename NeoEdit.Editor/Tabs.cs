@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
@@ -270,7 +271,7 @@ namespace NeoEdit.Editor
 			return false;
 		}
 
-		object Configure()
+		IConfiguration Configure()
 		{
 			switch (state.Command)
 			{
@@ -290,9 +291,9 @@ namespace NeoEdit.Editor
 			switch (state.Command)
 			{
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
-				case NECommand.Internal_AddTab: Execute_Internal_AddTab(state.Configuration as Tab); break;
-				case NECommand.Internal_MouseActivate: Execute_Internal_MouseActivate(state.Configuration as Tab); break;
-				case NECommand.Internal_CloseTab: Execute_Internal_CloseTab(state.Configuration as Tab); break;
+				case NECommand.Internal_AddTab: Execute_Internal_AddTab((state.Configuration as Configuration_Internal_AddTab).Tab as Tab); break;
+				case NECommand.Internal_MouseActivate: Execute_Internal_MouseActivate((state.Configuration as Configuration_Internal_MouseActivate).Tab as Tab); break;
+				case NECommand.Internal_CloseTab: Execute_Internal_CloseTab((state.Configuration as Configuration_Internal_CloseTab).Tab as Tab); break;
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.Internal_Scroll: Execute_Internal_Scroll(); break;
 				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
@@ -373,7 +374,7 @@ namespace NeoEdit.Editor
 				case NECommand.Window_NewWindow: Execute_Window_NewWindow(); break;
 				case NECommand.Window_Full: Execute_Window_Full(); break;
 				case NECommand.Window_Grid: Execute_Window_Grid(); break;
-				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(state.Configuration as WindowLayout); break;
+				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(); break;
 				case NECommand.Window_ActiveTabs: Execute_Window_ActiveTabs(); break;
 				case NECommand.Window_Font_Size: Execute_Window_Font_Size(); break;
 				case NECommand.Window_Font_ShowSpecial: Execute_Window_Font_ShowSpecial(state.MultiStatus); break;
@@ -638,7 +639,7 @@ namespace NeoEdit.Editor
 						}
 					}
 
-					tabs.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) });
+					tabs.HandleCommand(new ExecuteState(NECommand.Internal_AddTab) { Configuration = new Configuration_Internal_AddTab { Tab = new Tab(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) } });
 				}
 
 				if (commandLineParams.Diff)

@@ -6,8 +6,8 @@ using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
-using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.UI.Controls;
 

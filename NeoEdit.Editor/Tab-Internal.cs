@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
 
@@ -158,7 +159,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		object Configure_Internal_Key()
+		Configuration_Internal_Key Configure_Internal_Key()
 		{
 			switch (state.Key)
 			{
@@ -166,7 +167,7 @@ namespace NeoEdit.Editor
 				case Key.Delete:
 				case Key.Left:
 				case Key.Right:
-					return Tabs.ActiveTabs.Any(tab => tab.Selections.Any(range => range.HasSelection));
+					return new Configuration_Internal_Key { HasSelections = Tabs.ActiveTabs.Any(tab => tab.Selections.Any(range => range.HasSelection)) };
 				default: return null;
 			}
 		}
@@ -178,7 +179,7 @@ namespace NeoEdit.Editor
 				case Key.Back:
 				case Key.Delete:
 					{
-						if ((bool)state.Configuration)
+						if ((state.Configuration as Configuration_Internal_Key).HasSelections)
 						{
 							ReplaceSelections("");
 							break;
@@ -252,7 +253,7 @@ namespace NeoEdit.Editor
 					{
 						Selections = Selections.AsParallel().AsOrdered().Select(range =>
 						{
-							if ((!state.ShiftDown) && ((bool)state.Configuration))
+							if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key).HasSelections))
 								return new Range(range.Start);
 
 							var line = TextView.GetPositionLine(range.Cursor);
@@ -268,7 +269,7 @@ namespace NeoEdit.Editor
 					{
 						Selections = Selections.AsParallel().AsOrdered().Select(range =>
 						{
-							if ((!state.ShiftDown) && ((bool)state.Configuration))
+							if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key).HasSelections))
 								return new Range(range.End);
 
 							var line = TextView.GetPositionLine(range.Cursor);
@@ -403,8 +404,8 @@ namespace NeoEdit.Editor
 
 		void Execute_Internal_SetBinaryValue()
 		{
-			(var value, var oldSize) = ((byte[], int?))state.Configuration;
-			var newStr = Coder.BytesToString(value, CodePage);
+			var configuration = state.Configuration as Configuration_Internal_SetBinaryValue;
+			var newStr = Coder.BytesToString(configuration.Value, CodePage);
 			var replaceRange = Selections[CurrentSelection];
 			var newSels = new List<Range>();
 			var offset = 0;
@@ -413,7 +414,7 @@ namespace NeoEdit.Editor
 				var range = range1;
 				if (range == replaceRange)
 				{
-					replaceRange = Range.FromIndex(replaceRange.Start, oldSize ?? replaceRange.Length);
+					replaceRange = Range.FromIndex(replaceRange.Start, configuration.OldSize ?? replaceRange.Length);
 					offset += newStr.Length - replaceRange.Length;
 					range = Range.FromIndex(range.Start, range.Length + offset);
 				}
