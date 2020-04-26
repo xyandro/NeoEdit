@@ -1,0 +1,35 @@
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.Dialogs.Configure_Text_ReverseRegEx_Dialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
+	Title="Reverse RegEx" SizeToContent="Height" Width="800" FocusManager.FocusedElement="{Binding ElementName=regex}">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition MinHeight="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="_RegEx:" Target="{Binding ElementName=regex}" HorizontalAlignment="Right"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="regex" Text="{Binding RegEx, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="RevRegex" AcceptsTab="True"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="_Infinite Count:" Target="{Binding ElementName=infiniteCount}" HorizontalAlignment="Right"/>
+		<controls:NumericUpDown Grid.Row="1" Grid.Column="1" x:Name="infiniteCount" Value="{Binding InfiniteCount, ElementName=self}"/>
+
+		<Label Grid.Row="2" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
+		<Label Grid.Row="2" Grid.Column="1" Content="{Binding NumResults, ElementName=self}" ContentStringFormat="n0" HorizontalAlignment="Right"/>
+
+		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+
+</controls:NEWindow>

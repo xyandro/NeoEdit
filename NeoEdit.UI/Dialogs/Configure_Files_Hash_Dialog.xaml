@@ -1,0 +1,35 @@
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.Dialogs.Configure_Files_Hash_Dialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
+	xmlns:converters="clr-namespace:NeoEdit.UI.Converters"
+	Title="Choose Hash Algorithm" SizeToContent="Height" Width="400" FocusManager.FocusedElement="{Binding ElementName=hashType}">
+
+	<Grid Margin="10" Name="content">
+		<Grid.Resources>
+			<converters:HexConverter x:Key="hexConverter"/>
+		</Grid.Resources>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition MinHeight="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="_Hash Algorithm:" Target="{Binding ElementName=hashType}" HorizontalAlignment="Right"/>
+		<ComboBox Grid.Row="0" Grid.Column="1" Name="hashType" SelectedValue="{Binding HashType, ElementName=self}"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="HMAC _Key:" Target="{Binding ElementName=hmacKey}" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="1" Grid.Column="1" Name="hmacKey" Text="{Binding HMACKey, ElementName=self, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource hexConverter}}"/>
+
+		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+</controls:NEWindow>
