@@ -52,7 +52,7 @@ namespace NeoEdit.UI.Dialogs
 
 		void OnGenerate(object sender, RoutedEventArgs e)
 		{
-			var key = CryptorKeyDialog.Run(this, CryptorType, false);
+			var key = CryptorKeyDialog.Run(this, CryptorType, false)?.Key;
 			if (key != null)
 				Key = key;
 		}

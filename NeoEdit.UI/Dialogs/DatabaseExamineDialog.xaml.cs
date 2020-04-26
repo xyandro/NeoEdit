@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Windows;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Parsing;
 using NeoEdit.UI.Controls;
 
@@ -34,12 +35,18 @@ namespace NeoEdit.UI.Dialogs
 
 		void UpdateData() => Data = dbConnection.GetSchema(Collection);
 
-		void OkClick(object sender, RoutedEventArgs e) => DialogResult = true;
+		Configuration_Database_Examine result;
+		void OkClick(object sender, RoutedEventArgs e)
+		{
+			result = new Configuration_Database_Examine();
+			DialogResult = true;
+		}
 
-		static public void Run(Window parent, DbConnection dbConnection)
+		static public Configuration_Database_Examine Run(Window parent, DbConnection dbConnection)
 		{
 			var dialog = new DatabaseExamineDialog(dbConnection) { Owner = parent };
 			dialog.ShowDialog();
+			return dialog.result;
 		}
 	}
 }

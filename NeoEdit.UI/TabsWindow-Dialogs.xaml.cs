@@ -20,9 +20,9 @@ namespace NeoEdit.UI
 		public MessageOptions RunMessageDialog(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None) => RunOnUIThread(() => Message.Run(this, title, text, options, defaultAccept, defaultCancel));
 		public Configuration_Content_Ancestor Configure_Content_Ancestor(List<ParserNode> nodes) => RunOnUIThread(() => ContentAttributeDialog.Run(this, nodes));
 		public Configuration_Content_Attributes Configure_Content_Attributes(List<ParserNode> nodes) => RunOnUIThread(() => ContentAttributesDialog.Run(this, nodes));
-		public string RunCryptorKeyDialog(Cryptor.Type type, bool encrypt) => RunOnUIThread(() => CryptorKeyDialog.Run(this, type, encrypt));
+		public Configuration_File_Encrypt RunCryptorKeyDialog(Cryptor.Type type, bool encrypt) => RunOnUIThread(() => CryptorKeyDialog.Run(this, type, encrypt));
 		public Configuration_Database_Connect Configure_Database_Connect() => RunOnUIThread(() => DatabaseConnectDialog.Run(this));
-		public void RunDatabaseExamineDialog(DbConnection dbConnection) => RunOnUIThread(() => DatabaseExamineDialog.Run(this, dbConnection));
+		public Configuration_Database_Examine RunDatabaseExamineDialog(DbConnection dbConnection) => RunOnUIThread(() => DatabaseExamineDialog.Run(this, dbConnection));
 		public Configuration_DateTime_Format Configure_DateTime_Format(string example) => RunOnUIThread(() => DateTimeFormatDialog.Run(this, example));
 		public Configuration_DateTime_ToTimeZone Configure_DateTime_ToTimeZone() => RunOnUIThread(() => DateTimeToTimeZoneDialog.Run(this));
 		public Configuration_Diff_Fix_Whitespace_Dialog Configure_Diff_Fix_Whitespace_Dialog() => RunOnUIThread(() => DiffFixWhitespaceDialog.Run(this));

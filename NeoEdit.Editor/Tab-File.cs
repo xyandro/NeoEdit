@@ -337,19 +337,13 @@ namespace NeoEdit.Editor
 
 		Configuration_File_Encrypt Configure_File_Encrypt()
 		{
-			var configuration = new Configuration_File_Encrypt();
 			if (state.MultiStatus != false)
-				configuration.Key = "";
+				return new Configuration_File_Encrypt();
 			else
-				configuration.Key = Tabs.TabsWindow.RunCryptorKeyDialog(Cryptor.Type.AES, true);
-			return configuration;
+				return Tabs.TabsWindow.RunCryptorKeyDialog(Cryptor.Type.AES, true);
 		}
 
-		void Execute_File_Encrypt()
-		{
-			var result = (state.Configuration as Configuration_File_Encrypt).Key;
-			AESKey = result == "" ? null : result;
-		}
+		void Execute_File_Encrypt() => AESKey = (state.Configuration as Configuration_File_Encrypt).Key;
 
 		void Execute_File_Compress() => Compressed = state.MultiStatus == false;
 	}

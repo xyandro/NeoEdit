@@ -24,9 +24,9 @@ namespace NeoEdit.Common
 		MessageOptions RunMessageDialog(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None);
 		Configuration_Content_Ancestor Configure_Content_Ancestor(List<ParserNode> nodes);
 		Configuration_Content_Attributes Configure_Content_Attributes(List<ParserNode> nodes);
-		string RunCryptorKeyDialog(Cryptor.Type type, bool encrypt);
+		Configuration_File_Encrypt RunCryptorKeyDialog(Cryptor.Type type, bool encrypt);
 		Configuration_Database_Connect Configure_Database_Connect();
-		void RunDatabaseExamineDialog(DbConnection dbConnection);
+		Configuration_Database_Examine RunDatabaseExamineDialog(DbConnection dbConnection);
 		Configuration_DateTime_Format Configure_DateTime_Format(string example);
 		Configuration_DateTime_ToTimeZone Configure_DateTime_ToTimeZone();
 		Configuration_Diff_Fix_Whitespace_Dialog Configure_Diff_Fix_Whitespace_Dialog();

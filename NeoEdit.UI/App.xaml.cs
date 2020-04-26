@@ -14,7 +14,7 @@ namespace NeoEdit.UI
 		Action startAction;
 		App(Action action)
 		{
-			ITabsWindowStatic.RunCryptorKeyDialog = (type, encrypt) => CryptorKeyDialog.Run(null, type, encrypt);
+			ITabsWindowStatic.RunCryptorKeyDialog = (type, encrypt) => CryptorKeyDialog.Run(null, type, encrypt)?.Key;
 			ITabsWindowStatic.CreateITabsWindow = tabs => Dispatcher.Invoke(() => new TabsWindow(tabs));
 			ITabsWindowStatic.ShowExceptionMessage = ex => TabsWindow.ShowExceptionMessage(ex);
 

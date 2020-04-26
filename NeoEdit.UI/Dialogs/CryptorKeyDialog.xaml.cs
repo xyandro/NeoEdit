@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
 using NeoEdit.UI.Controls;
@@ -70,12 +71,13 @@ namespace NeoEdit.UI.Dialogs
 			Salt = Convert.ToBase64String(bytes);
 		}
 
-		string result;
+		Configuration_File_Encrypt result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			GenerateKey(null, null);
-			result = Encrypt ? PublicKey : PrivateKey;
-			if (string.IsNullOrEmpty(result))
+			result = new Configuration_File_Encrypt();
+			result.Key = Encrypt ? PublicKey : PrivateKey;
+			if (string.IsNullOrEmpty(result.Key))
 				return;
 
 			DialogResult = true;
@@ -99,7 +101,7 @@ namespace NeoEdit.UI.Dialogs
 			}
 		}
 
-		public static string Run(Window parent, Cryptor.Type type, bool encrypt)
+		public static Configuration_File_Encrypt Run(Window parent, Cryptor.Type type, bool encrypt)
 		{
 			var dialog = new CryptorKeyDialog(type, encrypt) { Owner = parent };
 			if (!dialog.ShowDialog())
