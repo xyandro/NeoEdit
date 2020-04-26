@@ -99,6 +99,10 @@ namespace NeoEdit.Editor.Content.CSharp
 					attributes["Type"] = "Class";
 					attributes["Name"] = (syntaxNode as ClassDeclarationSyntax).Identifier;
 					break;
+				case SyntaxKind.InterfaceDeclaration:
+					attributes["Type"] = "Interface";
+					attributes["Name"] = (syntaxNode as InterfaceDeclarationSyntax).Identifier;
+					break;
 				case SyntaxKind.ConstructorDeclaration:
 					attributes["Type"] = "Method";
 					attributes["Name"] = (syntaxNode as ConstructorDeclarationSyntax).Identifier;
