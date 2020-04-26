@@ -9,50 +9,36 @@ namespace NeoEdit.Editor.TaskRunning
 {
 	static class TaskRunner
 	{
+		static readonly int NumThreads = Environment.ProcessorCount; // 0 will run everything in calling thread, 1 will run everything in child thread
 		const int DefaultTaskTotal = 1;
-		const int ResetWait = 5000;
+		const int ForceCancelDelay = 5000;
+		const int MaxTaskGroupSize = 1000;
 
-		static readonly int NumThreads = Environment.ProcessorCount; // Use 0 to run synchronously
+		public static FluentTaskRunner<T> AsTaskRunner<T>(this IEnumerable<T> items) => new FluentTaskRunner<T>(items);
+		public static void Run(Action action) => new FluentTaskRunner<int>(new List<int> { 0 }).ParallelForEach(item => action());
+		public static void Run(Action<ITaskRunnerProgress> action) => new FluentTaskRunner<int>(new List<int> { 0 }).ParallelForEach((item, index, progress) => action(progress));
 
-		public static FluentTaskRunner<T> AsTaskRunner<T>(this IReadOnlyList<T> list) => new FluentTaskRunner<T>(list, list.Count);
-		public static FluentTaskRunner<T> AsTaskRunner<T>(this IEnumerable<T> list, int count) => new FluentTaskRunner<T>(list, count);
-		public static void Run(Action action) => new FluentTaskRunner<int>(new List<int> { 0 }, 1).ParallelForEach(obj => action());
-		public static void Run(Action<ITaskRunnerProgress> action) => new FluentTaskRunner<int>(new List<int> { 0 }, 1).ParallelForEach((obj, progress) => action(progress));
-		public static FluentTaskRunner<int> Range(int start, int count) => Enumerable.Range(start, count).AsTaskRunner(count);
-		public static FluentTaskRunner<T> Repeat<T>(T item, int count) => Enumerable.Repeat(item, count).AsTaskRunner(count);
 
-		static object lockObj = new object();
 		static readonly ManualResetEvent finished = new ManualResetEvent(true);
-		static Semaphore semaphore;
-		static readonly Queue<TaskRunnerData> tasks = new Queue<TaskRunnerData>();
+		static readonly ManualResetEvent workReady = new ManualResetEvent(false);
+		static readonly Stack<ITaskRunnerTask> tasks = new Stack<ITaskRunnerTask>();
+		static ITaskRunnerTask activeTask = null;
 		static long current = 0, total = 0;
 		static int running = 0;
 		static Exception exception;
-
 		static readonly List<Thread> threads = new List<Thread>();
 
 		static TaskRunner() => Start();
 
 		static void Start()
 		{
-			semaphore = new Semaphore(0, int.MaxValue);
-
-			threads.AddRange(Enumerable.Range(1, NumThreads).ForEach(x => new Thread(TaskRunnerThread) { Name = $"TaskRunner {x}" }));
+			threads.AddRange(Enumerable.Range(1, NumThreads).Select(num => new Thread(TaskRunnerThread) { Name = $"{nameof(TaskRunner)} {num}" }));
 			threads.ForEach(thread => thread.Start());
 		}
 
-		public static void Add(TaskRunnerData data)
+		public static void AddTask(ITaskRunnerTask task)
 		{
-			if (threads.Count == 0)
-			{
-				RunImmediately(data);
-				return;
-			}
-
-			if (data.Count == 0)
-				return;
-
-			lock (lockObj)
+			lock (tasks)
 			{
 				if (exception != null)
 				{
@@ -60,36 +46,31 @@ namespace NeoEdit.Editor.TaskRunning
 					throw exception;
 				}
 
+				if (NumThreads == 0)
+				{
+					RunSynchronously(task);
+					return;
+				}
+
+				total += task.ItemCount * DefaultTaskTotal;
+				tasks.Push(task);
+				activeTask = task;
 				finished.Reset();
-				total += data.Count * DefaultTaskTotal;
-				tasks.Enqueue(data);
-				semaphore.Release(data.Count);
+				workReady.Set();
 			}
 		}
 
-		static ITaskRunnerProgress progress;
-		static void RunImmediately(TaskRunnerData data)
+		static ITaskRunnerProgress progress = NumThreads == 0 ? new TaskRunnerProgress() : null;
+		static void RunSynchronously(ITaskRunnerTask task)
 		{
-			if (progress == null)
-				progress = new TaskRunnerProgress();
-
-			while (data.Enumerator.MoveNext())
-			{
-				var result = data.Enumerator.Current;
-				if (data.Func != null)
-					result = data.Func(result, progress);
-				data.Action?.Invoke(data.NextIndex, result, progress);
-				data.NextIndex++;
-			}
-			if (data.NextIndex != data.Count)
-				throw new Exception("Too few items in enumerable");
-			if (data.Enumerator.MoveNext())
-				throw new Exception("Too many items in enumerable");
+			for (var index = 0; index < task.ItemCount; ++index)
+				task.RunFunc(index, progress);
+			task.RunDone();
 		}
 
 		public static void ForceCancel()
 		{
-			lock (lockObj)
+			lock (tasks)
 			{
 				if (finished.WaitOne(0))
 					return;
@@ -97,32 +78,31 @@ namespace NeoEdit.Editor.TaskRunning
 			}
 
 			threads.ForEach(thread => thread.Abort());
-			var endWait = DateTime.Now.AddMilliseconds(ResetWait);
+			var endWait = DateTime.Now.AddMilliseconds(ForceCancelDelay);
 			foreach (var thread in threads)
 				if (!thread.Join(Math.Max(0, (int)(endWait - DateTime.Now).TotalMilliseconds)))
 					throw new Exception("Attempt to abort failed. Everything's probably broken now.");
 
-			lock (lockObj)
-			{
-				finished.Set();
-				semaphore.Dispose();
-				semaphore = null;
-				tasks.Clear();
-				threads.Clear();
-				current = total = running = 0;
+			finished.Set();
+			workReady.Reset();
+			tasks.Clear();
+			threads.Clear();
+			current = total = running = 0;
 
-				Start();
-			}
+			Start();
 		}
 
 		public static bool Cancel(Exception ex = null)
 		{
-			lock (lockObj)
+			if (finished.WaitOne(0))
+				return false;
+
+			lock (tasks)
 			{
-				if (finished.WaitOne(0))
-					return false;
-				if (exception == null)
-					exception = ex ?? new OperationCanceledException();
+				exception = exception ?? ex ?? new OperationCanceledException();
+				workReady.Reset();
+				activeTask = null;
+				tasks.Clear();
 				return true;
 			}
 		}
@@ -138,67 +118,77 @@ namespace NeoEdit.Editor.TaskRunning
 					throw exception;
 				}
 
-				lock (lockObj)
-				{
-					current += newCurrent - lastCurrent;
-					lastCurrent = newCurrent;
+				Interlocked.Add(ref total, newTotal - lastTotal);
+				Interlocked.Add(ref current, newCurrent - lastCurrent);
 
-					total += newTotal - lastTotal;
-					lastTotal = newTotal;
-				}
+				lastTotal = newTotal;
+				lastCurrent = newCurrent;
 			}
 			var progress = new TaskRunnerProgress { SetProgressAction = ReportProgress };
 
 			while (true)
 			{
-				semaphore.WaitOne();
+				workReady.WaitOne();
 
-				TaskRunnerData task;
-				object obj = null;
-				int index;
-
-				lock (lockObj)
-				{
-					task = tasks.Peek();
-
-					if (exception == null)
-					{
-						if (task.Enumerator.MoveNext())
-							obj = task.Enumerator.Current;
-						else
-							Cancel(new Exception("Too few items in enumerable"));
-					}
-
-					index = task.NextIndex++;
-					if (task.NextIndex == task.Count)
-					{
-						if ((exception == null) && (task.Enumerator.MoveNext()))
-							Cancel(new Exception("Too many items in enumerable"));
-						task.Enumerator.Dispose();
-						tasks.Dequeue();
-					}
-
+				lock (tasks)
 					++running;
-				}
 
-				if (exception == null)
+				try
 				{
-					try
+					while (true)
 					{
-						lastCurrent = 0;
-						lastTotal = DefaultTaskTotal;
+						var task = activeTask;
+						if (task == null)
+							break;
 
-						var result = obj;
-						if (task.Func != null)
-							result = task.Func(obj, progress);
-						task.Action?.Invoke(index, result, progress);
+						var taskGroupSize = task.Waiting >> 6;
+						if (taskGroupSize > MaxTaskGroupSize)
+							taskGroupSize = MaxTaskGroupSize;
+						if (taskGroupSize < 1)
+							taskGroupSize = 1;
 
-						ReportProgress(lastTotal, lastTotal);
+						var index = task.AddNextIndex(taskGroupSize);
+						var endIndex = index + taskGroupSize;
+						if (index > task.ItemCount)
+							index = task.ItemCount;
+						if (endIndex >= task.ItemCount)
+						{
+							endIndex = task.ItemCount;
+							taskGroupSize = endIndex - index;
+							lock (tasks)
+							{
+								if ((tasks.Count != 0) && (tasks.Peek() == task))
+								{
+									++taskGroupSize;
+									tasks.Pop();
+									if (tasks.Count == 0)
+									{
+										activeTask = null;
+										workReady.Reset();
+									}
+									else
+										activeTask = tasks.Peek();
+								}
+							}
+						}
+
+						for (; index < endIndex; ++index)
+						{
+							lastCurrent = 0;
+							lastTotal = DefaultTaskTotal;
+
+							task.RunFunc(index, progress);
+
+							ReportProgress(lastTotal, lastTotal);
+						}
+
+						if ((taskGroupSize != 0) && (task.AddWaiting(-taskGroupSize) == -1))
+							task.RunDone();
 					}
-					catch (Exception ex) when (!(ex is ThreadAbortException)) { Cancel(ex); }
 				}
+				catch (Exception ex) when (!(ex is ThreadAbortException)) { Cancel(ex); }
 
-				lock (lockObj)
+				lock (tasks)
 				{
 					--running;
 					if ((running == 0) && (tasks.Count == 0))
@@ -209,7 +199,7 @@ namespace NeoEdit.Editor.TaskRunning
 
 		public static void WaitForFinish(ITabsWindow tabsWindow)
 		{
-			lock (lockObj)
+			lock (tasks)
 				if (finished.WaitOne(0))
 					return;
 
@@ -222,7 +212,7 @@ namespace NeoEdit.Editor.TaskRunning
 			}
 			tabsWindow.SetTaskRunnerProgress(null);
 
-			lock (lockObj)
+			lock (tasks)
 			{
 				var ex = exception;
 

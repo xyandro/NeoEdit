@@ -112,7 +112,7 @@ namespace NeoEdit.Editor
 					return;
 			}
 
-			TaskRunner.Range(0, urls.Count).ParallelForEach(index => FetchURL(urls[index], fileNames[index]));
+			Enumerable.Range(0, urls.Count).AsTaskRunner().ParallelForEach(index => FetchURL(urls[index], fileNames[index]));
 		}
 
 		Configuration_Network_FetchStream Configure_Network_FetchStream() => Tabs.TabsWindow.Configure_Network_FetchStream(GetVariables(), Path.GetDirectoryName(FileName) ?? "");
@@ -126,7 +126,7 @@ namespace NeoEdit.Editor
 
 			var now = DateTime.Now;
 			var data = urls.Select((url, index) => Tuple.Create(url, now + TimeSpan.FromSeconds(index))).ToList();
-			data.AsTaskRunner().ParallelForEach((item, progress) => YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress));
+			data.AsTaskRunner().ParallelForEach((item, index, progress) => YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress));
 		}
 
 		Configuration_Network_FetchStream Configure_Network_FetchPlaylist() => Tabs.TabsWindow.Configure_Network_FetchStream(GetVariables(), null);
