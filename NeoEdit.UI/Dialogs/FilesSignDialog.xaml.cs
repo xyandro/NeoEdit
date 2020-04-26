@@ -49,17 +49,17 @@ namespace NeoEdit.UI.Dialogs
 				Key = key;
 		}
 
-		FilesSignDialogResult result = null;
+		Configuration_Files_Sign result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (Key == null)
 				return;
 
-			result = new FilesSignDialogResult { CryptorType = CryptorType, Key = Key, Hash = Hash };
+			result = new Configuration_Files_Sign { CryptorType = CryptorType, Key = Key, Hash = Hash };
 			DialogResult = true;
 		}
 
-		public static FilesSignDialogResult Run(Window parent)
+		public static Configuration_Files_Sign Run(Window parent)
 		{
 			var dialog = new FilesSignDialog { Owner = parent };
 			if (!dialog.ShowDialog())

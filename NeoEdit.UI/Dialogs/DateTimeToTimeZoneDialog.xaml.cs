@@ -19,14 +19,14 @@ namespace NeoEdit.UI.Dialogs
 			timeZone.AddSuggestions(Dater.GetAllTimeZones().ToArray());
 		}
 
-		DateTimeToTimeZoneDialogResult result;
+		Configuration_DateTime_ToTimeZone result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new DateTimeToTimeZoneDialogResult { TimeZone = TimeZone };
+			result = new Configuration_DateTime_ToTimeZone { TimeZone = TimeZone };
 			DialogResult = true;
 		}
 
-		public static DateTimeToTimeZoneDialogResult Run(Window parent)
+		public static Configuration_DateTime_ToTimeZone Run(Window parent)
 		{
 			var dialog = new DateTimeToTimeZoneDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

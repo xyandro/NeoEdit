@@ -71,13 +71,13 @@ namespace NeoEdit.UI.Dialogs
 		void Escape(object sender, RoutedEventArgs e) => Text = Regex.Escape(Text);
 		void Unescape(object sender, RoutedEventArgs e) => Text = Regex.Unescape(Text);
 
-		EditFindRegexReplaceDialogResult result;
+		Configuration_Edit_Find_RegexReplace result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new EditFindRegexReplaceDialogResult { Text = Text, Replace = Replace, WholeWords = WholeWords, MatchCase = MatchCase, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection };
+			result = new Configuration_Edit_Find_RegexReplace { Text = Text, Replace = Replace, WholeWords = WholeWords, MatchCase = MatchCase, SelectionOnly = SelectionOnly, EntireSelection = EntireSelection };
 			text.AddCurrentSuggestion(GetCheckBoxStatus());
 			replace.AddCurrentSuggestion();
 
@@ -88,7 +88,7 @@ namespace NeoEdit.UI.Dialogs
 
 		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = SelectionOnly = EntireSelection = false;
 
-		public static EditFindRegexReplaceDialogResult Run(Window parent, string text, bool selectionOnly)
+		public static Configuration_Edit_Find_RegexReplace Run(Window parent, string text, bool selectionOnly)
 		{
 			var dialog = new EditFindRegexReplaceDialog(text, selectionOnly) { Owner = parent };
 			if (!dialog.ShowDialog())

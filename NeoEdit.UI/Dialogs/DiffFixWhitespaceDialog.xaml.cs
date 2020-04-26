@@ -18,14 +18,14 @@ namespace NeoEdit.UI.Dialogs
 			LineStartTabStop = 4;
 		}
 
-		DiffFixWhitespaceDialogResult result;
+		Configuration_Diff_Fix_Whitespace_Dialog result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new DiffFixWhitespaceDialogResult { LineStartTabStop = LineStartTabStop };
+			result = new Configuration_Diff_Fix_Whitespace_Dialog { LineStartTabStop = LineStartTabStop };
 			DialogResult = true;
 		}
 
-		public static DiffFixWhitespaceDialogResult Run(Window parent)
+		public static Configuration_Diff_Fix_Whitespace_Dialog Run(Window parent)
 		{
 			var dialog = new DiffFixWhitespaceDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

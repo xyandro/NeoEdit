@@ -33,16 +33,16 @@ namespace NeoEdit.UI.Dialogs
 			Max = true;
 		}
 
-		NumericMinMaxValuesDialogResult result;
+		Configuration_Numeric_MinMaxValues result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if ((!Min) && (!Max))
 				return;
-			result = new NumericMinMaxValuesDialogResult { CodePage = CodePage, Min = Min, Max = Max };
+			result = new Configuration_Numeric_MinMaxValues { CodePage = CodePage, Min = Min, Max = Max };
 			DialogResult = true;
 		}
 
-		public static NumericMinMaxValuesDialogResult Run(Window parent)
+		public static Configuration_Numeric_MinMaxValues Run(Window parent)
 		{
 			var dialog = new NumericMinMaxValuesDialog { Owner = parent };
 			if (!dialog.ShowDialog())

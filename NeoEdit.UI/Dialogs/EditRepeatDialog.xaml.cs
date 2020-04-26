@@ -27,15 +27,15 @@ namespace NeoEdit.UI.Dialogs
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		EditRepeatDialogResult result;
+		Configuration_Edit_Repeat result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new EditRepeatDialogResult { Expression = Expression, SelectRepetitions = SelectRepetitions };
+			result = new Configuration_Edit_Repeat { Expression = Expression, SelectRepetitions = SelectRepetitions };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static EditRepeatDialogResult Run(Window parent, bool selectRepetitions, NEVariables variables)
+		public static Configuration_Edit_Repeat Run(Window parent, bool selectRepetitions, NEVariables variables)
 		{
 			var dialog = new EditRepeatDialog(selectRepetitions, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

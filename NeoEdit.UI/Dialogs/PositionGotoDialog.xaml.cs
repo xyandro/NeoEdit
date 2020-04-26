@@ -29,15 +29,15 @@ namespace NeoEdit.UI.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		PositionGotoDialogResult result;
+		Configuration_Position_Goto result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new PositionGotoDialogResult { Expression = Expression, OpenFilesOnce = OpenFilesOnce };
+			result = new Configuration_Position_Goto { Expression = Expression, OpenFilesOnce = OpenFilesOnce };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static PositionGotoDialogResult Run(Window parent, GotoType gotoType, int startValue, NEVariables variables)
+		public static Configuration_Position_Goto Run(Window parent, GotoType gotoType, int startValue, NEVariables variables)
 		{
 			var dialog = new PositionGotoDialog(gotoType, startValue, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

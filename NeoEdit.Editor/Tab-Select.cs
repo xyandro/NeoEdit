@@ -70,7 +70,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		IEnumerable<Range> SelectSplit(Range range, SelectSplitDialogResult result, ISearcher searcher)
+		IEnumerable<Range> SelectSplit(Range range, Configuration_Select_Split result, ISearcher searcher)
 		{
 			var stack = new Stack<SelectSplitEnum>();
 			stack.Push(SelectSplitEnum.None);
@@ -241,11 +241,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Select_Nothing() => Selections = new List<Range>();
 
-		SelectLimitDialogResult Configure_Select_Limit() => Tabs.TabsWindow.RunSelectLimitDialog(GetVariables());
+		Configuration_Select_Limit Configure_Select_Limit() => Tabs.TabsWindow.Configure_Select_Limit(GetVariables());
 
 		void Execute_Select_Limit()
 		{
-			var result = state.Configuration as SelectLimitDialogResult;
+			var result = state.Configuration as Configuration_Select_Limit;
 			var variables = GetVariables();
 			var firstSelection = state.GetExpression(result.FirstSelection).Evaluate<int>(variables);
 			var everyNth = state.GetExpression(result.EveryNth).Evaluate<int>(variables);
@@ -341,11 +341,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Select_Repeats_RepeatedLines(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList();
 
-		SelectByCountDialogResult Configure_Select_Repeats_ByCount() => Tabs.TabsWindow.RunSelectByCountDialog();
+		Configuration_Select_Repeats_ByCount Configure_Select_Repeats_ByCount() => Tabs.TabsWindow.Configure_Select_Repeats_ByCount();
 
 		void Execute_Select_Repeats_ByCount(bool caseSensitive)
 		{
-			var result = state.Configuration as SelectByCountDialogResult;
+			var result = state.Configuration as Configuration_Select_Repeats_ByCount;
 			var strs = Selections.Select((range, index) => Tuple.Create(Text.GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 			foreach (var tuple in strs)
@@ -413,11 +413,11 @@ namespace NeoEdit.Editor
 			}).ToList();
 		}
 
-		SelectSplitDialogResult Configure_Select_Split() => Tabs.TabsWindow.RunSelectSplitDialog(GetVariables());
+		Configuration_Select_Split Configure_Select_Split() => Tabs.TabsWindow.Configure_Select_Split(GetVariables());
 
 		void Execute_Select_Split()
 		{
-			var result = state.Configuration as SelectSplitDialogResult;
+			var result = state.Configuration as Configuration_Select_Split;
 			var indexes = GetExpressionResults<int>(result.Index, Selections.Count());
 
 			ISearcher searcher;

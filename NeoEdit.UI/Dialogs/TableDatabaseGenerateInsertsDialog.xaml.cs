@@ -27,7 +27,7 @@ namespace NeoEdit.UI.Dialogs
 			BatchSize = 500;
 		}
 
-		TableDatabaseGenerateInsertsDialogResult result;
+		Configuration_Table_Database_GenerateInserts result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrWhiteSpace(TableName))
@@ -37,7 +37,7 @@ namespace NeoEdit.UI.Dialogs
 			if (table.Selected.Count == 0)
 				throw new Exception("Please select the columns to use");
 
-			result = new TableDatabaseGenerateInsertsDialogResult
+			result = new Configuration_Table_Database_GenerateInserts
 			{
 				Columns = table.Selected.ToList(),
 				BatchSize = BatchSize,
@@ -46,7 +46,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static TableDatabaseGenerateInsertsDialogResult Run(Window parent, Table table, string tableName)
+		public static Configuration_Table_Database_GenerateInserts Run(Window parent, Table table, string tableName)
 		{
 			var dialog = new TableDatabaseGenerateInsertsDialog(table, tableName) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -109,7 +109,7 @@ namespace NeoEdit.UI.Dialogs
 			}.Show();
 		}
 
-		DatabaseConnectDialogResult result;
+		Configuration_Database_Connect result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (DBConnectInfo == null)
@@ -117,11 +117,11 @@ namespace NeoEdit.UI.Dialogs
 
 			XMLConverter.ToXML(DBConnectInfos.ToList()).Save(dbConfigFile);
 
-			result = new DatabaseConnectDialogResult { DBConnectInfo = DBConnectInfo };
+			result = new Configuration_Database_Connect { DBConnectInfo = DBConnectInfo };
 			DialogResult = true;
 		}
 
-		public static DatabaseConnectDialogResult Run(Window parent)
+		public static Configuration_Database_Connect Run(Window parent)
 		{
 			var dialog = new DatabaseConnectDialog { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -22,15 +22,15 @@ namespace NeoEdit.UI.Dialogs
 			Expression = "c";
 		}
 
-		ImageAddOverlayColorDialogResult result;
+		Configuration_Image_AddOverlayColor result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			expression.AddCurrentSuggestion();
-			result = new ImageAddOverlayColorDialogResult { Expression = Expression };
+			result = new Configuration_Image_AddOverlayColor { Expression = Expression };
 			DialogResult = true;
 		}
 
-		public static ImageAddOverlayColorDialogResult Run(Window parent, bool add, NEVariables variables)
+		public static Configuration_Image_AddOverlayColor Run(Window parent, bool add, NEVariables variables)
 		{
 			var dialog = new ImageAddOverlayColorDialog(add, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

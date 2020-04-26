@@ -26,14 +26,14 @@ namespace NeoEdit.UI.Dialogs
 			codePage.DisplayMemberPath = "Value";
 		}
 
-		FilesInsertDialogResult result;
+		Configuration_Files_Insert result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesInsertDialogResult { CodePage = CodePage };
+			result = new Configuration_Files_Insert { CodePage = CodePage };
 			DialogResult = true;
 		}
 
-		public static FilesInsertDialogResult Run(Window parent)
+		public static Configuration_Files_Insert Run(Window parent)
 		{
 			var dialog = new FilesInsertDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

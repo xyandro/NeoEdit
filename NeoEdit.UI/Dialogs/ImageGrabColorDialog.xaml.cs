@@ -72,12 +72,12 @@ namespace NeoEdit.UI.Dialogs
 			base.OnClosed(e);
 		}
 
-		ImageGrabColorDialogResult result;
+		Configuration_Image_GrabColor result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (!Colors.Any())
 				AddClick(sender, e);
-			result = new ImageGrabColorDialogResult { Colors = Colors.ToList() };
+			result = new Configuration_Image_GrabColor { Colors = Colors.ToList() };
 			DialogResult = true;
 		}
 
@@ -157,7 +157,7 @@ namespace NeoEdit.UI.Dialogs
 			}
 		}
 
-		public static ImageGrabColorDialogResult Run(Window parent, string color)
+		public static Configuration_Image_GrabColor Run(Window parent, string color)
 		{
 			var dialog = new ImageGrabColorDialog(color) { Owner = parent };
 			if (!dialog.ShowDialog())

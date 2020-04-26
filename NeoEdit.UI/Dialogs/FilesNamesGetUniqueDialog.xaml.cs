@@ -25,10 +25,10 @@ namespace NeoEdit.UI.Dialogs
 			CheckExisting = true;
 		}
 
-		FilesNamesGetUniqueDialogResult result;
+		Configuration_Files_Name_GetUnique result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesNamesGetUniqueDialogResult { Format = Format, CheckExisting = CheckExisting, RenameAll = RenameAll, UseGUIDs = UseGUIDs };
+			result = new Configuration_Files_Name_GetUnique { Format = Format, CheckExisting = CheckExisting, RenameAll = RenameAll, UseGUIDs = UseGUIDs };
 			DialogResult = true;
 		}
 
@@ -46,7 +46,7 @@ namespace NeoEdit.UI.Dialogs
 			}
 		}
 
-		public static FilesNamesGetUniqueDialogResult Run(Window parent)
+		public static Configuration_Files_Name_GetUnique Run(Window parent)
 		{
 			var dialog = new FilesNamesGetUniqueDialog { Owner = parent };
 			if (!dialog.ShowDialog())

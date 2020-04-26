@@ -302,7 +302,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_New_New: Execute_File_New_New(state.ShiftDown); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;
-				case NECommand.File_Open_Open: Execute_File_Open_Open(state.Configuration as OpenFileDialogResult); break;
+				case NECommand.File_Open_Open: Execute_File_Open_Open(state.Configuration as Configuration_File_Open_Open); break;
 				case NECommand.File_Open_CopiedCut: Execute_File_Open_CopiedCut(); break;
 				case NECommand.File_MoveToNewWindow: Execute_File_MoveToNewWindow(); break;
 				case NECommand.File_Shell_Integrate: Execute_File_Shell_Integrate(); break;
@@ -368,7 +368,7 @@ namespace NeoEdit.Editor
 				case NECommand.Macro_Open_Quick_10: Execute_Macro_Open_Quick(10); break;
 				case NECommand.Macro_Open_Quick_11: Execute_Macro_Open_Quick(11); break;
 				case NECommand.Macro_Open_Quick_12: Execute_Macro_Open_Quick(12); break;
-				case NECommand.Macro_Open_Open: Execute_File_Open_Open(state.Configuration as OpenFileDialogResult); break;
+				case NECommand.Macro_Open_Open: Execute_File_Open_Open(state.Configuration as Configuration_File_Open_Open); break;
 				case NECommand.Macro_TimeNextAction: Execute_Macro_TimeNextAction(); break;
 				case NECommand.Macro_Visualize: Execute_Macro_Visualize(state.MultiStatus); break;
 				case NECommand.Window_NewWindow: Execute_Window_NewWindow(); break;

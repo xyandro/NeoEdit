@@ -27,14 +27,14 @@ namespace NeoEdit.UI.Dialogs
 			OutputFiles = @"$@""{directoryname(xtmin)}\{filenamewithoutextension(xtmin)}-Combine{extension(xtmin)}""";
 		}
 
-		FilesOperationsCombineFilesDialogResult result;
+		Configuration_Files_Operations_CombineFiles result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesOperationsCombineFilesDialogResult { InputFiles = InputFiles, InputFileCount = InputFileCount, OutputFiles = OutputFiles };
+			result = new Configuration_Files_Operations_CombineFiles { InputFiles = InputFiles, InputFileCount = InputFileCount, OutputFiles = OutputFiles };
 			DialogResult = true;
 		}
 
-		public static FilesOperationsCombineFilesDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Files_Operations_CombineFiles Run(Window parent, NEVariables variables)
 		{
 			var dialog = new FilesOperationsCombineFilesDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

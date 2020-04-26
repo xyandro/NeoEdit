@@ -21,15 +21,15 @@ namespace NeoEdit.UI.Dialogs
 			OutputTemplate = @"$@""{directoryname(x)}\{filenamewithoutextension(x)}-{chunk}.png""";
 		}
 
-		ImageGIFSplitDialogResult result;
+		Configuration_Image_GIF_Split result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new ImageGIFSplitDialogResult { OutputTemplate = OutputTemplate };
+			result = new Configuration_Image_GIF_Split { OutputTemplate = OutputTemplate };
 			outputTemplate.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static ImageGIFSplitDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Image_GIF_Split Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageGIFSplitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

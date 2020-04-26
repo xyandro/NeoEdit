@@ -74,7 +74,7 @@
 
 			<UniformGrid Grid.Column="4" Rows="1">
 				<Grid>
-					<Button Click="OkClick" Tag="{x:Static configuration:EditFindFindDialogResult+ResultType.CopyCount}" Content="C_opy Count" Padding="2,1" Focusable="False">
+					<Button Click="OkClick" Tag="{x:Static configuration:Configuration_Edit_Find_Find+ResultType.CopyCount}" Content="C_opy Count" Padding="2,1" Focusable="False">
 						<Button.Visibility>
 							<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="(!p0 &amp;&amp; !p1 &amp;&amp; p2) ? &quot;Visible&quot; : &quot;Hidden&quot;">
 								<Binding Path="KeepMatching" ElementName="self"/>
@@ -83,7 +83,7 @@
 							</MultiBinding>
 						</Button.Visibility>
 					</Button>
-					<Button Click="OkClick" Tag="{x:Static configuration:EditFindFindDialogResult+ResultType.FindNext}" Content="Find _Next" Padding="2,1" Focusable="False">
+					<Button Click="OkClick" Tag="{x:Static configuration:Configuration_Edit_Find_Find+ResultType.FindNext}" Content="Find _Next" Padding="2,1" Focusable="False">
 						<Button.Visibility>
 							<MultiBinding Converter="{converters:NEExpressionConverter}" ConverterParameter="(!p0) ? &quot;Visible&quot; : &quot;Hidden&quot;">
 								<Binding Path="SelectionOnly" ElementName="self"/>
@@ -91,7 +91,7 @@
 						</Button.Visibility>
 					</Button>
 				</Grid>
-				<Button Click="OkClick" Tag="{x:Static configuration:EditFindFindDialogResult+ResultType.FindAll}" IsDefault="True" Content="Find _All" Padding="2,1" Focusable="False"/>
+				<Button Click="OkClick" Tag="{x:Static configuration:Configuration_Edit_Find_Find+ResultType.FindAll}" IsDefault="True" Content="Find _All" Padding="2,1" Focusable="False"/>
 				<Button IsCancel="True" Content="Cancel" Padding="2,1" Focusable="False"/>
 			</UniformGrid>
 		</Grid>

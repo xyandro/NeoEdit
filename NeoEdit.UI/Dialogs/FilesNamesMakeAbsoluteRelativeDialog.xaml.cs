@@ -12,7 +12,7 @@ namespace NeoEdit.UI.Dialogs
 		[DepProp]
 		public string Expression { get { return UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.GetPropValue<string>(this); } set { UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public FilesNamesMakeAbsoluteRelativeDialogResult.ResultType Type { get { return UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.GetPropValue<FilesNamesMakeAbsoluteRelativeDialogResult.ResultType>(this); } set { UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.SetPropValue(this, value); } }
+		public Configuration_Files_Name_MakeAbsolute.ResultType Type { get { return UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.GetPropValue<Configuration_Files_Name_MakeAbsolute.ResultType>(this); } set { UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool CheckType { get { return UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.GetPropValue<bool>(this); } set { UIHelper<FilesNamesMakeAbsoluteRelativeDialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
@@ -43,22 +43,22 @@ namespace NeoEdit.UI.Dialogs
 				if (value == null)
 					return;
 				if (File.Exists(value))
-					Type = FilesNamesMakeAbsoluteRelativeDialogResult.ResultType.File;
+					Type = Configuration_Files_Name_MakeAbsolute.ResultType.File;
 				else if (Directory.Exists(value))
-					Type = FilesNamesMakeAbsoluteRelativeDialogResult.ResultType.Directory;
+					Type = Configuration_Files_Name_MakeAbsolute.ResultType.Directory;
 			}
 			catch { }
 		}
 
-		FilesNamesMakeAbsoluteRelativeDialogResult result;
+		Configuration_Files_Name_MakeAbsolute result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesNamesMakeAbsoluteRelativeDialogResult { Expression = Expression, Type = Type };
+			result = new Configuration_Files_Name_MakeAbsolute { Expression = Expression, Type = Type };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static FilesNamesMakeAbsoluteRelativeDialogResult Run(Window parent, NEVariables variables, bool absolute, bool checkType)
+		public static Configuration_Files_Name_MakeAbsolute Run(Window parent, NEVariables variables, bool absolute, bool checkType)
 		{
 			var dialog = new FilesNamesMakeAbsoluteRelativeDialog(variables, absolute, checkType) { Owner = parent };
 			if (!dialog.ShowDialog())

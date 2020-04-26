@@ -31,16 +31,16 @@ namespace NeoEdit.UI.Dialogs
 			LineEndings = _LineEndings;
 		}
 
-		FileEncodingLineEndingsDialogResult result = null;
+		Configuration_File_Encoding_LineEndings result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (LineEndings == "")
 				return;
-			result = new FileEncodingLineEndingsDialogResult { LineEndings = LineEndings };
+			result = new Configuration_File_Encoding_LineEndings { LineEndings = LineEndings };
 			DialogResult = true;
 		}
 
-		public static FileEncodingLineEndingsDialogResult Run(Window parent, string lineEndings)
+		public static Configuration_File_Encoding_LineEndings Run(Window parent, string lineEndings)
 		{
 			var dialog = new FileEncodingLineEndingsDialog(lineEndings) { Owner = parent };
 			if (!dialog.ShowDialog())

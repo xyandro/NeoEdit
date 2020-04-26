@@ -173,10 +173,10 @@ namespace NeoEdit.UI.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		ImageCropDialogResult result;
+		Configuration_Image_Crop result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new ImageCropDialogResult { XExpression = XExpression, YExpression = YExpression, WidthExpression = WidthExpression, HeightExpression = HeightExpression, FillColor = Colorer.StringToString(FillColor) };
+			result = new Configuration_Image_Crop { XExpression = XExpression, YExpression = YExpression, WidthExpression = WidthExpression, HeightExpression = HeightExpression, FillColor = Colorer.StringToString(FillColor) };
 			xExpression.AddCurrentSuggestion();
 			yExpression.AddCurrentSuggestion();
 			widthExpression.AddCurrentSuggestion();
@@ -186,7 +186,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static ImageCropDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Image_Crop Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageCropDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

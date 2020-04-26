@@ -53,10 +53,10 @@ namespace NeoEdit.UI.Dialogs
 			NotContentIndexedThreeState = initial[FileAttributes.NotContentIndexed] == null;
 		}
 
-		FilesSetAttributesDialogResult result;
+		Configuration_Files_Set_Attributes result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesSetAttributesDialogResult
+			result = new Configuration_Files_Set_Attributes
 			{
 				Attributes = new Dictionary<FileAttributes, bool?>
 				{
@@ -75,7 +75,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static FilesSetAttributesDialogResult Run(Window parent, Dictionary<FileAttributes, bool?> attributes)
+		public static Configuration_Files_Set_Attributes Run(Window parent, Dictionary<FileAttributes, bool?> attributes)
 		{
 			var dialog = new FilesSetAttributesDialog(attributes) { Owner = parent };
 			if (!dialog.ShowDialog())

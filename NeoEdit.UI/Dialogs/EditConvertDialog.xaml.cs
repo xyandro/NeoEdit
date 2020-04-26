@@ -41,14 +41,14 @@ namespace NeoEdit.UI.Dialogs
 			OutputBOM = true;
 		}
 
-		EditConvertDialogResult result;
+		Configuration_Edit_Convert result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new EditConvertDialogResult { InputType = InputType, InputBOM = InputBOM, OutputType = OutputType, OutputBOM = OutputBOM };
+			result = new Configuration_Edit_Convert { InputType = InputType, InputBOM = InputBOM, OutputType = OutputType, OutputBOM = OutputBOM };
 			DialogResult = true;
 		}
 
-		public static EditConvertDialogResult Run(Window parent)
+		public static Configuration_Edit_Convert Run(Window parent)
 		{
 			var dialog = new EditConvertDialog { Owner = parent };
 			if (!dialog.ShowDialog())

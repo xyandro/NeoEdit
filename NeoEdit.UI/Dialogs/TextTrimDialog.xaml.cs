@@ -45,11 +45,11 @@ namespace NeoEdit.UI.Dialogs
 			public int GetHashCode(char val) => char.ToLowerInvariant(val).GetHashCode();
 		}
 
-		TextTrimDialogResult result;
+		Configuration_Text_Select_Trim result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var comparer = MatchCase ? EqualityComparer<char>.Default : (IEqualityComparer<char>)new NoCaseCharComparer();
-			result = new TextTrimDialogResult
+			result = new Configuration_Text_Select_Trim
 			{
 				TrimChars = new HashSet<char>(Helpers.GetCharsFromCharString(TrimChars).ToCharArray(), comparer),
 				Start = Location.HasFlag(TrimLocation.Start),
@@ -59,7 +59,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static TextTrimDialogResult Run(Window parent)
+		public static Configuration_Text_Select_Trim Run(Window parent)
 		{
 			var dialog = new TextTrimDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

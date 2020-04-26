@@ -30,16 +30,16 @@ namespace NeoEdit.UI.Dialogs
 			Concurrency = 10000;
 		}
 
-		NetworkScanPortsDialogResult result;
+		Configuration_Network_ScanPorts result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var ranges = Ports.Split(',').Where(str => str.Length != 0).Select(range => range.Trim().Split('-').Where(str => str.Length != 0).Select(port => int.Parse(port.Trim())).ToList()).Where(range => range.Count > 0).ToList();
 			var portRanges = ranges.Select(range => Tuple.Create(range[0], range.Count == 2 ? Math.Max(range[0], range[1]) : range[0])).ToList();
-			result = new NetworkScanPortsDialogResult { Ports = portRanges, Attempts = Attempts, Timeout = Timeout, Concurrency = Concurrency };
+			result = new Configuration_Network_ScanPorts { Ports = portRanges, Attempts = Attempts, Timeout = Timeout, Concurrency = Concurrency };
 			DialogResult = true;
 		}
 
-		public static NetworkScanPortsDialogResult Run(Window parent)
+		public static Configuration_Network_ScanPorts Run(Window parent)
 		{
 			var dialog = new NetworkScanPortsDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

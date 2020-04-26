@@ -136,14 +136,14 @@ namespace NeoEdit.UI.Dialogs
 			Reset();
 		}
 
-		TableEditTableDialogResult result;
+		Configuration_Table_EditTable result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new TableEditTableDialogResult { AggregateData = AggregateData, SortData = SortData };
+			result = new Configuration_Table_EditTable { AggregateData = AggregateData, SortData = SortData };
 			DialogResult = true;
 		}
 
-		public static TableEditTableDialogResult Run(Window parent, Table input)
+		public static Configuration_Table_EditTable Run(Window parent, Table input)
 		{
 			var dialog = new TableEditTableDialog(input) { Owner = parent };
 			if (!dialog.ShowDialog())

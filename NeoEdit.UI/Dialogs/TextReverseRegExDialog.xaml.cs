@@ -29,10 +29,10 @@ namespace NeoEdit.UI.Dialogs
 			InfiniteCount = 10;
 		}
 
-		TextReverseRegExDialogResult result;
+		Configuration_Text_ReverseRegEx result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new TextReverseRegExDialogResult { RegEx = RegEx, InfiniteCount = InfiniteCount };
+			result = new Configuration_Text_ReverseRegEx { RegEx = RegEx, InfiniteCount = InfiniteCount };
 			regex.AddCurrentSuggestion();
 			DialogResult = true;
 		}
@@ -43,7 +43,7 @@ namespace NeoEdit.UI.Dialogs
 			catch { NumResults = null; }
 		}
 
-		public static TextReverseRegExDialogResult Run(Window parent)
+		public static Configuration_Text_ReverseRegEx Run(Window parent)
 		{
 			var dialog = new TextReverseRegExDialog { Owner = parent };
 			if (!dialog.ShowDialog())

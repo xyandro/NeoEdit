@@ -205,13 +205,13 @@ namespace NeoEdit.UI.Dialogs
 		void Escape(object sender, RoutedEventArgs e) => Text = Regex.Escape(Text);
 		void Unescape(object sender, RoutedEventArgs e) => Text = Regex.Unescape(Text);
 
-		EditFindFindDialogResult result;
+		Configuration_Edit_Find_Find result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new EditFindFindDialogResult
+			result = new Configuration_Edit_Find_Find
 			{
 				Text = Text,
 				IsExpression = IsExpression,
@@ -228,7 +228,7 @@ namespace NeoEdit.UI.Dialogs
 				EntireSelection = EntireSelection,
 				KeepMatching = KeepMatching,
 				RemoveMatching = RemoveMatching,
-				Type = (EditFindFindDialogResult.ResultType)(sender as FrameworkElement).Tag
+				Type = (Configuration_Edit_Find_Find.ResultType)(sender as FrameworkElement).Tag
 			};
 			text.AddCurrentSuggestion(GetCheckBoxStatus());
 
@@ -255,7 +255,7 @@ namespace NeoEdit.UI.Dialogs
 			CodePages = startCodePages;
 		}
 
-		public static EditFindFindDialogResult Run(Window parent, string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables)
+		public static Configuration_Edit_Find_Find Run(Window parent, string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables)
 		{
 			var dialog = new EditFindFindDialog(text, selectionOnly, codePages, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

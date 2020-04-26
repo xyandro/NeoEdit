@@ -30,15 +30,15 @@ namespace NeoEdit.UI.Dialogs
 			Red = Green = Blue = true;
 		}
 
-		ImageAdjustColorDialogResult result;
+		Configuration_Image_AdjustColor result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			expression.AddCurrentSuggestion();
-			result = new ImageAdjustColorDialogResult { Expression = Expression, Alpha = Alpha, Red = Red, Green = Green, Blue = Blue };
+			result = new Configuration_Image_AdjustColor { Expression = Expression, Alpha = Alpha, Red = Red, Green = Green, Blue = Blue };
 			DialogResult = true;
 		}
 
-		public static ImageAdjustColorDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Image_AdjustColor Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageAdjustColorDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

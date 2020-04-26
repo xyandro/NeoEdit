@@ -25,14 +25,14 @@ namespace NeoEdit.UI.Dialogs
 			MaxValue = "1000";
 		}
 
-		NumericRandomNumberDialogResult result;
+		Configuration_Numeric_RandomNumber result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NumericRandomNumberDialogResult { MinValue = MinValue, MaxValue = MaxValue };
+			result = new Configuration_Numeric_RandomNumber { MinValue = MinValue, MaxValue = MaxValue };
 			DialogResult = true;
 		}
 
-		public static NumericRandomNumberDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Numeric_RandomNumber Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NumericRandomNumberDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

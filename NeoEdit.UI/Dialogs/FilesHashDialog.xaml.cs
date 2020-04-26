@@ -25,14 +25,14 @@ namespace NeoEdit.UI.Dialogs
 			HashType = Hasher.Type.SHA1;
 		}
 
-		FilesHashDialogResult result = null;
+		Configuration_Files_Hash result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesHashDialogResult { HashType = HashType, HMACKey = HMACKey };
+			result = new Configuration_Files_Hash { HashType = HashType, HMACKey = HMACKey };
 			DialogResult = true;
 		}
 
-		public static FilesHashDialogResult Run(Window parent)
+		public static Configuration_Files_Hash Run(Window parent)
 		{
 			var dialog = new FilesHashDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -26,14 +26,14 @@ namespace NeoEdit.UI.Dialogs
 			IncludeBeginning = true;
 		}
 
-		NumericCycleDialogResult result;
+		Configuration_Numeric_Cycle result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NumericCycleDialogResult { Minimum = Minimum, Maximum = Maximum, IncludeBeginning = IncludeBeginning };
+			result = new Configuration_Numeric_Cycle { Minimum = Minimum, Maximum = Maximum, IncludeBeginning = IncludeBeginning };
 			DialogResult = true;
 		}
 
-		public static NumericCycleDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Numeric_Cycle Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NumericCycleDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

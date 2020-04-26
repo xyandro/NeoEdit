@@ -29,14 +29,14 @@ namespace NeoEdit.UI.Dialogs
 			PrevMax = NewMax = "xmax";
 		}
 
-		NumericScaleDialogResult result;
+		Configuration_Numeric_Scale result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NumericScaleDialogResult { PrevMin = PrevMin, PrevMax = PrevMax, NewMin = NewMin, NewMax = NewMax };
+			result = new Configuration_Numeric_Scale { PrevMin = PrevMin, PrevMax = PrevMax, NewMin = NewMin, NewMax = NewMax };
 			DialogResult = true;
 		}
 
-		public static NumericScaleDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Numeric_Scale Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NumericScaleDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

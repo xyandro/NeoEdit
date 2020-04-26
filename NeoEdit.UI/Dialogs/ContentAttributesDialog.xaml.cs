@@ -26,14 +26,14 @@ namespace NeoEdit.UI.Dialogs
 			Attribute = Attributes.FirstOrDefault();
 		}
 
-		ContentAttributesDialogResult result;
+		Configuration_Content_Attributes result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new ContentAttributesDialogResult { Attribute = Attribute, FirstOnly = FirstOnly };
+			result = new Configuration_Content_Attributes { Attribute = Attribute, FirstOnly = FirstOnly };
 			DialogResult = true;
 		}
 
-		public static ContentAttributesDialogResult Run(Window parent, List<ParserNode> nodes)
+		public static Configuration_Content_Attributes Run(Window parent, List<ParserNode> nodes)
 		{
 			var dialog = new ContentAttributesDialog(nodes) { Owner = parent };
 			if (!dialog.ShowDialog())

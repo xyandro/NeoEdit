@@ -49,17 +49,17 @@ namespace NeoEdit.Editor
 
 		void Execute_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => AddTab(new Tab(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 
-		OpenFileDialogResult Configure_File_Open_Open(string initialDirectory = null)
+		Configuration_File_Open_Open Configure_File_Open_Open(string initialDirectory = null)
 		{
 			if ((initialDirectory == null) && (Focused != null))
 				initialDirectory = Path.GetDirectoryName(Focused.FileName);
-			var result = TabsWindow.RunOpenFileDialog("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
+			var result = TabsWindow.Configure_File_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
 			if (result == null)
 				throw new OperationCanceledException();
 			return result;
 		}
 
-		void Execute_File_Open_Open(OpenFileDialogResult result) => result.FileNames.ForEach(fileName => AddTab(new Tab(fileName)));
+		void Execute_File_Open_Open(Configuration_File_Open_Open result) => result.FileNames.ForEach(fileName => AddTab(new Tab(fileName)));
 
 		void Execute_File_Open_CopiedCut() => OpenFiles(NEClipboard.Current.Strings);
 

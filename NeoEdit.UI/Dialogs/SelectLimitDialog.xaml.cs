@@ -33,18 +33,18 @@ namespace NeoEdit.UI.Dialogs
 			JoinSelections = false;
 		}
 
-		SelectLimitDialogResult result = null;
+		Configuration_Select_Limit result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			firstSelection.AddCurrentSuggestion();
 			everyNth.AddCurrentSuggestion();
 			takeCount.AddCurrentSuggestion();
 			numSelections.AddCurrentSuggestion();
-			result = new SelectLimitDialogResult { FirstSelection = FirstSelection, EveryNth = EveryNth, TakeCount = TakeCount, NumSelections = NumSelections, JoinSelections = JoinSelections };
+			result = new Configuration_Select_Limit { FirstSelection = FirstSelection, EveryNth = EveryNth, TakeCount = TakeCount, NumSelections = NumSelections, JoinSelections = JoinSelections };
 			DialogResult = true;
 		}
 
-		public static SelectLimitDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Select_Limit Run(Window parent, NEVariables variables)
 		{
 			var dialog = new SelectLimitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -24,14 +24,14 @@ namespace NeoEdit.UI.Dialogs
 			ChunkSize = "20 mb";
 		}
 
-		FilesOperationsSplitFileDialogResult result;
+		Configuration_Files_Operations_SplitFile result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesOperationsSplitFileDialogResult { OutputTemplate = OutputTemplate, ChunkSize = ChunkSize };
+			result = new Configuration_Files_Operations_SplitFile { OutputTemplate = OutputTemplate, ChunkSize = ChunkSize };
 			DialogResult = true;
 		}
 
-		public static FilesOperationsSplitFileDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Files_Operations_SplitFile Run(Window parent, NEVariables variables)
 		{
 			var dialog = new FilesOperationsSplitFileDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

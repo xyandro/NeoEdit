@@ -53,17 +53,17 @@ namespace NeoEdit.UI.Dialogs
 				Key = key;
 		}
 
-		EditDataEncryptDialogResult result = null;
+		Configuration_Edit_Data_Encrypt result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (Key == null)
 				return;
 
-			result = new EditDataEncryptDialogResult { InputCodePage = InputCodePage, CryptorType = CryptorType, Key = Key, OutputCodePage = OutputCodePage };
+			result = new Configuration_Edit_Data_Encrypt { InputCodePage = InputCodePage, CryptorType = CryptorType, Key = Key, OutputCodePage = OutputCodePage };
 			DialogResult = true;
 		}
 
-		public static EditDataEncryptDialogResult Run(Window parent, Coder.CodePage codePage, bool encrypt)
+		public static Configuration_Edit_Data_Encrypt Run(Window parent, Coder.CodePage codePage, bool encrypt)
 		{
 			var dialog = new EditDataEncryptDialog(codePage, encrypt) { Owner = parent };
 			if (!dialog.ShowDialog())

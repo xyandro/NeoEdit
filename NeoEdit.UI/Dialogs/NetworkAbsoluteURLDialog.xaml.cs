@@ -24,15 +24,15 @@ namespace NeoEdit.UI.Dialogs
 			Expression = "c";
 		}
 
-		NetworkAbsoluteURLDialogResult result;
+		Configuration_Network_AbsoluteURL result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NetworkAbsoluteURLDialogResult { Expression = Expression };
+			result = new Configuration_Network_AbsoluteURL { Expression = Expression };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static NetworkAbsoluteURLDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Network_AbsoluteURL Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NetworkAbsoluteURLDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

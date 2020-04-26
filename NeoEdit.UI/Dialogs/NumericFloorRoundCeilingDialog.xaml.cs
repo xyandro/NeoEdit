@@ -25,16 +25,16 @@ namespace NeoEdit.UI.Dialogs
 			Interval = "1";
 		}
 
-		NumericFloorRoundCeilingDialogResult result;
+		Configuration_Numeric_Floor result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NumericFloorRoundCeilingDialogResult { BaseValue = BaseValue, Interval = Interval };
+			result = new Configuration_Numeric_Floor { BaseValue = BaseValue, Interval = Interval };
 			baseValue.AddCurrentSuggestion();
 			interval.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static NumericFloorRoundCeilingDialogResult Run(Window parent, string title, NEVariables variables)
+		public static Configuration_Numeric_Floor Run(Window parent, string title, NEVariables variables)
 		{
 			var dialog = new NumericFloorRoundCeilingDialog(title, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

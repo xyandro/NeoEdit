@@ -23,14 +23,14 @@ namespace NeoEdit.UI.Dialogs
 			Expression = expression;
 		}
 
-		FilesSetTimeDialogResult result;
+		Configuration_Files_Set_Time result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesSetTimeDialogResult { Expression = Expression };
+			result = new Configuration_Files_Set_Time { Expression = Expression };
 			DialogResult = true;
 		}
 
-		public static FilesSetTimeDialogResult Run(Window parent, NEVariables variables, string expression)
+		public static Configuration_Files_Set_Time Run(Window parent, NEVariables variables, string expression)
 		{
 			var dialog = new FilesSetTimeDialog(variables, expression) { Owner = parent };
 			if (!dialog.ShowDialog())

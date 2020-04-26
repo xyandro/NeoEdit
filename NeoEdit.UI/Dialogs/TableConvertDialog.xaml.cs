@@ -22,14 +22,14 @@ namespace NeoEdit.UI.Dialogs
 			TableType = tableType;
 		}
 
-		TableConvertDialogResult result;
+		Configuration_Table_Convert result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new TableConvertDialogResult { TableType = TableType };
+			result = new Configuration_Table_Convert { TableType = TableType };
 			DialogResult = true;
 		}
 
-		public static TableConvertDialogResult Run(Window parent, ParserType tableType)
+		public static Configuration_Table_Convert Run(Window parent, ParserType tableType)
 		{
 			var dialog = new TableConvertDialog(tableType) { Owner = parent };
 			if (!dialog.ShowDialog())

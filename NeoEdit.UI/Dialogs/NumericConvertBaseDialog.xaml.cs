@@ -87,7 +87,7 @@ namespace NeoEdit.UI.Dialogs
 			return result;
 		}
 
-		NumericConvertBaseDialogResult result;
+		Configuration_Numeric_ConvertBase result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var inputChars = Helpers.GetCharsFromCharString(InputSet);
@@ -95,7 +95,7 @@ namespace NeoEdit.UI.Dialogs
 			if (((inputChars.GroupBy(ch => ch).Any(group => group.Count() > 1))) || (outputChars.GroupBy(ch => ch).Any(group => group.Count() > 1)))
 				throw new ArgumentException("Can't have same number more than once");
 
-			result = new NumericConvertBaseDialogResult
+			result = new Configuration_Numeric_ConvertBase
 			{
 				InputSet = inputChars.Select((ch, index) => new { ch, index }).ToDictionary(pair => pair.ch, pair => pair.index),
 				OutputSet = outputChars.Select((ch, index) => new { ch, index }).ToDictionary(pair => pair.index, pair => pair.ch),
@@ -109,7 +109,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static NumericConvertBaseDialogResult Run(Window parent)
+		public static Configuration_Numeric_ConvertBase Run(Window parent)
 		{
 			var dialog = new NumericConvertBaseDialog { Owner = parent };
 			if (!dialog.ShowDialog())

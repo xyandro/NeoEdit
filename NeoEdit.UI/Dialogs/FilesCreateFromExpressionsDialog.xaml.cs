@@ -37,16 +37,16 @@ namespace NeoEdit.UI.Dialogs
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		FilesCreateFromExpressionsDialogResult result;
+		Configuration_Files_Create_FromExpressions result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesCreateFromExpressionsDialogResult { FileName = FileName, Data = Data, CodePage = CodePage };
+			result = new Configuration_Files_Create_FromExpressions { FileName = FileName, Data = Data, CodePage = CodePage };
 			data.AddCurrentSuggestion();
 			fileName.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static FilesCreateFromExpressionsDialogResult Run(Window parent, NEVariables variables, Coder.CodePage codePage)
+		public static Configuration_Files_Create_FromExpressions Run(Window parent, NEVariables variables, Coder.CodePage codePage)
 		{
 			var dialog = new FilesCreateFromExpressionsDialog(variables, codePage) { Owner = parent };
 			if (!dialog.ShowDialog())

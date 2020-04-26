@@ -57,17 +57,17 @@ namespace NeoEdit.UI.Dialogs
 				Key = key;
 		}
 
-		EditDataSignDialogResult result = null;
+		Configuration_Edit_Data_Sign result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (Key == null)
 				return;
 
-			result = new EditDataSignDialogResult { CodePage = CodePage, CryptorType = CryptorType, Key = Key, Hash = Hash };
+			result = new Configuration_Edit_Data_Sign { CodePage = CodePage, CryptorType = CryptorType, Key = Key, Hash = Hash };
 			DialogResult = true;
 		}
 
-		public static EditDataSignDialogResult Run(Window parent, Coder.CodePage codePage)
+		public static Configuration_Edit_Data_Sign Run(Window parent, Coder.CodePage codePage)
 		{
 			var dialog = new EditDataSignDialog(codePage) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -23,18 +23,18 @@ namespace NeoEdit.UI.Dialogs
 			MatchCase = false;
 		}
 
-		DiffIgnoreCharactersDialogResult result;
+		Configuration_Diff_IgnoreCharacters result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var ignoreCharacterStr = new string(Helpers.GetCharsFromCharString(IgnoreCharacters).ToCharArray());
 			if (!MatchCase)
 				ignoreCharacterStr = new string((ignoreCharacterStr.ToLowerInvariant() + ignoreCharacterStr.ToUpperInvariant()).Distinct().ToArray());
-			result = new DiffIgnoreCharactersDialogResult { IgnoreCharacters = ignoreCharacterStr };
+			result = new Configuration_Diff_IgnoreCharacters { IgnoreCharacters = ignoreCharacterStr };
 			ignoreCharacters.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static DiffIgnoreCharactersDialogResult Run(Window parent, string ignoreCharacters)
+		public static Configuration_Diff_IgnoreCharacters Run(Window parent, string ignoreCharacters)
 		{
 			var dialog = new DiffIgnoreCharactersDialog(ignoreCharacters) { Owner = parent };
 			if (!dialog.ShowDialog())

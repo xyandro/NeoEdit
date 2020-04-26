@@ -59,13 +59,13 @@ namespace NeoEdit.UI.Dialogs
 			BalanceLTGT = false;
 		}
 
-		SelectSplitDialogResult result;
+		Configuration_Select_Split result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new SelectSplitDialogResult
+			result = new Configuration_Select_Split
 			{
 				Text = Text,
 				Index = Index,
@@ -89,7 +89,7 @@ namespace NeoEdit.UI.Dialogs
 
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
-		public static SelectSplitDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Select_Split Run(Window parent, NEVariables variables)
 		{
 			var dialog = new SelectSplitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

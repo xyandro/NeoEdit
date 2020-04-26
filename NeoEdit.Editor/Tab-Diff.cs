@@ -252,11 +252,11 @@ namespace NeoEdit.Editor
 			CalculateDiff();
 		}
 
-		DiffIgnoreCharactersDialogResult Configure_Diff_IgnoreCharacters() => Tabs.TabsWindow.RunDiffIgnoreCharactersDialog(DiffIgnoreCharacters);
+		Configuration_Diff_IgnoreCharacters Configure_Diff_IgnoreCharacters() => Tabs.TabsWindow.Configure_Diff_IgnoreCharacters(DiffIgnoreCharacters);
 
 		void Execute_Diff_IgnoreCharacters()
 		{
-			var result = state.Configuration as DiffIgnoreCharactersDialogResult;
+			var result = state.Configuration as Configuration_Diff_IgnoreCharacters;
 			DiffIgnoreCharacters = result.IgnoreCharacters;
 			CalculateDiff();
 		}
@@ -311,14 +311,14 @@ namespace NeoEdit.Editor
 				source.ReplaceSelections(strs);
 		}
 
-		DiffFixWhitespaceDialogResult Configure_Diff_Fix_Whitespace_Dialog() => Tabs.TabsWindow.RunDiffFixWhitespaceDialog();
+		Configuration_Diff_Fix_Whitespace_Dialog Configure_Diff_Fix_Whitespace_Dialog() => Tabs.TabsWindow.Configure_Diff_Fix_Whitespace_Dialog();
 
 		void Execute_Diff_Fix_Whitespace()
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var result = state.Configuration as DiffFixWhitespaceDialogResult;
+			var result = state.Configuration as Configuration_Diff_Fix_Whitespace_Dialog;
 			var fixes = GetDiffFixes(DiffTarget, this, result.LineStartTabStop, null, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 			Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
 			ReplaceSelections(fixes.Item2);

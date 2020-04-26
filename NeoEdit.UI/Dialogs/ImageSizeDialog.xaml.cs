@@ -69,16 +69,16 @@ namespace NeoEdit.UI.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		ImageSizeDialogResult result;
+		Configuration_Image_Size result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new ImageSizeDialogResult { WidthExpression = WidthExpression, HeightExpression = HeightExpression, InterpolationMode = InterpolationMode };
+			result = new Configuration_Image_Size { WidthExpression = WidthExpression, HeightExpression = HeightExpression, InterpolationMode = InterpolationMode };
 			widthExpression.AddCurrentSuggestion();
 			heightExpression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static ImageSizeDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Image_Size Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageSizeDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

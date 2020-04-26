@@ -21,16 +21,16 @@ namespace NeoEdit.UI.Dialogs
 			MaxCount = null;
 		}
 
-		SelectByCountDialogResult result;
+		Configuration_Select_Repeats_ByCount result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (((!MinCount.HasValue) && (!MaxCount.HasValue)) || (MaxCount < MinCount))
 				return;
-			result = new SelectByCountDialogResult { MinCount = MinCount, MaxCount = MaxCount };
+			result = new Configuration_Select_Repeats_ByCount { MinCount = MinCount, MaxCount = MaxCount };
 			DialogResult = true;
 		}
 
-		public static SelectByCountDialogResult Run(Window parent)
+		public static Configuration_Select_Repeats_ByCount Run(Window parent)
 		{
 			var dialog = new SelectByCountDialog { Owner = parent };
 			if (!dialog.ShowDialog())

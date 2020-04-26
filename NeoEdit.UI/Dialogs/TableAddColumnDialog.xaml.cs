@@ -32,7 +32,7 @@ namespace NeoEdit.UI.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		TableAddColumnDialogResult result;
+		Configuration_Table_AddColumn result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (!IsValid)
@@ -40,11 +40,11 @@ namespace NeoEdit.UI.Dialogs
 
 			columnName.AddCurrentSuggestion();
 			expression.AddCurrentSuggestion();
-			result = new TableAddColumnDialogResult { ColumnName = ColumnName, Expression = Expression };
+			result = new Configuration_Table_AddColumn { ColumnName = ColumnName, Expression = Expression };
 			DialogResult = true;
 		}
 
-		public static TableAddColumnDialogResult Run(Window parent, NEVariables variables, int numRows)
+		public static Configuration_Table_AddColumn Run(Window parent, NEVariables variables, int numRows)
 		{
 			var dialog = new TableAddColumnDialog(variables, numRows) { Owner = parent };
 			if (!dialog.ShowDialog())

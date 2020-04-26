@@ -29,16 +29,16 @@ namespace NeoEdit.UI.Dialogs
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		FilesOperationsCopyMoveDialogResult result;
+		Configuration_Files_Operations_CopyMove result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesOperationsCopyMoveDialogResult { OldFileName = OldFileName, NewFileName = NewFileName };
+			result = new Configuration_Files_Operations_CopyMove { OldFileName = OldFileName, NewFileName = NewFileName };
 			oldFileName.AddCurrentSuggestion();
 			newFileName.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static FilesOperationsCopyMoveDialogResult Run(Window parent, NEVariables variables, bool move)
+		public static Configuration_Files_Operations_CopyMove Run(Window parent, NEVariables variables, bool move)
 		{
 			var dialog = new FilesOperationsCopyMoveDialog(variables, move) { Owner = parent };
 			if (!dialog.ShowDialog())

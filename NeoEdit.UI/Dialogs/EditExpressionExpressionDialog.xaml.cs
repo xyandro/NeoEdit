@@ -30,18 +30,18 @@ namespace NeoEdit.UI.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		EditExpressionExpressionDialogResult result;
+		Configuration_Edit_Expression_Expression result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (!IsValid)
 				throw new Exception("Invalid expression");
 
 			expression.AddCurrentSuggestion();
-			result = new EditExpressionExpressionDialogResult { Expression = Expression, Action = (EditExpressionExpressionDialogResult.Actions)(e.Source as FrameworkElement).Tag };
+			result = new Configuration_Edit_Expression_Expression { Expression = Expression, Action = (Configuration_Edit_Expression_Expression.Actions)(e.Source as FrameworkElement).Tag };
 			DialogResult = true;
 		}
 
-		public static EditExpressionExpressionDialogResult Run(Window parent, NEVariables variables, int? numRows = null)
+		public static Configuration_Edit_Expression_Expression Run(Window parent, NEVariables variables, int? numRows = null)
 		{
 			var dialog = new EditExpressionExpressionDialog(variables, numRows) { Owner = parent };
 			if (!dialog.ShowDialog())

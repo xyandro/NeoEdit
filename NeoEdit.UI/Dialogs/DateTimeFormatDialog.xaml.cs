@@ -73,14 +73,14 @@ namespace NeoEdit.UI.Dialogs
 
 		void OnHelp(object sender, RoutedEventArgs e) => DateTimeHelpDialog.Display();
 
-		DateTimeFormatDialogResult result;
+		Configuration_DateTime_Format result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new DateTimeFormatDialogResult { InputFormat = InputFormat, OutputFormat = OutputFormat };
+			result = new Configuration_DateTime_Format { InputFormat = InputFormat, OutputFormat = OutputFormat };
 			DialogResult = true;
 		}
 
-		public static DateTimeFormatDialogResult Run(Window parent, string example)
+		public static Configuration_DateTime_Format Run(Window parent, string example)
 		{
 			var dialog = new DateTimeFormatDialog(example) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -117,13 +117,13 @@ namespace NeoEdit.UI.Dialogs
 		void Escape(object sender, RoutedEventArgs e) => Text = Regex.Escape(Text);
 		void Unescape(object sender, RoutedEventArgs e) => Text = Regex.Unescape(Text);
 
-		FilesFindDialogResult result;
+		Configuration_Files_Find result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrEmpty(Text))
 				return;
 
-			result = new FilesFindDialogResult
+			result = new Configuration_Files_Find
 			{
 				Text = Text,
 				IsExpression = IsExpression,
@@ -160,7 +160,7 @@ namespace NeoEdit.UI.Dialogs
 			CodePages = new HashSet<Coder.CodePage>(Coder.DefaultCodePages);
 		}
 
-		public static FilesFindDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Files_Find Run(Window parent, NEVariables variables)
 		{
 			var dialog = new FilesFindDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

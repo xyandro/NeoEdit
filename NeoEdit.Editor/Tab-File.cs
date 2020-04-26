@@ -67,7 +67,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		GetExpressionDialogResult Configure_File_SaveCopy_SaveCopyByExpression() => Tabs.TabsWindow.RunGetExpressionDialog(GetVariables(), Selections.Count);
+		Configuration_File_SaveCopy_ByExpression Configure_File_SaveCopy_SaveCopyByExpression() => Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(GetVariables(), Selections.Count);
 
 		void Execute_File_SaveCopy_SaveCopyClipboard(bool copyOnly = false)
 		{
@@ -88,7 +88,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_SaveCopy_SaveCopyByExpression(bool copyOnly = false)
 		{
-			var result = state.Configuration as GetExpressionDialogResult;
+			var result = state.Configuration as Configuration_File_SaveCopy_ByExpression;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
@@ -126,7 +126,7 @@ namespace NeoEdit.Editor
 			SetFileName(fileName);
 		}
 
-		GetExpressionDialogResult Configure_File_Operations_RenameByExpression() => Tabs.TabsWindow.RunGetExpressionDialog(GetVariables(), Selections.Count);
+		Configuration_File_SaveCopy_ByExpression Configure_File_Operations_RenameByExpression() => Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(GetVariables(), Selections.Count);
 
 		void Execute_File_Operations_RenameClipboard()
 		{
@@ -153,7 +153,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Operations_RenameByExpression()
 		{
-			var result = state.Configuration as GetExpressionDialogResult;
+			var result = state.Configuration as Configuration_File_SaveCopy_ByExpression;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
@@ -209,7 +209,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Operations_SetDisplayName()
 		{
-			var result = state.Configuration as GetExpressionDialogResult;
+			var result = state.Configuration as Configuration_File_SaveCopy_ByExpression;
 			if (result.Expression == "f")
 			{
 				DisplayName = null;
@@ -270,7 +270,7 @@ namespace NeoEdit.Editor
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var result = Tabs.TabsWindow.RunOpenFileDialog("txt", filter: "Text files|*.txt|All files|*.*", filterIndex: 2, multiselect: true);
+			var result = Tabs.TabsWindow.Configure_File_Open_Open("txt", filter: "Text files|*.txt|All files|*.*", filterIndex: 2, multiselect: true);
 			if (result != null)
 				InsertFiles(result.FileNames);
 		}
@@ -295,19 +295,19 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
 
-		EncodingDialogResult Configure_File_Encoding_Encoding() => Tabs.TabsWindow.RunEncodingDialog(CodePage);
+		Configuration_File_Encoding_Encoding Configure_File_Encoding_Encoding() => Tabs.TabsWindow.Configure_File_Encoding_Encoding(CodePage);
 
 		void Execute_File_Encoding_Encoding()
 		{
-			var result = state.Configuration as EncodingDialogResult;
+			var result = state.Configuration as Configuration_File_Encoding_Encoding;
 			CodePage = result.CodePage;
 		}
 
-		EncodingDialogResult Configure_File_Encoding_ReopenWithEncoding() => Tabs.TabsWindow.RunEncodingDialog(CodePage);
+		Configuration_File_Encoding_Encoding Configure_File_Encoding_ReopenWithEncoding() => Tabs.TabsWindow.Configure_File_Encoding_Encoding(CodePage);
 
 		void Execute_File_Encoding_ReopenWithEncoding()
 		{
-			var result = state.Configuration as EncodingDialogResult;
+			var result = state.Configuration as Configuration_File_Encoding_Encoding;
 			if (IsModified)
 			{
 				if (!QueryUser(nameof(Execute_File_Encoding_ReopenWithEncoding), "You have unsaved changes. Are you sure you want to reload?", MessageOptions.Yes))
@@ -317,11 +317,11 @@ namespace NeoEdit.Editor
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		FileEncodingLineEndingsDialogResult Configure_File_Encoding_LineEndings() => Tabs.TabsWindow.RunFileEncodingLineEndingsDialog(LineEnding ?? "");
+		Configuration_File_Encoding_LineEndings Configure_File_Encoding_LineEndings() => Tabs.TabsWindow.Configure_File_Encoding_LineEndings(LineEnding ?? "");
 
 		void Execute_File_Encoding_LineEndings()
 		{
-			var result = state.Configuration as FileEncodingLineEndingsDialogResult;
+			var result = state.Configuration as Configuration_File_Encoding_LineEndings;
 			var lines = TextView.NumLines;
 			var sel = new List<Range>();
 			for (var line = 0; line < lines; ++line)

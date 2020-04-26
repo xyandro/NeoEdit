@@ -37,7 +37,7 @@ namespace NeoEdit.UI.Dialogs
 
 		void OnUpdateYouTubeDL(object sender, RoutedEventArgs e) => YouTubeDL.Update();
 
-		NetworkFetchStreamDialogResult result;
+		Configuration_Network_FetchStream result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if ((OutputDirectory != null) && (!Directory.Exists(OutputDirectory)))
@@ -46,7 +46,7 @@ namespace NeoEdit.UI.Dialogs
 			Settings.FFmpegPath = FFmpegPath;
 			expression.AddCurrentSuggestion();
 			outputDirectory.AddCurrentSuggestion();
-			result = new NetworkFetchStreamDialogResult
+			result = new Configuration_Network_FetchStream
 			{
 				Expression = Expression,
 				OutputDirectory = OutputDirectory,
@@ -54,7 +54,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static NetworkFetchStreamDialogResult Run(Window parent, NEVariables variables, string outputDirectory)
+		public static Configuration_Network_FetchStream Run(Window parent, NEVariables variables, string outputDirectory)
 		{
 			var dialog = new NetworkFetchStreamDialog(variables, outputDirectory) { Owner = parent };
 			if (!dialog.ShowDialog())

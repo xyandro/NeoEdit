@@ -26,7 +26,7 @@ namespace NeoEdit.UI.Dialogs
 			TableName = tableName;
 		}
 
-		TableDatabaseGenerateUpdatesDialogResult result;
+		Configuration_Table_Database_GenerateUpdates result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrWhiteSpace(TableName))
@@ -36,7 +36,7 @@ namespace NeoEdit.UI.Dialogs
 			if (where.Selected.Count == 0)
 				throw new Exception("Please select the columns to limit the update");
 
-			result = new TableDatabaseGenerateUpdatesDialogResult
+			result = new Configuration_Table_Database_GenerateUpdates
 			{
 				Update = update.Selected.ToList(),
 				Where = where.Selected.ToList(),
@@ -45,7 +45,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static TableDatabaseGenerateUpdatesDialogResult Run(Window parent, Table table, string tableName)
+		public static Configuration_Table_Database_GenerateUpdates Run(Window parent, Table table, string tableName)
 		{
 			var dialog = new TableDatabaseGenerateUpdatesDialog(table, tableName) { Owner = parent };
 			if (!dialog.ShowDialog())

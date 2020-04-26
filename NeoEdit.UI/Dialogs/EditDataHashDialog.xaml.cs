@@ -34,14 +34,14 @@ namespace NeoEdit.UI.Dialogs
 			HashType = Hasher.Type.SHA1;
 		}
 
-		EditDataHashDialogResult result = null;
+		Configuration_Edit_Data_Hash result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new EditDataHashDialogResult { CodePage = CodePage, HashType = HashType, HMACKey = HMACKey };
+			result = new Configuration_Edit_Data_Hash { CodePage = CodePage, HashType = HashType, HMACKey = HMACKey };
 			DialogResult = true;
 		}
 
-		public static EditDataHashDialogResult Run(Window parent, Coder.CodePage codePage)
+		public static Configuration_Edit_Data_Hash Run(Window parent, Coder.CodePage codePage)
 		{
 			var dialog = new EditDataHashDialog(codePage) { Owner = parent };
 			if (!dialog.ShowDialog())

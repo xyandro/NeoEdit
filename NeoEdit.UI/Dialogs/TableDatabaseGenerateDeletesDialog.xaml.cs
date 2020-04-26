@@ -25,7 +25,7 @@ namespace NeoEdit.UI.Dialogs
 			TableName = tableName;
 		}
 
-		TableDatabaseGenerateDeletesDialogResult result;
+		Configuration_Table_Database_GenerateDeletes result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrWhiteSpace(TableName))
@@ -33,7 +33,7 @@ namespace NeoEdit.UI.Dialogs
 			if (where.Selected.Count == 0)
 				throw new Exception("Please select the columns to limit the update");
 
-			result = new TableDatabaseGenerateDeletesDialogResult
+			result = new Configuration_Table_Database_GenerateDeletes
 			{
 				Where = where.Selected.ToList(),
 				TableName = TableName,
@@ -41,7 +41,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static TableDatabaseGenerateDeletesDialogResult Run(Window parent, Table table, string tableName)
+		public static Configuration_Table_Database_GenerateDeletes Run(Window parent, Table table, string tableName)
 		{
 			var dialog = new TableDatabaseGenerateDeletesDialog(table, tableName) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -26,16 +26,16 @@ namespace NeoEdit.UI.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		NetworkFetchFileDialogResult result;
+		Configuration_Network_FetchFile result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NetworkFetchFileDialogResult { URL = URL, FileName = FileName };
+			result = new Configuration_Network_FetchFile { URL = URL, FileName = FileName };
 			url.AddCurrentSuggestion();
 			fileName.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static NetworkFetchFileDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Network_FetchFile Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NetworkFetchFileDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

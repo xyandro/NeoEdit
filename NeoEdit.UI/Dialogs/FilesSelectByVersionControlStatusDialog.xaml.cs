@@ -42,10 +42,10 @@ namespace NeoEdit.UI.Dialogs
 			}
 		}
 
-		FilesSelectByVersionControlStatusDialogResult result;
+		Configuration_Files_Select_ByVersionControlStatus result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesSelectByVersionControlStatusDialogResult();
+			result = new Configuration_Files_Select_ByVersionControlStatus();
 			if (Normal)
 				result.Statuses |= Versioner.Status.Normal;
 			if (Modified)
@@ -59,7 +59,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static FilesSelectByVersionControlStatusDialogResult Run(Window parent)
+		public static Configuration_Files_Select_ByVersionControlStatus Run(Window parent)
 		{
 			var dialog = new FilesSelectByVersionControlStatusDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

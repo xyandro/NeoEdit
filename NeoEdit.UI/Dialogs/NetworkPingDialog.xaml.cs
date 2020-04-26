@@ -19,14 +19,14 @@ namespace NeoEdit.UI.Dialogs
 			Timeout = 1000;
 		}
 
-		NetworkPingDialogResult result;
+		Configuration_Network_Ping result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NetworkPingDialogResult { Timeout = Timeout };
+			result = new Configuration_Network_Ping { Timeout = Timeout };
 			DialogResult = true;
 		}
 
-		public static NetworkPingDialogResult Run(Window parent)
+		public static Configuration_Network_Ping Run(Window parent)
 		{
 			var dialog = new NetworkPingDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

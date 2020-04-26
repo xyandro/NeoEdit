@@ -21,16 +21,16 @@ namespace NeoEdit.UI.Dialogs
 			InterceptURL = interceptURL.GetLastSuggestion();
 		}
 
-		NetworkWCFInterceptCallsDialogResult result;
+		Configuration_Network_WCF_InterceptCalls result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NetworkWCFInterceptCallsDialogResult { WCFURL = WCFURL, InterceptURL = InterceptURL };
+			result = new Configuration_Network_WCF_InterceptCalls { WCFURL = WCFURL, InterceptURL = InterceptURL };
 			DialogResult = true;
 			wcfURL.AddCurrentSuggestion();
 			interceptURL.AddCurrentSuggestion();
 		}
 
-		public static NetworkWCFInterceptCallsDialogResult Run(Window parent)
+		public static Configuration_Network_WCF_InterceptCalls Run(Window parent)
 		{
 			var dialog = new NetworkWCFInterceptCallsDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

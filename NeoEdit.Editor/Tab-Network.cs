@@ -68,11 +68,11 @@ namespace NeoEdit.Editor
 			return results;
 		}
 
-		NetworkAbsoluteURLDialogResult Configure_Network_AbsoluteURL() => Tabs.TabsWindow.RunNetworkAbsoluteURLDialog(GetVariables());
+		Configuration_Network_AbsoluteURL Configure_Network_AbsoluteURL() => Tabs.TabsWindow.Configure_Network_AbsoluteURL(GetVariables());
 
 		void Execute_Network_AbsoluteURL()
 		{
-			var result = state.Configuration as NetworkAbsoluteURLDialogResult;
+			var result = state.Configuration as Configuration_Network_AbsoluteURL;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.Select((range, index) => new Uri(new Uri(results[index]), Text.GetString(range)).AbsoluteUri).ToList());
 		}
@@ -86,11 +86,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		NetworkFetchFileDialogResult Configure_Network_FetchFile() => Tabs.TabsWindow.RunNetworkFetchFileDialog(GetVariables());
+		Configuration_Network_FetchFile Configure_Network_FetchFile() => Tabs.TabsWindow.Configure_Network_FetchFile(GetVariables());
 
 		void Execute_Network_FetchFile()
 		{
-			var result = state.Configuration as NetworkFetchFileDialogResult;
+			var result = state.Configuration as Configuration_Network_FetchFile;
 			var variables = GetVariables();
 
 			var urlExpression = state.GetExpression(result.URL);
@@ -115,11 +115,11 @@ namespace NeoEdit.Editor
 			TaskRunner.Range(0, urls.Count).ParallelForEach(index => FetchURL(urls[index], fileNames[index]));
 		}
 
-		NetworkFetchStreamDialogResult Configure_Network_FetchStream() => Tabs.TabsWindow.RunNetworkFetchStreamDialog(GetVariables(), Path.GetDirectoryName(FileName) ?? "");
+		Configuration_Network_FetchStream Configure_Network_FetchStream() => Tabs.TabsWindow.Configure_Network_FetchStream(GetVariables(), Path.GetDirectoryName(FileName) ?? "");
 
 		void Execute_Network_FetchStream()
 		{
-			var result = state.Configuration as NetworkFetchStreamDialogResult;
+			var result = state.Configuration as Configuration_Network_FetchStream;
 			var urls = GetExpressionResults<string>(result.Expression);
 			if (!urls.Any())
 				return;
@@ -129,11 +129,11 @@ namespace NeoEdit.Editor
 			data.AsTaskRunner().ParallelForEach((item, progress) => YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress));
 		}
 
-		NetworkFetchStreamDialogResult Configure_Network_FetchPlaylist() => Tabs.TabsWindow.RunNetworkFetchStreamDialog(GetVariables(), null);
+		Configuration_Network_FetchStream Configure_Network_FetchPlaylist() => Tabs.TabsWindow.Configure_Network_FetchStream(GetVariables(), null);
 
 		void Execute_Network_FetchPlaylist()
 		{
-			var result = state.Configuration as NetworkFetchStreamDialogResult;
+			var result = state.Configuration as Configuration_Network_FetchStream;
 			var urls = GetExpressionResults<string>(result.Expression);
 			if (!urls.Any())
 				return;
@@ -177,11 +177,11 @@ namespace NeoEdit.Editor
 			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
 		}
 
-		NetworkPingDialogResult Configure_Network_Ping() => Tabs.TabsWindow.RunNetworkPingDialog();
+		Configuration_Network_Ping Configure_Network_Ping() => Tabs.TabsWindow.Configure_Network_Ping();
 
 		void Execute_Network_Ping()
 		{
-			var result = state.Configuration as NetworkPingDialogResult;
+			var result = state.Configuration as Configuration_Network_Ping;
 			var replies = Task.Run(async () =>
 			{
 				var strs = GetSelectionStrings().Select(async str =>
@@ -204,21 +204,21 @@ namespace NeoEdit.Editor
 			ReplaceSelections(replies);
 		}
 
-		NetworkScanPortsDialogResult Configure_Network_ScanPorts() => Tabs.TabsWindow.RunNetworkScanPortsDialog();
+		Configuration_Network_ScanPorts Configure_Network_ScanPorts() => Tabs.TabsWindow.Configure_Network_ScanPorts();
 
 		void Execute_Network_ScanPorts()
 		{
-			var result = state.Configuration as NetworkScanPortsDialogResult;
+			var result = state.Configuration as Configuration_Network_ScanPorts;
 			var strs = GetSelectionStrings();
 			var results = PortScanner.ScanPorts(strs.Select(str => IPAddress.Parse(str)).ToList(), result.Ports, result.Attempts, TimeSpan.FromMilliseconds(result.Timeout), result.Concurrency);
 			ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
 		}
 
-		NetworkWCFGetConfigDialogResult Configure_Network_WCF_GetConfig() => Tabs.TabsWindow.RunNetworkWCFGetConfigDialog();
+		Configuration_Network_WCF_GetConfig Configure_Network_WCF_GetConfig() => Tabs.TabsWindow.Configure_Network_WCF_GetConfig();
 
 		void Execute_Network_WCF_GetConfig()
 		{
-			var result = state.Configuration as NetworkWCFGetConfigDialogResult;
+			var result = state.Configuration as Configuration_Network_WCF_GetConfig;
 			if (Selections.Count != 1)
 				throw new Exception("Must have single selection.");
 
@@ -228,11 +228,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFClient.ExecuteWCF(Text.GetString(range))).ToList());
 
-		NetworkWCFInterceptCallsDialogResult Configure_Network_WCF_InterceptCalls() => Tabs.TabsWindow.RunNetworkWCFInterceptCallsDialog();
+		Configuration_Network_WCF_InterceptCalls Configure_Network_WCF_InterceptCalls() => Tabs.TabsWindow.Configure_Network_WCF_InterceptCalls();
 
 		void Execute_Network_WCF_InterceptCalls()
 		{
-			var result = state.Configuration as NetworkWCFInterceptCallsDialogResult;
+			var result = state.Configuration as Configuration_Network_WCF_InterceptCalls;
 			if (Selections.Count != 1)
 				throw new Exception("Must have single selection.");
 

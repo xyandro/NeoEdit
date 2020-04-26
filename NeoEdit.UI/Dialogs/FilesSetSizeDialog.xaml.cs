@@ -33,17 +33,17 @@ namespace NeoEdit.UI.Dialogs
 			Factor = 1;
 		}
 
-		FilesSetSizeDialogResult result;
+		Configuration_Files_Set_Size result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesSetSizeDialogResult { Expression = Expression, Factor = Factor };
+			result = new Configuration_Files_Set_Size { Expression = Expression, Factor = Factor };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		public static FilesSetSizeDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Files_Set_Size Run(Window parent, NEVariables variables)
 		{
 			var dialog = new FilesSetSizeDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

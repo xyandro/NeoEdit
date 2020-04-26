@@ -52,7 +52,7 @@ namespace NeoEdit.UI.Dialogs
 			Value = Values.FirstOrDefault();
 		}
 
-		ContentAttributeDialogResult result;
+		Configuration_Content_Ancestor result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var text = Value;
@@ -66,11 +66,11 @@ namespace NeoEdit.UI.Dialogs
 			if (!MatchCase)
 				options |= RegexOptions.IgnoreCase;
 
-			result = new ContentAttributeDialogResult { Attribute = Attribute, Regex = new Regex(text, options), Invert = Invert };
+			result = new Configuration_Content_Ancestor { Attribute = Attribute, Regex = new Regex(text, options), Invert = Invert };
 			DialogResult = true;
 		}
 
-		public static ContentAttributeDialogResult Run(Window parent, List<ParserNode> nodes)
+		public static Configuration_Content_Ancestor Run(Window parent, List<ParserNode> nodes)
 		{
 			var dialog = new ContentAttributeDialog(nodes) { Owner = parent };
 			if (!dialog.ShowDialog())

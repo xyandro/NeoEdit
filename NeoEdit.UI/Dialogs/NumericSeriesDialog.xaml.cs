@@ -36,14 +36,14 @@ namespace NeoEdit.UI.Dialogs
 			}
 		}
 
-		NumericSeriesDialogResult result;
+		Configuration_Numeric_Series_LinearGeometric result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NumericSeriesDialogResult { StartExpression = StartExpression, IncrementExpression = IncrementExpression };
+			result = new Configuration_Numeric_Series_LinearGeometric { StartExpression = StartExpression, IncrementExpression = IncrementExpression };
 			DialogResult = true;
 		}
 
-		public static NumericSeriesDialogResult Run(Window parent, bool linear, NEVariables variables)
+		public static Configuration_Numeric_Series_LinearGeometric Run(Window parent, bool linear, NEVariables variables)
 		{
 			var dialog = new NumericSeriesDialog(linear, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

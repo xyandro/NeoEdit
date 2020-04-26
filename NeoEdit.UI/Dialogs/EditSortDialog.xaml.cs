@@ -35,14 +35,14 @@ namespace NeoEdit.UI.Dialogs
 			ascending.IsChecked = true;
 		}
 
-		EditSortDialogResult result;
+		Configuration_Edit_Sort result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new EditSortDialogResult { SortScope = SortScope, UseRegion = UseRegion, SortType = SortType, CaseSensitive = CaseSensitive, Ascending = Ascending };
+			result = new Configuration_Edit_Sort { SortScope = SortScope, UseRegion = UseRegion, SortType = SortType, CaseSensitive = CaseSensitive, Ascending = Ascending };
 			DialogResult = true;
 		}
 
-		public static EditSortDialogResult Run(Window parent)
+		public static Configuration_Edit_Sort Run(Window parent)
 		{
 			var dialog = new EditSortDialog { Owner = parent };
 			if (!dialog.ShowDialog())

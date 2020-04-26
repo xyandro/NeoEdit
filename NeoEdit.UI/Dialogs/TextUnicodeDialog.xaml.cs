@@ -122,17 +122,17 @@ namespace NeoEdit.UI.Dialogs
 
 		void OnCodePointsDoubleClick(object sender, MouseButtonEventArgs e) => OkClick(null, null);
 
-		TextUnicodeDialogResult result;
+		Configuration_Text_Unicode result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (CodePoint == null)
 				return;
 
-			result = new TextUnicodeDialogResult { Value = CodePoint.Display };
+			result = new Configuration_Text_Unicode { Value = CodePoint.Display };
 			DialogResult = true;
 		}
 
-		public static TextUnicodeDialogResult Run(Window parent)
+		public static Configuration_Text_Unicode Run(Window parent)
 		{
 			var dialog = new TextUnicodeDialog { Owner = parent };
 			if (!dialog.ShowDialog())

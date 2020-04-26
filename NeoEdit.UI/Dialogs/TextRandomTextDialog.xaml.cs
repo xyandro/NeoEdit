@@ -25,21 +25,21 @@ namespace NeoEdit.UI.Dialogs
 			Expression = "x";
 		}
 
-		TextRandomTextDialogResult result;
+		Configuration_Text_RandomText result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var chars = Helpers.GetCharsFromCharString(Chars);
 			if (chars.Length == 0)
 				return;
 
-			result = new TextRandomTextDialogResult { Expression = Expression, Chars = chars };
+			result = new Configuration_Text_RandomText { Expression = Expression, Chars = chars };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		public static TextRandomTextDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Text_RandomText Run(Window parent, NEVariables variables)
 		{
 			var dialog = new TextRandomTextDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

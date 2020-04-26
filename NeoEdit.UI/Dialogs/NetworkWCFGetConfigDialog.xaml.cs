@@ -24,15 +24,15 @@ namespace NeoEdit.UI.Dialogs
 			URL = url.GetLastSuggestion();
 		}
 
-		NetworkWCFGetConfigDialogResult result;
+		Configuration_Network_WCF_GetConfig result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NetworkWCFGetConfigDialogResult { URL = URL };
+			result = new Configuration_Network_WCF_GetConfig { URL = URL };
 			DialogResult = true;
 			url.AddCurrentSuggestion();
 		}
 
-		static public NetworkWCFGetConfigDialogResult Run(Window parent)
+		static public Configuration_Network_WCF_GetConfig Run(Window parent)
 		{
 			var dialog = new NetworkWCFGetConfigDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

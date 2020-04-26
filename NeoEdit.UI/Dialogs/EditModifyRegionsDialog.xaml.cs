@@ -45,7 +45,7 @@ namespace NeoEdit.UI.Dialogs
 
 		void Reset(object sender, RoutedEventArgs e) => Region1 = Region2 = Region3 = Region4 = Region5 = Region6 = Region7 = Region8 = Region9 = false;
 
-		EditModifyRegionsDialogResult result;
+		Configuration_Edit_ModifyRegions result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var regions = new List<int>();
@@ -70,11 +70,11 @@ namespace NeoEdit.UI.Dialogs
 			if (!regions.Any())
 				return;
 
-			result = new EditModifyRegionsDialogResult { Regions = regions, Action = (EditModifyRegionsDialogResult.Actions)(sender as Button).Tag };
+			result = new Configuration_Edit_ModifyRegions { Regions = regions, Action = (Configuration_Edit_ModifyRegions.Actions)(sender as Button).Tag };
 			DialogResult = true;
 		}
 
-		public static EditModifyRegionsDialogResult Run(Window parent)
+		public static Configuration_Edit_ModifyRegions Run(Window parent)
 		{
 			var dialog = new EditModifyRegionsDialog { Owner = parent };
 			if (!dialog.ShowDialog())

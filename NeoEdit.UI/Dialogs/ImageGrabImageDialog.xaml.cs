@@ -84,10 +84,10 @@ namespace NeoEdit.UI.Dialogs
 			return result.Value;
 		}
 
-		ImageGrabImageDialogResult result;
+		Configuration_Image_GrabImage result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new ImageGrabImageDialogResult
+			result = new Configuration_Image_GrabImage
 			{
 				GrabX = GrabX,
 				GrabY = GrabY,
@@ -97,7 +97,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static ImageGrabImageDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Image_GrabImage Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageGrabImageDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

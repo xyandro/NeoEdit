@@ -22,15 +22,15 @@ namespace NeoEdit.UI.Dialogs
 			Count = "1";
 		}
 
-		EditRotateDialogResult result = null;
+		Configuration_Edit_Rotate result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			count.AddCurrentSuggestion();
-			result = new EditRotateDialogResult { Count = Count };
+			result = new Configuration_Edit_Rotate { Count = Count };
 			DialogResult = true;
 		}
 
-		public static EditRotateDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Edit_Rotate Run(Window parent, NEVariables variables)
 		{
 			var dialog = new EditRotateDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

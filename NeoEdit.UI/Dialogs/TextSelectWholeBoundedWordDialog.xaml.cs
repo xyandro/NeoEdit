@@ -54,10 +54,10 @@ namespace NeoEdit.UI.Dialogs
 			}
 		}
 
-		TextSelectWholeBoundedWordDialogResult result;
+		Configuration_Text_Select_WholeBoundedWord result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new TextSelectWholeBoundedWordDialogResult
+			result = new Configuration_Text_Select_WholeBoundedWord
 			{
 				Chars = new HashSet<char>(Helpers.GetCharsFromCharString(Chars).ToCharArray()),
 				Start = Location.HasFlag(TrimLocation.Start),
@@ -67,7 +67,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static TextSelectWholeBoundedWordDialogResult Run(Window parent, bool wholeWord)
+		public static Configuration_Text_Select_WholeBoundedWord Run(Window parent, bool wholeWord)
 		{
 			var dialog = new TextSelectWholeBoundedWordDialog(wholeWord) { Owner = parent };
 			if (!dialog.ShowDialog())

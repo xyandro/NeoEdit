@@ -32,10 +32,10 @@ namespace NeoEdit.UI.Dialogs
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		ImageGIFAnimateDialogResult result;
+		Configuration_Image_GIF_Animate result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new ImageGIFAnimateDialogResult { InputFiles = InputFiles, OutputFile = OutputFile, Delay = Delay, Repeat = Repeat };
+			result = new Configuration_Image_GIF_Animate { InputFiles = InputFiles, OutputFile = OutputFile, Delay = Delay, Repeat = Repeat };
 			inputFiles.AddCurrentSuggestion();
 			outputFile.AddCurrentSuggestion();
 			delay.AddCurrentSuggestion();
@@ -43,7 +43,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static ImageGIFAnimateDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Image_GIF_Animate Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageGIFAnimateDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

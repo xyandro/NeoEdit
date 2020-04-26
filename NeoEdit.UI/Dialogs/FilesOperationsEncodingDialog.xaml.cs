@@ -29,14 +29,14 @@ namespace NeoEdit.UI.Dialogs
 			OutputCodePage = Coder.CodePage.UTF8;
 		}
 
-		FilesOperationsEncodingDialogResult result;
+		Configuration_Files_Operations_Encoding result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new FilesOperationsEncodingDialogResult { InputCodePage = InputCodePage, OutputCodePage = OutputCodePage };
+			result = new Configuration_Files_Operations_Encoding { InputCodePage = InputCodePage, OutputCodePage = OutputCodePage };
 			DialogResult = true;
 		}
 
-		public static FilesOperationsEncodingDialogResult Run(Window parent)
+		public static Configuration_Files_Operations_Encoding Run(Window parent)
 		{
 			var dialog = new FilesOperationsEncodingDialog { Owner = parent };
 			if (!dialog.ShowDialog())

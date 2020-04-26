@@ -39,14 +39,14 @@ namespace NeoEdit.UI.Dialogs
 			}
 		}
 
-		EncodingDialogResult result = null;
+		Configuration_File_Encoding_Encoding result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new EncodingDialogResult { CodePage = CodePage };
+			result = new Configuration_File_Encoding_Encoding { CodePage = CodePage };
 			DialogResult = true;
 		}
 
-		public static EncodingDialogResult Run(Window parent, Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None)
+		public static Configuration_File_Encoding_Encoding Run(Window parent, Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None)
 		{
 			var dialog = new EncodingDialog(codePage ?? Coder.DefaultCodePage, detected) { Owner = parent };
 			if (!dialog.ShowDialog())

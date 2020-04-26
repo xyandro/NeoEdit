@@ -55,10 +55,10 @@ namespace NeoEdit.UI.Dialogs
 			lineBreaks = new HashSet<int>(shouldBreak.Indexes(pos => pos));
 		}
 
-		TableTextToTableDialogResult result;
+		Configuration_Table_TextToTable result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new TableTextToTableDialogResult { LineBreaks = lineBreaks.OrderBy().ToList() };
+			result = new Configuration_Table_TextToTable { LineBreaks = lineBreaks.OrderBy().ToList() };
 			DialogResult = true;
 		}
 
@@ -103,7 +103,7 @@ namespace NeoEdit.UI.Dialogs
 			SetupCanvas();
 		}
 
-		public static TableTextToTableDialogResult Run(Window parent, string text)
+		public static Configuration_Table_TextToTable Run(Window parent, string text)
 		{
 			var dialog = new TableTextToTableDialog(text) { Owner = parent };
 			if (!dialog.ShowDialog())

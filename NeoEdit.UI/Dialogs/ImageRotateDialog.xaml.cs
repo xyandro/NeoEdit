@@ -25,15 +25,15 @@ namespace NeoEdit.UI.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		ImageRotateDialogResult result;
+		Configuration_Image_Rotate result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new ImageRotateDialogResult { AngleExpression = AngleExpression };
+			result = new Configuration_Image_Rotate { AngleExpression = AngleExpression };
 			angleExpression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static ImageRotateDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Image_Rotate Run(Window parent, NEVariables variables)
 		{
 			var dialog = new ImageRotateDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

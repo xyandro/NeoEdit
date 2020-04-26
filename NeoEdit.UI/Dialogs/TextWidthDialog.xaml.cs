@@ -13,7 +13,7 @@ namespace NeoEdit.UI.Dialogs
 		[DepProp]
 		public string PadChar { get { return UIHelper<TextWidthDialog>.GetPropValue<string>(this); } set { UIHelper<TextWidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public TextWidthDialogResult.TextLocation Location { get { return UIHelper<TextWidthDialog>.GetPropValue<TextWidthDialogResult.TextLocation>(this); } set { UIHelper<TextWidthDialog>.SetPropValue(this, value); } }
+		public Configuration_Text_Select_ByWidth.TextLocation Location { get { return UIHelper<TextWidthDialog>.GetPropValue<Configuration_Text_Select_ByWidth.TextLocation>(this); } set { UIHelper<TextWidthDialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsSelect { get { return UIHelper<TextWidthDialog>.GetPropValue<bool>(this); } set { UIHelper<TextWidthDialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
@@ -39,28 +39,28 @@ namespace NeoEdit.UI.Dialogs
 		void NumericClick(object sender, RoutedEventArgs e)
 		{
 			PadChar = "0";
-			Location = TextWidthDialogResult.TextLocation.End;
+			Location = Configuration_Text_Select_ByWidth.TextLocation.End;
 		}
 
 		void StringClick(object sender, RoutedEventArgs e)
 		{
 			PadChar = " ";
-			Location = TextWidthDialogResult.TextLocation.Start;
+			Location = Configuration_Text_Select_ByWidth.TextLocation.Start;
 		}
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		TextWidthDialogResult result;
+		Configuration_Text_Select_ByWidth result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (PadChar.Length != 1)
 				return;
-			result = new TextWidthDialogResult { Expression = Expression, PadChar = PadChar[0], Location = Location };
+			result = new Configuration_Text_Select_ByWidth { Expression = Expression, PadChar = PadChar[0], Location = Location };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static TextWidthDialogResult Run(Window parent, bool numeric, bool isSelect, NEVariables variables)
+		public static Configuration_Text_Select_ByWidth Run(Window parent, bool numeric, bool isSelect, NEVariables variables)
 		{
 			var dialog = new TextWidthDialog(numeric, isSelect, variables) { Owner = parent };
 			if (!dialog.ShowDialog())

@@ -25,14 +25,14 @@ namespace NeoEdit.UI.Dialogs
 			Maximum = "xmax";
 		}
 
-		NumericLimitDialogResult result;
+		Configuration_Numeric_Limit result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new NumericLimitDialogResult { Minimum = Minimum, Maximum = Maximum };
+			result = new Configuration_Numeric_Limit { Minimum = Minimum, Maximum = Maximum };
 			DialogResult = true;
 		}
 
-		public static NumericLimitDialogResult Run(Window parent, NEVariables variables)
+		public static Configuration_Numeric_Limit Run(Window parent, NEVariables variables)
 		{
 			var dialog = new NumericLimitDialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())

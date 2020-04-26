@@ -50,14 +50,14 @@ namespace NeoEdit.UI.Dialogs
 			}
 		}
 
-		EditDataCompressDialogResult result = null;
+		Configuration_Edit_Data_Compress result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new EditDataCompressDialogResult { InputCodePage = InputCodePage, CompressorType = CompressorType, OutputCodePage = OutputCodePage };
+			result = new Configuration_Edit_Data_Compress { InputCodePage = InputCodePage, CompressorType = CompressorType, OutputCodePage = OutputCodePage };
 			DialogResult = true;
 		}
 
-		public static EditDataCompressDialogResult Run(Window parent, Coder.CodePage codePage, bool compress)
+		public static Configuration_Edit_Data_Compress Run(Window parent, Coder.CodePage codePage, bool compress)
 		{
 			var dialog = new EditDataCompressDialog(codePage, compress) { Owner = parent };
 			if (!dialog.ShowDialog())

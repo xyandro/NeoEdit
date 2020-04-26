@@ -21,19 +21,19 @@ namespace NeoEdit.UI.Dialogs
 			Chars = chars.GetLastSuggestion() ?? "a-zA-Z";
 		}
 
-		TextFirstDistinctDialogResult result;
+		Configuration_Text_FirstDistinct result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			var chars = Helpers.GetCharsFromCharString(Chars);
 			if (chars.Length == 0)
 				return;
 
-			result = new TextFirstDistinctDialogResult { Chars = chars, MatchCase = MatchCase };
+			result = new Configuration_Text_FirstDistinct { Chars = chars, MatchCase = MatchCase };
 			this.chars.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static TextFirstDistinctDialogResult Run(Window parent)
+		public static Configuration_Text_FirstDistinct Run(Window parent)
 		{
 			var dialog = new TextFirstDistinctDialog() { Owner = parent };
 			if (!dialog.ShowDialog())

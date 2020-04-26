@@ -26,13 +26,13 @@ namespace NeoEdit.UI.Dialogs
 			JoinType = Table.JoinType.Left;
 		}
 
-		TableJoinDialogResult result;
+		Configuration_Table_Join result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if (leftTable.Selected.Count != rightTable.Selected.Count)
 				throw new Exception("Tables must have same selection count");
 
-			result = new TableJoinDialogResult
+			result = new Configuration_Table_Join
 			{
 				LeftColumns = leftTable.Selected.ToList(),
 				RightColumns = rightTable.Selected.ToList(),
@@ -47,7 +47,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static TableJoinDialogResult Run(Window parent, Table leftTable, Table rightTable)
+		public static Configuration_Table_Join Run(Window parent, Table leftTable, Table rightTable)
 		{
 			var dialog = new TableJoinDialog(leftTable, rightTable) { Owner = parent };
 			if (!dialog.ShowDialog())
