@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
 using NeoEdit.UI.Controls;
 
@@ -108,24 +109,25 @@ namespace NeoEdit.UI.Dialogs
 
 		void Reset(object sender = null, RoutedEventArgs e = null) => SetCodePages(Coder.DefaultCodePages);
 
-		HashSet<Coder.CodePage> result;
+		Configuration_Window_ViewBinaryCodePages result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new HashSet<Coder.CodePage>();
+			result = new Configuration_Window_ViewBinaryCodePages();
+			result.CodePages = new HashSet<Coder.CodePage>();
 			foreach (var codePage in codePages)
 			{
 				switch (codePage)
 				{
-					case "UInt8LE": case "UInt8BE": result.Add(Coder.CodePage.UInt8); break;
-					case "Int8LE": case "Int8BE": result.Add(Coder.CodePage.Int8); break;
-					default: result.Add(Helpers.ParseEnum<Coder.CodePage>(codePage)); break;
+					case "UInt8LE": case "UInt8BE": result.CodePages.Add(Coder.CodePage.UInt8); break;
+					case "Int8LE": case "Int8BE": result.CodePages.Add(Coder.CodePage.Int8); break;
+					default: result.CodePages.Add(Helpers.ParseEnum<Coder.CodePage>(codePage)); break;
 				}
 			}
 
 			DialogResult = true;
 		}
 
-		public static HashSet<Coder.CodePage> Run(Window parent, HashSet<Coder.CodePage> startCodePages = null)
+		public static Configuration_Window_ViewBinaryCodePages Run(Window parent, HashSet<Coder.CodePage> startCodePages = null)
 		{
 			var find = new CodePagesDialog(startCodePages) { Owner = parent };
 			if (!find.ShowDialog())

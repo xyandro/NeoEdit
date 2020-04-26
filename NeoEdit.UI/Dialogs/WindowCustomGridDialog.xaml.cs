@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs
@@ -35,16 +36,16 @@ namespace NeoEdit.UI.Dialogs
 			ActiveOnly = false;
 		}
 
-		WindowLayout result;
+		Configuration_Window_CustomGrid result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
 			if ((Columns < 1) || (Rows < 1) || (MaxColumns < 1) || (MaxRows < 1))
 				return;
-			result = new WindowLayout(Columns, Rows, MaxColumns, MaxRows, ActiveOnly);
+			result = new Configuration_Window_CustomGrid { WindowLayout = new WindowLayout(Columns, Rows, MaxColumns, MaxRows, ActiveOnly) };
 			DialogResult = true;
 		}
 
-		public static WindowLayout Run(Window parent, WindowLayout windowLayout)
+		public static Configuration_Window_CustomGrid Run(Window parent, WindowLayout windowLayout)
 		{
 			var dialog = new WindowCustomGridDialog(windowLayout) { Owner = parent };
 			if (!dialog.ShowDialog())

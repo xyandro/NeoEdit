@@ -16,7 +16,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_Grid() => SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 
-		Configuration_Window_CustomGrid Configure_Window_CustomGrid() => new Configuration_Window_CustomGrid { WindowLayout = TabsWindow.RunWindowCustomGridDialog(WindowLayout) };
+		Configuration_Window_CustomGrid Configure_Window_CustomGrid() => TabsWindow.Configure_Window_CustomGrid(WindowLayout);
 
 		void Execute_Window_CustomGrid() => SetLayout((state.Configuration as Configuration_Window_CustomGrid).WindowLayout);
 

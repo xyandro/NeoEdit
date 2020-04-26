@@ -89,7 +89,7 @@ namespace NeoEdit.Editor
 		Configuration_Database_Examine Configure_Database_Examine()
 		{
 			ValidateConnection();
-			Tabs.TabsWindow.RunDatabaseExamineDialog(dbConnection);
+			Tabs.TabsWindow.Configure_Database_Examine(dbConnection);
 			return new Configuration_Database_Examine();
 		}
 

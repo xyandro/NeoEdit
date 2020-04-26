@@ -340,7 +340,7 @@ namespace NeoEdit.Editor
 			if (state.MultiStatus != false)
 				return new Configuration_File_Encrypt();
 			else
-				return Tabs.TabsWindow.RunCryptorKeyDialog(Cryptor.Type.AES, true);
+				return Tabs.TabsWindow.Configure_File_Encrypt(Cryptor.Type.AES, true);
 		}
 
 		void Execute_File_Encrypt() => AESKey = (state.Configuration as Configuration_File_Encrypt).Key;

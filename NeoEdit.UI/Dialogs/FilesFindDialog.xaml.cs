@@ -143,7 +143,7 @@ namespace NeoEdit.UI.Dialogs
 		{
 			try
 			{
-				CodePages = CodePagesDialog.Run(this, CodePages);
+				CodePages = CodePagesDialog.Run(this, CodePages).CodePages;
 				IsBinary = true;
 			}
 			catch { }
