@@ -106,7 +106,7 @@ namespace NeoEdit.Editor
 
 			if (!Instances.Any())
 			{
-				if (((state.Configuration as Configuration_File_Exit).FromMenu) || (!Settings.DontExitOnClose))
+				if (((state.Configuration as Configuration_File_Exit)?.WindowClosed != true) || (!Settings.DontExitOnClose))
 					Environment.Exit(0);
 
 				GC.Collect();

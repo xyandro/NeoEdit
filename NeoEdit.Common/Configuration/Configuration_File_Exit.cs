@@ -2,6 +2,6 @@
 {
 	public class Configuration_File_Exit : IConfiguration
 	{
-		public bool FromMenu { get; set; }
+		public bool WindowClosed { get; set; }
 	}
 }

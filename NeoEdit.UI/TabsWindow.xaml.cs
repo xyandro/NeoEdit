@@ -201,7 +201,7 @@ namespace NeoEdit.UI
 			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
 				Environment.Exit(0);
 
-			HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = new Configuration_File_Exit { FromMenu = false } });
+			HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = new Configuration_File_Exit { WindowClosed = true } });
 			args.Cancel = true;
 		}
 
