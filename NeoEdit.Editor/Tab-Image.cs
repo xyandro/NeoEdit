@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
@@ -67,6 +69,50 @@ namespace NeoEdit.Editor
 					image.Save(string.Format(outputTemplate, frame + 1), System.Drawing.Imaging.ImageFormat.Png);
 				}
 			}
+		}
+
+		DateTime? GetImageTakenDate(string fileName)
+		{
+			using (var image = new System.Drawing.Bitmap(fileName))
+			{
+				var dateTaken = image.PropertyItems.Where(a => a.Id == 0x9004).FirstOrDefault();
+				if (dateTaken == null)
+					dateTaken = image.PropertyItems.Where(a => a.Id == 0x9003).FirstOrDefault();
+				if (dateTaken == null)
+					return null;
+
+				var str = Encoding.UTF8.GetString(dateTaken.Value, 0, dateTaken.Value.Length - 1);
+				var originalDate = DateTime.ParseExact(str, "yyyy:MM:dd HH:mm:ss", null);
+				return originalDate;
+			}
+		}
+
+		void SetImageTakenDate(string fileName, DateTime dateTime)
+		{
+			string tempName;
+			using (System.Drawing.Image image = new System.Drawing.Bitmap(fileName))
+			{
+				var bytes = Encoding.UTF8.GetBytes(dateTime.ToString("yyyy:MM:dd HH:mm:ss") + '\0');
+
+				var newItem = (System.Drawing.Imaging.PropertyItem)FormatterServices.GetUninitializedObject(typeof(System.Drawing.Imaging.PropertyItem));
+				newItem.Id = 0x9004;
+				newItem.Value = bytes;
+				newItem.Len = bytes.Length;
+				newItem.Type = 2;
+				image.SetPropertyItem(newItem);
+
+				newItem = (System.Drawing.Imaging.PropertyItem)FormatterServices.GetUninitializedObject(typeof(System.Drawing.Imaging.PropertyItem));
+				newItem.Id = 0x9003;
+				newItem.Value = bytes;
+				newItem.Len = bytes.Length;
+				newItem.Type = 2;
+				image.SetPropertyItem(newItem);
+
+				tempName = Path.Combine(Path.GetDirectoryName(fileName), $"{Guid.NewGuid()}{Path.GetExtension(fileName)}");
+				image.Save(tempName);
+			}
+			File.Delete(fileName);
+			File.Move(tempName, fileName);
 		}
 
 		Configuration_Image_GrabColor Configure_Image_GrabColor() => Tabs.TabsWindow.Configure_Image_GrabColor(Selections.Select(range => Text.GetString(range)).FirstOrDefault());
@@ -269,6 +315,30 @@ namespace NeoEdit.Editor
 			var files = RelativeSelectedFiles();
 			var outputTemplates = state.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, files.Count);
 			Enumerable.Range(0, files.Count).ForEach(index => SplitGIF(files[index], outputTemplates[index]));
+		}
+
+		void Execute_Image_GetTakenDate() => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(fileName => GetImageTakenDate(fileName)?.ToString() ?? "<NONE>").ToList());
+
+		Configuration_Image_SetTakenDate Configure_Image_SetTakenDate() => Tabs.TabsWindow.Configure_Image_SetTakenDate(GetVariables());
+
+		void Execute_Image_SetTakenDate()
+		{
+			var result = state.Configuration as Configuration_Image_SetTakenDate;
+			var variables = GetVariables();
+
+			var fileNameExpression = state.GetExpression(result.FileName);
+			var dateTimeExpression = state.GetExpression(result.DateTime);
+			var resultCount = variables.ResultCount(fileNameExpression, dateTimeExpression);
+
+			var fileNames = fileNameExpression.EvaluateList<string>(variables, resultCount);
+			var dateTimes = dateTimeExpression.EvaluateList<string>(variables, resultCount).Select(DateTime.Parse).ToList();
+
+			const int InvalidCount = 10;
+			var invalid = fileNames.Distinct().Where(name => !Helpers.FileOrDirectoryExists(name)).Take(InvalidCount).ToList();
+			if (invalid.Any())
+				throw new Exception($"Files don't exist:\n{string.Join("\n", invalid)}");
+
+			Enumerable.Range(0, fileNames.Count).AsParallel().Select(index => (fileName: fileNames[index], dateTime: dateTimes[index])).ForEach(pair => SetImageTakenDate(pair.fileName, pair.dateTime));
 		}
 	}
 }

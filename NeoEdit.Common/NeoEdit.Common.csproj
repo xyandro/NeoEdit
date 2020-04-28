@@ -152,6 +152,7 @@
     <Compile Include="Configuration\Configuration_Window_CustomGrid.cs" />
     <Compile Include="Configuration\Configuration_Window_ViewBinaryCodePages.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="Configuration\Configuration_Image_SetTakenDate.cs" />
     <Compile Include="DBConnectInfo.cs" />
     <Compile Include="DiffType.cs" />
     <Compile Include="Enums\GetPathType.cs" />

@@ -102,6 +102,7 @@ namespace NeoEdit.UI
 		public Configuration_Image_Rotate Configure_Image_Rotate(NEVariables variables) => RunOnUIThread(() => Configure_Image_Rotate_Dialog.Run(this, variables));
 		public Configuration_Image_GIF_Animate Configure_Image_GIF_Animate(NEVariables variables) => RunOnUIThread(() => Configure_Image_GIF_Animate_Dialog.Run(this, variables));
 		public Configuration_Image_GIF_Split Configure_Image_GIF_Split(NEVariables variables) => RunOnUIThread(() => Configure_Image_GIF_Split_Dialog.Run(this, variables));
+		public Configuration_Image_SetTakenDate Configure_Image_SetTakenDate(NEVariables variables) => RunOnUIThread(() => Configure_Image_SetTakenDate_Dialog.Run(this, variables));
 		public Configuration_Table_Convert Configure_Table_Convert(ParserType tableType) => RunOnUIThread(() => Configure_Table_Convert_Dialog.Run(this, tableType));
 		public Configuration_Table_TextToTable Configure_Table_TextToTable(string text) => RunOnUIThread(() => Configure_Table_TextToTable_Dialog.Run(this, text));
 		public Configuration_Table_EditTable Configure_Table_EditTable(Table input) => RunOnUIThread(() => Configure_Table_EditTable_Dialog.Run(this, input));

@@ -268,10 +268,17 @@
     <Compile Include="Dialogs\Configure_Edit_Sort_Dialog.xaml.cs">
       <DependentUpon>Configure_Edit_Sort_Dialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\Configure_Image_SetTakenDate_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\Configure_File_Encoding_Encoding_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Dialogs\Configure_Image_SetTakenDate_Dialog.xaml.cs">
+      <DependentUpon>Configure_Image_SetTakenDate_Dialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\Configure_File_Encoding_Encoding_Dialog.xaml.cs">
       <DependentUpon>Configure_File_Encoding_Encoding_Dialog.xaml</DependentUpon>
     </Compile>

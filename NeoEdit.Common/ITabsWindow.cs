@@ -91,6 +91,7 @@ namespace NeoEdit.Common
 		Configuration_Image_Rotate Configure_Image_Rotate(NEVariables variables);
 		Configuration_Image_GIF_Animate Configure_Image_GIF_Animate(NEVariables variables);
 		Configuration_Image_GIF_Split Configure_Image_GIF_Split(NEVariables variables);
+		Configuration_Image_SetTakenDate Configure_Image_SetTakenDate(NEVariables variables);
 		Configuration_Table_Convert Configure_Table_Convert(ParserType tableType);
 		Configuration_Table_TextToTable Configure_Table_TextToTable(string text);
 		Configuration_Table_EditTable Configure_Table_EditTable(Table input);

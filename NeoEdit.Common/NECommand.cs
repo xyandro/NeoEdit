@@ -472,6 +472,8 @@ namespace NeoEdit.Common
 		Image_Rotate,
 		Image_GIF_Animate,
 		Image_GIF_Split,
+		Image_GetTakenDate,
+		Image_SetTakenDate,
 		Table_DetectType,
 		Table_Convert,
 		Table_TextToTable,

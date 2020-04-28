@@ -386,6 +386,7 @@ namespace NeoEdit.Editor
 				case NECommand.Image_Rotate: return Configure_Image_Rotate();
 				case NECommand.Image_GIF_Animate: return Configure_Image_GIF_Animate();
 				case NECommand.Image_GIF_Split: return Configure_Image_GIF_Split();
+				case NECommand.Image_SetTakenDate: return Configure_Image_SetTakenDate();
 				case NECommand.Table_Convert: return Configure_Table_Convert();
 				case NECommand.Table_TextToTable: return Configure_Table_TextToTable();
 				case NECommand.Table_EditTable: return Configure_Table_EditTable();
@@ -881,6 +882,8 @@ namespace NeoEdit.Editor
 				case NECommand.Image_Rotate: Execute_Image_Rotate(); break;
 				case NECommand.Image_GIF_Animate: Execute_Image_GIF_Animate(); break;
 				case NECommand.Image_GIF_Split: Execute_Image_GIF_Split(); break;
+				case NECommand.Image_GetTakenDate: Execute_Image_GetTakenDate(); break;
+				case NECommand.Image_SetTakenDate: Execute_Image_SetTakenDate(); break;
 				case NECommand.Table_DetectType: Execute_Table_DetectType(); break;
 				case NECommand.Table_Convert: Execute_Table_Convert(); break;
 				case NECommand.Table_TextToTable: Execute_Table_TextToTable(); break;

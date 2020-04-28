@@ -690,6 +690,9 @@
 			<controls:NEMenuItem Header="_Animate" CommandEnum="Image_GIF_Animate" ToolTip="Combine still pictures to GIF"/>
 			<controls:NEMenuItem Header="_Split" CommandEnum="Image_GIF_Split" ToolTip="Split GIF to still pictures"/>
 		</MenuItem>
+		<Separator/>
+		<controls:NEMenuItem Header="G_et Taken Date" CommandEnum="Image_GetTakenDate" ToolTip="Get taken date on pictures"/>
+		<controls:NEMenuItem Header="Se_t Taken Date" CommandEnum="Image_SetTakenDate" ToolTip="Set taken date on pictures"/>
 	</MenuItem>
 	<MenuItem Header="Ta_ble">
 		<controls:NEMenuItem Header="D_etect type" CommandEnum="Table_DetectType" ToolTip="Auto-detect table type"/>
