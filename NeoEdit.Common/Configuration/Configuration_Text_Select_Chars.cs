@@ -2,9 +2,9 @@
 
 namespace NeoEdit.Common.Configuration
 {
-	public class Configuration_Text_Select_Trim : IConfiguration
+	public class Configuration_Text_Select_Chars : IConfiguration
 	{
-		public HashSet<char> TrimChars { get; set; }
+		public HashSet<char> Chars { get; set; }
 		public bool Start { get; set; }
 		public bool End { get; set; }
 	}

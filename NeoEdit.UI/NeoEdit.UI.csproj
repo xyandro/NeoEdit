@@ -268,17 +268,10 @@
     <Compile Include="Dialogs\Configure_Edit_Sort_Dialog.xaml.cs">
       <DependentUpon>Configure_Edit_Sort_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\Configure_Image_SetTakenDate_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Dialogs\Configure_File_Encoding_Encoding_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\Configure_Image_SetTakenDate_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_SetTakenDate_Dialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\Configure_File_Encoding_Encoding_Dialog.xaml.cs">
       <DependentUpon>Configure_File_Encoding_Encoding_Dialog.xaml</DependentUpon>
     </Compile>
@@ -463,6 +456,13 @@
     </Page>
     <Compile Include="Dialogs\Configure_Image_Rotate_Dialog.xaml.cs">
       <DependentUpon>Configure_Image_Rotate_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Configure_Image_SetTakenDate_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Configure_Image_SetTakenDate_Dialog.xaml.cs">
+      <DependentUpon>Configure_Image_SetTakenDate_Dialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\Configure_Image_Size_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -695,19 +695,12 @@
     <Compile Include="Dialogs\Configure_Text_Select_ByWidth_Dialog.xaml.cs">
       <DependentUpon>Configure_Text_Select_ByWidth_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\Configure_Text_Select_Trim_Dialog.xaml">
+    <Page Include="Dialogs\Configure_Text_Select_Chars_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\Configure_Text_Select_Trim_Dialog.xaml.cs">
-      <DependentUpon>Configure_Text_Select_Trim_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Text_Select_WholeBoundedWord_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Text_Select_WholeBoundedWord_Dialog.xaml.cs">
-      <DependentUpon>Configure_Text_Select_WholeBoundedWord_Dialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Configure_Text_Select_Chars_Dialog.xaml.cs">
+      <DependentUpon>Configure_Text_Select_Chars_Dialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\Configure_Text_Unicode_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>

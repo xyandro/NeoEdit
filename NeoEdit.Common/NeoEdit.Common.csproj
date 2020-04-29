@@ -102,6 +102,7 @@
     <Compile Include="Configuration\Configuration_Image_GrabColor.cs" />
     <Compile Include="Configuration\Configuration_Image_GrabImage.cs" />
     <Compile Include="Configuration\Configuration_Image_Rotate.cs" />
+    <Compile Include="Configuration\Configuration_Image_SetTakenDate.cs" />
     <Compile Include="Configuration\Configuration_Image_Size.cs" />
     <Compile Include="Configuration\Configuration_Internal_AddTab.cs" />
     <Compile Include="Configuration\Configuration_Internal_CloseTab.cs" />
@@ -146,13 +147,11 @@
     <Compile Include="Configuration\Configuration_Text_RandomText.cs" />
     <Compile Include="Configuration\Configuration_Text_ReverseRegEx.cs" />
     <Compile Include="Configuration\Configuration_Text_Select_ByWidth.cs" />
-    <Compile Include="Configuration\Configuration_Text_Select_Trim.cs" />
-    <Compile Include="Configuration\Configuration_Text_Select_WholeBoundedWord.cs" />
+    <Compile Include="Configuration\Configuration_Text_Select_Chars.cs" />
     <Compile Include="Configuration\Configuration_Text_Unicode.cs" />
     <Compile Include="Configuration\Configuration_Window_CustomGrid.cs" />
     <Compile Include="Configuration\Configuration_Window_ViewBinaryCodePages.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
-    <Compile Include="Configuration\Configuration_Image_SetTakenDate.cs" />
     <Compile Include="DBConnectInfo.cs" />
     <Compile Include="DiffType.cs" />
     <Compile Include="Enums\GetPathType.cs" />

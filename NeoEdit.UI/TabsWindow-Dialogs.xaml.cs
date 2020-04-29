@@ -75,9 +75,8 @@ namespace NeoEdit.UI
 		public Configuration_Files_Operations_Encoding Configure_Files_Operations_Encoding() => RunOnUIThread(() => Configure_Files_Operations_Encoding_Dialog.Run(this));
 		public Configuration_Files_Operations_SplitFile Configure_Files_Operations_SplitFile(NEVariables variables) => RunOnUIThread(() => Configure_Files_Operations_SplitFile_Dialog.Run(this, variables));
 		public Configuration_Files_Operations_CombineFiles Configure_Files_Operations_CombineFiles(NEVariables variables) => RunOnUIThread(() => Configure_Files_Operations_CombineFiles_Dialog.Run(this, variables));
-		public Configuration_Text_Select_Trim Configure_Text_Select_Trim() => RunOnUIThread(() => Configure_Text_Select_Trim_Dialog.Run(this));
+		public Configuration_Text_Select_Chars Configure_Text_Select_Chars(int index) => RunOnUIThread(() => Configure_Text_Select_Chars_Dialog.Run(this, index));
 		public Configuration_Text_Select_ByWidth Configure_Text_Select_ByWidth(bool numeric, bool isSelect, NEVariables variables) => RunOnUIThread(() => Configure_Text_Select_ByWidth_Dialog.Run(this, numeric, isSelect, variables));
-		public Configuration_Text_Select_WholeBoundedWord Configure_Text_Select_WholeBoundedWord(bool wholeWord) => RunOnUIThread(() => Configure_Text_Select_WholeBoundedWord_Dialog.Run(this, wholeWord));
 		public Configuration_Text_Unicode Configure_Text_Unicode() => RunOnUIThread(() => Configure_Text_Unicode_Dialog.Run(this));
 		public Configuration_Text_RandomText Configure_Text_RandomText(NEVariables variables) => RunOnUIThread(() => Configure_Text_RandomText_Dialog.Run(this, variables));
 		public Configuration_Text_ReverseRegEx Configure_Text_ReverseRegEx() => RunOnUIThread(() => Configure_Text_ReverseRegEx_Dialog.Run(this));

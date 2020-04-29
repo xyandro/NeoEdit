@@ -64,9 +64,8 @@ namespace NeoEdit.Common
 		Configuration_Files_Operations_Encoding Configure_Files_Operations_Encoding();
 		Configuration_Files_Operations_SplitFile Configure_Files_Operations_SplitFile(NEVariables variables);
 		Configuration_Files_Operations_CombineFiles Configure_Files_Operations_CombineFiles(NEVariables variables);
-		Configuration_Text_Select_Trim Configure_Text_Select_Trim();
+		Configuration_Text_Select_Chars Configure_Text_Select_Chars(int index);
 		Configuration_Text_Select_ByWidth Configure_Text_Select_ByWidth(bool numeric, bool isSelect, NEVariables variables);
-		Configuration_Text_Select_WholeBoundedWord Configure_Text_Select_WholeBoundedWord(bool wholeWord);
 		Configuration_Text_Unicode Configure_Text_Unicode();
 		Configuration_Text_RandomText Configure_Text_RandomText(NEVariables variables);
 		Configuration_Text_ReverseRegEx Configure_Text_ReverseRegEx();

@@ -1,4 +1,4 @@
-﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.Dialogs.Configure_Text_Select_WholeBoundedWord_Dialog"
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.Dialogs.Configure_Text_Select_Chars_Dialog"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
@@ -27,6 +27,8 @@
 			<RadioButton GroupName="location" Content="_Both" IsChecked="{Binding Location, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Both}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 			<RadioButton GroupName="location" Content="_End" IsChecked="{Binding Location, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=End}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 		</StackPanel>
+
+		<CheckBox Grid.Row="2" Grid.Column="1" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
 
 		<UniformGrid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Rows="1">
 			<Button Click="OnTypeClick" Tag="Words" Content="_Words" Padding="10,1"/>

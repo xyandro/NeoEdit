@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
@@ -42,18 +41,18 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		Range TrimRange(Range range, Configuration_Text_Select_Trim result)
+		Range TrimRange(Range range, Configuration_Text_Select_Chars result)
 		{
 			var position = range.Start;
 			var length = range.Length;
 			if (result.End)
 			{
-				while ((length > 0) && (result.TrimChars.Contains(Text[position + length - 1])))
+				while ((length > 0) && (result.Chars.Contains(Text[position + length - 1])))
 					--length;
 			}
 			if (result.Start)
 			{
-				while ((length > 0) && (result.TrimChars.Contains(Text[position])))
+				while ((length > 0) && (result.Chars.Contains(Text[position])))
 				{
 					++position;
 					--length;
@@ -64,28 +63,28 @@ namespace NeoEdit.Editor
 			return Range.FromIndex(position, length);
 		}
 
-		static string TrimString(string str, Configuration_Text_Select_Trim result)
+		static string TrimString(string str, Configuration_Text_Select_Chars result)
 		{
 			var start = 0;
 			var end = str.Length;
 			if (result.Start)
 			{
-				while ((start < end) && (result.TrimChars.Contains(str[start])))
+				while ((start < end) && (result.Chars.Contains(str[start])))
 					++start;
 			}
 			if (result.End)
 			{
-				while ((start < end) && (result.TrimChars.Contains(str[end - 1])))
+				while ((start < end) && (result.Chars.Contains(str[end - 1])))
 					--end;
 			}
 			return str.Substring(start, end - start);
 		}
 
-		Configuration_Text_Select_Trim Configure_Text_Select_Trim() => Tabs.TabsWindow.Configure_Text_Select_Trim();
+		Configuration_Text_Select_Chars Configure_Text_Select_Trim() => Tabs.TabsWindow.Configure_Text_Select_Chars(0);
 
 		void Execute_Text_Select_Trim()
 		{
-			var result = state.Configuration as Configuration_Text_Select_Trim;
+			var result = state.Configuration as Configuration_Text_Select_Chars;
 			Selections = Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList();
 		}
 
@@ -98,11 +97,11 @@ namespace NeoEdit.Editor
 			Selections = Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList();
 		}
 
-		Configuration_Text_Select_WholeBoundedWord Configure_Text_Select_WholeBoundedWord(bool wholeWord) => Tabs.TabsWindow.Configure_Text_Select_WholeBoundedWord(wholeWord);
+		Configuration_Text_Select_Chars Configure_Text_Select_WholeBoundedWord(bool wholeWord) => Tabs.TabsWindow.Configure_Text_Select_Chars(wholeWord ? 1 : 2);
 
 		void Execute_Text_Select_WholeBoundedWord(bool wholeWord)
 		{
-			var result = state.Configuration as Configuration_Text_Select_WholeBoundedWord;
+			var result = state.Configuration as Configuration_Text_Select_Chars;
 			var minPosition = 0;
 			var maxPosition = TextView.MaxPosition;
 
@@ -168,11 +167,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
 		}
 
-		Configuration_Text_Select_Trim Configure_Text_Trim() => Tabs.TabsWindow.Configure_Text_Select_Trim();
+		Configuration_Text_Select_Chars Configure_Text_Trim() => Tabs.TabsWindow.Configure_Text_Select_Chars(0);
 
 		void Execute_Text_Trim()
 		{
-			var result = state.Configuration as Configuration_Text_Select_Trim;
+			var result = state.Configuration as Configuration_Text_Select_Chars;
 			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(Text.GetString(str), result)).ToList());
 		}
 
