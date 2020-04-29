@@ -10,29 +10,36 @@ namespace NeoEdit.Editor.TaskRunning
 	interface ITaskRunnerTask
 	{
 		int ItemCount { get; }
-		int Waiting { get; }
 
 		void RunFunc(int index, ITaskRunnerProgress progress);
 		void RunDone();
 		void Run(IEnumerable itemsEnum);
-		int AddNextIndex(int count);
-		int AddWaiting(int count);
+		void GetGroup(out int index, out int count);
+		int SetFinished(int count);
 	}
 
 	class TaskRunnerTask<TSource, TResult> : ITaskRunnerTask
 	{
+		const int MaxGroupSize = 1000;
+
 		public IReadOnlyList<TSource> Items { get; private set; }
 		public List<TResult> Results { get; private set; }
 		public Func<TSource, int, ITaskRunnerProgress, TResult> Func { get; }
-		public Action<IReadOnlyList<TResult>> Done { get; }
-		int waiting;
-		public int Waiting => waiting;
-		int nextIndex;
+		public Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> Done { get; }
+		int waiting = 0;
+		int nextIndex = 0;
+		bool fullGroup = false;
 
-		public TaskRunnerTask(Func<TSource, int, ITaskRunnerProgress, TResult> func, Action<IReadOnlyList<TResult>> done)
+		public TaskRunnerTask(Func<TSource, int, ITaskRunnerProgress, TResult> func, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> done)
 		{
 			Func = func;
 			Done = done;
+
+			if (Func == null)
+			{
+				fullGroup = true;
+				Func = (item, index, progress) => (TResult)(object)item;
+			}
 		}
 
 		public int ItemCount => Items.Count;
@@ -52,9 +59,28 @@ namespace NeoEdit.Editor.TaskRunning
 		}
 
 		public void RunFunc(int index, ITaskRunnerProgress progress) => Results[index] = Func(Items[index], index, progress);
-		public void RunDone() => Done(Results);
+		public void RunDone() => Done?.Invoke(Items, Results);
 
-		public int AddNextIndex(int count) => Interlocked.Add(ref nextIndex, count) - count;
-		public int AddWaiting(int count) => Interlocked.Add(ref waiting, count);
+		public void GetGroup(out int index, out int count)
+		{
+			if (fullGroup)
+				count = Items.Count;
+			else
+			{
+				count = waiting >> 6;
+				if (count > MaxGroupSize)
+					count = MaxGroupSize;
+				if (count < 1)
+					count = 1;
+			}
+
+			index = Interlocked.Add(ref nextIndex, count) - count;
+			if (index > Items.Count)
+				index = Items.Count;
+			if (index + count > Items.Count)
+				count = Items.Count - index;
+		}
+
+		public int SetFinished(int count) => Interlocked.Add(ref waiting, count);
 	}
 }

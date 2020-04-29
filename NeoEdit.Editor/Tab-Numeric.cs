@@ -261,7 +261,7 @@ namespace NeoEdit.Editor
 		void Execute_Numeric_Add_IncrementDecrement(bool add)
 		{
 			var toAdd = new NumericValue(add ? 1 : -1);
-			Selections.AsTaskRunner().Select(range => (new NumericValue(Text.GetString(range)) + toAdd).ToString()).ToList(sels => ReplaceSelections(sels));
+			Selections.AsTaskRunner().Select(range => (new NumericValue(Text.GetString(range)) + toAdd).ToString()).ToList(results => ReplaceSelections(results));
 		}
 
 		void Execute_Numeric_Add_AddSubtractClipboard(bool add)

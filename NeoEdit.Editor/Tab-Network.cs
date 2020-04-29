@@ -112,7 +112,7 @@ namespace NeoEdit.Editor
 					return;
 			}
 
-			Enumerable.Range(0, urls.Count).AsTaskRunner().ParallelForEach(index => FetchURL(urls[index], fileNames[index]));
+			TaskRunner.Range(0, urls.Count).ParallelForEach(index => FetchURL(urls[index], fileNames[index]));
 		}
 
 		Configuration_Network_FetchStream Configure_Network_FetchStream() => Tabs.TabsWindow.Configure_Network_FetchStream(GetVariables(), Path.GetDirectoryName(FileName) ?? "");
@@ -140,7 +140,7 @@ namespace NeoEdit.Editor
 
 			urls.AsTaskRunner()
 				.Select(url => string.Join(TextView.DefaultEnding, YouTubeDL.GetPlayListItems(url)))
-				.ToList(taskResults => ReplaceSelections(taskResults));
+				.ToList(results => ReplaceSelections(results));
 		}
 
 		void Execute_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }

@@ -12,12 +12,12 @@ namespace NeoEdit.Editor.TaskRunning
 		static readonly int NumThreads = Environment.ProcessorCount; // 0 will run everything in calling thread, 1 will run everything in child thread
 		const int DefaultTaskTotal = 1;
 		const int ForceCancelDelay = 5000;
-		const int MaxTaskGroupSize = 1000;
 
 		public static FluentTaskRunner<T> AsTaskRunner<T>(this IEnumerable<T> items) => new FluentTaskRunner<T>(items);
+		public static FluentTaskRunner<int> Range(int start, int count) => new FluentTaskRunner<int>(Enumerable.Range(start, count));
+		public static FluentTaskRunner<T> Repeat<T>(T value, int count) => new FluentTaskRunner<T>(Enumerable.Repeat(value, count));
 		public static void Run(Action action) => new FluentTaskRunner<int>(new List<int> { 0 }).ParallelForEach(item => action());
 		public static void Run(Action<ITaskRunnerProgress> action) => new FluentTaskRunner<int>(new List<int> { 0 }).ParallelForEach((item, index, progress) => action(progress));
-
 
 		static readonly ManualResetEvent finished = new ManualResetEvent(true);
 		static readonly ManualResetEvent workReady = new ManualResetEvent(false);
@@ -141,25 +141,15 @@ namespace NeoEdit.Editor.TaskRunning
 						if (task == null)
 							break;
 
-						var taskGroupSize = task.Waiting >> 6;
-						if (taskGroupSize > MaxTaskGroupSize)
-							taskGroupSize = MaxTaskGroupSize;
-						if (taskGroupSize < 1)
-							taskGroupSize = 1;
-
-						var index = task.AddNextIndex(taskGroupSize);
-						var endIndex = index + taskGroupSize;
-						if (index > task.ItemCount)
-							index = task.ItemCount;
-						if (endIndex >= task.ItemCount)
+						task.GetGroup(out var index, out var groupSize);
+						var endIndex = index + groupSize;
+						if (endIndex == task.ItemCount)
 						{
-							endIndex = task.ItemCount;
-							taskGroupSize = endIndex - index;
 							lock (tasks)
 							{
 								if ((tasks.Count != 0) && (tasks.Peek() == task))
 								{
-									++taskGroupSize;
+									++groupSize;
 									tasks.Pop();
 									if (tasks.Count == 0)
 									{
@@ -182,7 +172,7 @@ namespace NeoEdit.Editor.TaskRunning
 							ReportProgress(lastTotal, lastTotal);
 						}
 
-						if ((taskGroupSize != 0) && (task.AddWaiting(-taskGroupSize) == -1))
+						if ((groupSize != 0) && (task.SetFinished(-groupSize) == -1))
 							task.RunDone();
 					}
 				}
