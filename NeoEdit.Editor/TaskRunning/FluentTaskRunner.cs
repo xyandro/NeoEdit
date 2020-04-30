@@ -13,23 +13,23 @@ namespace NeoEdit.Editor.TaskRunning
 		public FluentTaskRunner(IEnumerable<T> items) => startTask = nextTask => nextTask.Start(items);
 
 		#region Select
-		public FluentTaskRunner<TResult> Select<TResult>(Func<T, TResult> func) => Select((item, index, progress) => func(item));
-		public FluentTaskRunner<TResult> Select<TResult>(Func<T, int, TResult> func) => Select((item, index, progress) => func(item, index));
-		public FluentTaskRunner<TResult> Select<TResult>(Func<T, int, ITaskRunnerProgress, TResult> func)
+		public FluentTaskRunner<TResult> Select<TResult>(Func<T, TResult> func, Func<T, long> getSize = null) => Select((item, index, progress) => func(item), getSize);
+		public FluentTaskRunner<TResult> Select<TResult>(Func<T, int, TResult> func, Func<T, long> getSize = null) => Select((item, index, progress) => func(item, index), getSize);
+		public FluentTaskRunner<TResult> Select<TResult>(Func<T, int, ITaskRunnerProgress, TResult> func, Func<T, long> getSize = null)
 		{
 			var curStartTask = startTask;
-			startTask = nextTask => curStartTask(new TaskRunnerTask<T, TResult>(func, (items, results) => nextTask.Start(results)));
+			startTask = nextTask => curStartTask(new TaskRunnerTask<T, TResult>(getSize, func, (items, results) => nextTask.Start(results)));
 			return new FluentTaskRunner<TResult>(startTask);
 		}
 		#endregion
 
 		#region Where
-		public FluentTaskRunner<T> Where(Func<T, bool> predicate) => Where((item, index, progress) => predicate(item));
-		public FluentTaskRunner<T> Where(Func<T, int, bool> predicate) => Where((item, index, progress) => predicate(item, index));
-		public FluentTaskRunner<T> Where(Func<T, int, ITaskRunnerProgress, bool> predicate)
+		public FluentTaskRunner<T> Where(Func<T, bool> predicate, Func<T, long> getSize = null) => Where((item, index, progress) => predicate(item), getSize);
+		public FluentTaskRunner<T> Where(Func<T, int, bool> predicate, Func<T, long> getSize = null) => Where((item, index, progress) => predicate(item, index), getSize);
+		public FluentTaskRunner<T> Where(Func<T, int, ITaskRunnerProgress, bool> predicate, Func<T, long> getSize = null)
 		{
 			var curStartTask = startTask;
-			startTask = nextTask => curStartTask(new TaskRunnerTask<T, bool>(predicate, (items, results) =>
+			startTask = nextTask => curStartTask(new TaskRunnerTask<T, bool>(getSize, predicate, (items, results) =>
 			{
 				var newList = new List<T>();
 				for (var ctr = 0; ctr < items.Count; ++ctr)
@@ -42,17 +42,13 @@ namespace NeoEdit.Editor.TaskRunning
 		#endregion
 
 		#region ToList
-		public void ToList(Action<IReadOnlyList<T>> action) => startTask(new TaskRunnerTask<T, T>(null, (items, results) => action(items)));
+		public void ToList(Action<IReadOnlyList<T>> action, Func<T, long> getSize = null) => startTask(new TaskRunnerTask<T, T>(getSize, null, (items, results) => action(items)));
 		#endregion
 
 		#region ParallelForEach
-		public void ParallelForEach(Action<T> action) => ParallelForEach((item, index, progress) => action(item));
-		public void ParallelForEach(Action<T, int> action) => ParallelForEach((item, index, progress) => action(item, index));
-		public void ParallelForEach(Action<T, int, ITaskRunnerProgress> action) => startTask(new TaskRunnerTask<T, T>((item, index, progress) => { action(item, index, progress); return default; }, null));
-		#endregion
-
-		#region SequentialForEach
-		public void SequentialForEach(Action<T> action) => startTask(new TaskRunnerTask<T, T>(null, (items, results) => results.ForEach(item => action(item))));
+		public void ParallelForEach(Action<T> action, Func<T, long> getSize = null) => ParallelForEach((item, index, progress) => action(item), getSize);
+		public void ParallelForEach(Action<T, int> action, Func<T, long> getSize = null) => ParallelForEach((item, index, progress) => action(item, index), getSize);
+		public void ParallelForEach(Action<T, int, ITaskRunnerProgress> action, Func<T, long> getSize = null) => startTask(new TaskRunnerTask<T, T>(getSize, (item, index, progress) => { action(item, index, progress); return default; }, null));
 		#endregion
 	}
 }

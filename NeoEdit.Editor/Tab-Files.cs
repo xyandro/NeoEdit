@@ -49,7 +49,7 @@ namespace NeoEdit.Editor
 					while (read < input.Length)
 					{
 						var block = input.Read(buffer, read, (int)(input.Length - read));
-						progress.SetProgress(input.Position, input.Length);
+						progress.Current = input.Position;
 						read += block;
 					}
 				}
@@ -77,7 +77,7 @@ namespace NeoEdit.Editor
 								break;
 							outputStream.Write(buffer, 0, block);
 							written += block;
-							progress.SetProgress(written, total);
+							progress.Current = written;
 						}
 		}
 
@@ -247,7 +247,7 @@ namespace NeoEdit.Editor
 
 							output.Write(bytes, 0, outByteCount);
 
-							progress.SetProgress(input.Position, input.Length);
+							progress.Current = input.Position;
 						}
 					}
 				}
@@ -332,7 +332,7 @@ namespace NeoEdit.Editor
 							var block = inputFile.Read(buffer, 0, (int)Math.Min(buffer.Length, endChunk - inputFile.Position));
 							if (block <= 0)
 								throw new Exception("Failed to read file");
-							progress.SetProgress(inputFile.Position, inputFile.Length);
+							progress.Current = inputFile.Position;
 							outputFile.Write(buffer, 0, block);
 						}
 					}
@@ -590,7 +590,9 @@ namespace NeoEdit.Editor
 							).Distinct().ToList()));
 
 				Selections.AsTaskRunner()
-					.Where((item, index, progress) => BinarySearchFile(FileName.RelativeChild(Text.GetString(Selections[index])), searchers[stringsToFind[index]], progress))
+					.Select(range => (range, fileName: FileName.RelativeChild(Text.GetString(range))))
+					.Where((tuple, index, progress) => BinarySearchFile(tuple.fileName, searchers[stringsToFind[index]], progress), tuple => new FileInfo(tuple.fileName).Length)
+					.Select(tuple => tuple.range)
 					.ToList(results => Selections = results);
 			}
 			else
@@ -620,7 +622,9 @@ namespace NeoEdit.Editor
 				}
 
 				Selections.AsTaskRunner()
-					.Where((item, index, progress) => TextSearchFile(FileName.RelativeChild(Text.GetString(Selections[index])), searchers[stringsToFind[index]], progress))
+					.Select(range => (range, fileName: FileName.RelativeChild(Text.GetString(range))))
+					.Where((tuple, index, progress) => TextSearchFile(tuple.fileName, searchers[stringsToFind[index]], progress), tuple => new FileInfo(tuple.fileName).Length)
+					.Select(tuple => tuple.range)
 					.ToList(results => Selections = results);
 			}
 		}
@@ -749,7 +753,8 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Files_Hash;
 			Selections.AsTaskRunner()
-				.Select((range, index, progress) => Hasher.Get(FileName.RelativeChild(Text.GetString(range)), result.HashType, result.HMACKey, progress))
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.Select((fileName, index, progress) => Hasher.Get(fileName, result.HashType, result.HMACKey, progress), fileName => new FileInfo(fileName).Length)
 				.ToList(results => ReplaceSelections(results));
 		}
 
@@ -890,7 +895,11 @@ namespace NeoEdit.Editor
 		void Execute_Files_Operations_Encoding()
 		{
 			var result = state.Configuration as Configuration_Files_Operations_Encoding;
-			Selections.AsTaskRunner().ParallelForEach((range, index, progress) => ReencodeFile(FileName.RelativeChild(Text.GetString(range)), progress, result.InputCodePage, result.OutputCodePage));
+			Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.ParallelForEach(
+					(fileName, index, progress) => ReencodeFile(fileName, progress, result.InputCodePage, result.OutputCodePage),
+					fileName => new FileInfo(fileName).Length);
 		}
 
 		Configuration_Files_Operations_SplitFile Configure_Files_Operations_SplitFile()
@@ -908,7 +917,11 @@ namespace NeoEdit.Editor
 			var files = RelativeSelectedFiles();
 			var outputTemplates = state.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
 			var chunkSizes = state.GetExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
-			TaskRunner.Range(0, Selections.Count).ParallelForEach((item, index, progress) => SplitFile(FileName.RelativeChild(Text.GetString(Selections[index])), outputTemplates[index], chunkSizes[index], progress));
+			Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.ParallelForEach(
+					(fileName, index, progress) => SplitFile(fileName, outputTemplates[index], chunkSizes[index], progress),
+					fileName => new FileInfo(fileName).Length);
 		}
 
 		Configuration_Files_Operations_CombineFiles Configure_Files_Operations_CombineFiles() => Tabs.TabsWindow.Configure_Files_Operations_CombineFiles(GetVariables());
@@ -942,7 +955,10 @@ namespace NeoEdit.Editor
 				inputs[current].Add(inputFile);
 			}
 
-			TaskRunner.Range(0, outputFiles.Count).ParallelForEach((item, index, progress) => CombineFiles(outputFiles[index], inputs[index], progress));
+			TaskRunner.Range(0, outputFiles.Count)
+				.ParallelForEach(
+					(item, index, progress) => CombineFiles(outputFiles[index], inputs[index], progress),
+					item => inputs[item].Sum(fileName => new FileInfo(fileName).Length));
 		}
 	}
 }

@@ -78,7 +78,7 @@ namespace NeoEdit.Common
 
 					var match = Regex.Match(e.Data, @"^\[download\]\s*([0-9.]+)%(?:\s|$)");
 					if (match.Success)
-						progress.SetProgress(int.Parse(match.Groups[1].Value), 100);
+						progress.Current = int.Parse(match.Groups[1].Value);
 
 					match = Regex.Match(e.Data, @"^\[download\]\s*(?:Destination:\s*(.*?)|(.*?) has already been downloaded)(?:$)");
 					if (match.Success)

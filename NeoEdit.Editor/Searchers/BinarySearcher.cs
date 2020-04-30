@@ -126,7 +126,7 @@ namespace NeoEdit.Editor.Searchers
 						if (read != length)
 							throw new Exception("Failed to read block");
 
-						progress.SetProgress(stream.Position, stream.Length);
+						progress.Current = stream.Position;
 					}
 
 					var b = data[offset];

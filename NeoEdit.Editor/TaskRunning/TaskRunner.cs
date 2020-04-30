@@ -10,7 +10,6 @@ namespace NeoEdit.Editor.TaskRunning
 	static class TaskRunner
 	{
 		static readonly int NumThreads = Environment.ProcessorCount; // 0 will run everything in calling thread
-		const int DefaultTaskTotal = 1;
 		const int ForceCancelDelay = 5000;
 
 		public static FluentTaskRunner<T> AsTaskRunner<T>(this IEnumerable<T> items) => new FluentTaskRunner<T>(items);
@@ -36,16 +35,20 @@ namespace NeoEdit.Editor.TaskRunning
 			threads.ForEach(thread => thread.Start());
 		}
 
-		static ITaskRunnerProgress progress = NumThreads == 0 ? CreateTaskRunnerProgress() : null;
+		static void RethrowException()
+		{
+			if (exception != null)
+				ExceptionDispatchInfo.Capture(exception).Throw();
+		}
+
+		static TaskRunnerProgress progress = NumThreads == 0 ? CreateTaskRunnerProgress() : null;
 		public static void AddTask(ITaskRunnerTask task)
 		{
 			lock (tasks)
 			{
-				if (exception != null)
-				{
-					ExceptionDispatchInfo.Capture(exception).Throw();
-					throw exception;
-				}
+				RethrowException();
+
+				Interlocked.Add(ref total, task.Total);
 
 				if (NumThreads == 0)
 				{
@@ -53,7 +56,6 @@ namespace NeoEdit.Editor.TaskRunning
 					return;
 				}
 
-				total += task.ItemCount * DefaultTaskTotal;
 				tasks.Push(task);
 				activeTask = task;
 				finished.Reset();
@@ -164,23 +166,7 @@ namespace NeoEdit.Editor.TaskRunning
 
 		static TaskRunnerProgress CreateTaskRunnerProgress()
 		{
-			long lastCurrent = 0, lastTotal = DefaultTaskTotal;
-			void ReportProgress(long newCurrent, long newTotal)
-			{
-				if (exception != null)
-				{
-					ExceptionDispatchInfo.Capture(exception).Throw();
-					throw exception;
-				}
-
-				Interlocked.Add(ref total, newTotal - lastTotal);
-				Interlocked.Add(ref current, newCurrent - lastCurrent);
-
-				lastTotal = newTotal;
-				lastCurrent = newCurrent;
-			}
-			var progress = new TaskRunnerProgress { SetProgressAction = ReportProgress };
-			return progress;
+			return new TaskRunnerProgress(delta => { RethrowException(); Interlocked.Add(ref current, delta); }, delta => Interlocked.Add(ref total, delta));
 		}
 
 		public static void WaitForFinish(ITabsWindow tabsWindow)

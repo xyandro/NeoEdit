@@ -2,6 +2,7 @@
 {
 	public interface ITaskRunnerProgress
 	{
-		void SetProgress(long current, long total);
+		long Current { get; set; }
+		long Total { get; set; }
 	}
 }

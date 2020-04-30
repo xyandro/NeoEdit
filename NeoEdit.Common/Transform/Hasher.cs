@@ -264,7 +264,7 @@ namespace NeoEdit.Common.Transform
 				var buffer = new byte[65536];
 				while (stream.Position < stream.Length)
 				{
-					progress.SetProgress(stream.Position, stream.Length);
+					progress.Current = stream.Position;
 
 					var block = stream.Read(buffer, 0, buffer.Length);
 					hashAlg.TransformBlock(buffer, 0, block, null, 0);

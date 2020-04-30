@@ -11,9 +11,10 @@ namespace NeoEdit.Editor.TaskRunning
 	{
 		int ItemCount { get; }
 		bool Finished { get; set; }
+		long Total { get; }
 
 		void Start(IEnumerable itemsEnum);
-		void Run(ITaskRunnerProgress progress);
+		void Run(TaskRunnerProgress progress);
 	}
 
 	class TaskRunnerTask<TSource, TResult> : ITaskRunnerTask
@@ -21,17 +22,21 @@ namespace NeoEdit.Editor.TaskRunning
 		const int MaxGroupSize = 1000;
 
 		public int ItemCount => items.Count;
-		public bool Finished { get; set; }
+		public bool Finished { get; set; } = false;
+		public long Total { get; private set; } = 0;
 
-		public IReadOnlyList<TSource> items;
-		public List<TResult> results;
-		public Func<TSource, int, ITaskRunnerProgress, TResult> func;
-		public Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> done;
+		IReadOnlyList<TSource> items;
+		IReadOnlyList<long> sizes;
+		List<TResult> results;
+		readonly Func<TSource, long> getSize;
+		readonly Func<TSource, int, ITaskRunnerProgress, TResult> func;
+		readonly Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> done;
 		int nextIndex = 0;
 		int waiting = 0;
 
-		public TaskRunnerTask(Func<TSource, int, ITaskRunnerProgress, TResult> func, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> done)
+		public TaskRunnerTask(Func<TSource, long> getSize, Func<TSource, int, ITaskRunnerProgress, TResult> func, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> done)
 		{
+			this.getSize = getSize;
 			this.func = func;
 			this.done = done;
 		}
@@ -42,21 +47,41 @@ namespace NeoEdit.Editor.TaskRunning
 				items = itemsEnum.Cast<TSource>().ToArray();
 
 			this.items = items;
+
+			if (getSize == null)
+				Total += items.Count * 100;
+			else
+			{
+				var sizes = new List<long>(items.Count);
+				foreach (var item in items)
+				{
+					var size = getSize.Invoke(item);
+					Total += size;
+					sizes.Add(size);
+				}
+				this.sizes = sizes;
+			}
+
 			results = new List<TResult>(items.Count);
 			for (var ctr = 0; ctr < items.Count; ++ctr)
 				results.Add(default);
+
 			waiting = items.Count;
 
 			TaskRunner.AddTask(this);
 		}
 
-		public void Run(ITaskRunnerProgress progress)
+		public void Run(TaskRunnerProgress progress)
 		{
 			if ((func == null) || (items.Count == 0))
 			{
 				Finished = true;
 				if (Interlocked.Add(ref nextIndex, 1) == 1) // Only call once
+				{
+					progress.Reset(Total);
 					done?.Invoke(items, results);
+					progress.Current = Total;
+				}
 				return;
 			}
 
@@ -85,7 +110,9 @@ namespace NeoEdit.Editor.TaskRunning
 
 				while (index < endIndex)
 				{
+					progress.Reset(sizes?[index] ?? 100);
 					results[index] = func(items[index], index, progress);
+					progress.Current = progress.Total;
 					++index;
 				}
 

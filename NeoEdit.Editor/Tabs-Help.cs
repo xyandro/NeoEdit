@@ -60,7 +60,7 @@ namespace NeoEdit.Editor
 				{
 					client.DownloadProgressChanged += (s, e) =>
 					{
-						try { progress.SetProgress(e.ProgressPercentage, 100); }
+						try { progress.Current = e.ProgressPercentage; }
 						catch { client.CancelAsync(); }
 					};
 					client.DownloadDataCompleted += (s, e) =>
