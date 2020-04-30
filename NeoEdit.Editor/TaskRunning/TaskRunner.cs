@@ -9,7 +9,7 @@ namespace NeoEdit.Editor.TaskRunning
 {
 	static class TaskRunner
 	{
-		static readonly int NumThreads = Environment.ProcessorCount; // 0 will run everything in calling thread, 1 will run everything in child thread
+		static readonly int NumThreads = Environment.ProcessorCount; // 0 will run everything in calling thread
 		const int DefaultTaskTotal = 1;
 		const int ForceCancelDelay = 5000;
 
@@ -36,6 +36,7 @@ namespace NeoEdit.Editor.TaskRunning
 			threads.ForEach(thread => thread.Start());
 		}
 
+		static ITaskRunnerProgress progress = NumThreads == 0 ? CreateTaskRunnerProgress() : null;
 		public static void AddTask(ITaskRunnerTask task)
 		{
 			lock (tasks)
@@ -48,7 +49,7 @@ namespace NeoEdit.Editor.TaskRunning
 
 				if (NumThreads == 0)
 				{
-					RunSynchronously(task);
+					task.Run(progress);
 					return;
 				}
 
@@ -58,14 +59,6 @@ namespace NeoEdit.Editor.TaskRunning
 				finished.Reset();
 				workReady.Set();
 			}
-		}
-
-		static ITaskRunnerProgress progress = NumThreads == 0 ? new TaskRunnerProgress() : null;
-		static void RunSynchronously(ITaskRunnerTask task)
-		{
-			for (var index = 0; index < task.ItemCount; ++index)
-				task.RunFunc(index, progress);
-			task.RunDone();
 		}
 
 		public static void ForceCancel()
@@ -107,7 +100,69 @@ namespace NeoEdit.Editor.TaskRunning
 			}
 		}
 
+		static void RemoveFinishedTasks()
+		{
+			ITaskRunnerTask task;
+
+			lock (tasks)
+			{
+				while (true)
+				{
+					if (tasks.Count == 0)
+					{
+						activeTask = null;
+						workReady.Reset();
+						break;
+					}
+
+					task = tasks.Peek();
+					if (!task.Finished)
+					{
+						activeTask = task;
+						break;
+					}
+
+					tasks.Pop();
+				}
+			}
+		}
+
 		static void TaskRunnerThread()
+		{
+			var progress = CreateTaskRunnerProgress();
+
+			ITaskRunnerTask task;
+			while (true)
+			{
+				task = activeTask;
+				if (task == null)
+				{
+					lock (tasks)
+						if (running == 0)
+							finished.Set();
+
+					workReady.WaitOne();
+					continue;
+				}
+
+				if (task.Finished)
+				{
+					RemoveFinishedTasks();
+					continue;
+				}
+
+				lock (tasks)
+					++running;
+
+				try { task.Run(progress); }
+				catch (Exception ex) when (!(ex is ThreadAbortException)) { Cancel(ex); }
+
+				lock (tasks)
+					--running;
+			}
+		}
+
+		static TaskRunnerProgress CreateTaskRunnerProgress()
 		{
 			long lastCurrent = 0, lastTotal = DefaultTaskTotal;
 			void ReportProgress(long newCurrent, long newTotal)
@@ -125,66 +180,7 @@ namespace NeoEdit.Editor.TaskRunning
 				lastCurrent = newCurrent;
 			}
 			var progress = new TaskRunnerProgress { SetProgressAction = ReportProgress };
-
-			while (true)
-			{
-				workReady.WaitOne();
-
-				lock (tasks)
-					++running;
-
-				try
-				{
-					while (true)
-					{
-						var task = activeTask;
-						if (task == null)
-							break;
-
-						task.GetGroup(out var index, out var groupSize);
-						var endIndex = index + groupSize;
-						if (endIndex == task.ItemCount)
-						{
-							lock (tasks)
-							{
-								if ((tasks.Count != 0) && (tasks.Peek() == task))
-								{
-									++groupSize;
-									tasks.Pop();
-									if (tasks.Count == 0)
-									{
-										activeTask = null;
-										workReady.Reset();
-									}
-									else
-										activeTask = tasks.Peek();
-								}
-							}
-						}
-
-						for (; index < endIndex; ++index)
-						{
-							lastCurrent = 0;
-							lastTotal = DefaultTaskTotal;
-
-							task.RunFunc(index, progress);
-
-							ReportProgress(lastTotal, lastTotal);
-						}
-
-						if ((groupSize != 0) && (task.SetFinished(-groupSize) == -1))
-							task.RunDone();
-					}
-				}
-				catch (Exception ex) when (!(ex is ThreadAbortException)) { Cancel(ex); }
-
-				lock (tasks)
-				{
-					--running;
-					if ((running == 0) && (tasks.Count == 0))
-						finished.Set();
-				}
-			}
+			return progress;
 		}
 
 		public static void WaitForFinish(ITabsWindow tabsWindow)

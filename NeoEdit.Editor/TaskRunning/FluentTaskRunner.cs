@@ -10,7 +10,7 @@ namespace NeoEdit.Editor.TaskRunning
 
 		FluentTaskRunner(Action<ITaskRunnerTask> startTask) => this.startTask = startTask;
 
-		public FluentTaskRunner(IEnumerable<T> items) => startTask = nextTask => nextTask.Run(items);
+		public FluentTaskRunner(IEnumerable<T> items) => startTask = nextTask => nextTask.Start(items);
 
 		#region Select
 		public FluentTaskRunner<TResult> Select<TResult>(Func<T, TResult> func) => Select((item, index, progress) => func(item));
@@ -18,7 +18,7 @@ namespace NeoEdit.Editor.TaskRunning
 		public FluentTaskRunner<TResult> Select<TResult>(Func<T, int, ITaskRunnerProgress, TResult> func)
 		{
 			var curStartTask = startTask;
-			startTask = nextTask => curStartTask(new TaskRunnerTask<T, TResult>(func, (items, results) => nextTask.Run(results)));
+			startTask = nextTask => curStartTask(new TaskRunnerTask<T, TResult>(func, (items, results) => nextTask.Start(results)));
 			return new FluentTaskRunner<TResult>(startTask);
 		}
 		#endregion
@@ -35,14 +35,14 @@ namespace NeoEdit.Editor.TaskRunning
 				for (var ctr = 0; ctr < items.Count; ++ctr)
 					if (results[ctr])
 						newList.Add(items[ctr]);
-				nextTask.Run(newList);
+				nextTask.Start(newList);
 			}));
 			return this;
 		}
 		#endregion
 
 		#region ToList
-		public void ToList(Action<IReadOnlyList<T>> action) => startTask(new TaskRunnerTask<T, T>(null, (items, results) => action(results)));
+		public void ToList(Action<IReadOnlyList<T>> action) => startTask(new TaskRunnerTask<T, T>(null, (items, results) => action(items)));
 		#endregion
 
 		#region ParallelForEach

@@ -10,77 +10,91 @@ namespace NeoEdit.Editor.TaskRunning
 	interface ITaskRunnerTask
 	{
 		int ItemCount { get; }
+		bool Finished { get; set; }
 
-		void RunFunc(int index, ITaskRunnerProgress progress);
-		void RunDone();
-		void Run(IEnumerable itemsEnum);
-		void GetGroup(out int index, out int count);
-		int SetFinished(int count);
+		void Start(IEnumerable itemsEnum);
+		void Run(ITaskRunnerProgress progress);
 	}
 
 	class TaskRunnerTask<TSource, TResult> : ITaskRunnerTask
 	{
 		const int MaxGroupSize = 1000;
 
-		public IReadOnlyList<TSource> Items { get; private set; }
-		public List<TResult> Results { get; private set; }
-		public Func<TSource, int, ITaskRunnerProgress, TResult> Func { get; }
-		public Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> Done { get; }
-		int waiting = 0;
+		public int ItemCount => items.Count;
+		public bool Finished { get; set; }
+
+		public IReadOnlyList<TSource> items;
+		public List<TResult> results;
+		public Func<TSource, int, ITaskRunnerProgress, TResult> func;
+		public Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> done;
 		int nextIndex = 0;
-		bool fullGroup = false;
+		int waiting = 0;
 
 		public TaskRunnerTask(Func<TSource, int, ITaskRunnerProgress, TResult> func, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> done)
 		{
-			Func = func;
-			Done = done;
-
-			if (Func == null)
-			{
-				fullGroup = true;
-				Func = (item, index, progress) => (TResult)(object)item;
-			}
+			this.func = func;
+			this.done = done;
 		}
 
-		public int ItemCount => Items.Count;
-
-		public void Run(IEnumerable itemsEnum)
+		public void Start(IEnumerable itemsEnum)
 		{
 			if (!(itemsEnum is IReadOnlyList<TSource> items))
 				items = itemsEnum.Cast<TSource>().ToArray();
 
-			Items = items;
-			Results = new List<TResult>(items.Count);
+			this.items = items;
+			results = new List<TResult>(items.Count);
 			for (var ctr = 0; ctr < items.Count; ++ctr)
-				Results.Add(default);
+				results.Add(default);
 			waiting = items.Count;
 
 			TaskRunner.AddTask(this);
 		}
 
-		public void RunFunc(int index, ITaskRunnerProgress progress) => Results[index] = Func(Items[index], index, progress);
-		public void RunDone() => Done?.Invoke(Items, Results);
-
-		public void GetGroup(out int index, out int count)
+		public void Run(ITaskRunnerProgress progress)
 		{
-			if (fullGroup)
-				count = Items.Count;
-			else
+			if ((func == null) || (items.Count == 0))
+			{
+				Finished = true;
+				if (Interlocked.Add(ref nextIndex, 1) == 1) // Only call once
+					done?.Invoke(items, results);
+				return;
+			}
+
+			int count, index, endIndex;
+			while (true)
 			{
 				count = waiting >> 6;
 				if (count > MaxGroupSize)
 					count = MaxGroupSize;
 				if (count < 1)
 					count = 1;
+				index = Interlocked.Add(ref nextIndex, count) - count;
+
+				// Break if we're beyond the end of the batch
+				if (index >= items.Count)
+					break;
+
+				endIndex = index + count;
+				// If this group includes the end of the batch, mark it as finished so no other tasks try to get more
+				if (endIndex >= items.Count)
+				{
+					Finished = true;
+					endIndex = items.Count;
+					count = endIndex - index;
+				}
+
+				while (index < endIndex)
+				{
+					results[index] = func(items[index], index, progress);
+					++index;
+				}
+
+				if (Interlocked.Add(ref waiting, -count) == 0)
+				{
+					done?.Invoke(items, results);
+					break;
+				}
 			}
-
-			index = Interlocked.Add(ref nextIndex, count) - count;
-			if (index > Items.Count)
-				index = Items.Count;
-			if (index + count > Items.Count)
-				count = Items.Count - index;
 		}
-
-		public int SetFinished(int count) => Interlocked.Add(ref waiting, count);
 	}
 }
