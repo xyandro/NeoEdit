@@ -10,35 +10,38 @@ namespace NeoEdit.Editor.TaskRunning
 	interface ITaskRunnerTask
 	{
 		int ItemCount { get; }
-		bool Finished { get; set; }
+		bool ExecuteDone { get; }
 		long Total { get; }
+		bool IsEmpty { get; }
 
 		void Start(IEnumerable itemsEnum);
-		void Run(TaskRunnerProgress progress);
+		void RunEmpty();
+		void RunBatch(TaskRunnerProgress progress);
 	}
 
 	class TaskRunnerTask<TSource, TResult> : ITaskRunnerTask
 	{
-		const int MaxGroupSize = 1000;
+		const int MaxBatchSize = 1000;
 
 		public int ItemCount => items.Count;
-		public bool Finished { get; set; } = false;
+		public bool ExecuteDone { get; set; } = false;
 		public long Total { get; private set; } = 0;
+		public bool IsEmpty => (execute == null) || (items.Count == 0);
 
 		IReadOnlyList<TSource> items;
 		IReadOnlyList<long> sizes;
 		List<TResult> results;
 		readonly Func<TSource, long> getSize;
-		readonly Func<TSource, int, ITaskRunnerProgress, TResult> func;
-		readonly Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> done;
+		readonly Func<TSource, int, ITaskRunnerProgress, TResult> execute;
+		readonly Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish;
 		int nextIndex = 0;
 		int waiting = 0;
 
-		public TaskRunnerTask(Func<TSource, long> getSize, Func<TSource, int, ITaskRunnerProgress, TResult> func, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> done)
+		public TaskRunnerTask(Func<TSource, long> getSize, Func<TSource, int, ITaskRunnerProgress, TResult> execute, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish)
 		{
 			this.getSize = getSize;
-			this.func = func;
-			this.done = done;
+			this.execute = execute;
+			this.finish = finish;
 		}
 
 		public void Start(IEnumerable itemsEnum)
@@ -71,57 +74,44 @@ namespace NeoEdit.Editor.TaskRunning
 			TaskRunner.AddTask(this);
 		}
 
-		public void Run(TaskRunnerProgress progress)
+		public void RunEmpty()
 		{
-			if ((func == null) || (items.Count == 0))
-			{
-				Finished = true;
-				if (Interlocked.Add(ref nextIndex, 1) == 1) // Only call once
-				{
-					progress.Reset(Total);
-					done?.Invoke(items, results);
-					progress.Current = Total;
-				}
+			ExecuteDone = true;
+			finish?.Invoke(items, results);
+		}
+
+		public void RunBatch(TaskRunnerProgress progress)
+		{
+			var count = waiting >> 6;
+			if (count > MaxBatchSize)
+				count = MaxBatchSize;
+			if (count < 1)
+				count = 1;
+			var index = Interlocked.Add(ref nextIndex, count) - count;
+
+			// Exit if we're beyond the end of the batch
+			if (index >= items.Count)
 				return;
-			}
 
-			int count, index, endIndex;
-			while (true)
+			var endIndex = index + count;
+			// If this group includes the end of the batch, mark it as finished so no other tasks try to get more
+			if (endIndex >= items.Count)
 			{
-				count = waiting >> 6;
-				if (count > MaxGroupSize)
-					count = MaxGroupSize;
-				if (count < 1)
-					count = 1;
-				index = Interlocked.Add(ref nextIndex, count) - count;
-
-				// Break if we're beyond the end of the batch
-				if (index >= items.Count)
-					break;
-
-				endIndex = index + count;
-				// If this group includes the end of the batch, mark it as finished so no other tasks try to get more
-				if (endIndex >= items.Count)
-				{
-					Finished = true;
-					endIndex = items.Count;
-					count = endIndex - index;
-				}
-
-				while (index < endIndex)
-				{
-					progress.Reset(sizes?[index] ?? 100);
-					results[index] = func(items[index], index, progress);
-					progress.Current = progress.Total;
-					++index;
-				}
-
-				if (Interlocked.Add(ref waiting, -count) == 0)
-				{
-					done?.Invoke(items, results);
-					break;
-				}
+				ExecuteDone = true;
+				endIndex = items.Count;
+				count = endIndex - index;
 			}
+
+			while (index < endIndex)
+			{
+				progress.Reset(sizes?[index] ?? 100);
+				results[index] = execute(items[index], index, progress);
+				progress.Current = progress.Total;
+				++index;
+			}
+
+			if (Interlocked.Add(ref waiting, -count) == 0)
+				finish?.Invoke(items, results);
 		}
 	}
 }

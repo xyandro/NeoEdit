@@ -21,9 +21,9 @@ namespace NeoEdit.Editor.TaskRunning
 		static readonly ManualResetEvent finished = new ManualResetEvent(true);
 		static readonly ManualResetEvent workReady = new ManualResetEvent(false);
 		static readonly Stack<ITaskRunnerTask> tasks = new Stack<ITaskRunnerTask>();
+		static int updateTasksLock = 0, running = 0;
 		static ITaskRunnerTask activeTask = null;
 		static long current = 0, total = 0;
-		static int running = 0;
 		static Exception exception;
 		static readonly List<Thread> threads = new List<Thread>();
 
@@ -35,42 +35,69 @@ namespace NeoEdit.Editor.TaskRunning
 			threads.ForEach(thread => thread.Start());
 		}
 
-		static void RethrowException()
+		static void ThrowIfException(Exception ex)
 		{
-			if (exception != null)
-				ExceptionDispatchInfo.Capture(exception).Throw();
+			if (ex != null)
+				ExceptionDispatchInfo.Capture(ex).Throw();
+		}
+
+		static TaskRunnerProgress CreateTaskRunnerProgress()
+		{
+			return new TaskRunnerProgress(delta =>
+			{
+				ThrowIfException(exception);
+				Interlocked.Add(ref current, delta);
+			}, delta => Interlocked.Add(ref total, delta));
 		}
 
 		static TaskRunnerProgress progress = NumThreads == 0 ? CreateTaskRunnerProgress() : null;
 		public static void AddTask(ITaskRunnerTask task)
 		{
-			lock (tasks)
+			ThrowIfException(exception);
+
+			if (NumThreads == 0)
 			{
-				RethrowException();
+				while (!task.ExecuteDone)
+					task.RunBatch(progress);
+			}
 
-				Interlocked.Add(ref total, task.Total);
+			finished.Reset();
+			Interlocked.Add(ref total, task.Total);
 
-				if (NumThreads == 0)
-				{
-					task.Run(progress);
-					return;
-				}
+			if (task.IsEmpty)
+			{
+				AddRunning(1);
+				task.RunEmpty();
+				AddRunning(-1);
+				return;
+			}
+
+			while (true)
+			{
+				if (Interlocked.CompareExchange(ref updateTasksLock, 1, 0) != 0)
+					continue;
 
 				tasks.Push(task);
 				activeTask = task;
-				finished.Reset();
 				workReady.Set();
+
+				updateTasksLock = 0;
+				break;
 			}
+		}
+
+		static void ClearAllWork()
+		{
+			workReady.Reset();
+			activeTask = null;
+			tasks.Clear();
 		}
 
 		public static void ForceCancel()
 		{
-			lock (tasks)
-			{
-				if (finished.WaitOne(0))
-					return;
-				exception = new Exception($"All active tasks killed. Program may be unstable as a result of this operation.");
-			}
+			if (finished.WaitOne(0))
+				return;
+			exception = new Exception($"All active tasks killed. Program may be unstable as a result of this operation.");
 
 			threads.ForEach(thread => thread.Abort());
 			var endWait = DateTime.Now.AddMilliseconds(ForceCancelDelay);
@@ -78,11 +105,11 @@ namespace NeoEdit.Editor.TaskRunning
 				if (!thread.Join(Math.Max(0, (int)(endWait - DateTime.Now).TotalMilliseconds)))
 					throw new Exception("Attempt to abort failed. Everything's probably broken now.");
 
-			finished.Set();
-			workReady.Reset();
-			tasks.Clear();
+			ClearAllWork();
+
 			threads.Clear();
-			current = total = running = 0;
+			current = total = updateTasksLock = running = 0;
+			finished.Set();
 
 			Start();
 		}
@@ -92,41 +119,19 @@ namespace NeoEdit.Editor.TaskRunning
 			if (finished.WaitOne(0))
 				return false;
 
-			lock (tasks)
-			{
-				exception = exception ?? ex ?? new OperationCanceledException();
-				workReady.Reset();
-				activeTask = null;
-				tasks.Clear();
-				return true;
-			}
+			exception = exception ?? ex ?? new OperationCanceledException();
+			while (Interlocked.CompareExchange(ref updateTasksLock, 1, 0) == 0) { }
+
+			ClearAllWork();
+
+			updateTasksLock = 0;
+			return true;
 		}
 
-		static void RemoveFinishedTasks()
+		static void AddRunning(int count)
 		{
-			ITaskRunnerTask task;
-
-			lock (tasks)
-			{
-				while (true)
-				{
-					if (tasks.Count == 0)
-					{
-						activeTask = null;
-						workReady.Reset();
-						break;
-					}
-
-					task = tasks.Peek();
-					if (!task.Finished)
-					{
-						activeTask = task;
-						break;
-					}
-
-					tasks.Pop();
-				}
-			}
+			if (Interlocked.Add(ref running, count) == 0)
+				finished.Set();
 		}
 
 		static void TaskRunnerThread()
@@ -136,44 +141,58 @@ namespace NeoEdit.Editor.TaskRunning
 			ITaskRunnerTask task;
 			while (true)
 			{
-				task = activeTask;
-				if (task == null)
+				workReady.WaitOne();
+				AddRunning(1);
+
+				try
 				{
-					lock (tasks)
-						if (running == 0)
-							finished.Set();
+					while (true)
+					{
+						task = activeTask;
+						if (task == null)
+							break;
 
-					workReady.WaitOne();
-					continue;
+						if (task.ExecuteDone)
+						{
+							if (Interlocked.CompareExchange(ref updateTasksLock, 1, 0) != 0)
+								continue;
+
+							while (true)
+							{
+								if (tasks.Count == 0)
+								{
+									workReady.Reset();
+									activeTask = null;
+									break;
+								}
+
+								task = tasks.Peek();
+								if (!task.ExecuteDone)
+								{
+									activeTask = task;
+									break;
+								}
+
+								tasks.Pop();
+							}
+
+							updateTasksLock = 0;
+							continue;
+						}
+
+						task.RunBatch(progress);
+					}
 				}
-
-				if (task.Finished)
-				{
-					RemoveFinishedTasks();
-					continue;
-				}
-
-				lock (tasks)
-					++running;
-
-				try { task.Run(progress); }
 				catch (Exception ex) when (!(ex is ThreadAbortException)) { Cancel(ex); }
 
-				lock (tasks)
-					--running;
+				AddRunning(-1);
 			}
-		}
-
-		static TaskRunnerProgress CreateTaskRunnerProgress()
-		{
-			return new TaskRunnerProgress(delta => { RethrowException(); Interlocked.Add(ref current, delta); }, delta => Interlocked.Add(ref total, delta));
 		}
 
 		public static void WaitForFinish(ITabsWindow tabsWindow)
 		{
-			lock (tasks)
-				if (finished.WaitOne(0))
-					return;
+			if (finished.WaitOne(0))
+				return;
 
 			tabsWindow.SetTaskRunnerProgress(0);
 			while (true)
@@ -184,19 +203,12 @@ namespace NeoEdit.Editor.TaskRunning
 			}
 			tabsWindow.SetTaskRunnerProgress(null);
 
-			lock (tasks)
-			{
-				var ex = exception;
+			var ex = exception;
 
-				exception = null;
-				current = total = 0;
+			exception = null;
+			current = total = 0;
 
-				if (ex != null)
-				{
-					ExceptionDispatchInfo.Capture(ex).Throw();
-					throw ex;
-				}
-			}
+			ThrowIfException(ex);
 		}
 	}
 }
