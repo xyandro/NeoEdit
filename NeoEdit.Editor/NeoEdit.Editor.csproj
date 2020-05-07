@@ -260,10 +260,6 @@
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
     <Compile Include="Tabs.cs" />
-    <Compile Include="TaskRunning\FluentTaskRunner.cs" />
-    <Compile Include="TaskRunning\TaskRunner.cs" />
-    <Compile Include="TaskRunning\TaskRunnerProgress.cs" />
-    <Compile Include="TaskRunning\TaskRunnerTask.cs" />
     <Compile Include="Transactional\NEText.cs" />
     <Compile Include="Transactional\TabsList.cs" />
     <Compile Include="Transactional\UndoRedo.cs" />
@@ -276,6 +272,10 @@
     <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj">
       <Project>{becbf5d9-9770-4caa-ac34-97335094d335}</Project>
       <Name>NeoEdit.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeoEdit.TaskRunning\NeoEdit.TaskRunning.csproj">
+      <Project>{e1437a47-c993-4361-90ea-2f9070c472cf}</Project>
+      <Name>NeoEdit.TaskRunning</Name>
     </ProjectReference>
     <ProjectReference Include="..\NeoEdit.WCF\NeoEdit.WCF.csproj">
       <Project>{3a49c899-545a-4849-b6d0-2686d1a32983}</Project>

@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using NeoEdit.Common;
 
-namespace NeoEdit.Editor.TaskRunning
+namespace NeoEdit.TaskRunning
 {
 	interface ITaskRunnerTask
 	{
@@ -37,7 +36,7 @@ namespace NeoEdit.Editor.TaskRunning
 		int nextIndex = 0;
 		int waiting = 0;
 
-		public TaskRunnerTask(Func<TSource, long> getSize, Func<TSource, int, ITaskRunnerProgress, TResult> execute, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish)
+		internal TaskRunnerTask(Func<TSource, long> getSize, Func<TSource, int, ITaskRunnerProgress, TResult> execute, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish)
 		{
 			this.getSize = getSize;
 			this.execute = execute;

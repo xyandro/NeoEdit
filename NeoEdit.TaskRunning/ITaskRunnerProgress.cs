@@ -1,4 +1,4 @@
-﻿namespace NeoEdit.Common
+﻿namespace NeoEdit.TaskRunning
 {
 	public interface ITaskRunnerProgress
 	{

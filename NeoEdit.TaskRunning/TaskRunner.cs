@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading;
-using NeoEdit.Common;
 
-namespace NeoEdit.Editor.TaskRunning
+namespace NeoEdit.TaskRunning
 {
-	static class TaskRunner
+	public static class TaskRunner
 	{
 		static readonly int NumThreads = Environment.ProcessorCount; // 0 will run everything in calling thread
 		const int ForceCancelDelay = 5000;
@@ -51,7 +50,7 @@ namespace NeoEdit.Editor.TaskRunning
 		}
 
 		static TaskRunnerProgress progress = NumThreads == 0 ? CreateTaskRunnerProgress() : null;
-		public static void AddTask(ITaskRunnerTask task)
+		internal static void AddTask(ITaskRunnerTask task)
 		{
 			ThrowIfException(exception);
 
@@ -189,19 +188,19 @@ namespace NeoEdit.Editor.TaskRunning
 			}
 		}
 
-		public static void WaitForFinish(ITabsWindow tabsWindow)
+		public static void WaitForFinish(Action<double?> setProgress)
 		{
 			if (finished.WaitOne(0))
 				return;
 
-			tabsWindow.SetTaskRunnerProgress(0);
+			setProgress?.Invoke(0);
 			while (true)
 			{
 				if (finished.WaitOne(100))
 					break;
-				tabsWindow.SetTaskRunnerProgress((double)current / total);
+				setProgress?.Invoke((double)current / total);
 			}
-			tabsWindow.SetTaskRunnerProgress(null);
+			setProgress?.Invoke(null);
 
 			var ex = exception;
 

@@ -5,7 +5,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.RevRegEx;
-using NeoEdit.Editor.TaskRunning;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {

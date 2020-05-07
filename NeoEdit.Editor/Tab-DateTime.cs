@@ -4,7 +4,7 @@ using System.Linq;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.TaskRunning;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {

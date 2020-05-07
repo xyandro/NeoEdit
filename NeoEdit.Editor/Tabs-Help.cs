@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
-using NeoEdit.Editor.TaskRunning;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {

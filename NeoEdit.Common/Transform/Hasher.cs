@@ -2,6 +2,7 @@
 using System.IO;
 using Classless.Hasher;
 using Classless.Hasher.Mac;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Common.Transform
 {

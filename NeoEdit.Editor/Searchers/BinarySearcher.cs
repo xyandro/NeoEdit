@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NeoEdit.Common;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor.Searchers
 {

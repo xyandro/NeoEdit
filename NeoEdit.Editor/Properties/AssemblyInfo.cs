@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("NeoEdit.Tabs.dll")]
+[assembly: AssemblyTitle("NeoEdit.Editor.dll")]

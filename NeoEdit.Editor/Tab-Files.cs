@@ -13,7 +13,7 @@ using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.Searchers;
-using NeoEdit.Editor.TaskRunning;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {

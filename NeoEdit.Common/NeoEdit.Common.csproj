@@ -189,7 +189,6 @@
     <Compile Include="ITab.cs" />
     <Compile Include="ITabs.cs" />
     <Compile Include="ITabsWindow.cs" />
-    <Compile Include="ITaskRunnerProgress.cs" />
     <Compile Include="ItemSet.cs" />
     <Compile Include="KeyGestureAttribute.cs" />
     <Compile Include="KeysAndValues.cs" />
@@ -296,6 +295,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NeoEdit.TaskRunning\NeoEdit.TaskRunning.csproj">
+      <Project>{E1437A47-C993-4361-90EA-2F9070C472CF}</Project>
+      <Name>NeoEdit.TaskRunning</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

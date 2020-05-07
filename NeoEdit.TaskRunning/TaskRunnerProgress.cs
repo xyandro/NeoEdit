@@ -1,7 +1,6 @@
 ﻿using System;
-using NeoEdit.Common;
 
-namespace NeoEdit.Editor.TaskRunning
+namespace NeoEdit.TaskRunning
 {
 	class TaskRunnerProgress : ITaskRunnerProgress
 	{
@@ -32,13 +31,13 @@ namespace NeoEdit.Editor.TaskRunning
 
 		readonly Action<long> addCurrent;
 		readonly Action<long> addTotal;
-		public TaskRunnerProgress(Action<long> addCurrent, Action<long> addTotal)
+		internal TaskRunnerProgress(Action<long> addCurrent, Action<long> addTotal)
 		{
 			this.addCurrent = addCurrent;
 			this.addTotal = addTotal;
 		}
 
-		public void Reset(long total)
+		internal void Reset(long total)
 		{
 			lastCurrent = 0;
 			lastTotal = total;

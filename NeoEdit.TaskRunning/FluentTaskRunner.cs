@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using NeoEdit.Common;
 
-namespace NeoEdit.Editor.TaskRunning
+namespace NeoEdit.TaskRunning
 {
-	class FluentTaskRunner<T>
+	public class FluentTaskRunner<T>
 	{
 		Action<ITaskRunnerTask> startTask;
 
 		FluentTaskRunner(Action<ITaskRunnerTask> startTask) => this.startTask = startTask;
 
-		public FluentTaskRunner(IEnumerable<T> items) => startTask = nextTask => nextTask.Start(items);
+		internal FluentTaskRunner(IEnumerable<T> items) => startTask = nextTask => nextTask.Start(items);
 
 		#region Select
 		public FluentTaskRunner<TResult> Select<TResult>(Func<T, TResult> func, Func<T, long> getSize = null) => Select((item, index, progress) => func(item), getSize);

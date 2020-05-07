@@ -10,8 +10,8 @@ using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.CommandLine;
-using NeoEdit.Editor.TaskRunning;
 using NeoEdit.Editor.Transactional;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -245,7 +245,7 @@ namespace NeoEdit.Editor
 					sw = Stopwatch.StartNew();
 
 				TaskRunner.Run(Execute);
-				TaskRunner.WaitForFinish(TabsWindow);
+				TaskRunner.WaitForFinish(percent => TabsWindow.SetTaskRunnerProgress(percent));
 				PostExecute();
 
 				if (sw != null)
