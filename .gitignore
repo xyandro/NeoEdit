@@ -18,8 +18,8 @@ TestResults
 # Specific
 /ChangeLog.txt
 /NeoEdit.Common/Expressions/Parser
-/NeoEdit.Common/Properties/GlobalAssemblyInfo.cs
 /NeoEdit.Common/RevRegEx/Parser
+/NeoEdit.Dependencies/Properties/GlobalAssemblyInfo.cs
 /NeoEdit.Editor/CommandLine/Parser
 /NeoEdit.Editor/Content/Balanced/Parser
 /NeoEdit.Editor/Content/Columns/Parser

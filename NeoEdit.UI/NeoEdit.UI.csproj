@@ -48,7 +48,7 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\NeoEdit.Common\Properties\GlobalAssemblyInfo.cs">
+    <Compile Include="..\NeoEdit.Dependencies\Properties\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Resource Include="..\Photoshop\NeoEdit.png">

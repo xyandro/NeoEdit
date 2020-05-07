@@ -21,6 +21,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit", "NeoEdit\NeoEdit.
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit.Common", "NeoEdit.Common\NeoEdit.Common.csproj", "{BECBF5D9-9770-4CAA-AC34-97335094D335}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959} = {7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit.Dependencies", "NeoEdit.Dependencies\NeoEdit.Dependencies.csproj", "{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit.Editor", "NeoEdit.Editor\NeoEdit.Editor.csproj", "{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}"
 EndProject
@@ -71,6 +76,14 @@ Global
 		{BECBF5D9-9770-4CAA-AC34-97335094D335}.Release|32.Build.0 = Release|x86
 		{BECBF5D9-9770-4CAA-AC34-97335094D335}.Release|64.ActiveCfg = Release|x64
 		{BECBF5D9-9770-4CAA-AC34-97335094D335}.Release|64.Build.0 = Release|x64
+		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Debug|32.ActiveCfg = Debug|x86
+		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Debug|32.Build.0 = Debug|x86
+		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Debug|64.ActiveCfg = Debug|x64
+		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Debug|64.Build.0 = Debug|x64
+		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Release|32.ActiveCfg = Release|x86
+		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Release|32.Build.0 = Release|x86
+		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Release|64.ActiveCfg = Release|x64
+		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Release|64.Build.0 = Release|x64
 		{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}.Debug|32.ActiveCfg = Debug|x86
 		{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}.Debug|32.Build.0 = Debug|x86
 		{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}.Debug|64.ActiveCfg = Debug|x64
