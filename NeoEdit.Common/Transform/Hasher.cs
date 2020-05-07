@@ -2,7 +2,6 @@
 using System.IO;
 using Classless.Hasher;
 using Classless.Hasher.Mac;
-using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Common.Transform
 {
@@ -251,7 +250,7 @@ namespace NeoEdit.Common.Transform
 			return Coder.BytesToString(hashAlg.ComputeHash(data), Coder.CodePage.Hex);
 		}
 
-		public static string Get(string fileName, Type type, byte[] key, ITaskRunnerProgress progress)
+		public static string Get(string fileName, Type type, byte[] key, Action<long> progress)
 		{
 			using (var stream = File.OpenRead(fileName))
 			{
@@ -265,7 +264,7 @@ namespace NeoEdit.Common.Transform
 				var buffer = new byte[65536];
 				while (stream.Position < stream.Length)
 				{
-					progress.Current = stream.Position;
+					progress(stream.Position);
 
 					var block = stream.Read(buffer, 0, buffer.Length);
 					hashAlg.TransformBlock(buffer, 0, block, null, 0);

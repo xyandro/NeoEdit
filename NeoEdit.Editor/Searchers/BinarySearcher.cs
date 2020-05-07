@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor.Searchers
 {
@@ -98,7 +97,7 @@ namespace NeoEdit.Editor.Searchers
 			}
 		}
 
-		public bool Find(string fileName, ITaskRunnerProgress progress)
+		public bool Find(string fileName, Action<long> progress)
 		{
 			const int bits = 16;
 			const int bitMask = (1 << bits) - 1;
@@ -126,7 +125,7 @@ namespace NeoEdit.Editor.Searchers
 						if (read != length)
 							throw new Exception("Failed to read block");
 
-						progress.Current = stream.Position;
+						progress(stream.Position);
 					}
 
 					var b = data[offset];

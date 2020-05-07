@@ -244,8 +244,9 @@ namespace NeoEdit.Editor
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
+				TaskRunner.IdleAction = percent => TabsWindow.SetTaskRunnerProgress(percent);
 				TaskRunner.Run(Execute);
-				TaskRunner.WaitForFinish(percent => TabsWindow.SetTaskRunnerProgress(percent));
+				TabsWindow.SetTaskRunnerProgress(null);
 				PostExecute();
 
 				if (sw != null)
@@ -402,7 +403,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void ExecuteActiveTabs() => ActiveTabs.AsTaskRunner().ParallelForEach(tab => tab.Execute());
+		void ExecuteActiveTabs() => ActiveTabs.AsTaskRunner().ForAll(tab => tab.Execute());
 
 		void PostExecute()
 		{

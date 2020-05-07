@@ -249,7 +249,7 @@ namespace NeoEdit.Editor
 
 				while (true)
 				{
-					progress.Current = 0; // Will throw if task has been canceled
+					progress(0); // Will throw if task has been canceled
 					if (moveBack)
 					{
 						currentScore -= score[current];

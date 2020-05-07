@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using NeoEdit.TaskRunning;
 using Newtonsoft.Json.Linq;
 
 namespace NeoEdit.Common
@@ -53,7 +52,7 @@ namespace NeoEdit.Common
 
 		public static void Update() => Process.Start(Settings.YouTubeDLPath, "-U");
 
-		public static void DownloadStream(string directory, string url, DateTime fileTime, ITaskRunnerProgress progress)
+		public static void DownloadStream(string directory, string url, DateTime fileTime, Action<long> progress)
 		{
 			using (var process = new Process
 			{
@@ -79,7 +78,7 @@ namespace NeoEdit.Common
 
 					var match = Regex.Match(e.Data, @"^\[download\]\s*([0-9.]+)%(?:\s|$)");
 					if (match.Success)
-						progress.Current = int.Parse(match.Groups[1].Value);
+						progress(int.Parse(match.Groups[1].Value));
 
 					match = Regex.Match(e.Data, @"^\[download\]\s*(?:Destination:\s*(.*?)|(.*?) has already been downloaded)(?:$)");
 					if (match.Success)
