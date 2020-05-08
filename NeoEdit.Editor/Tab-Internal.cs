@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -185,7 +185,7 @@ namespace NeoEdit.Editor
 							break;
 						}
 
-						Replace(Selections.AsParallel().AsOrdered().Select(range =>
+						Replace(Selections.AsTaskRunner().Select(range =>
 						{
 							var position = range.Start;
 							var anchor = range.Anchor;
@@ -251,7 +251,7 @@ namespace NeoEdit.Editor
 					break;
 				case Key.Left:
 					{
-						Selections = Selections.AsParallel().AsOrdered().Select(range =>
+						Selections = Selections.AsTaskRunner().Select(range =>
 						{
 							if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key).HasSelections))
 								return new Range(range.Start);
@@ -267,7 +267,7 @@ namespace NeoEdit.Editor
 					break;
 				case Key.Right:
 					{
-						Selections = Selections.AsParallel().AsOrdered().Select(range =>
+						Selections = Selections.AsTaskRunner().Select(range =>
 						{
 							if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key).HasSelections))
 								return new Range(range.End);
@@ -286,7 +286,7 @@ namespace NeoEdit.Editor
 					{
 						var mult = state.Key == Key.Up ? -1 : 1;
 						if (!state.ControlDown)
-							Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, mult, 0, state.ShiftDown)).ToList();
+							Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, mult, 0, state.ShiftDown)).ToList();
 						else if (!state.ShiftDown)
 							StartRow += mult;
 						else if (state.Key == Key.Down)
@@ -298,9 +298,9 @@ namespace NeoEdit.Editor
 				case Key.Home:
 					if (state.ControlDown)
 					{
-						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, state.ShiftDown)).ToList(); // Have to use MoveCursor for selection
+						var sels = Selections.AsTaskRunner().Select(range => MoveCursor(range, 0, state.ShiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!state.ShiftDown))
-							sels.Add(new Range());
+							sels = new List<Range> { new Range() };
 						Selections = sels;
 					}
 					else
@@ -337,41 +337,41 @@ namespace NeoEdit.Editor
 				case Key.End:
 					if (state.ControlDown)
 					{
-						var sels = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, Text.Length, state.ShiftDown)).ToList(); // Have to use MoveCursor for selection
+						var sels = Selections.AsTaskRunner().Select(range => MoveCursor(range, Text.Length, state.ShiftDown)).ToList(); // Have to use MoveCursor for selection
 						if ((!sels.Any()) && (!state.ShiftDown))
-							sels.Add(new Range(Text.Length));
+							sels = new List<Range> { new Range(Text.Length) };
 						Selections = sels;
 					}
 					else
-						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 0, int.MaxValue, state.ShiftDown, indexRel: false)).ToList();
+						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, 0, int.MaxValue, state.ShiftDown, indexRel: false)).ToList();
 					break;
 				case Key.PageUp:
 					if (state.ControlDown)
 						StartRow -= Tabs.TabRows / 2;
 					else
-						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, 1 - Tabs.TabRows, 0, state.ShiftDown)).ToList();
+						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, 1 - Tabs.TabRows, 0, state.ShiftDown)).ToList();
 					break;
 				case Key.PageDown:
 					if (state.ControlDown)
 						StartRow += Tabs.TabRows / 2;
 					else
-						Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, Tabs.TabRows - 1, 0, state.ShiftDown)).ToList();
+						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, Tabs.TabRows - 1, 0, state.ShiftDown)).ToList();
 					break;
 				case Key.Tab:
 					{
-						if (Selections.AsParallel().All(range => (!range.HasSelection) || (TextView.GetPositionLine(range.Start) == TextView.GetPositionLine(Math.Max(range.Start, range.End - 1)))))
+						if (Selections.AsTaskRunner().All(range => (!range.HasSelection) || (TextView.GetPositionLine(range.Start) == TextView.GetPositionLine(Math.Max(range.Start, range.End - 1)))))
 						{
 							if (!state.ShiftDown)
 								ReplaceSelections("\t", false, tryJoinUndo: true);
 							else
 							{
-								var tabs = Selections.AsParallel().AsOrdered().Where(range => (range.Start != 0) && (Text.GetString(range.Start - 1, 1) == "\t")).Select(range => Range.FromIndex(range.Start - 1, 1)).ToList();
+								var tabs = Selections.AsTaskRunner().Where(range => (range.Start != 0) && (Text.GetString(range.Start - 1, 1) == "\t")).Select(range => Range.FromIndex(range.Start - 1, 1)).ToList();
 								Replace(tabs, Enumerable.Repeat("", tabs.Count).ToList());
 							}
 							break;
 						}
 
-						var selLines = Selections.AsParallel().AsOrdered().Where(a => a.HasSelection).Select(range => new { start = TextView.GetPositionLine(range.Start), end = TextView.GetPositionLine(range.End - 1) }).ToList();
+						var selLines = Selections.AsTaskRunner().Where(a => a.HasSelection).Select(range => new { start = TextView.GetPositionLine(range.Start), end = TextView.GetPositionLine(range.End - 1) }).ToList();
 						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy().ToDictionary(line => line, line => TextView.GetPosition(line, 0));
 						int length;
 						string replace;

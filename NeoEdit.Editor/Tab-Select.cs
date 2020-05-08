@@ -4,6 +4,7 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Editor.Searchers;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -264,7 +265,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Select_Lines()
 		{
-			var lineSets = Selections.AsParallel().Select(range => new { start = TextView.GetPositionLine(range.Start), end = TextView.GetPositionLine(Math.Max(range.Start, range.End - 1)) }).ToList();
+			var lineSets = Selections.AsTaskRunner().Select(range => new { start = TextView.GetPositionLine(range.Start), end = TextView.GetPositionLine(Math.Max(range.Start, range.End - 1)) }).ToList();
 
 			var hasLine = new bool[TextView.NumLines];
 			foreach (var set in lineSets)
@@ -276,12 +277,12 @@ namespace NeoEdit.Editor
 				if (hasLine[line])
 					lines.Add(line);
 
-			Selections = lines.AsParallel().AsOrdered().Select(line => Range.FromIndex(TextView.GetPosition(line, 0), TextView.GetLineLength(line))).ToList();
+			Selections = lines.AsTaskRunner().Select(line => Range.FromIndex(TextView.GetPosition(line, 0), TextView.GetLineLength(line))).ToList();
 		}
 
 		void Execute_Select_WholeLines()
 		{
-			var sels = Selections.AsParallel().AsOrdered().Select(range =>
+			var sels = Selections.AsTaskRunner().Select(range =>
 			{
 				var startLine = TextView.GetPositionLine(range.Start);
 				var startPosition = TextView.GetPosition(startLine, 0);
@@ -293,7 +294,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		void Execute_Select_Rectangle() => Selections = Selections.AsParallel().AsOrdered().SelectMany(range => SelectRectangle(range)).ToList();
+		void Execute_Select_Rectangle() => Selections = Selections.AsTaskRunner().SelectMany(range => SelectRectangle(range)).ToList();
 
 		void Execute_Select_Invert()
 		{
@@ -321,7 +322,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Select_ToggleOpenClose()
 		{
-			Selections = Selections.AsParallel().AsOrdered().Select(range =>
+			Selections = Selections.AsTaskRunner().Select(range =>
 			{
 				var newPos = GetOppositeBracket(range.Cursor);
 				if (newPos == -1)
@@ -331,15 +332,15 @@ namespace NeoEdit.Editor
 			}).ToList();
 		}
 
-		void Execute_Select_Repeats_Unique(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().Distinct(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+		void Execute_Select_Repeats_Unique(bool caseSensitive) => Selections = Selections.AsTaskRunner().DistinctBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
-		void Execute_Select_Repeats_Duplicates(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().Duplicate(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+		void Execute_Select_Repeats_Duplicates(bool caseSensitive) => Selections = Selections.AsTaskRunner().DuplicateBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
-		void Execute_Select_Repeats_MatchPrevious(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().Match(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+		void Execute_Select_Repeats_MatchPrevious(bool caseSensitive) => Selections = Selections.AsTaskRunner().MatchBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
-		void Execute_Select_Repeats_NonMatchPrevious(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().NonMatch(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+		void Execute_Select_Repeats_NonMatchPrevious(bool caseSensitive) => Selections = Selections.AsTaskRunner().NonMatchBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
-		void Execute_Select_Repeats_RepeatedLines(bool caseSensitive) => Selections = Selections.AsParallel().AsOrdered().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList();
+		void Execute_Select_Repeats_RepeatedLines(bool caseSensitive) => Selections = Selections.AsTaskRunner().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList();
 
 		Configuration_Select_Repeats_ByCount Configure_Select_Repeats_ByCount() => Tabs.TabsWindow.Configure_Select_Repeats_ByCount();
 
@@ -426,7 +427,7 @@ namespace NeoEdit.Editor
 			else
 				searcher = new StringSearcher(result.Text, result.WholeWords, result.MatchCase, firstMatchOnly: true);
 
-			Selections = Selections.AsParallel().AsOrdered().SelectMany((range, index) => SelectSplit(range, result, searcher).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList();
+			Selections = Selections.AsTaskRunner().SelectMany((range, index) => SelectSplit(range, result, searcher).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList();
 		}
 
 		void Execute_Select_Selection_First()

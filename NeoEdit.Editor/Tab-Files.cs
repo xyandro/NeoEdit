@@ -483,7 +483,7 @@ namespace NeoEdit.Editor
 			var result = state.Configuration as Configuration_Files_Set_Size;
 			var vars = GetVariables();
 			var files = RelativeSelectedFiles();
-			var sizes = files.AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
+			var sizes = files.AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
 			var results = state.GetExpression(result.Expression).EvaluateList<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
 			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
@@ -634,7 +634,7 @@ namespace NeoEdit.Editor
 		void Execute_Files_Insert()
 		{
 			var result = state.Configuration as Configuration_Files_Insert;
-			ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
+			ReplaceSelections(RelativeSelectedFiles().AsTaskRunner().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
 		}
 
 		void Execute_Files_Create_Files()
@@ -672,7 +672,7 @@ namespace NeoEdit.Editor
 				File.WriteAllBytes(filename[ctr], Coder.StringToBytes(data[ctr], result.CodePage, true));
 		}
 
-		void Execute_Files_Select_Name(GetPathType type) => Selections = Selections.AsParallel().AsOrdered().Select(range => GetPathRange(type, range)).ToList();
+		void Execute_Files_Select_Name(GetPathType type) => Selections = Selections.AsTaskRunner().Select(range => GetPathRange(type, range)).ToList();
 
 		void Execute_Files_Select_Name_Next()
 		{
@@ -713,7 +713,7 @@ namespace NeoEdit.Editor
 				root = file;
 			}
 
-			Selections = sels.AsParallel().AsOrdered().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList();
+			Selections = sels.AsTaskRunner().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList();
 		}
 
 		void Execute_Files_Select_MatchDepth()
@@ -725,7 +725,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Select_CommonAncestor()
 		{
-			var strs = Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range) + "\\").ToList();
+			var strs = Selections.AsTaskRunner().Select(range => Text.GetString(range) + "\\").ToList();
 			var depth = 0;
 			if (strs.Any())
 			{
@@ -883,7 +883,7 @@ namespace NeoEdit.Editor
 		void Execute_Files_Operations_RunCommand_Parallel()
 		{
 			var workingDirectory = Path.GetDirectoryName(FileName ?? "");
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => RunCommand(Text.GetString(range), workingDirectory)).ToList());
+			ReplaceSelections(Selections.AsTaskRunner().Select(range => RunCommand(Text.GetString(range), workingDirectory)).ToList());
 		}
 
 		void Execute_Files_Operations_RunCommand_Sequential() => ReplaceSelections(GetSelectionStrings().Select(str => RunCommand(str, Path.GetDirectoryName(FileName ?? ""))).ToList());

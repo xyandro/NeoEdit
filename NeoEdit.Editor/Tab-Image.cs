@@ -8,6 +8,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -153,7 +154,7 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Image_AdjustColor;
 			var results = GetExpressionResults<double>(result.Expression, Selections.Count());
-			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AdjustColor(Text.GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
+			var strs = Selections.AsTaskRunner().Select((range, index) => AdjustColor(Text.GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
 			ReplaceSelections(strs);
 		}
 
@@ -163,7 +164,7 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Image_AddOverlayColor;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
-			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => AddColor(Text.GetString(range), results[index])).ToList();
+			var strs = Selections.AsTaskRunner().Select((range, index) => AddColor(Text.GetString(range), results[index])).ToList();
 			ReplaceSelections(strs);
 		}
 
@@ -171,7 +172,7 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Image_AddOverlayColor;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
-			var strs = Selections.AsParallel().AsOrdered().Select((range, index) => OverlayColor(results[index], Text.GetString(range))).ToList();
+			var strs = Selections.AsTaskRunner().Select((range, index) => OverlayColor(results[index], Text.GetString(range))).ToList();
 			ReplaceSelections(strs);
 		}
 
@@ -317,7 +318,7 @@ namespace NeoEdit.Editor
 			Enumerable.Range(0, files.Count).ForEach(index => SplitGIF(files[index], outputTemplates[index]));
 		}
 
-		void Execute_Image_GetTakenDate() => ReplaceSelections(RelativeSelectedFiles().AsParallel().AsOrdered().Select(fileName => GetImageTakenDate(fileName)?.ToString() ?? "<NONE>").ToList());
+		void Execute_Image_GetTakenDate() => ReplaceSelections(RelativeSelectedFiles().AsTaskRunner().Select(fileName => GetImageTakenDate(fileName)?.ToString() ?? "<NONE>").ToList());
 
 		Configuration_Image_SetTakenDate Configure_Image_SetTakenDate() => Tabs.TabsWindow.Configure_Image_SetTakenDate(GetVariables());
 
@@ -338,7 +339,7 @@ namespace NeoEdit.Editor
 			if (invalid.Any())
 				throw new Exception($"Files don't exist:\n{string.Join("\n", invalid)}");
 
-			Enumerable.Range(0, fileNames.Count).AsParallel().Select(index => (fileName: fileNames[index], dateTime: dateTimes[index])).ForEach(pair => SetImageTakenDate(pair.fileName, pair.dateTime));
+			Enumerable.Range(0, fileNames.Count).AsTaskRunner().Select(index => (fileName: fileNames[index], dateTime: dateTimes[index])).ForEach(pair => SetImageTakenDate(pair.fileName, pair.dateTime));
 		}
 	}
 }

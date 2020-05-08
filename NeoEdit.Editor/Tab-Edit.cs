@@ -13,6 +13,7 @@ using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.Searchers;
 using NeoEdit.Editor.Transactional;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -301,7 +302,7 @@ namespace NeoEdit.Editor
 			}
 
 			// Perform search
-			var results = selections.AsParallel().AsOrdered().Select((range, index) => searchers[stringsToFind[index]].Find(Text.GetString(range), range.Start)).ToList();
+			var results = selections.AsTaskRunner().Select((range, index) => searchers[stringsToFind[index]].Find(Text.GetString(range), range.Start)).ToList();
 
 			switch (result.Type)
 			{
@@ -355,9 +356,9 @@ namespace NeoEdit.Editor
 			var result = state.Configuration as Configuration_Edit_Find_RegexReplace;
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { Range.FromIndex(0, Text.Length) };
 			var searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, result.EntireSelection);
-			var sels = regions.AsParallel().AsOrdered().SelectMany(region => searcher.Find(Text.GetString(region), region.Start)).ToList();
+			var sels = regions.AsTaskRunner().SelectMany(region => searcher.Find(Text.GetString(region), region.Start)).ToList();
 			Selections = sels;
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => searcher.regexes[0].Replace(Text.GetString(range), result.Replace)).ToList());
+			ReplaceSelections(Selections.AsTaskRunner().Select(range => searcher.regexes[0].Replace(Text.GetString(range), result.Replace)).ToList());
 		}
 
 		void Execute_Edit_CopyDown()
@@ -411,7 +412,7 @@ namespace NeoEdit.Editor
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			if (results.Any(repeatCount => repeatCount < 0))
 				throw new Exception("Repeat count must be >= 0");
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => RepeatString(Text.GetString(range), results[index])).ToList());
+			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => RepeatString(Text.GetString(range), results[index])).ToList());
 			if (result.SelectRepetitions)
 			{
 				var sels = new List<Range>();
@@ -427,17 +428,17 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Edit_Escape_Markup() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlEncode(Text.GetString(range))).ToList());
+		void Execute_Edit_Escape_Markup() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.HtmlEncode(Text.GetString(range))).ToList());
 
-		void Execute_Edit_Escape_RegEx() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Escape(Text.GetString(range))).ToList());
+		void Execute_Edit_Escape_RegEx() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Regex.Escape(Text.GetString(range))).ToList());
 
-		void Execute_Edit_Escape_URL() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlEncode(Text.GetString(range))).ToList());
+		void Execute_Edit_Escape_URL() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.UrlEncode(Text.GetString(range))).ToList());
 
-		void Execute_Edit_Unescape_Markup() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.HtmlDecode(Text.GetString(range))).ToList());
+		void Execute_Edit_Unescape_Markup() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.HtmlDecode(Text.GetString(range))).ToList());
 
-		void Execute_Edit_Unescape_RegEx() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Regex.Unescape(Text.GetString(range))).ToList());
+		void Execute_Edit_Unescape_RegEx() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Regex.Unescape(Text.GetString(range))).ToList());
 
-		void Execute_Edit_Unescape_URL() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
+		void Execute_Edit_Unescape_URL() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
 
 		Configuration_Edit_Data_Hash Configure_Edit_Data_Hash() => Tabs.TabsWindow.Configure_Edit_Data_Hash(CodePage);
 
@@ -447,7 +448,7 @@ namespace NeoEdit.Editor
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
-			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
+			ReplaceSelections(strs.AsTaskRunner().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
 		Configuration_Edit_Data_Compress Configure_Edit_Data_Compress() => Tabs.TabsWindow.Configure_Edit_Data_Compress(CodePage, true);
@@ -458,10 +459,10 @@ namespace NeoEdit.Editor
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
-			var compressed = strs.AsParallel().AsOrdered().Select(str => Compressor.Compress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
+			var compressed = strs.AsTaskRunner().Select(str => Compressor.Compress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
 			if (!CheckCanEncode(compressed, result.OutputCodePage))
 				return;
-			ReplaceSelections(compressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+			ReplaceSelections(compressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
 		Configuration_Edit_Data_Compress Configure_Edit_Data_Decompress() => Tabs.TabsWindow.Configure_Edit_Data_Compress(CodePage, false);
@@ -472,10 +473,10 @@ namespace NeoEdit.Editor
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
-			var decompressed = strs.AsParallel().AsOrdered().Select(str => Compressor.Decompress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
+			var decompressed = strs.AsTaskRunner().Select(str => Compressor.Decompress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
 			if (!CheckCanEncode(decompressed, result.OutputCodePage))
 				return;
-			ReplaceSelections(decompressed.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+			ReplaceSelections(decompressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
 		Configuration_Edit_Data_Encrypt Configure_Edit_Data_Encrypt() => Tabs.TabsWindow.Configure_Edit_Data_Encrypt(CodePage, true);
@@ -486,10 +487,10 @@ namespace NeoEdit.Editor
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
-			var encrypted = strs.AsParallel().AsOrdered().Select(str => Cryptor.Encrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
+			var encrypted = strs.AsTaskRunner().Select(str => Cryptor.Encrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
 			if (!CheckCanEncode(encrypted, result.OutputCodePage))
 				return;
-			ReplaceSelections(encrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+			ReplaceSelections(encrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
 		Configuration_Edit_Data_Encrypt Configure_Edit_Data_Decrypt() => Tabs.TabsWindow.Configure_Edit_Data_Encrypt(CodePage, false);
@@ -500,10 +501,10 @@ namespace NeoEdit.Editor
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
-			var decrypted = strs.AsParallel().AsOrdered().Select(str => Cryptor.Decrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
+			var decrypted = strs.AsTaskRunner().Select(str => Cryptor.Decrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
 			if (!CheckCanEncode(decrypted, result.OutputCodePage))
 				return;
-			ReplaceSelections(decrypted.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+			ReplaceSelections(decrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
 		Configuration_Edit_Data_Sign Configure_Edit_Data_Sign() => Tabs.TabsWindow.Configure_Edit_Data_Sign(CodePage);
@@ -514,7 +515,7 @@ namespace NeoEdit.Editor
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
-			ReplaceSelections(strs.AsParallel().AsOrdered().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
+			ReplaceSelections(strs.AsTaskRunner().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
 		Configuration_Edit_Sort Configure_Edit_Sort() => Tabs.TabsWindow.Configure_Edit_Sort();
@@ -557,22 +558,22 @@ namespace NeoEdit.Editor
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputType))
 				return;
-			var bytes = strs.AsParallel().AsOrdered().Select(str => Coder.StringToBytes(str, result.InputType, result.InputBOM)).ToList();
+			var bytes = strs.AsTaskRunner().Select(str => Coder.StringToBytes(str, result.InputType, result.InputBOM)).ToList();
 			if (!CheckCanEncode(bytes, result.OutputType))
 				return;
-			ReplaceSelections(bytes.AsParallel().AsOrdered().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
+			ReplaceSelections(bytes.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
 		}
 
 		void Execute_Edit_Navigate_WordLeftRight(bool next)
 		{
 			if ((!state.ShiftDown) && (Selections.Any(range => range.HasSelection)))
 			{
-				Selections = Selections.AsParallel().AsOrdered().Select(range => new Range(next ? range.End : range.Start)).ToList();
+				Selections = Selections.AsTaskRunner().Select(range => new Range(next ? range.End : range.Start)).ToList();
 				return;
 			}
 
 			var func = next ? (Func<int, int>)GetNextWord : GetPrevWord;
-			Selections = Selections.AsParallel().AsOrdered().Select(range => MoveCursor(range, func(range.Cursor), state.ShiftDown)).ToList();
+			Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, func(range.Cursor), state.ShiftDown)).ToList();
 		}
 
 		void Execute_Edit_Navigate_AllLeft()
@@ -581,7 +582,7 @@ namespace NeoEdit.Editor
 				return;
 
 			var positions = Selections.Select(range => range.Cursor).ToList();
-			var lines = positions.AsParallel().AsOrdered().Select(position => TextView.GetPositionLine(position)).ToList();
+			var lines = positions.AsTaskRunner().Select(position => TextView.GetPositionLine(position)).ToList();
 
 			var indexes = positions.Zip(lines, (position, line) => TextView.GetPositionIndex(position, line)).ToList();
 			var index = Math.Min(indexes.Max() - 1, indexes.Min());
@@ -618,7 +619,7 @@ namespace NeoEdit.Editor
 				return;
 
 			var positions = Selections.Select(range => range.Cursor).ToList();
-			var lines = positions.AsParallel().AsOrdered().Select(position => TextView.GetPositionLine(position)).ToList();
+			var lines = positions.AsTaskRunner().Select(position => TextView.GetPositionLine(position)).ToList();
 
 			var index = positions.Zip(lines, (position, line) => TextView.GetPositionIndex(position, line)).Min();
 			var endIndex = lines.Select(line => TextView.GetLineLength(line)).Min();

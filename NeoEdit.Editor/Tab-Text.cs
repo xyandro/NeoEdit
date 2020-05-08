@@ -85,7 +85,7 @@ namespace NeoEdit.Editor
 		void Execute_Text_Select_Trim()
 		{
 			var result = state.Configuration as Configuration_Text_Select_Chars;
-			Selections = Selections.AsParallel().AsOrdered().Select(range => TrimRange(range, result)).ToList();
+			Selections = Selections.AsTaskRunner().Select(range => TrimRange(range, result)).ToList();
 		}
 
 		Configuration_Text_Select_ByWidth Configure_Text_Select_ByWidth() => Tabs.TabsWindow.Configure_Text_Select_ByWidth(false, true, GetVariables());
@@ -94,7 +94,7 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Text_Select_ByWidth;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
-			Selections = Selections.AsParallel().AsOrdered().Where((range, index) => range.Length == results[index]).ToList();
+			Selections = Selections.AsTaskRunner().Where((range, index) => range.Length == results[index]).ToList();
 		}
 
 		Configuration_Text_Select_Chars Configure_Text_Select_WholeBoundedWord(bool wholeWord) => Tabs.TabsWindow.Configure_Text_Select_Chars(wholeWord ? 1 : 2);
@@ -144,15 +144,15 @@ namespace NeoEdit.Editor
 			Selections = lengths.Indexes(length => length == find).Select(index => Selections[index]).ToList();
 		}
 
-		void Execute_Text_Case_Upper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToUpperInvariant()).ToList());
+		void Execute_Text_Case_Upper() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToUpperInvariant()).ToList());
 
-		void Execute_Text_Case_Lower() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToLowerInvariant()).ToList());
+		void Execute_Text_Case_Lower() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToLowerInvariant()).ToList());
 
-		void Execute_Text_Case_Proper() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToProper()).ToList());
+		void Execute_Text_Case_Proper() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToProper()).ToList());
 
-		void Execute_Text_Case_Toggle() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).ToToggled()).ToList());
+		void Execute_Text_Case_Toggle() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToToggled()).ToList());
 
-		void Execute_Text_Length() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => range.Length.ToString()).ToList());
+		void Execute_Text_Length() => ReplaceSelections(Selections.AsTaskRunner().Select(range => range.Length.ToString()).ToList());
 
 		Configuration_Text_Select_ByWidth Configure_Text_Width()
 		{
@@ -164,7 +164,7 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Text_Select_ByWidth;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
+			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
 		}
 
 		Configuration_Text_Select_Chars Configure_Text_Trim() => Tabs.TabsWindow.Configure_Text_Select_Chars(0);
@@ -172,10 +172,10 @@ namespace NeoEdit.Editor
 		void Execute_Text_Trim()
 		{
 			var result = state.Configuration as Configuration_Text_Select_Chars;
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select(str => TrimString(Text.GetString(str), result)).ToList());
+			ReplaceSelections(Selections.AsTaskRunner().Select(str => TrimString(Text.GetString(str), result)).ToList());
 		}
 
-		void Execute_Text_SingleLine() => ReplaceSelections(Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
+		void Execute_Text_SingleLine() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
 		Configuration_Text_Unicode Configure_Text_Unicode() => Tabs.TabsWindow.Configure_Text_Unicode();
 
@@ -185,7 +185,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(result.Value);
 		}
 
-		void Execute_Text_GUID() => ReplaceSelections(Selections.AsParallel().Select(range => Guid.NewGuid().ToString()).ToList());
+		void Execute_Text_GUID() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Guid.NewGuid().ToString()).ToList());
 
 		Configuration_Text_RandomText Configure_Text_RandomText() => Tabs.TabsWindow.Configure_Text_RandomText(GetVariables());
 
@@ -193,7 +193,7 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Text_RandomText;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
-			ReplaceSelections(Selections.AsParallel().AsOrdered().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
+			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 
 		void Execute_Text_LoremIpsum() => ReplaceSelections(new LoremGenerator().GetSentences().Take(Selections.Count).ToList());

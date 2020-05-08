@@ -22,7 +22,7 @@ namespace NeoEdit.TaskRunning
 		int finishLock;
 		int finishCount;
 
-		public TaskRunnerTask(string name, MethodInfo methodInfo, Func<TSource, long> getSize, Func<TSource, int, Action<long>, TResult> execute, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish) : base(methodInfo)
+		public TaskRunnerTask(MethodInfo methodInfo, Func<TSource, long> getSize, Func<TSource, int, Action<long>, TResult> execute, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish) : base(methodInfo)
 		{
 			this.getSize = getSize;
 			this.execute = execute;

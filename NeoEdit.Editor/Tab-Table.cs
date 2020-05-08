@@ -6,6 +6,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -94,7 +95,7 @@ namespace NeoEdit.Editor
 			if (!Selections.Any())
 				return;
 
-			var lineSets = Selections.AsParallel().AsOrdered().Select(range => new { start = TextView.GetPositionLine(range.Start), end = TextView.GetPositionLine(range.End) }).ToList();
+			var lineSets = Selections.AsTaskRunner().Select(range => new { start = TextView.GetPositionLine(range.Start), end = TextView.GetPositionLine(range.End) }).ToList();
 			if (lineSets.Any(range => range.start != range.end))
 				throw new Exception("Cannot have multi-line selections");
 
@@ -161,7 +162,7 @@ namespace NeoEdit.Editor
 			var variables = GetTableVariables(table);
 			var results = state.GetExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
-			Selections = lines.AsParallel().AsOrdered().Select(line => new Range(TextView.GetPosition(line, TextView.GetLineLength(line)), TextView.GetPosition(line, 0))).ToList();
+			Selections = lines.AsTaskRunner().Select(line => new Range(TextView.GetPosition(line, TextView.GetLineLength(line)), TextView.GetPosition(line, 0))).ToList();
 		}
 
 		void Execute_Table_SetJoinSource() => joinTable = GetTable();

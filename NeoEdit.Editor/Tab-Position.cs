@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -215,7 +216,7 @@ namespace NeoEdit.Editor
 				if (positions.Count != sels.Count)
 					throw new Exception("Expression count doesn't match selection count");
 
-				useTE.Selections = sels.AsParallel().AsOrdered().Select((range, ctr) => positions[ctr].GetRange(useTE, range, selecting)).ToList();
+				useTE.Selections = sels.AsTaskRunner().Select((range, ctr) => positions[ctr].GetRange(useTE, range, selecting)).ToList();
 			}
 		}
 

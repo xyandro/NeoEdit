@@ -5,6 +5,7 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -277,7 +278,7 @@ namespace NeoEdit.Editor
 				return;
 
 			Tabs.AddToTransaction(DiffTarget);
-			var lines = Selections.AsParallel().AsOrdered().Select(range => GetDiffNextPrevious(range, next)).ToList();
+			var lines = Selections.AsTaskRunner().Select(range => GetDiffNextPrevious(range, next)).ToList();
 			for (var pass = 0; pass < 2; ++pass)
 			{
 				var target = pass == 0 ? this : DiffTarget;
