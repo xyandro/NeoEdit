@@ -473,7 +473,7 @@ namespace NeoEdit.Editor
 		Configuration_Files_Set_Size Configure_Files_Set_Size()
 		{
 			var vars = GetVariables();
-			var sizes = RelativeSelectedFiles().AsParallel().AsOrdered().Select(file => new FileInfo(file).Length);
+			var sizes = RelativeSelectedFiles().AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
 			return Tabs.TabsWindow.Configure_Files_Set_Size(vars);
 		}

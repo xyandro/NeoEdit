@@ -156,7 +156,7 @@ namespace NeoEdit.Editor
 
 		Configuration_Text_Select_ByWidth Configure_Text_Width()
 		{
-			var numeric = Selections.Any() ? Selections.AsParallel().All(range => Text.GetString(range).IsNumeric()) : false;
+			var numeric = Selections.Any() ? Selections.AsTaskRunner().All(range => Text.GetString(range).IsNumeric()) : false;
 			return Tabs.TabsWindow.Configure_Text_Select_ByWidth(numeric, false, GetVariables());
 		}
 

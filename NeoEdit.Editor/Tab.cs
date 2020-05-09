@@ -11,6 +11,7 @@ using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.Editor.Transactional.View;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -83,9 +84,9 @@ namespace NeoEdit.Editor
 			Replace(Selections, strs, replaceType, tryJoinUndo);
 
 			if (highlight)
-				Selections = Selections.AsParallel().AsOrdered().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList();
+				Selections = Selections.AsTaskRunner().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList();
 			else
-				Selections = Selections.AsParallel().AsOrdered().Select(range => new Range(range.End)).ToList();
+				Selections = Selections.AsTaskRunner().Select(range => new Range(range.End)).ToList();
 		}
 
 		void Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs = null, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
@@ -1124,7 +1125,7 @@ namespace NeoEdit.Editor
 			IsModified = !modifiedChecksum.Match(Text);
 		}
 
-		List<string> GetSelectionStrings() => Selections.AsParallel().AsOrdered().Select(range => Text.GetString(range)).ToList();
+		IReadOnlyList<string> GetSelectionStrings() => Selections.AsTaskRunner().Select(range => Text.GetString(range)).ToList();
 
 		void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
 		{
@@ -1165,11 +1166,11 @@ namespace NeoEdit.Editor
 			results.Add(NEVariable.Constant("xlmin", "Selection min length", () => Selections.Select(range => range.Length).DefaultIfEmpty(0).Min()));
 			results.Add(NEVariable.Constant("xlmax", "Selection max length", () => Selections.Select(range => range.Length).DefaultIfEmpty(0).Max()));
 
-			results.Add(NEVariable.Constant("xmin", "Selection numeric min", () => Selections.AsParallel().Select(range => Text.GetString(range)).Distinct().Select(str => double.Parse(str)).DefaultIfEmpty(0).Min()));
-			results.Add(NEVariable.Constant("xmax", "Selection numeric max", () => Selections.AsParallel().Select(range => Text.GetString(range)).Distinct().Select(str => double.Parse(str)).DefaultIfEmpty(0).Max()));
+			results.Add(NEVariable.Constant("xmin", "Selection numeric min", () => Selections.AsTaskRunner().Select(range => Text.GetString(range)).Distinct().Select(str => double.Parse(str)).DefaultIfEmpty(0).Min()));
+			results.Add(NEVariable.Constant("xmax", "Selection numeric max", () => Selections.AsTaskRunner().Select(range => Text.GetString(range)).Distinct().Select(str => double.Parse(str)).DefaultIfEmpty(0).Max()));
 
-			results.Add(NEVariable.Constant("xtmin", "Selection text min", () => Selections.AsParallel().Select(range => Text.GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).First()));
-			results.Add(NEVariable.Constant("xtmax", "Selection text max", () => Selections.AsParallel().Select(range => Text.GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).Last()));
+			results.Add(NEVariable.Constant("xtmin", "Selection text min", () => Selections.AsTaskRunner().Select(range => Text.GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).First()));
+			results.Add(NEVariable.Constant("xtmax", "Selection text max", () => Selections.AsTaskRunner().Select(range => Text.GetString(range)).DefaultIfEmpty("").OrderBy(Helpers.SmartComparer(false)).Last()));
 
 			for (var ctr = 1; ctr <= 9; ++ctr)
 			{
@@ -1205,24 +1206,24 @@ namespace NeoEdit.Editor
 			results.Add(NEVariable.Constant("f", "Filename", () => FileName));
 			results.Add(NEVariable.Constant("d", "Display name", () => DisplayName));
 
-			var lineStarts = default(List<int>);
-			var initializeLineStarts = new NEVariableInitializer(() => lineStarts = Selections.AsParallel().AsOrdered().Select(range => TextView.GetPositionLine(range.Start) + 1).ToList());
+			var lineStarts = default(IReadOnlyList<int>);
+			var initializeLineStarts = new NEVariableInitializer(() => lineStarts = Selections.AsTaskRunner().Select(range => TextView.GetPositionLine(range.Start) + 1).ToList());
 			results.Add(NEVariable.List("line", "Selection line start", () => lineStarts, initializeLineStarts));
-			var lineEnds = default(List<int>);
-			var initializeLineEnds = new NEVariableInitializer(() => lineEnds = Selections.AsParallel().AsOrdered().Select(range => TextView.GetPositionLine(range.End) + 1).ToList());
+			var lineEnds = default(IReadOnlyList<int>);
+			var initializeLineEnds = new NEVariableInitializer(() => lineEnds = Selections.AsTaskRunner().Select(range => TextView.GetPositionLine(range.End) + 1).ToList());
 			results.Add(NEVariable.List("lineend", "Selection line end", () => lineEnds, initializeLineEnds));
 
-			var colStarts = default(List<int>);
-			var initializeColStarts = new NEVariableInitializer(() => colStarts = Selections.AsParallel().AsOrdered().Select((range, index) => TextView.GetPositionIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
+			var colStarts = default(IReadOnlyList<int>);
+			var initializeColStarts = new NEVariableInitializer(() => colStarts = Selections.AsTaskRunner().Select((range, index) => TextView.GetPositionIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
 			results.Add(NEVariable.List("col", "Selection column start", () => colStarts, initializeColStarts));
-			var colEnds = default(List<int>);
-			var initializeColEnds = new NEVariableInitializer(() => colEnds = Selections.AsParallel().AsOrdered().Select((range, index) => TextView.GetPositionIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
+			var colEnds = default(IReadOnlyList<int>);
+			var initializeColEnds = new NEVariableInitializer(() => colEnds = Selections.AsTaskRunner().Select((range, index) => TextView.GetPositionIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
 			results.Add(NEVariable.List("colend", "Selection column end", () => colEnds, initializeColEnds));
 
-			var posStarts = default(List<int>);
+			var posStarts = default(IReadOnlyList<int>);
 			var initializePosStarts = new NEVariableInitializer(() => posStarts = Selections.Select(range => range.Start).ToList());
 			results.Add(NEVariable.List("pos", "Selection position start", () => posStarts, initializePosStarts));
-			var posEnds = default(List<int>);
+			var posEnds = default(IReadOnlyList<int>);
 			var initializePosEnds = new NEVariableInitializer(() => posEnds = Selections.Select(range => range.End).ToList());
 			results.Add(NEVariable.List("posend", "Selection position end", () => posEnds, initializePosEnds));
 
@@ -1246,9 +1247,9 @@ namespace NeoEdit.Editor
 				results.Add(NEVariable.Constant("height", "Image height", () => GetBitmap().Height));
 			}
 
-			var nonNulls = default(List<Tuple<double, int>>);
+			var nonNulls = default(IReadOnlyList<Tuple<double, int>>);
 			double lineStart = 0, lineIncrement = 0, geoStart = 0, geoIncrement = 0;
-			var initializeNonNulls = new NEVariableInitializer(() => nonNulls = Selections.AsParallel().AsOrdered().Select((range, index) => new { str = Text.GetString(range), index }).NonNullOrWhiteSpace(obj => obj.str).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList());
+			var initializeNonNulls = new NEVariableInitializer(() => nonNulls = Selections.AsTaskRunner().Select((range, index) => new { str = Text.GetString(range), index }).NonNullOrWhiteSpace(obj => obj.str).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList());
 			var initializeLineSeries = new NEVariableInitializer(() =>
 			{
 				if (nonNulls.Count == 0)
@@ -1327,7 +1328,7 @@ namespace NeoEdit.Editor
 		}
 
 		static HashSet<string> drives = new HashSet<string>(DriveInfo.GetDrives().Select(drive => drive.Name));
-		bool StringsAreFiles(List<string> strs)
+		bool StringsAreFiles(IReadOnlyList<string> strs)
 		{
 			if ((strs.Count == 0) || (strs.Count > 500))
 				return false;
@@ -1340,9 +1341,9 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsParallel().All(data => Coder.CanEncode(data, codePage))) || (ConfirmContinueWhenCannotEncode());
+		bool CheckCanEncode(IEnumerable<byte[]> datas, Coder.CodePage codePage) => (datas.AsTaskRunner().All(data => Coder.CanEncode(data, codePage))) || (ConfirmContinueWhenCannotEncode());
 
-		bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsParallel().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
+		bool CheckCanEncode(IEnumerable<string> strs, Coder.CodePage codePage) => (strs.AsTaskRunner().All(str => Coder.CanEncode(str, codePage))) || (ConfirmContinueWhenCannotEncode());
 
 		bool ConfirmContinueWhenCannotEncode()
 		{
@@ -1361,10 +1362,10 @@ namespace NeoEdit.Editor
 			});
 		}
 
-		List<string> RelativeSelectedFiles()
+		IReadOnlyList<string> RelativeSelectedFiles()
 		{
 			var fileName = FileName;
-			return Selections.AsParallel().AsOrdered().Select(range => fileName.RelativeChild(Text.GetString(range))).ToList();
+			return Selections.AsTaskRunner().Select(range => fileName.RelativeChild(Text.GetString(range))).ToList();
 		}
 
 		bool VerifyCanEncode()

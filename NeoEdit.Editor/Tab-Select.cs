@@ -364,7 +364,7 @@ namespace NeoEdit.Editor
 			var configuration = new Configuration_Select_Repeats_Tabs_MatchMismatch();
 			foreach (var tab in Tabs.ActiveTabs)
 			{
-				var strs = tab.GetSelectionStrings();
+				var strs = tab.GetSelectionStrings().ToList();
 				var matches = configuration.Matches ?? strs;
 				while (matches.Count < strs.Count)
 					matches.Add(null);
@@ -393,7 +393,7 @@ namespace NeoEdit.Editor
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 			foreach (var tab in Tabs.ActiveTabs)
 			{
-				var repeats = tab.Selections.AsParallel().GroupBy(tab.Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
+				var repeats = tab.Selections.AsTaskRunner().GroupBy(tab.Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
 
 				if (configuration.Repeats != null)
 					repeats = repeats.Join(configuration.Repeats, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);

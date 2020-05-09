@@ -21,7 +21,7 @@ namespace NeoEdit.Editor
 
 			var codePage = CodePage; // Must save as other threads can't access DependencyProperties
 			var tabs = new Tabs();
-			var batches = ranges.AsParallel().AsOrdered().Select(range => Text.GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).ToList();
+			var batches = ranges.AsTaskRunner().Select(range => Text.GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).ToList();
 			foreach (var batch in batches)
 				tabs.AddDiff(new Tab(bytes: batch[0], codePage: codePage, modified: false), new Tab(bytes: batch[1], codePage: codePage, modified: false));
 		}

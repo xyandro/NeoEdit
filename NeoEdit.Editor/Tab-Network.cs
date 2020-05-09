@@ -43,7 +43,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		async Task<List<Tuple<string, string, bool>>> GetURLs(List<string> urls, Coder.CodePage codePage = Coder.CodePage.None)
+		async Task<List<Tuple<string, string, bool>>> GetURLs(IReadOnlyList<string> urls, Coder.CodePage codePage = Coder.CodePage.None)
 		{
 			var tasks = urls.Select(url => GetURL(url, codePage)).ToList();
 			var results = new List<Tuple<string, string, bool>>();

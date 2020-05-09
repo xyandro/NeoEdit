@@ -19,6 +19,9 @@ namespace NeoEdit.TaskRunning
 		public static void Run(Action action) => Range(1, 1).ForAll((item, index, progress) => action());
 		public static void Run(Action<Action<long>> action) => Range(1, 1).ForAll((item, index, progress) => action(progress));
 
+		public static T Min<T>(this FluentTaskRunner<T> taskRuner) where T : IComparable => taskRuner.Min(x => x);
+		public static T Max<T>(this FluentTaskRunner<T> taskRuner) where T : IComparable => taskRuner.Max(x => x);
+		public static FluentTaskRunner<string> NonNullOrWhiteSpace(this FluentTaskRunner<string> taskRuner) => taskRuner.Where(str => !string.IsNullOrWhiteSpace(str));
 
 		readonly static List<Thread> threads = new List<Thread>();
 		readonly static List<TaskRunnerEpic> epics = new List<TaskRunnerEpic>();

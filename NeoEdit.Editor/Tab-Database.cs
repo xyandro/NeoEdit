@@ -70,7 +70,7 @@ namespace NeoEdit.Editor
 			var selections = Selections.ToList();
 			if ((Selections.Count == 1) && (!Selections[0].HasSelection))
 				selections = new List<Range> { Range.FromIndex(0, Text.Length) };
-			var strs = GetSelectionStrings();
+			var strs = GetSelectionStrings().ToList();
 			// Not in parallel because prior selections may affect later ones
 			var results = selections.Select((range, index) => RunDBSelect(strs[index])).ToList();
 

@@ -19,9 +19,9 @@ namespace NeoEdit.Editor
 {
 	partial class Tab
 	{
-		List<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)
+		IReadOnlyList<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)
 		{
-			var entries = Selections.AsParallel().Select((range, index) => Tuple.Create(Text.GetString(range), index));
+			var entries = Selections.AsTaskRunner().Select((range, index) => Tuple.Create(Text.GetString(range), index));
 
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 
@@ -50,7 +50,7 @@ namespace NeoEdit.Editor
 				case SortType.Randomize: entries = entries.OrderBy(entry => random.Next()); break;
 				case SortType.Frequency:
 					{
-						entries = entries.ToList().AsParallel();
+						entries = entries.ToList().AsTaskRunner();
 						var frequency = entries.GroupBy(a => a.Item1, stringComparer).ToDictionary(a => a.Key, a => a.Count(), stringComparer);
 						entries = OrderByAscDesc(entries, entry => frequency[entry.Item1], ascending);
 					}
@@ -94,10 +94,15 @@ namespace NeoEdit.Editor
 			return sortSource;
 		}
 
-		static ParallelQuery<Tuple<string, int>> OrderByAscDesc<TKey>(ParallelQuery<Tuple<string, int>> source, Func<Tuple<string, int>, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)
+		static FluentTaskRunner<Tuple<string, int>> OrderByAscDesc<TKey>(FluentTaskRunner<Tuple<string, int>> source, Func<Tuple<string, int>, TKey> keySelector, bool ascending, IComparer<TKey> comparer = null)
 		{
-			var func = ascending ? (Func<ParallelQuery<Tuple<string, int>>, Func<Tuple<string, int>, TKey>, IComparer<TKey>, OrderedParallelQuery<Tuple<string, int>>>)ParallelEnumerable.OrderBy : ParallelEnumerable.OrderByDescending;
-			return func(source, keySelector, comparer ?? Comparer<TKey>.Default).ThenBy(x => x.Item2);
+			source = source.OrderBy(x => x.Item2);
+			var func = (Func<Func<Tuple<string, int>, TKey>, IComparer<TKey>, Func<Tuple<string, int>, long>, FluentTaskRunner<Tuple<string, int>>>)source.OrderBy;
+			if (ascending)
+				source = source.OrderBy(keySelector, comparer);
+			else
+				source = source.OrderByDescending(keySelector, comparer);
+			return source;
 		}
 
 		static string RepeatString(string input, int count)
@@ -198,7 +203,7 @@ namespace NeoEdit.Editor
 		Configuration_Edit_Find_Find Configure_Edit_Find_Find()
 		{
 			string text = null;
-			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
+			var selectionOnly = Selections.Any(range => range.HasSelection);
 
 			if (Selections.Count == 1)
 			{
@@ -336,7 +341,7 @@ namespace NeoEdit.Editor
 		Configuration_Edit_Find_RegexReplace Configure_Edit_Find_RegexReplace()
 		{
 			string text = null;
-			var selectionOnly = Selections.AsParallel().Any(range => range.HasSelection);
+			var selectionOnly = Selections.Any(range => range.HasSelection);
 
 			if (Selections.Count == 1)
 			{
@@ -363,7 +368,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_CopyDown()
 		{
-			var strs = GetSelectionStrings();
+			var strs = GetSelectionStrings().ToList();
 			var index = 0;
 			for (var ctr = 0; ctr < strs.Count; ++ctr)
 				if (string.IsNullOrWhiteSpace(strs[ctr]))
@@ -394,7 +399,7 @@ namespace NeoEdit.Editor
 			var result = state.Configuration as Configuration_Edit_Rotate;
 			var count = state.GetExpression(result.Count).Evaluate<int>(GetVariables());
 
-			var strs = GetSelectionStrings();
+			var strs = GetSelectionStrings().ToList();
 			if (count < 0)
 				count = -count % strs.Count;
 			else

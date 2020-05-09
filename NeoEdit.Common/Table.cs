@@ -54,7 +54,7 @@ namespace NeoEdit.Common
 
 		public Table(string input, ParserType tableType = ParserType.None, bool hasHeaders = true) : this(GetInputRows(input, tableType), hasHeaders) { }
 
-		public Table(List<List<string>> rows, bool hasHeaders = true)
+		public Table(IReadOnlyList<IReadOnlyList<string>> rows, bool hasHeaders = true)
 		{
 			Rows = rows.Select(row => row.Select(value => value ?? NULLSTR).ToList()).ToList();
 			EqualizeColumns();

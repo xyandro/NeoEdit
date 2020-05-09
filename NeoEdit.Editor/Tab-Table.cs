@@ -21,7 +21,7 @@ namespace NeoEdit.Editor
 			if (ContentType.IsTableType())
 				return new Table(Text.GetString(), ContentType, hasHeaders);
 			if (ContentType == ParserType.None)
-				return new Table(Enumerable.Range(0, TextView.NumLines).AsParallel().AsOrdered().Select(line => Text.GetString(TextView.GetLine(line))).NonNullOrWhiteSpace().Select(str => new List<string> { str }).ToList(), false);
+				return new Table(TaskRunner.Range(0, TextView.NumLines).Select(line => Text.GetString(TextView.GetLine(line))).NonNullOrWhiteSpace().Select(str => new List<string> { str }).ToList(), false);
 			throw new Exception("Invalid content type");
 		}
 

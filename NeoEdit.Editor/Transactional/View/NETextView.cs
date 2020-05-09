@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NeoEdit.Common;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor.Transactional.View
 {
@@ -364,6 +365,6 @@ namespace NeoEdit.Editor.Transactional.View
 			return sb.ToString();
 		}
 
-		public int GetMaxColumn(NEText text) => Enumerable.Range(0, NumLines).AsParallel().Max(line => GetLineColumnsLength(text, line));
+		public int GetMaxColumn(NEText text) => Enumerable.Range(0, NumLines).AsTaskRunner().Max(line => GetLineColumnsLength(text, line));
 	}
 }
