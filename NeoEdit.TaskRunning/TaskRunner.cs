@@ -91,7 +91,7 @@ namespace NeoEdit.TaskRunning
 
 		public static void ForceCancel()
 		{
-			if (!workReady.WaitOne(0))
+			if (epics.Count == 0)
 				return;
 
 			exception = new Exception($"All active tasks killed. Program may be unstable as a result of this operation.");
@@ -115,7 +115,7 @@ namespace NeoEdit.TaskRunning
 
 		public static bool Cancel(Exception ex = null)
 		{
-			if (!workReady.WaitOne(0))
+			if (epics.Count == 0)
 				return false;
 
 			if (exception != null)
