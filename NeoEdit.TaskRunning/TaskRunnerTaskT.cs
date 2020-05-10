@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 
 namespace NeoEdit.TaskRunning
@@ -21,7 +20,7 @@ namespace NeoEdit.TaskRunning
 		int nextExecute;
 		int finishCount;
 
-		public TaskRunnerTask(MethodInfo methodInfo, Func<TSource, long> getSize, Func<TSource, int, Action<long>, TResult> execute, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish) : base(methodInfo)
+		public TaskRunnerTask(Func<TSource, long> getSize, Func<TSource, int, Action<long>, TResult> execute, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish)
 		{
 			this.getSize = getSize;
 			this.execute = execute;
@@ -72,12 +71,7 @@ namespace NeoEdit.TaskRunning
 			{
 				TaskRunner.ThrowIfException();
 
-				var currentTicks = Timer.Ticks;
-				Interlocked.Add(ref epic.ticks, currentTicks - startTicks);
-				startTicks = currentTicks;
-
-				var delta = currentSize - lastCurrentSize;
-				Interlocked.Add(ref epic.current, delta);
+				Interlocked.Add(ref epic.current, currentSize - lastCurrentSize);
 				lastCurrentSize = currentSize;
 			}
 
@@ -103,7 +97,6 @@ namespace NeoEdit.TaskRunning
 			{
 				lastCurrentSize = 0;
 				totalSize = sizes?[index] ?? 100;
-				startTicks = Timer.Ticks;
 				results[index] = execute(items[index], index, SetProgress);
 				SetProgress(totalSize);
 				++index;
@@ -113,7 +106,8 @@ namespace NeoEdit.TaskRunning
 			{
 				finish?.Invoke(items, results);
 				finished = true;
-				epic.finishedEvent?.Set();
+				if (epic.entryTask == this)
+					epic.finishedEvent.Set();
 			}
 		}
 	}

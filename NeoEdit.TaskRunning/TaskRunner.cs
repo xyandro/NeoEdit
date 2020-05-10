@@ -51,7 +51,7 @@ namespace NeoEdit.TaskRunning
 
 		static void RunInCallingThread(TaskRunnerTask task)
 		{
-			task.epic = new TaskRunnerEpic();
+			task.epic = new TaskRunnerEpic(task, null);
 			while (!task.finished)
 				task.Run();
 		}
@@ -68,30 +68,11 @@ namespace NeoEdit.TaskRunning
 
 			while (Interlocked.CompareExchange(ref locker, 1, 0) != 0) { }
 
-			TaskRunnerEpic epic = null;
-			var epicParent = threadActiveTask?.epic;
-			if (epicParent != null)
-			{
-				foreach (var value in epicParent.children)
-				{
-					if (value.methodInfo == task.methodInfo)
-					{
-						epic = value;
-						break;
-					}
-				}
-			}
+			var epic = threadActiveTask?.epic;
 			if (epic == null)
 			{
-				epic = new TaskRunnerEpic(task.methodInfo, epicParent);
-				if (epicParent == null)
-				{
-					epics.Add(epic);
-					epic.finishedEvent = new ManualResetEvent(false);
-					epic.idleAction = idleAction;
-				}
-				else
-					epicParent.children.Add(epic);
+				epic = new TaskRunnerEpic(task, idleAction);
+				epics.Add(epic);
 			}
 
 			task.epic = epic;
@@ -102,7 +83,7 @@ namespace NeoEdit.TaskRunning
 
 			locker = 0;
 
-			if (epic.parent == null)
+			if (threadActiveTask == null)
 				WaitForFinish(epic);
 			else
 				RunTasksWhileWaiting(task);
@@ -172,8 +153,6 @@ namespace NeoEdit.TaskRunning
 		static void RunTasksWhileWaiting(TaskRunnerTask waitTask = null)
 		{
 			var lastActive = threadActiveTask;
-			if (lastActive != null)
-				Interlocked.Add(ref lastActive.epic.ticks, Timer.Ticks - lastActive.startTicks);
 
 			while ((waitTask == null) || (!waitTask.finished))
 			{
@@ -220,31 +199,13 @@ namespace NeoEdit.TaskRunning
 				task.Run();
 			}
 
-			if (lastActive != null)
-			{
-				lastActive.startTicks = Timer.Ticks;
-				threadActiveTask = lastActive;
-			}
+			threadActiveTask = lastActive;
 		}
 
 		static void WaitForFinish(TaskRunnerEpic epic)
 		{
-			while (true)
-			{
-				if (epic.finishedEvent.WaitOne(100))
-					break;
-				if (epic.idleAction != null)
-				{
-					while (Interlocked.CompareExchange(ref locker, 1, 0) != 0) { }
-					var progress = epic.GetProgress();
-					locker = 0;
-
-					epic.idleAction(progress);
-				}
-			}
-
-
-			epic.finishedEvent.Dispose();
+			epic.WaitForFinish();
+			epic.Dispose();
 
 			var ex = exception;
 

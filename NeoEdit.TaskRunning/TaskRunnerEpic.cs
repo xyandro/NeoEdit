@@ -1,49 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
 
 namespace NeoEdit.TaskRunning
 {
-	class TaskRunnerEpic
+	class TaskRunnerEpic : IDisposable
 	{
-		public readonly MethodInfo methodInfo;
-		public readonly TaskRunnerEpic parent;
-		public ManualResetEvent finishedEvent;
-		public Action<double> idleAction;
+		public readonly ManualResetEvent finishedEvent = new ManualResetEvent(false);
+		public readonly TaskRunnerTask entryTask;
+		public long current, total;
+		readonly Action<double> idleAction;
 
-		public readonly List<TaskRunnerEpic> children = new List<TaskRunnerEpic>();
-		public long current, total, estimatedTotal, ticks;
-
-		public TaskRunnerEpic(MethodInfo methodInfo = null, TaskRunnerEpic parent = null)
+		public TaskRunnerEpic(TaskRunnerTask entryTask, Action<double> idleAction)
 		{
-			this.methodInfo = methodInfo;
-			this.parent = parent;
+			this.entryTask = entryTask;
+			this.idleAction = idleAction;
 		}
 
-		internal double GetProgress()
-		{
-			long sumCurrent = 0, sumTotal = 0;
-			GetProgress(ref sumCurrent, ref sumTotal);
-			if (sumTotal == 0)
-				return 0;
-			return (double)sumCurrent / sumTotal;
+		public void Dispose() => finishedEvent.Dispose();
 
-		}
-
-		internal void GetProgress(ref long sumCurrent, ref long sumTotal)
+		public void WaitForFinish()
 		{
-			if ((parent == null) || (parent.current == 0))
-				estimatedTotal = total;
-			else
-				estimatedTotal = Math.Max(total, total * parent.estimatedTotal / parent.current);
-			if (current != 0)
+			while (true)
 			{
-				sumCurrent += ticks;
-				sumTotal += ticks * estimatedTotal / current;
+				if (finishedEvent.WaitOne(100))
+					break;
+
+				double progress;
+				if (total == 0)
+					progress = 0;
+				else
+					progress = (double)current / total;
+				idleAction?.Invoke(progress);
 			}
-			foreach (var child in children)
-				child.GetProgress(ref sumCurrent, ref sumTotal);
 		}
 	}
 }
