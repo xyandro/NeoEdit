@@ -7,8 +7,8 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using NeoEdit.Common.Parsing;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Common
 {
@@ -315,7 +315,7 @@ namespace NeoEdit.Common
 				chunks.Add(Tuple.Create(start, end));
 				start = end;
 			}
-			Parallel.ForEach(chunks, chunk => action(chunk.Item1, chunk.Item2));
+			chunks.AsTaskRunner().ForAll(chunk => action(chunk.Item1, chunk.Item2));
 		}
 
 		public static List<TResult> PartitionedParallelForEach<TResult>(int count, int partitionSize, Action<int, int, List<TResult>> action)
@@ -328,7 +328,7 @@ namespace NeoEdit.Common
 				start = end;
 			}
 			var lists = chunks.Select(chunk => new List<TResult>()).ToList();
-			Parallel.ForEach(chunks, (chunk, state, index) => action(chunk.Item1, chunk.Item2, lists[(int)index]));
+			chunks.AsTaskRunner().ForAll((chunk, index) => action(chunk.Item1, chunk.Item2, lists[index]));
 			var result = new List<TResult>();
 			lists.ForEach(list => result.AddRange(list));
 			return result;

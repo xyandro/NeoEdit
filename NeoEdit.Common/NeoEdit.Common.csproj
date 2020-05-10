@@ -296,5 +296,11 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NeoEdit.TaskRunning\NeoEdit.TaskRunning.csproj">
+      <Project>{e1437a47-c993-4361-90ea-2f9070c472cf}</Project>
+      <Name>NeoEdit.TaskRunning</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using NeoEdit.Common;
 using NeoEdit.TaskRunning;
 
@@ -58,7 +57,7 @@ namespace NeoEdit.Editor.Transactional.View
 			var chunkEndingPositions = chunks.Select(chunk => new List<int>()).ToList();
 
 			int defaultEnding = Ending_None;
-			Parallel.ForEach(chunks, chunk =>
+			chunks.AsTaskRunner().ForAll(chunk =>
 			{
 				var index = chunks.IndexOf(chunk);
 				int chunkDefaultEnding = Ending_None;
