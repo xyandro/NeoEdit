@@ -244,8 +244,7 @@ namespace NeoEdit.Editor
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
-				TaskRunner.IdleAction = percent => TabsWindow.SetTaskRunnerProgress(percent);
-				TaskRunner.Run(Execute);
+				TaskRunner.Run(Execute, percent => TabsWindow.SetTaskRunnerProgress(percent));
 				TabsWindow.SetTaskRunnerProgress(null);
 				PostExecute();
 
@@ -268,6 +267,7 @@ namespace NeoEdit.Editor
 			catch (OperationCanceledException) { }
 			catch (Exception ex) { TabsWindow.ShowExceptionMessage(ex); }
 
+			TabsWindow.SetTaskRunnerProgress(null);
 			Rollback();
 			return false;
 		}

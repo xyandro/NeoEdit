@@ -19,7 +19,6 @@ namespace NeoEdit.TaskRunning
 		TResult[] results;
 		IReadOnlyList<long> sizes;
 		int nextExecute;
-		int finishLock;
 		int finishCount;
 
 		public TaskRunnerTask(MethodInfo methodInfo, Func<TSource, long> getSize, Func<TSource, int, Action<long>, TResult> execute, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish) : base(methodInfo)
@@ -29,7 +28,7 @@ namespace NeoEdit.TaskRunning
 			this.finish = finish;
 		}
 
-		public override void RunTask(IEnumerable itemsEnum)
+		public override void RunTask(IEnumerable itemsEnum, Action<double> idleAction = null)
 		{
 			if (!(itemsEnum is IEnumerable<TSource> itemsEnumT))
 				itemsEnumT = itemsEnum.Cast<TSource>();
@@ -40,12 +39,12 @@ namespace NeoEdit.TaskRunning
 
 			if (execute == null)
 			{
-				finishCount = 0;
+				finishCount = 1;
 				nextExecute = items.Count;
 			}
 			else
 			{
-				finishCount = items.Count;
+				finishCount = items.Count + 1;
 				results = new TResult[items.Count];
 
 				if (getSize == null)
@@ -63,7 +62,7 @@ namespace NeoEdit.TaskRunning
 				}
 			}
 
-			TaskRunner.RunTask(this);
+			TaskRunner.RunTask(this, idleAction);
 		}
 
 		public override void Run()
@@ -72,6 +71,11 @@ namespace NeoEdit.TaskRunning
 			void SetProgress(long currentSize)
 			{
 				TaskRunner.ThrowIfException();
+
+				var currentTicks = Timer.Ticks;
+				Interlocked.Add(ref epic.ticks, currentTicks - startTicks);
+				startTicks = currentTicks;
+
 				var delta = currentSize - lastCurrentSize;
 				Interlocked.Add(ref epic.current, delta);
 				lastCurrentSize = currentSize;
@@ -84,19 +88,15 @@ namespace NeoEdit.TaskRunning
 				count = 1;
 
 			var index = Interlocked.Add(ref nextExecute, count) - count;
-			var endIndex = index + count;
-			if (endIndex >= items.Count)
-			{
-				if (index >= items.Count)
-				{
-					if (finishCount == 0)
-						Finish();
-					return;
-				}
+			if (index > items.Count)
+				return;
 
+			var endIndex = index + count;
+			if (endIndex > items.Count)
+			{
 				canRun = false;
 				endIndex = items.Count;
-				count = items.Count - index;
+				count = items.Count + 1 - index;
 			}
 
 			while (index < endIndex)
@@ -105,29 +105,16 @@ namespace NeoEdit.TaskRunning
 				totalSize = sizes?[index] ?? 100;
 				startTicks = Timer.Ticks;
 				results[index] = execute(items[index], index, SetProgress);
-				Interlocked.Add(ref epic.ticks, Timer.Ticks - startTicks);
 				SetProgress(totalSize);
 				++index;
 			}
 
 			if (Interlocked.Add(ref finishCount, -count) == 0)
 			{
-				canRun = true;
-				TaskRunner.SetActiveTask(this, true);
+				finish?.Invoke(items, results);
+				finished = true;
+				epic.finishedEvent?.Set();
 			}
-		}
-
-		void Finish()
-		{
-			if (Interlocked.CompareExchange(ref finishLock, 1, 0) != 0)
-				return;
-
-			canRun = false;
-			finish?.Invoke(items, results);
-			finished = true;
-			epic.tasks[index] = null;
-
-			TaskRunner.SetActiveTask(this, true);
 		}
 	}
 }

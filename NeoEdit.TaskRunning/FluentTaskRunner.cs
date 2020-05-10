@@ -17,7 +17,7 @@ namespace NeoEdit.TaskRunning
 
 		internal FluentTaskRunner(Action<TaskRunnerTask> runTask) => this.runTask = runTask;
 
-		internal FluentTaskRunner(IEnumerable<T> items) => runTask = nextTask => nextTask.RunTask(items);
+		internal FluentTaskRunner(IEnumerable<T> items, Action<double> idleAction = null) => runTask = nextTask => nextTask.RunTask(items, idleAction);
 
 		#region Select
 		public FluentTaskRunner<TResult> Select<TResult>(Func<T, TResult> func, Func<T, long> getSize = null) => Select((item, index, progress) => func(item), getSize);
