@@ -123,25 +123,30 @@ namespace NeoEdit.Editor
 			return path.Length;
 		}
 
-		static List<string> GetDirectoryContents(string dir, bool recursive, List<string> errors)
+		static List<string> GetDirectoryContents(string dir, bool recursive, List<string> errors, Action<long> progress)
 		{
 			var dirs = new Queue<string>();
 			dirs.Enqueue(dir);
 			var results = new List<string>();
+			var current = 0;
+			var total = 1;
 			int errorCount = 0;
 			while (dirs.Count != 0)
 			{
 				try
 				{
 					var cur = dirs.Dequeue();
+					++current;
+					progress((long)current * 100000 / total);
 					foreach (var subDir in Directory.GetDirectories(cur))
 					{
 						dirs.Enqueue(subDir);
+						++total;
 						results.Add(subDir);
 					}
 					results.AddRange(Directory.GetFiles(cur));
 				}
-				catch (Exception ex)
+				catch (Exception ex) when (!(ex is OperationCanceledException))
 				{
 					++errorCount;
 					if (errors.Count < 10)
@@ -459,7 +464,7 @@ namespace NeoEdit.Editor
 				throw new ArgumentException("Path must be of existing directories");
 
 			var errors = new List<string>();
-			ReplaceSelections(dirs.Select(dir => string.Join(TextView.DefaultEnding, GetDirectoryContents(dir, recursive, errors))).ToList());
+			ReplaceSelections(dirs.AsTaskRunner().Select((dir, index, progress) => string.Join(TextView.DefaultEnding, GetDirectoryContents(dir, recursive, errors, progress)), x => 100000).ToList());
 			if (errors.Any())
 				Tabs.TabsWindow.RunMessageDialog("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
 		}

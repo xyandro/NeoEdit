@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 
 namespace NeoEdit.TaskRunning
 {
 	class TaskRunnerEpic : IDisposable
 	{
-		public readonly ManualResetEvent finishedEvent = new ManualResetEvent(false);
-		public readonly TaskRunnerTask entryTask;
-		public long current, total;
+		readonly ManualResetEvent finishedEvent = new ManualResetEvent(false);
+		readonly TaskRunnerTask entryTask;
 		readonly Action<double> idleAction;
+		public long current, total;
+		public Exception exception;
 
 		public TaskRunnerEpic(TaskRunnerTask entryTask, Action<double> idleAction)
 		{
@@ -17,6 +19,12 @@ namespace NeoEdit.TaskRunning
 		}
 
 		public void Dispose() => finishedEvent.Dispose();
+
+		internal void ThrowIfException()
+		{
+			if (exception != null)
+				ExceptionDispatchInfo.Capture(exception).Throw();
+		}
 
 		public void WaitForFinish()
 		{
@@ -32,6 +40,20 @@ namespace NeoEdit.TaskRunning
 					progress = (double)current / total;
 				idleAction?.Invoke(progress);
 			}
+		}
+
+		internal void Cancel(Exception exception) => this.exception = this.exception ?? exception;
+
+		internal void ForceCancel(Exception exception)
+		{
+			this.exception = exception;
+			finishedEvent.Set();
+		}
+
+		internal void SetFinished(TaskRunnerTask task)
+		{
+			if (task == entryTask)
+				finishedEvent.Set();
 		}
 	}
 }

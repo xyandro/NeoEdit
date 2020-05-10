@@ -69,7 +69,7 @@ namespace NeoEdit.TaskRunning
 			long lastCurrentSize, totalSize;
 			void SetProgress(long currentSize)
 			{
-				TaskRunner.ThrowIfException();
+				epic.ThrowIfException();
 
 				Interlocked.Add(ref epic.current, currentSize - lastCurrentSize);
 				lastCurrentSize = currentSize;
@@ -80,6 +80,8 @@ namespace NeoEdit.TaskRunning
 				count = MaxGroupSize;
 			if (count < 1)
 				count = 1;
+			if (epic.exception != null)
+				count = finishCount;
 
 			var index = Interlocked.Add(ref nextExecute, count) - count;
 			if (index > items.Count)
@@ -93,21 +95,31 @@ namespace NeoEdit.TaskRunning
 				count = items.Count + 1 - index;
 			}
 
-			while (index < endIndex)
+			if (epic.exception == null)
 			{
-				lastCurrentSize = 0;
-				totalSize = sizes?[index] ?? 100;
-				results[index] = execute(items[index], index, SetProgress);
-				SetProgress(totalSize);
-				++index;
+				try
+				{
+					while (index < endIndex)
+					{
+						lastCurrentSize = 0;
+						totalSize = sizes?[index] ?? 100;
+						results[index] = execute(items[index], index, SetProgress);
+						SetProgress(totalSize);
+						++index;
+					}
+				}
+				catch (Exception ex) when (!(ex is ThreadAbortException)) { epic.Cancel(ex); }
 			}
 
 			if (Interlocked.Add(ref finishCount, -count) == 0)
 			{
-				finish?.Invoke(items, results);
+				if (epic.exception == null)
+				{
+					try { finish?.Invoke(items, results); }
+					catch (Exception ex) when (!(ex is ThreadAbortException)) { epic.Cancel(ex); }
+				}
 				finished = true;
-				if (epic.entryTask == this)
-					epic.finishedEvent.Set();
+				epic.SetFinished(this);
 			}
 		}
 	}

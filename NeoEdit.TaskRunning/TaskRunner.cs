@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Threading;
 
 namespace NeoEdit.TaskRunning
@@ -29,7 +28,6 @@ namespace NeoEdit.TaskRunning
 		static readonly ManualResetEvent workReady = new ManualResetEvent(false);
 		[ThreadStatic] static TaskRunnerTask threadActiveTask;
 		static int locker;
-		static Exception exception;
 
 		static TaskRunner()
 		{
@@ -42,13 +40,6 @@ namespace NeoEdit.TaskRunning
 			threads.ForEach(thread => thread.Start());
 		}
 
-		internal static void ThrowIfException() => ThrowIfException(exception);
-		static void ThrowIfException(Exception ex)
-		{
-			if (ex != null)
-				ExceptionDispatchInfo.Capture(ex).Throw();
-		}
-
 		static void RunInCallingThread(TaskRunnerTask task)
 		{
 			task.epic = new TaskRunnerEpic(task, null);
@@ -58,33 +49,36 @@ namespace NeoEdit.TaskRunning
 
 		internal static void RunTask(TaskRunnerTask task, Action<double> idleAction)
 		{
-			ThrowIfException();
-
 			if (NumThreads == 0)
 			{
 				RunInCallingThread(task);
 				return;
 			}
 
-			while (Interlocked.CompareExchange(ref locker, 1, 0) != 0) { }
-
 			var epic = threadActiveTask?.epic;
+			var createdEpic = false;
 			if (epic == null)
 			{
 				epic = new TaskRunnerEpic(task, idleAction);
-				epics.Add(epic);
+				createdEpic = true;
 			}
 
 			task.epic = epic;
 			Interlocked.Add(ref epic.total, task.totalSize);
+
+			while (Interlocked.CompareExchange(ref locker, 1, 0) != 0) { }
+
+			if (createdEpic)
+				epics.Add(epic);
+
 			tasks.Push(task);
 			activeTask = task;
 			workReady.Set();
 
 			locker = 0;
 
-			if (threadActiveTask == null)
-				WaitForFinish(epic);
+			if (createdEpic)
+				WaitForEpic(epic);
 			else
 				RunTasksWhileWaiting(task);
 		}
@@ -94,19 +88,18 @@ namespace NeoEdit.TaskRunning
 			if (epics.Count == 0)
 				return;
 
-			exception = new Exception($"All active tasks killed. Program may be unstable as a result of this operation.");
-
 			threads.ForEach(thread => thread.Abort());
 			var endWait = DateTime.Now.AddMilliseconds(ForceCancelDelay);
 			foreach (var thread in threads)
 				if (!thread.Join(Math.Max(0, (int)(endWait - DateTime.Now).TotalMilliseconds)))
-					throw new Exception("Attempt to abort failed. Everything's probably broken now.");
+					throw new Exception("Attempt to abort failed. Everything's probably broken now. (Pressing Ctrl+Break again may fix the problem.)");
 
 			threads.Clear();
 			tasks.Clear();
 			activeTask = null;
+			var exception = new Exception($"All active tasks killed. Program may be unstable as a result of this operation.");
 			foreach (var epic in epics)
-				epic.finishedEvent.Set();
+				epic.ForceCancel(exception);
 			workReady.Reset();
 			locker = 0;
 
@@ -118,20 +111,11 @@ namespace NeoEdit.TaskRunning
 			if (epics.Count == 0)
 				return false;
 
-			if (exception != null)
-				return true;
-
 			while (Interlocked.CompareExchange(ref locker, 1, 0) != 0) { }
 
-			if (exception == null)
-			{
-				exception = ex ?? new OperationCanceledException();
-				tasks.Clear();
-				activeTask = null;
-				foreach (var epic in epics)
-					epic.finishedEvent.Set();
-				workReady.Reset();
-			}
+			var exception = ex ?? new OperationCanceledException();
+			foreach (var epic in epics)
+				epic.Cancel(exception);
 
 			locker = 0;
 
@@ -143,10 +127,7 @@ namespace NeoEdit.TaskRunning
 			while (true)
 			{
 				workReady.WaitOne();
-
-				threadActiveTask = null;
-				try { RunTasksWhileWaiting(); }
-				catch (Exception ex) when (!(ex is ThreadAbortException)) { Cancel(ex); }
+				RunTasksWhileWaiting();
 			}
 		}
 
@@ -156,8 +137,6 @@ namespace NeoEdit.TaskRunning
 
 			while ((waitTask == null) || (!waitTask.finished))
 			{
-				ThrowIfException();
-
 				var task = activeTask;
 				if (task == null)
 				{
@@ -200,22 +179,20 @@ namespace NeoEdit.TaskRunning
 			}
 
 			threadActiveTask = lastActive;
+
+			waitTask?.epic.ThrowIfException();
 		}
 
-		static void WaitForFinish(TaskRunnerEpic epic)
+		static void WaitForEpic(TaskRunnerEpic epic)
 		{
 			epic.WaitForFinish();
 			epic.Dispose();
 
-			var ex = exception;
-
 			while (Interlocked.CompareExchange(ref locker, 1, 0) != 0) { }
 			epics.Remove(epic);
-			if (epics.Count == 0)
-				exception = null;
 			locker = 0;
 
-			ThrowIfException(ex);
+			epic.ThrowIfException();
 		}
 	}
 }
