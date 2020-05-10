@@ -5,12 +5,12 @@ namespace NeoEdit.TaskRunning
 {
 	abstract class TaskRunnerTask
 	{
-		public TaskRunnerEpic epic;
-		public bool canRun = true;
-		public bool finished;
-		public long totalSize;
+		internal TaskRunnerEpic epic;
+		internal bool canRun = true;
+		internal bool finished;
+		internal long totalSize;
 
-		public abstract void RunTask(IEnumerable itemsEnum, Action<double> idleAction = null);
-		public abstract void Run();
+		internal abstract void RunTask(IEnumerable itemsEnum, Action<double> idleAction = null);
+		internal abstract void Run();
 	}
 }

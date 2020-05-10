@@ -20,14 +20,14 @@ namespace NeoEdit.TaskRunning
 		int nextExecute;
 		int finishCount;
 
-		public TaskRunnerTask(Func<TSource, long> getSize, Func<TSource, int, Action<long>, TResult> execute, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish)
+		internal TaskRunnerTask(Func<TSource, long> getSize, Func<TSource, int, Action<long>, TResult> execute, Action<IReadOnlyList<TSource>, IReadOnlyList<TResult>> finish)
 		{
 			this.getSize = getSize;
 			this.execute = execute;
 			this.finish = finish;
 		}
 
-		public override void RunTask(IEnumerable itemsEnum, Action<double> idleAction = null)
+		internal override void RunTask(IEnumerable itemsEnum, Action<double> idleAction = null)
 		{
 			if (!(itemsEnum is IEnumerable<TSource> itemsEnumT))
 				itemsEnumT = itemsEnum.Cast<TSource>();
@@ -64,7 +64,7 @@ namespace NeoEdit.TaskRunning
 			TaskRunner.RunTask(this, idleAction);
 		}
 
-		public override void Run()
+		internal override void Run()
 		{
 			long lastCurrentSize, totalSize;
 			void SetProgress(long currentSize)

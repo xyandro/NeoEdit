@@ -186,7 +186,6 @@ namespace NeoEdit.TaskRunning
 		static void WaitForEpic(TaskRunnerEpic epic)
 		{
 			epic.WaitForFinish();
-			epic.Dispose();
 
 			while (Interlocked.CompareExchange(ref locker, 1, 0) != 0) { }
 			epics.Remove(epic);
