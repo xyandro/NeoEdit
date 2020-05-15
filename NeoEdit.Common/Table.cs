@@ -177,14 +177,14 @@ namespace NeoEdit.Common
 						var newLineChars = new char[] { '\r', '\n' };
 						result = result.Select(row => row.Select(value => value.Trim()).ToList()).ToList();
 						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(newLineChars) == -1 ? line[column].Length : 0)).ToList();
-						return string.Join("", result.AsTaskRunner().Select(line => "║ " + string.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending));
+						return string.Join("", result.AsTaskRunner().Select(line => "║ " + string.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending).ToList());
 					}
 				case ParserType.ExactColumns:
 					{
 						var newLineChars = new char[] { '\r', '\n' };
 						result = result.Select(row => row.Select(value => $@"""{value.Replace(@"""", @"""""")}""").ToList()).ToList();
 						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(newLineChars) == -1 ? line[column].Length : 0)).ToList();
-						return string.Join("", result.AsTaskRunner().Select(line => "║ " + string.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending));
+						return string.Join("", result.AsTaskRunner().Select(line => "║ " + string.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending).ToList());
 					}
 				default: throw new ArgumentException("Invalid output type");
 			}
