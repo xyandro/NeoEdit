@@ -1355,11 +1355,7 @@ namespace NeoEdit.Editor
 		void OpenTable(Table table, string name = null)
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
-			QueueAddTab(new Tab(bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)
-			{
-				ContentType = contentType,
-				DisplayName = name,
-			});
+			QueueAddTab(new Tab(displayName: name, bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: contentType, modified: false));
 		}
 
 		IReadOnlyList<string> RelativeSelectedFiles()
