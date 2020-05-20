@@ -5,6 +5,7 @@ namespace NeoEdit.Editor.Transactional.View
 	public interface INEView
 	{
 		string DefaultEnding { get; }
+		string OnlyEnding { get; }
 		int MaxIndex { get; }
 		int MaxPosition { get; }
 		int NumLines { get; }

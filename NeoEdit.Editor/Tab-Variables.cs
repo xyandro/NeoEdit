@@ -315,17 +315,6 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		string oldLineEnding, newLineEnding;
-		string LineEnding
-		{
-			get => newLineEnding;
-			set
-			{
-				EnsureInTransaction();
-				newLineEnding = value;
-			}
-		}
-
 		bool oldDiffIgnoreWhitespace, newDiffIgnoreWhitespace;
 		public bool DiffIgnoreWhitespace
 		{
@@ -544,7 +533,6 @@ namespace NeoEdit.Editor
 			newCodePage = oldCodePage;
 			newAESKey = oldAESKey;
 			newCompressed = oldCompressed;
-			newLineEnding = oldLineEnding;
 			newDiffIgnoreWhitespace = oldDiffIgnoreWhitespace;
 			newDiffIgnoreCase = oldDiffIgnoreCase;
 			newDiffIgnoreNumbers = oldDiffIgnoreNumbers;
@@ -587,7 +575,6 @@ namespace NeoEdit.Editor
 			oldCodePage = newCodePage;
 			oldAESKey = newAESKey;
 			oldCompressed = newCompressed;
-			oldLineEnding = newLineEnding;
 			oldDiffIgnoreWhitespace = newDiffIgnoreWhitespace;
 			oldDiffIgnoreCase = newDiffIgnoreCase;
 			oldDiffIgnoreNumbers = newDiffIgnoreNumbers;

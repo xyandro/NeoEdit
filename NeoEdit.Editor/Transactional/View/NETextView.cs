@@ -13,7 +13,8 @@ namespace NeoEdit.Editor.Transactional.View
 
 		readonly List<int> linePosition;
 		readonly List<int> endingPosition;
-		public string DefaultEnding { get; private set; }
+		public string DefaultEnding { get; }
+		public string OnlyEnding { get; }
 
 		public int NumLines { get; private set; }
 		public int MaxPosition { get; private set; }
@@ -57,10 +58,12 @@ namespace NeoEdit.Editor.Transactional.View
 			var chunkEndingPositions = chunks.Select(chunk => new List<int>()).ToList();
 
 			int defaultEnding = Ending_None;
+			int onlyEnding = Ending_None;
 			chunks.AsTaskRunner().ForAll(chunk =>
 			{
 				var index = chunks.IndexOf(chunk);
 				int chunkDefaultEnding = Ending_None;
+				int chunkOnlyEnding = Ending_None;
 				var chunkLinePosition = chunkLinePositions[index];
 				var chunkEndingPosition = chunkEndingPositions[index];
 				var chunkMaxIndex = 0;
@@ -88,6 +91,10 @@ namespace NeoEdit.Editor.Transactional.View
 					{
 						if (chunkDefaultEnding == Ending_None)
 							chunkDefaultEnding = ending;
+						if (chunkOnlyEnding == Ending_None)
+							chunkOnlyEnding = ending;
+						else if (chunkOnlyEnding != ending)
+							chunkOnlyEnding = Ending_Mixed;
 					}
 					chunkLinePosition.Add(position);
 					chunkEndingPosition.Add(endLine);
@@ -99,6 +106,10 @@ namespace NeoEdit.Editor.Transactional.View
 				{
 					if (defaultEnding == Ending_None)
 						defaultEnding = chunkDefaultEnding;
+					if (onlyEnding == Ending_None)
+						onlyEnding = chunkOnlyEnding;
+					else if (onlyEnding != chunkOnlyEnding)
+						chunkOnlyEnding = Ending_Mixed;
 					MaxIndex = Math.Max(MaxIndex, chunkMaxIndex);
 				}
 			});
@@ -126,6 +137,7 @@ namespace NeoEdit.Editor.Transactional.View
 			};
 
 			DefaultEnding = endingText[defaultEnding];
+			OnlyEnding = endingText[onlyEnding];
 			MaxPosition = text.Length;
 			NumLines = endingPosition.Count;
 		}
@@ -134,6 +146,7 @@ namespace NeoEdit.Editor.Transactional.View
 		{
 			MaxIndex = textView.MaxIndex;
 			DefaultEnding = textView.DefaultEnding;
+			OnlyEnding = textView.OnlyEnding;
 			NumLines = textView.NumLines;
 			MaxPosition = textView.MaxPosition;
 

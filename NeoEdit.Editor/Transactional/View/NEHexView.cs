@@ -6,6 +6,7 @@ namespace NeoEdit.Editor.Transactional.View
 	public class NEHexView : INEView
 	{
 		public string DefaultEnding => "\r\n";
+		public string OnlyEnding => "\r\n";
 
 		public int MaxIndex { get; }
 		public int MaxPosition { get; }
