@@ -317,7 +317,12 @@ namespace NeoEdit.Editor
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		Configuration_File_Encoding_LineEndings Configure_File_Encoding_LineEndings() => Tabs.TabsWindow.Configure_File_Encoding_LineEndings(TextView.OnlyEnding ?? "");
+		static Configuration_File_Encoding_LineEndings Configure_File_Encoding_LineEndings(Tabs tabs)
+		{
+			var endings = tabs.ActiveTabs.Select(tab => tab.TextView.OnlyEnding).Distinct().Take(2).ToList();
+			var ending = endings.Count == 1 ? endings[0] : "";
+			return tabs.TabsWindow.Configure_File_Encoding_LineEndings(ending);
+		}
 
 		void Execute_File_Encoding_LineEndings()
 		{
