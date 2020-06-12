@@ -539,6 +539,8 @@
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="_Hash" CommandEnum="Files_Hash" ToolTip="Hash files"/>
+		<controls:NEMenuItem Header="C_ompress" CommandEnum="Files_Compress" ToolTip="Compress files"/>
+		<controls:NEMenuItem Header="_Decompress" CommandEnum="Files_Decompress" ToolTip="Decompress files"/>
 		<controls:NEMenuItem Header="S_ign" CommandEnum="Files_Sign" ToolTip="Sign files"/>
 		<Separator/>
 		<MenuItem Header="O_perations">

@@ -763,6 +763,26 @@ namespace NeoEdit.Editor
 				.ToList());
 		}
 
+		Configuration_Files_Compress Configure_Files_Compress() => Tabs.TabsWindow.Configure_Files_Compress(true);
+
+		void Execute_Files_Compress()
+		{
+			var result = state.Configuration as Configuration_Files_Compress;
+			Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.ForAll((fileName, index, progress) => Compressor.Compress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
+		}
+
+		Configuration_Files_Compress Configure_Files_Decompress() => Tabs.TabsWindow.Configure_Files_Compress(false);
+
+		void Execute_Files_Decompress()
+		{
+			var result = state.Configuration as Configuration_Files_Compress;
+			Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.ForAll((fileName, index, progress) => Compressor.Decompress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
+		}
+
 		Configuration_Files_Sign Configure_Files_Sign() => Tabs.TabsWindow.Configure_Files_Sign();
 
 		void Execute_Files_Sign()

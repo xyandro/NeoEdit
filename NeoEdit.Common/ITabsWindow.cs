@@ -59,6 +59,7 @@ namespace NeoEdit.Common
 		Configuration_Files_Create_FromExpressions Configure_Files_Create_FromExpressions(NEVariables variables, Coder.CodePage codePage);
 		Configuration_Files_Select_ByVersionControlStatus Configure_Files_Select_ByVersionControlStatus();
 		Configuration_Files_Hash Configure_Files_Hash();
+		Configuration_Files_Compress Configure_Files_Compress(bool compress);
 		Configuration_Files_Sign Configure_Files_Sign();
 		Configuration_Files_Operations_CopyMove Configure_Files_Operations_CopyMove(NEVariables variables, bool move);
 		Configuration_Files_Operations_Encoding Configure_Files_Operations_Encoding();

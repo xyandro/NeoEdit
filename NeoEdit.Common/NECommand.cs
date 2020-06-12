@@ -380,6 +380,8 @@ namespace NeoEdit.Common
 		Files_Select_CommonAncestor,
 		Files_Select_ByVersionControlStatus,
 		Files_Hash,
+		Files_Compress,
+		Files_Decompress,
 		Files_Sign,
 		Files_Operations_Copy,
 		Files_Operations_Move,

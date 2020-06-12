@@ -296,6 +296,13 @@
     <Compile Include="Dialogs\Configure_File_SaveCopy_ByExpression_Dialog.xaml.cs">
       <DependentUpon>Configure_File_SaveCopy_ByExpression_Dialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\Configure_Files_Compress_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Configure_Files_Compress_Dialog.xaml.cs">
+      <DependentUpon>Configure_Files_Compress_Dialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\Configure_Files_Create_FromExpressions_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

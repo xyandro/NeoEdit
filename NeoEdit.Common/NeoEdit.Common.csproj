@@ -78,6 +78,7 @@
     <Compile Include="Configuration\Configuration_File_Exit.cs" />
     <Compile Include="Configuration\Configuration_File_Open_Open.cs" />
     <Compile Include="Configuration\Configuration_File_SaveCopy_ByExpression.cs" />
+    <Compile Include="Configuration\Configuration_Files_Compress.cs" />
     <Compile Include="Configuration\Configuration_Files_Create_FromExpressions.cs" />
     <Compile Include="Configuration\Configuration_Files_Find.cs" />
     <Compile Include="Configuration\Configuration_Files_Hash.cs" />

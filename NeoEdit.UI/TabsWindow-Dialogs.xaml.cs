@@ -70,6 +70,7 @@ namespace NeoEdit.UI
 		public Configuration_Files_Create_FromExpressions Configure_Files_Create_FromExpressions(NEVariables variables, Coder.CodePage codePage) => RunOnUIThread(() => Configure_Files_Create_FromExpressions_Dialog.Run(this, variables, codePage));
 		public Configuration_Files_Select_ByVersionControlStatus Configure_Files_Select_ByVersionControlStatus() => RunOnUIThread(() => Configure_Files_Select_ByVersionControlStatus_Dialog.Run(this));
 		public Configuration_Files_Hash Configure_Files_Hash() => RunOnUIThread(() => Configure_Files_Hash_Dialog.Run(this));
+		public Configuration_Files_Compress Configure_Files_Compress(bool compress) => RunOnUIThread(() => Configure_Files_Compress_Dialog.Run(this, compress));
 		public Configuration_Files_Sign Configure_Files_Sign() => RunOnUIThread(() => Configure_Files_Sign_Dialog.Run(this));
 		public Configuration_Files_Operations_CopyMove Configure_Files_Operations_CopyMove(NEVariables variables, bool move) => RunOnUIThread(() => Configure_Files_Operations_CopyMove_Dialog.Run(this, variables, move));
 		public Configuration_Files_Operations_Encoding Configure_Files_Operations_Encoding() => RunOnUIThread(() => Configure_Files_Operations_Encoding_Dialog.Run(this));
