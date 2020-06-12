@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using NeoEdit.Common;
 using NeoEdit.TaskRunning;
 
@@ -59,7 +60,7 @@ namespace NeoEdit.Editor.Transactional.View
 
 			int defaultEnding = Ending_None;
 			int onlyEnding = Ending_None;
-			chunks.AsTaskRunner().ForAll(chunk =>
+			Parallel.ForEach(chunks, chunk =>
 			{
 				var index = chunks.IndexOf(chunk);
 				int chunkDefaultEnding = Ending_None;
@@ -377,6 +378,6 @@ namespace NeoEdit.Editor.Transactional.View
 			return sb.ToString();
 		}
 
-		public int GetMaxColumn(NEText text) => Enumerable.Range(0, NumLines).AsTaskRunner().Max(line => GetLineColumnsLength(text, line));
+		public int GetMaxColumn(NEText text) => Enumerable.Range(0, NumLines).AsParallel().Max(line => GetLineColumnsLength(text, line));
 	}
 }

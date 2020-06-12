@@ -137,19 +137,15 @@ namespace NeoEdit.Editor
 					}
 				}
 
-				//if ((ignoreLineEndings == null) && (src.OnlyEnding != null) && (linesLCS[line][1] != LCS.MatchType.Gap))
-				//{
-				//	var endingStart = dest.endingPosition[mappedCurLine[1]];
-				//	var endingEnd = dest.linePosition[mappedCurLine[1] + 1];
-				//	if (endingStart == endingEnd)
-				//		continue;
-
-				//	if (dest.Data.Substring(endingStart, endingEnd - endingStart) != src.OnlyEnding)
-				//	{
-				//		ranges.Add(Tuple.Create(endingStart, endingEnd));
-				//		strs.Add(src.OnlyEnding);
-				//	}
-				//}
+				if ((ignoreLineEndings == null) && (src.TextView.OnlyEnding != null) && (linesLCS[line][1] != LCS.MatchType.Gap))
+				{
+					var ending = dest.TextView.GetEnding(mappedCurLine[1]);
+					if (dest.Text.GetString(ending) != src.TextView.OnlyEnding)
+					{
+						ranges.Add(Tuple.Create(ending.Start, ending.End));
+						strs.Add(src.TextView.OnlyEnding);
+					}
+				}
 			}
 
 			return Tuple.Create(ranges, strs);
