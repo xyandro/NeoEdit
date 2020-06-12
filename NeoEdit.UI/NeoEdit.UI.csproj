@@ -310,6 +310,13 @@
     <Compile Include="Dialogs\Configure_Files_Create_FromExpressions_Dialog.xaml.cs">
       <DependentUpon>Configure_Files_Create_FromExpressions_Dialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\Configure_Files_Encrypt_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Configure_Files_Encrypt_Dialog.xaml.cs">
+      <DependentUpon>Configure_Files_Encrypt_Dialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\Configure_Files_Find_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

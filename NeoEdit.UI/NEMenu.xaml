@@ -541,6 +541,8 @@
 		<controls:NEMenuItem Header="_Hash" CommandEnum="Files_Hash" ToolTip="Hash files"/>
 		<controls:NEMenuItem Header="C_ompress" CommandEnum="Files_Compress" ToolTip="Compress files"/>
 		<controls:NEMenuItem Header="_Decompress" CommandEnum="Files_Decompress" ToolTip="Decompress files"/>
+		<controls:NEMenuItem Header="Enc_rypt" CommandEnum="Files_Encrypt" ToolTip="Encrypt files"/>
+		<controls:NEMenuItem Header="Decr_ypt" CommandEnum="Files_Decrypt" ToolTip="Decrypt files"/>
 		<controls:NEMenuItem Header="S_ign" CommandEnum="Files_Sign" ToolTip="Sign files"/>
 		<Separator/>
 		<MenuItem Header="O_perations">

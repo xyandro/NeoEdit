@@ -80,6 +80,7 @@
     <Compile Include="Configuration\Configuration_File_SaveCopy_ByExpression.cs" />
     <Compile Include="Configuration\Configuration_Files_Compress.cs" />
     <Compile Include="Configuration\Configuration_Files_Create_FromExpressions.cs" />
+    <Compile Include="Configuration\Configuration_Files_Encrypt.cs" />
     <Compile Include="Configuration\Configuration_Files_Find.cs" />
     <Compile Include="Configuration\Configuration_Files_Hash.cs" />
     <Compile Include="Configuration\Configuration_Files_Insert.cs" />

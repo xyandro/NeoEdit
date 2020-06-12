@@ -783,6 +783,26 @@ namespace NeoEdit.Editor
 				.ForAll((fileName, index, progress) => Compressor.Decompress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
 		}
 
+		Configuration_Files_Encrypt Configure_Files_Encrypt() => Tabs.TabsWindow.Configure_Files_Encrypt(true);
+
+		void Execute_Files_Encrypt()
+		{
+			var result = state.Configuration as Configuration_Files_Encrypt;
+			Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.ForAll((fileName, index, progress) => Cryptor.Encrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
+		}
+
+		Configuration_Files_Encrypt Configure_Files_Decrypt() => Tabs.TabsWindow.Configure_Files_Encrypt(false);
+
+		void Execute_Files_Decrypt()
+		{
+			var result = state.Configuration as Configuration_Files_Encrypt;
+			Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.ForAll((fileName, index, progress) => Cryptor.Decrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
+		}
+
 		Configuration_Files_Sign Configure_Files_Sign() => Tabs.TabsWindow.Configure_Files_Sign();
 
 		void Execute_Files_Sign()

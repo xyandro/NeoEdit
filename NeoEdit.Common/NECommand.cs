@@ -382,6 +382,8 @@ namespace NeoEdit.Common
 		Files_Hash,
 		Files_Compress,
 		Files_Decompress,
+		Files_Encrypt,
+		Files_Decrypt,
 		Files_Sign,
 		Files_Operations_Copy,
 		Files_Operations_Move,

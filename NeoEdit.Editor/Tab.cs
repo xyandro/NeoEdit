@@ -349,6 +349,8 @@ namespace NeoEdit.Editor
 				case NECommand.Files_Hash: return Configure_Files_Hash();
 				case NECommand.Files_Compress: return Configure_Files_Compress();
 				case NECommand.Files_Decompress: return Configure_Files_Decompress();
+				case NECommand.Files_Encrypt: return Configure_Files_Encrypt();
+				case NECommand.Files_Decrypt: return Configure_Files_Decrypt();
 				case NECommand.Files_Sign: return Configure_Files_Sign();
 				case NECommand.Files_Operations_Copy: return Configure_Files_Operations_CopyMove(false);
 				case NECommand.Files_Operations_Move: return Configure_Files_Operations_CopyMove(true);
@@ -795,6 +797,8 @@ namespace NeoEdit.Editor
 				case NECommand.Files_Hash: Execute_Files_Hash(); break;
 				case NECommand.Files_Compress: Execute_Files_Compress(); break;
 				case NECommand.Files_Decompress: Execute_Files_Decompress(); break;
+				case NECommand.Files_Encrypt: Execute_Files_Encrypt(); break;
+				case NECommand.Files_Decrypt: Execute_Files_Decrypt(); break;
 				case NECommand.Files_Sign: Execute_Files_Sign(); break;
 				case NECommand.Files_Operations_Copy: Execute_Files_Operations_CopyMove(false); break;
 				case NECommand.Files_Operations_Move: Execute_Files_Operations_CopyMove(true); break;

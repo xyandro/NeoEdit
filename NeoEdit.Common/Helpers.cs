@@ -499,5 +499,17 @@ namespace NeoEdit.Common
 		public static bool IsAdministrator() => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
 		public static bool IsWordBoundary(string input, int index) => (input.Length != 0) && ((index == 0) || (index == input.Length) || (!isWordChar[input[index - 1]]) || (!isWordChar[input[index]]));
+
+		public static void ReadFully(Stream stream, byte[] buffer, int index, int length)
+		{
+			while (length > 0)
+			{
+				var count = stream.Read(buffer, index, length);
+				if (count == 0)
+					throw new Exception("Failed to read data");
+				index += count;
+				length -= count;
+			}
+		}
 	}
 }
