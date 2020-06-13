@@ -239,61 +239,45 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
-		public static string Get(byte[] data, Type type, byte[] key = null)
+		static string Get(Stream input, Type type, byte[] key, Action<long> progress)
 		{
 			if (type == Type.QuickHash)
-				return Coder.BytesToString(ComputeQuickHash(data), Coder.CodePage.Hex);
+				return Coder.BytesToString(ComputeQuickHash(input), Coder.CodePage.Hex);
 
 			var hashAlg = GetHashAlgorithm(type);
 			if ((key != null) && (hashAlg is BlockHashAlgorithm))
 				hashAlg = new Hmac(hashAlg as BlockHashAlgorithm, key);
-			return Coder.BytesToString(hashAlg.ComputeHash(data), Coder.CodePage.Hex);
+			hashAlg.Initialize();
+			var buffer = new byte[65536];
+			while (true)
+			{
+				progress?.Invoke(input.Position);
+
+				var block = input.Read(buffer, 0, buffer.Length);
+				if (block == 0)
+					break;
+				hashAlg.TransformBlock(buffer, 0, block, null, 0);
+			}
+			hashAlg.TransformFinalBlock(buffer, 0, 0);
+			return Coder.BytesToString(hashAlg.Hash, Coder.CodePage.Hex);
 		}
 
 		public static string Get(string fileName, Type type, byte[] key, Action<long> progress)
 		{
 			using (var stream = File.OpenRead(fileName))
-			{
-				if (type == Type.QuickHash)
-					return Coder.BytesToString(ComputeQuickHash(stream), Coder.CodePage.Hex);
-
-				var hashAlg = GetHashAlgorithm(type);
-				if ((key != null) && (hashAlg is BlockHashAlgorithm))
-					hashAlg = new Hmac(hashAlg as BlockHashAlgorithm, key);
-				hashAlg.Initialize();
-				var buffer = new byte[65536];
-				while (stream.Position < stream.Length)
-				{
-					progress(stream.Position);
-
-					var block = stream.Read(buffer, 0, buffer.Length);
-					hashAlg.TransformBlock(buffer, 0, block, null, 0);
-				}
-				hashAlg.TransformFinalBlock(buffer, 0, 0);
-				return Coder.BytesToString(hashAlg.Hash, Coder.CodePage.Hex);
-			}
+				return Get(stream, type, key, progress);
 		}
 
-		const int QuickHashBlockSize = 2048;
-
-		public static byte[] ComputeQuickHash(byte[] data)
+		public static string Get(byte[] data, Type type, byte[] key)
 		{
-			var hash = MD5.Create();
-			hash.Initialize();
-
-			var blockSize = (int)Math.Min(data.LongLength, QuickHashBlockSize);
-
-			var length = BitConverter.GetBytes(data.LongLength);
-			hash.TransformBlock(length, 0, length.Length, null, 0);
-
-			hash.TransformBlock(data, 0, blockSize, null, 0); // First block
-			hash.TransformFinalBlock(data, data.Length - blockSize, blockSize); // Last block
-
-			return hash.Hash;
+			using (var stream = new MemoryStream(data))
+				return Get(stream, type, key, null);
 		}
 
 		public static byte[] ComputeQuickHash(Stream stream)
 		{
+			const int QuickHashBlockSize = 2048;
+
 			var hash = MD5.Create();
 			hash.Initialize();
 
