@@ -952,6 +952,15 @@
 		<Separator/>
 		<controls:NEMenuItem Header="S_plit" CommandEnum="Select_Split" ToolTip="Split selections into multiple selections based on delimiters"/>
 		<Separator/>
+		<MenuItem Header="S_ummarize (case sensitive)">
+			<controls:NEMenuItem Header="_One" CommandEnum="Select_SummarizeCaseSensitive_One" ToolTip="Open a new window with count of all selections in all tabs"/>
+			<controls:NEMenuItem Header="_Many" CommandEnum="Select_SummarizeCaseSensitive_Many" ToolTip="Open a new window with count of all selections in each tab"/>
+		</MenuItem>
+		<MenuItem Header="Summari_ze (case insensitive)">
+			<controls:NEMenuItem Header="_One" CommandEnum="Select_SummarizeCaseInsensitive_One" ToolTip="Open a new window with count of all selections in all tabs"/>
+			<controls:NEMenuItem Header="_Many" CommandEnum="Select_SummarizeCaseInsensitive_Many" ToolTip="Open a new window with count of all selections in each tab"/>
+		</MenuItem>
+		<Separator/>
 		<MenuItem Header="_Selection">
 			<controls:NEMenuItem Header="_First" CommandEnum="Select_Selection_First" ToolTip="Make selection 1 focused selection"/>
 			<controls:NEMenuItem Header="Center _vertically" CommandEnum="Select_Selection_CenterVertically" ToolTip="Center focused selection vertically"/>

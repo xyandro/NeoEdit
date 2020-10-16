@@ -253,6 +253,9 @@
     <Compile Include="Tabs-Macro.cs">
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tabs-Select.cs">
+      <DependentUpon>Tabs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tabs-Variables.cs">
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>

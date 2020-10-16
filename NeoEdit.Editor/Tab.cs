@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
+using System.Text;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
@@ -42,6 +43,33 @@ namespace NeoEdit.Editor
 			Goto(line, column, index);
 
 			Commit();
+		}
+
+		static public Tab CreateSummaryTab(string displayName, List<(string str, int count)> summary)
+		{
+			var sb = new StringBuilder();
+			var countRanges = new List<Range>();
+			var stringRanges = new List<Range>();
+			foreach (var tuple in summary)
+			{
+				var countStr = tuple.count.ToString();
+				countRanges.Add(Range.FromIndex(sb.Length, countStr.Length));
+				sb.Append(countStr);
+
+				sb.Append(" ");
+
+				stringRanges.Add(Range.FromIndex(sb.Length, tuple.str.Length));
+				sb.Append(tuple.str);
+
+				sb.Append("\r\n");
+			}
+
+			var tab = new Tab(displayName: displayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+			tab.BeginTransaction(new ExecuteState(NECommand.None));
+			tab.Selections = stringRanges;
+			tab.Commit();
+
+			return tab;
 		}
 
 		public string TabLabel => $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(DiffTarget != null ? $" (Diff{(CodePage != DiffTarget.CodePage ? " - Encoding mismatch" : "")})" : "")}";
@@ -1133,7 +1161,7 @@ namespace NeoEdit.Editor
 			IsModified = !modifiedChecksum.Match(Text);
 		}
 
-		IReadOnlyList<string> GetSelectionStrings() => Selections.AsTaskRunner().Select(range => Text.GetString(range)).ToList();
+		public IReadOnlyList<string> GetSelectionStrings() => Selections.AsTaskRunner().Select(range => Text.GetString(range)).ToList();
 
 		void EnsureVisible(bool centerVertically = false, bool centerHorizontally = false)
 		{

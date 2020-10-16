@@ -315,6 +315,10 @@ namespace NeoEdit.Editor
 				case NECommand.Diff_Select_LeftTab: Execute_Diff_Select_LeftRightBothTabs(true); break;
 				case NECommand.Diff_Select_RightTab: Execute_Diff_Select_LeftRightBothTabs(false); break;
 				case NECommand.Diff_Select_BothTabs: Execute_Diff_Select_LeftRightBothTabs(null); break;
+				case NECommand.Select_SummarizeCaseSensitive_One: Execute_Select_Summarize(true, false); break;
+				case NECommand.Select_SummarizeCaseSensitive_Many: Execute_Select_Summarize(true, true); break;
+				case NECommand.Select_SummarizeCaseInsensitive_One: Execute_Select_Summarize(false, false); break;
+				case NECommand.Select_SummarizeCaseInsensitive_Many: Execute_Select_Summarize(false, true); break;
 				case NECommand.Macro_Record_Quick_1: Execute_Macro_Record_Quick(1); break;
 				case NECommand.Macro_Record_Quick_2: Execute_Macro_Record_Quick(2); break;
 				case NECommand.Macro_Record_Quick_3: Execute_Macro_Record_Quick(3); break;
