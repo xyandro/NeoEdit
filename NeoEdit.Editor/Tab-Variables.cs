@@ -56,7 +56,9 @@ namespace NeoEdit.Editor
 		{
 			get
 			{
-				if (DiffTarget != null)
+				if (DiffTarget == null)
+					diffData = null;
+				else
 				{
 					CalculateDiff();
 					return diffView;
