@@ -38,22 +38,22 @@ namespace NeoEdit.Editor
 						return null;
 
 					if (Position.HasValue)
-						return Math.Max(0, Math.Min(Position.Value, tab.TextView.MaxPosition));
+						return Math.Max(0, Math.Min(Position.Value, tab.Text.MaxPosition));
 
-					var line = Math.Max(0, Math.Min(Line ?? lastPosition?.Line ?? tab.TextView.GetPositionLine(position), tab.TextView.NumLines - 1));
+					var line = Math.Max(0, Math.Min(tab.Text.GetNonDiffLine(Line ?? lastPosition?.Line ?? tab.Text.GetPositionLine(position)), tab.Text.NumLines - 1));
 					var index = Index ?? lastPosition?.Index;
 					if (index.HasValue)
-						index = Math.Max(0, Math.Min(index.Value, tab.TextView.GetLineLength(line)));
+						index = Math.Max(0, Math.Min(index.Value, tab.Text.GetLineLength(line)));
 					else
 					{
 						var column = Column ?? lastPosition?.Column;
 						if (column.HasValue)
-							index = tab.TextView.GetIndexFromColumn(tab.Text, line, Math.Max(0, column.Value), true);
+							index = tab.Text.GetIndexFromColumn(line, Math.Max(0, column.Value), true);
 						else
 							index = 0;
 					}
 
-					return Math.Max(0, Math.Min(tab.TextView.GetPosition(line, index.Value), tab.TextView.MaxPosition));
+					return Math.Max(0, Math.Min(tab.Text.GetPosition(line, index.Value), tab.Text.MaxPosition));
 				}
 			}
 
@@ -135,15 +135,15 @@ namespace NeoEdit.Editor
 			var range = Selections.FirstOrDefault();
 			if (range != null)
 			{
-				line = TextView.GetPositionLine(range.Start) + 1;
-				index = TextView.GetPositionIndex(range.Start, line - 1) + 1;
-				column = TextView.GetColumnFromIndex(Text, line - 1, index - 1) + 1;
+				line = Text.GetPositionLine(range.Start) + 1;
+				index = Text.GetPositionIndex(range.Start, line - 1) + 1;
+				column = Text.GetColumnFromIndex(line - 1, index - 1) + 1;
 				position = range.Start;
 			}
 			int startValue;
 			switch (gotoType)
 			{
-				case GotoType.Line: startValue = line; break;
+				case GotoType.Line: startValue = Text.GetDiffLine(line); break;
 				case GotoType.Column: startValue = column; break;
 				case GotoType.Index: startValue = index; break;
 				case GotoType.Position: startValue = position; break;
@@ -231,19 +231,19 @@ namespace NeoEdit.Editor
 
 			if ((gotoType == GotoType.Line) || (gotoType == GotoType.Column) || (gotoType == GotoType.Index))
 			{
-				starts[GotoType.Line] = starts[GotoType.Position].Select(pos => TextView.GetPositionLine(pos)).ToList();
-				ends[GotoType.Line] = ends[GotoType.Position].Select(pos => TextView.GetPositionLine(pos)).ToList();
+				starts[GotoType.Line] = starts[GotoType.Position].Select(pos => Text.GetPositionLine(pos)).ToList();
+				ends[GotoType.Line] = ends[GotoType.Position].Select(pos => Text.GetPositionLine(pos)).ToList();
 			}
 
 			if ((gotoType == GotoType.Column) || (gotoType == GotoType.Index))
 			{
-				starts[GotoType.Index] = Enumerable.Range(0, count).Select(x => TextView.GetPositionIndex(starts[GotoType.Position][x], starts[GotoType.Line][x])).ToList();
-				ends[GotoType.Index] = Enumerable.Range(0, count).Select(x => TextView.GetPositionIndex(ends[GotoType.Position][x], ends[GotoType.Line][x])).ToList();
+				starts[GotoType.Index] = Enumerable.Range(0, count).Select(x => Text.GetPositionIndex(starts[GotoType.Position][x], starts[GotoType.Line][x])).ToList();
+				ends[GotoType.Index] = Enumerable.Range(0, count).Select(x => Text.GetPositionIndex(ends[GotoType.Position][x], ends[GotoType.Line][x])).ToList();
 
 				if (gotoType == GotoType.Column)
 				{
-					starts[GotoType.Column] = Enumerable.Range(0, count).Select(x => TextView.GetColumnFromIndex(Text, starts[GotoType.Line][x], starts[GotoType.Index][x])).ToList();
-					ends[GotoType.Column] = Enumerable.Range(0, count).Select(x => TextView.GetColumnFromIndex(Text, ends[GotoType.Line][x], ends[GotoType.Index][x])).ToList();
+					starts[GotoType.Column] = Enumerable.Range(0, count).Select(x => Text.GetColumnFromIndex(starts[GotoType.Line][x], starts[GotoType.Index][x])).ToList();
+					ends[GotoType.Column] = Enumerable.Range(0, count).Select(x => Text.GetColumnFromIndex(ends[GotoType.Line][x], ends[GotoType.Index][x])).ToList();
 				}
 			}
 

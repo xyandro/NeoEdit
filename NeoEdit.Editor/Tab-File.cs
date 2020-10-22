@@ -259,7 +259,7 @@ namespace NeoEdit.Editor
 
 			OpenFile(FileName, DisplayName, keepUndo: true);
 
-			Func<IReadOnlyList<Range>, IReadOnlyList<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(0, Math.Min(range.Cursor, TextView.MaxPosition)), Math.Max(0, Math.Min(range.Anchor, TextView.MaxPosition)))).ToList();
+			Func<IReadOnlyList<Range>, IReadOnlyList<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(0, Math.Min(range.Cursor, Text.MaxPosition)), Math.Max(0, Math.Min(range.Anchor, Text.MaxPosition)))).ToList();
 			Selections = reformatRanges(selections);
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, reformatRanges(GetRegions(region)));
@@ -319,7 +319,7 @@ namespace NeoEdit.Editor
 
 		static Configuration_File_Encoding_LineEndings Configure_File_Encoding_LineEndings(Tabs tabs)
 		{
-			var endings = tabs.ActiveTabs.Select(tab => tab.TextView.OnlyEnding).Distinct().Take(2).ToList();
+			var endings = tabs.ActiveTabs.Select(tab => tab.Text.OnlyEnding).Distinct().Take(2).ToList();
 			var ending = endings.Count == 1 ? endings[0] : "";
 			return tabs.TabsWindow.Configure_File_Encoding_LineEndings(ending);
 		}
@@ -327,14 +327,14 @@ namespace NeoEdit.Editor
 		void Execute_File_Encoding_LineEndings()
 		{
 			var result = state.Configuration as Configuration_File_Encoding_LineEndings;
-			var lines = TextView.NumLines;
+			var lines = Text.NumLines;
 			var sel = new List<Range>();
 			for (var line = 0; line < lines; ++line)
 			{
-				var current = Text.GetString(TextView.GetEnding(line));
+				var current = Text.GetEnding(line);
 				if ((current.Length == 0) || (current == result.LineEndings))
 					continue;
-				var start = TextView.GetPosition(line, TextView.GetLineLength(line));
+				var start = Text.GetPosition(line, Text.GetLineLength(line));
 				sel.Add(Range.FromIndex(start, current.Length));
 			}
 			Replace(sel, sel.Select(str => result.LineEndings).ToList());

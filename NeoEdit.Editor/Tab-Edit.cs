@@ -60,7 +60,7 @@ namespace NeoEdit.Editor
 			return entries.Select(entry => entry.Item2).ToList();
 		}
 
-		List<Range> GetSortLines() => Selections.Select(range => TextView.GetPositionLine(range.Start)).Select(line => Range.FromIndex(TextView.GetPosition(line, 0), TextView.GetLineLength(line))).ToList();
+		List<Range> GetSortLines() => Selections.Select(range => Text.GetPositionLine(range.Start)).Select(line => Range.FromIndex(Text.GetPosition(line, 0), Text.GetLineLength(line))).ToList();
 
 		List<Range> GetSortSource(SortScope scope, int useRegion)
 		{
@@ -208,7 +208,7 @@ namespace NeoEdit.Editor
 			if (Selections.Count == 1)
 			{
 				var sel = Selections.Single();
-				if ((selectionOnly) && (TextView.GetPositionLine(sel.Cursor) == TextView.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
+				if ((selectionOnly) && (Text.GetPositionLine(sel.Cursor) == Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
 					text = Text.GetString(sel);
@@ -229,7 +229,7 @@ namespace NeoEdit.Editor
 				firstMatchOnly = true;
 				selections = new List<Range>();
 				for (var ctr = 0; ctr < Selections.Count; ++ctr)
-					selections.Add(new Range(Selections[ctr].End, ctr + 1 == Selections.Count ? TextView.MaxPosition : Selections[ctr + 1].Start));
+					selections.Add(new Range(Selections[ctr].End, ctr + 1 == Selections.Count ? Text.MaxPosition : Selections[ctr + 1].Start));
 			}
 			else if (result.SelectionOnly)
 				selections = Selections.ToList();
@@ -324,7 +324,7 @@ namespace NeoEdit.Editor
 						else if (ctr + 1 < Selections.Count)
 							endPos = Selections[ctr + 1].Start;
 						else
-							endPos = TextView.MaxPosition;
+							endPos = Text.MaxPosition;
 						newSels.Add(new Range(endPos, Selections[ctr].Start));
 					}
 					Selections = newSels;
@@ -346,7 +346,7 @@ namespace NeoEdit.Editor
 			if (Selections.Count == 1)
 			{
 				var sel = Selections.Single();
-				if ((selectionOnly) && (TextView.GetPositionLine(sel.Cursor) == TextView.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
+				if ((selectionOnly) && (Text.GetPositionLine(sel.Cursor) == Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
 					text = Text.GetString(sel);
@@ -587,9 +587,9 @@ namespace NeoEdit.Editor
 				return;
 
 			var positions = Selections.Select(range => range.Cursor).ToList();
-			var lines = positions.AsTaskRunner().Select(position => TextView.GetPositionLine(position)).ToList();
+			var lines = positions.AsTaskRunner().Select(position => Text.GetPositionLine(position)).ToList();
 
-			var indexes = positions.Zip(lines, (position, line) => TextView.GetPositionIndex(position, line)).ToList();
+			var indexes = positions.Zip(lines, (position, line) => Text.GetPositionIndex(position, line)).ToList();
 			var index = Math.Min(indexes.Max() - 1, indexes.Min());
 
 			var currentIsSpace = default(bool?);
@@ -598,17 +598,17 @@ namespace NeoEdit.Editor
 			{
 				if (index < 0)
 				{
-					positions = lines.Select(line => TextView.GetPosition(line, 0)).ToList();
+					positions = lines.Select(line => Text.GetPosition(line, 0)).ToList();
 					break;
 				}
 
-				var isSpace = lines.All(line => GetWordSkipType(TextView.GetPosition(line, index)) == WordSkipType.Space);
+				var isSpace = lines.All(line => GetWordSkipType(Text.GetPosition(line, index)) == WordSkipType.Space);
 
 				if (!currentIsSpace.HasValue)
 					currentIsSpace = isSpace;
 				else if (isSpace != currentIsSpace)
 				{
-					positions = lines.Select(line => TextView.GetPosition(line, index + 1)).ToList();
+					positions = lines.Select(line => Text.GetPosition(line, index + 1)).ToList();
 					break;
 				}
 
@@ -624,10 +624,10 @@ namespace NeoEdit.Editor
 				return;
 
 			var positions = Selections.Select(range => range.Cursor).ToList();
-			var lines = positions.AsTaskRunner().Select(position => TextView.GetPositionLine(position)).ToList();
+			var lines = positions.AsTaskRunner().Select(position => Text.GetPositionLine(position)).ToList();
 
-			var index = positions.Zip(lines, (position, line) => TextView.GetPositionIndex(position, line)).Min();
-			var endIndex = lines.Select(line => TextView.GetLineLength(line)).Min();
+			var index = positions.Zip(lines, (position, line) => Text.GetPositionIndex(position, line)).Min();
+			var endIndex = lines.Select(line => Text.GetLineLength(line)).Min();
 
 			var currentIsSpace = default(bool?);
 
@@ -635,17 +635,17 @@ namespace NeoEdit.Editor
 			{
 				if (index > endIndex)
 				{
-					positions = lines.Select(line => TextView.GetPosition(line, TextView.GetLineLength(line))).ToList();
+					positions = lines.Select(line => Text.GetPosition(line, Text.GetLineLength(line))).ToList();
 					break;
 				}
 
-				var isSpace = lines.All(line => GetWordSkipType(TextView.GetPosition(line, index)) == WordSkipType.Space);
+				var isSpace = lines.All(line => GetWordSkipType(Text.GetPosition(line, index)) == WordSkipType.Space);
 
 				if (!currentIsSpace.HasValue)
 					currentIsSpace = isSpace;
 				else if (isSpace != currentIsSpace)
 				{
-					positions = lines.Select(line => TextView.GetPosition(line, index)).ToList();
+					positions = lines.Select(line => Text.GetPosition(line, index)).ToList();
 					break;
 				}
 

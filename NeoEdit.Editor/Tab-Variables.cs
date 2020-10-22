@@ -4,7 +4,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.Transactional;
-using NeoEdit.Editor.Transactional.View;
 
 namespace NeoEdit.Editor
 {
@@ -31,47 +30,18 @@ namespace NeoEdit.Editor
 			{
 				EnsureInTransaction();
 				newText = value;
-				ResetView();
 			}
 		}
 
-		INEView oldTextView, newTextView;
-		INEView TextView
+		bool oldIsDiff, newIsDiff;
+		bool IsDiff
 		{
-			get
+			get => newIsDiff;
+			set
 			{
-				if (newTextView == null)
-				{
-					if (ViewBinary)
-						newTextView = new NEHexView(newText.Length, Tabs.TabColumns - 1);
-					else
-						newTextView = new NETextView(newText);
-				}
-				return newTextView;
+				EnsureInTransaction();
+				newIsDiff = value;
 			}
-		}
-
-		INEView diffView;
-		INEView DiffView
-		{
-			get
-			{
-				if (DiffTarget == null)
-					diffData = null;
-				else
-				{
-					CalculateDiff();
-					return diffView;
-				}
-
-				return TextView;
-			}
-		}
-
-		public void ResetView()
-		{
-			newTextView = null;
-			newMaxColumn = null;
 		}
 
 		Tab oldDiffTarget, newDiffTarget;
@@ -81,33 +51,29 @@ namespace NeoEdit.Editor
 			set
 			{
 				EnsureInTransaction();
-				if (value == null)
-				{
-					if (newDiffTarget == null)
-						throw new Exception("Already not in diff");
-					newDiffTarget = newDiffTarget.newDiffTarget = null;
-				}
-				else
-				{
-					if (newDiffTarget != null)
-						throw new Exception("Already in diff");
-					if (value.newDiffTarget != null)
-						throw new Exception("DiffTarget already in diff");
-					newDiffTarget = value;
-					newDiffTarget.newDiffTarget = this;
-				}
-				ResetView();
-			}
-		}
+				if (value != null)
+					value.EnsureInTransaction();
 
-		int? oldMaxColumn, newMaxColumn;
-		public int ViewMaxColumn
-		{
-			get
-			{
-				if (!newMaxColumn.HasValue)
-					newMaxColumn = DiffView.GetMaxColumn(Text);
-				return newMaxColumn.Value;
+				IsDiff = false;
+
+				if (DiffTarget != null)
+				{
+					DiffTarget.IsDiff = false;
+
+					Text.ClearDiff();
+					DiffTarget.Text.ClearDiff();
+					DiffTarget.newDiffTarget = null;
+					newDiffTarget = null;
+				}
+
+				if (value != null)
+				{
+					value.DiffTarget = null;
+					newDiffTarget = value;
+					value.newDiffTarget = this;
+					IsDiff = DiffTarget.IsDiff = true;
+					CalculateDiff();
+				}
 			}
 		}
 
@@ -435,7 +401,6 @@ namespace NeoEdit.Editor
 			{
 				EnsureInTransaction();
 				newViewBinary = value;
-				ResetView();
 			}
 		}
 
@@ -520,8 +485,6 @@ namespace NeoEdit.Editor
 			newTabs = oldTabs;
 			newText = oldText;
 			newUndoRedo = oldUndoRedo;
-			newTextView = oldTextView;
-			newMaxColumn = oldMaxColumn;
 			newCurrentSelection = oldCurrentSelection;
 			newSelections = oldSelections;
 			for (var ctr = 0; ctr < oldRegions.Length; ++ctr)
@@ -550,6 +513,7 @@ namespace NeoEdit.Editor
 			newViewBinarySearches = oldViewBinarySearches;
 			newStartColumn = oldStartColumn;
 			newStartRow = oldStartRow;
+			newIsDiff = oldIsDiff;
 			newDiffTarget = oldDiffTarget;
 
 			ClearState();
@@ -562,8 +526,6 @@ namespace NeoEdit.Editor
 			oldTabs = newTabs;
 			oldText = newText;
 			oldUndoRedo = newUndoRedo;
-			oldTextView = newTextView;
-			oldMaxColumn = newMaxColumn;
 			oldCurrentSelection = newCurrentSelection;
 			oldSelections = newSelections;
 			for (var ctr = 0; ctr < oldRegions.Length; ++ctr)
@@ -592,6 +554,7 @@ namespace NeoEdit.Editor
 			oldViewBinarySearches = newViewBinarySearches;
 			oldStartColumn = newStartColumn;
 			oldStartRow = newStartRow;
+			oldIsDiff = newIsDiff;
 			oldDiffTarget = newDiffTarget;
 
 			ClearState();

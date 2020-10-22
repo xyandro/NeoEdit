@@ -160,7 +160,6 @@
     <None Include="Content\XML\Source\XMLLexer.g4" />
     <None Include="Content\XML\Source\XMLParser.g4" />
     <Compile Include="Content\XML\XMLVisitor.cs" />
-    <Compile Include="DiffData.cs" />
     <Compile Include="DiffParams.cs" />
     <Compile Include="FileSaver.cs" />
     <Compile Include="GIFWriter.cs" />
@@ -266,9 +265,6 @@
     <Compile Include="Transactional\NEText.cs" />
     <Compile Include="Transactional\TabsList.cs" />
     <Compile Include="Transactional\UndoRedo.cs" />
-    <Compile Include="Transactional\View\INEView.cs" />
-    <Compile Include="Transactional\View\NEHexView.cs" />
-    <Compile Include="Transactional\View\NETextView.cs" />
     <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>
   <ItemGroup>

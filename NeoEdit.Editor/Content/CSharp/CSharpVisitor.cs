@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Editor.Transactional;
-using NeoEdit.Editor.Transactional.View;
 
 namespace NeoEdit.Editor.Content.CSharp
 {
@@ -30,19 +29,19 @@ namespace NeoEdit.Editor.Content.CSharp
 			return walker.document;
 		}
 
-		public static string Comment(NEText text, INEView textView, Range range)
+		public static string Comment(NEText text, Range range)
 		{
-			var startLine = textView.GetPositionLine(range.Start);
-			var startIndex = textView.GetPositionIndex(range.Start, startLine);
-			var endLine = textView.GetPositionLine(range.End);
-			var endIndex = textView.GetPositionIndex(range.End, endLine);
+			var startLine = text.GetPositionLine(range.Start);
+			var startIndex = text.GetPositionIndex(range.Start, startLine);
+			var endLine = text.GetPositionLine(range.End);
+			var endIndex = text.GetPositionIndex(range.End, endLine);
 			var result = "";
 			for (var line = startLine; line <= endLine; ++line)
 			{
-				var linePosition = textView.GetPosition(line, 0);
+				var linePosition = text.GetPosition(line, 0);
 				var start = line == startLine ? startIndex : 0;
-				var contentEnd = line == endLine ? endIndex : textView.GetLineLength(line);
-				var end = line == endLine ? endIndex : contentEnd + textView.GetEndingLength(line);
+				var contentEnd = line == endLine ? endIndex : text.GetLineLength(line);
+				var end = line == endLine ? endIndex : contentEnd + text.GetEndingLength(line);
 				var str = text.GetString(linePosition + start, end - start);
 				if (start != contentEnd)
 					str = $"//{str}";
@@ -51,19 +50,19 @@ namespace NeoEdit.Editor.Content.CSharp
 			return result;
 		}
 
-		public static string Uncomment(NEText text, INEView textView, Range range)
+		public static string Uncomment(NEText text, Range range)
 		{
-			var startLine = textView.GetPositionLine(range.Start);
-			var startIndex = textView.GetPositionIndex(range.Start, startLine);
-			var endLine = textView.GetPositionLine(range.End);
-			var endIndex = textView.GetPositionIndex(range.End, endLine);
+			var startLine = text.GetPositionLine(range.Start);
+			var startIndex = text.GetPositionIndex(range.Start, startLine);
+			var endLine = text.GetPositionLine(range.End);
+			var endIndex = text.GetPositionIndex(range.End, endLine);
 			var result = "";
 			for (var line = startLine; line <= endLine; ++line)
 			{
-				var linePosition = textView.GetPosition(line, 0);
+				var linePosition = text.GetPosition(line, 0);
 				var start = line == startLine ? startIndex : 0;
-				var contentEnd = line == endLine ? endIndex : textView.GetLineLength(line);
-				var end = line == endLine ? endIndex : contentEnd + textView.GetEndingLength(line);
+				var contentEnd = line == endLine ? endIndex : text.GetLineLength(line);
+				var end = line == endLine ? endIndex : contentEnd + text.GetEndingLength(line);
 				var str = text.GetString(linePosition + start, end - start);
 				if (str.StartsWith("//"))
 					str = str.Substring(2);

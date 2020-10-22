@@ -464,7 +464,7 @@ namespace NeoEdit.Editor
 				throw new ArgumentException("Path must be of existing directories");
 
 			var errors = new List<string>();
-			ReplaceSelections(dirs.AsTaskRunner().Select((dir, index, progress) => string.Join(TextView.DefaultEnding, GetDirectoryContents(dir, recursive, errors, progress)), x => 100000).ToList());
+			ReplaceSelections(dirs.AsTaskRunner().Select((dir, index, progress) => string.Join(Text.DefaultEnding, GetDirectoryContents(dir, recursive, errors, progress)), x => 100000).ToList());
 			if (errors.Any())
 				Tabs.TabsWindow.RunMessageDialog("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
 		}
@@ -681,7 +681,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Select_Name_Next()
 		{
-			var maxPosition = TextView.MaxPosition;
+			var maxPosition = Text.MaxPosition;
 			var invalidChars = Path.GetInvalidFileNameChars();
 
 			var sels = new List<Range>();

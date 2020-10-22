@@ -30,7 +30,7 @@ namespace NeoEdit.Editor
 			private set
 			{
 				tabColumns = value;
-				AllTabs.ForEach(tab => tab.ResetView());
+				//AllTabs.ForEach(tab => tab.ResetView());
 			}
 		}
 

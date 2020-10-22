@@ -12,7 +12,6 @@ using NeoEdit.Editor.Content.SQL;
 using NeoEdit.Editor.Content.TCSV;
 using NeoEdit.Editor.Content.XML;
 using NeoEdit.Editor.Transactional;
-using NeoEdit.Editor.Transactional.View;
 
 namespace NeoEdit.Editor.Content
 {
@@ -36,11 +35,11 @@ namespace NeoEdit.Editor.Content
 			}
 		}
 
-		static internal string Comment(ParserType type, NEText text, INEView textView, Range range)
+		static internal string Comment(ParserType type, NEText text, Range range)
 		{
 			switch (type)
 			{
-				case ParserType.CSharp: return CSharpVisitor.Comment(text, textView, range);
+				case ParserType.CSharp: return CSharpVisitor.Comment(text, range);
 				case ParserType.HTML:
 				case ParserType.XML:
 					return HTMLVisitor.Comment(text, range);
@@ -48,11 +47,11 @@ namespace NeoEdit.Editor.Content
 			}
 		}
 
-		static internal string Uncomment(ParserType type, NEText text, INEView textView, Range range)
+		static internal string Uncomment(ParserType type, NEText text, Range range)
 		{
 			switch (type)
 			{
-				case ParserType.CSharp: return CSharpVisitor.Uncomment(text, textView, range);
+				case ParserType.CSharp: return CSharpVisitor.Uncomment(text, range);
 				case ParserType.HTML:
 				case ParserType.XML:
 					return HTMLVisitor.Uncomment(text, range);

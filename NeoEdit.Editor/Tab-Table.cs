@@ -21,7 +21,7 @@ namespace NeoEdit.Editor
 			if (ContentType.IsTableType())
 				return new Table(Text.GetString(), ContentType, hasHeaders);
 			if (ContentType == ParserType.None)
-				return new Table(TaskRunner.Range(0, TextView.NumLines).Select(line => Text.GetString(TextView.GetLine(line))).NonNullOrWhiteSpace().Select(str => new List<string> { str }).ToList(), false);
+				return new Table(TaskRunner.Range(0, Text.NumLines).Select(line => Text.GetLine(line)).NonNullOrWhiteSpace().Select(str => new List<string> { str }).ToList(), false);
 			throw new Exception("Invalid content type");
 		}
 
@@ -29,7 +29,7 @@ namespace NeoEdit.Editor
 		{
 			if (!ContentType.IsTableType())
 				ContentType = ParserType.Columns;
-			return table.ToString(TextView.DefaultEnding, ContentType);
+			return table.ToString(Text.DefaultEnding, ContentType);
 		}
 
 		NEVariables GetTableVariables(Table table)
@@ -95,7 +95,7 @@ namespace NeoEdit.Editor
 			if (!Selections.Any())
 				return;
 
-			var lineSets = Selections.AsTaskRunner().Select(range => new { start = TextView.GetPositionLine(range.Start), end = TextView.GetPositionLine(range.End) }).ToList();
+			var lineSets = Selections.AsTaskRunner().Select(range => new { start = Text.GetPositionLine(range.Start), end = Text.GetPositionLine(range.End) }).ToList();
 			if (lineSets.Any(range => range.start != range.end))
 				throw new Exception("Cannot have multi-line selections");
 
@@ -162,7 +162,7 @@ namespace NeoEdit.Editor
 			var variables = GetTableVariables(table);
 			var results = state.GetExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
-			Selections = lines.AsTaskRunner().Select(line => new Range(TextView.GetPosition(line, TextView.GetLineLength(line)), TextView.GetPosition(line, 0))).ToList();
+			Selections = lines.AsTaskRunner().Select(line => new Range(Text.GetPosition(line, Text.GetLineLength(line)), Text.GetPosition(line, 0))).ToList();
 		}
 
 		void Execute_Table_SetJoinSource() => joinTable = GetTable();
@@ -192,8 +192,8 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Table_Database_GenerateInserts;
 			var table = GetTable();
-			var header = $"INSERT INTO {result.TableName} ({string.Join(", ", Enumerable.Range(0, table.NumColumns).Select(column => table.GetHeader(column)))}) VALUES{(result.BatchSize == 1 ? " " : TextView.DefaultEnding)}";
-			var output = Enumerable.Range(0, table.NumRows).Batch(result.BatchSize).Select(batch => string.Join($",{TextView.DefaultEnding}", batch.Select(row => $"({string.Join(", ", result.Columns.Select(column => GetDBValue(table[row, column])))})"))).Select(val => $"{header}{val}{TextView.DefaultEnding}").ToList();
+			var header = $"INSERT INTO {result.TableName} ({string.Join(", ", Enumerable.Range(0, table.NumColumns).Select(column => table.GetHeader(column)))}) VALUES{(result.BatchSize == 1 ? " " : Text.DefaultEnding)}";
+			var output = Enumerable.Range(0, table.NumRows).Batch(result.BatchSize).Select(batch => string.Join($",{Text.DefaultEnding}", batch.Select(row => $"({string.Join(", ", result.Columns.Select(column => GetDBValue(table[row, column])))})"))).Select(val => $"{header}{val}{Text.DefaultEnding}").ToList();
 			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { string.Join("", output) });
 
 			var index = 0;
@@ -213,7 +213,7 @@ namespace NeoEdit.Editor
 			var result = state.Configuration as Configuration_Table_Database_GenerateUpdates;
 			var table = GetTable();
 
-			var output = Enumerable.Range(0, table.NumRows).Select(row => $"UPDATE {result.TableName} SET {string.Join(", ", result.Update.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{TextView.DefaultEnding}").ToList();
+			var output = Enumerable.Range(0, table.NumRows).Select(row => $"UPDATE {result.TableName} SET {string.Join(", ", result.Update.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{Text.DefaultEnding}").ToList();
 			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { string.Join("", output) });
 
 			var index = 0;
@@ -233,7 +233,7 @@ namespace NeoEdit.Editor
 			var result = state.Configuration as Configuration_Table_Database_GenerateDeletes;
 			var table = GetTable();
 
-			var output = Enumerable.Range(0, table.NumRows).Select(row => $"DELETE FROM {result.TableName} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{TextView.DefaultEnding}").ToList();
+			var output = Enumerable.Range(0, table.NumRows).Select(row => $"DELETE FROM {result.TableName} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{Text.DefaultEnding}").ToList();
 			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { string.Join("", output) });
 
 			var index = 0;

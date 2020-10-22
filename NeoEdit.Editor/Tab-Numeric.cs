@@ -424,7 +424,7 @@ namespace NeoEdit.Editor
 				}
 			}
 
-			ReplaceSelections(string.Join("", output.Select(row => string.Join(" ", row) + TextView.DefaultEnding)));
+			ReplaceSelections(string.Join("", output.Select(row => string.Join(" ", row) + Text.DefaultEnding)));
 
 			var start = Selections.Single().Start;
 			var sels = new List<Range>();
@@ -435,7 +435,7 @@ namespace NeoEdit.Editor
 					sels.Add(Range.FromIndex(start, str.Length));
 					start += str.Length + 1; // +1 is for space
 				}
-				start += TextView.DefaultEnding.Length - 1; // -1 is for space added before
+				start += Text.DefaultEnding.Length - 1; // -1 is for space added before
 			}
 			Selections = sels;
 		}

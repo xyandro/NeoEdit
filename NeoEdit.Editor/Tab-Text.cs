@@ -103,7 +103,7 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Text_Select_Chars;
 			var minPosition = 0;
-			var maxPosition = TextView.MaxPosition;
+			var maxPosition = Text.MaxPosition;
 
 			var sels = new List<Range>();
 			foreach (var range in Selections)
@@ -213,14 +213,14 @@ namespace NeoEdit.Editor
 				throw new Exception("Must have one selection.");
 
 			var data = RevRegExVisitor.Parse(result.RegEx, result.InfiniteCount);
-			var output = data.GetPossibilities().Select(str => str + TextView.DefaultEnding).ToList();
+			var output = data.GetPossibilities().Select(str => str + Text.DefaultEnding).ToList();
 			ReplaceSelections(string.Join("", output));
 
 			var start = Selections.Single().Start;
 			var sels = new List<Range>();
 			foreach (var str in output)
 			{
-				sels.Add(Range.FromIndex(start, str.Length - TextView.DefaultEnding.Length));
+				sels.Add(Range.FromIndex(start, str.Length - Text.DefaultEnding.Length));
 				start += str.Length;
 			}
 			Selections = sels;

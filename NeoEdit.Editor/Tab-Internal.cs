@@ -96,18 +96,18 @@ namespace NeoEdit.Editor
 		{
 			if ((lineRel) || (indexRel))
 			{
-				var startLine = TextView.GetPositionLine(range.Cursor);
-				var startIndex = TextView.GetPositionIndex(range.Cursor, startLine);
+				var startLine = Text.GetPositionLine(range.Cursor);
+				var startIndex = Text.GetPositionIndex(range.Cursor, startLine);
 
 				if (lineRel)
-					line += startLine;
+					line = Text.SkipDiffGaps(line + startLine, line > 0 ? 1 : -1);
 				if (indexRel)
 					index += startIndex;
 			}
 
-			line = Math.Max(0, Math.Min(line, TextView.NumLines - 1));
-			index = Math.Max(0, Math.Min(index, TextView.GetLineLength(line)));
-			return MoveCursor(range, TextView.GetPosition(line, index), selecting);
+			line = Math.Max(0, Math.Min(line, Text.NumLines - 1));
+			index = Math.Max(0, Math.Min(index, Text.GetLineLength(line)));
+			return MoveCursor(range, Text.GetPosition(line, index), selecting);
 		}
 
 		void BlockSelDown()
@@ -115,17 +115,17 @@ namespace NeoEdit.Editor
 			var sels = new List<Range>();
 			foreach (var range in Selections)
 			{
-				var cursorLine = TextView.GetPositionLine(range.Cursor);
-				var highlightLine = TextView.GetPositionLine(range.Anchor);
-				var cursorIndex = TextView.GetPositionIndex(range.Cursor, cursorLine);
-				var highlightIndex = TextView.GetPositionIndex(range.Anchor, highlightLine);
+				var cursorLine = Text.GetPositionLine(range.Cursor);
+				var highlightLine = Text.GetPositionLine(range.Anchor);
+				var cursorIndex = Text.GetPositionIndex(range.Cursor, cursorLine);
+				var highlightIndex = Text.GetPositionIndex(range.Anchor, highlightLine);
 
-				cursorLine = Math.Max(0, Math.Min(cursorLine + 1, TextView.NumLines - 1));
-				highlightLine = Math.Max(0, Math.Min(highlightLine + 1, TextView.NumLines - 1));
-				cursorIndex = Math.Max(0, Math.Min(cursorIndex, TextView.GetLineLength(cursorLine)));
-				highlightIndex = Math.Max(0, Math.Min(highlightIndex, TextView.GetLineLength(highlightLine)));
+				cursorLine = Math.Max(0, Math.Min(cursorLine + 1, Text.NumLines - 1));
+				highlightLine = Math.Max(0, Math.Min(highlightLine + 1, Text.NumLines - 1));
+				cursorIndex = Math.Max(0, Math.Min(cursorIndex, Text.GetLineLength(cursorLine)));
+				highlightIndex = Math.Max(0, Math.Min(highlightIndex, Text.GetLineLength(highlightLine)));
 
-				sels.Add(new Range(TextView.GetPosition(cursorLine, cursorIndex), TextView.GetPosition(highlightLine, highlightIndex)));
+				sels.Add(new Range(Text.GetPosition(cursorLine, cursorIndex), Text.GetPosition(highlightLine, highlightIndex)));
 			}
 			Selections = Selections.Concat(sels).ToList();
 		}
@@ -139,17 +139,17 @@ namespace NeoEdit.Editor
 			var sels = new List<Range>();
 			foreach (var range in Selections)
 			{
-				var startLine = TextView.GetPositionLine(range.Start);
-				var endLine = TextView.GetPositionLine(range.End);
-				var startIndex = TextView.GetPositionIndex(range.Start, startLine);
-				var endIndex = TextView.GetPositionIndex(range.End, endLine);
+				var startLine = Text.GetPositionLine(range.Start);
+				var endLine = Text.GetPositionLine(range.End);
+				var startIndex = Text.GetPositionIndex(range.Start, startLine);
+				var endIndex = Text.GetPositionIndex(range.End, endLine);
 
-				startLine = Math.Max(0, Math.Min(startLine - 1, TextView.NumLines - 1));
-				endLine = Math.Max(0, Math.Min(endLine - 1, TextView.NumLines - 1));
-				startIndex = Math.Max(0, Math.Min(startIndex, TextView.GetLineLength(startLine)));
-				endIndex = Math.Max(0, Math.Min(endIndex, TextView.GetLineLength(endLine)));
+				startLine = Math.Max(0, Math.Min(startLine - 1, Text.NumLines - 1));
+				endLine = Math.Max(0, Math.Min(endLine - 1, Text.NumLines - 1));
+				startIndex = Math.Max(0, Math.Min(startIndex, Text.GetLineLength(startLine)));
+				endIndex = Math.Max(0, Math.Min(endIndex, Text.GetLineLength(endLine)));
 
-				var prevLineRange = new Range(TextView.GetPosition(startLine, startIndex), TextView.GetPosition(endLine, endIndex));
+				var prevLineRange = new Range(Text.GetPosition(startLine, startIndex), Text.GetPosition(endLine, endIndex));
 				if (found.Contains(prevLineRange.ToString()))
 					sels.Add(prevLineRange);
 				else
@@ -199,14 +199,14 @@ namespace NeoEdit.Editor
 							}
 							else if ((state.ShiftDown) && (state.Key == Key.Delete))
 							{
-								var line = TextView.GetPositionLine(position);
-								position = TextView.GetPosition(line, 0);
-								anchor = position + TextView.GetLineLength(line) + TextView.GetEndingLength(line);
+								var line = Text.GetPositionLine(position);
+								position = Text.GetPosition(line, 0);
+								anchor = position + Text.GetLineLength(line) + Text.GetEndingLength(line);
 							}
 							else
 							{
-								var line = TextView.GetPositionLine(position);
-								var index = TextView.GetPositionIndex(position, line);
+								var line = Text.GetPositionLine(position);
+								var index = Text.GetPositionIndex(position, line);
 
 								if (state.Key == Key.Back)
 									--index;
@@ -218,17 +218,17 @@ namespace NeoEdit.Editor
 									--line;
 									if (line < 0)
 										return null;
-									index = TextView.GetLineLength(line);
+									index = Text.GetLineLength(line);
 								}
-								if (index > TextView.GetLineLength(line))
+								if (index > Text.GetLineLength(line))
 								{
 									++line;
-									if (line >= TextView.NumLines)
+									if (line >= Text.NumLines)
 										return null;
 									index = 0;
 								}
 
-								position = TextView.GetPosition(line, index);
+								position = Text.GetPosition(line, index);
 							}
 
 							return new Range(position, anchor);
@@ -256,10 +256,10 @@ namespace NeoEdit.Editor
 							if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key).HasSelections))
 								return new Range(range.Start);
 
-							var line = TextView.GetPositionLine(range.Cursor);
-							var index = TextView.GetPositionIndex(range.Cursor, line);
+							var line = Text.GetPositionLine(range.Cursor);
+							var index = Text.GetPositionIndex(range.Cursor, line);
 							if ((index == 0) && (line != 0))
-								return MoveCursor(range, range.Cursor - Math.Max(1, TextView.GetEndingLength(line - 1)), state.ShiftDown);
+								return MoveCursor(range, range.Cursor - Math.Max(1, Text.GetEndingLength(line - 1)), state.ShiftDown);
 							else
 								return MoveCursor(range, range.Cursor - 1, state.ShiftDown);
 						}).ToList();
@@ -272,10 +272,10 @@ namespace NeoEdit.Editor
 							if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key).HasSelections))
 								return new Range(range.End);
 
-							var line = TextView.GetPositionLine(range.Cursor);
-							var index = TextView.GetPositionIndex(range.Cursor, line);
-							if ((index == TextView.GetLineLength(line)) && (line != TextView.NumLines - 1))
-								return MoveCursor(range, range.Cursor + Math.Max(1, TextView.GetEndingLength(line)), state.ShiftDown);
+							var line = Text.GetPositionLine(range.Cursor);
+							var index = Text.GetPositionIndex(range.Cursor, line);
+							if ((index == Text.GetLineLength(line)) && (line != Text.NumLines - 1))
+								return MoveCursor(range, range.Cursor + Math.Max(1, Text.GetEndingLength(line)), state.ShiftDown);
 							else
 								return MoveCursor(range, range.Cursor + 1, state.ShiftDown);
 						}).ToList();
@@ -310,14 +310,14 @@ namespace NeoEdit.Editor
 						bool moveToStartText = false;
 						foreach (var selection in Selections)
 						{
-							var line = TextView.GetPositionLine(selection.Cursor);
-							var index = TextView.GetPositionIndex(selection.Cursor, line);
+							var line = Text.GetPositionLine(selection.Cursor);
+							var index = Text.GetPositionIndex(selection.Cursor, line);
 
 							int startText;
-							var end = TextView.GetLineLength(line);
+							var end = Text.GetLineLength(line);
 							for (startText = 0; startText < end; ++startText)
 							{
-								if (!char.IsWhiteSpace(Text[TextView.GetPosition(line, startText)]))
+								if (!char.IsWhiteSpace(Text[Text.GetPosition(line, startText)]))
 									break;
 							}
 							if (startText == end)
@@ -325,8 +325,8 @@ namespace NeoEdit.Editor
 
 							if (startText != index)
 								moveToStartText = true;
-							startTextSels.Add(MoveCursor(selection, TextView.GetPosition(line, startText), state.ShiftDown));
-							startLineSels.Add(MoveCursor(selection, TextView.GetPosition(line, 0), state.ShiftDown));
+							startTextSels.Add(MoveCursor(selection, Text.GetPosition(line, startText), state.ShiftDown));
+							startLineSels.Add(MoveCursor(selection, Text.GetPosition(line, 0), state.ShiftDown));
 						}
 						if (moveToStartText)
 							Selections = startTextSels;
@@ -359,7 +359,7 @@ namespace NeoEdit.Editor
 					break;
 				case Key.Tab:
 					{
-						if (Selections.AsTaskRunner().All(range => (!range.HasSelection) || (TextView.GetPositionLine(range.Start) == TextView.GetPositionLine(Math.Max(range.Start, range.End - 1)))))
+						if (Selections.AsTaskRunner().All(range => (!range.HasSelection) || (Text.GetPositionLine(range.Start) == Text.GetPositionLine(Math.Max(range.Start, range.End - 1)))))
 						{
 							if (!state.ShiftDown)
 								ReplaceSelections("\t", false, tryJoinUndo: true);
@@ -371,21 +371,21 @@ namespace NeoEdit.Editor
 							break;
 						}
 
-						var selLines = Selections.AsTaskRunner().Where(a => a.HasSelection).Select(range => new { start = TextView.GetPositionLine(range.Start), end = TextView.GetPositionLine(range.End - 1) }).ToList();
-						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy().ToDictionary(line => line, line => TextView.GetPosition(line, 0));
+						var selLines = Selections.AsTaskRunner().Where(a => a.HasSelection).Select(range => new { start = Text.GetPositionLine(range.Start), end = Text.GetPositionLine(range.End - 1) }).ToList();
+						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy().ToDictionary(line => line, line => Text.GetPosition(line, 0));
 						int length;
 						string replace;
 						if (state.ShiftDown)
 						{
 							length = 1;
 							replace = "";
-							lines = lines.Where(entry => (TextView.GetLineLength(entry.Key) != 0) && (Text[TextView.GetPosition(entry.Key, 0)] == '\t')).ToDictionary(entry => entry.Key, entry => entry.Value);
+							lines = lines.Where(entry => (Text.GetLineLength(entry.Key) != 0) && (Text[Text.GetPosition(entry.Key, 0)] == '\t')).ToDictionary(entry => entry.Key, entry => entry.Value);
 						}
 						else
 						{
 							length = 0;
 							replace = "\t";
-							lines = lines.Where(entry => TextView.GetLineLength(entry.Key) != 0).ToDictionary(entry => entry.Key, entry => entry.Value);
+							lines = lines.Where(entry => Text.GetLineLength(entry.Key) != 0).ToDictionary(entry => entry.Key, entry => entry.Value);
 						}
 
 						var sels = lines.Select(line => Range.FromIndex(line.Value, length)).ToList();
@@ -394,7 +394,7 @@ namespace NeoEdit.Editor
 					}
 					break;
 				case Key.Enter:
-					ReplaceSelections(TextView.DefaultEnding, false, tryJoinUndo: true);
+					ReplaceSelections(Text.DefaultEnding, false, tryJoinUndo: true);
 					break;
 				default: throw new OperationCanceledException();
 			}
@@ -429,10 +429,10 @@ namespace NeoEdit.Editor
 		public void Execute_Internal_Mouse(int line, int column, int clickCount, bool? selecting)
 		{
 			var sels = Selections.ToList();
-			line = Math.Max(0, Math.Min(line, DiffView.NumLines - 1));
-			column = Math.Max(0, Math.Min(column, DiffView.GetLineColumnsLength(Text, line)));
-			var index = DiffView.GetIndexFromColumn(Text, line, column, true);
-			var position = DiffView.GetPosition(line, index);
+			line = Math.Max(0, Math.Min(line, Text.NumLines - 1));
+			column = Math.Max(0, Math.Min(column, Text.GetLineColumnsLength(line)));
+			var index = Text.GetIndexFromColumn(line, column, true);
+			var position = Text.GetPosition(line, index);
 			var mouseRange = (CurrentSelection >= 0) && (CurrentSelection < sels.Count) ? sels[CurrentSelection] : null;
 
 			var currentSelection = default(Range);

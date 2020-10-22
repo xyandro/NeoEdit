@@ -47,7 +47,7 @@ namespace NeoEdit.Editor
 			if ((mustBeSameSize) && (list.Select(items => items.Count).Distinct().Count() > 1))
 				throw new Exception("All regions must have the same number of selections");
 
-			var sb = new StringBuilder(list.Sum(items => items.Sum(item => item.Length) + TextView.DefaultEnding.Length));
+			var sb = new StringBuilder(list.Sum(items => items.Sum(item => item.Length) + Text.DefaultEnding.Length));
 			var start = useRegions.First().Start;
 			var newRegions = new List<Range>();
 			var newSelections = new List<Range>();
@@ -59,7 +59,7 @@ namespace NeoEdit.Editor
 					newSelections.Add(Range.FromIndex(start + sb.Length, column.Length));
 					sb.Append(column);
 				}
-				sb.Append(TextView.DefaultEnding);
+				sb.Append(Text.DefaultEnding);
 				newRegions.Add(Range.FromIndex(start + regionStart, sb.Length - regionStart));
 			}
 

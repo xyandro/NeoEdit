@@ -25,9 +25,9 @@ namespace NeoEdit.Editor
 
 		IEnumerable<Range> FindRepetitions(bool caseSensitive, Range inputRange)
 		{
-			var startLine = TextView.GetPositionLine(inputRange.Start);
-			var endLine = TextView.GetPositionLine(inputRange.End);
-			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, TextView.GetPosition(line, 0)), Math.Min(inputRange.End, TextView.GetPosition(line, TextView.GetLineLength(line))))).ToList();
+			var startLine = Text.GetPositionLine(inputRange.Start);
+			var endLine = Text.GetPositionLine(inputRange.End);
+			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, Text.GetPosition(line, 0)), Math.Min(inputRange.End, Text.GetPosition(line, Text.GetLineLength(line))))).ToList();
 			if ((lineRanges.Count >= 2) && (!lineRanges[lineRanges.Count - 1].HasSelection))
 				lineRanges.RemoveAt(lineRanges.Count - 1);
 			var lineStrs = lineRanges.Select(range => Text.GetString(range)).Select(str => caseSensitive ? str : str.ToLowerInvariant()).ToList();
@@ -53,20 +53,20 @@ namespace NeoEdit.Editor
 
 		IEnumerable<Range> SelectRectangle(Range range)
 		{
-			var startLine = TextView.GetPositionLine(range.Start);
-			var endLine = TextView.GetPositionLine(range.End);
+			var startLine = Text.GetPositionLine(range.Start);
+			var endLine = Text.GetPositionLine(range.End);
 			if (startLine == endLine)
 			{
 				yield return range;
 				yield break;
 			}
-			var startIndex = TextView.GetPositionIndex(range.Start, startLine);
-			var endIndex = TextView.GetPositionIndex(range.End, endLine);
+			var startIndex = Text.GetPositionIndex(range.Start, startLine);
+			var endIndex = Text.GetPositionIndex(range.End, endLine);
 			for (var line = startLine; line <= endLine; ++line)
 			{
-				var length = TextView.GetLineLength(line);
-				var lineStartPosition = TextView.GetPosition(line, Math.Min(length, startIndex));
-				var lineEndPosition = TextView.GetPosition(line, Math.Min(length, endIndex));
+				var length = Text.GetLineLength(line);
+				var lineStartPosition = Text.GetPosition(line, Math.Min(length, startIndex));
+				var lineEndPosition = Text.GetPosition(line, Math.Min(length, endIndex));
 				yield return new Range(lineEndPosition, lineStartPosition);
 			}
 		}
@@ -196,7 +196,7 @@ namespace NeoEdit.Editor
 
 		int GetOppositeBracket(int position)
 		{
-			if ((position < 0) || (position > TextView.MaxPosition))
+			if ((position < 0) || (position > Text.MaxPosition))
 				return -1;
 
 			var dict = new Dictionary<char, char>
@@ -208,7 +208,7 @@ namespace NeoEdit.Editor
 			};
 
 			var found = default(KeyValuePair<char, char>);
-			if ((found.Key == 0) && (position < TextView.MaxPosition))
+			if ((found.Key == 0) && (position < Text.MaxPosition))
 				found = dict.FirstOrDefault(entry => (entry.Key == Text[position]) || (entry.Value == Text[position]));
 			var posAdjust = 1;
 			if (found.Key == 0)
@@ -224,7 +224,7 @@ namespace NeoEdit.Editor
 			var direction = found.Key == Text[position] ? 1 : -1;
 
 			var num = 0;
-			for (; (position >= 0) && (position < TextView.MaxPosition); position += direction)
+			for (; (position >= 0) && (position < Text.MaxPosition); position += direction)
 			{
 				if (Text[position] == found.Key)
 					++num;
@@ -265,29 +265,29 @@ namespace NeoEdit.Editor
 
 		void Execute_Select_Lines()
 		{
-			var lineSets = Selections.AsTaskRunner().Select(range => new { start = TextView.GetPositionLine(range.Start), end = TextView.GetPositionLine(Math.Max(range.Start, range.End - 1)) }).ToList();
+			var lineSets = Selections.AsTaskRunner().Select(range => new { start = Text.GetPositionLine(range.Start), end = Text.GetPositionLine(Math.Max(range.Start, range.End - 1)) }).ToList();
 
-			var hasLine = new bool[TextView.NumLines];
+			var hasLine = new bool[Text.NumLines];
 			foreach (var set in lineSets)
 				for (var ctr = set.start; ctr <= set.end; ++ctr)
 					hasLine[ctr] = true;
 
 			var lines = new List<int>();
 			for (var line = 0; line < hasLine.Length; ++line)
-				if (hasLine[line])
+				if ((hasLine[line]) && (!Text.IsDiffGapLine(line)))
 					lines.Add(line);
 
-			Selections = lines.AsTaskRunner().Select(line => Range.FromIndex(TextView.GetPosition(line, 0), TextView.GetLineLength(line))).ToList();
+			Selections = lines.AsTaskRunner().Select(line => Range.FromIndex(Text.GetPosition(line, 0), Text.GetLineLength(line))).ToList();
 		}
 
 		void Execute_Select_WholeLines()
 		{
 			var sels = Selections.AsTaskRunner().Select(range =>
 			{
-				var startLine = TextView.GetPositionLine(range.Start);
-				var startPosition = TextView.GetPosition(startLine, 0);
-				var endLine = TextView.GetPositionLine(Math.Max(range.Start, range.End - 1));
-				var endPosition = TextView.GetPosition(endLine, 0) + TextView.GetLineLength(endLine) + TextView.GetEndingLength(endLine);
+				var startLine = Text.GetPositionLine(range.Start);
+				var startPosition = Text.GetPosition(startLine, 0);
+				var endLine = Text.GetPositionLine(Math.Max(range.Start, range.End - 1));
+				var endPosition = Text.GetPosition(endLine, 0) + Text.GetLineLength(endLine) + Text.GetEndingLength(endLine);
 				return new Range(endPosition, startPosition);
 			}).ToList();
 
@@ -299,8 +299,8 @@ namespace NeoEdit.Editor
 		void Execute_Select_Invert()
 		{
 			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
-			var end = Selections.Select(sel => sel.Start).Concat(new[] { TextView.MaxPosition });
-			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != TextView.MaxPosition))).ToList();
+			var end = Selections.Select(sel => sel.Start).Concat(new[] { Text.MaxPosition });
+			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.MaxPosition))).ToList();
 		}
 
 		void Execute_Select_Join()

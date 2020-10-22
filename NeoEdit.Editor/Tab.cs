@@ -11,7 +11,6 @@ using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.Transactional;
-using NeoEdit.Editor.Transactional.View;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -84,7 +83,7 @@ namespace NeoEdit.Editor
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			var ending = addNewLines ?? strs.Any(str => !str.EndsWith(TextView.DefaultEnding)) ? TextView.DefaultEnding : "";
+			var ending = addNewLines ?? strs.Any(str => !str.EndsWith(Text.DefaultEnding)) ? Text.DefaultEnding : "";
 			if (ending.Length != 0)
 				strs = strs.Select(str => str + ending).ToList();
 			var ranges = new List<Range>();
@@ -146,14 +145,13 @@ namespace NeoEdit.Editor
 
 			Text = Text.Replace(ranges, strs);
 			SetModifiedFlag();
+			CalculateDiff();
 
 			var translateMap = GetTranslateMap(ranges, strs, new List<IReadOnlyList<Range>> { Selections }.Concat(Enumerable.Range(1, 9).Select(region => GetRegions(region))).ToList());
 			Selections = Translate(Selections, translateMap);
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, Translate(GetRegions(region), translateMap));
 		}
-
-		public int ViewNumLines => DiffView.NumLines;
 
 		#region Translate
 		static int[] GetTranslateNums(IReadOnlyList<IReadOnlyList<Range>> rangeLists)
@@ -316,17 +314,6 @@ namespace NeoEdit.Editor
 
 			return result;
 		}
-		#endregion
-
-		#region Columns
-		public int ViewGetPositionLine(int position) => DiffView.GetPositionLine(position);
-		public int ViewGetPositionIndex(int position, int line) => DiffView.GetPositionIndex(position, line);
-		public int ViewGetLineLength(int line) => DiffView.GetLineLength(line);
-		public int ViewGetPosition(int line, int index, bool allowJustPastEnd = false) => DiffView.GetPosition(line, index, allowJustPastEnd);
-		public int ViewGetIndexFromColumn(int line, int findColumn, bool returnMaxOnFail = false) => DiffView.GetIndexFromColumn(Text, line, findColumn, returnMaxOnFail);
-		public int ViewGetColumnFromIndex(int line, int findIndex) => DiffView.GetColumnFromIndex(Text, line, findIndex);
-		public int ViewGetLineColumnsLength(int line) => DiffView.GetLineColumnsLength(Text, line);
-		public string ViewGetLineColumns(int line, int startColumn, int endColumn) => DiffView.GetLineColumns(Text, line, startColumn, endColumn);
 		#endregion
 
 		#region Configure
@@ -1170,21 +1157,21 @@ namespace NeoEdit.Editor
 				return;
 
 			var range = Selections[CurrentSelection];
-			var lineMin = DiffView.GetPositionLine(range.Start);
-			var lineMax = DiffView.GetPositionLine(range.End);
-			var indexMin = DiffView.GetPositionIndex(range.Start, lineMin);
-			var indexMax = DiffView.GetPositionIndex(range.End, lineMax);
+			var lineMin = Text.GetPositionLine(range.Start);
+			var lineMax = Text.GetPositionLine(range.End);
+			var indexMin = Text.GetPositionIndex(range.Start, lineMin);
+			var indexMax = Text.GetPositionIndex(range.End, lineMax);
 
 			if (centerVertically)
 			{
 				StartRow = (lineMin + lineMax - Tabs.TabRows) / 2;
 				if (centerHorizontally)
-					StartColumn = (ViewGetColumnFromIndex(lineMin, indexMin) + ViewGetColumnFromIndex(lineMax, indexMax) - Tabs.TabColumns) / 2;
+					StartColumn = (Text.GetColumnFromIndex(lineMin, indexMin) + Text.GetColumnFromIndex(lineMax, indexMax) - Tabs.TabColumns) / 2;
 			}
 
-			var line = DiffView.GetPositionLine(range.Cursor);
-			var index = DiffView.GetPositionIndex(range.Cursor, line);
-			var x = DiffView.GetColumnFromIndex(Text, line, index);
+			var line = Text.GetPositionLine(range.Cursor);
+			var index = Text.GetPositionIndex(range.Cursor, line);
+			var x = Text.GetColumnFromIndex(line, index);
 			StartRow = Math.Min(line, Math.Max(line - (Tabs?.TabRows ?? 1) + 1, StartRow));
 			StartColumn = Math.Min(x, Math.Max(x - (Tabs?.TabColumns ?? 1) + 1, StartColumn));
 		}
@@ -1243,17 +1230,17 @@ namespace NeoEdit.Editor
 			results.Add(NEVariable.Constant("d", "Display name", () => DisplayName));
 
 			var lineStarts = default(IReadOnlyList<int>);
-			var initializeLineStarts = new NEVariableInitializer(() => lineStarts = Selections.AsTaskRunner().Select(range => TextView.GetPositionLine(range.Start) + 1).ToList());
+			var initializeLineStarts = new NEVariableInitializer(() => lineStarts = Selections.AsTaskRunner().Select(range => Text.GetPositionLine(range.Start) + 1).ToList());
 			results.Add(NEVariable.List("line", "Selection line start", () => lineStarts, initializeLineStarts));
 			var lineEnds = default(IReadOnlyList<int>);
-			var initializeLineEnds = new NEVariableInitializer(() => lineEnds = Selections.AsTaskRunner().Select(range => TextView.GetPositionLine(range.End) + 1).ToList());
+			var initializeLineEnds = new NEVariableInitializer(() => lineEnds = Selections.AsTaskRunner().Select(range => Text.GetPositionLine(range.End) + 1).ToList());
 			results.Add(NEVariable.List("lineend", "Selection line end", () => lineEnds, initializeLineEnds));
 
 			var colStarts = default(IReadOnlyList<int>);
-			var initializeColStarts = new NEVariableInitializer(() => colStarts = Selections.AsTaskRunner().Select((range, index) => TextView.GetPositionIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
+			var initializeColStarts = new NEVariableInitializer(() => colStarts = Selections.AsTaskRunner().Select((range, index) => Text.GetPositionIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
 			results.Add(NEVariable.List("col", "Selection column start", () => colStarts, initializeColStarts));
 			var colEnds = default(IReadOnlyList<int>);
-			var initializeColEnds = new NEVariableInitializer(() => colEnds = Selections.AsTaskRunner().Select((range, index) => TextView.GetPositionIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
+			var initializeColEnds = new NEVariableInitializer(() => colEnds = Selections.AsTaskRunner().Select((range, index) => Text.GetPositionIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
 			results.Add(NEVariable.List("colend", "Selection column end", () => colEnds, initializeColEnds));
 
 			var posStarts = default(IReadOnlyList<int>);
@@ -1513,16 +1500,16 @@ namespace NeoEdit.Editor
 			var pos = 0;
 			if (line.HasValue)
 			{
-				var useLine = Math.Max(0, Math.Min(line.Value, TextView.NumLines) - 1);
+				var useLine = Math.Max(0, Math.Min(line.Value, Text.NumLines) - 1);
 				int useIndex;
 				if (column.HasValue)
-					useIndex = TextView.GetIndexFromColumn(Text, useLine, Math.Max(0, column.Value - 1), true);
+					useIndex = Text.GetIndexFromColumn(useLine, Math.Max(0, column.Value - 1), true);
 				else if (index.HasValue)
-					useIndex = Math.Max(0, Math.Min(index.Value - 1, TextView.GetLineLength(useLine)));
+					useIndex = Math.Max(0, Math.Min(index.Value - 1, Text.GetLineLength(useLine)));
 				else
 					useIndex = 0;
 
-				pos = TextView.GetPosition(useLine, useIndex);
+				pos = Text.GetPosition(useLine, useIndex);
 			}
 			Selections = new List<Range> { new Range(pos) };
 		}
@@ -1551,7 +1538,10 @@ namespace NeoEdit.Editor
 		public void Closed()
 		{
 			if (DiffTarget != null)
+			{
+				DiffTarget.Tabs.AddToTransaction(DiffTarget);
 				DiffTarget = null;
+			}
 			ClearWatcher();
 			shutdownData?.OnShutdown();
 		}
@@ -1589,12 +1579,14 @@ namespace NeoEdit.Editor
 			else
 			{
 				var range = Selections[CurrentSelection];
-				var lineMin = TextView.GetPositionLine(range.Start);
-				var lineMax = TextView.GetPositionLine(range.End);
-				var indexMin = TextView.GetPositionIndex(range.Start, lineMin);
-				var indexMax = TextView.GetPositionIndex(range.End, lineMax);
-				var columnMin = TextView.GetColumnFromIndex(Text, lineMin, indexMin);
-				var columnMax = TextView.GetColumnFromIndex(Text, lineMax, indexMax);
+				var startLine = Text.GetPositionLine(range.Start);
+				var endLine = Text.GetPositionLine(range.End);
+				var indexMin = Text.GetPositionIndex(range.Start, startLine);
+				var indexMax = Text.GetPositionIndex(range.End, endLine);
+				var lineMin = Text.GetDiffLine(startLine);
+				var lineMax = Text.GetDiffLine(endLine);
+				var columnMin = Text.GetColumnFromIndex(startLine, indexMin);
+				var columnMax = Text.GetColumnFromIndex(endLine, indexMax);
 				var posMin = range.Start;
 				var posMax = range.End;
 
@@ -1627,180 +1619,45 @@ namespace NeoEdit.Editor
 			if (DiffTarget == null)
 				return;
 
-			//DiffTarget.DiffIgnoreWhitespace = DiffIgnoreWhitespace;
-			//DiffTarget.DiffIgnoreCase = DiffIgnoreCase;
-			//DiffTarget.DiffIgnoreNumbers = DiffIgnoreNumbers;
-			//DiffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
-			//DiffTarget.DiffIgnoreCharacters = DiffIgnoreCharacters;
+			Tabs?.AddToTransaction(DiffTarget);
 
-			var left = Tabs.GetTabIndex(this) < DiffTarget.Tabs.GetTabIndex(DiffTarget) ? this : DiffTarget;
+			DiffTarget.DiffIgnoreWhitespace = DiffIgnoreWhitespace;
+			DiffTarget.DiffIgnoreCase = DiffIgnoreCase;
+			DiffTarget.DiffIgnoreNumbers = DiffIgnoreNumbers;
+			DiffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
+			DiffTarget.DiffIgnoreCharacters = DiffIgnoreCharacters;
+
+			var left = Tabs?.GetTabIndex(this) < DiffTarget.Tabs?.GetTabIndex(DiffTarget) ? this : DiffTarget;
 			var right = left == this ? DiffTarget : this;
-			CalculateDiff(left, right, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
+			NEText.CalculateDiff(left.Text, right.Text, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 		}
 
-		DiffData diffData;
-		static void CalculateDiff(Tab tab0, Tab tab1, bool ignoreWhitespace, bool ignoreCase, bool ignoreNumbers, bool ignoreLineEndings, string ignoreCharacters)
-		{
-			lock (tab0)
-			{
-				var diffParams = new DiffParams(ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings, ignoreCharacters);
-				if ((tab0.diffData != null) && (tab1.diffData != null) && (tab0.diffData.Text == tab0.Text) && (tab1.diffData.Text == tab1.Text) && (tab0.diffData.DiffParams.Equals(diffParams)) && (tab1.diffData.DiffParams.Equals(diffParams)))
-					return;
+		public int ViewMaxColumn => Text.MaxColumn;
 
-				var tab = new Tab[] { tab0, tab1 };
-				var lines = new List<string>[2];
-				var map = new List<List<int>>[2];
-				for (var pass = 0; pass < 2; ++pass)
-				{
-					tab[pass].diffData = new DiffData(tab[pass].Text, diffParams);
-					var formatDiffLine = Enumerable.Range(0, tab[pass].TextView.NumLines).Select(line => diffParams.FormatLine(tab[pass].Text.GetString(tab[pass].TextView.GetLine(line, true)))).ToList();
-					lines[pass] = formatDiffLine.Select(val => val.Item1).ToList();
-					map[pass] = formatDiffLine.Select(val => val.Item2).ToList();
-				}
+		public int ViewNumLines => Text.NumLines;
 
-				var linesLCS = LCS.GetLCS(lines[0], lines[1], (str1, str2) => (string.IsNullOrWhiteSpace(str1) == string.IsNullOrWhiteSpace(str2)));
+		public int ViewGetPosition(int line, int index, bool allowJustPastEnd = false) => Text.GetPosition(line, index, allowJustPastEnd);
 
-				for (var pass = 0; pass < 2; ++pass)
-				{
-					tab[pass].diffData.LineCompare = linesLCS.Select(val =>
-					{
-						if (val[pass] == LCS.MatchType.Match)
-							return DiffType.Match;
-						if (val[pass] == LCS.MatchType.Gap)
-							return DiffType.GapMismatch;
-						if (val[1 - pass] == LCS.MatchType.Gap)
-							return DiffType.MismatchGap;
-						return DiffType.Mismatch;
-					}).ToList();
+		public int ViewGetIndexFromColumn(int line, int findColumn, bool returnMaxOnFail = false) => Text.GetIndexFromColumn(line, findColumn, returnMaxOnFail);
 
-					tab[pass].diffView = new NETextView(tab[pass].TextView as NETextView, linesLCS, pass);
+		public int ViewGetLineLength(int line) => Text.GetLineLength(line);
 
-					tab[pass].diffData.LineMap = new Dictionary<int, int>();
-					var pos = -1;
-					for (var line = 0; line < linesLCS.Count; ++line)
-					{
-						if (linesLCS[line][pass] != LCS.MatchType.Gap)
-							++pos;
-						tab[pass].diffData.LineMap[line] = pos;
-					}
-					tab[pass].diffData.LineRevMap = tab[pass].diffData.LineMap.GroupBy(pair => pair.Value).ToDictionary(group => group.Key, group => group.Min(pair => pair.Key));
-					tab[pass].diffData.ColCompare = new List<Tuple<int, int>>[linesLCS.Count];
-				}
+		public int ViewGetPositionLine(int position) => Text.GetPositionLine(position);
 
-				var curLine = new int[] { -1, -1 };
-				for (var line = 0; line < tab0.diffData.ColCompare.Length; ++line)
-				{
-					for (var pass = 0; pass < 2; ++pass)
-						++curLine[pass];
+		public int ViewGetPositionIndex(int position, int line) => Text.GetPositionIndex(position, line);
 
-					if (linesLCS[line].IsMatch)
-						continue;
+		public int ViewGetColumnFromIndex(int line, int findIndex) => Text.GetColumnFromIndex(line, findIndex);
 
-					var skip = false;
-					for (var pass = 0; pass < 2; ++pass)
-					{
-						if (linesLCS[line][pass] == LCS.MatchType.Gap)
-						{
-							--curLine[pass];
-							skip = true;
-						}
-					}
-					if (skip)
-						continue;
+		public int ViewGetLineColumnsLength(int line) => Text.GetLineColumnsLength(line);
 
-					var colsLCS = LCS.GetLCS(lines[0][curLine[0]], lines[1][curLine[1]], (ch1, ch2) => (char.IsLetterOrDigit(ch1) && char.IsLetterOrDigit(ch2)) || (char.IsWhiteSpace(ch1) && char.IsWhiteSpace(ch2)));
+		public string ViewGetLineColumns(int line, int startColumn, int endColumn) => Text.GetLineColumns(line, startColumn, endColumn);
 
-					for (var pass = 0; pass < 2; ++pass)
-					{
-						var start = default(int?);
-						var pos = -1;
-						tab[pass].diffData.ColCompare[line] = new List<Tuple<int, int>>();
-						for (var ctr = 0; ; ++ctr)
-						{
-							var done = ctr == colsLCS.Count;
-							if ((done) || (colsLCS[ctr][pass] != LCS.MatchType.Gap))
-								++pos;
+		public DiffType ViewGetLineDiffType(int line) => Text.GetLineDiffType(line);
 
-							if ((done) || (colsLCS[ctr].IsMatch))
-							{
-								if (start.HasValue)
-									tab[pass].diffData.ColCompare[line].Add(Tuple.Create(map[pass][curLine[pass]][start.Value], map[pass][curLine[pass]][pos]));
-								start = null;
-							}
-							else if (colsLCS[ctr][pass] == LCS.MatchType.Mismatch)
-								start = start ?? pos;
-							else
-								start = start ?? pos + 1;
+		public List<int> ViewGetLineColumnMap(int line, bool includeEnding = false) => Text.GetLineColumnMap(line, includeEnding);
 
-							if (done)
-								break;
-						}
-					}
-				}
-			}
-		}
+		public List<Tuple<int, int>> ViewGetLineColumnDiffs(int line) => Text.GetLineColumnDiffs(line);
 
-		public DiffType ViewGetLineDiffType(int line)
-		{
-			if (DiffTarget == null)
-				return DiffType.Match;
-			return diffData.LineCompare[line];
-		}
-
-		public List<int> ViewGetLineColumnMap(int line, bool includeEnding = false)
-		{
-			if ((line < 0) || (line >= DiffView.NumLines))
-				throw new IndexOutOfRangeException();
-
-			var result = new List<int>();
-			var index = DiffView.GetPosition(line, 0);
-			var len = DiffView.GetLineLength(line) + (includeEnding ? DiffView.GetEndingLength(line) : 0);
-			var outPos = 0;
-			while (len > 0)
-			{
-				result.Add(outPos);
-				if (Text[index] == '\t')
-					outPos = (outPos / NETextView.TabStop + 1) * NETextView.TabStop;
-				else
-					++outPos;
-				++index;
-				--len;
-			}
-			result.Add(outPos);
-
-			return result;
-		}
-
-		public List<Tuple<int, int>> ViewGetLineColumnDiffs(int line) => diffData?.ColCompare[line] ?? new List<Tuple<int, int>>();
-
-		public List<Tuple<double, double>> ViewGetDiffRanges()
-		{
-			if (diffData == null)
-				return null;
-
-			var diffRanges = new List<Tuple<double, double>>();
-			var start = -1;
-			var line = -1;
-			while (true)
-			{
-				++line;
-				var stop = line >= diffData.LineCompare.Count;
-				var lineIsDiff = stop ? false : diffData.LineCompare[line] != DiffType.Match;
-
-				if ((start != -1) && (!lineIsDiff))
-				{
-					diffRanges.Add(new Tuple<double, double>(start, line));
-					start = -1;
-				}
-
-				if (stop)
-					break;
-
-				if ((start == -1) && (lineIsDiff))
-					start = line;
-			}
-
-			return diffRanges;
-		}
+		public List<Tuple<double, double>> ViewGetDiffRanges() => Text.GetDiffRanges();
 	}
 }

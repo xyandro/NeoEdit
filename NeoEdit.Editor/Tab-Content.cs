@@ -99,9 +99,9 @@ namespace NeoEdit.Editor
 			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { str });
 		}
 
-		void Execute_Content_Comment() => ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Text, TextView, range)).ToList());
+		void Execute_Content_Comment() => ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Text, range)).ToList());
 
-		void Execute_Content_Uncomment() => ReplaceSelections(Selections.Select(range => Parser.Uncomment(ContentType, Text, TextView, range)).ToList());
+		void Execute_Content_Uncomment() => ReplaceSelections(Selections.Select(range => Parser.Uncomment(ContentType, Text, range)).ToList());
 
 		void Execute_Content_Copy() => Clipboard = GetSelectionNodes().Select(node => Text.GetString(node.Start, node.Length)).ToList();
 

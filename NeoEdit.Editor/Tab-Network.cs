@@ -55,13 +55,13 @@ namespace NeoEdit.Editor
 				catch (Exception ex)
 				{
 					error = true;
-					data = $"<error>{TextView.DefaultEnding}";
-					data += $"\t<url>{urls[ctr]}</url>{TextView.DefaultEnding}";
-					data += $"\t<data>{TextView.DefaultEnding}";
+					data = $"<error>{Text.DefaultEnding}";
+					data += $"\t<url>{urls[ctr]}</url>{Text.DefaultEnding}";
+					data += $"\t<data>{Text.DefaultEnding}";
 					for (; ex != null; ex = ex.InnerException)
-						data += $"\t\t{ex.Message}{TextView.DefaultEnding}";
-					data += $"\t</data>{TextView.DefaultEnding}";
-					data += $"</error>{TextView.DefaultEnding}";
+						data += $"\t\t{ex.Message}{Text.DefaultEnding}";
+					data += $"\t</data>{Text.DefaultEnding}";
+					data += $"</error>{Text.DefaultEnding}";
 				}
 				results.Add(Tuple.Create(urls[ctr], data, error));
 			}
@@ -138,7 +138,7 @@ namespace NeoEdit.Editor
 			if (!urls.Any())
 				return;
 
-			ReplaceSelections(urls.AsTaskRunner().Select(url => string.Join(TextView.DefaultEnding, YouTubeDL.GetPlayListItems(url))).ToList());
+			ReplaceSelections(urls.AsTaskRunner().Select(url => string.Join(Text.DefaultEnding, YouTubeDL.GetPlayListItems(url))).ToList());
 		}
 
 		void Execute_Network_Lookup_IP() { ReplaceSelections(Task.Run(async () => await Task.WhenAll(GetSelectionStrings().Select(async name => { try { return string.Join(" / ", (await Dns.GetHostEntryAsync(name)).AddressList.Select(address => address.ToString()).Distinct()); } catch { return "<ERROR>"; } }).ToList())).Result.ToList()); }
