@@ -411,12 +411,17 @@ namespace NeoEdit.Editor
 
 		void PostExecute()
 		{
+			var tabsAdded = 0;
 			NEClipboard setClipboard = null;
 			List<KeysAndValues>[] setKeysAndValues = null;
 			var dragFiles = new List<string>();
 			foreach (var tab in ActiveTabs)
 			{
-				tab.TabsToAdd.ForEach(newTab => AddTab(newTab));
+				foreach (var newTabTuple in tab.TabsToAdd)
+				{
+					AddTab(newTabTuple.tab, newTabTuple.index + tabsAdded);
+					++tabsAdded;
+				}
 
 				if (tab.ClipboardDataSet)
 				{

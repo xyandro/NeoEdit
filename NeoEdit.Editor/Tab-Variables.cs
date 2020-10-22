@@ -182,12 +182,12 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		readonly List<Tab> newTabsToAdd = new List<Tab>();
-		public IReadOnlyList<Tab> TabsToAdd => newTabsToAdd;
-		void QueueAddTab(Tab tab)
+		readonly List<(Tab tab, int? index)> newTabsToAdd = new List<(Tab tab, int? index)>();
+		public IReadOnlyList<(Tab tab, int? index)> TabsToAdd => newTabsToAdd;
+		void QueueAddTab(Tab tab, int? index = null)
 		{
 			EnsureInTransaction();
-			newTabsToAdd.Add(tab);
+			newTabsToAdd.Add((tab, index));
 		}
 
 		Tuple<IReadOnlyList<string>, bool?> newClipboardData;

@@ -204,7 +204,7 @@ namespace NeoEdit.Editor
 			Tabs.AddToTransaction(tab);
 			tab.ContentType = ContentType;
 			tab.DiffTarget = this;
-			QueueAddTab(tab);
+			QueueAddTab(tab, Tabs.GetTabIndex(this));
 		}
 
 		void Execute_File_Operations_SetDisplayName()
