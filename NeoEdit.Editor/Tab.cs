@@ -1539,7 +1539,7 @@ namespace NeoEdit.Editor
 		{
 			if (DiffTarget != null)
 			{
-				DiffTarget.Tabs.AddToTransaction(DiffTarget);
+				DiffTarget.Tabs?.AddToTransaction(DiffTarget);
 				DiffTarget = null;
 			}
 			ClearWatcher();
