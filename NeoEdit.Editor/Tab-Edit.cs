@@ -115,7 +115,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Undo()
 		{
-			var step = UndoRedo.GetUndo(ref newUndoRedo);
+			var step = UndoRedo.GetUndo(ref tabState.undoRedo);
 			if (step == null)
 				return;
 
@@ -134,7 +134,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Redo()
 		{
-			var step = UndoRedo.GetRedo(ref newUndoRedo);
+			var step = UndoRedo.GetRedo(ref tabState.undoRedo);
 			if (step == null)
 				return;
 

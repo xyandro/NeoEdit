@@ -15,39 +15,37 @@ namespace NeoEdit.Editor
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		Tabs oldTabs, newTabs;
+		TabState saveTabState, tabState;
+
 		public Tabs Tabs
 		{
-			get => newTabs;
-			set => newTabs = value;
+			get => tabState.tabs;
+			set => tabState.tabs = value;
 		}
 
-		NEText oldText, newText;
 		NEText Text
 		{
-			get => newText;
+			get => tabState.text;
 			set
 			{
 				EnsureInTransaction();
-				newText = value;
+				tabState.text = value;
 			}
 		}
 
-		bool oldIsDiff, newIsDiff;
 		bool IsDiff
 		{
-			get => newIsDiff;
+			get => tabState.isDiff;
 			set
 			{
 				EnsureInTransaction();
-				newIsDiff = value;
+				tabState.isDiff = value;
 			}
 		}
 
-		Tab oldDiffTarget, newDiffTarget;
 		public Tab DiffTarget
 		{
-			get => newDiffTarget;
+			get => tabState.diffTarget;
 			set
 			{
 				EnsureInTransaction();
@@ -62,59 +60,55 @@ namespace NeoEdit.Editor
 
 					Text.ClearDiff();
 					DiffTarget.Text.ClearDiff();
-					DiffTarget.newDiffTarget = null;
-					newDiffTarget = null;
+					DiffTarget.tabState.diffTarget = null;
+					tabState.diffTarget = null;
 				}
 
 				if (value != null)
 				{
 					value.DiffTarget = null;
-					newDiffTarget = value;
-					value.newDiffTarget = this;
+					tabState.diffTarget = value;
+					value.tabState.diffTarget = this;
 					IsDiff = DiffTarget.IsDiff = true;
 					CalculateDiff();
 				}
 			}
 		}
 
-		int oldCurrentSelection, newCurrentSelection;
 		public int CurrentSelection
 		{
-			get => Math.Min(Math.Max(0, newCurrentSelection), Selections.Count - 1);
+			get => Math.Min(Math.Max(0, tabState.currentSelection), Selections.Count - 1);
 			private set
 			{
 				EnsureInTransaction();
-				newCurrentSelection = value;
+				tabState.currentSelection = value;
 			}
 		}
 
-		IReadOnlyList<Range> oldSelections, newSelections;
 		public IReadOnlyList<Range> Selections
 		{
-			get => newSelections;
+			get => tabState.selections;
 			set
 			{
 				EnsureInTransaction();
-				newSelections = DeOverlap(value);
+				tabState.selections = DeOverlap(value);
 				CurrentSelection = CurrentSelection;
 				EnsureVisible();
 			}
 		}
 
-		readonly IReadOnlyList<Range>[] oldRegions = new IReadOnlyList<Range>[9];
-		readonly IReadOnlyList<Range>[] newRegions = new IReadOnlyList<Range>[9];
 		public IReadOnlyList<Range> GetRegions(int region)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			return newRegions[region - 1];
+			return tabState.regions[region - 1];
 		}
 
 		void SetRegions(int region, IReadOnlyList<Range> regions)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			newRegions[region - 1] = DeOverlap(regions);
+			tabState.regions[region - 1] = DeOverlap(regions);
 		}
 
 		readonly KeysAndValues[] newKeysAndValues = new KeysAndValues[Tabs.KeysAndValuesCount];
@@ -149,36 +143,33 @@ namespace NeoEdit.Editor
 			return keysAndValuesSet[kvIndex];
 		}
 
-		string oldDisplayName, newDisplayName;
 		public string DisplayName
 		{
-			get => newDisplayName;
+			get => tabState.displayName;
 			private set
 			{
 				EnsureInTransaction();
-				newDisplayName = value;
+				tabState.displayName = value;
 			}
 		}
 
-		string oldFileName, newFileName;
 		public string FileName
 		{
-			get => newFileName;
+			get => tabState.fileName;
 			private set
 			{
 				EnsureInTransaction();
-				newFileName = value;
+				tabState.fileName = value;
 			}
 		}
 
-		bool oldIsModified, newIsModified;
 		public bool IsModified
 		{
-			get => newIsModified;
+			get => tabState.isModified;
 			private set
 			{
 				EnsureInTransaction();
-				newIsModified = value;
+				tabState.isModified = value;
 			}
 		}
 
@@ -217,249 +208,228 @@ namespace NeoEdit.Editor
 		readonly List<string> newDragFiles = new List<string>();
 		public IReadOnlyList<string> DragFiles => newDragFiles;
 
-		bool oldAutoRefresh, newAutoRefresh;
 		public bool AutoRefresh
 		{
-			get => newAutoRefresh;
+			get => tabState.autoRefresh;
 			private set
 			{
 				EnsureInTransaction();
-				newAutoRefresh = value;
+				tabState.autoRefresh = value;
 			}
 		}
 
-		string oldDBName, newDBName;
 		public string DBName
 		{
-			get => newDBName;
+			get => tabState.dbName;
 			private set
 			{
 				EnsureInTransaction();
-				newDBName = value;
+				tabState.dbName = value;
 			}
 		}
 
-		ParserType oldContentType, newContentType;
 		public ParserType ContentType
 		{
-			get => newContentType;
+			get => tabState.contentType;
 			set
 			{
 				EnsureInTransaction();
-				newContentType = value;
+				tabState.contentType = value;
 			}
 		}
 
-		Coder.CodePage oldCodePage, newCodePage;
 		Coder.CodePage CodePage
 		{
-			get => newCodePage;
+			get => tabState.codePage;
 			set
 			{
 				EnsureInTransaction();
-				newCodePage = value;
+				tabState.codePage = value;
 			}
 		}
 
-		string oldAESKey, newAESKey;
 		public string AESKey
 		{
-			get => newAESKey;
+			get => tabState.aesKey;
 			private set
 			{
 				EnsureInTransaction();
-				newAESKey = value;
+				tabState.aesKey = value;
 			}
 		}
 
-		bool oldCompressed, newCompressed;
 		public bool Compressed
 		{
-			get => newCompressed;
+			get => tabState.compressed;
 			private set
 			{
 				EnsureInTransaction();
-				newCompressed = value;
+				tabState.compressed = value;
 			}
 		}
 
-		bool oldDiffIgnoreWhitespace, newDiffIgnoreWhitespace;
 		public bool DiffIgnoreWhitespace
 		{
-			get => newDiffIgnoreWhitespace;
+			get => tabState.diffIgnoreWhitespace;
 			private set
 			{
 				EnsureInTransaction();
-				newDiffIgnoreWhitespace = value;
+				tabState.diffIgnoreWhitespace = value;
 			}
 		}
 
-		bool oldDiffIgnoreCase, newDiffIgnoreCase;
 		public bool DiffIgnoreCase
 		{
-			get => newDiffIgnoreCase;
+			get => tabState.diffIgnoreCase;
 			private set
 			{
 				EnsureInTransaction();
-				newDiffIgnoreCase = value;
+				tabState.diffIgnoreCase = value;
 			}
 		}
 
-		bool oldDiffIgnoreNumbers, newDiffIgnoreNumbers;
 		public bool DiffIgnoreNumbers
 		{
-			get => newDiffIgnoreNumbers;
+			get => tabState.diffIgnoreNumbers;
 			private set
 			{
 				EnsureInTransaction();
-				newDiffIgnoreNumbers = value;
+				tabState.diffIgnoreNumbers = value;
 			}
 		}
 
-		bool oldDiffIgnoreLineEndings, newDiffIgnoreLineEndings;
 		public bool DiffIgnoreLineEndings
 		{
-			get => newDiffIgnoreLineEndings;
+			get => tabState.diffIgnoreLineEndings;
 			private set
 			{
 				EnsureInTransaction();
-				newDiffIgnoreLineEndings = value;
+				tabState.diffIgnoreLineEndings = value;
 			}
 		}
 
-		string oldDiffIgnoreCharacters, newDiffIgnoreCharacters;
 		public string DiffIgnoreCharacters
 		{
-			get => newDiffIgnoreCharacters;
+			get => tabState.diffIgnoreCharacters;
 			private set
 			{
 				EnsureInTransaction();
-				newDiffIgnoreCharacters = value;
+				tabState.diffIgnoreCharacters = value;
 			}
 		}
 
-		bool oldKeepSelections, newKeepSelections;
 		public bool KeepSelections
 		{
-			get => newKeepSelections;
+			get => tabState.keepSelections;
 			private set
 			{
 				EnsureInTransaction();
-				newKeepSelections = value;
+				tabState.keepSelections = value;
 			}
 		}
 
-		bool oldHighlightSyntax, newHighlightSyntax;
 		public bool HighlightSyntax
 		{
-			get => newHighlightSyntax;
+			get => tabState.highlightSyntax;
 			private set
 			{
 				EnsureInTransaction();
-				newHighlightSyntax = value;
+				tabState.highlightSyntax = value;
 			}
 		}
 
-		bool oldStrictParsing = true, newStrictParsing = true;
 		public bool StrictParsing
 		{
-			get => newStrictParsing;
+			get => tabState.strictParsing;
 			private set
 			{
 				EnsureInTransaction();
-				newStrictParsing = value;
+				tabState.strictParsing = value;
 			}
 		}
 
-		JumpByType oldJumpBy, newJumpBy;
 		public JumpByType JumpBy
 		{
-			get => newJumpBy;
+			get => tabState.jumpBy;
 			private set
 			{
 				EnsureInTransaction();
-				newJumpBy = value;
+				tabState.jumpBy = value;
 			}
 		}
 
-		DateTime oldLastActive, newLastActive;
 		public DateTime LastActive
 		{
-			get => newLastActive;
+			get => tabState.lastActive;
 			set
 			{
 				EnsureInTransaction();
-				newLastActive = value;
+				tabState.lastActive = value;
 			}
 		}
 
-		bool oldViewBinary, newViewBinary;
 		public bool ViewBinary
 		{
-			get => newViewBinary;
+			get => tabState.viewBinary;
 			private set
 			{
 				EnsureInTransaction();
-				newViewBinary = value;
+				tabState.viewBinary = value;
 			}
 		}
 
-		HashSet<Coder.CodePage> oldViewBinaryCodePages, newViewBinaryCodePages;
 		public HashSet<Coder.CodePage> ViewBinaryCodePages
 		{
-			get => newViewBinaryCodePages;
+			get => tabState.viewBinaryCodePages;
 			private set
 			{
 				EnsureInTransaction();
-				newViewBinaryCodePages = value;
+				tabState.viewBinaryCodePages = value;
 			}
 		}
 
-		IReadOnlyList<HashSet<string>> oldViewBinarySearches, newViewBinarySearches;
 		public IReadOnlyList<HashSet<string>> ViewBinarySearches
 		{
-			get => newViewBinarySearches;
+			get => tabState.viewBinarySearches;
 			private set
 			{
 				EnsureInTransaction();
-				newViewBinarySearches = value;
+				tabState.viewBinarySearches = value;
 			}
 		}
 
-		int oldStartColumn, newStartColumn;
 		public int StartColumn
 		{
-			get => newStartColumn;
+			get => tabState.startColumn;
 			set
 			{
 				EnsureInTransaction();
-				newStartColumn = value;
+				tabState.startColumn = value;
 			}
 		}
 
-		int oldStartRow, newStartRow;
 		public int StartRow
 		{
-			get => newStartRow;
+			get => tabState.startRow;
 			set
 			{
 				EnsureInTransaction();
-				newStartRow = value;
+				tabState.startRow = value;
 				if (DiffTarget != null)
 				{
 					Tabs.AddToTransaction(DiffTarget);
-					DiffTarget.newStartRow = value;
+					DiffTarget.tabState.startRow = value;
 				}
 			}
 		}
-
-		UndoRedo oldUndoRedo, newUndoRedo;
 
 		public void BeginTransaction(ExecuteState state = null)
 		{
 			if (this.state != null)
 				throw new Exception("Already in a transaction");
 			this.state = state ?? new ExecuteState(NECommand.None);
+			saveTabState = tabState;
+			tabState = tabState.Clone();
 		}
 
 		void ClearState()
@@ -476,87 +446,19 @@ namespace NeoEdit.Editor
 			}
 			newDragFiles.Clear();
 			state = null;
+			saveTabState = null;
 		}
 
 		public void Rollback()
 		{
 			EnsureInTransaction();
-
-			newTabs = oldTabs;
-			newText = oldText;
-			newUndoRedo = oldUndoRedo;
-			newCurrentSelection = oldCurrentSelection;
-			newSelections = oldSelections;
-			for (var ctr = 0; ctr < oldRegions.Length; ++ctr)
-				newRegions[ctr] = oldRegions[ctr];
-			newDisplayName = oldDisplayName;
-			newFileName = oldFileName;
-			newIsModified = oldIsModified;
-			newAutoRefresh = oldAutoRefresh;
-			newDBName = oldDBName;
-			newContentType = oldContentType;
-			newCodePage = oldCodePage;
-			newAESKey = oldAESKey;
-			newCompressed = oldCompressed;
-			newDiffIgnoreWhitespace = oldDiffIgnoreWhitespace;
-			newDiffIgnoreCase = oldDiffIgnoreCase;
-			newDiffIgnoreNumbers = oldDiffIgnoreNumbers;
-			newDiffIgnoreLineEndings = oldDiffIgnoreLineEndings;
-			newDiffIgnoreCharacters = oldDiffIgnoreCharacters;
-			newKeepSelections = oldKeepSelections;
-			newHighlightSyntax = oldHighlightSyntax;
-			newStrictParsing = oldStrictParsing;
-			newJumpBy = oldJumpBy;
-			newLastActive = oldLastActive;
-			newViewBinary = oldViewBinary;
-			newViewBinaryCodePages = oldViewBinaryCodePages;
-			newViewBinarySearches = oldViewBinarySearches;
-			newStartColumn = oldStartColumn;
-			newStartRow = oldStartRow;
-			newIsDiff = oldIsDiff;
-			newDiffTarget = oldDiffTarget;
-
+			tabState = saveTabState;
 			ClearState();
 		}
 
 		public void Commit()
 		{
 			EnsureInTransaction();
-
-			oldTabs = newTabs;
-			oldText = newText;
-			oldUndoRedo = newUndoRedo;
-			oldCurrentSelection = newCurrentSelection;
-			oldSelections = newSelections;
-			for (var ctr = 0; ctr < oldRegions.Length; ++ctr)
-				oldRegions[ctr] = newRegions[ctr];
-			oldDisplayName = newDisplayName;
-			oldFileName = newFileName;
-			oldIsModified = newIsModified;
-			oldAutoRefresh = newAutoRefresh;
-			oldDBName = newDBName;
-			oldContentType = newContentType;
-			oldCodePage = newCodePage;
-			oldAESKey = newAESKey;
-			oldCompressed = newCompressed;
-			oldDiffIgnoreWhitespace = newDiffIgnoreWhitespace;
-			oldDiffIgnoreCase = newDiffIgnoreCase;
-			oldDiffIgnoreNumbers = newDiffIgnoreNumbers;
-			oldDiffIgnoreLineEndings = newDiffIgnoreLineEndings;
-			oldDiffIgnoreCharacters = newDiffIgnoreCharacters;
-			oldKeepSelections = newKeepSelections;
-			oldHighlightSyntax = newHighlightSyntax;
-			oldStrictParsing = newStrictParsing;
-			oldJumpBy = newJumpBy;
-			oldLastActive = newLastActive;
-			oldViewBinary = newViewBinary;
-			oldViewBinaryCodePages = newViewBinaryCodePages;
-			oldViewBinarySearches = newViewBinarySearches;
-			oldStartColumn = newStartColumn;
-			oldStartRow = newStartRow;
-			oldIsDiff = newIsDiff;
-			oldDiffTarget = newDiffTarget;
-
 			ClearState();
 		}
 	}

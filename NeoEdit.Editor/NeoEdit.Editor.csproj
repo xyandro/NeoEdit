@@ -264,6 +264,7 @@
     <Compile Include="Tabs.cs" />
     <Compile Include="Transactional\NEText.cs" />
     <Compile Include="Transactional\TabsList.cs" />
+    <Compile Include="Transactional\TabState.cs" />
     <Compile Include="Transactional\UndoRedo.cs" />
     <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>

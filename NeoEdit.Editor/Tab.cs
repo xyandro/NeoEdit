@@ -23,14 +23,17 @@ namespace NeoEdit.Editor
 
 		public Tab(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
+			tabState = new TabState();
+
 			BeginTransaction(new ExecuteState(NECommand.None));
 
 			Text = new NEText("");
 			Selections = new List<Range>();
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, new List<Range>());
-			newUndoRedo = new UndoRedo();
 			ViewBinaryCodePages = new HashSet<Coder.CodePage>(Coder.DefaultCodePages);
+			StrictParsing = true;
+			tabState.undoRedo = new UndoRedo();
 
 			fileName = fileName?.Trim('"');
 			this.shutdownData = shutdownData;
@@ -139,9 +142,9 @@ namespace NeoEdit.Editor
 			var textCanvasUndoRedo = new UndoRedo.UndoRedoStep(undoRanges, undoText, tryJoinUndo);
 			switch (replaceType)
 			{
-				case ReplaceType.Undo: UndoRedo.AddUndone(ref newUndoRedo, textCanvasUndoRedo); break;
-				case ReplaceType.Redo: UndoRedo.AddRedone(ref newUndoRedo, textCanvasUndoRedo); break;
-				case ReplaceType.Normal: UndoRedo.AddUndo(ref newUndoRedo, textCanvasUndoRedo, IsModified); break;
+				case ReplaceType.Undo: UndoRedo.AddUndone(ref tabState.undoRedo, textCanvasUndoRedo); break;
+				case ReplaceType.Redo: UndoRedo.AddRedone(ref tabState.undoRedo, textCanvasUndoRedo); break;
+				case ReplaceType.Normal: UndoRedo.AddUndo(ref tabState.undoRedo, textCanvasUndoRedo, IsModified); break;
 			}
 
 			Text = Text.Replace(ranges, strs);
@@ -1492,7 +1495,7 @@ namespace NeoEdit.Editor
 				isModified = !Coder.CanExactlyEncode(bytes, CodePage);
 
 			if (!keepUndo)
-				UndoRedo.Clear(ref newUndoRedo);
+				UndoRedo.Clear(ref tabState.undoRedo);
 			SetModifiedFlag(isModified);
 		}
 
