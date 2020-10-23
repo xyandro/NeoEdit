@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NeoEdit.Common;
 
@@ -7,9 +8,18 @@ namespace NeoEdit.Editor
 {
 	partial class Tabs
 	{
+		string GetSummaryName(Tab tab, int index)
+		{
+			if (!string.IsNullOrWhiteSpace(tab.DisplayName))
+				return tab.DisplayName;
+			if (!string.IsNullOrWhiteSpace(tab.FileName))
+				return $"Summary for {Path.GetFileName(tab.FileName)}";
+			return $"Summary {index + 1}";
+		}
+
 		void Execute_Select_Summarize(bool caseSensitive, bool showAllTabs)
 		{
-			var selectionsByTab = ActiveTabs.Select(tab => (DisplayName: tab.FileName, Selections: tab.GetSelectionStrings())).ToList();
+			var selectionsByTab = ActiveTabs.Select((tab, index) => (DisplayName: GetSummaryName(tab, index), Selections: tab.GetSelectionStrings())).ToList();
 
 			if (!showAllTabs)
 				selectionsByTab = new List<(string DisplayName, IReadOnlyList<string> Selections)> { (DisplayName: "Summary", Selections: selectionsByTab.SelectMany(x => x.Selections).ToList()) };

@@ -60,7 +60,8 @@ namespace NeoEdit.Editor
 				stringRanges.Add(Range.FromIndex(sb.Length, tuple.str.Length));
 				sb.Append(tuple.str);
 
-				sb.Append("\r\n");
+				if ((!tuple.str.EndsWith("\r")) && (!tuple.str.EndsWith("\n")))
+					sb.Append("\r\n");
 			}
 
 			var tab = new Tab(displayName: displayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
