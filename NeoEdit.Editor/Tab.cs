@@ -332,7 +332,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_Operations_SetDisplayName: return Configure_File_SaveCopy_SaveCopyByExpression();
 				case NECommand.File_Encoding_Encoding: return Configure_File_Encoding_Encoding();
 				case NECommand.File_Encoding_ReopenWithEncoding: return Configure_File_Encoding_ReopenWithEncoding();
-				case NECommand.File_Encoding_LineEndings: return Configure_File_Encoding_LineEndings(Tabs);
+				case NECommand.File_Encoding_LineEndings: return Configure_File_Encoding_LineEndings();
 				case NECommand.File_Encrypt: return Configure_File_Encrypt();
 				case NECommand.Edit_Paste_Paste: return Configure_Edit_Paste_Paste();
 				case NECommand.Edit_Paste_RotatePaste: return Configure_Edit_Paste_Paste();
