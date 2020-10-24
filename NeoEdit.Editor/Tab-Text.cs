@@ -103,7 +103,7 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Text_Select_Chars;
 			var minPosition = 0;
-			var maxPosition = Text.MaxPosition;
+			var maxPosition = Text.Length;
 
 			var sels = new List<Range>();
 			foreach (var range in Selections)

@@ -25,8 +25,8 @@ namespace NeoEdit.Editor.Transactional
 		public string OnlyEnding { get; private set; }
 		public string DefaultEnding { get; private set; }
 
+		public int Length => text.Length;
 		public int NumLines => endingPosition.Count;
-		public int MaxPosition => text.Length;
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
 
@@ -158,8 +158,6 @@ namespace NeoEdit.Editor.Transactional
 
 			diffData = null;
 		}
-
-		public int Length => text.Length;
 
 		public char this[int position]
 		{

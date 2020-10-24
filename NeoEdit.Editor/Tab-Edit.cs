@@ -229,7 +229,7 @@ namespace NeoEdit.Editor
 				firstMatchOnly = true;
 				selections = new List<Range>();
 				for (var ctr = 0; ctr < Selections.Count; ++ctr)
-					selections.Add(new Range(Selections[ctr].End, ctr + 1 == Selections.Count ? Text.MaxPosition : Selections[ctr + 1].Start));
+					selections.Add(new Range(Selections[ctr].End, ctr + 1 == Selections.Count ? Text.Length : Selections[ctr + 1].Start));
 			}
 			else if (result.SelectionOnly)
 				selections = Selections.ToList();
@@ -324,7 +324,7 @@ namespace NeoEdit.Editor
 						else if (ctr + 1 < Selections.Count)
 							endPos = Selections[ctr + 1].Start;
 						else
-							endPos = Text.MaxPosition;
+							endPos = Text.Length;
 						newSels.Add(new Range(endPos, Selections[ctr].Start));
 					}
 					Selections = newSels;

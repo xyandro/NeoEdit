@@ -38,7 +38,7 @@ namespace NeoEdit.Editor
 						return null;
 
 					if (Position.HasValue)
-						return Math.Max(0, Math.Min(Position.Value, tab.Text.MaxPosition));
+						return Math.Max(0, Math.Min(Position.Value, tab.Text.Length));
 
 					var line = Math.Max(0, Math.Min(tab.Text.GetNonDiffLine(Line ?? lastPosition?.Line ?? tab.Text.GetPositionLine(position)), tab.Text.NumLines - 1));
 					var index = Index ?? lastPosition?.Index;
@@ -53,7 +53,7 @@ namespace NeoEdit.Editor
 							index = 0;
 					}
 
-					return Math.Max(0, Math.Min(tab.Text.GetPosition(line, index.Value), tab.Text.MaxPosition));
+					return Math.Max(0, Math.Min(tab.Text.GetPosition(line, index.Value), tab.Text.Length));
 				}
 			}
 

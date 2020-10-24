@@ -681,7 +681,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Select_Name_Next()
 		{
-			var maxPosition = Text.MaxPosition;
+			var maxPosition = Text.Length;
 			var invalidChars = Path.GetInvalidFileNameChars();
 
 			var sels = new List<Range>();

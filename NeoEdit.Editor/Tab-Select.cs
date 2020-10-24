@@ -196,7 +196,7 @@ namespace NeoEdit.Editor
 
 		int GetOppositeBracket(int position)
 		{
-			if ((position < 0) || (position > Text.MaxPosition))
+			if ((position < 0) || (position > Text.Length))
 				return -1;
 
 			var dict = new Dictionary<char, char>
@@ -208,7 +208,7 @@ namespace NeoEdit.Editor
 			};
 
 			var found = default(KeyValuePair<char, char>);
-			if ((found.Key == 0) && (position < Text.MaxPosition))
+			if ((found.Key == 0) && (position < Text.Length))
 				found = dict.FirstOrDefault(entry => (entry.Key == Text[position]) || (entry.Value == Text[position]));
 			var posAdjust = 1;
 			if (found.Key == 0)
@@ -224,7 +224,7 @@ namespace NeoEdit.Editor
 			var direction = found.Key == Text[position] ? 1 : -1;
 
 			var num = 0;
-			for (; (position >= 0) && (position < Text.MaxPosition); position += direction)
+			for (; (position >= 0) && (position < Text.Length); position += direction)
 			{
 				if (Text[position] == found.Key)
 					++num;
@@ -299,8 +299,8 @@ namespace NeoEdit.Editor
 		void Execute_Select_Invert()
 		{
 			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
-			var end = Selections.Select(sel => sel.Start).Concat(new[] { Text.MaxPosition });
-			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.MaxPosition))).ToList();
+			var end = Selections.Select(sel => sel.Start).Concat(new[] { Text.Length });
+			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.Length))).ToList();
 		}
 
 		void Execute_Select_Join()
