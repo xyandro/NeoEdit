@@ -9,8 +9,8 @@ using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
-using NeoEdit.Common.PreExecution;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.TaskRunning;
 
@@ -20,13 +20,13 @@ namespace NeoEdit.Editor
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
-		ExecuteState state;
+		EditorExecuteState state;
 
 		public Tab(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
 			tabState = new TabState();
 
-			BeginTransaction(new ExecuteState(NECommand.None));
+			BeginTransaction(new EditorExecuteState(NECommand.None));
 
 			Text = new NEText("");
 			Selections = new List<Range>();
@@ -69,7 +69,7 @@ namespace NeoEdit.Editor
 			}
 
 			var tab = new Tab(displayName: displayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-			tab.BeginTransaction(new ExecuteState(NECommand.None));
+			tab.BeginTransaction(new EditorExecuteState(NECommand.None));
 			tab.Selections = stringRanges;
 			tab.Commit();
 
@@ -452,18 +452,18 @@ namespace NeoEdit.Editor
 		#endregion
 
 		#region PreExecute
-		static public IPreExecution PreExecute(ExecuteState state, IReadOnlyList<Tab> activeTabs)
+		static public IPreExecution PreExecute(EditorExecuteState state)
 		{
 			switch (state.Command)
 			{
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: return PreExecute_Select_Repeats_Tabs_MatchMismatch(activeTabs, true);
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: return PreExecute_Select_Repeats_Tabs_MatchMismatch(activeTabs, true);
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(activeTabs, true);
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(activeTabs, true);
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: return PreExecute_Select_Repeats_Tabs_MatchMismatch(activeTabs, false);
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: return PreExecute_Select_Repeats_Tabs_MatchMismatch(activeTabs, false);
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(activeTabs, false);
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(activeTabs, false);
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: return PreExecute_Select_Repeats_Tabs_MatchMismatch(state, true);
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: return PreExecute_Select_Repeats_Tabs_MatchMismatch(state, true);
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(state, true);
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(state, true);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: return PreExecute_Select_Repeats_Tabs_MatchMismatch(state, false);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: return PreExecute_Select_Repeats_Tabs_MatchMismatch(state, false);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(state, false);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(state, false);
 				default: return null;
 			}
 		}

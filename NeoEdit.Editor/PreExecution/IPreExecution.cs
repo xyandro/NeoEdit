@@ -1,4 +1,4 @@
-﻿namespace NeoEdit.Common.PreExecution
+﻿namespace NeoEdit.Editor.PreExecution
 {
 	public interface IPreExecution { }
 }

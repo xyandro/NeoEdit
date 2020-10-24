@@ -192,8 +192,6 @@
     <Compile Include="ITabsWindow.cs" />
     <Compile Include="ItemSet.cs" />
     <Compile Include="KeyGestureAttribute.cs" />
-    <Compile Include="KeysAndValues.cs" />
-    <Compile Include="Models\AnswerResult.cs" />
     <Compile Include="Models\CommandLineParams.cs" />
     <Compile Include="Models\MacroPlayRepeatDialogResult.cs" />
     <Compile Include="Models\SaveFileDialogResult.cs" />
@@ -210,9 +208,6 @@
     <Compile Include="Parsing\ParserException.cs" />
     <Compile Include="Parsing\ParserHelper.cs" />
     <Compile Include="Parsing\ParserNode.cs" />
-    <Compile Include="PreExecution\IPreExecution.cs" />
-    <Compile Include="PreExecution\PreExecution_Select_Repeats_Tabs_CommonNonCommon.cs" />
-    <Compile Include="PreExecution\PreExecution_Select_Repeats_Tabs_MatchMismatch.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

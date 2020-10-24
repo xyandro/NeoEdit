@@ -88,7 +88,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void BeginTransaction(ExecuteState state)
+		void BeginTransaction(EditorExecuteState state)
 		{
 			if (this.state != null)
 				throw new Exception("Already in a transaction");

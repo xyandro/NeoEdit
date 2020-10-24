@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NeoEdit.Common.PreExecution
+namespace NeoEdit.Editor.PreExecution
 {
 	public class PreExecution_Select_Repeats_Tabs_CommonNonCommon : IPreExecution
 	{

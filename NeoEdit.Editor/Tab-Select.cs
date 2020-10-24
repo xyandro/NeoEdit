@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
-using NeoEdit.Common.PreExecution;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.Editor.Searchers;
 using NeoEdit.TaskRunning;
 
@@ -360,10 +360,10 @@ namespace NeoEdit.Editor
 			Selections = strs.Select(tuple => Selections[tuple.Item2]).ToList();
 		}
 
-		static PreExecution_Select_Repeats_Tabs_MatchMismatch PreExecute_Select_Repeats_Tabs_MatchMismatch(IReadOnlyList<Tab> activeTabs, bool caseSensitive)
+		static PreExecution_Select_Repeats_Tabs_MatchMismatch PreExecute_Select_Repeats_Tabs_MatchMismatch(EditorExecuteState state, bool caseSensitive)
 		{
 			var preExecution = new PreExecution_Select_Repeats_Tabs_MatchMismatch();
-			foreach (var tab in activeTabs)
+			foreach (var tab in state.Tabs.ActiveTabs)
 			{
 				var strs = tab.GetSelectionStrings().ToList();
 				var matches = preExecution.Matches ?? strs;
@@ -388,11 +388,11 @@ namespace NeoEdit.Editor
 			Selections = Selections.Where((range, index) => (matches[index] != null) == match).ToList();
 		}
 
-		static PreExecution_Select_Repeats_Tabs_CommonNonCommon PreExecute_Select_Repeats_Tabs_CommonNonCommon(IReadOnlyList<Tab> activeTabs, bool caseSensitive)
+		static PreExecution_Select_Repeats_Tabs_CommonNonCommon PreExecute_Select_Repeats_Tabs_CommonNonCommon(EditorExecuteState state, bool caseSensitive)
 		{
 			var preExecution = new PreExecution_Select_Repeats_Tabs_CommonNonCommon();
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
-			foreach (var tab in activeTabs)
+			foreach (var tab in state.Tabs.ActiveTabs)
 			{
 				var repeats = tab.Selections.AsTaskRunner().GroupBy(tab.Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
 

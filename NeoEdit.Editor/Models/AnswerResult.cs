@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NeoEdit.Common.Enums;
 
-namespace NeoEdit.Common.Models
+namespace NeoEdit.Editor.Models
 {
 	public class AnswerResult
 	{

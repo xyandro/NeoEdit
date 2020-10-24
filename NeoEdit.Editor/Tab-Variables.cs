@@ -423,11 +423,11 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void BeginTransaction(ExecuteState state = null)
+		public void BeginTransaction(EditorExecuteState state = null)
 		{
 			if (this.state != null)
 				throw new Exception("Already in a transaction");
-			this.state = state ?? new ExecuteState(NECommand.None);
+			this.state = state ?? new EditorExecuteState(NECommand.None);
 			saveTabState = tabState;
 			tabState = tabState.Clone();
 		}

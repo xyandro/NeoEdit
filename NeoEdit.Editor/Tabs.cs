@@ -9,9 +9,9 @@ using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
-using NeoEdit.Common.PreExecution;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.CommandLine;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.TaskRunning;
 
@@ -38,7 +38,7 @@ namespace NeoEdit.Editor
 
 		public int TabRows { get; private set; }
 
-		ExecuteState state;
+		EditorExecuteState state;
 
 		bool timeNextAction;
 		MacroAction lastAction;
@@ -50,7 +50,7 @@ namespace NeoEdit.Editor
 			oldTabsList = newTabsList = new TabsList(this);
 			oldWindowLayout = newWindowLayout = new WindowLayout(1, 1);
 
-			BeginTransaction(new ExecuteState(NECommand.None));
+			BeginTransaction(new EditorExecuteState(NECommand.None));
 			TabsWindow = ITabsWindowStatic.CreateITabsWindow(this);
 			if (addEmpty)
 				Execute_File_New_New(false);
@@ -202,7 +202,7 @@ namespace NeoEdit.Editor
 					TabsWindow.SetMacroProgress((double)stepIndex / macro.Actions.Count);
 				}
 
-				if (!RunCommand(macro.Actions[stepIndex++].GetExecuteState(), true))
+				if (!RunCommand(macro.Actions[stepIndex++].GetExecuteState(this), true))
 				{
 					playingMacro = null;
 					playingMacroNextAction = null;
@@ -216,13 +216,14 @@ namespace NeoEdit.Editor
 
 		public void HandleCommand(ExecuteState state, Func<bool> skipDraw = null)
 		{
-			RunCommand(state);
+			var editorState = new EditorExecuteState(this, state);
+			RunCommand(editorState);
 			PlayMacro();
 			if (skipDraw?.Invoke() != true)
 				RenderTabsWindow();
 		}
 
-		bool RunCommand(ExecuteState state, bool inMacro = false)
+		bool RunCommand(EditorExecuteState state, bool inMacro = false)
 		{
 			try
 			{
@@ -230,7 +231,7 @@ namespace NeoEdit.Editor
 				{
 					if (lastAction == null)
 						throw new Exception("No last action available");
-					state = lastAction.GetExecuteState();
+					state = lastAction.GetExecuteState(this);
 					inMacro = true;
 				}
 
@@ -290,7 +291,7 @@ namespace NeoEdit.Editor
 			return Focused.Configure();
 		}
 
-		IPreExecution PreExecute() => Tab.PreExecute(state, ActiveTabs);
+		IPreExecution PreExecute() => Tab.PreExecute(state);
 
 		void Execute()
 		{

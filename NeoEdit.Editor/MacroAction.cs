@@ -22,7 +22,7 @@ namespace NeoEdit.Editor
 
 		MacroAction() { }
 
-		public static MacroAction GetMacroAction(ExecuteState state)
+		public static MacroAction GetMacroAction(EditorExecuteState state)
 		{
 			if (!macroInclude[state.Command])
 				return null;
@@ -40,9 +40,9 @@ namespace NeoEdit.Editor
 			};
 		}
 
-		public ExecuteState GetExecuteState()
+		public EditorExecuteState GetExecuteState(Tabs tabs)
 		{
-			return new ExecuteState(Command)
+			return new EditorExecuteState(Command)
 			{
 				ShiftDown = ShiftDown,
 				ControlDown = ControlDown,
@@ -51,6 +51,7 @@ namespace NeoEdit.Editor
 				Key = Key,
 				Text = Text,
 				Configuration = Configuration,
+				Tabs = tabs,
 			};
 		}
 	}
