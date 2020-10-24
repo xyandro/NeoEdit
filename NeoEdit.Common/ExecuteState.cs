@@ -5,6 +5,7 @@ using System.Windows.Input;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
+using NeoEdit.Common.PreExecution;
 
 namespace NeoEdit.Common
 {
@@ -18,6 +19,7 @@ namespace NeoEdit.Common
 		public Key Key;
 		public string Text;
 		public IConfiguration Configuration;
+		public IPreExecution PreExecution;
 
 		public ExecuteState(NECommand command) => Command = command;
 

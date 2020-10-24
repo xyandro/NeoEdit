@@ -9,6 +9,7 @@ using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
+using NeoEdit.Common.PreExecution;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.TaskRunning;
@@ -441,18 +442,28 @@ namespace NeoEdit.Editor
 				case NECommand.Database_Examine: return Configure_Database_Examine();
 				case NECommand.Select_Limit: return Configure_Select_Limit();
 				case NECommand.Select_RepeatsCaseSensitive_ByCount: return Configure_Select_Repeats_ByCount();
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: return Configure_Select_Repeats_Tabs_MatchMismatch(true);
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: return Configure_Select_Repeats_Tabs_MatchMismatch(true);
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: return Configure_Select_Repeats_Tabs_CommonNonCommon(true);
-				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: return Configure_Select_Repeats_Tabs_CommonNonCommon(true);
 				case NECommand.Select_RepeatsCaseInsensitive_ByCount: return Configure_Select_Repeats_ByCount();
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: return Configure_Select_Repeats_Tabs_MatchMismatch(false);
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: return Configure_Select_Repeats_Tabs_MatchMismatch(false);
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: return Configure_Select_Repeats_Tabs_CommonNonCommon(false);
-				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: return Configure_Select_Repeats_Tabs_CommonNonCommon(false);
 				case NECommand.Select_Split: return Configure_Select_Split();
 				case NECommand.Select_Selection_ToggleAnchor: return Configure_Select_Selection_ToggleAnchor();
 				case NECommand.Window_ViewBinaryCodePages: return Configure_Window_ViewBinaryCodePages();
+				default: return null;
+			}
+		}
+		#endregion
+
+		#region PreExecute
+		static public IPreExecution PreExecute(ExecuteState state, IReadOnlyList<Tab> activeTabs)
+		{
+			switch (state.Command)
+			{
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Match: return PreExecute_Select_Repeats_Tabs_MatchMismatch(activeTabs, true);
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Mismatch: return PreExecute_Select_Repeats_Tabs_MatchMismatch(activeTabs, true);
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_Common: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(activeTabs, true);
+				case NECommand.Select_RepeatsCaseSensitive_Tabs_NonCommon: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(activeTabs, true);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Match: return PreExecute_Select_Repeats_Tabs_MatchMismatch(activeTabs, false);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Mismatch: return PreExecute_Select_Repeats_Tabs_MatchMismatch(activeTabs, false);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_Common: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(activeTabs, false);
+				case NECommand.Select_RepeatsCaseInsensitive_Tabs_NonCommon: return PreExecute_Select_Repeats_Tabs_CommonNonCommon(activeTabs, false);
 				default: return null;
 			}
 		}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
+using NeoEdit.Common.PreExecution;
 using NeoEdit.Editor.Searchers;
 using NeoEdit.TaskRunning;
 
@@ -359,13 +360,13 @@ namespace NeoEdit.Editor
 			Selections = strs.Select(tuple => Selections[tuple.Item2]).ToList();
 		}
 
-		Configuration_Select_Repeats_Tabs_MatchMismatch Configure_Select_Repeats_Tabs_MatchMismatch(bool caseSensitive)
+		static PreExecution_Select_Repeats_Tabs_MatchMismatch PreExecute_Select_Repeats_Tabs_MatchMismatch(IReadOnlyList<Tab> activeTabs, bool caseSensitive)
 		{
-			var configuration = new Configuration_Select_Repeats_Tabs_MatchMismatch();
-			foreach (var tab in Tabs.ActiveTabs)
+			var preExecution = new PreExecution_Select_Repeats_Tabs_MatchMismatch();
+			foreach (var tab in activeTabs)
 			{
 				var strs = tab.GetSelectionStrings().ToList();
-				var matches = configuration.Matches ?? strs;
+				var matches = preExecution.Matches ?? strs;
 				while (matches.Count < strs.Count)
 					matches.Add(null);
 				while (strs.Count < matches.Count)
@@ -376,36 +377,36 @@ namespace NeoEdit.Editor
 					if ((matches[ctr] != null) && (!string.Equals(matches[ctr], strs[ctr], stringComparison)))
 						matches[ctr] = null;
 
-				configuration.Matches = matches;
+				preExecution.Matches = matches;
 			}
-			return configuration;
+			return preExecution;
 		}
 
 		void Execute_Select_Repeats_Tabs_MatchMismatch(bool match)
 		{
-			var matches = (state.Configuration as Configuration_Select_Repeats_Tabs_MatchMismatch).Matches;
+			var matches = (state.PreExecution as PreExecution_Select_Repeats_Tabs_MatchMismatch).Matches;
 			Selections = Selections.Where((range, index) => (matches[index] != null) == match).ToList();
 		}
 
-		Configuration_Select_Repeats_Tabs_CommonNonCommon Configure_Select_Repeats_Tabs_CommonNonCommon(bool caseSensitive)
+		static PreExecution_Select_Repeats_Tabs_CommonNonCommon PreExecute_Select_Repeats_Tabs_CommonNonCommon(IReadOnlyList<Tab> activeTabs, bool caseSensitive)
 		{
-			var configuration = new Configuration_Select_Repeats_Tabs_CommonNonCommon();
+			var preExecution = new PreExecution_Select_Repeats_Tabs_CommonNonCommon();
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
-			foreach (var tab in Tabs.ActiveTabs)
+			foreach (var tab in activeTabs)
 			{
 				var repeats = tab.Selections.AsTaskRunner().GroupBy(tab.Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
 
-				if (configuration.Repeats != null)
-					repeats = repeats.Join(configuration.Repeats, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);
+				if (preExecution.Repeats != null)
+					repeats = repeats.Join(preExecution.Repeats, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);
 
-				configuration.Repeats = repeats;
+				preExecution.Repeats = repeats;
 			}
-			return configuration;
+			return preExecution;
 		}
 
 		void Execute_Select_Repeats_Tabs_CommonNonCommon(bool match)
 		{
-			var repeats = (state.Configuration as Configuration_Select_Repeats_Tabs_CommonNonCommon).Repeats;
+			var repeats = (state.PreExecution as PreExecution_Select_Repeats_Tabs_CommonNonCommon).Repeats;
 			repeats = repeats.ToDictionary(pair => pair.Key, pair => pair.Value, repeats.Comparer);
 			Selections = Selections.Where(range =>
 			{

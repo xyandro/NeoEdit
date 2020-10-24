@@ -133,8 +133,6 @@
     <Compile Include="Configuration\Configuration_Position_Goto.cs" />
     <Compile Include="Configuration\Configuration_Select_Limit.cs" />
     <Compile Include="Configuration\Configuration_Select_Repeats_ByCount.cs" />
-    <Compile Include="Configuration\Configuration_Select_Repeats_Tabs_CommonNonCommon.cs" />
-    <Compile Include="Configuration\Configuration_Select_Repeats_Tabs_MatchMismatch.cs" />
     <Compile Include="Configuration\Configuration_Select_Selection_ToggleAnchor.cs" />
     <Compile Include="Configuration\Configuration_Select_Split.cs" />
     <Compile Include="Configuration\Configuration_Table_AddColumn.cs" />
@@ -212,6 +210,9 @@
     <Compile Include="Parsing\ParserException.cs" />
     <Compile Include="Parsing\ParserHelper.cs" />
     <Compile Include="Parsing\ParserNode.cs" />
+    <Compile Include="PreExecution\IPreExecution.cs" />
+    <Compile Include="PreExecution\PreExecution_Select_Repeats_Tabs_CommonNonCommon.cs" />
+    <Compile Include="PreExecution\PreExecution_Select_Repeats_Tabs_MatchMismatch.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
