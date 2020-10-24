@@ -10,7 +10,23 @@ namespace NeoEdit.Editor
 {
 	partial class Tabs
 	{
-		static void Execute_Window_NewWindow() => new Tabs(true);
+		static void Execute_Window_New_NewWindow() => new Tabs(true);
+
+		void Execute_Window_New_FromClipboards()
+		{
+			var tabs = new Tabs();
+			tabs.BeginTransaction(state);
+			AddTabsFromClipboards(tabs);
+			tabs.Commit();
+		}
+
+		void Execute_Window_New_FromClipboardSelections()
+		{
+			var tabs = new Tabs();
+			tabs.BeginTransaction(state);
+			AddTabsFromClipboardSelections(tabs);
+			tabs.Commit();
+		}
 
 		void Execute_Window_Full() => SetLayout(new WindowLayout(1, 1));
 

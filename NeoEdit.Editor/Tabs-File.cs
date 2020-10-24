@@ -4,11 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
-using NeoEdit.Common.Transform;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -28,29 +26,9 @@ namespace NeoEdit.Editor
 			tabs.AddTab(new Tab(), canReplace: false);
 		}
 
-		void Execute_File_New_FromClipboards()
-		{
-			var index = 0;
-			foreach (var strs in NEClipboard.Current)
-			{
-				++index;
-				var ending = strs.Any(str => (!str.EndsWith("\r")) && (!str.EndsWith("\n"))) ? "\r\n" : "";
-				var sb = new StringBuilder(strs.Sum(str => str.Length + ending.Length));
-				var sels = new List<Range>();
-				foreach (var str in strs)
-				{
-					var start = sb.Length;
-					sb.Append(str);
-					sels.Add(new Range(sb.Length, start));
-					sb.Append(ending);
-				}
-				var te = new Tab(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-				AddTab(te, canReplace: index == 1);
-				te.Selections = sels;
-			}
-		}
+		void Execute_File_New_FromClipboards() => AddTabsFromClipboards(this);
 
-		void Execute_File_New_FromClipboardSelections() => NEClipboard.Current.Strings.ForEach((str, index) => AddTab(new Tab(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
+		void Execute_File_New_FromClipboardSelections() => AddTabsFromClipboardSelections(this);
 
 		Configuration_File_Open_Open Configure_File_Open_Open(string initialDirectory = null)
 		{

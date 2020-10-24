@@ -39,3 +39,6 @@ Only make menu appear when ready
 If I delete the entire block a region is in delete the region
 When pasting nothing whatever is selected should be deleted
 Save as doesn't abort properly
+Some configuration steps shouldn't be written in macro (e.g. Select->Repeats->Tabs->Common)
+Move Keys functions to dialog like Regions
+Ctrl+S should save if only change is encoding

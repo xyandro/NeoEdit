@@ -1055,7 +1055,12 @@
 		<controls:NEMenuItem x:Name="menu_Macro_Visualize" Header="_Visualize" CommandEnum="Macro_Visualize" ToolTip="Select whether to view macros run to run internally"/>
 	</MenuItem>
 	<MenuItem Header="_Window">
-		<controls:NEMenuItem Header="_New window" CommandEnum="Window_NewWindow" ToolTip="Create new window"/>
+		<MenuItem Header="_New">
+			<controls:NEMenuItem Header="_New window" CommandEnum="Window_New_NewWindow" ToolTip="Create new window"/>
+			<Separator/>
+			<controls:NEMenuItem Header="From _clipboards" CommandEnum="Window_New_FromClipboards" ToolTip="Open a new window with a new file for each file on the clipboard"/>
+			<controls:NEMenuItem Header="From c_lipboard selections" CommandEnum="Window_New_FromClipboardSelections" ToolTip="Open a new window with a new file for each value on the clipboard"/>
+		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="_Full" CommandEnum="Window_Full" ToolTip="Make current file full screen"/>
 		<controls:NEMenuItem Header="_Grid" CommandEnum="Window_Grid" ToolTip="Show files in grid"/>

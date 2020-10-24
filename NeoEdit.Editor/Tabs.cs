@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
@@ -376,7 +377,9 @@ namespace NeoEdit.Editor
 				case NECommand.Macro_Open_Open: Execute_File_Open_Open(state.Configuration as Configuration_File_Open_Open); break;
 				case NECommand.Macro_TimeNextAction: Execute_Macro_TimeNextAction(); break;
 				case NECommand.Macro_Visualize: Execute_Macro_Visualize(state.MultiStatus); break;
-				case NECommand.Window_NewWindow: Execute_Window_NewWindow(); break;
+				case NECommand.Window_New_NewWindow: Execute_Window_New_NewWindow(); break;
+				case NECommand.Window_New_FromClipboards: Execute_Window_New_FromClipboards(); break;
+				case NECommand.Window_New_FromClipboardSelections: Execute_Window_New_FromClipboardSelections(); break;
 				case NECommand.Window_Full: Execute_Window_Full(); break;
 				case NECommand.Window_Grid: Execute_Window_Grid(); break;
 				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(); break;
@@ -667,5 +670,29 @@ namespace NeoEdit.Editor
 		}
 
 		Tab GetTab(string fileName) => ActiveTabs.FirstOrDefault(tab => tab.FileName == fileName);
+
+		static void AddTabsFromClipboards(Tabs tabs)
+		{
+			var index = 0;
+			foreach (var strs in NEClipboard.Current)
+			{
+				++index;
+				var ending = strs.Any(str => (!str.EndsWith("\r")) && (!str.EndsWith("\n"))) ? "\r\n" : "";
+				var sb = new StringBuilder(strs.Sum(str => str.Length + ending.Length));
+				var sels = new List<Range>();
+				foreach (var str in strs)
+				{
+					var start = sb.Length;
+					sb.Append(str);
+					sels.Add(new Range(sb.Length, start));
+					sb.Append(ending);
+				}
+				var te = new Tab(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+				tabs.AddTab(te, canReplace: index == 1);
+				te.Selections = sels;
+			}
+		}
+
+		static void AddTabsFromClipboardSelections(Tabs tabs) => NEClipboard.Current.Strings.ForEach((str, index) => tabs.AddTab(new Tab(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 	}
 }
