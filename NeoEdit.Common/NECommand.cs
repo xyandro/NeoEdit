@@ -17,7 +17,7 @@ namespace NeoEdit.Common
 		[NoMacro] Internal_Redraw,
 		[NoMacro] Internal_SetupDiff,
 		[NoMacro] Internal_GotoTab,
-		[KeyGesture(Key.N, ModifierKeys.Control)] [KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_New_New,
+		[KeyGesture(Key.N, ModifierKeys.Control)] File_New_New,
 		File_New_FromSelections,
 		File_New_FromClipboards,
 		File_New_FromClipboardSelections,

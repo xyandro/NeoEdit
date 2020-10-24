@@ -18,13 +18,7 @@ namespace NeoEdit.Editor
 			files.AsTaskRunner().Select(file => new Tab(file)).ForEach(tab => AddTab(tab));
 		}
 
-		void Execute_File_New_New(bool createTabs)
-		{
-			var tabs = this;
-			if (createTabs)
-				tabs = new Tabs();
-			tabs.AddTab(new Tab(), canReplace: false);
-		}
+		void Execute_File_New_New() => AddTab(new Tab(), canReplace: false);
 
 		void Execute_File_New_FromClipboards() => AddTabsFromClipboards(this);
 

@@ -53,7 +53,7 @@ namespace NeoEdit.Editor
 			BeginTransaction(new EditorExecuteState(NECommand.None));
 			TabsWindow = ITabsWindowStatic.CreateITabsWindow(this);
 			if (addEmpty)
-				Execute_File_New_New(false);
+				AddTab(new Tab());
 			Commit();
 		}
 
@@ -306,7 +306,7 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
 				case NECommand.Internal_SetupDiff: Execute_Internal_SetupDiff(); break;
 				case NECommand.Internal_GotoTab: Execute_Internal_GotoTab(); break;
-				case NECommand.File_New_New: Execute_File_New_New(state.ShiftDown); break;
+				case NECommand.File_New_New: Execute_File_New_New(); break;
 				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
 				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;
 				case NECommand.File_Open_Open: Execute_File_Open_Open(state.Configuration as Configuration_File_Open_Open); break;
