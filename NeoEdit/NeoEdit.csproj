@@ -15,6 +15,7 @@
     <BitDepth Condition="'$(Platform)' == 'x86'">32</BitDepth>
     <BitDepth Condition="'$(Platform)' == 'x64'">64</BitDepth>
     <OutputPath>$(SolutionDir)bin\$(Configuration).$(BitDepth)\</OutputPath>
+    <BaseIntermediateOutputPath>obj\$(Configuration).$(BitDepth)\</BaseIntermediateOutputPath>
     <PlatformTarget>$(Platform)</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <CopyRetryCount>0</CopyRetryCount>

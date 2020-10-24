@@ -13,6 +13,7 @@
     <Deterministic>true</Deterministic>
     <ErrorReport>prompt</ErrorReport>
     <OutputPath>bin\$(Configuration)\</OutputPath>
+    <BaseIntermediateOutputPath>obj\$(Configuration).$(Platform)\</BaseIntermediateOutputPath>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <CopyRetryCount>0</CopyRetryCount>

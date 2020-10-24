@@ -15,6 +15,7 @@
     <BitDepth Condition="'$(Platform)' == 'x86'">32</BitDepth>
     <BitDepth Condition="'$(Platform)' == 'x64'">64</BitDepth>
     <OutputPath>$(SolutionDir)bin\$(Configuration).$(BitDepth)\</OutputPath>
+    <BaseIntermediateOutputPath>obj\$(Configuration).$(BitDepth)\</BaseIntermediateOutputPath>
     <PlatformTarget>$(Platform)</PlatformTarget>
     <CopyRetryCount>0</CopyRetryCount>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
