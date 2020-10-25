@@ -23,7 +23,7 @@ namespace NeoEdit.Editor
 			return newTabsList;
 		}
 
-		IReadOnlyOrderedHashSet<Tab> AllTabs => newTabsList.AllTabs;
+		public IReadOnlyOrderedHashSet<Tab> AllTabs => newTabsList.AllTabs;
 
 		void InsertTab(Tab tab, int? index = null)
 		{
@@ -37,7 +37,7 @@ namespace NeoEdit.Editor
 				GetUpdateTabsList().RemoveTab(tab);
 		}
 
-		void MoveTab(Tab tab, int index)
+		public void MoveTab(Tab tab, int index)
 		{
 			lock (this)
 				GetUpdateTabsList().MoveTab(tab, index);
@@ -45,16 +45,16 @@ namespace NeoEdit.Editor
 
 		public IReadOnlyOrderedHashSet<Tab> ActiveTabs => newTabsList.ActiveTabs;
 
-		void ClearAllActive() => GetUpdateTabsList().ClearActive();
+		public void ClearAllActive() => GetUpdateTabsList().ClearActive();
 
-		void SetActive(Tab tab, bool active = true) => GetUpdateTabsList().SetActive(tab, active);
+		public void SetActive(Tab tab, bool active = true) => GetUpdateTabsList().SetActive(tab, active);
 
-		bool IsActive(Tab tab) => newTabsList.IsActive(tab);
+		public bool IsActive(Tab tab) => newTabsList.IsActive(tab);
 
 		public Tab Focused
 		{
 			get => newTabsList.Focused;
-			private set => GetUpdateTabsList().Focused = value;
+			set => GetUpdateTabsList().Focused = value;
 		}
 
 		HashSet<Tab> transactionTabs;
@@ -78,7 +78,7 @@ namespace NeoEdit.Editor
 		}
 
 		bool oldMacroVisualize = true, newMacroVisualize = true;
-		bool MacroVisualize
+		public bool MacroVisualize
 		{
 			get => newMacroVisualize;
 			set
@@ -88,7 +88,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void BeginTransaction(EditorExecuteState state)
+		public void BeginTransaction(EditorExecuteState state)
 		{
 			if (this.state != null)
 				throw new Exception("Already in a transaction");
@@ -111,7 +111,7 @@ namespace NeoEdit.Editor
 			state = null;
 		}
 
-		void Commit()
+		public void Commit()
 		{
 			EnsureInTransaction();
 

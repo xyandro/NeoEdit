@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.PreExecution;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -46,6 +50,26 @@ namespace NeoEdit.Editor
 				ReplaceSelections(strs);
 		}
 
+		static PreExecutionStop PreExecute_File_New_New(EditorExecuteState state)
+		{
+			state.Tabs.AddTab(new Tab(), canReplace: false);
+			return PreExecutionStop.Stop;
+		}
+
+		void Execute_File_New_FromSelections() => GetSelectionStrings().ForEach(((str, index) => QueueAddTab(new Tab(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false))));
+
+		static PreExecutionStop PreExecute_File_New_FromClipboards(EditorExecuteState state)
+		{
+			Tabs.AddTabsFromClipboards(state.Tabs);
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_File_New_FromClipboardSelections(EditorExecuteState state)
+		{
+			Tabs.AddTabsFromClipboardSelections(state.Tabs);
+			return PreExecutionStop.Stop;
+		}
+
 		static Configuration_File_Open_Open Configure_File_Open_Open(EditorExecuteState state, string initialDirectory = null)
 		{
 			if ((initialDirectory == null) && (state.Tabs.Focused != null))
@@ -56,9 +80,19 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		void Execute_File_New_FromSelections() => GetSelectionStrings().ForEach(((str, index) => QueueAddTab(new Tab(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false))));
+		static PreExecutionStop PreExecute_File_Open_Open(EditorExecuteState state, Configuration_File_Open_Open result)
+		{
+			result.FileNames.ForEach(fileName => state.Tabs.AddTab(new Tab(fileName)));
+			return PreExecutionStop.Stop;
+		}
 
-		void Execute_File_Open_Selected() => Tabs.OpenFiles(RelativeSelectedFiles());
+		static PreExecutionStop PreExecute_File_Open_CopiedCut(EditorExecuteState state)
+		{
+			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new Tab(file)).ForEach(tab => state.Tabs.AddTab(tab));
+			return PreExecutionStop.Stop;
+		}
+
+		void Execute_File_Open_Selected() => RelativeSelectedFiles().AsTaskRunner().Select(file => new Tab(file)).ForEach(tab => state.Tabs.AddTab(tab));
 
 		void Execute_File_Save_Save()
 		{
@@ -77,8 +111,6 @@ namespace NeoEdit.Editor
 
 		void Execute_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		static Configuration_File_SaveCopy_ByExpression Configure_File_SaveCopy_SaveCopyByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
-
 		void Execute_File_SaveCopy_SaveCopyClipboard(bool copyOnly = false)
 		{
 			var results = Clipboard;
@@ -95,6 +127,8 @@ namespace NeoEdit.Editor
 
 			Save(newFileName, copyOnly);
 		}
+
+		static Configuration_File_SaveCopy_ByExpression Configure_File_SaveCopy_SaveCopyByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
 
 		void Execute_File_SaveCopy_SaveCopyByExpression(bool copyOnly = false)
 		{
@@ -136,8 +170,6 @@ namespace NeoEdit.Editor
 			SetFileName(fileName);
 		}
 
-		static Configuration_File_SaveCopy_ByExpression Configure_File_Operations_RenameByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
-
 		void Execute_File_Operations_RenameClipboard()
 		{
 			var results = Clipboard;
@@ -160,6 +192,8 @@ namespace NeoEdit.Editor
 			}
 			SetFileName(newFileName);
 		}
+
+		static Configuration_File_SaveCopy_ByExpression Configure_File_Operations_RenameByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
 
 		void Execute_File_Operations_RenameByExpression()
 		{
@@ -275,6 +309,18 @@ namespace NeoEdit.Editor
 				SetRegions(region, reformatRanges(GetRegions(region)));
 		}
 
+		static PreExecutionStop PreExecute_File_MoveToNewWindow(EditorExecuteState state)
+		{
+			var active = state.Tabs.ActiveTabs.ToList();
+			active.ForEach(tab => state.Tabs.RemoveTab(tab));
+
+			var tabs = new Tabs();
+			tabs.SetLayout(state.Tabs.WindowLayout);
+			active.ForEach(tab => tabs.AddTab(tab));
+
+			return PreExecutionStop.Stop;
+		}
+
 		void Execute_File_Insert_Files()
 		{
 			if (Selections.Count != 1)
@@ -361,5 +407,65 @@ namespace NeoEdit.Editor
 		void Execute_File_Encrypt() => AESKey = (state.Configuration as Configuration_File_Encrypt).Key;
 
 		void Execute_File_Compress() => Compressed = state.MultiStatus == false;
+
+		static PreExecutionStop PreExecute_File_Shell_Integrate(EditorExecuteState state)
+		{
+			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
+			using (var starKey = baseKey.OpenSubKey("*"))
+			using (var shellKey = starKey.OpenSubKey("shell", true))
+			using (var neoEditKey = shellKey.CreateSubKey("Open with NeoEdit"))
+			using (var commandKey = neoEditKey.CreateSubKey("command"))
+				commandKey.SetValue("", $@"""{Assembly.GetEntryAssembly().Location}"" -text ""%1""");
+
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_File_Shell_Unintegrate(EditorExecuteState state)
+		{
+			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
+			using (var starKey = baseKey.OpenSubKey("*"))
+			using (var shellKey = starKey.OpenSubKey("shell", true))
+				shellKey.DeleteSubKeyTree("Open with NeoEdit");
+
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_File_DontExitOnClose(EditorExecuteState state, bool? multiStatus)
+		{
+			Settings.DontExitOnClose = multiStatus != true;
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_File_Exit(EditorExecuteState state)
+		{
+			foreach (var tab in state.Tabs.AllTabs)
+			{
+				state.Tabs.AddToTransaction(tab);
+				tab.VerifyCanClose();
+				state.Tabs.RemoveTab(tab);
+			}
+			Tabs.Instances.Remove(state.Tabs);
+			state.Tabs.TabsWindow.CloseWindow();
+
+			if (!Tabs.Instances.Any())
+			{
+				if (((state.Configuration as Configuration_File_Exit)?.WindowClosed != true) || (!Settings.DontExitOnClose))
+					Environment.Exit(0);
+
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
+				GC.Collect();
+
+				// Restart if memory usage is more than 1/2 GB
+				var process = Process.GetCurrentProcess();
+				if (process.PrivateMemorySize64 > (1 << 29))
+				{
+					Process.Start(Environment.GetCommandLineArgs()[0], $"-background -waitpid={process.Id}");
+					Environment.Exit(0);
+				}
+			}
+
+			return PreExecutionStop.Stop;
+		}
 	}
 }

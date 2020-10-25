@@ -5,6 +5,7 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.TaskRunning;
 
@@ -59,6 +60,43 @@ namespace NeoEdit.Editor
 
 				return Tuple.Create(startLine, endLine);
 			}
+		}
+
+		static PreExecutionStop PreExecute_Diff_Diff(EditorExecuteState state, bool shiftDown)
+		{
+			var diffTargets = state.Tabs.AllTabs.Count == 2 ? state.Tabs.AllTabs.ToList() : state.Tabs.ActiveTabs.ToList();
+			diffTargets.ForEach(diffTarget => state.Tabs.AddToTransaction(diffTarget));
+
+			var inDiff = false;
+			for (var ctr = 0; ctr < diffTargets.Count; ++ctr)
+				if (diffTargets[ctr].DiffTarget != null)
+				{
+					inDiff = true;
+					diffTargets[ctr].DiffTarget = null;
+				}
+			if (inDiff)
+				return PreExecutionStop.Stop;
+
+			if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
+				throw new Exception("Must have even number of files active for diff.");
+
+			if (shiftDown)
+			{
+				if (!state.Tabs.AllTabs.Except(diffTargets).Any())
+					state.Tabs.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+				else
+				{
+					diffTargets.ForEach(diffTarget => state.Tabs.RemoveTab(diffTarget));
+
+					var tabs = new Tabs();
+					tabs.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+					diffTargets.ForEach(diffTarget => tabs.AddTab(diffTarget));
+				}
+			}
+
+			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
+
+			return PreExecutionStop.Stop;
 		}
 
 		void Execute_Diff_Selections() => DoRangesDiff(Selections);
@@ -241,6 +279,14 @@ namespace NeoEdit.Editor
 				throw new Exception("Diff not in progress");
 
 			Selections = Text.GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)).ToList();
+		}
+
+		static PreExecutionStop PreExecute_Diff_Select_LeftRightBothTabs(EditorExecuteState state, bool? left)
+		{
+			var active = new HashSet<Tab>(state.Tabs.ActiveTabs.NonNull(item => item.DiffTarget).SelectMany(item => new List<Tab> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((state.Tabs.GetTabIndex(item) < state.Tabs.GetTabIndex(item.DiffTarget)) == left)));
+			state.Tabs.AllTabs.ForEach(tab => state.Tabs.SetActive(tab, active.Contains(tab)));
+
+			return PreExecutionStop.Stop;
 		}
 	}
 }

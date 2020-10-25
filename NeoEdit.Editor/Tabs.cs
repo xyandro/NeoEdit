@@ -11,6 +11,7 @@ using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.CommandLine;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.TaskRunning;
 
@@ -39,7 +40,9 @@ namespace NeoEdit.Editor
 
 		EditorExecuteState state;
 
-		bool timeNextAction;
+		public DateTime LastActivated { get; set; }
+
+		public bool timeNextAction;
 		MacroAction lastAction;
 
 		public Tabs(bool addEmpty = false)
@@ -90,7 +93,7 @@ namespace NeoEdit.Editor
 			return keysAndValuesMap;
 		}
 
-		void RenderTabsWindow()
+		public void RenderTabsWindow()
 		{
 			var renderParameters = new RenderParameters
 			{
@@ -169,7 +172,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		void PlayMacro()
+		public void PlayMacro()
 		{
 			if (playingMacro == null)
 				return;
@@ -247,7 +250,8 @@ namespace NeoEdit.Editor
 					sw = Stopwatch.StartNew();
 
 				state.PreExecution = Tab.PreExecute(state);
-				TaskRunner.Run(Execute, percent => TabsWindow.SetTaskRunnerProgress(percent));
+				if (state.PreExecution != PreExecutionStop.Stop)
+					TaskRunner.Run(Execute, percent => TabsWindow.SetTaskRunnerProgress(percent));
 				TabsWindow.SetTaskRunnerProgress(null);
 				PostExecute();
 
@@ -275,129 +279,7 @@ namespace NeoEdit.Editor
 			return false;
 		}
 
-		void Execute()
-		{
-			switch (state.Command)
-			{
-				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
-				case NECommand.Internal_AddTab: Execute_Internal_AddTab((state.Configuration as Configuration_Internal_AddTab).Tab as Tab); break;
-				case NECommand.Internal_MouseActivate: Execute_Internal_MouseActivate((state.Configuration as Configuration_Internal_MouseActivate).Tab as Tab); break;
-				case NECommand.Internal_CloseTab: Execute_Internal_CloseTab((state.Configuration as Configuration_Internal_CloseTab).Tab as Tab); break;
-				case NECommand.Internal_Key: Execute_Internal_Key(); break;
-				case NECommand.Internal_Scroll: Execute_Internal_Scroll(); break;
-				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
-				case NECommand.Internal_SetupDiff: Execute_Internal_SetupDiff(); break;
-				case NECommand.Internal_GotoTab: Execute_Internal_GotoTab(); break;
-				case NECommand.File_New_New: Execute_File_New_New(); break;
-				case NECommand.File_New_FromClipboards: Execute_File_New_FromClipboards(); break;
-				case NECommand.File_New_FromClipboardSelections: Execute_File_New_FromClipboardSelections(); break;
-				case NECommand.File_Open_Open: Execute_File_Open_Open(state.Configuration as Configuration_File_Open_Open); break;
-				case NECommand.File_Open_CopiedCut: Execute_File_Open_CopiedCut(); break;
-				case NECommand.File_MoveToNewWindow: Execute_File_MoveToNewWindow(); break;
-				case NECommand.File_Shell_Integrate: Execute_File_Shell_Integrate(); break;
-				case NECommand.File_Shell_Unintegrate: Execute_File_Shell_Unintegrate(); break;
-				case NECommand.File_DontExitOnClose: Execute_File_DontExitOnClose(state.MultiStatus); break;
-				case NECommand.File_Exit: Execute_File_Exit(); break;
-				case NECommand.Edit_EscapeClearsSelections: Execute_Edit_EscapeClearsSelections(state.MultiStatus); break;
-				case NECommand.Diff_Diff: Execute_Diff_Diff(state.ShiftDown); break;
-				case NECommand.Diff_Select_LeftTab: Execute_Diff_Select_LeftRightBothTabs(true); break;
-				case NECommand.Diff_Select_RightTab: Execute_Diff_Select_LeftRightBothTabs(false); break;
-				case NECommand.Diff_Select_BothTabs: Execute_Diff_Select_LeftRightBothTabs(null); break;
-				case NECommand.Select_SummarizeCaseSensitive_One: Execute_Select_Summarize(true, false); break;
-				case NECommand.Select_SummarizeCaseSensitive_Many: Execute_Select_Summarize(true, true); break;
-				case NECommand.Select_SummarizeCaseInsensitive_One: Execute_Select_Summarize(false, false); break;
-				case NECommand.Select_SummarizeCaseInsensitive_Many: Execute_Select_Summarize(false, true); break;
-				case NECommand.Macro_Record_Quick_1: Execute_Macro_Record_Quick(1); break;
-				case NECommand.Macro_Record_Quick_2: Execute_Macro_Record_Quick(2); break;
-				case NECommand.Macro_Record_Quick_3: Execute_Macro_Record_Quick(3); break;
-				case NECommand.Macro_Record_Quick_4: Execute_Macro_Record_Quick(4); break;
-				case NECommand.Macro_Record_Quick_5: Execute_Macro_Record_Quick(5); break;
-				case NECommand.Macro_Record_Quick_6: Execute_Macro_Record_Quick(6); break;
-				case NECommand.Macro_Record_Quick_7: Execute_Macro_Record_Quick(7); break;
-				case NECommand.Macro_Record_Quick_8: Execute_Macro_Record_Quick(8); break;
-				case NECommand.Macro_Record_Quick_9: Execute_Macro_Record_Quick(9); break;
-				case NECommand.Macro_Record_Quick_10: Execute_Macro_Record_Quick(10); break;
-				case NECommand.Macro_Record_Quick_11: Execute_Macro_Record_Quick(11); break;
-				case NECommand.Macro_Record_Quick_12: Execute_Macro_Record_Quick(12); break;
-				case NECommand.Macro_Record_Record: Execute_Macro_Record_Record(); break;
-				case NECommand.Macro_Record_StopRecording: Execute_Macro_Record_StopRecording(); break;
-				case NECommand.Macro_Append_Quick_1: Execute_Macro_Append_Quick(1); break;
-				case NECommand.Macro_Append_Quick_2: Execute_Macro_Append_Quick(2); break;
-				case NECommand.Macro_Append_Quick_3: Execute_Macro_Append_Quick(3); break;
-				case NECommand.Macro_Append_Quick_4: Execute_Macro_Append_Quick(4); break;
-				case NECommand.Macro_Append_Quick_5: Execute_Macro_Append_Quick(5); break;
-				case NECommand.Macro_Append_Quick_6: Execute_Macro_Append_Quick(6); break;
-				case NECommand.Macro_Append_Quick_7: Execute_Macro_Append_Quick(7); break;
-				case NECommand.Macro_Append_Quick_8: Execute_Macro_Append_Quick(8); break;
-				case NECommand.Macro_Append_Quick_9: Execute_Macro_Append_Quick(9); break;
-				case NECommand.Macro_Append_Quick_10: Execute_Macro_Append_Quick(10); break;
-				case NECommand.Macro_Append_Quick_11: Execute_Macro_Append_Quick(11); break;
-				case NECommand.Macro_Append_Quick_12: Execute_Macro_Append_Quick(12); break;
-				case NECommand.Macro_Append_Append: Execute_Macro_Append_Append(); break;
-				case NECommand.Macro_Play_Quick_1: Execute_Macro_Play_Quick(1); break;
-				case NECommand.Macro_Play_Quick_2: Execute_Macro_Play_Quick(2); break;
-				case NECommand.Macro_Play_Quick_3: Execute_Macro_Play_Quick(3); break;
-				case NECommand.Macro_Play_Quick_4: Execute_Macro_Play_Quick(4); break;
-				case NECommand.Macro_Play_Quick_5: Execute_Macro_Play_Quick(5); break;
-				case NECommand.Macro_Play_Quick_6: Execute_Macro_Play_Quick(6); break;
-				case NECommand.Macro_Play_Quick_7: Execute_Macro_Play_Quick(7); break;
-				case NECommand.Macro_Play_Quick_8: Execute_Macro_Play_Quick(8); break;
-				case NECommand.Macro_Play_Quick_9: Execute_Macro_Play_Quick(9); break;
-				case NECommand.Macro_Play_Quick_10: Execute_Macro_Play_Quick(10); break;
-				case NECommand.Macro_Play_Quick_11: Execute_Macro_Play_Quick(11); break;
-				case NECommand.Macro_Play_Quick_12: Execute_Macro_Play_Quick(12); break;
-				case NECommand.Macro_Play_Play: Execute_Macro_Play_Play(); break;
-				case NECommand.Macro_Play_Repeat: Execute_Macro_Play_Repeat(); break;
-				case NECommand.Macro_Play_PlayOnCopiedFiles: Execute_Macro_Play_PlayOnCopiedFiles(); break;
-				case NECommand.Macro_Open_Quick_1: Execute_Macro_Open_Quick(1); break;
-				case NECommand.Macro_Open_Quick_2: Execute_Macro_Open_Quick(2); break;
-				case NECommand.Macro_Open_Quick_3: Execute_Macro_Open_Quick(3); break;
-				case NECommand.Macro_Open_Quick_4: Execute_Macro_Open_Quick(4); break;
-				case NECommand.Macro_Open_Quick_5: Execute_Macro_Open_Quick(5); break;
-				case NECommand.Macro_Open_Quick_6: Execute_Macro_Open_Quick(6); break;
-				case NECommand.Macro_Open_Quick_7: Execute_Macro_Open_Quick(7); break;
-				case NECommand.Macro_Open_Quick_8: Execute_Macro_Open_Quick(8); break;
-				case NECommand.Macro_Open_Quick_9: Execute_Macro_Open_Quick(9); break;
-				case NECommand.Macro_Open_Quick_10: Execute_Macro_Open_Quick(10); break;
-				case NECommand.Macro_Open_Quick_11: Execute_Macro_Open_Quick(11); break;
-				case NECommand.Macro_Open_Quick_12: Execute_Macro_Open_Quick(12); break;
-				case NECommand.Macro_Open_Open: Execute_File_Open_Open(state.Configuration as Configuration_File_Open_Open); break;
-				case NECommand.Macro_TimeNextAction: Execute_Macro_TimeNextAction(); break;
-				case NECommand.Macro_Visualize: Execute_Macro_Visualize(state.MultiStatus); break;
-				case NECommand.Window_New_NewWindow: Execute_Window_New_NewWindow(); break;
-				case NECommand.Window_New_FromClipboards: Execute_Window_New_FromClipboards(); break;
-				case NECommand.Window_New_FromClipboardSelections: Execute_Window_New_FromClipboardSelections(); break;
-				case NECommand.Window_Full: Execute_Window_Full(); break;
-				case NECommand.Window_Grid: Execute_Window_Grid(); break;
-				case NECommand.Window_CustomGrid: Execute_Window_CustomGrid(); break;
-				case NECommand.Window_ActiveTabs: Execute_Window_ActiveTabs(); break;
-				case NECommand.Window_Font_Size: Execute_Window_Font_Size(); break;
-				case NECommand.Window_Font_ShowSpecial: Execute_Window_Font_ShowSpecial(state.MultiStatus); break;
-				case NECommand.Window_Select_AllTabs: Execute_Window_Select_AllTabs(); break;
-				case NECommand.Window_Select_NoTabs: Execute_Window_Select_NoTabs(); break;
-				case NECommand.Window_Select_TabsWithSelections: Execute_Window_Select_TabsWithWithoutSelections(true); break;
-				case NECommand.Window_Select_TabsWithoutSelections: Execute_Window_Select_TabsWithWithoutSelections(false); break;
-				case NECommand.Window_Select_ModifiedTabs: Execute_Window_Select_ModifiedUnmodifiedTabs(true); break;
-				case NECommand.Window_Select_UnmodifiedTabs: Execute_Window_Select_ModifiedUnmodifiedTabs(false); break;
-				case NECommand.Window_Select_InactiveTabs: Execute_Window_Select_InactiveTabs(); break;
-				case NECommand.Window_Close_TabsWithSelections: Execute_Window_Close_TabsWithWithoutSelections(true); break;
-				case NECommand.Window_Close_TabsWithoutSelections: Execute_Window_Close_TabsWithWithoutSelections(false); break;
-				case NECommand.Window_Close_ModifiedTabs: Execute_Window_Close_ModifiedUnmodifiedTabs(true); break;
-				case NECommand.Window_Close_UnmodifiedTabs: Execute_Window_Close_ModifiedUnmodifiedTabs(false); break;
-				case NECommand.Window_Close_ActiveTabs: Execute_Window_Close_ActiveInactiveTabs(true); break;
-				case NECommand.Window_Close_InactiveTabs: Execute_Window_Close_ActiveInactiveTabs(false); break;
-				case NECommand.Window_WordList: Execute_Window_WordList(); break;
-				case NECommand.Help_About: Execute_Help_About(); break;
-				case NECommand.Help_Tutorial: Execute_Help_Tutorial(); break;
-				case NECommand.Help_Update: Execute_Help_Update(); break;
-				case NECommand.Help_Extract: Execute_Help_Extract(); break;
-				case NECommand.Help_RunGC: Execute_Help_RunGC(); break;
-				case NECommand.Help_CopyCommandLine: Execute_Help_CopyCommandLine(); break;
-				default: ExecuteActiveTabs(); break;
-			}
-		}
-
-		void ExecuteActiveTabs() => ActiveTabs.AsTaskRunner().ForAll(tab => tab.Execute());
+		public void Execute() => ActiveTabs.AsTaskRunner().ForAll(tab => tab.Execute());
 
 		void PostExecute()
 		{
@@ -452,7 +334,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void SetLayout(WindowLayout windowLayout) => WindowLayout = windowLayout;
+		public void SetLayout(WindowLayout windowLayout) => WindowLayout = windowLayout;
 
 		public void AddTab(Tab tab, int? index = null, bool canReplace = true)
 		{
@@ -494,7 +376,7 @@ namespace NeoEdit.Editor
 			return index;
 		}
 
-		void MovePrevNext(int offset, bool shiftDown, bool orderByActive = false)
+		public void MovePrevNext(int offset, bool shiftDown, bool orderByActive = false)
 		{
 			if (AllTabs.Count() <= 1)
 				return;
@@ -658,7 +540,7 @@ namespace NeoEdit.Editor
 
 		Tab GetTab(string fileName) => ActiveTabs.FirstOrDefault(tab => tab.FileName == fileName);
 
-		static void AddTabsFromClipboards(Tabs tabs)
+		public static void AddTabsFromClipboards(Tabs tabs)
 		{
 			var index = 0;
 			foreach (var strs in NEClipboard.Current)
@@ -680,6 +562,6 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static void AddTabsFromClipboardSelections(Tabs tabs) => NEClipboard.Current.Strings.ForEach((str, index) => tabs.AddTab(new Tab(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
+		public static void AddTabsFromClipboardSelections(Tabs tabs) => NEClipboard.Current.Strings.ForEach((str, index) => tabs.AddTab(new Tab(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 	}
 }

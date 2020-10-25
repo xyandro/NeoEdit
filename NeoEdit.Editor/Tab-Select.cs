@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
@@ -239,6 +240,15 @@ namespace NeoEdit.Editor
 			return -1;
 		}
 
+		string GetSummaryName(int index)
+		{
+			if (!string.IsNullOrWhiteSpace(DisplayName))
+				return DisplayName;
+			if (!string.IsNullOrWhiteSpace(FileName))
+				return $"Summary for {Path.GetFileName(FileName)}";
+			return $"Summary {index + 1}";
+		}
+
 		void Execute_Select_All() => Selections = new List<Range> { Range.FromIndex(0, Text.Length) };
 
 		void Execute_Select_Nothing() => Selections = new List<Range>();
@@ -429,6 +439,26 @@ namespace NeoEdit.Editor
 				searcher = new StringSearcher(result.Text, result.WholeWords, result.MatchCase, firstMatchOnly: true);
 
 			Selections = Selections.AsTaskRunner().SelectMany((range, index) => SelectSplit(range, result, searcher).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList();
+		}
+
+		static PreExecutionStop PreExecute_Select_Summarize(EditorExecuteState state, bool caseSensitive, bool showAllTabs)
+		{
+			var selectionsByTab = state.Tabs.ActiveTabs.Select((tab, index) => (DisplayName: tab.GetSummaryName(index), Selections: tab.GetSelectionStrings())).ToList();
+
+			if (!showAllTabs)
+				selectionsByTab = new List<(string DisplayName, IReadOnlyList<string> Selections)> { (DisplayName: "Summary", Selections: selectionsByTab.SelectMany(x => x.Selections).ToList()) };
+
+			var comparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
+			var summaryByTab = selectionsByTab.Select(tuple => (tuple.DisplayName, selections: tuple.Selections.GroupBy(x => x, comparer).Select(group => (str: group.Key, count: group.Count())).OrderByDescending(x => x.count).ToList())).ToList();
+
+			var tabs = new Tabs(false);
+			tabs.BeginTransaction(state);
+			foreach (var tab in summaryByTab)
+				tabs.AddTab(Tab.CreateSummaryTab(tab.DisplayName, tab.selections));
+			tabs.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+			tabs.Commit();
+
+			return PreExecutionStop.Stop;
 		}
 
 		void Execute_Select_Selection_First()

@@ -176,6 +176,7 @@
     <Compile Include="PreExecution\IPreExecution.cs" />
     <Compile Include="PreExecution\PreExecution_Select_Repeats_Tabs_CommonNonCommon.cs" />
     <Compile Include="PreExecution\PreExecution_Select_Repeats_Tabs_MatchMismatch.cs" />
+    <Compile Include="PreExecution\PreExecutionStop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Searchers\BinarySearcher.cs" />
     <Compile Include="Searchers\ISearcher.cs" />
@@ -207,6 +208,9 @@
     <Compile Include="Tab-Files.cs">
       <DependentUpon>Tab.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tab-Help.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tab-Image.cs">
       <DependentUpon>Tab.cs</DependentUpon>
     </Compile>
@@ -214,6 +218,9 @@
       <DependentUpon>Tab.cs</DependentUpon>
     </Compile>
     <Compile Include="Tab-Keys.cs">
+      <DependentUpon>Tab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tab-Macro.cs">
       <DependentUpon>Tab.cs</DependentUpon>
     </Compile>
     <Compile Include="Tab-Network.cs">
@@ -241,31 +248,10 @@
       <DependentUpon>Tab.cs</DependentUpon>
     </Compile>
     <Compile Include="Tab.cs" />
-    <Compile Include="Tabs-Diff.cs">
-      <DependentUpon>Tabs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tabs-Edit.cs">
-      <DependentUpon>Tabs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tabs-File.cs">
-      <DependentUpon>Tabs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tabs-Help.cs">
-      <DependentUpon>Tabs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tabs-Internal.cs">
-      <DependentUpon>Tabs.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tabs-Macro.cs">
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tabs-Select.cs">
-      <DependentUpon>Tabs.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tabs-Variables.cs">
-      <DependentUpon>Tabs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tabs-Window.cs">
       <DependentUpon>Tabs.cs</DependentUpon>
     </Compile>
     <Compile Include="Tabs.cs" />

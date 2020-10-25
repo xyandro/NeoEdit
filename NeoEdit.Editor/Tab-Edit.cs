@@ -11,6 +11,7 @@ using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.Editor.Searchers;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.TaskRunning;
@@ -366,18 +367,6 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select(range => searcher.regexes[0].Replace(Text.GetString(range), result.Replace)).ToList());
 		}
 
-		void Execute_Edit_CopyDown()
-		{
-			var strs = GetSelectionStrings().ToList();
-			var index = 0;
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
-				if (string.IsNullOrWhiteSpace(strs[ctr]))
-					strs[ctr] = strs[index];
-				else
-					index = ctr;
-			ReplaceSelections(strs);
-		}
-
 		static Configuration_Edit_Expression_Expression Configure_Edit_Expression_Expression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Expression_Expression(state.Tabs.Focused.GetVariables());
 
 		void Execute_Edit_Expression_Expression()
@@ -391,6 +380,18 @@ namespace NeoEdit.Editor
 		}
 
 		void Execute_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetExpressionResults<string>("Eval(x)", Selections.Count()));
+
+		void Execute_Edit_CopyDown()
+		{
+			var strs = GetSelectionStrings().ToList();
+			var index = 0;
+			for (var ctr = 0; ctr < strs.Count; ++ctr)
+				if (string.IsNullOrWhiteSpace(strs[ctr]))
+					strs[ctr] = strs[index];
+				else
+					index = ctr;
+			ReplaceSelections(strs);
+		}
 
 		static Configuration_Edit_Rotate Configure_Edit_Rotate(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Rotate(state.Tabs.Focused.GetVariables());
 
@@ -656,5 +657,11 @@ namespace NeoEdit.Editor
 		}
 
 		void Execute_Edit_Navigate_JumpBy(JumpByType jumpBy) => JumpBy = jumpBy;
+
+		static PreExecutionStop PreExecute_Edit_EscapeClearsSelections(EditorExecuteState state, bool? multiStatus)
+		{
+			Settings.EscapeClearsSelections = multiStatus != true;
+			return PreExecutionStop.Stop;
+		}
 	}
 }

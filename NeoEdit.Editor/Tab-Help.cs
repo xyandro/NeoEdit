@@ -8,17 +8,26 @@ using System.Reflection;
 using System.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class Tabs
+	partial class Tab
 	{
-		void Execute_Help_About() => TabsWindow.RunHelpAboutDialog();
+		static PreExecutionStop PreExecute_Help_About(EditorExecuteState state)
+		{
+			state.Tabs.TabsWindow.RunHelpAboutDialog();
+			return PreExecutionStop.Stop;
+		}
 
-		void Execute_Help_Tutorial() { }//TODO => new TutorialWindow(this);
+		static PreExecutionStop PreExecute_Help_Tutorial(EditorExecuteState state)
+		{
+			//TODO => new TutorialWindow(this);
+			return PreExecutionStop.Stop;
+		}
 
-		void Execute_Help_Update()
+		static PreExecutionStop PreExecute_Help_Update(EditorExecuteState state)
 		{
 			const string location = "https://github.com/xyandro/NeoEdit/releases";
 			const string url = location + "/latest";
@@ -45,8 +54,8 @@ namespace NeoEdit.Editor
 				throw new Exception("Version length mismatch");
 
 			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
-			if (!TabsWindow.RunMessageDialog("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
-				return;
+			if (!state.Tabs.TabsWindow.RunMessageDialog("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
+				return PreExecutionStop.Stop;
 
 			var oldLocation = Assembly.GetEntryAssembly().Location;
 			var newLocation = Path.Combine(Path.GetDirectoryName(oldLocation), $"{Path.GetFileNameWithoutExtension(oldLocation)}-Update{Path.GetExtension(oldLocation)}");
@@ -79,27 +88,37 @@ namespace NeoEdit.Editor
 				File.WriteAllBytes(newLocation, result);
 
 				Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
-				TabsWindow.RunMessageDialog("Info", "The program will be updated after exiting.");
+				state.Tabs.TabsWindow.RunMessageDialog("Info", "The program will be updated after exiting.");
 			});
+
+			return PreExecutionStop.Stop;
 		}
 
-		void Execute_Help_Extract()
+		static PreExecutionStop PreExecute_Help_Extract(EditorExecuteState state)
 		{
 			var location = Assembly.GetEntryAssembly().Location;
 
-			if (!TabsWindow.RunMessageDialog("Extract files", $"Files will be extracted from {location} after program exits.", MessageOptions.OkCancel, MessageOptions.Ok, MessageOptions.Cancel).HasFlag(MessageOptions.Ok))
-				return;
+			if (!state.Tabs.TabsWindow.RunMessageDialog("Extract files", $"Files will be extracted from {location} after program exits.", MessageOptions.OkCancel, MessageOptions.Ok, MessageOptions.Cancel).HasFlag(MessageOptions.Ok))
+				return PreExecutionStop.Stop;
 
 			Process.Start(location, $@"-extract {Process.GetCurrentProcess().Id}");
+
+			return PreExecutionStop.Stop;
 		}
 
-		static void Execute_Help_RunGC() => GC.Collect();
+		static PreExecutionStop PreExecute_Help_RunGC(EditorExecuteState state)
+		{
+			GC.Collect();
+			return PreExecutionStop.Stop;
+		}
 
-		void Execute_Help_CopyCommandLine()
+		static PreExecutionStop PreExecute_Help_CopyCommandLine(EditorExecuteState state)
 		{
 			var clipboard = new NEClipboard();
 			clipboard.Add(new List<string> { Environment.CommandLine });
 			NEClipboard.Current = clipboard;
+
+			return PreExecutionStop.Stop;
 		}
 	}
 }

@@ -6,6 +6,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -159,6 +160,42 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
+		static PreExecutionStop PreExecute_Internal_Activate(EditorExecuteState state)
+		{
+			state.Tabs.LastActivated = DateTime.Now;
+			foreach (var tab in state.Tabs.AllTabs)
+			{
+				state.Tabs.AddToTransaction(tab);
+				tab.Activated();
+			}
+
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Internal_AddTab(EditorExecuteState state, Tab tab)
+		{
+			state.Tabs.AddTab(tab);
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Internal_MouseActivate(EditorExecuteState state, Tab tab)
+		{
+			if (!state.ShiftDown)
+				state.Tabs.ClearAllActive();
+			state.Tabs.SetActive(tab);
+			state.Tabs.Focused = tab;
+
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Internal_CloseTab(EditorExecuteState state, Tab tab)
+		{
+			tab.VerifyCanClose();
+			state.Tabs.RemoveTab(tab);
+
+			return PreExecutionStop.Stop;
+		}
+
 		static Configuration_Internal_Key Configure_Internal_Key(EditorExecuteState state)
 		{
 			switch (state.Key)
@@ -167,19 +204,39 @@ namespace NeoEdit.Editor
 				case Key.Delete:
 				case Key.Left:
 				case Key.Right:
-					return new Configuration_Internal_Key { HasSelections = state.Tabs.ActiveTabs.Any(tab => tab.Selections.Any(range => range.HasSelection)) };
+					if (state.Tabs.ActiveTabs.Any(tab => tab.Selections.Any(range => range.HasSelection)))
+						return new Configuration_Internal_Key { HasSelections = true };
+					break;
+			}
+
+			return null;
+		}
+
+		static PreExecutionStop PreExecute_Internal_Key(EditorExecuteState state)
+		{
+			if (!state.ControlDown || state.AltDown)
+				return null;
+
+			switch (state.Key)
+			{
+				case Key.PageUp: state.Tabs.MovePrevNext(-1, state.ShiftDown); break;
+				case Key.PageDown: state.Tabs.MovePrevNext(1, state.ShiftDown); break;
+				case Key.Tab: state.Tabs.MovePrevNext(1, state.ShiftDown, true); break;
 				default: return null;
 			}
+
+			return PreExecutionStop.Stop;
 		}
 
 		void Execute_Internal_Key()
 		{
+			var hasSelections = (state.Configuration as Configuration_Internal_Key)?.HasSelections ?? false;
 			switch (state.Key)
 			{
 				case Key.Back:
 				case Key.Delete:
 					{
-						if ((state.Configuration as Configuration_Internal_Key).HasSelections)
+						if (hasSelections)
 						{
 							ReplaceSelections("");
 							break;
@@ -253,7 +310,7 @@ namespace NeoEdit.Editor
 					{
 						Selections = Selections.AsTaskRunner().Select(range =>
 						{
-							if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key).HasSelections))
+							if ((!state.ShiftDown) && (hasSelections))
 								return new Range(range.Start);
 
 							var line = Text.GetPositionLine(range.Cursor);
@@ -269,7 +326,7 @@ namespace NeoEdit.Editor
 					{
 						Selections = Selections.AsTaskRunner().Select(range =>
 						{
-							if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key).HasSelections))
+							if ((!state.ShiftDown) && (hasSelections))
 								return new Range(range.End);
 
 							var line = Text.GetPositionLine(range.Cursor);
@@ -426,6 +483,34 @@ namespace NeoEdit.Editor
 			Selections = newSels;
 		}
 
+		static PreExecutionStop PreExecute_Internal_Scroll(EditorExecuteState state)
+		{
+			var configuration = state.Configuration as Configuration_Internal_Scroll;
+			var tab = configuration.Tab as Tab;
+			state.Tabs.AddToTransaction(tab);
+			tab.StartColumn = configuration.Column;
+			tab.StartRow = configuration.Row;
+
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Internal_Mouse(EditorExecuteState state)
+		{
+			var configuration = state.Configuration as Configuration_Internal_Mouse;
+			var tab = configuration.Tab as Tab;
+
+			if ((state.Tabs.ActiveTabs.Count != 1) || (!state.Tabs.IsActive(tab)))
+			{
+				state.Tabs.ClearAllActive();
+				state.Tabs.SetActive(tab);
+				return PreExecutionStop.Stop;
+			}
+
+			tab.Execute_Internal_Mouse(configuration.Line, configuration.Column, configuration.ClickCount, configuration.Selecting);
+
+			return PreExecutionStop.Stop;
+		}
+
 		public void Execute_Internal_Mouse(int line, int column, int clickCount, bool? selecting)
 		{
 			var sels = Selections.ToList();
@@ -481,6 +566,30 @@ namespace NeoEdit.Editor
 			Selections = sels;
 			if (currentSelection != null)
 				CurrentSelection = Selections.FindIndex(currentSelection);
+		}
+
+		static PreExecutionStop PreExecute_Internal_SetupDiff(EditorExecuteState state)
+		{
+			state.Tabs.AllTabs.ForEach(tab => state.Tabs.AddToTransaction(tab));
+			for (var ctr = 0; ctr + 1 < state.Tabs.AllTabs.Count; ctr += 2)
+			{
+				state.Tabs.AllTabs[ctr].DiffTarget = state.Tabs.AllTabs[ctr + 1];
+				if (state.Tabs.AllTabs[ctr].ContentType == ParserType.None)
+					state.Tabs.AllTabs[ctr].ContentType = state.Tabs.AllTabs[ctr + 1].ContentType;
+				if (state.Tabs.AllTabs[ctr + 1].ContentType == ParserType.None)
+					state.Tabs.AllTabs[ctr + 1].ContentType = state.Tabs.AllTabs[ctr].ContentType;
+			}
+			state.Tabs.SetLayout(new WindowLayout(maxColumns: 2));
+
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Internal_GotoTab(EditorExecuteState state)
+		{
+			var result = state.Configuration as Configuration_Internal_GotoTab;
+			(result.Tab as Tab).Goto(result.Line, result.Column, result.Index);
+
+			return PreExecutionStop.Stop;
 		}
 	}
 }
