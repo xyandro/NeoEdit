@@ -2,7 +2,6 @@
 using System.Linq;
 using Antlr4.Runtime;
 using NeoEdit.Common.Parsing;
-using NeoEdit.Editor;
 using NeoEdit.Editor.Content.JSON.Parser;
 
 namespace NeoEdit.Editor.Content.JSON

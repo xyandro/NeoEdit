@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using NeoEdit.Common.Configuration;
-using NeoEdit.UI;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs

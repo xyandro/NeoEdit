@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
-using NeoEdit.UI;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs

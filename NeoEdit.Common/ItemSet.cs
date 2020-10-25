@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using NeoEdit.Common;
 
 namespace NeoEdit.Common
 {

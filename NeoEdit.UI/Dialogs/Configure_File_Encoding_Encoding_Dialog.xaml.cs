@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
-using NeoEdit.UI;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs

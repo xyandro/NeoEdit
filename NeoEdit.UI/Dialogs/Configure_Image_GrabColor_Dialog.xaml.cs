@@ -13,7 +13,6 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
-using NeoEdit.UI;
 using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs
