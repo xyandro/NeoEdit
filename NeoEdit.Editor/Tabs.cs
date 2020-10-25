@@ -52,7 +52,7 @@ namespace NeoEdit.Editor
 			oldTabsList = newTabsList = new TabsList(this);
 			oldWindowLayout = newWindowLayout = new WindowLayout(1, 1);
 
-			BeginTransaction(new EditorExecuteState(NECommand.None));
+			BeginTransaction(new EditorExecuteState());
 			TabsWindow = ITabsWindowStatic.CreateITabsWindow(this);
 			if (addEmpty)
 				AddTab(new Tab());

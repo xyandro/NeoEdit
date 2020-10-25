@@ -26,7 +26,7 @@ namespace NeoEdit.Editor
 		{
 			tabState = new TabState();
 
-			BeginTransaction(new EditorExecuteState(NECommand.None));
+			BeginTransaction(new EditorExecuteState());
 
 			Text = new NEText("");
 			Selections = new List<Range>();
@@ -69,7 +69,7 @@ namespace NeoEdit.Editor
 			}
 
 			var tab = new Tab(displayName: displayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-			tab.BeginTransaction(new EditorExecuteState(NECommand.None));
+			tab.BeginTransaction(new EditorExecuteState());
 			tab.Selections = stringRanges;
 			tab.Commit();
 

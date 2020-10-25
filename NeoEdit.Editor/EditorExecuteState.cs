@@ -1,33 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using NeoEdit.Common;
-using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Editor.Models;
 using NeoEdit.Editor.PreExecution;
 
 namespace NeoEdit.Editor
 {
-	public class EditorExecuteState
+	public class EditorExecuteState : ExecuteState
 	{
-		public NECommand Command;
-		public bool ShiftDown;
-		public bool ControlDown;
-		public bool AltDown;
-		public bool? MultiStatus;
-		public Key Key;
-		public string Text;
-		public IConfiguration Configuration;
 		public IPreExecution PreExecution;
 		public Tabs Tabs;
 
-		public EditorExecuteState(NECommand command) => Command = command;
+		public EditorExecuteState(NECommand command = NECommand.None) : base(command) => Command = command;
 
-		public EditorExecuteState(Tabs tabs, ExecuteState state)
+		public EditorExecuteState(Tabs tabs, ExecuteState state) : base(state.Command)
 		{
-			Command = state.Command;
 			ShiftDown = state.ShiftDown;
 			ControlDown = state.ControlDown;
 			AltDown = state.AltDown;
