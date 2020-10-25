@@ -11,7 +11,7 @@ namespace NeoEdit.UI.Tutorial
 		const string NextClick = " ⇒ ";
 		const string NextKey = ", ";
 
-		readonly static NEMenu neMenu = new NEMenu();
+		static readonly NEMenu neMenu = new NEMenu();
 
 		NECommand commandEnum;
 		public NECommand CommandEnum

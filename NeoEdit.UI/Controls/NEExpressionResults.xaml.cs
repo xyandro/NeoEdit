@@ -140,8 +140,8 @@ namespace NeoEdit.UI.Controls
 			UpdateChildren();
 		}
 
-		readonly static Brush LineBrush = new SolidColorBrush(Color.FromRgb(128, 128, 128));
-		readonly static Brush HeaderBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
+		static readonly Brush LineBrush = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+		static readonly Brush HeaderBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
 		const double Spacing = 1;
 		void UpdateChildren()
 		{

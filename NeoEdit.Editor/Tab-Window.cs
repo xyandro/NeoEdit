@@ -145,7 +145,7 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_Window_Select_InactiveTabs(EditorExecuteState state)
 		{
-			state.Tabs.AllTabs.ForEach((System.Action<Tab>)(tab => state.Tabs.SetActive(tab, !Enumerable.Contains<Tab>(state.Tabs.ActiveTabs, (Tab)tab))));
+			state.Tabs.AllTabs.ForEach(tab => state.Tabs.SetActive(tab, !Enumerable.Contains<Tab>(state.Tabs.ActiveTabs, tab)));
 			return PreExecutionStop.Stop;
 		}
 

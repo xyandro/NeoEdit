@@ -21,7 +21,7 @@ namespace NeoEdit.Editor
 				actions.Add(state);
 		}
 
-		public readonly static string MacroDirectory = Path.Combine(Helpers.NeoEditAppData, "Macro");
+		public static readonly string MacroDirectory = Path.Combine(Helpers.NeoEditAppData, "Macro");
 
 		public static string ChooseMacro(ITabsWindow tabsWindow)
 		{

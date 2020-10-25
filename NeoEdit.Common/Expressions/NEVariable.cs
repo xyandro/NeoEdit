@@ -5,7 +5,7 @@ using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Common.Expressions
 {
-	abstract public class NEVariable
+	public abstract class NEVariable
 	{
 		public string Name { get; }
 		public string Description { get; }
@@ -20,9 +20,9 @@ namespace NeoEdit.Common.Expressions
 			this.initializer = initializer;
 		}
 
-		virtual protected void VirtSetup() { }
-		virtual protected int? VirtCount() => null;
-		abstract protected object VirtValue(int index);
+		protected virtual void VirtSetup() { }
+		protected virtual int? VirtCount() => null;
+		protected abstract object VirtValue(int index);
 
 		void Setup()
 		{

@@ -716,7 +716,7 @@ namespace NeoEdit.Editor.Transactional
 			return diffRanges;
 		}
 
-		static public Tuple<List<Tuple<int, int>>, List<string>> GetDiffFixes(NEText src, NEText dest, int lineStartTabStop, bool? ignoreWhitespace, bool? ignoreCase, bool? ignoreNumbers, bool? ignoreLineEndings, string ignoreCharacters)
+		public static Tuple<List<Tuple<int, int>>, List<string>> GetDiffFixes(NEText src, NEText dest, int lineStartTabStop, bool? ignoreWhitespace, bool? ignoreCase, bool? ignoreNumbers, bool? ignoreLineEndings, string ignoreCharacters)
 		{
 			var textData = new NEText[] { src, dest };
 			var lineMap = new Dictionary<int, int>[2];

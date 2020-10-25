@@ -78,7 +78,7 @@ namespace NeoEdit.UI.Controls
 		}
 
 		static Dictionary<NECommand, NEMenuItemCommand> commands;
-		static public void RegisterCommands(UIElement window, Action<NECommand, bool?> handler)
+		public static void RegisterCommands(UIElement window, Action<NECommand, bool?> handler)
 		{
 			foreach (var command in commands.Values)
 				command.RegisterCommand(window, handler);

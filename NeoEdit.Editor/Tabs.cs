@@ -386,7 +386,7 @@ namespace NeoEdit.Editor
 				tab = AllTabs.GetIndex(0);
 			else
 			{
-				var tabs = orderByActive ? AllTabs.OrderByDescending(x => x.LastActive).ToList() as IList<Tab> : AllTabs as IList<Tab>;
+				var tabs = orderByActive ? AllTabs.OrderByDescending(x => x.LastActive).ToList() : AllTabs as IList<Tab>;
 				var index = tabs.FindIndex(Focused) + offset;
 				if (index < 0)
 					index += AllTabs.Count();

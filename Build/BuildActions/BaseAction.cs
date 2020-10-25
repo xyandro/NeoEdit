@@ -7,13 +7,13 @@ namespace Build.BuildActions
 {
 	abstract class BaseAction
 	{
-		abstract public string Name { get; }
+		public abstract string Name { get; }
 
 		public override string ToString() => Name;
 
-		virtual public bool Prepare() => true;
+		public virtual bool Prepare() => true;
 
-		abstract public void Run(WriteTextDelegate writeText, string configuration, List<string> platforms);
+		public abstract void Run(WriteTextDelegate writeText, string configuration, List<string> platforms);
 
 		protected void RunCommand(WriteTextDelegate writeText, string fileName, string arguments)
 		{

@@ -303,7 +303,7 @@ namespace NeoEdit.Editor
 						{
 							if (list.Count == 1)
 								return new StringSearcher(list[0].Item1, result.WholeWords, list[0].Item2, result.SkipSpace, result.EntireSelection, firstMatchOnly) as ISearcher;
-							return new StringsSearcher(list, result.WholeWords, result.EntireSelection, firstMatchOnly) as ISearcher;
+							return new StringsSearcher(list, result.WholeWords, result.EntireSelection, firstMatchOnly);
 						});
 			}
 

@@ -22,7 +22,7 @@ namespace NeoEdit.UI.Dialogs
 		[DepProp]
 		public string OutputExample { get { return UIHelper<Configure_DateTime_Format_Dialog>.GetPropValue<string>(this); } set { UIHelper<Configure_DateTime_Format_Dialog>.SetPropValue(this, value); } }
 
-		readonly static List<string> formats;
+		static readonly List<string> formats;
 
 		static Configure_DateTime_Format_Dialog()
 		{

@@ -18,11 +18,11 @@ namespace NeoEdit.Common.Enums
 		XML,
 	}
 
-	static public class ParserExtensions
+	public static class ParserExtensions
 	{
 		public static bool IsTableType(this ParserType parserType) => (parserType == ParserType.Columns) || (parserType == ParserType.ExactColumns) || (parserType == ParserType.TSV) || (parserType == ParserType.CSV);
 
-		static public ParserType GetParserType(string fileName)
+		public static ParserType GetParserType(string fileName)
 		{
 			if (string.IsNullOrEmpty(fileName))
 				return ParserType.None;

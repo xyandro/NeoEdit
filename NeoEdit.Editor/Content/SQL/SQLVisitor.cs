@@ -91,7 +91,7 @@ namespace NeoEdit.Editor.Content.SQL
 			else if (value is IEnumerable<ParserRuleContext>)
 			{
 				foreach (var value2 in value as IEnumerable<ParserRuleContext>)
-					node.AddAttr(name.ToString(), input, value2 as ParserRuleContext);
+					node.AddAttr(name.ToString(), input, value2);
 			}
 			else
 				throw new Exception($"Unknown attribute: {name}");

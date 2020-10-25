@@ -9,10 +9,10 @@ namespace NeoEdit.Editor
 {
 	public static class FileSaver
 	{
-		readonly static byte[] EncryptedHeader = Encoding.UTF8.GetBytes("\u0000NEAES\u0000");
-		readonly static byte[] EncryptedValidate = Encoding.UTF8.GetBytes("\u0000VALID\u0000");
-		readonly static byte[] CompressedHeader = Encoding.UTF8.GetBytes("\u0000NEGZIP\u0000");
-		readonly static HashSet<string> keyVault = new HashSet<string>();
+		static readonly byte[] EncryptedHeader = Encoding.UTF8.GetBytes("\u0000NEAES\u0000");
+		static readonly byte[] EncryptedValidate = Encoding.UTF8.GetBytes("\u0000VALID\u0000");
+		static readonly byte[] CompressedHeader = Encoding.UTF8.GetBytes("\u0000NEGZIP\u0000");
+		static readonly HashSet<string> keyVault = new HashSet<string>();
 
 		public static byte[] Encrypt(byte[] data, string AESKey)
 		{

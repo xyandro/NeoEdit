@@ -39,7 +39,7 @@ namespace NeoEdit.Common
 
 		public static event EventHandler ShowSpecialCharsChanged;
 
-		readonly static bool[] supported;
+		static readonly bool[] supported;
 
 		static Font()
 		{

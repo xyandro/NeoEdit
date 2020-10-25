@@ -334,7 +334,7 @@ namespace NeoEdit.Common
 			return result;
 		}
 
-		static public IEnumerable<string> SplitByLine(this string item)
+		public static IEnumerable<string> SplitByLine(this string item)
 		{
 			var lineBreakChars = new char[] { '\r', '\n' };
 			var pos = 0;
@@ -404,7 +404,7 @@ namespace NeoEdit.Common
 			return result;
 		}
 
-		static public IEnumerable<List<string>> SplitTCSV(this string source, char splitChar)
+		public static IEnumerable<List<string>> SplitTCSV(this string source, char splitChar)
 		{
 			var pos = 0;
 			while (pos < source.Length)
@@ -412,12 +412,12 @@ namespace NeoEdit.Common
 			yield break;
 		}
 
-		static public string RelativeChild(this string parent, string child) => string.IsNullOrEmpty(parent) ? child : new Uri(new Uri(parent), child).LocalPath;
+		public static string RelativeChild(this string parent, string child) => string.IsNullOrEmpty(parent) ? child : new Uri(new Uri(parent), child).LocalPath;
 
 		[DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
 		static extern unsafe int memcmp(byte* b1, byte* b2, long count);
 
-		static public bool? IsGreater(this IComparable v1, IComparable v2)
+		public static bool? IsGreater(this IComparable v1, IComparable v2)
 		{
 			var comp = v1.CompareTo(v2);
 			if (comp == 0)

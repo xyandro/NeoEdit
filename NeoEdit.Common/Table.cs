@@ -276,7 +276,7 @@ namespace NeoEdit.Common
 					yield return item;
 		}
 
-		static public Table Join(Table leftTable, Table rightTable, List<int> leftColumns, List<int> rightColumns, JoinType joinType)
+		public static Table Join(Table leftTable, Table rightTable, List<int> leftColumns, List<int> rightColumns, JoinType joinType)
 		{
 			if (joinType == JoinType.Cross)
 			{

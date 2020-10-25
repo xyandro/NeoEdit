@@ -32,7 +32,7 @@ namespace NeoEdit.UI.Dialogs
 			url.AddCurrentSuggestion();
 		}
 
-		static public Configuration_Network_WCF_GetConfig Run(Window parent)
+		public static Configuration_Network_WCF_GetConfig Run(Window parent)
 		{
 			var dialog = new Configure_Network_WCF_GetConfig_Dialog() { Owner = parent };
 			if (!dialog.ShowDialog())

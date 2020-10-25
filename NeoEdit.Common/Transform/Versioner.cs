@@ -209,6 +209,6 @@ namespace NeoEdit.Common.Transform
 			catch { return null; }
 		}
 
-		static public byte[] GetUnmodifiedFile(string file) => GetUnmodifiedGitFile(file) ?? GetUnmodifiedSvnFile(file);
+		public static byte[] GetUnmodifiedFile(string file) => GetUnmodifiedGitFile(file) ?? GetUnmodifiedSvnFile(file);
 	}
 }

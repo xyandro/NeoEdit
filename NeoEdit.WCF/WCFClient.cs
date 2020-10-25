@@ -44,8 +44,8 @@ namespace NeoEdit.WCF
 			public object Result { get; set; }
 		}
 
-		readonly static List<AppDomain> appDomains = new List<AppDomain>();
-		readonly static Dictionary<string, WCFClient> wcfClients = new Dictionary<string, WCFClient>();
+		static readonly List<AppDomain> appDomains = new List<AppDomain>();
+		static readonly Dictionary<string, WCFClient> wcfClients = new Dictionary<string, WCFClient>();
 
 		static bool hasWrittenWCFClientDLL = false;
 		static WCFClient GetWCFClient(string serviceURL)
@@ -87,11 +87,11 @@ namespace NeoEdit.WCF
 			return wcfClients[serviceURL];
 		}
 
-		static public void StartInterceptCalls(string serviceURL, string interceptURL) => GetWCFClient(serviceURL).DoStartInterceptCalls(interceptURL);
+		public static void StartInterceptCalls(string serviceURL, string interceptURL) => GetWCFClient(serviceURL).DoStartInterceptCalls(interceptURL);
 
-		static public List<string> EndInterceptCalls(string serviceURL) => GetWCFClient(serviceURL).DoEndInterceptCalls();
+		public static List<string> EndInterceptCalls(string serviceURL) => GetWCFClient(serviceURL).DoEndInterceptCalls();
 
-		static public void ResetClients()
+		public static void ResetClients()
 		{
 			foreach (var appDomain in appDomains)
 				AppDomain.Unload(appDomain);
@@ -99,9 +99,9 @@ namespace NeoEdit.WCF
 			wcfClients.Clear();
 		}
 
-		static public string GetWCFConfig(string serviceURL) => GetWCFClient(serviceURL).DoGetWCFConfig();
+		public static string GetWCFConfig(string serviceURL) => GetWCFClient(serviceURL).DoGetWCFConfig();
 
-		static public string ExecuteWCF(string str)
+		public static string ExecuteWCF(string str)
 		{
 			str = Regex.Replace(str, @"/\*.*?\*/", "", RegexOptions.Singleline | RegexOptions.Multiline);
 			var client = GetWCFClient(JsonConvert.DeserializeObject<WCFOperation>(str).ServiceURL);
@@ -446,7 +446,7 @@ namespace NeoEdit.WCFInterceptor
 			public object Result {{ get; set; }}
 		}}
 
-		static public Interceptor CurInterceptor {{ get; set; }}
+		public static Interceptor CurInterceptor {{ get; set; }}
 
 		public List<Call> Calls {{ get; private set; }}
 		Func<string, string, string, Dictionary<string, object>, object> getResult;

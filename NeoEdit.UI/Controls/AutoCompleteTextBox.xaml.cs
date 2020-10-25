@@ -71,9 +71,9 @@ namespace NeoEdit.UI.Controls
 
 		List<Suggestion> SuggestionList => string.IsNullOrEmpty(CompletionTag) ? localSuggestionList : GetSuggestionList(CompletionTag);
 
-		static public void AddTagSuggestions(string completionTag, params string[] suggestions) => AddTagSuggestions(GetSuggestionList(completionTag), suggestions.Select(text => new Suggestion { Text = text }).ToArray());
+		public static void AddTagSuggestions(string completionTag, params string[] suggestions) => AddTagSuggestions(GetSuggestionList(completionTag), suggestions.Select(text => new Suggestion { Text = text }).ToArray());
 
-		static public void AddTagSuggestions(string completionTag, params Tuple<string, object>[] suggestions) => AddTagSuggestions(GetSuggestionList(completionTag), suggestions.Select(tuple => new Suggestion { Text = tuple.Item1, Data = tuple.Item2 }).ToArray());
+		public static void AddTagSuggestions(string completionTag, params Tuple<string, object>[] suggestions) => AddTagSuggestions(GetSuggestionList(completionTag), suggestions.Select(tuple => new Suggestion { Text = tuple.Item1, Data = tuple.Item2 }).ToArray());
 
 		static void AddTagSuggestions(string completionTag, params Suggestion[] suggestions) => AddTagSuggestions(GetSuggestionList(completionTag), suggestions);
 

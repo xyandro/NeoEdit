@@ -7,7 +7,7 @@ namespace NeoEdit.TaskRunning
 {
 	public static class TaskRunner
 	{
-		readonly static int NumThreads = Environment.ProcessorCount; // Use 0 to run in calling thread
+		static readonly int NumThreads = Environment.ProcessorCount; // Use 0 to run in calling thread
 		const int ForceCancelDelay = 5000;
 
 		public static FluentTaskRunner<T> AsTaskRunner<T>(this IEnumerable<T> items, Action<double> idleAction = null) => new FluentTaskRunner<T>(items, idleAction);
@@ -21,9 +21,9 @@ namespace NeoEdit.TaskRunning
 		public static T Max<T>(this FluentTaskRunner<T> taskRuner) where T : IComparable => taskRuner.Max(x => x);
 		public static FluentTaskRunner<string> NonNullOrWhiteSpace(this FluentTaskRunner<string> taskRuner) => taskRuner.Where(str => !string.IsNullOrWhiteSpace(str));
 
-		readonly static List<Thread> threads = new List<Thread>();
-		readonly static Stack<TaskRunnerTask> tasks = new Stack<TaskRunnerTask>();
-		readonly static HashSet<TaskRunnerEpic> epics = new HashSet<TaskRunnerEpic>();
+		static readonly List<Thread> threads = new List<Thread>();
+		static readonly Stack<TaskRunnerTask> tasks = new Stack<TaskRunnerTask>();
+		static readonly HashSet<TaskRunnerEpic> epics = new HashSet<TaskRunnerEpic>();
 		static TaskRunnerTask activeTask;
 		static readonly ManualResetEvent workReady = new ManualResetEvent(false);
 		[ThreadStatic] static TaskRunnerTask threadActiveTask;

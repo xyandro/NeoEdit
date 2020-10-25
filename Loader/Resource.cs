@@ -119,7 +119,7 @@ namespace NeoEdit.Loader
 
 		public void WriteToPath(string path) => File.WriteAllBytes(Path.Combine(path, Header.Name), RawData);
 
-		static public bool DataMatch(Resource x32Res, Resource x64Res)
+		public static bool DataMatch(Resource x32Res, Resource x64Res)
 		{
 			if ((x32Res == null) || (x64Res == null))
 				return false;

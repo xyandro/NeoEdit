@@ -15,9 +15,9 @@ using NeoEdit.Editor.Transactional;
 
 namespace NeoEdit.Editor.Content
 {
-	static public class Parser
+	public static class Parser
 	{
-		static public ParserNode Parse(string data, ParserType parserType, bool strict)
+		public static ParserNode Parse(string data, ParserType parserType, bool strict)
 		{
 			switch (parserType)
 			{
@@ -35,7 +35,7 @@ namespace NeoEdit.Editor.Content
 			}
 		}
 
-		static internal string Comment(ParserType type, NEText text, Range range)
+		internal static string Comment(ParserType type, NEText text, Range range)
 		{
 			switch (type)
 			{
@@ -47,7 +47,7 @@ namespace NeoEdit.Editor.Content
 			}
 		}
 
-		static internal string Uncomment(ParserType type, NEText text, Range range)
+		internal static string Uncomment(ParserType type, NEText text, Range range)
 		{
 			switch (type)
 			{
@@ -59,7 +59,7 @@ namespace NeoEdit.Editor.Content
 			}
 		}
 
-		static public string Reformat(ParserNode node, string input, ParserType parserType)
+		public static string Reformat(ParserNode node, string input, ParserType parserType)
 		{
 			switch (parserType)
 			{

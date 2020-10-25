@@ -47,7 +47,7 @@ namespace NeoEdit.UI
 		}
 		static ClipboardChangeNotifier clipboardChangeNotifier;
 
-		static public void Initialize()
+		public static void Initialize()
 		{
 			// Must be called from dispatcher thread to set up listener properly
 			clipboardChangeNotifier = new ClipboardChangeNotifier(() => clipboardChanged = true);
@@ -57,7 +57,7 @@ namespace NeoEdit.UI
 		static bool clipboardChanged = true;
 		static NEClipboard systemClipboard;
 
-		static public void GetSystem(Dispatcher dispatcher)
+		public static void GetSystem(Dispatcher dispatcher)
 		{
 			if (!clipboardChanged)
 				return;
@@ -119,7 +119,7 @@ namespace NeoEdit.UI
 			});
 		}
 
-		static public void SetSystem(Dispatcher dispatcher)
+		public static void SetSystem(Dispatcher dispatcher)
 		{
 			if ((clipboardChanged) || (NEClipboard.Current == systemClipboard))
 				return;

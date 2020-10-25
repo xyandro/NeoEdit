@@ -15,10 +15,10 @@ namespace NeoEdit.UI
 {
 	partial class TabWindow
 	{
-		static internal readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
-		static internal readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
-		static internal readonly Pen selectionPen = new Pen(new SolidColorBrush(Color.FromArgb(96, 38, 132, 255)), 2);
-		static internal readonly Dictionary<int, Pen> regionPen = new Dictionary<int, Pen>
+		internal static readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
+		internal static readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
+		internal static readonly Pen selectionPen = new Pen(new SolidColorBrush(Color.FromArgb(96, 38, 132, 255)), 2);
+		internal static readonly Dictionary<int, Pen> regionPen = new Dictionary<int, Pen>
 		{
 			[1] = new Pen(new SolidColorBrush(Color.FromRgb(248, 118, 109)), 2),
 			[2] = new Pen(new SolidColorBrush(Color.FromRgb(124, 174, 0)), 2),
@@ -30,11 +30,11 @@ namespace NeoEdit.UI
 			[8] = new Pen(new SolidColorBrush(Color.FromRgb(105, 47, 111)), 2),
 			[9] = new Pen(new SolidColorBrush(Color.FromRgb(237, 223, 184)), 2),
 		};
-		static internal readonly Brush diffLineBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));
-		static internal readonly Pen diffLinePen = new Pen(new SolidColorBrush(Color.FromRgb(120, 102, 3)), 2);
-		static internal readonly Brush diffColBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));
-		static internal readonly Brush highlightRowBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
-		static internal readonly Pen lightlightRowPen = new Pen(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 1);
+		internal static readonly Brush diffLineBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));
+		internal static readonly Pen diffLinePen = new Pen(new SolidColorBrush(Color.FromRgb(120, 102, 3)), 2);
+		internal static readonly Brush diffColBrush = new SolidColorBrush(Color.FromArgb(64, 239, 203, 5));
+		internal static readonly Brush highlightRowBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
+		internal static readonly Pen lightlightRowPen = new Pen(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 1);
 
 		static TabWindow()
 		{

@@ -48,7 +48,7 @@ namespace NeoEdit.Editor
 			Commit();
 		}
 
-		static public Tab CreateSummaryTab(string displayName, List<(string str, int count)> summary)
+		public static Tab CreateSummaryTab(string displayName, List<(string str, int count)> summary)
 		{
 			var sb = new StringBuilder();
 			var countRanges = new List<Range>();
@@ -322,7 +322,7 @@ namespace NeoEdit.Editor
 		#endregion
 
 		#region Configure
-		static public IConfiguration Configure(EditorExecuteState state)
+		public static IConfiguration Configure(EditorExecuteState state)
 		{
 			switch (state.Command)
 			{
@@ -462,7 +462,7 @@ namespace NeoEdit.Editor
 		#endregion
 
 		#region PreExecute
-		static public IPreExecution PreExecute(EditorExecuteState state)
+		public static IPreExecution PreExecute(EditorExecuteState state)
 		{
 			switch (state.Command)
 			{

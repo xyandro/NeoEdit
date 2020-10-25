@@ -194,8 +194,8 @@ namespace NeoEdit.Common.Transform
 				var valueType = type.GetGenericArguments()[1];
 				foreach (var element in xml.Elements(itemTag))
 				{
-					var key = element.Element(keyTag) as XObject ?? element.Attribute(keyTag) as XObject;
-					var value = element.Element(valueTag) as XObject ?? element.Attribute(valueTag) as XObject;
+					var key = element.Element(keyTag) ?? element.Attribute(keyTag) as XObject;
+					var value = element.Element(valueTag) ?? element.Attribute(valueTag) as XObject;
 					items.Add(rFromXML(key, keyType), rFromXML(value, valueType));
 				}
 				return obj;
@@ -208,7 +208,7 @@ namespace NeoEdit.Common.Transform
 				foreach (var field in fields)
 				{
 					var fieldName = EscapeField(field, found);
-					var value = xml.Element(fieldName) as XObject ?? xml.Attribute(fieldName) as XObject;
+					var value = xml.Element(fieldName) ?? xml.Attribute(fieldName) as XObject;
 					if (value != null)
 						field.SetValue(obj, rFromXML(value, field.FieldType));
 				}

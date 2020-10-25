@@ -47,7 +47,7 @@ namespace NeoEdit.Loader
 
 		public bool NameMatch(string name) => (Name.Equals(name, StringComparison.OrdinalIgnoreCase)) || (Name.Equals($"{name}.exe", StringComparison.OrdinalIgnoreCase)) || (Name.Equals($"{name}.dll", StringComparison.OrdinalIgnoreCase));
 
-		static public bool DataMatch(ResourceHeader x32Res, ResourceHeader x64Res)
+		public static bool DataMatch(ResourceHeader x32Res, ResourceHeader x64Res)
 		{
 			if ((x32Res == null) || (x64Res == null))
 				return false;

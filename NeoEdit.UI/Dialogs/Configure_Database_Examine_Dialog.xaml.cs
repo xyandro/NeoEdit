@@ -42,7 +42,7 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		static public Configuration_Database_Examine Run(Window parent, DbConnection dbConnection)
+		public static Configuration_Database_Examine Run(Window parent, DbConnection dbConnection)
 		{
 			var dialog = new Configure_Database_Examine_Dialog(dbConnection) { Owner = parent };
 			dialog.ShowDialog();
