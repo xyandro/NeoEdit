@@ -116,7 +116,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
 
-		Configuration_Content_Ancestor Configure_Content_Ancestor() => Tabs.TabsWindow.Configure_Content_Ancestor(GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
+		static Configuration_Content_Ancestor Configure_Content_Ancestor(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Content_Ancestor(state.Tabs.Focused.GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
 
 		void Execute_Content_Ancestor()
 		{
@@ -124,7 +124,7 @@ namespace NeoEdit.Editor
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
-		Configuration_Content_Attributes Configure_Content_Attributes() => Tabs.TabsWindow.Configure_Content_Attributes(GetSelectionNodes());
+		static Configuration_Content_Attributes Configure_Content_Attributes(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Content_Attributes(state.Tabs.Focused.GetSelectionNodes());
 
 		void Execute_Content_Attributes()
 		{
@@ -132,7 +132,7 @@ namespace NeoEdit.Editor
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 		}
 
-		Configuration_Content_Ancestor Configure_Content_WithAttribute() => Tabs.TabsWindow.Configure_Content_Ancestor(GetSelectionNodes());
+		static Configuration_Content_Ancestor Configure_Content_WithAttribute(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Content_Ancestor(state.Tabs.Focused.GetSelectionNodes());
 
 		void Execute_Content_WithAttribute()
 		{
@@ -146,7 +146,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
 
-		Configuration_Content_Ancestor Configure_Content_Children_WithAttribute() => Tabs.TabsWindow.Configure_Content_Ancestor(GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
+		static Configuration_Content_Ancestor Configure_Content_Children_WithAttribute(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Content_Ancestor(state.Tabs.Focused.GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
 
 		void Execute_Content_Children_WithAttribute()
 		{
@@ -160,7 +160,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
 
-		Configuration_Content_Ancestor Configure_Content_Descendants_WithAttribute() => Tabs.TabsWindow.Configure_Content_Ancestor(GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+		static Configuration_Content_Ancestor Configure_Content_Descendants_WithAttribute(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Content_Ancestor(state.Tabs.Focused.GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
 
 		void Execute_Content_Descendants_WithAttribute()
 		{

@@ -50,7 +50,7 @@ namespace NeoEdit.Editor
 				throw new Exception("No connection.");
 		}
 
-		Configuration_Database_Connect Configure_Database_Connect() => Tabs.TabsWindow.Configure_Database_Connect();
+		static Configuration_Database_Connect Configure_Database_Connect(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Database_Connect();
 
 		void Execute_Database_Connect()
 		{
@@ -86,10 +86,10 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		Configuration_Database_Examine Configure_Database_Examine()
+		static Configuration_Database_Examine Configure_Database_Examine(EditorExecuteState state)
 		{
-			ValidateConnection();
-			Tabs.TabsWindow.Configure_Database_Examine(dbConnection);
+			state.Tabs.Focused.ValidateConnection();
+			state.Tabs.TabsWindow.Configure_Database_Examine(state.Tabs.Focused.dbConnection);
 			return new Configuration_Database_Examine();
 		}
 

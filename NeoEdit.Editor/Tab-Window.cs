@@ -11,7 +11,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_ViewBinary() => ViewBinary = state.MultiStatus != true;
 
-		Configuration_Window_ViewBinaryCodePages Configure_Window_ViewBinaryCodePages() => Tabs.TabsWindow.Configure_Window_ViewBinaryCodePages(ViewBinaryCodePages);
+		static Configuration_Window_ViewBinaryCodePages Configure_Window_ViewBinaryCodePages(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Window_ViewBinaryCodePages(state.Tabs.Focused.ViewBinaryCodePages);
 
 		void Execute_Window_ViewBinaryCodePages() => ViewBinaryCodePages = (state.Configuration as Configuration_Window_ViewBinaryCodePages).CodePages;
 	}

@@ -67,7 +67,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		Configuration_File_SaveCopy_ByExpression Configure_File_SaveCopy_SaveCopyByExpression() => Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(GetVariables(), Selections.Count);
+		static Configuration_File_SaveCopy_ByExpression Configure_File_SaveCopy_SaveCopyByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
 
 		void Execute_File_SaveCopy_SaveCopyClipboard(bool copyOnly = false)
 		{
@@ -126,7 +126,7 @@ namespace NeoEdit.Editor
 			SetFileName(fileName);
 		}
 
-		Configuration_File_SaveCopy_ByExpression Configure_File_Operations_RenameByExpression() => Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(GetVariables(), Selections.Count);
+		static Configuration_File_SaveCopy_ByExpression Configure_File_Operations_RenameByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
 
 		void Execute_File_Operations_RenameClipboard()
 		{
@@ -295,7 +295,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
 
-		Configuration_File_Encoding_Encoding Configure_File_Encoding_Encoding() => Tabs.TabsWindow.Configure_File_Encoding_Encoding(CodePage);
+		static Configuration_File_Encoding_Encoding Configure_File_Encoding_Encoding(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_Encoding_Encoding(state.Tabs.Focused.CodePage);
 
 		void Execute_File_Encoding_Encoding()
 		{
@@ -303,7 +303,7 @@ namespace NeoEdit.Editor
 			CodePage = result.CodePage;
 		}
 
-		Configuration_File_Encoding_Encoding Configure_File_Encoding_ReopenWithEncoding() => Tabs.TabsWindow.Configure_File_Encoding_Encoding(CodePage);
+		static Configuration_File_Encoding_Encoding Configure_File_Encoding_ReopenWithEncoding(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_Encoding_Encoding(state.Tabs.Focused.CodePage);
 
 		void Execute_File_Encoding_ReopenWithEncoding()
 		{
@@ -317,11 +317,11 @@ namespace NeoEdit.Editor
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		Configuration_File_Encoding_LineEndings Configure_File_Encoding_LineEndings()
+		static Configuration_File_Encoding_LineEndings Configure_File_Encoding_LineEndings(EditorExecuteState state)
 		{
-			var endings = Tabs.ActiveTabs.Select(tab => tab.Text.OnlyEnding).Distinct().Take(2).ToList();
+			var endings = state.Tabs.ActiveTabs.Select(tab => tab.Text.OnlyEnding).Distinct().Take(2).ToList();
 			var ending = endings.Count == 1 ? endings[0] : "";
-			return Tabs.TabsWindow.Configure_File_Encoding_LineEndings(ending);
+			return state.Tabs.TabsWindow.Configure_File_Encoding_LineEndings(ending);
 		}
 
 		void Execute_File_Encoding_LineEndings()
@@ -340,12 +340,12 @@ namespace NeoEdit.Editor
 			Replace(sel, sel.Select(str => result.LineEndings).ToList());
 		}
 
-		Configuration_File_Encrypt Configure_File_Encrypt()
+		static Configuration_File_Encrypt Configure_File_Encrypt(EditorExecuteState state)
 		{
 			if (state.MultiStatus != false)
 				return new Configuration_File_Encrypt();
 			else
-				return Tabs.TabsWindow.Configure_File_Encrypt(Cryptor.Type.AES, true);
+				return state.Tabs.TabsWindow.Configure_File_Encrypt(Cryptor.Type.AES, true);
 		}
 
 		void Execute_File_Encrypt() => AESKey = (state.Configuration as Configuration_File_Encrypt).Key;

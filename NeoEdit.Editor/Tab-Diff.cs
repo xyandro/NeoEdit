@@ -125,7 +125,7 @@ namespace NeoEdit.Editor
 			CalculateDiff();
 		}
 
-		Configuration_Diff_IgnoreCharacters Configure_Diff_IgnoreCharacters() => Tabs.TabsWindow.Configure_Diff_IgnoreCharacters(DiffIgnoreCharacters);
+		static Configuration_Diff_IgnoreCharacters Configure_Diff_IgnoreCharacters(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Diff_IgnoreCharacters(state.Tabs.Focused.DiffIgnoreCharacters);
 
 		void Execute_Diff_IgnoreCharacters()
 		{
@@ -184,7 +184,7 @@ namespace NeoEdit.Editor
 				source.ReplaceSelections(strs);
 		}
 
-		Configuration_Diff_Fix_Whitespace_Dialog Configure_Diff_Fix_Whitespace_Dialog() => Tabs.TabsWindow.Configure_Diff_Fix_Whitespace_Dialog();
+		static Configuration_Diff_Fix_Whitespace_Dialog Configure_Diff_Fix_Whitespace_Dialog(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Diff_Fix_Whitespace_Dialog();
 
 		void Execute_Diff_Fix_Whitespace()
 		{

@@ -188,7 +188,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsTaskRunner().Select(range => BigInteger.Parse("0" + Text.GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 
-		Configuration_Numeric_ConvertBase Configure_Numeric_ConvertBase() => Tabs.TabsWindow.Configure_Numeric_ConvertBase();
+		static Configuration_Numeric_ConvertBase Configure_Numeric_ConvertBase(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Numeric_ConvertBase();
 
 		void Execute_Numeric_ConvertBase()
 		{
@@ -200,7 +200,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Numeric_Series_OneBased() => ReplaceSelections(Selections.Select((range, index) => (index + 1).ToString()).ToList());
 
-		Configuration_Numeric_Series_LinearGeometric Configure_Numeric_Series_LinearGeometric(bool linear) => Tabs.TabsWindow.Configure_Numeric_Series_LinearGeometric(linear, GetVariables());
+		static Configuration_Numeric_Series_LinearGeometric Configure_Numeric_Series_LinearGeometric(EditorExecuteState state, bool linear) => state.Tabs.TabsWindow.Configure_Numeric_Series_LinearGeometric(linear, state.Tabs.Focused.GetVariables());
 
 		void Execute_Numeric_Series_LinearGeometric(bool linear)
 		{
@@ -211,7 +211,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.Select((range, index) => (linear ? start + increment * index : start * Math.Pow(increment, index)).ToString()).ToList());
 		}
 
-		Configuration_Numeric_Scale Configure_Numeric_Scale() => Tabs.TabsWindow.Configure_Numeric_Scale(GetVariables());
+		static Configuration_Numeric_Scale Configure_Numeric_Scale(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Numeric_Scale(state.Tabs.Focused.GetVariables());
 
 		void Execute_Numeric_Scale()
 		{
@@ -306,7 +306,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Numeric_Absolute() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).TrimStart('-')).ToList());
 
-		Configuration_Numeric_Floor Configure_Numeric_Floor() => Tabs.TabsWindow.Configure_Numeric_Floor("Floor", GetVariables());
+		static Configuration_Numeric_Floor Configure_Numeric_Floor(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Numeric_Floor("Floor", state.Tabs.Focused.GetVariables());
 
 		void Execute_Numeric_Floor()
 		{
@@ -316,7 +316,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => (Math.Floor((double.Parse(Text.GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index]) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
-		Configuration_Numeric_Floor Configure_Numeric_Ceiling() => Tabs.TabsWindow.Configure_Numeric_Floor("Ceiling", GetVariables());
+		static Configuration_Numeric_Floor Configure_Numeric_Ceiling(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Numeric_Floor("Ceiling", state.Tabs.Focused.GetVariables());
 
 		void Execute_Numeric_Ceiling()
 		{
@@ -326,7 +326,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => (Math.Ceiling((double.Parse(Text.GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index]) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
-		Configuration_Numeric_Floor Configure_Numeric_Round() => Tabs.TabsWindow.Configure_Numeric_Floor("Round", GetVariables());
+		static Configuration_Numeric_Floor Configure_Numeric_Round(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Numeric_Floor("Round", state.Tabs.Focused.GetVariables());
 
 		void Execute_Numeric_Round()
 		{
@@ -336,7 +336,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => (Math.Round((double.Parse(Text.GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index], MidpointRounding.AwayFromZero) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
-		Configuration_Numeric_Limit Configure_Numeric_Limit() => Tabs.TabsWindow.Configure_Numeric_Limit(GetVariables());
+		static Configuration_Numeric_Limit Configure_Numeric_Limit(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Numeric_Limit(state.Tabs.Focused.GetVariables());
 
 		void Execute_Numeric_Limit()
 		{
@@ -348,7 +348,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => Limit(minimums[index], double.Parse(Text.GetString(range)), maximums[index]).ToString()).ToList());
 		}
 
-		Configuration_Numeric_Cycle Configure_Numeric_Cycle() => Tabs.TabsWindow.Configure_Numeric_Cycle(GetVariables());
+		static Configuration_Numeric_Cycle Configure_Numeric_Cycle(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Numeric_Cycle(state.Tabs.Focused.GetVariables());
 
 		void Execute_Numeric_Cycle()
 		{
@@ -363,7 +363,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Numeric_Factor() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Factor(BigInteger.Parse(Text.GetString(range)))).ToList());
 
-		Configuration_Numeric_RandomNumber Configure_Numeric_RandomNumber() => Tabs.TabsWindow.Configure_Numeric_RandomNumber(GetVariables());
+		static Configuration_Numeric_RandomNumber Configure_Numeric_RandomNumber(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Numeric_RandomNumber(state.Tabs.Focused.GetVariables());
 
 		void Execute_Numeric_RandomNumber()
 		{
@@ -374,12 +374,12 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => random.Next(minValues[index], maxValues[index] + 1).ToString()).ToList());
 		}
 
-		Configuration_Numeric_CombinationsPermutations Configure_Numeric_CombinationsPermutations()
+		static Configuration_Numeric_CombinationsPermutations Configure_Numeric_CombinationsPermutations(EditorExecuteState state)
 		{
-			if (Selections.Count != 1)
+			if (state.Tabs.Focused.Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			return Tabs.TabsWindow.Configure_Numeric_CombinationsPermutations();
+			return state.Tabs.TabsWindow.Configure_Numeric_CombinationsPermutations();
 		}
 
 		void Execute_Numeric_CombinationsPermutations()
@@ -440,7 +440,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		Configuration_Numeric_MinMaxValues Configure_Numeric_MinMaxValues() => Tabs.TabsWindow.Configure_Numeric_MinMaxValues();
+		static Configuration_Numeric_MinMaxValues Configure_Numeric_MinMaxValues(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Numeric_MinMaxValues();
 
 		void Execute_Numeric_MinMaxValues()
 		{

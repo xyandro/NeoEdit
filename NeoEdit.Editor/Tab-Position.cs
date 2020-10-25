@@ -129,27 +129,27 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		Configuration_Position_Goto Configure_Position_Goto(GotoType gotoType)
+		static Configuration_Position_Goto Configure_Position_Goto(EditorExecuteState state, GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
-			var range = Selections.FirstOrDefault();
+			var range = state.Tabs.Focused.Selections.FirstOrDefault();
 			if (range != null)
 			{
-				line = Text.GetPositionLine(range.Start) + 1;
-				index = Text.GetPositionIndex(range.Start, line - 1) + 1;
-				column = Text.GetColumnFromIndex(line - 1, index - 1) + 1;
+				line = state.Tabs.Focused.Text.GetPositionLine(range.Start) + 1;
+				index = state.Tabs.Focused.Text.GetPositionIndex(range.Start, line - 1) + 1;
+				column = state.Tabs.Focused.Text.GetColumnFromIndex(line - 1, index - 1) + 1;
 				position = range.Start;
 			}
 			int startValue;
 			switch (gotoType)
 			{
-				case GotoType.Line: startValue = Text.GetDiffLine(line); break;
+				case GotoType.Line: startValue = state.Tabs.Focused.Text.GetDiffLine(line); break;
 				case GotoType.Column: startValue = column; break;
 				case GotoType.Index: startValue = index; break;
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return Tabs.TabsWindow.Configure_Position_Goto(gotoType, startValue, GetVariables());
+			return state.Tabs.TabsWindow.Configure_Position_Goto(gotoType, startValue, state.Tabs.Focused.GetVariables());
 		}
 
 		void Execute_Position_Goto(GotoType gotoType, bool selecting)

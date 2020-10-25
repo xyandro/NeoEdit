@@ -24,11 +24,11 @@ namespace NeoEdit.Editor
 
 		void Execute_File_New_FromClipboardSelections() => AddTabsFromClipboardSelections(this);
 
-		Configuration_File_Open_Open Configure_File_Open_Open(string initialDirectory = null)
+		static Configuration_File_Open_Open Configure_File_Open_Open(EditorExecuteState state, string initialDirectory = null)
 		{
-			if ((initialDirectory == null) && (Focused != null))
-				initialDirectory = Path.GetDirectoryName(Focused.FileName);
-			var result = TabsWindow.Configure_File_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
+			if ((initialDirectory == null) && (state.Tabs.Focused != null))
+				initialDirectory = Path.GetDirectoryName(state.Tabs.Focused.FileName);
+			var result = state.Tabs.TabsWindow.Configure_File_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
 			if (result == null)
 				throw new OperationCanceledException();
 			return result;

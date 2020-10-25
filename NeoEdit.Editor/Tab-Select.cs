@@ -243,7 +243,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Select_Nothing() => Selections = new List<Range>();
 
-		Configuration_Select_Limit Configure_Select_Limit() => Tabs.TabsWindow.Configure_Select_Limit(GetVariables());
+		static Configuration_Select_Limit Configure_Select_Limit(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Select_Limit(state.Tabs.Focused.GetVariables());
 
 		void Execute_Select_Limit()
 		{
@@ -343,7 +343,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Select_Repeats_RepeatedLines(bool caseSensitive) => Selections = Selections.AsTaskRunner().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList();
 
-		Configuration_Select_Repeats_ByCount Configure_Select_Repeats_ByCount() => Tabs.TabsWindow.Configure_Select_Repeats_ByCount();
+		static Configuration_Select_Repeats_ByCount Configure_Select_Repeats_ByCount(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Select_Repeats_ByCount();
 
 		void Execute_Select_Repeats_ByCount(bool caseSensitive)
 		{
@@ -415,7 +415,7 @@ namespace NeoEdit.Editor
 			}).ToList();
 		}
 
-		Configuration_Select_Split Configure_Select_Split() => Tabs.TabsWindow.Configure_Select_Split(GetVariables());
+		static Configuration_Select_Split Configure_Select_Split(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Select_Split(state.Tabs.Focused.GetVariables());
 
 		void Execute_Select_Split()
 		{
@@ -441,7 +441,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Select_Selection_Center() => EnsureVisible(true, true);
 
-		Configuration_Select_Selection_ToggleAnchor Configure_Select_Selection_ToggleAnchor() => new Configuration_Select_Selection_ToggleAnchor { AnchorStart = Tabs.ActiveTabs.Any(tab => tab.Selections.Any(range => range.Anchor > range.Cursor)) };
+		static Configuration_Select_Selection_ToggleAnchor Configure_Select_Selection_ToggleAnchor(EditorExecuteState state) => new Configuration_Select_Selection_ToggleAnchor { AnchorStart = state.Tabs.ActiveTabs.Any(tab => tab.Selections.Any(range => range.Anchor > range.Cursor)) };
 
 		void Execute_Select_Selection_ToggleAnchor()
 		{

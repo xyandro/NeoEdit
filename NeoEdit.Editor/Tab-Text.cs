@@ -80,7 +80,7 @@ namespace NeoEdit.Editor
 			return str.Substring(start, end - start);
 		}
 
-		Configuration_Text_Select_Chars Configure_Text_Select_Trim() => Tabs.TabsWindow.Configure_Text_Select_Chars(0);
+		static Configuration_Text_Select_Chars Configure_Text_Select_Trim(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Text_Select_Chars(0);
 
 		void Execute_Text_Select_Trim()
 		{
@@ -88,7 +88,7 @@ namespace NeoEdit.Editor
 			Selections = Selections.AsTaskRunner().Select(range => TrimRange(range, result)).ToList();
 		}
 
-		Configuration_Text_Select_ByWidth Configure_Text_Select_ByWidth() => Tabs.TabsWindow.Configure_Text_Select_ByWidth(false, true, GetVariables());
+		static Configuration_Text_Select_ByWidth Configure_Text_Select_ByWidth(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Text_Select_ByWidth(false, true, state.Tabs.Focused.GetVariables());
 
 		void Execute_Text_Select_ByWidth()
 		{
@@ -97,7 +97,7 @@ namespace NeoEdit.Editor
 			Selections = Selections.AsTaskRunner().Where((range, index) => range.Length == results[index]).ToList();
 		}
 
-		Configuration_Text_Select_Chars Configure_Text_Select_WholeBoundedWord(bool wholeWord) => Tabs.TabsWindow.Configure_Text_Select_Chars(wholeWord ? 1 : 2);
+		static Configuration_Text_Select_Chars Configure_Text_Select_WholeBoundedWord(EditorExecuteState state, bool wholeWord) => state.Tabs.TabsWindow.Configure_Text_Select_Chars(wholeWord ? 1 : 2);
 
 		void Execute_Text_Select_WholeBoundedWord(bool wholeWord)
 		{
@@ -154,10 +154,10 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_Length() => ReplaceSelections(Selections.AsTaskRunner().Select(range => range.Length.ToString()).ToList());
 
-		Configuration_Text_Select_ByWidth Configure_Text_Width()
+		static Configuration_Text_Select_ByWidth Configure_Text_Width(EditorExecuteState state)
 		{
-			var numeric = Selections.Any() ? Selections.AsTaskRunner().All(range => Text.GetString(range).IsNumeric()) : false;
-			return Tabs.TabsWindow.Configure_Text_Select_ByWidth(numeric, false, GetVariables());
+			var numeric = state.Tabs.Focused.Selections.Any() ? state.Tabs.Focused.Selections.AsTaskRunner().All(range => state.Tabs.Focused.Text.GetString(range).IsNumeric()) : false;
+			return state.Tabs.TabsWindow.Configure_Text_Select_ByWidth(numeric, false, state.Tabs.Focused.GetVariables());
 		}
 
 		void Execute_Text_Width()
@@ -167,7 +167,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
 		}
 
-		Configuration_Text_Select_Chars Configure_Text_Trim() => Tabs.TabsWindow.Configure_Text_Select_Chars(0);
+		static Configuration_Text_Select_Chars Configure_Text_Trim(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Text_Select_Chars(0);
 
 		void Execute_Text_Trim()
 		{
@@ -177,7 +177,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_SingleLine() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
 
-		Configuration_Text_Unicode Configure_Text_Unicode() => Tabs.TabsWindow.Configure_Text_Unicode();
+		static Configuration_Text_Unicode Configure_Text_Unicode(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Text_Unicode();
 
 		void Execute_Text_Unicode()
 		{
@@ -187,7 +187,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_GUID() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Guid.NewGuid().ToString()).ToList());
 
-		Configuration_Text_RandomText Configure_Text_RandomText() => Tabs.TabsWindow.Configure_Text_RandomText(GetVariables());
+		static Configuration_Text_RandomText Configure_Text_RandomText(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Text_RandomText(state.Tabs.Focused.GetVariables());
 
 		void Execute_Text_RandomText()
 		{
@@ -198,12 +198,12 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_LoremIpsum() => ReplaceSelections(new LoremGenerator().GetSentences().Take(Selections.Count).ToList());
 
-		Configuration_Text_ReverseRegEx Configure_Text_ReverseRegEx()
+		static Configuration_Text_ReverseRegEx Configure_Text_ReverseRegEx(EditorExecuteState state)
 		{
-			if (Selections.Count != 1)
+			if (state.Tabs.Focused.Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			return Tabs.TabsWindow.Configure_Text_ReverseRegEx();
+			return state.Tabs.TabsWindow.Configure_Text_ReverseRegEx();
 		}
 
 		void Execute_Text_ReverseRegEx()
@@ -226,7 +226,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		Configuration_Text_FirstDistinct Configure_Text_FirstDistinct() => Tabs.TabsWindow.Configure_Text_FirstDistinct();
+		static Configuration_Text_FirstDistinct Configure_Text_FirstDistinct(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Text_FirstDistinct();
 
 		void Execute_Text_FirstDistinct()
 		{

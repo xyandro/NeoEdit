@@ -241,7 +241,7 @@ namespace NeoEdit.Editor
 				state.KeysAndValuesFunc = GetKeysAndValuesMap;
 
 				if ((!inMacro) && (state.Configuration == null))
-					state.Configuration = Configure();
+					state.Configuration = Configure(state);
 
 				Stopwatch sw = null;
 				if (timeNextAction)
@@ -276,19 +276,19 @@ namespace NeoEdit.Editor
 			return false;
 		}
 
-		IConfiguration Configure()
+		static IConfiguration Configure(EditorExecuteState state)
 		{
 			switch (state.Command)
 			{
-				case NECommand.File_Open_Open: return Configure_File_Open_Open();
-				case NECommand.Macro_Open_Open: return Configure_File_Open_Open(Macro.MacroDirectory);
-				case NECommand.Window_CustomGrid: return Configure_Window_CustomGrid();
+				case NECommand.File_Open_Open: return Configure_File_Open_Open(state);
+				case NECommand.Macro_Open_Open: return Configure_File_Open_Open(state, Macro.MacroDirectory);
+				case NECommand.Window_CustomGrid: return Configure_Window_CustomGrid(state);
 			}
 
-			if (Focused == null)
+			if (state.Tabs.Focused == null)
 				return null;
 
-			return Focused.Configure();
+			return Tab.Configure(state);
 		}
 
 		IPreExecution PreExecute() => Tab.PreExecute(state);

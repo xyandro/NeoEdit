@@ -51,10 +51,10 @@ namespace NeoEdit.Editor
 
 		bool IsActive(Tab tab) => newTabsList.IsActive(tab);
 
-		Tab Focused
+		public Tab Focused
 		{
 			get => newTabsList.Focused;
-			set => GetUpdateTabsList().Focused = value;
+			private set => GetUpdateTabsList().Focused = value;
 		}
 
 		HashSet<Tab> transactionTabs;

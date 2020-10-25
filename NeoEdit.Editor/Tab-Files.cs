@@ -345,7 +345,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(Text.GetString(range))).ToList());
 
-		Configuration_Files_Name_MakeAbsolute Configure_Files_Name_MakeAbsolute() => Tabs.TabsWindow.Configure_Files_Name_MakeAbsolute(GetVariables(), true, true);
+		static Configuration_Files_Name_MakeAbsolute Configure_Files_Name_MakeAbsolute(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Name_MakeAbsolute(state.Tabs.Focused.GetVariables(), true, true);
 
 		void Execute_Files_Name_MakeAbsolute()
 		{
@@ -354,7 +354,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == Configuration_Files_Name_MakeAbsolute.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		Configuration_Files_Name_MakeAbsolute Configure_Files_Name_MakeRelative() => Tabs.TabsWindow.Configure_Files_Name_MakeAbsolute(GetVariables(), false, true);
+		static Configuration_Files_Name_MakeAbsolute Configure_Files_Name_MakeRelative(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Name_MakeAbsolute(state.Tabs.Focused.GetVariables(), false, true);
 
 		void Execute_Files_Name_MakeRelative()
 		{
@@ -365,7 +365,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
 		}
 
-		Configuration_Files_Name_GetUnique Configure_Files_Name_GetUnique() => Tabs.TabsWindow.Configure_Files_Name_GetUnique();
+		static Configuration_Files_Name_GetUnique Configure_Files_Name_GetUnique(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Name_GetUnique();
 
 		void Execute_Files_Name_GetUnique()
 		{
@@ -475,12 +475,12 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(x => versioner.GetStatus(x).ToString()).ToList());
 		}
 
-		Configuration_Files_Set_Size Configure_Files_Set_Size()
+		static Configuration_Files_Set_Size Configure_Files_Set_Size(EditorExecuteState state)
 		{
-			var vars = GetVariables();
-			var sizes = RelativeSelectedFiles().AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
+			var vars = state.Tabs.Focused.GetVariables();
+			var sizes = state.Tabs.Focused.RelativeSelectedFiles().AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			return Tabs.TabsWindow.Configure_Files_Set_Size(vars);
+			return state.Tabs.TabsWindow.Configure_Files_Set_Size(vars);
 		}
 
 		void Execute_Files_Set_Size()
@@ -494,7 +494,7 @@ namespace NeoEdit.Editor
 			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
-		Configuration_Files_Set_Time Configure_Files_Set_Time() => Tabs.TabsWindow.Configure_Files_Set_Time(GetVariables(), $@"""{DateTime.Now}""");
+		static Configuration_Files_Set_Time Configure_Files_Set_Time(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Set_Time(state.Tabs.Focused.GetVariables(), $@"""{DateTime.Now}""");
 
 		void Execute_Files_Set_Time(TimestampType type)
 		{
@@ -531,9 +531,9 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		Configuration_Files_Set_Attributes Configure_Files_Set_Attributes()
+		static Configuration_Files_Set_Attributes Configure_Files_Set_Attributes(EditorExecuteState state)
 		{
-			var filesAttrs = Selections.Select(range => Text.GetString(range)).Select(file => new DirectoryInfo(file).Attributes).ToList();
+			var filesAttrs = state.Tabs.Focused.Selections.Select(range => state.Tabs.Focused.Text.GetString(range)).Select(file => new DirectoryInfo(file).Attributes).ToList();
 			var availAttrs = Helpers.GetValues<FileAttributes>();
 			var current = new Dictionary<FileAttributes, bool?>();
 			foreach (var fileAttrs in filesAttrs)
@@ -546,7 +546,7 @@ namespace NeoEdit.Editor
 						current[availAttr] = null;
 				}
 
-			return Tabs.TabsWindow.Configure_Files_Set_Attributes(current);
+			return state.Tabs.TabsWindow.Configure_Files_Set_Attributes(current);
 		}
 
 		void Execute_Files_Set_Attributes()
@@ -563,7 +563,7 @@ namespace NeoEdit.Editor
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
-		Configuration_Files_Find Configure_Files_Find() => Tabs.TabsWindow.Configure_Files_Find(GetVariables());
+		static Configuration_Files_Find Configure_Files_Find(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Find(state.Tabs.Focused.GetVariables());
 
 		void Execute_Files_Find()
 		{
@@ -634,7 +634,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		Configuration_Files_Insert Configure_Files_Insert() => Tabs.TabsWindow.Configure_Files_Insert();
+		static Configuration_Files_Insert Configure_Files_Insert(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Insert();
 
 		void Execute_Files_Insert()
 		{
@@ -660,7 +660,7 @@ namespace NeoEdit.Editor
 				Directory.CreateDirectory(file);
 		}
 
-		Configuration_Files_Create_FromExpressions Configure_Files_Create_FromExpressions() => Tabs.TabsWindow.Configure_Files_Create_FromExpressions(GetVariables(), CodePage);
+		static Configuration_Files_Create_FromExpressions Configure_Files_Create_FromExpressions(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Create_FromExpressions(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.CodePage);
 
 		void Execute_Files_Create_FromExpressions()
 		{
@@ -741,7 +741,7 @@ namespace NeoEdit.Editor
 			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList();
 		}
 
-		Configuration_Files_Select_ByVersionControlStatus Configure_Files_Select_ByVersionControlStatus() => Tabs.TabsWindow.Configure_Files_Select_ByVersionControlStatus();
+		static Configuration_Files_Select_ByVersionControlStatus Configure_Files_Select_ByVersionControlStatus(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Select_ByVersionControlStatus();
 
 		void Execute_Files_Select_ByVersionControlStatus()
 		{
@@ -752,7 +752,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		Configuration_Files_Hash Configure_Files_Hash() => Tabs.TabsWindow.Configure_Files_Hash();
+		static Configuration_Files_Hash Configure_Files_Hash(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Hash();
 
 		void Execute_Files_Hash()
 		{
@@ -763,7 +763,7 @@ namespace NeoEdit.Editor
 				.ToList());
 		}
 
-		Configuration_Files_Compress Configure_Files_Compress() => Tabs.TabsWindow.Configure_Files_Compress(true);
+		static Configuration_Files_Compress Configure_Files_Compress(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Compress(true);
 
 		void Execute_Files_Compress()
 		{
@@ -773,7 +773,7 @@ namespace NeoEdit.Editor
 				.ForAll((fileName, index, progress) => Compressor.Compress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		Configuration_Files_Compress Configure_Files_Decompress() => Tabs.TabsWindow.Configure_Files_Compress(false);
+		static Configuration_Files_Compress Configure_Files_Decompress(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Compress(false);
 
 		void Execute_Files_Decompress()
 		{
@@ -783,7 +783,7 @@ namespace NeoEdit.Editor
 				.ForAll((fileName, index, progress) => Compressor.Decompress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		Configuration_Files_Encrypt Configure_Files_Encrypt() => Tabs.TabsWindow.Configure_Files_Encrypt(true);
+		static Configuration_Files_Encrypt Configure_Files_Encrypt(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Encrypt(true);
 
 		void Execute_Files_Encrypt()
 		{
@@ -793,7 +793,7 @@ namespace NeoEdit.Editor
 				.ForAll((fileName, index, progress) => Cryptor.Encrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		Configuration_Files_Encrypt Configure_Files_Decrypt() => Tabs.TabsWindow.Configure_Files_Encrypt(false);
+		static Configuration_Files_Encrypt Configure_Files_Decrypt(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Encrypt(false);
 
 		void Execute_Files_Decrypt()
 		{
@@ -803,7 +803,7 @@ namespace NeoEdit.Editor
 				.ForAll((fileName, index, progress) => Cryptor.Decrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		Configuration_Files_Sign Configure_Files_Sign() => Tabs.TabsWindow.Configure_Files_Sign();
+		static Configuration_Files_Sign Configure_Files_Sign(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Sign();
 
 		void Execute_Files_Sign()
 		{
@@ -811,7 +811,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		Configuration_Files_Operations_CopyMove Configure_Files_Operations_CopyMove(bool move) => Tabs.TabsWindow.Configure_Files_Operations_CopyMove(GetVariables(), move);
+		static Configuration_Files_Operations_CopyMove Configure_Files_Operations_CopyMove(EditorExecuteState state, bool move) => state.Tabs.TabsWindow.Configure_Files_Operations_CopyMove(state.Tabs.Focused.GetVariables(), move);
 
 		void Execute_Files_Operations_CopyMove(bool move)
 		{
@@ -935,7 +935,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Operations_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
 
-		Configuration_Files_Operations_Encoding Configure_Files_Operations_Encoding() => Tabs.TabsWindow.Configure_Files_Operations_Encoding();
+		static Configuration_Files_Operations_Encoding Configure_Files_Operations_Encoding(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Operations_Encoding();
 
 		void Execute_Files_Operations_Encoding()
 		{
@@ -947,11 +947,11 @@ namespace NeoEdit.Editor
 					fileName => new FileInfo(fileName).Length);
 		}
 
-		Configuration_Files_Operations_SplitFile Configure_Files_Operations_SplitFile()
+		static Configuration_Files_Operations_SplitFile Configure_Files_Operations_SplitFile(EditorExecuteState state)
 		{
-			var variables = GetVariables();
+			var variables = state.Tabs.Focused.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return Tabs.TabsWindow.Configure_Files_Operations_SplitFile(variables);
+			return state.Tabs.TabsWindow.Configure_Files_Operations_SplitFile(variables);
 		}
 
 		void Execute_Files_Operations_SplitFile()
@@ -969,7 +969,7 @@ namespace NeoEdit.Editor
 					fileName => new FileInfo(fileName).Length);
 		}
 
-		Configuration_Files_Operations_CombineFiles Configure_Files_Operations_CombineFiles() => Tabs.TabsWindow.Configure_Files_Operations_CombineFiles(GetVariables());
+		static Configuration_Files_Operations_CombineFiles Configure_Files_Operations_CombineFiles(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Files_Operations_CombineFiles(state.Tabs.Focused.GetVariables());
 
 		void Execute_Files_Operations_CombineFiles()
 		{

@@ -159,7 +159,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		Configuration_Internal_Key Configure_Internal_Key()
+		static Configuration_Internal_Key Configure_Internal_Key(EditorExecuteState state)
 		{
 			switch (state.Key)
 			{
@@ -167,7 +167,7 @@ namespace NeoEdit.Editor
 				case Key.Delete:
 				case Key.Left:
 				case Key.Right:
-					return new Configuration_Internal_Key { HasSelections = Tabs.ActiveTabs.Any(tab => tab.Selections.Any(range => range.HasSelection)) };
+					return new Configuration_Internal_Key { HasSelections = state.Tabs.ActiveTabs.Any(tab => tab.Selections.Any(range => range.HasSelection)) };
 				default: return null;
 			}
 		}

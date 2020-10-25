@@ -165,10 +165,10 @@ namespace NeoEdit.Editor
 				ReplaceSelections("");
 		}
 
-		Configuration_Edit_Paste_Paste Configure_Edit_Paste_Paste()
+		static Configuration_Edit_Paste_Paste Configure_Edit_Paste_Paste(EditorExecuteState state)
 		{
 			var configuration = new Configuration_Edit_Paste_Paste();
-			configuration.ReplaceOneWithMany = (Tabs.ActiveTabs.All(tab => tab.Selections.Count == 1)) && (Tabs.ActiveTabs.Any(tab => tab.Clipboard.Count != 1));
+			configuration.ReplaceOneWithMany = (state.Tabs.ActiveTabs.All(tab => tab.Selections.Count == 1)) && (state.Tabs.ActiveTabs.Any(tab => tab.Clipboard.Count != 1));
 			return configuration;
 		}
 
@@ -200,22 +200,22 @@ namespace NeoEdit.Editor
 			ReplaceSelections(clipboardStrings, highlight);
 		}
 
-		Configuration_Edit_Find_Find Configure_Edit_Find_Find()
+		static Configuration_Edit_Find_Find Configure_Edit_Find_Find(EditorExecuteState state)
 		{
 			string text = null;
-			var selectionOnly = Selections.Any(range => range.HasSelection);
+			var selectionOnly = state.Tabs.Focused.Selections.Any(range => range.HasSelection);
 
-			if (Selections.Count == 1)
+			if (state.Tabs.Focused.Selections.Count == 1)
 			{
-				var sel = Selections.Single();
-				if ((selectionOnly) && (Text.GetPositionLine(sel.Cursor) == Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
+				var sel = state.Tabs.Focused.Selections.Single();
+				if ((selectionOnly) && (state.Tabs.Focused.Text.GetPositionLine(sel.Cursor) == state.Tabs.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
-					text = Text.GetString(sel);
+					text = state.Tabs.Focused.Text.GetString(sel);
 				}
 			}
 
-			return Tabs.TabsWindow.Configure_Edit_Find_Find(text, selectionOnly, ViewBinaryCodePages, GetVariables());
+			return state.Tabs.TabsWindow.Configure_Edit_Find_Find(text, selectionOnly, state.Tabs.Focused.ViewBinaryCodePages, state.Tabs.Focused.GetVariables());
 		}
 
 		void Execute_Edit_Find_Find()
@@ -338,22 +338,22 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		Configuration_Edit_Find_RegexReplace Configure_Edit_Find_RegexReplace()
+		static Configuration_Edit_Find_RegexReplace Configure_Edit_Find_RegexReplace(EditorExecuteState state)
 		{
 			string text = null;
-			var selectionOnly = Selections.Any(range => range.HasSelection);
+			var selectionOnly = state.Tabs.Focused.Selections.Any(range => range.HasSelection);
 
-			if (Selections.Count == 1)
+			if (state.Tabs.Focused.Selections.Count == 1)
 			{
-				var sel = Selections.Single();
-				if ((selectionOnly) && (Text.GetPositionLine(sel.Cursor) == Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
+				var sel = state.Tabs.Focused.Selections.Single();
+				if ((selectionOnly) && (state.Tabs.Focused.Text.GetPositionLine(sel.Cursor) == state.Tabs.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
-					text = Text.GetString(sel);
+					text = state.Tabs.Focused.Text.GetString(sel);
 				}
 			}
 
-			return Tabs.TabsWindow.Configure_Edit_Find_RegexReplace(text, selectionOnly);
+			return state.Tabs.TabsWindow.Configure_Edit_Find_RegexReplace(text, selectionOnly);
 		}
 
 		void Execute_Edit_Find_RegexReplace()
@@ -378,7 +378,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		Configuration_Edit_Expression_Expression Configure_Edit_Expression_Expression() => Tabs.TabsWindow.Configure_Edit_Expression_Expression(GetVariables());
+		static Configuration_Edit_Expression_Expression Configure_Edit_Expression_Expression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Expression_Expression(state.Tabs.Focused.GetVariables());
 
 		void Execute_Edit_Expression_Expression()
 		{
@@ -392,7 +392,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetExpressionResults<string>("Eval(x)", Selections.Count()));
 
-		Configuration_Edit_Rotate Configure_Edit_Rotate() => Tabs.TabsWindow.Configure_Edit_Rotate(GetVariables());
+		static Configuration_Edit_Rotate Configure_Edit_Rotate(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Rotate(state.Tabs.Focused.GetVariables());
 
 		void Execute_Edit_Rotate()
 		{
@@ -409,7 +409,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		Configuration_Edit_Repeat Configure_Edit_Repeat() => Tabs.TabsWindow.Configure_Edit_Repeat(Selections.Count == 1, GetVariables());
+		static Configuration_Edit_Repeat Configure_Edit_Repeat(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Repeat(state.Tabs.Focused.Selections.Count == 1, state.Tabs.Focused.GetVariables());
 
 		void Execute_Edit_Repeat()
 		{
@@ -445,7 +445,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Unescape_URL() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
 
-		Configuration_Edit_Data_Hash Configure_Edit_Data_Hash() => Tabs.TabsWindow.Configure_Edit_Data_Hash(CodePage);
+		static Configuration_Edit_Data_Hash Configure_Edit_Data_Hash(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Data_Hash(state.Tabs.Focused.CodePage);
 
 		void Execute_Edit_Data_Hash()
 		{
@@ -456,7 +456,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs.AsTaskRunner().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		Configuration_Edit_Data_Compress Configure_Edit_Data_Compress() => Tabs.TabsWindow.Configure_Edit_Data_Compress(CodePage, true);
+		static Configuration_Edit_Data_Compress Configure_Edit_Data_Compress(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Data_Compress(state.Tabs.Focused.CodePage, true);
 
 		void Execute_Edit_Data_Compress()
 		{
@@ -470,7 +470,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(compressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		Configuration_Edit_Data_Compress Configure_Edit_Data_Decompress() => Tabs.TabsWindow.Configure_Edit_Data_Compress(CodePage, false);
+		static Configuration_Edit_Data_Compress Configure_Edit_Data_Decompress(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Data_Compress(state.Tabs.Focused.CodePage, false);
 
 		void Execute_Edit_Data_Decompress()
 		{
@@ -484,7 +484,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(decompressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		Configuration_Edit_Data_Encrypt Configure_Edit_Data_Encrypt() => Tabs.TabsWindow.Configure_Edit_Data_Encrypt(CodePage, true);
+		static Configuration_Edit_Data_Encrypt Configure_Edit_Data_Encrypt(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Data_Encrypt(state.Tabs.Focused.CodePage, true);
 
 		void Execute_Edit_Data_Encrypt()
 		{
@@ -498,7 +498,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(encrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		Configuration_Edit_Data_Encrypt Configure_Edit_Data_Decrypt() => Tabs.TabsWindow.Configure_Edit_Data_Encrypt(CodePage, false);
+		static Configuration_Edit_Data_Encrypt Configure_Edit_Data_Decrypt(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Data_Encrypt(state.Tabs.Focused.CodePage, false);
 
 		void Execute_Edit_Data_Decrypt()
 		{
@@ -512,7 +512,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(decrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		Configuration_Edit_Data_Sign Configure_Edit_Data_Sign() => Tabs.TabsWindow.Configure_Edit_Data_Sign(CodePage);
+		static Configuration_Edit_Data_Sign Configure_Edit_Data_Sign(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Data_Sign(state.Tabs.Focused.CodePage);
 
 		void Execute_Edit_Data_Sign()
 		{
@@ -523,7 +523,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs.AsTaskRunner().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
-		Configuration_Edit_Sort Configure_Edit_Sort() => Tabs.TabsWindow.Configure_Edit_Sort();
+		static Configuration_Edit_Sort Configure_Edit_Sort(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Sort();
 
 		void Execute_Edit_Sort()
 		{
@@ -555,7 +555,7 @@ namespace NeoEdit.Editor
 				SetRegions(result.UseRegion, newRegions);
 		}
 
-		Configuration_Edit_Convert Configure_Edit_Convert() => Tabs.TabsWindow.Configure_Edit_Convert();
+		static Configuration_Edit_Convert Configure_Edit_Convert(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Edit_Convert();
 
 		void Execute_Edit_Convert()
 		{

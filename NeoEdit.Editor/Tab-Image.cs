@@ -116,7 +116,7 @@ namespace NeoEdit.Editor
 			File.Move(tempName, fileName);
 		}
 
-		Configuration_Image_GrabColor Configure_Image_GrabColor() => Tabs.TabsWindow.Configure_Image_GrabColor(Selections.Select(range => Text.GetString(range)).FirstOrDefault());
+		static Configuration_Image_GrabColor Configure_Image_GrabColor(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Image_GrabColor(state.Tabs.Focused.Selections.Select(range => state.Tabs.Focused.Text.GetString(range)).FirstOrDefault());
 
 		void Execute_Image_GrabColor()
 		{
@@ -124,7 +124,7 @@ namespace NeoEdit.Editor
 			ReplaceOneWithMany(result.Colors, true);
 		}
 
-		Configuration_Image_GrabImage Configure_Image_GrabImage() => Tabs.TabsWindow.Configure_Image_GrabImage(GetVariables());
+		static Configuration_Image_GrabImage Configure_Image_GrabImage(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Image_GrabImage(state.Tabs.Focused.GetVariables());
 
 		void Execute_Image_GrabImage()
 		{
@@ -148,7 +148,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		Configuration_Image_AdjustColor Configure_Image_AdjustColor() => Tabs.TabsWindow.Configure_Image_AdjustColor(GetVariables());
+		static Configuration_Image_AdjustColor Configure_Image_AdjustColor(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Image_AdjustColor(state.Tabs.Focused.GetVariables());
 
 		void Execute_Image_AdjustColor()
 		{
@@ -158,7 +158,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		Configuration_Image_AddOverlayColor Configure_Image_AddOverlayColor(bool add) => Tabs.TabsWindow.Configure_Image_AddOverlayColor(add, GetVariables());
+		static Configuration_Image_AddOverlayColor Configure_Image_AddOverlayColor(EditorExecuteState state, bool add) => state.Tabs.TabsWindow.Configure_Image_AddOverlayColor(add, state.Tabs.Focused.GetVariables());
 
 		void Execute_Image_AddColor()
 		{
@@ -176,7 +176,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		Configuration_Image_Size Configure_Image_Size() => Tabs.TabsWindow.Configure_Image_Size(GetVariables());
+		static Configuration_Image_Size Configure_Image_Size(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Image_Size(state.Tabs.Focused.GetVariables());
 
 		void Execute_Image_Size()
 		{
@@ -207,7 +207,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		Configuration_Image_Crop Configure_Image_Crop() => Tabs.TabsWindow.Configure_Image_Crop(GetVariables());
+		static Configuration_Image_Crop Configure_Image_Crop(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Image_Crop(state.Tabs.Focused.GetVariables());
 
 		void Execute_Image_Crop()
 		{
@@ -257,7 +257,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		Configuration_Image_Rotate Configure_Image_Rotate() => Tabs.TabsWindow.Configure_Image_Rotate(GetVariables());
+		static Configuration_Image_Rotate Configure_Image_Rotate(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Image_Rotate(state.Tabs.Focused.GetVariables());
 
 		void Execute_Image_Rotate()
 		{
@@ -284,7 +284,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		Configuration_Image_GIF_Animate Configure_Image_GIF_Animate() => Tabs.TabsWindow.Configure_Image_GIF_Animate(GetVariables());
+		static Configuration_Image_GIF_Animate Configure_Image_GIF_Animate(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Image_GIF_Animate(state.Tabs.Focused.GetVariables());
 
 		void Execute_Image_GIF_Animate()
 		{
@@ -301,11 +301,11 @@ namespace NeoEdit.Editor
 						writer.WriteFrame(image, delays[ctr]);
 		}
 
-		Configuration_Image_GIF_Split Configure_Image_GIF_Split()
+		static Configuration_Image_GIF_Split Configure_Image_GIF_Split(EditorExecuteState state)
 		{
-			var variables = GetVariables();
+			var variables = state.Tabs.Focused.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return Tabs.TabsWindow.Configure_Image_GIF_Split(variables);
+			return state.Tabs.TabsWindow.Configure_Image_GIF_Split(variables);
 		}
 
 		void Execute_Image_GIF_Split()
@@ -320,7 +320,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Image_GetTakenDate() => ReplaceSelections(RelativeSelectedFiles().AsTaskRunner().Select(fileName => GetImageTakenDate(fileName)?.ToString() ?? "<NONE>").ToList());
 
-		Configuration_Image_SetTakenDate Configure_Image_SetTakenDate() => Tabs.TabsWindow.Configure_Image_SetTakenDate(GetVariables());
+		static Configuration_Image_SetTakenDate Configure_Image_SetTakenDate(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Image_SetTakenDate(state.Tabs.Focused.GetVariables());
 
 		void Execute_Image_SetTakenDate()
 		{
