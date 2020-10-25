@@ -2,41 +2,40 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DB80FD39-0222-4591-B224-833259BAC943}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>NeoEdit.Program</RootNamespace>
+    <RootNamespace>NeoEdit</RootNamespace>
     <AssemblyName>NeoEdit</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <OutputPath>$(SolutionDir)bin\$(Configuration).$(Platform)\</OutputPath>
+    <BaseIntermediateOutputPath>obj\$(Configuration).$(Platform)\</BaseIntermediateOutputPath>
+    <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
-    <BitDepth Condition="'$(Platform)' == 'x86'">32</BitDepth>
-    <BitDepth Condition="'$(Platform)' == 'x64'">64</BitDepth>
-    <OutputPath>$(SolutionDir)bin\$(Configuration).$(BitDepth)\</OutputPath>
-    <BaseIntermediateOutputPath>obj\$(Configuration).$(BitDepth)\</BaseIntermediateOutputPath>
-    <PlatformTarget>$(Platform)</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <CopyRetryCount>0</CopyRetryCount>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ApplicationIcon>$(SolutionDir)Photoshop\NeoEdit.ico</ApplicationIcon>
-    <NoWarn>3021</NoWarn>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'x64'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'x86'">
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>NeoEdit.Program</StartupObject>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="$(SolutionDir)Photoshop\NeoEdit.ico">
@@ -49,7 +48,9 @@
     <None Include="packages.config" />
     <Compile Include="Program.cs" />
     <AppDesigner Include="Properties\" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj">
@@ -70,9 +71,6 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

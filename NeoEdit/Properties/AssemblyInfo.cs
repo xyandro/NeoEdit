@@ -1,3 +1,3 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("NeoEdit.exe")]
+[assembly: AssemblyTitle("NeoEdit")]
