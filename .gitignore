@@ -16,7 +16,10 @@ obj
 TestResults
 
 # Specific
+/Build/packages
 /ChangeLog.txt
+/lib
+/LibGit2Sharp.*
 /NeoEdit.Common/Expressions/Parser
 /NeoEdit.Common/RevRegEx/Parser
 /NeoEdit.Dependencies/Properties/GlobalAssemblyInfo.cs

@@ -18,13 +18,17 @@ namespace Build
 			repo = new Repository(path);
 		}
 
-		public static string GetDirtyPaths() => string.Join("\n", repo.RetrieveStatus().Where(entry => entry.State != FileStatus.Untracked).Select(entry => $"{entry.State}: {entry.FilePath}"));
+		public static string GetDirtyPaths() => string.Join("\n", repo.RetrieveStatus().Where(entry => entry.State != FileStatus.NewInWorkdir).Select(entry => $"{entry.State}: {entry.FilePath}"));
 
 		public static IEnumerable<string> GetIgoredPaths() => repo.RetrieveStatus().Ignored.Select(entry => Path.Combine(repo.Info.WorkingDirectory, entry.FilePath));
 
-		public static void Fetch(string branch) => repo.Fetch(branch);
+		public static void Fetch(string branch)
+		{
+			var remote = repo.Network.Remotes["origin"];
+			Commands.Fetch(repo, remote.Name, remote.FetchRefSpecs.Select(x => x.Specification), null, "");
+		}
 
-		public static void SwitchBranch(string branch) => repo.Checkout(branch);
+		public static void SwitchBranch(string branch) => Commands.Checkout(repo, repo.Branches[branch]);
 
 		public static void Reset(string branch) => repo.Reset(ResetMode.Hard, repo.Branches[branch].Tip);
 	}
