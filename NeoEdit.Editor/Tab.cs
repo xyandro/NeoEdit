@@ -987,7 +987,6 @@ namespace NeoEdit.Editor
 				case NECommand.Text_Unicode: Execute_Text_Unicode(); break;
 				case NECommand.Text_GUID: Execute_Text_GUID(); break;
 				case NECommand.Text_RandomText: Execute_Text_RandomText(); break;
-				case NECommand.Text_LoremIpsum: Execute_Text_LoremIpsum(); break;
 				case NECommand.Text_ReverseRegEx: Execute_Text_ReverseRegEx(); break;
 				case NECommand.Text_FirstDistinct: Execute_Text_FirstDistinct(); break;
 				case NECommand.Text_RepeatCount: Execute_Text_RepeatCount(); break;

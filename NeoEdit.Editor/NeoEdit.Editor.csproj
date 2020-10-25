@@ -167,7 +167,6 @@
     <Compile Include="GIFWriter.cs" />
     <Compile Include="KeysAndValues.cs" />
     <Compile Include="LCS.cs" />
-    <Compile Include="LoremGenerator.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="MacroAction.cs" />
     <Compile Include="Models\AnswerResult.cs" />

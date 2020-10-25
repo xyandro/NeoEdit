@@ -416,7 +416,6 @@ namespace NeoEdit.Common
 		Text_Unicode,
 		Text_GUID,
 		Text_RandomText,
-		Text_LoremIpsum,
 		Text_ReverseRegEx,
 		Text_FirstDistinct,
 		Text_RepeatCount,

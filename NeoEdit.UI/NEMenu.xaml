@@ -597,7 +597,6 @@
 		<controls:NEMenuItem Header="_Unicode" CommandEnum="Text_Unicode" ToolTip="Insert unicode characters"/>
 		<controls:NEMenuItem Header="_GUID" CommandEnum="Text_GUID" ToolTip="Insert GUIDs"/>
 		<controls:NEMenuItem Header="_Random text" CommandEnum="Text_RandomText" ToolTip="Create random text"/>
-		<controls:NEMenuItem Header="L_orem ipsum" CommandEnum="Text_LoremIpsum" ToolTip="Add lorem ipsum text"/>
 		<controls:NEMenuItem Header="Re_verse regex" CommandEnum="Text_ReverseRegEx" ToolTip="Inserts all strings that would match given regular expression"/>
 		<controls:NEMenuItem Header="_First distinct" CommandEnum="Text_FirstDistinct" ToolTip="Select the distinct set of characters from all selections"/>
 		<Separator/>

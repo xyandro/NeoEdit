@@ -196,8 +196,6 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 
-		void Execute_Text_LoremIpsum() => ReplaceSelections(new LoremGenerator().GetSentences().Take(Selections.Count).ToList());
-
 		static Configuration_Text_ReverseRegEx Configure_Text_ReverseRegEx(EditorExecuteState state)
 		{
 			if (state.Tabs.Focused.Selections.Count != 1)
