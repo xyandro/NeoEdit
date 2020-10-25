@@ -11,7 +11,6 @@ using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.CommandLine;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.TaskRunning;
 
@@ -247,7 +246,7 @@ namespace NeoEdit.Editor
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
-				state.PreExecution = PreExecute();
+				state.PreExecution = Tab.PreExecute(state);
 				TaskRunner.Run(Execute, percent => TabsWindow.SetTaskRunnerProgress(percent));
 				TabsWindow.SetTaskRunnerProgress(null);
 				PostExecute();
@@ -275,8 +274,6 @@ namespace NeoEdit.Editor
 			Rollback();
 			return false;
 		}
-
-		IPreExecution PreExecute() => Tab.PreExecute(state);
 
 		void Execute()
 		{
