@@ -1057,7 +1057,7 @@
 	<MenuItem Header="_Window">
 		<MenuItem Header="_New">
 			<controls:NEMenuItem Header="_New window" CommandEnum="Window_New_NewWindow" ToolTip="Create new window"/>
-			<Separator/>
+			<controls:NEMenuItem Header="From _selections" CommandEnum="Window_New_FromSelections" ToolTip="Open a new window with a new file for each selection"/>
 			<controls:NEMenuItem Header="From _clipboards" CommandEnum="Window_New_FromClipboards" ToolTip="Open a new window with a new file for each file on the clipboard"/>
 			<controls:NEMenuItem Header="From c_lipboard selections" CommandEnum="Window_New_FromClipboardSelections" ToolTip="Open a new window with a new file for each value on the clipboard"/>
 		</MenuItem>

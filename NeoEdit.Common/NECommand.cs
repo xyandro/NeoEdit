@@ -718,6 +718,7 @@ namespace NeoEdit.Common
 		Macro_TimeNextAction,
 		Macro_Visualize,
 		Window_New_NewWindow,
+		Window_New_FromSelections,
 		Window_New_FromClipboards,
 		Window_New_FromClipboardSelections,
 		[KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Alt)] Window_Full,

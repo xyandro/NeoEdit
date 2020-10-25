@@ -6,6 +6,7 @@ using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.PreExecution;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -14,6 +15,24 @@ namespace NeoEdit.Editor
 		static PreExecutionStop PreExecute_Window_New_NewWindow(EditorExecuteState state)
 		{
 			new Tabs(true);
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Window_New_FromSelections(EditorExecuteState state)
+		{
+			var newTabs = state.Tabs.ActiveTabs.AsTaskRunner().SelectMany(tab => tab.Selections.AsTaskRunner().Select(range => tab.Text.GetString(range)).Select(str => new Tab(bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: tab.ContentType, modified: false)).ToList()).ToList();
+			newTabs.ForEach((tab, index) =>
+			{
+				tab.BeginTransaction(state);
+				tab.DisplayName = $"Selection {index + 1}";
+				tab.Commit();
+			});
+
+			var tabs = new Tabs();
+			tabs.BeginTransaction(state);
+			newTabs.ForEach(tab => tabs.AddTab(tab));
+			tabs.Commit();
+
 			return PreExecutionStop.Stop;
 		}
 
