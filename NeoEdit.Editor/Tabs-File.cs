@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Win32;
@@ -23,16 +22,6 @@ namespace NeoEdit.Editor
 		void Execute_File_New_FromClipboards() => AddTabsFromClipboards(this);
 
 		void Execute_File_New_FromClipboardSelections() => AddTabsFromClipboardSelections(this);
-
-		static Configuration_File_Open_Open Configure_File_Open_Open(EditorExecuteState state, string initialDirectory = null)
-		{
-			if ((initialDirectory == null) && (state.Tabs.Focused != null))
-				initialDirectory = Path.GetDirectoryName(state.Tabs.Focused.FileName);
-			var result = state.Tabs.TabsWindow.Configure_File_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
-			if (result == null)
-				throw new OperationCanceledException();
-			return result;
-		}
 
 		void Execute_File_Open_Open(Configuration_File_Open_Open result) => result.FileNames.ForEach(fileName => AddTab(new Tab(fileName)));
 

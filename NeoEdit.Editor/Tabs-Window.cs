@@ -32,8 +32,6 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_Grid() => SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 
-		static Configuration_Window_CustomGrid Configure_Window_CustomGrid(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_Window_CustomGrid(state.Tabs.WindowLayout);
-
 		void Execute_Window_CustomGrid() => SetLayout((state.Configuration as Configuration_Window_CustomGrid).WindowLayout);
 
 		void Execute_Window_ActiveTabs()

@@ -326,6 +326,16 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Command)
 			{
+				case NECommand.File_Open_Open: return Configure_File_Open_Open(state);
+				case NECommand.Macro_Open_Open: return Configure_File_Open_Open(state, Macro.MacroDirectory);
+				case NECommand.Window_CustomGrid: return Configure_Window_CustomGrid(state);
+			}
+
+			if (state.Tabs.Focused == null)
+				return null;
+
+			switch (state.Command)
+			{
 				case NECommand.Internal_Key: return Configure_Internal_Key(state);
 				case NECommand.File_Save_SaveAsByExpression: return Configure_File_SaveCopy_SaveCopyByExpression(state);
 				case NECommand.File_Copy_CopyToByExpression: return Configure_File_SaveCopy_SaveCopyByExpression(state);

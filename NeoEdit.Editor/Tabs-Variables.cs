@@ -67,7 +67,7 @@ namespace NeoEdit.Editor
 		}
 
 		WindowLayout oldWindowLayout, newWindowLayout;
-		WindowLayout WindowLayout
+		public WindowLayout WindowLayout
 		{
 			get => newWindowLayout;
 			set

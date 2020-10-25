@@ -46,6 +46,16 @@ namespace NeoEdit.Editor
 				ReplaceSelections(strs);
 		}
 
+		static Configuration_File_Open_Open Configure_File_Open_Open(EditorExecuteState state, string initialDirectory = null)
+		{
+			if ((initialDirectory == null) && (state.Tabs.Focused != null))
+				initialDirectory = Path.GetDirectoryName(state.Tabs.Focused.FileName);
+			var result = state.Tabs.TabsWindow.Configure_File_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
+			if (result == null)
+				throw new OperationCanceledException();
+			return result;
+		}
+
 		void Execute_File_New_FromSelections() => GetSelectionStrings().ForEach(((str, index) => QueueAddTab(new Tab(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false))));
 
 		void Execute_File_Open_Selected() => Tabs.OpenFiles(RelativeSelectedFiles());
