@@ -43,7 +43,7 @@ namespace NeoEdit.Common
 		File_Operations_SetDisplayName,
 		[KeyGesture(Key.F4, ModifierKeys.Control)] File_Close,
 		[KeyGesture(Key.F5)] File_Refresh,
-		[KeyGesture(Key.F5, ModifierKeys.Control)] File_AutoRefresh,
+		File_AutoRefresh,
 		File_Revert,
 		[KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Alt)] File_MoveToNewWindow,
 		File_Insert_Files,
