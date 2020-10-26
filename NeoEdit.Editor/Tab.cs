@@ -608,16 +608,13 @@ namespace NeoEdit.Editor
 				case NECommand.File_Save_Save: Execute_File_Save_Save(); break;
 				case NECommand.File_Save_SaveModified: Execute_File_Save_SaveModified(); break;
 				case NECommand.File_Save_SaveAs: Execute_File_SaveCopy_SaveCopy(); break;
-				case NECommand.File_Save_SaveAsClipboard: Execute_File_SaveCopy_SaveCopyClipboard(); break;
 				case NECommand.File_Save_SaveAsByExpression: Execute_File_SaveCopy_SaveCopyByExpression(); break;
 				case NECommand.File_Copy_CopyTo: Execute_File_SaveCopy_SaveCopy(true); break;
-				case NECommand.File_Copy_CopyToClipboard: Execute_File_SaveCopy_SaveCopyClipboard(true); break;
 				case NECommand.File_Copy_CopyToByExpression: Execute_File_SaveCopy_SaveCopyByExpression(true); break;
 				case NECommand.File_Copy_Path: Execute_File_Copy_Path(); break;
 				case NECommand.File_Copy_Name: Execute_File_Copy_Name(); break;
 				case NECommand.File_Copy_DisplayName: Execute_File_Copy_DisplayName(); break;
 				case NECommand.File_Rename_Rename: Execute_File_Rename_Rename(); break;
-				case NECommand.File_Rename_RenameClipboard: Execute_File_Rename_RenameClipboard(); break;
 				case NECommand.File_Rename_RenameByExpression: Execute_File_Rename_RenameByExpression(); break;
 				case NECommand.File_Operations_Delete: Execute_File_Operations_Delete(); break;
 				case NECommand.File_Operations_Explore: Execute_File_Operations_Explore(); break;

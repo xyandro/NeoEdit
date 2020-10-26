@@ -111,23 +111,6 @@ namespace NeoEdit.Editor
 
 		void Execute_File_SaveCopy_SaveCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		void Execute_File_SaveCopy_SaveCopyClipboard(bool copyOnly = false)
-		{
-			var results = Clipboard;
-			if (results.Count != 1)
-				throw new Exception("Only one filename may be specified");
-
-			var newFileName = FileName.RelativeChild(results[0]);
-
-			if (File.Exists(newFileName))
-			{
-				if (!QueryUser(nameof(Execute_File_SaveCopy_SaveCopyClipboard), "File already exists; overwrite?", MessageOptions.None))
-					return;
-			}
-
-			Save(newFileName, copyOnly);
-		}
-
 		static Configuration_File_SaveCopyRename_ByExpression Configure_File_SaveCopy_SaveCopyByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopyRename_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
 
 		void Execute_File_SaveCopy_SaveCopyByExpression(bool copyOnly = false)
@@ -168,29 +151,6 @@ namespace NeoEdit.Editor
 				File.Delete(fileName);
 			File.Move(FileName, fileName);
 			SetFileName(fileName);
-		}
-
-		void Execute_File_Rename_RenameClipboard()
-		{
-			var results = Clipboard;
-			if (results.Count != 1)
-				throw new Exception("Only one filename may be specified");
-
-			var newFileName = FileName.RelativeChild(results[0]);
-
-			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
-			{
-				if (!QueryUser(nameof(Execute_File_Rename_RenameClipboard), "File already exists; overwrite?", MessageOptions.None))
-					return;
-			}
-
-			if (FileName != null)
-			{
-				if (!string.Equals(FileName, newFileName, StringComparison.OrdinalIgnoreCase))
-					File.Delete(newFileName);
-				File.Move(FileName, newFileName);
-			}
-			SetFileName(newFileName);
 		}
 
 		static Configuration_File_SaveCopyRename_ByExpression Configure_File_Rename_RenameByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopyRename_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);

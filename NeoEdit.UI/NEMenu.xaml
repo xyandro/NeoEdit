@@ -30,12 +30,10 @@
 			<controls:NEMenuItem Header="Save _modified" CommandEnum="File_Save_SaveModified" ToolTip="Save modified active files"/>
 			<Separator/>
 			<controls:NEMenuItem Header="Save _as" CommandEnum="File_Save_SaveAs" ToolTip="Save active files to new locations"/>
-			<controls:NEMenuItem Header="Save as c_lipboard" CommandEnum="File_Save_SaveAsClipboard" ToolTip="Save active files to paths on clipboard"/>
 			<controls:NEMenuItem Header="Save as by e_xpression" CommandEnum="File_Save_SaveAsByExpression" ToolTip="Save active files to paths given by expression"/>
 		</MenuItem>
 		<MenuItem Header="_Copy">
 			<controls:NEMenuItem Header="_Copy to" CommandEnum="File_Copy_CopyTo" ToolTip="Copy active files to new locations"/>
-			<controls:NEMenuItem Header="Copy to c_lipboard" CommandEnum="File_Copy_CopyToClipboard" ToolTip="Copy active files to paths on clipboard"/>
 			<controls:NEMenuItem Header="Copy to by e_xpression" CommandEnum="File_Copy_CopyToByExpression" ToolTip="Copy active files to paths given by expression"/>
 			<Separator/>
 			<controls:NEMenuItem Header="_Path" CommandEnum="File_Copy_Path" ToolTip="Copy active files' paths to clipboard"/>
@@ -44,7 +42,6 @@
 		</MenuItem>
 		<MenuItem Header="_Rename">
 			<controls:NEMenuItem Header="_Rename" CommandEnum="File_Rename_Rename" ToolTip="Rename active files to new locations"/>
-			<controls:NEMenuItem Header="Rename c_lipboard" CommandEnum="File_Rename_RenameClipboard" ToolTip="Rename active files to paths on clipboard"/>
 			<controls:NEMenuItem Header="Rename by e_xpression" CommandEnum="File_Rename_RenameByExpression" ToolTip="Rename active files to paths given by expression"/>
 		</MenuItem>
 		<MenuItem Header="O_perations">
