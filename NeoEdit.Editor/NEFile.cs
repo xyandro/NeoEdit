@@ -480,7 +480,6 @@ namespace NeoEdit.Editor
 				case NECommand.File_New_FromClipboardSelections: return PreExecute_File_New_FromClipboardSelections(state);
 				case NECommand.File_Open_Open: return PreExecute_File_Open_Open(state);
 				case NECommand.File_Open_CopiedCut: return PreExecute_File_Open_CopiedCut(state);
-				case NECommand.File_MoveToNewWindow: return PreExecute_File_MoveToNewWindow(state);
 				case NECommand.File_Shell_Integrate: return PreExecute_File_Shell_Integrate(state);
 				case NECommand.File_Shell_Unintegrate: return PreExecute_File_Shell_Unintegrate(state);
 				case NECommand.File_DontExitOnClose: return PreExecute_File_DontExitOnClose(state);
@@ -563,6 +562,7 @@ namespace NeoEdit.Editor
 				case NECommand.Window_New_FromSelections: return PreExecute_Window_New_FromSelections(state);
 				case NECommand.Window_New_FromClipboards: return PreExecute_Window_New_FromClipboards(state);
 				case NECommand.Window_New_FromClipboardSelections: return PreExecute_Window_New_FromClipboardSelections(state);
+				case NECommand.Window_New_FromActiveFiles: return PreExecute_Window_New_FromActiveFiles(state);
 				case NECommand.Window_Full: return PreExecute_Window_Full(state);
 				case NECommand.Window_Grid: return PreExecute_Window_Grid(state);
 				case NECommand.Window_CustomGrid: return PreExecute_Window_CustomGrid(state);

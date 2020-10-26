@@ -59,8 +59,6 @@
 		<controls:NEMenuItem Header="_Auto refresh" CommandEnum="File_AutoRefresh" x:Name="menu_File_AutoRefresh" ToolTip="Set whether active files update when changed on disk"/>
 		<controls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert" ToolTip="Revert active files to current version on disk"/>
 		<Separator/>
-		<controls:NEMenuItem Header="Move to new _window" CommandEnum="File_MoveToNewWindow" ToolTip="Move active files to a new window"/>
-		<Separator/>
 		<MenuItem Header="_Insert">
 			<controls:NEMenuItem Header="_Files" CommandEnum="File_Insert_Files" ToolTip="Insert files chosen from disk"/>
 			<controls:NEMenuItem Header="_Copied/cut" CommandEnum="File_Insert_CopiedCut" ToolTip="Insert files copied/cut on the clipboard"/>
@@ -1059,6 +1057,7 @@
 			<controls:NEMenuItem Header="From _selections" CommandEnum="Window_New_FromSelections" ToolTip="Open a new window with a new file for each selection"/>
 			<controls:NEMenuItem Header="From _clipboards" CommandEnum="Window_New_FromClipboards" ToolTip="Open a new window with a new file for each file on the clipboard"/>
 			<controls:NEMenuItem Header="From c_lipboard selections" CommandEnum="Window_New_FromClipboardSelections" ToolTip="Open a new window with a new file for each value on the clipboard"/>
+			<controls:NEMenuItem Header="From active _files" CommandEnum="Window_New_FromActiveFiles" ToolTip="Move active files to a new window"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="_Full" CommandEnum="Window_Full" ToolTip="Make current file full screen"/>

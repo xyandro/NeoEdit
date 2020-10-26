@@ -56,6 +56,20 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
+		static PreExecutionStop PreExecute_Window_New_FromActiveFiles(EditorExecuteState state)
+		{
+			var active = state.NEFiles.ActiveFiles.ToList();
+			active.ForEach(neFile => state.NEFiles.RemoveFile(neFile));
+
+			var neFiles = new NEFiles();
+			neFiles.BeginTransaction(state);
+			neFiles.SetLayout(state.NEFiles.WindowLayout);
+			active.ForEach(neFile => neFiles.AddFile(neFile));
+			neFiles.Commit();
+
+			return PreExecutionStop.Stop;
+		}
+
 		static PreExecutionStop PreExecute_Window_Full(EditorExecuteState state)
 		{
 			state.NEFiles.SetLayout(new WindowLayout(1, 1));

@@ -270,18 +270,6 @@ namespace NeoEdit.Editor
 				SetRegions(region, reformatRanges(GetRegions(region)));
 		}
 
-		static PreExecutionStop PreExecute_File_MoveToNewWindow(EditorExecuteState state)
-		{
-			var active = state.NEFiles.ActiveFiles.ToList();
-			active.ForEach(neFile => state.NEFiles.RemoveFile(neFile));
-
-			var neFiles = new NEFiles();
-			neFiles.SetLayout(state.NEFiles.WindowLayout);
-			active.ForEach(neFile => neFiles.AddFile(neFile));
-
-			return PreExecutionStop.Stop;
-		}
-
 		void Execute_File_Insert_Files()
 		{
 			if (Selections.Count != 1)
