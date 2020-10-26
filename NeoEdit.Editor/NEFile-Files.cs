@@ -12,6 +12,7 @@ using NeoEdit.Common.Enums;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.Editor.Searchers;
 using NeoEdit.TaskRunning;
 
@@ -469,10 +470,17 @@ namespace NeoEdit.Editor
 				NEFiles.FilesWindow.RunMessageDialog("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
 		}
 
+		static PreExecution_Files_GetSelect_VersionControlStatus PreExecute_Files_GetSelect_VersionControlStatus(EditorExecuteState state)
+		{
+			var files = state.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(file => file.GetSelectionStrings()).Distinct().ToList();
+			var statuses = Versioner.GetStatuses(files);
+			return new PreExecution_Files_GetSelect_VersionControlStatus { Statuses = Enumerable.Range(0, files.Count).ToDictionary(index => files[index], index => statuses[index]) };
+		}
+
 		void Execute_Files_Get_VersionControlStatus()
 		{
-			var versioner = new Versioner();
-			ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(x => versioner.GetStatus(x).ToString()).ToList());
+			var preExecution = state.PreExecution as PreExecution_Files_GetSelect_VersionControlStatus;
+			ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(x => preExecution.Statuses[x].ToString()).ToList());
 		}
 
 		static Configuration_Files_Set_Size Configure_Files_Set_Size(EditorExecuteState state)
@@ -745,10 +753,10 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Select_ByVersionControlStatus()
 		{
-			var result = state.Configuration as Configuration_Files_Select_ByVersionControlStatus;
-			var versioner = new Versioner();
-			var statuses = RelativeSelectedFiles().Select(x => versioner.GetStatus(x)).ToList();
-			var sels = Selections.Zip(statuses, (range, status) => new { range, status }).Where(obj => result.Statuses.HasFlag(obj.status)).Select(obj => obj.range).ToList();
+			var configuration = state.Configuration as Configuration_Files_Select_ByVersionControlStatus;
+			var preExecution = state.PreExecution as PreExecution_Files_GetSelect_VersionControlStatus;
+			var statuses = RelativeSelectedFiles().Select(x => preExecution.Statuses[x]).ToList();
+			var sels = Selections.Zip(statuses, (range, status) => new { range, status }).Where(obj => configuration.Statuses.HasFlag(obj.status)).Select(obj => obj.range).ToList();
 			Selections = sels;
 		}
 

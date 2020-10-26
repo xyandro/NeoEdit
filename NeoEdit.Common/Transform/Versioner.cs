@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LibGit2Sharp;
-using NeoEdit.Common;
 using SharpSvn;
 
 namespace NeoEdit.Common.Transform
 {
-	public class Versioner
+	public static class Versioner
 	{
 		public enum Status
 		{
@@ -24,98 +23,96 @@ namespace NeoEdit.Common.Transform
 
 		class Node
 		{
-			public Status Status { get; private set; }
-			Dictionary<string, Node> children = new Dictionary<string, Node>(StringComparer.OrdinalIgnoreCase);
+			public static Comparer<string> NameComparer = Comparer<string>.Create(CompareTo);
 
-			public Node(Status status) => Status = status;
+			public string Name { get; }
+			public Status Status { get; set; } = Status.None;
 
-			public Node GetChild(string name, bool create = false)
+			public Node(string name) => Name = (name.Trim('\\') + @"\").ToLowerInvariant();
+
+			public override string ToString() => Name;
+
+			static int CompareTo(string file1, string file2)
 			{
-				if (children.ContainsKey(name))
-					return children[name];
-
-				if (!create)
-					return null;
-
-				return children[name] = new Node(Status.None);
-			}
-
-			public void Reset(Status status)
-			{
-				Status = status;
-				children.Clear();
-			}
-		}
-
-		readonly Node root = new Node(Status.None);
-
-		static List<string> SplitPath(string path) => path.Split('\\').NonNullOrEmpty().ToList();
-
-		void AddPathStatus(string path, Status status)
-		{
-			var node = root;
-			foreach (var item in SplitPath(path))
-				node = node.GetChild(item, true);
-			node.Reset(status);
-		}
-
-		public Status GetStatus(string path)
-		{
-			if ((!File.Exists(path)) && (!Directory.Exists(path)))
-				return Status.Unknown;
-
-			for (var pass = 0; pass < 2; ++pass)
-			{
-				var node = root;
-				var status = Status.None;
-				foreach (var item in SplitPath(path))
+				var node1Start = 0;
+				var node2Start = 0;
+				while (true)
 				{
-					node = node.GetChild(item);
-					if (node == null)
-						break;
-					if (node.Status != Status.None)
-						status = node.Status;
+					if (node1Start >= file1.Length)
+					{
+						if (node2Start >= file2.Length)
+							return 0;
+						return 1;
+					}
+					if (node2Start >= file2.Length)
+						return -1;
+
+					var node1End = file1.IndexOf('\\', node1Start);
+					if (node1End == -1)
+						node1End = file1.Length;
+					var node1Partial = file1.Substring(node1Start, node1End - node1Start);
+
+					var node2End = file2.IndexOf('\\', node2Start);
+					if (node2End == -1)
+						node2End = file2.Length;
+					var node2Partial = file2.Substring(node2Start, node2End - node2Start);
+
+					var compare = node1Partial.CompareTo(node2Partial);
+					if (compare != 0)
+						return compare;
+
+					node1Start = node1End + 1;
+					node2Start = node2End + 1;
 				}
-
-				if (status != Status.None)
-					return status;
-
-				if (pass == 0)
-					SetupPath(path);
 			}
-			throw new Exception("GetStatus logic failure");
 		}
 
-		void SetupPath(string path)
+		public static IReadOnlyList<Status> GetStatuses(IReadOnlyList<string> files)
 		{
-			if (GetGitFiles(path))
-				return;
+			var data = files.Select(file => new Node(file)).ToList();
+			var working = new Queue<Node>(data.OrderBy(x => x.Name, Node.NameComparer));
 
-			if (GetSvnFiles(path))
-				return;
-
-			if (File.Exists(path))
-				path = Path.GetDirectoryName(path);
-			AddPathStatus(path, Status.Unknown);
-		}
-
-		bool GetSvnFiles(string path)
-		{
-			using (var client = new SvnClient())
+			using (var svnClient = new SvnClient())
 			{
-				var root = client.GetWorkingCopyRoot(path);
-				if (root == null)
-					return false;
+				while (working.Any())
+				{
+					var fileName = working.Peek().Name;
 
-				client.Status(root, new SvnStatusArgs { RetrieveAllEntries = true, RetrieveIgnoredEntries = true, Depth = SvnDepth.Infinity }, (sender, status) => AddPathStatus(status.FullPath, GetSvnStatus(status)));
-				AddPathStatus($@"{root}\.svn", Status.VersionControl);
-				return true;
+					var statuses = GetStatusesGit(fileName) ?? GetStatusesSvn(svnClient, fileName);
+					if (statuses == null)
+						working.Dequeue().Status = Status.Unknown;
+					else
+						FillStatuses(statuses.Item1, statuses.Item2, statuses.Item3, statuses.Item4, working);
+				}
+			}
+
+			return data.Select(x => x.Status).ToList();
+		}
+
+		static Tuple<string, string, Dictionary<string, Status>, List<string>> GetStatusesGit(string fileName)
+		{
+			var repoData = Repository.Discover(fileName);
+			if (repoData == null)
+				return null;
+
+			using (var repository = new Repository(repoData))
+			{
+				var repoRoot = repository.Info.WorkingDirectory.ToLowerInvariant();
+				var repoStatus = repository.RetrieveStatus();
+
+				var ignored = repoStatus.Ignored.Select(entry => Path.Combine(repoRoot, entry.FilePath.ToLowerInvariant().Replace('/', '\\')).TrimEnd('\\') + '\\').OrderBy(Node.NameComparer).ToList();
+
+				var statusMap = new Dictionary<string, Status>();
+				repoStatus.Modified.Concat(repoStatus.Added).Concat(repoStatus.Staged).Concat(repoStatus.Removed).ForEach(entry => statusMap[Path.Combine(repoRoot, entry.FilePath.Replace('/', '\\').ToLowerInvariant().TrimEnd('\\') + '\\')] = Status.Modified);
+				repoStatus.Untracked.ForEach(entry => statusMap[Path.Combine(repoRoot, entry.FilePath.Replace('/', '\\').ToLowerInvariant().TrimEnd('\\') + '\\')] = Status.Unknown);
+
+				return Tuple.Create(repoRoot, repoData, statusMap, ignored);
 			}
 		}
 
-		static Status GetSvnStatus(SvnStatusEventArgs status)
+		static Status GetSvnStatus(SvnStatus status)
 		{
-			switch (status.LocalContentStatus)
+			switch (status)
 			{
 				case SvnStatus.Zero: return Status.Unknown;
 				case SvnStatus.None: return Status.Unknown;
@@ -136,28 +133,71 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
-		bool GetGitFiles(string path)
+		static Tuple<string, string, Dictionary<string, Status>, List<string>> GetStatusesSvn(SvnClient svnClient, string fileName)
 		{
-			var repoPath = Repository.Discover(path);
-			if (repoPath == null)
-				return false;
+			var repoRoot = svnClient.GetWorkingCopyRoot(fileName).ToLowerInvariant() + '\\';
+			if (repoRoot == null)
+				return null;
 
-			using (var repository = new Repository(repoPath))
+			var statusMap = new Dictionary<string, Status>();
+			var ignored = new List<string>();
+			svnClient.Status(repoRoot, new SvnStatusArgs { RetrieveIgnoredEntries = true, Depth = SvnDepth.Infinity }, (sender, eventArgs) =>
 			{
-				AddPathStatus(repository.Info.WorkingDirectory, Status.Normal);
+				var path = eventArgs.FullPath.ToLowerInvariant() + '\\';
+				var status = GetSvnStatus(eventArgs.LocalContentStatus);
+				if (status == Status.Ignored)
+					ignored.Add(path);
+				else
+					statusMap[path] = status;
+			});
 
-				var status = repository.RetrieveStatus();
-				new Dictionary<Status, IEnumerable<StatusEntry>>
-				{
-					[Status.Ignored] = status.Ignored,
-					[Status.Modified] = status.Modified.Concat(status.Added).Concat(status.Staged).Concat(status.Removed),
-					[Status.Unknown] = status.Untracked,
-				}.ForEach(pair => pair.Value.ForEach(entry => AddPathStatus(Path.Combine(repository.Info.WorkingDirectory, entry.FilePath), pair.Key)));
+			ignored = ignored.OrderBy(Node.NameComparer).ToList();
 
-				AddPathStatus(repository.Info.Path, Status.VersionControl);
-			}
-			return true;
+			return Tuple.Create(repoRoot, $@"{repoRoot}.svn\", statusMap, ignored);
 		}
+
+		static void FillStatuses(string repoRoot, string repoData, Dictionary<string, Status> statusMap, List<string> ignored, Queue<Node> working)
+		{
+			var ignoredIndex = 0;
+			while (working.Any())
+			{
+				var node = working.Peek();
+				if (!node.Name.StartsWith(repoRoot))
+					break;
+				working.Dequeue();
+
+				if (node.Name.StartsWith(repoData))
+				{
+					node.Status = Status.VersionControl;
+					continue;
+				}
+
+				while (ignoredIndex < ignored.Count)
+				{
+					var ignorePath = ignored[ignoredIndex];
+					if (node.Name.StartsWith(ignorePath))
+					{
+						node.Status = Status.Ignored;
+						break;
+					}
+
+					var ignoreCompare = Node.NameComparer.Compare(node.Name, ignorePath);
+					if (ignoreCompare == -1)
+						break;
+
+					++ignoredIndex;
+				}
+				if (node.Status != Status.None)
+					continue;
+
+				if (statusMap.TryGetValue(node.Name, out var status))
+					node.Status = status;
+				else
+					node.Status = Status.Normal;
+			}
+		}
+
+		static List<string> SplitPath(string path) => path.Split('\\').NonNullOrEmpty().ToList();
 
 		static byte[] GetUnmodifiedGitFile(string file)
 		{

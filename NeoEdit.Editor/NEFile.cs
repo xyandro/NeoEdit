@@ -489,6 +489,8 @@ namespace NeoEdit.Editor
 				case NECommand.Diff_Select_LeftFile: return PreExecute_Diff_Select_LeftRightBothFiles(state, true);
 				case NECommand.Diff_Select_RightFile: return PreExecute_Diff_Select_LeftRightBothFiles(state, false);
 				case NECommand.Diff_Select_BothFiles: return PreExecute_Diff_Select_LeftRightBothFiles(state, null);
+				case NECommand.Files_Get_VersionControlStatus: return PreExecute_Files_GetSelect_VersionControlStatus(state);
+				case NECommand.Files_Select_ByVersionControlStatus: return PreExecute_Files_GetSelect_VersionControlStatus(state);
 				case NECommand.Select_RepeatsCaseSensitive_Files_Match: return PreExecute_Select_Repeats_Files_MatchMismatch(state, true);
 				case NECommand.Select_RepeatsCaseSensitive_Files_Mismatch: return PreExecute_Select_Repeats_Files_MatchMismatch(state, true);
 				case NECommand.Select_RepeatsCaseSensitive_Files_Common: return PreExecute_Select_Repeats_Files_CommonNonCommon(state, true);

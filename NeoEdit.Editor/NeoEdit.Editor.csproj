@@ -244,6 +244,7 @@
     <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />
     <Compile Include="PreExecution\IPreExecution.cs" />
+    <Compile Include="PreExecution\PreExecution_Files_GetSelect_VersionControlStatus.cs" />
     <Compile Include="PreExecution\PreExecution_Select_Repeats_Files_CommonNonCommon.cs" />
     <Compile Include="PreExecution\PreExecution_Select_Repeats_Files_MatchMismatch.cs" />
     <Compile Include="PreExecution\PreExecutionStop.cs" />
