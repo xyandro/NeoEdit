@@ -1304,6 +1304,8 @@ namespace NeoEdit.Editor
 				StartRow = (lineMin + lineMax - Tabs.TabRows) / 2;
 				if (centerHorizontally)
 					StartColumn = (Text.GetColumnFromIndex(lineMin, indexMin) + Text.GetColumnFromIndex(lineMax, indexMax) - Tabs.TabColumns) / 2;
+				else
+					StartColumn = 0;
 			}
 
 			var line = Text.GetPositionLine(range.Cursor);
