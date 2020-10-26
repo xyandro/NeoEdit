@@ -97,7 +97,7 @@ namespace NeoEdit.Editor
 		{
 			var renderParameters = new RenderParameters
 			{
-				AllTabs = WindowLayout.ActiveOnly ? ActiveTabs : AllTabs,
+				AllTabs = ActiveOnly ? ActiveTabs : AllTabs,
 				ActiveTabs = ActiveTabs,
 				FocusedTab = Focused,
 				WindowLayout = WindowLayout,
@@ -147,6 +147,7 @@ namespace NeoEdit.Editor
 				[nameof(NECommand.Content_StrictParsing)] = GetMultiStatus(tab => tab.StrictParsing),
 				[nameof(NECommand.Content_KeepSelections)] = GetMultiStatus(tab => tab.KeepSelections),
 				[nameof(NECommand.Macro_Visualize)] = MacroVisualize,
+				[nameof(NECommand.Window_ActiveOnly)] = ActiveOnly,
 				[nameof(NECommand.Window_Font_ShowSpecial)] = Font.ShowSpecialChars,
 				[nameof(NECommand.Window_ViewBinary)] = GetMultiStatus(tab => tab.ViewBinary),
 			};

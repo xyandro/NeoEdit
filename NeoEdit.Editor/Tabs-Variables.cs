@@ -77,6 +77,17 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		bool oldActiveOnly, newActiveOnly;
+		public bool ActiveOnly
+		{
+			get => newActiveOnly;
+			set
+			{
+				EnsureInTransaction();
+				newActiveOnly = value;
+			}
+		}
+
 		bool oldMacroVisualize = true, newMacroVisualize = true;
 		public bool MacroVisualize
 		{
@@ -103,6 +114,7 @@ namespace NeoEdit.Editor
 
 			newTabsList = oldTabsList;
 			newWindowLayout = oldWindowLayout;
+			newActiveOnly = oldActiveOnly;
 			newMacroVisualize = oldMacroVisualize;
 
 			transactionTabs.ForEach(tab => tab.Rollback());
@@ -123,6 +135,7 @@ namespace NeoEdit.Editor
 				oldTabsList = newTabsList;
 			}
 			oldWindowLayout = newWindowLayout;
+			oldActiveOnly = newActiveOnly;
 			oldMacroVisualize = newMacroVisualize;
 
 			transactionTabs.ForEach(tab => tab.Commit());

@@ -294,6 +294,7 @@ namespace NeoEdit.UI
 			menu.menu_Content_StrictParsing.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_StrictParsing)];
 			menu.menu_Content_KeepSelections.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_KeepSelections)];
 			menu.menu_Macro_Visualize.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Macro_Visualize)];
+			menu.menu_Window_ActiveOnly.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_ActiveOnly)];
 			menu.menu_Window_Font_ShowSpecial.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_Font_ShowSpecial)];
 			menu.menu_Window_ViewBinary.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_ViewBinary)];
 		}

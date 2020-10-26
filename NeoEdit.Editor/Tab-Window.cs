@@ -76,6 +76,12 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
+		static PreExecutionStop PreExecute_Window_ActiveOnly(EditorExecuteState state, bool? multiStatus)
+		{
+			state.Tabs.ActiveOnly = multiStatus != true;
+			return PreExecutionStop.Stop;
+		}
+
 		static PreExecutionStop PreExecute_Window_ActiveTabs(EditorExecuteState state)
 		{
 			var data = new WindowActiveTabsDialogData();

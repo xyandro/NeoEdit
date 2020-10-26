@@ -56,7 +56,7 @@
 		</MenuItem>
 		<controls:NEMenuItem Header="C_lose" CommandEnum="File_Close" ToolTip="Close active files"/>
 		<controls:NEMenuItem Header="Re_fresh" CommandEnum="File_Refresh" ToolTip="Refresh active files"/>
-		<controls:NEMenuItem x:Name="menu_File_AutoRefresh" Header="_Auto refresh" CommandEnum="File_AutoRefresh" ToolTip="Set whether active files update when changed on disk"/>
+		<controls:NEMenuItem Header="_Auto refresh" CommandEnum="File_AutoRefresh" x:Name="menu_File_AutoRefresh" ToolTip="Set whether active files update when changed on disk"/>
 		<controls:NEMenuItem Header="Re_vert" CommandEnum="File_Revert" ToolTip="Revert active files to current version on disk"/>
 		<Separator/>
 		<controls:NEMenuItem Header="Move to new _window" CommandEnum="File_MoveToNewWindow" ToolTip="Move active files to a new window"/>
@@ -73,15 +73,15 @@
 			<controls:NEMenuItem Header="_Line endings" CommandEnum="File_Encoding_LineEndings" ToolTip="Set file line endings"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem x:Name="menu_File_Encrypt" Header="Encr_ypt" CommandEnum="File_Encrypt" ToolTip="Set whether file is encrypted on save"/>
-		<controls:NEMenuItem x:Name="menu_File_Compress" Header="Co_mpress" CommandEnum="File_Compress" ToolTip="Set whether file is compressed on save"/>
+		<controls:NEMenuItem Header="Encr_ypt" CommandEnum="File_Encrypt" x:Name="menu_File_Encrypt" ToolTip="Set whether file is encrypted on save"/>
+		<controls:NEMenuItem Header="Co_mpress" CommandEnum="File_Compress" x:Name="menu_File_Compress" ToolTip="Set whether file is compressed on save"/>
 		<Separator/>
 		<MenuItem Header="S_hell">
 			<controls:NEMenuItem Header="_Integrate" CommandEnum="File_Shell_Integrate" ToolTip="Enable Windows Explorer option to open files with NeoEdit"/>
 			<controls:NEMenuItem Header="_Unintegrate" CommandEnum="File_Shell_Unintegrate" ToolTip="Remove Windows Explorer option to open files with NeoEdit"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem x:Name="menu_File_DontExitOnClose" Header="Don't exi_t on close" CommandEnum="File_DontExitOnClose" ToolTip="Toggle whether program stays in memory when all windows closed"/>
+		<controls:NEMenuItem Header="Don't exi_t on close" CommandEnum="File_DontExitOnClose" x:Name="menu_File_DontExitOnClose" ToolTip="Toggle whether program stays in memory when all windows closed"/>
 		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit" ToolTip="Close the program"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
@@ -408,13 +408,13 @@
 			<controls:NEMenuItem Header="All r_ight" CommandEnum="Edit_Navigate_AllRight" ToolTip="Copy cursors on word to the right"/>
 			<Separator/>
 			<MenuItem Header="_Jump by">
-				<controls:NEMenuItem x:Name="menu_Edit_Navigate_JumpBy_Words" Header="_Words" CommandEnum="Edit_Navigate_JumpBy_Words" ToolTip="Set Ctrl+Left/Right to jump by words (default)"/>
-				<controls:NEMenuItem x:Name="menu_Edit_Navigate_JumpBy_Numbers" Header="_Numbers" CommandEnum="Edit_Navigate_JumpBy_Numbers" ToolTip="Set Ctrl+Left/Right to jump by numbers"/>
-				<controls:NEMenuItem x:Name="menu_Edit_Navigate_JumpBy_Paths" Header="_Paths" CommandEnum="Edit_Navigate_JumpBy_Paths" ToolTip="Set Ctrl+Left/Right to jump by paths"/>
+				<controls:NEMenuItem Header="_Words" CommandEnum="Edit_Navigate_JumpBy_Words" x:Name="menu_Edit_Navigate_JumpBy_Words" ToolTip="Set Ctrl+Left/Right to jump by words (default)"/>
+				<controls:NEMenuItem Header="_Numbers" CommandEnum="Edit_Navigate_JumpBy_Numbers" x:Name="menu_Edit_Navigate_JumpBy_Numbers" ToolTip="Set Ctrl+Left/Right to jump by numbers"/>
+				<controls:NEMenuItem Header="_Paths" CommandEnum="Edit_Navigate_JumpBy_Paths" x:Name="menu_Edit_Navigate_JumpBy_Paths" ToolTip="Set Ctrl+Left/Right to jump by paths"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem x:Name="menu_Edit_EscapeClearsSelections" Header="Escape c_lears selections" CommandEnum="Edit_EscapeClearsSelections" ToolTip="Toggle whether the Esc key removes extra selections"/>
+		<controls:NEMenuItem Header="Escape c_lears selections" CommandEnum="Edit_EscapeClearsSelections" x:Name="menu_Edit_EscapeClearsSelections" ToolTip="Toggle whether the Esc key removes extra selections"/>
 	</MenuItem>
 	<MenuItem Header="D_iff">
 		<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Diff" ToolTip="Diff active files"/>
@@ -435,10 +435,10 @@
 		<Separator/>
 		<controls:NEMenuItem Header="_Break" CommandEnum="Diff_Break" ToolTip="Disable diff"/>
 		<Separator/>
-		<controls:NEMenuItem x:Name="menu_Diff_IgnoreWhitespace" Header="Ignore _whitespace" CommandEnum="Diff_IgnoreWhitespace" ToolTip="Make diff ignore white space"/>
-		<controls:NEMenuItem x:Name="menu_Diff_IgnoreCase" Header="Ignore _case" CommandEnum="Diff_IgnoreCase" ToolTip="Make diff ignore case"/>
-		<controls:NEMenuItem x:Name="menu_Diff_IgnoreNumbers" Header="Ignore _numbers" CommandEnum="Diff_IgnoreNumbers" ToolTip="Make diff ignore numbers"/>
-		<controls:NEMenuItem x:Name="menu_Diff_IgnoreLineEndings" Header="Ignore line _endings" CommandEnum="Diff_IgnoreLineEndings" ToolTip="Make diff ignore line endings"/>
+		<controls:NEMenuItem Header="Ignore _whitespace" CommandEnum="Diff_IgnoreWhitespace" x:Name="menu_Diff_IgnoreWhitespace" ToolTip="Make diff ignore white space"/>
+		<controls:NEMenuItem Header="Ignore _case" CommandEnum="Diff_IgnoreCase" x:Name="menu_Diff_IgnoreCase" ToolTip="Make diff ignore case"/>
+		<controls:NEMenuItem Header="Ignore _numbers" CommandEnum="Diff_IgnoreNumbers" x:Name="menu_Diff_IgnoreNumbers" ToolTip="Make diff ignore numbers"/>
+		<controls:NEMenuItem Header="Ignore line _endings" CommandEnum="Diff_IgnoreLineEndings" x:Name="menu_Diff_IgnoreLineEndings" ToolTip="Make diff ignore line endings"/>
 		<controls:NEMenuItem Header="Ignore c_haracters" CommandEnum="Diff_IgnoreCharacters" ToolTip="Make diff ignore specific characters"/>
 		<controls:NEMenuItem Header="_Reset" CommandEnum="Diff_Reset" ToolTip="Reset diff ignore"/>
 		<Separator/>
@@ -752,21 +752,21 @@
 	<MenuItem Header="_Content">
 		<MenuItem Header="_Type">
 			<controls:NEMenuItem Header="Set _from extension" CommandEnum="Content_Type_SetFromExtension" ToolTip="Set content type based on file extension"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_None" Header="_None" CommandEnum="Content_Type_None" ToolTip="Set content type to none"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_Balanced" Header="_Balanced" CommandEnum="Content_Type_Balanced" ToolTip="Set content type to balanced"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_Columns" Header="C_olumns" CommandEnum="Content_Type_Columns" ToolTip="Set content type to columns"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_CPlusPlus" Header="C_++" CommandEnum="Content_Type_CPlusPlus" ToolTip="Set content type to C++"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_CSharp" Header="C_#" CommandEnum="Content_Type_CSharp" ToolTip="Set content type to C#"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_CSV" Header="_CSV" CommandEnum="Content_Type_CSV" ToolTip="Set content type to CSV"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_ExactColumns" Header="_Exact columns" CommandEnum="Content_Type_ExactColumns" ToolTip="Set content type to exact columns"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_HTML" Header="_HTML" CommandEnum="Content_Type_HTML" ToolTip="Set content type to HTML"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_JSON" Header="_JSON" CommandEnum="Content_Type_JSON" ToolTip="Set content type to JSON"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_SQL" Header="_SQL" CommandEnum="Content_Type_SQL" ToolTip="Set content type to SQL"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_TSV" Header="_TSV" CommandEnum="Content_Type_TSV" ToolTip="Set content type to TSV"/>
-			<controls:NEMenuItem x:Name="menu_Content_Type_XML" Header="_XML" CommandEnum="Content_Type_XML" ToolTip="Set content type to XML"/>
+			<controls:NEMenuItem Header="_None" CommandEnum="Content_Type_None" x:Name="menu_Content_Type_None" ToolTip="Set content type to none"/>
+			<controls:NEMenuItem Header="_Balanced" CommandEnum="Content_Type_Balanced" x:Name="menu_Content_Type_Balanced" ToolTip="Set content type to balanced"/>
+			<controls:NEMenuItem Header="C_olumns" CommandEnum="Content_Type_Columns" x:Name="menu_Content_Type_Columns" ToolTip="Set content type to columns"/>
+			<controls:NEMenuItem Header="C_++" CommandEnum="Content_Type_CPlusPlus" x:Name="menu_Content_Type_CPlusPlus" ToolTip="Set content type to C++"/>
+			<controls:NEMenuItem Header="C_#" CommandEnum="Content_Type_CSharp" x:Name="menu_Content_Type_CSharp" ToolTip="Set content type to C#"/>
+			<controls:NEMenuItem Header="_CSV" CommandEnum="Content_Type_CSV" x:Name="menu_Content_Type_CSV" ToolTip="Set content type to CSV"/>
+			<controls:NEMenuItem Header="_Exact columns" CommandEnum="Content_Type_ExactColumns" x:Name="menu_Content_Type_ExactColumns" ToolTip="Set content type to exact columns"/>
+			<controls:NEMenuItem Header="_HTML" CommandEnum="Content_Type_HTML" x:Name="menu_Content_Type_HTML" ToolTip="Set content type to HTML"/>
+			<controls:NEMenuItem Header="_JSON" CommandEnum="Content_Type_JSON" x:Name="menu_Content_Type_JSON" ToolTip="Set content type to JSON"/>
+			<controls:NEMenuItem Header="_SQL" CommandEnum="Content_Type_SQL" x:Name="menu_Content_Type_SQL" ToolTip="Set content type to SQL"/>
+			<controls:NEMenuItem Header="_TSV" CommandEnum="Content_Type_TSV" x:Name="menu_Content_Type_TSV" ToolTip="Set content type to TSV"/>
+			<controls:NEMenuItem Header="_XML" CommandEnum="Content_Type_XML" x:Name="menu_Content_Type_XML" ToolTip="Set content type to XML"/>
 		</MenuItem>
-		<controls:NEMenuItem x:Name="menu_Content_HighlightSyntax" Header="_Highlight syntax" CommandEnum="Content_HighlightSyntax" ToolTip="Toggle syntax highlighting"/>
-		<controls:NEMenuItem x:Name="menu_Content_StrictParsing" Header="_Strict parsing" CommandEnum="Content_StrictParsing" ToolTip="Toggle strict parsing"/>
+		<controls:NEMenuItem Header="_Highlight syntax" CommandEnum="Content_HighlightSyntax" x:Name="menu_Content_HighlightSyntax" ToolTip="Toggle syntax highlighting"/>
+		<controls:NEMenuItem Header="_Strict parsing" CommandEnum="Content_StrictParsing" x:Name="menu_Content_StrictParsing" ToolTip="Toggle strict parsing"/>
 		<Separator/>
 		<controls:NEMenuItem Header="Re_format" CommandEnum="Content_Reformat" ToolTip="Reformat selections based on current content type"/>
 		<Separator/>
@@ -808,7 +808,7 @@
 			<controls:NEMenuItem Header="R_ow" CommandEnum="Content_Navigate_Row" ToolTip="Select entire row"/>
 			<controls:NEMenuItem Header="_Column" CommandEnum="Content_Navigate_Column" ToolTip="Select entire column"/>
 		</MenuItem>
-		<controls:NEMenuItem x:Name="menu_Content_KeepSelections" Header="_Keep selections" CommandEnum="Content_KeepSelections" ToolTip="Toggle whether to keep selections when moving past the end of a list"/>
+		<controls:NEMenuItem Header="_Keep selections" CommandEnum="Content_KeepSelections" x:Name="menu_Content_KeepSelections" ToolTip="Toggle whether to keep selections when moving past the end of a list"/>
 	</MenuItem>
 	<MenuItem Header="Netw_ork">
 		<controls:NEMenuItem Header="_Absolute URL" CommandEnum="Network_AbsoluteURL" ToolTip="Make selected URLs absolute given base URL"/>
@@ -1051,7 +1051,7 @@
 		<controls:NEMenuItem Header="R_epeat last action" CommandEnum="Macro_RepeatLastAction" ToolTip="Repeat last action"/>
 		<controls:NEMenuItem Header="_Time next action" CommandEnum="Macro_TimeNextAction" ToolTip="Time next action"/>
 		<Separator/>
-		<controls:NEMenuItem x:Name="menu_Macro_Visualize" Header="_Visualize" CommandEnum="Macro_Visualize" ToolTip="Select whether to view macros run to run internally"/>
+		<controls:NEMenuItem Header="_Visualize" CommandEnum="Macro_Visualize" x:Name="menu_Macro_Visualize" ToolTip="Select whether to view macros run to run internally"/>
 	</MenuItem>
 	<MenuItem Header="_Window">
 		<MenuItem Header="_New">
@@ -1065,16 +1065,18 @@
 		<controls:NEMenuItem Header="_Grid" CommandEnum="Window_Grid" ToolTip="Show files in grid"/>
 		<controls:NEMenuItem Header="C_ustom grid" CommandEnum="Window_CustomGrid" ToolTip="Show files in custom grid"/>
 		<Separator/>
+		<controls:NEMenuItem Header="Active on_ly" CommandEnum="Window_ActiveOnly" x:Name="menu_Window_ActiveOnly" ToolTip="Only show active files"/>
+		<Separator/>
 		<controls:NEMenuItem Header="_Active tabs" CommandEnum="Window_ActiveTabs" ToolTip="Change which files are active"/>
 		<controls:NEMenuItem Header="Tab _index" CommandEnum="Window_TabIndex" ToolTip="Replace selections with tab index"/>
 		<controls:NEMenuItem Header="Ac_tive tab index" CommandEnum="Window_ActiveTabIndex" ToolTip="Replace selections with tab index (active tabs only)"/>
 		<Separator/>
 		<MenuItem Header="F_ont">
 			<controls:NEMenuItem Header="_Size" CommandEnum="Window_Font_Size" ToolTip="Change font size"/>
-			<controls:NEMenuItem x:Name="menu_Window_Font_ShowSpecial" Header="S_how special" CommandEnum="Window_Font_ShowSpecial" ToolTip="Toggle whether to show special characters"/>
+			<controls:NEMenuItem Header="S_how special" CommandEnum="Window_Font_ShowSpecial" x:Name="menu_Window_Font_ShowSpecial" ToolTip="Toggle whether to show special characters"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem x:Name="menu_Window_ViewBinary" Header="View _binary" CommandEnum="Window_ViewBinary" ToolTip="View binary values"/>
+		<controls:NEMenuItem Header="View _binary" CommandEnum="Window_ViewBinary" x:Name="menu_Window_ViewBinary" ToolTip="View binary values"/>
 		<controls:NEMenuItem Header="View binary co_de pages" CommandEnum="Window_ViewBinaryCodePages" ToolTip="Set codepages to view binary values"/>
 		<Separator/>
 		<MenuItem Header="_Select">

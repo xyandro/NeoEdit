@@ -16,24 +16,24 @@ namespace NeoEdit.UI.Dialogs
 		public int? MaxColumns { get { return UIHelper<Configure_Window_CustomGrid_Dialog>.GetPropValue<int?>(this); } set { UIHelper<Configure_Window_CustomGrid_Dialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public int? MaxRows { get { return UIHelper<Configure_Window_CustomGrid_Dialog>.GetPropValue<int?>(this); } set { UIHelper<Configure_Window_CustomGrid_Dialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool ActiveOnly { get { return UIHelper<Configure_Window_CustomGrid_Dialog>.GetPropValue<bool>(this); } set { UIHelper<Configure_Window_CustomGrid_Dialog>.SetPropValue(this, value); } }
 
 		static Configure_Window_CustomGrid_Dialog() => UIHelper<Configure_Window_CustomGrid_Dialog>.Register();
+
+		readonly WindowLayout windowLayout;
 
 		Configure_Window_CustomGrid_Dialog(WindowLayout windowLayout)
 		{
 			InitializeComponent();
+			this.windowLayout = windowLayout;
+			OnReset();
+		}
+
+		void OnReset(object sender = null, RoutedEventArgs e = null)
+		{
 			Columns = windowLayout.Columns;
 			Rows = windowLayout.Rows;
 			MaxColumns = windowLayout.MaxColumns;
 			MaxRows = windowLayout.MaxRows;
-			ActiveOnly = windowLayout.ActiveOnly;
-		}
-
-		void OnReset(object sender, RoutedEventArgs e)
-		{
-			ActiveOnly = false;
 		}
 
 		Configuration_Window_CustomGrid result;
@@ -41,7 +41,7 @@ namespace NeoEdit.UI.Dialogs
 		{
 			if ((Columns < 1) || (Rows < 1) || (MaxColumns < 1) || (MaxRows < 1))
 				return;
-			result = new Configuration_Window_CustomGrid { WindowLayout = new WindowLayout(Columns, Rows, MaxColumns, MaxRows, ActiveOnly) };
+			result = new Configuration_Window_CustomGrid { WindowLayout = new WindowLayout(Columns, Rows, MaxColumns, MaxRows) };
 			DialogResult = true;
 		}
 
