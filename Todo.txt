@@ -41,3 +41,4 @@ When pasting nothing whatever is selected should be deleted
 Save as doesn't abort properly
 Move Keys functions to dialog like Regions
 Ctrl+S should save if only change is encoding
+Expression dialog should be able to handle multiple selections like paste does

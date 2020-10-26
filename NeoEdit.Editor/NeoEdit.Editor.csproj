@@ -58,6 +58,7 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <OutputPath>$(SolutionDir)bin\$(Configuration).$(Platform)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration).$(Platform)\</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\$(Configuration).$(Platform)\</BaseIntermediateOutputPath>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
