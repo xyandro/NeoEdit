@@ -14,6 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <ApplicationIcon>$(SolutionDir)Photoshop\NeoEdit.ico</ApplicationIcon>
     <OutputPath>$(SolutionDir)bin\$(Configuration).$(Platform)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration).$(Platform)\</IntermediateOutputPath>
     <BaseIntermediateOutputPath>obj\$(Configuration).$(Platform)\</BaseIntermediateOutputPath>
