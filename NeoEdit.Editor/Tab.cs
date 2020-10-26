@@ -467,9 +467,9 @@ namespace NeoEdit.Editor
 			switch (state.Command)
 			{
 				case NECommand.Internal_Activate: return PreExecute_Internal_Activate(state);
-				case NECommand.Internal_AddTab: return PreExecute_Internal_AddTab(state, (state.Configuration as Configuration_Internal_AddTab).Tab as Tab);
-				case NECommand.Internal_MouseActivate: return PreExecute_Internal_MouseActivate(state, (state.Configuration as Configuration_Internal_MouseActivate).Tab as Tab);
-				case NECommand.Internal_CloseTab: return PreExecute_Internal_CloseTab(state, (state.Configuration as Configuration_Internal_CloseTab).Tab as Tab);
+				case NECommand.Internal_AddTab: return PreExecute_Internal_AddTab(state);
+				case NECommand.Internal_MouseActivate: return PreExecute_Internal_MouseActivate(state);
+				case NECommand.Internal_CloseTab: return PreExecute_Internal_CloseTab(state);
 				case NECommand.Internal_Key: return PreExecute_Internal_Key(state);
 				case NECommand.Internal_Scroll: return PreExecute_Internal_Scroll(state);
 				case NECommand.Internal_Mouse: return PreExecute_Internal_Mouse(state);
@@ -478,15 +478,15 @@ namespace NeoEdit.Editor
 				case NECommand.File_New_New: return PreExecute_File_New_New(state);
 				case NECommand.File_New_FromClipboards: return PreExecute_File_New_FromClipboards(state);
 				case NECommand.File_New_FromClipboardSelections: return PreExecute_File_New_FromClipboardSelections(state);
-				case NECommand.File_Open_Open: return PreExecute_File_Open_Open(state, state.Configuration as Configuration_File_Open_Open);
+				case NECommand.File_Open_Open: return PreExecute_File_Open_Open(state);
 				case NECommand.File_Open_CopiedCut: return PreExecute_File_Open_CopiedCut(state);
 				case NECommand.File_MoveToNewWindow: return PreExecute_File_MoveToNewWindow(state);
 				case NECommand.File_Shell_Integrate: return PreExecute_File_Shell_Integrate(state);
 				case NECommand.File_Shell_Unintegrate: return PreExecute_File_Shell_Unintegrate(state);
-				case NECommand.File_DontExitOnClose: return PreExecute_File_DontExitOnClose(state, state.MultiStatus);
+				case NECommand.File_DontExitOnClose: return PreExecute_File_DontExitOnClose(state);
 				case NECommand.File_Exit: return PreExecute_File_Exit(state);
-				case NECommand.Edit_EscapeClearsSelections: return PreExecute_Edit_EscapeClearsSelections(state, state.MultiStatus);
-				case NECommand.Diff_Diff: return PreExecute_Diff_Diff(state, state.ShiftDown);
+				case NECommand.Edit_EscapeClearsSelections: return PreExecute_Edit_EscapeClearsSelections(state);
+				case NECommand.Diff_Diff: return PreExecute_Diff_Diff(state);
 				case NECommand.Diff_Select_LeftTab: return PreExecute_Diff_Select_LeftRightBothTabs(state, true);
 				case NECommand.Diff_Select_RightTab: return PreExecute_Diff_Select_LeftRightBothTabs(state, false);
 				case NECommand.Diff_Select_BothTabs: return PreExecute_Diff_Select_LeftRightBothTabs(state, null);
@@ -556,9 +556,9 @@ namespace NeoEdit.Editor
 				case NECommand.Macro_Open_Quick_10: return PreExecute_Macro_Open_Quick(state, 10);
 				case NECommand.Macro_Open_Quick_11: return PreExecute_Macro_Open_Quick(state, 11);
 				case NECommand.Macro_Open_Quick_12: return PreExecute_Macro_Open_Quick(state, 12);
-				case NECommand.Macro_Open_Open: return PreExecute_File_Open_Open(state, state.Configuration as Configuration_File_Open_Open);
+				case NECommand.Macro_Open_Open: return PreExecute_File_Open_Open(state);
 				case NECommand.Macro_TimeNextAction: return PreExecute_Macro_TimeNextAction(state);
-				case NECommand.Macro_Visualize: return PreExecute_Macro_Visualize(state, state.MultiStatus);
+				case NECommand.Macro_Visualize: return PreExecute_Macro_Visualize(state);
 				case NECommand.Window_New_NewWindow: return PreExecute_Window_New_NewWindow(state);
 				case NECommand.Window_New_FromSelections: return PreExecute_Window_New_FromSelections(state);
 				case NECommand.Window_New_FromClipboards: return PreExecute_Window_New_FromClipboards(state);
@@ -566,10 +566,10 @@ namespace NeoEdit.Editor
 				case NECommand.Window_Full: return PreExecute_Window_Full(state);
 				case NECommand.Window_Grid: return PreExecute_Window_Grid(state);
 				case NECommand.Window_CustomGrid: return PreExecute_Window_CustomGrid(state);
-				case NECommand.Window_ActiveOnly: return PreExecute_Window_ActiveOnly(state, state.MultiStatus);
+				case NECommand.Window_ActiveOnly: return PreExecute_Window_ActiveOnly(state);
 				case NECommand.Window_ActiveTabs: return PreExecute_Window_ActiveTabs(state);
 				case NECommand.Window_Font_Size: return PreExecute_Window_Font_Size(state);
-				case NECommand.Window_Font_ShowSpecial: return PreExecute_Window_Font_ShowSpecial(state, state.MultiStatus);
+				case NECommand.Window_Font_ShowSpecial: return PreExecute_Window_Font_ShowSpecial(state);
 				case NECommand.Window_Select_AllTabs: return PreExecute_Window_Select_AllTabs(state);
 				case NECommand.Window_Select_NoTabs: return PreExecute_Window_Select_NoTabs(state);
 				case NECommand.Window_Select_TabsWithSelections: return PreExecute_Window_Select_TabsWithWithoutSelections(state, true);

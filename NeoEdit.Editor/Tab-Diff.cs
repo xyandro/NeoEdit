@@ -62,7 +62,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static PreExecutionStop PreExecute_Diff_Diff(EditorExecuteState state, bool shiftDown)
+		static PreExecutionStop PreExecute_Diff_Diff(EditorExecuteState state)
 		{
 			var diffTargets = state.Tabs.AllTabs.Count == 2 ? state.Tabs.AllTabs.ToList() : state.Tabs.ActiveTabs.ToList();
 			diffTargets.ForEach(diffTarget => state.Tabs.AddToTransaction(diffTarget));
@@ -80,7 +80,7 @@ namespace NeoEdit.Editor
 			if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
 				throw new Exception("Must have even number of files active for diff.");
 
-			if (shiftDown)
+			if (state.ShiftDown)
 			{
 				if (!state.Tabs.AllTabs.Except(diffTargets).Any())
 					state.Tabs.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));

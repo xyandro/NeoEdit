@@ -658,9 +658,9 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Navigate_JumpBy(JumpByType jumpBy) => JumpBy = jumpBy;
 
-		static PreExecutionStop PreExecute_Edit_EscapeClearsSelections(EditorExecuteState state, bool? multiStatus)
+		static PreExecutionStop PreExecute_Edit_EscapeClearsSelections(EditorExecuteState state)
 		{
-			Settings.EscapeClearsSelections = multiStatus != true;
+			Settings.EscapeClearsSelections = state.MultiStatus != true;
 			return PreExecutionStop.Stop;
 		}
 	}

@@ -129,9 +129,9 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Visualize(EditorExecuteState state, bool? multiStatus)
+		static PreExecutionStop PreExecute_Macro_Visualize(EditorExecuteState state)
 		{
-			state.Tabs.MacroVisualize = multiStatus != true;
+			state.Tabs.MacroVisualize = state.MultiStatus != true;
 			return PreExecutionStop.Stop;
 		}
 	}

@@ -76,9 +76,9 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_ActiveOnly(EditorExecuteState state, bool? multiStatus)
+		static PreExecutionStop PreExecute_Window_ActiveOnly(EditorExecuteState state)
 		{
-			state.Tabs.ActiveOnly = multiStatus != true;
+			state.Tabs.ActiveOnly = state.MultiStatus != true;
 			return PreExecutionStop.Stop;
 		}
 
@@ -130,9 +130,9 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_Font_ShowSpecial(EditorExecuteState state, bool? multiStatus)
+		static PreExecutionStop PreExecute_Window_Font_ShowSpecial(EditorExecuteState state)
 		{
-			Font.ShowSpecialChars = multiStatus != true;
+			Font.ShowSpecialChars = state.MultiStatus != true;
 			return PreExecutionStop.Stop;
 		}
 

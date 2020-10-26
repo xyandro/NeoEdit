@@ -172,14 +172,16 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Internal_AddTab(EditorExecuteState state, Tab tab)
+		static PreExecutionStop PreExecute_Internal_AddTab(EditorExecuteState state)
 		{
+			var tab = (state.Configuration as Configuration_Internal_AddTab).Tab as Tab;
 			state.Tabs.AddTab(tab);
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Internal_MouseActivate(EditorExecuteState state, Tab tab)
+		static PreExecutionStop PreExecute_Internal_MouseActivate(EditorExecuteState state)
 		{
+			var tab = (state.Configuration as Configuration_Internal_MouseActivate).Tab as Tab;
 			if (!state.ShiftDown)
 				state.Tabs.ClearAllActive();
 			state.Tabs.SetActive(tab);
@@ -188,8 +190,9 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Internal_CloseTab(EditorExecuteState state, Tab tab)
+		static PreExecutionStop PreExecute_Internal_CloseTab(EditorExecuteState state)
 		{
+			var tab = (state.Configuration as Configuration_Internal_CloseTab).Tab as Tab;
 			tab.VerifyCanClose();
 			state.Tabs.RemoveTab(tab);
 

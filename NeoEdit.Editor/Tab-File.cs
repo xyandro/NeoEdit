@@ -80,8 +80,9 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		static PreExecutionStop PreExecute_File_Open_Open(EditorExecuteState state, Configuration_File_Open_Open result)
+		static PreExecutionStop PreExecute_File_Open_Open(EditorExecuteState state)
 		{
+			var result = state.Configuration as Configuration_File_Open_Open;
 			result.FileNames.ForEach(fileName => state.Tabs.AddTab(new Tab(fileName)));
 			return PreExecutionStop.Stop;
 		}
@@ -390,9 +391,9 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_File_DontExitOnClose(EditorExecuteState state, bool? multiStatus)
+		static PreExecutionStop PreExecute_File_DontExitOnClose(EditorExecuteState state)
 		{
-			Settings.DontExitOnClose = multiStatus != true;
+			Settings.DontExitOnClose = state.MultiStatus != true;
 			return PreExecutionStop.Stop;
 		}
 
