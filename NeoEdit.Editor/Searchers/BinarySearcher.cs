@@ -38,7 +38,7 @@ namespace NeoEdit.Editor.Searchers
 					return;
 				for (var ctr = 0; ctr < bytes.Length; ++ctr)
 				{
-					BinarySearcher.GetLowerUpper(bytes[ctr], matchCase, out var lower, out var upper);
+					GetLowerUpper(bytes[ctr], matchCase, out var lower, out var upper);
 					exists[lower] = exists[upper] = true;
 				}
 			}

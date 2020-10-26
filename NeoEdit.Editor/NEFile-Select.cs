@@ -454,7 +454,7 @@ namespace NeoEdit.Editor
 			var neFiles = new NEFiles(false);
 			neFiles.BeginTransaction(state);
 			foreach (var neFile in summaryByFile)
-				neFiles.AddFile(NEFile.CreateSummaryFile(neFile.DisplayName, neFile.selections));
+				neFiles.AddFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
 			neFiles.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 			neFiles.Commit();
 
