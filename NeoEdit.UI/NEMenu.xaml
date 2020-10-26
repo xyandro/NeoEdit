@@ -459,9 +459,9 @@
 			<controls:NEMenuItem Header="_Match" CommandEnum="Diff_Select_Match" ToolTip="Select all matching text"/>
 			<controls:NEMenuItem Header="_Diff" CommandEnum="Diff_Select_Diff" ToolTip="Select all non-matching text"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Left tab" CommandEnum="Diff_Select_LeftTab" ToolTip="Select left tab of diff"/>
-			<controls:NEMenuItem Header="_Right tab" CommandEnum="Diff_Select_RightTab" ToolTip="Select right tab of diff"/>
-			<controls:NEMenuItem Header="_Both tabs" CommandEnum="Diff_Select_BothTabs" ToolTip="Select both tabs"/>
+			<controls:NEMenuItem Header="_Left file" CommandEnum="Diff_Select_LeftFile" ToolTip="Select left file of diff"/>
+			<controls:NEMenuItem Header="_Right file" CommandEnum="Diff_Select_RightFile" ToolTip="Select right file of diff"/>
+			<controls:NEMenuItem Header="_Both files" CommandEnum="Diff_Select_BothFiles" ToolTip="Select both files"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Fi_les">
@@ -922,12 +922,12 @@
 			<controls:NEMenuItem Header="R_epeated lines" CommandEnum="Select_RepeatsCaseSensitive_RepeatedLines" ToolTip="Join selections that repeat lines (case sensitive)"/>
 			<controls:NEMenuItem Header="By _count" CommandEnum="Select_RepeatsCaseSensitive_ByCount" ToolTip="Keep selections based on how many there are (case sensitive)"/>
 			<Separator/>
-			<MenuItem Header="_Tabs">
-				<controls:NEMenuItem Header="_Match" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Match" ToolTip="Keep selections that match text and position in all tabs (case sensitive)"/>
-				<controls:NEMenuItem Header="M_ismatch" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Mismatch" ToolTip="Keep selections that don't match text and position in all tabs (case sensitive)"/>
+			<MenuItem Header="_Files">
+				<controls:NEMenuItem Header="_Match" CommandEnum="Select_RepeatsCaseSensitive_Files_Match" ToolTip="Keep selections that match text and position in all files (case sensitive)"/>
+				<controls:NEMenuItem Header="M_ismatch" CommandEnum="Select_RepeatsCaseSensitive_Files_Mismatch" ToolTip="Keep selections that don't match text and position in all files (case sensitive)"/>
 				<Separator/>
-				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseSensitive_Tabs_Common" ToolTip="Keep selections that match text in all tabs (case sensitive)"/>
-				<controls:NEMenuItem Header="Non c_ommon" CommandEnum="Select_RepeatsCaseSensitive_Tabs_NonCommon" ToolTip="Keep selections that don't match text in all tabs (case sensitive)"/>
+				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseSensitive_Files_Common" ToolTip="Keep selections that match text in all files (case sensitive)"/>
+				<controls:NEMenuItem Header="Non c_ommon" CommandEnum="Select_RepeatsCaseSensitive_Files_NonCommon" ToolTip="Keep selections that don't match text in all files (case sensitive)"/>
 			</MenuItem>
 		</MenuItem>
 		<MenuItem Header="Repeats (case _insensitive)">
@@ -940,24 +940,24 @@
 			<controls:NEMenuItem Header="R_epeated lines" CommandEnum="Select_RepeatsCaseInsensitive_RepeatedLines" ToolTip="Join selections that repeat lines (case insensitive)"/>
 			<controls:NEMenuItem Header="By _count" CommandEnum="Select_RepeatsCaseInsensitive_ByCount" ToolTip="Keep selections based on how many there are (case insensitive)"/>
 			<Separator/>
-			<MenuItem Header="_Tabs">
-				<controls:NEMenuItem Header="_Match" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Match" ToolTip="Keep selections that match text and position in all tabs (case insensitive)"/>
-				<controls:NEMenuItem Header="M_ismatch" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Mismatch" ToolTip="Keep selections that don't match text and position in all tabs (case insensitive)"/>
+			<MenuItem Header="_Files">
+				<controls:NEMenuItem Header="_Match" CommandEnum="Select_RepeatsCaseInsensitive_Files_Match" ToolTip="Keep selections that match text and position in all files (case insensitive)"/>
+				<controls:NEMenuItem Header="M_ismatch" CommandEnum="Select_RepeatsCaseInsensitive_Files_Mismatch" ToolTip="Keep selections that don't match text and position in all files (case insensitive)"/>
 				<Separator/>
-				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_Common" ToolTip="Keep selections that match text in all tabs (case insensitive)"/>
-				<controls:NEMenuItem Header="Non c_ommon" CommandEnum="Select_RepeatsCaseInsensitive_Tabs_NonCommon" ToolTip="Keep selections that don't match text in all tabs (case insensitive)"/>
+				<controls:NEMenuItem Header="_Common" CommandEnum="Select_RepeatsCaseInsensitive_Files_Common" ToolTip="Keep selections that match text in all files (case insensitive)"/>
+				<controls:NEMenuItem Header="Non c_ommon" CommandEnum="Select_RepeatsCaseInsensitive_Files_NonCommon" ToolTip="Keep selections that don't match text in all files (case insensitive)"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="S_plit" CommandEnum="Select_Split" ToolTip="Split selections into multiple selections based on delimiters"/>
 		<Separator/>
 		<MenuItem Header="S_ummarize (case sensitive)">
-			<controls:NEMenuItem Header="_One" CommandEnum="Select_SummarizeCaseSensitive_One" ToolTip="Open a new window with count of all selections in all tabs"/>
-			<controls:NEMenuItem Header="_Many" CommandEnum="Select_SummarizeCaseSensitive_Many" ToolTip="Open a new window with count of all selections in each tab"/>
+			<controls:NEMenuItem Header="_One" CommandEnum="Select_SummarizeCaseSensitive_One" ToolTip="Open a new window with count of all selections in all files"/>
+			<controls:NEMenuItem Header="_Many" CommandEnum="Select_SummarizeCaseSensitive_Many" ToolTip="Open a new window with count of all selections in each file"/>
 		</MenuItem>
 		<MenuItem Header="Summari_ze (case insensitive)">
-			<controls:NEMenuItem Header="_One" CommandEnum="Select_SummarizeCaseInsensitive_One" ToolTip="Open a new window with count of all selections in all tabs"/>
-			<controls:NEMenuItem Header="_Many" CommandEnum="Select_SummarizeCaseInsensitive_Many" ToolTip="Open a new window with count of all selections in each tab"/>
+			<controls:NEMenuItem Header="_One" CommandEnum="Select_SummarizeCaseInsensitive_One" ToolTip="Open a new window with count of all selections in all files"/>
+			<controls:NEMenuItem Header="_Many" CommandEnum="Select_SummarizeCaseInsensitive_Many" ToolTip="Open a new window with count of all selections in each file"/>
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Selection">
@@ -1067,9 +1067,9 @@
 		<Separator/>
 		<controls:NEMenuItem Header="Active on_ly" CommandEnum="Window_ActiveOnly" x:Name="menu_Window_ActiveOnly" ToolTip="Only show active files"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Active tabs" CommandEnum="Window_ActiveTabs" ToolTip="Change which files are active"/>
-		<controls:NEMenuItem Header="Tab _index" CommandEnum="Window_TabIndex" ToolTip="Replace selections with tab index"/>
-		<controls:NEMenuItem Header="Ac_tive tab index" CommandEnum="Window_ActiveTabIndex" ToolTip="Replace selections with tab index (active tabs only)"/>
+		<controls:NEMenuItem Header="_Active files" CommandEnum="Window_ActiveFiles" ToolTip="Change which files are active"/>
+		<controls:NEMenuItem Header="File _index" CommandEnum="Window_FileIndex" ToolTip="Replace selections with file index"/>
+		<controls:NEMenuItem Header="Ac_tive file index" CommandEnum="Window_ActiveFileIndex" ToolTip="Replace selections with file index (active files only)"/>
 		<Separator/>
 		<MenuItem Header="F_ont">
 			<controls:NEMenuItem Header="_Size" CommandEnum="Window_Font_Size" ToolTip="Change font size"/>
@@ -1080,26 +1080,26 @@
 		<controls:NEMenuItem Header="View binary co_de pages" CommandEnum="Window_ViewBinaryCodePages" ToolTip="Set codepages to view binary values"/>
 		<Separator/>
 		<MenuItem Header="_Select">
-			<controls:NEMenuItem Header="_All tabs" CommandEnum="Window_Select_AllTabs" ToolTip="Select all files"/>
-			<controls:NEMenuItem Header="_No tabs" CommandEnum="Window_Select_NoTabs" ToolTip="Select no files"/>
+			<controls:NEMenuItem Header="_All files" CommandEnum="Window_Select_AllFiles" ToolTip="Select all files"/>
+			<controls:NEMenuItem Header="_No files" CommandEnum="Window_Select_NoFiles" ToolTip="Select no files"/>
 			<Separator/>
-			<controls:NEMenuItem Header="Tabs _with selections" CommandEnum="Window_Select_TabsWithSelections" ToolTip="Selected files with selections"/>
-			<controls:NEMenuItem Header="Tabs with_out selections" CommandEnum="Window_Select_TabsWithoutSelections" ToolTip="Selected files without selection"/>
+			<controls:NEMenuItem Header="Files _with selections" CommandEnum="Window_Select_FilesWithSelections" ToolTip="Selected files with selections"/>
+			<controls:NEMenuItem Header="Files with_out selections" CommandEnum="Window_Select_FilesWithoutSelections" ToolTip="Selected files without selection"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Modified tabs" CommandEnum="Window_Select_ModifiedTabs" ToolTip="Selected files that are modified"/>
-			<controls:NEMenuItem Header="_Unmodified tabs" CommandEnum="Window_Select_UnmodifiedTabs" ToolTip="Selected files that aren't modified"/>
+			<controls:NEMenuItem Header="_Modified files" CommandEnum="Window_Select_ModifiedFiles" ToolTip="Selected files that are modified"/>
+			<controls:NEMenuItem Header="_Unmodified files" CommandEnum="Window_Select_UnmodifiedFiles" ToolTip="Selected files that aren't modified"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Inactive tabs" CommandEnum="Window_Select_InactiveTabs" ToolTip="Selected files that aren't selected"/>
+			<controls:NEMenuItem Header="_Inactive files" CommandEnum="Window_Select_InactiveFiles" ToolTip="Selected files that aren't selected"/>
 		</MenuItem>
 		<MenuItem Header="_Close">
-			<controls:NEMenuItem Header="Tabs _with selections" CommandEnum="Window_Close_TabsWithSelections" ToolTip="Close selected files with selections"/>
-			<controls:NEMenuItem Header="Tabs with_out selections" CommandEnum="Window_Close_TabsWithoutSelections" ToolTip="Close selected files without selections"/>
+			<controls:NEMenuItem Header="Files _with selections" CommandEnum="Window_Close_FilesWithSelections" ToolTip="Close selected files with selections"/>
+			<controls:NEMenuItem Header="Files with_out selections" CommandEnum="Window_Close_FilesWithoutSelections" ToolTip="Close selected files without selections"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Modified tabs" CommandEnum="Window_Close_ModifiedTabs" ToolTip="Close selected files that are modified"/>
-			<controls:NEMenuItem Header="_Unmodified tabs" CommandEnum="Window_Close_UnmodifiedTabs" ToolTip="Close selected files that aren't modified"/>
+			<controls:NEMenuItem Header="_Modified files" CommandEnum="Window_Close_ModifiedFiles" ToolTip="Close selected files that are modified"/>
+			<controls:NEMenuItem Header="_Unmodified files" CommandEnum="Window_Close_UnmodifiedFiles" ToolTip="Close selected files that aren't modified"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Active tabs" CommandEnum="Window_Close_ActiveTabs" ToolTip="Close selected files"/>
-			<controls:NEMenuItem Header="_Inactive tabs" CommandEnum="Window_Close_InactiveTabs" ToolTip="Close unselected files"/>
+			<controls:NEMenuItem Header="_Active files" CommandEnum="Window_Close_ActiveFiles" ToolTip="Close selected files"/>
+			<controls:NEMenuItem Header="_Inactive files" CommandEnum="Window_Close_InactiveFiles" ToolTip="Close unselected files"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="_Word list" CommandEnum="Window_WordList" ToolTip="Get list of English words"/>

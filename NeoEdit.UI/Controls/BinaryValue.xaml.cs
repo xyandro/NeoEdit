@@ -108,7 +108,7 @@ namespace NeoEdit.UI.Controls
 			if (!Coder.IsStr(CodePage))
 				size = Coder.BytesRequired(CodePage);
 
-			UIHelper.FindParent<TabsWindow>(this).HandleCommand(new ExecuteState(NECommand.Internal_SetBinaryValue) { Configuration = new Configuration_Internal_SetBinaryValue { Value = newBytes, OldSize = size } });
+			UIHelper.FindParent<NEFilesWindow>(this).HandleCommand(new ExecuteState(NECommand.Internal_SetBinaryValue) { Configuration = new Configuration_Internal_SetBinaryValue { Value = newBytes, OldSize = size } });
 		}
 	}
 }

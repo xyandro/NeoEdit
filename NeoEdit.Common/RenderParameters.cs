@@ -4,9 +4,9 @@ namespace NeoEdit.Common
 {
 	public class RenderParameters
 	{
-		public IReadOnlyList<ITab> AllTabs { get; set; }
-		public IReadOnlyList<ITab> ActiveTabs { get; set; }
-		public ITab FocusedTab { get; set; }
+		public IReadOnlyList<INEFile> AllFiles { get; set; }
+		public IReadOnlyList<INEFile> ActiveFiles { get; set; }
+		public INEFile FocusedFile { get; set; }
 		public WindowLayout WindowLayout { get; set; }
 		public List<string> StatusBar { get; set; }
 		public Dictionary<string, bool?> MenuStatus { get; set; }

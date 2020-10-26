@@ -84,6 +84,13 @@
     </Compile>
     <Compile Include="Controls\DiffScrollBar.cs" />
     <Compile Include="Controls\EnhancedFocusManager.cs" />
+    <Page Include="Controls\FileLabel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Controls\FileLabel.xaml.cs">
+      <DependentUpon>FileLabel.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\NEExpressionResults.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -103,13 +110,6 @@
     <Compile Include="Controls\PropertyChangeNotifier.cs" />
     <Compile Include="Controls\RenderCanvas.cs" />
     <Compile Include="Controls\ScrollViewerBinding.cs" />
-    <Page Include="Controls\TabLabel.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Controls\TabLabel.xaml.cs">
-      <DependentUpon>TabLabel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\UIHelper.cs" />
     <Page Include="Controls\ViewBinary.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -840,12 +840,12 @@
     <Compile Include="Dialogs\WCFInterceptDialog.xaml.cs">
       <DependentUpon>WCFInterceptDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\WindowActiveTabsDialog.xaml">
+    <Page Include="Dialogs\WindowActiveFilesDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\WindowActiveTabsDialog.xaml.cs">
-      <DependentUpon>WindowActiveTabsDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\WindowActiveFilesDialog.xaml.cs">
+      <DependentUpon>WindowActiveFilesDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\WindowFontSizeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -861,6 +861,29 @@
     <Compile Include="Highlighting\HighlightJSON.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
+    <Compile Include="NEFilesWindow-Dialogs.xaml.cs">
+      <DependentUpon>NEFilesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NEFilesWindow-Full.xaml.cs">
+      <DependentUpon>NEFilesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NEFilesWindow-Grid.xaml.cs">
+      <DependentUpon>NEFilesWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="NEFilesWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="NEFilesWindow.xaml.cs">
+      <DependentUpon>NEFilesWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="NEFileWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="NEFileWindow.xaml.cs">
+      <DependentUpon>NEFileWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="NEMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -879,29 +902,6 @@
     <EmbeddedResource Include="Resources\License.txt" />
     <Resource Include="Resources\Unchecked.png" />
     <EmbeddedResource Include="Resources\Unicode.dat" />
-    <Compile Include="TabsWindow-Dialogs.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TabsWindow-Full.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TabsWindow-Grid.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
-    </Compile>
-    <Page Include="TabsWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="TabsWindow.xaml.cs">
-      <DependentUpon>TabsWindow.xaml</DependentUpon>
-    </Compile>
-    <Page Include="TabWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="TabWindow.xaml.cs">
-      <DependentUpon>TabWindow.xaml</DependentUpon>
-    </Compile>
     <Page Include="Tutorial\Pages\AdvancedFind.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

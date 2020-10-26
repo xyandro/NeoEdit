@@ -14,9 +14,9 @@ namespace NeoEdit.UI
 		Action startAction;
 		App(Action action)
 		{
-			ITabsWindowStatic.RunCryptorKeyDialog = (type, encrypt) => Configure_File_Encrypt_Dialog.Run(null, type, encrypt)?.Key;
-			ITabsWindowStatic.CreateITabsWindow = tabs => Dispatcher.Invoke(() => new TabsWindow(tabs));
-			ITabsWindowStatic.ShowExceptionMessage = ex => TabsWindow.ShowExceptionMessage(ex);
+			INEFilesWindowStatic.RunCryptorKeyDialog = (type, encrypt) => Configure_File_Encrypt_Dialog.Run(null, type, encrypt)?.Key;
+			INEFilesWindowStatic.CreateINEFilesWindow = neFiles => Dispatcher.Invoke(() => new NEFilesWindow(neFiles));
+			INEFilesWindowStatic.ShowExceptionMessage = ex => NEFilesWindow.ShowExceptionMessage(ex);
 
 			startAction = action;
 			InitializeComponent();
@@ -34,7 +34,7 @@ namespace NeoEdit.UI
 
 		void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-			TabsWindow.ShowExceptionMessage(e.Exception);
+			NEFilesWindow.ShowExceptionMessage(e.Exception);
 			e.Handled = true;
 		}
 

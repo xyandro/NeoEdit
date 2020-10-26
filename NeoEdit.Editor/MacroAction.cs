@@ -40,7 +40,7 @@ namespace NeoEdit.Editor
 			};
 		}
 
-		public EditorExecuteState GetExecuteState(Tabs tabs)
+		public EditorExecuteState GetExecuteState(NEFiles neFiles)
 		{
 			return new EditorExecuteState(Command)
 			{
@@ -51,7 +51,7 @@ namespace NeoEdit.Editor
 				Key = Key,
 				Text = Text,
 				Configuration = Configuration,
-				Tabs = tabs,
+				NEFiles = neFiles,
 			};
 		}
 	}

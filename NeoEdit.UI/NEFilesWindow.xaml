@@ -1,0 +1,57 @@
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.NEFilesWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
+	xmlns:ui="clr-namespace:NeoEdit.UI"
+	FocusVisualStyle="{x:Null}" Focusable="True" VerticalAlignment="Stretch" AllowDrop="True" Drop="OnDrop" Activated="OnActivated"
+	Width="800" Height="600" Visibility="Visible" IsMainWindow="True">
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<ui:NEMenu Grid.Row="0" Grid.Column="0" x:Name="menu"/>
+
+		<Grid Grid.Row="1" Grid.Column="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+
+			<Canvas Grid.Row="0" Grid.Column="0" Name="canvas" ClipToBounds="True"/>
+			<Border Grid.Row="0" Grid.Column="1" x:Name="scrollBarBorder" BorderBrush="#c0c0c0" BorderThickness="2" CornerRadius="4">
+				<controls:DiffScrollBar x:Name="scrollBar" ValueChanged="OnScrollBarValueChanged"/>
+			</Border>
+		</Grid>
+
+		<controls:RenderCanvas Grid.Row="2" Grid.Column="0" x:Name="statusBar" Height="20" Background="Transparent" Render="OnStatusBarRender" ClipToBounds="True"/>
+		<Grid x:Name="progressBars" Grid.Row="2" Grid.Column="0" Width="200" Height="20" HorizontalAlignment="Right">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="6"/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="6"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2"/>
+				<RowDefinition/>
+				<RowDefinition Height="2"/>
+				<RowDefinition/>
+				<RowDefinition Height="2"/>
+			</Grid.RowDefinitions>
+
+			<ProgressBar Grid.Row="1" Grid.Column="1" Name="macroProgressBar" Minimum="0" Maximum="1" Visibility="Hidden"/>
+			<ProgressBar Grid.Row="3" Grid.Column="1" Name="taskRunnerProgressBar" Minimum="0" Maximum="1" Visibility="Hidden"/>
+		</Grid>
+
+	</Grid>
+
+</controls:NEWindow>

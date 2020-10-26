@@ -2,7 +2,7 @@
 {
 	public class Configuration_Internal_Scroll : IConfiguration
 	{
-		public ITab Tab { get; set; }
+		public INEFile NEFile { get; set; }
 		public int Column { get; set; }
 		public int Row { get; set; }
 	}

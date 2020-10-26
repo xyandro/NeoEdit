@@ -23,20 +23,20 @@ namespace NeoEdit.Editor
 
 		public static readonly string MacroDirectory = Path.Combine(Helpers.NeoEditAppData, "Macro");
 
-		public static string ChooseMacro(ITabsWindow tabsWindow)
+		public static string ChooseMacro(INEFilesWindow filesWindow)
 		{
-			var result = tabsWindow.Configure_File_Open_Open("xml", MacroDirectory, "Macro files|*.xml|All files|*.*");
+			var result = filesWindow.Configure_File_Open_Open("xml", MacroDirectory, "Macro files|*.xml|All files|*.*");
 			if (result == null)
 				return null;
 			return result.FileNames[0];
 		}
 
-		public void Save(ITabsWindow tabsWindow, string fileName = null, bool macroDirRelative = false)
+		public void Save(INEFilesWindow filesWindow, string fileName = null, bool macroDirRelative = false)
 		{
 			Directory.CreateDirectory(MacroDirectory);
 			if (fileName == null)
 			{
-				var result = tabsWindow.RunSaveFileDialog("Macro.xml", "xml", MacroDirectory, "Macro files|*.xml|All files|*.*");
+				var result = filesWindow.RunSaveFileDialog("Macro.xml", "xml", MacroDirectory, "Macro files|*.xml|All files|*.*");
 				if (result == null)
 					return;
 
@@ -48,11 +48,11 @@ namespace NeoEdit.Editor
 			XMLConverter.ToXML(this).Save(fileName);
 		}
 
-		public static Macro Load(ITabsWindow tabsWindow, string fileName = null, bool macroDirRelative = false)
+		public static Macro Load(INEFilesWindow filesWindow, string fileName = null, bool macroDirRelative = false)
 		{
 			if (fileName == null)
 			{
-				fileName = ChooseMacro(tabsWindow);
+				fileName = ChooseMacro(filesWindow);
 				if (fileName == null)
 					return null;
 			}
