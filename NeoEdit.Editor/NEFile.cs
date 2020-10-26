@@ -362,7 +362,7 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Convert: return Configure_Edit_Convert(state);
 				case NECommand.Edit_ModifyRegions: return Configure_Edit_ModifyRegions(state);
 				case NECommand.Diff_IgnoreCharacters: return Configure_Diff_IgnoreCharacters(state);
-				case NECommand.Diff_Fix_Whitespace: return Configure_Diff_Fix_Whitespace_Dialog(state);
+				case NECommand.Diff_Fix_Whitespace: return Configure_Diff_Fix_Whitespace(state);
 				case NECommand.Files_Name_MakeAbsolute: return Configure_Files_Name_MakeAbsolute(state);
 				case NECommand.Files_Name_MakeRelative: return Configure_Files_Name_MakeRelative(state);
 				case NECommand.Files_Name_GetUnique: return Configure_Files_Name_GetUnique(state);
@@ -879,7 +879,7 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Navigate_JumpBy_Paths: Execute_Edit_Navigate_JumpBy(JumpByType.Paths); break;
 				case NECommand.Diff_Selections: Execute_Diff_Selections(); break;
 				case NECommand.Diff_SelectedFiles: Execute_Diff_SelectedFiles(); break;
-				case NECommand.Diff_VCSNormalFiles: Execute_Diff_Diff_VCSNormalFiles(); break;
+				case NECommand.Diff_VCSNormalFiles: Execute_Diff_VCSNormalFiles(); break;
 				case NECommand.Diff_Regions_Region1: Execute_Diff_Regions_Region(1); break;
 				case NECommand.Diff_Regions_Region2: Execute_Diff_Regions_Region(2); break;
 				case NECommand.Diff_Regions_Region3: Execute_Diff_Regions_Region(3); break;

@@ -59,7 +59,7 @@
     <Compile Include="Configuration\Configuration_Database_Examine.cs" />
     <Compile Include="Configuration\Configuration_DateTime_Format.cs" />
     <Compile Include="Configuration\Configuration_DateTime_ToTimeZone.cs" />
-    <Compile Include="Configuration\Configuration_Diff_Fix_Whitespace_Dialog.cs" />
+    <Compile Include="Configuration\Configuration_Diff_Fix_Whitespace.cs" />
     <Compile Include="Configuration\Configuration_Diff_IgnoreCharacters.cs" />
     <Compile Include="Configuration\Configuration_Edit_Convert.cs" />
     <Compile Include="Configuration\Configuration_Edit_Data_Compress.cs" />

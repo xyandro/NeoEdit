@@ -48,7 +48,7 @@ namespace NeoEdit.Common
 		Configuration_Edit_Convert Configure_Edit_Convert();
 		Configuration_Edit_ModifyRegions Configure_Edit_ModifyRegions();
 		Configuration_Diff_IgnoreCharacters Configure_Diff_IgnoreCharacters(string ignoreCharacters);
-		Configuration_Diff_Fix_Whitespace_Dialog Configure_Diff_Fix_Whitespace_Dialog();
+		Configuration_Diff_Fix_Whitespace Configure_Diff_Fix_Whitespace();
 		Configuration_Files_Name_MakeAbsolute Configure_Files_Name_MakeAbsolute(NEVariables variables, bool absolute, bool checkType);
 		Configuration_Files_Name_GetUnique Configure_Files_Name_GetUnique();
 		Configuration_Files_Set_Size Configure_Files_Set_Size(NEVariables variables);

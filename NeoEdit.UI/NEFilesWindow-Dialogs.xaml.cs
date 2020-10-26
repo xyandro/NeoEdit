@@ -59,7 +59,7 @@ namespace NeoEdit.UI
 		public Configuration_Edit_Convert Configure_Edit_Convert() => RunOnUIThread(() => Configure_Edit_Convert_Dialog.Run(this));
 		public Configuration_Edit_ModifyRegions Configure_Edit_ModifyRegions() => RunOnUIThread(() => Configure_Edit_ModifyRegions_Dialog.Run(this));
 		public Configuration_Diff_IgnoreCharacters Configure_Diff_IgnoreCharacters(string ignoreCharacters) => RunOnUIThread(() => Configure_Diff_IgnoreCharacters_Dialog.Run(this, ignoreCharacters));
-		public Configuration_Diff_Fix_Whitespace_Dialog Configure_Diff_Fix_Whitespace_Dialog() => RunOnUIThread(() => Configure_Diff_Fix_Whitespace_Dialog_Dialog.Run(this));
+		public Configuration_Diff_Fix_Whitespace Configure_Diff_Fix_Whitespace() => RunOnUIThread(() => Configure_Diff_Fix_Whitespace_Dialog.Run(this));
 		public Configuration_Files_Name_MakeAbsolute Configure_Files_Name_MakeAbsolute(NEVariables variables, bool absolute, bool checkType) => RunOnUIThread(() => Configure_Files_Name_MakeAbsolute_Dialog.Run(this, variables, absolute, checkType));
 		public Configuration_Files_Name_GetUnique Configure_Files_Name_GetUnique() => RunOnUIThread(() => Configure_Files_Name_GetUnique_Dialog.Run(this));
 		public Configuration_Files_Set_Size Configure_Files_Set_Size(NEVariables variables) => RunOnUIThread(() => Configure_Files_Set_Size_Dialog.Run(this, variables));

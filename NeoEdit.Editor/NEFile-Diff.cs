@@ -119,7 +119,7 @@ namespace NeoEdit.Editor
 				neFiles.AddDiff(new NEFile(fileName: batch[0]), new NEFile(fileName: batch[1]));
 		}
 
-		void Execute_Diff_Diff_VCSNormalFiles()
+		void Execute_Diff_VCSNormalFiles()
 		{
 			var files = GetSelectionStrings();
 			if (files.Any(file => !File.Exists(file)))
@@ -222,14 +222,14 @@ namespace NeoEdit.Editor
 				source.ReplaceSelections(strs);
 		}
 
-		static Configuration_Diff_Fix_Whitespace_Dialog Configure_Diff_Fix_Whitespace_Dialog(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Diff_Fix_Whitespace_Dialog();
+		static Configuration_Diff_Fix_Whitespace Configure_Diff_Fix_Whitespace(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Diff_Fix_Whitespace();
 
 		void Execute_Diff_Fix_Whitespace()
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var result = state.Configuration as Configuration_Diff_Fix_Whitespace_Dialog;
+			var result = state.Configuration as Configuration_Diff_Fix_Whitespace;
 			var fixes = NEText.GetDiffFixes(DiffTarget.Text, Text, result.LineStartTabStop, null, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 			Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
 			ReplaceSelections(fixes.Item2);

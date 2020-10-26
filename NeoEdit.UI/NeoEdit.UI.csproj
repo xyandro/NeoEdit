@@ -167,12 +167,12 @@
     <Compile Include="Dialogs\Configure_DateTime_ToTimeZone_Dialog.xaml.cs">
       <DependentUpon>Configure_DateTime_ToTimeZone_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\Configure_Diff_Fix_Whitespace_Dialog_Dialog.xaml">
+    <Page Include="Dialogs\Configure_Diff_Fix_Whitespace_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\Configure_Diff_Fix_Whitespace_Dialog_Dialog.xaml.cs">
-      <DependentUpon>Configure_Diff_Fix_Whitespace_Dialog_Dialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Configure_Diff_Fix_Whitespace_Dialog.xaml.cs">
+      <DependentUpon>Configure_Diff_Fix_Whitespace_Dialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\Configure_Diff_IgnoreCharacters_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
