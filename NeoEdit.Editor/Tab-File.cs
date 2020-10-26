@@ -128,11 +128,11 @@ namespace NeoEdit.Editor
 			Save(newFileName, copyOnly);
 		}
 
-		static Configuration_File_SaveCopy_ByExpression Configure_File_SaveCopy_SaveCopyByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
+		static Configuration_File_SaveCopyRename_ByExpression Configure_File_SaveCopy_SaveCopyByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopyRename_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
 
 		void Execute_File_SaveCopy_SaveCopyByExpression(bool copyOnly = false)
 		{
-			var result = state.Configuration as Configuration_File_SaveCopy_ByExpression;
+			var result = state.Configuration as Configuration_File_SaveCopyRename_ByExpression;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
@@ -154,7 +154,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Copy_DisplayName() => Clipboard = new List<string> { DisplayName ?? Path.GetFileName(FileName) };
 
-		void Execute_File_Operations_Rename()
+		void Execute_File_Rename_Rename()
 		{
 			if (string.IsNullOrEmpty(FileName))
 			{
@@ -170,7 +170,7 @@ namespace NeoEdit.Editor
 			SetFileName(fileName);
 		}
 
-		void Execute_File_Operations_RenameClipboard()
+		void Execute_File_Rename_RenameClipboard()
 		{
 			var results = Clipboard;
 			if (results.Count != 1)
@@ -180,7 +180,7 @@ namespace NeoEdit.Editor
 
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
-				if (!QueryUser(nameof(Execute_File_Operations_RenameClipboard), "File already exists; overwrite?", MessageOptions.None))
+				if (!QueryUser(nameof(Execute_File_Rename_RenameClipboard), "File already exists; overwrite?", MessageOptions.None))
 					return;
 			}
 
@@ -193,11 +193,11 @@ namespace NeoEdit.Editor
 			SetFileName(newFileName);
 		}
 
-		static Configuration_File_SaveCopy_ByExpression Configure_File_Operations_RenameByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
+		static Configuration_File_SaveCopyRename_ByExpression Configure_File_Rename_RenameByExpression(EditorExecuteState state) => state.Tabs.TabsWindow.Configure_File_SaveCopyRename_ByExpression(state.Tabs.Focused.GetVariables(), state.Tabs.Focused.Selections.Count);
 
-		void Execute_File_Operations_RenameByExpression()
+		void Execute_File_Rename_RenameByExpression()
 		{
-			var result = state.Configuration as Configuration_File_SaveCopy_ByExpression;
+			var result = state.Configuration as Configuration_File_SaveCopyRename_ByExpression;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (results.Count != 1)
 				throw new Exception("Only one filename may be specified");
@@ -206,7 +206,7 @@ namespace NeoEdit.Editor
 
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
-				if (!QueryUser(nameof(Execute_File_Operations_RenameByExpression), "File already exists; overwrite?", MessageOptions.None))
+				if (!QueryUser(nameof(Execute_File_Rename_RenameByExpression), "File already exists; overwrite?", MessageOptions.None))
 					return;
 			}
 
@@ -253,7 +253,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Operations_SetDisplayName()
 		{
-			var result = state.Configuration as Configuration_File_SaveCopy_ByExpression;
+			var result = state.Configuration as Configuration_File_SaveCopyRename_ByExpression;
 			if (result.Expression == "f")
 			{
 				DisplayName = null;

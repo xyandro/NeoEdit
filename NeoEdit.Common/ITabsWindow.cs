@@ -31,7 +31,7 @@ namespace NeoEdit.Common
 
 		Configuration_File_Open_Open Configure_File_Open_Open(string defaultExt, string initialDirectory = null, string filter = null, int filterIndex = 0, bool multiselect = false);
 		Configuration_Window_CustomGrid Configure_Window_CustomGrid(WindowLayout windowLayout);
-		Configuration_File_SaveCopy_ByExpression Configure_File_SaveCopy_ByExpression(NEVariables variables, int? numRows = null);
+		Configuration_File_SaveCopyRename_ByExpression Configure_File_SaveCopyRename_ByExpression(NEVariables variables, int? numRows = null);
 		Configuration_File_Encoding_Encoding Configure_File_Encoding_Encoding(Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None);
 		Configuration_File_Encoding_LineEndings Configure_File_Encoding_LineEndings(string lineEndings);
 		Configuration_File_Encrypt Configure_File_Encrypt(Cryptor.Type type, bool encrypt);

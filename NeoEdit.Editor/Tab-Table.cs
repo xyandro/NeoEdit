@@ -149,15 +149,15 @@ namespace NeoEdit.Editor
 			SetText(table);
 		}
 
-		static Configuration_File_SaveCopy_ByExpression Configure_Table_Select_RowsByExpression(EditorExecuteState state)
+		static Configuration_File_SaveCopyRename_ByExpression Configure_Table_Select_RowsByExpression(EditorExecuteState state)
 		{
 			var table = state.Tabs.Focused.GetTable();
-			return state.Tabs.TabsWindow.Configure_File_SaveCopy_ByExpression(state.Tabs.Focused.GetTableVariables(table), table.NumRows);
+			return state.Tabs.TabsWindow.Configure_File_SaveCopyRename_ByExpression(state.Tabs.Focused.GetTableVariables(table), table.NumRows);
 		}
 
 		void Execute_Table_Select_RowsByExpression()
 		{
-			var result = state.Configuration as Configuration_File_SaveCopy_ByExpression;
+			var result = state.Configuration as Configuration_File_SaveCopyRename_ByExpression;
 			var table = GetTable();
 			var variables = GetTableVariables(table);
 			var results = state.GetExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);

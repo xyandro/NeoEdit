@@ -42,7 +42,7 @@ namespace NeoEdit.UI
 			});
 		}
 		public Configuration_Window_CustomGrid Configure_Window_CustomGrid(WindowLayout windowLayout) => RunOnUIThread(() => Configure_Window_CustomGrid_Dialog.Run(this, windowLayout));
-		public Configuration_File_SaveCopy_ByExpression Configure_File_SaveCopy_ByExpression(NEVariables variables, int? numRows = null) => RunOnUIThread(() => Configure_File_SaveCopy_ByExpression_Dialog.Run(this, variables, numRows));
+		public Configuration_File_SaveCopyRename_ByExpression Configure_File_SaveCopyRename_ByExpression(NEVariables variables, int? numRows = null) => RunOnUIThread(() => Configure_File_SaveCopyRename_ByExpression_Dialog.Run(this, variables, numRows));
 		public Configuration_File_Encoding_Encoding Configure_File_Encoding_Encoding(Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None) => RunOnUIThread(() => Configure_File_Encoding_Encoding_Dialog.Run(this, codePage, detected));
 		public Configuration_File_Encoding_LineEndings Configure_File_Encoding_LineEndings(string lineEndings) => RunOnUIThread(() => Configure_File_Encoding_LineEndings_Dialog.Run(this, lineEndings));
 		public Configuration_File_Encrypt Configure_File_Encrypt(Cryptor.Type type, bool encrypt) => RunOnUIThread(() => Configure_File_Encrypt_Dialog.Run(this, type, encrypt));

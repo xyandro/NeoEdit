@@ -339,7 +339,7 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_Key: return Configure_Internal_Key(state);
 				case NECommand.File_Save_SaveAsByExpression: return Configure_File_SaveCopy_SaveCopyByExpression(state);
 				case NECommand.File_Copy_CopyToByExpression: return Configure_File_SaveCopy_SaveCopyByExpression(state);
-				case NECommand.File_Operations_RenameByExpression: return Configure_File_Operations_RenameByExpression(state);
+				case NECommand.File_Rename_RenameByExpression: return Configure_File_Rename_RenameByExpression(state);
 				case NECommand.File_Operations_SetDisplayName: return Configure_File_SaveCopy_SaveCopyByExpression(state);
 				case NECommand.File_Encoding_Encoding: return Configure_File_Encoding_Encoding(state);
 				case NECommand.File_Encoding_ReopenWithEncoding: return Configure_File_Encoding_ReopenWithEncoding(state);
@@ -616,9 +616,9 @@ namespace NeoEdit.Editor
 				case NECommand.File_Copy_Path: Execute_File_Copy_Path(); break;
 				case NECommand.File_Copy_Name: Execute_File_Copy_Name(); break;
 				case NECommand.File_Copy_DisplayName: Execute_File_Copy_DisplayName(); break;
-				case NECommand.File_Operations_Rename: Execute_File_Operations_Rename(); break;
-				case NECommand.File_Operations_RenameClipboard: Execute_File_Operations_RenameClipboard(); break;
-				case NECommand.File_Operations_RenameByExpression: Execute_File_Operations_RenameByExpression(); break;
+				case NECommand.File_Rename_Rename: Execute_File_Rename_Rename(); break;
+				case NECommand.File_Rename_RenameClipboard: Execute_File_Rename_RenameClipboard(); break;
+				case NECommand.File_Rename_RenameByExpression: Execute_File_Rename_RenameByExpression(); break;
 				case NECommand.File_Operations_Delete: Execute_File_Operations_Delete(); break;
 				case NECommand.File_Operations_Explore: Execute_File_Operations_Explore(); break;
 				case NECommand.File_Operations_CommandPrompt: Execute_File_Operations_CommandPrompt(); break;
