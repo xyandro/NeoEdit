@@ -250,6 +250,7 @@ namespace NeoEdit.Editor
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
+				FilesWindow.SetTaskRunnerProgress(0);
 				state.PreExecution = NEFile.PreExecute(state);
 				if (state.PreExecution != PreExecutionStop.Stop)
 					TaskRunner.Run(Execute, percent => FilesWindow.SetTaskRunnerProgress(percent));
