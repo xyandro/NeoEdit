@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using NeoEdit.Common;
@@ -12,9 +13,52 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
+		string GetDisplayName()
+		{
+			if (DisplayName != null)
+				return DisplayName;
+			if (FileName != null)
+				return Path.GetFileName(FileName);
+			return null;
+		}
+
 		static PreExecutionStop PreExecute_Window_New_NewWindow(EditorExecuteState state)
 		{
 			new NEFiles(true);
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Window_New_FromFileSelections(EditorExecuteState state)
+		{
+			var newFileDatas = state.NEFiles.ActiveFiles.AsTaskRunner().Select(neFile => (DisplayName: neFile.GetDisplayName(), Selections: neFile.GetSelectionStrings(), neFile.ContentType)).ToList();
+			var newFiles = new List<NEFile>();
+			foreach (var newFileData in newFileDatas)
+			{
+				var sb = new StringBuilder();
+				var selections = new List<Range>();
+
+				foreach (var str in newFileData.Selections)
+				{
+					selections.Add(Range.FromIndex(sb.Length, str.Length));
+					sb.Append(str);
+					if ((!str.EndsWith("\r")) && (!str.EndsWith("\n")))
+						sb.Append("\r\n");
+				}
+
+				var neFile = new NEFile(displayName: newFileData.DisplayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: newFileData.ContentType, modified: false);
+				neFile.BeginTransaction(state);
+				neFile.Selections = selections;
+				neFile.Commit();
+
+				newFiles.Add(neFile);
+			}
+
+			var neFiles = new NEFiles();
+			neFiles.BeginTransaction(state);
+			newFiles.ForEach(neFile => neFiles.AddFile(neFile));
+			neFiles.SetLayout(state.NEFiles.WindowLayout);
+			neFiles.Commit();
+
 			return PreExecutionStop.Stop;
 		}
 

@@ -561,6 +561,7 @@ namespace NeoEdit.Editor
 				case NECommand.Macro_TimeNextAction: return PreExecute_Macro_TimeNextAction(state);
 				case NECommand.Macro_Visualize: return PreExecute_Macro_Visualize(state);
 				case NECommand.Window_New_NewWindow: return PreExecute_Window_New_NewWindow(state);
+				case NECommand.Window_New_FromFileSelections: return PreExecute_Window_New_FromFileSelections(state);
 				case NECommand.Window_New_FromSelections: return PreExecute_Window_New_FromSelections(state);
 				case NECommand.Window_New_FromClipboards: return PreExecute_Window_New_FromClipboards(state);
 				case NECommand.Window_New_FromClipboardSelections: return PreExecute_Window_New_FromClipboardSelections(state);
