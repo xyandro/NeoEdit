@@ -46,3 +46,8 @@ Text->Select->Whole Word doesn't seem to work in macros (it gets the start but n
 Add d+/- operator to add/subtract dates
 Make Replace keep anchor for selections on undo
 Make network->Adapters info open a new window and properly format table
+When creating a new window make it match WindowLayout, ShowActive, and ContentType (maybe others?) of old window
+Home should sync between tabs when deciding whether to move to first text or index 0
+Find doesn't remember entire selection and remove at the same time
+When summarizing large selections screen will be zoomed to the right even if first selection is small
+Start recording/append macro shouldn't need to know which one
