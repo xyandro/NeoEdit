@@ -14,7 +14,7 @@ namespace NeoEdit.UI
 		Action startAction;
 		App(Action action)
 		{
-			INEFilesWindowStatic.RunCryptorKeyDialog = (type, encrypt) => Configure_File_Encrypt_Dialog.Run(null, type, encrypt)?.Key;
+			INEFilesWindowStatic.RunCryptorKeyDialog = (type, encrypt) => File_Advanced_Encrypt_Dialog.Run(null, type, encrypt)?.Key;
 			INEFilesWindowStatic.CreateINEFilesWindow = neFiles => Dispatcher.Invoke(() => new NEFilesWindow(neFiles));
 			INEFilesWindowStatic.ShowExceptionMessage = ex => NEFilesWindow.ShowExceptionMessage(ex);
 

@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.PreExecution;
-using NeoEdit.Editor.Searchers;
 using NeoEdit.Editor.Transactional;
 using NeoEdit.TaskRunning;
 
@@ -114,6 +113,189 @@ namespace NeoEdit.Editor
 			return builder.ToString();
 		}
 
+		void Execute_Edit_Select_All() => Selections = new List<Range> { Range.FromIndex(0, Text.Length) };
+
+		void Execute_Edit_Select_Nothing() => Selections = new List<Range>();
+
+		void Execute_Edit_Select_Join()
+		{
+			var sels = new List<Range>();
+			var start = 0;
+			while (start < Selections.Count)
+			{
+				var end = start;
+				while ((end + 1 < Selections.Count) && (Selections[end].End == Selections[end + 1].Start))
+					++end;
+				sels.Add(new Range(Selections[end].End, Selections[start].Start));
+				start = end + 1;
+			}
+			Selections = sels;
+		}
+
+		void Execute_Edit_Select_Invert()
+		{
+			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
+			var end = Selections.Select(sel => sel.Start).Concat(new[] { Text.Length });
+			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.Length))).ToList();
+		}
+
+		static Configuration_Edit_Select_Limit Configure_Edit_Select_Limit(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Select_Limit(state.NEFiles.Focused.GetVariables());
+
+		void Execute_Edit_Select_Limit()
+		{
+			var result = state.Configuration as Configuration_Edit_Select_Limit;
+			var variables = GetVariables();
+			var firstSelection = state.GetExpression(result.FirstSelection).Evaluate<int>(variables);
+			var everyNth = state.GetExpression(result.EveryNth).Evaluate<int>(variables);
+			var takeCount = state.GetExpression(result.TakeCount).Evaluate<int>(variables);
+			var numSels = state.GetExpression(result.NumSelections).Evaluate<int>(variables);
+
+			var sels = Selections.Skip(firstSelection - 1);
+			if (result.JoinSelections)
+				sels = sels.Batch(everyNth).Select(batch => batch.Take(takeCount)).Select(batch => new Range(batch.Last().End, batch.First().Start));
+			else
+				sels = sels.EveryNth(everyNth, takeCount);
+			sels = sels.Take(numSels);
+
+			Selections = sels.ToList();
+		}
+
+		void Execute_Edit_Select_Lines()
+		{
+			var lineSets = Selections.AsTaskRunner().Select(range => new { start = Text.GetPositionLine(range.Start), end = Text.GetPositionLine(Math.Max(range.Start, range.End - 1)) }).ToList();
+
+			var hasLine = new bool[Text.NumLines];
+			foreach (var set in lineSets)
+				for (var ctr = set.start; ctr <= set.end; ++ctr)
+					hasLine[ctr] = true;
+
+			var lines = new List<int>();
+			for (var line = 0; line < hasLine.Length; ++line)
+				if ((hasLine[line]) && (!Text.IsDiffGapLine(line)))
+					lines.Add(line);
+
+			Selections = lines.AsTaskRunner().Select(line => Range.FromIndex(Text.GetPosition(line, 0), Text.GetLineLength(line))).ToList();
+		}
+
+		void Execute_Edit_Select_WholeLines()
+		{
+			var sels = Selections.AsTaskRunner().Select(range =>
+			{
+				var startLine = Text.GetPositionLine(range.Start);
+				var startPosition = Text.GetPosition(startLine, 0);
+				var endLine = Text.GetPositionLine(Math.Max(range.Start, range.End - 1));
+				var endPosition = Text.GetPosition(endLine, 0) + Text.GetLineLength(endLine) + Text.GetEndingLength(endLine);
+				return new Range(endPosition, startPosition);
+			}).ToList();
+
+			Selections = sels;
+		}
+
+		void Execute_Edit_Select_EmptyNonEmpty(bool include) => Selections = Selections.Where(range => range.HasSelection != include).ToList();
+
+		static Configuration_Edit_Select_ToggleAnchor Configure_Edit_Select_ToggleAnchor(EditorExecuteState state) => new Configuration_Edit_Select_ToggleAnchor { AnchorStart = state.NEFiles.ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.Anchor > range.Cursor)) };
+
+		void Execute_Edit_Select_ToggleAnchor()
+		{
+			var anchorStart = (state.Configuration as Configuration_Edit_Select_ToggleAnchor).AnchorStart;
+			Selections = Selections.Select(range => new Range(anchorStart ? range.End : range.Start, anchorStart ? range.Start : range.End)).ToList();
+		}
+
+		void Execute_Edit_Select_Focused_First()
+		{
+			CurrentSelection = 0;
+			EnsureVisible();
+		}
+
+		void Execute_Edit_Select_Focused_NextPrevious(bool next)
+		{
+			var newSelection = CurrentSelection + (next ? 1 : -1);
+			if (newSelection < 0)
+				newSelection = Selections.Count - 1;
+			if (newSelection >= Selections.Count)
+				newSelection = 0;
+			CurrentSelection = newSelection;
+			EnsureVisible();
+		}
+
+		void Execute_Edit_Select_Focused_Single()
+		{
+			if (!Selections.Any())
+				return;
+			Selections = new List<Range> { Selections[CurrentSelection] };
+			CurrentSelection = 0;
+		}
+
+		void Execute_Edit_Select_Focused_Remove()
+		{
+			Selections = Selections.Where((sel, index) => index != CurrentSelection).ToList();
+			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
+		}
+
+		void Execute_Edit_Select_Focused_RemoveBeforeCurrent()
+		{
+			Selections = Selections.Where((sel, index) => index >= CurrentSelection).ToList();
+			CurrentSelection = 0;
+		}
+
+		void Execute_Edit_Select_Focused_RemoveAfterCurrent()
+		{
+			Selections = Selections.Where((sel, index) => index <= CurrentSelection).ToList();
+		}
+
+		void Execute_Edit_Select_Focused_CenterVertically() => EnsureVisible(true);
+
+		void Execute_Edit_Select_Focused_Center() => EnsureVisible(true, true);
+
+		void Execute_Edit_CopyCut(bool isCut)
+		{
+			var strs = GetSelectionStrings();
+
+			if (!StringsAreFiles(strs))
+				Clipboard = strs;
+			else if (isCut)
+				ClipboardCut = strs;
+			else
+				ClipboardCopy = strs;
+			if (isCut)
+				ReplaceSelections("");
+		}
+
+		static Configuration_Edit_Paste_PasteRotatePaste Configure_Edit_Paste_PasteRotatePaste(EditorExecuteState state)
+		{
+			var configuration = new Configuration_Edit_Paste_PasteRotatePaste();
+			configuration.ReplaceOneWithMany = (state.NEFiles.ActiveFiles.All(neFile => neFile.Selections.Count == 1)) && (state.NEFiles.ActiveFiles.Any(neFile => neFile.Clipboard.Count != 1));
+			return configuration;
+		}
+
+		void Execute_Edit_Paste_PasteRotatePaste(bool highlight, bool rotate)
+		{
+			var clipboardStrings = Clipboard;
+			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
+				return;
+
+			if ((state.Configuration as Configuration_Edit_Paste_PasteRotatePaste).ReplaceOneWithMany)
+			{
+				ReplaceOneWithMany(clipboardStrings, null);
+				return;
+			}
+
+			if (clipboardStrings.Count == 0)
+				throw new Exception("Nothing on clipboard!");
+
+			var repeat = Selections.Count / clipboardStrings.Count;
+			if (repeat * clipboardStrings.Count != Selections.Count)
+				throw new Exception("Number of selections must be a multiple of number of clipboards.");
+
+			if (repeat != 1)
+				if (rotate)
+					clipboardStrings = Enumerable.Repeat(clipboardStrings, repeat).SelectMany(x => x).ToList();
+				else
+					clipboardStrings = clipboardStrings.SelectMany(str => Enumerable.Repeat(str, repeat)).ToList();
+
+			ReplaceSelections(clipboardStrings, highlight);
+		}
+
 		void Execute_Edit_Undo()
 		{
 			var step = UndoRedo.GetUndo(ref fileState.undoRedo);
@@ -152,253 +334,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		void Execute_Edit_Copy_CutCopy(bool isCut)
-		{
-			var strs = GetSelectionStrings();
-
-			if (!StringsAreFiles(strs))
-				Clipboard = strs;
-			else if (isCut)
-				ClipboardCut = strs;
-			else
-				ClipboardCopy = strs;
-			if (isCut)
-				ReplaceSelections("");
-		}
-
-		static Configuration_Edit_Paste_Paste Configure_Edit_Paste_Paste(EditorExecuteState state)
-		{
-			var configuration = new Configuration_Edit_Paste_Paste();
-			configuration.ReplaceOneWithMany = (state.NEFiles.ActiveFiles.All(neFile => neFile.Selections.Count == 1)) && (state.NEFiles.ActiveFiles.Any(neFile => neFile.Clipboard.Count != 1));
-			return configuration;
-		}
-
-		void Execute_Edit_Paste_Paste(bool highlight, bool rotate)
-		{
-			var clipboardStrings = Clipboard;
-			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
-				return;
-
-			if ((state.Configuration as Configuration_Edit_Paste_Paste).ReplaceOneWithMany)
-			{
-				ReplaceOneWithMany(clipboardStrings, null);
-				return;
-			}
-
-			if (clipboardStrings.Count == 0)
-				throw new Exception("Nothing on clipboard!");
-
-			var repeat = Selections.Count / clipboardStrings.Count;
-			if (repeat * clipboardStrings.Count != Selections.Count)
-				throw new Exception("Number of selections must be a multiple of number of clipboards.");
-
-			if (repeat != 1)
-				if (rotate)
-					clipboardStrings = Enumerable.Repeat(clipboardStrings, repeat).SelectMany(x => x).ToList();
-				else
-					clipboardStrings = clipboardStrings.SelectMany(str => Enumerable.Repeat(str, repeat)).ToList();
-
-			ReplaceSelections(clipboardStrings, highlight);
-		}
-
-		static Configuration_Edit_Find_Find Configure_Edit_Find_Find(EditorExecuteState state)
-		{
-			string text = null;
-			var selectionOnly = state.NEFiles.Focused.Selections.Any(range => range.HasSelection);
-
-			if (state.NEFiles.Focused.Selections.Count == 1)
-			{
-				var sel = state.NEFiles.Focused.Selections.Single();
-				if ((selectionOnly) && (state.NEFiles.Focused.Text.GetPositionLine(sel.Cursor) == state.NEFiles.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
-				{
-					selectionOnly = false;
-					text = state.NEFiles.Focused.Text.GetString(sel);
-				}
-			}
-
-			return state.NEFiles.FilesWindow.Configure_Edit_Find_Find(text, selectionOnly, state.NEFiles.Focused.ViewBinaryCodePages, state.NEFiles.Focused.GetVariables());
-		}
-
-		void Execute_Edit_Find_Find()
-		{
-			var result = state.Configuration as Configuration_Edit_Find_Find;
-			// Determine selections to search
-			List<Range> selections;
-			var firstMatchOnly = (result.KeepMatching) || (result.RemoveMatching);
-			if (result.Type == Configuration_Edit_Find_Find.ResultType.FindNext)
-			{
-				firstMatchOnly = true;
-				selections = new List<Range>();
-				for (var ctr = 0; ctr < Selections.Count; ++ctr)
-					selections.Add(new Range(Selections[ctr].End, ctr + 1 == Selections.Count ? Text.Length : Selections[ctr + 1].Start));
-			}
-			else if (result.SelectionOnly)
-				selections = Selections.ToList();
-			else
-				selections = new List<Range> { Range.FromIndex(0, Text.Length) };
-
-			if (!selections.Any())
-				return;
-
-			// For each selection, determine strings to find. The boolean is for MatchCase, since even if MatchCase is false some should be true (INT16LE 30000 = 0u, NOT 0U)
-			List<List<(string, bool)>> stringsToFind;
-
-			if (result.IsExpression)
-			{
-				var expressionResults = GetExpressionResults<string>(result.Text, result.AlignSelections ? selections.Count : default(int?));
-				if (result.AlignSelections)
-				{
-					if (result.IsBoolean) // Either KeepMatching or RemoveMatching will also be true
-					{
-						Selections = Selections.Where((range, index) => (expressionResults[index] == "True") == result.KeepMatching).ToList();
-						return;
-					}
-
-					stringsToFind = selections.Select((x, index) => new List<(string, bool)> { (expressionResults[index], result.MatchCase) }).ToList();
-				}
-				else
-					stringsToFind = Enumerable.Repeat(expressionResults.Select(x => (x, result.MatchCase)).ToList(), selections.Count).ToList();
-			}
-			else
-				stringsToFind = Enumerable.Repeat(new List<(string, bool)> { (result.Text, result.MatchCase) }, selections.Count).ToList();
-
-			ViewBinarySearches = null;
-			// If the strings are binary convert them to all codepages
-			if (result.IsBinary)
-			{
-				ViewBinaryCodePages = result.CodePages;
-				ViewBinarySearches = stringsToFind.SelectMany().Distinct().GroupBy(x => x.Item2).Select(g => new HashSet<string>(g.Select(x => x.Item1), g.Key ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)).ToList();
-				var mapping = stringsToFind
-					.Distinct()
-					.ToDictionary(
-						list => list,
-						list => list.SelectMany(
-							item => result.CodePages
-								.Select(codePage => (Coder.TryStringToBytes(item.Item1, codePage), (item.Item2) || (Coder.AlwaysCaseSensitive(codePage))))
-								.NonNull(tuple => tuple.Item1)
-								.Select(tuple => (Coder.TryBytesToString(tuple.Item1, CodePage), tuple.Item2))
-								.NonNullOrEmpty(tuple => tuple.Item1)
-							).Distinct().ToList());
-
-				stringsToFind = stringsToFind.Select(list => mapping[list]).ToList();
-			}
-
-			// Create searchers
-			Dictionary<List<(string, bool)>, ISearcher> searchers;
-			if (result.IsRegex)
-			{
-				searchers = stringsToFind
-					.Distinct()
-					.ToDictionary(
-						list => list,
-						list => new RegexesSearcher(list.Select(x => x.Item1).ToList(), result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly, result.RegexGroups) as ISearcher);
-			}
-			else
-			{
-				searchers = stringsToFind
-					.Distinct()
-					.ToDictionary(
-						list => list,
-						list =>
-						{
-							if (list.Count == 1)
-								return new StringSearcher(list[0].Item1, result.WholeWords, list[0].Item2, result.SkipSpace, result.EntireSelection, firstMatchOnly) as ISearcher;
-							return new StringsSearcher(list, result.WholeWords, result.EntireSelection, firstMatchOnly);
-						});
-			}
-
-			// Perform search
-			var results = selections.AsTaskRunner().Select((range, index) => searchers[stringsToFind[index]].Find(Text.GetString(range), range.Start)).ToList();
-
-			switch (result.Type)
-			{
-				case Configuration_Edit_Find_Find.ResultType.CopyCount:
-					Clipboard = results.Select(list => list.Count.ToString()).ToList();
-					break;
-				case Configuration_Edit_Find_Find.ResultType.FindNext:
-					var newSels = new List<Range>();
-					for (var ctr = 0; ctr < Selections.Count; ++ctr)
-					{
-						int endPos;
-						if (results[ctr].Count >= 1)
-							endPos = results[ctr][0].End;
-						else if (ctr + 1 < Selections.Count)
-							endPos = Selections[ctr + 1].Start;
-						else
-							endPos = Text.Length;
-						newSels.Add(new Range(endPos, Selections[ctr].Start));
-					}
-					Selections = newSels;
-					break;
-				case Configuration_Edit_Find_Find.ResultType.FindAll:
-					if ((result.KeepMatching) || (result.RemoveMatching))
-						Selections = selections.Where((range, index) => results[index].Any() == result.KeepMatching).ToList();
-					else
-						Selections = results.SelectMany().ToList();
-					break;
-			}
-		}
-
-		static Configuration_Edit_Find_RegexReplace Configure_Edit_Find_RegexReplace(EditorExecuteState state)
-		{
-			string text = null;
-			var selectionOnly = state.NEFiles.Focused.Selections.Any(range => range.HasSelection);
-
-			if (state.NEFiles.Focused.Selections.Count == 1)
-			{
-				var sel = state.NEFiles.Focused.Selections.Single();
-				if ((selectionOnly) && (state.NEFiles.Focused.Text.GetPositionLine(sel.Cursor) == state.NEFiles.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
-				{
-					selectionOnly = false;
-					text = state.NEFiles.Focused.Text.GetString(sel);
-				}
-			}
-
-			return state.NEFiles.FilesWindow.Configure_Edit_Find_RegexReplace(text, selectionOnly);
-		}
-
-		void Execute_Edit_Find_RegexReplace()
-		{
-			var result = state.Configuration as Configuration_Edit_Find_RegexReplace;
-			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { Range.FromIndex(0, Text.Length) };
-			var searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, result.EntireSelection);
-			var sels = regions.AsTaskRunner().SelectMany(region => searcher.Find(Text.GetString(region), region.Start)).ToList();
-			Selections = sels;
-			ReplaceSelections(Selections.AsTaskRunner().Select(range => searcher.regexes[0].Replace(Text.GetString(range), result.Replace)).ToList());
-		}
-
-		static Configuration_Edit_Expression_Expression Configure_Edit_Expression_Expression(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Expression_Expression(state.NEFiles.Focused.GetVariables());
-
-		void Execute_Edit_Expression_Expression()
-		{
-			var result = state.Configuration as Configuration_Edit_Expression_Expression;
-			switch (result.Action)
-			{
-				case Configuration_Edit_Expression_Expression.Actions.Evaluate: ReplaceSelections(GetExpressionResults<string>(result.Expression, Selections.Count())); break;
-				case Configuration_Edit_Expression_Expression.Actions.Copy: Clipboard = GetExpressionResults<string>(result.Expression); break;
-			}
-		}
-
-		void Execute_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetExpressionResults<string>("Eval(x)", Selections.Count()));
-
-		static Configuration_Edit_Rotate Configure_Edit_Rotate(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Rotate(state.NEFiles.Focused.GetVariables());
-
-		void Execute_Edit_Rotate()
-		{
-			var result = state.Configuration as Configuration_Edit_Rotate;
-			var count = state.GetExpression(result.Count).Evaluate<int>(GetVariables());
-
-			var strs = GetSelectionStrings().ToList();
-			if (count < 0)
-				count = -count % strs.Count;
-			else
-				count = strs.Count - count % strs.Count;
-			strs.AddRange(strs.Take(count).ToList());
-			strs.RemoveRange(0, count);
-			ReplaceSelections(strs);
-		}
-
-		static Configuration_Edit_Repeat Configure_Edit_Repeat(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Repeat(state.NEFiles.Focused.Selections.Count == 1, state.NEFiles.Focused.GetVariables());
+		static Configuration_Edit_Repeat Configure_Edit_Repeat(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Repeat(state.NEFiles.Focused.Selections.Count == 1, state.NEFiles.Focused.GetVariables());
 
 		void Execute_Edit_Repeat()
 		{
@@ -422,141 +358,36 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Edit_Escape_Markup() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.HtmlEncode(Text.GetString(range))).ToList());
+		static Configuration_Edit_Rotate Configure_Edit_Rotate(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Rotate(state.NEFiles.Focused.GetVariables());
 
-		void Execute_Edit_Escape_RegEx() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Regex.Escape(Text.GetString(range))).ToList());
-
-		void Execute_Edit_Escape_URL() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.UrlEncode(Text.GetString(range))).ToList());
-
-		void Execute_Edit_Unescape_Markup() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.HtmlDecode(Text.GetString(range))).ToList());
-
-		void Execute_Edit_Unescape_RegEx() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Regex.Unescape(Text.GetString(range))).ToList());
-
-		void Execute_Edit_Unescape_URL() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
-
-		static Configuration_Edit_Data_Hash Configure_Edit_Data_Hash(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Data_Hash(state.NEFiles.Focused.CodePage);
-
-		void Execute_Edit_Data_Hash()
+		void Execute_Edit_Rotate()
 		{
-			var result = state.Configuration as Configuration_Edit_Data_Hash;
-			var strs = GetSelectionStrings();
-			if (!CheckCanEncode(strs, result.CodePage))
-				return;
-			ReplaceSelections(strs.AsTaskRunner().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
+			var result = state.Configuration as Configuration_Edit_Rotate;
+			var count = state.GetExpression(result.Count).Evaluate<int>(GetVariables());
+
+			var strs = GetSelectionStrings().ToList();
+			if (count < 0)
+				count = -count % strs.Count;
+			else
+				count = strs.Count - count % strs.Count;
+			strs.AddRange(strs.Take(count).ToList());
+			strs.RemoveRange(0, count);
+			ReplaceSelections(strs);
 		}
 
-		static Configuration_Edit_Data_Compress Configure_Edit_Data_Compress(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Data_Compress(state.NEFiles.Focused.CodePage, true);
+		static Configuration_Edit_Expression_Expression Configure_Edit_Expression_Expression(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Expression_Expression(state.NEFiles.Focused.GetVariables());
 
-		void Execute_Edit_Data_Compress()
+		void Execute_Edit_Expression_Expression()
 		{
-			var result = state.Configuration as Configuration_Edit_Data_Compress;
-			var strs = GetSelectionStrings();
-			if (!CheckCanEncode(strs, result.InputCodePage))
-				return;
-			var compressed = strs.AsTaskRunner().Select(str => Compressor.Compress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
-			if (!CheckCanEncode(compressed, result.OutputCodePage))
-				return;
-			ReplaceSelections(compressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
-		}
-
-		static Configuration_Edit_Data_Compress Configure_Edit_Data_Decompress(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Data_Compress(state.NEFiles.Focused.CodePage, false);
-
-		void Execute_Edit_Data_Decompress()
-		{
-			var result = state.Configuration as Configuration_Edit_Data_Compress;
-			var strs = GetSelectionStrings();
-			if (!CheckCanEncode(strs, result.InputCodePage))
-				return;
-			var decompressed = strs.AsTaskRunner().Select(str => Compressor.Decompress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
-			if (!CheckCanEncode(decompressed, result.OutputCodePage))
-				return;
-			ReplaceSelections(decompressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
-		}
-
-		static Configuration_Edit_Data_Encrypt Configure_Edit_Data_Encrypt(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Data_Encrypt(state.NEFiles.Focused.CodePage, true);
-
-		void Execute_Edit_Data_Encrypt()
-		{
-			var result = state.Configuration as Configuration_Edit_Data_Encrypt;
-			var strs = GetSelectionStrings();
-			if (!CheckCanEncode(strs, result.InputCodePage))
-				return;
-			var encrypted = strs.AsTaskRunner().Select(str => Cryptor.Encrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
-			if (!CheckCanEncode(encrypted, result.OutputCodePage))
-				return;
-			ReplaceSelections(encrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
-		}
-
-		static Configuration_Edit_Data_Encrypt Configure_Edit_Data_Decrypt(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Data_Encrypt(state.NEFiles.Focused.CodePage, false);
-
-		void Execute_Edit_Data_Decrypt()
-		{
-			var result = state.Configuration as Configuration_Edit_Data_Encrypt;
-			var strs = GetSelectionStrings();
-			if (!CheckCanEncode(strs, result.InputCodePage))
-				return;
-			var decrypted = strs.AsTaskRunner().Select(str => Cryptor.Decrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
-			if (!CheckCanEncode(decrypted, result.OutputCodePage))
-				return;
-			ReplaceSelections(decrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
-		}
-
-		static Configuration_Edit_Data_Sign Configure_Edit_Data_Sign(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Data_Sign(state.NEFiles.Focused.CodePage);
-
-		void Execute_Edit_Data_Sign()
-		{
-			var result = state.Configuration as Configuration_Edit_Data_Sign;
-			var strs = GetSelectionStrings();
-			if (!CheckCanEncode(strs, result.CodePage))
-				return;
-			ReplaceSelections(strs.AsTaskRunner().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
-		}
-
-		static Configuration_Edit_Sort Configure_Edit_Sort(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Sort();
-
-		void Execute_Edit_Sort()
-		{
-			var result = state.Configuration as Configuration_Edit_Sort;
-			var regions = GetSortSource(result.SortScope, result.UseRegion);
-			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
-			if (regions.Count != ordering.Count)
-				throw new Exception("Ordering misaligned");
-
-			var newSelections = Selections.ToList();
-			var orderedRegions = ordering.Select(index => regions[index]).ToList();
-			var orderedRegionText = orderedRegions.Select(range => Text.GetString(range)).ToList();
-
-			Replace(regions, orderedRegionText);
-
-			var newRegions = regions.ToList();
-			var add = 0;
-			for (var ctr = 0; ctr < newSelections.Count; ++ctr)
+			var result = state.Configuration as Configuration_Edit_Expression_Expression;
+			switch (result.Action)
 			{
-				var orderCtr = ordering[ctr];
-				newSelections[orderCtr] = new Range(newSelections[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, newSelections[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add);
-				newRegions[orderCtr] = new Range(newRegions[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, newRegions[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add);
-				add += orderedRegionText[ctr].Length - regions[ctr].Length;
+				case Configuration_Edit_Expression_Expression.Actions.Evaluate: ReplaceSelections(GetExpressionResults<string>(result.Expression, Selections.Count())); break;
+				case Configuration_Edit_Expression_Expression.Actions.Copy: Clipboard = GetExpressionResults<string>(result.Expression); break;
 			}
-			newSelections = ordering.Select(num => newSelections[num]).ToList();
-
-			Selections = newSelections;
-			if (result.SortScope == SortScope.Regions)
-				SetRegions(result.UseRegion, newRegions);
 		}
 
-		static Configuration_Edit_Convert Configure_Edit_Convert(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Convert();
-
-		void Execute_Edit_Convert()
-		{
-			var result = state.Configuration as Configuration_Edit_Convert;
-			var strs = GetSelectionStrings();
-			if (!CheckCanEncode(strs, result.InputType))
-				return;
-			var bytes = strs.AsTaskRunner().Select(str => Coder.StringToBytes(str, result.InputType, result.InputBOM)).ToList();
-			if (!CheckCanEncode(bytes, result.OutputType))
-				return;
-			ReplaceSelections(bytes.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
-		}
+		void Execute_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetExpressionResults<string>("Eval(x)", Selections.Count()));
 
 		void Execute_Edit_Navigate_WordLeftRight(bool next)
 		{
@@ -644,9 +475,133 @@ namespace NeoEdit.Editor
 			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, state.ShiftDown)).ToList();
 		}
 
-		void Execute_Edit_Navigate_JumpBy(JumpByType jumpBy) => JumpBy = jumpBy;
+		void Execute_Edit_Navigate_JumpBy_Various(JumpByType jumpBy) => JumpBy = jumpBy;
 
-		static PreExecutionStop PreExecute_Edit_EscapeClearsSelections(EditorExecuteState state)
+		void Execute_Edit_RepeatCount()
+		{
+			var strs = GetSelectionStrings();
+			var counts = strs.GroupBy(str => str).ToDictionary(group => group.Key, group => group.Count());
+			ReplaceSelections(strs.Select(str => counts[str].ToString()).ToList());
+		}
+
+		void Execute_Edit_RepeatIndex()
+		{
+			var counts = new Dictionary<string, int>();
+			var strs = GetSelectionStrings();
+			var newStrs = new List<string>();
+			foreach (var str in strs)
+			{
+				if (!counts.ContainsKey(str))
+					counts[str] = 0;
+				++counts[str];
+				newStrs.Add(counts[str].ToString());
+			}
+			ReplaceSelections(newStrs);
+		}
+
+		static Configuration_Edit_Advanced_Convert Configure_Edit_Advanced_Convert(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Advanced_Convert();
+
+		void Execute_Edit_Advanced_Convert()
+		{
+			var result = state.Configuration as Configuration_Edit_Advanced_Convert;
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.InputType))
+				return;
+			var bytes = strs.AsTaskRunner().Select(str => Coder.StringToBytes(str, result.InputType, result.InputBOM)).ToList();
+			if (!CheckCanEncode(bytes, result.OutputType))
+				return;
+			ReplaceSelections(bytes.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
+		}
+
+		static Configuration_Edit_Advanced_Hash Configure_Edit_Advanced_Hash(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Advanced_Hash(state.NEFiles.Focused.CodePage);
+
+		void Execute_Edit_Advanced_Hash()
+		{
+			var result = state.Configuration as Configuration_Edit_Advanced_Hash;
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.CodePage))
+				return;
+			ReplaceSelections(strs.AsTaskRunner().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
+		}
+
+		static Configuration_Edit_Advanced_CompressDecompress Configure_Edit_Advanced_Compress(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Advanced_CompressDecompress(state.NEFiles.Focused.CodePage, true);
+
+		void Execute_Edit_Advanced_Compress()
+		{
+			var result = state.Configuration as Configuration_Edit_Advanced_CompressDecompress;
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.InputCodePage))
+				return;
+			var compressed = strs.AsTaskRunner().Select(str => Compressor.Compress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
+			if (!CheckCanEncode(compressed, result.OutputCodePage))
+				return;
+			ReplaceSelections(compressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+		}
+
+		static Configuration_Edit_Advanced_CompressDecompress Configure_Edit_Advanced_Decompress(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Advanced_CompressDecompress(state.NEFiles.Focused.CodePage, false);
+
+		void Execute_Edit_Advanced_Decompress()
+		{
+			var result = state.Configuration as Configuration_Edit_Advanced_CompressDecompress;
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.InputCodePage))
+				return;
+			var decompressed = strs.AsTaskRunner().Select(str => Compressor.Decompress(Coder.StringToBytes(str, result.InputCodePage), result.CompressorType)).ToList();
+			if (!CheckCanEncode(decompressed, result.OutputCodePage))
+				return;
+			ReplaceSelections(decompressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+		}
+
+		static Configuration_Edit_Advanced_EncryptDecrypt Configure_Edit_Advanced_Encrypt(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Advanced_EncryptDecrypt(state.NEFiles.Focused.CodePage, true);
+
+		void Execute_Edit_Advanced_Encrypt()
+		{
+			var result = state.Configuration as Configuration_Edit_Advanced_EncryptDecrypt;
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.InputCodePage))
+				return;
+			var encrypted = strs.AsTaskRunner().Select(str => Cryptor.Encrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
+			if (!CheckCanEncode(encrypted, result.OutputCodePage))
+				return;
+			ReplaceSelections(encrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+		}
+
+		static Configuration_Edit_Advanced_EncryptDecrypt Configure_Edit_Advanced_Decrypt(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Advanced_EncryptDecrypt(state.NEFiles.Focused.CodePage, false);
+
+		void Execute_Edit_Advanced_Decrypt()
+		{
+			var result = state.Configuration as Configuration_Edit_Advanced_EncryptDecrypt;
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.InputCodePage))
+				return;
+			var decrypted = strs.AsTaskRunner().Select(str => Cryptor.Decrypt(Coder.StringToBytes(str, result.InputCodePage), result.CryptorType, result.Key)).ToList();
+			if (!CheckCanEncode(decrypted, result.OutputCodePage))
+				return;
+			ReplaceSelections(decrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
+		}
+
+		static Configuration_Edit_Advanced_Sign Configure_Edit_Advanced_Sign(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_Advanced_Sign(state.NEFiles.Focused.CodePage);
+
+		void Execute_Edit_Advanced_Sign()
+		{
+			var result = state.Configuration as Configuration_Edit_Advanced_Sign;
+			var strs = GetSelectionStrings();
+			if (!CheckCanEncode(strs, result.CodePage))
+				return;
+			ReplaceSelections(strs.AsTaskRunner().Select(str => Cryptor.Sign(Coder.StringToBytes(str, result.CodePage), result.CryptorType, result.Key, result.Hash)).ToList());
+		}
+
+		void Execute_Edit_Advanced_RunCommand_Parallel()
+		{
+			var workingDirectory = Path.GetDirectoryName(FileName ?? "");
+			ReplaceSelections(Selections.AsTaskRunner().Select(range => RunCommand(Text.GetString(range), workingDirectory)).ToList());
+		}
+
+		void Execute_Edit_Advanced_RunCommand_Sequential() => ReplaceSelections(GetSelectionStrings().Select(str => RunCommand(str, Path.GetDirectoryName(FileName ?? ""))).ToList());
+
+		void Execute_Edit_Advanced_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
+
+		static PreExecutionStop PreExecute_Edit_Advanced_EscapeClearsSelections(EditorExecuteState state)
 		{
 			Settings.EscapeClearsSelections = state.MultiStatus != true;
 			return PreExecutionStop.Stop;

@@ -13,6 +13,62 @@ namespace NeoEdit.Editor
 	{
 		static string QuickMacro(int num) => $"QuickText{num}.xml";
 
+		static PreExecutionStop PreExecute_Macro_Play_Quick(EditorExecuteState state, int quickNum)
+		{
+			state.NEFiles.PlayMacro(Macro.Load(state.NEFiles.FilesWindow, QuickMacro(quickNum), true));
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Macro_Play_Play(EditorExecuteState state)
+		{
+			state.NEFiles.PlayMacro(Macro.Load(state.NEFiles.FilesWindow));
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Macro_Play_Repeat(EditorExecuteState state)
+		{
+			var result = state.NEFiles.FilesWindow.RunDialog_PreExecute_Macro_Play_Repeat(() => Macro.ChooseMacro(state.NEFiles.FilesWindow));
+
+			var macro = Macro.Load(state.NEFiles.FilesWindow, result.Macro);
+			var expression = new NEExpression(result.Expression);
+			var count = int.MaxValue;
+			if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Number)
+				count = expression.Evaluate<int>();
+
+			Action startNext = null;
+			startNext = () =>
+			{
+				if ((state.NEFiles.Focused == null) || (--count < 0))
+					return;
+
+				if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Condition)
+					if (!expression.Evaluate<bool>(state.NEFiles.Focused.GetVariables()))
+						return;
+
+				state.NEFiles.PlayMacro(macro, startNext);
+			};
+			startNext();
+
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Macro_Play_PlayOnCopiedFiles(EditorExecuteState state)
+		{
+			var files = new Queue<string>(NEClipboard.Current.Strings);
+			var macro = Macro.Load(state.NEFiles.FilesWindow);
+			Action startNext = null;
+			startNext = () =>
+			{
+				if (!files.Any())
+					return;
+				state.NEFiles.AddFile(new NEFile(files.Dequeue()));
+				state.NEFiles.PlayMacro(macro, startNext);
+			};
+			startNext();
+
+			return PreExecutionStop.Stop;
+		}
+
 		static PreExecutionStop PreExecute_Macro_Record_Quick(EditorExecuteState state, int quickNum)
 		{
 			if (state.NEFiles.recordingMacro == null)
@@ -61,71 +117,9 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Play_Quick(EditorExecuteState state, int quickNum)
-		{
-			state.NEFiles.PlayMacro(Macro.Load(state.NEFiles.FilesWindow, QuickMacro(quickNum), true));
-			return PreExecutionStop.Stop;
-		}
-
-		static PreExecutionStop PreExecute_Macro_Play_Play(EditorExecuteState state)
-		{
-			state.NEFiles.PlayMacro(Macro.Load(state.NEFiles.FilesWindow));
-			return PreExecutionStop.Stop;
-		}
-
-		static PreExecutionStop PreExecute_Macro_Play_Repeat(EditorExecuteState state)
-		{
-			var result = state.NEFiles.FilesWindow.RunMacroPlayRepeatDialog(() => Macro.ChooseMacro(state.NEFiles.FilesWindow));
-
-			var macro = Macro.Load(state.NEFiles.FilesWindow, result.Macro);
-			var expression = new NEExpression(result.Expression);
-			var count = int.MaxValue;
-			if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Number)
-				count = expression.Evaluate<int>();
-
-			Action startNext = null;
-			startNext = () =>
-			{
-				if ((state.NEFiles.Focused == null) || (--count < 0))
-					return;
-
-				if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Condition)
-					if (!expression.Evaluate<bool>(state.NEFiles.Focused.GetVariables()))
-						return;
-
-				state.NEFiles.PlayMacro(macro, startNext);
-			};
-			startNext();
-
-			return PreExecutionStop.Stop;
-		}
-
-		static PreExecutionStop PreExecute_Macro_Play_PlayOnCopiedFiles(EditorExecuteState state)
-		{
-			var files = new Queue<string>(NEClipboard.Current.Strings);
-			var macro = Macro.Load(state.NEFiles.FilesWindow);
-			Action startNext = null;
-			startNext = () =>
-			{
-				if (!files.Any())
-					return;
-				state.NEFiles.AddFile(new NEFile(files.Dequeue()));
-				state.NEFiles.PlayMacro(macro, startNext);
-			};
-			startNext();
-
-			return PreExecutionStop.Stop;
-		}
-
 		static PreExecutionStop PreExecute_Macro_Open_Quick(EditorExecuteState state, int quickNum)
 		{
 			state.NEFiles.AddFile(new NEFile(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
-			return PreExecutionStop.Stop;
-		}
-
-		static PreExecutionStop PreExecute_Macro_TimeNextAction(EditorExecuteState state)
-		{
-			state.NEFiles.timeNextAction = true;
 			return PreExecutionStop.Stop;
 		}
 

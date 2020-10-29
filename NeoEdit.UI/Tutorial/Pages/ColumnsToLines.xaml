@@ -16,7 +16,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/>. In the dialog that comes up, type a comma and a space, then hit Enter. This selects every occurrence of a comma and space.
+					Click <tutorial:TutorialCommand CommandEnum="Text_Find_Find"/>. In the dialog that comes up, type a comma and a space, then hit Enter. This selects every occurrence of a comma and space.
 				</Paragraph>
 				<Paragraph>
 					Whatever you do happens in each selection.
@@ -29,7 +29,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_All"/> .  This replaces all current selections with one that has the entire file.
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_All"/> .  This replaces all current selections with one that has the entire file.
 				</Paragraph>
 			</ListItem>
 		</List>

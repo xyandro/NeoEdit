@@ -35,34 +35,6 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		bool TextSearchFile(string fileName, ISearcher searcher, Action<long> progress)
-		{
-			try
-			{
-				if (Directory.Exists(fileName))
-					return false;
-
-				byte[] buffer;
-				using (var input = File.OpenRead(fileName))
-				{
-					buffer = new byte[input.Length];
-					var read = 0;
-					while (read < input.Length)
-					{
-						var block = input.Read(buffer, read, (int)(input.Length - read));
-						progress(input.Position);
-						read += block;
-					}
-				}
-
-				return searcher.Find(Coder.BytesToString(buffer, Coder.CodePage.AutoByBOM, true)).Any();
-			}
-			catch (Exception ex) when (!(ex is OperationCanceledException))
-			{
-				return QueryUser(nameof(TextSearchFile), $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.None);
-			}
-		}
-
 		static void CombineFiles(string outputFile, List<string> inputFiles, Action<long> progress)
 		{
 			var total = inputFiles.Sum(file => new FileInfo(file).Length);
@@ -344,203 +316,103 @@ namespace NeoEdit.Editor
 					}
 		}
 
-		void Execute_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(Text.GetString(range))).ToList());
-
-		static Configuration_Files_Name_MakeAbsolute Configure_Files_Name_MakeAbsolute(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Name_MakeAbsolute(state.NEFiles.Focused.GetVariables(), true, true);
-
-		void Execute_Files_Name_MakeAbsolute()
+		bool TextSearchFile(string fileName, ISearcher searcher, Action<long> progress)
 		{
-			var result = state.Configuration as Configuration_Files_Name_MakeAbsolute;
-			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
-			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == Configuration_Files_Name_MakeAbsolute.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
-		}
-
-		static Configuration_Files_Name_MakeAbsolute Configure_Files_Name_MakeRelative(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Name_MakeAbsolute(state.NEFiles.Focused.GetVariables(), false, true);
-
-		void Execute_Files_Name_MakeRelative()
-		{
-			var result = state.Configuration as Configuration_Files_Name_MakeAbsolute;
-			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
-			if (result.Type == Configuration_Files_Name_MakeAbsolute.ResultType.File)
-				results = results.Select(str => Path.GetDirectoryName(str)).ToList();
-			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
-		}
-
-		void Execute_Files_Name_Sanitize() => ReplaceSelections(Selections.Select(range => SanitizeFileName(Text.GetString(range))).ToList());
-
-		void Execute_Files_Get_Size() => ReplaceSelections(RelativeSelectedFiles().Select(file => GetSize(file)).ToList());
-
-		void Execute_Files_Get_Time(TimestampType timestampType)
-		{
-			Func<FileSystemInfo, DateTime> getTime;
-			switch (timestampType)
+			try
 			{
-				case TimestampType.Write: getTime = fi => fi.LastWriteTime; break;
-				case TimestampType.Access: getTime = fi => fi.LastAccessTime; break;
-				case TimestampType.Create: getTime = fi => fi.CreationTime; break;
-				default: throw new Exception("Invalid TimestampType");
+				if (Directory.Exists(fileName))
+					return false;
+
+				byte[] buffer;
+				using (var input = File.OpenRead(fileName))
+				{
+					buffer = new byte[input.Length];
+					var read = 0;
+					while (read < input.Length)
+					{
+						var block = input.Read(buffer, read, (int)(input.Length - read));
+						progress(input.Position);
+						read += block;
+					}
+				}
+
+				return searcher.Find(Coder.BytesToString(buffer, Coder.CodePage.AutoByBOM, true)).Any();
+			}
+			catch (Exception ex) when (!(ex is OperationCanceledException))
+			{
+				return QueryUser(nameof(TextSearchFile), $"Unable to read {fileName}.\n\n{ex.Message}\n\nLeave selected?", MessageOptions.None);
+			}
+		}
+
+		void Execute_Files_Select_Files() => Selections = Selections.AsTaskRunner().Where(range => File.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList();
+
+		void Execute_Files_Select_Directories() => Selections = Selections.AsTaskRunner().Where(range => Directory.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList();
+
+		void Execute_Files_Select_ExistingNonExisting(bool existing) => Selections = Selections.AsTaskRunner().Where(range => Helpers.FileOrDirectoryExists(FileName.RelativeChild(Text.GetString(range))) == existing).ToList();
+
+		void Execute_Files_Select_Name_Various(GetPathType type) => Selections = Selections.AsTaskRunner().Select(range => GetPathRange(type, range)).ToList();
+
+		void Execute_Files_Select_Name_Next()
+		{
+			var maxPosition = Text.Length;
+			var invalidChars = Path.GetInvalidFileNameChars();
+
+			var sels = new List<Range>();
+			foreach (var range in Selections)
+			{
+				var endPosition = range.End;
+				while ((endPosition < maxPosition) && (((endPosition - range.Start == 1) && (Text[endPosition] == ':')) || ((endPosition - range.End == 0) && ((Text[endPosition] == '\\') || (Text[endPosition] == '/'))) || (!invalidChars.Contains(Text[endPosition]))))
+					++endPosition;
+
+				sels.Add(new Range(endPosition, range.Start));
 			}
 
-			var files = RelativeSelectedFiles();
-			var strs = new List<string>();
+			Selections = sels;
+		}
+
+		void Execute_Files_Select_Name_CommonAncestor()
+		{
+			var strs = Selections.AsTaskRunner().Select(range => Text.GetString(range) + "\\").ToList();
+			var depth = 0;
+			if (strs.Any())
+			{
+				var length = strs[0].Length;
+				strs.Skip(1).ForEach(str => FindCommonLength(strs[0], str, ref length));
+				depth = strs[0].Substring(0, length).Count(c => c == '\\');
+			}
+			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList();
+		}
+
+		void Execute_Files_Select_Name_MatchDepth()
+		{
+			var strs = GetSelectionStrings();
+			var minDepth = strs.Select(str => str.Count(c => c == '\\') + 1).DefaultIfEmpty(0).Min();
+			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], minDepth))).ToList();
+		}
+
+		void Execute_Files_Select_RootsNonRoots(bool include)
+		{
+			var sels = Selections.Select(range => new { range = range, str = Text.GetString(range).ToLower().Replace(@"\\", @"\").TrimEnd('\\') + @"\" }).ToList();
+			var files = sels.Select(obj => obj.str).Distinct().OrderBy().ToList();
+			var roots = new HashSet<string>();
+			string root = null;
 			foreach (var file in files)
 			{
-				if (File.Exists(file))
-					strs.Add(getTime(new FileInfo(file)).ToString("yyyy-MM-dd HH:mm:ss.fff"));
-				else if (Directory.Exists(file))
-					strs.Add(getTime(new DirectoryInfo(file)).ToString("yyyy-MM-dd HH:mm:ss.fff"));
-				else
-					strs.Add("INVALID");
+				if ((root != null) && (file.StartsWith(root)))
+					continue;
+
+				roots.Add(file);
+				root = file;
 			}
-			ReplaceSelections(strs);
+
+			Selections = sels.AsTaskRunner().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList();
 		}
 
-		void Execute_Files_Get_Attributes()
+		static Configuration_Files_Select_ByContent Configure_Files_Select_ByContent(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Select_ByContent(state.NEFiles.Focused.GetVariables());
+
+		void Execute_Files_Select_ByContent()
 		{
-			var files = RelativeSelectedFiles();
-			var strs = new List<string>();
-			foreach (var file in files)
-			{
-				if (File.Exists(file))
-				{
-					var fileinfo = new FileInfo(file);
-					strs.Add(fileinfo.Attributes.ToString());
-				}
-				else if (Directory.Exists(file))
-				{
-					var dirinfo = new DirectoryInfo(file);
-					strs.Add(dirinfo.Attributes.ToString());
-				}
-				else
-					strs.Add("INVALID");
-			}
-			ReplaceSelections(strs);
-		}
-
-		void Execute_Files_Get_Version_File() => ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => FileVersionInfo.GetVersionInfo(file).FileVersion).ToList());
-
-		void Execute_Files_Get_Version_Product() => ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => FileVersionInfo.GetVersionInfo(file).ProductVersion).ToList());
-
-		void Execute_Files_Get_Version_Assembly() => ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => AssemblyName.GetAssemblyName(file).Version.ToString()).ToList());
-
-		void Execute_Files_Get_ChildrenDescendants(bool recursive)
-		{
-			var dirs = RelativeSelectedFiles();
-			if (dirs.Any(dir => !Directory.Exists(dir)))
-				throw new ArgumentException("Path must be of existing directories");
-
-			var errors = new List<string>();
-			ReplaceSelections(dirs.AsTaskRunner().Select((dir, index, progress) => string.Join(Text.DefaultEnding, GetDirectoryContents(dir, recursive, errors, progress)), x => 100000).ToList());
-			if (errors.Any())
-				NEFiles.FilesWindow.RunMessageDialog("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
-		}
-
-		static PreExecution_Files_GetSelect_VersionControlStatus PreExecute_Files_GetSelect_VersionControlStatus(EditorExecuteState state)
-		{
-			var files = state.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(file => file.GetSelectionStrings()).Distinct().ToList();
-			var statuses = Versioner.GetStatuses(files);
-			return new PreExecution_Files_GetSelect_VersionControlStatus { Statuses = Enumerable.Range(0, files.Count).ToDictionary(index => files[index], index => statuses[index]) };
-		}
-
-		void Execute_Files_Get_VersionControlStatus()
-		{
-			var preExecution = state.PreExecution as PreExecution_Files_GetSelect_VersionControlStatus;
-			ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(x => preExecution.Statuses[x].ToString()).ToList());
-		}
-
-		static Configuration_Files_Set_Size Configure_Files_Set_Size(EditorExecuteState state)
-		{
-			var vars = state.NEFiles.Focused.GetVariables();
-			var sizes = state.NEFiles.Focused.RelativeSelectedFiles().AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
-			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			return state.NEFiles.FilesWindow.Configure_Files_Set_Size(vars);
-		}
-
-		void Execute_Files_Set_Size()
-		{
-			var result = state.Configuration as Configuration_Files_Set_Size;
-			var vars = GetVariables();
-			var files = RelativeSelectedFiles();
-			var sizes = files.AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
-			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			var results = state.GetExpression(result.Expression).EvaluateList<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
-			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
-		}
-
-		static Configuration_Files_Set_Time Configure_Files_Set_Time(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Set_Time(state.NEFiles.Focused.GetVariables(), $@"""{DateTime.Now}""");
-
-		void Execute_Files_Set_Time(TimestampType type)
-		{
-			var result = state.Configuration as Configuration_Files_Set_Time;
-			var dateTimes = GetExpressionResults<DateTime>(result.Expression, Selections.Count());
-			var files = RelativeSelectedFiles();
-			for (var ctr = 0; ctr < files.Count; ++ctr)
-			{
-				var dateTime = dateTimes[ctr];
-				var file = files[ctr];
-				if (!Helpers.FileOrDirectoryExists(file))
-					File.WriteAllBytes(file, new byte[0]);
-
-				if (File.Exists(file))
-				{
-					var info = new FileInfo(file);
-					if (type.HasFlag(TimestampType.Write))
-						info.LastWriteTime = dateTime;
-					if (type.HasFlag(TimestampType.Access))
-						info.LastAccessTime = dateTime;
-					if (type.HasFlag(TimestampType.Create))
-						info.CreationTime = dateTime;
-				}
-				else if (Directory.Exists(file))
-				{
-					var info = new DirectoryInfo(file);
-					if (type.HasFlag(TimestampType.Write))
-						info.LastWriteTime = dateTime;
-					if (type.HasFlag(TimestampType.Access))
-						info.LastAccessTime = dateTime;
-					if (type.HasFlag(TimestampType.Create))
-						info.CreationTime = dateTime;
-				}
-			}
-		}
-
-		static Configuration_Files_Set_Attributes Configure_Files_Set_Attributes(EditorExecuteState state)
-		{
-			var filesAttrs = state.NEFiles.Focused.Selections.Select(range => state.NEFiles.Focused.Text.GetString(range)).Select(file => new DirectoryInfo(file).Attributes).ToList();
-			var availAttrs = Helpers.GetValues<FileAttributes>();
-			var current = new Dictionary<FileAttributes, bool?>();
-			foreach (var fileAttrs in filesAttrs)
-				foreach (var availAttr in availAttrs)
-				{
-					var fileHasAttr = fileAttrs.HasFlag(availAttr);
-					if (!current.ContainsKey(availAttr))
-						current[availAttr] = fileHasAttr;
-					if (current[availAttr] != fileHasAttr)
-						current[availAttr] = null;
-				}
-
-			return state.NEFiles.FilesWindow.Configure_Files_Set_Attributes(current);
-		}
-
-		void Execute_Files_Set_Attributes()
-		{
-			var result = state.Configuration as Configuration_Files_Set_Attributes;
-			FileAttributes andMask = 0, orMask = 0;
-			foreach (var pair in result.Attributes)
-			{
-				andMask |= pair.Key;
-				if ((pair.Value.HasValue) && (pair.Value.Value))
-					orMask |= pair.Key;
-			}
-			foreach (var file in Selections.Select(range => Text.GetString(range)))
-				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
-		}
-
-		static Configuration_Files_Find Configure_Files_Find(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Find(state.NEFiles.Focused.GetVariables());
-
-		void Execute_Files_Find()
-		{
-			var result = state.Configuration as Configuration_Files_Find;
+			var result = state.Configuration as Configuration_Files_Select_ByContent;
 			// For each file, determine strings to find
 			List<List<string>> stringsToFind;
 
@@ -607,188 +479,29 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static Configuration_Files_Insert Configure_Files_Insert(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Insert();
+		static Configuration_Files_Select_BySourceControlStatus Configure_Files_Select_BySourceControlStatus(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Select_BySourceControlStatus();
 
-		void Execute_Files_Insert()
+		static PreExecution_Files_SelectGet_BySourceControlStatus PreExecute_Files_SelectGet_BySourceControlStatus(EditorExecuteState state)
 		{
-			var result = state.Configuration as Configuration_Files_Insert;
-			ReplaceSelections(RelativeSelectedFiles().AsTaskRunner().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
+			var files = state.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(file => file.GetSelectionStrings()).Distinct().ToList();
+			var statuses = Versioner.GetStatuses(files);
+			return new PreExecution_Files_SelectGet_BySourceControlStatus { Statuses = Enumerable.Range(0, files.Count).ToDictionary(index => files[index], index => statuses[index]) };
 		}
 
-		void Execute_Files_Create_Files()
+		void Execute_Files_Select_BySourceControlStatus()
 		{
-			var files = RelativeSelectedFiles();
-			if (files.Any(file => Directory.Exists(file)))
-				throw new Exception("Directory already exists");
-			files = files.Where(file => !File.Exists(file)).ToList();
-			var data = new byte[0];
-			foreach (var file in files)
-				File.WriteAllBytes(file, data);
-		}
-
-		void Execute_Files_Create_Directories()
-		{
-			var files = RelativeSelectedFiles();
-			foreach (var file in files)
-				Directory.CreateDirectory(file);
-		}
-
-		static Configuration_Files_Create_FromExpressions Configure_Files_Create_FromExpressions(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Create_FromExpressions(state.NEFiles.Focused.GetVariables(), state.NEFiles.Focused.CodePage);
-
-		void Execute_Files_Create_FromExpressions()
-		{
-			var result = state.Configuration as Configuration_Files_Create_FromExpressions;
-			var variables = GetVariables();
-
-			var filenameExpression = state.GetExpression(result.FileName);
-			var dataExpression = state.GetExpression(result.Data);
-			var resultCount = variables.ResultCount(filenameExpression, dataExpression);
-
-			var filename = filenameExpression.EvaluateList<string>(variables, resultCount);
-			var data = dataExpression.EvaluateList<string>(variables, resultCount);
-			for (var ctr = 0; ctr < data.Count; ++ctr)
-				File.WriteAllBytes(filename[ctr], Coder.StringToBytes(data[ctr], result.CodePage, true));
-		}
-
-		void Execute_Files_Select_Name(GetPathType type) => Selections = Selections.AsTaskRunner().Select(range => GetPathRange(type, range)).ToList();
-
-		void Execute_Files_Select_Name_Next()
-		{
-			var maxPosition = Text.Length;
-			var invalidChars = Path.GetInvalidFileNameChars();
-
-			var sels = new List<Range>();
-			foreach (var range in Selections)
-			{
-				var endPosition = range.End;
-				while ((endPosition < maxPosition) && (((endPosition - range.Start == 1) && (Text[endPosition] == ':')) || ((endPosition - range.End == 0) && ((Text[endPosition] == '\\') || (Text[endPosition] == '/'))) || (!invalidChars.Contains(Text[endPosition]))))
-					++endPosition;
-
-				sels.Add(new Range(endPosition, range.Start));
-			}
-
-			Selections = sels;
-		}
-
-		void Execute_Files_Select_Files() => Selections = Selections.AsTaskRunner().Where(range => File.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList();
-
-		void Execute_Files_Select_Directories() => Selections = Selections.AsTaskRunner().Where(range => Directory.Exists(FileName.RelativeChild(Text.GetString(range)))).ToList();
-
-		void Execute_Files_Select_Existing(bool existing) => Selections = Selections.AsTaskRunner().Where(range => Helpers.FileOrDirectoryExists(FileName.RelativeChild(Text.GetString(range))) == existing).ToList();
-
-		void Execute_Files_Select_Roots(bool include)
-		{
-			var sels = Selections.Select(range => new { range = range, str = Text.GetString(range).ToLower().Replace(@"\\", @"\").TrimEnd('\\') + @"\" }).ToList();
-			var files = sels.Select(obj => obj.str).Distinct().OrderBy().ToList();
-			var roots = new HashSet<string>();
-			string root = null;
-			foreach (var file in files)
-			{
-				if ((root != null) && (file.StartsWith(root)))
-					continue;
-
-				roots.Add(file);
-				root = file;
-			}
-
-			Selections = sels.AsTaskRunner().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList();
-		}
-
-		void Execute_Files_Select_MatchDepth()
-		{
-			var strs = GetSelectionStrings();
-			var minDepth = strs.Select(str => str.Count(c => c == '\\') + 1).DefaultIfEmpty(0).Min();
-			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], minDepth))).ToList();
-		}
-
-		void Execute_Files_Select_CommonAncestor()
-		{
-			var strs = Selections.AsTaskRunner().Select(range => Text.GetString(range) + "\\").ToList();
-			var depth = 0;
-			if (strs.Any())
-			{
-				var length = strs[0].Length;
-				strs.Skip(1).ForEach(str => FindCommonLength(strs[0], str, ref length));
-				depth = strs[0].Substring(0, length).Count(c => c == '\\');
-			}
-			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList();
-		}
-
-		static Configuration_Files_Select_ByVersionControlStatus Configure_Files_Select_ByVersionControlStatus(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Select_ByVersionControlStatus();
-
-		void Execute_Files_Select_ByVersionControlStatus()
-		{
-			var configuration = state.Configuration as Configuration_Files_Select_ByVersionControlStatus;
-			var preExecution = state.PreExecution as PreExecution_Files_GetSelect_VersionControlStatus;
+			var configuration = state.Configuration as Configuration_Files_Select_BySourceControlStatus;
+			var preExecution = state.PreExecution as PreExecution_Files_SelectGet_BySourceControlStatus;
 			var statuses = RelativeSelectedFiles().Select(x => preExecution.Statuses[x]).ToList();
 			var sels = Selections.Zip(statuses, (range, status) => new { range, status }).Where(obj => configuration.Statuses.HasFlag(obj.status)).Select(obj => obj.range).ToList();
 			Selections = sels;
 		}
 
-		static Configuration_Files_Hash Configure_Files_Hash(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Hash();
+		static Configuration_Files_CopyMove Configure_Files_CopyMove(EditorExecuteState state, bool move) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_CopyMove(state.NEFiles.Focused.GetVariables(), move);
 
-		void Execute_Files_Hash()
+		void Execute_Files_CopyMove(bool move)
 		{
-			var result = state.Configuration as Configuration_Files_Hash;
-			ReplaceSelections(Selections.AsTaskRunner()
-				.Select(range => FileName.RelativeChild(Text.GetString(range)))
-				.Select((fileName, index, progress) => Hasher.Get(fileName, result.HashType, result.HMACKey, progress), fileName => new FileInfo(fileName).Length)
-				.ToList());
-		}
-
-		static Configuration_Files_Compress Configure_Files_Compress(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Compress(true);
-
-		void Execute_Files_Compress()
-		{
-			var result = state.Configuration as Configuration_Files_Compress;
-			Selections.AsTaskRunner()
-				.Select(range => FileName.RelativeChild(Text.GetString(range)))
-				.ForAll((fileName, index, progress) => Compressor.Compress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
-		}
-
-		static Configuration_Files_Compress Configure_Files_Decompress(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Compress(false);
-
-		void Execute_Files_Decompress()
-		{
-			var result = state.Configuration as Configuration_Files_Compress;
-			Selections.AsTaskRunner()
-				.Select(range => FileName.RelativeChild(Text.GetString(range)))
-				.ForAll((fileName, index, progress) => Compressor.Decompress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
-		}
-
-		static Configuration_Files_Encrypt Configure_Files_Encrypt(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Encrypt(true);
-
-		void Execute_Files_Encrypt()
-		{
-			var result = state.Configuration as Configuration_Files_Encrypt;
-			Selections.AsTaskRunner()
-				.Select(range => FileName.RelativeChild(Text.GetString(range)))
-				.ForAll((fileName, index, progress) => Cryptor.Encrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
-		}
-
-		static Configuration_Files_Encrypt Configure_Files_Decrypt(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Encrypt(false);
-
-		void Execute_Files_Decrypt()
-		{
-			var result = state.Configuration as Configuration_Files_Encrypt;
-			Selections.AsTaskRunner()
-				.Select(range => FileName.RelativeChild(Text.GetString(range)))
-				.ForAll((fileName, index, progress) => Cryptor.Decrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
-		}
-
-		static Configuration_Files_Sign Configure_Files_Sign(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Sign();
-
-		void Execute_Files_Sign()
-		{
-			var result = state.Configuration as Configuration_Files_Sign;
-			ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
-		}
-
-		static Configuration_Files_Operations_CopyMove Configure_Files_Operations_CopyMove(EditorExecuteState state, bool move) => state.NEFiles.FilesWindow.Configure_Files_Operations_CopyMove(state.NEFiles.Focused.GetVariables(), move);
-
-		void Execute_Files_Operations_CopyMove(bool move)
-		{
-			var result = state.Configuration as Configuration_Files_Operations_CopyMove;
+			var result = state.Configuration as Configuration_Files_CopyMove;
 			var variables = GetVariables();
 
 			var oldFileNameExpression = state.GetExpression(result.OldFileName);
@@ -814,11 +527,11 @@ namespace NeoEdit.Editor
 			if (invalid.Any())
 				throw new Exception($"Destinations already exist:\n{string.Join("\n", invalid)}");
 
-			var confirmCopyMove = $"{nameof(Execute_Files_Operations_CopyMove)}_Confirm";
+			var confirmCopyMove = $"{nameof(Execute_Files_CopyMove)}_Confirm";
 			if (!QueryUser(confirmCopyMove, $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?", MessageOptions.Yes))
 				return;
 
-			var overwriteCopyMove = $"{nameof(Execute_Files_Operations_CopyMove)}_Overwrite";
+			var overwriteCopyMove = $"{nameof(Execute_Files_CopyMove)}_Overwrite";
 			invalid = newFileNames.Zip(oldFileNames, (newFileName, oldFileName) => new { newFileName, oldFileName }).Where(obj => (!string.Equals(obj.newFileName, obj.oldFileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(obj.newFileName))).Select(obj => obj.newFileName).Distinct().Take(InvalidCount).ToList();
 			if (invalid.Any())
 			{
@@ -846,14 +559,14 @@ namespace NeoEdit.Editor
 				}
 		}
 
-		void Execute_Files_Operations_Delete()
+		void Execute_Files_Delete()
 		{
 			var files = RelativeSelectedFiles();
 			if (!files.Any())
 				return;
 
-			var sureAnswer = $"{nameof(Execute_Files_Operations_Delete)}_Sure";
-			var continueAnswer = $"{nameof(Execute_Files_Operations_Delete)}_Continue";
+			var sureAnswer = $"{nameof(Execute_Files_Delete)}_Sure";
+			var continueAnswer = $"{nameof(Execute_Files_Delete)}_Continue";
 
 			if (!QueryUser(sureAnswer, "Are you sure you want to delete these files/directories?", MessageOptions.No))
 				return;
@@ -875,44 +588,232 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Files_Operations_DragDrop()
+		static Configuration_Files_Name_MakeAbsoluteRelative Configure_Files_Name_MakeAbsolute(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Name_MakeAbsoluteRelative(state.NEFiles.Focused.GetVariables(), true, true);
+
+		void Execute_Files_Name_MakeAbsolute()
 		{
-			var strs = RelativeSelectedFiles();
-			if (!StringsAreFiles(strs))
-				throw new Exception("Selections must be files.");
-			newDragFiles.AddRange(strs);
+			var result = state.Configuration as Configuration_Files_Name_MakeAbsoluteRelative;
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
+			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == Configuration_Files_Name_MakeAbsoluteRelative.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		void Execute_Files_Operations_Explore()
+		static Configuration_Files_Name_MakeAbsoluteRelative Configure_Files_Name_MakeRelative(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Name_MakeAbsoluteRelative(state.NEFiles.Focused.GetVariables(), false, true);
+
+		void Execute_Files_Name_MakeRelative()
 		{
-			if (Selections.Count != 1)
-				throw new Exception("Can only explore one file.");
-			Process.Start("explorer.exe", $"/select,\"{RelativeSelectedFiles()[0]}\"");
+			var result = state.Configuration as Configuration_Files_Name_MakeAbsoluteRelative;
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
+			if (result.Type == Configuration_Files_Name_MakeAbsoluteRelative.ResultType.File)
+				results = results.Select(str => Path.GetDirectoryName(str)).ToList();
+			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
 		}
 
-		void Execute_Files_Operations_CommandPrompt()
+		void Execute_Files_Name_Simplify() => ReplaceSelections(Selections.Select(range => Path.GetFullPath(Text.GetString(range))).ToList());
+
+		void Execute_Files_Name_Sanitize() => ReplaceSelections(Selections.Select(range => SanitizeFileName(Text.GetString(range))).ToList());
+
+		void Execute_Files_Get_Size() => ReplaceSelections(RelativeSelectedFiles().Select(file => GetSize(file)).ToList());
+
+		void Execute_Files_Get_Time_Various(TimestampType timestampType)
 		{
-			var dirs = RelativeSelectedFiles().Select(path => File.Exists(path) ? Path.GetDirectoryName(path) : path).Distinct().ToList();
-			if (dirs.Count != 1)
-				throw new Exception("Too many file locations.");
-			Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = dirs[0] });
+			Func<FileSystemInfo, DateTime> getTime;
+			switch (timestampType)
+			{
+				case TimestampType.Write: getTime = fi => fi.LastWriteTime; break;
+				case TimestampType.Access: getTime = fi => fi.LastAccessTime; break;
+				case TimestampType.Create: getTime = fi => fi.CreationTime; break;
+				default: throw new Exception("Invalid TimestampType");
+			}
+
+			var files = RelativeSelectedFiles();
+			var strs = new List<string>();
+			foreach (var file in files)
+			{
+				if (File.Exists(file))
+					strs.Add(getTime(new FileInfo(file)).ToString("yyyy-MM-dd HH:mm:ss.fff"));
+				else if (Directory.Exists(file))
+					strs.Add(getTime(new DirectoryInfo(file)).ToString("yyyy-MM-dd HH:mm:ss.fff"));
+				else
+					strs.Add("INVALID");
+			}
+			ReplaceSelections(strs);
 		}
 
-		void Execute_Files_Operations_RunCommand_Parallel()
+		void Execute_Files_Get_Attributes()
 		{
-			var workingDirectory = Path.GetDirectoryName(FileName ?? "");
-			ReplaceSelections(Selections.AsTaskRunner().Select(range => RunCommand(Text.GetString(range), workingDirectory)).ToList());
+			var files = RelativeSelectedFiles();
+			var strs = new List<string>();
+			foreach (var file in files)
+			{
+				if (File.Exists(file))
+				{
+					var fileinfo = new FileInfo(file);
+					strs.Add(fileinfo.Attributes.ToString());
+				}
+				else if (Directory.Exists(file))
+				{
+					var dirinfo = new DirectoryInfo(file);
+					strs.Add(dirinfo.Attributes.ToString());
+				}
+				else
+					strs.Add("INVALID");
+			}
+			ReplaceSelections(strs);
 		}
 
-		void Execute_Files_Operations_RunCommand_Sequential() => ReplaceSelections(GetSelectionStrings().Select(str => RunCommand(str, Path.GetDirectoryName(FileName ?? ""))).ToList());
+		void Execute_Files_Get_Version_File() => ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => FileVersionInfo.GetVersionInfo(file).FileVersion).ToList());
 
-		void Execute_Files_Operations_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
+		void Execute_Files_Get_Version_Product() => ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => FileVersionInfo.GetVersionInfo(file).ProductVersion).ToList());
 
-		static Configuration_Files_Operations_Encoding Configure_Files_Operations_Encoding(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Operations_Encoding();
+		void Execute_Files_Get_Version_Assembly() => ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => AssemblyName.GetAssemblyName(file).Version.ToString()).ToList());
 
-		void Execute_Files_Operations_Encoding()
+		static Configuration_Files_Get_Hash Configure_Files_Get_Hash(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Get_Hash();
+
+		void Execute_Files_Get_Hash()
 		{
-			var result = state.Configuration as Configuration_Files_Operations_Encoding;
+			var result = state.Configuration as Configuration_Files_Get_Hash;
+			ReplaceSelections(Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.Select((fileName, index, progress) => Hasher.Get(fileName, result.HashType, result.HMACKey, progress), fileName => new FileInfo(fileName).Length)
+				.ToList());
+		}
+
+		void Execute_Files_Get_SourceControlStatus()
+		{
+			var preExecution = state.PreExecution as PreExecution_Files_SelectGet_BySourceControlStatus;
+			ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(x => preExecution.Statuses[x].ToString()).ToList());
+		}
+
+		void Execute_Files_Get_ChildrenDescendants(bool recursive)
+		{
+			var dirs = RelativeSelectedFiles();
+			if (dirs.Any(dir => !Directory.Exists(dir)))
+				throw new ArgumentException("Path must be of existing directories");
+
+			var errors = new List<string>();
+			ReplaceSelections(dirs.AsTaskRunner().Select((dir, index, progress) => string.Join(Text.DefaultEnding, GetDirectoryContents(dir, recursive, errors, progress)), x => 100000).ToList());
+			if (errors.Any())
+				NEFiles.FilesWindow.RunDialog_ShowMessage("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
+		}
+
+		static Configuration_Files_Get_Content Configure_Files_Get_Content(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Get_Content();
+
+		void Execute_Files_Get_Content()
+		{
+			var result = state.Configuration as Configuration_Files_Get_Content;
+			ReplaceSelections(RelativeSelectedFiles().AsTaskRunner().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
+		}
+
+		static Configuration_Files_Set_Size Configure_Files_Set_Size(EditorExecuteState state)
+		{
+			var vars = state.NEFiles.Focused.GetVariables();
+			var sizes = state.NEFiles.Focused.RelativeSelectedFiles().AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
+			vars.Add(NEVariable.List("size", "File size", () => sizes));
+			return state.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Size(vars);
+		}
+
+		void Execute_Files_Set_Size()
+		{
+			var result = state.Configuration as Configuration_Files_Set_Size;
+			var vars = GetVariables();
+			var files = RelativeSelectedFiles();
+			var sizes = files.AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
+			vars.Add(NEVariable.List("size", "File size", () => sizes));
+			var results = state.GetExpression(result.Expression).EvaluateList<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
+			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
+		}
+
+		static Configuration_Files_Set_Time_Various Configure_Files_Set_Time_Various(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Time_Various(state.NEFiles.Focused.GetVariables(), $@"""{DateTime.Now}""");
+
+		void Execute_Files_Set_Time_Various(TimestampType type)
+		{
+			var result = state.Configuration as Configuration_Files_Set_Time_Various;
+			var dateTimes = GetExpressionResults<DateTime>(result.Expression, Selections.Count());
+			var files = RelativeSelectedFiles();
+			for (var ctr = 0; ctr < files.Count; ++ctr)
+			{
+				var dateTime = dateTimes[ctr];
+				var file = files[ctr];
+				if (!Helpers.FileOrDirectoryExists(file))
+					File.WriteAllBytes(file, new byte[0]);
+
+				if (File.Exists(file))
+				{
+					var info = new FileInfo(file);
+					if (type.HasFlag(TimestampType.Write))
+						info.LastWriteTime = dateTime;
+					if (type.HasFlag(TimestampType.Access))
+						info.LastAccessTime = dateTime;
+					if (type.HasFlag(TimestampType.Create))
+						info.CreationTime = dateTime;
+				}
+				else if (Directory.Exists(file))
+				{
+					var info = new DirectoryInfo(file);
+					if (type.HasFlag(TimestampType.Write))
+						info.LastWriteTime = dateTime;
+					if (type.HasFlag(TimestampType.Access))
+						info.LastAccessTime = dateTime;
+					if (type.HasFlag(TimestampType.Create))
+						info.CreationTime = dateTime;
+				}
+			}
+		}
+
+		static Configuration_Files_Set_Attributes Configure_Files_Set_Attributes(EditorExecuteState state)
+		{
+			var filesAttrs = state.NEFiles.Focused.Selections.Select(range => state.NEFiles.Focused.Text.GetString(range)).Select(file => new DirectoryInfo(file).Attributes).ToList();
+			var availAttrs = Helpers.GetValues<FileAttributes>();
+			var current = new Dictionary<FileAttributes, bool?>();
+			foreach (var fileAttrs in filesAttrs)
+				foreach (var availAttr in availAttrs)
+				{
+					var fileHasAttr = fileAttrs.HasFlag(availAttr);
+					if (!current.ContainsKey(availAttr))
+						current[availAttr] = fileHasAttr;
+					if (current[availAttr] != fileHasAttr)
+						current[availAttr] = null;
+				}
+
+			return state.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Attributes(current);
+		}
+
+		void Execute_Files_Set_Attributes()
+		{
+			var result = state.Configuration as Configuration_Files_Set_Attributes;
+			FileAttributes andMask = 0, orMask = 0;
+			foreach (var pair in result.Attributes)
+			{
+				andMask |= pair.Key;
+				if ((pair.Value.HasValue) && (pair.Value.Value))
+					orMask |= pair.Key;
+			}
+			foreach (var file in Selections.Select(range => Text.GetString(range)))
+				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
+		}
+
+		static Configuration_Files_Set_Content Configure_Files_Set_Content(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Content(state.NEFiles.Focused.GetVariables(), state.NEFiles.Focused.CodePage);
+
+		void Execute_Files_Set_Content()
+		{
+			var result = state.Configuration as Configuration_Files_Set_Content;
+			var variables = GetVariables();
+
+			var filenameExpression = state.GetExpression(result.FileName);
+			var dataExpression = state.GetExpression(result.Data);
+			var resultCount = variables.ResultCount(filenameExpression, dataExpression);
+
+			var filename = filenameExpression.EvaluateList<string>(variables, resultCount);
+			var data = dataExpression.EvaluateList<string>(variables, resultCount);
+			for (var ctr = 0; ctr < data.Count; ++ctr)
+				File.WriteAllBytes(filename[ctr], Coder.StringToBytes(data[ctr], result.CodePage, true));
+		}
+
+		static Configuration_Files_Set_Encoding Configure_Files_Set_Encoding(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Encoding();
+
+		void Execute_Files_Set_Encoding()
+		{
+			var result = state.Configuration as Configuration_Files_Set_Encoding;
 			Selections.AsTaskRunner()
 				.Select(range => FileName.RelativeChild(Text.GetString(range)))
 				.ForAll(
@@ -920,16 +821,105 @@ namespace NeoEdit.Editor
 					fileName => new FileInfo(fileName).Length);
 		}
 
-		static Configuration_Files_Operations_SplitFile Configure_Files_Operations_SplitFile(EditorExecuteState state)
+		void Execute_Files_Create_Files()
+		{
+			var files = RelativeSelectedFiles();
+			if (files.Any(file => Directory.Exists(file)))
+				throw new Exception("Directory already exists");
+			files = files.Where(file => !File.Exists(file)).ToList();
+			var data = new byte[0];
+			foreach (var file in files)
+				File.WriteAllBytes(file, data);
+		}
+
+		void Execute_Files_Create_Directories()
+		{
+			var files = RelativeSelectedFiles();
+			foreach (var file in files)
+				Directory.CreateDirectory(file);
+		}
+
+		static Configuration_Files_CompressDecompress Configure_Files_Compress(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_CompressDecompress(true);
+
+		void Execute_Files_Compress()
+		{
+			var result = state.Configuration as Configuration_Files_CompressDecompress;
+			Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.ForAll((fileName, index, progress) => Compressor.Compress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
+		}
+
+		static Configuration_Files_CompressDecompress Configure_Files_Decompress(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_CompressDecompress(false);
+
+		void Execute_Files_Decompress()
+		{
+			var result = state.Configuration as Configuration_Files_CompressDecompress;
+			Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.ForAll((fileName, index, progress) => Compressor.Decompress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
+		}
+
+		static Configuration_Files_EncryptDecrypt Configure_Files_Encrypt(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_EncryptDecrypt(true);
+
+		void Execute_Files_Encrypt()
+		{
+			var result = state.Configuration as Configuration_Files_EncryptDecrypt;
+			Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.ForAll((fileName, index, progress) => Cryptor.Encrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
+		}
+
+		static Configuration_Files_EncryptDecrypt Configure_Files_Decrypt(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_EncryptDecrypt(false);
+
+		void Execute_Files_Decrypt()
+		{
+			var result = state.Configuration as Configuration_Files_EncryptDecrypt;
+			Selections.AsTaskRunner()
+				.Select(range => FileName.RelativeChild(Text.GetString(range)))
+				.ForAll((fileName, index, progress) => Cryptor.Decrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
+		}
+
+		static Configuration_Files_Sign Configure_Files_Sign(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Sign();
+
+		void Execute_Files_Sign()
+		{
+			var result = state.Configuration as Configuration_Files_Sign;
+			ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
+		}
+
+		void Execute_Files_Advanced_Explore()
+		{
+			if (Selections.Count != 1)
+				throw new Exception("Can only explore one file.");
+			Process.Start("explorer.exe", $"/select,\"{RelativeSelectedFiles()[0]}\"");
+		}
+
+		void Execute_Files_Advanced_CommandPrompt()
+		{
+			var dirs = RelativeSelectedFiles().Select(path => File.Exists(path) ? Path.GetDirectoryName(path) : path).Distinct().ToList();
+			if (dirs.Count != 1)
+				throw new Exception("Too many file locations.");
+			Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = dirs[0] });
+		}
+
+		void Execute_Files_Advanced_DragDrop()
+		{
+			var strs = RelativeSelectedFiles();
+			if (!StringsAreFiles(strs))
+				throw new Exception("Selections must be files.");
+			newDragFiles.AddRange(strs);
+		}
+
+		static Configuration_Files_Advanced_SplitFiles Configure_Files_Advanced_SplitFiles(EditorExecuteState state)
 		{
 			var variables = state.NEFiles.Focused.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return state.NEFiles.FilesWindow.Configure_Files_Operations_SplitFile(variables);
+			return state.NEFiles.FilesWindow.RunDialog_Configure_Files_Advanced_SplitFiles(variables);
 		}
 
-		void Execute_Files_Operations_SplitFile()
+		void Execute_Files_Advanced_SplitFiles()
 		{
-			var result = state.Configuration as Configuration_Files_Operations_SplitFile;
+			var result = state.Configuration as Configuration_Files_Advanced_SplitFiles;
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
 			var files = RelativeSelectedFiles();
@@ -942,11 +932,11 @@ namespace NeoEdit.Editor
 					fileName => new FileInfo(fileName).Length);
 		}
 
-		static Configuration_Files_Operations_CombineFiles Configure_Files_Operations_CombineFiles(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Operations_CombineFiles(state.NEFiles.Focused.GetVariables());
+		static Configuration_Files_Advanced_CombineFiles Configure_Files_Advanced_CombineFiles(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Advanced_CombineFiles(state.NEFiles.Focused.GetVariables());
 
-		void Execute_Files_Operations_CombineFiles()
+		void Execute_Files_Advanced_CombineFiles()
 		{
-			var result = state.Configuration as Configuration_Files_Operations_CombineFiles;
+			var result = state.Configuration as Configuration_Files_Advanced_CombineFiles;
 			var variables = GetVariables();
 
 			var inputFileCountExpr = state.GetExpression(result.InputFileCount);

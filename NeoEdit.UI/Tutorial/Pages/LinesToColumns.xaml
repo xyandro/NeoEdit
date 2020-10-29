@@ -15,12 +15,12 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_All"/>.
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_All"/>.
 				</Paragraph>
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/>.
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_Lines"/>.
 				</Paragraph>
 				<Paragraph>
 					Notice the text at the bottom left:  Selection 1/20.  This means there are 20 independent selections, with the first one being focused.  Focus will be discussed later.
@@ -68,7 +68,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy_Copy"/> to copy the new line. It can be pasted where ever it's useful.
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy"/> to copy the new line. It can be pasted where ever it's useful.
 				</Paragraph>
 			</ListItem>
 		</List>

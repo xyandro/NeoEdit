@@ -17,12 +17,12 @@
 		<List>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_Lines"/> .
 				</Paragraph>
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy_Copy"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy"/> .
 				</Paragraph>
 				<Paragraph>
 					Notice the text at the bottom center: Clipboard: 1 file, 1 selection. This means there is one value on the clipboard. Multiple files will be discussed later.
@@ -30,12 +30,12 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_All"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_All"/> .
 				</Paragraph>
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_Lines"/> .
 				</Paragraph>
 			</ListItem>
 			<ListItem>
@@ -61,7 +61,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy_Copy"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy"/> .
 				</Paragraph>
 				<Paragraph>
 					Notice the text at the bottom center: Clipboard: 1 file, 15 selections. There are 15 values on the clipboard.

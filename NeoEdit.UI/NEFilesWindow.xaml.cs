@@ -267,17 +267,13 @@ namespace NeoEdit.UI
 		void SetMenuCheckboxes()
 		{
 			menu.menu_File_AutoRefresh.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_AutoRefresh)];
-			menu.menu_File_Encrypt.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Encrypt)];
-			menu.menu_File_Compress.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Compress)];
-			menu.menu_File_DontExitOnClose.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_DontExitOnClose)];
+			menu.menu_File_Advanced_Compress.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Advanced_Compress)];
+			menu.menu_File_Advanced_Encrypt.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Advanced_Encrypt)];
+			menu.menu_File_Advanced_DontExitOnClose.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Advanced_DontExitOnClose)];
 			menu.menu_Edit_Navigate_JumpBy_Words.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Words)];
 			menu.menu_Edit_Navigate_JumpBy_Numbers.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Numbers)];
 			menu.menu_Edit_Navigate_JumpBy_Paths.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Paths)];
-			menu.menu_Edit_EscapeClearsSelections.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_EscapeClearsSelections)];
-			menu.menu_Diff_IgnoreWhitespace.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreWhitespace)];
-			menu.menu_Diff_IgnoreCase.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreCase)];
-			menu.menu_Diff_IgnoreNumbers.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreNumbers)];
-			menu.menu_Diff_IgnoreLineEndings.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreLineEndings)];
+			menu.menu_Edit_Advanced_EscapeClearsSelections.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Advanced_EscapeClearsSelections)];
 			menu.menu_Content_Type_None.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_None)];
 			menu.menu_Content_Type_Balanced.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_Balanced)];
 			menu.menu_Content_Type_Columns.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_Columns)];
@@ -293,10 +289,14 @@ namespace NeoEdit.UI
 			menu.menu_Content_HighlightSyntax.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_HighlightSyntax)];
 			menu.menu_Content_StrictParsing.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_StrictParsing)];
 			menu.menu_Content_KeepSelections.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_KeepSelections)];
+			menu.menu_Diff_IgnoreWhitespace.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreWhitespace)];
+			menu.menu_Diff_IgnoreCase.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreCase)];
+			menu.menu_Diff_IgnoreNumbers.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreNumbers)];
+			menu.menu_Diff_IgnoreLineEndings.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Diff_IgnoreLineEndings)];
 			menu.menu_Macro_Visualize.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Macro_Visualize)];
 			menu.menu_Window_ActiveOnly.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_ActiveOnly)];
 			menu.menu_Window_Font_ShowSpecial.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_Font_ShowSpecial)];
-			menu.menu_Window_ViewBinary.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_ViewBinary)];
+			menu.menu_Window_Binary.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_Binary)];
 		}
 
 		public void Render(RenderParameters renderParameters)

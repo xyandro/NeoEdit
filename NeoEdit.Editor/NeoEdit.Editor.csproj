@@ -203,7 +203,7 @@
     <Compile Include="NEFile-Internal.cs">
       <DependentUpon>NEFile.cs</DependentUpon>
     </Compile>
-    <Compile Include="NEFile-Keys.cs">
+    <Compile Include="NEFile-KeyValue.cs">
       <DependentUpon>NEFile.cs</DependentUpon>
     </Compile>
     <Compile Include="NEFile-Macro.cs">
@@ -216,9 +216,6 @@
       <DependentUpon>NEFile.cs</DependentUpon>
     </Compile>
     <Compile Include="NEFile-Position.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Select.cs">
       <DependentUpon>NEFile.cs</DependentUpon>
     </Compile>
     <Compile Include="NEFile-Table.cs">
@@ -244,9 +241,9 @@
     <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />
     <Compile Include="PreExecution\IPreExecution.cs" />
-    <Compile Include="PreExecution\PreExecution_Files_GetSelect_VersionControlStatus.cs" />
-    <Compile Include="PreExecution\PreExecution_Select_Repeats_Files_CommonNonCommon.cs" />
-    <Compile Include="PreExecution\PreExecution_Select_Repeats_Files_MatchMismatch.cs" />
+    <Compile Include="PreExecution\PreExecution_Files_SelectGet_BySourceControlStatus.cs" />
+    <Compile Include="PreExecution\PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase.cs" />
+    <Compile Include="PreExecution\PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase.cs" />
     <Compile Include="PreExecution\PreExecutionStop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Searchers\BinarySearcher.cs" />

@@ -10,26 +10,6 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		object GetAddSubtractValue(string str)
-		{
-			var split = str.IndexOf(' ');
-			if ((split > 0) && (str.IndexOf(' ', split + 1) == -1))
-				return new NumericValue(str.Substring(0, split), str.Substring(split + 1)).ConvertUnits(new ExpressionUnits("ticks"));
-			return Dater.TryStringToDateTimeOffset(str);
-		}
-
-		NumericValue SimplifyDateUnits(NumericValue value)
-		{
-			var units = new List<string> { "days", "hours", "minutes", "seconds", "ms", "µs", "ns" };
-			foreach (var unit in units)
-			{
-				var testUnit = new NumericValue(1, unit);
-				if (value >= testUnit)
-					return value.ConvertUnits(testUnit.Units);
-			}
-			return value;
-		}
-
 		string AddDates(string str1, string str2)
 		{
 			var val1 = GetAddSubtractValue(str1);
@@ -57,6 +37,26 @@ namespace NeoEdit.Editor
 					break;
 			}
 			throw new Exception($"Invalid inputs: {str1}, {str2}");
+		}
+
+		object GetAddSubtractValue(string str)
+		{
+			var split = str.IndexOf(' ');
+			if ((split > 0) && (str.IndexOf(' ', split + 1) == -1))
+				return new NumericValue(str.Substring(0, split), str.Substring(split + 1)).ConvertUnits(new ExpressionUnits("ticks"));
+			return Dater.TryStringToDateTimeOffset(str);
+		}
+
+		NumericValue SimplifyDateUnits(NumericValue value)
+		{
+			var units = new List<string> { "days", "hours", "minutes", "seconds", "ms", "µs", "ns" };
+			foreach (var unit in units)
+			{
+				var testUnit = new NumericValue(1, unit);
+				if (value >= testUnit)
+					return value.ConvertUnits(testUnit.Units);
+			}
+			return value;
 		}
 
 		string SubtractDates(string str1, string str2)
@@ -91,26 +91,26 @@ namespace NeoEdit.Editor
 
 		void Execute_DateTime_Now() => ReplaceSelections(Dater.DateTimeOffsetToString(DateTimeOffset.Now));
 
-		void Execute_DateTime_UtcNow() => ReplaceSelections(Dater.DateTimeOffsetToString(DateTimeOffset.UtcNow));
+		void Execute_DateTime_UTCNow() => ReplaceSelections(Dater.DateTimeOffsetToString(DateTimeOffset.UtcNow));
 
-		static Configuration_DateTime_Format Configure_DateTime_Format(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_DateTime_Format(state.NEFiles.Focused.Selections.Select(range => state.NEFiles.Focused.Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
-
-		void Execute_DateTime_Format()
-		{
-			var result = state.Configuration as Configuration_DateTime_Format;
-			ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.StringToDateTimeOffset(Text.GetString(range), result.InputFormat), result.OutputFormat)).ToList());
-		}
-
-		void Execute_DateTime_ToUtc() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: Dater.UTC), Dater.UTC))).ToList());
+		void Execute_DateTime_ToUTC() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: Dater.UTC), Dater.UTC))).ToList());
 
 		void Execute_DateTime_ToLocal() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: Dater.Local), Dater.Local))).ToList());
 
-		static Configuration_DateTime_ToTimeZone Configure_DateTime_ToTimeZone(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_DateTime_ToTimeZone();
+		static Configuration_DateTime_ToTimeZone Configure_DateTime_ToTimeZone(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_DateTime_ToTimeZone();
 
 		void Execute_DateTime_ToTimeZone()
 		{
 			var result = state.Configuration as Configuration_DateTime_ToTimeZone;
 			ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: result.TimeZone), result.TimeZone))).ToList());
+		}
+
+		static Configuration_DateTime_Format Configure_DateTime_Format(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_DateTime_Format(state.NEFiles.Focused.Selections.Select(range => state.NEFiles.Focused.Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
+
+		void Execute_DateTime_Format()
+		{
+			var result = state.Configuration as Configuration_DateTime_Format;
+			ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.StringToDateTimeOffset(Text.GetString(range), result.InputFormat), result.OutputFormat)).ToList());
 		}
 
 		void Execute_DateTime_AddClipboard()

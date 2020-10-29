@@ -17,7 +17,7 @@
 			<ListItem>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter "John".
@@ -35,7 +35,7 @@
 			<ListItem>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter "John".
@@ -53,13 +53,13 @@
 			<ListItem>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Select_Lines"/> to select the full line from the matching selections.
+					<tutorial:TutorialCommand CommandEnum="Edit_Select_Lines"/> to select the full line from the matching selections.
 				</Paragraph>
 			</ListItem>
 			<ListItem>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter "t".
@@ -82,7 +82,7 @@
 			<ListItem>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter "\w+ \w+ \w+". (This regular expression finds three words separated by spaces.)
@@ -102,7 +102,7 @@
 			<ListItem>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter "\w+ (\w+) \w+". (This regular expression finds three words separated by spaces, with the middle name marked as a group by parenthesis.)
@@ -136,7 +136,7 @@
 			<ListItem>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter "Name:".
@@ -162,7 +162,7 @@
 				</Paragraph>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter "J", make "Selection only" the only check, and hit "Find All".
@@ -174,7 +174,7 @@
 				</Paragraph>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter ";", uncheck all boxes, and hit "Find Next". (NOT "Find All")
@@ -194,7 +194,7 @@
 			<ListItem>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter "Likes:".  Make it so none of the boxes are checked. Hit "Find All".
@@ -206,7 +206,7 @@
 				</Paragraph>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter ";", uncheck all boxes, and hit "Find Next". (NOT "Find All")
@@ -221,7 +221,7 @@
 				</Paragraph>
 				<Paragraph>
 					Click
-					<tutorial:TutorialCommand CommandEnum="Edit_Find_Find"/> .
+					<tutorial:TutorialCommand CommandEnum="Text_Find_Find"/> .
 				</Paragraph>
 				<Paragraph>
 					In the find dialog, enter "Pizza", make "Selection only" and "Keep matches" the only checks, and hit "Find All".

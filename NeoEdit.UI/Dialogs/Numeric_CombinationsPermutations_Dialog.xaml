@@ -1,0 +1,49 @@
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.Dialogs.Numeric_CombinationsPermutations_Dialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
+	xmlns:converters="clr-namespace:NeoEdit.UI.Converters"
+	Title="Combinations/Permutations" SizeToContent="WidthAndHeight" FocusManager.FocusedElement="{Binding ElementName=itemCount}">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="60"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition MinHeight="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Content="_Items (n):" Target="{Binding ElementName=itemCount}" HorizontalAlignment="Right"/>
+		<controls:NumericUpDown Grid.Row="0" Grid.Column="1" x:Name="itemCount" Value="{Binding ItemCount, ElementName=self}" Minimum="1"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="_Use (r):" Target="{Binding ElementName=useCount}" HorizontalAlignment="Right"/>
+		<controls:NumericUpDown Grid.Row="1" Grid.Column="1" x:Name="useCount" Value="{Binding UseCount, ElementName=self}" Minimum="1"/>
+
+		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+			<RadioButton GroupName="type" Content="_Combinations" IsChecked="{Binding Type, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Combinations}" Focusable="False" Margin="0,0,10,0" VerticalAlignment="Center"/>
+			<RadioButton GroupName="type" Content="_Permutations" IsChecked="{Binding Type, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Permutations}" Focusable="False" Margin="0,0,10,0" VerticalAlignment="Center"/>
+		</StackPanel>
+
+		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Repeat Items" IsChecked="{Binding Repeat, ElementName=self}" Focusable="False"/>
+
+		<Label Grid.Row="4" Grid.Column="0" Content="Formula:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<StackPanel Grid.Row="4" Grid.Column="1" Name="formula" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+		<Label Grid.Row="5" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
+		<TextBox Grid.Row="5" Grid.Column="1" Background="Transparent" BorderBrush="Transparent" IsReadOnly="True" Text="{Binding NumResults, ElementName=self, StringFormat=n0}" HorizontalAlignment="Right"/>
+
+		<UniformGrid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+
+</controls:NEWindow>

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
+using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Editor.PreExecution;
@@ -15,12 +16,6 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		static PreExecutionStop PreExecute_Help_About(EditorExecuteState state)
-		{
-			state.NEFiles.FilesWindow.RunHelpAboutDialog();
-			return PreExecutionStop.Stop;
-		}
-
 		static PreExecutionStop PreExecute_Help_Tutorial(EditorExecuteState state)
 		{
 			//TODO => new TutorialWindow(this);
@@ -54,7 +49,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Version length mismatch");
 
 			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
-			if (!state.NEFiles.FilesWindow.RunMessageDialog("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
+			if (!state.NEFiles.FilesWindow.RunDialog_ShowMessage("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
 				return PreExecutionStop.Stop;
 
 			var oldLocation = Assembly.GetEntryAssembly().Location;
@@ -88,17 +83,54 @@ namespace NeoEdit.Editor
 				File.WriteAllBytes(newLocation, result);
 
 				Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
-				state.NEFiles.FilesWindow.RunMessageDialog("Info", "The program will be updated after exiting.");
+				state.NEFiles.FilesWindow.RunDialog_ShowMessage("Info", "The program will be updated after exiting.");
 			});
 
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Help_Extract(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Help_TimeNextAction(EditorExecuteState state)
+		{
+			state.NEFiles.timeNextAction = true;
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Help_Advanced_Shell_Integrate(EditorExecuteState state)
+		{
+			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
+			using (var starKey = baseKey.OpenSubKey("*"))
+			using (var shellKey = starKey.OpenSubKey("shell", true))
+			using (var neoEditKey = shellKey.CreateSubKey("Open with NeoEdit"))
+			using (var commandKey = neoEditKey.CreateSubKey("command"))
+				commandKey.SetValue("", $@"""{Assembly.GetEntryAssembly().Location}"" -text ""%1""");
+
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Help_Advanced_Shell_Unintegrate(EditorExecuteState state)
+		{
+			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
+			using (var starKey = baseKey.OpenSubKey("*"))
+			using (var shellKey = starKey.OpenSubKey("shell", true))
+				shellKey.DeleteSubKeyTree("Open with NeoEdit");
+
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Help_Advanced_CopyCommandLine(EditorExecuteState state)
+		{
+			var clipboard = new NEClipboard();
+			clipboard.Add(new List<string> { Environment.CommandLine });
+			NEClipboard.Current = clipboard;
+
+			return PreExecutionStop.Stop;
+		}
+
+		static PreExecutionStop PreExecute_Help_Advanced_Extract(EditorExecuteState state)
 		{
 			var location = Assembly.GetEntryAssembly().Location;
 
-			if (!state.NEFiles.FilesWindow.RunMessageDialog("Extract files", $"Files will be extracted from {location} after program exits.", MessageOptions.OkCancel, MessageOptions.Ok, MessageOptions.Cancel).HasFlag(MessageOptions.Ok))
+			if (!state.NEFiles.FilesWindow.RunDialog_ShowMessage("Extract files", $"Files will be extracted from {location} after program exits.", MessageOptions.OkCancel, MessageOptions.Ok, MessageOptions.Cancel).HasFlag(MessageOptions.Ok))
 				return PreExecutionStop.Stop;
 
 			Process.Start(location, $@"-extract {Process.GetCurrentProcess().Id}");
@@ -106,18 +138,15 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Help_RunGC(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Help_Advanced_RunGC(EditorExecuteState state)
 		{
 			GC.Collect();
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Help_CopyCommandLine(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Help_About(EditorExecuteState state)
 		{
-			var clipboard = new NEClipboard();
-			clipboard.Add(new List<string> { Environment.CommandLine });
-			NEClipboard.Current = clipboard;
-
+			state.NEFiles.FilesWindow.RunDialog_PreExecute_Help_About();
 			return PreExecutionStop.Stop;
 		}
 	}

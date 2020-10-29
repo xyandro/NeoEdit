@@ -14,17 +14,17 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_All"/>.
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_All"/>.
 				</Paragraph>
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/>.
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_Lines"/>.
 				</Paragraph>
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Edit_Sort"/>. Click Ok in the dialog to accept the defaults.
+					Click <tutorial:TutorialCommand CommandEnum="Text_Sort"/>. Click Ok in the dialog to accept the defaults.
 				</Paragraph>
 			</ListItem>
 		</List>
@@ -38,12 +38,12 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_All"/>.
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_All"/>.
 				</Paragraph>
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/>.
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_Lines"/>.
 				</Paragraph>
 			</ListItem>
 		</List>
@@ -63,7 +63,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Edit_Sort"/>.
+					Click <tutorial:TutorialCommand CommandEnum="Text_Sort"/>.
 				</Paragraph>
 				<Paragraph>
 					In the dialog, notice that "What to sort" is set to "Selections".
@@ -82,7 +82,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Edit_Sort"/>.
+					Click <tutorial:TutorialCommand CommandEnum="Text_Sort"/>.
 				</Paragraph>
 				<Paragraph>
 					Change "What to sort" to "Lines", then click "Ok".
@@ -113,7 +113,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Edit_Sort"/>.
+					Click <tutorial:TutorialCommand CommandEnum="Text_Sort"/>.
 				</Paragraph>
 				<Paragraph>
 					Change "What to sort" to "Lines", then click "Ok".

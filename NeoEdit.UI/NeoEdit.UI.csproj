@@ -125,600 +125,47 @@
     <Compile Include="Converters\NonEmptyConverter.cs" />
     <Compile Include="Converters\RadioConverter.cs" />
     <Compile Include="Converters\ValidValueConverter.cs" />
-    <Page Include="Dialogs\Configure_Content_Ancestor_Dialog.xaml">
+    <Page Include="Dialogs\Content_Attributes_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\Configure_Content_Ancestor_Dialog.xaml.cs">
-      <DependentUpon>Configure_Content_Ancestor_Dialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Content_Attributes_Dialog.xaml.cs">
+      <DependentUpon>Content_Attributes_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\Configure_Content_Attributes_Dialog.xaml">
+    <Page Include="Dialogs\Content_Various_WithAttribute_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\Configure_Content_Attributes_Dialog.xaml.cs">
-      <DependentUpon>Configure_Content_Attributes_Dialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Content_Various_WithAttribute_Dialog.xaml.cs">
+      <DependentUpon>Content_Various_WithAttribute_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\Configure_Database_Connect_Dialog.xaml">
+    <Page Include="Dialogs\Database_Connect_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\Configure_Database_Connect_Dialog.xaml.cs">
-      <DependentUpon>Configure_Database_Connect_Dialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Database_Connect_Dialog.xaml.cs">
+      <DependentUpon>Database_Connect_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\Configure_Database_Examine_Dialog.xaml">
+    <Page Include="Dialogs\Database_Examine_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\Configure_Database_Examine_Dialog.xaml.cs">
-      <DependentUpon>Configure_Database_Examine_Dialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Database_Examine_Dialog.xaml.cs">
+      <DependentUpon>Database_Examine_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\Configure_DateTime_Format_Dialog.xaml">
+    <Page Include="Dialogs\DateTime_Format_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\Configure_DateTime_Format_Dialog.xaml.cs">
-      <DependentUpon>Configure_DateTime_Format_Dialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\DateTime_Format_Dialog.xaml.cs">
+      <DependentUpon>DateTime_Format_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\Configure_DateTime_ToTimeZone_Dialog.xaml">
+    <Page Include="Dialogs\DateTime_ToTimeZone_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\Configure_DateTime_ToTimeZone_Dialog.xaml.cs">
-      <DependentUpon>Configure_DateTime_ToTimeZone_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Diff_Fix_Whitespace_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Diff_Fix_Whitespace_Dialog.xaml.cs">
-      <DependentUpon>Configure_Diff_Fix_Whitespace_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Diff_IgnoreCharacters_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Diff_IgnoreCharacters_Dialog.xaml.cs">
-      <DependentUpon>Configure_Diff_IgnoreCharacters_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Convert_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Convert_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Convert_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Data_Compress_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Data_Compress_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Data_Compress_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Data_Encrypt_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Data_Encrypt_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Data_Encrypt_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Data_Hash_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Data_Hash_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Data_Hash_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Data_Sign_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Data_Sign_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Data_Sign_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Expression_Expression_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Expression_Expression_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Expression_Expression_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Find_Find_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Find_Find_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Find_Find_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Find_RegexReplace_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Find_RegexReplace_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Find_RegexReplace_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_ModifyRegions_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_ModifyRegions_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_ModifyRegions_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Repeat_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Repeat_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Repeat_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Rotate_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Rotate_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Rotate_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Edit_Sort_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Edit_Sort_Dialog.xaml.cs">
-      <DependentUpon>Configure_Edit_Sort_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_File_Encoding_Encoding_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_File_Encoding_Encoding_Dialog.xaml.cs">
-      <DependentUpon>Configure_File_Encoding_Encoding_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_File_Encoding_LineEndings_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_File_Encoding_LineEndings_Dialog.xaml.cs">
-      <DependentUpon>Configure_File_Encoding_LineEndings_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_File_Encrypt_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_File_Encrypt_Dialog.xaml.cs">
-      <DependentUpon>Configure_File_Encrypt_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_File_SaveCopyRename_ByExpression_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_File_SaveCopyRename_ByExpression_Dialog.xaml.cs">
-      <DependentUpon>Configure_File_SaveCopyRename_ByExpression_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Compress_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Compress_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Compress_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Create_FromExpressions_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Create_FromExpressions_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Create_FromExpressions_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Encrypt_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Encrypt_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Encrypt_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Find_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Find_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Find_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Hash_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Hash_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Hash_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Insert_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Insert_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Insert_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Name_MakeAbsolute_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Name_MakeAbsolute_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Name_MakeAbsolute_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Operations_CombineFiles_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Operations_CombineFiles_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Operations_CombineFiles_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Operations_CopyMove_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Operations_CopyMove_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Operations_CopyMove_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Operations_Encoding_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Operations_Encoding_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Operations_Encoding_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Operations_SplitFile_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Operations_SplitFile_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Operations_SplitFile_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Select_ByVersionControlStatus_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Select_ByVersionControlStatus_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Select_ByVersionControlStatus_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Set_Attributes_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Set_Attributes_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Set_Attributes_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Set_Size_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Set_Size_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Set_Size_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Set_Time_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Set_Time_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Set_Time_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Files_Sign_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Sign_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Sign_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Image_AddOverlayColor_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Image_AddOverlayColor_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_AddOverlayColor_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Image_AdjustColor_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Image_AdjustColor_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_AdjustColor_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Image_Crop_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Image_Crop_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_Crop_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Image_GIF_Animate_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Image_GIF_Animate_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_GIF_Animate_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Image_GIF_Split_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Image_GIF_Split_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_GIF_Split_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Image_GrabColor_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Image_GrabColor_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_GrabColor_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Image_GrabImage_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Image_GrabImage_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_GrabImage_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Image_Rotate_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Image_Rotate_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_Rotate_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Image_SetTakenDate_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Image_SetTakenDate_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_SetTakenDate_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Image_Size_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Image_Size_Dialog.xaml.cs">
-      <DependentUpon>Configure_Image_Size_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Network_AbsoluteURL_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Network_AbsoluteURL_Dialog.xaml.cs">
-      <DependentUpon>Configure_Network_AbsoluteURL_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Network_FetchFile_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Network_FetchFile_Dialog.xaml.cs">
-      <DependentUpon>Configure_Network_FetchFile_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Network_FetchStream_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Network_FetchStream_Dialog.xaml.cs">
-      <DependentUpon>Configure_Network_FetchStream_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Network_Ping_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Network_Ping_Dialog.xaml.cs">
-      <DependentUpon>Configure_Network_Ping_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Network_ScanPorts_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Network_ScanPorts_Dialog.xaml.cs">
-      <DependentUpon>Configure_Network_ScanPorts_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Network_WCF_GetConfig_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Network_WCF_GetConfig_Dialog.xaml.cs">
-      <DependentUpon>Configure_Network_WCF_GetConfig_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Network_WCF_InterceptCalls_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Network_WCF_InterceptCalls_Dialog.xaml.cs">
-      <DependentUpon>Configure_Network_WCF_InterceptCalls_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Numeric_CombinationsPermutations_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Numeric_CombinationsPermutations_Dialog.xaml.cs">
-      <DependentUpon>Configure_Numeric_CombinationsPermutations_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Numeric_ConvertBase_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Numeric_ConvertBase_Dialog.xaml.cs">
-      <DependentUpon>Configure_Numeric_ConvertBase_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Numeric_Cycle_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Numeric_Cycle_Dialog.xaml.cs">
-      <DependentUpon>Configure_Numeric_Cycle_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Numeric_Floor_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Numeric_Floor_Dialog.xaml.cs">
-      <DependentUpon>Configure_Numeric_Floor_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Numeric_Limit_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Numeric_Limit_Dialog.xaml.cs">
-      <DependentUpon>Configure_Numeric_Limit_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Numeric_MinMaxValues_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Numeric_MinMaxValues_Dialog.xaml.cs">
-      <DependentUpon>Configure_Numeric_MinMaxValues_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Numeric_RandomNumber_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Numeric_RandomNumber_Dialog.xaml.cs">
-      <DependentUpon>Configure_Numeric_RandomNumber_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Numeric_Scale_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Numeric_Scale_Dialog.xaml.cs">
-      <DependentUpon>Configure_Numeric_Scale_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Numeric_Series_LinearGeometric_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Numeric_Series_LinearGeometric_Dialog.xaml.cs">
-      <DependentUpon>Configure_Numeric_Series_LinearGeometric_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Position_Goto_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Position_Goto_Dialog.xaml.cs">
-      <DependentUpon>Configure_Position_Goto_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Select_Limit_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Select_Limit_Dialog.xaml.cs">
-      <DependentUpon>Configure_Select_Limit_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Select_Repeats_ByCount_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Select_Repeats_ByCount_Dialog.xaml.cs">
-      <DependentUpon>Configure_Select_Repeats_ByCount_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Select_Split_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Select_Split_Dialog.xaml.cs">
-      <DependentUpon>Configure_Select_Split_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Table_Convert_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Table_Convert_Dialog.xaml.cs">
-      <DependentUpon>Configure_Table_Convert_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Table_Database_GenerateDeletes_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Table_Database_GenerateDeletes_Dialog.xaml.cs">
-      <DependentUpon>Configure_Table_Database_GenerateDeletes_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Table_Database_GenerateInserts_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Table_Database_GenerateInserts_Dialog.xaml.cs">
-      <DependentUpon>Configure_Table_Database_GenerateInserts_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Table_Database_GenerateUpdates_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Table_Database_GenerateUpdates_Dialog.xaml.cs">
-      <DependentUpon>Configure_Table_Database_GenerateUpdates_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Table_EditTable_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Table_EditTable_Dialog.xaml.cs">
-      <DependentUpon>Configure_Table_EditTable_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Table_Join_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Table_Join_Dialog.xaml.cs">
-      <DependentUpon>Configure_Table_Join_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Table_TextToTable_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Table_TextToTable_Dialog.xaml.cs">
-      <DependentUpon>Configure_Table_TextToTable_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Text_FirstDistinct_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Text_FirstDistinct_Dialog.xaml.cs">
-      <DependentUpon>Configure_Text_FirstDistinct_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Text_RandomText_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Text_RandomText_Dialog.xaml.cs">
-      <DependentUpon>Configure_Text_RandomText_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Text_ReverseRegEx_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Text_ReverseRegEx_Dialog.xaml.cs">
-      <DependentUpon>Configure_Text_ReverseRegEx_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Text_Select_ByWidth_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Text_Select_ByWidth_Dialog.xaml.cs">
-      <DependentUpon>Configure_Text_Select_ByWidth_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Text_Select_Chars_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Text_Select_Chars_Dialog.xaml.cs">
-      <DependentUpon>Configure_Text_Select_Chars_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Text_Unicode_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Text_Unicode_Dialog.xaml.cs">
-      <DependentUpon>Configure_Text_Unicode_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Window_CustomGrid_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Window_CustomGrid_Dialog.xaml.cs">
-      <DependentUpon>Configure_Window_CustomGrid_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Window_ViewBinaryCodePages_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Window_ViewBinaryCodePages_Dialog.xaml.cs">
-      <DependentUpon>Configure_Window_ViewBinaryCodePages_Dialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\DateTime_ToTimeZone_Dialog.xaml.cs">
+      <DependentUpon>DateTime_ToTimeZone_Dialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\DateTimeHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -727,12 +174,103 @@
     <Compile Include="Dialogs\DateTimeHelpDialog.xaml.cs">
       <DependentUpon>DateTimeHelpDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\Diff_Fix_Whitespace_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Diff_Fix_Whitespace_Dialog.xaml.cs">
+      <DependentUpon>Diff_Fix_Whitespace_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Diff_IgnoreCharacters_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Diff_IgnoreCharacters_Dialog.xaml.cs">
+      <DependentUpon>Diff_IgnoreCharacters_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Edit_Advanced_CompressDecompress_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Edit_Advanced_CompressDecompress_Dialog.xaml.cs">
+      <DependentUpon>Edit_Advanced_CompressDecompress_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Edit_Advanced_Convert_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Edit_Advanced_Convert_Dialog.xaml.cs">
+      <DependentUpon>Edit_Advanced_Convert_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Edit_Advanced_EncryptDecrypt_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Edit_Advanced_EncryptDecrypt_Dialog.xaml.cs">
+      <DependentUpon>Edit_Advanced_EncryptDecrypt_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Edit_Advanced_Hash_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Edit_Advanced_Hash_Dialog.xaml.cs">
+      <DependentUpon>Edit_Advanced_Hash_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Edit_Advanced_Sign_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Edit_Advanced_Sign_Dialog.xaml.cs">
+      <DependentUpon>Edit_Advanced_Sign_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Edit_Expression_Expression_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Edit_Expression_Expression_Dialog.xaml.cs">
+      <DependentUpon>Edit_Expression_Expression_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Edit_ModifyRegions_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Edit_ModifyRegions_Dialog.xaml.cs">
+      <DependentUpon>Edit_ModifyRegions_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Edit_Repeat_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Edit_Repeat_Dialog.xaml.cs">
+      <DependentUpon>Edit_Repeat_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Edit_Rotate_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Edit_Rotate_Dialog.xaml.cs">
+      <DependentUpon>Edit_Rotate_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Edit_Select_Limit_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Edit_Select_Limit_Dialog.xaml.cs">
+      <DependentUpon>Edit_Select_Limit_Dialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\EditDatabaseConnectDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Dialogs\EditDatabaseConnectDialog.xaml.cs">
       <DependentUpon>EditDatabaseConnectDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Execute_Network_WCF_InterceptCalls_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Execute_Network_WCF_InterceptCalls_Dialog.xaml.cs">
+      <DependentUpon>Execute_Network_WCF_InterceptCalls_Dialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\ExpressionHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -755,19 +293,166 @@
     <Compile Include="Dialogs\ExpressionHelpVariablesDialog.xaml.cs">
       <DependentUpon>ExpressionHelpVariablesDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\File_Advanced_Encrypt_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\File_Advanced_Encrypt_Dialog.xaml.cs">
+      <DependentUpon>File_Advanced_Encrypt_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\File_LineEndings_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\File_LineEndings_Dialog.xaml.cs">
+      <DependentUpon>File_LineEndings_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\File_OpenEncoding_ReopenWithEncoding_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\File_OpenEncoding_ReopenWithEncoding_Dialog.xaml.cs">
+      <DependentUpon>File_OpenEncoding_ReopenWithEncoding_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\File_Select_Choose_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\File_Select_Choose_Dialog.xaml.cs">
+      <DependentUpon>File_Select_Choose_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Advanced_CombineFiles_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Advanced_CombineFiles_Dialog.xaml.cs">
+      <DependentUpon>Files_Advanced_CombineFiles_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Advanced_SplitFiles_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Advanced_SplitFiles_Dialog.xaml.cs">
+      <DependentUpon>Files_Advanced_SplitFiles_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_CompressDecompress_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_CompressDecompress_Dialog.xaml.cs">
+      <DependentUpon>Files_CompressDecompress_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_CopyMove_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_CopyMove_Dialog.xaml.cs">
+      <DependentUpon>Files_CopyMove_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_EncryptDecrypt_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_EncryptDecrypt_Dialog.xaml.cs">
+      <DependentUpon>Files_EncryptDecrypt_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Get_Content_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Get_Content_Dialog.xaml.cs">
+      <DependentUpon>Files_Get_Content_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Get_Hash_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Get_Hash_Dialog.xaml.cs">
+      <DependentUpon>Files_Get_Hash_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Name_MakeAbsoluteRelative_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Name_MakeAbsoluteRelative_Dialog.xaml.cs">
+      <DependentUpon>Files_Name_MakeAbsoluteRelative_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Select_ByContent_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Select_ByContent_Dialog.xaml.cs">
+      <DependentUpon>Files_Select_ByContent_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Select_BySourceControlStatus_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Select_BySourceControlStatus_Dialog.xaml.cs">
+      <DependentUpon>Files_Select_BySourceControlStatus_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Set_Attributes_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Set_Attributes_Dialog.xaml.cs">
+      <DependentUpon>Files_Set_Attributes_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Set_Content_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Set_Content_Dialog.xaml.cs">
+      <DependentUpon>Files_Set_Content_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Set_Encoding_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Set_Encoding_Dialog.xaml.cs">
+      <DependentUpon>Files_Set_Encoding_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Set_Size_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Set_Size_Dialog.xaml.cs">
+      <DependentUpon>Files_Set_Size_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Set_Time_Various_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Set_Time_Various_Dialog.xaml.cs">
+      <DependentUpon>Files_Set_Time_Various_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Files_Sign_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Files_Sign_Dialog.xaml.cs">
+      <DependentUpon>Files_Sign_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\FileTable_Various_Various_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\FileTable_Various_Various_Dialog.xaml.cs">
+      <DependentUpon>FileTable_Various_Various_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Help_About_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Help_About_Dialog.xaml.cs">
+      <DependentUpon>Help_About_Dialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\HelpAboutChangeLogDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Dialogs\HelpAboutChangeLogDialog.xaml.cs">
       <DependentUpon>HelpAboutChangeLogDialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\HelpAboutDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\HelpAboutDialog.xaml.cs">
-      <DependentUpon>HelpAboutDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\HelpAboutLicenseDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -777,6 +462,76 @@
       <DependentUpon>HelpAboutLicenseDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\HelpItems.cs" />
+    <Page Include="Dialogs\Image_AddOverlayColor_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Image_AddOverlayColor_Dialog.xaml.cs">
+      <DependentUpon>Image_AddOverlayColor_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Image_AdjustColor_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Image_AdjustColor_Dialog.xaml.cs">
+      <DependentUpon>Image_AdjustColor_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Image_Crop_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Image_Crop_Dialog.xaml.cs">
+      <DependentUpon>Image_Crop_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Image_GIF_Animate_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Image_GIF_Animate_Dialog.xaml.cs">
+      <DependentUpon>Image_GIF_Animate_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Image_GIF_Split_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Image_GIF_Split_Dialog.xaml.cs">
+      <DependentUpon>Image_GIF_Split_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Image_GrabColor_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Image_GrabColor_Dialog.xaml.cs">
+      <DependentUpon>Image_GrabColor_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Image_GrabImage_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Image_GrabImage_Dialog.xaml.cs">
+      <DependentUpon>Image_GrabImage_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Image_Resize_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Image_Resize_Dialog.xaml.cs">
+      <DependentUpon>Image_Resize_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Image_Rotate_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Image_Rotate_Dialog.xaml.cs">
+      <DependentUpon>Image_Rotate_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Image_SetTakenDate_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Image_SetTakenDate_Dialog.xaml.cs">
+      <DependentUpon>Image_SetTakenDate_Dialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\JoinDisplay.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -784,12 +539,12 @@
     <Compile Include="Dialogs\JoinDisplay.xaml.cs">
       <DependentUpon>JoinDisplay.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\MacroPlayRepeatDialog.xaml">
+    <Page Include="Dialogs\Macro_Play_Repeat_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\MacroPlayRepeatDialog.xaml.cs">
-      <DependentUpon>MacroPlayRepeatDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Macro_Play_Repeat_Dialog.xaml.cs">
+      <DependentUpon>Macro_Play_Repeat_Dialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\Message.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -798,12 +553,180 @@
     <Compile Include="Dialogs\Message.xaml.cs">
       <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\Network_AbsoluteURL_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Network_AbsoluteURL_Dialog.xaml.cs">
+      <DependentUpon>Network_AbsoluteURL_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Network_Fetch_File_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Network_Fetch_File_Dialog.xaml.cs">
+      <DependentUpon>Network_Fetch_File_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Network_Fetch_StreamPlaylist_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Network_Fetch_StreamPlaylist_Dialog.xaml.cs">
+      <DependentUpon>Network_Fetch_StreamPlaylist_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Network_Ping_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Network_Ping_Dialog.xaml.cs">
+      <DependentUpon>Network_Ping_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Network_ScanPorts_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Network_ScanPorts_Dialog.xaml.cs">
+      <DependentUpon>Network_ScanPorts_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Network_WCF_GetConfig_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Network_WCF_GetConfig_Dialog.xaml.cs">
+      <DependentUpon>Network_WCF_GetConfig_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Network_WCF_InterceptCalls_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Network_WCF_InterceptCalls_Dialog.xaml.cs">
+      <DependentUpon>Network_WCF_InterceptCalls_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Numeric_CombinationsPermutations_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Numeric_CombinationsPermutations_Dialog.xaml.cs">
+      <DependentUpon>Numeric_CombinationsPermutations_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Numeric_ConvertBase_ConvertBase_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Numeric_ConvertBase_ConvertBase_Dialog.xaml.cs">
+      <DependentUpon>Numeric_ConvertBase_ConvertBase_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Numeric_Cycle_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Numeric_Cycle_Dialog.xaml.cs">
+      <DependentUpon>Numeric_Cycle_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Numeric_MinMaxValues_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Numeric_MinMaxValues_Dialog.xaml.cs">
+      <DependentUpon>Numeric_MinMaxValues_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Numeric_RandomNumber_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Numeric_RandomNumber_Dialog.xaml.cs">
+      <DependentUpon>Numeric_RandomNumber_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Numeric_Scale_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Numeric_Scale_Dialog.xaml.cs">
+      <DependentUpon>Numeric_Scale_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Numeric_Select_Limit_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Numeric_Select_Limit_Dialog.xaml.cs">
+      <DependentUpon>Numeric_Select_Limit_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Numeric_Series_LinearGeometric_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Numeric_Series_LinearGeometric_Dialog.xaml.cs">
+      <DependentUpon>Numeric_Series_LinearGeometric_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Numeric_Various_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Numeric_Various_Dialog.xaml.cs">
+      <DependentUpon>Numeric_Various_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Position_Goto_Various_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Position_Goto_Various_Dialog.xaml.cs">
+      <DependentUpon>Position_Goto_Various_Dialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\RegExHelpDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Dialogs\RegExHelpDialog.xaml.cs">
       <DependentUpon>RegExHelpDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Table_Convert_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Table_Convert_Dialog.xaml.cs">
+      <DependentUpon>Table_Convert_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Table_Database_GenerateDeletes_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Table_Database_GenerateDeletes_Dialog.xaml.cs">
+      <DependentUpon>Table_Database_GenerateDeletes_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Table_Database_GenerateInserts_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Table_Database_GenerateInserts_Dialog.xaml.cs">
+      <DependentUpon>Table_Database_GenerateInserts_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Table_Database_GenerateUpdates_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Table_Database_GenerateUpdates_Dialog.xaml.cs">
+      <DependentUpon>Table_Database_GenerateUpdates_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Table_Edit_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Table_Edit_Dialog.xaml.cs">
+      <DependentUpon>Table_Edit_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Table_Join_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Table_Join_Dialog.xaml.cs">
+      <DependentUpon>Table_Join_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Table_New_FromSelection_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Table_New_FromSelection_Dialog.xaml.cs">
+      <DependentUpon>Table_New_FromSelection_Dialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\TableDisplay.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -812,6 +735,83 @@
     <Compile Include="Dialogs\TableDisplay.xaml.cs">
       <DependentUpon>TableDisplay.xaml</DependentUpon>
     </Compile>
+    <Page Include="Dialogs\Text_Advanced_FirstDistinct_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_Advanced_FirstDistinct_Dialog.xaml.cs">
+      <DependentUpon>Text_Advanced_FirstDistinct_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Text_Advanced_ReverseRegex_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_Advanced_ReverseRegex_Dialog.xaml.cs">
+      <DependentUpon>Text_Advanced_ReverseRegex_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Text_Advanced_Unicode_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_Advanced_Unicode_Dialog.xaml.cs">
+      <DependentUpon>Text_Advanced_Unicode_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Text_Find_Find_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_Find_Find_Dialog.xaml.cs">
+      <DependentUpon>Text_Find_Find_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Text_Find_RegexReplace_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_Find_RegexReplace_Dialog.xaml.cs">
+      <DependentUpon>Text_Find_RegexReplace_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Text_Random_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_Random_Dialog.xaml.cs">
+      <DependentUpon>Text_Random_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Text_Select_Repeats_ByCount_IgnoreMatchCase_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_Select_Repeats_ByCount_IgnoreMatchCase_Dialog.xaml.cs">
+      <DependentUpon>Text_Select_Repeats_ByCount_IgnoreMatchCase_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Text_Select_Split_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_Select_Split_Dialog.xaml.cs">
+      <DependentUpon>Text_Select_Split_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Text_SelectTrim_WholeBoundedWordTrim_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_SelectTrim_WholeBoundedWordTrim_Dialog.xaml.cs">
+      <DependentUpon>Text_SelectTrim_WholeBoundedWordTrim_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Text_SelectWidth_ByWidth_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_SelectWidth_ByWidth_Dialog.xaml.cs">
+      <DependentUpon>Text_SelectWidth_ByWidth_Dialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Dialogs\Text_Sort_Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="Dialogs\Text_Sort_Dialog.xaml.cs">
+      <DependentUpon>Text_Sort_Dialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dialogs\ViewBinaryEditValueDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -819,26 +819,26 @@
     <Compile Include="Dialogs\ViewBinaryEditValueDialog.xaml.cs">
       <DependentUpon>ViewBinaryEditValueDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\WCFInterceptDialog.xaml">
+    <Page Include="Dialogs\Window_BinaryCodePages_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\WCFInterceptDialog.xaml.cs">
-      <DependentUpon>WCFInterceptDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Window_BinaryCodePages_Dialog.xaml.cs">
+      <DependentUpon>Window_BinaryCodePages_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\WindowActiveFilesDialog.xaml">
+    <Page Include="Dialogs\Window_CustomGrid_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\WindowActiveFilesDialog.xaml.cs">
-      <DependentUpon>WindowActiveFilesDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Window_CustomGrid_Dialog.xaml.cs">
+      <DependentUpon>Window_CustomGrid_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\WindowFontSizeDialog.xaml">
+    <Page Include="Dialogs\Window_Font_Size_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\WindowFontSizeDialog.xaml.cs">
-      <DependentUpon>WindowFontSizeDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\Window_Font_Size_Dialog.xaml.cs">
+      <DependentUpon>Window_Font_Size_Dialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />

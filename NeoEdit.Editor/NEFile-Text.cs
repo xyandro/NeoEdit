@@ -1,19 +1,207 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
+using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.RevRegEx;
+using NeoEdit.Common.Transform;
+using NeoEdit.Editor.PreExecution;
+using NeoEdit.Editor.Searchers;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
+		enum SelectSplitEnum
+		{
+			None = 0,
+			Parentheses = 1,
+			Brackets = 2,
+			Braces = 4,
+			LTGT = 8,
+			String = 16,
+			VerbatimString = 32 | String,
+			InterpolatedString = 64 | String,
+			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
+		}
+
+		int GetOppositeBracket(int position)
+		{
+			if ((position < 0) || (position > Text.Length))
+				return -1;
+
+			var dict = new Dictionary<char, char>
+			{
+				{ '(', ')' },
+				{ '{', '}' },
+				{ '[', ']' },
+				{ '<', '>' },
+			};
+
+			var found = default(KeyValuePair<char, char>);
+			if ((found.Key == 0) && (position < Text.Length))
+				found = dict.FirstOrDefault(entry => (entry.Key == Text[position]) || (entry.Value == Text[position]));
+			var posAdjust = 1;
+			if (found.Key == 0)
+			{
+				if (--position < 0)
+					return -1;
+				found = dict.FirstOrDefault(entry => (entry.Key == Text[position]) || (entry.Value == Text[position]));
+				posAdjust = 0;
+			}
+			if (found.Key == 0)
+				return -1;
+
+			var direction = found.Key == Text[position] ? 1 : -1;
+
+			var num = 0;
+			for (; (position >= 0) && (position < Text.Length); position += direction)
+			{
+				if (Text[position] == found.Key)
+					++num;
+				if (Text[position] == found.Value)
+					--num;
+
+				if (num == 0)
+					return position + posAdjust;
+			}
+
+			return -1;
+		}
+
 		static string GetRandomData(string chars, int length) => new string(Enumerable.Range(0, length).Select(num => chars[random.Next(chars.Length)]).ToArray());
 
-		static string SetWidth(string str, Configuration_Text_Select_ByWidth result, int value)
+		static string RepeatsValue(bool caseSensitive, string input) => caseSensitive ? input : input?.ToLowerInvariant();
+
+		IEnumerable<Range> SelectSplit(Range range, Configuration_Text_Select_Split result, ISearcher searcher)
+		{
+			var stack = new Stack<SelectSplitEnum>();
+			stack.Push(SelectSplitEnum.None);
+
+			var charValue = new Dictionary<char, SelectSplitEnum>
+			{
+				['('] = SelectSplitEnum.Parentheses,
+				[')'] = SelectSplitEnum.Parentheses,
+				['['] = SelectSplitEnum.Brackets,
+				[']'] = SelectSplitEnum.Brackets,
+				['{'] = SelectSplitEnum.Braces,
+				['}'] = SelectSplitEnum.Braces,
+				['<'] = SelectSplitEnum.LTGT,
+				['>'] = SelectSplitEnum.LTGT,
+			};
+
+			var start = range.Start;
+			var pos = start;
+			var matchPos = -1;
+			var matchLen = 0;
+			while (true)
+			{
+				var stackTop = stack.Peek();
+				if (stackTop.HasFlag(SelectSplitEnum.String))
+				{
+					if (pos >= range.End)
+						throw new Exception("Incomplete string");
+					else if ((pos + 1 < range.End) && (Text[pos] == '\\') && (!stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
+						pos += 2;
+					else if ((pos + 1 < range.End) && (Text[pos] == '"') && (Text[pos + 1] == '"') && (stackTop.HasFlag(SelectSplitEnum.VerbatimString)))
+						pos += 2;
+					else if ((pos + 1 < range.End) && (Text[pos] == '{') && (Text[pos + 1] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
+						pos += 2;
+					else if ((Text[pos] == '{') && (stackTop.HasFlag(SelectSplitEnum.InterpolatedString)))
+					{
+						stack.Push(SelectSplitEnum.Braces);
+						++pos;
+					}
+					else if (Text[pos] == '"')
+					{
+						stack.Pop();
+						++pos;
+					}
+					else
+						++pos;
+				}
+				else
+				{
+					if ((stackTop == SelectSplitEnum.None) && (pos > matchPos))
+					{
+						var found = searcher.Find(Text.GetString(pos, range.End - pos), pos).FirstOrDefault();
+						if (found != null)
+						{
+							if (found.Length == 0)
+								throw new Exception("Cannot split on empty selection");
+							matchPos = found.Start;
+							matchLen = found.Length;
+						}
+						else
+						{
+							matchPos = range.End;
+							matchLen = 0;
+						}
+					}
+
+					if ((pos >= range.End) || ((pos == matchPos) && (stackTop == SelectSplitEnum.None)))
+					{
+						if (stack.Count != 1)
+							throw new Exception($"Didn't find close for {stackTop}");
+						var useStart = start;
+						var useEnd = pos;
+						if (result.TrimWhitespace)
+						{
+							while ((useStart < pos) && (char.IsWhiteSpace(Text[useStart])))
+								++useStart;
+							while ((useEnd > useStart) && (char.IsWhiteSpace(Text[useEnd - 1])))
+								--useEnd;
+						}
+						if ((!result.ExcludeEmpty) || (useStart != useEnd))
+							yield return new Range(useEnd, useStart);
+						if (pos >= range.End)
+							break;
+						if (result.IncludeResults)
+							yield return Range.FromIndex(pos, matchLen);
+						pos += matchLen;
+						start = pos;
+					}
+					else if (((result.BalanceParens) && (Text[pos] == '(')) || ((result.BalanceBrackets) && (Text[pos] == '[')) || ((result.BalanceBraces) && (Text[pos] == '{')) || ((result.BalanceLTGT) && (Text[pos] == '<')))
+						stack.Push(charValue[Text[pos++]]);
+					else if (((result.BalanceParens) && (Text[pos] == ')')) || ((result.BalanceBrackets) && (Text[pos] == ']')) || ((result.BalanceBraces) && (Text[pos] == '}')) || ((result.BalanceLTGT) && (Text[pos] == '>')))
+					{
+						if (charValue[Text[pos]] != stackTop)
+							throw new Exception($"Didn't find open for {Text[pos]}");
+						stack.Pop();
+						++pos;
+					}
+					else if ((result.BalanceStrings) && (Text[pos] == '\"'))
+					{
+						stack.Push(SelectSplitEnum.String);
+						++pos;
+					}
+					else if ((result.BalanceStrings) && (pos + 1 < range.End) && (Text[pos] == '@') && (Text[pos + 1] == '\"'))
+					{
+						stack.Push(SelectSplitEnum.VerbatimString);
+						pos += 2;
+					}
+					else if ((result.BalanceStrings) && (pos + 1 < range.End) && (Text[pos] == '$') && (Text[pos + 1] == '\"'))
+					{
+						stack.Push(SelectSplitEnum.InterpolatedString);
+						pos += 2;
+					}
+					else if ((result.BalanceStrings) && (pos + 2 < range.End) && (Text[pos] == '$') && (Text[pos + 1] == '@') && (Text[pos + 2] == '\"'))
+					{
+						stack.Push(SelectSplitEnum.InterpolatedVerbatimString);
+						pos += 3;
+					}
+					else
+						++pos;
+				}
+			}
+		}
+
+		static string SetWidth(string str, Configuration_Text_SelectWidth_ByWidth result, int value)
 		{
 			if (str.Length == value)
 				return str;
@@ -22,9 +210,9 @@ namespace NeoEdit.Editor
 			{
 				switch (result.Location)
 				{
-					case Configuration_Text_Select_ByWidth.TextLocation.Start: return str.Substring(0, value);
-					case Configuration_Text_Select_ByWidth.TextLocation.Middle: return str.Substring((str.Length - value) / 2, value);
-					case Configuration_Text_Select_ByWidth.TextLocation.End: return str.Substring(str.Length - value);
+					case Configuration_Text_SelectWidth_ByWidth.TextLocation.Start: return str.Substring(0, value);
+					case Configuration_Text_SelectWidth_ByWidth.TextLocation.Middle: return str.Substring((str.Length - value) / 2, value);
+					case Configuration_Text_SelectWidth_ByWidth.TextLocation.End: return str.Substring(str.Length - value);
 					default: throw new ArgumentException("Invalid");
 				}
 			}
@@ -33,15 +221,15 @@ namespace NeoEdit.Editor
 				var len = value - str.Length;
 				switch (result.Location)
 				{
-					case Configuration_Text_Select_ByWidth.TextLocation.Start: return str + new string(result.PadChar, len);
-					case Configuration_Text_Select_ByWidth.TextLocation.Middle: return new string(result.PadChar, len / 2) + str + new string(result.PadChar, (len + 1) / 2);
-					case Configuration_Text_Select_ByWidth.TextLocation.End: return new string(result.PadChar, len) + str;
+					case Configuration_Text_SelectWidth_ByWidth.TextLocation.Start: return str + new string(result.PadChar, len);
+					case Configuration_Text_SelectWidth_ByWidth.TextLocation.Middle: return new string(result.PadChar, len / 2) + str + new string(result.PadChar, (len + 1) / 2);
+					case Configuration_Text_SelectWidth_ByWidth.TextLocation.End: return new string(result.PadChar, len) + str;
 					default: throw new ArgumentException("Invalid");
 				}
 			}
 		}
 
-		Range TrimRange(Range range, Configuration_Text_Select_Chars result)
+		Range TrimRange(Range range, Configuration_Text_SelectTrim_WholeBoundedWordTrim result)
 		{
 			var position = range.Start;
 			var length = range.Length;
@@ -63,7 +251,7 @@ namespace NeoEdit.Editor
 			return Range.FromIndex(position, length);
 		}
 
-		static string TrimString(string str, Configuration_Text_Select_Chars result)
+		static string TrimString(string str, Configuration_Text_SelectTrim_WholeBoundedWordTrim result)
 		{
 			var start = 0;
 			var end = str.Length;
@@ -80,28 +268,11 @@ namespace NeoEdit.Editor
 			return str.Substring(start, end - start);
 		}
 
-		static Configuration_Text_Select_Chars Configure_Text_Select_Trim(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Text_Select_Chars(0);
-
-		void Execute_Text_Select_Trim()
-		{
-			var result = state.Configuration as Configuration_Text_Select_Chars;
-			Selections = Selections.AsTaskRunner().Select(range => TrimRange(range, result)).ToList();
-		}
-
-		static Configuration_Text_Select_ByWidth Configure_Text_Select_ByWidth(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Text_Select_ByWidth(false, true, state.NEFiles.Focused.GetVariables());
-
-		void Execute_Text_Select_ByWidth()
-		{
-			var result = state.Configuration as Configuration_Text_Select_ByWidth;
-			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
-			Selections = Selections.AsTaskRunner().Where((range, index) => range.Length == results[index]).ToList();
-		}
-
-		static Configuration_Text_Select_Chars Configure_Text_Select_WholeBoundedWord(EditorExecuteState state, bool wholeWord) => state.NEFiles.FilesWindow.Configure_Text_Select_Chars(wholeWord ? 1 : 2);
+		static Configuration_Text_SelectTrim_WholeBoundedWordTrim Configure_Text_Select_WholeBoundedWord(EditorExecuteState state, bool wholeWord) => state.NEFiles.FilesWindow.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(wholeWord ? 1 : 2);
 
 		void Execute_Text_Select_WholeBoundedWord(bool wholeWord)
 		{
-			var result = state.Configuration as Configuration_Text_Select_Chars;
+			var result = state.Configuration as Configuration_Text_SelectTrim_WholeBoundedWordTrim;
 			var minPosition = 0;
 			var maxPosition = Text.Length;
 
@@ -124,6 +295,119 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
+		static Configuration_Text_SelectTrim_WholeBoundedWordTrim Configure_Text_Select_Trim(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(0);
+
+		void Execute_Text_Select_Trim()
+		{
+			var result = state.Configuration as Configuration_Text_SelectTrim_WholeBoundedWordTrim;
+			Selections = Selections.AsTaskRunner().Select(range => TrimRange(range, result)).ToList();
+		}
+
+		static Configuration_Text_Select_Split Configure_Text_Select_Split(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Text_Select_Split(state.NEFiles.Focused.GetVariables());
+
+		void Execute_Text_Select_Split()
+		{
+			var result = state.Configuration as Configuration_Text_Select_Split;
+			var indexes = GetExpressionResults<int>(result.Index, Selections.Count());
+
+			ISearcher searcher;
+			if (result.IsRegex)
+				searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, firstMatchOnly: true);
+			else
+				searcher = new StringSearcher(result.Text, result.WholeWords, result.MatchCase, firstMatchOnly: true);
+
+			Selections = Selections.AsTaskRunner().SelectMany((range, index) => SelectSplit(range, result, searcher).Skip(indexes[index] == 0 ? 0 : indexes[index] - 1).Take(indexes[index] == 0 ? int.MaxValue : 1)).ToList();
+		}
+
+		void Execute_Text_Select_Repeats_Unique_IgnoreMatchCase(bool caseSensitive) => Selections = Selections.AsTaskRunner().DistinctBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+
+		void Execute_Text_Select_Repeats_Duplicates_IgnoreMatchCase(bool caseSensitive) => Selections = Selections.AsTaskRunner().DuplicateBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+
+		void Execute_Text_Select_Repeats_NonMatchPrevious_IgnoreMatchCase(bool caseSensitive) => Selections = Selections.AsTaskRunner().NonMatchBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+
+		void Execute_Text_Select_Repeats_MatchPrevious_IgnoreMatchCase(bool caseSensitive) => Selections = Selections.AsTaskRunner().MatchBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
+
+		static Configuration_Text_Select_Repeats_ByCount_IgnoreMatchCase Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase();
+
+		void Execute_Text_Select_Repeats_ByCount_IgnoreMatchCase(bool caseSensitive)
+		{
+			var result = state.Configuration as Configuration_Text_Select_Repeats_ByCount_IgnoreMatchCase;
+			var strs = Selections.Select((range, index) => Tuple.Create(Text.GetString(range), index)).ToList();
+			var counts = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
+			foreach (var tuple in strs)
+			{
+				if (!counts.ContainsKey(tuple.Item1))
+					counts[tuple.Item1] = 0;
+				++counts[tuple.Item1];
+			}
+			strs = strs.Where(tuple => ((!result.MinCount.HasValue) || (counts[tuple.Item1] >= result.MinCount)) && ((!result.MaxCount.HasValue) || (counts[tuple.Item1] <= result.MaxCount))).ToList();
+			Selections = strs.Select(tuple => Selections[tuple.Item2]).ToList();
+		}
+
+		static PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(EditorExecuteState state, bool caseSensitive)
+		{
+			var preExecution = new PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase();
+			foreach (var neFile in state.NEFiles.ActiveFiles)
+			{
+				var strs = neFile.GetSelectionStrings().ToList();
+				var matches = preExecution.Matches ?? strs;
+				while (matches.Count < strs.Count)
+					matches.Add(null);
+				while (strs.Count < matches.Count)
+					strs.Add(null);
+
+				var stringComparison = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+				for (var ctr = 0; ctr < matches.Count; ++ctr)
+					if ((matches[ctr] != null) && (!string.Equals(matches[ctr], strs[ctr], stringComparison)))
+						matches[ctr] = null;
+
+				preExecution.Matches = matches;
+			}
+			return preExecution;
+		}
+
+		void Execute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(bool match)
+		{
+			var matches = (state.PreExecution as PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase).Matches;
+			Selections = Selections.Where((range, index) => (matches[index] != null) == match).ToList();
+		}
+
+		static PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase PreExecute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(EditorExecuteState state, bool caseSensitive)
+		{
+			var preExecution = new PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase();
+			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
+			foreach (var neFile in state.NEFiles.ActiveFiles)
+			{
+				var repeats = neFile.Selections.AsTaskRunner().GroupBy(neFile.Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
+
+				if (preExecution.Repeats != null)
+					repeats = repeats.Join(preExecution.Repeats, pair => pair.Key, pair => pair.Key, (r1, r2) => new { r1.Key, Value = Math.Min(r1.Value, r2.Value) }, repeats.Comparer).ToDictionary(obj => obj.Key, obj => obj.Value, repeats.Comparer);
+
+				preExecution.Repeats = repeats;
+			}
+			return preExecution;
+		}
+
+		void Execute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(bool match)
+		{
+			var repeats = (state.PreExecution as PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase).Repeats;
+			repeats = repeats.ToDictionary(pair => pair.Key, pair => pair.Value, repeats.Comparer);
+			Selections = Selections.Where(range =>
+			{
+				var str = Text.GetString(range);
+				return ((repeats.ContainsKey(str)) && (repeats[str]-- > 0)) == match;
+			}).ToList();
+		}
+
+		static Configuration_Text_SelectWidth_ByWidth Configure_Text_Select_ByWidth(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Text_SelectWidth_ByWidth(false, true, state.NEFiles.Focused.GetVariables());
+
+		void Execute_Text_Select_ByWidth()
+		{
+			var result = state.Configuration as Configuration_Text_SelectWidth_ByWidth;
+			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
+			Selections = Selections.AsTaskRunner().Where((range, index) => range.Length == results[index]).ToList();
+		}
+
 		void Execute_Text_Select_MinMax_Text(bool max)
 		{
 			if (!Selections.Any())
@@ -144,89 +428,281 @@ namespace NeoEdit.Editor
 			Selections = lengths.Indexes(length => length == find).Select(index => Selections[index]).ToList();
 		}
 
+		void Execute_Text_Select_ToggleOpenClose()
+		{
+			Selections = Selections.AsTaskRunner().Select(range =>
+			{
+				var newPos = GetOppositeBracket(range.Cursor);
+				if (newPos == -1)
+					return range;
+
+				return MoveCursor(range, newPos, state.ShiftDown);
+			}).ToList();
+		}
+
+		static Configuration_Text_Find_Find Configure_Text_Find_Find(EditorExecuteState state)
+		{
+			string text = null;
+			var selectionOnly = state.NEFiles.Focused.Selections.Any(range => range.HasSelection);
+
+			if (state.NEFiles.Focused.Selections.Count == 1)
+			{
+				var sel = state.NEFiles.Focused.Selections.Single();
+				if ((selectionOnly) && (state.NEFiles.Focused.Text.GetPositionLine(sel.Cursor) == state.NEFiles.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
+				{
+					selectionOnly = false;
+					text = state.NEFiles.Focused.Text.GetString(sel);
+				}
+			}
+
+			return state.NEFiles.FilesWindow.RunDialog_Configure_Text_Find_Find(text, selectionOnly, state.NEFiles.Focused.ViewBinaryCodePages, state.NEFiles.Focused.GetVariables());
+		}
+
+		void Execute_Text_Find_Find()
+		{
+			var result = state.Configuration as Configuration_Text_Find_Find;
+			// Determine selections to search
+			List<Range> selections;
+			var firstMatchOnly = (result.KeepMatching) || (result.RemoveMatching);
+			if (result.Type == Configuration_Text_Find_Find.ResultType.FindNext)
+			{
+				firstMatchOnly = true;
+				selections = new List<Range>();
+				for (var ctr = 0; ctr < Selections.Count; ++ctr)
+					selections.Add(new Range(Selections[ctr].End, ctr + 1 == Selections.Count ? Text.Length : Selections[ctr + 1].Start));
+			}
+			else if (result.SelectionOnly)
+				selections = Selections.ToList();
+			else
+				selections = new List<Range> { Range.FromIndex(0, Text.Length) };
+
+			if (!selections.Any())
+				return;
+
+			// For each selection, determine strings to find. The boolean is for MatchCase, since even if MatchCase is false some should be true (INT16LE 30000 = 0u, NOT 0U)
+			List<List<(string, bool)>> stringsToFind;
+
+			if (result.IsExpression)
+			{
+				var expressionResults = GetExpressionResults<string>(result.Text, result.AlignSelections ? selections.Count : default(int?));
+				if (result.AlignSelections)
+				{
+					if (result.IsBoolean) // Either KeepMatching or RemoveMatching will also be true
+					{
+						Selections = Selections.Where((range, index) => (expressionResults[index] == "True") == result.KeepMatching).ToList();
+						return;
+					}
+
+					stringsToFind = selections.Select((x, index) => new List<(string, bool)> { (expressionResults[index], result.MatchCase) }).ToList();
+				}
+				else
+					stringsToFind = Enumerable.Repeat(expressionResults.Select(x => (x, result.MatchCase)).ToList(), selections.Count).ToList();
+			}
+			else
+				stringsToFind = Enumerable.Repeat(new List<(string, bool)> { (result.Text, result.MatchCase) }, selections.Count).ToList();
+
+			ViewBinarySearches = null;
+			// If the strings are binary convert them to all codepages
+			if (result.IsBinary)
+			{
+				ViewBinaryCodePages = result.CodePages;
+				ViewBinarySearches = stringsToFind.SelectMany().Distinct().GroupBy(x => x.Item2).Select(g => new HashSet<string>(g.Select(x => x.Item1), g.Key ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)).ToList();
+				var mapping = stringsToFind
+					.Distinct()
+					.ToDictionary(
+						list => list,
+						list => list.SelectMany(
+							item => result.CodePages
+								.Select(codePage => (Coder.TryStringToBytes(item.Item1, codePage), (item.Item2) || (Coder.AlwaysCaseSensitive(codePage))))
+								.NonNull(tuple => tuple.Item1)
+								.Select(tuple => (Coder.TryBytesToString(tuple.Item1, CodePage), tuple.Item2))
+								.NonNullOrEmpty(tuple => tuple.Item1)
+							).Distinct().ToList());
+
+				stringsToFind = stringsToFind.Select(list => mapping[list]).ToList();
+			}
+
+			// Create searchers
+			Dictionary<List<(string, bool)>, ISearcher> searchers;
+			if (result.IsRegex)
+			{
+				searchers = stringsToFind
+					.Distinct()
+					.ToDictionary(
+						list => list,
+						list => new RegexesSearcher(list.Select(x => x.Item1).ToList(), result.WholeWords, result.MatchCase, result.EntireSelection, firstMatchOnly, result.RegexGroups) as ISearcher);
+			}
+			else
+			{
+				searchers = stringsToFind
+					.Distinct()
+					.ToDictionary(
+						list => list,
+						list =>
+						{
+							if (list.Count == 1)
+								return new StringSearcher(list[0].Item1, result.WholeWords, list[0].Item2, result.SkipSpace, result.EntireSelection, firstMatchOnly) as ISearcher;
+							return new StringsSearcher(list, result.WholeWords, result.EntireSelection, firstMatchOnly);
+						});
+			}
+
+			// Perform search
+			var results = selections.AsTaskRunner().Select((range, index) => searchers[stringsToFind[index]].Find(Text.GetString(range), range.Start)).ToList();
+
+			switch (result.Type)
+			{
+				case Configuration_Text_Find_Find.ResultType.CopyCount:
+					Clipboard = results.Select(list => list.Count.ToString()).ToList();
+					break;
+				case Configuration_Text_Find_Find.ResultType.FindNext:
+					var newSels = new List<Range>();
+					for (var ctr = 0; ctr < Selections.Count; ++ctr)
+					{
+						int endPos;
+						if (results[ctr].Count >= 1)
+							endPos = results[ctr][0].End;
+						else if (ctr + 1 < Selections.Count)
+							endPos = Selections[ctr + 1].Start;
+						else
+							endPos = Text.Length;
+						newSels.Add(new Range(endPos, Selections[ctr].Start));
+					}
+					Selections = newSels;
+					break;
+				case Configuration_Text_Find_Find.ResultType.FindAll:
+					if ((result.KeepMatching) || (result.RemoveMatching))
+						Selections = selections.Where((range, index) => results[index].Any() == result.KeepMatching).ToList();
+					else
+						Selections = results.SelectMany().ToList();
+					break;
+			}
+		}
+
+		static Configuration_Text_Find_RegexReplace Configure_Text_Find_RegexReplace(EditorExecuteState state)
+		{
+			string text = null;
+			var selectionOnly = state.NEFiles.Focused.Selections.Any(range => range.HasSelection);
+
+			if (state.NEFiles.Focused.Selections.Count == 1)
+			{
+				var sel = state.NEFiles.Focused.Selections.Single();
+				if ((selectionOnly) && (state.NEFiles.Focused.Text.GetPositionLine(sel.Cursor) == state.NEFiles.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
+				{
+					selectionOnly = false;
+					text = state.NEFiles.Focused.Text.GetString(sel);
+				}
+			}
+
+			return state.NEFiles.FilesWindow.RunDialog_Configure_Text_Find_RegexReplace(text, selectionOnly);
+		}
+
+		void Execute_Text_Find_RegexReplace()
+		{
+			var result = state.Configuration as Configuration_Text_Find_RegexReplace;
+			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { Range.FromIndex(0, Text.Length) };
+			var searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, result.EntireSelection);
+			var sels = regions.AsTaskRunner().SelectMany(region => searcher.Find(Text.GetString(region), region.Start)).ToList();
+			Selections = sels;
+			ReplaceSelections(Selections.AsTaskRunner().Select(range => searcher.regexes[0].Replace(Text.GetString(range), result.Replace)).ToList());
+		}
+
+		static Configuration_Text_SelectTrim_WholeBoundedWordTrim Configure_Text_Trim(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(0);
+
+		void Execute_Text_Trim()
+		{
+			var result = state.Configuration as Configuration_Text_SelectTrim_WholeBoundedWordTrim;
+			ReplaceSelections(Selections.AsTaskRunner().Select(str => TrimString(Text.GetString(str), result)).ToList());
+		}
+
+		static Configuration_Text_SelectWidth_ByWidth Configure_Text_Width(EditorExecuteState state)
+		{
+			var numeric = state.NEFiles.Focused.Selections.Any() ? state.NEFiles.Focused.Selections.AsTaskRunner().All(range => state.NEFiles.Focused.Text.GetString(range).IsNumeric()) : false;
+			return state.NEFiles.FilesWindow.RunDialog_Configure_Text_SelectWidth_ByWidth(numeric, false, state.NEFiles.Focused.GetVariables());
+		}
+
+		void Execute_Text_Width()
+		{
+			var result = state.Configuration as Configuration_Text_SelectWidth_ByWidth;
+			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
+			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
+		}
+
+		void Execute_Text_SingleLine() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
+
 		void Execute_Text_Case_Upper() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToUpperInvariant()).ToList());
 
 		void Execute_Text_Case_Lower() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToLowerInvariant()).ToList());
 
 		void Execute_Text_Case_Proper() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToProper()).ToList());
 
-		void Execute_Text_Case_Toggle() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToToggled()).ToList());
+		void Execute_Text_Case_Invert() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToToggled()).ToList());
 
-		static Configuration_Text_Select_ByWidth Configure_Text_Width(EditorExecuteState state)
+		static Configuration_Text_Sort Configure_Text_Sort(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Text_Sort();
+
+		void Execute_Text_Sort()
 		{
-			var numeric = state.NEFiles.Focused.Selections.Any() ? state.NEFiles.Focused.Selections.AsTaskRunner().All(range => state.NEFiles.Focused.Text.GetString(range).IsNumeric()) : false;
-			return state.NEFiles.FilesWindow.Configure_Text_Select_ByWidth(numeric, false, state.NEFiles.Focused.GetVariables());
+			var result = state.Configuration as Configuration_Text_Sort;
+			var regions = GetSortSource(result.SortScope, result.UseRegion);
+			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
+			if (regions.Count != ordering.Count)
+				throw new Exception("Ordering misaligned");
+
+			var newSelections = Selections.ToList();
+			var orderedRegions = ordering.Select(index => regions[index]).ToList();
+			var orderedRegionText = orderedRegions.Select(range => Text.GetString(range)).ToList();
+
+			Replace(regions, orderedRegionText);
+
+			var newRegions = regions.ToList();
+			var add = 0;
+			for (var ctr = 0; ctr < newSelections.Count; ++ctr)
+			{
+				var orderCtr = ordering[ctr];
+				newSelections[orderCtr] = new Range(newSelections[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, newSelections[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add);
+				newRegions[orderCtr] = new Range(newRegions[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, newRegions[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add);
+				add += orderedRegionText[ctr].Length - regions[ctr].Length;
+			}
+			newSelections = ordering.Select(num => newSelections[num]).ToList();
+
+			Selections = newSelections;
+			if (result.SortScope == SortScope.Regions)
+				SetRegions(result.UseRegion, newRegions);
 		}
 
-		void Execute_Text_Width()
+		void Execute_Text_Escape_Markup() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.HtmlEncode(Text.GetString(range))).ToList());
+
+		void Execute_Text_Escape_Regex() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Regex.Escape(Text.GetString(range))).ToList());
+
+		void Execute_Text_Escape_URL() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.UrlEncode(Text.GetString(range))).ToList());
+
+		void Execute_Text_Unescape_Markup() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.HtmlDecode(Text.GetString(range))).ToList());
+
+		void Execute_Text_Unescape_Regex() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Regex.Unescape(Text.GetString(range))).ToList());
+
+		void Execute_Text_Unescape_URL() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
+
+		static Configuration_Text_Random Configure_Text_Random(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Text_Random(state.NEFiles.Focused.GetVariables());
+
+		void Execute_Text_Random()
 		{
-			var result = state.Configuration as Configuration_Text_Select_ByWidth;
-			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
-			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
-		}
-
-		static Configuration_Text_Select_Chars Configure_Text_Trim(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Text_Select_Chars(0);
-
-		void Execute_Text_Trim()
-		{
-			var result = state.Configuration as Configuration_Text_Select_Chars;
-			ReplaceSelections(Selections.AsTaskRunner().Select(str => TrimString(Text.GetString(str), result)).ToList());
-		}
-
-		void Execute_Text_SingleLine() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).Replace("\r", "").Replace("\n", "")).ToList());
-
-		static Configuration_Text_Unicode Configure_Text_Unicode(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Text_Unicode();
-
-		void Execute_Text_Unicode()
-		{
-			var result = state.Configuration as Configuration_Text_Unicode;
-			ReplaceSelections(result.Value);
-		}
-
-		void Execute_Text_GUID() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Guid.NewGuid().ToString()).ToList());
-
-		static Configuration_Text_RandomText Configure_Text_RandomText(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Text_RandomText(state.NEFiles.Focused.GetVariables());
-
-		void Execute_Text_RandomText()
-		{
-			var result = state.Configuration as Configuration_Text_RandomText;
+			var result = state.Configuration as Configuration_Text_Random;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 
-		static Configuration_Text_ReverseRegEx Configure_Text_ReverseRegEx(EditorExecuteState state)
-		{
-			if (state.NEFiles.Focused.Selections.Count != 1)
-				throw new Exception("Must have one selection.");
+		static Configuration_Text_Advanced_Unicode Configure_Text_Advanced_Unicode(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Text_Advanced_Unicode();
 
-			return state.NEFiles.FilesWindow.Configure_Text_ReverseRegEx();
+		void Execute_Text_Advanced_Unicode()
+		{
+			var result = state.Configuration as Configuration_Text_Advanced_Unicode;
+			ReplaceSelections(result.Value);
 		}
 
-		void Execute_Text_ReverseRegEx()
+		static Configuration_Text_Advanced_FirstDistinct Configure_Text_Advanced_FirstDistinct(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Text_Advanced_FirstDistinct();
+
+		void Execute_Text_Advanced_FirstDistinct()
 		{
-			var result = state.Configuration as Configuration_Text_ReverseRegEx;
-			if (Selections.Count != 1)
-				throw new Exception("Must have one selection.");
-
-			var data = RevRegExVisitor.Parse(result.RegEx, result.InfiniteCount);
-			var output = data.GetPossibilities().Select(str => str + Text.DefaultEnding).ToList();
-			ReplaceSelections(string.Join("", output));
-
-			var start = Selections.Single().Start;
-			var sels = new List<Range>();
-			foreach (var str in output)
-			{
-				sels.Add(Range.FromIndex(start, str.Length - Text.DefaultEnding.Length));
-				start += str.Length;
-			}
-			Selections = sels;
-		}
-
-		static Configuration_Text_FirstDistinct Configure_Text_FirstDistinct(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Text_FirstDistinct();
-
-		void Execute_Text_FirstDistinct()
-		{
-			var result = state.Configuration as Configuration_Text_FirstDistinct;
+			var result = state.Configuration as Configuration_Text_Advanced_FirstDistinct;
 			TaskRunner.Run(progress =>
 			{
 				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
@@ -300,26 +776,34 @@ namespace NeoEdit.Editor
 			});
 		}
 
-		void Execute_Text_RepeatCount()
+		void Execute_Text_Advanced_GUID() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Guid.NewGuid().ToString()).ToList());
+
+		static Configuration_Text_Advanced_ReverseRegex Configure_Text_Advanced_ReverseRegex(EditorExecuteState state)
 		{
-			var strs = GetSelectionStrings();
-			var counts = strs.GroupBy(str => str).ToDictionary(group => group.Key, group => group.Count());
-			ReplaceSelections(strs.Select(str => counts[str].ToString()).ToList());
+			if (state.NEFiles.Focused.Selections.Count != 1)
+				throw new Exception("Must have one selection.");
+
+			return state.NEFiles.FilesWindow.RunDialog_Configure_Text_Advanced_ReverseRegex();
 		}
 
-		void Execute_Text_RepeatIndex()
+		void Execute_Text_Advanced_ReverseRegex()
 		{
-			var counts = new Dictionary<string, int>();
-			var strs = GetSelectionStrings();
-			var newStrs = new List<string>();
-			foreach (var str in strs)
+			var result = state.Configuration as Configuration_Text_Advanced_ReverseRegex;
+			if (Selections.Count != 1)
+				throw new Exception("Must have one selection.");
+
+			var data = RevRegExVisitor.Parse(result.RegEx, result.InfiniteCount);
+			var output = data.GetPossibilities().Select(str => str + Text.DefaultEnding).ToList();
+			ReplaceSelections(string.Join("", output));
+
+			var start = Selections.Single().Start;
+			var sels = new List<Range>();
+			foreach (var str in output)
 			{
-				if (!counts.ContainsKey(str))
-					counts[str] = 0;
-				++counts[str];
-				newStrs.Add(counts[str].ToString());
+				sels.Add(Range.FromIndex(start, str.Length - Text.DefaultEnding.Length));
+				start += str.Length;
 			}
-			ReplaceSelections(newStrs);
+			Selections = sels;
 		}
 	}
 }

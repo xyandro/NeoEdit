@@ -21,12 +21,12 @@
 		<List>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_All"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_All"/> .
 				</Paragraph>
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Select_Lines"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Select_Lines"/> .
 				</Paragraph>
 			</ListItem>
 			<ListItem>
@@ -97,7 +97,7 @@
 		<List>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy_Copy"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Copy"/> .
 				</Paragraph>
 			</ListItem>
 			<ListItem>

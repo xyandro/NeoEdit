@@ -82,7 +82,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Type_SetFromExtension() => ContentType = ParserExtensions.GetParserType(FileName);
 
-		void Execute_Content_Type(ParserType contentType) => ContentType = contentType;
+		void Execute_Content_Type_Various(ParserType contentType) => ContentType = contentType;
 
 		void Execute_Content_HighlightSyntax() => HighlightSyntax = state.MultiStatus == false;
 
@@ -116,15 +116,15 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
 
-		static Configuration_Content_Ancestor Configure_Content_Ancestor(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Content_Ancestor(state.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
+		static Configuration_Content_Various_WithAttribute Configure_Content_Ancestor(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(state.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
 
 		void Execute_Content_Ancestor()
 		{
-			var result = state.Configuration as Configuration_Content_Ancestor;
+			var result = state.Configuration as Configuration_Content_Various_WithAttribute;
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
-		static Configuration_Content_Attributes Configure_Content_Attributes(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Content_Attributes(state.NEFiles.Focused.GetSelectionNodes());
+		static Configuration_Content_Attributes Configure_Content_Attributes(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Content_Attributes(state.NEFiles.Focused.GetSelectionNodes());
 
 		void Execute_Content_Attributes()
 		{
@@ -132,11 +132,11 @@ namespace NeoEdit.Editor
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 		}
 
-		static Configuration_Content_Ancestor Configure_Content_WithAttribute(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Content_Ancestor(state.NEFiles.Focused.GetSelectionNodes());
+		static Configuration_Content_Various_WithAttribute Configure_Content_WithAttribute(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(state.NEFiles.Focused.GetSelectionNodes());
 
 		void Execute_Content_WithAttribute()
 		{
-			var result = state.Configuration as Configuration_Content_Ancestor;
+			var result = state.Configuration as Configuration_Content_Various_WithAttribute;
 			ContentReplaceSelections(GetSelectionNodes().Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
@@ -146,11 +146,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
 
-		static Configuration_Content_Ancestor Configure_Content_Children_WithAttribute(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Content_Ancestor(state.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
+		static Configuration_Content_Various_WithAttribute Configure_Content_Children_WithAttribute(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(state.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
 
 		void Execute_Content_Children_WithAttribute()
 		{
-			var result = state.Configuration as Configuration_Content_Ancestor;
+			var result = state.Configuration as Configuration_Content_Various_WithAttribute;
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Children()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
@@ -160,15 +160,15 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
 
-		static Configuration_Content_Ancestor Configure_Content_Descendants_WithAttribute(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Content_Ancestor(state.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+		static Configuration_Content_Various_WithAttribute Configure_Content_Descendants_WithAttribute(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(state.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
 
 		void Execute_Content_Descendants_WithAttribute()
 		{
-			var result = state.Configuration as Configuration_Content_Ancestor;
+			var result = state.Configuration as Configuration_Content_Various_WithAttribute;
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Descendants()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
-		void Execute_Content_Navigate(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown)
+		void Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum direction, bool shiftDown)
 		{
 			if (ContentType == ParserType.None)
 			{

@@ -1,0 +1,51 @@
+﻿<controls:NEWindow x:Name="self" x:Class="NeoEdit.UI.Dialogs.DateTime_Format_Dialog"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
+	Title="Format Date/Time" SizeToContent="Height" Width="500" FocusManager.FocusedElement="{Binding ElementName=outputFormat}">
+
+	<Grid Margin="10">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition MinHeight="10"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Input" HorizontalAlignment="Center"/>
+
+		<Label Grid.Row="1" Grid.Column="0" Content="_Format:" Target="{Binding ElementName=inputFormat}"/>
+		<ComboBox Grid.Row="1" Grid.Column="1" Name="inputFormat" IsEditable="True" Text="{Binding InputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<Label Grid.Row="2" Grid.Column="0" Content="Example:"/>
+		<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Example, ElementName=self}" IsReadOnly="True" IsTabStop="False" Foreground="Gray"/>
+
+		<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ParsedExample, ElementName=self}" IsReadOnly="True" IsTabStop="False" Foreground="Gray"/>
+
+		<Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="Output" HorizontalAlignment="Center"/>
+
+		<Label Grid.Row="6" Grid.Column="0" Content="F_ormat:" Target="{Binding ElementName=outputFormat}"/>
+		<ComboBox Grid.Row="6" Grid.Column="1" Name="outputFormat" IsEditable="True" Text="{Binding OutputFormat, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<Label Grid.Row="7" Grid.Column="0" Content="Result:"/>
+		<TextBox Grid.Row="7" Grid.Column="1" Text="{Binding OutputExample, ElementName=self}" IsReadOnly="True" IsTabStop="False" Foreground="Gray"/>
+
+		<Button Grid.Row="9" Grid.ColumnSpan="4" HorizontalAlignment="Left" Content="_Help" Click="OnHelp" Padding="10,0"/>
+
+		<UniformGrid Grid.Row="9" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
+			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
+		</UniformGrid>
+	</Grid>
+
+</controls:NEWindow>

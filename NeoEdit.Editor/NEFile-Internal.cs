@@ -13,104 +13,6 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		WordSkipType GetWordSkipType(int position)
-		{
-			if ((position < 0) || (position >= Text.Length))
-				return WordSkipType.Space;
-
-			var c = Text[position];
-			switch (JumpBy)
-			{
-				case JumpByType.Words:
-				case JumpByType.Numbers:
-					if (char.IsWhiteSpace(c))
-						return WordSkipType.Space;
-					else if ((char.IsLetterOrDigit(c)) || (c == '_') || ((JumpBy == JumpByType.Numbers) && ((c == '.') || (c == '-'))))
-						return WordSkipType.Char;
-					else
-						return WordSkipType.Symbol;
-				case JumpByType.Paths:
-					if (c == '\\')
-						return WordSkipType.Path;
-					return WordSkipType.Char;
-				default:
-					return WordSkipType.Space;
-			}
-		}
-
-		int GetNextWord(int position)
-		{
-			WordSkipType moveType = WordSkipType.None;
-
-			--position;
-			while (true)
-			{
-				if (position >= Text.Length)
-					return Text.Length;
-
-				++position;
-				var current = GetWordSkipType(position);
-
-				if (moveType == WordSkipType.None)
-					moveType = current;
-
-				if (current != moveType)
-					return position;
-			}
-		}
-
-		int GetPrevWord(int position)
-		{
-			WordSkipType moveType = WordSkipType.None;
-
-			while (true)
-			{
-				if (position < 0)
-					return 0;
-
-				--position;
-				var current = GetWordSkipType(position);
-
-				if (moveType == WordSkipType.None)
-					moveType = current;
-
-				if (current != moveType)
-					return position + 1;
-			}
-		}
-
-		Range MoveCursor(Range range, int position, bool selecting)
-		{
-			position = Math.Max(0, Math.Min(position, Text.Length));
-			if (selecting)
-				if (range.Cursor == position)
-					return range;
-				else
-					return new Range(position, range.Anchor);
-
-			if ((range.Cursor == position) && (range.Anchor == position))
-				return range;
-			return new Range(position);
-		}
-
-		Range MoveCursor(Range range, int line, int index, bool selecting, bool lineRel = true, bool indexRel = true)
-		{
-			if ((lineRel) || (indexRel))
-			{
-				var startLine = Text.GetPositionLine(range.Cursor);
-				var startIndex = Text.GetPositionIndex(range.Cursor, startLine);
-
-				if (lineRel)
-					line = Text.SkipDiffGaps(line + startLine, line > 0 ? 1 : -1);
-				if (indexRel)
-					index += startIndex;
-			}
-
-			line = Math.Max(0, Math.Min(line, Text.NumLines - 1));
-			index = Math.Max(0, Math.Min(index, Text.GetLineLength(line)));
-			return MoveCursor(range, Text.GetPosition(line, index), selecting);
-		}
-
 		void BlockSelDown()
 		{
 			var sels = new List<Range>();
@@ -158,6 +60,104 @@ namespace NeoEdit.Editor
 			}
 
 			Selections = sels;
+		}
+
+		int GetNextWord(int position)
+		{
+			WordSkipType moveType = WordSkipType.None;
+
+			--position;
+			while (true)
+			{
+				if (position >= Text.Length)
+					return Text.Length;
+
+				++position;
+				var current = GetWordSkipType(position);
+
+				if (moveType == WordSkipType.None)
+					moveType = current;
+
+				if (current != moveType)
+					return position;
+			}
+		}
+
+		int GetPrevWord(int position)
+		{
+			WordSkipType moveType = WordSkipType.None;
+
+			while (true)
+			{
+				if (position < 0)
+					return 0;
+
+				--position;
+				var current = GetWordSkipType(position);
+
+				if (moveType == WordSkipType.None)
+					moveType = current;
+
+				if (current != moveType)
+					return position + 1;
+			}
+		}
+
+		WordSkipType GetWordSkipType(int position)
+		{
+			if ((position < 0) || (position >= Text.Length))
+				return WordSkipType.Space;
+
+			var c = Text[position];
+			switch (JumpBy)
+			{
+				case JumpByType.Words:
+				case JumpByType.Numbers:
+					if (char.IsWhiteSpace(c))
+						return WordSkipType.Space;
+					else if ((char.IsLetterOrDigit(c)) || (c == '_') || ((JumpBy == JumpByType.Numbers) && ((c == '.') || (c == '-'))))
+						return WordSkipType.Char;
+					else
+						return WordSkipType.Symbol;
+				case JumpByType.Paths:
+					if (c == '\\')
+						return WordSkipType.Path;
+					return WordSkipType.Char;
+				default:
+					return WordSkipType.Space;
+			}
+		}
+
+		Range MoveCursor(Range range, int position, bool selecting)
+		{
+			position = Math.Max(0, Math.Min(position, Text.Length));
+			if (selecting)
+				if (range.Cursor == position)
+					return range;
+				else
+					return new Range(position, range.Anchor);
+
+			if ((range.Cursor == position) && (range.Anchor == position))
+				return range;
+			return new Range(position);
+		}
+
+		Range MoveCursor(Range range, int line, int index, bool selecting, bool lineRel = true, bool indexRel = true)
+		{
+			if ((lineRel) || (indexRel))
+			{
+				var startLine = Text.GetPositionLine(range.Cursor);
+				var startIndex = Text.GetPositionIndex(range.Cursor, startLine);
+
+				if (lineRel)
+					line = Text.SkipDiffGaps(line + startLine, line > 0 ? 1 : -1);
+				if (indexRel)
+					index += startIndex;
+			}
+
+			line = Math.Max(0, Math.Min(line, Text.NumLines - 1));
+			index = Math.Max(0, Math.Min(index, Text.GetLineLength(line)));
+			return MoveCursor(range, Text.GetPosition(line, index), selecting);
 		}
 
 		static PreExecutionStop PreExecute_Internal_Activate(EditorExecuteState state)
@@ -304,7 +304,7 @@ namespace NeoEdit.Editor
 					//DragFiles = null;
 					if (Settings.EscapeClearsSelections)
 					{
-						Execute_Select_Selection_Single();
+						Execute_Edit_Select_Focused_Single();
 						if (!Selections.Any())
 							Selections = new List<Range> { new Range() };
 					}

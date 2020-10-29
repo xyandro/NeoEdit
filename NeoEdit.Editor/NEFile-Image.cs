@@ -7,6 +7,7 @@ using System.Text;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
+using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.TaskRunning;
 
@@ -47,31 +48,6 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		static string OverlayColor(string color1, string color2)
-		{
-			Colorer.StringToARGB(color1, out byte alpha1, out byte red1, out byte green1, out byte blue1);
-			Colorer.StringToARGB(color2, out byte alpha2, out byte red2, out byte green2, out byte blue2);
-			red1 = (byte)((red1 * alpha1 / 255) + (red2 * alpha2 * (255 - alpha1) / (255 * 255)));
-			green1 = (byte)((green1 * alpha1 / 255) + (green2 * alpha2 * (255 - alpha1) / (255 * 255)));
-			blue1 = (byte)((blue1 * alpha1 / 255) + (blue2 * alpha2 * (255 - alpha1) / (255 * 255)));
-			alpha1 = (byte)(alpha1 + (alpha2 * (255 - alpha1) / 255));
-			return Colorer.ARGBToString(alpha1, red1, green1, blue1);
-		}
-
-		static void SplitGIF(string fileName, string outputTemplate)
-		{
-			using (var image = System.Drawing.Image.FromFile(fileName))
-			{
-				var dimension = new System.Drawing.Imaging.FrameDimension(image.FrameDimensionsList[0]);
-				var frameCount = image.GetFrameCount(dimension);
-				for (var frame = 0; frame < frameCount; ++frame)
-				{
-					image.SelectActiveFrame(dimension, frame);
-					image.Save(string.Format(outputTemplate, frame + 1), System.Drawing.Imaging.ImageFormat.Png);
-				}
-			}
-		}
-
 		DateTime? GetImageTakenDate(string fileName)
 		{
 			using (var image = new System.Drawing.Bitmap(fileName))
@@ -86,6 +62,17 @@ namespace NeoEdit.Editor
 				var originalDate = DateTime.ParseExact(str, "yyyy:MM:dd HH:mm:ss", null);
 				return originalDate;
 			}
+		}
+
+		static string OverlayColor(string color1, string color2)
+		{
+			Colorer.StringToARGB(color1, out byte alpha1, out byte red1, out byte green1, out byte blue1);
+			Colorer.StringToARGB(color2, out byte alpha2, out byte red2, out byte green2, out byte blue2);
+			red1 = (byte)((red1 * alpha1 / 255) + (red2 * alpha2 * (255 - alpha1) / (255 * 255)));
+			green1 = (byte)((green1 * alpha1 / 255) + (green2 * alpha2 * (255 - alpha1) / (255 * 255)));
+			blue1 = (byte)((blue1 * alpha1 / 255) + (blue2 * alpha2 * (255 - alpha1) / (255 * 255)));
+			alpha1 = (byte)(alpha1 + (alpha2 * (255 - alpha1) / 255));
+			return Colorer.ARGBToString(alpha1, red1, green1, blue1);
 		}
 
 		void SetImageTakenDate(string fileName, DateTime dateTime)
@@ -116,71 +103,25 @@ namespace NeoEdit.Editor
 			File.Move(tempName, fileName);
 		}
 
-		static Configuration_Image_GrabColor Configure_Image_GrabColor(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Image_GrabColor(state.NEFiles.Focused.Selections.Select(range => state.NEFiles.Focused.Text.GetString(range)).FirstOrDefault());
-
-		void Execute_Image_GrabColor()
+		static void SplitGIF(string fileName, string outputTemplate)
 		{
-			var result = state.Configuration as Configuration_Image_GrabColor;
-			ReplaceOneWithMany(result.Colors, true);
-		}
-
-		static Configuration_Image_GrabImage Configure_Image_GrabImage(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Image_GrabImage(state.NEFiles.Focused.GetVariables());
-
-		void Execute_Image_GrabImage()
-		{
-			var result = state.Configuration as Configuration_Image_GrabImage;
-			var variables = GetVariables();
-			var x = state.GetExpression(result.GrabX).EvaluateList<int>(variables, Selections.Count());
-			var y = state.GetExpression(result.GrabY).EvaluateList<int>(variables, Selections.Count());
-			var width = state.GetExpression(result.GrabWidth).EvaluateList<int>(variables, Selections.Count());
-			var height = state.GetExpression(result.GrabHeight).EvaluateList<int>(variables, Selections.Count());
-
-			var strs = new List<string>();
-			for (var ctr = 0; ctr < x.Count; ++ctr)
+			using (var image = System.Drawing.Image.FromFile(fileName))
 			{
-				using (var image = new System.Drawing.Bitmap(width[ctr], height[ctr], System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+				var dimension = new System.Drawing.Imaging.FrameDimension(image.FrameDimensionsList[0]);
+				var frameCount = image.GetFrameCount(dimension);
+				for (var frame = 0; frame < frameCount; ++frame)
 				{
-					using (var dest = System.Drawing.Graphics.FromImage(image))
-						dest.CopyFromScreen(x[ctr], y[ctr], 0, 0, image.Size);
-					strs.Add(Coder.BitmapToString(image));
+					image.SelectActiveFrame(dimension, frame);
+					image.Save(string.Format(outputTemplate, frame + 1), System.Drawing.Imaging.ImageFormat.Png);
 				}
 			}
-			ReplaceSelections(strs);
 		}
 
-		static Configuration_Image_AdjustColor Configure_Image_AdjustColor(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Image_AdjustColor(state.NEFiles.Focused.GetVariables());
+		static Configuration_Image_Resize Configure_Image_Resize(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Image_Resize(state.NEFiles.Focused.GetVariables());
 
-		void Execute_Image_AdjustColor()
+		void Execute_Image_Resize()
 		{
-			var result = state.Configuration as Configuration_Image_AdjustColor;
-			var results = GetExpressionResults<double>(result.Expression, Selections.Count());
-			var strs = Selections.AsTaskRunner().Select((range, index) => AdjustColor(Text.GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
-			ReplaceSelections(strs);
-		}
-
-		static Configuration_Image_AddOverlayColor Configure_Image_AddOverlayColor(EditorExecuteState state, bool add) => state.NEFiles.FilesWindow.Configure_Image_AddOverlayColor(add, state.NEFiles.Focused.GetVariables());
-
-		void Execute_Image_AddColor()
-		{
-			var result = state.Configuration as Configuration_Image_AddOverlayColor;
-			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
-			var strs = Selections.AsTaskRunner().Select((range, index) => AddColor(Text.GetString(range), results[index])).ToList();
-			ReplaceSelections(strs);
-		}
-
-		void Execute_Image_OverlayColor()
-		{
-			var result = state.Configuration as Configuration_Image_AddOverlayColor;
-			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
-			var strs = Selections.AsTaskRunner().Select((range, index) => OverlayColor(results[index], Text.GetString(range))).ToList();
-			ReplaceSelections(strs);
-		}
-
-		static Configuration_Image_Size Configure_Image_Size(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Image_Size(state.NEFiles.Focused.GetVariables());
-
-		void Execute_Image_Size()
-		{
-			var result = state.Configuration as Configuration_Image_Size;
+			var result = state.Configuration as Configuration_Image_Resize;
 			var variables = GetVariables();
 			var width = state.GetExpression(result.WidthExpression).Evaluate<int>(variables);
 			var height = state.GetExpression(result.HeightExpression).Evaluate<int>(variables);
@@ -207,7 +148,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		static Configuration_Image_Crop Configure_Image_Crop(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Image_Crop(state.NEFiles.Focused.GetVariables());
+		static Configuration_Image_Crop Configure_Image_Crop(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Image_Crop(state.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_Crop()
 		{
@@ -253,11 +194,71 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
+		static Configuration_Image_GrabColor Configure_Image_GrabColor(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Image_GrabColor(state.NEFiles.Focused.Selections.Select(range => state.NEFiles.Focused.Text.GetString(range)).FirstOrDefault());
+
+		void Execute_Image_GrabColor()
+		{
+			var result = state.Configuration as Configuration_Image_GrabColor;
+			ReplaceOneWithMany(result.Colors, true);
+		}
+
+		static Configuration_Image_GrabImage Configure_Image_GrabImage(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Image_GrabImage(state.NEFiles.Focused.GetVariables());
+
+		void Execute_Image_GrabImage()
+		{
+			var result = state.Configuration as Configuration_Image_GrabImage;
+			var variables = GetVariables();
+			var x = state.GetExpression(result.GrabX).EvaluateList<int>(variables, Selections.Count());
+			var y = state.GetExpression(result.GrabY).EvaluateList<int>(variables, Selections.Count());
+			var width = state.GetExpression(result.GrabWidth).EvaluateList<int>(variables, Selections.Count());
+			var height = state.GetExpression(result.GrabHeight).EvaluateList<int>(variables, Selections.Count());
+
+			var strs = new List<string>();
+			for (var ctr = 0; ctr < x.Count; ++ctr)
+			{
+				using (var image = new System.Drawing.Bitmap(width[ctr], height[ctr], System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+				{
+					using (var dest = System.Drawing.Graphics.FromImage(image))
+						dest.CopyFromScreen(x[ctr], y[ctr], 0, 0, image.Size);
+					strs.Add(Coder.BitmapToString(image));
+				}
+			}
+			ReplaceSelections(strs);
+		}
+
+		static Configuration_Image_AddOverlayColor Configure_Image_AddOverlayColor(EditorExecuteState state, bool add) => state.NEFiles.FilesWindow.RunDialog_Configure_Image_AddOverlayColor(add, state.NEFiles.Focused.GetVariables());
+
+		void Execute_Image_AddColor()
+		{
+			var result = state.Configuration as Configuration_Image_AddOverlayColor;
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
+			var strs = Selections.AsTaskRunner().Select((range, index) => AddColor(Text.GetString(range), results[index])).ToList();
+			ReplaceSelections(strs);
+		}
+
+		static Configuration_Image_AdjustColor Configure_Image_AdjustColor(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Image_AdjustColor(state.NEFiles.Focused.GetVariables());
+
+		void Execute_Image_AdjustColor()
+		{
+			var result = state.Configuration as Configuration_Image_AdjustColor;
+			var results = GetExpressionResults<double>(result.Expression, Selections.Count());
+			var strs = Selections.AsTaskRunner().Select((range, index) => AdjustColor(Text.GetString(range), results[index], result.Alpha, result.Red, result.Green, result.Blue)).ToList();
+			ReplaceSelections(strs);
+		}
+
+		void Execute_Image_OverlayColor()
+		{
+			var result = state.Configuration as Configuration_Image_AddOverlayColor;
+			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
+			var strs = Selections.AsTaskRunner().Select((range, index) => OverlayColor(results[index], Text.GetString(range))).ToList();
+			ReplaceSelections(strs);
+		}
+
 		void Execute_Image_FlipHorizontal() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipX);
 
 		void Execute_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		static Configuration_Image_Rotate Configure_Image_Rotate(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Image_Rotate(state.NEFiles.Focused.GetVariables());
+		static Configuration_Image_Rotate Configure_Image_Rotate(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Image_Rotate(state.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_Rotate()
 		{
@@ -284,7 +285,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		static Configuration_Image_GIF_Animate Configure_Image_GIF_Animate(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Image_GIF_Animate(state.NEFiles.Focused.GetVariables());
+		static Configuration_Image_GIF_Animate Configure_Image_GIF_Animate(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Image_GIF_Animate(state.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_GIF_Animate()
 		{
@@ -305,7 +306,7 @@ namespace NeoEdit.Editor
 		{
 			var variables = state.NEFiles.Focused.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return state.NEFiles.FilesWindow.Configure_Image_GIF_Split(variables);
+			return state.NEFiles.FilesWindow.RunDialog_Configure_Image_GIF_Split(variables);
 		}
 
 		void Execute_Image_GIF_Split()
@@ -320,7 +321,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Image_GetTakenDate() => ReplaceSelections(RelativeSelectedFiles().AsTaskRunner().Select(fileName => GetImageTakenDate(fileName)?.ToString() ?? "<NONE>").ToList());
 
-		static Configuration_Image_SetTakenDate Configure_Image_SetTakenDate(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Image_SetTakenDate(state.NEFiles.Focused.GetVariables());
+		static Configuration_Image_SetTakenDate Configure_Image_SetTakenDate(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Image_SetTakenDate(state.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_SetTakenDate()
 		{

@@ -128,7 +128,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static Configuration_Position_Goto Configure_Position_Goto(EditorExecuteState state, GotoType gotoType)
+		static Configuration_Position_Goto_Various Configure_Position_Goto_Various(EditorExecuteState state, GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
 			var range = state.NEFiles.Focused.Selections.FirstOrDefault();
@@ -148,12 +148,12 @@ namespace NeoEdit.Editor
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return state.NEFiles.FilesWindow.Configure_Position_Goto(gotoType, startValue, state.NEFiles.Focused.GetVariables());
+			return state.NEFiles.FilesWindow.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, state.NEFiles.Focused.GetVariables());
 		}
 
-		void Execute_Position_Goto(GotoType gotoType, bool selecting)
+		void Execute_Position_Goto_Various(GotoType gotoType, bool selecting)
 		{
-			var result = state.Configuration as Configuration_Position_Goto;
+			var result = state.Configuration as Configuration_Position_Goto_Various;
 			var values = GotoRange.GetPositionsData(GetExpressionResults<string>(result.Expression), gotoType);
 			if (!values.Any())
 				return;
@@ -219,7 +219,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Position_Copy(GotoType gotoType, bool withLine)
+		void Execute_Position_Copy_Various(GotoType gotoType, bool withLine)
 		{
 			var starts = new Dictionary<GotoType, List<int>>();
 			var ends = new Dictionary<GotoType, List<int>>();

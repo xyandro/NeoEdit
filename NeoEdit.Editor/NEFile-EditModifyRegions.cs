@@ -37,6 +37,38 @@ namespace NeoEdit.Editor
 			return list;
 		}
 
+		List<Range> GetSearchRegions(List<int> regions)
+		{
+			var searchList = new List<Range>();
+			var useRegions = regions.Select(index => GetRegions(index)).ToList();
+			if (!useRegions.SelectMany().Any())
+				return searchList;
+
+			var useRegionPos = Enumerable.Repeat(0, useRegions.Count).ToList();
+			while (true)
+			{
+				var minRegion = -1;
+				var minRange = new Range(int.MaxValue);
+				for (var region = 0; region < useRegions.Count; ++region)
+					if (useRegionPos[region] < useRegions[region].Count)
+						if ((useRegions[region][useRegionPos[region]].Start < minRange.Start) || ((useRegions[region][useRegionPos[region]].Start == minRange.Start) && (useRegions[region][useRegionPos[region]].End < minRange.End)))
+						{
+							minRegion = region;
+							minRange = useRegions[region][useRegionPos[region]];
+						}
+
+				if (minRegion == -1)
+					break;
+
+				if ((searchList.Count > 0) && (searchList[searchList.Count - 1].End > minRange.Start))
+					searchList[searchList.Count - 1] = new Range(minRange.Start, searchList[searchList.Count - 1].Start);
+				searchList.Add(minRange);
+				++useRegionPos[minRegion];
+			}
+
+			return searchList;
+		}
+
 		void SetRegionsWithSelectionsText(int useRegion, List<List<string>> list, bool mustBeSameSize = true)
 		{
 			var useRegions = GetRegions(useRegion);
@@ -70,41 +102,9 @@ namespace NeoEdit.Editor
 			Selections = newSelections;
 		}
 
-		List<Range> GetSearchRegions(List<int> regions)
-		{
-			var searchList = new List<Range>();
-			var useRegions = regions.Select(index => GetRegions(index)).ToList();
-			if (!useRegions.SelectMany().Any())
-				return searchList;
+		static Configuration_Edit_ModifyRegions Configure_Edit_ModifyRegions(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_ModifyRegions();
 
-			var useRegionPos = Enumerable.Repeat(0, useRegions.Count).ToList();
-			while (true)
-			{
-				var minRegion = -1;
-				var minRange = new Range(int.MaxValue);
-				for (var region = 0; region < useRegions.Count; ++region)
-					if (useRegionPos[region] < useRegions[region].Count)
-						if ((useRegions[region][useRegionPos[region]].Start < minRange.Start) || ((useRegions[region][useRegionPos[region]].Start == minRange.Start) && (useRegions[region][useRegionPos[region]].End < minRange.End)))
-						{
-							minRegion = region;
-							minRange = useRegions[region][useRegionPos[region]];
-						}
-
-				if (minRegion == -1)
-					break;
-
-				if ((searchList.Count > 0) && (searchList[searchList.Count - 1].End > minRange.Start))
-					searchList[searchList.Count - 1] = new Range(minRange.Start, searchList[searchList.Count - 1].Start);
-				searchList.Add(minRange);
-				++useRegionPos[minRegion];
-			}
-
-			return searchList;
-		}
-
-		static Configuration_Edit_ModifyRegions Configure_Edit_ModifyRegions(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_ModifyRegions();
-
-		void Execute_Edit_ModifyRegions(Configuration_Edit_ModifyRegions result)
+		void Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions result)
 		{
 			switch (result.Action)
 			{
@@ -134,7 +134,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Edit_ModifyRegions(Configuration_Edit_ModifyRegions.Actions action, int region) => Execute_Edit_ModifyRegions(new Configuration_Edit_ModifyRegions { Action = action, Regions = new List<int> { region } });
+		void Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions.Actions action, int region) => Execute_Edit_ModifyRegions_Various_Various_Region(new Configuration_Edit_ModifyRegions { Action = action, Regions = new List<int> { region } });
 
 		void Execute_Edit_ModifyRegions_Select_Select(List<int> regions) => Selections = regions.SelectMany(useRegion => GetRegions(useRegion)).ToList();
 
