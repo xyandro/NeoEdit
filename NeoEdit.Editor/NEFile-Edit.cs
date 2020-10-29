@@ -381,18 +381,6 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Expression_EvaluateSelected() => ReplaceSelections(GetExpressionResults<string>("Eval(x)", Selections.Count()));
 
-		void Execute_Edit_CopyDown()
-		{
-			var strs = GetSelectionStrings().ToList();
-			var index = 0;
-			for (var ctr = 0; ctr < strs.Count; ++ctr)
-				if (string.IsNullOrWhiteSpace(strs[ctr]))
-					strs[ctr] = strs[index];
-				else
-					index = ctr;
-			ReplaceSelections(strs);
-		}
-
 		static Configuration_Edit_Rotate Configure_Edit_Rotate(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Edit_Rotate(state.NEFiles.Focused.GetVariables());
 
 		void Execute_Edit_Rotate()

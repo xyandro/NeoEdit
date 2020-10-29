@@ -25,53 +25,7 @@ namespace NeoEdit.Editor
 			InterpolatedVerbatimString = InterpolatedString | VerbatimString,
 		}
 
-		IEnumerable<Range> FindRepetitions(bool caseSensitive, Range inputRange)
-		{
-			var startLine = Text.GetPositionLine(inputRange.Start);
-			var endLine = Text.GetPositionLine(inputRange.End);
-			var lineRanges = Enumerable.Range(startLine, endLine - startLine + 1).Select(line => new Range(Math.Max(inputRange.Start, Text.GetPosition(line, 0)), Math.Min(inputRange.End, Text.GetPosition(line, Text.GetLineLength(line))))).ToList();
-			if ((lineRanges.Count >= 2) && (!lineRanges[lineRanges.Count - 1].HasSelection))
-				lineRanges.RemoveAt(lineRanges.Count - 1);
-			var lineStrs = lineRanges.Select(range => Text.GetString(range)).Select(str => caseSensitive ? str : str.ToLowerInvariant()).ToList();
-			var lines = Enumerable.Range(1, lineStrs.Count).MaxBy(x => GetRepetitionScore(lineStrs, x));
-			for (var ctr = 0; ctr < lineRanges.Count; ctr += lines)
-				yield return new Range(lineRanges[ctr + lines - 1].End, lineRanges[ctr].Start);
-		}
-
-		static int GetRepetitionScore(List<string> data, int lines)
-		{
-			var count = data.Count / lines;
-			if (count * lines != data.Count)
-				return 0;
-
-			var score = 0;
-			for (var repetition = 1; repetition < count; ++repetition)
-				for (var index = 0; index < lines; ++index)
-					score += LCS.GetLCS(data[index], data[repetition * lines + index]).Count(val => val[0] == LCS.MatchType.Match);
-			return score;
-		}
-
 		static string RepeatsValue(bool caseSensitive, string input) => caseSensitive ? input : input?.ToLowerInvariant();
-
-		IEnumerable<Range> SelectRectangle(Range range)
-		{
-			var startLine = Text.GetPositionLine(range.Start);
-			var endLine = Text.GetPositionLine(range.End);
-			if (startLine == endLine)
-			{
-				yield return range;
-				yield break;
-			}
-			var startIndex = Text.GetPositionIndex(range.Start, startLine);
-			var endIndex = Text.GetPositionIndex(range.End, endLine);
-			for (var line = startLine; line <= endLine; ++line)
-			{
-				var length = Text.GetLineLength(line);
-				var lineStartPosition = Text.GetPosition(line, Math.Min(length, startIndex));
-				var lineEndPosition = Text.GetPosition(line, Math.Min(length, endIndex));
-				yield return new Range(lineEndPosition, lineStartPosition);
-			}
-		}
 
 		IEnumerable<Range> SelectSplit(Range range, Configuration_Select_Split result, ISearcher searcher)
 		{
@@ -305,8 +259,6 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		void Execute_Select_Rectangle() => Selections = Selections.AsTaskRunner().SelectMany(range => SelectRectangle(range)).ToList();
-
 		void Execute_Select_Invert()
 		{
 			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
@@ -350,8 +302,6 @@ namespace NeoEdit.Editor
 		void Execute_Select_Repeats_MatchPrevious(bool caseSensitive) => Selections = Selections.AsTaskRunner().MatchBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
 		void Execute_Select_Repeats_NonMatchPrevious(bool caseSensitive) => Selections = Selections.AsTaskRunner().NonMatchBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
-
-		void Execute_Select_Repeats_RepeatedLines(bool caseSensitive) => Selections = Selections.AsTaskRunner().SelectMany(range => FindRepetitions(caseSensitive, range)).ToList();
 
 		static Configuration_Select_Repeats_ByCount Configure_Select_Repeats_ByCount(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Select_Repeats_ByCount();
 

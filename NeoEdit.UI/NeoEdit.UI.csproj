@@ -335,13 +335,6 @@
     <Compile Include="Dialogs\Configure_Files_Insert_Dialog.xaml.cs">
       <DependentUpon>Configure_Files_Insert_Dialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Dialogs\Configure_Files_Name_GetUnique_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Files_Name_GetUnique_Dialog.xaml.cs">
-      <DependentUpon>Configure_Files_Name_GetUnique_Dialog.xaml</DependentUpon>
-    </Compile>
     <Page Include="Dialogs\Configure_Files_Name_MakeAbsolute_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -621,13 +614,6 @@
     </Page>
     <Compile Include="Dialogs\Configure_Select_Split_Dialog.xaml.cs">
       <DependentUpon>Configure_Select_Split_Dialog.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Dialogs\Configure_Table_AddColumn_Dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Dialogs\Configure_Table_AddColumn_Dialog.xaml.cs">
-      <DependentUpon>Configure_Table_AddColumn_Dialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Dialogs\Configure_Table_Convert_Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -56,8 +56,6 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
-		void Execute_File_New_FromSelections() => GetSelectionStrings().ForEach(((str, index) => QueueAddFile(new NEFile(displayName: $"Selection {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ContentType, modified: false))));
-
 		static PreExecutionStop PreExecute_File_New_FromClipboards(EditorExecuteState state)
 		{
 			NEFiles.AddFilesFromClipboards(state.NEFiles);
@@ -92,8 +90,6 @@ namespace NeoEdit.Editor
 			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => state.NEFiles.AddFile(neFile));
 			return PreExecutionStop.Stop;
 		}
-
-		void Execute_File_Open_Selected() => RelativeSelectedFiles().AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => state.NEFiles.AddFile(neFile));
 
 		void Execute_File_Save_Save()
 		{
@@ -226,12 +222,6 @@ namespace NeoEdit.Editor
 			DisplayName = results[0];
 		}
 
-		void Execute_File_Close()
-		{
-			VerifyCanClose();
-			NEFiles.RemoveFile(this);
-		}
-
 		void Execute_File_Refresh()
 		{
 			if (string.IsNullOrEmpty(FileName))
@@ -269,36 +259,6 @@ namespace NeoEdit.Editor
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, reformatRanges(GetRegions(region)));
 		}
-
-		void Execute_File_Insert_Files()
-		{
-			if (Selections.Count != 1)
-				throw new Exception("Must have one selection.");
-
-			var result = NEFiles.FilesWindow.Configure_File_Open_Open("txt", filter: "Text files|*.txt|All files|*.*", filterIndex: 2, multiselect: true);
-			if (result != null)
-				InsertFiles(result.FileNames);
-		}
-
-		void Execute_File_Insert_CopiedCut()
-		{
-			if (Selections.Count != 1)
-				throw new Exception("Must have one selection.");
-
-			var files = Clipboard;
-			if (files.Count == 0)
-				return;
-
-			if (files.Count > 5)
-			{
-				if (!QueryUser(nameof(Execute_File_Insert_CopiedCut), $"Are you sure you want to insert these {files.Count} files?", MessageOptions.Yes))
-					return;
-			}
-
-			InsertFiles(files);
-		}
-
-		void Execute_File_Insert_Selected() => InsertFiles(RelativeSelectedFiles());
 
 		static Configuration_File_Encoding_Encoding Configure_File_Encoding_Encoding(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_File_Encoding_Encoding(state.NEFiles.Focused.CodePage);
 

@@ -124,31 +124,6 @@ namespace NeoEdit.Editor
 			SetText(GetTable().Aggregate(result.AggregateData).Sort(result.SortData));
 		}
 
-		void Execute_Table_AddHeaders() => SetText(GetTable(false));
-
-		void Execute_Table_AddRow()
-		{
-			var table = GetTable();
-			table.AddRow();
-			SetText(table);
-		}
-
-		static Configuration_Table_AddColumn Configure_Table_AddColumn(EditorExecuteState state)
-		{
-			var table = state.NEFiles.Focused.GetTable();
-			return state.NEFiles.FilesWindow.Configure_Table_AddColumn(state.NEFiles.Focused.GetTableVariables(table), table.NumRows);
-		}
-
-		void Execute_Table_AddColumn()
-		{
-			var result = state.Configuration as Configuration_Table_AddColumn;
-			var table = GetTable();
-			var variables = GetTableVariables(table);
-			var results = state.GetExpression(result.Expression).EvaluateList<string>(variables, table.NumRows);
-			table.AddColumn(result.ColumnName, results);
-			SetText(table);
-		}
-
 		static Configuration_File_SaveCopyRename_ByExpression Configure_Table_Select_RowsByExpression(EditorExecuteState state)
 		{
 			var table = state.NEFiles.Focused.GetTable();

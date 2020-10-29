@@ -86,7 +86,6 @@
     <Compile Include="Configuration\Configuration_Files_Find.cs" />
     <Compile Include="Configuration\Configuration_Files_Hash.cs" />
     <Compile Include="Configuration\Configuration_Files_Insert.cs" />
-    <Compile Include="Configuration\Configuration_Files_Name_GetUnique.cs" />
     <Compile Include="Configuration\Configuration_Files_Name_MakeAbsolute.cs" />
     <Compile Include="Configuration\Configuration_Files_Operations_CombineFiles.cs" />
     <Compile Include="Configuration\Configuration_Files_Operations_CopyMove.cs" />
@@ -136,7 +135,6 @@
     <Compile Include="Configuration\Configuration_Select_Repeats_ByCount.cs" />
     <Compile Include="Configuration\Configuration_Select_Selection_ToggleAnchor.cs" />
     <Compile Include="Configuration\Configuration_Select_Split.cs" />
-    <Compile Include="Configuration\Configuration_Table_AddColumn.cs" />
     <Compile Include="Configuration\Configuration_Table_Convert.cs" />
     <Compile Include="Configuration\Configuration_Table_Database_GenerateDeletes.cs" />
     <Compile Include="Configuration\Configuration_Table_Database_GenerateInserts.cs" />

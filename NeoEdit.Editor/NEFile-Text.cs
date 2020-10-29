@@ -152,8 +152,6 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_Case_Toggle() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToToggled()).ToList());
 
-		void Execute_Text_Length() => ReplaceSelections(Selections.AsTaskRunner().Select(range => range.Length.ToString()).ToList());
-
 		static Configuration_Text_Select_ByWidth Configure_Text_Width(EditorExecuteState state)
 		{
 			var numeric = state.NEFiles.Focused.Selections.Any() ? state.NEFiles.Focused.Selections.AsTaskRunner().All(range => state.NEFiles.Focused.Text.GetString(range).IsNumeric()) : false;

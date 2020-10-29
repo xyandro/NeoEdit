@@ -61,7 +61,6 @@ namespace NeoEdit.UI
 		public Configuration_Diff_IgnoreCharacters Configure_Diff_IgnoreCharacters(string ignoreCharacters) => RunOnUIThread(() => Configure_Diff_IgnoreCharacters_Dialog.Run(this, ignoreCharacters));
 		public Configuration_Diff_Fix_Whitespace Configure_Diff_Fix_Whitespace() => RunOnUIThread(() => Configure_Diff_Fix_Whitespace_Dialog.Run(this));
 		public Configuration_Files_Name_MakeAbsolute Configure_Files_Name_MakeAbsolute(NEVariables variables, bool absolute, bool checkType) => RunOnUIThread(() => Configure_Files_Name_MakeAbsolute_Dialog.Run(this, variables, absolute, checkType));
-		public Configuration_Files_Name_GetUnique Configure_Files_Name_GetUnique() => RunOnUIThread(() => Configure_Files_Name_GetUnique_Dialog.Run(this));
 		public Configuration_Files_Set_Size Configure_Files_Set_Size(NEVariables variables) => RunOnUIThread(() => Configure_Files_Set_Size_Dialog.Run(this, variables));
 		public Configuration_Files_Set_Time Configure_Files_Set_Time(NEVariables variables, string expression) => RunOnUIThread(() => Configure_Files_Set_Time_Dialog.Run(this, variables, expression));
 		public Configuration_Files_Set_Attributes Configure_Files_Set_Attributes(Dictionary<FileAttributes, bool?> attributes) => RunOnUIThread(() => Configure_Files_Set_Attributes_Dialog.Run(this, attributes));
@@ -107,7 +106,6 @@ namespace NeoEdit.UI
 		public Configuration_Table_Convert Configure_Table_Convert(ParserType tableType) => RunOnUIThread(() => Configure_Table_Convert_Dialog.Run(this, tableType));
 		public Configuration_Table_TextToTable Configure_Table_TextToTable(string text) => RunOnUIThread(() => Configure_Table_TextToTable_Dialog.Run(this, text));
 		public Configuration_Table_EditTable Configure_Table_EditTable(Table input) => RunOnUIThread(() => Configure_Table_EditTable_Dialog.Run(this, input));
-		public Configuration_Table_AddColumn Configure_Table_AddColumn(NEVariables variables, int numRows) => RunOnUIThread(() => Configure_Table_AddColumn_Dialog.Run(this, variables, numRows));
 		public Configuration_Table_Join Configure_Table_Join(Table leftTable, Table rightTable) => RunOnUIThread(() => Configure_Table_Join_Dialog.Run(this, leftTable, rightTable));
 		public Configuration_Table_Database_GenerateInserts Configure_Table_Database_GenerateInserts(Table table, string tableName) => RunOnUIThread(() => Configure_Table_Database_GenerateInserts_Dialog.Run(this, table, tableName));
 		public Configuration_Table_Database_GenerateUpdates Configure_Table_Database_GenerateUpdates(Table table, string tableName) => RunOnUIThread(() => Configure_Table_Database_GenerateUpdates_Dialog.Run(this, table, tableName));

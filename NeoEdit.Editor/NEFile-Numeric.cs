@@ -160,30 +160,6 @@ namespace NeoEdit.Editor
 			Selections = values.Indexes(value => value == find).Select(index => Selections[index]).ToList();
 		}
 
-		void Execute_Numeric_Select_Fraction_Whole()
-		{
-			Selections = Selections.AsTaskRunner().Select(range =>
-			{
-				var str = Text.GetString(range);
-				var idx = str.IndexOf('.');
-				if (idx == -1)
-					return range;
-				return Range.FromIndex(range.Start, idx);
-			}).ToList();
-		}
-
-		void Execute_Numeric_Select_Fraction_Fraction()
-		{
-			Selections = Selections.AsTaskRunner().Select(range =>
-			{
-				var str = Text.GetString(range);
-				var idx = str.IndexOf('.');
-				if (idx == -1)
-					return Range.FromIndex(range.End, 0);
-				return new Range(range.End, range.Start + idx);
-			}).ToList();
-		}
-
 		void Execute_Numeric_Hex_ToHex() => ReplaceSelections(Selections.AsTaskRunner().Select(range => BigInteger.Parse(Text.GetString(range)).ToString("x").TrimStart('0')).Select(str => str.Length == 0 ? "0" : str).ToList());
 
 		void Execute_Numeric_Hex_FromHex() => ReplaceSelections(Selections.AsTaskRunner().Select(range => BigInteger.Parse("0" + Text.GetString(range), NumberStyles.HexNumber).ToString()).ToList());
@@ -278,28 +254,6 @@ namespace NeoEdit.Editor
 
 			var mult = new NumericValue(add ? 1 : -1);
 			ReplaceSelections(Selections.Zip(clipboardStrings, (sel, clip) => new { sel, clip }).AsTaskRunner().Select(obj => (new NumericValue(Text.GetString(obj.sel)) + new NumericValue(obj.clip) * mult).ToString()).ToList());
-		}
-
-		void Execute_Numeric_Fraction_Whole()
-		{
-			ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range)).Select(str =>
-			{
-				var idx = str.IndexOf('.');
-				if (idx == -1)
-					return str;
-				return str.Substring(0, idx);
-			}).ToList());
-		}
-
-		void Execute_Numeric_Fraction_Fraction()
-		{
-			ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range)).Select(str =>
-			{
-				var idx = str.IndexOf('.');
-				if (idx == -1)
-					return "0";
-				return str.Substring(idx);
-			}).ToList());
 		}
 
 		void Execute_Numeric_Fraction_Simplify() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range)).Select(SimplifyFraction).ToList());

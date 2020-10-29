@@ -13,21 +13,6 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		void DoRangesDiff(IReadOnlyList<Range> ranges)
-		{
-			if (!ranges.Any())
-				return;
-
-			if (ranges.Count % 2 != 0)
-				throw new Exception("Must have even number of items.");
-
-			var codePage = CodePage; // Must save as other threads can't access DependencyProperties
-			var neFiles = new NEFiles();
-			var batches = ranges.AsTaskRunner().Select(range => Text.GetString(range)).Select(str => Coder.StringToBytes(str, codePage)).Batch(2).ToList();
-			foreach (var batch in batches)
-				neFiles.AddDiff(new NEFile(bytes: batch[0], codePage: codePage, modified: false), new NEFile(bytes: batch[1], codePage: codePage, modified: false));
-		}
-
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
 		{
 			if (next)
@@ -98,44 +83,6 @@ namespace NeoEdit.Editor
 
 			return PreExecutionStop.Stop;
 		}
-
-		void Execute_Diff_Selections() => DoRangesDiff(Selections);
-
-		void Execute_Diff_SelectedFiles()
-		{
-			if (!Selections.Any())
-				return;
-
-			if (Selections.Count % 2 != 0)
-				throw new Exception("Must have even number of selections.");
-
-			var files = GetSelectionStrings();
-			if (files.Any(file => !File.Exists(file)))
-				throw new Exception("Selections must be files.");
-
-			var neFiles = new NEFiles();
-			var batches = files.Batch(2).ToList();
-			foreach (var batch in batches)
-				neFiles.AddDiff(new NEFile(fileName: batch[0]), new NEFile(fileName: batch[1]));
-		}
-
-		void Execute_Diff_VCSNormalFiles()
-		{
-			var files = GetSelectionStrings();
-			if (files.Any(file => !File.Exists(file)))
-				throw new Exception("Selections must be files.");
-
-			var original = files.Select(file => Versioner.GetUnmodifiedFile(file)).ToList();
-			var invalidIndexes = original.Indexes(file => file == null);
-			if (invalidIndexes.Any())
-				throw new Exception($"Unable to get unmodified files:\n{string.Join("\n", invalidIndexes.Select(index => files[index]))}");
-
-			var neFiles = new NEFiles();
-			for (var ctr = 0; ctr < files.Count; ctr++)
-				neFiles.AddDiff(new NEFile(displayName: Path.GetFileName(files[ctr]), modified: false, bytes: original[ctr]), new NEFile(fileName: files[ctr]));
-		}
-
-		void Execute_Diff_Regions_Region(int useRegion) => DoRangesDiff(GetRegions(useRegion));
 
 		void Execute_Diff_Break() => DiffTarget = null;
 

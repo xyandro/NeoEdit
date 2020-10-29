@@ -50,7 +50,6 @@ namespace NeoEdit.Common
 		Configuration_Diff_IgnoreCharacters Configure_Diff_IgnoreCharacters(string ignoreCharacters);
 		Configuration_Diff_Fix_Whitespace Configure_Diff_Fix_Whitespace();
 		Configuration_Files_Name_MakeAbsolute Configure_Files_Name_MakeAbsolute(NEVariables variables, bool absolute, bool checkType);
-		Configuration_Files_Name_GetUnique Configure_Files_Name_GetUnique();
 		Configuration_Files_Set_Size Configure_Files_Set_Size(NEVariables variables);
 		Configuration_Files_Set_Time Configure_Files_Set_Time(NEVariables variables, string expression);
 		Configuration_Files_Set_Attributes Configure_Files_Set_Attributes(Dictionary<FileAttributes, bool?> attributes);
@@ -96,7 +95,6 @@ namespace NeoEdit.Common
 		Configuration_Table_Convert Configure_Table_Convert(ParserType tableType);
 		Configuration_Table_TextToTable Configure_Table_TextToTable(string text);
 		Configuration_Table_EditTable Configure_Table_EditTable(Table input);
-		Configuration_Table_AddColumn Configure_Table_AddColumn(NEVariables variables, int numRows);
 		Configuration_Table_Join Configure_Table_Join(Table leftTable, Table rightTable);
 		Configuration_Table_Database_GenerateInserts Configure_Table_Database_GenerateInserts(Table table, string tableName);
 		Configuration_Table_Database_GenerateUpdates Configure_Table_Database_GenerateUpdates(Table table, string tableName);

@@ -366,41 +366,6 @@ namespace NeoEdit.Editor
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => GetRelativePath(str, results[index])).ToList());
 		}
 
-		static Configuration_Files_Name_GetUnique Configure_Files_Name_GetUnique(EditorExecuteState state) => state.NEFiles.FilesWindow.Configure_Files_Name_GetUnique();
-
-		void Execute_Files_Name_GetUnique()
-		{
-			var result = state.Configuration as Configuration_Files_Name_GetUnique;
-			var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-			if (!result.Format.Contains("{Unique}"))
-				throw new Exception("Format must contain \"{Unique}\" tag");
-			var newNames = new List<string>();
-			var format = result.Format.Replace("{Path}", "{0}").Replace("{Name}", "{1}").Replace("{Unique}", "{2}").Replace("{Ext}", "{3}");
-			foreach (var fileName in GetSelectionStrings())
-			{
-				var path = Path.GetDirectoryName(fileName);
-				if (!string.IsNullOrEmpty(path))
-					path += @"\";
-				var name = Path.GetFileNameWithoutExtension(fileName);
-				var ext = Path.GetExtension(fileName);
-				var newFileName = fileName;
-				for (var num = result.RenameAll ? 1 : 2; ; ++num)
-				{
-					if ((result.CheckExisting) && (Helpers.FileOrDirectoryExists(newFileName)))
-						used.Add(newFileName);
-					if (((num != 1) || (!result.RenameAll)) && (!used.Contains(newFileName)))
-						break;
-					var unique = result.UseGUIDs ? Guid.NewGuid().ToString() : num.ToString();
-
-					newFileName = string.Format(format, path, name, unique, ext);
-				}
-				newNames.Add(newFileName);
-				used.Add(newFileName);
-			}
-
-			ReplaceSelections(newNames);
-		}
-
 		void Execute_Files_Name_Sanitize() => ReplaceSelections(Selections.Select(range => SanitizeFileName(Text.GetString(range))).ToList());
 
 		void Execute_Files_Get_Size() => ReplaceSelections(RelativeSelectedFiles().Select(file => GetSize(file)).ToList());
