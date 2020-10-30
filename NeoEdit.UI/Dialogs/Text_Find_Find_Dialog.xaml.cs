@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
@@ -243,6 +245,41 @@ namespace NeoEdit.UI.Dialogs
 				IsBinary = true;
 			}
 			catch { }
+		}
+
+		protected override void OnKeyDown(KeyEventArgs e)
+		{
+			if ((Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) && (Keyboard.Modifiers.HasFlag(ModifierKeys.Control)))
+			{
+				e.Handled = true;
+				switch (e.Key)
+				{
+					case Key.C: OnSetClick("c"); break;
+					case Key.K: OnSetClick("k"); break;
+					case Key.D1:
+					case Key.D2:
+					case Key.D3:
+					case Key.D4:
+					case Key.D5:
+					case Key.D6:
+						OnSetClick($"r{e.Key - Key.D1 + 1}");
+						break;
+					case Key.D7:
+					case Key.D8:
+					case Key.D9:
+						OnSetClick($"v{e.Key - Key.D1 + 1}");
+						break;
+					default: e.Handled = false; break;
+				}
+			}
+
+			base.OnKeyDown(e);
+		}
+
+		void OnSetClick(object sender, RoutedEventArgs e = null)
+		{
+			Text = ((sender as FrameworkElement)?.Tag as string) ?? (sender as string);
+			IsExpression = true;
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);

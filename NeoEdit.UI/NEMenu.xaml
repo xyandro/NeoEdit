@@ -70,7 +70,7 @@
 		<controls:NEMenuItem Header="_Encoding" CommandEnum="File_Encoding" ToolTip="Set file encoding"/>
 		<controls:NEMenuItem Header="_Line endings" CommandEnum="File_LineEndings" ToolTip="Set file line endings"/>
 		<Separator/>
-		<controls:NEMenuItem Header="F_ile index" CommandEnum="File_FileIndex" ToolTip="Replace selections with file index"/>
+		<controls:NEMenuItem Header="File _index" CommandEnum="File_FileIndex" ToolTip="Replace selections with file index"/>
 		<controls:NEMenuItem Header="Ac_tive file index" CommandEnum="File_ActiveFileIndex" ToolTip="Replace selections with file index (only counting active files)"/>
 		<Separator/>
 		<MenuItem Header="Ad_vanced">

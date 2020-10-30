@@ -52,9 +52,11 @@ Find doesn't remember entire selection and remove at the same time
 When summarizing large selections screen will be zoomed to the right even if first selection is small
 Start recording/append macro shouldn't need to know which one
 Copy from two files, nothing in one, many in other, then select all and paste. The file without data doesn't overwrite the selection
-Add "Clipboards" and "keys" buttons to find dialog
 Make a new window blur in but not the content (or maybe glow)
 In regions dialog use insert and delete to do things
 In regions dialog instead of different functions for how to handle overlap (remove vs exclude) have an checkbox for overlaps
 Check all expressions to make sure counts are handled properly (like in the move files dialog)
 After universal undo is done remove any confirm options (like closing a window) except for exit
+Add reset to all dialogs
+If something pings NeoEdit when a dialog is up, cancel it
+Make universal undo/redo in menu tell you what action they're going to undo
