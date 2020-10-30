@@ -636,7 +636,7 @@
 			<controls:NEMenuItem Header="Non-r_oots" CommandEnum="Files_Select_NonRoots" ToolTip="Leave selected non-parent directories"/>
 			<Separator/>
 			<controls:NEMenuItem Header="By _content" CommandEnum="Files_Select_ByContent" ToolTip="Leave selected files that contain specific data"/>
-			<controls:NEMenuItem Header="By _source control status" CommandEnum="Files_Select_BySourceControlStatus" ToolTip="Leave selected files based on source control status"/>
+			<controls:NEMenuItem Header="By so_urce control status" CommandEnum="Files_Select_BySourceControlStatus" ToolTip="Leave selected files based on source control status"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="Cop_y" CommandEnum="Files_Copy" ToolTip="Copy files based on expressions"/>
