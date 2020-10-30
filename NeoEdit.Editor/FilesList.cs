@@ -2,7 +2,7 @@
 using System.Linq;
 using NeoEdit.Common;
 
-namespace NeoEdit.Editor.Transactional
+namespace NeoEdit.Editor
 {
 	public class FilesList
 	{

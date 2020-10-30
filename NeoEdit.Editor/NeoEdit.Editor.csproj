@@ -164,6 +164,8 @@
     <Compile Include="DiffParams.cs" />
     <Compile Include="EditorExecuteState.cs" />
     <Compile Include="FileSaver.cs" />
+    <Compile Include="FilesList.cs" />
+    <Compile Include="FileState.cs" />
     <Compile Include="GIFWriter.cs" />
     <Compile Include="KeysAndValues.cs" />
     <Compile Include="LCS.cs" />
@@ -238,6 +240,7 @@
       <DependentUpon>NEFiles.cs</DependentUpon>
     </Compile>
     <Compile Include="NEFiles.cs" />
+    <Compile Include="NEText.cs" />
     <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />
     <Compile Include="PreExecution\IPreExecution.cs" />
@@ -252,10 +255,7 @@
     <Compile Include="Searchers\StringSearcher.cs" />
     <Compile Include="Searchers\StringsSearcher.cs" />
     <Compile Include="ShutdownData.cs" />
-    <Compile Include="Transactional\FilesList.cs" />
-    <Compile Include="Transactional\FileState.cs" />
-    <Compile Include="Transactional\NEText.cs" />
-    <Compile Include="Transactional\UndoRedo.cs" />
+    <Compile Include="UndoRedo.cs" />
     <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>
   <ItemGroup>

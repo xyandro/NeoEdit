@@ -1,6 +1,4 @@
-﻿using NeoEdit.Editor.Transactional;
-
-namespace NeoEdit.Editor
+﻿namespace NeoEdit.Editor
 {
 	public class CacheValue
 	{

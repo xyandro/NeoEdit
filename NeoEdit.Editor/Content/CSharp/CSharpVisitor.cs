@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NeoEdit.Common;
 using NeoEdit.Common.Parsing;
-using NeoEdit.Editor.Transactional;
 
 namespace NeoEdit.Editor.Content.CSharp
 {

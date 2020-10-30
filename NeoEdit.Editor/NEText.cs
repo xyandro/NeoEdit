@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Editor.Transactional
+namespace NeoEdit.Editor
 {
 	// Positions: absolute positions in data
 	// Lines/indexes: positions in data as broken into lines

@@ -4,7 +4,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
 
-namespace NeoEdit.Editor.Transactional
+namespace NeoEdit.Editor
 {
 	class FileState
 	{

@@ -6,7 +6,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.PreExecution;
-using NeoEdit.Editor.Transactional;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor

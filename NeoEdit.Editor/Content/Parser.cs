@@ -11,7 +11,6 @@ using NeoEdit.Editor.Content.JSON;
 using NeoEdit.Editor.Content.SQL;
 using NeoEdit.Editor.Content.TCSV;
 using NeoEdit.Editor.Content.XML;
-using NeoEdit.Editor.Transactional;
 
 namespace NeoEdit.Editor.Content
 {
