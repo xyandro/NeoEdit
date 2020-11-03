@@ -340,7 +340,7 @@ namespace NeoEdit.Editor
 			if (invalid.Any())
 				throw new Exception($"Files don't exist:\n{string.Join("\n", invalid)}");
 
-			Enumerable.Range(0, fileNames.Count).AsTaskRunner().Select(index => (fileName: fileNames[index], dateTime: dateTimes[index])).ForEach(pair => SetImageTakenDate(pair.fileName, pair.dateTime));
+			TaskRunner.Range(0, fileNames.Count).Select(index => (fileName: fileNames[index], dateTime: dateTimes[index])).ForEach(pair => SetImageTakenDate(pair.fileName, pair.dateTime));
 		}
 	}
 }

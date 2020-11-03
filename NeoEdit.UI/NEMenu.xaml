@@ -108,19 +108,19 @@
 			<controls:NEMenuItem Header="_Limit" CommandEnum="Edit_Select_Limit" ToolTip="Keep selections based on starting selection, every nth selection, total selection count"/>
 			<Separator/>
 			<controls:NEMenuItem Header="Line_s" CommandEnum="Edit_Select_Lines" ToolTip="Select line (except newline) of any selections"/>
-			<controls:NEMenuItem Header="_Whole lines" CommandEnum="Edit_Select_WholeLines" ToolTip="Select line (including newline) of all selections"/>
+			<controls:NEMenuItem Header="W_hole lines" CommandEnum="Edit_Select_WholeLines" ToolTip="Select line (including newline) of all selections"/>
 			<Separator/>
 			<controls:NEMenuItem Header="_Empty" CommandEnum="Edit_Select_Empty" ToolTip="Keep selections that are empty"/>
 			<controls:NEMenuItem Header="Non-e_mpty" CommandEnum="Edit_Select_NonEmpty" ToolTip="Keep selections that aren't empty"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Toggle anchor" CommandEnum="Edit_Select_ToggleAnchor" ToolTip="Toggle anchor between left/right side of selections"/>
+			<controls:NEMenuItem Header="T_oggle anchor" CommandEnum="Edit_Select_ToggleAnchor" ToolTip="Toggle anchor between left/right side of selections"/>
 			<Separator/>
 			<MenuItem Header="_Focused">
 				<controls:NEMenuItem Header="_First" CommandEnum="Edit_Select_Focused_First" ToolTip="Focus first selection"/>
 				<controls:NEMenuItem Header="Ne_xt" CommandEnum="Edit_Select_Focused_Next" ToolTip="Focus next selection"/>
 				<controls:NEMenuItem Header="_Previous" CommandEnum="Edit_Select_Focused_Previous" ToolTip="Focus previous selection"/>
 				<Separator/>
-				<controls:NEMenuItem Header="_Single" CommandEnum="Edit_Select_Focused_Single" ToolTip="Keep only focused selection"/>
+				<controls:NEMenuItem Header="S_ingle" CommandEnum="Edit_Select_Focused_Single" ToolTip="Keep only focused selection"/>
 				<controls:NEMenuItem Header="_Remove" CommandEnum="Edit_Select_Focused_Remove" ToolTip="Remove focused selection"/>
 				<Separator/>
 				<controls:NEMenuItem Header="Remove _before current" CommandEnum="Edit_Select_Focused_RemoveBeforeCurrent" ToolTip="Remove all selections before focused selection"/>
@@ -135,7 +135,7 @@
 		<controls:NEMenuItem Header="_Cut" CommandEnum="Edit_Cut" ToolTip="Cut selections to clipboard"/>
 		<MenuItem Header="_Paste">
 			<controls:NEMenuItem Header="_Paste" CommandEnum="Edit_Paste_Paste" ToolTip="Paste clipboard values; if there are extra selections, duplicate clipboard values"/>
-			<controls:NEMenuItem Header="_Rotate paste" CommandEnum="Edit_Paste_RotatePaste" ToolTip="Paste clipboard values; if there are extra selections, rotate clipboard values"/>
+			<controls:NEMenuItem Header="Ro_tate paste" CommandEnum="Edit_Paste_RotatePaste" ToolTip="Paste clipboard values; if there are extra selections, rotate clipboard values"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="_Undo" CommandEnum="Edit_Undo" ToolTip="Undo last change"/>
@@ -207,7 +207,7 @@
 					<controls:NEMenuItem Header="Region _8" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region8" ToolTip="Leave selections contained in any region 8 value"/>
 					<controls:NEMenuItem Header="Region _9" CommandEnum="Edit_ModifyRegions_Select_WithEnclosing_Region9" ToolTip="Leave selections contained in any region 9 value"/>
 				</MenuItem>
-				<MenuItem Header="W_ithout enclosing">
+				<MenuItem Header="With_out enclosing">
 					<controls:NEMenuItem Header="Region _1" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region1" ToolTip="Leave selections not contained in any region 1 value"/>
 					<controls:NEMenuItem Header="Region _2" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region2" ToolTip="Leave selections not contained in any region 2 value"/>
 					<controls:NEMenuItem Header="Region _3" CommandEnum="Edit_ModifyRegions_Select_WithoutEnclosing_Region3" ToolTip="Leave selections not contained in any region 3 value"/>
@@ -469,7 +469,7 @@
 					<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_Duplicates_MatchCase" ToolTip="Select duplicates (match case)"/>
 				</MenuItem>
 				<Separator/>
-				<MenuItem Header="Non m_atch previous">
+				<MenuItem Header="Non-m_atch previous">
 					<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_NonMatchPrevious_IgnoreCase" ToolTip="Keep selections that don't match the previous selection (ignore case)"/>
 					<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_NonMatchPrevious_MatchCase" ToolTip="Keep selections that don't match the previous selection (match case)"/>
 				</MenuItem>
@@ -497,7 +497,7 @@
 						<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Common_IgnoreCase" ToolTip="Keep selections that match text in all files (ignore case)"/>
 						<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Common_MatchCase" ToolTip="Keep selections that match text in all files (match case)"/>
 					</MenuItem>
-					<MenuItem Header="Non c_ommon">
+					<MenuItem Header="Non-c_ommon">
 						<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_NonCommon_IgnoreCase" ToolTip="Keep selections that don't match text in all files (ignore case)"/>
 						<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_NonCommon_MatchCase" ToolTip="Keep selections that don't match text in all files (match case)"/>
 					</MenuItem>
@@ -547,7 +547,7 @@
 			<controls:NEMenuItem Header="_URL" CommandEnum="Text_Unescape_URL" ToolTip="Unescape URL"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="_Random" CommandEnum="Text_Random" ToolTip="Create random text"/>
+		<controls:NEMenuItem Header="R_andom" CommandEnum="Text_Random" ToolTip="Create random text"/>
 		<Separator/>
 		<MenuItem Header="Ad_vanced">
 			<controls:NEMenuItem Header="_Unicode" CommandEnum="Text_Advanced_Unicode" ToolTip="Insert unicode characters"/>
@@ -633,9 +633,9 @@
 			</MenuItem>
 			<Separator/>
 			<controls:NEMenuItem Header="_Roots" CommandEnum="Files_Select_Roots" ToolTip="Leave selected parent directories"/>
-			<controls:NEMenuItem Header="Non-r_oots" CommandEnum="Files_Select_NonRoots" ToolTip="Leave selected non-parent directories"/>
+			<controls:NEMenuItem Header="Non-roo_ts" CommandEnum="Files_Select_NonRoots" ToolTip="Leave selected non-parent directories"/>
 			<Separator/>
-			<controls:NEMenuItem Header="By _content" CommandEnum="Files_Select_ByContent" ToolTip="Leave selected files that contain specific data"/>
+			<controls:NEMenuItem Header="By c_ontent" CommandEnum="Files_Select_ByContent" ToolTip="Leave selected files that contain specific data"/>
 			<controls:NEMenuItem Header="By so_urce control status" CommandEnum="Files_Select_BySourceControlStatus" ToolTip="Leave selected files based on source control status"/>
 		</MenuItem>
 		<Separator/>
@@ -873,14 +873,14 @@
 		<controls:NEMenuItem Header="Ignore _whitespace" CommandEnum="Diff_IgnoreWhitespace" x:Name="menu_Diff_IgnoreWhitespace" ToolTip="Make diff ignore white space"/>
 		<controls:NEMenuItem Header="Ignore _case" CommandEnum="Diff_IgnoreCase" x:Name="menu_Diff_IgnoreCase" ToolTip="Make diff ignore case"/>
 		<controls:NEMenuItem Header="Ignore _numbers" CommandEnum="Diff_IgnoreNumbers" x:Name="menu_Diff_IgnoreNumbers" ToolTip="Make diff ignore numbers"/>
-		<controls:NEMenuItem Header="Ignore line _endings" CommandEnum="Diff_IgnoreLineEndings" x:Name="menu_Diff_IgnoreLineEndings" ToolTip="Make diff ignore line endings"/>
+		<controls:NEMenuItem Header="Ignore _line endings" CommandEnum="Diff_IgnoreLineEndings" x:Name="menu_Diff_IgnoreLineEndings" ToolTip="Make diff ignore line endings"/>
 		<controls:NEMenuItem Header="Ignore c_haracters" CommandEnum="Diff_IgnoreCharacters" ToolTip="Make diff ignore specific characters"/>
 		<controls:NEMenuItem Header="_Reset" CommandEnum="Diff_Reset" ToolTip="Reset diff ignore"/>
 		<Separator/>
 		<controls:NEMenuItem Header="Ne_xt" CommandEnum="Diff_Next" ToolTip="Move to next difference"/>
 		<controls:NEMenuItem Header="_Previous" CommandEnum="Diff_Previous" ToolTip="Move to previous difference"/>
-		<controls:NEMenuItem Header="C_opy left" CommandEnum="Diff_CopyLeft" ToolTip="Copy difference from left file to right"/>
-		<controls:NEMenuItem Header="Cop_y right" CommandEnum="Diff_CopyRight" ToolTip="Copy difference from right file to left"/>
+		<controls:NEMenuItem Header="Copy l_eft" CommandEnum="Diff_CopyLeft" ToolTip="Copy difference from left file to right"/>
+		<controls:NEMenuItem Header="Copy ri_ght" CommandEnum="Diff_CopyRight" ToolTip="Copy difference from right file to left"/>
 		<Separator/>
 		<MenuItem Header="_Fix">
 			<controls:NEMenuItem Header="_Whitespace" CommandEnum="Diff_Fix_Whitespace" ToolTip="On line that match except for whitespace, copy the whitespace"/>
@@ -1106,12 +1106,12 @@
 		<MenuItem Header="_Kill tasks" InputGestureText="Ctrl+Break" Click="OnKillTasks" ToolTip="Kill all running tasks (can cause program to crash)"/>
 		<Separator/>
 		<MenuItem Header="Ad_vanced">
-			<MenuItem Header="S_hell">
+			<MenuItem Header="_Shell">
 				<controls:NEMenuItem Header="_Integrate" CommandEnum="Help_Advanced_Shell_Integrate" ToolTip="Enable Windows Explorer option to open files with NeoEdit"/>
 				<controls:NEMenuItem Header="_Unintegrate" CommandEnum="Help_Advanced_Shell_Unintegrate" ToolTip="Remove Windows Explorer option to open files with NeoEdit"/>
 			</MenuItem>
 			<Separator/>
-			<controls:NEMenuItem Header="_Copy command line" CommandEnum="Help_Advanced_CopyCommandLine" ToolTip="Copy command line to clipboard"/>
+			<controls:NEMenuItem Header="Cop_y command line" CommandEnum="Help_Advanced_CopyCommandLine" ToolTip="Copy command line to clipboard"/>
 			<Separator/>
 			<controls:NEMenuItem Visibility="{Binding Path=(common:Settings.CanExtract), Converter={converters:BoolToVisibleCollapsedConverter}}" Header="_Extract" CommandEnum="Help_Advanced_Extract" ToolTip="Extract files on disk (speeds up load time)"/>
 			<Separator Visibility="{Binding Path=(common:Settings.CanExtract), Converter={converters:BoolToVisibleCollapsedConverter}}"/>

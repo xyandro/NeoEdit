@@ -45,7 +45,8 @@ namespace NeoEdit.UI
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
 			InitializeComponent();
-			UIHelper.AuditMenu(menu);
+			if (Helpers.IsDebugBuild)
+				UIHelper.AuditMenu(menu);
 			menu.StopTasks += StopTasks;
 			menu.KillTasks += KillTasks;
 
