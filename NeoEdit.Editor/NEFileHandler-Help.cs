@@ -29,7 +29,7 @@ namespace NeoEdit.Editor
 			const string check = location + "/tag/";
 			const string exe = location + "/download/{0}/NeoEdit.exe";
 
-			var oldVersion = ((AssemblyFileVersionAttribute)typeof(NEFiles).Assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
+			var oldVersion = ((AssemblyFileVersionAttribute)typeof(NEFilesHandler).Assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
 			string newVersion;
 
 			var request = WebRequest.Create(url) as HttpWebRequest;

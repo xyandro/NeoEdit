@@ -128,21 +128,21 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_File_New_FromClipboard_Selections(EditorExecuteState state)
 		{
-			NEFiles.AddFilesFromClipboardSelections(state.NEFiles);
+			NEFilesHandler.AddFilesFromClipboardSelections(state.NEFiles);
 			return PreExecutionStop.Stop;
 		}
 
 		static PreExecutionStop PreExecute_File_New_FromClipboard_Files(EditorExecuteState state)
 		{
-			NEFiles.AddFilesFromClipboards(state.NEFiles);
+			NEFilesHandler.AddFilesFromClipboards(state.NEFiles);
 			return PreExecutionStop.Stop;
 		}
 
 		static PreExecutionStop PreExecute_File_New_WordList(EditorExecuteState state)
 		{
 			byte[] data;
-			var streamName = typeof(NEFiles).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
-			using (var stream = typeof(NEFiles).Assembly.GetManifestResourceStream(streamName))
+			var streamName = typeof(NEFilesHandler).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
+			using (var stream = typeof(NEFilesHandler).Assembly.GetManifestResourceStream(streamName))
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);
@@ -442,10 +442,10 @@ namespace NeoEdit.Editor
 				neFile.VerifyCanClose();
 				state.NEFiles.RemoveFile(neFile);
 			}
-			NEFiles.Instances.Remove(state.NEFiles);
+			NEFilesHandler.Instances.Remove(state.NEFiles);
 			state.NEFiles.FilesWindow.CloseWindow();
 
-			if (!NEFiles.Instances.Any())
+			if (!NEFilesHandler.Instances.Any())
 			{
 				if (((state.Configuration as Configuration_File_Exit)?.WindowClosed != true) || (!Settings.DontExitOnClose))
 					Environment.Exit(0);

@@ -16,13 +16,13 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	public partial class NEFiles : INEFiles
+	public partial class NEFilesHandler : INEFiles
 	{
 		public const int KeysAndValuesCount = 10;
 
 		public INEFilesWindow FilesWindow { get; }
 
-		public static List<NEFiles> Instances { get; } = new List<NEFiles>();
+		public static List<NEFilesHandler> Instances { get; } = new List<NEFilesHandler>();
 
 		int displayColumns;
 		public int DisplayColumns
@@ -44,7 +44,7 @@ namespace NeoEdit.Editor
 		public bool timeNextAction;
 		MacroAction lastAction;
 
-		public NEFiles(bool addEmpty = false)
+		public NEFilesHandler(bool addEmpty = false)
 		{
 			Instances.Add(this);
 
@@ -493,7 +493,7 @@ namespace NeoEdit.Editor
 
 		public static void CreateFiles(CommandLineParams commandLineParams)
 		{
-			NEFiles neFiles = null;
+			NEFilesHandler neFiles = null;
 			try
 			{
 				if (commandLineParams.Background)
@@ -501,7 +501,7 @@ namespace NeoEdit.Editor
 
 				if (!commandLineParams.Files.Any())
 				{
-					new NEFiles(true);
+					new NEFilesHandler(true);
 					return;
 				}
 
@@ -509,7 +509,7 @@ namespace NeoEdit.Editor
 				if (!commandLineParams.Diff)
 					neFiles = Instances.OrderByDescending(x => x.LastActivated).FirstOrDefault();
 				if (neFiles == null)
-					neFiles = new NEFiles();
+					neFiles = new NEFilesHandler();
 				foreach (var file in commandLineParams.Files)
 				{
 					if (commandLineParams.Existing)
@@ -541,7 +541,7 @@ namespace NeoEdit.Editor
 
 		NEFileHandler GetFile(string fileName) => ActiveFiles.FirstOrDefault(neFile => neFile.FileName == fileName);
 
-		public static void AddFilesFromClipboards(NEFiles neFiles)
+		public static void AddFilesFromClipboards(NEFilesHandler neFiles)
 		{
 			var index = 0;
 			foreach (var strs in NEClipboard.Current)
@@ -563,6 +563,6 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public static void AddFilesFromClipboardSelections(NEFiles neFiles) => NEClipboard.Current.Strings.ForEach((str, index) => neFiles.AddFile(new NEFileHandler(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
+		public static void AddFilesFromClipboardSelections(NEFilesHandler neFiles) => NEClipboard.Current.Strings.ForEach((str, index) => neFiles.AddFile(new NEFileHandler(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 	}
 }

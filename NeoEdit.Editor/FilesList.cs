@@ -6,12 +6,12 @@ namespace NeoEdit.Editor
 {
 	public class FilesList
 	{
-		NEFiles neFiles;
+		NEFilesHandler neFiles;
 		OrderedHashSet<NEFileHandler> allFiles, activeFiles;
 		bool activeFilesSorted;
 		NEFileHandler focused;
 
-		public FilesList(NEFiles neFiles)
+		public FilesList(NEFilesHandler neFiles)
 		{
 			this.neFiles = neFiles;
 			allFiles = new OrderedHashSet<NEFileHandler>();

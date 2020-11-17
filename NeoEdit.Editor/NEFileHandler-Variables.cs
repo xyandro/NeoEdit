@@ -16,7 +16,7 @@ namespace NeoEdit.Editor
 
 		NEFile saveFileState, fileState;
 
-		public NEFiles NEFiles
+		public NEFilesHandler NEFiles
 		{
 			get => fileState.neFiles;
 			set => fileState.neFiles = value;
@@ -110,7 +110,7 @@ namespace NeoEdit.Editor
 			fileState.regions[region - 1] = DeOverlap(regions);
 		}
 
-		readonly KeysAndValues[] newKeysAndValues = new KeysAndValues[NEFiles.KeysAndValuesCount];
+		readonly KeysAndValues[] newKeysAndValues = new KeysAndValues[NEFilesHandler.KeysAndValuesCount];
 		public KeysAndValues GetKeysAndValues(int kvIndex)
 		{
 			if ((kvIndex < 0) || (kvIndex > 9))
@@ -122,7 +122,7 @@ namespace NeoEdit.Editor
 			return newKeysAndValues[kvIndex];
 		}
 
-		readonly bool[] keysAndValuesSet = new bool[NEFiles.KeysAndValuesCount];
+		readonly bool[] keysAndValuesSet = new bool[NEFilesHandler.KeysAndValuesCount];
 
 		void SetKeysAndValues(int kvIndex, IReadOnlyList<string> values, bool matchCase = false)
 		{
@@ -438,7 +438,7 @@ namespace NeoEdit.Editor
 			newFilesToAdd.Clear();
 			newClipboardData = null;
 			ClipboardDataSet = false;
-			for (var kvIndex = 0; kvIndex < NEFiles.KeysAndValuesCount; ++kvIndex)
+			for (var kvIndex = 0; kvIndex < NEFilesHandler.KeysAndValuesCount; ++kvIndex)
 			{
 				newKeysAndValues[kvIndex] = null;
 				keysAndValuesSet[kvIndex] = false;

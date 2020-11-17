@@ -11,11 +11,11 @@ namespace NeoEdit.Editor
 	public class EditorExecuteState : ExecuteState
 	{
 		public IPreExecution PreExecution;
-		public NEFiles NEFiles;
+		public NEFilesHandler NEFiles;
 
 		public EditorExecuteState(NECommand command = NECommand.None) : base(command) => Command = command;
 
-		public EditorExecuteState(NEFiles neFiles, ExecuteState state) : base(state.Command)
+		public EditorExecuteState(NEFilesHandler neFiles, ExecuteState state) : base(state.Command)
 		{
 			ShiftDown = state.ShiftDown;
 			ControlDown = state.ControlDown;

@@ -40,7 +40,7 @@ namespace NeoEdit.Editor
 			};
 		}
 
-		public EditorExecuteState GetExecuteState(NEFiles neFiles)
+		public EditorExecuteState GetExecuteState(NEFilesHandler neFiles)
 		{
 			return new EditorExecuteState(Command)
 			{

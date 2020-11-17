@@ -88,7 +88,7 @@ namespace NeoEdit.Editor
 				{
 					diffTargets.ForEach(diffTarget => state.NEFiles.RemoveFile(diffTarget));
 
-					var neFiles = new NEFiles();
+					var neFiles = new NEFilesHandler();
 					neFiles.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 					diffTargets.ForEach(diffTarget => neFiles.AddFile(diffTarget));
 				}

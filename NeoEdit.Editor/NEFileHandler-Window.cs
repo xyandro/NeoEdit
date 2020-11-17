@@ -33,7 +33,7 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_Window_New_NewWindow(EditorExecuteState state)
 		{
-			new NEFiles(true);
+			new NEFilesHandler(true);
 			return PreExecutionStop.Stop;
 		}
 
@@ -47,7 +47,7 @@ namespace NeoEdit.Editor
 				neFile.Commit();
 			});
 
-			var neFiles = new NEFiles();
+			var neFiles = new NEFilesHandler();
 			neFiles.BeginTransaction(state);
 			newFiles.ForEach(neFile => neFiles.AddFile(neFile));
 			neFiles.Commit();
@@ -80,7 +80,7 @@ namespace NeoEdit.Editor
 				newFiles.Add(neFile);
 			}
 
-			var neFiles = new NEFiles();
+			var neFiles = new NEFilesHandler();
 			neFiles.BeginTransaction(state);
 			newFiles.ForEach(neFile => neFiles.AddFile(neFile));
 			neFiles.SetLayout(state.NEFiles.WindowLayout);
@@ -99,7 +99,7 @@ namespace NeoEdit.Editor
 			var comparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 			var summaryByFile = selectionsByFile.Select(tuple => (tuple.DisplayName, selections: tuple.Selections.GroupBy(x => x, comparer).Select(group => (str: group.Key, count: group.Count())).OrderByDescending(x => x.count).ToList())).ToList();
 
-			var neFiles = new NEFiles(false);
+			var neFiles = new NEFilesHandler(false);
 			neFiles.BeginTransaction(state);
 			foreach (var neFile in summaryByFile)
 				neFiles.AddFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
@@ -111,9 +111,9 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_Window_New_FromClipboard_AllSelections(EditorExecuteState state)
 		{
-			var neFiles = new NEFiles();
+			var neFiles = new NEFilesHandler();
 			neFiles.BeginTransaction(state);
-			NEFiles.AddFilesFromClipboardSelections(neFiles);
+			NEFilesHandler.AddFilesFromClipboardSelections(neFiles);
 			neFiles.Commit();
 
 			return PreExecutionStop.Stop;
@@ -121,9 +121,9 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_Window_New_FromClipboard_EachFile(EditorExecuteState state)
 		{
-			var neFiles = new NEFiles();
+			var neFiles = new NEFilesHandler();
 			neFiles.BeginTransaction(state);
-			NEFiles.AddFilesFromClipboards(neFiles);
+			NEFilesHandler.AddFilesFromClipboards(neFiles);
 			neFiles.Commit();
 
 			return PreExecutionStop.Stop;
@@ -134,7 +134,7 @@ namespace NeoEdit.Editor
 			var active = state.NEFiles.ActiveFiles.ToList();
 			active.ForEach(neFile => state.NEFiles.RemoveFile(neFile));
 
-			var neFiles = new NEFiles();
+			var neFiles = new NEFilesHandler();
 			neFiles.BeginTransaction(state);
 			neFiles.SetLayout(state.NEFiles.WindowLayout);
 			active.ForEach(neFile => neFiles.AddFile(neFile));

@@ -5,7 +5,7 @@ using NeoEdit.Common;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFiles
+	partial class NEFilesHandler
 	{
 		void EnsureInTransaction()
 		{

@@ -233,13 +233,13 @@
       <DependentUpon>NEFileHandler.cs</DependentUpon>
     </Compile>
     <Compile Include="NEFileHandler.cs" />
-    <Compile Include="NEFiles-Macro.cs">
-      <DependentUpon>NEFiles.cs</DependentUpon>
+    <Compile Include="NEFilesHandler-Macro.cs">
+      <DependentUpon>NEFilesHandler.cs</DependentUpon>
     </Compile>
-    <Compile Include="NEFiles-Variables.cs">
-      <DependentUpon>NEFiles.cs</DependentUpon>
+    <Compile Include="NEFilesHandler-Variables.cs">
+      <DependentUpon>NEFilesHandler.cs</DependentUpon>
     </Compile>
-    <Compile Include="NEFiles.cs" />
+    <Compile Include="NEFilesHandler.cs" />
     <Compile Include="NEText.cs" />
     <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />

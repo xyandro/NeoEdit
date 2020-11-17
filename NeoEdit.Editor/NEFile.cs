@@ -8,7 +8,7 @@ namespace NeoEdit.Editor
 {
 	class NEFile
 	{
-		public NEFiles neFiles;
+		public NEFilesHandler neFiles;
 		public NEText text;
 		public UndoRedo undoRedo;
 		public int currentSelection;
