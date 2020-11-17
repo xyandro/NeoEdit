@@ -6,7 +6,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
-	class NEFileState
+	class NEFile
 	{
 		public NEFiles neFiles;
 		public NEText text;
@@ -41,14 +41,14 @@ namespace NeoEdit.Editor
 		public bool isDiff;
 		public NEFileHandler diffTarget;
 
-		public NEFileState()
+		public NEFile()
 		{
 			regions = new IReadOnlyList<Range>[9];
 		}
 
-		public NEFileState Clone()
+		public NEFile Clone()
 		{
-			var fileState = new NEFileState
+			var fileState = new NEFile
 			{
 				neFiles = neFiles,
 				text = text,

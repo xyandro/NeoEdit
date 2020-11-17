@@ -14,7 +14,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		NEFileState saveFileState, fileState;
+		NEFile saveFileState, fileState;
 
 		public NEFiles NEFiles
 		{

@@ -171,6 +171,7 @@
     <Compile Include="Macro.cs" />
     <Compile Include="MacroAction.cs" />
     <Compile Include="Models\AnswerResult.cs" />
+    <Compile Include="NEFile.cs" />
     <Compile Include="NEFileHandler-Content.cs">
       <DependentUpon>NEFileHandler.cs</DependentUpon>
     </Compile>
@@ -239,7 +240,6 @@
       <DependentUpon>NEFiles.cs</DependentUpon>
     </Compile>
     <Compile Include="NEFiles.cs" />
-    <Compile Include="NEFileState.cs" />
     <Compile Include="NEText.cs" />
     <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />
