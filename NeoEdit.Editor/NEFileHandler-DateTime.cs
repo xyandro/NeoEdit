@@ -97,19 +97,19 @@ namespace NeoEdit.Editor
 
 		void Execute_DateTime_ToLocal() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: Dater.Local), Dater.Local))).ToList());
 
-		static Configuration_DateTime_ToTimeZone Configure_DateTime_ToTimeZone(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_DateTime_ToTimeZone();
+		static Configuration_DateTime_ToTimeZone Configure_DateTime_ToTimeZone() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_DateTime_ToTimeZone();
 
 		void Execute_DateTime_ToTimeZone()
 		{
-			var result = state.Configuration as Configuration_DateTime_ToTimeZone;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_DateTime_ToTimeZone;
 			ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: result.TimeZone), result.TimeZone))).ToList());
 		}
 
-		static Configuration_DateTime_Format Configure_DateTime_Format(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_DateTime_Format(state.NEFiles.Focused.Selections.Select(range => state.NEFiles.Focused.Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
+		static Configuration_DateTime_Format Configure_DateTime_Format() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_DateTime_Format(EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Select(range => EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
 
 		void Execute_DateTime_Format()
 		{
-			var result = state.Configuration as Configuration_DateTime_Format;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_DateTime_Format;
 			ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.StringToDateTimeOffset(Text.GetString(range), result.InputFormat), result.OutputFormat)).ToList());
 		}
 

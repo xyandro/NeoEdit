@@ -10,12 +10,17 @@ namespace NeoEdit.Editor
 {
 	public class EditorExecuteState : ExecuteState
 	{
+		public static EditorExecuteState CurrentState { get; private set; }
+		public static void SetState(NECommand command) => CurrentState = new EditorExecuteState(command);
+		public static void SetState(NEFilesHandler neFiles, ExecuteState state) => CurrentState = new EditorExecuteState(neFiles, state);
+		public static void ClearState() => CurrentState = null;
+
 		public IPreExecution PreExecution;
 		public NEFilesHandler NEFiles;
 
-		public EditorExecuteState(NECommand command = NECommand.None) : base(command) => Command = command;
+		EditorExecuteState(NECommand command) : base(command) => Command = command;
 
-		public EditorExecuteState(NEFilesHandler neFiles, ExecuteState state) : base(state.Command)
+		EditorExecuteState(NEFilesHandler neFiles, ExecuteState state) : base(state.Command)
 		{
 			ShiftDown = state.ShiftDown;
 			ControlDown = state.ControlDown;

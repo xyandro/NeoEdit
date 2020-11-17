@@ -37,7 +37,7 @@ namespace NeoEdit.Editor
 
 		public int DisplayRows { get; private set; }
 
-		EditorExecuteState state;
+		bool inTransaction = false;
 
 		public DateTime LastActivated { get; set; }
 
@@ -51,7 +51,7 @@ namespace NeoEdit.Editor
 			oldFilesList = newFilesList = new FilesList(this);
 			oldWindowLayout = newWindowLayout = new WindowLayout(1, 1);
 
-			BeginTransaction(new EditorExecuteState());
+			BeginTransaction();
 			FilesWindow = INEFilesWindowStatic.CreateINEFilesWindow(this);
 			if (addEmpty)
 				AddFile(new NEFileHandler());
@@ -204,7 +204,8 @@ namespace NeoEdit.Editor
 					FilesWindow.SetMacroProgress((double)stepIndex / macro.Actions.Count);
 				}
 
-				if (!RunCommand(macro.Actions[stepIndex++].GetExecuteState(this), true))
+				macro.Actions[stepIndex++].ReplaceExecuteState(this);
+				if (!RunCommand(true))
 				{
 					playingMacro = null;
 					playingMacroNextAction = null;
@@ -218,40 +219,41 @@ namespace NeoEdit.Editor
 
 		public void HandleCommand(ExecuteState state, Func<bool> skipDraw = null)
 		{
-			var editorState = new EditorExecuteState(this, state);
-			RunCommand(editorState);
+			EditorExecuteState.SetState(this, state);
+			RunCommand();
 			PlayMacro();
 			if (skipDraw?.Invoke() != true)
 				RenderFilesWindow();
+			EditorExecuteState.ClearState();
 		}
 
-		bool RunCommand(EditorExecuteState state, bool inMacro = false)
+		bool RunCommand(bool inMacro = false)
 		{
 			try
 			{
-				if (state.Command == NECommand.Macro_RepeatLastAction)
+				if (EditorExecuteState.CurrentState.Command == NECommand.Macro_RepeatLastAction)
 				{
 					if (lastAction == null)
 						throw new Exception("No last action available");
-					state = lastAction.GetExecuteState(this);
+					lastAction.ReplaceExecuteState(this);
 					inMacro = true;
 				}
 
-				BeginTransaction(state);
+				BeginTransaction();
 
-				state.ClipboardDataMapFunc = GetClipboardDataMap;
-				state.KeysAndValuesFunc = GetKeysAndValuesMap;
+				EditorExecuteState.CurrentState.ClipboardDataMapFunc = GetClipboardDataMap;
+				EditorExecuteState.CurrentState.KeysAndValuesFunc = GetKeysAndValuesMap;
 
-				if ((!inMacro) && (state.Configuration == null))
-					state.Configuration = NEFileHandler.Configure(state);
+				if ((!inMacro) && (EditorExecuteState.CurrentState.Configuration == null))
+					EditorExecuteState.CurrentState.Configuration = NEFileHandler.Configure();
 
 				Stopwatch sw = null;
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
 				FilesWindow.SetTaskRunnerProgress(0);
-				state.PreExecution = NEFileHandler.PreExecute(state);
-				if (state.PreExecution != PreExecutionStop.Stop)
+				EditorExecuteState.CurrentState.PreExecution = NEFileHandler.PreExecute();
+				if (EditorExecuteState.CurrentState.PreExecution != PreExecutionStop.Stop)
 					TaskRunner.Run(Execute, percent => FilesWindow.SetTaskRunnerProgress(percent));
 				FilesWindow.SetTaskRunnerProgress(null);
 				PostExecute();
@@ -262,7 +264,7 @@ namespace NeoEdit.Editor
 					FilesWindow.RunDialog_ShowMessage("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
 				}
 
-				var action = MacroAction.GetMacroAction(state);
+				var action = MacroAction.GetMacroAction();
 				if (action != null)
 				{
 					lastAction = action;

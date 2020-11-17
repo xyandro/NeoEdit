@@ -22,37 +22,35 @@ namespace NeoEdit.Editor
 
 		MacroAction() { }
 
-		public static MacroAction GetMacroAction(EditorExecuteState state)
+		public static MacroAction GetMacroAction()
 		{
-			if (!macroInclude[state.Command])
+			if (!macroInclude[EditorExecuteState.CurrentState.Command])
 				return null;
 
 			return new MacroAction
 			{
-				Command = state.Command,
-				ShiftDown = state.ShiftDown,
-				ControlDown = state.ControlDown,
-				AltDown = state.AltDown,
-				MultiStatus = state.MultiStatus,
-				Key = state.Key,
-				Text = state.Text,
-				Configuration = state.Configuration,
+				Command = EditorExecuteState.CurrentState.Command,
+				ShiftDown = EditorExecuteState.CurrentState.ShiftDown,
+				ControlDown = EditorExecuteState.CurrentState.ControlDown,
+				AltDown = EditorExecuteState.CurrentState.AltDown,
+				MultiStatus = EditorExecuteState.CurrentState.MultiStatus,
+				Key = EditorExecuteState.CurrentState.Key,
+				Text = EditorExecuteState.CurrentState.Text,
+				Configuration = EditorExecuteState.CurrentState.Configuration,
 			};
 		}
 
-		public EditorExecuteState GetExecuteState(NEFilesHandler neFiles)
+		public void ReplaceExecuteState(NEFilesHandler neFiles)
 		{
-			return new EditorExecuteState(Command)
-			{
-				ShiftDown = ShiftDown,
-				ControlDown = ControlDown,
-				AltDown = AltDown,
-				MultiStatus = MultiStatus,
-				Key = Key,
-				Text = Text,
-				Configuration = Configuration,
-				NEFiles = neFiles,
-			};
+			EditorExecuteState.SetState(Command);
+			EditorExecuteState.CurrentState.ShiftDown = ShiftDown;
+			EditorExecuteState.CurrentState.ControlDown = ControlDown;
+			EditorExecuteState.CurrentState.AltDown = AltDown;
+			EditorExecuteState.CurrentState.MultiStatus = MultiStatus;
+			EditorExecuteState.CurrentState.Key = Key;
+			EditorExecuteState.CurrentState.Text = Text;
+			EditorExecuteState.CurrentState.Configuration = Configuration;
+			EditorExecuteState.CurrentState.NEFiles = neFiles;
 		}
 	}
 }

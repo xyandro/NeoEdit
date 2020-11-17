@@ -128,32 +128,32 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static Configuration_Position_Goto_Various Configure_Position_Goto_Various(EditorExecuteState state, GotoType gotoType)
+		static Configuration_Position_Goto_Various Configure_Position_Goto_Various(GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
-			var range = state.NEFiles.Focused.Selections.FirstOrDefault();
+			var range = EditorExecuteState.CurrentState.NEFiles.Focused.Selections.FirstOrDefault();
 			if (range != null)
 			{
-				line = state.NEFiles.Focused.Text.GetPositionLine(range.Start) + 1;
-				index = state.NEFiles.Focused.Text.GetPositionIndex(range.Start, line - 1) + 1;
-				column = state.NEFiles.Focused.Text.GetColumnFromIndex(line - 1, index - 1) + 1;
+				line = EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetPositionLine(range.Start) + 1;
+				index = EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetPositionIndex(range.Start, line - 1) + 1;
+				column = EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetColumnFromIndex(line - 1, index - 1) + 1;
 				position = range.Start;
 			}
 			int startValue;
 			switch (gotoType)
 			{
-				case GotoType.Line: startValue = state.NEFiles.Focused.Text.GetDiffLine(line); break;
+				case GotoType.Line: startValue = EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetDiffLine(line); break;
 				case GotoType.Column: startValue = column; break;
 				case GotoType.Index: startValue = index; break;
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return state.NEFiles.FilesWindow.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, state.NEFiles.Focused.GetVariables());
+			return EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 		}
 
 		void Execute_Position_Goto_Various(GotoType gotoType, bool selecting)
 		{
-			var result = state.Configuration as Configuration_Position_Goto_Various;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Position_Goto_Various;
 			var values = GotoRange.GetPositionsData(GetExpressionResults<string>(result.Expression), gotoType);
 			if (!values.Any())
 				return;

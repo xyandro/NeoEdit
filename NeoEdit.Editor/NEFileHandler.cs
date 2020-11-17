@@ -19,13 +19,13 @@ namespace NeoEdit.Editor
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
-		EditorExecuteState state;
+		bool inTransaction = false;
 
 		public NEFileHandler(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
 			fileState = new NEFile();
 
-			BeginTransaction(new EditorExecuteState());
+			BeginTransaction();
 
 			Text = new NEText("");
 			Selections = new List<Range>();
@@ -68,7 +68,7 @@ namespace NeoEdit.Editor
 			}
 
 			var neFile = new NEFileHandler(displayName: displayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-			neFile.BeginTransaction(new EditorExecuteState());
+			neFile.BeginTransaction();
 			neFile.Selections = stringRanges;
 			neFile.Commit();
 
@@ -321,275 +321,275 @@ namespace NeoEdit.Editor
 		#endregion
 
 		#region Configure
-		public static IConfiguration Configure(EditorExecuteState state)
+		public static IConfiguration Configure()
 		{
-			switch (state.Command)
+			switch (EditorExecuteState.CurrentState.Command)
 			{
-				case NECommand.File_Open_Open: return Configure_FileMacro_Open_Open(state);
-				case NECommand.Macro_Open_Open: return Configure_FileMacro_Open_Open(state, Macro.MacroDirectory);
-				case NECommand.Window_CustomGrid: return Configure_Window_CustomGrid(state);
+				case NECommand.File_Open_Open: return Configure_FileMacro_Open_Open();
+				case NECommand.Macro_Open_Open: return Configure_FileMacro_Open_Open(Macro.MacroDirectory);
+				case NECommand.Window_CustomGrid: return Configure_Window_CustomGrid();
 			}
 
-			if (state.NEFiles.Focused == null)
+			if (EditorExecuteState.CurrentState.NEFiles.Focused == null)
 				return null;
 
-			switch (state.Command)
+			switch (EditorExecuteState.CurrentState.Command)
 			{
-				case NECommand.Internal_Key: return Configure_Internal_Key(state);
-				case NECommand.File_Open_ReopenWithEncoding: return Configure_File_Open_ReopenWithEncoding(state);
-				case NECommand.File_Save_SaveAsByExpression: return Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(state);
-				case NECommand.File_Move_MoveByExpression: return Configure_File_Move_MoveByExpression(state);
-				case NECommand.File_Copy_CopyByExpression: return Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(state);
-				case NECommand.File_Encoding: return Configure_File_Encoding(state);
-				case NECommand.File_LineEndings: return Configure_File_LineEndings(state);
-				case NECommand.File_Advanced_Encrypt: return Configure_File_Advanced_Encrypt(state);
-				case NECommand.File_Advanced_SetDisplayName: return Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(state);
-				case NECommand.Edit_Select_Limit: return Configure_Edit_Select_Limit(state);
-				case NECommand.Edit_Select_ToggleAnchor: return Configure_Edit_Select_ToggleAnchor(state);
-				case NECommand.Edit_Paste_Paste: return Configure_Edit_Paste_PasteRotatePaste(state);
-				case NECommand.Edit_Paste_RotatePaste: return Configure_Edit_Paste_PasteRotatePaste(state);
-				case NECommand.Edit_Repeat: return Configure_Edit_Repeat(state);
-				case NECommand.Edit_Rotate: return Configure_Edit_Rotate(state);
-				case NECommand.Edit_Expression_Expression: return Configure_Edit_Expression_Expression(state);
-				case NECommand.Edit_ModifyRegions: return Configure_Edit_ModifyRegions(state);
-				case NECommand.Edit_Advanced_Convert: return Configure_Edit_Advanced_Convert(state);
-				case NECommand.Edit_Advanced_Hash: return Configure_Edit_Advanced_Hash(state);
-				case NECommand.Edit_Advanced_Compress: return Configure_Edit_Advanced_Compress(state);
-				case NECommand.Edit_Advanced_Decompress: return Configure_Edit_Advanced_Decompress(state);
-				case NECommand.Edit_Advanced_Encrypt: return Configure_Edit_Advanced_Encrypt(state);
-				case NECommand.Edit_Advanced_Decrypt: return Configure_Edit_Advanced_Decrypt(state);
-				case NECommand.Edit_Advanced_Sign: return Configure_Edit_Advanced_Sign(state);
-				case NECommand.Text_Select_WholeWord: return Configure_Text_Select_WholeBoundedWord(state, true);
-				case NECommand.Text_Select_BoundedWord: return Configure_Text_Select_WholeBoundedWord(state, false);
-				case NECommand.Text_Select_Trim: return Configure_Text_Select_Trim(state);
-				case NECommand.Text_Select_Split: return Configure_Text_Select_Split(state);
-				case NECommand.Text_Select_Repeats_ByCount_IgnoreCase: return Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase(state);
-				case NECommand.Text_Select_Repeats_ByCount_MatchCase: return Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase(state);
-				case NECommand.Text_Select_ByWidth: return Configure_Text_Select_ByWidth(state);
-				case NECommand.Text_Find_Find: return Configure_Text_Find_Find(state);
-				case NECommand.Text_Find_RegexReplace: return Configure_Text_Find_RegexReplace(state);
-				case NECommand.Text_Trim: return Configure_Text_Trim(state);
-				case NECommand.Text_Width: return Configure_Text_Width(state);
-				case NECommand.Text_Sort: return Configure_Text_Sort(state);
-				case NECommand.Text_Random: return Configure_Text_Random(state);
-				case NECommand.Text_Advanced_Unicode: return Configure_Text_Advanced_Unicode(state);
-				case NECommand.Text_Advanced_FirstDistinct: return Configure_Text_Advanced_FirstDistinct(state);
-				case NECommand.Text_Advanced_ReverseRegex: return Configure_Text_Advanced_ReverseRegex(state);
-				case NECommand.Numeric_Select_Limit: return Configure_Numeric_Select_Limit(state);
-				case NECommand.Numeric_Round: return Configure_Numeric_Round(state);
-				case NECommand.Numeric_Floor: return Configure_Numeric_Floor(state);
-				case NECommand.Numeric_Ceiling: return Configure_Numeric_Ceiling(state);
-				case NECommand.Numeric_Scale: return Configure_Numeric_Scale(state);
-				case NECommand.Numeric_Cycle: return Configure_Numeric_Cycle(state);
-				case NECommand.Numeric_Series_Linear: return Configure_Numeric_Series_LinearGeometric(state, true);
-				case NECommand.Numeric_Series_Geometric: return Configure_Numeric_Series_LinearGeometric(state, false);
-				case NECommand.Numeric_ConvertBase_ConvertBase: return Configure_Numeric_ConvertBase_ConvertBase(state);
-				case NECommand.Numeric_RandomNumber: return Configure_Numeric_RandomNumber(state);
-				case NECommand.Numeric_CombinationsPermutations: return Configure_Numeric_CombinationsPermutations(state);
-				case NECommand.Numeric_MinMaxValues: return Configure_Numeric_MinMaxValues(state);
-				case NECommand.Files_Select_ByContent: return Configure_Files_Select_ByContent(state);
-				case NECommand.Files_Select_BySourceControlStatus: return Configure_Files_Select_BySourceControlStatus(state);
-				case NECommand.Files_Copy: return Configure_Files_CopyMove(state, false);
-				case NECommand.Files_Move: return Configure_Files_CopyMove(state, true);
-				case NECommand.Files_Name_MakeAbsolute: return Configure_Files_Name_MakeAbsolute(state);
-				case NECommand.Files_Name_MakeRelative: return Configure_Files_Name_MakeRelative(state);
-				case NECommand.Files_Get_Hash: return Configure_Files_Get_Hash(state);
-				case NECommand.Files_Get_Content: return Configure_Files_Get_Content(state);
-				case NECommand.Files_Set_Size: return Configure_Files_Set_Size(state);
-				case NECommand.Files_Set_Time_Write: return Configure_Files_Set_Time_Various(state);
-				case NECommand.Files_Set_Time_Access: return Configure_Files_Set_Time_Various(state);
-				case NECommand.Files_Set_Time_Create: return Configure_Files_Set_Time_Various(state);
-				case NECommand.Files_Set_Time_All: return Configure_Files_Set_Time_Various(state);
-				case NECommand.Files_Set_Attributes: return Configure_Files_Set_Attributes(state);
-				case NECommand.Files_Set_Content: return Configure_Files_Set_Content(state);
-				case NECommand.Files_Set_Encoding: return Configure_Files_Set_Encoding(state);
-				case NECommand.Files_Compress: return Configure_Files_Compress(state);
-				case NECommand.Files_Decompress: return Configure_Files_Decompress(state);
-				case NECommand.Files_Encrypt: return Configure_Files_Encrypt(state);
-				case NECommand.Files_Decrypt: return Configure_Files_Decrypt(state);
-				case NECommand.Files_Sign: return Configure_Files_Sign(state);
-				case NECommand.Files_Advanced_SplitFiles: return Configure_Files_Advanced_SplitFiles(state);
-				case NECommand.Files_Advanced_CombineFiles: return Configure_Files_Advanced_CombineFiles(state);
-				case NECommand.Content_Ancestor: return Configure_Content_Ancestor(state);
-				case NECommand.Content_Attributes: return Configure_Content_Attributes(state);
-				case NECommand.Content_WithAttribute: return Configure_Content_WithAttribute(state);
-				case NECommand.Content_Children_WithAttribute: return Configure_Content_Children_WithAttribute(state);
-				case NECommand.Content_Descendants_WithAttribute: return Configure_Content_Descendants_WithAttribute(state);
-				case NECommand.DateTime_ToTimeZone: return Configure_DateTime_ToTimeZone(state);
-				case NECommand.DateTime_Format: return Configure_DateTime_Format(state);
-				case NECommand.Table_Select_RowsByExpression: return Configure_Table_Select_RowsByExpression(state);
-				case NECommand.Table_New_FromSelection: return Configure_Table_New_FromSelection(state);
-				case NECommand.Table_Edit: return Configure_Table_Edit(state);
-				case NECommand.Table_Convert: return Configure_Table_Convert(state);
-				case NECommand.Table_Join: return Configure_Table_Join(state);
-				case NECommand.Table_Database_GenerateInserts: return Configure_Table_Database_GenerateInserts(state);
-				case NECommand.Table_Database_GenerateUpdates: return Configure_Table_Database_GenerateUpdates(state);
-				case NECommand.Table_Database_GenerateDeletes: return Configure_Table_Database_GenerateDeletes(state);
-				case NECommand.Image_Resize: return Configure_Image_Resize(state);
-				case NECommand.Image_Crop: return Configure_Image_Crop(state);
-				case NECommand.Image_GrabColor: return Configure_Image_GrabColor(state);
-				case NECommand.Image_GrabImage: return Configure_Image_GrabImage(state);
-				case NECommand.Image_AddColor: return Configure_Image_AddOverlayColor(state, true);
-				case NECommand.Image_AdjustColor: return Configure_Image_AdjustColor(state);
-				case NECommand.Image_OverlayColor: return Configure_Image_AddOverlayColor(state, false);
-				case NECommand.Image_Rotate: return Configure_Image_Rotate(state);
-				case NECommand.Image_GIF_Animate: return Configure_Image_GIF_Animate(state);
-				case NECommand.Image_GIF_Split: return Configure_Image_GIF_Split(state);
-				case NECommand.Image_SetTakenDate: return Configure_Image_SetTakenDate(state);
-				case NECommand.Position_Goto_Lines: return Configure_Position_Goto_Various(state, GotoType.Line);
-				case NECommand.Position_Goto_Columns: return Configure_Position_Goto_Various(state, GotoType.Column);
-				case NECommand.Position_Goto_Indexes: return Configure_Position_Goto_Various(state, GotoType.Index);
-				case NECommand.Position_Goto_Positions: return Configure_Position_Goto_Various(state, GotoType.Position);
-				case NECommand.Diff_IgnoreCharacters: return Configure_Diff_IgnoreCharacters(state);
-				case NECommand.Diff_Fix_Whitespace: return Configure_Diff_Fix_Whitespace(state);
-				case NECommand.Network_AbsoluteURL: return Configure_Network_AbsoluteURL(state);
-				case NECommand.Network_Fetch_File: return Configure_Network_Fetch_File(state);
-				case NECommand.Network_Fetch_Stream: return Configure_Network_Fetch_Stream(state);
-				case NECommand.Network_Fetch_Playlist: return Configure_Network_Fetch_Playlist(state);
-				case NECommand.Network_Ping: return Configure_Network_Ping(state);
-				case NECommand.Network_ScanPorts: return Configure_Network_ScanPorts(state);
-				case NECommand.Network_WCF_GetConfig: return Configure_Network_WCF_GetConfig(state);
-				case NECommand.Network_WCF_InterceptCalls: return Configure_Network_WCF_InterceptCalls(state);
-				case NECommand.Database_Connect: return Configure_Database_Connect(state);
-				case NECommand.Database_Examine: return Configure_Database_Examine(state);
-				case NECommand.Window_BinaryCodePages: return Configure_Window_BinaryCodePages(state);
+				case NECommand.Internal_Key: return Configure_Internal_Key();
+				case NECommand.File_Open_ReopenWithEncoding: return Configure_File_Open_ReopenWithEncoding();
+				case NECommand.File_Save_SaveAsByExpression: return Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName();
+				case NECommand.File_Move_MoveByExpression: return Configure_File_Move_MoveByExpression();
+				case NECommand.File_Copy_CopyByExpression: return Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName();
+				case NECommand.File_Encoding: return Configure_File_Encoding();
+				case NECommand.File_LineEndings: return Configure_File_LineEndings();
+				case NECommand.File_Advanced_Encrypt: return Configure_File_Advanced_Encrypt();
+				case NECommand.File_Advanced_SetDisplayName: return Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName();
+				case NECommand.Edit_Select_Limit: return Configure_Edit_Select_Limit();
+				case NECommand.Edit_Select_ToggleAnchor: return Configure_Edit_Select_ToggleAnchor();
+				case NECommand.Edit_Paste_Paste: return Configure_Edit_Paste_PasteRotatePaste();
+				case NECommand.Edit_Paste_RotatePaste: return Configure_Edit_Paste_PasteRotatePaste();
+				case NECommand.Edit_Repeat: return Configure_Edit_Repeat();
+				case NECommand.Edit_Rotate: return Configure_Edit_Rotate();
+				case NECommand.Edit_Expression_Expression: return Configure_Edit_Expression_Expression();
+				case NECommand.Edit_ModifyRegions: return Configure_Edit_ModifyRegions();
+				case NECommand.Edit_Advanced_Convert: return Configure_Edit_Advanced_Convert();
+				case NECommand.Edit_Advanced_Hash: return Configure_Edit_Advanced_Hash();
+				case NECommand.Edit_Advanced_Compress: return Configure_Edit_Advanced_Compress();
+				case NECommand.Edit_Advanced_Decompress: return Configure_Edit_Advanced_Decompress();
+				case NECommand.Edit_Advanced_Encrypt: return Configure_Edit_Advanced_Encrypt();
+				case NECommand.Edit_Advanced_Decrypt: return Configure_Edit_Advanced_Decrypt();
+				case NECommand.Edit_Advanced_Sign: return Configure_Edit_Advanced_Sign();
+				case NECommand.Text_Select_WholeWord: return Configure_Text_Select_WholeBoundedWord(true);
+				case NECommand.Text_Select_BoundedWord: return Configure_Text_Select_WholeBoundedWord(false);
+				case NECommand.Text_Select_Trim: return Configure_Text_Select_Trim();
+				case NECommand.Text_Select_Split: return Configure_Text_Select_Split();
+				case NECommand.Text_Select_Repeats_ByCount_IgnoreCase: return Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase();
+				case NECommand.Text_Select_Repeats_ByCount_MatchCase: return Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase();
+				case NECommand.Text_Select_ByWidth: return Configure_Text_Select_ByWidth();
+				case NECommand.Text_Find_Find: return Configure_Text_Find_Find();
+				case NECommand.Text_Find_RegexReplace: return Configure_Text_Find_RegexReplace();
+				case NECommand.Text_Trim: return Configure_Text_Trim();
+				case NECommand.Text_Width: return Configure_Text_Width();
+				case NECommand.Text_Sort: return Configure_Text_Sort();
+				case NECommand.Text_Random: return Configure_Text_Random();
+				case NECommand.Text_Advanced_Unicode: return Configure_Text_Advanced_Unicode();
+				case NECommand.Text_Advanced_FirstDistinct: return Configure_Text_Advanced_FirstDistinct();
+				case NECommand.Text_Advanced_ReverseRegex: return Configure_Text_Advanced_ReverseRegex();
+				case NECommand.Numeric_Select_Limit: return Configure_Numeric_Select_Limit();
+				case NECommand.Numeric_Round: return Configure_Numeric_Round();
+				case NECommand.Numeric_Floor: return Configure_Numeric_Floor();
+				case NECommand.Numeric_Ceiling: return Configure_Numeric_Ceiling();
+				case NECommand.Numeric_Scale: return Configure_Numeric_Scale();
+				case NECommand.Numeric_Cycle: return Configure_Numeric_Cycle();
+				case NECommand.Numeric_Series_Linear: return Configure_Numeric_Series_LinearGeometric(true);
+				case NECommand.Numeric_Series_Geometric: return Configure_Numeric_Series_LinearGeometric(false);
+				case NECommand.Numeric_ConvertBase_ConvertBase: return Configure_Numeric_ConvertBase_ConvertBase();
+				case NECommand.Numeric_RandomNumber: return Configure_Numeric_RandomNumber();
+				case NECommand.Numeric_CombinationsPermutations: return Configure_Numeric_CombinationsPermutations();
+				case NECommand.Numeric_MinMaxValues: return Configure_Numeric_MinMaxValues();
+				case NECommand.Files_Select_ByContent: return Configure_Files_Select_ByContent();
+				case NECommand.Files_Select_BySourceControlStatus: return Configure_Files_Select_BySourceControlStatus();
+				case NECommand.Files_Copy: return Configure_Files_CopyMove(false);
+				case NECommand.Files_Move: return Configure_Files_CopyMove(true);
+				case NECommand.Files_Name_MakeAbsolute: return Configure_Files_Name_MakeAbsolute();
+				case NECommand.Files_Name_MakeRelative: return Configure_Files_Name_MakeRelative();
+				case NECommand.Files_Get_Hash: return Configure_Files_Get_Hash();
+				case NECommand.Files_Get_Content: return Configure_Files_Get_Content();
+				case NECommand.Files_Set_Size: return Configure_Files_Set_Size();
+				case NECommand.Files_Set_Time_Write: return Configure_Files_Set_Time_Various();
+				case NECommand.Files_Set_Time_Access: return Configure_Files_Set_Time_Various();
+				case NECommand.Files_Set_Time_Create: return Configure_Files_Set_Time_Various();
+				case NECommand.Files_Set_Time_All: return Configure_Files_Set_Time_Various();
+				case NECommand.Files_Set_Attributes: return Configure_Files_Set_Attributes();
+				case NECommand.Files_Set_Content: return Configure_Files_Set_Content();
+				case NECommand.Files_Set_Encoding: return Configure_Files_Set_Encoding();
+				case NECommand.Files_Compress: return Configure_Files_Compress();
+				case NECommand.Files_Decompress: return Configure_Files_Decompress();
+				case NECommand.Files_Encrypt: return Configure_Files_Encrypt();
+				case NECommand.Files_Decrypt: return Configure_Files_Decrypt();
+				case NECommand.Files_Sign: return Configure_Files_Sign();
+				case NECommand.Files_Advanced_SplitFiles: return Configure_Files_Advanced_SplitFiles();
+				case NECommand.Files_Advanced_CombineFiles: return Configure_Files_Advanced_CombineFiles();
+				case NECommand.Content_Ancestor: return Configure_Content_Ancestor();
+				case NECommand.Content_Attributes: return Configure_Content_Attributes();
+				case NECommand.Content_WithAttribute: return Configure_Content_WithAttribute();
+				case NECommand.Content_Children_WithAttribute: return Configure_Content_Children_WithAttribute();
+				case NECommand.Content_Descendants_WithAttribute: return Configure_Content_Descendants_WithAttribute();
+				case NECommand.DateTime_ToTimeZone: return Configure_DateTime_ToTimeZone();
+				case NECommand.DateTime_Format: return Configure_DateTime_Format();
+				case NECommand.Table_Select_RowsByExpression: return Configure_Table_Select_RowsByExpression();
+				case NECommand.Table_New_FromSelection: return Configure_Table_New_FromSelection();
+				case NECommand.Table_Edit: return Configure_Table_Edit();
+				case NECommand.Table_Convert: return Configure_Table_Convert();
+				case NECommand.Table_Join: return Configure_Table_Join();
+				case NECommand.Table_Database_GenerateInserts: return Configure_Table_Database_GenerateInserts();
+				case NECommand.Table_Database_GenerateUpdates: return Configure_Table_Database_GenerateUpdates();
+				case NECommand.Table_Database_GenerateDeletes: return Configure_Table_Database_GenerateDeletes();
+				case NECommand.Image_Resize: return Configure_Image_Resize();
+				case NECommand.Image_Crop: return Configure_Image_Crop();
+				case NECommand.Image_GrabColor: return Configure_Image_GrabColor();
+				case NECommand.Image_GrabImage: return Configure_Image_GrabImage();
+				case NECommand.Image_AddColor: return Configure_Image_AddOverlayColor(true);
+				case NECommand.Image_AdjustColor: return Configure_Image_AdjustColor();
+				case NECommand.Image_OverlayColor: return Configure_Image_AddOverlayColor(false);
+				case NECommand.Image_Rotate: return Configure_Image_Rotate();
+				case NECommand.Image_GIF_Animate: return Configure_Image_GIF_Animate();
+				case NECommand.Image_GIF_Split: return Configure_Image_GIF_Split();
+				case NECommand.Image_SetTakenDate: return Configure_Image_SetTakenDate();
+				case NECommand.Position_Goto_Lines: return Configure_Position_Goto_Various(GotoType.Line);
+				case NECommand.Position_Goto_Columns: return Configure_Position_Goto_Various(GotoType.Column);
+				case NECommand.Position_Goto_Indexes: return Configure_Position_Goto_Various(GotoType.Index);
+				case NECommand.Position_Goto_Positions: return Configure_Position_Goto_Various(GotoType.Position);
+				case NECommand.Diff_IgnoreCharacters: return Configure_Diff_IgnoreCharacters();
+				case NECommand.Diff_Fix_Whitespace: return Configure_Diff_Fix_Whitespace();
+				case NECommand.Network_AbsoluteURL: return Configure_Network_AbsoluteURL();
+				case NECommand.Network_Fetch_File: return Configure_Network_Fetch_File();
+				case NECommand.Network_Fetch_Stream: return Configure_Network_Fetch_Stream();
+				case NECommand.Network_Fetch_Playlist: return Configure_Network_Fetch_Playlist();
+				case NECommand.Network_Ping: return Configure_Network_Ping();
+				case NECommand.Network_ScanPorts: return Configure_Network_ScanPorts();
+				case NECommand.Network_WCF_GetConfig: return Configure_Network_WCF_GetConfig();
+				case NECommand.Network_WCF_InterceptCalls: return Configure_Network_WCF_InterceptCalls();
+				case NECommand.Database_Connect: return Configure_Database_Connect();
+				case NECommand.Database_Examine: return Configure_Database_Examine();
+				case NECommand.Window_BinaryCodePages: return Configure_Window_BinaryCodePages();
 				default: return null;
 			}
 		}
 		#endregion
 
 		#region PreExecute
-		public static IPreExecution PreExecute(EditorExecuteState state)
+		public static IPreExecution PreExecute()
 		{
-			switch (state.Command)
+			switch (EditorExecuteState.CurrentState.Command)
 			{
-				case NECommand.Internal_Activate: return PreExecute_Internal_Activate(state);
-				case NECommand.Internal_AddFile: return PreExecute_Internal_AddFile(state);
-				case NECommand.Internal_MouseActivate: return PreExecute_Internal_MouseActivate(state);
-				case NECommand.Internal_CloseFile: return PreExecute_Internal_CloseFile(state);
-				case NECommand.Internal_Key: return PreExecute_Internal_Key(state);
-				case NECommand.Internal_Scroll: return PreExecute_Internal_Scroll(state);
-				case NECommand.Internal_Mouse: return PreExecute_Internal_Mouse(state);
-				case NECommand.Internal_SetupDiff: return PreExecute_Internal_SetupDiff(state);
-				case NECommand.Internal_GotoFile: return PreExecute_Internal_GotoFile(state);
-				case NECommand.File_Select_All: return PreExecute_File_Select_All(state);
-				case NECommand.File_Select_None: return PreExecute_File_Select_None(state);
-				case NECommand.File_Select_WithSelections: return PreExecute_File_Select_WithWithoutSelections(state, true);
-				case NECommand.File_Select_WithoutSelections: return PreExecute_File_Select_WithWithoutSelections(state, false);
-				case NECommand.File_Select_Modified: return PreExecute_File_Select_ModifiedUnmodified(state, true);
-				case NECommand.File_Select_Unmodified: return PreExecute_File_Select_ModifiedUnmodified(state, false);
-				case NECommand.File_Select_Inactive: return PreExecute_File_Select_Inactive(state);
-				case NECommand.File_Select_Choose: return PreExecute_File_Select_Choose(state);
-				case NECommand.File_New_New: return PreExecute_File_New_New(state);
-				case NECommand.File_New_FromClipboard_Selections: return PreExecute_File_New_FromClipboard_Selections(state);
-				case NECommand.File_New_FromClipboard_Files: return PreExecute_File_New_FromClipboard_Files(state);
-				case NECommand.File_New_WordList: return PreExecute_File_New_WordList(state);
-				case NECommand.File_Open_Open: return PreExecute_FileMacro_Open_Open(state);
-				case NECommand.File_Open_CopiedCut: return PreExecute_File_Open_CopiedCut(state);
-				case NECommand.File_Advanced_DontExitOnClose: return PreExecute_File_Advanced_DontExitOnClose(state);
-				case NECommand.File_Close_ActiveFiles: return PreExecute_File_Close_ActiveInactiveFiles(state, true);
-				case NECommand.File_Close_InactiveFiles: return PreExecute_File_Close_ActiveInactiveFiles(state, false);
-				case NECommand.File_Close_FilesWithSelections: return PreExecute_File_Close_FilesWithWithoutSelections(state, true);
-				case NECommand.File_Close_FilesWithoutSelections: return PreExecute_File_Close_FilesWithWithoutSelections(state, false);
-				case NECommand.File_Close_ModifiedFiles: return PreExecute_File_Close_ModifiedUnmodifiedFiles(state, true);
-				case NECommand.File_Close_UnmodifiedFiles: return PreExecute_File_Close_ModifiedUnmodifiedFiles(state, false);
-				case NECommand.File_Exit: return PreExecute_File_Exit(state);
-				case NECommand.Edit_Advanced_EscapeClearsSelections: return PreExecute_Edit_Advanced_EscapeClearsSelections(state);
-				case NECommand.Text_Select_Repeats_BetweenFiles_Match_IgnoreCase: return PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(state, false);
-				case NECommand.Text_Select_Repeats_BetweenFiles_Match_MatchCase: return PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(state, true);
-				case NECommand.Text_Select_Repeats_BetweenFiles_Mismatch_IgnoreCase: return PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(state, false);
-				case NECommand.Text_Select_Repeats_BetweenFiles_Mismatch_MatchCase: return PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(state, true);
-				case NECommand.Text_Select_Repeats_BetweenFiles_Common_IgnoreCase: return PreExecute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(state, false);
-				case NECommand.Text_Select_Repeats_BetweenFiles_Common_MatchCase: return PreExecute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(state, true);
-				case NECommand.Text_Select_Repeats_BetweenFiles_NonCommon_IgnoreCase: return PreExecute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(state, false);
-				case NECommand.Text_Select_Repeats_BetweenFiles_NonCommon_MatchCase: return PreExecute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(state, true);
-				case NECommand.Files_Select_BySourceControlStatus: return PreExecute_Files_SelectGet_BySourceControlStatus(state);
-				case NECommand.Files_Get_SourceControlStatus: return PreExecute_Files_SelectGet_BySourceControlStatus(state);
-				case NECommand.Diff_Select_LeftFile: return PreExecute_Diff_Select_LeftRightBothFiles(state, true);
-				case NECommand.Diff_Select_RightFile: return PreExecute_Diff_Select_LeftRightBothFiles(state, false);
-				case NECommand.Diff_Select_BothFiles: return PreExecute_Diff_Select_LeftRightBothFiles(state, null);
-				case NECommand.Diff_Diff: return PreExecute_Diff_Diff(state);
-				case NECommand.Macro_Play_Quick_1: return PreExecute_Macro_Play_Quick(state, 1);
-				case NECommand.Macro_Play_Quick_2: return PreExecute_Macro_Play_Quick(state, 2);
-				case NECommand.Macro_Play_Quick_3: return PreExecute_Macro_Play_Quick(state, 3);
-				case NECommand.Macro_Play_Quick_4: return PreExecute_Macro_Play_Quick(state, 4);
-				case NECommand.Macro_Play_Quick_5: return PreExecute_Macro_Play_Quick(state, 5);
-				case NECommand.Macro_Play_Quick_6: return PreExecute_Macro_Play_Quick(state, 6);
-				case NECommand.Macro_Play_Quick_7: return PreExecute_Macro_Play_Quick(state, 7);
-				case NECommand.Macro_Play_Quick_8: return PreExecute_Macro_Play_Quick(state, 8);
-				case NECommand.Macro_Play_Quick_9: return PreExecute_Macro_Play_Quick(state, 9);
-				case NECommand.Macro_Play_Quick_10: return PreExecute_Macro_Play_Quick(state, 10);
-				case NECommand.Macro_Play_Quick_11: return PreExecute_Macro_Play_Quick(state, 11);
-				case NECommand.Macro_Play_Quick_12: return PreExecute_Macro_Play_Quick(state, 12);
-				case NECommand.Macro_Play_Play: return PreExecute_Macro_Play_Play(state);
-				case NECommand.Macro_Play_Repeat: return PreExecute_Macro_Play_Repeat(state);
-				case NECommand.Macro_Play_PlayOnCopiedFiles: return PreExecute_Macro_Play_PlayOnCopiedFiles(state);
-				case NECommand.Macro_Record_Quick_1: return PreExecute_Macro_Record_Quick(state, 1);
-				case NECommand.Macro_Record_Quick_2: return PreExecute_Macro_Record_Quick(state, 2);
-				case NECommand.Macro_Record_Quick_3: return PreExecute_Macro_Record_Quick(state, 3);
-				case NECommand.Macro_Record_Quick_4: return PreExecute_Macro_Record_Quick(state, 4);
-				case NECommand.Macro_Record_Quick_5: return PreExecute_Macro_Record_Quick(state, 5);
-				case NECommand.Macro_Record_Quick_6: return PreExecute_Macro_Record_Quick(state, 6);
-				case NECommand.Macro_Record_Quick_7: return PreExecute_Macro_Record_Quick(state, 7);
-				case NECommand.Macro_Record_Quick_8: return PreExecute_Macro_Record_Quick(state, 8);
-				case NECommand.Macro_Record_Quick_9: return PreExecute_Macro_Record_Quick(state, 9);
-				case NECommand.Macro_Record_Quick_10: return PreExecute_Macro_Record_Quick(state, 10);
-				case NECommand.Macro_Record_Quick_11: return PreExecute_Macro_Record_Quick(state, 11);
-				case NECommand.Macro_Record_Quick_12: return PreExecute_Macro_Record_Quick(state, 12);
-				case NECommand.Macro_Record_Record: return PreExecute_Macro_Record_Record(state);
-				case NECommand.Macro_Record_StopRecording: return PreExecute_Macro_Record_StopRecording(state);
-				case NECommand.Macro_Append_Quick_1: return PreExecute_Macro_Append_Quick(state, 1);
-				case NECommand.Macro_Append_Quick_2: return PreExecute_Macro_Append_Quick(state, 2);
-				case NECommand.Macro_Append_Quick_3: return PreExecute_Macro_Append_Quick(state, 3);
-				case NECommand.Macro_Append_Quick_4: return PreExecute_Macro_Append_Quick(state, 4);
-				case NECommand.Macro_Append_Quick_5: return PreExecute_Macro_Append_Quick(state, 5);
-				case NECommand.Macro_Append_Quick_6: return PreExecute_Macro_Append_Quick(state, 6);
-				case NECommand.Macro_Append_Quick_7: return PreExecute_Macro_Append_Quick(state, 7);
-				case NECommand.Macro_Append_Quick_8: return PreExecute_Macro_Append_Quick(state, 8);
-				case NECommand.Macro_Append_Quick_9: return PreExecute_Macro_Append_Quick(state, 9);
-				case NECommand.Macro_Append_Quick_10: return PreExecute_Macro_Append_Quick(state, 10);
-				case NECommand.Macro_Append_Quick_11: return PreExecute_Macro_Append_Quick(state, 11);
-				case NECommand.Macro_Append_Quick_12: return PreExecute_Macro_Append_Quick(state, 12);
-				case NECommand.Macro_Append_Append: return PreExecute_Macro_Append_Append(state);
-				case NECommand.Macro_Open_Quick_1: return PreExecute_Macro_Open_Quick(state, 1);
-				case NECommand.Macro_Open_Quick_2: return PreExecute_Macro_Open_Quick(state, 2);
-				case NECommand.Macro_Open_Quick_3: return PreExecute_Macro_Open_Quick(state, 3);
-				case NECommand.Macro_Open_Quick_4: return PreExecute_Macro_Open_Quick(state, 4);
-				case NECommand.Macro_Open_Quick_5: return PreExecute_Macro_Open_Quick(state, 5);
-				case NECommand.Macro_Open_Quick_6: return PreExecute_Macro_Open_Quick(state, 6);
-				case NECommand.Macro_Open_Quick_7: return PreExecute_Macro_Open_Quick(state, 7);
-				case NECommand.Macro_Open_Quick_8: return PreExecute_Macro_Open_Quick(state, 8);
-				case NECommand.Macro_Open_Quick_9: return PreExecute_Macro_Open_Quick(state, 9);
-				case NECommand.Macro_Open_Quick_10: return PreExecute_Macro_Open_Quick(state, 10);
-				case NECommand.Macro_Open_Quick_11: return PreExecute_Macro_Open_Quick(state, 11);
-				case NECommand.Macro_Open_Quick_12: return PreExecute_Macro_Open_Quick(state, 12);
-				case NECommand.Macro_Open_Open: return PreExecute_FileMacro_Open_Open(state);
-				case NECommand.Macro_Visualize: return PreExecute_Macro_Visualize(state);
-				case NECommand.Window_New_NewWindow: return PreExecute_Window_New_NewWindow(state);
-				case NECommand.Window_New_FromSelections_AllSelections: return PreExecute_Window_New_FromSelections_AllSelections(state);
-				case NECommand.Window_New_FromSelections_EachFile: return PreExecute_Window_New_FromSelections_EachFile(state);
-				case NECommand.Window_New_SummarizeSelections_AllSelections_IgnoreCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(state, false, false);
-				case NECommand.Window_New_SummarizeSelections_AllSelections_MatchCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(state, true, false);
-				case NECommand.Window_New_SummarizeSelections_EachFile_IgnoreCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(state, false, true);
-				case NECommand.Window_New_SummarizeSelections_EachFile_MatchCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(state, true, true);
-				case NECommand.Window_New_FromClipboard_AllSelections: return PreExecute_Window_New_FromClipboard_AllSelections(state);
-				case NECommand.Window_New_FromClipboard_EachFile: return PreExecute_Window_New_FromClipboard_EachFile(state);
-				case NECommand.Window_New_FromActiveFiles: return PreExecute_Window_New_FromActiveFiles(state);
-				case NECommand.Window_Full: return PreExecute_Window_Full(state);
-				case NECommand.Window_Grid: return PreExecute_Window_Grid(state);
-				case NECommand.Window_CustomGrid: return PreExecute_Window_CustomGrid(state);
-				case NECommand.Window_ActiveOnly: return PreExecute_Window_ActiveOnly(state);
-				case NECommand.Window_Font_Size: return PreExecute_Window_Font_Size(state);
-				case NECommand.Window_Font_ShowSpecial: return PreExecute_Window_Font_ShowSpecial(state);
-				case NECommand.Help_Tutorial: return PreExecute_Help_Tutorial(state);
-				case NECommand.Help_Update: return PreExecute_Help_Update(state);
-				case NECommand.Help_TimeNextAction: return PreExecute_Help_TimeNextAction(state);
-				case NECommand.Help_Advanced_Shell_Integrate: return PreExecute_Help_Advanced_Shell_Integrate(state);
-				case NECommand.Help_Advanced_Shell_Unintegrate: return PreExecute_Help_Advanced_Shell_Unintegrate(state);
-				case NECommand.Help_Advanced_CopyCommandLine: return PreExecute_Help_Advanced_CopyCommandLine(state);
-				case NECommand.Help_Advanced_Extract: return PreExecute_Help_Advanced_Extract(state);
-				case NECommand.Help_Advanced_RunGC: return PreExecute_Help_Advanced_RunGC(state);
-				case NECommand.Help_About: return PreExecute_Help_About(state);
+				case NECommand.Internal_Activate: return PreExecute_Internal_Activate();
+				case NECommand.Internal_AddFile: return PreExecute_Internal_AddFile();
+				case NECommand.Internal_MouseActivate: return PreExecute_Internal_MouseActivate();
+				case NECommand.Internal_CloseFile: return PreExecute_Internal_CloseFile();
+				case NECommand.Internal_Key: return PreExecute_Internal_Key();
+				case NECommand.Internal_Scroll: return PreExecute_Internal_Scroll();
+				case NECommand.Internal_Mouse: return PreExecute_Internal_Mouse();
+				case NECommand.Internal_SetupDiff: return PreExecute_Internal_SetupDiff();
+				case NECommand.Internal_GotoFile: return PreExecute_Internal_GotoFile();
+				case NECommand.File_Select_All: return PreExecute_File_Select_All();
+				case NECommand.File_Select_None: return PreExecute_File_Select_None();
+				case NECommand.File_Select_WithSelections: return PreExecute_File_Select_WithWithoutSelections(true);
+				case NECommand.File_Select_WithoutSelections: return PreExecute_File_Select_WithWithoutSelections(false);
+				case NECommand.File_Select_Modified: return PreExecute_File_Select_ModifiedUnmodified(true);
+				case NECommand.File_Select_Unmodified: return PreExecute_File_Select_ModifiedUnmodified(false);
+				case NECommand.File_Select_Inactive: return PreExecute_File_Select_Inactive();
+				case NECommand.File_Select_Choose: return PreExecute_File_Select_Choose();
+				case NECommand.File_New_New: return PreExecute_File_New_New();
+				case NECommand.File_New_FromClipboard_Selections: return PreExecute_File_New_FromClipboard_Selections();
+				case NECommand.File_New_FromClipboard_Files: return PreExecute_File_New_FromClipboard_Files();
+				case NECommand.File_New_WordList: return PreExecute_File_New_WordList();
+				case NECommand.File_Open_Open: return PreExecute_FileMacro_Open_Open();
+				case NECommand.File_Open_CopiedCut: return PreExecute_File_Open_CopiedCut();
+				case NECommand.File_Advanced_DontExitOnClose: return PreExecute_File_Advanced_DontExitOnClose();
+				case NECommand.File_Close_ActiveFiles: return PreExecute_File_Close_ActiveInactiveFiles(true);
+				case NECommand.File_Close_InactiveFiles: return PreExecute_File_Close_ActiveInactiveFiles(false);
+				case NECommand.File_Close_FilesWithSelections: return PreExecute_File_Close_FilesWithWithoutSelections(true);
+				case NECommand.File_Close_FilesWithoutSelections: return PreExecute_File_Close_FilesWithWithoutSelections(false);
+				case NECommand.File_Close_ModifiedFiles: return PreExecute_File_Close_ModifiedUnmodifiedFiles(true);
+				case NECommand.File_Close_UnmodifiedFiles: return PreExecute_File_Close_ModifiedUnmodifiedFiles(false);
+				case NECommand.File_Exit: return PreExecute_File_Exit();
+				case NECommand.Edit_Advanced_EscapeClearsSelections: return PreExecute_Edit_Advanced_EscapeClearsSelections();
+				case NECommand.Text_Select_Repeats_BetweenFiles_Match_IgnoreCase: return PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(false);
+				case NECommand.Text_Select_Repeats_BetweenFiles_Match_MatchCase: return PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(true);
+				case NECommand.Text_Select_Repeats_BetweenFiles_Mismatch_IgnoreCase: return PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(false);
+				case NECommand.Text_Select_Repeats_BetweenFiles_Mismatch_MatchCase: return PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(true);
+				case NECommand.Text_Select_Repeats_BetweenFiles_Common_IgnoreCase: return PreExecute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(false);
+				case NECommand.Text_Select_Repeats_BetweenFiles_Common_MatchCase: return PreExecute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(true);
+				case NECommand.Text_Select_Repeats_BetweenFiles_NonCommon_IgnoreCase: return PreExecute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(false);
+				case NECommand.Text_Select_Repeats_BetweenFiles_NonCommon_MatchCase: return PreExecute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(true);
+				case NECommand.Files_Select_BySourceControlStatus: return PreExecute_Files_SelectGet_BySourceControlStatus();
+				case NECommand.Files_Get_SourceControlStatus: return PreExecute_Files_SelectGet_BySourceControlStatus();
+				case NECommand.Diff_Select_LeftFile: return PreExecute_Diff_Select_LeftRightBothFiles(true);
+				case NECommand.Diff_Select_RightFile: return PreExecute_Diff_Select_LeftRightBothFiles(false);
+				case NECommand.Diff_Select_BothFiles: return PreExecute_Diff_Select_LeftRightBothFiles(null);
+				case NECommand.Diff_Diff: return PreExecute_Diff_Diff();
+				case NECommand.Macro_Play_Quick_1: return PreExecute_Macro_Play_Quick(1);
+				case NECommand.Macro_Play_Quick_2: return PreExecute_Macro_Play_Quick(2);
+				case NECommand.Macro_Play_Quick_3: return PreExecute_Macro_Play_Quick(3);
+				case NECommand.Macro_Play_Quick_4: return PreExecute_Macro_Play_Quick(4);
+				case NECommand.Macro_Play_Quick_5: return PreExecute_Macro_Play_Quick(5);
+				case NECommand.Macro_Play_Quick_6: return PreExecute_Macro_Play_Quick(6);
+				case NECommand.Macro_Play_Quick_7: return PreExecute_Macro_Play_Quick(7);
+				case NECommand.Macro_Play_Quick_8: return PreExecute_Macro_Play_Quick(8);
+				case NECommand.Macro_Play_Quick_9: return PreExecute_Macro_Play_Quick(9);
+				case NECommand.Macro_Play_Quick_10: return PreExecute_Macro_Play_Quick(10);
+				case NECommand.Macro_Play_Quick_11: return PreExecute_Macro_Play_Quick(11);
+				case NECommand.Macro_Play_Quick_12: return PreExecute_Macro_Play_Quick(12);
+				case NECommand.Macro_Play_Play: return PreExecute_Macro_Play_Play();
+				case NECommand.Macro_Play_Repeat: return PreExecute_Macro_Play_Repeat();
+				case NECommand.Macro_Play_PlayOnCopiedFiles: return PreExecute_Macro_Play_PlayOnCopiedFiles();
+				case NECommand.Macro_Record_Quick_1: return PreExecute_Macro_Record_Quick(1);
+				case NECommand.Macro_Record_Quick_2: return PreExecute_Macro_Record_Quick(2);
+				case NECommand.Macro_Record_Quick_3: return PreExecute_Macro_Record_Quick(3);
+				case NECommand.Macro_Record_Quick_4: return PreExecute_Macro_Record_Quick(4);
+				case NECommand.Macro_Record_Quick_5: return PreExecute_Macro_Record_Quick(5);
+				case NECommand.Macro_Record_Quick_6: return PreExecute_Macro_Record_Quick(6);
+				case NECommand.Macro_Record_Quick_7: return PreExecute_Macro_Record_Quick(7);
+				case NECommand.Macro_Record_Quick_8: return PreExecute_Macro_Record_Quick(8);
+				case NECommand.Macro_Record_Quick_9: return PreExecute_Macro_Record_Quick(9);
+				case NECommand.Macro_Record_Quick_10: return PreExecute_Macro_Record_Quick(10);
+				case NECommand.Macro_Record_Quick_11: return PreExecute_Macro_Record_Quick(11);
+				case NECommand.Macro_Record_Quick_12: return PreExecute_Macro_Record_Quick(12);
+				case NECommand.Macro_Record_Record: return PreExecute_Macro_Record_Record();
+				case NECommand.Macro_Record_StopRecording: return PreExecute_Macro_Record_StopRecording();
+				case NECommand.Macro_Append_Quick_1: return PreExecute_Macro_Append_Quick(1);
+				case NECommand.Macro_Append_Quick_2: return PreExecute_Macro_Append_Quick(2);
+				case NECommand.Macro_Append_Quick_3: return PreExecute_Macro_Append_Quick(3);
+				case NECommand.Macro_Append_Quick_4: return PreExecute_Macro_Append_Quick(4);
+				case NECommand.Macro_Append_Quick_5: return PreExecute_Macro_Append_Quick(5);
+				case NECommand.Macro_Append_Quick_6: return PreExecute_Macro_Append_Quick(6);
+				case NECommand.Macro_Append_Quick_7: return PreExecute_Macro_Append_Quick(7);
+				case NECommand.Macro_Append_Quick_8: return PreExecute_Macro_Append_Quick(8);
+				case NECommand.Macro_Append_Quick_9: return PreExecute_Macro_Append_Quick(9);
+				case NECommand.Macro_Append_Quick_10: return PreExecute_Macro_Append_Quick(10);
+				case NECommand.Macro_Append_Quick_11: return PreExecute_Macro_Append_Quick(11);
+				case NECommand.Macro_Append_Quick_12: return PreExecute_Macro_Append_Quick(12);
+				case NECommand.Macro_Append_Append: return PreExecute_Macro_Append_Append();
+				case NECommand.Macro_Open_Quick_1: return PreExecute_Macro_Open_Quick(1);
+				case NECommand.Macro_Open_Quick_2: return PreExecute_Macro_Open_Quick(2);
+				case NECommand.Macro_Open_Quick_3: return PreExecute_Macro_Open_Quick(3);
+				case NECommand.Macro_Open_Quick_4: return PreExecute_Macro_Open_Quick(4);
+				case NECommand.Macro_Open_Quick_5: return PreExecute_Macro_Open_Quick(5);
+				case NECommand.Macro_Open_Quick_6: return PreExecute_Macro_Open_Quick(6);
+				case NECommand.Macro_Open_Quick_7: return PreExecute_Macro_Open_Quick(7);
+				case NECommand.Macro_Open_Quick_8: return PreExecute_Macro_Open_Quick(8);
+				case NECommand.Macro_Open_Quick_9: return PreExecute_Macro_Open_Quick(9);
+				case NECommand.Macro_Open_Quick_10: return PreExecute_Macro_Open_Quick(10);
+				case NECommand.Macro_Open_Quick_11: return PreExecute_Macro_Open_Quick(11);
+				case NECommand.Macro_Open_Quick_12: return PreExecute_Macro_Open_Quick(12);
+				case NECommand.Macro_Open_Open: return PreExecute_FileMacro_Open_Open();
+				case NECommand.Macro_Visualize: return PreExecute_Macro_Visualize();
+				case NECommand.Window_New_NewWindow: return PreExecute_Window_New_NewWindow();
+				case NECommand.Window_New_FromSelections_AllSelections: return PreExecute_Window_New_FromSelections_AllSelections();
+				case NECommand.Window_New_FromSelections_EachFile: return PreExecute_Window_New_FromSelections_EachFile();
+				case NECommand.Window_New_SummarizeSelections_AllSelections_IgnoreCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(false, false);
+				case NECommand.Window_New_SummarizeSelections_AllSelections_MatchCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(true, false);
+				case NECommand.Window_New_SummarizeSelections_EachFile_IgnoreCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(false, true);
+				case NECommand.Window_New_SummarizeSelections_EachFile_MatchCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(true, true);
+				case NECommand.Window_New_FromClipboard_AllSelections: return PreExecute_Window_New_FromClipboard_AllSelections();
+				case NECommand.Window_New_FromClipboard_EachFile: return PreExecute_Window_New_FromClipboard_EachFile();
+				case NECommand.Window_New_FromActiveFiles: return PreExecute_Window_New_FromActiveFiles();
+				case NECommand.Window_Full: return PreExecute_Window_Full();
+				case NECommand.Window_Grid: return PreExecute_Window_Grid();
+				case NECommand.Window_CustomGrid: return PreExecute_Window_CustomGrid();
+				case NECommand.Window_ActiveOnly: return PreExecute_Window_ActiveOnly();
+				case NECommand.Window_Font_Size: return PreExecute_Window_Font_Size();
+				case NECommand.Window_Font_ShowSpecial: return PreExecute_Window_Font_ShowSpecial();
+				case NECommand.Help_Tutorial: return PreExecute_Help_Tutorial();
+				case NECommand.Help_Update: return PreExecute_Help_Update();
+				case NECommand.Help_TimeNextAction: return PreExecute_Help_TimeNextAction();
+				case NECommand.Help_Advanced_Shell_Integrate: return PreExecute_Help_Advanced_Shell_Integrate();
+				case NECommand.Help_Advanced_Shell_Unintegrate: return PreExecute_Help_Advanced_Shell_Unintegrate();
+				case NECommand.Help_Advanced_CopyCommandLine: return PreExecute_Help_Advanced_CopyCommandLine();
+				case NECommand.Help_Advanced_Extract: return PreExecute_Help_Advanced_Extract();
+				case NECommand.Help_Advanced_RunGC: return PreExecute_Help_Advanced_RunGC();
+				case NECommand.Help_About: return PreExecute_Help_About();
 			}
 
 			return null;
@@ -599,7 +599,7 @@ namespace NeoEdit.Editor
 		#region Execute
 		public void Execute()
 		{
-			switch (state.Command)
+			switch (EditorExecuteState.CurrentState.Command)
 			{
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.Internal_Text: Execute_Internal_Text(); break;
@@ -651,7 +651,7 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Select_Focused_Center: Execute_Edit_Select_Focused_Center(); break;
 				case NECommand.Edit_Copy: Execute_Edit_CopyCut(false); break;
 				case NECommand.Edit_Cut: Execute_Edit_CopyCut(true); break;
-				case NECommand.Edit_Paste_Paste: Execute_Edit_Paste_PasteRotatePaste(state.ShiftDown, false); break;
+				case NECommand.Edit_Paste_Paste: Execute_Edit_Paste_PasteRotatePaste(EditorExecuteState.CurrentState.ShiftDown, false); break;
 				case NECommand.Edit_Paste_RotatePaste: Execute_Edit_Paste_PasteRotatePaste(true, true); break;
 				case NECommand.Edit_Undo: Execute_Edit_Undo(); break;
 				case NECommand.Edit_Redo: Execute_Edit_Redo(); break;
@@ -659,7 +659,7 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Rotate: Execute_Edit_Rotate(); break;
 				case NECommand.Edit_Expression_Expression: Execute_Edit_Expression_Expression(); break;
 				case NECommand.Edit_Expression_EvaluateSelected: Execute_Edit_Expression_EvaluateSelected(); break;
-				case NECommand.Edit_ModifyRegions: Execute_Edit_ModifyRegions_Various_Various_Region(state.Configuration as Configuration_Edit_ModifyRegions); break;
+				case NECommand.Edit_ModifyRegions: Execute_Edit_ModifyRegions_Various_Various_Region(EditorExecuteState.CurrentState.Configuration as Configuration_Edit_ModifyRegions); break;
 				case NECommand.Edit_ModifyRegions_Select_Select_Region1: Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions.Actions.Select_Select, 1); break;
 				case NECommand.Edit_ModifyRegions_Select_Select_Region2: Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions.Actions.Select_Select, 2); break;
 				case NECommand.Edit_ModifyRegions_Select_Select_Region3: Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions.Actions.Select_Select, 3); break;
@@ -1054,14 +1054,14 @@ namespace NeoEdit.Editor
 				case NECommand.Content_Descendants_SelfAndDescendants: Execute_Content_Descendants_SelfAndDescendants(); break;
 				case NECommand.Content_Descendants_First: Execute_Content_Descendants_First(); break;
 				case NECommand.Content_Descendants_WithAttribute: Execute_Content_Descendants_WithAttribute(); break;
-				case NECommand.Content_Navigate_Up: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Up, state.ShiftDown); break;
-				case NECommand.Content_Navigate_Down: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Down, state.ShiftDown); break;
-				case NECommand.Content_Navigate_Left: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Left, state.ShiftDown); break;
-				case NECommand.Content_Navigate_Right: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Right, state.ShiftDown); break;
-				case NECommand.Content_Navigate_Home: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Home, state.ShiftDown); break;
-				case NECommand.Content_Navigate_End: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.End, state.ShiftDown); break;
-				case NECommand.Content_Navigate_Pgup: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.PgUp, state.ShiftDown); break;
-				case NECommand.Content_Navigate_Pgdn: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.PgDn, state.ShiftDown); break;
+				case NECommand.Content_Navigate_Up: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Up, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Content_Navigate_Down: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Down, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Content_Navigate_Left: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Left, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Content_Navigate_Right: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Right, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Content_Navigate_Home: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Home, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Content_Navigate_End: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.End, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Content_Navigate_Pgup: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.PgUp, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Content_Navigate_Pgdn: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.PgDn, EditorExecuteState.CurrentState.ShiftDown); break;
 				case NECommand.Content_Navigate_Row: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Row, true); break;
 				case NECommand.Content_Navigate_Column: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Column, true); break;
 				case NECommand.Content_KeepSelections: Execute_Content_KeepSelections(); break;
@@ -1108,26 +1108,26 @@ namespace NeoEdit.Editor
 				case NECommand.Image_GIF_Split: Execute_Image_GIF_Split(); break;
 				case NECommand.Image_GetTakenDate: Execute_Image_GetTakenDate(); break;
 				case NECommand.Image_SetTakenDate: Execute_Image_SetTakenDate(); break;
-				case NECommand.Position_Goto_Lines: Execute_Position_Goto_Various(GotoType.Line, state.ShiftDown); break;
-				case NECommand.Position_Goto_Columns: Execute_Position_Goto_Various(GotoType.Column, state.ShiftDown); break;
-				case NECommand.Position_Goto_Indexes: Execute_Position_Goto_Various(GotoType.Index, state.ShiftDown); break;
-				case NECommand.Position_Goto_Positions: Execute_Position_Goto_Various(GotoType.Position, state.ShiftDown); break;
+				case NECommand.Position_Goto_Lines: Execute_Position_Goto_Various(GotoType.Line, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Position_Goto_Columns: Execute_Position_Goto_Various(GotoType.Column, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Position_Goto_Indexes: Execute_Position_Goto_Various(GotoType.Index, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Position_Goto_Positions: Execute_Position_Goto_Various(GotoType.Position, EditorExecuteState.CurrentState.ShiftDown); break;
 				case NECommand.Position_Copy_Lines: Execute_Position_Copy_Various(GotoType.Line, false); break;
-				case NECommand.Position_Copy_Columns: Execute_Position_Copy_Various(GotoType.Column, !state.ShiftDown); break;
-				case NECommand.Position_Copy_Indexes: Execute_Position_Copy_Various(GotoType.Index, !state.ShiftDown); break;
+				case NECommand.Position_Copy_Columns: Execute_Position_Copy_Various(GotoType.Column, !EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Position_Copy_Indexes: Execute_Position_Copy_Various(GotoType.Index, !EditorExecuteState.CurrentState.ShiftDown); break;
 				case NECommand.Position_Copy_Positions: Execute_Position_Copy_Various(GotoType.Position, false); break;
 				case NECommand.Diff_Select_Matches: Execute_Diff_Select_MatchesDiffs(true); break;
 				case NECommand.Diff_Select_Diffs: Execute_Diff_Select_MatchesDiffs(false); break;
 				case NECommand.Diff_Break: Execute_Diff_Break(); break;
 				case NECommand.Diff_SourceControl: Execute_Diff_SourceControl(); break;
-				case NECommand.Diff_IgnoreWhitespace: Execute_Diff_IgnoreWhitespace(state.MultiStatus); break;
-				case NECommand.Diff_IgnoreCase: Execute_Diff_IgnoreCase(state.MultiStatus); break;
-				case NECommand.Diff_IgnoreNumbers: Execute_Diff_IgnoreNumbers(state.MultiStatus); break;
-				case NECommand.Diff_IgnoreLineEndings: Execute_Diff_IgnoreLineEndings(state.MultiStatus); break;
+				case NECommand.Diff_IgnoreWhitespace: Execute_Diff_IgnoreWhitespace(EditorExecuteState.CurrentState.MultiStatus); break;
+				case NECommand.Diff_IgnoreCase: Execute_Diff_IgnoreCase(EditorExecuteState.CurrentState.MultiStatus); break;
+				case NECommand.Diff_IgnoreNumbers: Execute_Diff_IgnoreNumbers(EditorExecuteState.CurrentState.MultiStatus); break;
+				case NECommand.Diff_IgnoreLineEndings: Execute_Diff_IgnoreLineEndings(EditorExecuteState.CurrentState.MultiStatus); break;
 				case NECommand.Diff_IgnoreCharacters: Execute_Diff_IgnoreCharacters(); break;
 				case NECommand.Diff_Reset: Execute_Diff_Reset(); break;
-				case NECommand.Diff_Next: Execute_Diff_NextPrevious(true, state.ShiftDown); break;
-				case NECommand.Diff_Previous: Execute_Diff_NextPrevious(false, state.ShiftDown); break;
+				case NECommand.Diff_Next: Execute_Diff_NextPrevious(true, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Diff_Previous: Execute_Diff_NextPrevious(false, EditorExecuteState.CurrentState.ShiftDown); break;
 				case NECommand.Diff_CopyLeft: Execute_Diff_CopyLeftRight(true); break;
 				case NECommand.Diff_CopyRight: Execute_Diff_CopyLeftRight(false); break;
 				case NECommand.Diff_Fix_Whitespace: Execute_Diff_Fix_Whitespace(); break;
@@ -1426,7 +1426,7 @@ namespace NeoEdit.Editor
 			return results;
 		}
 
-		List<T> GetExpressionResults<T>(string expression, int? count = null) => state.GetExpression(expression).EvaluateList<T>(GetVariables(), count);
+		List<T> GetExpressionResults<T>(string expression, int? count = null) => EditorExecuteState.CurrentState.GetExpression(expression).EvaluateList<T>(GetVariables(), count);
 
 		List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
 		{
@@ -1713,13 +1713,13 @@ namespace NeoEdit.Editor
 
 		public bool QueryUser(string name, string text, MessageOptions defaultAccept)
 		{
-			lock (state)
+			lock (EditorExecuteState.CurrentState)
 			{
-				if ((!state.SavedAnswers[name].HasFlag(MessageOptions.All)) && (!state.SavedAnswers[name].HasFlag(MessageOptions.Cancel)))
-					NEFiles.ShowFile(this, () => state.SavedAnswers[name] = NEFiles.FilesWindow.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
-				if (state.SavedAnswers[name] == MessageOptions.Cancel)
+				if ((!EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.All)) && (!EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.Cancel)))
+					NEFiles.ShowFile(this, () => EditorExecuteState.CurrentState.SavedAnswers[name] = NEFiles.FilesWindow.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
+				if (EditorExecuteState.CurrentState.SavedAnswers[name] == MessageOptions.Cancel)
 					throw new OperationCanceledException();
-				return state.SavedAnswers[name].HasFlag(MessageOptions.Yes);
+				return EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.Yes);
 			}
 		}
 

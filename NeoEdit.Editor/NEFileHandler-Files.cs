@@ -408,11 +408,11 @@ namespace NeoEdit.Editor
 			Selections = sels.AsTaskRunner().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList();
 		}
 
-		static Configuration_Files_Select_ByContent Configure_Files_Select_ByContent(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Select_ByContent(state.NEFiles.Focused.GetVariables());
+		static Configuration_Files_Select_ByContent Configure_Files_Select_ByContent() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Select_ByContent(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 
 		void Execute_Files_Select_ByContent()
 		{
-			var result = state.Configuration as Configuration_Files_Select_ByContent;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Select_ByContent;
 			// For each file, determine strings to find
 			List<List<string>> stringsToFind;
 
@@ -479,33 +479,33 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static Configuration_Files_Select_BySourceControlStatus Configure_Files_Select_BySourceControlStatus(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Select_BySourceControlStatus();
+		static Configuration_Files_Select_BySourceControlStatus Configure_Files_Select_BySourceControlStatus() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Select_BySourceControlStatus();
 
-		static PreExecution_Files_SelectGet_BySourceControlStatus PreExecute_Files_SelectGet_BySourceControlStatus(EditorExecuteState state)
+		static PreExecution_Files_SelectGet_BySourceControlStatus PreExecute_Files_SelectGet_BySourceControlStatus()
 		{
-			var files = state.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(file => file.GetSelectionStrings()).Distinct().ToList();
+			var files = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(file => file.GetSelectionStrings()).Distinct().ToList();
 			var statuses = Versioner.GetStatuses(files);
 			return new PreExecution_Files_SelectGet_BySourceControlStatus { Statuses = Enumerable.Range(0, files.Count).ToDictionary(index => files[index], index => statuses[index]) };
 		}
 
 		void Execute_Files_Select_BySourceControlStatus()
 		{
-			var configuration = state.Configuration as Configuration_Files_Select_BySourceControlStatus;
-			var preExecution = state.PreExecution as PreExecution_Files_SelectGet_BySourceControlStatus;
+			var configuration = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Select_BySourceControlStatus;
+			var preExecution = EditorExecuteState.CurrentState.PreExecution as PreExecution_Files_SelectGet_BySourceControlStatus;
 			var statuses = RelativeSelectedFiles().Select(x => preExecution.Statuses[x]).ToList();
 			var sels = Selections.Zip(statuses, (range, status) => new { range, status }).Where(obj => configuration.Statuses.HasFlag(obj.status)).Select(obj => obj.range).ToList();
 			Selections = sels;
 		}
 
-		static Configuration_Files_CopyMove Configure_Files_CopyMove(EditorExecuteState state, bool move) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_CopyMove(state.NEFiles.Focused.GetVariables(), move);
+		static Configuration_Files_CopyMove Configure_Files_CopyMove(bool move) => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_CopyMove(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables(), move);
 
 		void Execute_Files_CopyMove(bool move)
 		{
-			var result = state.Configuration as Configuration_Files_CopyMove;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_CopyMove;
 			var variables = GetVariables();
 
-			var oldFileNameExpression = state.GetExpression(result.OldFileName);
-			var newFileNameExpression = state.GetExpression(result.NewFileName);
+			var oldFileNameExpression = EditorExecuteState.CurrentState.GetExpression(result.OldFileName);
+			var newFileNameExpression = EditorExecuteState.CurrentState.GetExpression(result.NewFileName);
 			var resultCount = variables.ResultCount(oldFileNameExpression, newFileNameExpression);
 
 			var oldFileNames = oldFileNameExpression.EvaluateList<string>(variables, resultCount);
@@ -588,20 +588,20 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static Configuration_Files_Name_MakeAbsoluteRelative Configure_Files_Name_MakeAbsolute(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Name_MakeAbsoluteRelative(state.NEFiles.Focused.GetVariables(), true, true);
+		static Configuration_Files_Name_MakeAbsoluteRelative Configure_Files_Name_MakeAbsolute() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Name_MakeAbsoluteRelative(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables(), true, true);
 
 		void Execute_Files_Name_MakeAbsolute()
 		{
-			var result = state.Configuration as Configuration_Files_Name_MakeAbsoluteRelative;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Name_MakeAbsoluteRelative;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == Configuration_Files_Name_MakeAbsoluteRelative.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		static Configuration_Files_Name_MakeAbsoluteRelative Configure_Files_Name_MakeRelative(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Name_MakeAbsoluteRelative(state.NEFiles.Focused.GetVariables(), false, true);
+		static Configuration_Files_Name_MakeAbsoluteRelative Configure_Files_Name_MakeRelative() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Name_MakeAbsoluteRelative(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables(), false, true);
 
 		void Execute_Files_Name_MakeRelative()
 		{
-			var result = state.Configuration as Configuration_Files_Name_MakeAbsoluteRelative;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Name_MakeAbsoluteRelative;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
 			if (result.Type == Configuration_Files_Name_MakeAbsoluteRelative.ResultType.File)
 				results = results.Select(str => Path.GetDirectoryName(str)).ToList();
@@ -667,11 +667,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Get_Version_Assembly() => ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => AssemblyName.GetAssemblyName(file).Version.ToString()).ToList());
 
-		static Configuration_Files_Get_Hash Configure_Files_Get_Hash(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Get_Hash();
+		static Configuration_Files_Get_Hash Configure_Files_Get_Hash() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Get_Hash();
 
 		void Execute_Files_Get_Hash()
 		{
-			var result = state.Configuration as Configuration_Files_Get_Hash;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Get_Hash;
 			ReplaceSelections(Selections.AsTaskRunner()
 				.Select(range => FileName.RelativeChild(Text.GetString(range)))
 				.Select((fileName, index, progress) => Hasher.Get(fileName, result.HashType, result.HMACKey, progress), fileName => new FileInfo(fileName).Length)
@@ -680,7 +680,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Get_SourceControlStatus()
 		{
-			var preExecution = state.PreExecution as PreExecution_Files_SelectGet_BySourceControlStatus;
+			var preExecution = EditorExecuteState.CurrentState.PreExecution as PreExecution_Files_SelectGet_BySourceControlStatus;
 			ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(x => preExecution.Statuses[x].ToString()).ToList());
 		}
 
@@ -696,38 +696,38 @@ namespace NeoEdit.Editor
 				NEFiles.FilesWindow.RunDialog_ShowMessage("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
 		}
 
-		static Configuration_Files_Get_Content Configure_Files_Get_Content(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Get_Content();
+		static Configuration_Files_Get_Content Configure_Files_Get_Content() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Get_Content();
 
 		void Execute_Files_Get_Content()
 		{
-			var result = state.Configuration as Configuration_Files_Get_Content;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Get_Content;
 			ReplaceSelections(RelativeSelectedFiles().AsTaskRunner().Select(fileName => Coder.BytesToString(File.ReadAllBytes(fileName), result.CodePage, true)).ToList());
 		}
 
-		static Configuration_Files_Set_Size Configure_Files_Set_Size(EditorExecuteState state)
+		static Configuration_Files_Set_Size Configure_Files_Set_Size()
 		{
-			var vars = state.NEFiles.Focused.GetVariables();
-			var sizes = state.NEFiles.Focused.RelativeSelectedFiles().AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
+			var vars = EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables();
+			var sizes = EditorExecuteState.CurrentState.NEFiles.Focused.RelativeSelectedFiles().AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			return state.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Size(vars);
+			return EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Size(vars);
 		}
 
 		void Execute_Files_Set_Size()
 		{
-			var result = state.Configuration as Configuration_Files_Set_Size;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Set_Size;
 			var vars = GetVariables();
 			var files = RelativeSelectedFiles();
 			var sizes = files.AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			var results = state.GetExpression(result.Expression).EvaluateList<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
+			var results = EditorExecuteState.CurrentState.GetExpression(result.Expression).EvaluateList<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
 			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
-		static Configuration_Files_Set_Time_Various Configure_Files_Set_Time_Various(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Time_Various(state.NEFiles.Focused.GetVariables(), $@"""{DateTime.Now}""");
+		static Configuration_Files_Set_Time_Various Configure_Files_Set_Time_Various() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Time_Various(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables(), $@"""{DateTime.Now}""");
 
 		void Execute_Files_Set_Time_Various(TimestampType type)
 		{
-			var result = state.Configuration as Configuration_Files_Set_Time_Various;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Set_Time_Various;
 			var dateTimes = GetExpressionResults<DateTime>(result.Expression, Selections.Count());
 			var files = RelativeSelectedFiles();
 			for (var ctr = 0; ctr < files.Count; ++ctr)
@@ -760,9 +760,9 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static Configuration_Files_Set_Attributes Configure_Files_Set_Attributes(EditorExecuteState state)
+		static Configuration_Files_Set_Attributes Configure_Files_Set_Attributes()
 		{
-			var filesAttrs = state.NEFiles.Focused.Selections.Select(range => state.NEFiles.Focused.Text.GetString(range)).Select(file => new DirectoryInfo(file).Attributes).ToList();
+			var filesAttrs = EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Select(range => EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetString(range)).Select(file => new DirectoryInfo(file).Attributes).ToList();
 			var availAttrs = Helpers.GetValues<FileAttributes>();
 			var current = new Dictionary<FileAttributes, bool?>();
 			foreach (var fileAttrs in filesAttrs)
@@ -775,12 +775,12 @@ namespace NeoEdit.Editor
 						current[availAttr] = null;
 				}
 
-			return state.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Attributes(current);
+			return EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Attributes(current);
 		}
 
 		void Execute_Files_Set_Attributes()
 		{
-			var result = state.Configuration as Configuration_Files_Set_Attributes;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Set_Attributes;
 			FileAttributes andMask = 0, orMask = 0;
 			foreach (var pair in result.Attributes)
 			{
@@ -792,15 +792,15 @@ namespace NeoEdit.Editor
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
-		static Configuration_Files_Set_Content Configure_Files_Set_Content(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Content(state.NEFiles.Focused.GetVariables(), state.NEFiles.Focused.CodePage);
+		static Configuration_Files_Set_Content Configure_Files_Set_Content() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Content(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables(), EditorExecuteState.CurrentState.NEFiles.Focused.CodePage);
 
 		void Execute_Files_Set_Content()
 		{
-			var result = state.Configuration as Configuration_Files_Set_Content;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Set_Content;
 			var variables = GetVariables();
 
-			var filenameExpression = state.GetExpression(result.FileName);
-			var dataExpression = state.GetExpression(result.Data);
+			var filenameExpression = EditorExecuteState.CurrentState.GetExpression(result.FileName);
+			var dataExpression = EditorExecuteState.CurrentState.GetExpression(result.Data);
 			var resultCount = variables.ResultCount(filenameExpression, dataExpression);
 
 			var filename = filenameExpression.EvaluateList<string>(variables, resultCount);
@@ -809,11 +809,11 @@ namespace NeoEdit.Editor
 				File.WriteAllBytes(filename[ctr], Coder.StringToBytes(data[ctr], result.CodePage, true));
 		}
 
-		static Configuration_Files_Set_Encoding Configure_Files_Set_Encoding(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Encoding();
+		static Configuration_Files_Set_Encoding Configure_Files_Set_Encoding() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Set_Encoding();
 
 		void Execute_Files_Set_Encoding()
 		{
-			var result = state.Configuration as Configuration_Files_Set_Encoding;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Set_Encoding;
 			Selections.AsTaskRunner()
 				.Select(range => FileName.RelativeChild(Text.GetString(range)))
 				.ForAll(
@@ -839,51 +839,51 @@ namespace NeoEdit.Editor
 				Directory.CreateDirectory(file);
 		}
 
-		static Configuration_Files_CompressDecompress Configure_Files_Compress(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_CompressDecompress(true);
+		static Configuration_Files_CompressDecompress Configure_Files_Compress() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_CompressDecompress(true);
 
 		void Execute_Files_Compress()
 		{
-			var result = state.Configuration as Configuration_Files_CompressDecompress;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_CompressDecompress;
 			Selections.AsTaskRunner()
 				.Select(range => FileName.RelativeChild(Text.GetString(range)))
 				.ForAll((fileName, index, progress) => Compressor.Compress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		static Configuration_Files_CompressDecompress Configure_Files_Decompress(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_CompressDecompress(false);
+		static Configuration_Files_CompressDecompress Configure_Files_Decompress() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_CompressDecompress(false);
 
 		void Execute_Files_Decompress()
 		{
-			var result = state.Configuration as Configuration_Files_CompressDecompress;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_CompressDecompress;
 			Selections.AsTaskRunner()
 				.Select(range => FileName.RelativeChild(Text.GetString(range)))
 				.ForAll((fileName, index, progress) => Compressor.Decompress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		static Configuration_Files_EncryptDecrypt Configure_Files_Encrypt(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_EncryptDecrypt(true);
+		static Configuration_Files_EncryptDecrypt Configure_Files_Encrypt() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_EncryptDecrypt(true);
 
 		void Execute_Files_Encrypt()
 		{
-			var result = state.Configuration as Configuration_Files_EncryptDecrypt;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_EncryptDecrypt;
 			Selections.AsTaskRunner()
 				.Select(range => FileName.RelativeChild(Text.GetString(range)))
 				.ForAll((fileName, index, progress) => Cryptor.Encrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		static Configuration_Files_EncryptDecrypt Configure_Files_Decrypt(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_EncryptDecrypt(false);
+		static Configuration_Files_EncryptDecrypt Configure_Files_Decrypt() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_EncryptDecrypt(false);
 
 		void Execute_Files_Decrypt()
 		{
-			var result = state.Configuration as Configuration_Files_EncryptDecrypt;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_EncryptDecrypt;
 			Selections.AsTaskRunner()
 				.Select(range => FileName.RelativeChild(Text.GetString(range)))
 				.ForAll((fileName, index, progress) => Cryptor.Decrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		static Configuration_Files_Sign Configure_Files_Sign(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Sign();
+		static Configuration_Files_Sign Configure_Files_Sign() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Sign();
 
 		void Execute_Files_Sign()
 		{
-			var result = state.Configuration as Configuration_Files_Sign;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Sign;
 			ReplaceSelections(RelativeSelectedFiles().Select(file => Cryptor.Sign(file, result.CryptorType, result.Key, result.Hash)).ToList());
 		}
 
@@ -910,21 +910,21 @@ namespace NeoEdit.Editor
 			newDragFiles.AddRange(strs);
 		}
 
-		static Configuration_Files_Advanced_SplitFiles Configure_Files_Advanced_SplitFiles(EditorExecuteState state)
+		static Configuration_Files_Advanced_SplitFiles Configure_Files_Advanced_SplitFiles()
 		{
-			var variables = state.NEFiles.Focused.GetVariables();
+			var variables = EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return state.NEFiles.FilesWindow.RunDialog_Configure_Files_Advanced_SplitFiles(variables);
+			return EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Advanced_SplitFiles(variables);
 		}
 
 		void Execute_Files_Advanced_SplitFiles()
 		{
-			var result = state.Configuration as Configuration_Files_Advanced_SplitFiles;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Advanced_SplitFiles;
 			var variables = GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
 			var files = RelativeSelectedFiles();
-			var outputTemplates = state.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
-			var chunkSizes = state.GetExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
+			var outputTemplates = EditorExecuteState.CurrentState.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
+			var chunkSizes = EditorExecuteState.CurrentState.GetExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
 			Selections.AsTaskRunner()
 				.Select(range => FileName.RelativeChild(Text.GetString(range)))
 				.ForAll(
@@ -932,18 +932,18 @@ namespace NeoEdit.Editor
 					fileName => new FileInfo(fileName).Length);
 		}
 
-		static Configuration_Files_Advanced_CombineFiles Configure_Files_Advanced_CombineFiles(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Files_Advanced_CombineFiles(state.NEFiles.Focused.GetVariables());
+		static Configuration_Files_Advanced_CombineFiles Configure_Files_Advanced_CombineFiles() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Advanced_CombineFiles(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 
 		void Execute_Files_Advanced_CombineFiles()
 		{
-			var result = state.Configuration as Configuration_Files_Advanced_CombineFiles;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Files_Advanced_CombineFiles;
 			var variables = GetVariables();
 
-			var inputFileCountExpr = state.GetExpression(result.InputFileCount);
-			var outputFilesExpr = state.GetExpression(result.OutputFiles);
+			var inputFileCountExpr = EditorExecuteState.CurrentState.GetExpression(result.InputFileCount);
+			var outputFilesExpr = EditorExecuteState.CurrentState.GetExpression(result.OutputFiles);
 			var count = variables.ResultCount(inputFileCountExpr, outputFilesExpr);
 
-			var inputFiles = state.GetExpression(result.InputFiles).EvaluateList<string>(variables);
+			var inputFiles = EditorExecuteState.CurrentState.GetExpression(result.InputFiles).EvaluateList<string>(variables);
 			var inputFileCount = inputFileCountExpr.EvaluateList<int>(variables, count);
 			var outputFiles = outputFilesExpr.EvaluateList<string>(variables, count);
 

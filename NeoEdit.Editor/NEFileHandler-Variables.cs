@@ -10,7 +10,7 @@ namespace NeoEdit.Editor
 	{
 		void EnsureInTransaction()
 		{
-			if (state == null)
+			if (!inTransaction)
 				throw new Exception("Must start transaction before editing data");
 		}
 
@@ -117,7 +117,7 @@ namespace NeoEdit.Editor
 				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
 
 			if (newKeysAndValues[kvIndex] == null)
-				newKeysAndValues[kvIndex] = state.GetKeysAndValues(kvIndex, this);
+				newKeysAndValues[kvIndex] = EditorExecuteState.CurrentState.GetKeysAndValues(kvIndex, this);
 
 			return newKeysAndValues[kvIndex];
 		}
@@ -187,7 +187,7 @@ namespace NeoEdit.Editor
 			get
 			{
 				if (newClipboardData == null)
-					newClipboardData = state.GetClipboardData(this);
+					newClipboardData = EditorExecuteState.CurrentState.GetClipboardData(this);
 
 				return newClipboardData;
 			}
@@ -422,11 +422,11 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void BeginTransaction(EditorExecuteState state = null)
+		public void BeginTransaction()
 		{
-			if (this.state != null)
+			if (inTransaction)
 				throw new Exception("Already in a transaction");
-			this.state = state ?? new EditorExecuteState();
+			inTransaction = true;
 			saveFileState = fileState;
 			fileState = fileState.Clone();
 		}
@@ -444,7 +444,7 @@ namespace NeoEdit.Editor
 				keysAndValuesSet[kvIndex] = false;
 			}
 			newDragFiles.Clear();
-			state = null;
+			inTransaction = false;
 			saveFileState = null;
 		}
 

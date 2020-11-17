@@ -31,33 +31,33 @@ namespace NeoEdit.Editor
 			return $"Summary {index + 1}";
 		}
 
-		static PreExecutionStop PreExecute_Window_New_NewWindow(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_New_NewWindow()
 		{
 			new NEFilesHandler(true);
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_New_FromSelections_AllSelections(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_New_FromSelections_AllSelections()
 		{
-			var newFiles = state.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(neFile => neFile.Selections.AsTaskRunner().Select(range => neFile.Text.GetString(range)).Select(str => new NEFileHandler(bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: neFile.ContentType, modified: false)).ToList()).ToList();
+			var newFiles = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(neFile => neFile.Selections.AsTaskRunner().Select(range => neFile.Text.GetString(range)).Select(str => new NEFileHandler(bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: neFile.ContentType, modified: false)).ToList()).ToList();
 			newFiles.ForEach((neFile, index) =>
 			{
-				neFile.BeginTransaction(state);
+				neFile.BeginTransaction();
 				neFile.DisplayName = $"Selection {index + 1}";
 				neFile.Commit();
 			});
 
 			var neFiles = new NEFilesHandler();
-			neFiles.BeginTransaction(state);
+			neFiles.BeginTransaction();
 			newFiles.ForEach(neFile => neFiles.AddFile(neFile));
 			neFiles.Commit();
 
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_New_FromSelections_EachFile(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_New_FromSelections_EachFile()
 		{
-			var newFileDatas = state.NEFiles.ActiveFiles.AsTaskRunner().Select(neFile => (DisplayName: neFile.GetDisplayName(), Selections: neFile.GetSelectionStrings(), neFile.ContentType)).ToList();
+			var newFileDatas = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.AsTaskRunner().Select(neFile => (DisplayName: neFile.GetDisplayName(), Selections: neFile.GetSelectionStrings(), neFile.ContentType)).ToList();
 			var newFiles = new List<NEFileHandler>();
 			foreach (var newFileData in newFileDatas)
 			{
@@ -73,7 +73,7 @@ namespace NeoEdit.Editor
 				}
 
 				var neFile = new NEFileHandler(displayName: newFileData.DisplayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: newFileData.ContentType, modified: false);
-				neFile.BeginTransaction(state);
+				neFile.BeginTransaction();
 				neFile.Selections = selections;
 				neFile.Commit();
 
@@ -81,17 +81,17 @@ namespace NeoEdit.Editor
 			}
 
 			var neFiles = new NEFilesHandler();
-			neFiles.BeginTransaction(state);
+			neFiles.BeginTransaction();
 			newFiles.ForEach(neFile => neFiles.AddFile(neFile));
-			neFiles.SetLayout(state.NEFiles.WindowLayout);
+			neFiles.SetLayout(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
 			neFiles.Commit();
 
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(EditorExecuteState state, bool caseSensitive, bool showAllFiles)
+		static PreExecutionStop PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(bool caseSensitive, bool showAllFiles)
 		{
-			var selectionsByFile = state.NEFiles.ActiveFiles.Select((neFile, index) => (DisplayName: neFile.GetSummaryName(index), Selections: neFile.GetSelectionStrings())).ToList();
+			var selectionsByFile = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Select((neFile, index) => (DisplayName: neFile.GetSummaryName(index), Selections: neFile.GetSelectionStrings())).ToList();
 
 			if (!showAllFiles)
 				selectionsByFile = new List<(string DisplayName, IReadOnlyList<string> Selections)> { (DisplayName: "Summary", Selections: selectionsByFile.SelectMany(x => x.Selections).ToList()) };
@@ -100,7 +100,7 @@ namespace NeoEdit.Editor
 			var summaryByFile = selectionsByFile.Select(tuple => (tuple.DisplayName, selections: tuple.Selections.GroupBy(x => x, comparer).Select(group => (str: group.Key, count: group.Count())).OrderByDescending(x => x.count).ToList())).ToList();
 
 			var neFiles = new NEFilesHandler(false);
-			neFiles.BeginTransaction(state);
+			neFiles.BeginTransaction();
 			foreach (var neFile in summaryByFile)
 				neFiles.AddFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
 			neFiles.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
@@ -109,82 +109,82 @@ namespace NeoEdit.Editor
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_New_FromClipboard_AllSelections(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_New_FromClipboard_AllSelections()
 		{
 			var neFiles = new NEFilesHandler();
-			neFiles.BeginTransaction(state);
+			neFiles.BeginTransaction();
 			NEFilesHandler.AddFilesFromClipboardSelections(neFiles);
 			neFiles.Commit();
 
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_New_FromClipboard_EachFile(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_New_FromClipboard_EachFile()
 		{
 			var neFiles = new NEFilesHandler();
-			neFiles.BeginTransaction(state);
+			neFiles.BeginTransaction();
 			NEFilesHandler.AddFilesFromClipboards(neFiles);
 			neFiles.Commit();
 
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_New_FromActiveFiles(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_New_FromActiveFiles()
 		{
-			var active = state.NEFiles.ActiveFiles.ToList();
-			active.ForEach(neFile => state.NEFiles.RemoveFile(neFile));
+			var active = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.ToList();
+			active.ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.RemoveFile(neFile));
 
 			var neFiles = new NEFilesHandler();
-			neFiles.BeginTransaction(state);
-			neFiles.SetLayout(state.NEFiles.WindowLayout);
+			neFiles.BeginTransaction();
+			neFiles.SetLayout(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
 			active.ForEach(neFile => neFiles.AddFile(neFile));
 			neFiles.Commit();
 
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_Full(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_Full()
 		{
-			state.NEFiles.SetLayout(new WindowLayout(1, 1));
+			EditorExecuteState.CurrentState.NEFiles.SetLayout(new WindowLayout(1, 1));
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_Grid(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_Grid()
 		{
-			state.NEFiles.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+			EditorExecuteState.CurrentState.NEFiles.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 			return PreExecutionStop.Stop;
 		}
 
-		static Configuration_Window_CustomGrid Configure_Window_CustomGrid(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Window_CustomGrid(state.NEFiles.WindowLayout);
+		static Configuration_Window_CustomGrid Configure_Window_CustomGrid() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Window_CustomGrid(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
 
-		static PreExecutionStop PreExecute_Window_CustomGrid(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_CustomGrid()
 		{
-			state.NEFiles.SetLayout((state.Configuration as Configuration_Window_CustomGrid).WindowLayout);
+			EditorExecuteState.CurrentState.NEFiles.SetLayout((EditorExecuteState.CurrentState.Configuration as Configuration_Window_CustomGrid).WindowLayout);
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_ActiveOnly(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_ActiveOnly()
 		{
-			state.NEFiles.ActiveOnly = state.MultiStatus != true;
+			EditorExecuteState.CurrentState.NEFiles.ActiveOnly = EditorExecuteState.CurrentState.MultiStatus != true;
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_Font_Size(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_Font_Size()
 		{
-			state.NEFiles.FilesWindow.RunDialog_PreExecute_Window_Font_Size();
+			EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_PreExecute_Window_Font_Size();
 			return PreExecutionStop.Stop;
 		}
 
-		static PreExecutionStop PreExecute_Window_Font_ShowSpecial(EditorExecuteState state)
+		static PreExecutionStop PreExecute_Window_Font_ShowSpecial()
 		{
-			Font.ShowSpecialChars = state.MultiStatus != true;
+			Font.ShowSpecialChars = EditorExecuteState.CurrentState.MultiStatus != true;
 			return PreExecutionStop.Stop;
 		}
 
-		void Execute_Window_Binary() => ViewBinary = state.MultiStatus != true;
+		void Execute_Window_Binary() => ViewBinary = EditorExecuteState.CurrentState.MultiStatus != true;
 
-		static Configuration_Window_BinaryCodePages Configure_Window_BinaryCodePages(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Window_BinaryCodePages(state.NEFiles.Focused.ViewBinaryCodePages);
+		static Configuration_Window_BinaryCodePages Configure_Window_BinaryCodePages() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Window_BinaryCodePages(EditorExecuteState.CurrentState.NEFiles.Focused.ViewBinaryCodePages);
 
-		void Execute_Window_BinaryCodePages() => ViewBinaryCodePages = (state.Configuration as Configuration_Window_BinaryCodePages).CodePages;
+		void Execute_Window_BinaryCodePages() => ViewBinaryCodePages = (EditorExecuteState.CurrentState.Configuration as Configuration_Window_BinaryCodePages).CodePages;
 	}
 }

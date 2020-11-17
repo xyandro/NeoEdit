@@ -53,35 +53,35 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		static Configuration_FileTable_Various_Various Configure_Table_Select_RowsByExpression(EditorExecuteState state)
+		static Configuration_FileTable_Various_Various Configure_Table_Select_RowsByExpression()
 		{
-			var table = state.NEFiles.Focused.GetTable();
-			return state.NEFiles.FilesWindow.RunDialog_Configure_FileTable_Various_Various(state.NEFiles.Focused.GetTableVariables(table), table.NumRows);
+			var table = EditorExecuteState.CurrentState.NEFiles.Focused.GetTable();
+			return EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEFiles.Focused.GetTableVariables(table), table.NumRows);
 		}
 
 		void Execute_Table_Select_RowsByExpression()
 		{
-			var result = state.Configuration as Configuration_FileTable_Various_Various;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_FileTable_Various_Various;
 			var table = GetTable();
 			var variables = GetTableVariables(table);
-			var results = state.GetExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
+			var results = EditorExecuteState.CurrentState.GetExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
 			Selections = lines.AsTaskRunner().Select(line => new Range(Text.GetPosition(line, Text.GetLineLength(line)), Text.GetPosition(line, 0))).ToList();
 		}
 
-		static Configuration_Table_New_FromSelection Configure_Table_New_FromSelection(EditorExecuteState state)
+		static Configuration_Table_New_FromSelection Configure_Table_New_FromSelection()
 		{
-			if (state.NEFiles.Focused.Selections.Count != 1)
+			if (EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Count != 1)
 				throw new Exception("Must have one selection");
-			if (!state.NEFiles.Focused.Selections[0].HasSelection)
+			if (!EditorExecuteState.CurrentState.NEFiles.Focused.Selections[0].HasSelection)
 				throw new Exception("Must have data selected");
 
-			return state.NEFiles.FilesWindow.RunDialog_Configure_Table_New_FromSelection(state.NEFiles.Focused.GetSelectionStrings().Single());
+			return EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Table_New_FromSelection(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionStrings().Single());
 		}
 
 		void Execute_Table_New_FromSelection()
 		{
-			var result = state.Configuration as Configuration_Table_New_FromSelection;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Table_New_FromSelection;
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection");
 			if (!Selections[0].HasSelection)
@@ -120,21 +120,21 @@ namespace NeoEdit.Editor
 			OpenTable(new Table(rows, false));
 		}
 
-		static Configuration_Table_Edit Configure_Table_Edit(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Table_Edit(state.NEFiles.Focused.GetTable());
+		static Configuration_Table_Edit Configure_Table_Edit() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Table_Edit(EditorExecuteState.CurrentState.NEFiles.Focused.GetTable());
 
 		void Execute_Table_Edit()
 		{
-			var result = state.Configuration as Configuration_Table_Edit;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Table_Edit;
 			SetText(GetTable().Aggregate(result.AggregateData).Sort(result.SortData));
 		}
 
 		void Execute_Table_DetectType() => ContentType = Table.GuessTableType(Text.GetString());
 
-		static Configuration_Table_Convert Configure_Table_Convert(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Table_Convert(state.NEFiles.Focused.ContentType);
+		static Configuration_Table_Convert Configure_Table_Convert() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Table_Convert(EditorExecuteState.CurrentState.NEFiles.Focused.ContentType);
 
 		void Execute_Table_Convert()
 		{
-			var result = state.Configuration as Configuration_Table_Convert;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Table_Convert;
 			var table = GetTable();
 			ContentType = result.TableType;
 			SetText(table);
@@ -142,17 +142,17 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_SetJoinSource() => joinTable = GetTable();
 
-		static Configuration_Table_Join Configure_Table_Join(EditorExecuteState state)
+		static Configuration_Table_Join Configure_Table_Join()
 		{
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
 
-			return state.NEFiles.FilesWindow.RunDialog_Configure_Table_Join(state.NEFiles.Focused.GetTable(), joinTable);
+			return EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Table_Join(EditorExecuteState.CurrentState.NEFiles.Focused.GetTable(), joinTable);
 		}
 
 		void Execute_Table_Join()
 		{
-			var result = state.Configuration as Configuration_Table_Join;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Table_Join;
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
 
@@ -161,11 +161,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_Transpose() => SetText(GetTable().Transpose());
 
-		static Configuration_Table_Database_GenerateInserts Configure_Table_Database_GenerateInserts(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Table_Database_GenerateInserts(state.NEFiles.Focused.GetTable(), state.NEFiles.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEFiles.Focused.FileName));
+		static Configuration_Table_Database_GenerateInserts Configure_Table_Database_GenerateInserts() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Table_Database_GenerateInserts(EditorExecuteState.CurrentState.NEFiles.Focused.GetTable(), EditorExecuteState.CurrentState.NEFiles.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(EditorExecuteState.CurrentState.NEFiles.Focused.FileName));
 
 		void Execute_Table_Database_GenerateInserts()
 		{
-			var result = state.Configuration as Configuration_Table_Database_GenerateInserts;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Table_Database_GenerateInserts;
 			var table = GetTable();
 			var header = $"INSERT INTO {result.TableName} ({string.Join(", ", Enumerable.Range(0, table.NumColumns).Select(column => table.GetHeader(column)))}) VALUES{(result.BatchSize == 1 ? " " : Text.DefaultEnding)}";
 			var output = Enumerable.Range(0, table.NumRows).Batch(result.BatchSize).Select(batch => string.Join($",{Text.DefaultEnding}", batch.Select(row => $"({string.Join(", ", result.Columns.Select(column => GetDBValue(table[row, column])))})"))).Select(val => $"{header}{val}{Text.DefaultEnding}").ToList();
@@ -181,11 +181,11 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static Configuration_Table_Database_GenerateUpdates Configure_Table_Database_GenerateUpdates(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Table_Database_GenerateUpdates(state.NEFiles.Focused.GetTable(), state.NEFiles.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEFiles.Focused.FileName));
+		static Configuration_Table_Database_GenerateUpdates Configure_Table_Database_GenerateUpdates() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Table_Database_GenerateUpdates(EditorExecuteState.CurrentState.NEFiles.Focused.GetTable(), EditorExecuteState.CurrentState.NEFiles.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(EditorExecuteState.CurrentState.NEFiles.Focused.FileName));
 
 		void Execute_Table_Database_GenerateUpdates()
 		{
-			var result = state.Configuration as Configuration_Table_Database_GenerateUpdates;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Table_Database_GenerateUpdates;
 			var table = GetTable();
 
 			var output = Enumerable.Range(0, table.NumRows).Select(row => $"UPDATE {result.TableName} SET {string.Join(", ", result.Update.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{Text.DefaultEnding}").ToList();
@@ -201,11 +201,11 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static Configuration_Table_Database_GenerateDeletes Configure_Table_Database_GenerateDeletes(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Table_Database_GenerateDeletes(state.NEFiles.Focused.GetTable(), state.NEFiles.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEFiles.Focused.FileName));
+		static Configuration_Table_Database_GenerateDeletes Configure_Table_Database_GenerateDeletes() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Table_Database_GenerateDeletes(EditorExecuteState.CurrentState.NEFiles.Focused.GetTable(), EditorExecuteState.CurrentState.NEFiles.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(EditorExecuteState.CurrentState.NEFiles.Focused.FileName));
 
 		void Execute_Table_Database_GenerateDeletes()
 		{
-			var result = state.Configuration as Configuration_Table_Database_GenerateDeletes;
+			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Table_Database_GenerateDeletes;
 			var table = GetTable();
 
 			var output = Enumerable.Range(0, table.NumRows).Select(row => $"DELETE FROM {result.TableName} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{Text.DefaultEnding}").ToList();

@@ -102,7 +102,7 @@ namespace NeoEdit.Editor
 			Selections = newSelections;
 		}
 
-		static Configuration_Edit_ModifyRegions Configure_Edit_ModifyRegions(EditorExecuteState state) => state.NEFiles.FilesWindow.RunDialog_Configure_Edit_ModifyRegions();
+		static Configuration_Edit_ModifyRegions Configure_Edit_ModifyRegions() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Edit_ModifyRegions();
 
 		void Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions result)
 		{

@@ -9,7 +9,7 @@ namespace NeoEdit.Editor
 	{
 		void EnsureInTransaction()
 		{
-			if (state == null)
+			if (!inTransaction)
 				throw new Exception("Must start transaction before editing data");
 		}
 
@@ -62,7 +62,7 @@ namespace NeoEdit.Editor
 			if (transactionFiles.Contains(neFile))
 				return;
 			transactionFiles.Add(neFile);
-			neFile.BeginTransaction(state);
+			neFile.BeginTransaction();
 		}
 
 		WindowLayout oldWindowLayout, newWindowLayout;
@@ -98,11 +98,11 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void BeginTransaction(EditorExecuteState state)
+		public void BeginTransaction()
 		{
-			if (this.state != null)
+			if (inTransaction)
 				throw new Exception("Already in a transaction");
-			this.state = state;
+			inTransaction = true;
 			transactionFiles = new HashSet<NEFileHandler>();
 			ActiveFiles.ForEach(AddToTransaction);
 		}
@@ -119,7 +119,7 @@ namespace NeoEdit.Editor
 			transactionFiles.ForEach(neFile => neFile.Rollback());
 			transactionFiles = null;
 
-			state = null;
+			inTransaction = false;
 		}
 
 		public void Commit()
@@ -140,7 +140,7 @@ namespace NeoEdit.Editor
 			transactionFiles.ForEach(neFile => neFile.Commit());
 			transactionFiles = null;
 
-			state = null;
+			inTransaction = false;
 		}
 	}
 }
