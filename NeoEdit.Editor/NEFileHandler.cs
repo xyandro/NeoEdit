@@ -15,13 +15,13 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	public partial class NEFile : INEFile
+	public partial class NEFileHandler : INEFile
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
 		EditorExecuteState state;
 
-		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
+		public NEFileHandler(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
 			fileState = new NEFileState();
 
@@ -47,7 +47,7 @@ namespace NeoEdit.Editor
 			Commit();
 		}
 
-		public static NEFile CreateSummaryFile(string displayName, List<(string str, int count)> summary)
+		public static NEFileHandler CreateSummaryFile(string displayName, List<(string str, int count)> summary)
 		{
 			var sb = new StringBuilder();
 			var countRanges = new List<Range>();
@@ -67,7 +67,7 @@ namespace NeoEdit.Editor
 					sb.Append("\r\n");
 			}
 
-			var neFile = new NEFile(displayName: displayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+			var neFile = new NEFileHandler(displayName: displayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 			neFile.BeginTransaction(new EditorExecuteState());
 			neFile.Selections = stringRanges;
 			neFile.Commit();
@@ -1487,7 +1487,7 @@ namespace NeoEdit.Editor
 		void OpenTable(Table table, string name = null)
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
-			QueueAddFile(new NEFile(displayName: name, bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: contentType, modified: false));
+			QueueAddFile(new NEFileHandler(displayName: name, bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: contentType, modified: false));
 		}
 
 		IReadOnlyList<string> RelativeSelectedFiles()

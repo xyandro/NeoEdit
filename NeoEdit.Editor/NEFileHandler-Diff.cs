@@ -10,7 +10,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
 		{
@@ -56,7 +56,7 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_Diff_Select_LeftRightBothFiles(EditorExecuteState state, bool? left)
 		{
-			var active = new HashSet<NEFile>(state.NEFiles.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFile> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((state.NEFiles.GetFileIndex(item) < state.NEFiles.GetFileIndex(item.DiffTarget)) == left)));
+			var active = new HashSet<NEFileHandler>(state.NEFiles.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFileHandler> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((state.NEFiles.GetFileIndex(item) < state.NEFiles.GetFileIndex(item.DiffTarget)) == left)));
 			state.NEFiles.AllFiles.ForEach(neFile => state.NEFiles.SetActive(neFile, active.Contains(neFile)));
 
 			return PreExecutionStop.Stop;
@@ -109,7 +109,7 @@ namespace NeoEdit.Editor
 			if (original == null)
 				throw new Exception("Unable to get VCS content");
 
-			var neFile = new NEFile(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
+			var neFile = new NEFileHandler(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
 			NEFiles.AddToTransaction(neFile);
 			neFile.ContentType = ContentType;
 			neFile.DiffTarget = this;

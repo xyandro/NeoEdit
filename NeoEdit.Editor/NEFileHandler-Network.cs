@@ -16,7 +16,7 @@ using NeoEdit.WCF;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		static void FetchURL(string url, string fileName)
 		{

@@ -7,15 +7,15 @@ namespace NeoEdit.Editor
 	public class FilesList
 	{
 		NEFiles neFiles;
-		OrderedHashSet<NEFile> allFiles, activeFiles;
+		OrderedHashSet<NEFileHandler> allFiles, activeFiles;
 		bool activeFilesSorted;
-		NEFile focused;
+		NEFileHandler focused;
 
 		public FilesList(NEFiles neFiles)
 		{
 			this.neFiles = neFiles;
-			allFiles = new OrderedHashSet<NEFile>();
-			activeFiles = new OrderedHashSet<NEFile>();
+			allFiles = new OrderedHashSet<NEFileHandler>();
+			activeFiles = new OrderedHashSet<NEFileHandler>();
 			activeFilesSorted = true;
 			focused = null;
 		}
@@ -23,15 +23,15 @@ namespace NeoEdit.Editor
 		public FilesList(FilesList old)
 		{
 			neFiles = old.neFiles;
-			allFiles = new OrderedHashSet<NEFile>(old.allFiles);
-			activeFiles = new OrderedHashSet<NEFile>(old.activeFiles);
+			allFiles = new OrderedHashSet<NEFileHandler>(old.allFiles);
+			activeFiles = new OrderedHashSet<NEFileHandler>(old.activeFiles);
 			activeFilesSorted = old.activeFilesSorted;
 			focused = old.focused;
 		}
 
-		public IReadOnlyOrderedHashSet<NEFile> AllFiles => allFiles;
+		public IReadOnlyOrderedHashSet<NEFileHandler> AllFiles => allFiles;
 
-		public void InsertFile(FilesList old, NEFile neFile, int? index = null)
+		public void InsertFile(FilesList old, NEFileHandler neFile, int? index = null)
 		{
 			if (neFile == null)
 				throw new ArgumentNullException();
@@ -54,7 +54,7 @@ namespace NeoEdit.Editor
 				focused = neFile;
 		}
 
-		public void RemoveFile(NEFile neFile)
+		public void RemoveFile(NEFileHandler neFile)
 		{
 			if (neFile == null)
 				throw new ArgumentNullException();
@@ -86,7 +86,7 @@ namespace NeoEdit.Editor
 				neFiles.AddToTransaction(focused);
 		}
 
-		public void MoveFile(NEFile neFile, int index)
+		public void MoveFile(NEFileHandler neFile, int index)
 		{
 			var oldIndex = allFiles.IndexOf(neFile);
 			if (oldIndex == -1)
@@ -96,13 +96,13 @@ namespace NeoEdit.Editor
 			activeFilesSorted = false;
 		}
 
-		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles
+		public IReadOnlyOrderedHashSet<NEFileHandler> ActiveFiles
 		{
 			get
 			{
 				if (!activeFilesSorted)
 				{
-					activeFiles = new OrderedHashSet<NEFile>(allFiles.Where(neFile => activeFiles.Contains(neFile)));
+					activeFiles = new OrderedHashSet<NEFileHandler>(allFiles.Where(neFile => activeFiles.Contains(neFile)));
 					activeFilesSorted = true;
 				}
 				return activeFiles;
@@ -111,14 +111,14 @@ namespace NeoEdit.Editor
 
 		public void ClearActive()
 		{
-			activeFiles = new OrderedHashSet<NEFile>();
+			activeFiles = new OrderedHashSet<NEFileHandler>();
 			activeFilesSorted = true;
 			focused = null;
 		}
 
-		public bool Contains(NEFile neFile) => allFiles.Contains(neFile);
+		public bool Contains(NEFileHandler neFile) => allFiles.Contains(neFile);
 
-		public void SetActive(NEFile neFile, bool active = true)
+		public void SetActive(NEFileHandler neFile, bool active = true)
 		{
 			if (neFile == null)
 				throw new ArgumentNullException();
@@ -142,9 +142,9 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public bool IsActive(NEFile neFile) => activeFiles.Contains(neFile);
+		public bool IsActive(NEFileHandler neFile) => activeFiles.Contains(neFile);
 
-		public NEFile Focused
+		public NEFileHandler Focused
 		{
 			get => focused;
 			set

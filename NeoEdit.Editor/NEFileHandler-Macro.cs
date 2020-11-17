@@ -9,7 +9,7 @@ using NeoEdit.Editor.PreExecution;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		static string QuickMacro(int num) => $"QuickText{num}.xml";
 
@@ -61,7 +61,7 @@ namespace NeoEdit.Editor
 			{
 				if (!files.Any())
 					return;
-				state.NEFiles.AddFile(new NEFile(files.Dequeue()));
+				state.NEFiles.AddFile(new NEFileHandler(files.Dequeue()));
 				state.NEFiles.PlayMacro(macro, startNext);
 			};
 			startNext();
@@ -119,7 +119,7 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_Macro_Open_Quick(EditorExecuteState state, int quickNum)
 		{
-			state.NEFiles.AddFile(new NEFile(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
+			state.NEFiles.AddFile(new NEFileHandler(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 			return PreExecutionStop.Stop;
 		}
 

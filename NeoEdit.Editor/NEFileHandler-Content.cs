@@ -9,7 +9,7 @@ using NeoEdit.Editor.Content;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		void ContentReplaceSelections(IEnumerable<ParserBase> nodes)
 		{

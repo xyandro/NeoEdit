@@ -9,7 +9,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		class QueryResult
 		{
@@ -112,7 +112,7 @@ namespace NeoEdit.Editor
 								text += reader.GetString(0);
 					}
 
-					QueueAddFile(new NEFile(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ParserType.SQL, modified: false));
+					QueueAddFile(new NEFileHandler(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ParserType.SQL, modified: false));
 				}
 				catch (Exception ex) { result = ex.Message; }
 				results.Add($"{sproc}: {result}");

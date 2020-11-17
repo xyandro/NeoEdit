@@ -7,7 +7,7 @@ using NeoEdit.Common.Configuration;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		List<Tuple<Range, List<Range>>> GetRegionsWithSelections(int useRegion)
 		{

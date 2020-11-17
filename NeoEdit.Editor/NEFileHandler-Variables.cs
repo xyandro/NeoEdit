@@ -6,7 +6,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
-	public partial class NEFile
+	public partial class NEFileHandler
 	{
 		void EnsureInTransaction()
 		{
@@ -42,7 +42,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public NEFile DiffTarget
+		public NEFileHandler DiffTarget
 		{
 			get => fileState.diffTarget;
 			set
@@ -172,9 +172,9 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		readonly List<(NEFile neFile, int? index)> newFilesToAdd = new List<(NEFile neFile, int? index)>();
-		public IReadOnlyList<(NEFile neFile, int? index)> FilesToAdd => newFilesToAdd;
-		void QueueAddFile(NEFile neFile, int? index = null)
+		readonly List<(NEFileHandler neFile, int? index)> newFilesToAdd = new List<(NEFileHandler neFile, int? index)>();
+		public IReadOnlyList<(NEFileHandler neFile, int? index)> FilesToAdd => newFilesToAdd;
+		void QueueAddFile(NEFileHandler neFile, int? index = null)
 		{
 			EnsureInTransaction();
 			newFilesToAdd.Add((neFile, index));

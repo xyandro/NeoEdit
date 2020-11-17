@@ -18,7 +18,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		bool BinarySearchFile(string fileName, BinarySearcher searcher, Action<long> progress)
 		{

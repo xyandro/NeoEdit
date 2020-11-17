@@ -11,7 +11,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		void BlockSelDown()
 		{
@@ -174,14 +174,14 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_Internal_AddFile(EditorExecuteState state)
 		{
-			var neFile = (state.Configuration as Configuration_Internal_AddFile).NEFile as NEFile;
+			var neFile = (state.Configuration as Configuration_Internal_AddFile).NEFile as NEFileHandler;
 			state.NEFiles.AddFile(neFile);
 			return PreExecutionStop.Stop;
 		}
 
 		static PreExecutionStop PreExecute_Internal_MouseActivate(EditorExecuteState state)
 		{
-			var neFile = (state.Configuration as Configuration_Internal_MouseActivate).NEFile as NEFile;
+			var neFile = (state.Configuration as Configuration_Internal_MouseActivate).NEFile as NEFileHandler;
 			if (!state.ShiftDown)
 				state.NEFiles.ClearAllActive();
 			state.NEFiles.SetActive(neFile);
@@ -192,7 +192,7 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_Internal_CloseFile(EditorExecuteState state)
 		{
-			var neFile = (state.Configuration as Configuration_Internal_CloseFile).NEFile as NEFile;
+			var neFile = (state.Configuration as Configuration_Internal_CloseFile).NEFile as NEFileHandler;
 			neFile.VerifyCanClose();
 			state.NEFiles.RemoveFile(neFile);
 
@@ -489,7 +489,7 @@ namespace NeoEdit.Editor
 		static PreExecutionStop PreExecute_Internal_Scroll(EditorExecuteState state)
 		{
 			var configuration = state.Configuration as Configuration_Internal_Scroll;
-			var neFile = configuration.NEFile as NEFile;
+			var neFile = configuration.NEFile as NEFileHandler;
 			state.NEFiles.AddToTransaction(neFile);
 			neFile.StartColumn = configuration.Column;
 			neFile.StartRow = configuration.Row;
@@ -500,7 +500,7 @@ namespace NeoEdit.Editor
 		static PreExecutionStop PreExecute_Internal_Mouse(EditorExecuteState state)
 		{
 			var configuration = state.Configuration as Configuration_Internal_Mouse;
-			var neFile = configuration.NEFile as NEFile;
+			var neFile = configuration.NEFile as NEFileHandler;
 
 			if ((state.NEFiles.ActiveFiles.Count != 1) || (!state.NEFiles.IsActive(neFile)))
 			{
@@ -590,7 +590,7 @@ namespace NeoEdit.Editor
 		static PreExecutionStop PreExecute_Internal_GotoFile(EditorExecuteState state)
 		{
 			var result = state.Configuration as Configuration_Internal_GotoFile;
-			(result.NEFile as NEFile).Goto(result.Line, result.Column, result.Index);
+			(result.NEFile as NEFileHandler).Goto(result.Line, result.Column, result.Index);
 
 			return PreExecutionStop.Stop;
 		}

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		void Execute_KeyValue_Set_KeysValues_IgnoreMatchCase(int index, bool matchCase = true) => SetKeysAndValues(index, GetSelectionStrings(), matchCase);
 

@@ -39,7 +39,7 @@ namespace NeoEdit.Editor
 		public int startColumn;
 		public int startRow;
 		public bool isDiff;
-		public NEFile diffTarget;
+		public NEFileHandler diffTarget;
 
 		public NEFileState()
 		{

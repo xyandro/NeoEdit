@@ -16,7 +16,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		IReadOnlyList<int> GetOrdering(SortType type, bool caseSensitive, bool ascending)
 		{

@@ -15,7 +15,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		string GetSaveFileName()
 		{
@@ -79,7 +79,7 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_File_Select_Inactive(EditorExecuteState state)
 		{
-			state.NEFiles.AllFiles.ForEach(neFile => state.NEFiles.SetActive(neFile, !Enumerable.Contains<NEFile>(state.NEFiles.ActiveFiles, neFile)));
+			state.NEFiles.AllFiles.ForEach(neFile => state.NEFiles.SetActive(neFile, !Enumerable.Contains<NEFileHandler>(state.NEFiles.ActiveFiles, neFile)));
 			return PreExecutionStop.Stop;
 		}
 
@@ -122,7 +122,7 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_File_New_New(EditorExecuteState state)
 		{
-			state.NEFiles.AddFile(new NEFile(), canReplace: false);
+			state.NEFiles.AddFile(new NEFileHandler(), canReplace: false);
 			return PreExecutionStop.Stop;
 		}
 
@@ -151,7 +151,7 @@ namespace NeoEdit.Editor
 
 			data = Compressor.Decompress(data, Compressor.Type.GZip);
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data));
-			state.NEFiles.AddFile(new NEFile(displayName: "Word List", bytes: data, modified: false));
+			state.NEFiles.AddFile(new NEFileHandler(displayName: "Word List", bytes: data, modified: false));
 
 			return PreExecutionStop.Stop;
 		}
@@ -169,13 +169,13 @@ namespace NeoEdit.Editor
 		static PreExecutionStop PreExecute_FileMacro_Open_Open(EditorExecuteState state)
 		{
 			var result = state.Configuration as Configuration_FileMacro_Open_Open;
-			result.FileNames.ForEach(fileName => state.NEFiles.AddFile(new NEFile(fileName)));
+			result.FileNames.ForEach(fileName => state.NEFiles.AddFile(new NEFileHandler(fileName)));
 			return PreExecutionStop.Stop;
 		}
 
 		static PreExecutionStop PreExecute_File_Open_CopiedCut(EditorExecuteState state)
 		{
-			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => state.NEFiles.AddFile(neFile));
+			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFileHandler(file)).ForEach(neFile => state.NEFiles.AddFile(neFile));
 			return PreExecutionStop.Stop;
 		}
 

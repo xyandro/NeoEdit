@@ -54,7 +54,7 @@ namespace NeoEdit.Editor
 			BeginTransaction(new EditorExecuteState());
 			FilesWindow = INEFilesWindowStatic.CreateINEFilesWindow(this);
 			if (addEmpty)
-				AddFile(new NEFile());
+				AddFile(new NEFileHandler());
 			Commit();
 		}
 
@@ -108,7 +108,7 @@ namespace NeoEdit.Editor
 
 		Dictionary<string, bool?> GetMenuStatus()
 		{
-			bool? GetMultiStatus(Func<NEFile, bool> func)
+			bool? GetMultiStatus(Func<NEFileHandler, bool> func)
 			{
 				var results = ActiveFiles.Select(func).Distinct().Take(2).ToList();
 				if (results.Count != 1)
@@ -243,14 +243,14 @@ namespace NeoEdit.Editor
 				state.KeysAndValuesFunc = GetKeysAndValuesMap;
 
 				if ((!inMacro) && (state.Configuration == null))
-					state.Configuration = NEFile.Configure(state);
+					state.Configuration = NEFileHandler.Configure(state);
 
 				Stopwatch sw = null;
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
 				FilesWindow.SetTaskRunnerProgress(0);
-				state.PreExecution = NEFile.PreExecute(state);
+				state.PreExecution = NEFileHandler.PreExecute(state);
 				if (state.PreExecution != PreExecutionStop.Stop)
 					TaskRunner.Run(Execute, percent => FilesWindow.SetTaskRunnerProgress(percent));
 				FilesWindow.SetTaskRunnerProgress(null);
@@ -337,7 +337,7 @@ namespace NeoEdit.Editor
 
 		public void SetLayout(WindowLayout windowLayout) => WindowLayout = windowLayout;
 
-		public void AddFile(NEFile neFile, int? index = null, bool canReplace = true)
+		public void AddFile(NEFileHandler neFile, int? index = null, bool canReplace = true)
 		{
 			if ((canReplace) && (!index.HasValue) && (Focused != null) && (Focused.Empty()) && (oldFilesList.Contains(Focused)))
 			{
@@ -348,7 +348,7 @@ namespace NeoEdit.Editor
 			InsertFile(neFile, index);
 		}
 
-		public void AddDiff(NEFile neFile1, NEFile neFile2)
+		public void AddDiff(NEFileHandler neFile1, NEFileHandler neFile2)
 		{
 			if (neFile1.ContentType == ParserType.None)
 				neFile1.ContentType = neFile2.ContentType;
@@ -362,14 +362,14 @@ namespace NeoEdit.Editor
 
 		void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, ParserType contentType1 = ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, int? index1 = null, ShutdownData shutdownData1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, ParserType contentType2 = ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, int? index2 = null, ShutdownData shutdownData2 = null)
 		{
-			var te1 = new NEFile(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, index1, shutdownData1);
-			var te2 = new NEFile(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, index2, shutdownData2);
+			var te1 = new NEFileHandler(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, index1, shutdownData1);
+			var te2 = new NEFileHandler(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, index2, shutdownData2);
 			AddDiff(te1, te2);
 		}
 
-		bool FileIsActive(NEFile neFile) => ActiveFiles.Contains(neFile);
+		bool FileIsActive(NEFileHandler neFile) => ActiveFiles.Contains(neFile);
 
-		public int GetFileIndex(NEFile neFile, bool activeOnly = false)
+		public int GetFileIndex(NEFileHandler neFile, bool activeOnly = false)
 		{
 			var index = (activeOnly ? ActiveFiles : AllFiles).FindIndex(neFile);
 			if (index == -1)
@@ -382,12 +382,12 @@ namespace NeoEdit.Editor
 			if (AllFiles.Count() <= 1)
 				return;
 
-			NEFile neFile;
+			NEFileHandler neFile;
 			if (Focused == null)
 				neFile = AllFiles.GetIndex(0);
 			else
 			{
-				var neFiles = orderByActive ? AllFiles.OrderByDescending(x => x.LastActive).ToList() : AllFiles as IList<NEFile>;
+				var neFiles = orderByActive ? AllFiles.OrderByDescending(x => x.LastActive).ToList() : AllFiles as IList<NEFileHandler>;
 				var index = neFiles.FindIndex(Focused) + offset;
 				if (index < 0)
 					index += AllFiles.Count();
@@ -401,7 +401,7 @@ namespace NeoEdit.Editor
 			Focused = neFile;
 		}
 
-		void Move(NEFile neFile, int newIndex)
+		void Move(NEFileHandler neFile, int newIndex)
 		{
 			RemoveFile(neFile);
 			InsertFile(neFile, newIndex);
@@ -422,7 +422,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		public T ShowFile<T>(NEFile neFile, Func<T> action)
+		public T ShowFile<T>(NEFileHandler neFile, Func<T> action)
 		{
 			lock (this)
 			{
@@ -522,7 +522,7 @@ namespace NeoEdit.Editor
 						}
 					}
 
-					neFiles.HandleCommand(new ExecuteState(NECommand.Internal_AddFile) { Configuration = new Configuration_Internal_AddFile { NEFile = new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) } });
+					neFiles.HandleCommand(new ExecuteState(NECommand.Internal_AddFile) { Configuration = new Configuration_Internal_AddFile { NEFile = new NEFileHandler(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) } });
 				}
 
 				if (commandLineParams.Diff)
@@ -539,7 +539,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		NEFile GetFile(string fileName) => ActiveFiles.FirstOrDefault(neFile => neFile.FileName == fileName);
+		NEFileHandler GetFile(string fileName) => ActiveFiles.FirstOrDefault(neFile => neFile.FileName == fileName);
 
 		public static void AddFilesFromClipboards(NEFiles neFiles)
 		{
@@ -557,12 +557,12 @@ namespace NeoEdit.Editor
 					sels.Add(new Range(sb.Length, start));
 					sb.Append(ending);
 				}
-				var te = new NEFile(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+				var te = new NEFileHandler(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 				neFiles.AddFile(te, canReplace: index == 1);
 				te.Selections = sels;
 			}
 		}
 
-		public static void AddFilesFromClipboardSelections(NEFiles neFiles) => NEClipboard.Current.Strings.ForEach((str, index) => neFiles.AddFile(new NEFile(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
+		public static void AddFilesFromClipboardSelections(NEFiles neFiles) => NEClipboard.Current.Strings.ForEach((str, index) => neFiles.AddFile(new NEFileHandler(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 	}
 }

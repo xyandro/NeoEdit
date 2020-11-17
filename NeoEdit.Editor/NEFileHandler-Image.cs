@@ -13,7 +13,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		static string AddColor(string color1, string color2)
 		{

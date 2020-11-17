@@ -11,7 +11,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFile
+	partial class NEFileHandler
 	{
 		string GetDisplayName()
 		{
@@ -39,7 +39,7 @@ namespace NeoEdit.Editor
 
 		static PreExecutionStop PreExecute_Window_New_FromSelections_AllSelections(EditorExecuteState state)
 		{
-			var newFiles = state.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(neFile => neFile.Selections.AsTaskRunner().Select(range => neFile.Text.GetString(range)).Select(str => new NEFile(bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: neFile.ContentType, modified: false)).ToList()).ToList();
+			var newFiles = state.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(neFile => neFile.Selections.AsTaskRunner().Select(range => neFile.Text.GetString(range)).Select(str => new NEFileHandler(bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: neFile.ContentType, modified: false)).ToList()).ToList();
 			newFiles.ForEach((neFile, index) =>
 			{
 				neFile.BeginTransaction(state);
@@ -58,7 +58,7 @@ namespace NeoEdit.Editor
 		static PreExecutionStop PreExecute_Window_New_FromSelections_EachFile(EditorExecuteState state)
 		{
 			var newFileDatas = state.NEFiles.ActiveFiles.AsTaskRunner().Select(neFile => (DisplayName: neFile.GetDisplayName(), Selections: neFile.GetSelectionStrings(), neFile.ContentType)).ToList();
-			var newFiles = new List<NEFile>();
+			var newFiles = new List<NEFileHandler>();
 			foreach (var newFileData in newFileDatas)
 			{
 				var sb = new StringBuilder();
@@ -72,7 +72,7 @@ namespace NeoEdit.Editor
 						sb.Append("\r\n");
 				}
 
-				var neFile = new NEFile(displayName: newFileData.DisplayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: newFileData.ContentType, modified: false);
+				var neFile = new NEFileHandler(displayName: newFileData.DisplayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: newFileData.ContentType, modified: false);
 				neFile.BeginTransaction(state);
 				neFile.Selections = selections;
 				neFile.Commit();

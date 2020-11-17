@@ -22,42 +22,42 @@ namespace NeoEdit.Editor
 			return newFilesList;
 		}
 
-		public IReadOnlyOrderedHashSet<NEFile> AllFiles => newFilesList.AllFiles;
+		public IReadOnlyOrderedHashSet<NEFileHandler> AllFiles => newFilesList.AllFiles;
 
-		void InsertFile(NEFile neFile, int? index = null)
+		void InsertFile(NEFileHandler neFile, int? index = null)
 		{
 			lock (this)
 				GetUpdateFilesList().InsertFile(oldFilesList, neFile, index);
 		}
 
-		public void RemoveFile(NEFile neFile)
+		public void RemoveFile(NEFileHandler neFile)
 		{
 			lock (this)
 				GetUpdateFilesList().RemoveFile(neFile);
 		}
 
-		public void MoveFile(NEFile neFile, int index)
+		public void MoveFile(NEFileHandler neFile, int index)
 		{
 			lock (this)
 				GetUpdateFilesList().MoveFile(neFile, index);
 		}
 
-		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles => newFilesList.ActiveFiles;
+		public IReadOnlyOrderedHashSet<NEFileHandler> ActiveFiles => newFilesList.ActiveFiles;
 
 		public void ClearAllActive() => GetUpdateFilesList().ClearActive();
 
-		public void SetActive(NEFile neFile, bool active = true) => GetUpdateFilesList().SetActive(neFile, active);
+		public void SetActive(NEFileHandler neFile, bool active = true) => GetUpdateFilesList().SetActive(neFile, active);
 
-		public bool IsActive(NEFile neFile) => newFilesList.IsActive(neFile);
+		public bool IsActive(NEFileHandler neFile) => newFilesList.IsActive(neFile);
 
-		public NEFile Focused
+		public NEFileHandler Focused
 		{
 			get => newFilesList.Focused;
 			set => GetUpdateFilesList().Focused = value;
 		}
 
-		HashSet<NEFile> transactionFiles;
-		public void AddToTransaction(NEFile neFile)
+		HashSet<NEFileHandler> transactionFiles;
+		public void AddToTransaction(NEFileHandler neFile)
 		{
 			if (transactionFiles.Contains(neFile))
 				return;
@@ -103,7 +103,7 @@ namespace NeoEdit.Editor
 			if (this.state != null)
 				throw new Exception("Already in a transaction");
 			this.state = state;
-			transactionFiles = new HashSet<NEFile>();
+			transactionFiles = new HashSet<NEFileHandler>();
 			ActiveFiles.ForEach(AddToTransaction);
 		}
 
