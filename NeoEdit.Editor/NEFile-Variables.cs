@@ -16,12 +16,6 @@ namespace NeoEdit.Editor
 
 		NEFileData saveFileData, fileData;
 
-		public NEFiles NEFiles
-		{
-			get => fileData.neFiles;
-			set => fileData.neFiles = value;
-		}
-
 		NEText Text
 		{
 			get => fileData.text;
@@ -413,7 +407,7 @@ namespace NeoEdit.Editor
 				fileData.startRow = value;
 				if (DiffTarget != null)
 				{
-					NEFiles.AddToTransaction(DiffTarget);
+					EditorExecuteState.CurrentState.NEFiles.AddToTransaction(DiffTarget);
 					DiffTarget.fileData.startRow = value;
 				}
 			}

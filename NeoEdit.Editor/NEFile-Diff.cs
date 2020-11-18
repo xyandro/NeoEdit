@@ -109,7 +109,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Unable to get VCS content");
 
 			var neFile = new NEFile(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
-			NEFiles.AddToTransaction(neFile);
+			EditorExecuteState.CurrentState.NEFiles.AddToTransaction(neFile);
 			neFile.ContentType = ContentType;
 			neFile.DiffTarget = this;
 			AddFile(neFile);
@@ -161,10 +161,10 @@ namespace NeoEdit.Editor
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			if ((NEFiles.GetFileIndex(this) < DiffTarget.NEFiles.GetFileIndex(DiffTarget)) && (NEFiles.ActiveFiles.Contains(DiffTarget)))
+			if ((EditorExecuteState.CurrentState.NEFiles.GetFileIndex(this) < EditorExecuteState.CurrentState.NEFiles.GetFileIndex(DiffTarget)) && (EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Contains(DiffTarget)))
 				return;
 
-			NEFiles.AddToTransaction(DiffTarget);
+			EditorExecuteState.CurrentState.NEFiles.AddToTransaction(DiffTarget);
 			var lines = Selections.AsTaskRunner().Select(range => GetDiffNextPrevious(range, next)).ToList();
 			for (var pass = 0; pass < 2; ++pass)
 			{
@@ -181,17 +181,17 @@ namespace NeoEdit.Editor
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var target = NEFiles.GetFileIndex(this) < DiffTarget.NEFiles.GetFileIndex(DiffTarget) ? this : DiffTarget;
+			var target = EditorExecuteState.CurrentState.NEFiles.GetFileIndex(this) < EditorExecuteState.CurrentState.NEFiles.GetFileIndex(DiffTarget) ? this : DiffTarget;
 			var source = target == this ? DiffTarget : this;
 			if (!moveLeft)
 				Helpers.Swap(ref target, ref source);
 
 			// If both files are active only do this from the target file
-			var bothActive = NEFiles.ActiveFiles.Contains(DiffTarget);
+			var bothActive = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Contains(DiffTarget);
 			if ((bothActive) && (target != this))
 				return;
 
-			NEFiles.AddToTransaction(DiffTarget);
+			EditorExecuteState.CurrentState.NEFiles.AddToTransaction(DiffTarget);
 			var strs = source.GetSelectionStrings();
 			target.ReplaceSelections(strs);
 			// If both files are active queue an empty edit so undo will take both back to the same place

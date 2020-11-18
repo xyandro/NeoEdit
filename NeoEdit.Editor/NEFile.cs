@@ -1237,7 +1237,7 @@ namespace NeoEdit.Editor
 			watcher.Changed += (s1, e1) =>
 			{
 				watcherFileModified = true;
-				try { NEFiles.FilesWindow.QueueActivateNEFiles(); } catch { }
+				try { EditorExecuteState.CurrentState.NEFiles.FilesWindow.QueueActivateNEFiles(); } catch { }
 			};
 			watcher.EnableRaisingEvents = true;
 		}
@@ -1271,9 +1271,9 @@ namespace NeoEdit.Editor
 
 			if (centerVertically)
 			{
-				StartRow = (lineMin + lineMax - NEFiles.DisplayRows) / 2;
+				StartRow = (lineMin + lineMax - EditorExecuteState.CurrentState.NEFiles.DisplayRows) / 2;
 				if (centerHorizontally)
-					StartColumn = (Text.GetColumnFromIndex(lineMin, indexMin) + Text.GetColumnFromIndex(lineMax, indexMax) - NEFiles.DisplayColumns) / 2;
+					StartColumn = (Text.GetColumnFromIndex(lineMin, indexMin) + Text.GetColumnFromIndex(lineMax, indexMax) - EditorExecuteState.CurrentState.NEFiles.DisplayColumns) / 2;
 				else
 					StartColumn = 0;
 			}
@@ -1281,8 +1281,8 @@ namespace NeoEdit.Editor
 			var line = Text.GetPositionLine(range.Cursor);
 			var index = Text.GetPositionIndex(range.Cursor, line);
 			var x = Text.GetColumnFromIndex(line, index);
-			StartRow = Math.Min(line, Math.Max(line - (NEFiles?.DisplayRows ?? 1) + 1, StartRow));
-			StartColumn = Math.Min(x, Math.Max(x - (NEFiles?.DisplayColumns ?? 1) + 1, StartColumn));
+			StartRow = Math.Min(line, Math.Max(line - (EditorExecuteState.CurrentState.NEFiles?.DisplayRows ?? 1) + 1, StartRow));
+			StartColumn = Math.Min(x, Math.Max(x - (EditorExecuteState.CurrentState.NEFiles?.DisplayColumns ?? 1) + 1, StartColumn));
 		}
 
 		public NEVariables GetVariables()
@@ -1648,7 +1648,7 @@ namespace NeoEdit.Editor
 		{
 			if (DiffTarget != null)
 			{
-				DiffTarget.NEFiles?.AddToTransaction(DiffTarget);
+				EditorExecuteState.CurrentState.NEFiles?.AddToTransaction(DiffTarget);
 				DiffTarget = null;
 			}
 			ClearWatcher();
@@ -1672,7 +1672,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void ViewSetDisplaySize(int columns, int rows) => NEFiles?.SetDisplaySize(columns, rows);
+		public void ViewSetDisplaySize(int columns, int rows) => EditorExecuteState.CurrentState.NEFiles?.SetDisplaySize(columns, rows);
 
 		public List<string> ViewGetStatusBar()
 		{
@@ -1716,7 +1716,7 @@ namespace NeoEdit.Editor
 			lock (EditorExecuteState.CurrentState)
 			{
 				if ((!EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.All)) && (!EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.Cancel)))
-					NEFiles.ShowFile(this, () => EditorExecuteState.CurrentState.SavedAnswers[name] = NEFiles.FilesWindow.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
+					EditorExecuteState.CurrentState.NEFiles.ShowFile(this, () => EditorExecuteState.CurrentState.SavedAnswers[name] = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
 				if (EditorExecuteState.CurrentState.SavedAnswers[name] == MessageOptions.Cancel)
 					throw new OperationCanceledException();
 				return EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.Yes);
@@ -1728,7 +1728,7 @@ namespace NeoEdit.Editor
 			if (DiffTarget == null)
 				return;
 
-			NEFiles?.AddToTransaction(DiffTarget);
+			EditorExecuteState.CurrentState.NEFiles?.AddToTransaction(DiffTarget);
 
 			DiffTarget.DiffIgnoreWhitespace = DiffIgnoreWhitespace;
 			DiffTarget.DiffIgnoreCase = DiffIgnoreCase;
@@ -1736,7 +1736,7 @@ namespace NeoEdit.Editor
 			DiffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
 			DiffTarget.DiffIgnoreCharacters = DiffIgnoreCharacters;
 
-			var left = NEFiles?.GetFileIndex(this) < DiffTarget.NEFiles?.GetFileIndex(DiffTarget) ? this : DiffTarget;
+			var left = EditorExecuteState.CurrentState.NEFiles?.GetFileIndex(this) < EditorExecuteState.CurrentState.NEFiles?.GetFileIndex(DiffTarget) ? this : DiffTarget;
 			var right = left == this ? DiffTarget : this;
 			NEText.CalculateDiff(left.Text, right.Text, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 		}

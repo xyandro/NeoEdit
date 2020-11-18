@@ -401,15 +401,15 @@ namespace NeoEdit.Editor
 					break;
 				case Key.PageUp:
 					if (EditorExecuteState.CurrentState.ControlDown)
-						StartRow -= NEFiles.DisplayRows / 2;
+						StartRow -= EditorExecuteState.CurrentState.NEFiles.DisplayRows / 2;
 					else
-						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, 1 - NEFiles.DisplayRows, 0, EditorExecuteState.CurrentState.ShiftDown)).ToList();
+						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, 1 - EditorExecuteState.CurrentState.NEFiles.DisplayRows, 0, EditorExecuteState.CurrentState.ShiftDown)).ToList();
 					break;
 				case Key.PageDown:
 					if (EditorExecuteState.CurrentState.ControlDown)
-						StartRow += NEFiles.DisplayRows / 2;
+						StartRow += EditorExecuteState.CurrentState.NEFiles.DisplayRows / 2;
 					else
-						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, NEFiles.DisplayRows - 1, 0, EditorExecuteState.CurrentState.ShiftDown)).ToList();
+						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, EditorExecuteState.CurrentState.NEFiles.DisplayRows - 1, 0, EditorExecuteState.CurrentState.ShiftDown)).ToList();
 					break;
 				case Key.Tab:
 					{

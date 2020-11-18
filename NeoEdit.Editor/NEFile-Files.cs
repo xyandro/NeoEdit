@@ -694,7 +694,7 @@ namespace NeoEdit.Editor
 			var errors = new List<string>();
 			ReplaceSelections(dirs.AsTaskRunner().Select((dir, index, progress) => string.Join(Text.DefaultEnding, GetDirectoryContents(dir, recursive, errors, progress)), x => 100000).ToList());
 			if (errors.Any())
-				NEFiles.FilesWindow.RunDialog_ShowMessage("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
+				EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_ShowMessage("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
 		}
 
 		static void Configure_Files_Get_Content() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Files_Get_Content();

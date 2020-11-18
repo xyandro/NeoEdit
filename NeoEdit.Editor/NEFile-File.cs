@@ -42,9 +42,9 @@ namespace NeoEdit.Editor
 
 		string GetSaveFileName()
 		{
-			return NEFiles.ShowFile(this, () =>
+			return EditorExecuteState.CurrentState.NEFiles.ShowFile(this, () =>
 			{
-				var result = NEFiles.FilesWindow.RunSaveFileDialog(Path.GetFileName(FileName) ?? DisplayName, "txt", Path.GetDirectoryName(FileName), "All files|*.*");
+				var result = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunSaveFileDialog(Path.GetFileName(FileName) ?? DisplayName, "txt", Path.GetDirectoryName(FileName), "All files|*.*");
 				if (result == null)
 					throw new OperationCanceledException();
 
@@ -382,7 +382,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_FileActiveFileIndex(bool activeOnly)
 		{
-			ReplaceSelections((NEFiles.GetFileIndex(this, activeOnly) + 1).ToString());
+			ReplaceSelections((EditorExecuteState.CurrentState.NEFiles.GetFileIndex(this, activeOnly) + 1).ToString());
 		}
 
 		void Execute_File_Advanced_Compress() => Compressed = EditorExecuteState.CurrentState.MultiStatus == false;

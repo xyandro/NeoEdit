@@ -7,7 +7,6 @@ namespace NeoEdit.Editor
 {
 	class NEFileData
 	{
-		public NEFiles neFiles;
 		public NEText text;
 		public UndoRedo undoRedo;
 		public int currentSelection;
@@ -48,7 +47,6 @@ namespace NeoEdit.Editor
 		{
 			var fileState = new NEFileData
 			{
-				neFiles = neFiles,
 				text = text,
 				undoRedo = undoRedo,
 				currentSelection = currentSelection,
