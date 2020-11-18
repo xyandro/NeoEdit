@@ -43,10 +43,11 @@ namespace NeoEdit.Editor
 
 		public NEFiles(bool addEmpty = false)
 		{
-			AllNEFiles.Add(this);
+			filesData = new NEFilesData();
+			filesData.allFiles = filesData.activeFiles = new OrderedHashSet<NEFile>();
+			filesData.windowLayout = new WindowLayout(1, 1);
 
-			oldAllFiles = newAllFiles = oldActiveFiles = newActiveFiles = new OrderedHashSet<NEFile>();
-			oldWindowLayout = newWindowLayout = new WindowLayout(1, 1);
+			AllNEFiles.Add(this);
 
 			BeginTransaction();
 			FilesWindow = INEFilesWindowStatic.CreateINEFilesWindow(this);

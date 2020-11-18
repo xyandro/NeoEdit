@@ -13,27 +13,27 @@ namespace NeoEdit.Editor
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		IReadOnlyOrderedHashSet<NEFile> oldAllFiles, newAllFiles;
+		NEFilesData saveFilesData, filesData;
+
 		public IReadOnlyOrderedHashSet<NEFile> AllFiles
 		{
-			get => newAllFiles;
+			get => filesData.allFiles;
 			set
 			{
 				EnsureInTransaction();
-				newAllFiles = value;
+				filesData.allFiles = value;
 			}
 		}
 
-		IReadOnlyOrderedHashSet<NEFile> oldActiveFiles, newActiveFiles;
 		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles
 		{
-			get => newActiveFiles;
+			get => filesData.activeFiles;
 			set
 			{
 				EnsureInTransaction();
-				newActiveFiles = value;
-				if (!newActiveFiles.Contains(Focused))
-					Focused = newActiveFiles.FirstOrDefault();
+				filesData.activeFiles = value;
+				if (!filesData.activeFiles.Contains(Focused))
+					Focused = filesData.activeFiles.FirstOrDefault();
 			}
 		}
 
@@ -43,14 +43,13 @@ namespace NeoEdit.Editor
 
 		public void SetActiveFiles(IEnumerable<NEFile> files) => ActiveFiles = new OrderedHashSet<NEFile>(files);
 
-		NEFile oldFocused, newFocused;
 		public NEFile Focused
 		{
-			get => newFocused;
+			get => filesData.focused;
 			set
 			{
 				EnsureInTransaction();
-				newFocused = value;
+				filesData.focused = value;
 			}
 		}
 
@@ -63,36 +62,33 @@ namespace NeoEdit.Editor
 			neFile.BeginTransaction();
 		}
 
-		WindowLayout oldWindowLayout, newWindowLayout;
 		public WindowLayout WindowLayout
 		{
-			get => newWindowLayout;
+			get => filesData.windowLayout;
 			set
 			{
 				EnsureInTransaction();
-				newWindowLayout = value;
+				filesData.windowLayout = value;
 			}
 		}
 
-		bool oldActiveOnly, newActiveOnly;
 		public bool ActiveOnly
 		{
-			get => newActiveOnly;
+			get => filesData.activeOnly;
 			set
 			{
 				EnsureInTransaction();
-				newActiveOnly = value;
+				filesData.activeOnly = value;
 			}
 		}
 
-		bool oldMacroVisualize = true, newMacroVisualize = true;
 		public bool MacroVisualize
 		{
-			get => newMacroVisualize;
+			get => filesData.macroVisualize;
 			set
 			{
 				EnsureInTransaction();
-				newMacroVisualize = value;
+				filesData.macroVisualize = value;
 			}
 		}
 
@@ -111,6 +107,8 @@ namespace NeoEdit.Editor
 			if (inTransaction)
 				throw new Exception("Already in a transaction");
 			inTransaction = true;
+			saveFilesData = filesData;
+			filesData = filesData.Clone();
 			transactionFiles = new HashSet<NEFile>();
 			ActiveFiles.ForEach(AddToTransaction);
 		}
@@ -119,12 +117,7 @@ namespace NeoEdit.Editor
 		{
 			EnsureInTransaction();
 
-			newAllFiles = oldAllFiles;
-			newActiveFiles = oldActiveFiles;
-			newFocused = oldFocused;
-			newWindowLayout = oldWindowLayout;
-			newActiveOnly = oldActiveOnly;
-			newMacroVisualize = oldMacroVisualize;
+			filesData = saveFilesData;
 
 			transactionFiles.ForEach(neFile => neFile.Rollback());
 			transactionFiles = null;
@@ -136,13 +129,6 @@ namespace NeoEdit.Editor
 		public void Commit()
 		{
 			EnsureInTransaction();
-
-			oldAllFiles = newAllFiles;
-			oldActiveFiles = newActiveFiles;
-			oldFocused = newFocused;
-			oldWindowLayout = newWindowLayout;
-			oldActiveOnly = newActiveOnly;
-			oldMacroVisualize = newMacroVisualize;
 
 			transactionFiles.ForEach(neFile => neFile.Commit());
 			transactionFiles = null;

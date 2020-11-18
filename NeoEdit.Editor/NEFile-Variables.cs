@@ -14,47 +14,47 @@ namespace NeoEdit.Editor
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		NEFileData saveFileState, fileState;
+		NEFileData saveFileData, fileData;
 
 		public NEFiles NEFiles
 		{
-			get => fileState.neFiles;
-			set => fileState.neFiles = value;
+			get => fileData.neFiles;
+			set => fileData.neFiles = value;
 		}
 
 		NEText Text
 		{
-			get => fileState.text;
+			get => fileData.text;
 			set
 			{
 				EnsureInTransaction();
-				fileState.text = value;
+				fileData.text = value;
 			}
 		}
 
 		UndoRedo UndoRedo
 		{
-			get => fileState.undoRedo;
+			get => fileData.undoRedo;
 			set
 			{
 				EnsureInTransaction();
-				fileState.undoRedo = value;
+				fileData.undoRedo = value;
 			}
 		}
 
 		bool IsDiff
 		{
-			get => fileState.isDiff;
+			get => fileData.isDiff;
 			set
 			{
 				EnsureInTransaction();
-				fileState.isDiff = value;
+				fileData.isDiff = value;
 			}
 		}
 
 		public NEFile DiffTarget
 		{
-			get => fileState.diffTarget;
+			get => fileData.diffTarget;
 			set
 			{
 				EnsureInTransaction();
@@ -69,15 +69,15 @@ namespace NeoEdit.Editor
 
 					Text.ClearDiff();
 					DiffTarget.Text.ClearDiff();
-					DiffTarget.fileState.diffTarget = null;
-					fileState.diffTarget = null;
+					DiffTarget.fileData.diffTarget = null;
+					fileData.diffTarget = null;
 				}
 
 				if (value != null)
 				{
 					value.DiffTarget = null;
-					fileState.diffTarget = value;
-					value.fileState.diffTarget = this;
+					fileData.diffTarget = value;
+					value.fileData.diffTarget = this;
 					IsDiff = DiffTarget.IsDiff = true;
 					CalculateDiff();
 				}
@@ -86,21 +86,21 @@ namespace NeoEdit.Editor
 
 		public int CurrentSelection
 		{
-			get => Math.Min(Math.Max(0, fileState.currentSelection), Selections.Count - 1);
+			get => Math.Min(Math.Max(0, fileData.currentSelection), Selections.Count - 1);
 			private set
 			{
 				EnsureInTransaction();
-				fileState.currentSelection = value;
+				fileData.currentSelection = value;
 			}
 		}
 
 		public IReadOnlyList<Range> Selections
 		{
-			get => fileState.selections;
+			get => fileData.selections;
 			set
 			{
 				EnsureInTransaction();
-				fileState.selections = DeOverlap(value);
+				fileData.selections = DeOverlap(value);
 				CurrentSelection = CurrentSelection;
 				EnsureVisible();
 			}
@@ -110,14 +110,14 @@ namespace NeoEdit.Editor
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			return fileState.regions[region - 1];
+			return fileData.regions[region - 1];
 		}
 
 		void SetRegions(int region, IReadOnlyList<Range> regions)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			fileState.regions[region - 1] = DeOverlap(regions);
+			fileData.regions[region - 1] = DeOverlap(regions);
 		}
 
 		public NEFileResult result { get; private set; }
@@ -153,31 +153,31 @@ namespace NeoEdit.Editor
 
 		public string DisplayName
 		{
-			get => fileState.displayName;
+			get => fileData.displayName;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.displayName = value;
+				fileData.displayName = value;
 			}
 		}
 
 		public string FileName
 		{
-			get => fileState.fileName;
+			get => fileData.fileName;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.fileName = value;
+				fileData.fileName = value;
 			}
 		}
 
 		public bool IsModified
 		{
-			get => fileState.isModified;
+			get => fileData.isModified;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.isModified = value;
+				fileData.isModified = value;
 			}
 		}
 
@@ -212,151 +212,151 @@ namespace NeoEdit.Editor
 
 		public bool AutoRefresh
 		{
-			get => fileState.autoRefresh;
+			get => fileData.autoRefresh;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.autoRefresh = value;
+				fileData.autoRefresh = value;
 			}
 		}
 
 		public string DBName
 		{
-			get => fileState.dbName;
+			get => fileData.dbName;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.dbName = value;
+				fileData.dbName = value;
 			}
 		}
 
 		public ParserType ContentType
 		{
-			get => fileState.contentType;
+			get => fileData.contentType;
 			set
 			{
 				EnsureInTransaction();
-				fileState.contentType = value;
+				fileData.contentType = value;
 			}
 		}
 
 		Coder.CodePage CodePage
 		{
-			get => fileState.codePage;
+			get => fileData.codePage;
 			set
 			{
 				EnsureInTransaction();
-				fileState.codePage = value;
+				fileData.codePage = value;
 			}
 		}
 
 		public string AESKey
 		{
-			get => fileState.aesKey;
+			get => fileData.aesKey;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.aesKey = value;
+				fileData.aesKey = value;
 			}
 		}
 
 		public bool Compressed
 		{
-			get => fileState.compressed;
+			get => fileData.compressed;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.compressed = value;
+				fileData.compressed = value;
 			}
 		}
 
 		public bool DiffIgnoreWhitespace
 		{
-			get => fileState.diffIgnoreWhitespace;
+			get => fileData.diffIgnoreWhitespace;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.diffIgnoreWhitespace = value;
+				fileData.diffIgnoreWhitespace = value;
 			}
 		}
 
 		public bool DiffIgnoreCase
 		{
-			get => fileState.diffIgnoreCase;
+			get => fileData.diffIgnoreCase;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.diffIgnoreCase = value;
+				fileData.diffIgnoreCase = value;
 			}
 		}
 
 		public bool DiffIgnoreNumbers
 		{
-			get => fileState.diffIgnoreNumbers;
+			get => fileData.diffIgnoreNumbers;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.diffIgnoreNumbers = value;
+				fileData.diffIgnoreNumbers = value;
 			}
 		}
 
 		public bool DiffIgnoreLineEndings
 		{
-			get => fileState.diffIgnoreLineEndings;
+			get => fileData.diffIgnoreLineEndings;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.diffIgnoreLineEndings = value;
+				fileData.diffIgnoreLineEndings = value;
 			}
 		}
 
 		public string DiffIgnoreCharacters
 		{
-			get => fileState.diffIgnoreCharacters;
+			get => fileData.diffIgnoreCharacters;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.diffIgnoreCharacters = value;
+				fileData.diffIgnoreCharacters = value;
 			}
 		}
 
 		public bool KeepSelections
 		{
-			get => fileState.keepSelections;
+			get => fileData.keepSelections;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.keepSelections = value;
+				fileData.keepSelections = value;
 			}
 		}
 
 		public bool HighlightSyntax
 		{
-			get => fileState.highlightSyntax;
+			get => fileData.highlightSyntax;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.highlightSyntax = value;
+				fileData.highlightSyntax = value;
 			}
 		}
 
 		public bool StrictParsing
 		{
-			get => fileState.strictParsing;
+			get => fileData.strictParsing;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.strictParsing = value;
+				fileData.strictParsing = value;
 			}
 		}
 
 		public JumpByType JumpBy
 		{
-			get => fileState.jumpBy;
+			get => fileData.jumpBy;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.jumpBy = value;
+				fileData.jumpBy = value;
 			}
 		}
 
@@ -364,55 +364,55 @@ namespace NeoEdit.Editor
 
 		public bool ViewBinary
 		{
-			get => fileState.viewBinary;
+			get => fileData.viewBinary;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.viewBinary = value;
+				fileData.viewBinary = value;
 			}
 		}
 
 		public HashSet<Coder.CodePage> ViewBinaryCodePages
 		{
-			get => fileState.viewBinaryCodePages;
+			get => fileData.viewBinaryCodePages;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.viewBinaryCodePages = value;
+				fileData.viewBinaryCodePages = value;
 			}
 		}
 
 		public IReadOnlyList<HashSet<string>> ViewBinarySearches
 		{
-			get => fileState.viewBinarySearches;
+			get => fileData.viewBinarySearches;
 			private set
 			{
 				EnsureInTransaction();
-				fileState.viewBinarySearches = value;
+				fileData.viewBinarySearches = value;
 			}
 		}
 
 		public int StartColumn
 		{
-			get => fileState.startColumn;
+			get => fileData.startColumn;
 			set
 			{
 				EnsureInTransaction();
-				fileState.startColumn = value;
+				fileData.startColumn = value;
 			}
 		}
 
 		public int StartRow
 		{
-			get => fileState.startRow;
+			get => fileData.startRow;
 			set
 			{
 				EnsureInTransaction();
-				fileState.startRow = value;
+				fileData.startRow = value;
 				if (DiffTarget != null)
 				{
 					NEFiles.AddToTransaction(DiffTarget);
-					DiffTarget.fileState.startRow = value;
+					DiffTarget.fileData.startRow = value;
 				}
 			}
 		}
@@ -422,8 +422,8 @@ namespace NeoEdit.Editor
 			if (inTransaction)
 				throw new Exception("Already in a transaction");
 			inTransaction = true;
-			saveFileState = fileState;
-			fileState = fileState.Clone();
+			saveFileData = fileData;
+			fileData = fileData.Clone();
 		}
 
 		void ClearState()
@@ -434,14 +434,14 @@ namespace NeoEdit.Editor
 			for (var kvIndex = 0; kvIndex < NEFiles.KeysAndValuesCount; ++kvIndex)
 				keysAndValues[kvIndex] = null;
 			inTransaction = false;
-			saveFileState = null;
+			saveFileData = null;
 			result = null;
 		}
 
 		public void Rollback()
 		{
 			EnsureInTransaction();
-			fileState = saveFileState;
+			fileData = saveFileData;
 			ClearState();
 		}
 

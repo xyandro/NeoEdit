@@ -22,7 +22,7 @@ namespace NeoEdit.Editor
 
 		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
-			fileState = new NEFileData();
+			fileData = new NEFileData();
 
 			BeginTransaction();
 

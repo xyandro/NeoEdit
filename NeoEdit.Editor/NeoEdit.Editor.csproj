@@ -240,6 +240,7 @@
       <DependentUpon>NEFiles.cs</DependentUpon>
     </Compile>
     <Compile Include="NEFiles.cs" />
+    <Compile Include="NEFilesData.cs" />
     <Compile Include="NEFilesResult.cs" />
     <Compile Include="NEText.cs" />
     <None Include="packages.config" />
