@@ -35,51 +35,51 @@ namespace NeoEdit.Editor
 			this.redo = redo;
 		}
 
-		public static void Clear(ref UndoRedo undoRedo)
+		public static UndoRedo Create()
 		{
-			undoRedo = new UndoRedo(new List<UndoRedoStep>(), new List<UndoRedoStep>());
+			return new UndoRedo(new List<UndoRedoStep>(), new List<UndoRedoStep>());
 		}
 
-		public static UndoRedoStep GetUndo(ref UndoRedo undoRedo)
+		public (UndoRedo, UndoRedoStep) GetUndo()
 		{
-			if (undoRedo.undo.Count == 0)
-				return null;
+			if (undo.Count == 0)
+				return (this, null);
 
-			var result = undoRedo.undo.Last();
-			undoRedo = new UndoRedo(undoRedo.undo.Take(undoRedo.undo.Count - 1).ToList(), undoRedo.redo);
-			return result;
+			var result = undo.Last();
+			var undoRedo = new UndoRedo(undo.Take(undo.Count - 1).ToList(), redo);
+			return (undoRedo, result);
 		}
 
-		public static UndoRedoStep GetRedo(ref UndoRedo undoRedo)
+		public (UndoRedo, UndoRedoStep) GetRedo()
 		{
-			if (undoRedo.redo.Count == 0)
-				return null;
+			if (redo.Count == 0)
+				return (this, null);
 
-			var step = undoRedo.redo.Last();
-			undoRedo = new UndoRedo(undoRedo.undo, undoRedo.redo.Take(undoRedo.redo.Count - 1).ToList());
-			return step;
+			var step = redo.Last();
+			var undoRedo = new UndoRedo(undo, redo.Take(redo.Count - 1).ToList());
+			return (undoRedo, step);
 		}
 
-		public static void AddUndone(ref UndoRedo undoRedo, UndoRedoStep current)
+		public UndoRedo AddUndone(UndoRedoStep current)
 		{
-			undoRedo = new UndoRedo(undoRedo.undo, undoRedo.redo.Concat(current).ToList());
+			return new UndoRedo(undo, redo.Concat(current).ToList());
 		}
 
-		public static void AddRedone(ref UndoRedo undoRedo, UndoRedoStep current)
+		public UndoRedo AddRedone(UndoRedoStep current)
 		{
-			undoRedo = new UndoRedo(undoRedo.undo.Concat(current).ToList(), undoRedo.redo);
+			return new UndoRedo(undo.Concat(current).ToList(), redo);
 		}
 
 		const int maxUndo = 1048576 * 10;
-		public static void AddUndo(ref UndoRedo undoRedo, UndoRedoStep current, bool modified)
+		public UndoRedo AddUndo(UndoRedoStep current, bool modified)
 		{
-			var undo = undoRedo.undo.ToList();
+			var undoList = undo.ToList();
 
 			// See if we can add this one to the last one
 			var done = false;
-			if ((current.tryJoinLast) && (modified) && (undo.Count != 0))
+			if ((current.tryJoinLast) && (modified) && (undoList.Count != 0))
 			{
-				var last = undo.Last();
+				var last = undoList.Last();
 				if ((last.tryJoinLast) && (last.ranges.Count == current.ranges.Count))
 				{
 					var change = 0;
@@ -108,18 +108,18 @@ namespace NeoEdit.Editor
 			}
 
 			if (!done)
-				undo.Add(current);
+				undoList.Add(current);
 
 			// Limit undo buffer
 			while (true)
 			{
-				var totalChars = undo.Sum(undoItem => undoItem.text.Sum(textItem => textItem.Length));
+				var totalChars = undoList.Sum(undoItem => undoItem.text.Sum(textItem => textItem.Length));
 				if (totalChars <= maxUndo)
 					break;
-				undo.RemoveAt(0);
+				undoList.RemoveAt(0);
 			}
 
-			undoRedo = new UndoRedo(undo, new List<UndoRedoStep>());
+			return new UndoRedo(undoList, new List<UndoRedoStep>());
 		}
 	}
 }

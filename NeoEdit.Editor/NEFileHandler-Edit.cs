@@ -11,7 +11,6 @@ using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -297,7 +296,8 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Undo()
 		{
-			var step = UndoRedo.GetUndo(ref fileState.undoRedo);
+			UndoRedo.UndoRedoStep step;
+			(UndoRedo, step) = UndoRedo.GetUndo();
 			if (step == null)
 				return;
 
@@ -316,7 +316,8 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Redo()
 		{
-			var step = UndoRedo.GetRedo(ref fileState.undoRedo);
+			UndoRedo.UndoRedoStep step;
+			(UndoRedo, step) = UndoRedo.GetRedo();
 			if (step == null)
 				return;
 

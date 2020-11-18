@@ -32,6 +32,16 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		UndoRedo UndoRedo
+		{
+			get => fileState.undoRedo;
+			set
+			{
+				EnsureInTransaction();
+				fileState.undoRedo = value;
+			}
+		}
+
 		bool IsDiff
 		{
 			get => fileState.isDiff;
