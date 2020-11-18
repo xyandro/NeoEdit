@@ -5,7 +5,6 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -64,7 +63,6 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Diff_Diff()
 		{
 			var diffTargets = EditorExecuteState.CurrentState.NEFiles.AllFiles.Count == 2 ? EditorExecuteState.CurrentState.NEFiles.AllFiles.ToList() : EditorExecuteState.CurrentState.NEFiles.ActiveFiles.ToList();
-			diffTargets.ForEach(diffTarget => EditorExecuteState.CurrentState.NEFiles.AddToTransaction(diffTarget));
 
 			var inDiff = false;
 			for (var ctr = 0; ctr < diffTargets.Count; ++ctr)
@@ -109,7 +107,6 @@ namespace NeoEdit.Editor
 				throw new Exception("Unable to get VCS content");
 
 			var neFile = new NEFile(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
-			EditorExecuteState.CurrentState.NEFiles.AddToTransaction(neFile);
 			neFile.ContentType = ContentType;
 			neFile.DiffTarget = this;
 			AddFile(neFile);
@@ -164,7 +161,6 @@ namespace NeoEdit.Editor
 			if ((EditorExecuteState.CurrentState.NEFiles.GetFileIndex(this) < EditorExecuteState.CurrentState.NEFiles.GetFileIndex(DiffTarget)) && (EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Contains(DiffTarget)))
 				return;
 
-			EditorExecuteState.CurrentState.NEFiles.AddToTransaction(DiffTarget);
 			var lines = Selections.AsTaskRunner().Select(range => GetDiffNextPrevious(range, next)).ToList();
 			for (var pass = 0; pass < 2; ++pass)
 			{
@@ -191,7 +187,6 @@ namespace NeoEdit.Editor
 			if ((bothActive) && (target != this))
 				return;
 
-			EditorExecuteState.CurrentState.NEFiles.AddToTransaction(DiffTarget);
 			var strs = source.GetSelectionStrings();
 			target.ReplaceSelections(strs);
 			// If both files are active queue an empty edit so undo will take both back to the same place

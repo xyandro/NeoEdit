@@ -9,7 +9,6 @@ using System.Threading;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor

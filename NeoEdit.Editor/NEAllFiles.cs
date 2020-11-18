@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NeoEdit.Common;
 
 namespace NeoEdit.Editor
@@ -8,75 +8,71 @@ namespace NeoEdit.Editor
 	{
 		static NEAllFiles()
 		{
-			neAllFilesData = new NEAllFilesData();
-			neAllFilesData.allNEFiles = new OrderedHashSet<NEFiles>();
+			data = new NEAllFilesData();
+			SetAllNEFilesDatas(new OrderedHashSet<NEFilesData>());
 		}
 
-		static void EnsureInTransaction()
+		public static NEAllFilesData data { get; private set; }
+		static NEAllFilesData editableData
 		{
-			if (!inTransaction)
-				throw new Exception("Must start transaction before editing data");
+			get
+			{
+				if (data.NESerial != NESerialTracker.NESerial)
+					data = data.Clone();
+				return data;
+			}
 		}
 
-		static bool inTransaction = false;
-		static NEAllFilesData saveNEAllFilesData, neAllFilesData;
-
-		public static IReadOnlyOrderedHashSet<NEFiles> AllNEFiles
+		public static void ResetData(NEAllFilesData data)
 		{
-			get => neAllFilesData.allNEFiles;
+			result = null;
+			NEAllFiles.data = data;
+			SetAllNEFilesDatas(AllNEFilesDatas); // Will regenerate AllNEFiles
+			AllNEFilesDatas.ForEach(neFilesData => neFilesData.neFiles.ResetData(neFilesData));
+		}
+
+		public static IReadOnlyOrderedHashSet<NEFiles> AllNEFiles { get; private set; }
+
+		public static IReadOnlyOrderedHashSet<NEFilesData> AllNEFilesDatas
+		{
+			get => data.allNEFilesData;
 			set
 			{
-				EnsureInTransaction();
-				neAllFilesData.allNEFiles = value;
+				editableData.allNEFilesData = value;
+				AllNEFiles = new OrderedHashSet<NEFiles>(value.Select(neFilesData => neFilesData.neFiles));
 			}
 		}
 
-		public static void SetAllNEFiles(IEnumerable<NEFiles> allNEFiles) => AllNEFiles = new OrderedHashSet<NEFiles>(allNEFiles);
+		public static void SetAllNEFilesDatas(IEnumerable<NEFilesData> allNEFilesDatas) => AllNEFilesDatas = new OrderedHashSet<NEFilesData>(allNEFilesDatas);
 
-		public static void BeginTransaction()
+		public static NEAllFilesResult GetResult()
 		{
-			if (inTransaction)
-				throw new Exception("Already in a transaction");
-
-			inTransaction = true;
-			saveNEAllFilesData = neAllFilesData;
-			neAllFilesData = neAllFilesData.Clone();
-
-			AllNEFiles.ForEach(neFiles => neFiles.BeginTransaction());
-		}
-
-		public static void Rollback()
-		{
-			EnsureInTransaction();
-			AllNEFiles.ForEach(neFiles => neFiles.Rollback());
-			neAllFilesData = saveNEAllFilesData;
-			result = null;
-			inTransaction = false;
-		}
-
-		public static void Commit()
-		{
-			EnsureInTransaction();
 			foreach (var neFiles in AllNEFiles)
 			{
-				neFiles.Commit();
+				var result = neFiles.GetResult();
+				if (result == null)
+					continue;
 
-				if (neFiles.result.Clipboard != null)
-					CreateResult().SetClipboard(neFiles.result.Clipboard);
+				if (result.Clipboard != null)
+					CreateResult().SetClipboard(result.Clipboard);
 
-				if (neFiles.result.KeysAndValues != null)
-					CreateResult().SetKeysAndValues(neFiles.result.KeysAndValues);
+				if (result.KeysAndValues != null)
+					CreateResult().SetKeysAndValues(result.KeysAndValues);
 
-				if (neFiles.result.DragFiles != null)
-					CreateResult().SetDragFiles(neFiles.result.DragFiles);
-
-				neFiles.ClearResult();
+				if (result.DragFiles != null)
+					CreateResult().SetDragFiles(result.DragFiles);
 			}
 
-			inTransaction = false;
+			var nextAllNEFilesDatas = AllNEFiles.Select(x => x.data).ToList();
+			if (!AllNEFilesDatas.Matches(nextAllNEFilesDatas))
+				SetAllNEFilesDatas(nextAllNEFilesDatas);
+
+			var ret = result;
+			result = null;
+			return ret;
 		}
 
-		public static NEAllFilesResult result { get; private set; }
+		static NEAllFilesResult result;
 		static NEAllFilesResult CreateResult()
 		{
 			if (result == null)
@@ -84,10 +80,8 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		public static void ClearResult() => result = null;
+		public static void AddNewFiles(NEFiles neFiles) => SetAllNEFilesDatas(AllNEFilesDatas.Concat(neFiles.data));
 
-		public static void AddNewFiles(NEFiles neFiles) => SetAllNEFiles(AllNEFiles.Concat(neFiles));
-
-		public static void RemoveFiles(NEFiles neFiles) => SetAllNEFiles(AllNEFiles.Except(neFiles));
+		public static void RemoveFiles(NEFiles neFiles) => SetAllNEFilesDatas(AllNEFilesDatas.Except(neFiles.data));
 	}
 }

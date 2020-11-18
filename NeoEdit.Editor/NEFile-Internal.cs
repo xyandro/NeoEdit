@@ -162,12 +162,7 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Internal_Activate()
 		{
 			EditorExecuteState.CurrentState.NEFiles.LastActivated = DateTime.Now;
-			foreach (var neFile in EditorExecuteState.CurrentState.NEFiles.AllFiles)
-			{
-				EditorExecuteState.CurrentState.NEFiles.AddToTransaction(neFile);
-				neFile.Activated();
-			}
-
+			EditorExecuteState.CurrentState.NEFiles.AllFiles.ForEach(neFile => neFile.Activated());
 			return true;
 		}
 
@@ -476,10 +471,8 @@ namespace NeoEdit.Editor
 		{
 			var configuration = EditorExecuteState.CurrentState.Configuration as Configuration_Internal_Scroll;
 			var neFile = configuration.NEFile as NEFile;
-			EditorExecuteState.CurrentState.NEFiles.AddToTransaction(neFile);
 			neFile.StartColumn = configuration.Column;
 			neFile.StartRow = configuration.Row;
-
 			return true;
 		}
 

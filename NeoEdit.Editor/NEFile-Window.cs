@@ -6,7 +6,6 @@ using System.Text;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -40,17 +39,10 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Window_New_FromSelections_AllSelections()
 		{
 			var newFiles = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(neFile => neFile.Selections.AsTaskRunner().Select(range => neFile.Text.GetString(range)).Select(str => new NEFile(bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: neFile.ContentType, modified: false)).ToList()).ToList();
-			newFiles.ForEach((neFile, index) =>
-			{
-				neFile.BeginTransaction();
-				neFile.DisplayName = $"Selection {index + 1}";
-				neFile.Commit();
-			});
+			newFiles.ForEach((neFile, index) => neFile.DisplayName = $"Selection {index + 1}");
 
 			var neFiles = new NEFiles();
-			neFiles.BeginTransaction();
 			newFiles.ForEach(neFile => neFiles.AddNewFile(neFile));
-			neFiles.Commit();
 
 			return true;
 		}
@@ -72,19 +64,12 @@ namespace NeoEdit.Editor
 						sb.Append("\r\n");
 				}
 
-				var neFile = new NEFile(displayName: newFileData.DisplayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: newFileData.ContentType, modified: false);
-				neFile.BeginTransaction();
-				neFile.Selections = selections;
-				neFile.Commit();
-
-				newFiles.Add(neFile);
+				newFiles.Add(new NEFile(displayName: newFileData.DisplayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: newFileData.ContentType, modified: false) { Selections = selections });
 			}
 
 			var neFiles = new NEFiles();
-			neFiles.BeginTransaction();
 			newFiles.ForEach(neFile => neFiles.AddNewFile(neFile));
 			neFiles.SetLayout(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
-			neFiles.Commit();
 
 			return true;
 		}
@@ -100,32 +85,22 @@ namespace NeoEdit.Editor
 			var summaryByFile = selectionsByFile.Select(tuple => (tuple.DisplayName, selections: tuple.Selections.GroupBy(x => x, comparer).Select(group => (str: group.Key, count: group.Count())).OrderByDescending(x => x.count).ToList())).ToList();
 
 			var neFiles = new NEFiles(false);
-			neFiles.BeginTransaction();
 			foreach (var neFile in summaryByFile)
 				neFiles.AddNewFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
 			neFiles.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
-			neFiles.Commit();
 
 			return true;
 		}
 
 		static bool PreExecute_Window_New_FromClipboard_AllSelections()
 		{
-			var neFiles = new NEFiles();
-			neFiles.BeginTransaction();
-			AddFilesFromClipboardSelections(neFiles);
-			neFiles.Commit();
-
+			AddFilesFromClipboardSelections(new NEFiles());
 			return true;
 		}
 
 		static bool PreExecute_Window_New_FromClipboard_EachFile()
 		{
-			var neFiles = new NEFiles();
-			neFiles.BeginTransaction();
-			AddFilesFromClipboards(neFiles);
-			neFiles.Commit();
-
+			AddFilesFromClipboards(new NEFiles());
 			return true;
 		}
 
@@ -135,10 +110,8 @@ namespace NeoEdit.Editor
 			active.ForEach(neFile => neFile.ClearFiles());
 
 			var neFiles = new NEFiles();
-			neFiles.BeginTransaction();
 			neFiles.SetLayout(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
 			active.ForEach(neFile => neFiles.AddNewFile(neFile));
-			neFiles.Commit();
 
 			return true;
 		}

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Common;
-using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 using NeoEdit.Editor.CommandLine;
@@ -18,8 +17,6 @@ namespace NeoEdit.Editor
 		public const int KeysAndValuesCount = 10;
 
 		public INEFilesWindow FilesWindow { get; }
-
-		//public static List<NEFiles> AllNEFiles { get; } = new List<NEFiles>();
 
 		int displayColumns;
 		public int DisplayColumns
@@ -34,8 +31,6 @@ namespace NeoEdit.Editor
 
 		public int DisplayRows { get; private set; }
 
-		bool inTransaction = false;
-
 		public DateTime LastActivated { get; set; }
 
 		public bool timeNextAction;
@@ -43,16 +38,15 @@ namespace NeoEdit.Editor
 
 		public NEFiles(bool addEmpty = false)
 		{
-			filesData = new NEFilesData();
-			filesData.allFiles = filesData.activeFiles = new OrderedHashSet<NEFile>();
-			filesData.windowLayout = new WindowLayout(1, 1);
+			data = new NEFilesData(this);
+			AllFileDatas = new OrderedHashSet<NEFileData>();
+			ActiveFiles = new OrderedHashSet<NEFile>();
+			WindowLayout = new WindowLayout(1, 1);
 			NEAllFiles.AddNewFiles(this);
 
-			BeginTransaction();
 			FilesWindow = INEFilesWindowStatic.CreateINEFilesWindow(this);
 			if (addEmpty)
 				AddNewFile(new NEFile());
-			Commit();
 		}
 
 		IReadOnlyDictionary<INEFile, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
@@ -226,6 +220,7 @@ namespace NeoEdit.Editor
 
 		bool RunCommand(bool inMacro = false)
 		{
+			var oldData = NEAllFiles.data;
 			try
 			{
 				if (EditorExecuteState.CurrentState.Command == NECommand.Macro_RepeatLastAction)
@@ -237,7 +232,6 @@ namespace NeoEdit.Editor
 				}
 
 				CreateResult();
-				NEAllFiles.BeginTransaction();
 
 				EditorExecuteState.CurrentState.ClipboardDataMapFunc = GetClipboardDataMap;
 				EditorExecuteState.CurrentState.KeysAndValuesFunc = GetKeysAndValuesMap;
@@ -267,28 +261,25 @@ namespace NeoEdit.Editor
 					recordingMacro?.AddAction(action);
 				}
 
-				NEAllFiles.Commit();
-
-				if (NEAllFiles.result != null)
+				var result = NEAllFiles.GetResult();
+				if (result != null)
 				{
-					if (NEAllFiles.result.Clipboard != null)
-						NEClipboard.Current = NEAllFiles.result.Clipboard;
+					if (result.Clipboard != null)
+						NEClipboard.Current = result.Clipboard;
 
-					if (NEAllFiles.result.KeysAndValues != null)
+					if (result.KeysAndValues != null)
 						for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
-							if (NEAllFiles.result.KeysAndValues[kvIndex] != null)
-								keysAndValues[kvIndex] = NEAllFiles.result.KeysAndValues[kvIndex];
+							if (result.KeysAndValues[kvIndex] != null)
+								keysAndValues[kvIndex] = result.KeysAndValues[kvIndex];
 
-					if (NEAllFiles.result.DragFiles?.Any() == true)
+					if (result.DragFiles?.Any() == true)
 					{
-						var nonExisting = NEAllFiles.result.DragFiles.Where(x => !File.Exists(x)).ToList();
+						var nonExisting = result.DragFiles.Where(x => !File.Exists(x)).ToList();
 						if (nonExisting.Any())
 							throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
 						// TODO: Make these files actually do something
 						//Focused.DragFiles = fileNames;
 					}
-
-					NEAllFiles.ClearResult();
 				}
 
 				return true;
@@ -297,7 +288,7 @@ namespace NeoEdit.Editor
 			catch (Exception ex) { FilesWindow.ShowExceptionMessage(ex); }
 
 			FilesWindow.SetTaskRunnerProgress(null);
-			NEAllFiles.Rollback();
+			NEAllFiles.ResetData(oldData);
 			return false;
 		}
 
@@ -433,8 +424,6 @@ namespace NeoEdit.Editor
 
 		public static void CreateFiles(CommandLineParams commandLineParams)
 		{
-			NEAllFiles.BeginTransaction();
-
 			NEFiles neFiles = null;
 			try
 			{
@@ -471,7 +460,6 @@ namespace NeoEdit.Editor
 					neFiles.SetupDiff();
 
 				neFiles.FilesWindow.SetForeground();
-				NEAllFiles.Commit();
 			}
 			catch (Exception ex)
 			{
@@ -479,8 +467,6 @@ namespace NeoEdit.Editor
 					neFiles.FilesWindow.ShowExceptionMessage(ex);
 				else
 					INEFilesWindowStatic.ShowExceptionMessage(ex);
-
-				NEAllFiles.Rollback();
 			}
 		}
 

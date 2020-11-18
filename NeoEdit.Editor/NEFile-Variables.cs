@@ -8,53 +8,46 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		void EnsureInTransaction()
+		public NEFileData data { get; private set; }
+		NEFileData editableData
 		{
-			if (!inTransaction)
-				throw new Exception("Must start transaction before editing data");
+			get
+			{
+				if (data.NESerial != NESerialTracker.NESerial)
+					data = data.Clone();
+				return data;
+			}
 		}
 
-		NEFileData saveFileData, fileData;
+		public void ResetData(NEFileData data)
+		{
+			result = null;
+			this.data = data;
+		}
 
 		NEText Text
 		{
-			get => fileData.text;
-			set
-			{
-				EnsureInTransaction();
-				fileData.text = value;
-			}
+			get => data.text;
+			set => editableData.text = value;
 		}
 
 		UndoRedo UndoRedo
 		{
-			get => fileData.undoRedo;
-			set
-			{
-				EnsureInTransaction();
-				fileData.undoRedo = value;
-			}
+			get => data.undoRedo;
+			set => editableData.undoRedo = value;
 		}
 
 		bool IsDiff
 		{
-			get => fileData.isDiff;
-			set
-			{
-				EnsureInTransaction();
-				fileData.isDiff = value;
-			}
+			get => data.isDiff;
+			set => editableData.isDiff = value;
 		}
 
 		public NEFile DiffTarget
 		{
-			get => fileData.diffTarget;
+			get => data.diffTarget;
 			set
 			{
-				EnsureInTransaction();
-				if (value != null)
-					value.EnsureInTransaction();
-
 				IsDiff = false;
 
 				if (DiffTarget != null)
@@ -63,15 +56,15 @@ namespace NeoEdit.Editor
 
 					Text.ClearDiff();
 					DiffTarget.Text.ClearDiff();
-					DiffTarget.fileData.diffTarget = null;
-					fileData.diffTarget = null;
+					DiffTarget.editableData.diffTarget = null;
+					editableData.diffTarget = null;
 				}
 
 				if (value != null)
 				{
 					value.DiffTarget = null;
-					fileData.diffTarget = value;
-					value.fileData.diffTarget = this;
+					editableData.diffTarget = value;
+					value.editableData.diffTarget = this;
 					IsDiff = DiffTarget.IsDiff = true;
 					CalculateDiff();
 				}
@@ -80,21 +73,16 @@ namespace NeoEdit.Editor
 
 		public int CurrentSelection
 		{
-			get => Math.Min(Math.Max(0, fileData.currentSelection), Selections.Count - 1);
-			private set
-			{
-				EnsureInTransaction();
-				fileData.currentSelection = value;
-			}
+			get => Math.Min(Math.Max(0, data.currentSelection), Selections.Count - 1);
+			private set => editableData.currentSelection = value;
 		}
 
 		public IReadOnlyList<Range> Selections
 		{
-			get => fileData.selections;
+			get => data.selections;
 			set
 			{
-				EnsureInTransaction();
-				fileData.selections = DeOverlap(value);
+				editableData.selections = DeOverlap(value);
 				CurrentSelection = CurrentSelection;
 				EnsureVisible();
 			}
@@ -104,25 +92,23 @@ namespace NeoEdit.Editor
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			return fileData.regions[region - 1];
+			return data.regions[region - 1];
 		}
 
 		void SetRegions(int region, IReadOnlyList<Range> regions)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			fileData.regions[region - 1] = DeOverlap(regions);
+			data.regions[region - 1] = DeOverlap(regions);
 		}
 
-		public NEFileResult result { get; private set; }
+		NEFileResult result;
 		NEFileResult CreateResult()
 		{
 			if (result == null)
 				result = new NEFileResult();
 			return result;
 		}
-
-		public void ClearResult() => result = null;
 
 		readonly KeysAndValues[] keysAndValues = new KeysAndValues[NEFiles.KeysAndValuesCount];
 		KeysAndValues GetKeysAndValues(int kvIndex)
@@ -141,7 +127,6 @@ namespace NeoEdit.Editor
 			if ((kvIndex < 0) || (kvIndex > 9))
 				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
 
-			EnsureInTransaction();
 			var newKeysAndValues = new KeysAndValues(values, kvIndex == 0, matchCase);
 			keysAndValues[kvIndex] = newKeysAndValues;
 			CreateResult().SetKeysAndValues(kvIndex, newKeysAndValues);
@@ -149,32 +134,20 @@ namespace NeoEdit.Editor
 
 		public string DisplayName
 		{
-			get => fileData.displayName;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.displayName = value;
-			}
+			get => data.displayName;
+			private set => editableData.displayName = value;
 		}
 
 		public string FileName
 		{
-			get => fileData.fileName;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.fileName = value;
-			}
+			get => data.fileName;
+			private set => editableData.fileName = value;
 		}
 
 		public bool IsModified
 		{
-			get => fileData.isModified;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.isModified = value;
-			}
+			get => data.isModified;
+			private set => editableData.isModified = value;
 		}
 
 		void ClearFiles() => CreateResult().ClearFiles();
@@ -194,7 +167,6 @@ namespace NeoEdit.Editor
 
 			set
 			{
-				EnsureInTransaction();
 				clipboardData = value;
 				CreateResult().SetClipboard(value);
 			}
@@ -208,243 +180,140 @@ namespace NeoEdit.Editor
 
 		public bool AutoRefresh
 		{
-			get => fileData.autoRefresh;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.autoRefresh = value;
-			}
+			get => data.autoRefresh;
+			private set => editableData.autoRefresh = value;
 		}
 
 		public string DBName
 		{
-			get => fileData.dbName;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.dbName = value;
-			}
+			get => data.dbName;
+			private set => editableData.dbName = value;
 		}
 
 		public ParserType ContentType
 		{
-			get => fileData.contentType;
-			set
-			{
-				EnsureInTransaction();
-				fileData.contentType = value;
-			}
+			get => data.contentType;
+			set => editableData.contentType = value;
 		}
 
 		Coder.CodePage CodePage
 		{
-			get => fileData.codePage;
-			set
-			{
-				EnsureInTransaction();
-				fileData.codePage = value;
-			}
+			get => data.codePage;
+			set => editableData.codePage = value;
 		}
 
 		public string AESKey
 		{
-			get => fileData.aesKey;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.aesKey = value;
-			}
+			get => data.aesKey;
+			private set => editableData.aesKey = value;
 		}
 
 		public bool Compressed
 		{
-			get => fileData.compressed;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.compressed = value;
-			}
+			get => data.compressed;
+			private set => editableData.compressed = value;
 		}
 
 		public bool DiffIgnoreWhitespace
 		{
-			get => fileData.diffIgnoreWhitespace;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.diffIgnoreWhitespace = value;
-			}
+			get => data.diffIgnoreWhitespace;
+			private set => editableData.diffIgnoreWhitespace = value;
 		}
 
 		public bool DiffIgnoreCase
 		{
-			get => fileData.diffIgnoreCase;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.diffIgnoreCase = value;
-			}
+			get => data.diffIgnoreCase;
+			private set => editableData.diffIgnoreCase = value;
 		}
 
 		public bool DiffIgnoreNumbers
 		{
-			get => fileData.diffIgnoreNumbers;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.diffIgnoreNumbers = value;
-			}
+			get => data.diffIgnoreNumbers;
+			private set => editableData.diffIgnoreNumbers = value;
 		}
 
 		public bool DiffIgnoreLineEndings
 		{
-			get => fileData.diffIgnoreLineEndings;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.diffIgnoreLineEndings = value;
-			}
+			get => data.diffIgnoreLineEndings;
+			private set => editableData.diffIgnoreLineEndings = value;
 		}
 
 		public string DiffIgnoreCharacters
 		{
-			get => fileData.diffIgnoreCharacters;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.diffIgnoreCharacters = value;
-			}
+			get => data.diffIgnoreCharacters;
+			private set => editableData.diffIgnoreCharacters = value;
 		}
 
 		public bool KeepSelections
 		{
-			get => fileData.keepSelections;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.keepSelections = value;
-			}
+			get => data.keepSelections;
+			private set => editableData.keepSelections = value;
 		}
 
 		public bool HighlightSyntax
 		{
-			get => fileData.highlightSyntax;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.highlightSyntax = value;
-			}
+			get => data.highlightSyntax;
+			private set => editableData.highlightSyntax = value;
 		}
 
 		public bool StrictParsing
 		{
-			get => fileData.strictParsing;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.strictParsing = value;
-			}
+			get => data.strictParsing;
+			private set => editableData.strictParsing = value;
 		}
 
 		public JumpByType JumpBy
 		{
-			get => fileData.jumpBy;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.jumpBy = value;
-			}
+			get => data.jumpBy;
+			private set => editableData.jumpBy = value;
 		}
 
 		public DateTime LastActive { get; set; }
 
 		public bool ViewBinary
 		{
-			get => fileData.viewBinary;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.viewBinary = value;
-			}
+			get => data.viewBinary;
+			private set => editableData.viewBinary = value;
 		}
 
 		public HashSet<Coder.CodePage> ViewBinaryCodePages
 		{
-			get => fileData.viewBinaryCodePages;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.viewBinaryCodePages = value;
-			}
+			get => data.viewBinaryCodePages;
+			private set => editableData.viewBinaryCodePages = value;
 		}
 
 		public IReadOnlyList<HashSet<string>> ViewBinarySearches
 		{
-			get => fileData.viewBinarySearches;
-			private set
-			{
-				EnsureInTransaction();
-				fileData.viewBinarySearches = value;
-			}
+			get => data.viewBinarySearches;
+			private set => editableData.viewBinarySearches = value;
 		}
 
 		public int StartColumn
 		{
-			get => fileData.startColumn;
-			set
-			{
-				EnsureInTransaction();
-				fileData.startColumn = value;
-			}
+			get => data.startColumn;
+			set => editableData.startColumn = value;
 		}
 
 		public int StartRow
 		{
-			get => fileData.startRow;
+			get => data.startRow;
 			set
 			{
-				EnsureInTransaction();
-				fileData.startRow = value;
+				editableData.startRow = value;
 				if (DiffTarget != null)
-				{
-					EditorExecuteState.CurrentState.NEFiles.AddToTransaction(DiffTarget);
-					DiffTarget.fileData.startRow = value;
-				}
+					DiffTarget.editableData.startRow = value;
 			}
 		}
 
-		public void BeginTransaction()
+		public NEFileResult GetResult()
 		{
-			if (inTransaction)
-				throw new Exception("Already in a transaction");
-			inTransaction = true;
-			saveFileData = fileData;
-			fileData = fileData.Clone();
-		}
-
-		void ClearState()
-		{
-			EnsureInTransaction();
-
 			clipboardData = null;
 			for (var kvIndex = 0; kvIndex < NEFiles.KeysAndValuesCount; ++kvIndex)
 				keysAndValues[kvIndex] = null;
-			inTransaction = false;
-			saveFileData = null;
-		}
 
-		public void Rollback()
-		{
-			EnsureInTransaction();
-			fileData = saveFileData;
-			ClearState();
+			var ret = result;
 			result = null;
-		}
-
-		public void Commit()
-		{
-			EnsureInTransaction();
-			ClearState();
+			return ret;
 		}
 	}
 }

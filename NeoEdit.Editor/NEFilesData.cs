@@ -2,18 +2,23 @@
 
 namespace NeoEdit.Editor
 {
-	class NEFilesData
+	public class NEFilesData
 	{
-		public IReadOnlyOrderedHashSet<NEFile> allFiles;
+		public readonly int NESerial = NESerialTracker.NESerial;
+		public readonly NEFiles neFiles;
+
+		public IReadOnlyOrderedHashSet<NEFileData> allFileDatas;
 		public IReadOnlyOrderedHashSet<NEFile> activeFiles;
 		public NEFile focused;
 		public WindowLayout windowLayout;
 		public bool activeOnly;
 		public bool macroVisualize = true;
 
-		public NEFilesData Clone() => new NEFilesData
+		public NEFilesData(NEFiles neFiles) => this.neFiles = neFiles;
+
+		public NEFilesData Clone() => new NEFilesData(neFiles)
 		{
-			allFiles = allFiles,
+			allFileDatas = allFileDatas,
 			activeFiles = activeFiles,
 			focused = focused,
 			windowLayout = windowLayout,

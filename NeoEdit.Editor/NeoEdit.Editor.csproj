@@ -245,6 +245,7 @@
     <Compile Include="NEFiles.cs" />
     <Compile Include="NEFilesData.cs" />
     <Compile Include="NEFilesResult.cs" />
+    <Compile Include="NESerialTracker.cs" />
     <Compile Include="NEText.cs" />
     <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />

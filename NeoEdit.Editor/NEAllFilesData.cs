@@ -4,8 +4,10 @@ namespace NeoEdit.Editor
 {
 	public class NEAllFilesData
 	{
-		public IReadOnlyOrderedHashSet<NEFiles> allNEFiles;
+		public readonly int NESerial = NESerialTracker.NESerial;
 
-		public NEAllFilesData Clone() => new NEAllFilesData { allNEFiles = allNEFiles };
+		public IReadOnlyOrderedHashSet<NEFilesData> allNEFilesData;
+
+		public NEAllFilesData Clone() => new NEAllFilesData { allNEFilesData = allNEFilesData };
 	}
 }

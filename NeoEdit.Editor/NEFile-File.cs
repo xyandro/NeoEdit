@@ -456,7 +456,6 @@ namespace NeoEdit.Editor
 		{
 			foreach (var neFile in EditorExecuteState.CurrentState.NEFiles.AllFiles)
 			{
-				EditorExecuteState.CurrentState.NEFiles.AddToTransaction(neFile);
 				neFile.VerifyCanClose();
 				neFile.ClearFiles();
 			}

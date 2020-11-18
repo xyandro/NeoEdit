@@ -115,6 +115,9 @@ namespace NeoEdit.Common
 
 		public static bool Matches<TSource>(this IEnumerable<TSource> source1, IEnumerable<TSource> source2)
 		{
+			if ((source1 is IList<TSource> source1IList) && (source2 is IList<TSource> source2IList) && (source1IList.Count != source2IList.Count))
+				return false;
+
 			using (var enum1 = source1.GetEnumerator())
 			using (var enum2 = source2.GetEnumerator())
 			{

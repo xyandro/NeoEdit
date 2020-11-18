@@ -5,7 +5,6 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Models;
-using NeoEdit.Editor.PreExecution;
 
 namespace NeoEdit.Editor
 {

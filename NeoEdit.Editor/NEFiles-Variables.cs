@@ -7,33 +7,47 @@ namespace NeoEdit.Editor
 {
 	partial class NEFiles
 	{
-		void EnsureInTransaction()
+		public NEFilesData data { get; private set; }
+		NEFilesData editableData
 		{
-			if (!inTransaction)
-				throw new Exception("Must start transaction before editing data");
-		}
-
-		NEFilesData saveFilesData, filesData;
-
-		public IReadOnlyOrderedHashSet<NEFile> AllFiles
-		{
-			get => filesData.allFiles;
-			set
+			get
 			{
-				EnsureInTransaction();
-				filesData.allFiles = value;
+				if (data.NESerial != NESerialTracker.NESerial)
+					data = data.Clone();
+				return data;
 			}
 		}
 
-		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles
+		public void ResetData(NEFilesData data)
 		{
-			get => filesData.activeFiles;
+			result = null;
+			this.data = data;
+			SetAllFileDatas(AllFileDatas); // Will regenerate AllFiles
+			AllFileDatas.ForEach(neFileData => neFileData.neFile.ResetData(neFileData));
+		}
+
+		public IReadOnlyOrderedHashSet<NEFile> AllFiles { get; private set; }
+
+		public IReadOnlyOrderedHashSet<NEFileData> AllFileDatas
+		{
+			get => data.allFileDatas;
 			set
 			{
-				EnsureInTransaction();
-				filesData.activeFiles = value;
-				if (!filesData.activeFiles.Contains(Focused))
-					Focused = filesData.activeFiles.FirstOrDefault();
+				editableData.allFileDatas = value;
+				AllFiles = new OrderedHashSet<NEFile>(value.Select(neFile => neFile.neFile));
+			}
+		}
+
+		public void SetAllFileDatas(IEnumerable<NEFileData> neFileDatas) => AllFileDatas = new OrderedHashSet<NEFileData>(neFileDatas);
+
+		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles
+		{
+			get => data.activeFiles;
+			set
+			{
+				editableData.activeFiles = value;
+				if (!data.activeFiles.Contains(Focused))
+					Focused = data.activeFiles.FirstOrDefault();
 			}
 		}
 
@@ -45,54 +59,29 @@ namespace NeoEdit.Editor
 
 		public NEFile Focused
 		{
-			get => filesData.focused;
-			set
-			{
-				EnsureInTransaction();
-				filesData.focused = value;
-			}
-		}
-
-		HashSet<NEFile> transactionFiles;
-		public void AddToTransaction(NEFile neFile)
-		{
-			if (transactionFiles.Contains(neFile))
-				return;
-			transactionFiles.Add(neFile);
-			neFile.BeginTransaction();
+			get => data.focused;
+			set => editableData.focused = value;
 		}
 
 		public WindowLayout WindowLayout
 		{
-			get => filesData.windowLayout;
-			set
-			{
-				EnsureInTransaction();
-				filesData.windowLayout = value;
-			}
+			get => data.windowLayout;
+			set => editableData.windowLayout = value;
 		}
 
 		public bool ActiveOnly
 		{
-			get => filesData.activeOnly;
-			set
-			{
-				EnsureInTransaction();
-				filesData.activeOnly = value;
-			}
+			get => data.activeOnly;
+			set => editableData.activeOnly = value;
 		}
 
 		public bool MacroVisualize
 		{
-			get => filesData.macroVisualize;
-			set
-			{
-				EnsureInTransaction();
-				filesData.macroVisualize = value;
-			}
+			get => data.macroVisualize;
+			set => editableData.macroVisualize = value;
 		}
 
-		public NEFilesResult result { get; private set; }
+		NEFilesResult result;
 		NEFilesResult CreateResult()
 		{
 			if (result == null)
@@ -100,115 +89,73 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		public void ClearResult() => result = null;
-
 		public void AddNewFile(NEFile neFile) => CreateResult().AddNewFile(neFile);
 
-		public void BeginTransaction()
+		public NEFilesResult GetResult()
 		{
-			if (inTransaction)
-				throw new Exception("Already in a transaction");
-			inTransaction = true;
-			saveFilesData = filesData;
-			filesData = filesData.Clone();
-			transactionFiles = new HashSet<NEFile>();
-			ActiveFiles.ForEach(AddToTransaction);
-		}
-
-		public void Rollback()
-		{
-			EnsureInTransaction();
-
-			filesData = saveFilesData;
-
-			transactionFiles.ForEach(neFile => neFile.Rollback());
-			transactionFiles = null;
-
-			inTransaction = false;
-			result = null;
-		}
-
-		public void Commit()
-		{
-			EnsureInTransaction();
-
-			transactionFiles.ForEach(neFile => neFile.Commit());
-			transactionFiles = null;
-
 			NEClipboard setClipboard = null;
 			List<KeysAndValues>[] setKeysAndValues = null;
 			List<string> dragFiles = null;
 
-			var nextAllFiles = new OrderedHashSet<NEFile>();
-			var newFiles = new List<NEFile>();
-			var filesChanged = false;
+			var nextAllFileDatas = new List<NEFileData>();
+			var newFileDatas = new List<NEFileData>();
 			foreach (var neFile in AllFiles)
 			{
-				if (neFile.result == null)
+				var result = neFile.GetResult();
+				if (result == null)
 				{
-					nextAllFiles.Add(neFile);
+					nextAllFileDatas.Add(neFile.data);
 					continue;
 				}
 
-				if (neFile.result.Files == null)
-					nextAllFiles.Add(neFile);
+				if (result.Files == null)
+					nextAllFileDatas.Add(neFile.data);
 				else
-				{
-					neFile.result.Files.ForEach(nextAllFiles.Add);
-					filesChanged = true;
-				}
+					nextAllFileDatas.AddRange(result.Files.ForEach(x => x.data));
 
-				if (neFile.result.NewFiles != null)
-				{
-					newFiles.AddRange(neFile.result.NewFiles);
-					filesChanged = true;
-				}
+				if (result.NewFiles != null)
+					newFileDatas.AddRange(result.NewFiles.Select(x => x.data));
 
-				if (neFile.result.Clipboard != null)
+				if (result.Clipboard != null)
 				{
 					if (setClipboard == null)
 						setClipboard = new NEClipboard();
-					setClipboard.Add(neFile.result.Clipboard.Item1);
-					setClipboard.IsCut = neFile.result.Clipboard.Item2;
+					setClipboard.Add(result.Clipboard.Item1);
+					setClipboard.IsCut = result.Clipboard.Item2;
 				}
 
-				if (neFile.result.KeysAndValues != null)
+				if (result.KeysAndValues != null)
 					for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
-						if (neFile.result.KeysAndValues[kvIndex] != null)
+						if (result.KeysAndValues[kvIndex] != null)
 						{
 							if (setKeysAndValues == null)
 								setKeysAndValues = new List<KeysAndValues>[KeysAndValuesCount];
 							if (setKeysAndValues[kvIndex] == null)
 								setKeysAndValues[kvIndex] = new List<KeysAndValues>();
-							setKeysAndValues[kvIndex].Add(neFile.result.KeysAndValues[kvIndex]);
+							setKeysAndValues[kvIndex].Add(result.KeysAndValues[kvIndex]);
 						}
 
-				if (neFile.result.DragFiles != null)
+				if (result.DragFiles != null)
 				{
 					if (dragFiles == null)
 						dragFiles = new List<string>();
-					dragFiles.AddRange(neFile.result.DragFiles);
+					dragFiles.AddRange(result.DragFiles);
 				}
-
-				neFile.ClearResult();
 			}
 
-			newFiles.ForEach(nextAllFiles.Add);
+			nextAllFileDatas.AddRange(newFileDatas);
 
 			if (result != null)
 			{
 				if (result.NewFiles != null)
-				{
-					result.NewFiles.ForEach(nextAllFiles.Add);
-					filesChanged = true;
-				}
+					nextAllFileDatas.AddRange(result.NewFiles.ForEach(x => x.data));
 			}
 
-			if (filesChanged)
+			if (!AllFileDatas.Matches(nextAllFileDatas))
 			{
-				var newlyAdded = nextAllFiles.Except(AllFiles).ToList();
+				var newlyAdded = nextAllFileDatas.Select(x => x.neFile).Except(AllFiles).ToList();
 
-				AllFiles = nextAllFiles;
+				SetAllFileDatas(nextAllFileDatas);
 
 				if (newlyAdded.Any())
 					SetActiveFiles(newlyAdded);
@@ -236,7 +183,9 @@ namespace NeoEdit.Editor
 			if (dragFiles != null)
 				CreateResult().SetDragFiles(dragFiles);
 
-			inTransaction = false;
+			var ret = result;
+			result = null;
+			return ret;
 		}
 	}
 }

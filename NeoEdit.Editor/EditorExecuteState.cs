@@ -11,9 +11,22 @@ namespace NeoEdit.Editor
 	public class EditorExecuteState : ExecuteState
 	{
 		public static EditorExecuteState CurrentState { get; private set; }
-		public static void SetState(NECommand command) => CurrentState = new EditorExecuteState(command);
-		public static void SetState(NEFiles neFiles, ExecuteState state) => CurrentState = new EditorExecuteState(neFiles, state);
+
+		public static void SetState(NECommand command)
+		{
+			NESerialTracker.MoveNext();
+			CurrentState = new EditorExecuteState(command);
+		}
+
+		public static void SetState(NEFiles neFiles, ExecuteState state)
+		{
+			NESerialTracker.MoveNext();
+			CurrentState = new EditorExecuteState(neFiles, state);
+		}
+
 		public static void ClearState() => CurrentState = null;
+
+		public readonly int NESerial = NESerialTracker.NESerial;
 
 		public IPreExecution PreExecution;
 		public NEFiles NEFiles;

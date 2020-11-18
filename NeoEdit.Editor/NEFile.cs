@@ -18,13 +18,9 @@ namespace NeoEdit.Editor
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 
-		bool inTransaction = false;
-
 		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
-			fileData = new NEFileData();
-
-			BeginTransaction();
+			data = new NEFileData(this);
 
 			Text = new NEText("");
 			Selections = new List<Range>();
@@ -42,8 +38,6 @@ namespace NeoEdit.Editor
 
 			OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
 			Goto(line, column, index);
-
-			Commit();
 		}
 
 		public static NEFile CreateSummaryFile(string displayName, List<(string str, int count)> summary)
@@ -66,12 +60,7 @@ namespace NeoEdit.Editor
 					sb.Append("\r\n");
 			}
 
-			var neFile = new NEFile(displayName: displayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-			neFile.BeginTransaction();
-			neFile.Selections = stringRanges;
-			neFile.Commit();
-
-			return neFile;
+			return new NEFile(displayName: displayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false) { Selections = stringRanges };
 		}
 
 		public string NEFileLabel => $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(DiffTarget != null ? $" (Diff{(CodePage != DiffTarget.CodePage ? " - Encoding mismatch" : "")})" : "")}";
@@ -1278,8 +1267,8 @@ namespace NeoEdit.Editor
 			var line = Text.GetPositionLine(range.Cursor);
 			var index = Text.GetPositionIndex(range.Cursor, line);
 			var x = Text.GetColumnFromIndex(line, index);
-			StartRow = Math.Min(line, Math.Max(line - (EditorExecuteState.CurrentState.NEFiles?.DisplayRows ?? 1) + 1, StartRow));
-			StartColumn = Math.Min(x, Math.Max(x - (EditorExecuteState.CurrentState.NEFiles?.DisplayColumns ?? 1) + 1, StartColumn));
+			StartRow = Math.Min(line, Math.Max(line - (EditorExecuteState.CurrentState?.NEFiles?.DisplayRows ?? 1) + 1, StartRow));
+			StartColumn = Math.Min(x, Math.Max(x - (EditorExecuteState.CurrentState?.NEFiles?.DisplayColumns ?? 1) + 1, StartColumn));
 		}
 
 		public NEVariables GetVariables()
@@ -1644,10 +1633,7 @@ namespace NeoEdit.Editor
 		public void Closed()
 		{
 			if (DiffTarget != null)
-			{
-				EditorExecuteState.CurrentState.NEFiles?.AddToTransaction(DiffTarget);
 				DiffTarget = null;
-			}
 			ClearWatcher();
 			shutdownData?.OnShutdown();
 		}
@@ -1724,8 +1710,6 @@ namespace NeoEdit.Editor
 		{
 			if (DiffTarget == null)
 				return;
-
-			EditorExecuteState.CurrentState.NEFiles?.AddToTransaction(DiffTarget);
 
 			DiffTarget.DiffIgnoreWhitespace = DiffIgnoreWhitespace;
 			DiffTarget.DiffIgnoreCase = DiffIgnoreCase;

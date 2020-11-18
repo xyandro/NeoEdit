@@ -5,8 +5,11 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
-	class NEFileData
+	public class NEFileData
 	{
+		public readonly int NESerial = NESerialTracker.NESerial;
+		public readonly NEFile neFile;
+
 		public NEText text;
 		public UndoRedo undoRedo;
 		public int currentSelection;
@@ -38,14 +41,15 @@ namespace NeoEdit.Editor
 		public bool isDiff;
 		public NEFile diffTarget;
 
-		public NEFileData()
+		public NEFileData(NEFile neFile)
 		{
+			this.neFile = neFile;
 			regions = new IReadOnlyList<Range>[9];
 		}
 
 		public NEFileData Clone()
 		{
-			var fileState = new NEFileData
+			var fileState = new NEFileData(neFile)
 			{
 				text = text,
 				undoRedo = undoRedo,
