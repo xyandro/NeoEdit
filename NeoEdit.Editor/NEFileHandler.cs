@@ -489,10 +489,6 @@ namespace NeoEdit.Editor
 				case NECommand.File_Advanced_DontExitOnClose: return PreExecute_File_Advanced_DontExitOnClose();
 				case NECommand.File_Close_ActiveFiles: return PreExecute_File_Close_ActiveInactiveFiles(true);
 				case NECommand.File_Close_InactiveFiles: return PreExecute_File_Close_ActiveInactiveFiles(false);
-				case NECommand.File_Close_FilesWithSelections: return PreExecute_File_Close_FilesWithWithoutSelections(true);
-				case NECommand.File_Close_FilesWithoutSelections: return PreExecute_File_Close_FilesWithWithoutSelections(false);
-				case NECommand.File_Close_ModifiedFiles: return PreExecute_File_Close_ModifiedUnmodifiedFiles(true);
-				case NECommand.File_Close_UnmodifiedFiles: return PreExecute_File_Close_ModifiedUnmodifiedFiles(false);
 				case NECommand.File_Exit: return PreExecute_File_Exit();
 				case NECommand.Edit_Advanced_EscapeClearsSelections: return PreExecute_Edit_Advanced_EscapeClearsSelections();
 				case NECommand.Text_Select_Repeats_BetweenFiles_Match_IgnoreCase: return PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(false);
@@ -630,6 +626,10 @@ namespace NeoEdit.Editor
 				case NECommand.File_Advanced_CommandPrompt: Execute_File_Advanced_CommandPrompt(); break;
 				case NECommand.File_Advanced_DragDrop: Execute_File_Advanced_DragDrop(); break;
 				case NECommand.File_Advanced_SetDisplayName: Execute_File_Advanced_SetDisplayName(); break;
+				case NECommand.File_Close_FilesWithSelections: Execute_File_Close_FilesWithWithoutSelections(true); break;
+				case NECommand.File_Close_FilesWithoutSelections: Execute_File_Close_FilesWithWithoutSelections(false); break;
+				case NECommand.File_Close_ModifiedFiles: Execute_File_Close_ModifiedUnmodifiedFiles(true); break;
+				case NECommand.File_Close_UnmodifiedFiles: Execute_File_Close_ModifiedUnmodifiedFiles(false); break;
 				case NECommand.Edit_Select_All: Execute_Edit_Select_All(); break;
 				case NECommand.Edit_Select_Nothing: Execute_Edit_Select_Nothing(); break;
 				case NECommand.Edit_Select_Join: Execute_Edit_Select_Join(); break;
@@ -1487,7 +1487,7 @@ namespace NeoEdit.Editor
 		void OpenTable(Table table, string name = null)
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
-			QueueAddFile(new NEFileHandler(displayName: name, bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: contentType, modified: false));
+			AddNewFile(new NEFileHandler(displayName: name, bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: contentType, modified: false));
 		}
 
 		IReadOnlyList<string> RelativeSelectedFiles()

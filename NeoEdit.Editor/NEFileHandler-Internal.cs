@@ -175,18 +175,15 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Internal_AddFile()
 		{
 			var neFile = (EditorExecuteState.CurrentState.Configuration as Configuration_Internal_AddFile).NEFile as NEFileHandler;
-			EditorExecuteState.CurrentState.NEFiles.AddFile(neFile);
+			EditorExecuteState.CurrentState.NEFiles.AddNewFile(neFile);
 			return true;
 		}
 
 		static bool PreExecute_Internal_MouseActivate()
 		{
 			var neFile = (EditorExecuteState.CurrentState.Configuration as Configuration_Internal_MouseActivate).NEFile as NEFileHandler;
-			if (!EditorExecuteState.CurrentState.ShiftDown)
-				EditorExecuteState.CurrentState.NEFiles.ClearAllActive();
-			EditorExecuteState.CurrentState.NEFiles.SetActive(neFile);
+			EditorExecuteState.CurrentState.NEFiles.SetActiveFiles(EditorExecuteState.CurrentState.NEFiles.AllFiles.Where(file => (file == neFile) || ((EditorExecuteState.CurrentState.ShiftDown) && (EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Contains(file)))));
 			EditorExecuteState.CurrentState.NEFiles.Focused = neFile;
-
 			return true;
 		}
 
@@ -194,8 +191,7 @@ namespace NeoEdit.Editor
 		{
 			var neFile = (EditorExecuteState.CurrentState.Configuration as Configuration_Internal_CloseFile).NEFile as NEFileHandler;
 			neFile.VerifyCanClose();
-			EditorExecuteState.CurrentState.NEFiles.RemoveFile(neFile);
-
+			neFile.ClearFiles();
 			return true;
 		}
 
@@ -500,10 +496,9 @@ namespace NeoEdit.Editor
 			var configuration = EditorExecuteState.CurrentState.Configuration as Configuration_Internal_Mouse;
 			var neFile = configuration.NEFile as NEFileHandler;
 
-			if ((EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Count != 1) || (!EditorExecuteState.CurrentState.NEFiles.IsActive(neFile)))
+			if ((EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Count != 1) || (!EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Contains(neFile)))
 			{
-				EditorExecuteState.CurrentState.NEFiles.ClearAllActive();
-				EditorExecuteState.CurrentState.NEFiles.SetActive(neFile);
+				EditorExecuteState.CurrentState.NEFiles.SetActiveFile(neFile);
 				return true;
 			}
 

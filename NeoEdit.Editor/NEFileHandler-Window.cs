@@ -49,7 +49,7 @@ namespace NeoEdit.Editor
 
 			var neFiles = new NEFilesHandler();
 			neFiles.BeginTransaction();
-			newFiles.ForEach(neFile => neFiles.AddFile(neFile));
+			newFiles.ForEach(neFile => neFiles.AddNewFile(neFile));
 			neFiles.Commit();
 
 			return true;
@@ -82,7 +82,7 @@ namespace NeoEdit.Editor
 
 			var neFiles = new NEFilesHandler();
 			neFiles.BeginTransaction();
-			newFiles.ForEach(neFile => neFiles.AddFile(neFile));
+			newFiles.ForEach(neFile => neFiles.AddNewFile(neFile));
 			neFiles.SetLayout(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
 			neFiles.Commit();
 
@@ -102,7 +102,7 @@ namespace NeoEdit.Editor
 			var neFiles = new NEFilesHandler(false);
 			neFiles.BeginTransaction();
 			foreach (var neFile in summaryByFile)
-				neFiles.AddFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
+				neFiles.AddNewFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
 			neFiles.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 			neFiles.Commit();
 
@@ -113,7 +113,7 @@ namespace NeoEdit.Editor
 		{
 			var neFiles = new NEFilesHandler();
 			neFiles.BeginTransaction();
-			NEFilesHandler.AddFilesFromClipboardSelections(neFiles);
+			AddFilesFromClipboardSelections(neFiles);
 			neFiles.Commit();
 
 			return true;
@@ -123,7 +123,7 @@ namespace NeoEdit.Editor
 		{
 			var neFiles = new NEFilesHandler();
 			neFiles.BeginTransaction();
-			NEFilesHandler.AddFilesFromClipboards(neFiles);
+			AddFilesFromClipboards(neFiles);
 			neFiles.Commit();
 
 			return true;
@@ -132,12 +132,12 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Window_New_FromActiveFiles()
 		{
 			var active = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.ToList();
-			active.ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.RemoveFile(neFile));
+			active.ForEach(neFile => neFile.ClearFiles());
 
 			var neFiles = new NEFilesHandler();
 			neFiles.BeginTransaction();
 			neFiles.SetLayout(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
-			active.ForEach(neFile => neFiles.AddFile(neFile));
+			active.ForEach(neFile => neFiles.AddNewFile(neFile));
 			neFiles.Commit();
 
 			return true;

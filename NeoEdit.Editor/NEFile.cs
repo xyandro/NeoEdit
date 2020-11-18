@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
@@ -32,7 +31,6 @@ namespace NeoEdit.Editor
 		public bool highlightSyntax;
 		public bool strictParsing;
 		public JumpByType jumpBy;
-		public DateTime lastActive;
 		public bool viewBinary;
 		public HashSet<Coder.CodePage> viewBinaryCodePages;
 		public IReadOnlyList<HashSet<string>> viewBinarySearches;
@@ -73,7 +71,6 @@ namespace NeoEdit.Editor
 				highlightSyntax = highlightSyntax,
 				strictParsing = strictParsing,
 				jumpBy = jumpBy,
-				lastActive = lastActive,
 				viewBinary = viewBinary,
 				viewBinaryCodePages = viewBinaryCodePages,
 				viewBinarySearches = viewBinarySearches,

@@ -6,7 +6,8 @@ namespace NeoEdit.Editor
 	public class NEFileHandlerResult
 	{
 		public KeysAndValues[] KeysAndValues { get; private set; }
-		public List<(NEFileHandler neFile, int? index)> FilesToAdd { get; private set; }
+		public List<NEFileHandler> Files { get; private set; }
+		public List<NEFileHandler> NewFiles { get; private set; }
 		public Tuple<IReadOnlyList<string>, bool?> Clipboard { get; private set; }
 		public List<string> DragFiles { get; private set; }
 
@@ -20,11 +21,25 @@ namespace NeoEdit.Editor
 			KeysAndValues[kvIndex] = keysAndValues;
 		}
 
-		public void AddNewFile((NEFileHandler neFile, int? index) data)
+		public void ClearFiles()
 		{
-			if (FilesToAdd == null)
-				FilesToAdd = new List<(NEFileHandler neFile, int? index)>();
-			FilesToAdd.Add(data);
+			if (Files == null)
+				Files = new List<NEFileHandler>();
+			Files.Clear();
+		}
+
+		public void AddFile(NEFileHandler neFile)
+		{
+			if (Files == null)
+				Files = new List<NEFileHandler>();
+			Files.Add(neFile);
+		}
+
+		public void AddNewFile(NEFileHandler neFile)
+		{
+			if (NewFiles == null)
+				NewFiles = new List<NEFileHandler>();
+			NewFiles.Add(neFile);
 		}
 
 		public void SetClipboard(Tuple<IReadOnlyList<string>, bool?> clipboard) => Clipboard = clipboard;

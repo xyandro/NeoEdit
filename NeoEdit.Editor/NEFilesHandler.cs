@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
-using NeoEdit.Common.Transform;
 using NeoEdit.Editor.CommandLine;
 using NeoEdit.TaskRunning;
 
@@ -21,7 +19,7 @@ namespace NeoEdit.Editor
 
 		public INEFilesWindow FilesWindow { get; }
 
-		public static List<NEFilesHandler> Instances { get; } = new List<NEFilesHandler>();
+		public static List<NEFilesHandler> AllNEFiles { get; } = new List<NEFilesHandler>();
 
 		int displayColumns;
 		public int DisplayColumns
@@ -45,15 +43,15 @@ namespace NeoEdit.Editor
 
 		public NEFilesHandler(bool addEmpty = false)
 		{
-			Instances.Add(this);
+			AllNEFiles.Add(this);
 
-			oldFilesList = newFilesList = new FilesList(this);
+			oldAllFiles = newAllFiles = oldActiveFiles = newActiveFiles = new OrderedHashSet<NEFileHandler>();
 			oldWindowLayout = newWindowLayout = new WindowLayout(1, 1);
 
 			BeginTransaction();
 			FilesWindow = INEFilesWindowStatic.CreateINEFilesWindow(this);
 			if (addEmpty)
-				AddFile(new NEFileHandler());
+				AddNewFile(new NEFileHandler());
 			Commit();
 		}
 
@@ -238,6 +236,7 @@ namespace NeoEdit.Editor
 					inMacro = true;
 				}
 
+				CreateResult();
 				BeginTransaction();
 
 				EditorExecuteState.CurrentState.ClipboardDataMapFunc = GetClipboardDataMap;
@@ -254,7 +253,10 @@ namespace NeoEdit.Editor
 				if (!NEFileHandler.PreExecute())
 					TaskRunner.Run(Execute, percent => FilesWindow.SetTaskRunnerProgress(percent));
 				FilesWindow.SetTaskRunnerProgress(null);
-				PostExecute();
+
+				foreach (var neFiles in AllNEFiles)
+					if (neFiles.result != null)
+						neFiles.PostExecute();
 
 				if (sw != null)
 				{
@@ -269,14 +271,18 @@ namespace NeoEdit.Editor
 					recordingMacro?.AddAction(action);
 				}
 
-				Commit();
+				foreach (var neFiles in AllNEFiles)
+					if (neFiles.result != null)
+						Commit();
 				return true;
 			}
 			catch (OperationCanceledException) { }
 			catch (Exception ex) { FilesWindow.ShowExceptionMessage(ex); }
 
 			FilesWindow.SetTaskRunnerProgress(null);
-			Rollback();
+			foreach (var neFiles in AllNEFiles)
+				if (neFiles.result != null)
+					Rollback();
 			return false;
 		}
 
@@ -284,21 +290,34 @@ namespace NeoEdit.Editor
 
 		void PostExecute()
 		{
-			var filesAdded = 0;
 			NEClipboard setClipboard = null;
 			List<KeysAndValues>[] setKeysAndValues = null;
 			var dragFiles = new List<string>();
-			foreach (var neFile in ActiveFiles)
+
+			var nextAllFiles = new OrderedHashSet<NEFileHandler>();
+			var newFiles = new List<NEFileHandler>();
+			var filesChanged = false;
+			foreach (var neFile in AllFiles)
 			{
 				if (neFile.result == null)
+				{
+					nextAllFiles.Add(neFile);
 					continue;
+				}
 
-				if (neFile.result.FilesToAdd != null)
-					foreach (var newFileTuple in neFile.result.FilesToAdd)
-					{
-						AddFile(newFileTuple.neFile, newFileTuple.index + filesAdded);
-						++filesAdded;
-					}
+				if (neFile.result.Files == null)
+					nextAllFiles.Add(neFile);
+				else
+				{
+					neFile.result.Files.ForEach(nextAllFiles.Add);
+					filesChanged = true;
+				}
+
+				if (neFile.result.NewFiles != null)
+				{
+					newFiles.AddRange(neFile.result.NewFiles);
+					filesChanged = true;
+				}
 
 				if (neFile.result.Clipboard != null)
 				{
@@ -323,6 +342,40 @@ namespace NeoEdit.Editor
 					dragFiles.AddRange(neFile.result.DragFiles);
 			}
 
+			newFiles.ForEach(nextAllFiles.Add);
+
+			if (result != null)
+			{
+				if (result.NewFiles != null)
+				{
+					result.NewFiles.ForEach(nextAllFiles.Add);
+					filesChanged = true;
+				}
+			}
+
+			if (filesChanged)
+			{
+				var newlyAdded = nextAllFiles.Except(AllFiles).ToList();
+
+				AllFiles = nextAllFiles;
+
+				if (newlyAdded.Any())
+					SetActiveFiles(newlyAdded);
+				else
+				{
+					SetActiveFiles(AllFiles.Intersect(ActiveFiles));
+					if (!ActiveFiles.Any())
+					{
+						var newActive = AllFiles.OrderByDescending(file => file.LastActive).FirstOrDefault();
+						if (newActive != null)
+							SetActiveFile(newActive);
+					}
+				}
+
+				var now = DateTime.Now;
+				ActiveFiles.ForEach(neFile => neFile.LastActive = now);
+			}
+
 			if (setClipboard != null)
 				NEClipboard.Current = setClipboard;
 
@@ -342,38 +395,6 @@ namespace NeoEdit.Editor
 		}
 
 		public void SetLayout(WindowLayout windowLayout) => WindowLayout = windowLayout;
-
-		public void AddFile(NEFileHandler neFile, int? index = null, bool canReplace = true)
-		{
-			if ((canReplace) && (!index.HasValue) && (Focused != null) && (Focused.Empty()) && (oldFilesList.Contains(Focused)))
-			{
-				index = AllFiles.FindIndex(Focused);
-				RemoveFile(Focused);
-			}
-
-			InsertFile(neFile, index);
-		}
-
-		public void AddDiff(NEFileHandler neFile1, NEFileHandler neFile2)
-		{
-			if (neFile1.ContentType == ParserType.None)
-				neFile1.ContentType = neFile2.ContentType;
-			if (neFile2.ContentType == ParserType.None)
-				neFile2.ContentType = neFile1.ContentType;
-			AddFile(neFile1);
-			AddFile(neFile2);
-			neFile1.DiffTarget = neFile2;
-			SetLayout(new WindowLayout(maxColumns: 2));
-		}
-
-		void AddDiff(string fileName1 = null, string displayName1 = null, byte[] bytes1 = null, Coder.CodePage codePage1 = Coder.CodePage.AutoByBOM, ParserType contentType1 = ParserType.None, bool? modified1 = null, int? line1 = null, int? column1 = null, int? index1 = null, ShutdownData shutdownData1 = null, string fileName2 = null, string displayName2 = null, byte[] bytes2 = null, Coder.CodePage codePage2 = Coder.CodePage.AutoByBOM, ParserType contentType2 = ParserType.None, bool? modified2 = null, int? line2 = null, int? column2 = null, int? index2 = null, ShutdownData shutdownData2 = null)
-		{
-			var te1 = new NEFileHandler(fileName1, displayName1, bytes1, codePage1, contentType1, modified1, line1, column1, index1, shutdownData1);
-			var te2 = new NEFileHandler(fileName2, displayName2, bytes2, codePage2, contentType2, modified2, line2, column2, index2, shutdownData2);
-			AddDiff(te1, te2);
-		}
-
-		bool FileIsActive(NEFileHandler neFile) => ActiveFiles.Contains(neFile);
 
 		public int GetFileIndex(NEFileHandler neFile, bool activeOnly = false)
 		{
@@ -401,16 +422,9 @@ namespace NeoEdit.Editor
 					index -= AllFiles.Count();
 				neFile = neFiles[index];
 			}
-			if (!shiftDown)
-				ClearAllActive();
-			SetActive(neFile);
-			Focused = neFile;
-		}
 
-		void Move(NEFileHandler neFile, int newIndex)
-		{
-			RemoveFile(neFile);
-			InsertFile(neFile, newIndex);
+			SetActiveFiles(AllFiles.Where(file => (file == neFile) || ((shiftDown) && (ActiveFiles.Contains(file)))));
+			Focused = neFile;
 		}
 
 		public bool GotoFile(string fileName, int? line, int? column, int? index)
@@ -419,9 +433,7 @@ namespace NeoEdit.Editor
 			if (neFile == null)
 				return false;
 			//Activate();
-			ClearAllActive();
-			SetActive(neFile);
-			Focused = neFile;
+			SetActiveFile(neFile);
 			//TODO
 			//neFile.Execute_File_Refresh();
 			//neFile.Goto(line, column, index);
@@ -432,20 +444,20 @@ namespace NeoEdit.Editor
 		{
 			lock (this)
 			{
-				var saveFilesList = newFilesList;
-				newFilesList = new FilesList(newFilesList);
-				ClearAllActive();
-				SetActive(neFile);
+				var saveActiveFiles = ActiveFiles;
+				var saveFocused = Focused;
+				var saveWindowLayout = WindowLayout;
 
-				var saveWindowLayout = newWindowLayout;
+				SetActiveFile(neFile);
 				WindowLayout = new WindowLayout(1, 1);
 
 				RenderFilesWindow();
 
 				var result = action();
 
-				newFilesList = saveFilesList;
-				newWindowLayout = saveWindowLayout;
+				ActiveFiles = saveActiveFiles;
+				Focused = saveFocused;
+				WindowLayout = saveWindowLayout;
 
 				return result;
 			}
@@ -513,14 +525,14 @@ namespace NeoEdit.Editor
 
 				var shutdownData = string.IsNullOrWhiteSpace(commandLineParams.Wait) ? null : new ShutdownData(commandLineParams.Wait, commandLineParams.Files.Count);
 				if (!commandLineParams.Diff)
-					neFiles = Instances.OrderByDescending(x => x.LastActivated).FirstOrDefault();
+					neFiles = AllNEFiles.OrderByDescending(x => x.LastActivated).FirstOrDefault();
 				if (neFiles == null)
 					neFiles = new NEFilesHandler();
 				foreach (var file in commandLineParams.Files)
 				{
 					if (commandLineParams.Existing)
 					{
-						var neFile = Instances.OrderByDescending(x => x.LastActivated).Select(x => x.GetFile(file.FileName)).NonNull().FirstOrDefault();
+						var neFile = AllNEFiles.OrderByDescending(x => x.LastActivated).Select(x => x.GetFile(file.FileName)).NonNull().FirstOrDefault();
 						if (neFile != null)
 						{
 							neFiles.HandleCommand(new ExecuteState(NECommand.Internal_GotoFile) { Configuration = new Configuration_Internal_GotoFile { NEFile = neFile, Line = file.Line, Column = file.Column, Index = file.Index } });
@@ -546,29 +558,5 @@ namespace NeoEdit.Editor
 		}
 
 		NEFileHandler GetFile(string fileName) => ActiveFiles.FirstOrDefault(neFile => neFile.FileName == fileName);
-
-		public static void AddFilesFromClipboards(NEFilesHandler neFiles)
-		{
-			var index = 0;
-			foreach (var strs in NEClipboard.Current)
-			{
-				++index;
-				var ending = strs.Any(str => (!str.EndsWith("\r")) && (!str.EndsWith("\n"))) ? "\r\n" : "";
-				var sb = new StringBuilder(strs.Sum(str => str.Length + ending.Length));
-				var sels = new List<Range>();
-				foreach (var str in strs)
-				{
-					var start = sb.Length;
-					sb.Append(str);
-					sels.Add(new Range(sb.Length, start));
-					sb.Append(ending);
-				}
-				var te = new NEFileHandler(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-				neFiles.AddFile(te, canReplace: index == 1);
-				te.Selections = sels;
-			}
-		}
-
-		public static void AddFilesFromClipboardSelections(NEFilesHandler neFiles) => NEClipboard.Current.Strings.ForEach((str, index) => neFiles.AddFile(new NEFileHandler(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 	}
 }

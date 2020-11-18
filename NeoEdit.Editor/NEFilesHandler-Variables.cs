@@ -13,47 +13,45 @@ namespace NeoEdit.Editor
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		FilesList oldFilesList, newFilesList;
-		FilesList GetUpdateFilesList()
+		IReadOnlyOrderedHashSet<NEFileHandler> oldAllFiles, newAllFiles;
+		public IReadOnlyOrderedHashSet<NEFileHandler> AllFiles
 		{
-			EnsureInTransaction();
-			if (newFilesList == oldFilesList)
-				newFilesList = new FilesList(newFilesList);
-			return newFilesList;
+			get => newAllFiles;
+			set
+			{
+				EnsureInTransaction();
+				newAllFiles = value;
+			}
 		}
 
-		public IReadOnlyOrderedHashSet<NEFileHandler> AllFiles => newFilesList.AllFiles;
-
-		void InsertFile(NEFileHandler neFile, int? index = null)
+		IReadOnlyOrderedHashSet<NEFileHandler> oldActiveFiles, newActiveFiles;
+		public IReadOnlyOrderedHashSet<NEFileHandler> ActiveFiles
 		{
-			lock (this)
-				GetUpdateFilesList().InsertFile(oldFilesList, neFile, index);
+			get => newActiveFiles;
+			set
+			{
+				EnsureInTransaction();
+				newActiveFiles = value;
+				if (!newActiveFiles.Contains(Focused))
+					Focused = newActiveFiles.FirstOrDefault();
+			}
 		}
 
-		public void RemoveFile(NEFileHandler neFile)
-		{
-			lock (this)
-				GetUpdateFilesList().RemoveFile(neFile);
-		}
+		public void ClearActiveFiles() => ActiveFiles = new OrderedHashSet<NEFileHandler>();
 
-		public void MoveFile(NEFileHandler neFile, int index)
-		{
-			lock (this)
-				GetUpdateFilesList().MoveFile(neFile, index);
-		}
+		public void SetActiveFile(NEFileHandler file) => ActiveFiles = new OrderedHashSet<NEFileHandler> { file };
 
-		public IReadOnlyOrderedHashSet<NEFileHandler> ActiveFiles => newFilesList.ActiveFiles;
+		public void SetActiveFiles(IEnumerable<NEFileHandler> files) => ActiveFiles = new OrderedHashSet<NEFileHandler>(files);
 
-		public void ClearAllActive() => GetUpdateFilesList().ClearActive();
-
-		public void SetActive(NEFileHandler neFile, bool active = true) => GetUpdateFilesList().SetActive(neFile, active);
-
-		public bool IsActive(NEFileHandler neFile) => newFilesList.IsActive(neFile);
-
+		NEFileHandler oldFocused, newFocused;
 		public NEFileHandler Focused
 		{
-			get => newFilesList.Focused;
-			set => GetUpdateFilesList().Focused = value;
+			get => newFocused;
+			set
+			{
+				EnsureInTransaction();
+				newFocused = value;
+			}
 		}
 
 		HashSet<NEFileHandler> transactionFiles;
@@ -98,6 +96,16 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		public NEFilesHandlerResult result { get; private set; }
+		NEFilesHandlerResult CreateResult()
+		{
+			if (result == null)
+				result = new NEFilesHandlerResult();
+			return result;
+		}
+
+		public void AddNewFile(NEFileHandler neFile) => CreateResult().AddNewFile(neFile);
+
 		public void BeginTransaction()
 		{
 			if (inTransaction)
@@ -111,7 +119,9 @@ namespace NeoEdit.Editor
 		{
 			EnsureInTransaction();
 
-			newFilesList = oldFilesList;
+			newAllFiles = oldAllFiles;
+			newActiveFiles = oldActiveFiles;
+			newFocused = oldFocused;
 			newWindowLayout = oldWindowLayout;
 			newActiveOnly = oldActiveOnly;
 			newMacroVisualize = oldMacroVisualize;
@@ -120,19 +130,16 @@ namespace NeoEdit.Editor
 			transactionFiles = null;
 
 			inTransaction = false;
+			result = null;
 		}
 
 		public void Commit()
 		{
 			EnsureInTransaction();
 
-			if (oldFilesList != newFilesList)
-			{
-				oldFilesList.AllFiles.Null(neFile => neFile.NEFiles).Where(neFile => !newFilesList.Contains(neFile)).ForEach(neFile => neFile.Closed());
-				var now = DateTime.Now;
-				newFilesList.ActiveFiles.ForEach(neFile => neFile.LastActive = now);
-				oldFilesList = newFilesList;
-			}
+			oldAllFiles = newAllFiles;
+			oldActiveFiles = newActiveFiles;
+			oldFocused = newFocused;
 			oldWindowLayout = newWindowLayout;
 			oldActiveOnly = newActiveOnly;
 			oldMacroVisualize = newMacroVisualize;
@@ -141,6 +148,7 @@ namespace NeoEdit.Editor
 			transactionFiles = null;
 
 			inTransaction = false;
+			result = null;
 		}
 	}
 }

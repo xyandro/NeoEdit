@@ -200,7 +200,7 @@ namespace NeoEdit.Editor
 				if (useFile != null)
 				{
 					useTE = new NEFileHandler(useFile);
-					NEFiles.AddFile(useTE);
+					NEFiles.AddNewFile(useTE);
 				}
 
 				var sels = useTE.Selections.ToList();

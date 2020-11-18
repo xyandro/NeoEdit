@@ -61,7 +61,7 @@ namespace NeoEdit.Editor
 			{
 				if (!files.Any())
 					return;
-				EditorExecuteState.CurrentState.NEFiles.AddFile(new NEFileHandler(files.Dequeue()));
+				EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFileHandler(files.Dequeue()));
 				EditorExecuteState.CurrentState.NEFiles.PlayMacro(macro, startNext);
 			};
 			startNext();
@@ -119,7 +119,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Macro_Open_Quick(int quickNum)
 		{
-			EditorExecuteState.CurrentState.NEFiles.AddFile(new NEFileHandler(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
+			EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFileHandler(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 			return true;
 		}
 

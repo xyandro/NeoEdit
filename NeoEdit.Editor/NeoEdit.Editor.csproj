@@ -164,7 +164,6 @@
     <Compile Include="DiffParams.cs" />
     <Compile Include="EditorExecuteState.cs" />
     <Compile Include="FileSaver.cs" />
-    <Compile Include="FilesList.cs" />
     <Compile Include="GIFWriter.cs" />
     <Compile Include="KeysAndValues.cs" />
     <Compile Include="LCS.cs" />
@@ -241,6 +240,7 @@
       <DependentUpon>NEFilesHandler.cs</DependentUpon>
     </Compile>
     <Compile Include="NEFilesHandler.cs" />
+    <Compile Include="NEFilesHandlerResult.cs" />
     <Compile Include="NEText.cs" />
     <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />

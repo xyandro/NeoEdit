@@ -57,8 +57,7 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Diff_Select_LeftRightBothFiles(bool? left)
 		{
 			var active = new HashSet<NEFileHandler>(EditorExecuteState.CurrentState.NEFiles.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFileHandler> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((EditorExecuteState.CurrentState.NEFiles.GetFileIndex(item) < EditorExecuteState.CurrentState.NEFiles.GetFileIndex(item.DiffTarget)) == left)));
-			EditorExecuteState.CurrentState.NEFiles.AllFiles.ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.SetActive(neFile, active.Contains(neFile)));
-
+			EditorExecuteState.CurrentState.NEFiles.SetActiveFiles(EditorExecuteState.CurrentState.NEFiles.AllFiles.Where(neFile => active.Contains(neFile)));
 			return true;
 		}
 
@@ -86,11 +85,11 @@ namespace NeoEdit.Editor
 					EditorExecuteState.CurrentState.NEFiles.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 				else
 				{
-					diffTargets.ForEach(diffTarget => EditorExecuteState.CurrentState.NEFiles.RemoveFile(diffTarget));
+					diffTargets.ForEach(diffTarget => diffTarget.ClearFiles());
 
 					var neFiles = new NEFilesHandler();
 					neFiles.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
-					diffTargets.ForEach(diffTarget => neFiles.AddFile(diffTarget));
+					diffTargets.ForEach(diffTarget => neFiles.AddNewFile(diffTarget));
 				}
 			}
 
@@ -113,7 +112,8 @@ namespace NeoEdit.Editor
 			NEFiles.AddToTransaction(neFile);
 			neFile.ContentType = ContentType;
 			neFile.DiffTarget = this;
-			QueueAddFile(neFile, NEFiles.GetFileIndex(this));
+			AddFile(neFile);
+			AddFile(this);
 		}
 
 		void Execute_Diff_IgnoreWhitespace(bool? multiStatus)

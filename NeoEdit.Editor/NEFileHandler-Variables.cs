@@ -123,7 +123,6 @@ namespace NeoEdit.Editor
 		public NEFileHandlerResult result { get; private set; }
 		NEFileHandlerResult CreateResult()
 		{
-			EnsureInTransaction();
 			if (result == null)
 				result = new NEFileHandlerResult();
 			return result;
@@ -182,7 +181,9 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void QueueAddFile(NEFileHandler neFile, int? index = null) => CreateResult().AddNewFile((neFile, index));
+		void ClearFiles() => CreateResult().ClearFiles();
+		void AddFile(NEFileHandler neFile) => CreateResult().AddFile(neFile);
+		void AddNewFile(NEFileHandler neFile) => CreateResult().AddNewFile(neFile);
 
 		Tuple<IReadOnlyList<string>, bool?> clipboardData;
 		Tuple<IReadOnlyList<string>, bool?> ClipboardData
@@ -359,15 +360,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public DateTime LastActive
-		{
-			get => fileState.lastActive;
-			set
-			{
-				EnsureInTransaction();
-				fileState.lastActive = value;
-			}
-		}
+		public DateTime LastActive { get; set; }
 
 		public bool ViewBinary
 		{
