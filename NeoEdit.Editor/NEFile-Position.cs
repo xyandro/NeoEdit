@@ -10,7 +10,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFileHandler
+	partial class NEFile
 	{
 		class GotoRange
 		{
@@ -31,7 +31,7 @@ namespace NeoEdit.Editor
 
 				public override string ToString() => $"Line: {Line}, Index: {Index}, Column: {Column}, Position: {Position}";
 
-				public int? GetPosition(NEFileHandler neFile, int position, GotoLocation lastPosition = null)
+				public int? GetPosition(NEFile neFile, int position, GotoLocation lastPosition = null)
 				{
 					if ((Line == null) && (Index == null) && (Column == null) && (Position == null))
 						return null;
@@ -116,7 +116,7 @@ namespace NeoEdit.Editor
 				return result;
 			}
 
-			public Range GetRange(NEFileHandler te, Range range, bool selecting)
+			public Range GetRange(NEFile te, Range range, bool selecting)
 			{
 				var start = Start.GetPosition(te, range.Cursor);
 				var end = End.GetPosition(te, range.Cursor, Start);
@@ -199,7 +199,7 @@ namespace NeoEdit.Editor
 				var useFile = list.First().File;
 				if (useFile != null)
 				{
-					useTE = new NEFileHandler(useFile);
+					useTE = new NEFile(useFile);
 					NEFiles.AddNewFile(useTE);
 				}
 

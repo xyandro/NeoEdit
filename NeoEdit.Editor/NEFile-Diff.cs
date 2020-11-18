@@ -10,7 +10,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFileHandler
+	partial class NEFile
 	{
 		Tuple<int, int> GetDiffNextPrevious(Range range, bool next)
 		{
@@ -56,7 +56,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Diff_Select_LeftRightBothFiles(bool? left)
 		{
-			var active = new HashSet<NEFileHandler>(EditorExecuteState.CurrentState.NEFiles.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFileHandler> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((EditorExecuteState.CurrentState.NEFiles.GetFileIndex(item) < EditorExecuteState.CurrentState.NEFiles.GetFileIndex(item.DiffTarget)) == left)));
+			var active = new HashSet<NEFile>(EditorExecuteState.CurrentState.NEFiles.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFile> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((EditorExecuteState.CurrentState.NEFiles.GetFileIndex(item) < EditorExecuteState.CurrentState.NEFiles.GetFileIndex(item.DiffTarget)) == left)));
 			EditorExecuteState.CurrentState.NEFiles.SetActiveFiles(EditorExecuteState.CurrentState.NEFiles.AllFiles.Where(neFile => active.Contains(neFile)));
 			return true;
 		}
@@ -87,7 +87,7 @@ namespace NeoEdit.Editor
 				{
 					diffTargets.ForEach(diffTarget => diffTarget.ClearFiles());
 
-					var neFiles = new NEFilesHandler();
+					var neFiles = new NEFiles();
 					neFiles.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 					diffTargets.ForEach(diffTarget => neFiles.AddNewFile(diffTarget));
 				}
@@ -108,7 +108,7 @@ namespace NeoEdit.Editor
 			if (original == null)
 				throw new Exception("Unable to get VCS content");
 
-			var neFile = new NEFileHandler(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
+			var neFile = new NEFile(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
 			NEFiles.AddToTransaction(neFile);
 			neFile.ContentType = ContentType;
 			neFile.DiffTarget = this;

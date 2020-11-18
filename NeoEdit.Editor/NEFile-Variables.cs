@@ -6,7 +6,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFileHandler
+	partial class NEFile
 	{
 		void EnsureInTransaction()
 		{
@@ -14,9 +14,9 @@ namespace NeoEdit.Editor
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		NEFile saveFileState, fileState;
+		NEFileData saveFileState, fileState;
 
-		public NEFilesHandler NEFiles
+		public NEFiles NEFiles
 		{
 			get => fileState.neFiles;
 			set => fileState.neFiles = value;
@@ -52,7 +52,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public NEFileHandler DiffTarget
+		public NEFile DiffTarget
 		{
 			get => fileState.diffTarget;
 			set
@@ -120,15 +120,15 @@ namespace NeoEdit.Editor
 			fileState.regions[region - 1] = DeOverlap(regions);
 		}
 
-		public NEFileHandlerResult result { get; private set; }
-		NEFileHandlerResult CreateResult()
+		public NEFileResult result { get; private set; }
+		NEFileResult CreateResult()
 		{
 			if (result == null)
-				result = new NEFileHandlerResult();
+				result = new NEFileResult();
 			return result;
 		}
 
-		readonly KeysAndValues[] keysAndValues = new KeysAndValues[NEFilesHandler.KeysAndValuesCount];
+		readonly KeysAndValues[] keysAndValues = new KeysAndValues[NEFiles.KeysAndValuesCount];
 		KeysAndValues GetKeysAndValues(int kvIndex)
 		{
 			if ((kvIndex < 0) || (kvIndex > 9))
@@ -182,8 +182,8 @@ namespace NeoEdit.Editor
 		}
 
 		void ClearFiles() => CreateResult().ClearFiles();
-		void AddFile(NEFileHandler neFile) => CreateResult().AddFile(neFile);
-		void AddNewFile(NEFileHandler neFile) => CreateResult().AddNewFile(neFile);
+		void AddFile(NEFile neFile) => CreateResult().AddFile(neFile);
+		void AddNewFile(NEFile neFile) => CreateResult().AddNewFile(neFile);
 
 		Tuple<IReadOnlyList<string>, bool?> clipboardData;
 		Tuple<IReadOnlyList<string>, bool?> ClipboardData
@@ -431,7 +431,7 @@ namespace NeoEdit.Editor
 			EnsureInTransaction();
 
 			clipboardData = null;
-			for (var kvIndex = 0; kvIndex < NEFilesHandler.KeysAndValuesCount; ++kvIndex)
+			for (var kvIndex = 0; kvIndex < NEFiles.KeysAndValuesCount; ++kvIndex)
 				keysAndValues[kvIndex] = null;
 			inTransaction = false;
 			saveFileState = null;

@@ -170,77 +170,77 @@
     <Compile Include="Macro.cs" />
     <Compile Include="MacroAction.cs" />
     <Compile Include="Models\AnswerResult.cs" />
+    <Compile Include="NEFile-Content.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Database.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-DateTime.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Diff.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Edit.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-EditModifyRegions.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-File.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Files.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Help.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Image.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Internal.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-KeyValue.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Macro.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Network.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Numeric.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Position.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Table.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Text.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Variables.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEFile-Window.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
     <Compile Include="NEFile.cs" />
-    <Compile Include="NEFileHandler-Content.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
+    <Compile Include="NEFileData.cs" />
+    <Compile Include="NEFileResult.cs" />
+    <Compile Include="NEFiles-Macro.cs">
+      <DependentUpon>NEFiles.cs</DependentUpon>
     </Compile>
-    <Compile Include="NEFileHandler-Database.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
+    <Compile Include="NEFiles-Variables.cs">
+      <DependentUpon>NEFiles.cs</DependentUpon>
     </Compile>
-    <Compile Include="NEFileHandler-DateTime.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Diff.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Edit.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-EditModifyRegions.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-File.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Files.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Help.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Image.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Internal.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-KeyValue.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Macro.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Network.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Numeric.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Position.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Table.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Text.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Variables.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler-Window.cs">
-      <DependentUpon>NEFileHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFileHandler.cs" />
-    <Compile Include="NEFileHandlerResult.cs" />
-    <Compile Include="NEFilesHandler-Macro.cs">
-      <DependentUpon>NEFilesHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFilesHandler-Variables.cs">
-      <DependentUpon>NEFilesHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFilesHandler.cs" />
-    <Compile Include="NEFilesHandlerResult.cs" />
+    <Compile Include="NEFiles.cs" />
+    <Compile Include="NEFilesResult.cs" />
     <Compile Include="NEText.cs" />
     <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />

@@ -18,7 +18,7 @@ namespace NeoEdit
 	{
 		static Program()
 		{
-			INEFilesStatic.HandlesKey = NEFilesHandler.HandlesKey;
+			INEFilesStatic.HandlesKey = NEFiles.HandlesKey;
 		}
 
 		const string IPCName = "NeoEdit-{debe0282-0e9d-47fd-836c-60f500dbaeb5}";
@@ -33,7 +33,7 @@ namespace NeoEdit
 		static void Main()
 		{
 			var commandLine = string.Join(" ", Environment.GetCommandLineArgs().Skip(1).Select(str => $"\"{str}\""));
-			var commandLineParams = NEFilesHandler.ParseCommandLine(commandLine);
+			var commandLineParams = NEFiles.ParseCommandLine(commandLine);
 			HandleWaitPID(commandLineParams);
 
 			var masterPid = default(int?);
@@ -46,7 +46,7 @@ namespace NeoEdit
 					SetMasterPID();
 					SetupPipeWait();
 				}
-				App.Run(() => NEFilesHandler.CreateFiles(commandLineParams));
+				App.Run(() => NEFiles.CreateFiles(commandLineParams));
 				return;
 			}
 
@@ -109,7 +109,7 @@ namespace NeoEdit
 				pipe.Read(buf, 0, buf.Length);
 				var commandLineParams = JsonConvert.DeserializeObject<CommandLineParams>(Coder.BytesToString(buf, Coder.CodePage.UTF8));
 
-				App.Run(() => NEFilesHandler.CreateFiles(commandLineParams));
+				App.Run(() => NEFiles.CreateFiles(commandLineParams));
 
 				SetupPipeWait();
 			}, null);

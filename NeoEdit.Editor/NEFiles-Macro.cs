@@ -2,7 +2,7 @@
 
 namespace NeoEdit.Editor
 {
-	partial class NEFilesHandler
+	partial class NEFiles
 	{
 		public Macro playingMacro, recordingMacro;
 		Action playingMacroNextAction;

@@ -14,9 +14,9 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFileHandler
+	partial class NEFile
 	{
-		static void AddFilesFromClipboards(NEFilesHandler neFiles)
+		static void AddFilesFromClipboards(NEFiles neFiles)
 		{
 			var index = 0;
 			foreach (var strs in NEClipboard.Current)
@@ -32,13 +32,13 @@ namespace NeoEdit.Editor
 					sels.Add(new Range(sb.Length, start));
 					sb.Append(ending);
 				}
-				var te = new NEFileHandler(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
+				var te = new NEFile(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
 				neFiles.AddNewFile(te);
 				te.Selections = sels;
 			}
 		}
 
-		static void AddFilesFromClipboardSelections(NEFilesHandler neFiles) => NEClipboard.Current.Strings.ForEach((str, index) => neFiles.AddNewFile(new NEFileHandler(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
+		static void AddFilesFromClipboardSelections(NEFiles neFiles) => NEClipboard.Current.Strings.ForEach((str, index) => neFiles.AddNewFile(new NEFile(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 
 		string GetSaveFileName()
 		{
@@ -144,7 +144,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_File_New_New()
 		{
-			EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFileHandler());
+			EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFile());
 			return true;
 		}
 
@@ -163,8 +163,8 @@ namespace NeoEdit.Editor
 		static bool PreExecute_File_New_WordList()
 		{
 			byte[] data;
-			var streamName = typeof(NEFilesHandler).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
-			using (var stream = typeof(NEFilesHandler).Assembly.GetManifestResourceStream(streamName))
+			var streamName = typeof(NEFiles).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
+			using (var stream = typeof(NEFiles).Assembly.GetManifestResourceStream(streamName))
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);
@@ -173,7 +173,7 @@ namespace NeoEdit.Editor
 
 			data = Compressor.Decompress(data, Compressor.Type.GZip);
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data));
-			EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFileHandler(displayName: "Word List", bytes: data, modified: false));
+			EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFile(displayName: "Word List", bytes: data, modified: false));
 
 			return true;
 		}
@@ -191,13 +191,13 @@ namespace NeoEdit.Editor
 		static bool PreExecute_FileMacro_Open_Open()
 		{
 			var result = EditorExecuteState.CurrentState.Configuration as Configuration_FileMacro_Open_Open;
-			result.FileNames.ForEach(fileName => EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFileHandler(fileName)));
+			result.FileNames.ForEach(fileName => EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFile(fileName)));
 			return true;
 		}
 
 		static bool PreExecute_File_Open_CopiedCut()
 		{
-			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFileHandler(file)).ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.AddNewFile(neFile));
+			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.AddNewFile(neFile));
 			return true;
 		}
 
@@ -460,10 +460,10 @@ namespace NeoEdit.Editor
 				neFile.VerifyCanClose();
 				neFile.ClearFiles();
 			}
-			NEFilesHandler.AllNEFiles.Remove(EditorExecuteState.CurrentState.NEFiles);
+			NEFiles.AllNEFiles.Remove(EditorExecuteState.CurrentState.NEFiles);
 			EditorExecuteState.CurrentState.NEFiles.FilesWindow.CloseWindow();
 
-			if (!NEFilesHandler.AllNEFiles.Any())
+			if (!NEFiles.AllNEFiles.Any())
 			{
 				if (((EditorExecuteState.CurrentState.Configuration as Configuration_File_Exit)?.WindowClosed != true) || (!Settings.DontExitOnClose))
 					Environment.Exit(0);

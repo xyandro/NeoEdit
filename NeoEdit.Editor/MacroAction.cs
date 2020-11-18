@@ -40,7 +40,7 @@ namespace NeoEdit.Editor
 			};
 		}
 
-		public void ReplaceExecuteState(NEFilesHandler neFiles)
+		public void ReplaceExecuteState(NEFiles neFiles)
 		{
 			EditorExecuteState.SetState(Command);
 			EditorExecuteState.CurrentState.ShiftDown = ShiftDown;

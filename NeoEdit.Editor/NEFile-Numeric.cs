@@ -11,7 +11,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFileHandler
+	partial class NEFile
 	{
 		static string ConvertBase(string str, Dictionary<char, int> inputSet, Dictionary<int, char> outputSet)
 		{

@@ -11,7 +11,7 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFileHandler
+	partial class NEFile
 	{
 		string GetDisplayName()
 		{
@@ -33,13 +33,13 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Window_New_NewWindow()
 		{
-			new NEFilesHandler(true);
+			new NEFiles(true);
 			return true;
 		}
 
 		static bool PreExecute_Window_New_FromSelections_AllSelections()
 		{
-			var newFiles = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(neFile => neFile.Selections.AsTaskRunner().Select(range => neFile.Text.GetString(range)).Select(str => new NEFileHandler(bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: neFile.ContentType, modified: false)).ToList()).ToList();
+			var newFiles = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.AsTaskRunner().SelectMany(neFile => neFile.Selections.AsTaskRunner().Select(range => neFile.Text.GetString(range)).Select(str => new NEFile(bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: neFile.ContentType, modified: false)).ToList()).ToList();
 			newFiles.ForEach((neFile, index) =>
 			{
 				neFile.BeginTransaction();
@@ -47,7 +47,7 @@ namespace NeoEdit.Editor
 				neFile.Commit();
 			});
 
-			var neFiles = new NEFilesHandler();
+			var neFiles = new NEFiles();
 			neFiles.BeginTransaction();
 			newFiles.ForEach(neFile => neFiles.AddNewFile(neFile));
 			neFiles.Commit();
@@ -58,7 +58,7 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Window_New_FromSelections_EachFile()
 		{
 			var newFileDatas = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.AsTaskRunner().Select(neFile => (DisplayName: neFile.GetDisplayName(), Selections: neFile.GetSelectionStrings(), neFile.ContentType)).ToList();
-			var newFiles = new List<NEFileHandler>();
+			var newFiles = new List<NEFile>();
 			foreach (var newFileData in newFileDatas)
 			{
 				var sb = new StringBuilder();
@@ -72,7 +72,7 @@ namespace NeoEdit.Editor
 						sb.Append("\r\n");
 				}
 
-				var neFile = new NEFileHandler(displayName: newFileData.DisplayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: newFileData.ContentType, modified: false);
+				var neFile = new NEFile(displayName: newFileData.DisplayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: newFileData.ContentType, modified: false);
 				neFile.BeginTransaction();
 				neFile.Selections = selections;
 				neFile.Commit();
@@ -80,7 +80,7 @@ namespace NeoEdit.Editor
 				newFiles.Add(neFile);
 			}
 
-			var neFiles = new NEFilesHandler();
+			var neFiles = new NEFiles();
 			neFiles.BeginTransaction();
 			newFiles.ForEach(neFile => neFiles.AddNewFile(neFile));
 			neFiles.SetLayout(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
@@ -99,7 +99,7 @@ namespace NeoEdit.Editor
 			var comparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 			var summaryByFile = selectionsByFile.Select(tuple => (tuple.DisplayName, selections: tuple.Selections.GroupBy(x => x, comparer).Select(group => (str: group.Key, count: group.Count())).OrderByDescending(x => x.count).ToList())).ToList();
 
-			var neFiles = new NEFilesHandler(false);
+			var neFiles = new NEFiles(false);
 			neFiles.BeginTransaction();
 			foreach (var neFile in summaryByFile)
 				neFiles.AddNewFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
@@ -111,7 +111,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Window_New_FromClipboard_AllSelections()
 		{
-			var neFiles = new NEFilesHandler();
+			var neFiles = new NEFiles();
 			neFiles.BeginTransaction();
 			AddFilesFromClipboardSelections(neFiles);
 			neFiles.Commit();
@@ -121,7 +121,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Window_New_FromClipboard_EachFile()
 		{
-			var neFiles = new NEFilesHandler();
+			var neFiles = new NEFiles();
 			neFiles.BeginTransaction();
 			AddFilesFromClipboards(neFiles);
 			neFiles.Commit();
@@ -134,7 +134,7 @@ namespace NeoEdit.Editor
 			var active = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.ToList();
 			active.ForEach(neFile => neFile.ClearFiles());
 
-			var neFiles = new NEFilesHandler();
+			var neFiles = new NEFiles();
 			neFiles.BeginTransaction();
 			neFiles.SetLayout(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
 			active.ForEach(neFile => neFiles.AddNewFile(neFile));

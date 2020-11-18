@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace NeoEdit.Editor
 {
-	public class NEFileHandlerResult
+	public class NEFileResult
 	{
 		public KeysAndValues[] KeysAndValues { get; private set; }
-		public List<NEFileHandler> Files { get; private set; }
-		public List<NEFileHandler> NewFiles { get; private set; }
+		public List<NEFile> Files { get; private set; }
+		public List<NEFile> NewFiles { get; private set; }
 		public Tuple<IReadOnlyList<string>, bool?> Clipboard { get; private set; }
 		public List<string> DragFiles { get; private set; }
 
@@ -24,21 +24,21 @@ namespace NeoEdit.Editor
 		public void ClearFiles()
 		{
 			if (Files == null)
-				Files = new List<NEFileHandler>();
+				Files = new List<NEFile>();
 			Files.Clear();
 		}
 
-		public void AddFile(NEFileHandler neFile)
+		public void AddFile(NEFile neFile)
 		{
 			if (Files == null)
-				Files = new List<NEFileHandler>();
+				Files = new List<NEFile>();
 			Files.Add(neFile);
 		}
 
-		public void AddNewFile(NEFileHandler neFile)
+		public void AddNewFile(NEFile neFile)
 		{
 			if (NewFiles == null)
-				NewFiles = new List<NEFileHandler>();
+				NewFiles = new List<NEFile>();
 			NewFiles.Add(neFile);
 		}
 

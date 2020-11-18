@@ -13,13 +13,13 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	public partial class NEFilesHandler : INEFiles
+	public partial class NEFiles : INEFiles
 	{
 		public const int KeysAndValuesCount = 10;
 
 		public INEFilesWindow FilesWindow { get; }
 
-		public static List<NEFilesHandler> AllNEFiles { get; } = new List<NEFilesHandler>();
+		public static List<NEFiles> AllNEFiles { get; } = new List<NEFiles>();
 
 		int displayColumns;
 		public int DisplayColumns
@@ -41,17 +41,17 @@ namespace NeoEdit.Editor
 		public bool timeNextAction;
 		MacroAction lastAction;
 
-		public NEFilesHandler(bool addEmpty = false)
+		public NEFiles(bool addEmpty = false)
 		{
 			AllNEFiles.Add(this);
 
-			oldAllFiles = newAllFiles = oldActiveFiles = newActiveFiles = new OrderedHashSet<NEFileHandler>();
+			oldAllFiles = newAllFiles = oldActiveFiles = newActiveFiles = new OrderedHashSet<NEFile>();
 			oldWindowLayout = newWindowLayout = new WindowLayout(1, 1);
 
 			BeginTransaction();
 			FilesWindow = INEFilesWindowStatic.CreateINEFilesWindow(this);
 			if (addEmpty)
-				AddNewFile(new NEFileHandler());
+				AddNewFile(new NEFile());
 			Commit();
 		}
 
@@ -105,7 +105,7 @@ namespace NeoEdit.Editor
 
 		Dictionary<string, bool?> GetMenuStatus()
 		{
-			bool? GetMultiStatus(Func<NEFileHandler, bool> func)
+			bool? GetMultiStatus(Func<NEFile, bool> func)
 			{
 				var results = ActiveFiles.Select(func).Distinct().Take(2).ToList();
 				if (results.Count != 1)
@@ -243,14 +243,14 @@ namespace NeoEdit.Editor
 				EditorExecuteState.CurrentState.KeysAndValuesFunc = GetKeysAndValuesMap;
 
 				if ((!inMacro) && (EditorExecuteState.CurrentState.Configuration == null))
-					NEFileHandler.Configure();
+					NEFile.Configure();
 
 				Stopwatch sw = null;
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
 				FilesWindow.SetTaskRunnerProgress(0);
-				if (!NEFileHandler.PreExecute())
+				if (!NEFile.PreExecute())
 					TaskRunner.Run(Execute, percent => FilesWindow.SetTaskRunnerProgress(percent));
 				FilesWindow.SetTaskRunnerProgress(null);
 
@@ -294,8 +294,8 @@ namespace NeoEdit.Editor
 			List<KeysAndValues>[] setKeysAndValues = null;
 			var dragFiles = new List<string>();
 
-			var nextAllFiles = new OrderedHashSet<NEFileHandler>();
-			var newFiles = new List<NEFileHandler>();
+			var nextAllFiles = new OrderedHashSet<NEFile>();
+			var newFiles = new List<NEFile>();
 			var filesChanged = false;
 			foreach (var neFile in AllFiles)
 			{
@@ -396,7 +396,7 @@ namespace NeoEdit.Editor
 
 		public void SetLayout(WindowLayout windowLayout) => WindowLayout = windowLayout;
 
-		public int GetFileIndex(NEFileHandler neFile, bool activeOnly = false)
+		public int GetFileIndex(NEFile neFile, bool activeOnly = false)
 		{
 			var index = (activeOnly ? ActiveFiles : AllFiles).FindIndex(neFile);
 			if (index == -1)
@@ -409,12 +409,12 @@ namespace NeoEdit.Editor
 			if (AllFiles.Count() <= 1)
 				return;
 
-			NEFileHandler neFile;
+			NEFile neFile;
 			if (Focused == null)
 				neFile = AllFiles.GetIndex(0);
 			else
 			{
-				var neFiles = orderByActive ? AllFiles.OrderByDescending(x => x.LastActive).ToList() : AllFiles as IList<NEFileHandler>;
+				var neFiles = orderByActive ? AllFiles.OrderByDescending(x => x.LastActive).ToList() : AllFiles as IList<NEFile>;
 				var index = neFiles.FindIndex(Focused) + offset;
 				if (index < 0)
 					index += AllFiles.Count();
@@ -440,7 +440,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		public T ShowFile<T>(NEFileHandler neFile, Func<T> action)
+		public T ShowFile<T>(NEFile neFile, Func<T> action)
 		{
 			lock (this)
 			{
@@ -511,7 +511,7 @@ namespace NeoEdit.Editor
 
 		public static void CreateFiles(CommandLineParams commandLineParams)
 		{
-			NEFilesHandler neFiles = null;
+			NEFiles neFiles = null;
 			try
 			{
 				if (commandLineParams.Background)
@@ -519,7 +519,7 @@ namespace NeoEdit.Editor
 
 				if (!commandLineParams.Files.Any())
 				{
-					new NEFilesHandler(true);
+					new NEFiles(true);
 					return;
 				}
 
@@ -527,7 +527,7 @@ namespace NeoEdit.Editor
 				if (!commandLineParams.Diff)
 					neFiles = AllNEFiles.OrderByDescending(x => x.LastActivated).FirstOrDefault();
 				if (neFiles == null)
-					neFiles = new NEFilesHandler();
+					neFiles = new NEFiles();
 				foreach (var file in commandLineParams.Files)
 				{
 					if (commandLineParams.Existing)
@@ -540,7 +540,7 @@ namespace NeoEdit.Editor
 						}
 					}
 
-					neFiles.HandleCommand(new ExecuteState(NECommand.Internal_AddFile) { Configuration = new Configuration_Internal_AddFile { NEFile = new NEFileHandler(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) } });
+					neFiles.HandleCommand(new ExecuteState(NECommand.Internal_AddFile) { Configuration = new Configuration_Internal_AddFile { NEFile = new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) } });
 				}
 
 				if (commandLineParams.Diff)
@@ -557,6 +557,6 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		NEFileHandler GetFile(string fileName) => ActiveFiles.FirstOrDefault(neFile => neFile.FileName == fileName);
+		NEFile GetFile(string fileName) => ActiveFiles.FirstOrDefault(neFile => neFile.FileName == fileName);
 	}
 }

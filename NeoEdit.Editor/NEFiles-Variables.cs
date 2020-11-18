@@ -5,7 +5,7 @@ using NeoEdit.Common;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFilesHandler
+	partial class NEFiles
 	{
 		void EnsureInTransaction()
 		{
@@ -13,8 +13,8 @@ namespace NeoEdit.Editor
 				throw new Exception("Must start transaction before editing data");
 		}
 
-		IReadOnlyOrderedHashSet<NEFileHandler> oldAllFiles, newAllFiles;
-		public IReadOnlyOrderedHashSet<NEFileHandler> AllFiles
+		IReadOnlyOrderedHashSet<NEFile> oldAllFiles, newAllFiles;
+		public IReadOnlyOrderedHashSet<NEFile> AllFiles
 		{
 			get => newAllFiles;
 			set
@@ -24,8 +24,8 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		IReadOnlyOrderedHashSet<NEFileHandler> oldActiveFiles, newActiveFiles;
-		public IReadOnlyOrderedHashSet<NEFileHandler> ActiveFiles
+		IReadOnlyOrderedHashSet<NEFile> oldActiveFiles, newActiveFiles;
+		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles
 		{
 			get => newActiveFiles;
 			set
@@ -37,14 +37,14 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void ClearActiveFiles() => ActiveFiles = new OrderedHashSet<NEFileHandler>();
+		public void ClearActiveFiles() => ActiveFiles = new OrderedHashSet<NEFile>();
 
-		public void SetActiveFile(NEFileHandler file) => ActiveFiles = new OrderedHashSet<NEFileHandler> { file };
+		public void SetActiveFile(NEFile file) => ActiveFiles = new OrderedHashSet<NEFile> { file };
 
-		public void SetActiveFiles(IEnumerable<NEFileHandler> files) => ActiveFiles = new OrderedHashSet<NEFileHandler>(files);
+		public void SetActiveFiles(IEnumerable<NEFile> files) => ActiveFiles = new OrderedHashSet<NEFile>(files);
 
-		NEFileHandler oldFocused, newFocused;
-		public NEFileHandler Focused
+		NEFile oldFocused, newFocused;
+		public NEFile Focused
 		{
 			get => newFocused;
 			set
@@ -54,8 +54,8 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		HashSet<NEFileHandler> transactionFiles;
-		public void AddToTransaction(NEFileHandler neFile)
+		HashSet<NEFile> transactionFiles;
+		public void AddToTransaction(NEFile neFile)
 		{
 			if (transactionFiles.Contains(neFile))
 				return;
@@ -96,22 +96,22 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public NEFilesHandlerResult result { get; private set; }
-		NEFilesHandlerResult CreateResult()
+		public NEFilesResult result { get; private set; }
+		NEFilesResult CreateResult()
 		{
 			if (result == null)
-				result = new NEFilesHandlerResult();
+				result = new NEFilesResult();
 			return result;
 		}
 
-		public void AddNewFile(NEFileHandler neFile) => CreateResult().AddNewFile(neFile);
+		public void AddNewFile(NEFile neFile) => CreateResult().AddNewFile(neFile);
 
 		public void BeginTransaction()
 		{
 			if (inTransaction)
 				throw new Exception("Already in a transaction");
 			inTransaction = true;
-			transactionFiles = new HashSet<NEFileHandler>();
+			transactionFiles = new HashSet<NEFile>();
 			ActiveFiles.ForEach(AddToTransaction);
 		}
 
