@@ -19,7 +19,7 @@ namespace NeoEdit.Editor
 
 		public INEFilesWindow FilesWindow { get; }
 
-		public static List<NEFiles> AllNEFiles { get; } = new List<NEFiles>();
+		//public static List<NEFiles> AllNEFiles { get; } = new List<NEFiles>();
 
 		int displayColumns;
 		public int DisplayColumns
@@ -46,8 +46,7 @@ namespace NeoEdit.Editor
 			filesData = new NEFilesData();
 			filesData.allFiles = filesData.activeFiles = new OrderedHashSet<NEFile>();
 			filesData.windowLayout = new WindowLayout(1, 1);
-
-			AllNEFiles.Add(this);
+			NEAllFiles.AddNewFiles(this);
 
 			BeginTransaction();
 			FilesWindow = INEFilesWindowStatic.CreateINEFilesWindow(this);
@@ -238,7 +237,7 @@ namespace NeoEdit.Editor
 				}
 
 				CreateResult();
-				BeginTransaction();
+				NEAllFiles.BeginTransaction();
 
 				EditorExecuteState.CurrentState.ClipboardDataMapFunc = GetClipboardDataMap;
 				EditorExecuteState.CurrentState.KeysAndValuesFunc = GetKeysAndValuesMap;
@@ -268,29 +267,28 @@ namespace NeoEdit.Editor
 					recordingMacro?.AddAction(action);
 				}
 
-				foreach (var neFiles in AllNEFiles)
-					neFiles.Commit();
+				NEAllFiles.Commit();
 
-				if (result != null)
+				if (NEAllFiles.result != null)
 				{
-					if (result.Clipboard != null)
-						NEClipboard.Current = result.Clipboard;
+					if (NEAllFiles.result.Clipboard != null)
+						NEClipboard.Current = NEAllFiles.result.Clipboard;
 
-					if (result.KeysAndValues != null)
+					if (NEAllFiles.result.KeysAndValues != null)
 						for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
-							if (result.KeysAndValues[kvIndex] != null)
-								keysAndValues[kvIndex] = result.KeysAndValues[kvIndex];
+							if (NEAllFiles.result.KeysAndValues[kvIndex] != null)
+								keysAndValues[kvIndex] = NEAllFiles.result.KeysAndValues[kvIndex];
 
-					if (result.DragFiles?.Any() == true)
+					if (NEAllFiles.result.DragFiles?.Any() == true)
 					{
-						var nonExisting = result.DragFiles.Where(x => !File.Exists(x)).ToList();
+						var nonExisting = NEAllFiles.result.DragFiles.Where(x => !File.Exists(x)).ToList();
 						if (nonExisting.Any())
 							throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
 						// TODO: Make these files actually do something
 						//Focused.DragFiles = fileNames;
 					}
 
-					ClearResult();
+					NEAllFiles.ClearResult();
 				}
 
 				return true;
@@ -299,9 +297,7 @@ namespace NeoEdit.Editor
 			catch (Exception ex) { FilesWindow.ShowExceptionMessage(ex); }
 
 			FilesWindow.SetTaskRunnerProgress(null);
-			foreach (var neFiles in AllNEFiles)
-				if (neFiles.result != null)
-					Rollback();
+			NEAllFiles.Rollback();
 			return false;
 		}
 
@@ -424,6 +420,8 @@ namespace NeoEdit.Editor
 
 		public static void CreateFiles(CommandLineParams commandLineParams)
 		{
+			NEAllFiles.BeginTransaction();
+
 			NEFiles neFiles = null;
 			try
 			{
@@ -438,14 +436,14 @@ namespace NeoEdit.Editor
 
 				var shutdownData = string.IsNullOrWhiteSpace(commandLineParams.Wait) ? null : new ShutdownData(commandLineParams.Wait, commandLineParams.Files.Count);
 				if (!commandLineParams.Diff)
-					neFiles = AllNEFiles.OrderByDescending(x => x.LastActivated).FirstOrDefault();
+					neFiles = NEAllFiles.AllNEFiles.OrderByDescending(x => x.LastActivated).FirstOrDefault();
 				if (neFiles == null)
 					neFiles = new NEFiles();
 				foreach (var file in commandLineParams.Files)
 				{
 					if (commandLineParams.Existing)
 					{
-						var neFile = AllNEFiles.OrderByDescending(x => x.LastActivated).Select(x => x.GetFile(file.FileName)).NonNull().FirstOrDefault();
+						var neFile = NEAllFiles.AllNEFiles.OrderByDescending(x => x.LastActivated).Select(x => x.GetFile(file.FileName)).NonNull().FirstOrDefault();
 						if (neFile != null)
 						{
 							neFiles.HandleCommand(new ExecuteState(NECommand.Internal_GotoFile) { Configuration = new Configuration_Internal_GotoFile { NEFile = neFile, Line = file.Line, Column = file.Column, Index = file.Index } });
@@ -460,6 +458,7 @@ namespace NeoEdit.Editor
 					neFiles.HandleCommand(new ExecuteState(NECommand.Internal_SetupDiff));
 
 				neFiles.FilesWindow.SetForeground();
+				NEAllFiles.Commit();
 			}
 			catch (Exception ex)
 			{
@@ -467,6 +466,8 @@ namespace NeoEdit.Editor
 					neFiles.FilesWindow.ShowExceptionMessage(ex);
 				else
 					INEFilesWindowStatic.ShowExceptionMessage(ex);
+
+				NEAllFiles.Rollback();
 			}
 		}
 

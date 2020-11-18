@@ -170,6 +170,9 @@
     <Compile Include="Macro.cs" />
     <Compile Include="MacroAction.cs" />
     <Compile Include="Models\AnswerResult.cs" />
+    <Compile Include="NEAllFiles.cs" />
+    <Compile Include="NEAllFilesData.cs" />
+    <Compile Include="NEAllFilesResult.cs" />
     <Compile Include="NEFile-Content.cs">
       <DependentUpon>NEFile.cs</DependentUpon>
     </Compile>

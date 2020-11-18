@@ -100,7 +100,7 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		void ClearResult() => result = null;
+		public void ClearResult() => result = null;
 
 		public void AddNewFile(NEFile neFile) => CreateResult().AddNewFile(neFile);
 
@@ -115,7 +115,7 @@ namespace NeoEdit.Editor
 			ActiveFiles.ForEach(AddToTransaction);
 		}
 
-		void Rollback()
+		public void Rollback()
 		{
 			EnsureInTransaction();
 

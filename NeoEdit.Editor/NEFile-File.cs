@@ -460,26 +460,7 @@ namespace NeoEdit.Editor
 				neFile.VerifyCanClose();
 				neFile.ClearFiles();
 			}
-			NEFiles.AllNEFiles.Remove(EditorExecuteState.CurrentState.NEFiles);
-			EditorExecuteState.CurrentState.NEFiles.FilesWindow.CloseWindow();
-
-			if (!NEFiles.AllNEFiles.Any())
-			{
-				if (((EditorExecuteState.CurrentState.Configuration as Configuration_File_Exit)?.WindowClosed != true) || (!Settings.DontExitOnClose))
-					Environment.Exit(0);
-
-				GC.Collect();
-				GC.WaitForPendingFinalizers();
-				GC.Collect();
-
-				// Restart if memory usage is more than 1/2 GB
-				var process = Process.GetCurrentProcess();
-				if (process.PrivateMemorySize64 > (1 << 29))
-				{
-					Process.Start(Environment.GetCommandLineArgs()[0], $"-background -waitpid={process.Id}");
-					Environment.Exit(0);
-				}
-			}
+			NEAllFiles.RemoveFiles(EditorExecuteState.CurrentState.NEFiles);
 
 			return true;
 		}
