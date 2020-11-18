@@ -255,10 +255,6 @@ namespace NeoEdit.Editor
 					TaskRunner.Run(Execute, percent => FilesWindow.SetTaskRunnerProgress(percent));
 				FilesWindow.SetTaskRunnerProgress(null);
 
-				foreach (var neFiles in AllNEFiles)
-					if (neFiles.result != null)
-						neFiles.PostExecute();
-
 				if (sw != null)
 				{
 					timeNextAction = false;
@@ -273,8 +269,30 @@ namespace NeoEdit.Editor
 				}
 
 				foreach (var neFiles in AllNEFiles)
-					if (neFiles.result != null)
-						Commit();
+					neFiles.Commit();
+
+				if (result != null)
+				{
+					if (result.Clipboard != null)
+						NEClipboard.Current = result.Clipboard;
+
+					if (result.KeysAndValues != null)
+						for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
+							if (result.KeysAndValues[kvIndex] != null)
+								keysAndValues[kvIndex] = result.KeysAndValues[kvIndex];
+
+					if (result.DragFiles?.Any() == true)
+					{
+						var nonExisting = result.DragFiles.Where(x => !File.Exists(x)).ToList();
+						if (nonExisting.Any())
+							throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
+						// TODO: Make these files actually do something
+						//Focused.DragFiles = fileNames;
+					}
+
+					ClearResult();
+				}
+
 				return true;
 			}
 			catch (OperationCanceledException) { }
@@ -288,112 +306,6 @@ namespace NeoEdit.Editor
 		}
 
 		public void Execute() => ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute());
-
-		void PostExecute()
-		{
-			NEClipboard setClipboard = null;
-			List<KeysAndValues>[] setKeysAndValues = null;
-			var dragFiles = new List<string>();
-
-			var nextAllFiles = new OrderedHashSet<NEFile>();
-			var newFiles = new List<NEFile>();
-			var filesChanged = false;
-			foreach (var neFile in AllFiles)
-			{
-				if (neFile.result == null)
-				{
-					nextAllFiles.Add(neFile);
-					continue;
-				}
-
-				if (neFile.result.Files == null)
-					nextAllFiles.Add(neFile);
-				else
-				{
-					neFile.result.Files.ForEach(nextAllFiles.Add);
-					filesChanged = true;
-				}
-
-				if (neFile.result.NewFiles != null)
-				{
-					newFiles.AddRange(neFile.result.NewFiles);
-					filesChanged = true;
-				}
-
-				if (neFile.result.Clipboard != null)
-				{
-					if (setClipboard == null)
-						setClipboard = new NEClipboard();
-					setClipboard.Add(neFile.result.Clipboard.Item1);
-					setClipboard.IsCut = neFile.result.Clipboard.Item2;
-				}
-
-				if (neFile.result.KeysAndValues != null)
-					for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
-						if (neFile.result.KeysAndValues[kvIndex] != null)
-						{
-							if (setKeysAndValues == null)
-								setKeysAndValues = new List<KeysAndValues>[KeysAndValuesCount];
-							if (setKeysAndValues[kvIndex] == null)
-								setKeysAndValues[kvIndex] = new List<KeysAndValues>();
-							setKeysAndValues[kvIndex].Add(neFile.result.KeysAndValues[kvIndex]);
-						}
-
-				if (neFile.result.DragFiles != null)
-					dragFiles.AddRange(neFile.result.DragFiles);
-			}
-
-			newFiles.ForEach(nextAllFiles.Add);
-
-			if (result != null)
-			{
-				if (result.NewFiles != null)
-				{
-					result.NewFiles.ForEach(nextAllFiles.Add);
-					filesChanged = true;
-				}
-			}
-
-			if (filesChanged)
-			{
-				var newlyAdded = nextAllFiles.Except(AllFiles).ToList();
-
-				AllFiles = nextAllFiles;
-
-				if (newlyAdded.Any())
-					SetActiveFiles(newlyAdded);
-				else
-				{
-					SetActiveFiles(AllFiles.Intersect(ActiveFiles));
-					if (!ActiveFiles.Any())
-					{
-						var newActive = AllFiles.OrderByDescending(file => file.LastActive).FirstOrDefault();
-						if (newActive != null)
-							SetActiveFile(newActive);
-					}
-				}
-
-				var now = DateTime.Now;
-				ActiveFiles.ForEach(neFile => neFile.LastActive = now);
-			}
-
-			if (setClipboard != null)
-				NEClipboard.Current = setClipboard;
-
-			if (setKeysAndValues != null)
-				for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
-					if (setKeysAndValues[kvIndex] != null)
-						keysAndValues[kvIndex] = setKeysAndValues[kvIndex];
-
-			if (dragFiles.Any())
-			{
-				var nonExisting = dragFiles.Where(x => !File.Exists(x)).ToList();
-				if (nonExisting.Any())
-					throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
-				// TODO: Make these files actually do something
-				//Focused.DragFiles = fileNames;
-			}
-		}
 
 		public void SetLayout(WindowLayout windowLayout) => WindowLayout = windowLayout;
 

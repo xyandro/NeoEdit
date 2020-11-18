@@ -128,6 +128,8 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
+		public void ClearResult() => result = null;
+
 		readonly KeysAndValues[] keysAndValues = new KeysAndValues[NEFiles.KeysAndValuesCount];
 		KeysAndValues GetKeysAndValues(int kvIndex)
 		{
@@ -435,7 +437,6 @@ namespace NeoEdit.Editor
 				keysAndValues[kvIndex] = null;
 			inTransaction = false;
 			saveFileData = null;
-			result = null;
 		}
 
 		public void Rollback()
@@ -443,6 +444,7 @@ namespace NeoEdit.Editor
 			EnsureInTransaction();
 			fileData = saveFileData;
 			ClearState();
+			result = null;
 		}
 
 		public void Commit()
