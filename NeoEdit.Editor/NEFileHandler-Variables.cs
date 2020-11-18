@@ -6,7 +6,7 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
-	public partial class NEFileHandler
+	partial class NEFileHandler
 	{
 		void EnsureInTransaction()
 		{
@@ -110,19 +110,26 @@ namespace NeoEdit.Editor
 			fileState.regions[region - 1] = DeOverlap(regions);
 		}
 
-		readonly KeysAndValues[] newKeysAndValues = new KeysAndValues[NEFilesHandler.KeysAndValuesCount];
-		public KeysAndValues GetKeysAndValues(int kvIndex)
+		public NEFileHandlerResult result { get; private set; }
+		NEFileHandlerResult CreateResult()
+		{
+			EnsureInTransaction();
+			if (result == null)
+				result = new NEFileHandlerResult();
+			return result;
+		}
+
+		readonly KeysAndValues[] keysAndValues = new KeysAndValues[NEFilesHandler.KeysAndValuesCount];
+		KeysAndValues GetKeysAndValues(int kvIndex)
 		{
 			if ((kvIndex < 0) || (kvIndex > 9))
 				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
 
-			if (newKeysAndValues[kvIndex] == null)
-				newKeysAndValues[kvIndex] = EditorExecuteState.CurrentState.GetKeysAndValues(kvIndex, this);
+			if (keysAndValues[kvIndex] == null)
+				keysAndValues[kvIndex] = EditorExecuteState.CurrentState.GetKeysAndValues(kvIndex, this);
 
-			return newKeysAndValues[kvIndex];
+			return keysAndValues[kvIndex];
 		}
-
-		readonly bool[] keysAndValuesSet = new bool[NEFilesHandler.KeysAndValuesCount];
 
 		void SetKeysAndValues(int kvIndex, IReadOnlyList<string> values, bool matchCase = false)
 		{
@@ -130,16 +137,9 @@ namespace NeoEdit.Editor
 				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
 
 			EnsureInTransaction();
-			newKeysAndValues[kvIndex] = new KeysAndValues(values, kvIndex == 0, matchCase);
-			keysAndValuesSet[kvIndex] = true;
-		}
-
-		public bool KeysAndValuesSet(int kvIndex)
-		{
-			if ((kvIndex < 0) || (kvIndex > 9))
-				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
-
-			return keysAndValuesSet[kvIndex];
+			var newKeysAndValues = new KeysAndValues(values, kvIndex == 0, matchCase);
+			keysAndValues[kvIndex] = newKeysAndValues;
+			CreateResult().SetKeysAndValues(kvIndex, newKeysAndValues);
 		}
 
 		public string DisplayName
@@ -172,31 +172,24 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		readonly List<(NEFileHandler neFile, int? index)> newFilesToAdd = new List<(NEFileHandler neFile, int? index)>();
-		public IReadOnlyList<(NEFileHandler neFile, int? index)> FilesToAdd => newFilesToAdd;
-		void QueueAddFile(NEFileHandler neFile, int? index = null)
-		{
-			EnsureInTransaction();
-			newFilesToAdd.Add((neFile, index));
-		}
+		void QueueAddFile(NEFileHandler neFile, int? index = null) => CreateResult().AddNewFile((neFile, index));
 
-		Tuple<IReadOnlyList<string>, bool?> newClipboardData;
-		public bool ClipboardDataSet { get; set; }
-		public Tuple<IReadOnlyList<string>, bool?> ClipboardData
+		Tuple<IReadOnlyList<string>, bool?> clipboardData;
+		Tuple<IReadOnlyList<string>, bool?> ClipboardData
 		{
 			get
 			{
-				if (newClipboardData == null)
-					newClipboardData = EditorExecuteState.CurrentState.GetClipboardData(this);
+				if (clipboardData == null)
+					clipboardData = EditorExecuteState.CurrentState.GetClipboardData(this);
 
-				return newClipboardData;
+				return clipboardData;
 			}
 
 			set
 			{
 				EnsureInTransaction();
-				newClipboardData = value;
-				ClipboardDataSet = true;
+				clipboardData = value;
+				CreateResult().SetClipboard(value);
 			}
 		}
 
@@ -204,8 +197,7 @@ namespace NeoEdit.Editor
 		IReadOnlyList<string> ClipboardCopy { set => ClipboardData = Tuple.Create(value, (bool?)false); }
 		IReadOnlyList<string> ClipboardCut { set => ClipboardData = Tuple.Create(value, (bool?)true); }
 
-		readonly List<string> newDragFiles = new List<string>();
-		public IReadOnlyList<string> DragFiles => newDragFiles;
+		void AddDragFile(string fileName) => CreateResult().AddDragFile(fileName);
 
 		public bool AutoRefresh
 		{
@@ -435,17 +427,12 @@ namespace NeoEdit.Editor
 		{
 			EnsureInTransaction();
 
-			newFilesToAdd.Clear();
-			newClipboardData = null;
-			ClipboardDataSet = false;
+			clipboardData = null;
 			for (var kvIndex = 0; kvIndex < NEFilesHandler.KeysAndValuesCount; ++kvIndex)
-			{
-				newKeysAndValues[kvIndex] = null;
-				keysAndValuesSet[kvIndex] = false;
-			}
-			newDragFiles.Clear();
+				keysAndValues[kvIndex] = null;
 			inTransaction = false;
 			saveFileState = null;
+			result = null;
 		}
 
 		public void Rollback()

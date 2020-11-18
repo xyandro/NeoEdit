@@ -233,6 +233,7 @@
       <DependentUpon>NEFileHandler.cs</DependentUpon>
     </Compile>
     <Compile Include="NEFileHandler.cs" />
+    <Compile Include="NEFileHandlerResult.cs" />
     <Compile Include="NEFilesHandler-Macro.cs">
       <DependentUpon>NEFilesHandler.cs</DependentUpon>
     </Compile>

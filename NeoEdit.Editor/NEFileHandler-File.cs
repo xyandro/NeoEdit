@@ -379,7 +379,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Advanced_CommandPrompt() => Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = Path.GetDirectoryName(FileName) });
 
-		void Execute_File_Advanced_DragDrop() => newDragFiles.Add(FileName);
+		void Execute_File_Advanced_DragDrop() => AddDragFile(FileName);
 
 		void Execute_File_Advanced_SetDisplayName()
 		{

@@ -908,7 +908,7 @@ namespace NeoEdit.Editor
 			var strs = RelativeSelectedFiles();
 			if (!StringsAreFiles(strs))
 				throw new Exception("Selections must be files.");
-			newDragFiles.AddRange(strs);
+			strs.ForEach(AddDragFile);
 		}
 
 		static void Configure_Files_Advanced_SplitFiles()

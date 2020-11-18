@@ -290,31 +290,37 @@ namespace NeoEdit.Editor
 			var dragFiles = new List<string>();
 			foreach (var neFile in ActiveFiles)
 			{
-				foreach (var newFileTuple in neFile.FilesToAdd)
-				{
-					AddFile(newFileTuple.neFile, newFileTuple.index + filesAdded);
-					++filesAdded;
-				}
+				if (neFile.result == null)
+					continue;
 
-				if (neFile.ClipboardDataSet)
+				if (neFile.result.FilesToAdd != null)
+					foreach (var newFileTuple in neFile.result.FilesToAdd)
+					{
+						AddFile(newFileTuple.neFile, newFileTuple.index + filesAdded);
+						++filesAdded;
+					}
+
+				if (neFile.result.Clipboard != null)
 				{
 					if (setClipboard == null)
 						setClipboard = new NEClipboard();
-					setClipboard.Add(neFile.ClipboardData.Item1);
-					setClipboard.IsCut = neFile.ClipboardData.Item2;
+					setClipboard.Add(neFile.result.Clipboard.Item1);
+					setClipboard.IsCut = neFile.result.Clipboard.Item2;
 				}
 
-				for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
-					if (neFile.KeysAndValuesSet(kvIndex))
-					{
-						if (setKeysAndValues == null)
-							setKeysAndValues = new List<KeysAndValues>[KeysAndValuesCount];
-						if (setKeysAndValues[kvIndex] == null)
-							setKeysAndValues[kvIndex] = new List<KeysAndValues>();
-						setKeysAndValues[kvIndex].Add(neFile.GetKeysAndValues(kvIndex));
-					}
+				if (neFile.result.KeysAndValues != null)
+					for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
+						if (neFile.result.KeysAndValues[kvIndex] != null)
+						{
+							if (setKeysAndValues == null)
+								setKeysAndValues = new List<KeysAndValues>[KeysAndValuesCount];
+							if (setKeysAndValues[kvIndex] == null)
+								setKeysAndValues[kvIndex] = new List<KeysAndValues>();
+							setKeysAndValues[kvIndex].Add(neFile.result.KeysAndValues[kvIndex]);
+						}
 
-				dragFiles.AddRange(neFile.DragFiles);
+				if (neFile.result.DragFiles != null)
+					dragFiles.AddRange(neFile.result.DragFiles);
 			}
 
 			if (setClipboard != null)
