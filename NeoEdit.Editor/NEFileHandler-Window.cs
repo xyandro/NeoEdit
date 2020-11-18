@@ -155,7 +155,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static Configuration_Window_CustomGrid Configure_Window_CustomGrid() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Window_CustomGrid(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
+		static void Configure_Window_CustomGrid() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Window_CustomGrid(EditorExecuteState.CurrentState.NEFiles.WindowLayout);
 
 		static bool PreExecute_Window_CustomGrid()
 		{
@@ -183,7 +183,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_Binary() => ViewBinary = EditorExecuteState.CurrentState.MultiStatus != true;
 
-		static Configuration_Window_BinaryCodePages Configure_Window_BinaryCodePages() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Window_BinaryCodePages(EditorExecuteState.CurrentState.NEFiles.Focused.ViewBinaryCodePages);
+		static void Configure_Window_BinaryCodePages() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Window_BinaryCodePages(EditorExecuteState.CurrentState.NEFiles.Focused.ViewBinaryCodePages);
 
 		void Execute_Window_BinaryCodePages() => ViewBinaryCodePages = (EditorExecuteState.CurrentState.Configuration as Configuration_Window_BinaryCodePages).CodePages;
 	}

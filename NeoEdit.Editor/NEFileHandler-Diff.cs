@@ -140,7 +140,7 @@ namespace NeoEdit.Editor
 			CalculateDiff();
 		}
 
-		static Configuration_Diff_IgnoreCharacters Configure_Diff_IgnoreCharacters() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Diff_IgnoreCharacters(EditorExecuteState.CurrentState.NEFiles.Focused.DiffIgnoreCharacters);
+		static void Configure_Diff_IgnoreCharacters() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Diff_IgnoreCharacters(EditorExecuteState.CurrentState.NEFiles.Focused.DiffIgnoreCharacters);
 
 		void Execute_Diff_IgnoreCharacters()
 		{
@@ -199,7 +199,7 @@ namespace NeoEdit.Editor
 				source.ReplaceSelections(strs);
 		}
 
-		static Configuration_Diff_Fix_Whitespace Configure_Diff_Fix_Whitespace() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Diff_Fix_Whitespace();
+		static void Configure_Diff_Fix_Whitespace() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Diff_Fix_Whitespace();
 
 		void Execute_Diff_Fix_Whitespace()
 		{

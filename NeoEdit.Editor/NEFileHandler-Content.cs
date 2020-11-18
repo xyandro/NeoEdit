@@ -116,7 +116,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
 
-		static Configuration_Content_Various_WithAttribute Configure_Content_Ancestor() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
+		static void Configure_Content_Ancestor() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
 
 		void Execute_Content_Ancestor()
 		{
@@ -124,7 +124,7 @@ namespace NeoEdit.Editor
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
-		static Configuration_Content_Attributes Configure_Content_Attributes() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Content_Attributes(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionNodes());
+		static void Configure_Content_Attributes() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Content_Attributes(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionNodes());
 
 		void Execute_Content_Attributes()
 		{
@@ -132,7 +132,7 @@ namespace NeoEdit.Editor
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 		}
 
-		static Configuration_Content_Various_WithAttribute Configure_Content_WithAttribute() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionNodes());
+		static void Configure_Content_WithAttribute() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionNodes());
 
 		void Execute_Content_WithAttribute()
 		{
@@ -146,7 +146,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
 
-		static Configuration_Content_Various_WithAttribute Configure_Content_Children_WithAttribute() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
+		static void Configure_Content_Children_WithAttribute() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
 
 		void Execute_Content_Children_WithAttribute()
 		{
@@ -160,7 +160,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
 
-		static Configuration_Content_Various_WithAttribute Configure_Content_Descendants_WithAttribute() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+		static void Configure_Content_Descendants_WithAttribute() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Content_Various_WithAttribute(EditorExecuteState.CurrentState.NEFiles.Focused.GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
 
 		void Execute_Content_Descendants_WithAttribute()
 		{

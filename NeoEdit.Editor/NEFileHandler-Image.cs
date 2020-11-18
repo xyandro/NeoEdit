@@ -117,7 +117,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static Configuration_Image_Resize Configure_Image_Resize() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_Resize(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Image_Resize() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_Resize(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_Resize()
 		{
@@ -148,7 +148,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		static Configuration_Image_Crop Configure_Image_Crop() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_Crop(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Image_Crop() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_Crop(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_Crop()
 		{
@@ -194,7 +194,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		static Configuration_Image_GrabColor Configure_Image_GrabColor() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_GrabColor(EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Select(range => EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetString(range)).FirstOrDefault());
+		static void Configure_Image_GrabColor() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_GrabColor(EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Select(range => EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetString(range)).FirstOrDefault());
 
 		void Execute_Image_GrabColor()
 		{
@@ -202,7 +202,7 @@ namespace NeoEdit.Editor
 			ReplaceOneWithMany(result.Colors, true);
 		}
 
-		static Configuration_Image_GrabImage Configure_Image_GrabImage() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_GrabImage(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Image_GrabImage() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_GrabImage(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_GrabImage()
 		{
@@ -226,7 +226,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		static Configuration_Image_AddOverlayColor Configure_Image_AddOverlayColor(bool add) => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_AddOverlayColor(add, EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Image_AddOverlayColor(bool add) => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_AddOverlayColor(add, EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_AddColor()
 		{
@@ -236,7 +236,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		static Configuration_Image_AdjustColor Configure_Image_AdjustColor() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_AdjustColor(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Image_AdjustColor() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_AdjustColor(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_AdjustColor()
 		{
@@ -258,7 +258,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		static Configuration_Image_Rotate Configure_Image_Rotate() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_Rotate(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Image_Rotate() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_Rotate(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_Rotate()
 		{
@@ -285,7 +285,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		static Configuration_Image_GIF_Animate Configure_Image_GIF_Animate() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_GIF_Animate(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Image_GIF_Animate() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_GIF_Animate(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_GIF_Animate()
 		{
@@ -302,11 +302,11 @@ namespace NeoEdit.Editor
 						writer.WriteFrame(image, delays[ctr]);
 		}
 
-		static Configuration_Image_GIF_Split Configure_Image_GIF_Split()
+		static void Configure_Image_GIF_Split()
 		{
 			var variables = EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			return EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_GIF_Split(variables);
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_GIF_Split(variables);
 		}
 
 		void Execute_Image_GIF_Split()
@@ -321,7 +321,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Image_GetTakenDate() => ReplaceSelections(RelativeSelectedFiles().AsTaskRunner().Select(fileName => GetImageTakenDate(fileName)?.ToString() ?? "<NONE>").ToList());
 
-		static Configuration_Image_SetTakenDate Configure_Image_SetTakenDate() => EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_SetTakenDate(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Image_SetTakenDate() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Image_SetTakenDate(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 
 		void Execute_Image_SetTakenDate()
 		{

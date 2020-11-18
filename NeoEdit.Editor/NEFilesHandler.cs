@@ -11,7 +11,6 @@ using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.CommandLine;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -245,7 +244,7 @@ namespace NeoEdit.Editor
 				EditorExecuteState.CurrentState.KeysAndValuesFunc = GetKeysAndValuesMap;
 
 				if ((!inMacro) && (EditorExecuteState.CurrentState.Configuration == null))
-					EditorExecuteState.CurrentState.Configuration = NEFileHandler.Configure();
+					NEFileHandler.Configure();
 
 				Stopwatch sw = null;
 				if (timeNextAction)

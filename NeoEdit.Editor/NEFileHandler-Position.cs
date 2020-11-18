@@ -128,7 +128,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static Configuration_Position_Goto_Various Configure_Position_Goto_Various(GotoType gotoType)
+		static void Configure_Position_Goto_Various(GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
 			var range = EditorExecuteState.CurrentState.NEFiles.Focused.Selections.FirstOrDefault();
@@ -148,7 +148,7 @@ namespace NeoEdit.Editor
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			return EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
 		}
 
 		void Execute_Position_Goto_Various(GotoType gotoType, bool selecting)

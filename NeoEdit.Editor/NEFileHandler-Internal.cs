@@ -199,7 +199,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static Configuration_Internal_Key Configure_Internal_Key()
+		static void Configure_Internal_Key()
 		{
 			switch (EditorExecuteState.CurrentState.Key)
 			{
@@ -208,11 +208,9 @@ namespace NeoEdit.Editor
 				case Key.Left:
 				case Key.Right:
 					if (EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.HasSelection)))
-						return new Configuration_Internal_Key { HasSelections = true };
+						EditorExecuteState.CurrentState.Configuration = new Configuration_Internal_Key { HasSelections = true };
 					break;
 			}
-
-			return null;
 		}
 
 		static bool PreExecute_Internal_Key()
