@@ -160,7 +160,7 @@ namespace NeoEdit.Editor
 			return MoveCursor(range, Text.GetPosition(line, index), selecting);
 		}
 
-		static PreExecutionStop PreExecute_Internal_Activate()
+		static bool PreExecute_Internal_Activate()
 		{
 			EditorExecuteState.CurrentState.NEFiles.LastActivated = DateTime.Now;
 			foreach (var neFile in EditorExecuteState.CurrentState.NEFiles.AllFiles)
@@ -169,17 +169,17 @@ namespace NeoEdit.Editor
 				neFile.Activated();
 			}
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Internal_AddFile()
+		static bool PreExecute_Internal_AddFile()
 		{
 			var neFile = (EditorExecuteState.CurrentState.Configuration as Configuration_Internal_AddFile).NEFile as NEFileHandler;
 			EditorExecuteState.CurrentState.NEFiles.AddFile(neFile);
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Internal_MouseActivate()
+		static bool PreExecute_Internal_MouseActivate()
 		{
 			var neFile = (EditorExecuteState.CurrentState.Configuration as Configuration_Internal_MouseActivate).NEFile as NEFileHandler;
 			if (!EditorExecuteState.CurrentState.ShiftDown)
@@ -187,16 +187,16 @@ namespace NeoEdit.Editor
 			EditorExecuteState.CurrentState.NEFiles.SetActive(neFile);
 			EditorExecuteState.CurrentState.NEFiles.Focused = neFile;
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Internal_CloseFile()
+		static bool PreExecute_Internal_CloseFile()
 		{
 			var neFile = (EditorExecuteState.CurrentState.Configuration as Configuration_Internal_CloseFile).NEFile as NEFileHandler;
 			neFile.VerifyCanClose();
 			EditorExecuteState.CurrentState.NEFiles.RemoveFile(neFile);
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
 		static Configuration_Internal_Key Configure_Internal_Key()
@@ -215,20 +215,20 @@ namespace NeoEdit.Editor
 			return null;
 		}
 
-		static PreExecutionStop PreExecute_Internal_Key()
+		static bool PreExecute_Internal_Key()
 		{
 			if (!EditorExecuteState.CurrentState.ControlDown || EditorExecuteState.CurrentState.AltDown)
-				return null;
+				return false;
 
 			switch (EditorExecuteState.CurrentState.Key)
 			{
 				case Key.PageUp: EditorExecuteState.CurrentState.NEFiles.MovePrevNext(-1, EditorExecuteState.CurrentState.ShiftDown); break;
 				case Key.PageDown: EditorExecuteState.CurrentState.NEFiles.MovePrevNext(1, EditorExecuteState.CurrentState.ShiftDown); break;
 				case Key.Tab: EditorExecuteState.CurrentState.NEFiles.MovePrevNext(1, EditorExecuteState.CurrentState.ShiftDown, true); break;
-				default: return null;
+				default: return false;
 			}
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
 		void Execute_Internal_Key()
@@ -486,7 +486,7 @@ namespace NeoEdit.Editor
 			Selections = newSels;
 		}
 
-		static PreExecutionStop PreExecute_Internal_Scroll()
+		static bool PreExecute_Internal_Scroll()
 		{
 			var configuration = EditorExecuteState.CurrentState.Configuration as Configuration_Internal_Scroll;
 			var neFile = configuration.NEFile as NEFileHandler;
@@ -494,10 +494,10 @@ namespace NeoEdit.Editor
 			neFile.StartColumn = configuration.Column;
 			neFile.StartRow = configuration.Row;
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Internal_Mouse()
+		static bool PreExecute_Internal_Mouse()
 		{
 			var configuration = EditorExecuteState.CurrentState.Configuration as Configuration_Internal_Mouse;
 			var neFile = configuration.NEFile as NEFileHandler;
@@ -506,12 +506,12 @@ namespace NeoEdit.Editor
 			{
 				EditorExecuteState.CurrentState.NEFiles.ClearAllActive();
 				EditorExecuteState.CurrentState.NEFiles.SetActive(neFile);
-				return PreExecutionStop.Stop;
+				return true;
 			}
 
 			neFile.Execute_Internal_Mouse(configuration.Line, configuration.Column, configuration.ClickCount, configuration.Selecting);
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
 		public void Execute_Internal_Mouse(int line, int column, int clickCount, bool? selecting)
@@ -571,7 +571,7 @@ namespace NeoEdit.Editor
 				CurrentSelection = Selections.FindIndex(currentSelection);
 		}
 
-		static PreExecutionStop PreExecute_Internal_SetupDiff()
+		static bool PreExecute_Internal_SetupDiff()
 		{
 			EditorExecuteState.CurrentState.NEFiles.AllFiles.ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.AddToTransaction(neFile));
 			for (var ctr = 0; ctr + 1 < EditorExecuteState.CurrentState.NEFiles.AllFiles.Count; ctr += 2)
@@ -584,15 +584,15 @@ namespace NeoEdit.Editor
 			}
 			EditorExecuteState.CurrentState.NEFiles.SetLayout(new WindowLayout(maxColumns: 2));
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Internal_GotoFile()
+		static bool PreExecute_Internal_GotoFile()
 		{
 			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Internal_GotoFile;
 			(result.NEFile as NEFileHandler).Goto(result.Line, result.Column, result.Index);
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 	}
 }

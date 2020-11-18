@@ -252,8 +252,7 @@ namespace NeoEdit.Editor
 					sw = Stopwatch.StartNew();
 
 				FilesWindow.SetTaskRunnerProgress(0);
-				EditorExecuteState.CurrentState.PreExecution = NEFileHandler.PreExecute();
-				if (EditorExecuteState.CurrentState.PreExecution != PreExecutionStop.Stop)
+				if (!NEFileHandler.PreExecute())
 					TaskRunner.Run(Execute, percent => FilesWindow.SetTaskRunnerProgress(percent));
 				FilesWindow.SetTaskRunnerProgress(null);
 				PostExecute();

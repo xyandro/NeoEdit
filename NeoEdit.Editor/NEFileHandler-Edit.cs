@@ -600,10 +600,10 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Advanced_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
 
-		static PreExecutionStop PreExecute_Edit_Advanced_EscapeClearsSelections()
+		static bool PreExecute_Edit_Advanced_EscapeClearsSelections()
 		{
 			Settings.EscapeClearsSelections = EditorExecuteState.CurrentState.MultiStatus != true;
-			return PreExecutionStop.Stop;
+			return true;
 		}
 	}
 }

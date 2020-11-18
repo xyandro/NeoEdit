@@ -54,15 +54,15 @@ namespace NeoEdit.Editor
 			Selections = Text.GetDiffMatches(matching).Select(tuple => new Range(tuple.Item2, tuple.Item1)).ToList();
 		}
 
-		static PreExecutionStop PreExecute_Diff_Select_LeftRightBothFiles(bool? left)
+		static bool PreExecute_Diff_Select_LeftRightBothFiles(bool? left)
 		{
 			var active = new HashSet<NEFileHandler>(EditorExecuteState.CurrentState.NEFiles.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFileHandler> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((EditorExecuteState.CurrentState.NEFiles.GetFileIndex(item) < EditorExecuteState.CurrentState.NEFiles.GetFileIndex(item.DiffTarget)) == left)));
 			EditorExecuteState.CurrentState.NEFiles.AllFiles.ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.SetActive(neFile, active.Contains(neFile)));
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Diff_Diff()
+		static bool PreExecute_Diff_Diff()
 		{
 			var diffTargets = EditorExecuteState.CurrentState.NEFiles.AllFiles.Count == 2 ? EditorExecuteState.CurrentState.NEFiles.AllFiles.ToList() : EditorExecuteState.CurrentState.NEFiles.ActiveFiles.ToList();
 			diffTargets.ForEach(diffTarget => EditorExecuteState.CurrentState.NEFiles.AddToTransaction(diffTarget));
@@ -75,7 +75,7 @@ namespace NeoEdit.Editor
 					diffTargets[ctr].DiffTarget = null;
 				}
 			if (inDiff)
-				return PreExecutionStop.Stop;
+				return true;
 
 			if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
 				throw new Exception("Must have even number of files active for diff.");
@@ -96,7 +96,7 @@ namespace NeoEdit.Editor
 
 			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
 		void Execute_Diff_Break() => DiffTarget = null;

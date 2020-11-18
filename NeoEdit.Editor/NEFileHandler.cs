@@ -459,7 +459,7 @@ namespace NeoEdit.Editor
 		#endregion
 
 		#region PreExecute
-		public static IPreExecution PreExecute()
+		public static bool PreExecute()
 		{
 			switch (EditorExecuteState.CurrentState.Command)
 			{
@@ -592,7 +592,7 @@ namespace NeoEdit.Editor
 				case NECommand.Help_About: return PreExecute_Help_About();
 			}
 
-			return null;
+			return false;
 		}
 		#endregion
 

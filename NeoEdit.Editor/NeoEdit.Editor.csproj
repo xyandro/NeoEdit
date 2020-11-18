@@ -247,7 +247,6 @@
     <Compile Include="PreExecution\PreExecution_Files_SelectGet_BySourceControlStatus.cs" />
     <Compile Include="PreExecution\PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase.cs" />
     <Compile Include="PreExecution\PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase.cs" />
-    <Compile Include="PreExecution\PreExecutionStop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Searchers\BinarySearcher.cs" />
     <Compile Include="Searchers\ISearcher.cs" />

@@ -13,19 +13,19 @@ namespace NeoEdit.Editor
 	{
 		static string QuickMacro(int num) => $"QuickText{num}.xml";
 
-		static PreExecutionStop PreExecute_Macro_Play_Quick(int quickNum)
+		static bool PreExecute_Macro_Play_Quick(int quickNum)
 		{
 			EditorExecuteState.CurrentState.NEFiles.PlayMacro(Macro.Load(EditorExecuteState.CurrentState.NEFiles.FilesWindow, QuickMacro(quickNum), true));
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Play_Play()
+		static bool PreExecute_Macro_Play_Play()
 		{
 			EditorExecuteState.CurrentState.NEFiles.PlayMacro(Macro.Load(EditorExecuteState.CurrentState.NEFiles.FilesWindow));
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Play_Repeat()
+		static bool PreExecute_Macro_Play_Repeat()
 		{
 			var result = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_PreExecute_Macro_Play_Repeat(() => Macro.ChooseMacro(EditorExecuteState.CurrentState.NEFiles.FilesWindow));
 
@@ -49,10 +49,10 @@ namespace NeoEdit.Editor
 			};
 			startNext();
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Play_PlayOnCopiedFiles()
+		static bool PreExecute_Macro_Play_PlayOnCopiedFiles()
 		{
 			var files = new Queue<string>(NEClipboard.Current.Strings);
 			var macro = Macro.Load(EditorExecuteState.CurrentState.NEFiles.FilesWindow);
@@ -66,28 +66,28 @@ namespace NeoEdit.Editor
 			};
 			startNext();
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Record_Quick(int quickNum)
+		static bool PreExecute_Macro_Record_Quick(int quickNum)
 		{
 			if (EditorExecuteState.CurrentState.NEFiles.recordingMacro == null)
 				PreExecute_Macro_Record_Record();
 			else
 				PreExecute_Macro_Record_StopRecording(QuickMacro(quickNum));
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Record_Record()
+		static bool PreExecute_Macro_Record_Record()
 		{
 			EditorExecuteState.CurrentState.NEFiles.EnsureNotRecording();
 			EditorExecuteState.CurrentState.NEFiles.recordingMacro = new Macro();
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Record_StopRecording(string fileName = null)
+		static bool PreExecute_Macro_Record_StopRecording(string fileName = null)
 		{
 			if (EditorExecuteState.CurrentState.NEFiles.recordingMacro == null)
 				throw new Exception($"Cannot stop recording; recording not in progess.");
@@ -96,37 +96,37 @@ namespace NeoEdit.Editor
 			EditorExecuteState.CurrentState.NEFiles.recordingMacro = null;
 			macro.Save(EditorExecuteState.CurrentState.NEFiles.FilesWindow, fileName, true);
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Append_Quick(int quickNum)
+		static bool PreExecute_Macro_Append_Quick(int quickNum)
 		{
 			if (EditorExecuteState.CurrentState.NEFiles.recordingMacro == null)
 				EditorExecuteState.CurrentState.NEFiles.recordingMacro = Macro.Load(EditorExecuteState.CurrentState.NEFiles.FilesWindow, QuickMacro(quickNum), true);
 			else
 				PreExecute_Macro_Record_StopRecording(QuickMacro(quickNum));
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Append_Append()
+		static bool PreExecute_Macro_Append_Append()
 		{
 			EditorExecuteState.CurrentState.NEFiles.EnsureNotRecording();
 			EditorExecuteState.CurrentState.NEFiles.recordingMacro = Macro.Load(EditorExecuteState.CurrentState.NEFiles.FilesWindow);
 
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Open_Quick(int quickNum)
+		static bool PreExecute_Macro_Open_Quick(int quickNum)
 		{
 			EditorExecuteState.CurrentState.NEFiles.AddFile(new NEFileHandler(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
-			return PreExecutionStop.Stop;
+			return true;
 		}
 
-		static PreExecutionStop PreExecute_Macro_Visualize()
+		static bool PreExecute_Macro_Visualize()
 		{
 			EditorExecuteState.CurrentState.NEFiles.MacroVisualize = EditorExecuteState.CurrentState.MultiStatus != true;
-			return PreExecutionStop.Stop;
+			return true;
 		}
 	}
 }
