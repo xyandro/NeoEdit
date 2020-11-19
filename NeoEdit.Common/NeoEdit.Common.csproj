@@ -105,9 +105,7 @@
     <Compile Include="Configuration\Configuration_Image_Resize.cs" />
     <Compile Include="Configuration\Configuration_Image_Rotate.cs" />
     <Compile Include="Configuration\Configuration_Image_SetTakenDate.cs" />
-    <Compile Include="Configuration\Configuration_Internal_AddFile.cs" />
     <Compile Include="Configuration\Configuration_Internal_CloseFile.cs" />
-    <Compile Include="Configuration\Configuration_Internal_GotoFile.cs" />
     <Compile Include="Configuration\Configuration_Internal_Key.cs" />
     <Compile Include="Configuration\Configuration_Internal_Mouse.cs" />
     <Compile Include="Configuration\Configuration_Internal_MouseActivate.cs" />

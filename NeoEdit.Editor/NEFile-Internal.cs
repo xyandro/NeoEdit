@@ -6,7 +6,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -169,13 +168,6 @@ namespace NeoEdit.Editor
 				neFile.Activated();
 			}
 
-			return true;
-		}
-
-		static bool PreExecute_Internal_AddFile()
-		{
-			var neFile = (EditorExecuteState.CurrentState.Configuration as Configuration_Internal_AddFile).NEFile as NEFile;
-			EditorExecuteState.CurrentState.NEFiles.AddNewFile(neFile);
 			return true;
 		}
 
@@ -562,30 +554,6 @@ namespace NeoEdit.Editor
 			Selections = sels;
 			if (currentSelection != null)
 				CurrentSelection = Selections.FindIndex(currentSelection);
-		}
-
-		static bool PreExecute_Internal_SetupDiff()
-		{
-			EditorExecuteState.CurrentState.NEFiles.AllFiles.ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.AddToTransaction(neFile));
-			for (var ctr = 0; ctr + 1 < EditorExecuteState.CurrentState.NEFiles.AllFiles.Count; ctr += 2)
-			{
-				EditorExecuteState.CurrentState.NEFiles.AllFiles[ctr].DiffTarget = EditorExecuteState.CurrentState.NEFiles.AllFiles[ctr + 1];
-				if (EditorExecuteState.CurrentState.NEFiles.AllFiles[ctr].ContentType == ParserType.None)
-					EditorExecuteState.CurrentState.NEFiles.AllFiles[ctr].ContentType = EditorExecuteState.CurrentState.NEFiles.AllFiles[ctr + 1].ContentType;
-				if (EditorExecuteState.CurrentState.NEFiles.AllFiles[ctr + 1].ContentType == ParserType.None)
-					EditorExecuteState.CurrentState.NEFiles.AllFiles[ctr + 1].ContentType = EditorExecuteState.CurrentState.NEFiles.AllFiles[ctr].ContentType;
-			}
-			EditorExecuteState.CurrentState.NEFiles.SetLayout(new WindowLayout(maxColumns: 2));
-
-			return true;
-		}
-
-		static bool PreExecute_Internal_GotoFile()
-		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Internal_GotoFile;
-			(result.NEFile as NEFile).Goto(result.Line, result.Column, result.Index);
-
-			return true;
 		}
 	}
 }

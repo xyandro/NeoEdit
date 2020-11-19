@@ -418,6 +418,19 @@ namespace NeoEdit.Editor
 
 		public static CommandLineParams ParseCommandLine(string commandLine) => CommandLineVisitor.GetCommandLineParams(commandLine);
 
+		void SetupDiff()
+		{
+			for (var ctr = 0; ctr + 1 < AllFiles.Count; ctr += 2)
+			{
+				AllFiles[ctr].DiffTarget = AllFiles[ctr + 1];
+				if (AllFiles[ctr].ContentType == ParserType.None)
+					AllFiles[ctr].ContentType = AllFiles[ctr + 1].ContentType;
+				if (AllFiles[ctr + 1].ContentType == ParserType.None)
+					AllFiles[ctr + 1].ContentType = AllFiles[ctr].ContentType;
+			}
+			SetLayout(new WindowLayout(maxColumns: 2));
+		}
+
 		public static void CreateFiles(CommandLineParams commandLineParams)
 		{
 			NEAllFiles.BeginTransaction();
@@ -446,16 +459,16 @@ namespace NeoEdit.Editor
 						var neFile = NEAllFiles.AllNEFiles.OrderByDescending(x => x.LastActivated).Select(x => x.GetFile(file.FileName)).NonNull().FirstOrDefault();
 						if (neFile != null)
 						{
-							neFiles.HandleCommand(new ExecuteState(NECommand.Internal_GotoFile) { Configuration = new Configuration_Internal_GotoFile { NEFile = neFile, Line = file.Line, Column = file.Column, Index = file.Index } });
+							neFile.Goto(file.Line, file.Column, file.Index);
 							continue;
 						}
 					}
 
-					neFiles.HandleCommand(new ExecuteState(NECommand.Internal_AddFile) { Configuration = new Configuration_Internal_AddFile { NEFile = new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData) } });
+					neFiles.AddNewFile(new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData));
 				}
 
 				if (commandLineParams.Diff)
-					neFiles.HandleCommand(new ExecuteState(NECommand.Internal_SetupDiff));
+					neFiles.SetupDiff();
 
 				neFiles.FilesWindow.SetForeground();
 				NEAllFiles.Commit();

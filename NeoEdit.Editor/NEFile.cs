@@ -464,14 +464,11 @@ namespace NeoEdit.Editor
 			switch (EditorExecuteState.CurrentState.Command)
 			{
 				case NECommand.Internal_Activate: return PreExecute_Internal_Activate();
-				case NECommand.Internal_AddFile: return PreExecute_Internal_AddFile();
 				case NECommand.Internal_MouseActivate: return PreExecute_Internal_MouseActivate();
 				case NECommand.Internal_CloseFile: return PreExecute_Internal_CloseFile();
 				case NECommand.Internal_Key: return PreExecute_Internal_Key();
 				case NECommand.Internal_Scroll: return PreExecute_Internal_Scroll();
 				case NECommand.Internal_Mouse: return PreExecute_Internal_Mouse();
-				case NECommand.Internal_SetupDiff: return PreExecute_Internal_SetupDiff();
-				case NECommand.Internal_GotoFile: return PreExecute_Internal_GotoFile();
 				case NECommand.File_Select_All: return PreExecute_File_Select_All();
 				case NECommand.File_Select_None: return PreExecute_File_Select_None();
 				case NECommand.File_Select_WithSelections: return PreExecute_File_Select_WithWithoutSelections(true);

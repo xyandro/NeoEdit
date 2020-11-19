@@ -6,7 +6,6 @@ namespace NeoEdit.Common
 	{
 		None,
 		[NoMacro] Internal_Activate,
-		[NoMacro] Internal_AddFile,
 		[NoMacro] Internal_MouseActivate,
 		[NoMacro] Internal_CloseFile,
 		Internal_Key,
@@ -15,8 +14,6 @@ namespace NeoEdit.Common
 		[NoMacro] Internal_Scroll,
 		[NoMacro] Internal_Mouse,
 		[NoMacro] Internal_Redraw,
-		[NoMacro] Internal_SetupDiff,
-		[NoMacro] Internal_GotoFile,
 		[KeyGesture(Key.A, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] File_Select_All,
 		File_Select_None,
 		File_Select_WithSelections,
