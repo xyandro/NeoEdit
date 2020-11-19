@@ -160,7 +160,7 @@ namespace NeoEdit.Editor
 			Selections = values.Indexes(value => value == find).Select(index => Selections[index]).ToList();
 		}
 
-		static void Configure_Numeric_Select_Limit() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_Select_Limit(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Numeric_Select_Limit() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_Select_Limit(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Numeric_Select_Limit()
 		{
@@ -172,7 +172,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => Limit(minimums[index], double.Parse(Text.GetString(range)), maximums[index]).ToString()).ToList());
 		}
 
-		static void Configure_Numeric_Round() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_Various("Round", EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Numeric_Round() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_Various("Round", EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Numeric_Round()
 		{
@@ -182,7 +182,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => (Math.Round((double.Parse(Text.GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index], MidpointRounding.AwayFromZero) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
-		static void Configure_Numeric_Floor() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_Various("Floor", EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Numeric_Floor() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_Various("Floor", EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Numeric_Floor()
 		{
@@ -192,7 +192,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => (Math.Floor((double.Parse(Text.GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index]) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
-		static void Configure_Numeric_Ceiling() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_Various("Ceiling", EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Numeric_Ceiling() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_Various("Ceiling", EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Numeric_Ceiling()
 		{
@@ -259,7 +259,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Numeric_AbsoluteValue() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).TrimStart('-')).ToList());
 
-		static void Configure_Numeric_Scale() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_Scale(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Numeric_Scale() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_Scale(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Numeric_Scale()
 		{
@@ -273,7 +273,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => ((double.Parse(Text.GetString(range)) - prevMins[index]) * (newMaxs[index] - newMins[index]) / (prevMaxs[index] - prevMins[index]) + newMins[index]).ToString()).ToList());
 		}
 
-		static void Configure_Numeric_Cycle() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_Cycle(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Numeric_Cycle() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_Cycle(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Numeric_Cycle()
 		{
@@ -294,7 +294,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Numeric_Series_OneBased() => ReplaceSelections(Selections.Select((range, index) => (index + 1).ToString()).ToList());
 
-		static void Configure_Numeric_Series_LinearGeometric(bool linear) => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_Series_LinearGeometric(linear, EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Numeric_Series_LinearGeometric(bool linear) => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_Series_LinearGeometric(linear, EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Numeric_Series_LinearGeometric(bool linear)
 		{
@@ -309,7 +309,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Numeric_ConvertBase_FromHex() => ReplaceSelections(Selections.AsTaskRunner().Select(range => BigInteger.Parse("0" + Text.GetString(range), NumberStyles.HexNumber).ToString()).ToList());
 
-		static void Configure_Numeric_ConvertBase_ConvertBase() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_ConvertBase_ConvertBase();
+		static void Configure_Numeric_ConvertBase_ConvertBase() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_ConvertBase_ConvertBase();
 
 		void Execute_Numeric_ConvertBase_ConvertBase()
 		{
@@ -317,7 +317,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(GetSelectionStrings().Select(str => ConvertBase(str, result.InputSet, result.OutputSet)).ToList());
 		}
 
-		static void Configure_Numeric_RandomNumber() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_RandomNumber(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Numeric_RandomNumber() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_RandomNumber(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Numeric_RandomNumber()
 		{
@@ -333,7 +333,7 @@ namespace NeoEdit.Editor
 			if (EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_CombinationsPermutations();
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_CombinationsPermutations();
 		}
 
 		void Execute_Numeric_CombinationsPermutations()
@@ -394,7 +394,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Numeric_MinMaxValues() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Numeric_MinMaxValues();
+		static void Configure_Numeric_MinMaxValues() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Numeric_MinMaxValues();
 
 		void Execute_Numeric_MinMaxValues()
 		{

@@ -1224,7 +1224,7 @@ namespace NeoEdit.Editor
 			watcher.Changed += (s1, e1) =>
 			{
 				watcherFileModified = true;
-				try { EditorExecuteState.CurrentState.NEWindow.FilesWindow.QueueActivateNEWindow(); } catch { }
+				try { EditorExecuteState.CurrentState.NEWindowUI.QueueActivateNEWindow(); } catch { }
 			};
 			watcher.EnableRaisingEvents = true;
 		}
@@ -1700,7 +1700,7 @@ namespace NeoEdit.Editor
 			lock (EditorExecuteState.CurrentState)
 			{
 				if ((!EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.All)) && (!EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.Cancel)))
-					EditorExecuteState.CurrentState.NEWindow.ShowFile(this, () => EditorExecuteState.CurrentState.SavedAnswers[name] = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
+					EditorExecuteState.CurrentState.NEWindow.ShowFile(this, () => EditorExecuteState.CurrentState.SavedAnswers[name] = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
 				if (EditorExecuteState.CurrentState.SavedAnswers[name] == MessageOptions.Cancel)
 					throw new OperationCanceledException();
 				return EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.Yes);

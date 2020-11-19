@@ -44,7 +44,7 @@ namespace NeoEdit.Editor
 		{
 			return EditorExecuteState.CurrentState.NEWindow.ShowFile(this, () =>
 			{
-				var result = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunSaveFileDialog(Path.GetFileName(FileName) ?? DisplayName, "txt", Path.GetDirectoryName(FileName), "All files|*.*");
+				var result = EditorExecuteState.CurrentState.NEWindowUI.RunSaveFileDialog(Path.GetFileName(FileName) ?? DisplayName, "txt", Path.GetDirectoryName(FileName), "All files|*.*");
 				if (result == null)
 					throw new OperationCanceledException();
 
@@ -137,7 +137,7 @@ namespace NeoEdit.Editor
 				//EditorExecuteState.CurrentState.NEWindow.RenderFilesWindow();
 			};
 
-			EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_PreExecute_File_Select_Choose(data);
+			EditorExecuteState.CurrentState.NEWindowUI.RunDialog_PreExecute_File_Select_Choose(data);
 
 			return true;
 		}
@@ -182,7 +182,7 @@ namespace NeoEdit.Editor
 		{
 			if ((initialDirectory == null) && (EditorExecuteState.CurrentState.NEWindow.Focused != null))
 				initialDirectory = Path.GetDirectoryName(EditorExecuteState.CurrentState.NEWindow.Focused.FileName);
-			var result = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_FileMacro_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
+			var result = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_FileMacro_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
 			if (result == null)
 				throw new OperationCanceledException();
 			EditorExecuteState.CurrentState.Configuration = result;
@@ -201,7 +201,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static void Configure_File_Open_ReopenWithEncoding() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage);
+		static void Configure_File_Open_ReopenWithEncoding() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage);
 
 		void Execute_File_Open_ReopenWithEncoding()
 		{
@@ -270,7 +270,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_SaveCopy_SaveAsCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		static void Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables(), EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count);
+		static void Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables(), EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count);
 
 		void Execute_File_SaveCopy_SaveAsCopyByExpression(bool copyOnly = false)
 		{
@@ -306,7 +306,7 @@ namespace NeoEdit.Editor
 			SetFileName(fileName);
 		}
 
-		static void Configure_File_Move_MoveByExpression() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables(), EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count);
+		static void Configure_File_Move_MoveByExpression() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables(), EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count);
 
 		void Execute_File_Move_MoveByExpression()
 		{
@@ -349,7 +349,7 @@ namespace NeoEdit.Editor
 			File.Delete(FileName);
 		}
 
-		static void Configure_File_Encoding() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage);
+		static void Configure_File_Encoding() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage);
 
 		void Execute_File_Encoding()
 		{
@@ -361,7 +361,7 @@ namespace NeoEdit.Editor
 		{
 			var endings = EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Select(neFile => neFile.Text.OnlyEnding).Distinct().Take(2).ToList();
 			var ending = endings.Count == 1 ? endings[0] : "";
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_File_LineEndings(ending);
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_File_LineEndings(ending);
 		}
 
 		void Execute_File_LineEndings()
@@ -392,7 +392,7 @@ namespace NeoEdit.Editor
 			if (EditorExecuteState.CurrentState.MultiStatus != false)
 				EditorExecuteState.CurrentState.Configuration = new Configuration_File_Advanced_Encrypt();
 			else
-				EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type.AES, true);
+				EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type.AES, true);
 		}
 
 		void Execute_File_Advanced_Encrypt() => AESKey = (EditorExecuteState.CurrentState.Configuration as Configuration_File_Advanced_Encrypt).Key;

@@ -34,7 +34,7 @@ namespace NeoEdit.UI
 			Clipboarder.Initialize();
 		}
 
-		readonly INEWindow NEWindow;
+		public readonly INEWindow NEWindow;
 
 		public RenderParameters renderParameters;
 
@@ -57,7 +57,8 @@ namespace NeoEdit.UI
 		public void HandleCommand(ExecuteState state)
 		{
 			state.NEWindow = NEWindow;
-			NEGlobalUI.HandleCommand(state, Dispatcher);
+			state.NEWindowUI = this;
+			NEGlobalUI.HandleCommand(state);
 		}
 
 		public void QueueActivateNEWindow()

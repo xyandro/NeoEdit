@@ -48,7 +48,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Version length mismatch");
 
 			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
-			if (!EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_ShowMessage("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
+			if (!EditorExecuteState.CurrentState.NEWindowUI.RunDialog_ShowMessage("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
 				return true;
 
 			var oldLocation = Assembly.GetEntryAssembly().Location;
@@ -82,7 +82,7 @@ namespace NeoEdit.Editor
 				File.WriteAllBytes(newLocation, result);
 
 				Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
-				EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_ShowMessage("Info", "The program will be updated after exiting.");
+				EditorExecuteState.CurrentState.NEWindowUI.RunDialog_ShowMessage("Info", "The program will be updated after exiting.");
 			});
 
 			return true;
@@ -129,7 +129,7 @@ namespace NeoEdit.Editor
 		{
 			var location = Assembly.GetEntryAssembly().Location;
 
-			if (!EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_ShowMessage("Extract files", $"Files will be extracted from {location} after program exits.", MessageOptions.OkCancel, MessageOptions.Ok, MessageOptions.Cancel).HasFlag(MessageOptions.Ok))
+			if (!EditorExecuteState.CurrentState.NEWindowUI.RunDialog_ShowMessage("Extract files", $"Files will be extracted from {location} after program exits.", MessageOptions.OkCancel, MessageOptions.Ok, MessageOptions.Cancel).HasFlag(MessageOptions.Ok))
 				return true;
 
 			Process.Start(location, $@"-extract {Process.GetCurrentProcess().Id}");
@@ -145,7 +145,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Help_About()
 		{
-			EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_PreExecute_Help_About();
+			EditorExecuteState.CurrentState.NEWindowUI.RunDialog_PreExecute_Help_About();
 			return true;
 		}
 	}

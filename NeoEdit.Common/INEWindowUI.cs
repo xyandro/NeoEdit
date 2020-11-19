@@ -14,8 +14,6 @@ namespace NeoEdit.Common
 	public static class INEWindowUIStatic
 	{
 		public static Func<Cryptor.Type, bool, string> RunCryptorKeyDialog { get; set; }
-		public static Func<INEWindow, INEWindowUI> CreateINEWindowUI { get; set; }
-		public static Action<Exception> ShowExceptionMessage { get; set; }
 	}
 
 	public interface INEWindowUI
@@ -118,9 +116,7 @@ namespace NeoEdit.Common
 
 		void Render(RenderParameters renderParameters);
 		void ShowExceptionMessage(Exception ex);
-		void CloseWindow();
 		void QueueActivateNEWindow();
-		void SetForeground();
 		void SetMacroProgress(double? percent);
 		void SetTaskRunnerProgress(double? percent);
 	}

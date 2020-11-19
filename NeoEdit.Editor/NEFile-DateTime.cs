@@ -97,7 +97,7 @@ namespace NeoEdit.Editor
 
 		void Execute_DateTime_ToLocal() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: Dater.Local), Dater.Local))).ToList());
 
-		static void Configure_DateTime_ToTimeZone() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_DateTime_ToTimeZone();
+		static void Configure_DateTime_ToTimeZone() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_DateTime_ToTimeZone();
 
 		void Execute_DateTime_ToTimeZone()
 		{
@@ -105,7 +105,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select(range => Dater.DateTimeOffsetToString(Dater.ChangeTimeZone(Dater.StringToDateTimeOffset(Text.GetString(range), defaultTimeZone: result.TimeZone), result.TimeZone))).ToList());
 		}
 
-		static void Configure_DateTime_Format() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_DateTime_Format(EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Select(range => EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
+		static void Configure_DateTime_Format() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_DateTime_Format(EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Select(range => EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetString(range)).DefaultIfEmpty(Dater.DateTimeOffsetToString(DateTimeOffset.Now)).First());
 
 		void Execute_DateTime_Format()
 		{

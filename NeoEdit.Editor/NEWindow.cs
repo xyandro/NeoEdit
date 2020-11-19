@@ -13,8 +13,6 @@ namespace NeoEdit.Editor
 {
 	public partial class NEWindow : INEWindow
 	{
-		public INEWindowUI FilesWindow { get; }
-
 		int displayColumns;
 		public int DisplayColumns
 		{
@@ -41,7 +39,6 @@ namespace NeoEdit.Editor
 			WindowLayout = new WindowLayout(1, 1);
 			EditorExecuteState.CurrentState.NEGlobal.AddNewFiles(this);
 
-			FilesWindow = INEWindowUIStatic.CreateINEWindowUI(this);
 			if (addEmpty)
 				AddNewFile(new NEFile());
 		}
@@ -91,7 +88,7 @@ namespace NeoEdit.Editor
 				StatusBar = GetStatusBar(),
 				MenuStatus = GetMenuStatus(),
 			};
-			FilesWindow.Render(renderParameters);
+			EditorExecuteState.CurrentState.NEWindowUI.Render(renderParameters);
 		}
 
 		Dictionary<string, bool?> GetMenuStatus()
@@ -164,7 +161,7 @@ namespace NeoEdit.Editor
 			if (playingMacro == null)
 				return;
 
-			FilesWindow.SetMacroProgress(0);
+			EditorExecuteState.CurrentState.NEWindowUI.SetMacroProgress(0);
 			var stepIndex = 0;
 			DateTime lastTime = DateTime.MinValue;
 			while (true)
@@ -188,7 +185,7 @@ namespace NeoEdit.Editor
 				if ((now - lastTime).TotalMilliseconds >= 100)
 				{
 					lastTime = now;
-					FilesWindow.SetMacroProgress((double)stepIndex / macro.Actions.Count);
+					EditorExecuteState.CurrentState.NEWindowUI.SetMacroProgress((double)stepIndex / macro.Actions.Count);
 				}
 
 				macro.Actions[stepIndex++].SetExecuteState();
@@ -201,7 +198,7 @@ namespace NeoEdit.Editor
 				if (MacroVisualize)
 					RenderFilesWindow();
 			}
-			FilesWindow.SetMacroProgress(null);
+			EditorExecuteState.CurrentState.NEWindowUI.SetMacroProgress(null);
 		}
 
 		public void HandleCommand(ExecuteState state, Func<bool> skipDraw = null)
@@ -239,15 +236,15 @@ namespace NeoEdit.Editor
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
-				FilesWindow.SetTaskRunnerProgress(0);
+				EditorExecuteState.CurrentState.NEWindowUI.SetTaskRunnerProgress(0);
 				if (!NEFile.PreExecute())
-					TaskRunner.Run(Execute, percent => FilesWindow.SetTaskRunnerProgress(percent));
-				FilesWindow.SetTaskRunnerProgress(null);
+					TaskRunner.Run(Execute, percent => EditorExecuteState.CurrentState.NEWindowUI.SetTaskRunnerProgress(percent));
+				EditorExecuteState.CurrentState.NEWindowUI.SetTaskRunnerProgress(null);
 
 				if (sw != null)
 				{
 					timeNextAction = false;
-					FilesWindow.RunDialog_ShowMessage("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
+					EditorExecuteState.CurrentState.NEWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
 				}
 
 				var action = MacroAction.GetMacroAction();
@@ -281,9 +278,9 @@ namespace NeoEdit.Editor
 				return true;
 			}
 			catch (OperationCanceledException) { }
-			catch (Exception ex) { FilesWindow.ShowExceptionMessage(ex); }
+			catch (Exception ex) { EditorExecuteState.CurrentState.NEWindowUI.ShowExceptionMessage(ex); }
 
-			FilesWindow.SetTaskRunnerProgress(null);
+			EditorExecuteState.CurrentState.NEWindowUI.SetTaskRunnerProgress(null);
 			EditorExecuteState.CurrentState.NEGlobal.ResetData(oldData);
 			return false;
 		}
@@ -364,8 +361,6 @@ namespace NeoEdit.Editor
 			DisplayColumns = columns;
 			DisplayRows = rows;
 		}
-
-		void SetForeground() => FilesWindow.SetForeground();
 
 		List<string> GetStatusBar()
 		{

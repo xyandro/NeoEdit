@@ -68,7 +68,7 @@ namespace NeoEdit.Editor
 			return results;
 		}
 
-		static void Configure_Network_AbsoluteURL() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Network_AbsoluteURL(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Network_AbsoluteURL() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Network_AbsoluteURL(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Network_AbsoluteURL()
 		{
@@ -86,7 +86,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(results.Select(result => result.Item2).ToList());
 		}
 
-		static void Configure_Network_Fetch_File() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Network_Fetch_File(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Network_Fetch_File() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Network_Fetch_File(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Network_Fetch_File()
 		{
@@ -115,7 +115,7 @@ namespace NeoEdit.Editor
 			TaskRunner.Range(0, urls.Count).ForAll(index => FetchURL(urls[index], fileNames[index]));
 		}
 
-		static void Configure_Network_Fetch_Stream() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Network_Fetch_StreamPlaylist(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables(), Path.GetDirectoryName(EditorExecuteState.CurrentState.NEWindow.Focused.FileName) ?? "");
+		static void Configure_Network_Fetch_Stream() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Network_Fetch_StreamPlaylist(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables(), Path.GetDirectoryName(EditorExecuteState.CurrentState.NEWindow.Focused.FileName) ?? "");
 
 		void Execute_Network_Fetch_Stream()
 		{
@@ -129,7 +129,7 @@ namespace NeoEdit.Editor
 			data.AsTaskRunner().ForAll((item, index, progress) => YouTubeDL.DownloadStream(result.OutputDirectory, item.Item1, item.Item2, progress));
 		}
 
-		static void Configure_Network_Fetch_Playlist() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Network_Fetch_StreamPlaylist(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables(), null);
+		static void Configure_Network_Fetch_Playlist() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Network_Fetch_StreamPlaylist(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables(), null);
 
 		void Execute_Network_Fetch_Playlist()
 		{
@@ -175,7 +175,7 @@ namespace NeoEdit.Editor
 			ReplaceOneWithMany(data.Select(row => string.Join("│", row.Select((item, column) => item + new string(' ', columnLens[column] - item.Length)))).ToList(), true);
 		}
 
-		static void Configure_Network_Ping() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Network_Ping();
+		static void Configure_Network_Ping() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Network_Ping();
 
 		void Execute_Network_Ping()
 		{
@@ -202,7 +202,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(replies);
 		}
 
-		static void Configure_Network_ScanPorts() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Network_ScanPorts();
+		static void Configure_Network_ScanPorts() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Network_ScanPorts();
 
 		void Execute_Network_ScanPorts()
 		{
@@ -212,7 +212,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs.Zip(results, (str, strResult) => $"{str}: {string.Join(", ", strResult)}").ToList());
 		}
 
-		static void Configure_Network_WCF_GetConfig() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Network_WCF_GetConfig();
+		static void Configure_Network_WCF_GetConfig() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Network_WCF_GetConfig();
 
 		void Execute_Network_WCF_GetConfig()
 		{
@@ -226,7 +226,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Network_WCF_Execute() => ReplaceSelections(Selections.Select(range => WCFClient.ExecuteWCF(Text.GetString(range))).ToList());
 
-		static void Configure_Network_WCF_InterceptCalls() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Network_WCF_InterceptCalls();
+		static void Configure_Network_WCF_InterceptCalls() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Network_WCF_InterceptCalls();
 
 		void Execute_Network_WCF_InterceptCalls()
 		{
@@ -235,7 +235,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Must have single selection.");
 
 			WCFClient.StartInterceptCalls(result.WCFURL, result.InterceptURL);
-			EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Execute_Network_WCF_InterceptCalls();
+			EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Execute_Network_WCF_InterceptCalls();
 			var values = WCFClient.EndInterceptCalls(result.WCFURL);
 			if (!values.Any())
 				return;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace NeoEdit.Common
@@ -9,5 +10,7 @@ namespace NeoEdit.Common
 		void HandleCommand(ExecuteState state, Func<bool> skipDraw = null);
 		bool StopTasks();
 		bool KillTasks();
+
+		IEnumerable<INEWindow> NEWindows { get; }
 	}
 }

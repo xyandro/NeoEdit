@@ -196,8 +196,6 @@ namespace NeoEdit.Editor
 			if (commandLineParams.Diff)
 				neWindow.SetupDiff();
 
-			neWindow.FilesWindow.SetForeground();
-
 			return true;
 		}
 

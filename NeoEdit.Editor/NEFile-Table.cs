@@ -56,7 +56,7 @@ namespace NeoEdit.Editor
 		static void Configure_Table_Select_RowsByExpression()
 		{
 			var table = EditorExecuteState.CurrentState.NEWindow.Focused.GetTable();
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEWindow.Focused.GetTableVariables(table), table.NumRows);
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEWindow.Focused.GetTableVariables(table), table.NumRows);
 		}
 
 		void Execute_Table_Select_RowsByExpression()
@@ -76,7 +76,7 @@ namespace NeoEdit.Editor
 			if (!EditorExecuteState.CurrentState.NEWindow.Focused.Selections[0].HasSelection)
 				throw new Exception("Must have data selected");
 
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Table_New_FromSelection(EditorExecuteState.CurrentState.NEWindow.Focused.GetSelectionStrings().Single());
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Table_New_FromSelection(EditorExecuteState.CurrentState.NEWindow.Focused.GetSelectionStrings().Single());
 		}
 
 		void Execute_Table_New_FromSelection()
@@ -120,7 +120,7 @@ namespace NeoEdit.Editor
 			OpenTable(new Table(rows, false));
 		}
 
-		static void Configure_Table_Edit() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Table_Edit(EditorExecuteState.CurrentState.NEWindow.Focused.GetTable());
+		static void Configure_Table_Edit() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Table_Edit(EditorExecuteState.CurrentState.NEWindow.Focused.GetTable());
 
 		void Execute_Table_Edit()
 		{
@@ -130,7 +130,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_DetectType() => ContentType = Table.GuessTableType(Text.GetString());
 
-		static void Configure_Table_Convert() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Table_Convert(EditorExecuteState.CurrentState.NEWindow.Focused.ContentType);
+		static void Configure_Table_Convert() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Table_Convert(EditorExecuteState.CurrentState.NEWindow.Focused.ContentType);
 
 		void Execute_Table_Convert()
 		{
@@ -147,7 +147,7 @@ namespace NeoEdit.Editor
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
 
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Table_Join(EditorExecuteState.CurrentState.NEWindow.Focused.GetTable(), joinTable);
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Table_Join(EditorExecuteState.CurrentState.NEWindow.Focused.GetTable(), joinTable);
 		}
 
 		void Execute_Table_Join()
@@ -161,7 +161,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_Transpose() => SetText(GetTable().Transpose());
 
-		static void Configure_Table_Database_GenerateInserts() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Table_Database_GenerateInserts(EditorExecuteState.CurrentState.NEWindow.Focused.GetTable(), EditorExecuteState.CurrentState.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(EditorExecuteState.CurrentState.NEWindow.Focused.FileName));
+		static void Configure_Table_Database_GenerateInserts() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Table_Database_GenerateInserts(EditorExecuteState.CurrentState.NEWindow.Focused.GetTable(), EditorExecuteState.CurrentState.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(EditorExecuteState.CurrentState.NEWindow.Focused.FileName));
 
 		void Execute_Table_Database_GenerateInserts()
 		{
@@ -181,7 +181,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Table_Database_GenerateUpdates() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Table_Database_GenerateUpdates(EditorExecuteState.CurrentState.NEWindow.Focused.GetTable(), EditorExecuteState.CurrentState.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(EditorExecuteState.CurrentState.NEWindow.Focused.FileName));
+		static void Configure_Table_Database_GenerateUpdates() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Table_Database_GenerateUpdates(EditorExecuteState.CurrentState.NEWindow.Focused.GetTable(), EditorExecuteState.CurrentState.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(EditorExecuteState.CurrentState.NEWindow.Focused.FileName));
 
 		void Execute_Table_Database_GenerateUpdates()
 		{
@@ -201,7 +201,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Table_Database_GenerateDeletes() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Table_Database_GenerateDeletes(EditorExecuteState.CurrentState.NEWindow.Focused.GetTable(), EditorExecuteState.CurrentState.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(EditorExecuteState.CurrentState.NEWindow.Focused.FileName));
+		static void Configure_Table_Database_GenerateDeletes() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Table_Database_GenerateDeletes(EditorExecuteState.CurrentState.NEWindow.Focused.GetTable(), EditorExecuteState.CurrentState.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(EditorExecuteState.CurrentState.NEWindow.Focused.FileName));
 
 		void Execute_Table_Database_GenerateDeletes()
 		{

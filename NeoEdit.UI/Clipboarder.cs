@@ -56,11 +56,9 @@ namespace NeoEdit.UI
 		static bool clipboardChanged = true;
 		static NEClipboard systemClipboard;
 
-		public static bool ShouldGetSystem() => clipboardChanged;
-
 		public static void GetSystem()
 		{
-			if (!ShouldGetSystem())
+			if (!clipboardChanged)
 				return;
 
 			try
@@ -117,11 +115,9 @@ namespace NeoEdit.UI
 			catch { }
 		}
 
-		public static bool ShouldSetSystem() => (!clipboardChanged) && (NEClipboard.Current != systemClipboard);
-
 		public static void SetSystem()
 		{
-			if (!ShouldSetSystem())
+			if ((clipboardChanged) || (NEClipboard.Current == systemClipboard))
 				return;
 
 			try

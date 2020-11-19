@@ -49,7 +49,7 @@ namespace NeoEdit.Editor
 				throw new Exception("No connection.");
 		}
 
-		static void Configure_Database_Connect() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Database_Connect();
+		static void Configure_Database_Connect() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Database_Connect();
 
 		void Execute_Database_Connect()
 		{
@@ -88,7 +88,7 @@ namespace NeoEdit.Editor
 		static void Configure_Database_Examine()
 		{
 			EditorExecuteState.CurrentState.NEWindow.Focused.ValidateConnection();
-			EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Database_Examine(EditorExecuteState.CurrentState.NEWindow.Focused.dbConnection);
+			EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Database_Examine(EditorExecuteState.CurrentState.NEWindow.Focused.dbConnection);
 			EditorExecuteState.CurrentState.Configuration = new Configuration_Database_Examine();
 		}
 
