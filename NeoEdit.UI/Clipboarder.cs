@@ -10,7 +10,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
@@ -57,95 +56,93 @@ namespace NeoEdit.UI
 		static bool clipboardChanged = true;
 		static NEClipboard systemClipboard;
 
-		public static void GetSystem(Dispatcher dispatcher)
+		public static bool ShouldGetSystem() => clipboardChanged;
+
+		public static void GetSystem()
 		{
-			if (!clipboardChanged)
+			if (!ShouldGetSystem())
 				return;
 
-			dispatcher.Invoke(() =>
+			try
 			{
-				try
+				var dataObj = Clipboard.GetDataObject();
+
+				if (dataObj == null)
+					return;
+
+				if (dataObj.GetData(typeof(NEClipboard)) as int? == PID)
 				{
-					var dataObj = Clipboard.GetDataObject();
-
-					if (dataObj == null)
-						return;
-
-					if (dataObj.GetData(typeof(NEClipboard)) as int? == PID)
-					{
-						clipboardChanged = false;
-						return;
-					}
-
-					var result = new NEClipboard();
-
-					var dropList = (dataObj.GetData(DataFormats.FileDrop) as string[])?.OrderBy(Helpers.SmartComparer(false)).ToList();
-					if ((dropList != null) && (dropList.Count != 0))
-					{
-						var isCut = false;
-						var dropEffectStream = dataObj.GetData("Preferred DropEffect");
-						if (dropEffectStream is MemoryStream)
-						{
-							try
-							{
-								var dropEffect = (DragDropEffects)BitConverter.ToInt32(((MemoryStream)dropEffectStream).ToArray(), 0);
-								isCut = dropEffect.HasFlag(DragDropEffects.Move);
-							}
-							catch { }
-						}
-						result.Add(new List<string>(dropList));
-						result.IsCut = isCut;
-					}
-					else
-					{
-						var str = dataObj.GetData(DataFormats.UnicodeText) as string ?? dataObj.GetData(DataFormats.OemText) as string ?? dataObj.GetData(DataFormats.Text) as string ?? dataObj.GetData(typeof(string)) as string;
-
-						if ((str == null) && (dataObj.GetData(DataFormats.Bitmap, true) is BitmapSource image))
-						{
-							var bmp = new Bitmap(image.PixelWidth, image.PixelHeight, PixelFormat.Format32bppPArgb);
-							var data = bmp.LockBits(new Rectangle(System.Drawing.Point.Empty, bmp.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppPArgb);
-							image.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height * data.Stride, data.Stride);
-							bmp.UnlockBits(data);
-							str = Coder.BitmapToString(bmp);
-						}
-
-						result.Add(new List<string> { str });
-					}
-
-					NEClipboard.Current = systemClipboard = result;
 					clipboardChanged = false;
+					return;
 				}
-				catch { }
-			});
+
+				var result = new NEClipboard();
+
+				var dropList = (dataObj.GetData(DataFormats.FileDrop) as string[])?.OrderBy(Helpers.SmartComparer(false)).ToList();
+				if ((dropList != null) && (dropList.Count != 0))
+				{
+					var isCut = false;
+					var dropEffectStream = dataObj.GetData("Preferred DropEffect");
+					if (dropEffectStream is MemoryStream)
+					{
+						try
+						{
+							var dropEffect = (DragDropEffects)BitConverter.ToInt32(((MemoryStream)dropEffectStream).ToArray(), 0);
+							isCut = dropEffect.HasFlag(DragDropEffects.Move);
+						}
+						catch { }
+					}
+					result.Add(new List<string>(dropList));
+					result.IsCut = isCut;
+				}
+				else
+				{
+					var str = dataObj.GetData(DataFormats.UnicodeText) as string ?? dataObj.GetData(DataFormats.OemText) as string ?? dataObj.GetData(DataFormats.Text) as string ?? dataObj.GetData(typeof(string)) as string;
+
+					if ((str == null) && (dataObj.GetData(DataFormats.Bitmap, true) is BitmapSource image))
+					{
+						var bmp = new Bitmap(image.PixelWidth, image.PixelHeight, PixelFormat.Format32bppPArgb);
+						var data = bmp.LockBits(new Rectangle(System.Drawing.Point.Empty, bmp.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppPArgb);
+						image.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height * data.Stride, data.Stride);
+						bmp.UnlockBits(data);
+						str = Coder.BitmapToString(bmp);
+					}
+
+					result.Add(new List<string> { str });
+				}
+
+				NEClipboard.Current = systemClipboard = result;
+				clipboardChanged = false;
+			}
+			catch { }
 		}
 
-		public static void SetSystem(Dispatcher dispatcher)
+		public static bool ShouldSetSystem() => (!clipboardChanged) && (NEClipboard.Current != systemClipboard);
+
+		public static void SetSystem()
 		{
-			if ((clipboardChanged) || (NEClipboard.Current == systemClipboard))
+			if (!ShouldSetSystem())
 				return;
 
-			dispatcher.Invoke(() =>
+			try
 			{
-				try
+				var dataObj = new DataObject();
+
+				dataObj.SetText(NEClipboard.Current.String, TextDataFormat.UnicodeText);
+				dataObj.SetData(typeof(NEClipboard), PID);
+
+				if (NEClipboard.Current.IsCut.HasValue)
 				{
-					var dataObj = new DataObject();
-
-					dataObj.SetText(NEClipboard.Current.String, TextDataFormat.UnicodeText);
-					dataObj.SetData(typeof(NEClipboard), PID);
-
-					if (NEClipboard.Current.IsCut.HasValue)
-					{
-						var dropList = new StringCollection();
-						dropList.AddRange(NEClipboard.Current.Strings.ToArray());
-						dataObj.SetFileDropList(dropList);
-						dataObj.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(NEClipboard.Current.IsCut == true ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
-					}
-
-					Clipboard.SetDataObject(dataObj, true);
-					systemClipboard = NEClipboard.Current;
+					var dropList = new StringCollection();
+					dropList.AddRange(NEClipboard.Current.Strings.ToArray());
+					dataObj.SetFileDropList(dropList);
+					dataObj.SetData("Preferred DropEffect", new MemoryStream(BitConverter.GetBytes((int)(NEClipboard.Current.IsCut == true ? DragDropEffects.Move : DragDropEffects.Copy | DragDropEffects.Link))));
 				}
-				catch { }
-			});
+
+				Clipboard.SetDataObject(dataObj, true);
+				systemClipboard = NEClipboard.Current;
+			}
+			catch { }
 		}
 	}
 }

@@ -854,6 +854,7 @@
     <Compile Include="NEFileWindow.xaml.cs">
       <DependentUpon>NEFileWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NEGlobalUI.cs" />
     <Page Include="NEMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

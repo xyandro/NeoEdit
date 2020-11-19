@@ -21,7 +21,6 @@ namespace NeoEdit.UI
 {
 	partial class NEWindowUI : INEWindowUI
 	{
-		static readonly ActionRunner actionRunner = new ActionRunner();
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
 
@@ -47,8 +46,6 @@ namespace NeoEdit.UI
 			InitializeComponent();
 			if (Helpers.IsDebugBuild)
 				UIHelper.AuditMenu(menu);
-			menu.StopTasks += StopTasks;
-			menu.KillTasks += KillTasks;
 
 			//NEClipboard.ClipboardChanged += () => statusBar.InvalidateVisual();
 			Font.FontSizeChanged += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_Redraw));
@@ -59,13 +56,8 @@ namespace NeoEdit.UI
 
 		public void HandleCommand(ExecuteState state)
 		{
-			state.Modifiers = Keyboard.Modifiers;
-			actionRunner.Add(moreQueued =>
-			{
-				Clipboarder.GetSystem(Dispatcher);
-				NEWindow.HandleCommand(state, moreQueued);
-				Clipboarder.SetSystem(Dispatcher);
-			});
+			state.NEWindow = NEWindow;
+			NEGlobalUI.HandleCommand(state, Dispatcher);
 		}
 
 		public void QueueActivateNEWindow()
@@ -109,23 +101,6 @@ namespace NeoEdit.UI
 			//e.Handled = true;
 		}
 
-		bool StopTasks()
-		{
-			var result = false;
-			if (actionRunner.CancelActive())
-				result = true;
-			if (NEWindow.StopTasks())
-				result = true;
-			return result;
-		}
-
-		bool KillTasks()
-		{
-			actionRunner.CancelActive();
-			NEWindow.KillTasks();
-			return true;
-		}
-
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
@@ -135,12 +110,12 @@ namespace NeoEdit.UI
 				key = e.SystemKey;
 
 			if (key == Key.Escape)
-				e.Handled = StopTasks();
+				e.Handled = NEGlobalUI.StopTasks();
 
 			if (key == Key.Cancel)
-				e.Handled = KillTasks();
+				e.Handled = NEGlobalUI.KillTasks();
 
-			if ((!e.Handled) && (INEWindowStatic.HandlesKey(Keyboard.Modifiers, key)))
+			if ((!e.Handled) && (NEGlobalUI.HandlesKey(Keyboard.Modifiers, key)))
 			{
 				HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });
 				e.Handled = true;

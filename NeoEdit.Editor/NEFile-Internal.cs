@@ -159,6 +159,48 @@ namespace NeoEdit.Editor
 			return MoveCursor(range, Text.GetPosition(line, index), selecting);
 		}
 
+		public static bool PreExecute_Internal_CommandLine()
+		{
+			var commandLineParams = (EditorExecuteState.CurrentState.Configuration as Configuration_Internal_CommandLine).CommandLineParams;
+			if (commandLineParams.Background)
+				return true;
+
+			if (!commandLineParams.Files.Any())
+			{
+				new NEWindow(true);
+				return true;
+			}
+
+			var shutdownData = string.IsNullOrWhiteSpace(commandLineParams.Wait) ? null : new ShutdownData(commandLineParams.Wait, commandLineParams.Files.Count);
+
+			NEWindow neWindow = null;
+			if (!commandLineParams.Diff)
+				neWindow = EditorExecuteState.CurrentState.NEGlobal.NEWindows.OrderByDescending(x => x.LastActivated).FirstOrDefault();
+			if (neWindow == null)
+				neWindow = new NEWindow();
+			foreach (var file in commandLineParams.Files)
+			{
+				if (commandLineParams.Existing)
+				{
+					var neFile = EditorExecuteState.CurrentState.NEGlobal.NEWindows.OrderByDescending(x => x.LastActivated).Select(x => x.GetFile(file.FileName)).NonNull().FirstOrDefault();
+					if (neFile != null)
+					{
+						neFile.Goto(file.Line, file.Column, file.Index);
+						continue;
+					}
+				}
+
+				neWindow.AddNewFile(new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData));
+			}
+
+			if (commandLineParams.Diff)
+				neWindow.SetupDiff();
+
+			neWindow.FilesWindow.SetForeground();
+
+			return true;
+		}
+
 		static bool PreExecute_Internal_Activate()
 		{
 			EditorExecuteState.CurrentState.NEWindow.LastActivated = DateTime.Now;

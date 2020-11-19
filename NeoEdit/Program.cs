@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor;
@@ -18,7 +19,7 @@ namespace NeoEdit
 	{
 		static Program()
 		{
-			INEWindowStatic.HandlesKey = NEWindow.HandlesKey;
+			NEGlobalUI.neGlobal = new NEGlobal();
 		}
 
 		const string IPCName = "NeoEdit-{debe0282-0e9d-47fd-836c-60f500dbaeb5}";
@@ -46,7 +47,7 @@ namespace NeoEdit
 					SetMasterPID();
 					SetupPipeWait();
 				}
-				App.Run(() => NEWindow.CreateFiles(commandLineParams));
+				App.Run(() => NEGlobalUI.HandleCommand(new ExecuteState(NECommand.Internal_CommandLine) { Configuration = new Configuration_Internal_CommandLine { CommandLineParams = commandLineParams } }));
 				return;
 			}
 
@@ -109,7 +110,7 @@ namespace NeoEdit
 				pipe.Read(buf, 0, buf.Length);
 				var commandLineParams = JsonConvert.DeserializeObject<CommandLineParams>(Coder.BytesToString(buf, Coder.CodePage.UTF8));
 
-				App.Run(() => NEWindow.CreateFiles(commandLineParams));
+				App.Run(() => NEGlobalUI.HandleCommand(new ExecuteState(NECommand.Internal_CommandLine) { Configuration = new Configuration_Internal_CommandLine { CommandLineParams = commandLineParams } }));
 
 				SetupPipeWait();
 			}, null);

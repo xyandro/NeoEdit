@@ -12,28 +12,24 @@ namespace NeoEdit.Editor
 	{
 		public static EditorExecuteState CurrentState { get; private set; }
 
-		public static void SetState(NECommand command)
-		{
-			NESerialTracker.MoveNext();
-			CurrentState = new EditorExecuteState(command);
-		}
-
-		public static void SetState(NEWindow neWindow, ExecuteState state)
-		{
-			NESerialTracker.MoveNext();
-			CurrentState = new EditorExecuteState(neWindow, state);
-		}
+		public static void SetState(NEGlobal neGlobal, ExecuteState state) => CurrentState = new EditorExecuteState(neGlobal, state);
 
 		public static void ClearState() => CurrentState = null;
 
-		public readonly int NESerial = NESerialTracker.NESerial;
-
+		public NEGlobal NEGlobal;
+		public new NEWindow NEWindow;
 		public IPreExecution PreExecution;
-		public NEWindow NEWindow;
 
-		EditorExecuteState(NECommand command) : base(command) => Command = command;
+		EditorExecuteState(NEGlobal neGlobal, ExecuteState state) : base(state)
+		{
+			NEGlobal = neGlobal;
+			NEWindow = base.NEWindow as NEWindow;
+		}
 
-		EditorExecuteState(NEWindow neWindow, ExecuteState state) : base(state) => NEWindow = neWindow;
+		internal ExecuteState GetExecuteState()
+		{
+			throw new NotImplementedException();
+		}
 
 		AnswerResult savedAnswers;
 		public AnswerResult SavedAnswers

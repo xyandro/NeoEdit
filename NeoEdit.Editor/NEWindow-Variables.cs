@@ -125,11 +125,11 @@ namespace NeoEdit.Editor
 				}
 
 				if (result.KeysAndValues != null)
-					for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
+					for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 						if (result.KeysAndValues[kvIndex] != null)
 						{
 							if (setKeysAndValues == null)
-								setKeysAndValues = new List<KeysAndValues>[KeysAndValuesCount];
+								setKeysAndValues = new List<KeysAndValues>[10];
 							if (setKeysAndValues[kvIndex] == null)
 								setKeysAndValues[kvIndex] = new List<KeysAndValues>();
 							setKeysAndValues[kvIndex].Add(result.KeysAndValues[kvIndex]);

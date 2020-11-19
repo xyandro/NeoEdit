@@ -452,6 +452,7 @@ namespace NeoEdit.Editor
 		{
 			switch (EditorExecuteState.CurrentState.Command)
 			{
+				case NECommand.Internal_CommandLine: return PreExecute_Internal_CommandLine();
 				case NECommand.Internal_Activate: return PreExecute_Internal_Activate();
 				case NECommand.Internal_MouseActivate: return PreExecute_Internal_MouseActivate();
 				case NECommand.Internal_CloseFile: return PreExecute_Internal_CloseFile();

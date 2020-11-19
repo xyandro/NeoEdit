@@ -459,7 +459,7 @@ namespace NeoEdit.Editor
 				neFile.VerifyCanClose();
 				neFile.ClearFiles();
 			}
-			NEGlobal.RemoveFiles(EditorExecuteState.CurrentState.NEWindow);
+			EditorExecuteState.CurrentState.NEGlobal.RemoveFiles(EditorExecuteState.CurrentState.NEWindow);
 
 			return true;
 		}

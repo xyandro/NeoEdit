@@ -5,6 +5,7 @@ namespace NeoEdit.Common
 	public enum NECommand
 	{
 		None,
+		[NoMacro] Internal_CommandLine,
 		[NoMacro] Internal_Activate,
 		[NoMacro] Internal_MouseActivate,
 		[NoMacro] Internal_CloseFile,

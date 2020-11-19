@@ -5,6 +5,7 @@ namespace NeoEdit.Common
 {
 	public class ExecuteState
 	{
+		public INEWindow NEWindow;
 		public NECommand Command;
 		public bool ShiftDown;
 		public bool ControlDown;
@@ -14,10 +15,19 @@ namespace NeoEdit.Common
 		public string Text;
 		public IConfiguration Configuration;
 
-		public ExecuteState(NECommand command) => Command = command;
+		public ExecuteState(NECommand command)
+		{
+			Command = command;
+
+			var modifiers = Keyboard.Modifiers;
+			ShiftDown = modifiers.HasFlag(ModifierKeys.Shift);
+			ControlDown = modifiers.HasFlag(ModifierKeys.Control);
+			AltDown = modifiers.HasFlag(ModifierKeys.Alt);
+		}
 
 		public ExecuteState(ExecuteState state)
 		{
+			NEWindow = state.NEWindow;
 			Command = state.Command;
 			ShiftDown = state.ShiftDown;
 			ControlDown = state.ControlDown;
@@ -26,16 +36,6 @@ namespace NeoEdit.Common
 			Key = state.Key;
 			Text = state.Text;
 			Configuration = state.Configuration;
-		}
-
-		public ModifierKeys Modifiers
-		{
-			set
-			{
-				ShiftDown = value.HasFlag(ModifierKeys.Shift);
-				ControlDown = value.HasFlag(ModifierKeys.Control);
-				AltDown = value.HasFlag(ModifierKeys.Alt);
-			}
 		}
 
 		public override string ToString() => Command.ToString();

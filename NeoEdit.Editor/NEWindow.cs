@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
@@ -14,8 +13,6 @@ namespace NeoEdit.Editor
 {
 	public partial class NEWindow : INEWindow
 	{
-		public const int KeysAndValuesCount = 10;
-
 		public INEWindowUI FilesWindow { get; }
 
 		int displayColumns;
@@ -42,7 +39,7 @@ namespace NeoEdit.Editor
 			AllFileDatas = new OrderedHashSet<NEFileData>();
 			ActiveFiles = new OrderedHashSet<NEFile>();
 			WindowLayout = new WindowLayout(1, 1);
-			NEGlobal.AddNewFiles(this);
+			EditorExecuteState.CurrentState.NEGlobal.AddNewFiles(this);
 
 			FilesWindow = INEWindowUIStatic.CreateINEWindowUI(this);
 			if (addEmpty)
@@ -69,7 +66,7 @@ namespace NeoEdit.Editor
 			return clipboardDataMap;
 		}
 
-		static IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), KeysAndValuesCount).ToArray();
+		static IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
 		Dictionary<INEFile, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
 		{
 			var empty = new KeysAndValues(new List<string>(), kvIndex == 0);
@@ -145,15 +142,14 @@ namespace NeoEdit.Editor
 
 		public bool StopTasks()
 		{
-			var result = false;
 			if (playingMacro != null)
 			{
 				playingMacro = null;
-				result = true;
+				return true;
 			}
 			if (TaskRunner.Cancel())
-				result = true;
-			return result;
+				return true;
+			return false;
 		}
 
 		public bool KillTasks()
@@ -195,7 +191,7 @@ namespace NeoEdit.Editor
 					FilesWindow.SetMacroProgress((double)stepIndex / macro.Actions.Count);
 				}
 
-				macro.Actions[stepIndex++].ReplaceExecuteState(this);
+				macro.Actions[stepIndex++].SetExecuteState();
 				if (!RunCommand(true))
 				{
 					playingMacro = null;
@@ -210,7 +206,6 @@ namespace NeoEdit.Editor
 
 		public void HandleCommand(ExecuteState state, Func<bool> skipDraw = null)
 		{
-			EditorExecuteState.SetState(this, state);
 			RunCommand();
 			PlayMacro();
 			if (skipDraw?.Invoke() != true)
@@ -220,14 +215,15 @@ namespace NeoEdit.Editor
 
 		bool RunCommand(bool inMacro = false)
 		{
-			var oldData = NEGlobal.data;
+			NESerialTracker.MoveNext();
+			var oldData = EditorExecuteState.CurrentState.NEGlobal.data;
 			try
 			{
 				if (EditorExecuteState.CurrentState.Command == NECommand.Macro_RepeatLastAction)
 				{
 					if (lastAction == null)
 						throw new Exception("No last action available");
-					lastAction.ReplaceExecuteState(this);
+					lastAction.SetExecuteState();
 					inMacro = true;
 				}
 
@@ -261,14 +257,14 @@ namespace NeoEdit.Editor
 					recordingMacro?.AddAction(action);
 				}
 
-				var result = NEGlobal.GetResult();
+				var result = EditorExecuteState.CurrentState.NEGlobal.GetResult();
 				if (result != null)
 				{
 					if (result.Clipboard != null)
 						NEClipboard.Current = result.Clipboard;
 
 					if (result.KeysAndValues != null)
-						for (var kvIndex = 0; kvIndex < KeysAndValuesCount; ++kvIndex)
+						for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 							if (result.KeysAndValues[kvIndex] != null)
 								keysAndValues[kvIndex] = result.KeysAndValues[kvIndex];
 
@@ -288,7 +284,7 @@ namespace NeoEdit.Editor
 			catch (Exception ex) { FilesWindow.ShowExceptionMessage(ex); }
 
 			FilesWindow.SetTaskRunnerProgress(null);
-			NEGlobal.ResetData(oldData);
+			EditorExecuteState.CurrentState.NEGlobal.ResetData(oldData);
 			return false;
 		}
 
@@ -384,32 +380,9 @@ namespace NeoEdit.Editor
 			return status;
 		}
 
-		public static bool HandlesKey(ModifierKeys modifiers, Key key)
-		{
-			switch (key)
-			{
-				case Key.Back:
-				case Key.Delete:
-				case Key.Escape:
-				case Key.Left:
-				case Key.Right:
-				case Key.Up:
-				case Key.Down:
-				case Key.Home:
-				case Key.End:
-				case Key.PageUp:
-				case Key.PageDown:
-				case Key.Tab:
-				case Key.Enter:
-					return true;
-			}
-
-			return false;
-		}
-
 		public static CommandLineParams ParseCommandLine(string commandLine) => CommandLineVisitor.GetCommandLineParams(commandLine);
 
-		void SetupDiff()
+		public void SetupDiff()
 		{
 			for (var ctr = 0; ctr + 1 < AllFiles.Count; ctr += 2)
 			{
@@ -422,54 +395,6 @@ namespace NeoEdit.Editor
 			SetLayout(new WindowLayout(maxColumns: 2));
 		}
 
-		public static void CreateFiles(CommandLineParams commandLineParams)
-		{
-			NEWindow neWindow = null;
-			try
-			{
-				if (commandLineParams.Background)
-					return;
-
-				if (!commandLineParams.Files.Any())
-				{
-					new NEWindow(true);
-					return;
-				}
-
-				var shutdownData = string.IsNullOrWhiteSpace(commandLineParams.Wait) ? null : new ShutdownData(commandLineParams.Wait, commandLineParams.Files.Count);
-				if (!commandLineParams.Diff)
-					neWindow = NEGlobal.NEWindows.OrderByDescending(x => x.LastActivated).FirstOrDefault();
-				if (neWindow == null)
-					neWindow = new NEWindow();
-				foreach (var file in commandLineParams.Files)
-				{
-					if (commandLineParams.Existing)
-					{
-						var neFile = NEGlobal.NEWindows.OrderByDescending(x => x.LastActivated).Select(x => x.GetFile(file.FileName)).NonNull().FirstOrDefault();
-						if (neFile != null)
-						{
-							neFile.Goto(file.Line, file.Column, file.Index);
-							continue;
-						}
-					}
-
-					neWindow.AddNewFile(new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData));
-				}
-
-				if (commandLineParams.Diff)
-					neWindow.SetupDiff();
-
-				neWindow.FilesWindow.SetForeground();
-			}
-			catch (Exception ex)
-			{
-				if (neWindow != null)
-					neWindow.FilesWindow.ShowExceptionMessage(ex);
-				else
-					INEWindowUIStatic.ShowExceptionMessage(ex);
-			}
-		}
-
-		NEFile GetFile(string fileName) => ActiveFiles.FirstOrDefault(neFile => neFile.FileName == fileName);
+		public NEFile GetFile(string fileName) => ActiveFiles.FirstOrDefault(neFile => neFile.FileName == fileName);
 	}
 }

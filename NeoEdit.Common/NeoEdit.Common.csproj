@@ -106,6 +106,7 @@
     <Compile Include="Configuration\Configuration_Image_Rotate.cs" />
     <Compile Include="Configuration\Configuration_Image_SetTakenDate.cs" />
     <Compile Include="Configuration\Configuration_Internal_CloseFile.cs" />
+    <Compile Include="Configuration\Configuration_Internal_CommandLine.cs" />
     <Compile Include="Configuration\Configuration_Internal_Key.cs" />
     <Compile Include="Configuration\Configuration_Internal_Mouse.cs" />
     <Compile Include="Configuration\Configuration_Internal_MouseActivate.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Font.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="INEFile.cs" />
+    <Compile Include="INEGlobal.cs" />
     <Compile Include="INEWindow.cs" />
     <Compile Include="INEWindowUI.cs" />
     <Compile Include="IReadOnlyOrderedHashSet.cs" />
