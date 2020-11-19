@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="Controls\DiffScrollBar.cs" />
     <Compile Include="Controls\EnhancedFocusManager.cs" />
+    <Compile Include="Controls\EnhancedWindow.cs" />
     <Page Include="Controls\FileLabel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -99,7 +100,6 @@
       <DependentUpon>NEExpressionResults.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NEMenuItem.cs" />
-    <Compile Include="Controls\NEWindow.cs" />
     <Page Include="Controls\NumericUpDown.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

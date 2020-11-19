@@ -15,16 +15,16 @@ using Newtonsoft.Json;
 
 namespace NeoEdit.UI.Controls
 {
-	public class NEWindow : Window
+	public class EnhancedWindow : Window
 	{
 		const double MinWindowSize = 50;
 		const double ResizeBorder = 10;
 		const double DragDetect = 10;
 
 		[DepProp]
-		public bool IsMainWindow { get { return UIHelper<NEWindow>.GetPropValue<bool>(this); } set { UIHelper<NEWindow>.SetPropValue(this, value); } }
+		public bool IsMainWindow { get { return UIHelper<EnhancedWindow>.GetPropValue<bool>(this); } set { UIHelper<EnhancedWindow>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool IsFullScreen { get { return UIHelper<NEWindow>.GetPropValue<bool>(this); } set { UIHelper<NEWindow>.SetPropValue(this, value); } }
+		public bool IsFullScreen { get { return UIHelper<EnhancedWindow>.GetPropValue<bool>(this); } set { UIHelper<EnhancedWindow>.SetPropValue(this, value); } }
 
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(32, 32, 32));
 		static readonly Brush OuterBrush = new SolidColorBrush(Color.FromRgb(85, 85, 85));
@@ -39,9 +39,9 @@ namespace NeoEdit.UI.Controls
 		IntPtr hook;
 		bool winDown;
 
-		static NEWindow()
+		static EnhancedWindow()
 		{
-			UIHelper<NEWindow>.Register();
+			UIHelper<EnhancedWindow>.Register();
 			BackgroundBrush.Freeze();
 			OuterBrush.Freeze();
 			ActiveBrush.Freeze();
@@ -105,7 +105,7 @@ namespace NeoEdit.UI.Controls
 			return fullScreenRects;
 		}
 
-		public NEWindow()
+		public EnhancedWindow()
 		{
 			hookProc = HookProc;
 			WindowStyle = WindowStyle.None;
@@ -124,7 +124,7 @@ namespace NeoEdit.UI.Controls
 
 		ControlTemplate GetTemplate()
 		{
-			var template = new ControlTemplate(typeof(NEWindow));
+			var template = new ControlTemplate(typeof(EnhancedWindow));
 
 			var outerGrid = new FrameworkElementFactory(typeof(Grid));
 
@@ -169,7 +169,7 @@ namespace NeoEdit.UI.Controls
 
 			var decoder = BitmapDecoder.Create(new Uri($"pack://application:,,,/NeoEdit;component/NeoEdit.ico"), BitmapCreateOptions.DelayCreation, BitmapCacheOption.OnDemand);
 			var iconImage = decoder.Frames.Where(f => f.Width == 16).OrderByDescending(f => f.Width).First();
-			var icon = new FrameworkElementFactory(typeof(Image)) { Name = "neWindowIcon" };
+			var icon = new FrameworkElementFactory(typeof(Image)) { Name = "enhancedWindowIcon" };
 			icon.SetValue(Image.StretchProperty, Stretch.None);
 			icon.SetValue(Image.SourceProperty, iconImage);
 			icon.SetValue(Image.MarginProperty, new Thickness(5, 0, 0, 0));
@@ -177,7 +177,7 @@ namespace NeoEdit.UI.Controls
 			icon.SetValue(Grid.ColumnProperty, 0);
 			grid.AppendChild(icon);
 
-			var textBlock = new FrameworkElementFactory(typeof(TextBlock)) { Name = "neWindowTitle" };
+			var textBlock = new FrameworkElementFactory(typeof(TextBlock)) { Name = "enhancedWindowTitle" };
 			textBlock.SetValue(TextBlock.FontSizeProperty, 14d);
 			textBlock.SetValue(TextBlock.ForegroundProperty, ActiveBrush);
 			textBlock.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
@@ -195,7 +195,7 @@ namespace NeoEdit.UI.Controls
 			stackPanel.SetValue(Grid.RowProperty, 0);
 			stackPanel.SetValue(Grid.ColumnProperty, 2);
 
-			var minimizeButton = new FrameworkElementFactory(typeof(Button)) { Name = "neWindowMinimize" };
+			var minimizeButton = new FrameworkElementFactory(typeof(Button)) { Name = "enhancedWindowMinimize" };
 			minimizeButton.SetValue(Button.ContentProperty, "🗕");
 			minimizeButton.SetValue(Button.FontSizeProperty, 14d);
 			minimizeButton.SetValue(Button.MarginProperty, new Thickness(5, -2, 5, 0));
@@ -225,7 +225,7 @@ namespace NeoEdit.UI.Controls
 			growButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnGrowClick));
 			stackPanel.AppendChild(growButton);
 
-			var closeButton = new FrameworkElementFactory(typeof(Button)) { Name = "neWindowClose" };
+			var closeButton = new FrameworkElementFactory(typeof(Button)) { Name = "enhancedWindowClose" };
 			closeButton.SetValue(Button.ContentProperty, "🗙");
 			closeButton.SetValue(Button.FontSizeProperty, 14d);
 			closeButton.SetValue(Button.MarginProperty, new Thickness(5, -2, 5, 0));
@@ -250,12 +250,12 @@ namespace NeoEdit.UI.Controls
 
 			template.VisualTree = outerGrid;
 
-			var windowStateTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => x.IsFullScreen), Value = true };
+			var windowStateTrigger = new Trigger { Property = UIHelper<EnhancedWindow>.GetProperty(x => x.IsFullScreen), Value = true };
 			windowStateTrigger.Setters.Add(new Setter { TargetName = outerBorder.Name, Property = Border.BorderThicknessProperty, Value = new Thickness(0) });
 			windowStateTrigger.Setters.Add(new Setter { TargetName = rect.Name, Property = VisibilityProperty, Value = Visibility.Visible });
 			template.Triggers.Add(windowStateTrigger);
 
-			var isMainWindowTrigger = new Trigger { Property = UIHelper<NEWindow>.GetProperty(x => IsMainWindow), Value = false };
+			var isMainWindowTrigger = new Trigger { Property = UIHelper<EnhancedWindow>.GetProperty(x => IsMainWindow), Value = false };
 			isMainWindowTrigger.Setters.Add(new Setter { TargetName = icon.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
 			isMainWindowTrigger.Setters.Add(new Setter { TargetName = minimizeButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });
 			isMainWindowTrigger.Setters.Add(new Setter { TargetName = shrinkButton.Name, Property = Image.VisibilityProperty, Value = Visibility.Collapsed });

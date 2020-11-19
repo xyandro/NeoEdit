@@ -9,7 +9,7 @@ using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs
 {
-	partial class File_Select_Choose_Dialog : NEWindow
+	partial class File_Select_Choose_Dialog : EnhancedWindow
 	{
 		readonly WindowActiveFilesDialogData data;
 
