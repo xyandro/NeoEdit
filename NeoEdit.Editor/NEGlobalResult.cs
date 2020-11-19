@@ -3,7 +3,7 @@ using NeoEdit.Common;
 
 namespace NeoEdit.Editor
 {
-	public class NEAllFilesResult
+	public class NEGlobalResult
 	{
 		public NEClipboard Clipboard { get; private set; }
 		public IReadOnlyList<KeysAndValues>[] KeysAndValues { get; private set; }

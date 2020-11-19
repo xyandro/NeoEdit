@@ -42,7 +42,7 @@ namespace NeoEdit.Editor
 			AllFileDatas = new OrderedHashSet<NEFileData>();
 			ActiveFiles = new OrderedHashSet<NEFile>();
 			WindowLayout = new WindowLayout(1, 1);
-			NEAllFiles.AddNewFiles(this);
+			NEGlobal.AddNewFiles(this);
 
 			FilesWindow = INEFilesWindowStatic.CreateINEFilesWindow(this);
 			if (addEmpty)
@@ -220,7 +220,7 @@ namespace NeoEdit.Editor
 
 		bool RunCommand(bool inMacro = false)
 		{
-			var oldData = NEAllFiles.data;
+			var oldData = NEGlobal.data;
 			try
 			{
 				if (EditorExecuteState.CurrentState.Command == NECommand.Macro_RepeatLastAction)
@@ -261,7 +261,7 @@ namespace NeoEdit.Editor
 					recordingMacro?.AddAction(action);
 				}
 
-				var result = NEAllFiles.GetResult();
+				var result = NEGlobal.GetResult();
 				if (result != null)
 				{
 					if (result.Clipboard != null)
@@ -288,7 +288,7 @@ namespace NeoEdit.Editor
 			catch (Exception ex) { FilesWindow.ShowExceptionMessage(ex); }
 
 			FilesWindow.SetTaskRunnerProgress(null);
-			NEAllFiles.ResetData(oldData);
+			NEGlobal.ResetData(oldData);
 			return false;
 		}
 
@@ -438,14 +438,14 @@ namespace NeoEdit.Editor
 
 				var shutdownData = string.IsNullOrWhiteSpace(commandLineParams.Wait) ? null : new ShutdownData(commandLineParams.Wait, commandLineParams.Files.Count);
 				if (!commandLineParams.Diff)
-					neFiles = NEAllFiles.AllNEFiles.OrderByDescending(x => x.LastActivated).FirstOrDefault();
+					neFiles = NEGlobal.AllNEFiles.OrderByDescending(x => x.LastActivated).FirstOrDefault();
 				if (neFiles == null)
 					neFiles = new NEFiles();
 				foreach (var file in commandLineParams.Files)
 				{
 					if (commandLineParams.Existing)
 					{
-						var neFile = NEAllFiles.AllNEFiles.OrderByDescending(x => x.LastActivated).Select(x => x.GetFile(file.FileName)).NonNull().FirstOrDefault();
+						var neFile = NEGlobal.AllNEFiles.OrderByDescending(x => x.LastActivated).Select(x => x.GetFile(file.FileName)).NonNull().FirstOrDefault();
 						if (neFile != null)
 						{
 							neFile.Goto(file.Line, file.Column, file.Index);

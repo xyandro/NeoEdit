@@ -2,12 +2,12 @@
 
 namespace NeoEdit.Editor
 {
-	public class NEAllFilesData
+	public class NEGlobalData
 	{
 		public readonly int NESerial = NESerialTracker.NESerial;
 
 		public IReadOnlyOrderedHashSet<NEFilesData> allNEFilesData;
 
-		public NEAllFilesData Clone() => new NEAllFilesData { allNEFilesData = allNEFilesData };
+		public NEGlobalData Clone() => new NEGlobalData { allNEFilesData = allNEFilesData };
 	}
 }

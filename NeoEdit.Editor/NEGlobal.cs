@@ -4,16 +4,16 @@ using NeoEdit.Common;
 
 namespace NeoEdit.Editor
 {
-	public static class NEAllFiles
+	public static class NEGlobal
 	{
-		static NEAllFiles()
+		static NEGlobal()
 		{
-			data = new NEAllFilesData();
+			data = new NEGlobalData();
 			SetAllNEFilesDatas(new OrderedHashSet<NEFilesData>());
 		}
 
-		public static NEAllFilesData data { get; private set; }
-		static NEAllFilesData editableData
+		public static NEGlobalData data { get; private set; }
+		static NEGlobalData editableData
 		{
 			get
 			{
@@ -23,10 +23,10 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public static void ResetData(NEAllFilesData data)
+		public static void ResetData(NEGlobalData data)
 		{
 			result = null;
-			NEAllFiles.data = data;
+			NEGlobal.data = data;
 			SetAllNEFilesDatas(AllNEFilesDatas); // Will regenerate AllNEFiles
 			AllNEFilesDatas.ForEach(neFilesData => neFilesData.neFiles.ResetData(neFilesData));
 		}
@@ -45,7 +45,7 @@ namespace NeoEdit.Editor
 
 		public static void SetAllNEFilesDatas(IEnumerable<NEFilesData> allNEFilesDatas) => AllNEFilesDatas = new OrderedHashSet<NEFilesData>(allNEFilesDatas);
 
-		public static NEAllFilesResult GetResult()
+		public static NEGlobalResult GetResult()
 		{
 			foreach (var neFiles in AllNEFiles)
 			{
@@ -72,11 +72,11 @@ namespace NeoEdit.Editor
 			return ret;
 		}
 
-		static NEAllFilesResult result;
-		static NEAllFilesResult CreateResult()
+		static NEGlobalResult result;
+		static NEGlobalResult CreateResult()
 		{
 			if (result == null)
-				result = new NEAllFilesResult();
+				result = new NEGlobalResult();
 			return result;
 		}
 
