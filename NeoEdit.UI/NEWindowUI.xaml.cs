@@ -19,15 +19,15 @@ using NeoEdit.UI.Dialogs;
 
 namespace NeoEdit.UI
 {
-	partial class NEFilesWindow : INEFilesWindow
+	partial class NEWindowUI : INEWindowUI
 	{
 		static readonly ActionRunner actionRunner = new ActionRunner();
 		static readonly Brush OutlineBrush = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 		static readonly Brush BackgroundBrush = new SolidColorBrush(Color.FromRgb(64, 64, 64));
 
-		static NEFilesWindow()
+		static NEWindowUI()
 		{
-			UIHelper<NEFilesWindow>.Register();
+			UIHelper<NEWindowUI>.Register();
 
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
@@ -35,13 +35,13 @@ namespace NeoEdit.UI
 			Clipboarder.Initialize();
 		}
 
-		readonly INEFiles NEFiles;
+		readonly INEWindow NEWindow;
 
 		public RenderParameters renderParameters;
 
-		public NEFilesWindow(INEFiles neFiles)
+		public NEWindowUI(INEWindow neWindow)
 		{
-			NEFiles = neFiles;
+			NEWindow = neWindow;
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
 			InitializeComponent();
@@ -63,12 +63,12 @@ namespace NeoEdit.UI
 			actionRunner.Add(moreQueued =>
 			{
 				Clipboarder.GetSystem(Dispatcher);
-				NEFiles.HandleCommand(state, moreQueued);
+				NEWindow.HandleCommand(state, moreQueued);
 				Clipboarder.SetSystem(Dispatcher);
 			});
 		}
 
-		public void QueueActivateNEFiles()
+		public void QueueActivateNEWindow()
 		{
 			RunOnUIThread(() =>
 			{
@@ -82,7 +82,7 @@ namespace NeoEdit.UI
 		void OnActivated(object sender, EventArgs e)
 		{
 			if (!Helpers.IsDebugBuild)
-				QueueActivateNEFiles();
+				QueueActivateNEWindow();
 		}
 
 		void OnScrollBarValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => HandleCommand(new ExecuteState(NECommand.Internal_Redraw));
@@ -114,7 +114,7 @@ namespace NeoEdit.UI
 			var result = false;
 			if (actionRunner.CancelActive())
 				result = true;
-			if (NEFiles.StopTasks())
+			if (NEWindow.StopTasks())
 				result = true;
 			return result;
 		}
@@ -122,7 +122,7 @@ namespace NeoEdit.UI
 		bool KillTasks()
 		{
 			actionRunner.CancelActive();
-			NEFiles.KillTasks();
+			NEWindow.KillTasks();
 			return true;
 		}
 
@@ -140,7 +140,7 @@ namespace NeoEdit.UI
 			if (key == Key.Cancel)
 				e.Handled = KillTasks();
 
-			if ((!e.Handled) && (INEFilesStatic.HandlesKey(Keyboard.Modifiers, key)))
+			if ((!e.Handled) && (INEWindowStatic.HandlesKey(Keyboard.Modifiers, key)))
 			{
 				HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });
 				e.Handled = true;
@@ -321,7 +321,7 @@ namespace NeoEdit.UI
 
 		//public bool GotoFile(string fileName, int? line, int? column, int? index)
 		//{
-		//	var neFile = NEFiles.AllIFiles.FirstOrDefault(x => x.FileName == fileName);
+		//	var neFile = NEWindow.AllIFiles.FirstOrDefault(x => x.FileName == fileName);
 		//	if (neFile == null)
 		//		return false;
 		//	//TODO

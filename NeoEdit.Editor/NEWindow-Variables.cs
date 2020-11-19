@@ -5,10 +5,10 @@ using NeoEdit.Common;
 
 namespace NeoEdit.Editor
 {
-	partial class NEFiles
+	partial class NEWindow
 	{
-		public NEFilesData data { get; private set; }
-		NEFilesData editableData
+		public NEWindowData data { get; private set; }
+		NEWindowData editableData
 		{
 			get
 			{
@@ -18,7 +18,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void ResetData(NEFilesData data)
+		public void ResetData(NEWindowData data)
 		{
 			result = null;
 			this.data = data;
@@ -81,17 +81,17 @@ namespace NeoEdit.Editor
 			set => editableData.macroVisualize = value;
 		}
 
-		NEFilesResult result;
-		NEFilesResult CreateResult()
+		NEWindowResult result;
+		NEWindowResult CreateResult()
 		{
 			if (result == null)
-				result = new NEFilesResult();
+				result = new NEWindowResult();
 			return result;
 		}
 
 		public void AddNewFile(NEFile neFile) => CreateResult().AddNewFile(neFile);
 
-		public NEFilesResult GetResult()
+		public NEWindowResult GetResult()
 		{
 			NEClipboard setClipboard = null;
 			List<KeysAndValues>[] setKeysAndValues = null;

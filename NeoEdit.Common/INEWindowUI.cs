@@ -11,15 +11,15 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Common
 {
-	public static class INEFilesWindowStatic
+	public static class INEWindowUIStatic
 	{
 		public delegate string RunCryptorKeyDialogDelegate(Cryptor.Type type, bool encrypt);
 		public static RunCryptorKeyDialogDelegate RunCryptorKeyDialog { get; set; }
-		public static Func<INEFiles, INEFilesWindow> CreateINEFilesWindow { get; set; }
+		public static Func<INEWindow, INEWindowUI> CreateINEWindowUI { get; set; }
 		public static Action<Exception> ShowExceptionMessage { get; set; }
 	}
 
-	public interface INEFilesWindow
+	public interface INEWindowUI
 	{
 		MessageOptions RunDialog_ShowMessage(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None);
 
@@ -120,7 +120,7 @@ namespace NeoEdit.Common
 		void Render(RenderParameters renderParameters);
 		void ShowExceptionMessage(Exception ex);
 		void CloseWindow();
-		void QueueActivateNEFiles();
+		void QueueActivateNEWindow();
 		void SetForeground();
 		void SetMacroProgress(double? percent);
 		void SetTaskRunnerProgress(double? percent);

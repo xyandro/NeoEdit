@@ -23,7 +23,7 @@ namespace NeoEdit.Editor
 
 		public static readonly string MacroDirectory = Path.Combine(Helpers.NeoEditAppData, "Macro");
 
-		public static string ChooseMacro(INEFilesWindow filesWindow)
+		public static string ChooseMacro(INEWindowUI filesWindow)
 		{
 			var result = filesWindow.RunDialog_Configure_FileMacro_Open_Open("xml", MacroDirectory, "Macro files|*.xml|All files|*.*");
 			if (result == null)
@@ -31,7 +31,7 @@ namespace NeoEdit.Editor
 			return result.FileNames[0];
 		}
 
-		public void Save(INEFilesWindow filesWindow, string fileName = null, bool macroDirRelative = false)
+		public void Save(INEWindowUI filesWindow, string fileName = null, bool macroDirRelative = false)
 		{
 			Directory.CreateDirectory(MacroDirectory);
 			if (fileName == null)
@@ -48,7 +48,7 @@ namespace NeoEdit.Editor
 			XMLConverter.ToXML(this).Save(fileName);
 		}
 
-		public static Macro Load(INEFilesWindow filesWindow, string fileName = null, bool macroDirRelative = false)
+		public static Macro Load(INEWindowUI filesWindow, string fileName = null, bool macroDirRelative = false)
 		{
 			if (fileName == null)
 			{

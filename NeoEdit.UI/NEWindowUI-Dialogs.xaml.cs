@@ -15,7 +15,7 @@ using NeoEdit.UI.Dialogs;
 
 namespace NeoEdit.UI
 {
-	partial class NEFilesWindow
+	partial class NEWindowUI
 	{
 		public MessageOptions RunDialog_ShowMessage(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None) => RunOnUIThread(() => Message.Run(this, title, text, options, defaultAccept, defaultCancel));
 

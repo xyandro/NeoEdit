@@ -49,13 +49,13 @@ namespace NeoEdit.UI
 			lightlightRowPen.Freeze();
 		}
 
-		public NEFilesWindow FilesWindow { get; }
+		public NEWindowUI FilesWindow { get; }
 		public INEFile NEFile { get; set; }
 
 		const double Spacing = 2;
 		static double LineHeight => Font.FontSize + Spacing;
 
-		internal NEFileWindow(NEFilesWindow filesWindow)
+		internal NEFileWindow(NEWindowUI filesWindow)
 		{
 			FilesWindow = filesWindow;
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);

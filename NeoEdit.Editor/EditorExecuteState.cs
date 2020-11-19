@@ -18,10 +18,10 @@ namespace NeoEdit.Editor
 			CurrentState = new EditorExecuteState(command);
 		}
 
-		public static void SetState(NEFiles neFiles, ExecuteState state)
+		public static void SetState(NEWindow neWindow, ExecuteState state)
 		{
 			NESerialTracker.MoveNext();
-			CurrentState = new EditorExecuteState(neFiles, state);
+			CurrentState = new EditorExecuteState(neWindow, state);
 		}
 
 		public static void ClearState() => CurrentState = null;
@@ -29,11 +29,11 @@ namespace NeoEdit.Editor
 		public readonly int NESerial = NESerialTracker.NESerial;
 
 		public IPreExecution PreExecution;
-		public NEFiles NEFiles;
+		public NEWindow NEWindow;
 
 		EditorExecuteState(NECommand command) : base(command) => Command = command;
 
-		EditorExecuteState(NEFiles neFiles, ExecuteState state) : base(state.Command)
+		EditorExecuteState(NEWindow neWindow, ExecuteState state) : base(state.Command)
 		{
 			ShiftDown = state.ShiftDown;
 			ControlDown = state.ControlDown;
@@ -42,7 +42,7 @@ namespace NeoEdit.Editor
 			Key = state.Key;
 			Text = state.Text;
 			Configuration = state.Configuration;
-			NEFiles = neFiles;
+			NEWindow = neWindow;
 		}
 
 		AnswerResult savedAnswers;

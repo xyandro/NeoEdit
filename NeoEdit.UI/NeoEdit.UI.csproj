@@ -847,22 +847,6 @@
     <Compile Include="Highlighting\HighlightJSON.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
-    <Compile Include="NEFilesWindow-Dialogs.xaml.cs">
-      <DependentUpon>NEFilesWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NEFilesWindow-Full.xaml.cs">
-      <DependentUpon>NEFilesWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="NEFilesWindow-Grid.xaml.cs">
-      <DependentUpon>NEFilesWindow.xaml</DependentUpon>
-    </Compile>
-    <Page Include="NEFilesWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="NEFilesWindow.xaml.cs">
-      <DependentUpon>NEFilesWindow.xaml</DependentUpon>
-    </Compile>
     <Page Include="NEFileWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -876,6 +860,22 @@
     </Page>
     <Compile Include="NEMenu.xaml.cs">
       <DependentUpon>NEMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NEWindowUI-Dialogs.xaml.cs">
+      <DependentUpon>NEWindowUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NEWindowUI-Full.xaml.cs">
+      <DependentUpon>NEWindowUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NEWindowUI-Grid.xaml.cs">
+      <DependentUpon>NEWindowUI.xaml</DependentUpon>
+    </Compile>
+    <Page Include="NEWindowUI.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="NEWindowUI.xaml.cs">
+      <DependentUpon>NEWindowUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="NoDelayClipboard.cs" />
     <None Include="packages.config" />

@@ -233,20 +233,20 @@
     <Compile Include="NEFile.cs" />
     <Compile Include="NEFileData.cs" />
     <Compile Include="NEFileResult.cs" />
-    <Compile Include="NEFiles-Macro.cs">
-      <DependentUpon>NEFiles.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFiles-Variables.cs">
-      <DependentUpon>NEFiles.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFiles.cs" />
-    <Compile Include="NEFilesData.cs" />
-    <Compile Include="NEFilesResult.cs" />
     <Compile Include="NEGlobal.cs" />
     <Compile Include="NEGlobalData.cs" />
     <Compile Include="NEGlobalResult.cs" />
     <Compile Include="NESerialTracker.cs" />
     <Compile Include="NEText.cs" />
+    <Compile Include="NEWindow-Macro.cs">
+      <DependentUpon>NEWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEWindow-Variables.cs">
+      <DependentUpon>NEWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEWindow.cs" />
+    <Compile Include="NEWindowData.cs" />
+    <Compile Include="NEWindowResult.cs" />
     <None Include="packages.config" />
     <Compile Include="PortScanner.cs" />
     <Compile Include="PreExecution\IPreExecution.cs" />

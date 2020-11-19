@@ -3,7 +3,7 @@ using NeoEdit.Common;
 
 namespace NeoEdit.Editor
 {
-	public class NEFilesResult
+	public class NEWindowResult
 	{
 		public List<NEFile> NewFiles { get; private set; }
 		public NEClipboard Clipboard { get; private set; }

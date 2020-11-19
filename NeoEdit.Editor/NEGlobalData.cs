@@ -6,8 +6,8 @@ namespace NeoEdit.Editor
 	{
 		public readonly int NESerial = NESerialTracker.NESerial;
 
-		public IReadOnlyOrderedHashSet<NEFilesData> allNEFilesData;
+		public IReadOnlyOrderedHashSet<NEWindowData> neWindowDatas;
 
-		public NEGlobalData Clone() => new NEGlobalData { allNEFilesData = allNEFilesData };
+		public NEGlobalData Clone() => new NEGlobalData { neWindowDatas = neWindowDatas };
 	}
 }

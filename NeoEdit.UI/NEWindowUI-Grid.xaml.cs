@@ -7,7 +7,7 @@ using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI
 {
-	partial class NEFilesWindow
+	partial class NEWindowUI
 	{
 		int gridColumns, gridRows;
 		double gridWidth, gridHeight;

@@ -268,7 +268,7 @@ namespace NeoEdit.Editor
 			return str.Substring(start, end - start);
 		}
 
-		static void Configure_Text_Select_WholeBoundedWord(bool wholeWord) => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(wholeWord ? 1 : 2);
+		static void Configure_Text_Select_WholeBoundedWord(bool wholeWord) => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(wholeWord ? 1 : 2);
 
 		void Execute_Text_Select_WholeBoundedWord(bool wholeWord)
 		{
@@ -295,7 +295,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Text_Select_Trim() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(0);
+		static void Configure_Text_Select_Trim() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(0);
 
 		void Execute_Text_Select_Trim()
 		{
@@ -303,7 +303,7 @@ namespace NeoEdit.Editor
 			Selections = Selections.AsTaskRunner().Select(range => TrimRange(range, result)).ToList();
 		}
 
-		static void Configure_Text_Select_Split() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_Select_Split(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Text_Select_Split() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_Select_Split(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Text_Select_Split()
 		{
@@ -327,7 +327,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_Select_Repeats_MatchPrevious_IgnoreMatchCase(bool caseSensitive) => Selections = Selections.AsTaskRunner().MatchBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
-		static void Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase();
+		static void Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase();
 
 		void Execute_Text_Select_Repeats_ByCount_IgnoreMatchCase(bool caseSensitive)
 		{
@@ -347,7 +347,7 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(bool caseSensitive)
 		{
 			var preExecution = new PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase();
-			foreach (var neFile in EditorExecuteState.CurrentState.NEFiles.ActiveFiles)
+			foreach (var neFile in EditorExecuteState.CurrentState.NEWindow.ActiveFiles)
 			{
 				var strs = neFile.GetSelectionStrings().ToList();
 				var matches = preExecution.Matches ?? strs;
@@ -377,7 +377,7 @@ namespace NeoEdit.Editor
 		{
 			var preExecution = new PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase();
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
-			foreach (var neFile in EditorExecuteState.CurrentState.NEFiles.ActiveFiles)
+			foreach (var neFile in EditorExecuteState.CurrentState.NEWindow.ActiveFiles)
 			{
 				var repeats = neFile.Selections.AsTaskRunner().GroupBy(neFile.Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
 
@@ -401,7 +401,7 @@ namespace NeoEdit.Editor
 			}).ToList();
 		}
 
-		static void Configure_Text_Select_ByWidth() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_SelectWidth_ByWidth(false, true, EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Text_Select_ByWidth() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_SelectWidth_ByWidth(false, true, EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Text_Select_ByWidth()
 		{
@@ -445,19 +445,19 @@ namespace NeoEdit.Editor
 		static void Configure_Text_Find_Find()
 		{
 			string text = null;
-			var selectionOnly = EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Any(range => range.HasSelection);
+			var selectionOnly = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Any(range => range.HasSelection);
 
-			if (EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Count == 1)
+			if (EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count == 1)
 			{
-				var sel = EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Single();
-				if ((selectionOnly) && (EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetPositionLine(sel.Cursor) == EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
+				var sel = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Single();
+				if ((selectionOnly) && (EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetPositionLine(sel.Cursor) == EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
-					text = EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetString(sel);
+					text = EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetString(sel);
 				}
 			}
 
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_Find_Find(text, selectionOnly, EditorExecuteState.CurrentState.NEFiles.Focused.ViewBinaryCodePages, EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_Find_Find(text, selectionOnly, EditorExecuteState.CurrentState.NEWindow.Focused.ViewBinaryCodePages, EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 		}
 
 		void Execute_Text_Find_Find()
@@ -583,19 +583,19 @@ namespace NeoEdit.Editor
 		static void Configure_Text_Find_RegexReplace()
 		{
 			string text = null;
-			var selectionOnly = EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Any(range => range.HasSelection);
+			var selectionOnly = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Any(range => range.HasSelection);
 
-			if (EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Count == 1)
+			if (EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count == 1)
 			{
-				var sel = EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Single();
-				if ((selectionOnly) && (EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetPositionLine(sel.Cursor) == EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
+				var sel = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Single();
+				if ((selectionOnly) && (EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetPositionLine(sel.Cursor) == EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
-					text = EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetString(sel);
+					text = EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetString(sel);
 				}
 			}
 
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_Find_RegexReplace(text, selectionOnly);
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_Find_RegexReplace(text, selectionOnly);
 		}
 
 		void Execute_Text_Find_RegexReplace()
@@ -608,7 +608,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select(range => searcher.regexes[0].Replace(Text.GetString(range), result.Replace)).ToList());
 		}
 
-		static void Configure_Text_Trim() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(0);
+		static void Configure_Text_Trim() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(0);
 
 		void Execute_Text_Trim()
 		{
@@ -618,8 +618,8 @@ namespace NeoEdit.Editor
 
 		static void Configure_Text_Width()
 		{
-			var numeric = EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Any() ? EditorExecuteState.CurrentState.NEFiles.Focused.Selections.AsTaskRunner().All(range => EditorExecuteState.CurrentState.NEFiles.Focused.Text.GetString(range).IsNumeric()) : false;
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_SelectWidth_ByWidth(numeric, false, EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+			var numeric = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Any() ? EditorExecuteState.CurrentState.NEWindow.Focused.Selections.AsTaskRunner().All(range => EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetString(range).IsNumeric()) : false;
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_SelectWidth_ByWidth(numeric, false, EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 		}
 
 		void Execute_Text_Width()
@@ -639,7 +639,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_Case_Invert() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToToggled()).ToList());
 
-		static void Configure_Text_Sort() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_Sort();
+		static void Configure_Text_Sort() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_Sort();
 
 		void Execute_Text_Sort()
 		{
@@ -683,7 +683,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_Unescape_URL() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
 
-		static void Configure_Text_Random() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_Random(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables());
+		static void Configure_Text_Random() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_Random(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
 
 		void Execute_Text_Random()
 		{
@@ -692,7 +692,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 
-		static void Configure_Text_Advanced_Unicode() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_Advanced_Unicode();
+		static void Configure_Text_Advanced_Unicode() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_Advanced_Unicode();
 
 		void Execute_Text_Advanced_Unicode()
 		{
@@ -700,7 +700,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(result.Value);
 		}
 
-		static void Configure_Text_Advanced_FirstDistinct() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_Advanced_FirstDistinct();
+		static void Configure_Text_Advanced_FirstDistinct() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_Advanced_FirstDistinct();
 
 		void Execute_Text_Advanced_FirstDistinct()
 		{
@@ -782,10 +782,10 @@ namespace NeoEdit.Editor
 
 		static void Configure_Text_Advanced_ReverseRegex()
 		{
-			if (EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Count != 1)
+			if (EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_Text_Advanced_ReverseRegex();
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_Text_Advanced_ReverseRegex();
 		}
 
 		void Execute_Text_Advanced_ReverseRegex()

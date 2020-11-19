@@ -161,16 +161,16 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Internal_Activate()
 		{
-			EditorExecuteState.CurrentState.NEFiles.LastActivated = DateTime.Now;
-			EditorExecuteState.CurrentState.NEFiles.AllFiles.ForEach(neFile => neFile.Activated());
+			EditorExecuteState.CurrentState.NEWindow.LastActivated = DateTime.Now;
+			EditorExecuteState.CurrentState.NEWindow.AllFiles.ForEach(neFile => neFile.Activated());
 			return true;
 		}
 
 		static bool PreExecute_Internal_MouseActivate()
 		{
 			var neFile = (EditorExecuteState.CurrentState.Configuration as Configuration_Internal_MouseActivate).NEFile as NEFile;
-			EditorExecuteState.CurrentState.NEFiles.SetActiveFiles(EditorExecuteState.CurrentState.NEFiles.AllFiles.Where(file => (file == neFile) || ((EditorExecuteState.CurrentState.ShiftDown) && (EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Contains(file)))));
-			EditorExecuteState.CurrentState.NEFiles.Focused = neFile;
+			EditorExecuteState.CurrentState.NEWindow.SetActiveFiles(EditorExecuteState.CurrentState.NEWindow.AllFiles.Where(file => (file == neFile) || ((EditorExecuteState.CurrentState.ShiftDown) && (EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Contains(file)))));
+			EditorExecuteState.CurrentState.NEWindow.Focused = neFile;
 			return true;
 		}
 
@@ -190,7 +190,7 @@ namespace NeoEdit.Editor
 				case Key.Delete:
 				case Key.Left:
 				case Key.Right:
-					if (EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.HasSelection)))
+					if (EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.HasSelection)))
 						EditorExecuteState.CurrentState.Configuration = new Configuration_Internal_Key { HasSelections = true };
 					break;
 			}
@@ -203,9 +203,9 @@ namespace NeoEdit.Editor
 
 			switch (EditorExecuteState.CurrentState.Key)
 			{
-				case Key.PageUp: EditorExecuteState.CurrentState.NEFiles.MovePrevNext(-1, EditorExecuteState.CurrentState.ShiftDown); break;
-				case Key.PageDown: EditorExecuteState.CurrentState.NEFiles.MovePrevNext(1, EditorExecuteState.CurrentState.ShiftDown); break;
-				case Key.Tab: EditorExecuteState.CurrentState.NEFiles.MovePrevNext(1, EditorExecuteState.CurrentState.ShiftDown, true); break;
+				case Key.PageUp: EditorExecuteState.CurrentState.NEWindow.MovePrevNext(-1, EditorExecuteState.CurrentState.ShiftDown); break;
+				case Key.PageDown: EditorExecuteState.CurrentState.NEWindow.MovePrevNext(1, EditorExecuteState.CurrentState.ShiftDown); break;
+				case Key.Tab: EditorExecuteState.CurrentState.NEWindow.MovePrevNext(1, EditorExecuteState.CurrentState.ShiftDown, true); break;
 				default: return false;
 			}
 
@@ -388,15 +388,15 @@ namespace NeoEdit.Editor
 					break;
 				case Key.PageUp:
 					if (EditorExecuteState.CurrentState.ControlDown)
-						StartRow -= EditorExecuteState.CurrentState.NEFiles.DisplayRows / 2;
+						StartRow -= EditorExecuteState.CurrentState.NEWindow.DisplayRows / 2;
 					else
-						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, 1 - EditorExecuteState.CurrentState.NEFiles.DisplayRows, 0, EditorExecuteState.CurrentState.ShiftDown)).ToList();
+						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, 1 - EditorExecuteState.CurrentState.NEWindow.DisplayRows, 0, EditorExecuteState.CurrentState.ShiftDown)).ToList();
 					break;
 				case Key.PageDown:
 					if (EditorExecuteState.CurrentState.ControlDown)
-						StartRow += EditorExecuteState.CurrentState.NEFiles.DisplayRows / 2;
+						StartRow += EditorExecuteState.CurrentState.NEWindow.DisplayRows / 2;
 					else
-						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, EditorExecuteState.CurrentState.NEFiles.DisplayRows - 1, 0, EditorExecuteState.CurrentState.ShiftDown)).ToList();
+						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, EditorExecuteState.CurrentState.NEWindow.DisplayRows - 1, 0, EditorExecuteState.CurrentState.ShiftDown)).ToList();
 					break;
 				case Key.Tab:
 					{
@@ -406,8 +406,8 @@ namespace NeoEdit.Editor
 								ReplaceSelections("\t", false, tryJoinUndo: true);
 							else
 							{
-								var neFiles = Selections.AsTaskRunner().Where(range => (range.Start != 0) && (Text.GetString(range.Start - 1, 1) == "\t")).Select(range => Range.FromIndex(range.Start - 1, 1)).ToList();
-								Replace(neFiles, Enumerable.Repeat("", neFiles.Count).ToList());
+								var neWindow = Selections.AsTaskRunner().Where(range => (range.Start != 0) && (Text.GetString(range.Start - 1, 1) == "\t")).Select(range => Range.FromIndex(range.Start - 1, 1)).ToList();
+								Replace(neWindow, Enumerable.Repeat("", neWindow.Count).ToList());
 							}
 							break;
 						}
@@ -481,9 +481,9 @@ namespace NeoEdit.Editor
 			var configuration = EditorExecuteState.CurrentState.Configuration as Configuration_Internal_Mouse;
 			var neFile = configuration.NEFile as NEFile;
 
-			if ((EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Count != 1) || (!EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Contains(neFile)))
+			if ((EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Count != 1) || (!EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Contains(neFile)))
 			{
-				EditorExecuteState.CurrentState.NEFiles.SetActiveFile(neFile);
+				EditorExecuteState.CurrentState.NEWindow.SetActiveFile(neFile);
 				return true;
 			}
 

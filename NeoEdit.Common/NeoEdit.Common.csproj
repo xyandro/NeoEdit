@@ -184,8 +184,8 @@
     <Compile Include="Font.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="INEFile.cs" />
-    <Compile Include="INEFiles.cs" />
-    <Compile Include="INEFilesWindow.cs" />
+    <Compile Include="INEWindow.cs" />
+    <Compile Include="INEWindowUI.cs" />
     <Compile Include="IReadOnlyOrderedHashSet.cs" />
     <Compile Include="ItemSet.cs" />
     <Compile Include="KeyGestureAttribute.cs" />

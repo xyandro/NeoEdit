@@ -17,7 +17,7 @@ namespace NeoEdit.UI.Tutorial
 		const string StartPage = "Home";
 
 		readonly bool LoadFromFile = false;
-		readonly INEFiles neFiles;
+		readonly INEWindow neWindow;
 		readonly List<string> pages = new List<string>();
 		int currentPage = 0;
 
@@ -72,11 +72,11 @@ namespace NeoEdit.UI.Tutorial
 			catch (Exception ex) { MessageBox.Show(ex.Message); }
 		}
 
-		public TutorialWindow(INEFiles neFiles)
+		public TutorialWindow(INEWindow neWindow)
 		{
-			this.neFiles = neFiles;
+			this.neWindow = neWindow;
 			InitializeComponent();
-			//TODO Owner = neFiles.FilesWindow;
+			//TODO Owner = neWindow.FilesWindow;
 
 			if (Helpers.IsDebugBuild)
 			{

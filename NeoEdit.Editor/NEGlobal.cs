@@ -9,7 +9,7 @@ namespace NeoEdit.Editor
 		static NEGlobal()
 		{
 			data = new NEGlobalData();
-			SetAllNEFilesDatas(new OrderedHashSet<NEFilesData>());
+			SetNEWindowDatas(new OrderedHashSet<NEWindowData>());
 		}
 
 		public static NEGlobalData data { get; private set; }
@@ -27,29 +27,29 @@ namespace NeoEdit.Editor
 		{
 			result = null;
 			NEGlobal.data = data;
-			SetAllNEFilesDatas(AllNEFilesDatas); // Will regenerate AllNEFiles
-			AllNEFilesDatas.ForEach(neFilesData => neFilesData.neFiles.ResetData(neFilesData));
+			SetNEWindowDatas(NEWindowDatas); // Will regenerate NEWindows
+			NEWindowDatas.ForEach(neWindowData => neWindowData.neWindow.ResetData(neWindowData));
 		}
 
-		public static IReadOnlyOrderedHashSet<NEFiles> AllNEFiles { get; private set; }
+		public static IReadOnlyOrderedHashSet<NEWindow> NEWindows { get; private set; }
 
-		public static IReadOnlyOrderedHashSet<NEFilesData> AllNEFilesDatas
+		public static IReadOnlyOrderedHashSet<NEWindowData> NEWindowDatas
 		{
-			get => data.allNEFilesData;
+			get => data.neWindowDatas;
 			set
 			{
-				editableData.allNEFilesData = value;
-				AllNEFiles = new OrderedHashSet<NEFiles>(value.Select(neFilesData => neFilesData.neFiles));
+				editableData.neWindowDatas = value;
+				NEWindows = new OrderedHashSet<NEWindow>(value.Select(neWindowData => neWindowData.neWindow));
 			}
 		}
 
-		public static void SetAllNEFilesDatas(IEnumerable<NEFilesData> allNEFilesDatas) => AllNEFilesDatas = new OrderedHashSet<NEFilesData>(allNEFilesDatas);
+		public static void SetNEWindowDatas(IEnumerable<NEWindowData> neWindowDatas) => NEWindowDatas = new OrderedHashSet<NEWindowData>(neWindowDatas);
 
 		public static NEGlobalResult GetResult()
 		{
-			foreach (var neFiles in AllNEFiles)
+			foreach (var neWindow in NEWindows)
 			{
-				var result = neFiles.GetResult();
+				var result = neWindow.GetResult();
 				if (result == null)
 					continue;
 
@@ -63,9 +63,9 @@ namespace NeoEdit.Editor
 					CreateResult().SetDragFiles(result.DragFiles);
 			}
 
-			var nextAllNEFilesDatas = AllNEFiles.Select(x => x.data).ToList();
-			if (!AllNEFilesDatas.Matches(nextAllNEFilesDatas))
-				SetAllNEFilesDatas(nextAllNEFilesDatas);
+			var nextNEWindowDatas = NEWindows.Select(x => x.data).ToList();
+			if (!NEWindowDatas.Matches(nextNEWindowDatas))
+				SetNEWindowDatas(nextNEWindowDatas);
 
 			var ret = result;
 			result = null;
@@ -80,8 +80,8 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		public static void AddNewFiles(NEFiles neFiles) => SetAllNEFilesDatas(AllNEFilesDatas.Concat(neFiles.data));
+		public static void AddNewFiles(NEWindow neWindow) => SetNEWindowDatas(NEWindowDatas.Concat(neWindow.data));
 
-		public static void RemoveFiles(NEFiles neFiles) => SetAllNEFilesDatas(AllNEFilesDatas.Except(neFiles.data));
+		public static void RemoveFiles(NEWindow neWindow) => SetNEWindowDatas(NEWindowDatas.Except(neWindow.data));
 	}
 }

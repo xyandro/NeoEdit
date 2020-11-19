@@ -40,7 +40,7 @@ namespace NeoEdit.Editor
 			};
 		}
 
-		public void ReplaceExecuteState(NEFiles neFiles)
+		public void ReplaceExecuteState(NEWindow neWindow)
 		{
 			EditorExecuteState.SetState(Command);
 			EditorExecuteState.CurrentState.ShiftDown = ShiftDown;
@@ -50,7 +50,7 @@ namespace NeoEdit.Editor
 			EditorExecuteState.CurrentState.Key = Key;
 			EditorExecuteState.CurrentState.Text = Text;
 			EditorExecuteState.CurrentState.Configuration = Configuration;
-			EditorExecuteState.CurrentState.NEFiles = neFiles;
+			EditorExecuteState.CurrentState.NEWindow = neWindow;
 		}
 	}
 }

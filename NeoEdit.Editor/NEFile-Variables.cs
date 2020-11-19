@@ -110,7 +110,7 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		readonly KeysAndValues[] keysAndValues = new KeysAndValues[NEFiles.KeysAndValuesCount];
+		readonly KeysAndValues[] keysAndValues = new KeysAndValues[NEWindow.KeysAndValuesCount];
 		KeysAndValues GetKeysAndValues(int kvIndex)
 		{
 			if ((kvIndex < 0) || (kvIndex > 9))
@@ -308,7 +308,7 @@ namespace NeoEdit.Editor
 		public NEFileResult GetResult()
 		{
 			clipboardData = null;
-			for (var kvIndex = 0; kvIndex < NEFiles.KeysAndValuesCount; ++kvIndex)
+			for (var kvIndex = 0; kvIndex < NEWindow.KeysAndValuesCount; ++kvIndex)
 				keysAndValues[kvIndex] = null;
 
 			var ret = result;

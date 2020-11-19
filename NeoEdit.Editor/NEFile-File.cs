@@ -16,7 +16,7 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		static void AddFilesFromClipboards(NEFiles neFiles)
+		static void AddFilesFromClipboards(NEWindow neWindow)
 		{
 			var index = 0;
 			foreach (var strs in NEClipboard.Current)
@@ -33,18 +33,18 @@ namespace NeoEdit.Editor
 					sb.Append(ending);
 				}
 				var te = new NEFile(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-				neFiles.AddNewFile(te);
+				neWindow.AddNewFile(te);
 				te.Selections = sels;
 			}
 		}
 
-		static void AddFilesFromClipboardSelections(NEFiles neFiles) => NEClipboard.Current.Strings.ForEach((str, index) => neFiles.AddNewFile(new NEFile(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
+		static void AddFilesFromClipboardSelections(NEWindow neWindow) => NEClipboard.Current.Strings.ForEach((str, index) => neWindow.AddNewFile(new NEFile(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
 
 		string GetSaveFileName()
 		{
-			return EditorExecuteState.CurrentState.NEFiles.ShowFile(this, () =>
+			return EditorExecuteState.CurrentState.NEWindow.ShowFile(this, () =>
 			{
-				var result = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunSaveFileDialog(Path.GetFileName(FileName) ?? DisplayName, "txt", Path.GetDirectoryName(FileName), "All files|*.*");
+				var result = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunSaveFileDialog(Path.GetFileName(FileName) ?? DisplayName, "txt", Path.GetDirectoryName(FileName), "All files|*.*");
 				if (result == null)
 					throw new OperationCanceledException();
 
@@ -76,32 +76,32 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_File_Select_All()
 		{
-			EditorExecuteState.CurrentState.NEFiles.ActiveFiles = EditorExecuteState.CurrentState.NEFiles.AllFiles;
-			EditorExecuteState.CurrentState.NEFiles.Focused = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.FirstOrDefault();
+			EditorExecuteState.CurrentState.NEWindow.ActiveFiles = EditorExecuteState.CurrentState.NEWindow.AllFiles;
+			EditorExecuteState.CurrentState.NEWindow.Focused = EditorExecuteState.CurrentState.NEWindow.ActiveFiles.FirstOrDefault();
 			return true;
 		}
 
 		static bool PreExecute_File_Select_None()
 		{
-			EditorExecuteState.CurrentState.NEFiles.ClearActiveFiles();
+			EditorExecuteState.CurrentState.NEWindow.ClearActiveFiles();
 			return true;
 		}
 
 		static bool PreExecute_File_Select_WithWithoutSelections(bool hasSelections)
 		{
-			EditorExecuteState.CurrentState.NEFiles.SetActiveFiles(EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Where(neFile => neFile.Selections.Any() == hasSelections));
+			EditorExecuteState.CurrentState.NEWindow.SetActiveFiles(EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Where(neFile => neFile.Selections.Any() == hasSelections));
 			return true;
 		}
 
 		static bool PreExecute_File_Select_ModifiedUnmodified(bool modified)
 		{
-			EditorExecuteState.CurrentState.NEFiles.SetActiveFiles(EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Where(neFile => neFile.IsModified == modified));
+			EditorExecuteState.CurrentState.NEWindow.SetActiveFiles(EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Where(neFile => neFile.IsModified == modified));
 			return true;
 		}
 
 		static bool PreExecute_File_Select_Inactive()
 		{
-			EditorExecuteState.CurrentState.NEFiles.SetActiveFiles(EditorExecuteState.CurrentState.NEFiles.AllFiles.Except(EditorExecuteState.CurrentState.NEFiles.ActiveFiles));
+			EditorExecuteState.CurrentState.NEWindow.SetActiveFiles(EditorExecuteState.CurrentState.NEWindow.AllFiles.Except(EditorExecuteState.CurrentState.NEWindow.ActiveFiles));
 			return true;
 		}
 
@@ -110,61 +110,61 @@ namespace NeoEdit.Editor
 			var data = new WindowActiveFilesDialogData();
 			void RecalculateData()
 			{
-				data.AllFiles = EditorExecuteState.CurrentState.NEFiles.AllFiles.Select(neFile => neFile.NEFileLabel).ToList();
-				data.ActiveIndexes = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Select(neFile => EditorExecuteState.CurrentState.NEFiles.AllFiles.IndexOf(neFile)).ToList();
-				data.FocusedIndex = EditorExecuteState.CurrentState.NEFiles.AllFiles.IndexOf(EditorExecuteState.CurrentState.NEFiles.Focused);
+				data.AllFiles = EditorExecuteState.CurrentState.NEWindow.AllFiles.Select(neFile => neFile.NEFileLabel).ToList();
+				data.ActiveIndexes = EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Select(neFile => EditorExecuteState.CurrentState.NEWindow.AllFiles.IndexOf(neFile)).ToList();
+				data.FocusedIndex = EditorExecuteState.CurrentState.NEWindow.AllFiles.IndexOf(EditorExecuteState.CurrentState.NEWindow.Focused);
 			}
 			RecalculateData();
 			data.SetActiveIndexes = list =>
 			{
-				//EditorExecuteState.CurrentState.NEFiles.ClearAllActive();
-				//list.Select(index => EditorExecuteState.CurrentState.NEFiles.AllFiles[index]).ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.SetActive(neFile));
+				//EditorExecuteState.CurrentState.NEWindow.ClearAllActive();
+				//list.Select(index => EditorExecuteState.CurrentState.NEWindow.AllFiles[index]).ForEach(neFile => EditorExecuteState.CurrentState.NEWindow.SetActive(neFile));
 				//RecalculateData();
-				//EditorExecuteState.CurrentState.NEFiles.RenderFilesWindow();
+				//EditorExecuteState.CurrentState.NEWindow.RenderFilesWindow();
 			};
 			data.CloseFiles = list =>
 			{
-				//var neFiles = list.Select(index => EditorExecuteState.CurrentState.NEFiles.AllFiles[index]).ToList();
-				//neFiles.ForEach(neFile => neFile.VerifyCanClose());
-				//neFiles.ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.RemoveFile(neFile));
+				//var neWindow = list.Select(index => EditorExecuteState.CurrentState.NEWindow.AllFiles[index]).ToList();
+				//neWindow.ForEach(neFile => neFile.VerifyCanClose());
+				//neWindow.ForEach(neFile => EditorExecuteState.CurrentState.NEWindow.RemoveFile(neFile));
 				//RecalculateData();
-				//EditorExecuteState.CurrentState.NEFiles.RenderFilesWindow();
+				//EditorExecuteState.CurrentState.NEWindow.RenderFilesWindow();
 			};
 			data.DoMoves = moves =>
 			{
-				//moves.ForEach(((int oldIndex, int newIndex) move) => EditorExecuteState.CurrentState.NEFiles.MoveFile(EditorExecuteState.CurrentState.NEFiles.AllFiles[move.oldIndex], move.newIndex));
+				//moves.ForEach(((int oldIndex, int newIndex) move) => EditorExecuteState.CurrentState.NEWindow.MoveFile(EditorExecuteState.CurrentState.NEWindow.AllFiles[move.oldIndex], move.newIndex));
 				//RecalculateData();
-				//EditorExecuteState.CurrentState.NEFiles.RenderFilesWindow();
+				//EditorExecuteState.CurrentState.NEWindow.RenderFilesWindow();
 			};
 
-			EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_PreExecute_File_Select_Choose(data);
+			EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_PreExecute_File_Select_Choose(data);
 
 			return true;
 		}
 
 		static bool PreExecute_File_New_New()
 		{
-			EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFile());
+			EditorExecuteState.CurrentState.NEWindow.AddNewFile(new NEFile());
 			return true;
 		}
 
 		static bool PreExecute_File_New_FromClipboard_Selections()
 		{
-			AddFilesFromClipboardSelections(EditorExecuteState.CurrentState.NEFiles);
+			AddFilesFromClipboardSelections(EditorExecuteState.CurrentState.NEWindow);
 			return true;
 		}
 
 		static bool PreExecute_File_New_FromClipboard_Files()
 		{
-			AddFilesFromClipboards(EditorExecuteState.CurrentState.NEFiles);
+			AddFilesFromClipboards(EditorExecuteState.CurrentState.NEWindow);
 			return true;
 		}
 
 		static bool PreExecute_File_New_WordList()
 		{
 			byte[] data;
-			var streamName = typeof(NEFiles).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
-			using (var stream = typeof(NEFiles).Assembly.GetManifestResourceStream(streamName))
+			var streamName = typeof(NEWindow).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
+			using (var stream = typeof(NEWindow).Assembly.GetManifestResourceStream(streamName))
 			using (var ms = new MemoryStream())
 			{
 				stream.CopyTo(ms);
@@ -173,16 +173,16 @@ namespace NeoEdit.Editor
 
 			data = Compressor.Decompress(data, Compressor.Type.GZip);
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data));
-			EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFile(displayName: "Word List", bytes: data, modified: false));
+			EditorExecuteState.CurrentState.NEWindow.AddNewFile(new NEFile(displayName: "Word List", bytes: data, modified: false));
 
 			return true;
 		}
 
 		static void Configure_FileMacro_Open_Open(string initialDirectory = null)
 		{
-			if ((initialDirectory == null) && (EditorExecuteState.CurrentState.NEFiles.Focused != null))
-				initialDirectory = Path.GetDirectoryName(EditorExecuteState.CurrentState.NEFiles.Focused.FileName);
-			var result = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_FileMacro_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
+			if ((initialDirectory == null) && (EditorExecuteState.CurrentState.NEWindow.Focused != null))
+				initialDirectory = Path.GetDirectoryName(EditorExecuteState.CurrentState.NEWindow.Focused.FileName);
+			var result = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_FileMacro_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
 			if (result == null)
 				throw new OperationCanceledException();
 			EditorExecuteState.CurrentState.Configuration = result;
@@ -191,17 +191,17 @@ namespace NeoEdit.Editor
 		static bool PreExecute_FileMacro_Open_Open()
 		{
 			var result = EditorExecuteState.CurrentState.Configuration as Configuration_FileMacro_Open_Open;
-			result.FileNames.ForEach(fileName => EditorExecuteState.CurrentState.NEFiles.AddNewFile(new NEFile(fileName)));
+			result.FileNames.ForEach(fileName => EditorExecuteState.CurrentState.NEWindow.AddNewFile(new NEFile(fileName)));
 			return true;
 		}
 
 		static bool PreExecute_File_Open_CopiedCut()
 		{
-			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => EditorExecuteState.CurrentState.NEFiles.AddNewFile(neFile));
+			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => EditorExecuteState.CurrentState.NEWindow.AddNewFile(neFile));
 			return true;
 		}
 
-		static void Configure_File_Open_ReopenWithEncoding() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(EditorExecuteState.CurrentState.NEFiles.Focused.CodePage);
+		static void Configure_File_Open_ReopenWithEncoding() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage);
 
 		void Execute_File_Open_ReopenWithEncoding()
 		{
@@ -270,7 +270,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_SaveCopy_SaveAsCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		static void Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables(), EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Count);
+		static void Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables(), EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count);
 
 		void Execute_File_SaveCopy_SaveAsCopyByExpression(bool copyOnly = false)
 		{
@@ -306,7 +306,7 @@ namespace NeoEdit.Editor
 			SetFileName(fileName);
 		}
 
-		static void Configure_File_Move_MoveByExpression() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEFiles.Focused.GetVariables(), EditorExecuteState.CurrentState.NEFiles.Focused.Selections.Count);
+		static void Configure_File_Move_MoveByExpression() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_FileTable_Various_Various(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables(), EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count);
 
 		void Execute_File_Move_MoveByExpression()
 		{
@@ -349,7 +349,7 @@ namespace NeoEdit.Editor
 			File.Delete(FileName);
 		}
 
-		static void Configure_File_Encoding() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(EditorExecuteState.CurrentState.NEFiles.Focused.CodePage);
+		static void Configure_File_Encoding() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage);
 
 		void Execute_File_Encoding()
 		{
@@ -359,9 +359,9 @@ namespace NeoEdit.Editor
 
 		static void Configure_File_LineEndings()
 		{
-			var endings = EditorExecuteState.CurrentState.NEFiles.ActiveFiles.Select(neFile => neFile.Text.OnlyEnding).Distinct().Take(2).ToList();
+			var endings = EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Select(neFile => neFile.Text.OnlyEnding).Distinct().Take(2).ToList();
 			var ending = endings.Count == 1 ? endings[0] : "";
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_File_LineEndings(ending);
+			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_File_LineEndings(ending);
 		}
 
 		void Execute_File_LineEndings()
@@ -382,7 +382,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_FileActiveFileIndex(bool activeOnly)
 		{
-			ReplaceSelections((EditorExecuteState.CurrentState.NEFiles.GetFileIndex(this, activeOnly) + 1).ToString());
+			ReplaceSelections((EditorExecuteState.CurrentState.NEWindow.GetFileIndex(this, activeOnly) + 1).ToString());
 		}
 
 		void Execute_File_Advanced_Compress() => Compressed = EditorExecuteState.CurrentState.MultiStatus == false;
@@ -392,7 +392,7 @@ namespace NeoEdit.Editor
 			if (EditorExecuteState.CurrentState.MultiStatus != false)
 				EditorExecuteState.CurrentState.Configuration = new Configuration_File_Advanced_Encrypt();
 			else
-				EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEFiles.FilesWindow.RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type.AES, true);
+				EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindow.FilesWindow.RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type.AES, true);
 		}
 
 		void Execute_File_Advanced_Encrypt() => AESKey = (EditorExecuteState.CurrentState.Configuration as Configuration_File_Advanced_Encrypt).Key;
@@ -425,7 +425,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_File_Close_ActiveInactiveFiles(bool active)
 		{
-			foreach (var neFile in (active ? EditorExecuteState.CurrentState.NEFiles.ActiveFiles : EditorExecuteState.CurrentState.NEFiles.AllFiles.Except(EditorExecuteState.CurrentState.NEFiles.ActiveFiles)))
+			foreach (var neFile in (active ? EditorExecuteState.CurrentState.NEWindow.ActiveFiles : EditorExecuteState.CurrentState.NEWindow.AllFiles.Except(EditorExecuteState.CurrentState.NEWindow.ActiveFiles)))
 			{
 				neFile.VerifyCanClose();
 				neFile.ClearFiles();
@@ -454,12 +454,12 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_File_Exit()
 		{
-			foreach (var neFile in EditorExecuteState.CurrentState.NEFiles.AllFiles)
+			foreach (var neFile in EditorExecuteState.CurrentState.NEWindow.AllFiles)
 			{
 				neFile.VerifyCanClose();
 				neFile.ClearFiles();
 			}
-			NEGlobal.RemoveFiles(EditorExecuteState.CurrentState.NEFiles);
+			NEGlobal.RemoveFiles(EditorExecuteState.CurrentState.NEWindow);
 
 			return true;
 		}

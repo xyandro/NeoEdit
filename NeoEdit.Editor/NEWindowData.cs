@@ -2,10 +2,10 @@
 
 namespace NeoEdit.Editor
 {
-	public class NEFilesData
+	public class NEWindowData
 	{
 		public readonly int NESerial = NESerialTracker.NESerial;
-		public readonly NEFiles neFiles;
+		public readonly NEWindow neWindow;
 
 		public IReadOnlyOrderedHashSet<NEFileData> allFileDatas;
 		public IReadOnlyOrderedHashSet<NEFile> activeFiles;
@@ -14,9 +14,9 @@ namespace NeoEdit.Editor
 		public bool activeOnly;
 		public bool macroVisualize = true;
 
-		public NEFilesData(NEFiles neFiles) => this.neFiles = neFiles;
+		public NEWindowData(NEWindow neWindow) => this.neWindow = neWindow;
 
-		public NEFilesData Clone() => new NEFilesData(neFiles)
+		public NEWindowData Clone() => new NEWindowData(neWindow)
 		{
 			allFileDatas = allFileDatas,
 			activeFiles = activeFiles,
