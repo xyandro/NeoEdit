@@ -13,8 +13,7 @@ namespace NeoEdit.Common
 {
 	public static class INEWindowUIStatic
 	{
-		public delegate string RunCryptorKeyDialogDelegate(Cryptor.Type type, bool encrypt);
-		public static RunCryptorKeyDialogDelegate RunCryptorKeyDialog { get; set; }
+		public static Func<Cryptor.Type, bool, string> RunCryptorKeyDialog { get; set; }
 		public static Func<INEWindow, INEWindowUI> CreateINEWindowUI { get; set; }
 		public static Action<Exception> ShowExceptionMessage { get; set; }
 	}

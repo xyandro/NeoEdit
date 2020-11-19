@@ -33,17 +33,7 @@ namespace NeoEdit.Editor
 
 		EditorExecuteState(NECommand command) : base(command) => Command = command;
 
-		EditorExecuteState(NEWindow neWindow, ExecuteState state) : base(state.Command)
-		{
-			ShiftDown = state.ShiftDown;
-			ControlDown = state.ControlDown;
-			AltDown = state.AltDown;
-			MultiStatus = state.MultiStatus;
-			Key = state.Key;
-			Text = state.Text;
-			Configuration = state.Configuration;
-			NEWindow = neWindow;
-		}
+		EditorExecuteState(NEWindow neWindow, ExecuteState state) : base(state) => NEWindow = neWindow;
 
 		AnswerResult savedAnswers;
 		public AnswerResult SavedAnswers

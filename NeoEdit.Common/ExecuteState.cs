@@ -16,6 +16,18 @@ namespace NeoEdit.Common
 
 		public ExecuteState(NECommand command) => Command = command;
 
+		public ExecuteState(ExecuteState state)
+		{
+			Command = state.Command;
+			ShiftDown = state.ShiftDown;
+			ControlDown = state.ControlDown;
+			AltDown = state.AltDown;
+			MultiStatus = state.MultiStatus;
+			Key = state.Key;
+			Text = state.Text;
+			Configuration = state.Configuration;
+		}
+
 		public ModifierKeys Modifiers
 		{
 			set
