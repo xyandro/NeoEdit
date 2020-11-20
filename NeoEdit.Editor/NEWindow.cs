@@ -13,6 +13,8 @@ namespace NeoEdit.Editor
 {
 	public partial class NEWindow : INEWindow
 	{
+		static EditorExecuteState state => EditorExecuteState.CurrentState;
+
 		int displayColumns;
 		public int DisplayColumns
 		{
@@ -37,7 +39,7 @@ namespace NeoEdit.Editor
 			AllFileDatas = new OrderedHashSet<NEFileData>();
 			ActiveFiles = new OrderedHashSet<NEFile>();
 			WindowLayout = new WindowLayout(1, 1);
-			EditorExecuteState.CurrentState.NEGlobal.AddNewFiles(this);
+			state.NEGlobal.AddNewFiles(this);
 
 			if (addEmpty)
 				AddNewFile(new NEFile());
@@ -88,7 +90,7 @@ namespace NeoEdit.Editor
 				StatusBar = GetStatusBar(),
 				MenuStatus = GetMenuStatus(),
 			};
-			EditorExecuteState.CurrentState.NEWindowUI.Render(renderParameters);
+			state.NEWindowUI.Render(renderParameters);
 		}
 
 		Dictionary<string, bool?> GetMenuStatus()
@@ -161,7 +163,7 @@ namespace NeoEdit.Editor
 			if (playingMacro == null)
 				return;
 
-			EditorExecuteState.CurrentState.NEWindowUI.SetMacroProgress(0);
+			state.NEWindowUI.SetMacroProgress(0);
 			var stepIndex = 0;
 			DateTime lastTime = DateTime.MinValue;
 			while (true)
@@ -185,7 +187,7 @@ namespace NeoEdit.Editor
 				if ((now - lastTime).TotalMilliseconds >= 100)
 				{
 					lastTime = now;
-					EditorExecuteState.CurrentState.NEWindowUI.SetMacroProgress((double)stepIndex / macro.Actions.Count);
+					state.NEWindowUI.SetMacroProgress((double)stepIndex / macro.Actions.Count);
 				}
 
 				macro.Actions[stepIndex++].SetExecuteState();
@@ -198,7 +200,7 @@ namespace NeoEdit.Editor
 				if (MacroVisualize)
 					RenderFilesWindow();
 			}
-			EditorExecuteState.CurrentState.NEWindowUI.SetMacroProgress(null);
+			state.NEWindowUI.SetMacroProgress(null);
 		}
 
 		public void HandleCommand(ExecuteState state, Func<bool> skipDraw = null)
@@ -213,10 +215,10 @@ namespace NeoEdit.Editor
 		bool RunCommand(bool inMacro = false)
 		{
 			NESerialTracker.MoveNext();
-			var oldData = EditorExecuteState.CurrentState.NEGlobal.data;
+			var oldData = state.NEGlobal.data;
 			try
 			{
-				if (EditorExecuteState.CurrentState.Command == NECommand.Macro_RepeatLastAction)
+				if (state.Command == NECommand.Macro_RepeatLastAction)
 				{
 					if (lastAction == null)
 						throw new Exception("No last action available");
@@ -226,25 +228,25 @@ namespace NeoEdit.Editor
 
 				CreateResult();
 
-				EditorExecuteState.CurrentState.ClipboardDataMapFunc = GetClipboardDataMap;
-				EditorExecuteState.CurrentState.KeysAndValuesFunc = GetKeysAndValuesMap;
+				state.ClipboardDataMapFunc = GetClipboardDataMap;
+				state.KeysAndValuesFunc = GetKeysAndValuesMap;
 
-				if ((!inMacro) && (EditorExecuteState.CurrentState.Configuration == null))
+				if ((!inMacro) && (state.Configuration == null))
 					NEFile.Configure();
 
 				Stopwatch sw = null;
 				if (timeNextAction)
 					sw = Stopwatch.StartNew();
 
-				EditorExecuteState.CurrentState.NEWindowUI.SetTaskRunnerProgress(0);
+				state.NEWindowUI.SetTaskRunnerProgress(0);
 				if (!NEFile.PreExecute())
-					TaskRunner.Run(Execute, percent => EditorExecuteState.CurrentState.NEWindowUI.SetTaskRunnerProgress(percent));
-				EditorExecuteState.CurrentState.NEWindowUI.SetTaskRunnerProgress(null);
+					TaskRunner.Run(Execute, percent => state.NEWindowUI.SetTaskRunnerProgress(percent));
+				state.NEWindowUI.SetTaskRunnerProgress(null);
 
 				if (sw != null)
 				{
 					timeNextAction = false;
-					EditorExecuteState.CurrentState.NEWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
+					state.NEWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
 				}
 
 				var action = MacroAction.GetMacroAction();
@@ -254,7 +256,7 @@ namespace NeoEdit.Editor
 					recordingMacro?.AddAction(action);
 				}
 
-				var result = EditorExecuteState.CurrentState.NEGlobal.GetResult();
+				var result = state.NEGlobal.GetResult();
 				if (result != null)
 				{
 					if (result.Clipboard != null)
@@ -278,10 +280,10 @@ namespace NeoEdit.Editor
 				return true;
 			}
 			catch (OperationCanceledException) { }
-			catch (Exception ex) { EditorExecuteState.CurrentState.NEWindowUI.ShowExceptionMessage(ex); }
+			catch (Exception ex) { state.NEWindowUI.ShowExceptionMessage(ex); }
 
-			EditorExecuteState.CurrentState.NEWindowUI.SetTaskRunnerProgress(null);
-			EditorExecuteState.CurrentState.NEGlobal.ResetData(oldData);
+			state.NEWindowUI.SetTaskRunnerProgress(null);
+			state.NEGlobal.ResetData(oldData);
 			return false;
 		}
 

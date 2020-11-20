@@ -14,21 +14,21 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Macro_Play_Quick(int quickNum)
 		{
-			EditorExecuteState.CurrentState.NEWindow.PlayMacro(Macro.Load(EditorExecuteState.CurrentState.NEWindowUI, QuickMacro(quickNum), true));
+			state.NEWindow.PlayMacro(Macro.Load(state.NEWindowUI, QuickMacro(quickNum), true));
 			return true;
 		}
 
 		static bool PreExecute_Macro_Play_Play()
 		{
-			EditorExecuteState.CurrentState.NEWindow.PlayMacro(Macro.Load(EditorExecuteState.CurrentState.NEWindowUI));
+			state.NEWindow.PlayMacro(Macro.Load(state.NEWindowUI));
 			return true;
 		}
 
 		static bool PreExecute_Macro_Play_Repeat()
 		{
-			var result = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_PreExecute_Macro_Play_Repeat(() => Macro.ChooseMacro(EditorExecuteState.CurrentState.NEWindowUI));
+			var result = state.NEWindowUI.RunDialog_PreExecute_Macro_Play_Repeat(() => Macro.ChooseMacro(state.NEWindowUI));
 
-			var macro = Macro.Load(EditorExecuteState.CurrentState.NEWindowUI, result.Macro);
+			var macro = Macro.Load(state.NEWindowUI, result.Macro);
 			var expression = new NEExpression(result.Expression);
 			var count = int.MaxValue;
 			if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Number)
@@ -37,14 +37,14 @@ namespace NeoEdit.Editor
 			Action startNext = null;
 			startNext = () =>
 			{
-				if ((EditorExecuteState.CurrentState.NEWindow.Focused == null) || (--count < 0))
+				if ((state.NEWindow.Focused == null) || (--count < 0))
 					return;
 
 				if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Condition)
-					if (!expression.Evaluate<bool>(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables()))
+					if (!expression.Evaluate<bool>(state.NEWindow.Focused.GetVariables()))
 						return;
 
-				EditorExecuteState.CurrentState.NEWindow.PlayMacro(macro, startNext);
+				state.NEWindow.PlayMacro(macro, startNext);
 			};
 			startNext();
 
@@ -54,14 +54,14 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Macro_Play_PlayOnCopiedFiles()
 		{
 			var files = new Queue<string>(NEClipboard.Current.Strings);
-			var macro = Macro.Load(EditorExecuteState.CurrentState.NEWindowUI);
+			var macro = Macro.Load(state.NEWindowUI);
 			Action startNext = null;
 			startNext = () =>
 			{
 				if (!files.Any())
 					return;
-				EditorExecuteState.CurrentState.NEWindow.AddNewFile(new NEFile(files.Dequeue()));
-				EditorExecuteState.CurrentState.NEWindow.PlayMacro(macro, startNext);
+				state.NEWindow.AddNewFile(new NEFile(files.Dequeue()));
+				state.NEWindow.PlayMacro(macro, startNext);
 			};
 			startNext();
 
@@ -70,7 +70,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Macro_Record_Quick(int quickNum)
 		{
-			if (EditorExecuteState.CurrentState.NEWindow.recordingMacro == null)
+			if (state.NEWindow.recordingMacro == null)
 				PreExecute_Macro_Record_Record();
 			else
 				PreExecute_Macro_Record_StopRecording(QuickMacro(quickNum));
@@ -80,28 +80,28 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Macro_Record_Record()
 		{
-			EditorExecuteState.CurrentState.NEWindow.EnsureNotRecording();
-			EditorExecuteState.CurrentState.NEWindow.recordingMacro = new Macro();
+			state.NEWindow.EnsureNotRecording();
+			state.NEWindow.recordingMacro = new Macro();
 
 			return true;
 		}
 
 		static bool PreExecute_Macro_Record_StopRecording(string fileName = null)
 		{
-			if (EditorExecuteState.CurrentState.NEWindow.recordingMacro == null)
+			if (state.NEWindow.recordingMacro == null)
 				throw new Exception($"Cannot stop recording; recording not in progess.");
 
-			var macro = EditorExecuteState.CurrentState.NEWindow.recordingMacro;
-			EditorExecuteState.CurrentState.NEWindow.recordingMacro = null;
-			macro.Save(EditorExecuteState.CurrentState.NEWindowUI, fileName, true);
+			var macro = state.NEWindow.recordingMacro;
+			state.NEWindow.recordingMacro = null;
+			macro.Save(state.NEWindowUI, fileName, true);
 
 			return true;
 		}
 
 		static bool PreExecute_Macro_Append_Quick(int quickNum)
 		{
-			if (EditorExecuteState.CurrentState.NEWindow.recordingMacro == null)
-				EditorExecuteState.CurrentState.NEWindow.recordingMacro = Macro.Load(EditorExecuteState.CurrentState.NEWindowUI, QuickMacro(quickNum), true);
+			if (state.NEWindow.recordingMacro == null)
+				state.NEWindow.recordingMacro = Macro.Load(state.NEWindowUI, QuickMacro(quickNum), true);
 			else
 				PreExecute_Macro_Record_StopRecording(QuickMacro(quickNum));
 
@@ -110,21 +110,21 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Macro_Append_Append()
 		{
-			EditorExecuteState.CurrentState.NEWindow.EnsureNotRecording();
-			EditorExecuteState.CurrentState.NEWindow.recordingMacro = Macro.Load(EditorExecuteState.CurrentState.NEWindowUI);
+			state.NEWindow.EnsureNotRecording();
+			state.NEWindow.recordingMacro = Macro.Load(state.NEWindowUI);
 
 			return true;
 		}
 
 		static bool PreExecute_Macro_Open_Quick(int quickNum)
 		{
-			EditorExecuteState.CurrentState.NEWindow.AddNewFile(new NEFile(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
+			state.NEWindow.AddNewFile(new NEFile(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 			return true;
 		}
 
 		static bool PreExecute_Macro_Visualize()
 		{
-			EditorExecuteState.CurrentState.NEWindow.MacroVisualize = EditorExecuteState.CurrentState.MultiStatus != true;
+			state.NEWindow.MacroVisualize = state.MultiStatus != true;
 			return true;
 		}
 	}

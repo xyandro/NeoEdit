@@ -34,7 +34,7 @@ namespace NeoEdit.Editor
 				case SortType.DateTime: entries = OrderByAscDesc(entries, entry => DateTime.Parse(entry.Item1), ascending); break;
 				case SortType.Keys:
 					{
-						var keysHash = EditorExecuteState.CurrentState.GetKeysAndValues(0, this).Lookup;
+						var keysHash = state.GetKeysAndValues(0, this).Lookup;
 						entries = OrderByAscDesc(entries, entry => entry.Item1, ascending, Comparer<string>.Create((value1, value2) => (keysHash.ContainsKey(value1) ? keysHash[value1] : int.MaxValue).CompareTo(keysHash.ContainsKey(value2) ? keysHash[value2] : int.MaxValue)));
 					}
 					break;
@@ -137,16 +137,16 @@ namespace NeoEdit.Editor
 			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.Length))).ToList();
 		}
 
-		static void Configure_Edit_Select_Limit() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Select_Limit(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Edit_Select_Limit() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Select_Limit(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Edit_Select_Limit()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Select_Limit;
+			var result = state.Configuration as Configuration_Edit_Select_Limit;
 			var variables = GetVariables();
-			var firstSelection = EditorExecuteState.CurrentState.GetExpression(result.FirstSelection).Evaluate<int>(variables);
-			var everyNth = EditorExecuteState.CurrentState.GetExpression(result.EveryNth).Evaluate<int>(variables);
-			var takeCount = EditorExecuteState.CurrentState.GetExpression(result.TakeCount).Evaluate<int>(variables);
-			var numSels = EditorExecuteState.CurrentState.GetExpression(result.NumSelections).Evaluate<int>(variables);
+			var firstSelection = state.GetExpression(result.FirstSelection).Evaluate<int>(variables);
+			var everyNth = state.GetExpression(result.EveryNth).Evaluate<int>(variables);
+			var takeCount = state.GetExpression(result.TakeCount).Evaluate<int>(variables);
+			var numSels = state.GetExpression(result.NumSelections).Evaluate<int>(variables);
 
 			var sels = Selections.Skip(firstSelection - 1);
 			if (result.JoinSelections)
@@ -191,11 +191,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Select_EmptyNonEmpty(bool include) => Selections = Selections.Where(range => range.HasSelection != include).ToList();
 
-		static void Configure_Edit_Select_ToggleAnchor() => EditorExecuteState.CurrentState.Configuration = new Configuration_Edit_Select_ToggleAnchor { AnchorStart = EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.Anchor > range.Cursor)) };
+		static void Configure_Edit_Select_ToggleAnchor() => state.Configuration = new Configuration_Edit_Select_ToggleAnchor { AnchorStart = state.NEWindow.ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.Anchor > range.Cursor)) };
 
 		void Execute_Edit_Select_ToggleAnchor()
 		{
-			var anchorStart = (EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Select_ToggleAnchor).AnchorStart;
+			var anchorStart = (state.Configuration as Configuration_Edit_Select_ToggleAnchor).AnchorStart;
 			Selections = Selections.Select(range => new Range(anchorStart ? range.End : range.Start, anchorStart ? range.Start : range.End)).ToList();
 		}
 
@@ -262,8 +262,8 @@ namespace NeoEdit.Editor
 		static void Configure_Edit_Paste_PasteRotatePaste()
 		{
 			var configuration = new Configuration_Edit_Paste_PasteRotatePaste();
-			configuration.ReplaceOneWithMany = (EditorExecuteState.CurrentState.NEWindow.ActiveFiles.All(neFile => neFile.Selections.Count == 1)) && (EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Any(neFile => neFile.Clipboard.Count != 1));
-			EditorExecuteState.CurrentState.Configuration = configuration;
+			configuration.ReplaceOneWithMany = (state.NEWindow.ActiveFiles.All(neFile => neFile.Selections.Count == 1)) && (state.NEWindow.ActiveFiles.Any(neFile => neFile.Clipboard.Count != 1));
+			state.Configuration = configuration;
 		}
 
 		void Execute_Edit_Paste_PasteRotatePaste(bool highlight, bool rotate)
@@ -272,7 +272,7 @@ namespace NeoEdit.Editor
 			if ((clipboardStrings.Count == 0) && (Selections.Count == 0))
 				return;
 
-			if ((EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Paste_PasteRotatePaste).ReplaceOneWithMany)
+			if ((state.Configuration as Configuration_Edit_Paste_PasteRotatePaste).ReplaceOneWithMany)
 			{
 				ReplaceOneWithMany(clipboardStrings, null);
 				return;
@@ -334,11 +334,11 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Edit_Repeat() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Repeat(EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count == 1, EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.Selections.Count == 1, state.NEWindow.Focused.GetVariables());
 
 		void Execute_Edit_Repeat()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Repeat;
+			var result = state.Configuration as Configuration_Edit_Repeat;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			if (results.Any(repeatCount => repeatCount < 0))
 				throw new Exception("Repeat count must be >= 0");
@@ -358,12 +358,12 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static void Configure_Edit_Rotate() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Rotate(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Edit_Rotate() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Rotate(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Edit_Rotate()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Rotate;
-			var count = EditorExecuteState.CurrentState.GetExpression(result.Count).Evaluate<int>(GetVariables());
+			var result = state.Configuration as Configuration_Edit_Rotate;
+			var count = state.GetExpression(result.Count).Evaluate<int>(GetVariables());
 
 			var strs = GetSelectionStrings().ToList();
 			if (count < 0)
@@ -375,11 +375,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		static void Configure_Edit_Expression_Expression() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Expression_Expression(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Edit_Expression_Expression() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Expression_Expression(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Edit_Expression_Expression()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Expression_Expression;
+			var result = state.Configuration as Configuration_Edit_Expression_Expression;
 			switch (result.Action)
 			{
 				case Configuration_Edit_Expression_Expression.Actions.Evaluate: ReplaceSelections(GetExpressionResults<string>(result.Expression, Selections.Count())); break;
@@ -391,14 +391,14 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Navigate_WordLeftRight(bool next)
 		{
-			if ((!EditorExecuteState.CurrentState.ShiftDown) && (Selections.Any(range => range.HasSelection)))
+			if ((!state.ShiftDown) && (Selections.Any(range => range.HasSelection)))
 			{
 				Selections = Selections.AsTaskRunner().Select(range => new Range(next ? range.End : range.Start)).ToList();
 				return;
 			}
 
 			var func = next ? (Func<int, int>)GetNextWord : GetPrevWord;
-			Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, func(range.Cursor), EditorExecuteState.CurrentState.ShiftDown)).ToList();
+			Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, func(range.Cursor), state.ShiftDown)).ToList();
 		}
 
 		void Execute_Edit_Navigate_AllLeft()
@@ -435,7 +435,7 @@ namespace NeoEdit.Editor
 				--index;
 			}
 
-			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, EditorExecuteState.CurrentState.ShiftDown)).ToList();
+			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, state.ShiftDown)).ToList();
 		}
 
 		void Execute_Edit_Navigate_AllRight()
@@ -472,7 +472,7 @@ namespace NeoEdit.Editor
 				++index;
 			}
 
-			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, EditorExecuteState.CurrentState.ShiftDown)).ToList();
+			Selections = Selections.Zip(positions, (range, position) => MoveCursor(range, position, state.ShiftDown)).ToList();
 		}
 
 		void Execute_Edit_Navigate_JumpBy_Various(JumpByType jumpBy) => JumpBy = jumpBy;
@@ -499,11 +499,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(newStrs);
 		}
 
-		static void Configure_Edit_Advanced_Convert() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Advanced_Convert();
+		static void Configure_Edit_Advanced_Convert() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_Convert();
 
 		void Execute_Edit_Advanced_Convert()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Advanced_Convert;
+			var result = state.Configuration as Configuration_Edit_Advanced_Convert;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputType))
 				return;
@@ -513,22 +513,22 @@ namespace NeoEdit.Editor
 			ReplaceSelections(bytes.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Hash() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Advanced_Hash(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage);
+		static void Configure_Edit_Advanced_Hash() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_Hash(state.NEWindow.Focused.CodePage);
 
 		void Execute_Edit_Advanced_Hash()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Advanced_Hash;
+			var result = state.Configuration as Configuration_Edit_Advanced_Hash;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
 			ReplaceSelections(strs.AsTaskRunner().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Compress() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Advanced_CompressDecompress(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage, true);
+		static void Configure_Edit_Advanced_Compress() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_CompressDecompress(state.NEWindow.Focused.CodePage, true);
 
 		void Execute_Edit_Advanced_Compress()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Advanced_CompressDecompress;
+			var result = state.Configuration as Configuration_Edit_Advanced_CompressDecompress;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -538,11 +538,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(compressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Decompress() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Advanced_CompressDecompress(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage, false);
+		static void Configure_Edit_Advanced_Decompress() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_CompressDecompress(state.NEWindow.Focused.CodePage, false);
 
 		void Execute_Edit_Advanced_Decompress()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Advanced_CompressDecompress;
+			var result = state.Configuration as Configuration_Edit_Advanced_CompressDecompress;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -552,11 +552,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(decompressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Encrypt() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Advanced_EncryptDecrypt(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage, true);
+		static void Configure_Edit_Advanced_Encrypt() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_EncryptDecrypt(state.NEWindow.Focused.CodePage, true);
 
 		void Execute_Edit_Advanced_Encrypt()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Advanced_EncryptDecrypt;
+			var result = state.Configuration as Configuration_Edit_Advanced_EncryptDecrypt;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -566,11 +566,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(encrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Decrypt() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Advanced_EncryptDecrypt(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage, false);
+		static void Configure_Edit_Advanced_Decrypt() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_EncryptDecrypt(state.NEWindow.Focused.CodePage, false);
 
 		void Execute_Edit_Advanced_Decrypt()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Advanced_EncryptDecrypt;
+			var result = state.Configuration as Configuration_Edit_Advanced_EncryptDecrypt;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.InputCodePage))
 				return;
@@ -580,11 +580,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections(decrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Sign() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Edit_Advanced_Sign(EditorExecuteState.CurrentState.NEWindow.Focused.CodePage);
+		static void Configure_Edit_Advanced_Sign() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_Sign(state.NEWindow.Focused.CodePage);
 
 		void Execute_Edit_Advanced_Sign()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Edit_Advanced_Sign;
+			var result = state.Configuration as Configuration_Edit_Advanced_Sign;
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
@@ -603,7 +603,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Edit_Advanced_EscapeClearsSelections()
 		{
-			Settings.EscapeClearsSelections = EditorExecuteState.CurrentState.MultiStatus != true;
+			Settings.EscapeClearsSelections = state.MultiStatus != true;
 			return true;
 		}
 	}

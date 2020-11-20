@@ -131,29 +131,29 @@ namespace NeoEdit.Editor
 		static void Configure_Position_Goto_Various(GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
-			var range = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.FirstOrDefault();
+			var range = state.NEWindow.Focused.Selections.FirstOrDefault();
 			if (range != null)
 			{
-				line = EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetPositionLine(range.Start) + 1;
-				index = EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetPositionIndex(range.Start, line - 1) + 1;
-				column = EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetColumnFromIndex(line - 1, index - 1) + 1;
+				line = state.NEWindow.Focused.Text.GetPositionLine(range.Start) + 1;
+				index = state.NEWindow.Focused.Text.GetPositionIndex(range.Start, line - 1) + 1;
+				column = state.NEWindow.Focused.Text.GetColumnFromIndex(line - 1, index - 1) + 1;
 				position = range.Start;
 			}
 			int startValue;
 			switch (gotoType)
 			{
-				case GotoType.Line: startValue = EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetDiffLine(line); break;
+				case GotoType.Line: startValue = state.NEWindow.Focused.Text.GetDiffLine(line); break;
 				case GotoType.Column: startValue = column; break;
 				case GotoType.Index: startValue = index; break;
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+			state.Configuration = state.NEWindowUI.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, state.NEWindow.Focused.GetVariables());
 		}
 
 		void Execute_Position_Goto_Various(GotoType gotoType, bool selecting)
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Position_Goto_Various;
+			var result = state.Configuration as Configuration_Position_Goto_Various;
 			var values = GotoRange.GetPositionsData(GetExpressionResults<string>(result.Expression), gotoType);
 			if (!values.Any())
 				return;
@@ -200,7 +200,7 @@ namespace NeoEdit.Editor
 				if (useFile != null)
 				{
 					useTE = new NEFile(useFile);
-					EditorExecuteState.CurrentState.NEWindow.AddNewFile(useTE);
+					state.NEWindow.AddNewFile(useTE);
 				}
 
 				var sels = useTE.Selections.ToList();

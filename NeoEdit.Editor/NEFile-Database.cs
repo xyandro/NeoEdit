@@ -49,11 +49,11 @@ namespace NeoEdit.Editor
 				throw new Exception("No connection.");
 		}
 
-		static void Configure_Database_Connect() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Database_Connect();
+		static void Configure_Database_Connect() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Database_Connect();
 
 		void Execute_Database_Connect()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Database_Connect;
+			var result = state.Configuration as Configuration_Database_Connect;
 			if (dbConnection != null)
 			{
 				dbConnection.Dispose();
@@ -87,9 +87,9 @@ namespace NeoEdit.Editor
 
 		static void Configure_Database_Examine()
 		{
-			EditorExecuteState.CurrentState.NEWindow.Focused.ValidateConnection();
-			EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Database_Examine(EditorExecuteState.CurrentState.NEWindow.Focused.dbConnection);
-			EditorExecuteState.CurrentState.Configuration = new Configuration_Database_Examine();
+			state.NEWindow.Focused.ValidateConnection();
+			state.NEWindowUI.RunDialog_Configure_Database_Examine(state.NEWindow.Focused.dbConnection);
+			state.Configuration = new Configuration_Database_Examine();
 		}
 
 		void Execute_Database_GetSproc()

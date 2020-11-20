@@ -268,11 +268,11 @@ namespace NeoEdit.Editor
 			return str.Substring(start, end - start);
 		}
 
-		static void Configure_Text_Select_WholeBoundedWord(bool wholeWord) => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(wholeWord ? 1 : 2);
+		static void Configure_Text_Select_WholeBoundedWord(bool wholeWord) => state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(wholeWord ? 1 : 2);
 
 		void Execute_Text_Select_WholeBoundedWord(bool wholeWord)
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_SelectTrim_WholeBoundedWordTrim;
+			var result = state.Configuration as Configuration_Text_SelectTrim_WholeBoundedWordTrim;
 			var minPosition = 0;
 			var maxPosition = Text.Length;
 
@@ -295,19 +295,19 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Text_Select_Trim() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(0);
+		static void Configure_Text_Select_Trim() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(0);
 
 		void Execute_Text_Select_Trim()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_SelectTrim_WholeBoundedWordTrim;
+			var result = state.Configuration as Configuration_Text_SelectTrim_WholeBoundedWordTrim;
 			Selections = Selections.AsTaskRunner().Select(range => TrimRange(range, result)).ToList();
 		}
 
-		static void Configure_Text_Select_Split() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_Select_Split(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Text_Select_Split() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_Select_Split(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Text_Select_Split()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_Select_Split;
+			var result = state.Configuration as Configuration_Text_Select_Split;
 			var indexes = GetExpressionResults<int>(result.Index, Selections.Count());
 
 			ISearcher searcher;
@@ -327,11 +327,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_Select_Repeats_MatchPrevious_IgnoreMatchCase(bool caseSensitive) => Selections = Selections.AsTaskRunner().MatchBy(range => RepeatsValue(caseSensitive, Text.GetString(range))).ToList();
 
-		static void Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase();
+		static void Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase();
 
 		void Execute_Text_Select_Repeats_ByCount_IgnoreMatchCase(bool caseSensitive)
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_Select_Repeats_ByCount_IgnoreMatchCase;
+			var result = state.Configuration as Configuration_Text_Select_Repeats_ByCount_IgnoreMatchCase;
 			var strs = Selections.Select((range, index) => Tuple.Create(Text.GetString(range), index)).ToList();
 			var counts = new Dictionary<string, int>(caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
 			foreach (var tuple in strs)
@@ -347,7 +347,7 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(bool caseSensitive)
 		{
 			var preExecution = new PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase();
-			foreach (var neFile in EditorExecuteState.CurrentState.NEWindow.ActiveFiles)
+			foreach (var neFile in state.NEWindow.ActiveFiles)
 			{
 				var strs = neFile.GetSelectionStrings().ToList();
 				var matches = preExecution.Matches ?? strs;
@@ -363,13 +363,13 @@ namespace NeoEdit.Editor
 
 				preExecution.Matches = matches;
 			}
-			EditorExecuteState.CurrentState.PreExecution = preExecution;
+			state.PreExecution = preExecution;
 			return false;
 		}
 
 		void Execute_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase(bool match)
 		{
-			var matches = (EditorExecuteState.CurrentState.PreExecution as PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase).Matches;
+			var matches = (state.PreExecution as PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase).Matches;
 			Selections = Selections.Where((range, index) => (matches[index] != null) == match).ToList();
 		}
 
@@ -377,7 +377,7 @@ namespace NeoEdit.Editor
 		{
 			var preExecution = new PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase();
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
-			foreach (var neFile in EditorExecuteState.CurrentState.NEWindow.ActiveFiles)
+			foreach (var neFile in state.NEWindow.ActiveFiles)
 			{
 				var repeats = neFile.Selections.AsTaskRunner().GroupBy(neFile.Text.GetString, stringComparer).ToDictionary(g => g.Key, g => g.Count(), stringComparer);
 
@@ -386,13 +386,13 @@ namespace NeoEdit.Editor
 
 				preExecution.Repeats = repeats;
 			}
-			EditorExecuteState.CurrentState.PreExecution = preExecution;
+			state.PreExecution = preExecution;
 			return false;
 		}
 
 		void Execute_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase(bool match)
 		{
-			var repeats = (EditorExecuteState.CurrentState.PreExecution as PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase).Repeats;
+			var repeats = (state.PreExecution as PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase).Repeats;
 			repeats = repeats.ToDictionary(pair => pair.Key, pair => pair.Value, repeats.Comparer);
 			Selections = Selections.Where(range =>
 			{
@@ -401,11 +401,11 @@ namespace NeoEdit.Editor
 			}).ToList();
 		}
 
-		static void Configure_Text_Select_ByWidth() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_SelectWidth_ByWidth(false, true, EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Text_Select_ByWidth() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_SelectWidth_ByWidth(false, true, state.NEWindow.Focused.GetVariables());
 
 		void Execute_Text_Select_ByWidth()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_SelectWidth_ByWidth;
+			var result = state.Configuration as Configuration_Text_SelectWidth_ByWidth;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			Selections = Selections.AsTaskRunner().Where((range, index) => range.Length == results[index]).ToList();
 		}
@@ -438,31 +438,31 @@ namespace NeoEdit.Editor
 				if (newPos == -1)
 					return range;
 
-				return MoveCursor(range, newPos, EditorExecuteState.CurrentState.ShiftDown);
+				return MoveCursor(range, newPos, state.ShiftDown);
 			}).ToList();
 		}
 
 		static void Configure_Text_Find_Find()
 		{
 			string text = null;
-			var selectionOnly = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Any(range => range.HasSelection);
+			var selectionOnly = state.NEWindow.Focused.Selections.Any(range => range.HasSelection);
 
-			if (EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count == 1)
+			if (state.NEWindow.Focused.Selections.Count == 1)
 			{
-				var sel = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Single();
-				if ((selectionOnly) && (EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetPositionLine(sel.Cursor) == EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
+				var sel = state.NEWindow.Focused.Selections.Single();
+				if ((selectionOnly) && (state.NEWindow.Focused.Text.GetPositionLine(sel.Cursor) == state.NEWindow.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
-					text = EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetString(sel);
+					text = state.NEWindow.Focused.Text.GetString(sel);
 				}
 			}
 
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_Find_Find(text, selectionOnly, EditorExecuteState.CurrentState.NEWindow.Focused.ViewBinaryCodePages, EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+			state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_Find_Find(text, selectionOnly, state.NEWindow.Focused.ViewBinaryCodePages, state.NEWindow.Focused.GetVariables());
 		}
 
 		void Execute_Text_Find_Find()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_Find_Find;
+			var result = state.Configuration as Configuration_Text_Find_Find;
 			// Determine selections to search
 			List<Range> selections;
 			var firstMatchOnly = (result.KeepMatching) || (result.RemoveMatching);
@@ -583,24 +583,24 @@ namespace NeoEdit.Editor
 		static void Configure_Text_Find_RegexReplace()
 		{
 			string text = null;
-			var selectionOnly = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Any(range => range.HasSelection);
+			var selectionOnly = state.NEWindow.Focused.Selections.Any(range => range.HasSelection);
 
-			if (EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count == 1)
+			if (state.NEWindow.Focused.Selections.Count == 1)
 			{
-				var sel = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Single();
-				if ((selectionOnly) && (EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetPositionLine(sel.Cursor) == EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
+				var sel = state.NEWindow.Focused.Selections.Single();
+				if ((selectionOnly) && (state.NEWindow.Focused.Text.GetPositionLine(sel.Cursor) == state.NEWindow.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
 				{
 					selectionOnly = false;
-					text = EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetString(sel);
+					text = state.NEWindow.Focused.Text.GetString(sel);
 				}
 			}
 
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_Find_RegexReplace(text, selectionOnly);
+			state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_Find_RegexReplace(text, selectionOnly);
 		}
 
 		void Execute_Text_Find_RegexReplace()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_Find_RegexReplace;
+			var result = state.Configuration as Configuration_Text_Find_RegexReplace;
 			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { Range.FromIndex(0, Text.Length) };
 			var searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, result.EntireSelection);
 			var sels = regions.AsTaskRunner().SelectMany(region => searcher.Find(Text.GetString(region), region.Start)).ToList();
@@ -608,23 +608,23 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select(range => searcher.regexes[0].Replace(Text.GetString(range), result.Replace)).ToList());
 		}
 
-		static void Configure_Text_Trim() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(0);
+		static void Configure_Text_Trim() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_SelectTrim_WholeBoundedWordTrim(0);
 
 		void Execute_Text_Trim()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_SelectTrim_WholeBoundedWordTrim;
+			var result = state.Configuration as Configuration_Text_SelectTrim_WholeBoundedWordTrim;
 			ReplaceSelections(Selections.AsTaskRunner().Select(str => TrimString(Text.GetString(str), result)).ToList());
 		}
 
 		static void Configure_Text_Width()
 		{
-			var numeric = EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Any() ? EditorExecuteState.CurrentState.NEWindow.Focused.Selections.AsTaskRunner().All(range => EditorExecuteState.CurrentState.NEWindow.Focused.Text.GetString(range).IsNumeric()) : false;
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_SelectWidth_ByWidth(numeric, false, EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+			var numeric = state.NEWindow.Focused.Selections.Any() ? state.NEWindow.Focused.Selections.AsTaskRunner().All(range => state.NEWindow.Focused.Text.GetString(range).IsNumeric()) : false;
+			state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_SelectWidth_ByWidth(numeric, false, state.NEWindow.Focused.GetVariables());
 		}
 
 		void Execute_Text_Width()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_SelectWidth_ByWidth;
+			var result = state.Configuration as Configuration_Text_SelectWidth_ByWidth;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => SetWidth(Text.GetString(range), result, results[index])).ToList());
 		}
@@ -639,11 +639,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_Case_Invert() => ReplaceSelections(Selections.AsTaskRunner().Select(range => Text.GetString(range).ToToggled()).ToList());
 
-		static void Configure_Text_Sort() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_Sort();
+		static void Configure_Text_Sort() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_Sort();
 
 		void Execute_Text_Sort()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_Sort;
+			var result = state.Configuration as Configuration_Text_Sort;
 			var regions = GetSortSource(result.SortScope, result.UseRegion);
 			var ordering = GetOrdering(result.SortType, result.CaseSensitive, result.Ascending);
 			if (regions.Count != ordering.Count)
@@ -683,28 +683,28 @@ namespace NeoEdit.Editor
 
 		void Execute_Text_Unescape_URL() => ReplaceSelections(Selections.AsTaskRunner().Select(range => HttpUtility.UrlDecode(Text.GetString(range))).ToList());
 
-		static void Configure_Text_Random() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_Random(EditorExecuteState.CurrentState.NEWindow.Focused.GetVariables());
+		static void Configure_Text_Random() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_Random(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Text_Random()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_Random;
+			var result = state.Configuration as Configuration_Text_Random;
 			var results = GetExpressionResults<int>(result.Expression, Selections.Count());
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => GetRandomData(result.Chars, results[index])).ToList());
 		}
 
-		static void Configure_Text_Advanced_Unicode() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_Advanced_Unicode();
+		static void Configure_Text_Advanced_Unicode() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_Advanced_Unicode();
 
 		void Execute_Text_Advanced_Unicode()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_Advanced_Unicode;
+			var result = state.Configuration as Configuration_Text_Advanced_Unicode;
 			ReplaceSelections(result.Value);
 		}
 
-		static void Configure_Text_Advanced_FirstDistinct() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_Advanced_FirstDistinct();
+		static void Configure_Text_Advanced_FirstDistinct() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_Advanced_FirstDistinct();
 
 		void Execute_Text_Advanced_FirstDistinct()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_Advanced_FirstDistinct;
+			var result = state.Configuration as Configuration_Text_Advanced_FirstDistinct;
 			TaskRunner.Run(progress =>
 			{
 				var valid = new HashSet<char>(result.Chars.Select(ch => result.MatchCase ? ch : char.ToLowerInvariant(ch)));
@@ -782,15 +782,15 @@ namespace NeoEdit.Editor
 
 		static void Configure_Text_Advanced_ReverseRegex()
 		{
-			if (EditorExecuteState.CurrentState.NEWindow.Focused.Selections.Count != 1)
+			if (state.NEWindow.Focused.Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 
-			EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Text_Advanced_ReverseRegex();
+			state.Configuration = state.NEWindowUI.RunDialog_Configure_Text_Advanced_ReverseRegex();
 		}
 
 		void Execute_Text_Advanced_ReverseRegex()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Text_Advanced_ReverseRegex;
+			var result = state.Configuration as Configuration_Text_Advanced_ReverseRegex;
 			if (Selections.Count != 1)
 				throw new Exception("Must have one selection.");
 

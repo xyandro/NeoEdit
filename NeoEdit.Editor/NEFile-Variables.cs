@@ -117,7 +117,7 @@ namespace NeoEdit.Editor
 				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
 
 			if (keysAndValues[kvIndex] == null)
-				keysAndValues[kvIndex] = EditorExecuteState.CurrentState.GetKeysAndValues(kvIndex, this);
+				keysAndValues[kvIndex] = state.GetKeysAndValues(kvIndex, this);
 
 			return keysAndValues[kvIndex];
 		}
@@ -160,7 +160,7 @@ namespace NeoEdit.Editor
 			get
 			{
 				if (clipboardData == null)
-					clipboardData = EditorExecuteState.CurrentState.GetClipboardData(this);
+					clipboardData = state.GetClipboardData(this);
 
 				return clipboardData;
 			}

@@ -10,6 +10,7 @@ namespace NeoEdit.Editor
 	public class MacroAction
 	{
 		static readonly Dictionary<NECommand, bool> macroInclude = Helpers.GetValues<NECommand>().ToDictionary(command => command, command => typeof(NECommand).GetField(command.ToString()).GetCustomAttribute<NoMacroAttribute>() == null);
+		static EditorExecuteState state => EditorExecuteState.CurrentState;
 
 		public NECommand Command;
 		public bool ShiftDown;
@@ -24,33 +25,33 @@ namespace NeoEdit.Editor
 
 		public static MacroAction GetMacroAction()
 		{
-			if (!macroInclude[EditorExecuteState.CurrentState.Command])
+			if (!macroInclude[state.Command])
 				return null;
 
 			return new MacroAction
 			{
-				Command = EditorExecuteState.CurrentState.Command,
-				ShiftDown = EditorExecuteState.CurrentState.ShiftDown,
-				ControlDown = EditorExecuteState.CurrentState.ControlDown,
-				AltDown = EditorExecuteState.CurrentState.AltDown,
-				MultiStatus = EditorExecuteState.CurrentState.MultiStatus,
-				Key = EditorExecuteState.CurrentState.Key,
-				Text = EditorExecuteState.CurrentState.Text,
-				Configuration = EditorExecuteState.CurrentState.Configuration,
+				Command = state.Command,
+				ShiftDown = state.ShiftDown,
+				ControlDown = state.ControlDown,
+				AltDown = state.AltDown,
+				MultiStatus = state.MultiStatus,
+				Key = state.Key,
+				Text = state.Text,
+				Configuration = state.Configuration,
 			};
 		}
 
 		public void SetExecuteState()
 		{
-			EditorExecuteState.SetState(EditorExecuteState.CurrentState.NEGlobal, EditorExecuteState.CurrentState);
-			EditorExecuteState.CurrentState.Command = Command;
-			EditorExecuteState.CurrentState.ShiftDown = ShiftDown;
-			EditorExecuteState.CurrentState.ControlDown = ControlDown;
-			EditorExecuteState.CurrentState.AltDown = AltDown;
-			EditorExecuteState.CurrentState.MultiStatus = MultiStatus;
-			EditorExecuteState.CurrentState.Key = Key;
-			EditorExecuteState.CurrentState.Text = Text;
-			EditorExecuteState.CurrentState.Configuration = Configuration;
+			EditorExecuteState.SetState(state.NEGlobal, state);
+			state.Command = Command;
+			state.ShiftDown = ShiftDown;
+			state.ControlDown = ControlDown;
+			state.AltDown = AltDown;
+			state.MultiStatus = MultiStatus;
+			state.Key = Key;
+			state.Text = Text;
+			state.Configuration = Configuration;
 		}
 	}
 }

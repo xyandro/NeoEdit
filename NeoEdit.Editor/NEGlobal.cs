@@ -8,6 +8,8 @@ namespace NeoEdit.Editor
 {
 	public class NEGlobal : INEGlobal
 	{
+		static EditorExecuteState state => EditorExecuteState.CurrentState;
+
 		public NEGlobal()
 		{
 			data = new NEGlobalData();
@@ -111,18 +113,18 @@ namespace NeoEdit.Editor
 			return false;
 		}
 
-		public void HandleCommand(ExecuteState state, Func<bool> skipDraw = null)
+		public void HandleCommand(ExecuteState executeState, Func<bool> skipDraw = null)
 		{
-			EditorExecuteState.SetState(this, state);
+			EditorExecuteState.SetState(this, executeState);
 			switch (state.Command)
 			{
 				case NECommand.Internal_CommandLine: NEFile.PreExecute_Internal_CommandLine(); break;
-				default: EditorExecuteState.CurrentState.NEWindow.HandleCommand(state, skipDraw); break;
+				default: state.NEWindow.HandleCommand(state, skipDraw); break;
 			}
 		}
 
-		public bool StopTasks() => EditorExecuteState.CurrentState.NEWindow.StopTasks();
+		public bool StopTasks() => state.NEWindow.StopTasks();
 
-		public bool KillTasks() => EditorExecuteState.CurrentState.NEWindow.KillTasks();
+		public bool KillTasks() => state.NEWindow.KillTasks();
 	}
 }

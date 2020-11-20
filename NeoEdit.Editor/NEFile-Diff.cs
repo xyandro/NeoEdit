@@ -55,14 +55,14 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Diff_Select_LeftRightBothFiles(bool? left)
 		{
-			var active = new HashSet<NEFile>(EditorExecuteState.CurrentState.NEWindow.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFile> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((EditorExecuteState.CurrentState.NEWindow.GetFileIndex(item) < EditorExecuteState.CurrentState.NEWindow.GetFileIndex(item.DiffTarget)) == left)));
-			EditorExecuteState.CurrentState.NEWindow.SetActiveFiles(EditorExecuteState.CurrentState.NEWindow.AllFiles.Where(neFile => active.Contains(neFile)));
+			var active = new HashSet<NEFile>(state.NEWindow.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFile> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((state.NEWindow.GetFileIndex(item) < state.NEWindow.GetFileIndex(item.DiffTarget)) == left)));
+			state.NEWindow.SetActiveFiles(state.NEWindow.AllFiles.Where(neFile => active.Contains(neFile)));
 			return true;
 		}
 
 		static bool PreExecute_Diff_Diff()
 		{
-			var diffTargets = EditorExecuteState.CurrentState.NEWindow.AllFiles.Count == 2 ? EditorExecuteState.CurrentState.NEWindow.AllFiles.ToList() : EditorExecuteState.CurrentState.NEWindow.ActiveFiles.ToList();
+			var diffTargets = state.NEWindow.AllFiles.Count == 2 ? state.NEWindow.AllFiles.ToList() : state.NEWindow.ActiveFiles.ToList();
 
 			var inDiff = false;
 			for (var ctr = 0; ctr < diffTargets.Count; ++ctr)
@@ -77,10 +77,10 @@ namespace NeoEdit.Editor
 			if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
 				throw new Exception("Must have even number of files active for diff.");
 
-			if (EditorExecuteState.CurrentState.ShiftDown)
+			if (state.ShiftDown)
 			{
-				if (!EditorExecuteState.CurrentState.NEWindow.AllFiles.Except(diffTargets).Any())
-					EditorExecuteState.CurrentState.NEWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+				if (!state.NEWindow.AllFiles.Except(diffTargets).Any())
+					state.NEWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 				else
 				{
 					diffTargets.ForEach(diffTarget => diffTarget.ClearFiles());
@@ -137,11 +137,11 @@ namespace NeoEdit.Editor
 			CalculateDiff();
 		}
 
-		static void Configure_Diff_IgnoreCharacters() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Diff_IgnoreCharacters(EditorExecuteState.CurrentState.NEWindow.Focused.DiffIgnoreCharacters);
+		static void Configure_Diff_IgnoreCharacters() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Diff_IgnoreCharacters(state.NEWindow.Focused.DiffIgnoreCharacters);
 
 		void Execute_Diff_IgnoreCharacters()
 		{
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Diff_IgnoreCharacters;
+			var result = state.Configuration as Configuration_Diff_IgnoreCharacters;
 			DiffIgnoreCharacters = result.IgnoreCharacters;
 			CalculateDiff();
 		}
@@ -158,7 +158,7 @@ namespace NeoEdit.Editor
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			if ((EditorExecuteState.CurrentState.NEWindow.GetFileIndex(this) < EditorExecuteState.CurrentState.NEWindow.GetFileIndex(DiffTarget)) && (EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Contains(DiffTarget)))
+			if ((state.NEWindow.GetFileIndex(this) < state.NEWindow.GetFileIndex(DiffTarget)) && (state.NEWindow.ActiveFiles.Contains(DiffTarget)))
 				return;
 
 			var lines = Selections.AsTaskRunner().Select(range => GetDiffNextPrevious(range, next)).ToList();
@@ -177,13 +177,13 @@ namespace NeoEdit.Editor
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var target = EditorExecuteState.CurrentState.NEWindow.GetFileIndex(this) < EditorExecuteState.CurrentState.NEWindow.GetFileIndex(DiffTarget) ? this : DiffTarget;
+			var target = state.NEWindow.GetFileIndex(this) < state.NEWindow.GetFileIndex(DiffTarget) ? this : DiffTarget;
 			var source = target == this ? DiffTarget : this;
 			if (!moveLeft)
 				Helpers.Swap(ref target, ref source);
 
 			// If both files are active only do this from the target file
-			var bothActive = EditorExecuteState.CurrentState.NEWindow.ActiveFiles.Contains(DiffTarget);
+			var bothActive = state.NEWindow.ActiveFiles.Contains(DiffTarget);
 			if ((bothActive) && (target != this))
 				return;
 
@@ -194,14 +194,14 @@ namespace NeoEdit.Editor
 				source.ReplaceSelections(strs);
 		}
 
-		static void Configure_Diff_Fix_Whitespace() => EditorExecuteState.CurrentState.Configuration = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_Configure_Diff_Fix_Whitespace();
+		static void Configure_Diff_Fix_Whitespace() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Diff_Fix_Whitespace();
 
 		void Execute_Diff_Fix_Whitespace()
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var result = EditorExecuteState.CurrentState.Configuration as Configuration_Diff_Fix_Whitespace;
+			var result = state.Configuration as Configuration_Diff_Fix_Whitespace;
 			var fixes = NEText.GetDiffFixes(DiffTarget.Text, Text, result.LineStartTabStop, null, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 			Selections = fixes.Item1.Select(tuple => new Range(tuple.Item1, tuple.Item2)).ToList();
 			ReplaceSelections(fixes.Item2);

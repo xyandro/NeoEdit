@@ -17,6 +17,7 @@ namespace NeoEdit.Editor
 	public partial class NEFile : INEFile
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
+		static EditorExecuteState state => EditorExecuteState.CurrentState;
 
 		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
@@ -312,7 +313,7 @@ namespace NeoEdit.Editor
 		public static void Configure()
 		{
 			var handled = true;
-			switch (EditorExecuteState.CurrentState.Command)
+			switch (state.Command)
 			{
 				case NECommand.File_Open_Open: Configure_FileMacro_Open_Open(); break;
 				case NECommand.Macro_Open_Open: Configure_FileMacro_Open_Open(Macro.MacroDirectory); break;
@@ -320,10 +321,10 @@ namespace NeoEdit.Editor
 				default: handled = false; break;
 			}
 
-			if ((handled) || (EditorExecuteState.CurrentState.NEWindow.Focused == null))
+			if ((handled) || (state.NEWindow.Focused == null))
 				return;
 
-			switch (EditorExecuteState.CurrentState.Command)
+			switch (state.Command)
 			{
 				case NECommand.Internal_Key: Configure_Internal_Key(); break;
 				case NECommand.File_Open_ReopenWithEncoding: Configure_File_Open_ReopenWithEncoding(); break;
@@ -450,7 +451,7 @@ namespace NeoEdit.Editor
 		#region PreExecute
 		public static bool PreExecute()
 		{
-			switch (EditorExecuteState.CurrentState.Command)
+			switch (state.Command)
 			{
 				case NECommand.Internal_CommandLine: return PreExecute_Internal_CommandLine();
 				case NECommand.Internal_Activate: return PreExecute_Internal_Activate();
@@ -582,7 +583,7 @@ namespace NeoEdit.Editor
 		#region Execute
 		public void Execute()
 		{
-			switch (EditorExecuteState.CurrentState.Command)
+			switch (state.Command)
 			{
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.Internal_Text: Execute_Internal_Text(); break;
@@ -638,7 +639,7 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Select_Focused_Center: Execute_Edit_Select_Focused_Center(); break;
 				case NECommand.Edit_Copy: Execute_Edit_CopyCut(false); break;
 				case NECommand.Edit_Cut: Execute_Edit_CopyCut(true); break;
-				case NECommand.Edit_Paste_Paste: Execute_Edit_Paste_PasteRotatePaste(EditorExecuteState.CurrentState.ShiftDown, false); break;
+				case NECommand.Edit_Paste_Paste: Execute_Edit_Paste_PasteRotatePaste(state.ShiftDown, false); break;
 				case NECommand.Edit_Paste_RotatePaste: Execute_Edit_Paste_PasteRotatePaste(true, true); break;
 				case NECommand.Edit_Undo: Execute_Edit_Undo(); break;
 				case NECommand.Edit_Redo: Execute_Edit_Redo(); break;
@@ -646,7 +647,7 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Rotate: Execute_Edit_Rotate(); break;
 				case NECommand.Edit_Expression_Expression: Execute_Edit_Expression_Expression(); break;
 				case NECommand.Edit_Expression_EvaluateSelected: Execute_Edit_Expression_EvaluateSelected(); break;
-				case NECommand.Edit_ModifyRegions: Execute_Edit_ModifyRegions_Various_Various_Region(EditorExecuteState.CurrentState.Configuration as Configuration_Edit_ModifyRegions); break;
+				case NECommand.Edit_ModifyRegions: Execute_Edit_ModifyRegions_Various_Various_Region(state.Configuration as Configuration_Edit_ModifyRegions); break;
 				case NECommand.Edit_ModifyRegions_Select_Select_Region1: Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions.Actions.Select_Select, 1); break;
 				case NECommand.Edit_ModifyRegions_Select_Select_Region2: Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions.Actions.Select_Select, 2); break;
 				case NECommand.Edit_ModifyRegions_Select_Select_Region3: Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions.Actions.Select_Select, 3); break;
@@ -1041,14 +1042,14 @@ namespace NeoEdit.Editor
 				case NECommand.Content_Descendants_SelfAndDescendants: Execute_Content_Descendants_SelfAndDescendants(); break;
 				case NECommand.Content_Descendants_First: Execute_Content_Descendants_First(); break;
 				case NECommand.Content_Descendants_WithAttribute: Execute_Content_Descendants_WithAttribute(); break;
-				case NECommand.Content_Navigate_Up: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Up, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Content_Navigate_Down: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Down, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Content_Navigate_Left: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Left, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Content_Navigate_Right: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Right, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Content_Navigate_Home: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Home, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Content_Navigate_End: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.End, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Content_Navigate_Pgup: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.PgUp, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Content_Navigate_Pgdn: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.PgDn, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Content_Navigate_Up: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Up, state.ShiftDown); break;
+				case NECommand.Content_Navigate_Down: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Down, state.ShiftDown); break;
+				case NECommand.Content_Navigate_Left: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Left, state.ShiftDown); break;
+				case NECommand.Content_Navigate_Right: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Right, state.ShiftDown); break;
+				case NECommand.Content_Navigate_Home: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Home, state.ShiftDown); break;
+				case NECommand.Content_Navigate_End: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.End, state.ShiftDown); break;
+				case NECommand.Content_Navigate_Pgup: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.PgUp, state.ShiftDown); break;
+				case NECommand.Content_Navigate_Pgdn: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.PgDn, state.ShiftDown); break;
 				case NECommand.Content_Navigate_Row: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Row, true); break;
 				case NECommand.Content_Navigate_Column: Execute_Content_Navigate_Various(ParserNode.ParserNavigationDirectionEnum.Column, true); break;
 				case NECommand.Content_KeepSelections: Execute_Content_KeepSelections(); break;
@@ -1095,26 +1096,26 @@ namespace NeoEdit.Editor
 				case NECommand.Image_GIF_Split: Execute_Image_GIF_Split(); break;
 				case NECommand.Image_GetTakenDate: Execute_Image_GetTakenDate(); break;
 				case NECommand.Image_SetTakenDate: Execute_Image_SetTakenDate(); break;
-				case NECommand.Position_Goto_Lines: Execute_Position_Goto_Various(GotoType.Line, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Position_Goto_Columns: Execute_Position_Goto_Various(GotoType.Column, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Position_Goto_Indexes: Execute_Position_Goto_Various(GotoType.Index, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Position_Goto_Positions: Execute_Position_Goto_Various(GotoType.Position, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Position_Goto_Lines: Execute_Position_Goto_Various(GotoType.Line, state.ShiftDown); break;
+				case NECommand.Position_Goto_Columns: Execute_Position_Goto_Various(GotoType.Column, state.ShiftDown); break;
+				case NECommand.Position_Goto_Indexes: Execute_Position_Goto_Various(GotoType.Index, state.ShiftDown); break;
+				case NECommand.Position_Goto_Positions: Execute_Position_Goto_Various(GotoType.Position, state.ShiftDown); break;
 				case NECommand.Position_Copy_Lines: Execute_Position_Copy_Various(GotoType.Line, false); break;
-				case NECommand.Position_Copy_Columns: Execute_Position_Copy_Various(GotoType.Column, !EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Position_Copy_Indexes: Execute_Position_Copy_Various(GotoType.Index, !EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Position_Copy_Columns: Execute_Position_Copy_Various(GotoType.Column, !state.ShiftDown); break;
+				case NECommand.Position_Copy_Indexes: Execute_Position_Copy_Various(GotoType.Index, !state.ShiftDown); break;
 				case NECommand.Position_Copy_Positions: Execute_Position_Copy_Various(GotoType.Position, false); break;
 				case NECommand.Diff_Select_Matches: Execute_Diff_Select_MatchesDiffs(true); break;
 				case NECommand.Diff_Select_Diffs: Execute_Diff_Select_MatchesDiffs(false); break;
 				case NECommand.Diff_Break: Execute_Diff_Break(); break;
 				case NECommand.Diff_SourceControl: Execute_Diff_SourceControl(); break;
-				case NECommand.Diff_IgnoreWhitespace: Execute_Diff_IgnoreWhitespace(EditorExecuteState.CurrentState.MultiStatus); break;
-				case NECommand.Diff_IgnoreCase: Execute_Diff_IgnoreCase(EditorExecuteState.CurrentState.MultiStatus); break;
-				case NECommand.Diff_IgnoreNumbers: Execute_Diff_IgnoreNumbers(EditorExecuteState.CurrentState.MultiStatus); break;
-				case NECommand.Diff_IgnoreLineEndings: Execute_Diff_IgnoreLineEndings(EditorExecuteState.CurrentState.MultiStatus); break;
+				case NECommand.Diff_IgnoreWhitespace: Execute_Diff_IgnoreWhitespace(state.MultiStatus); break;
+				case NECommand.Diff_IgnoreCase: Execute_Diff_IgnoreCase(state.MultiStatus); break;
+				case NECommand.Diff_IgnoreNumbers: Execute_Diff_IgnoreNumbers(state.MultiStatus); break;
+				case NECommand.Diff_IgnoreLineEndings: Execute_Diff_IgnoreLineEndings(state.MultiStatus); break;
 				case NECommand.Diff_IgnoreCharacters: Execute_Diff_IgnoreCharacters(); break;
 				case NECommand.Diff_Reset: Execute_Diff_Reset(); break;
-				case NECommand.Diff_Next: Execute_Diff_NextPrevious(true, EditorExecuteState.CurrentState.ShiftDown); break;
-				case NECommand.Diff_Previous: Execute_Diff_NextPrevious(false, EditorExecuteState.CurrentState.ShiftDown); break;
+				case NECommand.Diff_Next: Execute_Diff_NextPrevious(true, state.ShiftDown); break;
+				case NECommand.Diff_Previous: Execute_Diff_NextPrevious(false, state.ShiftDown); break;
 				case NECommand.Diff_CopyLeft: Execute_Diff_CopyLeftRight(true); break;
 				case NECommand.Diff_CopyRight: Execute_Diff_CopyLeftRight(false); break;
 				case NECommand.Diff_Fix_Whitespace: Execute_Diff_Fix_Whitespace(); break;
@@ -1224,7 +1225,7 @@ namespace NeoEdit.Editor
 			watcher.Changed += (s1, e1) =>
 			{
 				watcherFileModified = true;
-				try { EditorExecuteState.CurrentState.NEWindowUI.QueueActivateNEWindow(); } catch { }
+				try { state.NEWindowUI.QueueActivateNEWindow(); } catch { }
 			};
 			watcher.EnableRaisingEvents = true;
 		}
@@ -1258,9 +1259,9 @@ namespace NeoEdit.Editor
 
 			if (centerVertically)
 			{
-				StartRow = (lineMin + lineMax - EditorExecuteState.CurrentState.NEWindow.DisplayRows) / 2;
+				StartRow = (lineMin + lineMax - state.NEWindow.DisplayRows) / 2;
 				if (centerHorizontally)
-					StartColumn = (Text.GetColumnFromIndex(lineMin, indexMin) + Text.GetColumnFromIndex(lineMax, indexMax) - EditorExecuteState.CurrentState.NEWindow.DisplayColumns) / 2;
+					StartColumn = (Text.GetColumnFromIndex(lineMin, indexMin) + Text.GetColumnFromIndex(lineMax, indexMax) - state.NEWindow.DisplayColumns) / 2;
 				else
 					StartColumn = 0;
 			}
@@ -1268,8 +1269,8 @@ namespace NeoEdit.Editor
 			var line = Text.GetPositionLine(range.Cursor);
 			var index = Text.GetPositionIndex(range.Cursor, line);
 			var x = Text.GetColumnFromIndex(line, index);
-			StartRow = Math.Min(line, Math.Max(line - (EditorExecuteState.CurrentState?.NEWindow?.DisplayRows ?? 1) + 1, StartRow));
-			StartColumn = Math.Min(x, Math.Max(x - (EditorExecuteState.CurrentState?.NEWindow?.DisplayColumns ?? 1) + 1, StartColumn));
+			StartRow = Math.Min(line, Math.Max(line - (state?.NEWindow?.DisplayRows ?? 1) + 1, StartRow));
+			StartColumn = Math.Min(x, Math.Max(x - (state?.NEWindow?.DisplayColumns ?? 1) + 1, StartColumn));
 		}
 
 		public NEVariables GetVariables()
@@ -1413,7 +1414,7 @@ namespace NeoEdit.Editor
 			return results;
 		}
 
-		List<T> GetExpressionResults<T>(string expression, int? count = null) => EditorExecuteState.CurrentState.GetExpression(expression).EvaluateList<T>(GetVariables(), count);
+		List<T> GetExpressionResults<T>(string expression, int? count = null) => state.GetExpression(expression).EvaluateList<T>(GetVariables(), count);
 
 		List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
 		{
@@ -1656,7 +1657,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void ViewSetDisplaySize(int columns, int rows) => EditorExecuteState.CurrentState.NEWindow?.SetDisplaySize(columns, rows);
+		public void ViewSetDisplaySize(int columns, int rows) => state.NEWindow?.SetDisplaySize(columns, rows);
 
 		public List<string> ViewGetStatusBar()
 		{
@@ -1697,13 +1698,13 @@ namespace NeoEdit.Editor
 
 		public bool QueryUser(string name, string text, MessageOptions defaultAccept)
 		{
-			lock (EditorExecuteState.CurrentState)
+			lock (state)
 			{
-				if ((!EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.All)) && (!EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.Cancel)))
-					EditorExecuteState.CurrentState.NEWindow.ShowFile(this, () => EditorExecuteState.CurrentState.SavedAnswers[name] = EditorExecuteState.CurrentState.NEWindowUI.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
-				if (EditorExecuteState.CurrentState.SavedAnswers[name] == MessageOptions.Cancel)
+				if ((!state.SavedAnswers[name].HasFlag(MessageOptions.All)) && (!state.SavedAnswers[name].HasFlag(MessageOptions.Cancel)))
+					state.NEWindow.ShowFile(this, () => state.SavedAnswers[name] = state.NEWindowUI.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
+				if (state.SavedAnswers[name] == MessageOptions.Cancel)
 					throw new OperationCanceledException();
-				return EditorExecuteState.CurrentState.SavedAnswers[name].HasFlag(MessageOptions.Yes);
+				return state.SavedAnswers[name].HasFlag(MessageOptions.Yes);
 			}
 		}
 
@@ -1718,7 +1719,7 @@ namespace NeoEdit.Editor
 			DiffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
 			DiffTarget.DiffIgnoreCharacters = DiffIgnoreCharacters;
 
-			var left = EditorExecuteState.CurrentState.NEWindow?.GetFileIndex(this) < EditorExecuteState.CurrentState.NEWindow?.GetFileIndex(DiffTarget) ? this : DiffTarget;
+			var left = state.NEWindow?.GetFileIndex(this) < state.NEWindow?.GetFileIndex(DiffTarget) ? this : DiffTarget;
 			var right = left == this ? DiffTarget : this;
 			NEText.CalculateDiff(left.Text, right.Text, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 		}
