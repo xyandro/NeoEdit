@@ -5,8 +5,6 @@ namespace NeoEdit.Common
 {
 	public class ExecuteState
 	{
-		public INEWindow NEWindow;
-		public INEWindowUI NEWindowUI;
 		public NECommand Command;
 		public bool ShiftDown;
 		public bool ControlDown;
@@ -28,8 +26,6 @@ namespace NeoEdit.Common
 
 		public ExecuteState(ExecuteState state)
 		{
-			NEWindow = state.NEWindow;
-			NEWindowUI = state.NEWindowUI;
 			Command = state.Command;
 			ShiftDown = state.ShiftDown;
 			ControlDown = state.ControlDown;

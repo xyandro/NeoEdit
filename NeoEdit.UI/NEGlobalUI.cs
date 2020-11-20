@@ -18,13 +18,15 @@ namespace NeoEdit.UI
 
 		public static bool HandlesKey(ModifierKeys modifiers, Key key) => neGlobal.HandlesKey(modifiers, key);
 
-		public static void HandleCommand(ExecuteState state)
+		public static void HandleCommand(ExecuteState state) => HandleCommand(null, null, state);
+
+		public static void HandleCommand(INEWindow neWindow, INEWindowUI neWindowUI, ExecuteState state)
 		{
 			actionRunner.Add(moreQueued =>
 			{
 				Dispatcher.Invoke(() => Clipboarder.GetSystem());
 
-				neGlobal.HandleCommand(state, moreQueued);
+				neGlobal.HandleCommand(neWindow, neWindowUI, state, moreQueued);
 
 				Dispatcher.Invoke(() =>
 				{

@@ -43,7 +43,7 @@ namespace NeoEdit.Editor
 
 		public void SetExecuteState()
 		{
-			EditorExecuteState.SetState(state.NEGlobal, state);
+			EditorExecuteState.SetState(state.NEGlobal, state.NEWindow, state.NEWindowUI, state);
 			state.Command = Command;
 			state.ShiftDown = ShiftDown;
 			state.ControlDown = ControlDown;

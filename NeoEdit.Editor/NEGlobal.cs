@@ -113,9 +113,9 @@ namespace NeoEdit.Editor
 			return false;
 		}
 
-		public void HandleCommand(ExecuteState executeState, Func<bool> skipDraw = null)
+		public void HandleCommand(INEWindow neWindow, INEWindowUI neWindowUI, ExecuteState executeState, Func<bool> skipDraw)
 		{
-			EditorExecuteState.SetState(this, executeState);
+			EditorExecuteState.SetState(this, neWindow as NEWindow, neWindowUI, executeState);
 			switch (state.Command)
 			{
 				case NECommand.Internal_CommandLine: NEFile.PreExecute_Internal_CommandLine(); break;
