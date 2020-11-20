@@ -7,7 +7,7 @@ namespace NeoEdit.Editor
 		public readonly int NESerial = NESerialTracker.NESerial;
 		public readonly NEWindow neWindow;
 
-		public IReadOnlyOrderedHashSet<NEFileData> allFileDatas;
+		public IReadOnlyOrderedHashSet<NEFileData> neFileDatas;
 		public IReadOnlyOrderedHashSet<NEFile> activeFiles;
 		public NEFile focused;
 		public WindowLayout windowLayout;
@@ -18,12 +18,14 @@ namespace NeoEdit.Editor
 
 		public NEWindowData Clone() => new NEWindowData(neWindow)
 		{
-			allFileDatas = allFileDatas,
+			neFileDatas = neFileDatas,
 			activeFiles = activeFiles,
 			focused = focused,
 			windowLayout = windowLayout,
 			activeOnly = activeOnly,
 			macroVisualize = macroVisualize,
 		};
+
+		public override string ToString() => NESerial.ToString();
 	}
 }

@@ -56,7 +56,7 @@ namespace NeoEdit.Editor
 		static void Configure_Table_Select_RowsByExpression()
 		{
 			var table = state.NEWindow.Focused.GetTable();
-			state.Configuration = state.NEWindowUI.RunDialog_Configure_FileTable_Various_Various(state.NEWindow.Focused.GetTableVariables(table), table.NumRows);
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_FileTable_Various_Various(state.NEWindow.Focused.GetTableVariables(table), table.NumRows);
 		}
 
 		void Execute_Table_Select_RowsByExpression()
@@ -76,7 +76,7 @@ namespace NeoEdit.Editor
 			if (!state.NEWindow.Focused.Selections[0].HasSelection)
 				throw new Exception("Must have data selected");
 
-			state.Configuration = state.NEWindowUI.RunDialog_Configure_Table_New_FromSelection(state.NEWindow.Focused.GetSelectionStrings().Single());
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_New_FromSelection(state.NEWindow.Focused.GetSelectionStrings().Single());
 		}
 
 		void Execute_Table_New_FromSelection()
@@ -120,7 +120,7 @@ namespace NeoEdit.Editor
 			OpenTable(new Table(rows, false));
 		}
 
-		static void Configure_Table_Edit() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Table_Edit(state.NEWindow.Focused.GetTable());
+		static void Configure_Table_Edit() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Edit(state.NEWindow.Focused.GetTable());
 
 		void Execute_Table_Edit()
 		{
@@ -130,7 +130,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_DetectType() => ContentType = Table.GuessTableType(Text.GetString());
 
-		static void Configure_Table_Convert() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Table_Convert(state.NEWindow.Focused.ContentType);
+		static void Configure_Table_Convert() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Convert(state.NEWindow.Focused.ContentType);
 
 		void Execute_Table_Convert()
 		{
@@ -147,7 +147,7 @@ namespace NeoEdit.Editor
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
 
-			state.Configuration = state.NEWindowUI.RunDialog_Configure_Table_Join(state.NEWindow.Focused.GetTable(), joinTable);
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Join(state.NEWindow.Focused.GetTable(), joinTable);
 		}
 
 		void Execute_Table_Join()
@@ -161,7 +161,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Table_Transpose() => SetText(GetTable().Transpose());
 
-		static void Configure_Table_Database_GenerateInserts() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Table_Database_GenerateInserts(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
+		static void Configure_Table_Database_GenerateInserts() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Database_GenerateInserts(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
 
 		void Execute_Table_Database_GenerateInserts()
 		{
@@ -181,7 +181,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Table_Database_GenerateUpdates() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Table_Database_GenerateUpdates(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
+		static void Configure_Table_Database_GenerateUpdates() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Database_GenerateUpdates(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
 
 		void Execute_Table_Database_GenerateUpdates()
 		{
@@ -201,7 +201,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Table_Database_GenerateDeletes() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Table_Database_GenerateDeletes(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
+		static void Configure_Table_Database_GenerateDeletes() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Database_GenerateDeletes(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
 
 		void Execute_Table_Database_GenerateDeletes()
 		{

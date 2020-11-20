@@ -42,7 +42,7 @@ namespace NeoEdit.Editor
 			newFiles.ForEach((neFile, index) => neFile.DisplayName = $"Selection {index + 1}");
 
 			var neWindow = new NEWindow();
-			newFiles.ForEach(neFile => neWindow.AddNewFile(neFile));
+			newFiles.ForEach(neFile => neWindow.AddNewNEFile(neFile));
 
 			return true;
 		}
@@ -68,7 +68,7 @@ namespace NeoEdit.Editor
 			}
 
 			var neWindow = new NEWindow();
-			newFiles.ForEach(neFile => neWindow.AddNewFile(neFile));
+			newFiles.ForEach(neFile => neWindow.AddNewNEFile(neFile));
 			neWindow.SetLayout(state.NEWindow.WindowLayout);
 
 			return true;
@@ -86,7 +86,7 @@ namespace NeoEdit.Editor
 
 			var neWindow = new NEWindow(false);
 			foreach (var neFile in summaryByFile)
-				neWindow.AddNewFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
+				neWindow.AddNewNEFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
 			neWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 
 			return true;
@@ -107,11 +107,11 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Window_New_FromActiveFiles()
 		{
 			var active = state.NEWindow.ActiveFiles.ToList();
-			active.ForEach(neFile => neFile.ClearFiles());
+			active.ForEach(neFile => neFile.ClearNEFiles());
 
 			var neWindow = new NEWindow();
 			neWindow.SetLayout(state.NEWindow.WindowLayout);
-			active.ForEach(neFile => neWindow.AddNewFile(neFile));
+			active.ForEach(neFile => neWindow.AddNewNEFile(neFile));
 
 			return true;
 		}
@@ -128,7 +128,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static void Configure_Window_CustomGrid() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Window_CustomGrid(state.NEWindow.WindowLayout);
+		static void Configure_Window_CustomGrid() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Window_CustomGrid(state.NEWindow.WindowLayout);
 
 		static bool PreExecute_Window_CustomGrid()
 		{
@@ -144,7 +144,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Window_Font_Size()
 		{
-			state.NEWindowUI.RunDialog_PreExecute_Window_Font_Size();
+			state.NEWindow.neWindowUI.RunDialog_PreExecute_Window_Font_Size();
 			return true;
 		}
 
@@ -156,7 +156,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Window_Binary() => ViewBinary = state.MultiStatus != true;
 
-		static void Configure_Window_BinaryCodePages() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Window_BinaryCodePages(state.NEWindow.Focused.ViewBinaryCodePages);
+		static void Configure_Window_BinaryCodePages() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Window_BinaryCodePages(state.NEWindow.Focused.ViewBinaryCodePages);
 
 		void Execute_Window_BinaryCodePages() => ViewBinaryCodePages = (state.Configuration as Configuration_Window_BinaryCodePages).CodePages;
 	}

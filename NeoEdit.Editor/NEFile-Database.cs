@@ -49,7 +49,7 @@ namespace NeoEdit.Editor
 				throw new Exception("No connection.");
 		}
 
-		static void Configure_Database_Connect() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Database_Connect();
+		static void Configure_Database_Connect() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Database_Connect();
 
 		void Execute_Database_Connect()
 		{
@@ -88,7 +88,7 @@ namespace NeoEdit.Editor
 		static void Configure_Database_Examine()
 		{
 			state.NEWindow.Focused.ValidateConnection();
-			state.NEWindowUI.RunDialog_Configure_Database_Examine(state.NEWindow.Focused.dbConnection);
+			state.NEWindow.neWindowUI.RunDialog_Configure_Database_Examine(state.NEWindow.Focused.dbConnection);
 			state.Configuration = new Configuration_Database_Examine();
 		}
 
@@ -112,7 +112,7 @@ namespace NeoEdit.Editor
 								text += reader.GetString(0);
 					}
 
-					AddNewFile(new NEFile(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ParserType.SQL, modified: false));
+					AddNewNEFile(new NEFile(displayName: sproc, bytes: Coder.StringToBytes(text, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: ParserType.SQL, modified: false));
 				}
 				catch (Exception ex) { result = ex.Message; }
 				results.Add($"{sproc}: {result}");

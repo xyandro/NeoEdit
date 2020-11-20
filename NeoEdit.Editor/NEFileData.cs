@@ -90,5 +90,7 @@ namespace NeoEdit.Editor
 
 			return neFileData;
 		}
+
+		public override string ToString() => NESerial.ToString();
 	}
 }

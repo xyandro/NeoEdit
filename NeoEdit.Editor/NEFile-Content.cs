@@ -116,7 +116,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Parent() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Parent ?? node));
 
-		static void Configure_Content_Ancestor() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Content_Various_WithAttribute(state.NEWindow.Focused.GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
+		static void Configure_Content_Ancestor() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Content_Various_WithAttribute(state.NEWindow.Focused.GetSelectionNodes().SelectMany(node => node.Parents()).Distinct().ToList());
 
 		void Execute_Content_Ancestor()
 		{
@@ -124,7 +124,7 @@ namespace NeoEdit.Editor
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.Parents()).Where(child => child.HasAttr(result.Attribute, result.Regex, result.Invert)));
 		}
 
-		static void Configure_Content_Attributes() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Content_Attributes(state.NEWindow.Focused.GetSelectionNodes());
+		static void Configure_Content_Attributes() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Content_Attributes(state.NEWindow.Focused.GetSelectionNodes());
 
 		void Execute_Content_Attributes()
 		{
@@ -132,7 +132,7 @@ namespace NeoEdit.Editor
 			ContentReplaceSelections(GetSelectionNodes().SelectMany(node => node.GetAttrs(result.Attribute, result.FirstOnly)));
 		}
 
-		static void Configure_Content_WithAttribute() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Content_Various_WithAttribute(state.NEWindow.Focused.GetSelectionNodes());
+		static void Configure_Content_WithAttribute() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Content_Various_WithAttribute(state.NEWindow.Focused.GetSelectionNodes());
 
 		void Execute_Content_WithAttribute()
 		{
@@ -146,7 +146,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Children_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Children().FirstOrDefault()));
 
-		static void Configure_Content_Children_WithAttribute() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Content_Various_WithAttribute(state.NEWindow.Focused.GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
+		static void Configure_Content_Children_WithAttribute() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Content_Various_WithAttribute(state.NEWindow.Focused.GetSelectionNodes().SelectMany(node => node.Children()).Distinct().ToList());
 
 		void Execute_Content_Children_WithAttribute()
 		{
@@ -160,7 +160,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Descendants_First() => ContentReplaceSelections(GetSelectionNodes().Select(node => node.Descendants().FirstOrDefault()));
 
-		static void Configure_Content_Descendants_WithAttribute() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Content_Various_WithAttribute(state.NEWindow.Focused.GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
+		static void Configure_Content_Descendants_WithAttribute() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Content_Various_WithAttribute(state.NEWindow.Focused.GetSelectionNodes().SelectMany(node => node.Descendants()).Distinct().ToList());
 
 		void Execute_Content_Descendants_WithAttribute()
 		{

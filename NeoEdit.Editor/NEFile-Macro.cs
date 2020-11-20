@@ -14,21 +14,21 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Macro_Play_Quick(int quickNum)
 		{
-			state.NEWindow.PlayMacro(Macro.Load(state.NEWindowUI, QuickMacro(quickNum), true));
+			state.NEWindow.PlayMacro(Macro.Load(state.NEWindow.neWindowUI, QuickMacro(quickNum), true));
 			return true;
 		}
 
 		static bool PreExecute_Macro_Play_Play()
 		{
-			state.NEWindow.PlayMacro(Macro.Load(state.NEWindowUI));
+			state.NEWindow.PlayMacro(Macro.Load(state.NEWindow.neWindowUI));
 			return true;
 		}
 
 		static bool PreExecute_Macro_Play_Repeat()
 		{
-			var result = state.NEWindowUI.RunDialog_PreExecute_Macro_Play_Repeat(() => Macro.ChooseMacro(state.NEWindowUI));
+			var result = state.NEWindow.neWindowUI.RunDialog_PreExecute_Macro_Play_Repeat(() => Macro.ChooseMacro(state.NEWindow.neWindowUI));
 
-			var macro = Macro.Load(state.NEWindowUI, result.Macro);
+			var macro = Macro.Load(state.NEWindow.neWindowUI, result.Macro);
 			var expression = new NEExpression(result.Expression);
 			var count = int.MaxValue;
 			if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Number)
@@ -54,13 +54,13 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Macro_Play_PlayOnCopiedFiles()
 		{
 			var files = new Queue<string>(NEClipboard.Current.Strings);
-			var macro = Macro.Load(state.NEWindowUI);
+			var macro = Macro.Load(state.NEWindow.neWindowUI);
 			Action startNext = null;
 			startNext = () =>
 			{
 				if (!files.Any())
 					return;
-				state.NEWindow.AddNewFile(new NEFile(files.Dequeue()));
+				state.NEWindow.AddNewNEFile(new NEFile(files.Dequeue()));
 				state.NEWindow.PlayMacro(macro, startNext);
 			};
 			startNext();
@@ -93,7 +93,7 @@ namespace NeoEdit.Editor
 
 			var macro = state.NEWindow.recordingMacro;
 			state.NEWindow.recordingMacro = null;
-			macro.Save(state.NEWindowUI, fileName, true);
+			macro.Save(state.NEWindow.neWindowUI, fileName, true);
 
 			return true;
 		}
@@ -101,7 +101,7 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Macro_Append_Quick(int quickNum)
 		{
 			if (state.NEWindow.recordingMacro == null)
-				state.NEWindow.recordingMacro = Macro.Load(state.NEWindowUI, QuickMacro(quickNum), true);
+				state.NEWindow.recordingMacro = Macro.Load(state.NEWindow.neWindowUI, QuickMacro(quickNum), true);
 			else
 				PreExecute_Macro_Record_StopRecording(QuickMacro(quickNum));
 
@@ -111,14 +111,14 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Macro_Append_Append()
 		{
 			state.NEWindow.EnsureNotRecording();
-			state.NEWindow.recordingMacro = Macro.Load(state.NEWindowUI);
+			state.NEWindow.recordingMacro = Macro.Load(state.NEWindow.neWindowUI);
 
 			return true;
 		}
 
 		static bool PreExecute_Macro_Open_Quick(int quickNum)
 		{
-			state.NEWindow.AddNewFile(new NEFile(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
+			state.NEWindow.AddNewNEFile(new NEFile(Path.Combine(Macro.MacroDirectory, QuickMacro(quickNum))));
 			return true;
 		}
 

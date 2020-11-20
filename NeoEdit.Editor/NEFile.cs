@@ -40,6 +40,23 @@ namespace NeoEdit.Editor
 			Goto(line, column, index);
 		}
 
+		bool attached = false;
+		public void Attach()
+		{
+			if (attached)
+				throw new Exception("File already attached");
+			attached = true;
+			SetAutoRefresh();
+		}
+
+		public void Detach()
+		{
+			if (!attached)
+				throw new Exception("File not attached");
+			attached = false;
+			SetAutoRefresh();
+		}
+
 		public static NEFile CreateSummaryFile(string displayName, List<(string str, int count)> summary)
 		{
 			var sb = new StringBuilder();
@@ -1181,19 +1198,14 @@ namespace NeoEdit.Editor
 			Execute_File_Refresh();
 		}
 
-		void ClearWatcher()
+		void SetAutoRefresh(bool? value = null)
 		{
 			watcher?.Dispose();
 			watcher = null;
-		}
-
-		void SetAutoRefresh(bool? value = null)
-		{
-			ClearWatcher();
 
 			if (value.HasValue)
 				AutoRefresh = value.Value;
-			if ((!AutoRefresh) || (!File.Exists(FileName)))
+			if ((!attached) || (!AutoRefresh) || (!File.Exists(FileName)))
 				return;
 
 			watcher = new FileSystemWatcher
@@ -1205,7 +1217,7 @@ namespace NeoEdit.Editor
 			watcher.Changed += (s1, e1) =>
 			{
 				watcherFileModified = true;
-				try { state.NEWindowUI.QueueActivateNEWindow(); } catch { }
+				try { state.NEWindow.neWindowUI.QueueActivateNEWindow(); } catch { }
 			};
 			watcher.EnableRaisingEvents = true;
 		}
@@ -1455,7 +1467,7 @@ namespace NeoEdit.Editor
 		void OpenTable(Table table, string name = null)
 		{
 			var contentType = ContentType.IsTableType() ? ContentType : ParserType.Columns;
-			AddNewFile(new NEFile(displayName: name, bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: contentType, modified: false));
+			AddNewNEFile(new NEFile(displayName: name, bytes: Coder.StringToBytes(table.ToString("\r\n", contentType), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: contentType, modified: false));
 		}
 
 		IReadOnlyList<string> RelativeSelectedFiles()
@@ -1614,7 +1626,6 @@ namespace NeoEdit.Editor
 		{
 			if (DiffTarget != null)
 				DiffTarget = null;
-			ClearWatcher();
 			shutdownData?.OnShutdown();
 		}
 
@@ -1679,7 +1690,7 @@ namespace NeoEdit.Editor
 			lock (state)
 			{
 				if ((!state.SavedAnswers[name].HasFlag(MessageOptions.All)) && (!state.SavedAnswers[name].HasFlag(MessageOptions.Cancel)))
-					state.NEWindow.ShowFile(this, () => state.SavedAnswers[name] = state.NEWindowUI.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
+					state.NEWindow.ShowFile(this, () => state.SavedAnswers[name] = state.NEWindow.neWindowUI.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
 				if (state.SavedAnswers[name] == MessageOptions.Cancel)
 					throw new OperationCanceledException();
 				return state.SavedAnswers[name].HasFlag(MessageOptions.Yes);

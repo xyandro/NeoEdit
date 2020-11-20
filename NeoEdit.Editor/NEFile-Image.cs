@@ -117,7 +117,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static void Configure_Image_Resize() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Image_Resize(state.NEWindow.Focused.GetVariables());
+		static void Configure_Image_Resize() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_Resize(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Image_Resize()
 		{
@@ -148,7 +148,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		static void Configure_Image_Crop() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Image_Crop(state.NEWindow.Focused.GetVariables());
+		static void Configure_Image_Crop() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_Crop(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Image_Crop()
 		{
@@ -194,7 +194,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		static void Configure_Image_GrabColor() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Image_GrabColor(state.NEWindow.Focused.Selections.Select(range => state.NEWindow.Focused.Text.GetString(range)).FirstOrDefault());
+		static void Configure_Image_GrabColor() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_GrabColor(state.NEWindow.Focused.Selections.Select(range => state.NEWindow.Focused.Text.GetString(range)).FirstOrDefault());
 
 		void Execute_Image_GrabColor()
 		{
@@ -202,7 +202,7 @@ namespace NeoEdit.Editor
 			ReplaceOneWithMany(result.Colors, true);
 		}
 
-		static void Configure_Image_GrabImage() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Image_GrabImage(state.NEWindow.Focused.GetVariables());
+		static void Configure_Image_GrabImage() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_GrabImage(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Image_GrabImage()
 		{
@@ -226,7 +226,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		static void Configure_Image_AddOverlayColor(bool add) => state.Configuration = state.NEWindowUI.RunDialog_Configure_Image_AddOverlayColor(add, state.NEWindow.Focused.GetVariables());
+		static void Configure_Image_AddOverlayColor(bool add) => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_AddOverlayColor(add, state.NEWindow.Focused.GetVariables());
 
 		void Execute_Image_AddColor()
 		{
@@ -236,7 +236,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		static void Configure_Image_AdjustColor() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Image_AdjustColor(state.NEWindow.Focused.GetVariables());
+		static void Configure_Image_AdjustColor() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_AdjustColor(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Image_AdjustColor()
 		{
@@ -258,7 +258,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Image_FlipVertical() => Flip(System.Drawing.RotateFlipType.RotateNoneFlipY);
 
-		static void Configure_Image_Rotate() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Image_Rotate(state.NEWindow.Focused.GetVariables());
+		static void Configure_Image_Rotate() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_Rotate(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Image_Rotate()
 		{
@@ -285,7 +285,7 @@ namespace NeoEdit.Editor
 			Selections = new List<Range> { new Range() };
 		}
 
-		static void Configure_Image_GIF_Animate() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Image_GIF_Animate(state.NEWindow.Focused.GetVariables());
+		static void Configure_Image_GIF_Animate() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_GIF_Animate(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Image_GIF_Animate()
 		{
@@ -306,7 +306,7 @@ namespace NeoEdit.Editor
 		{
 			var variables = state.NEWindow.Focused.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			state.Configuration = state.NEWindowUI.RunDialog_Configure_Image_GIF_Split(variables);
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_GIF_Split(variables);
 		}
 
 		void Execute_Image_GIF_Split()
@@ -321,7 +321,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Image_GetTakenDate() => ReplaceSelections(RelativeSelectedFiles().AsTaskRunner().Select(fileName => GetImageTakenDate(fileName)?.ToString() ?? "<NONE>").ToList());
 
-		static void Configure_Image_SetTakenDate() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Image_SetTakenDate(state.NEWindow.Focused.GetVariables());
+		static void Configure_Image_SetTakenDate() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_SetTakenDate(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Image_SetTakenDate()
 		{

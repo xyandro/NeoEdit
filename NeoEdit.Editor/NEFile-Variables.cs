@@ -21,7 +21,7 @@ namespace NeoEdit.Editor
 
 		public void ResetData(NEFileData data)
 		{
-			result = null;
+			ResetResult();
 			this.data = data;
 		}
 
@@ -144,9 +144,9 @@ namespace NeoEdit.Editor
 			private set => editableData.isModified = value;
 		}
 
-		void ClearFiles() => CreateResult().ClearFiles();
-		void AddFile(NEFile neFile) => CreateResult().AddFile(neFile);
-		void AddNewFile(NEFile neFile) => CreateResult().AddNewFile(neFile);
+		void ClearNEFiles() => CreateResult().ClearNEFiles();
+		void AddNEFile(NEFile neFile) => CreateResult().AddNEFile(neFile);
+		void AddNewNEFile(NEFile neFile) => CreateResult().AddNewNEFile(neFile);
 
 		Tuple<IReadOnlyList<string>, bool?> clipboardData;
 		Tuple<IReadOnlyList<string>, bool?> ClipboardData
@@ -299,14 +299,19 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public NEFileResult GetResult()
+		void ResetResult()
 		{
 			clipboardData = null;
 			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 				keysAndValues[kvIndex] = null;
 
-			var ret = result;
 			result = null;
+		}
+
+		public NEFileResult GetResult()
+		{
+			var ret = result;
+			ResetResult();
 			return ret;
 		}
 	}

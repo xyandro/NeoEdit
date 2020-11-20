@@ -190,7 +190,7 @@ namespace NeoEdit.Editor
 					}
 				}
 
-				neWindow.AddNewFile(new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData));
+				neWindow.AddNewNEFile(new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData));
 			}
 
 			if (commandLineParams.Diff)
@@ -202,14 +202,14 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Internal_Activate()
 		{
 			state.NEWindow.LastActivated = DateTime.Now;
-			state.NEWindow.AllFiles.ForEach(neFile => neFile.Activated());
+			state.NEWindow.NEFiles.ForEach(neFile => neFile.Activated());
 			return true;
 		}
 
 		static bool PreExecute_Internal_MouseActivate()
 		{
 			var neFile = (state.Configuration as Configuration_Internal_MouseActivate).NEFile as NEFile;
-			state.NEWindow.SetActiveFiles(state.NEWindow.AllFiles.Where(file => (file == neFile) || ((state.ShiftDown) && (state.NEWindow.ActiveFiles.Contains(file)))));
+			state.NEWindow.SetActiveFiles(state.NEWindow.NEFiles.Where(file => (file == neFile) || ((state.ShiftDown) && (state.NEWindow.ActiveFiles.Contains(file)))));
 			state.NEWindow.Focused = neFile;
 			return true;
 		}
@@ -218,7 +218,7 @@ namespace NeoEdit.Editor
 		{
 			var neFile = (state.Configuration as Configuration_Internal_CloseFile).NEFile as NEFile;
 			neFile.VerifyCanClose();
-			neFile.ClearFiles();
+			neFile.ClearNEFiles();
 			return true;
 		}
 

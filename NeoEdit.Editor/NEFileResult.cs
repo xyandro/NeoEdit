@@ -21,21 +21,21 @@ namespace NeoEdit.Editor
 			KeysAndValues[kvIndex] = keysAndValues;
 		}
 
-		public void ClearFiles()
+		public void ClearNEFiles()
 		{
 			if (Files == null)
 				Files = new List<NEFile>();
 			Files.Clear();
 		}
 
-		public void AddFile(NEFile neFile)
+		public void AddNEFile(NEFile neFile)
 		{
 			if (Files == null)
 				Files = new List<NEFile>();
 			Files.Add(neFile);
 		}
 
-		public void AddNewFile(NEFile neFile)
+		public void AddNewNEFile(NEFile neFile)
 		{
 			if (NewFiles == null)
 				NewFiles = new List<NEFile>();

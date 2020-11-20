@@ -13,6 +13,7 @@ namespace NeoEdit.Common
 {
 	public static class INEWindowUIStatic
 	{
+		public static Func<INEWindow, INEWindowUI> CreateNEWindowUI { get; set; }
 		public static Func<Cryptor.Type, bool, string> RunCryptorKeyDialog { get; set; }
 	}
 
@@ -119,5 +120,7 @@ namespace NeoEdit.Common
 		void QueueActivateNEWindow();
 		void SetMacroProgress(double? percent);
 		void SetTaskRunnerProgress(double? percent);
+
+		void CloseWindow();
 	}
 }

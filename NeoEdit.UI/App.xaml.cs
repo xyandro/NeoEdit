@@ -14,6 +14,7 @@ namespace NeoEdit.UI
 		Action startAction;
 		App(Action action)
 		{
+			INEWindowUIStatic.CreateNEWindowUI = neWindow => Dispatcher.Invoke(() => new NEWindowUI(neWindow));
 			INEWindowUIStatic.RunCryptorKeyDialog = (type, encrypt) => File_Advanced_Encrypt_Dialog.Run(null, type, encrypt)?.Key;
 			NEGlobalUI.Dispatcher = Dispatcher;
 

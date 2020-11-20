@@ -12,20 +12,18 @@ namespace NeoEdit.Editor
 	{
 		public static EditorExecuteState CurrentState { get; private set; }
 
-		public static void SetState(NEGlobal neGlobal, NEWindow neWindow, INEWindowUI neWindowUI, ExecuteState state) => CurrentState = new EditorExecuteState(neGlobal, neWindow, neWindowUI, state);
+		public static void SetState(NEGlobal neGlobal, NEWindow neWindow, ExecuteState state) => CurrentState = new EditorExecuteState(neGlobal, neWindow, state);
 
 		public static void ClearState() => CurrentState = null;
 
 		public NEGlobal NEGlobal;
 		public NEWindow NEWindow;
-		public INEWindowUI NEWindowUI;
 		public IPreExecution PreExecution;
 
-		EditorExecuteState(NEGlobal neGlobal, NEWindow neWindow, INEWindowUI neWindowUI, ExecuteState state) : base(state)
+		EditorExecuteState(NEGlobal neGlobal, NEWindow neWindow, ExecuteState state) : base(state)
 		{
 			NEGlobal = neGlobal;
 			NEWindow = neWindow;
-			NEWindowUI = neWindowUI;
 		}
 
 		internal ExecuteState GetExecuteState()

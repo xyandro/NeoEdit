@@ -56,13 +56,13 @@ namespace NeoEdit.Editor
 		static bool PreExecute_Diff_Select_LeftRightBothFiles(bool? left)
 		{
 			var active = new HashSet<NEFile>(state.NEWindow.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFile> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((state.NEWindow.GetFileIndex(item) < state.NEWindow.GetFileIndex(item.DiffTarget)) == left)));
-			state.NEWindow.SetActiveFiles(state.NEWindow.AllFiles.Where(neFile => active.Contains(neFile)));
+			state.NEWindow.SetActiveFiles(state.NEWindow.NEFiles.Where(neFile => active.Contains(neFile)));
 			return true;
 		}
 
 		static bool PreExecute_Diff_Diff()
 		{
-			var diffTargets = state.NEWindow.AllFiles.Count == 2 ? state.NEWindow.AllFiles.ToList() : state.NEWindow.ActiveFiles.ToList();
+			var diffTargets = state.NEWindow.NEFiles.Count == 2 ? state.NEWindow.NEFiles.ToList() : state.NEWindow.ActiveFiles.ToList();
 
 			var inDiff = false;
 			for (var ctr = 0; ctr < diffTargets.Count; ++ctr)
@@ -79,15 +79,15 @@ namespace NeoEdit.Editor
 
 			if (state.ShiftDown)
 			{
-				if (!state.NEWindow.AllFiles.Except(diffTargets).Any())
+				if (!state.NEWindow.NEFiles.Except(diffTargets).Any())
 					state.NEWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 				else
 				{
-					diffTargets.ForEach(diffTarget => diffTarget.ClearFiles());
+					diffTargets.ForEach(diffTarget => diffTarget.ClearNEFiles());
 
 					var neWindow = new NEWindow();
 					neWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
-					diffTargets.ForEach(diffTarget => neWindow.AddNewFile(diffTarget));
+					diffTargets.ForEach(diffTarget => neWindow.AddNewNEFile(diffTarget));
 				}
 			}
 
@@ -109,8 +109,8 @@ namespace NeoEdit.Editor
 			var neFile = new NEFile(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
 			neFile.ContentType = ContentType;
 			neFile.DiffTarget = this;
-			AddFile(neFile);
-			AddFile(this);
+			AddNEFile(neFile);
+			AddNEFile(this);
 		}
 
 		void Execute_Diff_IgnoreWhitespace(bool? multiStatus)
@@ -137,7 +137,7 @@ namespace NeoEdit.Editor
 			CalculateDiff();
 		}
 
-		static void Configure_Diff_IgnoreCharacters() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Diff_IgnoreCharacters(state.NEWindow.Focused.DiffIgnoreCharacters);
+		static void Configure_Diff_IgnoreCharacters() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Diff_IgnoreCharacters(state.NEWindow.Focused.DiffIgnoreCharacters);
 
 		void Execute_Diff_IgnoreCharacters()
 		{
@@ -194,7 +194,7 @@ namespace NeoEdit.Editor
 				source.ReplaceSelections(strs);
 		}
 
-		static void Configure_Diff_Fix_Whitespace() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Diff_Fix_Whitespace();
+		static void Configure_Diff_Fix_Whitespace() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Diff_Fix_Whitespace();
 
 		void Execute_Diff_Fix_Whitespace()
 		{

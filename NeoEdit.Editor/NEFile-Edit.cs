@@ -137,7 +137,7 @@ namespace NeoEdit.Editor
 			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.Length))).ToList();
 		}
 
-		static void Configure_Edit_Select_Limit() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Select_Limit(state.NEWindow.Focused.GetVariables());
+		static void Configure_Edit_Select_Limit() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Select_Limit(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Edit_Select_Limit()
 		{
@@ -322,7 +322,7 @@ namespace NeoEdit.Editor
 				ResetData(data.redo);
 		}
 
-		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.Selections.Count == 1, state.NEWindow.Focused.GetVariables());
+		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.Selections.Count == 1, state.NEWindow.Focused.GetVariables());
 
 		void Execute_Edit_Repeat()
 		{
@@ -346,7 +346,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static void Configure_Edit_Rotate() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Rotate(state.NEWindow.Focused.GetVariables());
+		static void Configure_Edit_Rotate() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Rotate(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Edit_Rotate()
 		{
@@ -363,7 +363,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		static void Configure_Edit_Expression_Expression() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Expression_Expression(state.NEWindow.Focused.GetVariables());
+		static void Configure_Edit_Expression_Expression() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Expression_Expression(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Edit_Expression_Expression()
 		{
@@ -487,7 +487,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(newStrs);
 		}
 
-		static void Configure_Edit_Advanced_Convert() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_Convert();
+		static void Configure_Edit_Advanced_Convert() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Advanced_Convert();
 
 		void Execute_Edit_Advanced_Convert()
 		{
@@ -501,7 +501,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(bytes.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputType, result.OutputBOM)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Hash() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_Hash(state.NEWindow.Focused.CodePage);
+		static void Configure_Edit_Advanced_Hash() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Advanced_Hash(state.NEWindow.Focused.CodePage);
 
 		void Execute_Edit_Advanced_Hash()
 		{
@@ -512,7 +512,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs.AsTaskRunner().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Compress() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_CompressDecompress(state.NEWindow.Focused.CodePage, true);
+		static void Configure_Edit_Advanced_Compress() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Advanced_CompressDecompress(state.NEWindow.Focused.CodePage, true);
 
 		void Execute_Edit_Advanced_Compress()
 		{
@@ -526,7 +526,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(compressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Decompress() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_CompressDecompress(state.NEWindow.Focused.CodePage, false);
+		static void Configure_Edit_Advanced_Decompress() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Advanced_CompressDecompress(state.NEWindow.Focused.CodePage, false);
 
 		void Execute_Edit_Advanced_Decompress()
 		{
@@ -540,7 +540,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(decompressed.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Encrypt() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_EncryptDecrypt(state.NEWindow.Focused.CodePage, true);
+		static void Configure_Edit_Advanced_Encrypt() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Advanced_EncryptDecrypt(state.NEWindow.Focused.CodePage, true);
 
 		void Execute_Edit_Advanced_Encrypt()
 		{
@@ -554,7 +554,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(encrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Decrypt() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_EncryptDecrypt(state.NEWindow.Focused.CodePage, false);
+		static void Configure_Edit_Advanced_Decrypt() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Advanced_EncryptDecrypt(state.NEWindow.Focused.CodePage, false);
 
 		void Execute_Edit_Advanced_Decrypt()
 		{
@@ -568,7 +568,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(decrypted.AsTaskRunner().Select(data => Coder.BytesToString(data, result.OutputCodePage)).ToList());
 		}
 
-		static void Configure_Edit_Advanced_Sign() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Advanced_Sign(state.NEWindow.Focused.CodePage);
+		static void Configure_Edit_Advanced_Sign() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Advanced_Sign(state.NEWindow.Focused.CodePage);
 
 		void Execute_Edit_Advanced_Sign()
 		{

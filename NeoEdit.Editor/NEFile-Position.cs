@@ -148,7 +148,7 @@ namespace NeoEdit.Editor
 				case GotoType.Position: startValue = position; break;
 				default: throw new ArgumentException("GotoType invalid");
 			}
-			state.Configuration = state.NEWindowUI.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, state.NEWindow.Focused.GetVariables());
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, state.NEWindow.Focused.GetVariables());
 		}
 
 		void Execute_Position_Goto_Various(GotoType gotoType, bool selecting)
@@ -200,7 +200,7 @@ namespace NeoEdit.Editor
 				if (useFile != null)
 				{
 					useTE = new NEFile(useFile);
-					state.NEWindow.AddNewFile(useTE);
+					state.NEWindow.AddNewNEFile(useTE);
 				}
 
 				var sels = useTE.Selections.ToList();

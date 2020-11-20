@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.TaskRunning;
 
@@ -32,9 +34,13 @@ namespace NeoEdit.Editor
 
 		public void ResetData(NEGlobalData data)
 		{
-			result = null;
+			var oldNEWindows = NEWindows;
+
+			ResetResult();
 			this.data = data;
-			SetNEWindowDatas(NEWindowDatas); // Will regenerate NEWindows
+			RecreateNEWindows();
+			NEWindows.Except(oldNEWindows).ForEach(neWindow => neWindow.Attach());
+			oldNEWindows.Except(NEWindows).ForEach(neWindow => neWindow.Detach());
 			NEWindowDatas.ForEach(neWindowData => neWindowData.neWindow.ResetData(neWindowData));
 		}
 
@@ -48,11 +54,18 @@ namespace NeoEdit.Editor
 			set
 			{
 				editableData.neWindowDatas = value;
-				NEWindows = new OrderedHashSet<NEWindow>(value.Select(neWindowData => neWindowData.neWindow));
+				RecreateNEWindows();
 			}
 		}
 
+		void RecreateNEWindows() => NEWindows = new OrderedHashSet<NEWindow>(data.neWindowDatas.Select(neWindowData => neWindowData.neWindow));
+
 		public void SetNEWindowDatas(IEnumerable<NEWindowData> neWindowDatas) => NEWindowDatas = new OrderedHashSet<NEWindowData>(neWindowDatas);
+
+		void ResetResult()
+		{
+			result = null;
+		}
 
 		public NEGlobalResult GetResult()
 		{
@@ -72,12 +85,26 @@ namespace NeoEdit.Editor
 					CreateResult().SetDragFiles(result.DragFiles);
 			}
 
-			var nextNEWindowDatas = NEWindows.Select(x => x.data).ToList();
+			IEnumerable<NEWindow> nextNEWindowsItr = NEWindows;
+			if (result != null)
+			{
+				if (result.RemoveNEWindows != null)
+					nextNEWindowsItr = nextNEWindowsItr.Except(result.RemoveNEWindows);
+				if (result.AddNEWindows != null)
+					nextNEWindowsItr = nextNEWindowsItr.Concat(result.AddNEWindows);
+			}
+			var nextNEWindowDatas = nextNEWindowsItr.Select(x => x.data).ToList();
+
 			if (!NEWindowDatas.Matches(nextNEWindowDatas))
+			{
+				var oldNEWindows = NEWindows;
 				SetNEWindowDatas(nextNEWindowDatas);
+				NEWindows.Except(oldNEWindows).ForEach(neWindow => neWindow.Attach());
+				oldNEWindows.Except(NEWindows).ForEach(neWindow => neWindow.Detach());
+			}
 
 			var ret = result;
-			result = null;
+			ResetResult();
 			return ret;
 		}
 
@@ -89,9 +116,8 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		public void AddNewFiles(NEWindow neWindow) => SetNEWindowDatas(NEWindowDatas.Concat(neWindow.data));
-
-		public void RemoveFiles(NEWindow neWindow) => SetNEWindowDatas(NEWindowDatas.Except(neWindow.data));
+		public void AddNEWindow(NEWindow neWindow) => CreateResult().AddNEWindow(neWindow);
+		public void RemoveNEWindow(NEWindow neWindow) => CreateResult().RemoveNEWindow(neWindow);
 
 		public bool HandlesKey(ModifierKeys modifiers, Key key)
 		{
@@ -126,14 +152,15 @@ namespace NeoEdit.Editor
 				actions.Reverse().ForEach(actionStack.Push);
 		}
 
-		public void HandleCommand(INEWindow neWindow, INEWindowUI neWindowUI, ExecuteState executeState, Func<bool> skipDraw)
+		public void HandleCommand(INEWindow neWindow, ExecuteState executeState, Func<bool> skipDraw)
 		{
 			lock (actionStack)
 				actionStack.Push(executeState);
-			RunCommands(neWindow as NEWindow, neWindowUI, skipDraw);
+			RunCommands(neWindow as NEWindow, skipDraw);
+			CheckExit(executeState);
 		}
 
-		void RunCommands(NEWindow neWindow, INEWindowUI neWindowUI, Func<bool> skipDraw)
+		void RunCommands(NEWindow neWindow, Func<bool> skipDraw)
 		{
 			try
 			{
@@ -157,7 +184,7 @@ namespace NeoEdit.Editor
 					{
 						if (state.NEWindow.MacroVisualize)
 							state.NEWindow.RenderNEWindowUI();
-						state.NEWindowUI.SetMacroProgress((double)actionCount / total);
+						state.NEWindow.neWindowUI.SetMacroProgress((double)actionCount / total);
 					}
 
 					if (action.Command == NECommand.Macro_RepeatLastAction)
@@ -168,7 +195,7 @@ namespace NeoEdit.Editor
 					}
 
 					NESerialTracker.MoveNext();
-					EditorExecuteState.SetState(this, neWindow, neWindowUI, action);
+					EditorExecuteState.SetState(this, neWindow, action);
 
 					RunCommand();
 					if (state.MacroInclude)
@@ -180,7 +207,7 @@ namespace NeoEdit.Editor
 				if (!(ex is OperationCanceledException))
 				{
 					state.NEWindow?.RenderNEWindowUI();
-					state.NEWindowUI?.ShowExceptionMessage(ex);
+					state.NEWindow.neWindowUI?.ShowExceptionMessage(ex);
 				}
 				lock (actionStack)
 					actionStack.Clear();
@@ -189,7 +216,7 @@ namespace NeoEdit.Editor
 			{
 				if (!skipDraw())
 					state.NEWindow?.RenderNEWindowUI();
-				state.NEWindowUI?.SetMacroProgress(null);
+				state.NEWindow?.neWindowUI?.SetMacroProgress(null);
 				EditorExecuteState.ClearState();
 			}
 		}
@@ -211,7 +238,7 @@ namespace NeoEdit.Editor
 				if (timeNextAction)
 				{
 					timeNextAction = false;
-					state.NEWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {elapsed:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
+					state.NEWindow.neWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {elapsed:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
 				}
 
 				var result = state.NEGlobal.GetResult();
@@ -242,7 +269,28 @@ namespace NeoEdit.Editor
 			}
 			finally
 			{
-				state.NEWindowUI?.SetTaskRunnerProgress(null);
+				state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(null);
+			}
+		}
+
+		void CheckExit(ExecuteState state)
+		{
+			if (NEWindows.Any())
+				return;
+
+			if (((state.Configuration as Configuration_File_Exit)?.WindowClosed != true) || (!Settings.DontExitOnClose))
+				Environment.Exit(0);
+
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+			GC.Collect();
+
+			// Restart if memory usage is more than 1/2 GB
+			var process = Process.GetCurrentProcess();
+			if (process.PrivateMemorySize64 > (1 << 29))
+			{
+				Process.Start(Environment.GetCommandLineArgs()[0], $"-background -waitpid={process.Id}");
+				Environment.Exit(0);
 			}
 		}
 

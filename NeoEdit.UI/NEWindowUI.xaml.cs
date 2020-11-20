@@ -54,7 +54,7 @@ namespace NeoEdit.UI
 			Closing += OnClosing;
 		}
 
-		public void HandleCommand(ExecuteState state) => NEGlobalUI.HandleCommand(NEWindow, this, state);
+		public void HandleCommand(ExecuteState state) => NEGlobalUI.HandleCommand(NEWindow, state);
 
 		public void QueueActivateNEWindow()
 		{

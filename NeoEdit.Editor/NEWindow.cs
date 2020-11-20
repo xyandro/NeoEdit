@@ -14,6 +14,8 @@ namespace NeoEdit.Editor
 	{
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
 
+		public INEWindowUI neWindowUI { get; private set; }
+
 		int displayColumns;
 		public int DisplayColumns
 		{
@@ -32,13 +34,31 @@ namespace NeoEdit.Editor
 		public NEWindow(bool addEmpty = false)
 		{
 			data = new NEWindowData(this);
-			AllFileDatas = new OrderedHashSet<NEFileData>();
+			NEFileDatas = new OrderedHashSet<NEFileData>();
 			ActiveFiles = new OrderedHashSet<NEFile>();
 			WindowLayout = new WindowLayout(1, 1);
-			state.NEGlobal.AddNewFiles(this);
+			state.NEGlobal.AddNEWindow(this);
 
 			if (addEmpty)
-				AddNewFile(new NEFile());
+				AddNewNEFile(new NEFile());
+		}
+
+		bool attached = false;
+		public void Attach()
+		{
+			if (attached)
+				throw new Exception("Window already attached");
+			attached = true;
+			neWindowUI = INEWindowUIStatic.CreateNEWindowUI(this);
+		}
+
+		public void Detach()
+		{
+			if (!attached)
+				throw new Exception("Window not attached");
+			attached = false;
+			neWindowUI.CloseWindow();
+			neWindowUI = null;
 		}
 
 		IReadOnlyDictionary<INEFile, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
@@ -65,10 +85,10 @@ namespace NeoEdit.Editor
 		Dictionary<INEFile, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
 		{
 			var empty = new KeysAndValues(new List<string>(), kvIndex == 0);
-			var keysAndValuesMap = AllFiles.ToDictionary(x => x as INEFile, x => empty);
+			var keysAndValuesMap = NEFiles.ToDictionary(x => x as INEFile, x => empty);
 
 			if (keysAndValues[kvIndex].Count == 1)
-				AllFiles.ForEach(neFile => keysAndValuesMap[neFile] = keysAndValues[kvIndex][0]);
+				NEFiles.ForEach(neFile => keysAndValuesMap[neFile] = keysAndValues[kvIndex][0]);
 			else if (keysAndValues[kvIndex].Count == ActiveFiles.Count)
 				ActiveFiles.ForEach((neFile, index) => keysAndValuesMap[neFile] = keysAndValues[kvIndex][index]);
 
@@ -79,14 +99,14 @@ namespace NeoEdit.Editor
 		{
 			var renderParameters = new RenderParameters
 			{
-				AllFiles = ActiveOnly ? ActiveFiles : AllFiles,
+				AllFiles = ActiveOnly ? ActiveFiles : NEFiles,
 				ActiveFiles = ActiveFiles,
 				FocusedFile = Focused,
 				WindowLayout = WindowLayout,
 				StatusBar = GetStatusBar(),
 				MenuStatus = GetMenuStatus(),
 			};
-			state.NEWindowUI.Render(renderParameters);
+			state.NEWindow.neWindowUI?.Render(renderParameters);
 		}
 
 		Dictionary<string, bool?> GetMenuStatus()
@@ -145,13 +165,13 @@ namespace NeoEdit.Editor
 
 			var sw = Stopwatch.StartNew();
 
-			state.NEWindowUI.SetTaskRunnerProgress(0);
+			state.NEWindow.neWindowUI.SetTaskRunnerProgress(0);
 			try
 			{
 				if (!NEFile.PreExecute())
-					TaskRunner.Run(Execute, percent => state.NEWindowUI.SetTaskRunnerProgress(percent));
+					TaskRunner.Run(Execute, percent => state.NEWindow.neWindowUI.SetTaskRunnerProgress(percent));
 			}
-			finally { state.NEWindowUI.SetTaskRunnerProgress(null); }
+			finally { state.NEWindow.neWindowUI.SetTaskRunnerProgress(null); }
 
 			var elapsed = sw.ElapsedMilliseconds;
 
@@ -167,7 +187,7 @@ namespace NeoEdit.Editor
 
 		public int GetFileIndex(NEFile neFile, bool activeOnly = false)
 		{
-			var index = (activeOnly ? ActiveFiles : AllFiles).FindIndex(neFile);
+			var index = (activeOnly ? ActiveFiles : NEFiles).FindIndex(neFile);
 			if (index == -1)
 				throw new ArgumentException("Not found");
 			return index;
@@ -175,30 +195,30 @@ namespace NeoEdit.Editor
 
 		public void MovePrevNext(int offset, bool shiftDown, bool orderByActive = false)
 		{
-			if (AllFiles.Count() <= 1)
+			if (NEFiles.Count() <= 1)
 				return;
 
 			NEFile neFile;
 			if (Focused == null)
-				neFile = AllFiles.GetIndex(0);
+				neFile = NEFiles.GetIndex(0);
 			else
 			{
-				var neWindow = orderByActive ? AllFiles.OrderByDescending(x => x.LastActive).ToList() : AllFiles as IList<NEFile>;
+				var neWindow = orderByActive ? NEFiles.OrderByDescending(x => x.LastActive).ToList() : NEFiles as IList<NEFile>;
 				var index = neWindow.FindIndex(Focused) + offset;
 				if (index < 0)
-					index += AllFiles.Count();
-				if (index >= AllFiles.Count())
-					index -= AllFiles.Count();
+					index += NEFiles.Count();
+				if (index >= NEFiles.Count())
+					index -= NEFiles.Count();
 				neFile = neWindow[index];
 			}
 
-			SetActiveFiles(AllFiles.Where(file => (file == neFile) || ((shiftDown) && (ActiveFiles.Contains(file)))));
+			SetActiveFiles(NEFiles.Where(file => (file == neFile) || ((shiftDown) && (ActiveFiles.Contains(file)))));
 			Focused = neFile;
 		}
 
 		public bool GotoFile(string fileName, int? line, int? column, int? index)
 		{
-			var neFile = AllFiles.FirstOrDefault(x => x.FileName == fileName);
+			var neFile = NEFiles.FirstOrDefault(x => x.FileName == fileName);
 			if (neFile == null)
 				return false;
 			//Activate();
@@ -244,8 +264,8 @@ namespace NeoEdit.Editor
 
 			var status = new List<string>();
 			status.Add($"Active: {plural(ActiveFiles.Count, "file")}, {plural(ActiveFiles.Sum(neFile => neFile.Selections.Count), "selection")}, {ActiveFiles.Select(neFile => neFile.Selections.Count).DefaultIfEmpty(0).Min():n0} min / {ActiveFiles.Select(neFile => neFile.Selections.Count).DefaultIfEmpty(0).Max():n0} max");
-			status.Add($"Inactive: {plural(AllFiles.Except(ActiveFiles).Count(), "file")}, {plural(AllFiles.Except(ActiveFiles).Sum(neFile => neFile.Selections.Count), "selection")}");
-			status.Add($"Total: {plural(AllFiles.Count(), "file")}, {plural(AllFiles.Sum(neFile => neFile.Selections.Count), "selection")}");
+			status.Add($"Inactive: {plural(NEFiles.Except(ActiveFiles).Count(), "file")}, {plural(NEFiles.Except(ActiveFiles).Sum(neFile => neFile.Selections.Count), "selection")}");
+			status.Add($"Total: {plural(NEFiles.Count(), "file")}, {plural(NEFiles.Sum(neFile => neFile.Selections.Count), "selection")}");
 			status.Add($"Clipboard: {plural(NEClipboard.Current?.Count ?? 0, "file")}, {plural(NEClipboard.Current?.ChildCount ?? 0, "selection")}");
 			status.Add($"Keys/Values: {string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
 			return status;
@@ -255,13 +275,13 @@ namespace NeoEdit.Editor
 
 		public void SetupDiff()
 		{
-			for (var ctr = 0; ctr + 1 < AllFiles.Count; ctr += 2)
+			for (var ctr = 0; ctr + 1 < NEFiles.Count; ctr += 2)
 			{
-				AllFiles[ctr].DiffTarget = AllFiles[ctr + 1];
-				if (AllFiles[ctr].ContentType == ParserType.None)
-					AllFiles[ctr].ContentType = AllFiles[ctr + 1].ContentType;
-				if (AllFiles[ctr + 1].ContentType == ParserType.None)
-					AllFiles[ctr + 1].ContentType = AllFiles[ctr].ContentType;
+				NEFiles[ctr].DiffTarget = NEFiles[ctr + 1];
+				if (NEFiles[ctr].ContentType == ParserType.None)
+					NEFiles[ctr].ContentType = NEFiles[ctr + 1].ContentType;
+				if (NEFiles[ctr + 1].ContentType == ParserType.None)
+					NEFiles[ctr + 1].ContentType = NEFiles[ctr].ContentType;
 			}
 			SetLayout(new WindowLayout(maxColumns: 2));
 		}

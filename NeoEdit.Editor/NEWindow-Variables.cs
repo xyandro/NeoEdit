@@ -20,25 +20,34 @@ namespace NeoEdit.Editor
 
 		public void ResetData(NEWindowData data)
 		{
-			result = null;
+			var oldNEFiles = NEFiles;
+
+			ResetResult();
 			this.data = data;
-			SetAllFileDatas(AllFileDatas); // Will regenerate AllFiles
-			AllFileDatas.ForEach(neFileData => neFileData.neFile.ResetData(neFileData));
+			RecreateNEFiles();
+			NEFiles.Except(oldNEFiles).ForEach(neFile => neFile.Attach());
+			oldNEFiles.Except(NEFiles).ForEach(neFile => neFile.Detach());
+			NEFileDatas.ForEach(neFileData => neFileData.neFile.ResetData(neFileData));
 		}
 
-		public IReadOnlyOrderedHashSet<NEFile> AllFiles { get; private set; }
+		public IReadOnlyOrderedHashSet<NEFile> NEFiles { get; private set; }
 
-		public IReadOnlyOrderedHashSet<NEFileData> AllFileDatas
+		public IReadOnlyOrderedHashSet<NEFileData> NEFileDatas
 		{
-			get => data.allFileDatas;
+			get => data.neFileDatas;
 			set
 			{
-				editableData.allFileDatas = value;
-				AllFiles = new OrderedHashSet<NEFile>(value.Select(neFile => neFile.neFile));
+				editableData.neFileDatas = value;
+				RecreateNEFiles();
 			}
 		}
 
-		public void SetAllFileDatas(IEnumerable<NEFileData> neFileDatas) => AllFileDatas = new OrderedHashSet<NEFileData>(neFileDatas);
+		void RecreateNEFiles()
+		{
+			NEFiles = new OrderedHashSet<NEFile>(NEFileDatas.Select(neFile => neFile.neFile));
+		}
+
+		public void SetNEFileDatas(IEnumerable<NEFileData> neFileDatas) => NEFileDatas = new OrderedHashSet<NEFileData>(neFileDatas);
 
 		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles
 		{
@@ -89,7 +98,12 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		public void AddNewFile(NEFile neFile) => CreateResult().AddNewFile(neFile);
+		public void AddNewNEFile(NEFile neFile) => CreateResult().AddNewNEFile(neFile);
+
+		void ResetResult()
+		{
+			result = null;
+		}
 
 		public NEWindowResult GetResult()
 		{
@@ -97,21 +111,21 @@ namespace NeoEdit.Editor
 			List<KeysAndValues>[] setKeysAndValues = null;
 			List<string> dragFiles = null;
 
-			var nextAllFileDatas = new List<NEFileData>();
+			var nextNEFileDatas = new List<NEFileData>();
 			var newFileDatas = new List<NEFileData>();
-			foreach (var neFile in AllFiles)
+			foreach (var neFile in NEFiles)
 			{
 				var result = neFile.GetResult();
 				if (result == null)
 				{
-					nextAllFileDatas.Add(neFile.data);
+					nextNEFileDatas.Add(neFile.data);
 					continue;
 				}
 
 				if (result.Files == null)
-					nextAllFileDatas.Add(neFile.data);
+					nextNEFileDatas.Add(neFile.data);
 				else
-					nextAllFileDatas.AddRange(result.Files.ForEach(x => x.data));
+					nextNEFileDatas.AddRange(result.Files.ForEach(x => x.data));
 
 				if (result.NewFiles != null)
 					newFileDatas.AddRange(result.NewFiles.Select(x => x.data));
@@ -143,28 +157,31 @@ namespace NeoEdit.Editor
 				}
 			}
 
-			nextAllFileDatas.AddRange(newFileDatas);
+			nextNEFileDatas.AddRange(newFileDatas);
 
 			if (result != null)
 			{
-				if (result.NewFiles != null)
-					nextAllFileDatas.AddRange(result.NewFiles.ForEach(x => x.data));
+				if (result.NewNEFiles != null)
+					nextNEFileDatas.AddRange(result.NewNEFiles.ForEach(x => x.data));
 			}
 
-			if (!AllFileDatas.Matches(nextAllFileDatas))
+			if (!NEFileDatas.Matches(nextNEFileDatas))
 			{
-				var newlyAdded = nextAllFileDatas.Select(x => x.neFile).Except(AllFiles).ToList();
+				var newlyAdded = nextNEFileDatas.Select(x => x.neFile).Except(NEFiles).ToList();
 
-				SetAllFileDatas(nextAllFileDatas);
+				var oldNEFiles = NEFiles;
+				SetNEFileDatas(nextNEFileDatas);
+				NEFiles.Except(oldNEFiles).ForEach(neFile => neFile.Attach());
+				oldNEFiles.Except(NEFiles).ForEach(neFile => neFile.Detach());
 
 				if (newlyAdded.Any())
 					SetActiveFiles(newlyAdded);
 				else
 				{
-					SetActiveFiles(AllFiles.Intersect(ActiveFiles));
+					SetActiveFiles(NEFiles.Intersect(ActiveFiles));
 					if (!ActiveFiles.Any())
 					{
-						var newActive = AllFiles.OrderByDescending(file => file.LastActive).FirstOrDefault();
+						var newActive = NEFiles.OrderByDescending(file => file.LastActive).FirstOrDefault();
 						if (newActive != null)
 							SetActiveFile(newActive);
 					}
@@ -184,7 +201,7 @@ namespace NeoEdit.Editor
 				CreateResult().SetDragFiles(dragFiles);
 
 			var ret = result;
-			result = null;
+			ResetResult();
 			return ret;
 		}
 	}

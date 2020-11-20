@@ -408,7 +408,7 @@ namespace NeoEdit.Editor
 			Selections = sels.AsTaskRunner().Where(sel => roots.Contains(sel.str) == include).Select(sel => sel.range).ToList();
 		}
 
-		static void Configure_Files_Select_ByContent() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Select_ByContent(state.NEWindow.Focused.GetVariables());
+		static void Configure_Files_Select_ByContent() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Select_ByContent(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Files_Select_ByContent()
 		{
@@ -479,7 +479,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static void Configure_Files_Select_BySourceControlStatus() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Select_BySourceControlStatus();
+		static void Configure_Files_Select_BySourceControlStatus() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Select_BySourceControlStatus();
 
 		static bool PreExecute_Files_SelectGet_BySourceControlStatus()
 		{
@@ -498,7 +498,7 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Files_CopyMove(bool move) => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_CopyMove(state.NEWindow.Focused.GetVariables(), move);
+		static void Configure_Files_CopyMove(bool move) => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_CopyMove(state.NEWindow.Focused.GetVariables(), move);
 
 		void Execute_Files_CopyMove(bool move)
 		{
@@ -589,7 +589,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static void Configure_Files_Name_MakeAbsolute() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Name_MakeAbsoluteRelative(state.NEWindow.Focused.GetVariables(), true, true);
+		static void Configure_Files_Name_MakeAbsolute() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Name_MakeAbsoluteRelative(state.NEWindow.Focused.GetVariables(), true, true);
 
 		void Execute_Files_Name_MakeAbsolute()
 		{
@@ -598,7 +598,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(GetSelectionStrings().Select((str, index) => new Uri(new Uri(results[index] + (result.Type == Configuration_Files_Name_MakeAbsoluteRelative.ResultType.Directory ? "\\" : "")), str).LocalPath).ToList());
 		}
 
-		static void Configure_Files_Name_MakeRelative() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Name_MakeAbsoluteRelative(state.NEWindow.Focused.GetVariables(), false, true);
+		static void Configure_Files_Name_MakeRelative() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Name_MakeAbsoluteRelative(state.NEWindow.Focused.GetVariables(), false, true);
 
 		void Execute_Files_Name_MakeRelative()
 		{
@@ -668,7 +668,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Files_Get_Version_Assembly() => ReplaceSelections(Selections.AsTaskRunner().Select(range => FileName.RelativeChild(Text.GetString(range))).Select(file => AssemblyName.GetAssemblyName(file).Version.ToString()).ToList());
 
-		static void Configure_Files_Get_Hash() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Get_Hash();
+		static void Configure_Files_Get_Hash() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Get_Hash();
 
 		void Execute_Files_Get_Hash()
 		{
@@ -694,10 +694,10 @@ namespace NeoEdit.Editor
 			var errors = new List<string>();
 			ReplaceSelections(dirs.AsTaskRunner().Select((dir, index, progress) => string.Join(Text.DefaultEnding, GetDirectoryContents(dir, recursive, errors, progress)), x => 100000).ToList());
 			if (errors.Any())
-				state.NEWindowUI.RunDialog_ShowMessage("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
+				state.NEWindow.neWindowUI.RunDialog_ShowMessage("Error", $"The following error(s) occurred:\n{string.Join("\n", errors)}");
 		}
 
-		static void Configure_Files_Get_Content() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Get_Content();
+		static void Configure_Files_Get_Content() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Get_Content();
 
 		void Execute_Files_Get_Content()
 		{
@@ -710,7 +710,7 @@ namespace NeoEdit.Editor
 			var vars = state.NEWindow.Focused.GetVariables();
 			var sizes = state.NEWindow.Focused.RelativeSelectedFiles().AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Set_Size(vars);
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Set_Size(vars);
 		}
 
 		void Execute_Files_Set_Size()
@@ -724,7 +724,7 @@ namespace NeoEdit.Editor
 			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
-		static void Configure_Files_Set_Time_Various() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Set_Time_Various(state.NEWindow.Focused.GetVariables(), $@"""{DateTime.Now}""");
+		static void Configure_Files_Set_Time_Various() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Set_Time_Various(state.NEWindow.Focused.GetVariables(), $@"""{DateTime.Now}""");
 
 		void Execute_Files_Set_Time_Various(TimestampType type)
 		{
@@ -776,7 +776,7 @@ namespace NeoEdit.Editor
 						current[availAttr] = null;
 				}
 
-			state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Set_Attributes(current);
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Set_Attributes(current);
 		}
 
 		void Execute_Files_Set_Attributes()
@@ -793,7 +793,7 @@ namespace NeoEdit.Editor
 				new FileInfo(file).Attributes = new FileInfo(file).Attributes & ~andMask | orMask;
 		}
 
-		static void Configure_Files_Set_Content() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Set_Content(state.NEWindow.Focused.GetVariables(), state.NEWindow.Focused.CodePage);
+		static void Configure_Files_Set_Content() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Set_Content(state.NEWindow.Focused.GetVariables(), state.NEWindow.Focused.CodePage);
 
 		void Execute_Files_Set_Content()
 		{
@@ -810,7 +810,7 @@ namespace NeoEdit.Editor
 				File.WriteAllBytes(filename[ctr], Coder.StringToBytes(data[ctr], result.CodePage, true));
 		}
 
-		static void Configure_Files_Set_Encoding() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Set_Encoding();
+		static void Configure_Files_Set_Encoding() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Set_Encoding();
 
 		void Execute_Files_Set_Encoding()
 		{
@@ -840,7 +840,7 @@ namespace NeoEdit.Editor
 				Directory.CreateDirectory(file);
 		}
 
-		static void Configure_Files_Compress() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_CompressDecompress(true);
+		static void Configure_Files_Compress() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_CompressDecompress(true);
 
 		void Execute_Files_Compress()
 		{
@@ -850,7 +850,7 @@ namespace NeoEdit.Editor
 				.ForAll((fileName, index, progress) => Compressor.Compress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		static void Configure_Files_Decompress() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_CompressDecompress(false);
+		static void Configure_Files_Decompress() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_CompressDecompress(false);
 
 		void Execute_Files_Decompress()
 		{
@@ -860,7 +860,7 @@ namespace NeoEdit.Editor
 				.ForAll((fileName, index, progress) => Compressor.Decompress(fileName, result.CompressorType, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		static void Configure_Files_Encrypt() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_EncryptDecrypt(true);
+		static void Configure_Files_Encrypt() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_EncryptDecrypt(true);
 
 		void Execute_Files_Encrypt()
 		{
@@ -870,7 +870,7 @@ namespace NeoEdit.Editor
 				.ForAll((fileName, index, progress) => Cryptor.Encrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		static void Configure_Files_Decrypt() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_EncryptDecrypt(false);
+		static void Configure_Files_Decrypt() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_EncryptDecrypt(false);
 
 		void Execute_Files_Decrypt()
 		{
@@ -880,7 +880,7 @@ namespace NeoEdit.Editor
 				.ForAll((fileName, index, progress) => Cryptor.Decrypt(fileName, result.CryptorType, result.Key, progress), fileName => new FileInfo(fileName).Length);
 		}
 
-		static void Configure_Files_Sign() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Sign();
+		static void Configure_Files_Sign() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Sign();
 
 		void Execute_Files_Sign()
 		{
@@ -915,7 +915,7 @@ namespace NeoEdit.Editor
 		{
 			var variables = state.NEWindow.Focused.GetVariables();
 			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
-			state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Advanced_SplitFiles(variables);
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Advanced_SplitFiles(variables);
 		}
 
 		void Execute_Files_Advanced_SplitFiles()
@@ -933,7 +933,7 @@ namespace NeoEdit.Editor
 					fileName => new FileInfo(fileName).Length);
 		}
 
-		static void Configure_Files_Advanced_CombineFiles() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Files_Advanced_CombineFiles(state.NEWindow.Focused.GetVariables());
+		static void Configure_Files_Advanced_CombineFiles() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Advanced_CombineFiles(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Files_Advanced_CombineFiles()
 		{
