@@ -847,12 +847,12 @@
     <Compile Include="Highlighting\HighlightJSON.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
-    <Page Include="NEFileWindow.xaml">
+    <Page Include="NEFileUI.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="NEFileWindow.xaml.cs">
-      <DependentUpon>NEFileWindow.xaml</DependentUpon>
+    <Compile Include="NEFileUI.xaml.cs">
+      <DependentUpon>NEFileUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="NEGlobalUI.cs" />
     <Page Include="NEMenu.xaml">

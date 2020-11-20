@@ -212,12 +212,12 @@ namespace NeoEdit.UI
 			return fileLabel;
 		}
 
-		readonly List<NEFileWindow> fileWindows = new List<NEFileWindow>();
-		void SetFileWindowCount(int desiredCount)
+		readonly List<NEFileUI> neFileUIs = new List<NEFileUI>();
+		void SetNEFileUICount(int desiredCount)
 		{
-			while (fileWindows.Count < desiredCount)
-				fileWindows.Add(new NEFileWindow(this));
-			fileWindows.RemoveRange(desiredCount, fileWindows.Count - desiredCount);
+			while (neFileUIs.Count < desiredCount)
+				neFileUIs.Add(new NEFileUI(this));
+			neFileUIs.RemoveRange(desiredCount, neFileUIs.Count - desiredCount);
 		}
 
 		void OnStatusBarRender(object s, DrawingContext dc)

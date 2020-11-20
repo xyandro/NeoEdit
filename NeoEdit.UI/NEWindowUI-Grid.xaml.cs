@@ -25,7 +25,7 @@ namespace NeoEdit.UI
 			if (!lastGrid)
 				return;
 
-			DisconnectFileWindows();
+			DisconnectNEFileUIs();
 			canvas.Children.Clear();
 
 			gridColumns = gridRows = 0;
@@ -40,14 +40,14 @@ namespace NeoEdit.UI
 			lastWindowLayout = new WindowLayout();
 		}
 
-		void DisconnectFileWindows()
+		void DisconnectNEFileUIs()
 		{
-			foreach (var fileWindow in fileWindows)
+			foreach (var neFileUI in neFileUIs)
 			{
-				if (fileWindow.NEFile == null)
+				if (neFileUI.NEFile == null)
 					continue;
-				(fileWindow.Parent as DockPanel).Children.Clear();
-				fileWindow.NEFile = null;
+				(neFileUI.Parent as DockPanel).Children.Clear();
+				neFileUI.NEFile = null;
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace NeoEdit.UI
 
 				lastGridAllFiles = null; // Make everything else calculate
 
-				SetFileWindowCount(gridColumns * gridRows);
+				SetNEFileUICount(gridColumns * gridRows);
 			}
 		}
 
@@ -126,14 +126,14 @@ namespace NeoEdit.UI
 			if ((lastGridAllFiles == renderParameters.AllFiles) && (lastGridScrollBarValue == scrollBar.Value))
 			{
 				gridFileLabels.ForEach(fileLabel => fileLabel.Refresh(renderParameters));
-				fileWindows.ForEach(fileWindow => fileWindow.DrawAll());
+				neFileUIs.ForEach(neFileUI => neFileUI.DrawAll());
 				return;
 			}
 
 			canvas.Children.Clear();
 			gridFileLabels = new List<NEFileLabel>();
-			DisconnectFileWindows();
-			var fileWindowsIndex = 0;
+			DisconnectNEFileUIs();
+			var neFileUIIndex = 0;
 			var fileIndex = (int)(scrollBar.Value + 0.5) * gridColumns;
 			for (var row = 0; row < gridRows; ++row)
 				for (var column = 0; column < gridColumns; ++column)
@@ -153,17 +153,17 @@ namespace NeoEdit.UI
 					Canvas.SetLeft(border, column * gridWidth);
 					Canvas.SetTop(border, top);
 
-					var fileWindow = fileWindows[fileWindowsIndex++];
-					fileWindow.NEFile = renderParameters.AllFiles.GetIndex(fileIndex++);
+					var neFileUI = neFileUIs[neFileUIIndex++];
+					neFileUI.NEFile = renderParameters.AllFiles.GetIndex(fileIndex++);
 					var dockPanel = new DockPanel { AllowDrop = true };
-					dockPanel.Drop += (s, e) => OnDrop(e, fileWindow.NEFile);
-					var fileLabel = CreateFileLabel(fileWindow.NEFile);
+					dockPanel.Drop += (s, e) => OnDrop(e, neFileUI.NEFile);
+					var fileLabel = CreateFileLabel(neFileUI.NEFile);
 					DockPanel.SetDock(fileLabel, Dock.Top);
 					dockPanel.Children.Add(fileLabel);
-					fileWindow.SetValue(DockPanel.DockProperty, Dock.Bottom);
-					fileWindow.FocusVisualStyle = null;
-					dockPanel.Children.Add(fileWindow);
-					fileWindow.DrawAll();
+					neFileUI.SetValue(DockPanel.DockProperty, Dock.Bottom);
+					neFileUI.FocusVisualStyle = null;
+					dockPanel.Children.Add(neFileUI);
+					neFileUI.DrawAll();
 
 					border.Child = dockPanel;
 

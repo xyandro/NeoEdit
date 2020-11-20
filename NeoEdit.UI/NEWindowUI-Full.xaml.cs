@@ -34,7 +34,7 @@ namespace NeoEdit.UI
 			fullFileLabelsPanel = null;
 			fullContentGrid.Children.Clear();
 			fullContentGrid = null;
-			fileWindows[0].NEFile = null;
+			neFileUIs[0].NEFile = null;
 			fullFileLabelsWidth = 0;
 			fullFileLabels = null;
 
@@ -68,7 +68,7 @@ namespace NeoEdit.UI
 			if (lastFull)
 				return;
 
-			SetFileWindowCount(1);
+			SetNEFileUICount(1);
 
 			if (scrollBarBorder.Visibility != Visibility.Collapsed)
 			{
@@ -200,7 +200,7 @@ namespace NeoEdit.UI
 
 		void SetFullContent()
 		{
-			fileWindows[0].NEFile = renderParameters.FocusedFile;
+			neFileUIs[0].NEFile = renderParameters.FocusedFile;
 			if (renderParameters.FocusedFile == null)
 			{
 				if (lastFullFocused != null)
@@ -209,10 +209,10 @@ namespace NeoEdit.UI
 			else
 			{
 				if (lastFullFocused == null)
-					fullContentGrid.Children.Add(fileWindows[0]);
+					fullContentGrid.Children.Add(neFileUIs[0]);
 			}
 
-			fileWindows[0].DrawAll();
+			neFileUIs[0].DrawAll();
 		}
 	}
 }

@@ -13,7 +13,7 @@ using NeoEdit.UI.Highlighting;
 
 namespace NeoEdit.UI
 {
-	partial class NEFileWindow
+	partial class NEFileUI
 	{
 		internal static readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
 		internal static readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
@@ -36,7 +36,7 @@ namespace NeoEdit.UI
 		internal static readonly Brush highlightRowBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
 		internal static readonly Pen lightlightRowPen = new Pen(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255)), 1);
 
-		static NEFileWindow()
+		static NEFileUI()
 		{
 			caretBrush.Freeze();
 			selectionBrush.Freeze();
@@ -55,7 +55,7 @@ namespace NeoEdit.UI
 		const double Spacing = 2;
 		static double LineHeight => Font.FontSize + Spacing;
 
-		internal NEFileWindow(NEWindowUI filesWindow)
+		internal NEFileUI(NEWindowUI filesWindow)
 		{
 			FilesWindow = filesWindow;
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
