@@ -138,8 +138,14 @@
 			<controls:NEMenuItem Header="Ro_tate paste" CommandEnum="Edit_Paste_RotatePaste" ToolTip="Paste clipboard values; if there are extra selections, rotate clipboard values"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="_Undo" CommandEnum="Edit_Undo" ToolTip="Undo last change"/>
-		<controls:NEMenuItem Header="_Redo" CommandEnum="Edit_Redo" ToolTip="Redo last change"/>
+		<MenuItem Header="_Undo">
+			<controls:NEMenuItem Header="_Text" CommandEnum="Edit_Undo_Text" ToolTip="Undo last text change"/>
+			<controls:NEMenuItem Header="_Step" CommandEnum="Edit_Undo_Step" ToolTip="Undo last step"/>
+		</MenuItem>
+		<MenuItem Header="_Redo">
+			<controls:NEMenuItem Header="_Text" CommandEnum="Edit_Redo_Text" ToolTip="Redo last text change"/>
+			<controls:NEMenuItem Header="_Step" CommandEnum="Edit_Redo_Step" ToolTip="Redo last step"/>
+		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="R_epeat" CommandEnum="Edit_Repeat" ToolTip="Repeat the currently selected text (include the newline in selection if desired)"/>
 		<controls:NEMenuItem Header="Ro_tate" CommandEnum="Edit_Rotate" ToolTip="Rotate selections (move them all up/down n items)"/>

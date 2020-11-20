@@ -40,6 +40,9 @@ namespace NeoEdit.Editor
 		public bool isDiff;
 		public NEFile diffTarget;
 
+		public NEFileData undo;
+		public NEFileData redo;
+
 		public NEFileData(NEFile neFile)
 		{
 			this.neFile = neFile;
@@ -48,7 +51,7 @@ namespace NeoEdit.Editor
 
 		public NEFileData Clone()
 		{
-			var fileState = new NEFileData(neFile)
+			var neFileData = new NEFileData(neFile)
 			{
 				text = text,
 				currentSelection = currentSelection,
@@ -80,9 +83,12 @@ namespace NeoEdit.Editor
 				diffTarget = diffTarget,
 			};
 
-			regions.CopyTo(fileState.regions, 0);
+			neFileData.undo = this;
+			redo = neFileData;
 
-			return fileState;
+			regions.CopyTo(neFileData.regions, 0);
+
+			return neFileData;
 		}
 	}
 }

@@ -77,7 +77,7 @@
 					Now we have a problem. Since the "What to sort" was set to "Selections", only the selections were sorted, and the first and last names no longer match.
 				</Paragraph>
 				<Paragraph>
-					This isn't what we want, so click <tutorial:TutorialCommand CommandEnum="Edit_Undo"/>
+					This isn't what we want, so click <tutorial:TutorialCommand CommandEnum="Edit_Undo_Text"/>
 				</Paragraph>
 			</ListItem>
 			<ListItem>

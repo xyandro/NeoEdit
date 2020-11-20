@@ -294,12 +294,32 @@ namespace NeoEdit.Editor
 			ReplaceSelections(clipboardStrings, highlight);
 		}
 
-		void Execute_Edit_Undo()
+		void Execute_Edit_Undo_Text()
 		{
+			var useData = data;
+			while ((useData.undo != null) && (useData.text == Text))
+				useData = useData.undo;
+			ResetData(useData);
 		}
 
-		void Execute_Edit_Redo()
+		void Execute_Edit_Undo_Step()
 		{
+			if (data.undo != null)
+				ResetData(data.undo);
+		}
+
+		void Execute_Edit_Redo_Text()
+		{
+			var useData = data;
+			while ((useData.redo != null) && (useData.text == Text))
+				useData = useData.redo;
+			ResetData(useData);
+		}
+
+		void Execute_Edit_Redo_Step()
+		{
+			if (data.redo != null)
+				ResetData(data.redo);
 		}
 
 		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.Selections.Count == 1, state.NEWindow.Focused.GetVariables());

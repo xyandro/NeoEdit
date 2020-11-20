@@ -620,8 +620,10 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Cut: Execute_Edit_CopyCut(true); break;
 				case NECommand.Edit_Paste_Paste: Execute_Edit_Paste_PasteRotatePaste(state.ShiftDown, false); break;
 				case NECommand.Edit_Paste_RotatePaste: Execute_Edit_Paste_PasteRotatePaste(true, true); break;
-				case NECommand.Edit_Undo: Execute_Edit_Undo(); break;
-				case NECommand.Edit_Redo: Execute_Edit_Redo(); break;
+				case NECommand.Edit_Undo_Text: Execute_Edit_Undo_Text(); break;
+				case NECommand.Edit_Undo_Step: Execute_Edit_Undo_Step(); break;
+				case NECommand.Edit_Redo_Text: Execute_Edit_Redo_Text(); break;
+				case NECommand.Edit_Redo_Step: Execute_Edit_Redo_Step(); break;
 				case NECommand.Edit_Repeat: Execute_Edit_Repeat(); break;
 				case NECommand.Edit_Rotate: Execute_Edit_Rotate(); break;
 				case NECommand.Edit_Expression_Expression: Execute_Edit_Expression_Expression(); break;

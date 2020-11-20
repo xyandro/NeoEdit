@@ -53,7 +53,7 @@
 		<List>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="Edit_Undo"/> .
+					Click <tutorial:TutorialCommand CommandEnum="Edit_Undo_Text"/> .
 				</Paragraph>
 				<Paragraph>
 					This will get back to the colors.
