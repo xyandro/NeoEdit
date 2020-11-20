@@ -157,7 +157,6 @@
     <Compile Include="Enums\JumpByType.cs" />
     <Compile Include="Enums\MessageOptions.cs" />
     <Compile Include="Enums\ParserType.cs" />
-    <Compile Include="Enums\ReplaceType.cs" />
     <Compile Include="Enums\SortScope.cs" />
     <Compile Include="Enums\SortType.cs" />
     <Compile Include="Enums\TimestampType.cs" />

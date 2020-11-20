@@ -11,7 +11,6 @@ namespace NeoEdit.Editor
 		public readonly NEFile neFile;
 
 		public NEText text;
-		public UndoRedo undoRedo;
 		public int currentSelection;
 		public IReadOnlyList<Range> selections;
 		public IReadOnlyList<Range>[] regions;
@@ -52,7 +51,6 @@ namespace NeoEdit.Editor
 			var fileState = new NEFileData(neFile)
 			{
 				text = text,
-				undoRedo = undoRedo,
 				currentSelection = currentSelection,
 				selections = selections,
 				displayName = displayName,

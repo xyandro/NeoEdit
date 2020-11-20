@@ -443,7 +443,7 @@ namespace NeoEdit.Editor
 						if (Selections.AsTaskRunner().All(range => (!range.HasSelection) || (Text.GetPositionLine(range.Start) == Text.GetPositionLine(Math.Max(range.Start, range.End - 1)))))
 						{
 							if (!state.ShiftDown)
-								ReplaceSelections("\t", false, tryJoinUndo: true);
+								ReplaceSelections("\t", false);
 							else
 							{
 								var neWindow = Selections.AsTaskRunner().Where(range => (range.Start != 0) && (Text.GetString(range.Start - 1, 1) == "\t")).Select(range => Range.FromIndex(range.Start - 1, 1)).ToList();
@@ -475,13 +475,13 @@ namespace NeoEdit.Editor
 					}
 					break;
 				case Key.Enter:
-					ReplaceSelections(Text.DefaultEnding, false, tryJoinUndo: true);
+					ReplaceSelections(Text.DefaultEnding, false);
 					break;
 				default: throw new OperationCanceledException();
 			}
 		}
 
-		void Execute_Internal_Text() => ReplaceSelections(state.Text, false, tryJoinUndo: true);
+		void Execute_Internal_Text() => ReplaceSelections(state.Text, false);
 
 		void Execute_Internal_SetBinaryValue()
 		{

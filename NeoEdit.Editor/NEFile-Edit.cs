@@ -296,42 +296,10 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Undo()
 		{
-			UndoRedo.UndoRedoStep step;
-			(UndoRedo, step) = UndoRedo.GetUndo();
-			if (step == null)
-				return;
-
-			Replace(step.ranges, step.text, ReplaceType.Undo);
-
-			var offset = 0;
-			var sels = new List<Range>();
-			for (var ctr = 0; ctr < step.ranges.Count; ++ctr)
-			{
-				sels.Add(Range.FromIndex(step.ranges[ctr].Start + offset, step.text[ctr].Length));
-				offset += step.text[ctr].Length - step.ranges[ctr].Length;
-			}
-
-			Selections = sels;
 		}
 
 		void Execute_Edit_Redo()
 		{
-			UndoRedo.UndoRedoStep step;
-			(UndoRedo, step) = UndoRedo.GetRedo();
-			if (step == null)
-				return;
-
-			Replace(step.ranges, step.text, ReplaceType.Redo);
-
-			var offset = 0;
-			var sels = new List<Range>();
-			for (var ctr = 0; ctr < step.ranges.Count; ++ctr)
-			{
-				sels.Add(Range.FromIndex(step.ranges[ctr].Start + offset, step.text[ctr].Length));
-				offset += step.text[ctr].Length - step.ranges[ctr].Length;
-			}
-
-			Selections = sels;
 		}
 
 		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.Selections.Count == 1, state.NEWindow.Focused.GetVariables());

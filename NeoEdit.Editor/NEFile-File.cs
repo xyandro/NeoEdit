@@ -245,7 +245,7 @@ namespace NeoEdit.Editor
 			var selections = Selections.ToList();
 			var regions = Enumerable.Range(1, 9).ToDictionary(index => index, index => GetRegions(index));
 
-			OpenFile(FileName, DisplayName, keepUndo: true);
+			OpenFile(FileName, DisplayName);
 
 			Func<IReadOnlyList<Range>, IReadOnlyList<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(0, Math.Min(range.Cursor, Text.Length)), Math.Max(0, Math.Min(range.Anchor, Text.Length)))).ToList();
 			Selections = reformatRanges(selections);

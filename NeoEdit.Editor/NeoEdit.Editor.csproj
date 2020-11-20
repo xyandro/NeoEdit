@@ -260,7 +260,6 @@
     <Compile Include="Searchers\StringSearcher.cs" />
     <Compile Include="Searchers\StringsSearcher.cs" />
     <Compile Include="ShutdownData.cs" />
-    <Compile Include="UndoRedo.cs" />
     <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>
   <ItemGroup>

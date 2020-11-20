@@ -29,7 +29,6 @@ namespace NeoEdit.Editor
 				SetRegions(region, new List<Range>());
 			ViewBinaryCodePages = new HashSet<Coder.CodePage>(Coder.DefaultCodePages);
 			StrictParsing = true;
-			UndoRedo = new UndoRedo();
 
 			fileName = fileName?.Trim('"');
 			this.shutdownData = shutdownData;
@@ -97,11 +96,11 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		void ReplaceSelections(string str, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false) => ReplaceSelections(Enumerable.Repeat(str, Selections.Count).ToList(), highlight, replaceType, tryJoinUndo);
+		void ReplaceSelections(string str, bool highlight = true) => ReplaceSelections(Enumerable.Repeat(str, Selections.Count).ToList(), highlight);
 
-		void ReplaceSelections(IReadOnlyList<string> strs, bool highlight = true, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		void ReplaceSelections(IReadOnlyList<string> strs, bool highlight = true)
 		{
-			Replace(Selections, strs, replaceType, tryJoinUndo);
+			Replace(Selections, strs);
 
 			if (highlight)
 				Selections = Selections.AsTaskRunner().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList();
@@ -109,32 +108,12 @@ namespace NeoEdit.Editor
 				Selections = Selections.AsTaskRunner().Select(range => new Range(range.End)).ToList();
 		}
 
-		void Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs = null, ReplaceType replaceType = ReplaceType.Normal, bool tryJoinUndo = false)
+		void Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs = null)
 		{
 			if (strs == null)
 				strs = Enumerable.Repeat("", ranges.Count).ToList();
 			if (ranges.Count != strs.Count)
 				throw new Exception("Invalid string count");
-
-			var undoRanges = new List<Range>();
-			var undoText = new List<string>();
-
-			var change = 0;
-			for (var ctr = 0; ctr < ranges.Count; ++ctr)
-			{
-				var undoRange = Range.FromIndex(ranges[ctr].Start + change, strs[ctr].Length);
-				undoRanges.Add(undoRange);
-				undoText.Add(Text.GetString(ranges[ctr]));
-				change = undoRange.End - ranges[ctr].End;
-			}
-
-			var textCanvasUndoRedo = new UndoRedo.UndoRedoStep(undoRanges, undoText, tryJoinUndo);
-			switch (replaceType)
-			{
-				case ReplaceType.Undo: UndoRedo = UndoRedo.AddUndone(textCanvasUndoRedo); break;
-				case ReplaceType.Redo: UndoRedo = UndoRedo.AddRedone(textCanvasUndoRedo); break;
-				case ReplaceType.Normal: UndoRedo = UndoRedo.AddUndo(textCanvasUndoRedo, IsModified); break;
-			}
 
 			Text = Text.Replace(ranges, strs);
 			SetModifiedFlag();
@@ -1552,7 +1531,7 @@ namespace NeoEdit.Editor
 				Execute_File_Save_SaveAll();
 		}
 
-		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, bool keepUndo = false)
+		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null)
 		{
 			SetFileName(fileName);
 			if (ContentType == ParserType.None)
@@ -1587,8 +1566,6 @@ namespace NeoEdit.Editor
 			if ((!isModified) && ((bytes.Length >> 20) < 50))
 				isModified = !Coder.CanExactlyEncode(bytes, CodePage);
 
-			if (!keepUndo)
-				UndoRedo = UndoRedo.Create();
 			SetModifiedFlag(isModified);
 		}
 

@@ -31,12 +31,6 @@ namespace NeoEdit.Editor
 			set => editableData.text = value;
 		}
 
-		UndoRedo UndoRedo
-		{
-			get => data.undoRedo;
-			set => editableData.undoRedo = value;
-		}
-
 		bool IsDiff
 		{
 			get => data.isDiff;
