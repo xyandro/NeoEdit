@@ -126,5 +126,7 @@ namespace NeoEdit.Editor
 		public bool StopTasks() => state.NEWindow.StopTasks();
 
 		public bool KillTasks() => state.NEWindow.KillTasks();
+
+		public static void ReplaceExecuteState(ExecuteState executeState) => EditorExecuteState.SetState(state.NEGlobal, state.NEWindow, state.NEWindowUI, executeState);
 	}
 }

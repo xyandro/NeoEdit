@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
@@ -13,6 +14,8 @@ namespace NeoEdit.Editor
 {
 	public partial class NEWindow : INEWindow
 	{
+		static readonly Dictionary<NECommand, bool> macroInclude = Helpers.GetValues<NECommand>().ToDictionary(command => command, command => typeof(NECommand).GetField(command.ToString()).GetCustomAttribute<NoMacroAttribute>() == null);
+
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
 
 		int displayColumns;
@@ -31,7 +34,7 @@ namespace NeoEdit.Editor
 		public DateTime LastActivated { get; set; }
 
 		public bool timeNextAction;
-		MacroAction lastAction;
+		ExecuteState lastAction;
 
 		public NEWindow(bool addEmpty = false)
 		{
@@ -190,7 +193,7 @@ namespace NeoEdit.Editor
 					state.NEWindowUI.SetMacroProgress((double)stepIndex / macro.Actions.Count);
 				}
 
-				macro.Actions[stepIndex++].SetExecuteState();
+				NEGlobal.ReplaceExecuteState(macro.Actions[stepIndex++]);
 				if (!RunCommand(true))
 				{
 					playingMacro = null;
@@ -222,7 +225,7 @@ namespace NeoEdit.Editor
 				{
 					if (lastAction == null)
 						throw new Exception("No last action available");
-					lastAction.SetExecuteState();
+					NEGlobal.ReplaceExecuteState(lastAction);
 					inMacro = true;
 				}
 
@@ -249,11 +252,10 @@ namespace NeoEdit.Editor
 					state.NEWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
 				}
 
-				var action = MacroAction.GetMacroAction();
-				if (action != null)
+				if (macroInclude[state.Command])
 				{
-					lastAction = action;
-					recordingMacro?.AddAction(action);
+					lastAction = new ExecuteState(state);
+					recordingMacro?.AddAction(lastAction);
 				}
 
 				var result = state.NEGlobal.GetResult();

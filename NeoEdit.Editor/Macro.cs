@@ -9,10 +9,10 @@ namespace NeoEdit.Editor
 {
 	public class Macro
 	{
-		readonly List<MacroAction> actions = new List<MacroAction>();
-		public IReadOnlyList<MacroAction> Actions => actions;
+		readonly List<ExecuteState> actions = new List<ExecuteState>();
+		public IReadOnlyList<ExecuteState> Actions => actions;
 
-		public void AddAction(MacroAction state)
+		public void AddAction(ExecuteState state)
 		{
 			var last = actions.LastOrDefault();
 			if ((state.Command == NECommand.Internal_Text) && (last?.Command == NECommand.Internal_Text))

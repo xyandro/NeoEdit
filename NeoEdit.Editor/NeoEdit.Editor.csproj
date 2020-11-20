@@ -168,7 +168,6 @@
     <Compile Include="KeysAndValues.cs" />
     <Compile Include="LCS.cs" />
     <Compile Include="Macro.cs" />
-    <Compile Include="MacroAction.cs" />
     <Compile Include="Models\AnswerResult.cs" />
     <Compile Include="NEFile-Content.cs">
       <DependentUpon>NEFile.cs</DependentUpon>
