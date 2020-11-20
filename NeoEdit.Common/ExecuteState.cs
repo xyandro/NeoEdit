@@ -1,10 +1,15 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Input;
 using NeoEdit.Common.Configuration;
 
 namespace NeoEdit.Common
 {
 	public class ExecuteState
 	{
+		static readonly Dictionary<NECommand, bool> macroInclude = Helpers.GetValues<NECommand>().ToDictionary(command => command, command => typeof(NECommand).GetField(command.ToString()).GetCustomAttribute<NoMacroAttribute>() == null);
+
 		public NECommand Command;
 		public bool ShiftDown;
 		public bool ControlDown;
@@ -13,6 +18,8 @@ namespace NeoEdit.Common
 		public Key Key;
 		public string Text;
 		public IConfiguration Configuration;
+
+		public bool MacroInclude => macroInclude[Command];
 
 		public ExecuteState(NECommand command)
 		{

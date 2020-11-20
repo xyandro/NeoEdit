@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -113,20 +116,155 @@ namespace NeoEdit.Editor
 			return false;
 		}
 
+		readonly Stack<ExecuteState> actionStack = new Stack<ExecuteState>();
+		ExecuteState lastAction;
+		bool timeNextAction;
+
+		public void QueueActions(IEnumerable<ExecuteState> actions)
+		{
+			lock (actionStack)
+				actions.Reverse().ForEach(actionStack.Push);
+		}
+
 		public void HandleCommand(INEWindow neWindow, INEWindowUI neWindowUI, ExecuteState executeState, Func<bool> skipDraw)
 		{
-			EditorExecuteState.SetState(this, neWindow as NEWindow, neWindowUI, executeState);
-			switch (state.Command)
+			lock (actionStack)
+				actionStack.Push(executeState);
+			RunCommands(neWindow as NEWindow, neWindowUI, skipDraw);
+		}
+
+		void RunCommands(NEWindow neWindow, INEWindowUI neWindowUI, Func<bool> skipDraw)
+		{
+			try
 			{
-				case NECommand.Internal_CommandLine: NEFile.PreExecute_Internal_CommandLine(); break;
-				default: state.NEWindow.HandleCommand(state, skipDraw); break;
+				var actionCount = -2; // -1 because it preincrements, and -1 so it doesn't count the first step (which could queue a macro)
+
+				while (true)
+				{
+					++actionCount;
+
+					int actionStackCount;
+					ExecuteState action;
+					lock (actionStack)
+					{
+						actionStackCount = actionStack.Count;
+						if (actionStackCount == 0)
+							break;
+						action = actionStack.Pop();
+					}
+					var total = actionStackCount + actionCount;
+					if (total > 0)
+					{
+						if (state.NEWindow.MacroVisualize)
+							state.NEWindow.RenderNEWindowUI();
+						state.NEWindowUI.SetMacroProgress((double)actionCount / total);
+					}
+
+					if (action.Command == NECommand.Macro_RepeatLastAction)
+					{
+						if (lastAction == null)
+							throw new Exception("No last action available");
+						action = lastAction;
+					}
+
+					NESerialTracker.MoveNext();
+					EditorExecuteState.SetState(this, neWindow, neWindowUI, action);
+
+					RunCommand();
+					if (state.MacroInclude)
+						lastAction = new ExecuteState(state);
+				}
+			}
+			catch (Exception ex)
+			{
+				if (!(ex is OperationCanceledException))
+				{
+					state.NEWindow?.RenderNEWindowUI();
+					state.NEWindowUI?.ShowExceptionMessage(ex);
+				}
+				lock (actionStack)
+					actionStack.Clear();
+			}
+			finally
+			{
+				if (!skipDraw())
+					state.NEWindow?.RenderNEWindowUI();
+				state.NEWindowUI?.SetMacroProgress(null);
+				EditorExecuteState.ClearState();
 			}
 		}
 
-		public bool StopTasks() => state.NEWindow.StopTasks();
+		void RunCommand()
+		{
+			var oldData = state.NEGlobal.data;
 
-		public bool KillTasks() => state.NEWindow.KillTasks();
+			try
+			{
+				var elapsed = 0L;
+				switch (state.Command)
+				{
+					case NECommand.Internal_CommandLine: NEFile.PreExecute_Internal_CommandLine(); break;
+					case NECommand.Help_TimeNextAction: timeNextAction = true; break;
+					default: elapsed = state.NEWindow.RunCommand(); break;
+				}
 
-		public static void ReplaceExecuteState(ExecuteState executeState) => EditorExecuteState.SetState(state.NEGlobal, state.NEWindow, state.NEWindowUI, executeState);
+				if (timeNextAction)
+				{
+					timeNextAction = false;
+					state.NEWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {elapsed:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
+				}
+
+				var result = state.NEGlobal.GetResult();
+				if (result != null)
+				{
+					if (result.Clipboard != null)
+						NEClipboard.Current = result.Clipboard;
+
+					if (result.KeysAndValues != null)
+						for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
+							if (result.KeysAndValues[kvIndex] != null)
+								NEWindow.keysAndValues[kvIndex] = result.KeysAndValues[kvIndex];
+
+					if (result.DragFiles?.Any() == true)
+					{
+						var nonExisting = result.DragFiles.Where(x => !File.Exists(x)).ToList();
+						if (nonExisting.Any())
+							throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
+						// TODO: Make these files actually do something
+						//Focused.DragFiles = fileNames;
+					}
+				}
+			}
+			catch
+			{
+				state.NEGlobal.ResetData(oldData);
+				throw;
+			}
+			finally
+			{
+				state.NEWindowUI?.SetTaskRunnerProgress(null);
+			}
+		}
+
+		public bool StopTasks()
+		{
+			lock (actionStack)
+				if (actionStack.Any())
+				{
+					actionStack.Clear();
+					return true;
+				}
+			if (TaskRunner.Cancel())
+				return true;
+			return false;
+		}
+
+		public bool KillTasks()
+		{
+			lock (actionStack)
+				actionStack.Clear();
+			TaskRunner.ForceCancel();
+			return true;
+		}
 	}
 }

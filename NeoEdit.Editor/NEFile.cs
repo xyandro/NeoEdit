@@ -546,7 +546,6 @@ namespace NeoEdit.Editor
 				case NECommand.Window_Font_ShowSpecial: return PreExecute_Window_Font_ShowSpecial();
 				case NECommand.Help_Tutorial: return PreExecute_Help_Tutorial();
 				case NECommand.Help_Update: return PreExecute_Help_Update();
-				case NECommand.Help_TimeNextAction: return PreExecute_Help_TimeNextAction();
 				case NECommand.Help_Advanced_Shell_Integrate: return PreExecute_Help_Advanced_Shell_Integrate();
 				case NECommand.Help_Advanced_Shell_Unintegrate: return PreExecute_Help_Advanced_Shell_Unintegrate();
 				case NECommand.Help_Advanced_CopyCommandLine: return PreExecute_Help_Advanced_CopyCommandLine();

@@ -88,12 +88,6 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static bool PreExecute_Help_TimeNextAction()
-		{
-			state.NEWindow.timeNextAction = true;
-			return true;
-		}
-
 		static bool PreExecute_Help_Advanced_Shell_Integrate()
 		{
 			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))

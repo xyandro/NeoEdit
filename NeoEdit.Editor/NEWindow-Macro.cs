@@ -4,13 +4,8 @@ namespace NeoEdit.Editor
 {
 	partial class NEWindow
 	{
-		public Macro playingMacro, recordingMacro;
-		Action playingMacroNextAction;
-		public void PlayMacro(Macro macro, Action action = null)
-		{
-			playingMacro = macro;
-			playingMacroNextAction = action;
-		}
+		public Macro recordingMacro;
+		public void PlayMacro(Macro macro, Action action = null) => state.NEGlobal.QueueActions(macro.Actions);
 
 		public void EnsureNotRecording()
 		{

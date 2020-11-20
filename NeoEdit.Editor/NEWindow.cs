@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Models;
@@ -14,8 +12,6 @@ namespace NeoEdit.Editor
 {
 	public partial class NEWindow : INEWindow
 	{
-		static readonly Dictionary<NECommand, bool> macroInclude = Helpers.GetValues<NECommand>().ToDictionary(command => command, command => typeof(NECommand).GetField(command.ToString()).GetCustomAttribute<NoMacroAttribute>() == null);
-
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
 
 		int displayColumns;
@@ -32,9 +28,6 @@ namespace NeoEdit.Editor
 		public int DisplayRows { get; private set; }
 
 		public DateTime LastActivated { get; set; }
-
-		public bool timeNextAction;
-		ExecuteState lastAction;
 
 		public NEWindow(bool addEmpty = false)
 		{
@@ -68,7 +61,7 @@ namespace NeoEdit.Editor
 			return clipboardDataMap;
 		}
 
-		static IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
+		public static IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
 		Dictionary<INEFile, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
 		{
 			var empty = new KeysAndValues(new List<string>(), kvIndex == 0);
@@ -82,7 +75,7 @@ namespace NeoEdit.Editor
 			return keysAndValuesMap;
 		}
 
-		public void RenderFilesWindow()
+		public void RenderNEWindowUI()
 		{
 			var renderParameters = new RenderParameters
 			{
@@ -142,151 +135,30 @@ namespace NeoEdit.Editor
 			};
 		}
 
-		public bool StopTasks()
+		public long RunCommand()
 		{
-			if (playingMacro != null)
-			{
-				playingMacro = null;
-				return true;
-			}
-			if (TaskRunner.Cancel())
-				return true;
-			return false;
-		}
+			state.ClipboardDataMapFunc = GetClipboardDataMap;
+			state.KeysAndValuesFunc = GetKeysAndValuesMap;
 
-		public bool KillTasks()
-		{
-			playingMacro = null;
-			TaskRunner.ForceCancel();
-			return true;
-		}
+			if (state.Configuration == null)
+				NEFile.Configure();
 
-		public void PlayMacro()
-		{
-			if (playingMacro == null)
-				return;
+			var sw = Stopwatch.StartNew();
 
-			state.NEWindowUI.SetMacroProgress(0);
-			var stepIndex = 0;
-			DateTime lastTime = DateTime.MinValue;
-			while (true)
-			{
-				var macro = playingMacro;
-				if (macro == null)
-					break;
-
-				if (stepIndex == macro.Actions.Count)
-				{
-					var action = playingMacroNextAction;
-					playingMacro = null;
-					playingMacroNextAction = null;
-					stepIndex = 0;
-					// The action may queue up another macro
-					action?.Invoke();
-					continue;
-				}
-
-				var now = DateTime.Now;
-				if ((now - lastTime).TotalMilliseconds >= 100)
-				{
-					lastTime = now;
-					state.NEWindowUI.SetMacroProgress((double)stepIndex / macro.Actions.Count);
-				}
-
-				NEGlobal.ReplaceExecuteState(macro.Actions[stepIndex++]);
-				if (!RunCommand(true))
-				{
-					playingMacro = null;
-					playingMacroNextAction = null;
-					break;
-				}
-				if (MacroVisualize)
-					RenderFilesWindow();
-			}
-			state.NEWindowUI.SetMacroProgress(null);
-		}
-
-		public void HandleCommand(ExecuteState state, Func<bool> skipDraw = null)
-		{
-			RunCommand();
-			PlayMacro();
-			if (skipDraw?.Invoke() != true)
-				RenderFilesWindow();
-			EditorExecuteState.ClearState();
-		}
-
-		bool RunCommand(bool inMacro = false)
-		{
-			NESerialTracker.MoveNext();
-			var oldData = state.NEGlobal.data;
+			state.NEWindowUI.SetTaskRunnerProgress(0);
 			try
 			{
-				if (state.Command == NECommand.Macro_RepeatLastAction)
-				{
-					if (lastAction == null)
-						throw new Exception("No last action available");
-					NEGlobal.ReplaceExecuteState(lastAction);
-					inMacro = true;
-				}
-
-				CreateResult();
-
-				state.ClipboardDataMapFunc = GetClipboardDataMap;
-				state.KeysAndValuesFunc = GetKeysAndValuesMap;
-
-				if ((!inMacro) && (state.Configuration == null))
-					NEFile.Configure();
-
-				Stopwatch sw = null;
-				if (timeNextAction)
-					sw = Stopwatch.StartNew();
-
-				state.NEWindowUI.SetTaskRunnerProgress(0);
 				if (!NEFile.PreExecute())
 					TaskRunner.Run(Execute, percent => state.NEWindowUI.SetTaskRunnerProgress(percent));
-				state.NEWindowUI.SetTaskRunnerProgress(null);
-
-				if (sw != null)
-				{
-					timeNextAction = false;
-					state.NEWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
-				}
-
-				if (macroInclude[state.Command])
-				{
-					lastAction = new ExecuteState(state);
-					recordingMacro?.AddAction(lastAction);
-				}
-
-				var result = state.NEGlobal.GetResult();
-				if (result != null)
-				{
-					if (result.Clipboard != null)
-						NEClipboard.Current = result.Clipboard;
-
-					if (result.KeysAndValues != null)
-						for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
-							if (result.KeysAndValues[kvIndex] != null)
-								keysAndValues[kvIndex] = result.KeysAndValues[kvIndex];
-
-					if (result.DragFiles?.Any() == true)
-					{
-						var nonExisting = result.DragFiles.Where(x => !File.Exists(x)).ToList();
-						if (nonExisting.Any())
-							throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
-						// TODO: Make these files actually do something
-						//Focused.DragFiles = fileNames;
-					}
-				}
-
-				return true;
 			}
-			catch (OperationCanceledException) { }
-			catch (Exception ex) { state.NEWindowUI.ShowExceptionMessage(ex); }
+			finally { state.NEWindowUI.SetTaskRunnerProgress(null); }
 
-			state.NEWindowUI.SetTaskRunnerProgress(null);
-			state.NEGlobal.ResetData(oldData);
-			return false;
+			var elapsed = sw.ElapsedMilliseconds;
+
+			if ((recordingMacro != null) && (state.MacroInclude))
+				recordingMacro.AddAction(new ExecuteState(state));
+
+			return elapsed;
 		}
 
 		public void Execute() => ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute());
@@ -348,7 +220,7 @@ namespace NeoEdit.Editor
 				SetActiveFile(neFile);
 				WindowLayout = new WindowLayout(1, 1);
 
-				RenderFilesWindow();
+				RenderNEWindowUI();
 
 				var result = action();
 

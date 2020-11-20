@@ -10,7 +10,7 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		static string QuickMacro(int num) => $"QuickText{num}.xml";
+		static string QuickMacro(int num) => $"QuickMacro{num}.xml";
 
 		static bool PreExecute_Macro_Play_Quick(int quickNum)
 		{
