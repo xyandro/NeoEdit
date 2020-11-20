@@ -92,13 +92,13 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static bool PreExecute_Window_New_FromClipboard_AllSelections()
+		static bool PreExecute_Window_New_FromClipboard_Selections()
 		{
 			AddFilesFromClipboardSelections(new NEWindow());
 			return true;
 		}
 
-		static bool PreExecute_Window_New_FromClipboard_EachFile()
+		static bool PreExecute_Window_New_FromClipboard_Files()
 		{
 			AddFilesFromClipboards(new NEWindow());
 			return true;

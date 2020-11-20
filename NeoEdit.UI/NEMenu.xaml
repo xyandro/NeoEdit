@@ -1076,8 +1076,8 @@
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="From _clipboard">
-				<controls:NEMenuItem Header="_All selections" CommandEnum="Window_New_FromClipboard_AllSelections" ToolTip="Open a new window with a new file for each value on the clipboard"/>
-				<controls:NEMenuItem Header="_Each file" CommandEnum="Window_New_FromClipboard_EachFile" ToolTip="Open a new window with a new file for each file on the clipboard"/>
+				<controls:NEMenuItem Header="_Selections" CommandEnum="Window_New_FromClipboard_Selections" ToolTip="Open a new window with a new file for each value on the clipboard"/>
+				<controls:NEMenuItem Header="_Files" CommandEnum="Window_New_FromClipboard_Files" ToolTip="Open a new window with a new file for each file on the clipboard"/>
 			</MenuItem>
 			<controls:NEMenuItem Header="From active _files" CommandEnum="Window_New_FromActiveFiles" ToolTip="Move files to a new window"/>
 		</MenuItem>

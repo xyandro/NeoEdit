@@ -556,8 +556,8 @@ namespace NeoEdit.Editor
 				case NECommand.Window_New_SummarizeSelections_AllSelections_MatchCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(true, false);
 				case NECommand.Window_New_SummarizeSelections_EachFile_IgnoreCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(false, true);
 				case NECommand.Window_New_SummarizeSelections_EachFile_MatchCase: return PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(true, true);
-				case NECommand.Window_New_FromClipboard_AllSelections: return PreExecute_Window_New_FromClipboard_AllSelections();
-				case NECommand.Window_New_FromClipboard_EachFile: return PreExecute_Window_New_FromClipboard_EachFile();
+				case NECommand.Window_New_FromClipboard_Selections: return PreExecute_Window_New_FromClipboard_Selections();
+				case NECommand.Window_New_FromClipboard_Files: return PreExecute_Window_New_FromClipboard_Files();
 				case NECommand.Window_New_FromActiveFiles: return PreExecute_Window_New_FromActiveFiles();
 				case NECommand.Window_Full: return PreExecute_Window_Full();
 				case NECommand.Window_Grid: return PreExecute_Window_Grid();
