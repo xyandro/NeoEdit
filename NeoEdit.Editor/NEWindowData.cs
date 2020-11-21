@@ -16,15 +16,15 @@ namespace NeoEdit.Editor
 
 		public NEWindowData(NEWindow neWindow) => this.neWindow = neWindow;
 
-		public NEWindowData Clone() => new NEWindowData(neWindow)
+		public NEWindowData(NEWindowData neWindowData)
 		{
-			neFileDatas = neFileDatas,
-			activeFiles = activeFiles,
-			focused = focused,
-			windowLayout = windowLayout,
-			activeOnly = activeOnly,
-			macroVisualize = macroVisualize,
-		};
+			neFileDatas = neWindowData.neFileDatas;
+			activeFiles = neWindowData.activeFiles;
+			focused = neWindowData.focused;
+			windowLayout = neWindowData.windowLayout;
+			activeOnly = neWindowData.activeOnly;
+			macroVisualize = neWindowData.macroVisualize;
+		}
 
 		public override string ToString() => NESerial.ToString();
 	}

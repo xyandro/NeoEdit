@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
@@ -49,46 +50,40 @@ namespace NeoEdit.Editor
 			regions = new IReadOnlyList<Range>[9];
 		}
 
-		public NEFileData Clone()
+		public NEFileData(NEFileData neFileData)
 		{
-			var neFileData = new NEFileData(neFile)
-			{
-				text = text,
-				currentSelection = currentSelection,
-				selections = selections,
-				displayName = displayName,
-				fileName = fileName,
-				isModified = isModified,
-				autoRefresh = autoRefresh,
-				dbName = dbName,
-				contentType = contentType,
-				codePage = codePage,
-				aesKey = aesKey,
-				compressed = compressed,
-				diffIgnoreWhitespace = diffIgnoreWhitespace,
-				diffIgnoreCase = diffIgnoreCase,
-				diffIgnoreNumbers = diffIgnoreNumbers,
-				diffIgnoreLineEndings = diffIgnoreLineEndings,
-				diffIgnoreCharacters = diffIgnoreCharacters,
-				keepSelections = keepSelections,
-				highlightSyntax = highlightSyntax,
-				strictParsing = strictParsing,
-				jumpBy = jumpBy,
-				viewBinary = viewBinary,
-				viewBinaryCodePages = viewBinaryCodePages,
-				viewBinarySearches = viewBinarySearches,
-				startColumn = startColumn,
-				startRow = startRow,
-				isDiff = isDiff,
-				diffTarget = diffTarget,
-			};
+			text = neFileData.text;
+			currentSelection = neFileData.currentSelection;
+			selections = neFileData.selections;
+			regions = neFileData.regions.ToArray();
+			displayName = neFileData.displayName;
+			fileName = neFileData.fileName;
+			isModified = neFileData.isModified;
+			autoRefresh = neFileData.autoRefresh;
+			dbName = neFileData.dbName;
+			contentType = neFileData.contentType;
+			codePage = neFileData.codePage;
+			aesKey = neFileData.aesKey;
+			compressed = neFileData.compressed;
+			diffIgnoreWhitespace = neFileData.diffIgnoreWhitespace;
+			diffIgnoreCase = neFileData.diffIgnoreCase;
+			diffIgnoreNumbers = neFileData.diffIgnoreNumbers;
+			diffIgnoreLineEndings = neFileData.diffIgnoreLineEndings;
+			diffIgnoreCharacters = neFileData.diffIgnoreCharacters;
+			keepSelections = neFileData.keepSelections;
+			highlightSyntax = neFileData.highlightSyntax;
+			strictParsing = neFileData.strictParsing;
+			jumpBy = neFileData.jumpBy;
+			viewBinary = neFileData.viewBinary;
+			viewBinaryCodePages = neFileData.viewBinaryCodePages;
+			viewBinarySearches = neFileData.viewBinarySearches;
+			startColumn = neFileData.startColumn;
+			startRow = neFileData.startRow;
+			isDiff = neFileData.isDiff;
+			diffTarget = neFileData.diffTarget;
 
-			neFileData.undo = this;
-			redo = neFileData;
-
-			regions.CopyTo(neFileData.regions, 0);
-
-			return neFileData;
+			undo = neFileData;
+			neFileData.redo = this;
 		}
 
 		public override string ToString() => NESerial.ToString();

@@ -8,7 +8,9 @@ namespace NeoEdit.Editor
 
 		public IReadOnlyOrderedHashSet<NEWindowData> neWindowDatas;
 
-		public NEGlobalData Clone() => new NEGlobalData { neWindowDatas = neWindowDatas };
+		public NEGlobalData() { }
+
+		public NEGlobalData(NEGlobalData neGlobalData) => neWindowDatas = neGlobalData.neWindowDatas;
 
 		public override string ToString() => NESerial.ToString();
 	}

@@ -11,116 +11,15 @@ using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
-	public class NEGlobal : INEGlobal
+	public partial class NEGlobal : INEGlobal
 	{
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
 
 		public NEGlobal()
 		{
-			data = new NEGlobalData();
+			Data = new NEGlobalData();
 			SetNEWindowDatas(new OrderedHashSet<NEWindowData>());
 		}
-
-		public NEGlobalData data { get; private set; }
-		NEGlobalData editableData
-		{
-			get
-			{
-				if (data.NESerial != NESerialTracker.NESerial)
-					data = data.Clone();
-				return data;
-			}
-		}
-
-		public void ResetData(NEGlobalData data)
-		{
-			var oldNEWindows = NEWindows;
-
-			ResetResult();
-			this.data = data;
-			RecreateNEWindows();
-			NEWindows.Except(oldNEWindows).ForEach(neWindow => neWindow.Attach(this));
-			oldNEWindows.Except(NEWindows).ForEach(neWindow => neWindow.Detach());
-			NEWindowDatas.ForEach(neWindowData => neWindowData.neWindow.ResetData(neWindowData));
-		}
-
-		IEnumerable<INEWindow> INEGlobal.NEWindows => NEWindows;
-
-		public IReadOnlyOrderedHashSet<NEWindow> NEWindows { get; private set; }
-
-		public IReadOnlyOrderedHashSet<NEWindowData> NEWindowDatas
-		{
-			get => data.neWindowDatas;
-			set
-			{
-				editableData.neWindowDatas = value;
-				RecreateNEWindows();
-			}
-		}
-
-		void RecreateNEWindows() => NEWindows = new OrderedHashSet<NEWindow>(data.neWindowDatas.Select(neWindowData => neWindowData.neWindow));
-
-		public void SetNEWindowDatas(IEnumerable<NEWindowData> neWindowDatas) => NEWindowDatas = new OrderedHashSet<NEWindowData>(neWindowDatas);
-
-		public bool FilesChanged { get; set; }
-
-		void ResetResult()
-		{
-			result = null;
-			FilesChanged = false;
-		}
-
-		public NEGlobalResult GetResult()
-		{
-			foreach (var neWindow in NEWindows)
-			{
-				var result = neWindow.GetResult();
-				if (result == null)
-					continue;
-
-				if (result.Clipboard != null)
-					CreateResult().SetClipboard(result.Clipboard);
-
-				if (result.KeysAndValues != null)
-					CreateResult().SetKeysAndValues(result.KeysAndValues);
-
-				if (result.DragFiles != null)
-					CreateResult().SetDragFiles(result.DragFiles);
-			}
-
-			IEnumerable<NEWindow> nextNEWindowsItr = NEWindows;
-			if (result != null)
-			{
-				if (result.RemoveNEWindows != null)
-					nextNEWindowsItr = nextNEWindowsItr.Except(result.RemoveNEWindows);
-				if (result.AddNEWindows != null)
-					nextNEWindowsItr = nextNEWindowsItr.Concat(result.AddNEWindows);
-			}
-			var nextNEWindowDatas = nextNEWindowsItr.Select(x => x.Data).ToList();
-
-			if (!NEWindowDatas.Matches(nextNEWindowDatas))
-			{
-				var oldNEWindows = NEWindows;
-				SetNEWindowDatas(nextNEWindowDatas);
-				NEWindows.Except(oldNEWindows).ForEach(neWindow => neWindow.Attach(this));
-				oldNEWindows.Except(NEWindows).ForEach(neWindow => neWindow.Detach());
-			}
-
-			var ret = result;
-			ResetResult();
-			return ret;
-		}
-
-		NEGlobalResult result;
-		public NEGlobalResult CreateResult()
-		{
-			if (result == null)
-				result = new NEGlobalResult();
-			return result;
-		}
-
-		public void AddNEWindow(NEWindow neWindow) => CreateResult().AddNEWindow(neWindow);
-		public void RemoveNEWindow(NEWindow neWindow) => CreateResult().RemoveNEWindow(neWindow);
 
 		public bool HandlesKey(ModifierKeys modifiers, Key key)
 		{
@@ -226,7 +125,7 @@ namespace NeoEdit.Editor
 
 		void RunCommand()
 		{
-			var oldData = state.NEGlobal.data;
+			var oldData = state.NEGlobal.Data;
 
 			try
 			{

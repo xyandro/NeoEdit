@@ -16,8 +16,7 @@ namespace NeoEdit.Editor
 				if (Data.NESerial != NESerialTracker.NESerial)
 				{
 					CreateResult();
-					var oldData = Data;
-					Data = Data.Clone();
+					Data = new NEFileData(Data);
 				}
 				return Data;
 			}
@@ -53,7 +52,6 @@ namespace NeoEdit.Editor
 		public bool ViewBinary { get => Data.viewBinary; private set => EditableData.viewBinary = value; }
 		public HashSet<Coder.CodePage> ViewBinaryCodePages { get => Data.viewBinaryCodePages; private set => EditableData.viewBinaryCodePages = value; }
 		public IReadOnlyList<HashSet<string>> ViewBinarySearches { get => Data.viewBinarySearches; private set => EditableData.viewBinarySearches = value; }
-		public int StartColumn { get => Data.startColumn; set => EditableData.startColumn = value; }
 
 		public NEFile DiffTarget
 		{
@@ -94,6 +92,18 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		public int StartRow
+		{
+			get => Data.startRow;
+			set
+			{
+				EditableData.startRow = value;
+				if (DiffTarget != null)
+					DiffTarget.EditableData.startRow = value;
+			}
+		}
+		public int StartColumn { get => Data.startColumn; set => EditableData.startColumn = value; }
+
 		public IReadOnlyList<Range> GetRegions(int region)
 		{
 			if ((region < 1) || (region > 9))
@@ -105,29 +115,8 @@ namespace NeoEdit.Editor
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
+			EditableData.regions[region - 1] = DeOverlap(regions);
 			Data.regions[region - 1] = DeOverlap(regions);
-		}
-
-		readonly KeysAndValues[] keysAndValues = new KeysAndValues[10];
-		KeysAndValues GetKeysAndValues(int kvIndex)
-		{
-			if ((kvIndex < 0) || (kvIndex > 9))
-				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
-
-			if (keysAndValues[kvIndex] == null)
-				keysAndValues[kvIndex] = state.GetKeysAndValues(kvIndex, this);
-
-			return keysAndValues[kvIndex];
-		}
-
-		void SetKeysAndValues(int kvIndex, IReadOnlyList<string> values, bool matchCase = false)
-		{
-			if ((kvIndex < 0) || (kvIndex > 9))
-				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
-
-			var newKeysAndValues = new KeysAndValues(values, kvIndex == 0, matchCase);
-			keysAndValues[kvIndex] = newKeysAndValues;
-			CreateResult().SetKeysAndValues(kvIndex, newKeysAndValues);
 		}
 
 		void ClearNEFiles() => CreateResult().ClearNEFiles();
@@ -156,17 +145,57 @@ namespace NeoEdit.Editor
 		IReadOnlyList<string> ClipboardCopy { set => ClipboardData = Tuple.Create(value, (bool?)false); }
 		IReadOnlyList<string> ClipboardCut { set => ClipboardData = Tuple.Create(value, (bool?)true); }
 
+		readonly KeysAndValues[] keysAndValues = new KeysAndValues[10];
+		KeysAndValues GetKeysAndValues(int kvIndex)
+		{
+			if ((kvIndex < 0) || (kvIndex > 9))
+				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
+
+			if (keysAndValues[kvIndex] == null)
+				keysAndValues[kvIndex] = state.GetKeysAndValues(kvIndex, this);
+
+			return keysAndValues[kvIndex];
+		}
+
+		void SetKeysAndValues(int kvIndex, IReadOnlyList<string> values, bool matchCase = false)
+		{
+			if ((kvIndex < 0) || (kvIndex > 9))
+				throw new IndexOutOfRangeException($"Invalid kvIndex: {kvIndex}");
+
+			var newKeysAndValues = new KeysAndValues(values, kvIndex == 0, matchCase);
+			keysAndValues[kvIndex] = newKeysAndValues;
+			CreateResult().SetKeysAndValues(kvIndex, newKeysAndValues);
+		}
+
 		void AddDragFile(string fileName) => CreateResult().AddDragFile(fileName);
 
-		public int StartRow
+		NEFileResult result;
+		NEFileResult CreateResult()
 		{
-			get => Data.startRow;
-			set
+			if (result == null)
 			{
-				EditableData.startRow = value;
-				if (DiffTarget != null)
-					DiffTarget.StartRow = value;
+				NEWindow?.CreateResult();
+				result = new NEFileResult(this);
 			}
+			return result;
+		}
+
+		public NEFileResult GetResult()
+		{
+			if (result == null)
+				return null;
+
+			var ret = result;
+			ResetResult();
+			return ret;
+		}
+
+		void ResetResult()
+		{
+			clipboardData = null;
+			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
+				keysAndValues[kvIndex] = null;
+			result = null;
 		}
 
 		public NEWindow NEWindow { get; private set; }
@@ -184,35 +213,6 @@ namespace NeoEdit.Editor
 				throw new Exception("File not attached");
 			NEWindow = null;
 			SetAutoRefresh();
-		}
-
-		NEFileResult result;
-		NEFileResult CreateResult()
-		{
-			if (result == null)
-			{
-				NEWindow.CreateResult();
-				result = new NEFileResult(this);
-			}
-			return result;
-		}
-
-		void ResetResult()
-		{
-			clipboardData = null;
-			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
-				keysAndValues[kvIndex] = null;
-			result = null;
-		}
-
-		public NEFileResult GetResult()
-		{
-			if (result == null)
-				return null;
-
-			var ret = result;
-			ResetResult();
-			return ret;
 		}
 	}
 }

@@ -232,6 +232,9 @@
     <Compile Include="NEFile.cs" />
     <Compile Include="NEFileData.cs" />
     <Compile Include="NEFileResult.cs" />
+    <Compile Include="NEGlobal-Variables.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
     <Compile Include="NEGlobal.cs" />
     <Compile Include="NEGlobalData.cs" />
     <Compile Include="NEGlobalResult.cs" />
