@@ -7,14 +7,14 @@ namespace NeoEdit.Editor
 {
 	partial class NEWindow
 	{
-		public NEWindowData data { get; private set; }
-		NEWindowData editableData
+		public NEWindowData Data { get; private set; }
+		NEWindowData EditableData
 		{
 			get
 			{
-				if (data.NESerial != NESerialTracker.NESerial)
-					data = data.Clone();
-				return data;
+				if (Data.NESerial != NESerialTracker.NESerial)
+					Data = Data.Clone();
+				return Data;
 			}
 		}
 
@@ -23,92 +23,89 @@ namespace NeoEdit.Editor
 			var oldNEFiles = NEFiles;
 
 			ResetResult();
-			this.data = data;
+			Data = data;
 			RecreateNEFiles();
-			NEFiles.Except(oldNEFiles).ForEach(neFile => neFile.Attach());
+			NEFiles.Except(oldNEFiles).ForEach(neFile => neFile.Attach(this));
 			oldNEFiles.Except(NEFiles).ForEach(neFile => neFile.Detach());
 			NEFileDatas.ForEach(neFileData => neFileData.neFile.ResetData(neFileData));
 		}
 
+		public NEFile Focused { get => Data.focused; set => EditableData.focused = value; }
+		public WindowLayout WindowLayout { get => Data.windowLayout; set => EditableData.windowLayout = value; }
+		public bool ActiveOnly { get => Data.activeOnly; set => EditableData.activeOnly = value; }
+		public bool MacroVisualize { get => Data.macroVisualize; set => EditableData.macroVisualize = value; }
+
 		public IReadOnlyOrderedHashSet<NEFile> NEFiles { get; private set; }
+
+		public void SetNEFileDatas(IEnumerable<NEFileData> neFileDatas) => NEFileDatas = new OrderedHashSet<NEFileData>(neFileDatas);
 
 		public IReadOnlyOrderedHashSet<NEFileData> NEFileDatas
 		{
-			get => data.neFileDatas;
+			get => Data.neFileDatas;
 			set
 			{
-				editableData.neFileDatas = value;
+				EditableData.neFileDatas = value;
 				RecreateNEFiles();
 			}
 		}
 
-		void RecreateNEFiles()
-		{
-			NEFiles = new OrderedHashSet<NEFile>(NEFileDatas.Select(neFile => neFile.neFile));
-		}
-
-		public void SetNEFileDatas(IEnumerable<NEFileData> neFileDatas) => NEFileDatas = new OrderedHashSet<NEFileData>(neFileDatas);
+		void RecreateNEFiles() => NEFiles = new OrderedHashSet<NEFile>(NEFileDatas.Select(neFile => neFile.neFile));
 
 		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles
 		{
-			get => data.activeFiles;
+			get => Data.activeFiles;
 			set
 			{
-				editableData.activeFiles = value;
-				if (!data.activeFiles.Contains(Focused))
-					Focused = data.activeFiles.FirstOrDefault();
+				EditableData.activeFiles = value;
+				if (!ActiveFiles.Contains(Focused))
+					Focused = ActiveFiles.OrderByDescending(neFile => neFile.LastActive).FirstOrDefault();
 			}
 		}
 
 		public void ClearActiveFiles() => ActiveFiles = new OrderedHashSet<NEFile>();
-
 		public void SetActiveFile(NEFile file) => ActiveFiles = new OrderedHashSet<NEFile> { file };
-
 		public void SetActiveFiles(IEnumerable<NEFile> files) => ActiveFiles = new OrderedHashSet<NEFile>(files);
-
-		public NEFile Focused
-		{
-			get => data.focused;
-			set => editableData.focused = value;
-		}
-
-		public WindowLayout WindowLayout
-		{
-			get => data.windowLayout;
-			set => editableData.windowLayout = value;
-		}
-
-		public bool ActiveOnly
-		{
-			get => data.activeOnly;
-			set => editableData.activeOnly = value;
-		}
-
-		public bool MacroVisualize
-		{
-			get => data.macroVisualize;
-			set => editableData.macroVisualize = value;
-		}
-
-		NEWindowResult result;
-		NEWindowResult CreateResult()
-		{
-			if (result == null)
-				result = new NEWindowResult();
-			return result;
-		}
 
 		public void AddNewNEFile(NEFile neFile) => CreateResult().AddNewNEFile(neFile);
 
-		void ResetResult()
+		public NEGlobal NEGlobal { get; private set; }
+		public void Attach(NEGlobal neGlobal)
 		{
-			result = null;
+			if (NEGlobal != null)
+				throw new Exception("Window already attached");
+			NEGlobal = neGlobal;
+			neWindowUI = INEWindowUIStatic.CreateNEWindowUI(this);
 		}
+
+		public void Detach()
+		{
+			if (NEGlobal == null)
+				throw new Exception("Window not attached");
+			NEGlobal = null;
+			neWindowUI.CloseWindow();
+			neWindowUI = null;
+		}
+
+		NEWindowResult result;
+		public NEWindowResult CreateResult()
+		{
+			if (result == null)
+			{
+				NEGlobal.CreateResult();
+				result = new NEWindowResult();
+			}
+			return result;
+		}
+
+		void ResetResult() => result = null;
 
 		public NEWindowResult GetResult()
 		{
+			if (result == null)
+				return null;
+
 			NEClipboard setClipboard = null;
-			List<KeysAndValues>[] setKeysAndValues = null;
+			List<KeysAndValues>[] keysAndValues = null;
 			List<string> dragFiles = null;
 
 			var nextNEFileDatas = new List<NEFileData>();
@@ -118,17 +115,14 @@ namespace NeoEdit.Editor
 				var result = neFile.GetResult();
 				if (result == null)
 				{
-					nextNEFileDatas.Add(neFile.data);
+					nextNEFileDatas.Add(neFile.Data);
 					continue;
 				}
 
-				if (result.Files == null)
-					nextNEFileDatas.Add(neFile.data);
-				else
-					nextNEFileDatas.AddRange(result.Files.ForEach(x => x.data));
+				nextNEFileDatas.AddRange(result.NEFiles.ForEach(x => x.Data));
 
-				if (result.NewFiles != null)
-					newFileDatas.AddRange(result.NewFiles.Select(x => x.data));
+				if (result.NewNEFiles != null)
+					newFileDatas.AddRange(result.NewNEFiles.Select(x => x.Data));
 
 				if (result.Clipboard != null)
 				{
@@ -142,11 +136,11 @@ namespace NeoEdit.Editor
 					for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 						if (result.KeysAndValues[kvIndex] != null)
 						{
-							if (setKeysAndValues == null)
-								setKeysAndValues = new List<KeysAndValues>[10];
-							if (setKeysAndValues[kvIndex] == null)
-								setKeysAndValues[kvIndex] = new List<KeysAndValues>();
-							setKeysAndValues[kvIndex].Add(result.KeysAndValues[kvIndex]);
+							if (keysAndValues == null)
+								keysAndValues = new List<KeysAndValues>[10];
+							if (keysAndValues[kvIndex] == null)
+								keysAndValues[kvIndex] = new List<KeysAndValues>();
+							keysAndValues[kvIndex].Add(result.KeysAndValues[kvIndex]);
 						}
 
 				if (result.DragFiles != null)
@@ -159,46 +153,41 @@ namespace NeoEdit.Editor
 
 			nextNEFileDatas.AddRange(newFileDatas);
 
-			if (result != null)
-			{
-				if (result.NewNEFiles != null)
-					nextNEFileDatas.AddRange(result.NewNEFiles.ForEach(x => x.data));
-			}
+			if (result?.NewNEFiles != null)
+				nextNEFileDatas.AddRange(result.NewNEFiles.ForEach(x => x.Data));
 
 			if (!NEFileDatas.Matches(nextNEFileDatas))
 			{
-				var newlyAdded = nextNEFileDatas.Select(x => x.neFile).Except(NEFiles).ToList();
-
 				var oldNEFiles = NEFiles;
+
 				SetNEFileDatas(nextNEFileDatas);
-				NEFiles.Except(oldNEFiles).ForEach(neFile => neFile.Attach());
+				NEFiles.Except(oldNEFiles).ForEach(neFile => neFile.Attach(this));
 				oldNEFiles.Except(NEFiles).ForEach(neFile => neFile.Detach());
 
-				if (newlyAdded.Any())
-					SetActiveFiles(newlyAdded);
-				else
+				var nextActiveFiles = NEFiles.Except(oldNEFiles).ToList(); // New files
+				if (!nextActiveFiles.Any())
+					nextActiveFiles = NEFiles.Intersect(ActiveFiles).ToList(); // Currently active files
+				if ((!nextActiveFiles.Any()) && (NEFiles.Any()))
 				{
-					SetActiveFiles(NEFiles.Intersect(ActiveFiles));
-					if (!ActiveFiles.Any())
-					{
-						var newActive = NEFiles.OrderByDescending(file => file.LastActive).FirstOrDefault();
-						if (newActive != null)
-							SetActiveFile(newActive);
-					}
+					// All files with max LastActive
+					var maxLastActive = NEFiles.Max(neFile => neFile.LastActive);
+					nextActiveFiles = NEFiles.Where(neFile => neFile.LastActive == maxLastActive).ToList();
 				}
+
+				SetActiveFiles(nextActiveFiles);
 
 				var now = DateTime.Now;
 				ActiveFiles.ForEach(neFile => neFile.LastActive = now);
 			}
 
 			if (setClipboard != null)
-				CreateResult().SetClipboard(setClipboard);
+				result.SetClipboard(setClipboard);
 
-			if (setKeysAndValues != null)
-				CreateResult().SetKeysAndValues(setKeysAndValues);
+			if (keysAndValues != null)
+				result.SetKeysAndValues(keysAndValues);
 
 			if (dragFiles != null)
-				CreateResult().SetDragFiles(dragFiles);
+				result.SetDragFiles(dragFiles);
 
 			var ret = result;
 			ResetResult();

@@ -5,11 +5,31 @@ namespace NeoEdit.Editor
 {
 	public class NEFileResult
 	{
-		public KeysAndValues[] KeysAndValues { get; private set; }
-		public List<NEFile> Files { get; private set; }
-		public List<NEFile> NewFiles { get; private set; }
+		public List<NEFile> NEFiles { get; private set; }
+		public List<NEFile> NewNEFiles { get; private set; }
 		public Tuple<IReadOnlyList<string>, bool?> Clipboard { get; private set; }
+		public KeysAndValues[] KeysAndValues { get; private set; }
 		public List<string> DragFiles { get; private set; }
+
+		public NEFileResult(NEFile neFile) => NEFiles = new List<NEFile> { neFile };
+
+		public void ClearNEFiles()
+		{
+			if (NEFiles == null)
+				NEFiles = new List<NEFile>();
+			NEFiles.Clear();
+		}
+
+		public void AddNEFile(NEFile neFile) => NEFiles.Add(neFile);
+
+		public void AddNewNEFile(NEFile neFile)
+		{
+			if (NewNEFiles == null)
+				NewNEFiles = new List<NEFile>();
+			NewNEFiles.Add(neFile);
+		}
+
+		public void SetClipboard(Tuple<IReadOnlyList<string>, bool?> clipboard) => Clipboard = clipboard;
 
 		public void SetKeysAndValues(int kvIndex, KeysAndValues keysAndValues)
 		{
@@ -21,30 +41,7 @@ namespace NeoEdit.Editor
 			KeysAndValues[kvIndex] = keysAndValues;
 		}
 
-		public void ClearNEFiles()
-		{
-			if (Files == null)
-				Files = new List<NEFile>();
-			Files.Clear();
-		}
-
-		public void AddNEFile(NEFile neFile)
-		{
-			if (Files == null)
-				Files = new List<NEFile>();
-			Files.Add(neFile);
-		}
-
-		public void AddNewNEFile(NEFile neFile)
-		{
-			if (NewFiles == null)
-				NewFiles = new List<NEFile>();
-			NewFiles.Add(neFile);
-		}
-
-		public void SetClipboard(Tuple<IReadOnlyList<string>, bool?> clipboard) => Clipboard = clipboard;
-
-		internal void AddDragFile(string fileName)
+		public void AddDragFile(string fileName)
 		{
 			if (DragFiles == null)
 				DragFiles = new List<string>();

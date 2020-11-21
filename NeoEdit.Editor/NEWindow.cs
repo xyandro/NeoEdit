@@ -33,7 +33,7 @@ namespace NeoEdit.Editor
 
 		public NEWindow(bool addEmpty = false)
 		{
-			data = new NEWindowData(this);
+			Data = new NEWindowData(this);
 			NEFileDatas = new OrderedHashSet<NEFileData>();
 			ActiveFiles = new OrderedHashSet<NEFile>();
 			WindowLayout = new WindowLayout(1, 1);
@@ -41,24 +41,6 @@ namespace NeoEdit.Editor
 
 			if (addEmpty)
 				AddNewNEFile(new NEFile());
-		}
-
-		bool attached = false;
-		public void Attach()
-		{
-			if (attached)
-				throw new Exception("Window already attached");
-			attached = true;
-			neWindowUI = INEWindowUIStatic.CreateNEWindowUI(this);
-		}
-
-		public void Detach()
-		{
-			if (!attached)
-				throw new Exception("Window not attached");
-			attached = false;
-			neWindowUI.CloseWindow();
-			neWindowUI = null;
 		}
 
 		IReadOnlyDictionary<INEFile, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()

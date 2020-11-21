@@ -39,7 +39,7 @@ namespace NeoEdit.Editor
 			ResetResult();
 			this.data = data;
 			RecreateNEWindows();
-			NEWindows.Except(oldNEWindows).ForEach(neWindow => neWindow.Attach());
+			NEWindows.Except(oldNEWindows).ForEach(neWindow => neWindow.Attach(this));
 			oldNEWindows.Except(NEWindows).ForEach(neWindow => neWindow.Detach());
 			NEWindowDatas.ForEach(neWindowData => neWindowData.neWindow.ResetData(neWindowData));
 		}
@@ -62,9 +62,12 @@ namespace NeoEdit.Editor
 
 		public void SetNEWindowDatas(IEnumerable<NEWindowData> neWindowDatas) => NEWindowDatas = new OrderedHashSet<NEWindowData>(neWindowDatas);
 
+		public bool FilesChanged { get; set; }
+
 		void ResetResult()
 		{
 			result = null;
+			FilesChanged = false;
 		}
 
 		public NEGlobalResult GetResult()
@@ -93,13 +96,13 @@ namespace NeoEdit.Editor
 				if (result.AddNEWindows != null)
 					nextNEWindowsItr = nextNEWindowsItr.Concat(result.AddNEWindows);
 			}
-			var nextNEWindowDatas = nextNEWindowsItr.Select(x => x.data).ToList();
+			var nextNEWindowDatas = nextNEWindowsItr.Select(x => x.Data).ToList();
 
 			if (!NEWindowDatas.Matches(nextNEWindowDatas))
 			{
 				var oldNEWindows = NEWindows;
 				SetNEWindowDatas(nextNEWindowDatas);
-				NEWindows.Except(oldNEWindows).ForEach(neWindow => neWindow.Attach());
+				NEWindows.Except(oldNEWindows).ForEach(neWindow => neWindow.Attach(this));
 				oldNEWindows.Except(NEWindows).ForEach(neWindow => neWindow.Detach());
 			}
 
@@ -109,7 +112,7 @@ namespace NeoEdit.Editor
 		}
 
 		NEGlobalResult result;
-		NEGlobalResult CreateResult()
+		public NEGlobalResult CreateResult()
 		{
 			if (result == null)
 				result = new NEGlobalResult();

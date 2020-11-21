@@ -8,38 +8,56 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		public NEFileData data { get; private set; }
-		NEFileData editableData
+		public NEFileData Data { get; private set; }
+		NEFileData EditableData
 		{
 			get
 			{
-				if (data.NESerial != NESerialTracker.NESerial)
-					data = data.Clone();
-				return data;
+				if (Data.NESerial != NESerialTracker.NESerial)
+				{
+					CreateResult();
+					var oldData = Data;
+					Data = Data.Clone();
+				}
+				return Data;
 			}
 		}
 
 		public void ResetData(NEFileData data)
 		{
 			ResetResult();
-			this.data = data;
+			Data = data;
 		}
 
-		NEText Text
-		{
-			get => data.text;
-			set => editableData.text = value;
-		}
-
-		bool IsDiff
-		{
-			get => data.isDiff;
-			set => editableData.isDiff = value;
-		}
+		NEText Text { get => Data.text; set => EditableData.text = value; }
+		bool IsDiff { get => Data.isDiff; set => EditableData.isDiff = value; }
+		public int CurrentSelection { get => Math.Min(Math.Max(0, Data.currentSelection), Selections.Count - 1); private set => EditableData.currentSelection = value; }
+		public string DisplayName { get => Data.displayName; private set => EditableData.displayName = value; }
+		public string FileName { get => Data.fileName; private set => EditableData.fileName = value; }
+		public bool IsModified { get => Data.isModified; private set => EditableData.isModified = value; }
+		public bool AutoRefresh { get => Data.autoRefresh; private set => EditableData.autoRefresh = value; }
+		public string DBName { get => Data.dbName; private set => EditableData.dbName = value; }
+		public ParserType ContentType { get => Data.contentType; set => EditableData.contentType = value; }
+		Coder.CodePage CodePage { get => Data.codePage; set => EditableData.codePage = value; }
+		public string AESKey { get => Data.aesKey; private set => EditableData.aesKey = value; }
+		public bool Compressed { get => Data.compressed; private set => EditableData.compressed = value; }
+		public bool DiffIgnoreWhitespace { get => Data.diffIgnoreWhitespace; private set => EditableData.diffIgnoreWhitespace = value; }
+		public bool DiffIgnoreCase { get => Data.diffIgnoreCase; private set => EditableData.diffIgnoreCase = value; }
+		public bool DiffIgnoreNumbers { get => Data.diffIgnoreNumbers; private set => EditableData.diffIgnoreNumbers = value; }
+		public bool DiffIgnoreLineEndings { get => Data.diffIgnoreLineEndings; private set => EditableData.diffIgnoreLineEndings = value; }
+		public string DiffIgnoreCharacters { get => Data.diffIgnoreCharacters; private set => EditableData.diffIgnoreCharacters = value; }
+		public bool KeepSelections { get => Data.keepSelections; private set => EditableData.keepSelections = value; }
+		public bool HighlightSyntax { get => Data.highlightSyntax; private set => EditableData.highlightSyntax = value; }
+		public bool StrictParsing { get => Data.strictParsing; private set => EditableData.strictParsing = value; }
+		public JumpByType JumpBy { get => Data.jumpBy; private set => EditableData.jumpBy = value; }
+		public bool ViewBinary { get => Data.viewBinary; private set => EditableData.viewBinary = value; }
+		public HashSet<Coder.CodePage> ViewBinaryCodePages { get => Data.viewBinaryCodePages; private set => EditableData.viewBinaryCodePages = value; }
+		public IReadOnlyList<HashSet<string>> ViewBinarySearches { get => Data.viewBinarySearches; private set => EditableData.viewBinarySearches = value; }
+		public int StartColumn { get => Data.startColumn; set => EditableData.startColumn = value; }
 
 		public NEFile DiffTarget
 		{
-			get => data.diffTarget;
+			get => Data.diffTarget;
 			set
 			{
 				IsDiff = false;
@@ -50,33 +68,27 @@ namespace NeoEdit.Editor
 
 					Text.ClearDiff();
 					DiffTarget.Text.ClearDiff();
-					DiffTarget.editableData.diffTarget = null;
-					editableData.diffTarget = null;
+					DiffTarget.EditableData.diffTarget = null;
+					EditableData.diffTarget = null;
 				}
 
 				if (value != null)
 				{
 					value.DiffTarget = null;
-					editableData.diffTarget = value;
-					value.editableData.diffTarget = this;
+					EditableData.diffTarget = value;
+					value.EditableData.diffTarget = this;
 					IsDiff = DiffTarget.IsDiff = true;
 					CalculateDiff();
 				}
 			}
 		}
 
-		public int CurrentSelection
-		{
-			get => Math.Min(Math.Max(0, data.currentSelection), Selections.Count - 1);
-			private set => editableData.currentSelection = value;
-		}
-
 		public IReadOnlyList<Range> Selections
 		{
-			get => data.selections;
+			get => Data.selections;
 			set
 			{
-				editableData.selections = DeOverlap(value);
+				EditableData.selections = DeOverlap(value);
 				CurrentSelection = CurrentSelection;
 				EnsureVisible();
 			}
@@ -86,22 +98,14 @@ namespace NeoEdit.Editor
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			return data.regions[region - 1];
+			return Data.regions[region - 1];
 		}
 
 		void SetRegions(int region, IReadOnlyList<Range> regions)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			data.regions[region - 1] = DeOverlap(regions);
-		}
-
-		NEFileResult result;
-		NEFileResult CreateResult()
-		{
-			if (result == null)
-				result = new NEFileResult();
-			return result;
+			Data.regions[region - 1] = DeOverlap(regions);
 		}
 
 		readonly KeysAndValues[] keysAndValues = new KeysAndValues[10];
@@ -124,24 +128,6 @@ namespace NeoEdit.Editor
 			var newKeysAndValues = new KeysAndValues(values, kvIndex == 0, matchCase);
 			keysAndValues[kvIndex] = newKeysAndValues;
 			CreateResult().SetKeysAndValues(kvIndex, newKeysAndValues);
-		}
-
-		public string DisplayName
-		{
-			get => data.displayName;
-			private set => editableData.displayName = value;
-		}
-
-		public string FileName
-		{
-			get => data.fileName;
-			private set => editableData.fileName = value;
-		}
-
-		public bool IsModified
-		{
-			get => data.isModified;
-			private set => editableData.isModified = value;
 		}
 
 		void ClearNEFiles() => CreateResult().ClearNEFiles();
@@ -172,131 +158,43 @@ namespace NeoEdit.Editor
 
 		void AddDragFile(string fileName) => CreateResult().AddDragFile(fileName);
 
-		public bool AutoRefresh
-		{
-			get => data.autoRefresh;
-			private set => editableData.autoRefresh = value;
-		}
-
-		public string DBName
-		{
-			get => data.dbName;
-			private set => editableData.dbName = value;
-		}
-
-		public ParserType ContentType
-		{
-			get => data.contentType;
-			set => editableData.contentType = value;
-		}
-
-		Coder.CodePage CodePage
-		{
-			get => data.codePage;
-			set => editableData.codePage = value;
-		}
-
-		public string AESKey
-		{
-			get => data.aesKey;
-			private set => editableData.aesKey = value;
-		}
-
-		public bool Compressed
-		{
-			get => data.compressed;
-			private set => editableData.compressed = value;
-		}
-
-		public bool DiffIgnoreWhitespace
-		{
-			get => data.diffIgnoreWhitespace;
-			private set => editableData.diffIgnoreWhitespace = value;
-		}
-
-		public bool DiffIgnoreCase
-		{
-			get => data.diffIgnoreCase;
-			private set => editableData.diffIgnoreCase = value;
-		}
-
-		public bool DiffIgnoreNumbers
-		{
-			get => data.diffIgnoreNumbers;
-			private set => editableData.diffIgnoreNumbers = value;
-		}
-
-		public bool DiffIgnoreLineEndings
-		{
-			get => data.diffIgnoreLineEndings;
-			private set => editableData.diffIgnoreLineEndings = value;
-		}
-
-		public string DiffIgnoreCharacters
-		{
-			get => data.diffIgnoreCharacters;
-			private set => editableData.diffIgnoreCharacters = value;
-		}
-
-		public bool KeepSelections
-		{
-			get => data.keepSelections;
-			private set => editableData.keepSelections = value;
-		}
-
-		public bool HighlightSyntax
-		{
-			get => data.highlightSyntax;
-			private set => editableData.highlightSyntax = value;
-		}
-
-		public bool StrictParsing
-		{
-			get => data.strictParsing;
-			private set => editableData.strictParsing = value;
-		}
-
-		public JumpByType JumpBy
-		{
-			get => data.jumpBy;
-			private set => editableData.jumpBy = value;
-		}
-
-		public DateTime LastActive { get; set; }
-
-		public bool ViewBinary
-		{
-			get => data.viewBinary;
-			private set => editableData.viewBinary = value;
-		}
-
-		public HashSet<Coder.CodePage> ViewBinaryCodePages
-		{
-			get => data.viewBinaryCodePages;
-			private set => editableData.viewBinaryCodePages = value;
-		}
-
-		public IReadOnlyList<HashSet<string>> ViewBinarySearches
-		{
-			get => data.viewBinarySearches;
-			private set => editableData.viewBinarySearches = value;
-		}
-
-		public int StartColumn
-		{
-			get => data.startColumn;
-			set => editableData.startColumn = value;
-		}
-
 		public int StartRow
 		{
-			get => data.startRow;
+			get => Data.startRow;
 			set
 			{
-				editableData.startRow = value;
+				EditableData.startRow = value;
 				if (DiffTarget != null)
-					DiffTarget.editableData.startRow = value;
+					DiffTarget.StartRow = value;
 			}
+		}
+
+		public NEWindow NEWindow { get; private set; }
+		public void Attach(NEWindow neWindow)
+		{
+			if (NEWindow != null)
+				throw new Exception("File already attached");
+			NEWindow = neWindow;
+			SetAutoRefresh();
+		}
+
+		public void Detach()
+		{
+			if (NEWindow != null)
+				throw new Exception("File not attached");
+			NEWindow = null;
+			SetAutoRefresh();
+		}
+
+		NEFileResult result;
+		NEFileResult CreateResult()
+		{
+			if (result == null)
+			{
+				NEWindow.CreateResult();
+				result = new NEFileResult(this);
+			}
+			return result;
 		}
 
 		void ResetResult()
@@ -304,12 +202,14 @@ namespace NeoEdit.Editor
 			clipboardData = null;
 			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
 				keysAndValues[kvIndex] = null;
-
 			result = null;
 		}
 
 		public NEFileResult GetResult()
 		{
+			if (result == null)
+				return null;
+
 			var ret = result;
 			ResetResult();
 			return ret;

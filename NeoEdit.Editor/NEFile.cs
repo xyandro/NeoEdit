@@ -19,9 +19,11 @@ namespace NeoEdit.Editor
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
 
+		public DateTime LastActive { get; set; }
+
 		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
-			data = new NEFileData(this);
+			Data = new NEFileData(this);
 
 			Text = new NEText("");
 			Selections = new List<Range>();
@@ -38,23 +40,6 @@ namespace NeoEdit.Editor
 
 			OpenFile(fileName, displayName, bytes, codePage, contentType, modified);
 			Goto(line, column, index);
-		}
-
-		bool attached = false;
-		public void Attach()
-		{
-			if (attached)
-				throw new Exception("File already attached");
-			attached = true;
-			SetAutoRefresh();
-		}
-
-		public void Detach()
-		{
-			if (!attached)
-				throw new Exception("File not attached");
-			attached = false;
-			SetAutoRefresh();
 		}
 
 		public static NEFile CreateSummaryFile(string displayName, List<(string str, int count)> summary)
@@ -1205,7 +1190,8 @@ namespace NeoEdit.Editor
 
 			if (value.HasValue)
 				AutoRefresh = value.Value;
-			if ((!attached) || (!AutoRefresh) || (!File.Exists(FileName)))
+
+			if ((NEWindow == null) || (!AutoRefresh) || (!File.Exists(FileName)))
 				return;
 
 			watcher = new FileSystemWatcher

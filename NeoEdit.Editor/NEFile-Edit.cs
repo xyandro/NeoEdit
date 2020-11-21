@@ -296,7 +296,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Undo_Text()
 		{
-			var useData = data;
+			var useData = Data;
 			while ((useData.undo != null) && (useData.text == Text))
 				useData = useData.undo;
 			ResetData(useData);
@@ -304,13 +304,13 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Undo_Step()
 		{
-			if (data.undo != null)
-				ResetData(data.undo);
+			if (Data.undo != null)
+				ResetData(Data.undo);
 		}
 
 		void Execute_Edit_Redo_Text()
 		{
-			var useData = data;
+			var useData = Data;
 			while ((useData.redo != null) && (useData.text == Text))
 				useData = useData.redo;
 			ResetData(useData);
@@ -318,8 +318,8 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Redo_Step()
 		{
-			if (data.redo != null)
-				ResetData(data.redo);
+			if (Data.redo != null)
+				ResetData(Data.redo);
 		}
 
 		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.Selections.Count == 1, state.NEWindow.Focused.GetVariables());
