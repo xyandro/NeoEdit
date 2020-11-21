@@ -16,29 +16,37 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		static void AddFilesFromClipboards(NEWindow neWindow)
+		string GetSelectionsName(int index)
 		{
-			var index = 0;
-			foreach (var strs in NEClipboard.Current)
-			{
-				++index;
-				var ending = strs.Any(str => (!str.EndsWith("\r")) && (!str.EndsWith("\n"))) ? "\r\n" : "";
-				var sb = new StringBuilder(strs.Sum(str => str.Length + ending.Length));
-				var sels = new List<Range>();
-				foreach (var str in strs)
-				{
-					var start = sb.Length;
-					sb.Append(str);
-					sels.Add(new Range(sb.Length, start));
-					sb.Append(ending);
-				}
-				var te = new NEFile(displayName: $"Clipboard {index}", bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false);
-				neWindow.AddNewNEFile(te);
-				te.Selections = sels;
-			}
+			if (!string.IsNullOrWhiteSpace(DisplayName))
+				return $"Selections for {DisplayName}";
+			if (!string.IsNullOrWhiteSpace(FileName))
+				return $"Selections for {Path.GetFileName(FileName)}";
+			return $"Selections {index + 1}";
 		}
 
-		static void AddFilesFromClipboardSelections(NEWindow neWindow) => NEClipboard.Current.Strings.ForEach((str, index) => neWindow.AddNewNEFile(new NEFile(displayName: $"Clipboard {index + 1}", bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false)));
+		static NEFile CreateFileFromStrings(IReadOnlyList<string> strs, string name, ParserType contentType)
+		{
+			var sb = new StringBuilder(strs.Sum(str => str.Length + 2)); // 2 is for ending; may or may not need it
+			var sels = new List<Range>();
+			foreach (var str in strs)
+			{
+				var start = sb.Length;
+				sb.Append(str);
+				sels.Add(new Range(sb.Length, start));
+				if ((!str.EndsWith("\r")) && (!str.EndsWith("\n")))
+					sb.Append("\r\n");
+			}
+
+			return new NEFile(displayName: name, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: contentType, modified: false)
+			{
+				Selections = sels,
+				StartRow = 0,
+				StartColumn = 0,
+			};
+		}
+
+		static void AddFilesFromStrings(NEWindow neWindow, IReadOnlyList<(IReadOnlyList<string> strs, string name, ParserType contentType)> data) => data.AsTaskRunner().Select(x => CreateFileFromStrings(x.strs, x.name, x.contentType)).ForEach(neFile => neWindow.AddNewNEFile(neFile));
 
 		string GetSaveFileName()
 		{
@@ -148,15 +156,41 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static bool PreExecute_File_New_FromClipboard_Selections()
+		static bool PreExecute_File_New_FromSelections_All()
 		{
-			AddFilesFromClipboardSelections(state.NEWindow);
+			var contentType = state.NEWindow.ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
+			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings()).ToList(), "Selections", contentType) });
+			return true;
+		}
+
+		static bool PreExecute_File_New_FromSelections_Files()
+		{
+			AddFilesFromStrings(state.NEWindow, state.NEWindow.ActiveFiles.Select((neFile, index) => (neFile.GetSelectionStrings(), neFile.GetSelectionsName(index + 1), neFile.ContentType)).ToList());
+			return true;
+		}
+
+		static bool PreExecute_File_New_FromSelections_Selections()
+		{
+			var index = 0;
+			AddFilesFromStrings(state.NEWindow, state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings().Select(str => (new List<string> { str } as IReadOnlyList<string>, $"Selection {++index}", neFile.ContentType))).ToList());
+			return true;
+		}
+
+		static bool PreExecute_File_New_FromClipboard_All()
+		{
+			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (NEClipboard.Current.Strings, "Clipboards", ParserType.None) });
 			return true;
 		}
 
 		static bool PreExecute_File_New_FromClipboard_Files()
 		{
-			AddFilesFromClipboards(state.NEWindow);
+			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Select((clipboard, index) => (clipboard, $"Clipboard {index + 1}", ParserType.None)).ToList());
+			return true;
+		}
+
+		static bool PreExecute_File_New_FromClipboard_Selections()
+		{
+			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
 			return true;
 		}
 

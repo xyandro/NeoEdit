@@ -31,9 +31,15 @@
 		<Separator/>
 		<MenuItem Header="_New">
 			<controls:NEMenuItem Header="_New" CommandEnum="File_New_New" ToolTip="Open a new empty window"/>
+			<MenuItem Header="From _selections">
+				<controls:NEMenuItem Header="_All" CommandEnum="File_New_FromSelections_All" ToolTip="Create a new file with all selections"/>
+				<controls:NEMenuItem Header="_Files" CommandEnum="File_New_FromSelections_Files" ToolTip="Create a new file with selections from each file"/>
+				<controls:NEMenuItem Header="_Selections" CommandEnum="File_New_FromSelections_Selections" ToolTip="Create a new file for each selection"/>
+			</MenuItem>
 			<MenuItem Header="From _clipboard">
-				<controls:NEMenuItem Header="_Selections" CommandEnum="File_New_FromClipboard_Selections" ToolTip="Create a new file for each value on the clipboard"/>
+				<controls:NEMenuItem Header="_All" CommandEnum="File_New_FromClipboard_All" ToolTip="Create a new file with all values on the clipboard"/>
 				<controls:NEMenuItem Header="_Files" CommandEnum="File_New_FromClipboard_Files" ToolTip="Create a new file for each file on the clipboard"/>
+				<controls:NEMenuItem Header="_Selections" CommandEnum="File_New_FromClipboard_Selections" ToolTip="Create a new file for each value on the clipboard"/>
 			</MenuItem>
 			<controls:NEMenuItem Header="_Word list" CommandEnum="File_New_WordList" ToolTip="Get list of English words"/>
 		</MenuItem>
@@ -492,22 +498,26 @@
 				</MenuItem>
 				<Separator/>
 				<MenuItem Header="Between _files">
-					<MenuItem Header="_Match">
-						<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Match_IgnoreCase" ToolTip="Keep selections that match text and position in all files (ignore case)"/>
-						<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Match_MatchCase" ToolTip="Keep selections that match text and position in all files (match case)"/>
-					</MenuItem>
-					<MenuItem Header="M_ismatch">
-						<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Mismatch_IgnoreCase" ToolTip="Keep selections that don't match text and position in all files (ignore case)"/>
-						<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Mismatch_MatchCase" ToolTip="Keep selections that don't match text and position in all files (match case)"/>
+					<MenuItem Header="_Ordered">
+						<MenuItem Header="_Match">
+							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Ordered_Match_IgnoreCase" ToolTip="Keep selections that match text and position in all files (ignore case)"/>
+							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Ordered_Match_MatchCase" ToolTip="Keep selections that match text and position in all files (match case)"/>
+						</MenuItem>
+						<MenuItem Header="M_ismatch">
+							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Ordered_Mismatch_IgnoreCase" ToolTip="Keep selections that don't match text and position in all files (ignore case)"/>
+							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Ordered_Mismatch_MatchCase" ToolTip="Keep selections that don't match text and position in all files (match case)"/>
+						</MenuItem>
 					</MenuItem>
 					<Separator/>
-					<MenuItem Header="_Common">
-						<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Common_IgnoreCase" ToolTip="Keep selections that match text in all files (ignore case)"/>
-						<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Common_MatchCase" ToolTip="Keep selections that match text in all files (match case)"/>
-					</MenuItem>
-					<MenuItem Header="Non-c_ommon">
-						<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_NonCommon_IgnoreCase" ToolTip="Keep selections that don't match text in all files (ignore case)"/>
-						<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_NonCommon_MatchCase" ToolTip="Keep selections that don't match text in all files (match case)"/>
+					<MenuItem Header="_Unordered">
+						<MenuItem Header="_Match">
+							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Unordered_Match_IgnoreCase" ToolTip="Keep selections that match text in all files (ignore case)"/>
+							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Unordered_Match_MatchCase" ToolTip="Keep selections that match text in all files (match case)"/>
+						</MenuItem>
+						<MenuItem Header="M_ismatch">
+							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Unordered_Mismatch_IgnoreCase" ToolTip="Keep selections that don't match text in all files (ignore case)"/>
+							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Unordered_Mismatch_MatchCase" ToolTip="Keep selections that don't match text in all files (match case)"/>
+						</MenuItem>
 					</MenuItem>
 				</MenuItem>
 			</MenuItem>
@@ -1070,22 +1080,24 @@
 		<MenuItem Header="_New">
 			<controls:NEMenuItem Header="_New window" CommandEnum="Window_New_NewWindow" ToolTip="Create new window"/>
 			<MenuItem Header="From _selections">
-				<controls:NEMenuItem Header="_All selections" CommandEnum="Window_New_FromSelections_AllSelections" ToolTip="Open a new window with a new file for each selection"/>
-				<controls:NEMenuItem Header="_Each file" CommandEnum="Window_New_FromSelections_EachFile" ToolTip="Open a new window with a new file for each file"/>
+				<controls:NEMenuItem Header="_All" CommandEnum="Window_New_FromSelections_All" ToolTip="Open a new window with a new file with all selections"/>
+				<controls:NEMenuItem Header="_Files" CommandEnum="Window_New_FromSelections_Files" ToolTip="Open a new window with a new file with selections from each file"/>
+				<controls:NEMenuItem Header="_Selections" CommandEnum="Window_New_FromSelections_Selections" ToolTip="Open a new window with a new file for each selection"/>
 			</MenuItem>
 			<MenuItem Header="S_ummarize selections">
-				<MenuItem Header="_All selections">
-					<controls:NEMenuItem Header="_Ignore case" CommandEnum="Window_New_SummarizeSelections_AllSelections_IgnoreCase" ToolTip="Open a new window with count of all selections in all files"/>
-					<controls:NEMenuItem Header="Match _case" CommandEnum="Window_New_SummarizeSelections_AllSelections_MatchCase" ToolTip="Open a new window with count of all selections in all files"/>
+				<MenuItem Header="_Files">
+					<controls:NEMenuItem Header="_Ignore case" CommandEnum="Window_New_SummarizeSelections_Files_IgnoreCase" ToolTip="Open a new window with count of all selections in each file (ignore case)"/>
+					<controls:NEMenuItem Header="Match _case" CommandEnum="Window_New_SummarizeSelections_Files_MatchCase" ToolTip="Open a new window with count of all selections in each file (match case)"/>
 				</MenuItem>
-				<MenuItem Header="_Each file">
-					<controls:NEMenuItem Header="_Ignore case" CommandEnum="Window_New_SummarizeSelections_EachFile_IgnoreCase" ToolTip="Open a new window with count of all selections in each file"/>
-					<controls:NEMenuItem Header="Match _case" CommandEnum="Window_New_SummarizeSelections_EachFile_MatchCase" ToolTip="Open a new window with count of all selections in each file"/>
+				<MenuItem Header="_Selections">
+					<controls:NEMenuItem Header="_Ignore case" CommandEnum="Window_New_SummarizeSelections_Selections_IgnoreCase" ToolTip="Open a new window with count of all selections in all files (ignore case)"/>
+					<controls:NEMenuItem Header="Match _case" CommandEnum="Window_New_SummarizeSelections_Selections_MatchCase" ToolTip="Open a new window with count of all selections in all files (match case)"/>
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="From _clipboard">
-				<controls:NEMenuItem Header="_Selections" CommandEnum="Window_New_FromClipboard_Selections" ToolTip="Open a new window with a new file for each value on the clipboard"/>
+				<controls:NEMenuItem Header="_All" CommandEnum="Window_New_FromClipboard_All" ToolTip="Open a new window with a new file with all values on the clipboard"/>
 				<controls:NEMenuItem Header="_Files" CommandEnum="Window_New_FromClipboard_Files" ToolTip="Open a new window with a new file for each file on the clipboard"/>
+				<controls:NEMenuItem Header="_Selections" CommandEnum="Window_New_FromClipboard_Selections" ToolTip="Open a new window with a new file for each value on the clipboard"/>
 			</MenuItem>
 			<controls:NEMenuItem Header="From active _files" CommandEnum="Window_New_FromActiveFiles" ToolTip="Move files to a new window"/>
 		</MenuItem>

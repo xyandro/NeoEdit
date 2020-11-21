@@ -2,25 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
-using NeoEdit.Common.Transform;
-using NeoEdit.TaskRunning;
+using NeoEdit.Common.Enums;
 
 namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		string GetDisplayName()
-		{
-			if (DisplayName != null)
-				return DisplayName;
-			if (FileName != null)
-				return Path.GetFileName(FileName);
-			return null;
-		}
-
 		string GetSummaryName(int index)
 		{
 			if (!string.IsNullOrWhiteSpace(DisplayName))
@@ -36,41 +25,29 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static bool PreExecute_Window_New_FromSelections_AllSelections()
+		static bool PreExecute_Window_New_FromSelections_All()
 		{
-			var newFiles = state.NEWindow.ActiveFiles.AsTaskRunner().SelectMany(neFile => neFile.Selections.AsTaskRunner().Select(range => neFile.Text.GetString(range)).Select(str => new NEFile(bytes: Coder.StringToBytes(str, Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: neFile.ContentType, modified: false)).ToList()).ToList();
-			newFiles.ForEach((neFile, index) => neFile.DisplayName = $"Selection {index + 1}");
-
+			var contentType = state.NEWindow.ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
 			var neWindow = new NEWindow();
-			newFiles.ForEach(neFile => neWindow.AddNewNEFile(neFile));
-
+			AddFilesFromStrings(neWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings()).ToList(), "Selections", contentType) });
+			neWindow.SetLayout(state.NEWindow.WindowLayout);
 			return true;
 		}
 
-		static bool PreExecute_Window_New_FromSelections_EachFile()
+		static bool PreExecute_Window_New_FromSelections_Files()
 		{
-			var newFileDatas = state.NEWindow.ActiveFiles.AsTaskRunner().Select(neFile => (DisplayName: neFile.GetDisplayName(), Selections: neFile.GetSelectionStrings(), neFile.ContentType)).ToList();
-			var newFiles = new List<NEFile>();
-			foreach (var newFileData in newFileDatas)
-			{
-				var sb = new StringBuilder();
-				var selections = new List<Range>();
-
-				foreach (var str in newFileData.Selections)
-				{
-					selections.Add(Range.FromIndex(sb.Length, str.Length));
-					sb.Append(str);
-					if ((!str.EndsWith("\r")) && (!str.EndsWith("\n")))
-						sb.Append("\r\n");
-				}
-
-				newFiles.Add(new NEFile(displayName: newFileData.DisplayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, contentType: newFileData.ContentType, modified: false) { Selections = selections });
-			}
-
 			var neWindow = new NEWindow();
-			newFiles.ForEach(neFile => neWindow.AddNewNEFile(neFile));
+			AddFilesFromStrings(neWindow, state.NEWindow.ActiveFiles.Select((neFile, index) => (neFile.GetSelectionStrings(), neFile.GetSelectionsName(index + 1), neFile.ContentType)).ToList());
 			neWindow.SetLayout(state.NEWindow.WindowLayout);
+			return true;
+		}
 
+		static bool PreExecute_Window_New_FromSelections_Selections()
+		{
+			var index = 0;
+			var neWindow = new NEWindow();
+			AddFilesFromStrings(neWindow, state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings().Select(str => (new List<string> { str } as IReadOnlyList<string>, $"Selection {++index}", neFile.ContentType))).ToList());
+			neWindow.SetLayout(state.NEWindow.WindowLayout);
 			return true;
 		}
 
@@ -92,27 +69,39 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static bool PreExecute_Window_New_FromClipboard_Selections()
+		static bool PreExecute_Window_New_FromClipboard_All()
 		{
-			AddFilesFromClipboardSelections(new NEWindow());
+			var neWindow = new NEWindow();
+			AddFilesFromStrings(neWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (NEClipboard.Current.Strings, "Clipboards", ParserType.None) });
+			neWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 			return true;
 		}
 
 		static bool PreExecute_Window_New_FromClipboard_Files()
 		{
-			AddFilesFromClipboards(new NEWindow());
+			var neWindow = new NEWindow();
+			AddFilesFromStrings(neWindow, NEClipboard.Current.Select((clipboard, index) => (clipboard, $"Clipboard {index + 1}", ParserType.None)).ToList());
+			neWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+			return true;
+		}
+
+		static bool PreExecute_Window_New_FromClipboard_Selections()
+		{
+			var neWindow = new NEWindow();
+			AddFilesFromStrings(neWindow, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
+			neWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
 			return true;
 		}
 
 		static bool PreExecute_Window_New_FromActiveFiles()
 		{
-			var active = state.NEWindow.ActiveFiles.ToList();
-			active.ForEach(neFile => neFile.ClearNEFiles());
-
 			var neWindow = new NEWindow();
+			foreach (var neFile in state.NEWindow.ActiveFiles)
+			{
+				neFile.ClearNEFiles();
+				neWindow.AddNewNEFile(neFile);
+			}
 			neWindow.SetLayout(state.NEWindow.WindowLayout);
-			active.ForEach(neFile => neWindow.AddNewNEFile(neFile));
-
 			return true;
 		}
 
