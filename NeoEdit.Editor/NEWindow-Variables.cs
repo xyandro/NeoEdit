@@ -57,6 +57,8 @@ namespace NeoEdit.Editor
 				EditableData.activeFiles = value;
 				if (!ActiveFiles.Contains(Focused))
 					Focused = ActiveFiles.OrderByDescending(neFile => neFile.LastActive).FirstOrDefault();
+				var now = DateTime.Now;
+				value.ForEach(neFile => neFile.LastActive = now);
 			}
 		}
 
@@ -151,9 +153,6 @@ namespace NeoEdit.Editor
 				}
 
 				SetActiveFiles(nextActiveFiles);
-
-				var now = DateTime.Now;
-				ActiveFiles.ForEach(neFile => neFile.LastActive = now);
 			}
 
 			if (setClipboard != null)
