@@ -52,6 +52,7 @@ namespace NeoEdit.Editor
 
 		public NEFileData(NEFileData neFileData)
 		{
+			neFile = neFileData.neFile;
 			text = neFileData.text;
 			currentSelection = neFileData.currentSelection;
 			selections = neFileData.selections;

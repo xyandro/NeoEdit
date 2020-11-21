@@ -22,9 +22,9 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void ResetData(NEFileData data)
+		public void SetData(NEFileData data)
 		{
-			ResetResult();
+			ClearResult();
 			Data = data;
 		}
 
@@ -186,11 +186,11 @@ namespace NeoEdit.Editor
 				return null;
 
 			var ret = result;
-			ResetResult();
+			ClearResult();
 			return ret;
 		}
 
-		void ResetResult()
+		void ClearResult()
 		{
 			clipboardData = null;
 			for (var kvIndex = 0; kvIndex < 10; ++kvIndex)
@@ -203,14 +203,20 @@ namespace NeoEdit.Editor
 		{
 			if (NEWindow != null)
 				throw new Exception("File already attached");
+			if (result != null)
+				throw new Exception("Can't attach, file being modified");
+
 			NEWindow = neWindow;
 			SetAutoRefresh();
 		}
 
 		public void Detach()
 		{
-			if (NEWindow != null)
+			if (NEWindow == null)
 				throw new Exception("File not attached");
+			if (result != null)
+				throw new Exception("Can't detach, file being modified");
+
 			NEWindow = null;
 			SetAutoRefresh();
 		}

@@ -21,16 +21,11 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void ResetData(NEWindowData data)
+		public void SetData(NEWindowData data)
 		{
-			var oldNEFiles = NEFiles;
-
-			ResetResult();
+			ClearResult();
 			Data = data;
-			RecreateNEFiles();
-			NEFiles.Except(oldNEFiles).ForEach(neFile => neFile.Attach(this));
-			oldNEFiles.Except(NEFiles).ForEach(neFile => neFile.Detach());
-			NEFileDatas.ForEach(neFileData => neFileData.neFile.ResetData(neFileData));
+			NEFileDatas.ForEach(neFileData => neFileData.neFile.SetData(neFileData));
 		}
 
 		public NEFile Focused { get => Data.focused; set => EditableData.focused = value; }
@@ -38,9 +33,7 @@ namespace NeoEdit.Editor
 		public bool ActiveOnly { get => Data.activeOnly; set => EditableData.activeOnly = value; }
 		public bool MacroVisualize { get => Data.macroVisualize; set => EditableData.macroVisualize = value; }
 
-		public IReadOnlyOrderedHashSet<NEFile> NEFiles { get; private set; }
-
-		public void SetNEFileDatas(IEnumerable<NEFileData> neFileDatas) => NEFileDatas = new OrderedHashSet<NEFileData>(neFileDatas);
+		public IReadOnlyOrderedHashSet<NEFile> NEFiles => Data.neFiles;
 
 		public IReadOnlyOrderedHashSet<NEFileData> NEFileDatas
 		{
@@ -48,11 +41,9 @@ namespace NeoEdit.Editor
 			private set
 			{
 				EditableData.neFileDatas = value;
-				RecreateNEFiles();
+				EditableData.neFiles = new OrderedHashSet<NEFile>(value.Select(neFileData => neFileData.neFile));
 			}
 		}
-
-		void RecreateNEFiles() => NEFiles = new OrderedHashSet<NEFile>(NEFileDatas.Select(neFile => neFile.neFile));
 
 		public void ClearActiveFiles() => ActiveFiles = new OrderedHashSet<NEFile>();
 		public void SetActiveFile(NEFile file) => ActiveFiles = new OrderedHashSet<NEFile> { file };
@@ -69,6 +60,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		public void ClearNEWindows() => CreateResult().ClearNEWindows();
 		public void AddNewNEFile(NEFile neFile) => CreateResult().AddNewNEFile(neFile);
 
 		NEWindowResult result;
@@ -77,7 +69,7 @@ namespace NeoEdit.Editor
 			if (result == null)
 			{
 				NEGlobal?.CreateResult();
-				result = new NEWindowResult();
+				result = new NEWindowResult(this);
 			}
 			return result;
 		}
@@ -91,7 +83,7 @@ namespace NeoEdit.Editor
 			List<KeysAndValues>[] keysAndValues = null;
 			List<string> dragFiles = null;
 
-			var nextNEFileDatas = new List<NEFileData>();
+			var nextNEFileDatas = new OrderedHashSet<NEFileData>();
 			var newFileDatas = new List<NEFileData>();
 			foreach (var neFile in NEFiles)
 			{
@@ -102,7 +94,7 @@ namespace NeoEdit.Editor
 					continue;
 				}
 
-				nextNEFileDatas.AddRange(result.NEFiles.ForEach(x => x.Data));
+				result.NEFiles.ForEach(x => nextNEFileDatas.Add(x.Data));
 
 				if (result.NewNEFiles != null)
 					newFileDatas.AddRange(result.NewNEFiles.Select(x => x.Data));
@@ -134,18 +126,19 @@ namespace NeoEdit.Editor
 				}
 			}
 
-			nextNEFileDatas.AddRange(newFileDatas);
+			newFileDatas.ForEach(nextNEFileDatas.Add);
 
 			if (result?.NewNEFiles != null)
-				nextNEFileDatas.AddRange(result.NewNEFiles.ForEach(x => x.Data));
+			{
+				result.NewNEFiles.ForEach(neFile => neFile.GetResult());
+				result.NewNEFiles.ForEach(neFile => nextNEFileDatas.Add(neFile.Data));
+			}
 
 			if (!NEFileDatas.Matches(nextNEFileDatas))
 			{
 				var oldNEFiles = NEFiles;
 
-				SetNEFileDatas(nextNEFileDatas);
-				NEFiles.Except(oldNEFiles).ForEach(neFile => neFile.Attach(this));
-				oldNEFiles.Except(NEFiles).ForEach(neFile => neFile.Detach());
+				NEFileDatas = nextNEFileDatas;
 
 				var nextActiveFiles = NEFiles.Except(oldNEFiles).ToList(); // New files
 				if (!nextActiveFiles.Any())
@@ -173,17 +166,20 @@ namespace NeoEdit.Editor
 				result.SetDragFiles(dragFiles);
 
 			var ret = result;
-			ResetResult();
+			ClearResult();
 			return ret;
 		}
 
-		void ResetResult() => result = null;
+		void ClearResult() => result = null;
 
 		public NEGlobal NEGlobal { get; private set; }
 		public void Attach(NEGlobal neGlobal)
 		{
 			if (NEGlobal != null)
 				throw new Exception("Window already attached");
+			if (result != null)
+				throw new Exception("Can't attach, window being modified");
+
 			NEGlobal = neGlobal;
 			neWindowUI = INEWindowUIStatic.CreateNEWindowUI(this);
 		}
@@ -192,9 +188,12 @@ namespace NeoEdit.Editor
 		{
 			if (NEGlobal == null)
 				throw new Exception("Window not attached");
-			NEGlobal = null;
+			if (result != null)
+				throw new Exception("Can't detach, window being modified");
+
 			neWindowUI.CloseWindow();
 			neWindowUI = null;
+			NEGlobal = null;
 		}
 	}
 }

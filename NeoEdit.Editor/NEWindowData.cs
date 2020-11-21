@@ -8,17 +8,26 @@ namespace NeoEdit.Editor
 		public readonly NEWindow neWindow;
 
 		public IReadOnlyOrderedHashSet<NEFileData> neFileDatas;
+		public IReadOnlyOrderedHashSet<NEFile> neFiles;
 		public IReadOnlyOrderedHashSet<NEFile> activeFiles;
 		public NEFile focused;
 		public WindowLayout windowLayout;
 		public bool activeOnly;
 		public bool macroVisualize = true;
 
-		public NEWindowData(NEWindow neWindow) => this.neWindow = neWindow;
+		public NEWindowData(NEWindow neWindow)
+		{
+			this.neWindow = neWindow;
+			neFileDatas = new OrderedHashSet<NEFileData>();
+			neFiles = activeFiles = new OrderedHashSet<NEFile>();
+			windowLayout = new WindowLayout(1, 1);
+		}
 
 		public NEWindowData(NEWindowData neWindowData)
 		{
+			neWindow = neWindowData.neWindow;
 			neFileDatas = neWindowData.neFileDatas;
+			neFiles = neWindowData.neFiles;
 			activeFiles = neWindowData.activeFiles;
 			focused = neWindowData.focused;
 			windowLayout = neWindowData.windowLayout;

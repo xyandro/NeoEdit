@@ -13,12 +13,7 @@ namespace NeoEdit.Editor
 
 		public NEFileResult(NEFile neFile) => NEFiles = new List<NEFile> { neFile };
 
-		public void ClearNEFiles()
-		{
-			if (NEFiles == null)
-				NEFiles = new List<NEFile>();
-			NEFiles.Clear();
-		}
+		public void ClearNEFiles() => NEFiles.Clear();
 
 		public void AddNEFile(NEFile neFile) => NEFiles.Add(neFile);
 

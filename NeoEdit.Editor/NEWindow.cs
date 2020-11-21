@@ -34,10 +34,7 @@ namespace NeoEdit.Editor
 		public NEWindow(bool addEmpty = false)
 		{
 			Data = new NEWindowData(this);
-			NEFileDatas = new OrderedHashSet<NEFileData>();
-			ActiveFiles = new OrderedHashSet<NEFile>();
-			WindowLayout = new WindowLayout(1, 1);
-			state.NEGlobal.AddNEWindow(this);
+			state.NEGlobal.AddNewNEWindow(this);
 
 			if (addEmpty)
 				AddNewNEFile(new NEFile());

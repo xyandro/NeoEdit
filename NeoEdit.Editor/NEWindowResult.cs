@@ -11,12 +11,9 @@ namespace NeoEdit.Editor
 		public IReadOnlyList<KeysAndValues>[] KeysAndValues { get; private set; }
 		public IReadOnlyList<string> DragFiles { get; private set; }
 
-		public void ClearNEWindows()
-		{
-			if (NEWindows == null)
-				NEWindows = new List<NEWindow>();
-			NEWindows.Clear();
-		}
+		public NEWindowResult(NEWindow neWindow) => NEWindows = new List<NEWindow> { neWindow };
+
+		public void ClearNEWindows() => NEWindows.Clear();
 
 		public void AddNewNEFile(NEFile neFile)
 		{

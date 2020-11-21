@@ -18,7 +18,7 @@ namespace NeoEdit.Editor
 		public NEGlobal()
 		{
 			Data = new NEGlobalData();
-			SetNEWindowDatas(new OrderedHashSet<NEWindowData>());
+			NEWindowDatas = new OrderedHashSet<NEWindowData>();
 		}
 
 		public bool HandlesKey(ModifierKeys modifiers, Key key)
@@ -143,7 +143,7 @@ namespace NeoEdit.Editor
 					state.NEWindow.neWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {elapsed:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
 				}
 
-				var result = state.NEGlobal.GetResult();
+				var result = GetResult();
 				if (result != null)
 				{
 					if (result.Clipboard != null)
@@ -163,10 +163,12 @@ namespace NeoEdit.Editor
 						//Focused.DragFiles = fileNames;
 					}
 				}
+
+				UpdateAttachments();
 			}
 			catch
 			{
-				state.NEGlobal.ResetData(oldData);
+				state.NEGlobal.SetData(oldData);
 				throw;
 			}
 			finally
