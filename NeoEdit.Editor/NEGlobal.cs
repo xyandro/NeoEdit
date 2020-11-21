@@ -47,6 +47,7 @@ namespace NeoEdit.Editor
 		readonly Stack<ExecuteState> actionStack = new Stack<ExecuteState>();
 		ExecuteState lastAction;
 		bool timeNextAction;
+		NEGlobalData undoGlobalData, redoGlobalData;
 
 		public void QueueActions(IEnumerable<ExecuteState> actions)
 		{
@@ -56,6 +57,28 @@ namespace NeoEdit.Editor
 
 		public void HandleCommand(INEWindow neWindow, ExecuteState executeState, Func<bool> skipDraw)
 		{
+			switch (executeState.Command)
+			{
+				case NECommand.Edit_Undo_Global:
+					if (undoGlobalData != null)
+					{
+						redoGlobalData = Data;
+						SetData(undoGlobalData);
+						undoGlobalData = null;
+						NEWindows.ForEach(x => x.RenderNEWindowUI());
+					}
+					return;
+				case NECommand.Edit_Redo_Global:
+					if (redoGlobalData != null)
+					{
+						undoGlobalData = Data;
+						SetData(redoGlobalData);
+						redoGlobalData = null;
+						NEWindows.ForEach(x => x.RenderNEWindowUI());
+					}
+					return;
+			}
+
 			lock (actionStack)
 				actionStack.Push(executeState);
 			RunCommands(neWindow as NEWindow, skipDraw);
@@ -64,6 +87,7 @@ namespace NeoEdit.Editor
 
 		void RunCommands(NEWindow neWindow, Func<bool> skipDraw)
 		{
+			var oldData = Data;
 			try
 			{
 				var actionCount = -2; // -1 because it preincrements, and -1 so it doesn't count the first step (which could queue a macro)
@@ -102,6 +126,12 @@ namespace NeoEdit.Editor
 					RunCommand();
 					if (state.MacroInclude)
 						lastAction = new ExecuteState(state);
+				}
+
+				if (Data != oldData)
+				{
+					undoGlobalData = oldData;
+					redoGlobalData = null;
 				}
 			}
 			catch (Exception ex)

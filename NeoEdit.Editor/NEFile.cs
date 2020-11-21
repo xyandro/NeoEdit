@@ -1632,7 +1632,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public void ViewSetDisplaySize(int columns, int rows) => state.NEWindow?.SetDisplaySize(columns, rows);
+		public void ViewSetDisplaySize(int columns, int rows) => NEWindow?.SetDisplaySize(columns, rows);
 
 		public List<string> ViewGetStatusBar()
 		{

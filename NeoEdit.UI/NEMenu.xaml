@@ -141,10 +141,12 @@
 		<MenuItem Header="_Undo">
 			<controls:NEMenuItem Header="_Text" CommandEnum="Edit_Undo_Text" ToolTip="Undo last text change"/>
 			<controls:NEMenuItem Header="_Step" CommandEnum="Edit_Undo_Step" ToolTip="Undo last step"/>
+			<controls:NEMenuItem Header="_Global" CommandEnum="Edit_Undo_Global" ToolTip="Global undo"/>
 		</MenuItem>
 		<MenuItem Header="_Redo">
 			<controls:NEMenuItem Header="_Text" CommandEnum="Edit_Redo_Text" ToolTip="Redo last text change"/>
 			<controls:NEMenuItem Header="_Step" CommandEnum="Edit_Redo_Step" ToolTip="Redo last step"/>
+			<controls:NEMenuItem Header="_Global" CommandEnum="Edit_Redo_Global" ToolTip="Global redo"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="R_epeat" CommandEnum="Edit_Repeat" ToolTip="Repeat the currently selected text (include the newline in selection if desired)"/>

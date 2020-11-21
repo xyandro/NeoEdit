@@ -85,7 +85,7 @@ namespace NeoEdit.Editor
 				StatusBar = GetStatusBar(),
 				MenuStatus = GetMenuStatus(),
 			};
-			state.NEWindow.neWindowUI?.Render(renderParameters);
+			neWindowUI?.Render(renderParameters);
 		}
 
 		Dictionary<string, bool?> GetMenuStatus()
@@ -144,13 +144,13 @@ namespace NeoEdit.Editor
 
 			var sw = Stopwatch.StartNew();
 
-			state.NEWindow.neWindowUI.SetTaskRunnerProgress(0);
+			neWindowUI.SetTaskRunnerProgress(0);
 			try
 			{
 				if (!NEFile.PreExecute())
-					TaskRunner.Run(Execute, percent => state.NEWindow.neWindowUI.SetTaskRunnerProgress(percent));
+					TaskRunner.Run(Execute, percent => neWindowUI.SetTaskRunnerProgress(percent));
 			}
-			finally { state.NEWindow.neWindowUI.SetTaskRunnerProgress(null); }
+			finally { neWindowUI.SetTaskRunnerProgress(null); }
 
 			var elapsed = sw.ElapsedMilliseconds;
 
