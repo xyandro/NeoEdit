@@ -19,6 +19,8 @@ namespace NeoEdit.Editor
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
 
+		readonly NEText Text = new NEText("");
+
 		public DateTime LastActive { get; set; }
 		public bool IsModified { get; private set; }
 		public string DBName { get; private set; }
@@ -70,7 +72,6 @@ namespace NeoEdit.Editor
 		{
 			Data = new NEFileData(this);
 
-			Text = new NEText("");
 			Selections = new List<Range>();
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, new List<Range>());
@@ -162,7 +163,7 @@ namespace NeoEdit.Editor
 			if (ranges.Count != strs.Count)
 				throw new Exception("Invalid string count");
 
-			Text = Text.Replace(ranges, strs);
+			NETextPoint = Text.CreateTextPoint(ranges, strs);
 			SetModifiedFlag();
 			CalculateDiff();
 

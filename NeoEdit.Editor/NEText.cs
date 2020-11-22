@@ -19,11 +19,13 @@ namespace NeoEdit.Editor
 	{
 		const int tabStop = 4;
 
-		readonly string text;
+		string text;
 		List<int> linePosition;
 		List<int> endingPosition;
 		public string OnlyEnding { get; private set; }
 		public string DefaultEnding { get; private set; }
+
+		NETextPoint neTextPoint = new NETextPoint(new List<Range>(), new List<string>(), null);
 
 		public int Length => text.Length;
 		public int NumLines => endingPosition.Count;
@@ -429,42 +431,17 @@ namespace NeoEdit.Editor
 			return text.Substring(start, length);
 		}
 
-		public NEText Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> newText)
+		public NETextPoint CreateTextPoint(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs)
 		{
-			if (ranges.Count != newText.Count)
-				throw new Exception("Invalid number of arguments");
+			MoveToTextPoint(new NETextPoint(ranges, strs, neTextPoint));
+			return neTextPoint;
+		}
 
-			int? checkPos = null;
-			foreach (var range in ranges)
-			{
-				if (!checkPos.HasValue)
-					checkPos = range.Start;
-				if (range.Start < checkPos)
-					throw new Exception("Replace data out of order");
-				checkPos = range.End;
-			}
-
-			var sb = new StringBuilder();
-			var dataPos = 0;
-			for (var listIndex = 0; listIndex <= newText.Count; ++listIndex)
-			{
-				var position = text.Length;
-				var length = 0;
-				if (listIndex < ranges.Count)
-				{
-					position = ranges[listIndex].Start;
-					length = ranges[listIndex].Length;
-				}
-
-				sb.Append(text, dataPos, position - dataPos);
-				dataPos = position;
-
-				if (listIndex < newText.Count)
-					sb.Append(newText[listIndex]);
-				dataPos += length;
-			}
-
-			return new NEText(sb.ToString());
+		public void MoveToTextPoint(NETextPoint nextNETextPoint)
+		{
+			text = NETextPoint.MoveTo(text, neTextPoint, nextNETextPoint);
+			neTextPoint = nextNETextPoint;
+			CalculateLines();
 		}
 
 		class DiffParams
@@ -855,5 +832,7 @@ namespace NeoEdit.Editor
 		public int IndexOfAny(char[] anyOf, int position) => text.IndexOfAny(anyOf, position);
 		public int IndexOfAny(char[] anyOf, int position, int length) => text.IndexOfAny(anyOf, position, length);
 		public bool Equals(NEText neText) => text == neText.text;
+
+		public override string ToString() => text;
 	}
 }

@@ -240,6 +240,7 @@
     <Compile Include="NEGlobalResult.cs" />
     <Compile Include="NESerialTracker.cs" />
     <Compile Include="NEText.cs" />
+    <Compile Include="NETextPoint.cs" />
     <Compile Include="NEWindow-Macro.cs">
       <DependentUpon>NEWindow.cs</DependentUpon>
     </Compile>

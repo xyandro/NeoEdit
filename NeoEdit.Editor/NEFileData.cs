@@ -9,7 +9,7 @@ namespace NeoEdit.Editor
 		public readonly int NESerial = NESerialTracker.NESerial;
 		public readonly NEFile neFile;
 
-		public NEText text;
+		public NETextPoint neTextPoint;
 		public IReadOnlyList<Range> selections;
 		public IReadOnlyList<Range>[] regions;
 		public NEFile diffTarget;
@@ -27,7 +27,7 @@ namespace NeoEdit.Editor
 		{
 			neFile = neFileData.neFile;
 
-			text = neFileData.text;
+			neTextPoint = neFileData.neTextPoint;
 			selections = neFileData.selections;
 			regions = neFileData.regions.ToArray();
 			diffTarget = neFileData.diffTarget;

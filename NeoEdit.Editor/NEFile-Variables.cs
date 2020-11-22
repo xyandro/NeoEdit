@@ -24,11 +24,12 @@ namespace NeoEdit.Editor
 		{
 			ClearResult();
 			Data = data;
+			Text.MoveToTextPoint(NETextPoint);
 			EnsureVisible();
 			SetModifiedFlag();
 		}
 
-		NEText Text { get => Data.text; set => EditableData.text = value; }
+		NETextPoint NETextPoint { get => Data.neTextPoint; set => EditableData.neTextPoint = value; }
 
 		public NEFile DiffTarget
 		{

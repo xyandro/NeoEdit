@@ -297,7 +297,7 @@ namespace NeoEdit.Editor
 		void Execute_Edit_Undo_Text()
 		{
 			var useData = Data;
-			while ((useData.undo != null) && (useData.text == Text))
+			while ((useData.undo != null) && (useData.neTextPoint == NETextPoint))
 				useData = useData.undo;
 			SetData(useData);
 		}
@@ -311,7 +311,7 @@ namespace NeoEdit.Editor
 		void Execute_Edit_Redo_Text()
 		{
 			var useData = Data;
-			while ((useData.redo != null) && (useData.text == Text))
+			while ((useData.redo != null) && (useData.neTextPoint == NETextPoint))
 				useData = useData.redo;
 			SetData(useData);
 		}
