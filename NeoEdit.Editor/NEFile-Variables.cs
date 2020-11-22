@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NeoEdit.Common;
-using NeoEdit.Common.Enums;
-using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
@@ -30,19 +28,14 @@ namespace NeoEdit.Editor
 		}
 
 		NEText Text { get => Data.text; set => EditableData.text = value; }
-		bool IsDiff { get => Data.isDiff; set => EditableData.isDiff = value; }
 
 		public NEFile DiffTarget
 		{
 			get => Data.diffTarget;
 			set
 			{
-				IsDiff = false;
-
 				if (DiffTarget != null)
 				{
-					DiffTarget.IsDiff = false;
-
 					Text.ClearDiff();
 					DiffTarget.Text.ClearDiff();
 					DiffTarget.EditableData.diffTarget = null;
@@ -54,7 +47,6 @@ namespace NeoEdit.Editor
 					value.DiffTarget = null;
 					EditableData.diffTarget = value;
 					value.EditableData.diffTarget = this;
-					IsDiff = DiffTarget.IsDiff = true;
 					CalculateDiff();
 				}
 			}

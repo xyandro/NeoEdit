@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
-using NeoEdit.Common.Enums;
-using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
@@ -14,7 +12,6 @@ namespace NeoEdit.Editor
 		public NEText text;
 		public IReadOnlyList<Range> selections;
 		public IReadOnlyList<Range>[] regions;
-		public bool isDiff;
 		public NEFile diffTarget;
 
 		public NEFileData undo;
@@ -33,7 +30,6 @@ namespace NeoEdit.Editor
 			text = neFileData.text;
 			selections = neFileData.selections;
 			regions = neFileData.regions.ToArray();
-			isDiff = neFileData.isDiff;
 			diffTarget = neFileData.diffTarget;
 
 			undo = neFileData;
