@@ -1663,11 +1663,15 @@ namespace NeoEdit.Editor
 
 		public bool Empty() => (FileName == null) && (!IsModified) && (Text.Length == 0);
 
-		public void Closed()
+		public void Close()
 		{
-			if (DiffTarget != null)
-				DiffTarget = null;
-			shutdownData?.OnShutdown();
+			DiffTarget = null;
+			if (shutdownData != null)
+			{
+				shutdownData.OnShutdown();
+				shutdownData = null;
+			}
+			ClearNEFiles();
 		}
 
 		public override string ToString() => DisplayName ?? FileName;

@@ -457,7 +457,7 @@ namespace NeoEdit.Editor
 			foreach (var neFile in (active ? state.NEWindow.ActiveFiles : state.NEWindow.NEFiles.Except(state.NEWindow.ActiveFiles)))
 			{
 				neFile.VerifyCanClose();
-				neFile.ClearNEFiles();
+				neFile.Close();
 			}
 
 			return true;
@@ -468,7 +468,7 @@ namespace NeoEdit.Editor
 			if (Selections.Any() == hasSelections)
 			{
 				VerifyCanClose();
-				ClearNEFiles();
+				Close();
 			}
 		}
 
@@ -477,7 +477,7 @@ namespace NeoEdit.Editor
 			if (IsModified == modified)
 			{
 				VerifyCanClose();
-				ClearNEFiles();
+				Close();
 			}
 		}
 
@@ -486,7 +486,7 @@ namespace NeoEdit.Editor
 			foreach (var neFile in state.NEWindow.NEFiles)
 			{
 				neFile.VerifyCanClose();
-				neFile.ClearNEFiles();
+				neFile.Close();
 			}
 			state.NEWindow.ClearNEWindows();
 

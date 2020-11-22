@@ -224,7 +224,7 @@ namespace NeoEdit.Editor
 		{
 			var neFile = (state.Configuration as Configuration_Internal_CloseFile).NEFile as NEFile;
 			neFile.VerifyCanClose();
-			neFile.ClearNEFiles();
+			neFile.Close();
 			return true;
 		}
 
