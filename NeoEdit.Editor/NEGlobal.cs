@@ -212,7 +212,7 @@ namespace NeoEdit.Editor
 			if (NEWindows.Any())
 				return;
 
-			if (((state.Configuration as Configuration_File_Exit)?.WindowClosed != true) || (!Settings.DontExitOnClose))
+			if ((!Settings.DontExitOnClose) || ((state.Configuration as Configuration_File_Exit)?.WindowClosed != true))
 				Environment.Exit(0);
 
 			GC.Collect();

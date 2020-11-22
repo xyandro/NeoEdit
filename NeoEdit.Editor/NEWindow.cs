@@ -43,7 +43,7 @@ namespace NeoEdit.Editor
 
 		public int DisplayRows { get; private set; }
 
-		public DateTime LastActivated { get; set; }
+		public DateTime LastActive { get; set; }
 
 		public NEWindow(bool addEmpty = false)
 		{
@@ -270,6 +270,8 @@ namespace NeoEdit.Editor
 
 		public static CommandLineParams ParseCommandLine(string commandLine) => CommandLineVisitor.GetCommandLineParams(commandLine);
 
+		public void SetForeground() => neWindowUI.SetForeground();
+
 		public void SetupDiff(IReadOnlyList<NEFile> neFiles)
 		{
 			for (var ctr = 0; ctr + 1 < neFiles.Count; ctr += 2)
@@ -282,7 +284,5 @@ namespace NeoEdit.Editor
 			}
 			WindowLayout = new WindowLayout(maxColumns: 2);
 		}
-
-		public NEFile GetFile(string fileName) => ActiveFiles.FirstOrDefault(neFile => neFile.FileName == fileName);
 	}
 }

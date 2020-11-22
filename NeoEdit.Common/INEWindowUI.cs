@@ -121,6 +121,7 @@ namespace NeoEdit.Common
 		void SetMacroProgress(double? percent);
 		void SetTaskRunnerProgress(double? percent);
 
+		void SetForeground();
 		void CloseWindow();
 	}
 }

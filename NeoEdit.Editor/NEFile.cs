@@ -1258,7 +1258,7 @@ namespace NeoEdit.Editor
 			watcher.Changed += (s1, e1) =>
 			{
 				watcherFileModified = true;
-				try { state.NEWindow.neWindowUI.QueueActivateNEWindow(); } catch { }
+				try { NEWindow.neWindowUI.QueueActivateNEWindow(); } catch { }
 			};
 			watcher.EnableRaisingEvents = true;
 		}

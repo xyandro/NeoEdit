@@ -175,7 +175,7 @@ namespace NeoEdit.Editor
 
 			NEWindow neWindow = null;
 			if (!commandLineParams.Diff)
-				neWindow = state.NEGlobal.NEWindows.OrderByDescending(x => x.LastActivated).FirstOrDefault();
+				neWindow = state.NEGlobal.NEWindows.OrderByDescending(x => x.LastActive).FirstOrDefault();
 			if (neWindow == null)
 				neWindow = new NEWindow();
 			var neFiles = new List<NEFile>();
@@ -183,10 +183,14 @@ namespace NeoEdit.Editor
 			{
 				if (commandLineParams.Existing)
 				{
-					var neFile = state.NEGlobal.NEWindows.OrderByDescending(x => x.LastActivated).Select(x => x.GetFile(file.FileName)).NonNull().FirstOrDefault();
+					var neFile = state.NEGlobal.NEWindows.OrderByDescending(x => x.LastActive).SelectMany(x => x.ActiveFiles).OrderByDescending(x => x.LastActive).FirstOrDefault(x => x.FileName == file.FileName);
+					if (neFile == null)
+						neFile = state.NEGlobal.NEWindows.OrderByDescending(x => x.LastActive).SelectMany(x => x.NEFiles).FirstOrDefault(x => x.FileName == file.FileName);
 					if (neFile != null)
 					{
+						neFile.NEWindow.SetActiveFile(neFile);
 						neFile.Goto(file.Line, file.Column, file.Index);
+						neFile.NEWindow.SetForeground();
 						continue;
 					}
 				}
@@ -203,7 +207,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Internal_Activate()
 		{
-			state.NEWindow.LastActivated = DateTime.Now;
+			state.NEWindow.LastActive = DateTime.Now;
 			state.NEWindow.NEFiles.ForEach(neFile => neFile.Activated());
 			return true;
 		}

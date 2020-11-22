@@ -313,9 +313,12 @@ namespace NeoEdit.UI
 
 		public void SetForeground()
 		{
-			Activate();
-			Show();
-			SetForegroundWindow(new WindowInteropHelper(this).Handle);
+			RunOnUIThread(() =>
+			{
+				Activate();
+				Show();
+				SetForegroundWindow(new WindowInteropHelper(this).Handle);
+			});
 		}
 
 		void SetProgress(ProgressBar progressBar, double? percent)

@@ -103,7 +103,7 @@
 			<controls:NEMenuItem Header="_Unmodified files" CommandEnum="File_Close_UnmodifiedFiles" ToolTip="Close selected files that aren't modified"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit" ToolTip="Close the program"/>
+		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit" InputGestureText="Alt+F4" ToolTip="Close the program"/>
 	</MenuItem>
 	<MenuItem Header="_Edit">
 		<MenuItem Header="_Select">

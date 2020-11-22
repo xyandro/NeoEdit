@@ -66,7 +66,7 @@ namespace NeoEdit.Common
 		File_Close_FilesWithoutSelections,
 		File_Close_ModifiedFiles,
 		File_Close_UnmodifiedFiles,
-		[KeyGesture(Key.F4, ModifierKeys.Alt)] File_Exit,
+		File_Exit,
 		[KeyGesture(Key.A, ModifierKeys.Control)] Edit_Select_All,
 		Edit_Select_Nothing,
 		[KeyGesture(Key.J, ModifierKeys.Control)] Edit_Select_Join,
