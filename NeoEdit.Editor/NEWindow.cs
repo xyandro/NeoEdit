@@ -16,6 +16,10 @@ namespace NeoEdit.Editor
 
 		public INEWindowUI neWindowUI { get; private set; }
 
+		public WindowLayout WindowLayout { get; set; } = new WindowLayout(1, 1);
+		public bool ActiveOnly { get; set; }
+		public bool MacroVisualize { get; set; } = true;
+
 		int displayColumns;
 		public int DisplayColumns
 		{
@@ -162,8 +166,6 @@ namespace NeoEdit.Editor
 
 		public void Execute() => ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute());
 
-		public void SetLayout(WindowLayout windowLayout) => WindowLayout = windowLayout;
-
 		public int GetFileIndex(NEFile neFile, bool activeOnly = false)
 		{
 			var index = (activeOnly ? ActiveFiles : NEFiles).FindIndex(neFile);
@@ -262,7 +264,7 @@ namespace NeoEdit.Editor
 				if (NEFiles[ctr + 1].ContentType == ParserType.None)
 					NEFiles[ctr + 1].ContentType = NEFiles[ctr].ContentType;
 			}
-			SetLayout(new WindowLayout(maxColumns: 2));
+			WindowLayout = new WindowLayout(maxColumns: 2);
 		}
 
 		public NEFile GetFile(string fileName) => ActiveFiles.FirstOrDefault(neFile => neFile.FileName == fileName);

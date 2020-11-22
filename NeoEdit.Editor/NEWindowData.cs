@@ -11,16 +11,12 @@ namespace NeoEdit.Editor
 		public IReadOnlyOrderedHashSet<NEFile> neFiles;
 		public IReadOnlyOrderedHashSet<NEFile> activeFiles;
 		public NEFile focused;
-		public WindowLayout windowLayout;
-		public bool activeOnly;
-		public bool macroVisualize = true;
 
 		public NEWindowData(NEWindow neWindow)
 		{
 			this.neWindow = neWindow;
 			neFileDatas = new OrderedHashSet<NEFileData>();
 			neFiles = activeFiles = new OrderedHashSet<NEFile>();
-			windowLayout = new WindowLayout(1, 1);
 		}
 
 		public NEWindowData(NEWindowData neWindowData)
@@ -31,9 +27,6 @@ namespace NeoEdit.Editor
 			neFiles = neWindowData.neFiles;
 			activeFiles = neWindowData.activeFiles;
 			focused = neWindowData.focused;
-			windowLayout = neWindowData.windowLayout;
-			activeOnly = neWindowData.activeOnly;
-			macroVisualize = neWindowData.macroVisualize;
 		}
 
 		public override string ToString() => NESerial.ToString();

@@ -80,13 +80,13 @@ namespace NeoEdit.Editor
 			if (state.ShiftDown)
 			{
 				if (!state.NEWindow.NEFiles.Except(diffTargets).Any())
-					state.NEWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+					state.NEWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 				else
 				{
 					diffTargets.ForEach(diffTarget => diffTarget.ClearNEFiles());
 
 					var neWindow = new NEWindow();
-					neWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+					neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 					diffTargets.ForEach(diffTarget => neWindow.AddNewNEFile(diffTarget));
 				}
 			}

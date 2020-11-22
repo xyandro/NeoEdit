@@ -29,9 +29,6 @@ namespace NeoEdit.Editor
 		}
 
 		public NEFile Focused { get => Data.focused; set => EditableData.focused = value; }
-		public WindowLayout WindowLayout { get => Data.windowLayout; set => EditableData.windowLayout = value; }
-		public bool ActiveOnly { get => Data.activeOnly; set => EditableData.activeOnly = value; }
-		public bool MacroVisualize { get => Data.macroVisualize; set => EditableData.macroVisualize = value; }
 
 		public IReadOnlyOrderedHashSet<NEFile> NEFiles => Data.neFiles;
 

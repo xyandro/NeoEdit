@@ -30,7 +30,7 @@ namespace NeoEdit.Editor
 			var contentType = state.NEWindow.ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings()).ToList(), "Selections", contentType) });
-			neWindow.SetLayout(state.NEWindow.WindowLayout);
+			neWindow.WindowLayout = state.NEWindow.WindowLayout;
 			return true;
 		}
 
@@ -38,7 +38,7 @@ namespace NeoEdit.Editor
 		{
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, state.NEWindow.ActiveFiles.Select((neFile, index) => (neFile.GetSelectionStrings(), neFile.GetSelectionsName(index + 1), neFile.ContentType)).ToList());
-			neWindow.SetLayout(state.NEWindow.WindowLayout);
+			neWindow.WindowLayout = state.NEWindow.WindowLayout;
 			return true;
 		}
 
@@ -47,7 +47,7 @@ namespace NeoEdit.Editor
 			var index = 0;
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings().Select(str => (new List<string> { str } as IReadOnlyList<string>, $"Selection {++index}", neFile.ContentType))).ToList());
-			neWindow.SetLayout(state.NEWindow.WindowLayout);
+			neWindow.WindowLayout = state.NEWindow.WindowLayout;
 			return true;
 		}
 
@@ -64,7 +64,7 @@ namespace NeoEdit.Editor
 			var neWindow = new NEWindow(false);
 			foreach (var neFile in summaryByFile)
 				neWindow.AddNewNEFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
-			neWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 
 			return true;
 		}
@@ -73,7 +73,7 @@ namespace NeoEdit.Editor
 		{
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (NEClipboard.Current.Strings, "Clipboards", ParserType.None) });
-			neWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 			return true;
 		}
 
@@ -81,7 +81,7 @@ namespace NeoEdit.Editor
 		{
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, NEClipboard.Current.Select((clipboard, index) => (clipboard, $"Clipboard {index + 1}", ParserType.None)).ToList());
-			neWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 			return true;
 		}
 
@@ -89,7 +89,7 @@ namespace NeoEdit.Editor
 		{
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
-			neWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 			return true;
 		}
 
@@ -101,19 +101,19 @@ namespace NeoEdit.Editor
 				neFile.ClearNEFiles();
 				neWindow.AddNewNEFile(neFile);
 			}
-			neWindow.SetLayout(state.NEWindow.WindowLayout);
+			neWindow.WindowLayout = state.NEWindow.WindowLayout;
 			return true;
 		}
 
 		static bool PreExecute_Window_Full()
 		{
-			state.NEWindow.SetLayout(new WindowLayout(1, 1));
+			state.NEWindow.WindowLayout = new WindowLayout(1, 1);
 			return true;
 		}
 
 		static bool PreExecute_Window_Grid()
 		{
-			state.NEWindow.SetLayout(new WindowLayout(maxColumns: 4, maxRows: 4));
+			state.NEWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 			return true;
 		}
 
@@ -121,7 +121,7 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Window_CustomGrid()
 		{
-			state.NEWindow.SetLayout((state.Configuration as Configuration_Window_CustomGrid).WindowLayout);
+			state.NEWindow.WindowLayout = (state.Configuration as Configuration_Window_CustomGrid).WindowLayout;
 			return true;
 		}
 

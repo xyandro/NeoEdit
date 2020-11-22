@@ -24,6 +24,7 @@ namespace NeoEdit.Editor
 		{
 			ClearResult();
 			Data = data;
+			EnsureVisible();
 			SetModifiedFlag();
 		}
 
