@@ -70,6 +70,7 @@ namespace NeoEdit
 			pipeClient.Write(buf, 0, buf.Length);
 
 			while ((waitEvent?.WaitOne(1000) == false) && (!proc.HasExited)) { }
+			Environment.Exit(0); // ActionRunner will keep the program active
 		}
 
 		static void HandleWaitPID(CommandLineParams commandLineParams)
