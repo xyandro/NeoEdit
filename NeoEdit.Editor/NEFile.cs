@@ -20,6 +20,7 @@ namespace NeoEdit.Editor
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
 
 		public DateTime LastActive { get; set; }
+		public bool IsModified { get; private set; }
 
 		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{

@@ -17,7 +17,6 @@ namespace NeoEdit.Editor
 		public IReadOnlyList<Range>[] regions;
 		public string displayName;
 		public string fileName;
-		public bool isModified;
 		public bool autoRefresh;
 		public string dbName;
 		public ParserType contentType;
@@ -59,7 +58,6 @@ namespace NeoEdit.Editor
 			regions = neFileData.regions.ToArray();
 			displayName = neFileData.displayName;
 			fileName = neFileData.fileName;
-			isModified = neFileData.isModified;
 			autoRefresh = neFileData.autoRefresh;
 			dbName = neFileData.dbName;
 			contentType = neFileData.contentType;

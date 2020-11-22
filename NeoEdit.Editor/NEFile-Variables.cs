@@ -26,6 +26,7 @@ namespace NeoEdit.Editor
 		{
 			ClearResult();
 			Data = data;
+			SetModifiedFlag();
 		}
 
 		NEText Text { get => Data.text; set => EditableData.text = value; }
@@ -33,7 +34,6 @@ namespace NeoEdit.Editor
 		public int CurrentSelection { get => Math.Min(Math.Max(0, Data.currentSelection), Selections.Count - 1); private set => EditableData.currentSelection = value; }
 		public string DisplayName { get => Data.displayName; private set => EditableData.displayName = value; }
 		public string FileName { get => Data.fileName; private set => EditableData.fileName = value; }
-		public bool IsModified { get => Data.isModified; private set => EditableData.isModified = value; }
 		public bool AutoRefresh { get => Data.autoRefresh; private set => EditableData.autoRefresh = value; }
 		public string DBName { get => Data.dbName; private set => EditableData.dbName = value; }
 		public ParserType ContentType { get => Data.contentType; set => EditableData.contentType = value; }
