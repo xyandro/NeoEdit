@@ -1120,12 +1120,12 @@
 		<Separator/>
 		<controls:NEMenuItem Header="_Update" CommandEnum="Help_Update" ToolTip="Update"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Time next action" CommandEnum="Help_TimeNextAction" ToolTip="Time next action"/>
-		<Separator/>
 		<MenuItem Header="_Stop tasks" InputGestureText="Esc" Click="OnStopTasks" ToolTip="Stop all running tasks"/>
 		<MenuItem Header="_Kill tasks" InputGestureText="Ctrl+Break" Click="OnKillTasks" ToolTip="Kill all running tasks (can cause program to crash)"/>
 		<Separator/>
 		<MenuItem Header="Ad_vanced">
+			<controls:NEMenuItem Header="_Time next action" CommandEnum="Help_Advanced_TimeNextAction" ToolTip="Time next action"/>
+			<Separator/>
 			<MenuItem Header="_Shell">
 				<controls:NEMenuItem Header="_Integrate" CommandEnum="Help_Advanced_Shell_Integrate" ToolTip="Enable Windows Explorer option to open files with NeoEdit"/>
 				<controls:NEMenuItem Header="_Unintegrate" CommandEnum="Help_Advanced_Shell_Unintegrate" ToolTip="Remove Windows Explorer option to open files with NeoEdit"/>

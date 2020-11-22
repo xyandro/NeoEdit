@@ -719,7 +719,7 @@ namespace NeoEdit.Common
 		Window_BinaryCodePages,
 		Help_Tutorial,
 		Help_Update,
-		Help_TimeNextAction,
+		Help_Advanced_TimeNextAction,
 		Help_Advanced_Shell_Integrate,
 		Help_Advanced_Shell_Unintegrate,
 		Help_Advanced_CopyCommandLine,

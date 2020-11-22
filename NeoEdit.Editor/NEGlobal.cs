@@ -159,19 +159,19 @@ namespace NeoEdit.Editor
 
 			try
 			{
+				var timeAction = timeNextAction;
+				timeNextAction = false;
+
 				var elapsed = 0L;
 				switch (state.Command)
 				{
 					case NECommand.Internal_CommandLine: NEFile.PreExecute_Internal_CommandLine(); break;
-					case NECommand.Help_TimeNextAction: timeNextAction = true; break;
+					case NECommand.Help_Advanced_TimeNextAction: timeNextAction = true; break;
 					default: elapsed = state.NEWindow.RunCommand(); break;
 				}
 
-				if (timeNextAction)
-				{
-					timeNextAction = false;
+				if (timeAction)
 					state.NEWindow.neWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {elapsed:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
-				}
 
 				var result = GetResult();
 				if (result != null)
