@@ -12,31 +12,8 @@ namespace NeoEdit.Editor
 		public readonly NEFile neFile;
 
 		public NEText text;
-		public int currentSelection;
 		public IReadOnlyList<Range> selections;
 		public IReadOnlyList<Range>[] regions;
-		public string displayName;
-		public string fileName;
-		public bool autoRefresh;
-		public string dbName;
-		public ParserType contentType;
-		public Coder.CodePage codePage;
-		public string aesKey;
-		public bool compressed;
-		public bool diffIgnoreWhitespace;
-		public bool diffIgnoreCase;
-		public bool diffIgnoreNumbers;
-		public bool diffIgnoreLineEndings;
-		public string diffIgnoreCharacters;
-		public bool keepSelections;
-		public bool highlightSyntax;
-		public bool strictParsing;
-		public JumpByType jumpBy;
-		public bool viewBinary;
-		public HashSet<Coder.CodePage> viewBinaryCodePages;
-		public IReadOnlyList<HashSet<string>> viewBinarySearches;
-		public int startColumn;
-		public int startRow;
 		public bool isDiff;
 		public NEFile diffTarget;
 
@@ -52,32 +29,10 @@ namespace NeoEdit.Editor
 		public NEFileData(NEFileData neFileData)
 		{
 			neFile = neFileData.neFile;
+
 			text = neFileData.text;
-			currentSelection = neFileData.currentSelection;
 			selections = neFileData.selections;
 			regions = neFileData.regions.ToArray();
-			displayName = neFileData.displayName;
-			fileName = neFileData.fileName;
-			autoRefresh = neFileData.autoRefresh;
-			dbName = neFileData.dbName;
-			contentType = neFileData.contentType;
-			codePage = neFileData.codePage;
-			aesKey = neFileData.aesKey;
-			compressed = neFileData.compressed;
-			diffIgnoreWhitespace = neFileData.diffIgnoreWhitespace;
-			diffIgnoreCase = neFileData.diffIgnoreCase;
-			diffIgnoreNumbers = neFileData.diffIgnoreNumbers;
-			diffIgnoreLineEndings = neFileData.diffIgnoreLineEndings;
-			diffIgnoreCharacters = neFileData.diffIgnoreCharacters;
-			keepSelections = neFileData.keepSelections;
-			highlightSyntax = neFileData.highlightSyntax;
-			strictParsing = neFileData.strictParsing;
-			jumpBy = neFileData.jumpBy;
-			viewBinary = neFileData.viewBinary;
-			viewBinaryCodePages = neFileData.viewBinaryCodePages;
-			viewBinarySearches = neFileData.viewBinarySearches;
-			startColumn = neFileData.startColumn;
-			startRow = neFileData.startRow;
 			isDiff = neFileData.isDiff;
 			diffTarget = neFileData.diffTarget;
 

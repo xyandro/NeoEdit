@@ -26,6 +26,7 @@ namespace NeoEdit.Editor
 		public NEWindowData(NEWindowData neWindowData)
 		{
 			neWindow = neWindowData.neWindow;
+
 			neFileDatas = neWindowData.neFileDatas;
 			neFiles = neWindowData.neFiles;
 			activeFiles = neWindowData.activeFiles;

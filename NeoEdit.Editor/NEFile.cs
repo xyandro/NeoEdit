@@ -21,6 +21,50 @@ namespace NeoEdit.Editor
 
 		public DateTime LastActive { get; set; }
 		public bool IsModified { get; private set; }
+		public string DBName { get; private set; }
+		int currentSelection;
+		public int CurrentSelection { get => Math.Min(Math.Max(0, currentSelection), Selections.Count - 1); private set => currentSelection = value; }
+		public string DisplayName { get; private set; }
+		public string FileName { get; private set; }
+		public bool AutoRefresh { get; private set; }
+		public ParserType ContentType { get; set; }
+		public Coder.CodePage CodePage { get; private set; }
+		public string AESKey { get; private set; }
+		public bool Compressed { get; private set; }
+		public bool DiffIgnoreWhitespace { get; private set; }
+		public bool DiffIgnoreCase { get; private set; }
+		public bool DiffIgnoreNumbers { get; private set; }
+		public bool DiffIgnoreLineEndings { get; private set; }
+		public string DiffIgnoreCharacters { get; private set; }
+		public bool KeepSelections { get; private set; }
+		public bool HighlightSyntax { get; private set; }
+		public bool StrictParsing { get; private set; }
+		public JumpByType JumpBy { get; private set; }
+		public bool ViewBinary { get; private set; }
+		public HashSet<Coder.CodePage> ViewBinaryCodePages { get; private set; }
+		public IReadOnlyList<HashSet<string>> ViewBinarySearches { get; private set; }
+
+		int startRow, startColumn;
+		public int StartRow
+		{
+			get => startRow;
+			private set
+			{
+				startRow = value;
+				if (DiffTarget != null)
+					DiffTarget.StartRow = value;
+			}
+		}
+		public int StartColumn
+		{
+			get => startColumn;
+			private set
+			{
+				startColumn = value;
+				if (DiffTarget != null)
+					DiffTarget.StartColumn = value;
+			}
+		}
 
 		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
