@@ -157,6 +157,10 @@ namespace NeoEdit.Editor
 
 			if (!NEFileDatas.Matches(nextNEFileDatas))
 			{
+				if ((Focused != null) && (Focused.Empty()))
+					if (nextNEFileDatas.Select(neFileData => neFileData.neFile).Except(NEFiles).Any(neFile => !neFile.Empty()))
+						nextNEFileDatas.Remove(Focused.Data);
+
 				var oldNEFiles = NEFiles;
 
 				NEFileDatas = nextNEFileDatas;
