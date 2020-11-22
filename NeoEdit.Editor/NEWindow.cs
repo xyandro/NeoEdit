@@ -224,22 +224,28 @@ namespace NeoEdit.Editor
 		{
 			lock (this)
 			{
+				if (TaskRunner.Canceled)
+					throw new OperationCanceledException();
+
 				var saveActiveFiles = ActiveFiles;
 				var saveFocused = Focused;
 				var saveWindowLayout = WindowLayout;
 
-				SetActiveFile(neFile);
-				WindowLayout = new WindowLayout(1, 1);
+				try
+				{
+					SetActiveFile(neFile);
+					WindowLayout = new WindowLayout(1, 1);
 
-				RenderNEWindowUI();
+					RenderNEWindowUI();
 
-				var result = action();
-
-				ActiveFiles = saveActiveFiles;
-				Focused = saveFocused;
-				WindowLayout = saveWindowLayout;
-
-				return result;
+					return action();
+				}
+				finally
+				{
+					ActiveFiles = saveActiveFiles;
+					Focused = saveFocused;
+					WindowLayout = saveWindowLayout;
+				}
 			}
 		}
 

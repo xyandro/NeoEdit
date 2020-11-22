@@ -53,9 +53,6 @@ namespace NeoEdit.Editor
 			return state.NEWindow.ShowFile(this, () =>
 			{
 				var result = state.NEWindow.neWindowUI.RunSaveFileDialog(Path.GetFileName(FileName) ?? DisplayName, "txt", Path.GetDirectoryName(FileName), "All files|*.*");
-				if (result == null)
-					throw new OperationCanceledException();
-
 				if (Directory.Exists(result.FileName))
 					throw new Exception("A directory by that name already exists");
 				if (!Directory.Exists(Path.GetDirectoryName(result.FileName)))
@@ -217,8 +214,6 @@ namespace NeoEdit.Editor
 			if ((initialDirectory == null) && (state.NEWindow.Focused != null))
 				initialDirectory = Path.GetDirectoryName(state.NEWindow.Focused.FileName);
 			var result = state.NEWindow.neWindowUI.RunDialog_Configure_FileMacro_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
-			if (result == null)
-				throw new OperationCanceledException();
 			state.Configuration = result;
 		}
 

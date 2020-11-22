@@ -29,6 +29,8 @@ namespace NeoEdit.TaskRunning
 		[ThreadStatic] static TaskRunnerTask threadActiveTask;
 		static int locker;
 
+		public static bool Canceled => threadActiveTask?.epic.Canceled == true;
+
 		static TaskRunner()
 		{
 			Start();

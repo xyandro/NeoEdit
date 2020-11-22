@@ -12,6 +12,8 @@ namespace NeoEdit.TaskRunning
 		internal long current, total;
 		internal Exception exception;
 
+		internal bool Canceled => exception != null;
+
 		internal TaskRunnerEpic(TaskRunnerTask entryTask, Action<double> idleAction)
 		{
 			this.entryTask = entryTask;

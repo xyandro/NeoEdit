@@ -26,8 +26,6 @@ namespace NeoEdit.Editor
 		public static string ChooseMacro(INEWindowUI filesWindow)
 		{
 			var result = filesWindow.RunDialog_Configure_FileMacro_Open_Open("xml", MacroDirectory, "Macro files|*.xml|All files|*.*");
-			if (result == null)
-				return null;
 			return result.FileNames[0];
 		}
 
@@ -37,9 +35,6 @@ namespace NeoEdit.Editor
 			if (fileName == null)
 			{
 				var result = filesWindow.RunSaveFileDialog("Macro.xml", "xml", MacroDirectory, "Macro files|*.xml|All files|*.*");
-				if (result == null)
-					return;
-
 				fileName = result.FileName;
 			}
 			else if (macroDirRelative)
