@@ -109,6 +109,7 @@ namespace NeoEdit.Editor
 			var neFile = new NEFile(displayName: Path.GetFileName(FileName), modified: false, bytes: original);
 			neFile.ContentType = ContentType;
 			neFile.DiffTarget = this;
+			ClearNEFiles();
 			AddNEFile(neFile);
 			AddNEFile(this);
 		}
