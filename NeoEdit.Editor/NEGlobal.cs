@@ -138,7 +138,7 @@ namespace NeoEdit.Editor
 			{
 				if (!(ex is OperationCanceledException))
 				{
-					state.NEWindow?.RenderNEWindowUI();
+					NEWindows.ForEach(x => x.RenderNEWindowUI());
 					state.NEWindow.neWindowUI?.ShowExceptionMessage(ex);
 				}
 				lock (actionStack)
@@ -147,7 +147,7 @@ namespace NeoEdit.Editor
 			finally
 			{
 				if (!skipDraw())
-					state.NEWindow?.RenderNEWindowUI();
+					NEWindows.ForEach(x => x.RenderNEWindowUI());
 				state.NEWindow?.neWindowUI?.SetMacroProgress(null);
 				EditorExecuteState.ClearState();
 			}

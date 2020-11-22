@@ -16,7 +16,17 @@ namespace NeoEdit.Editor
 
 		public INEWindowUI neWindowUI { get; private set; }
 
-		public WindowLayout WindowLayout { get; set; } = new WindowLayout(1, 1);
+		bool NeedsRender { get; set; }
+		public void SetNeedsRender() => NeedsRender = true;
+		private WindowLayout windowLayout = new WindowLayout(1, 1);
+		public WindowLayout WindowLayout
+		{
+			get => windowLayout; set
+			{
+				windowLayout = value;
+				NeedsRender = true;
+			}
+		}
 		public bool MacroVisualize { get; set; } = true;
 
 		bool activeFirst;
@@ -90,6 +100,10 @@ namespace NeoEdit.Editor
 
 		public void RenderNEWindowUI()
 		{
+			if (!NeedsRender)
+				return;
+
+			NeedsRender = false;
 			neWindowUI?.Render(new RenderParameters
 			{
 				NEFiles = OrderedNEFiles,

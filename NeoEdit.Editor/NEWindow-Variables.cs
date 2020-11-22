@@ -26,6 +26,7 @@ namespace NeoEdit.Editor
 			ClearResult();
 			Data = data;
 			NEFileDatas.ForEach(neFileData => neFileData.neFile.SetData(neFileData));
+			NeedsRender = true;
 		}
 
 		public NEFile Focused { get => Data.focused; set => EditableData.focused = value; }
@@ -89,6 +90,7 @@ namespace NeoEdit.Editor
 		{
 			if (result == null)
 			{
+				NeedsRender = true;
 				NEGlobal?.CreateResult();
 				result = new NEWindowResult(this);
 			}
