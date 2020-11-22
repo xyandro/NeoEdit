@@ -1266,11 +1266,11 @@ namespace NeoEdit.Editor
 			if (newValue.HasValue)
 			{
 				if (newValue == false)
-					modifiedChecksum.SetValue(Text);
+					modifiedChecksum.SetValue(Text.GetString());
 				else
 					modifiedChecksum.Invalidate(); // Nothing will match, file will be perpetually modified
 			}
-			IsModified = !modifiedChecksum.Match(Text);
+			IsModified = !modifiedChecksum.Match(Text.GetString());
 		}
 
 		public IReadOnlyList<string> GetSelectionStrings() => Selections.AsTaskRunner().Select(range => Text.GetString(range)).ToList();

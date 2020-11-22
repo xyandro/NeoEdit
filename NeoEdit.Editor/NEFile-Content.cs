@@ -71,10 +71,10 @@ namespace NeoEdit.Editor
 
 		ParserNode RootNode()
 		{
-			if ((!previousData.Match(Text)) || (previousType != ContentType))
+			if ((!previousData.Match(Text.GetString())) || (previousType != ContentType))
 			{
 				previousRoot = Parser.Parse(Text.GetString(), ContentType, StrictParsing);
-				previousData.SetValue(Text);
+				previousData.SetValue(Text.GetString());
 				previousType = ContentType;
 			}
 			return previousRoot;

@@ -2,10 +2,10 @@
 {
 	public class CacheValue
 	{
-		NEText value;
+		string value;
 		bool invalid = true;
 
-		public bool Match(NEText value)
+		public bool Match(string value)
 		{
 			if (invalid)
 				return false;
@@ -18,7 +18,7 @@
 			return true;
 		}
 
-		public void SetValue(NEText value)
+		public void SetValue(string value)
 		{
 			this.value = value;
 			invalid = false;
