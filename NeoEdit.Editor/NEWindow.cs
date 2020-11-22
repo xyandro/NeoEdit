@@ -264,15 +264,15 @@ namespace NeoEdit.Editor
 
 		public static CommandLineParams ParseCommandLine(string commandLine) => CommandLineVisitor.GetCommandLineParams(commandLine);
 
-		public void SetupDiff()
+		public void SetupDiff(IReadOnlyList<NEFile> neFiles)
 		{
-			for (var ctr = 0; ctr + 1 < NEFiles.Count; ctr += 2)
+			for (var ctr = 0; ctr + 1 < neFiles.Count; ctr += 2)
 			{
-				NEFiles[ctr].DiffTarget = NEFiles[ctr + 1];
-				if (NEFiles[ctr].ContentType == ParserType.None)
-					NEFiles[ctr].ContentType = NEFiles[ctr + 1].ContentType;
-				if (NEFiles[ctr + 1].ContentType == ParserType.None)
-					NEFiles[ctr + 1].ContentType = NEFiles[ctr].ContentType;
+				neFiles[ctr].DiffTarget = neFiles[ctr + 1];
+				if (neFiles[ctr].ContentType == ParserType.None)
+					neFiles[ctr].ContentType = neFiles[ctr + 1].ContentType;
+				if (neFiles[ctr + 1].ContentType == ParserType.None)
+					neFiles[ctr + 1].ContentType = neFiles[ctr].ContentType;
 			}
 			WindowLayout = new WindowLayout(maxColumns: 2);
 		}

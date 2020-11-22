@@ -178,6 +178,7 @@ namespace NeoEdit.Editor
 				neWindow = state.NEGlobal.NEWindows.OrderByDescending(x => x.LastActivated).FirstOrDefault();
 			if (neWindow == null)
 				neWindow = new NEWindow();
+			var neFiles = new List<NEFile>();
 			foreach (var file in commandLineParams.Files)
 			{
 				if (commandLineParams.Existing)
@@ -190,11 +191,12 @@ namespace NeoEdit.Editor
 					}
 				}
 
-				neWindow.AddNewNEFile(new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData));
+				neFiles.Add(new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData));
 			}
 
+			neFiles.ForEach(neWindow.AddNewNEFile);
 			if (commandLineParams.Diff)
-				neWindow.SetupDiff();
+				neWindow.SetupDiff(neFiles);
 
 			return true;
 		}
