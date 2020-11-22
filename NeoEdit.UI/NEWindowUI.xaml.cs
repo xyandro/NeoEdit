@@ -52,6 +52,8 @@ namespace NeoEdit.UI
 
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 			Closing += OnClosing;
+
+			SetForeground();
 		}
 
 		public void HandleCommand(ExecuteState state) => NEGlobalUI.HandleCommand(NEWindow, state);
