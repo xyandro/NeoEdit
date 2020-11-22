@@ -17,8 +17,18 @@ namespace NeoEdit.Editor
 		public INEWindowUI neWindowUI { get; private set; }
 
 		public WindowLayout WindowLayout { get; set; } = new WindowLayout(1, 1);
-		public bool ActiveOnly { get; set; }
 		public bool MacroVisualize { get; set; } = true;
+
+		bool activeFirst;
+		public bool ActiveFirst
+		{
+			get => activeFirst;
+			set
+			{
+				activeFirst = value;
+				UpdateOrderedNEFiles();
+			}
+		}
 
 		int displayColumns;
 		public int DisplayColumns
@@ -27,7 +37,7 @@ namespace NeoEdit.Editor
 			private set
 			{
 				displayColumns = value;
-				//AllFiles.ForEach(neFile => neFile.ResetView());
+				//NEFiles.ForEach(neFile => neFile.ResetView());
 			}
 		}
 
@@ -80,16 +90,16 @@ namespace NeoEdit.Editor
 
 		public void RenderNEWindowUI()
 		{
-			var renderParameters = new RenderParameters
+			neWindowUI?.Render(new RenderParameters
 			{
-				AllFiles = ActiveOnly ? ActiveFiles : NEFiles,
+				NEFiles = OrderedNEFiles,
+				FileCount = ActiveFirst ? ActiveFiles.Count : NEFiles.Count,
 				ActiveFiles = ActiveFiles,
 				FocusedFile = Focused,
 				WindowLayout = WindowLayout,
 				StatusBar = GetStatusBar(),
 				MenuStatus = GetMenuStatus(),
-			};
-			neWindowUI?.Render(renderParameters);
+			});
 		}
 
 		Dictionary<string, bool?> GetMenuStatus()
@@ -132,7 +142,7 @@ namespace NeoEdit.Editor
 				[nameof(NECommand.Diff_IgnoreNumbers)] = GetMultiStatus(neFile => neFile.DiffIgnoreNumbers),
 				[nameof(NECommand.Diff_IgnoreLineEndings)] = GetMultiStatus(neFile => neFile.DiffIgnoreLineEndings),
 				[nameof(NECommand.Macro_Visualize)] = MacroVisualize,
-				[nameof(NECommand.Window_ActiveOnly)] = ActiveOnly,
+				[nameof(NECommand.Window_ActiveFirst)] = ActiveFirst,
 				[nameof(NECommand.Window_Font_ShowSpecial)] = Font.ShowSpecialChars,
 				[nameof(NECommand.Window_Binary)] = GetMultiStatus(neFile => neFile.ViewBinary),
 			};

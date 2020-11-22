@@ -9,6 +9,7 @@ namespace NeoEdit.Editor
 
 		public IReadOnlyOrderedHashSet<NEFileData> neFileDatas;
 		public IReadOnlyOrderedHashSet<NEFile> neFiles;
+		public IReadOnlyOrderedHashSet<NEFile> orderedNEFiles;
 		public IReadOnlyOrderedHashSet<NEFile> activeFiles;
 		public NEFile focused;
 
@@ -16,7 +17,7 @@ namespace NeoEdit.Editor
 		{
 			this.neWindow = neWindow;
 			neFileDatas = new OrderedHashSet<NEFileData>();
-			neFiles = activeFiles = new OrderedHashSet<NEFile>();
+			neFiles = orderedNEFiles = activeFiles = new OrderedHashSet<NEFile>();
 		}
 
 		public NEWindowData(NEWindowData neWindowData)
@@ -25,6 +26,7 @@ namespace NeoEdit.Editor
 
 			neFileDatas = neWindowData.neFileDatas;
 			neFiles = neWindowData.neFiles;
+			orderedNEFiles = neWindowData.orderedNEFiles;
 			activeFiles = neWindowData.activeFiles;
 			focused = neWindowData.focused;
 		}

@@ -126,13 +126,13 @@ namespace NeoEdit.Editor
 			data.SetActiveIndexes = list =>
 			{
 				//state.NEWindow.ClearAllActive();
-				//list.Select(index => state.NEWindow.AllFiles[index]).ForEach(neFile => state.NEWindow.SetActive(neFile));
+				//list.Select(index => state.NEWindow.NEFiles[index]).ForEach(neFile => state.NEWindow.SetActive(neFile));
 				//RecalculateData();
 				//state.NEWindow.RenderFilesWindow();
 			};
 			data.CloseFiles = list =>
 			{
-				//var neWindow = list.Select(index => state.NEWindow.AllFiles[index]).ToList();
+				//var neWindow = list.Select(index => state.NEWindow.NEFiles[index]).ToList();
 				//neWindow.ForEach(neFile => neFile.VerifyCanClose());
 				//neWindow.ForEach(neFile => state.NEWindow.RemoveFile(neFile));
 				//RecalculateData();
@@ -140,7 +140,7 @@ namespace NeoEdit.Editor
 			};
 			data.DoMoves = moves =>
 			{
-				//moves.ForEach(((int oldIndex, int newIndex) move) => state.NEWindow.MoveFile(state.NEWindow.AllFiles[move.oldIndex], move.newIndex));
+				//moves.ForEach(((int oldIndex, int newIndex) move) => state.NEWindow.MoveFile(state.NEWindow.NEFiles[move.oldIndex], move.newIndex));
 				//RecalculateData();
 				//state.NEWindow.RenderFilesWindow();
 			};

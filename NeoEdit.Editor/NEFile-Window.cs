@@ -125,9 +125,9 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static bool PreExecute_Window_ActiveOnly()
+		static bool PreExecute_Window_ActiveFirst()
 		{
-			state.NEWindow.ActiveOnly = state.MultiStatus != true;
+			state.NEWindow.ActiveFirst = state.MultiStatus != true;
 			return true;
 		}
 

@@ -60,5 +60,4 @@ After universal undo is done remove any confirm options (like closing a window) 
 Add reset to all dialogs
 If something pings NeoEdit when a dialog is up, cancel it
 Make universal undo/redo in menu tell you what action they're going to undo
-Instead of "Active only" do "Active first", and in grid make it only consider active when deciding grid size
 Break diff if one of the files moves to a different window

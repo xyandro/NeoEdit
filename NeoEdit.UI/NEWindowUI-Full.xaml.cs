@@ -20,7 +20,7 @@ namespace NeoEdit.UI
 
 		bool lastFull = false;
 		Size lastFullSize;
-		IReadOnlyList<INEFile> lastFullAllFiles;
+		IReadOnlyList<INEFile> lastFullNEFiles;
 		INEFile lastFullFocused;
 		double lastFullFileLabelIndex;
 
@@ -40,7 +40,7 @@ namespace NeoEdit.UI
 
 			lastFull = false;
 			lastFullSize = default;
-			lastFullAllFiles = null;
+			lastFullNEFiles = null;
 			lastFullFocused = null;
 			lastFullFileLabelIndex = 0;
 		}
@@ -58,7 +58,7 @@ namespace NeoEdit.UI
 
 			lastFull = true;
 			lastFullSize = canvas.RenderSize;
-			lastFullAllFiles = renderParameters.AllFiles;
+			lastFullNEFiles = renderParameters.NEFiles;
 			lastFullFocused = renderParameters.FocusedFile;
 			lastFullFileLabelIndex = fullFileLabelIndex;
 		}
@@ -127,7 +127,7 @@ namespace NeoEdit.UI
 			if (fileLabelDict.ContainsKey(index))
 				return fileLabelDict[index];
 
-			var fileLabel = CreateFileLabel(renderParameters.AllFiles.GetIndex(index));
+			var fileLabel = CreateFileLabel(renderParameters.NEFiles.GetIndex(index));
 			fileLabel.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 			fileLabelDict[index] = fileLabel;
 			return fileLabel;
@@ -155,17 +155,17 @@ namespace NeoEdit.UI
 		void CreateFullFileLabels()
 		{
 			var fileLabelMap = new Dictionary<int, NEFileLabel>();
-			if ((renderParameters.FocusedFile != null) && ((lastFullAllFiles != renderParameters.AllFiles) || (lastFullFocused != renderParameters.FocusedFile)))
+			if ((renderParameters.FocusedFile != null) && ((lastFullNEFiles != renderParameters.NEFiles) || (lastFullFocused != renderParameters.FocusedFile)))
 			{
-				var atLeftIndex = renderParameters.AllFiles.FindIndex(renderParameters.FocusedFile);
+				var atLeftIndex = renderParameters.NEFiles.FindIndex(renderParameters.FocusedFile);
 				var atRightIndex = GetAtRightIndex(fileLabelMap, atLeftIndex);
 				fullFileLabelIndex = Math.Min(atLeftIndex, Math.Max(fullFileLabelIndex, atRightIndex));
 			}
 
-			if ((lastFullAllFiles != renderParameters.AllFiles) || (lastFullFileLabelIndex != fullFileLabelIndex))
-				fullFileLabelIndex = Math.Max(0, Math.Min(fullFileLabelIndex, GetAtRightIndex(fileLabelMap, renderParameters.AllFiles.Count - 1)));
+			if ((lastFullNEFiles != renderParameters.NEFiles) || (lastFullFileLabelIndex != fullFileLabelIndex))
+				fullFileLabelIndex = Math.Max(0, Math.Min(fullFileLabelIndex, GetAtRightIndex(fileLabelMap, renderParameters.NEFiles.Count - 1)));
 
-			if ((lastFullAllFiles == renderParameters.AllFiles) && (lastFullFileLabelIndex == fullFileLabelIndex))
+			if ((lastFullNEFiles == renderParameters.NEFiles) && (lastFullFileLabelIndex == fullFileLabelIndex))
 			{
 				fullFileLabels.ForEach(fileLabel => fileLabel.Refresh(renderParameters));
 				return;
@@ -173,7 +173,7 @@ namespace NeoEdit.UI
 
 			fullFileLabelsPanel.Children.Clear();
 			fullFileLabels = new List<NEFileLabel>();
-			if (!renderParameters.AllFiles.Any())
+			if (!renderParameters.NEFiles.Any())
 				return;
 
 			var remaining = fullFileLabelsWidth;
@@ -181,7 +181,7 @@ namespace NeoEdit.UI
 			var offset = fullFileLabelIndex - index;
 			while (true)
 			{
-				if ((index >= renderParameters.AllFiles.Count) || (remaining <= 0))
+				if ((index >= renderParameters.NEFiles.Count) || (remaining <= 0))
 					break;
 
 				var fileLabel = GetFileLabel(fileLabelMap, index);

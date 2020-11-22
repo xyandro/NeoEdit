@@ -712,7 +712,7 @@ namespace NeoEdit.Common
 		[KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Alt)] Window_Full,
 		[KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Alt)] Window_Grid,
 		[KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Alt)] Window_CustomGrid,
-		[KeyGesture(Key.F3)] Window_ActiveOnly,
+		[KeyGesture(Key.F3)] Window_ActiveFirst,
 		Window_Font_Size,
 		Window_Font_ShowSpecial,
 		Window_Binary,

@@ -15,7 +15,7 @@ namespace NeoEdit.UI
 
 		bool lastGrid = false;
 		Size lastGridSize;
-		IReadOnlyList<INEFile> lastGridAllFiles;
+		IReadOnlyList<INEFile> lastGridNEFiles;
 		INEFile lastGridFocused;
 		double lastGridScrollBarValue;
 		WindowLayout lastWindowLayout;
@@ -34,7 +34,7 @@ namespace NeoEdit.UI
 
 			lastGrid = false;
 			lastGridSize = default;
-			lastGridAllFiles = null;
+			lastGridNEFiles = null;
 			lastGridFocused = null;
 			lastGridScrollBarValue = 0;
 			lastWindowLayout = new WindowLayout();
@@ -64,7 +64,7 @@ namespace NeoEdit.UI
 
 			lastGrid = true;
 			lastGridSize = canvas.RenderSize;
-			lastGridAllFiles = renderParameters.AllFiles;
+			lastGridNEFiles = renderParameters.NEFiles;
 			lastGridFocused = renderParameters.FocusedFile;
 			lastGridScrollBarValue = scrollBar.Value;
 			lastWindowLayout = renderParameters.WindowLayout;
@@ -72,7 +72,7 @@ namespace NeoEdit.UI
 
 		void CalculateGridParameters()
 		{
-			if ((lastGridAllFiles != renderParameters.AllFiles) || (lastWindowLayout != renderParameters.WindowLayout))
+			if ((lastGridNEFiles != renderParameters.NEFiles) || (lastWindowLayout != renderParameters.WindowLayout))
 			{
 				int? columns = null, rows = null;
 				if (renderParameters.WindowLayout.Columns.HasValue)
@@ -80,16 +80,16 @@ namespace NeoEdit.UI
 				if (renderParameters.WindowLayout.Rows.HasValue)
 					rows = Math.Max(1, renderParameters.WindowLayout.Rows.Value);
 				if ((!columns.HasValue) && (!rows.HasValue))
-					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(renderParameters.AllFiles.Count)), renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(renderParameters.FileCount)), renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
 				if (!rows.HasValue)
-					rows = Math.Max(1, Math.Min((renderParameters.AllFiles.Count + columns.Value - 1) / columns.Value, renderParameters.WindowLayout.MaxRows ?? int.MaxValue));
+					rows = Math.Max(1, Math.Min((renderParameters.FileCount + columns.Value - 1) / columns.Value, renderParameters.WindowLayout.MaxRows ?? int.MaxValue));
 				if (!columns.HasValue)
-					columns = Math.Max(1, Math.Min((renderParameters.AllFiles.Count + rows.Value - 1) / rows.Value, renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((renderParameters.FileCount + rows.Value - 1) / rows.Value, renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
 
 				gridColumns = columns.Value;
 				gridRows = rows.Value;
 
-				var totalRows = (renderParameters.AllFiles.Count + gridColumns - 1) / gridColumns;
+				var totalRows = (renderParameters.NEFiles.Count + gridColumns - 1) / gridColumns;
 
 				scrollBarBorder.Visibility = totalRows > gridRows ? Visibility.Visible : Visibility.Collapsed;
 				UpdateLayout();
@@ -100,7 +100,7 @@ namespace NeoEdit.UI
 				scrollBar.ViewportSize = gridRows;
 				scrollBar.Maximum = totalRows - scrollBar.ViewportSize;
 
-				lastGridAllFiles = null; // Make everything else calculate
+				lastGridNEFiles = null; // Make everything else calculate
 
 				SetNEFileUICount(gridColumns * gridRows);
 			}
@@ -110,9 +110,9 @@ namespace NeoEdit.UI
 		{
 			scrollBar.ValueChanged -= OnScrollBarValueChanged;
 
-			if ((renderParameters.FocusedFile != null) && ((lastGridAllFiles != renderParameters.AllFiles) || (lastGridFocused != renderParameters.FocusedFile)))
+			if ((renderParameters.FocusedFile != null) && ((lastGridNEFiles != renderParameters.NEFiles) || (lastGridFocused != renderParameters.FocusedFile)))
 			{
-				var atTop = renderParameters.AllFiles.FindIndex(renderParameters.FocusedFile) / gridColumns;
+				var atTop = renderParameters.NEFiles.FindIndex(renderParameters.FocusedFile) / gridColumns;
 				scrollBar.Value = Math.Min(atTop, Math.Max(scrollBar.Value, atTop + 1 - scrollBar.ViewportSize));
 			}
 
@@ -123,7 +123,7 @@ namespace NeoEdit.UI
 
 		void SetGridLayout()
 		{
-			if ((lastGridAllFiles == renderParameters.AllFiles) && (lastGridScrollBarValue == scrollBar.Value))
+			if ((lastGridNEFiles == renderParameters.NEFiles) && (lastGridScrollBarValue == scrollBar.Value))
 			{
 				gridFileLabels.ForEach(fileLabel => fileLabel.Refresh(renderParameters));
 				neFileUIs.ForEach(neFileUI => neFileUI.DrawAll());
@@ -138,7 +138,7 @@ namespace NeoEdit.UI
 			for (var row = 0; row < gridRows; ++row)
 				for (var column = 0; column < gridColumns; ++column)
 				{
-					if (fileIndex >= renderParameters.AllFiles.Count)
+					if (fileIndex >= renderParameters.NEFiles.Count)
 						break;
 
 					var top = row * gridHeight;
@@ -154,7 +154,7 @@ namespace NeoEdit.UI
 					Canvas.SetTop(border, top);
 
 					var neFileUI = neFileUIs[neFileUIIndex++];
-					neFileUI.NEFile = renderParameters.AllFiles.GetIndex(fileIndex++);
+					neFileUI.NEFile = renderParameters.NEFiles.GetIndex(fileIndex++);
 					var dockPanel = new DockPanel { AllowDrop = true };
 					dockPanel.Drop += (s, e) => OnDrop(e, neFileUI.NEFile);
 					var fileLabel = CreateFileLabel(neFileUI.NEFile);

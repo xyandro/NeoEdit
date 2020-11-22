@@ -4,7 +4,8 @@ namespace NeoEdit.Common
 {
 	public class RenderParameters
 	{
-		public IReadOnlyList<INEFile> AllFiles { get; set; }
+		public IReadOnlyList<INEFile> NEFiles { get; set; }
+		public int FileCount { get; set; }
 		public IReadOnlyList<INEFile> ActiveFiles { get; set; }
 		public INEFile FocusedFile { get; set; }
 		public WindowLayout WindowLayout { get; set; }

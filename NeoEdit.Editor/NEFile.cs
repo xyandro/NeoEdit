@@ -594,7 +594,7 @@ namespace NeoEdit.Editor
 				case NECommand.Window_Full: return PreExecute_Window_Full();
 				case NECommand.Window_Grid: return PreExecute_Window_Grid();
 				case NECommand.Window_CustomGrid: return PreExecute_Window_CustomGrid();
-				case NECommand.Window_ActiveOnly: return PreExecute_Window_ActiveOnly();
+				case NECommand.Window_ActiveFirst: return PreExecute_Window_ActiveFirst();
 				case NECommand.Window_Font_Size: return PreExecute_Window_Font_Size();
 				case NECommand.Window_Font_ShowSpecial: return PreExecute_Window_Font_ShowSpecial();
 				case NECommand.Help_Tutorial: return PreExecute_Help_Tutorial();
