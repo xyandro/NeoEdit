@@ -26,12 +26,18 @@ namespace NeoEdit.UI
 
 		static NEWindowUI()
 		{
+			new NEMenu(); // The first time it creates a menu it's slow, do it while the user isn't waiting
 			UIHelper<NEWindowUI>.Register();
 
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
 
 			Clipboarder.Initialize();
+		}
+
+		public static void Initialize()
+		{
+			// Doesn't do anything, but the static constructor will be called
 		}
 
 		public readonly INEWindow NEWindow;
