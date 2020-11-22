@@ -52,7 +52,7 @@ namespace NeoEdit.Editor
 			{
 				startRow = value;
 				if (DiffTarget != null)
-					DiffTarget.StartRow = value;
+					DiffTarget.startRow = value;
 			}
 		}
 		public int StartColumn
@@ -62,7 +62,7 @@ namespace NeoEdit.Editor
 			{
 				startColumn = value;
 				if (DiffTarget != null)
-					DiffTarget.StartColumn = value;
+					DiffTarget.startColumn = value;
 			}
 		}
 
