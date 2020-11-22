@@ -31,7 +31,7 @@ namespace NeoEdit.UI
 					Filter = filter,
 				};
 				if (dialog.ShowDialog() != true)
-					return null;
+					throw new OperationCanceledException();
 				return new SaveFileDialogResult { FileName = dialog.FileName };
 			});
 		}
@@ -50,7 +50,7 @@ namespace NeoEdit.UI
 					Multiselect = multiselect,
 				};
 				if (dialog.ShowDialog() != true)
-					return null;
+					throw new OperationCanceledException();
 				return new Configuration_FileMacro_Open_Open { FileNames = dialog.FileNames.ToList() };
 			});
 		}
