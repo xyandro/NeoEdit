@@ -2,33 +2,33 @@
 
 namespace NeoEdit.Editor
 {
-	public class NEWindowData
+	public class NEWindowData : INEWindowData
 	{
-		public readonly int NESerial = NESerialTracker.NESerial;
-		public readonly NEWindow neWindow;
+		public int NESerial { get; } = NESerialTracker.NESerial;
+		public NEWindow NEWindow { get; }
 
-		public IReadOnlyOrderedHashSet<NEFileData> neFileDatas;
-		public IReadOnlyOrderedHashSet<NEFile> neFiles;
-		public IReadOnlyOrderedHashSet<NEFile> orderedNEFiles;
-		public IReadOnlyOrderedHashSet<NEFile> activeFiles;
-		public NEFile focused;
+		public IReadOnlyOrderedHashSet<INEFileData> NEFileDatas { get; set; }
+		public IReadOnlyOrderedHashSet<NEFile> NEFiles { get; set; }
+		public IReadOnlyOrderedHashSet<NEFile> OrderedNEFiles { get; set; }
+		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles { get; set; }
+		public NEFile Focused { get; set; }
 
 		public NEWindowData(NEWindow neWindow)
 		{
-			this.neWindow = neWindow;
-			neFileDatas = new OrderedHashSet<NEFileData>();
-			neFiles = orderedNEFiles = activeFiles = new OrderedHashSet<NEFile>();
+			NEWindow = neWindow;
+			NEFileDatas = new OrderedHashSet<INEFileData>();
+			NEFiles = OrderedNEFiles = ActiveFiles = new OrderedHashSet<NEFile>();
 		}
 
-		public NEWindowData(NEWindowData neWindowData)
+		public NEWindowData(INEWindowData neWindowData)
 		{
-			neWindow = neWindowData.neWindow;
+			NEWindow = neWindowData.NEWindow;
 
-			neFileDatas = neWindowData.neFileDatas;
-			neFiles = neWindowData.neFiles;
-			orderedNEFiles = neWindowData.orderedNEFiles;
-			activeFiles = neWindowData.activeFiles;
-			focused = neWindowData.focused;
+			NEFileDatas = neWindowData.NEFileDatas;
+			NEFiles = neWindowData.NEFiles;
+			OrderedNEFiles = neWindowData.OrderedNEFiles;
+			ActiveFiles = neWindowData.ActiveFiles;
+			Focused = neWindowData.Focused;
 		}
 
 		public override string ToString() => NESerial.ToString();

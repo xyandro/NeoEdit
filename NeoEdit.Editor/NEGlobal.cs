@@ -18,7 +18,7 @@ namespace NeoEdit.Editor
 		public NEGlobal()
 		{
 			Data = new NEGlobalData();
-			NEWindowDatas = new OrderedHashSet<NEWindowData>();
+			NEWindowDatas = new OrderedHashSet<INEWindowData>();
 		}
 
 		public bool HandlesKey(ModifierKeys modifiers, Key key)
@@ -47,7 +47,7 @@ namespace NeoEdit.Editor
 		readonly Stack<ExecuteState> actionStack = new Stack<ExecuteState>();
 		ExecuteState lastAction;
 		bool timeNextAction;
-		NEGlobalData undoGlobalData, redoGlobalData;
+		INEGlobalData undoGlobalData, redoGlobalData;
 
 		public void QueueActions(IEnumerable<ExecuteState> actions)
 		{

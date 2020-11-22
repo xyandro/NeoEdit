@@ -81,7 +81,7 @@ namespace NeoEdit.UI.Dialogs
 				TrimWhitespace = TrimWhitespace,
 			};
 
-			this.text.AddCurrentSuggestion();
+			text.AddCurrentSuggestion();
 
 			DialogResult = true;
 		}

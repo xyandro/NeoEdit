@@ -6,36 +6,36 @@ namespace NeoEdit.Editor
 {
 	partial class NEGlobal
 	{
-		public NEGlobalData Data { get; private set; }
+		public INEGlobalData Data { get; private set; }
 		NEGlobalData EditableData
 		{
 			get
 			{
 				if (Data.NESerial != NESerialTracker.NESerial)
 					Data = new NEGlobalData(Data);
-				return Data;
+				return Data as NEGlobalData;
 			}
 		}
 
-		public void SetData(NEGlobalData data)
+		public void SetData(INEGlobalData data)
 		{
 			ClearResult();
 			Data = data;
-			NEWindowDatas.ForEach(neWindowData => neWindowData.neWindow.SetData(neWindowData));
+			NEWindowDatas.ForEach(neWindowData => neWindowData.NEWindow.SetData(neWindowData));
 			UpdateAttachments();
 		}
 
-		IEnumerable<INEWindow> INEGlobal.NEWindows => Data.neWindows;
+		IEnumerable<INEWindow> INEGlobal.NEWindows => Data.NEWindows;
 
-		public IReadOnlyOrderedHashSet<NEWindow> NEWindows => Data.neWindows;
+		public IReadOnlyOrderedHashSet<NEWindow> NEWindows => Data.NEWindows;
 
-		public IReadOnlyOrderedHashSet<NEWindowData> NEWindowDatas
+		public IReadOnlyOrderedHashSet<INEWindowData> NEWindowDatas
 		{
-			get => Data.neWindowDatas;
+			get => Data.NEWindowDatas;
 			private set
 			{
-				EditableData.neWindowDatas = value;
-				EditableData.neWindows = new OrderedHashSet<NEWindow>(value.Select(neWindowData => neWindowData.neWindow));
+				EditableData.NEWindowDatas = value;
+				EditableData.NEWindows = new OrderedHashSet<NEWindow>(value.Select(neWindowData => neWindowData.NEWindow));
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace NeoEdit.Editor
 			if (result == null)
 				return null;
 
-			var nextNEWindowDatas = new OrderedHashSet<NEWindowData>();
+			var nextNEWindowDatas = new OrderedHashSet<INEWindowData>();
 			foreach (var neWindow in NEWindows)
 			{
 				var result = neWindow.GetResult();
@@ -92,29 +92,29 @@ namespace NeoEdit.Editor
 
 		void ClearResult() => result = null;
 
-		NEGlobalData oldAttachments = new NEGlobalData();
+		INEGlobalData oldAttachments = new NEGlobalData();
 		void UpdateAttachments()
 		{
 			if (oldAttachments == Data)
 				return;
 
-			var oldAttachmentsMap = oldAttachments.neWindowDatas.ToDictionary(neWindowData => neWindowData.neWindow);
+			var oldAttachmentsMap = oldAttachments.NEWindowDatas.ToDictionary(neWindowData => neWindowData.NEWindow);
 
 			// Closed windows: detach all files, then the window
-			oldAttachments.neWindows.Except(Data.neWindows).ForEach(neWindow =>
+			oldAttachments.NEWindows.Except(Data.NEWindows).ForEach(neWindow =>
 			{
-				oldAttachmentsMap[neWindow].neFiles.ForEach(neFile => neFile.Detach());
+				oldAttachmentsMap[neWindow].NEFiles.ForEach(neFile => neFile.Detach());
 				neWindow.Detach();
 			});
 
 			// Existing windows: detach removed files
-			oldAttachments.neWindows.Intersect(Data.neWindows).ForEach(neWindow => oldAttachmentsMap[neWindow].neFiles.Except(neWindow.NEFiles).ForEach(neFile => neFile.Detach()));
+			oldAttachments.NEWindows.Intersect(Data.NEWindows).ForEach(neWindow => oldAttachmentsMap[neWindow].NEFiles.Except(neWindow.NEFiles).ForEach(neFile => neFile.Detach()));
 
 			// Existing windows: attach new files
-			oldAttachments.neWindows.Intersect(Data.neWindows).ForEach(neWindow => neWindow.NEFiles.Except(oldAttachmentsMap[neWindow].neFiles).ForEach(neFile => neFile.Attach(neWindow)));
+			oldAttachments.NEWindows.Intersect(Data.NEWindows).ForEach(neWindow => neWindow.NEFiles.Except(oldAttachmentsMap[neWindow].NEFiles).ForEach(neFile => neFile.Attach(neWindow)));
 
 			// New windows: attach the window, then all files
-			Data.neWindows.Except(oldAttachments.neWindows).ForEach(neWindow =>
+			Data.NEWindows.Except(oldAttachments.NEWindows).ForEach(neWindow =>
 			{
 				neWindow.Attach(this);
 				neWindow.NEFiles.ForEach(neFile => neFile.Attach(neWindow));

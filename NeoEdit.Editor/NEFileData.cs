@@ -4,36 +4,36 @@ using NeoEdit.Common;
 
 namespace NeoEdit.Editor
 {
-	public class NEFileData
+	public class NEFileData : INEFileData
 	{
-		public readonly int NESerial = NESerialTracker.NESerial;
-		public readonly NEFile neFile;
+		public int NESerial { get; } = NESerialTracker.NESerial;
+		public NEFile NEFile { get; }
 
-		public NETextPoint neTextPoint;
-		public IReadOnlyList<Range> selections;
-		public IReadOnlyList<Range>[] regions;
-		public NEFile diffTarget;
+		public NETextPoint NETextPoint { get; set; }
+		public IReadOnlyList<Range> Selections { get; set; }
+		public IReadOnlyList<Range>[] Regions { get; set; }
+		public NEFile DiffTarget { get; set; }
 
-		public NEFileData undo;
-		public NEFileData redo;
+		public INEFileData Undo { get; set; }
+		public INEFileData Redo { get; set; }
 
 		public NEFileData(NEFile neFile)
 		{
-			this.neFile = neFile;
-			regions = new IReadOnlyList<Range>[9];
+			NEFile = neFile;
+			Regions = new IReadOnlyList<Range>[9];
 		}
 
-		public NEFileData(NEFileData neFileData)
+		public NEFileData(INEFileData neFileData)
 		{
-			neFile = neFileData.neFile;
+			NEFile = neFileData.NEFile;
 
-			neTextPoint = neFileData.neTextPoint;
-			selections = neFileData.selections;
-			regions = neFileData.regions.ToArray();
-			diffTarget = neFileData.diffTarget;
+			NETextPoint = neFileData.NETextPoint;
+			Selections = neFileData.Selections;
+			Regions = neFileData.Regions.ToArray();
+			DiffTarget = neFileData.DiffTarget;
 
-			undo = neFileData;
-			neFileData.redo = this;
+			Undo = neFileData;
+			(neFileData as NEFileData).Redo = this;
 		}
 
 		public override string ToString() => NESerial.ToString();

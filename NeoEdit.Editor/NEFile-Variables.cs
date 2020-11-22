@@ -6,7 +6,7 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		public NEFileData Data { get; private set; }
+		public INEFileData Data { get; private set; }
 		NEFileData EditableData
 		{
 			get
@@ -16,11 +16,11 @@ namespace NeoEdit.Editor
 					CreateResult();
 					Data = new NEFileData(Data);
 				}
-				return Data;
+				return Data as NEFileData;
 			}
 		}
 
-		public void SetData(NEFileData data)
+		public void SetData(INEFileData data)
 		{
 			ClearResult();
 			Data = data;
@@ -29,26 +29,26 @@ namespace NeoEdit.Editor
 			SetModifiedFlag();
 		}
 
-		NETextPoint NETextPoint { get => Data.neTextPoint; set => EditableData.neTextPoint = value; }
+		NETextPoint NETextPoint { get => Data.NETextPoint; set => EditableData.NETextPoint = value; }
 
 		public NEFile DiffTarget
 		{
-			get => Data.diffTarget;
+			get => Data.DiffTarget;
 			set
 			{
 				if (DiffTarget != null)
 				{
 					Text.ClearDiff();
 					DiffTarget.Text.ClearDiff();
-					DiffTarget.EditableData.diffTarget = null;
-					EditableData.diffTarget = null;
+					DiffTarget.EditableData.DiffTarget = null;
+					EditableData.DiffTarget = null;
 				}
 
 				if (value != null)
 				{
 					value.DiffTarget = null;
-					EditableData.diffTarget = value;
-					value.EditableData.diffTarget = this;
+					EditableData.DiffTarget = value;
+					value.EditableData.DiffTarget = this;
 					CalculateDiff();
 				}
 			}
@@ -56,10 +56,10 @@ namespace NeoEdit.Editor
 
 		public IReadOnlyList<Range> Selections
 		{
-			get => Data.selections;
+			get => Data.Selections;
 			set
 			{
-				EditableData.selections = DeOverlap(value);
+				EditableData.Selections = DeOverlap(value);
 				CurrentSelection = CurrentSelection;
 				EnsureVisible();
 			}
@@ -69,15 +69,15 @@ namespace NeoEdit.Editor
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			return Data.regions[region - 1];
+			return Data.Regions[region - 1];
 		}
 
 		void SetRegions(int region, IReadOnlyList<Range> regions)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
-			EditableData.regions[region - 1] = DeOverlap(regions);
-			Data.regions[region - 1] = DeOverlap(regions);
+			EditableData.Regions[region - 1] = DeOverlap(regions);
+			Data.Regions[region - 1] = DeOverlap(regions);
 		}
 
 		void ClearNEFiles() => CreateResult().ClearNEFiles();

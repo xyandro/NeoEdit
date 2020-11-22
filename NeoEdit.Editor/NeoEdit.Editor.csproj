@@ -165,6 +165,9 @@
     <Compile Include="EditorExecuteState.cs" />
     <Compile Include="FileSaver.cs" />
     <Compile Include="GIFWriter.cs" />
+    <Compile Include="INEFileData.cs" />
+    <Compile Include="INEGlobalData.cs" />
+    <Compile Include="INEWindowData.cs" />
     <Compile Include="KeysAndValues.cs" />
     <Compile Include="LCS.cs" />
     <Compile Include="Macro.cs" />

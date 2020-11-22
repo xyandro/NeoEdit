@@ -81,7 +81,7 @@ namespace NeoEdit.UI.Dialogs
 
 			Reset();
 			Text = text.GetLastSuggestion() ?? "";
-			SetCheckBoxStatus(this.text.GetLastSuggestionData() as CheckBoxStatus);
+			SetCheckBoxStatus(text.GetLastSuggestionData() as CheckBoxStatus);
 		}
 
 		CheckBoxStatus GetCheckBoxStatus()

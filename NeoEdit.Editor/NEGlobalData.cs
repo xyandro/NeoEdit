@@ -2,23 +2,23 @@
 
 namespace NeoEdit.Editor
 {
-	public class NEGlobalData
+	public class NEGlobalData : INEGlobalData
 	{
-		public readonly int NESerial = NESerialTracker.NESerial;
+		public int NESerial { get; } = NESerialTracker.NESerial;
 
-		public IReadOnlyOrderedHashSet<NEWindowData> neWindowDatas;
-		public IReadOnlyOrderedHashSet<NEWindow> neWindows;
+		public IReadOnlyOrderedHashSet<INEWindowData> NEWindowDatas { get; set; }
+		public IReadOnlyOrderedHashSet<NEWindow> NEWindows { get; set; }
 
 		public NEGlobalData()
 		{
-			neWindowDatas = new OrderedHashSet<NEWindowData>();
-			neWindows = new OrderedHashSet<NEWindow>();
+			NEWindowDatas = new OrderedHashSet<INEWindowData>();
+			NEWindows = new OrderedHashSet<NEWindow>();
 		}
 
-		public NEGlobalData(NEGlobalData neGlobalData)
+		public NEGlobalData(INEGlobalData neGlobalData)
 		{
-			neWindowDatas = neGlobalData.neWindowDatas;
-			neWindows = neGlobalData.neWindows;
+			NEWindowDatas = neGlobalData.NEWindowDatas;
+			NEWindows = neGlobalData.NEWindows;
 		}
 
 		public override string ToString() => NESerial.ToString();

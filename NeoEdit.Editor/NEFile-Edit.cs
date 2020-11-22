@@ -297,29 +297,29 @@ namespace NeoEdit.Editor
 		void Execute_Edit_Undo_Text()
 		{
 			var useData = Data;
-			while ((useData.undo != null) && (useData.neTextPoint == NETextPoint))
-				useData = useData.undo;
+			while ((useData.Undo != null) && (useData.NETextPoint == NETextPoint))
+				useData = useData.Undo;
 			SetData(useData);
 		}
 
 		void Execute_Edit_Undo_Step()
 		{
-			if (Data.undo != null)
-				SetData(Data.undo);
+			if (Data.Undo != null)
+				SetData(Data.Undo);
 		}
 
 		void Execute_Edit_Redo_Text()
 		{
 			var useData = Data;
-			while ((useData.redo != null) && (useData.neTextPoint == NETextPoint))
-				useData = useData.redo;
+			while ((useData.Redo != null) && (useData.NETextPoint == NETextPoint))
+				useData = useData.Redo;
 			SetData(useData);
 		}
 
 		void Execute_Edit_Redo_Step()
 		{
-			if (Data.redo != null)
-				SetData(Data.redo);
+			if (Data.Redo != null)
+				SetData(Data.Redo);
 		}
 
 		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.Selections.Count == 1, state.NEWindow.Focused.GetVariables());

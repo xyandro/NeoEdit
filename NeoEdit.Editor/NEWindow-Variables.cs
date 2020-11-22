@@ -7,7 +7,7 @@ namespace NeoEdit.Editor
 {
 	partial class NEWindow
 	{
-		public NEWindowData Data { get; private set; }
+		public INEWindowData Data { get; private set; }
 		NEWindowData EditableData
 		{
 			get
@@ -17,23 +17,23 @@ namespace NeoEdit.Editor
 					CreateResult();
 					Data = new NEWindowData(Data);
 				}
-				return Data;
+				return Data as NEWindowData;
 			}
 		}
 
-		public void SetData(NEWindowData data)
+		public void SetData(INEWindowData data)
 		{
 			ClearResult();
 			Data = data;
-			NEFileDatas.ForEach(neFileData => neFileData.neFile.SetData(neFileData));
+			NEFileDatas.ForEach(neFileData => neFileData.NEFile.SetData(neFileData));
 			NeedsRender = true;
 		}
 
-		public NEFile Focused { get => Data.focused; set => EditableData.focused = value; }
+		public NEFile Focused { get => Data.Focused; set => EditableData.Focused = value; }
 
-		public IReadOnlyOrderedHashSet<NEFile> NEFiles => Data.neFiles;
+		public IReadOnlyOrderedHashSet<NEFile> NEFiles => Data.NEFiles;
 
-		public IReadOnlyOrderedHashSet<NEFile> OrderedNEFiles => Data.orderedNEFiles;
+		public IReadOnlyOrderedHashSet<NEFile> OrderedNEFiles => Data.OrderedNEFiles;
 		void UpdateOrderedNEFiles()
 		{
 			if (ActiveFirst)
@@ -43,22 +43,22 @@ namespace NeoEdit.Editor
 				foreach (var neFile in NEFiles)
 					(ActiveFiles.Contains(neFile) ? activeFiles : inactiveFiles).Add(neFile);
 				inactiveFiles.ForEach(activeFiles.Add);
-				EditableData.orderedNEFiles = activeFiles;
+				EditableData.OrderedNEFiles = activeFiles;
 			}
 			else
-				EditableData.orderedNEFiles = NEFiles;
+				EditableData.OrderedNEFiles = NEFiles;
 		}
 
-		public IReadOnlyOrderedHashSet<NEFileData> NEFileDatas
+		public IReadOnlyOrderedHashSet<INEFileData> NEFileDatas
 		{
-			get => Data.neFileDatas;
+			get => Data.NEFileDatas;
 			private set
 			{
-				EditableData.neFileDatas = value;
-				var nextNEFiles = new OrderedHashSet<NEFile>(value.Select(neFileData => neFileData.neFile));
+				EditableData.NEFileDatas = value;
+				var nextNEFiles = new OrderedHashSet<NEFile>(value.Select(neFileData => neFileData.NEFile));
 				if (!nextNEFiles.Matches(NEFiles))
 				{
-					EditableData.neFiles = nextNEFiles;
+					EditableData.NEFiles = nextNEFiles;
 					UpdateOrderedNEFiles();
 				}
 			}
@@ -70,10 +70,10 @@ namespace NeoEdit.Editor
 
 		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles
 		{
-			get => Data.activeFiles;
+			get => Data.ActiveFiles;
 			set
 			{
-				EditableData.activeFiles = value;
+				EditableData.ActiveFiles = value;
 				UpdateOrderedNEFiles();
 				if (!ActiveFiles.Contains(Focused))
 					Focused = ActiveFiles.OrderByDescending(neFile => neFile.LastActive).FirstOrDefault();
@@ -106,8 +106,8 @@ namespace NeoEdit.Editor
 			List<KeysAndValues>[] keysAndValues = null;
 			List<string> dragFiles = null;
 
-			var nextNEFileDatas = new OrderedHashSet<NEFileData>();
-			var newFileDatas = new List<NEFileData>();
+			var nextNEFileDatas = new OrderedHashSet<INEFileData>();
+			var newFileDatas = new List<INEFileData>();
 			foreach (var neFile in NEFiles)
 			{
 				var result = neFile.GetResult();
@@ -160,7 +160,7 @@ namespace NeoEdit.Editor
 			if (!NEFileDatas.Matches(nextNEFileDatas))
 			{
 				if ((Focused != null) && (Focused.Empty()))
-					if (nextNEFileDatas.Select(neFileData => neFileData.neFile).Except(NEFiles).Any(neFile => !neFile.Empty()))
+					if (nextNEFileDatas.Select(neFileData => neFileData.NEFile).Except(NEFiles).Any(neFile => !neFile.Empty()))
 						nextNEFileDatas.Remove(Focused.Data);
 
 				var oldNEFiles = NEFiles;
