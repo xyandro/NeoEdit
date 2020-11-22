@@ -155,7 +155,7 @@ namespace NeoEdit.Editor
 
 		void RunCommand()
 		{
-			var oldData = state.NEGlobal.Data;
+			var oldData = Data;
 
 			try
 			{
@@ -198,7 +198,7 @@ namespace NeoEdit.Editor
 			}
 			catch
 			{
-				state.NEGlobal.SetData(oldData);
+				SetData(oldData);
 				throw;
 			}
 			finally

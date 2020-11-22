@@ -1292,9 +1292,9 @@ namespace NeoEdit.Editor
 
 			if (centerVertically)
 			{
-				StartRow = (lineMin + lineMax - state.NEWindow.DisplayRows) / 2;
+				StartRow = (lineMin + lineMax - NEWindow.DisplayRows) / 2;
 				if (centerHorizontally)
-					StartColumn = (Text.GetColumnFromIndex(lineMin, indexMin) + Text.GetColumnFromIndex(lineMax, indexMax) - state.NEWindow.DisplayColumns) / 2;
+					StartColumn = (Text.GetColumnFromIndex(lineMin, indexMin) + Text.GetColumnFromIndex(lineMax, indexMax) - NEWindow.DisplayColumns) / 2;
 				else
 					StartColumn = 0;
 			}
@@ -1302,8 +1302,8 @@ namespace NeoEdit.Editor
 			var line = Text.GetPositionLine(range.Cursor);
 			var index = Text.GetPositionIndex(range.Cursor, line);
 			var x = Text.GetColumnFromIndex(line, index);
-			StartRow = Math.Min(line, Math.Max(line - (state?.NEWindow?.DisplayRows ?? 1) + 1, StartRow));
-			StartColumn = Math.Min(x, Math.Max(x - (state?.NEWindow?.DisplayColumns ?? 1) + 1, StartColumn));
+			StartRow = Math.Min(line, Math.Max(line - (NEWindow?.DisplayRows ?? 1) + 1, StartRow));
+			StartColumn = Math.Min(x, Math.Max(x - (NEWindow?.DisplayColumns ?? 1) + 1, StartColumn));
 		}
 
 		public NEVariables GetVariables()
@@ -1731,7 +1731,7 @@ namespace NeoEdit.Editor
 			lock (state)
 			{
 				if ((!state.SavedAnswers[name].HasFlag(MessageOptions.All)) && (!state.SavedAnswers[name].HasFlag(MessageOptions.Cancel)))
-					state.NEWindow.ShowFile(this, () => state.SavedAnswers[name] = state.NEWindow.neWindowUI.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
+					NEWindow.ShowFile(this, () => state.SavedAnswers[name] = NEWindow.neWindowUI.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
 				if (state.SavedAnswers[name] == MessageOptions.Cancel)
 					throw new OperationCanceledException();
 				return state.SavedAnswers[name].HasFlag(MessageOptions.Yes);

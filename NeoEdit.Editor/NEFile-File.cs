@@ -50,9 +50,9 @@ namespace NeoEdit.Editor
 
 		string GetSaveFileName()
 		{
-			return state.NEWindow.ShowFile(this, () =>
+			return NEWindow.ShowFile(this, () =>
 			{
-				var result = state.NEWindow.neWindowUI.RunSaveFileDialog(Path.GetFileName(FileName) ?? DisplayName, "txt", Path.GetDirectoryName(FileName), "All files|*.*");
+				var result = NEWindow.neWindowUI.RunSaveFileDialog(Path.GetFileName(FileName) ?? DisplayName, "txt", Path.GetDirectoryName(FileName), "All files|*.*");
 				if (Directory.Exists(result.FileName))
 					throw new Exception("A directory by that name already exists");
 				if (!Directory.Exists(Path.GetDirectoryName(result.FileName)))
@@ -411,7 +411,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_FileActiveFileIndex(bool activeOnly)
 		{
-			ReplaceSelections((state.NEWindow.GetFileIndex(this, activeOnly) + 1).ToString());
+			ReplaceSelections((NEWindow.GetFileIndex(this, activeOnly) + 1).ToString());
 		}
 
 		void Execute_File_Advanced_Compress() => Compressed = state.MultiStatus == false;

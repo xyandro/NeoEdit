@@ -158,7 +158,7 @@ namespace NeoEdit.Editor
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			if ((state.NEWindow.GetFileIndex(this) < state.NEWindow.GetFileIndex(DiffTarget)) && (state.NEWindow.ActiveFiles.Contains(DiffTarget)))
+			if ((NEWindow.GetFileIndex(this) < DiffTarget.NEWindow.GetFileIndex(DiffTarget)) && (NEWindow.ActiveFiles.Contains(DiffTarget)))
 				return;
 
 			var lines = Selections.AsTaskRunner().Select(range => GetDiffNextPrevious(range, next)).ToList();
@@ -177,13 +177,13 @@ namespace NeoEdit.Editor
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
 
-			var target = state.NEWindow.GetFileIndex(this) < state.NEWindow.GetFileIndex(DiffTarget) ? this : DiffTarget;
+			var target = NEWindow.GetFileIndex(this) < DiffTarget.NEWindow.GetFileIndex(DiffTarget) ? this : DiffTarget;
 			var source = target == this ? DiffTarget : this;
 			if (!moveLeft)
 				Helpers.Swap(ref target, ref source);
 
 			// If both files are active only do this from the target file
-			var bothActive = state.NEWindow.ActiveFiles.Contains(DiffTarget);
+			var bothActive = NEWindow.ActiveFiles.Contains(DiffTarget);
 			if ((bothActive) && (target != this))
 				return;
 

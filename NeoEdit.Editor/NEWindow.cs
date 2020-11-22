@@ -93,7 +93,7 @@ namespace NeoEdit.Editor
 			neWindowUI?.Render(new RenderParameters
 			{
 				NEFiles = OrderedNEFiles,
-				FileCount = ActiveFirst ? ActiveFiles.Count : NEFiles.Count,
+				FileCount = (ActiveFirst) && (ActiveFiles.Count > 0) ? ActiveFiles.Count : NEFiles.Count,
 				ActiveFiles = ActiveFiles,
 				FocusedFile = Focused,
 				WindowLayout = WindowLayout,
