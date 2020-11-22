@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
@@ -18,8 +19,10 @@ namespace NeoEdit.Editor
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
+		static int nextSerial;
 
 		readonly NEText Text = new NEText("");
+		readonly int serial = Interlocked.Increment(ref nextSerial);
 
 		public DateTime LastActive { get; set; }
 		public bool IsModified { get; private set; }
@@ -1746,9 +1749,12 @@ namespace NeoEdit.Editor
 			DiffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
 			DiffTarget.DiffIgnoreCharacters = DiffIgnoreCharacters;
 
-			var left = state.NEWindow?.GetFileIndex(this) < state.NEWindow?.GetFileIndex(DiffTarget) ? this : DiffTarget;
-			var right = left == this ? DiffTarget : this;
-			NEText.CalculateDiff(left.Text, right.Text, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
+			// Use serial to make sure the diff always happens the same way (neFile1 vs neFile2 is slightly different from neFile2 vs neFile1)
+			var neFile1 = serial < DiffTarget.serial ? this : DiffTarget;
+			var neFile2 = neFile1 == this ? DiffTarget : this;
+
+			lock (neFile1)
+				NEText.CalculateDiff(neFile1.Text, neFile2.Text, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 		}
 
 		public int ViewMaxColumn => Text.MaxColumn;
