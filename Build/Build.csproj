@@ -17,6 +17,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <CopyRetryCount>0</CopyRetryCount>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)' == 'x86'">
     <OutputPath>$(SolutionDir)..\</OutputPath>

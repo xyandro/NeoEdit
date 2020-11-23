@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <CopyRetryCount>0</CopyRetryCount>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
     <OutputPath>bin\$(Configuration)\</OutputPath>
