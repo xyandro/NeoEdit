@@ -169,6 +169,7 @@ namespace NeoEdit.Editor
 			switch (state.Command)
 			{
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); return;
+				case NECommand.Internal_MouseActivate: Execute_Internal_MouseActivate(); return;
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); return;
 			}
 		}

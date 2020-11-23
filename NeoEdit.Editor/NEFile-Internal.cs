@@ -159,14 +159,6 @@ namespace NeoEdit.Editor
 			return MoveCursor(range, Text.GetPosition(line, index), selecting);
 		}
 
-		static bool PreExecute_Internal_MouseActivate()
-		{
-			var neFile = (state.Configuration as Configuration_Internal_MouseActivate).NEFile as NEFile;
-			state.NEWindow.SetActiveFiles(state.NEWindow.NEFiles.Where(file => (file == neFile) || ((state.ShiftDown) && (state.NEWindow.ActiveFiles.Contains(file)))));
-			state.NEWindow.Focused = neFile;
-			return true;
-		}
-
 		static bool PreExecute_Internal_CloseFile()
 		{
 			var neFile = (state.Configuration as Configuration_Internal_CloseFile).NEFile as NEFile;
