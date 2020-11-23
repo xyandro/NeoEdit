@@ -29,6 +29,17 @@ namespace NeoEdit.Editor
 			SetModifiedFlag();
 		}
 
+		void SetData(int serial)
+		{
+			var data = Data;
+			while ((data.Undo != null) && (data.NESerial > serial))
+				data = data.Undo;
+			while ((data.Redo != null) && (data.Redo.NESerial <= serial))
+				data = data.Redo;
+			if (data != Data)
+				SetData(data);
+		}
+
 		NETextPoint NETextPoint { get => Data.NETextPoint; set => EditableData.NETextPoint = value; }
 
 		public NEFile DiffTarget
