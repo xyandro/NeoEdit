@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
@@ -165,7 +164,14 @@ namespace NeoEdit.Editor
 
 		public bool PreExecute() => NEFile.PreExecute();
 
-		public void Execute() => ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute());
+		public void Execute()
+		{
+			switch (state.Command)
+			{
+				case NECommand.Internal_Activate: Execute_Internal_Activate(); return;
+				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); return;
+			}
+		}
 
 		public int GetFileIndex(NEFile neFile, bool activeOnly = false)
 		{

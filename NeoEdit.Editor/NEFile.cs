@@ -507,7 +507,6 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Activate: return PreExecute_Internal_Activate();
 				case NECommand.Internal_MouseActivate: return PreExecute_Internal_MouseActivate();
 				case NECommand.Internal_CloseFile: return PreExecute_Internal_CloseFile();
 				case NECommand.Internal_Key: return PreExecute_Internal_Key();
@@ -1204,7 +1203,7 @@ namespace NeoEdit.Editor
 		FileSystemWatcher watcher = null;
 		DateTime fileLastWrite { get; set; }
 
-		public void Activated()
+		public void CheckForRefresh()
 		{
 			if (!watcherFileModified)
 				return;
