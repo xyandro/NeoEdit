@@ -159,14 +159,6 @@ namespace NeoEdit.Editor
 			return MoveCursor(range, Text.GetPosition(line, index), selecting);
 		}
 
-		static bool PreExecute_Internal_CloseFile()
-		{
-			var neFile = (state.Configuration as Configuration_Internal_CloseFile).NEFile as NEFile;
-			neFile.VerifyCanClose();
-			neFile.Close();
-			return true;
-		}
-
 		static void Configure_Internal_Key()
 		{
 			switch (state.Key)

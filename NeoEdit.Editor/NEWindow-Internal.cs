@@ -19,5 +19,12 @@ namespace NeoEdit.Editor
 			SetActiveFiles(NEFiles.Where(file => (file == neFile) || ((state.ShiftDown) && (ActiveFiles.Contains(file)))));
 			Focused = neFile;
 		}
+
+		void Execute_Internal_CloseFile()
+		{
+			var neFile = (state.Configuration as Configuration_Internal_CloseFile).NEFile as NEFile;
+			neFile.VerifyCanClose();
+			neFile.Close();
+		}
 	}
 }
