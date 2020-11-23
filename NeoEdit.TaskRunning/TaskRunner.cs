@@ -14,6 +14,7 @@ namespace NeoEdit.TaskRunning
 		public static FluentTaskRunner<int> Range(int start, int count, Action<double> idleAction = null) => new FluentTaskRunner<int>(Enumerable.Range(start, count), idleAction);
 		public static FluentTaskRunner<T> Repeat<T>(T item, int count, Action<double> idleAction = null) => new FluentTaskRunner<T>(Enumerable.Repeat(item, count), idleAction);
 
+		public static T Run<T>(Func<T> func, Action<double> idleAction = null) => Range(1, 1, idleAction).Select((item, index, progress) => func()).ToList()[0];
 		public static void Run(Action action, Action<double> idleAction = null) => Range(1, 1, idleAction).ForAll((item, index, progress) => action());
 		public static void Run(Action<Action<long>> action, Action<double> idleAction = null) => Range(1, 1, idleAction).ForAll((item, index, progress) => action(progress));
 

@@ -27,7 +27,6 @@ namespace NeoEdit.Editor
 				NeedsRender = true;
 			}
 		}
-		public bool MacroVisualize { get; set; } = true;
 
 		bool activeFirst;
 		public bool ActiveFirst
@@ -64,7 +63,7 @@ namespace NeoEdit.Editor
 				AddNewNEFile(new NEFile());
 		}
 
-		IReadOnlyDictionary<INEFile, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
+		public IReadOnlyDictionary<INEFile, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
 		{
 			var empty = Tuple.Create(new List<string>() as IReadOnlyList<string>, default(bool?));
 			var clipboardDataMap = ActiveFiles.ToDictionary(x => x as INEFile, x => empty);
@@ -85,7 +84,7 @@ namespace NeoEdit.Editor
 		}
 
 		public static IReadOnlyList<KeysAndValues>[] keysAndValues = Enumerable.Repeat(new List<KeysAndValues>(), 10).ToArray();
-		Dictionary<INEFile, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
+		public Dictionary<INEFile, KeysAndValues> GetKeysAndValuesMap(int kvIndex)
 		{
 			var empty = new KeysAndValues(new List<string>(), kvIndex == 0);
 			var keysAndValuesMap = NEFiles.ToDictionary(x => x as INEFile, x => empty);
@@ -155,38 +154,16 @@ namespace NeoEdit.Editor
 				[nameof(NECommand.Diff_IgnoreCase)] = GetMultiStatus(neFile => neFile.DiffIgnoreCase),
 				[nameof(NECommand.Diff_IgnoreNumbers)] = GetMultiStatus(neFile => neFile.DiffIgnoreNumbers),
 				[nameof(NECommand.Diff_IgnoreLineEndings)] = GetMultiStatus(neFile => neFile.DiffIgnoreLineEndings),
-				[nameof(NECommand.Macro_Visualize)] = MacroVisualize,
+				[nameof(NECommand.Macro_Visualize)] = NEGlobal.MacroVisualize,
 				[nameof(NECommand.Window_ActiveFirst)] = ActiveFirst,
 				[nameof(NECommand.Window_Font_ShowSpecial)] = Font.ShowSpecialChars,
 				[nameof(NECommand.Window_Binary)] = GetMultiStatus(neFile => neFile.ViewBinary),
 			};
 		}
 
-		public long RunCommand()
-		{
-			state.ClipboardDataMapFunc = GetClipboardDataMap;
-			state.KeysAndValuesFunc = GetKeysAndValuesMap;
+		public void Configure() => NEFile.Configure();
 
-			if (state.Configuration == null)
-				NEFile.Configure();
-
-			var sw = Stopwatch.StartNew();
-
-			neWindowUI.SetTaskRunnerProgress(0);
-			try
-			{
-				if (!NEFile.PreExecute())
-					TaskRunner.Run(Execute, percent => neWindowUI.SetTaskRunnerProgress(percent));
-			}
-			finally { neWindowUI.SetTaskRunnerProgress(null); }
-
-			var elapsed = sw.ElapsedMilliseconds;
-
-			if ((recordingMacro != null) && (state.MacroInclude))
-				recordingMacro.AddAction(new ExecuteState(state));
-
-			return elapsed;
-		}
+		public bool PreExecute() => NEFile.PreExecute();
 
 		public void Execute() => ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute());
 

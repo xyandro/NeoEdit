@@ -209,9 +209,6 @@
     <Compile Include="NEFile-KeyValue.cs">
       <DependentUpon>NEFile.cs</DependentUpon>
     </Compile>
-    <Compile Include="NEFile-Macro.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
     <Compile Include="NEFile-Network.cs">
       <DependentUpon>NEFile.cs</DependentUpon>
     </Compile>
@@ -236,6 +233,18 @@
     <Compile Include="NEFile.cs" />
     <Compile Include="NEFileData.cs" />
     <Compile Include="NEFileResult.cs" />
+    <Compile Include="NEGlobal-Edit.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEGlobal-Help.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEGlobal-Internal.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NEGlobal-Macro.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
     <Compile Include="NEGlobal-Variables.cs">
       <DependentUpon>NEGlobal.cs</DependentUpon>
     </Compile>
@@ -245,9 +254,6 @@
     <Compile Include="NESerialTracker.cs" />
     <Compile Include="NEText.cs" />
     <Compile Include="NETextPoint.cs" />
-    <Compile Include="NEWindow-Macro.cs">
-      <DependentUpon>NEWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="NEWindow-Variables.cs">
       <DependentUpon>NEWindow.cs</DependentUpon>
     </Compile>
