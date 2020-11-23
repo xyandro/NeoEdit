@@ -70,7 +70,7 @@ namespace NeoEdit.Editor
 			get => Data.Selections;
 			set
 			{
-				EditableData.Selections = DeOverlap(value);
+				EditableData.Selections = Sort(value);
 				CurrentSelection = CurrentSelection;
 				EnsureVisible();
 			}

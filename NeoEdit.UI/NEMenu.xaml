@@ -114,12 +114,14 @@
 			<controls:NEMenuItem Header="_Limit" CommandEnum="Edit_Select_Limit" ToolTip="Keep selections based on starting selection, every nth selection, total selection count"/>
 			<Separator/>
 			<controls:NEMenuItem Header="Line_s" CommandEnum="Edit_Select_Lines" ToolTip="Select line (except newline) of any selections"/>
-			<controls:NEMenuItem Header="W_hole lines" CommandEnum="Edit_Select_WholeLines" ToolTip="Select line (including newline) of all selections"/>
+			<controls:NEMenuItem Header="_Whole lines" CommandEnum="Edit_Select_WholeLines" ToolTip="Select line (including newline) of all selections"/>
 			<Separator/>
 			<controls:NEMenuItem Header="_Empty" CommandEnum="Edit_Select_Empty" ToolTip="Keep selections that are empty"/>
 			<controls:NEMenuItem Header="Non-e_mpty" CommandEnum="Edit_Select_NonEmpty" ToolTip="Keep selections that aren't empty"/>
 			<Separator/>
-			<controls:NEMenuItem Header="T_oggle anchor" CommandEnum="Edit_Select_ToggleAnchor" ToolTip="Toggle anchor between left/right side of selections"/>
+			<controls:NEMenuItem Header="_De-overlap" CommandEnum="Edit_Select_DeOverlap" ToolTip="Make selections not overlap"/>
+			<Separator/>
+			<controls:NEMenuItem Header="_Toggle anchor" CommandEnum="Edit_Select_ToggleAnchor" ToolTip="Toggle anchor between left/right side of selections"/>
 			<Separator/>
 			<MenuItem Header="_Focused">
 				<controls:NEMenuItem Header="_First" CommandEnum="Edit_Select_Focused_First" ToolTip="Focus first selection"/>

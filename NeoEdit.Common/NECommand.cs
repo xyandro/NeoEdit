@@ -76,6 +76,7 @@ namespace NeoEdit.Common
 		[KeyGesture(Key.L, ModifierKeys.Control | ModifierKeys.Alt)] Edit_Select_WholeLines,
 		Edit_Select_Empty,
 		Edit_Select_NonEmpty,
+		Edit_Select_DeOverlap,
 		[KeyGesture(Key.Space, ModifierKeys.Control)] Edit_Select_ToggleAnchor,
 		[KeyGesture(Key.D0, ModifierKeys.Alt)] Edit_Select_Focused_First,
 		[KeyGesture(Key.OemPlus, ModifierKeys.Alt)] Edit_Select_Focused_Next,

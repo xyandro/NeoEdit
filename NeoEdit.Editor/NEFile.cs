@@ -273,6 +273,22 @@ namespace NeoEdit.Editor
 		}
 		#endregion
 
+		static bool NeedsSort(IReadOnlyList<Range> items)
+		{
+			for (var ctr = 1; ctr < items.Count; ++ctr)
+				if ((items[ctr].Start < items[ctr - 1].Start) || ((items[ctr].Start == items[ctr - 1].Start) && (items[ctr].End < items[ctr - 1].End)))
+					return true;
+
+			return false;
+		}
+
+		static IReadOnlyList<Range> Sort(IReadOnlyList<Range> items)
+		{
+			if (!NeedsSort(items))
+				return items;
+			return items.OrderBy(range => range.Start).ThenBy(range => range.End).ToList();
+		}
+
 		#region DeOverlap
 		enum DeOverlapStep
 		{
@@ -620,6 +636,7 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Select_WholeLines: Execute_Edit_Select_WholeLines(); break;
 				case NECommand.Edit_Select_Empty: Execute_Edit_Select_EmptyNonEmpty(true); break;
 				case NECommand.Edit_Select_NonEmpty: Execute_Edit_Select_EmptyNonEmpty(false); break;
+				case NECommand.Edit_Select_DeOverlap: Execute_Edit_Select_DeOverlap(); break;
 				case NECommand.Edit_Select_ToggleAnchor: Execute_Edit_Select_ToggleAnchor(); break;
 				case NECommand.Edit_Select_Focused_First: Execute_Edit_Select_Focused_First(); break;
 				case NECommand.Edit_Select_Focused_Next: Execute_Edit_Select_Focused_NextPrevious(true); break;
