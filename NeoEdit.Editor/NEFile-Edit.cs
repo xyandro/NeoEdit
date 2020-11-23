@@ -333,6 +333,13 @@ namespace NeoEdit.Editor
 			state.NEWindow.CreateResult();
 		}
 
+		static void PreExecute_Edit_Undo_BetweenFiles_Sync()
+		{
+			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.Redo).NonNull().Select(x => x.NESerial - 1).DefaultIfEmpty(int.MinValue).Max();
+			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
+			state.NEWindow.CreateResult();
+		}
+
 		void Execute_Edit_Redo_Text()
 		{
 			var neFileData = Data;
@@ -368,6 +375,13 @@ namespace NeoEdit.Editor
 		static void PreExecute_Edit_Redo_BetweenFiles_Step()
 		{
 			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.Redo).NonNull().Select(x => x.NESerial).DefaultIfEmpty(int.MaxValue).Min();
+			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
+			state.NEWindow.CreateResult();
+		}
+
+		static void PreExecute_Edit_Redo_BetweenFiles_Sync()
+		{
+			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.NESerial).DefaultIfEmpty(int.MaxValue).Min();
 			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
 			state.NEWindow.CreateResult();
 		}
