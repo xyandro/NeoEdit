@@ -66,7 +66,7 @@ namespace NeoEdit.Editor
 			var variables = GetTableVariables(table);
 			var results = state.GetExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
-			Selections = lines.AsTaskRunner().Select(line => new Range(Text.GetPosition(line, Text.GetLineLength(line)), Text.GetPosition(line, 0))).ToList();
+			Selections = lines.AsTaskRunner().Select(line => new Range(Text.GetPosition(line, 0), Text.GetPosition(line, Text.GetLineLength(line)))).ToList();
 		}
 
 		static void Configure_Table_New_FromSelection()

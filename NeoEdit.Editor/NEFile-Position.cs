@@ -121,9 +121,9 @@ namespace NeoEdit.Editor
 				var start = Start.GetPosition(te, range.Cursor);
 				var end = End.GetPosition(te, range.Cursor, Start);
 				if (end.HasValue)
-					return new Range(end.Value, start.Value);
+					return new Range(start.Value, end.Value);
 				if (selecting)
-					return new Range(start.Value, range.Anchor);
+					return new Range(range.Anchor, start.Value);
 				return Range.FromIndex(start.Value, 0);
 			}
 		}

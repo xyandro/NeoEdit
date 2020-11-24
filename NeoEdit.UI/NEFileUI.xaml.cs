@@ -147,7 +147,7 @@ namespace NeoEdit.UI
 			drawBounds.EndColumn = Math.Min(NEFile.ViewMaxColumn + 1, drawBounds.StartColumn + (int)Math.Ceiling(canvas.ActualWidth / Font.CharWidth));
 
 			var lines = Enumerable.Range(drawBounds.StartLine, drawBounds.EndLine - drawBounds.StartLine);
-			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(NEFile.ViewGetPosition(line, 0), NEFile.ViewGetPosition(line, NEFile.ViewGetLineLength(line) + 1)));
+			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(NEFile.ViewGetPosition(line, NEFile.ViewGetLineLength(line) + 1), NEFile.ViewGetPosition(line, 0)));
 			drawBounds.StartIndexes = lines.ToDictionary(line => line, line => NEFile.ViewGetIndexFromColumn(line, drawBounds.StartColumn, true));
 			drawBounds.EndIndexes = lines.ToDictionary(line => line, line => NEFile.ViewGetIndexFromColumn(line, drawBounds.EndColumn, true));
 			return drawBounds;

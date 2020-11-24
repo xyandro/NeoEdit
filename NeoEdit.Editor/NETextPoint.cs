@@ -84,7 +84,7 @@ namespace NeoEdit.Editor
 			var change = 0;
 			for (var ctr = 0; ctr < ranges.Count; ++ctr)
 			{
-				var undoRange = new Range(ranges[ctr].Start + change, ranges[ctr].Start + strs[ctr].Length + change);
+				var undoRange = new Range(ranges[ctr].Start + strs[ctr].Length + change, ranges[ctr].Start + change);
 				nextRanges.Add(undoRange);
 				nextStrs.Add(text.Substring(ranges[ctr].Start, ranges[ctr].Length));
 				change = undoRange.Anchor - ranges[ctr].End;

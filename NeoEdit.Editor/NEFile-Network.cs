@@ -246,7 +246,7 @@ namespace NeoEdit.Editor
 			foreach (var value in values)
 			{
 				var endSel = startSel + value.Length;
-				sels.Add(new Range(endSel, startSel));
+				sels.Add(new Range(startSel, endSel));
 				startSel = endSel;
 			}
 			Selections = sels;

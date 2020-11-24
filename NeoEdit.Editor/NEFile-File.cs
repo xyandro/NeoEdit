@@ -33,7 +33,7 @@ namespace NeoEdit.Editor
 			{
 				var start = sb.Length;
 				sb.Append(str);
-				sels.Add(new Range(sb.Length, start));
+				sels.Add(new Range(start, sb.Length));
 				if ((!str.EndsWith("\r")) && (!str.EndsWith("\n")))
 					sb.Append("\r\n");
 			}
@@ -276,7 +276,7 @@ namespace NeoEdit.Editor
 
 			OpenFile(FileName, DisplayName);
 
-			Func<IReadOnlyList<Range>, IReadOnlyList<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(0, Math.Min(range.Cursor, Text.Length)), Math.Max(0, Math.Min(range.Anchor, Text.Length)))).ToList();
+			Func<IReadOnlyList<Range>, IReadOnlyList<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(0, Math.Min(range.Anchor, Text.Length)), Math.Max(0, Math.Min(range.Cursor, Text.Length)))).ToList();
 			Selections = reformatRanges(selections);
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, reformatRanges(GetRegions(region)));

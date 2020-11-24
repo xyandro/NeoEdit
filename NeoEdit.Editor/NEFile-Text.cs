@@ -158,7 +158,7 @@ namespace NeoEdit.Editor
 								--useEnd;
 						}
 						if ((!result.ExcludeEmpty) || (useStart != useEnd))
-							yield return new Range(useEnd, useStart);
+							yield return new Range(useStart, useEnd);
 						if (pos >= range.End)
 							break;
 						if (result.IncludeResults)
@@ -290,7 +290,7 @@ namespace NeoEdit.Editor
 					while ((endPosition < maxPosition) && (result.Chars.Contains(Text[endPosition]) == wholeWord))
 						++endPosition;
 
-				sels.Add(new Range(endPosition, startPosition));
+				sels.Add(new Range(startPosition, endPosition));
 			}
 			Selections = sels;
 		}
@@ -471,7 +471,7 @@ namespace NeoEdit.Editor
 				firstMatchOnly = true;
 				selections = new List<Range>();
 				for (var ctr = 0; ctr < Selections.Count; ++ctr)
-					selections.Add(new Range(Selections[ctr].End, ctr + 1 == Selections.Count ? Text.Length : Selections[ctr + 1].Start));
+					selections.Add(new Range(ctr + 1 == Selections.Count ? Text.Length : Selections[ctr + 1].Start, Selections[ctr].End));
 			}
 			else if (result.SelectionOnly)
 				selections = Selections.ToList();
@@ -567,7 +567,7 @@ namespace NeoEdit.Editor
 							endPos = Selections[ctr + 1].Start;
 						else
 							endPos = Text.Length;
-						newSels.Add(new Range(endPos, Selections[ctr].Start));
+						newSels.Add(new Range(Selections[ctr].Start, endPos));
 					}
 					Selections = newSels;
 					break;
@@ -660,8 +660,8 @@ namespace NeoEdit.Editor
 			for (var ctr = 0; ctr < newSelections.Count; ++ctr)
 			{
 				var orderCtr = ordering[ctr];
-				newSelections[orderCtr] = new Range(newSelections[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, newSelections[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add);
-				newRegions[orderCtr] = new Range(newRegions[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add, newRegions[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add);
+				newSelections[orderCtr] = new Range(newSelections[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add, newSelections[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add);
+				newRegions[orderCtr] = new Range(newRegions[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add, newRegions[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add);
 				add += orderedRegionText[ctr].Length - regions[ctr].Length;
 			}
 			newSelections = ordering.Select(num => newSelections[num]).ToList();

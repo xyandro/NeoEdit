@@ -23,7 +23,7 @@ namespace NeoEdit.Editor
 						if (prevNode != null)
 						{
 							var overlap = e.Current.Start < prevNode.End;
-							sels.Add(new Range(overlap ? prevNode.Start : prevNode.End, prevNode.Start));
+							sels.Add(new Range(prevNode.Start, overlap ? prevNode.Start : prevNode.End));
 						}
 
 						prevNode = e.Current;
@@ -31,7 +31,7 @@ namespace NeoEdit.Editor
 					else
 					{
 						if (prevNode != null)
-							sels.Add(new Range(prevNode.End, prevNode.Start));
+							sels.Add(new Range(prevNode.Start, prevNode.End));
 						break;
 					}
 

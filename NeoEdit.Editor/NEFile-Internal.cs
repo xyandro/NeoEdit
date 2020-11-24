@@ -27,7 +27,7 @@ namespace NeoEdit.Editor
 				cursorIndex = Math.Max(0, Math.Min(cursorIndex, Text.GetLineLength(cursorLine)));
 				highlightIndex = Math.Max(0, Math.Min(highlightIndex, Text.GetLineLength(highlightLine)));
 
-				sels.Add(new Range(Text.GetPosition(cursorLine, cursorIndex), Text.GetPosition(highlightLine, highlightIndex)));
+				sels.Add(new Range(Text.GetPosition(highlightLine, highlightIndex), Text.GetPosition(cursorLine, cursorIndex)));
 			}
 			Selections = Selections.Concat(sels).ToList();
 		}
@@ -51,7 +51,7 @@ namespace NeoEdit.Editor
 				startIndex = Math.Max(0, Math.Min(startIndex, Text.GetLineLength(startLine)));
 				endIndex = Math.Max(0, Math.Min(endIndex, Text.GetLineLength(endLine)));
 
-				var prevLineRange = new Range(Text.GetPosition(startLine, startIndex), Text.GetPosition(endLine, endIndex));
+				var prevLineRange = new Range(Text.GetPosition(endLine, endIndex), Text.GetPosition(startLine, startIndex));
 				if (found.Contains(prevLineRange.ToString()))
 					sels.Add(prevLineRange);
 				else
@@ -134,7 +134,7 @@ namespace NeoEdit.Editor
 				if (range.Cursor == position)
 					return range;
 				else
-					return new Range(position, range.Anchor);
+					return new Range(range.Anchor, position);
 
 			if ((range.Cursor == position) && (range.Anchor == position))
 				return range;
@@ -249,7 +249,7 @@ namespace NeoEdit.Editor
 								position = Text.GetPosition(line, index);
 							}
 
-							return new Range(position, anchor);
+							return new Range(anchor, position);
 						}).Where(range => range != null).ToList());
 					}
 					break;
@@ -501,7 +501,7 @@ namespace NeoEdit.Editor
 						}
 					}
 
-					currentSelection = new Range(position, anchor);
+					currentSelection = new Range(anchor, position);
 				}
 			}
 			else
@@ -515,7 +515,7 @@ namespace NeoEdit.Editor
 				{
 					if (mouseRange != null)
 						sels.Remove(mouseRange);
-					currentSelection = new Range(GetNextWord(position), GetPrevWord(Math.Min(position + 1, Text.Length)));
+					currentSelection = new Range(GetPrevWord(Math.Min(position + 1, Text.Length)), GetNextWord(position));
 				}
 			}
 

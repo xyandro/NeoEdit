@@ -162,7 +162,7 @@ namespace NeoEdit.Editor
 			Replace(Selections, strs);
 
 			if (highlight)
-				Selections = Selections.AsTaskRunner().Select((range, index) => new Range(range.End, range.End - (strs == null ? 0 : strs[index].Length))).ToList();
+				Selections = Selections.AsTaskRunner().Select((range, index) => new Range(range.End - (strs == null ? 0 : strs[index].Length), range.End)).ToList();
 			else
 				Selections = Selections.AsTaskRunner().Select(range => new Range(range.End)).ToList();
 		}
@@ -264,9 +264,9 @@ namespace NeoEdit.Editor
 					var startPos = current;
 					current = Array.IndexOf(translateMap.Item1, ranges[ctr].End, current);
 					if (ranges[ctr].Cursor < ranges[ctr].Anchor)
-						list.Add(new Range(translateMap.Item2[startPos], translateMap.Item2[current]));
-					else
 						list.Add(new Range(translateMap.Item2[current], translateMap.Item2[startPos]));
+					else
+						list.Add(new Range(translateMap.Item2[startPos], translateMap.Item2[current]));
 				}
 			});
 			return result;
@@ -343,9 +343,9 @@ namespace NeoEdit.Editor
 						if ((range == null) || (last.End <= range.Start))
 							result.Add(last);
 						else if (last.Cursor < last.Anchor)
-							result.Add(new Range(last.Start, range.Start));
-						else
 							result.Add(new Range(range.Start, last.Start));
+						else
+							result.Add(new Range(last.Start, range.Start));
 						last = null;
 					}
 

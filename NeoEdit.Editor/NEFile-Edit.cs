@@ -124,7 +124,7 @@ namespace NeoEdit.Editor
 				var end = start;
 				while ((end + 1 < Selections.Count) && (Selections[end].End == Selections[end + 1].Start))
 					++end;
-				sels.Add(new Range(Selections[end].End, Selections[start].Start));
+				sels.Add(new Range(Selections[start].Start, Selections[end].End));
 				start = end + 1;
 			}
 			Selections = sels;
@@ -134,7 +134,7 @@ namespace NeoEdit.Editor
 		{
 			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
 			var end = Selections.Select(sel => sel.Start).Concat(new[] { Text.Length });
-			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(endPos, startPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.Length))).ToList();
+			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(startPos, endPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.Length))).ToList();
 		}
 
 		static void Configure_Edit_Select_Limit() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Select_Limit(state.NEWindow.Focused.GetVariables());
@@ -150,7 +150,7 @@ namespace NeoEdit.Editor
 
 			var sels = Selections.Skip(firstSelection - 1);
 			if (result.JoinSelections)
-				sels = sels.Batch(everyNth).Select(batch => batch.Take(takeCount)).Select(batch => new Range(batch.Last().End, batch.First().Start));
+				sels = sels.Batch(everyNth).Select(batch => batch.Take(takeCount)).Select(batch => new Range(batch.First().Start, batch.Last().End));
 			else
 				sels = sels.EveryNth(everyNth, takeCount);
 			sels = sels.Take(numSels);
@@ -183,7 +183,7 @@ namespace NeoEdit.Editor
 				var startPosition = Text.GetPosition(startLine, 0);
 				var endLine = Text.GetPositionLine(Math.Max(range.Start, range.End - 1));
 				var endPosition = Text.GetPosition(endLine, 0) + Text.GetLineLength(endLine) + Text.GetEndingLength(endLine);
-				return new Range(endPosition, startPosition);
+				return new Range(startPosition, endPosition);
 			}).ToList();
 
 			Selections = sels;
@@ -198,7 +198,7 @@ namespace NeoEdit.Editor
 		void Execute_Edit_Select_ToggleAnchor()
 		{
 			var anchorStart = (state.Configuration as Configuration_Edit_Select_ToggleAnchor).AnchorStart;
-			Selections = Selections.Select(range => new Range(anchorStart ? range.End : range.Start, anchorStart ? range.Start : range.End)).ToList();
+			Selections = Selections.Select(range => new Range(anchorStart ? range.Start : range.End, anchorStart ? range.End : range.Start)).ToList();
 		}
 
 		void Execute_Edit_Select_Focused_First()

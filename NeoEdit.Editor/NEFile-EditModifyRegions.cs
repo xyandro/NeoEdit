@@ -61,7 +61,7 @@ namespace NeoEdit.Editor
 					break;
 
 				if ((searchList.Count > 0) && (searchList[searchList.Count - 1].End > minRange.Start))
-					searchList[searchList.Count - 1] = new Range(minRange.Start, searchList[searchList.Count - 1].Start);
+					searchList[searchList.Count - 1] = new Range(searchList[searchList.Count - 1].Start, minRange.Start);
 				searchList.Add(minRange);
 				++useRegionPos[minRegion];
 			}
@@ -291,11 +291,11 @@ namespace NeoEdit.Editor
 					else
 					{
 						if (region.Start < Selections[selectionIndex].Start)
-							newRegions.Add(new Range(Selections[selectionIndex].Start, region.Start));
+							newRegions.Add(new Range(region.Start, Selections[selectionIndex].Start));
 						if (region.End <= Selections[selectionIndex].End)
 							region = null;
 						else
-							region = new Range(region.End, Selections[selectionIndex].End);
+							region = new Range(Selections[selectionIndex].End, region.End);
 					}
 				}
 				SetRegions(useRegion, newRegions);
@@ -318,7 +318,7 @@ namespace NeoEdit.Editor
 					{
 						if ((!GetRegions(useRegion)[regionIndex].HasSelection) || (!selection.HasSelection) || ((GetRegions(useRegion)[regionIndex].End != selection.Start) && (GetRegions(useRegion)[regionIndex].Start != selection.End)))
 						{
-							var newRegion = new Range(Math.Min(GetRegions(useRegion)[regionIndex].End, selection.End), Math.Max(GetRegions(useRegion)[regionIndex].Start, selection.Start));
+							var newRegion = new Range(Math.Max(GetRegions(useRegion)[regionIndex].Start, selection.Start), Math.Min(GetRegions(useRegion)[regionIndex].End, selection.End));
 							if ((newRegions.Count == 0) || (!newRegion.Equals(newRegions[newRegions.Count - 1])))
 								newRegions.Add(newRegion);
 						}
@@ -350,11 +350,11 @@ namespace NeoEdit.Editor
 					else
 					{
 						if (regions2[regionIndex].Start < Selections[selectionIndex].Start)
-							newRegions.Add(new Range(Selections[selectionIndex].Start, regions2[regionIndex].Start));
+							newRegions.Add(new Range(regions2[regionIndex].Start, Selections[selectionIndex].Start));
 						while ((regionIndex < regions2.Count) && (regions2[regionIndex].End <= Selections[selectionIndex].End))
 							regionIndex++;
 						if ((regionIndex < regions2.Count) && (regions2[regionIndex].Start < Selections[selectionIndex].End))
-							regions2[regionIndex] = new Range(regions2[regionIndex].End, Selections[selectionIndex].End);
+							regions2[regionIndex] = new Range(Selections[selectionIndex].End, regions2[regionIndex].End);
 						++selectionIndex;
 					}
 				}
@@ -381,8 +381,8 @@ namespace NeoEdit.Editor
 				foreach (var selection in regionsWithSelection.Item2)
 				{
 					position += regionsWithSelection.Item1.Length;
-					newRegions.Add(new Range(regionsWithSelection.Item1.Cursor + position, regionsWithSelection.Item1.Anchor + position));
-					newSelections.Add(new Range(selection.Cursor + position, selection.Anchor + position));
+					newRegions.Add(new Range(regionsWithSelection.Item1.Anchor + position, regionsWithSelection.Item1.Cursor + position));
+					newSelections.Add(new Range(selection.Anchor + position, selection.Cursor + position));
 				}
 			}
 			Replace(useRegions.ToList(), newRegionStrs);

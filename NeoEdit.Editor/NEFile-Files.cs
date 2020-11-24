@@ -144,10 +144,10 @@ namespace NeoEdit.Editor
 
 			switch (type)
 			{
-				case GetPathType.FileName: return new Range(range.End, range.Start + dirTotal);
-				case GetPathType.FileNameWoExtension: return new Range(range.End - extLen, range.Start + dirTotal);
+				case GetPathType.FileName: return new Range(range.Start + dirTotal, range.End);
+				case GetPathType.FileNameWoExtension: return new Range(range.Start + dirTotal, range.End - extLen);
 				case GetPathType.Directory: return Range.FromIndex(range.Start, dirLength);
-				case GetPathType.Extension: return new Range(range.End, range.End - extLen);
+				case GetPathType.Extension: return new Range(range.End - extLen, range.End);
 				default: throw new ArgumentException();
 			}
 		}
@@ -364,7 +364,7 @@ namespace NeoEdit.Editor
 				while ((endPosition < maxPosition) && (((endPosition - range.Start == 1) && (Text[endPosition] == ':')) || ((endPosition - range.End == 0) && ((Text[endPosition] == '\\') || (Text[endPosition] == '/'))) || (!invalidChars.Contains(Text[endPosition]))))
 					++endPosition;
 
-				sels.Add(new Range(endPosition, range.Start));
+				sels.Add(new Range(range.Start, endPosition));
 			}
 
 			Selections = sels;
