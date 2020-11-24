@@ -185,6 +185,7 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
 				case NECommand.Internal_CloseFile: Execute_Internal_CloseFile(); break;
 				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
+				case NECommand.Internal_Redraw: Execute_Internal_Redraw(); break;
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
 		}

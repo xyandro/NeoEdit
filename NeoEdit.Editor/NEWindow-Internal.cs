@@ -76,5 +76,7 @@ namespace NeoEdit.Editor
 			else if (!configuration.ActivateOnly)
 				neFile.Execute_Internal_Mouse(configuration.Line, configuration.Column, configuration.ClickCount, configuration.Selecting);
 		}
+
+		void Execute_Internal_Redraw() => SetNeedsRender();
 	}
 }
