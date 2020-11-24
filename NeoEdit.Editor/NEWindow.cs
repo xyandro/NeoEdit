@@ -160,9 +160,23 @@ namespace NeoEdit.Editor
 			};
 		}
 
-		public void Configure() => NEFile.Configure();
+		public void Configure()
+		{
+			switch (state.Command)
+			{
+				case NECommand.Internal_Key: Configure_Internal_Key(); return;
+				default: NEFile.Configure(); return;
+			}
+		}
 
-		public bool PreExecute() => NEFile.PreExecute();
+		public bool PreExecute()
+		{
+			switch (state.Command)
+			{
+				case NECommand.Internal_Key: return PreExecute_Internal_Key();
+				default: return NEFile.PreExecute();
+			}
+		}
 
 		public void Execute()
 		{

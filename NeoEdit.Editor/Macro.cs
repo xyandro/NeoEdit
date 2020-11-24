@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
@@ -40,7 +41,12 @@ namespace NeoEdit.Editor
 			else if (macroDirRelative)
 				fileName = Path.Combine(MacroDirectory, fileName);
 
-			XMLConverter.ToXML(this).Save(fileName);
+			using (var stream = File.Create(fileName))
+			{
+				XMLConverter.ToXML(this).Save(stream);
+				var newLine = Encoding.UTF8.GetBytes("\r\n");
+				stream.Write(newLine, 0, newLine.Length);
+			}
 		}
 
 		public static Macro Load(INEWindowUI filesWindow, string fileName = null, bool macroDirRelative = false)

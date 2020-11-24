@@ -15,7 +15,7 @@ namespace NeoEdit.Editor
 	{
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
 
-		public bool MacroVisualize { get; set; } = true;
+		public bool MacroVisualize { get; set; }
 
 		public NEGlobal()
 		{

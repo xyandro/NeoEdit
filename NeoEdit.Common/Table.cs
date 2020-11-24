@@ -93,7 +93,7 @@ namespace NeoEdit.Common
 
 		public static ParserType GuessTableType(string input)
 		{
-			var endLine = input.IndexOfAny(new char[] { '\r', '\n' });
+			var endLine = input.IndexOfAny(Helpers.NewLineChars);
 			if (endLine == -1)
 				endLine = input.Length;
 			var firstRow = input.Substring(0, endLine);
@@ -174,16 +174,14 @@ namespace NeoEdit.Common
 				case ParserType.CSV: return string.Join("", result.Select(items => string.Join(",", items.Select(item => ToTCSV(item, ','))) + ending));
 				case ParserType.Columns:
 					{
-						var newLineChars = new char[] { '\r', '\n' };
 						result = result.Select(row => row.Select(value => value.Trim()).ToList()).ToList();
-						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(newLineChars) == -1 ? line[column].Length : 0)).ToList();
+						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(Helpers.NewLineChars) == -1 ? line[column].Length : 0)).ToList();
 						return string.Join("", result.AsTaskRunner().Select(line => "║ " + string.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending).ToList());
 					}
 				case ParserType.ExactColumns:
 					{
-						var newLineChars = new char[] { '\r', '\n' };
 						result = result.Select(row => row.Select(value => $@"""{value.Replace(@"""", @"""""")}""").ToList()).ToList();
-						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(newLineChars) == -1 ? line[column].Length : 0)).ToList();
+						var columnWidths = Enumerable.Range(0, Headers.Count).Select(column => result.Max(line => line[column].IndexOfAny(Helpers.NewLineChars) == -1 ? line[column].Length : 0)).ToList();
 						return string.Join("", result.AsTaskRunner().Select(line => "║ " + string.Join(" │ ", Enumerable.Range(0, Headers.Count).Select(column => line[column] + new string(' ', Math.Max(columnWidths[column] - line[column].Length, 0)))) + " ║" + ending).ToList());
 					}
 				default: throw new ArgumentException("Invalid output type");

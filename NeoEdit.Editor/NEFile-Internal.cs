@@ -159,263 +159,357 @@ namespace NeoEdit.Editor
 			return MoveCursor(range, Text.GetPosition(line, index), selecting);
 		}
 
-		static void Configure_Internal_Key()
-		{
-			switch (state.Key)
-			{
-				case Key.Back:
-				case Key.Delete:
-				case Key.Left:
-				case Key.Right:
-					if (state.NEWindow.ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.HasSelection)))
-						state.Configuration = new Configuration_Internal_Key { HasSelections = true };
-					break;
-			}
-		}
-
-		static bool PreExecute_Internal_Key()
-		{
-			if (!state.ControlDown || state.AltDown)
-				return false;
-
-			switch (state.Key)
-			{
-				case Key.PageUp: state.NEWindow.MovePrevNext(-1, state.ShiftDown); break;
-				case Key.PageDown: state.NEWindow.MovePrevNext(1, state.ShiftDown); break;
-				case Key.Tab: state.NEWindow.MovePrevNext(1, state.ShiftDown, true); break;
-				default: return false;
-			}
-
-			return true;
-		}
-
 		void Execute_Internal_Key()
 		{
-			var hasSelections = (state.Configuration as Configuration_Internal_Key)?.HasSelections ?? false;
 			switch (state.Key)
 			{
-				case Key.Back:
-				case Key.Delete:
-					{
-						if (hasSelections)
-						{
-							ReplaceSelections("");
-							break;
-						}
-
-						Replace(Selections.AsTaskRunner().Select(range =>
-						{
-							var position = range.Start;
-							var anchor = range.Anchor;
-
-							if (state.ControlDown)
-							{
-								if (state.Key == Key.Back)
-									position = GetPrevWord(position);
-								else
-									position = GetNextWord(position);
-							}
-							else if ((state.ShiftDown) && (state.Key == Key.Delete))
-							{
-								var line = Text.GetPositionLine(position);
-								position = Text.GetPosition(line, 0);
-								anchor = position + Text.GetLineLength(line) + Text.GetEndingLength(line);
-							}
-							else
-							{
-								var line = Text.GetPositionLine(position);
-								var index = Text.GetPositionIndex(position, line);
-
-								if (state.Key == Key.Back)
-									--index;
-								else
-									++index;
-
-								if (index < 0)
-								{
-									--line;
-									if (line < 0)
-										return null;
-									index = Text.GetLineLength(line);
-								}
-								if (index > Text.GetLineLength(line))
-								{
-									++line;
-									if (line >= Text.NumLines)
-										return null;
-									index = 0;
-								}
-
-								position = Text.GetPosition(line, index);
-							}
-
-							return new Range(anchor, position);
-						}).Where(range => range != null).ToList());
-					}
-					break;
-				case Key.Escape:
-					if (ViewBinarySearches != null)
-					{
-						ViewBinarySearches = null;
-						break;
-					}
-					//DragFiles = null;
-					if (Settings.EscapeClearsSelections)
-					{
-						Execute_Edit_Select_Focused_Single();
-						if (!Selections.Any())
-							Selections = new List<Range> { new Range() };
-					}
-					break;
-				case Key.Left:
-					{
-						Selections = Selections.AsTaskRunner().Select(range =>
-						{
-							if ((!state.ShiftDown) && (hasSelections))
-								return new Range(range.Start);
-
-							var line = Text.GetPositionLine(range.Cursor);
-							var index = Text.GetPositionIndex(range.Cursor, line);
-							if ((index == 0) && (line != 0))
-								return MoveCursor(range, range.Cursor - Math.Max(1, Text.GetEndingLength(line - 1)), state.ShiftDown);
-							else
-								return MoveCursor(range, range.Cursor - 1, state.ShiftDown);
-						}).ToList();
-					}
-					break;
-				case Key.Right:
-					{
-						Selections = Selections.AsTaskRunner().Select(range =>
-						{
-							if ((!state.ShiftDown) && (hasSelections))
-								return new Range(range.End);
-
-							var line = Text.GetPositionLine(range.Cursor);
-							var index = Text.GetPositionIndex(range.Cursor, line);
-							if ((index == Text.GetLineLength(line)) && (line != Text.NumLines - 1))
-								return MoveCursor(range, range.Cursor + Math.Max(1, Text.GetEndingLength(line)), state.ShiftDown);
-							else
-								return MoveCursor(range, range.Cursor + 1, state.ShiftDown);
-						}).ToList();
-					}
-					break;
-				case Key.Up:
-				case Key.Down:
-					{
-						var mult = state.Key == Key.Up ? -1 : 1;
-						if (!state.ControlDown)
-							Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, mult, 0, state.ShiftDown)).ToList();
-						else if (!state.ShiftDown)
-							StartRow += mult;
-						else if (state.Key == Key.Down)
-							BlockSelDown();
-						else
-							BlockSelUp();
-					}
-					break;
-				case Key.Home:
-					if (state.ControlDown)
-					{
-						var sels = Selections.AsTaskRunner().Select(range => MoveCursor(range, 0, state.ShiftDown)).ToList(); // Have to use MoveCursor for selection
-						if ((!sels.Any()) && (!state.ShiftDown))
-							sels = new List<Range> { new Range() };
-						Selections = sels;
-					}
-					else
-					{
-						var startTextSels = new List<Range>();
-						var startLineSels = new List<Range>();
-						bool moveToStartText = false;
-						foreach (var selection in Selections)
-						{
-							var line = Text.GetPositionLine(selection.Cursor);
-							var index = Text.GetPositionIndex(selection.Cursor, line);
-
-							int startText;
-							var end = Text.GetLineLength(line);
-							for (startText = 0; startText < end; ++startText)
-							{
-								if (!char.IsWhiteSpace(Text[Text.GetPosition(line, startText)]))
-									break;
-							}
-							if (startText == end)
-								startText = 0;
-
-							if (startText != index)
-								moveToStartText = true;
-							startTextSels.Add(MoveCursor(selection, Text.GetPosition(line, startText), state.ShiftDown));
-							startLineSels.Add(MoveCursor(selection, Text.GetPosition(line, 0), state.ShiftDown));
-						}
-						if (moveToStartText)
-							Selections = startTextSels;
-						else
-							Selections = startLineSels;
-					}
-					break;
-				case Key.End:
-					if (state.ControlDown)
-					{
-						var sels = Selections.AsTaskRunner().Select(range => MoveCursor(range, Text.Length, state.ShiftDown)).ToList(); // Have to use MoveCursor for selection
-						if ((!sels.Any()) && (!state.ShiftDown))
-							sels = new List<Range> { new Range(Text.Length) };
-						Selections = sels;
-					}
-					else
-						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, 0, int.MaxValue, state.ShiftDown, indexRel: false)).ToList();
-					break;
-				case Key.PageUp:
-					if (state.ControlDown)
-						StartRow -= NEWindow.DisplayRows / 2;
-					else
-						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, 1 - NEWindow.DisplayRows, 0, state.ShiftDown)).ToList();
-					break;
-				case Key.PageDown:
-					if (state.ControlDown)
-						StartRow += NEWindow.DisplayRows / 2;
-					else
-						Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, NEWindow.DisplayRows - 1, 0, state.ShiftDown)).ToList();
-					break;
-				case Key.Tab:
-					{
-						if (Selections.AsTaskRunner().All(range => (!range.HasSelection) || (Text.GetPositionLine(range.Start) == Text.GetPositionLine(Math.Max(range.Start, range.End - 1)))))
-						{
-							if (!state.ShiftDown)
-								ReplaceSelections("\t", false);
-							else
-							{
-								var neWindow = Selections.AsTaskRunner().Where(range => (range.Start != 0) && (Text.GetString(range.Start - 1, 1) == "\t")).Select(range => Range.FromIndex(range.Start - 1, 1)).ToList();
-								Replace(neWindow, Enumerable.Repeat("", neWindow.Count).ToList());
-							}
-							break;
-						}
-
-						var selLines = Selections.AsTaskRunner().Where(a => a.HasSelection).Select(range => new { start = Text.GetPositionLine(range.Start), end = Text.GetPositionLine(range.End - 1) }).ToList();
-						var lines = selLines.SelectMany(entry => Enumerable.Range(entry.start, entry.end - entry.start + 1)).Distinct().OrderBy().ToDictionary(line => line, line => Text.GetPosition(line, 0));
-						int length;
-						string replace;
-						if (state.ShiftDown)
-						{
-							length = 1;
-							replace = "";
-							lines = lines.Where(entry => (Text.GetLineLength(entry.Key) != 0) && (Text[Text.GetPosition(entry.Key, 0)] == '\t')).ToDictionary(entry => entry.Key, entry => entry.Value);
-						}
-						else
-						{
-							length = 0;
-							replace = "\t";
-							lines = lines.Where(entry => Text.GetLineLength(entry.Key) != 0).ToDictionary(entry => entry.Key, entry => entry.Value);
-						}
-
-						var sels = lines.Select(line => Range.FromIndex(line.Value, length)).ToList();
-						var insert = sels.Select(range => replace).ToList();
-						Replace(sels, insert);
-					}
-					break;
-				case Key.Enter:
-					ReplaceSelections(Text.DefaultEnding, false);
-					break;
-				default: throw new OperationCanceledException();
+				case Key.Back: case Key.Delete: Execute_Internal_Key_BackDelete(); break;
+				case Key.Escape: Execute_Internal_Key_Escape(); break;
+				case Key.Left: Execute_Internal_Key_Left(); break;
+				case Key.Right: Execute_Internal_Key_Right(); break;
+				case Key.Up: Execute_Internal_Key_Up(); break;
+				case Key.Down: Execute_Internal_Key_Down(); break;
+				case Key.Home: Execute_Internal_Key_Home(); break;
+				case Key.End: Execute_Internal_Key_End(); break;
+				case Key.PageUp: Execute_Internal_Key_PageUp(); break;
+				case Key.PageDown: Execute_Internal_Key_PageDown(); break;
+				case Key.Tab: Execute_Internal_Key_Tab(); break;
+				case Key.Enter: Execute_Internal_Key_Enter(); break;
 			}
+		}
+
+		void Execute_Internal_Key_BackDelete()
+		{
+			if ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true)
+			{
+				ReplaceSelections("");
+				return;
+			}
+
+			Replace(Selections.AsTaskRunner().Select(range =>
+			{
+				var anchor = range.Anchor;
+				var cursor = range.Cursor;
+
+				if (state.ControlDown)
+				{
+					if (state.Key == Key.Back)
+						cursor = GetPrevWord(cursor);
+					else
+						cursor = GetNextWord(cursor);
+				}
+				else if ((state.ShiftDown) && (state.Key == Key.Delete))
+				{
+					anchor = Text.GetLineStartPosition(cursor);
+					cursor = Text.NextChar(Text.GetLineEndPosition(cursor), true);
+				}
+				else if (state.Key == Key.Back)
+					cursor = Text.PrevChar(cursor, true);
+				else
+					cursor = Text.NextChar(cursor, true);
+
+				return new Range(anchor, cursor);
+			}).Where(x => x.HasSelection).ToList());
+		}
+
+		void Execute_Internal_Key_Escape()
+		{
+			if (ViewBinarySearches != null)
+			{
+				ViewBinarySearches = null;
+				return;
+			}
+			//DragFiles = null;
+			if (Settings.EscapeClearsSelections)
+			{
+				Execute_Edit_Select_Focused_Single();
+				if (!Selections.Any())
+					Selections = new List<Range> { new Range() };
+			}
+		}
+
+		void Execute_Internal_Key_Left()
+		{
+			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
+			{
+				Selections = Selections.AsTaskRunner().Select(range => new Range(range.Start)).ToList();
+				return;
+			}
+
+			Selections = Selections.AsTaskRunner().Select(range =>
+			{
+				var cursor = range.Cursor;
+				var anchor = range.Anchor;
+				cursor = Text.PrevChar(cursor, true);
+				if (!state.ShiftDown)
+					anchor = cursor;
+				return new Range(anchor, cursor);
+			}).ToList();
+		}
+
+		void Execute_Internal_Key_Right()
+		{
+			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
+			{
+				Selections = Selections.AsTaskRunner().Select(range => new Range(range.End)).ToList();
+				return;
+			}
+
+			Selections = Selections.AsTaskRunner().Select(range =>
+			{
+				var cursor = range.Cursor;
+				var anchor = range.Anchor;
+				cursor = Text.NextChar(cursor, true);
+				if (!state.ShiftDown)
+					anchor = cursor;
+				return new Range(anchor, cursor);
+			}).ToList();
+		}
+
+		void Execute_Internal_Key_Up()
+		{
+			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
+			{
+				Selections = Selections.AsTaskRunner().Select(range => new Range(range.Start)).ToList();
+				return;
+			}
+
+			if (!state.ControlDown)
+			{
+				Selections = Selections.AsTaskRunner().Select(range =>
+				{
+					var anchor = range.Anchor;
+					var cursor = range.Cursor;
+					var lineStart = Text.GetLineStartPosition(cursor);
+					if (lineStart != 0)
+					{
+						var column = Text.GetColumnFromPosition(cursor, lineStart);
+						var prevLineStart = Text.GetLineStartPosition(Text.PrevChar(lineStart));
+						cursor = Text.GetPositionFromColumn(column, prevLineStart, true);
+					}
+					if (!state.ShiftDown)
+						anchor = cursor;
+					return new Range(anchor, cursor);
+				}).ToList();
+			}
+			else if (!state.ShiftDown)
+				StartRow += -1;
+			else if (state.Key == Key.Down)
+				BlockSelDown();
+			else
+				BlockSelUp();
+		}
+
+		void Execute_Internal_Key_Down()
+		{
+			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
+			{
+				Selections = Selections.AsTaskRunner().Select(range => new Range(range.End)).ToList();
+				return;
+			}
+
+			if (!state.ControlDown)
+			{
+				Selections = Selections.AsTaskRunner().Select(range =>
+				{
+					var anchor = range.Anchor;
+					var cursor = range.Cursor;
+					var lineEnd = Text.GetLineEndPosition(cursor);
+					if (lineEnd != Text.Length)
+					{
+						var lineStart = Text.GetLineStartPosition(cursor);
+						var column = Text.GetColumnFromPosition(cursor, lineStart);
+
+						var nextLineStart = Text.GetLineStartPosition(Text.NextChar(lineEnd));
+						cursor = Text.GetPositionFromColumn(column, nextLineStart, true);
+					}
+					if (!state.ShiftDown)
+						anchor = cursor;
+					return new Range(anchor, cursor);
+				}).ToList();
+			}
+			else if (!state.ShiftDown)
+				StartRow += 1;
+			else if (state.Key == Key.Down)
+				BlockSelDown();
+			else
+				BlockSelUp();
+		}
+
+		void Execute_Internal_Key_Home()
+		{
+			if (state.ControlDown)
+				Selections = Selections.AsTaskRunner().Select(range => new Range(state.ShiftDown ? range.Anchor : 0, 0)).ToList();
+			else
+			{
+				var moveToStartText = false;
+				var datas = Selections.AsTaskRunner().Select(range =>
+				{
+					var startLine = Text.GetLineStartPosition(range.Cursor);
+
+					var startText = startLine;
+					while (true)
+					{
+						if (startText >= Text.Length)
+						{
+							startText = startLine;
+							break;
+						}
+						if (!char.IsWhiteSpace(Text[startText]))
+							break;
+						if ((Text[startText] == '\r') || (Text[startText] == '\n'))
+						{
+							startText = startLine;
+							break;
+						}
+						++startText;
+					}
+
+					if (range.Cursor != startText)
+						moveToStartText = true;
+
+					return (startLine, startText);
+				}).ToList();
+
+				if (moveToStartText)
+					Selections = datas.Select((data, index) => new Range(state.ShiftDown ? Selections[index].Anchor : data.startText, data.startText)).ToList();
+				else
+					Selections = datas.Select((data, index) => new Range(state.ShiftDown ? Selections[index].Anchor : data.startLine, data.startLine)).ToList();
+			}
+		}
+
+		void Execute_Internal_Key_End()
+		{
+			if (state.ControlDown)
+				Selections = Selections.AsTaskRunner().Select(range => new Range(state.ShiftDown ? range.Anchor : Text.Length, Text.Length)).ToList();
+			else
+				Selections = Selections.AsTaskRunner().Select(range =>
+				{
+					var anchor = range.Anchor;
+					var cursor = range.Cursor;
+					cursor = Text.GetLineEndPosition(cursor);
+					if (!state.ShiftDown)
+						anchor = cursor;
+					return new Range(anchor, cursor);
+				}).ToList();
+		}
+
+		void Execute_Internal_Key_PageUp()
+		{
+			Selections = Selections.AsTaskRunner().Select(range =>
+			{
+				var anchor = range.Anchor;
+				var cursor = range.Cursor;
+				var lineStart = Text.GetLineStartPosition(cursor);
+				var column = Text.GetColumnFromPosition(cursor, lineStart);
+				for (var ctr = 0; ctr < NEWindow.DisplayRows - 1; ++ctr)
+					if (lineStart == 0)
+						break;
+					else
+						lineStart = Text.GetLineStartPosition(Text.PrevChar(lineStart));
+				cursor = Text.GetPositionFromColumn(column, lineStart, true);
+				if (!state.ShiftDown)
+					anchor = cursor;
+				return new Range(anchor, cursor);
+			}).ToList();
+		}
+
+		void Execute_Internal_Key_PageDown()
+		{
+			Selections = Selections.AsTaskRunner().Select(range =>
+			{
+				var anchor = range.Anchor;
+				var cursor = range.Cursor;
+				var lineStart = Text.GetLineStartPosition(cursor);
+				var column = Text.GetColumnFromPosition(cursor, lineStart);
+				for (var ctr = 0; ctr < NEWindow.DisplayRows - 1; ++ctr)
+					if (lineStart == Text.Length)
+						break;
+					else
+						lineStart = Text.NextChar(Text.GetLineEndPosition(lineStart), true);
+				cursor = Text.GetPositionFromColumn(column, lineStart, true);
+				if (!state.ShiftDown)
+					anchor = cursor;
+				return new Range(anchor, cursor);
+			}).ToList();
+		}
+
+		void Execute_Internal_Key_Tab()
+		{
+			if (Selections.AsTaskRunner().All(range => (!range.HasSelection) || (Text.GetLineStartPosition(range.Start) == Text.GetLineStartPosition(range.End))))
+			{
+				ReplaceSelections("\t", false);
+				return;
+			}
+
+			var datas = Selections.AsTaskRunner().Select(range =>
+			{
+				var start = Text.GetLineStartPosition(range.Start);
+				var lineStarts = new List<int>();
+				while (true)
+				{
+					while ((start < range.Start) && (Text[start] == '\t'))
+						++start;
+
+					var end = Text.NextChar(Text.GetLineEndPosition(start), true);
+					lineStarts.Add(start);
+
+					start = end;
+					if (start >= range.End)
+						break;
+				}
+				return (range, lineStarts);
+			}).ToList();
+
+			var offset = 0;
+			var replaceRanges = new List<Range>();
+			var replaceStrs = new List<string>();
+			var newSels = new List<Range>();
+			foreach (var data in datas)
+			{
+				var rangeStart = data.range.Start + offset;
+				var rangeEnd = data.range.End + offset;
+				foreach (var _lineStart in data.lineStarts)
+				{
+					var lineStart = _lineStart;
+
+					if (state.ShiftDown)
+					{
+						if ((lineStart >= Text.Length) || (Text[lineStart] != '\t'))
+						{
+							if ((lineStart == 0) || (Text[lineStart - 1] != '\t'))
+								continue;
+							--lineStart;
+						}
+						replaceRanges.Add(Range.FromIndex(lineStart, 1));
+						replaceStrs.Add("");
+						--offset;
+						if (data.range.Start > lineStart)
+							--rangeStart;
+						if (data.range.End > lineStart)
+							--rangeEnd;
+					}
+					else
+					{
+						replaceRanges.Add(Range.FromIndex(lineStart, 0));
+						replaceStrs.Add("\t");
+						++offset;
+						if (data.range.Start > lineStart)
+							++rangeStart;
+						++rangeEnd;
+					}
+
+				}
+				newSels.Add(new Range(rangeStart, rangeEnd));
+			}
+
+			Replace(replaceRanges, replaceStrs);
+			Selections = newSels;
+		}
+
+		void Execute_Internal_Key_Enter()
+		{
+			ReplaceSelections(Text.DefaultEnding, false);
 		}
 
 		void Execute_Internal_Text() => ReplaceSelections(state.Text, false);

@@ -336,11 +336,10 @@ namespace NeoEdit.Common
 
 		public static IEnumerable<string> SplitByLine(this string item)
 		{
-			var lineBreakChars = new char[] { '\r', '\n' };
 			var pos = 0;
 			while (pos < item.Length)
 			{
-				var index = item.IndexOfAny(lineBreakChars, pos);
+				var index = item.IndexOfAny(Helpers.NewLineChars, pos);
 				if (index == -1)
 					index = item.Length;
 				yield return item.Substring(pos, index - pos);
@@ -511,5 +510,7 @@ namespace NeoEdit.Common
 				length -= count;
 			}
 		}
+
+		public static char[] NewLineChars { get; } = new char[] { '\r', '\n' };
 	}
 }

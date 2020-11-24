@@ -54,17 +54,15 @@ namespace NeoEdit.Editor
 			endingPosition = new List<int>();
 			MaxIndex = MaxColumn = 0;
 
-			var lineEndChars = new char[] { '\r', '\n' };
-
 			var chunkSize = Math.Max(65536, text.Length / 32);
 			var startChunk = 0;
 			var chunks = new List<Tuple<int, int>>();
 			while (startChunk < text.Length)
 			{
-				var endChunk = text.IndexOfAny(lineEndChars, Math.Min(text.Length, startChunk + chunkSize));
+				var endChunk = text.IndexOfAny(Helpers.NewLineChars, Math.Min(text.Length, startChunk + chunkSize));
 				if (endChunk == -1)
 					endChunk = text.Length;
-				while ((endChunk < text.Length) && (lineEndChars.Contains(text[endChunk])))
+				while ((endChunk < text.Length) && (Helpers.NewLineChars.Contains(text[endChunk])))
 					++endChunk;
 
 				chunks.Add(Tuple.Create(startChunk, endChunk));
@@ -87,7 +85,7 @@ namespace NeoEdit.Editor
 				var position = chunk.Item1;
 				while (position < chunk.Item2)
 				{
-					var endLine = text.IndexOfAny(lineEndChars, position, chunk.Item2 - position);
+					var endLine = text.IndexOfAny(Helpers.NewLineChars, position, chunk.Item2 - position);
 					var endLineLen = 1;
 					var ending = Ending_None;
 					if (endLine == -1)
@@ -829,9 +827,112 @@ namespace NeoEdit.Editor
 		}
 
 		public int IndexOf(char value, int position, int length) => text.IndexOf(value, position, length);
+		public int IndexOf(char value, Range range) => text.IndexOf(value, range.Start, range.Length);
 		public int IndexOfAny(char[] anyOf, int position) => text.IndexOfAny(anyOf, position);
 		public int IndexOfAny(char[] anyOf, int position, int length) => text.IndexOfAny(anyOf, position, length);
+		public int IndexOfAny(char[] anyOf, Range range) => text.IndexOfAny(anyOf, range.Start, range.Length);
 		public bool Equals(NEText neText) => text == neText.text;
+
+		public int GetLineStartPosition(int position)
+		{
+			if ((position < 0) || (position > text.Length))
+				throw new IndexOutOfRangeException();
+
+			// If we're in the middle of \r\n move back
+			if ((position > 0) && (position < text.Length) && (text[position - 1] == '\r') && (text[position] == '\n'))
+				--position;
+
+			for (var ctr = position - 1; ctr >= 0; --ctr)
+				if ((text[ctr] == '\r') || (text[ctr] == '\n'))
+					return ctr + 1;
+			return 0;
+		}
+
+		public int GetLineEndPosition(int position)
+		{
+			if ((position < 0) || (position > text.Length))
+				throw new IndexOutOfRangeException();
+
+			// If we're in the middle of \r\n move back
+			if ((position > 0) && (position < text.Length) && (text[position - 1] == '\r') && (text[position] == '\n'))
+				--position;
+
+			for (var ctr = position; ctr < text.Length; ++ctr)
+				if ((text[ctr] == '\r') || (text[ctr] == '\n'))
+					return ctr;
+
+			return text.Length;
+		}
+
+		public int PrevChar(int position, bool allowBeginning = false)
+		{
+			if ((allowBeginning) && (position == 0))
+				return 0;
+
+			if ((position <= 0) || (position > text.Length))
+				throw new IndexOutOfRangeException();
+
+			--position;
+			if ((position > 0) && (text[position - 1] == '\r') && (text[position] == '\n'))
+				--position;
+			return position;
+		}
+
+		public int NextChar(int position, bool allowEnd = false)
+		{
+			if ((allowEnd) && (position == text.Length))
+				return text.Length;
+
+			if ((position < 0) || (position >= text.Length))
+				throw new IndexOutOfRangeException();
+
+			if ((position + 1 < text.Length) && (text[position] == '\r') && (text[position + 1] == '\n'))
+				++position;
+			++position;
+			return position;
+		}
+
+		public int GetColumnFromPosition(int position, int lineStartPosition)
+		{
+			if (position < lineStartPosition)
+				throw new IndexOutOfRangeException();
+
+			var column = 0;
+			for (var ctr = lineStartPosition; ctr < position; ++ctr)
+			{
+				if ((text[ctr] == '\r') || (text[ctr] == '\r'))
+					throw new IndexOutOfRangeException("Position is not in the given line");
+				else if (text[ctr] == '\t')
+					column = (column / tabStop + 1) * tabStop;
+				else
+					++column;
+			}
+			return column;
+		}
+
+		public int GetPositionFromColumn(int findColumn, int lineStartPosition, bool stopAtLineEnd = false)
+		{
+			if ((lineStartPosition < 0) || (lineStartPosition > text.Length) || (findColumn < 0))
+				throw new IndexOutOfRangeException();
+
+			var position = lineStartPosition;
+			var column = 0;
+			while (column < findColumn)
+			{
+				if ((position == text.Length) || (text[position] == '\r') || (text[position] == '\n'))
+				{
+					if (stopAtLineEnd)
+						break;
+					throw new IndexOutOfRangeException("Line doesn't have column");
+				}
+				else if (text[position] == '\t')
+					column = (column / tabStop + 1) * tabStop;
+				else
+					++column;
+				++position;
+			}
+			return position;
+		}
 
 		public override string ToString() => text;
 	}

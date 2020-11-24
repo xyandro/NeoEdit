@@ -380,7 +380,6 @@ namespace NeoEdit.Editor
 
 			switch (state.Command)
 			{
-				case NECommand.Internal_Key: Configure_Internal_Key(); break;
 				case NECommand.File_Open_ReopenWithEncoding: Configure_File_Open_ReopenWithEncoding(); break;
 				case NECommand.File_Save_SaveAsByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Move_MoveByExpression: Configure_File_Move_MoveByExpression(); break;
@@ -507,7 +506,6 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Key: return PreExecute_Internal_Key();
 				case NECommand.Internal_Scroll: return PreExecute_Internal_Scroll();
 				case NECommand.Internal_Mouse: return PreExecute_Internal_Mouse();
 				case NECommand.File_Select_All: return PreExecute_File_Select_All();

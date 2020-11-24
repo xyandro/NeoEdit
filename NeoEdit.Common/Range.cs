@@ -10,8 +10,8 @@ namespace NeoEdit.Common
 		{
 			Anchor = anchor;
 			Cursor = cursor;
-			Start = Math.Min(Cursor, Anchor);
-			End = Math.Max(Cursor, Anchor);
+			Start = Math.Min(Anchor, Cursor);
+			End = Math.Max(Anchor, Cursor);
 			Length = End - Start;
 			HasSelection = Length != 0;
 		}

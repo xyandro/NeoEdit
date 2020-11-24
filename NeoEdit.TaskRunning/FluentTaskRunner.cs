@@ -213,6 +213,20 @@ namespace NeoEdit.TaskRunning
 		}
 		#endregion
 
+		#region NonNull
+		public FluentTaskRunner<T> NonNull(Func<T, long> getSize = null)
+		{
+			return new FluentTaskRunner<T>(nextTask => runTask(new TaskRunnerTask<T, T>(getSize, null, (items, results) =>
+			{
+				var nextList = new List<T>();
+				for (var ctr = 0; ctr < items.Count; ++ctr)
+					if (items[ctr] != null)
+						nextList.Add(items[ctr]);
+				nextTask.RunTask(nextList);
+			})));
+		}
+		#endregion
+
 		#region NonNullOrWhiteSpace
 		public FluentTaskRunner<T> NonNullOrWhiteSpace(Func<T, string> func, Func<T, long> getSize = null) => NonNullOrWhiteSpace((item, index, progress) => func(item), getSize);
 		public FluentTaskRunner<T> NonNullOrWhiteSpace(Func<T, int, string> func, Func<T, long> getSize = null) => NonNullOrWhiteSpace((item, index, progress) => func(item, index), getSize);
