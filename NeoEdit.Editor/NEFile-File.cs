@@ -7,7 +7,6 @@ using System.Text;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
-using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.TaskRunning;
@@ -77,43 +76,6 @@ namespace NeoEdit.Editor
 				ReplaceOneWithMany(strs, false);
 			if (Selections.Count == fileNames.Count())
 				ReplaceSelections(strs);
-		}
-
-		static bool PreExecute_File_Select_Choose()
-		{
-			var data = new WindowActiveFilesDialogData();
-			void RecalculateData()
-			{
-				data.AllFiles = state.NEWindow.NEFiles.Select(neFile => neFile.NEFileLabel).ToList();
-				data.ActiveIndexes = state.NEWindow.ActiveFiles.Select(neFile => state.NEWindow.NEFiles.IndexOf(neFile)).ToList();
-				data.FocusedIndex = state.NEWindow.NEFiles.IndexOf(state.NEWindow.Focused);
-			}
-			RecalculateData();
-			data.SetActiveIndexes = list =>
-			{
-				//state.NEWindow.ClearAllActive();
-				//list.Select(index => state.NEWindow.NEFiles[index]).ForEach(neFile => state.NEWindow.SetActive(neFile));
-				//RecalculateData();
-				//state.NEWindow.RenderFilesWindow();
-			};
-			data.CloseFiles = list =>
-			{
-				//var neWindow = list.Select(index => state.NEWindow.NEFiles[index]).ToList();
-				//neWindow.ForEach(neFile => neFile.VerifyCanClose());
-				//neWindow.ForEach(neFile => state.NEWindow.RemoveFile(neFile));
-				//RecalculateData();
-				//state.NEWindow.RenderFilesWindow();
-			};
-			data.DoMoves = moves =>
-			{
-				//moves.ForEach(((int oldIndex, int newIndex) move) => state.NEWindow.MoveFile(state.NEWindow.NEFiles[move.oldIndex], move.newIndex));
-				//RecalculateData();
-				//state.NEWindow.RenderFilesWindow();
-			};
-
-			state.NEWindow.neWindowUI.RunDialog_PreExecute_File_Select_Choose(data);
-
-			return true;
 		}
 
 		static bool PreExecute_File_New_New()

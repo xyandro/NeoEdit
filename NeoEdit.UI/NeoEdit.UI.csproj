@@ -93,6 +93,7 @@
     <Compile Include="Controls\FileLabel.xaml.cs">
       <DependentUpon>FileLabel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FocusableListView.cs" />
     <Page Include="Controls\NEExpressionResults.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

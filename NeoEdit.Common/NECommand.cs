@@ -21,7 +21,7 @@ namespace NeoEdit.Common
 		File_Select_Modified,
 		File_Select_Unmodified,
 		File_Select_Inactive,
-		[KeyGesture(Key.A, ModifierKeys.Control | ModifierKeys.Alt)] File_Select_Choose,
+		[NoMacro] [KeyGesture(Key.A, ModifierKeys.Control | ModifierKeys.Alt)] File_Select_Choose,
 		[KeyGesture(Key.N, ModifierKeys.Control)] File_New_New,
 		File_New_FromSelections_All,
 		File_New_FromSelections_Files,

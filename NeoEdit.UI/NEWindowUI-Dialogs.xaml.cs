@@ -36,7 +36,7 @@ namespace NeoEdit.UI
 			});
 		}
 
-		public void RunDialog_PreExecute_File_Select_Choose(WindowActiveFilesDialogData data) => RunOnUIThread(() => File_Select_Choose_Dialog.Run(this, data));
+		public void RunDialog_Execute_File_Select_Choose(IEnumerable<INEFile> neFiles, IEnumerable<INEFile> activeFiles, INEFile focused, Func<IEnumerable<INEFile>, bool> canClose, Action<IEnumerable<INEFile>, IEnumerable<INEFile>, INEFile> updateFiles) => RunOnUIThread(() => File_Select_Choose_Dialog.Run(this, neFiles, activeFiles, focused, canClose, updateFiles));
 		public Configuration_FileMacro_Open_Open RunDialog_Configure_FileMacro_Open_Open(string defaultExt, string initialDirectory = null, string filter = null, int filterIndex = 0, bool multiselect = false)
 		{
 			return RunOnUIThread(() =>

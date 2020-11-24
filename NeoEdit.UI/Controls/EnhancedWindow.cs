@@ -202,26 +202,29 @@ namespace NeoEdit.UI.Controls
 			minimizeButton.SetValue(Button.ForegroundProperty, ActiveBrush);
 			minimizeButton.SetValue(Button.BackgroundProperty, Brushes.Transparent);
 			minimizeButton.SetValue(Button.BorderBrushProperty, Brushes.Transparent);
+			minimizeButton.SetValue(Button.FocusableProperty, false);
 			minimizeButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnMinimizeClick));
 			stackPanel.AppendChild(minimizeButton);
 
 			var shrinkButton = new FrameworkElementFactory(typeof(Button)) { Name = "shrinkButton" };
+			shrinkButton.SetValue(Button.ContentProperty, "🗗");
 			shrinkButton.SetValue(Button.FontSizeProperty, 14d);
 			shrinkButton.SetValue(Button.MarginProperty, new Thickness(5, -2, 5, 0));
 			shrinkButton.SetValue(Button.ForegroundProperty, ActiveBrush);
 			shrinkButton.SetValue(Button.BackgroundProperty, Brushes.Transparent);
 			shrinkButton.SetValue(Button.BorderBrushProperty, Brushes.Transparent);
-			shrinkButton.SetValue(Button.ContentProperty, "🗗");
+			shrinkButton.SetValue(Button.FocusableProperty, false);
 			shrinkButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnShrinkClick));
 			stackPanel.AppendChild(shrinkButton);
 
 			var growButton = new FrameworkElementFactory(typeof(Button)) { Name = "growButton" };
+			growButton.SetValue(Button.ContentProperty, "🗖");
 			growButton.SetValue(Button.FontSizeProperty, 14d);
 			growButton.SetValue(Button.MarginProperty, new Thickness(5, -2, 5, 0));
 			growButton.SetValue(Button.ForegroundProperty, ActiveBrush);
 			growButton.SetValue(Button.BackgroundProperty, Brushes.Transparent);
 			growButton.SetValue(Button.BorderBrushProperty, Brushes.Transparent);
-			growButton.SetValue(Button.ContentProperty, "🗖");
+			growButton.SetValue(Button.FocusableProperty, false);
 			growButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnGrowClick));
 			stackPanel.AppendChild(growButton);
 
@@ -232,6 +235,7 @@ namespace NeoEdit.UI.Controls
 			closeButton.SetValue(Button.ForegroundProperty, ActiveBrush);
 			closeButton.SetValue(Button.BackgroundProperty, Brushes.Transparent);
 			closeButton.SetValue(Button.BorderBrushProperty, Brushes.Transparent);
+			closeButton.SetValue(Button.FocusableProperty, false);
 			closeButton.AddHandler(Button.ClickEvent, new RoutedEventHandler(OnCloseClick));
 
 			stackPanel.AppendChild(closeButton);

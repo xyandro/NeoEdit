@@ -193,7 +193,6 @@
     <Compile Include="Models\CommandLineParams.cs" />
     <Compile Include="Models\MacroPlayRepeatDialogResult.cs" />
     <Compile Include="Models\SaveFileDialogResult.cs" />
-    <Compile Include="Models\WindowActiveFilesDialogData.cs" />
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboard.cs" />
     <Compile Include="NECommand.cs" />

@@ -23,7 +23,7 @@ namespace NeoEdit.Common
 
 		SaveFileDialogResult RunSaveFileDialog(string fileName, string defaultExt, string initialDirectory, string filter);
 
-		void RunDialog_PreExecute_File_Select_Choose(WindowActiveFilesDialogData data);
+		void RunDialog_Execute_File_Select_Choose(IEnumerable<INEFile> neFiles, IEnumerable<INEFile> activeFiles, INEFile focused, Func<IEnumerable<INEFile>, bool> canClose, Action<IEnumerable<INEFile>, IEnumerable<INEFile>, INEFile> updateFiles);
 		Configuration_FileMacro_Open_Open RunDialog_Configure_FileMacro_Open_Open(string defaultExt, string initialDirectory = null, string filter = null, int filterIndex = 0, bool multiselect = false);
 		Configuration_File_OpenEncoding_ReopenWithEncoding RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None);
 		Configuration_FileTable_Various_Various RunDialog_Configure_FileTable_Various_Various(NEVariables variables, int? numRows = null);

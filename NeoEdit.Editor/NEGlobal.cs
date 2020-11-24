@@ -109,8 +109,13 @@ namespace NeoEdit.Editor
 					}
 
 					RunCommand();
+
 					if (state.MacroInclude)
+					{
 						lastAction = new ExecuteState(state);
+						if (recordingMacro != null)
+							recordingMacro.AddAction(lastAction);
+					}
 				}
 
 				if (Data != oldData)
@@ -133,7 +138,6 @@ namespace NeoEdit.Editor
 			{
 				if (!skipDraw())
 					NEWindows.ForEach(x => x.RenderNEWindowUI());
-				state.NEWindow?.neWindowUI?.SetMacroProgress(null);
 				EditorExecuteState.ClearState();
 			}
 		}
@@ -159,9 +163,6 @@ namespace NeoEdit.Editor
 
 				if (sw != null)
 					state.NEWindow.neWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
-
-				if ((recordingMacro != null) && (state.MacroInclude))
-					recordingMacro.AddAction(new ExecuteState(state));
 
 				var result = GetResult();
 				if (result != null)
@@ -193,8 +194,8 @@ namespace NeoEdit.Editor
 			}
 			finally
 			{
-				state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(null);
-				state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(null);
+				NEWindows.ForEach(neWindow => neWindow.neWindowUI?.SetMacroProgress(null));
+				NEWindows.ForEach(neWindow => neWindow.neWindowUI?.SetTaskRunnerProgress(null));
 			}
 		}
 

@@ -556,8 +556,17 @@
 		<SolidColorBrush x:Key="ListItemSelectedFill" Color="#FF606060"/>
 		<SolidColorBrush x:Key="ListItemSelectedInactiveFill" Color="#FF606060"/>
 		<SolidColorBrush x:Key="ListItemSelectedHoverFill" Color="#FF808080"/>
+		<Style x:Key="ListViewFocusVisual">
+			<Setter Property="Control.Template">
+				<Setter.Value>
+					<ControlTemplate>
+						<Rectangle RadiusX="3" RadiusY="3" Margin="2" SnapsToDevicePixels="true" Stroke="#FFA0A0A0" StrokeThickness="1" StrokeDashArray="1 2"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 		<Style TargetType="ListViewItem">
-			<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+			<Setter Property="FocusVisualStyle" Value="{StaticResource ListViewFocusVisual}"/>
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="BorderBrush" Value="Transparent"/>
 			<Setter Property="BorderThickness" Value="2"/>
