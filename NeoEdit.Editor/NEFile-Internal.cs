@@ -141,24 +141,6 @@ namespace NeoEdit.Editor
 			return new Range(position);
 		}
 
-		Range MoveCursor(Range range, int line, int index, bool selecting, bool lineRel = true, bool indexRel = true)
-		{
-			if ((lineRel) || (indexRel))
-			{
-				var startLine = Text.GetPositionLine(range.Cursor);
-				var startIndex = Text.GetPositionIndex(range.Cursor, startLine);
-
-				if (lineRel)
-					line = Text.SkipDiffGaps(line + startLine, line > 0 ? 1 : -1);
-				if (indexRel)
-					index += startIndex;
-			}
-
-			line = Math.Max(0, Math.Min(line, Text.NumLines - 1));
-			index = Math.Max(0, Math.Min(index, Text.GetLineLength(line)));
-			return MoveCursor(range, Text.GetPosition(line, index), selecting);
-		}
-
 		void Execute_Internal_Key()
 		{
 			switch (state.Key)
@@ -507,10 +489,7 @@ namespace NeoEdit.Editor
 			Selections = newSels;
 		}
 
-		void Execute_Internal_Key_Enter()
-		{
-			ReplaceSelections(Text.DefaultEnding, false);
-		}
+		void Execute_Internal_Key_Enter() => ReplaceSelections(Text.DefaultEnding, false);
 
 		void Execute_Internal_Text() => ReplaceSelections(state.Text, false);
 

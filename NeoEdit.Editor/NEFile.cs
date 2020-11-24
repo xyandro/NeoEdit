@@ -51,8 +51,10 @@ namespace NeoEdit.Editor
 		public bool HighlightSyntax { get => highlightSyntax; private set { highlightSyntax = value; NEWindow?.SetNeedsRender(); } }
 		public bool StrictParsing { get; private set; }
 		public JumpByType JumpBy { get; private set; }
-		public bool ViewBinary { get; private set; }
-		public HashSet<Coder.CodePage> ViewBinaryCodePages { get; private set; }
+		bool viewBinary;
+		public bool ViewBinary { get => viewBinary; private set { viewBinary = value; NEWindow?.SetNeedsRender(); } }
+		HashSet<Coder.CodePage> viewBinaryCodePages;
+		public HashSet<Coder.CodePage> ViewBinaryCodePages { get => viewBinaryCodePages; private set { viewBinaryCodePages = value; NEWindow?.SetNeedsRender(); } }
 		public IReadOnlyList<HashSet<string>> ViewBinarySearches { get; private set; }
 
 		int startRow, startColumn;
@@ -1188,7 +1190,7 @@ namespace NeoEdit.Editor
 				case NECommand.KeyValue_Replace_Values7: Execute_KeyValue_Replace_Values(7); break;
 				case NECommand.KeyValue_Replace_Values8: Execute_KeyValue_Replace_Values(8); break;
 				case NECommand.KeyValue_Replace_Values9: Execute_KeyValue_Replace_Values(9); break;
-				case NECommand.Window_Binary: Execute_Window_Binary(); break;
+				case NECommand.Window_ViewBinary: Execute_Window_ViewBinary(); break;
 				case NECommand.Window_BinaryCodePages: Execute_Window_BinaryCodePages(); break;
 			}
 		}

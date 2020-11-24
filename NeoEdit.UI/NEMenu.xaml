@@ -1128,7 +1128,7 @@
 			<controls:NEMenuItem Header="S_how special" CommandEnum="Window_Font_ShowSpecial" x:Name="menu_Window_Font_ShowSpecial" ToolTip="Toggle whether to show special characters"/>
 		</MenuItem>
 		<Separator/>
-		<controls:NEMenuItem Header="_Binary" CommandEnum="Window_Binary" x:Name="menu_Window_Binary" ToolTip="View binary values"/>
+		<controls:NEMenuItem Header="View _binary" CommandEnum="Window_ViewBinary" x:Name="menu_Window_ViewBinary" ToolTip="View binary values"/>
 		<controls:NEMenuItem Header="B_inary code pages" CommandEnum="Window_BinaryCodePages" ToolTip="Set codepages to view binary values"/>
 	</MenuItem>
 	<MenuItem Header="_Help">

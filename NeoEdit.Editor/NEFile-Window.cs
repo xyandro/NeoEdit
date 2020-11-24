@@ -143,7 +143,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		void Execute_Window_Binary() => ViewBinary = state.MultiStatus != true;
+		void Execute_Window_ViewBinary() => ViewBinary = state.MultiStatus != true;
 
 		static void Configure_Window_BinaryCodePages() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Window_BinaryCodePages(state.NEWindow.Focused.ViewBinaryCodePages);
 

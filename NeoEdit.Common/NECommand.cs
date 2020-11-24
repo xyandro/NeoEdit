@@ -722,7 +722,7 @@ namespace NeoEdit.Common
 		[KeyGesture(Key.F3)] Window_ActiveFirst,
 		Window_Font_Size,
 		Window_Font_ShowSpecial,
-		Window_Binary,
+		Window_ViewBinary,
 		Window_BinaryCodePages,
 		Help_Tutorial,
 		Help_Update,

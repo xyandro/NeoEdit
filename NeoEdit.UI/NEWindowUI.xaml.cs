@@ -276,7 +276,7 @@ namespace NeoEdit.UI
 			menu.menu_Macro_Visualize.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Macro_Visualize)];
 			menu.menu_Window_ActiveFirst.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_ActiveFirst)];
 			menu.menu_Window_Font_ShowSpecial.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_Font_ShowSpecial)];
-			menu.menu_Window_Binary.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_Binary)];
+			menu.menu_Window_ViewBinary.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Window_ViewBinary)];
 		}
 
 		public void Render(RenderParameters renderParameters)

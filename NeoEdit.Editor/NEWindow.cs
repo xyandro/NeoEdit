@@ -156,7 +156,7 @@ namespace NeoEdit.Editor
 				[nameof(NECommand.Macro_Visualize)] = NEGlobal.MacroVisualize,
 				[nameof(NECommand.Window_ActiveFirst)] = ActiveFirst,
 				[nameof(NECommand.Window_Font_ShowSpecial)] = Font.ShowSpecialChars,
-				[nameof(NECommand.Window_Binary)] = GetMultiStatus(neFile => neFile.ViewBinary),
+				[nameof(NECommand.Window_ViewBinary)] = GetMultiStatus(neFile => neFile.ViewBinary),
 			};
 		}
 
