@@ -254,6 +254,9 @@
     <Compile Include="NESerialTracker.cs" />
     <Compile Include="NEText.cs" />
     <Compile Include="NETextPoint.cs" />
+    <Compile Include="NEWindow-File.cs">
+      <DependentUpon>NEWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="NEWindow-Internal.cs">
       <DependentUpon>NEWindow.cs</DependentUpon>
     </Compile>

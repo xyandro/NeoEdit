@@ -186,6 +186,13 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_CloseFile: Execute_Internal_CloseFile(); break;
 				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
 				case NECommand.Internal_Redraw: Execute_Internal_Redraw(); break;
+				case NECommand.File_Select_All: Execute_File_Select_All(); break;
+				case NECommand.File_Select_None: Execute_File_Select_None(); break;
+				case NECommand.File_Select_WithSelections: Execute_File_Select_WithWithoutSelections(true); break;
+				case NECommand.File_Select_WithoutSelections: Execute_File_Select_WithWithoutSelections(false); break;
+				case NECommand.File_Select_Modified: Execute_File_Select_ModifiedUnmodified(true); break;
+				case NECommand.File_Select_Unmodified: Execute_File_Select_ModifiedUnmodified(false); break;
+				case NECommand.File_Select_Inactive: Execute_File_Select_Inactive(); break;
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
 		}

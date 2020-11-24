@@ -79,37 +79,6 @@ namespace NeoEdit.Editor
 				ReplaceSelections(strs);
 		}
 
-		static bool PreExecute_File_Select_All()
-		{
-			state.NEWindow.ActiveFiles = state.NEWindow.NEFiles;
-			state.NEWindow.Focused = state.NEWindow.ActiveFiles.FirstOrDefault();
-			return true;
-		}
-
-		static bool PreExecute_File_Select_None()
-		{
-			state.NEWindow.ClearActiveFiles();
-			return true;
-		}
-
-		static bool PreExecute_File_Select_WithWithoutSelections(bool hasSelections)
-		{
-			state.NEWindow.SetActiveFiles(state.NEWindow.ActiveFiles.Where(neFile => neFile.Selections.Any() == hasSelections));
-			return true;
-		}
-
-		static bool PreExecute_File_Select_ModifiedUnmodified(bool modified)
-		{
-			state.NEWindow.SetActiveFiles(state.NEWindow.ActiveFiles.Where(neFile => neFile.IsModified == modified));
-			return true;
-		}
-
-		static bool PreExecute_File_Select_Inactive()
-		{
-			state.NEWindow.SetActiveFiles(state.NEWindow.NEFiles.Except(state.NEWindow.ActiveFiles));
-			return true;
-		}
-
 		static bool PreExecute_File_Select_Choose()
 		{
 			var data = new WindowActiveFilesDialogData();
