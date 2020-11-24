@@ -164,8 +164,8 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Key: Configure_Internal_Key(); return;
-				default: NEFile.Configure(); return;
+				case NECommand.Internal_Key: Configure_Internal_Key(); break;
+				default: NEFile.Configure(); break;
 			}
 		}
 
@@ -182,10 +182,10 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Activate: Execute_Internal_Activate(); return;
-				case NECommand.Internal_MouseActivate: Execute_Internal_MouseActivate(); return;
-				case NECommand.Internal_CloseFile: Execute_Internal_CloseFile(); return;
-				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); return;
+				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
+				case NECommand.Internal_CloseFile: Execute_Internal_CloseFile(); break;
+				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
+				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
 		}
 

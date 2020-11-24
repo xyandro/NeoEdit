@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Common;
@@ -12,13 +13,6 @@ namespace NeoEdit.Editor
 		{
 			LastActive = DateTime.Now;
 			NEFiles.ForEach(neFile => neFile.CheckForRefresh());
-		}
-
-		void Execute_Internal_MouseActivate()
-		{
-			var neFile = (state.Configuration as Configuration_Internal_MouseActivate).NEFile as NEFile;
-			SetActiveFiles(NEFiles.Where(file => (file == neFile) || ((state.ShiftDown) && (ActiveFiles.Contains(file)))));
-			Focused = neFile;
 		}
 
 		void Execute_Internal_CloseFile()
@@ -55,6 +49,32 @@ namespace NeoEdit.Editor
 				case Key.Tab: MovePrevNext(1, state.ShiftDown, true); return true;
 				default: return false;
 			}
+		}
+
+		void Execute_Internal_Mouse()
+		{
+			var configuration = state.Configuration as Configuration_Internal_Mouse;
+			var neFile = configuration.NEFile as NEFile;
+
+			if (state.AltDown)
+			{
+				if (!configuration.Selecting)
+				{
+					var nextActiveFiles = new HashSet<NEFile>(ActiveFiles);
+					if (nextActiveFiles.Contains(neFile))
+						nextActiveFiles.Remove(neFile);
+					else
+						nextActiveFiles.Add(neFile);
+
+					SetActiveFiles(NEFiles.Where(file => nextActiveFiles.Contains(file))); // Keep order
+					if (ActiveFiles.Contains(neFile))
+						Focused = neFile;
+				}
+			}
+			else if ((ActiveFiles.Count != 1) || (!ActiveFiles.Contains(neFile)))
+				SetActiveFile(neFile);
+			else if (!configuration.ActivateOnly)
+				neFile.Execute_Internal_Mouse(configuration.Line, configuration.Column, configuration.ClickCount, configuration.Selecting);
 		}
 	}
 }

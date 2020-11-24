@@ -392,7 +392,7 @@ namespace NeoEdit.UI
 		}
 
 		int mouseClickCount;
-		void HandleMouse(Point position, bool? selecting)
+		void HandleMouse(Point position, bool selecting)
 		{
 			canvas.CaptureMouse();
 			var line = (int)(position.Y / LineHeight + yScroll.Value);
@@ -404,7 +404,7 @@ namespace NeoEdit.UI
 		{
 			canvas.CaptureMouse();
 			mouseClickCount = e.ClickCount;
-			HandleMouse(e.GetPosition(canvas), null);
+			HandleMouse(e.GetPosition(canvas), false);
 			e.Handled = true;
 		}
 

@@ -526,23 +526,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static bool PreExecute_Internal_Mouse()
-		{
-			var configuration = state.Configuration as Configuration_Internal_Mouse;
-			var neFile = configuration.NEFile as NEFile;
-
-			if ((state.NEWindow.ActiveFiles.Count != 1) || (!state.NEWindow.ActiveFiles.Contains(neFile)))
-			{
-				state.NEWindow.SetActiveFile(neFile);
-				return true;
-			}
-
-			neFile.Execute_Internal_Mouse(configuration.Line, configuration.Column, configuration.ClickCount, configuration.Selecting);
-
-			return true;
-		}
-
-		public void Execute_Internal_Mouse(int line, int column, int clickCount, bool? selecting)
+		public void Execute_Internal_Mouse(int line, int column, int clickCount, bool selecting)
 		{
 			var sels = Selections.ToList();
 			line = Math.Max(0, Math.Min(line, Text.NumLines - 1));
@@ -552,7 +536,7 @@ namespace NeoEdit.Editor
 			var mouseRange = (CurrentSelection >= 0) && (CurrentSelection < sels.Count) ? sels[CurrentSelection] : null;
 
 			var currentSelection = default(Range);
-			if (selecting ?? state.ShiftDown)
+			if ((selecting) || (state.ShiftDown))
 			{
 				if (mouseRange != null)
 				{

@@ -203,7 +203,7 @@ namespace NeoEdit.UI
 		NEFileLabel CreateFileLabel(INEFile neFile)
 		{
 			var fileLabel = new NEFileLabel(neFile);
-			fileLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_MouseActivate) { Configuration = new Configuration_Internal_MouseActivate { NEFile = neFile } });
+			fileLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_Mouse) { Configuration = new Configuration_Internal_Mouse { NEFile = neFile, ActivateOnly = true } });
 			fileLabel.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)

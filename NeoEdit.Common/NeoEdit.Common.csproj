@@ -110,7 +110,6 @@
     <Compile Include="Configuration\Configuration_Internal_CommandLine.cs" />
     <Compile Include="Configuration\Configuration_Internal_Key.cs" />
     <Compile Include="Configuration\Configuration_Internal_Mouse.cs" />
-    <Compile Include="Configuration\Configuration_Internal_MouseActivate.cs" />
     <Compile Include="Configuration\Configuration_Internal_Scroll.cs" />
     <Compile Include="Configuration\Configuration_Internal_SetBinaryValue.cs" />
     <Compile Include="Configuration\Configuration_Network_AbsoluteURL.cs" />

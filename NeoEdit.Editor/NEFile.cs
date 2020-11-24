@@ -509,7 +509,6 @@ namespace NeoEdit.Editor
 			switch (state.Command)
 			{
 				case NECommand.Internal_Scroll: return PreExecute_Internal_Scroll();
-				case NECommand.Internal_Mouse: return PreExecute_Internal_Mouse();
 				case NECommand.File_Select_All: return PreExecute_File_Select_All();
 				case NECommand.File_Select_None: return PreExecute_File_Select_None();
 				case NECommand.File_Select_WithSelections: return PreExecute_File_Select_WithWithoutSelections(true);
