@@ -50,7 +50,7 @@ namespace NeoEdit.Editor
 		readonly Stack<ExecuteState> actionStack = new Stack<ExecuteState>();
 		ExecuteState lastAction;
 		bool timeNextAction;
-		INEGlobalData undoGlobalData, redoGlobalData;
+		INEGlobalData undoGlobalData;
 
 		void QueueActions(IEnumerable<ExecuteState> actions)
 		{
@@ -118,11 +118,8 @@ namespace NeoEdit.Editor
 					}
 				}
 
-				if (Data != oldData)
-				{
+				if ((Data != oldData) && ((state.Command != NECommand.Internal_CommandLine) || (NEWindows.Count != 1) || (NEWindows[0].NEFiles.Count != 1) || (!NEWindows[0].NEFiles[0].Empty())))
 					undoGlobalData = oldData;
-					redoGlobalData = null;
-				}
 			}
 			catch (Exception ex)
 			{
@@ -215,7 +212,6 @@ namespace NeoEdit.Editor
 			{
 				case NECommand.Internal_CommandLine: Execute_Internal_CommandLine(); return;
 				case NECommand.Edit_Undo_Global: Execute_Edit_Undo_Global(); return;
-				case NECommand.Edit_Redo_Global: Execute_Edit_Redo_Global(); return;
 				case NECommand.Macro_Play_Quick_1: Execute_Macro_Play_Quick(1); return;
 				case NECommand.Macro_Play_Quick_2: Execute_Macro_Play_Quick(2); return;
 				case NECommand.Macro_Play_Quick_3: Execute_Macro_Play_Quick(3); return;

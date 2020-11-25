@@ -102,7 +102,6 @@ namespace NeoEdit.Common
 		[KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift)] Edit_Redo_BetweenFiles_Text,
 		[KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Shift)] Edit_Redo_BetweenFiles_Step,
 		Edit_Redo_BetweenFiles_Sync,
-		Edit_Redo_Global,
 		[KeyGesture(Key.R, ModifierKeys.Control)] Edit_Repeat,
 		Edit_Rotate,
 		[KeyGesture(Key.E, ModifierKeys.Control)] Edit_Expression_Expression,

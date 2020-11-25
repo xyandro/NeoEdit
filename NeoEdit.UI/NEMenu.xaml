@@ -171,8 +171,6 @@
 				<controls:NEMenuItem Header="_Step" CommandEnum="Edit_Redo_BetweenFiles_Step" ToolTip="Redo last step among files"/>
 				<controls:NEMenuItem Header="S_ync" CommandEnum="Edit_Redo_BetweenFiles_Sync" ToolTip="Redo until files on same step"/>
 			</MenuItem>
-			<Separator/>
-			<controls:NEMenuItem Header="_Global" CommandEnum="Edit_Redo_Global" ToolTip="Global redo"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="R_epeat" CommandEnum="Edit_Repeat" ToolTip="Repeat the currently selected text (include the newline in selection if desired)"/>
