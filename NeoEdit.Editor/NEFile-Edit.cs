@@ -368,9 +368,9 @@ namespace NeoEdit.Editor
 			foreach (var neFile in state.NEWindow.ActiveFiles)
 			{
 				var neFileData = neFile.Data;
-				while ((neFileData.Redo != null) && (neFileData.NETextPoint == neFile.NETextPoint))
+				while ((neFileData != null) && (neFileData.NETextPoint == neFile.NETextPoint))
 					neFileData = neFileData.Redo;
-				target = Math.Min(target, neFileData.NESerial);
+				target = Math.Min(target, neFileData?.NESerial ?? int.MaxValue);
 			}
 			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
 			state.NEWindow.CreateResult();
