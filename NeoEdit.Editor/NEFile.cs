@@ -108,7 +108,7 @@ namespace NeoEdit.Editor
 				}
 			}
 		}
-		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
+		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null)
 		{
 			Data = new NEFileData(this);
 
@@ -118,8 +118,8 @@ namespace NeoEdit.Editor
 			ViewBinaryCodePages = new HashSet<Coder.CodePage>(Coder.DefaultCodePages);
 			StrictParsing = true;
 
-			fileName = fileName?.Trim('"');
-			this.shutdownData = shutdownData;
+			if (fileName != null)
+				fileName = Path.GetFullPath(fileName.Trim('"'));
 
 			AutoRefresh = KeepSelections = HighlightSyntax = true;
 			JumpBy = JumpByType.Words;
@@ -417,6 +417,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_LineEndings: Configure_File_LineEndings(); break;
 				case NECommand.File_Advanced_Encrypt: Configure_File_Advanced_Encrypt(); break;
 				case NECommand.File_Advanced_SetDisplayName: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
+				case NECommand.File_Exit: Configure_File_Exit(); break;
 				case NECommand.Edit_Select_Limit: Configure_Edit_Select_Limit(); break;
 				case NECommand.Edit_Select_ToggleAnchor: Configure_Edit_Select_ToggleAnchor(); break;
 				case NECommand.Edit_Paste_Paste: Configure_Edit_Paste_PasteRotatePaste(); break;
@@ -1635,7 +1636,7 @@ namespace NeoEdit.Editor
 
 		string savedBitmapText;
 		System.Drawing.Bitmap savedBitmap;
-		private ShutdownData shutdownData;
+		readonly List<ShutdownData> shutdownDatas = new List<ShutdownData>();
 
 		System.Drawing.Bitmap GetBitmap()
 		{
@@ -1654,14 +1655,17 @@ namespace NeoEdit.Editor
 
 		public bool Empty() => (FileName == null) && (!IsModified) && (Text.Length == 0);
 
+		public void AddShutdownData(ShutdownData shutdownData)
+		{
+			if (shutdownData != null)
+				shutdownDatas.Add(shutdownData);
+		}
+
 		public void Close()
 		{
 			DiffTarget = null;
-			if (shutdownData != null)
-			{
-				shutdownData.OnShutdown();
-				shutdownData = null;
-			}
+			shutdownDatas.ForEach(shutdownData => shutdownData.OnShutdown());
+			shutdownDatas.Clear();
 			ClearNEFiles();
 		}
 

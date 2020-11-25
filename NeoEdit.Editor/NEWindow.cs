@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
-using NeoEdit.Common.Models;
-using NeoEdit.Editor.CommandLine;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -53,13 +51,10 @@ namespace NeoEdit.Editor
 
 		public DateTime LastActive { get; set; }
 
-		public NEWindow(bool addEmpty = false)
+		public NEWindow()
 		{
 			Data = new NEWindowData(this);
 			state.NEGlobal.AddNewNEWindow(this);
-
-			if (addEmpty)
-				AddNewNEFile(new NEFile());
 		}
 
 		public IReadOnlyDictionary<INEFile, Tuple<IReadOnlyList<string>, bool?>> GetClipboardDataMap()
@@ -290,8 +285,6 @@ namespace NeoEdit.Editor
 			status.Add($"Keys/Values: {string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
 			return status;
 		}
-
-		public static CommandLineParams ParseCommandLine(string commandLine) => CommandLineVisitor.GetCommandLineParams(commandLine);
 
 		public void SetForeground() => neWindowUI.SetForeground();
 

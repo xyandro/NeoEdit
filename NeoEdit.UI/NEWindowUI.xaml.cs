@@ -26,27 +26,21 @@ namespace NeoEdit.UI
 
 		static NEWindowUI()
 		{
-			new NEMenu(); // The first time it creates a menu it's slow, do it while the user isn't waiting
 			UIHelper<NEWindowUI>.Register();
 
 			OutlineBrush.Freeze();
 			BackgroundBrush.Freeze();
-
-			Clipboarder.Initialize();
 		}
 
-		public static void Initialize()
-		{
-			// Doesn't do anything, but the static constructor will be called
-		}
-
-		public readonly INEWindow NEWindow;
+		public readonly INEWindow neWindow;
+		public readonly App app;
 
 		public RenderParameters renderParameters;
 
-		public NEWindowUI(INEWindow neWindow)
+		public NEWindowUI(INEWindow neWindow, App app)
 		{
-			NEWindow = neWindow;
+			this.neWindow = neWindow;
+			this.app = app;
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command) { MultiStatus = multiStatus }));
 			InitializeComponent();
@@ -62,7 +56,7 @@ namespace NeoEdit.UI
 			SetForeground();
 		}
 
-		public void HandleCommand(ExecuteState state) => NEGlobalUI.HandleCommand(NEWindow, state);
+		public void HandleCommand(ExecuteState state) => App.HandleCommand(neWindow, state);
 
 		public void QueueActivateNEWindow()
 		{
@@ -114,12 +108,12 @@ namespace NeoEdit.UI
 				key = e.SystemKey;
 
 			if (key == Key.Escape)
-				e.Handled = NEGlobalUI.StopTasks();
+				e.Handled = app.StopTasks();
 
 			if (key == Key.Cancel)
-				e.Handled = NEGlobalUI.KillTasks();
+				e.Handled = app.KillTasks();
 
-			if ((!e.Handled) && (NEGlobalUI.HandlesKey(Keyboard.Modifiers, key)))
+			if ((!e.Handled) && (app.HandlesKey(Keyboard.Modifiers, key)))
 			{
 				HandleCommand(new ExecuteState(NECommand.Internal_Key) { Key = key });
 				e.Handled = true;
@@ -181,7 +175,7 @@ namespace NeoEdit.UI
 			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
 				Environment.Exit(0);
 
-			HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = new Configuration_File_Exit { WindowClosed = true } });
+			HandleCommand(new ExecuteState(NECommand.File_Exit) { Configuration = new Configuration_File_Exit { ShouldExit = false } });
 			args.Cancel = true;
 		}
 
@@ -419,5 +413,8 @@ namespace NeoEdit.UI
 				}
 			}
 		}
+
+		void OnStopTasks() => app.StopTasks();
+		void OnKillTasks() => app.KillTasks();
 	}
 }

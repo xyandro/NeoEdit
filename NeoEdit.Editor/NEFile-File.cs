@@ -412,6 +412,11 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		static void Configure_File_Exit()
+		{
+			state.Configuration = new Configuration_File_Exit { ShouldExit = true };
+		}
+
 		static bool PreExecute_File_Exit()
 		{
 			foreach (var neFile in state.NEWindow.NEFiles)

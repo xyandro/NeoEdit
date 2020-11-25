@@ -16,7 +16,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<ui:NEMenu Grid.Row="0" Grid.Column="0" x:Name="menu"/>
+		<ui:NEMenu Grid.Row="0" Grid.Column="0" x:Name="menu" StopTasks="OnStopTasks" KillTasks="OnKillTasks"/>
 
 		<Grid Grid.Row="1" Grid.Column="0">
 			<Grid.ColumnDefinitions>

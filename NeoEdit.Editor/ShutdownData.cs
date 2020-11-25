@@ -11,13 +11,15 @@ namespace NeoEdit.Editor
 		{
 			this.name = name;
 			this.count = count;
+			CheckRelease(count);
 		}
 
-		public void OnShutdown()
+		public void OnShutdown() => CheckRelease(Interlocked.Decrement(ref count));
+
+		void CheckRelease(int count)
 		{
-			lock (this)
-				if (--count == 0)
-					new EventWaitHandle(false, EventResetMode.ManualReset, name).Set();
+			if (count == 0)
+				new EventWaitHandle(false, EventResetMode.ManualReset, name).Set();
 		}
 	}
 }

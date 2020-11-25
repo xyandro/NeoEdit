@@ -21,7 +21,8 @@ namespace NeoEdit.Editor
 
 		static bool PreExecute_Window_New_NewWindow()
 		{
-			new NEWindow(true);
+			var neWindow = new NEWindow();
+			neWindow.AddNewNEFile(new NEFile());
 			return true;
 		}
 
@@ -61,7 +62,7 @@ namespace NeoEdit.Editor
 			var comparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
 			var summaryByFile = selectionsByFile.Select(tuple => (tuple.DisplayName, selections: tuple.Selections.GroupBy(x => x, comparer).Select(group => (str: group.Key, count: group.Count())).OrderByDescending(x => x.count).ToList())).ToList();
 
-			var neWindow = new NEWindow(false);
+			var neWindow = new NEWindow();
 			foreach (var neFile in summaryByFile)
 				neWindow.AddNewNEFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);

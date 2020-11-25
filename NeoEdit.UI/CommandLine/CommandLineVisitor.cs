@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
 using Antlr4.Runtime.Misc;
-using NeoEdit.CommandLine.Parser;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Parsing;
+using NeoEdit.UI.CommandLine.Parser;
 
-namespace NeoEdit.Editor.CommandLine
+namespace NeoEdit.UI.CommandLine
 {
 	class CommandLineVisitor : CommandLineParserBaseVisitor<object>
 	{
@@ -48,9 +49,14 @@ namespace NeoEdit.Editor.CommandLine
 
 		public override object VisitFile([NotNull] CommandLineParser.FileContext context)
 		{
+			var fileName = Path.GetFullPath(context.filename.GetText());
+			if (!File.Exists(fileName))
+				throw new Exception($"File doesn't exist: {fileName}");
+
+			fileName = Path.GetFullPath(fileName);
 			clParams.Files.Add(new CommandLineParams.File
 			{
-				FileName = context.filename.GetText(),
+				FileName = fileName,
 				DisplayName = context.display?.GetText(),
 				Line = context.line == null ? default(int?) : int.Parse(context.line.Text),
 				Column = context.column == null ? default(int?) : int.Parse(context.column.Text),

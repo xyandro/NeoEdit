@@ -62,7 +62,6 @@ namespace NeoEdit.Editor
 			lock (actionStack)
 				actionStack.Push(executeState);
 			RunCommands(neWindow as NEWindow, skipDraw);
-			CheckExit(executeState);
 		}
 
 		void RunCommands(NEWindow neWindow, Func<bool> skipDraw)
@@ -136,6 +135,7 @@ namespace NeoEdit.Editor
 			}
 			finally
 			{
+				CheckExit();
 				if (!skipDraw())
 					NEWindows.ForEach(x => x.RenderNEWindowUI());
 				EditorExecuteState.ClearState();
@@ -275,12 +275,12 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void CheckExit(ExecuteState state)
+		void CheckExit()
 		{
 			if (NEWindows.Any())
 				return;
 
-			if ((!Settings.DontExitOnClose) || ((state.Configuration as Configuration_File_Exit)?.WindowClosed != true))
+			if ((!Settings.DontExitOnClose) || ((state.Configuration as Configuration_File_Exit)?.ShouldExit ?? false))
 				Environment.Exit(0);
 
 			GC.Collect();

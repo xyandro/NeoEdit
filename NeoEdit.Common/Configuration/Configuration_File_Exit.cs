@@ -2,6 +2,6 @@
 {
 	public class Configuration_File_Exit : IConfiguration
 	{
-		public bool WindowClosed { get; set; }
+		public bool ShouldExit { get; set; }
 	}
 }
