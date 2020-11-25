@@ -155,7 +155,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static bool PreExecute_File_Open_CopiedCutFiles()
+		static bool PreExecute_File_Open_CopiedCut()
 		{
 			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => state.NEWindow.AddNewNEFile(neFile));
 			return true;

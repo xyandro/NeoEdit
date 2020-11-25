@@ -34,7 +34,7 @@
 			</ListItem>
 			<ListItem>
 				<Paragraph>
-					Click <tutorial:TutorialCommand CommandEnum="File_Close_ActiveFiles"/> .
+					Click <tutorial:TutorialCommand CommandEnum="File_Close_Active"/> .
 				</Paragraph>
 			</ListItem>
 		</List>

@@ -546,10 +546,10 @@ namespace NeoEdit.Editor
 				case NECommand.File_New_FromClipboard_Selections: return PreExecute_File_New_FromClipboard_Selections();
 				case NECommand.File_New_WordList: return PreExecute_File_New_WordList();
 				case NECommand.File_Open_Open: return PreExecute_FileMacro_Open_Open();
-				case NECommand.File_Open_CopiedCutFiles: return PreExecute_File_Open_CopiedCutFiles();
+				case NECommand.File_Open_CopiedCut: return PreExecute_File_Open_CopiedCut();
 				case NECommand.File_Advanced_DontExitOnClose: return PreExecute_File_Advanced_DontExitOnClose();
-				case NECommand.File_Close_ActiveFiles: return PreExecute_File_Close_ActiveInactiveFiles(true);
-				case NECommand.File_Close_InactiveFiles: return PreExecute_File_Close_ActiveInactiveFiles(false);
+				case NECommand.File_Close_Active: return PreExecute_File_Close_ActiveInactiveFiles(true);
+				case NECommand.File_Close_Inactive: return PreExecute_File_Close_ActiveInactiveFiles(false);
 				case NECommand.File_Exit: return PreExecute_File_Exit();
 				case NECommand.Edit_Undo_BetweenFiles_Text: PreExecute_Edit_Undo_BetweenFiles_Text(); break;
 				case NECommand.Edit_Undo_BetweenFiles_Step: PreExecute_Edit_Undo_BetweenFiles_Step(); break;
@@ -584,7 +584,7 @@ namespace NeoEdit.Editor
 				case NECommand.Window_New_FromClipboard_All: return PreExecute_Window_New_FromClipboard_All();
 				case NECommand.Window_New_FromClipboard_Files: return PreExecute_Window_New_FromClipboard_Files();
 				case NECommand.Window_New_FromClipboard_Selections: return PreExecute_Window_New_FromClipboard_Selections();
-				case NECommand.Window_New_FromFiles_ActiveFiles: return PreExecute_Window_New_FromFiles_ActiveFiles();
+				case NECommand.Window_New_FromFiles_Active: return PreExecute_Window_New_FromFiles_Active();
 				case NECommand.Window_Full: return PreExecute_Window_Full();
 				case NECommand.Window_Grid: return PreExecute_Window_Grid();
 				case NECommand.Window_CustomGrid: return PreExecute_Window_CustomGrid();
@@ -639,10 +639,10 @@ namespace NeoEdit.Editor
 				case NECommand.File_Advanced_CommandPrompt: Execute_File_Advanced_CommandPrompt(); break;
 				case NECommand.File_Advanced_DragDrop: Execute_File_Advanced_DragDrop(); break;
 				case NECommand.File_Advanced_SetDisplayName: Execute_File_Advanced_SetDisplayName(); break;
-				case NECommand.File_Close_FilesWithSelections: Execute_File_Close_FilesWithWithoutSelections(true); break;
-				case NECommand.File_Close_FilesWithoutSelections: Execute_File_Close_FilesWithWithoutSelections(false); break;
-				case NECommand.File_Close_ModifiedFiles: Execute_File_Close_ModifiedUnmodifiedFiles(true); break;
-				case NECommand.File_Close_UnmodifiedFiles: Execute_File_Close_ModifiedUnmodifiedFiles(false); break;
+				case NECommand.File_Close_WithSelections: Execute_File_Close_FilesWithWithoutSelections(true); break;
+				case NECommand.File_Close_WithoutSelections: Execute_File_Close_FilesWithWithoutSelections(false); break;
+				case NECommand.File_Close_Modified: Execute_File_Close_ModifiedUnmodifiedFiles(true); break;
+				case NECommand.File_Close_Unmodified: Execute_File_Close_ModifiedUnmodifiedFiles(false); break;
 				case NECommand.Edit_Select_All: Execute_Edit_Select_All(); break;
 				case NECommand.Edit_Select_Nothing: Execute_Edit_Select_Nothing(); break;
 				case NECommand.Edit_Select_Join: Execute_Edit_Select_Join(); break;

@@ -45,7 +45,7 @@
 		</MenuItem>
 		<MenuItem Header="_Open">
 			<controls:NEMenuItem Header="_Open" CommandEnum="File_Open_Open" ToolTip="Open files chosen from disk"/>
-			<controls:NEMenuItem Header="_Copied/cut files" CommandEnum="File_Open_CopiedCutFiles" ToolTip="Open files copied/cut on the clipboard"/>
+			<controls:NEMenuItem Header="_Copied/cut" CommandEnum="File_Open_CopiedCut" ToolTip="Open files copied/cut on the clipboard"/>
 			<controls:NEMenuItem Header="_Reopen with encoding" CommandEnum="File_Open_ReopenWithEncoding" ToolTip="Reopen file with different encoding"/>
 		</MenuItem>
 		<controls:NEMenuItem Header="Re_fresh" CommandEnum="File_Refresh" ToolTip="Refresh files"/>
@@ -93,14 +93,14 @@
 		</MenuItem>
 		<Separator/>
 		<MenuItem Header="_Close">
-			<controls:NEMenuItem Header="_Active files" CommandEnum="File_Close_ActiveFiles" ToolTip="Close active files"/>
-			<controls:NEMenuItem Header="_Inactive files" CommandEnum="File_Close_InactiveFiles" ToolTip="Close inactive files"/>
+			<controls:NEMenuItem Header="_Active" CommandEnum="File_Close_Active" ToolTip="Close active files"/>
+			<controls:NEMenuItem Header="_Inactive" CommandEnum="File_Close_Inactive" ToolTip="Close inactive files"/>
 			<Separator/>
-			<controls:NEMenuItem Header="Files _with selections" CommandEnum="File_Close_FilesWithSelections" ToolTip="Close selected files with selections"/>
-			<controls:NEMenuItem Header="Files with_out selections" CommandEnum="File_Close_FilesWithoutSelections" ToolTip="Close selected files without selections"/>
+			<controls:NEMenuItem Header="_With selections" CommandEnum="File_Close_WithSelections" ToolTip="Close selected files with selections"/>
+			<controls:NEMenuItem Header="With_out selections" CommandEnum="File_Close_WithoutSelections" ToolTip="Close selected files without selections"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_Modified files" CommandEnum="File_Close_ModifiedFiles" ToolTip="Close selected files that are modified"/>
-			<controls:NEMenuItem Header="_Unmodified files" CommandEnum="File_Close_UnmodifiedFiles" ToolTip="Close selected files that aren't modified"/>
+			<controls:NEMenuItem Header="_Modified" CommandEnum="File_Close_Modified" ToolTip="Close selected files that are modified"/>
+			<controls:NEMenuItem Header="_Unmodified" CommandEnum="File_Close_Unmodified" ToolTip="Close selected files that aren't modified"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit" InputGestureText="Alt+F4" ToolTip="Close the program"/>
@@ -1118,7 +1118,7 @@
 				<controls:NEMenuItem Header="_Selections" CommandEnum="Window_New_FromClipboard_Selections" ToolTip="Open a new window with a new file for each value on the clipboard"/>
 			</MenuItem>
 			<MenuItem Header="From _files">
-				<controls:NEMenuItem Header="_Active files" CommandEnum="Window_New_FromFiles_ActiveFiles" ToolTip="Move files to a new window"/>
+				<controls:NEMenuItem Header="_Active" CommandEnum="Window_New_FromFiles_Active" ToolTip="Move files to a new window"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
