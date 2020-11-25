@@ -1096,7 +1096,7 @@
 	</MenuItem>
 	<MenuItem Header="_Window">
 		<MenuItem Header="_New">
-			<controls:NEMenuItem Header="_New window" CommandEnum="Window_New_NewWindow" ToolTip="Create new window"/>
+			<controls:NEMenuItem Header="_New" CommandEnum="Window_New_New" ToolTip="Create new window"/>
 			<MenuItem Header="From _selections">
 				<controls:NEMenuItem Header="_All" CommandEnum="Window_New_FromSelections_All" ToolTip="Open a new window with a new file with all selections"/>
 				<controls:NEMenuItem Header="_Files" CommandEnum="Window_New_FromSelections_Files" ToolTip="Open a new window with a new file with selections from each file"/>

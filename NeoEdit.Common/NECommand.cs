@@ -703,7 +703,7 @@ namespace NeoEdit.Common
 		Macro_Open_Open,
 		[KeyGesture(Key.OemPeriod, ModifierKeys.Control)] Macro_RepeatLastAction,
 		Macro_Visualize,
-		Window_New_NewWindow,
+		Window_New_New,
 		Window_New_FromSelections_All,
 		Window_New_FromSelections_Files,
 		Window_New_FromSelections_Selections,

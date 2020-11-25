@@ -19,7 +19,7 @@ namespace NeoEdit.Editor
 			return $"Summary {index + 1}";
 		}
 
-		static bool PreExecute_Window_New_NewWindow()
+		static bool PreExecute_Window_New_New()
 		{
 			var neWindow = new NEWindow();
 			neWindow.AddNewNEFile(new NEFile());

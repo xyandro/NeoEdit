@@ -573,7 +573,7 @@ namespace NeoEdit.Editor
 				case NECommand.Diff_Select_BothFiles: return PreExecute_Diff_Select_LeftRightBothFiles(null);
 				case NECommand.Diff_Diff: return PreExecute_Diff_Diff();
 				case NECommand.Macro_Open_Open: return PreExecute_FileMacro_Open_Open();
-				case NECommand.Window_New_NewWindow: return PreExecute_Window_New_NewWindow();
+				case NECommand.Window_New_New: return PreExecute_Window_New_New();
 				case NECommand.Window_New_FromSelections_All: return PreExecute_Window_New_FromSelections_All();
 				case NECommand.Window_New_FromSelections_Files: return PreExecute_Window_New_FromSelections_Files();
 				case NECommand.Window_New_FromSelections_Selections: return PreExecute_Window_New_FromSelections_Selections();
