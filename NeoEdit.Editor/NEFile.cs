@@ -1217,18 +1217,9 @@ namespace NeoEdit.Editor
 		#endregion
 
 		#region Watcher
-		bool watcherFileModified = false;
+		public bool watcherFileModified = false;
 		FileSystemWatcher watcher = null;
 		DateTime fileLastWrite { get; set; }
-
-		public void CheckForRefresh()
-		{
-			if (!watcherFileModified)
-				return;
-
-			watcherFileModified = false;
-			Execute_File_Refresh();
-		}
 
 		void SetAutoRefresh(bool? value = null)
 		{
@@ -1250,7 +1241,7 @@ namespace NeoEdit.Editor
 			watcher.Changed += (s1, e1) =>
 			{
 				watcherFileModified = true;
-				try { NEWindow.neWindowUI.QueueActivateNEWindow(); } catch { }
+				try { NEWindow?.neWindowUI?.SendActivateIfActive(); } catch { }
 			};
 			watcher.EnableRaisingEvents = true;
 		}

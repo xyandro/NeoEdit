@@ -117,7 +117,7 @@ namespace NeoEdit.Common
 
 		void Render(RenderParameters renderParameters);
 		void ShowExceptionMessage(Exception ex);
-		void QueueActivateNEWindow();
+		void SendActivateIfActive();
 		void SetMacroProgress(double? percent);
 		void SetTaskRunnerProgress(double? percent);
 

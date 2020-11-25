@@ -58,10 +58,11 @@ namespace NeoEdit.UI
 
 		public void HandleCommand(ExecuteState state) => App.HandleCommand(neWindow, state);
 
-		public void QueueActivateNEWindow()
+		public void SendActivateIfActive()
 		{
 			RunOnUIThread(() =>
 			{
+				// If window is not currently active it will get an Internal_Activate when it's activated
 				if (!IsActive)
 					return;
 
@@ -72,7 +73,7 @@ namespace NeoEdit.UI
 		void OnActivated(object sender, EventArgs e)
 		{
 			if (!Helpers.IsDebugBuild)
-				QueueActivateNEWindow();
+				HandleCommand(new ExecuteState(NECommand.Internal_Activate));
 		}
 
 		void OnScrollBarValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => HandleCommand(new ExecuteState(NECommand.Internal_Redraw));

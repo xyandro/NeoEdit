@@ -12,7 +12,9 @@ namespace NeoEdit.Editor
 		void Execute_Internal_Activate()
 		{
 			LastActive = DateTime.Now;
-			NEFiles.ForEach(neFile => neFile.CheckForRefresh());
+			var modified = NEFiles.Where(neFile => neFile.watcherFileModified).ToList();
+			modified.ForEach(neFile => neFile.watcherFileModified = false);
+			modified.ForEach(neFile => neFile.Execute_File_Refresh());
 		}
 
 		void Execute_Internal_CloseFile()

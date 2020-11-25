@@ -175,7 +175,7 @@ namespace NeoEdit.Editor
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		void Execute_File_Refresh()
+		public void Execute_File_Refresh()
 		{
 			if (string.IsNullOrEmpty(FileName))
 				return;
