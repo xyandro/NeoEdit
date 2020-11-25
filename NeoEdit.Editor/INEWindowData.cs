@@ -9,7 +9,6 @@ namespace NeoEdit.Editor
 
 		IReadOnlyOrderedHashSet<INEFileData> NEFileDatas { get; }
 		IReadOnlyOrderedHashSet<NEFile> NEFiles { get; }
-		IReadOnlyOrderedHashSet<NEFile> OrderedNEFiles { get; }
 		IReadOnlyOrderedHashSet<NEFile> ActiveFiles { get; }
 		NEFile Focused { get; }
 	}

@@ -32,24 +32,47 @@ namespace NeoEdit.Editor
 			set
 			{
 				activeFirst = value;
-				UpdateOrderedNEFiles();
+				SetNeedsRender();
 			}
 		}
 
-		int displayColumns;
-		public int DisplayColumns
-		{
-			get => displayColumns;
-			private set
-			{
-				displayColumns = value;
-				//NEFiles.ForEach(neFile => neFile.ResetView());
-			}
-		}
+		public int DisplayColumns { get; private set; }
 
 		public int DisplayRows { get; private set; }
 
 		public DateTime LastActive { get; set; }
+
+		IReadOnlyOrderedHashSet<NEFile> orderedNEFiles;
+		bool orderedNEFiles_ActiveFirst;
+		IReadOnlyOrderedHashSet<NEFile> orderedNEFiles_NEFiles;
+		IReadOnlyOrderedHashSet<NEFile> orderedNEFiles_ActiveFiles;
+		public IReadOnlyOrderedHashSet<NEFile> OrderedNEFiles
+		{
+			get
+			{
+				if ((ActiveFirst != orderedNEFiles_ActiveFirst) || (NEFiles != orderedNEFiles_NEFiles) || (ActiveFiles != orderedNEFiles_ActiveFiles))
+					lock (this)
+						if ((ActiveFirst != orderedNEFiles_ActiveFirst) || (NEFiles != orderedNEFiles_NEFiles) || (ActiveFiles != orderedNEFiles_ActiveFiles))
+						{
+							if (ActiveFirst)
+							{
+								var activeFiles = new OrderedHashSet<NEFile>();
+								var inactiveFiles = new OrderedHashSet<NEFile>();
+								foreach (var neFile in NEFiles)
+									(ActiveFiles.Contains(neFile) ? activeFiles : inactiveFiles).Add(neFile);
+								inactiveFiles.ForEach(activeFiles.Add);
+								orderedNEFiles = activeFiles;
+							}
+							else
+								orderedNEFiles = NEFiles;
+
+							orderedNEFiles_ActiveFirst = ActiveFirst;
+							orderedNEFiles_NEFiles = NEFiles;
+							orderedNEFiles_ActiveFiles = ActiveFiles;
+						}
+				return orderedNEFiles;
+			}
+		}
 
 		public NEWindow()
 		{
