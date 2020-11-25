@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
@@ -275,8 +276,34 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		Timer exitTimer;
+		void CancelExit()
+		{
+			if (exitTimer == null)
+				return;
+
+			exitTimer.Stop();
+			exitTimer.Dispose();
+			exitTimer = null;
+		}
+
+		void ScheduleExit(TimeSpan delay, int pid)
+		{
+			exitTimer = new Timer((int)delay.TotalMilliseconds);
+			exitTimer.Elapsed += (s, e) =>
+			{
+				CancelExit();
+
+				Process.Start(Environment.GetCommandLineArgs()[0], $"-background -waitpid={pid}");
+				Environment.Exit(0);
+			};
+			exitTimer.Start();
+		}
+
 		void CheckExit()
 		{
+			CancelExit();
+
 			if (NEWindows.Any())
 				return;
 
@@ -287,13 +314,10 @@ namespace NeoEdit.Editor
 			GC.WaitForPendingFinalizers();
 			GC.Collect();
 
-			// Restart if memory usage is more than 1/2 GB
+			// Restart if memory usage is more than 1/2 GB (but give user time in case they do something else)
 			var process = Process.GetCurrentProcess();
 			if (process.PrivateMemorySize64 > (1 << 29))
-			{
-				Process.Start(Environment.GetCommandLineArgs()[0], $"-background -waitpid={process.Id}");
-				Environment.Exit(0);
-			}
+				ScheduleExit(TimeSpan.FromSeconds(30), process.Id);
 		}
 
 		public bool StopTasks()
