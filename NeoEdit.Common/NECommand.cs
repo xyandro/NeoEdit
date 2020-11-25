@@ -714,7 +714,7 @@ namespace NeoEdit.Common
 		Window_New_FromClipboard_All,
 		Window_New_FromClipboard_Files,
 		Window_New_FromClipboard_Selections,
-		[KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Alt)] Window_New_FromActiveFiles,
+		[KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Alt)] Window_New_FromFiles_ActiveFiles,
 		[KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Alt)] Window_Full,
 		[KeyGesture(Key.G, ModifierKeys.Control | ModifierKeys.Alt)] Window_Grid,
 		[KeyGesture(Key.C, ModifierKeys.Control | ModifierKeys.Alt)] Window_CustomGrid,

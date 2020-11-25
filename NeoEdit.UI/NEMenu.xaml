@@ -1117,7 +1117,9 @@
 				<controls:NEMenuItem Header="_Files" CommandEnum="Window_New_FromClipboard_Files" ToolTip="Open a new window with a new file for each file on the clipboard"/>
 				<controls:NEMenuItem Header="_Selections" CommandEnum="Window_New_FromClipboard_Selections" ToolTip="Open a new window with a new file for each value on the clipboard"/>
 			</MenuItem>
-			<controls:NEMenuItem Header="From active _files" CommandEnum="Window_New_FromActiveFiles" ToolTip="Move files to a new window"/>
+			<MenuItem Header="From _files">
+				<controls:NEMenuItem Header="_Active files" CommandEnum="Window_New_FromFiles_ActiveFiles" ToolTip="Move files to a new window"/>
+			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="_Full" CommandEnum="Window_Full" ToolTip="Make current file full screen"/>

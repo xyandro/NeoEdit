@@ -94,7 +94,7 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
-		static bool PreExecute_Window_New_FromActiveFiles()
+		static bool PreExecute_Window_New_FromFiles_ActiveFiles()
 		{
 			var neWindow = new NEWindow();
 			foreach (var neFile in state.NEWindow.ActiveFiles)
