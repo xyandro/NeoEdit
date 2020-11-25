@@ -546,7 +546,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_New_FromClipboard_Selections: return PreExecute_File_New_FromClipboard_Selections();
 				case NECommand.File_New_WordList: return PreExecute_File_New_WordList();
 				case NECommand.File_Open_Open: return PreExecute_FileMacro_Open_Open();
-				case NECommand.File_Open_CopiedCut: return PreExecute_File_Open_CopiedCut();
+				case NECommand.File_Open_CopiedCutFiles: return PreExecute_File_Open_CopiedCutFiles();
 				case NECommand.File_Advanced_DontExitOnClose: return PreExecute_File_Advanced_DontExitOnClose();
 				case NECommand.File_Close_ActiveFiles: return PreExecute_File_Close_ActiveInactiveFiles(true);
 				case NECommand.File_Close_InactiveFiles: return PreExecute_File_Close_ActiveInactiveFiles(false);

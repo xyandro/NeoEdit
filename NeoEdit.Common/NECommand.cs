@@ -31,7 +31,7 @@ namespace NeoEdit.Common
 		File_New_FromClipboard_Selections,
 		File_New_WordList,
 		[KeyGesture(Key.O, ModifierKeys.Control)] File_Open_Open,
-		[KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_Open_CopiedCut,
+		[KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Alt)] [KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Shift, 2)] File_Open_CopiedCutFiles,
 		File_Open_ReopenWithEncoding,
 		[KeyGesture(Key.F5)] File_Refresh,
 		File_AutoRefresh,

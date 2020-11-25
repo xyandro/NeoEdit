@@ -45,7 +45,7 @@
 		</MenuItem>
 		<MenuItem Header="_Open">
 			<controls:NEMenuItem Header="_Open" CommandEnum="File_Open_Open" ToolTip="Open files chosen from disk"/>
-			<controls:NEMenuItem Header="_Copied/cut" CommandEnum="File_Open_CopiedCut" ToolTip="Open files copied/cut on the clipboard"/>
+			<controls:NEMenuItem Header="_Copied/cut files" CommandEnum="File_Open_CopiedCutFiles" ToolTip="Open files copied/cut on the clipboard"/>
 			<controls:NEMenuItem Header="_Reopen with encoding" CommandEnum="File_Open_ReopenWithEncoding" ToolTip="Reopen file with different encoding"/>
 		</MenuItem>
 		<controls:NEMenuItem Header="Re_fresh" CommandEnum="File_Refresh" ToolTip="Refresh files"/>
