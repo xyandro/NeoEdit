@@ -70,6 +70,7 @@ namespace NeoEdit.Editor
 					DiffTarget.startRow = value;
 			}
 		}
+
 		public int StartColumn
 		{
 			get => startColumn;
@@ -82,6 +83,31 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		NEFile diffTarget;
+		public NEFile DiffTarget
+		{
+			get => diffTarget;
+			set
+			{
+				if (DiffTarget != null)
+				{
+					Text.ClearDiff();
+					DiffTarget.Text.ClearDiff();
+					DiffTarget.diffTarget = null;
+					diffTarget = null;
+					NEWindow?.SetNeedsRender();
+				}
+
+				if (value != null)
+				{
+					value.DiffTarget = null;
+					diffTarget = value;
+					value.diffTarget = this;
+					NEWindow?.SetNeedsRender();
+					CalculateDiff();
+				}
+			}
+		}
 		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null, ShutdownData shutdownData = null)
 		{
 			Data = new NEFileData(this);

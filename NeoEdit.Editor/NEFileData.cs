@@ -12,7 +12,6 @@ namespace NeoEdit.Editor
 		public NETextPoint NETextPoint { get; set; }
 		public IReadOnlyList<Range> Selections { get; set; }
 		public IReadOnlyList<Range>[] Regions { get; set; }
-		public NEFile DiffTarget { get; set; }
 
 		public INEFileData Undo { get; set; }
 		public INEFileData Redo { get; set; }
@@ -30,7 +29,6 @@ namespace NeoEdit.Editor
 			NETextPoint = neFileData.NETextPoint;
 			Selections = neFileData.Selections;
 			Regions = neFileData.Regions.ToArray();
-			DiffTarget = neFileData.DiffTarget;
 
 			Undo = neFileData;
 			(neFileData as NEFileData).Redo = this;

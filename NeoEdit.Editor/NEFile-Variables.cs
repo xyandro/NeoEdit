@@ -42,29 +42,6 @@ namespace NeoEdit.Editor
 
 		NETextPoint NETextPoint { get => Data.NETextPoint; set => EditableData.NETextPoint = value; }
 
-		public NEFile DiffTarget
-		{
-			get => Data.DiffTarget;
-			set
-			{
-				if (DiffTarget != null)
-				{
-					Text.ClearDiff();
-					DiffTarget.Text.ClearDiff();
-					DiffTarget.EditableData.DiffTarget = null;
-					EditableData.DiffTarget = null;
-				}
-
-				if (value != null)
-				{
-					value.DiffTarget = null;
-					EditableData.DiffTarget = value;
-					value.EditableData.DiffTarget = this;
-					CalculateDiff();
-				}
-			}
-		}
-
 		public IReadOnlyList<Range> Selections
 		{
 			get => Data.Selections;
