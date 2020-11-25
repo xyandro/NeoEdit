@@ -150,19 +150,17 @@ namespace NeoEdit.Editor
 			{
 				Configure();
 
-				Stopwatch sw = null;
-				if (timeNextAction)
-				{
-					timeNextAction = false;
-					sw = Stopwatch.StartNew();
-				}
+				var showTime = timeNextAction;
+				timeNextAction = false;
+				Stopwatch sw = Stopwatch.StartNew();
 
 				state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(0);
 				if (!TaskRunner.Run(PreExecute, percent => state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(percent)))
 					TaskRunner.Run(Execute, percent => state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(percent));
 
-				if (sw != null)
-					state.NEWindow.neWindowUI.RunDialog_ShowMessage("Timer", $"Elapsed time: {sw.ElapsedMilliseconds:n} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
+				Debug.WriteLine($"{state.Command} elapsed time: {sw.ElapsedMilliseconds:n0} ms");
+				if (showTime)
+					state.NEWindow.neWindowUI.RunDialog_ShowMessage("Timer", $"{state.Command} elapsed time: {sw.ElapsedMilliseconds:n0} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);
 
 				var result = GetResult();
 				if (result != null)
