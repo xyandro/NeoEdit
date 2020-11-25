@@ -18,7 +18,6 @@ namespace NeoEdit.Editor
 
 		public NEFileData(NEFile neFile)
 		{
-			NESerial = int.MinValue;
 			NEFile = neFile;
 			Regions = new IReadOnlyList<Range>[9];
 		}

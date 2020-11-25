@@ -15,7 +15,6 @@ namespace NeoEdit.Editor
 
 		public NEWindowData(NEWindow neWindow)
 		{
-			NESerial = int.MinValue;
 			NEWindow = neWindow;
 			NEFileDatas = new OrderedHashSet<INEFileData>();
 			NEFiles = OrderedNEFiles = ActiveFiles = new OrderedHashSet<NEFile>();
