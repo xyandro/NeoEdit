@@ -20,19 +20,12 @@ namespace NeoEdit.Editor
 
 			var shutdownData = string.IsNullOrWhiteSpace(commandLineParams.Wait) ? null : new ShutdownData(commandLineParams.Wait, commandLineParams.Files.Count);
 
-			NEWindow neWindow = null;
-			if (!commandLineParams.Diff)
-				neWindow = state.NEGlobal.NEWindows.OrderByDescending(x => x.LastActive).FirstOrDefault();
-			if (neWindow == null)
-				neWindow = new NEWindow();
 			var neFiles = new List<NEFile>();
 			foreach (var file in commandLineParams.Files)
 			{
 				if (commandLineParams.Existing)
 				{
-					var neFile = state.NEGlobal.NEWindows.OrderByDescending(x => x.LastActive).SelectMany(x => x.ActiveFiles).OrderByDescending(x => x.LastActive).FirstOrDefault(x => x.FileName == file.FileName);
-					if (neFile == null)
-						neFile = state.NEGlobal.NEWindows.OrderByDescending(x => x.LastActive).SelectMany(x => x.NEFiles).FirstOrDefault(x => x.FileName == file.FileName);
+					var neFile = NEWindows.SelectMany(x => x.NEFiles).OrderByDescending(x => x.LastActive).FirstOrDefault(x => x.FileName == file.FileName);
 					if (neFile != null)
 					{
 						neFile.NEWindow.SetActiveFile(neFile);
@@ -45,11 +38,17 @@ namespace NeoEdit.Editor
 				neFiles.Add(new NEFile(file.FileName, file.DisplayName, line: file.Line, column: file.Column, index: file.Index, shutdownData: shutdownData));
 			}
 
+			if (!neFiles.Any())
+				return;
+
+			NEWindow neWindow = null;
+			if (!commandLineParams.Diff)
+				neWindow = NEWindows.OrderByDescending(x => x.LastActive).FirstOrDefault();
+			if (neWindow == null)
+				neWindow = new NEWindow();
 			neFiles.ForEach(neWindow.AddNewNEFile);
 			if (commandLineParams.Diff)
 				neWindow.SetupDiff(neFiles);
-
-			return;
 		}
 	}
 }

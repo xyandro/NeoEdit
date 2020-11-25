@@ -297,6 +297,7 @@ namespace NeoEdit.Editor
 
 		public void SetupDiff(IReadOnlyList<NEFile> neFiles)
 		{
+			var now = DateTime.Now;
 			for (var ctr = 0; ctr + 1 < neFiles.Count; ctr += 2)
 			{
 				neFiles[ctr].DiffTarget = neFiles[ctr + 1];
@@ -304,6 +305,7 @@ namespace NeoEdit.Editor
 					neFiles[ctr].ContentType = neFiles[ctr + 1].ContentType;
 				if (neFiles[ctr + 1].ContentType == ParserType.None)
 					neFiles[ctr + 1].ContentType = neFiles[ctr].ContentType;
+				neFiles[ctr + 1].LastActive = now; // Only set ctr + 1 active
 			}
 			WindowLayout = new WindowLayout(maxColumns: 2);
 		}

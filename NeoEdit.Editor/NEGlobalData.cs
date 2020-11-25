@@ -11,6 +11,7 @@ namespace NeoEdit.Editor
 
 		public NEGlobalData()
 		{
+			NESerial = int.MinValue;
 			NEWindowDatas = new OrderedHashSet<INEWindowData>();
 			NEWindows = new OrderedHashSet<NEWindow>();
 		}

@@ -168,6 +168,12 @@ namespace NeoEdit.Editor
 				NEFileDatas = nextNEFileDatas;
 
 				var nextActiveFiles = NEFiles.Except(oldNEFiles).ToList(); // New files
+				if (nextActiveFiles.Any())
+				{
+					// All files with max LastActive; if only some new files should be active set their LastActive to the same value (like a diff)
+					var maxLastActive = nextActiveFiles.Max(neFile => neFile.LastActive);
+					nextActiveFiles = nextActiveFiles.Where(neFile => neFile.LastActive == maxLastActive).ToList();
+				}
 				if (!nextActiveFiles.Any())
 					nextActiveFiles = NEFiles.Intersect(ActiveFiles).ToList(); // Currently active files
 				if ((!nextActiveFiles.Any()) && (NEFiles.Any()))
