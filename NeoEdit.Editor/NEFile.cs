@@ -36,6 +36,7 @@ namespace NeoEdit.Editor
 		string fileName;
 		public string FileName { get => fileName; private set { fileName = value; NEWindow?.SetNeedsRender(); } }
 		public bool AutoRefresh { get; private set; }
+		public bool AllowOverlappingSelections { get; private set; }
 		ParserType contentType;
 		public ParserType ContentType { get => contentType; set { contentType = value; NEWindow?.SetNeedsRender(); } }
 		public Coder.CodePage CodePage { get; private set; }
@@ -624,7 +625,8 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Select_WholeLines: Execute_Edit_Select_WholeLines(); break;
 				case NECommand.Edit_Select_Empty: Execute_Edit_Select_EmptyNonEmpty(true); break;
 				case NECommand.Edit_Select_NonEmpty: Execute_Edit_Select_EmptyNonEmpty(false); break;
-				case NECommand.Edit_Select_DeOverlap: Execute_Edit_Select_DeOverlap(); break;
+				case NECommand.Edit_Select_Overlap_DeOverlap: Execute_Edit_Select_Overlap_DeOverlap(); break;
+				case NECommand.Edit_Select_Overlap_AllowOverlappingSelections: Execute_Edit_Select_Overlap_AllowOverlappingSelections(); break;
 				case NECommand.Edit_Select_ToggleAnchor: Execute_Edit_Select_ToggleAnchor(); break;
 				case NECommand.Edit_Select_Focused_First: Execute_Edit_Select_Focused_First(); break;
 				case NECommand.Edit_Select_Focused_Next: Execute_Edit_Select_Focused_NextPrevious(true); break;

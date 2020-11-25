@@ -191,7 +191,9 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Select_EmptyNonEmpty(bool include) => Selections = Selections.Where(range => range.HasSelection != include).ToList();
 
-		void Execute_Edit_Select_DeOverlap() => Selections = DeOverlap(Selections);
+		void Execute_Edit_Select_Overlap_DeOverlap() => Selections = DeOverlap(Selections);
+
+		void Execute_Edit_Select_Overlap_AllowOverlappingSelections() => AllowOverlappingSelections = state.MultiStatus != true;
 
 		static void Configure_Edit_Select_ToggleAnchor() => state.Configuration = new Configuration_Edit_Select_ToggleAnchor { AnchorStart = state.NEWindow.ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.Anchor > range.Cursor)) };
 

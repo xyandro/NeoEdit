@@ -119,7 +119,11 @@
 			<controls:NEMenuItem Header="_Empty" CommandEnum="Edit_Select_Empty" ToolTip="Keep selections that are empty"/>
 			<controls:NEMenuItem Header="Non-e_mpty" CommandEnum="Edit_Select_NonEmpty" ToolTip="Keep selections that aren't empty"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_De-overlap" CommandEnum="Edit_Select_DeOverlap" ToolTip="Make selections not overlap"/>
+			<MenuItem Header="_Overlap">
+				<controls:NEMenuItem Header="_De-overlap" CommandEnum="Edit_Select_Overlap_DeOverlap" ToolTip="Make selections not overlap"/>
+				<Separator/>
+				<controls:NEMenuItem Header="_Allow overlapping selections" CommandEnum="Edit_Select_Overlap_AllowOverlappingSelections" x:Name="menu_Edit_Select_Overlap_AllowOverlappingSelections" ToolTip="Toggle whether selections can overlap"/>
+			</MenuItem>
 			<Separator/>
 			<controls:NEMenuItem Header="_Toggle anchor" CommandEnum="Edit_Select_ToggleAnchor" ToolTip="Toggle anchor between left/right side of selections"/>
 			<Separator/>

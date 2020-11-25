@@ -130,6 +130,7 @@ namespace NeoEdit.Editor
 				[nameof(NECommand.File_Advanced_Compress)] = GetMultiStatus(neFile => neFile.Compressed),
 				[nameof(NECommand.File_Advanced_Encrypt)] = GetMultiStatus(neFile => !string.IsNullOrWhiteSpace(neFile.AESKey)),
 				[nameof(NECommand.File_Advanced_DontExitOnClose)] = Settings.DontExitOnClose,
+				[nameof(NECommand.Edit_Select_Overlap_AllowOverlappingSelections)] = GetMultiStatus(neFile => neFile.AllowOverlappingSelections),
 				[nameof(NECommand.Edit_Navigate_JumpBy_Words)] = GetMultiStatus(neFile => neFile.JumpBy == JumpByType.Words),
 				[nameof(NECommand.Edit_Navigate_JumpBy_Numbers)] = GetMultiStatus(neFile => neFile.JumpBy == JumpByType.Numbers),
 				[nameof(NECommand.Edit_Navigate_JumpBy_Paths)] = GetMultiStatus(neFile => neFile.JumpBy == JumpByType.Paths),
