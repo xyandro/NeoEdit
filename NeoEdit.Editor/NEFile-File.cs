@@ -78,12 +78,6 @@ namespace NeoEdit.Editor
 				ReplaceSelections(strs);
 		}
 
-		static bool PreExecute_File_New_New()
-		{
-			state.NEWindow.AddNewNEFile(new NEFile());
-			return true;
-		}
-
 		static bool PreExecute_File_New_FromSelections_All()
 		{
 			var contentType = state.NEWindow.ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();

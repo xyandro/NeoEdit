@@ -50,5 +50,7 @@ namespace NeoEdit.Editor
 
 			neWindowUI.RunDialog_Execute_File_Select_Choose(NEFiles, ActiveFiles, Focused, CanClose, UpdateFiles);
 		}
+
+		void Execute_File_New_New() => AddNewNEFile(new NEFile());
 	}
 }

@@ -213,6 +213,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_Select_Unmodified: Execute_File_Select_ModifiedUnmodified(false); break;
 				case NECommand.File_Select_Inactive: Execute_File_Select_Inactive(); break;
 				case NECommand.File_Select_Choose: Execute_File_Select_Choose(); break;
+				case NECommand.File_New_New: Execute_File_New_New(); break;
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
 		}
