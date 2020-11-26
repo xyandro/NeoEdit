@@ -585,6 +585,7 @@ namespace NeoEdit.Editor
 				case NECommand.Window_New_FromClipboard_Files: return PreExecute_Window_New_FromClipboard_Files();
 				case NECommand.Window_New_FromClipboard_Selections: return PreExecute_Window_New_FromClipboard_Selections();
 				case NECommand.Window_New_FromFiles_Active: return PreExecute_Window_New_FromFiles_Active();
+				case NECommand.Window_New_FromFiles_CopiedCut: return PreExecute_Window_New_FromFiles_CopiedCut();
 				case NECommand.Window_Full: return PreExecute_Window_Full();
 				case NECommand.Window_Grid: return PreExecute_Window_Grid();
 				case NECommand.Window_CustomGrid: return PreExecute_Window_CustomGrid();

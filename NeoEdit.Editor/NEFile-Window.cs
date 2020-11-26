@@ -5,6 +5,7 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -103,6 +104,14 @@ namespace NeoEdit.Editor
 				neWindow.AddNewNEFile(neFile);
 			}
 			neWindow.WindowLayout = state.NEWindow.WindowLayout;
+			return true;
+		}
+
+		static bool PreExecute_Window_New_FromFiles_CopiedCut()
+		{
+			var neWindow = new NEWindow();
+			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => neWindow.AddNewNEFile(neFile));
+			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 			return true;
 		}
 

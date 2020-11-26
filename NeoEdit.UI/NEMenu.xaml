@@ -1119,6 +1119,7 @@
 			</MenuItem>
 			<MenuItem Header="From _files">
 				<controls:NEMenuItem Header="_Active" CommandEnum="Window_New_FromFiles_Active" ToolTip="Move files to a new window"/>
+				<controls:NEMenuItem Header="_Copied/cut" CommandEnum="Window_New_FromFiles_CopiedCut" ToolTip="Open files on clipboard in a new window"/>
 			</MenuItem>
 		</MenuItem>
 		<Separator/>
