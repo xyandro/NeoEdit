@@ -61,24 +61,6 @@ namespace NeoEdit.Editor
 			});
 		}
 
-		void InsertFiles(IEnumerable<string> fileNames)
-		{
-			if ((Selections.Count != 1) && (Selections.Count != fileNames.Count()))
-				throw new Exception("Must have either one or equal number of selections.");
-
-			var strs = new List<string>();
-			foreach (var fileName in fileNames)
-			{
-				var bytes = File.ReadAllBytes(fileName);
-				strs.Add(Coder.BytesToString(bytes, Coder.CodePage.AutoByBOM, true));
-			}
-
-			if (Selections.Count == 1)
-				ReplaceOneWithMany(strs, false);
-			if (Selections.Count == fileNames.Count())
-				ReplaceSelections(strs);
-		}
-
 		static void PreExecute_File_New_FromSelections_All()
 		{
 			var contentType = state.NEWindow.ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
