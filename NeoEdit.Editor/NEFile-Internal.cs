@@ -6,6 +6,7 @@ using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -517,13 +518,13 @@ namespace NeoEdit.Editor
 			Selections = newSels;
 		}
 
-		static bool PreExecute_Internal_Scroll()
+		static void PreExecute_Internal_Scroll()
 		{
 			var configuration = state.Configuration as Configuration_Internal_Scroll;
 			var neFile = configuration.NEFile as NEFile;
 			neFile.StartColumn = configuration.Column;
 			neFile.StartRow = configuration.Row;
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		public void Execute_Internal_Mouse(int line, int column, int clickCount, bool selecting)

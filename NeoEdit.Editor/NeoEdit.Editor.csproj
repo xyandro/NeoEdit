@@ -259,6 +259,7 @@
     <Compile Include="PortScanner.cs" />
     <Compile Include="PreExecution\IPreExecution.cs" />
     <Compile Include="PreExecution\PreExecution_Files_SelectGet_BySourceControlStatus.cs" />
+    <Compile Include="PreExecution\PreExecution_TaskFinished.cs" />
     <Compile Include="PreExecution\PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase.cs" />
     <Compile Include="PreExecution\PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

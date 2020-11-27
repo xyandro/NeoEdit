@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
+using NeoEdit.Editor.PreExecution;
 
 namespace NeoEdit.Editor
 {
@@ -39,17 +40,16 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		bool PreExecute_Internal_Key()
+		void PreExecute_Internal_Key()
 		{
 			if ((!state.ControlDown) || (state.AltDown))
-				return false;
+				return;
 
 			switch (state.Key)
 			{
-				case Key.PageUp: MovePrevNext(-1, state.ShiftDown); return true;
-				case Key.PageDown: MovePrevNext(1, state.ShiftDown); return true;
-				case Key.Tab: MovePrevNext(1, state.ShiftDown, true); return true;
-				default: return false;
+				case Key.PageUp: MovePrevNext(-1, state.ShiftDown); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
+				case Key.PageDown: MovePrevNext(1, state.ShiftDown); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
+				case Key.Tab: MovePrevNext(1, state.ShiftDown, true); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
 			}
 		}
 

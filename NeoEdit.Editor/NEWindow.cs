@@ -188,12 +188,12 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public bool PreExecute()
+		public void PreExecute()
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Key: return PreExecute_Internal_Key();
-				default: return NEFile.PreExecute();
+				case NECommand.Internal_Key: PreExecute_Internal_Key(); break;
+				default: NEFile.PreExecute(); break;
 			}
 		}
 

@@ -9,19 +9,20 @@ using System.Threading;
 using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		static bool PreExecute_Help_Tutorial()
+		static void PreExecute_Help_Tutorial()
 		{
 			//TODO => new TutorialWindow(this);
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_Help_Update()
+		static void PreExecute_Help_Update()
 		{
 			const string location = "https://github.com/xyandro/NeoEdit/releases";
 			const string url = location + "/latest";
@@ -49,7 +50,7 @@ namespace NeoEdit.Editor
 
 			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
 			if (!state.NEWindow.neWindowUI.RunDialog_ShowMessage("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
-				return true;
+				state.PreExecution = PreExecution_TaskFinished.Singleton;
 
 			var oldLocation = Assembly.GetEntryAssembly().Location;
 			var newLocation = Path.Combine(Path.GetDirectoryName(oldLocation), $"{Path.GetFileNameWithoutExtension(oldLocation)}-Update{Path.GetExtension(oldLocation)}");
@@ -85,10 +86,10 @@ namespace NeoEdit.Editor
 				state.NEWindow.neWindowUI.RunDialog_ShowMessage("Info", "The program will be updated after exiting.");
 			});
 
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_Help_Advanced_Shell_Integrate()
+		static void PreExecute_Help_Advanced_Shell_Integrate()
 		{
 			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
 			using (var starKey = baseKey.OpenSubKey("*"))
@@ -97,50 +98,50 @@ namespace NeoEdit.Editor
 			using (var commandKey = neoEditKey.CreateSubKey("command"))
 				commandKey.SetValue("", $@"""{Assembly.GetEntryAssembly().Location}"" -text ""%1""");
 
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_Help_Advanced_Shell_Unintegrate()
+		static void PreExecute_Help_Advanced_Shell_Unintegrate()
 		{
 			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
 			using (var starKey = baseKey.OpenSubKey("*"))
 			using (var shellKey = starKey.OpenSubKey("shell", true))
 				shellKey.DeleteSubKeyTree("Open with NeoEdit");
 
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_Help_Advanced_CopyCommandLine()
+		static void PreExecute_Help_Advanced_CopyCommandLine()
 		{
 			var clipboard = new NEClipboard();
 			clipboard.Add(new List<string> { Environment.CommandLine });
 			NEClipboard.Current = clipboard;
 
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_Help_Advanced_Extract()
+		static void PreExecute_Help_Advanced_Extract()
 		{
 			var location = Assembly.GetEntryAssembly().Location;
 
 			if (!state.NEWindow.neWindowUI.RunDialog_ShowMessage("Extract files", $"Files will be extracted from {location} after program exits.", MessageOptions.OkCancel, MessageOptions.Ok, MessageOptions.Cancel).HasFlag(MessageOptions.Ok))
-				return true;
+				state.PreExecution = PreExecution_TaskFinished.Singleton;
 
 			Process.Start(location, $@"-extract {Process.GetCurrentProcess().Id}");
 
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_Help_Advanced_RunGC()
+		static void PreExecute_Help_Advanced_RunGC()
 		{
 			GC.Collect();
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_Help_About()
+		static void PreExecute_Help_About()
 		{
 			state.NEWindow.neWindowUI.RunDialog_PreExecute_Help_About();
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 	}
 }

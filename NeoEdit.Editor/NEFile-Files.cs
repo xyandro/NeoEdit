@@ -481,12 +481,11 @@ namespace NeoEdit.Editor
 
 		static void Configure_Files_Select_BySourceControlStatus() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Select_BySourceControlStatus();
 
-		static bool PreExecute_Files_SelectGet_BySourceControlStatus()
+		static void PreExecute_Files_SelectGet_BySourceControlStatus()
 		{
 			var files = state.NEWindow.ActiveFiles.AsTaskRunner().SelectMany(file => file.GetSelectionStrings()).Distinct().ToList();
 			var statuses = Versioner.GetStatuses(files);
 			state.PreExecution = new PreExecution_Files_SelectGet_BySourceControlStatus { Statuses = Enumerable.Range(0, files.Count).ToDictionary(index => files[index], index => statuses[index]) };
-			return false;
 		}
 
 		void Execute_Files_Select_BySourceControlStatus()

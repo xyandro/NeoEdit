@@ -9,6 +9,7 @@ using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -78,45 +79,45 @@ namespace NeoEdit.Editor
 				ReplaceSelections(strs);
 		}
 
-		static bool PreExecute_File_New_FromSelections_All()
+		static void PreExecute_File_New_FromSelections_All()
 		{
 			var contentType = state.NEWindow.ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
 			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings()).ToList(), "Selections", contentType) });
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_File_New_FromSelections_Files()
+		static void PreExecute_File_New_FromSelections_Files()
 		{
 			AddFilesFromStrings(state.NEWindow, state.NEWindow.ActiveFiles.Select((neFile, index) => (neFile.GetSelectionStrings(), neFile.GetSelectionsName(index + 1), neFile.ContentType)).ToList());
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_File_New_FromSelections_Selections()
+		static void PreExecute_File_New_FromSelections_Selections()
 		{
 			var index = 0;
 			AddFilesFromStrings(state.NEWindow, state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings().Select(str => (new List<string> { str } as IReadOnlyList<string>, $"Selection {++index}", neFile.ContentType))).ToList());
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_File_New_FromClipboard_All()
+		static void PreExecute_File_New_FromClipboard_All()
 		{
 			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (NEClipboard.Current.Strings, "Clipboards", ParserType.None) });
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_File_New_FromClipboard_Files()
+		static void PreExecute_File_New_FromClipboard_Files()
 		{
 			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Select((clipboard, index) => (clipboard, $"Clipboard {index + 1}", ParserType.None)).ToList());
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_File_New_FromClipboard_Selections()
+		static void PreExecute_File_New_FromClipboard_Selections()
 		{
 			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_File_New_WordList()
+		static void PreExecute_File_New_WordList()
 		{
 			byte[] data;
 			var streamName = typeof(NEWindow).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
@@ -131,7 +132,7 @@ namespace NeoEdit.Editor
 			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data));
 			state.NEWindow.AddNewNEFile(new NEFile(displayName: "Word List", bytes: data, modified: false));
 
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void Configure_FileMacro_Open_Open(string initialDirectory = null)
@@ -142,17 +143,17 @@ namespace NeoEdit.Editor
 			state.Configuration = result;
 		}
 
-		static bool PreExecute_FileMacro_Open_Open()
+		static void PreExecute_FileMacro_Open_Open()
 		{
 			var result = state.Configuration as Configuration_FileMacro_Open_Open;
 			result.FileNames.ForEach(fileName => state.NEWindow.AddNewNEFile(new NEFile(fileName)));
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_File_Open_CopiedCut()
+		static void PreExecute_File_Open_CopiedCut()
 		{
 			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => state.NEWindow.AddNewNEFile(neFile));
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void Configure_File_Open_ReopenWithEncoding() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(state.NEWindow.Focused.CodePage);
@@ -371,13 +372,13 @@ namespace NeoEdit.Editor
 			DisplayName = results[0];
 		}
 
-		static bool PreExecute_File_Advanced_DontExitOnClose()
+		static void PreExecute_File_Advanced_DontExitOnClose()
 		{
 			Settings.DontExitOnClose = state.MultiStatus != true;
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static bool PreExecute_File_Close_ActiveInactiveFiles(bool active)
+		static void PreExecute_File_Close_ActiveInactiveFiles(bool active)
 		{
 			foreach (var neFile in (active ? state.NEWindow.ActiveFiles : state.NEWindow.NEFiles.Except(state.NEWindow.ActiveFiles)))
 			{
@@ -385,7 +386,7 @@ namespace NeoEdit.Editor
 				neFile.Close();
 			}
 
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		void Execute_File_Close_FilesWithWithoutSelections(bool hasSelections)
@@ -411,7 +412,7 @@ namespace NeoEdit.Editor
 			state.Configuration = new Configuration_File_Exit { ShouldExit = true };
 		}
 
-		static bool PreExecute_File_Exit()
+		static void PreExecute_File_Exit()
 		{
 			foreach (var neFile in state.NEWindow.NEFiles)
 			{
@@ -420,7 +421,7 @@ namespace NeoEdit.Editor
 			}
 			state.NEWindow.ClearNEWindows();
 
-			return true;
+			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 	}
 }
