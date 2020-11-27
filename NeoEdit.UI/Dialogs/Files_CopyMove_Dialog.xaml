@@ -18,20 +18,20 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Old Name:" Target="{Binding ElementName=oldFileName}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Old name:" Target="{Binding ElementName=oldFileName}" HorizontalAlignment="Right"/>
 		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="oldFileName" Text="{Binding OldFileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="CopyMoveFilesDialogOldFileName"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" Expression="{Binding OldFileName, ElementName=self}" CountExpression1="{Binding NewFileName, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="_New Name:" Target="{Binding ElementName=newFileName}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="_New name:" Target="{Binding ElementName=newFileName}" HorizontalAlignment="Right"/>
 		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="newFileName" Text="{Binding NewFileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="CopyMoveFilesDialogNewFileName"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" MultiRow="True" Expression="{Binding NewFileName, ElementName=self}" CountExpression1="{Binding OldFileName, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Center" Rows="1">
-			<Button Content="Expression _Help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
+			<Button Content="Expression _help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

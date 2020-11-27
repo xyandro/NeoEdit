@@ -20,10 +20,10 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="_RegEx:" Target="{Binding ElementName=regex}" HorizontalAlignment="Right"/>
 		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="regex" Text="{Binding RegEx, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="RevRegex" AcceptsTab="True"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Infinite Count:" Target="{Binding ElementName=infiniteCount}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="_Infinite count:" Target="{Binding ElementName=infiniteCount}" HorizontalAlignment="Right"/>
 		<controls:NumericUpDown Grid.Row="1" Grid.Column="1" x:Name="infiniteCount" Value="{Binding InfiniteCount, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="Total results:" HorizontalAlignment="Right"/>
 		<Label Grid.Row="2" Grid.Column="1" Content="{Binding NumResults, ElementName=self}" ContentStringFormat="n0" HorizontalAlignment="Right"/>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

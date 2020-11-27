@@ -27,7 +27,7 @@
 		<TextBox Grid.Row="2" Background="Transparent" BorderBrush="Transparent" IsReadOnly="True" Text="{Binding Copyright, ElementName=self}"/>
 
 		<Button Grid.Row="3" HorizontalAlignment="Left" Content="_License" Click="LicenseClick"/>
-		<Button Grid.Row="3" HorizontalAlignment="Center" Content="_Change Log" Click="ChangeLogClick"/>
+		<Button Grid.Row="3" HorizontalAlignment="Center" Content="_Change log" Click="ChangeLogClick"/>
 		<Button Grid.Row="3" Width="50" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" Content="Ok" Click="OKClick"/>
 	</Grid>
 

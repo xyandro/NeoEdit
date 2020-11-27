@@ -56,12 +56,12 @@
 			<CheckBox Content="_Parens" IsChecked="{Binding BalanceParens, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
 			<CheckBox Content="Brac_kets" IsChecked="{Binding BalanceBrackets, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
 			<CheckBox Content="Br_aces" IsChecked="{Binding BalanceBraces, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
-			<CheckBox Content="_Less/Greater Than" IsChecked="{Binding BalanceLTGT, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
+			<CheckBox Content="_Less/greater than" IsChecked="{Binding BalanceLTGT, ElementName=self}" Focusable="False" Margin="4,0,0,0"/>
 		</StackPanel>
 		<CheckBox Grid.Row="8" Grid.Column="1" Content="Tri_m whitespace" IsChecked="{Binding TrimWhitespace, ElementName=self}" Focusable="False" VerticalAlignment="Center"/>
 
 		<StackPanel Grid.Row="10" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Left">
-			<Button Click="RegExHelp" Content="RegEx _Help"/>
+			<Button Click="RegExHelp" Content="RegEx _help"/>
 			<Button Click="Reset" Content="Rese_t"/>
 		</StackPanel>
 

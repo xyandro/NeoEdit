@@ -48,7 +48,7 @@
 				<Label Grid.Row="1" Grid.Column="4" Content="C" HorizontalAlignment="Right"/>
 				<Label Grid.Row="1" Grid.Column="5" Content="Count"/>
 				<Label Grid.Row="1" Grid.Column="6" Content="O" HorizontalAlignment="Right"/>
-				<Label Grid.Row="1" Grid.Column="7" Content="Count Non-null"/>
+				<Label Grid.Row="1" Grid.Column="7" Content="Count non-null"/>
 				<Label Grid.Row="2" Grid.Column="0" Content="S" HorizontalAlignment="Right"/>
 				<Label Grid.Row="2" Grid.Column="1" Content="Sum"/>
 				<Label Grid.Row="2" Grid.Column="2" Content="V" HorizontalAlignment="Right"/>

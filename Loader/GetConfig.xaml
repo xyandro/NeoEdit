@@ -23,19 +23,19 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="X_32 Start:" HorizontalAlignment="Right" Target="{Binding ElementName=x32StartBrowse}"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="X_32 start:" HorizontalAlignment="Right" Target="{Binding ElementName=x32StartBrowse}"/>
 		<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding X32Start, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" IsReadOnly="True"/>
 		<Button Grid.Row="0" Grid.Column="2" Name="x32StartBrowse" Content="Browse" Click="BrowseClick"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="X_64 Start:" HorizontalAlignment="Right" Target="{Binding ElementName=x64StartBrowse}"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="X_64 start:" HorizontalAlignment="Right" Target="{Binding ElementName=x64StartBrowse}"/>
 		<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding X64Start, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" IsReadOnly="True"/>
 		<Button Grid.Row="1" Grid.Column="2" Name="x64StartBrowse" Content="Browse" Click="BrowseClick"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="X_32 Path:" HorizontalAlignment="Right" Target="{Binding ElementName=x32PathBrowse}"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="X_32 path:" HorizontalAlignment="Right" Target="{Binding ElementName=x32PathBrowse}"/>
 		<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding X32Path, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" IsReadOnly="True"/>
 		<Button Grid.Row="2" Grid.Column="2" Name="x32PathBrowse" Content="Browse" Click="BrowseClick"/>
 
-		<Label Grid.Row="3" Grid.Column="0" Content="X_64 Path:" HorizontalAlignment="Right" Target="{Binding ElementName=x64PathBrowse}"/>
+		<Label Grid.Row="3" Grid.Column="0" Content="X_64 path:" HorizontalAlignment="Right" Target="{Binding ElementName=x64PathBrowse}"/>
 		<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding X64Path, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" IsReadOnly="True"/>
 		<Button Grid.Row="3" Grid.Column="2" Name="x64PathBrowse" Content="Browse" Click="BrowseClick"/>
 
@@ -54,7 +54,7 @@
 
 		<Label Grid.Row="8" Grid.Column="0" Content="Misc:" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-			<CheckBox Content="Can _Extract" IsChecked="{Binding CanExtract}" Margin="0,0,10,0"/>
+			<CheckBox Content="Can _extract" IsChecked="{Binding CanExtract}" Margin="0,0,10,0"/>
 			<CheckBox Content="_NGen" IsChecked="{Binding NGen}" Margin="0,0,10,0"/>
 			<CheckBox Content="_Console" IsChecked="{Binding IsConsole}" Margin="0,0,10,0"/>
 		</StackPanel>

@@ -28,7 +28,7 @@
 		<Label Grid.Row="2" Grid.Column="0" Content="Padding _character:" Target="{Binding ElementName=padChar}" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='!p0'}"/>
 		<TextBox Grid.Row="2" Grid.Column="1" Name="padChar" HorizontalAlignment="Left" MaxLength="1" Text="{Binding PadChar, ElementName=self, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsSelect, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='!p0'}"/>
 
-		<Label Grid.Row="3" Grid.Column="0" Content="Text Location:" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='!p0'}"/>
+		<Label Grid.Row="3" Grid.Column="0" Content="Text location:" HorizontalAlignment="Right" Visibility="{Binding IsSelect, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='!p0'}"/>
 		<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Visibility="{Binding IsSelect, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='!p0'}">
 			<RadioButton GroupName="location" Content="_Start" IsChecked="{Binding Location, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Start}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
 			<RadioButton GroupName="location" Content="M_iddle" IsChecked="{Binding Location, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Middle}" Margin="0,0,10,0" VerticalAlignment="Center" Focusable="False"/>
@@ -41,7 +41,7 @@
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Center" Rows="1">
-			<Button Content="Expression _Help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
+			<Button Content="Expression _help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

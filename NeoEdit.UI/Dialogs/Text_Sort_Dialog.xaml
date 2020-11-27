@@ -50,7 +50,7 @@
 					<RadioButton GroupName="sortType" Content="_Integer" IsChecked="{Binding SortType, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Integer}"/>
 					<RadioButton GroupName="sortType" Content="Fl_oat" IsChecked="{Binding SortType, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Float}"/>
 					<RadioButton GroupName="sortType" Content="_Hex" IsChecked="{Binding SortType, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Hex}"/>
-					<RadioButton GroupName="sortType" Content="Dat_e/Time" IsChecked="{Binding SortType, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=DateTime}"/>
+					<RadioButton GroupName="sortType" Content="Dat_e/time" IsChecked="{Binding SortType, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=DateTime}"/>
 					<RadioButton GroupName="sortType" Content="_Keys" IsChecked="{Binding SortType, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Keys}"/>
 					<RadioButton GroupName="sortType" Content="Cli_pboard" IsChecked="{Binding SortType, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Clipboard}"/>
 					<RadioButton GroupName="sortType" Content="Re_verse" IsChecked="{Binding SortType, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Reverse}"/>
@@ -62,7 +62,7 @@
 				<Separator Background="Transparent"/>
 				<Separator Background="Transparent"/>
 
-				<CheckBox Content="_Case Sensitive" IsChecked="{Binding CaseSensitive, ElementName=self}"/>
+				<CheckBox Content="_Case sensitive" IsChecked="{Binding CaseSensitive, ElementName=self}"/>
 			</StackPanel>
 		</GroupBox>
 

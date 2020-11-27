@@ -50,7 +50,7 @@
 		<controls:NEExpressionResults Grid.Row="7" Grid.Column="1" Expression="{Binding HeightExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="3" VerticalAlignment="Center">
-			<Label Content="Anchor (Ctrl + Direction to select)" HorizontalAlignment="Center"/>
+			<Label Content="Anchor (ctrl + direction to select)" HorizontalAlignment="Center"/>
 
 			<UniformGrid Rows="3" Columns="3" Width="60">
 				<ToggleButton Width="20" Content="↖" Tag="Top,Left" Click="OnChangeAnchor">
@@ -164,7 +164,7 @@
 		</StackPanel>
 
 		<StackPanel Grid.Row="6" Grid.RowSpan="2" Grid.Column="3" VerticalAlignment="Center">
-			<Label Content="Fill _Color" HorizontalAlignment="Center" Target="{Binding ElementName=fillColor}"/>
+			<Label Content="Fill _color" HorizontalAlignment="Center" Target="{Binding ElementName=fillColor}"/>
 			<controls:AutoCompleteTextBox x:Name="fillColor" Width="100" Text="{Binding FillColor, ElementName=self, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" CompletionTag="ImageCropDialogFillColor"/>
 		</StackPanel>
 
@@ -173,7 +173,7 @@
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="9" Grid.ColumnSpan="4" HorizontalAlignment="Center" Rows="1">
-			<Button Content="Expression H_elp" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
+			<Button Content="Expression h_elp" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="9" Grid.ColumnSpan="4" HorizontalAlignment="Right" Rows="1">

@@ -22,13 +22,13 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Input Files:" Target="{Binding ElementName=inputFiles}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Input files:" Target="{Binding ElementName=inputFiles}" HorizontalAlignment="Right"/>
 		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="inputFiles" Text="{Binding InputFiles, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageAnimateDialogInputFiles"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" Expression="{Binding InputFiles, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="_Output File:" Target="{Binding ElementName=outputFile}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="_Output file:" Target="{Binding ElementName=outputFile}" HorizontalAlignment="Right"/>
 		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="outputFile" Text="{Binding OutputFile, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageAnimateDialogOutputFile"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
@@ -47,7 +47,7 @@
 		<controls:NEExpressionResults Grid.Row="7" Grid.Column="1" Expression="{Binding Repeat, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="9" Grid.ColumnSpan="2" HorizontalAlignment="Center" Rows="1">
-			<Button Content="Expression _Help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
+			<Button Content="Expression _help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="9" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

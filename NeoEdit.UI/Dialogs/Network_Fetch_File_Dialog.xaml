@@ -31,7 +31,7 @@
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" MultiRow="True" Expression="{Binding FileName, ElementName=self}" CountExpression1="{Binding URL, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Center" Rows="1">
-			<Button Content="Expression _Help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
+			<Button Content="Expression _help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

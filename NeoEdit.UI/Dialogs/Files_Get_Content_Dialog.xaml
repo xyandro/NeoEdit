@@ -15,7 +15,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Code Page:" Target="{Binding ElementName=codePage}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Code page:" Target="{Binding ElementName=codePage}" HorizontalAlignment="Right"/>
 		<ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Name="codePage" SelectedValue="{Binding CodePage, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

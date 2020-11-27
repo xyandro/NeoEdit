@@ -24,7 +24,7 @@
 		<ListView Name="codePoints" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding CodePointInformation, ElementName=self}" SelectedItem="{Binding CodePoint, ElementName=self}" MouseDoubleClick="OnCodePointsDoubleClick">
 			<ListView.View>
 				<GridView>
-					<GridViewColumn Header="Code Point" DisplayMemberBinding="{Binding CodePointDisplay}"/>
+					<GridViewColumn Header="Code point" DisplayMemberBinding="{Binding CodePointDisplay}"/>
 					<GridViewColumn Header="" DisplayMemberBinding="{Binding Display}"/>
 					<GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}"/>
 				</GridView>

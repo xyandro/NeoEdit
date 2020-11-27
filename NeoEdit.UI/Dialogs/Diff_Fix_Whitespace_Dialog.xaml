@@ -16,7 +16,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Line Start _Tab Stop:" Target="{Binding ElementName=lineStartTabStop}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Line start _tab stop:" Target="{Binding ElementName=lineStartTabStop}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="0" Grid.Column="1" Name="lineStartTabStop" Text="{Binding LineStartTabStop, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<Label Grid.Row="1" Grid.Column="1" Content="(Use 0 to not require starting whitespace to match.)"/>

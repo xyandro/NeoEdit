@@ -45,8 +45,8 @@
 				<Button Click="OkClick" Content="Pre_vious" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Select_Previous}"/>
 				<Button Click="OkClick" Content="_Next" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Select_Next}"/>
 				<Button Click="OkClick" Content="Enc_losing" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Select_Enclosing}"/>
-				<Button Click="OkClick" Content="_With Enclosing" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Select_WithEnclosing}"/>
-				<Button Click="OkClick" Content="With_out Enclosing" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Select_WithoutEnclosing}"/>
+				<Button Click="OkClick" Content="_With enclosing" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Select_WithEnclosing}"/>
+				<Button Click="OkClick" Content="With_out enclosing" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Select_WithoutEnclosing}"/>
 			</UniformGrid>
 		</GroupBox>
 
@@ -66,7 +66,7 @@
 		<GroupBox Grid.Row="3" Grid.Column="0" Header="Copy">
 			<UniformGrid Columns="3">
 				<Button Click="OkClick" Content="Enclosing" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Copy_Enclosing}"/>
-				<Button Click="OkClick" Content="Enclosing Index" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Copy_EnclosingIndex}"/>
+				<Button Click="OkClick" Content="Enclosing index" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Copy_EnclosingIndex}"/>
 			</UniformGrid>
 		</GroupBox>
 
@@ -74,11 +74,11 @@
 			<UniformGrid Columns="3">
 				<Button Click="OkClick" Content="Flatten" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_Flatten}"/>
 				<Button Click="OkClick" Content="Transpose" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_Transpose}"/>
-				<Button Click="OkClick" Content="Rotate Left" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_RotateLeft}"/>
-				<Button Click="OkClick" Content="Rotate Right" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_RotateRight}"/>
+				<Button Click="OkClick" Content="Rotate left" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_RotateLeft}"/>
+				<Button Click="OkClick" Content="Rotate right" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_RotateRight}"/>
 				<Button Click="OkClick" Content="Rotate 180" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_Rotate180}"/>
-				<Button Click="OkClick" Content="Mirror Horizontal" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_MirrorHorizontal}"/>
-				<Button Click="OkClick" Content="Mirror Vertical" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_MirrorVertical}"/>
+				<Button Click="OkClick" Content="Mirror horizontal" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_MirrorHorizontal}"/>
+				<Button Click="OkClick" Content="Mirror vertical" Tag="{x:Static configuration:Configuration_Edit_ModifyRegions+Actions.Transform_MirrorVertical}"/>
 			</UniformGrid>
 		</GroupBox>
 

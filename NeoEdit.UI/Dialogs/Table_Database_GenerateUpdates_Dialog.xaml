@@ -24,7 +24,7 @@
 		<Label Grid.Row="1" Grid.Column="0" Content="_Where:" Target="{Binding ElementName=where}" HorizontalAlignment="Right"/>
 		<dialogs:TableDisplay Grid.Row="1" Grid.Column="1" x:Name="where" Selectable="True" Table="{Binding Table, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="Table _Name:" Target="{Binding ElementName=tableName}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="Table _name:" Target="{Binding ElementName=tableName}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="2" Grid.Column="1" Name="tableName" Text="{Binding TableName, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

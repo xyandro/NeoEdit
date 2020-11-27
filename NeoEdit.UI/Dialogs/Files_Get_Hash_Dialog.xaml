@@ -21,10 +21,10 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Hash Algorithm:" Target="{Binding ElementName=hashType}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Hash algorithm:" Target="{Binding ElementName=hashType}" HorizontalAlignment="Right"/>
 		<ComboBox Grid.Row="0" Grid.Column="1" Name="hashType" SelectedValue="{Binding HashType, ElementName=self}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="HMAC _Key:" Target="{Binding ElementName=hmacKey}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="1" Grid.Column="0" Content="HMAC _key:" Target="{Binding ElementName=hmacKey}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="1" Grid.Column="1" Name="hmacKey" Text="{Binding HMACKey, ElementName=self, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource hexConverter}}"/>
 
 		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

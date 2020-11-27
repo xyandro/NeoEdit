@@ -15,7 +15,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Table _Type:" Target="{Binding ElementName=tableType}"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Table _type:" Target="{Binding ElementName=tableType}"/>
 		<ComboBox Grid.Row="0" Grid.Column="1" Name="tableType" ItemsSource="{Binding TableTypes, ElementName=self}" SelectedItem="{Binding TableType, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

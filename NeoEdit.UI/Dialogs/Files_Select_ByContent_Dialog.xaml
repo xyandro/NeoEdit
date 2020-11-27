@@ -53,8 +53,8 @@
 			<Button Grid.Column="0" Click="Reset" Content="Rese_t" Padding="2,1" Focusable="False"/>
 
 			<StackPanel Grid.Column="2" Orientation="Horizontal">
-				<Button Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="ExpressionHelp" Content="Expression _Help" Padding="2,1" Focusable="False"/>
-				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="RegExHelp" Content="RegEx _Help" Padding="2,1" Focusable="False"/>
+				<Button Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="ExpressionHelp" Content="Expression _help" Padding="2,1" Focusable="False"/>
+				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="RegExHelp" Content="RegEx _help" Padding="2,1" Focusable="False"/>
 				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="Escape" Click="Escape" Padding="2,1" Focusable="False"/>
 				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="Unescape" Click="Unescape" Padding="2,1" Focusable="False"/>
 			</StackPanel>

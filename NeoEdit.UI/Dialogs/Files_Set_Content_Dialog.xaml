@@ -19,7 +19,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_File Name:" Target="{Binding ElementName=fileName}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_File name:" Target="{Binding ElementName=fileName}" HorizontalAlignment="Right"/>
 		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="fileName" Text="{Binding FileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="CreateFilesDialogFileName"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
@@ -31,11 +31,11 @@
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" MultiRow="True" Expression="{Binding Data, ElementName=self}" CountExpression1="{Binding FileName, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<Label Grid.Row="4" Grid.Column="0" Content="_Code Page:" Target="{Binding ElementName=codePage}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="4" Grid.Column="0" Content="_Code page:" Target="{Binding ElementName=codePage}" HorizontalAlignment="Right"/>
 		<ComboBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Name="codePage" SelectedValue="{Binding CodePage, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" Rows="1">
-			<Button Content="Expression _Help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
+			<Button Content="Expression _help" Click="ExpressionHelp" Padding="10,1" Focusable="False"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

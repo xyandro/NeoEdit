@@ -15,7 +15,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="Font _Size:" Target="{Binding ElementName=textFontSize}" HorizontalAlignment="Right"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="Font _size:" Target="{Binding ElementName=textFontSize}" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="0" Grid.Column="1" x:Name="textFontSize" Text="{Binding TextFontSize, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
 
 		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

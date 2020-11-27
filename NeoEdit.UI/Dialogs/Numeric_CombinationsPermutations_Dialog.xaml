@@ -32,12 +32,12 @@
 			<RadioButton GroupName="type" Content="_Permutations" IsChecked="{Binding Type, ElementName=self, Converter={converters:RadioConverter}, ConverterParameter=Permutations}" Focusable="False" Margin="0,0,10,0" VerticalAlignment="Center"/>
 		</StackPanel>
 
-		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Repeat Items" IsChecked="{Binding Repeat, ElementName=self}" Focusable="False"/>
+		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Repeat items" IsChecked="{Binding Repeat, ElementName=self}" Focusable="False"/>
 
 		<Label Grid.Row="4" Grid.Column="0" Content="Formula:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="4" Grid.Column="1" Name="formula" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-		<Label Grid.Row="5" Grid.Column="0" Content="Total Results:" HorizontalAlignment="Right"/>
+		<Label Grid.Row="5" Grid.Column="0" Content="Total results:" HorizontalAlignment="Right"/>
 		<TextBox Grid.Row="5" Grid.Column="1" Background="Transparent" BorderBrush="Transparent" IsReadOnly="True" Text="{Binding NumResults, ElementName=self, StringFormat=n0}" HorizontalAlignment="Right"/>
 
 		<UniformGrid Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">

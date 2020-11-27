@@ -21,19 +21,19 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Label Grid.Row="0" Grid.Column="0" Content="_Input Files:" HorizontalAlignment="Right" Target="{Binding ElementName=inputFiles}"/>
+		<Label Grid.Row="0" Grid.Column="0" Content="_Input files:" HorizontalAlignment="Right" Target="{Binding ElementName=inputFiles}"/>
 		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="inputFiles" Text="{Binding InputFiles, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FilesOperationsSplitFileDialogInputFiles"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" Expression="{Binding InputFiles, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="File _Count:" HorizontalAlignment="Right" Target="{Binding ElementName=inputFileCount}"/>
+		<Label Grid.Row="2" Grid.Column="0" Content="File _count:" HorizontalAlignment="Right" Target="{Binding ElementName=inputFileCount}"/>
 		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="inputFileCount" Text="{Binding InputFileCount, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FilesOperationsSplitFileDialogInputFileCount"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" Expression="{Binding InputFileCount, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<Label Grid.Row="4" Grid.Column="0" Content="_Output Files:" HorizontalAlignment="Right" Target="{Binding ElementName=outputFiles}"/>
+		<Label Grid.Row="4" Grid.Column="0" Content="_Output files:" HorizontalAlignment="Right" Target="{Binding ElementName=outputFiles}"/>
 		<controls:AutoCompleteTextBox Grid.Row="4" Grid.Column="1" x:Name="outputFiles" Text="{Binding OutputFiles, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FilesOperationsSplitFileDialogOutputFiles"/>
 
 		<Label Grid.Row="5" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>

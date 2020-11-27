@@ -45,7 +45,7 @@
 			<Button Grid.Column="0" Click="Reset" Content="Rese_t" Focusable="False"/>
 
 			<UniformGrid Grid.Column="2" Rows="1">
-				<Button Click="RegExHelp" Content="RegEx _Help" Focusable="False"/>
+				<Button Click="RegExHelp" Content="RegEx _help" Focusable="False"/>
 				<Button Content="Esca_pe" Click="Escape" Focusable="False"/>
 				<Button Content="_Unescape" Click="Unescape" Focusable="False"/>
 			</UniformGrid>

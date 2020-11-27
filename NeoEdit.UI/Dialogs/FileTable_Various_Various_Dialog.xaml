@@ -23,7 +23,7 @@
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" NumResults="{Binding NumRows, ElementName=self}" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}" IsValid="{Binding IsValid, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
-			<Button Click="ExpressionHelp" Content="Expression _Help" Padding="10,1"/>
+			<Button Click="ExpressionHelp" Content="Expression _help" Padding="10,1"/>
 		</UniformGrid>
 
 		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
