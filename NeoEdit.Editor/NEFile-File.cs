@@ -10,7 +10,6 @@ using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.PreExecution;
-using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
@@ -240,11 +239,11 @@ namespace NeoEdit.Editor
 			ReplaceSelections((NEWindow.GetFileIndex(this, activeOnly) + 1).ToString());
 		}
 
-		void Execute_File_Advanced_Compress() => Compressed = state.MultiStatus == false;
+		void Execute_File_Advanced_Compress() => Compressed = state.MultiStatus != true;
 
 		static void Configure_File_Advanced_Encrypt()
 		{
-			if (state.MultiStatus != false)
+			if (state.MultiStatus != true)
 				state.Configuration = new Configuration_File_Advanced_Encrypt();
 			else
 				state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type.AES, true);

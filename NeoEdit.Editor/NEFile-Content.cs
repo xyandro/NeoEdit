@@ -84,11 +84,11 @@ namespace NeoEdit.Editor
 
 		void Execute_Content_Type_Various(ParserType contentType) => ContentType = contentType;
 
-		void Execute_Content_HighlightSyntax() => HighlightSyntax = state.MultiStatus == false;
+		void Execute_Content_HighlightSyntax() => HighlightSyntax = state.MultiStatus != true;
 
 		void Execute_Content_StrictParsing()
 		{
-			StrictParsing = state.MultiStatus == false;
+			StrictParsing = state.MultiStatus != true;
 			previousData.Invalidate();
 		}
 

@@ -278,19 +278,6 @@ namespace NeoEdit.Editor
 			Focused = neFile;
 		}
 
-		public bool GotoFile(string fileName, int? line, int? column, int? index)
-		{
-			var neFile = NEFiles.FirstOrDefault(x => x.FileName == fileName);
-			if (neFile == null)
-				return false;
-			//Activate();
-			SetActiveFile(neFile);
-			//TODO
-			//neFile.Execute_File_Refresh();
-			//neFile.Goto(line, column, index);
-			return true;
-		}
-
 		public T ShowFile<T>(NEFile neFile, Func<T> action)
 		{
 			lock (this)

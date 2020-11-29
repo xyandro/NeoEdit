@@ -294,21 +294,6 @@ namespace NeoEdit.UI
 			UpdateLayout();
 		}
 
-		//public bool GotoFile(string fileName, int? line, int? column, int? index)
-		//{
-		//	var neFile = NEWindow.AllIFiles.FirstOrDefault(x => x.FileName == fileName);
-		//	if (neFile == null)
-		//		return false;
-		//	//TODO
-		//	//Activate();
-		//	//Files.ClearAllActive();
-		//	//Files.SetActive(neFile);
-		//	//Files.FocusedIFile = neFile;
-		//	//neFile.Execute_File_Refresh();
-		//	//neFile.Goto(line, column, index);
-		//	return true;
-		//}
-
 		[DllImport("user32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		static extern bool SetForegroundWindow(IntPtr hWnd);
