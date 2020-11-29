@@ -398,8 +398,6 @@ namespace NeoEdit.Editor
 			var handled = true;
 			switch (state.Command)
 			{
-				case NECommand.File_Open_Open: Configure_FileMacro_Open_Open(); break;
-				case NECommand.Macro_Open_Open: Configure_FileMacro_Open_Open(Macro.MacroDirectory); break;
 				case NECommand.Window_CustomGrid: Configure_Window_CustomGrid(); break;
 				default: handled = false; break;
 			}
@@ -537,7 +535,6 @@ namespace NeoEdit.Editor
 			switch (state.Command)
 			{
 				case NECommand.Internal_Scroll: PreExecute_Internal_Scroll(); break;
-				case NECommand.File_Open_Open: PreExecute_FileMacro_Open_Open(); break;
 				case NECommand.File_Open_CopiedCut: PreExecute_File_Open_CopiedCut(); break;
 				case NECommand.File_Advanced_DontExitOnClose: PreExecute_File_Advanced_DontExitOnClose(); break;
 				case NECommand.File_Close_Active: PreExecute_File_Close_ActiveInactiveFiles(true); break;
@@ -564,7 +561,6 @@ namespace NeoEdit.Editor
 				case NECommand.Diff_Select_RightFile: PreExecute_Diff_Select_LeftRightBothFiles(false); break;
 				case NECommand.Diff_Select_BothFiles: PreExecute_Diff_Select_LeftRightBothFiles(null); break;
 				case NECommand.Diff_Diff: PreExecute_Diff_Diff(); break;
-				case NECommand.Macro_Open_Open: PreExecute_FileMacro_Open_Open(); break;
 				case NECommand.Window_New_New: PreExecute_Window_New_New(); break;
 				case NECommand.Window_New_FromSelections_All: PreExecute_Window_New_FromSelections_All(); break;
 				case NECommand.Window_New_FromSelections_Files: PreExecute_Window_New_FromSelections_Files(); break;

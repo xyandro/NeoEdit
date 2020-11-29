@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.PreExecution;
@@ -74,7 +75,7 @@ namespace NeoEdit.Editor
 		void PostExecute_File_New_FromSelections_All()
 		{
 			var preExecution = state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections;
-			var contentType = state.NEWindow.ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
+			var contentType = ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
 			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (preExecution.Selections.SelectMany(d => d.Value.selections).ToList(), "Selections", contentType) });
 		}
 
@@ -117,7 +118,20 @@ namespace NeoEdit.Editor
 			}
 
 			bytes = Compressor.Decompress(bytes, Compressor.Type.GZip);
-			state.NEWindow.AddNewNEFile(new NEFile(displayName: "Word List", bytes: bytes, modified: false));
+			AddNewNEFile(new NEFile(displayName: "Word List", bytes: bytes, modified: false));
+		}
+
+		void Configure_FileMacro_Open_Open(string initialDirectory = null)
+		{
+			if ((initialDirectory == null) && (state.NEWindow.Focused != null))
+				initialDirectory = Path.GetDirectoryName(state.NEWindow.Focused.FileName);
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_FileMacro_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
+		}
+
+		void Execute_FileMacro_Open_Open()
+		{
+			var configuration = state.Configuration as Configuration_FileMacro_Open_Open;
+			configuration.FileNames.ForEach(fileName => AddNewNEFile(new NEFile(fileName)));
 		}
 	}
 }

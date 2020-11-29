@@ -184,6 +184,8 @@ namespace NeoEdit.Editor
 			switch (state.Command)
 			{
 				case NECommand.Internal_Key: Configure_Internal_Key(); break;
+				case NECommand.File_Open_Open: Configure_FileMacro_Open_Open(); break;
+				case NECommand.Macro_Open_Open: Configure_FileMacro_Open_Open(Macro.MacroDirectory); break;
 				default: NEFile.Configure(); break;
 			}
 		}
@@ -224,6 +226,8 @@ namespace NeoEdit.Editor
 				case NECommand.File_New_FromClipboard_Files: Execute_File_New_FromClipboard_Files(); break;
 				case NECommand.File_New_FromClipboard_Selections: Execute_File_New_FromClipboard_Selections(); break;
 				case NECommand.File_New_WordList: Execute_File_New_WordList(); break;
+				case NECommand.File_Open_Open: Execute_FileMacro_Open_Open(); break;
+				case NECommand.Macro_Open_Open: Execute_FileMacro_Open_Open(); break;
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
 		}
