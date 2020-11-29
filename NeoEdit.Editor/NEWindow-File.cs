@@ -133,5 +133,7 @@ namespace NeoEdit.Editor
 			var configuration = state.Configuration as Configuration_FileMacro_Open_Open;
 			configuration.FileNames.ForEach(fileName => AddNewNEFile(new NEFile(fileName)));
 		}
+
+		void Execute_File_Open_CopiedCut() => NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => AddNewNEFile(neFile));
 	}
 }
