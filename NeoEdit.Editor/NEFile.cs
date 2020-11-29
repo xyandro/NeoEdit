@@ -537,9 +537,6 @@ namespace NeoEdit.Editor
 			switch (state.Command)
 			{
 				case NECommand.Internal_Scroll: PreExecute_Internal_Scroll(); break;
-				case NECommand.File_New_FromSelections_All: PreExecute_File_New_FromSelections_All(); break;
-				case NECommand.File_New_FromSelections_Files: PreExecute_File_New_FromSelections_Files(); break;
-				case NECommand.File_New_FromSelections_Selections: PreExecute_File_New_FromSelections_Selections(); break;
 				case NECommand.File_New_FromClipboard_All: PreExecute_File_New_FromClipboard_All(); break;
 				case NECommand.File_New_FromClipboard_Files: PreExecute_File_New_FromClipboard_Files(); break;
 				case NECommand.File_New_FromClipboard_Selections: PreExecute_File_New_FromClipboard_Selections(); break;
@@ -613,6 +610,9 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.Internal_Text: Execute_Internal_Text(); break;
 				case NECommand.Internal_SetBinaryValue: Execute_Internal_SetBinaryValue(); break;
+				case NECommand.File_New_FromSelections_All: Execute_File_New_FromSelections_AllFilesSelections(); break;
+				case NECommand.File_New_FromSelections_Files: Execute_File_New_FromSelections_AllFilesSelections(); break;
+				case NECommand.File_New_FromSelections_Selections: Execute_File_New_FromSelections_AllFilesSelections(); break;
 				case NECommand.File_Open_ReopenWithEncoding: Execute_File_Open_ReopenWithEncoding(); break;
 				case NECommand.File_Refresh: Execute_File_Refresh(); break;
 				case NECommand.File_AutoRefresh: Execute_File_AutoRefresh(); break;
@@ -1213,6 +1213,12 @@ namespace NeoEdit.Editor
 				case NECommand.Window_ViewBinary: Execute_Window_ViewBinary(); break;
 				case NECommand.Window_BinaryCodePages: Execute_Window_BinaryCodePages(); break;
 			}
+		}
+		#endregion
+
+		#region PostExecute
+		public void PostExecute()
+		{
 		}
 		#endregion
 

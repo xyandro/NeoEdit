@@ -1,11 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
+using NeoEdit.Editor.PreExecution;
+using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
 {
 	partial class NEWindow
 	{
+		void AddFilesFromStrings(NEWindow neWindow, IReadOnlyList<(IReadOnlyList<string> strs, string name, ParserType contentType)> data)
+		{
+			data.AsTaskRunner().Select(x => NEFile.CreateFileFromStrings(x.strs, x.name, x.contentType)).ForEach(neFile => neWindow.AddNewNEFile(neFile));
+		}
+
 		void Execute_File_Select_All()
 		{
 			ActiveFiles = NEFiles;
@@ -52,5 +60,33 @@ namespace NeoEdit.Editor
 		}
 
 		void Execute_File_New_New() => AddNewNEFile(new NEFile());
+
+		void PreExecute_File_New_FromSelections_AllFilesSelections()
+		{
+			state.PreExecution = new PreExecution_File_New_FromSelections_AllFilesSelections
+			{
+				Selections = ActiveFiles.ToDictionary(x => x, x => default((IReadOnlyList<string>, string, Common.Enums.ParserType))),
+			};
+		}
+
+		void PostExecute_File_New_FromSelections_All()
+		{
+			var preExecution = state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections;
+			var contentType = state.NEWindow.ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
+			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (preExecution.Selections.SelectMany(d => d.Value.selections).ToList(), "Selections", contentType) });
+		}
+
+		void PostExecute_File_New_FromSelections_Files()
+		{
+			var preExecution = state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections;
+			AddFilesFromStrings(state.NEWindow, preExecution.Selections.Values.Select((tuple, index) => (tuple.selections, tuple.name ?? $"Selections {index + 1}", tuple.contentType)).ToList());
+		}
+
+		void PostExecute_File_New_FromSelections_Selections()
+		{
+			var preExecution = state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections;
+			var index = 0;
+			AddFilesFromStrings(state.NEWindow, preExecution.Selections.Values.SelectMany(tuple => tuple.selections.Select(str => (new List<string> { str } as IReadOnlyList<string>, $"Selection {++index}", tuple.contentType))).ToList());
+		}
 	}
 }

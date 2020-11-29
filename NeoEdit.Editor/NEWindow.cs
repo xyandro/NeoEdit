@@ -188,15 +188,21 @@ namespace NeoEdit.Editor
 			}
 		}
 
+		#region PreExecute
 		public void PreExecute()
 		{
 			switch (state.Command)
 			{
 				case NECommand.Internal_Key: PreExecute_Internal_Key(); break;
+				case NECommand.File_New_FromSelections_All: PreExecute_File_New_FromSelections_AllFilesSelections(); break;
+				case NECommand.File_New_FromSelections_Files: PreExecute_File_New_FromSelections_AllFilesSelections(); break;
+				case NECommand.File_New_FromSelections_Selections: PreExecute_File_New_FromSelections_AllFilesSelections(); break;
 				default: NEFile.PreExecute(); break;
 			}
 		}
+		#endregion
 
+		#region Execute
 		public void Execute()
 		{
 			switch (state.Command)
@@ -217,6 +223,19 @@ namespace NeoEdit.Editor
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
 		}
+		#endregion
+
+		#region PostExecute
+		public void PostExecute()
+		{
+			switch (state.Command)
+			{
+				case NECommand.File_New_FromSelections_All: PostExecute_File_New_FromSelections_All(); break;
+				case NECommand.File_New_FromSelections_Files: PostExecute_File_New_FromSelections_Files(); break;
+				case NECommand.File_New_FromSelections_Selections: PostExecute_File_New_FromSelections_Selections(); break;
+			}
+		}
+		#endregion
 
 		public int GetFileIndex(NEFile neFile, bool activeOnly = false)
 		{

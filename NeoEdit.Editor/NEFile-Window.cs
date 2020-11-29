@@ -12,6 +12,8 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
+		static void AddFilesFromStrings(NEWindow neWindow, IReadOnlyList<(IReadOnlyList<string> strs, string name, ParserType contentType)> data) => data.AsTaskRunner().Select(x => CreateFileFromStrings(x.strs, x.name, x.contentType)).ForEach(neFile => neWindow.AddNewNEFile(neFile));
+
 		string GetSummaryName(int index)
 		{
 			if (!string.IsNullOrWhiteSpace(DisplayName))
@@ -40,7 +42,7 @@ namespace NeoEdit.Editor
 		static void PreExecute_Window_New_FromSelections_Files()
 		{
 			var neWindow = new NEWindow();
-			AddFilesFromStrings(neWindow, state.NEWindow.ActiveFiles.Select((neFile, index) => (neFile.GetSelectionStrings(), neFile.GetSelectionsName(index + 1), neFile.ContentType)).ToList());
+			AddFilesFromStrings(neWindow, state.NEWindow.ActiveFiles.Select((neFile, index) => (neFile.GetSelectionStrings(), neFile.GetSelectionsName() ?? $"Selections {index + 1}", neFile.ContentType)).ToList());
 			neWindow.WindowLayout = state.NEWindow.WindowLayout;
 			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}

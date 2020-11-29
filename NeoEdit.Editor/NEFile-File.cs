@@ -16,16 +16,16 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		string GetSelectionsName(int index)
+		string GetSelectionsName()
 		{
 			if (!string.IsNullOrWhiteSpace(DisplayName))
 				return $"Selections for {DisplayName}";
 			if (!string.IsNullOrWhiteSpace(FileName))
 				return $"Selections for {Path.GetFileName(FileName)}";
-			return $"Selections {index + 1}";
+			return null;
 		}
 
-		static NEFile CreateFileFromStrings(IReadOnlyList<string> strs, string name, ParserType contentType)
+		public static NEFile CreateFileFromStrings(IReadOnlyList<string> strs, string name, ParserType contentType)
 		{
 			var sb = new StringBuilder(strs.Sum(str => str.Length + 2)); // 2 is for ending; may or may not need it
 			var sels = new List<Range>();
@@ -46,8 +46,6 @@ namespace NeoEdit.Editor
 			};
 		}
 
-		static void AddFilesFromStrings(NEWindow neWindow, IReadOnlyList<(IReadOnlyList<string> strs, string name, ParserType contentType)> data) => data.AsTaskRunner().Select(x => CreateFileFromStrings(x.strs, x.name, x.contentType)).ForEach(neFile => neWindow.AddNewNEFile(neFile));
-
 		string GetSaveFileName()
 		{
 			return NEWindow.ShowFile(this, () =>
@@ -61,24 +59,9 @@ namespace NeoEdit.Editor
 			});
 		}
 
-		static void PreExecute_File_New_FromSelections_All()
+		void Execute_File_New_FromSelections_AllFilesSelections()
 		{
-			var contentType = state.NEWindow.ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
-			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings()).ToList(), "Selections", contentType) });
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
-
-		static void PreExecute_File_New_FromSelections_Files()
-		{
-			AddFilesFromStrings(state.NEWindow, state.NEWindow.ActiveFiles.Select((neFile, index) => (neFile.GetSelectionStrings(), neFile.GetSelectionsName(index + 1), neFile.ContentType)).ToList());
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
-
-		static void PreExecute_File_New_FromSelections_Selections()
-		{
-			var index = 0;
-			AddFilesFromStrings(state.NEWindow, state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings().Select(str => (new List<string> { str } as IReadOnlyList<string>, $"Selection {++index}", neFile.ContentType))).ToList());
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
+			(state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections).Selections[this] = (GetSelectionStrings(), GetSelectionsName(), ContentType);
 		}
 
 		static void PreExecute_File_New_FromClipboard_All()
