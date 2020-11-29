@@ -407,7 +407,6 @@ namespace NeoEdit.Editor
 
 			switch (state.Command)
 			{
-				case NECommand.File_Open_ReopenWithEncoding: Configure_File_Open_ReopenWithEncoding(); break;
 				case NECommand.File_Save_SaveAsByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Move_MoveByExpression: Configure_File_Move_MoveByExpression(); break;
 				case NECommand.File_Copy_CopyByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
@@ -1771,5 +1770,12 @@ namespace NeoEdit.Editor
 		public List<Tuple<int, int>> ViewGetLineColumnDiffs(int line) => Text.GetLineColumnDiffs(line);
 
 		public List<Tuple<double, double>> ViewGetDiffRanges() => Text.GetDiffRanges();
+
+		public bool CheckModified(MessageOptions defaultAccept)
+		{
+			if (!IsModified)
+				return true;
+			return QueryUser(nameof(Execute_File_Open_ReopenWithEncoding), "You have unsaved changes. Are you sure you want to reload?", defaultAccept);
+		}
 	}
 }

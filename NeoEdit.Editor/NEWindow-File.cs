@@ -123,9 +123,9 @@ namespace NeoEdit.Editor
 
 		void Configure_FileMacro_Open_Open(string initialDirectory = null)
 		{
-			if ((initialDirectory == null) && (state.NEWindow.Focused != null))
-				initialDirectory = Path.GetDirectoryName(state.NEWindow.Focused.FileName);
-			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_FileMacro_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
+			if ((initialDirectory == null) && (Focused != null))
+				initialDirectory = Path.GetDirectoryName(Focused.FileName);
+			state.Configuration = neWindowUI.RunDialog_Configure_FileMacro_Open_Open("txt", initialDirectory, "Text files|*.txt|All files|*.*", 2, true);
 		}
 
 		void Execute_FileMacro_Open_Open()
@@ -135,5 +135,11 @@ namespace NeoEdit.Editor
 		}
 
 		void Execute_File_Open_CopiedCut() => NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => AddNewNEFile(neFile));
+
+		void Configure_File_Open_ReopenWithEncoding()
+		{
+			var codePage = ActiveFiles.GroupBy(neFile => neFile.CodePage).OrderByDescending(group => group.Count()).Select(group => group.Key).DefaultIfEmpty(Coder.CodePage.UTF8).First();
+			state.Configuration = neWindowUI.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(codePage);
+		}
 	}
 }

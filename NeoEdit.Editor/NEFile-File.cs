@@ -64,16 +64,11 @@ namespace NeoEdit.Editor
 			(state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections).Selections[this] = (GetSelectionStrings(), GetSelectionsName(), ContentType);
 		}
 
-		static void Configure_File_Open_ReopenWithEncoding() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(state.NEWindow.Focused.CodePage);
-
 		void Execute_File_Open_ReopenWithEncoding()
 		{
 			var result = state.Configuration as Configuration_File_OpenEncoding_ReopenWithEncoding;
-			if (IsModified)
-			{
-				if (!QueryUser(nameof(Execute_File_Open_ReopenWithEncoding), "You have unsaved changes. Are you sure you want to reload?", MessageOptions.Yes))
-					return;
-			}
+			if (!CheckModified(MessageOptions.Yes))
+				return;
 
 			OpenFile(FileName, codePage: result.CodePage);
 		}
@@ -99,11 +94,8 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Revert()
 		{
-			if (IsModified)
-			{
-				if (!QueryUser(nameof(Execute_File_Revert), "You have unsaved changes. Are you sure you want to reload?", MessageOptions.No))
-					return;
-			}
+			if (!CheckModified(MessageOptions.No))
+				return;
 
 			var selections = Selections.ToList();
 			var regions = Enumerable.Range(1, 9).ToDictionary(index => index, index => GetRegions(index));

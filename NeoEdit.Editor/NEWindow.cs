@@ -185,6 +185,7 @@ namespace NeoEdit.Editor
 			{
 				case NECommand.Internal_Key: Configure_Internal_Key(); break;
 				case NECommand.File_Open_Open: Configure_FileMacro_Open_Open(); break;
+				case NECommand.File_Open_ReopenWithEncoding: Configure_File_Open_ReopenWithEncoding(); break;
 				case NECommand.Macro_Open_Open: Configure_FileMacro_Open_Open(Macro.MacroDirectory); break;
 				default: NEFile.Configure(); break;
 			}
