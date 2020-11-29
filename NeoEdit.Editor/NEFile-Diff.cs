@@ -73,7 +73,10 @@ namespace NeoEdit.Editor
 					diffTargets[ctr].DiffTarget = null;
 				}
 			if (inDiff)
+			{
 				state.PreExecution = PreExecution_TaskFinished.Singleton;
+				return;
+			}
 
 			if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
 				throw new Exception("Must have even number of files active for diff.");
