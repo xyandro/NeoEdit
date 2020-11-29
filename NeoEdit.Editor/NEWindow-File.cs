@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
+using NeoEdit.Common.Transform;
 using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
@@ -102,6 +104,20 @@ namespace NeoEdit.Editor
 		void Execute_File_New_FromClipboard_Selections()
 		{
 			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
+		}
+
+		void Execute_File_New_WordList()
+		{
+			byte[] bytes;
+			using (var stream = typeof(NEWindow).Assembly.GetManifestResourceStream(typeof(NEWindow).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single()))
+			using (var ms = new MemoryStream())
+			{
+				stream.CopyTo(ms);
+				bytes = ms.ToArray();
+			}
+
+			bytes = Compressor.Decompress(bytes, Compressor.Type.GZip);
+			state.NEWindow.AddNewNEFile(new NEFile(displayName: "Word List", bytes: bytes, modified: false));
 		}
 	}
 }

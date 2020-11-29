@@ -64,24 +64,6 @@ namespace NeoEdit.Editor
 			(state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections).Selections[this] = (GetSelectionStrings(), GetSelectionsName(), ContentType);
 		}
 
-		static void PreExecute_File_New_WordList()
-		{
-			byte[] data;
-			var streamName = typeof(NEWindow).Assembly.GetManifestResourceNames().Where(name => name.EndsWith(".Words.txt.gz")).Single();
-			using (var stream = typeof(NEWindow).Assembly.GetManifestResourceStream(streamName))
-			using (var ms = new MemoryStream())
-			{
-				stream.CopyTo(ms);
-				data = ms.ToArray();
-			}
-
-			data = Compressor.Decompress(data, Compressor.Type.GZip);
-			data = Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(data));
-			state.NEWindow.AddNewNEFile(new NEFile(displayName: "Word List", bytes: data, modified: false));
-
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
-
 		static void Configure_FileMacro_Open_Open(string initialDirectory = null)
 		{
 			if ((initialDirectory == null) && (state.NEWindow.Focused != null))

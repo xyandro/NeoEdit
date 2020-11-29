@@ -223,6 +223,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_New_FromClipboard_All: Execute_File_New_FromClipboard_All(); break;
 				case NECommand.File_New_FromClipboard_Files: Execute_File_New_FromClipboard_Files(); break;
 				case NECommand.File_New_FromClipboard_Selections: Execute_File_New_FromClipboard_Selections(); break;
+				case NECommand.File_New_WordList: Execute_File_New_WordList(); break;
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
 		}
