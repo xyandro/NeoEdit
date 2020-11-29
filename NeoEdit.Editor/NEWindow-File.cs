@@ -88,5 +88,20 @@ namespace NeoEdit.Editor
 			var index = 0;
 			AddFilesFromStrings(state.NEWindow, preExecution.Selections.Values.SelectMany(tuple => tuple.selections.Select(str => (new List<string> { str } as IReadOnlyList<string>, $"Selection {++index}", tuple.contentType))).ToList());
 		}
+
+		void Execute_File_New_FromClipboard_All()
+		{
+			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (NEClipboard.Current.Strings, "Clipboards", ParserType.None) });
+		}
+
+		void Execute_File_New_FromClipboard_Files()
+		{
+			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Select((clipboard, index) => (clipboard, $"Clipboard {index + 1}", ParserType.None)).ToList());
+		}
+
+		void Execute_File_New_FromClipboard_Selections()
+		{
+			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
+		}
 	}
 }

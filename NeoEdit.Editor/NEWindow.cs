@@ -220,6 +220,9 @@ namespace NeoEdit.Editor
 				case NECommand.File_Select_Inactive: Execute_File_Select_Inactive(); break;
 				case NECommand.File_Select_Choose: Execute_File_Select_Choose(); break;
 				case NECommand.File_New_New: Execute_File_New_New(); break;
+				case NECommand.File_New_FromClipboard_All: Execute_File_New_FromClipboard_All(); break;
+				case NECommand.File_New_FromClipboard_Files: Execute_File_New_FromClipboard_Files(); break;
+				case NECommand.File_New_FromClipboard_Selections: Execute_File_New_FromClipboard_Selections(); break;
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
 		}

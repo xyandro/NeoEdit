@@ -64,24 +64,6 @@ namespace NeoEdit.Editor
 			(state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections).Selections[this] = (GetSelectionStrings(), GetSelectionsName(), ContentType);
 		}
 
-		static void PreExecute_File_New_FromClipboard_All()
-		{
-			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (NEClipboard.Current.Strings, "Clipboards", ParserType.None) });
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
-
-		static void PreExecute_File_New_FromClipboard_Files()
-		{
-			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Select((clipboard, index) => (clipboard, $"Clipboard {index + 1}", ParserType.None)).ToList());
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
-
-		static void PreExecute_File_New_FromClipboard_Selections()
-		{
-			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
-
 		static void PreExecute_File_New_WordList()
 		{
 			byte[] data;
