@@ -206,7 +206,7 @@ namespace NeoEdit.UI
 			Clipboarder.Initialize();
 
 			INEWindowUIStatic.CreateNEWindowUI = neWindow => Dispatcher.Invoke(() => new NEWindowUI(neWindow, this));
-			INEWindowUIStatic.RunCryptorKeyDialog = (type, encrypt) => File_Advanced_Encrypt_Dialog.Run(null, type, encrypt).Key;
+			INEWindowUIStatic.RunCryptorKeyDialog = (type, encrypt) => Dispatcher.Invoke(() => File_Advanced_Encrypt_Dialog.Run(null, type, encrypt).Key);
 
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
 

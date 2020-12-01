@@ -58,9 +58,6 @@ namespace NeoEdit.Editor
 			while (true)
 			{
 				var key = INEWindowUIStatic.RunCryptorKeyDialog(Cryptor.Type.AES, false);
-				if (string.IsNullOrEmpty(key))
-					throw new Exception("Failed to decrypt file");
-
 				var output = Decrypt(bytes, key);
 				if (output == null)
 					continue;
@@ -68,7 +65,7 @@ namespace NeoEdit.Editor
 				keyVault.Add(key);
 				bytes = output;
 				AESKey = key;
-				return;
+				break;
 			}
 		}
 
