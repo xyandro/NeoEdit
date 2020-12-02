@@ -14,7 +14,7 @@ namespace NeoEdit.Common
 	public static class INEWindowUIStatic
 	{
 		public static Func<INEWindow, INEWindowUI> CreateNEWindowUI { get; set; }
-		public static Func<Cryptor.Type, bool, string> RunCryptorKeyDialog { get; set; }
+		public static Func<Cryptor.Type, string> GetDecryptKey { get; set; }
 	}
 
 	public interface INEWindowUI

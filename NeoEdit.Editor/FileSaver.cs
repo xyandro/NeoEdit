@@ -12,14 +12,12 @@ namespace NeoEdit.Editor
 		static readonly byte[] EncryptedHeader = Encoding.UTF8.GetBytes("\u0000NEAES\u0000");
 		static readonly byte[] EncryptedValidate = Encoding.UTF8.GetBytes("\u0000VALID\u0000");
 		static readonly byte[] CompressedHeader = Encoding.UTF8.GetBytes("\u0000NEGZIP\u0000");
-		static readonly HashSet<string> keyVault = new HashSet<string>();
 
 		public static byte[] Encrypt(byte[] data, string AESKey)
 		{
 			if (string.IsNullOrEmpty(AESKey))
 				return data;
 
-			keyVault.Add(AESKey);
 			return EncryptedHeader.Concat(Cryptor.Encrypt(EncryptedValidate.Concat(data).ToArray(), Cryptor.Type.AES, AESKey)).ToArray();
 		}
 
@@ -42,27 +40,14 @@ namespace NeoEdit.Editor
 			if ((bytes.Length < EncryptedHeader.Length) || (!bytes.Equal(EncryptedHeader, EncryptedHeader.Length)))
 				return;
 
-			bytes = bytes.Skip(EncryptedHeader.Length).ToArray();
-
-			foreach (var key in keyVault)
-			{
-				var output = Decrypt(bytes, key);
-				if (output == null)
-					continue;
-
-				bytes = output;
-				AESKey = key;
-				return;
-			}
-
+			var toDecrypt = bytes.Skip(EncryptedHeader.Length).ToArray();
 			while (true)
 			{
-				var key = INEWindowUIStatic.RunCryptorKeyDialog(Cryptor.Type.AES, false);
-				var output = Decrypt(bytes, key);
+				var key = INEWindowUIStatic.GetDecryptKey(Cryptor.Type.AES);
+				var output = Decrypt(toDecrypt, key);
 				if (output == null)
 					continue;
 
-				keyVault.Add(key);
 				bytes = output;
 				AESKey = key;
 				break;
