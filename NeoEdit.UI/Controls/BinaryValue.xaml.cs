@@ -108,7 +108,7 @@ namespace NeoEdit.UI.Controls
 			if (!Coder.IsStr(CodePage))
 				size = Coder.BytesRequired(CodePage);
 
-			UIHelper.FindParent<NEWindowUI>(this).HandleCommand(new ExecuteState(NECommand.Internal_SetBinaryValue) { Configuration = new Configuration_Internal_SetBinaryValue { Value = newBytes, OldSize = size } });
+			UIHelper.FindParent<NEWindowUI>(this).HandleCommand(new ExecuteState(NECommand.Internal_SetBinaryValue, Keyboard.Modifiers) { Configuration = new Configuration_Internal_SetBinaryValue { Value = newBytes, OldSize = size } });
 		}
 	}
 }

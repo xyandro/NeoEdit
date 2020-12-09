@@ -166,7 +166,7 @@ namespace NeoEdit.UI
 			if (Dispatcher?.CheckAccess() == false)
 				Dispatcher.Invoke(() => HandleCommandLine(commandLineParams));
 			else
-				HandleCommand(new ExecuteState(NECommand.Internal_CommandLine) { Configuration = new Configuration_Internal_CommandLine { CommandLineParams = commandLineParams } });
+				HandleCommand(new ExecuteState(NECommand.Internal_CommandLine, Keyboard.Modifiers) { Configuration = new Configuration_Internal_CommandLine { CommandLineParams = commandLineParams } });
 		}
 
 		public static void HandleCommand(ExecuteState state) => HandleCommand(null, state);

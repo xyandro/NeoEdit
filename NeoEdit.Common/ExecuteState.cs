@@ -21,11 +21,10 @@ namespace NeoEdit.Common
 
 		public bool MacroInclude => macroInclude[Command];
 
-		public ExecuteState(NECommand command)
+		public ExecuteState(NECommand command, ModifierKeys modifiers)
 		{
 			Command = command;
 
-			var modifiers = Keyboard.Modifiers;
 			ShiftDown = modifiers.HasFlag(ModifierKeys.Shift);
 			ControlDown = modifiers.HasFlag(ModifierKeys.Control);
 			AltDown = modifiers.HasFlag(ModifierKeys.Alt);
