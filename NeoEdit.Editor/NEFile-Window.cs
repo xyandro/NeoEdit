@@ -152,7 +152,7 @@ namespace NeoEdit.Editor
 
 		static void PreExecute_Window_Font_ShowSpecial()
 		{
-			Font.ShowSpecialChars = state.MultiStatus != true;
+			Settings.ShowSpecialChars = state.MultiStatus != true;
 			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 

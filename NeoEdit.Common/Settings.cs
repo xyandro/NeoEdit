@@ -19,14 +19,13 @@ namespace NeoEdit.Common
 					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
 					try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
 					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
-					try { Font.FontSize = int.Parse(xml.Element(nameof(Font.FontSize)).Value); } catch { }
+					try { fontSize = double.Parse(xml.Element(nameof(FontSize)).Value); } catch { }
+					try { showSpecialChars = bool.Parse(xml.Element(nameof(ShowSpecialChars)).Value); } catch { }
 					try { windowPosition = xml.Element(nameof(WindowPosition)).Value; } catch { }
 					try { wcfURLs = new List<string>(xml.Element(nameof(WCFURLs)).Value.Split('\n')); } catch { }
 				}
 				catch { }
 			}
-
-			Font.FontSizeChanged += (s, e) => SaveSettings();
 		}
 
 		static void SaveSettings()
@@ -38,7 +37,8 @@ namespace NeoEdit.Common
 				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
 				xml.Add(new XElement(nameof(YouTubeDLPath), youTubeDLPath));
 				xml.Add(new XElement(nameof(FFmpegPath), ffmpegPath));
-				xml.Add(new XElement(nameof(Font.FontSize), Font.FontSize));
+				xml.Add(new XElement(nameof(FontSize), fontSize));
+				xml.Add(new XElement(nameof(ShowSpecialChars), showSpecialChars));
 				xml.Add(new XElement(nameof(WindowPosition), windowPosition));
 				xml.Add(new XElement(nameof(WCFURLs), string.Join("\n", wcfURLs)));
 				xml.Save(settingsFile);
@@ -86,6 +86,28 @@ namespace NeoEdit.Common
 			set
 			{
 				ffmpegPath = value;
+				SaveSettings();
+			}
+		}
+
+		static double fontSize = 14;
+		public static double FontSize
+		{
+			get { return fontSize; }
+			set
+			{
+				fontSize = value;
+				SaveSettings();
+			}
+		}
+
+		static bool showSpecialChars = false;
+		public static bool ShowSpecialChars
+		{
+			get { return showSpecialChars; }
+			set
+			{
+				showSpecialChars = value;
 				SaveSettings();
 			}
 		}

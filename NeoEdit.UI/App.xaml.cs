@@ -204,6 +204,7 @@ namespace NeoEdit.UI
 
 			new NEMenu(); // The first time it creates a menu it's slow, do it while the user isn't waiting
 			Clipboarder.Initialize();
+			Font.Reset();
 
 			INEWindowUIStatic.CreateNEWindowUI = neWindow => Dispatcher.Invoke(() => new NEWindowUI(neWindow, this));
 			INEWindowUIStatic.GetDecryptKey = type => Dispatcher.Invoke(() => File_Advanced_Encrypt_Dialog.Run(null, type, false).Key);

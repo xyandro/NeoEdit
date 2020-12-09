@@ -4,40 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
+using NeoEdit.Common;
 
-namespace NeoEdit.Common
+namespace NeoEdit.UI
 {
 	public static class Font
 	{
-		public static event EventHandler FontSizeChanged;
 		public static FontFamily FontFamily { get; }
 		public static Typeface Typeface { get; }
-		static double fontSize;
 		public static double CharWidth { get; private set; }
-		public static double FontSize
-		{
-			get { return fontSize; }
-			set
-			{
-				fontSize = value;
-				var formattedText = GetText("0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()");
-				CharWidth = formattedText.Width / "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()".Length;
-				FontSizeChanged?.Invoke(null, new EventArgs());
-			}
-		}
-
-		static bool showSpecialChars = false;
-		public static bool ShowSpecialChars
-		{
-			get { return showSpecialChars; }
-			set
-			{
-				showSpecialChars = value;
-				ShowSpecialCharsChanged?.Invoke(null, new EventArgs());
-			}
-		}
-
-		public static event EventHandler ShowSpecialCharsChanged;
+		public static double FontSize { get; private set; }
 
 		static readonly bool[] supported;
 
@@ -45,7 +21,6 @@ namespace NeoEdit.Common
 		{
 			FontFamily = new FontFamily(new Uri("pack://application:,,,/NeoEdit.UI;component/"), "./Resources/#DejaVu Sans Mono");
 			Typeface = FontFamily.GetTypefaces().First();
-			FontSize = 14;
 
 			Typeface.TryGetGlyphTypeface(out var glyphTypeface);
 			var chars = glyphTypeface.CharacterToGlyphMap;
@@ -55,6 +30,13 @@ namespace NeoEdit.Common
 				var fs = new FormattedText(Encoding.UTF32.GetString(BitConverter.GetBytes(pair.Key)), CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, Typeface, 14, Brushes.White, 1);
 				supported[pair.Key] = (pair.Key == ' ') || (fs.Width == 8.43);
 			}
+		}
+
+		public static void Reset()
+		{
+			FontSize = Settings.FontSize;
+			var formattedText = GetText("0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()");
+			CharWidth = formattedText.Width / "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()".Length;
 		}
 
 		public static string RemoveSpecialChars(string str)
@@ -85,7 +67,7 @@ namespace NeoEdit.Common
 
 		public static FormattedText GetText(string str)
 		{
-			if (!ShowSpecialChars)
+			if (!Settings.ShowSpecialChars)
 				str = RemoveSpecialChars(str);
 			return new FormattedText(str, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, Typeface, FontSize, Brushes.White, 1);
 		}

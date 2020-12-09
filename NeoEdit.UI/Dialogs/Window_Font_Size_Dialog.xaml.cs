@@ -19,7 +19,8 @@ namespace NeoEdit.UI.Dialogs
 
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			Font.FontSize = TextFontSize;
+			Settings.FontSize = TextFontSize;
+			Font.Reset();
 			DialogResult = true;
 		}
 

@@ -48,7 +48,6 @@ namespace NeoEdit.UI
 				UIHelper.AuditMenu(menu);
 
 			//NEClipboard.ClipboardChanged += () => statusBar.InvalidateVisual();
-			Font.FontSizeChanged += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_Redraw));
 
 			scrollBar.MouseWheel += (s, e) => scrollBar.Value -= e.Delta * scrollBar.ViewportSize / 1200;
 			Closing += OnClosing;

@@ -174,7 +174,7 @@ namespace NeoEdit.Editor
 				[nameof(NECommand.Diff_IgnoreLineEndings)] = GetMultiStatus(neFile => neFile.DiffIgnoreLineEndings),
 				[nameof(NECommand.Macro_Visualize)] = NEGlobal.MacroVisualize,
 				[nameof(NECommand.Window_ActiveFirst)] = ActiveFirst,
-				[nameof(NECommand.Window_Font_ShowSpecial)] = Font.ShowSpecialChars,
+				[nameof(NECommand.Window_Font_ShowSpecial)] = Settings.ShowSpecialChars,
 				[nameof(NECommand.Window_ViewBinary)] = GetMultiStatus(neFile => neFile.ViewBinary),
 			};
 		}

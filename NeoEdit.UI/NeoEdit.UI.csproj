@@ -853,6 +853,7 @@
     <Compile Include="Dialogs\Window_Font_Size_Dialog.xaml.cs">
       <DependentUpon>Window_Font_Size_Dialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Font.cs" />
     <Compile Include="Highlighting\Highlight.cs" />
     <Compile Include="Highlighting\HighlightColumns.cs" />
     <Compile Include="Highlighting\HighlightCPlusPlus.cs" />
