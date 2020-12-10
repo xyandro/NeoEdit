@@ -12,7 +12,6 @@ using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.TaskRunning;
-using NeoEdit.WCF;
 
 namespace NeoEdit.Editor
 {

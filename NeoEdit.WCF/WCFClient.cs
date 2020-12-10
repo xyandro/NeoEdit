@@ -11,7 +11,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
@@ -28,86 +27,6 @@ namespace NeoEdit.WCF
 {
 	public class WCFClient : MarshalByRefObject
 	{
-		class WCFConfig
-		{
-			public List<WCFOperation> Operations { get; } = new List<WCFOperation>();
-			public string Config { get; set; }
-		}
-
-		class WCFOperation
-		{
-			public string ServiceURL { get; set; }
-			public string Namespace { get; set; }
-			public string Contract { get; set; }
-			public string Operation { get; set; }
-			public Dictionary<string, object> Parameters { get; set; } = new Dictionary<string, object>();
-			public object Result { get; set; }
-		}
-
-		static readonly List<AppDomain> appDomains = new List<AppDomain>();
-		static readonly Dictionary<string, WCFClient> wcfClients = new Dictionary<string, WCFClient>();
-
-		static bool hasWrittenWCFClientDLL = false;
-		static WCFClient GetWCFClient(string serviceURL)
-		{
-			if (!wcfClients.ContainsKey(serviceURL))
-			{
-				var wcfClientAssemblyName = typeof(WCFClient).Assembly.Location;
-				if (string.IsNullOrWhiteSpace(wcfClientAssemblyName))
-				{
-					var wcfAssembly = typeof(WCFClient).Assembly;
-					wcfClientAssemblyName = Path.Combine(Path.GetTempPath(), $"{wcfAssembly.GetName().Name}.dll");
-					if (!hasWrittenWCFClientDLL)
-					{
-						var jsonAssembly = typeof(JsonConvert).Assembly;
-						var newtonsoftAssemblyName = Path.Combine(Path.GetTempPath(), $"{jsonAssembly.GetName().Name}.dll");
-						var extractor = AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetType("NeoEdit.Loader.Extractor")).Where(x => x != null).First();
-						var getAssembly = extractor.GetMethod("GetAssembly", BindingFlags.Static | BindingFlags.Public);
-						File.WriteAllBytes(wcfClientAssemblyName, getAssembly.Invoke(null, new object[] { wcfAssembly.FullName }) as byte[]);
-						File.WriteAllBytes(newtonsoftAssemblyName, getAssembly.Invoke(null, new object[] { jsonAssembly.FullName }) as byte[]);
-						hasWrittenWCFClientDLL = true;
-					}
-				}
-
-				var appDomain = AppDomain.CreateDomain(serviceURL);
-				try
-				{
-					wcfClients[serviceURL] = appDomain.CreateInstanceFromAndUnwrap(wcfClientAssemblyName, typeof(WCFClient).FullName) as WCFClient;
-					wcfClients[serviceURL].Load(serviceURL);
-				}
-				catch
-				{
-					wcfClients.Remove(serviceURL);
-					AppDomain.Unload(appDomain);
-					throw;
-				}
-				appDomains.Add(appDomain);
-			}
-
-			return wcfClients[serviceURL];
-		}
-
-		public static void StartInterceptCalls(string serviceURL, string interceptURL) => GetWCFClient(serviceURL).DoStartInterceptCalls(interceptURL);
-
-		public static List<string> EndInterceptCalls(string serviceURL) => GetWCFClient(serviceURL).DoEndInterceptCalls();
-
-		public static void ResetClients()
-		{
-			foreach (var appDomain in appDomains)
-				AppDomain.Unload(appDomain);
-			appDomains.Clear();
-			wcfClients.Clear();
-		}
-
-		public static string GetWCFConfig(string serviceURL) => GetWCFClient(serviceURL).DoGetWCFConfig();
-
-		public static string ExecuteWCF(string str)
-		{
-			str = Regex.Replace(str, @"/\*.*?\*/", "", RegexOptions.Singleline | RegexOptions.Multiline);
-			var client = GetWCFClient(JsonConvert.DeserializeObject<WCFOperation>(str).ServiceURL);
-			return client.DoExecuteWCF(str);
-		}
-
 		public string ServiceURL { get; private set; }
 
 		Collection<Binding> Bindings { get; set; }
@@ -119,16 +38,13 @@ namespace NeoEdit.WCF
 		readonly CodeDomProvider codeDomProvider = new CSharpCodeProvider();
 		Assembly compiledAssembly;
 
-		void Load(string serviceUrl)
+		public void Load(string serviceUrl)
 		{
 			ServiceURL = serviceUrl;
 			GetMetadata();
 			GenerateConfig();
 			CompileProxyAssembly();
 		}
-
-		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.Infrastructure)]
-		public override object InitializeLifetimeService() => null;
 
 		public object CreateInstance(string contractNamespace, string contractName)
 		{
@@ -584,9 +500,7 @@ namespace NeoEdit.WCFInterceptor
 			return null;
 		}
 
-		void DoResetClients() => wcfClients.Clear();
-
-		string DoGetWCFConfig()
+		public string DoGetWCFConfig()
 		{
 			try
 			{
@@ -607,7 +521,7 @@ namespace NeoEdit.WCFInterceptor
 			catch (Exception ex) { throw AggregateException(ex); }
 		}
 
-		string DoExecuteWCF(string str)
+		public string DoExecuteWCF(string str)
 		{
 			try
 			{
@@ -812,7 +726,7 @@ namespace NeoEdit.WCFInterceptor
 		}
 
 		dynamic interceptor;
-		void DoStartInterceptCalls(string interceptURL)
+		public void DoStartInterceptCalls(string interceptURL)
 		{
 			try
 			{
@@ -822,7 +736,7 @@ namespace NeoEdit.WCFInterceptor
 			catch (Exception ex) { throw AggregateException(ex); }
 		}
 
-		List<string> DoEndInterceptCalls()
+		public List<string> DoEndInterceptCalls()
 		{
 			try
 			{

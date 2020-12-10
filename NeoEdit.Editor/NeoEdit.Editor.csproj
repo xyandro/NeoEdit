@@ -81,6 +81,9 @@
     <Compile Include="..\NeoEdit.Dependencies\Properties\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\NeoEdit.WCF\WCFMessage.cs">
+      <Link>WCFMessage.cs</Link>
+    </Compile>
     <None Include="app.config" />
     <Compile Include="CacheValue.cs" />
     <Compile Include="Content\Balanced\BalancedVisitor.cs" />
@@ -267,6 +270,7 @@
     <Compile Include="Searchers\StringSearcher.cs" />
     <Compile Include="Searchers\StringsSearcher.cs" />
     <Compile Include="ShutdownData.cs" />
+    <Compile Include="WCFClient.cs" />
     <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>
   <ItemGroup>
@@ -277,10 +281,6 @@
     <ProjectReference Include="..\NeoEdit.TaskRunning\NeoEdit.TaskRunning.csproj">
       <Project>{e1437a47-c993-4361-90ea-2f9070c472cf}</Project>
       <Name>NeoEdit.TaskRunning</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NeoEdit.WCF\NeoEdit.WCF.csproj">
-      <Project>{3a49c899-545a-4849-b6d0-2686d1a32983}</Project>
-      <Name>NeoEdit.WCF</Name>
     </ProjectReference>
     <Reference Include="Antlr4.Runtime.Standard, Version=4.8.0.0, Culture=neutral, PublicKeyToken=e78b2c5abd1fcb3f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr4.Runtime.Standard.4.8.0\lib\net35\Antlr4.Runtime.Standard.dll</HintPath>
