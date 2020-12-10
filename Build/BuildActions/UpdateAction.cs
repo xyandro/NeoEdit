@@ -6,7 +6,7 @@ namespace Build.BuildActions
 	{
 		public override string Name => "Update";
 
-		public override void Run(WriteTextDelegate writeText, string configuration, List<string> platforms)
+		public override void Run(WriteTextDelegate writeText, string configuration)
 		{
 			const string remoteName = "origin";
 			const string localBranch = "master";

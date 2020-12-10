@@ -16,9 +16,6 @@
 			<Label DockPanel.Dock="Top" Content="_Configurations:" Target="{Binding ElementName=configurations}"/>
 			<ListBox DockPanel.Dock="Top" Name="configurations" ItemsSource="{Binding Configurations, ElementName=self}"/>
 
-			<Label DockPanel.Dock="Top" Content="_Platforms:" Target="{Binding ElementName=platforms}"/>
-			<ListBox DockPanel.Dock="Top" Name="platforms" ItemsSource="{Binding Platforms, ElementName=self}" SelectionMode="Extended"/>
-
 			<Label DockPanel.Dock="Top" Content="_Actions:" Target="{Binding ElementName=actions}"/>
 			<ListBox DockPanel.Dock="Top" Name="actions" ItemsSource="{Binding Actions,ElementName=self}" SelectionMode="Extended"/>
 

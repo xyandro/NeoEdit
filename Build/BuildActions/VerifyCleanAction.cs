@@ -7,7 +7,7 @@ namespace Build.BuildActions
 	{
 		public override string Name => "Verify Clean";
 
-		public override void Run(WriteTextDelegate writeText, string configuration, List<string> platforms)
+		public override void Run(WriteTextDelegate writeText, string configuration)
 		{
 			var dirty = Git.GetDirtyPaths();
 			if (string.IsNullOrEmpty(dirty))

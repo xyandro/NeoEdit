@@ -12,12 +12,10 @@ namespace Build
 	partial class BuildWindow
 	{
 		static DependencyProperty ConfigurationsProperty = DependencyProperty.Register(nameof(Configurations), typeof(List<string>), typeof(BuildWindow));
-		static DependencyProperty PlatformsProperty = DependencyProperty.Register(nameof(Platforms), typeof(List<string>), typeof(BuildWindow));
 		static DependencyProperty ActionsProperty = DependencyProperty.Register(nameof(Actions), typeof(List<BaseAction>), typeof(BuildWindow));
 		static DependencyProperty ProgressTextProperty = DependencyProperty.Register(nameof(ProgressText), typeof(string), typeof(BuildWindow));
 
 		List<string> Configurations { get { return (List<string>)GetValue(ConfigurationsProperty); } set { SetValue(ConfigurationsProperty, value); } }
-		List<string> Platforms { get { return (List<string>)GetValue(PlatformsProperty); } set { SetValue(PlatformsProperty, value); } }
 		List<BaseAction> Actions { get { return (List<BaseAction>)GetValue(ActionsProperty); } set { SetValue(ActionsProperty, value); } }
 		string ProgressText { get { return (string)GetValue(ProgressTextProperty); } set { SetValue(ProgressTextProperty, value); } }
 
@@ -26,7 +24,6 @@ namespace Build
 			InitializeComponent();
 
 			Configurations = new List<string> { "Debug", "Release" };
-			Platforms = new List<string> { "32", "64" };
 			Actions = new List<BaseAction>
 			{
 				new VerifyCleanAction(),
@@ -46,11 +43,10 @@ namespace Build
 		void OnReset(object sender, RoutedEventArgs e)
 		{
 			configurations.SelectedItem = Configurations[1];
-			platforms.SelectAll();
 			actions.SelectAll();
 		}
 
-		void OnDeleteIgnored(object sender, RoutedEventArgs e) => Run(writeText => new DeleteIgnoredAction().Run(writeText, null, null));
+		void OnDeleteIgnored(object sender, RoutedEventArgs e) => Run(writeText => new DeleteIgnoredAction().Run(writeText, null));
 
 		void EnableButtons(bool enabled)
 		{
@@ -62,8 +58,6 @@ namespace Build
 		{
 			// Preserve ordering
 			var useConfiguration = (string)configurations.SelectedItem;
-			var usePlatformsHash = new HashSet<string>(platforms.SelectedItems.Cast<string>());
-			var usePlatforms = Platforms.Intersect(usePlatformsHash).ToList();
 			var useActionsHash = new HashSet<BaseAction>(actions.SelectedItems.Cast<BaseAction>());
 			var useActions = Actions.Intersect(useActionsHash).ToList();
 
@@ -75,8 +69,6 @@ namespace Build
 			{
 				if (useConfiguration == null)
 					throw new Exception("Please choose a configuration.");
-				if (!usePlatforms.Any())
-					throw new Exception("Please choose platforms.");
 				if (!useActions.Any())
 					throw new Exception("Nothing to do!");
 
@@ -84,7 +76,7 @@ namespace Build
 				{
 					writeText($"Starting {action}...");
 					var stopWatch = Stopwatch.StartNew();
-					action.Run(writeText, useConfiguration, usePlatforms);
+					action.Run(writeText, useConfiguration);
 					stopWatch.Stop();
 					writeText($"Finished {action} ({stopWatch.Elapsed.TotalSeconds} seconds).");
 					writeText();

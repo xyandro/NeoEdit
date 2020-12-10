@@ -7,14 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Build", "Build.csproj", "{A
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|32 = Debug|32
-		Release|32 = Release|32
+		Debug|64 = Debug|64
+		Release|64 = Release|64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A6DCBF9A-BF54-4CE9-B0CD-91AF70D6DA34}.Debug|32.ActiveCfg = Debug|x86
-		{A6DCBF9A-BF54-4CE9-B0CD-91AF70D6DA34}.Debug|32.Build.0 = Debug|x86
-		{A6DCBF9A-BF54-4CE9-B0CD-91AF70D6DA34}.Release|32.ActiveCfg = Release|x86
-		{A6DCBF9A-BF54-4CE9-B0CD-91AF70D6DA34}.Release|32.Build.0 = Release|x86
+		{A6DCBF9A-BF54-4CE9-B0CD-91AF70D6DA34}.Debug|64.ActiveCfg = Debug|x64
+		{A6DCBF9A-BF54-4CE9-B0CD-91AF70D6DA34}.Debug|64.Build.0 = Debug|x64
+		{A6DCBF9A-BF54-4CE9-B0CD-91AF70D6DA34}.Release|64.ActiveCfg = Release|x64
+		{A6DCBF9A-BF54-4CE9-B0CD-91AF70D6DA34}.Release|64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

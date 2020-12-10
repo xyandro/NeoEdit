@@ -13,7 +13,7 @@ namespace Build.BuildActions
 
 		public virtual bool Prepare() => true;
 
-		public abstract void Run(WriteTextDelegate writeText, string configuration, List<string> platforms);
+		public abstract void Run(WriteTextDelegate writeText, string configuration);
 
 		protected void RunCommand(WriteTextDelegate writeText, string fileName, string arguments)
 		{

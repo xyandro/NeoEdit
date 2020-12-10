@@ -11,7 +11,7 @@ namespace Build.BuildActions
 
 		public override bool Prepare() => App.EnsureGitHubTokenExists();
 
-		public override void Run(WriteTextDelegate writeText, string configuration, List<string> platforms)
+		public override void Run(WriteTextDelegate writeText, string configuration)
 		{
 			var exeName = $@"{App.Location}\Release\NeoEdit.exe";
 			if (!File.Exists(exeName))

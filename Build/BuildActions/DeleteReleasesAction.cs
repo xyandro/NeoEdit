@@ -8,7 +8,7 @@ namespace Build.BuildActions
 
 		public override bool Prepare() => App.EnsureGitHubTokenExists();
 
-		public override void Run(WriteTextDelegate writeText, string configuration, List<string> platforms)
+		public override void Run(WriteTextDelegate writeText, string configuration)
 		{
 			using (var git = new GitHub())
 			{

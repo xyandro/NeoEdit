@@ -7,7 +7,7 @@ namespace Build.BuildActions
 	{
 		public override string Name => "Clean";
 
-		public override void Run(WriteTextDelegate writeText, string configuration, List<string> platforms)
+		public override void Run(WriteTextDelegate writeText, string configuration)
 		{
 			var releases = $@"{App.Location}\Release";
 			foreach (var path in Git.GetIgoredPaths())

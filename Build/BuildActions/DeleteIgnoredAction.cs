@@ -7,7 +7,7 @@ namespace Build.BuildActions
 	{
 		public override string Name => "Delete Ignored";
 
-		public override void Run(WriteTextDelegate writeText, string configuration, List<string> platforms)
+		public override void Run(WriteTextDelegate writeText, string configuration)
 		{
 			writeText("Deleting ignored files...");
 			foreach (var path in Git.GetIgoredPaths())
