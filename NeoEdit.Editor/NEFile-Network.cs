@@ -241,11 +241,11 @@ namespace NeoEdit.Editor
 
 			var startSel = Selections[0].Start;
 			ReplaceSelections(string.Join("", values));
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var value in values)
 			{
 				var endSel = startSel + value.Length;
-				sels.Add(new Range(startSel, endSel));
+				sels.Add(new NERange(startSel, endSel));
 				startSel = endSel;
 			}
 			Selections = sels;

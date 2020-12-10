@@ -116,15 +116,15 @@ namespace NeoEdit.Editor
 				return result;
 			}
 
-			public Range GetRange(NEFile te, Range range, bool selecting)
+			public NERange GetRange(NEFile te, NERange range, bool selecting)
 			{
 				var start = Start.GetPosition(te, range.Cursor);
 				var end = End.GetPosition(te, range.Cursor, Start);
 				if (end.HasValue)
-					return new Range(start.Value, end.Value);
+					return new NERange(start.Value, end.Value);
 				if (selecting)
-					return new Range(range.Anchor, start.Value);
-				return Range.FromIndex(start.Value, 0);
+					return new NERange(range.Anchor, start.Value);
+				return NERange.FromIndex(start.Value, 0);
 			}
 		}
 
@@ -207,7 +207,7 @@ namespace NeoEdit.Editor
 				var positions = list;
 
 				if ((sels.Count == 0) && ((gotoType == GotoType.Line) || (gotoType == GotoType.Position)))
-					sels.Add(new Range());
+					sels.Add(new NERange());
 				if (sels.Count == 1)
 					sels = Enumerable.Repeat(sels[0], positions.Count).ToList();
 				if (positions.Count == 1)

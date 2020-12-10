@@ -120,8 +120,8 @@ namespace NeoEdit.UI
 			public int EndLine { get; set; }
 			public int StartColumn { get; set; }
 			public int EndColumn { get; set; }
-			Dictionary<int, Range> lineRanges;
-			public Dictionary<int, Range> LineRanges
+			Dictionary<int, NERange> lineRanges;
+			public Dictionary<int, NERange> LineRanges
 			{
 				get => lineRanges; set
 				{
@@ -147,7 +147,7 @@ namespace NeoEdit.UI
 			drawBounds.EndColumn = Math.Min(NEFile.ViewMaxColumn + 1, drawBounds.StartColumn + (int)Math.Ceiling(canvas.ActualWidth / Font.CharWidth));
 
 			var lines = Enumerable.Range(drawBounds.StartLine, drawBounds.EndLine - drawBounds.StartLine);
-			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new Range(NEFile.ViewGetPosition(line, NEFile.ViewGetLineLength(line) + 1), NEFile.ViewGetPosition(line, 0)));
+			drawBounds.LineRanges = lines.ToDictionary(line => line, line => new NERange(NEFile.ViewGetPosition(line, NEFile.ViewGetLineLength(line) + 1), NEFile.ViewGetPosition(line, 0)));
 			drawBounds.StartIndexes = lines.ToDictionary(line => line, line => NEFile.ViewGetIndexFromColumn(line, drawBounds.StartColumn, true));
 			drawBounds.EndIndexes = lines.ToDictionary(line => line, line => NEFile.ViewGetIndexFromColumn(line, drawBounds.EndColumn, true));
 			return drawBounds;
@@ -184,7 +184,7 @@ namespace NeoEdit.UI
 			}
 		}
 
-		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, Range visibleCursor, IReadOnlyList<Range> ranges, Brush brush, Pen pen, double leftSpacing, double rightSpacing)
+		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, NERange visibleCursor, IReadOnlyList<NERange> ranges, Brush brush, Pen pen, double leftSpacing, double rightSpacing)
 		{
 			var radius = Math.Min(4, Font.FontSize / 2 - 1);
 
@@ -200,7 +200,7 @@ namespace NeoEdit.UI
 			}
 		}
 
-		List<Point> GetIndicatorPoints(Range range, DrawBounds drawBounds, double leftSpacing, double rightSpacing)
+		List<Point> GetIndicatorPoints(NERange range, DrawBounds drawBounds, double leftSpacing, double rightSpacing)
 		{
 			var startLine = NEFile.ViewGetPositionLine(range.Start);
 			var startColumn = NEFile.ViewGetColumnFromIndex(startLine, NEFile.ViewGetPositionIndex(range.Start, startLine));

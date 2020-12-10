@@ -112,9 +112,9 @@ namespace NeoEdit.Editor
 		{
 			Data = new NEFileData(this);
 
-			Selections = new List<Range>();
+			Selections = new List<NERange>();
 			for (var region = 1; region <= 9; ++region)
-				SetRegions(region, new List<Range>());
+				SetRegions(region, new List<NERange>());
 			ViewBinaryCodePages = new HashSet<Coder.CodePage>(Coder.DefaultCodePages);
 			StrictParsing = true;
 
@@ -131,17 +131,17 @@ namespace NeoEdit.Editor
 		public static NEFile CreateSummaryFile(string displayName, List<(string str, int count)> summary)
 		{
 			var sb = new StringBuilder();
-			var countRanges = new List<Range>();
-			var stringRanges = new List<Range>();
+			var countRanges = new List<NERange>();
+			var stringRanges = new List<NERange>();
 			foreach (var tuple in summary)
 			{
 				var countStr = tuple.count.ToString();
-				countRanges.Add(Range.FromIndex(sb.Length, countStr.Length));
+				countRanges.Add(NERange.FromIndex(sb.Length, countStr.Length));
 				sb.Append(countStr);
 
 				sb.Append(" ");
 
-				stringRanges.Add(Range.FromIndex(sb.Length, tuple.str.Length));
+				stringRanges.Add(NERange.FromIndex(sb.Length, tuple.str.Length));
 				sb.Append(tuple.str);
 
 				if ((!tuple.str.EndsWith("\r")) && (!tuple.str.EndsWith("\n")))
@@ -166,19 +166,19 @@ namespace NeoEdit.Editor
 			var ending = addNewLines ?? strs.Any(str => !str.EndsWith(Text.DefaultEnding)) ? Text.DefaultEnding : "";
 			if (ending.Length != 0)
 				strs = strs.Select(str => str + ending).ToList();
-			var ranges = new List<Range>();
+			var ranges = new List<NERange>();
 			if (strs.Count > 0)
 			{
 				ranges.Add(Selections[0]);
-				ranges.AddRange(Enumerable.Repeat(new Range(Selections[0].End), strs.Count - 1));
+				ranges.AddRange(Enumerable.Repeat(new NERange(Selections[0].End), strs.Count - 1));
 			}
 			var position = Selections.Single().Start;
 			Replace(ranges, strs);
 
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var str in strs)
 			{
-				sels.Add(Range.FromIndex(position, str.Length - ending.Length));
+				sels.Add(NERange.FromIndex(position, str.Length - ending.Length));
 				position += str.Length;
 			}
 			Selections = sels;
@@ -191,12 +191,12 @@ namespace NeoEdit.Editor
 			Replace(Selections, strs);
 
 			if (highlight)
-				Selections = Selections.AsTaskRunner().Select((range, index) => new Range(range.End - (strs == null ? 0 : strs[index].Length), range.End)).ToList();
+				Selections = Selections.AsTaskRunner().Select((range, index) => new NERange(range.End - (strs == null ? 0 : strs[index].Length), range.End)).ToList();
 			else
-				Selections = Selections.AsTaskRunner().Select(range => new Range(range.End)).ToList();
+				Selections = Selections.AsTaskRunner().Select(range => new NERange(range.End)).ToList();
 		}
 
-		void Replace(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs = null)
+		void Replace(IReadOnlyList<NERange> ranges, IReadOnlyList<string> strs = null)
 		{
 			if (strs == null)
 				strs = Enumerable.Repeat("", ranges.Count).ToList();
@@ -207,14 +207,14 @@ namespace NeoEdit.Editor
 			SetModifiedFlag();
 			CalculateDiff();
 
-			var translateMap = GetTranslateMap(ranges, strs, new List<IReadOnlyList<Range>> { Selections }.Concat(Enumerable.Range(1, 9).Select(region => GetRegions(region))).ToList());
+			var translateMap = GetTranslateMap(ranges, strs, new List<IReadOnlyList<NERange>> { Selections }.Concat(Enumerable.Range(1, 9).Select(region => GetRegions(region))).ToList());
 			Selections = Translate(Selections, translateMap);
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, Translate(GetRegions(region), translateMap));
 		}
 
 		#region Translate
-		static int[] GetTranslateNums(IReadOnlyList<IReadOnlyList<Range>> rangeLists)
+		static int[] GetTranslateNums(IReadOnlyList<IReadOnlyList<NERange>> rangeLists)
 		{
 			var nums = new int[rangeLists.Sum(rangeList => rangeList.Count * 2)];
 			var numsStart = 0;
@@ -247,7 +247,7 @@ namespace NeoEdit.Editor
 			return nums;
 		}
 
-		static Tuple<int[], int[]> GetTranslateMap(IReadOnlyList<Range> replaceRanges, IReadOnlyList<string> strs, IReadOnlyList<IReadOnlyList<Range>> rangeLists)
+		static Tuple<int[], int[]> GetTranslateMap(IReadOnlyList<NERange> replaceRanges, IReadOnlyList<string> strs, IReadOnlyList<IReadOnlyList<NERange>> rangeLists)
 		{
 			var translateNums = GetTranslateNums(rangeLists);
 			var translateResults = new int[translateNums.Length];
@@ -282,9 +282,9 @@ namespace NeoEdit.Editor
 			return Tuple.Create(translateNums, translateResults);
 		}
 
-		static IReadOnlyList<Range> Translate(IReadOnlyList<Range> ranges, Tuple<int[], int[]> translateMap)
+		static IReadOnlyList<NERange> Translate(IReadOnlyList<NERange> ranges, Tuple<int[], int[]> translateMap)
 		{
-			var result = Helpers.PartitionedParallelForEach<Range>(ranges.Count, Math.Max(65536, (ranges.Count + 31) / 32), (start, end, list) =>
+			var result = Helpers.PartitionedParallelForEach<NERange>(ranges.Count, Math.Max(65536, (ranges.Count + 31) / 32), (start, end, list) =>
 			{
 				var current = 0;
 				for (var ctr = start; ctr < end; ++ctr)
@@ -293,16 +293,16 @@ namespace NeoEdit.Editor
 					var startPos = current;
 					current = Array.IndexOf(translateMap.Item1, ranges[ctr].End, current);
 					if (ranges[ctr].Cursor < ranges[ctr].Anchor)
-						list.Add(new Range(translateMap.Item2[current], translateMap.Item2[startPos]));
+						list.Add(new NERange(translateMap.Item2[current], translateMap.Item2[startPos]));
 					else
-						list.Add(new Range(translateMap.Item2[startPos], translateMap.Item2[current]));
+						list.Add(new NERange(translateMap.Item2[startPos], translateMap.Item2[current]));
 				}
 			});
 			return result;
 		}
 		#endregion
 
-		static bool NeedsSort(IReadOnlyList<Range> items)
+		static bool NeedsSort(IReadOnlyList<NERange> items)
 		{
 			for (var ctr = 1; ctr < items.Count; ++ctr)
 				if ((items[ctr].Start < items[ctr - 1].Start) || ((items[ctr].Start == items[ctr - 1].Start) && (items[ctr].End < items[ctr - 1].End)))
@@ -311,7 +311,7 @@ namespace NeoEdit.Editor
 			return false;
 		}
 
-		static IReadOnlyList<Range> Sort(IReadOnlyList<Range> items)
+		static IReadOnlyList<NERange> Sort(IReadOnlyList<NERange> items)
 		{
 			if (!NeedsSort(items))
 				return items;
@@ -326,7 +326,7 @@ namespace NeoEdit.Editor
 			Done,
 		}
 
-		static IReadOnlyList<Range> DeOverlap(IReadOnlyList<Range> items)
+		static IReadOnlyList<NERange> DeOverlap(IReadOnlyList<NERange> items)
 		{
 			while (true)
 			{
@@ -340,7 +340,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static DeOverlapStep GetDeOverlapStep(IReadOnlyList<Range> items)
+		static DeOverlapStep GetDeOverlapStep(IReadOnlyList<NERange> items)
 		{
 			var result = DeOverlapStep.Done;
 			for (var ctr = 1; ctr < items.Count; ++ctr)
@@ -355,13 +355,13 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		static IReadOnlyList<Range> DoDeOverlap(IReadOnlyList<Range> items)
+		static IReadOnlyList<NERange> DoDeOverlap(IReadOnlyList<NERange> items)
 		{
-			var result = new List<Range>();
+			var result = new List<NERange>();
 
 			using (var enumerator = items.GetEnumerator())
 			{
-				var last = default(Range);
+				var last = default(NERange);
 
 				while (true)
 				{
@@ -372,9 +372,9 @@ namespace NeoEdit.Editor
 						if ((range == null) || (last.End <= range.Start))
 							result.Add(last);
 						else if (last.Cursor < last.Anchor)
-							result.Add(new Range(range.Start, last.Start));
+							result.Add(new NERange(range.Start, last.Start));
 						else
-							result.Add(new Range(last.Start, range.Start));
+							result.Add(new NERange(last.Start, range.Start));
 						last = null;
 					}
 
@@ -1428,10 +1428,10 @@ namespace NeoEdit.Editor
 
 		List<T> GetExpressionResults<T>(string expression, int? count = null) => state.GetExpression(expression).EvaluateList<T>(GetVariables(), count);
 
-		List<Range> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
+		List<NERange> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
 		{
 			var useRegions = GetRegions(useRegion);
-			var regions = new List<Range>();
+			var regions = new List<NERange>();
 			var currentRegion = 0;
 			var used = false;
 			foreach (var selection in Selections)
@@ -1590,7 +1590,7 @@ namespace NeoEdit.Editor
 			CodePage = codePage;
 
 			var data = Coder.BytesToString(bytes, codePage, true);
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { data });
+			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { data });
 
 			if (File.Exists(FileName))
 				fileLastWrite = new FileInfo(FileName).LastWriteTime;
@@ -1618,7 +1618,7 @@ namespace NeoEdit.Editor
 
 				pos = Text.GetPosition(useLine, useIndex);
 			}
-			Selections = new List<Range> { new Range(pos) };
+			Selections = new List<NERange> { new NERange(pos) };
 		}
 
 		string savedBitmapText;

@@ -28,7 +28,7 @@ namespace NeoEdit.Editor.Content.CSharp
 			return walker.document;
 		}
 
-		public static string Comment(NEText text, Range range)
+		public static string Comment(NEText text, NERange range)
 		{
 			var startLine = text.GetPositionLine(range.Start);
 			var startIndex = text.GetPositionIndex(range.Start, startLine);
@@ -49,7 +49,7 @@ namespace NeoEdit.Editor.Content.CSharp
 			return result;
 		}
 
-		public static string Uncomment(NEText text, Range range)
+		public static string Uncomment(NEText text, NERange range)
 		{
 			var startLine = text.GetPositionLine(range.Start);
 			var startIndex = text.GetPositionIndex(range.Start, startLine);

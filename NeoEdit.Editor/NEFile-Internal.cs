@@ -15,7 +15,7 @@ namespace NeoEdit.Editor
 	{
 		void BlockSelDown()
 		{
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var range in Selections)
 			{
 				var cursorLine = Text.GetPositionLine(range.Cursor);
@@ -28,7 +28,7 @@ namespace NeoEdit.Editor
 				cursorIndex = Math.Max(0, Math.Min(cursorIndex, Text.GetLineLength(cursorLine)));
 				highlightIndex = Math.Max(0, Math.Min(highlightIndex, Text.GetLineLength(highlightLine)));
 
-				sels.Add(new Range(Text.GetPosition(highlightLine, highlightIndex), Text.GetPosition(cursorLine, cursorIndex)));
+				sels.Add(new NERange(Text.GetPosition(highlightLine, highlightIndex), Text.GetPosition(cursorLine, cursorIndex)));
 			}
 			Selections = Selections.Concat(sels).ToList();
 		}
@@ -39,7 +39,7 @@ namespace NeoEdit.Editor
 			foreach (var range in Selections)
 				found.Add(range.ToString());
 
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var range in Selections)
 			{
 				var startLine = Text.GetPositionLine(range.Start);
@@ -52,7 +52,7 @@ namespace NeoEdit.Editor
 				startIndex = Math.Max(0, Math.Min(startIndex, Text.GetLineLength(startLine)));
 				endIndex = Math.Max(0, Math.Min(endIndex, Text.GetLineLength(endLine)));
 
-				var prevLineRange = new Range(Text.GetPosition(endLine, endIndex), Text.GetPosition(startLine, startIndex));
+				var prevLineRange = new NERange(Text.GetPosition(endLine, endIndex), Text.GetPosition(startLine, startIndex));
 				if (found.Contains(prevLineRange.ToString()))
 					sels.Add(prevLineRange);
 				else
@@ -128,18 +128,18 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		Range MoveCursor(Range range, int position, bool selecting)
+		NERange MoveCursor(NERange range, int position, bool selecting)
 		{
 			position = Math.Max(0, Math.Min(position, Text.Length));
 			if (selecting)
 				if (range.Cursor == position)
 					return range;
 				else
-					return new Range(range.Anchor, position);
+					return new NERange(range.Anchor, position);
 
 			if ((range.Cursor == position) && (range.Anchor == position))
 				return range;
-			return new Range(position);
+			return new NERange(position);
 		}
 
 		void Execute_Internal_Key()
@@ -191,7 +191,7 @@ namespace NeoEdit.Editor
 				else
 					cursor = Text.NextChar(cursor, true);
 
-				return new Range(anchor, cursor);
+				return new NERange(anchor, cursor);
 			}).Where(x => x.HasSelection).ToList());
 		}
 
@@ -207,7 +207,7 @@ namespace NeoEdit.Editor
 			{
 				Execute_Edit_Select_Focused_Single();
 				if (!Selections.Any())
-					Selections = new List<Range> { new Range() };
+					Selections = new List<NERange> { new NERange() };
 			}
 		}
 
@@ -215,7 +215,7 @@ namespace NeoEdit.Editor
 		{
 			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
 			{
-				Selections = Selections.AsTaskRunner().Select(range => new Range(range.Start)).ToList();
+				Selections = Selections.AsTaskRunner().Select(range => new NERange(range.Start)).ToList();
 				return;
 			}
 
@@ -226,7 +226,7 @@ namespace NeoEdit.Editor
 				cursor = Text.PrevChar(cursor, true);
 				if (!state.ShiftDown)
 					anchor = cursor;
-				return new Range(anchor, cursor);
+				return new NERange(anchor, cursor);
 			}).ToList();
 		}
 
@@ -234,7 +234,7 @@ namespace NeoEdit.Editor
 		{
 			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
 			{
-				Selections = Selections.AsTaskRunner().Select(range => new Range(range.End)).ToList();
+				Selections = Selections.AsTaskRunner().Select(range => new NERange(range.End)).ToList();
 				return;
 			}
 
@@ -245,7 +245,7 @@ namespace NeoEdit.Editor
 				cursor = Text.NextChar(cursor, true);
 				if (!state.ShiftDown)
 					anchor = cursor;
-				return new Range(anchor, cursor);
+				return new NERange(anchor, cursor);
 			}).ToList();
 		}
 
@@ -253,7 +253,7 @@ namespace NeoEdit.Editor
 		{
 			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
 			{
-				Selections = Selections.AsTaskRunner().Select(range => new Range(range.Start)).ToList();
+				Selections = Selections.AsTaskRunner().Select(range => new NERange(range.Start)).ToList();
 				return;
 			}
 
@@ -272,7 +272,7 @@ namespace NeoEdit.Editor
 					}
 					if (!state.ShiftDown)
 						anchor = cursor;
-					return new Range(anchor, cursor);
+					return new NERange(anchor, cursor);
 				}).ToList();
 			}
 			else if (!state.ShiftDown)
@@ -287,7 +287,7 @@ namespace NeoEdit.Editor
 		{
 			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
 			{
-				Selections = Selections.AsTaskRunner().Select(range => new Range(range.End)).ToList();
+				Selections = Selections.AsTaskRunner().Select(range => new NERange(range.End)).ToList();
 				return;
 			}
 
@@ -308,7 +308,7 @@ namespace NeoEdit.Editor
 					}
 					if (!state.ShiftDown)
 						anchor = cursor;
-					return new Range(anchor, cursor);
+					return new NERange(anchor, cursor);
 				}).ToList();
 			}
 			else if (!state.ShiftDown)
@@ -322,7 +322,7 @@ namespace NeoEdit.Editor
 		void Execute_Internal_Key_Home()
 		{
 			if (state.ControlDown)
-				Selections = Selections.AsTaskRunner().Select(range => new Range(state.ShiftDown ? range.Anchor : 0, 0)).ToList();
+				Selections = Selections.AsTaskRunner().Select(range => new NERange(state.ShiftDown ? range.Anchor : 0, 0)).ToList();
 			else
 			{
 				var moveToStartText = false;
@@ -355,16 +355,16 @@ namespace NeoEdit.Editor
 				}).ToList();
 
 				if (moveToStartText)
-					Selections = datas.Select((data, index) => new Range(state.ShiftDown ? Selections[index].Anchor : data.startText, data.startText)).ToList();
+					Selections = datas.Select((data, index) => new NERange(state.ShiftDown ? Selections[index].Anchor : data.startText, data.startText)).ToList();
 				else
-					Selections = datas.Select((data, index) => new Range(state.ShiftDown ? Selections[index].Anchor : data.startLine, data.startLine)).ToList();
+					Selections = datas.Select((data, index) => new NERange(state.ShiftDown ? Selections[index].Anchor : data.startLine, data.startLine)).ToList();
 			}
 		}
 
 		void Execute_Internal_Key_End()
 		{
 			if (state.ControlDown)
-				Selections = Selections.AsTaskRunner().Select(range => new Range(state.ShiftDown ? range.Anchor : Text.Length, Text.Length)).ToList();
+				Selections = Selections.AsTaskRunner().Select(range => new NERange(state.ShiftDown ? range.Anchor : Text.Length, Text.Length)).ToList();
 			else
 				Selections = Selections.AsTaskRunner().Select(range =>
 				{
@@ -373,7 +373,7 @@ namespace NeoEdit.Editor
 					cursor = Text.GetLineEndPosition(cursor);
 					if (!state.ShiftDown)
 						anchor = cursor;
-					return new Range(anchor, cursor);
+					return new NERange(anchor, cursor);
 				}).ToList();
 		}
 
@@ -393,7 +393,7 @@ namespace NeoEdit.Editor
 				cursor = Text.GetPositionFromColumn(column, lineStart, true);
 				if (!state.ShiftDown)
 					anchor = cursor;
-				return new Range(anchor, cursor);
+				return new NERange(anchor, cursor);
 			}).ToList();
 		}
 
@@ -413,7 +413,7 @@ namespace NeoEdit.Editor
 				cursor = Text.GetPositionFromColumn(column, lineStart, true);
 				if (!state.ShiftDown)
 					anchor = cursor;
-				return new Range(anchor, cursor);
+				return new NERange(anchor, cursor);
 			}).ToList();
 		}
 
@@ -445,9 +445,9 @@ namespace NeoEdit.Editor
 			}).ToList();
 
 			var offset = 0;
-			var replaceRanges = new List<Range>();
+			var replaceRanges = new List<NERange>();
 			var replaceStrs = new List<string>();
-			var newSels = new List<Range>();
+			var newSels = new List<NERange>();
 			foreach (var data in datas)
 			{
 				var rangeStart = data.range.Start + offset;
@@ -464,7 +464,7 @@ namespace NeoEdit.Editor
 								continue;
 							--lineStart;
 						}
-						replaceRanges.Add(Range.FromIndex(lineStart, 1));
+						replaceRanges.Add(NERange.FromIndex(lineStart, 1));
 						replaceStrs.Add("");
 						--offset;
 						if (data.range.Start > lineStart)
@@ -474,7 +474,7 @@ namespace NeoEdit.Editor
 					}
 					else
 					{
-						replaceRanges.Add(Range.FromIndex(lineStart, 0));
+						replaceRanges.Add(NERange.FromIndex(lineStart, 0));
 						replaceStrs.Add("\t");
 						++offset;
 						if (data.range.Start > lineStart)
@@ -483,7 +483,7 @@ namespace NeoEdit.Editor
 					}
 
 				}
-				newSels.Add(new Range(rangeStart, rangeEnd));
+				newSels.Add(new NERange(rangeStart, rangeEnd));
 			}
 
 			Replace(replaceRanges, replaceStrs);
@@ -499,22 +499,22 @@ namespace NeoEdit.Editor
 			var configuration = state.Configuration as Configuration_Internal_SetBinaryValue;
 			var newStr = Coder.BytesToString(configuration.Value, CodePage);
 			var replaceRange = Selections[CurrentSelection];
-			var newSels = new List<Range>();
+			var newSels = new List<NERange>();
 			var offset = 0;
 			foreach (var range1 in Selections)
 			{
 				var range = range1;
 				if (range == replaceRange)
 				{
-					replaceRange = Range.FromIndex(replaceRange.Start, configuration.OldSize ?? replaceRange.Length);
+					replaceRange = NERange.FromIndex(replaceRange.Start, configuration.OldSize ?? replaceRange.Length);
 					offset += newStr.Length - replaceRange.Length;
-					range = Range.FromIndex(range.Start, range.Length + offset);
+					range = NERange.FromIndex(range.Start, range.Length + offset);
 				}
 				else
 					range = range.Move(offset);
 				newSels.Add(range);
 			}
-			Replace(new List<Range> { replaceRange }, new List<string> { newStr });
+			Replace(new List<NERange> { replaceRange }, new List<string> { newStr });
 			Selections = newSels;
 		}
 
@@ -536,7 +536,7 @@ namespace NeoEdit.Editor
 			var position = Text.GetPosition(line, index);
 			var mouseRange = (CurrentSelection >= 0) && (CurrentSelection < sels.Count) ? sels[CurrentSelection] : null;
 
-			var currentSelection = default(Range);
+			var currentSelection = default(NERange);
 			if ((selecting) || (state.ShiftDown))
 			{
 				if (mouseRange != null)
@@ -559,7 +559,7 @@ namespace NeoEdit.Editor
 						}
 					}
 
-					currentSelection = new Range(anchor, position);
+					currentSelection = new NERange(anchor, position);
 				}
 			}
 			else
@@ -568,12 +568,12 @@ namespace NeoEdit.Editor
 					sels.Clear();
 
 				if (clickCount == 1)
-					currentSelection = new Range(position);
+					currentSelection = new NERange(position);
 				else
 				{
 					if (mouseRange != null)
 						sels.Remove(mouseRange);
-					currentSelection = new Range(GetPrevWord(Math.Min(position + 1, Text.Length)), GetNextWord(position));
+					currentSelection = new NERange(GetPrevWord(Math.Min(position + 1, Text.Length)), GetNextWord(position));
 				}
 			}
 

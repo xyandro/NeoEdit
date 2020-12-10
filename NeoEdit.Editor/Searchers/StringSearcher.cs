@@ -66,9 +66,9 @@ namespace NeoEdit.Editor.Searchers
 			return inputIndex - index;
 		}
 
-		public List<Range> Find(string input, int addOffset = 0)
+		public List<NERange> Find(string input, int addOffset = 0)
 		{
-			var result = new List<Range>();
+			var result = new List<NERange>();
 			if ((entireSelection) && (!skipSpace) && (input.Length != findStr1.Length))
 				return result;
 
@@ -80,7 +80,7 @@ namespace NeoEdit.Editor.Searchers
 				{
 					if ((entireSelection) && (matchLength != input.Length))
 						return result;
-					result.Add(Range.FromIndex(index + addOffset, matchLength));
+					result.Add(NERange.FromIndex(index + addOffset, matchLength));
 					if (firstMatchOnly)
 						return result;
 					index += Math.Max(1, matchLength);

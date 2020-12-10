@@ -14,7 +14,7 @@ namespace NeoEdit.Common
 		bool ViewBinary { get; }
 		IReadOnlyList<HashSet<string>> ViewBinarySearches { get; }
 		HashSet<Coder.CodePage> ViewBinaryCodePages { get; }
-		IReadOnlyList<Range> Selections { get; }
+		IReadOnlyList<NERange> Selections { get; }
 		int CurrentSelection { get; }
 		bool HighlightSyntax { get; }
 		ParserType ContentType { get; }
@@ -32,7 +32,7 @@ namespace NeoEdit.Common
 		int ViewGetLineColumnsLength(int line);
 		string ViewGetLineColumns(int line, int startColumn, int endColumn);
 		void ViewSetDisplaySize(int columns, int rows);
-		IReadOnlyList<Range> GetRegions(int region);
+		IReadOnlyList<NERange> GetRegions(int region);
 		List<string> ViewGetStatusBar();
 		DiffType ViewGetLineDiffType(int line);
 		List<int> ViewGetLineColumnMap(int line, bool includeEnding = false);

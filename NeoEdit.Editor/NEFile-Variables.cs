@@ -42,7 +42,7 @@ namespace NeoEdit.Editor
 
 		NETextPoint NETextPoint { get => Data.NETextPoint; set => EditableData.NETextPoint = value; }
 
-		public IReadOnlyList<Range> Selections
+		public IReadOnlyList<NERange> Selections
 		{
 			get => Data.Selections;
 			set
@@ -56,14 +56,14 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public IReadOnlyList<Range> GetRegions(int region)
+		public IReadOnlyList<NERange> GetRegions(int region)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");
 			return Data.Regions[region - 1];
 		}
 
-		void SetRegions(int region, IReadOnlyList<Range> regions)
+		void SetRegions(int region, IReadOnlyList<NERange> regions)
 		{
 			if ((region < 1) || (region > 9))
 				throw new IndexOutOfRangeException($"Invalid region: {region}");

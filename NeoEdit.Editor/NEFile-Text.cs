@@ -78,7 +78,7 @@ namespace NeoEdit.Editor
 
 		static string RepeatsValue(bool caseSensitive, string input) => caseSensitive ? input : input?.ToLowerInvariant();
 
-		IEnumerable<Range> SelectSplit(Range range, Configuration_Text_Select_Split result, ISearcher searcher)
+		IEnumerable<NERange> SelectSplit(NERange range, Configuration_Text_Select_Split result, ISearcher searcher)
 		{
 			var stack = new Stack<SelectSplitEnum>();
 			stack.Push(SelectSplitEnum.None);
@@ -158,11 +158,11 @@ namespace NeoEdit.Editor
 								--useEnd;
 						}
 						if ((!result.ExcludeEmpty) || (useStart != useEnd))
-							yield return new Range(useStart, useEnd);
+							yield return new NERange(useStart, useEnd);
 						if (pos >= range.End)
 							break;
 						if (result.IncludeResults)
-							yield return Range.FromIndex(pos, matchLen);
+							yield return NERange.FromIndex(pos, matchLen);
 						pos += matchLen;
 						start = pos;
 					}
@@ -229,7 +229,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		Range TrimRange(Range range, Configuration_Text_SelectTrim_WholeBoundedWordTrim result)
+		NERange TrimRange(NERange range, Configuration_Text_SelectTrim_WholeBoundedWordTrim result)
 		{
 			var position = range.Start;
 			var length = range.Length;
@@ -248,7 +248,7 @@ namespace NeoEdit.Editor
 			}
 			if ((position == range.Start) && (length == range.Length))
 				return range;
-			return Range.FromIndex(position, length);
+			return NERange.FromIndex(position, length);
 		}
 
 		static string TrimString(string str, Configuration_Text_SelectTrim_WholeBoundedWordTrim result)
@@ -276,7 +276,7 @@ namespace NeoEdit.Editor
 			var minPosition = 0;
 			var maxPosition = Text.Length;
 
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var range in Selections)
 			{
 				var startPosition = range.Start;
@@ -290,7 +290,7 @@ namespace NeoEdit.Editor
 					while ((endPosition < maxPosition) && (result.Chars.Contains(Text[endPosition]) == wholeWord))
 						++endPosition;
 
-				sels.Add(new Range(startPosition, endPosition));
+				sels.Add(new NERange(startPosition, endPosition));
 			}
 			Selections = sels;
 		}
@@ -462,19 +462,19 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Text_Find_Find;
 			// Determine selections to search
-			List<Range> selections;
+			List<NERange> selections;
 			var firstMatchOnly = (result.KeepMatching) || (result.RemoveMatching);
 			if (result.Type == Configuration_Text_Find_Find.ResultType.FindNext)
 			{
 				firstMatchOnly = true;
-				selections = new List<Range>();
+				selections = new List<NERange>();
 				for (var ctr = 0; ctr < Selections.Count; ++ctr)
-					selections.Add(new Range(ctr + 1 == Selections.Count ? Text.Length : Selections[ctr + 1].Start, Selections[ctr].End));
+					selections.Add(new NERange(ctr + 1 == Selections.Count ? Text.Length : Selections[ctr + 1].Start, Selections[ctr].End));
 			}
 			else if (result.SelectionOnly)
 				selections = Selections.ToList();
 			else
-				selections = new List<Range> { Range.FromIndex(0, Text.Length) };
+				selections = new List<NERange> { NERange.FromIndex(0, Text.Length) };
 
 			if (!selections.Any())
 				return;
@@ -555,7 +555,7 @@ namespace NeoEdit.Editor
 					Clipboard = results.Select(list => list.Count.ToString()).ToList();
 					break;
 				case Configuration_Text_Find_Find.ResultType.FindNext:
-					var newSels = new List<Range>();
+					var newSels = new List<NERange>();
 					for (var ctr = 0; ctr < Selections.Count; ++ctr)
 					{
 						int endPos;
@@ -565,7 +565,7 @@ namespace NeoEdit.Editor
 							endPos = Selections[ctr + 1].Start;
 						else
 							endPos = Text.Length;
-						newSels.Add(new Range(Selections[ctr].Start, endPos));
+						newSels.Add(new NERange(Selections[ctr].Start, endPos));
 					}
 					Selections = newSels;
 					break;
@@ -599,7 +599,7 @@ namespace NeoEdit.Editor
 		void Execute_Text_Find_RegexReplace()
 		{
 			var result = state.Configuration as Configuration_Text_Find_RegexReplace;
-			var regions = result.SelectionOnly ? Selections.ToList() : new List<Range> { Range.FromIndex(0, Text.Length) };
+			var regions = result.SelectionOnly ? Selections.ToList() : new List<NERange> { NERange.FromIndex(0, Text.Length) };
 			var searcher = new RegexesSearcher(new List<string> { result.Text }, result.WholeWords, result.MatchCase, result.EntireSelection);
 			var sels = regions.AsTaskRunner().SelectMany(region => searcher.Find(Text.GetString(region), region.Start)).ToList();
 			Selections = sels;
@@ -658,8 +658,8 @@ namespace NeoEdit.Editor
 			for (var ctr = 0; ctr < newSelections.Count; ++ctr)
 			{
 				var orderCtr = ordering[ctr];
-				newSelections[orderCtr] = new Range(newSelections[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add, newSelections[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add);
-				newRegions[orderCtr] = new Range(newRegions[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add, newRegions[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add);
+				newSelections[orderCtr] = new NERange(newSelections[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add, newSelections[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add);
+				newRegions[orderCtr] = new NERange(newRegions[orderCtr].Anchor - regions[orderCtr].Start + regions[ctr].Start + add, newRegions[orderCtr].Cursor - regions[orderCtr].Start + regions[ctr].Start + add);
 				add += orderedRegionText[ctr].Length - regions[ctr].Length;
 			}
 			newSelections = ordering.Select(num => newSelections[num]).ToList();
@@ -772,7 +772,7 @@ namespace NeoEdit.Editor
 				for (var ctr = 0; ctr < data.Count; ++ctr)
 					map[data[ctr].Item2] = ctr;
 
-				Selections = Selections.Select((range, index) => Range.FromIndex(range.Start + data[map[index]].Item3[best[map[index]]], 1)).ToList();
+				Selections = Selections.Select((range, index) => NERange.FromIndex(range.Start + data[map[index]].Item3[best[map[index]]], 1)).ToList();
 			});
 		}
 
@@ -797,10 +797,10 @@ namespace NeoEdit.Editor
 			ReplaceSelections(string.Join("", output));
 
 			var start = Selections.Single().Start;
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var str in output)
 			{
-				sels.Add(Range.FromIndex(start, str.Length - Text.DefaultEnding.Length));
+				sels.Add(NERange.FromIndex(start, str.Length - Text.DefaultEnding.Length));
 				start += str.Length;
 			}
 			Selections = sels;

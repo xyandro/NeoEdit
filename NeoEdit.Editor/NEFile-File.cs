@@ -27,12 +27,12 @@ namespace NeoEdit.Editor
 		public static NEFile CreateFileFromStrings(IReadOnlyList<string> strs, string name, ParserType contentType)
 		{
 			var sb = new StringBuilder(strs.Sum(str => str.Length + 2)); // 2 is for ending; may or may not need it
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var str in strs)
 			{
 				var start = sb.Length;
 				sb.Append(str);
-				sels.Add(new Range(start, sb.Length));
+				sels.Add(new NERange(start, sb.Length));
 				if ((!str.EndsWith("\r")) && (!str.EndsWith("\n")))
 					sb.Append("\r\n");
 			}
@@ -101,7 +101,7 @@ namespace NeoEdit.Editor
 
 			OpenFile(FileName, DisplayName);
 
-			Func<IReadOnlyList<Range>, IReadOnlyList<Range>> reformatRanges = l => l.Select(range => new Range(Math.Max(0, Math.Min(range.Anchor, Text.Length)), Math.Max(0, Math.Min(range.Cursor, Text.Length)))).ToList();
+			Func<IReadOnlyList<NERange>, IReadOnlyList<NERange>> reformatRanges = l => l.Select(range => new NERange(Math.Max(0, Math.Min(range.Anchor, Text.Length)), Math.Max(0, Math.Min(range.Cursor, Text.Length)))).ToList();
 			Selections = reformatRanges(selections);
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, reformatRanges(GetRegions(region)));
@@ -222,14 +222,14 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_File_LineEndings;
 			var lines = Text.NumLines;
-			var sel = new List<Range>();
+			var sel = new List<NERange>();
 			for (var line = 0; line < lines; ++line)
 			{
 				var current = Text.GetEnding(line);
 				if ((current.Length == 0) || (current == result.LineEndings))
 					continue;
 				var start = Text.GetPosition(line, Text.GetLineLength(line));
-				sel.Add(Range.FromIndex(start, current.Length));
+				sel.Add(NERange.FromIndex(start, current.Length));
 			}
 			Replace(sel, sel.Select(str => result.LineEndings).ToList());
 		}

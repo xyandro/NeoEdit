@@ -133,7 +133,7 @@ namespace NeoEdit.Editor
 			return results;
 		}
 
-		Range GetPathRange(GetPathType type, Range range)
+		NERange GetPathRange(GetPathType type, NERange range)
 		{
 			var path = Text.GetString(range);
 			var dirLength = Math.Max(0, path.LastIndexOf('\\'));
@@ -144,10 +144,10 @@ namespace NeoEdit.Editor
 
 			switch (type)
 			{
-				case GetPathType.FileName: return new Range(range.Start + dirTotal, range.End);
-				case GetPathType.FileNameWoExtension: return new Range(range.Start + dirTotal, range.End - extLen);
-				case GetPathType.Directory: return Range.FromIndex(range.Start, dirLength);
-				case GetPathType.Extension: return new Range(range.End - extLen, range.End);
+				case GetPathType.FileName: return new NERange(range.Start + dirTotal, range.End);
+				case GetPathType.FileNameWoExtension: return new NERange(range.Start + dirTotal, range.End - extLen);
+				case GetPathType.Directory: return NERange.FromIndex(range.Start, dirLength);
+				case GetPathType.Extension: return new NERange(range.End - extLen, range.End);
 				default: throw new ArgumentException();
 			}
 		}
@@ -357,14 +357,14 @@ namespace NeoEdit.Editor
 			var maxPosition = Text.Length;
 			var invalidChars = Path.GetInvalidFileNameChars();
 
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var range in Selections)
 			{
 				var endPosition = range.End;
 				while ((endPosition < maxPosition) && (((endPosition - range.Start == 1) && (Text[endPosition] == ':')) || ((endPosition - range.End == 0) && ((Text[endPosition] == '\\') || (Text[endPosition] == '/'))) || (!invalidChars.Contains(Text[endPosition]))))
 					++endPosition;
 
-				sels.Add(new Range(range.Start, endPosition));
+				sels.Add(new NERange(range.Start, endPosition));
 			}
 
 			Selections = sels;
@@ -380,14 +380,14 @@ namespace NeoEdit.Editor
 				strs.Skip(1).ForEach(str => FindCommonLength(strs[0], str, ref length));
 				depth = strs[0].Substring(0, length).Count(c => c == '\\');
 			}
-			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList();
+			Selections = Selections.Select((range, index) => NERange.FromIndex(range.Start, GetDepthLength(strs[index], depth))).ToList();
 		}
 
 		void Execute_Files_Select_Name_MatchDepth()
 		{
 			var strs = GetSelectionStrings();
 			var minDepth = strs.Select(str => str.Count(c => c == '\\') + 1).DefaultIfEmpty(0).Min();
-			Selections = Selections.Select((range, index) => Range.FromIndex(range.Start, GetDepthLength(strs[index], minDepth))).ToList();
+			Selections = Selections.Select((range, index) => NERange.FromIndex(range.Start, GetDepthLength(strs[index], minDepth))).ToList();
 		}
 
 		void Execute_Files_Select_RootsNonRoots(bool include)

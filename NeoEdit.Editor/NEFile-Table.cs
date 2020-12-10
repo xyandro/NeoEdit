@@ -49,8 +49,8 @@ namespace NeoEdit.Editor
 		void SetText(Table table)
 		{
 			var output = GetTableText(table);
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { output });
-			Selections = new List<Range> { new Range() };
+			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { output });
+			Selections = new List<NERange> { new NERange() };
 		}
 
 		static void Configure_Table_Select_RowsByExpression()
@@ -66,7 +66,7 @@ namespace NeoEdit.Editor
 			var variables = GetTableVariables(table);
 			var results = state.GetExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
-			Selections = lines.AsTaskRunner().Select(line => new Range(Text.GetPosition(line, 0), Text.GetPosition(line, Text.GetLineLength(line)))).ToList();
+			Selections = lines.AsTaskRunner().Select(line => new NERange(Text.GetPosition(line, 0), Text.GetPosition(line, Text.GetLineLength(line)))).ToList();
 		}
 
 		static void Configure_Table_New_FromSelection()
@@ -169,13 +169,13 @@ namespace NeoEdit.Editor
 			var table = GetTable();
 			var header = $"INSERT INTO {result.TableName} ({string.Join(", ", Enumerable.Range(0, table.NumColumns).Select(column => table.GetHeader(column)))}) VALUES{(result.BatchSize == 1 ? " " : Text.DefaultEnding)}";
 			var output = Enumerable.Range(0, table.NumRows).Batch(result.BatchSize).Select(batch => string.Join($",{Text.DefaultEnding}", batch.Select(row => $"({string.Join(", ", result.Columns.Select(column => GetDBValue(table[row, column])))})"))).Select(val => $"{header}{val}{Text.DefaultEnding}").ToList();
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { string.Join("", output) });
+			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { string.Join("", output) });
 
 			var index = 0;
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var item in output)
 			{
-				sels.Add(Range.FromIndex(index, item.Length));
+				sels.Add(NERange.FromIndex(index, item.Length));
 				index += item.Length;
 			}
 			Selections = sels;
@@ -189,13 +189,13 @@ namespace NeoEdit.Editor
 			var table = GetTable();
 
 			var output = Enumerable.Range(0, table.NumRows).Select(row => $"UPDATE {result.TableName} SET {string.Join(", ", result.Update.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{Text.DefaultEnding}").ToList();
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { string.Join("", output) });
+			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { string.Join("", output) });
 
 			var index = 0;
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var item in output)
 			{
-				sels.Add(Range.FromIndex(index, item.Length));
+				sels.Add(NERange.FromIndex(index, item.Length));
 				index += item.Length;
 			}
 			Selections = sels;
@@ -209,13 +209,13 @@ namespace NeoEdit.Editor
 			var table = GetTable();
 
 			var output = Enumerable.Range(0, table.NumRows).Select(row => $"DELETE FROM {result.TableName} WHERE {string.Join(" AND ", result.Where.Select(column => $"{table.GetHeader(column)} = {GetDBValue(table[row, column])}"))}{Text.DefaultEnding}").ToList();
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { string.Join("", output) });
+			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { string.Join("", output) });
 
 			var index = 0;
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var item in output)
 			{
-				sels.Add(Range.FromIndex(index, item.Length));
+				sels.Add(NERange.FromIndex(index, item.Length));
 				index += item.Length;
 			}
 			Selections = sels;

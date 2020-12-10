@@ -10,8 +10,8 @@ namespace NeoEdit.Editor
 		public NEFile NEFile { get; }
 
 		public NETextPoint NETextPoint { get; set; }
-		public IReadOnlyList<Range> Selections { get; set; }
-		public IReadOnlyList<Range>[] Regions { get; set; }
+		public IReadOnlyList<NERange> Selections { get; set; }
+		public IReadOnlyList<NERange>[] Regions { get; set; }
 
 		public INEFileData Undo { get; set; }
 		public INEFileData Redo { get; set; }
@@ -19,7 +19,7 @@ namespace NeoEdit.Editor
 		public NEFileData(NEFile neFile)
 		{
 			NEFile = neFile;
-			Regions = new IReadOnlyList<Range>[9];
+			Regions = new IReadOnlyList<NERange>[9];
 		}
 
 		public NEFileData(INEFileData neFileData)

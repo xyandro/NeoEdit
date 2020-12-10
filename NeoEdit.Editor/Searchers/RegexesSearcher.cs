@@ -29,9 +29,9 @@ namespace NeoEdit.Editor.Searchers
 			this.regexGroups = regexGroups;
 		}
 
-		public List<Range> Find(string input, int addOffset = 0)
+		public List<NERange> Find(string input, int addOffset = 0)
 		{
-			var result = new List<Range>();
+			var result = new List<NERange>();
 			foreach (var regex in regexes)
 			{
 				var matches = firstMatchOnly ? new List<Match> { regex.Match(input) } : regex.Matches(input).Cast<Match>();
@@ -41,9 +41,9 @@ namespace NeoEdit.Editor.Searchers
 						continue;
 
 					if ((!regexGroups) || (match.Groups.Count == 1))
-						result.Add(Range.FromIndex(match.Index + addOffset, match.Length));
+						result.Add(NERange.FromIndex(match.Index + addOffset, match.Length));
 					else
-						result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => Range.FromIndex(capture.Index + addOffset, capture.Length)));
+						result.AddRange(match.Groups.Cast<Group>().Skip(1).Where(group => group.Success).SelectMany(group => group.Captures.Cast<Capture>()).Select(capture => NERange.FromIndex(capture.Index + addOffset, capture.Length)));
 					if ((firstMatchOnly) && (result.Count != 0))
 						break;
 				}

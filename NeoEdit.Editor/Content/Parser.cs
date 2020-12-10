@@ -34,7 +34,7 @@ namespace NeoEdit.Editor.Content
 			}
 		}
 
-		internal static string Comment(ParserType type, NEText text, Range range)
+		internal static string Comment(ParserType type, NEText text, NERange range)
 		{
 			switch (type)
 			{
@@ -46,7 +46,7 @@ namespace NeoEdit.Editor.Content
 			}
 		}
 
-		internal static string Uncomment(ParserType type, NEText text, Range range)
+		internal static string Uncomment(ParserType type, NEText text, NERange range)
 		{
 			switch (type)
 			{

@@ -192,6 +192,7 @@
     <Compile Include="MoreLinq.cs" />
     <Compile Include="NEClipboard.cs" />
     <Compile Include="NECommand.cs" />
+    <Compile Include="NERange.cs" />
     <Compile Include="NoMacroAttribute.cs" />
     <Compile Include="OrderedHashSet.cs" />
     <None Include="packages.config" />
@@ -204,7 +205,6 @@
     <Compile Include="Parsing\ParserNode.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Range.cs" />
     <Compile Include="RenderParameters.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExLexer.cs" />
     <Compile Include="RevRegEx\Parser\RevRegExParser.cs" />

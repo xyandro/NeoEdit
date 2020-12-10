@@ -213,7 +213,7 @@ namespace NeoEdit.Editor
 
 			var total = new NumericValue(0);
 			Selections.Where(range => range.HasSelection).ForEach(range => total += new NumericValue(Text.GetString(range)));
-			Selections = new List<Range> { result };
+			Selections = new List<NERange> { result };
 			ReplaceSelections(total.ToString());
 		}
 
@@ -381,12 +381,12 @@ namespace NeoEdit.Editor
 			ReplaceSelections(string.Join("", output.Select(row => string.Join(" ", row) + Text.DefaultEnding)));
 
 			var start = Selections.Single().Start;
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			foreach (var row in output)
 			{
 				foreach (var str in row)
 				{
-					sels.Add(Range.FromIndex(start, str.Length));
+					sels.Add(NERange.FromIndex(start, str.Length));
 					start += str.Length + 1; // +1 is for space
 				}
 				start += Text.DefaultEnding.Length - 1; // -1 is for space added before

@@ -59,11 +59,11 @@ namespace NeoEdit.Editor
 			return entries.Select(entry => entry.Item2).ToList();
 		}
 
-		List<Range> GetSortLines() => Selections.Select(range => Text.GetPositionLine(range.Start)).Select(line => Range.FromIndex(Text.GetPosition(line, 0), Text.GetLineLength(line))).ToList();
+		List<NERange> GetSortLines() => Selections.Select(range => Text.GetPositionLine(range.Start)).Select(line => NERange.FromIndex(Text.GetPosition(line, 0), Text.GetLineLength(line))).ToList();
 
-		List<Range> GetSortSource(SortScope scope, int useRegion)
+		List<NERange> GetSortSource(SortScope scope, int useRegion)
 		{
-			List<Range> sortSource = null;
+			List<NERange> sortSource = null;
 			switch (scope)
 			{
 				case SortScope.Selections: sortSource = Selections.ToList(); break;
@@ -112,20 +112,20 @@ namespace NeoEdit.Editor
 			return builder.ToString();
 		}
 
-		void Execute_Edit_Select_All() => Selections = new List<Range> { Range.FromIndex(0, Text.Length) };
+		void Execute_Edit_Select_All() => Selections = new List<NERange> { NERange.FromIndex(0, Text.Length) };
 
-		void Execute_Edit_Select_Nothing() => Selections = new List<Range>();
+		void Execute_Edit_Select_Nothing() => Selections = new List<NERange>();
 
 		void Execute_Edit_Select_Join()
 		{
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			var start = 0;
 			while (start < Selections.Count)
 			{
 				var end = start;
 				while ((end + 1 < Selections.Count) && (Selections[end].End == Selections[end + 1].Start))
 					++end;
-				sels.Add(new Range(Selections[start].Start, Selections[end].End));
+				sels.Add(new NERange(Selections[start].Start, Selections[end].End));
 				start = end + 1;
 			}
 			Selections = sels;
@@ -135,7 +135,7 @@ namespace NeoEdit.Editor
 		{
 			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
 			var end = Selections.Select(sel => sel.Start).Concat(new[] { Text.Length });
-			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new Range(startPos, endPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.Length))).ToList();
+			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new NERange(startPos, endPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.Length))).ToList();
 		}
 
 		static void Configure_Edit_Select_Limit() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Select_Limit(state.NEWindow.Focused.GetVariables());
@@ -151,7 +151,7 @@ namespace NeoEdit.Editor
 
 			var sels = Selections.Skip(firstSelection - 1);
 			if (result.JoinSelections)
-				sels = sels.Batch(everyNth).Select(batch => batch.Take(takeCount)).Select(batch => new Range(batch.First().Start, batch.Last().End));
+				sels = sels.Batch(everyNth).Select(batch => batch.Take(takeCount)).Select(batch => new NERange(batch.First().Start, batch.Last().End));
 			else
 				sels = sels.EveryNth(everyNth, takeCount);
 			sels = sels.Take(numSels);
@@ -173,7 +173,7 @@ namespace NeoEdit.Editor
 				if ((hasLine[line]) && (!Text.IsDiffGapLine(line)))
 					lines.Add(line);
 
-			Selections = lines.AsTaskRunner().Select(line => Range.FromIndex(Text.GetPosition(line, 0), Text.GetLineLength(line))).ToList();
+			Selections = lines.AsTaskRunner().Select(line => NERange.FromIndex(Text.GetPosition(line, 0), Text.GetLineLength(line))).ToList();
 		}
 
 		void Execute_Edit_Select_WholeLines()
@@ -184,7 +184,7 @@ namespace NeoEdit.Editor
 				var startPosition = Text.GetPosition(startLine, 0);
 				var endLine = Text.GetPositionLine(Math.Max(range.Start, range.End - 1));
 				var endPosition = Text.GetPosition(endLine, 0) + Text.GetLineLength(endLine) + Text.GetEndingLength(endLine);
-				return new Range(startPosition, endPosition);
+				return new NERange(startPosition, endPosition);
 			}).ToList();
 
 			Selections = sels;
@@ -201,7 +201,7 @@ namespace NeoEdit.Editor
 		void Execute_Edit_Select_ToggleAnchor()
 		{
 			var anchorStart = (state.Configuration as Configuration_Edit_Select_ToggleAnchor).AnchorStart;
-			Selections = Selections.Select(range => new Range(anchorStart ? range.Start : range.End, anchorStart ? range.End : range.Start)).ToList();
+			Selections = Selections.Select(range => new NERange(anchorStart ? range.Start : range.End, anchorStart ? range.End : range.Start)).ToList();
 		}
 
 		void Execute_Edit_Select_Focused_First()
@@ -225,7 +225,7 @@ namespace NeoEdit.Editor
 		{
 			if (!Selections.Any())
 				return;
-			Selections = new List<Range> { Selections[CurrentSelection] };
+			Selections = new List<NERange> { Selections[CurrentSelection] };
 			CurrentSelection = 0;
 		}
 
@@ -402,14 +402,14 @@ namespace NeoEdit.Editor
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => RepeatString(Text.GetString(range), results[index])).ToList());
 			if (result.SelectRepetitions)
 			{
-				var sels = new List<Range>();
+				var sels = new List<NERange>();
 				for (var ctr = 0; ctr < Selections.Count; ++ctr)
 					if (results[ctr] != 0)
 					{
 						var selection = Selections[ctr];
 						var len = selection.Length / results[ctr];
 						for (var index = selection.Start; index < selection.End; index += len)
-							sels.Add(Range.FromIndex(index, len));
+							sels.Add(NERange.FromIndex(index, len));
 					}
 				Selections = sels;
 			}
@@ -450,7 +450,7 @@ namespace NeoEdit.Editor
 		{
 			if ((!state.ShiftDown) && (Selections.Any(range => range.HasSelection)))
 			{
-				Selections = Selections.AsTaskRunner().Select(range => new Range(next ? range.End : range.Start)).ToList();
+				Selections = Selections.AsTaskRunner().Select(range => new NERange(next ? range.End : range.Start)).ToList();
 				return;
 			}
 

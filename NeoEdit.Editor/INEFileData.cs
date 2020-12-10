@@ -9,8 +9,8 @@ namespace NeoEdit.Editor
 		NEFile NEFile { get; }
 
 		NETextPoint NETextPoint { get; }
-		IReadOnlyList<Range> Selections { get; }
-		IReadOnlyList<Range>[] Regions { get; }
+		IReadOnlyList<NERange> Selections { get; }
+		IReadOnlyList<NERange>[] Regions { get; }
 
 		INEFileData Undo { get; }
 		INEFileData Redo { get; }

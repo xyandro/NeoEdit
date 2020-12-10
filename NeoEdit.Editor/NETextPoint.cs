@@ -8,11 +8,11 @@ namespace NeoEdit.Editor
 {
 	public class NETextPoint
 	{
-		IReadOnlyList<Range> ranges;
+		IReadOnlyList<NERange> ranges;
 		IReadOnlyList<string> strs;
 		NETextPoint parent;
 
-		public NETextPoint(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs, NETextPoint parent)
+		public NETextPoint(IReadOnlyList<NERange> ranges, IReadOnlyList<string> strs, NETextPoint parent)
 		{
 			if (ranges.Count != strs.Count)
 				throw new Exception("Invalid number of arguments");
@@ -78,13 +78,13 @@ namespace NeoEdit.Editor
 				checkPos = range.End;
 			}
 
-			var nextRanges = new List<Range>();
+			var nextRanges = new List<NERange>();
 			var nextStrs = new List<string>();
 
 			var change = 0;
 			for (var ctr = 0; ctr < ranges.Count; ++ctr)
 			{
-				var undoRange = new Range(ranges[ctr].Start + strs[ctr].Length + change, ranges[ctr].Start + change);
+				var undoRange = new NERange(ranges[ctr].Start + strs[ctr].Length + change, ranges[ctr].Start + change);
 				nextRanges.Add(undoRange);
 				nextStrs.Add(text.Substring(ranges[ctr].Start, ranges[ctr].Length));
 				change = undoRange.Anchor - ranges[ctr].End;

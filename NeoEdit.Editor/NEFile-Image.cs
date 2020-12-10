@@ -44,8 +44,8 @@ namespace NeoEdit.Editor
 		{
 			var bitmap = Coder.StringToBitmap(Text.GetString());
 			bitmap.RotateFlip(type);
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(bitmap) });
-			Selections = new List<Range> { new Range() };
+			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(bitmap) });
+			Selections = new List<NERange> { new NERange() };
 		}
 
 		DateTime? GetImageTakenDate(string fileName)
@@ -144,8 +144,8 @@ namespace NeoEdit.Editor
 				}
 			}
 
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(resultBitmap) });
-			Selections = new List<Range> { new Range() };
+			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(resultBitmap) });
+			Selections = new List<NERange> { new NERange() };
 		}
 
 		static void Configure_Image_Crop() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_Crop(state.NEWindow.Focused.GetVariables());
@@ -190,8 +190,8 @@ namespace NeoEdit.Editor
 				graphics.DrawImage(bitmap, new System.Drawing.Rectangle(destX, destY, width, height), new System.Drawing.Rectangle(srcX, srcY, width, height), System.Drawing.GraphicsUnit.Pixel);
 			}
 
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(resultBitmap) });
-			Selections = new List<Range> { new Range() };
+			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(resultBitmap) });
+			Selections = new List<NERange> { new NERange() };
 		}
 
 		static void Configure_Image_GrabColor() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_GrabColor(state.NEWindow.Focused.Selections.Select(range => state.NEWindow.Focused.Text.GetString(range)).FirstOrDefault());
@@ -281,8 +281,8 @@ namespace NeoEdit.Editor
 				g.DrawImageUnscaled(bitmap, 0, 0);
 			}
 
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(resultBitmap) });
-			Selections = new List<Range> { new Range() };
+			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { Coder.BitmapToString(resultBitmap) });
+			Selections = new List<NERange> { new NERange() };
 		}
 
 		static void Configure_Image_GIF_Animate() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_GIF_Animate(state.NEWindow.Focused.GetVariables());

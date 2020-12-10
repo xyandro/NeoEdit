@@ -14,7 +14,7 @@ namespace NeoEdit.Editor
 		void ContentReplaceSelections(IEnumerable<ParserBase> nodes)
 		{
 			nodes = nodes.NonNull().Distinct().OrderBy(node => node.Start).ThenBy(node => node.End);
-			var sels = new List<Range>();
+			var sels = new List<NERange>();
 			var prevNode = default(ParserBase);
 			using (var e = nodes.GetEnumerator())
 				while (true)
@@ -23,7 +23,7 @@ namespace NeoEdit.Editor
 						if (prevNode != null)
 						{
 							var overlap = e.Current.Start < prevNode.End;
-							sels.Add(new Range(prevNode.Start, overlap ? prevNode.Start : prevNode.End));
+							sels.Add(new NERange(prevNode.Start, overlap ? prevNode.Start : prevNode.End));
 						}
 
 						prevNode = e.Current;
@@ -31,7 +31,7 @@ namespace NeoEdit.Editor
 					else
 					{
 						if (prevNode != null)
-							sels.Add(new Range(prevNode.Start, prevNode.End));
+							sels.Add(new NERange(prevNode.Start, prevNode.End));
 						break;
 					}
 
@@ -96,7 +96,7 @@ namespace NeoEdit.Editor
 		{
 			var root = RootNode();
 			var str = Parser.Reformat(root, Text.GetString(), ContentType);
-			Replace(new List<Range> { Range.FromIndex(0, Text.Length) }, new List<string> { str });
+			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { str });
 		}
 
 		void Execute_Content_Comment() => ReplaceSelections(Selections.Select(range => Parser.Comment(ContentType, Text, range)).ToList());

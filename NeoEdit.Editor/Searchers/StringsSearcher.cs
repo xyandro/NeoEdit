@@ -92,9 +92,9 @@ namespace NeoEdit.Editor.Searchers
 			}
 		}
 
-		public List<Range> Find(string input, int addOffset = 0)
+		public List<NERange> Find(string input, int addOffset = 0)
 		{
-			var result = new List<Range>();
+			var result = new List<NERange>();
 			var curNodes = new List<SearchNode>();
 			var startNodes = new SearchNode[] { matchCaseStartNode, ignoreCaseStartNode };
 			for (var index = 0; index < input.Length; ++index)
@@ -140,7 +140,7 @@ namespace NeoEdit.Editor.Searchers
 							continue;
 						if ((entireSelection) && (index + 1 != input.Length))
 							continue;
-						result.Add(Range.FromIndex(index - newNode.length + 1 + addOffset, newNode.length));
+						result.Add(NERange.FromIndex(index - newNode.length + 1 + addOffset, newNode.length));
 						if (firstMatchOnly)
 							return result;
 					}

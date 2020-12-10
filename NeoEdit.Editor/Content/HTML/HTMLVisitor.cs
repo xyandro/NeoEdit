@@ -95,7 +95,7 @@ namespace NeoEdit.Editor.Content.HTML
 
 		public static string Format(ParserNode document, string input) => string.Join("", rFormat(document, input).Item1.Select(str => $"{str.TrimEnd()}\r\n"));
 
-		public static string Comment(NEText text, Range range)
+		public static string Comment(NEText text, NERange range)
 		{
 			var str = text.GetString(range.Start, range.Length);
 			if (string.IsNullOrWhiteSpace(str))
@@ -103,7 +103,7 @@ namespace NeoEdit.Editor.Content.HTML
 			return $"<!--{str.Replace("-->", "--><!--")}-->";
 		}
 
-		public static string Uncomment(NEText text, Range range)
+		public static string Uncomment(NEText text, NERange range)
 		{
 			var str = text.GetString(range.Start, range.Length);
 			if ((string.IsNullOrWhiteSpace(str)) || (!str.StartsWith("<!--")) || (!str.EndsWith("-->")))

@@ -5,6 +5,6 @@ namespace NeoEdit.Editor.Searchers
 {
 	public interface ISearcher
 	{
-		List<Range> Find(string input, int addOffset = 0);
+		List<NERange> Find(string input, int addOffset = 0);
 	}
 }

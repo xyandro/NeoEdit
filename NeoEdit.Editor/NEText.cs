@@ -25,7 +25,7 @@ namespace NeoEdit.Editor
 		public string OnlyEnding { get; private set; }
 		public string DefaultEnding { get; private set; }
 
-		NETextPoint neTextPoint = new NETextPoint(new List<Range>(), new List<string>(), null);
+		NETextPoint neTextPoint = new NETextPoint(new List<NERange>(), new List<string>(), null);
 
 		public int Length => text.Length;
 		public int NumLines => endingPosition.Count;
@@ -420,7 +420,7 @@ namespace NeoEdit.Editor
 
 		public string GetString() => text;
 
-		public string GetString(Range range) => text.Substring(range.Start, range.Length);
+		public string GetString(NERange range) => text.Substring(range.Start, range.Length);
 
 		public string GetString(int start, int length)
 		{
@@ -429,7 +429,7 @@ namespace NeoEdit.Editor
 			return text.Substring(start, length);
 		}
 
-		public NETextPoint CreateTextPoint(IReadOnlyList<Range> ranges, IReadOnlyList<string> strs)
+		public NETextPoint CreateTextPoint(IReadOnlyList<NERange> ranges, IReadOnlyList<string> strs)
 		{
 			MoveToTextPoint(new NETextPoint(ranges, strs, neTextPoint));
 			return neTextPoint;
@@ -827,10 +827,10 @@ namespace NeoEdit.Editor
 		}
 
 		public int IndexOf(char value, int position, int length) => text.IndexOf(value, position, length);
-		public int IndexOf(char value, Range range) => text.IndexOf(value, range.Start, range.Length);
+		public int IndexOf(char value, NERange range) => text.IndexOf(value, range.Start, range.Length);
 		public int IndexOfAny(char[] anyOf, int position) => text.IndexOfAny(anyOf, position);
 		public int IndexOfAny(char[] anyOf, int position, int length) => text.IndexOfAny(anyOf, position, length);
-		public int IndexOfAny(char[] anyOf, Range range) => text.IndexOfAny(anyOf, range.Start, range.Length);
+		public int IndexOfAny(char[] anyOf, NERange range) => text.IndexOfAny(anyOf, range.Start, range.Length);
 		public bool Equals(NEText neText) => text == neText.text;
 
 		public int GetLineStartPosition(int position)
