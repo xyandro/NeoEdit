@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LibGit2Sharp;
-using SharpSvn;
 
 namespace NeoEdit.Common.Transform
 {
@@ -72,18 +71,15 @@ namespace NeoEdit.Common.Transform
 			var data = files.Select(file => new Node(file)).ToList();
 			var working = new Queue<Node>(data.OrderBy(x => x.Name, Node.NameComparer));
 
-			using (var svnClient = new SvnClient())
+			while (working.Any())
 			{
-				while (working.Any())
-				{
-					var fileName = working.Peek().Name;
+				var fileName = working.Peek().Name;
 
-					var statuses = GetStatusesGit(fileName) ?? GetStatusesSvn(svnClient, fileName);
-					if (statuses == null)
-						working.Dequeue().Status = Status.Unknown;
-					else
-						FillStatuses(statuses.Item1, statuses.Item2, statuses.Item3, statuses.Item4, working);
-				}
+				var statuses = GetStatusesGit(fileName);
+				if (statuses == null)
+					working.Dequeue().Status = Status.Unknown;
+				else
+					FillStatuses(statuses.Item1, statuses.Item2, statuses.Item3, statuses.Item4, working);
 			}
 
 			return data.Select(x => x.Status).ToList();
@@ -108,52 +104,6 @@ namespace NeoEdit.Common.Transform
 
 				return Tuple.Create(repoRoot, repoData, statusMap, ignored);
 			}
-		}
-
-		static Status GetSvnStatus(SvnStatus status)
-		{
-			switch (status)
-			{
-				case SvnStatus.Zero: return Status.Unknown;
-				case SvnStatus.None: return Status.Unknown;
-				case SvnStatus.NotVersioned: return Status.Unknown;
-				case SvnStatus.Normal: return Status.Normal;
-				case SvnStatus.Added: return Status.Modified;
-				case SvnStatus.Missing: return Status.Modified;
-				case SvnStatus.Deleted: return Status.Modified;
-				case SvnStatus.Replaced: return Status.Modified;
-				case SvnStatus.Modified: return Status.Modified;
-				case SvnStatus.Merged: return Status.Modified;
-				case SvnStatus.Conflicted: return Status.Modified;
-				case SvnStatus.Ignored: return Status.Ignored;
-				case SvnStatus.Obstructed: return Status.Modified;
-				case SvnStatus.External: return Status.Modified;
-				case SvnStatus.Incomplete: return Status.Modified;
-				default: throw new Exception("Invalid status");
-			}
-		}
-
-		static Tuple<string, string, Dictionary<string, Status>, List<string>> GetStatusesSvn(SvnClient svnClient, string fileName)
-		{
-			var repoRoot = svnClient.GetWorkingCopyRoot(fileName).ToLowerInvariant() + '\\';
-			if (repoRoot == null)
-				return null;
-
-			var statusMap = new Dictionary<string, Status>();
-			var ignored = new List<string>();
-			svnClient.Status(repoRoot, new SvnStatusArgs { RetrieveIgnoredEntries = true, Depth = SvnDepth.Infinity }, (sender, eventArgs) =>
-			{
-				var path = eventArgs.FullPath.ToLowerInvariant() + '\\';
-				var status = GetSvnStatus(eventArgs.LocalContentStatus);
-				if (status == Status.Ignored)
-					ignored.Add(path);
-				else
-					statusMap[path] = status;
-			});
-
-			ignored = ignored.OrderBy(Node.NameComparer).ToList();
-
-			return Tuple.Create(repoRoot, $@"{repoRoot}.svn\", statusMap, ignored);
 		}
 
 		static void FillStatuses(string repoRoot, string repoData, Dictionary<string, Status> statusMap, List<string> ignored, Queue<Node> working)
@@ -231,24 +181,6 @@ namespace NeoEdit.Common.Transform
 			catch { return null; }
 		}
 
-		static byte[] GetUnmodifiedSvnFile(string file)
-		{
-			try
-			{
-				file = SvnTools.GetTruePath(file);
-				if (file == null)
-					return null;
-
-				using (var ms = new MemoryStream())
-				{
-					using (var client = new SvnClient())
-						client.Write(SvnPathTarget.FromString(file), ms, new SvnWriteArgs() { Revision = SvnRevision.Base });
-					return ms.ToArray();
-				}
-			}
-			catch { return null; }
-		}
-
-		public static byte[] GetUnmodifiedFile(string file) => GetUnmodifiedGitFile(file) ?? GetUnmodifiedSvnFile(file);
+		public static byte[] GetUnmodifiedFile(string file) => GetUnmodifiedGitFile(file);
 	}
 }
