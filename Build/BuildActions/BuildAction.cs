@@ -19,7 +19,7 @@ namespace Build.BuildActions
 			foreach (var platform in platforms)
 			{
 				writeText($"Building {configuration}.{platform}...");
-				var arguments = $@"""{App.Location}\NeoEdit.sln"" /build ""{configuration}|{platform}"" /project Loader";
+				var arguments = $@"""{App.Location}\NeoEdit.sln"" /build ""{configuration}|{platform}"" /project NeoEdit";
 				RunCommand(writeText, devenv, arguments);
 			}
 		}

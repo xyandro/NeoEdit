@@ -5,11 +5,6 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compress", "Compress\Compress.csproj", "{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loader", "Loader\Loader.csproj", "{770DFCD1-C149-40E4-B1A1-76D06465A57C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DB80FD39-0222-4591-B224-833259BAC943} = {DB80FD39-0222-4591-B224-833259BAC943}
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-400C-4A95-B92C-95DF0146B2F4}"
 	ProjectSection(SolutionItems) = preProject
 		Todo.txt = Todo.txt
@@ -51,14 +46,6 @@ Global
 		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}.Release|32.Build.0 = Release|Any CPU
 		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}.Release|64.ActiveCfg = Release|Any CPU
 		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}.Release|64.Build.0 = Release|Any CPU
-		{770DFCD1-C149-40E4-B1A1-76D06465A57C}.Debug|32.ActiveCfg = Debug|Any CPU
-		{770DFCD1-C149-40E4-B1A1-76D06465A57C}.Debug|32.Build.0 = Debug|Any CPU
-		{770DFCD1-C149-40E4-B1A1-76D06465A57C}.Debug|64.ActiveCfg = Debug|Any CPU
-		{770DFCD1-C149-40E4-B1A1-76D06465A57C}.Debug|64.Build.0 = Debug|Any CPU
-		{770DFCD1-C149-40E4-B1A1-76D06465A57C}.Release|32.ActiveCfg = Release|Any CPU
-		{770DFCD1-C149-40E4-B1A1-76D06465A57C}.Release|32.Build.0 = Release|Any CPU
-		{770DFCD1-C149-40E4-B1A1-76D06465A57C}.Release|64.ActiveCfg = Release|Any CPU
-		{770DFCD1-C149-40E4-B1A1-76D06465A57C}.Release|64.Build.0 = Release|Any CPU
 		{DB80FD39-0222-4591-B224-833259BAC943}.Debug|32.ActiveCfg = Debug|x86
 		{DB80FD39-0222-4591-B224-833259BAC943}.Debug|32.Build.0 = Debug|x86
 		{DB80FD39-0222-4591-B224-833259BAC943}.Debug|64.ActiveCfg = Debug|x64

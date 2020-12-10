@@ -32,7 +32,6 @@ namespace Build
 				new VerifyCleanAction(),
 				new UpdateAction(),
 				new BuildAction(),
-				new LoaderAction(),
 				new CleanAction(),
 				new DeleteReleasesAction(),
 				new ReleaseAction(),

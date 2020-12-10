@@ -55,7 +55,6 @@
     <Compile Include="BuildActions\CleanAction.cs" />
     <Compile Include="BuildActions\DeleteIgnoredAction.cs" />
     <Compile Include="BuildActions\DeleteReleasesAction.cs" />
-    <Compile Include="BuildActions\LoaderAction.cs" />
     <Compile Include="BuildActions\ReleaseAction.cs" />
     <Compile Include="BuildActions\UpdateAction.cs" />
     <Compile Include="BuildActions\VerifyCleanAction.cs" />
