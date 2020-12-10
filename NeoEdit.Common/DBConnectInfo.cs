@@ -2,7 +2,6 @@
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Data.SQLite;
-using System.Data.SqlServerCe;
 using MySql.Data.MySqlClient;
 using NeoEdit.Common.Transform;
 
@@ -15,7 +14,6 @@ namespace NeoEdit.Common
 			None,
 			MSSQL,
 			MySQL,
-			SQLCE,
 			SQLite,
 		}
 
@@ -37,7 +35,6 @@ namespace NeoEdit.Common
 			{
 				case DBType.MSSQL: return new SqlConnectionStringBuilder(ConnectionString);
 				case DBType.MySQL: return new MySqlConnectionStringBuilder(ConnectionString);
-				case DBType.SQLCE: return new SqlCeConnectionStringBuilder(ConnectionString);
 				case DBType.SQLite: return new SQLiteConnectionStringBuilder(ConnectionString);
 				default: throw new ArgumentException("Invalid database type");
 			}
@@ -47,7 +44,6 @@ namespace NeoEdit.Common
 		{
 			switch (Type)
 			{
-				case DBType.SQLCE: using (var engine = new SqlCeEngine(ConnectionString)) engine.CreateDatabase(); break;
 				case DBType.SQLite: SQLiteConnection.CreateFile((GetBuilder() as SQLiteConnectionStringBuilder).DataSource); break;
 				default: throw new ArgumentException("Can't create database");
 			}
@@ -60,7 +56,6 @@ namespace NeoEdit.Common
 			{
 				case DBType.MSSQL: conn = new SqlConnection(ConnectionString); break;
 				case DBType.MySQL: conn = new MySqlConnection(ConnectionString); break;
-				case DBType.SQLCE: conn = new SqlCeConnection(ConnectionString); break;
 				case DBType.SQLite: conn = new SQLiteConnection(ConnectionString); break;
 				default: throw new ArgumentException("Invalid database type");
 			}
