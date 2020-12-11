@@ -33,14 +33,14 @@ namespace NeoEdit.UI
 		}
 
 		public readonly INEWindow neWindow;
-		public readonly App app;
+		public readonly NEGlobalUI neGlobalUI;
 
 		public RenderParameters renderParameters;
 
-		public NEWindowUI(INEWindow neWindow, App app)
+		public NEWindowUI(INEWindow neWindow, NEGlobalUI neGlobalUI)
 		{
 			this.neWindow = neWindow;
-			this.app = app;
+			this.neGlobalUI = neGlobalUI;
 
 			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command, Keyboard.Modifiers) { MultiStatus = multiStatus }));
 			InitializeComponent();
@@ -55,7 +55,7 @@ namespace NeoEdit.UI
 			SetForeground();
 		}
 
-		public void HandleCommand(ExecuteState state) => App.HandleCommand(neWindow, state);
+		public void HandleCommand(ExecuteState state) => NEGlobalUI.HandleCommand(neWindow, state);
 
 		public void SendActivateIfActive()
 		{
@@ -108,12 +108,12 @@ namespace NeoEdit.UI
 				key = e.SystemKey;
 
 			if (key == Key.Escape)
-				e.Handled = app.StopTasks();
+				e.Handled = neGlobalUI.StopTasks();
 
 			if (key == Key.Cancel)
-				e.Handled = app.KillTasks();
+				e.Handled = neGlobalUI.KillTasks();
 
-			if ((!e.Handled) && (app.HandlesKey(Keyboard.Modifiers, key)))
+			if ((!e.Handled) && (neGlobalUI.HandlesKey(Keyboard.Modifiers, key)))
 			{
 				HandleCommand(new ExecuteState(NECommand.Internal_Key, Keyboard.Modifiers) { Key = key });
 				e.Handled = true;
@@ -399,7 +399,7 @@ namespace NeoEdit.UI
 			}
 		}
 
-		void OnStopTasks() => app.StopTasks();
-		void OnKillTasks() => app.KillTasks();
+		void OnStopTasks() => neGlobalUI.StopTasks();
+		void OnKillTasks() => neGlobalUI.KillTasks();
 	}
 }

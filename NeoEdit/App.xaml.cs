@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
 using System.IO.Pipes;
@@ -7,33 +6,25 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Threading;
-using NeoEdit.Common;
-using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
-using NeoEdit.UI.CommandLine;
-using NeoEdit.UI.Dialogs;
+using NeoEdit.Editor;
+using NeoEdit.UI;
 using Newtonsoft.Json;
 
-namespace NeoEdit.UI
+namespace NeoEdit
 {
 	partial class App
 	{
-		const int DrawFrequency = 5;
-
-		readonly INEGlobal neGlobal;
-
-		public static void RunProgram(Func<INEGlobal> getNEGlobal, string commandLine)
+		public static void RunProgram(CommandLineParams commandLineParams)
 		{
-			try { RunCommandLine(getNEGlobal, commandLine); }
+			try { RunCommandLine(commandLineParams); }
 			catch (Exception ex) { NEWindowUI.ShowExceptionMessage(ex); }
 		}
 
-		static void RunCommandLine(Func<INEGlobal> getNEGlobal, string commandLine)
+		static void RunCommandLine(CommandLineParams commandLineParams)
 		{
-			var commandLineParams = CommandLineVisitor.GetCommandLineParams(commandLine);
 			HandleWaitPID(commandLineParams);
 
 			var masterPid = default(int?);
@@ -41,13 +32,13 @@ namespace NeoEdit.UI
 				masterPid = GetMasterPID();
 			if (!masterPid.HasValue)
 			{
-				var app = new App(getNEGlobal());
+				var app = new App();
 				if (!commandLineParams.Multi)
 				{
 					SetMasterPID();
 					app.SetupPipeWait();
 				}
-				app.HandleCommandLine(commandLineParams);
+				app.neGlobalUI.HandleCommandLine(commandLineParams);
 				app.Run();
 				return;
 			}
@@ -75,7 +66,7 @@ namespace NeoEdit.UI
 
 		const string IPCName = "NeoEdit-{debe0282-0e9d-47fd-836c-60f500dbaeb5}";
 		const string ShutdownEventName = "NeoEdit-Wait-{0}";
-
+		private readonly NEGlobalUI neGlobalUI;
 		static MemoryMappedFile masterPIDFile;
 
 		static void HandleWaitPID(CommandLineParams commandLineParams)
@@ -116,99 +107,19 @@ namespace NeoEdit.UI
 				pipe.Read(buf, 0, buf.Length);
 				var commandLineParams = JsonConvert.DeserializeObject<CommandLineParams>(Coder.BytesToString(buf, Coder.CodePage.UTF8));
 
-				HandleCommandLine(commandLineParams);
+				neGlobalUI.HandleCommandLine(commandLineParams);
 
 				SetupPipeWait();
 			}, null);
 		}
 
-		static readonly BlockingCollection<(INEWindow, ExecuteState)> states = new BlockingCollection<(INEWindow, ExecuteState)>();
-
-		static int numSkipped = 0;
-
-		void RunThread()
+		public App()
 		{
-			while (true)
-			{
-				try
-				{
-					(var neWindow, var state) = states.Take();
-					Dispatcher.Invoke(() => Clipboarder.GetSystem());
-					neGlobal.HandleCommand(neWindow, state, SkipDraw);
-					Dispatcher.Invoke(() => Clipboarder.SetSystem());
-				}
-				catch { }
-			}
-		}
-
-		static bool SkipDraw()
-		{
-			if (states.Count == 0)
-			{
-				numSkipped = 0;
-				return false;
-			}
-
-			++numSkipped;
-			if (numSkipped == DrawFrequency)
-			{
-				numSkipped = 0;
-				return false;
-			}
-
-			return true;
-		}
-
-		public bool HandlesKey(ModifierKeys modifiers, Key key) => neGlobal.HandlesKey(modifiers, key);
-
-		void HandleCommandLine(CommandLineParams commandLineParams)
-		{
-			if (Dispatcher?.CheckAccess() == false)
-				Dispatcher.Invoke(() => HandleCommandLine(commandLineParams));
-			else
-				HandleCommand(new ExecuteState(NECommand.Internal_CommandLine, Keyboard.Modifiers) { Configuration = new Configuration_Internal_CommandLine { CommandLineParams = commandLineParams } });
-		}
-
-		public static void HandleCommand(ExecuteState state) => HandleCommand(null, state);
-
-		public static void HandleCommand(INEWindow neWindow, ExecuteState state) => states.Add((neWindow, state));
-
-		public bool StopTasks()
-		{
-			var result = false;
-			if (CancelActive())
-				result = true;
-			if (neGlobal.StopTasks())
-				result = true;
-			return result;
-		}
-
-		public bool KillTasks()
-		{
-			CancelActive();
-			neGlobal.KillTasks();
-			return true;
-		}
-
-		static bool CancelActive()
-		{
-			var result = false;
-			while (states.TryTake(out var _))
-				result = true;
-			return result;
-		}
-
-		public App(INEGlobal neGlobal)
-		{
-			this.neGlobal = neGlobal;
+			neGlobalUI = new NEGlobalUI(new NEGlobal(), Dispatcher);
 
 			new NEMenu(); // The first time it creates a menu it's slow, do it while the user isn't waiting
 			Clipboarder.Initialize();
 			Font.Reset();
-
-			INEWindowUIStatic.CreateNEWindowUI = neWindow => Dispatcher.Invoke(() => new NEWindowUI(neWindow, this));
-			INEWindowUIStatic.GetDecryptKey = type => Dispatcher.Invoke(() => File_Advanced_Encrypt_Dialog.Run(null, type, false).Key);
-			INEWindowUIStatic.ShowExceptionMessage = ex => Dispatcher.Invoke(() => NEWindowUI.ShowExceptionMessage(ex));
 
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
@@ -220,7 +131,6 @@ namespace NeoEdit.UI
 		{
 			EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotFocusEvent, new RoutedEventHandler((s, e2) => (s as TextBox).SelectAll()));
 			base.OnStartup(e);
-			new Thread(RunThread) { Name = nameof(App) }.Start();
 		}
 
 		void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

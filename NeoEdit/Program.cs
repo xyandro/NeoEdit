@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
-using NeoEdit.Editor;
-using NeoEdit.UI;
+using NeoEdit.CommandLine;
 
 namespace NeoEdit
 {
 	class Program
 	{
-		[STAThread] static void Main() => App.RunProgram(() => new NEGlobal(), string.Join(" ", Environment.GetCommandLineArgs().Skip(1).Select(str => $"\"{str}\"")));
+		[STAThread]
+		static void Main(string[] args) => App.RunProgram(CommandLineVisitor.GetCommandLineParams(string.Join(" ", args.Select(str => $"\"{str}\""))));
 	}
 }

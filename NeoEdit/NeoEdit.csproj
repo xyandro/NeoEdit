@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="BuildCommandLine" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Target Name="BuildCommandLine" Inputs="CommandLine\Source\CommandLineLexer.g4;CommandLine\Source\CommandLineParser.g4" Outputs="CommandLine\Parser\CommandLineLexer.cs;CommandLine\Parser\CommandLineParser.cs;CommandLine\Parser\CommandLineParserBaseVisitor.cs;CommandLine\Parser\CommandLineParserVisitor.cs" Returns="">
+    <Message Text="Building CommandLine parser" Importance="High" />
+    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.CommandLine.Parser -o &quot;$(ProjectDir)CommandLine\Parser&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineLexer.g4&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineParser.g4&quot;" />
+  </Target>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -22,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <NoWarn>3021</NoWarn>
     <CopyRetryCount>0</CopyRetryCount>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)' == 'x64'">
@@ -37,6 +42,9 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>NeoEdit.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Resource Include="$(SolutionDir)Photoshop\NeoEdit.ico">
       <Link>NeoEdit.ico</Link>
@@ -45,12 +53,30 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <None Include="App.config" />
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommandLine\CommandLineVisitor.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineLexer.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineParser.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineParserBaseVisitor.cs" />
+    <Compile Include="CommandLine\Parser\CommandLineParserVisitor.cs" />
+    <None Include="CommandLine\Source\CommandLineLexer.g4" />
+    <None Include="CommandLine\Source\CommandLineParser.g4" />
     <None Include="packages.config" />
     <Compile Include="Program.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj">
@@ -65,11 +91,16 @@
       <Project>{bf989b15-1e74-49d5-8487-426a94902012}</Project>
       <Name>NeoEdit.UI</Name>
     </ProjectReference>
+    <Reference Include="Antlr4.Runtime.Standard, Version=4.8.0.0, Culture=neutral, PublicKeyToken=e78b2c5abd1fcb3f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr4.Runtime.Standard.4.8.0\lib\net35\Antlr4.Runtime.Standard.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

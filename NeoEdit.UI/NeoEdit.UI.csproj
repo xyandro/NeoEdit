@@ -1,13 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="BuildChangeLog;BuildCommandLine;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" InitialTargets="BuildChangeLog;License" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Target Name="BuildChangeLog" Inputs="NeoEdit.UI.csproj" Outputs="Resources\ChangeLog.txt" Returns="">
     <Message Text="Building ChangeLog" Importance="High" />
     <Exec Command="ChangeLog.bat &quot;Resources\ChangeLog.txt&quot;" />
-  </Target>
-  <Target Name="BuildCommandLine" Inputs="CommandLine\Source\CommandLineLexer.g4;CommandLine\Source\CommandLineParser.g4" Outputs="CommandLine\Parser\CommandLineLexer.cs;CommandLine\Parser\CommandLineParser.cs;CommandLine\Parser\CommandLineParserBaseVisitor.cs;CommandLine\Parser\CommandLineParserVisitor.cs" Returns="">
-    <Message Text="Building CommandLine parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.UI.CommandLine.Parser -o &quot;$(ProjectDir)CommandLine\Parser&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineLexer.g4&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineParser.g4&quot;" />
   </Target>
   <Target Name="License" Inputs="$(SolutionDir)License.txt" Outputs="Resources\License.txt" Returns="">
     <Message Text="Copy license" Importance="High" />
@@ -54,21 +50,7 @@
       <Link>Resources\NeoEdit.png</Link>
     </Resource>
     <None Include="app.config" />
-    <Page Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Clipboarder.cs" />
-    <Compile Include="CommandLine\CommandLineVisitor.cs" />
-    <Compile Include="CommandLine\Parser\CommandLineLexer.cs" />
-    <Compile Include="CommandLine\Parser\CommandLineParser.cs" />
-    <Compile Include="CommandLine\Parser\CommandLineParserBaseVisitor.cs" />
-    <Compile Include="CommandLine\Parser\CommandLineParserVisitor.cs" />
-    <None Include="CommandLine\Source\CommandLineLexer.g4" />
-    <None Include="CommandLine\Source\CommandLineParser.g4" />
     <Page Include="Controls\AutoCompleteTextBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -865,6 +847,7 @@
     <Compile Include="NEFileUI.xaml.cs">
       <DependentUpon>NEFileUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NEGlobalUI.cs" />
     <Page Include="NEMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -899,10 +882,6 @@
     <EmbeddedResource Include="Resources\License.txt" />
     <Resource Include="Resources\Unchecked.png" />
     <EmbeddedResource Include="Resources\Unicode.dat" />
-    <Page Include="Theme.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Tutorial\Pages\AdvancedFind.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
