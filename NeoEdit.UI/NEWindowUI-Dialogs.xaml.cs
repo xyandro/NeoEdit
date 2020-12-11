@@ -54,7 +54,7 @@ namespace NeoEdit.UI
 				return new Configuration_FileMacro_Open_Open { FileNames = dialog.FileNames.ToList() };
 			});
 		}
-		public Configuration_File_OpenEncoding_ReopenWithEncoding RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(Coder.CodePage? codePage = null, Coder.CodePage detected = Coder.CodePage.None) => RunOnUIThread(() => File_OpenEncoding_ReopenWithEncoding_Dialog.Run(this, codePage, detected));
+		public Configuration_File_OpenEncoding_ReopenWithEncoding RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(Coder.CodePage codePage, bool hasBOM) => RunOnUIThread(() => File_OpenEncoding_ReopenWithEncoding_Dialog.Run(this, codePage, hasBOM));
 		public Configuration_FileTable_Various_Various RunDialog_Configure_FileTable_Various_Various(NEVariables variables, int? numRows = null) => RunOnUIThread(() => FileTable_Various_Various_Dialog.Run(this, variables, numRows));
 		public Configuration_File_LineEndings RunDialog_Configure_File_LineEndings(string lineEndings) => RunOnUIThread(() => File_LineEndings_Dialog.Run(this, lineEndings));
 		public Configuration_File_Advanced_Encrypt RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type type, bool encrypt) => RunOnUIThread(() => File_Advanced_Encrypt_Dialog.Run(this, type, encrypt));

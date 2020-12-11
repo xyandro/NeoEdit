@@ -12,19 +12,15 @@
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Code page:" Target="{Binding ElementName=codePage}" HorizontalAlignment="Right"/>
-		<ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Name="codePage" SelectedValue="{Binding CodePage, ElementName=self}"/>
+		<ComboBox Grid.Row="0" Grid.Column="1" Name="codePage" ItemsSource="{Binding CodePages, ElementName=self}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding CodePage, ElementName=self}"/>
+		<CheckBox Grid.Row="0" Grid.Column="2" Content="_BOM" IsChecked="{Binding HasBOM, ElementName=self}" VerticalAlignment="Center"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="_Detected:" Target="{Binding ElementName=setDetected}" HorizontalAlignment="Right"/>
-		<Label Grid.Row="1" Grid.Column="1" Content="{Binding DetectedStr, ElementName=self}"/>
-		<Button Grid.Row="1" Grid.Column="2" Name="setDetected" Content="_Set" Click="SetDetected" Padding="10,0" VerticalAlignment="Center"/>
-
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

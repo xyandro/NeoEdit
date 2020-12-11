@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NeoEdit.Common;
-using NeoEdit.Common.Parsing;
 
 namespace NeoEdit.Common.Transform
 {
@@ -45,7 +44,6 @@ namespace NeoEdit.Common.Transform
 
 			StartString = -50,
 
-			AutoUnicode = -40,
 			AutoByBOM = -41,
 
 			StartNonAutoString = -30,
@@ -64,8 +62,7 @@ namespace NeoEdit.Common.Transform
 			UTF32BE = 12001,
 		}
 
-		public static IReadOnlyCollection<CodePage> DefaultCodePages { get; } = new HashSet<CodePage> { CodePage.UInt8, CodePage.UInt16LE, CodePage.UInt32LE, CodePage.UInt64LE, CodePage.Int8, CodePage.Int16LE, CodePage.Int32LE, CodePage.Int64LE, DefaultCodePage, CodePage.UTF8, CodePage.UTF16LE };
-		public static CodePage DefaultCodePage => (CodePage)Encoding.Default.CodePage;
+		public static IReadOnlyCollection<CodePage> DefaultCodePages { get; } = new HashSet<CodePage> { CodePage.UInt8, CodePage.UInt16LE, CodePage.UInt32LE, CodePage.UInt64LE, CodePage.Int8, CodePage.Int16LE, CodePage.Int32LE, CodePage.Int64LE, CodePage.UTF8, CodePage.UTF16LE, CodePage.CodePage1252 };
 
 		public static int BytesRequired(this CodePage codePage)
 		{
@@ -161,8 +158,6 @@ namespace NeoEdit.Common.Transform
 				{
 					if (codePage > 0)
 						description += $" - Codepage {(int)codePage}";
-					if (codePage == DefaultCodePage)
-						description = $"Default - {description}";
 					encoding = Encoding.GetEncoding((int)codePage);
 					preamble = encoding.GetPreamble();
 					if ((preamble != null) && (preamble.Length == 0))
@@ -179,19 +174,17 @@ namespace NeoEdit.Common.Transform
 		static Coder()
 		{
 			var encodings = Encoding.GetEncodings().Select(encoding => new NEEncoding(encoding)).OrderBy(encoding => encoding.description).ToList();
-			var defaultEncoding = encodings.Single(encoding => encoding.codePage == DefaultCodePage);
 
 			NEEncodings = new List<NEEncoding>
 			{
-				defaultEncoding,
-				new NEEncoding(CodePage.ASCII, "ASCII"),
 				new NEEncoding(CodePage.UTF8, "UTF8"),
 				new NEEncoding(CodePage.UTF16LE, "UTF16 (Little endian)"),
 				new NEEncoding(CodePage.UTF16BE, "UTF16 (Big endian)"),
 				new NEEncoding(CodePage.UTF32LE, "UTF32 (Little endian)"),
 				new NEEncoding(CodePage.UTF32BE, "UTF32 (Big endian)"),
-				new NEEncoding(CodePage.AutoUnicode, "Auto Unicode"),
 				new NEEncoding(CodePage.AutoByBOM, "Auto By BOM"),
+				new NEEncoding(CodePage.ASCII, "ASCII"),
+				new NEEncoding(CodePage.CodePage1252, "1252 (Windows)"),
 				new NEEncoding(CodePage.Hex, "Hex"),
 				new NEEncoding(CodePage.HexRev, "Hex Reversed"),
 				new NEEncoding(CodePage.Binary, "Binary"),
@@ -523,6 +516,12 @@ namespace NeoEdit.Common.Transform
 			return string.Join(" ", result);
 		}
 
+		public static bool HasBOM(byte[] data, CodePage codePage)
+		{
+			var encoding = NEEncodingDictionary[codePage];
+			return (encoding.preamble != null) && (data.Length >= encoding.preamble.Length) && (data.Equal(encoding.preamble, encoding.preamble.Length));
+		}
+
 		public static string TryBytesToString(byte[] data, CodePage codePage, bool stripBOM = false)
 		{
 			try
@@ -719,46 +718,11 @@ namespace NeoEdit.Common.Transform
 			switch (codePage)
 			{
 				case CodePage.AutoByBOM: return CodePageFromBOM(data);
-				case CodePage.AutoUnicode: return GuessUnicodeEncoding(data);
 				default: return codePage;
 			}
 		}
 
-		public static CodePage CodePageFromBOM(string fileName)
-		{
-			var maxPreambleLength = MaxPreambleSize;
-			using (var file = File.OpenRead(fileName))
-			{
-				var header = new byte[Math.Min(maxPreambleLength, file.Length)];
-				file.Read(header, 0, header.Length);
-				return CodePageFromBOM(header);
-			}
-		}
-
-		public static CodePage CodePageFromBOM(byte[] data) => NEEncodings.NonNull(encoding => encoding.preamble).OrderByDescending(encoding => encoding.preamble.Length).Where(encoding => (data.Length >= encoding.preamble.Length) && (data.Equal(encoding.preamble, encoding.preamble.Length))).Select(encoding => encoding.codePage).DefaultIfEmpty(DefaultCodePage).First();
-
-		public static CodePage GuessUnicodeEncoding(byte[] data)
-		{
-			var encoding = CodePageFromBOM(data);
-			if (encoding != DefaultCodePage)
-				return encoding;
-
-			if (data.Length >= 4)
-			{
-				if (BitConverter.ToUInt32(data, 0) <= 0xffff)
-					return CodePage.UTF32LE;
-				if (BitConverter.ToUInt32(data.Take(4).Reverse().ToArray(), 0) <= 0xffff)
-					return CodePage.UTF32BE;
-			}
-
-			var zeroIndex = Array.IndexOf(data, (byte)0);
-			if (zeroIndex == -1)
-				return CodePage.UTF8;
-			else if ((zeroIndex & 1) == 1)
-				return CodePage.UTF16LE;
-			else
-				return CodePage.UTF16BE;
-		}
+		public static CodePage CodePageFromBOM(byte[] data) => NEEncodings.NonNull(encoding => encoding.preamble).OrderByDescending(encoding => encoding.preamble.Length).Where(encoding => (data.Length >= encoding.preamble.Length) && (data.Equal(encoding.preamble, encoding.preamble.Length))).Select(encoding => encoding.codePage).DefaultIfEmpty(CodePage.UTF8).First();
 
 		public static List<CodePage> GetAllCodePages() => NEEncodings.Select(encoding => encoding.codePage).ToList();
 		public static List<CodePage> GetStringCodePages() => GetAllCodePages().Where(codePage => IsStr(codePage)).ToList();

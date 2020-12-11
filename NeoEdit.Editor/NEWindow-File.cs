@@ -138,8 +138,8 @@ namespace NeoEdit.Editor
 
 		void Configure_File_Open_ReopenWithEncoding()
 		{
-			var codePage = ActiveFiles.GroupBy(neFile => neFile.CodePage).OrderByDescending(group => group.Count()).Select(group => group.Key).DefaultIfEmpty(Coder.CodePage.UTF8).First();
-			state.Configuration = neWindowUI.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(codePage);
+			(var codePage, var hasBOM) = ActiveFiles.GroupBy(neFile => (neFile.CodePage, neFile.HasBOM)).OrderByDescending(group => group.Count()).Select(group => group.Key).DefaultIfEmpty((Coder.CodePage.UTF8, true)).First();
+			state.Configuration = neWindowUI.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(codePage, hasBOM);
 		}
 	}
 }

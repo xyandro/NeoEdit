@@ -40,6 +40,7 @@ namespace NeoEdit.Editor
 		ParserType contentType;
 		public ParserType ContentType { get => contentType; set { contentType = value; NEWindow?.SetNeedsRender(); } }
 		public Coder.CodePage CodePage { get; private set; }
+		public bool HasBOM { get; private set; }
 		public string AESKey { get; private set; }
 		public bool Compressed { get; private set; }
 		public bool DiffIgnoreWhitespace { get; private set; }
@@ -1502,7 +1503,10 @@ namespace NeoEdit.Editor
 				return true;
 
 			if (QueryUser(nameof(VerifyCanEncode), "The current encoding cannot fully represent this data. Switch to UTF-8?", MessageOptions.Yes))
+			{
 				CodePage = Coder.CodePage.UTF8;
+				HasBOM = true;
+			}
 			return true;
 		}
 
@@ -1518,7 +1522,7 @@ namespace NeoEdit.Editor
 				{
 					if ((!copyOnly) && (watcher != null))
 						watcher.EnableRaisingEvents = false;
-					File.WriteAllBytes(fileName, FileSaver.Encrypt(FileSaver.Compress(Text.GetBytes(CodePage), Compressed), AESKey));
+					File.WriteAllBytes(fileName, FileSaver.Encrypt(FileSaver.Compress(Text.GetBytes(CodePage, HasBOM), Compressed), AESKey));
 					if ((!copyOnly) && (watcher != null))
 						watcher.EnableRaisingEvents = true;
 					break;
@@ -1585,11 +1589,10 @@ namespace NeoEdit.Editor
 			bytes = FileSaver.Decompress(bytes, out var compressed);
 			Compressed = compressed;
 
-			if (codePage == Coder.CodePage.AutoByBOM)
-				codePage = Coder.CodePageFromBOM(bytes);
-			CodePage = codePage;
+			CodePage = Coder.ResolveCodePage(codePage, bytes);
+			HasBOM = Coder.HasBOM(bytes, CodePage);
 
-			var data = Coder.BytesToString(bytes, codePage, true);
+			var data = Coder.BytesToString(bytes, CodePage, true);
 			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { data });
 
 			if (File.Exists(FileName))

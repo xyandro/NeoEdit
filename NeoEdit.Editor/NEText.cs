@@ -40,7 +40,7 @@ namespace NeoEdit.Editor
 
 		public bool CanEncode(Coder.CodePage codePage) => Coder.CanEncode(text, codePage);
 
-		public byte[] GetBytes(Coder.CodePage codePage) => Coder.StringToBytes(text, codePage, true);
+		public byte[] GetBytes(Coder.CodePage codePage, bool writeBOM) => Coder.StringToBytes(text, codePage, writeBOM);
 
 		void CalculateLines()
 		{

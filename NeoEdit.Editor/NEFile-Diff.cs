@@ -250,6 +250,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Diff not in progress");
 
 			CodePage = DiffTarget.CodePage;
+			HasBOM = DiffTarget.HasBOM;
 		}
 	}
 }
