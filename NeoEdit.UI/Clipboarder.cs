@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -9,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
@@ -17,28 +17,26 @@ namespace NeoEdit.UI
 {
 	public class Clipboarder
 	{
-		[DesignerCategory("Code")]
-		class ClipboardChangeNotifier : System.Windows.Forms.Form
+		class ClipboardChangeNotifier
 		{
 			readonly Action callback;
 			public ClipboardChangeNotifier(Action callback)
 			{
 				this.callback = callback;
 				IntPtr HWND_MESSAGE = new IntPtr(-3);
-				SetParent(Handle, HWND_MESSAGE);
-				AddClipboardFormatListener(Handle);
+				var hwndSource = new HwndSource(0, 0, 0, 0, 0, 0, 0, null, HWND_MESSAGE);
+				hwndSource.AddHook(WndProc);
+				AddClipboardFormatListener(hwndSource.Handle);
 			}
 
-			protected override void WndProc(ref System.Windows.Forms.Message m)
+			IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 			{
 				const int WM_CLIPBOARDUPDATE = 0x031D;
-				if (m.Msg == WM_CLIPBOARDUPDATE)
+				if (msg == WM_CLIPBOARDUPDATE)
 					callback();
-				base.WndProc(ref m);
+				//base.WndProc(ref m);
+				return IntPtr.Zero;
 			}
-
-			[DllImport("user32.dll", SetLastError = true)]
-			static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
 			[DllImport("user32.dll", SetLastError = true)]
 			[return: MarshalAs(UnmanagedType.Bool)]

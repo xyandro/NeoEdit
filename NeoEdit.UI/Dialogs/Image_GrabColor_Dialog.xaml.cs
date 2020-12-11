@@ -94,15 +94,7 @@ namespace NeoEdit.UI.Dialogs
 
 			if (hwnd == new WindowInteropHelper(this).Handle)
 			{
-				Rect ownerRect;
-				if (Owner.WindowState == WindowState.Maximized)
-				{
-					var useRect = System.Windows.Forms.Screen.GetWorkingArea(new System.Drawing.Point((int)Owner.Left, (int)Owner.Top));
-					ownerRect = new Rect(useRect.X, useRect.Y, useRect.Width, useRect.Height);
-				}
-				else
-					ownerRect = new Rect(Owner.Left, Owner.Top, Owner.ActualWidth, Owner.ActualHeight);
-
+				var ownerRect = new Rect(Owner.Left, Owner.Top, Owner.ActualWidth, Owner.ActualHeight);
 				var points = new List<Point>
 				{
 					new Point(ownerRect.Left + 10, ownerRect.Top + 10), // Top left
