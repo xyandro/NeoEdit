@@ -578,7 +578,7 @@ namespace NeoEdit.Editor
 			var strs = GetSelectionStrings();
 			if (!CheckCanEncode(strs, result.CodePage))
 				return;
-			ReplaceSelections(strs.AsTaskRunner().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType, result.HMACKey)).ToList());
+			ReplaceSelections(strs.AsTaskRunner().Select(str => Hasher.Get(Coder.StringToBytes(str, result.CodePage), result.HashType)).ToList());
 		}
 
 		static void Configure_Edit_Advanced_Compress() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Advanced_CompressDecompress(state.NEWindow.Focused.CodePage, true);

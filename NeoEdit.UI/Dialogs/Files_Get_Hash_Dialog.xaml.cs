@@ -12,8 +12,6 @@ namespace NeoEdit.UI.Dialogs
 	{
 		[DepProp]
 		Hasher.Type HashType { get { return UIHelper<Files_Get_Hash_Dialog>.GetPropValue<Hasher.Type>(this); } set { UIHelper<Files_Get_Hash_Dialog>.SetPropValue(this, value); } }
-		[DepProp]
-		byte[] HMACKey { get { return UIHelper<Files_Get_Hash_Dialog>.GetPropValue<byte[]>(this); } set { UIHelper<Files_Get_Hash_Dialog>.SetPropValue(this, value); } }
 
 		static Files_Get_Hash_Dialog() { UIHelper<Files_Get_Hash_Dialog>.Register(); }
 
@@ -28,7 +26,7 @@ namespace NeoEdit.UI.Dialogs
 		Configuration_Files_Get_Hash result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Configuration_Files_Get_Hash { HashType = HashType, HMACKey = HMACKey };
+			result = new Configuration_Files_Get_Hash { HashType = HashType };
 			DialogResult = true;
 		}
 

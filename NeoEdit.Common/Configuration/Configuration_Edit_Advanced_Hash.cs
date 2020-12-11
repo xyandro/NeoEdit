@@ -6,6 +6,5 @@ namespace NeoEdit.Common.Configuration
 	{
 		public Coder.CodePage CodePage { get; set; }
 		public Hasher.Type HashType { get; set; }
-		public byte[] HMACKey { get; set; }
 	}
 }

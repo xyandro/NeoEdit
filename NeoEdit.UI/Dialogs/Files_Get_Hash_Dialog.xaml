@@ -16,7 +16,6 @@
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -24,10 +23,7 @@
 		<Label Grid.Row="0" Grid.Column="0" Content="_Hash algorithm:" Target="{Binding ElementName=hashType}" HorizontalAlignment="Right"/>
 		<ComboBox Grid.Row="0" Grid.Column="1" Name="hashType" SelectedValue="{Binding HashType, ElementName=self}"/>
 
-		<Label Grid.Row="1" Grid.Column="0" Content="HMAC _key:" Target="{Binding ElementName=hmacKey}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="1" Grid.Column="1" Name="hmacKey" Text="{Binding HMACKey, ElementName=self, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource hexConverter}}"/>
-
-		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

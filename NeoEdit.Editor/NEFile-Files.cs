@@ -674,7 +674,7 @@ namespace NeoEdit.Editor
 			var result = state.Configuration as Configuration_Files_Get_Hash;
 			ReplaceSelections(Selections.AsTaskRunner()
 				.Select(range => FileName.RelativeChild(Text.GetString(range)))
-				.Select((fileName, index, progress) => Hasher.Get(fileName, result.HashType, result.HMACKey, progress), fileName => new FileInfo(fileName).Length)
+				.Select((fileName, index, progress) => Hasher.Get(fileName, result.HashType, progress), fileName => new FileInfo(fileName).Length)
 				.ToList());
 		}
 

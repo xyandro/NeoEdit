@@ -14,8 +14,6 @@ namespace NeoEdit.UI.Dialogs
 		Coder.CodePage CodePage { get { return UIHelper<Edit_Advanced_Hash_Dialog>.GetPropValue<Coder.CodePage>(this); } set { UIHelper<Edit_Advanced_Hash_Dialog>.SetPropValue(this, value); } }
 		[DepProp]
 		Hasher.Type HashType { get { return UIHelper<Edit_Advanced_Hash_Dialog>.GetPropValue<Hasher.Type>(this); } set { UIHelper<Edit_Advanced_Hash_Dialog>.SetPropValue(this, value); } }
-		[DepProp]
-		byte[] HMACKey { get { return UIHelper<Edit_Advanced_Hash_Dialog>.GetPropValue<byte[]>(this); } set { UIHelper<Edit_Advanced_Hash_Dialog>.SetPropValue(this, value); } }
 
 		static Edit_Advanced_Hash_Dialog() { UIHelper<Edit_Advanced_Hash_Dialog>.Register(); }
 
@@ -36,7 +34,7 @@ namespace NeoEdit.UI.Dialogs
 		Configuration_Edit_Advanced_Hash result = null;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Configuration_Edit_Advanced_Hash { CodePage = CodePage, HashType = HashType, HMACKey = HMACKey };
+			result = new Configuration_Edit_Advanced_Hash { CodePage = CodePage, HashType = HashType };
 			DialogResult = true;
 		}
 
