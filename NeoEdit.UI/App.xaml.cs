@@ -208,6 +208,7 @@ namespace NeoEdit.UI
 
 			INEWindowUIStatic.CreateNEWindowUI = neWindow => Dispatcher.Invoke(() => new NEWindowUI(neWindow, this));
 			INEWindowUIStatic.GetDecryptKey = type => Dispatcher.Invoke(() => File_Advanced_Encrypt_Dialog.Run(null, type, false).Key);
+			INEWindowUIStatic.ShowExceptionMessage = ex => Dispatcher.Invoke(() => NEWindowUI.ShowExceptionMessage(ex));
 
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
 

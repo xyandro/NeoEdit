@@ -127,7 +127,10 @@ namespace NeoEdit.Editor
 				if (!(ex is OperationCanceledException))
 				{
 					NEWindows.ForEach(x => x.RenderNEWindowUI());
-					state.NEWindow.neWindowUI?.ShowExceptionMessage(ex);
+					if (state?.NEWindow?.neWindowUI == null)
+						INEWindowUIStatic.ShowExceptionMessage(ex);
+					else
+						state.NEWindow.neWindowUI.ShowExceptionMessage(ex);
 				}
 				lock (actionStack)
 					actionStack.Clear();
