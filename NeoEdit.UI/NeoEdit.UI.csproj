@@ -899,6 +899,10 @@
     <EmbeddedResource Include="Resources\License.txt" />
     <Resource Include="Resources\Unchecked.png" />
     <EmbeddedResource Include="Resources\Unicode.dat" />
+    <Page Include="Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Tutorial\Pages\AdvancedFind.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
