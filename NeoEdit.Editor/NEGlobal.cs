@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Timers;
-using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
@@ -25,23 +24,23 @@ namespace NeoEdit.Editor
 			NEWindowDatas = new OrderedHashSet<INEWindowData>();
 		}
 
-		public bool HandlesKey(ModifierKeys modifiers, Key key)
+		public bool HandlesKey(Modifiers modifiers, string key)
 		{
 			switch (key)
 			{
-				case Key.Back:
-				case Key.Delete:
-				case Key.Escape:
-				case Key.Left:
-				case Key.Right:
-				case Key.Up:
-				case Key.Down:
-				case Key.Home:
-				case Key.End:
-				case Key.PageUp:
-				case Key.PageDown:
-				case Key.Tab:
-				case Key.Enter:
+				case "Back":
+				case "Delete":
+				case "Escape":
+				case "Left":
+				case "Right":
+				case "Up":
+				case "Down":
+				case "Home":
+				case "End":
+				case "PageUp":
+				case "PageDown":
+				case "Tab":
+				case "Enter":
 					return true;
 			}
 

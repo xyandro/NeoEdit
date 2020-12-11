@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace NeoEdit.Common
 {
 	public interface INEGlobal
 	{
-		bool HandlesKey(ModifierKeys modifiers, Key key);
+		bool HandlesKey(Modifiers modifiers, string key);
 		void HandleCommand(INEWindow neWindow, ExecuteState executeState, Func<bool> skipDraw);
 		bool StopTasks();
 		bool KillTasks();

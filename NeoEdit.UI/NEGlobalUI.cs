@@ -53,14 +53,14 @@ namespace NeoEdit.UI
 			return true;
 		}
 
-		public bool HandlesKey(ModifierKeys modifiers, Key key) => neGlobal.HandlesKey(modifiers, key);
+		public bool HandlesKey(ModifierKeys modifiers, Key key) => neGlobal.HandlesKey(modifiers.ToModifiers(), key.FromKey());
 
 		public void HandleCommandLine(CommandLineParams commandLineParams)
 		{
 			if (dispatcher?.CheckAccess() == false)
 				dispatcher.Invoke(() => HandleCommandLine(commandLineParams));
 			else
-				HandleCommand(new ExecuteState(NECommand.Internal_CommandLine, Keyboard.Modifiers) { Configuration = new Configuration_Internal_CommandLine { CommandLineParams = commandLineParams } });
+				HandleCommand(new ExecuteState(NECommand.Internal_CommandLine, Keyboard.Modifiers.ToModifiers()) { Configuration = new Configuration_Internal_CommandLine { CommandLineParams = commandLineParams } });
 		}
 
 		public static void HandleCommand(ExecuteState state) => HandleCommand(null, state);

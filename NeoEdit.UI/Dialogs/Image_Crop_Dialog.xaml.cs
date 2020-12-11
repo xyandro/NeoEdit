@@ -44,7 +44,7 @@ namespace NeoEdit.UI.Dialogs
 			OnResetClick();
 		}
 
-		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 
 		string GetRatioWidth(string aspectRatio) => $"min(width, height * ({aspectRatio}))";
 		string GetRatioHeight(string aspectRatio) => $"min(width / ({aspectRatio}), height)";

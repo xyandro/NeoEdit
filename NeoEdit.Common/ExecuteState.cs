@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Input;
 using NeoEdit.Common.Configuration;
 
 namespace NeoEdit.Common
@@ -15,19 +14,19 @@ namespace NeoEdit.Common
 		public bool ControlDown;
 		public bool AltDown;
 		public bool? MultiStatus;
-		public Key Key;
+		public string Key;
 		public string Text;
 		public IConfiguration Configuration;
 
 		public bool MacroInclude => macroInclude[Command];
 
-		public ExecuteState(NECommand command, ModifierKeys modifiers)
+		public ExecuteState(NECommand command, Modifiers modifiers)
 		{
 			Command = command;
 
-			ShiftDown = modifiers.HasFlag(ModifierKeys.Shift);
-			ControlDown = modifiers.HasFlag(ModifierKeys.Control);
-			AltDown = modifiers.HasFlag(ModifierKeys.Alt);
+			ShiftDown = modifiers.HasFlag(Modifiers.Shift);
+			ControlDown = modifiers.HasFlag(Modifiers.Control);
+			AltDown = modifiers.HasFlag(Modifiers.Alt);
 		}
 
 		public ExecuteState(ExecuteState state)

@@ -840,6 +840,7 @@
     <Compile Include="Highlighting\HighlightJSON.cs" />
     <Compile Include="Highlighting\HighlightMarkup.cs" />
     <Compile Include="Highlighting\HighlightSQL.cs" />
+    <Compile Include="KeyExtensions.cs" />
     <Page Include="NEFileUI.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

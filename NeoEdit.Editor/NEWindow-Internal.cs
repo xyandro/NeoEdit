@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Editor.PreExecution;
@@ -29,12 +28,12 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Key)
 			{
-				case Key.Back:
-				case Key.Delete:
-				case Key.Left:
-				case Key.Right:
-				case Key.Up:
-				case Key.Down:
+				case "Back":
+				case "Delete":
+				case "Left":
+				case "Right":
+				case "Up":
+				case "Down":
 					state.Configuration = new Configuration_Internal_Key { HasSelections = ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.HasSelection)) };
 					break;
 			}
@@ -47,9 +46,9 @@ namespace NeoEdit.Editor
 
 			switch (state.Key)
 			{
-				case Key.PageUp: MovePrevNext(-1, state.ShiftDown); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
-				case Key.PageDown: MovePrevNext(1, state.ShiftDown); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
-				case Key.Tab: MovePrevNext(1, state.ShiftDown, true); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
+				case "PageUp": MovePrevNext(-1, state.ShiftDown); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
+				case "PageDown": MovePrevNext(1, state.ShiftDown); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
+				case "Tab": MovePrevNext(1, state.ShiftDown, true); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
 			}
 		}
 

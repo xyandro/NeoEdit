@@ -100,13 +100,13 @@ namespace NeoEdit.UI
 			grid.Children.Add(fullFileLabelsPanel);
 
 			var moveLeft = new RepeatButton { Content = "⮜", Margin = new Thickness(0, 0, 4, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, Focusable = false };
-			moveLeft.Click += (s, e) => { --fullFileLabelIndex; HandleCommand(new ExecuteState(NECommand.Internal_Redraw, Keyboard.Modifiers)); };
+			moveLeft.Click += (s, e) => { --fullFileLabelIndex; HandleCommand(new ExecuteState(NECommand.Internal_Redraw, Keyboard.Modifiers.ToModifiers())); };
 			Grid.SetRow(moveLeft, 0);
 			Grid.SetColumn(moveLeft, 0);
 			grid.Children.Add(moveLeft);
 
 			var moveRight = new RepeatButton { Content = "⮞", Margin = new Thickness(4, 0, 0, 0), Foreground = Brushes.White, Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, Focusable = false };
-			moveRight.Click += (s, e) => { ++fullFileLabelIndex; HandleCommand(new ExecuteState(NECommand.Internal_Redraw, Keyboard.Modifiers)); };
+			moveRight.Click += (s, e) => { ++fullFileLabelIndex; HandleCommand(new ExecuteState(NECommand.Internal_Redraw, Keyboard.Modifiers.ToModifiers())); };
 			Grid.SetRow(moveRight, 0);
 			Grid.SetColumn(moveRight, 2);
 			grid.Children.Add(moveRight);

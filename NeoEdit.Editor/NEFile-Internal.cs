@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
@@ -146,18 +145,18 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Key)
 			{
-				case Key.Back: case Key.Delete: Execute_Internal_Key_BackDelete(); break;
-				case Key.Escape: Execute_Internal_Key_Escape(); break;
-				case Key.Left: Execute_Internal_Key_Left(); break;
-				case Key.Right: Execute_Internal_Key_Right(); break;
-				case Key.Up: Execute_Internal_Key_Up(); break;
-				case Key.Down: Execute_Internal_Key_Down(); break;
-				case Key.Home: Execute_Internal_Key_Home(); break;
-				case Key.End: Execute_Internal_Key_End(); break;
-				case Key.PageUp: Execute_Internal_Key_PageUp(); break;
-				case Key.PageDown: Execute_Internal_Key_PageDown(); break;
-				case Key.Tab: Execute_Internal_Key_Tab(); break;
-				case Key.Enter: Execute_Internal_Key_Enter(); break;
+				case "Back": case "Delete": Execute_Internal_Key_BackDelete(); break;
+				case "Escape": Execute_Internal_Key_Escape(); break;
+				case "Left": Execute_Internal_Key_Left(); break;
+				case "Right": Execute_Internal_Key_Right(); break;
+				case "Up": Execute_Internal_Key_Up(); break;
+				case "Down": Execute_Internal_Key_Down(); break;
+				case "Home": Execute_Internal_Key_Home(); break;
+				case "End": Execute_Internal_Key_End(); break;
+				case "PageUp": Execute_Internal_Key_PageUp(); break;
+				case "PageDown": Execute_Internal_Key_PageDown(); break;
+				case "Tab": Execute_Internal_Key_Tab(); break;
+				case "Enter": Execute_Internal_Key_Enter(); break;
 			}
 		}
 
@@ -176,17 +175,17 @@ namespace NeoEdit.Editor
 
 				if (state.ControlDown)
 				{
-					if (state.Key == Key.Back)
+					if (state.Key == "Back")
 						cursor = GetPrevWord(cursor);
 					else
 						cursor = GetNextWord(cursor);
 				}
-				else if ((state.ShiftDown) && (state.Key == Key.Delete))
+				else if ((state.ShiftDown) && (state.Key == "Delete"))
 				{
 					anchor = Text.GetLineStartPosition(cursor);
 					cursor = Text.NextChar(Text.GetLineEndPosition(cursor), true);
 				}
-				else if (state.Key == Key.Back)
+				else if (state.Key == "Back")
 					cursor = Text.PrevChar(cursor, true);
 				else
 					cursor = Text.NextChar(cursor, true);
@@ -277,7 +276,7 @@ namespace NeoEdit.Editor
 			}
 			else if (!state.ShiftDown)
 				StartRow += -1;
-			else if (state.Key == Key.Down)
+			else if (state.Key == "Down")
 				BlockSelDown();
 			else
 				BlockSelUp();
@@ -313,7 +312,7 @@ namespace NeoEdit.Editor
 			}
 			else if (!state.ShiftDown)
 				StartRow += 1;
-			else if (state.Key == Key.Down)
+			else if (state.Key == "Down")
 				BlockSelDown();
 			else
 				BlockSelUp();

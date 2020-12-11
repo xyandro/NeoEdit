@@ -57,7 +57,7 @@ namespace NeoEdit.UI.Dialogs
 			xScroller.ScrollChanged += (s, e) => { if (e.ViewportHeightChange != 0) SetupTable(); };
 		}
 
-		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
+		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{

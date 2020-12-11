@@ -34,7 +34,15 @@ namespace NeoEdit.UI.Controls
 			{
 				window.CommandBindings.Add(new CommandBinding(this, (s, e) => handler(Command, MultiStatus)));
 				foreach (var keyGesture in KeyGestures)
-					window.InputBindings.Add(new KeyBinding(this, new KeyGesture(keyGesture.Key, keyGesture.Modifiers)));
+				{
+					var keys = new List<Key> { keyGesture.Key.ToKey() };
+					if (keyGesture.Key == "+")
+						keys.Add(Key.OemPlus);
+					if (keyGesture.Key == "-")
+						keys.Add(Key.OemMinus);
+					foreach (var key in keys)
+						window.InputBindings.Add(new KeyBinding(this, new KeyGesture(key, keyGesture.Modifiers.ToModifierKeys())));
+				}
 			}
 		}
 

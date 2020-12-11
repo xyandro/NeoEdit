@@ -49,7 +49,7 @@ namespace NeoEdit.UI.Controls
 			base.OnPreviewKeyDown(e);
 			if (e.Handled)
 				return;
-			var controlDown = (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
+			var controlDown = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
 			e.Handled = true;
 			switch (e.Key)
 			{

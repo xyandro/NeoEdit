@@ -66,7 +66,7 @@ namespace NeoEdit.UI
 
 		void OnMouseWheel(object sender, MouseWheelEventArgs e) => yScroll.Value -= e.Delta / 40;
 
-		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => FilesWindow.HandleCommand(new ExecuteState(NECommand.Internal_Scroll, Keyboard.Modifiers) { Configuration = new Configuration_Internal_Scroll { NEFile = NEFile, Column = (int)xScroll.Value, Row = (int)yScroll.Value } });
+		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => FilesWindow.HandleCommand(new ExecuteState(NECommand.Internal_Scroll, Keyboard.Modifiers.ToModifiers()) { Configuration = new Configuration_Internal_Scroll { NEFile = NEFile, Column = (int)xScroll.Value, Row = (int)yScroll.Value } });
 
 		public void DrawAll()
 		{
@@ -397,7 +397,7 @@ namespace NeoEdit.UI
 			canvas.CaptureMouse();
 			var line = (int)(position.Y / LineHeight + yScroll.Value);
 			var column = (int)(position.X / Font.CharWidth + xScroll.Value);
-			FilesWindow.HandleCommand(new ExecuteState(NECommand.Internal_Mouse, Keyboard.Modifiers) { Configuration = new Configuration_Internal_Mouse { NEFile = NEFile, Line = line, Column = column, ClickCount = mouseClickCount, Selecting = selecting } });
+			FilesWindow.HandleCommand(new ExecuteState(NECommand.Internal_Mouse, Keyboard.Modifiers.ToModifiers()) { Configuration = new Configuration_Internal_Mouse { NEFile = NEFile, Line = line, Column = column, ClickCount = mouseClickCount, Selecting = selecting } });
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

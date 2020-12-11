@@ -53,9 +53,9 @@ namespace NeoEdit.UI.Dialogs
 
 		void SetupTable() => Table = input.Aggregate(AggregateData).Sort(SortData);
 
-		bool controlDown => (Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.None;
-		bool altDown => (Keyboard.Modifiers & ModifierKeys.Alt) != ModifierKeys.None;
-		bool shiftDown => (Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.None;
+		bool controlDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+		bool altDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
+		bool shiftDown => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
 
 		void TablePreviewKeyDown(object sender, KeyEventArgs e)
 		{

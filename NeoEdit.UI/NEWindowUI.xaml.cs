@@ -42,7 +42,7 @@ namespace NeoEdit.UI
 			this.neWindow = neWindow;
 			this.neGlobalUI = neGlobalUI;
 
-			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command, Keyboard.Modifiers) { MultiStatus = multiStatus }));
+			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command, Keyboard.Modifiers.ToModifiers()) { MultiStatus = multiStatus }));
 			InitializeComponent();
 			if (Helpers.IsDebugBuild)
 				UIHelper.AuditMenu(menu);
@@ -65,22 +65,22 @@ namespace NeoEdit.UI
 				if (!IsActive)
 					return;
 
-				HandleCommand(new ExecuteState(NECommand.Internal_Activate, Keyboard.Modifiers));
+				HandleCommand(new ExecuteState(NECommand.Internal_Activate, Keyboard.Modifiers.ToModifiers()));
 			});
 		}
 
 		void OnActivated(object sender, EventArgs e)
 		{
 			if (!Helpers.IsDebugBuild)
-				HandleCommand(new ExecuteState(NECommand.Internal_Activate, Keyboard.Modifiers));
+				HandleCommand(new ExecuteState(NECommand.Internal_Activate, Keyboard.Modifiers.ToModifiers()));
 		}
 
-		void OnScrollBarValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => HandleCommand(new ExecuteState(NECommand.Internal_Redraw, Keyboard.Modifiers));
+		void OnScrollBarValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => HandleCommand(new ExecuteState(NECommand.Internal_Redraw, Keyboard.Modifiers.ToModifiers()));
 
 		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
 		{
 			base.OnRenderSizeChanged(sizeInfo);
-			HandleCommand(new ExecuteState(NECommand.Internal_Redraw, Keyboard.Modifiers));
+			HandleCommand(new ExecuteState(NECommand.Internal_Redraw, Keyboard.Modifiers.ToModifiers()));
 		}
 
 		protected override void OnSourceInitialized(EventArgs e)
@@ -115,7 +115,7 @@ namespace NeoEdit.UI
 
 			if ((!e.Handled) && (neGlobalUI.HandlesKey(Keyboard.Modifiers, key)))
 			{
-				HandleCommand(new ExecuteState(NECommand.Internal_Key, Keyboard.Modifiers) { Key = key });
+				HandleCommand(new ExecuteState(NECommand.Internal_Key, Keyboard.Modifiers.ToModifiers()) { Key = key.FromKey() });
 				e.Handled = true;
 			}
 		}
@@ -127,7 +127,7 @@ namespace NeoEdit.UI
 			if (e.Source is MenuItem)
 				return;
 
-			HandleCommand(new ExecuteState(NECommand.Internal_Text, Keyboard.Modifiers) { Text = e.Text });
+			HandleCommand(new ExecuteState(NECommand.Internal_Text, Keyboard.Modifiers.ToModifiers()) { Text = e.Text });
 			e.Handled = true;
 		}
 
@@ -175,7 +175,7 @@ namespace NeoEdit.UI
 			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
 				Environment.Exit(0);
 
-			HandleCommand(new ExecuteState(NECommand.File_Exit, Keyboard.Modifiers) { Configuration = new Configuration_File_Exit { ShouldExit = false } });
+			HandleCommand(new ExecuteState(NECommand.File_Exit, Keyboard.Modifiers.ToModifiers()) { Configuration = new Configuration_File_Exit { ShouldExit = false } });
 			args.Cancel = true;
 		}
 
@@ -197,13 +197,13 @@ namespace NeoEdit.UI
 		NEFileLabel CreateFileLabel(INEFile neFile)
 		{
 			var fileLabel = new NEFileLabel(neFile);
-			fileLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_Mouse, Keyboard.Modifiers) { Configuration = new Configuration_Internal_Mouse { NEFile = neFile, ActivateOnly = true } });
+			fileLabel.MouseLeftButtonDown += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_Mouse, Keyboard.Modifiers.ToModifiers()) { Configuration = new Configuration_Internal_Mouse { NEFile = neFile, ActivateOnly = true } });
 			fileLabel.MouseMove += (s, e) =>
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
 					DragDrop.DoDragDrop(s as DependencyObject, new DataObject(typeof(List<INEFile>), renderParameters.ActiveFiles), DragDropEffects.Move);
 			};
-			fileLabel.CloseClicked += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseFile, Keyboard.Modifiers) { Configuration = new Configuration_Internal_CloseFile { NEFile = neFile } });
+			fileLabel.CloseClicked += (s, e) => HandleCommand(new ExecuteState(NECommand.Internal_CloseFile, Keyboard.Modifiers.ToModifiers()) { Configuration = new Configuration_Internal_CloseFile { NEFile = neFile } });
 
 			fileLabel.Refresh(renderParameters);
 			return fileLabel;
