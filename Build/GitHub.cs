@@ -7,8 +7,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Script.Serialization;
+using Microsoft.AspNetCore.StaticFiles;
+using Newtonsoft.Json;
 
 namespace Build
 {
@@ -29,7 +29,7 @@ namespace Build
 
 		async Task<HttpResponseMessage> SendMessage(HttpRequestMessage message) => await client.SendAsync(message);
 
-		async Task<T> ParseResponse<T>(HttpResponseMessage response) => new JavaScriptSerializer().Deserialize<T>(await response.Content.ReadAsStringAsync());
+		async Task<T> ParseResponse<T>(HttpResponseMessage response) => JsonConvert.DeserializeObject<T>(await response.Content.ReadAsStringAsync());
 
 		async Task<Dictionary<string, object>> ParseResponseObj(HttpResponseMessage response) => await ParseResponse<Dictionary<string, object>>(response);
 
@@ -135,7 +135,9 @@ namespace Build
 			{
 				var content = new ProgressStreamContent(file, 1048576);
 				content.Progress += percent => status(percent);
-				content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(fileName));
+				if (!new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType))
+					throw new NotImplementedException();
+				content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 				request.Content = content;
 				var response = await SendMessage(request);
 				if (response.StatusCode != HttpStatusCode.Created)

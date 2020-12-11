@@ -22,7 +22,8 @@ TestResults
 /LibGit2Sharp.*
 /NeoEdit.Common/Expressions/Parser
 /NeoEdit.Common/RevRegEx/Parser
-/NeoEdit.Dependencies/Properties/GlobalAssemblyInfo.cs
+/NeoEdit.Dependencies/GlobalAssemblyInfo.cs
+/NeoEdit.Dependencies/Version.csproj
 /NeoEdit.Editor/Content/Balanced/Parser
 /NeoEdit.Editor/Content/Columns/Parser
 /NeoEdit.Editor/Content/CSharp/Parser
@@ -36,5 +37,6 @@ TestResults
 /NeoEdit.UI/Resources/ChangeLog.txt
 /NeoEdit.UI/Resources/License.txt
 /NeoEdit/CommandLine/Parser
+/NeoEdit/Properties/launchSettings.json
 /packages
 /Release

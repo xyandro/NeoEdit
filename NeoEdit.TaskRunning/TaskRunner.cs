@@ -91,7 +91,7 @@ namespace NeoEdit.TaskRunning
 			if (epics.Count == 0)
 				return;
 
-			threads.ForEach(thread => thread.Abort());
+			threads.ForEach(thread => thread.Interrupt());
 			var endWait = DateTime.Now.AddMilliseconds(ForceCancelDelay);
 			foreach (var thread in threads)
 				if (!thread.Join(Math.Max(0, (int)(endWait - DateTime.Now).TotalMilliseconds)))

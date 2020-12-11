@@ -173,6 +173,8 @@ namespace NeoEdit.Common.Transform
 
 		static Coder()
 		{
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
 			var encodings = Encoding.GetEncodings().Select(encoding => new NEEncoding(encoding)).OrderBy(encoding => encoding.description).ToList();
 
 			NEEncodings = new List<NEEncoding>

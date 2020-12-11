@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildSQL;BuildTCSV;BuildXML;CompressWords" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\build\Microsoft.CodeAnalysis.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\build\Microsoft.CodeAnalysis.Analyzers.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildSQL;BuildTCSV;BuildXML;CompressWords">
+
+  <Import Project="..\NeoEdit.Dependencies\Version.csproj" />
+
   <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs" Returns="">
     <Message Text="Building Balanced parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.Balanced.Parser -o &quot;$(ProjectDir)Content\Balanced\Parser&quot; &quot;$(ProjectDir)Content\Balanced\Source\Balanced.g4&quot;" />
@@ -40,301 +40,119 @@
   </Target>
   <Target Name="CompressWords" Inputs="Words.txt" Outputs="Words.txt.gz" Returns="">
     <Message Text="Compressing word list" Importance="High" />
-    <Exec Command="&quot;$(SolutionDir)Compress\bin\$(Configuration)\Compress.exe&quot; &quot;$(ProjectDir)Words.txt&quot; &quot;$(ProjectDir)Words.txt.gz&quot;" />
+    <Exec Command="&quot;$(SolutionDir)Compress\bin\$(Configuration)\net5.0\Compress.exe&quot; &quot;$(ProjectDir)Words.txt&quot; &quot;$(ProjectDir)Words.txt.gz&quot;" />
   </Target>
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NeoEdit.Editor</RootNamespace>
-    <AssemblyName>NeoEdit.Editor</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <OutputPath>$(SolutionDir)bin\$(Configuration).$(Platform)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration).$(Platform)\</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\$(Configuration).$(Platform)\</BaseIntermediateOutputPath>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <NoWarn>3021</NoWarn>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>net5.0</TargetFramework>
+    <NoWarn>1701;1702;3021</NoWarn>
     <CopyRetryCount>0</CopyRetryCount>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)' == 'x64'">
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="..\NeoEdit.Dependencies\Properties\GlobalAssemblyInfo.cs">
-      <Link>Properties\GlobalAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\NeoEdit.WCF\WCFMessage.cs">
-      <Link>WCFMessage.cs</Link>
-    </Compile>
-    <None Include="app.config" />
-    <Compile Include="CacheValue.cs" />
-    <Compile Include="Content\Balanced\BalancedVisitor.cs" />
-    <Compile Include="Content\Balanced\Parser\BalancedBaseVisitor.cs" />
-    <Compile Include="Content\Balanced\Parser\BalancedLexer.cs" />
-    <Compile Include="Content\Balanced\Parser\BalancedParser.cs" />
-    <Compile Include="Content\Balanced\Parser\BalancedVisitor.cs" />
-    <None Include="Content\Balanced\Source\Balanced.g4" />
-    <Compile Include="Content\Columns\ColumnsVisitor.cs" />
-    <Compile Include="Content\Columns\Parser\ColumnsBaseVisitor.cs" />
-    <Compile Include="Content\Columns\Parser\ColumnsLexer.cs" />
-    <Compile Include="Content\Columns\Parser\ColumnsParser.cs" />
-    <Compile Include="Content\Columns\Parser\ColumnsVisitor.cs" />
-    <None Include="Content\Columns\Source\Columns.g4" />
-    <Compile Include="Content\CSharp\CSharpVisitor.cs" />
-    <Compile Include="Content\CSharp\Parser\CSharpLexer.cs" />
-    <Compile Include="Content\CSharp\Parser\CSharpParser.cs" />
-    <Compile Include="Content\CSharp\Parser\CSharpParserBaseVisitor.cs" />
-    <Compile Include="Content\CSharp\Parser\CSharpParserVisitor.cs" />
-    <None Include="Content\CSharp\Source\CSharpLexer.g4" />
-    <None Include="Content\CSharp\Source\CSharpParser.g4" />
-    <Compile Include="Content\ExactColumns\ExactColumnsVisitor.cs" />
-    <Compile Include="Content\ExactColumns\Parser\ExactColumnsBaseVisitor.cs" />
-    <Compile Include="Content\ExactColumns\Parser\ExactColumnsLexer.cs" />
-    <Compile Include="Content\ExactColumns\Parser\ExactColumnsParser.cs" />
-    <Compile Include="Content\ExactColumns\Parser\ExactColumnsVisitor.cs" />
-    <None Include="Content\ExactColumns\Source\ExactColumns.g4" />
-    <Compile Include="Content\HTML\HTMLVisitor.cs" />
-    <Compile Include="Content\HTML\Parser\HTMLLexer.cs" />
-    <Compile Include="Content\HTML\Parser\HTMLParser.cs" />
-    <Compile Include="Content\HTML\Parser\HTMLParserBaseVisitor.cs" />
-    <Compile Include="Content\HTML\Parser\HTMLParserVisitor.cs" />
-    <None Include="Content\HTML\Source\HTMLLexer.g4" />
-    <None Include="Content\HTML\Source\HTMLParser.g4" />
-    <Compile Include="Content\JSON\JSONVisitor.cs" />
-    <Compile Include="Content\JSON\Parser\JSONBaseVisitor.cs" />
-    <Compile Include="Content\JSON\Parser\JSONLexer.cs" />
-    <Compile Include="Content\JSON\Parser\JSONParser.cs" />
-    <Compile Include="Content\JSON\Parser\JSONVisitor.cs" />
-    <None Include="Content\JSON\Source\JSON.g4" />
-    <Compile Include="Content\Parser.cs" />
-    <Compile Include="Content\SQL\Parser\SQLLexer.cs" />
-    <Compile Include="Content\SQL\Parser\SQLParser.cs" />
-    <Compile Include="Content\SQL\Parser\SQLParserBaseVisitor.cs" />
-    <Compile Include="Content\SQL\Parser\SQLParserVisitor.cs" />
-    <None Include="Content\SQL\Source\SQLLexer.g4" />
-    <None Include="Content\SQL\Source\SQLParser.g4" />
-    <Compile Include="Content\SQL\SQLVisitor.cs" />
-    <Compile Include="Content\TCSV\CSVVisitor.cs" />
-    <Compile Include="Content\TCSV\Parser\CSVBaseVisitor.cs" />
-    <Compile Include="Content\TCSV\Parser\CSVLexer.cs" />
-    <Compile Include="Content\TCSV\Parser\CSVParser.cs" />
-    <Compile Include="Content\TCSV\Parser\CSVVisitor.cs" />
-    <Compile Include="Content\TCSV\Parser\TSVBaseVisitor.cs" />
-    <Compile Include="Content\TCSV\Parser\TSVLexer.cs" />
-    <Compile Include="Content\TCSV\Parser\TSVParser.cs" />
-    <Compile Include="Content\TCSV\Parser\TSVVisitor.cs" />
-    <None Include="Content\TCSV\Source\CSV.g4" />
-    <None Include="Content\TCSV\Source\TSV.g4" />
-    <Compile Include="Content\TCSV\TSVVisitor.cs" />
-    <Compile Include="Content\XML\Parser\XMLLexer.cs" />
-    <Compile Include="Content\XML\Parser\XMLParser.cs" />
-    <Compile Include="Content\XML\Parser\XMLParserBaseVisitor.cs" />
-    <Compile Include="Content\XML\Parser\XMLParserVisitor.cs" />
-    <None Include="Content\XML\Source\XMLLexer.g4" />
-    <None Include="Content\XML\Source\XMLParser.g4" />
-    <Compile Include="Content\XML\XMLVisitor.cs" />
-    <Compile Include="DiffParams.cs" />
-    <Compile Include="EditorExecuteState.cs" />
-    <Compile Include="FileSaver.cs" />
-    <Compile Include="GIFWriter.cs" />
-    <Compile Include="INEFileData.cs" />
-    <Compile Include="INEGlobalData.cs" />
-    <Compile Include="INEWindowData.cs" />
-    <Compile Include="KeysAndValues.cs" />
-    <Compile Include="LCS.cs" />
-    <Compile Include="Macro.cs" />
-    <Compile Include="Models\AnswerResult.cs" />
-    <Compile Include="NEFile-Content.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Database.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-DateTime.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Diff.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Edit.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-EditModifyRegions.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-File.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Files.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Help.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Image.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Internal.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-KeyValue.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Network.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Numeric.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Position.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Table.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Text.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Variables.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile-Window.cs">
-      <DependentUpon>NEFile.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEFile.cs" />
-    <Compile Include="NEFileData.cs" />
-    <Compile Include="NEFileResult.cs" />
-    <Compile Include="NEGlobal-Edit.cs">
-      <DependentUpon>NEGlobal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEGlobal-Help.cs">
-      <DependentUpon>NEGlobal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEGlobal-Internal.cs">
-      <DependentUpon>NEGlobal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEGlobal-Macro.cs">
-      <DependentUpon>NEGlobal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEGlobal-Variables.cs">
-      <DependentUpon>NEGlobal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEGlobal.cs" />
-    <Compile Include="NEGlobalData.cs" />
-    <Compile Include="NEGlobalResult.cs" />
-    <Compile Include="NESerialTracker.cs" />
-    <Compile Include="NEText.cs" />
-    <Compile Include="NETextPoint.cs" />
-    <Compile Include="NEWindow-File.cs">
-      <DependentUpon>NEWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEWindow-Internal.cs">
-      <DependentUpon>NEWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEWindow-Variables.cs">
-      <DependentUpon>NEWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NEWindow.cs" />
-    <Compile Include="NEWindowData.cs" />
-    <Compile Include="NEWindowResult.cs" />
-    <None Include="packages.config" />
-    <Compile Include="PortScanner.cs" />
-    <Compile Include="PreExecution\IPreExecution.cs" />
-    <Compile Include="PreExecution\PreExecution_File_New_FromSelections_AllFilesSelections.cs" />
-    <Compile Include="PreExecution\PreExecution_Files_SelectGet_BySourceControlStatus.cs" />
-    <Compile Include="PreExecution\PreExecution_TaskFinished.cs" />
-    <Compile Include="PreExecution\PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase.cs" />
-    <Compile Include="PreExecution\PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Searchers\BinarySearcher.cs" />
-    <Compile Include="Searchers\ISearcher.cs" />
-    <Compile Include="Searchers\RegexesSearcher.cs" />
-    <Compile Include="Searchers\StringSearcher.cs" />
-    <Compile Include="Searchers\StringsSearcher.cs" />
-    <Compile Include="ShutdownData.cs" />
-    <Compile Include="WCFClient.cs" />
+    <None Remove="Words.txt.gz" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\NeoEdit.WCF\WCFMessage.cs" Link="WCFMessage.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Words.txt.gz" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj">
-      <Project>{becbf5d9-9770-4caa-ac34-97335094d335}</Project>
-      <Name>NeoEdit.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NeoEdit.TaskRunning\NeoEdit.TaskRunning.csproj">
-      <Project>{e1437a47-c993-4361-90ea-2f9070c472cf}</Project>
-      <Name>NeoEdit.TaskRunning</Name>
-    </ProjectReference>
-    <Reference Include="Antlr4.Runtime.Standard, Version=4.8.0.0, Culture=neutral, PublicKeyToken=e78b2c5abd1fcb3f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Antlr4.Runtime.Standard.4.8.0\lib\net35\Antlr4.Runtime.Standard.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis, Version=3.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.3.7.0\lib\netstandard2.0\Microsoft.CodeAnalysis.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=3.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.3.7.0\lib\netstandard2.0\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Collections.Immutable, Version=1.2.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.7.1\lib\net461\System.Collections.Immutable.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reflection.Metadata, Version=1.4.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reflection.Metadata.1.8.1\lib\net461\System.Reflection.Metadata.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Encoding.CodePages, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encoding.CodePages.4.7.1\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="WindowsBase" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+    <ProjectReference Include="..\NeoEdit.Common\NeoEdit.Common.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\build\Microsoft.CodeAnalysis.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\build\Microsoft.CodeAnalysis.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\build\Microsoft.CodeAnalysis.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\build\Microsoft.CodeAnalysis.Analyzers.targets'))" />
-  </Target>
-  <Import Project="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\build\Microsoft.CodeAnalysis.Analyzers.targets" Condition="Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\build\Microsoft.CodeAnalysis.Analyzers.targets')" />
+
+  <ItemGroup>
+    <Compile Update="NEFile-Content.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Database.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-DateTime.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Diff.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Edit.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-EditModifyRegions.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-File.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Files.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Help.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Image.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Internal.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-KeyValue.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Network.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Numeric.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Position.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Table.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Text.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Variables.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEFile-Window.cs">
+      <DependentUpon>NEFile.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEGlobal-Edit.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEGlobal-Help.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEGlobal-Internal.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEGlobal-Macro.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEGlobal-Variables.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEWindow-File.cs">
+      <DependentUpon>NEWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEWindow-Internal.cs">
+      <DependentUpon>NEWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Update="NEWindow-Variables.cs">
+      <DependentUpon>NEWindow.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

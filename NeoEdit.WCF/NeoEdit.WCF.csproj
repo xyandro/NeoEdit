@@ -6,36 +6,33 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3A49C899-545A-4849-B6D0-2686D1A32983}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NeoEdit.WCF</RootNamespace>
     <AssemblyName>NeoEdit.WCF</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <ApplicationIcon>$(SolutionDir)Photoshop\NeoEdit.ico</ApplicationIcon>
-    <OutputPath>$(SolutionDir)bin\$(Configuration).$(Platform)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration).$(Platform)\</IntermediateOutputPath>
-    <BaseIntermediateOutputPath>obj\$(Configuration).$(Platform)\</BaseIntermediateOutputPath>
-    <LangVersion>7.3</LangVersion>
+    <ApplicationIcon>..\Photoshop\NeoEdit.ico</ApplicationIcon>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>..\NeoEdit\bin\$(Configuration)\net5.0-windows\</OutputPath>
     <CopyRetryCount>0</CopyRetryCount>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)' == 'x64'">
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\NeoEdit.Dependencies\Properties\GlobalAssemblyInfo.cs">
+    <Compile Include="..\NeoEdit.Dependencies\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <None Include="packages.config" />
