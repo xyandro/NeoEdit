@@ -10,19 +10,16 @@ namespace NeoEdit.UI.Dialogs
 	{
 		[DepProp]
 		public string Expression { get { return UIHelper<Edit_Repeat_Dialog>.GetPropValue<string>(this); } set { UIHelper<Edit_Repeat_Dialog>.SetPropValue(this, value); } }
-		[DepProp]
-		public bool SelectRepetitions { get { return UIHelper<Edit_Repeat_Dialog>.GetPropValue<bool>(this); } set { UIHelper<Edit_Repeat_Dialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
 
 		static Edit_Repeat_Dialog() { UIHelper<Edit_Repeat_Dialog>.Register(); }
 
-		Edit_Repeat_Dialog(bool selectRepetitions, NEVariables variables)
+		Edit_Repeat_Dialog(NEVariables variables)
 		{
 			Variables = variables;
 			InitializeComponent();
 
 			Expression = "1";
-			SelectRepetitions = selectRepetitions;
 		}
 
 		private void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
@@ -30,14 +27,14 @@ namespace NeoEdit.UI.Dialogs
 		Configuration_Edit_Repeat result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Configuration_Edit_Repeat { Expression = Expression, SelectRepetitions = SelectRepetitions };
+			result = new Configuration_Edit_Repeat { Expression = Expression };
 			expression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static Configuration_Edit_Repeat Run(Window parent, bool selectRepetitions, NEVariables variables)
+		public static Configuration_Edit_Repeat Run(Window parent, NEVariables variables)
 		{
-			var dialog = new Edit_Repeat_Dialog(selectRepetitions, variables) { Owner = parent };
+			var dialog = new Edit_Repeat_Dialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())
 				throw new OperationCanceledException();
 			return dialog.result;

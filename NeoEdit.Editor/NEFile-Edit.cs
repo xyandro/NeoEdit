@@ -391,7 +391,7 @@ namespace NeoEdit.Editor
 			state.NEWindow.CreateResult();
 		}
 
-		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.Selections.Count == 1, state.NEWindow.Focused.GetVariables());
+		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Edit_Repeat()
 		{
@@ -400,19 +400,17 @@ namespace NeoEdit.Editor
 			if (results.Any(repeatCount => repeatCount < 0))
 				throw new Exception("Repeat count must be >= 0");
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => RepeatString(Text.GetString(range), results[index])).ToList());
-			if (result.SelectRepetitions)
-			{
-				var sels = new List<NERange>();
-				for (var ctr = 0; ctr < Selections.Count; ++ctr)
-					if (results[ctr] != 0)
-					{
-						var selection = Selections[ctr];
-						var len = selection.Length / results[ctr];
-						for (var index = selection.Start; index < selection.End; index += len)
-							sels.Add(NERange.FromIndex(index, len));
-					}
-				Selections = sels;
-			}
+
+			var sels = new List<NERange>();
+			for (var ctr = 0; ctr < Selections.Count; ++ctr)
+				if (results[ctr] != 0)
+				{
+					var selection = Selections[ctr];
+					var len = selection.Length / results[ctr];
+					for (var index = selection.Start; index < selection.End; index += len)
+						sels.Add(NERange.FromIndex(index, len));
+				}
+			Selections = sels;
 		}
 
 		static void Configure_Edit_Rotate() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Rotate(state.NEWindow.Focused.GetVariables());

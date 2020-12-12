@@ -12,7 +12,6 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
 			<RowDefinition MinHeight="10"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
@@ -23,14 +22,11 @@
 		<Label Grid.Row="1" Grid.Column="0" Content="Value(s):" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<Label Grid.Row="2" Grid.Column="0" Content="_Select all:" Target="{Binding ElementName=selectRepetitions}" HorizontalAlignment="Right"/>
-		<CheckBox Grid.Row="2" Grid.Column="1" Name="selectRepetitions" IsChecked="{Binding SelectRepetitions, ElementName=self}" VerticalAlignment="Center" Focusable="False"/>
-
-		<UniformGrid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
+		<UniformGrid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
 			<Button Content="Expression _help" Click="ExpressionHelp" Padding="10,1"/>
 		</UniformGrid>
 
-		<UniformGrid Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
+		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>
 			<Button IsCancel="True" Content="Cancel" Padding="10,1"/>
 		</UniformGrid>

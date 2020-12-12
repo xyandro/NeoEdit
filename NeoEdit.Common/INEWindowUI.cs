@@ -31,7 +31,7 @@ namespace NeoEdit.Common
 		Configuration_File_LineEndings RunDialog_Configure_File_LineEndings(string lineEndings);
 		Configuration_File_Advanced_Encrypt RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type type, bool encrypt);
 		Configuration_Edit_Select_Limit RunDialog_Configure_Edit_Select_Limit(NEVariables variables);
-		Configuration_Edit_Repeat RunDialog_Configure_Edit_Repeat(bool selectRepetitions, NEVariables variables);
+		Configuration_Edit_Repeat RunDialog_Configure_Edit_Repeat(NEVariables variables);
 		Configuration_Edit_Rotate RunDialog_Configure_Edit_Rotate(NEVariables variables);
 		Configuration_Edit_Expression_Expression RunDialog_Configure_Edit_Expression_Expression(NEVariables variables, int? numRows = null);
 		Configuration_Edit_ModifyRegions RunDialog_Configure_Edit_ModifyRegions();

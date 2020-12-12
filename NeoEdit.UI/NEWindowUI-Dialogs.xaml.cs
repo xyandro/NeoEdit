@@ -59,7 +59,7 @@ namespace NeoEdit.UI
 		public Configuration_File_LineEndings RunDialog_Configure_File_LineEndings(string lineEndings) => RunOnUIThread(() => File_LineEndings_Dialog.Run(this, lineEndings));
 		public Configuration_File_Advanced_Encrypt RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type type, bool encrypt) => RunOnUIThread(() => File_Advanced_Encrypt_Dialog.Run(this, type, encrypt));
 		public Configuration_Edit_Select_Limit RunDialog_Configure_Edit_Select_Limit(NEVariables variables) => RunOnUIThread(() => Edit_Select_Limit_Dialog.Run(this, variables));
-		public Configuration_Edit_Repeat RunDialog_Configure_Edit_Repeat(bool selectRepetitions, NEVariables variables) => RunOnUIThread(() => Edit_Repeat_Dialog.Run(this, selectRepetitions, variables));
+		public Configuration_Edit_Repeat RunDialog_Configure_Edit_Repeat(NEVariables variables) => RunOnUIThread(() => Edit_Repeat_Dialog.Run(this, variables));
 		public Configuration_Edit_Rotate RunDialog_Configure_Edit_Rotate(NEVariables variables) => RunOnUIThread(() => Edit_Rotate_Dialog.Run(this, variables));
 		public Configuration_Edit_Expression_Expression RunDialog_Configure_Edit_Expression_Expression(NEVariables variables, int? numRows = null) => RunOnUIThread(() => Edit_Expression_Expression_Dialog.Run(this, variables, numRows));
 		public Configuration_Edit_ModifyRegions RunDialog_Configure_Edit_ModifyRegions() => RunOnUIThread(() => Edit_ModifyRegions_Dialog.Run(this));
