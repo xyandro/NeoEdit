@@ -11,15 +11,12 @@ using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Common
 {
-	public static class INEWindowUIStatic
-	{
-		public static Func<INEWindow, INEWindowUI> CreateNEWindowUI { get; set; }
-		public static Func<Cryptor.Type, string> GetDecryptKey { get; set; }
-		public static Action<Exception> ShowExceptionMessage { get; set; }
-	}
-
 	public interface INEWindowUI
 	{
+		static Func<INEWindow, INEWindowUI> CreateNEWindowUIStatic { get; set; }
+		static Func<Cryptor.Type, string> GetDecryptKeyStatic { get; set; }
+		static Action<Exception> ShowExceptionMessageStatic { get; set; }
+
 		MessageOptions RunDialog_ShowMessage(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None);
 
 		SaveFileDialogResult RunSaveFileDialog(string fileName, string defaultExt, string initialDirectory, string filter);

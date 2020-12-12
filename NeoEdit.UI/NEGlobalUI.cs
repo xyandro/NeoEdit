@@ -101,9 +101,9 @@ namespace NeoEdit.UI
 			Clipboarder.Initialize();
 			Font.Reset();
 
-			INEWindowUIStatic.CreateNEWindowUI = neWindow => dispatcher.Invoke(() => new NEWindowUI(neWindow, this));
-			INEWindowUIStatic.GetDecryptKey = type => dispatcher.Invoke(() => File_Advanced_Encrypt_Dialog.Run(null, type, false).Key);
-			INEWindowUIStatic.ShowExceptionMessage = ex => dispatcher.Invoke(() => NEWindowUI.ShowExceptionMessage(ex));
+			INEWindowUI.CreateNEWindowUIStatic = neWindow => dispatcher.Invoke(() => new NEWindowUI(neWindow, this));
+			INEWindowUI.GetDecryptKeyStatic = type => dispatcher.Invoke(() => File_Advanced_Encrypt_Dialog.Run(null, type, false).Key);
+			INEWindowUI.ShowExceptionMessageStatic = ex => dispatcher.Invoke(() => NEWindowUI.ShowExceptionMessage(ex));
 
 			new Thread(RunThread) { Name = nameof(NEGlobalUI) }.Start();
 		}

@@ -191,7 +191,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Can't attach, window being modified");
 
 			NEGlobal = neGlobal;
-			neWindowUI = INEWindowUIStatic.CreateNEWindowUI(this);
+			neWindowUI = INEWindowUI.CreateNEWindowUIStatic(this);
 		}
 
 		public void Detach()

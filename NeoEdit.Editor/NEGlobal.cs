@@ -128,7 +128,7 @@ namespace NeoEdit.Editor
 				{
 					NEWindows.ForEach(x => x.RenderNEWindowUI());
 					if (state?.NEWindow?.neWindowUI == null)
-						INEWindowUIStatic.ShowExceptionMessage(ex);
+						INEWindowUI.ShowExceptionMessageStatic(ex);
 					else
 						state.NEWindow.neWindowUI.ShowExceptionMessage(ex);
 				}

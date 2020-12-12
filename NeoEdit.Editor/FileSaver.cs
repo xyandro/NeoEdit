@@ -41,7 +41,7 @@ namespace NeoEdit.Editor
 			var toDecrypt = bytes.Skip(EncryptedHeader.Length).ToArray();
 			while (true)
 			{
-				var key = INEWindowUIStatic.GetDecryptKey(Cryptor.Type.AES);
+				var key = INEWindowUI.GetDecryptKeyStatic(Cryptor.Type.AES);
 				var output = Decrypt(toDecrypt, key);
 				if (output == null)
 					continue;
