@@ -71,15 +71,17 @@ namespace NeoEdit.UI.Dialogs
 				AddButton("_Yes", MessageOptions.Yes);
 			if (Options.HasFlag(MessageOptions.No))
 				AddButton("_No", MessageOptions.No);
+			if (Options.HasFlag(MessageOptions.Ok))
+				AddButton("_Ok", MessageOptions.Ok);
 			if (Options.HasFlag(MessageOptions.All))
 			{
 				if (Options.HasFlag(MessageOptions.Yes))
 					AddButton("Y_es to all", MessageOptions.Yes | MessageOptions.All);
 				if (Options.HasFlag(MessageOptions.No))
 					AddButton("N_o to all", MessageOptions.No | MessageOptions.All);
+				if (Options.HasFlag(MessageOptions.Ok))
+					AddButton("O_k to all", MessageOptions.Ok | MessageOptions.All);
 			}
-			if (Options.HasFlag(MessageOptions.Ok))
-				AddButton("_Ok", MessageOptions.Ok);
 			if (Options.HasFlag(MessageOptions.Cancel))
 				AddButton("_Cancel", MessageOptions.Cancel);
 		}

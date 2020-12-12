@@ -26,6 +26,9 @@ namespace NeoEdit.Editor
 
 		public DateTime LastActive { get; set; }
 		public bool IsModified { get; private set; }
+		public DateTime LastWriteTime { get; private set; }
+		public DateTime LastExternalWriteTime { get; private set; }
+		public DateTime LastActivatedTime { get; set; }
 		public string DBName { get; private set; }
 		int currentSelection;
 		public int CurrentSelection { get => Math.Min(Math.Max(0, currentSelection), Selections.Count - 1); private set { currentSelection = value; } }
@@ -35,8 +38,10 @@ namespace NeoEdit.Editor
 		public bool AutoRefresh { get; private set; }
 		public bool AllowOverlappingSelections { get; private set; }
 		public ParserType ContentType { get; set; }
-		public Coder.CodePage CodePage { get; private set; }
-		public bool HasBOM { get; private set; }
+		Coder.CodePage codePage;
+		public Coder.CodePage CodePage { get => codePage; private set { codePage = value; SetIsModified(); } }
+		bool hasBOM;
+		public bool HasBOM { get => hasBOM; private set { hasBOM = value; SetIsModified(); } }
 		public string AESKey { get; private set; }
 		public bool Compressed { get; private set; }
 		public bool DiffIgnoreWhitespace { get; private set; }
@@ -100,6 +105,12 @@ namespace NeoEdit.Editor
 				}
 			}
 		}
+
+		string savedText;
+		NETextPoint savedTextPoint;
+		Coder.CodePage savedCodePage;
+		bool savedHasBOM;
+
 		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null)
 		{
 			Data = new NEFileData(this);
@@ -143,9 +154,8 @@ namespace NeoEdit.Editor
 			return new NEFile(displayName: displayName, bytes: Coder.StringToBytes(sb.ToString(), Coder.CodePage.UTF8), codePage: Coder.CodePage.UTF8, modified: false) { Selections = stringRanges };
 		}
 
-		public string NEFileLabel => $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(DiffTarget != null ? $" (Diff{(CodePage != DiffTarget.CodePage ? " - Encoding mismatch" : "")})" : "")}";
+		public string NEFileLabel => $"{DisplayName ?? (string.IsNullOrEmpty(FileName) ? "[Untitled]" : Path.GetFileName(FileName))}{(IsModified ? "*" : "")}{(LastWriteTime != LastExternalWriteTime ? "+" : "")}{(DiffTarget != null ? $" (Diff{(CodePage != DiffTarget.CodePage ? " - Encoding mismatch" : "")})" : "")}";
 
-		CacheValue modifiedChecksum = new CacheValue();
 		CacheValue previousData = new CacheValue();
 		ParserType previousType;
 		ParserNode previousRoot;
@@ -196,7 +206,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Invalid string count");
 
 			NETextPoint = Text.CreateTextPoint(ranges, strs);
-			SetModifiedFlag();
+			SetIsModified();
 			CalculateDiff();
 
 			var translateMap = GetTranslateMap(ranges, strs, new List<IReadOnlyList<NERange>> { Selections }.Concat(Enumerable.Range(1, 9).Select(region => GetRegions(region))).ToList());
@@ -625,6 +635,8 @@ namespace NeoEdit.Editor
 				case NECommand.File_Close_WithoutSelections: Execute_File_Close_FilesWithWithoutSelections(false); break;
 				case NECommand.File_Close_Modified: Execute_File_Close_ModifiedUnmodifiedFiles(true); break;
 				case NECommand.File_Close_Unmodified: Execute_File_Close_ModifiedUnmodifiedFiles(false); break;
+				case NECommand.File_Close_ExternalModified: Execute_File_Close_ExternalModifiedUnmodifiedFiles(true); break;
+				case NECommand.File_Close_ExternalUnmodified: Execute_File_Close_ExternalModifiedUnmodifiedFiles(false); break;
 				case NECommand.Edit_Select_All: Execute_Edit_Select_All(); break;
 				case NECommand.Edit_Select_Nothing: Execute_Edit_Select_Nothing(); break;
 				case NECommand.Edit_Select_Join: Execute_Edit_Select_Join(); break;
@@ -1205,46 +1217,67 @@ namespace NeoEdit.Editor
 		#endregion
 
 		#region Watcher
-		public bool watcherFileModified = false;
 		FileSystemWatcher watcher = null;
-		DateTime fileLastWrite { get; set; }
 
-		void SetAutoRefresh(bool? value = null)
+		void SetupWatcher()
 		{
 			watcher?.Dispose();
 			watcher = null;
 
-			if (value.HasValue)
-				AutoRefresh = value.Value;
+			void SetLastExternalWriteTime() => LastExternalWriteTime = GetFileWriteTime(FileName);
 
-			if ((NEWindow == null) || (!AutoRefresh) || (!File.Exists(FileName)))
+			SetLastExternalWriteTime();
+			if ((NEWindow == null) || (string.IsNullOrWhiteSpace(FileName)))
 				return;
+
+			void FileChanged()
+			{
+				SetLastExternalWriteTime();
+				if (AutoRefresh)
+					try { NEWindow?.neWindowUI?.SendActivateIfActive(); } catch { }
+				else
+					LastActivatedTime = LastExternalWriteTime;
+			}
 
 			watcher = new FileSystemWatcher
 			{
 				Path = Path.GetDirectoryName(FileName),
-				NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime,
+				NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime | NotifyFilters.FileName,
 				Filter = Path.GetFileName(FileName),
 			};
-			watcher.Changed += (s1, e1) =>
-			{
-				watcherFileModified = true;
-				try { NEWindow?.neWindowUI?.SendActivateIfActive(); } catch { }
-			};
+			watcher.Changed += (s1, e1) => FileChanged();
+			watcher.Deleted += (s1, e1) => FileChanged();
+			watcher.Renamed += (s1, e1) => FileChanged();
+			watcher.Created += (s1, e1) => FileChanged();
 			watcher.EnableRaisingEvents = true;
 		}
 		#endregion
 
-		void SetModifiedFlag(bool? newValue = null)
+		void SetIsModified(bool? newValue = null)
 		{
 			if (newValue.HasValue)
 			{
 				if (newValue == false)
-					modifiedChecksum.SetValue(Text.GetString());
+				{
+					savedText = Text.GetString();
+					// Don't save text if > 50 MB
+					if ((savedText.Length >> 20) >= 50)
+						savedText = null;
+					savedTextPoint = NETextPoint;
+					savedCodePage = CodePage;
+					savedHasBOM = HasBOM;
+				}
 				else
-					modifiedChecksum.Invalidate(); // Nothing will match, file will be perpetually modified
+				{
+					// Nothing will match, file will be perpetually modified
+					savedText = null;
+					savedTextPoint = null;
+					savedCodePage = Coder.CodePage.None;
+					savedHasBOM = false;
+				}
 			}
-			IsModified = !modifiedChecksum.Match(Text.GetString());
+
+			IsModified = (savedCodePage != CodePage) || (savedHasBOM != HasBOM) || ((savedTextPoint != NETextPoint) && (savedText != Text.GetString()));
 		}
 
 		public IReadOnlyList<string> GetSelectionStrings() => Selections.AsTaskRunner().Select(range => Text.GetString(range)).ToList();
@@ -1501,6 +1534,16 @@ namespace NeoEdit.Editor
 			return true;
 		}
 
+		DateTime GetFileWriteTime(string fileName)
+		{
+			if (string.IsNullOrWhiteSpace(fileName))
+				return DateTime.MinValue;
+			var fileInfo = new FileInfo(fileName);
+			if (!fileInfo.Exists)
+				return DateTime.MinValue;
+			return fileInfo.LastWriteTimeUtc;
+		}
+
 		void Save(string fileName, bool copyOnly = false)
 		{
 			if ((Coder.IsStr(CodePage)) && ((Text.Length >> 20) < 50) && (!VerifyCanEncode()))
@@ -1532,9 +1575,9 @@ namespace NeoEdit.Editor
 
 			if (!copyOnly)
 			{
-				fileLastWrite = new FileInfo(fileName).LastWriteTime;
-				SetModifiedFlag(false);
 				SetFileName(fileName);
+				LastWriteTime = LastExternalWriteTime = LastActivatedTime = GetFileWriteTime(FileName);
+				SetIsModified(false);
 			}
 		}
 
@@ -1547,16 +1590,26 @@ namespace NeoEdit.Editor
 			ContentType = ParserExtensions.GetParserType(FileName);
 			DisplayName = null;
 
-			SetAutoRefresh();
+			SetupWatcher();
 		}
 
 		public void VerifyCanClose()
 		{
-			if (!IsModified)
-				return;
+			string prompt = null;
 
-			if (QueryUser(nameof(VerifyCanClose), "Do you want to save changes?", MessageOptions.None))
-				Execute_File_Save_SaveAll();
+			if (IsModified)
+			{
+				if (LastWriteTime != LastExternalWriteTime)
+					prompt = "You have modified this file, and it has been changed externally. Do you want to save your copy?";
+				else
+					prompt = "You have modified this file. Do you want to save your copy?";
+			}
+			else if (LastWriteTime != LastExternalWriteTime)
+				prompt = "This file has been changed externally. Do you want to save your copy?";
+
+			if (prompt != null)
+				if (QueryUser($"{nameof(VerifyCanClose)}-{IsModified}-{LastWriteTime != LastExternalWriteTime}", prompt, MessageOptions.None))
+					Execute_File_Save_SaveAll();
 		}
 
 		void OpenFile(string fileName, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null)
@@ -1586,14 +1639,12 @@ namespace NeoEdit.Editor
 			var data = Coder.BytesToString(bytes, CodePage, true);
 			Replace(new List<NERange> { NERange.FromIndex(0, Text.Length) }, new List<string> { data });
 
-			if (File.Exists(FileName))
-				fileLastWrite = new FileInfo(FileName).LastWriteTime;
-
 			// If encoding can't exactly express bytes mark as modified (only for < 50 MB)
 			if ((!isModified) && ((bytes.Length >> 20) < 50))
 				isModified = !Coder.CanExactlyEncode(bytes, CodePage);
 
-			SetModifiedFlag(isModified);
+			SetIsModified(isModified);
+			LastWriteTime = LastExternalWriteTime = LastActivatedTime = GetFileWriteTime(FileName);
 		}
 
 		public void Goto(int? line, int? column, int? index)
@@ -1706,12 +1757,12 @@ namespace NeoEdit.Editor
 			return status;
 		}
 
-		public bool QueryUser(string name, string text, MessageOptions defaultAccept)
+		public bool QueryUser(string name, string text, MessageOptions defaultAccept, MessageOptions options = MessageOptions.YesNoAllCancel)
 		{
 			lock (state)
 			{
 				if ((!state.SavedAnswers[name].HasFlag(MessageOptions.All)) && (!state.SavedAnswers[name].HasFlag(MessageOptions.Cancel)))
-					NEWindow.ShowFile(this, () => state.SavedAnswers[name] = NEWindow.neWindowUI.RunDialog_ShowMessage("Confirm", text, MessageOptions.YesNoAllCancel, defaultAccept, MessageOptions.Cancel));
+					NEWindow.ShowFile(this, () => state.SavedAnswers[name] = NEWindow.neWindowUI.RunDialog_ShowMessage("Confirm", text, options, defaultAccept, MessageOptions.Cancel));
 				if (state.SavedAnswers[name] == MessageOptions.Cancel)
 					throw new OperationCanceledException();
 				return state.SavedAnswers[name].HasFlag(MessageOptions.Yes);

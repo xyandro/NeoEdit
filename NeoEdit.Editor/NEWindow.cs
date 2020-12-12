@@ -211,6 +211,8 @@ namespace NeoEdit.Editor
 				case NECommand.File_Select_WithoutSelections: Execute_File_Select_WithWithoutSelections(false); break;
 				case NECommand.File_Select_Modified: Execute_File_Select_ModifiedUnmodified(true); break;
 				case NECommand.File_Select_Unmodified: Execute_File_Select_ModifiedUnmodified(false); break;
+				case NECommand.File_Select_ExternalModified: Execute_File_Select_ExternalModifiedUnmodified(true); break;
+				case NECommand.File_Select_ExternalUnmodified: Execute_File_Select_ExternalModifiedUnmodified(false); break;
 				case NECommand.File_Select_Inactive: Execute_File_Select_Inactive(); break;
 				case NECommand.File_Select_Choose: Execute_File_Select_Choose(); break;
 				case NECommand.File_New_New: Execute_File_New_New(); break;

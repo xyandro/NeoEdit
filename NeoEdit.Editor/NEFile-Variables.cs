@@ -26,7 +26,7 @@ namespace NeoEdit.Editor
 			Data = data;
 			Text.MoveToTextPoint(NETextPoint);
 			EnsureVisible();
-			SetModifiedFlag();
+			SetIsModified();
 		}
 
 		void SetData(int serial)
@@ -159,7 +159,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Can't attach, file being modified");
 
 			NEWindow = neWindow;
-			SetAutoRefresh();
+			SetupWatcher();
 		}
 
 		public void Detach()
@@ -170,7 +170,7 @@ namespace NeoEdit.Editor
 				throw new Exception("Can't detach, file being modified");
 
 			NEWindow = null;
-			SetAutoRefresh();
+			SetupWatcher();
 		}
 	}
 }

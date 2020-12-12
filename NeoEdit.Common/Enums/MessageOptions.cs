@@ -14,8 +14,9 @@ namespace NeoEdit.Common.Enums
 
 		YesNo = Yes | No,
 		YesNoAll = Yes | No | All,
-		OkCancel = Ok | Cancel,
 		YesNoCancel = Yes | No | Cancel,
 		YesNoAllCancel = Yes | No | All | Cancel,
+		OkCancel = Ok | Cancel,
+		OkAllCancel = Ok | All | Cancel,
 	}
 }

@@ -29,6 +29,8 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Select_ModifiedUnmodified(bool modified) => SetActiveFiles(ActiveFiles.Where(neFile => neFile.IsModified == modified));
 
+		void Execute_File_Select_ExternalModifiedUnmodified(bool modified) => SetActiveFiles(ActiveFiles.Where(neFile => (neFile.LastWriteTime != neFile.LastExternalWriteTime) == modified));
+
 		void Execute_File_Select_Inactive() => SetActiveFiles(NEFiles.Except(ActiveFiles));
 
 		void Execute_File_Select_Choose()

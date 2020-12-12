@@ -74,22 +74,21 @@ namespace NeoEdit.Editor
 
 		public void Execute_File_Refresh()
 		{
-			if (string.IsNullOrEmpty(FileName))
+			if ((string.IsNullOrEmpty(FileName)) || (LastWriteTime == LastExternalWriteTime))
 				return;
 
-			if (!File.Exists(FileName))
-				throw new Exception("This file has been deleted.");
-
-			if (fileLastWrite != new FileInfo(FileName).LastWriteTime)
+			if (File.Exists(FileName))
 			{
-				if (!QueryUser(nameof(Execute_File_Refresh), "This file has been updated on disk. Reload?", MessageOptions.Yes))
-					return;
-
-				Execute_File_Revert();
+				if (QueryUser($"{nameof(Execute_File_Refresh)}-Updated", "This file has been updated on disk. Reload?", MessageOptions.Yes))
+					Execute_File_Revert();
+			}
+			else
+			{
+				QueryUser($"{nameof(Execute_File_Refresh)}-Deleted", "This file has been deleted.", MessageOptions.Ok, MessageOptions.OkAllCancel);
 			}
 		}
 
-		void Execute_File_AutoRefresh() => SetAutoRefresh(state.MultiStatus != true);
+		void Execute_File_AutoRefresh() => AutoRefresh = state.MultiStatus != true;
 
 		void Execute_File_Revert()
 		{
@@ -109,7 +108,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Save_SaveModified()
 		{
-			if ((FileName != null) && (!IsModified))
+			if ((FileName != null) && (!IsModified) && (LastWriteTime == LastExternalWriteTime))
 				return;
 			Execute_File_Save_SaveAll();
 		}
@@ -301,6 +300,15 @@ namespace NeoEdit.Editor
 		void Execute_File_Close_ModifiedUnmodifiedFiles(bool modified)
 		{
 			if (IsModified == modified)
+			{
+				VerifyCanClose();
+				Close();
+			}
+		}
+
+		void Execute_File_Close_ExternalModifiedUnmodifiedFiles(bool modified)
+		{
+			if ((LastWriteTime != LastExternalWriteTime) == modified)
 			{
 				VerifyCanClose();
 				Close();
