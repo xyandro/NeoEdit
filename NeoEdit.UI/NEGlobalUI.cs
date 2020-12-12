@@ -1,7 +1,10 @@
 ﻿using System.Collections.Concurrent;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Models;
@@ -104,8 +107,26 @@ namespace NeoEdit.UI
 			INEWindowUI.CreateNEWindowUIStatic = neWindow => dispatcher.Invoke(() => new NEWindowUI(neWindow, this));
 			INEWindowUI.GetDecryptKeyStatic = type => dispatcher.Invoke(() => File_Advanced_Encrypt_Dialog.Run(null, type, false).Key);
 			INEWindowUI.ShowExceptionMessageStatic = ex => dispatcher.Invoke(() => NEWindowUI.ShowExceptionMessage(ex));
+			INEWindowUI.ShellIntegrateStatic = integrate => ShellIntegrate(integrate);
 
 			new Thread(RunThread) { Name = nameof(NEGlobalUI) }.Start();
+		}
+
+		static void ShellIntegrate(bool integrate)
+		{
+			using var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default);
+			using var starKey = baseKey.OpenSubKey("*");
+			using var shellKey = starKey.OpenSubKey("shell", true);
+			if (integrate)
+			{
+				using var neoEditKey = shellKey.CreateSubKey("Open with NeoEdit");
+				using var commandKey = neoEditKey.CreateSubKey("command");
+				var location = Assembly.GetEntryAssembly().Location;
+				location = Path.Combine(Path.GetDirectoryName(location), $"{Path.GetFileNameWithoutExtension(location)}.exe");
+				commandKey.SetValue("", $@"""{location}"" ""%1""");
+			}
+			else
+				shellKey.DeleteSubKeyTree("Open with NeoEdit");
 		}
 	}
 }

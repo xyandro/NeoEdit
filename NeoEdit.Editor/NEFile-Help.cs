@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-using Microsoft.Win32;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
 using NeoEdit.Editor.PreExecution;
@@ -94,23 +93,13 @@ namespace NeoEdit.Editor
 
 		static void PreExecute_Help_Advanced_Shell_Integrate()
 		{
-			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
-			using (var starKey = baseKey.OpenSubKey("*"))
-			using (var shellKey = starKey.OpenSubKey("shell", true))
-			using (var neoEditKey = shellKey.CreateSubKey("Open with NeoEdit"))
-			using (var commandKey = neoEditKey.CreateSubKey("command"))
-				commandKey.SetValue("", $@"""{Assembly.GetEntryAssembly().Location}"" -text ""%1""");
-
+			INEWindowUI.ShellIntegrateStatic(true);
 			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Help_Advanced_Shell_Unintegrate()
 		{
-			using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Default))
-			using (var starKey = baseKey.OpenSubKey("*"))
-			using (var shellKey = starKey.OpenSubKey("shell", true))
-				shellKey.DeleteSubKeyTree("Open with NeoEdit");
-
+			INEWindowUI.ShellIntegrateStatic(false);
 			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 

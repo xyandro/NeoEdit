@@ -16,6 +16,7 @@ namespace NeoEdit.Common
 		static Func<INEWindow, INEWindowUI> CreateNEWindowUIStatic { get; set; }
 		static Func<Cryptor.Type, string> GetDecryptKeyStatic { get; set; }
 		static Action<Exception> ShowExceptionMessageStatic { get; set; }
+		static Action<bool> ShellIntegrateStatic { get; set; }
 
 		MessageOptions RunDialog_ShowMessage(string title, string text, MessageOptions options = MessageOptions.Ok, MessageOptions defaultAccept = MessageOptions.None, MessageOptions defaultCancel = MessageOptions.None);
 
