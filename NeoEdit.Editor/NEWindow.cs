@@ -25,16 +25,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		bool activeFirst;
-		public bool ActiveFirst
-		{
-			get => activeFirst;
-			set
-			{
-				activeFirst = value;
-				SetNeedsRender();
-			}
-		}
+		public bool ActiveFirst { get; set; }
 
 		public int DisplayColumns { get; private set; }
 

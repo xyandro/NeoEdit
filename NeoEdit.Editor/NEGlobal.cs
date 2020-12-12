@@ -67,6 +67,7 @@ namespace NeoEdit.Editor
 
 		void RunCommands(NEWindow neWindow, Func<bool> skipDraw)
 		{
+			neWindow?.SetNeedsRender();
 			var oldData = Data;
 			try
 			{

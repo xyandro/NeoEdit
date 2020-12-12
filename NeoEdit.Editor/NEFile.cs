@@ -25,20 +25,16 @@ namespace NeoEdit.Editor
 		readonly int serial = Interlocked.Increment(ref nextSerial);
 
 		public DateTime LastActive { get; set; }
-		private bool isModified;
-		public bool IsModified { get => isModified; private set { isModified = value; NEWindow?.SetNeedsRender(); } }
-		string dbName;
-		public string DBName { get => dbName; private set { dbName = value; NEWindow?.SetNeedsRender(); } }
+		public bool IsModified { get; private set; }
+		public string DBName { get; private set; }
 		int currentSelection;
-		public int CurrentSelection { get => Math.Min(Math.Max(0, currentSelection), Selections.Count - 1); private set { currentSelection = value; NEWindow?.SetNeedsRender(); } }
-		string displayName;
-		public string DisplayName { get => displayName; private set { displayName = value; NEWindow?.SetNeedsRender(); } }
-		string fileName;
-		public string FileName { get => fileName; private set { fileName = value; NEWindow?.SetNeedsRender(); } }
+		public int CurrentSelection { get => Math.Min(Math.Max(0, currentSelection), Selections.Count - 1); private set { currentSelection = value; } }
+
+		public string DisplayName { get; private set; }
+		public string FileName { get; private set; }
 		public bool AutoRefresh { get; private set; }
 		public bool AllowOverlappingSelections { get; private set; }
-		ParserType contentType;
-		public ParserType ContentType { get => contentType; set { contentType = value; NEWindow?.SetNeedsRender(); } }
+		public ParserType ContentType { get; set; }
 		public Coder.CodePage CodePage { get; private set; }
 		public bool HasBOM { get; private set; }
 		public string AESKey { get; private set; }
@@ -49,14 +45,11 @@ namespace NeoEdit.Editor
 		public bool DiffIgnoreLineEndings { get; private set; }
 		public string DiffIgnoreCharacters { get; private set; }
 		public bool KeepSelections { get; private set; }
-		bool highlightSyntax;
-		public bool HighlightSyntax { get => highlightSyntax; private set { highlightSyntax = value; NEWindow?.SetNeedsRender(); } }
+		public bool HighlightSyntax { get; private set; }
 		public bool StrictParsing { get; private set; }
 		public JumpByType JumpBy { get; private set; }
-		bool viewBinary;
-		public bool ViewBinary { get => viewBinary; private set { viewBinary = value; NEWindow?.SetNeedsRender(); } }
-		HashSet<Coder.CodePage> viewBinaryCodePages;
-		public HashSet<Coder.CodePage> ViewBinaryCodePages { get => viewBinaryCodePages; private set { viewBinaryCodePages = value; NEWindow?.SetNeedsRender(); } }
+		public bool ViewBinary { get; private set; }
+		public HashSet<Coder.CodePage> ViewBinaryCodePages { get; private set; }
 		public IReadOnlyList<HashSet<string>> ViewBinarySearches { get; private set; }
 
 		int startRow, startColumn;
@@ -66,7 +59,6 @@ namespace NeoEdit.Editor
 			private set
 			{
 				startRow = value;
-				NEWindow?.SetNeedsRender();
 				if (DiffTarget != null)
 					DiffTarget.startRow = value;
 			}
@@ -78,7 +70,6 @@ namespace NeoEdit.Editor
 			private set
 			{
 				startColumn = value;
-				NEWindow?.SetNeedsRender();
 				if (DiffTarget != null)
 					DiffTarget.startColumn = value;
 			}
@@ -92,11 +83,11 @@ namespace NeoEdit.Editor
 			{
 				if (DiffTarget != null)
 				{
+					DiffTarget.NEWindow?.SetNeedsRender();
 					Text.ClearDiff();
 					DiffTarget.Text.ClearDiff();
 					DiffTarget.diffTarget = null;
 					diffTarget = null;
-					NEWindow?.SetNeedsRender();
 				}
 
 				if (value != null)
@@ -104,7 +95,7 @@ namespace NeoEdit.Editor
 					value.DiffTarget = null;
 					diffTarget = value;
 					value.diffTarget = this;
-					NEWindow?.SetNeedsRender();
+					DiffTarget.NEWindow?.SetNeedsRender();
 					CalculateDiff();
 				}
 			}
