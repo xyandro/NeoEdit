@@ -585,7 +585,6 @@ namespace NeoEdit.Editor
 				case NECommand.Help_Advanced_Shell_Integrate: PreExecute_Help_Advanced_Shell_Integrate(); break;
 				case NECommand.Help_Advanced_Shell_Unintegrate: PreExecute_Help_Advanced_Shell_Unintegrate(); break;
 				case NECommand.Help_Advanced_CopyCommandLine: PreExecute_Help_Advanced_CopyCommandLine(); break;
-				case NECommand.Help_Advanced_Extract: PreExecute_Help_Advanced_Extract(); break;
 				case NECommand.Help_Advanced_RunGC: PreExecute_Help_Advanced_RunGC(); break;
 				case NECommand.Help_About: PreExecute_Help_About(); break;
 			}

@@ -732,7 +732,6 @@
 		Help_Advanced_Shell_Integrate,
 		Help_Advanced_Shell_Unintegrate,
 		Help_Advanced_CopyCommandLine,
-		Help_Advanced_Extract,
 		Help_Advanced_RunGC,
 		Help_About,
 	}

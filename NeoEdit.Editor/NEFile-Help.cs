@@ -112,18 +112,6 @@ namespace NeoEdit.Editor
 			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static void PreExecute_Help_Advanced_Extract()
-		{
-			var location = Assembly.GetEntryAssembly().Location;
-
-			if (!state.NEWindow.neWindowUI.RunDialog_ShowMessage("Extract files", $"Files will be extracted from {location} after program exits.", MessageOptions.OkCancel, MessageOptions.Ok, MessageOptions.Cancel).HasFlag(MessageOptions.Ok))
-				state.PreExecution = PreExecution_TaskFinished.Singleton;
-
-			Process.Start(location, $@"-extract {Process.GetCurrentProcess().Id}");
-
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
-
 		static void PreExecute_Help_Advanced_RunGC()
 		{
 			GC.Collect();

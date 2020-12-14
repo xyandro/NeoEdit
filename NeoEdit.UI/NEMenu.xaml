@@ -1160,8 +1160,6 @@
 			<Separator/>
 			<controls:NEMenuItem Header="Cop_y command line" CommandEnum="Help_Advanced_CopyCommandLine" ToolTip="Copy command line to clipboard"/>
 			<Separator/>
-			<controls:NEMenuItem Visibility="{Binding Path=(common:Settings.CanExtract), Converter={converters:BoolToVisibleCollapsedConverter}}" Header="_Extract" CommandEnum="Help_Advanced_Extract" ToolTip="Extract files on disk (speeds up load time)"/>
-			<Separator Visibility="{Binding Path=(common:Settings.CanExtract), Converter={converters:BoolToVisibleCollapsedConverter}}"/>
 			<controls:NEMenuItem Header="Run _GC" CommandEnum="Help_Advanced_RunGC" ToolTip="Run garbage collection (mainly for debugging)"/>
 		</MenuItem>
 		<Separator/>
