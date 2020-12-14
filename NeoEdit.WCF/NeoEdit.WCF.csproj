@@ -17,7 +17,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <OutputPath>..\NeoEdit\bin\$(Configuration)\net5.0-windows\</OutputPath>
     <CopyRetryCount>0</CopyRetryCount>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -25,11 +24,13 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>..\NeoEdit\bin\$(Configuration)\net5.0-windows\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>..\Publish\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\NeoEdit.Dependencies\GlobalAssemblyInfo.cs">
