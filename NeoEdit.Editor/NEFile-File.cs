@@ -199,7 +199,10 @@ namespace NeoEdit.Editor
 			if (!QueryUser(nameof(Execute_File_Delete), "Are you sure you want to delete this file?", MessageOptions.No))
 				return;
 
+			watcher.EnableRaisingEvents = false;
 			File.Delete(FileName);
+			LastWriteTime = LastExternalWriteTime = LastActivatedTime = DateTime.MinValue;
+			watcher.EnableRaisingEvents = true;
 		}
 
 		static void Configure_File_Encoding() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(state.NEWindow.Focused.CodePage, state.NEWindow.Focused.HasBOM);
