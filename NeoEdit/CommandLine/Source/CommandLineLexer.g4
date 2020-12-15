@@ -4,12 +4,12 @@ STARTSTR    : '"' -> skip, pushMode(STR) ;
 
 BACKGROUND  : '-background'                                ;
 COLUMN      : '-col' | '-column'                           ;
+DEBUG       : '-debug'                                     ;
 DIFF        : '-diff'                                      ;
 DISPLAY     : '-display' | '-displayname' | '-displaytext' ;
 EXISTING    : '-exist' | '-existing'                       ;
 INDEX       : '-in' | '-index'                             ;
 LINE        : '-line'                                      ;
-MULTI       : '-multi'                                     ;
 WAIT        : '-wait'                                      ;
 WAITPID     : '-waitpid'                                   ;
 
@@ -23,12 +23,12 @@ mode STR;
 
 BACKGROUND2 : BACKGROUND -> type(BACKGROUND) ;
 COLUMN2     : COLUMN     -> type(COLUMN)     ;
+DEBUG2      : DEBUG      -> type(DEBUG)      ;
 DIFF2       : DIFF       -> type(DIFF)       ;
 DISPLAY2    : DISPLAY    -> type(DISPLAY)    ;
 EXISTING2   : EXISTING   -> type(EXISTING)   ;
 INDEX2      : INDEX      -> type(INDEX)      ;
 LINE2       : LINE       -> type(LINE)       ;
-MULTI2      : MULTI      -> type(MULTI)      ;
 WAIT2       : WAIT       -> type(WAIT)       ;
 WAITPID2    : WAITPID    -> type(WAITPID)    ;
 

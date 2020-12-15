@@ -14,7 +14,7 @@ namespace NeoEdit.Common.Models
 		}
 
 		public bool Background { get; set; }
-		public bool Multi { get; set; }
+		public bool Debug { get; set; }
 		public bool Existing { get; set; }
 		public bool Diff { get; set; }
 		public List<File> Files { get; } = new List<File>();

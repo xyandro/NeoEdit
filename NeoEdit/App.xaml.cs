@@ -28,12 +28,12 @@ namespace NeoEdit
 			HandleWaitPID(commandLineParams);
 
 			var masterPid = default(int?);
-			if (!commandLineParams.Multi)
+			if (!commandLineParams.Debug)
 				masterPid = GetMasterPID();
 			if (!masterPid.HasValue)
 			{
 				var app = new App();
-				if (!commandLineParams.Multi)
+				if (!commandLineParams.Debug)
 				{
 					SetMasterPID();
 					app.SetupPipeWait();

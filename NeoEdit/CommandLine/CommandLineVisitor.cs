@@ -29,10 +29,10 @@ namespace NeoEdit.CommandLine
 			return base.VisitBackground(context);
 		}
 
-		public override object VisitMulti([NotNull] CommandLineParser.MultiContext context)
+		public override object VisitDebug([NotNull] CommandLineParser.DebugContext context)
 		{
-			clParams.Multi = true;
-			return base.VisitMulti(context);
+			clParams.Debug = true;
+			return base.VisitDebug(context);
 		}
 
 		public override object VisitExisting([NotNull] CommandLineParser.ExistingContext context)
