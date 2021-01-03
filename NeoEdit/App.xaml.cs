@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using NeoEdit.Common;
 using NeoEdit.Common.Models;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor;
@@ -64,8 +65,8 @@ namespace NeoEdit
 			while ((waitEvent?.WaitOne(1000) == false) && (!proc.HasExited)) { }
 		}
 
-		const string IPCName = "NeoEdit-{debe0282-0e9d-47fd-836c-60f500dbaeb5}";
-		const string ShutdownEventName = "NeoEdit-Wait-{0}";
+		readonly static string IPCName = $"NeoEdit-{{debe0282-0e9d-47fd-836c-60f500dbaeb5}}{(Helpers.IsAdministrator() ? "-Admin" : "")}";
+		readonly static string ShutdownEventName = $"NeoEdit-Wait-{{0}}{(Helpers.IsAdministrator() ? "-Admin" : "")}";
 		private readonly NEGlobalUI neGlobalUI;
 		static MemoryMappedFile masterPIDFile;
 
