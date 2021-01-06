@@ -121,9 +121,7 @@ namespace NeoEdit.UI
 			{
 				using var neoEditKey = shellKey.CreateSubKey("Open with NeoEdit");
 				using var commandKey = neoEditKey.CreateSubKey("command");
-				var location = Assembly.GetEntryAssembly().Location;
-				location = Path.Combine(Path.GetDirectoryName(location), $"{Path.GetFileNameWithoutExtension(location)}.exe");
-				commandKey.SetValue("", $@"""{location}"" ""%1""");
+				commandKey.SetValue("", $@"""{Helpers.GetEntryExe()}"" ""%1""");
 			}
 			else
 				shellKey.DeleteSubKeyTree("Open with NeoEdit");

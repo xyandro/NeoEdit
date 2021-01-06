@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Shell;
 using System.Windows.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Models;
@@ -20,49 +21,47 @@ namespace NeoEdit
 	{
 		public static void RunProgram(CommandLineParams commandLineParams)
 		{
-			try { RunCommandLine(commandLineParams); }
-			catch (Exception ex) { NEWindowUI.ShowExceptionMessage(ex); }
-		}
-
-		static void RunCommandLine(CommandLineParams commandLineParams)
-		{
-			HandleWaitPID(commandLineParams);
-
-			var masterPid = default(int?);
-			if (!commandLineParams.Debug)
-				masterPid = GetMasterPID();
-			if (!masterPid.HasValue)
+			try
 			{
-				var app = new App();
+				HandleWaitPID(commandLineParams);
+
+				var masterPid = default(int?);
 				if (!commandLineParams.Debug)
+					masterPid = GetMasterPID();
+				if (!masterPid.HasValue)
 				{
-					SetMasterPID();
-					app.SetupPipeWait();
+					var app = new App();
+					if (!commandLineParams.Debug)
+					{
+						SetMasterPID();
+						app.SetupPipeWait();
+					}
+					app.neGlobalUI.HandleCommandLine(commandLineParams);
+					app.Run();
+					return;
 				}
-				app.neGlobalUI.HandleCommandLine(commandLineParams);
-				app.Run();
-				return;
+
+				var proc = Process.GetProcessById(masterPid.Value);
+				Win32.AllowSetForegroundWindow(proc.Id);
+
+				// Server already exists; connect and send command line
+				var waitEvent = default(EventWaitHandle);
+				if (commandLineParams.Wait != null)
+				{
+					commandLineParams.Wait = string.Format(ShutdownEventName, Guid.NewGuid());
+					waitEvent = new EventWaitHandle(false, EventResetMode.ManualReset, commandLineParams.Wait);
+				}
+
+				var pipeClient = new NamedPipeClientStream(".", IPCName, PipeDirection.InOut);
+				pipeClient.Connect();
+				var buf = Coder.StringToBytes(JsonConvert.SerializeObject(commandLineParams), Coder.CodePage.UTF8);
+				var size = BitConverter.GetBytes(buf.Length);
+				pipeClient.Write(size, 0, size.Length);
+				pipeClient.Write(buf, 0, buf.Length);
+
+				while ((waitEvent?.WaitOne(1000) == false) && (!proc.HasExited)) { }
 			}
-
-			var proc = Process.GetProcessById(masterPid.Value);
-			Win32.AllowSetForegroundWindow(proc.Id);
-
-			// Server already exists; connect and send command line
-			var waitEvent = default(EventWaitHandle);
-			if (commandLineParams.Wait != null)
-			{
-				commandLineParams.Wait = string.Format(ShutdownEventName, Guid.NewGuid());
-				waitEvent = new EventWaitHandle(false, EventResetMode.ManualReset, commandLineParams.Wait);
-			}
-
-			var pipeClient = new NamedPipeClientStream(".", IPCName, PipeDirection.InOut);
-			pipeClient.Connect();
-			var buf = Coder.StringToBytes(JsonConvert.SerializeObject(commandLineParams), Coder.CodePage.UTF8);
-			var size = BitConverter.GetBytes(buf.Length);
-			pipeClient.Write(size, 0, size.Length);
-			pipeClient.Write(buf, 0, buf.Length);
-
-			while ((waitEvent?.WaitOne(1000) == false) && (!proc.HasExited)) { }
+			catch (Exception ex) { NEWindowUI.ShowExceptionMessage(ex); }
 		}
 
 		readonly static string IPCName = $"NeoEdit-{{debe0282-0e9d-47fd-836c-60f500dbaeb5}}{(Helpers.IsAdministrator() ? "-Admin" : "")}";
@@ -122,10 +121,22 @@ namespace NeoEdit
 			Clipboarder.Initialize();
 			Font.Reset();
 
+			SetupJumpList();
+
 			ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
 			InitializeComponent();
 			DispatcherUnhandledException += App_DispatcherUnhandledException;
+		}
+
+		void SetupJumpList()
+		{
+			var runAsAdminTask = new JumpTask { Title = "Run as administrator", ApplicationPath = Helpers.GetEntryExe(), Arguments = "-admin" };
+
+			var jumpList = new JumpList();
+			jumpList.JumpItems.Add(runAsAdminTask);
+
+			JumpList.SetJumpList(this, jumpList);
 		}
 
 		protected override void OnStartup(StartupEventArgs e)

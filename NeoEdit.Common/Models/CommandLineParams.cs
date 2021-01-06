@@ -13,6 +13,7 @@ namespace NeoEdit.Common.Models
 			public int? Index { get; set; }
 		}
 
+		public bool Admin { get; set; }
 		public bool Background { get; set; }
 		public bool Debug { get; set; }
 		public bool Existing { get; set; }

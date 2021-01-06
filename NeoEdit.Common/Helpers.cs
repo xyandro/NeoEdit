@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
@@ -512,5 +513,12 @@ namespace NeoEdit.Common
 		}
 
 		public static char[] NewLineChars { get; } = new char[] { '\r', '\n' };
+
+		public static string GetEntryExe()
+		{
+			var location = Assembly.GetEntryAssembly().Location;
+			location = Path.Combine(Path.GetDirectoryName(location), $"{Path.GetFileNameWithoutExtension(location)}.exe");
+			return location;
+		}
 	}
 }

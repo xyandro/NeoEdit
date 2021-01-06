@@ -4,8 +4,9 @@ options { tokenVocab = CommandLineLexer; }
 
 expr       : parameter* EOF ;
 
-parameter  : background | debug | existing | diff | file | wait | waitpid ;
+parameter  : admin | background | debug | existing | diff | file | wait | waitpid ;
 
+admin      : ADMIN ;
 background : BACKGROUND ;
 debug      : DEBUG ;
 existing   : EXISTING ;

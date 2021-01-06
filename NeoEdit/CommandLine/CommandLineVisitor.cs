@@ -23,6 +23,12 @@ namespace NeoEdit.CommandLine
 
 		CommandLineParams clParams = new CommandLineParams();
 
+		public override object VisitAdmin([NotNull] CommandLineParser.AdminContext context)
+		{
+			clParams.Admin = true;
+			return base.VisitAdmin(context);
+		}
+
 		public override object VisitBackground([NotNull] CommandLineParser.BackgroundContext context)
 		{
 			clParams.Background = true;

@@ -2,6 +2,7 @@ lexer grammar CommandLineLexer;
 
 STARTSTR    : '"' -> skip, pushMode(STR) ;
 
+ADMIN       : '-admin'                                     ;
 BACKGROUND  : '-background'                                ;
 COLUMN      : '-col' | '-column'                           ;
 DEBUG       : '-debug'                                     ;
@@ -21,6 +22,7 @@ WS          : [ \t\r\n\f\u000b\u0085\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u
 
 mode STR;
 
+ADMIN2      : ADMIN      -> type(ADMIN)      ;
 BACKGROUND2 : BACKGROUND -> type(BACKGROUND) ;
 COLUMN2     : COLUMN     -> type(COLUMN)     ;
 DEBUG2      : DEBUG      -> type(DEBUG)      ;
