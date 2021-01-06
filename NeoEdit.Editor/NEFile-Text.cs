@@ -443,19 +443,15 @@ namespace NeoEdit.Editor
 		static void Configure_Text_Find_Find()
 		{
 			string text = null;
-			var selectionOnly = state.NEWindow.Focused.Selections.Any(range => range.HasSelection);
 
 			if (state.NEWindow.Focused.Selections.Count == 1)
 			{
-				var sel = state.NEWindow.Focused.Selections.Single();
-				if ((selectionOnly) && (state.NEWindow.Focused.Text.GetPositionLine(sel.Cursor) == state.NEWindow.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
-				{
-					selectionOnly = false;
-					text = state.NEWindow.Focused.Text.GetString(sel);
-				}
+				var range = state.NEWindow.Focused.Selections.Single();
+				if ((range.HasSelection) && (state.NEWindow.Focused.Text.GetPositionLine(range.Cursor) == state.NEWindow.Focused.Text.GetPositionLine(range.Anchor)) && (range.Length < 1000))
+					text = state.NEWindow.Focused.Text.GetString(range);
 			}
 
-			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Text_Find_Find(text, selectionOnly, state.NEWindow.Focused.ViewBinaryCodePages, state.NEWindow.Focused.GetVariables());
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Text_Find_Find(text, state.NEWindow.Focused.ViewBinaryCodePages, state.NEWindow.Focused.GetVariables());
 		}
 
 		void Execute_Text_Find_Find()
@@ -581,19 +577,15 @@ namespace NeoEdit.Editor
 		static void Configure_Text_Find_RegexReplace()
 		{
 			string text = null;
-			var selectionOnly = state.NEWindow.Focused.Selections.Any(range => range.HasSelection);
 
 			if (state.NEWindow.Focused.Selections.Count == 1)
 			{
-				var sel = state.NEWindow.Focused.Selections.Single();
-				if ((selectionOnly) && (state.NEWindow.Focused.Text.GetPositionLine(sel.Cursor) == state.NEWindow.Focused.Text.GetPositionLine(sel.Anchor)) && (sel.Length < 1000))
-				{
-					selectionOnly = false;
-					text = state.NEWindow.Focused.Text.GetString(sel);
-				}
+				var range = state.NEWindow.Focused.Selections.Single();
+				if ((range.HasSelection) && (state.NEWindow.Focused.Text.GetPositionLine(range.Cursor) == state.NEWindow.Focused.Text.GetPositionLine(range.Anchor)) && (range.Length < 1000))
+					text = state.NEWindow.Focused.Text.GetString(range);
 			}
 
-			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Text_Find_RegexReplace(text, selectionOnly);
+			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Text_Find_RegexReplace(text);
 		}
 
 		void Execute_Text_Find_RegexReplace()

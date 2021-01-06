@@ -42,8 +42,8 @@ namespace NeoEdit.Common
 		Configuration_Text_Select_Split RunDialog_Configure_Text_Select_Split(NEVariables variables);
 		Configuration_Text_Select_Repeats_ByCount_IgnoreMatchCase RunDialog_Configure_Text_Select_Repeats_ByCount_IgnoreMatchCase();
 		Configuration_Text_SelectWidth_ByWidth RunDialog_Configure_Text_SelectWidth_ByWidth(bool numeric, bool isSelect, NEVariables variables);
-		Configuration_Text_Find_Find RunDialog_Configure_Text_Find_Find(string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables);
-		Configuration_Text_Find_RegexReplace RunDialog_Configure_Text_Find_RegexReplace(string text, bool selectionOnly);
+		Configuration_Text_Find_Find RunDialog_Configure_Text_Find_Find(string text, HashSet<Coder.CodePage> codePages, NEVariables variables);
+		Configuration_Text_Find_RegexReplace RunDialog_Configure_Text_Find_RegexReplace(string text);
 		Configuration_Text_Sort RunDialog_Configure_Text_Sort();
 		Configuration_Text_Random RunDialog_Configure_Text_Random(NEVariables variables);
 		Configuration_Text_Advanced_Unicode RunDialog_Configure_Text_Advanced_Unicode();

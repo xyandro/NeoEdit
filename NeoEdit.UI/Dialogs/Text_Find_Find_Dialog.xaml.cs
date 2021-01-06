@@ -151,7 +151,7 @@ namespace NeoEdit.UI.Dialogs
 
 		readonly HashSet<Coder.CodePage> startCodePages;
 
-		Text_Find_Find_Dialog(string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables)
+		Text_Find_Find_Dialog(string text, HashSet<Coder.CodePage> codePages, NEVariables variables)
 		{
 			Variables = variables;
 			startCodePages = codePages;
@@ -159,7 +159,6 @@ namespace NeoEdit.UI.Dialogs
 			InitializeComponent();
 
 			Reset();
-			SelectionOnly = selectionOnly;
 			Text = text ?? "";
 		}
 
@@ -291,9 +290,9 @@ namespace NeoEdit.UI.Dialogs
 			CodePages = startCodePages;
 		}
 
-		public static Configuration_Text_Find_Find Run(Window parent, string text, bool selectionOnly, HashSet<Coder.CodePage> codePages, NEVariables variables)
+		public static Configuration_Text_Find_Find Run(Window parent, string text, HashSet<Coder.CodePage> codePages, NEVariables variables)
 		{
-			var dialog = new Text_Find_Find_Dialog(text, selectionOnly, codePages, variables) { Owner = parent };
+			var dialog = new Text_Find_Find_Dialog(text, codePages, variables) { Owner = parent };
 			if (!dialog.ShowDialog())
 				throw new OperationCanceledException();
 			return dialog.result;

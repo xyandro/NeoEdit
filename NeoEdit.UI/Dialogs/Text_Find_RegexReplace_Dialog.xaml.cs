@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
-using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.UI.Controls;
 
@@ -36,14 +35,12 @@ namespace NeoEdit.UI.Dialogs
 			UIHelper<Text_Find_RegexReplace_Dialog>.AddCallback(a => a.EntireSelection, (obj, o, n) => { if (obj.EntireSelection) obj.SelectionOnly = true; });
 		}
 
-		Text_Find_RegexReplace_Dialog(string text, bool selectionOnly)
+		Text_Find_RegexReplace_Dialog(string text)
 		{
 			InitializeComponent();
 
-			SelectionOnly = selectionOnly;
-			Text = text.CoalesceNullOrEmpty(this.text.GetLastSuggestion(), "");
+			Text = text ?? "";
 			Replace = "";
-			SetCheckBoxStatus(this.text.GetLastSuggestionData() as CheckBoxStatus);
 		}
 
 		CheckBoxStatus GetCheckBoxStatus()
@@ -88,9 +85,9 @@ namespace NeoEdit.UI.Dialogs
 
 		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = SelectionOnly = EntireSelection = false;
 
-		public static Configuration_Text_Find_RegexReplace Run(Window parent, string text, bool selectionOnly)
+		public static Configuration_Text_Find_RegexReplace Run(Window parent, string text)
 		{
-			var dialog = new Text_Find_RegexReplace_Dialog(text, selectionOnly) { Owner = parent };
+			var dialog = new Text_Find_RegexReplace_Dialog(text) { Owner = parent };
 			if (!dialog.ShowDialog())
 				throw new OperationCanceledException();
 			return dialog.result;
