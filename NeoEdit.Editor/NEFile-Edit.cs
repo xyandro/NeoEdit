@@ -161,7 +161,7 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Select_Lines()
 		{
-			var lineSets = Selections.AsTaskRunner().Select(range => new { start = Text.GetPositionLine(range.Start), end = Text.GetPositionLine(Math.Max(range.Start, range.End - 1)) }).ToList();
+			var lineSets = Selections.AsTaskRunner().Where(range => range.HasSelection).Select(range => new { start = Text.GetPositionLine(range.Start), end = Text.GetPositionLine(range.End - 1) }).ToList();
 
 			var hasLine = new bool[Text.NumLines];
 			foreach (var set in lineSets)
