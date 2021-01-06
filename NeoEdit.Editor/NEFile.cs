@@ -110,6 +110,8 @@ namespace NeoEdit.Editor
 		NETextPoint savedTextPoint;
 		Coder.CodePage savedCodePage;
 		bool savedHasBOM;
+		string savedAESKey;
+		bool savedCompressed;
 
 		public NEFile(string fileName = null, string displayName = null, byte[] bytes = null, Coder.CodePage codePage = Coder.CodePage.AutoByBOM, ParserType contentType = ParserType.None, bool? modified = null, int? line = null, int? column = null, int? index = null)
 		{
@@ -1265,6 +1267,8 @@ namespace NeoEdit.Editor
 					savedTextPoint = NETextPoint;
 					savedCodePage = CodePage;
 					savedHasBOM = HasBOM;
+					savedAESKey = AESKey;
+					savedCompressed = Compressed;
 				}
 				else
 				{
@@ -1273,10 +1277,12 @@ namespace NeoEdit.Editor
 					savedTextPoint = null;
 					savedCodePage = Coder.CodePage.None;
 					savedHasBOM = false;
+					savedAESKey = null;
+					savedCompressed = false;
 				}
 			}
 
-			IsModified = (savedCodePage != CodePage) || (savedHasBOM != HasBOM) || ((savedTextPoint != NETextPoint) && (savedText != Text.GetString()));
+			IsModified = (savedCodePage != CodePage) || (savedHasBOM != HasBOM) || (savedAESKey != AESKey) || (savedCompressed != Compressed) || ((savedTextPoint != NETextPoint) && (savedText != Text.GetString()));
 		}
 
 		public IReadOnlyList<string> GetSelectionStrings() => Selections.AsTaskRunner().Select(range => Text.GetString(range)).ToList();
