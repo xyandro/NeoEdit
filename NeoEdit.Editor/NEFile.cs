@@ -420,6 +420,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_Advanced_SetDisplayName: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Exit: Configure_File_Exit(); break;
 				case NECommand.Edit_Select_Limit: Configure_Edit_Select_Limit(); break;
+				case NECommand.Edit_Select_Lines: Configure_Edit_Select_Lines(); break;
 				case NECommand.Edit_Select_ToggleAnchor: Configure_Edit_Select_ToggleAnchor(); break;
 				case NECommand.Edit_Paste_Paste: Configure_Edit_Paste_PasteRotatePaste(); break;
 				case NECommand.Edit_Paste_RotatePaste: Configure_Edit_Paste_PasteRotatePaste(); break;

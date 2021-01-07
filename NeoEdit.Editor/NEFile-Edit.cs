@@ -159,13 +159,19 @@ namespace NeoEdit.Editor
 			Selections = sels.ToList();
 		}
 
+		static void Configure_Edit_Select_Lines() => state.Configuration = new Configuration_Edit_Select_Lines { HasSelections = state.NEWindow.ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.HasSelection)) };
+
 		void Execute_Edit_Select_Lines()
 		{
-			var lineSets = Selections.AsTaskRunner().Where(range => range.HasSelection).Select(range => new { start = Text.GetPositionLine(range.Start), end = Text.GetPositionLine(range.End - 1) }).ToList();
+			IReadOnlyList<NERange> lineSets;
+			if ((state.Configuration as Configuration_Edit_Select_Lines).HasSelections)
+				lineSets = Selections.AsTaskRunner().Where(range => range.HasSelection).Select(range => new NERange(Text.GetPositionLine(range.Start), Text.GetPositionLine(range.End - 1))).ToList();
+			else
+				lineSets = Selections.AsTaskRunner().Select(range => new NERange(Text.GetPositionLine(range.Start))).ToList();
 
 			var hasLine = new bool[Text.NumLines];
 			foreach (var set in lineSets)
-				for (var ctr = set.start; ctr <= set.end; ++ctr)
+				for (var ctr = set.Start; ctr <= set.End; ++ctr)
 					hasLine[ctr] = true;
 
 			var lines = new List<int>();
