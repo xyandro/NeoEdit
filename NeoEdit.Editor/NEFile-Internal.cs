@@ -200,7 +200,7 @@ namespace NeoEdit.Editor
 				ViewBinarySearches = null;
 				return;
 			}
-			//DragFiles = null;
+			INEGlobalUI.DragFiles = null;
 			if (Settings.EscapeClearsSelections)
 			{
 				Execute_Edit_Select_Focused_Single();

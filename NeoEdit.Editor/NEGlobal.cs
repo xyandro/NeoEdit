@@ -93,6 +93,9 @@ namespace NeoEdit.Editor
 						state.NEWindow?.neWindowUI?.SetMacroProgress((double)actionCount / total);
 					}
 
+					if (action.Command != NECommand.Internal_Activate)
+						INEGlobalUI.DragFiles = null;
+
 					if (action.Command == NECommand.Macro_RepeatLastAction)
 					{
 						if (lastAction == null)
@@ -180,8 +183,7 @@ namespace NeoEdit.Editor
 						var nonExisting = result.DragFiles.Where(x => !File.Exists(x)).ToList();
 						if (nonExisting.Any())
 							throw new Exception($"The following files don't exist:\n\n{string.Join("\n", nonExisting)}");
-						// TODO: Make these files actually do something
-						//Focused.DragFiles = fileNames;
+						INEGlobalUI.DragFiles = result.DragFiles.ToArray();
 					}
 				}
 

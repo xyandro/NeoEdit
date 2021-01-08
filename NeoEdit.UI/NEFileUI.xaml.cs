@@ -49,15 +49,15 @@ namespace NeoEdit.UI
 			lightlightRowPen.Freeze();
 		}
 
-		public NEWindowUI FilesWindow { get; }
+		public NEWindowUI neWindowUI { get; }
 		public INEFile NEFile { get; set; }
 
 		const double Spacing = 2;
 		static double LineHeight => Font.FontSize + Spacing;
 
-		internal NEFileUI(NEWindowUI filesWindow)
+		internal NEFileUI(NEWindowUI neWindowUI)
 		{
-			FilesWindow = filesWindow;
+			this.neWindowUI = neWindowUI;
 			EnhancedFocusManager.SetIsEnhancedFocusScope(this, true);
 			InitializeComponent();
 			DragEnter += (s, e) => e.Effects = DragDropEffects.Link;
@@ -66,7 +66,7 @@ namespace NeoEdit.UI
 
 		void OnMouseWheel(object sender, MouseWheelEventArgs e) => yScroll.Value -= e.Delta / 40;
 
-		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => FilesWindow.HandleCommand(new ExecuteState(NECommand.Internal_Scroll, Keyboard.Modifiers.ToModifiers()) { Configuration = new Configuration_Internal_Scroll { NEFile = NEFile, Column = (int)xScroll.Value, Row = (int)yScroll.Value } });
+		void ScrollChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => neWindowUI.HandleCommand(new ExecuteState(NECommand.Internal_Scroll, Keyboard.Modifiers.ToModifiers()) { Configuration = new Configuration_Internal_Scroll { NEFile = NEFile, Column = (int)xScroll.Value, Row = (int)yScroll.Value } });
 
 		public void DrawAll()
 		{
@@ -353,7 +353,7 @@ namespace NeoEdit.UI
 
 		void OnCanvasRender(object sender, DrawingContext dc)
 		{
-			if (FilesWindow.renderParameters == null)
+			if (neWindowUI.renderParameters == null)
 				return;
 
 			NEFile.ViewSetDisplaySize((int)Math.Floor(canvas.ActualWidth / Font.CharWidth), (int)Math.Floor(canvas.ActualHeight / LineHeight));
@@ -374,7 +374,7 @@ namespace NeoEdit.UI
 
 		void OnStatusBarRender(object s, DrawingContext dc)
 		{
-			if (FilesWindow.renderParameters == null)
+			if (neWindowUI.renderParameters == null)
 				return;
 
 			const string Separator = "  |  ";
@@ -397,11 +397,18 @@ namespace NeoEdit.UI
 			canvas.CaptureMouse();
 			var line = (int)(position.Y / LineHeight + yScroll.Value);
 			var column = (int)(position.X / Font.CharWidth + xScroll.Value);
-			FilesWindow.HandleCommand(new ExecuteState(NECommand.Internal_Mouse, Keyboard.Modifiers.ToModifiers()) { Configuration = new Configuration_Internal_Mouse { NEFile = NEFile, Line = line, Column = column, ClickCount = mouseClickCount, Selecting = selecting } });
+			neWindowUI.HandleCommand(new ExecuteState(NECommand.Internal_Mouse, Keyboard.Modifiers.ToModifiers()) { Configuration = new Configuration_Internal_Mouse { NEFile = NEFile, Line = line, Column = column, ClickCount = mouseClickCount, Selecting = selecting } });
 		}
 
 		void OnCanvasMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
+			if (INEGlobalUI.DragFiles != null)
+			{
+				DragDrop.DoDragDrop(this, new DataObject(DataFormats.FileDrop, INEGlobalUI.DragFiles), DragDropEffects.Copy);
+				INEGlobalUI.DragFiles = null;
+				return;
+			}
+
 			canvas.CaptureMouse();
 			mouseClickCount = e.ClickCount;
 			HandleMouse(e.GetPosition(canvas), false);

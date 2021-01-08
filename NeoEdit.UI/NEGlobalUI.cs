@@ -10,7 +10,7 @@ using NeoEdit.UI.Dialogs;
 
 namespace NeoEdit.UI
 {
-	public class NEGlobalUI
+	public class NEGlobalUI : INEGlobalUI
 	{
 		const int DrawFrequency = 5;
 
