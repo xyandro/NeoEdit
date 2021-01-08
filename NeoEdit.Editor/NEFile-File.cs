@@ -201,8 +201,6 @@ namespace NeoEdit.Editor
 			watcher.EnableRaisingEvents = true;
 		}
 
-		static void Configure_File_Encoding() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_File_OpenEncoding_ReopenWithEncoding(state.NEWindow.Focused.CodePage, state.NEWindow.Focused.HasBOM);
-
 		void Execute_File_Encoding()
 		{
 			var result = state.Configuration as Configuration_File_OpenEncoding_ReopenWithEncoding;
