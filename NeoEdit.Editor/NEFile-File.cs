@@ -157,8 +157,6 @@ namespace NeoEdit.Editor
 			SetFileName(fileName);
 		}
 
-		static void Configure_File_Move_MoveByExpression() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_FileTable_Various_Various(state.NEWindow.Focused.GetVariables(), state.NEWindow.Focused.Selections.Count);
-
 		void Execute_File_Move_MoveByExpression()
 		{
 			var result = state.Configuration as Configuration_FileTable_Various_Various;

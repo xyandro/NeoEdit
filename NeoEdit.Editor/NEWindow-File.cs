@@ -146,5 +146,7 @@ namespace NeoEdit.Editor
 		}
 
 		void Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName() => state.Configuration = neWindowUI.RunDialog_Configure_FileTable_Various_Various(Focused?.GetVariables() ?? new NEVariables(), Focused?.Selections.Count ?? 0);
+
+		void Configure_File_Move_MoveByExpression() => state.Configuration = neWindowUI.RunDialog_Configure_FileTable_Various_Various(Focused?.GetVariables() ?? new NEVariables(), Focused?.Selections.Count ?? 0);
 	}
 }

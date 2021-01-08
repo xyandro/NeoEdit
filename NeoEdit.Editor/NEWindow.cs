@@ -179,6 +179,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_Open_ReopenWithEncoding: Configure_File_Open_ReopenWithEncoding(); break;
 				case NECommand.Macro_Open_Open: Configure_FileMacro_Open_Open(Macro.MacroDirectory); break;
 				case NECommand.File_Save_SaveAsByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
+				case NECommand.File_Move_MoveByExpression: Configure_File_Move_MoveByExpression(); break;
 				case NECommand.File_Copy_CopyByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Advanced_SetDisplayName: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				default: NEFile.Configure(); break;
