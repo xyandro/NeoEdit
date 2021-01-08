@@ -6,9 +6,9 @@
 	Title="Connect to Database" SizeToContent="Width" Height="400" FocusManager.FocusedElement="{Binding ElementName=name}">
 
 	<Window.Resources>
-		<dialogs:DBParamTemplateSelector x:Key="dbParamTemplateSelectorValue" Path="Value"/>
-		<dialogs:DBParamTemplateSelector x:Key="dbParamTemplateSelectorOriginal" Path="Original" ReadOnly="True"/>
-		<dialogs:DBParamTemplateSelector x:Key="dbParamTemplateSelectorDefault" Path="Default" ReadOnly="True"/>
+		<dialogs:DBParamTemplateSelector x:Key="dbParamTemplateSelectorNewValue" Path="Value"/>
+		<dialogs:DBParamTemplateSelector x:Key="dbParamTemplateSelectorOldValue" Path="Original" ReadOnly="True"/>
+		<dialogs:DBParamTemplateSelector x:Key="dbParamTemplateSelectorDefaultValue" Path="Default" ReadOnly="True"/>
 	</Window.Resources>
 
 	<Grid Margin="10">
@@ -42,8 +42,8 @@
 			<ListView.View>
 				<GridView>
 					<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-					<GridViewColumn Header="Value" CellTemplateSelector="{StaticResource dbParamTemplateSelectorValue}"/>
-					<GridViewColumn Header="Original" CellTemplateSelector="{StaticResource dbParamTemplateSelectorOriginal}"/>
+					<GridViewColumn Header="New Value" CellTemplateSelector="{StaticResource dbParamTemplateSelectorNewValue}"/>
+					<GridViewColumn Header="Old Value" CellTemplateSelector="{StaticResource dbParamTemplateSelectorOldValue}"/>
 					<GridViewColumn>
 						<GridViewColumn.Header>
 							<Button Content="Reset" Click="ResetOriginalClick"/>
@@ -54,7 +54,7 @@
 							</DataTemplate>
 						</GridViewColumn.CellTemplate>
 					</GridViewColumn>
-					<GridViewColumn Header="Default" CellTemplateSelector="{StaticResource dbParamTemplateSelectorDefault}"/>
+					<GridViewColumn Header="Default Value" CellTemplateSelector="{StaticResource dbParamTemplateSelectorDefaultValue}"/>
 					<GridViewColumn>
 						<GridViewColumn.Header>
 							<Button Content="Reset" Click="ResetDefaultClick"/>

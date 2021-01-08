@@ -28,13 +28,13 @@ namespace NeoEdit.UI.Dialogs
 			InitializeComponent();
 			try { DBConnectInfos = new ObservableCollection<DBConnectInfo>(XMLConverter.FromXML<List<DBConnectInfo>>(XElement.Load(dbConfigFile))); }
 			catch { DBConnectInfos = new ObservableCollection<DBConnectInfo>(); }
+			DBConnectInfos.CollectionChanged += (s, e) => XMLConverter.ToXML(DBConnectInfos.ToList()).Save(dbConfigFile);
 		}
 
 		void AddClick(object sender, RoutedEventArgs e)
 		{
-			var result = EditDatabaseConnectDialog.Run(Owner, new DBConnectInfo());
-			if (result != null)
-				DBConnectInfos.Add(result);
+			try { DBConnectInfos.Add(EditDatabaseConnectDialog.Run(Owner, new DBConnectInfo())); }
+			catch { }
 		}
 
 		void CopyClick(object sender, RoutedEventArgs e)
@@ -42,9 +42,8 @@ namespace NeoEdit.UI.Dialogs
 			if (DBConnectInfo == null)
 				return;
 
-			var result = EditDatabaseConnectDialog.Run(Owner, DBConnectInfo);
-			if (result != null)
-				DBConnectInfos.Add(result);
+			try { DBConnectInfos.Add(EditDatabaseConnectDialog.Run(Owner, DBConnectInfo)); }
+			catch { }
 		}
 
 		void EditClick(object sender, RoutedEventArgs e)
@@ -52,9 +51,8 @@ namespace NeoEdit.UI.Dialogs
 			if (DBConnectInfo == null)
 				return;
 
-			var result = EditDatabaseConnectDialog.Run(Owner, DBConnectInfo);
-			if (result != null)
-				DBConnectInfos[DBConnectInfos.IndexOf(DBConnectInfo)] = result;
+			try { DBConnectInfos[DBConnectInfos.IndexOf(DBConnectInfo)] = EditDatabaseConnectDialog.Run(Owner, DBConnectInfo); }
+			catch { }
 		}
 
 		void DeleteClick(object sender, RoutedEventArgs e)
@@ -114,8 +112,6 @@ namespace NeoEdit.UI.Dialogs
 		{
 			if (DBConnectInfo == null)
 				return;
-
-			XMLConverter.ToXML(DBConnectInfos.ToList()).Save(dbConfigFile);
 
 			result = new Configuration_Database_Connect { DBConnectInfo = DBConnectInfo };
 			DialogResult = true;
