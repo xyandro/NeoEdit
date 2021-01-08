@@ -42,8 +42,10 @@ namespace NeoEdit.Editor
 		public Coder.CodePage CodePage { get => codePage; private set { codePage = value; SetIsModified(); } }
 		bool hasBOM;
 		public bool HasBOM { get => hasBOM; private set { hasBOM = value; SetIsModified(); } }
-		public string AESKey { get; private set; }
-		public bool Compressed { get; private set; }
+		string aesKey;
+		public string AESKey { get => aesKey; private set { aesKey = value; SetIsModified(); } }
+		bool compressed;
+		public bool Compressed { get => compressed; private set { compressed = value; SetIsModified(); } }
 		public bool DiffIgnoreWhitespace { get; private set; }
 		public bool DiffIgnoreCase { get; private set; }
 		public bool DiffIgnoreNumbers { get; private set; }
