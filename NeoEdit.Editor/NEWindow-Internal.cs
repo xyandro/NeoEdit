@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
-using NeoEdit.Editor.PreExecution;
 
 namespace NeoEdit.Editor
 {
@@ -47,9 +46,9 @@ namespace NeoEdit.Editor
 
 			switch (state.Key)
 			{
-				case "PageUp": MovePrevNext(-1, state.ShiftDown); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
-				case "PageDown": MovePrevNext(1, state.ShiftDown); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
-				case "Tab": MovePrevNext(1, state.ShiftDown, true); state.PreExecution = PreExecution_TaskFinished.Singleton; break;
+				case "PageUp": MovePrevNext(-1, state.ShiftDown); break;
+				case "PageDown": MovePrevNext(1, state.ShiftDown); break;
+				case "Tab": MovePrevNext(1, state.ShiftDown, true); break;
 			}
 		}
 

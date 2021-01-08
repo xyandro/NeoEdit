@@ -5,7 +5,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -523,7 +522,6 @@ namespace NeoEdit.Editor
 			var neFile = configuration.NEFile as NEFile;
 			neFile.StartColumn = configuration.Column;
 			neFile.StartRow = configuration.Row;
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		public void Execute_Internal_Mouse(int line, int column, int clickCount, bool selecting)

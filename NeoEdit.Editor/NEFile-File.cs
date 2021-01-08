@@ -7,7 +7,6 @@ using System.Text;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
-using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
 using NeoEdit.Editor.PreExecution;
 
@@ -253,11 +252,7 @@ namespace NeoEdit.Editor
 			DisplayName = results[0];
 		}
 
-		static void PreExecute_File_Advanced_DontExitOnClose()
-		{
-			Settings.DontExitOnClose = state.MultiStatus != true;
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_File_Advanced_DontExitOnClose() => Settings.DontExitOnClose = state.MultiStatus != true;
 
 		static void PreExecute_File_Close_ActiveInactiveFiles(bool active)
 		{
@@ -266,8 +261,6 @@ namespace NeoEdit.Editor
 				neFile.VerifyCanClose();
 				neFile.Close();
 			}
-
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		void Execute_File_Close_FilesWithWithoutSelections(bool hasSelections)
@@ -310,8 +303,6 @@ namespace NeoEdit.Editor
 				neFile.Close();
 			}
 			state.NEWindow.ClearNEWindows();
-
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 	}
 }

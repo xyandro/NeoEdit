@@ -11,7 +11,6 @@ using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -662,10 +661,6 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Advanced_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
 
-		static void PreExecute_Edit_Advanced_EscapeClearsSelections()
-		{
-			Settings.EscapeClearsSelections = state.MultiStatus != true;
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Edit_Advanced_EscapeClearsSelections() => Settings.EscapeClearsSelections = state.MultiStatus != true;
 	}
 }

@@ -5,7 +5,6 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -58,7 +57,6 @@ namespace NeoEdit.Editor
 		{
 			var active = new HashSet<NEFile>(state.NEWindow.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFile> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((state.NEWindow.GetFileIndex(item) < state.NEWindow.GetFileIndex(item.DiffTarget)) == left)));
 			state.NEWindow.SetActiveFiles(state.NEWindow.NEFiles.Where(neFile => active.Contains(neFile)));
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Diff_Diff()
@@ -73,10 +71,7 @@ namespace NeoEdit.Editor
 					diffTargets[ctr].DiffTarget = null;
 				}
 			if (inDiff)
-			{
-				state.PreExecution = PreExecution_TaskFinished.Singleton;
 				return;
-			}
 
 			if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
 				throw new Exception("Must have even number of files active for diff.");
@@ -98,8 +93,6 @@ namespace NeoEdit.Editor
 			}
 
 			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
-
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		void Execute_Diff_Break() => DiffTarget = null;

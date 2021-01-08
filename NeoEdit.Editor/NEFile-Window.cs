@@ -5,7 +5,6 @@ using System.Linq;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -27,7 +26,6 @@ namespace NeoEdit.Editor
 		{
 			var neWindow = new NEWindow();
 			neWindow.AddNewNEFile(new NEFile());
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Window_New_FromSelections_All()
@@ -36,7 +34,6 @@ namespace NeoEdit.Editor
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings()).ToList(), "Selections", contentType) });
 			neWindow.WindowLayout = state.NEWindow.WindowLayout;
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Window_New_FromSelections_Files()
@@ -44,7 +41,6 @@ namespace NeoEdit.Editor
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, state.NEWindow.ActiveFiles.Select((neFile, index) => (neFile.GetSelectionStrings(), neFile.GetSelectionsName() ?? $"Selections {index + 1}", neFile.ContentType)).ToList());
 			neWindow.WindowLayout = state.NEWindow.WindowLayout;
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Window_New_FromSelections_Selections()
@@ -53,7 +49,6 @@ namespace NeoEdit.Editor
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, state.NEWindow.ActiveFiles.SelectMany(neFile => neFile.GetSelectionStrings().Select(str => (new List<string> { str } as IReadOnlyList<string>, $"Selection {++index}", neFile.ContentType))).ToList());
 			neWindow.WindowLayout = state.NEWindow.WindowLayout;
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(bool caseSensitive, bool showAllFiles)
@@ -70,8 +65,6 @@ namespace NeoEdit.Editor
 			foreach (var neFile in summaryByFile)
 				neWindow.AddNewNEFile(CreateSummaryFile(neFile.DisplayName, neFile.selections));
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
-
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Window_New_FromClipboard_All()
@@ -79,7 +72,6 @@ namespace NeoEdit.Editor
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (NEClipboard.Current.Strings, "Clipboards", ParserType.None) });
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Window_New_FromClipboard_Files()
@@ -87,7 +79,6 @@ namespace NeoEdit.Editor
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, NEClipboard.Current.Select((clipboard, index) => (clipboard, $"Clipboard {index + 1}", ParserType.None)).ToList());
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Window_New_FromClipboard_Selections()
@@ -95,7 +86,6 @@ namespace NeoEdit.Editor
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Window_New_FromFiles_Active()
@@ -107,7 +97,6 @@ namespace NeoEdit.Editor
 				neWindow.AddNewNEFile(neFile);
 			}
 			neWindow.WindowLayout = state.NEWindow.WindowLayout;
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Window_New_FromFiles_CopiedCut()
@@ -115,46 +104,21 @@ namespace NeoEdit.Editor
 			var neWindow = new NEWindow();
 			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => neWindow.AddNewNEFile(neFile));
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static void PreExecute_Window_Full()
-		{
-			state.NEWindow.WindowLayout = new WindowLayout(1, 1);
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Window_Full() => state.NEWindow.WindowLayout = new WindowLayout(1, 1);
 
-		static void PreExecute_Window_Grid()
-		{
-			state.NEWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Window_Grid() => state.NEWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 
 		static void Configure_Window_CustomGrid() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Window_CustomGrid(state.NEWindow.WindowLayout);
 
-		static void PreExecute_Window_CustomGrid()
-		{
-			state.NEWindow.WindowLayout = (state.Configuration as Configuration_Window_CustomGrid).WindowLayout;
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Window_CustomGrid() => state.NEWindow.WindowLayout = (state.Configuration as Configuration_Window_CustomGrid).WindowLayout;
 
-		static void PreExecute_Window_ActiveFirst()
-		{
-			state.NEWindow.ActiveFirst = state.MultiStatus != true;
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Window_ActiveFirst() => state.NEWindow.ActiveFirst = state.MultiStatus != true;
 
-		static void PreExecute_Window_Font_Size()
-		{
-			state.NEWindow.neWindowUI.RunDialog_PreExecute_Window_Font_Size();
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Window_Font_Size() => state.NEWindow.neWindowUI.RunDialog_PreExecute_Window_Font_Size();
 
-		static void PreExecute_Window_Font_ShowSpecial()
-		{
-			Settings.ShowSpecialChars = state.MultiStatus != true;
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Window_Font_ShowSpecial() => Settings.ShowSpecialChars = state.MultiStatus != true;
 
 		void Execute_Window_ViewBinary() => ViewBinary = state.MultiStatus != true;
 

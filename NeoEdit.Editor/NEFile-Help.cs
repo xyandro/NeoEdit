@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Threading;
 using NeoEdit.Common;
 using NeoEdit.Common.Enums;
-using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -18,7 +17,6 @@ namespace NeoEdit.Editor
 		static void PreExecute_Help_Tutorial()
 		{
 			//TODO => new TutorialWindow(this);
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
 		static void PreExecute_Help_Update()
@@ -49,10 +47,7 @@ namespace NeoEdit.Editor
 
 			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
 			if (!state.NEWindow.neWindowUI.RunDialog_ShowMessage("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
-			{
-				state.PreExecution = PreExecution_TaskFinished.Singleton;
 				return;
-			}
 
 			var oldLocation = Assembly.GetEntryAssembly().Location;
 			var newLocation = Path.Combine(Path.GetDirectoryName(oldLocation), $"{Path.GetFileNameWithoutExtension(oldLocation)}-Update{Path.GetExtension(oldLocation)}");
@@ -87,41 +82,21 @@ namespace NeoEdit.Editor
 				Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
 				state.NEWindow.neWindowUI.RunDialog_ShowMessage("Info", "The program will be updated after exiting.");
 			});
-
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static void PreExecute_Help_Advanced_Shell_Integrate()
-		{
-			INEWindowUI.ShellIntegrateStatic(true);
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Help_Advanced_Shell_Integrate() => INEWindowUI.ShellIntegrateStatic(true);
 
-		static void PreExecute_Help_Advanced_Shell_Unintegrate()
-		{
-			INEWindowUI.ShellIntegrateStatic(false);
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Help_Advanced_Shell_Unintegrate() => INEWindowUI.ShellIntegrateStatic(false);
 
 		static void PreExecute_Help_Advanced_CopyCommandLine()
 		{
 			var clipboard = new NEClipboard();
 			clipboard.Add(new List<string> { Environment.CommandLine });
 			NEClipboard.Current = clipboard;
-
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
 		}
 
-		static void PreExecute_Help_Advanced_RunGC()
-		{
-			GC.Collect();
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Help_Advanced_RunGC() => GC.Collect();
 
-		static void PreExecute_Help_About()
-		{
-			state.NEWindow.neWindowUI.RunDialog_PreExecute_Help_About();
-			state.PreExecution = PreExecution_TaskFinished.Singleton;
-		}
+		static void PreExecute_Help_About() => state.NEWindow.neWindowUI.RunDialog_PreExecute_Help_About();
 	}
 }
