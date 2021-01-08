@@ -534,7 +534,6 @@ namespace NeoEdit.Editor
 			switch (state.Command)
 			{
 				case NECommand.Internal_Scroll: PreExecute_Internal_Scroll(); break;
-				case NECommand.File_Advanced_DontExitOnClose: PreExecute_File_Advanced_DontExitOnClose(); break;
 				case NECommand.File_Close_Active: PreExecute_File_Close_ActiveInactiveFiles(true); break;
 				case NECommand.File_Close_Inactive: PreExecute_File_Close_ActiveInactiveFiles(false); break;
 				case NECommand.File_Exit: PreExecute_File_Exit(); break;

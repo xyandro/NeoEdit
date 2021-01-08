@@ -131,6 +131,9 @@
     <Compile Update="NEGlobal-Edit.cs">
       <DependentUpon>NEGlobal.cs</DependentUpon>
     </Compile>
+    <Compile Update="NEGlobal-File.cs">
+      <DependentUpon>NEGlobal.cs</DependentUpon>
+    </Compile>
     <Compile Update="NEGlobal-Help.cs">
       <DependentUpon>NEGlobal.cs</DependentUpon>
     </Compile>

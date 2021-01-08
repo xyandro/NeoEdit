@@ -211,7 +211,14 @@ namespace NeoEdit.Editor
 		}
 
 		#region PreExecute
-		void PreExecute() => state.NEWindow?.PreExecute();
+		void PreExecute()
+		{
+			switch (state.Command)
+			{
+				case NECommand.File_Advanced_DontExitOnClose: PreExecute_File_Advanced_DontExitOnClose(); break;
+				default: state.NEWindow?.PreExecute(); break;
+			}
+		}
 		#endregion
 
 		#region Execute

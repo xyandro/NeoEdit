@@ -252,8 +252,6 @@ namespace NeoEdit.Editor
 			DisplayName = results[0];
 		}
 
-		static void PreExecute_File_Advanced_DontExitOnClose() => Settings.DontExitOnClose = state.MultiStatus != true;
-
 		static void PreExecute_File_Close_ActiveInactiveFiles(bool active)
 		{
 			foreach (var neFile in (active ? state.NEWindow.ActiveFiles : state.NEWindow.NEFiles.Except(state.NEWindow.ActiveFiles)))
