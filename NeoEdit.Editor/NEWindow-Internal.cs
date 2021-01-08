@@ -34,7 +34,8 @@ namespace NeoEdit.Editor
 				case "Right":
 				case "Up":
 				case "Down":
-					state.Configuration = new Configuration_Internal_Key { HasSelections = ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.HasSelection)) };
+					if (ActiveFiles.Any(neFile => neFile.Selections.Any(range => range.HasSelection)))
+						state.Configuration = new Configuration_Internal_Key { HasSelections = true };
 					break;
 			}
 		}
