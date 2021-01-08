@@ -231,14 +231,6 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Advanced_Compress() => Compressed = state.MultiStatus != true;
 
-		static void Configure_File_Advanced_Encrypt()
-		{
-			if (state.MultiStatus != true)
-				state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type.AES, true);
-			else
-				state.Configuration = new Configuration_File_Advanced_Encrypt();
-		}
-
 		void Execute_File_Advanced_Encrypt() => AESKey = (state.Configuration as Configuration_File_Advanced_Encrypt).Key;
 
 		void Execute_File_Advanced_Explore() => Process.Start("explorer.exe", $"/select,\"{FileName}\"");

@@ -157,5 +157,13 @@ namespace NeoEdit.Editor
 			var ending = endings.Count == 1 ? endings[0] : "";
 			state.Configuration = neWindowUI.RunDialog_Configure_File_LineEndings(ending);
 		}
+
+		void Configure_File_Advanced_Encrypt()
+		{
+			if (state.MultiStatus != true)
+				state.Configuration = neWindowUI.RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type.AES, true);
+			else
+				state.Configuration = new Configuration_File_Advanced_Encrypt();
+		}
 	}
 }

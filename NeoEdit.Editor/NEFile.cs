@@ -413,7 +413,6 @@ namespace NeoEdit.Editor
 
 			switch (state.Command)
 			{
-				case NECommand.File_Advanced_Encrypt: Configure_File_Advanced_Encrypt(); break;
 				case NECommand.File_Exit: Configure_File_Exit(); break;
 				case NECommand.Edit_Select_Limit: Configure_Edit_Select_Limit(); break;
 				case NECommand.Edit_Select_Lines: Configure_Edit_Select_Lines(); break;
