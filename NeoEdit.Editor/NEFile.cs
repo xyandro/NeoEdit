@@ -411,13 +411,10 @@ namespace NeoEdit.Editor
 
 			switch (state.Command)
 			{
-				case NECommand.File_Save_SaveAsByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Move_MoveByExpression: Configure_File_Move_MoveByExpression(); break;
-				case NECommand.File_Copy_CopyByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Encoding: Configure_File_Encoding(); break;
 				case NECommand.File_LineEndings: Configure_File_LineEndings(); break;
 				case NECommand.File_Advanced_Encrypt: Configure_File_Advanced_Encrypt(); break;
-				case NECommand.File_Advanced_SetDisplayName: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Exit: Configure_File_Exit(); break;
 				case NECommand.Edit_Select_Limit: Configure_Edit_Select_Limit(); break;
 				case NECommand.Edit_Select_Lines: Configure_Edit_Select_Lines(); break;

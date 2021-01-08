@@ -123,8 +123,6 @@ namespace NeoEdit.Editor
 
 		void Execute_File_SaveCopy_SaveAsCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		static void Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_FileTable_Various_Various(state.NEWindow.Focused.GetVariables(), state.NEWindow.Focused.Selections.Count);
-
 		void Execute_File_SaveCopy_SaveAsCopyByExpression(bool copyOnly = false)
 		{
 			var result = state.Configuration as Configuration_FileTable_Various_Various;
