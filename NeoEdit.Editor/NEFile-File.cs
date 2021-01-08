@@ -208,13 +208,6 @@ namespace NeoEdit.Editor
 			HasBOM = result.HasBOM;
 		}
 
-		static void Configure_File_LineEndings()
-		{
-			var endings = state.NEWindow.ActiveFiles.Select(neFile => neFile.Text.OnlyEnding).Distinct().Take(2).ToList();
-			var ending = endings.Count == 1 ? endings[0] : "";
-			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_File_LineEndings(ending);
-		}
-
 		void Execute_File_LineEndings()
 		{
 			var result = state.Configuration as Configuration_File_LineEndings;

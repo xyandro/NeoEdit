@@ -21,7 +21,7 @@ namespace NeoEdit.Editor
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
 		static int nextSerial;
 
-		readonly NEText Text = new NEText("");
+		public readonly NEText Text = new NEText("");
 		readonly int serial = Interlocked.Increment(ref nextSerial);
 
 		public DateTime LastActive { get; set; }
@@ -413,7 +413,6 @@ namespace NeoEdit.Editor
 
 			switch (state.Command)
 			{
-				case NECommand.File_LineEndings: Configure_File_LineEndings(); break;
 				case NECommand.File_Advanced_Encrypt: Configure_File_Advanced_Encrypt(); break;
 				case NECommand.File_Exit: Configure_File_Exit(); break;
 				case NECommand.Edit_Select_Limit: Configure_Edit_Select_Limit(); break;

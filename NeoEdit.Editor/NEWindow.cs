@@ -182,6 +182,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_Move_MoveByExpression: Configure_File_Move_MoveByExpression(); break;
 				case NECommand.File_Copy_CopyByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Encoding: Configure_File_Encoding(); break;
+				case NECommand.File_LineEndings: Configure_File_LineEndings(); break;
 				case NECommand.File_Advanced_SetDisplayName: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				default: NEFile.Configure(); break;
 			}
