@@ -16,8 +16,10 @@ namespace NeoEdit.UI
 	partial class NEFileUI
 	{
 		internal static readonly Brush caretBrush = new SolidColorBrush(Color.FromArgb(192, 255, 255, 255));
-		internal static readonly Brush selectionBrush = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
-		internal static readonly Pen selectionPen = new Pen(new SolidColorBrush(Color.FromArgb(96, 38, 132, 255)), 2);
+		internal static readonly Brush selectionBrushNonOverlap = new SolidColorBrush(Color.FromArgb(96, 38, 132, 255));
+		internal static readonly Pen selectionPenNonOverlap = new Pen(new SolidColorBrush(Color.FromArgb(96, 38, 132, 255)), 2);
+		internal static readonly Brush selectionBrushOverlap = new SolidColorBrush(Color.FromArgb(96, 38, 255, 132));
+		internal static readonly Pen selectionPenOverlap = new Pen(new SolidColorBrush(Color.FromArgb(96, 38, 255, 132)), 2);
 		internal static readonly Dictionary<int, Pen> regionPen = new Dictionary<int, Pen>
 		{
 			[1] = new Pen(new SolidColorBrush(Color.FromRgb(248, 118, 109)), 2),
@@ -39,8 +41,10 @@ namespace NeoEdit.UI
 		static NEFileUI()
 		{
 			caretBrush.Freeze();
-			selectionBrush.Freeze();
-			selectionPen.Freeze();
+			selectionBrushNonOverlap.Freeze();
+			selectionPenNonOverlap.Freeze();
+			selectionBrushOverlap.Freeze();
+			selectionPenOverlap.Freeze();
 			regionPen.Values.ForEach(brush => brush.Freeze());
 			diffLineBrush.Freeze();
 			diffLinePen.Freeze();
@@ -153,38 +157,7 @@ namespace NeoEdit.UI
 			return drawBounds;
 		}
 
-		void RenderCarets(DrawingContext dc, DrawBounds drawBounds)
-		{
-			for (var selectionCtr = 0; selectionCtr < NEFile.Selections.Count; ++selectionCtr)
-			{
-				var range = NEFile.Selections[selectionCtr];
-
-				if ((range.End < drawBounds.ScreenStart) || (range.Start > drawBounds.ScreenEnd))
-					continue;
-
-				var startLine = NEFile.ViewGetPositionLine(range.Start);
-				var endLine = NEFile.ViewGetPositionLine(range.End);
-				var cursorLine = range.Cursor == range.Start ? startLine : endLine;
-				startLine = Math.Max(drawBounds.StartLine, startLine);
-				endLine = Math.Min(drawBounds.EndLine, endLine + 1);
-
-				if ((cursorLine < startLine) || (cursorLine >= endLine))
-					continue;
-
-				if (selectionCtr == NEFile.CurrentSelection)
-					dc.DrawRoundedRectangle(highlightRowBrush, lightlightRowPen, new Rect(-2, drawBounds.Y(cursorLine), canvas.ActualWidth + 4, Font.FontSize), 4, 4);
-
-				var cursor = NEFile.ViewGetPositionIndex(range.Cursor, cursorLine);
-				if ((cursor >= drawBounds.StartIndexes[cursorLine]) && (cursor <= drawBounds.EndIndexes[cursorLine]))
-				{
-					cursor = NEFile.ViewGetColumnFromIndex(cursorLine, cursor);
-					for (var pass = selectionCtr == NEFile.CurrentSelection ? 2 : 1; pass > 0; --pass)
-						dc.DrawRectangle(caretBrush, null, new Rect(drawBounds.X(cursor) - 1, drawBounds.Y(cursorLine), 2, LineHeight));
-				}
-			}
-		}
-
-		void RenderIndicators(DrawingContext dc, DrawBounds drawBounds, NERange visibleCursor, IReadOnlyList<NERange> ranges, Brush brush, Pen pen, double leftSpacing, double rightSpacing)
+		void RenderCarets(DrawingContext dc, DrawBounds drawBounds, NERange visibleCursor, IReadOnlyList<NERange> ranges, Brush brush, Pen pen, double leftSpacing, double rightSpacing)
 		{
 			var radius = Math.Min(4, Font.FontSize / 2 - 1);
 
@@ -363,11 +336,11 @@ namespace NeoEdit.UI
 			var visibleCursor = (NEFile.CurrentSelection >= 0) && (NEFile.CurrentSelection < NEFile.Selections.Count) ? NEFile.Selections[NEFile.CurrentSelection] : null;
 
 			for (var region = 1; region <= 9; ++region)
-				RenderIndicators(dc, drawBounds, null, NEFile.GetRegions(region), null, regionPen[region], -2, 2);
-			if (NEFile.Selections.Any(range => range.HasSelection))
-				RenderIndicators(dc, drawBounds, visibleCursor, NEFile.Selections, selectionBrush, selectionPen, -1, 1);
+				RenderCarets(dc, drawBounds, null, NEFile.GetRegions(region), null, regionPen[region], -2, 2);
+			if (NEFile.AllowOverlappingSelections)
+				RenderCarets(dc, drawBounds, visibleCursor, NEFile.Selections, selectionBrushOverlap, selectionPenOverlap, -1, 1);
 			else
-				RenderCarets(dc, drawBounds);
+				RenderCarets(dc, drawBounds, visibleCursor, NEFile.Selections, selectionBrushNonOverlap, selectionPenNonOverlap, -1, 1);
 			RenderDiff(dc, drawBounds);
 			RenderText(dc, drawBounds);
 		}

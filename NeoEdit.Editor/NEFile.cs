@@ -36,7 +36,6 @@ namespace NeoEdit.Editor
 		public string DisplayName { get; private set; }
 		public string FileName { get; private set; }
 		public bool AutoRefresh { get; private set; }
-		public bool AllowOverlappingSelections { get; private set; }
 		public ParserType ContentType { get; set; }
 		Coder.CodePage codePage;
 		public Coder.CodePage CodePage { get => codePage; private set { codePage = value; SetIsModified(); } }
@@ -307,22 +306,6 @@ namespace NeoEdit.Editor
 			return result;
 		}
 		#endregion
-
-		static bool NeedsSort(IReadOnlyList<NERange> items)
-		{
-			for (var ctr = 1; ctr < items.Count; ++ctr)
-				if ((items[ctr].Start < items[ctr - 1].Start) || ((items[ctr].Start == items[ctr - 1].Start) && (items[ctr].End < items[ctr - 1].End)))
-					return true;
-
-			return false;
-		}
-
-		static IReadOnlyList<NERange> Sort(IReadOnlyList<NERange> items)
-		{
-			if (!NeedsSort(items))
-				return items;
-			return items.OrderBy(range => range.Start).ThenBy(range => range.End).ToList();
-		}
 
 		#region DeOverlap
 		enum DeOverlapStep

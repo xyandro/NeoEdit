@@ -11,6 +11,7 @@ namespace NeoEdit.Editor
 		NETextPoint NETextPoint { get; }
 		IReadOnlyList<NERange> Selections { get; }
 		IReadOnlyList<NERange>[] Regions { get; }
+		bool AllowOverlappingSelections { get; }
 
 		INEFileData Undo { get; }
 		INEFileData Redo { get; }

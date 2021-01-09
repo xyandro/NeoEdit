@@ -48,7 +48,7 @@ namespace NeoEdit.Editor
 			set
 			{
 				if (AllowOverlappingSelections)
-					EditableData.Selections = Sort(value);
+					EditableData.Selections = value;
 				else
 					EditableData.Selections = DeOverlap(value);
 				CurrentSelection = CurrentSelection;
@@ -70,6 +70,8 @@ namespace NeoEdit.Editor
 			EditableData.Regions[region - 1] = DeOverlap(regions);
 			Data.Regions[region - 1] = DeOverlap(regions);
 		}
+
+		public bool AllowOverlappingSelections { get => Data.AllowOverlappingSelections; private set => EditableData.AllowOverlappingSelections = value; }
 
 		void ClearNEFiles() => CreateResult().ClearNEFiles();
 		void AddNEFile(NEFile neFile) => CreateResult().AddNEFile(neFile);

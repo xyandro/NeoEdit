@@ -17,6 +17,7 @@ namespace NeoEdit.Common
 		IReadOnlyList<NERange> Selections { get; }
 		int CurrentSelection { get; }
 		bool HighlightSyntax { get; }
+		bool AllowOverlappingSelections { get; }
 		ParserType ContentType { get; }
 		string NEFileLabel { get; }
 		string DisplayName { get; }

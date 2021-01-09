@@ -12,6 +12,7 @@ namespace NeoEdit.Editor
 		public NETextPoint NETextPoint { get; set; }
 		public IReadOnlyList<NERange> Selections { get; set; }
 		public IReadOnlyList<NERange>[] Regions { get; set; }
+		public bool AllowOverlappingSelections { get; set; }
 
 		public INEFileData Undo { get; set; }
 		public INEFileData Redo { get; set; }
@@ -29,6 +30,7 @@ namespace NeoEdit.Editor
 			NETextPoint = neFileData.NETextPoint;
 			Selections = neFileData.Selections;
 			Regions = neFileData.Regions.ToArray();
+			AllowOverlappingSelections = neFileData.AllowOverlappingSelections;
 
 			Undo = neFileData;
 			(neFileData as NEFileData).Redo = this;
