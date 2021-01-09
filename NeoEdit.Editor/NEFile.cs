@@ -640,8 +640,7 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Select_WholeLines: Execute_Edit_Select_WholeLines(); break;
 				case NECommand.Edit_Select_Empty: Execute_Edit_Select_EmptyNonEmpty(true); break;
 				case NECommand.Edit_Select_NonEmpty: Execute_Edit_Select_EmptyNonEmpty(false); break;
-				case NECommand.Edit_Select_Overlap_DeOverlap: Execute_Edit_Select_Overlap_DeOverlap(); break;
-				case NECommand.Edit_Select_Overlap_AllowOverlappingSelections: Execute_Edit_Select_Overlap_AllowOverlappingSelections(); break;
+				case NECommand.Edit_Select_AllowOverlappingSelections: Execute_Edit_Select_AllowOverlappingSelections(); break;
 				case NECommand.Edit_Select_ToggleAnchor: Execute_Edit_Select_ToggleAnchor(); break;
 				case NECommand.Edit_Select_Focused_First: Execute_Edit_Select_Focused_First(); break;
 				case NECommand.Edit_Select_Focused_Next: Execute_Edit_Select_Focused_NextPrevious(true); break;

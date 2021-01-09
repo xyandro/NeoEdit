@@ -244,7 +244,7 @@ namespace NeoEdit.UI
 			menu.menu_File_Advanced_Compress.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Advanced_Compress)];
 			menu.menu_File_Advanced_Encrypt.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Advanced_Encrypt)];
 			menu.menu_File_Advanced_DontExitOnClose.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Advanced_DontExitOnClose)];
-			menu.menu_Edit_Select_Overlap_AllowOverlappingSelections.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Select_Overlap_AllowOverlappingSelections)];
+			menu.menu_Edit_Select_AllowOverlappingSelections.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Select_AllowOverlappingSelections)];
 			menu.menu_Edit_Navigate_JumpBy_Words.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Words)];
 			menu.menu_Edit_Navigate_JumpBy_Numbers.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Numbers)];
 			menu.menu_Edit_Navigate_JumpBy_Paths.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Paths)];
