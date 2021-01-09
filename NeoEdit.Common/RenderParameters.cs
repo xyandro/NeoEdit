@@ -9,6 +9,7 @@ namespace NeoEdit.Common
 		public IReadOnlyList<INEFile> ActiveFiles { get; set; }
 		public INEFile FocusedFile { get; set; }
 		public WindowLayout WindowLayout { get; set; }
+		public bool ActiveFirst { get; set; }
 		public List<string> StatusBar { get; set; }
 		public Dictionary<string, bool?> MenuStatus { get; set; }
 	}

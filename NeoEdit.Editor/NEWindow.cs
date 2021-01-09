@@ -118,6 +118,7 @@ namespace NeoEdit.Editor
 				ActiveFiles = ActiveFiles,
 				FocusedFile = Focused,
 				WindowLayout = WindowLayout,
+				ActiveFirst = ActiveFirst,
 				StatusBar = GetStatusBar(),
 				MenuStatus = GetMenuStatus(),
 			});
