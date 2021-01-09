@@ -724,7 +724,7 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
-		public static CodePage CodePageFromBOM(byte[] data) => NEEncodings.NonNull(encoding => encoding.preamble).OrderByDescending(encoding => encoding.preamble.Length).Where(encoding => (data.Length >= encoding.preamble.Length) && (data.Equal(encoding.preamble, encoding.preamble.Length))).Select(encoding => encoding.codePage).DefaultIfEmpty(CodePage.UTF8).First();
+		public static CodePage CodePageFromBOM(byte[] data) => NEEncodings.NonNull(encoding => encoding.preamble).OrderByDescending(encoding => encoding.preamble.Length).Where(encoding => (data.Length >= encoding.preamble.Length) && (data.Equal(encoding.preamble, encoding.preamble.Length))).Select(encoding => encoding.codePage).DefaultIfEmpty((CodePage)1252).First();
 
 		public static List<CodePage> GetAllCodePages() => NEEncodings.Select(encoding => encoding.codePage).ToList();
 		public static List<CodePage> GetStringCodePages() => GetAllCodePages().Where(codePage => IsStr(codePage)).ToList();
