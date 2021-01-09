@@ -146,6 +146,9 @@
     <Compile Update="NEGlobal-Variables.cs">
       <DependentUpon>NEGlobal.cs</DependentUpon>
     </Compile>
+    <Compile Update="NEWindow-Edit.cs">
+      <DependentUpon>NEWindow.cs</DependentUpon>
+    </Compile>
     <Compile Update="NEWindow-File.cs">
       <DependentUpon>NEWindow.cs</DependentUpon>
     </Compile>

@@ -187,6 +187,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_Advanced_Encrypt: Configure_File_Advanced_Encrypt(); break;
 				case NECommand.File_Advanced_SetDisplayName: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Exit: Configure_File_Exit(); break;
+				case NECommand.Edit_Select_Limit: Configure_Edit_Select_Limit(); break;
 				default: NEFile.Configure(); break;
 			}
 		}

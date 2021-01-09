@@ -163,8 +163,6 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Edit_Select_Limit() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Select_Limit(state.NEWindow.Focused.GetVariables());
-
 		void Execute_Edit_Select_Limit()
 		{
 			var result = state.Configuration as Configuration_Edit_Select_Limit;
