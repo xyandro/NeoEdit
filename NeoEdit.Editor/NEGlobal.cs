@@ -7,6 +7,7 @@ using System.Timers;
 using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
+using NeoEdit.Editor.PreExecution;
 using NeoEdit.TaskRunning;
 
 namespace NeoEdit.Editor
@@ -159,9 +160,12 @@ namespace NeoEdit.Editor
 				Stopwatch sw = Stopwatch.StartNew();
 
 				state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(0);
-				TaskRunner.Run(PreExecute, percent => state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(percent));
-				TaskRunner.Run(Execute, percent => state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(percent));
-				TaskRunner.Run(PostExecute, percent => state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(percent));
+				if (state.PreExecution != PreExecution_TaskFinished.Singleton)
+					TaskRunner.Run(PreExecute, percent => state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(percent));
+				if (state.PreExecution != PreExecution_TaskFinished.Singleton)
+					TaskRunner.Run(Execute, percent => state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(percent));
+				if (state.PreExecution != PreExecution_TaskFinished.Singleton)
+					TaskRunner.Run(PostExecute, percent => state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(percent));
 
 				Debug.WriteLine($"{state.Command} elapsed time: {sw.ElapsedMilliseconds:n0} ms");
 				if (showTime)
