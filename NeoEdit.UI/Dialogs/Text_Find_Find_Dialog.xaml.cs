@@ -23,6 +23,7 @@ namespace NeoEdit.UI.Dialogs
 			public bool WholeWords { get; set; }
 			public bool MatchCase { get; set; }
 			public bool SkipSpace { get; set; }
+			public bool SelectionOnly { get; set; }
 			public bool EntireSelection { get; set; }
 			public bool KeepMatching { get; set; }
 			public bool RemoveMatching { get; set; }
@@ -175,6 +176,7 @@ namespace NeoEdit.UI.Dialogs
 				WholeWords = WholeWords,
 				MatchCase = MatchCase,
 				SkipSpace = SkipSpace,
+				SelectionOnly = SelectionOnly,
 				EntireSelection = EntireSelection,
 				KeepMatching = KeepMatching,
 				RemoveMatching = RemoveMatching,
@@ -195,6 +197,7 @@ namespace NeoEdit.UI.Dialogs
 			WholeWords = checkBoxStatus.WholeWords;
 			MatchCase = checkBoxStatus.MatchCase;
 			SkipSpace = checkBoxStatus.SkipSpace;
+			SelectionOnly = checkBoxStatus.SelectionOnly;
 			EntireSelection = checkBoxStatus.EntireSelection;
 			KeepMatching = checkBoxStatus.KeepMatching;
 			RemoveMatching = checkBoxStatus.RemoveMatching;
