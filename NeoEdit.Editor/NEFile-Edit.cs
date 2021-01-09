@@ -137,9 +137,30 @@ namespace NeoEdit.Editor
 
 		void Execute_Edit_Select_Invert()
 		{
-			var start = new[] { 0 }.Concat(Selections.Select(sel => sel.End));
-			var end = Selections.Select(sel => sel.Start).Concat(new[] { Text.Length });
-			Selections = Enumerable.Zip(start, end, (startPos, endPos) => new NERange(startPos, endPos)).Where(range => (range.HasSelection) || ((range.Start != 0) && (range.Start != Text.Length))).ToList();
+			var pos = 0;
+			var sels = new List<NERange>();
+			var index = 0;
+			var selections = GetSortedSelections();
+			while (index < selections.Count)
+			{
+				var start = selections[index].Start;
+				var end = selections[index].End;
+				while ((index + 1 < selections.Count) && (selections[index + 1].Start <= end))
+				{
+					end = Math.Max(end, selections[index + 1].End);
+					++index;
+				}
+				if (start != end)
+				{
+					if (start != pos)
+						sels.Add(new NERange(pos, start));
+					pos = end;
+				}
+				++index;
+			}
+			if (pos != Text.Length)
+				sels.Add(new NERange(pos, Text.Length));
+			Selections = sels;
 		}
 
 		static void Configure_Edit_Select_Limit() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Select_Limit(state.NEWindow.Focused.GetVariables());
