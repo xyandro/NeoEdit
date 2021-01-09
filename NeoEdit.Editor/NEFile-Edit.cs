@@ -118,14 +118,19 @@ namespace NeoEdit.Editor
 		void Execute_Edit_Select_Join()
 		{
 			var sels = new List<NERange>();
-			var start = 0;
-			while (start < Selections.Count)
+			var index = 0;
+			var selections = GetSortedSelections();
+			while (index < selections.Count)
 			{
-				var end = start;
-				while ((end + 1 < Selections.Count) && (Selections[end].End == Selections[end + 1].Start))
-					++end;
-				sels.Add(new NERange(Selections[start].Start, Selections[end].End));
-				start = end + 1;
+				var start = selections[index].Start;
+				var end = selections[index].End;
+				while ((index + 1 < selections.Count) && (selections[index + 1].Start <= end))
+				{
+					end = Math.Max(end, selections[index + 1].End);
+					++index;
+				}
+				sels.Add(new NERange(start, end));
+				++index;
 			}
 			Selections = sels;
 		}
