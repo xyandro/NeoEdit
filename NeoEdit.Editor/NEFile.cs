@@ -413,7 +413,6 @@ namespace NeoEdit.Editor
 
 			switch (state.Command)
 			{
-				case NECommand.File_Exit: Configure_File_Exit(); break;
 				case NECommand.Edit_Select_Limit: Configure_Edit_Select_Limit(); break;
 				case NECommand.Edit_Select_Lines: Configure_Edit_Select_Lines(); break;
 				case NECommand.Edit_Select_ToggleAnchor: Configure_Edit_Select_ToggleAnchor(); break;
@@ -536,7 +535,6 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_Scroll: PreExecute_Internal_Scroll(); break;
 				case NECommand.File_Close_Active: PreExecute_File_Close_ActiveInactiveFiles(true); break;
 				case NECommand.File_Close_Inactive: PreExecute_File_Close_ActiveInactiveFiles(false); break;
-				case NECommand.File_Exit: PreExecute_File_Exit(); break;
 				case NECommand.Edit_Undo_BetweenFiles_Text: PreExecute_Edit_Undo_BetweenFiles_Text(); break;
 				case NECommand.Edit_Undo_BetweenFiles_Step: PreExecute_Edit_Undo_BetweenFiles_Step(); break;
 				case NECommand.Edit_Undo_BetweenFiles_Sync: PreExecute_Edit_Undo_BetweenFiles_Sync(); break;

@@ -67,7 +67,7 @@ namespace NeoEdit.Editor
 
 		void Execute_File_New_New() => AddNewNEFile(new NEFile());
 
-		void PreExecute_File_New_FromSelections_AllFilesSelections()
+		void Execute_File_New_FromSelections_AllFilesSelections()
 		{
 			state.PreExecution = new PreExecution_File_New_FromSelections_AllFilesSelections
 			{
@@ -79,35 +79,35 @@ namespace NeoEdit.Editor
 		{
 			var preExecution = state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections;
 			var contentType = ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
-			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (preExecution.Selections.SelectMany(d => d.Value.selections).ToList(), "Selections", contentType) });
+			AddFilesFromStrings(this, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (preExecution.Selections.SelectMany(d => d.Value.selections).ToList(), "Selections", contentType) });
 		}
 
 		void PostExecute_File_New_FromSelections_Files()
 		{
 			var preExecution = state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections;
-			AddFilesFromStrings(state.NEWindow, preExecution.Selections.Values.Select((tuple, index) => (tuple.selections, tuple.name ?? $"Selections {index + 1}", tuple.contentType)).ToList());
+			AddFilesFromStrings(this, preExecution.Selections.Values.Select((tuple, index) => (tuple.selections, tuple.name ?? $"Selections {index + 1}", tuple.contentType)).ToList());
 		}
 
 		void PostExecute_File_New_FromSelections_Selections()
 		{
 			var preExecution = state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections;
 			var index = 0;
-			AddFilesFromStrings(state.NEWindow, preExecution.Selections.Values.SelectMany(tuple => tuple.selections.Select(str => (new List<string> { str } as IReadOnlyList<string>, $"Selection {++index}", tuple.contentType))).ToList());
+			AddFilesFromStrings(this, preExecution.Selections.Values.SelectMany(tuple => tuple.selections.Select(str => (new List<string> { str } as IReadOnlyList<string>, $"Selection {++index}", tuple.contentType))).ToList());
 		}
 
 		void Execute_File_New_FromClipboard_All()
 		{
-			AddFilesFromStrings(state.NEWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (NEClipboard.Current.Strings, "Clipboards", ParserType.None) });
+			AddFilesFromStrings(this, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (NEClipboard.Current.Strings, "Clipboards", ParserType.None) });
 		}
 
 		void Execute_File_New_FromClipboard_Files()
 		{
-			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Select((clipboard, index) => (clipboard, $"Clipboard {index + 1}", ParserType.None)).ToList());
+			AddFilesFromStrings(this, NEClipboard.Current.Select((clipboard, index) => (clipboard, $"Clipboard {index + 1}", ParserType.None)).ToList());
 		}
 
 		void Execute_File_New_FromClipboard_Selections()
 		{
-			AddFilesFromStrings(state.NEWindow, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
+			AddFilesFromStrings(this, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
 		}
 
 		void Execute_File_New_WordList()
@@ -164,6 +164,18 @@ namespace NeoEdit.Editor
 				state.Configuration = neWindowUI.RunDialog_Configure_File_Advanced_Encrypt(Cryptor.Type.AES, true);
 			else
 				state.Configuration = new Configuration_File_Advanced_Encrypt();
+		}
+
+		void Configure_File_Exit() => state.Configuration = new Configuration_File_Exit { ShouldExit = true };
+
+		void Execute_File_Exit()
+		{
+			foreach (var neFile in NEFiles)
+			{
+				neFile.VerifyCanClose();
+				neFile.Close();
+			}
+			ClearNEWindows();
 		}
 	}
 }

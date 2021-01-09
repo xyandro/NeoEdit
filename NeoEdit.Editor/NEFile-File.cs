@@ -287,20 +287,5 @@ namespace NeoEdit.Editor
 				Close();
 			}
 		}
-
-		static void Configure_File_Exit()
-		{
-			state.Configuration = new Configuration_File_Exit { ShouldExit = true };
-		}
-
-		static void PreExecute_File_Exit()
-		{
-			foreach (var neFile in state.NEWindow.NEFiles)
-			{
-				neFile.VerifyCanClose();
-				neFile.Close();
-			}
-			state.NEWindow.ClearNEWindows();
-		}
 	}
 }

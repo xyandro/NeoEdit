@@ -185,6 +185,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_LineEndings: Configure_File_LineEndings(); break;
 				case NECommand.File_Advanced_Encrypt: Configure_File_Advanced_Encrypt(); break;
 				case NECommand.File_Advanced_SetDisplayName: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
+				case NECommand.File_Exit: Configure_File_Exit(); break;
 				default: NEFile.Configure(); break;
 			}
 		}
@@ -195,9 +196,6 @@ namespace NeoEdit.Editor
 			switch (state.Command)
 			{
 				case NECommand.Internal_Key: PreExecute_Internal_Key(); break;
-				case NECommand.File_New_FromSelections_All: PreExecute_File_New_FromSelections_AllFilesSelections(); break;
-				case NECommand.File_New_FromSelections_Files: PreExecute_File_New_FromSelections_AllFilesSelections(); break;
-				case NECommand.File_New_FromSelections_Selections: PreExecute_File_New_FromSelections_AllFilesSelections(); break;
 				default: NEFile.PreExecute(); break;
 			}
 		}
@@ -223,12 +221,16 @@ namespace NeoEdit.Editor
 				case NECommand.File_Select_Inactive: Execute_File_Select_Inactive(); break;
 				case NECommand.File_Select_Choose: Execute_File_Select_Choose(); break;
 				case NECommand.File_New_New: Execute_File_New_New(); break;
+				case NECommand.File_New_FromSelections_All: Execute_File_New_FromSelections_AllFilesSelections(); break;
+				case NECommand.File_New_FromSelections_Files: Execute_File_New_FromSelections_AllFilesSelections(); break;
+				case NECommand.File_New_FromSelections_Selections: Execute_File_New_FromSelections_AllFilesSelections(); break;
 				case NECommand.File_New_FromClipboard_All: Execute_File_New_FromClipboard_All(); break;
 				case NECommand.File_New_FromClipboard_Files: Execute_File_New_FromClipboard_Files(); break;
 				case NECommand.File_New_FromClipboard_Selections: Execute_File_New_FromClipboard_Selections(); break;
 				case NECommand.File_New_WordList: Execute_File_New_WordList(); break;
 				case NECommand.File_Open_Open: Execute_FileMacro_Open_Open(); break;
 				case NECommand.File_Open_CopiedCut: Execute_File_Open_CopiedCut(); break;
+				case NECommand.File_Exit: Execute_File_Exit(); break;
 				case NECommand.Macro_Open_Open: Execute_FileMacro_Open_Open(); break;
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
