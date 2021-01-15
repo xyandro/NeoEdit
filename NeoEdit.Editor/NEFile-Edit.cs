@@ -369,8 +369,8 @@ namespace NeoEdit.Editor
 
 		static void PreExecute_Edit_Undo_BetweenFiles_Step()
 		{
-			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.Undo).NonNull().Select(x => x.NESerial).DefaultIfEmpty(int.MinValue).Max();
-			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
+			var target = state.NEWindow.ActiveFiles.Where(x => x.Data.Undo != null).Select(x => x.Data.NESerial - 1).DefaultIfEmpty(int.MinValue).Max();
+			state.NEWindow.ActiveFiles.Where(neFile => (neFile.Data.Undo != null) && (neFile.Data.NESerial > target)).ForEach(neFile => neFile.SetData(neFile.Data.Undo));
 			state.NEWindow.CreateResult();
 		}
 
@@ -416,7 +416,7 @@ namespace NeoEdit.Editor
 		static void PreExecute_Edit_Redo_BetweenFiles_Step()
 		{
 			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.Redo).NonNull().Select(x => x.NESerial).DefaultIfEmpty(int.MaxValue).Min();
-			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
+			state.NEWindow.ActiveFiles.Where(neFile => (neFile.Data.Redo != null) && (neFile.Data.Redo.NESerial <= target)).ForEach(neFile => neFile.SetData(neFile.Data.Redo));
 			state.NEWindow.CreateResult();
 		}
 
