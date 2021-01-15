@@ -537,10 +537,8 @@ namespace NeoEdit.Editor
 				case NECommand.File_Close_Inactive: PreExecute_File_Close_ActiveInactiveFiles(false); break;
 				case NECommand.Edit_Undo_BetweenFiles_Text: PreExecute_Edit_Undo_BetweenFiles_Text(); break;
 				case NECommand.Edit_Undo_BetweenFiles_Step: PreExecute_Edit_Undo_BetweenFiles_Step(); break;
-				case NECommand.Edit_Undo_BetweenFiles_Sync: PreExecute_Edit_Undo_BetweenFiles_Sync(); break;
 				case NECommand.Edit_Redo_BetweenFiles_Text: PreExecute_Edit_Redo_BetweenFiles_Text(); break;
 				case NECommand.Edit_Redo_BetweenFiles_Step: PreExecute_Edit_Redo_BetweenFiles_Step(); break;
-				case NECommand.Edit_Redo_BetweenFiles_Sync: PreExecute_Edit_Redo_BetweenFiles_Sync(); break;
 				case NECommand.Edit_Advanced_EscapeClearsSelections: PreExecute_Edit_Advanced_EscapeClearsSelections(); break;
 				case NECommand.Text_Select_Repeats_BetweenFiles_Ordered_Matches_IgnoreCase: PreExecute_Text_Select_Repeats_BetweenFiles_Ordered_MatchesDiffs_IgnoreMatchCase(false); break;
 				case NECommand.Text_Select_Repeats_BetweenFiles_Ordered_Matches_MatchCase: PreExecute_Text_Select_Repeats_BetweenFiles_Ordered_MatchesDiffs_IgnoreMatchCase(true); break;

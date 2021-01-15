@@ -368,12 +368,6 @@ namespace NeoEdit.Editor
 			state.NEWindow.ActiveFiles.Where(neFile => (neFile.Data.Undo != null) && (neFile.Data.NESerial > target)).ForEach(neFile => neFile.SetData(neFile.Data.Undo));
 		}
 
-		static void PreExecute_Edit_Undo_BetweenFiles_Sync()
-		{
-			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.Redo).NonNull().Select(x => x.NESerial - 1).DefaultIfEmpty(int.MinValue).Max();
-			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
-		}
-
 		void Execute_Edit_Redo_Text()
 		{
 			var neFileData = Data;
@@ -405,12 +399,6 @@ namespace NeoEdit.Editor
 		{
 			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.Redo).NonNull().Select(x => x.NESerial).DefaultIfEmpty(int.MaxValue).Min();
 			state.NEWindow.ActiveFiles.Where(neFile => (neFile.Data.Redo != null) && (neFile.Data.Redo.NESerial <= target)).ForEach(neFile => neFile.SetData(neFile.Data.Redo));
-		}
-
-		static void PreExecute_Edit_Redo_BetweenFiles_Sync()
-		{
-			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.NESerial).DefaultIfEmpty(int.MaxValue).Min();
-			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
 		}
 
 		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.GetVariables());
