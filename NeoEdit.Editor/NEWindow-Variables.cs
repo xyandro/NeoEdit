@@ -23,10 +23,11 @@ namespace NeoEdit.Editor
 
 		public void SetData(INEWindowData data)
 		{
-			ClearResult();
 			Data = data;
 			NEFileDatas.ForEach(neFileData => neFileData.NEFile.SetData(neFileData));
 			NeedsRender = true;
+			ClearResult();
+			NEGlobal.CreateResult();
 		}
 
 		public NEFile Focused { get => Data.Focused; set => EditableData.Focused = value; }

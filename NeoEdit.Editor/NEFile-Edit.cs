@@ -341,16 +341,12 @@ namespace NeoEdit.Editor
 			while ((neFileData.Undo != null) && (neFileData.NETextPoint == NETextPoint))
 				neFileData = neFileData.Undo;
 			SetData(neFileData);
-			NEWindow.CreateResult();
 		}
 
 		void Execute_Edit_Undo_Step()
 		{
 			if (Data.Undo != null)
-			{
 				SetData(Data.Undo);
-				NEWindow.CreateResult();
-			}
 		}
 
 		static void PreExecute_Edit_Undo_BetweenFiles_Text()
@@ -364,21 +360,18 @@ namespace NeoEdit.Editor
 				target = Math.Max(target, neFileData.NESerial);
 			}
 			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
-			state.NEWindow.CreateResult();
 		}
 
 		static void PreExecute_Edit_Undo_BetweenFiles_Step()
 		{
 			var target = state.NEWindow.ActiveFiles.Where(x => x.Data.Undo != null).Select(x => x.Data.NESerial - 1).DefaultIfEmpty(int.MinValue).Max();
 			state.NEWindow.ActiveFiles.Where(neFile => (neFile.Data.Undo != null) && (neFile.Data.NESerial > target)).ForEach(neFile => neFile.SetData(neFile.Data.Undo));
-			state.NEWindow.CreateResult();
 		}
 
 		static void PreExecute_Edit_Undo_BetweenFiles_Sync()
 		{
 			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.Redo).NonNull().Select(x => x.NESerial - 1).DefaultIfEmpty(int.MinValue).Max();
 			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
-			state.NEWindow.CreateResult();
 		}
 
 		void Execute_Edit_Redo_Text()
@@ -387,16 +380,12 @@ namespace NeoEdit.Editor
 			while ((neFileData.Redo != null) && (neFileData.NETextPoint == NETextPoint))
 				neFileData = neFileData.Redo;
 			SetData(neFileData);
-			NEWindow.CreateResult();
 		}
 
 		void Execute_Edit_Redo_Step()
 		{
 			if (Data.Redo != null)
-			{
 				SetData(Data.Redo);
-				NEWindow.CreateResult();
-			}
 		}
 
 		static void PreExecute_Edit_Redo_BetweenFiles_Text()
@@ -410,21 +399,18 @@ namespace NeoEdit.Editor
 				target = Math.Min(target, neFileData?.NESerial ?? int.MaxValue);
 			}
 			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
-			state.NEWindow.CreateResult();
 		}
 
 		static void PreExecute_Edit_Redo_BetweenFiles_Step()
 		{
 			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.Redo).NonNull().Select(x => x.NESerial).DefaultIfEmpty(int.MaxValue).Min();
 			state.NEWindow.ActiveFiles.Where(neFile => (neFile.Data.Redo != null) && (neFile.Data.Redo.NESerial <= target)).ForEach(neFile => neFile.SetData(neFile.Data.Redo));
-			state.NEWindow.CreateResult();
 		}
 
 		static void PreExecute_Edit_Redo_BetweenFiles_Sync()
 		{
 			var target = state.NEWindow.ActiveFiles.Select(x => x.Data.NESerial).DefaultIfEmpty(int.MaxValue).Min();
 			state.NEWindow.ActiveFiles.ForEach(neFile => neFile.SetData(target));
-			state.NEWindow.CreateResult();
 		}
 
 		static void Configure_Edit_Repeat() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.GetVariables());

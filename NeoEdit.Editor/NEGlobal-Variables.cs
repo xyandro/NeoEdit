@@ -19,10 +19,10 @@ namespace NeoEdit.Editor
 
 		public void SetData(INEGlobalData data)
 		{
-			ClearResult();
 			Data = data;
 			NEWindowDatas.ForEach(neWindowData => neWindowData.NEWindow.SetData(neWindowData));
 			UpdateAttachments();
+			ClearResult();
 		}
 
 		IEnumerable<INEWindow> INEGlobal.NEWindows => Data.NEWindows;

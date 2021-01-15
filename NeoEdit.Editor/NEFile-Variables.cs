@@ -22,11 +22,12 @@ namespace NeoEdit.Editor
 
 		public void SetData(INEFileData data)
 		{
-			ClearResult();
 			Data = data;
 			Text.MoveToTextPoint(NETextPoint);
 			EnsureVisible();
 			SetIsModified();
+			ClearResult();
+			NEWindow.CreateResult();
 		}
 
 		void SetData(int serial)
