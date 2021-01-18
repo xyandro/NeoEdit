@@ -23,6 +23,9 @@ namespace NeoEdit.Editor
 
 		public void SetData(INEWindowData data)
 		{
+			if (Data == data)
+				return;
+
 			Data = data;
 			NEFileDatas.ForEach(neFileData => neFileData.NEFile.SetData(neFileData));
 			NeedsRender = true;

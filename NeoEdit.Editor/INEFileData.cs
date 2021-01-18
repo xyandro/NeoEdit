@@ -15,5 +15,8 @@ namespace NeoEdit.Editor
 
 		INEFileData Undo { get; }
 		INEFileData Redo { get; }
+		INEFileData RedoText { get; }
+
+		INEFileData Next();
 	}
 }

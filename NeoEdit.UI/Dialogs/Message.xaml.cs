@@ -50,7 +50,7 @@ namespace NeoEdit.UI.Dialogs
 		{
 			buttons.Children.Clear();
 
-			Action<string, MessageOptions> AddButton = (text, option) =>
+			void AddButton(string text, MessageOptions option)
 			{
 				if (DefaultAccept == MessageOptions.None)
 					DefaultAccept = option;
@@ -65,7 +65,7 @@ namespace NeoEdit.UI.Dialogs
 				};
 				buttonActions[button] = option;
 				buttons.Children.Add(button);
-			};
+			}
 
 			if (Options.HasFlag(MessageOptions.Yes))
 				AddButton("_Yes", MessageOptions.Yes);
