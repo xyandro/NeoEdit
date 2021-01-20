@@ -238,6 +238,48 @@ namespace NeoEdit.Common.Expressions
 
 		string GetDirectoryName(string str) => string.IsNullOrEmpty(str) ? null : Path.GetDirectoryName(str);
 
+		string Elapsed(string timeStr1, string timeStr2, bool showAll)
+		{
+			var time1 = DateTimeOffset.Parse(timeStr1);
+			var time2 = DateTimeOffset.Parse(timeStr2);
+			if (time1 > time2)
+				throw new Exception("Must specify dates in order");
+
+			var parts = new List<string>();
+
+			string Plural(int count, string item) => $"{count} {item}{(count == 1 ? "" : "s")}";
+
+			void AddPart(string part, Func<DateTimeOffset, DateTimeOffset> addPart)
+			{
+				var count = 0;
+				while (true)
+				{
+					var nextTime1 = addPart(time1);
+					if (nextTime1 > time2)
+						break;
+					++count;
+					time1 = nextTime1;
+				}
+
+				if ((showAll) || (count != 0))
+					parts.Add(Plural(count, part));
+			}
+
+			AddPart("year", dto => dto.AddYears(1));
+			AddPart("month", dto => dto.AddMonths(1));
+			AddPart("day", dto => dto.AddDays(1));
+			AddPart("hour", dto => dto.AddHours(1));
+			AddPart("minute", dto => dto.AddMinutes(1));
+			AddPart("second", dto => dto.AddSeconds(1));
+			AddPart("millisecond", dto => dto.AddMilliseconds(1));
+			AddPart("tick", dto => dto.AddTicks(1));
+
+			if (!parts.Any())
+				parts.Add("0 ticks");
+
+			return string.Join(", ", parts);
+		}
+
 		string GetFileName(string str) => string.IsNullOrEmpty(str) ? null : Path.GetFileName(str);
 
 		string GetFileNameWithoutExtension(string str) => string.IsNullOrEmpty(str) ? null : Path.GetFileNameWithoutExtension(str);
@@ -268,6 +310,8 @@ namespace NeoEdit.Common.Expressions
 				case "cos": return GetNumeric(paramList[0]).Cos();
 				case "date": return new NumericValue(new DateTimeOffset(DateTime.Now.Date, DateTimeOffset.Now.Offset).UtcTicks, "ticks");
 				case "directoryname": return GetDirectoryName(GetString(paramList[0]));
+				case "elapsed": return Elapsed(GetString(paramList[0]), GetString(paramList[1]), false);
+				case "elapseda": return Elapsed(GetString(paramList[0]), GetString(paramList[1]), true);
 				case "eval": return new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row, unit);
 				case "extension": return GetExtension(GetString(paramList[0]));
 				case "factor": return GetNumeric(paramList[0]).Factor();
