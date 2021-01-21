@@ -240,10 +240,14 @@ namespace NeoEdit.Common.Expressions
 
 		string Elapsed(string timeStr1, string timeStr2, bool showAll)
 		{
+			var mult = "";
 			var time1 = DateTimeOffset.Parse(timeStr1);
 			var time2 = DateTimeOffset.Parse(timeStr2);
 			if (time1 > time2)
-				throw new Exception("Must specify dates in order");
+			{
+				(time1, time2) = (time2, time1);
+				mult = "-";
+			}
 
 			var parts = new List<string>();
 
@@ -262,7 +266,7 @@ namespace NeoEdit.Common.Expressions
 				}
 
 				if ((showAll) || (count != 0))
-					parts.Add(Plural(count, part));
+					parts.Add(mult + Plural(count, part));
 			}
 
 			AddPart("year", dto => dto.AddYears(1));
