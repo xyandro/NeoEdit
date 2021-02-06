@@ -24,10 +24,12 @@
 			<controls:NEMenuItem Header="_Modified" CommandEnum="File_Select_Modified" ToolTip="Selected files that are modified"/>
 			<controls:NEMenuItem Header="_Unmodified" CommandEnum="File_Select_Unmodified" ToolTip="Selected files that aren't modified"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_External Modified" CommandEnum="File_Select_ExternalModified" ToolTip="Selected files that are externally modified"/>
-			<controls:NEMenuItem Header="E_xternal Unmodified" CommandEnum="File_Select_ExternalUnmodified" ToolTip="Selected files that aren't externally modified"/>
+			<controls:NEMenuItem Header="_External modified" CommandEnum="File_Select_ExternalModified" ToolTip="Selected files that are externally modified"/>
+			<controls:NEMenuItem Header="Ex_ternal unmodified" CommandEnum="File_Select_ExternalUnmodified" ToolTip="Selected files that aren't externally modified"/>
 			<Separator/>
 			<controls:NEMenuItem Header="_Inactive" CommandEnum="File_Select_Inactive" ToolTip="Selected files that aren't selected"/>
+			<Separator/>
+			<controls:NEMenuItem Header="Select by e_xpression" CommandEnum="File_Select_SelectByExpression" ToolTip="Selected files that aren't selected"/>
 			<Separator/>
 			<controls:NEMenuItem Header="_Choose" CommandEnum="File_Select_Choose" ToolTip="Change which files are active"/>
 		</MenuItem>
@@ -105,8 +107,8 @@
 			<controls:NEMenuItem Header="_Modified" CommandEnum="File_Close_Modified" ToolTip="Close selected files that are modified"/>
 			<controls:NEMenuItem Header="_Unmodified" CommandEnum="File_Close_Unmodified" ToolTip="Close selected files that aren't modified"/>
 			<Separator/>
-			<controls:NEMenuItem Header="_External Modified" CommandEnum="File_Close_ExternalModified" ToolTip="Close selected files that are externally modified"/>
-			<controls:NEMenuItem Header="E_xternal Unmodified" CommandEnum="File_Close_ExternalUnmodified" ToolTip="Close selected files that aren't externally modified"/>
+			<controls:NEMenuItem Header="_External modified" CommandEnum="File_Close_ExternalModified" ToolTip="Close selected files that are externally modified"/>
+			<controls:NEMenuItem Header="E_xternal unmodified" CommandEnum="File_Close_ExternalUnmodified" ToolTip="Close selected files that aren't externally modified"/>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="E_xit" CommandEnum="File_Exit" InputGestureText="Alt+F4" ToolTip="Close the program"/>

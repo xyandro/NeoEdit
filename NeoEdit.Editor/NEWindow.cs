@@ -176,9 +176,9 @@ namespace NeoEdit.Editor
 			switch (state.Command)
 			{
 				case NECommand.Internal_Key: Configure_Internal_Key(); break;
+				case NECommand.File_Select_SelectByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Open_Open: Configure_FileMacro_Open_Open(); break;
 				case NECommand.File_Open_ReopenWithEncoding: Configure_File_Open_ReopenWithEncoding(); break;
-				case NECommand.Macro_Open_Open: Configure_FileMacro_Open_Open(Macro.MacroDirectory); break;
 				case NECommand.File_Save_SaveAsByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Move_MoveByExpression: Configure_File_Move_MoveByExpression(); break;
 				case NECommand.File_Copy_CopyByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
@@ -188,6 +188,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_Advanced_SetDisplayName: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
 				case NECommand.File_Exit: Configure_File_Exit(); break;
 				case NECommand.Edit_Select_Limit: Configure_Edit_Select_Limit(); break;
+				case NECommand.Macro_Open_Open: Configure_FileMacro_Open_Open(Macro.MacroDirectory); break;
 				default: NEFile.Configure(); break;
 			}
 		}
@@ -221,6 +222,7 @@ namespace NeoEdit.Editor
 				case NECommand.File_Select_ExternalModified: Execute_File_Select_ExternalModifiedUnmodified(true); break;
 				case NECommand.File_Select_ExternalUnmodified: Execute_File_Select_ExternalModifiedUnmodified(false); break;
 				case NECommand.File_Select_Inactive: Execute_File_Select_Inactive(); break;
+				case NECommand.File_Select_SelectByExpression: Execute_File_Select_SelectByExpression(); break;
 				case NECommand.File_Select_Choose: Execute_File_Select_Choose(); break;
 				case NECommand.File_New_New: Execute_File_New_New(); break;
 				case NECommand.File_New_FromSelections_All: Execute_File_New_FromSelections_AllFilesSelections(); break;

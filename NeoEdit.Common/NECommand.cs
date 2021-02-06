@@ -21,6 +21,7 @@
 		File_Select_ExternalModified,
 		File_Select_ExternalUnmodified,
 		File_Select_Inactive,
+		File_Select_SelectByExpression,
 		[NoMacro] [KeyGesture("A", Modifiers.Control | Modifiers.Alt)] File_Select_Choose,
 		[KeyGesture("N", Modifiers.Control)] File_New_New,
 		File_New_FromSelections_All,

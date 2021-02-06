@@ -34,6 +34,12 @@ namespace NeoEdit.Editor
 
 		void Execute_File_Select_Inactive() => SetActiveFiles(NEFiles.Except(ActiveFiles));
 
+		void Execute_File_Select_SelectByExpression()
+		{
+			var expression = state.GetExpression((state.Configuration as Configuration_FileTable_Various_Various).Expression);
+			SetActiveFiles(ActiveFiles.Where(neFile => expression.Evaluate<bool>(neFile.GetVariables())));
+		}
+
 		void Execute_File_Select_Choose()
 		{
 			bool CanClose(IEnumerable<INEFile> files)
