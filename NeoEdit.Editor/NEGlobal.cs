@@ -167,6 +167,8 @@ namespace NeoEdit.Editor
 				if (state.PreExecution != PreExecution_TaskFinished.Singleton)
 					TaskRunner.Run(PostExecute, percent => state.NEWindow?.neWindowUI?.SetTaskRunnerProgress(percent));
 
+				state.NEWindow?.CalculateDiffs();
+
 				Debug.WriteLine($"{state.Command} elapsed time: {sw.ElapsedMilliseconds:n0} ms");
 				if (showTime)
 					state.NEWindow.neWindowUI.RunDialog_ShowMessage("Timer", $"{state.Command} elapsed time: {sw.ElapsedMilliseconds:n0} ms", MessageOptions.Ok, MessageOptions.None, MessageOptions.None);

@@ -31,6 +31,7 @@ namespace NeoEdit.Editor
 		public int NumLines => endingPosition.Count;
 		public int MaxIndex { get; private set; }
 		public int MaxColumn { get; private set; }
+		public bool HasDiff => diffData != null;
 
 		public NEText(string text = "")
 		{
@@ -554,7 +555,6 @@ namespace NeoEdit.Editor
 			var map = new List<List<int>>[2];
 			for (var pass = 0; pass < 2; ++pass)
 			{
-				textData[pass].ClearDiff();
 				textData[pass].diffData = new DiffData(textData[pass].text, diffParams);
 				var formatDiffLine = Enumerable.Range(0, textData[pass].NumLines).Select(line => diffParams.FormatLine(textData[pass].GetLine(line, true))).ToList();
 				lines[pass] = formatDiffLine.Select(val => val.Item1).ToList();

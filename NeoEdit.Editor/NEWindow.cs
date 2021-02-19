@@ -334,6 +334,13 @@ namespace NeoEdit.Editor
 
 		public void SetForeground() => neWindowUI.SetForeground();
 
+		public void CalculateDiffs()
+		{
+			var diffFiles = NEFiles.Where(neFile => (neFile.DiffTarget != null) && (!neFile.Text.HasDiff)).ToList();
+			diffFiles = diffFiles.Select(neFile => neFile.DiffSerial < neFile.DiffTarget.DiffSerial ? neFile : neFile.DiffTarget).Distinct().ToList();
+			diffFiles.AsTaskRunner().ForAll(neFile => NEText.CalculateDiff(neFile.Text, neFile.DiffTarget.Text, neFile.DiffIgnoreWhitespace, neFile.DiffIgnoreCase, neFile.DiffIgnoreNumbers, neFile.DiffIgnoreLineEndings, neFile.DiffIgnoreCharacters));
+		}
+
 		public void SetupDiff(IReadOnlyList<NEFile> neFiles)
 		{
 			var now = DateTime.Now;

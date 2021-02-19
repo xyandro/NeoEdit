@@ -113,44 +113,23 @@ namespace NeoEdit.Editor
 			AddNEFile(this);
 		}
 
-		void Execute_Diff_IgnoreWhitespace(bool? multiStatus)
-		{
-			DiffIgnoreWhitespace = multiStatus != true;
-			CalculateDiff();
-		}
+		void Execute_Diff_IgnoreWhitespace(bool? multiStatus) => DiffIgnoreWhitespace = DiffTarget.DiffIgnoreWhitespace = multiStatus != true;
 
-		void Execute_Diff_IgnoreCase(bool? multiStatus)
-		{
-			DiffIgnoreCase = multiStatus != true;
-			CalculateDiff();
-		}
+		void Execute_Diff_IgnoreCase(bool? multiStatus) => DiffIgnoreCase = DiffTarget.DiffIgnoreCase = multiStatus != true;
 
-		void Execute_Diff_IgnoreNumbers(bool? multiStatus)
-		{
-			DiffIgnoreNumbers = multiStatus != true;
-			CalculateDiff();
-		}
+		void Execute_Diff_IgnoreNumbers(bool? multiStatus) => DiffIgnoreNumbers = DiffTarget.DiffIgnoreNumbers = multiStatus != true;
 
-		void Execute_Diff_IgnoreLineEndings(bool? multiStatus)
-		{
-			DiffIgnoreLineEndings = multiStatus != true;
-			CalculateDiff();
-		}
+		void Execute_Diff_IgnoreLineEndings(bool? multiStatus) => DiffIgnoreLineEndings = DiffTarget.DiffIgnoreLineEndings = multiStatus != true;
 
 		static void Configure_Diff_IgnoreCharacters() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Diff_IgnoreCharacters(state.NEWindow.Focused.DiffIgnoreCharacters);
 
-		void Execute_Diff_IgnoreCharacters()
-		{
-			var result = state.Configuration as Configuration_Diff_IgnoreCharacters;
-			DiffIgnoreCharacters = result.IgnoreCharacters;
-			CalculateDiff();
-		}
+		void Execute_Diff_IgnoreCharacters() => DiffIgnoreCharacters = DiffTarget.DiffIgnoreCharacters = (state.Configuration as Configuration_Diff_IgnoreCharacters).IgnoreCharacters;
 
 		void Execute_Diff_Reset()
 		{
 			DiffIgnoreWhitespace = DiffIgnoreCase = DiffIgnoreNumbers = DiffIgnoreLineEndings = false;
-			DiffIgnoreCharacters = null;
-			CalculateDiff();
+			DiffTarget.DiffIgnoreWhitespace = DiffTarget.DiffIgnoreCase = DiffTarget.DiffIgnoreNumbers = DiffTarget.DiffIgnoreLineEndings = false;
+			DiffIgnoreCharacters = DiffTarget.DiffIgnoreCharacters = null;
 		}
 
 		void Execute_Diff_NextPrevious(bool next, bool shiftDown)

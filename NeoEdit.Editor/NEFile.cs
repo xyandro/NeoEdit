@@ -19,10 +19,10 @@ namespace NeoEdit.Editor
 	{
 		static ThreadSafeRandom random = new ThreadSafeRandom();
 		static EditorExecuteState state => EditorExecuteState.CurrentState;
-		static int nextSerial;
+		static int nextDiffSerial;
 
 		public readonly NEText Text = new NEText("");
-		readonly int serial = Interlocked.Increment(ref nextSerial);
+		public int DiffSerial { get; } = Interlocked.Increment(ref nextDiffSerial);
 
 		public DateTime LastActive { get; set; }
 		public bool IsModified { get; private set; }
@@ -45,11 +45,16 @@ namespace NeoEdit.Editor
 		public string AESKey { get => aesKey; private set { aesKey = value; SetIsModified(); } }
 		bool compressed;
 		public bool Compressed { get => compressed; private set { compressed = value; SetIsModified(); } }
-		public bool DiffIgnoreWhitespace { get; private set; }
-		public bool DiffIgnoreCase { get; private set; }
-		public bool DiffIgnoreNumbers { get; private set; }
-		public bool DiffIgnoreLineEndings { get; private set; }
-		public string DiffIgnoreCharacters { get; private set; }
+		bool diffIgnoreWhitespace;
+		public bool DiffIgnoreWhitespace { get => diffIgnoreWhitespace; private set { diffIgnoreWhitespace = value; Text.ClearDiff(); } }
+		bool diffIgnoreCase;
+		public bool DiffIgnoreCase { get => diffIgnoreCase; private set { diffIgnoreCase = value; Text.ClearDiff(); } }
+		bool diffIgnoreNumbers;
+		public bool DiffIgnoreNumbers { get => diffIgnoreNumbers; private set { diffIgnoreNumbers = value; Text.ClearDiff(); } }
+		bool diffIgnoreLineEndings;
+		public bool DiffIgnoreLineEndings { get => diffIgnoreLineEndings; private set { diffIgnoreLineEndings = value; Text.ClearDiff(); } }
+		string diffIgnoreCharacters;
+		public string DiffIgnoreCharacters { get => diffIgnoreCharacters; private set { diffIgnoreCharacters = value; Text.ClearDiff(); } }
 		public bool KeepSelections { get; private set; }
 		public bool HighlightSyntax { get; private set; }
 		public bool StrictParsing { get; private set; }
@@ -102,7 +107,6 @@ namespace NeoEdit.Editor
 					diffTarget = value;
 					value.diffTarget = this;
 					DiffTarget.NEWindow?.SetNeedsRender();
-					CalculateDiff();
 				}
 			}
 		}
@@ -210,7 +214,6 @@ namespace NeoEdit.Editor
 
 			NETextPoint = Text.CreateTextPoint(ranges, strs);
 			SetIsModified();
-			CalculateDiff();
 
 			var translateMap = GetTranslateMap(ranges, strs, new List<IReadOnlyList<NERange>> { Selections }.Concat(Enumerable.Range(1, 9).Select(region => GetRegions(region))).ToList());
 			Selections = Translate(Selections, translateMap);
@@ -1762,25 +1765,6 @@ namespace NeoEdit.Editor
 					throw new OperationCanceledException();
 				return state.SavedAnswers[name].HasFlag(MessageOptions.Yes);
 			}
-		}
-
-		void CalculateDiff()
-		{
-			if (DiffTarget == null)
-				return;
-
-			DiffTarget.DiffIgnoreWhitespace = DiffIgnoreWhitespace;
-			DiffTarget.DiffIgnoreCase = DiffIgnoreCase;
-			DiffTarget.DiffIgnoreNumbers = DiffIgnoreNumbers;
-			DiffTarget.DiffIgnoreLineEndings = DiffIgnoreLineEndings;
-			DiffTarget.DiffIgnoreCharacters = DiffIgnoreCharacters;
-
-			// Use serial to make sure the diff always happens the same way (neFile1 vs neFile2 is slightly different from neFile2 vs neFile1)
-			var neFile1 = serial < DiffTarget.serial ? this : DiffTarget;
-			var neFile2 = neFile1 == this ? DiffTarget : this;
-
-			lock (neFile1)
-				NEText.CalculateDiff(neFile1.Text, neFile2.Text, DiffIgnoreWhitespace, DiffIgnoreCase, DiffIgnoreNumbers, DiffIgnoreLineEndings, DiffIgnoreCharacters);
 		}
 
 		public int ViewMaxColumn => Text.MaxColumn;
