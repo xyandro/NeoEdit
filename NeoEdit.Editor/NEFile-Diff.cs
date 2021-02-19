@@ -121,15 +121,15 @@ namespace NeoEdit.Editor
 
 		void Execute_Diff_IgnoreLineEndings(bool? multiStatus) => DiffIgnoreLineEndings = DiffTarget.DiffIgnoreLineEndings = multiStatus != true;
 
-		static void Configure_Diff_IgnoreCharacters() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Diff_IgnoreCharacters(state.NEWindow.Focused.DiffIgnoreCharacters);
+		static void Configure_Diff_IgnoreCharacters() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Diff_IgnoreCharacters(string.Join("", state.NEWindow.Focused.DiffIgnoreCharacters));
 
-		void Execute_Diff_IgnoreCharacters() => DiffIgnoreCharacters = DiffTarget.DiffIgnoreCharacters = (state.Configuration as Configuration_Diff_IgnoreCharacters).IgnoreCharacters;
+		void Execute_Diff_IgnoreCharacters() => DiffIgnoreCharacters = DiffTarget.DiffIgnoreCharacters = new HashSet<char>((state.Configuration as Configuration_Diff_IgnoreCharacters).IgnoreCharacters ?? "");
 
 		void Execute_Diff_Reset()
 		{
 			DiffIgnoreWhitespace = DiffIgnoreCase = DiffIgnoreNumbers = DiffIgnoreLineEndings = false;
 			DiffTarget.DiffIgnoreWhitespace = DiffTarget.DiffIgnoreCase = DiffTarget.DiffIgnoreNumbers = DiffTarget.DiffIgnoreLineEndings = false;
-			DiffIgnoreCharacters = DiffTarget.DiffIgnoreCharacters = null;
+			DiffIgnoreCharacters = DiffTarget.DiffIgnoreCharacters = new HashSet<char>();
 		}
 
 		void Execute_Diff_NextPrevious(bool next, bool shiftDown)

@@ -53,8 +53,8 @@ namespace NeoEdit.Editor
 		public bool DiffIgnoreNumbers { get => diffIgnoreNumbers; private set { diffIgnoreNumbers = value; Text.ClearDiff(); } }
 		bool diffIgnoreLineEndings;
 		public bool DiffIgnoreLineEndings { get => diffIgnoreLineEndings; private set { diffIgnoreLineEndings = value; Text.ClearDiff(); } }
-		string diffIgnoreCharacters;
-		public string DiffIgnoreCharacters { get => diffIgnoreCharacters; private set { diffIgnoreCharacters = value; Text.ClearDiff(); } }
+		HashSet<char> diffIgnoreCharacters = new HashSet<char>();
+		public HashSet<char> DiffIgnoreCharacters { get => diffIgnoreCharacters; private set { diffIgnoreCharacters = value; Text.ClearDiff(); } }
 		public bool KeepSelections { get; private set; }
 		public bool HighlightSyntax { get; private set; }
 		public bool StrictParsing { get; private set; }
