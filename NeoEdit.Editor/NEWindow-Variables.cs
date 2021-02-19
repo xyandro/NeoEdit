@@ -30,7 +30,7 @@ namespace NeoEdit.Editor
 			NEFileDatas.ForEach(neFileData => neFileData.NEFile.SetData(neFileData));
 			NeedsRender = true;
 			ClearResult();
-			NEGlobal.CreateResult();
+			NEGlobal?.CreateResult();
 		}
 
 		public NEFile Focused { get => Data.Focused; set => EditableData.Focused = value; }
