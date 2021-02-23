@@ -17,7 +17,11 @@ namespace NeoEdit.UI.Dialogs
 
 		public static Dictionary<Coder.CodePage, string> CodePages { get; } = Coder.GetAllCodePages().ToDictionary(page => page, page => Coder.GetDescription(page));
 
-		static File_OpenEncoding_ReopenWithEncoding_Dialog() { UIHelper<File_OpenEncoding_ReopenWithEncoding_Dialog>.Register(); }
+		static File_OpenEncoding_ReopenWithEncoding_Dialog()
+		{
+			UIHelper<File_OpenEncoding_ReopenWithEncoding_Dialog>.Register();
+			UIHelper<File_OpenEncoding_ReopenWithEncoding_Dialog>.AddCallback(x => x.CodePage, (obj, o, n) => obj.HasBOM = true); ;
+		}
 
 		File_OpenEncoding_ReopenWithEncoding_Dialog(Coder.CodePage codePage, bool hasBOM)
 		{
