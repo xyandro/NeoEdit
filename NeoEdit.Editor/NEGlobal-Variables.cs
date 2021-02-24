@@ -19,9 +19,6 @@ namespace NeoEdit.Editor
 
 		public void SetData(INEGlobalData data)
 		{
-			if (Data == data)
-				return;
-
 			Data = data;
 			NEWindowDatas.ForEach(neWindowData => neWindowData.NEWindow.SetData(neWindowData));
 			UpdateAttachments();

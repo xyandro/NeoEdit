@@ -22,9 +22,6 @@ namespace NeoEdit.Editor
 
 		public void SetData(INEFileData data)
 		{
-			if (Data == data)
-				return;
-
 			Data = data;
 			for (var undo = Data; undo != null; undo = undo.Undo)
 				if (undo.Undo is NEFileData undoData)
