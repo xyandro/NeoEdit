@@ -507,6 +507,7 @@ namespace NeoEdit.Editor
 			var map = new List<List<int>>[2];
 			for (var pass = 0; pass < 2; ++pass)
 			{
+				textData[pass].ClearDiff();
 				textData[pass].diffData = new DiffData();
 				var formatDiffLine = Enumerable.Range(0, textData[pass].NumLines).Select(line => FormatDiffLine(textData[pass].GetLine(line, true), ignoreWhitespace, ignoreCase, ignoreNumbers, ignoreLineEndings, ignoreCharacters)).ToList();
 				lines[pass] = formatDiffLine.Select(val => val.Item1).ToList();
