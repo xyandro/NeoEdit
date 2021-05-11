@@ -604,14 +604,19 @@ namespace NeoEdit.Editor
 			if (diffData == null)
 				return;
 
-			for (var line = diffData.LineCompare.Count - 1; line >= 0; --line)
-				if (diffData.LineCompare[line] == DiffType.GapMismatch)
-				{
-					linePosition.RemoveAt(line);
-					endingPosition.RemoveAt(line);
-				}
+			lock (this)
+			{
+				if (diffData == null)
+					return;
+				for (var line = diffData.LineCompare.Count - 1; line >= 0; --line)
+					if (diffData.LineCompare[line] == DiffType.GapMismatch)
+					{
+						linePosition.RemoveAt(line);
+						endingPosition.RemoveAt(line);
+					}
 
-			diffData = null;
+				diffData = null;
+			}
 		}
 
 		public List<Tuple<double, double>> GetDiffRanges()
