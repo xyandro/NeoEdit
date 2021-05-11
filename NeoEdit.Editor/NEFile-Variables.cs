@@ -31,7 +31,7 @@ namespace NeoEdit.Editor
 			EnsureVisible();
 			SetIsModified();
 			ClearResult();
-			NEWindow.CreateResult();
+			NEWindow?.CreateResult();
 		}
 
 		void SetData(int serial)
