@@ -63,3 +63,4 @@ Make universal undo/redo in menu tell you what action they're going to undo
 Break diff if one of the files moves to a different window
 If file on disk is updated set modified flag
 Add File->Select->By expression
+Make modals pop up in middle of current window
