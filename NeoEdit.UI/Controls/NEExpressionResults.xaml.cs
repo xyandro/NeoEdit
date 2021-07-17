@@ -20,9 +20,7 @@ namespace NeoEdit.UI.Controls
 		[DepProp]
 		public NEVariables Variables { get { return UIHelper<NEExpressionResults>.GetPropValue<NEVariables>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? NumResults { get { return UIHelper<NEExpressionResults>.GetPropValue<int?>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
-		[DepProp]
-		public int MaxResults { get { return UIHelper<NEExpressionResults>.GetPropValue<int>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
+		public int? RowCount { get { return UIHelper<NEExpressionResults>.GetPropValue<int?>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
 		[DepProp(BindsTwoWayByDefault = true)]
 		public bool IsValid { get { return UIHelper<NEExpressionResults>.GetPropValue<bool>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
 		[DepProp]
@@ -30,13 +28,7 @@ namespace NeoEdit.UI.Controls
 		[DepProp]
 		public string ErrorMessage { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
 		[DepProp]
-		public string CountExpression1 { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
-		[DepProp]
-		public string CountExpression2 { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
-		[DepProp]
-		public string CountExpression3 { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
-		[DepProp]
-		public string CountExpression4 { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
+		public string CountExpression { get { return UIHelper<NEExpressionResults>.GetPropValue<string>(this); } set { UIHelper<NEExpressionResults>.SetPropValue(this, value); } }
 
 		static readonly double RowHeight;
 
@@ -45,13 +37,9 @@ namespace NeoEdit.UI.Controls
 			UIHelper<NEExpressionResults>.Register();
 			UIHelper<NEExpressionResults>.AddCallback(a => a.Expression, (obj, o, n) => obj.Invalidate());
 			UIHelper<NEExpressionResults>.AddCallback(a => a.Variables, (obj, o, n) => obj.Invalidate());
-			UIHelper<NEExpressionResults>.AddCallback(a => a.NumResults, (obj, o, n) => obj.Invalidate());
-			UIHelper<NEExpressionResults>.AddCallback(a => a.MaxResults, (obj, o, n) => obj.Invalidate());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.RowCount, (obj, o, n) => obj.Invalidate());
 			UIHelper<NEExpressionResults>.AddCallback(a => a.MultiRow, (obj, o, n) => obj.Invalidate());
-			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression1, (obj, o, n) => obj.Invalidate());
-			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression2, (obj, o, n) => obj.Invalidate());
-			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression3, (obj, o, n) => obj.Invalidate());
-			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression4, (obj, o, n) => obj.Invalidate());
+			UIHelper<NEExpressionResults>.AddCallback(a => a.CountExpression, (obj, o, n) => obj.Invalidate());
 			RowHeight = CalcRowHeight();
 			LineBrush.Freeze();
 			HeaderBrush.Freeze();
@@ -67,7 +55,6 @@ namespace NeoEdit.UI.Controls
 		public NEExpressionResults()
 		{
 			InitializeComponent();
-			MaxResults = 10;
 		}
 
 		void Invalidate()
@@ -76,15 +63,15 @@ namespace NeoEdit.UI.Controls
 			UpdateChildren();
 		}
 
-		int ResultCount => Variables.ResultCount(new List<string> { Expression, CountExpression1, CountExpression2, CountExpression3, CountExpression4 }.NonNullOrWhiteSpace().Select(expr => new NEExpression(expr)).ToArray()) ?? 1;
+		int GetRowCount() => Variables.RowCount(new List<string> { Expression, CountExpression }.NonNullOrWhiteSpace().SelectMany(expr => new NEExpression(expr).VariableUses), RowCount);
 
 		protected override Size MeasureOverride(Size constraint)
 		{
 			base.MeasureOverride(constraint);
 			try
 			{
-				var resultCount = MultiRow ? Math.Min(NumResults ?? ResultCount, MaxResults) + 1 : 1;
-				return new Size(0, resultCount * RowHeight + Spacing * 2);
+				var rowCount = MultiRow ? Math.Min(GetRowCount(), 10) + 1 : 1;
+				return new Size(0, rowCount * RowHeight + Spacing * 2);
 			}
 			catch { return RenderSize; }
 		}
@@ -145,24 +132,27 @@ namespace NeoEdit.UI.Controls
 		const double Spacing = 1;
 		void UpdateChildren()
 		{
-			List<string> variables;
+			List<NEVariableUse> variables;
 			List<string> results;
 			Dictionary<string, List<string>> varValues;
-			var useResults = MultiRow ? Math.Max(0, (int)((ActualHeight - Spacing * 2) / RowHeight - 1)) : MaxResults;
+			int rowCount;
+			var useResults = MultiRow ? Math.Max(0, (int)((ActualHeight - Spacing * 2) / RowHeight - 1)) : 10;
 			try
 			{
 				var expression = new NEExpression(Expression);
-				variables = new List<string>(expression.Variables);
-				var resultCount = Math.Min(NumResults ?? ResultCount, useResults);
-				results = expression.EvaluateList<string>(Variables, resultCount, forceCount: false).Coalesce("").ToList();
-				varValues = variables.ToDictionary(variable => variable, variable => Variables.GetValues(variable, resultCount).Select(val => val?.ToString()).ToList());
+				variables = expression.VariableUses.Distinct(varUse => varUse.Display).ToList();
+				rowCount = GetRowCount();
+				var useCount = Math.Min(rowCount, useResults);
+				results = expression.Evaluate<string>(Variables, 0, useCount, rowCount).Coalesce("").ToList();
+				varValues = variables.ToDictionary(variable => variable.Display, variable => Variables.GetValues(variable, useCount, rowCount).Select(val => val?.ToString()).ToList());
 				IsValid = true;
 				ErrorMessage = null;
 			}
 			catch (Exception ex)
 			{
 				results = MultiRow ? Enumerable.Repeat(default(string), useResults).ToList() : new List<string>();
-				variables = new List<string>();
+				variables = new List<NEVariableUse>();
+				rowCount = 0;
 				varValues = new Dictionary<string, List<string>>();
 				IsValid = false;
 				ErrorMessage = ex.Message;
@@ -179,9 +169,9 @@ namespace NeoEdit.UI.Controls
 			if (MultiRow)
 			{
 				Func<WidthType, int, Tuple<WidthType, List<FrameworkElement>>> GetSpace = (widthType, numRows) => Tuple.Create(widthType, new[] { new Rectangle { Width = Spacing, Fill = HeaderBrush } }.Concat(Enumerable.Range(0, numRows - 1).Select(row => new Rectangle { Width = Spacing })).Cast<FrameworkElement>().ToList());
-				columns.AddRange(variables.SelectMany(variable => new[] {
+				columns.AddRange(variables.SelectMany(variableUse => new[] {
 					GetSpace(WidthType.Shrink3, results.Count + 1),
-					Tuple.Create(WidthType.Expand | WidthType.Shrink4, new[] { GetTextBlock(variable, HeaderBrush) }.Concat(Enumerable.Range(0, results.Count).Select(result => GetTextBlock(varValues[variable][result]))).ToList()),
+					Tuple.Create(WidthType.Expand | WidthType.Shrink4, new[] { GetTextBlock(variableUse.Display, HeaderBrush) }.Concat(Enumerable.Range(0, results.Count).Select(result => GetTextBlock(varValues[variableUse.Display][result]))).ToList()),
 					GetSpace(WidthType.Shrink3, results.Count + 1),
 					GetLine(WidthType.Shrink5, results.Count + 1),
 				}));
@@ -197,7 +187,7 @@ namespace NeoEdit.UI.Controls
 				columns.Add(GetLine(WidthType.Shrink2, results.Count + 1));
 
 				columns.Add(Tuple.Create(WidthType.Shrink6, new[] { new Rectangle { Width = Spacing, Fill = HeaderBrush } }.Concat(Enumerable.Repeat(default(FrameworkElement), results.Count)).ToList()));
-				columns.Add(Tuple.Create(WidthType.Expand | WidthType.Shrink7, new[] { GetTextBlock("Result", HeaderBrush) }.Concat(results.Select(result => GetTextBlock(result))).ToList()));
+				columns.Add(Tuple.Create(WidthType.Expand | WidthType.Shrink7, new[] { GetTextBlock($"Results ({rowCount})", HeaderBrush) }.Concat(results.Select(result => GetTextBlock(result))).ToList()));
 				columns.Add(Tuple.Create(WidthType.Shrink6, new[] { new Rectangle { Width = Spacing, Fill = HeaderBrush } }.Concat(Enumerable.Repeat(default(FrameworkElement), results.Count)).ToList()));
 			}
 			else

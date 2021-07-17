@@ -20,7 +20,7 @@
 		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="expression" AcceptsTab="True" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FileTable_Various_Various_Dialog"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
-		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" NumResults="{Binding NumRows, ElementName=self}" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}" IsValid="{Binding IsValid, ElementName=self}"/>
+		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" RowCount="{Binding NumRows, ElementName=self}" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}" IsValid="{Binding IsValid, ElementName=self}"/>
 
 		<UniformGrid Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Rows="1">
 			<Button Click="ExpressionHelp" Content="Expression _help" Padding="10,1"/>

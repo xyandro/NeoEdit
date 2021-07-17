@@ -9,23 +9,21 @@ namespace NeoEdit.Common.Expressions
 {
 	public class NEExpression
 	{
-		readonly string expression;
+		public string Expression { get; }
+		public List<NEVariableUse> VariableUses { get; }
+		public string DefaultUnit { get; set; }
+
 		readonly ExpressionParser.ExprContext tree;
 
 		public NEExpression(string expression)
 		{
-			this.expression = expression;
+			Expression = expression;
 
 			try { tree = ParserHelper.Parse<ExpressionLexer, ExpressionParser, ExpressionParser.ExprContext>(expression, parser => parser.expr(), true); }
 			catch (Exception ex) { throw new Exception($"Invalid expression: {expression}", ex); }
+
+			VariableUses = NEExpressionVariableFinder.GetVariables(tree);
 		}
-
-		internal object InternalEvaluate(NEVariables variables, int row, string unit) => new ExpressionEvaluator(expression, variables, row, unit).Visit(tree);
-
-		public object Evaluate(NEVariables variables = null, string unit = null) => EvaluateList(variables, 1, unit)[0];
-		public T Evaluate<T>(NEVariables variables = null, string unit = null) => EvaluateList<T>(variables, 1, unit)[0];
-
-		public List<object> EvaluateList(NEVariables variables, int? rowCount = null, string unit = null) => EvaluateList<object>(variables, rowCount, unit);
 
 		T ChangeType<T>(object value)
 		{
@@ -40,24 +38,30 @@ namespace NeoEdit.Common.Expressions
 			return (T)Convert.ChangeType(value, typeof(T));
 		}
 
-		public List<T> EvaluateList<T>(NEVariables variables, int? rowCount = null, string unit = null, bool forceCount = true)
+		public T EvaluateOne<T>(NEVariables variables = null) => Evaluate<T>(variables, 0, 1, 1)[0];
+
+		public List<T> Evaluate<T>(NEVariables variables = null, int? rowCount = null)
 		{
-			try
-			{
-				if (rowCount < 0)
-					throw new ArgumentException($"{nameof(rowCount)} must be positive");
-				var resultCount = variables.ResultCount(Variables);
-				var count = rowCount ?? resultCount ?? 1;
-				if ((forceCount) && (count != (resultCount ?? count)))
-					throw new Exception($"Result count mismatch: expression has {resultCount} results, but {count} were requested");
-				return Enumerable.Range(0, count).Select(row => ChangeType<T>(InternalEvaluate(variables, row, unit))).ToList();
-			}
+			var count = rowCount ?? variables.RowCount(VariableUses);
+			return Evaluate<T>(variables, 0, count, count);
+		}
+
+		public List<T> Evaluate<T>(NEVariables variables, int startRow, int count, int rowCount)
+		{
+			if (rowCount < 0)
+				throw new ArgumentException($"{nameof(rowCount)} invalid ({rowCount})");
+			if ((startRow < 0) || (startRow > rowCount))
+				throw new ArgumentException($"{nameof(startRow)} invalid (0 <= {startRow} <= {rowCount})");
+			if ((count < 0) || (startRow + count > rowCount))
+				throw new ArgumentException($"{nameof(count)} invalid (0 <= {count} <= {rowCount})");
+
+			if (rowCount != variables.RowCount(VariableUses, rowCount))
+				throw new Exception("Invalid row count");
+
+			try { return Enumerable.Range(0, count).Select(row => ChangeType<T>(new NEExpressionEvaluator(Expression, variables, row, rowCount, DefaultUnit).Visit(tree))).ToList(); }
 			catch (AggregateException ex) { throw ex.InnerException ?? ex; }
 		}
 
-		HashSet<string> variables;
-		public HashSet<string> Variables => variables = variables ?? VariableFinder.GetVariables(tree);
-
-		public override string ToString() => expression;
+		public override string ToString() => Expression;
 	}
 }

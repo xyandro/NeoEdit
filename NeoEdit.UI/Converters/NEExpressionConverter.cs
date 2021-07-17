@@ -134,7 +134,7 @@ namespace NeoEdit.UI.Converters
 		public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var values = value.Select(val => val == DependencyProperty.UnsetValue ? null : val).ToArray();
-			var result = GetExpression(parameter as string).Evaluate(new NEVariables(values));
+			var result = GetExpression(parameter as string).EvaluateOne<object>(NEVariables.FromConstants(values));
 			return GetResult(result, targetType);
 		}
 
@@ -142,7 +142,7 @@ namespace NeoEdit.UI.Converters
 		{
 			if (value == DependencyProperty.UnsetValue)
 				value = null;
-			var result = GetExpression(parameter as string).Evaluate(new NEVariables(value));
+			var result = GetExpression(parameter as string).EvaluateOne<object>(NEVariables.FromConstants(value));
 			return GetResult(result, targetType);
 		}
 

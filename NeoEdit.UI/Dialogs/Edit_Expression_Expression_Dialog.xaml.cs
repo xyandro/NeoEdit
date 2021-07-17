@@ -13,19 +13,19 @@ namespace NeoEdit.UI.Dialogs
 		[DepProp]
 		public NEVariables Variables { get { return UIHelper<Edit_Expression_Expression_Dialog>.GetPropValue<NEVariables>(this); } set { UIHelper<Edit_Expression_Expression_Dialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public int? NumRows { get { return UIHelper<Edit_Expression_Expression_Dialog>.GetPropValue<int?>(this); } set { UIHelper<Edit_Expression_Expression_Dialog>.SetPropValue(this, value); } }
+		public int? RowCount { get { return UIHelper<Edit_Expression_Expression_Dialog>.GetPropValue<int?>(this); } set { UIHelper<Edit_Expression_Expression_Dialog>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool IsValid { get { return UIHelper<Edit_Expression_Expression_Dialog>.GetPropValue<bool>(this); } set { UIHelper<Edit_Expression_Expression_Dialog>.SetPropValue(this, value); } }
 
 		static Edit_Expression_Expression_Dialog() { UIHelper<Edit_Expression_Expression_Dialog>.Register(); }
 
-		Edit_Expression_Expression_Dialog(NEVariables variables, int? numRows)
+		Edit_Expression_Expression_Dialog(NEVariables variables, int? rowCount)
 		{
 			InitializeComponent();
 
 			Expression = "x";
 			Variables = variables;
-			NumRows = numRows;
+			RowCount = rowCount;
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
@@ -41,9 +41,9 @@ namespace NeoEdit.UI.Dialogs
 			DialogResult = true;
 		}
 
-		public static Configuration_Edit_Expression_Expression Run(Window parent, NEVariables variables, int? numRows = null)
+		public static Configuration_Edit_Expression_Expression Run(Window parent, NEVariables variables, int? rowCount = null)
 		{
-			var dialog = new Edit_Expression_Expression_Dialog(variables, numRows) { Owner = parent };
+			var dialog = new Edit_Expression_Expression_Dialog(variables, rowCount) { Owner = parent };
 			if (!dialog.ShowDialog())
 				throw new OperationCanceledException();
 			return dialog.result;

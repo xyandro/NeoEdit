@@ -39,7 +39,7 @@ namespace NeoEdit.UI.Dialogs
 
 			try
 			{
-				var value = new NEExpression(Expression).Evaluate<string>(Variables);
+				var value = new NEExpression(Expression).EvaluateOne<string>(Variables);
 				if (value == null)
 					return;
 				if (File.Exists(value))

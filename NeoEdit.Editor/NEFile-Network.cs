@@ -139,10 +139,10 @@ namespace NeoEdit.Editor
 
 			var urlExpression = state.GetExpression(result.URL);
 			var fileNameExpression = state.GetExpression(result.FileName);
-			var resultCount = variables.ResultCount(urlExpression, fileNameExpression);
+			var rowCount = variables.RowCount(urlExpression, fileNameExpression);
 
-			var urls = urlExpression.EvaluateList<string>(variables, resultCount);
-			var fileNames = fileNameExpression.EvaluateList<string>(variables, resultCount);
+			var urls = urlExpression.Evaluate<string>(variables, rowCount);
+			var fileNames = fileNameExpression.Evaluate<string>(variables, rowCount);
 
 			const int InvalidCount = 10;
 			var invalid = fileNames.Select(name => Path.GetDirectoryName(name)).Distinct().Where(dir => !Directory.Exists(dir)).Take(InvalidCount).ToList();

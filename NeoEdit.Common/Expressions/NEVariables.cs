@@ -11,11 +11,11 @@ namespace NeoEdit.Common.Expressions
 
 		public NEVariables() { }
 
-		public NEVariables(params object[] values) { AddRange(values.Select((value, index) => NEVariable.Constant($"p{index}", $"Param {index}", value))); }
+		public NEVariables(IEnumerable<NEVariable> variables) => AddRange(variables);
 
-		public NEVariables(IEnumerable<NEVariable> variables) { AddRange(variables); }
+		public NEVariables(params NEVariable[] variables) => AddRange(variables);
 
-		public NEVariables(params NEVariable[] variables) { AddRange(variables); }
+		public static NEVariables FromConstants(params object[] values) => new NEVariables(values.Select((value, index) => NEVariable.Constant($"p{index}", $"Param {index}", () => value)));
 
 		public void Add(NEVariable variable) => varDict[variable.Name] = variable;
 
@@ -32,34 +32,40 @@ namespace NeoEdit.Common.Expressions
 			return varDict[variable];
 		}
 
-		public object GetValue(string variable, int rowNum) => GetVariable(variable).GetValue(rowNum);
-
-		public List<object> GetValues(string variable, int rowCount) => Enumerable.Range(0, rowCount).Select(row => GetVariable(variable).GetValue(row)).ToList();
-
-		public int? ResultCount(params IEnumerable<string>[] variableLists)
+		public object GetValue(NEVariableUse variableUse, int index, int rowCount)
 		{
-			int? resultCount = null;
-			string resultVariable = null;
-
-			foreach (var list in variableLists)
-				foreach (var variable in list)
-				{
-					var count = GetVariable(variable).Count();
-					if (!count.HasValue)
-						continue;
-
-					if (!resultCount.HasValue)
-					{
-						resultCount = count;
-						resultVariable = variable;
-					}
-					else if (resultCount != count)
-						throw new Exception($"Result count mismatch: {resultVariable} ({resultCount}) vs {variable} ({count})");
-				}
-			return resultCount;
+			var variable = GetVariable(variableUse.Name);
+			return variable.GetValue(index, variableUse.Repeat, rowCount);
 		}
 
-		public int? ResultCount(params NEExpression[] expressions) => ResultCount(expressions.Select(expression => expression.Variables).ToArray());
+		public List<object> GetValues(NEVariableUse variable, int count, int rowCount) => GetVariable(variable.Name).GetValues(variable.Repeat, count, rowCount);
+
+		public List<object> GetValues(NEVariableUse variable, int rowCount) => GetValues(variable, rowCount, rowCount);
+
+		public int RowCount(params NEExpression[] expressions) => RowCount(expressions.SelectMany(x => x.VariableUses));
+
+		public int RowCount(IEnumerable<NEVariableUse> variableUses, int? rowCount = null)
+		{
+			var variables = variableUses.Select(x => (variable: GetVariable(x.Name), repeat: x.Repeat)).ToList();
+			var count = rowCount ?? variables.Select(x => x.variable.Count ?? 1).DefaultIfEmpty(1).Max();
+
+			foreach ((var variable, var repeat) in variables)
+			{
+				if (variable.Count == null) // Series, doesn't factor into count
+					continue;
+
+				if (variable.Count == count)
+					continue;
+
+				if (repeat == NEVariableRepeat.None)
+					throw new Exception($"Variable count mismatch: {variable.Name} ({variable.Count}) vs {count}");
+
+				if (count % variable.Count != 0)
+					throw new Exception($"Non-multiple variable: {variable.Name} ({variable.Count}) vs {count}");
+			}
+
+			return count;
+		}
 
 		//Class implements ienumerable so it can be the source of the variable help dialog
 		public IEnumerator<NEVariable> GetEnumerator() => varDict.Values.GetEnumerator();

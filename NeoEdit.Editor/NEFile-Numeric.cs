@@ -166,8 +166,8 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Numeric_Select_Limit;
 			var variables = GetVariables();
-			var minimums = state.GetExpression(result.Minimum).EvaluateList<double>(variables, Selections.Count());
-			var maximums = state.GetExpression(result.Maximum).EvaluateList<double>(variables, Selections.Count());
+			var minimums = state.GetExpression(result.Minimum).Evaluate<double>(variables, Selections.Count());
+			var maximums = state.GetExpression(result.Maximum).Evaluate<double>(variables, Selections.Count());
 
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => Limit(minimums[index], double.Parse(Text.GetString(range)), maximums[index]).ToString()).ToList());
 		}
@@ -177,8 +177,8 @@ namespace NeoEdit.Editor
 		void Execute_Numeric_Round()
 		{
 			var result = state.Configuration as Configuration_Numeric_Various;
-			var baseValue = state.GetExpression(result.BaseValue).EvaluateList<double>(GetVariables(), Selections.Count());
-			var interval = state.GetExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
+			var baseValue = state.GetExpression(result.BaseValue).Evaluate<double>(GetVariables(), Selections.Count());
+			var interval = state.GetExpression(result.Interval).Evaluate<double>(GetVariables(), Selections.Count());
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => (Math.Round((double.Parse(Text.GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index], MidpointRounding.AwayFromZero) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
@@ -187,8 +187,8 @@ namespace NeoEdit.Editor
 		void Execute_Numeric_Floor()
 		{
 			var result = state.Configuration as Configuration_Numeric_Various;
-			var baseValue = state.GetExpression(result.BaseValue).EvaluateList<double>(GetVariables(), Selections.Count());
-			var interval = state.GetExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
+			var baseValue = state.GetExpression(result.BaseValue).Evaluate<double>(GetVariables(), Selections.Count());
+			var interval = state.GetExpression(result.Interval).Evaluate<double>(GetVariables(), Selections.Count());
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => (Math.Floor((double.Parse(Text.GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index]) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
@@ -197,8 +197,8 @@ namespace NeoEdit.Editor
 		void Execute_Numeric_Ceiling()
 		{
 			var result = state.Configuration as Configuration_Numeric_Various;
-			var baseValue = state.GetExpression(result.BaseValue).EvaluateList<double>(GetVariables(), Selections.Count());
-			var interval = state.GetExpression(result.Interval).EvaluateList<double>(GetVariables(), Selections.Count());
+			var baseValue = state.GetExpression(result.BaseValue).Evaluate<double>(GetVariables(), Selections.Count());
+			var interval = state.GetExpression(result.Interval).Evaluate<double>(GetVariables(), Selections.Count());
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => (Math.Ceiling((double.Parse(Text.GetString(range), NumberStyles.Float) - baseValue[index]) / interval[index]) * interval[index] + baseValue[index]).ToString()).ToList());
 		}
 
@@ -265,10 +265,10 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Numeric_Scale;
 			var variables = GetVariables();
-			var prevMins = state.GetExpression(result.PrevMin).EvaluateList<double>(variables, Selections.Count());
-			var prevMaxs = state.GetExpression(result.PrevMax).EvaluateList<double>(variables, Selections.Count());
-			var newMins = state.GetExpression(result.NewMin).EvaluateList<double>(variables, Selections.Count());
-			var newMaxs = state.GetExpression(result.NewMax).EvaluateList<double>(variables, Selections.Count());
+			var prevMins = state.GetExpression(result.PrevMin).Evaluate<double>(variables, Selections.Count());
+			var prevMaxs = state.GetExpression(result.PrevMax).Evaluate<double>(variables, Selections.Count());
+			var newMins = state.GetExpression(result.NewMin).Evaluate<double>(variables, Selections.Count());
+			var newMaxs = state.GetExpression(result.NewMax).Evaluate<double>(variables, Selections.Count());
 
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => ((double.Parse(Text.GetString(range)) - prevMins[index]) * (newMaxs[index] - newMins[index]) / (prevMaxs[index] - prevMins[index]) + newMins[index]).ToString()).ToList());
 		}
@@ -279,8 +279,8 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Numeric_Cycle;
 			var variables = GetVariables();
-			var minimums = state.GetExpression(result.Minimum).EvaluateList<double>(variables, Selections.Count());
-			var maximums = state.GetExpression(result.Maximum).EvaluateList<double>(variables, Selections.Count());
+			var minimums = state.GetExpression(result.Minimum).Evaluate<double>(variables, Selections.Count());
+			var maximums = state.GetExpression(result.Maximum).Evaluate<double>(variables, Selections.Count());
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => Cycle(double.Parse(Text.GetString(range)), minimums[index], maximums[index], result.IncludeBeginning).ToString()).ToList());
 		}
 
@@ -300,8 +300,8 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Numeric_Series_LinearGeometric;
 			var variables = GetVariables();
-			var start = state.GetExpression(result.StartExpression).Evaluate<double>(variables);
-			var increment = state.GetExpression(result.IncrementExpression).Evaluate<double>(variables);
+			var start = state.GetExpression(result.StartExpression).EvaluateOne<double>(variables);
+			var increment = state.GetExpression(result.IncrementExpression).EvaluateOne<double>(variables);
 			ReplaceSelections(Selections.Select((range, index) => (linear ? start + increment * index : start * Math.Pow(increment, index)).ToString()).ToList());
 		}
 
@@ -323,8 +323,8 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Numeric_RandomNumber;
 			var variables = GetVariables();
-			var minValues = state.GetExpression(result.MinValue).EvaluateList<int>(variables, Selections.Count());
-			var maxValues = state.GetExpression(result.MaxValue).EvaluateList<int>(variables, Selections.Count());
+			var minValues = state.GetExpression(result.MinValue).Evaluate<int>(variables, Selections.Count());
+			var maxValues = state.GetExpression(result.MaxValue).Evaluate<int>(variables, Selections.Count());
 			ReplaceSelections(Selections.AsTaskRunner().Select((range, index) => random.Next(minValues[index], maxValues[index] + 1).ToString()).ToList());
 		}
 

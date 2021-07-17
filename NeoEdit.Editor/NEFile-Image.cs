@@ -123,8 +123,8 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Image_Resize;
 			var variables = GetVariables();
-			var width = state.GetExpression(result.WidthExpression).Evaluate<int>(variables);
-			var height = state.GetExpression(result.HeightExpression).Evaluate<int>(variables);
+			var width = state.GetExpression(result.WidthExpression).EvaluateOne<int>(variables);
+			var height = state.GetExpression(result.HeightExpression).EvaluateOne<int>(variables);
 
 			var bitmap = GetBitmap();
 			var resultBitmap = new System.Drawing.Bitmap(width, height, bitmap.PixelFormat);
@@ -154,10 +154,10 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Image_Crop;
 			var variables = GetVariables();
-			var destX = state.GetExpression(result.XExpression).Evaluate<int>(variables);
-			var destY = state.GetExpression(result.YExpression).Evaluate<int>(variables);
-			var newWidth = state.GetExpression(result.WidthExpression).Evaluate<int>(variables);
-			var newHeight = state.GetExpression(result.HeightExpression).Evaluate<int>(variables);
+			var destX = state.GetExpression(result.XExpression).EvaluateOne<int>(variables);
+			var destY = state.GetExpression(result.YExpression).EvaluateOne<int>(variables);
+			var newWidth = state.GetExpression(result.WidthExpression).EvaluateOne<int>(variables);
+			var newHeight = state.GetExpression(result.HeightExpression).EvaluateOne<int>(variables);
 			if ((newWidth <= 0) || (newHeight <= 0))
 				throw new Exception("Width and height must be greater than 0");
 
@@ -208,10 +208,10 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Image_GrabImage;
 			var variables = GetVariables();
-			var x = state.GetExpression(result.GrabX).EvaluateList<int>(variables, Selections.Count());
-			var y = state.GetExpression(result.GrabY).EvaluateList<int>(variables, Selections.Count());
-			var width = state.GetExpression(result.GrabWidth).EvaluateList<int>(variables, Selections.Count());
-			var height = state.GetExpression(result.GrabHeight).EvaluateList<int>(variables, Selections.Count());
+			var x = state.GetExpression(result.GrabX).Evaluate<int>(variables, Selections.Count());
+			var y = state.GetExpression(result.GrabY).Evaluate<int>(variables, Selections.Count());
+			var width = state.GetExpression(result.GrabWidth).Evaluate<int>(variables, Selections.Count());
+			var height = state.GetExpression(result.GrabHeight).Evaluate<int>(variables, Selections.Count());
 
 			var strs = new List<string>();
 			for (var ctr = 0; ctr < x.Count; ++ctr)
@@ -264,7 +264,7 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Image_Rotate;
 			var variables = GetVariables();
-			var angle = state.GetExpression(result.AngleExpression).Evaluate<float>(variables, "deg");
+			var angle = state.GetExpression(result.AngleExpression, "deg").EvaluateOne<float>(variables);
 
 			var bitmap = GetBitmap();
 			var path = new System.Drawing.Drawing2D.GraphicsPath();
@@ -291,10 +291,10 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Image_GIF_Animate;
 			var variables = GetVariables();
-			var inputFiles = state.GetExpression(result.InputFiles).EvaluateList<string>(variables);
-			var outputFile = state.GetExpression(result.OutputFile).Evaluate<string>(variables);
-			var delays = state.GetExpression(result.Delay).EvaluateList<int>(variables, inputFiles.Count, "ms");
-			var repeat = state.GetExpression(result.Repeat).Evaluate<int>(variables);
+			var inputFiles = state.GetExpression(result.InputFiles).Evaluate<string>(variables);
+			var outputFile = state.GetExpression(result.OutputFile).EvaluateOne<string>(variables);
+			var delays = state.GetExpression(result.Delay, "ms").Evaluate<int>(variables, inputFiles.Count);
+			var repeat = state.GetExpression(result.Repeat).EvaluateOne<int>(variables);
 
 			using (var writer = new GIFWriter(outputFile, repeat))
 				for (var ctr = 0; ctr < inputFiles.Count; ++ctr)
@@ -305,7 +305,7 @@ namespace NeoEdit.Editor
 		static void Configure_Image_GIF_Split()
 		{
 			var variables = state.NEWindow.Focused.GetVariables();
-			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
+			variables.Add(NEVariable.Constant("chunk", "Chunk number", () => 1));
 			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_GIF_Split(variables);
 		}
 
@@ -313,9 +313,9 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Image_GIF_Split;
 			var variables = GetVariables();
-			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
+			variables.Add(NEVariable.Constant("chunk", "Chunk number", () => "{0}"));
 			var files = RelativeSelectedFiles();
-			var outputTemplates = state.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, files.Count);
+			var outputTemplates = state.GetExpression(result.OutputTemplate).Evaluate<string>(variables, files.Count);
 			Enumerable.Range(0, files.Count).ForEach(index => SplitGIF(files[index], outputTemplates[index]));
 		}
 
@@ -330,10 +330,10 @@ namespace NeoEdit.Editor
 
 			var fileNameExpression = state.GetExpression(result.FileName);
 			var dateTimeExpression = state.GetExpression(result.DateTime);
-			var resultCount = variables.ResultCount(fileNameExpression, dateTimeExpression);
+			var rowCount = variables.RowCount(fileNameExpression, dateTimeExpression);
 
-			var fileNames = fileNameExpression.EvaluateList<string>(variables, resultCount);
-			var dateTimes = dateTimeExpression.EvaluateList<string>(variables, resultCount).Select(DateTime.Parse).ToList();
+			var fileNames = fileNameExpression.Evaluate<string>(variables, rowCount);
+			var dateTimes = dateTimeExpression.Evaluate<string>(variables, rowCount).Select(DateTime.Parse).ToList();
 
 			const int InvalidCount = 10;
 			var invalid = fileNames.Distinct().Where(name => !Helpers.FileOrDirectoryExists(name)).Take(InvalidCount).ToList();

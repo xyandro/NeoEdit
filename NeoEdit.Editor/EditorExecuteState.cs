@@ -74,7 +74,7 @@ namespace NeoEdit.Editor
 
 		Dictionary<string, NEExpression> expressions;
 
-		public NEExpression GetExpression(string expression)
+		public NEExpression GetExpression(string expression, string defaultUnit = null)
 		{
 			if (expressions == null)
 				lock (this)
@@ -85,7 +85,7 @@ namespace NeoEdit.Editor
 				if (expressions.ContainsKey(expression))
 					return expressions[expression];
 
-			var neExpression = new NEExpression(expression);
+			var neExpression = new NEExpression(expression) { DefaultUnit = defaultUnit };
 			lock (this)
 				expressions[expression] = neExpression;
 			return neExpression;

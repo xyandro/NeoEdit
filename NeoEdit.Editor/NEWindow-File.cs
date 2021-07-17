@@ -37,7 +37,7 @@ namespace NeoEdit.Editor
 		void Execute_File_Select_SelectByExpression()
 		{
 			var expression = state.GetExpression((state.Configuration as Configuration_FileTable_Various_Various).Expression);
-			SetActiveFiles(ActiveFiles.Where(neFile => expression.Evaluate<bool>(neFile.GetVariables())));
+			SetActiveFiles(ActiveFiles.Where(neFile => expression.EvaluateOne<bool>(neFile.GetVariables())));
 		}
 
 		void Execute_File_Select_Choose()

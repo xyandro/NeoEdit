@@ -240,10 +240,10 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Edit_Select_Limit;
 			var variables = GetVariables();
-			var firstSelection = state.GetExpression(result.FirstSelection).Evaluate<int>(variables);
-			var everyNth = state.GetExpression(result.EveryNth).Evaluate<int>(variables);
-			var takeCount = state.GetExpression(result.TakeCount).Evaluate<int>(variables);
-			var numSels = state.GetExpression(result.NumSelections).Evaluate<int>(variables);
+			var firstSelection = state.GetExpression(result.FirstSelection).EvaluateOne<int>(variables);
+			var everyNth = state.GetExpression(result.EveryNth).EvaluateOne<int>(variables);
+			var takeCount = state.GetExpression(result.TakeCount).EvaluateOne<int>(variables);
+			var numSels = state.GetExpression(result.NumSelections).EvaluateOne<int>(variables);
 
 			var sels = Selections.Skip(firstSelection - 1);
 			if (result.JoinSelections)
@@ -459,7 +459,7 @@ namespace NeoEdit.Editor
 		void Execute_Edit_Rotate()
 		{
 			var result = state.Configuration as Configuration_Edit_Rotate;
-			var count = state.GetExpression(result.Count).Evaluate<int>(GetVariables());
+			var count = state.GetExpression(result.Count).EvaluateOne<int>(GetVariables());
 
 			var strs = GetSelectionStrings().ToList();
 			if (count < 0)

@@ -1315,8 +1315,8 @@ namespace NeoEdit.Editor
 			var results = new NEVariables();
 
 			var strs = default(List<string>);
-			var initializeStrs = new NEVariableInitializer(() => strs = Selections.Select(range => Text.GetString(range)).ToList());
-			results.Add(NEVariable.List("x", "Selection", () => strs, initializeStrs));
+			var initializeStrs = new RunOnceAction(() => strs = Selections.Select(range => Text.GetString(range)).ToList());
+			results.Add(NEVariable.List("x", "Selection", () => { initializeStrs.Invoke(); return strs; }));
 			results.Add(NEVariable.Constant("xn", "Selection count", () => Selections.Count));
 			results.Add(NEVariable.List("xl", "Selection length", () => Selections.Select(range => range.Length)));
 			results.Add(NEVariable.Constant("xlmin", "Selection min length", () => Selections.Select(range => range.Length).DefaultIfEmpty(0).Min()));
@@ -1332,8 +1332,8 @@ namespace NeoEdit.Editor
 			{
 				var region = ctr; // If we don't copy this variable it passes the most recent value (10 after it's done) to GetRegions
 				var regions = default(List<string>);
-				var initializeRegions = new NEVariableInitializer(() => regions = GetRegions(region).Select(range => Text.GetString(range)).ToList());
-				results.Add(NEVariable.List($"r{region}", $"Region {region}", () => regions, initializeRegions));
+				var initializeRegions = new RunOnceAction(() => regions = GetRegions(region).Select(range => Text.GetString(range)).ToList());
+				results.Add(NEVariable.List($"r{region}", $"Region {region}", () => { initializeRegions.Invoke(); return regions; }));
 				results.Add(NEVariable.Constant($"r{region}n", $"Region {region} count", () => GetRegions(region).Count));
 				results.Add(NEVariable.List($"r{region}l", $"Region {region} length", () => GetRegions(region).Select(range => range.Length)));
 				results.Add(NEVariable.Constant($"r{region}lmin", $"Region {region} min length", () => GetRegions(region).Select(range => range.Length).DefaultIfEmpty(0).Min()));
@@ -1363,25 +1363,25 @@ namespace NeoEdit.Editor
 			results.Add(NEVariable.Constant("d", "Display name", () => DisplayName));
 
 			var lineStarts = default(IReadOnlyList<int>);
-			var initializeLineStarts = new NEVariableInitializer(() => lineStarts = Selections.AsTaskRunner().Select(range => Text.GetPositionLine(range.Start) + 1).ToList());
-			results.Add(NEVariable.List("line", "Selection line start", () => lineStarts, initializeLineStarts));
+			var initializeLineStarts = new RunOnceAction(() => lineStarts = Selections.AsTaskRunner().Select(range => Text.GetPositionLine(range.Start) + 1).ToList());
+			results.Add(NEVariable.List("line", "Selection line start", () => { initializeLineStarts.Invoke(); return lineStarts; }));
 			var lineEnds = default(IReadOnlyList<int>);
-			var initializeLineEnds = new NEVariableInitializer(() => lineEnds = Selections.AsTaskRunner().Select(range => Text.GetPositionLine(range.End) + 1).ToList());
-			results.Add(NEVariable.List("lineend", "Selection line end", () => lineEnds, initializeLineEnds));
+			var initializeLineEnds = new RunOnceAction(() => lineEnds = Selections.AsTaskRunner().Select(range => Text.GetPositionLine(range.End) + 1).ToList());
+			results.Add(NEVariable.List("lineend", "Selection line end", () => { initializeLineEnds.Invoke(); return lineEnds; }));
 
 			var colStarts = default(IReadOnlyList<int>);
-			var initializeColStarts = new NEVariableInitializer(() => colStarts = Selections.AsTaskRunner().Select((range, index) => Text.GetPositionIndex(range.Start, lineStarts[index] - 1) + 1).ToList(), initializeLineStarts);
-			results.Add(NEVariable.List("col", "Selection column start", () => colStarts, initializeColStarts));
+			var initializeColStarts = new RunOnceAction(() => { initializeLineStarts.Invoke(); colStarts = Selections.AsTaskRunner().Select((range, index) => Text.GetPositionIndex(range.Start, lineStarts[index] - 1) + 1).ToList(); });
+			results.Add(NEVariable.List("col", "Selection column start", () => { initializeColStarts.Invoke(); return colStarts; }));
 			var colEnds = default(IReadOnlyList<int>);
-			var initializeColEnds = new NEVariableInitializer(() => colEnds = Selections.AsTaskRunner().Select((range, index) => Text.GetPositionIndex(range.End, lineEnds[index] - 1) + 1).ToList(), initializeLineEnds);
-			results.Add(NEVariable.List("colend", "Selection column end", () => colEnds, initializeColEnds));
+			var initializeColEnds = new RunOnceAction(() => { initializeLineEnds.Invoke(); colEnds = Selections.AsTaskRunner().Select((range, index) => Text.GetPositionIndex(range.End, lineEnds[index] - 1) + 1).ToList(); });
+			results.Add(NEVariable.List("colend", "Selection column end", () => { initializeColEnds.Invoke(); return colEnds; }));
 
 			var posStarts = default(IReadOnlyList<int>);
-			var initializePosStarts = new NEVariableInitializer(() => posStarts = Selections.Select(range => range.Start).ToList());
-			results.Add(NEVariable.List("pos", "Selection position start", () => posStarts, initializePosStarts));
+			var initializePosStarts = new RunOnceAction(() => posStarts = Selections.Select(range => range.Start).ToList());
+			results.Add(NEVariable.List("pos", "Selection position start", () => { initializePosStarts.Invoke(); return posStarts; }));
 			var posEnds = default(IReadOnlyList<int>);
-			var initializePosEnds = new NEVariableInitializer(() => posEnds = Selections.Select(range => range.End).ToList());
-			results.Add(NEVariable.List("posend", "Selection position end", () => posEnds, initializePosEnds));
+			var initializePosEnds = new RunOnceAction(() => posEnds = Selections.Select(range => range.End).ToList());
+			results.Add(NEVariable.List("posend", "Selection position end", () => { initializePosEnds.Invoke(); return posEnds; }));
 
 			for (var ctr = 0; ctr < 10; ++ctr)
 			{
@@ -1405,9 +1405,10 @@ namespace NeoEdit.Editor
 
 			var nonNulls = default(IReadOnlyList<Tuple<double, int>>);
 			double lineStart = 0, lineIncrement = 0, geoStart = 0, geoIncrement = 0;
-			var initializeNonNulls = new NEVariableInitializer(() => nonNulls = Selections.AsTaskRunner().Select((range, index) => new { str = Text.GetString(range), index }).NonNullOrWhiteSpace(obj => obj.str).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList());
-			var initializeLineSeries = new NEVariableInitializer(() =>
+			var initializeNonNulls = new RunOnceAction(() => nonNulls = Selections.AsTaskRunner().Select((range, index) => new { str = Text.GetString(range), index }).NonNullOrWhiteSpace(obj => obj.str).Select(obj => Tuple.Create(double.Parse(obj.str), obj.index)).ToList());
+			var initializeLineSeries = new RunOnceAction(() =>
 			{
+				initializeNonNulls.Invoke();
 				if (nonNulls.Count == 0)
 					lineStart = lineIncrement = 1;
 				else if (nonNulls.Count == 1)
@@ -1423,9 +1424,10 @@ namespace NeoEdit.Editor
 					lineIncrement = (last.Item1 - first.Item1) / (last.Item2 - first.Item2);
 					lineStart = first.Item1 - lineIncrement * first.Item2;
 				}
-			}, initializeNonNulls);
-			var initializeGeoSeries = new NEVariableInitializer(() =>
+			});
+			var initializeGeoSeries = new RunOnceAction(() =>
 			{
+				initializeNonNulls.Invoke();
 				if (nonNulls.Count == 0)
 					geoStart = geoIncrement = 1;
 				else if (nonNulls.Count == 1)
@@ -1441,16 +1443,16 @@ namespace NeoEdit.Editor
 					geoIncrement = Math.Pow(last.Item1 / first.Item1, 1.0 / (last.Item2 - first.Item2));
 					geoStart = first.Item1 / Math.Pow(geoIncrement, first.Item2);
 				}
-			}, initializeNonNulls);
-			results.Add(NEVariable.Constant("linestart", "Linear series start", () => lineStart, initializeLineSeries));
-			results.Add(NEVariable.Constant("lineincrement", "Linear series increment", () => lineIncrement, initializeLineSeries));
-			results.Add(NEVariable.Constant("geostart", "Geometric series start", () => geoStart, initializeGeoSeries));
-			results.Add(NEVariable.Constant("geoincrement", "Geometric series increment", () => geoIncrement, initializeGeoSeries));
+			});
+			results.Add(NEVariable.Constant("linestart", "Linear series start", () => { initializeLineSeries.Invoke(); return lineStart; }));
+			results.Add(NEVariable.Constant("lineincrement", "Linear series increment", () => { initializeLineSeries.Invoke(); return lineIncrement; }));
+			results.Add(NEVariable.Constant("geostart", "Geometric series start", () => { initializeGeoSeries.Invoke(); return geoStart; }));
+			results.Add(NEVariable.Constant("geoincrement", "Geometric series increment", () => { initializeGeoSeries.Invoke(); return geoIncrement; }));
 
 			return results;
 		}
 
-		List<T> GetExpressionResults<T>(string expression, int? count = null) => state.GetExpression(expression).EvaluateList<T>(GetVariables(), count);
+		List<T> GetExpressionResults<T>(string expression, int? count = null) => state.GetExpression(expression).Evaluate<T>(GetVariables(), count);
 
 		List<NERange> GetEnclosingRegions(int useRegion, bool useAllRegions = false, bool mustBeInRegion = true)
 		{

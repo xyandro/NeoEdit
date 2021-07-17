@@ -43,7 +43,7 @@ value
 	| val=INTEGER # Integer
 	| val=FLOAT # Float
 	| val=HEX # Hex
-	| val=VARIABLE # Variable
+	| (repeat=repeats)? val=VARIABLE # Variable
 	;
 
 units
@@ -53,7 +53,9 @@ units
 	| unit # UnitSimple
 	;
 
-unit : val=(CONSTANT | FALSE | METHOD | NULL | TRUE | VARIABLE | CURRENCY) ;
+unit : val=(CONSTANT | FALSE | METHOD | NULL | TRUE | VARIABLE) ;
+
+repeats : (HASH | AT)+ ;
 
 normalstring : STRSTART val=strcontent STREND ;
 strcontent : (strchars | strescape | strunicode)* ;

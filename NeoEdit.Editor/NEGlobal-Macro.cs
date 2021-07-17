@@ -33,7 +33,7 @@ namespace NeoEdit.Editor
 			var expression = new NEExpression(result.Expression);
 			var count = int.MaxValue;
 			if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Number)
-				count = expression.Evaluate<int>();
+				count = expression.EvaluateOne<int>();
 
 			Action startNext = null;
 			startNext = () =>
@@ -42,7 +42,7 @@ namespace NeoEdit.Editor
 					return;
 
 				if (result.RepeatType == MacroPlayRepeatDialogResult.RepeatTypeEnum.Condition)
-					if (!expression.Evaluate<bool>(state.NEWindow.Focused.GetVariables()))
+					if (!expression.EvaluateOne<bool>(state.NEWindow.Focused.GetVariables()))
 						return;
 
 				PlayMacro(macro, startNext);

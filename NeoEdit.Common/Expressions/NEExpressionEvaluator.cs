@@ -13,18 +13,20 @@ using NeoEdit.Common.Expressions.Parser;
 
 namespace NeoEdit.Common.Expressions
 {
-	class ExpressionEvaluator : ExpressionParserBaseVisitor<object>
+	class NEExpressionEvaluator : ExpressionParserBaseVisitor<object>
 	{
 		readonly string expression;
 		readonly NEVariables variables;
 		readonly int row;
-		readonly string unit;
-		internal ExpressionEvaluator(string expression, NEVariables variables, int row, string unit)
+		readonly int rowCount;
+		readonly string defaultUnit;
+		internal NEExpressionEvaluator(string expression, NEVariables variables, int row, int rowCount, string defaultUnit)
 		{
 			this.expression = expression;
 			this.variables = variables;
 			this.row = row;
-			this.unit = unit;
+			this.rowCount = rowCount;
+			this.defaultUnit = defaultUnit;
 		}
 
 		NumericValue GetNumeric(object val)
@@ -170,14 +172,14 @@ namespace NeoEdit.Common.Expressions
 			if ((context.DEBUG() != null) && (Debugger.IsAttached))
 				Debugger.Break();
 			var result = Visit(context.form());
-			if (unit != null)
+			if (defaultUnit != null)
 			{
-				if (unit != "")
+				if (defaultUnit != "")
 				{
 					if (!(result is NumericValue))
 						throw new Exception("Cannot change units on non-numeric result");
 					if ((result as NumericValue).Units.HasUnits)
-						result = (result as NumericValue).ConvertUnits(new ExpressionUnits(unit)).StripUnits();
+						result = (result as NumericValue).ConvertUnits(new ExpressionUnits(defaultUnit)).StripUnits();
 				}
 				else if (result is NumericValue)
 					result = (result as NumericValue).StripUnits();
@@ -214,7 +216,7 @@ namespace NeoEdit.Common.Expressions
 
 		object GetShortForm(string op)
 		{
-			var values = new Queue<object>(variables.Select(variable => variable.GetValue(row)));
+			var values = new Queue<object>(variables.Select(variable => variable.GetValue(row, NEVariableRepeat.Cycle, rowCount)));
 			object result = null;
 			bool first = true;
 			while (values.Any())
@@ -316,7 +318,7 @@ namespace NeoEdit.Common.Expressions
 				case "directoryname": return GetDirectoryName(GetString(paramList[0]));
 				case "elapsed": return Elapsed(GetString(paramList[0]), GetString(paramList[1]), false);
 				case "elapseda": return Elapsed(GetString(paramList[0]), GetString(paramList[1]), true);
-				case "eval": return new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row, unit);
+				case "eval": return new NEExpression(GetString(paramList[0])) { DefaultUnit = defaultUnit }.Evaluate<object>(variables, row, 1, rowCount)[0];
 				case "extension": return GetExtension(GetString(paramList[0]));
 				case "factor": return GetNumeric(paramList[0]).Factor();
 				case "filename": return GetFileName(GetString(paramList[0]));
@@ -347,7 +349,7 @@ namespace NeoEdit.Common.Expressions
 				case "towords": return GetNumeric(paramList[0]).ToWords();
 				case "type": return paramList[0].GetType();
 				case "utcdate": return new NumericValue(DateTimeOffset.Now.UtcDateTime.Date.Ticks, "ticks");
-				case "valideval": try { new NEExpression(GetString(paramList[0])).InternalEvaluate(variables, row, unit); return true; } catch { return false; }
+				case "valideval": try { new NEExpression(GetString(paramList[0])) { DefaultUnit = defaultUnit }.Evaluate<object>(variables, row, 1, rowCount); return true; } catch { return false; }
 				case "validre": return ValidRE(GetString(paramList[0]));
 				default: throw new ArgumentException($"Invalid method: {method}");
 			}
@@ -425,10 +427,12 @@ namespace NeoEdit.Common.Expressions
 		public override object VisitInteger(ExpressionParser.IntegerContext context) => GetNumeric(BigInteger.Parse(context.val.Text.Replace(",", "")));
 		public override object VisitFloat(ExpressionParser.FloatContext context) => GetNumeric(double.Parse(context.val.Text.Replace(",", "")));
 		public override object VisitHex(ExpressionParser.HexContext context) => GetNumeric(BigInteger.Parse("0" + context.val.Text.Substring(2), NumberStyles.HexNumber));
-		public override object VisitVariable(ExpressionParser.VariableContext context) => variables.GetValue(context.val.Text, row);
+		public override object VisitVariable(ExpressionParser.VariableContext context) => variables.GetValue(new NEVariableUse(context.val.Text, context.repeat?.GetText() ?? ""), row, rowCount);
 		public override object VisitUnitExp(ExpressionParser.UnitExpContext context) => GetNumeric(Visit(context.base1)).Exp(GetNumeric(int.Parse(context.power.Text)));
 		public override object VisitUnitMult(ExpressionParser.UnitMultContext context) => BinaryOp(context.op.Text, Visit(context.val1), Visit(context.val2));
 		public override object VisitUnitParen(ExpressionParser.UnitParenContext context) => Visit(context.units());
 		public override object VisitUnit(ExpressionParser.UnitContext context) => new NumericValue(1, context.val.Text);
+
+		public override string ToString() => expression;
 	}
 }

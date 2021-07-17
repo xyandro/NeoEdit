@@ -40,8 +40,8 @@ namespace NeoEdit.Editor
 				var col = column; // If we don't copy this the value will be updated and invalid
 				var header = table.GetHeader(column);
 				var colData = default(List<string>);
-				var colDataInitialize = new NEVariableInitializer(() => colData = Enumerable.Range(0, table.NumRows).Select(row => table[row, col]).ToList());
-				results.Add(NEVariable.List(header, $"Column {header}", () => colData, colDataInitialize));
+				var colDataInitialize = new RunOnceAction(() => colData = Enumerable.Range(0, table.NumRows).Select(row => table[row, col]).ToList());
+				results.Add(NEVariable.List(header, $"Column {header}", () => { colDataInitialize.Invoke(); return colData; }));
 			}
 			return results;
 		}
@@ -64,7 +64,7 @@ namespace NeoEdit.Editor
 			var result = state.Configuration as Configuration_FileTable_Various_Various;
 			var table = GetTable();
 			var variables = GetTableVariables(table);
-			var results = state.GetExpression(result.Expression).EvaluateList<bool>(variables, table.NumRows);
+			var results = state.GetExpression(result.Expression).Evaluate<bool>(variables, table.NumRows);
 			var lines = results.Indexes(res => res).Select(row => row + 1).ToList();
 			Selections = lines.AsTaskRunner().Select(line => new NERange(Text.GetPosition(line, 0), Text.GetPosition(line, Text.GetLineLength(line)))).ToList();
 		}

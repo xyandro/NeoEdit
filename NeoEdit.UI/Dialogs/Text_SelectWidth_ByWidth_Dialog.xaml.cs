@@ -29,7 +29,7 @@ namespace NeoEdit.UI.Dialogs
 
 			IsSelect = isSelect;
 
-			Expression = "xlmax";
+			Expression = "@xlmax";
 			if (numeric)
 				NumericClick(null, null);
 			else

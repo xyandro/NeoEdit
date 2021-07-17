@@ -506,10 +506,10 @@ namespace NeoEdit.Editor
 
 			var oldFileNameExpression = state.GetExpression(result.OldFileName);
 			var newFileNameExpression = state.GetExpression(result.NewFileName);
-			var resultCount = variables.ResultCount(oldFileNameExpression, newFileNameExpression);
+			var rowCount = variables.RowCount(oldFileNameExpression, newFileNameExpression);
 
-			var oldFileNames = oldFileNameExpression.EvaluateList<string>(variables, resultCount);
-			var newFileNames = newFileNameExpression.EvaluateList<string>(variables, resultCount);
+			var oldFileNames = oldFileNameExpression.Evaluate<string>(variables, rowCount);
+			var newFileNames = newFileNameExpression.Evaluate<string>(variables, rowCount);
 
 			const int InvalidCount = 10;
 			var invalid = oldFileNames.Distinct().Where(name => !Helpers.FileOrDirectoryExists(name)).Take(InvalidCount).ToList();
@@ -528,7 +528,7 @@ namespace NeoEdit.Editor
 				throw new Exception($"Destinations already exist:\n{string.Join("\n", invalid)}");
 
 			var confirmCopyMove = $"{nameof(Execute_Files_CopyMove)}_Confirm";
-			if (!QueryUser(confirmCopyMove, $"Are you sure you want to {(move ? "move" : "copy")} these {resultCount} files/directories?", MessageOptions.Yes))
+			if (!QueryUser(confirmCopyMove, $"Are you sure you want to {(move ? "move" : "copy")} these {rowCount} files/directories?", MessageOptions.Yes))
 				return;
 
 			var overwriteCopyMove = $"{nameof(Execute_Files_CopyMove)}_Overwrite";
@@ -719,7 +719,7 @@ namespace NeoEdit.Editor
 			var files = RelativeSelectedFiles();
 			var sizes = files.AsTaskRunner().Select(file => new FileInfo(file).Length).ToList();
 			vars.Add(NEVariable.List("size", "File size", () => sizes));
-			var results = state.GetExpression(result.Expression).EvaluateList<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
+			var results = state.GetExpression(result.Expression).Evaluate<long>(vars, Selections.Count()).Select(size => size * result.Factor).ToList();
 			files.Zip(results, (file, size) => new { file, size }).ForEach(obj => SetFileSize(obj.file, obj.size));
 		}
 
@@ -801,10 +801,10 @@ namespace NeoEdit.Editor
 
 			var filenameExpression = state.GetExpression(result.FileName);
 			var dataExpression = state.GetExpression(result.Data);
-			var resultCount = variables.ResultCount(filenameExpression, dataExpression);
+			var rowCount = variables.RowCount(filenameExpression, dataExpression);
 
-			var filename = filenameExpression.EvaluateList<string>(variables, resultCount);
-			var data = dataExpression.EvaluateList<string>(variables, resultCount);
+			var filename = filenameExpression.Evaluate<string>(variables, rowCount);
+			var data = dataExpression.Evaluate<string>(variables, rowCount);
 			for (var ctr = 0; ctr < data.Count; ++ctr)
 				File.WriteAllBytes(filename[ctr], Coder.StringToBytes(data[ctr], result.CodePage, true));
 		}
@@ -913,7 +913,7 @@ namespace NeoEdit.Editor
 		static void Configure_Files_Advanced_SplitFiles()
 		{
 			var variables = state.NEWindow.Focused.GetVariables();
-			variables.Add(NEVariable.Constant("chunk", "Chunk number", 1));
+			variables.Add(NEVariable.Constant("chunk", "Chunk number", () => 1));
 			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Files_Advanced_SplitFiles(variables);
 		}
 
@@ -921,10 +921,10 @@ namespace NeoEdit.Editor
 		{
 			var result = state.Configuration as Configuration_Files_Advanced_SplitFiles;
 			var variables = GetVariables();
-			variables.Add(NEVariable.Constant("chunk", "Chunk number", "{0}"));
+			variables.Add(NEVariable.Constant("chunk", "Chunk number", () => "{0}"));
 			var files = RelativeSelectedFiles();
-			var outputTemplates = state.GetExpression(result.OutputTemplate).EvaluateList<string>(variables, Selections.Count);
-			var chunkSizes = state.GetExpression(result.ChunkSize).EvaluateList<long>(variables, Selections.Count, "bytes");
+			var outputTemplates = state.GetExpression(result.OutputTemplate).Evaluate<string>(variables, Selections.Count);
+			var chunkSizes = state.GetExpression(result.ChunkSize, "bytes").Evaluate<long>(variables, Selections.Count);
 			Selections.AsTaskRunner()
 				.Select(range => FileName.RelativeChild(Text.GetString(range)))
 				.ForAll(
@@ -941,11 +941,11 @@ namespace NeoEdit.Editor
 
 			var inputFileCountExpr = state.GetExpression(result.InputFileCount);
 			var outputFilesExpr = state.GetExpression(result.OutputFiles);
-			var count = variables.ResultCount(inputFileCountExpr, outputFilesExpr);
+			var count = variables.RowCount(inputFileCountExpr, outputFilesExpr);
 
-			var inputFiles = state.GetExpression(result.InputFiles).EvaluateList<string>(variables);
-			var inputFileCount = inputFileCountExpr.EvaluateList<int>(variables, count);
-			var outputFiles = outputFilesExpr.EvaluateList<string>(variables, count);
+			var inputFiles = state.GetExpression(result.InputFiles).Evaluate<string>(variables);
+			var inputFileCount = inputFileCountExpr.Evaluate<int>(variables, count);
+			var outputFiles = outputFilesExpr.Evaluate<string>(variables, count);
 
 			if (inputFiles.Count != inputFileCount.Sum())
 				throw new Exception("Invalid input file count");
