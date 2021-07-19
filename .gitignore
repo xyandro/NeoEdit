@@ -33,6 +33,9 @@ TestResults
 /NeoEdit.Editor/Content/SQL/Parser
 /NeoEdit.Editor/Content/TCSV/Parser
 /NeoEdit.Editor/Content/XML/Parser
+/NeoEdit.Setup/Debug
+/NeoEdit.Setup/NeoEdit.Setup.vdproj
+/NeoEdit.Setup/Release
 /NeoEdit.UI/Resources/ChangeLog.txt
 /NeoEdit.UI/Resources/License.txt
 /NeoEdit/CommandLine/Parser

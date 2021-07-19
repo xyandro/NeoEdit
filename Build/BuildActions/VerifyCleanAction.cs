@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Build.BuildActions
 {
@@ -7,7 +6,7 @@ namespace Build.BuildActions
 	{
 		public override string Name => "Verify Clean";
 
-		public override void Run(WriteTextDelegate writeText, string configuration)
+		public override void Run(WriteTextDelegate writeText)
 		{
 			var dirty = Git.GetDirtyPaths();
 			if (string.IsNullOrEmpty(dirty))

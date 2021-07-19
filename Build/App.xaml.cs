@@ -7,11 +7,20 @@ namespace Build
 {
 	partial class App
 	{
-		public static string Location { get; } = Path.GetDirectoryName(typeof(App).Assembly.Location);
+		public static string Location { get; }
 		public static string GitHubToken { get; private set; }
 
 		[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
 		static extern void SetDllDirectory(string lpPathName);
+
+		static App()
+		{
+#if DEBUG
+			Location = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(typeof(App).Assembly.Location)))));
+#else
+			Location = Path.GetDirectoryName(Path.GetDirectoryName(typeof(App).Assembly.Location));
+#endif
+		}
 
 		public static bool EnsureGitHubTokenExists()
 		{

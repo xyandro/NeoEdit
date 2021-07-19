@@ -24,7 +24,7 @@ namespace NeoEdit.Editor
 			const string location = "https://github.com/xyandro/NeoEdit/releases";
 			const string url = location + "/latest";
 			const string check = location + "/tag/";
-			const string exe = location + "/download/{0}/NeoEdit.exe";
+			const string exe = location + "/download/{0}/NeoEdit.msi";
 
 			var oldVersion = ((AssemblyFileVersionAttribute)typeof(NEWindow).Assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
 			string newVersion;
@@ -48,9 +48,6 @@ namespace NeoEdit.Editor
 			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
 			if (!state.NEWindow.neWindowUI.RunDialog_ShowMessage("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
 				return;
-
-			var oldLocation = Assembly.GetEntryAssembly().Location;
-			var newLocation = Path.Combine(Path.GetDirectoryName(oldLocation), $"{Path.GetFileNameWithoutExtension(oldLocation)}-Update{Path.GetExtension(oldLocation)}");
 
 			TaskRunner.Run(progress =>
 			{
@@ -77,10 +74,9 @@ namespace NeoEdit.Editor
 				if (result == null)
 					return;
 
-				File.WriteAllBytes(newLocation, result);
-
-				Process.Start(newLocation, $@"-update ""{oldLocation}"" {Process.GetCurrentProcess().Id}");
-				state.NEWindow.neWindowUI.RunDialog_ShowMessage("Info", "The program will be updated after exiting.");
+				var location = Path.Combine(Path.GetTempPath(), "NeoEdit.msi");
+				File.WriteAllBytes(location, result);
+				Process.Start(new ProcessStartInfo(location) { UseShellExecute = true });
 			});
 		}
 

@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace Build.BuildActions
+﻿namespace Build.BuildActions
 {
 	class UpdateAction : BaseAction
 	{
 		public override string Name => "Update";
 
-		public override void Run(WriteTextDelegate writeText, string configuration)
+		public override void Run(WriteTextDelegate writeText)
 		{
 			const string remoteName = "origin";
 			const string localBranch = "master";

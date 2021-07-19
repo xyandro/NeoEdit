@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -13,7 +12,7 @@ namespace Build.BuildActions
 
 		public virtual bool Prepare() => true;
 
-		public abstract void Run(WriteTextDelegate writeText, string configuration);
+		public abstract void Run(WriteTextDelegate writeText);
 
 		protected void RunCommand(WriteTextDelegate writeText, string fileName, string arguments)
 		{

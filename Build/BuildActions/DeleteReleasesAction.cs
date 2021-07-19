@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Build.BuildActions
+﻿namespace Build.BuildActions
 {
 	class DeleteReleasesAction : BaseAction
 	{
@@ -8,27 +6,34 @@ namespace Build.BuildActions
 
 		public override bool Prepare() => App.EnsureGitHubTokenExists();
 
-		public override void Run(WriteTextDelegate writeText, string configuration)
+		public override void Run(WriteTextDelegate writeText)
 		{
-			using (var git = new GitHub())
-			{
-				writeText("Looking for releases...");
-				var releaseIds = git.GetReleaseIDs().Result;
-				writeText($"{releaseIds.Count} releases found.");
-				foreach (var releaseId in releaseIds)
-				{
-					writeText($"Delete release {releaseId}...");
-					git.DeleteRelease(releaseId).Wait();
-				}
+			using var git = new GitHub();
 
-				writeText("Looking for tags...");
-				var tagIds = git.GetTagIDs().Result;
-				writeText($"{tagIds.Count} tags found.");
-				foreach (var tagId in tagIds)
-				{
-					writeText($"Delete tag {tagId}...");
-					git.DeleteTag(tagId).Wait();
-				}
+			writeText("Looking for releases...");
+			var releaseIds = git.GetReleaseIDs().Result;
+			writeText($"{releaseIds.Count} releases found.");
+			foreach (var releaseId in releaseIds)
+			{
+				// Keep oldest NeoEdit 3 around just in case
+				if (releaseId == 25182147)
+					continue;
+
+				writeText($"Delete release {releaseId}...");
+				git.DeleteRelease(releaseId).Wait();
+			}
+
+			writeText("Looking for tags...");
+			var tagIds = git.GetTagIDs().Result;
+			writeText($"{tagIds.Count} tags found.");
+			foreach (var tagId in tagIds)
+			{
+				// Keep oldest NeoEdit 3 around just in case
+				if (tagId == "3.0.1.2761")
+					continue;
+
+				writeText($"Delete tag {tagId}...");
+				git.DeleteTag(tagId).Wait();
 			}
 		}
 	}

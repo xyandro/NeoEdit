@@ -43,7 +43,7 @@ namespace Build
 				if (response.StatusCode != HttpStatusCode.OK)
 					throw new Exception("Failed to find releases.");
 				var result = await ParseResponseList(response);
-				return result.Select(entry => (int)entry["id"]).ToList();
+				return result.Select(entry => Convert.ToInt32(entry["id"])).ToList();
 			}
 		}
 

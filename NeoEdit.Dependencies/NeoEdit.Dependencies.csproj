@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildGlobalAssemblyInfo;BuildVersion">
+<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildGlobalAssemblyInfo;BuildVersion;BuildSetup">
   <Target Name="BuildGlobalAssemblyInfo" Inputs="GlobalAssemblyInfo.Template.cs" Outputs="GlobalAssemblyInfo.cs" Returns="">
     <Message Text="Building GlobalAssemblyInfo" Importance="High" />
     <Exec Command="GitInfo.bat GlobalAssemblyInfo.Template.cs GlobalAssemblyInfo.cs" />
@@ -6,6 +6,10 @@
   <Target Name="BuildVersion" Inputs="Version.Template.csproj" Outputs="Version.csproj" Returns="">
     <Message Text="Building Version" Importance="High" />
     <Exec Command="GitInfo.bat Version.Template.csproj Version.csproj" />
+  </Target>
+  <Target Name="BuildSetup" Inputs="..\NeoEdit.Setup\NeoEdit.Setup.Template.vdproj" Outputs="..\NeoEdit.Setup\NeoEdit.Setup.vdproj" Returns="">
+    <Message Text="Building Setup" Importance="High" />
+    <Exec Command="GitInfo.bat ..\NeoEdit.Setup\NeoEdit.Setup.Template.vdproj ..\NeoEdit.Setup\NeoEdit.Setup.vdproj" />
   </Target>
 
   <PropertyGroup>

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 
 namespace Build.BuildActions
 {
@@ -7,7 +6,7 @@ namespace Build.BuildActions
 	{
 		public override string Name => "Delete Ignored";
 
-		public override void Run(WriteTextDelegate writeText, string configuration)
+		public override void Run(WriteTextDelegate writeText)
 		{
 			writeText("Deleting ignored files...");
 			foreach (var path in Git.GetIgoredPaths())

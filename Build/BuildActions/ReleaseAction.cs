@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -11,12 +10,13 @@ namespace Build.BuildActions
 
 		public override bool Prepare() => App.EnsureGitHubTokenExists();
 
-		public override void Run(WriteTextDelegate writeText, string configuration)
+		public override void Run(WriteTextDelegate writeText)
 		{
-			var exeName = $@"{App.Location}\Release\NeoEdit.exe";
-			if (!File.Exists(exeName))
-				throw new Exception($"Build not found: {exeName}.");
-			var version = FileVersionInfo.GetVersionInfo(exeName).FileVersion;
+			var version = FileVersionInfo.GetVersionInfo($@"{App.Location}\NeoEdit\bin\Release\net5.0-windows\NeoEdit.exe").FileVersion;
+
+			var msiName = $@"{App.Location}\NeoEdit.Setup\Release\NeoEdit.msi";
+			if (!File.Exists(msiName))
+				throw new Exception($"Build not found: {msiName}.");
 
 			using (var client = new GitHub())
 			{
@@ -25,9 +25,9 @@ namespace Build.BuildActions
 				writeText($"Creating release {version}.");
 				var uploadUrl = client.CreateRelease(version).Result;
 
-				writeText($"Uploading {exeName}...");
+				writeText($"Uploading {msiName}...");
 				writeText($"0%");
-				client.UploadFile(uploadUrl, exeName, percent => writeText($"\udead{percent}%")).Wait();
+				client.UploadFile(uploadUrl, msiName, percent => writeText($"\udead{percent}%")).Wait();
 				writeText("\udead100%");
 			}
 		}

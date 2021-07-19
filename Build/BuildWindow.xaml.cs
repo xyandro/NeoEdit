@@ -11,11 +11,9 @@ namespace Build
 {
 	partial class BuildWindow
 	{
-		static DependencyProperty ConfigurationsProperty = DependencyProperty.Register(nameof(Configurations), typeof(List<string>), typeof(BuildWindow));
 		static DependencyProperty ActionsProperty = DependencyProperty.Register(nameof(Actions), typeof(List<BaseAction>), typeof(BuildWindow));
 		static DependencyProperty ProgressTextProperty = DependencyProperty.Register(nameof(ProgressText), typeof(string), typeof(BuildWindow));
 
-		List<string> Configurations { get { return (List<string>)GetValue(ConfigurationsProperty); } set { SetValue(ConfigurationsProperty, value); } }
 		List<BaseAction> Actions { get { return (List<BaseAction>)GetValue(ActionsProperty); } set { SetValue(ActionsProperty, value); } }
 		string ProgressText { get { return (string)GetValue(ProgressTextProperty); } set { SetValue(ProgressTextProperty, value); } }
 
@@ -23,13 +21,12 @@ namespace Build
 		{
 			InitializeComponent();
 
-			Configurations = new List<string> { "Debug", "Release" };
 			Actions = new List<BaseAction>
 			{
 				new VerifyCleanAction(),
 				new UpdateAction(),
+				new RestorePackagesAction(),
 				new BuildAction(),
-				new CleanAction(),
 				new DeleteReleasesAction(),
 				new ReleaseAction(),
 				new DeleteIgnoredAction(),
@@ -42,11 +39,10 @@ namespace Build
 
 		void OnReset(object sender, RoutedEventArgs e)
 		{
-			configurations.SelectedItem = Configurations[1];
 			actions.SelectAll();
 		}
 
-		void OnDeleteIgnored(object sender, RoutedEventArgs e) => Run(writeText => new DeleteIgnoredAction().Run(writeText, null));
+		void OnDeleteIgnored(object sender, RoutedEventArgs e) => Run(writeText => new DeleteIgnoredAction().Run(writeText));
 
 		void EnableButtons(bool enabled)
 		{
@@ -57,7 +53,6 @@ namespace Build
 		void OnGo(object sender, RoutedEventArgs e)
 		{
 			// Preserve ordering
-			var useConfiguration = (string)configurations.SelectedItem;
 			var useActionsHash = new HashSet<BaseAction>(actions.SelectedItems.Cast<BaseAction>());
 			var useActions = Actions.Intersect(useActionsHash).ToList();
 
@@ -67,8 +62,6 @@ namespace Build
 
 			Run(writeText =>
 			{
-				if (useConfiguration == null)
-					throw new Exception("Please choose a configuration.");
 				if (!useActions.Any())
 					throw new Exception("Nothing to do!");
 
@@ -76,7 +69,7 @@ namespace Build
 				{
 					writeText($"Starting {action}...");
 					var stopWatch = Stopwatch.StartNew();
-					action.Run(writeText, useConfiguration);
+					action.Run(writeText);
 					stopWatch.Stop();
 					writeText($"Finished {action} ({stopWatch.Elapsed.TotalSeconds} seconds).");
 					writeText();
