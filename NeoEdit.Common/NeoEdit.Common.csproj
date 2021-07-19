@@ -19,8 +19,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\Libs\git2-6777db8.dll" Link="git2-6777db8.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.0" />
-    <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
     <PackageReference Include="MySql.Data" Version="8.0.22" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
@@ -31,6 +36,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NeoEdit.TaskRunning\NeoEdit.TaskRunning.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="LibGit2Sharp">
+      <HintPath>..\Libs\LibGit2Sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
