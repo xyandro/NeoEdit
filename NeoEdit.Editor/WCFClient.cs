@@ -21,7 +21,7 @@ namespace NeoEdit.Editor
 				{
 					Process.Start(new ProcessStartInfo
 					{
-						FileName = Path.Combine(Path.GetDirectoryName(typeof(WCFClient).Assembly.Location), "NeoEdit.WCF.exe"),
+						FileName = Path.Combine(Path.GetDirectoryName(typeof(WCFClient).Assembly.Location), @"WCF\NeoEdit.WCF.exe"),
 						Arguments = PID.ToString()
 					});
 				}
