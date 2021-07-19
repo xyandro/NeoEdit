@@ -33,11 +33,8 @@ TestResults
 /NeoEdit.Editor/Content/SQL/Parser
 /NeoEdit.Editor/Content/TCSV/Parser
 /NeoEdit.Editor/Content/XML/Parser
-/NeoEdit.Editor/Words.txt.gz
 /NeoEdit.UI/Resources/ChangeLog.txt
 /NeoEdit.UI/Resources/License.txt
 /NeoEdit/CommandLine/Parser
 /NeoEdit/Properties/launchSettings.json
 /packages
-/Publish
-/Release

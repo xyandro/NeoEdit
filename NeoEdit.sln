@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compress", "Compress\Compress.csproj", "{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-400C-4A95-B92C-95DF0146B2F4}"
 	ProjectSection(SolutionItems) = preProject
 		Todo.txt = Todo.txt
@@ -24,7 +22,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeoEdit.Dependencies", "Neo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeoEdit.Editor", "NeoEdit.Editor\NeoEdit.Editor.csproj", "{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}"
 	ProjectSection(ProjectDependencies) = postProject
-		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8} = {2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}
 		{3A49C899-545A-4849-B6D0-2686D1A32983} = {3A49C899-545A-4849-B6D0-2686D1A32983}
 		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959} = {7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}
 	EndProjectSection
@@ -50,10 +47,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FDBAF09-F617-456E-9FFA-0E8595B0DCD8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DB80FD39-0222-4591-B224-833259BAC943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DB80FD39-0222-4591-B224-833259BAC943}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB80FD39-0222-4591-B224-833259BAC943}.Release|Any CPU.ActiveCfg = Release|Any CPU

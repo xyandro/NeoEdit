@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildSQL;BuildTCSV;BuildXML;CompressWords">
+<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildSQL;BuildTCSV;BuildXML">
 
   <Import Project="..\NeoEdit.Dependencies\Version.csproj" />
 
@@ -37,10 +37,6 @@
   <Target Name="BuildXML" Inputs="Content\XML\Source\XMLLexer.g4;Content\XML\Source\XMLParser.g4" Outputs="Content\XML\Parser\XMLLexer.cs;Content\XML\Parser\XMLParser.cs;Content\XML\Parser\XMLParserBaseVisitor.cs;Content\XML\Parser\XMLParserVisitor.cs" Returns="">
     <Message Text="Building XML parser" Importance="High" />
     <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
-  </Target>
-  <Target Name="CompressWords" Inputs="Words.txt" Outputs="Words.txt.gz" Returns="">
-    <Message Text="Compressing word list" Importance="High" />
-    <Exec Command="&quot;$(SolutionDir)Compress\bin\$(Configuration)\net5.0\Compress.exe&quot; &quot;$(ProjectDir)Words.txt&quot; &quot;$(ProjectDir)Words.txt.gz&quot;" />
   </Target>
 
   <PropertyGroup>
