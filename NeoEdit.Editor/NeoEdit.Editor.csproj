@@ -1,43 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildBalanced;BuildColumns;BuildCSharp;BuildExactColumns;BuildHTML;BuildJSON;BuildSQL;BuildTCSV;BuildXML">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\NeoEdit.Dependencies\Version.csproj" />
-
-  <Target Name="BuildBalanced" Inputs="Content\Balanced\Source\Balanced.g4" Outputs="Content\Balanced\Parser\BalancedBaseVisitor.cs;Content\Balanced\Parser\BalancedLexer.cs;Content\Balanced\Parser\BalancedParser.cs;Content\Balanced\Parser\BalancedVisitor.cs" Returns="">
-    <Message Text="Building Balanced parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.Balanced.Parser -o &quot;$(ProjectDir)Content\Balanced\Parser&quot; &quot;$(ProjectDir)Content\Balanced\Source\Balanced.g4&quot;" />
-  </Target>
-  <Target Name="BuildColumns" Inputs="Content\Columns\Source\Columns.g4" Outputs="Content\Columns\Parser\ColumnsBaseVisitor.cs;Content\Columns\Parser\ColumnsLexer.cs;Content\Columns\Parser\ColumnsParser.cs;Content\Columns\Parser\ColumnsVisitor.cs" Returns="">
-    <Message Text="Building Columns parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.Columns.Parser -o &quot;$(ProjectDir)Content\Columns\Parser&quot; &quot;$(ProjectDir)Content\Columns\Source\Columns.g4&quot;" />
-  </Target>
-  <Target Name="BuildCSharp" Inputs="Content\CSharp\Source\CSharpLexer.g4;Content\CSharp\Source\CSharpParser.g4" Outputs="Content\CSharp\Parser\CSharpParserBaseVisitor.cs;Content\CSharp\Parser\CSharpParserVisitor.cs;Content\CSharp\Parser\CSharpLexer.cs;Content\CSharp\Parser\CSharpParser.cs" Returns="">
-    <Message Text="Building CSharp parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.CSharp.Parser -o &quot;$(ProjectDir)Content\CSharp\Parser&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpLexer.g4&quot; &quot;$(ProjectDir)Content\CSharp\Source\CSharpParser.g4&quot;" />
-  </Target>
-  <Target Name="BuildExactColumns" Inputs="Content\ExactColumns\Source\ExactColumns.g4" Outputs="Content\ExactColumns\Parser\ExactColumnsBaseVisitor.cs;Content\ExactColumns\Parser\ExactColumnsLexer.cs;Content\ExactColumns\Parser\ExactColumnsParser.cs;Content\ExactColumns\Parser\ExactColumnsVisitor.cs" Returns="">
-    <Message Text="Building ExactColumns parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.ExactColumns.Parser -o &quot;$(ProjectDir)Content\ExactColumns\Parser&quot; &quot;$(ProjectDir)Content\ExactColumns\Source\ExactColumns.g4&quot;" />
-  </Target>
-  <Target Name="BuildHTML" Inputs="Content\HTML\Source\HTMLLexer.g4;Content\HTML\Source\HTMLParser.g4" Outputs="Content\HTML\Parser\HTMLLexer.cs;Content\HTML\Parser\HTMLParser.cs;Content\HTML\Parser\HTMLParserBaseVisitor.cs;Content\HTML\Parser\HTMLParserVisitor.cs" Returns="">
-    <Message Text="Building HTML parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.HTML.Parser -o &quot;$(ProjectDir)Content\HTML\Parser&quot; &quot;$(ProjectDir)Content\HTML\Source\HTMLLexer.g4&quot; &quot;$(ProjectDir)Content\HTML\Source\HTMLParser.g4&quot;" />
-  </Target>
-  <Target Name="BuildJSON" Inputs="Content\JSON\Source\JSON.g4" Outputs="Content\JSON\Parser\JSONBaseVisitor.cs;Content\JSON\Parser\JSONLexer.cs;Content\JSON\Parser\JSONParser.cs;Content\JSON\Parser\JSONVisitor.cs" Returns="">
-    <Message Text="Building JSON parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.JSON.Parser -o &quot;$(ProjectDir)Content\JSON\Parser&quot; &quot;$(ProjectDir)Content\JSON\Source\JSON.g4&quot;" />
-  </Target>
-  <Target Name="BuildSQL" Inputs="Content\SQL\Source\SQLLexer.g4;Content\SQL\Source\SQLParser.g4" Outputs="Content\SQL\Parser\SQLLexer.cs;Content\SQL\Parser\SQLParser.cs;Content\SQL\Parser\SQLParserBaseVisitor.cs;Content\SQL\Parser\SQLParserVisitor.cs" Returns="">
-    <Message Text="Building SQL parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.SQL.Parser -o &quot;$(ProjectDir)Content\SQL\Parser&quot; &quot;$(ProjectDir)Content\SQL\Source\SQLLexer.g4&quot; &quot;$(ProjectDir)Content\SQL\Source\SQLParser.g4&quot;" />
-  </Target>
-  <Target Name="BuildTCSV" Inputs="Content\TCSV\Source\CSV.g4;Content\TCSV\Source\TSV.g4" Outputs="Content\TCSV\Parser\CSVBaseVisitor.cs;Content\TCSV\Parser\CSVLexer.cs;Content\TCSV\Parser\CSVParser.cs;Content\TCSV\Parser\CSVVisitor.cs;Content\TCSV\Parser\TSVBaseVisitor.cs;Content\TCSV\Parser\TSVLexer.cs;Content\TCSV\Parser\TSVParser.cs;Content\TCSV\Parser\TSVVisitor.cs" Returns="">
-    <Message Text="Building TCSV parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.TCSV.Parser -o &quot;$(ProjectDir)Content\TCSV\Parser&quot; &quot;$(ProjectDir)Content\TCSV\Source\CSV.g4&quot; &quot;$(ProjectDir)Content\TCSV\Source\TSV.g4&quot;" />
-  </Target>
-  <Target Name="BuildXML" Inputs="Content\XML\Source\XMLLexer.g4;Content\XML\Source\XMLParser.g4" Outputs="Content\XML\Parser\XMLLexer.cs;Content\XML\Parser\XMLParser.cs;Content\XML\Parser\XMLParserBaseVisitor.cs;Content\XML\Parser\XMLParserVisitor.cs" Returns="">
-    <Message Text="Building XML parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Editor.Content.XML.Parser -o &quot;$(ProjectDir)Content\XML\Parser&quot; &quot;$(ProjectDir)Content\XML\Source\XMLLexer.g4&quot; &quot;$(ProjectDir)Content\XML\Source\XMLParser.g4&quot;" />
-  </Target>
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -46,7 +9,94 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Content\Balanced\Source\Balanced.g4" />
+    <None Remove="Content\Columns\Source\Columns.g4" />
+    <None Remove="Content\CSharp\Source\CSharpLexer.g4" />
+    <None Remove="Content\CSharp\Source\CSharpParser.g4" />
+    <None Remove="Content\ExactColumns\Source\ExactColumns.g4" />
+    <None Remove="Content\HTML\Source\HTMLLexer.g4" />
+    <None Remove="Content\HTML\Source\HTMLParser.g4" />
+    <None Remove="Content\JSON\Source\JSON.g4" />
+    <None Remove="Content\SQL\Source\SQLLexer.g4" />
+    <None Remove="Content\SQL\Source\SQLParser.g4" />
+    <None Remove="Content\TCSV\Source\CSV.g4" />
+    <None Remove="Content\TCSV\Source\TSV.g4" />
+    <None Remove="Content\XML\Source\XMLLexer.g4" />
+    <None Remove="Content\XML\Source\XMLParser.g4" />
     <None Remove="Words.txt.gz" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Antlr4 Include="Content\Balanced\Source\Balanced.g4">
+      <AntOutDir>Content\Balanced\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.Balanced.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\Columns\Source\Columns.g4">
+      <AntOutDir>Content\Columns\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.Columns.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\CSharp\Source\CSharpLexer.g4">
+      <AntOutDir>Content\CSharp\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.CSharp.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\CSharp\Source\CSharpParser.g4">
+      <AntOutDir>Content\CSharp\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.CSharp.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\ExactColumns\Source\ExactColumns.g4">
+      <AntOutDir>Content\ExactColumns\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.ExactColumns.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\HTML\Source\HTMLLexer.g4">
+      <AntOutDir>Content\HTML\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.HTML.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\HTML\Source\HTMLParser.g4">
+      <AntOutDir>Content\HTML\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.HTML.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\JSON\Source\JSON.g4">
+      <AntOutDir>Content\JSON\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.JSON.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\SQL\Source\SQLLexer.g4">
+      <AntOutDir>Content\SQL\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.SQL.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\SQL\Source\SQLParser.g4">
+      <AntOutDir>Content\SQL\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.SQL.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\TCSV\Source\CSV.g4">
+      <AntOutDir>Content\TCSV\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.TCSV.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\TCSV\Source\TSV.g4">
+      <AntOutDir>Content\TCSV\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.TCSV.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\XML\Source\XMLLexer.g4">
+      <AntOutDir>Content\XML\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.XML.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Content\XML\Source\XMLParser.g4">
+      <AntOutDir>Content\XML\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Editor.Content.XML.Parser</Package>
+    </Antlr4>
   </ItemGroup>
 
   <ItemGroup>
@@ -58,7 +108,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.0" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" />
+    <PackageReference Include="Antlr4BuildTasks" Version="8.14.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
   </ItemGroup>
 

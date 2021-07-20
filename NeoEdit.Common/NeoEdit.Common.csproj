@@ -1,15 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildExpression;BuildRevRegEx">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\NeoEdit.Dependencies\Version.csproj" />
-
-  <Target Name="BuildExpression" Inputs="Expressions\Source\ExpressionLexer.g4;Expressions\Source\ExpressionParser.g4" Outputs="Expressions\Parser\ExpressionLexer.cs;Expressions\Parser\ExpressionParser.cs;Expressions\Parser\ExpressionParserBaseVisitor.cs;Expressions\Parser\ExpressionParserVisitor.cs" Returns="">
-    <Message Text="Building expression parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Common.Expressions.Parser -o &quot;$(ProjectDir)Expressions\Parser&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionLexer.g4&quot; &quot;$(ProjectDir)Expressions\Source\ExpressionParser.g4&quot;" />
-  </Target>
-  <Target Name="BuildRevRegEx" Inputs="RevRegEx\Source\RevRegExLexer.g4;RevRegEx\Source\RevRegExParser.g4" Outputs="RevRegEx\Parser\RevRegExLexer.cs;RevRegEx\Parser\RevRegExParser.cs;RevRegEx\Parser\RevRegExParserBaseVisitor.cs;RevRegEx\Parser\RevRegExParserVisitor.cs" Returns="">
-    <Message Text="Building RevRegEx parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.Common.RevRegEx.Parser -o &quot;$(ProjectDir)RevRegEx\Parser&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExLexer.g4&quot; &quot;$(ProjectDir)RevRegEx\Source\RevRegExParser.g4&quot;" />
-  </Target>
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -19,13 +10,44 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Expressions\Source\ExpressionLexer.g4" />
+    <None Remove="Expressions\Source\ExpressionParser.g4" />
+    <None Remove="RevRegEx\Source\RevRegExLexer.g4" />
+    <None Remove="RevRegEx\Source\RevRegExParser.g4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Antlr4 Include="Expressions\Source\ExpressionLexer.g4">
+      <AntOutDir>Expressions\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Common.Expressions.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="Expressions\Source\ExpressionParser.g4">
+      <AntOutDir>Expressions\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Common.Expressions.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="RevRegEx\Source\RevRegExLexer.g4">
+      <AntOutDir>RevRegEx\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Common.RevRegEx.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="RevRegEx\Source\RevRegExParser.g4">
+      <AntOutDir>RevRegEx\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.Common.RevRegEx.Parser</Package>
+    </Antlr4>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\Libs\git2-6777db8.dll" Link="git2-6777db8.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.0" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" />
+    <PackageReference Include="Antlr4BuildTasks" Version="8.14.0" />
     <PackageReference Include="MySql.Data" Version="8.0.22" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />

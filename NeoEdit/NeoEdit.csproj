@@ -1,11 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildCommandLine">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\NeoEdit.Dependencies\Version.csproj" />
-
-  <Target Name="BuildCommandLine" Inputs="CommandLine\Source\CommandLineLexer.g4;CommandLine\Source\CommandLineParser.g4" Outputs="CommandLine\Parser\CommandLineLexer.cs;CommandLine\Parser\CommandLineParser.cs;CommandLine\Parser\CommandLineParserBaseVisitor.cs;CommandLine\Parser\CommandLineParserVisitor.cs" Returns="">
-    <Message Text="Building CommandLine parser" Importance="High" />
-    <Exec Command="java -jar &quot;$(SolutionDir)Libs\antlr-4.8-complete.jar&quot; -Dlanguage=CSharp -no-listener -visitor -package NeoEdit.CommandLine.Parser -o &quot;$(ProjectDir)CommandLine\Parser&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineLexer.g4&quot; &quot;$(ProjectDir)CommandLine\Source\CommandLineParser.g4&quot;" />
-  </Target>
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -16,6 +11,29 @@
     <StartupObject>NeoEdit.Program</StartupObject>
     <CopyRetryCount>0</CopyRetryCount>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="CommandLine\Source\CommandLineLexer.g4" />
+    <None Remove="CommandLine\Source\CommandLineParser.g4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Antlr4 Include="CommandLine\Source\CommandLineLexer.g4">
+      <AntOutDir>CommandLine\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.CommandLine.Parser</Package>
+    </Antlr4>
+    <Antlr4 Include="CommandLine\Source\CommandLineParser.g4">
+      <AntOutDir>CommandLine\Parser</AntOutDir>
+      <Listener>false</Listener>
+      <Package>NeoEdit.CommandLine.Parser</Package>
+    </Antlr4>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.9.2" />
+    <PackageReference Include="Antlr4BuildTasks" Version="8.14.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NeoEdit.Editor\NeoEdit.Editor.csproj" />
