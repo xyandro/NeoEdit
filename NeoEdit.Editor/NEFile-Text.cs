@@ -344,7 +344,7 @@ namespace NeoEdit.Editor
 			Selections = strs.Select(tuple => Selections[tuple.Item2]).ToList();
 		}
 
-		static void PreExecute_Text_Select_Repeats_BetweenFiles_Ordered_MatchesDiffs_IgnoreMatchCase(bool caseSensitive)
+		static void PreExecute_Text_Select_Repeats_BetweenFiles_MatchesDiffs_Ordered_IgnoreMatchCase(bool caseSensitive)
 		{
 			var preExecution = new PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase();
 			foreach (var neFile in state.NEWindow.ActiveFiles)
@@ -366,13 +366,13 @@ namespace NeoEdit.Editor
 			state.PreExecution = preExecution;
 		}
 
-		void Execute_Text_Select_Repeats_BetweenFiles_Ordered_MatchesDiffs_IgnoreMatchCase(bool match)
+		void Execute_Text_Select_Repeats_BetweenFiles_MatchesDiffs_Ordered_IgnoreMatchCase(bool match)
 		{
 			var matches = (state.PreExecution as PreExecution_Text_Select_Repeats_BetweenFiles_MatchMismatch_IgnoreMatchCase).Matches;
 			Selections = Selections.Where((range, index) => (matches[index] != null) == match).ToList();
 		}
 
-		static void PreExecute_Text_Select_Repeats_BetweenFiles_Unordered_MatchesDiffs_IgnoreMatchCase(bool caseSensitive)
+		static void PreExecute_Text_Select_Repeats_BetweenFiles_MatchesDiffs_Unordered_IgnoreMatchCase(bool caseSensitive)
 		{
 			var preExecution = new PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase();
 			var stringComparer = caseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
@@ -388,7 +388,7 @@ namespace NeoEdit.Editor
 			state.PreExecution = preExecution;
 		}
 
-		void Execute_Text_Select_Repeats_BetweenFiles_Unordered_MatchesDiffs_IgnoreMatchCase(bool match)
+		void Execute_Text_Select_Repeats_BetweenFiles_MatchesDiffs_Unordered_IgnoreMatchCase(bool match)
 		{
 			var repeats = (state.PreExecution as PreExecution_Text_Select_Repeats_BetweenFiles_CommonNonCommon_IgnoreMatchCase).Repeats;
 			repeats = repeats.ToDictionary(pair => pair.Key, pair => pair.Value, repeats.Comparer);

@@ -518,25 +518,25 @@
 				</MenuItem>
 				<Separator/>
 				<MenuItem Header="Between _files">
-					<MenuItem Header="_Ordered">
-						<MenuItem Header="_Matches">
-							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Ordered_Matches_IgnoreCase" ToolTip="Keep selections that match text and position in all files (ignore case)"/>
-							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Ordered_Matches_MatchCase" ToolTip="Keep selections that match text and position in all files (match case)"/>
+					<MenuItem Header="_Matches">
+						<MenuItem Header="_Ordered">
+							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Matches_Ordered_IgnoreCase" ToolTip="Keep selections that match text and position in all files (ignore case)"/>
+							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Matches_Ordered_MatchCase" ToolTip="Keep selections that match text and position in all files (match case)"/>
 						</MenuItem>
-						<MenuItem Header="_Diffs">
-							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Ordered_Diffs_IgnoreCase" ToolTip="Keep selections that don't match text and position in all files (ignore case)"/>
-							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Ordered_Diffs_MatchCase" ToolTip="Keep selections that don't match text and position in all files (match case)"/>
+						<MenuItem Header="_Unordered">
+							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Matches_Unordered_IgnoreCase" ToolTip="Keep selections that match text in all files (ignore case)"/>
+							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Matches_Unordered_MatchCase" ToolTip="Keep selections that match text in all files (match case)"/>
 						</MenuItem>
 					</MenuItem>
 					<Separator/>
-					<MenuItem Header="_Unordered">
-						<MenuItem Header="_Matches">
-							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Unordered_Matches_IgnoreCase" ToolTip="Keep selections that match text in all files (ignore case)"/>
-							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Unordered_Matches_MatchCase" ToolTip="Keep selections that match text in all files (match case)"/>
+					<MenuItem Header="_Diffs">
+						<MenuItem Header="_Ordered">
+							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Diffs_Ordered_IgnoreCase" ToolTip="Keep selections that don't match text and position in all files (ignore case)"/>
+							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Diffs_Ordered_MatchCase" ToolTip="Keep selections that don't match text and position in all files (match case)"/>
 						</MenuItem>
-						<MenuItem Header="_Diffs">
-							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Unordered_Diffs_IgnoreCase" ToolTip="Keep selections that don't match text in all files (ignore case)"/>
-							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Unordered_Diffs_MatchCase" ToolTip="Keep selections that don't match text in all files (match case)"/>
+						<MenuItem Header="_Unordered">
+							<controls:NEMenuItem Header="_Ignore case" CommandEnum="Text_Select_Repeats_BetweenFiles_Diffs_Unordered_IgnoreCase" ToolTip="Keep selections that don't match text in all files (ignore case)"/>
+							<controls:NEMenuItem Header="Match _case" CommandEnum="Text_Select_Repeats_BetweenFiles_Diffs_Unordered_MatchCase" ToolTip="Keep selections that don't match text in all files (match case)"/>
 						</MenuItem>
 					</MenuItem>
 				</MenuItem>
