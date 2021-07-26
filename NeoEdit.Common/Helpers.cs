@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using NeoEdit.Common.Parsing;
 using NeoEdit.TaskRunning;
 
@@ -519,6 +520,29 @@ namespace NeoEdit.Common
 			var location = Assembly.GetEntryAssembly().Location;
 			location = Path.Combine(Path.GetDirectoryName(location), $"{Path.GetFileNameWithoutExtension(location)}.exe");
 			return location;
+		}
+
+		public static async Task<IReadOnlyList<TOut>> RunTasks<TIn, TOut>(IReadOnlyList<TIn> items, Func<TIn, Task<TOut>> func, int concurrency = 10)
+		{
+			var tasks = new List<Task<TOut>>();
+			var running = new List<Task<TOut>>();
+			var itemIndex = 0;
+			while (true)
+			{
+				while ((running.Count < concurrency) && (itemIndex < items.Count))
+				{
+					var task = func(items[itemIndex]);
+					++itemIndex;
+					tasks.Add(task);
+					running.Add(task);
+				}
+
+				if (!running.Any())
+					break;
+
+				running.Remove(await Task.WhenAny(running));
+			}
+			return tasks.Select(task => task.Result).ToList();
 		}
 	}
 }

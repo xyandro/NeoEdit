@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +13,9 @@ using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Parsing;
 using NeoEdit.Common.Transform;
+using NeoEdit.Editor.Models;
 using NeoEdit.TaskRunning;
+using Newtonsoft.Json;
 
 namespace NeoEdit.Editor
 {
@@ -67,6 +71,47 @@ namespace NeoEdit.Editor
 			return results;
 		}
 
+		static NetworkRequest ParseNetworkRequest(string data)
+		{
+			if (string.IsNullOrWhiteSpace(data))
+				throw new Exception($"Invalid request: {data}");
+
+			var d = data.Trim();
+			if (d.StartsWith("{"))
+				return JsonConvert.DeserializeObject<NetworkRequest>(data);
+
+			return new NetworkRequest { Request = new NetworkRequest.NetworkRequestRequest { Method = "GET", URL = data } };
+		}
+
+		static async Task<string> MakeNetworkRequest(HttpClient client, string data)
+		{
+			var networkRequest = ParseNetworkRequest(data);
+
+			var request = new HttpRequestMessage(new HttpMethod(networkRequest.Request.Method), networkRequest.Request.URL);
+			if ((!string.IsNullOrWhiteSpace(networkRequest.Request.Authentication?.Scheme)) && (!string.IsNullOrWhiteSpace(networkRequest.Request.Authentication?.Parameter)))
+				request.Headers.Authorization = new AuthenticationHeaderValue(networkRequest.Request.Authentication.Scheme, networkRequest.Request.Authentication.Parameter);
+			if (!string.IsNullOrWhiteSpace(networkRequest.Request.Body?.Content))
+			{
+				var content = new ByteArrayContent(Convert.FromBase64String(networkRequest.Request.Body?.Content));
+				content.Headers.ContentType = new MediaTypeHeaderValue(networkRequest.Request.Body.MediaType) { CharSet = networkRequest.Request.Body.CharSet };
+				request.Content = content;
+			}
+
+			var result = await client.SendAsync(request);
+			networkRequest.Response = new NetworkRequest.NetworkRequestResponse();
+			networkRequest.Response.Success = result.IsSuccessStatusCode;
+			networkRequest.Response.StatusCode = (int)result.StatusCode;
+			networkRequest.Response.StatusCodeText = result.StatusCode.ToString();
+			networkRequest.Response.Response = Convert.ToBase64String(await result.Content.ReadAsByteArrayAsync());
+			return JsonConvert.SerializeObject(networkRequest, Formatting.Indented);
+		}
+
+		static async Task<IReadOnlyList<string>> MakeNetworkRequests(IReadOnlyList<string> sels)
+		{
+			using var httpClient = new HttpClient();
+			return await Helpers.RunTasks(sels, sel => MakeNetworkRequest(httpClient, sel));
+		}
+
 		static void Configure_Network_AbsoluteURL() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Network_AbsoluteURL(state.NEWindow.Focused.GetVariables());
 
 		void Execute_Network_AbsoluteURL()
@@ -113,6 +158,8 @@ namespace NeoEdit.Editor
 
 			TaskRunner.Range(0, urls.Count).ForAll(index => FetchURL(urls[index], fileNames[index]));
 		}
+
+		void Execute_Network_Fetch_Custom() => ReplaceSelections(Task.Run(() => MakeNetworkRequests(GetSelectionStrings()).Result).Result);
 
 		static void Configure_Network_Fetch_Stream() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Network_Fetch_StreamPlaylist(state.NEWindow.Focused.GetVariables(), Path.GetDirectoryName(state.NEWindow.Focused.FileName) ?? "");
 

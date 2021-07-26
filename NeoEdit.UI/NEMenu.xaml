@@ -935,6 +935,9 @@
 			<controls:NEMenuItem Header="F_etch" CommandEnum="Network_Fetch_Fetch" ToolTip="Fetch selected URLs"/>
 			<controls:NEMenuItem Header="_Hex" CommandEnum="Network_Fetch_Hex" ToolTip="Fetch selected URLs as hex"/>
 			<controls:NEMenuItem Header="_File" CommandEnum="Network_Fetch_File" ToolTip="Fetch selected URLs into files"/>
+			<Separator/>
+			<controls:NEMenuItem Header="_Custom" CommandEnum="Network_Fetch_Custom" ToolTip="Fetch URLs"/>
+			<Separator/>
 			<controls:NEMenuItem Header="_Stream" CommandEnum="Network_Fetch_Stream" ToolTip="Fetch video from selected URLs"/>
 			<controls:NEMenuItem Header="_Playlist" CommandEnum="Network_Fetch_Playlist" ToolTip="Fetch playlist from selected URLs"/>
 		</MenuItem>

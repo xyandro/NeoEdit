@@ -1144,6 +1144,7 @@ namespace NeoEdit.Editor
 				case NECommand.Network_Fetch_Fetch: Execute_Network_Fetch_FetchHex(); break;
 				case NECommand.Network_Fetch_Hex: Execute_Network_Fetch_FetchHex(Coder.CodePage.Hex); break;
 				case NECommand.Network_Fetch_File: Execute_Network_Fetch_File(); break;
+				case NECommand.Network_Fetch_Custom: Execute_Network_Fetch_Custom(); break;
 				case NECommand.Network_Fetch_Stream: Execute_Network_Fetch_Stream(); break;
 				case NECommand.Network_Fetch_Playlist: Execute_Network_Fetch_Playlist(); break;
 				case NECommand.Network_Lookup_IP: Execute_Network_Lookup_IP(); break;
