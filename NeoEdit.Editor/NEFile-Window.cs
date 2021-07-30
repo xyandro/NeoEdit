@@ -114,7 +114,7 @@ namespace NeoEdit.Editor
 
 		static void PreExecute_Window_CustomGrid() => state.NEWindow.WindowLayout = (state.Configuration as Configuration_Window_CustomGrid).WindowLayout;
 
-		static void PreExecute_Window_ActiveFirst() => state.NEWindow.ActiveFirst = state.MultiStatus != true;
+		static void PreExecute_Window_WorkMode() => state.NEWindow.WorkMode = state.MultiStatus != true;
 
 		static void PreExecute_Window_Font_Size() => state.NEWindow.neWindowUI.RunDialog_PreExecute_Window_Font_Size();
 

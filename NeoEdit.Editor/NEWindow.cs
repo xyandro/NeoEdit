@@ -25,45 +25,13 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		public bool ActiveFirst { get; set; }
+		public bool WorkMode { get; set; }
 
 		public int DisplayColumns { get; private set; }
 
 		public int DisplayRows { get; private set; }
 
 		public DateTime LastActive { get; set; }
-
-		IReadOnlyOrderedHashSet<NEFile> orderedNEFiles;
-		bool orderedNEFiles_ActiveFirst;
-		IReadOnlyOrderedHashSet<NEFile> orderedNEFiles_NEFiles;
-		IReadOnlyOrderedHashSet<NEFile> orderedNEFiles_ActiveFiles;
-		public IReadOnlyOrderedHashSet<NEFile> OrderedNEFiles
-		{
-			get
-			{
-				if ((ActiveFirst != orderedNEFiles_ActiveFirst) || (NEFiles != orderedNEFiles_NEFiles) || (ActiveFiles != orderedNEFiles_ActiveFiles))
-					lock (this)
-						if ((ActiveFirst != orderedNEFiles_ActiveFirst) || (NEFiles != orderedNEFiles_NEFiles) || (ActiveFiles != orderedNEFiles_ActiveFiles))
-						{
-							if (ActiveFirst)
-							{
-								var activeFiles = new OrderedHashSet<NEFile>();
-								var inactiveFiles = new OrderedHashSet<NEFile>();
-								foreach (var neFile in NEFiles)
-									(ActiveFiles.Contains(neFile) ? activeFiles : inactiveFiles).Add(neFile);
-								inactiveFiles.ForEach(activeFiles.Add);
-								orderedNEFiles = activeFiles;
-							}
-							else
-								orderedNEFiles = NEFiles;
-
-							orderedNEFiles_ActiveFirst = ActiveFirst;
-							orderedNEFiles_NEFiles = NEFiles;
-							orderedNEFiles_ActiveFiles = ActiveFiles;
-						}
-				return orderedNEFiles;
-			}
-		}
 
 		public NEWindow()
 		{
@@ -109,19 +77,23 @@ namespace NeoEdit.Editor
 		{
 			if (!NeedsRender)
 				return;
-
 			NeedsRender = false;
-			neWindowUI?.Render(new RenderParameters
+
+			var renderParameters = new RenderParameters
 			{
-				NEFiles = OrderedNEFiles,
-				FileCount = (ActiveFirst) && (ActiveFiles.Count > 0) ? ActiveFiles.Count : NEFiles.Count,
+				NEFiles = NEFiles,
 				ActiveFiles = ActiveFiles,
 				FocusedFile = Focused,
 				WindowLayout = WindowLayout,
-				ActiveFirst = ActiveFirst,
+				WorkMode = WorkMode,
 				StatusBar = GetStatusBar(),
 				MenuStatus = GetMenuStatus(),
-			});
+			};
+
+			if (WorkMode)
+				renderParameters.NEFiles = ActiveFiles.Where(neFile => neFile.Selections.Any()).ToList();
+
+			neWindowUI?.Render(renderParameters);
 		}
 
 		Dictionary<string, bool?> GetMenuStatus()
@@ -165,7 +137,7 @@ namespace NeoEdit.Editor
 				[nameof(NECommand.Diff_IgnoreNumbers)] = GetMultiStatus(neFile => neFile.DiffIgnoreNumbers),
 				[nameof(NECommand.Diff_IgnoreLineEndings)] = GetMultiStatus(neFile => neFile.DiffIgnoreLineEndings),
 				[nameof(NECommand.Macro_Visualize)] = NEGlobal.MacroVisualize,
-				[nameof(NECommand.Window_ActiveFirst)] = ActiveFirst,
+				[nameof(NECommand.Window_WorkMode)] = WorkMode,
 				[nameof(NECommand.Window_Font_ShowSpecial)] = Settings.ShowSpecialChars,
 				[nameof(NECommand.Window_ViewBinary)] = GetMultiStatus(neFile => neFile.ViewBinary),
 			};

@@ -50,18 +50,18 @@ namespace NeoEdit.UI.Controls
 		{
 			if (renderParameters.FocusedFile == NEFile)
 			{
-				border.BorderBrush = renderParameters.ActiveFirst ? FocusedBorderBrushActiveFirst : FocusedBorderBrushAll;
-				border.Background = renderParameters.ActiveFirst ? FocusedBackgroundBrushActiveFirst : FocusedBackgroundBrushAll;
+				border.BorderBrush = FocusedBorderBrushAll;
+				border.Background = FocusedBackgroundBrushAll;
 			}
 			else if (renderParameters.ActiveFiles.Contains(NEFile))
 			{
-				border.BorderBrush = renderParameters.ActiveFirst ? ActiveBorderBrushActiveFirst : ActiveBorderBrushAll;
-				border.Background = renderParameters.ActiveFirst ? ActiveBackgroundBrushActiveFirst : ActiveBackgroundBrushAll;
+				border.BorderBrush = ActiveBorderBrushAll;
+				border.Background = ActiveBackgroundBrushAll;
 			}
 			else
 			{
-				border.BorderBrush = renderParameters.ActiveFirst ? InactiveBorderBrushActiveFirst : InactiveBorderBrushAll;
-				border.Background = renderParameters.ActiveFirst ? InactiveBackgroundBrushActiveFirst : InactiveBackgroundBrushAll;
+				border.BorderBrush = InactiveBorderBrushAll;
+				border.Background = InactiveBackgroundBrushAll;
 			}
 
 			text.Text = NEFile.NEFileLabel;

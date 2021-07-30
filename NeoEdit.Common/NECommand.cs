@@ -720,7 +720,7 @@
 		[KeyGesture("F", Modifiers.Control | Modifiers.Alt)] Window_Full,
 		[KeyGesture("G", Modifiers.Control | Modifiers.Alt)] Window_Grid,
 		[KeyGesture("C", Modifiers.Control | Modifiers.Alt)] Window_CustomGrid,
-		[KeyGesture("F3")] Window_ActiveFirst,
+		[KeyGesture("F3")] Window_WorkMode,
 		Window_Font_Size,
 		Window_Font_ShowSpecial,
 		Window_ViewBinary,
