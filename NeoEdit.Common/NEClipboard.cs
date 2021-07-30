@@ -12,8 +12,8 @@ namespace NeoEdit.Common
 		public bool? IsCut { get; set; } = null;
 
 		public void Add(IReadOnlyList<string> items) => stringLists.Add(items);
-		public int Count => stringLists.Count;
-		public int ChildCount => stringLists.Sum(list => list.Count);
+		public int FileCount => stringLists.Count;
+		public int ItemCount => stringLists.Sum(list => list.Count);
 
 		public string String => string.Join("\r\n", Strings);
 		public IReadOnlyList<string> Strings => stringLists.SelectMany().ToList();

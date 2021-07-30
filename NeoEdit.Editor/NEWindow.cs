@@ -44,11 +44,11 @@ namespace NeoEdit.Editor
 			var empty = Tuple.Create(new List<string>() as IReadOnlyList<string>, default(bool?));
 			var clipboardDataMap = ActiveFiles.ToDictionary(x => x as INEFile, x => empty);
 
-			if (NEClipboard.Current.Count == ActiveFiles.Count)
+			if (NEClipboard.Current.FileCount == ActiveFiles.Count)
 				NEClipboard.Current.ForEach((cb, index) => clipboardDataMap[ActiveFiles.GetIndex(index)] = Tuple.Create(cb, NEClipboard.Current.IsCut));
-			else if (NEClipboard.Current.ChildCount == ActiveFiles.Count)
+			else if (NEClipboard.Current.ItemCount == ActiveFiles.Count)
 				NEClipboard.Current.Strings.ForEach((str, index) => clipboardDataMap[ActiveFiles.GetIndex(index)] = new Tuple<IReadOnlyList<string>, bool?>(new List<string> { str }, NEClipboard.Current.IsCut));
-			else if (((NEClipboard.Current.Count == 1) || (NEClipboard.Current.Count == NEClipboard.Current.ChildCount)) && (NEClipboard.Current.ChildCount == ActiveFiles.Sum(neFile => neFile.Selections.Count)))
+			else if (((NEClipboard.Current.FileCount == 1) || (NEClipboard.Current.FileCount == NEClipboard.Current.ItemCount)) && (NEClipboard.Current.ItemCount == ActiveFiles.Sum(neFile => neFile.Selections.Count)))
 				NEClipboard.Current.Strings.Take(ActiveFiles.Select(neFile => neFile.Selections.Count)).ForEach((obj, index) => clipboardDataMap[ActiveFiles.GetIndex(index)] = new Tuple<IReadOnlyList<string>, bool?>(obj.ToList(), NEClipboard.Current.IsCut));
 			else
 			{
@@ -299,7 +299,7 @@ namespace NeoEdit.Editor
 			status.Add($"Active: {plural(ActiveFiles.Count, "file")}, {plural(ActiveFiles.Sum(neFile => neFile.Selections.Count), "selection")}, {ActiveFiles.Select(neFile => neFile.Selections.Count).DefaultIfEmpty(0).Min():n0} min / {ActiveFiles.Select(neFile => neFile.Selections.Count).DefaultIfEmpty(0).Max():n0} max");
 			status.Add($"Inactive: {plural(NEFiles.Except(ActiveFiles).Count(), "file")}, {plural(NEFiles.Except(ActiveFiles).Sum(neFile => neFile.Selections.Count), "selection")}");
 			status.Add($"Total: {plural(NEFiles.Count(), "file")}, {plural(NEFiles.Sum(neFile => neFile.Selections.Count), "selection")}");
-			status.Add($"Clipboard: {plural(NEClipboard.Current?.Count ?? 0, "file")}, {plural(NEClipboard.Current?.ChildCount ?? 0, "selection")}");
+			status.Add($"Clipboard: {plural(NEClipboard.Current?.FileCount ?? 0, "file")}, {plural(NEClipboard.Current?.ItemCount ?? 0, "selection")}");
 			status.Add($"Keys/Values: {string.Join(" / ", keysAndValues.Select(l => $"{l.Sum(x => x.Values.Count):n0}"))}");
 			return status;
 		}
