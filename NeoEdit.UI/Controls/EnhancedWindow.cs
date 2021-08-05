@@ -84,7 +84,12 @@ namespace NeoEdit.UI.Controls
 				var top = rects.Min(x => x.Top);
 				var right = rects.Max(x => x.Right);
 				var bottom = rects.Max(x => x.Bottom);
-				return new Rect(left, top, right - left, bottom - top);
+
+				var transform = PresentationSource.FromVisual(this).CompositionTarget.TransformFromDevice;
+				var p = transform.Transform(new Point(left, top));
+				var v = transform.Transform(new Vector(right - left, bottom - top));
+
+				return new Rect(p, v);
 			}
 
 			var mustInclude = GetMainMonitor();
