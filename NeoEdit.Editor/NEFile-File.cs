@@ -57,11 +57,6 @@ namespace NeoEdit.Editor
 			});
 		}
 
-		void Execute_File_New_FromSelections_AllFilesSelections()
-		{
-			(state.PreExecution as PreExecution_File_New_FromSelections_AllFilesSelections).Selections[this] = (GetSelectionStrings(), GetSelectionsName(), ContentType);
-		}
-
 		void Execute_File_Open_ReopenWithEncoding()
 		{
 			var result = state.Configuration as Configuration_File_OpenEncoding_ReopenWithEncoding;

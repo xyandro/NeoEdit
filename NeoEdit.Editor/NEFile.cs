@@ -597,9 +597,6 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_Key: Execute_Internal_Key(); break;
 				case NECommand.Internal_Text: Execute_Internal_Text(); break;
 				case NECommand.Internal_SetBinaryValue: Execute_Internal_SetBinaryValue(); break;
-				case NECommand.File_New_FromSelections_All: Execute_File_New_FromSelections_AllFilesSelections(); break;
-				case NECommand.File_New_FromSelections_Files: Execute_File_New_FromSelections_AllFilesSelections(); break;
-				case NECommand.File_New_FromSelections_Selections: Execute_File_New_FromSelections_AllFilesSelections(); break;
 				case NECommand.File_Open_ReopenWithEncoding: Execute_File_Open_ReopenWithEncoding(); break;
 				case NECommand.File_Refresh: Execute_File_Refresh(); break;
 				case NECommand.File_AutoRefresh: Execute_File_AutoRefresh(); break;
