@@ -111,7 +111,7 @@ namespace NeoEdit.Editor
 			return builder.ToString();
 		}
 
-		static public List<INEFileData> GetUndo(IReadOnlyList<NEFile> neFiles, bool text)
+		public static List<INEFileData> GetUndo(IReadOnlyList<NEFile> neFiles, bool text)
 		{
 			var target = int.MinValue;
 			foreach (var neFile in neFiles)
@@ -138,7 +138,7 @@ namespace NeoEdit.Editor
 			return result;
 		}
 
-		static public List<INEFileData> GetRedo(IReadOnlyList<NEFile> neFiles, bool text)
+		public static List<INEFileData> GetRedo(IReadOnlyList<NEFile> neFiles, bool text)
 		{
 			var target = int.MaxValue;
 

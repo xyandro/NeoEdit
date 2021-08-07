@@ -8,7 +8,6 @@ using NeoEdit.Common;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Enums;
 using NeoEdit.Common.Transform;
-using NeoEdit.Editor.PreExecution;
 
 namespace NeoEdit.Editor
 {

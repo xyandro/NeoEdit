@@ -64,8 +64,8 @@ namespace NeoEdit
 			catch (Exception ex) { NEWindowUI.ShowExceptionMessage(ex); }
 		}
 
-		readonly static string IPCName = $"NeoEdit-{{debe0282-0e9d-47fd-836c-60f500dbaeb5}}";
-		readonly static string ShutdownEventName = $"NeoEdit-Wait-{{0}}";
+		static readonly string IPCName = $"NeoEdit-{{debe0282-0e9d-47fd-836c-60f500dbaeb5}}";
+		static readonly string ShutdownEventName = $"NeoEdit-Wait-{{0}}";
 		private readonly NEGlobalUI neGlobalUI;
 		static MemoryMappedFile masterPIDFile;
 
