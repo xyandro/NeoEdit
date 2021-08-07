@@ -49,9 +49,9 @@ namespace NeoEdit.Editor
 				throw new Exception("No connection.");
 		}
 
-		static void Configure_Database_Connect() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Database_Connect();
+		static void Configure__Database_Connect() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Database_Connect();
 
-		void Execute_Database_Connect()
+		void Execute__Database_Connect()
 		{
 			var result = state.Configuration as Configuration_Database_Connect;
 			if (dbConnection != null)
@@ -63,7 +63,7 @@ namespace NeoEdit.Editor
 			DBName = result.DBConnectInfo.Name;
 		}
 
-		void Execute_Database_ExecuteQuery()
+		void Execute__Database_ExecuteQuery()
 		{
 			ValidateConnection();
 			var selections = Selections.ToList();
@@ -85,14 +85,14 @@ namespace NeoEdit.Editor
 			ReplaceSelections(strs);
 		}
 
-		static void Configure_Database_Examine()
+		static void Configure__Database_Examine()
 		{
 			state.NEWindow.Focused.ValidateConnection();
 			state.NEWindow.neWindowUI.RunDialog_Configure_Database_Examine(state.NEWindow.Focused.dbConnection);
 			state.Configuration = new Configuration_Database_Examine();
 		}
 
-		void Execute_Database_GetSproc()
+		void Execute__Database_GetSproc()
 		{
 			ValidateConnection();
 

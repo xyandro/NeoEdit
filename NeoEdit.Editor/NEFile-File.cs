@@ -57,7 +57,7 @@ namespace NeoEdit.Editor
 			});
 		}
 
-		void Execute_File_Open_ReopenWithEncoding()
+		void Execute__File_Open_ReopenWithEncoding()
 		{
 			var result = state.Configuration as Configuration_File_OpenEncoding_ReopenWithEncoding;
 			if (!CheckModified(MessageOptions.Yes))
@@ -66,25 +66,25 @@ namespace NeoEdit.Editor
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		public void Execute_File_Refresh()
+		public void Execute__File_Refresh()
 		{
 			if ((string.IsNullOrEmpty(FileName)) || (LastWriteTime == LastExternalWriteTime))
 				return;
 
 			if (File.Exists(FileName))
 			{
-				if (QueryUser($"{nameof(Execute_File_Refresh)}-Updated", "This file has been updated on disk. Reload?", MessageOptions.Yes))
-					Execute_File_Revert();
+				if (QueryUser($"{nameof(Execute__File_Refresh)}-Updated", "This file has been updated on disk. Reload?", MessageOptions.Yes))
+					Execute__File_Revert();
 			}
 			else
 			{
-				QueryUser($"{nameof(Execute_File_Refresh)}-Deleted", "This file has been deleted.", MessageOptions.Ok, MessageOptions.OkAllCancel);
+				QueryUser($"{nameof(Execute__File_Refresh)}-Deleted", "This file has been deleted.", MessageOptions.Ok, MessageOptions.OkAllCancel);
 			}
 		}
 
-		void Execute_File_AutoRefresh() => AutoRefresh = state.MultiStatus != true;
+		void Execute__File_AutoRefresh() => AutoRefresh = state.MultiStatus != true;
 
-		void Execute_File_Revert()
+		void Execute__File_Revert()
 		{
 			if (!CheckModified(MessageOptions.No))
 				return;
@@ -100,24 +100,24 @@ namespace NeoEdit.Editor
 				SetRegions(region, reformatRanges(GetRegions(region)));
 		}
 
-		void Execute_File_Save_SaveModified()
+		void Execute__File_Save_SaveModified()
 		{
 			if ((FileName != null) && (!IsModified) && (LastWriteTime == LastExternalWriteTime))
 				return;
-			Execute_File_Save_SaveAll();
+			Execute__File_Save_SaveAll();
 		}
 
-		void Execute_File_Save_SaveAll()
+		void Execute__File_Save_SaveAll()
 		{
 			if (FileName == null)
-				Execute_File_SaveCopy_SaveAsCopy();
+				Execute__File_Save_SaveAs__File_Copy_Copy();
 			else
 				Save(FileName);
 		}
 
-		void Execute_File_SaveCopy_SaveAsCopy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
+		void Execute__File_Save_SaveAs__File_Copy_Copy(bool copyOnly = false) => Save(GetSaveFileName(), copyOnly);
 
-		void Execute_File_SaveCopy_SaveAsCopyByExpression(bool copyOnly = false)
+		void Execute__File_Save_SaveAsByExpression__File_Copy_CopyByExpression(bool copyOnly = false)
 		{
 			var result = state.Configuration as Configuration_FileTable_Various_Various;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
@@ -128,18 +128,18 @@ namespace NeoEdit.Editor
 
 			if (File.Exists(newFileName))
 			{
-				if (!QueryUser(nameof(Execute_File_SaveCopy_SaveAsCopyByExpression), "File already exists; overwrite?", MessageOptions.None))
+				if (!QueryUser(nameof(Execute__File_Save_SaveAsByExpression__File_Copy_CopyByExpression), "File already exists; overwrite?", MessageOptions.None))
 					return;
 			}
 
 			Save(newFileName, copyOnly);
 		}
 
-		void Execute_File_Move_Move()
+		void Execute__File_Move_Move()
 		{
 			if (string.IsNullOrEmpty(FileName))
 			{
-				Execute_File_SaveCopy_SaveAsCopy();
+				Execute__File_Save_SaveAs__File_Copy_Copy();
 				return;
 			}
 
@@ -151,7 +151,7 @@ namespace NeoEdit.Editor
 			SetFileName(fileName);
 		}
 
-		void Execute_File_Move_MoveByExpression()
+		void Execute__File_Move_MoveByExpression()
 		{
 			var result = state.Configuration as Configuration_FileTable_Various_Various;
 			var results = GetExpressionResults<string>(result.Expression, Selections.Count());
@@ -162,7 +162,7 @@ namespace NeoEdit.Editor
 
 			if ((!string.Equals(newFileName, FileName, StringComparison.OrdinalIgnoreCase)) && (File.Exists(newFileName)))
 			{
-				if (!QueryUser(nameof(Execute_File_Move_MoveByExpression), "File already exists; overwrite?", MessageOptions.None))
+				if (!QueryUser(nameof(Execute__File_Move_MoveByExpression), "File already exists; overwrite?", MessageOptions.None))
 					return;
 			}
 
@@ -175,18 +175,18 @@ namespace NeoEdit.Editor
 			SetFileName(newFileName);
 		}
 
-		void Execute_File_Copy_Path() => ClipboardCopy = new List<string> { FileName };
+		void Execute__File_Copy_Path() => ClipboardCopy = new List<string> { FileName };
 
-		void Execute_File_Copy_Name() => Clipboard = new List<string> { Path.GetFileName(FileName) };
+		void Execute__File_Copy_Name() => Clipboard = new List<string> { Path.GetFileName(FileName) };
 
-		void Execute_File_Copy_DisplayName() => Clipboard = new List<string> { DisplayName ?? Path.GetFileName(FileName) };
+		void Execute__File_Copy_DisplayName() => Clipboard = new List<string> { DisplayName ?? Path.GetFileName(FileName) };
 
-		void Execute_File_Delete()
+		void Execute__File_Delete()
 		{
 			if (FileName == null)
 				return;
 
-			if (!QueryUser(nameof(Execute_File_Delete), "Are you sure you want to delete this file?", MessageOptions.No))
+			if (!QueryUser(nameof(Execute__File_Delete), "Are you sure you want to delete this file?", MessageOptions.No))
 				return;
 
 			watcher.EnableRaisingEvents = false;
@@ -195,14 +195,14 @@ namespace NeoEdit.Editor
 			watcher.EnableRaisingEvents = true;
 		}
 
-		void Execute_File_Encoding()
+		void Execute__File_Encoding()
 		{
 			var result = state.Configuration as Configuration_File_OpenEncoding_ReopenWithEncoding;
 			CodePage = result.CodePage;
 			HasBOM = result.HasBOM;
 		}
 
-		void Execute_File_LineEndings()
+		void Execute__File_LineEndings()
 		{
 			var result = state.Configuration as Configuration_File_LineEndings;
 			var lines = Text.NumLines;
@@ -218,22 +218,22 @@ namespace NeoEdit.Editor
 			Replace(sel, sel.Select(str => result.LineEndings).ToList());
 		}
 
-		void Execute_File_FileActiveFileIndex(bool activeOnly)
+		void Execute__File_FileIndex__File_ActiveFileIndex(bool activeOnly)
 		{
 			ReplaceSelections((NEWindow.GetFileIndex(this, activeOnly) + 1).ToString());
 		}
 
-		void Execute_File_Advanced_Compress() => Compressed = state.MultiStatus != true;
+		void Execute__File_Advanced_Compress() => Compressed = state.MultiStatus != true;
 
-		void Execute_File_Advanced_Encrypt() => AESKey = (state.Configuration as Configuration_File_Advanced_Encrypt).Key;
+		void Execute__File_Advanced_Encrypt() => AESKey = (state.Configuration as Configuration_File_Advanced_Encrypt).Key;
 
-		void Execute_File_Advanced_Explore() => Process.Start("explorer.exe", $"/select,\"{FileName}\"");
+		void Execute__File_Advanced_Explore() => Process.Start("explorer.exe", $"/select,\"{FileName}\"");
 
-		void Execute_File_Advanced_CommandPrompt() => Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = Path.GetDirectoryName(FileName) });
+		void Execute__File_Advanced_CommandPrompt() => Process.Start(new ProcessStartInfo("cmd.exe") { WorkingDirectory = Path.GetDirectoryName(FileName) });
 
-		void Execute_File_Advanced_DragDrop() => AddDragFile(FileName);
+		void Execute__File_Advanced_DragDrop() => AddDragFile(FileName);
 
-		void Execute_File_Advanced_SetDisplayName()
+		void Execute__File_Advanced_SetDisplayName()
 		{
 			var result = state.Configuration as Configuration_FileTable_Various_Various;
 			if (result.Expression == "f")
@@ -247,7 +247,7 @@ namespace NeoEdit.Editor
 			DisplayName = results[0];
 		}
 
-		static void PreExecute_File_Close_ActiveInactiveFiles(bool active)
+		static void PreExecute__File_Close_Active__File_Close_Inactive(bool active)
 		{
 			foreach (var neFile in (active ? state.NEWindow.ActiveFiles : state.NEWindow.NEFiles.Except(state.NEWindow.ActiveFiles)))
 			{
@@ -256,7 +256,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_File_Close_FilesWithWithoutSelections(bool hasSelections)
+		void Execute__File_Close_WithSelections__File_Close_WithoutSelections(bool hasSelections)
 		{
 			if (Selections.Any() == hasSelections)
 			{
@@ -265,7 +265,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_File_Close_ModifiedUnmodifiedFiles(bool modified)
+		void Execute__File_Close_Modified__File_Close_Unmodified(bool modified)
 		{
 			if (IsModified == modified)
 			{
@@ -274,7 +274,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_File_Close_ExternalModifiedUnmodifiedFiles(bool modified)
+		void Execute__File_Close_ExternalModified__File_Close_ExternalUnmodified(bool modified)
 		{
 			if ((LastWriteTime != LastExternalWriteTime) == modified)
 			{

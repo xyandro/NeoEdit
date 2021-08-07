@@ -8,7 +8,7 @@ namespace NeoEdit.Editor
 {
 	partial class NEGlobal
 	{
-		void Execute_Internal_CommandLine()
+		void Execute__Internal_CommandLine()
 		{
 			var commandLineParams = (state.Configuration as Configuration_Internal_CommandLine).CommandLineParams;
 

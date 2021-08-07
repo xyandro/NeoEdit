@@ -140,7 +140,7 @@ namespace NeoEdit.Editor
 			return new NERange(position);
 		}
 
-		void Execute_Internal_Key()
+		void Execute__Internal_Key()
 		{
 			switch (state.Key)
 			{
@@ -203,7 +203,7 @@ namespace NeoEdit.Editor
 			INEGlobalUI.DragFiles = null;
 			if (Settings.EscapeClearsSelections)
 			{
-				Execute_Edit_Select_Focused_Single();
+				Execute__Edit_Select_Focused_Single();
 				if (!Selections.Any())
 					Selections = new List<NERange> { new NERange() };
 			}
@@ -490,9 +490,9 @@ namespace NeoEdit.Editor
 
 		void Execute_Internal_Key_Enter() => ReplaceSelections(Text.DefaultEnding, false);
 
-		void Execute_Internal_Text() => ReplaceSelections(state.Text, false);
+		void Execute__Internal_Text() => ReplaceSelections(state.Text, false);
 
-		void Execute_Internal_SetBinaryValue()
+		void Execute__Internal_SetBinaryValue()
 		{
 			var configuration = state.Configuration as Configuration_Internal_SetBinaryValue;
 			var newStr = Coder.BytesToString(configuration.Value, CodePage);
@@ -516,7 +516,7 @@ namespace NeoEdit.Editor
 			Selections = newSels;
 		}
 
-		static void PreExecute_Internal_Scroll()
+		static void PreExecute__Internal_Scroll()
 		{
 			var configuration = state.Configuration as Configuration_Internal_Scroll;
 			var neFile = configuration.NEFile as NEFile;
@@ -524,7 +524,7 @@ namespace NeoEdit.Editor
 			neFile.StartRow = configuration.Row;
 		}
 
-		public void Execute_Internal_Mouse(int line, int column, int clickCount, bool selecting)
+		public void Execute__Internal_Mouse(int line, int column, int clickCount, bool selecting)
 		{
 			var sels = Selections.ToList();
 			line = Math.Max(0, Math.Min(line, Text.NumLines - 1));

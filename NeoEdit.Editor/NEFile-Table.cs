@@ -53,13 +53,13 @@ namespace NeoEdit.Editor
 			Selections = new List<NERange> { new NERange() };
 		}
 
-		static void Configure_Table_Select_RowsByExpression()
+		static void Configure__Table_Select_RowsByExpression()
 		{
 			var table = state.NEWindow.Focused.GetTable();
 			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_FileTable_Various_Various(state.NEWindow.Focused.GetTableVariables(table), table.NumRows);
 		}
 
-		void Execute_Table_Select_RowsByExpression()
+		void Execute__Table_Select_RowsByExpression()
 		{
 			var result = state.Configuration as Configuration_FileTable_Various_Various;
 			var table = GetTable();
@@ -69,7 +69,7 @@ namespace NeoEdit.Editor
 			Selections = lines.AsTaskRunner().Select(line => new NERange(Text.GetPosition(line, 0), Text.GetPosition(line, Text.GetLineLength(line)))).ToList();
 		}
 
-		static void Configure_Table_New_FromSelection()
+		static void Configure__Table_New_FromSelection()
 		{
 			if (state.NEWindow.Focused.Selections.Count != 1)
 				throw new Exception("Must have one selection");
@@ -79,7 +79,7 @@ namespace NeoEdit.Editor
 			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_New_FromSelection(state.NEWindow.Focused.GetSelectionStrings().Single());
 		}
 
-		void Execute_Table_New_FromSelection()
+		void Execute__Table_New_FromSelection()
 		{
 			var result = state.Configuration as Configuration_Table_New_FromSelection;
 			if (Selections.Count != 1)
@@ -94,7 +94,7 @@ namespace NeoEdit.Editor
 			OpenTable(new Table(rows));
 		}
 
-		void Execute_Table_New_FromLineSelections()
+		void Execute__Table_New_FromLineSelections()
 		{
 			if (!Selections.Any())
 				return;
@@ -109,7 +109,7 @@ namespace NeoEdit.Editor
 			OpenTable(new Table(rows, false));
 		}
 
-		void Execute_Table_New_FromRegionSelections_Region(int useRegion)
+		void Execute__Table_New_FromRegionSelections_Region1__Table_New_FromRegionSelections_Region2__Table_New_FromRegionSelections_Region3__Table_New_FromRegionSelections_Region4__Table_New_FromRegionSelections_Region5__Table_New_FromRegionSelections_Region6__Table_New_FromRegionSelections_Region7__Table_New_FromRegionSelections_Region8__Table_New_FromRegionSelections_Region9(int useRegion)
 		{
 			if (!Selections.Any())
 				return;
@@ -120,19 +120,19 @@ namespace NeoEdit.Editor
 			OpenTable(new Table(rows, false));
 		}
 
-		static void Configure_Table_Edit() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Edit(state.NEWindow.Focused.GetTable());
+		static void Configure__Table_Edit() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Edit(state.NEWindow.Focused.GetTable());
 
-		void Execute_Table_Edit()
+		void Execute__Table_Edit()
 		{
 			var result = state.Configuration as Configuration_Table_Edit;
 			SetText(GetTable().Aggregate(result.AggregateData).Sort(result.SortData));
 		}
 
-		void Execute_Table_DetectType() => ContentType = Table.GuessTableType(Text.GetString());
+		void Execute__Table_DetectType() => ContentType = Table.GuessTableType(Text.GetString());
 
-		static void Configure_Table_Convert() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Convert(state.NEWindow.Focused.ContentType);
+		static void Configure__Table_Convert() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Convert(state.NEWindow.Focused.ContentType);
 
-		void Execute_Table_Convert()
+		void Execute__Table_Convert()
 		{
 			var result = state.Configuration as Configuration_Table_Convert;
 			var table = GetTable();
@@ -140,9 +140,9 @@ namespace NeoEdit.Editor
 			SetText(table);
 		}
 
-		void Execute_Table_SetJoinSource() => joinTable = GetTable();
+		void Execute__Table_SetJoinSource() => joinTable = GetTable();
 
-		static void Configure_Table_Join()
+		static void Configure__Table_Join()
 		{
 			if (joinTable == null)
 				throw new Exception("You must first set a join source.");
@@ -150,7 +150,7 @@ namespace NeoEdit.Editor
 			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Join(state.NEWindow.Focused.GetTable(), joinTable);
 		}
 
-		void Execute_Table_Join()
+		void Execute__Table_Join()
 		{
 			var result = state.Configuration as Configuration_Table_Join;
 			if (joinTable == null)
@@ -159,11 +159,11 @@ namespace NeoEdit.Editor
 			SetText(Table.Join(GetTable(), joinTable, result.LeftColumns, result.RightColumns, result.JoinType));
 		}
 
-		void Execute_Table_Transpose() => SetText(GetTable().Transpose());
+		void Execute__Table_Transpose() => SetText(GetTable().Transpose());
 
-		static void Configure_Table_Database_GenerateInserts() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Database_GenerateInserts(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
+		static void Configure__Table_Database_GenerateInserts() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Database_GenerateInserts(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
 
-		void Execute_Table_Database_GenerateInserts()
+		void Execute__Table_Database_GenerateInserts()
 		{
 			var result = state.Configuration as Configuration_Table_Database_GenerateInserts;
 			var table = GetTable();
@@ -181,9 +181,9 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Table_Database_GenerateUpdates() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Database_GenerateUpdates(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
+		static void Configure__Table_Database_GenerateUpdates() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Database_GenerateUpdates(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
 
-		void Execute_Table_Database_GenerateUpdates()
+		void Execute__Table_Database_GenerateUpdates()
 		{
 			var result = state.Configuration as Configuration_Table_Database_GenerateUpdates;
 			var table = GetTable();
@@ -201,9 +201,9 @@ namespace NeoEdit.Editor
 			Selections = sels;
 		}
 
-		static void Configure_Table_Database_GenerateDeletes() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Database_GenerateDeletes(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
+		static void Configure__Table_Database_GenerateDeletes() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Table_Database_GenerateDeletes(state.NEWindow.Focused.GetTable(), state.NEWindow.Focused.FileName == null ? "<TABLE>" : Path.GetFileNameWithoutExtension(state.NEWindow.Focused.FileName));
 
-		void Execute_Table_Database_GenerateDeletes()
+		void Execute__Table_Database_GenerateDeletes()
 		{
 			var result = state.Configuration as Configuration_Table_Database_GenerateDeletes;
 			var table = GetTable();

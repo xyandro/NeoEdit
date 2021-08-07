@@ -2,6 +2,6 @@
 {
 	partial class NEGlobal
 	{
-		void Execute_Help_Advanced_TimeNextAction() => timeNextAction = true;
+		void Execute__Help_Advanced_TimeNextAction() => timeNextAction = true;
 	}
 }

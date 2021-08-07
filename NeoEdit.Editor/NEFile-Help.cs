@@ -14,12 +14,12 @@ namespace NeoEdit.Editor
 {
 	partial class NEFile
 	{
-		static void PreExecute_Help_Tutorial()
+		static void PreExecute__Help_Tutorial()
 		{
 			//TODO => new TutorialWindow(this);
 		}
 
-		static void PreExecute_Help_Update()
+		static void PreExecute__Help_Update()
 		{
 			const string location = "https://github.com/xyandro/NeoEdit/releases";
 			const string url = location + "/latest";
@@ -80,19 +80,19 @@ namespace NeoEdit.Editor
 			});
 		}
 
-		static void PreExecute_Help_Advanced_Shell_Integrate() => INEWindowUI.ShellIntegrateStatic(true);
+		static void PreExecute__Help_Advanced_Shell_Integrate() => INEWindowUI.ShellIntegrateStatic(true);
 
-		static void PreExecute_Help_Advanced_Shell_Unintegrate() => INEWindowUI.ShellIntegrateStatic(false);
+		static void PreExecute__Help_Advanced_Shell_Unintegrate() => INEWindowUI.ShellIntegrateStatic(false);
 
-		static void PreExecute_Help_Advanced_CopyCommandLine()
+		static void PreExecute__Help_Advanced_CopyCommandLine()
 		{
 			var clipboard = new NEClipboard();
 			clipboard.Add(new List<string> { Environment.CommandLine });
 			NEClipboard.Current = clipboard;
 		}
 
-		static void PreExecute_Help_Advanced_RunGC() => GC.Collect();
+		static void PreExecute__Help_Advanced_RunGC() => GC.Collect();
 
-		static void PreExecute_Help_About() => state.NEWindow.neWindowUI.RunDialog_PreExecute_Help_About();
+		static void PreExecute__Help_About() => state.NEWindow.neWindowUI.RunDialog_PreExecute_Help_About();
 	}
 }

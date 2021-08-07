@@ -128,7 +128,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static void Configure_Position_Goto_Various(GotoType gotoType)
+		static void Configure__Position_Goto_Lines__Position_Goto_Columns__Position_Goto_Indexes__Position_Goto_Positions(GotoType gotoType)
 		{
 			int line = 1, column = 1, index = 1, position = 0;
 			var range = state.NEWindow.Focused.Selections.FirstOrDefault();
@@ -151,7 +151,7 @@ namespace NeoEdit.Editor
 			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, state.NEWindow.Focused.GetVariables());
 		}
 
-		void Execute_Position_Goto_Various(GotoType gotoType, bool selecting)
+		void Execute__Position_Goto_Lines__Position_Goto_Columns__Position_Goto_Indexes__Position_Goto_Positions(GotoType gotoType, bool selecting)
 		{
 			var result = state.Configuration as Configuration_Position_Goto_Various;
 			var values = GotoRange.GetPositionsData(GetExpressionResults<string>(result.Expression), gotoType);
@@ -219,7 +219,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Position_Copy_Various(GotoType gotoType, bool withLine)
+		void Execute__Position_Copy_Lines__Position_Copy_Columns__Position_Copy_Indexes__Position_Copy_Positions(GotoType gotoType, bool withLine)
 		{
 			var starts = new Dictionary<GotoType, List<int>>();
 			var ends = new Dictionary<GotoType, List<int>>();

@@ -22,13 +22,13 @@ namespace NeoEdit.Editor
 			return $"Summary {index + 1}";
 		}
 
-		static void PreExecute_Window_New_New()
+		static void PreExecute__Window_New_New()
 		{
 			var neWindow = new NEWindow();
 			neWindow.AddNewNEFile(new NEFile());
 		}
 
-		static void PreExecute_Window_New_FromSelections_All()
+		static void PreExecute__Window_New_FromSelections_All()
 		{
 			var contentType = state.NEWindow.ActiveFiles.GroupBy(neFile => neFile.ContentType).OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
 			var neWindow = new NEWindow();
@@ -36,14 +36,14 @@ namespace NeoEdit.Editor
 			neWindow.WindowLayout = state.NEWindow.WindowLayout;
 		}
 
-		static void PreExecute_Window_New_FromSelections_Files()
+		static void PreExecute__Window_New_FromSelections_Files()
 		{
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, state.NEWindow.ActiveFiles.Select((neFile, index) => (neFile.GetSelectionStrings(), neFile.GetSelectionsName() ?? $"Selections {index + 1}", neFile.ContentType)).ToList());
 			neWindow.WindowLayout = state.NEWindow.WindowLayout;
 		}
 
-		static void PreExecute_Window_New_FromSelections_Selections()
+		static void PreExecute__Window_New_FromSelections_Selections()
 		{
 			var index = 0;
 			var neWindow = new NEWindow();
@@ -51,7 +51,7 @@ namespace NeoEdit.Editor
 			neWindow.WindowLayout = state.NEWindow.WindowLayout;
 		}
 
-		static void PreExecute_Window_New_SummarizeSelections_AllSelectionsEachFile_IgnoreMatchCase(bool caseSensitive, bool showAllFiles)
+		static void PreExecute__Window_New_SummarizeSelections_Files_IgnoreCase__Window_New_SummarizeSelections_Files_MatchCase__Window_New_SummarizeSelections_Selections_IgnoreCase__Window_New_SummarizeSelections_Selections_MatchCase(bool caseSensitive, bool showAllFiles)
 		{
 			var selectionsByFile = state.NEWindow.ActiveFiles.Select((neFile, index) => (DisplayName: neFile.GetSummaryName(index), Selections: neFile.GetSelectionStrings())).ToList();
 
@@ -67,28 +67,28 @@ namespace NeoEdit.Editor
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 		}
 
-		static void PreExecute_Window_New_FromClipboard_All()
+		static void PreExecute__Window_New_FromClipboard_All()
 		{
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, new List<(IReadOnlyList<string> strs, string name, ParserType contentType)> { (NEClipboard.Current.Strings, "Clipboards", ParserType.None) });
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 		}
 
-		static void PreExecute_Window_New_FromClipboard_Files()
+		static void PreExecute__Window_New_FromClipboard_Files()
 		{
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, NEClipboard.Current.Select((clipboard, index) => (clipboard, $"Clipboard {index + 1}", ParserType.None)).ToList());
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 		}
 
-		static void PreExecute_Window_New_FromClipboard_Selections()
+		static void PreExecute__Window_New_FromClipboard_Selections()
 		{
 			var neWindow = new NEWindow();
 			AddFilesFromStrings(neWindow, NEClipboard.Current.Strings.Select((str, index) => (new List<string> { str } as IReadOnlyList<string>, $"Clipboard {index + 1}", ParserType.None)).ToList());
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 		}
 
-		static void PreExecute_Window_New_FromFiles_Active()
+		static void PreExecute__Window_New_FromFiles_Active()
 		{
 			var neWindow = new NEWindow();
 			foreach (var neFile in state.NEWindow.ActiveFiles)
@@ -99,31 +99,31 @@ namespace NeoEdit.Editor
 			neWindow.WindowLayout = state.NEWindow.WindowLayout;
 		}
 
-		static void PreExecute_Window_New_FromFiles_CopiedCut()
+		static void PreExecute__Window_New_FromFiles_CopiedCut()
 		{
 			var neWindow = new NEWindow();
 			NEClipboard.Current.Strings.AsTaskRunner().Select(file => new NEFile(file)).ForEach(neFile => neWindow.AddNewNEFile(neFile));
 			neWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 		}
 
-		static void PreExecute_Window_Full() => state.NEWindow.WindowLayout = new WindowLayout(1, 1);
+		static void PreExecute__Window_Full() => state.NEWindow.WindowLayout = new WindowLayout(1, 1);
 
-		static void PreExecute_Window_Grid() => state.NEWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
+		static void PreExecute__Window_Grid() => state.NEWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
 
-		static void Configure_Window_CustomGrid() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Window_CustomGrid(state.NEWindow.WindowLayout);
+		static void Configure__Window_CustomGrid() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Window_CustomGrid(state.NEWindow.WindowLayout);
 
-		static void PreExecute_Window_CustomGrid() => state.NEWindow.WindowLayout = (state.Configuration as Configuration_Window_CustomGrid).WindowLayout;
+		static void PreExecute__Window_CustomGrid() => state.NEWindow.WindowLayout = (state.Configuration as Configuration_Window_CustomGrid).WindowLayout;
 
-		static void PreExecute_Window_WorkMode() => state.NEWindow.WorkMode = state.MultiStatus != true;
+		static void PreExecute__Window_WorkMode() => state.NEWindow.WorkMode = state.MultiStatus != true;
 
-		static void PreExecute_Window_Font_Size() => state.NEWindow.neWindowUI.RunDialog_PreExecute_Window_Font_Size();
+		static void PreExecute__Window_Font_Size() => state.NEWindow.neWindowUI.RunDialog_PreExecute_Window_Font_Size();
 
-		static void PreExecute_Window_Font_ShowSpecial() => Settings.ShowSpecialChars = state.MultiStatus != true;
+		static void PreExecute__Window_Font_ShowSpecial() => Settings.ShowSpecialChars = state.MultiStatus != true;
 
-		void Execute_Window_ViewBinary() => ViewBinary = state.MultiStatus != true;
+		void Execute__Window_ViewBinary() => ViewBinary = state.MultiStatus != true;
 
-		static void Configure_Window_BinaryCodePages() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Window_BinaryCodePages(state.NEWindow.Focused.ViewBinaryCodePages);
+		static void Configure__Window_BinaryCodePages() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Window_BinaryCodePages(state.NEWindow.Focused.ViewBinaryCodePages);
 
-		void Execute_Window_BinaryCodePages() => ViewBinaryCodePages = (state.Configuration as Configuration_Window_BinaryCodePages).CodePages;
+		void Execute__Window_BinaryCodePages() => ViewBinaryCodePages = (state.Configuration as Configuration_Window_BinaryCodePages).CodePages;
 	}
 }

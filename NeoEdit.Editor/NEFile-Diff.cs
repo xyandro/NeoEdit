@@ -45,7 +45,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Diff_Select_MatchesDiffs(bool matching)
+		void Execute__Diff_Select_Matches__Diff_Select_Diffs(bool matching)
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
@@ -53,13 +53,13 @@ namespace NeoEdit.Editor
 			Selections = Text.GetDiffMatches(matching).Select(tuple => new NERange(tuple.Item1, tuple.Item2)).ToList();
 		}
 
-		static void PreExecute_Diff_Select_LeftRightBothFiles(bool? left)
+		static void PreExecute__Diff_Select_LeftFile__Diff_Select_RightFile__Diff_Select_BothFiles(bool? left)
 		{
 			var active = new HashSet<NEFile>(state.NEWindow.ActiveFiles.NonNull(item => item.DiffTarget).SelectMany(item => new List<NEFile> { item, item.DiffTarget }).Distinct().Where(item => (!left.HasValue) || ((state.NEWindow.GetFileIndex(item) < state.NEWindow.GetFileIndex(item.DiffTarget)) == left)));
 			state.NEWindow.SetActiveFiles(state.NEWindow.NEFiles.Where(neFile => active.Contains(neFile)));
 		}
 
-		static void PreExecute_Diff_Diff()
+		static void PreExecute__Diff_Diff()
 		{
 			var diffTargets = state.NEWindow.NEFiles.Count == 2 ? state.NEWindow.NEFiles.ToList() : state.NEWindow.ActiveFiles.ToList();
 
@@ -95,9 +95,9 @@ namespace NeoEdit.Editor
 			diffTargets.Batch(2).ForEach(batch => batch[0].DiffTarget = batch[1]);
 		}
 
-		void Execute_Diff_Break() => DiffTarget = null;
+		void Execute__Diff_Break() => DiffTarget = null;
 
-		void Execute_Diff_SourceControl()
+		void Execute__Diff_SourceControl()
 		{
 			if (string.IsNullOrEmpty(FileName))
 				throw new Exception("Must have filename to do diff");
@@ -113,26 +113,26 @@ namespace NeoEdit.Editor
 			AddNEFile(this);
 		}
 
-		void Execute_Diff_IgnoreWhitespace(bool? multiStatus) => DiffIgnoreWhitespace = DiffTarget.DiffIgnoreWhitespace = multiStatus != true;
+		void Execute__Diff_IgnoreWhitespace(bool? multiStatus) => DiffIgnoreWhitespace = DiffTarget.DiffIgnoreWhitespace = multiStatus != true;
 
-		void Execute_Diff_IgnoreCase(bool? multiStatus) => DiffIgnoreCase = DiffTarget.DiffIgnoreCase = multiStatus != true;
+		void Execute__Diff_IgnoreCase(bool? multiStatus) => DiffIgnoreCase = DiffTarget.DiffIgnoreCase = multiStatus != true;
 
-		void Execute_Diff_IgnoreNumbers(bool? multiStatus) => DiffIgnoreNumbers = DiffTarget.DiffIgnoreNumbers = multiStatus != true;
+		void Execute__Diff_IgnoreNumbers(bool? multiStatus) => DiffIgnoreNumbers = DiffTarget.DiffIgnoreNumbers = multiStatus != true;
 
-		void Execute_Diff_IgnoreLineEndings(bool? multiStatus) => DiffIgnoreLineEndings = DiffTarget.DiffIgnoreLineEndings = multiStatus != true;
+		void Execute__Diff_IgnoreLineEndings(bool? multiStatus) => DiffIgnoreLineEndings = DiffTarget.DiffIgnoreLineEndings = multiStatus != true;
 
-		static void Configure_Diff_IgnoreCharacters() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Diff_IgnoreCharacters(string.Join("", state.NEWindow.Focused.DiffIgnoreCharacters));
+		static void Configure__Diff_IgnoreCharacters() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Diff_IgnoreCharacters(string.Join("", state.NEWindow.Focused.DiffIgnoreCharacters));
 
-		void Execute_Diff_IgnoreCharacters() => DiffIgnoreCharacters = DiffTarget.DiffIgnoreCharacters = new HashSet<char>((state.Configuration as Configuration_Diff_IgnoreCharacters).IgnoreCharacters ?? "");
+		void Execute__Diff_IgnoreCharacters() => DiffIgnoreCharacters = DiffTarget.DiffIgnoreCharacters = new HashSet<char>((state.Configuration as Configuration_Diff_IgnoreCharacters).IgnoreCharacters ?? "");
 
-		void Execute_Diff_Reset()
+		void Execute__Diff_Reset()
 		{
 			DiffIgnoreWhitespace = DiffIgnoreCase = DiffIgnoreNumbers = DiffIgnoreLineEndings = false;
 			DiffTarget.DiffIgnoreWhitespace = DiffTarget.DiffIgnoreCase = DiffTarget.DiffIgnoreNumbers = DiffTarget.DiffIgnoreLineEndings = false;
 			DiffIgnoreCharacters = DiffTarget.DiffIgnoreCharacters = new HashSet<char>();
 		}
 
-		void Execute_Diff_NextPrevious(bool next, bool shiftDown)
+		void Execute__Diff_Next__Diff_Previous(bool next, bool shiftDown)
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
@@ -151,7 +151,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Diff_CopyLeftRight(bool moveLeft)
+		void Execute__Diff_CopyLeft__Diff_CopyRight(bool moveLeft)
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
@@ -173,9 +173,9 @@ namespace NeoEdit.Editor
 				source.ReplaceSelections(strs);
 		}
 
-		static void Configure_Diff_Fix_Whitespace() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Diff_Fix_Whitespace();
+		static void Configure__Diff_Fix_Whitespace() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Diff_Fix_Whitespace();
 
-		void Execute_Diff_Fix_Whitespace()
+		void Execute__Diff_Fix_Whitespace()
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
@@ -186,7 +186,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(fixes.Item2);
 		}
 
-		void Execute_Diff_Fix_Case()
+		void Execute__Diff_Fix_Case()
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
@@ -196,7 +196,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(fixes.Item2);
 		}
 
-		void Execute_Diff_Fix_Numbers()
+		void Execute__Diff_Fix_Numbers()
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
@@ -206,7 +206,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(fixes.Item2);
 		}
 
-		void Execute_Diff_Fix_LineEndings()
+		void Execute__Diff_Fix_LineEndings()
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
@@ -216,7 +216,7 @@ namespace NeoEdit.Editor
 			ReplaceSelections(fixes.Item2);
 		}
 
-		void Execute_Diff_Fix_Encoding()
+		void Execute__Diff_Fix_Encoding()
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");

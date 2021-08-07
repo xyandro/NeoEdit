@@ -102,9 +102,9 @@ namespace NeoEdit.Editor
 			Selections = newSelections;
 		}
 
-		static void Configure_Edit_ModifyRegions() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_ModifyRegions();
+		static void Configure__Edit_ModifyRegions() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_ModifyRegions();
 
-		void Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions result)
+		void Execute__Edit_ModifyRegions(Configuration_Edit_ModifyRegions result)
 		{
 			switch (result.Action)
 			{
@@ -134,7 +134,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Edit_ModifyRegions_Various_Various_Region(Configuration_Edit_ModifyRegions.Actions action, int region) => Execute_Edit_ModifyRegions_Various_Various_Region(new Configuration_Edit_ModifyRegions { Action = action, Regions = new List<int> { region } });
+		void Execute__Edit_ModifyRegions(Configuration_Edit_ModifyRegions.Actions action, int region) => Execute__Edit_ModifyRegions(new Configuration_Edit_ModifyRegions { Action = action, Regions = new List<int> { region } });
 
 		void Execute_Edit_ModifyRegions_Select_Select(List<int> regions) => Selections = regions.SelectMany(useRegion => GetRegions(useRegion)).ToList();
 

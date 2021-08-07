@@ -147,20 +147,20 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Key: Configure_Internal_Key(); break;
-				case NECommand.File_Select_SelectByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
-				case NECommand.File_Open_Open: Configure_FileMacro_Open_Open(); break;
-				case NECommand.File_Open_ReopenWithEncoding: Configure_File_Open_ReopenWithEncoding(); break;
-				case NECommand.File_Save_SaveAsByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
-				case NECommand.File_Move_MoveByExpression: Configure_File_Move_MoveByExpression(); break;
-				case NECommand.File_Copy_CopyByExpression: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
-				case NECommand.File_Encoding: Configure_File_Encoding(); break;
-				case NECommand.File_LineEndings: Configure_File_LineEndings(); break;
-				case NECommand.File_Advanced_Encrypt: Configure_File_Advanced_Encrypt(); break;
-				case NECommand.File_Advanced_SetDisplayName: Configure_File_SaveCopyAdvanced_SaveAsCopyByExpressionSetDisplayName(); break;
-				case NECommand.File_Exit: Configure_File_Exit(); break;
-				case NECommand.Edit_Select_Limit: Configure_Edit_Select_Limit(); break;
-				case NECommand.Macro_Open_Open: Configure_FileMacro_Open_Open(Macro.MacroDirectory); break;
+				case NECommand.Internal_Key: Configure__Internal_Key(); break;
+				case NECommand.File_Select_SelectByExpression: Configure__File_Select_SelectByExpression__File_Save_SaveAsByExpression__File_Copy_CopyByExpression__File_Advanced_SetDisplayName(); break;
+				case NECommand.File_Open_Open: Configure__File_Open_Open__Macro_Open_Open(); break;
+				case NECommand.File_Open_ReopenWithEncoding: Configure__File_Open_ReopenWithEncoding(); break;
+				case NECommand.File_Save_SaveAsByExpression: Configure__File_Select_SelectByExpression__File_Save_SaveAsByExpression__File_Copy_CopyByExpression__File_Advanced_SetDisplayName(); break;
+				case NECommand.File_Move_MoveByExpression: Configure__File_Move_MoveByExpression(); break;
+				case NECommand.File_Copy_CopyByExpression: Configure__File_Select_SelectByExpression__File_Save_SaveAsByExpression__File_Copy_CopyByExpression__File_Advanced_SetDisplayName(); break;
+				case NECommand.File_Encoding: Configure__File_Encoding(); break;
+				case NECommand.File_LineEndings: Configure__File_LineEndings(); break;
+				case NECommand.File_Advanced_Encrypt: Configure__File_Advanced_Encrypt(); break;
+				case NECommand.File_Advanced_SetDisplayName: Configure__File_Select_SelectByExpression__File_Save_SaveAsByExpression__File_Copy_CopyByExpression__File_Advanced_SetDisplayName(); break;
+				case NECommand.File_Exit: Configure__File_Exit(); break;
+				case NECommand.Edit_Select_Limit: Configure__Edit_Select_Limit(); break;
+				case NECommand.Macro_Open_Open: Configure__File_Open_Open__Macro_Open_Open(Macro.MacroDirectory); break;
 				default: NEFile.Configure(); break;
 			}
 		}
@@ -170,7 +170,7 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Key: PreExecute_Internal_Key(); break;
+				case NECommand.Internal_Key: PreExecute__Internal_Key(); break;
 				default: NEFile.PreExecute(); break;
 			}
 		}
@@ -181,33 +181,33 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Command)
 			{
-				case NECommand.Internal_Activate: Execute_Internal_Activate(); break;
-				case NECommand.Internal_CloseFile: Execute_Internal_CloseFile(); break;
-				case NECommand.Internal_Mouse: Execute_Internal_Mouse(); break;
-				case NECommand.Internal_Redraw: Execute_Internal_Redraw(); break;
-				case NECommand.File_Select_All: Execute_File_Select_All(); break;
-				case NECommand.File_Select_None: Execute_File_Select_None(); break;
-				case NECommand.File_Select_WithSelections: Execute_File_Select_WithWithoutSelections(true); break;
-				case NECommand.File_Select_WithoutSelections: Execute_File_Select_WithWithoutSelections(false); break;
-				case NECommand.File_Select_Modified: Execute_File_Select_ModifiedUnmodified(true); break;
-				case NECommand.File_Select_Unmodified: Execute_File_Select_ModifiedUnmodified(false); break;
-				case NECommand.File_Select_ExternalModified: Execute_File_Select_ExternalModifiedUnmodified(true); break;
-				case NECommand.File_Select_ExternalUnmodified: Execute_File_Select_ExternalModifiedUnmodified(false); break;
-				case NECommand.File_Select_Inactive: Execute_File_Select_Inactive(); break;
-				case NECommand.File_Select_SelectByExpression: Execute_File_Select_SelectByExpression(); break;
-				case NECommand.File_Select_Choose: Execute_File_Select_Choose(); break;
-				case NECommand.File_New_New: Execute_File_New_New(); break;
-				case NECommand.File_New_FromSelections_All: Execute_File_New_FromSelections_AllFilesSelections(); break;
-				case NECommand.File_New_FromSelections_Files: Execute_File_New_FromSelections_AllFilesSelections(); break;
-				case NECommand.File_New_FromSelections_Selections: Execute_File_New_FromSelections_AllFilesSelections(); break;
-				case NECommand.File_New_FromClipboard_All: Execute_File_New_FromClipboard_All(); break;
-				case NECommand.File_New_FromClipboard_Files: Execute_File_New_FromClipboard_Files(); break;
-				case NECommand.File_New_FromClipboard_Selections: Execute_File_New_FromClipboard_Selections(); break;
-				case NECommand.File_New_WordList: Execute_File_New_WordList(); break;
-				case NECommand.File_Open_Open: Execute_FileMacro_Open_Open(); break;
-				case NECommand.File_Open_CopiedCut: Execute_File_Open_CopiedCut(); break;
-				case NECommand.File_Exit: Execute_File_Exit(); break;
-				case NECommand.Macro_Open_Open: Execute_FileMacro_Open_Open(); break;
+				case NECommand.Internal_Activate: Execute__Internal_Activate(); break;
+				case NECommand.Internal_CloseFile: Execute__Internal_CloseFile(); break;
+				case NECommand.Internal_Mouse: Execute__Internal_Mouse(); break;
+				case NECommand.Internal_Redraw: Execute__Internal_Redraw(); break;
+				case NECommand.File_Select_All: Execute__File_Select_All(); break;
+				case NECommand.File_Select_None: Execute__File_Select_None(); break;
+				case NECommand.File_Select_WithSelections: Execute__File_Select_WithSelections__File_Select_WithoutSelections(true); break;
+				case NECommand.File_Select_WithoutSelections: Execute__File_Select_WithSelections__File_Select_WithoutSelections(false); break;
+				case NECommand.File_Select_Modified: Execute__File_Select_Modified__File_Select_Unmodified(true); break;
+				case NECommand.File_Select_Unmodified: Execute__File_Select_Modified__File_Select_Unmodified(false); break;
+				case NECommand.File_Select_ExternalModified: Execute__File_Select_ExternalModified__File_Select_ExternalUnmodified(true); break;
+				case NECommand.File_Select_ExternalUnmodified: Execute__File_Select_ExternalModified__File_Select_ExternalUnmodified(false); break;
+				case NECommand.File_Select_Inactive: Execute__File_Select_Inactive(); break;
+				case NECommand.File_Select_SelectByExpression: Execute__File_Select_SelectByExpression(); break;
+				case NECommand.File_Select_Choose: Execute__File_Select_Choose(); break;
+				case NECommand.File_New_New: Execute__File_New_New(); break;
+				case NECommand.File_New_FromSelections_All: Execute__File_New_FromSelections_All__File_New_FromSelections_Files__File_New_FromSelections_Selections(); break;
+				case NECommand.File_New_FromSelections_Files: Execute__File_New_FromSelections_All__File_New_FromSelections_Files__File_New_FromSelections_Selections(); break;
+				case NECommand.File_New_FromSelections_Selections: Execute__File_New_FromSelections_All__File_New_FromSelections_Files__File_New_FromSelections_Selections(); break;
+				case NECommand.File_New_FromClipboard_All: Execute__File_New_FromClipboard_All(); break;
+				case NECommand.File_New_FromClipboard_Files: Execute__File_New_FromClipboard_Files(); break;
+				case NECommand.File_New_FromClipboard_Selections: Execute__File_New_FromClipboard_Selections(); break;
+				case NECommand.File_New_WordList: Execute__File_New_WordList(); break;
+				case NECommand.File_Open_Open: Execute__File_Open_Open__Macro_Open_Open(); break;
+				case NECommand.File_Open_CopiedCut: Execute__File_Open_CopiedCut(); break;
+				case NECommand.File_Exit: Execute__File_Exit(); break;
+				case NECommand.Macro_Open_Open: Execute__File_Open_Open__Macro_Open_Open(); break;
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
 		}
@@ -218,9 +218,9 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Command)
 			{
-				case NECommand.File_New_FromSelections_All: PostExecute_File_New_FromSelections_All(); break;
-				case NECommand.File_New_FromSelections_Files: PostExecute_File_New_FromSelections_Files(); break;
-				case NECommand.File_New_FromSelections_Selections: PostExecute_File_New_FromSelections_Selections(); break;
+				case NECommand.File_New_FromSelections_All: PostExecute__File_New_FromSelections_All(); break;
+				case NECommand.File_New_FromSelections_Files: PostExecute__File_New_FromSelections_Files(); break;
+				case NECommand.File_New_FromSelections_Selections: PostExecute__File_New_FromSelections_Selections(); break;
 			}
 		}
 		#endregion
