@@ -14,12 +14,12 @@ namespace NeoEdit.UI.Controls
 		static readonly Brush FocusedBackgroundBrushAll = new SolidColorBrush(Color.FromRgb(23, 81, 156));
 		static readonly Brush ActiveBackgroundBrushAll = new SolidColorBrush(Color.FromRgb(14, 50, 96));
 		static readonly Brush InactiveBackgroundBrushAll = Brushes.Transparent;
-		static readonly Brush FocusedBorderBrushActiveFirst = new SolidColorBrush(Color.FromRgb(31, 216, 113));
-		static readonly Brush ActiveBorderBrushActiveFirst = new SolidColorBrush(Color.FromRgb(28, 193, 101));
-		static readonly Brush InactiveBorderBrushActiveFirst = Brushes.Transparent;
-		static readonly Brush FocusedBackgroundBrushActiveFirst = new SolidColorBrush(Color.FromRgb(23, 156, 81));
-		static readonly Brush ActiveBackgroundBrushActiveFirst = new SolidColorBrush(Color.FromRgb(14, 96, 50));
-		static readonly Brush InactiveBackgroundBrushActiveFirst = Brushes.Transparent;
+		static readonly Brush FocusedBorderBrushWorkMode = new SolidColorBrush(Color.FromRgb(31, 216, 113));
+		static readonly Brush ActiveBorderBrushWorkMode = new SolidColorBrush(Color.FromRgb(28, 193, 101));
+		static readonly Brush InactiveBorderBrushWorkMode = Brushes.Transparent;
+		static readonly Brush FocusedBackgroundBrushWorkMode = new SolidColorBrush(Color.FromRgb(23, 156, 81));
+		static readonly Brush ActiveBackgroundBrushWorkMode = new SolidColorBrush(Color.FromRgb(14, 96, 50));
+		static readonly Brush InactiveBackgroundBrushWorkMode = Brushes.Transparent;
 
 		static NEFileLabel()
 		{
@@ -29,12 +29,12 @@ namespace NeoEdit.UI.Controls
 			FocusedBackgroundBrushAll.Freeze();
 			ActiveBackgroundBrushAll.Freeze();
 			InactiveBackgroundBrushAll.Freeze();
-			FocusedBorderBrushActiveFirst.Freeze();
-			ActiveBorderBrushActiveFirst.Freeze();
-			InactiveBorderBrushActiveFirst.Freeze();
-			FocusedBackgroundBrushActiveFirst.Freeze();
-			ActiveBackgroundBrushActiveFirst.Freeze();
-			InactiveBackgroundBrushActiveFirst.Freeze();
+			FocusedBorderBrushWorkMode.Freeze();
+			ActiveBorderBrushWorkMode.Freeze();
+			InactiveBorderBrushWorkMode.Freeze();
+			FocusedBackgroundBrushWorkMode.Freeze();
+			ActiveBackgroundBrushWorkMode.Freeze();
+			InactiveBackgroundBrushWorkMode.Freeze();
 		}
 
 		public NEFileLabel(INEFile neFile)
@@ -50,18 +50,18 @@ namespace NeoEdit.UI.Controls
 		{
 			if (renderParameters.FocusedFile == NEFile)
 			{
-				border.BorderBrush = FocusedBorderBrushAll;
-				border.Background = FocusedBackgroundBrushAll;
+				border.BorderBrush = renderParameters.WorkMode ? FocusedBorderBrushWorkMode : FocusedBorderBrushAll;
+				border.Background = renderParameters.WorkMode ? FocusedBackgroundBrushWorkMode : FocusedBackgroundBrushAll;
 			}
 			else if (renderParameters.ActiveFiles.Contains(NEFile))
 			{
-				border.BorderBrush = ActiveBorderBrushAll;
-				border.Background = ActiveBackgroundBrushAll;
+				border.BorderBrush = renderParameters.WorkMode ? ActiveBorderBrushWorkMode : ActiveBorderBrushAll;
+				border.Background = renderParameters.WorkMode ? ActiveBackgroundBrushWorkMode : ActiveBackgroundBrushAll;
 			}
 			else
 			{
-				border.BorderBrush = InactiveBorderBrushAll;
-				border.Background = InactiveBackgroundBrushAll;
+				border.BorderBrush = renderParameters.WorkMode ? InactiveBorderBrushWorkMode : InactiveBorderBrushAll;
+				border.Background = renderParameters.WorkMode ? InactiveBackgroundBrushWorkMode : InactiveBackgroundBrushAll;
 			}
 
 			text.Text = NEFile.NEFileLabel;

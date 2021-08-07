@@ -80,11 +80,11 @@ namespace NeoEdit.UI
 				if (renderParameters.WindowLayout.Rows.HasValue)
 					rows = Math.Max(1, renderParameters.WindowLayout.Rows.Value);
 				if ((!columns.HasValue) && (!rows.HasValue))
-					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(renderParameters.NEFiles.Count)), renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((int)Math.Ceiling(Math.Sqrt(renderParameters.FileCount)), renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
 				if (!rows.HasValue)
-					rows = Math.Max(1, Math.Min((renderParameters.NEFiles.Count + columns.Value - 1) / columns.Value, renderParameters.WindowLayout.MaxRows ?? int.MaxValue));
+					rows = Math.Max(1, Math.Min((renderParameters.FileCount + columns.Value - 1) / columns.Value, renderParameters.WindowLayout.MaxRows ?? int.MaxValue));
 				if (!columns.HasValue)
-					columns = Math.Max(1, Math.Min((renderParameters.NEFiles.Count + rows.Value - 1) / rows.Value, renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
+					columns = Math.Max(1, Math.Min((renderParameters.FileCount + rows.Value - 1) / rows.Value, renderParameters.WindowLayout.MaxColumns ?? int.MaxValue));
 
 				gridColumns = columns.Value;
 				gridRows = rows.Value;

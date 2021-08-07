@@ -82,6 +82,7 @@ namespace NeoEdit.Editor
 			var renderParameters = new RenderParameters
 			{
 				NEFiles = NEFiles,
+				FileCount = NEFiles.Count,
 				ActiveFiles = ActiveFiles,
 				FocusedFile = Focused,
 				WindowLayout = WindowLayout,
@@ -90,8 +91,15 @@ namespace NeoEdit.Editor
 				MenuStatus = GetMenuStatus(),
 			};
 
-			if (WorkMode)
-				renderParameters.NEFiles = ActiveFiles.Where(neFile => neFile.Selections.Any()).ToList();
+			if (renderParameters.WorkMode)
+			{
+				var workFiles = ActiveFiles.Where(neFile => neFile.Selections.Any()).ToList();
+				if (workFiles.Any())
+				{
+					renderParameters.NEFiles = workFiles.Concat(renderParameters.NEFiles.Except(workFiles)).ToList();
+					renderParameters.FileCount = workFiles.Count;
+				}
+			}
 
 			neWindowUI?.Render(renderParameters);
 		}
