@@ -542,7 +542,7 @@
 		Table_Database_GenerateInserts,
 		Table_Database_GenerateUpdates,
 		Table_Database_GenerateDeletes,
-		Image_Resize,
+		Image_Size,
 		Image_Crop,
 		Image_GrabColor,
 		Image_GrabImage,

@@ -498,7 +498,7 @@ namespace NeoEdit.Editor
 				case NECommand.Table_Database_GenerateInserts: Configure__Table_Database_GenerateInserts(); break;
 				case NECommand.Table_Database_GenerateUpdates: Configure__Table_Database_GenerateUpdates(); break;
 				case NECommand.Table_Database_GenerateDeletes: Configure__Table_Database_GenerateDeletes(); break;
-				case NECommand.Image_Resize: Configure__Image_Resize(); break;
+				case NECommand.Image_Size: Configure__Image_Size(); break;
 				case NECommand.Image_Crop: Configure__Image_Crop(); break;
 				case NECommand.Image_GrabColor: Configure__Image_GrabColor(); break;
 				case NECommand.Image_GrabImage: Configure__Image_GrabImage(); break;
@@ -1096,7 +1096,7 @@ namespace NeoEdit.Editor
 				case NECommand.Table_Database_GenerateInserts: Execute__Table_Database_GenerateInserts(); break;
 				case NECommand.Table_Database_GenerateUpdates: Execute__Table_Database_GenerateUpdates(); break;
 				case NECommand.Table_Database_GenerateDeletes: Execute__Table_Database_GenerateDeletes(); break;
-				case NECommand.Image_Resize: Execute__Image_Resize(); break;
+				case NECommand.Image_Size: Execute__Image_Size(); break;
 				case NECommand.Image_Crop: Execute__Image_Crop(); break;
 				case NECommand.Image_GrabColor: Execute__Image_GrabColor(); break;
 				case NECommand.Image_GrabImage: Execute__Image_GrabImage(); break;

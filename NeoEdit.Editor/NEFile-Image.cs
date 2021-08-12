@@ -117,11 +117,11 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		static void Configure__Image_Resize() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_Resize(state.NEWindow.Focused.GetVariables());
+		static void Configure__Image_Size() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Image_Size(state.NEWindow.Focused.GetVariables());
 
-		void Execute__Image_Resize()
+		void Execute__Image_Size()
 		{
-			var result = state.Configuration as Configuration_Image_Resize;
+			var result = state.Configuration as Configuration_Image_Size;
 			var variables = GetVariables();
 			var width = state.GetExpression(result.WidthExpression).EvaluateOne<int>(variables);
 			var height = state.GetExpression(result.HeightExpression).EvaluateOne<int>(variables);

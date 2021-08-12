@@ -85,7 +85,7 @@ namespace NeoEdit.Common
 		Configuration_Table_Database_GenerateInserts RunDialog_Configure_Table_Database_GenerateInserts(Table table, string tableName);
 		Configuration_Table_Database_GenerateUpdates RunDialog_Configure_Table_Database_GenerateUpdates(Table table, string tableName);
 		Configuration_Table_Database_GenerateDeletes RunDialog_Configure_Table_Database_GenerateDeletes(Table table, string tableName);
-		Configuration_Image_Resize RunDialog_Configure_Image_Resize(NEVariables variables);
+		Configuration_Image_Size RunDialog_Configure_Image_Size(NEVariables variables);
 		Configuration_Image_Crop RunDialog_Configure_Image_Crop(NEVariables variables);
 		Configuration_Image_GrabColor RunDialog_Configure_Image_GrabColor(string color);
 		Configuration_Image_GrabImage RunDialog_Configure_Image_GrabImage(NEVariables variables);

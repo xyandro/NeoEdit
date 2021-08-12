@@ -857,7 +857,7 @@
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="Ima_ge">
-		<controls:NEMenuItem Header="_Resize" CommandEnum="Image_Resize" ToolTip="Resize image"/>
+		<controls:NEMenuItem Header="_Size" CommandEnum="Image_Size" ToolTip="Change image size"/>
 		<controls:NEMenuItem Header="_Crop" CommandEnum="Image_Crop" ToolTip="Crop image"/>
 		<Separator/>
 		<controls:NEMenuItem Header="Grab co_lor" CommandEnum="Image_GrabColor" ToolTip="Pick a color off the screen"/>

@@ -115,7 +115,7 @@ namespace NeoEdit.UI
 		public Configuration_Table_Database_GenerateInserts RunDialog_Configure_Table_Database_GenerateInserts(Table table, string tableName) => RunOnUIThread(() => Table_Database_GenerateInserts_Dialog.Run(this, table, tableName));
 		public Configuration_Table_Database_GenerateUpdates RunDialog_Configure_Table_Database_GenerateUpdates(Table table, string tableName) => RunOnUIThread(() => Table_Database_GenerateUpdates_Dialog.Run(this, table, tableName));
 		public Configuration_Table_Database_GenerateDeletes RunDialog_Configure_Table_Database_GenerateDeletes(Table table, string tableName) => RunOnUIThread(() => Table_Database_GenerateDeletes_Dialog.Run(this, table, tableName));
-		public Configuration_Image_Resize RunDialog_Configure_Image_Resize(NEVariables variables) => RunOnUIThread(() => Image_Resize_Dialog.Run(this, variables));
+		public Configuration_Image_Size RunDialog_Configure_Image_Size(NEVariables variables) => RunOnUIThread(() => Image_Size_Dialog.Run(this, variables));
 		public Configuration_Image_Crop RunDialog_Configure_Image_Crop(NEVariables variables) => RunOnUIThread(() => Image_Crop_Dialog.Run(this, variables));
 		public Configuration_Image_GrabColor RunDialog_Configure_Image_GrabColor(string color) => RunOnUIThread(() => Image_GrabColor_Dialog.Run(this, color));
 		public Configuration_Image_GrabImage RunDialog_Configure_Image_GrabImage(NEVariables variables) => RunOnUIThread(() => Image_GrabImage_Dialog.Run(this, variables));

@@ -10,25 +10,25 @@ using NeoEdit.UI.Controls;
 
 namespace NeoEdit.UI.Dialogs
 {
-	partial class Image_Resize_Dialog
+	partial class Image_Size_Dialog
 	{
 		[DepProp]
-		public string WidthExpression { get { return UIHelper<Image_Resize_Dialog>.GetPropValue<string>(this); } set { UIHelper<Image_Resize_Dialog>.SetPropValue(this, value); } }
+		public string WidthExpression { get { return UIHelper<Image_Size_Dialog>.GetPropValue<string>(this); } set { UIHelper<Image_Size_Dialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public string HeightExpression { get { return UIHelper<Image_Resize_Dialog>.GetPropValue<string>(this); } set { UIHelper<Image_Resize_Dialog>.SetPropValue(this, value); } }
+		public string HeightExpression { get { return UIHelper<Image_Size_Dialog>.GetPropValue<string>(this); } set { UIHelper<Image_Size_Dialog>.SetPropValue(this, value); } }
 		[DepProp]
-		public InterpolationMode InterpolationMode { get { return UIHelper<Image_Resize_Dialog>.GetPropValue<InterpolationMode>(this); } set { UIHelper<Image_Resize_Dialog>.SetPropValue(this, value); } }
+		public InterpolationMode InterpolationMode { get { return UIHelper<Image_Size_Dialog>.GetPropValue<InterpolationMode>(this); } set { UIHelper<Image_Size_Dialog>.SetPropValue(this, value); } }
 		public NEVariables Variables { get; }
 		public List<InterpolationMode> InterpolationModes { get; }
 
-		static Image_Resize_Dialog()
+		static Image_Size_Dialog()
 		{
-			UIHelper<Image_Resize_Dialog>.Register();
-			UIHelper<Image_Resize_Dialog>.AddCallback(a => a.WidthExpression, (obj, o, n) => obj.SetWidth(o));
-			UIHelper<Image_Resize_Dialog>.AddCallback(a => a.HeightExpression, (obj, o, n) => obj.SetHeight(o));
+			UIHelper<Image_Size_Dialog>.Register();
+			UIHelper<Image_Size_Dialog>.AddCallback(a => a.WidthExpression, (obj, o, n) => obj.SetWidth(o));
+			UIHelper<Image_Size_Dialog>.AddCallback(a => a.HeightExpression, (obj, o, n) => obj.SetHeight(o));
 		}
 
-		Image_Resize_Dialog(NEVariables variables)
+		Image_Size_Dialog(NEVariables variables)
 		{
 			Variables = variables;
 			InterpolationModes = Enum.GetValues(typeof(InterpolationMode)).OfType<InterpolationMode>().Except(InterpolationMode.Invalid).ToList();
@@ -69,18 +69,18 @@ namespace NeoEdit.UI.Dialogs
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);
 
-		Configuration_Image_Resize result;
+		Configuration_Image_Size result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			result = new Configuration_Image_Resize { WidthExpression = WidthExpression, HeightExpression = HeightExpression, InterpolationMode = InterpolationMode };
+			result = new Configuration_Image_Size { WidthExpression = WidthExpression, HeightExpression = HeightExpression, InterpolationMode = InterpolationMode };
 			widthExpression.AddCurrentSuggestion();
 			heightExpression.AddCurrentSuggestion();
 			DialogResult = true;
 		}
 
-		public static Configuration_Image_Resize Run(Window parent, NEVariables variables)
+		public static Configuration_Image_Size Run(Window parent, NEVariables variables)
 		{
-			var dialog = new Image_Resize_Dialog(variables) { Owner = parent };
+			var dialog = new Image_Size_Dialog(variables) { Owner = parent };
 			if (!dialog.ShowDialog())
 				throw new OperationCanceledException();
 			return dialog.result;
