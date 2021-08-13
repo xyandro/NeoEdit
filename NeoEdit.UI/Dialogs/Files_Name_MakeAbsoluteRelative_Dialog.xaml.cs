@@ -29,7 +29,7 @@ namespace NeoEdit.UI.Dialogs
 			InitializeComponent();
 			Title = $"Make {(absolute ? "Absolute" : "Relative")}";
 			CheckType = checkType;
-			Expression = "f";
+			Expression = "@f";
 		}
 
 		void SetIsFile()
