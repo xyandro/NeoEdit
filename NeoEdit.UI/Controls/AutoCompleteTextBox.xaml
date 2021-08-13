@@ -1,15 +1,15 @@
-﻿<TextBox Name="self" x:Class="NeoEdit.UI.Controls.AutoCompleteTextBox"
+﻿<RichTextBox Name="self" x:Class="NeoEdit.UI.Controls.AutoCompleteTextBox"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:controls="clr-namespace:NeoEdit.UI.Controls"
 	xmlns:converters="clr-namespace:NeoEdit.UI.Converters">
 
-	<TextBox.Resources>
-		<Style TargetType="controls:AutoCompleteTextBox" BasedOn="{StaticResource {x:Type TextBox}}"/>
-	</TextBox.Resources>
+	<RichTextBox.Resources>
+		<Style TargetType="controls:AutoCompleteTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}"/>
+	</RichTextBox.Resources>
 
-	<TextBox.Template>
-		<ControlTemplate TargetType="TextBox">
+	<RichTextBox.Template>
+		<ControlTemplate TargetType="RichTextBox">
 			<Grid SnapsToDevicePixels="True">
 				<Border CornerRadius="4" Padding="2" BorderThickness="2" Background="#404040" BorderBrush="#808080" Visibility="{TemplateBinding IsReadOnly, Converter={converters:BoolToVisibleCollapsedConverter}, ConverterParameter=false}"/>
 				<ScrollViewer Margin="2" Name="PART_ContentHost" VerticalAlignment="Center"/>
@@ -31,6 +31,6 @@
 				</Popup>
 			</Grid>
 		</ControlTemplate>
-	</TextBox.Template>
+	</RichTextBox.Template>
 
-</TextBox>
+</RichTextBox>

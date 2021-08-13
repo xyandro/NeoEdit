@@ -4,10 +4,13 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Media;
 using NeoEdit.Common;
 
 namespace NeoEdit.UI.Controls
@@ -25,6 +28,8 @@ namespace NeoEdit.UI.Controls
 			public override string ToString() => Text;
 		}
 
+		[DepProp(BindsTwoWayByDefault = true)]
+		public string Text { get => UIHelper<AutoCompleteTextBox>.GetPropValue<string>(this); set => UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); }
 		[DepProp]
 		public string CompletionTag { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<string>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
@@ -33,6 +38,8 @@ namespace NeoEdit.UI.Controls
 		public bool SuppressNavigation { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
 		public bool UpcaseTracking { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
+		[DepProp]
+		public bool HighlightExpressions { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
 		ObservableCollection<Suggestion> Suggestions { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<ObservableCollection<Suggestion>>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
@@ -44,7 +51,11 @@ namespace NeoEdit.UI.Controls
 		{
 			UIHelper<AutoCompleteTextBox>.Register();
 			UIHelper<AutoCompleteTextBox>.AddCallback(a => a.SuggestedValue, (obj, o, n) => obj.listbox.ScrollIntoView(n));
+			UIHelper<AutoCompleteTextBox>.AddCallback(x => x.Text, (obj, o, n) => obj.TextPropertyChangedAction?.Invoke(n));
+			UIHelper<AutoCompleteTextBox>.AddCallback(x => x.HighlightExpressions, (obj, o, n) => obj.SetHighlighting());
 		}
+
+		Action<string> TextPropertyChangedAction;
 
 		public AutoCompleteTextBox()
 		{
@@ -55,6 +66,82 @@ namespace NeoEdit.UI.Controls
 			SelectionChanged += (s, e) => SetSuggestions();
 			LostKeyboardFocus += (s, e) => IsDropDownOpen = false;
 			PreviewKeyDown += HandleKey;
+			TextChanged += OnTextChanged;
+			TextPropertyChangedAction += SetText;
+			AcceptsReturn = false;
+		}
+
+		void SetText(string text)
+		{
+			TextChanged -= OnTextChanged;
+			Document.Blocks.Clear();
+			Document.Blocks.Add(new Paragraph(new Run(text)));
+			SelectAll();
+			TextChanged += OnTextChanged;
+			SetHighlighting();
+		}
+
+		protected override void OnSelectionChanged(RoutedEventArgs e)
+		{
+			base.OnSelectionChanged(e);
+			var block = Document.Blocks.FirstBlock;
+			if (block == null)
+				return;
+
+			var start = Selection.Start.CompareTo(block.ContentEnd) <= 0 ? Selection.Start : block.ContentEnd;
+			var end = Selection.End.CompareTo(block.ContentEnd) <= 0 ? Selection.End : block.ContentEnd;
+
+			if ((start != Selection.Start) || (end != Selection.End))
+				Selection.Select(start, end);
+		}
+
+		void OnTextChanged(object sender, TextChangedEventArgs e)
+		{
+			TextPropertyChangedAction -= SetText;
+			var block = Document.Blocks.FirstBlock;
+			Text = block == null ? "" : new TextRange(block.ContentStart, block.ContentEnd).Text;
+			TextPropertyChangedAction += SetText;
+
+			SetHighlighting();
+		}
+
+		void SetHighlighting()
+		{
+			TextChanged -= OnTextChanged;
+			var oldSelection = new TextRange(Selection.Start, Selection.End);
+
+			SelectAll();
+			Selection.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
+
+			if (HighlightExpressions)
+			{
+				var ranges = new List<(TextRange, int)>();
+				var regex = new Regex(@"\br([1-9])\b");
+				foreach (var paragraph in Document.Blocks.OfType<Paragraph>())
+				{
+					foreach (var inline in paragraph.Inlines)
+					{
+						var text = new TextRange(inline.ContentStart, inline.ContentEnd).Text;
+						foreach (Match match in regex.Matches(text))
+						{
+							var region = int.Parse(match.Groups[1].Value);
+							var start = inline.ContentStart.GetPositionAtOffset(match.Groups[0].Index);
+							var end = inline.ContentStart.GetPositionAtOffset(match.Groups[0].Index + match.Groups[0].Length);
+							var range = new TextRange(start, end);
+							ranges.Add((range, region));
+						}
+					}
+				}
+
+				foreach ((var range, var region) in ranges)
+				{
+					Selection.Select(range.Start, range.End);
+					Selection.ApplyPropertyValue(TextElement.ForegroundProperty, NEFileUI.regionPen[region].Brush);
+				}
+			}
+
+			Selection.Select(oldSelection.Start, oldSelection.End);
+			TextChanged += OnTextChanged;
 		}
 
 		ListBox listbox => Template.FindName("PART_ListBox", this) as ListBox;
@@ -174,7 +261,7 @@ namespace NeoEdit.UI.Controls
 
 			Suggestions.Clear();
 
-			var find = SelectedText == Text ? "" : SelectedText.CoalesceNullOrEmpty(Text) ?? "";
+			var find = Selection.Text == Text ? "" : Selection.Text.CoalesceNullOrEmpty(Text) ?? "";
 			var ucFind = Regex.Replace(find, "[^A-Z]", "");
 			foreach (var suggestion in SuggestionList.Where(x => HasStr(x.Text, find)))
 				Suggestions.Add(suggestion);
