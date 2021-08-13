@@ -122,9 +122,34 @@ namespace NeoEdit.UI.Controls
 
 		public new bool ShowDialog()
 		{
+			WindowStartupLocation = WindowStartupLocation.CenterOwner;
 			var result = base.ShowDialog() == true;
 			Owner?.Focus();
 			return result;
+		}
+
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		{
+			if (Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Alt))
+			{
+				e.Handled = true;
+				switch (e.Key)
+				{
+					case Key.Up: SetWindowPosition(0, -1); break;
+					case Key.Down: SetWindowPosition(0, 1); break;
+					case Key.Left: SetWindowPosition(-1, 0); break;
+					case Key.Right: SetWindowPosition(1, 0); break;
+					default: e.Handled = false; break;
+				}
+			}
+
+			base.OnPreviewKeyDown(e);
+		}
+
+		void SetWindowPosition(int xOfs, int yOfs)
+		{
+			Left += xOfs * (((Owner?.Width ?? Width) - Width) / 4);
+			Top += yOfs * (((Owner?.Height ?? Height) - Height) / 4);
 		}
 
 		ControlTemplate GetTemplate()
