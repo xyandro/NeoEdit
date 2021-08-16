@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using NeoEdit.Common;
 using NeoEdit.Common.Transform;
 
@@ -41,7 +42,9 @@ namespace NeoEdit.Editor
 			var toDecrypt = bytes.Skip(EncryptedHeader.Length).ToArray();
 			while (true)
 			{
-				var key = INEWindowUI.GetDecryptKeyStatic(Cryptor.Type.AES);
+				string key;
+				try { key = INEWindowUI.GetDecryptKeyStatic(Cryptor.Type.AES); }
+				catch (TaskCanceledException) { return; }
 				var output = Decrypt(toDecrypt, key);
 				if (output == null)
 					continue;
