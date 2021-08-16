@@ -65,25 +65,7 @@ namespace NeoEdit.Editor
 			OpenFile(FileName, codePage: result.CodePage);
 		}
 
-		public void Execute__File_Refresh()
-		{
-			if ((string.IsNullOrEmpty(FileName)) || (LastWriteTime == LastExternalWriteTime))
-				return;
-
-			if (File.Exists(FileName))
-			{
-				if (QueryUser($"{nameof(Execute__File_Refresh)}-Updated", "This file has been updated on disk. Reload?", MessageOptions.Yes))
-					Execute__File_Revert();
-			}
-			else
-			{
-				QueryUser($"{nameof(Execute__File_Refresh)}-Deleted", "This file has been deleted.", MessageOptions.Ok, MessageOptions.OkAllCancel);
-			}
-		}
-
-		void Execute__File_AutoRefresh() => AutoRefresh = state.MultiStatus != true;
-
-		void Execute__File_Revert()
+		void Execute__File_Open_Revert()
 		{
 			if (!CheckModified(MessageOptions.No))
 				return;
@@ -98,6 +80,24 @@ namespace NeoEdit.Editor
 			for (var region = 1; region <= 9; ++region)
 				SetRegions(region, reformatRanges(GetRegions(region)));
 		}
+
+		public void Execute__File_Open_Refresh()
+		{
+			if ((string.IsNullOrEmpty(FileName)) || (LastWriteTime == LastExternalWriteTime))
+				return;
+
+			if (File.Exists(FileName))
+			{
+				if (QueryUser($"{nameof(Execute__File_Open_Refresh)}-Updated", "This file has been updated on disk. Reload?", MessageOptions.Yes))
+					Execute__File_Open_Revert();
+			}
+			else
+			{
+				QueryUser($"{nameof(Execute__File_Open_Refresh)}-Deleted", "This file has been deleted.", MessageOptions.Ok, MessageOptions.OkAllCancel);
+			}
+		}
+
+		void Execute__File_Open_AutoRefresh() => AutoRefresh = state.MultiStatus != true;
 
 		void Execute__File_Save_SaveModified()
 		{

@@ -14,7 +14,7 @@ namespace NeoEdit.Editor
 			LastActive = DateTime.Now;
 			var modified = NEFiles.Where(neFile => neFile.LastExternalWriteTime != neFile.LastActivatedTime).ToList();
 			modified.ForEach(neFile => neFile.LastActivatedTime = neFile.LastExternalWriteTime);
-			modified.ForEach(neFile => neFile.Execute__File_Refresh());
+			modified.ForEach(neFile => neFile.Execute__File_Open_Refresh());
 		}
 
 		void Execute__Internal_CloseFile()

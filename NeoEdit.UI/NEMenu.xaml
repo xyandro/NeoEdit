@@ -52,10 +52,12 @@
 			<controls:NEMenuItem Header="_Open" CommandEnum="File_Open_Open" ToolTip="Open files chosen from disk"/>
 			<controls:NEMenuItem Header="_Copied/cut" CommandEnum="File_Open_CopiedCut" ToolTip="Open files copied/cut on the clipboard"/>
 			<controls:NEMenuItem Header="_Reopen with encoding" CommandEnum="File_Open_ReopenWithEncoding" ToolTip="Reopen file with different encoding"/>
+			<Separator/>
+			<controls:NEMenuItem Header="Re_vert" CommandEnum="File_Open_Revert" ToolTip="Revert files to current version on disk"/>
+			<Separator/>
+			<controls:NEMenuItem Header="Re_fresh" CommandEnum="File_Open_Refresh" ToolTip="Refresh files"/>
+			<controls:NEMenuItem Header="_Auto refresh" CommandEnum="File_Open_AutoRefresh" x:Name="menu_File_Open_AutoRefresh" ToolTip="Set whether files refresh when changed on disk"/>
 		</MenuItem>
-		<controls:NEMenuItem Header="Re_fresh" CommandEnum="File_Refresh" ToolTip="Refresh files"/>
-		<controls:NEMenuItem Header="A_uto refresh" CommandEnum="File_AutoRefresh" x:Name="menu_File_AutoRefresh" ToolTip="Set whether files refresh when changed on disk"/>
-		<controls:NEMenuItem Header="_Revert" CommandEnum="File_Revert" ToolTip="Revert files to current version on disk"/>
 		<Separator/>
 		<MenuItem Header="S_ave">
 			<controls:NEMenuItem Header="Save _modified" CommandEnum="File_Save_SaveModified" ToolTip="Save modified files"/>

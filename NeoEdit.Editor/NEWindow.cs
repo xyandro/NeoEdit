@@ -116,7 +116,7 @@ namespace NeoEdit.Editor
 
 			return new Dictionary<string, bool?>
 			{
-				[nameof(NECommand.File_AutoRefresh)] = GetMultiStatus(neFile => neFile.AutoRefresh),
+				[nameof(NECommand.File_Open_AutoRefresh)] = GetMultiStatus(neFile => neFile.AutoRefresh),
 				[nameof(NECommand.File_Advanced_Compress)] = GetMultiStatus(neFile => neFile.Compressed),
 				[nameof(NECommand.File_Advanced_Encrypt)] = GetMultiStatus(neFile => !string.IsNullOrWhiteSpace(neFile.AESKey)),
 				[nameof(NECommand.File_Advanced_DontExitOnClose)] = Settings.DontExitOnClose,

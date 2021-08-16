@@ -240,7 +240,7 @@ namespace NeoEdit.UI
 
 		void SetMenuCheckboxes()
 		{
-			menu.menu_File_AutoRefresh.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_AutoRefresh)];
+			menu.menu_File_Open_AutoRefresh.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Open_AutoRefresh)];
 			menu.menu_File_Advanced_Compress.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Advanced_Compress)];
 			menu.menu_File_Advanced_Encrypt.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Advanced_Encrypt)];
 			menu.menu_File_Advanced_DontExitOnClose.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.File_Advanced_DontExitOnClose)];

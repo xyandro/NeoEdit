@@ -598,9 +598,9 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_Text: Execute__Internal_Text(); break;
 				case NECommand.Internal_SetBinaryValue: Execute__Internal_SetBinaryValue(); break;
 				case NECommand.File_Open_ReopenWithEncoding: Execute__File_Open_ReopenWithEncoding(); break;
-				case NECommand.File_Refresh: Execute__File_Refresh(); break;
-				case NECommand.File_AutoRefresh: Execute__File_AutoRefresh(); break;
-				case NECommand.File_Revert: Execute__File_Revert(); break;
+				case NECommand.File_Open_Revert: Execute__File_Open_Revert(); break;
+				case NECommand.File_Open_Refresh: Execute__File_Open_Refresh(); break;
+				case NECommand.File_Open_AutoRefresh: Execute__File_Open_AutoRefresh(); break;
 				case NECommand.File_Save_SaveModified: Execute__File_Save_SaveModified(); break;
 				case NECommand.File_Save_SaveAll: Execute__File_Save_SaveAll(); break;
 				case NECommand.File_Save_SaveAs: Execute__File_Save_SaveAs__File_Copy_Copy(); break;
