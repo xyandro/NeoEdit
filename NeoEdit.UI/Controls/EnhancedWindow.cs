@@ -130,7 +130,7 @@ namespace NeoEdit.UI.Controls
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
-			if (Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Alt))
+			if ((Owner != null) && (Keyboard.Modifiers == (ModifierKeys.Control | ModifierKeys.Alt)))
 			{
 				e.Handled = true;
 				switch (e.Key)
@@ -148,8 +148,8 @@ namespace NeoEdit.UI.Controls
 
 		void SetWindowPosition(int xOfs, int yOfs)
 		{
-			Left += xOfs * (((Owner?.Width ?? Width) - Width) / 4);
-			Top += yOfs * (((Owner?.Height ?? Height) - Height) / 4);
+			Left += xOfs * ((Owner.Width - Width) / 4);
+			Top += yOfs * ((Owner.Height - Height) / 4);
 		}
 
 		ControlTemplate GetTemplate()
