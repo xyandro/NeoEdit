@@ -35,7 +35,7 @@ namespace Build
 
 		async Task<List<Dictionary<string, object>>> ParseResponseList(HttpResponseMessage response) => await ParseResponse<List<Dictionary<string, object>>>(response);
 
-		public async Task<List<int>> GetReleaseIDs()
+		public async Task<int?> GetReleaseID(string version)
 		{
 			using (var request = new HttpRequestMessage(HttpMethod.Get, $"{baseUrl}/releases"))
 			{
@@ -43,7 +43,7 @@ namespace Build
 				if (response.StatusCode != HttpStatusCode.OK)
 					throw new Exception("Failed to find releases.");
 				var result = await ParseResponseList(response);
-				return result.Select(entry => Convert.ToInt32(entry["id"])).ToList();
+				return result.Where(entry => entry["tag_name"]?.ToString() == version).Select(entry => Convert.ToInt32(entry["id"])).Cast<int?>().FirstOrDefault();
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace Build
 			}
 		}
 
-		public async Task<List<string>> GetTagIDs()
+		public async Task<string> GetTagID(string version)
 		{
 			using (var request = new HttpRequestMessage(HttpMethod.Get, $"{baseUrl}/tags"))
 			{
@@ -65,7 +65,7 @@ namespace Build
 				if (response.StatusCode != HttpStatusCode.OK)
 					throw new Exception("Failed to find tags.");
 				var result = await ParseResponseList(response);
-				return result.Select(entry => (string)entry["name"]).ToList();
+				return result.Where(entry => entry["name"]?.ToString() == version).Select(entry => (string)entry["name"]).FirstOrDefault();
 			}
 		}
 

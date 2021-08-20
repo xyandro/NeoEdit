@@ -27,7 +27,6 @@ namespace Build
 				new UpdateAction(),
 				new RestorePackagesAction(),
 				new BuildAction(),
-				new DeleteReleasesAction(),
 				new ReleaseAction(),
 				new DeleteIgnoredAction(),
 			};

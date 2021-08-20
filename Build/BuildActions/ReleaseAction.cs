@@ -18,18 +18,31 @@ namespace Build.BuildActions
 			if (!File.Exists(msiName))
 				throw new Exception($"Build not found: {msiName}.");
 
-			using (var client = new GitHub())
+			using var git = new GitHub();
+
+			writeText($"Version is {version}");
+
+			var releaseId = git.GetReleaseID(version).Result;
+			if (releaseId != null)
 			{
-				writeText($"Version is {version}");
-
-				writeText($"Creating release {version}.");
-				var uploadUrl = client.CreateRelease(version).Result;
-
-				writeText($"Uploading {msiName}...");
-				writeText($"0%");
-				client.UploadFile(uploadUrl, msiName, percent => writeText($"\udead{percent}%")).Wait();
-				writeText("\udead100%");
+				writeText($"Delete duplicate release {releaseId}...");
+				git.DeleteRelease(releaseId.Value).Wait();
 			}
+
+			var tagId = git.GetTagID(version).Result;
+			if (tagId != null)
+			{
+				writeText($"Delete duplicate tag {tagId}...");
+				git.DeleteTag(tagId).Wait();
+			}
+
+			writeText($"Creating release {version}.");
+			var uploadUrl = git.CreateRelease(version).Result;
+
+			writeText($"Uploading {msiName}...");
+			writeText($"0%");
+			git.UploadFile(uploadUrl, msiName, percent => writeText($"\udead{percent}%")).Wait();
+			writeText("\udead100%");
 		}
 	}
 }
