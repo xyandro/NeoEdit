@@ -248,9 +248,9 @@ namespace NeoEdit.UI.Dialogs
 			catch { }
 		}
 
-		protected override void OnKeyDown(KeyEventArgs e)
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
-			if ((Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) && (Keyboard.Modifiers.HasFlag(ModifierKeys.Control)))
+			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control | ModifierKeys.Shift))
 			{
 				e.Handled = true;
 				switch (e.Key)
@@ -274,7 +274,7 @@ namespace NeoEdit.UI.Dialogs
 				}
 			}
 
-			base.OnKeyDown(e);
+			base.OnPreviewKeyDown(e);
 		}
 
 		void OnSetClick(object sender, RoutedEventArgs e = null)
