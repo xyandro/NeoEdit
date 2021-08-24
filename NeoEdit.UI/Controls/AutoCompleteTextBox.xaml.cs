@@ -97,7 +97,7 @@ namespace NeoEdit.UI.Controls
 
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
-			if (e.Key == Key.Tab)
+			if ((AcceptsTab) && (e.Key == Key.Tab))
 			{
 				Selection.Text = "\t";
 				Selection.Select(Selection.End, Selection.End);
