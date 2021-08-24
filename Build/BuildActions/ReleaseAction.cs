@@ -16,7 +16,10 @@ namespace Build.BuildActions
 
 			var msiName = $@"{App.Location}\NeoEdit.Setup\Release\NeoEdit.msi";
 			if (!File.Exists(msiName))
-				throw new Exception($"Build not found: {msiName}.");
+				throw new Exception($"MSI not found: {msiName}.");
+			var zipName = $@"{App.Location}\NeoEdit.Setup\Release\NeoEdit.zip";
+			if (!File.Exists(zipName))
+				throw new Exception($"Zip not found: {zipName}.");
 
 			using var git = new GitHub();
 
@@ -42,6 +45,11 @@ namespace Build.BuildActions
 			writeText($"Uploading {msiName}...");
 			writeText($"0%");
 			git.UploadFile(uploadUrl, msiName, percent => writeText($"\udead{percent}%")).Wait();
+			writeText("\udead100%");
+
+			writeText($"Uploading {zipName}...");
+			writeText($"0%");
+			git.UploadFile(uploadUrl, zipName, percent => writeText($"\udead{percent}%")).Wait();
 			writeText("\udead100%");
 		}
 	}
