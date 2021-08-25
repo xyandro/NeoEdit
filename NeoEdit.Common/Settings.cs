@@ -10,22 +10,22 @@ namespace NeoEdit.Common
 
 		static Settings()
 		{
-			if (File.Exists(settingsFile))
+			try
 			{
-				try
-				{
-					var xml = XElement.Load(settingsFile);
-					try { dontExitOnClose = bool.Parse(xml.Element(nameof(DontExitOnClose)).Value); } catch { }
-					try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
-					try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
-					try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
-					try { fontSize = double.Parse(xml.Element(nameof(FontSize)).Value); } catch { }
-					try { showSpecialChars = bool.Parse(xml.Element(nameof(ShowSpecialChars)).Value); } catch { }
-					try { windowPosition = xml.Element(nameof(WindowPosition)).Value; } catch { }
-					try { wcfURLs = new List<string>(xml.Element(nameof(WCFURLs)).Value.Split('\n')); } catch { }
-				}
-				catch { }
+				if (!File.Exists(settingsFile))
+					return;
+
+				var xml = XElement.Load(settingsFile);
+				try { dontExitOnClose = bool.Parse(xml.Element(nameof(DontExitOnClose)).Value); } catch { }
+				try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
+				try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
+				try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
+				try { fontSize = double.Parse(xml.Element(nameof(FontSize)).Value); } catch { }
+				try { showSpecialChars = bool.Parse(xml.Element(nameof(ShowSpecialChars)).Value); } catch { }
+				try { windowPosition = xml.Element(nameof(WindowPosition)).Value; } catch { }
+				try { wcfURLs = new List<string>(xml.Element(nameof(WCFURLs)).Value.Split('\n')); } catch { }
 			}
+			catch { }
 		}
 
 		static void SaveSettings()
