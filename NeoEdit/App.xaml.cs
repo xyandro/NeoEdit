@@ -19,6 +19,9 @@ namespace NeoEdit
 {
 	partial class App
 	{
+		static string IPCName { get; } = $"NeoEdit-{Helpers.CurrentUser}-{{debe0282-0e9d-47fd-836c-60f500dbaeb5}}";
+		static string ShutdownEventName { get; } = $"NeoEdit-Wait-{Helpers.CurrentUser}-{Guid.NewGuid()}";
+
 		public static void RunProgram(CommandLineParams commandLineParams)
 		{
 			try
@@ -48,7 +51,7 @@ namespace NeoEdit
 				var waitEvent = default(EventWaitHandle);
 				if (commandLineParams.Wait != null)
 				{
-					commandLineParams.Wait = string.Format(ShutdownEventName, Guid.NewGuid());
+					commandLineParams.Wait = ShutdownEventName;
 					waitEvent = new EventWaitHandle(false, EventResetMode.ManualReset, commandLineParams.Wait);
 				}
 
@@ -64,8 +67,6 @@ namespace NeoEdit
 			catch (Exception ex) { NEWindowUI.ShowExceptionMessage(ex); }
 		}
 
-		static readonly string IPCName = $"NeoEdit-{{debe0282-0e9d-47fd-836c-60f500dbaeb5}}";
-		static readonly string ShutdownEventName = $"NeoEdit-Wait-{{0}}";
 		private readonly NEGlobalUI neGlobalUI;
 		static MemoryMappedFile masterPIDFile;
 

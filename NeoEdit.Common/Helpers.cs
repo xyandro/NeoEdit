@@ -439,6 +439,12 @@ namespace NeoEdit.Common
 			for (var ctr = 0; ctr < isWordChar.Length; ++ctr)
 				if (wordRegex.IsMatch(((char)ctr).ToString()))
 					isWordChar[ctr] = true;
+
+			var identity = WindowsIdentity.GetCurrent();
+			CurrentUser = identity.Name[(identity.Name.IndexOf('\\') + 1)..].ToLowerInvariant();
+			IsAdministrator = new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
+			if (IsAdministrator)
+				CurrentUser += "-admin";
 		}
 
 		public static void Swap<T>(ref T item1, ref T item2)
@@ -497,7 +503,9 @@ namespace NeoEdit.Common
 
 		public static bool FileOrDirectoryExists(string name) => (Directory.Exists(name)) || (File.Exists(name));
 
-		public static bool IsAdministrator() => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+		public static bool IsAdministrator { get; }
+
+		public static string CurrentUser { get; }
 
 		public static bool IsWordBoundary(string input, int index) => (input.Length != 0) && ((index == 0) || (index == input.Length) || (!isWordChar[input[index - 1]]) || (!isWordChar[input[index]]));
 

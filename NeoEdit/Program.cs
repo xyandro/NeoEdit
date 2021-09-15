@@ -13,7 +13,7 @@ namespace NeoEdit
 		{
 			var commandLine = string.Join(" ", args.Select(str => $"\"{str}\""));
 			var commandLineParams = CommandLineVisitor.GetCommandLineParams(commandLine);
-			if ((commandLineParams.Admin) && (!Helpers.IsAdministrator()))
+			if ((commandLineParams.Admin) && (!Helpers.IsAdministrator))
 			{
 				new Process()
 				{

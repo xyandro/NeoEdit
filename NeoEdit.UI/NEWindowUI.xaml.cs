@@ -284,7 +284,7 @@ namespace NeoEdit.UI
 		{
 			statusBar.InvalidateVisual();
 			SetMenuCheckboxes();
-			Title = $"{(renderParameters.FocusedFile == null ? "" : $"{renderParameters.FocusedFile.DisplayName ?? renderParameters.FocusedFile.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator() ? " (Administrator)" : "")}";
+			Title = $"{(renderParameters.FocusedFile == null ? "" : $"{renderParameters.FocusedFile.DisplayName ?? renderParameters.FocusedFile.FileName ?? "Untitled"} - ")}NeoEdit{(Helpers.IsAdministrator ? " (Administrator)" : "")}";
 
 			if ((renderParameters.WindowLayout.Columns == 1) && (renderParameters.WindowLayout.Rows == 1))
 				DoFullLayout();
