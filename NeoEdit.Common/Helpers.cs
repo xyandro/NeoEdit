@@ -443,8 +443,6 @@ namespace NeoEdit.Common
 			var identity = WindowsIdentity.GetCurrent();
 			CurrentUser = identity.Name[(identity.Name.IndexOf('\\') + 1)..].ToLowerInvariant();
 			IsAdministrator = new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
-			if (IsAdministrator)
-				CurrentUser += "-admin";
 		}
 
 		public static void Swap<T>(ref T item1, ref T item2)

@@ -19,13 +19,16 @@ namespace NeoEdit
 {
 	partial class App
 	{
-		static string IPCName { get; } = $"NeoEdit-{Helpers.CurrentUser}-{{debe0282-0e9d-47fd-836c-60f500dbaeb5}}";
-		static string ShutdownEventName { get; } = $"NeoEdit-Wait-{Helpers.CurrentUser}-{Guid.NewGuid()}";
+		static string IPCName { get; set; }
+		static string ShutdownEventName { get; set; }
 
 		public static void RunProgram(CommandLineParams commandLineParams)
 		{
 			try
 			{
+				IPCName = $"NeoEdit-{Helpers.CurrentUser}-{commandLineParams.Admin}-{{debe0282-0e9d-47fd-836c-60f500dbaeb5}}";
+				ShutdownEventName = string.Format($"NeoEdit-Wait-{Helpers.CurrentUser}-{commandLineParams.Admin}-{Guid.NewGuid()}");
+
 				HandleWaitPID(commandLineParams);
 
 				var masterPid = default(int?);
