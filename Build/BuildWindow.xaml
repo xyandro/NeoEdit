@@ -16,8 +16,7 @@
 			<Label DockPanel.Dock="Top" Content="_Actions:" Target="{Binding ElementName=actions}"/>
 			<ListBox DockPanel.Dock="Top" Name="actions" ItemsSource="{Binding Actions,ElementName=self}" SelectionMode="Extended"/>
 
-			<Button DockPanel.Dock="Top" Content="_Reset" Click="OnReset"/>
-			<Button DockPanel.Dock="Top" Name="deleteIgnoredButton" Content="Delete _ignored" Click="OnDeleteIgnored"/>
+			<Button DockPanel.Dock="Top" Name="resetButton" Content="Rese_t" Click="OnReset"/>
 
 			<Button DockPanel.Dock="Bottom" Name="goButton" Content="_Go" Click="OnGo" VerticalAlignment="Bottom"/>
 		</DockPanel>

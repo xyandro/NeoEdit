@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyCompany("Randon Spackensen")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCopyright("© Randon Spackensen 2013-%YEAR%")]
+[assembly: AssemblyCopyright("© Randon Spackensen 2013-2013")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("NeoEdit")]
@@ -12,5 +12,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 
-[assembly: AssemblyVersion("5.1.1.%NUMREVS%")]
-[assembly: AssemblyFileVersion("5.1.1.%NUMREVS%")]
+[assembly: AssemblyVersion("1.1.1.1")]
+[assembly: AssemblyFileVersion("1.1.1.1")]

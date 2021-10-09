@@ -25,28 +25,24 @@ namespace Build
 			{
 				new VerifyCleanAction(),
 				new UpdateAction(),
+				new VersionAction(),
 				new RestorePackagesAction(),
 				new BuildAction(),
 				new CreateZipAction(),
 				new ReleaseAction(),
-				new DeleteIgnoredAction(),
+				new ResetAction(),
 			};
 
-			OnReset(null, null);
+			actions.SelectAll();
 
 			ProgressText = "Select the desired options and then press \"Go\".\n";
 		}
 
-		void OnReset(object sender, RoutedEventArgs e)
-		{
-			actions.SelectAll();
-		}
-
-		void OnDeleteIgnored(object sender, RoutedEventArgs e) => Run(writeText => new DeleteIgnoredAction().Run(writeText));
+		void OnReset(object sender, RoutedEventArgs e) => Run(writeText => new ResetAction().Run(writeText));
 
 		void EnableButtons(bool enabled)
 		{
-			deleteIgnoredButton.IsEnabled = enabled;
+			resetButton.IsEnabled = enabled;
 			goButton.IsEnabled = enabled;
 		}
 

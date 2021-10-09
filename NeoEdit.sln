@@ -9,39 +9,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{6F0CF426-4
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeoEdit", "NeoEdit\NeoEdit.csproj", "{DB80FD39-0222-4591-B224-833259BAC943}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959} = {7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeoEdit.Common", "NeoEdit.Common\NeoEdit.Common.csproj", "{BECBF5D9-9770-4CAA-AC34-97335094D335}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959} = {7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeoEdit.Dependencies", "NeoEdit.Dependencies\NeoEdit.Dependencies.csproj", "{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeoEdit.Editor", "NeoEdit.Editor\NeoEdit.Editor.csproj", "{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3A49C899-545A-4849-B6D0-2686D1A32983} = {3A49C899-545A-4849-B6D0-2686D1A32983}
-		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959} = {7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}
 	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NeoEdit.Setup", "NeoEdit.Setup\NeoEdit.Setup.vdproj", "{7713E978-B654-4DA2-9210-C744413AC3AB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeoEdit.TaskRunning", "NeoEdit.TaskRunning\NeoEdit.TaskRunning.csproj", "{E1437A47-C993-4361-90EA-2F9070C472CF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959} = {7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeoEdit.UI", "NeoEdit.UI\NeoEdit.UI.csproj", "{BF989B15-1E74-49D5-8487-426A94902012}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959} = {7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeoEdit.WCF", "NeoEdit.WCF\NeoEdit.WCF.csproj", "{3A49C899-545A-4849-B6D0-2686D1A32983}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959} = {7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,10 +39,6 @@ Global
 		{BECBF5D9-9770-4CAA-AC34-97335094D335}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BECBF5D9-9770-4CAA-AC34-97335094D335}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BECBF5D9-9770-4CAA-AC34-97335094D335}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7CF3D0BD-813C-4B2C-B1D3-2147BEB78959}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B8783A3-C995-4DE5-84FF-1D7060E1F1FB}.Release|Any CPU.ActiveCfg = Release|Any CPU

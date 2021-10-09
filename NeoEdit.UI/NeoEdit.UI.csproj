@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildChangeLog;License">
 
-  <Import Project="..\NeoEdit.Dependencies\Version.csproj" />
+  <Import Project="..\Version.csproj" />
 
   <Target Name="BuildChangeLog" Inputs="NeoEdit.UI.csproj" Outputs="Resources\ChangeLog.txt" Returns="">
     <Message Text="Building ChangeLog" Importance="High" />

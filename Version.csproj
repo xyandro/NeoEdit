@@ -1,13 +1,13 @@
-<Project>
+﻿<Project>
 
   <PropertyGroup>
-    <AssemblyVersion>5.1.1.%NUMREVS%</AssemblyVersion>
-    <FileVersion>5.1.1.%NUMREVS%</FileVersion>
-    <Version>5.1.1.%NUMREVS%</Version>
+    <AssemblyVersion>5.1.1.1</AssemblyVersion>
+    <FileVersion>1.1.1.1</FileVersion>
+    <Version>1.1.1.1</Version>
     <Authors>Randon Spackensen</Authors>
     <Company>Randon Spackensen</Company>
     <Product>NeoEdit</Product>
-    <Copyright>© Randon Spackensen 2013-%YEAR%</Copyright>
+    <Copyright>© Randon Spackensen 2013-2013</Copyright>
     <Description></Description>
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>

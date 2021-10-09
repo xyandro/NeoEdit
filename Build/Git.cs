@@ -31,5 +31,9 @@ namespace Build
 		public static void SwitchBranch(string branch) => Commands.Checkout(repo, repo.Branches[branch]);
 
 		public static void Reset(string branch) => repo.Reset(ResetMode.Hard, repo.Branches[branch].Tip);
+
+		public static int CommitCount() => repo.Head.Commits.Count();
+
+		public static void Revert(IEnumerable<string> paths) => repo.CheckoutPaths(repo.Head.FriendlyName, paths, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
 	}
 }

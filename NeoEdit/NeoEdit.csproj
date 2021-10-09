@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\NeoEdit.Dependencies\Version.csproj" />
+  <Import Project="..\Version.csproj" />
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
