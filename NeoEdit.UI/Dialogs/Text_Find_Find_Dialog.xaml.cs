@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Input;
 using NeoEdit.Common.Configuration;
 using NeoEdit.Common.Expressions;
 using NeoEdit.Common.Transform;
@@ -161,6 +160,8 @@ namespace NeoEdit.UI.Dialogs
 
 			Reset();
 			Text = text ?? "";
+
+			PreviewKeyDown += (s, e) => (Text, IsExpression) = ExpressionShortcutsDialog.HandleKey(e, Text, IsExpression);
 		}
 
 		CheckBoxStatus GetCheckBoxStatus()
@@ -246,41 +247,6 @@ namespace NeoEdit.UI.Dialogs
 				IsBinary = true;
 			}
 			catch { }
-		}
-
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
-		{
-			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control | ModifierKeys.Shift))
-			{
-				e.Handled = true;
-				switch (e.Key)
-				{
-					case Key.C: OnSetClick("c"); break;
-					case Key.K: OnSetClick("k"); break;
-					case Key.D1:
-					case Key.D2:
-					case Key.D3:
-					case Key.D4:
-					case Key.D5:
-					case Key.D6:
-						OnSetClick($"r{e.Key - Key.D1 + 1}");
-						break;
-					case Key.D7:
-					case Key.D8:
-					case Key.D9:
-						OnSetClick($"v{e.Key - Key.D1 + 1}");
-						break;
-					default: e.Handled = false; break;
-				}
-			}
-
-			base.OnPreviewKeyDown(e);
-		}
-
-		void OnSetClick(object sender, RoutedEventArgs e = null)
-		{
-			Text = ((sender as FrameworkElement)?.Tag as string) ?? (sender as string);
-			IsExpression = true;
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);

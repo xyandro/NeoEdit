@@ -19,6 +19,8 @@ namespace NeoEdit.UI.Dialogs
 
 		void ShowUnitsClick(object sender, RoutedEventArgs e) => ExpressionHelpUnitsDialog.Run();
 
+		void ShowKeyboardShortcutsClick(object sender, RoutedEventArgs e) => ExpressionShortcutsDialog.Run();
+
 		public static void Display(NEVariables variables = null) => new ExpressionHelpDialog(variables);
 	}
 }

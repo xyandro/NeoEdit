@@ -22,16 +22,25 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="EditFindFindDialogText" OnAcceptSuggestion="OnAcceptSuggestion"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="EditFindFindDialogText" OnAcceptSuggestion="OnAcceptSuggestion" HighlightExpressions="{Binding IsExpression, ElementName=self}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="Results:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" MultiRow="True" Expression="{Binding Text, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
-		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+		<DockPanel Grid.Row="2" Grid.Column="1">
 			<CheckBox Content="E_xpression" IsChecked="{Binding IsExpression, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 			<CheckBox Content="A_lign selections" IsChecked="{Binding AlignSelections, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
-		</StackPanel>
-		<CheckBox Grid.Row="3" Grid.Column="1" Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
+			<Button HorizontalAlignment="Right" Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="ExpressionHelp" Content="Expression _help" Padding="2,1" Focusable="False"/>
+		</DockPanel>
+		<DockPanel Grid.Row="3" Grid.Column="1">
+			<CheckBox Content="_Regex" IsChecked="{Binding IsRegex, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
+
+			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}">
+				<Button Click="RegExHelp" Content="RegEx _help" Padding="2,1" Focusable="False"/>
+				<Button Content="Escape" Click="Escape" Padding="2,1" Focusable="False"/>
+				<Button Content="Unescape" Click="Unescape" Padding="2,1" Focusable="False"/>
+			</StackPanel>
+		</DockPanel>
 		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="B_inary" IsChecked="{Binding IsBinary, ElementName=self}" VerticalAlignment="Center" Margin="0,0,5,0" Focusable="False"/>
 			<Button Content="{Binding CodePages.Count, ElementName=self, Converter={converters:NEExpressionConverter}, ConverterParameter='$&quot;Co_de pages ({p0})&quot;'}" Click="OnCodePagesClick" VerticalAlignment="Center" Margin="0,0,5,0" Focusable="False"/>
@@ -41,29 +50,12 @@
 			<CheckBox Content="Skip s_pace" IsChecked="{Binding SkipSpace, ElementName=self}" Margin="0,0,5,0" Focusable="False"/>
 		</StackPanel>
 
-		<Grid Grid.Row="7" Grid.Column="1">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition/>
-				<ColumnDefinition Width="Auto"/>
-			</Grid.ColumnDefinitions>
+		<Button Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" Click="Reset" Content="Rese_t" Padding="2,1" Focusable="False"/>
 
-			<Button Grid.Column="0" Click="Reset" Content="Rese_t" Padding="2,1" Focusable="False"/>
-
-			<StackPanel Grid.Column="2" Orientation="Horizontal">
-				<Button Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="ExpressionHelp" Content="Expression _help" Padding="2,1" Focusable="False"/>
-				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Click="RegExHelp" Content="RegEx _help" Padding="2,1" Focusable="False"/>
-				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="Escape" Click="Escape" Padding="2,1" Focusable="False"/>
-				<Button Visibility="{Binding IsRegex, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="Unescape" Click="Unescape" Padding="2,1" Focusable="False"/>
-			</StackPanel>
-
-			<UniformGrid Grid.Column="4" Rows="1">
-				<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="2,1" Focusable="False"/>
-				<Button IsCancel="True" Content="Cancel" Padding="2,1" Focusable="False"/>
-			</UniformGrid>
-		</Grid>
+		<UniformGrid Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right" Rows="1">
+			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="2,1" Focusable="False"/>
+			<Button IsCancel="True" Content="Cancel" Padding="2,1" Focusable="False"/>
+		</UniformGrid>
 	</Grid>
 
 </controls:EnhancedWindow>
