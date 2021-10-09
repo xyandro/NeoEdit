@@ -141,8 +141,8 @@
 				<controls:NEMenuItem Header="S_ingle" CommandEnum="Edit_Select_Focused_Single" ToolTip="Keep only focused selection"/>
 				<controls:NEMenuItem Header="_Remove" CommandEnum="Edit_Select_Focused_Remove" ToolTip="Remove focused selection"/>
 				<Separator/>
-				<controls:NEMenuItem Header="Remove _before current" CommandEnum="Edit_Select_Focused_RemoveBeforeCurrent" ToolTip="Remove all selections before focused selection"/>
-				<controls:NEMenuItem Header="Remove _after current" CommandEnum="Edit_Select_Focused_RemoveAfterCurrent" ToolTip="Remove all selections after focused selection"/>
+				<controls:NEMenuItem Header="Remove _before" CommandEnum="Edit_Select_Focused_RemoveBefore" ToolTip="Remove all selections before focused selection"/>
+				<controls:NEMenuItem Header="Remove _after" CommandEnum="Edit_Select_Focused_RemoveAfter" ToolTip="Remove all selections after focused selection"/>
 				<Separator/>
 				<controls:NEMenuItem Header="Center _vertically" CommandEnum="Edit_Select_Focused_CenterVertically" ToolTip="Center focused selection vertically"/>
 				<controls:NEMenuItem Header="_Center" CommandEnum="Edit_Select_Focused_Center" ToolTip="Center focused selection"/>

@@ -645,8 +645,8 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Select_Focused_Previous: Execute__Edit_Select_Focused_Next__Edit_Select_Focused_Previous(false); break;
 				case NECommand.Edit_Select_Focused_Single: Execute__Edit_Select_Focused_Single(); break;
 				case NECommand.Edit_Select_Focused_Remove: Execute__Edit_Select_Focused_Remove(); break;
-				case NECommand.Edit_Select_Focused_RemoveBeforeCurrent: Execute__Edit_Select_Focused_RemoveBeforeCurrent(); break;
-				case NECommand.Edit_Select_Focused_RemoveAfterCurrent: Execute__Edit_Select_Focused_RemoveAfterCurrent(); break;
+				case NECommand.Edit_Select_Focused_RemoveBefore: Execute__Edit_Select_Focused_RemoveBefore(); break;
+				case NECommand.Edit_Select_Focused_RemoveAfter: Execute__Edit_Select_Focused_RemoveAfter(); break;
 				case NECommand.Edit_Select_Focused_CenterVertically: Execute__Edit_Select_Focused_CenterVertically(); break;
 				case NECommand.Edit_Select_Focused_Center: Execute__Edit_Select_Focused_Center(); break;
 				case NECommand.Edit_Copy: Execute__Edit_Copy__Edit_Cut(false); break;

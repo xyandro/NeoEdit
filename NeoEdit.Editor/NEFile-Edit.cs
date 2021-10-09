@@ -344,13 +344,13 @@ namespace NeoEdit.Editor
 			CurrentSelection = Math.Max(0, Math.Min(CurrentSelection, Selections.Count - 1));
 		}
 
-		void Execute__Edit_Select_Focused_RemoveBeforeCurrent()
+		void Execute__Edit_Select_Focused_RemoveBefore()
 		{
 			Selections = Selections.Where((sel, index) => index >= CurrentSelection).ToList();
 			CurrentSelection = 0;
 		}
 
-		void Execute__Edit_Select_Focused_RemoveAfterCurrent()
+		void Execute__Edit_Select_Focused_RemoveAfter()
 		{
 			Selections = Selections.Where((sel, index) => index <= CurrentSelection).ToList();
 		}
