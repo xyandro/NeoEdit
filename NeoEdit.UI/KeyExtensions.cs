@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Windows.Input;
 using NeoEdit.Common;
 
@@ -6,18 +6,6 @@ namespace NeoEdit.UI
 {
 	static class KeyExtensions
 	{
-		public static ModifierKeys ToModifierKeys(this Modifiers modifiers)
-		{
-			var modifierKeys = ModifierKeys.None;
-			if (modifiers.HasFlag(Modifiers.Alt))
-				modifierKeys |= ModifierKeys.Alt;
-			if (modifiers.HasFlag(Modifiers.Control))
-				modifierKeys |= ModifierKeys.Control;
-			if (modifiers.HasFlag(Modifiers.Shift))
-				modifierKeys |= ModifierKeys.Shift;
-			return modifierKeys;
-		}
-
 		public static Modifiers ToModifiers(this ModifierKeys modifierKeys)
 		{
 			var modifiers = Modifiers.None;
@@ -28,24 +16,6 @@ namespace NeoEdit.UI
 			if (modifierKeys.HasFlag(ModifierKeys.Shift))
 				modifiers |= Modifiers.Shift;
 			return modifiers;
-		}
-
-		public static Key ToKey(this string str)
-		{
-			switch (str)
-			{
-				case "+": return Key.Add;
-				case "-": return Key.Subtract;
-				case ".": return Key.OemPeriod;
-				case "/": return Key.OemQuestion;
-				case "]": return Key.OemCloseBrackets;
-			}
-
-			if ((str.Length == 1) && (str[0] >= '0') && (str[0] <= '9'))
-				str = $"D{str}";
-			if (Enum.TryParse<Key>(str, out var key))
-				return key;
-			throw new Exception($"Can't interpret key: {key}");
 		}
 
 		public static string FromKey(this Key key)
@@ -68,6 +38,19 @@ namespace NeoEdit.UI
 			if ((str.Length == 2) && (str[0] == 'D') && (str[1] >= '0') && (str[1] <= '9'))
 				return str.Substring(1);
 			return str;
+		}
+
+		public static string ToText(this KeyGesture keyGesture)
+		{
+			var parts = new List<string>();
+			if (keyGesture.Modifiers.HasFlag(ModifierKeys.Control))
+				parts.Add("Ctrl");
+			if (keyGesture.Modifiers.HasFlag(ModifierKeys.Alt))
+				parts.Add("Alt");
+			if (keyGesture.Modifiers.HasFlag(ModifierKeys.Shift))
+				parts.Add("Shift");
+			parts.Add(keyGesture.Key.FromKey());
+			return string.Join("+", parts);
 		}
 	}
 }

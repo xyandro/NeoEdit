@@ -436,7 +436,7 @@ namespace NeoEdit.Editor
 				if (newPos == -1)
 					return range;
 
-				return MoveCursor(range, newPos, state.ShiftDown);
+				return MoveCursor(range, newPos, state.CommandIndex != 0);
 			}).ToList();
 		}
 

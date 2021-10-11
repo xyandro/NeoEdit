@@ -109,7 +109,7 @@ namespace NeoEdit.Editor
 		{
 			var nodes = GetSelectionNodes();
 			var allAtBeginning = nodes.Select((node, index) => Selections[index].Cursor == node.Start).All();
-			Selections = nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, state.ShiftDown)).ToList();
+			Selections = nodes.Select((node, index) => MoveCursor(Selections[index], allAtBeginning ? node.End : node.Start, state.CommandIndex != 0)).ToList();
 		}
 
 		void Execute__Content_Current() => ContentReplaceSelections(GetSelectionNodes());

@@ -134,8 +134,6 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute__Edit_ModifyRegions(Configuration_Edit_ModifyRegions.Actions action, int region) => Execute__Edit_ModifyRegions(new Configuration_Edit_ModifyRegions { Action = action, Regions = new List<int> { region } });
-
 		void Execute_Edit_ModifyRegions_Select_Select(List<int> regions) => Selections = regions.SelectMany(useRegion => GetRegions(useRegion)).ToList();
 
 		void Execute_Edit_ModifyRegions_Select_Previous(List<int> regions)

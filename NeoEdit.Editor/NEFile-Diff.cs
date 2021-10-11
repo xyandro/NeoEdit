@@ -76,7 +76,7 @@ namespace NeoEdit.Editor
 			if ((diffTargets.Count == 0) || (diffTargets.Count % 2 != 0))
 				throw new Exception("Must have even number of files active for diff.");
 
-			if (state.ShiftDown)
+			if (state.CommandIndex != 0)
 			{
 				if (!state.NEWindow.NEFiles.Except(diffTargets).Any())
 					state.NEWindow.WindowLayout = new WindowLayout(maxColumns: 4, maxRows: 4);
@@ -132,7 +132,7 @@ namespace NeoEdit.Editor
 			DiffIgnoreCharacters = DiffTarget.DiffIgnoreCharacters = new HashSet<char>();
 		}
 
-		void Execute__Diff_Next__Diff_Previous(bool next, bool shiftDown)
+		void Execute__Diff_Next__Diff_Previous(bool next)
 		{
 			if (DiffTarget == null)
 				throw new Exception("Diff not in progress");
@@ -145,7 +145,7 @@ namespace NeoEdit.Editor
 			{
 				var target = pass == 0 ? this : DiffTarget;
 				var sels = lines.Select(tuple => new NERange(target.Text.GetPosition(tuple.Item1, 0, true), target.Text.GetPosition(tuple.Item2, 0, true))).ToList();
-				if (shiftDown)
+				if (state.CommandIndex != 0)
 					sels.AddRange(target.Selections);
 				target.Selections = sels;
 			}

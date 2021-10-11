@@ -151,7 +151,7 @@ namespace NeoEdit.Editor
 			state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Position_Goto_Various(gotoType, startValue, state.NEWindow.Focused.GetVariables());
 		}
 
-		void Execute__Position_Goto_Lines__Position_Goto_Columns__Position_Goto_Indexes__Position_Goto_Positions(GotoType gotoType, bool selecting)
+		void Execute__Position_Goto_Lines__Position_Goto_Columns__Position_Goto_Indexes__Position_Goto_Positions(GotoType gotoType)
 		{
 			var result = state.Configuration as Configuration_Position_Goto_Various;
 			var values = GotoRange.GetPositionsData(GetExpressionResults<string>(result.Expression), gotoType);
@@ -215,7 +215,7 @@ namespace NeoEdit.Editor
 				if (positions.Count != sels.Count)
 					throw new Exception("Expression count doesn't match selection count");
 
-				useTE.Selections = sels.AsTaskRunner().Select((range, ctr) => positions[ctr].GetRange(useTE, range, selecting)).ToList();
+				useTE.Selections = sels.AsTaskRunner().Select((range, ctr) => positions[ctr].GetRange(useTE, range, state.ShiftDown)).ToList();
 			}
 		}
 

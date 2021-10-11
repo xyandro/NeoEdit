@@ -10,6 +10,7 @@ namespace NeoEdit.Common
 		static readonly Dictionary<NECommand, bool> macroInclude = Helpers.GetValues<NECommand>().ToDictionary(command => command, command => typeof(NECommand).GetField(command.ToString()).GetCustomAttribute<NoMacroAttribute>() == null);
 
 		public NECommand Command;
+		public int CommandIndex;
 		public bool ShiftDown;
 		public bool ControlDown;
 		public bool AltDown;
@@ -32,6 +33,7 @@ namespace NeoEdit.Common
 		public ExecuteState(ExecuteState state)
 		{
 			Command = state.Command;
+			CommandIndex = state.CommandIndex;
 			ShiftDown = state.ShiftDown;
 			ControlDown = state.ControlDown;
 			AltDown = state.AltDown;

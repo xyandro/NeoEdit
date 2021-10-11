@@ -42,8 +42,10 @@ namespace NeoEdit.UI
 			this.neWindow = neWindow;
 			this.neGlobalUI = neGlobalUI;
 
-			NEMenuItem.RegisterCommands(this, (command, multiStatus) => HandleCommand(new ExecuteState(command, Keyboard.Modifiers.ToModifiers()) { MultiStatus = multiStatus }));
 			InitializeComponent();
+
+			NEMenuItem.RegisterCommands(this, menu, (command, commandIndex, configuration, multiStatus) => HandleCommand(new ExecuteState(command, Keyboard.Modifiers.ToModifiers()) { CommandIndex = commandIndex, Configuration = configuration, MultiStatus = multiStatus }));
+
 			if (Helpers.IsDebugBuild)
 				UIHelper.AuditMenu(menu);
 

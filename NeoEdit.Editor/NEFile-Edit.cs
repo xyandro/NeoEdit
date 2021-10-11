@@ -487,14 +487,14 @@ namespace NeoEdit.Editor
 
 		void Execute__Edit_Navigate_WordLeft__Edit_Navigate_WordRight(bool next)
 		{
-			if ((!state.ShiftDown) && (Selections.Any(range => range.HasSelection)))
+			if ((state.CommandIndex == 0) && (Selections.Any(range => range.HasSelection)))
 			{
 				Selections = Selections.AsTaskRunner().Select(range => new NERange(next ? range.End : range.Start)).ToList();
 				return;
 			}
 
 			var func = next ? (Func<int, int>)GetNextWord : GetPrevWord;
-			Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, func(range.Cursor), state.ShiftDown)).ToList();
+			Selections = Selections.AsTaskRunner().Select(range => MoveCursor(range, func(range.Cursor), state.CommandIndex != 0)).ToList();
 		}
 
 		void Execute__Edit_Navigate_AllLeft()
