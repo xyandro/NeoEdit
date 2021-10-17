@@ -93,7 +93,11 @@ namespace NeoEdit.Editor
 			}
 			else
 			{
-				QueryUser($"{nameof(Execute__File_Open_Refresh)}-Deleted", "This file has been deleted.", MessageOptions.Ok, MessageOptions.OkAllCancel);
+				if (QueryUser($"{nameof(Execute__File_Open_Refresh)}-Deleted", "This file has been deleted. Close?", MessageOptions.Yes))
+				{
+					VerifyCanClose();
+					Close();
+				}
 			}
 		}
 
