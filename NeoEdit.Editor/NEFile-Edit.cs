@@ -111,79 +111,6 @@ namespace NeoEdit.Editor
 			return builder.ToString();
 		}
 
-		public static List<INEFileData> GetUndo(IReadOnlyList<NEFile> neFiles, bool text)
-		{
-			var target = int.MinValue;
-			foreach (var neFile in neFiles)
-			{
-				var neFileData = neFile.Data;
-				var neFileTarget = int.MinValue;
-				while ((neFileData.Undo != null) && (((text) && (neFileData.NETextPoint == neFile.NETextPoint)) || ((!text) && (neFileData == neFile.Data))))
-				{
-					neFileTarget = neFileData.NESerial - 1;
-					neFileData = neFileData.Undo;
-				}
-				target = Math.Max(target, neFileTarget);
-			}
-
-			var result = new List<INEFileData>();
-			foreach (var neFile in neFiles)
-			{
-				var neFileData = neFile.Data;
-				while ((neFileData.Undo != null) && (neFileData.NESerial > target))
-					neFileData = neFileData.Undo;
-				result.Add(neFileData);
-			}
-
-			return result;
-		}
-
-		public static List<INEFileData> GetRedo(IReadOnlyList<NEFile> neFiles, bool text)
-		{
-			var target = int.MaxValue;
-
-			foreach (var neFile in neFiles)
-			{
-				var neFileData = neFile.Data;
-				while ((neFileData != null) && (((text) && ((neFileData.NETextPoint == neFile.NETextPoint))) || ((!text) && ((neFileData == neFile.Data)))))
-					neFileData = neFileData.Redo;
-				if (neFileData != null)
-					target = Math.Min(target, neFileData.NESerial);
-			}
-
-			var hasRedoText = false;
-			var result = new List<INEFileData>();
-			foreach (var neFile in neFiles)
-			{
-				var neFileData = neFile.Data;
-				while ((neFileData.Redo != null) && (neFileData.Redo.NESerial <= target))
-					neFileData = neFileData.Redo;
-				if ((target == int.MaxValue) && (neFileData.RedoText != null))
-				{
-					neFileData = neFileData.RedoText;
-					hasRedoText = true;
-				}
-
-				result.Add(neFileData);
-			}
-
-			if ((target == int.MaxValue) && (hasRedoText))
-			{
-				lock (state)
-				{
-					if (state.SavedAnswers[nameof(GetRedo)] != (MessageOptions.Yes | MessageOptions.All))
-					{
-						var answer = state.NEWindow.neWindowUI.RunDialog_ShowMessage("Confirm", "No more redo steps; move to last text update?", MessageOptions.Yes | MessageOptions.Cancel, MessageOptions.Yes, MessageOptions.Cancel);
-						if (answer.HasFlag(MessageOptions.Cancel))
-							throw new OperationCanceledException();
-						state.SavedAnswers[nameof(GetRedo)] = MessageOptions.Yes | MessageOptions.All;
-					}
-				}
-			}
-
-			return result;
-		}
-
 		void Execute__Edit_Select_All() => Selections = new List<NERange> { NERange.FromIndex(0, Text.Length) };
 
 		void Execute__Edit_Select_Nothing() => Selections = new List<NERange>();
@@ -406,30 +333,6 @@ namespace NeoEdit.Editor
 					clipboardStrings = clipboardStrings.SelectMany(str => Enumerable.Repeat(str, repeat)).ToList();
 
 			ReplaceSelections(clipboardStrings, highlight);
-		}
-
-		void Execute__Edit_Undo_Text__Edit_Undo_Step(bool text)
-		{
-			var datas = GetUndo(new List<NEFile> { this }, text);
-			SetData(datas[0]);
-		}
-
-		static void PreExecute__Edit_Undo_BetweenFiles_Text__Edit_Undo_BetweenFiles_Step(bool text)
-		{
-			var datas = GetUndo(state.NEWindow.ActiveFiles, text);
-			state.NEWindow.ActiveFiles.ForEach((neFile, index) => neFile.SetData(datas[index]));
-		}
-
-		void Execute__Edit_Redo_Text__Edit_Redo_Step(bool text)
-		{
-			var datas = GetRedo(new List<NEFile> { this }, text);
-			SetData(datas[0]);
-		}
-
-		static void PreExecute__Edit_Redo_BetweenFiles_Text__Edit_Redo_BetweenFiles_Step(bool text)
-		{
-			var datas = GetRedo(state.NEWindow.ActiveFiles, text);
-			state.NEWindow.ActiveFiles.ForEach((neFile, index) => neFile.SetData(datas[index]));
 		}
 
 		static void Configure__Edit_Repeat() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Edit_Repeat(state.NEWindow.Focused.GetVariables());

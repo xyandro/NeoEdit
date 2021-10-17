@@ -4,9 +4,11 @@ namespace NeoEdit.Editor
 {
 	public interface INEGlobalData
 	{
-		int NESerial { get; }
+		long NESerial { get; }
 
 		IReadOnlyOrderedHashSet<INEWindowData> NEWindowDatas { get; }
 		IReadOnlyOrderedHashSet<NEWindow> NEWindows { get; }
+
+		INEGlobalData Next();
 	}
 }

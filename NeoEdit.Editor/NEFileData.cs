@@ -6,7 +6,7 @@ namespace NeoEdit.Editor
 {
 	public class NEFileData : INEFileData
 	{
-		public int NESerial { get; } = NESerialTracker.NESerial;
+		public long NESerial { get; } = NESerialTracker.NESerial;
 		public NEFile NEFile { get; }
 
 		NETextPoint neTextPoint;
@@ -15,26 +15,13 @@ namespace NeoEdit.Editor
 			get => neTextPoint;
 			set
 			{
-				if (neTextPoint == value)
-					return;
-
-				var data = Undo;
-				while ((data != null) && (data.NETextPoint == NETextPoint))
-				{
-					(data as NEFileData).RedoText = this;
-					data = data.Undo;
-				}
 				neTextPoint = value;
-				RedoText = null;
+				NEFile.NEWindow?.SetTextChanged();
 			}
 		}
 		public IReadOnlyList<NERange> Selections { get; set; }
 		public IReadOnlyList<NERange>[] Regions { get; set; }
 		public bool AllowOverlappingSelections { get; set; }
-
-		public INEFileData Undo { get; set; }
-		public INEFileData Redo { get; set; }
-		public INEFileData RedoText { get; set; }
 
 		NEFileData() { }
 
@@ -46,17 +33,13 @@ namespace NeoEdit.Editor
 
 		public INEFileData Next()
 		{
-			var next = new NEFileData(NEFile)
+			return new NEFileData(NEFile)
 			{
 				neTextPoint = neTextPoint,
 				Selections = Selections,
 				Regions = Regions.ToArray(),
 				AllowOverlappingSelections = AllowOverlappingSelections,
-				RedoText = RedoText,
-				Undo = this,
 			};
-			Redo = next;
-			return next;
 		}
 
 		public override string ToString() => NESerial.ToString();

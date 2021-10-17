@@ -12,7 +12,7 @@ namespace NeoEdit.Editor
 			get
 			{
 				if (Data.NESerial != NESerialTracker.NESerial)
-					Data = new NEGlobalData(Data);
+					Data = Data.Next();
 				return Data as NEGlobalData;
 			}
 		}

@@ -215,6 +215,10 @@ namespace NeoEdit.Editor
 				case NECommand.File_Open_Open: Execute__File_Open_Open__Macro_Open_Open(); break;
 				case NECommand.File_Open_CopiedCut: Execute__File_Open_CopiedCut(); break;
 				case NECommand.File_Exit: Execute__File_Exit(); break;
+				case NECommand.Edit_Undo_Text: Execute__Edit_Undo_Text__Edit_Undo_Step(true); break;
+				case NECommand.Edit_Undo_Step: Execute__Edit_Undo_Text__Edit_Undo_Step(false); break;
+				case NECommand.Edit_Redo_Text: Execute__Edit_Redo_Text__Edit_Redo_Step(true); break;
+				case NECommand.Edit_Redo_Step: Execute__Edit_Redo_Text__Edit_Redo_Step(false); break;
 				case NECommand.Macro_Open_Open: Execute__File_Open_Open__Macro_Open_Open(); break;
 				default: ActiveFiles.AsTaskRunner().ForAll(neFile => neFile.Execute()); break;
 			}
@@ -335,5 +339,7 @@ namespace NeoEdit.Editor
 			}
 			WindowLayout = new WindowLayout(maxColumns: 2);
 		}
+
+		public void SetTextChanged() => EditableData.SetTextChanged();
 	}
 }

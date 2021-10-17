@@ -160,21 +160,11 @@
 			<controls:NEMenuItem Header="_Text" CommandEnum="Edit_Undo_Text" ToolTip="Undo last text change"/>
 			<controls:NEMenuItem Header="_Step" CommandEnum="Edit_Undo_Step" ToolTip="Undo last step"/>
 			<Separator/>
-			<MenuItem Header="Between _files">
-				<controls:NEMenuItem Header="_Text" CommandEnum="Edit_Undo_BetweenFiles_Text" ToolTip="Undo last text change among files"/>
-				<controls:NEMenuItem Header="_Step" CommandEnum="Edit_Undo_BetweenFiles_Step" ToolTip="Undo last step among files"/>
-			</MenuItem>
-			<Separator/>
 			<controls:NEMenuItem Header="_Global" CommandEnum="Edit_Undo_Global" ToolTip="Global undo"/>
 		</MenuItem>
 		<MenuItem Header="_Redo">
 			<controls:NEMenuItem Header="_Text" CommandEnum="Edit_Redo_Text" ToolTip="Redo last text change"/>
 			<controls:NEMenuItem Header="_Step" CommandEnum="Edit_Redo_Step" ToolTip="Redo last step"/>
-			<Separator/>
-			<MenuItem Header="Between _files">
-				<controls:NEMenuItem Header="_Text" CommandEnum="Edit_Redo_BetweenFiles_Text" ToolTip="Redo last text change among files"/>
-				<controls:NEMenuItem Header="_Step" CommandEnum="Edit_Redo_BetweenFiles_Step" ToolTip="Redo last step among files"/>
-			</MenuItem>
 		</MenuItem>
 		<Separator/>
 		<controls:NEMenuItem Header="R_epeat" CommandEnum="Edit_Repeat" ToolTip="Repeat the currently selected text (include the newline in selection if desired)"/>

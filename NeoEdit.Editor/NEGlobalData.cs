@@ -4,7 +4,7 @@ namespace NeoEdit.Editor
 {
 	public class NEGlobalData : INEGlobalData
 	{
-		public int NESerial { get; } = NESerialTracker.NESerial;
+		public long NESerial { get; } = NESerialTracker.NESerial;
 
 		public IReadOnlyOrderedHashSet<INEWindowData> NEWindowDatas { get; set; }
 		public IReadOnlyOrderedHashSet<NEWindow> NEWindows { get; set; }
@@ -15,10 +15,13 @@ namespace NeoEdit.Editor
 			NEWindows = new OrderedHashSet<NEWindow>();
 		}
 
-		public NEGlobalData(INEGlobalData neGlobalData)
+		public INEGlobalData Next()
 		{
-			NEWindowDatas = neGlobalData.NEWindowDatas;
-			NEWindows = neGlobalData.NEWindows;
+			return new NEGlobalData
+			{
+				NEWindowDatas = NEWindowDatas,
+				NEWindows = NEWindows,
+			};
 		}
 
 		public override string ToString() => NESerial.ToString();

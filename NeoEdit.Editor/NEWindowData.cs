@@ -4,13 +4,37 @@ namespace NeoEdit.Editor
 {
 	public class NEWindowData : INEWindowData
 	{
-		public int NESerial { get; } = NESerialTracker.NESerial;
+		public long NESerial { get; } = NESerialTracker.NESerial;
 		public NEWindow NEWindow { get; }
 
 		public IReadOnlyOrderedHashSet<INEFileData> NEFileDatas { get; set; }
 		public IReadOnlyOrderedHashSet<NEFile> NEFiles { get; set; }
 		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles { get; set; }
 		public NEFile Focused { get; set; }
+
+		public INEWindowData Undo { get; set; }
+		public INEWindowData Redo { get; set; }
+		public INEWindowData RedoText { get; set; }
+
+		public bool TextChanged { get; private set; } = false;
+		public void SetTextChanged()
+		{
+			if (TextChanged)
+				return;
+
+			TextChanged = true;
+			RedoText = null;
+			var data = this;
+			while (true)
+			{
+				data = data.Undo as NEWindowData;
+				if (data == null)
+					break;
+				data.RedoText = this;
+				if (data.TextChanged)
+					break;
+			}
+		}
 
 		public NEWindowData(NEWindow neWindow)
 		{
@@ -19,14 +43,19 @@ namespace NeoEdit.Editor
 			NEFiles = ActiveFiles = new OrderedHashSet<NEFile>();
 		}
 
-		public NEWindowData(INEWindowData neWindowData)
+		public INEWindowData Next()
 		{
-			NEWindow = neWindowData.NEWindow;
-
-			NEFileDatas = neWindowData.NEFileDatas;
-			NEFiles = neWindowData.NEFiles;
-			ActiveFiles = neWindowData.ActiveFiles;
-			Focused = neWindowData.Focused;
+			var next = new NEWindowData(NEWindow)
+			{
+				NEFileDatas = NEFileDatas,
+				NEFiles = NEFiles,
+				ActiveFiles = ActiveFiles,
+				Focused = Focused,
+				RedoText = RedoText,
+				Undo = this,
+			};
+			Redo = next;
+			return next;
 		}
 
 		public override string ToString() => NESerial.ToString();

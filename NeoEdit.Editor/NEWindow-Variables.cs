@@ -15,7 +15,7 @@ namespace NeoEdit.Editor
 				if (Data.NESerial != NESerialTracker.NESerial)
 				{
 					CreateResult();
-					Data = new NEWindowData(Data);
+					Data = Data.Next();
 				}
 				return Data as NEWindowData;
 			}
@@ -24,6 +24,10 @@ namespace NeoEdit.Editor
 		public void SetData(INEWindowData data)
 		{
 			Data = data;
+			for (var undo = Data; undo != null; undo = undo.Undo)
+				if (undo.Undo is NEWindowData undoData)
+					undoData.Redo = undo;
+
 			NEFileDatas.ForEach(neFileData => neFileData.NEFile.SetData(neFileData));
 			NeedsRender = true;
 			ClearResult();

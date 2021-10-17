@@ -538,10 +538,6 @@ namespace NeoEdit.Editor
 				case NECommand.Internal_Scroll: PreExecute__Internal_Scroll(); break;
 				case NECommand.File_Close_Active: PreExecute__File_Close_Active__File_Close_Inactive(true); break;
 				case NECommand.File_Close_Inactive: PreExecute__File_Close_Active__File_Close_Inactive(false); break;
-				case NECommand.Edit_Undo_BetweenFiles_Text: PreExecute__Edit_Undo_BetweenFiles_Text__Edit_Undo_BetweenFiles_Step(true); break;
-				case NECommand.Edit_Undo_BetweenFiles_Step: PreExecute__Edit_Undo_BetweenFiles_Text__Edit_Undo_BetweenFiles_Step(false); break;
-				case NECommand.Edit_Redo_BetweenFiles_Text: PreExecute__Edit_Redo_BetweenFiles_Text__Edit_Redo_BetweenFiles_Step(true); break;
-				case NECommand.Edit_Redo_BetweenFiles_Step: PreExecute__Edit_Redo_BetweenFiles_Text__Edit_Redo_BetweenFiles_Step(false); break;
 				case NECommand.Edit_Advanced_EscapeClearsSelections: PreExecute__Edit_Advanced_EscapeClearsSelections(); break;
 				case NECommand.Text_Select_Repeats_BetweenFiles_Matches_Ordered_IgnoreCase: PreExecute__Text_Select_Repeats_BetweenFiles_Matches_Ordered_IgnoreCase__Text_Select_Repeats_BetweenFiles_Matches_Ordered_MatchCase__Text_Select_Repeats_BetweenFiles_Diffs_Ordered_IgnoreCase__Text_Select_Repeats_BetweenFiles_Diffs_Ordered_MatchCase(false); break;
 				case NECommand.Text_Select_Repeats_BetweenFiles_Matches_Ordered_MatchCase: PreExecute__Text_Select_Repeats_BetweenFiles_Matches_Ordered_IgnoreCase__Text_Select_Repeats_BetweenFiles_Matches_Ordered_MatchCase__Text_Select_Repeats_BetweenFiles_Diffs_Ordered_IgnoreCase__Text_Select_Repeats_BetweenFiles_Diffs_Ordered_MatchCase(true); break;
@@ -653,10 +649,6 @@ namespace NeoEdit.Editor
 				case NECommand.Edit_Cut: Execute__Edit_Copy__Edit_Cut(true); break;
 				case NECommand.Edit_Paste_Paste: Execute__Edit_Paste_Paste__Edit_Paste_RotatePaste(state.CommandIndex != 0, false); break;
 				case NECommand.Edit_Paste_RotatePaste: Execute__Edit_Paste_Paste__Edit_Paste_RotatePaste(true, true); break;
-				case NECommand.Edit_Undo_Text: Execute__Edit_Undo_Text__Edit_Undo_Step(true); break;
-				case NECommand.Edit_Undo_Step: Execute__Edit_Undo_Text__Edit_Undo_Step(false); break;
-				case NECommand.Edit_Redo_Text: Execute__Edit_Redo_Text__Edit_Redo_Step(true); break;
-				case NECommand.Edit_Redo_Step: Execute__Edit_Redo_Text__Edit_Redo_Step(false); break;
 				case NECommand.Edit_Repeat: Execute__Edit_Repeat(); break;
 				case NECommand.Edit_Rotate: Execute__Edit_Rotate(); break;
 				case NECommand.Edit_Expression_Expression: Execute__Edit_Expression_Expression(); break;

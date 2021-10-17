@@ -23,26 +23,12 @@ namespace NeoEdit.Editor
 		public void SetData(INEFileData data)
 		{
 			Data = data;
-			for (var undo = Data; undo != null; undo = undo.Undo)
-				if (undo.Undo is NEFileData undoData)
-					undoData.Redo = undo;
 
 			Text.MoveToTextPoint(NETextPoint);
 			EnsureVisible();
 			SetIsModified();
 			ClearResult();
 			NEWindow?.CreateResult();
-		}
-
-		void SetData(int serial)
-		{
-			var data = Data;
-			while ((data.Undo != null) && (data.NESerial > serial))
-				data = data.Undo;
-			while ((data.Redo != null) && (data.Redo.NESerial <= serial))
-				data = data.Redo;
-			if (data != Data)
-				SetData(data);
 		}
 
 		NETextPoint NETextPoint { get => Data.NETextPoint; set => EditableData.NETextPoint = value; }
