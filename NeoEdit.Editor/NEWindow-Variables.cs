@@ -70,6 +70,18 @@ namespace NeoEdit.Editor
 		public void ClearNEWindows() => CreateResult().ClearNEWindows();
 		public void AddNewNEFile(NEFile neFile) => CreateResult().AddNewNEFile(neFile);
 
+		public WindowLayout WindowLayout
+		{
+			get => Data.WindowLayout;
+			set
+			{
+				EditableData.WindowLayout = value;
+				NeedsRender = true;
+			}
+		}
+
+		public bool WorkMode { get => Data.WorkMode; set => EditableData.WorkMode = value; }
+
 		NEWindowResult result;
 		public NEWindowResult CreateResult()
 		{

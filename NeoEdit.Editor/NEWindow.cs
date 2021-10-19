@@ -15,17 +15,6 @@ namespace NeoEdit.Editor
 
 		bool NeedsRender { get; set; }
 		public void SetNeedsRender() => NeedsRender = true;
-		private WindowLayout windowLayout = new WindowLayout(1, 1);
-		public WindowLayout WindowLayout
-		{
-			get => windowLayout; set
-			{
-				windowLayout = value;
-				NeedsRender = true;
-			}
-		}
-
-		public bool WorkMode { get; set; }
 
 		public int DisplayColumns { get; private set; }
 

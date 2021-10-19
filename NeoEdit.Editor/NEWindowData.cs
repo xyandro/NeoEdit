@@ -11,6 +11,8 @@ namespace NeoEdit.Editor
 		public IReadOnlyOrderedHashSet<NEFile> NEFiles { get; set; }
 		public IReadOnlyOrderedHashSet<NEFile> ActiveFiles { get; set; }
 		public NEFile Focused { get; set; }
+		public WindowLayout WindowLayout { get; set; }
+		public bool WorkMode { get; set; }
 
 		public INEWindowData Undo { get; set; }
 		public INEWindowData Redo { get; set; }
@@ -41,6 +43,7 @@ namespace NeoEdit.Editor
 			NEWindow = neWindow;
 			NEFileDatas = new OrderedHashSet<INEFileData>();
 			NEFiles = ActiveFiles = new OrderedHashSet<NEFile>();
+			WindowLayout = new WindowLayout(1, 1);
 		}
 
 		public INEWindowData Next()
@@ -51,6 +54,8 @@ namespace NeoEdit.Editor
 				NEFiles = NEFiles,
 				ActiveFiles = ActiveFiles,
 				Focused = Focused,
+				WindowLayout = WindowLayout,
+				WorkMode = WorkMode,
 				RedoText = RedoText,
 				Undo = this,
 			};

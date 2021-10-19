@@ -11,6 +11,8 @@ namespace NeoEdit.Editor
 		IReadOnlyOrderedHashSet<NEFile> NEFiles { get; }
 		IReadOnlyOrderedHashSet<NEFile> ActiveFiles { get; }
 		NEFile Focused { get; }
+		WindowLayout WindowLayout { get; }
+		bool WorkMode { get; }
 
 		INEWindowData Undo { get; }
 		INEWindowData Redo { get; }
