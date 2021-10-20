@@ -61,12 +61,12 @@ namespace NeoEdit.Common.Transform
 			}
 		}
 
-		static AsymmetricAlgorithm GetAsymmetricAlgorithm(Type type)
+		static AsymmetricAlgorithm GetAsymmetricAlgorithm(Type type, int keySize = 0)
 		{
 			switch (type)
 			{
-				case Type.RSA: case Type.RSAAES: return new RSACryptoServiceProvider();
-				case Type.DSA: return new DSACryptoServiceProvider();
+				case Type.RSA: case Type.RSAAES: return new RSACryptoServiceProvider(keySize);
+				case Type.DSA: return new DSACryptoServiceProvider(keySize);
 				default: throw new Exception("Not an asymmetric type");
 			}
 		}
@@ -170,12 +170,7 @@ namespace NeoEdit.Common.Transform
 				return Convert.ToBase64String(alg.Key);
 			}
 			else
-			{
-				var alg = GetAsymmetricAlgorithm(type);
-				if (keySize != 0)
-					alg.KeySize = keySize;
-				return alg.ToXmlString(true);
-			}
+				return GetAsymmetricAlgorithm(type, keySize).ToXmlString(true);
 		}
 
 		public static string GetPublicKey(Type type, string privKey)

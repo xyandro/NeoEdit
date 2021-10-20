@@ -51,9 +51,13 @@ namespace NeoEdit.UI.Dialogs
 
 		void OnGenerate(object sender, RoutedEventArgs e)
 		{
-			var key = File_Advanced_Encrypt_Dialog.Run(this, CryptorType, false)?.Key;
-			if (key != null)
-				Key = key;
+			try
+			{
+				var key = File_Advanced_Encrypt_Dialog.Run(this, CryptorType, false)?.Key;
+				if (key != null)
+					Key = key;
+			}
+			catch (OperationCanceledException) { }
 		}
 
 		Configuration_Edit_Advanced_Sign result = null;
