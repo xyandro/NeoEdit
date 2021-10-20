@@ -599,7 +599,5 @@ namespace NeoEdit.Editor
 		void Execute__Edit_Advanced_RunCommand_Sequential() => ReplaceSelections(GetSelectionStrings().Select(str => RunCommand(str, Path.GetDirectoryName(FileName ?? ""))).ToList());
 
 		void Execute__Edit_Advanced_RunCommand_Shell() => GetSelectionStrings().ForEach(str => Process.Start(str));
-
-		static void PreExecute__Edit_Advanced_EscapeClearsSelections() => Settings.EscapeClearsSelections = state.MultiStatus != true;
 	}
 }

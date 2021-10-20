@@ -250,7 +250,6 @@ namespace NeoEdit.UI
 			menu.menu_Edit_Navigate_JumpBy_Words.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Words)];
 			menu.menu_Edit_Navigate_JumpBy_Numbers.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Numbers)];
 			menu.menu_Edit_Navigate_JumpBy_Paths.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Navigate_JumpBy_Paths)];
-			menu.menu_Edit_Advanced_EscapeClearsSelections.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Edit_Advanced_EscapeClearsSelections)];
 			menu.menu_Content_Type_None.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_None)];
 			menu.menu_Content_Type_Balanced.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_Balanced)];
 			menu.menu_Content_Type_Columns.MultiStatus = renderParameters.MenuStatus[nameof(NECommand.Content_Type_Columns)];

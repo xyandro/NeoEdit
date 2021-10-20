@@ -210,8 +210,6 @@
 				<controls:NEMenuItem Header="_Sequential" CommandEnum="Edit_Advanced_RunCommand_Sequential" ToolTip="Run selected commands on at a time"/>
 				<controls:NEMenuItem Header="S_hell" CommandEnum="Edit_Advanced_RunCommand_Shell" ToolTip="Run selected commands through the shell"/>
 			</MenuItem>
-			<Separator/>
-			<controls:NEMenuItem Header="E_scape clears selections" CommandEnum="Edit_Advanced_EscapeClearsSelections" x:Name="menu_Edit_Advanced_EscapeClearsSelections" ToolTip="Toggle whether the Esc key removes extra selections"/>
 		</MenuItem>
 	</MenuItem>
 	<MenuItem Header="_Text">

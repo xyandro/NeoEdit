@@ -201,12 +201,10 @@ namespace NeoEdit.Editor
 				return;
 			}
 			INEGlobalUI.DragFiles = null;
-			if (Settings.EscapeClearsSelections)
-			{
-				Execute__Edit_Select_Focused_Single();
-				if (!Selections.Any())
-					Selections = new List<NERange> { new NERange() };
-			}
+
+			Execute__Edit_Select_Focused_Single();
+			if (!Selections.Any())
+				Selections = new List<NERange> { new NERange() };
 		}
 
 		void Execute_Internal_Key_Left()

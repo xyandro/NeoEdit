@@ -122,7 +122,6 @@
 		Edit_Advanced_RunCommand_Parallel,
 		Edit_Advanced_RunCommand_Sequential,
 		Edit_Advanced_RunCommand_Shell,
-		Edit_Advanced_EscapeClearsSelections,
 		Text_Select_WholeWord,
 		Text_Select_BoundedWord,
 		Text_Select_Trim,

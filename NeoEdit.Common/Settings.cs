@@ -17,7 +17,6 @@ namespace NeoEdit.Common
 
 				var xml = XElement.Load(settingsFile);
 				try { dontExitOnClose = bool.Parse(xml.Element(nameof(DontExitOnClose)).Value); } catch { }
-				try { escapeClearsSelections = bool.Parse(xml.Element(nameof(EscapeClearsSelections)).Value); } catch { }
 				try { youTubeDLPath = xml.Element(nameof(YouTubeDLPath)).Value; } catch { }
 				try { ffmpegPath = xml.Element(nameof(FFmpegPath)).Value; } catch { }
 				try { fontSize = double.Parse(xml.Element(nameof(FontSize)).Value); } catch { }
@@ -34,7 +33,6 @@ namespace NeoEdit.Common
 			{
 				var xml = new XElement("Settings");
 				xml.Add(new XElement(nameof(DontExitOnClose), dontExitOnClose));
-				xml.Add(new XElement(nameof(EscapeClearsSelections), escapeClearsSelections));
 				xml.Add(new XElement(nameof(YouTubeDLPath), youTubeDLPath));
 				xml.Add(new XElement(nameof(FFmpegPath), ffmpegPath));
 				xml.Add(new XElement(nameof(FontSize), fontSize));
@@ -53,17 +51,6 @@ namespace NeoEdit.Common
 			set
 			{
 				dontExitOnClose = value;
-				SaveSettings();
-			}
-		}
-
-		static bool escapeClearsSelections = true;
-		public static bool EscapeClearsSelections
-		{
-			get { return escapeClearsSelections; }
-			set
-			{
-				escapeClearsSelections = value;
 				SaveSettings();
 			}
 		}
