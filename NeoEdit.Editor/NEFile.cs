@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -29,39 +28,6 @@ namespace NeoEdit.Editor
 		public DateTime LastWriteTime { get; private set; }
 		public DateTime LastExternalWriteTime { get; private set; }
 		public DateTime LastActivatedTime { get; set; }
-		public string DBName { get; private set; }
-		int currentSelection;
-		public int CurrentSelection { get => Math.Min(Math.Max(0, currentSelection), Selections.Count - 1); private set { currentSelection = value; } }
-
-		public string DisplayName { get; private set; }
-		public string FileName { get; private set; }
-		public bool AutoRefresh { get; private set; }
-		public ParserType ContentType { get; set; }
-		Coder.CodePage codePage;
-		public Coder.CodePage CodePage { get => codePage; private set { codePage = value; SetIsModified(); } }
-		bool hasBOM;
-		public bool HasBOM { get => hasBOM; private set { hasBOM = value; SetIsModified(); } }
-		string aesKey;
-		public string AESKey { get => aesKey; private set { aesKey = value; SetIsModified(); } }
-		bool compressed;
-		public bool Compressed { get => compressed; private set { compressed = value; SetIsModified(); } }
-		bool diffIgnoreWhitespace;
-		public bool DiffIgnoreWhitespace { get => diffIgnoreWhitespace; private set { diffIgnoreWhitespace = value; Text.ClearDiff(); } }
-		bool diffIgnoreCase;
-		public bool DiffIgnoreCase { get => diffIgnoreCase; private set { diffIgnoreCase = value; Text.ClearDiff(); } }
-		bool diffIgnoreNumbers;
-		public bool DiffIgnoreNumbers { get => diffIgnoreNumbers; private set { diffIgnoreNumbers = value; Text.ClearDiff(); } }
-		bool diffIgnoreLineEndings;
-		public bool DiffIgnoreLineEndings { get => diffIgnoreLineEndings; private set { diffIgnoreLineEndings = value; Text.ClearDiff(); } }
-		HashSet<char> diffIgnoreCharacters = new HashSet<char>();
-		public HashSet<char> DiffIgnoreCharacters { get => diffIgnoreCharacters; private set { diffIgnoreCharacters = value; Text.ClearDiff(); } }
-		public bool KeepSelections { get; private set; }
-		public bool HighlightSyntax { get; private set; }
-		public bool StrictParsing { get; private set; }
-		public JumpByType JumpBy { get; private set; }
-		public bool ViewBinary { get; private set; }
-		public HashSet<Coder.CodePage> ViewBinaryCodePages { get; private set; }
-		public IReadOnlyList<HashSet<string>> ViewBinarySearches { get; private set; }
 
 		int startRow, startColumn;
 		public int StartRow
@@ -83,31 +49,6 @@ namespace NeoEdit.Editor
 				startColumn = value;
 				if (DiffTarget != null)
 					DiffTarget.startColumn = value;
-			}
-		}
-
-		NEFile diffTarget;
-		public NEFile DiffTarget
-		{
-			get => diffTarget;
-			set
-			{
-				if (DiffTarget != null)
-				{
-					DiffTarget.NEWindow?.SetNeedsRender();
-					Text.ClearDiff();
-					DiffTarget.Text.ClearDiff();
-					DiffTarget.diffTarget = null;
-					diffTarget = null;
-				}
-
-				if (value != null)
-				{
-					value.DiffTarget = null;
-					diffTarget = value;
-					value.diffTarget = this;
-					DiffTarget.NEWindow?.SetNeedsRender();
-				}
 			}
 		}
 
@@ -1288,8 +1229,6 @@ namespace NeoEdit.Editor
 		{
 			return QueryUser(nameof(ConfirmContinueWhenCannotEncode), "The specified encoding cannot fully represent the data. Continue anyway?", MessageOptions.Yes);
 		}
-
-		DbConnection dbConnection { get; set; }
 
 		void OpenTable(Table table, string name = null)
 		{

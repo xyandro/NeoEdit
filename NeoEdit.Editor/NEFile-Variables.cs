@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using NeoEdit.Common;
+using NeoEdit.Common.Enums;
+using NeoEdit.Common.Transform;
 
 namespace NeoEdit.Editor
 {
@@ -67,6 +70,53 @@ namespace NeoEdit.Editor
 		void ClearNEFiles() => CreateResult().ClearNEFiles();
 		void AddNEFile(NEFile neFile) => CreateResult().AddNEFile(neFile);
 		void AddNewNEFile(NEFile neFile) => CreateResult().AddNewNEFile(neFile);
+
+		public string DBName { get => Data.DBName; private set => EditableData.DBName = value; }
+		public int CurrentSelection { get => Math.Min(Math.Max(0, Data.CurrentSelection), Selections.Count - 1); private set { EditableData.CurrentSelection = value; } }
+		public string DisplayName { get => Data.DisplayName; private set => EditableData.DisplayName = value; }
+		public string FileName { get => Data.FileName; private set => EditableData.FileName = value; }
+		public bool AutoRefresh { get => Data.AutoRefresh; private set => EditableData.AutoRefresh = value; }
+		public ParserType ContentType { get => Data.ContentType; set => EditableData.ContentType = value; }
+		public Coder.CodePage CodePage { get => Data.CodePage; private set { EditableData.CodePage = value; SetIsModified(); } }
+		public bool HasBOM { get => Data.HasBOM; private set { EditableData.HasBOM = value; SetIsModified(); } }
+		public string AESKey { get => Data.AESKey; private set { EditableData.AESKey = value; SetIsModified(); } }
+		public bool Compressed { get => Data.Compressed; private set { EditableData.Compressed = value; SetIsModified(); } }
+		public bool DiffIgnoreWhitespace { get => Data.DiffIgnoreWhitespace; private set { EditableData.DiffIgnoreWhitespace = value; Text.ClearDiff(); } }
+		public bool DiffIgnoreCase { get => Data.DiffIgnoreCase; private set { EditableData.DiffIgnoreCase = value; Text.ClearDiff(); } }
+		public bool DiffIgnoreNumbers { get => Data.DiffIgnoreNumbers; private set { EditableData.DiffIgnoreNumbers = value; Text.ClearDiff(); } }
+		public bool DiffIgnoreLineEndings { get => Data.DiffIgnoreLineEndings; private set { EditableData.DiffIgnoreLineEndings = value; Text.ClearDiff(); } }
+		public HashSet<char> DiffIgnoreCharacters { get => Data.DiffIgnoreCharacters; private set { EditableData.DiffIgnoreCharacters = value; Text.ClearDiff(); } }
+		public bool KeepSelections { get => Data.KeepSelections; private set => EditableData.KeepSelections = value; }
+		public bool HighlightSyntax { get => Data.HighlightSyntax; private set => EditableData.HighlightSyntax = value; }
+		public bool StrictParsing { get => Data.StrictParsing; private set => EditableData.StrictParsing = value; }
+		public JumpByType JumpBy { get => Data.JumpBy; private set => EditableData.JumpBy = value; }
+		public bool ViewBinary { get => Data.ViewBinary; private set => EditableData.ViewBinary = value; }
+		public HashSet<Coder.CodePage> ViewBinaryCodePages { get => Data.ViewBinaryCodePages; private set => EditableData.ViewBinaryCodePages = value; }
+		public IReadOnlyList<HashSet<string>> ViewBinarySearches { get => Data.ViewBinarySearches; private set => EditableData.ViewBinarySearches = value; }
+		public NEFile DiffTarget
+		{
+			get => Data.DiffTarget;
+			set
+			{
+				if (Data.DiffTarget != null)
+				{
+					Data.DiffTarget.NEWindow?.SetNeedsRender();
+					Text.ClearDiff();
+					Data.DiffTarget.Text.ClearDiff();
+					Data.DiffTarget.EditableData.DiffTarget = null;
+					EditableData.DiffTarget = null;
+				}
+
+				if (value != null)
+				{
+					value.EditableData.DiffTarget = null;
+					EditableData.DiffTarget = value;
+					value.EditableData.DiffTarget = this;
+					Data.DiffTarget.NEWindow?.SetNeedsRender();
+				}
+			}
+		}
+		DbConnection dbConnection { get => Data.dbConnection; set => EditableData.dbConnection = value; }
 
 		Tuple<IReadOnlyList<string>, bool?> clipboardData;
 		Tuple<IReadOnlyList<string>, bool?> ClipboardData
