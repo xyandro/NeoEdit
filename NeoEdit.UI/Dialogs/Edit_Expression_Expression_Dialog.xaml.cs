@@ -26,8 +26,6 @@ namespace NeoEdit.UI.Dialogs
 			Expression = "x";
 			Variables = variables;
 			RowCount = rowCount;
-
-			PreviewKeyDown += (s, e) => (Expression, _) = ExpressionShortcutsDialog.HandleKey(e, Expression, true);
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);

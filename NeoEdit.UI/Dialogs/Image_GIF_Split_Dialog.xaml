@@ -18,7 +18,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Output _template:" HorizontalAlignment="Right" Target="{Binding ElementName=outputTemplate}"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="outputTemplate" Text="{Binding OutputTemplate, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageGIFSplitDialogOutputTemplate"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="outputTemplate" Text="{Binding OutputTemplate, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_GIF_Split_Dialog-OutputTemplate" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" Expression="{Binding OutputTemplate, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

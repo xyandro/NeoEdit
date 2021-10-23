@@ -18,7 +18,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Size:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Files_Set_Size_Dialog"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Files_Set_Size_Dialog-Expression" IsExpression="True"/>
 		<ComboBox Grid.Row="0" Grid.Column="2" ItemsSource="{Binding FactorDict, ElementName=self}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding Factor, ElementName=self}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Value(s):" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>

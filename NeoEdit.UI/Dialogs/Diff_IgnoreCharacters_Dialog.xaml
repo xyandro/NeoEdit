@@ -17,7 +17,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="C_haracters:" Target="{Binding ElementName=ignoreCharacters}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="ignoreCharacters" Text="{Binding IgnoreCharacters, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Diff_IgnoreCharacters_Dialog-IgnoreCharacters"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="ignoreCharacters" Text="{Binding IgnoreCharacters, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Diff_IgnoreCharacters_Dialog-IgnoreCharacters" DisableExpressionShortcuts="True"/>
 
 		<CheckBox Grid.Row="1" Grid.Column="1" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}"/>
 

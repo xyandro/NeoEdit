@@ -18,7 +18,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Multiplier:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="expression" AcceptsTab="True" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_AdjustColor_Dialog"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="expression" AcceptsTab="True" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_AdjustColor_Dialog-Expression" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

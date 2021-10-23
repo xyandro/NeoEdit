@@ -160,8 +160,6 @@ namespace NeoEdit.UI.Dialogs
 
 			Reset();
 			Text = text ?? "";
-
-			PreviewKeyDown += (s, e) => (Text, IsExpression) = ExpressionShortcutsDialog.HandleKey(e, Text, IsExpression);
 		}
 
 		CheckBoxStatus GetCheckBoxStatus()

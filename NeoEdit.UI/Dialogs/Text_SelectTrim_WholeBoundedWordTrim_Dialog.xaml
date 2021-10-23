@@ -19,7 +19,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="C_haracters:" Target="{Binding ElementName=chars}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="chars" Text="{Binding Chars, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="chars" Text="{Binding Chars, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Text_SelectTrim_WholeBoundedWordTrim_Dialog-Chars" DisableExpressionShortcuts="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Location:" HorizontalAlignment="Right"/>
 		<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">

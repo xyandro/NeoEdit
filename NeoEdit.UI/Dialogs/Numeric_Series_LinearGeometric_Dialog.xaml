@@ -19,13 +19,13 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Start:" Target="{Binding ElementName=start}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Name="start" Text="{Binding StartExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="start" Text="{Binding StartExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_Series_LinearGeometric_Dialog-StartExpression" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding StartExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Name="incrementLabel" Content="_Increment:" Target="{Binding ElementName=increment}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="2" Grid.Column="1" Name="increment" Text="{Binding IncrementExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="increment" Text="{Binding IncrementExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_Series_LinearGeometric_Dialog-IncrementExpression" IsExpression="True"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" Expression="{Binding IncrementExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

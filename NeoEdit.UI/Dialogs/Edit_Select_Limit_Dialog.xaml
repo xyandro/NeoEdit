@@ -24,25 +24,25 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_First selection:" Target="{Binding ElementName=firstSelection}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="firstSelection" Text="{Binding FirstSelection, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="LimitDialogFirst"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="firstSelection" Text="{Binding FirstSelection, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Edit_Select_Limit_Dialog-FirstSelection" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" RowCount="1" Expression="{Binding FirstSelection, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Every nth selection:" Target="{Binding ElementName=everyNth}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="everyNth" Text="{Binding EveryNth, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="LimitDialogEvery"/>
+		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="everyNth" Text="{Binding EveryNth, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Edit_Select_Limit_Dialog-EveryNth" IsExpression="True"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" RowCount="1" Expression="{Binding EveryNth, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="4" Grid.Column="0" Content="_Take count:" Target="{Binding ElementName=takeCount}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="4" Grid.Column="1" x:Name="takeCount" Text="{Binding TakeCount, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="LimitDialogEvery"/>
+		<controls:AutoCompleteTextBox Grid.Row="4" Grid.Column="1" x:Name="takeCount" Text="{Binding TakeCount, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Edit_Select_Limit_Dialog-TakeCount" IsExpression="True"/>
 
 		<Label Grid.Row="5" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="5" Grid.Column="1" RowCount="1" Expression="{Binding TakeCount, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="6" Grid.Column="0" Content="_Number of selections:" Target="{Binding ElementName=numSelections}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="6" Grid.Column="1" x:Name="numSelections" Text="{Binding NumSelections, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="LimitDialogNumber"/>
+		<controls:AutoCompleteTextBox Grid.Row="6" Grid.Column="1" x:Name="numSelections" Text="{Binding NumSelections, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Edit_Select_Limit_Dialog-NumSelections" IsExpression="True"/>
 
 		<Label Grid.Row="7" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="7" Grid.Column="1" RowCount="1" Expression="{Binding NumSelections, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

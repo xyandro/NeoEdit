@@ -23,25 +23,25 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Input files:" Target="{Binding ElementName=inputFiles}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="inputFiles" Text="{Binding InputFiles, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageAnimateDialogInputFiles"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="inputFiles" Text="{Binding InputFiles, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_GIF_Animate_Dialog-InputFiles" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" Expression="{Binding InputFiles, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Output file:" Target="{Binding ElementName=outputFile}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="outputFile" Text="{Binding OutputFile, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageAnimateDialogOutputFile"/>
+		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="outputFile" Text="{Binding OutputFile, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_GIF_Animate_Dialog-OutputFile" IsExpression="True"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" Expression="{Binding OutputFile, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="4" Grid.Column="0" Content="_Delay:" Target="{Binding ElementName=delay}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="4" Grid.Column="1" x:Name="delay" Text="{Binding Delay, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageAnimateDialogDelay"/>
+		<controls:AutoCompleteTextBox Grid.Row="4" Grid.Column="1" x:Name="delay" Text="{Binding Delay, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_GIF_Animate_Dialog-Delay" IsExpression="True"/>
 
 		<Label Grid.Row="5" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="5" Grid.Column="1" Expression="{Binding Delay, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="6" Grid.Column="0" Content="_Repeat:" Target="{Binding ElementName=repeat}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="6" Grid.Column="1" x:Name="repeat" Text="{Binding Repeat, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageAnimateDialogRepeat"/>
+		<controls:AutoCompleteTextBox Grid.Row="6" Grid.Column="1" x:Name="repeat" Text="{Binding Repeat, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_GIF_Animate_Dialog-Repeat" IsExpression="True"/>
 
 		<Label Grid.Row="7" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="7" Grid.Column="1" Expression="{Binding Repeat, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

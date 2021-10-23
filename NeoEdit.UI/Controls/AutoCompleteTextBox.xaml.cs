@@ -17,6 +17,24 @@ namespace NeoEdit.UI.Controls
 {
 	partial class AutoCompleteTextBox
 	{
+		public static IReadOnlyDictionary<Key, string> Shortcuts { get; } = new Dictionary<Key, string>
+		{
+			[Key.X] = "x",
+			[Key.Y] = "y",
+			[Key.Z] = "z",
+			[Key.C] = "c",
+			[Key.K] = "k",
+			[Key.D1] = "r1",
+			[Key.D2] = "r2",
+			[Key.D3] = "r3",
+			[Key.D4] = "r4",
+			[Key.D5] = "r5",
+			[Key.D6] = "r6",
+			[Key.D7] = "v7",
+			[Key.D8] = "v8",
+			[Key.D9] = "v9",
+		};
+
 		public delegate void OnAcceptSuggestionDelegate(string text, object data);
 		public event OnAcceptSuggestionDelegate OnAcceptSuggestion;
 
@@ -39,7 +57,9 @@ namespace NeoEdit.UI.Controls
 		[DepProp]
 		public bool UpcaseTracking { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
-		public bool HighlightExpressions { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
+		public bool DisableExpressionShortcuts { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
+		[DepProp(BindsTwoWayByDefault = true)]
+		public bool IsExpression { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<bool>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
 		ObservableCollection<Suggestion> Suggestions { get { return UIHelper<AutoCompleteTextBox>.GetPropValue<ObservableCollection<Suggestion>>(this); } set { UIHelper<AutoCompleteTextBox>.SetPropValue(this, value); } }
 		[DepProp]
@@ -52,7 +72,7 @@ namespace NeoEdit.UI.Controls
 			UIHelper<AutoCompleteTextBox>.Register();
 			UIHelper<AutoCompleteTextBox>.AddCallback(a => a.SuggestedValue, (obj, o, n) => obj.listbox.ScrollIntoView(n));
 			UIHelper<AutoCompleteTextBox>.AddCallback(x => x.Text, (obj, o, n) => obj.TextPropertyChangedAction?.Invoke(n));
-			UIHelper<AutoCompleteTextBox>.AddCallback(x => x.HighlightExpressions, (obj, o, n) => obj.SetHighlighting());
+			UIHelper<AutoCompleteTextBox>.AddCallback(x => x.IsExpression, (obj, o, n) => obj.SetHighlighting());
 		}
 
 		Action<string> TextPropertyChangedAction;
@@ -122,12 +142,13 @@ namespace NeoEdit.UI.Controls
 			var oldSelection = new TextRange(Selection.Start, Selection.End);
 
 			SelectAll();
-			Selection.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
+			Selection.ClearAllProperties();
+			Selection.ApplyPropertyValue(RichTextBox.ForegroundProperty, Brushes.White);
 
-			if (HighlightExpressions)
+			if (IsExpression)
 			{
 				var ranges = new List<(TextRange, int)>();
-				var regex = new Regex(@"\br([1-9])\b");
+				var regex = new Regex(@"\br([1-9])(|n|l(|min|max))\b");
 				foreach (var paragraph in Document.Blocks.OfType<Paragraph>())
 				{
 					foreach (var inline in paragraph.Inlines)
@@ -242,6 +263,14 @@ namespace NeoEdit.UI.Controls
 				suggestedIndex = Math.Max(0, Math.Min(suggestedIndex, Suggestions.Count - 1));
 				if (SuggestedIndex != suggestedIndex)
 					SuggestedIndex = suggestedIndex;
+				return;
+			}
+
+			if ((!DisableExpressionShortcuts) && (Keyboard.Modifiers.HasFlag(ModifierKeys.Control | ModifierKeys.Shift)) && (Shortcuts.ContainsKey(e.Key)))
+			{
+				Selection.Text = Shortcuts[e.Key];
+				Selection.Select(Selection.End, Selection.End);
+				IsExpression = true;
 			}
 		}
 

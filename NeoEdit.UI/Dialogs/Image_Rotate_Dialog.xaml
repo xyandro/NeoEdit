@@ -17,7 +17,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Angle in degrees:" Target="{Binding ElementName=angleExpression}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="angleExpression" Text="{Binding AngleExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageResizeDialogWidthExpression"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="angleExpression" Text="{Binding AngleExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_Rotate_Dialog-AngleExpression" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding AngleExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

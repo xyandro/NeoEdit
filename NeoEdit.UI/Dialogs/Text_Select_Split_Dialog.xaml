@@ -25,10 +25,10 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="SelectSplit"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Text_Select_Split_Dialog-Text" DisableExpressionShortcuts="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="I_ndex (0 for all):" Target="{Binding ElementName=index}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="index" Text="{Binding Index, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="SelectSplitDialogIndex"/>
+		<controls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="index" Text="{Binding Index, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Text_Select_Split_Dialog-Index" IsExpression="True"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="2" Grid.Column="1" Expression="{Binding Index, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

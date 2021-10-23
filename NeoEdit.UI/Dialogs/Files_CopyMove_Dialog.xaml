@@ -19,13 +19,13 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Old name:" Target="{Binding ElementName=oldFileName}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="oldFileName" Text="{Binding OldFileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="CopyMoveFilesDialogOldFileName"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="oldFileName" Text="{Binding OldFileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Files_CopyMove_Dialog-OldFileName" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" Expression="{Binding OldFileName, ElementName=self}" CountExpression="{Binding NewFileName, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_New name:" Target="{Binding ElementName=newFileName}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="newFileName" Text="{Binding NewFileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="CopyMoveFilesDialogNewFileName"/>
+		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="newFileName" Text="{Binding NewFileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Files_CopyMove_Dialog-NewFileName" IsExpression="True"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" MultiRow="True" Expression="{Binding NewFileName, ElementName=self}" CountExpression="{Binding OldFileName, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

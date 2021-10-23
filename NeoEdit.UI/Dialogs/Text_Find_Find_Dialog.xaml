@@ -24,7 +24,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="EditFindFindDialogText" OnAcceptSuggestion="OnAcceptSuggestion" HighlightExpressions="{Binding IsExpression, ElementName=self}"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Text_Find_Find_Dialog-Text" OnAcceptSuggestion="OnAcceptSuggestion" IsExpression="{Binding IsExpression, ElementName=self}"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" Content="Results:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Visibility="{Binding IsExpression, ElementName=self, Converter={converters:BoolToVisibleCollapsedConverter}}" MultiRow="True" Expression="{Binding Text, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

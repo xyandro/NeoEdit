@@ -19,13 +19,13 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_URL:" Target="{Binding ElementName=url}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="url" Text="{Binding URL, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="CopyMoveFilesDialogURL"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="url" Text="{Binding URL, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Network_Fetch_File_Dialog-URL" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" Expression="{Binding URL, ElementName=self}" CountExpression="{Binding FileName, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_File:" Target="{Binding ElementName=fileName}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="fileName" Text="{Binding FileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="CopyMoveFilesDialogFileName"/>
+		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="fileName" Text="{Binding FileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Network_Fetch_File_Dialog-FileName" IsExpression="True"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" MultiRow="True" Expression="{Binding FileName, ElementName=self}" CountExpression="{Binding URL, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

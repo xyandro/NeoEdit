@@ -82,8 +82,6 @@ namespace NeoEdit.UI.Dialogs
 			Reset();
 			Text = text.GetLastSuggestion() ?? "";
 			SetCheckBoxStatus(text.GetLastSuggestionData() as CheckBoxStatus);
-
-			PreviewKeyDown += (s, e) => (Text, IsExpression) = ExpressionShortcutsDialog.HandleKey(e, Text, IsExpression);
 		}
 
 		CheckBoxStatus GetCheckBoxStatus()

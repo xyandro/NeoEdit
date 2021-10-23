@@ -21,7 +21,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Expression:" Target="{Binding ElementName=expression}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" CompletionTag="NetworkFetchStreamDialogExpression"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" CompletionTag="Network_Fetch_StreamPlaylist_Dialog-Expression" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" MultiRow="True" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
@@ -34,7 +34,7 @@
 		<TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Name="ffmpegPath" Text="{Binding FFmpegPath, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
 
 		<Label Grid.Row="4" Grid.Column="0" Content="_Output directory:" Target="{Binding ElementName=outputDirectory}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" x:Name="outputDirectory" Text="{Binding OutputDirectory, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" CompletionTag="NetworkFetchStreamDialogOutputDirectory"/>
+		<controls:AutoCompleteTextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" x:Name="outputDirectory" Text="{Binding OutputDirectory, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" CompletionTag="Network_Fetch_StreamPlaylist_Dialog-OutputDirectory" DisableExpressionShortcuts="True"/>
 
 		<UniformGrid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

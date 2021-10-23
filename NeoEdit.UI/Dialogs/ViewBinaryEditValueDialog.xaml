@@ -16,7 +16,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Value:" Target="{Binding ElementName=value}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="value" Text="{Binding Value, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ViewBinaryEditValueDialog"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="value" Text="{Binding Value, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ViewBinaryEditValueDialog-Value" DisableExpressionShortcuts="True"/>
 
 		<UniformGrid Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

@@ -24,16 +24,16 @@
 		<Label Grid.Row="0" Grid.Column="2" Content="Max" HorizontalAlignment="Center"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Previous:" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="prevMin" Text="{Binding PrevMin, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ScaleDialog_PrevMin"/>
-		<controls:AutoCompleteTextBox Grid.Row="1" Grid.Column="2" Text="{Binding PrevMax, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ScaleDialog_PrevMax"/>
+		<controls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="prevMin" Text="{Binding PrevMin, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_Scale_Dialog-PrevMin" IsExpression="True"/>
+		<controls:AutoCompleteTextBox Grid.Row="1" Grid.Column="2" Text="{Binding PrevMax, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_Scale_Dialog-PrevMax" IsExpression="True"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="2" Grid.Column="1" Expression="{Binding PrevMin, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 		<controls:NEExpressionResults Grid.Row="2" Grid.Column="2" Expression="{Binding PrevMax, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="New:" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="3" Grid.Column="1" Text="{Binding NewMin, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ScaleDialog_NewMin"/>
-		<controls:AutoCompleteTextBox Grid.Row="3" Grid.Column="2" Text="{Binding NewMax, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ScaleDialog_NewMax"/>
+		<controls:AutoCompleteTextBox Grid.Row="3" Grid.Column="1" Text="{Binding NewMin, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_Scale_Dialog-NewMin" IsExpression="True"/>
+		<controls:AutoCompleteTextBox Grid.Row="3" Grid.Column="2" Text="{Binding NewMax, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_Scale_Dialog-NewMax" IsExpression="True"/>
 
 		<Label Grid.Row="4" Grid.Column="0" Content="Results:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="4" Grid.Column="1" Expression="{Binding NewMin, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

@@ -22,12 +22,12 @@
 		<Label Grid.Row="0" Grid.Column="2" Content="Set:" HorizontalAlignment="Center"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="_Input:" Target="{Binding ElementName=inputBase}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox TabIndex="0" Grid.Row="1" Grid.Column="1" x:Name="inputBase" Text="{Binding InputBase, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ConvertBaseDialogBase"/>
-		<controls:AutoCompleteTextBox TabIndex="2" Grid.Row="1" Grid.Column="2" x:Name="inputSet" Text="{Binding InputSet, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ConvertBaseDialogSet"/>
+		<controls:AutoCompleteTextBox TabIndex="0" Grid.Row="1" Grid.Column="1" x:Name="inputBase" Text="{Binding InputBase, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_ConvertBase_ConvertBase_Dialog-InputBase" DisableExpressionShortcuts="True"/>
+		<controls:AutoCompleteTextBox TabIndex="2" Grid.Row="1" Grid.Column="2" x:Name="inputSet" Text="{Binding InputSet, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_ConvertBase_ConvertBase_Dialog-InputSet" DisableExpressionShortcuts="True"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Output:" Target="{Binding ElementName=outputBase}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox TabIndex="1" Grid.Row="2" Grid.Column="1" x:Name="outputBase" Text="{Binding OutputBase, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ConvertBaseDialogBase"/>
-		<controls:AutoCompleteTextBox TabIndex="3" Grid.Row="2" Grid.Column="2" x:Name="outputSet" Text="{Binding OutputSet, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ConvertBaseDialogSet"/>
+		<controls:AutoCompleteTextBox TabIndex="1" Grid.Row="2" Grid.Column="1" x:Name="outputBase" Text="{Binding OutputBase, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_ConvertBase_ConvertBase_Dialog-OutputBase" DisableExpressionShortcuts="True"/>
+		<controls:AutoCompleteTextBox TabIndex="3" Grid.Row="2" Grid.Column="2" x:Name="outputSet" Text="{Binding OutputSet, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_ConvertBase_ConvertBase_Dialog-OutputSet" DisableExpressionShortcuts="True"/>
 
 		<UniformGrid Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

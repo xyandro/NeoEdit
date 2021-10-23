@@ -19,13 +19,13 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_File name:" Target="{Binding ElementName=fileName}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="fileName" Text="{Binding FileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ConfigureImageSetTakenDateDialogFileName"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="fileName" Text="{Binding FileName, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_SetTakenDate_Dialog-FileName" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" MultiRow="True" Expression="{Binding FileName, ElementName=self}" CountExpression="{Binding DateTime, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Date/time:" Target="{Binding ElementName=dateTime}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="dateTime" Text="{Binding DateTime, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ConfigureImageSetTakenDateDialogDateTime"/>
+		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="dateTime" Text="{Binding DateTime, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_SetTakenDate_Dialog-DateTime" IsExpression="True"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" MultiRow="True" Expression="{Binding DateTime, ElementName=self}" CountExpression="{Binding FileName, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

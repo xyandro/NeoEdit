@@ -17,10 +17,10 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_WCF URL:" Target="{Binding ElementName=wcfURL}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="wcfURL" Text="{Binding WCFURL, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="NetworkWCFInterceptCallDialogWCFURL"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="wcfURL" Text="{Binding WCFURL, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Network_WCF_InterceptCalls_Dialog-WCFURL" DisableExpressionShortcuts="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="_Intercept URL:" Target="{Binding ElementName=interceptURL}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="interceptURL" Text="{Binding InterceptURL, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="NetworkWCFInterceptCallDialogInterceptURL"/>
+		<controls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="interceptURL" Text="{Binding InterceptURL, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Network_WCF_InterceptCalls_Dialog-InterceptURL" DisableExpressionShortcuts="True"/>
 
 		<UniformGrid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

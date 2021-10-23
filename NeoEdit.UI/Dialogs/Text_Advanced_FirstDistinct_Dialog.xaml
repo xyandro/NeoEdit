@@ -17,7 +17,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Chars:" Target="{Binding ElementName=chars}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="chars" Text="{Binding Chars, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="FirstDistinct"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="chars" Text="{Binding Chars, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Text_Advanced_FirstDistinct_Dialog-Chars" DisableExpressionShortcuts="True"/>
 
 		<CheckBox Grid.Row="1" Grid.Column="1" Content="Match _case" IsChecked="{Binding MatchCase, ElementName=self}" Focusable="False"/>
 

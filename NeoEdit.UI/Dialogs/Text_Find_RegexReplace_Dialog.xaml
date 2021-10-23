@@ -19,10 +19,10 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Find:" Target="{Binding ElementName=text}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="EditFindFindDialogText" OnAcceptSuggestion="OnAcceptSuggestion"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="text" AcceptsTab="True" Text="{Binding Text, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Text_Find_RegexReplace_Dialog-Text" OnAcceptSuggestion="OnAcceptSuggestion" DisableExpressionShortcuts="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Rep_lace:" Target="{Binding ElementName=replace}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="replace" AcceptsTab="True" Text="{Binding Replace, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ReplaceDialogReplace"/>
+		<controls:AutoCompleteTextBox Grid.Row="1" Grid.Column="1" x:Name="replace" AcceptsTab="True" Text="{Binding Replace, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Text_Find_RegexReplace_Dialog-Replace" DisableExpressionShortcuts="True"/>
 
 		<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
 			<CheckBox Content="_Whole words only" IsChecked="{Binding WholeWords, ElementName=self}" Margin="0,5,0,0" Focusable="False"/>

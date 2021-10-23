@@ -17,7 +17,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Count:" Target="{Binding ElementName=expression}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" CompletionTag="Edit_Repeat_Dialog"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="expression" Text="{Binding Expression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" CompletionTag="Edit_Repeat_Dialog-Expression" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Value(s):" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding Expression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

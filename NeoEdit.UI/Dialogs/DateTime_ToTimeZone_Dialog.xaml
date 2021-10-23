@@ -16,7 +16,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="T_ime zone" Target="{Binding ElementName=timeZone}"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="timeZone" Text="{Binding TimeZone, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="timeZone" Text="{Binding TimeZone, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="DateTime_ToTimeZone_Dialog-TimeZone" DisableExpressionShortcuts="True"/>
 
 		<UniformGrid Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Rows="1">
 			<Button Click="OkClick" IsDefault="True" Content="Ok" Padding="10,1"/>

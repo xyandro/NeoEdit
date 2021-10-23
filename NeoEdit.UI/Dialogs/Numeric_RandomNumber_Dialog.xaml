@@ -19,13 +19,13 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="Mi_nimum:" Target="{Binding ElementName=minValue}"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="minValue" Text="{Binding MinValue, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="NumericRandomNumberDialogMinValue"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="minValue" Text="{Binding MinValue, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_RandomNumber_Dialog-MinValue" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding MinValue, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="Ma_ximum:" Target="{Binding ElementName=maxValue}"/>
-		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="maxValue" Text="{Binding MaxValue, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="NumericRandomNumberDialogMaxValue"/>
+		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="maxValue" Text="{Binding MaxValue, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Numeric_RandomNumber_Dialog-MaxValue" IsExpression="True"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" Expression="{Binding MaxValue, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

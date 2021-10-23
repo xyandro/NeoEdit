@@ -18,7 +18,7 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_RegEx:" Target="{Binding ElementName=regex}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="regex" Text="{Binding RegEx, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="RevRegex" AcceptsTab="True"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="regex" Text="{Binding RegEx, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Text_Advanced_ReverseRegex_Dialog-RegEx" AcceptsTab="True" DisableExpressionShortcuts="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="_Infinite count:" Target="{Binding ElementName=infiniteCount}" HorizontalAlignment="Right"/>
 		<controls:NumericUpDown Grid.Row="1" Grid.Column="1" x:Name="infiniteCount" Value="{Binding InfiniteCount, ElementName=self}"/>

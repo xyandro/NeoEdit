@@ -20,13 +20,13 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_Width:" Target="{Binding ElementName=widthExpression}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="widthExpression" Text="{Binding WidthExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageResizeDialogWidthExpression"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="widthExpression" Text="{Binding WidthExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_Size_Dialog-WidthExpression" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding WidthExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Height:" Target="{Binding ElementName=heightExpression}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="heightExpression" Text="{Binding HeightExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageResizeDialogHeightExpression"/>
+		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="heightExpression" Text="{Binding HeightExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_Size_Dialog-HeightExpression" IsExpression="True"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" Expression="{Binding HeightExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

@@ -24,25 +24,25 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_X" Target="{Binding ElementName=grabX}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="0" Grid.Column="1" Name="grabX" Text="{Binding GrabX, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="grabX" Text="{Binding GrabX, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_GrabImage_Dialog-GrabX" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding GrabX, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Y" Target="{Binding ElementName=grabY}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="2" Grid.Column="1" Name="grabY" Text="{Binding GrabY, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="grabY" Text="{Binding GrabY, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_GrabImage_Dialog-GrabY" IsExpression="True"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" Expression="{Binding GrabY, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="4" Grid.Column="0" Content="_Width" Target="{Binding ElementName=grabWidth}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="4" Grid.Column="1" Name="grabWidth" Text="{Binding GrabWidth, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<controls:AutoCompleteTextBox Grid.Row="4" Grid.Column="1" x:Name="grabWidth" Text="{Binding GrabWidth, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_GrabImage_Dialog-GrabWidth" IsExpression="True"/>
 
 		<Label Grid.Row="5" Grid.Column="0" Content="Result" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="5" Grid.Column="1" Expression="{Binding GrabWidth, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="6" Grid.Column="0" Content="_Height" Target="{Binding ElementName=grabHeight}" HorizontalAlignment="Right"/>
-		<TextBox Grid.Row="6" Grid.Column="1" Name="grabHeight" Text="{Binding GrabHeight, ElementName=self, UpdateSourceTrigger=PropertyChanged}"/>
+		<controls:AutoCompleteTextBox Grid.Row="6" Grid.Column="1" x:Name="grabHeight" Text="{Binding GrabHeight, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_GrabImage_Dialog-GrabHeight" IsExpression="True"/>
 
 		<Label Grid.Row="7" Grid.Column="0" Content="Result" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="7" Grid.Column="1" Expression="{Binding GrabHeight, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>

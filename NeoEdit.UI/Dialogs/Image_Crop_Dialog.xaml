@@ -26,25 +26,25 @@
 		</Grid.RowDefinitions>
 
 		<Label Grid.Row="0" Grid.Column="0" Content="_X:" Target="{Binding ElementName=xExpression}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="xExpression" Text="{Binding XExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageCropDialogXExpression"/>
+		<controls:AutoCompleteTextBox Grid.Row="0" Grid.Column="1" x:Name="xExpression" Text="{Binding XExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_Crop_Dialog-XExpression" IsExpression="True"/>
 
 		<Label Grid.Row="1" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="1" Grid.Column="1" Expression="{Binding XExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="2" Grid.Column="0" Content="_Y:" Target="{Binding ElementName=yExpression}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="yExpression" Text="{Binding YExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageCropDialogYExpression"/>
+		<controls:AutoCompleteTextBox Grid.Row="2" Grid.Column="1" x:Name="yExpression" Text="{Binding YExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_Crop_Dialog-YExpression" IsExpression="True"/>
 
 		<Label Grid.Row="3" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="3" Grid.Column="1" Expression="{Binding YExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="4" Grid.Column="0" Content="_Width:" Target="{Binding ElementName=widthExpression}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="4" Grid.Column="1" x:Name="widthExpression" Text="{Binding WidthExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageCropDialogWidthExpression"/>
+		<controls:AutoCompleteTextBox Grid.Row="4" Grid.Column="1" x:Name="widthExpression" Text="{Binding WidthExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_Crop_Dialog-WidthExpression" IsExpression="True"/>
 
 		<Label Grid.Row="5" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="5" Grid.Column="1" Expression="{Binding WidthExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
 
 		<Label Grid.Row="6" Grid.Column="0" Content="_Height:" Target="{Binding ElementName=heightExpression}" HorizontalAlignment="Right"/>
-		<controls:AutoCompleteTextBox Grid.Row="6" Grid.Column="1" x:Name="heightExpression" Text="{Binding HeightExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="ImageCropDialogHeightExpression"/>
+		<controls:AutoCompleteTextBox Grid.Row="6" Grid.Column="1" x:Name="heightExpression" Text="{Binding HeightExpression, ElementName=self, UpdateSourceTrigger=PropertyChanged}" CompletionTag="Image_Crop_Dialog-HeightExpression" IsExpression="True"/>
 
 		<Label Grid.Row="7" Grid.Column="0" Content="Result:" HorizontalAlignment="Right"/>
 		<controls:NEExpressionResults Grid.Row="7" Grid.Column="1" Expression="{Binding HeightExpression, ElementName=self}" Variables="{Binding Variables, ElementName=self}"/>
@@ -158,14 +158,14 @@
 		<StackPanel Grid.Row="4" Grid.RowSpan="2" Grid.Column="3" VerticalAlignment="Center">
 			<Label Content="_Ratio" HorizontalAlignment="Center" Target="{Binding ElementName=aspectRatio}"/>
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-				<controls:AutoCompleteTextBox x:Name="aspectRatio" Width="100" Text="{Binding AspectRatio, ElementName=self, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" CompletionTag="ImageCropDialogAspectRatio"/>
+				<controls:AutoCompleteTextBox x:Name="aspectRatio" Width="100" Text="{Binding AspectRatio, ElementName=self, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" CompletionTag="Image_Crop_Dialog-AspectRatio" DisableExpressionShortcuts="True"/>
 				<Button Content="_Apply" HorizontalAlignment="Center" Click="OnApplyAspectRatio"/>
 			</StackPanel>
 		</StackPanel>
 
 		<StackPanel Grid.Row="6" Grid.RowSpan="2" Grid.Column="3" VerticalAlignment="Center">
 			<Label Content="Fill _color" HorizontalAlignment="Center" Target="{Binding ElementName=fillColor}"/>
-			<controls:AutoCompleteTextBox x:Name="fillColor" Width="100" Text="{Binding FillColor, ElementName=self, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" CompletionTag="ImageCropDialogFillColor"/>
+			<controls:AutoCompleteTextBox x:Name="fillColor" Width="100" Text="{Binding FillColor, ElementName=self, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" CompletionTag="Image_Crop_Dialog-FillColor" DisableExpressionShortcuts="True"/>
 		</StackPanel>
 
 		<UniformGrid Grid.Row="9" Grid.ColumnSpan="4" HorizontalAlignment="Left" Rows="1">
