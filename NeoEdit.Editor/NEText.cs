@@ -25,7 +25,7 @@ namespace NeoEdit.Editor
 		public string OnlyEnding { get; private set; }
 		public string DefaultEnding { get; private set; }
 
-		NETextPoint neTextPoint = new NETextPoint(new List<NERange>(), new List<string>(), null);
+		NETextPoint neTextPoint = new NETextPoint("", new List<NERange>(), new List<string>(), null);
 
 		public int Length => text.Length;
 		public int NumLines => endingPosition.Count;
@@ -432,7 +432,7 @@ namespace NeoEdit.Editor
 
 		public NETextPoint CreateTextPoint(IReadOnlyList<NERange> ranges, IReadOnlyList<string> strs)
 		{
-			MoveToTextPoint(new NETextPoint(ranges, strs, neTextPoint));
+			MoveToTextPoint(new NETextPoint(text, ranges, strs, neTextPoint));
 			return neTextPoint;
 		}
 

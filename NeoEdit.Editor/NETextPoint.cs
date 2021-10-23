@@ -12,14 +12,66 @@ namespace NeoEdit.Editor
 		IReadOnlyList<string> strs;
 		NETextPoint parent;
 
-		public NETextPoint(IReadOnlyList<NERange> ranges, IReadOnlyList<string> strs, NETextPoint parent)
+		public NETextPoint(string text, IReadOnlyList<NERange> ranges, IReadOnlyList<string> strs, NETextPoint parent)
 		{
 			if (ranges.Count != strs.Count)
 				throw new Exception("Invalid number of arguments");
 
+			(ranges, strs) = Simplify(text, ranges, strs);
 			this.ranges = ranges;
 			this.strs = strs;
 			this.parent = parent;
+		}
+
+		static int BeginMatchLength(string str1, string str2)
+		{
+			var max = Math.Min(str1.Length, str2.Length);
+			for (var ctr = 0; ctr < max; ++ctr)
+				if (str1[ctr] != str2[ctr])
+					return ctr;
+			return max;
+		}
+
+		static int EndMatchLength(string str1, string str2)
+		{
+			var max = Math.Min(str1.Length, str2.Length);
+			for (var ctr = 0; ctr < max; ++ctr)
+				if (str1[str1.Length - ctr - 1] != str2[str2.Length - ctr - 1])
+					return ctr;
+			return max;
+		}
+
+		static (IReadOnlyList<NERange>, IReadOnlyList<string>) Simplify(string text, IReadOnlyList<NERange> ranges, IReadOnlyList<string> strs)
+		{
+			List<NERange> newRanges = new List<NERange>();
+			List<string> newStrs = new List<string>();
+
+			for (var ctr = 0; ctr < ranges.Count; ++ctr)
+			{
+				var range = ranges[ctr];
+				var str = strs[ctr];
+
+				var len = BeginMatchLength(str, text[range.Start..range.End]);
+				if (len != 0)
+				{
+					range = NERange.FromIndex(range.Start + len, range.Length - len);
+					str = str[len..];
+				}
+
+				len = EndMatchLength(str, text[range.Start..range.End]);
+				if (len != 0)
+				{
+					range = NERange.FromIndex(range.Start, range.Length - len);
+					str = str[0..(str.Length - len)];
+				}
+
+				if ((range.Length != 0) || (str.Length != 0))
+				{
+					newRanges.Add(range);
+					newStrs.Add(str);
+				}
+			}
+			return (newRanges, newStrs);
 		}
 
 		public static string MoveTo(string text, NETextPoint start, NETextPoint end)
