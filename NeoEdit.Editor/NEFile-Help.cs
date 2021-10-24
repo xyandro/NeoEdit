@@ -46,8 +46,11 @@ namespace NeoEdit.Editor
 				throw new Exception("Version length mismatch");
 
 			var newer = oldNums.Zip(newNums, (oldNum, newNum) => newNum.IsGreater(oldNum)).NonNull().FirstOrDefault();
-			if (!state.NEWindow.neWindowUI.RunDialog_ShowMessage("Download new version?", newer ? $"A newer version ({newVersion}) is available. Download it?" : $"Already up to date ({newVersion}). Update anyway?", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
+			if (!state.NEWindow.neWindowUI.RunDialog_ShowMessage("Download new version?", $"Current version: {oldVersion}\nNewest version: {newVersion}\n\n{(newer ? $"A newer version is available. Download and install it?" : $"Already up to date ({newVersion}). Update anyway?")}\n\nThis will terminate all running instances of NeoEdit.", MessageOptions.YesNo, newer ? MessageOptions.Yes : MessageOptions.No, MessageOptions.No).HasFlag(MessageOptions.Yes))
 				return;
+
+			var pid = Process.GetCurrentProcess().Id;
+			Process.GetProcessesByName("NeoEdit").Where(process => process.Id != pid).ForEach(process => process.Kill());
 
 			TaskRunner.Run(progress =>
 			{
@@ -77,6 +80,8 @@ namespace NeoEdit.Editor
 				var location = Path.Combine(Path.GetTempPath(), "NeoEdit.msi");
 				File.WriteAllBytes(location, result);
 				Process.Start(new ProcessStartInfo(location) { UseShellExecute = true });
+
+				Environment.Exit(0);
 			});
 		}
 
