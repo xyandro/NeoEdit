@@ -80,17 +80,20 @@ namespace NeoEdit.Editor
 				MenuStatus = GetMenuStatus(),
 			};
 
-			if (renderParameters.WorkMode)
-			{
-				var workFiles = ActiveFiles.Where(neFile => neFile.Selections.Any()).ToList();
-				if (workFiles.Any())
-				{
-					renderParameters.NEFiles = workFiles.Concat(renderParameters.NEFiles.Except(workFiles)).ToList();
-					renderParameters.FileCount = workFiles.Count;
-				}
-			}
+			SetupWorkMode(renderParameters);
 
 			neWindowUI?.Render(renderParameters);
+		}
+
+		static void SetupWorkMode(RenderParameters renderParameters)
+		{
+			if (!renderParameters.WorkMode)
+				return;
+
+			var activeFiles = renderParameters.ActiveFiles.Where(neFile => neFile.Selections.Any()).ToList();
+			activeFiles = activeFiles.Concat(renderParameters.ActiveFiles.Except(activeFiles)).ToList();
+			renderParameters.NEFiles = activeFiles.Concat(renderParameters.NEFiles.Except(activeFiles)).ToList();
+			renderParameters.FileCount = activeFiles.Count;
 		}
 
 		Dictionary<string, bool?> GetMenuStatus()

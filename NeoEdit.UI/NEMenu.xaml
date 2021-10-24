@@ -859,7 +859,7 @@
 		<controls:NEMenuItem Header="_Grid" CommandEnum="Window_Grid" ToolTip="Show files in grid"/>
 		<controls:NEMenuItem Header="_Custom grid" CommandEnum="Window_CustomGrid" ToolTip="Show files in custom grid"/>
 		<Separator/>
-		<controls:NEMenuItem Header="_Work mode" CommandEnum="Window_WorkMode" x:Name="menu_Window_WorkMode" ToolTip="Toggle work mode (Only show active files with selections)"/>
+		<controls:NEMenuItem Header="_Work mode" CommandEnum="Window_WorkMode" x:Name="menu_Window_WorkMode" ToolTip="Toggle work mode (Only show active files, those with selections first; this is visual only and doesn't affect internal ordering)"/>
 		<Separator/>
 		<MenuItem Header="F_ont">
 			<controls:NEMenuItem Header="_Size" CommandEnum="Window_Font_Size" ToolTip="Change font size"/>
