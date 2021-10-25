@@ -116,7 +116,7 @@ namespace NeoEdit.Editor
 				}
 			}
 		}
-		DbConnection dbConnection { get => Data.dbConnection; set => EditableData.dbConnection = value; }
+		DbConnection DbConnection { get => Data.DbConnection; set => EditableData.DbConnection = value; }
 
 		Tuple<IReadOnlyList<string>, bool?> clipboardData;
 		Tuple<IReadOnlyList<string>, bool?> ClipboardData

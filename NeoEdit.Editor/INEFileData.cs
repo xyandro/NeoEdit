@@ -38,7 +38,7 @@ namespace NeoEdit.Editor
 		HashSet<Coder.CodePage> ViewBinaryCodePages { get; }
 		IReadOnlyList<HashSet<string>> ViewBinarySearches { get; }
 		NEFile DiffTarget { get; }
-		DbConnection dbConnection { get; }
+		DbConnection DbConnection { get; }
 
 		INEFileData Next();
 	}

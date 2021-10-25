@@ -24,7 +24,7 @@ namespace NeoEdit.Editor
 			{
 				var result = new List<QueryResult>();
 				var tableName = Regex.Match(commandText, @"\bFROM\b.*?([\[\]a-z\.]+)", RegexOptions.IgnoreCase).Groups[1].Value.Replace("[", "").Replace("]", "").CoalesceNullOrEmpty();
-				using (var command = dbConnection.CreateCommand())
+				using (var command = DbConnection.CreateCommand())
 				{
 					command.CommandText = commandText;
 					using (var reader = command.ExecuteReader())
@@ -45,7 +45,7 @@ namespace NeoEdit.Editor
 
 		void ValidateConnection()
 		{
-			if (dbConnection == null)
+			if (DbConnection == null)
 				throw new Exception("No connection.");
 		}
 
@@ -54,12 +54,12 @@ namespace NeoEdit.Editor
 		void Execute__Database_Connect()
 		{
 			var result = state.Configuration as Configuration_Database_Connect;
-			if (dbConnection != null)
+			if (DbConnection != null)
 			{
-				dbConnection.Dispose();
-				dbConnection = null;
+				DbConnection.Dispose();
+				DbConnection = null;
 			}
-			dbConnection = result.DBConnectInfo.GetConnection();
+			DbConnection = result.DBConnectInfo.GetConnection();
 			DBName = result.DBConnectInfo.Name;
 		}
 
@@ -88,7 +88,7 @@ namespace NeoEdit.Editor
 		static void Configure__Database_Examine()
 		{
 			state.NEWindow.Focused.ValidateConnection();
-			state.NEWindow.neWindowUI.RunDialog_Configure_Database_Examine(state.NEWindow.Focused.dbConnection);
+			state.NEWindow.neWindowUI.RunDialog_Configure_Database_Examine(state.NEWindow.Focused.DbConnection);
 			state.Configuration = new Configuration_Database_Examine();
 		}
 
@@ -104,7 +104,7 @@ namespace NeoEdit.Editor
 				try
 				{
 					var text = "";
-					using (var command = dbConnection.CreateCommand())
+					using (var command = DbConnection.CreateCommand())
 					{
 						command.CommandText = $"sp_helptext '{sproc}'";
 						using (var reader = command.ExecuteReader())
