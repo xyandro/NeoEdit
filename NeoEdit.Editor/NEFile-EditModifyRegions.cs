@@ -108,35 +108,35 @@ namespace NeoEdit.Editor
 		{
 			switch (result.Action)
 			{
-				case Configuration_Edit_ModifyRegions.Actions.Select_Select: Execute_Edit_ModifyRegions_Select_Select(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Select_Previous: Execute_Edit_ModifyRegions_Select_Previous(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Select_Next: Execute_Edit_ModifyRegions_Select_Next(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Select_Enclosing: Execute_Edit_ModifyRegions_Select_Enclosing(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Select_WithEnclosing: Execute_Edit_ModifyRegions_Select_WithEnclosing(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Select_WithoutEnclosing: Execute_Edit_ModifyRegions_Select_WithoutEnclosing(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Modify_Set: Execute_Edit_ModifyRegions_Modify_Set(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Modify_Clear: Execute_Edit_ModifyRegions_Modify_Clear(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Modify_Remove: Execute_Edit_ModifyRegions_Modify_Remove(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Modify_Add: Execute_Edit_ModifyRegions_Modify_Add(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Modify_Unite: Execute_Edit_ModifyRegions_Modify_Unite(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Modify_Intersect: Execute_Edit_ModifyRegions_Modify_Intersect(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Modify_Exclude: Execute_Edit_ModifyRegions_Modify_Exclude(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Modify_Repeat: Execute_Edit_ModifyRegions_Modify_Repeat(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Copy_Enclosing: Execute_Edit_ModifyRegions_Copy_Enclosing(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Copy_EnclosingIndex: Execute_Edit_ModifyRegions_Copy_EnclosingIndex(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Transform_Flatten: Execute_Edit_ModifyRegions_Transform_Flatten(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Transform_Transpose: Execute_Edit_ModifyRegions_Transform_Transpose(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Transform_RotateLeft: Execute_Edit_ModifyRegions_Transform_RotateLeft(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Transform_RotateRight: Execute_Edit_ModifyRegions_Transform_RotateRight(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Transform_Rotate180: Execute_Edit_ModifyRegions_Transform_Rotate180(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Transform_MirrorHorizontal: Execute_Edit_ModifyRegions_Transform_MirrorHorizontal(result.Regions); break;
-				case Configuration_Edit_ModifyRegions.Actions.Transform_MirrorVertical: Execute_Edit_ModifyRegions_Transform_MirrorVertical(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Select_Select: Execute__Edit_ModifyRegions__Select_Select(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Select_Previous: Execute__Edit_ModifyRegions__Select_Previous(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Select_Next: Execute__Edit_ModifyRegions__Select_Next(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Select_Enclosing: Execute__Edit_ModifyRegions__Select_Enclosing(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Select_WithEnclosing: Execute__Edit_ModifyRegions__Select_WithEnclosing(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Select_WithoutEnclosing: Execute__Edit_ModifyRegions__Select_WithoutEnclosing(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Modify_Set: Execute__Edit_ModifyRegions__Modify_Set(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Modify_Clear: Execute__Edit_ModifyRegions__Modify_Clear(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Modify_Remove: Execute__Edit_ModifyRegions__Modify_Remove(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Modify_Add: Execute__Edit_ModifyRegions__Modify_Add(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Modify_Unite: Execute__Edit_ModifyRegions__Modify_Unite(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Modify_Intersect: Execute__Edit_ModifyRegions__Modify_Intersect(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Modify_Exclude: Execute__Edit_ModifyRegions__Modify_Exclude(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Modify_Repeat: Execute__Edit_ModifyRegions__Modify_Repeat(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Copy_Enclosing: Execute__Edit_ModifyRegions__Copy_Enclosing(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Copy_EnclosingIndex: Execute__Edit_ModifyRegions__Copy_EnclosingIndex(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Transform_Flatten: Execute__Edit_ModifyRegions__Transform_Flatten(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Transform_Transpose: Execute__Edit_ModifyRegions__Transform_Transpose(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Transform_RotateLeft: Execute__Edit_ModifyRegions__Transform_RotateLeft(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Transform_RotateRight: Execute__Edit_ModifyRegions__Transform_RotateRight(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Transform_Rotate180: Execute__Edit_ModifyRegions__Transform_Rotate180(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Transform_MirrorHorizontal: Execute__Edit_ModifyRegions__Transform_MirrorHorizontal(result.Regions); break;
+				case Configuration_Edit_ModifyRegions.Actions.Transform_MirrorVertical: Execute__Edit_ModifyRegions__Transform_MirrorVertical(result.Regions); break;
 			}
 		}
 
-		void Execute_Edit_ModifyRegions_Select_Select(List<int> regions) => Selections = regions.SelectMany(useRegion => GetRegions(useRegion)).ToList();
+		void Execute__Edit_ModifyRegions__Select_Select(List<int> regions) => Selections = regions.SelectMany(useRegion => GetRegions(useRegion)).ToList();
 
-		void Execute_Edit_ModifyRegions_Select_Previous(List<int> regions)
+		void Execute__Edit_ModifyRegions__Select_Previous(List<int> regions)
 		{
 			if (!Selections.Any())
 				return;
@@ -160,7 +160,7 @@ namespace NeoEdit.Editor
 			Selections = newSels;
 		}
 
-		void Execute_Edit_ModifyRegions_Select_Next(List<int> regions)
+		void Execute__Edit_ModifyRegions__Select_Next(List<int> regions)
 		{
 			if (!Selections.Any())
 				return;
@@ -186,7 +186,7 @@ namespace NeoEdit.Editor
 			Selections = newSels;
 		}
 
-		void Execute_Edit_ModifyRegions_Select_Enclosing(List<int> regions)
+		void Execute__Edit_ModifyRegions__Select_Enclosing(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -195,7 +195,7 @@ namespace NeoEdit.Editor
 			Selections = GetEnclosingRegions(useRegion);
 		}
 
-		void Execute_Edit_ModifyRegions_Select_WithEnclosing(List<int> regions)
+		void Execute__Edit_ModifyRegions__Select_WithEnclosing(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -204,7 +204,7 @@ namespace NeoEdit.Editor
 			Selections = Selections.Zip(GetEnclosingRegions(useRegion, mustBeInRegion: false), (selection, region) => region == null ? null : selection).Where(selection => selection != null).ToList();
 		}
 
-		void Execute_Edit_ModifyRegions_Select_WithoutEnclosing(List<int> regions)
+		void Execute__Edit_ModifyRegions__Select_WithoutEnclosing(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -213,11 +213,11 @@ namespace NeoEdit.Editor
 			Selections = Selections.Zip(GetEnclosingRegions(useRegion, mustBeInRegion: false), (selection, region) => region == null ? selection : null).Where(selection => selection != null).ToList();
 		}
 
-		void Execute_Edit_ModifyRegions_Modify_Set(List<int> regions) => regions.ForEach(useRegion => SetRegions(useRegion, Selections.ToList()));
+		void Execute__Edit_ModifyRegions__Modify_Set(List<int> regions) => regions.ForEach(useRegion => SetRegions(useRegion, Selections.ToList()));
 
-		void Execute_Edit_ModifyRegions_Modify_Clear(List<int> regions) => regions.ForEach(useRegion => SetRegions(useRegion, new List<NERange>()));
+		void Execute__Edit_ModifyRegions__Modify_Clear(List<int> regions) => regions.ForEach(useRegion => SetRegions(useRegion, new List<NERange>()));
 
-		void Execute_Edit_ModifyRegions_Modify_Remove(List<int> regions)
+		void Execute__Edit_ModifyRegions__Modify_Remove(List<int> regions)
 		{
 			foreach (var useRegion in regions)
 			{
@@ -236,7 +236,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Edit_ModifyRegions_Modify_Add(List<int> regions)
+		void Execute__Edit_ModifyRegions__Modify_Add(List<int> regions)
 		{
 			foreach (var useRegion in regions)
 			{
@@ -256,7 +256,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Edit_ModifyRegions_Modify_Unite(List<int> regions)
+		void Execute__Edit_ModifyRegions__Modify_Unite(List<int> regions)
 		{
 			foreach (var useRegion in regions)
 			{
@@ -300,7 +300,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Edit_ModifyRegions_Modify_Intersect(List<int> regions)
+		void Execute__Edit_ModifyRegions__Modify_Intersect(List<int> regions)
 		{
 			foreach (var useRegion in regions)
 			{
@@ -327,7 +327,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Edit_ModifyRegions_Modify_Exclude(List<int> regions)
+		void Execute__Edit_ModifyRegions__Modify_Exclude(List<int> regions)
 		{
 			foreach (var useRegion in regions)
 			{
@@ -360,7 +360,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Edit_ModifyRegions_Modify_Repeat(List<int> regions)
+		void Execute__Edit_ModifyRegions__Modify_Repeat(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -388,7 +388,7 @@ namespace NeoEdit.Editor
 			Selections = newSelections;
 		}
 
-		void Execute_Edit_ModifyRegions_Copy_Enclosing(List<int> regions)
+		void Execute__Edit_ModifyRegions__Copy_Enclosing(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -397,7 +397,7 @@ namespace NeoEdit.Editor
 			Clipboard = GetEnclosingRegions(useRegion).Select(range => Text.GetString(range)).ToList();
 		}
 
-		void Execute_Edit_ModifyRegions_Copy_EnclosingIndex(List<int> regions)
+		void Execute__Edit_ModifyRegions__Copy_EnclosingIndex(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -406,7 +406,7 @@ namespace NeoEdit.Editor
 			Clipboard = GetEnclosingRegions(useRegion).Select(region => (GetRegions(useRegion).FindIndex(region) + 1).ToString()).ToList();
 		}
 
-		void Execute_Edit_ModifyRegions_Transform_Flatten(List<int> regions)
+		void Execute__Edit_ModifyRegions__Transform_Flatten(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -415,7 +415,7 @@ namespace NeoEdit.Editor
 			SetRegionsWithSelectionsText(useRegion, GetRegionsWithSelectionsText(useRegion, false), false);
 		}
 
-		void Execute_Edit_ModifyRegions_Transform_Transpose(List<int> regions)
+		void Execute__Edit_ModifyRegions__Transform_Transpose(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -426,7 +426,7 @@ namespace NeoEdit.Editor
 			SetRegionsWithSelectionsText(useRegion, Enumerable.Range(0, count).Select(index => regions2.Select(strs => strs[index]).ToList()).ToList());
 		}
 
-		void Execute_Edit_ModifyRegions_Transform_RotateLeft(List<int> regions)
+		void Execute__Edit_ModifyRegions__Transform_RotateLeft(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -437,7 +437,7 @@ namespace NeoEdit.Editor
 			SetRegionsWithSelectionsText(useRegion, Enumerable.Range(0, count).Select(index => regions2.Select(region => region[region.Count - 1 - index]).ToList()).ToList());
 		}
 
-		void Execute_Edit_ModifyRegions_Transform_RotateRight(List<int> regions)
+		void Execute__Edit_ModifyRegions__Transform_RotateRight(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -449,7 +449,7 @@ namespace NeoEdit.Editor
 			SetRegionsWithSelectionsText(useRegion, Enumerable.Range(0, count).Select(index => regions2.Select(region => region[index]).ToList()).ToList());
 		}
 
-		void Execute_Edit_ModifyRegions_Transform_Rotate180(List<int> regions)
+		void Execute__Edit_ModifyRegions__Transform_Rotate180(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -461,7 +461,7 @@ namespace NeoEdit.Editor
 			SetRegionsWithSelectionsText(useRegion, regions2);
 		}
 
-		void Execute_Edit_ModifyRegions_Transform_MirrorHorizontal(List<int> regions)
+		void Execute__Edit_ModifyRegions__Transform_MirrorHorizontal(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");
@@ -472,7 +472,7 @@ namespace NeoEdit.Editor
 			SetRegionsWithSelectionsText(useRegion, regions2);
 		}
 
-		void Execute_Edit_ModifyRegions_Transform_MirrorVertical(List<int> regions)
+		void Execute__Edit_ModifyRegions__Transform_MirrorVertical(List<int> regions)
 		{
 			if (regions.Count != 1)
 				throw new Exception("Can only select single region");

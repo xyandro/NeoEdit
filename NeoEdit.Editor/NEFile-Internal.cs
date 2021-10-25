@@ -144,22 +144,22 @@ namespace NeoEdit.Editor
 		{
 			switch (state.Key)
 			{
-				case "Back": case "Delete": Execute_Internal_Key_BackDelete(); break;
-				case "Escape": Execute_Internal_Key_Escape(); break;
-				case "Left": Execute_Internal_Key_Left(); break;
-				case "Right": Execute_Internal_Key_Right(); break;
-				case "Up": Execute_Internal_Key_Up(); break;
-				case "Down": Execute_Internal_Key_Down(); break;
-				case "Home": Execute_Internal_Key_Home(); break;
-				case "End": Execute_Internal_Key_End(); break;
-				case "PageUp": Execute_Internal_Key_PageUp(); break;
-				case "PageDown": Execute_Internal_Key_PageDown(); break;
-				case "Tab": Execute_Internal_Key_Tab(); break;
-				case "Enter": Execute_Internal_Key_Enter(); break;
+				case "Back": case "Delete": Execute__Internal_Key__BackDelete(); break;
+				case "Escape": Execute__Internal_Key__Escape(); break;
+				case "Left": Execute__Internal_Key__Left(); break;
+				case "Right": Execute__Internal_Key__Right(); break;
+				case "Up": Execute__Internal_Key__Up(); break;
+				case "Down": Execute__Internal_Key__Down(); break;
+				case "Home": Execute__Internal_Key__Home(); break;
+				case "End": Execute__Internal_Key__End(); break;
+				case "PageUp": Execute__Internal_Key__PageUp(); break;
+				case "PageDown": Execute__Internal_Key__PageDown(); break;
+				case "Tab": Execute__Internal_Key__Tab(); break;
+				case "Enter": Execute__Internal_Key__Enter(); break;
 			}
 		}
 
-		void Execute_Internal_Key_BackDelete()
+		void Execute__Internal_Key__BackDelete()
 		{
 			if ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true)
 			{
@@ -193,7 +193,7 @@ namespace NeoEdit.Editor
 			}).Where(x => x.HasSelection).ToList());
 		}
 
-		void Execute_Internal_Key_Escape()
+		void Execute__Internal_Key__Escape()
 		{
 			if (ViewBinarySearches != null)
 			{
@@ -207,7 +207,7 @@ namespace NeoEdit.Editor
 				Selections = new List<NERange> { new NERange() };
 		}
 
-		void Execute_Internal_Key_Left()
+		void Execute__Internal_Key__Left()
 		{
 			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
 			{
@@ -226,7 +226,7 @@ namespace NeoEdit.Editor
 			}).ToList();
 		}
 
-		void Execute_Internal_Key_Right()
+		void Execute__Internal_Key__Right()
 		{
 			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
 			{
@@ -245,7 +245,7 @@ namespace NeoEdit.Editor
 			}).ToList();
 		}
 
-		void Execute_Internal_Key_Up()
+		void Execute__Internal_Key__Up()
 		{
 			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
 			{
@@ -279,7 +279,7 @@ namespace NeoEdit.Editor
 				BlockSelUp();
 		}
 
-		void Execute_Internal_Key_Down()
+		void Execute__Internal_Key__Down()
 		{
 			if ((!state.ShiftDown) && ((state.Configuration as Configuration_Internal_Key)?.HasSelections == true))
 			{
@@ -315,7 +315,7 @@ namespace NeoEdit.Editor
 				BlockSelUp();
 		}
 
-		void Execute_Internal_Key_Home()
+		void Execute__Internal_Key__Home()
 		{
 			if (state.ControlDown)
 				Selections = Selections.AsTaskRunner().Select(range => new NERange(state.ShiftDown ? range.Anchor : 0, 0)).ToList();
@@ -357,7 +357,7 @@ namespace NeoEdit.Editor
 			}
 		}
 
-		void Execute_Internal_Key_End()
+		void Execute__Internal_Key__End()
 		{
 			if (state.ControlDown)
 				Selections = Selections.AsTaskRunner().Select(range => new NERange(state.ShiftDown ? range.Anchor : Text.Length, Text.Length)).ToList();
@@ -373,7 +373,7 @@ namespace NeoEdit.Editor
 				}).ToList();
 		}
 
-		void Execute_Internal_Key_PageUp()
+		void Execute__Internal_Key__PageUp()
 		{
 			Selections = Selections.AsTaskRunner().Select(range =>
 			{
@@ -393,7 +393,7 @@ namespace NeoEdit.Editor
 			}).ToList();
 		}
 
-		void Execute_Internal_Key_PageDown()
+		void Execute__Internal_Key__PageDown()
 		{
 			Selections = Selections.AsTaskRunner().Select(range =>
 			{
@@ -413,7 +413,7 @@ namespace NeoEdit.Editor
 			}).ToList();
 		}
 
-		void Execute_Internal_Key_Tab()
+		void Execute__Internal_Key__Tab()
 		{
 			if (Selections.AsTaskRunner().All(range => (!range.HasSelection) || (Text.GetLineStartPosition(range.Start) == Text.GetLineStartPosition(range.End))))
 			{
@@ -486,7 +486,7 @@ namespace NeoEdit.Editor
 			Selections = newSels;
 		}
 
-		void Execute_Internal_Key_Enter() => ReplaceSelections(Text.DefaultEnding, false);
+		void Execute__Internal_Key__Enter() => ReplaceSelections(Text.DefaultEnding, false);
 
 		void Execute__Internal_Text() => ReplaceSelections(state.Text, false);
 
