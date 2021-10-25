@@ -169,6 +169,12 @@ namespace NeoEdit.UI.Dialogs
 			YExpression = GetYCenter(HeightExpression);
 			AspectRatio = "width/height";
 			FillColor = "00000000";
+			xExpression.SelectAll();
+			yExpression.SelectAll();
+			widthExpression.SelectAll();
+			heightExpression.SelectAll();
+			aspectRatio.SelectAll();
+			fillColor.SelectAll();
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);

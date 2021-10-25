@@ -83,7 +83,12 @@ namespace NeoEdit.UI.Dialogs
 
 		void RegExHelp(object sender, RoutedEventArgs e) => RegExHelpDialog.Display();
 
-		void Reset(object sender, RoutedEventArgs e) => WholeWords = MatchCase = SelectionOnly = EntireSelection = false;
+		void Reset(object sender, RoutedEventArgs e)
+		{
+			WholeWords = MatchCase = SelectionOnly = EntireSelection = false;
+			text.SelectAll();
+			replace.SelectAll();
+		}
 
 		public static Configuration_Text_Find_RegexReplace Run(Window parent, string text)
 		{

@@ -65,6 +65,8 @@ namespace NeoEdit.UI.Dialogs
 			WidthExpression = "width";
 			HeightExpression = "height";
 			InterpolationMode = InterpolationMode.HighQualityBicubic;
+			widthExpression.SelectAll();
+			heightExpression.SelectAll();
 		}
 
 		void ExpressionHelp(object sender, RoutedEventArgs e) => ExpressionHelpDialog.Display(Variables);

@@ -255,6 +255,7 @@ namespace NeoEdit.UI.Dialogs
 		{
 			IsExpression = AlignSelections = IsBoolean = IsRegex = RegexGroups = IsBinary = WholeWords = MatchCase = SkipSpace = SelectionOnly = EntireSelection = KeepMatching = RemoveMatching = false;
 			CodePages = startCodePages;
+			text.SelectAll();
 		}
 
 		public static Configuration_Text_Find_Find Run(Window parent, string text, HashSet<Coder.CodePage> codePages, NEVariables variables)

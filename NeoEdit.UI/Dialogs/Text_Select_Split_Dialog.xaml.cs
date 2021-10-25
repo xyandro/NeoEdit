@@ -56,6 +56,8 @@ namespace NeoEdit.UI.Dialogs
 			WholeWords = MatchCase = IsRegex = IncludeResults = ExcludeEmpty = false;
 			BalanceStrings = BalanceParens = BalanceBrackets = BalanceBraces = TrimWhitespace = true;
 			BalanceLTGT = false;
+			text.SelectAll();
+			index.SelectAll();
 		}
 
 		Configuration_Text_Select_Split result;

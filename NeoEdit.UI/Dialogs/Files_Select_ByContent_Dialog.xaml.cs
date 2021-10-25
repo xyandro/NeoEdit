@@ -158,6 +158,7 @@ namespace NeoEdit.UI.Dialogs
 			IsExpression = AlignSelections = IsRegex = MatchCase = SkipSpace = false;
 			IsBinary = true;
 			CodePages = new HashSet<Coder.CodePage>(Coder.DefaultCodePages);
+			text.SelectAll();
 		}
 
 		public static Configuration_Files_Select_ByContent Run(Window parent, NEVariables variables)
