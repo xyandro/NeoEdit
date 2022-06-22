@@ -267,6 +267,7 @@ namespace NeoEdit.Editor
 					var useColumns = Math.Min(skipColumns, tabIndex - index);
 					index += useColumns;
 					column += useColumns;
+					continue;
 				}
 
 				{
