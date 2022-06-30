@@ -665,6 +665,8 @@
 			<Separator/>
 			<controls:NEMenuItem Header="_Custom" CommandEnum="Network_Fetch_Custom" ToolTip="Fetch URLs"/>
 			<Separator/>
+			<controls:NEMenuItem Header="Ce_rtificate" CommandEnum="Network_Fetch_Certificate" ToolTip="Fetch URLs"/>
+			<Separator/>
 			<controls:NEMenuItem Header="_Stream" CommandEnum="Network_Fetch_Stream" ToolTip="Fetch video from selected URLs"/>
 			<controls:NEMenuItem Header="_Playlist" CommandEnum="Network_Fetch_Playlist" ToolTip="Fetch playlist from selected URLs"/>
 		</MenuItem>

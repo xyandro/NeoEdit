@@ -6,6 +6,9 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
+using System.Net.Security;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using NeoEdit.Common;
@@ -112,6 +115,27 @@ namespace NeoEdit.Editor
 			return await Helpers.RunTasks(sels, sel => MakeNetworkRequest(httpClient, sel));
 		}
 
+		async Task<string> GetCertificate(string url)
+		{
+			string result = null;
+			var request = WebRequest.CreateHttp(url);
+			request.AllowAutoRedirect = false;
+			request.ServerCertificateValidationCallback = (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) =>
+			{
+				//var sb = new StringBuilder();
+				//sb.AppendLine("-----BEGIN CERTIFICATE-----");
+				//sb.AppendLine(Convert.ToBase64String(certificate.Export(X509ContentType.Cert), Base64FormattingOptions.InsertLineBreaks));
+				//sb.AppendLine("-----END CERTIFICATE-----");
+				//results.Add(sb.ToString());
+				result = $"{certificate.Subject}\t{certificate.GetExpirationDateString()}";
+				return false;
+			};
+			try { using var response = await request.GetResponseAsync(); } catch (Exception ex) { if (!(ex?.InnerException?.InnerException is AuthenticationException)) throw; }
+			if (result == null)
+				throw new Exception("Failed to get certificate");
+			return result;
+		}
+
 		static void Configure__Network_AbsoluteURL() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Network_AbsoluteURL(state.NEWindow.Focused.GetVariables());
 
 		void Execute__Network_AbsoluteURL()
@@ -160,6 +184,8 @@ namespace NeoEdit.Editor
 		}
 
 		void Execute__Network_Fetch_Custom() => ReplaceSelections(Task.Run(() => MakeNetworkRequests(GetSelectionStrings()).Result).Result);
+
+		void Execute__Network_Fetch_Certificate() => ReplaceSelections(Task.Run(async () => await Helpers.RunTasks(GetSelectionStrings(), sel => GetCertificate(sel))).Result);
 
 		static void Configure__Network_Fetch_Stream() => state.Configuration = state.NEWindow.neWindowUI.RunDialog_Configure_Network_Fetch_StreamPlaylist(state.NEWindow.Focused.GetVariables(), Path.GetDirectoryName(state.NEWindow.Focused.FileName) ?? "");
 

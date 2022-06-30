@@ -380,6 +380,7 @@
 		Network_Fetch_Hex,
 		Network_Fetch_File,
 		Network_Fetch_Custom,
+		Network_Fetch_Certificate,
 		Network_Fetch_Stream,
 		Network_Fetch_Playlist,
 		Network_Lookup_IP,

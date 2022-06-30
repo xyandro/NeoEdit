@@ -867,6 +867,7 @@ namespace NeoEdit.Editor
 				case NECommand.Network_Fetch_Hex: Execute__Network_Fetch_Fetch__Network_Fetch_Hex(Coder.CodePage.Hex); break;
 				case NECommand.Network_Fetch_File: Execute__Network_Fetch_File(); break;
 				case NECommand.Network_Fetch_Custom: Execute__Network_Fetch_Custom(); break;
+				case NECommand.Network_Fetch_Certificate: Execute__Network_Fetch_Certificate(); break;
 				case NECommand.Network_Fetch_Stream: Execute__Network_Fetch_Stream(); break;
 				case NECommand.Network_Fetch_Playlist: Execute__Network_Fetch_Playlist(); break;
 				case NECommand.Network_Lookup_IP: Execute__Network_Lookup_IP(); break;
