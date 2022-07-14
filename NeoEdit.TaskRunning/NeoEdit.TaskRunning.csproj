@@ -3,7 +3,7 @@
   <Import Project="..\Version.csproj" />
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <CopyRetryCount>0</CopyRetryCount>
   </PropertyGroup>
 

@@ -152,7 +152,7 @@
                 "ScatterAssemblies"
                 {
                 }
-            "SourcePath" = "8:..\\NeoEdit\\bin\\Release\\net5.0-windows\\LibGit2Sharp.dll"
+            "SourcePath" = "8:..\\NeoEdit\\bin\\Release\\net6.0-windows\\LibGit2Sharp.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_41F7866F280242B0A401D255BB00DB5A"
@@ -172,7 +172,7 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_929B3B016DEB4638B22C710159FA58B6"
             {
-            "SourcePath" = "8:..\\NeoEdit\\bin\\Release\\net5.0-windows\\NeoEdit.exe"
+            "SourcePath" = "8:..\\NeoEdit\\bin\\Release\\net6.0-windows\\NeoEdit.exe"
             "TargetName" = "8:NeoEdit.exe"
             "Tag" = "8:"
             "Folder" = "8:_41F7866F280242B0A401D255BB00DB5A"
@@ -841,7 +841,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B9CCEB09C9594289B2E5B4A374068967"
             {
-            "SourcePath" = "8:..\\NeoEdit\\obj\\Release\\net5.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\NeoEdit\\obj\\Release\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_41F7866F280242B0A401D255BB00DB5A"

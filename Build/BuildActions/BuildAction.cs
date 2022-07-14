@@ -12,7 +12,7 @@ namespace Build.BuildActions
 		public override void Run(WriteTextDelegate writeText)
 		{
 			var versions = new List<string> { "Community", "Enterprise", "Professional" };
-			var devEnvTemplate = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\{0}\Common7\IDE\devenv.com";
+			var devEnvTemplate = @"C:\Program Files\Microsoft Visual Studio\2022\{0}\Common7\IDE\devenv.com";
 			var devEnv = versions.Select(version => string.Format(devEnvTemplate, version)).FirstOrDefault(path => File.Exists(path));
 			if (devEnv == null)
 				throw new Exception("Unable to find devenv");

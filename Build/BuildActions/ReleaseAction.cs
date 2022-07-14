@@ -12,7 +12,7 @@ namespace Build.BuildActions
 
 		public override void Run(WriteTextDelegate writeText)
 		{
-			var version = FileVersionInfo.GetVersionInfo($@"{App.Location}\NeoEdit\bin\Release\net5.0-windows\NeoEdit.exe").FileVersion;
+			var version = FileVersionInfo.GetVersionInfo($@"{App.Location}\NeoEdit\bin\Release\net6.0-windows\NeoEdit.exe").FileVersion;
 
 			var msiName = $@"{App.Location}\NeoEdit.Setup\Release\NeoEdit.msi";
 			if (!File.Exists(msiName))

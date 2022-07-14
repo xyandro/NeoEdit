@@ -29,7 +29,7 @@ namespace Build.BuildActions
 		public override void Run(WriteTextDelegate writeText)
 		{
 			var ignoreExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".pdb" };
-			var path = $@"{App.Location}\NeoEdit\bin\Release\net5.0-windows";
+			var path = $@"{App.Location}\NeoEdit\bin\Release\net6.0-windows";
 			var files = FindFiles(path);
 			files = files.Where(file => !ignoreExtensions.Contains(Path.GetExtension(file))).ToList();
 			using var archiveFile = File.Create($@"{App.Location}\NeoEdit.Setup\Release\NeoEdit.zip");

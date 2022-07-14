@@ -12,7 +12,7 @@ namespace Build.BuildActions
 		public override void Run(WriteTextDelegate writeText)
 		{
 			var versions = new List<string> { "Community", "Enterprise", "Professional" };
-			var msBuildTemplate = @"C:\Program Files (x86)\Microsoft Visual Studio\2019\{0}\MSBuild\Current\Bin\msbuild.exe";
+			var msBuildTemplate = @"C:\Program Files\Microsoft Visual Studio\2022\{0}\MSBuild\Current\Bin\MSBuild.exe";
 			var msBuild = versions.Select(version => string.Format(msBuildTemplate, version)).FirstOrDefault(path => File.Exists(path));
 			if (msBuild == null)
 				throw new Exception("Unable to find msbuild");
