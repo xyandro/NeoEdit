@@ -51,12 +51,6 @@ namespace NeoEdit.UI.Dialogs
 			MatchCase = false;
 		}
 
-		class NoCaseCharComparer : IEqualityComparer<char>
-		{
-			public bool Equals(char val1, char val2) => char.ToLowerInvariant(val1) == char.ToLowerInvariant(val2);
-			public int GetHashCode(char val) => char.ToLowerInvariant(val).GetHashCode();
-		}
-
 		void OnTypeClick(object sender, RoutedEventArgs e)
 		{
 			switch ((sender as FrameworkElement).Tag)
@@ -70,10 +64,13 @@ namespace NeoEdit.UI.Dialogs
 		Configuration_Text_SelectTrim_WholeBoundedWordTrim result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			var comparer = MatchCase ? EqualityComparer<char>.Default : (IEqualityComparer<char>)new NoCaseCharComparer();
+			var useChars = Helpers.GetCharsFromCharString(Chars);
+			if (!MatchCase)
+				useChars += useChars.ToUpperInvariant();
+
 			result = new Configuration_Text_SelectTrim_WholeBoundedWordTrim
 			{
-				Chars = new HashSet<char>(Helpers.GetCharsFromCharString(Chars).ToCharArray(), comparer),
+				Chars = new HashSet<char>(useChars.ToCharArray()),
 				Start = Location.HasFlag(TrimLocation.Start),
 				End = Location.HasFlag(TrimLocation.End),
 			};
