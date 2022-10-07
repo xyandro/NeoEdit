@@ -64,13 +64,13 @@ namespace NeoEdit.UI.Dialogs
 		Configuration_Text_SelectTrim_WholeBoundedWordTrim result;
 		void OkClick(object sender, RoutedEventArgs e)
 		{
-			var useChars = Chars;
+			var useChars = Helpers.GetCharsFromCharString(Chars);
 			if (!MatchCase)
 				useChars += useChars.ToUpperInvariant();
 
 			result = new Configuration_Text_SelectTrim_WholeBoundedWordTrim
 			{
-				Chars = new HashSet<char>(Helpers.GetCharsFromCharString(useChars).ToCharArray()),
+				Chars = new HashSet<char>(useChars.ToCharArray()),
 				Start = Location.HasFlag(TrimLocation.Start),
 				End = Location.HasFlag(TrimLocation.End),
 			};
